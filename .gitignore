@@ -1,0 +1,7 @@
+bin
+.DS_Store
+**/.svn
+target
+*.iws
+*.iml
+*.ipr

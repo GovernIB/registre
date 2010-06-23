@@ -1,0 +1,150 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>es.caib.regweb</groupId>
+  <artifactId>logic</artifactId>
+  <packaging>ejb</packaging>
+  <version>1.0</version>
+  <name>Registre Web - logic</name>
+
+  <parent>
+    <groupId>es.caib</groupId>
+    <artifactId>regweb</artifactId>
+    <version>1.0</version>
+  </parent>
+
+  <dependencies>
+    <dependency>
+      <groupId>es.caib.regweb</groupId>
+      <artifactId>model</artifactId>
+      <version>1.0</version>
+      <type>jar</type>
+      <scope>provided</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>2.3</version>
+      <scope>provided</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-annotations</artifactId>
+      <version>3.4.0.GA</version>
+      <scope>provided</scope>
+    </dependency>
+    
+  </dependencies>
+
+  <build>
+    <filters>
+      <filter>../config.properties</filter>
+    </filters>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>**/*.xml</include>
+        </includes>
+      </resource>
+    </resources>
+
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>hibernate3-maven-plugin</artifactId>
+        <version>2.2</version>
+        <configuration>
+          <components>
+            <component>
+              <name>hbm2ddl</name>
+              <outputDirectory>target</outputDirectory>
+            </component>
+          </components>
+          <componentProperties>
+            <persistenceunit>Default</persistenceunit>
+            <outputfilename>schema.ddl</outputfilename>
+            <drop>false</drop>
+            <create>true</create>
+            <export>false</export>
+            <format>true</format>
+            <configurationfile>/target/classes/hibernate.cfg.xml</configurationfile>
+          </componentProperties>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>xdoclet-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>xdoclet</goal>
+            </goals>
+            <configuration>
+              <generatedSourcesDirectory>${project.build.directory}/xdoclet</generatedSourcesDirectory>
+              <tasks>
+                <ejbdoclet
+                    destdir="${project.build.directory}/xdoclet"
+                    excludedtags="@version,@author"
+                    ejbspec="2.0"
+                    force="false"
+                    verbose="true">
+                    <fileset dir="${project.build.sourceDirectory}">
+                        <include name="**/*EJB.java"/>
+                    </fileset>
+
+                    <packageSubstitution packages="ejb" substituteWith="interfaces" />
+                    <localinterface pattern="{0}Local"/>
+                    <localhomeinterface pattern="{0}LocalHome"/>
+                    <remoteinterface pattern="{0}"/>
+                    <homeinterface pattern="{0}Home"/>
+                    <session/>
+
+                    <utilobject cacheHomes="true" kind="physical">
+                        <packageSubstitution packages="ejb" substituteWith="util"/>
+                    </utilobject>
+
+                    <deploymentdescriptor
+                        clientjar="es_caib_regweb_logic-client.jar"
+                        xmlencoding="UTF-8"
+                        destdir="${project.build.directory}/classes/META-INF"
+                        validatexml="true"
+                        />
+                    <jboss
+                        version="3.2"
+                        xmlencoding="UTF-8"
+                        destdir="${project.build.directory}/classes/META-INF"
+                        validatexml="true"
+                        securityDomain="java:/jaas/seycon"
+                        />
+                </ejbdoclet>
+              </tasks>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-ejb-plugin</artifactId>
+        <version>2.2</version>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Class-Path>
+                model.jar lib/hibernate-core-3.3.1.GA.jar lib/hibernate-annotations-3.4.0.GA.jar lib/hibernate-commons-annotations-3.1.0.GA.jar lib/slf4j-api-1.5.2.jar lib/slf4j-log4j12-1.5.2.jar lib/ejb3-persistence-1.0.2.GA.jar lib/javassist-3.8.0.GA.jar lib/antlr-2.7.6.jar lib/jta-1.1.jar
+              </Class-Path>
+            </manifestEntries>
+            <addMavenDescriptor>false</addMavenDescriptor>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

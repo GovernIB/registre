@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE web-app PUBLIC
+   "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+   "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+  <description>Registro WEB</description>
+
+  <context-param>
+     <param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
+     <param-value>messages</param-value>
+     <description><![CDATA[]]></description>
+  </context-param>
+
+  <filter>
+      <filter-name>sitemesh</filter-name>
+      <filter-class>com.opensymphony.module.sitemesh.filter.PageFilter</filter-class>
+  </filter>
+  <filter-mapping>
+      <filter-name>sitemesh</filter-name>
+      <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <servlet>
+    <servlet-name>ControllerAdmin</servlet-name>
+    <servlet-class>es.caib.regweb.webapp.servlet.admin.ControllerAdminServlet</servlet-class>
+  </servlet>
+    
+  <servlet>
+    <servlet-name>Controller</servlet-name>
+    <servlet-class>es.caib.regweb.webapp.servlet.ControllerServlet</servlet-class>
+  </servlet>
+    
+  <servlet>
+    <servlet-name>ControllerPopup</servlet-name>
+    <servlet-class>es.caib.regweb.webapp.servlet.ControllerPopupServlet</servlet-class>
+  </servlet>
+    
+
+  <servlet>
+    <servlet-name>PujaFitxerTraspas</servlet-name>
+    <servlet-class>es.caib.regweb.webapp.servlet.PujaFitxerTraspasServlet</servlet-class>
+  </servlet>
+    
+  <servlet>
+    <servlet-name>UtilAdmin</servlet-name>
+    <servlet-class>es.caib.regweb.webapp.servlet.UtilAdminServlet</servlet-class>
+  </servlet>
+  
+  <servlet>
+  	<servlet-name>QuartzInitializer</servlet-name>
+	<display-name>Quartz Initializer Servlet</display-name>
+	<servlet-class>org.quartz.ee.servlet.QuartzInitializerServlet</servlet-class>
+	<load-on-startup>1</load-on-startup>
+  </servlet>
+  
+  <servlet>
+	<servlet-name>QuartzServlet</servlet-name>
+	<display-name>Quartz Servlet</display-name>
+	<servlet-class>es.caib.regweb.webapp.servlet.QuartzServlet</servlet-class>
+	<init-param><param-name>cronExpr</param-name> 
+	<!-- Feim que s'executi cada vespre a les 4:30, després del backup online 
+		 de l'AS400. I només de dilluns a divendres.
+		 Es important que hagi acabat abans de les 7:30 que el dissabte comença
+		 la còpia de seguretat off-line -->
+	<param-value>0 30 4 ? * MON-SAT</param-value></init-param>
+	<!-- cada minut <param-value>0 * * * * ?</param-value></init-param> -->
+	<load-on-startup>2</load-on-startup>
+  </servlet>
+  
+  <servlet>
+    <servlet-name>RecuperaDescripcionDestinatario</servlet-name>
+    <servlet-class>es.caib.regweb.webapp.servlet.RecuperaDescripcionDestinatarioServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>RecuperaDescripcionRemitente</servlet-name>
+    <servlet-class>es.caib.regweb.webapp.servlet.RecuperaDescripcionRemitenteServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>PdfServlet</servlet-name>
+    <servlet-class>es.caib.regweb.webapp.servlet.PdfServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>FileServlet</servlet-name>
+    <servlet-class>es.caib.regweb.webapp.servlet.FileServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>LoadFileServlet</servlet-name>
+    <servlet-class>es.caib.regweb.webapp.servlet.LoadFileServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>LoadFileRebutServlet</servlet-name>
+    <servlet-class>es.caib.regweb.webapp.servlet.LoadFileRebutServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>ReciboServlet</servlet-name>
+    <servlet-class>es.caib.regweb.webapp.servlet.ReciboServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>OficioServlet</servlet-name>
+    <servlet-class>es.caib.regweb.webapp.servlet.OficioServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>DesbloqueaSession</servlet-name>
+    <servlet-class>es.caib.regweb.webapp.servlet.DesbloqueaSessionServlet</servlet-class>
+  </servlet>
+ 
+  <servlet-mapping>
+    <servlet-name>ControllerAdmin</servlet-name>
+    <url-pattern>/admin/controller.do</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>ControllerAdmin</servlet-name>
+    <url-pattern>/admin/popup.do</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>Controller</servlet-name>
+    <url-pattern>/controller.do</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>ControllerPopup</servlet-name>
+    <url-pattern>/popup.do</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>Controller</servlet-name>
+    <url-pattern>/index.jsp</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>UtilAdmin</servlet-name>
+    <url-pattern>/UtilAdmin</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>PujaFitxerTraspas</servlet-name>
+    <url-pattern>/PujaFitxerTraspas</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>RecuperaDescripcionRemitente</servlet-name>
+    <url-pattern>/RecuperaDescripcionRemitente</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>RecuperaDescripcionDestinatario</servlet-name>
+    <url-pattern>/RecuperaDescripcionDestinatario</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>PdfServlet</servlet-name>
+    <url-pattern>/imprimeSello</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>ReciboServlet</servlet-name>
+    <url-pattern>/imprimeixRebut</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>OficioServlet</servlet-name>
+    <url-pattern>/imprimeixOfici</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>LoadFileServlet</servlet-name>
+    <url-pattern>/mostrafitxer</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>LoadFileRebutServlet</servlet-name>
+    <url-pattern>/mostrafitxerrebut</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>FileServlet</servlet-name>
+    <url-pattern>/davallafitxer</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  <servlet-name>DesbloqueaSession</servlet-name>
+    <url-pattern>/DesbloqueaSession</url-pattern>
+  </servlet-mapping>
+
+  <welcome-file-list>
+    <welcome-file>${webapp.welcomeFile}</welcome-file>
+  </welcome-file-list>  
+
+ <!-- 	<error-page>
+		<error-code>404</error-code>
+		<location>error404.html</location>
+	</error-page>-->
+
+	<!-- <error-page>
+		<error-code>401</error-code>
+		<location>/error401.html</location>
+	</error-page> -->
+	
+    
+<!--     <taglib>
+       <taglib-uri>taglibs-request-1.0</taglib-uri>
+       <taglib-location>/WEB-INF/tlds/request.tld</taglib-location>
+    </taglib>
+    <taglib>
+       <taglib-uri>jstl-fmt</taglib-uri>
+       <taglib-location>/WEB-INF/tlds/fmt.tld</taglib-location>
+    </taglib>
+    <taglib>
+       <taglib-uri>jstl-c-rt</taglib-uri>
+       <taglib-location>/WEB-INF/tlds/c-rt.tld</taglib-location>
+    </taglib> -->
+
+   
+  <security-constraint>
+        <display-name>REGWEB</display-name>
+        <web-resource-collection>
+            <web-resource-name>Acceso a REGWEB</web-resource-name>
+            <url-pattern>/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <description>Acceso a REGWEB</description>
+            <role-name>RWE_USUARI</role-name>
+        </auth-constraint>
+  </security-constraint>
+
+  <security-constraint>
+        <display-name>REGWEB</display-name>
+        <web-resource-collection>
+            <web-resource-name>Acceso a REGWEB LOPD</web-resource-name>
+            <url-pattern>/lopd/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <description>Acceso a REGWEB</description>
+            <role-name>RWE_LOPD</role-name>
+        </auth-constraint>
+  </security-constraint>
+
+  <security-constraint>
+        <display-name>REGWEB</display-name>
+        <web-resource-collection>
+            <web-resource-name>Acceso a REGWEB LOPD</web-resource-name>
+            <url-pattern>/admin/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <description>Acceso a REGWEB</description>
+            <role-name>RWE_ADMIN</role-name>
+        </auth-constraint>
+  </security-constraint>
+
+    
+  <login-config>
+    <auth-method>BASIC</auth-method>
+    <realm-name>Govern de les Illes Balears</realm-name>
+  </login-config>
+  
+  <security-role>
+    <role-name>RWE_USUARI</role-name>
+  </security-role>
+  <security-role>
+    <role-name>RWE_LOPD</role-name>
+  </security-role>
+  <security-role>
+    <role-name>RWE_ADMIN</role-name>
+  </security-role>
+  
+    <env-entry>
+        <description />
+            <env-entry-name>BDP.url</env-entry-name>
+            <!-- Direccion absoluta -->
+            <env-entry-value>${webapp.bdp.url}</env-entry-value>
+            <env-entry-type>java.lang.String</env-entry-type>
+    </env-entry>
+    <env-entry>
+        <description />
+            <env-entry-name>BDP.forward</env-entry-name>
+            <!-- Direccion absoluta -->
+            <env-entry-value>${webapp.bdp.forward}</env-entry-value>
+            <env-entry-type>java.lang.String</env-entry-type>
+    </env-entry>
+    <env-entry>
+        <description />
+            <env-entry-name>Repros.max</env-entry-name>
+            <!-- Nombre màxim de Repros d'entrada i sortida per usuari -->
+            <env-entry-value>10</env-entry-value>
+            <env-entry-type>java.lang.Integer</env-entry-type>
+    </env-entry>
+	
+</web-app>

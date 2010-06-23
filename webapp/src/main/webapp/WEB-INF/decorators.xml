@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<decorators>
+    <excludes>
+        <pattern>/jscripts/*</pattern>
+        <pattern>/imagenes/*</pattern>
+        <pattern>/lanza.jsp</pattern>
+    </excludes>
+
+	<decorator>
+		<decorator-name>default</decorator-name>
+		<jsp-file>/decorators/decorator.jsp</jsp-file>
+	</decorator>
+	<decorator>
+		<decorator-name>admin</decorator-name>
+		<jsp-file>/decorators/admin.jsp</jsp-file>
+	</decorator>
+	<decorator>
+		<decorator-name>popup</decorator-name>
+		<jsp-file>/decorators/popup.jsp</jsp-file>
+	</decorator>
+
+		
+	<decorator-mapping>
+		<decorator-name>none</decorator-name>
+		<url-pattern>/index.jsp</url-pattern>
+	</decorator-mapping>	
+	<decorator-mapping>
+		<decorator-name>none</decorator-name>
+		<url-pattern>/login.jsp</url-pattern>
+	</decorator-mapping>	
+	<decorator-mapping>
+		<decorator-name>none</decorator-name>
+		<url-pattern>/errorLogin.jsp</url-pattern>
+	</decorator-mapping>	
+	<decorator-mapping>
+		<decorator-name>admin</decorator-name>
+		<url-pattern>/admin/controller.do</url-pattern>
+	</decorator-mapping>
+	<decorator-mapping>
+		<decorator-name>admin</decorator-name>
+		<url-pattern>/UtilAdmin</url-pattern>
+	</decorator-mapping>
+	<decorator-mapping>
+		<decorator-name>popup</decorator-name>
+		<url-pattern>/admin/popup.do</url-pattern>
+	</decorator-mapping>
+	<decorator-mapping>
+		<decorator-name>default</decorator-name>
+		<url-pattern>/controller.do</url-pattern>
+	</decorator-mapping>
+	<decorator-mapping>
+		<decorator-name>default</decorator-name>
+		<url-pattern>/index.jsp</url-pattern>
+	</decorator-mapping>
+	
+	<decorator-mapping>
+		<decorator-name>default</decorator-name>
+		<url-pattern>/*.jsp</url-pattern>
+	</decorator-mapping>
+	<decorator-mapping>
+		<decorator-name>popup</decorator-name>
+		<url-pattern>/popup/*</url-pattern>
+	</decorator-mapping>
+	<decorator-mapping>
+		<decorator-name>popup</decorator-name>
+		<url-pattern>/popup.do</url-pattern>
+	</decorator-mapping>
+	
+	
+	<decorator-mapping>
+		<decorator-name>none</decorator-name>
+		<url-pattern>/lanza.jsp</url-pattern>
+	</decorator-mapping>	
+	<decorator-mapping>
+		<decorator-name>none</decorator-name>
+		<url-pattern>/documentos/*</url-pattern>
+	</decorator-mapping>	
+	<decorator-mapping>
+		<decorator-name>none</decorator-name>
+		<url-pattern>/jscripts/*</url-pattern>
+	</decorator-mapping>	
+	<decorator-mapping>
+		<decorator-name>none</decorator-name>
+		<url-pattern>/imagenes/*</url-pattern>
+	</decorator-mapping>	
+
+	
+</decorators>

@@ -1,0 +1,601 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ejb-jar PUBLIC '-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0//EN' 'http://java.sun.com/dtd/ejb-jar_2_0.dtd'>
+
+<ejb-jar>
+  <display-name>Registro web de Entrada</display-name>
+  <enterprise-beans>
+    
+   <session>
+      <description>Ejb per gestionar l'administració del registre web</description>
+      <ejb-name>Admin</ejb-name>
+      <home>es.caib.regweb.admin.AdminHome</home>
+      <remote>es.caib.regweb.admin.Admin</remote>
+      <ejb-class>es.caib.regweb.admin.AdminBean</ejb-class>
+      <session-type>Stateless</session-type>
+      <transaction-type>Container</transaction-type>
+      <resource-ref>
+		<description>DataSource DB</description>
+		<res-ref-name>es.caib.regweb.db</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+      </resource-ref>
+    </session>
+    
+   <session>
+      <description>Ejb per esborrar els registres antics de totes les taules de registre d'accessos</description>
+      <ejb-name>EsborraRegAnticsLopd</ejb-name>
+      <home>es.caib.regweb.EsborraRegAnticsLopdHome</home>
+      <remote>es.caib.regweb.EsborraRegAnticsLopd</remote>
+      <ejb-class>es.caib.regweb.EsborraRegAnticsLopdBean</ejb-class>
+      <session-type>Stateless</session-type>
+      <transaction-type>Container</transaction-type>
+      <resource-ref>
+		<description>DataSource DB</description>
+		<res-ref-name>es.caib.regweb.db</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+      </resource-ref>
+    </session>
+
+    <session>
+      <description>Ejb para llistar el registre d'accessos al registre d'entrades</description>
+      <ejb-name>ListadoRegAccesosEntrada</ejb-name>
+      <home>es.caib.regweb.ListadoRegAccesosEntradaHome</home>
+      <remote>es.caib.regweb.ListadoRegAccesosEntrada</remote>
+      <ejb-class>es.caib.regweb.ListadoRegAccesosEntradaBean</ejb-class>
+      <session-type>Stateless</session-type>
+      <transaction-type>Container</transaction-type>
+      <resource-ref>
+		<description>DataSource DB</description>
+		<res-ref-name>es.caib.regweb.db</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+       </resource-ref>
+       <security-role-ref>
+            <role-name>RWE_LOPD</role-name>
+            <role-link>RWE_LOPD</role-link>
+      </security-role-ref>
+    </session>
+    
+    <session>
+      <description>Ejb para llistar el registre d'accessos al registre de sortides</description>
+      <ejb-name>ListadoRegAccesosSortida</ejb-name>
+      <home>es.caib.regweb.ListadoRegAccesosSortidaHome</home>
+      <remote>es.caib.regweb.ListadoRegAccesosSortida</remote>
+      <ejb-class>es.caib.regweb.ListadoRegAccesosSortidaBean</ejb-class>
+      <session-type>Stateless</session-type>
+      <transaction-type>Container</transaction-type>
+      <resource-ref>
+		<description>DataSource DB</description>
+		<res-ref-name>es.caib.regweb.db</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+       </resource-ref>
+       <security-role-ref>
+            <role-name>RWE_LOPD</role-name>
+            <role-link>RWE_LOPD</role-link>
+      </security-role-ref>
+    </session>
+    
+    <session>
+      <description>Ejb per a llistar el registre d'accessos al registre de modificacions amb visat</description>
+      <ejb-name>ListadoRegAccesosVisat</ejb-name>
+      <home>es.caib.regweb.ListadoRegAccesosVisatHome</home>
+      <remote>es.caib.regweb.ListadoRegAccesosVisat</remote>
+      <ejb-class>es.caib.regweb.ListadoRegAccesosVisatBean</ejb-class>
+      <session-type>Stateless</session-type>
+      <transaction-type>Container</transaction-type>
+      <resource-ref>
+		<description>DataSource DB</description>
+		<res-ref-name>es.caib.regweb.db</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+       </resource-ref>
+       <security-role-ref>
+            <role-name>RWE_LOPD</role-name>
+            <role-link>RWE_LOPD</role-link>
+      </security-role-ref>
+    </session>
+
+    <session>
+      <description>Ejb para listar oficios remision</description>
+      <ejb-name>ListadoOficios</ejb-name>
+      <home>es.caib.regweb.ListadoOficiosHome</home>
+      <remote>es.caib.regweb.ListadoOficios</remote>
+      <ejb-class>es.caib.regweb.ListadoOficiosBean</ejb-class>
+      <session-type>Stateless</session-type>
+      <transaction-type>Container</transaction-type>
+      <resource-ref>
+		<description>DataSource DB</description>
+		<res-ref-name>es.caib.regweb.db</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+       </resource-ref>
+       <security-role-ref>
+            <role-name>RWE_USUARI</role-name>
+            <role-link>RWE_USUARI</role-link>
+      </security-role-ref>
+    </session>
+
+    <session>
+      <description>Ejb para listar registros entrada pendientes remision</description>
+      <ejb-name>ListadoRegOficiosEntrada</ejb-name>
+      <home>es.caib.regweb.ListadoRegOficiosEntradaHome</home>
+      <remote>es.caib.regweb.ListadoRegOficiosEntrada</remote>
+      <ejb-class>es.caib.regweb.ListadoRegOficiosEntradaBean</ejb-class>
+      <session-type>Stateless</session-type>
+      <transaction-type>Container</transaction-type>
+      <resource-ref>
+		<description>DataSource DB</description>
+		<res-ref-name>es.caib.regweb.db</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+       </resource-ref>
+       <security-role-ref>
+            <role-name>RWE_USUARI</role-name>
+            <role-link>RWE_USUARI</role-link>
+      </security-role-ref>
+    </session>
+    <session>
+      <description>Ejb para listar registros remitidos pendientes llegar</description>
+      <ejb-name>ListadoRegOficiosSalida</ejb-name>
+      <home>es.caib.regweb.ListadoRegOficiosSalidaHome</home>
+      <remote>es.caib.regweb.ListadoRegOficiosSalida</remote>
+      <ejb-class>es.caib.regweb.ListadoRegOficiosSalidaBean</ejb-class>
+      <session-type>Stateless</session-type>
+      <transaction-type>Container</transaction-type>
+      <resource-ref>
+		<description>DataSource DB</description>
+		<res-ref-name>es.caib.regweb.db</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+       </resource-ref>
+       <security-role-ref>
+            <role-name>RWE_USUARI</role-name>
+            <role-link>RWE_USUARI</role-link>
+      </security-role-ref>
+    </session>
+    <session>
+      <description>Ejb para listar registros entrada</description>
+      <ejb-name>ListadoRegistrosEntrada</ejb-name>
+      <home>es.caib.regweb.ListadoRegistrosEntradaHome</home>
+      <remote>es.caib.regweb.ListadoRegistrosEntrada</remote>
+      <ejb-class>es.caib.regweb.ListadoRegistrosEntradaBean</ejb-class>
+      <session-type>Stateless</session-type>
+      <transaction-type>Container</transaction-type>
+      <resource-ref>
+		<description>DataSource DB</description>
+		<res-ref-name>es.caib.regweb.db</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+       </resource-ref>
+       <security-role-ref>
+            <role-name>RWE_USUARI</role-name>
+            <role-link>RWE_USUARI</role-link>
+      </security-role-ref>
+    </session>
+    <session>
+      <description>Ejb para listar registros salida</description>
+      <ejb-name>ListadoRegistrosSalida</ejb-name>
+      <home>es.caib.regweb.ListadoRegistrosSalidaHome</home>
+      <remote>es.caib.regweb.ListadoRegistrosSalida</remote>
+      <ejb-class>es.caib.regweb.ListadoRegistrosSalidaBean</ejb-class>
+      <session-type>Stateless</session-type>
+      <transaction-type>Container</transaction-type>
+      <resource-ref>
+		<description>DataSource DB</description>
+		<res-ref-name>es.caib.regweb.db</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+       </resource-ref>
+       <security-role-ref>
+            <role-name>RWE_USUARI</role-name>
+            <role-link>RWE_USUARI</role-link>
+      </security-role-ref>
+    </session>
+        <session>
+      <description>Ejb para Modelos Recibos</description>
+      <ejb-name>ModeloRecibo</ejb-name>
+      <home>es.caib.regweb.ModeloReciboHome</home>
+      <remote>es.caib.regweb.ModeloRecibo</remote>
+      <ejb-class>es.caib.regweb.ModeloReciboBean</ejb-class>
+      <session-type>Stateful</session-type> 
+      <transaction-type>Bean</transaction-type>
+      <resource-ref>
+		<description>DataSource DB</description>
+		<res-ref-name>es.caib.regweb.db</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+       </resource-ref>	
+       <security-role-ref>
+            <role-name>RWE_USUARI</role-name>
+            <role-link>RWE_USUARI</role-link>
+      </security-role-ref>
+
+    </session>
+
+        <session>
+      <description>Ejb para Modelos Oficios de Remision</description>
+      <ejb-name>ModeloOficio</ejb-name>
+      <home>es.caib.regweb.ModeloOficioHome</home>
+      <remote>es.caib.regweb.ModeloOficio</remote>
+      <ejb-class>es.caib.regweb.ModeloOficioBean</ejb-class>
+      <session-type>Stateful</session-type> 
+      <transaction-type>Bean</transaction-type>
+      <resource-ref>
+		<description>DataSource DB</description>
+		<res-ref-name>es.caib.regweb.db</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+       </resource-ref>	
+       <security-role-ref>
+            <role-name>RWE_USUARI</role-name>
+            <role-link>RWE_USUARI</role-link>
+      </security-role-ref>
+
+    </session>
+
+        <session>
+      <description>Ejb para Oficios de Remision</description>
+      <ejb-name>LineaOficioRemision</ejb-name>
+      <home>es.caib.regweb.LineaOficioRemisionHome</home>
+      <remote>es.caib.regweb.LineaOficioRemision</remote>
+      <ejb-class>es.caib.regweb.LineaOficioRemisionBean</ejb-class>
+      <session-type>Stateful</session-type> 
+      <transaction-type>Bean</transaction-type>
+      <resource-ref>
+		<description>DataSource DB</description>
+		<res-ref-name>es.caib.regweb.db</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+       </resource-ref>	
+       <security-role-ref>
+            <role-name>RWE_USUARI</role-name>
+            <role-link>RWE_USUARI</role-link>
+      </security-role-ref>
+
+    </session>
+
+        <session>
+      <description>Ejb para Oficios de Remision</description>
+      <ejb-name>OficioRemision</ejb-name>
+      <home>es.caib.regweb.OficioRemisionHome</home>
+      <remote>es.caib.regweb.OficioRemision</remote>
+      <ejb-class>es.caib.regweb.OficioRemisionBean</ejb-class>
+      <session-type>Stateful</session-type> 
+      <transaction-type>Bean</transaction-type>
+      <resource-ref>
+		<description>DataSource DB</description>
+		<res-ref-name>es.caib.regweb.db</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+       </resource-ref>	
+       <security-role-ref>
+            <role-name>RWE_USUARI</role-name>
+            <role-link>RWE_USUARI</role-link>
+      </security-role-ref>
+
+    </session>
+    <session>
+      <description>Ejb para Registro de Entrada</description>
+      <ejb-name>RegistroEntrada</ejb-name>
+      <home>es.caib.regweb.RegistroEntradaHome</home>
+      <remote>es.caib.regweb.RegistroEntrada</remote>
+      <ejb-class>es.caib.regweb.RegistroEntradaBean</ejb-class>
+      <session-type>Stateful</session-type> 
+      <transaction-type>Bean</transaction-type>
+      <resource-ref>
+		<description>DataSource DB</description>
+		<res-ref-name>es.caib.regweb.db</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+       </resource-ref>	
+       <security-role-ref>
+            <role-name>RWE_USUARI</role-name>
+            <role-link>RWE_USUARI</role-link>
+      </security-role-ref>
+      
+    <env-entry>
+      <description>Nombre del certificado a usar</description>
+      <env-entry-name>certName</env-entry-name>
+      <env-entry-type>java.lang.String</env-entry-type>
+      <env-entry-value>TITULAR DE CERTIFICADO DE PRUEBA</env-entry-value>
+    </env-entry>
+    
+    <env-entry>
+      <description>Content-Type usado en la firma de los acuses de recibo</description>
+      <env-entry-name>contentType</env-entry-name>
+      <env-entry-type>java.lang.String</env-entry-type>
+      <env-entry-value>application/x-caib-rebutregistre</env-entry-value>
+    </env-entry>
+    
+    <env-entry>
+      <description>ContraseÃ±a del certificado del registro</description>
+      <env-entry-name>certPassword</env-entry-name>
+      <env-entry-type>java.lang.String</env-entry-type>
+      <env-entry-value>12341234</env-entry-value>
+    </env-entry>
+    
+    <env-entry>
+      <description>Usuari d'enllac d'AS400 per VPO i CSS</description>
+      <env-entry-name>usuEnllac</env-entry-name>
+      <env-entry-type>java.lang.String</env-entry-type>
+      <env-entry-value>regtel</env-entry-value>
+    </env-entry>
+
+    <env-entry>
+      <description>Contrasenya usuari d'enllac d'AS400 per VPO i CSS</description>
+      <env-entry-name>passEnllac</env-entry-name>
+      <env-entry-type>java.lang.String</env-entry-type>
+      <env-entry-value>telreg</env-entry-value>
+    </env-entry>
+    </session>
+    
+    <session>
+      <description>Ejb para Registro de Salida</description>
+      <ejb-name>RegistroSalida</ejb-name>
+      <home>es.caib.regweb.RegistroSalidaHome</home>
+      <remote>es.caib.regweb.RegistroSalida</remote>
+      <ejb-class>es.caib.regweb.RegistroSalidaBean</ejb-class>
+      <session-type>Stateful</session-type>
+      <transaction-type>Bean</transaction-type>
+      <resource-ref>
+		<description>DataSource DB</description>
+		<res-ref-name>es.caib.regweb.db</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+       </resource-ref>	
+       <security-role-ref>
+            <role-name>RWE_USUARI</role-name>
+            <role-link>RWE_USUARI</role-link>
+      </security-role-ref>
+      
+    <env-entry>
+      <description>Usuari d'enllac d'AS400 per VPO i CSS</description>
+      <env-entry-name>usuEnllac</env-entry-name>
+      <env-entry-type>java.lang.String</env-entry-type>
+      <env-entry-value>regtel</env-entry-value>
+    </env-entry>
+
+    <env-entry>
+      <description>Contrasenya usuari d'enllac d'AS400 per VPO i CSS</description>
+      <env-entry-name>passEnllac</env-entry-name>
+      <env-entry-type>java.lang.String</env-entry-type>
+      <env-entry-value>telreg</env-entry-value>
+    </env-entry>
+    </session>
+    <session>
+      <description>Ejb para recuperar datos adicionales</description>
+      <ejb-name>Valores</ejb-name>
+      <home>es.caib.regweb.ValoresHome</home>
+      <remote>es.caib.regweb.Valores</remote>
+      <ejb-class>es.caib.regweb.ValoresBean</ejb-class>
+      <session-type>Stateless</session-type>
+      <transaction-type>Container</transaction-type>
+      <resource-ref>
+		<description>DataSource DB</description>
+		<res-ref-name>es.caib.regweb.db</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+       </resource-ref>	
+    </session>
+    <session>
+      <description>Ejb para Registro de Entrada</description>
+      <ejb-name>RegistroModificadoEntrada</ejb-name>
+      <home>es.caib.regweb.RegistroModificadoEntradaHome</home>
+      <remote>es.caib.regweb.RegistroModificadoEntrada</remote>
+      <ejb-class>es.caib.regweb.RegistroModificadoEntradaBean</ejb-class>
+      <session-type>Stateful</session-type> 
+      <transaction-type>Bean</transaction-type>
+      <resource-ref>
+		<description>DataSource DB</description>
+		<res-ref-name>es.caib.regweb.db</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+       </resource-ref>	
+       <security-role-ref>
+            <role-name>RWE_USUARI</role-name>
+            <role-link>RWE_USUARI</role-link>
+      </security-role-ref>
+      
+          <env-entry>
+      <description>Usuari d'enllac d'AS400 per VPO i CSS</description>
+      <env-entry-name>usuEnllac</env-entry-name>
+      <env-entry-type>java.lang.String</env-entry-type>
+      <env-entry-value>regtel</env-entry-value>
+    </env-entry>
+
+    <env-entry>
+      <description>Contrasenya usuari d'enllac d'AS400 per VPO i CSS</description>
+      <env-entry-name>passEnllac</env-entry-name>
+      <env-entry-type>java.lang.String</env-entry-type>
+      <env-entry-value>telreg</env-entry-value>
+    </env-entry>
+      
+    </session>
+    <session>
+      <description>Ejb para Registro de Salida</description>
+      <ejb-name>RegistroModificadoSalida</ejb-name>
+      <home>es.caib.regweb.RegistroModificadoSalidaHome</home>
+      <remote>es.caib.regweb.RegistroModificadoSalida</remote>
+      <ejb-class>es.caib.regweb.RegistroModificadoSalidaBean</ejb-class>
+      <session-type>Stateful</session-type> 
+      <transaction-type>Bean</transaction-type>
+      <resource-ref>
+		<description>DataSource DB</description>
+		<res-ref-name>es.caib.regweb.db</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+       </resource-ref>	
+       <security-role-ref>
+            <role-name>RWE_USUARI</role-name>
+            <role-link>RWE_USUARI</role-link>
+      </security-role-ref>
+      
+          <env-entry>
+      <description>Usuari d'enllac d'AS400 per VPO i CSS</description>
+      <env-entry-name>usuEnllac</env-entry-name>
+      <env-entry-type>java.lang.String</env-entry-type>
+      <env-entry-value>regtel</env-entry-value>
+    </env-entry>
+
+    <env-entry>
+      <description>Contrasenya usuari d'enllac d'AS400 per VPO i CSS</description>
+      <env-entry-name>passEnllac</env-entry-name>
+      <env-entry-type>java.lang.String</env-entry-type>
+      <env-entry-value>telreg</env-entry-value>
+    </env-entry>
+      
+    </session>
+    <session>
+      <description>Ejb para Registro Publicado</description>
+      <ejb-name>RegistroPublicadoEntrada</ejb-name>
+      <home>es.caib.regweb.RegistroPublicadoEntradaHome</home>
+      <remote>es.caib.regweb.RegistroPublicadoEntrada</remote>
+      <ejb-class>es.caib.regweb.RegistroPublicadoEntradaBean</ejb-class>
+      <session-type>Stateful</session-type> 
+      <transaction-type>Bean</transaction-type>
+      <resource-ref>
+		<description>DataSource DB</description>
+		<res-ref-name>es.caib.regweb.db</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+       </resource-ref>	
+       <security-role-ref>
+            <role-name>RWE_USUARI</role-name>
+            <role-link>RWE_USUARI</role-link>
+      </security-role-ref>
+    </session>
+
+   <session>
+      <description>Ejb para el acceso a Repros de usuario</description>
+      <ejb-name>ReproUsuario</ejb-name>
+      <home>es.caib.regweb.ReproUsuarioHome</home>
+      <remote>es.caib.regweb.ReproUsuario</remote>
+      <ejb-class>es.caib.regweb.ReproUsuarioBean</ejb-class>
+      <session-type>Stateless</session-type> 
+      <transaction-type>Container</transaction-type>
+      <resource-ref>
+		<description>DataSource DB</description>
+		<res-ref-name>es.caib.regweb.db</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+       </resource-ref>	
+       <security-role-ref>
+            <role-name>RWE_USUARI</role-name>
+            <role-link>RWE_USUARI</role-link>
+      </security-role-ref>
+    </session>
+
+
+  </enterprise-beans>
+
+<assembly-descriptor>
+        <security-role>
+            <description>Restricciones de acceso al EJB</description>
+            <role-name>RWE_USUARI</role-name>
+        </security-role>
+        
+        <method-permission>
+        <!-- Qui executa el job d'esborrar registres de log antics no té cap role! -->
+            <role-name>tothom</role-name>
+            <method>
+                <ejb-name>EsborraRegAnticsLopd</ejb-name>
+                <method-name>*</method-name>
+        	</method>
+        </method-permission>
+            
+        <method-permission>
+            <role-name>RWE_USUARI</role-name>
+            <method>
+                <ejb-name>ListadoRegAccesosEntrada</ejb-name>
+                <method-name>*</method-name>
+            </method>
+            <method>
+                <ejb-name>ListadoRegAccesosSortida</ejb-name>
+                <method-name>*</method-name>
+            </method> 
+            <method>
+                <ejb-name>ListadoRegAccesosVisat</ejb-name>
+                <method-name>*</method-name>
+            </method>
+            <method>
+                <ejb-name>ListadoOficios</ejb-name>
+                <method-name>*</method-name>
+            </method>
+            <method>
+                <ejb-name>ListadoRegOficiosEntrada</ejb-name>
+                <method-name>*</method-name>
+            </method>
+            <method>
+                <ejb-name>ListadoRegOficiosSalida</ejb-name>
+                <method-name>*</method-name>
+            </method>
+            <method>
+                <ejb-name>ListadoRegistrosEntrada</ejb-name>
+                <method-name>*</method-name>
+            </method>
+            <method>
+                <ejb-name>ListadoRegistrosSalida</ejb-name>
+                <method-name>*</method-name>
+            </method>
+            <method>
+                <ejb-name>ModeloRecibo</ejb-name>
+                <method-name>*</method-name>
+            </method>
+            <method>
+                <ejb-name>ModeloOficio</ejb-name>
+                <method-name>*</method-name>
+            </method>
+            <method>
+                <ejb-name>LineaOficioRemision</ejb-name>
+                <method-name>*</method-name>
+            </method>
+            <method>
+                <ejb-name>OficioRemision</ejb-name>
+                <method-name>*</method-name>
+            </method>
+            <method>
+                <ejb-name>RegistroEntrada</ejb-name>
+                <method-name>*</method-name>
+            </method>
+            <method>
+                <ejb-name>RegistroSalida</ejb-name>
+                <method-name>*</method-name>
+            </method>
+            <method>
+                <ejb-name>Valores</ejb-name>
+                <method-name>*</method-name>
+            </method>
+            <method>
+                <ejb-name>RegistroModificadoEntrada</ejb-name>
+                <method-name>*</method-name>
+            </method>
+            <method>
+                <ejb-name>RegistroModificadoSalida</ejb-name>
+                <method-name>*</method-name>
+            </method>
+            <method>
+                <ejb-name>RegistroPublicadoEntrada</ejb-name>
+                <method-name>*</method-name>
+            </method>
+            <method>
+                <ejb-name>ReproUsuario</ejb-name>
+                <method-name>*</method-name>
+            </method>
+        </method-permission>
+        
+        <method-permission>
+        <!-- Qui executa el job d'esborrar registres de log antics no té cap role! -->
+            <role-name>RWE_ADMIN</role-name>
+            <method>
+                <ejb-name>Admin</ejb-name>
+                <method-name>*</method-name>
+        	</method>
+        </method-permission>
+        
+        
+</assembly-descriptor> 
+
+</ejb-jar>
+

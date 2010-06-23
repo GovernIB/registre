@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+
+    <session-factory name="es.caib.regweb.hibernate.SessionFactory">
+      <property name="hibernate.connection.datasource">java:/es.caib.regweb.db</property>
+      <property name="hibernate.query.substitutions">yes</property>
+
+      <property name="hibernate.connection.release_mode">auto</property>
+      <!-- <property name="hibernate.transaction.factory_class">org.hibernate.transaction.JTATransactionFactory</property> 
+      <property name="hibernate.transaction.manager_lookup_class">org.hibernate.transaction.JBossTransactionManagerLookup</property> -->
+    	
+    	<property name="hibernate.dialect">${hibernate.dialect}</property>
+      <property name="hibernate.bytecode.use_reflection_optimizer">true</property>
+      <property name="hibernate.show_sql">false</property>
+    	
+   		<mapping class="es.caib.regweb.model.AgrupacionGeografica"/>
+    	<mapping class="es.caib.regweb.model.AgrupacionGeograficaId"/>
+    	<mapping class="es.caib.regweb.model.Autorizacion"/>
+  		<mapping class="es.caib.regweb.model.AutorizacionId"/>
+  		<mapping class="es.caib.regweb.model.BloqueoDisquete"/>
+    	<mapping class="es.caib.regweb.model.BloqueoDisqueteId"/>
+  		<mapping class="es.caib.regweb.model.CodigoPostal"/>
+  		<mapping class="es.caib.regweb.model.CodigoPostalId"/>
+  		<mapping class="es.caib.regweb.model.Contador"/>
+  		<mapping class="es.caib.regweb.model.ContadorId"/>
+  		<mapping class="es.caib.regweb.model.Disquete"/>
+  		<mapping class="es.caib.regweb.model.DisqueteId"/>
+  		<mapping class="es.caib.regweb.model.EntidadRemitente"/>
+  		<mapping class="es.caib.regweb.model.EntidadRemitenteId"/>
+  		<mapping class="es.caib.regweb.model.Entrada"/>
+  		<mapping class="es.caib.regweb.model.Entrada060"/>
+  		<mapping class="es.caib.regweb.model.Entrada060Id"/>
+  		<mapping class="es.caib.regweb.model.EntradaId"/>
+  		<mapping class="es.caib.regweb.model.EntradaOficinaFisica"/>
+  		<mapping class="es.caib.regweb.model.EntradaOficinaFisicaId"/>
+  		<mapping class="es.caib.regweb.model.Idioma"/>
+  		<mapping class="es.caib.regweb.model.Libro"/>
+  		<mapping class="es.caib.regweb.model.LibroId"/>
+  		<mapping class="es.caib.regweb.model.LineaOficioRemision"/>
+  		<mapping class="es.caib.regweb.model.LineaOficioRemisionId"/>
+  		<mapping class="es.caib.regweb.model.LogEntradaLopd"/>
+  		<mapping class="es.caib.regweb.model.LogEntradaLopdId"/>
+  		<mapping class="es.caib.regweb.model.LogModificacionLopd"/>
+  		<mapping class="es.caib.regweb.model.LogModificacionLopdId"/>
+  		<mapping class="es.caib.regweb.model.LogSalidaLopd"/>
+  		<mapping class="es.caib.regweb.model.LogSalidaLopdId"/>
+  		<mapping class="es.caib.regweb.model.ModeloOficio"/>
+  		<mapping class="es.caib.regweb.model.ModeloRecibo"/>
+  		<mapping class="es.caib.regweb.model.Modificacion"/>
+  		<mapping class="es.caib.regweb.model.ModificacionId"/>
+  		<mapping class="es.caib.regweb.model.Municipio060"/>
+  		<mapping class="es.caib.regweb.model.NumeroCorreo"/>
+  		<mapping class="es.caib.regweb.model.NumeroCorreoId"/>
+  		<mapping class="es.caib.regweb.model.Oficina"/>
+  		<mapping class="es.caib.regweb.model.OficinaFisica"/>
+  		<mapping class="es.caib.regweb.model.OficinaFisicaHistorico"/>
+  		<mapping class="es.caib.regweb.model.OficinaFisicaHistoricoId"/>
+  		<mapping class="es.caib.regweb.model.OficinaFisicaId"/>
+  		<mapping class="es.caib.regweb.model.OficinaHistorico"/>
+  		<mapping class="es.caib.regweb.model.OficinaHistoricoId"/>
+  		<mapping class="es.caib.regweb.model.OficinaOrganismo"/>
+  		<mapping class="es.caib.regweb.model.OficinaOrganismoId"/>
+  		<mapping class="es.caib.regweb.model.OficinaOrganismoNoRemision"/>
+  		<mapping class="es.caib.regweb.model.OficinaOrganismoNoRemisionId"/>
+  		<mapping class="es.caib.regweb.model.OficioRemision"/>
+  		<mapping class="es.caib.regweb.model.OficioRemisionId"/>
+  		<mapping class="es.caib.regweb.model.Organismo"/>
+  		<mapping class="es.caib.regweb.model.OrganismoHistorico"/>
+  		<mapping class="es.caib.regweb.model.OrganismoHistoricoId"/>
+  		<mapping class="es.caib.regweb.model.Publicacion"/>
+  		<mapping class="es.caib.regweb.model.PublicacionId"/>
+  		<mapping class="es.caib.regweb.model.Repro"/>
+  		<mapping class="es.caib.regweb.model.ReproId"/>
+  		<mapping class="es.caib.regweb.model.Salida"/>
+  		<mapping class="es.caib.regweb.model.SalidaId"/>
+  		<mapping class="es.caib.regweb.model.SalidaOficinaFisica"/>
+  		<mapping class="es.caib.regweb.model.SalidaOficinaFisicaId"/>
+  		<mapping class="es.caib.regweb.model.TipoAgrupacionGeografica"/>
+  		<mapping class="es.caib.regweb.model.TipoAgrupacionGeograficaId"/>
+  		<mapping class="es.caib.regweb.model.TipoDocumento"/>
+  		<mapping class="es.caib.regweb.model.TipoDocumentoId"/>
+   		<mapping class="es.caib.regweb.model.Visado"/>
+    </session-factory>
+    
+</hibernate-configuration>

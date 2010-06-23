@@ -1,0 +1,344 @@
+body, table, td {font-family: verdana,arial,sans-serif; font-size: 11px}
+
+
+.par {background-color: white}
+
+.impar {background-color: #DDDDFF}
+
+.ficha {font-size: 14px}
+
+.cabeceraTabla {
+        font-size: 12px;
+        font-weight: bold;
+}
+
+.titulo {font-weight: bold; font-size: 16px; text-align: center}
+
+.bordeEntrada{
+	border-style: solid;
+	border-color: #0000FF;
+	border-top-width: 2px;
+	border-bottom-width: 2px;
+	border-right-width: 2px;
+	border-left-width: 2px;
+	}
+
+.pasoEntrada {
+	border-style: solid;
+	border-color: #0000FF;
+	border-top-width: 2px;
+	border-bottom-width: 2px;
+	border-right-width: 2px;
+	border-left-width: 2px;
+	vertical-align: middle;
+	text-align:center;
+	margin: 50px auto;
+	padding:40px 10px 60px 10px;
+	width:60%;
+}
+
+.bordeSalida{
+	border-style: solid;
+	border-color: #A52A2A;
+	border-top-width: 2px;
+	border-bottom-width: 2px;
+	border-right-width: 2px;
+	border-left-width: 2px;
+}
+
+.pasoSalida {
+	border-style: solid;
+	border-color: #A52A2A;
+	border-top-width: 2px;
+	border-bottom-width: 2px;
+	border-right-width: 2px;
+	border-left-width: 2px;
+	vertical-align: middle;
+	text-align:center;
+	margin: 50px auto;
+	padding:40px 10px 60px 10px;
+	width:60%;
+}
+
+#menuEntrada {
+		border-style: solid;
+		border-color: #0000FF;
+		border-top-width: 2px;
+		border-bottom-width: 2px;
+		border-right-width: 2px;
+		border-left-width: 2px;
+		background-color: white
+		/*
+	border: 0px solid #000;
+	margin: 2em;
+	padding: 5px;
+	margin-left: 0;
+	padding-left: 1em;*/
+}
+
+#menuEntrada li {
+	margin: 0;
+	padding: 15px;
+
+}
+
+#menuSortida {
+	border-style: solid;
+		border-color: #A52A2A;
+		border-top-width: 2px;
+		border-bottom-width: 2px;
+		border-right-width: 2px;
+		border-left-width: 2px;
+		background-color: white
+}
+
+#menuSortida li {
+	margin: 0;
+	padding: 15px;
+
+}
+
+#menuDocAdm {
+		border-style: solid;
+		border-color: #006633;
+		border-top-width: 2px;
+		border-bottom-width: 2px;
+		border-right-width: 2px;
+		border-left-width: 2px;
+		background-color: white;
+		width: 20%;
+		margin-left: auto;
+		margin-right: auto;
+		text-align: left;
+		padding:5px;
+}
+
+#menuDocAdm li {
+	margin: 0;
+	padding-left: 15px;
+	padding-right: 10px;
+	padding-top: 10px;
+	padding-bottom: 10px;		
+}
+
+#menuDocAdm ul {
+	margin: 0;
+	padding: 25px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+#menuDocAdm ol {
+	margin: 0;
+	padding: 25px;
+	padding-top: 10px;
+	padding-left: 30px;
+}
+
+
+#menuDocAdm * {
+	margin: 0;
+	padding: 0;
+}
+
+.anchorAsSubmitButton {
+		border-style: solid;
+		border-color: #D4D0C8;
+		border-top-width: 2px;
+		border-bottom-width: 2px;
+		border-right-width: 2px;
+		border-left-width: 2px;
+		background-color: #D4D0C8;
+		margin-left: auto;
+		margin-right: auto;
+		text-align: center;
+		padding:0;
+}
+
+.recuadroEntradas
+		{
+		border-style: solid;
+		border-color: #0000FF;
+		border-top-width: 2px;
+		border-bottom-width: 2px;
+		border-right-width: 2px;
+		border-left-width: 2px;
+		background-color: white}
+
+.recuadroSalidas
+		{border-style: solid;
+		border-color: #A52A2A;
+		border-top-width: 2px;
+		border-bottom-width: 2px;
+		border-right-width: 2px;
+		border-left-width: 2px;
+		background-color: white}
+
+.recuadroEntradas td
+/*.cellaEntrades*/
+{ 
+	border-width: 1px 1px 1px 1px;
+	padding: 1px 1px 1px 1px;
+	border-style: solid solid solid solid;
+	border-color: #0000FF;
+	background-color: white;
+	-moz-border-radius: 0px 0px 0px 0px;
+}
+
+.recuadroSalidas td /*.cellaSortides*/
+{ 
+	border-width: 1px 1px 1px 1px;
+	padding: 1px 1px 1px 1px;
+	border-style: solid solid solid solid;
+	border-color: #A52A2A;
+	background-color: white;
+	-moz-border-radius: 0px 0px 0px 0px;
+}
+
+.recuadroDocumentacio{
+		border-style: solid;
+		border-color: #006633;
+		border-top-width: 2px;
+		border-bottom-width: 2px;
+		border-right-width: 2px;
+		border-left-width: 2px;
+		background-color: white;
+		margin-left: auto;
+		margin-right: auto;
+		text-align: left;
+}
+		
+.recuadroErrors
+		{border-style: solid;
+		border-color: #FF0000;
+		border-top-width: 2px;
+		border-bottom-width: 2px;
+		border-right-width: 2px;
+		border-left-width: 2px;
+		background-color: white}
+
+
+.errorcampo {color: #FF0000;
+             }
+
+.menu {font-size: 12px}
+
+.botonFormulario {
+      font-size: 14px;
+      font-family: Verdana,Helvetica;
+      font-weight: bold;
+      color: black;
+      background: #E2E3E7;
+      border-style: solid;
+      border: 1px;
+      height: 30px;
+      border-top: #D4D6DB solid 3px;
+      border-bottom: #606063 solid 3px;
+      border-right: #606063 solid 3px;
+      border-left: #606063 solid 3px;
+}
+
+.errorSinRegistros {
+      font-weight: bold;
+      font-size: 14px;
+      color: red;
+      }
+
+.repro {
+      border-top: solid 2px;
+      border-bottom: solid 2px;
+      border-right: solid 2px;
+      border-left: solid 2px;
+      background: white;
+      font-size: 12px;
+}      
+
+/* Nous estils (2007) */ 
+
+#capsal { 
+	background:url(../imagenes/capsal/fondo.gif) repeat-x #ff8400; 
+	color:#fff; 
+	border-bottom:5px solid #be6200; 
+}
+#capsal a { float:right; margin-right:1em; display:block; padding:1em 2em 1em 0; background:url(../imagenes/aplicacio/marcsup_tornar.gif) no-repeat right 1em; color:#fff; font-weight:bold; }
+#capsal img { float:left; }
+#capsal h1 { background:url(../imagenes/aplicacio/marcsup_titol_ico.gif) no-repeat; margin:0 0 0 200px; padding:.5em 0 .6em 75px; font-size:1.5em; }
+
+
+#peu { 
+		padding-top:1em;
+		height:3.5em; 
+		color:#000; 
+		border-top:.3em solid #ff8400; 
+		background:url(../imagenes/peu/fondo_peu.gif) repeat-x; 
+}
+
+#peu img#logoAD { 
+	float:left; 
+	position:relative; 
+	top:-0.5em; 
+	margin-left:1em; 
+}
+
+
+#capsalUsuari { 
+		background-color:#efefef; 
+		padding:.3em 1em .4em 1em; 
+		border-bottom:1px solid #be6200; 
+		color:#000; 
+		display:block; 
+}
+
+#capsalUsuari a { 
+			color:#00548e; 
+}
+
+ul#mollaPa { 
+		position:relative; 
+		margin:0; 
+		padding-left:.7em; 
+		line-height:2em; 
+		border-bottom:1px solid #e3e3e3; 
+}
+ul#mollaPa li { 
+		list-style:none; 
+		display:inline; 
+		padding-right:1.3em; 
+		background:url(../imagenes/mollapa/flecha.gif) no-repeat right center #fff; 
+}
+
+
+#distance { 
+		width:1px;
+		height:50%;
+		background-color:#fc6;
+		margin-bottom:-13.75em; /* half of container's height */
+		float:left;
+}
+
+.RecuadreCentrat {
+	width: 500px; 
+	padding: 10px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	margin-right: auto;
+	margin-left: auto; 	
+	/* opera does not like 'margin:20px auto' */
+	text-align:left; 
+	/* part 2 of 2 centering hack */
+	width: 400px; /* ie5win fudge begins */
+	voice-family: "\"}\"";
+	voice-family:inherit;
+	/* width: 370px; */
+	}
+	
+#RecuadreCentrat_old {
+	top: 50%;
+	left: 50%;
+	width:375px;
+	height:125px;
+	margin-top: -62px; /*set to a negative number 1/2 of your height*/
+	margin-left: -188px; /*set to a negative number 1/2 of your width*/
+	overflow: auto;
+}
+		
