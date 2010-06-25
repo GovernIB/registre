@@ -357,7 +357,7 @@
                     <a href="javascript:lee_cookie();"><img src="imagenes/repro.gif"  alt="Llegir Repro" border="0" title="Llegir Repro"></a>
                 </td>
                 <td  width="5%">
-                    <a href="expImpRepro.jsp?tipusCookie=RWS"><img src="imagenes/exportar.gif"  alt="Exportar Repro" border="0" title="Exportar Repro"></a>
+                    <a href="<c:url value='/repro/expImpRepro.jsp?tipusCookie=RWS' />"><img src="imagenes/exportar.gif"  alt="Exportar Repro" border="0" title="Exportar Repro"></a>
                 </td>
                 <td  width="5%">
                     <a href="javascript:importar_cookie();"><img src="imagenes/importar.gif"  alt="<fmt:message key='importar_repro'/>" border="0" title="<fmt:message key='importar_repro'/>"></a>

@@ -33,6 +33,10 @@
 		<url-pattern>/errorLogin.jsp</url-pattern>
 	</decorator-mapping>	
 	<decorator-mapping>
+		<decorator-name>none</decorator-name>
+		<url-pattern>/repro/*</url-pattern>
+	</decorator-mapping>	
+	<decorator-mapping>
 		<decorator-name>admin</decorator-name>
 		<url-pattern>/admin/controller.do</url-pattern>
 	</decorator-mapping>
