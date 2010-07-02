@@ -8,6 +8,8 @@ package es.caib.regweb.webapp.servlet;
 
 import java.io.*;
 import java.net.*;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -122,7 +124,9 @@ public class PdfServlet extends HttpServlet {
             // step 3: we open the document
             document.open();
             
-            
+            Locale localeLang = Locale.getDefault();
+            ResourceBundle messages = ResourceBundle.getBundle("messages", localeLang);
+
             // step 4: we grab the ContentByte and do some stuff with it
             PdfContentByte cb = writer.getDirectContent();
             
@@ -137,19 +141,19 @@ public class PdfServlet extends HttpServlet {
             cb.setFontAndSize(bf, 10);
             // 
             cb.setTextMatrix(x,y);
-            cb.showText(checkUTF("GOVERN DE LES ILLES BALEARS"));
+            cb.showText(checkUTF( messages.getString("pdf.titol") ));
             y=y-13;
             cb.setTextMatrix(x,y);
             cb.showText(nom_oficina);
             y=y-13;
             cb.setTextMatrix(x,y);
-            cb.showText(checkUTF("REGISTRE: "+es));
+            cb.showText(checkUTF(messages.getString("pdf.registre") + " " + es));
             y=y-13;
             cb.setTextMatrix(x,y);
-            cb.showText(checkUTF("N\u00FAm: "+numeroEntrada+"/"+anoEntrada));
+            cb.showText(checkUTF(messages.getString("pdf.num") + " " + numeroEntrada + "/" + anoEntrada));
             y=y-13;
             cb.setTextMatrix(x,y);
-            cb.showText(checkUTF("Data: "+dataEntrada));
+            cb.showText(checkUTF(messages.getString("pdf.data") + " " + dataEntrada));
          // we tell the contentByte, we've finished drawing text
             
             if(auto_print.equals("si")){

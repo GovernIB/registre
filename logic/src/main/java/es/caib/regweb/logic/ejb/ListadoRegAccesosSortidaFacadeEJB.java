@@ -254,8 +254,9 @@ public abstract class ListadoRegAccesosSortidaFacadeEJB extends HibernateEJB {
             //      " order by log.id.anyo, log.id.numero, log.id.fecha, log.id.hora" :
             //      " order by log.id.fecha, log.id.hora, log.id.anyo, log.id.numero ");
 
-			String sentenciaSql="SELECT * FROM BZSALPD LEFT JOIN BAGECOM ON FAACAGCO=FZUCAGCO " +
-			"WHERE FZUCAGCO>=? AND FZUCAGCO<=? " +
+			String sentenciaSql="SELECT FZUTIPAC, FZUCUSU, FZUDATAC, FZUHORAC, FZUNUMEN, FZUANOEN, FZUCAGCO, FAADAGCO " +
+			" FROM BZSALPD LEFT JOIN BAGECOM ON FAACAGCO=FZUCAGCO " +
+			" WHERE FZUCAGCO>=? AND FZUCAGCO<=? " +
 			(!fechaDesde.equals("") ? " AND FZUDATAC>=? AND FZUDATAC<=? " : "" ) +
 			(!numRegistre.equals("") ? " AND FZUNUMEN=?" : "" )+
 			(!anyRegistre.equals("") ? " AND FZUANOEN=?" : "" )+

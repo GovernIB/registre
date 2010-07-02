@@ -245,8 +245,9 @@ public abstract class ListadoRegAccesosVisatFacadeEJB extends HibernateEJB {
             //      " order by log.id.anyo, log.id.numero, log.id.fecha, log.id.hora" :
             //      " order by log.id.fecha, log.id.hora, log.id.anyo, log.id.numero ");
 
-			String sentenciaSql="SELECT * FROM BZMOLPD LEFT JOIN BAGECOM ON FAACAGCO=FZVCAGCO " +
-			"WHERE FZVCAGCO>=? AND FZVCAGCO<=? " +
+			String sentenciaSql="SELECT FZVTIPAC, FZVCUSU, FZVDATAC, FZVHORAC, FZVNUMEN, FZVANOEN, FZVCAGCO, FZVCENSA, FZVHMODI, FAADAGCO " +
+			" FROM BZMOLPD LEFT JOIN BAGECOM ON FAACAGCO=FZVCAGCO " +
+			" WHERE FZVCAGCO>=? AND FZVCAGCO<=? " +
 			(!fechaDesde.equals("") ? " AND FZVDATAC>=? AND FZVDATAC<=?  " : "" ) +
 			(!numRegistre.equals("") ? " AND FZVNUMEN=?" : "" )+
 			(!anyRegistre.equals("") ? " AND FZVANOEN=?" : "" )+

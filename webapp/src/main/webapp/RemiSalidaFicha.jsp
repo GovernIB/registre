@@ -62,9 +62,11 @@ String oficio=request.getParameter("oficio");
             if (cadena==null || cadena=="") {
             return false;
             }
-        	oficioDescartaForm.motius.value=cadena;
+            var form = document.getElementById("oficioDescartaForm");
+
+        	form.motius.value=cadena;
             
-            oficioDescartaForm.submit();
+            form.submit();
         }
 		</script>
     </head>
@@ -276,7 +278,7 @@ String oficio=request.getParameter("oficio");
                                 </form>
                             </td>
                             <td>
-                               <form name="oficioDescartaForm" action="RemiSalidaDescartar.jsp" method="post" >
+                               <form name="oficioDescartaForm" id="oficioDescartaForm" action="RemiSalidaDescartar.jsp" method="post" >
     				            <input type="hidden" name="oficina" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(codOficina)%>">
             				    <input type="hidden" name="numeroSalida" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(numeroSalida)%>">
                 				<input type="hidden" name="ano" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(ano)%>">

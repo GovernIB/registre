@@ -151,22 +151,22 @@
 <tr>
 	<th><fmt:message key='codi_tipus_document'/></th>
 	<th><fmt:message key='descripcio_tipus_document'/></th>
-  <!-- <th><fmt:message key='data_baixa_2'/></th> -->
+    <th><fmt:message key='data_baixa_2'/></th>
 </tr>
 <tr>
 	<td><input type="text" name="codTipusDoc" readonly="true"  id="codTipusDoc" size="2" maxlength="2" value="<c:out escapeXml="true" value='${tipusDocuments.codiTipusDoc}'/>" style="width: 23px;"/></td>
 	<td>
 	  <input type="text" name="descTipusDoc" id="descTipusDoc" value="<c:out escapeXml="true" value='${tipusDocuments.descTipusDoc}'/>" size="30" maxlength="30" style="width: 225px;"/>
-    <input type="hidden" name="dataBaixa" id="dataBaixa" value="<c:out escapeXml="true" value='${tipusDocuments.dataBaixa}'/>" />
+    <%--<input type="hidden" name="dataBaixa" id="dataBaixa" value="<c:out escapeXml="true" value='${tipusDocuments.dataBaixa}'/>" />--%>
 	</td>
-  <!-- <td><input type="text" name="dataBaixa" id="dataBaixa" <c:out escapeXml="true" value='${readonly}'/> value="<c:out escapeXml="true" value='${tipusDocuments.dataBaixa}'/>" size="10" maxlength="10" style="width: 70px;"/></td> -->
+    <td><input type="text" name="dataBaixa" id="dataBaixa" <c:out escapeXml="true" value='${readonly}'/> value="<c:out escapeXml="true" value='${tipusDocuments.dataBaixa}'/>" size="10" maxlength="10" style="width: 70px;"/></td>
 </tr>
 <tr>
 	<td align="center" colspan="3"><input type="submit" value="<fmt:message key='desa'/>"/></td>
 </tr>
 
+</table>
 </form>
-</table>	
 </div>
 
 </c:otherwise>

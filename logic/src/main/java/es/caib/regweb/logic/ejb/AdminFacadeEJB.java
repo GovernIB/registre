@@ -1944,7 +1944,7 @@ public abstract class AdminFacadeEJB extends HibernateEJB {
 		Session session = getSession();
 		
 		try {
-			
+			if (dataBaixa==null || dataBaixa.trim().equals("")) dataBaixa="0";
 			TipoDocumento tp = new TipoDocumento(new TipoDocumentoId(codTipDoc, Integer.valueOf(dataBaixa)), descTipDoc);
 			session.save(tp);
 			log.debug("Insertat ("+codTipDoc+","+descTipDoc+","+dataBaixa+") (update count=1) a TipoDocumento)");

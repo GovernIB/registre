@@ -1846,7 +1846,7 @@ public class ControllerAdminServlet extends UtilWebServlet {
         		    // Si l'organisme existeix...	
         			existeTipDoc = true;		
         			valorAccio="actualitzaTipusDoc";
-        			tipusDocuments.setDataBaixa("");
+        			if (tipusDocuments.getDataBaixa()==null || tipusDocuments.getDataBaixa().equals("0")) tipusDocuments.setDataBaixa("");
                 } else {
         			readonly="readonly=\"true\""; //Quan es dona d'alta no es pot modificar la data de baixa!
         			valorAccio="altaTipusDoc";

@@ -24,27 +24,45 @@ session.setAttribute("listadoOficiosEntrada",parametros);
     <script src="jscripts/TAO.js"></script>
         <script>
             function confirmaDescarta() {
+
+                var valor = false;
+
+                var llistaElementsFormAU = document.getElementById("ofimul").elements;
+
+                for (var i=0; i<llistaElementsFormAU.length ;i++) {
+                    //window.alert('Element '+i+' '+llistaElementsFormAU[i].name);
+                    if ( llistaElementsFormAU[i].name == "registre" ){
+                        valor = valor || llistaElementsFormAU[i].checked;
+                    }
+                }
+                if (!valor) {
+                    alert("<fmt:message key='error_ofici.ha_de_seleccionar_un_registre' />");
+                    return false;
+                }
+
+
                 var cadena=prompt("<fmt:message key='esta_segur_anular_oficis_motius'/>","");
                 if (cadena==null || cadena=="") {
                 return false;
                 }
 
-        		var llistaElementsFormAU = document.getElementById("ofimul").elements;
+                var llistaElementsFormAU = document.getElementById("ofimul").elements;
+                var form = document.getElementById("oficioDescartaForm");
 
 
         		for (var i=0; i<llistaElementsFormAU.length ;i++) {
         			//window.alert('Element '+i+' '+llistaElementsFormAU[i].name); 
         			if ( llistaElementsFormAU[i].name == "registre" ){
         				if (llistaElementsFormAU[i].checked) {
-        	            	if (oficioDescartaForm.registre.value!="") oficioDescartaForm.registre.value += "|";
-        	            	oficioDescartaForm.registre.value += llistaElementsFormAU[i].value;
+        	            	if (form.registre.value!="") form.registre.value += "|";
+        	            	form.registre.value += llistaElementsFormAU[i].value;
         				}
         			}
         		}
                         
-            	oficioDescartaForm.motius.value=cadena;
+            	form.motius.value=cadena;
                 
-                oficioDescartaForm.submit();
+                form.submit();
             }
 		</script>
     <script>
@@ -104,19 +122,19 @@ session.setAttribute("listadoOficiosEntrada",parametros);
 			}
 		}
 		if (!valor) {
-			alert("Ha de seleccionar al menys un registre.");
+			alert("<fmt:message key='error_ofici.ha_de_seleccionar_un_registre' />");
 			return false;
 		}
 		if (!mismodestinatario) {
-			alert("Els registres han de tenir el mateix destinatari.");
+			alert("<fmt:message key='error_ofici.mateix_destinatari' />");
 			return false;
 		}
 		if (!mismoorigen) {
-			alert("Els registres han de ser de la mateixa oficina.");
+			alert("<fmt:message key='error_ofici.mateixa_oficina' />");
 			return false;
 		}
 		if (!mismoorigenfisico) {
-			alert("Els registres han de ser de la mateixa oficina fisica.");
+			alert("<fmt:message key='error_ofici.mateixa_oficina_fisica' />");
 			return false;
 		}
 		document.getElementById("ofimul").submit();
@@ -298,7 +316,7 @@ if (registros.size()==0) {
                             </p>
                         </td>
                         <td>
-                           <form name="oficioDescartaForm" action="RemiEntradaDescartarMultiple.jsp" method="post" >
+                           <form name="oficioDescartaForm" id="oficioDescartaForm" action="RemiEntradaDescartarMultiple.jsp" method="post" >
 				            <input type="hidden" name="registre" value="">
             				<input type="hidden" name="motius" value=""/>
                             <!-- Boton de enviar -->          

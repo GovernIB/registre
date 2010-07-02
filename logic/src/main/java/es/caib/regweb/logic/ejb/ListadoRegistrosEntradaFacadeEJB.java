@@ -126,13 +126,13 @@ public abstract class ListadoRegistrosEntradaFacadeEJB extends HibernateEJB {
 			try {
 				int codigoDestinatari = Integer.parseInt(codiDestinatari);
 
-				String sentenciaHql="SELECT * FROM BORGANI WHERE FAXCORGA=? ";
+				String sentenciaHql="SELECT FAXCORGA FROM BORGANI WHERE FAXCORGA=? ";
 				q=session.createSQLQuery(sentenciaHql); //, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 				q.setInteger(0,Integer.valueOf(codiDestinatari));
 				rs=q.scroll(ScrollMode.SCROLL_INSENSITIVE);
 				
 				if (!rs.next()) {
-					sentenciaHql="SELECT * FROM BHORGAN WHERE FHXCORGA=? ";
+					sentenciaHql="SELECT FHXCORGA FROM BHORGAN WHERE FHXCORGA=? ";
 					q=session.createSQLQuery(sentenciaHql); //, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 					q.setInteger(0,Integer.valueOf(codiDestinatari));
 					rs=q.scroll(ScrollMode.SCROLL_INSENSITIVE);
@@ -498,22 +498,24 @@ public abstract class ListadoRegistrosEntradaFacadeEJB extends HibernateEJB {
 			String texto="";
 			if (numero>0) {
 				if (accion.equals("R")) {
-					texto=" AND FZANUMEN<?";
+					texto=" AND FZANUMEN<? ";
 				} else {
-					texto=" AND FZANUMEN>?";
+					texto=" AND FZANUMEN>? ";
 				}
 			} else {
 				texto="";
 			}
-			String sentenciaHql="SELECT * FROM BZENTRA LEFT JOIN BAGECOM ON FAACAGCO=FZACAGCO " +
-			"LEFT JOIN BZENTID ON FZACENTI=FZGCENTI AND FZGNENTI=FZANENTI " +
-			"LEFT JOIN BORGANI ON FAXCORGA=FZACORGA " +
-			"LEFT JOIN BZTDOCU ON FZICTIPE=FZACTIPE " +
-			"LEFT JOIN BZIDIOM ON FZACIDI=FZMCIDI " +
-			"LEFT JOIN BAGRUGE ON FZACTAGG=FABCTAGG AND FZACAGGE=FABCAGGE " +
-			"LEFT JOIN BZAUTOR ON FZHCUSU=? AND FZHCAGCO=FZACAGCO " +
-			"WHERE FZHCAUT=? AND FZACAGCO=?" +
-			(!any.trim().equals("") ? "AND FZAANOEN>=?" : "") +
+			String sentenciaHql="SELECT FZAANOEN, FZANUMEN, FZACAGCO, FAADAGCO, FZAFDOCU, FZAFENTR, " +
+            " FZGCENTI, FZAREMIT, FZGDENT2, FAXDORGR, FZIDTIPE, FZMDIDI, FZAENULA " +
+            " FROM BZENTRA LEFT JOIN BAGECOM ON FAACAGCO=FZACAGCO " +
+			" LEFT JOIN BZENTID ON FZACENTI=FZGCENTI AND FZGNENTI=FZANENTI " +
+			" LEFT JOIN BORGANI ON FAXCORGA=FZACORGA " +
+			" LEFT JOIN BZTDOCU ON FZICTIPE=FZACTIPE " +
+			" LEFT JOIN BZIDIOM ON FZACIDI=FZMCIDI " +
+			" LEFT JOIN BAGRUGE ON FZACTAGG=FABCTAGG AND FZACAGGE=FABCAGGE " +
+			" LEFT JOIN BZAUTOR ON FZHCUSU=? AND FZHCAGCO=FZACAGCO " +
+			" WHERE FZHCAUT=? AND FZACAGCO=? " +
+			(!any.trim().equals("") ? " AND FZAANOEN>=? " : "") +
 			texto +
 			" ORDER BY FZACAGCO, FZAANOEN, FZANUMEN " +
 			(accion.equals("R") ? "DESC" : "ASC") ;
