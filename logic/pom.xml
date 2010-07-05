@@ -134,6 +134,16 @@
         <artifactId>maven-ejb-plugin</artifactId>
         <version>2.2</version>
         <configuration>
+          <generateClient>true</generateClient>
+          <clientIncludes>
+              <clientInclude>es/caib/regweb/logic/interfaces/**/*.class</clientInclude>
+              <clientInclude>es/caib/regweb/logic/helper/**/*.class</clientInclude>
+          </clientIncludes>
+          <clientExcludes>
+              <clientExclude>es/caib/regweb/logic/helper/Base64.class</clientExclude>
+              <clientExclude>es/caib/regweb/logic/helper/Conf.class</clientExclude>
+              <clientExclude>es/caib/regweb/logic/helper/Helper.class</clientExclude>
+          </clientExcludes>
           <archive>
             <manifestEntries>
               <Class-Path>
