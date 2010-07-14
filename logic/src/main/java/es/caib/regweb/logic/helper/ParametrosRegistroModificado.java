@@ -1,8 +1,9 @@
 package es.caib.regweb.logic.helper;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class ParametrosRegistroModificado {
+public class ParametrosRegistroModificado implements Serializable {
 	
     private int anoEntrada;
     private int anoSalida;
@@ -35,6 +36,7 @@ public class ParametrosRegistroModificado {
 	private String entidad1Old="";
 	private int entidad2Old=0;
 	private String password="";
+    private boolean visado=false;
 	
 	private int oficina;
 	
@@ -65,6 +67,17 @@ public class ParametrosRegistroModificado {
     public void setDestinatario(int destinatario) {
 		this.destinatario=destinatario;
 	}
+
+
+    public void setVisado(boolean es_visado) {
+		this.visado=es_visado;
+	}
+
+
+    public boolean getVisado() {
+		return visado;
+	}
+
     public int getDestinatario() {
 		return destinatario;
 	}

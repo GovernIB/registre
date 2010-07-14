@@ -88,14 +88,25 @@ if (motivo.equals("")) {
     registro.setAltresNuevo(request.getParameter("altres").trim());
     registro.setComentarioNuevo(request.getParameter("comentario"));
 }
-boolean ok=regsal.validar(registro);
+
+
+
+           registro=regsal.validar(registro);
+           boolean ok=registro.getValidado();
+
 if (!ok){
     request.setAttribute("registroSalida",registro);
 %>
         <jsp:forward page="ModiSalida.jsp"/>
 <% } else { 
-    
-    boolean actualizado=regsal.actualizar(registro);
+
+
+
+    registro=regsal.actualizar(registro);
+
+    boolean actualizado=registro.getregistroActualizado();
+
+
     if (!actualizado) {
         request.setAttribute("registroSalida",registro);
 %>

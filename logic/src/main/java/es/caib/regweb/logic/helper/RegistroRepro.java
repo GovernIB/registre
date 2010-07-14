@@ -1,12 +1,14 @@
 package es.caib.regweb.logic.helper;
 
+import java.io.Serializable;
+
 /**
  * Classe per desar la informació de les repros
  * @author  Victor Herrera
  * @version 1.0
  */
 
-public class RegistroRepro {
+public class RegistroRepro implements Serializable {
 	private String repro;
 	private String codUsuario;
 	private String nomRepro;

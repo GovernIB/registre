@@ -1,8 +1,9 @@
 package es.caib.regweb.logic.helper;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class ParametrosOficioRemision {
+public class ParametrosOficioRemision implements Serializable {
     
     private String usuario="";
 
@@ -229,6 +230,14 @@ public class ParametrosOficioRemision {
     
     public boolean getActualizado() {
         return registroActualizado;
+    }
+
+    public void setGrabado(boolean es_grabado) {
+        this.registroGrabado=es_grabado;
+    }
+
+    public void setActualizado(boolean es_actualizado) {
+        this.registroActualizado=es_actualizado;
     }
 
 

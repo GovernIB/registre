@@ -102,7 +102,8 @@ public class RegistroEntradaClientThread  extends Thread{
 
 
       // Validamos.
-      if (!regent.validar(ren)){
+      ren = regent.validar(ren);
+      if (!ren.getValidado()){
         log.error("Error en la consistencia de los datos");
         Hashtable ht = ren.getErrores();
         log.error(ht.toString());

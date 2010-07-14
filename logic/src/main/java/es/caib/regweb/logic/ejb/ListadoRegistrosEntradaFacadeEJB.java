@@ -78,7 +78,7 @@ public abstract class ListadoRegistrosEntradaFacadeEJB extends HibernateEJB {
     * @ejb.interface-method
     * @ejb.permission unchecked="true"
     */
-    public boolean validarBusqueda(ParametrosListadoRegistrosEntrada parametros) {
+    public ParametrosListadoRegistrosEntrada validarBusqueda(ParametrosListadoRegistrosEntrada parametros) {
         
          String oficinaDesde=parametros.getOficinaDesde();
          String oficinaHasta=parametros.getOficinaHasta();
@@ -155,7 +155,8 @@ public abstract class ListadoRegistrosEntradaFacadeEJB extends HibernateEJB {
 		} else {
 			validado=false;
 		}
-		return validado;
+        parametros.setValidado(validado);
+		return parametros;
 	}
 	
 	

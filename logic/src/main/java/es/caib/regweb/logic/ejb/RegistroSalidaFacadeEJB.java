@@ -66,7 +66,7 @@ public abstract class RegistroSalidaFacadeEJB extends HibernateEJB {
     * @ejb.interface-method
     * @ejb.permission unchecked="true"
     */
-    public boolean validar(ParametrosRegistroSalida param) {
+    public ParametrosRegistroSalida validar(ParametrosRegistroSalida param) {
         Session session = getSession();
         ScrollableResults rs=null;
         Query q = null;
@@ -449,7 +449,9 @@ public abstract class RegistroSalidaFacadeEJB extends HibernateEJB {
 		} else {
 			validado=false;
 		}
-		return validado;
+
+        param.setValidado(validado);
+		return param;
 	}
 	
 	
@@ -462,7 +464,7 @@ public abstract class RegistroSalidaFacadeEJB extends HibernateEJB {
     * @ejb.interface-method
     * @ejb.permission unchecked="true"
     */
-    public boolean grabar(ParametrosRegistroSalida param) throws HibernateException, ClassNotFoundException, Exception {
+    public ParametrosRegistroSalida grabar(ParametrosRegistroSalida param) throws HibernateException, ClassNotFoundException, Exception {
 		
 		
 		
@@ -531,7 +533,8 @@ public abstract class RegistroSalidaFacadeEJB extends HibernateEJB {
 		Session session = getSession();
 		
 		if (!validado) {
-			validado=validar(param);
+            param=validar(param);
+			validado=param.getValidado();
 		}
 		if (!validado) {
 			throw new Exception("No s'ha realitzat la validaci\u00f3 de les dades del registre ");
@@ -779,7 +782,8 @@ public abstract class RegistroSalidaFacadeEJB extends HibernateEJB {
 			log.error(usuario+": Error inesperat al guardar el LogLopd."+e.getMessage() );
 			e.printStackTrace();
 		}
-		return registroSalidaGrabado;
+        param.setregistroSalidaGrabado(registroSalidaGrabado);
+		return param;
 	}
 	
 	/**
@@ -1132,7 +1136,7 @@ public abstract class RegistroSalidaFacadeEJB extends HibernateEJB {
     * @ejb.interface-method
     * @ejb.permission unchecked="true"
     */
-    public boolean actualizar(ParametrosRegistroSalida param) throws HibernateException, ClassNotFoundException, Exception {
+    public ParametrosRegistroSalida actualizar(ParametrosRegistroSalida param) throws HibernateException, ClassNotFoundException, Exception {
 		
 		
 		
@@ -1195,7 +1199,8 @@ public abstract class RegistroSalidaFacadeEJB extends HibernateEJB {
 		
 		
 		if (!validado) {
-			validado=validar(param);
+            param=validar(param);
+			validado=param.getValidado();
 		}
 		if (!validado) {
 			throw new Exception("No s'ha realitzat la validaci\u00f3 de les dades del registre ");
@@ -1521,7 +1526,9 @@ public abstract class RegistroSalidaFacadeEJB extends HibernateEJB {
 		} finally {
 			close(session);
 		}
-		return registroActualizado;
+
+        param.setregistroActualizado(registroActualizado);
+		return param;
 	}
 	
 	private String convierteEntidadCastellano(String entidadCatalan, String entidad2Nuevo, Session session) {

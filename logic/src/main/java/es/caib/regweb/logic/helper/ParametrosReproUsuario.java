@@ -1,8 +1,9 @@
 package es.caib.regweb.logic.helper;
 
+import java.io.Serializable;
 import java.util.Vector;
 
-public class ParametrosReproUsuario {
+public class ParametrosReproUsuario implements Serializable {
 
 	private String repro;
 	private String codUsuario;

@@ -1,7 +1,9 @@
 package es.caib.regweb.logic.helper;
 
+import java.io.Serializable;
 
-public class AgrupacioGeograficaData {
+
+public class AgrupacioGeograficaData implements Serializable {
 
 	/**
 	 * @param args

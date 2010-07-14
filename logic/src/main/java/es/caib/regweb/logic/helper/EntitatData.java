@@ -1,7 +1,9 @@
 package es.caib.regweb.logic.helper;
 
+import java.io.Serializable;
 
-public class EntitatData {
+
+public class EntitatData implements Serializable {
 
 	/**
 	 * @param args

@@ -1,9 +1,10 @@
 package es.caib.regweb.logic.helper;
 
+import java.io.Serializable;
 import java.util.*;
 import java.text.*;
 
-public class ParametrosListadoRegistrosSalida  {
+public class ParametrosListadoRegistrosSalida  implements Serializable {
 	
     
 	private String oficinaDesde="";
@@ -86,6 +87,15 @@ public class ParametrosListadoRegistrosSalida  {
     public void setCodiRemitent(String codiremitent) {
 		this.codiRemitent=codiremitent;
 	}
+
+    public void setValidado(boolean validado) {
+		this.validado=validado;
+	}
+
+    public boolean getValidado(){
+        return validado;
+    }
+
     public String getOficinaDesde() {
 		return oficinaDesde;
 	}

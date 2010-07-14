@@ -153,7 +153,7 @@ public abstract class RegistroModificadoSalidaFacadeEJB extends HibernateEJB {
     * @ejb.interface-method
     * @ejb.permission unchecked="true"
     */
-    public boolean visar(ParametrosRegistroModificado param) throws HibernateException, ClassNotFoundException, Exception {
+    public ParametrosRegistroModificado visar(ParametrosRegistroModificado param) throws HibernateException, ClassNotFoundException, Exception {
 
 		Session session = getSession();
 		SQLQuery q = null;
@@ -291,7 +291,8 @@ public abstract class RegistroModificadoSalidaFacadeEJB extends HibernateEJB {
 		} finally {
 			close(session);
 		}
-		return visado;
+        param.setVisado(visado);
+		return param;
 	}
 	
 	

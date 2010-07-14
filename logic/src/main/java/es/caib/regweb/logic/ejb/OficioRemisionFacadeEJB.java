@@ -54,7 +54,7 @@ public abstract class OficioRemisionFacadeEJB extends HibernateEJB {
      * @ejb.interface-method
      * @ejb.permission unchecked="true"
      */
-    public boolean grabar(ParametrosOficioRemision parametros) throws ClassNotFoundException, Exception {
+    public ParametrosOficioRemision grabar(ParametrosOficioRemision parametros) throws ClassNotFoundException, Exception {
         Session session = getSession();
         boolean registroGrabado=false;
         try {
@@ -139,7 +139,9 @@ public abstract class OficioRemisionFacadeEJB extends HibernateEJB {
         } finally {
             close(session);
         }
-        return registroGrabado;
+
+        parametros.setGrabado(registroGrabado);
+        return parametros;
     }
 
    
@@ -151,7 +153,7 @@ public abstract class OficioRemisionFacadeEJB extends HibernateEJB {
      * @ejb.interface-method
      * @ejb.permission unchecked="true"
      */
-    public boolean actualizar(ParametrosOficioRemision parametros) throws ClassNotFoundException, Exception {
+    public ParametrosOficioRemision actualizar(ParametrosOficioRemision parametros) throws ClassNotFoundException, Exception {
 		Session session = getSession();
 		Query q = null;
         
@@ -258,7 +260,9 @@ public abstract class OficioRemisionFacadeEJB extends HibernateEJB {
         } finally {
             close(session);
         }
-        return registroActualizado;
+
+        parametros.setActualizado(registroActualizado);
+        return parametros;
     }
     
     /**

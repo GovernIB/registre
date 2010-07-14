@@ -217,7 +217,8 @@ public class UtilAdminServlet extends UtilWebServlet {
 						res.setcomentario(extracte);
 						
 						// Validamos.
-						if (!rs.validar(res)){
+                        res = rs.validar(res);
+						if (!res.getValidado()){
 							validat=false;
 							log.error("Error en la consistencia de los datos");
 							Hashtable ht = res.getErrores();
@@ -288,7 +289,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 							// Extracto o comentario del registro explicando de qué se trata el doc.
 							res.setcomentario(extracte);
 							// Validamos.
-							if (!rs.validar(res)){
+							if (!rs.validar(res).getValidado()){
 								validat=true;
 								log.error("Error en la consistencia de los datos");
 								Hashtable ht = res.getErrores();
@@ -300,7 +301,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 								log.error("Registro de entrada con errores:\n" + ht);
 							}
 							// Grabamos
-							if (rs.grabar(res)) {
+							if (rs.grabar(res).getregistroSalidaGrabado()) {
 								//S'ha gravat correctament REGISTRE: SORTIDES  Núm. 14554 / 2007   Data  10-AGO-2007
 								DateFormat dateFddMMyyyy = new SimpleDateFormat("dd/MM/yyyy");
 								DateFormat dateFddMMMyyyy= new SimpleDateFormat("dd-MMM-yyyy");

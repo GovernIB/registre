@@ -521,7 +521,7 @@ public abstract class ValoresFacadeEJB extends HibernateEJB {
 			}
 			if (destino.size()==0) {
 				destino.addElement("&nbsp;");
-				destino.addElement("No hi ha Organismes Destinataris");
+				destino.addElement("No hi ha Organismes");
 				destino.addElement("&nbsp;");
 			}
 			session.flush();
@@ -559,7 +559,7 @@ public abstract class ValoresFacadeEJB extends HibernateEJB {
 			}
 			if (destino.size()==0) {
 				destino.addElement("&nbsp;");
-				destino.addElement("No hi ha Organismes Destinataris");
+				destino.addElement("No hi ha Organismes");
 				destino.addElement("&nbsp;");
 			}
 			session.flush();

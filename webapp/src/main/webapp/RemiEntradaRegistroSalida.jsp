@@ -60,7 +60,7 @@ Vector modelosOficios = valores.buscarModelos("tots","totes");
 param.setOficinaOficio(request.getParameter("oficina"));
 param.setFechaOficio(request.getParameter("datasalida"));
 
-ofi.grabar(param);
+param = ofi.grabar(param);
 oficio = ofi.leer(param);
 
 registro.fijaUsuario(usuario);
@@ -85,7 +85,13 @@ registro.setdisquet(request.getParameter("disquet"));
 registro.setcomentario("Ofici de sortida de documentació amb núm. d'ofici " + oficio.getNumeroOficio() + "/" + oficio.getAnoOficio());
 %>
 
-<% boolean ok=regsal.validar(registro);
+<%
+     registro=regsal.validar(registro);
+     boolean ok=registro.getValidado();
+
+
+
+
 if (!ok){
     request.setAttribute("registroSalida",registro);
     
@@ -97,8 +103,11 @@ if (!ok){
 %>
         <jsp:forward page="RemiEntradaPaso.jsp" />
 <% } else { 
-    
-    boolean grabado=regsal.grabar(registro);
+
+     registro=regsal.grabar(registro);
+
+     boolean grabado=registro.getregistroSalidaGrabado();
+
     if (!grabado) {
         request.setAttribute("registroSalida",registro);
 
@@ -155,7 +164,7 @@ if (!ok){
 		    
 		}
 		oficio.setDescripcion(descripcion);
-		ofi.actualizar(oficio);
+		oficio=ofi.actualizar(oficio);
 		
         String bloqueoOficina=(session.getAttribute("bloqueoOficina")==null) ? "" : (String)session.getAttribute("bloqueoOficina");
         String bloqueoTipo=(session.getAttribute("bloqueoTipo")==null) ? "" : (String)session.getAttribute("bloqueoTipo");

@@ -1,6 +1,8 @@
 package es.caib.regweb.logic.helper;
 
-public class Municipi060Data {
+import java.io.Serializable;
+
+public class Municipi060Data implements Serializable {
 
 	/**
 	 * @param args

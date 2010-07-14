@@ -100,7 +100,7 @@ if (registros.size()==0) {
         	session.removeAttribute("listadoOficios");
         	%>
 <p><p>
-<center><b<fmt:message key='no_shan_trobat_registres_que_compleixin_els_criteris_seleccionats'/></b></center>
+<center><b><fmt:message key='no_shan_trobat_registres_que_compleixin_els_criteris_seleccionats'/></b></center>
      <% } else { %>
      
 <table border="0" width="95%" align="center">

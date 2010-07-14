@@ -82,7 +82,18 @@
 		</ul>
 		<!-- Fi Molla pa-->
 		<p>&nbsp;</p>
-<%    if (regmod.visar(registroModificado)) { %>
+
+
+<%
+        registroModificado=regmod.visar(registroModificado);
+
+        boolean visado=registroModificado.getVisado();
+
+
+    if (visado) {
+
+
+%>
 
         <table class="recuadroEntradas" width="400" align="center">
             <tr>

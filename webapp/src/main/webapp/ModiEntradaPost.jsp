@@ -91,7 +91,8 @@ if (motivo.equals("")) {
 }
 
 
-boolean ok=regent.validar(registro);
+registro = regent.validar(registro);
+boolean ok=registro.getValidado();
 
 if (!ok){
     request.setAttribute("registroEntrada",registro);
@@ -99,7 +100,12 @@ if (!ok){
         <jsp:forward page="ModiEntrada.jsp"/>
 <% } else { 
     
-    boolean actualizado=regent.actualizar(registro);
+
+
+    registro=regent.actualizar(registro);
+
+    boolean actualizado=registro.getregistroActualizado();
+
     if (!actualizado) {
         request.setAttribute("registroEntrada",registro);
 %>

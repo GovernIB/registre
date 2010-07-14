@@ -1,8 +1,9 @@
 package es.caib.regweb.logic.helper;
 
+import java.io.Serializable;
 import java.util.TreeMap;
 
-public class AutoritzacionsUsuariData {
+public class AutoritzacionsUsuariData implements Serializable {
 
 	/**
 	 * @param args

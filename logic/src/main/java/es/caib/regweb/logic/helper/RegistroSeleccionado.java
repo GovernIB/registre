@@ -6,13 +6,14 @@
 
 package es.caib.regweb.logic.helper;
 
+import java.io.Serializable;
 /**
  * Classe per desar un registre seleccionat
  * @author  FJMARTINEZ
  * @version 1.0
  */
 
-public class RegistroSeleccionado implements Comparable {
+public class RegistroSeleccionado implements Comparable,Serializable  {
 	
 	/** Creates a new instance of RegistroSeleccionado */
 	public RegistroSeleccionado() {

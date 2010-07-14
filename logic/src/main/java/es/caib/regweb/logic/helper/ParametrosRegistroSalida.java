@@ -1,8 +1,9 @@
 package es.caib.regweb.logic.helper;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class ParametrosRegistroSalida {
+public class ParametrosRegistroSalida implements Serializable {
 	
     private String dataVisado="";
 	private String datasalida="";
@@ -68,6 +69,17 @@ public class ParametrosRegistroSalida {
 		return actualizacion;
 	}
 
+    public boolean getregistroActualizado() {
+		return registroActualizado;
+	}
+
+    public void setregistroSalidaGrabado(boolean es_grabado) {
+		this.registroSalidaGrabado=es_grabado;
+	}
+
+    public boolean getregistroSalidaGrabado() {
+		return registroSalidaGrabado;
+	}
 
     public void fijaPasswordUser(String password) {
 		this.password=password;
@@ -197,6 +209,10 @@ public class ParametrosRegistroSalida {
 		this.disquet=disquet;
 	}
 
+    public void setregistroActualizado(boolean es_actualizado) {
+		this.registroActualizado=es_actualizado;
+	}
+
     public void setcomentario(String comentarioEntero) {
 		if (comentarioEntero.length()>160) {
 			comentarioEntero=comentarioEntero.substring(0, 160);
@@ -238,7 +254,12 @@ public class ParametrosRegistroSalida {
     public void setDataVisado(String dataVisado) {
 		this.dataVisado=dataVisado;
 	}
-	
+
+    public void setValidado(boolean es_validado) {
+          this.validado=es_validado;
+      }
+
+
     public boolean getValidado() {
 		return validado;
 	}

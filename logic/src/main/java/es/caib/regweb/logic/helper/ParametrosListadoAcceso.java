@@ -1,5 +1,6 @@
 package es.caib.regweb.logic.helper;
 
+import java.io.Serializable;
 import java.util.Hashtable;
 
 /**
@@ -8,7 +9,7 @@ import java.util.Hashtable;
  * @version 1.0
  */
 
-public class ParametrosListadoAcceso {
+public class ParametrosListadoAcceso implements Serializable {
 	
 	private String oficinaDesde="";
 	private String oficinaHasta="";
@@ -99,6 +100,10 @@ public class ParametrosListadoAcceso {
 	public void setfechaHasta(String fechaHasta) {
 		this.fechaHasta=fechaHasta;
 	}
+
+    public void setValidado(boolean es_validado) {
+		this.validado=es_validado;
+	}
 	
 	public String getOficinaDesde() {
 		return oficinaDesde;
@@ -106,6 +111,11 @@ public class ParametrosListadoAcceso {
 	public String getOficinaHasta() {
 		return oficinaHasta;
 	}
+
+    public boolean getValidado() {
+		return validado;
+	}
+
 	public String getFechaDesde() {
 		return fechaDesde;
 	}

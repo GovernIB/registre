@@ -79,7 +79,11 @@ param.setOficinaOficio(codOficina);
 param.setNumeroOficio(numeroOficio);
 oficio = ofi.leer(param);
 
-boolean ok=regent.validar(registro);
+
+
+     registro=regent.validar(registro);
+     boolean ok=registro.getValidado();
+
 if (!ok || oficio==null){
 	if (oficio==null) {
 		registro.getErrores().put("","Error inesperat, no s'ha pogut obtenir les dades de l'ofici");
@@ -97,7 +101,11 @@ if (!ok || oficio==null){
         <jsp:forward page="RemiSalidaPaso.jsp" />
 <% } else { 
     
-    boolean grabado=regent.grabar(registro);
+    registro=regent.grabar(registro);
+
+    boolean grabado=registro.getGrabado();
+
+
     if (!grabado) {
         request.setAttribute("registroEntrada",registro);
 
@@ -118,7 +126,7 @@ if (!ok || oficio==null){
 			oficio.setOficinaEntrada(registro.getOficina());
 			oficio.setNumeroEntrada(registro.getNumeroEntrada());
 			oficio.setFechaEntrada(registro.getDataEntrada());
-			ofi.actualizar(oficio);
+			oficio = ofi.actualizar(oficio);
 
 	
 		String bloqueoOficina=(session.getAttribute("bloqueoOficina")==null) ? "" : (String)session.getAttribute("bloqueoOficina");

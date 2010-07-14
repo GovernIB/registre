@@ -67,7 +67,7 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
      * @ejb.interface-method
      * @ejb.permission unchecked="true"
      */
-    public boolean validar(ParametrosRegistroEntrada param) {
+    public ParametrosRegistroEntrada validar(ParametrosRegistroEntrada param) {
         Session session = getSession();
         ScrollableResults rs=null;
         Query q = null;
@@ -438,7 +438,8 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
         } else {
             validado=false;
         }
-        return validado;
+        param.setValidado(validado);
+        return param;
     }
     
     
@@ -451,7 +452,7 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
      * @ejb.interface-method
      * @ejb.permission unchecked="true"
      */
-    public boolean grabar(ParametrosRegistroEntrada param) throws HibernateException, ClassNotFoundException, Exception {
+    public ParametrosRegistroEntrada grabar(ParametrosRegistroEntrada param) throws HibernateException, ClassNotFoundException, Exception {
         
         String dataVisado=param.getDataVisado();
         String dataentrada=param.getDataEntrada();
@@ -519,7 +520,8 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
             /* Grabamos registro si las validaciones son correctas */
             SQLQuery ms = null;
             if (!validado) {
-                validado=validar(param);
+                param=validar(param);
+                validado=param.getValidado();
             }
             if (!validado) {
                 throw new Exception("No s'ha realitzat la validaci\u00f3 de les dades del registre ");
@@ -765,7 +767,8 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
         } finally {
 			close(session);
         }
-        return registroGrabado;
+        param.setregistroGrabado(registroGrabado);
+        return param;
     }
 
     
@@ -969,7 +972,7 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
      * @ejb.interface-method
      * @ejb.permission unchecked="true"
      */
-    public boolean actualizar(ParametrosRegistroEntrada param) throws HibernateException, ClassNotFoundException, Exception {
+    public ParametrosRegistroEntrada actualizar(ParametrosRegistroEntrada param) throws HibernateException, ClassNotFoundException, Exception {
 
         
         String dataVisado=param.getDataVisado();
@@ -1035,7 +1038,8 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
 		SQLQuery ms = null;
 		
         if (!validado) {
-            validado=validar(param);
+            param=validar(param);
+            validado=param.getValidado();
         }
         if (!validado) {
             throw new Exception("No s'ha realitzat la validaci\u00f3 de les dades del registre ");
@@ -1338,7 +1342,8 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
         } finally {
 			close(session);
         }
-        return registroActualizado;
+        param.setregistroActualizado(registroActualizado);
+        return param;
     }
     
     

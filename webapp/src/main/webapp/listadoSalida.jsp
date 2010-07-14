@@ -75,7 +75,9 @@ parametros.setCodiRemitent(codiremitentBusqueda);
 session.setAttribute("listadoSalida",parametros);
 %>
 
-<% boolean ok=listado.validarBusqueda(parametros);
+<%
+parametros=listado.validarBusqueda(parametros);
+boolean ok=parametros.getValidado();
 if (!ok){
 %>
     <%  if (request.getParameter("any")==null) { %>

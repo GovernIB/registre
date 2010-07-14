@@ -1,9 +1,10 @@
 package es.caib.regweb.logic.helper;
 
+import java.io.Serializable;
 import java.util.*;
 import java.text.*;
 
-public class ParametrosRegistroPublicadoEntrada {
+public class ParametrosRegistroPublicadoEntrada implements Serializable {
 	
 	private int anoEntrada;
 	private int numero;

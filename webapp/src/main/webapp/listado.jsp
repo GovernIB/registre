@@ -77,7 +77,9 @@ parametros.setCodiMunicipi060(codiMun060);
 session.setAttribute("listadoEntrada",parametros);
 %>
 
-<% boolean ok=listado.validarBusqueda(parametros);
+<%
+parametros=listado.validarBusqueda(parametros);
+boolean ok=parametros.getValidado();
 if (!ok){
 %>
   <%  if (request.getParameter("any")==null) { %>

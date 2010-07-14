@@ -1,6 +1,8 @@
 package es.caib.regweb.logic.helper;
 
-public class TipusDocumentData {
+import java.io.Serializable;
+
+public class TipusDocumentData implements Serializable {
 
 	/**
 	 * @param args

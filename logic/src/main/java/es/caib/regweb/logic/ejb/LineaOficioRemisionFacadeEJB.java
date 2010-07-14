@@ -56,12 +56,13 @@ public abstract class LineaOficioRemisionFacadeEJB extends HibernateEJB {
      * @ejb.interface-method
      * @ejb.permission unchecked="true"
      */
-    public boolean grabar(ParametrosLineaOficioRemision parametros) throws SQLException, ClassNotFoundException, Exception {
+    public ParametrosLineaOficioRemision grabar(ParametrosLineaOficioRemision parametros) throws SQLException, ClassNotFoundException, Exception {
 
         Session session = getSession();
         try {
 
             boolean registroGrabado=false;
+
 
             /* Recuperamos la fecha y la hora del sistema, fzafsis(aaaammdd) y fzahsis (hhMMssmm) */
             Date fechaSystem=new Date();
@@ -105,7 +106,9 @@ public abstract class LineaOficioRemisionFacadeEJB extends HibernateEJB {
         } finally {
             close(session);
         }
-        return registroGrabado;
+
+        parametros.setRegistroGrabado(registroGrabado);
+        return parametros;
 
     }
 
@@ -120,7 +123,7 @@ public abstract class LineaOficioRemisionFacadeEJB extends HibernateEJB {
      * @ejb.interface-method
      * @ejb.permission unchecked="true"
      */
-    public boolean actualizar(ParametrosLineaOficioRemision parametros) throws SQLException, ClassNotFoundException, Exception {
+    public ParametrosLineaOficioRemision actualizar(ParametrosLineaOficioRemision parametros) throws SQLException, ClassNotFoundException, Exception {
 		Session session = getSession();
 		Query q = null;
         
@@ -167,7 +170,8 @@ public abstract class LineaOficioRemisionFacadeEJB extends HibernateEJB {
         } finally {
             close(session);
         }
-        return registroActualizado;
+        parametros.setRegistroActualizado(registroActualizado);
+        return parametros;
     }
     
     

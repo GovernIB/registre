@@ -1,8 +1,9 @@
 package es.caib.regweb.logic.helper;
 
+import java.io.Serializable;
 import java.util.Hashtable;
 
-public class ParametrosLineaOficioRemision {
+public class ParametrosLineaOficioRemision implements Serializable {
     
     private String usuario="";
 
@@ -129,6 +130,14 @@ public class ParametrosLineaOficioRemision {
 		this.usuario = usuario;
 	}
 
+
+    public void setRegistroGrabado(boolean es_grabado) {
+		this.registroGrabado = es_grabado;
+	}
+
+    public void setRegistroActualizado(boolean es_actualizado) {
+		this.registroActualizado = es_actualizado;
+	}
 
     public Hashtable getErrores() {
 		return errores;

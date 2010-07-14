@@ -68,16 +68,25 @@ if(request.getParameter("mun_060")!=null)
 registro.setcomentario(request.getParameter("comentario"));
 %>
 
-<% boolean ok=regent.validar(registro);
+<%
+
+     registro=regent.validar(registro);
+     boolean ok=registro.getValidado();
+
+
 if (!ok){
     request.setAttribute("registroEntrada",registro);
 
 %>
         <jsp:forward page="pedirdatos.jsp" />
-<% } else { 
+<% } else {
     
     
-    boolean grabado=regent.grabar(registro);
+
+
+    registro=regent.grabar(registro);
+
+    boolean grabado=registro.getGrabado();
     
     if (!grabado) {
         request.setAttribute("registroEntrada",registro);

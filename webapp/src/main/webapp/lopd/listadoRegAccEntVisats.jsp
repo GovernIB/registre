@@ -53,7 +53,9 @@ parametros.setAnyRegistre(anyRegistre);
 session.setAttribute("listadoRegAcEVisat",parametros);
 %>
 
-<% boolean ok=listado.validarBusqueda(parametros);
+<%
+parametros=listado.validarBusqueda(parametros);
+boolean ok=parametros.getValidado();
 if (!ok){
 %>
     <jsp:forward page="busquedaRegAccVisatsEntXFechas.jsp" />

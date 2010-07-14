@@ -52,7 +52,9 @@ parametros.setAnyRegistre(anyRegistre);
 session.setAttribute("listadoRegAcESEntrada",parametros);
 %>
 
-<% boolean ok=listado.validarBusqueda(parametros);
+<%
+parametros=listado.validarBusqueda(parametros);
+boolean ok=parametros.getValidado();
 if (!ok){
 %>
     <jsp:forward page="busquedaRegAccEntradasXFechas.jsp" />

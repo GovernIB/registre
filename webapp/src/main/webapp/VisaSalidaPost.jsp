@@ -85,7 +85,9 @@
 		<!-- Fi Molla pa-->
         <p>&nbsp;</p>
 
-<%    if (regmod.visar(registroModificado)) { %>
+<%
+    registroModificado = regmod.visar(registroModificado);
+    if (registroModificado.getVisado()) { %>
 
         <table class="recuadroSalidas" width="400" align="center">
             <tr>

@@ -31,13 +31,21 @@ param2.setAnoEntrada(null);
 param2.setOficinaEntrada(null);
 param2.setNumeroEntrada(null);
 param2.setFechaEntrada(null);
-oficio.actualizar(param2);
+param2=oficio.actualizar(param2);
 oficio.anular(param2);
 
 %>
+<%
+String [] parametros=(String [])session.getAttribute("listadoOficios");
 
-            <jsp:forward page="fichaOficio.jsp" >
-                <jsp:param name="oficina" value="<%=codOficina%>"/>
-                <jsp:param name="numero" value="<%=numOficio%>"/>
-                <jsp:param name="any" value="<%=ano%>"/>
+String oficinaSel=parametros[0];
+String oficinaFisicaSel=parametros[1];
+String anyoSel=parametros[2];
+
+%>
+
+            <jsp:forward page="listadoOficios.jsp" >
+                <jsp:param name="oficina" value="<%=oficinaSel%>"/>
+                <jsp:param name="oficinafisica" value="<%=oficinaFisicaSel%>"/>
+                <jsp:param name="any" value="<%=anyoSel%>"/>
             </jsp:forward>

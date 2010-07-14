@@ -31,7 +31,7 @@ oficio.setAnoEntrada(null);
 oficio.setOficinaEntrada(null);
 oficio.setNumeroEntrada(null);
 oficio.setFechaEntrada(null);
-ofi.actualizar(oficio);
+oficio=ofi.actualizar(oficio);
 
 %>
     <%

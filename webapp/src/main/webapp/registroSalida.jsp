@@ -64,16 +64,28 @@ registro.setdisquet(request.getParameter("disquet"));
 registro.setcomentario(request.getParameter("comentario"));
 %>
 
-<% boolean ok=regsal.validar(registro);
+<%
+
+     registro=regsal.validar(registro);
+     boolean ok=registro.getValidado();
+
+
+
+
 if (!ok){
     request.setAttribute("registroSalida",registro);
 
 %>
         <jsp:forward page="pedirdatosSalida.jsp" />
 <% } else { 
-    
-    
-    boolean grabado=regsal.grabar(registro);
+
+
+    registro=regsal.grabar(registro);
+
+    boolean grabado=registro.getregistroSalidaGrabado();
+
+
+
     if (!grabado) {
         request.setAttribute("registroSalida",registro);
 

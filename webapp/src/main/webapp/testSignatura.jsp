@@ -72,7 +72,8 @@ registro.setdisquet("");
 out.println("<p>Fitxer de prova a firmar:"+System.getProperty("user.home")+".bash_history</p>");
 out.println("<p>Carpeta on es desaran el resultat de firmar:"+System.getProperty("user.home")+"</p>");
 registro.setcomentario("Prova de signatura digital!");
-boolean ok=regent.validar(registro);
+registro = regent.validar(registro);
+boolean ok=registro.getValidado();
 if (!ok){
 
         Hashtable errores = (registro==null)?new Hashtable():registro.getErrores();

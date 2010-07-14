@@ -1,8 +1,9 @@
 package es.caib.regweb.logic.helper;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class ParametrosRegistroEntrada {
+public class ParametrosRegistroEntrada implements Serializable {
     
     private String dataVisado="";
     private String dataentrada="";
@@ -121,8 +122,23 @@ public class ParametrosRegistroEntrada {
     public String getBOIBobservaciones() {
         return BOIBobservaciones;
     }
-    
-    
+
+
+      public void setregistroActualizado(boolean es_actualizado) {
+		this.registroActualizado=es_actualizado;
+	}
+
+    public boolean getregistroActualizado() {
+		return registroActualizado;
+	}
+
+     public void setregistroGrabado(boolean es_grabado) {
+		this.registroGrabado=es_grabado;
+	}
+
+    public boolean getregistroGrabado() {
+		return registroGrabado;
+	}
     
     /* Recogemos campos enviados por registro.jsp */
     public void setAnoEntrada(String anoEntrada) {
@@ -302,6 +318,10 @@ public class ParametrosRegistroEntrada {
 
     public boolean getValidado() {
         return validado;
+    }
+
+     public void setValidado(boolean es_valido) {
+        this.validado=es_valido;
     }
     
     /* Devolvemos la serie de errores */
