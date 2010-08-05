@@ -16,13 +16,6 @@
   <dependencies>
     <dependency>
       <groupId>es.caib.regweb</groupId>
-      <artifactId>model</artifactId>
-      <version>1.0</version>
-      <type>jar</type>
-    </dependency>
-
-    <dependency>
-      <groupId>es.caib.regweb</groupId>
       <artifactId>webapp</artifactId>
       <version>1.0</version>
       <type>war</type>
@@ -55,111 +48,23 @@
           <displayName>Registre Web</displayName>
           <description>Registre Web</description>
           <jboss>
-            <version>3.2</version>
-            <unauthenticated-principal>nobody</unauthenticated-principal>
+            <version>4</version>
             <loader-repository>es.caib.regweb:loader=regweb.ear</loader-repository>
+            <loader-repository-config>java2ParentDelegation=false</loader-repository-config>
           </jboss>
-
           <modules>
-            <jarModule>
-              <groupId>javassist</groupId>
-              <artifactId>javassist</artifactId>
-              <bundleDir>lib</bundleDir>
-              <includeInApplicationXml>false</includeInApplicationXml>
-            </jarModule>
-            <jarModule>
-              <groupId>antlr</groupId>
-              <artifactId>antlr</artifactId>
-              <bundleDir>lib</bundleDir>
-              <includeInApplicationXml>false</includeInApplicationXml>
-            </jarModule>
-            <jarModule>
-              <groupId>javax.transaction</groupId>
-              <artifactId>jta</artifactId>
-              <bundleDir>lib</bundleDir>
-              <includeInApplicationXml>false</includeInApplicationXml>
-            </jarModule>
-            <jarModule>
-              <groupId>org.hibernate</groupId>
-              <artifactId>ejb3-persistence</artifactId>
-              <bundleDir>lib</bundleDir>
-              <includeInApplicationXml>false</includeInApplicationXml>
-            </jarModule>
-            <jarModule>
-              <groupId>org.hibernate</groupId>
-              <artifactId>hibernate-core</artifactId>
-              <bundleDir>lib</bundleDir>
-              <includeInApplicationXml>false</includeInApplicationXml>
-            </jarModule>
-            <jarModule>
-              <groupId>org.hibernate</groupId>
-              <artifactId>hibernate-annotations</artifactId>
-              <bundleDir>lib</bundleDir>
-              <includeInApplicationXml>false</includeInApplicationXml>
-            </jarModule>
-            <jarModule>
-              <groupId>org.hibernate</groupId>
-              <artifactId>hibernate-commons-annotations</artifactId>
-              <bundleDir>lib</bundleDir>
-              <includeInApplicationXml>false</includeInApplicationXml>
-            </jarModule>
-            <jarModule>
-              <groupId>org.hibernate</groupId>
-              <artifactId>hibernate-validator</artifactId>
-              <bundleDir>lib</bundleDir>
-              <includeInApplicationXml>false</includeInApplicationXml>
-            </jarModule>
-            <jarModule>
-              <groupId>log4j</groupId>
-              <artifactId>log4j</artifactId>
-              <bundleDir>lib</bundleDir>
-              <includeInApplicationXml>false</includeInApplicationXml>
-            </jarModule>
-            <jarModule>
-              <groupId>org.slf4j</groupId>
-              <artifactId>slf4j-api</artifactId>
-              <bundleDir>lib</bundleDir>
-              <includeInApplicationXml>false</includeInApplicationXml>
-            </jarModule>
-            <jarModule>
-              <groupId>org.slf4j</groupId>
-              <artifactId>slf4j-log4j12</artifactId>
-              <bundleDir>lib</bundleDir>
-              <includeInApplicationXml>false</includeInApplicationXml>
-            </jarModule>
-            <jarModule>
-              <groupId>commons-collections</groupId>
-              <artifactId>commons-collections</artifactId>
-              <bundleDir>lib</bundleDir>
-              <includeInApplicationXml>false</includeInApplicationXml>
-            </jarModule>
-            <jarModule>
-              <groupId>dom4j</groupId>
-              <artifactId>dom4j</artifactId>
-              <bundleDir>lib</bundleDir>
-              <includeInApplicationXml>false</includeInApplicationXml>
-            </jarModule>
-
-            <jarModule>
-              <groupId>es.caib.regweb</groupId>
-              <artifactId>model</artifactId>
-              <bundleFileName>model.jar</bundleFileName>
-              <includeInApplicationXml>false</includeInApplicationXml>
-            </jarModule>
-            <ejbModule>
-              <groupId>es.caib.regweb</groupId>
-              <artifactId>logic</artifactId>
-              <bundleFileName>logic.jar</bundleFileName>
-            </ejbModule>
-
             <webModule>
               <groupId>es.caib.regweb</groupId>
               <artifactId>webapp</artifactId>
               <contextRoot>regweb</contextRoot>
             </webModule>
           </modules>
+          <defaultLibBundleDir>lib</defaultLibBundleDir>
+          <archive>
+            <addMavenDescriptor>false</addMavenDescriptor>
+          </archive>
         </configuration>
-      </plugin>
+      </plugin>        
     </plugins>
   </build>
 

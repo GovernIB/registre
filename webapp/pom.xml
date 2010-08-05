@@ -14,13 +14,6 @@
   </parent>
 
   <dependencies>
-    <!-- <dependency>
-      <groupId>es.caib.regweb</groupId>
-      <artifactId>ejb</artifactId>
-      <version>1.0</version>
-      <type>ejb</type>
-      <scope>provided</scope>
-    </dependency> -->
 
     <dependency>
       <groupId>es.caib.regweb</groupId>
@@ -29,56 +22,11 @@
       <type>ejb</type>
       <scope>provided</scope>
     </dependency>
-    
-    <dependency>
-      <groupId>es.caib.regweb</groupId>
-      <artifactId>model</artifactId>
-      <version>1.0</version>
-      <type>jar</type>
-      <scope>provided</scope>
-    </dependency>
 
-    <!-- para que no incluya librerias innecesarias en WEB-INF/lib -->
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-core</artifactId>
-      <version>3.3.1.GA</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-annotations</artifactId>
-      <version>3.4.0.GA</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>dom4j</groupId>
-      <artifactId>dom4j</artifactId>
-      <version>1.6.1</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>javassist</groupId>
-      <artifactId>javassist</artifactId>
-      <version>3.4.GA</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.geronimo.specs</groupId>
-      <artifactId>geronimo-ejb_2.1_spec</artifactId>
-      <version>1.1</version>
-      <scope>provided</scope>
-    </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
       <version>2.3</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>xml-apis</groupId>
-      <artifactId>xml-apis</artifactId>
-      <version>1.0.b2</version>
       <scope>provided</scope>
     </dependency>
 
@@ -96,31 +44,9 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>dom4j</groupId>
-      <artifactId>dom4j</artifactId>
-      <version>1.6.1</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>commons-collections</groupId>
-      <artifactId>commons-collections</artifactId>
-      <version>3.1</version>
-    </dependency>
-    <dependency>
       <groupId>commons-fileupload</groupId>
       <artifactId>commons-fileupload</artifactId>
-      <version>1.0-beta-1</version>
-    </dependency>
-    <dependency>
-      <groupId>commons-beanutils</groupId>
-      <artifactId>commons-beanutils</artifactId>
-      <version>1.8.0</version>
-    </dependency>
-    <dependency>
-      <groupId>commons-logging</groupId>
-      <artifactId>commons-logging</artifactId>
-      <version>1.1.1</version>
-      <scope>provided</scope>
+      <version>1.0</version>
     </dependency>
     <dependency>
       <groupId>taglibs</groupId>
@@ -137,8 +63,6 @@
         <artifactId>sitemesh</artifactId>
         <version>2.2.1</version>
     </dependency>
-
-
   </dependencies>
 
   <build>
@@ -162,36 +86,21 @@
                 <include>**/*.xml</include>
               </includes>
               <filtering>true</filtering>
-              <targetPath></targetPath> 
+            </resource>
+            <resource>
+              <directory>src/personalizacion</directory>
+              <filtering>true</filtering>
             </resource>
           </webResources>
+          <archive>
+            <manifestEntries>
+              <Class-Path>
+                lib/model.jar
+              </Class-Path>
+            </manifestEntries>
+            <addMavenDescriptor>false</addMavenDescriptor>
+          </archive> 
         </configuration>
-      </plugin>
-
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>2.4.3</version>
-        <executions>
-          <execution>
-            <id>copy-resources</id>
-            <!-- here the phase you need -->
-            <phase>compile</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${basedir}/target/regweb</outputDirectory>
-              <resources>          
-                <resource>
-                  <directory>src/personalizacion</directory>
-                  <filtering>true</filtering>
-                </resource>
-              </resources>              
-            </configuration>            
-          </execution>
-        </executions>
       </plugin>
 
     </plugins>
