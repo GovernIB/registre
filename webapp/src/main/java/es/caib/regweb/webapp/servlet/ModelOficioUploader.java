@@ -34,9 +34,9 @@ public class ModelOficioUploader {
 	/** Creates a new instance of FileUploader */
 	public ModelOficioUploader(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws SQLException, Exception {      
 		log = Logger.getLogger(this.getClass());
-		FileUpload fu = new FileUpload();
+		FileUpload fu = new FileUpload(new DefaultFileItemFactory());
 		fu.setSizeMax(MAX_FILE_SIZE);// 40 kB
-		fu.setSizeThreshold(MAX_FILE_SIZE);// 40 kB
+		//fu.setSizeThreshold(MAX_FILE_SIZE);// 40 kB
 
 		//Cercam el EJB d'accés al repositori de models d'oficis
         ModeloOficioFacade mod = ModeloOficioFacadeUtil.getHome().create();				

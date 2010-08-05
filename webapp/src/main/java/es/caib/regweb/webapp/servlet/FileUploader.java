@@ -35,9 +35,9 @@ public class FileUploader {
 	public FileUploader(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response, String tipusRepro) throws SQLException, Exception {      
 		log = Logger.getLogger(this.getClass());
 		int nombreRepros = 0;
-		FileUpload fu = new FileUpload();
+		FileUpload fu = new FileUpload(new DefaultFileItemFactory());
 		fu.setSizeMax(50960);// 40 kB
-		fu.setSizeThreshold(50960);// 40 kB
+		//fu.setSizeThreshold(50960);// 40 kB
 		
 		Vector vectorRepros = new Vector();
 		javax.naming.InitialContext contexto = new javax.naming.InitialContext();

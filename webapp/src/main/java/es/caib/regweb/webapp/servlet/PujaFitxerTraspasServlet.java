@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.fileupload.DefaultFileItemFactory;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUpload;
 import org.apache.commons.fileupload.FileUploadException;
@@ -67,9 +68,9 @@ public class PujaFitxerTraspasServlet extends UtilWebServlet {
         String param = "/admin/controller.do?accion=index";
         
         log.debug("PujaFitxerTraspasServlet, accion="+accion);
-    	FileUpload fu = new FileUpload();
+    	FileUpload fu = new FileUpload(new DefaultFileItemFactory());
     	fu.setSizeMax(50960);// 40 kB
-    	fu.setSizeThreshold(50960);// 40 kB
+    	//fu.setSizeThreshold(50960);// 40 kB
     	StringBuffer out = null;
     	java.util.List fileItems=null;
     	Iterator i = null;
