@@ -1,5 +1,5 @@
 <%@page import="java.util.*, java.text.*, es.caib.regweb.logic.interfaces.*, es.caib.regweb.logic.util.*, es.caib.regweb.logic.helper.*" contentType="text/html"%>
-<%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <%@ page pageEncoding="UTF-8"%>
 <% request.setCharacterEncoding("UTF-8"); %>
