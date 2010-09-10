@@ -544,7 +544,7 @@
                     </select>&nbsp;
 
                     <c:choose>
-                    <c:when test="${registro.entrada.view.disquete_correo}">
+                    <c:when test="${initParam['registro.entrada.view.disquete_correo']}">
                     <!--Numero de disquete -->
                     <font class="<%=errorEn(errores,"disquet")%>"><fmt:message key='registro.num_disquete'/> </font>
                     <input type=text onkeypress="return check(event)" name=disquet size="8" value="<%=(registro==null)? "":registro.getDisquet().trim()%>">

@@ -192,7 +192,7 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
         <script language="javascript" src="jscripts/TAO.js"></script>
         <script language="javascript">
 		     function activar_060(){
-           <c:if test="${registro.entrada.view.registre012}">
+           <c:if test="${initParam['registro.entrada.view.registre012']}">
 					valor=document.registroForm.Reg060.checked;
 		            
 		            if (valor){
@@ -684,7 +684,7 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
                             </td>
                         </tr>
                                         <!-- 9ª fila de la tabla -->
-                <c:if test="${registro.entrada.view.registre012}">
+                <c:if test="${initParam['registro.entrada.view.registre012']}">
                 <tr>
                             <td style="border:0" valign="bottom">
                               <input TYPE="checkbox" NAME="Reg060" VALUE="Si" Onclick="activar_060()" <%=(registro==null)? "": retornarChecked(registro)%> ><fmt:message key='registre_012'/> </input>
@@ -728,7 +728,7 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
                                     &nbsp;
 
                                     <c:choose>
-                                    <c:when test="${registro.entrada.view.disquete_correo}">
+                                    <c:when test="${initParam['registro.entrada.view.disquete_correo']}">
                                     <!--Numero de disquete -->
                                     <font class="<%=errorEn(errores,"disquet")%>"><fmt:message key='registro.num_disquete'/> </font>
                                     <input onkeypress="return check(event)" type=text name=disquet size="8" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml((registro==null)? "":registro.getDisquet().trim())%>">

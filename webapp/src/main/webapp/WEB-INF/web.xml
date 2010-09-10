@@ -1,16 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!DOCTYPE web-app PUBLIC
-   "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
-   "http://java.sun.com/dtd/web-app_2_3.dtd">
+<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
-<web-app>
   <description>Registro WEB</description>
 
   <context-param>
+     <description><![CDATA[]]></description>
      <param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
      <param-value>messages</param-value>
-     <description><![CDATA[]]></description>
+  </context-param>
+
+  <context-param>
+     <param-name>admin.view.traspasos</param-name>
+     <param-value>${admin.view.traspasos}</param-value>
+  </context-param>
+  <context-param>
+     <param-name>registro.entrada.view.preregistre</param-name>
+     <param-value>${registro.entrada.view.preregistre}</param-value>
+  </context-param>
+  <context-param>
+     <param-name>registro.entrada.view.disquete_correo</param-name>
+     <param-value>${registro.entrada.view.disquete_correo}</param-value>
+  </context-param>
+  <context-param>
+     <param-name>registro.entrada.view.registre012</param-name>
+     <param-value>${registro.entrada.view.registre012}</param-value>
+  </context-param>
+  <context-param>
+     <param-name>oficios.config.tipo_documento</param-name>
+     <param-value>${oficios.config.tipo_documento}</param-value>
+  </context-param>
+  <context-param>
+     <param-name>oficios.config.idioma</param-name>
+     <param-value>${oficios.config.idioma}</param-value>
+  </context-param>
+  <context-param>
+     <param-name>oficios.config.entidad</param-name>
+     <param-value>${oficios.config.entidad}</param-value>
   </context-param>
 
   <filter>
@@ -49,15 +75,15 @@
   </servlet>
   
   <servlet>
+    <display-name>Quartz Initializer Servlet</display-name>
   	<servlet-name>QuartzInitializer</servlet-name>
-	<display-name>Quartz Initializer Servlet</display-name>
 	<servlet-class>org.quartz.ee.servlet.QuartzInitializerServlet</servlet-class>
 	<load-on-startup>1</load-on-startup>
   </servlet>
   
   <servlet>
-	<servlet-name>QuartzServlet</servlet-name>
-	<display-name>Quartz Servlet</display-name>
+    <display-name>Quartz Servlet</display-name>
+    <servlet-name>QuartzServlet</servlet-name>
 	<servlet-class>es.caib.regweb.webapp.servlet.QuartzServlet</servlet-class>
 	<init-param><param-name>cronExpr</param-name> 
 	<!-- Feim que s'executi cada vespre a les 4:30, després del backup online 
@@ -263,23 +289,23 @@
     <env-entry>
         <description />
             <env-entry-name>BDP.url</env-entry-name>
+            <env-entry-type>java.lang.String</env-entry-type>
             <!-- Direccion absoluta -->
             <env-entry-value>${webapp.bdp.url}</env-entry-value>
-            <env-entry-type>java.lang.String</env-entry-type>
     </env-entry>
     <env-entry>
         <description />
             <env-entry-name>BDP.forward</env-entry-name>
+            <env-entry-type>java.lang.String</env-entry-type>
             <!-- Direccion absoluta -->
             <env-entry-value>${webapp.bdp.forward}</env-entry-value>
-            <env-entry-type>java.lang.String</env-entry-type>
     </env-entry>
     <env-entry>
         <description />
             <env-entry-name>Repros.max</env-entry-name>
+            <env-entry-type>java.lang.Integer</env-entry-type>
             <!-- Nombre màxim de Repros d'entrada i sortida per usuari -->
             <env-entry-value>10</env-entry-value>
-            <env-entry-type>java.lang.Integer</env-entry-type>
     </env-entry>
 	
 </web-app>

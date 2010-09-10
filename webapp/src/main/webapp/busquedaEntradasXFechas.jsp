@@ -266,7 +266,7 @@ void escribeSelect2(javax.servlet.jsp.JspWriter out, String tipo, Vector valores
         </tr>
         
         <c:choose>
-        <c:when test="${registro.entrada.view.registre012}">
+        <c:when test="${initParam['registro.entrada.view.registre012']}">
         <tr>
             <td style="border:0">
                 &nbsp;<fmt:message key='entitat_local_012'/> ...............:

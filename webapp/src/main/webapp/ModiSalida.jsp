@@ -638,7 +638,7 @@
                             &nbsp;
 
                             <c:choose>
-                            <c:when test="${registro.entrada.view.disquete_correo}">
+                            <c:when test="${initParam['registro.entrada.view.disquete_correo']}">
                             <!--Numero de disquete -->
                             <font class="<%=errorEn(errores,"disquet")%>"><fmt:message key='registro.num_disquete'/> </font>
                             <input onkeypress="return check(event)" type=text name=disquet size="8" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml((registro==null)? "":registro.getDisquet().trim())%>">

@@ -132,7 +132,7 @@
         <script language="javascript" src="jscripts/TAO.js"></script>
 <script language="javascript">
      function activar_060(){
-       <c:if test="${registro.entrada.view.registre012}">
+       <c:if test="${initParam['registro.entrada.view.registre012']}">
 			valor=document.registroForm.Reg060.checked;
             
             if (valor){
@@ -159,7 +159,7 @@
             		alert("El símbol \"¤\" no és permès a l\'aplicació. Emprau \"euro\" o \"euros\" segons pertoqui");
             		return false;
             	} else { 
-                <c:if test="${registro.entrada.view.registre012}">
+                <c:if test="${initParam['registro.entrada.view.registre012']}">
                     if (document.registroForm.Reg060.checked && document.registroForm.mun_060.value == "000"){
                       alert("S'ha de seleccionar el municipi del 060.");
                       return false;
@@ -397,15 +397,15 @@
                         &nbsp;<font class="errorcampo">*</font>
                         <font class="<%=errorEn(errores, "tipo")%>"><fmt:message key='registro.tipo'/> </font>
                         <select name="tiposel" size="1" style="width: 250px" disabled>
-                            <% escribeSelect(out, "N", valores.buscarDocumentos(), "${oficios.config.tipo_documento}"); %>
+                            <% escribeSelect(out, "N", valores.buscarDocumentos(), application.getInitParameter("oficios.config.tipo_documento")); %>
                         </select>
-                        <input type="hidden" name="tipo" value="<%="${oficios.config.tipo_documento}"%>"/>
+                        <input type="hidden" name="tipo" value="${initParam['oficios.config.tipo_documento']}}"/>
                         <!-- Despegable para Idiomas -->
                         <font class="<%=errorEn(errores,"idioma")%>"><fmt:message key='registro.idioma'/></font>
                         <select name="idiomasel" size="1" disabled>
-                            <% escribeSelect(out, "N", valores.buscarIdiomas(), "${oficios.config.idioma}"); %>
+                            <% escribeSelect(out, "N", valores.buscarIdiomas(), application.getInitParameter("oficios.config.idioma")); %>
                         </select>
-                        <input type="hidden" name="idioma" value="<%="${oficios.config.idioma}"%>"/>
+                        <input type="hidden" name="idioma" value="${initParam['oficios.config.idioma']}"/>
                     </td>
                 </tr>
                 <!-- 3ª fila de la tabla -->
@@ -415,7 +415,7 @@
                 <br><font class="errorcampo">*</font>
                 <fmt:message key='remitent'/>........<font class="<%=errorEn(errores,"entidad1")%>"><fmt:message key='registro.entidad'/></font>
                 <!-- Remitente Entidad 1 -->
-                <input id="enti" type=text name=entidad1 readonly size="7" value="${oficios.config.entidad}" onblur="recuperaDescripcionEntidad()"> 
+                <input id="enti" type=text name=entidad1 readonly size="7" value="${initParam['oficios.config.entidad']}" onblur="recuperaDescripcionEntidad()"> 
                 <!-- Remitente Entidad 2 -->
                <%
                // Calculamos el destinatario
@@ -499,7 +499,7 @@
                     </td>
                 </tr>
                 <!-- 9ª fila de la tabla -->
-                <c:if test="${registro.entrada.view.registre012}">
+                <c:if test="${initParam['registro.entrada.view.registre012']}">
                 <tr>
 					<td style="border:0;" colspan="2">
                     <table>
@@ -549,7 +549,7 @@
                     <input type="hidden" name="idioex" value="<%=anteriorIdioex%>"/>
 
                         <c:choose>
-                        <c:when test="${registro.entrada.view.disquete_correo}">
+                        <c:when test="${initParam['registro.entrada.view.disquete_correo']}">
                         <!--Numero de disquete -->
                         <font class="<%=errorEn(errores,"disquet")%>"><fmt:message key='registro.num_disquete'/> </font>
                         <input readonly onkeypress="return check(event)" type=text name=disquet size="8" value="<%=reg.getDisquet()!=null?reg.getDisquet().trim():""%>">

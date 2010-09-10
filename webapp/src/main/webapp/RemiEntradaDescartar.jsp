@@ -209,7 +209,7 @@ ParametrosLineaOficioRemision param = new ParametrosLineaOficioRemision();
                     &nbsp;
 
                     <c:choose>
-                    <c:when test="${registro.entrada.view.disquete_correo}">
+                    <c:when test="${initParam['registro.entrada.view.disquete_correo']}">
                     <!--Numero de disquete -->
                     <fmt:message key='registro.num_disquete'/> <font class="ficha"><%=reg.getDisquet()%></font>
                     &nbsp;

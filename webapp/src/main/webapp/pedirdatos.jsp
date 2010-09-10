@@ -135,7 +135,7 @@ function refrescaFisica(){
    }
 
      function activar_060(){
-        <c:if test="${registro.entrada.view.registre012}">
+        <c:if test="${initParam['registro.entrada.view.registre012']}">
 			valor=document.registroForm.Reg060.checked;
             
             if (valor){
@@ -163,7 +163,7 @@ function refrescaFisica(){
             		return false;
             	} else {
 
-                    <c:if test="${registro.entrada.view.registre012}">
+                    <c:if test="${initParam['registro.entrada.view.registre012']}">
                     if (document.registroForm.Reg060.checked && document.registroForm.mun_060.value == "000"){
 						alert("S'ha de seleccionar el municipi del 060.");
                         return false;
@@ -570,7 +570,7 @@ function refrescaFisica(){
                     </td>
                 </tr>
                 <!-- 9ª fila de la tabla -->
-                <c:if test="${registro.entrada.view.registre012}">
+                <c:if test="${initParam['registro.entrada.view.registre012']}">
                 <tr>
 					<td style="border:0;" colspan="2">
                     <table>
@@ -619,7 +619,7 @@ function refrescaFisica(){
                         </select>&nbsp;
                         
                         <c:choose>
-                        <c:when test="${registro.entrada.view.disquete_correo}">
+                        <c:when test="${initParam['registro.entrada.view.disquete_correo']}">
                         <!--Numero de disquete -->
                         <font class="<%=errorEn(errores,"disquet")%>"><fmt:message key='registro.num_disquete'/> </font>
                         <input onkeypress="return check(event)" type=text name=disquet size="8" value="<%=(registro==null)? "":registro.getDisquet().trim()%>">

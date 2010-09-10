@@ -1,7 +1,6 @@
 <%@ page pageEncoding="UTF-8"%>
 <% request.setCharacterEncoding("UTF-8"); %>
 <%@ page contentType="text/html;charset=UTF-8"%>
-<%@page import="java.util.*, es.caib.regweb.logic.interfaces.*, es.caib.regweb.logic.util.*, es.caib.regweb.logic.helper.*"%>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 
@@ -34,14 +33,14 @@
   				<li><a href="<c:url value='/admin/controller.do?accion=comptadors'/>"><fmt:message key="inicialitzacio_comptador"/></a></li>
 					<li><a href="<c:url value='/admin/controller.do?accion=agrupacionsgeografiques'/>"><fmt:message key="agrupacions_geografiques"/></a></li>
   				<li><a href="<c:url value='/admin/controller.do?accion=tipusDocuments'/>"><fmt:message key="tipus_documents"/></a></li>
-          <c:if test="${registro.entrada.view.registre012}">
+          <c:if test="${initParam['registro.entrada.view.registre012']}">
   				<li><a href="<c:url value='/admin/controller.do?accion=municipis060'/>"><fmt:message key="municipis_012"/></a></li>
   				</c:if>
   		 		<li><a href="<c:url value='/admin/controller.do?accion=modelsOficis'/>"><fmt:message key="models_oficis"/></a></li>
   		 		<li><a href="<c:url value='/admin/controller.do?accion=modelsRebuts'/>"><fmt:message key="models_rebuts"/></a></li>
   		 	</ul>
 
-            <c:if test="${admin.view.traspasos}">
+            <c:if test="${initParam['admin.view.traspasos']}">
             <p><strong><fmt:message key="procediments"/></strong></p>
   			<ul style="padding-top:0px;">
   				<li><a href="<c:url value='/admin/controller.do?accion=traspassos'/>"><fmt:message key="traspassos_fogaiba"/></a></li>
