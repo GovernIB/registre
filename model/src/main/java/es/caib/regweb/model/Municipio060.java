@@ -13,6 +13,7 @@ import javax.persistence.UniqueConstraint;
  */
 @Entity
 @Table(name = "BZMUN_060", uniqueConstraints = @UniqueConstraint(columnNames = "MUN_NOM"))
+@org.hibernate.annotations.Table(appliesTo = "BZMUN_060", comment = "Municipio060")
 public class Municipio060 implements java.io.Serializable {
 
 	private String codigoMunicipio;

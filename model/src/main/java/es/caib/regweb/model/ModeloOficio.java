@@ -9,6 +9,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "BZMODOF")
+@org.hibernate.annotations.Table(appliesTo = "BZMODOF", comment = "ModeloOficio")
 public class ModeloOficio implements java.io.Serializable {
 
 	private String nombre;

@@ -14,6 +14,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "BZIDIOM")
+@org.hibernate.annotations.Table(appliesTo = "BZIDIOM", comment = "Idioma")
 public class Idioma implements java.io.Serializable {
 
 	private String codigo;

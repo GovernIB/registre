@@ -14,6 +14,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "BZAUTOR")
+@org.hibernate.annotations.Table(appliesTo = "BZAUTOR", comment = "Autorizacion")
 public class Autorizacion implements java.io.Serializable {
 
 	private AutorizacionId id;

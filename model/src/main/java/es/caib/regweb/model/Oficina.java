@@ -9,6 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="BAGECOM")
+@org.hibernate.annotations.Table(appliesTo = "BAGECOM", comment = "Oficina")
 public class Oficina implements java.io.Serializable {
   private int codigo;
   private String nombre;
