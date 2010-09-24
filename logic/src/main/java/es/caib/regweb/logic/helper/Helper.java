@@ -87,7 +87,7 @@ public class Helper {
     /**
      * Actualiza el numero de Disquete. Si el numero a actualizar es mayor que el leido.
      *
-     * @param con Connection
+     * @param session Connection
      * @param disquete int con el numero del disquete a actualizar
      * @param oficina Código de la oficina que solicita el número
      * @param tipo    "E"=Entrada   "S"=Salida
@@ -189,9 +189,9 @@ public class Helper {
             ps=session.createSQLQuery(sentenciaSql);
             ps.addScalar("FZJFVISA", Hibernate.INTEGER);
             ps.setString(0,tipo);
-            ps.setString(1,oficina);
-            ps.setString(2,ano);
-            ps.setString(3,numero);
+            ps.setInteger(1,Integer.parseInt(oficina));
+            ps.setInteger(2,Integer.parseInt(ano));
+            ps.setInteger(3,Integer.parseInt(numero));
             rs=ps.scroll();
             if (rs.next()) {
                 pdteVisado=true;
