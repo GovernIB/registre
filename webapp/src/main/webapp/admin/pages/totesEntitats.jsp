@@ -4,6 +4,7 @@
 <%@page import="java.util.*, es.caib.regweb.logic.interfaces.*, es.caib.regweb.logic.util.*, es.caib.regweb.logic.helper.*"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://commons.apache.org/lang/stringescapeutils/functions" prefix="seu" %>
 
 <html>
     <head>
@@ -44,7 +45,7 @@
           <c:if test="${((item/3)%2)==0}"><c:set var="clase" value="par" /></c:if>
 
             <tr class="<c:out escapeXml='false' value='${clase}'/>">
-              <td><a href="javascript:selecciona('<c:out escapeXml="false" value="${entidad1}"/>', '<c:out escapeXml="false" value="${entidad2}"/>', '<c:out escapeXml="false" value="${texto}"/>')"><c:out escapeXml='false' value='${entidades}'/></a></td>
+              <td><a href="javascript:selecciona('<c:out escapeXml="false" value="${entidad1}"/>', '<c:out escapeXml="false" value="${entidad2}"/>', '<c:out escapeXml="false" value="${seu:escapeJavaScript(texto)}"/>')"><c:out escapeXml='false' value='${entidades}'/></a></td>
               <td><c:out escapeXml='false' value='${texto}'/></td>
             </tr>
           </c:forEach>
