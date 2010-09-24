@@ -19,7 +19,6 @@ ValoresFacade valores = ValoresFacadeUtil.getHome().create();
         <link rel="shortcut icon" href="favicon.ico"/>
     </head>
     <body>
-        <form>
         <%
             String subcadenaCodigo=(request.getParameter("subcadenaCodigo")==null) ? "" :request.getParameter("subcadenaCodigo").trim();
             String subcadenaTexto=(request.getParameter("subcadenaTexto")==null) ? "" : request.getParameter("subcadenaTexto").trim();
@@ -34,7 +33,7 @@ ValoresFacade valores = ValoresFacadeUtil.getHome().create();
                 String entidades=entidad1+"-"+entidad2; 
                 %>
             <tr class="<%=(((i/3)%2)==0)? "par":"impar"%>">
-                <td><a href="javascript:selecciona('<%=entidad1%>', '<%=entidad2%>', '<%=texto.replaceAll("\'", "\\\\\'")%>')"><%=entidades%></a></td>
+                <td><a href="javascript:selecciona('<%=entidad1%>', '<%=entidad2%>', '<%=texto.replaceAll("'", "\\\\'")%>')"><%=entidades%></a></td>
                 <td><%=texto%></td>
             </tr>
             <%}%>
