@@ -130,7 +130,7 @@
           </components>
           <componentProperties>
             <persistenceunit>Default</persistenceunit>
-            <outputfilename>schema.ddl</outputfilename>
+            <outputfilename>schema.sql</outputfilename>
             <drop>false</drop>
             <create>true</create>
             <export>false</export>
