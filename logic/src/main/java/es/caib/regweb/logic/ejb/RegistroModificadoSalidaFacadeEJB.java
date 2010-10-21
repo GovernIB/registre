@@ -189,8 +189,8 @@ public abstract class RegistroModificadoSalidaFacadeEJB extends HibernateEJB {
 			q.setInteger(contador++,param.getOficina());
 			q.setInteger(contador++,param.getNumeroRegistro());
 			q.setInteger(contador++,param.getAnoSalida());
-			q.setString(contador++, param.getFechaModificacion());
-			q.setString(contador++, param.getHoraModificacion());
+			q.setInteger(contador++, Integer.parseInt(param.getFechaModificacion()));
+			q.setInteger(contador++, Integer.parseInt(param.getHoraModificacion()));
 			
 			int registrosAfectados=q.executeUpdate();
 
