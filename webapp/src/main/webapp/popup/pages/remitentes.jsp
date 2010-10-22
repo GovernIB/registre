@@ -25,7 +25,7 @@
                 </td>
             </tr>
             <tr>
-                <form action="popup.do">
+                <form action="popup.do" method="POST">
                 <td>
                     <input type="hidden" name="accion" value="remitentes" />
                     <input type="text" name="subcadenaCodigo" size="7" maxlength="7" value="<c:out value='${subcadenaCodigo}' />">
