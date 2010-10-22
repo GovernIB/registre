@@ -77,6 +77,8 @@ public class ControllerPopupServlet extends UtilWebServlet {
 
             Vector remitentes=valores.buscarRemitentes(subcadenaCodigo, subcadenaTexto);
 
+            request.setAttribute("subcadenaCodigo", subcadenaCodigo);
+            request.setAttribute("subcadenaTexto", subcadenaTexto);
             request.setAttribute("remitentes", remitentes);
             request.setAttribute("remitentesSize", remitentes.size());
 

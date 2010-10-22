@@ -611,7 +611,7 @@ public abstract class ValoresFacadeEJB extends HibernateEJB {
 			sentenciaHql="select codigoCatalan, id.numero, nombreCatalan from EntidadRemitente where id.fechaBaja=0" +
 			((!subcadenaTexto.trim().equals("") || !subcadenaCodigo.trim().equals("")) ? " and " : "") +
 			((!subcadenaTexto.trim().equals("") && !subcadenaCodigo.trim().equals("")) ? "(" : "") +
-			((!subcadenaTexto.trim().equals("")) ? "nombreCatalan like ?" : "") +
+			((!subcadenaTexto.trim().equals("")) ? "upper(nombreCatalan) like ?" : "") +
 			((!subcadenaTexto.trim().equals("") && !subcadenaCodigo.trim().equals("")) ? " or " : "") +
 			((!subcadenaCodigo.trim().equals("") && subcadenaCodigo.trim().length()!=6) ? "codigoCatalan like ?" : "") +
 			((!subcadenaCodigo.trim().equals("") && subcadenaCodigo.trim().length()==6) ? "codigoCatalan like ? or codigoCatalan like ?" : "") +
@@ -641,14 +641,14 @@ public abstract class ValoresFacadeEJB extends HibernateEJB {
 			}
 			if (remitentes.size()==0) {
 				remitentes.addElement("&nbsp;");
-				remitentes.addElement("No hi ha Remitents");
 				remitentes.addElement("&nbsp;");
+				remitentes.addElement("No hi ha Remitents");
 			}
 			session.flush();
         } catch (Exception e) {
          remitentes.addElement("&nbsp;");
-         remitentes.addElement("Error en la SELECT");
          remitentes.addElement("&nbsp;");
+         remitentes.addElement("Error en la SELECT");
          log.error("ERROR: ");
         } finally {
             close(session);
