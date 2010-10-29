@@ -37,11 +37,11 @@
     </dependency>
 
 
-      <!-- librerias a incluir en WEB-INF/lib -->
+    <!-- librerias a incluir en WEB-INF/lib -->
     <dependency>
       <groupId>com.lowagie</groupId>
       <artifactId>itext</artifactId>
-      <version>1.3</version>
+      <version>1.4.8</version>
       <scope>compile</scope>
     </dependency>
     <dependency>

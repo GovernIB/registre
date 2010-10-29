@@ -7,16 +7,10 @@
 package es.caib.regweb.webapp.servlet;
 
 import java.io.*;
-import java.net.*;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-import com.lowagie.text.*;
-import com.lowagie.text.pdf.*;
-
-import com.lowagie.text.pdf.PdfAction.*;
-import com.lowagie.text.Chunk;
 import org.apache.log4j.Logger;
 
 /**
