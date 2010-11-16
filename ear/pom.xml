@@ -48,7 +48,7 @@
           <displayName>Registre Web</displayName>
           <description>Registre Web</description>
           <jboss>
-            <version>4</version>
+            <version>3.2</version>
             <loader-repository>es.caib.regweb:loader=regweb.ear</loader-repository>
             <loader-repository-config>java2ParentDelegation=false</loader-repository-config>
           </jboss>
