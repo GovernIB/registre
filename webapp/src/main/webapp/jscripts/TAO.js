@@ -73,7 +73,7 @@
         if (key==13) return false;
 
         if (document.registroForm.comentario &&document.registroForm.comentario.value.length>159) {
-            alert("No es permeten més caràcters a l'extracte");
+            alert("No es permeten mÃ©s carÃ cters a l'extracte");
             return false;
         } else {
             return true;
