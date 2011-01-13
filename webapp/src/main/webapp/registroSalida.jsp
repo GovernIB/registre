@@ -154,6 +154,9 @@ if (!ok){
         <!-- Nueva tabla -->
 		<br/>
 		<br/>
+
+        <%-- substituir per incloure la pàgina "sellos.jsp" --%>
+        <%--
         <table align="center">
             <tr>
                 <td align="center">
@@ -224,6 +227,16 @@ if (!ok){
                 </td>
             </tr>
         </table>
+        --%>
+        <c:set var="data" scope="request"><%=registro.getDataSalida()%></c:set>
+        <c:set var="hora" scope="request"><%=registro.getHora()%></c:set>
+        <c:set var="oficina" scope="request"><%=valores.recuperaDescripcionOficina(registro.getOficina())%></c:set>
+        <c:set var="oficinaid" scope="request"><%=registro.getOficina()%></c:set>
+        <c:set var="numero" scope="request"><%=registro.getNumeroSalida()%></c:set>
+        <c:set var="ano" scope="request"><%=registro.getAnoSalida()%></c:set>
+        <c:set var="ES" scope="request">S</c:set>
+        <jsp:include page="sellos.jsp" flush="true" />
+
         <!-- Fin de la nueva tabla -->
         <%
 }

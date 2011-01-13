@@ -186,6 +186,9 @@ if (!ok){
         <!-- Nueva tabla -->
        <br/>
        <br/>
+
+       <%-- substituir per incloure la pàgina "sellos.jsp" --%>  
+       <%--
         <table align="center">
             <tr>
                 <td align="center"> 
@@ -255,8 +258,17 @@ if (!ok){
                      <a target="_blank" href="imprimeSello?data=<%=registro.getDataEntrada()%>&tipo=8&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroEntrada()%>&ano=<%=registro.getAnoEntrada()%>&ES=E&auto_print=si"><fmt:message key='pdf_8'/></a> 
                 </td>
             </tr>
-            <%-- Imagenes --%>
         </table>
+         --%>
+         <c:set var="data" scope="request"><%=registro.getDataEntrada()%></c:set>
+         <c:set var="hora" scope="request"><%=registro.getHora()%></c:set>
+         <c:set var="oficina" scope="request"><%=valores.recuperaDescripcionOficina(registro.getOficina())%></c:set>
+         <c:set var="oficinaid" scope="request"><%=registro.getOficina()%></c:set>
+         <c:set var="numero" scope="request"><%=registro.getNumeroEntrada()%></c:set>
+         <c:set var="ano" scope="request"><%=registro.getAnoEntrada()%></c:set>
+         <c:set var="ES" scope="request">E</c:set>
+         <jsp:include page="sellos.jsp" flush="true" />
+
         <!-- Fin de la nueva tabla -->
         <%
 }
