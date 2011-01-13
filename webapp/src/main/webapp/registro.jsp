@@ -10,7 +10,6 @@
 <%
 
 RegistroEntradaFacade regent = RegistroEntradaFacadeUtil.getHome().create();
-ParametrosRegistroEntrada param = new ParametrosRegistroEntrada();
 ParametrosRegistroEntrada registro = new ParametrosRegistroEntrada();
 
 session.setAttribute("oficinaSesion", request.getParameter("oficina"));
