@@ -15,6 +15,10 @@
      <param-value>${admin.view.traspasos}</param-value>
   </context-param>
   <context-param>
+     <param-name>registro.sello.color</param-name>
+     <param-value>${registro.sello.color}</param-value>
+  </context-param>
+  <context-param>
      <param-name>registro.entrada.view.preregistre</param-name>
      <param-value>${registro.entrada.view.preregistre}</param-value>
   </context-param>

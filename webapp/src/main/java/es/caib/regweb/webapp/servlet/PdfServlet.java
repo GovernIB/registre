@@ -6,6 +6,7 @@
 
 package es.caib.regweb.webapp.servlet;
 
+import java.awt.*;
 import java.io.*;
 import java.net.*;
 import java.util.Locale;
@@ -22,6 +23,7 @@ import es.caib.regweb.logic.util.ValoresFacadeUtil;
 
 import com.lowagie.text.pdf.PdfAction.*;
 import com.lowagie.text.Chunk;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -55,6 +57,19 @@ public class PdfServlet extends HttpServlet {
 //        System.out.println("Comienza");
 
         request.setCharacterEncoding("UTF-8");
+
+        // Color per defecte
+        Color color = Color.BLACK;
+        String colorParam = this.getServletContext().getInitParameter("registro.sello.color");
+        if (StringUtils.isNotBlank(colorParam)) {
+            color = getColor(colorParam);
+            if (color == null) {
+                log.warn("Parametre 'registro.sello.color' invàlid: " + colorParam + "");
+                log.warn("Ha de ser de la forma: R,G,B");
+                log.warn("On R, G i B són enters entre 0 i 255");
+                color = Color.BLACK;
+            }
+        }
 
         String oficina=request.getParameter("oficina");
         String oficinaid=request.getParameter("oficinaid");
@@ -135,6 +150,7 @@ public class PdfServlet extends HttpServlet {
             cb.stroke();
             
             // we tell the ContentByte we're ready to draw text
+            cb.setColorFill(color);
             cb.beginText();
             
             BaseFont bf = BaseFont.createFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
@@ -223,5 +239,26 @@ public class PdfServlet extends HttpServlet {
         }
         return resultado;
     }
-    
+
+    private Color getColor(String param) {
+        String[] components = param.split(",");
+        if (components.length != 3) {
+            // Ha de tenir tres components
+            return null;
+        }
+
+        int[] rgb = new int[3];
+        for (int i = 0; i < 3; i++) {
+            try {
+                // Comrpovar que és un número
+                rgb[i] = Integer.parseInt(components[i]);
+            } catch (NumberFormatException e) {
+                return null;
+            }
+            // Comprovar rang 0..255
+            if (rgb[i] < 0 || rgb[i] > 255) return null;
+        }
+
+        return new Color(rgb[0], rgb[1], rgb[2]);
+    }
 }
