@@ -27,9 +27,9 @@ public class EntradaOficinaFisicaId implements java.io.Serializable {
 
     @ManyToOne(cascade= CascadeType.ALL)
     @JoinColumns ({
-        @JoinColumn(name="FOEANOEN", referencedColumnName = "FZAANOEN"),
-        @JoinColumn(name="FOENUMEN", referencedColumnName = "FZANUMEN"),
-        @JoinColumn(name="FOECAGCO", referencedColumnName = "FZACAGCO")
+        @JoinColumn(name="FOEANOEN", nullable = false, referencedColumnName = "FZAANOEN"),
+        @JoinColumn(name="FOENUMEN", nullable = false, referencedColumnName = "FZANUMEN"),
+        @JoinColumn(name="FOECAGCO", nullable = false, referencedColumnName = "FZACAGCO")
     })
 	public Entrada getEntrada() {
 		return this.entrada;

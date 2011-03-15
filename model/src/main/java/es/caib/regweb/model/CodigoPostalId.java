@@ -26,8 +26,8 @@ public class CodigoPostalId implements java.io.Serializable {
 
     @ManyToOne(cascade= CascadeType.ALL)
     @JoinColumns ({
-        @JoinColumn(name="F12CTAGG", referencedColumnName = "FABCTAGG"),
-        @JoinColumn(name="F12CAGGE", referencedColumnName = "FABCAGGE")
+        @JoinColumn(name="F12CTAGG", nullable = false, referencedColumnName = "FABCTAGG"),
+        @JoinColumn(name="F12CAGGE", nullable = false, referencedColumnName = "FABCAGGE")
     })
 	public AgrupacionGeografica getAgrupacionGeografica() {
 		return this.agrupacionGeografica;

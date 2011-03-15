@@ -27,9 +27,9 @@ public class Entrada060Id implements java.io.Serializable {
 
     @ManyToOne(cascade= CascadeType.ALL)
     @JoinColumns ({
-        @JoinColumn(name="ENT_ANY", referencedColumnName = "FZAANOEN"),
-        @JoinColumn(name="ENT_NUM", referencedColumnName = "FZANUMEN"),
-        @JoinColumn(name="ENT_OFI", referencedColumnName = "FZACAGCO")
+        @JoinColumn(name="ENT_ANY", nullable = false, referencedColumnName = "FZAANOEN"),
+        @JoinColumn(name="ENT_NUM", nullable = false, referencedColumnName = "FZANUMEN"),
+        @JoinColumn(name="ENT_OFI", nullable = false, referencedColumnName = "FZACAGCO")
     })
 	public Entrada getEntrada() {
 		return this.entrada;

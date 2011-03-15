@@ -27,7 +27,7 @@ public class OficinaFisicaId implements java.io.Serializable {
 	}
 
     @ManyToOne(cascade= CascadeType.ALL)
-    @JoinColumn(name="FZOCAGCO", referencedColumnName = "FAACAGCO")
+    @JoinColumn(name="FZOCAGCO", nullable = false, referencedColumnName = "FAACAGCO")
 	public Oficina getOficina() {
 		return this.oficina;
 	}

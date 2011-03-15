@@ -28,7 +28,7 @@ public class OficinaOrganismoNoRemisionId implements java.io.Serializable {
 	}
 
     @ManyToOne(cascade= CascadeType.ALL)
-    @JoinColumn(name="FZFCAGCO", referencedColumnName = "FAACAGCO")
+    @JoinColumn(name="FZFCAGCO", nullable = false, referencedColumnName = "FAACAGCO")
 	public Oficina getOficina() {
 		return this.oficina;
 	}
@@ -38,7 +38,7 @@ public class OficinaOrganismoNoRemisionId implements java.io.Serializable {
 	}
 
     @ManyToOne(cascade= CascadeType.ALL)
-    @JoinColumn(name="FZFCORGA", referencedColumnName = "FAXCORGA")
+    @JoinColumn(name="FZFCORGA", nullable = false, referencedColumnName = "FAXCORGA")
 	public Organismo getOrganismo() {
 		return this.organismo;
 	}
