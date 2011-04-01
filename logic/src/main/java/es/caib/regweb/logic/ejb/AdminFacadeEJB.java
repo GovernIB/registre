@@ -31,6 +31,8 @@ import es.caib.regweb.model.OrganismoHistorico;
 import es.caib.regweb.model.OrganismoHistoricoId;
 import es.caib.regweb.model.OficinaFisica;
 import es.caib.regweb.model.OficinaFisicaId;
+import es.caib.regweb.model.OficinaFisicaHistorico;
+import es.caib.regweb.model.OficinaFisicaHistoricoId;
 import es.caib.regweb.model.OficinaHistorico;
 import es.caib.regweb.model.OficinaHistoricoId;
 import es.caib.regweb.model.AgrupacionGeografica;
@@ -449,7 +451,7 @@ public abstract class AdminFacadeEJB extends HibernateEJB {
 		
 			try {
 				
-				String sentenciaHql="SELECT id.oficina.codigo, id.codigoOficinaFisica, nombre FROM OficinaFisica WHERE id.oficina.codigo = ? AND id.codigoOficinaFisica = ? ";
+				String sentenciaHql="SELECT id.oficina.codigo, id.codigoOficinaFisica, nombre ,fechaBaja FROM OficinaFisica WHERE id.oficina.codigo = ? AND id.codigoOficinaFisica = ? ";
 				Query query=session.createQuery(sentenciaHql);
 				query.setInteger(0,Integer.valueOf(oficina));
 				query.setInteger(1,Integer.valueOf(oficinaFisica));
@@ -459,13 +461,28 @@ public abstract class AdminFacadeEJB extends HibernateEJB {
 					oficinas.addElement(String.valueOf(rs.getInteger(0)));
 					oficinas.addElement(String.valueOf(rs.getInteger(1)));
 					oficinas.addElement(rs.getString(2).trim());
+                    
+					String dataBaixa=String.valueOf(rs.getInteger(3));
+                    if (dataBaixa.length()==5)
+                        dataBaixa="0"+dataBaixa;
+                    
+                    DateFormat yymmdd=new SimpleDateFormat("yyMMdd");
+                    DateFormat ddmmyyyy=new SimpleDateFormat("dd/MM/yyyy");
+                    java.util.Date data=null;
+                    
+                    try {
+                        data=yymmdd.parse(dataBaixa);
+                        oficinas.addElement(ddmmyyyy.format(data));
+                    } catch (Exception e) {
+                        oficinas.addElement(dataBaixa);
+                    }
 				}
 				
 				if (oficinas.size()==0) {
 					oficinas.addElement("");
 					oficinas.addElement("");
-					oficinas.addElement("Oficina "+oficina+" no existeix");
-					//oficinas.addElement("");
+					oficinas.addElement("Oficina f�sica "+oficina+"-"+oficinaFisica+" no existeix");
+					oficinas.addElement("");
 				}
 				
 				session.flush(); 
@@ -474,7 +491,7 @@ public abstract class AdminFacadeEJB extends HibernateEJB {
              oficinas.addElement("");
              oficinas.addElement("");
              oficinas.addElement("BuscarOficinasFisicas Error en la SELECT");
-             //oficinas.addElement("");
+             oficinas.addElement("");
              log.error(e.getMessage());
             } finally {
                 close(session);
@@ -721,6 +738,85 @@ public abstract class AdminFacadeEJB extends HibernateEJB {
 		return organismes;
 	}
 
+	/*
+	 * Retorna el usuaris per una oficina determinada.
+	 * @param oficina Codi d'oficina a cercar
+	 * @return Informació dels usuaris autoritzats a una oficina determinada
+	 * @throws RemoteException
+	 * 
+	 * @ejb.interface-method
+     * @ejb.permission unchecked="true"
+	 */
+	public Vector getAutoritzacionsOficina(String oficina) throws RemoteException{
+		
+    	/* Fic a un TreeMap els usuaris autoritzats a una oficina.*/
+		Vector resposta = new Vector();
+		
+    	AutoritzacionsUsuariData autUsuData = null;
+    	 	
+    	String tipusAut = "";
+    	String UsuariAutOlD = "";
+    	String UsuariAut = "";
+		Vector oficinas=new Vector();
+		
+		Session session = getSession();
+		ScrollableResults rs=null;
+		
+		try {
+			
+			String sentenciaHql="select usuario,codigoAutorizacion from Autorizacion " +
+					"where codigoOficina=? " +
+					"ORDER BY usuario,codigoAutorizacion";
+			
+			Query query=session.createQuery(sentenciaHql);
+			query.setInteger(0,Integer.valueOf(oficina));
+			rs = query.scroll();
+
+			int i=0;
+			while (rs.next()) {
+				
+				UsuariAut = rs.getString(1);
+				tipusAut = rs.getString(2);
+				 
+				
+				//Si es un nou usuari
+				if(!UsuariAut.equals(UsuariAutOlD)){
+					if(autUsuData!=null){					
+						resposta.add(autUsuData);
+					}
+					autUsuData = new AutoritzacionsUsuariData(UsuariAut);
+				}
+				
+				if ( tipusAut.equals("AE")) {
+					autUsuData.setAe(true);
+				} else if ( tipusAut.equals("CE")) {
+					autUsuData.setCe(true);
+				} else if ( tipusAut.equals("AS")) {
+					autUsuData.setAs(true);
+				} else if ( tipusAut.equals("CS")) {
+					autUsuData.setCs(true);
+				} else if ( tipusAut.equals("VE")) {
+					autUsuData.setVe(true);
+				} else if ( tipusAut.equals("VS")) {
+					autUsuData.setVs(true);
+				}
+				i++;
+				//System.out.println("Afegim("+i+"): "+tipusAut+" "+UsuariAut);
+				UsuariAutOlD = UsuariAut;
+			}
+		} catch (Exception e) {
+			oficinas.addElement("");
+			oficinas.addElement("getAutoritzacionsOficina Error en la SELECT");
+			log.error(e.getMessage());
+		} finally {
+			close(session);
+		}
+    	return resposta;
+    }
+	
+	/**
+
+	
 	/**
 	 * Retorna les oficines autoritzades a l'usuari.
 	 * @param usuari Codi d'usuari a cercar
@@ -741,7 +837,7 @@ public abstract class AdminFacadeEJB extends HibernateEJB {
     	TreeMap autUsuVS = new TreeMap();
     	
     	String tipusAut = "";
-    	String oficinaAut = "";
+    	//String oficinaAut = "";
 		Session session = getSession();
 		ScrollableResults rs=null;
 		
@@ -759,7 +855,7 @@ public abstract class AdminFacadeEJB extends HibernateEJB {
 			int i=0;
 			while (rs.next()) {
 				tipusAut = rs.getString(0);
-				oficinaAut = String.valueOf(rs.getInteger(1)); 
+				//oficinaAut = String.valueOf(rs.getInteger(1)); 
 				if ( tipusAut.equals("AE")) {
 					autUsuAE.put(new Integer(rs.getInteger(1)),"X");
 				} else if ( tipusAut.equals("CE")) {
@@ -983,7 +1079,7 @@ public abstract class AdminFacadeEJB extends HibernateEJB {
 			query.setString(0,usuari);
 			int afectats=query.executeUpdate();
 			if (afectats<=0){
-				log.info("L'usuari ("+usuari+") no té dades a Autorizacion.");
+				log.info("L'usuari ("+usuari+") no t� dades a Autorizacion.");
 			}
 
 
@@ -1345,7 +1441,7 @@ public abstract class AdminFacadeEJB extends HibernateEJB {
 			session.flush();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage());
 			throw new RegwebException(e.getMessage());
         } finally {
             close(session);
@@ -1353,32 +1449,131 @@ public abstract class AdminFacadeEJB extends HibernateEJB {
     	return 0;    	
     }
 
+    /**
+     * Retorna l'hist�ric de l'oficina fisica donada
+     * @param oficina Oficina de la que cercar l'hist�ric
+     * @param oficina Oficina fisica de la que cercar l'hist�ric
+     * @return Vector amb tota la informaci� de l'hist�ric de l'oficina fisica.
+     * @throws RemoteException
+     * @ejb.interface-method
+     * @ejb.permission unchecked="true"
+     */
+	public Vector getHistOficinaFisica(String oficina, String oficinaFisica)  throws RemoteException{
+		Session session = getSession();
+		ScrollableResults rs=null;
+		Vector oficinasFisicas=new Vector();
+		
+		DateFormat yyyymmdd=new SimpleDateFormat("yyyyMMdd");
+        DateFormat ddmmyyyy=new SimpleDateFormat("dd/MM/yyyy");
+		
+			try {
+				String sentenciaHql="SELECT id.codigoOficina, id.codigoOficinaFisica,id.fechaAlta, nombre, fechaBaja"+
+				                    " FROM OficinaFisicaHistorico "+
+				                    " WHERE id.codigoOficina = ? AND id.codigoOficinaFisica = ? "+
+				                    " ORDER BY fechaBaja ASC";
+				Query query=session.createQuery(sentenciaHql);
+				query.setInteger(0,Integer.valueOf(oficina));
+				query.setInteger(1,Integer.valueOf(oficinaFisica));
+				rs = query.scroll();
+				
+				
+				while (rs.next()) {
+					oficinasFisicas.addElement(String.valueOf(rs.getInteger(0))); //id.oficina.codigo
+					oficinasFisicas.addElement(String.valueOf(rs.getInteger(1))); //id.codigoOficinaFisica
+					oficinasFisicas.addElement(rs.getString(3).trim()); //nombre
+
+					String dataAlta=String.valueOf(rs.getInteger(2)); //fecha alta
+	                try {
+	                	java.util.Date data=yyyymmdd.parse(dataAlta);
+	                	oficinasFisicas.addElement(ddmmyyyy.format(data));
+	                } catch (Exception e) {
+	                	oficinasFisicas.addElement(dataAlta);
+	                }					
+			        
+					String dataBaixa=String.valueOf(rs.getInteger(4)); //fecha baja
+	                try {
+	                	java.util.Date data=yyyymmdd.parse(dataBaixa);
+	                	oficinasFisicas.addElement(ddmmyyyy.format(data));
+	                } catch (Exception e) {
+	                	oficinasFisicas.addElement(dataBaixa);
+	                }
+					//log.debug("Llegim histOficinesFisiques: "+String.valueOf(rs.getInteger(0))+" "+String.valueOf(rs.getInteger(1))+" "+rs.getString("ofh_nom")
+					//		+" "+String.valueOf(rs.getInt("ofh_fecalt"))+" "+String.valueOf(rs.getInt("ofh_fecbaj")));
+				}
+				
+				if (oficinasFisicas.size()==0) {
+					oficinasFisicas.addElement("");
+					oficinasFisicas.addElement("");
+					oficinasFisicas.addElement("Oficina "+oficina+" no existeix");
+					oficinasFisicas.addElement("");
+					oficinasFisicas.addElement("");
+				}
+				
+			} catch (Exception e) {
+				oficinasFisicas.addElement("");
+				oficinasFisicas.addElement("");
+				oficinasFisicas.addElement("BuscarOficinas Error en la SELECT");
+				oficinasFisicas.addElement("");
+				oficinasFisicas.addElement("");
+				log.error(e);
+			} finally {
+				close(session);
+			}
+		return oficinasFisicas;
+	}
+    
 
     /**
-     * Alta de nova oficina fosoca.
+     * Alta de hist�ric d'oficina fisica
+     * @param codOficina Codi d'oficina
+     * @param codOficinaFisica Codi d'oficina fisica
+     * @param descOficina Descripci� de l'oficina fisica
+     * @param dataAlta Data d'alta de l'oficina fisica (juntament amb codOficina i codOficinaFisica �s la clau prim�ria)
+     * @return torna 0 si ha anat b� (si va malament, bota la RegwebException)
+     * @throws RemoteException
+     * @throws RegwebException
+     * @ejb.interface-method
+     * @ejb.permission unchecked="true"
+     */
+    public int altaHistOficinaFisica(String codOficina, String codOficinaFisica, String descOficina, String dataAlta) throws RemoteException, RegwebException { 
+    	Session session = getSession();
+		
+		try {					
+			OficinaFisicaHistorico ofiHistHist = new OficinaFisicaHistorico( new OficinaFisicaHistoricoId(Integer.valueOf(codOficina),Integer.valueOf(codOficinaFisica),Integer.valueOf(dataAlta),0),descOficina,Integer.valueOf(0));
+			session.save(ofiHistHist);
+			session.flush();
+			log.debug("Insertat ("+codOficina+","+codOficinaFisica+","+descOficina+",0) a OficinaFisicaHistorico)");
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			throw new RegwebException(e.getMessage());
+		} finally {
+			close(session);
+		}
+    	return 0;    	
+    }
+    
+    /**
+     * Alta de nova oficina fisica.
      * @param codOficina Codi d'oficina 
      * @param codOficinaFisica Codi d'oficina 
      * @param descOficina Descripció de l'oficina 
-     * @param dataAlta Data d'alta 
+     * @param dataBaixa Data d'baixa 
      * @return torna 0 si ha anat bé (si va malament, bota la RegwebException)
      * @throws RemoteException
      * @throws RegwebException
      * @ejb.interface-method
      * @ejb.permission unchecked="true"
      */
-    public int altaOficinaFisica(String codOficina, String codOficinaFisica, String descOficina, String dataAlta) throws RemoteException, RegwebException { 
+    public int altaOficinaFisica(String codOficina, String codOficinaFisica, String descOficina, String dataBaixa) throws RemoteException, RegwebException { 
 		Session session = getSession();
 		
 		try {
             Oficina oficina = (Oficina) session.load(Oficina.class, Integer.valueOf(codOficina));
             OficinaFisica ofi = new OficinaFisica(new OficinaFisicaId(oficina,Integer.valueOf(codOficinaFisica)),
-                                            descOficina,
-                                            0);
+                                            descOficina,Integer.valueOf(dataBaixa));
             session.save(ofi);
-			log.debug("Insertat ("+codOficina+"-"+codOficinaFisica+","+descOficina+",0) (update count=1) a OficinaFisica)");
-			
-
 			session.flush();
+			log.debug("Insertat ("+codOficina+"-"+codOficinaFisica+","+descOficina+","+dataBaixa+") (update count=1) a OficinaFisica)");
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1387,6 +1582,21 @@ public abstract class AdminFacadeEJB extends HibernateEJB {
             close(session);
         }
     	return 0;    	
+    }
+
+    /**
+     * Alta de nova oficina fisica.
+     * @param codOficina Codi d'oficina 
+     * @param codOficinaFisica Codi d'oficina 
+     * @param descOficina Descripció de l'oficina 
+     * @return torna 0 si ha anat bé (si va malament, bota la RegwebException)
+     * @throws RemoteException
+     * @throws RegwebException
+     * @ejb.interface-method
+     * @ejb.permission unchecked="true"
+     */
+    public int altaOficinaFisica(String codOficina, String codOficinaFisica, String descOficina) throws RemoteException, RegwebException { 
+    	return altaOficinaFisica(codOficina,codOficinaFisica,descOficina,"0");    	
     }
 
     /**
@@ -1480,12 +1690,13 @@ public abstract class AdminFacadeEJB extends HibernateEJB {
     	
     	try {
     		
-    		String sentenciaHql="UPDATE OficinaFisica SET nombre=? " +
+    		String sentenciaHql="UPDATE OficinaFisica SET nombre=? , fechaBaja=? " +
     		    "WHERE id.oficina.codigo=? AND id.codigoOficinaFisica=?";
     		Query query=session.createQuery(sentenciaHql);
     		query.setString(0,descOficina);
-    		query.setInteger(1,Integer.valueOf(codOficina));
-    		query.setInteger(2,Integer.valueOf(codOficinaFisica));
+    		query.setString(1,dataBaixa);
+    		query.setInteger(2,Integer.valueOf(codOficina));
+    		query.setInteger(3,Integer.valueOf(codOficinaFisica));
     		
     		int afectats=query.executeUpdate();
     		if (afectats<=0){
@@ -2150,7 +2361,7 @@ public abstract class AdminFacadeEJB extends HibernateEJB {
 			session.flush();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 			throw new RegwebException(e.getMessage());
         } finally {
             close(session);
@@ -2166,5 +2377,48 @@ public abstract class AdminFacadeEJB extends HibernateEJB {
         super.ejbCreate();
     }
   
+    /**
+     * Actualitza la informació de l'històric de l'oficina fisica
+     * @param codOficina Codi d'oficina a modificar l'històric
+     * @param codOficinaFisica Codi d'oficina fisica a modificar l'històric
+     * @param descOficina Descripció de l'oficina fisica
+     * @param dataAlta Data d'alta
+     * @param dataBaixa Data de baixa
+     * @return torna 0 si ha anat bé (si va malament, bota la RegwebException)
+     * @throws RemoteException
+     * @throws RegwebException
+     * @ejb.interface-method
+     * @ejb.permission unchecked="true"
+     */
+    public int actualitzaHistOficinaFisica(String codOficina, String codOficinaFisica, String descOficina, String dataAlta, String dataBaixa) throws RemoteException, RegwebException { 
+    	Session session = getSession();
+    	ScrollableResults rs=null;
+		
+		try {
+
+			String sentenciaHql="UPDATE OficinaFisicaHistorico "+
+			" SET nombre=?, fechaBaja=? " +
+			" WHERE id.codigoOficina=? AND id.codigoOficinaFisica=? AND id.fechaAlta=?";
+			Query query=session.createQuery(sentenciaHql);
    
+			query.setString(0,descOficina);
+			query.setInteger(1, new Integer(dataBaixa));
+			query.setString(2,codOficina);
+			query.setString(3,codOficinaFisica);
+			query.setInteger(4, new Integer(dataAlta));
+			// NO EXECUTAM FINS TENIR CLAR TOT EL QUE S'HA DE FER! 	
+			
+			int afectats=query.executeUpdate();
+			if (afectats<=0){
+
+				throw new RegwebException("ERROR: No s'ha pogut donar d'alta l'oficina fisica ("+codOficina+","+codOficinaFisica+","+descOficina+","+dataBaixa+") a bzofifis.");
+			}
+			log.debug("actualitzam l'històric d'oficina fisica");
+		} catch (Exception e) {
+			throw new RegwebException(e.getMessage());
+		} finally {
+			close(session);
+		}
+    	return 0;    
+    }
 }

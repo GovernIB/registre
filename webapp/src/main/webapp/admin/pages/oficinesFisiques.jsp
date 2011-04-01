@@ -2,8 +2,11 @@
 <% request.setCharacterEncoding("UTF-8"); %>
 <%@ page contentType="text/html;charset=UTF-8"%>
 <%@page import="java.util.*, es.caib.regweb.logic.interfaces.*, es.caib.regweb.logic.util.*, es.caib.regweb.logic.helper.*"%>
+<%@ page import="org.apache.log4j.Logger" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
+<%! private Logger log = Logger.getLogger(this.getClass());%>
 
 <html>
 <head>
@@ -11,9 +14,12 @@
     <script>
 	function addLoadEvent(func) {
     	var oldonload = window.onload;
+    	
 	    if (typeof window.onload != 'function') {
+	    	
 	        window.onload = func;
 	    } else {
+	    	
 	        window.onload = function() {
 	            if (oldonload) {
 	                oldonload();
@@ -86,7 +92,7 @@
 
         <c:if test="${not empty missatge}"> 
         addLoadEvent(function() {
-          abreError();;
+          abreError()
         });				
         </c:if>
     </script>
@@ -113,7 +119,7 @@
             <td>
             	 <div  id="menuDocAdm" style="width:250px">
             	 <ul style="margin-right: 5px">
-					<li><p><fmt:message key='oficina_a_gestionar_q'/> <a href="javascript:abreOficinas()"><img border="0" src="<c:url value='/imagenes/buscar.gif'/>" align=middle alt="<fmt:message key='cercar'/>"></a></p></li>
+					<li><p><fmt:message key='oficina_a_gestionar_q'/> <a href="javascript:abreOficinas()"><img border="0" src="<c:url value='/imagenes/buscar.gif'/>" align="middle" alt="<fmt:message key='cercar'/>"></a></p></li>
                 	<li>	<form id="cercaOficina" name="cercaOficina" action="<c:url value='/admin/controller.do?accion=oficinesFisiques'/>" method="post">
 								<input onKeyPress="return goodchars(event,'0123456789')" style="width:20px;" type="text" name="oficinaGestionar" id="oficinaGestionar" size="2" maxlength="2"/>
 								<input onKeyPress="return goodchars(event,'0123456789')" style="width:40px;" type="text" name="oficinaGestionarFisica" id="oficinaGestionarFisica" size="4" maxlength="4"/>

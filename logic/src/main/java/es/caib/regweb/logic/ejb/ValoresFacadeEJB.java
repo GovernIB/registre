@@ -39,7 +39,25 @@ import org.hibernate.ScrollMode;
  */
 public abstract class ValoresFacadeEJB extends HibernateEJB {
 	
+	
+    /**
+     * @ejb.env-entry
+     *   name="registro.registrevirtual.numero"
+     *   type="java.lang.String"
+     *   value="${registro.registrevirtual.numero}"
+     */
+	 String numeroRegistreVirtual;
+    /**
+     * @ejb.env-entry
+     *   name="registro.registrevirtual.estat"
+     *   type="java.lang.String"
+     *   value="${registro.registrevirtual.estat}"
+     */
+	 String registreVirtualActiu;
+
     private Logger log = Logger.getLogger(this.getClass());
+
+    
 
 	/** Creates a new instance of Valores */
 
@@ -224,10 +242,18 @@ public abstract class ValoresFacadeEJB extends HibernateEJB {
 				query.setString(1,autorizacion);
 				rs = query.scroll(ScrollMode.SCROLL_INSENSITIVE);
 				
+				log.debug("Registre Virtual Actiu="+this.registreVirtualActiu+"; Codi Oficina Virtual="+this.numeroRegistreVirtual);
+				
 				while (rs.next()) {
+					String codiOficinaFisica = String.valueOf(rs.getInteger(1));
+					
+					//Controlamos que la oficina física no sea una virtual y que las oficinas físicas virtuales no están activas
+					if (!(this.registreVirtualActiu.equalsIgnoreCase("true")&&
+							this.numeroRegistreVirtual.equalsIgnoreCase(codiOficinaFisica))){
 					oficinas.addElement(String.valueOf(rs.getInteger(0)));
 					oficinas.addElement(String.valueOf(rs.getInteger(1)));
 					oficinas.addElement(rs.getString(2));
+				}
 				}
 				
 				if (oficinas.size()==0) {
@@ -1029,7 +1055,6 @@ public abstract class ValoresFacadeEJB extends HibernateEJB {
 		Session session = getSession();
 		ScrollableResults rs=null;
 		
-		
 		boolean liberado=false;
 		
 		try {
@@ -1058,9 +1083,12 @@ public abstract class ValoresFacadeEJB extends HibernateEJB {
 				liberado=false;
 			}
 			session.flush();
+		} catch (NumberFormatException e) {
+			liberado=false;
+	        //log.error("liberarDisquete ERROR: ",e);
         } catch (Exception e) {
          liberado=false;
-         log.error("liberarDisquete ERROR: ");
+         log.error("liberarDisquete ERROR: ",e);
         } finally {
             close(session);
         }
@@ -1201,5 +1229,4 @@ public abstract class ValoresFacadeEJB extends HibernateEJB {
         super.ejbCreate();
     }
 
-	
 }

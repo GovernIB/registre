@@ -9,12 +9,19 @@
      <param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
      <param-value>messages</param-value>
   </context-param>
-
+  <context-param>
+     <param-name>registro.oficinaBOIB</param-name>
+     <param-value>${registro.oficinaBOIB}</param-value>
+  </context-param>
   <context-param>
      <param-name>admin.view.traspasos</param-name>
      <param-value>${admin.view.traspasos}</param-value>
   </context-param>
   <context-param>
+     <param-name>registro.entrada.view.infoBOIB</param-name>
+     <param-value>${registro.entrada.view.infoBOIB}</param-value>
+  </context-param>
+    <context-param>
      <param-name>registro.sello.color</param-name>
      <param-value>${registro.sello.color}</param-value>
   </context-param>
@@ -41,6 +48,10 @@
   <context-param>
      <param-name>oficios.config.entidad</param-name>
      <param-value>${oficios.config.entidad}</param-value>
+  </context-param>
+    <context-param>
+     <param-name>registro.solicituds.estat</param-name>
+     <param-value>${registro.solicituds.estat}</param-value>
   </context-param>
 
   <filter>
@@ -314,7 +325,14 @@
             <env-entry-name>Repros.max</env-entry-name>
             <env-entry-type>java.lang.Integer</env-entry-type>
             <!-- Nombre màxim de Repros d'entrada i sortida per usuari -->
-            <env-entry-value>10</env-entry-value>
+            <env-entry-value>${registro.repros.max}</env-entry-value>
+    </env-entry>
+    <env-entry>
+        <description />
+            <env-entry-name>registro.registros.oficio.max</env-entry-name>
+            <env-entry-type>java.lang.String</env-entry-type>
+            <!-- Nombre màxim de registres que pot contenir un ofici de remisió -->
+            <env-entry-value>${registro.registros.oficio.max}</env-entry-value>
     </env-entry>
 	
 </web-app>

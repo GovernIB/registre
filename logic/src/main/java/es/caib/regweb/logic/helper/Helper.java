@@ -3,6 +3,7 @@ package es.caib.regweb.logic.helper;
 import org.hibernate.Hibernate;
 import org.hibernate.SQLQuery;
 import org.hibernate.Query;
+import org.hibernate.ScrollMode;
 import org.hibernate.Session;
 import org.hibernate.ScrollableResults;
 import javax.ejb.SessionContext;
@@ -105,12 +106,10 @@ public class Helper {
             ps.setString(0, tipo);
             ps.setString(1, oficina);
             ps.setString(2, anyo);
-            rs=ps.scroll();
+            rs=ps.scroll(ScrollMode.SCROLL_INSENSITIVE);
             int numeroDisquete=0;
             if (rs.next()) {
                 numeroDisquete=rs.getInteger(0);
-                //rs.close();
-                //ps.close();
                 /* Actualizamos el numero de disquete si es mayor al leido */
                 if (disquete>numeroDisquete) {
                     sentenciaSql="UPDATE BZDISQU SET FZLNDIS=? WHERE FZLCENSA=? AND FZLCAGCO=? AND FZLAENSA=?";
@@ -119,8 +118,7 @@ public class Helper {
                     ts.setString(1,tipo);
                     ts.setInteger(2,Integer.parseInt(oficina));
                     ts.setInteger(3,Integer.parseInt(anyo));
-                    int cualquiera=ts.executeUpdate();
-                    //ts.close();
+                    ts.executeUpdate();                   
                 }
             } else if (disquete>0) {
                 sentenciaSql="INSERT INTO BZDISQU (FZLCENSA, FZLCAGCO, FZLAENSA, FZLNDIS)" +
@@ -130,19 +128,19 @@ public class Helper {
                 ts.setInteger(1,Integer.parseInt(oficina));
                 ts.setInteger(2,Integer.parseInt(anyo));
                 ts.setInteger(3,disquete);
-                int cualquiera=ts.executeUpdate();
-                //ts.close();
+                ts.executeUpdate();               
             }
+
         } catch (Exception e) {
-            e.printStackTrace();
             errores.put("","No és possible gravar el registre ara, torni a intentar-ho ");
             throw new HibernateException("No és possible gravar el registre ara, torni a intentar-ho ",e);
         } finally {
             try{
-                if (rs != null)
-                    rs.close();
+               // if (rs != null)
+               //     rs.close();
+                session.flush();
             } catch (Exception e) {
-                e.printStackTrace();
+                //log.error("Error al tancar accés a BD", e);
             }
         }
     }
@@ -168,9 +166,7 @@ public class Helper {
                 rs.close();
             }
         } catch (Exception e) {
-            System.out.println("ERROR: convierteEntidad");
-            System.out.println(e.getMessage());
-            e.printStackTrace();
+            log.error("ERROR: convierteEntidad",e);
             entidadCatalan="";
         }
         return entidadCatalan;
@@ -182,7 +178,7 @@ public class Helper {
         SQLQuery ps = null;
         boolean pdteVisado=false;
 
-        log.info("estaPdteVisado ("+tipo+","+oficina+","+ano+","+numero+")");
+        log.debug("estaPdteVisado ("+tipo+","+oficina+","+ano+","+numero+")");
         try {
             String sentenciaSql="SELECT FZJFVISA FROM BZMODIF WHERE (FZJIEXTR=' ' OR FZJIREMI=' ' OR FZJIEXTR='' OR FZJIREMI='') AND FZJFVISA=0 " +
             "AND FZJCENSA=? AND FZJCAGCO=? AND FZJANOEN=? AND FZJNUMEN=?";

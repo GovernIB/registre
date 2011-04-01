@@ -95,14 +95,13 @@
 %>
 <!-- Exploter no renderitza bé.  -->
 <html>
-    <head><title><fmt:message key='registre_entrades'/></title>
+    <head>
+        <title><fmt:message key='registre_entrades'/></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link type="text/CSS" rel="stylesheet" href="estilos.css"/>
-        
         <script language="javascript" src="livescript.js"></script>
         <script language="javascript" src="jscripts/TAO.js"></script>
-<script language="javascript">
 
+<script language="javascript">
 var oficinasfisicasarray = new Array();
 <% for (int ii=0; oficinasfisicas!=null && ii<oficinasfisicas.size(); ii=ii+3) { %>
 	oficinasfisicasarray.push([<%= oficinasfisicas.get(ii).toString() %>, <%= oficinasfisicas.get(ii+1).toString() %>,"<%= oficinasfisicas.get(ii+2).toString() %>"]);
@@ -139,11 +138,11 @@ function refrescaFisica(){
 			valor=document.registroForm.Reg060.checked;
             
             if (valor){
-           
 			    document.registroForm.mun_060.disabled = false;
+			    document.registroForm.numreg_060.disabled = false;
             }else{
-				
 				document.registroForm.mun_060.disabled = true;
+				document.registroForm.numreg_060.disabled = true;
 			}
         </c:if>
 }
@@ -158,11 +157,10 @@ function refrescaFisica(){
             	valor2=document.registroForm.fora.value;
             	valor3=document.registroForm.correo.value;
             	valor4=document.registroForm.disquet.value;
-            	if (valor.indexOf('¤',0)>-1 || valor1.indexOf('¤',0)>-1 || valor2.indexOf('¤',0)>-1 || valor3.indexOf('¤',0)>-1 || valor4.indexOf('¤',0)>-1) {
-            		alert("El símbol \"¤\" no és permès a l\'aplicació. Emprau \"euro\" o \"euros\" segons pertoqui");
+            	if (valor.indexOf('€',0)>-1 || valor1.indexOf('¤',0)>-1 || valor2.indexOf('¤',0)>-1 || valor3.indexOf('¤',0)>-1 || valor4.indexOf('¤',0)>-1) {
+            		alert("El símbol \"€\" no és permès a l\'aplicació. Emprau \"euro\" o \"euros\" segons pertoqui");
             		return false;
             	} else {
-
                     <c:if test="${initParam['registro.entrada.view.registre012']}">
                     if (document.registroForm.Reg060.checked && document.registroForm.mun_060.value == "000"){
 						alert("S'ha de seleccionar el municipi del 060.");
@@ -362,19 +360,13 @@ function refrescaFisica(){
 		<li><fmt:message key='registre_entrades'/></li>
 		</ul>
 		<!-- Fi Molla pa-->
-        <div align="center">
-<!--        <p>
-         <center>
-        <font class="titulo">
-            Usuari : <%=usuario%>
-        </font>
-        </center> 
-        &nbsp;<p>-->
         
-        <!-- Mostramos Errores si los hubiera -->
+        <div align="center">
+        <%  // Mostramos Errores si los hubiera
+            Hashtable errores = (registro==null)? new Hashtable(): registro.getErrores();
+            if (errores.size() > 0) {
+        %>
 
-        <% Hashtable errores = (registro==null)? new Hashtable(): registro.getErrores();
-            if (errores.size() > 0) {%>
         <table class="recuadroErrors" width="599" align="center">
             <tr>
                 <td>
@@ -426,14 +418,14 @@ function refrescaFisica(){
                                 <!-- Data d'entrada -->
                                 <font class="<%=errorEn(errores,"dataentrada")%>"> <fmt:message key='registro.fecha_entrada'/></font>
                                 <%String anteriorDataEntrada=(registro==null)? "":registro.getDataEntrada();%>
-                                <input id="dataentrada" type=text name="dataentrada" value="<%=anteriorDataEntrada.equals("") ? valores.getFecha() : anteriorDataEntrada %>" size="10" >
+                                <input id="dataentrada" type="text" name="dataentrada" value="<%=anteriorDataEntrada.equals("") ? valores.getFecha() : anteriorDataEntrada %>" size="10" >
                             </td>
                             <td style="border:0;">
                                 <!-- Hora d'entrada -->
                                 &nbsp;&nbsp;&nbsp;&nbsp;
                                 <font class="<%=errorEn(errores,"hora")%>"><fmt:message key='registro.hora'/></font>
                                 <% String anteriorHora=(registro==null)? "":registro.getHora();%>
-                                <input type=text name="hora" value="<%=anteriorHora.equals("") ? valores.getHorasMinutos() : anteriorHora %>" size="5">
+                                <input type="text" name="hora" value="<%=anteriorHora.equals("") ? valores.getHorasMinutos() : anteriorHora %>" size="5">
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             </td>
                         </tr>
@@ -464,7 +456,7 @@ function refrescaFisica(){
                 <!-- 1ª fila de la tabla -->
                 <tr>
                 <td style="border:0;" colspan="2">
-                &nbsp;<br><b><fmt:message key='dades_del_document'/></b><p>
+                &nbsp;<br><b><fmt:message key='dades_del_document'/></b><p/>
                 </TD>
                 </TR>
                 <!-- 2ª fila de la tabla -->  
@@ -473,7 +465,7 @@ function refrescaFisica(){
                     <td style="border:0;" colspan="2">
                         <font class="<%= errorEn(errores,"data") %>"><fmt:message key='registro.fecha'/></font>
                         <% String anteriorData=(registro==null)? "":registro.getData(); %>
-                        <input type=text name=data value="<%=anteriorData.equals("") ? valores.getFecha() : anteriorData %>" size="10" > 
+                        <input type="text" name="data" value="<%=anteriorData.equals("") ? valores.getFecha() : anteriorData %>" size="10" > 
                         <!-- Despegable para Tipos de documentos -->
                         &nbsp;<font class="errorcampo">*</font>
                         <font class="<%=errorEn(errores, "tipo")%>"><fmt:message key='registro.tipo'/> </font>
@@ -494,10 +486,10 @@ function refrescaFisica(){
                 <br><font class="errorcampo">*</font>
                 <fmt:message key='remitent'/>........<font class="<%=errorEn(errores,"entidad1")%>"><fmt:message key='registro.entidad'/></font>
                 <!-- Remitente Entidad 1 -->
-                <input id="enti" type=text name=entidad1 size="7" value="<%=(registro==null)? "":registro.getEntidad1()%>" onblur="recuperaDescripcionEntidad()">
+                <input id="enti" type="text" name="entidad1" size="7" value="<%=(registro==null)? "":registro.getEntidad1()%>" onblur="recuperaDescripcionEntidad()">
                 <!-- Remitente Entidad 2 -->
-                <input type=text name=entidad2 size="3" value="<%=(registro==null)? "":registro.getEntidad2()%>" onblur="recuperaDescripcionEntidad()">
-                <a href="javascript:abreRemitentes()"><img border="0" src="imagenes/buscar.gif" align=middle alt="<fmt:message key='cercar'/>"></a>
+                <input type="text" name="entidad2" size="3" value="<%=(registro==null)? "":registro.getEntidad2()%>" onblur="recuperaDescripcionEntidad()">
+                <a href="javascript:abreRemitentes()"><img border="0" src="imagenes/buscar.gif" align="middle" alt="<fmt:message key='cercar'/>"></a>
                 </td>
                 <!-- Descipcion del Remitente  -->
                 <td style="border:0;" width="45%"> 
@@ -510,7 +502,7 @@ function refrescaFisica(){
                 <!-- Remitente Altres entidades -->
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 &nbsp;&nbsp;&nbsp;&nbsp;
-                <fmt:message key='altres'/>&nbsp;&nbsp;<input onkeypress="return check(event)" type=text name=altres size="30" maxlength="30" value="<%=(registro==null)? "":registro.getAltres().trim()%>">
+                <fmt:message key='altres'/>&nbsp;&nbsp;<input onkeypress="return check(event)" type="text" name="altres" size="30" maxlength="30" value="<%=(registro==null)? "":registro.getAltres().trim()%>">
                 </td>
                 </tr>
                 <tr>
@@ -531,7 +523,7 @@ function refrescaFisica(){
                                 <span class="<%=errorEn(errores,"balears")%>"> <fmt:message key='registro.baleares'/></span>
                             </td>
                             <td style="border:0;">
-                            <select name=balears>
+                            <select name="balears">    
                             <% escribeSelect(out, "N", valores.buscarBaleares(), (registro==null)? "":registro.getBalears()); %>
                             </select>
                             </td>
@@ -540,7 +532,7 @@ function refrescaFisica(){
                             <td style="border:0;">&nbsp;</td>
                             <td style="border:0;" valign="bottom" colspan="2">
                                 <fmt:message key='registro.fuera_baleares'/>&nbsp;
-                                <input onkeypress="return check(event)" type=text name=fora size="25" maxlength="25" value="<%=(registro==null)? "":registro.getFora().trim()%>">            
+                                <input onkeypress="return check(event)" type="text" name="fora" size="25" maxlength="25" value="<%=(registro==null)? "":registro.getFora().trim()%>">            
                             </td>
                         </tr>
                     </table>
@@ -551,8 +543,8 @@ function refrescaFisica(){
                 <td style="border:0;" colspan="2">
                     <!-- Numero de salida -->
                     &nbsp;<br><font class="<%=errorEn(errores,"salida1")%>"><fmt:message key='registro.num_sortida'/></font>
-                    <input onKeyPress="return goodchars(event,'0123456789')" type=text name=salida1 maxlength="6" size="6" value="<%=(registro==null)? "":registro.getSalida1()%>">&nbsp;&nbsp;/&nbsp; 
-                    <input onKeyPress="return goodchars(event,'0123456789')" type=text name=salida2 maxlength="4" size="4" value="<%=(registro==null)? "":registro.getSalida2()%>">
+                    <input onKeyPress="return goodchars(event,'0123456789')" type="text" name="salida1" maxlength="6" size="6" value="<%=(registro==null)? "":registro.getSalida1()%>">&nbsp;&nbsp;/&nbsp; 
+                    <input onKeyPress="return goodchars(event,'0123456789')" type="text" name="salida2" maxlength="4" size="4" value="<%=(registro==null)? "":registro.getSalida2()%>">
                 </td>
                 </tr> 
                 <!-- 8ª fila de la tabla -->
@@ -560,9 +552,9 @@ function refrescaFisica(){
                     <td style="border:0;">
                     <!-- Organismo destinatario -->
                     &nbsp;<br><font class="errorcampo">*</font><font class="<%=errorEn(errores,"destinatari")%>"><fmt:message key='registro.organismo_destinatario'/>..............:</font>
-                    <input id="desti" type=text name=destinatari size="4"  maxlength="4" value="<%=(registro==null)? "":registro.getDestinatari()%>" onblur="recuperaDestinatario()">
+                    <input id="desti" type="text" name="destinatari" size="4"  maxlength="4" value="<%=(registro==null)? "":registro.getDestinatari()%>" onblur="recuperaDestinatario()">
                     <a href="javascript:abreDestinatarios()">
-                        <img src="imagenes/buscar.gif" align=middle alt="<fmt:message key='cercar'/>" border="0">
+                        <img src="imagenes/buscar.gif" align="middle" alt="<fmt:message key='cercar'/>" border="0">
                     </a>
                     </td>
                     <td style="border:0" >
@@ -576,16 +568,28 @@ function refrescaFisica(){
                     <table>
                         <tr>
                             <td style="border:0;" valign="bottom">
-                              <input TYPE="checkbox" NAME="Reg060" VALUE="Si" Onclick="activar_060()" <%=(registro==null)? "":retornarChecked(registro)%> ><fmt:message key='registre_012'/>........................</input>
+                              <input TYPE="checkbox" NAME="Reg060" VALUE="Si" Onclick="activar_060()" <%=(registro==null)? "":retornarChecked(registro)%> ><fmt:message key='registre_012'/>........................
                             </td> 	
                             <td style="border:0;">
                               <!-- Despegable para AYUNTAMIENTOS DEL 060 -->
                                 &nbsp;<br><font class="<%= errorEn(errores,"mun_060")%>"><fmt:message key='registro.entidad_local'/> </font>
-                                <select name="mun_060" <%=(registro==null)? "disabled":retornarDisabled(registro)%>
+                                <select name="mun_060" <%=(registro==null)? "disabled=\"disabled\"":retornarDisabled(registro)%>>
                                     <% 
 										String munSeleccionat = (registro==null)? "000":registro.getMunicipi060();
 										munSeleccionat = (munSeleccionat.equals("")? "000":munSeleccionat);
 										escribeSelect(out, "N", valores.buscar_060(), munSeleccionat); %> 
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border:0;" valign="bottom">&nbsp;</td> 	
+                            <td style="border:0;">
+                                &nbsp;<br><font class="<%= errorEn(errores,"numreg_060")%>"><fmt:message key='registro.num_registres_060'/></font>
+                                <select name="numreg_060" id="numreg_060" <%=(registro==null)?"disabled=\"disabled\"":retornarDisabled(registro)%>>
+                                <option value="1" selected="selected">1</option>
+                                <%for(int i=2; i<99; i++){ %>
+                                    <option value="<%=i%>"><%=i%></option>
+                                <%} %>
                                 </select>
                             </td>
                         </tr>
@@ -612,22 +616,22 @@ function refrescaFisica(){
                     <td style="border:0;">
                         <!-- Idioma del Extracto -->
                         &nbsp;<br><font class="<%=errorEn(errores,"idioex")%>"><fmt:message key='registro.idioma'/></font>
-                        <select name =idioex    >
+                        <select name="idioex">
                             <% String anteriorIdioex=(registro==null)? "":registro.getIdioex(); %>
-                            <option value="2" <%=anteriorIdioex.equals("2") ? "selected" : "" %> > <fmt:message key='registro.idioma.catala'/>
-                            <option value="1" <%=anteriorIdioex.equals("1") ? "selected" : "" %> > <fmt:message key='registro.idioma.castella'/>
+                            <option value="2" <%=anteriorIdioex.equals("2") ? "selected" : "" %> > <fmt:message key='registro.idioma.catala'/></option>
+                            <option value="1" <%=anteriorIdioex.equals("1") ? "selected" : "" %> > <fmt:message key='registro.idioma.castella'/></option>
                         </select>&nbsp;
                         
                         <c:choose>
                         <c:when test="${initParam['registro.entrada.view.disquete_correo']}">
                         <!--Numero de disquete -->
                         <font class="<%=errorEn(errores,"disquet")%>"><fmt:message key='registro.num_disquete'/> </font>
-                        <input onkeypress="return check(event)" type=text name=disquet size="8" value="<%=(registro==null)? "":registro.getDisquet().trim()%>">
-                        <a href="javascript:abreDisquete()"><img src="imagenes/buscar.gif" align=middle alt="Darrer disquet" border="0"></a>
+                        <input onkeypress="return check(event)" type="text" name="disquet" size="8" value="<%=(registro==null)? "":registro.getDisquet().trim()%>">
+                        <a href="javascript:abreDisquete()"><img src="imagenes/buscar.gif" align="middle" alt="Darrer disquet" border="0"></a>
                         <!--Numero de disquete -->
                         &nbsp;&nbsp;
                         <font class="<%=errorEn(errores,"correo")%>"><fmt:message key='registro.num_correo'/> </font>
-                        <input id="corr" onkeypress="return check(event)" type=text name=correo size="8" value="<%=(registro==null)? "":registro.getCorreo().trim()%>">
+                        <input id="corr" onkeypress="return check(event)" type="text" name="correo" size="8" value="<%=(registro==null)? "":registro.getCorreo().trim()%>">
                         </c:when>
                         <c:otherwise>
                         <input type="hidden" name="disquet" value=""/>
@@ -641,7 +645,7 @@ function refrescaFisica(){
                         &nbsp;<br>
                         <!-- Extracto del documento -->
                         <font class="errorcampo">*</font>
-                        <font class="<%=errorEn(errores,"comentario")%>"><fmt:message key='extracte_del_document'/>:
+                        <font class="<%=errorEn(errores,"comentario")%>"><fmt:message key='extracte_del_document'/>:</font>
                         <textarea cols="67" onkeypress="return check(event)" rows="3" name="comentario"><%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml((registro==null) ? "" : registro.getComentario())%></textarea>
                     </td>
                 </tr>
@@ -649,7 +653,7 @@ function refrescaFisica(){
                     <td style="border:0">
                         <!-- Boton de enviar -->          
                         <p align="center">
-                        <input type=submit value="<fmt:message key='enviar'/>">
+                        <input type="submit" value="<fmt:message key='enviar'/>">
                         </P>
                     </td>
                 </tr>

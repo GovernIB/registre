@@ -7,7 +7,7 @@ ValoresFacade valores = ValoresFacadeUtil.getHome().create();
 
 <html>
     <head>
-        <title>Seleccionar Remitents</title>
+        <title>Seleccionar entitats</title>
         <script>
             function selecciona(codEntidad1, codEntidad2, desc) {
             top.opener.setEntidad(codEntidad1, codEntidad2, desc);

@@ -150,6 +150,14 @@ public interface ListadoRegistrosEntrada extends EJBObject {
 	 * @throws RemoteException
 	 */
 	public boolean validarBusqueda() throws RemoteException;
+	/** Recuperamos el total de documentos 060 de los registros del listado
+	 *
+	 * @return int totalRegistres060
+	 *
+	 * @throws RemoteException
+	 */
+	public int getTotalRegistres060() throws RemoteException;
+	
 	public String getExtracto() throws RemoteException;
 	public void setExtracto(String extracto) throws RemoteException;
 	public String getTipo() throws RemoteException;

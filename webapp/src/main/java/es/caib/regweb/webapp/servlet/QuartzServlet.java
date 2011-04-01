@@ -31,7 +31,7 @@ public class QuartzServlet extends GenericServlet {
 		String _fullDeployedEventEjbName="";
 		log = Logger.getLogger(this.getClass());
 		super.init(config);
-		log.info("Programant el job nocturn que esborra els registres antics del log de la LOPD..");
+		log.debug("Programant el job nocturn que esborra els registres antics del log de la LOPD..");
 
 		JobDetail jd = new JobDetail("Test Quartz","My Test Job",EJBInvokerJob.class);
 		jd.getJobDataMap().put("ejb", "es.caib.regweb.logic.EsborraRegAnticsLopdFacade");
@@ -44,7 +44,7 @@ public class QuartzServlet extends GenericServlet {
 			String cronExpr = null;
 //			Get the cron Expression as an Init parameter
 			cronExpr = getInitParameter("cronExpr");
-			log.info(cronExpr);
+			log.debug(cronExpr);
 			cronTrigger.setCronExpression(cronExpr);
 			Scheduler sched = StdSchedulerFactory.getDefaultScheduler();
 			sched.scheduleJob(jd, cronTrigger);

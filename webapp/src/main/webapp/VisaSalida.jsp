@@ -45,7 +45,7 @@
     String extracto=registroModificado.getExtracto();
     String remitente=registroModificado.getRemitente();
 
-    
+   // System.out.println("Entifaf1Catalan leida: "+entidad1);
     
     ValoresFacade valores = ValoresFacadeUtil.getHome().create();
     

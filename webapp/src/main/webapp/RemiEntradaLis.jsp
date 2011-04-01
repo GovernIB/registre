@@ -11,8 +11,14 @@ String usuario=request.getRemoteUser().toUpperCase();
 String oficinaSel=request.getParameter("oficina");
 String oficinaFisSel=request.getParameter("oficinafisica");
 String parametros[] = {oficinaSel, oficinaFisSel};
+String numMaxRegistes = "500";
 
 session.setAttribute("listadoOficiosEntrada",parametros);
+
+//Cercam el número màxim de registres que pot contenir un ofici de remisió
+javax.naming.InitialContext contexto = new javax.naming.InitialContext();
+javax.naming.Context myenv = (javax.naming.Context) contexto.lookup("java:comp/env");
+numMaxRegistes = (String)myenv.lookup("registro.registros.oficio.max");
 %>
 
 
@@ -107,6 +113,9 @@ session.setAttribute("listadoOficiosEntrada",parametros);
 		var mismoorigenfisico = true;
 		var mismodestinatario = true;
 
+		var contadorRegistres = 0;
+		var numMaxRegistes = <%=numMaxRegistes %>;
+		
 		for (var i=0; i<llistaElementsFormAU.length ;i++) {
 			//window.alert('Element '+i+' '+llistaElementsFormAU[i].name); 
 			if ( llistaElementsFormAU[i].name == "registre" ){
@@ -118,9 +127,13 @@ session.setAttribute("listadoOficiosEntrada",parametros);
 					mismoorigenfisico = mismoorigenfisico && (origenfisico == document.getElementById("ofis-"+llistaElementsFormAU[i].value).value);
 					if (destinatario == "") destinatario = document.getElementById("dest-"+llistaElementsFormAU[i].value).value;
 					mismodestinatario = mismodestinatario && (destinatario == document.getElementById("dest-"+llistaElementsFormAU[i].value).value);
+
+					contadorRegistres = contadorRegistres+1;
 				}
 			}
 		}
+
+		
 		if (!valor) {
 			alert("<fmt:message key='error_ofici.ha_de_seleccionar_un_registre' />");
 			return false;
@@ -135,6 +148,11 @@ session.setAttribute("listadoOficiosEntrada",parametros);
 		}
 		if (!mismoorigenfisico) {
 			alert("<fmt:message key='error_ofici.mateixa_oficina_fisica' />");
+			return false;
+		}
+		
+		if (contadorRegistres>numMaxRegistes){
+			alert("<fmt:message key='error_ofici.massa_registres1' />"+" "+numMaxRegistes+" "+"<fmt:message key='error_ofici.massa_registres2' />");
 			return false;
 		}
 		document.getElementById("ofimul").submit();
@@ -204,7 +222,7 @@ if (registros.size()==0) {
 /* No hi ha cap element al llistat, eliminam el llistat de la sessió.*/
         	session.removeAttribute("listadoOficiosEntrada");
         	%>
-<p><p>
+<p/><p/>
 <center><b><fmt:message key='no_shan_trobat_registres_que_compleixin_els_criteris_seleccionats'/></B></center>
      <% } else { %>
      
@@ -221,7 +239,7 @@ if (registros.size()==0) {
 </table>
 
 
-<table width="100%" border=0>
+<table width="100%" border="0">
     <tr>
         <td align="left">
             
@@ -250,7 +268,7 @@ if (registros.size()==0) {
            <td width="10%" class="cabeceraTabla">&nbsp;&nbsp;<fmt:message key='extracte'/></td>
            <td align="left">
                <a href="javascript: buscar()"> 
-                   <img src="imagenes/buscar.gif" border=0  title="<fmt:message key='cercar_extracte'/>">
+                   <img src="imagenes/buscar.gif" border="0"  title="<fmt:message key='cercar_extracte'/>">
                </a>
            </td>
        </tr>
@@ -282,14 +300,14 @@ if (registros.size()==0) {
      
         <td>
         <a id="<%="ref"+i%>" href="RemiEntradaFicha.jsp?oficina=<%=oficina%>&numeroEntrada=<%=numeroEntrada%>&anoEntrada=<%=anoEntrada%>">
-            <img src="imagenes/open24.gif" border=0  title="Veure document">
+            <img src="imagenes/open24.gif" border="0"  title="Veure document">
         </a>
         </td> 
         <td>
         <input type="checkbox" name="registre" value="<%=oficina%>-<%=numeroEntrada%>-<%=anoEntrada%>-<%=oficinaFisica %>">
-        <input type="hidden" disabled name="destinatario" id="dest-<%=oficina%>-<%=numeroEntrada%>-<%=anoEntrada%>-<%=oficinaFisica %>" value="<%=destinatario %>">
-        <input type="hidden" disabled name="origen" id="ori-<%=oficina%>-<%=numeroEntrada%>-<%=anoEntrada%>-<%=oficinaFisica %>" value="<%=oficina %>">
-        <input type="hidden" disabled name="origenfisico" id="ofis-<%=oficina%>-<%=numeroEntrada%>-<%=anoEntrada%>-<%=oficinaFisica %>" value="<%=oficinaFisica %>">
+        <input type="hidden" disabled="disabled" name="destinatario" id="dest-<%=oficina%>-<%=numeroEntrada%>-<%=anoEntrada%>-<%=oficinaFisica %>" value="<%=destinatario %>">
+        <input type="hidden" disabled="disabled" name="origen" id="ori-<%=oficina%>-<%=numeroEntrada%>-<%=anoEntrada%>-<%=oficinaFisica %>" value="<%=oficina %>">
+        <input type="hidden" disabled="disabled" name="origenfisico" id="ofis-<%=oficina%>-<%=numeroEntrada%>-<%=anoEntrada%>-<%=oficinaFisica %>" value="<%=oficinaFisica %>">
         </td> 
         <td style="<%= (anulado) ? "color:red;" : "" %>"><%=fechaEntrada%></td>
         <td style="<%= (anulado) ? "color:red;" : "" %>" align="center"><%=numeroEntrada%></td>
@@ -307,7 +325,7 @@ if (registros.size()==0) {
 
         <%-- formulario --%>
     <div align="center">        
-            <table border=0 width="50%">
+            <table border="0" width="50%">
                     <tr>
                         <td>
 				            <!-- Boton de enviar -->          

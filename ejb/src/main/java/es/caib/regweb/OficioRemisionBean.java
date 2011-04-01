@@ -501,7 +501,7 @@ public class OficioRemisionBean implements SessionBean {
             
     }
     /**
-     * Actualitza el registre d'entrada
+     * Actualitza la taula de gestió dels ofici de remissió.
      * @throws SQLException
      * @throws ClassNotFoundException
      * @throws Exception
@@ -634,7 +634,7 @@ public class OficioRemisionBean implements SessionBean {
             } catch (SQLException sqle) {
                 throw new RemoteException("S'ha produït un error i no s'han pogut tornar enrere els canvis efectuats", sqle);
             }
-            throw new RemoteException("Error inesperat, no s'ha modifcat el registre", ex);
+            throw new RemoteException("Error inesperat, no s'ha actualitzat la taula de gestió dels ofici de remissió.", ex);
         } finally {
         	ToolsBD.closeConn(conn, ms, null);
         }

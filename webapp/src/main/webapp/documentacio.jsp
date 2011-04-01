@@ -25,7 +25,8 @@
         <link rel="shortcut icon" href="favicon.ico"/>
         <script>
             function abre() {
-            ventana=window.open("http://suport.caib.es/sacmicrofront/contenido.do?mkey=M207&lang=CA&cont=9853");
+            //ventana=window.open("http://suport.caib.es/sacmicrofront/contenido.do?mkey=M207&lang=CA&cont=9853");
+            ventana=window.open("<fmt:message key='urlPinfos'/>");
             ventana.moveTo(0,0);
             ventana.focus();
             }
@@ -58,19 +59,14 @@
                         <ul>
                                 <li><a href="davallafitxer?nomfitxer=manualusuari" target="_blank"><font class="menu"><fmt:message key='manual_usuari'/></font></a></li>
                                 <li><a href="davallafitxer?nomfitxer=requisits" target="_blank"><font class="menu"><fmt:message key='requisits_tecnologics'/></font></a></li>
-                                <!--<li><a href="davallafitxer?nomfitxer=Solicitud1" target="_blank"><font class="menu"><fmt:message key='sollicitud_autoritzacio_registre_web_per_usuari_que_ja_empra_las400'/></font></a></li>
-                                <li><a href="davallafitxer?nomfitxer=Solicitud2" target="_blank"><font class="menu"><fmt:message key='sollicitud_autoritzacio_registre_web_per_nou_usuari'/></font></a></li>
-                                <li><a href="davallafitxer?nomfitxer=Solicitud3" target="_blank"><font class="menu">Sol·licitud autorització NOU usuari NOMÉS AS400</font></a></li> -->
+                                <c:if test="${initParam['registro.solicituds.estat']}">
 								<li><a href="javascript:abre()"><font class="menu"><fmt:message key='sollicituds_dautoritzacio_nous_usuaris'/></font></a></li>
+								</c:if>
                     	</ul>
 					</div>
             </td>
             </tr>
         </table>
 		<p>&nbsp;</p>
-		<p>&nbsp;</p>
-        
-                 
-		
     </body>
 </html>

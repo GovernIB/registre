@@ -1,13 +1,14 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<!--
-  Registro General CAIB - Registro de Entradas
--->
+<%@ page import = "java.util.*, es.caib.regweb.logic.interfaces.*, es.caib.regweb.logic.util.*, es.caib.regweb.logic.helper.*, org.apache.log4j.Logger" %>
+<%@ page contentType="text/html"%>
 <%@ page pageEncoding="UTF-8"%>
-<% request.setCharacterEncoding("UTF-8"); %>
 
-<%@ page import = "java.util.*, es.caib.regweb.logic.interfaces.*, es.caib.regweb.logic.util.*, es.caib.regweb.logic.helper.*" %>
-<%
+<%! private Logger log = Logger.getLogger(this.getClass()); %>
+<% request.setCharacterEncoding("UTF-8"); 
+
+
+
 RegistroEntradaFacade regent = RegistroEntradaFacadeUtil.getHome().create();
 ParametrosRegistroEntrada param = new ParametrosRegistroEntrada();
 ParametrosRegistroEntrada registro = new ParametrosRegistroEntrada();
@@ -24,8 +25,7 @@ int serieForm = Integer.parseInt(request.getParameter("serie"));
 
 if (serie>serieForm) {
     session.setAttribute("errorAtras","1");
-%>
-       <% }
+}
 
 serie++;
 //    intSerie++;
@@ -62,8 +62,14 @@ registro.setdestinatari(request.getParameter("destinatari"));
 registro.setidioex(request.getParameter("idioex"));
 registro.setdisquet(request.getParameter("disquet"));
 registro.setRegistroAnulado(request.getParameter("suprimir"));
-if (request.getParameter("mun_060")!=null)
+if (request.getParameter("mun_060")!=null){
    registro.setMunicipi060(request.getParameter("mun_060"));
+	   try{
+	   		registro.setNumeroDocumentosRegistro060(request.getParameter("numreg_060"));
+		 }catch(NumberFormatException ne){
+			 log.error("Parámetro del número de dos 012 no recibido.",ne);
+		 }
+	  }
 registro.setActualizacion(true);
 
 registro.setMotivo(motivo);
@@ -99,9 +105,6 @@ if (!ok){
 %>
         <jsp:forward page="ModiEntrada.jsp"/>
 <% } else { 
-    
-
-
     registro=regent.actualizar(registro);
 
     boolean actualizado=registro.getregistroActualizado();
@@ -123,6 +126,7 @@ if (!ok){
             session.removeAttribute("bloqueoUsuario");
             session.removeAttribute("bloqueoDisquete");
         }
+        
 %>
 
 <html>
@@ -134,27 +138,27 @@ if (!ok){
     </head>
     <body>
        
-      	<!-- Molla pa --> 
+      	<%-- Molla pa --%> 
 		<ul id="mollaPa">
 		<li><a href="index.jsp"><fmt:message key='inici'/></a></li>
 		<li><a href="ModiEntradaClave.jsp"><fmt:message key='modificacio_dentrades'/></a></li>
 		<li><fmt:message key='registre_entrada_modificat'/></li>
 		</ul>
-		<!-- Fi Molla pa-->
-<!--        <p>&nbsp;
+		<%--Fi Molla pa--%>
+<%--        <p>&nbsp;
         <center><font class="titulo"><fmt:message key='usuari'/> : <%=usuario%></font></center>&nbsp;<p>
--->
+--%>
 		<p>&nbsp;</p>
         <table class="recuadroEntradas" width="400" align="center">
             <tr>
                 <td style="border:0">
-                    &nbsp;<br><center><b><fmt:message key='registre'/> <%=registro.getNumeroEntrada()%>/<%=registro.getAnoEntrada()%> <fmt:message key='modificat_correctament'/></B></center></p>
+                    &nbsp;<br><center><b><fmt:message key='registre'/> <%=registro.getNumeroEntrada()%>/<%=registro.getAnoEntrada()%> <fmt:message key='modificat_correctament'/></B></center><br/>
                 </td>
             </tr>   
             <tr><td style="border:0">&nbsp;</td></tr>
             <tr>
                 <td style="border:0">
-                    <p><center><b><fmt:message key='oficina'/>:&nbsp;<%=registro.getOficina()%>-<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%></b></center>
+                    <br/> <center><b><fmt:message key='oficina'/>:&nbsp;<%=registro.getOficina()%>-<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%></b></center>
                 </td>
             </tr>
             <tr><td style="border:0">&nbsp;</td></tr>
@@ -162,16 +166,13 @@ if (!ok){
                 <td style="border:0">
                     <p>
                     	<center>
-                    		<a style="text-decoration: none;" type="button" class="botonFormulario" href="ModiEntradaClave.jsp">
-                        &nbsp;<fmt:message key='boton.nueva_modificacion'/>&nbsp;</a>
+                    		<a style="text-decoration: none;" type="button" class="botonFormulario" href="ModiEntradaClave.jsp">&nbsp;<fmt:message key='boton.nueva_modificacion'/>&nbsp;</a>
                         </center>
                     </p>
                 </td>
             </tr>
             <tr><td style="border:0">&nbsp;</td></tr>
         </table>
-       
-        <!-- Nueva tabla -->
 &nbsp;<br>
 
         <%-- substituir per incloure la pàgina "sellos.jsp" --%>
@@ -269,7 +270,5 @@ if (!ok){
 		<p>&nbsp;</p>
 		<p>&nbsp;</p>
    		
-              
-		
     </body>
 </html>

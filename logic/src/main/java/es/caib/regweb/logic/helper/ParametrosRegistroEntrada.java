@@ -39,7 +39,7 @@ public class ParametrosRegistroEntrada implements Serializable {
     private String password="";
     private String municipi060="";
     private String descripcioMunicipi060="";
-    
+    private String numeroDocumentosRegistro060="0";
     
     private boolean error=false;
     private boolean validado=false;
@@ -211,6 +211,7 @@ public class ParametrosRegistroEntrada implements Serializable {
     
     public void setoficinafisica(String oficinafisica) {
         this.oficinafisica=oficinafisica;
+      
     }
     
     public void setdata(String data) {
@@ -521,4 +522,12 @@ public class ParametrosRegistroEntrada implements Serializable {
     public void setEntidad1Grabada(String entidad1Grabada) {
         this.entidad1Grabada=entidad1Grabada;
     }
+
+	public String getNumeroDocumentosRegistro060() {
+		return numeroDocumentosRegistro060;
+	}
+
+	public void setNumeroDocumentosRegistro060(String numeroDocumentosRegistro060) {
+		this.numeroDocumentosRegistro060 = numeroDocumentosRegistro060;
+	}
 }

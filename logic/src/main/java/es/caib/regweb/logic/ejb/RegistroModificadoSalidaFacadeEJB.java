@@ -95,7 +95,7 @@ public abstract class RegistroModificadoSalidaFacadeEJB extends HibernateEJB {
 				res.setLeido(true);
 				res.setAnoSalida(rs.getInteger(0));
 				res.setEntidad1(rs.getString(1));
-				res.setEntidad1Catalan(Helper.convierteEntidad(param.getEntidad1(),session));
+				res.setEntidad1Catalan(Helper.convierteEntidad(res.getEntidad1(),session));
 				res.setEntidad2(rs.getInteger(2));
 				res.setExtracto(rs.getString(3));
 				res.setUsuarioModificacion(rs.getString(4));

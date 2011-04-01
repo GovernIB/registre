@@ -91,6 +91,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 		if ("nouNomOficina".equals(accion)) param = actualitzaOficina(request, sesion);
 		if ("nouNomOficinaFisica".equals(accion)) param = actualitzaOficinaFisica(request, sesion);
 		if ("baixaOficina".equals(accion)) param = actualitzaOficina(request, sesion);
+		if ("baixaOficinaFisica".equals(accion)) param = actualitzaOficinaFisica(request, sesion);
 
 		if ("altaOrganisme".equals(accion)) param = altaOrganisme(request, sesion);
 		if ("nouNomOrganisme".equals(accion)) param = actualitzaOrganisme(request, sesion);
@@ -241,7 +242,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 						// Si hem validat tot el fitxer, donam d'alta els registres
 						buffReader = new BufferedReader( new StringReader(fitxer) );
 						tmp="";
-						log.debug("Trasp\u00E0s validat, ara donarem d'alta!");
+						log.debug("Trasp\u00E0s validat, ara donarem d\'alta!");
 						while ( (tmp = buffReader.readLine())!=null ) {
 							res= new ParametrosRegistroSalida();
 							extracte="";
@@ -324,7 +325,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 						}
 					}
 				}catch(Exception ex){
-					ex.printStackTrace();
+					log.error("Capturam excepci\u00f3 estranya!",ex);
 				}
 			} else {
 				log.error("Error, no hi ha fitxer!");
@@ -372,10 +373,9 @@ public class UtilAdminServlet extends UtilWebServlet {
 			request.setAttribute("descMissatge", "Error: camp no num\u00e8ric.");
 			request.setAttribute("init",""); //Buidam atribut "init" per a que segueixi a la pàgina actual.
 			resultado = new String("/admin/controller.do?accion=passaTraspassos");
-			NFe.printStackTrace();
+			//NFe.printStackTrace();
 		} catch(Exception ex) {
-			log.debug("Capturam excepci\u00f3 estranya!");
-			ex.printStackTrace();
+			log.error("Capturam excepci\u00f3 estranya!",ex);
 		}    		
 		return resultado;
 	}
@@ -462,7 +462,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 			request.setAttribute("descMissatge", "Error: camp no num\u00e8ric.");
 			request.setAttribute("init",""); //Buidam atribut "init" per a que segueixi a la pàgina actual.
 			resultado = new String("/admin/controller.do?accion=autoritzUsuari");
-			NFe.printStackTrace();
+			//NFe.printStackTrace();
 		} catch(RegwebException RWEex) {
 			log.debug("Capturam excepci\u00f3 regweb!");
 			request.setAttribute("missatge", "true");
@@ -479,8 +479,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 			request.setAttribute("init",""); //Buidam atribut "init" per a que segueixi a la pàgina actual.
 			resultado = new String("/admin/controller.do?accion=autoritzUsuari");
 		} catch(Exception ex) {
-			log.debug("Capturam excepci\u00f3 estranya!");
-			ex.printStackTrace();
+			log.error("Capturam excepci\u00f3 estranya!",ex);
 		}
 		
 		return resultado;
@@ -549,8 +548,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 			request.setAttribute("init",""); //Buidam atribut "init" per a que segueixi a la pàgina actual.
 			resultado = new String("/admin/controller.do?accion=organismesOficina");
 		} catch(Exception ex) {
-			log.debug("Capturam excepci\u00f3 estranya!");
-			ex.printStackTrace();
+			log.error("Capturam excepci\u00f3 estranya!",ex);
 		}
 		return resultado;
 	}    
@@ -601,7 +599,7 @@ public class UtilAdminServlet extends UtilWebServlet {
     			//Si té històric, feim la comprovació, en cas contrari no és necessari
     			dataDarreraBaix=ddmmyyyy.parse(dataDarreraBaixa);
     			if ( dataDarreraBaix.compareTo(dataAlt)>=0)
-    				throw new RegwebException("La data d'alta ha de ser posterior a la darrera data de baixa!");
+    				throw new RegwebException("La data d\'alta ha de ser posterior a la darrera data de baixa!");
     		}
     		
 			autoritzaUsuari.altaOrganisme(organismeGestionar, descCurtaOrganisme, descLlargaOrganisme, dataAlta );
@@ -614,7 +612,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 			request.setAttribute("descMissatge", "Error: camp no num\u00e8ric.");
 			request.setAttribute("init",""); //Buidam atribut "init" per a que segueixi a la pàgina actual.
 			resultado = new String("/admin/controller.do?accion=organismes");
-			NFe.printStackTrace();
+			//NFe.printStackTrace();
 		} catch(RegwebException RWEex) {
 			log.debug("Capturam excepci\u00f3 regweb!");
 			request.setAttribute("missatge", "true");
@@ -631,8 +629,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 			request.setAttribute("init",""); //Buidam atribut "init" per a que segueixi a la pàgina actual.
 			resultado = new String("/admin/controller.do?accion=organismes");
 		} catch(Exception ex) {
-			log.debug("Capturam excepci\u00f3 estranya!");
-			ex.printStackTrace();
+			log.error("Capturam excepci\u00f3 estranya!",ex);
 		}
 		return resultado;
 	}    
@@ -688,7 +685,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 				}
 				//log.debug("La data de baixa és vàlida i és: "+dataBaixa);
 			} catch (Exception e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 				request.setAttribute("init",""); //Posam atribut a init per a que torni a la pàgina inicial.
 				throw new RegwebException("Data no v\u00E0lida");
 			}	
@@ -698,7 +695,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 
 			if ( !dataBaixa.equals("0") )
 				if ( dataAlt.compareTo(dataBaix)>=0 )
-				throw new RegwebException("La data de baixa és anterior a la data d'alta!");
+				throw new RegwebException("La data de baixa és anterior a la data d\'alta!");
 
 			
 			if (accio.equals("nouNomOrganisme")) {
@@ -713,7 +710,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 					//Si té històric, feim la comprovació, en cas contrari no és necessari
 					dataDarreraBaix=ddmmyyyy.parse(dataDarreraBaixa);
 					if ( dataDarreraBaix.compareTo(dataAlt)>=0)
-						throw new RegwebException("La data d'alta ha de ser posterior a la darrera data de baixa!");
+						throw new RegwebException("La data d\'alta ha de ser posterior a la darrera data de baixa!");
 				}
 				autoritzaUsuari.altaHistOrganisme(codOrganisme, descCurtaOrganisme, descLlargaOrganisme, dataAlta);
 				autoritzaUsuari.actualitzaOrganisme(codOrganisme, descCurtaOrganisme, descLlargaOrganisme, "0");
@@ -729,7 +726,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 			request.setAttribute("descMissatge", "Error: camp no num\u00e8ric.");
 			request.setAttribute("init",""); //Buidam atribut "init" per a que segueixi a la pàgina actual.
 			resultado = new String("/admin/controller.do?accion=organismes");
-			NFe.printStackTrace();
+			//NFe.printStackTrace();
 		} catch(RegwebException RWEex) {
 			log.debug("Capturam excepci\u00f3 regweb!");
 			request.setAttribute("missatge", "true");
@@ -746,8 +743,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 			request.setAttribute("init",""); //Posam atribut a init per a que torni a la pàgina inicial.
 			resultado="/admin/controller.do?accion=organismes";
 		} catch(Exception ex) {
-			log.debug("Capturam excepci\u00f3 estranya!");
-			ex.printStackTrace();
+			log.error("Capturam excepci\u00f3 estranya!",ex);
 		}
 		
 		return resultado;
@@ -808,7 +804,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 			request.setAttribute("descMissatge", "Error: camp no num\u00e8ric.");
 			request.setAttribute("init",""); //Buidam atribut "init" per a que segueixi a la pàgina actual.
 			resultado = new String("/admin/controller.do?accion=entitats");
-			NFe.printStackTrace();
+			//NFe.printStackTrace();
 		} catch(RegwebException RWEex) {
 			log.debug("Capturam excepci\u00f3 regweb!");
 			request.setAttribute("missatge", "true");
@@ -825,8 +821,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 			resultado="/admin/controller.do?accion=entitats";
 			request.setAttribute("init",""); //Buidam atribut a init per a torni a la pàgina de dades.
 		} catch(Exception ex) {
-			log.debug("Capturam excepci\u00f3 estranya!");
-			ex.printStackTrace();
+			log.error("Capturam excepci\u00f3 estranya!",ex);
 		}
 		return resultado;
 	}    
@@ -876,7 +871,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 				//Si té històric, feim la comprovació, en cas contrari no és necessari
 				dataDarreraBaix=ddmmyyyy.parse(dataDarreraBaixa);
 				if ( dataDarreraBaix.compareTo(dataAlt)>=0)
-					throw new RegwebException("La data d'alta ha de ser posterior a la darrera data de baixa!");
+					throw new RegwebException("La data d\'alta ha de ser posterior a la darrera data de baixa!");
 			}
 			//Cream l'oficina
 			autoritzaUsuari.altaOficina(oficinaGestionar, descOficina, dataAlta );
@@ -898,9 +893,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 			}
 			resultado="/admin/controller.do?accion=oficines";
 		} catch(Exception ex) {
-			log.debug("Capturam excepci\u00f3 estranya!");
-			
-			ex.printStackTrace();
+			log.error("Capturam excepci\u00f3 estranya!",ex);
 		}
 		return resultado;
 	}    
@@ -955,7 +948,6 @@ public class UtilAdminServlet extends UtilWebServlet {
 				}
 				//log.debug("La data de baixa és vàlida i és: "+dataBaixa);
 			} catch (Exception e) {
-				e.printStackTrace();
 				request.setAttribute("init",""); //Posam atribut a init per a que torni a la pàgina inicial.
 				throw new RegwebException("Data no v\u00E0lida");
 			}	
@@ -965,7 +957,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 
 			if ( !dataBaixa.equals("0") )
 				if ( dataAlt.compareTo(dataBaix)>=0 )
-				throw new RegwebException("La data de baixa és anterior a la data d'alta!");
+				throw new RegwebException("La data de baixa és anterior a la data d\'alta!");
 
 			
 			if (accio.equals("nouNomOficina")) {
@@ -980,7 +972,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 					//Si té històric, feim la comprovació, en cas contrari no és necessari
 					dataDarreraBaix=ddmmyyyy.parse(dataDarreraBaixa);
 					if ( dataDarreraBaix.compareTo(dataAlt)>=0)
-						throw new RegwebException("La data d'alta ha de ser posterior a la darrera data de baixa!");
+						throw new RegwebException("La data d\'alta ha de ser posterior a la darrera data de baixa!");
 				}
 				autoritzaUsuari.altaHistOficina(codOficina, descOficina, dataAlta);
 				autoritzaUsuari.actualitzaOficina(codOficina, descOficina, "0");
@@ -996,7 +988,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 			request.setAttribute("descMissatge", "Error: camp no num\u00e8ric.");
 			request.setAttribute("init",""); //Buidam atribut "init" per a que segueixi a la pàgina actual.
 			resultado = new String("/admin/controller.do?accion=oficines");
-			NFe.printStackTrace();
+			//NFe.printStackTrace();
 		} catch(RegwebException RWEex) {
 			log.debug("Capturam excepci\u00f3 regweb!");
 			request.setAttribute("missatge", "true");
@@ -1013,8 +1005,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 			request.setAttribute("init",""); //Posam atribut a init per a que torni a la pàgina inicial.
 			resultado="/admin/controller.do?accion=oficines";
 		} catch(Exception ex) {
-			log.debug("Capturam excepci\u00f3 estranya!");
-			ex.printStackTrace();
+			log.error("Capturam excepci\u00f3 estranya!",ex);
 		}
 		
 		return resultado;
@@ -1024,14 +1015,13 @@ public class UtilAdminServlet extends UtilWebServlet {
 		String resultado = new String("/admin/controller.do?accion=index");
 		
 		try{            
-			String msg="";
-			String idPropAct = "";
 			log.debug("Dins altaOficinaFisica (servlet)");
 			String oficinaGestionar = request.getParameter("oficinaGestionar").trim(); // Oficina a gestionar.
 			String oficinaGestionarFisica = request.getParameter("oficinaGestionarFisica").trim(); // Oficina a gestionar.
 			String descOficina = request.getParameter("descOficina").trim(); // Descripció de l'oficina
-			String dataAlta = "";//request.getParameter("dataAlta").trim(); // Data Alta (yymmdd)
+			String dataAlta= request.getParameter("dataAlta").trim(); // Data Alta (yymmdd)
 			String dataAltaHistoric = dataAlta; // Data Alta de l'històric (yyyymmdd)
+			
 			/* Validam l'entrada de dades */
 			if ( oficinaGestionar.length()>2 || oficinaGestionarFisica.length()>4 || descOficina.length()>20)
 				throw new RegwebException("Camp massa llarg");
@@ -1044,37 +1034,37 @@ public class UtilAdminServlet extends UtilWebServlet {
 			ddmmyy.setLenient(false);
 			ddmmyyyy.setLenient(false);  // Important! Sino deixaria passar dates errònees com: "40/01/07"!
 			Date dataAlt=null;
-			Date dataDarreraBaix=null;
-			//log.debug("La data de baixa original és: "+dataBaixa);
-//			try {
-//				dataAlt=ddmmyy.parse(dataAlta);
-//				dataAlta=yymmdd.format(dataAlt);
-//				dataAltaHistoric=yyyymmdd.format(dataAlt);
-//				//log.debug("La data de baixa és vàlida i és: "+dataBaixa);
-//			} catch (Exception e) {
-//				throw new RegwebException("Data no v\u00E0lida");
-//			}
+		
+			try {
+				dataAlt=ddmmyy.parse(dataAlta);
+				dataAlta=yymmdd.format(dataAlt);
+				dataAltaHistoric=yyyymmdd.format(dataAlt);
+				//log.debug("La data de baixa és vàlida i és: "+dataBaixa);
+			} catch (Exception e) {
+				throw new RegwebException("Data no v\u00E0lida");
+			}
 			
 			/* Agafam el bean */
-			AdminFacade autoritzaUsuari = AdminFacadeUtil.getHome().create();
+			AdminFacade adminBean = AdminFacadeUtil.getHome().create();
 			
 			//	Aquí hem de comprovar que la nova data d'alta és posterior a la darrera data de baixa de l'històric.
-//			Vector historicOficines = new Vector();
-//			historicOficines = autoritzaUsuari.getHistOficina(oficinaGestionar);
-//			String dataDarreraBaixa = (String) historicOficines.get(3);
-//			if (!dataDarreraBaixa.equals("")) {
-//				//Si té històric, feim la comprovació, en cas contrari no és necessari
-//				dataDarreraBaix=ddmmyyyy.parse(dataDarreraBaixa);
-//				if ( dataDarreraBaix.compareTo(dataAlt)>=0)
-//					throw new RegwebException("La data d'alta ha de ser posterior a la darrera data de baixa!");
-//			}
+			Vector historicOficines = new Vector();
+			historicOficines = adminBean.getHistOficinaFisica(oficinaGestionar, oficinaGestionarFisica);
+			
+			String dataDarreraBaixa = (String) historicOficines.get(4);
+			if (!dataDarreraBaixa.equals("")) {
+				//Si té històric, feim la comprovació, en cas contrari no és necessari
+				java.util.Date dataDarreraBaix=ddmmyyyy.parse(dataDarreraBaixa);
+				if ( dataDarreraBaix.compareTo(dataAlt)>=0)
+					throw new RegwebException("La data d\'alta ha de ser posterior a la darrera data de baixa!");
+			}
 			//Cream l'oficina
-			autoritzaUsuari.altaOficinaFisica(oficinaGestionar, oficinaGestionarFisica, descOficina, dataAlta );
-			//Cream l'històric corresponent
-			//autoritzaUsuari.altaHistOficina(oficinaGestionar, descOficina, dataAltaHistoric);
+			adminBean.altaOficinaFisica(oficinaGestionar, oficinaGestionarFisica, descOficina );
+			//Cream l'historic corresponent
+			adminBean.altaHistOficinaFisica(oficinaGestionar,oficinaGestionarFisica, descOficina, dataAltaHistoric);
 			
 		} catch(RegwebException RWEex) {
-			log.debug("Capturam excepci\u00f3 regweb!");
+			log.debug("Capturam excepcio regweb!");
 			request.setAttribute("missatge", "true");
 			request.setAttribute("descMissatge", RWEex.getMessage());
 			
@@ -1086,12 +1076,11 @@ public class UtilAdminServlet extends UtilWebServlet {
 				+ elements[i].getMethodName() + "()\n";
 				request.setAttribute("mesInfoMissatge"+i,linia);
 			}
-			RWEex.printStackTrace();
+			log.error(RWEex);
 			resultado="/admin/controller.do?accion=oficinesFisiques";
 		} catch(Exception ex) {
-			log.debug("Capturam excepci\u00f3 estranya!");
-			
-			ex.printStackTrace();
+			log.error(ex);
+			//ex.printStackTrace();
 		}
 		return resultado;
 	}    
@@ -1102,33 +1091,93 @@ public class UtilAdminServlet extends UtilWebServlet {
 		
 		try{            
 			//log.debug("Dins actualitzaOficina (servlet)");
-			String codOficina = request.getParameter("codiOficina").trim(); // Codi Oficina a gestionar
-			String codOficinaFisica = request.getParameter("codiOficinaFisica").trim(); // Codi Oficina a gestionar
+			String codOficina = request.getParameter("oficinaGestionar").trim(); // Codi Oficina a gestionar
+			String codOficinaFisica = request.getParameter("oficinaGestionarFisica").trim(); // Codi Oficina a gestionar
 			String descOficina = request.getParameter("descOficina").trim(); // Descripció llarga de l'Oficina 
+			String dataBaixa = request.getParameter("dataBaixa").trim(); // DataBaixa de l'Oficina 
+			String dataAlta = request.getParameter("dataAlta").trim(); // Data Alta
 			String accio = request.getParameter("accion").trim(); // Acció a dur a terme (nouNomOficina,baixaOficina)
+    		String dataBaixayymmdd = dataBaixa;
 			request.setAttribute("init","init"); //Posam atribut a init per a que torni a la pàgina inicial.
+			
+			if (dataBaixa.equals(""))
+    			dataBaixa="0";
 			
 			/* Validam l'entrada de dades */
 			if ( codOficina.length()>2 || descOficina.length()>20)
 				throw new RegwebException("Camp massa llarg");
 			
+			// Validam la data 
+    		SimpleDateFormat yyyymmdd=new SimpleDateFormat("yyyyMMdd");
+    		SimpleDateFormat ddmmyyyy=new SimpleDateFormat("dd/MM/yyyy");
+    		SimpleDateFormat yymmdd=new SimpleDateFormat("yyMMdd");
+    		SimpleDateFormat ddmmyy=new SimpleDateFormat("dd/MM/yyyy");
+    		ddmmyy.setLenient(false);
+    		ddmmyyyy.setLenient(false);  // Important! Sino deixaria passar dates errònees com: "40/01/07"!
+    		java.util.Date data=null;
+    		java.util.Date dataAlt=null;
+    		java.util.Date dataBaix=null;
+    		//log.debug("La data de baixa original és: "+dataBaixa);
+    		try {
+    			data=ddmmyyyy.parse(dataAlta);
+    			dataAlt=data;
+    			dataAlta=yyyymmdd.format(data);
+
+    			if (!dataBaixa.equals("0")) {
+    				data=ddmmyyyy.parse(dataBaixa);
+    				dataBaix=data;
+    				dataBaixa=yyyymmdd.format(data);
+
+    				data=ddmmyy.parse(dataBaixayymmdd);
+    				dataBaixayymmdd=yymmdd.format(data);
+    				log.debug("dataBaixa="+dataBaixa+" dataBaixayymmdd="+dataBaixayymmdd);
+    			}
+    			//log.debug("La data de baixa és vàlida i és: "+dataBaixa);
+    		} catch (Exception e) {
+    			//e.printStackTrace();
+    			request.setAttribute("init",""); //Posam atribut a init per a que torni a la pàgina inicial.
+    			throw new RegwebException("Data no v�lida");
+    		}	
 			
 			/* Agafam el bean */
 			AdminFacade autoritzaUsuari = AdminFacadeUtil.getHome().create();
 
+			if ( !dataBaixa.equals("0") )
+    			if ( dataAlt.compareTo(dataBaix)>=0 )
+    			throw new RegwebException("La data de baixa �s anterior a la data d�alta!");
 			
 			if (accio.equals("nouNomOficinaFisica")) {
+				//Hem de crear una nova entrada a l'històric d'oficines fisiques amb les dades passades. També hem de posar
+    			//la data de baixa de l'oficina fisica a "0" a la taula d'oficines fisiques.
+    			//	Aquí hem de comprovar que la nova data d'alta és posterior a la darrera data de baixa de l'històric.
+    			Vector historicOficinesFisiques = new Vector();
+    			historicOficinesFisiques = autoritzaUsuari.getHistOficinaFisica(codOficina, codOficinaFisica);
+    			Date dataDarreraBaix=null;
+    			String dataDarreraBaixa = (String) historicOficinesFisiques.get(4);
+    			if (!dataDarreraBaixa.equals("")) {
+    				//Si té històric, feim la comprovació, en cas contrari no és necessari
+    				dataDarreraBaix=ddmmyyyy.parse(dataDarreraBaixa);
+    				if ( dataDarreraBaix.compareTo(dataAlt)>=0)
+    					throw new RegwebException("La data d\'alta ha de ser posterior a la darrera data de baixa!");
+    			}
+    			autoritzaUsuari.altaHistOficinaFisica(codOficina, codOficinaFisica, descOficina, dataAlta);
 				autoritzaUsuari.actualitzaOficinaFisica(codOficina, codOficinaFisica, descOficina, "0");
 			}
+    		if (accio.equals("baixaOficinaFisica")) {
+    			//Donam de baixa a l'històric i després a la taula d'oficines fisiques.
+    			autoritzaUsuari.actualitzaHistOficinaFisica(codOficina, codOficinaFisica, descOficina, dataAlta, dataBaixa);
+    			autoritzaUsuari.actualitzaOficinaFisica(codOficina, codOficinaFisica, descOficina, dataBaixayymmdd);
+    		}
+
 		} catch(NumberFormatException NFe) {
-			log.debug("Error: camp no num\u00e8ric.");
+			log.debug("Error: camp no numèric.");
 			request.setAttribute("missatge", "true");
-			request.setAttribute("descMissatge", "Error: camp no num\u00e8ric.");
+			request.setAttribute("descMissatge", "Error: camp no numèric.");
 			request.setAttribute("init",""); //Buidam atribut "init" per a que segueixi a la pàgina actual.
-			resultado = new String("/admin/controller.do?accion=oficines");
-			NFe.printStackTrace();
+			resultado = new String("/admin/controller.do?accion=oficinesFisiques");
+			//NFe.printStackTrace();
 		} catch(RegwebException RWEex) {
-			log.debug("Capturam excepci\u00f3 regweb!");
+			log.debug("Capturam excepció regweb!");
 			request.setAttribute("missatge", "true");
 			request.setAttribute("descMissatge", RWEex.getMessage());
 			
@@ -1143,8 +1192,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 			request.setAttribute("init",""); //Posam atribut a init per a que torni a la pàgina inicial.
 			resultado="/admin/controller.do?accion=oficinesFisiques";
 		} catch(Exception ex) {
-			log.debug("Capturam excepci\u00f3 estranya!");
-			ex.printStackTrace();
+			log.error("Capturam excepció estranya!",ex);
 		}
 		
 		return resultado;
@@ -1203,8 +1251,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 			request.setAttribute("init",""); //Buidam atribut "init" per a que segueixi a la pàgina actual.
 			resultado = new String("/admin/controller.do?accion=comptadors");
 		} catch(Exception ex) {
-			log.debug("Capturam excepci\u00f3 estranya!");
-			ex.printStackTrace();
+			log.error("Capturam excepci\u00f3 estranya!",ex);
 		}
 		return resultado;
 	}    
@@ -1259,10 +1306,10 @@ public class UtilAdminServlet extends UtilWebServlet {
 			request.setAttribute("descMissatge", "Error: camp no num\u00e8ric.");
 			request.setAttribute("init",""); //Buidam atribut "init" per a que segueixi a la pàgina actual.
 			resultado = new String("/admin/controller.do?accion=agrupacionsgeografiques");
-			NFe.printStackTrace();
+			//NFe.printStackTrace();
 		} catch(RegwebException RWEex) {
 			log.debug("Capturam excepci\u00f3 regweb!");
-			RWEex.printStackTrace();
+			//RWEex.printStackTrace();
 			request.setAttribute("missatge", "true");
 			request.setAttribute("descMissatge", RWEex.getMessage());
 			
@@ -1277,8 +1324,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 			request.setAttribute("init",""); //Buidam atribut init per a que no inicialitzi els valors de la pantalla actual.
 			resultado="/admin/controller.do?accion=agrupacionsgeografiques";
 		} catch(Exception ex) {
-			log.debug("Capturam excepci\u00f3 estranya!");
-			ex.printStackTrace();
+			log.error("Capturam excepci\u00f3 estranya!",ex);
 		}
 		return resultado;
 	}    
@@ -1351,8 +1397,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 			request.setAttribute("init",""); //Buidam atribut init per a que no inicialitzi els valors de la pantalla actual.
 			resultado="/admin/controller.do?accion=agrupacionsgeografiques";
 		} catch(Exception ex) {
-			log.debug("Capturam excepci\u00f3 estranya!");
-			ex.printStackTrace();
+			log.error("Capturam excepci\u00f3 estranya!",ex);
 		}
 		return resultado;
 	}    
@@ -1399,9 +1444,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 			request.setAttribute("init",""); //Buidam atribut init per a que no inicialitzi els valors de la pantalla actual.
 			resultado="/admin/controller.do?accion=tipusDocuments";
 		} catch(Exception ex) {
-			log.debug("Capturam excepci\u00f3 estranya!");
-			
-			ex.printStackTrace();
+			log.error("Capturam excepci\u00f3 estranya!",ex);
 		}
 		return resultado;
 	}    
@@ -1466,8 +1509,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 			request.setAttribute("init",""); //Buidam atribut init per a que no inicialitzi els valors de la pantalla actual.
 			resultado="/admin/controller.do?accion=tipusDocuments";
 		} catch(Exception ex) {
-			log.debug("Capturam excepci\u00f3 estranya!");
-			ex.printStackTrace();
+			log.error("Capturam excepci\u00f3 estranya!",ex);
 		}
 		return resultado;
 	}    
@@ -1533,8 +1575,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 			request.setAttribute("init",""); //Buidam atribut init per a que no inicialitzi els valors de la pantalla actual.
 			resultado="/admin/controller.do?accion=municipis060";
 		} catch(Exception ex) {
-			log.debug("Capturam excepci\u00f3 estranya!");
-			ex.printStackTrace();
+			log.error("Capturam excepci\u00f3 estranya!",ex);
 		}
 		return resultado;
 	}    
@@ -1581,9 +1622,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 			request.setAttribute("init",""); //Buidam atribut init per a que no inicialitzi els valors de la pantalla actual.
 			resultado="/admin/controller.do?accion=municipis060";
 		} catch(Exception ex) {
-			log.debug("Capturam excepci\u00f3 estranya!");
-			
-			ex.printStackTrace();
+			log.error("Capturam excepci\u00f3 estranya!",ex);
 		}
 		return resultado;
 	}    

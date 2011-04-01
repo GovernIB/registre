@@ -457,7 +457,7 @@ public abstract class RegistroModificadoEntradaFacadeEJB extends HibernateEJB {
 			q.executeUpdate();
 			generado=true;
 
-			
+			log.debug("generarBZVISAD finalizado correctamente.");
 		} catch (Exception e){
 			generado=false;
 			log.error("Error: "+e.getMessage());
@@ -551,6 +551,7 @@ public abstract class RegistroModificadoEntradaFacadeEJB extends HibernateEJB {
                     registros.add(reg);
 				}
 			}
+			log.debug("recuperarRegistros ejecutado correctamente.");
 		} catch (Exception e) {
 			log.error("Error: "+e.getMessage());
 			e.printStackTrace();
@@ -618,11 +619,12 @@ public abstract class RegistroModificadoEntradaFacadeEJB extends HibernateEJB {
 			logLopdBZMODIF("INSERT", param.getUsuarioModificacion()
 					, Integer.parseInt(aaaammdd.format(fechaSystem)), horamili, 'E', param.getNumeroRegistro(), param.getAnoEntrada(), param.getOficina(), Integer.parseInt(aaaammdd.format(fechaSystem)),Integer.parseInt(hhmmss.format(fechaSystem)+ss) );
 			
-			
+			log.debug("generarModificacion ejecutado correctamente.");
+			session.flush();
 			generado=true;
 		} catch (Exception e) {
 			log.error("RegistroModificadoEntradaBean: Excepci\u00f3n al generar modificacion "+ e.getMessage());
-			e.printStackTrace();
+			//e.printStackTrace();
 			generado=false;
 		} finally {
 			
@@ -657,13 +659,13 @@ public abstract class RegistroModificadoEntradaFacadeEJB extends HibernateEJB {
 	private void logLopdBZMODIF(String tipusAcces, String usuari, int data, int hora, char entrsal, int nombreRegistre, int any, int oficina, int dataModif, int horaModif  ) {
         Session session = getSession();
 		try {
-            LogModificacionLopd log = new LogModificacionLopd(new LogModificacionLopdId( tipusAcces, usuari, Integer.valueOf(data), Integer.valueOf(hora), 
+            LogModificacionLopd entradaLog = new LogModificacionLopd(new LogModificacionLopdId( tipusAcces, usuari, Integer.valueOf(data), Integer.valueOf(hora), 
                                      String.valueOf(entrsal), Integer.valueOf(nombreRegistre), Integer.valueOf(any), Integer.valueOf(oficina),
                                      Integer.valueOf(dataModif), Integer.valueOf(horaModif)));
 
-            session.save(log);
+            session.save(entradaLog);
             session.flush();
-
+            log.debug("logLopdBZMODIF ejecutado correctamente.");
         } catch (HibernateException he) {
             throw new EJBException(he);
         } finally {
@@ -687,11 +689,12 @@ public abstract class RegistroModificadoEntradaFacadeEJB extends HibernateEJB {
 	private void logLopdBZENTRA(String tipusAcces, String usuari, int data, int hora, int nombreRegistre, int any, int oficina) {
         Session session = getSession();
 		try {
-            LogEntradaLopd log = new LogEntradaLopd(new LogEntradaLopdId( tipusAcces, usuari, Integer.valueOf(data), Integer.valueOf(hora), 
+            LogEntradaLopd entradaLog = new LogEntradaLopd(new LogEntradaLopdId( tipusAcces, usuari, Integer.valueOf(data), Integer.valueOf(hora), 
                                      Integer.valueOf(nombreRegistre), Integer.valueOf(any), Integer.valueOf(oficina)));
 
-            session.save(log);
+            session.save(entradaLog);
             session.flush();
+            log.debug("logLopdBZENTRA ejecutado correctamente.");
 
         } catch (HibernateException he) {
             throw new EJBException(he);

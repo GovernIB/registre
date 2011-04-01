@@ -23,7 +23,7 @@
                 <c:param name="hora" value="${hora}"/>
                 <c:param name="tipo" value="${token}"/>
                 <c:param name="oficina" value="${oficina}"/>
-                <c:param name="oficina" value="${oficinaid}"/>
+                <c:param name="oficinaid" value="${oficinaid}"/>
                 <c:param name="numero" value="${numero}"/>
                 <c:param name="ano" value="${ano}"/>
                 <c:param name="ES" value="${ES}"/>
@@ -43,7 +43,7 @@
                 <c:param name="hora" value="${hora}"/>
                 <c:param name="tipo" value="${token}"/>
                 <c:param name="oficina" value="${oficina}"/>
-                <c:param name="oficina" value="${oficinaid}"/>
+                <c:param name="oficinaid" value="${oficinaid}"/>
                 <c:param name="numero" value="${numero}"/>
                 <c:param name="ano" value="${ano}"/>
                 <c:param name="ES" value="${ES}"/>
@@ -64,7 +64,7 @@
                 <c:param name="hora" value="${hora}"/>
                 <c:param name="tipo" value="${token}"/>
                 <c:param name="oficina" value="${oficina}"/>
-                <c:param name="oficina" value="${oficinaid}"/>
+                <c:param name="oficinaid" value="${oficinaid}"/>
                 <c:param name="numero" value="${numero}"/>
                 <c:param name="ano" value="${ano}"/>
                 <c:param name="ES" value="${ES}"/>
@@ -84,7 +84,7 @@
                 <c:param name="hora" value="${hora}"/>
                 <c:param name="tipo" value="${token}"/>
                 <c:param name="oficina" value="${oficina}"/>
-                <c:param name="oficina" value="${oficinaid}"/>
+                <c:param name="oficinaid" value="${oficinaid}"/>
                 <c:param name="numero" value="${numero}"/>
                 <c:param name="ano" value="${ano}"/>
                 <c:param name="ES" value="${ES}"/>

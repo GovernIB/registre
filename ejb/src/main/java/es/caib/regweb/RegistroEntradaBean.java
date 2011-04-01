@@ -65,6 +65,7 @@ public class RegistroEntradaBean implements SessionBean {
     private String password="";
     private String municipi060="";
     private String descripcioMunicipi060="";
+    private int numeroRegistros060=0;
     
     private SessionContext contextoSesion;
     
@@ -732,16 +733,17 @@ public class RegistroEntradaBean implements SessionBean {
      * @throws ClassNotFoundException
      * @throws Exception
      */
-   private void cargarMunicipio060(Connection conn, int fzaanoe, int fzanume, int fzacagc, String codimun) throws SQLException, ClassNotFoundException, Exception {
+    private void cargarMunicipio060(Connection conn, int fzaanoe, int fzanume, int fzacagc, String codimun,int numreg_060) throws SQLException, ClassNotFoundException, Exception {
 	   PreparedStatement ms = null;
 	   try{
-		   String insertBZNCORR="INSERT INTO BZENTRA060 (ENT_ANY, ENT_OFI, ENT_NUM, ENT_CODIMUN)" +
-           "VALUES (?,?,?,?)";
+ 		   String insertBZNCORR="insert into BZENTRA060 (ENT_ANY, ENT_OFI, ENT_NUM, ENT_CODIMUN,ENT_NUMREG)" +
+            "values (?,?,?,?,?)";
 		   ms=conn.prepareStatement(insertBZNCORR);
 		   ms.setInt(1, fzaanoe);
 		   ms.setInt(2,fzacagc);
 		   ms.setInt(3,fzanume);
 		   ms.setString(4, codimun);
+ 		   ms.setInt(5, numreg_060);
 		   ms.execute();
 	   }catch(Exception e){
 		   throw e;
@@ -932,7 +934,7 @@ public class RegistroEntradaBean implements SessionBean {
             registroGrabado=true;
             
             if(!municipi060.equals(""))
-            	cargarMunicipio060(conn, fzaanoe, fzanume, fzacagc, municipi060);
+            	cargarMunicipio060(conn, fzaanoe, fzanume, fzacagc, municipi060,numeroRegistros060);
            
             
             // desacoplamiento cobol
@@ -1009,18 +1011,21 @@ public class RegistroEntradaBean implements SessionBean {
         
         try {
             conn=ToolsBD.getConn();
-            String sentenciaSql="UPDATE BZENTRA060 SET ENT_CODIMUN=?  WHERE ENT_ANY=? AND ENT_OFI=? AND ENT_NUM=?";
+            String sentenciaSql="Update bzentra060 set ent_codimun=?, ent_numreg=?  where ent_any=? and ent_ofi=? and ent_num=?";
             ps=conn.prepareStatement(sentenciaSql);
             ps.setString(1,municipi060);
-            ps.setString(2,anoEntrada);
-            ps.setString(3,oficina);
-            ps.setString(4,numeroEntrada);
+            ps.setInt(2,numeroRegistros060);
+            ps.setString(3,anoEntrada);
+            ps.setString(4,oficina);
+            ps.setString(5,numeroEntrada);
+            
+            //System.out.println("Municipi 060:"+anoEntrada+":"+oficina+":"+numeroEntrada+":"+municipi060+":"+numeroRegistros060);
             actualizados=ps.executeUpdate();
             if (actualizados!=0) {
-            	System.out.println("Municipi 060 actualitzat:"+municipi060);
+            	//System.out.println("Municipi 060 actualitzat:"+municipi060);
             }else{
-            	cargarMunicipio060(conn, Integer.parseInt(anoEntrada), Integer.parseInt(numeroEntrada), Integer.parseInt(oficina), municipi060);
-            	System.out.println("Municipi060 creat.");
+            	cargarMunicipio060(conn, Integer.parseInt(anoEntrada), Integer.parseInt(numeroEntrada), Integer.parseInt(oficina), municipi060,numeroRegistros060);
+            	//System.out.println("Municipi060 creat.");
             }
         }catch(Exception e ){
         	  throw e;
@@ -1417,15 +1422,16 @@ public class RegistroEntradaBean implements SessionBean {
         PreparedStatement ps = null;
         try {
             conn=ToolsBD.getConn();
-            String sentenciaSql="SELECT ENT_CODIMUN, MUN_NOM FROM BZENTRA060,BZMUN_060 WHERE ENT_ANY=? AND ENT_OFI=? AND ENT_NUM=? AND ENT_CODIMUN=MUN_CODI";
+            String sentenciaSql="Select ent_codimun, mun_nom, ent_numreg from bzentra060,bzmun_060 where ent_any=? and ent_ofi=? and ent_num=? and ent_codimun=mun_codi";
             ps=conn.prepareStatement(sentenciaSql);
             ps.setString(1,anoEntrada);
             ps.setString(2,oficina);
             ps.setString(3,numeroEntrada);
             rs=ps.executeQuery();
             if (rs.next()) {
-            	municipi060 = rs.getString("ENT_CODIMUN");
-            	descripcioMunicipi060 = rs.getString("MUN_NOM");
+            	municipi060 = rs.getString("ent_codimun");
+            	descripcioMunicipi060 = rs.getString("mun_nom");
+            	numeroRegistros060 = rs.getInt("ent_numreg");
             	//System.out.println("Municipi 060 llegit:"+municipi060);
             }/*else{
             	System.out.println("Res per llegir.");
@@ -2027,227 +2033,19 @@ public class RegistroEntradaBean implements SessionBean {
 		} finally {
 			ToolsBD.closeConn(conn, ps, null);
 		}
-		//System.out.println("RegistroEntradaBean: Desada informació dins BZENLPD: "+tipusAcces+" "+usuari+" "+data+" "+hora+" "+nombreRegistre+" "+any+" "+oficina);
      }
 
-    
 /**
-   * Obtiene el acuse de recibo en formato XML y lo firma con el certificado establecido en ejb-jar.xml, devolviendo
-   * en forma de OutputStream el acuse de recibo, la firma y el SMIME formado por el documento de acuse de recibo y su firma 
-   * @throws java.lang.Exception
-   * @throws javax.naming.NamingException cuando no se encuentran los parÃ¡metros necesarios para la firma
-   * en el JNDI del EJB (se deben poner en ejb-jar.xml)
-   * @return Signature objeto de firma electrònica de la API Signatura
-   * @param signatureStream <code>OutputStream</code> con la firma electrÃ³nica serializada en un stream para su posterior almacenaje o transmisiÃ³n
-   * @param smime <code>OutputStream</code> con el fichero de acuse de recibo y la firma electrÃ³nica empaquetados en un fichero SMIME
-   * @param rebut <code>OutputStream</code> con el fichero acuse de recibo en formato XML
-   * @param documentName <code>Vector</code> de String con los nombres de los documentos presentados en el registro
-   * @param documentHash <code>Vector</code> de String con el hashing de los documentos presentados en el registro
-   * @param hashingAlg nombre del algoritmo de hashing utilizado para pasar el hash de los documentos
-   * @param oficina
-   * @param data
-   * @param num
-   * @author JesÃºs Reyes (3dÃ­gits)
+ * @return the numeroRegistros060
    */
+public int getNumeroRegistros060() {
+	return numeroRegistros060;
+}
 
-  // private Signature getRebutSignat(SignerFactory sf, Signer signer, String num, String data, String oficina,String hashingAlg, Vector documentHash, Vector documentName, OutputStream rebut, OutputStream smime, OutputStream signatureStream) throws NamingException, Exception
-  // {
-  // 
-  //    XMLConstructor constructor = new XMLConstructor();
-  //    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-  //   
-  //   //Construcción del recibo en XML
-  //   constructor.createDocument(num,data,oficina,hashingAlg,documentHash,documentName,outputStream);
-  // 
-  //   ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
-  //   ByteArrayInputStream inputStreamForSMIME = new ByteArrayInputStream(outputStream.toByteArray());
-  //   if (inputStream==null)
-  //     throw new Exception("No se ha podido crear el recibo XML");
-  //     
-  //   
-  //   
-  //   // Los tres Strings siguientes se obtienen del ejb-jar.xml
-  //   String certName = null;
-  //   String contentType = null;
-  //   String password = null; 
-  //       
-  //   Context initCtx = new InitialContext();
-  //   Context context = (Context)initCtx.lookup("java:comp/env");
-  //   certName = (String)context.lookup("certName");
-  //   contentType = (String) context.lookup("contentType");
-  //   password = (String) context.lookup("certPassword");
-  // 
-  //   Signature signature = null;
-  //   
-  //     // Firma del recibo
-  //   signature = signer.sign(inputStream,certName,password,contentType);
-  //     
-  //     // Creación del SMIME
-  //   if (smime!=null)
-  //   {
-  //     signer.generateSMIME(inputStreamForSMIME,signature,smime);
-  //   }
-  //     
-  //     // Devolución del XML
-  //   if (rebut!=null)
-  //   {
-  //     outputStream.writeTo(rebut);
-  //   }
-  //    
-  //     //Serialización de la firma
-  //   if (signatureStream!=null)
-  //   {
-  //     ObjectOutputStream os = new ObjectOutputStream(signatureStream);
-  //     os.writeObject(signature);
-  //     os.flush();
-  //     signatureStream.close();
-  //   }
-  //   
-  //   return signature;
-  // }
-  
-   
-  // public String TestTS( ) throws RemoteException, SQLException, ClassNotFoundException, NamingException, Exception
-  // {
-  //   Connection conn = null;
-  //   try {
-  //       /* AquÃ­ hem de cridar al mï¿½tode de l'API de signatura per a que ens proporcioni el temps actual del
-  //        * servidor de signatures, aquest serï¿½ la data que tendrÃ  validesa legal. Serï¿½ la data que hi haurï¿½ 
-  //        * a l'acusament de rebuda i a l'entrada del registre
-  //        * this.set */
-  //       // Los tres Strings siguientes se obtienen del ejb-jar.xml
-  //       String certName = null;
-  //       String contentType = null;
-  //       String password = null; 
-  //       Date data_tradise = null;
-  //       
-  //      //      Obtención de la clase de Signer
-  //    SignerFactory sf = new SignerFactory();  
-  //    Signer signer = sf.getSigner();
-  //    
-  //       Context initCtx = new InitialContext();
-  //       Context context = (Context)initCtx.lookup("java:comp/env");
-  //       certName = (String)context.lookup("certName");
-  //       contentType = (String) context.lookup("contentType");
-  //       password = (String) context.lookup("certPassword");
-  //       
-  //       /* Obtenim la data de tradise*/
-  //       //System.out.println("RegistroEntradaBean: certName= "+certName+" contentType ="+contentType+" password= "+password);
-  //       data_tradise = signer.getCurrentDate(certName, password, contentType);
-  //       //System.out.println("4");
-  //       /* La transformam en string */
-  //       SimpleDateFormat formata_data;
-  //       formata_data = new SimpleDateFormat("dd/MM/yyyy");
-  //       /* Posam la data (dia/mes/any) proporcionada pel servidor de temps de tradise */
-  //       setdataentrada(formata_data.format(data_tradise));
-  //       
-  //       
-  //       DateFormat formata_hora=new SimpleDateFormat("HH:mm");
-  //       /* Posam la hora (hora/minuts) proporcionada pel servidor de temps de tradise */
-  //       sethora(formata_hora.format(data_tradise));
-  //       System.out.println("La data de tradise es:"+data_tradise+" passada a" +
-  //            " string="+ getDataEntrada()
-  //            + " amb hora = "+getHora()); 
-  //     
-  //       return new String("La data de tradise es:"+data_tradise+" passada a" +
-  //            " string="+ getDataEntrada()
-  //            + " amb hora = "+getHora());
-  //       
-  //   } catch (Exception ex) {
-  //       ex.printStackTrace();
-  //       errores.put("","Error inesperat, no s'ha desat el registre");
-  //       throw new RemoteException("Error inesperat, no s'ha desat el registre", ex);
-  //   } finally {
-  //       try {
-  //           if (conn != null && !conn.isClosed()) conn.close();
-  //       } catch (Exception e){
-  //           System.out.println("Excepció en tancar la connexió: "+e.getMessage());
-  //           e.printStackTrace();
-  //       }
-  //   }
-  // }
-  
-//   public Signature grabarConFirma(String hashingAlg, Vector documentHash, Vector documentName, OutputStream rebut, OutputStream smime, OutputStream signatureStream) throws RemoteException, SQLException, ClassNotFoundException, NamingException, Exception
-//   {
-//   
-//     Connection conn = null;
-//     try {
-//         conn=ToolsBD.getConn();
-//         conn.setAutoCommit(false);
-//         
-//         //1Âº Creamos el registro de entrada con el mÃ©todo genÃ©rico
-//         //Valores para pruebas sin tener que realizar entradas reales en el registro
-//         /*String num = "245";
-//         String data = "20/05/2005";
-//         String oficina = new String("Conselleria d'Economia, Hisenda i Innovacio");
-//           */
-//         /* AquÃ­ hem de cridar al mï¿½tode de l'API de signatura per a que ens proporcioni el temps actual del
-//          * servidor de signatures, aquest serï¿½ la data que tendrÃ  validesa legal. Serï¿½ la data que hi haurï¿½ 
-//          * a l'acusament de rebuda i a l'entrada del registre
-//          * this.set */
-// //      Los tres Strings siguientes se obtienen del ejb-jar.xml
-//         String certName = null;
-//         String contentType = null;
-//         String password = null; 
-//         Date data_tradise = null;
-//         
-//         
-// //      Obtención de la clase de Signer
-//      SignerFactory sf = new SignerFactory();  
-//      Signer signer = sf.getSigner();
-//         
-//         Context initCtx = new InitialContext();
-//         Context context = (Context)initCtx.lookup("java:comp/env");
-//         certName = (String)context.lookup("certName");
-//         contentType = (String) context.lookup("contentType");
-//         password = (String) context.lookup("certPassword");
-//         /* Obtenim la data de tradise*/  
-//         //System.out.println("Intentam obtenir la data del servidor de temps de Tradise");
-//         data_tradise = signer.getCurrentDate(certName, password, contentType);
-//         //System.out.println("Ja hem obtingut la data del servidor de temps de Tradise");
-//         /* La transformam en string */
-//         SimpleDateFormat formata_data;
-//         formata_data = new SimpleDateFormat("dd/MM/yyyy");
-//         /* Posam la data (dia/mes/any) proporcionada pel servidor de temps de tradise com data del registre */
-//         setdataentrada(formata_data.format(data_tradise));
-//         /* Posam la data (dia/mes/any) proporcionada pel servidor de temps de tradise com data del document */
-//         setdata(formata_data.format(data_tradise));
-//         
-//         
-//         DateFormat formata_hora=new SimpleDateFormat("HH:mm");
-//         /* Posam la hora (hora/minuts) proporcionada pel servidor de temps de tradise */
-//         sethora(formata_hora.format(data_tradise));
-//         /*System.out.println("La data de tradise es:"+data_tradise+" passada a" +
-//              " string="+ getDataEntrada()
-//              + " amb hora = "+getHora()); */
-//         /* Ara feim el registre */
-//         cargar (conn);
-//         
-//         //System.out.println("Registre registrat amb nombre:"+this.getNumero()+" la variable fzanume="+fzanume);
-//         //2Âº Devolvemos el acuse de recibo firmado
-//         Signature s = getRebutSignat( sf, signer, this.getNumeroEntrada(), this.getDataEntrada(), this.getOficina(), hashingAlg, documentHash, documentName, rebut,smime, signatureStream);
-//         //Date ts = new Date();
-//         //ts = s.getDate();
-//         //System.out.println("La data del timestamp Ã©s:"+ts);
-//         conn.commit();
-//         
-//         return s;
-//     } catch (Exception ex) {
-//         ex.printStackTrace();
-//         System.getProperty("user.home");
-//         System.getProperty("java.io.tmpdir");
-//         registroGrabado=false;
-//         errores.put("","Error inesperat, no s'ha desat el registre");
-//         try {
-//             conn.rollback();
-//         } catch (SQLException sqle) {
-//             throw new RemoteException("S'ha produ\357t un error i no s'han pogut tornar enrere els canvis efectuats", sqle);
-//         }
-//         throw new RemoteException("Error inesperat, no s'ha desat el registre", ex);
-//     } finally {
-//      ToolsBD.closeConn(conn, null, null);
-//     }
-//     
-//    //  return getRebutSignat(num, data, oficina, hashingAlg,documentHash,documentName,rebut,smime,signatureStream);
-//   }
+/**
+ * @param numeroRegistros060 the numeroRegistros060 to set
+ */
+public void setNumeroRegistros060(int numeroRegistros060) {
+	this.numeroRegistros060 = numeroRegistros060;
+}
 }

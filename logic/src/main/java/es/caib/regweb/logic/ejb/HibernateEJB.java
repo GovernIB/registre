@@ -61,7 +61,7 @@ public abstract class HibernateEJB implements SessionBean {
    }
 
    public void ejbCreate() throws CreateException {
-      log.info("ejbCreate: " + this.getClass());
+      log.debug("ejbCreate: " + this.getClass());
       try {
          Context ctx = new InitialContext();
          sf = (SessionFactory) ctx.lookup("java:comp/env/hibernate/SessionFactory");
@@ -78,12 +78,13 @@ public abstract class HibernateEJB implements SessionBean {
    }
 
    public void ejbRemove() {
-      log.info("ejbRemove: " + this.getClass());
+      log.debug("ejbRemove: " + this.getClass());
       sf = null;
    }
 
    protected Session getSession() {
       try {
+    	  log.debug("GetSession");
           return sf.openSession();
       } catch (HibernateException e) {
          throw new EJBException(e);
@@ -91,6 +92,7 @@ public abstract class HibernateEJB implements SessionBean {
    }
 
    protected void close(Session sessio) {
+	   log.debug("Close Session");
       if (sessio != null && sessio.isOpen()) {
          try {
             if (sessio.isDirty()) {

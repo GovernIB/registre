@@ -61,8 +61,10 @@ registro.setsalida2(request.getParameter("salida2"));
 registro.setdestinatari(request.getParameter("destinatari"));
 registro.setidioex(request.getParameter("idioex"));
 registro.setdisquet(request.getParameter("disquet"));
-if(request.getParameter("mun_060")!=null)
+if(request.getParameter("mun_060")!=null){
 	registro.setMunicipi060(request.getParameter("mun_060"));
+	registro.setNumeroDocumentosRegistro060(request.getParameter("numreg_060"));
+	}
 
 registro.setcomentario(request.getParameter("comentario"));
 %>

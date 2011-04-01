@@ -19,6 +19,7 @@ public class Entrada060 implements java.io.Serializable {
 
 	private Entrada060Id id;
 	private String codigoMunicipio;
+	private String numeroRegistros060;
 
 	public Entrada060() {
 	}
@@ -48,6 +49,15 @@ public class Entrada060 implements java.io.Serializable {
 
 	public void setCodigoMunicipio(String codigoMunicipio) {
 		this.codigoMunicipio = codigoMunicipio;
+	}
+
+	@Column(name = "ENT_NUMREG", nullable = false, length = 5)
+	public String getNumeroRegistros060() {
+		return this.numeroRegistros060;
+	}
+
+	public void setNumeroRegistros060(String numeroRegistros060) {
+		this.numeroRegistros060 = numeroRegistros060;
 	}
 
 }

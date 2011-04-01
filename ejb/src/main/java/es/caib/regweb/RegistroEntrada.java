@@ -248,6 +248,18 @@ public interface RegistroEntrada extends EJBObject {
 	 * @return String
 	 */
 	public boolean getValidado() throws RemoteException;
+	/** Recuperamos en un String desde el objeto Registro el numero de documentos
+	 * que provienen del municipio 060.
+	 * @throws RemoteException
+	 * @return int
+	 */
+	public int getNumeroRegistros060()throws RemoteException;
+	/** Fija en el objeto Registro el numero de documentos que provienen del municipio 060.
+	 * @param anoEntrada String
+	 * @throws RemoteException
+	 */
+	public void setNumeroRegistros060(int numeroRegistros060) throws RemoteException;
+
 	/** Grabamos el objeto Registro en la base de datos.
 	 * @throws RemoteException
 	 * @throws SQLException

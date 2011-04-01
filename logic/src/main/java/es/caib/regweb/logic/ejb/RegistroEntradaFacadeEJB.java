@@ -10,7 +10,7 @@ import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.ScrollableResults;
-import org.hibernate.ScrollMode;
+//import org.hibernate.ScrollMode;
 import es.caib.regweb.logic.helper.Helper;
 
 import java.rmi.*;
@@ -73,7 +73,7 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
         Query q = null;
         
         
-        String dataVisado=param.getDataVisado();
+        //String dataVisado=param.getDataVisado();
         String dataentrada=param.getDataEntrada();
         String hora=param.getHora();
         String oficina=param.getOficina();
@@ -82,7 +82,7 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
         String tipo=param.getTipo();
         String idioma=param.getIdioma();
         String entidad1=param.getEntidad1();
-        String entidad1Grabada=param.getEntidad1Grabada();
+        //String entidad1Grabada=param.getEntidad1Grabada();
         String entidad2=param.getEntidad2();
         String altres=param.getAltres();
         String balears=param.getBalears();
@@ -95,20 +95,21 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
         String comentario=param.getComentario();
         String usuario=param.getUsuario();
         // int fzanume=param.getFzanume();
-        String correo=param.getCorreo();
-        String registroAnulado=param.getRegistroAnulado();
+        //String correo=param.getCorreo();
+        //String registroAnulado=param.getRegistroAnulado();
         boolean actualizacion=param.getActualizacion();
-        boolean leidos=param.getLeido();
+        //boolean leidos=param.getLeido();
         String motivo=param.getMotivo();
         String entidad1Nuevo=param.getEntidad1Nuevo();
         String entidad2Nuevo=param.getEntidad2Nuevo();
         String altresNuevo=param.getAltresNuevo();
         String comentarioNuevo=param.getComentarioNuevo();
-        String password=param.getPassword();
-        String municipi060=param.getMunicipi060();
-        String descripcioMunicipi060=param.getDescripcionMunicipi060();
+        //String password=param.getPassword();
+        //String municipi060=param.getMunicipi060();
+        //String descripcioMunicipi060=param.getDescripcionMunicipi060();
+        //String numeroDocumentosRegistro060=param.getNumeroDocumentosRegistro060();
         Hashtable errores=param.getErrores();
-        String entidadCastellano=param.getEntidadCastellano();
+        //String entidadCastellano=param.getEntidadCastellano();
                 
         
         
@@ -488,6 +489,7 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
         String password=param.getPassword();
         String municipi060=param.getMunicipi060();
         String descripcioMunicipi060=param.getDescripcionMunicipi060();
+        String numeroDocumentosRegistro060=(param.getNumeroDocumentosRegistro060()==null)?"1":param.getNumeroDocumentosRegistro060();
         Hashtable errores=param.getErrores();
                 
         // String anoEntrada=param.getAnoEntrada();
@@ -519,6 +521,7 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
 
             /* Grabamos registro si las validaciones son correctas */
             SQLQuery ms = null;
+            
             if (!validado) {
                 param=validar(param);
                 validado=param.getValidado();
@@ -670,8 +673,10 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
             int numRegistrosGrabado=ms.executeUpdate();
             registroGrabado=true;
 
+            log.debug("Numero:"+numeroDocumentosRegistro060);
+            
             if(!municipi060.equals(""))
-            	cargarMunicipio060(session, fzaanoe, fzanume, fzacagc, municipi060);
+            	cargarMunicipio060(session, fzaanoe, fzanume, fzacagc, municipi060,Integer.parseInt(numeroDocumentosRegistro060));
 
 
             /* Grabamos numero de correo si tuviera */
@@ -777,16 +782,17 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
      * @throws ClassNotFoundException
      * @throws Exception
      */
-   private void cargarMunicipio060(Session session, int fzaanoe, int fzanume, int fzacagc, String codimun) throws HibernateException, ClassNotFoundException, Exception {
+   private void cargarMunicipio060(Session session, int fzaanoe, int fzanume, int fzacagc, String codimun,int numreg_060) throws HibernateException, ClassNotFoundException, Exception {
 	   SQLQuery ms = null;
 	   try{
-		   String insertBZNCORR="INSERT INTO BZENTRA060 (ENT_ANY, ENT_OFI, ENT_NUM, ENT_CODIMUN)" +
-           "VALUES (?,?,?,?)";
+		   String insertBZNCORR="INSERT INTO BZENTRA060 (ENT_ANY, ENT_OFI, ENT_NUM, ENT_CODIMUN,ENT_NUMREG)" +
+           "VALUES (?,?,?,?,?)";
 		   ms=session.createSQLQuery(insertBZNCORR);
 		   ms.setInteger(0, fzaanoe);
 		   ms.setInteger(1,fzacagc);
 		   ms.setInteger(2,fzanume);
 		   ms.setString(3, codimun);
+		   ms.setInteger(4,numreg_060);
 		   ms.executeUpdate();
 	   }catch(Exception e){
 		   throw e;
@@ -839,6 +845,7 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
         String password=param.getPassword();
         String municipi060=param.getMunicipi060();
         String descripcioMunicipi060=param.getDescripcionMunicipi060();
+        String numeroDocumentosRegistro060=param.getNumeroDocumentosRegistro060();
         Hashtable errores=param.getErrores();
                 
         String anoEntrada=param.getAnoEntrada();
@@ -860,17 +867,19 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
         
         try {
 
-            String sentenciaHql="UPDATE BZENTRA060 SET ENT_CODIMUN=?  WHERE ENT_ANY=? AND ENT_OFI=? AND ENT_NUM=?";
+            String sentenciaHql="UPDATE BZENTRA060 SET ENT_CODIMUN=?, ENT_NUMREG=?  WHERE ENT_ANY=? AND ENT_OFI=? AND ENT_NUM=?";
             q=session.createSQLQuery(sentenciaHql);
             q.setString(0,municipi060);
-            q.setInteger(1,Integer.valueOf(anoEntrada));
-            q.setInteger(2,Integer.valueOf(oficina));
-            q.setInteger(3,Integer.valueOf(numeroEntrada));
+            q.setInteger(1,Integer.valueOf(numeroDocumentosRegistro060));
+            q.setInteger(2,Integer.valueOf(anoEntrada));
+            q.setInteger(3,Integer.valueOf(oficina));
+            q.setInteger(4,Integer.valueOf(numeroEntrada));
+           
             actualizados=q.executeUpdate();
             if (actualizados!=0) {
             	log.debug("Municipi 060 actualitzat:"+municipi060);
             }else{
-            	cargarMunicipio060(session, Integer.parseInt(anoEntrada), Integer.parseInt(numeroEntrada), Integer.parseInt(oficina), municipi060);
+            	cargarMunicipio060(session, Integer.parseInt(anoEntrada), Integer.parseInt(numeroEntrada), Integer.parseInt(oficina), municipi060, Integer.parseInt(numeroDocumentosRegistro060));
             	log.debug("Municipi060 creat.");
             }
         }catch(Exception e ){
@@ -924,6 +933,7 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
         String password=param.getPassword();
         String municipi060=param.getMunicipi060();
         String descripcioMunicipi060=param.getDescripcionMunicipi060();
+        String numeroDocumentosRegistro060=param.getNumeroDocumentosRegistro060();
         Hashtable errores=param.getErrores();
                 
         String anoEntrada=param.getAnoEntrada();
@@ -1009,6 +1019,7 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
         String password=param.getPassword();
         String municipi060=param.getMunicipi060();
         String descripcioMunicipi060=param.getDescripcionMunicipi060();
+        String numeroDocumentosRegistro060=param.getNumeroDocumentosRegistro060();
         Hashtable errores=param.getErrores();
                 
         String anoEntrada=param.getAnoEntrada();
@@ -1175,36 +1186,7 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
 
 
 
-            /* Ejecutamos sentencias SQL */
-            ms=session.createSQLQuery("UPDATE BZENTRA SET FZAFDOCU=?, FZAREMIT=?, FZACONEN=?, FZACTIPE=?, " +
-                    "FZACEDIE=?, FZAENULA=?, FZAPROCE=?, FZAFENTR=?, FZACTAGG=?, FZACAGGE=?, FZACORGA=?, " +
-                    "FZACENTI=?, FZANENTI=?, FZAHORA=?, FZACIDIO=?, FZACONE2=?, FZANLOC=?, FZAALOC=?, FZANDIS=?, " +
-                    "FZACUSU=?, FZACIDI=? WHERE FZAANOEN=? AND FZANUMEN=? AND FZACAGCO=?");
-            ms.setInteger(0,fzafdoc);
-            ms.setString(1,(altres.length()>30) ? altres.substring(0,30) : altres); // 30 pos.
-            ms.setString(2,(fzacone.length()>160) ? fzacone.substring(0,160) : fzacone); // 160 pos.
-            ms.setString(3,(tipo.length()>2) ? tipo.substring(0,1) : tipo);  // 2 pos.
-            ms.setString(4,"N");
-            ms.setString(5,(registroAnulado.length()>1) ? registroAnulado.substring(0,1) : registroAnulado);
-            ms.setString(6,(fzaproce.length()>25) ? fzaproce.substring(0,25) : fzaproce); // 25 pos.
-            ms.setInteger(7,fzafent);
-            ms.setInteger(8,fzactagg);
-            ms.setInteger(9,fzacagge);
-            ms.setInteger(10,fzacorg);   
-            ms.setString(11,(fzacent.length()>7) ? fzacent.substring(0,8) : fzacent); // 7 pos.
-            ms.setInteger(12,fzanent);
-            ms.setInteger(13,fzahora);
-            ms.setInteger(14,fzacidi);
-            ms.setString(15,(fzacone2.length()>160) ? fzacone2.substring(0,160) : fzacone2); // 160 pos.
-            ms.setInteger(16,fzanloc);
-            ms.setInteger(17,fzaaloc);
-            ms.setInteger(18,fzandis);
-            ms.setString(19,(usuario.toUpperCase().length()>10) ? usuario.toUpperCase().substring(0,10) : usuario.toUpperCase()); // 10 pos.
-            ms.setString(20,idioma);
-            // Clave del fichero
-            ms.setInteger(21,fzaanoe);
-            ms.setInteger(22,fzanume);
-            ms.setInteger(23,fzacagc);
+
             
             // Si hay motivo, generamos objeto Modificacion
             boolean modificado=false;           
@@ -1222,7 +1204,8 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
                 if (altresNuevo.trim().equals("")) {
                     altresNuevo="";
                     fzanentNuevo=Integer.parseInt(entidad2Nuevo);
-                    fzacentNuevo=convierteEntidadCastellano(entidad1Nuevo, entidad2Nuevo, session);
+                    //fzacentNuevo=entidad2Nuevo;
+                    fzacentNuevo=convierteEntidadCastellano(entidad1Nuevo, entidad2Nuevo);
                 } else {
                     fzanentNuevo=0;
                     fzacentNuevo="";
@@ -1248,9 +1231,41 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
                 }
                 registroModificado.setMotivo(motivo);
                 modificado=regmod.generarModificacion(registroModificado, session);
-                
+                log.debug("Eliminam regmod");
+                regmod.remove();
             }
             if ((modificado && !motivo.equals("")) || motivo.equals(""))  {
+                /* Ejecutamos sentencias SQL */
+                ms=session.createSQLQuery("UPDATE BZENTRA SET FZAFDOCU=?, FZAREMIT=?, FZACONEN=?, FZACTIPE=?, " +
+                        "FZACEDIE=?, FZAENULA=?, FZAPROCE=?, FZAFENTR=?, FZACTAGG=?, FZACAGGE=?, FZACORGA=?, " +
+                        "FZACENTI=?, FZANENTI=?, FZAHORA=?, FZACIDIO=?, FZACONE2=?, FZANLOC=?, FZAALOC=?, FZANDIS=?, " +
+                        "FZACUSU=?, FZACIDI=? WHERE FZAANOEN=? AND FZANUMEN=? AND FZACAGCO=?");
+                ms.setInteger(0,fzafdoc);
+                ms.setString(1,(altres.length()>30) ? altres.substring(0,30) : altres); // 30 pos.
+                ms.setString(2,(fzacone.length()>160) ? fzacone.substring(0,160) : fzacone); // 160 pos.
+                ms.setString(3,(tipo.length()>2) ? tipo.substring(0,1) : tipo);  // 2 pos.
+                ms.setString(4,"N");
+                ms.setString(5,(registroAnulado.length()>1) ? registroAnulado.substring(0,1) : registroAnulado);
+                ms.setString(6,(fzaproce.length()>25) ? fzaproce.substring(0,25) : fzaproce); // 25 pos.
+                ms.setInteger(7,fzafent);
+                ms.setInteger(8,fzactagg);
+                ms.setInteger(9,fzacagge);
+                ms.setInteger(10,fzacorg);   
+                ms.setString(11,(fzacent.length()>7) ? fzacent.substring(0,8) : fzacent); // 7 pos.
+                ms.setInteger(12,fzanent);
+                ms.setInteger(13,fzahora);
+                ms.setInteger(14,fzacidi);
+                ms.setString(15,(fzacone2.length()>160) ? fzacone2.substring(0,160) : fzacone2); // 160 pos.
+                ms.setInteger(16,fzanloc);
+                ms.setInteger(17,fzaaloc);
+                ms.setInteger(18,fzandis);
+                ms.setString(19,(usuario.toUpperCase().length()>10) ? usuario.toUpperCase().substring(0,10) : usuario.toUpperCase()); // 10 pos.
+                ms.setString(20,idioma);
+                // Clave del fichero
+                ms.setInteger(21,fzaanoe);
+                ms.setInteger(22,fzanume);
+                ms.setInteger(23,fzacagc);
+                
                 int afectados=ms.executeUpdate();
                 if (afectados>0){
                     registroActualizado=true;
@@ -1332,7 +1347,7 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
             		actualizar060(param);
             
             session.flush();
-            
+            log.debug("Actualizar registro de entrada ejecutado correctamente.");
         } catch (Exception ex) {
         	log.error("Error inesperat, no s'ha desat el registre: "+ex.getMessage());
             ex.printStackTrace();
@@ -1340,9 +1355,10 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
             errores.put("","Error inesperat, no s'ha desat el registre"+": "+ex.getClass()+"->"+ex.getMessage());
             throw new RemoteException("Error inesperat, no s'ha modifcat el registre", ex);
         } finally {
+        	param.setregistroActualizado(registroActualizado);
 			close(session);
         }
-        param.setregistroActualizado(registroActualizado);
+        log.debug("Fin");
         return param;
     }
     
@@ -1384,10 +1400,11 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
 
         try {
 
-            String sentenciaHql="SELECT ENT_CODIMUN, MUN_NOM FROM BZENTRA060,BZMUN_060 WHERE ENT_ANY=? AND ENT_OFI=? AND ENT_NUM=? AND ENT_CODIMUN=MUN_CODI";
+            String sentenciaHql="SELECT ENT_CODIMUN, MUN_NOM, ENT_NUMREG FROM BZENTRA060,BZMUN_060 WHERE ENT_ANY=? AND ENT_OFI=? AND ENT_NUM=? AND ENT_CODIMUN=MUN_CODI";
             q=session.createSQLQuery(sentenciaHql);
             q.addScalar("ENT_CODIMUN", Hibernate.STRING);
             q.addScalar("MUN_NOM", Hibernate.STRING);
+            q.addScalar("ENT_NUMREG", Hibernate.STRING);
             q.setInteger(0,Integer.valueOf(anoEntrada));
             q.setInteger(1,Integer.valueOf(oficina));
             q.setInteger(2,Integer.valueOf(numeroEntrada));
@@ -1395,6 +1412,7 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
             if (rs.next()) {
             	param.setMunicipi060(rs.getString(0));
             	param.setDescripcionMunicipi060(rs.getString(1));
+            	param.setNumeroDocumentosRegistro060(rs.getString(2));
             }
             
         }catch(Exception e ){
@@ -1496,8 +1514,8 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
             q.setInteger(2,Integer.valueOf(numeroEntrada));
             q.setInteger(3,Integer.valueOf(oficina));
             q.setString(4,"CE");
-            log.info("Leyendo registro entrada...");
-            log.info(q);
+            log.debug("Leyendo registro entrada...");
+            log.debug(q);
             rs=q.scroll();
             if (rs.next()) {
             	/* Recuperamos la fecha y la hora del sistema, fzafsis(aaaammdd) y fzahsis (hhMMssmm) */
@@ -1699,9 +1717,10 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
                 res.setsalida1(String.valueOf(rs.getInteger(30)));
                 res.setsalida2(String.valueOf(rs.getInteger(31)));
                 res.setCorreo(rs.getString(32));
-            }
+            
             // leer060() lee el campo de municipio 060 asociado al registro. Este dato se almacena en la tabla BZENTRA060.
             leer060(res, session);
+            }
         } catch (Exception e) {
         	log.error("ERROR: Leer: "+e.getMessage());
             e.printStackTrace();
@@ -1712,13 +1731,14 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
         return res;
     }
     
-    private String convierteEntidadCastellano(String entidadCatalan, String entidad2Nuevo, Session session) {
+    private String convierteEntidadCastellano(String entidadCatalan, String entidad2Nuevo) {
+    	Session sessio = getSession();
         String eCastellano="";
         ScrollableResults rs = null;
         SQLQuery q1 = null;
         try {
             String sentenciaHql="SELECT FZGCENTI FROM BZENTID WHERE FZGCENT2=? AND FZGNENTI=? AND FZGFBAJA=0";
-            q1=session.createSQLQuery(sentenciaHql);
+            q1=sessio.createSQLQuery(sentenciaHql);
             q1.addScalar("FZGCENTI", Hibernate.STRING);
             q1.setString(0,entidadCatalan);
             q1.setInteger(1,Integer.parseInt(entidad2Nuevo));
@@ -1733,6 +1753,7 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
             eCastellano="";
         } finally {
             if (rs!=null) rs.close();
+            close(sessio);
         }
         return eCastellano;
     }

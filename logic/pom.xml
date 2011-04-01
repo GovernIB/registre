@@ -112,6 +112,7 @@
         <filtering>true</filtering>
         <includes>
           <include>**/*.xml</include>
+           <include>**/*.properties</include>
         </includes>
       </resource>
     </resources>
@@ -161,6 +162,7 @@
             <configuration>
               <generatedSourcesDirectory>${project.build.directory}/xdoclet</generatedSourcesDirectory>
               <tasks>
+                <property file="../config.properties"/>
                 <ejbdoclet
                     destdir="${project.build.directory}/xdoclet"
                     excludedtags="@version,@author"

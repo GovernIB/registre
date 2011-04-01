@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
-import org.hibernate.Query;
+//import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.ScrollableResults;
@@ -41,6 +41,8 @@ public abstract class ListadoRegistrosEntradaFacadeEJB extends HibernateEJB {
 	private DateFormat dateF= new SimpleDateFormat("dd/MM/yyyy");
 	private Date fechaTest1=null;
 	private Date fechaTest2=null; 
+	
+	private int totalRegistres060=0; 
 	
 
 	
@@ -194,6 +196,7 @@ public abstract class ListadoRegistrosEntradaFacadeEJB extends HibernateEJB {
 		DateFormat ddmmyyyy=new SimpleDateFormat("dd/MM/yyyy");
 		java.util.Date fechaDocumento=null;
 		java.util.Date fechaEESS=null;        
+		String numero_de_registres ;
 		
 		String fechaInicio=fechaDesde.substring(6,10)+fechaDesde.substring(3,5)+fechaDesde.substring(0,2);
 		String fechaFinal=fechaHasta.substring(6,10)+fechaHasta.substring(3,5)+fechaHasta.substring(0,2);
@@ -226,8 +229,8 @@ public abstract class ListadoRegistrosEntradaFacadeEJB extends HibernateEJB {
 			" ORDER BY FZACAGCO, FZAANOEN, FZANUMEN ";
 			//log.debug(sentenciaHql);
 			q=session.createSQLQuery(sentenciaHql); //, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            q.addScalar("FZAANOEN", Hibernate.INTEGER);
-            q.addScalar("FZANUMEN", Hibernate.INTEGER);
+            q.addScalar("FZAANOEN", Hibernate.INTEGER);//0
+            q.addScalar("FZANUMEN", Hibernate.INTEGER);//1
             q.addScalar("FZACAGCO", Hibernate.INTEGER);
             q.addScalar("FZAFENTR", Hibernate.INTEGER);
             q.addScalar("OFF_CODI", Hibernate.STRING);
@@ -236,17 +239,18 @@ public abstract class ListadoRegistrosEntradaFacadeEJB extends HibernateEJB {
             q.addScalar("FZAFDOCU", Hibernate.INTEGER);
             q.addScalar("FZGCENTI", Hibernate.STRING);
             q.addScalar("FZAREMIT", Hibernate.STRING);
-            q.addScalar("FZGDENT2", Hibernate.STRING);
+            q.addScalar("FZGDENT2", Hibernate.STRING);//10
             q.addScalar("FABDAGGE", Hibernate.STRING);
             q.addScalar("FZAPROCE", Hibernate.STRING);
             q.addScalar("FZACORGA", Hibernate.INTEGER);
             q.addScalar("FAXDORGT", Hibernate.STRING);
             q.addScalar("FZIDTIPE", Hibernate.STRING);
             q.addScalar("FZMDIDI" , Hibernate.STRING);
-            q.addScalar("FZAENULA", Hibernate.STRING);
+            q.addScalar("FZAENULA", Hibernate.STRING);//17
             q.addScalar("FZACIDIO", Hibernate.STRING);
-            q.addScalar("FZACONEN", Hibernate.STRING);
+            q.addScalar("FZACONEN", Hibernate.STRING);//19
             q.addScalar("FZACONE2", Hibernate.STRING);
+            q.addScalar("ENT_NUMREG", Hibernate.STRING);//21
             
 			int contador=0;
 			q.setString(contador++,usuario); 
@@ -287,9 +291,17 @@ public abstract class ListadoRegistrosEntradaFacadeEJB extends HibernateEJB {
 			}
 			
 			if (pagina<=1 && parametros.isCalcularTotalRegistres()) {
+				int totalRegistres060 = 0;
 			// La primera vegada, calculam el nombre màxim de registres que tornarà la consulta
 			rs=q.scroll(ScrollMode.SCROLL_INSENSITIVE);
             // log.debug("Nombre total de registres ="+rs.getFetchSize());
+			
+			while (rs.next()) {
+				
+				if((rs.getString(21)!=null)&&(!rs.getString(21).equals(""))&&(!rs.getString(17).equalsIgnoreCase("S")))
+					totalRegistres060 += Integer.parseInt(rs.getString(21));
+			}
+			
 //			 Point to the last row in resultset.
 		      rs.last();
 		      // Get the row position which is also the number of rows in the resultset.
@@ -299,6 +311,8 @@ public abstract class ListadoRegistrosEntradaFacadeEJB extends HibernateEJB {
 		      log.debug("Total rows for the query using Scrollable ResultSet: "
 		                         +rowcount);
 		      parametros.setTotalFiles( String.valueOf(rowcount));
+		      this.totalRegistres060 = totalRegistres060;
+		      
 			}
 		    
 		    // Numero maximo de registros a devolver
@@ -450,7 +464,7 @@ public abstract class ListadoRegistrosEntradaFacadeEJB extends HibernateEJB {
                 if (ss.length()>2) {
                     ss=ss.substring(0,2);
                 }
-                int fzahsis=Integer.parseInt(hhmmss.format(fechaSystem)+ss);
+                //int fzahsis=Integer.parseInt(hhmmss.format(fechaSystem)+ss);
                 
                 switch (Stringsss.length()) {
                 //Hem d'emplenar amb 0s.
@@ -464,6 +478,7 @@ public abstract class ListadoRegistrosEntradaFacadeEJB extends HibernateEJB {
                 int horamili=Integer.parseInt(hhmmss.format(fechaSystem)+Stringsss);
                 logLopdBZENTRA("SELECT", usuario, fzafsis, horamili, rs.getInteger(1), rs.getInteger(0), rs.getInteger(2));
                 
+                registro.setNumeroDocumentosRegistro060((rs.getString(21)!= null)?Integer.parseInt(rs.getString(21)):0);
                 registrosVector.addElement(registro);
 			}
 			
@@ -642,4 +657,20 @@ public abstract class ListadoRegistrosEntradaFacadeEJB extends HibernateEJB {
             close(session);
         }
     }
+
+    /**
+	    * @ejb.interface-method
+	    * @ejb.permission unchecked="true"
+	    */
+	public int getTotalRegistres060() {
+		return totalRegistres060;
+	}
+
+    /**
+	    * @ejb.interface-method
+	    * @ejb.permission unchecked="true"
+	    */
+	public void setTotalRegistres060(int totalRegistres060) {
+		this.totalRegistres060 = totalRegistres060;
+	}
 }

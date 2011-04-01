@@ -53,7 +53,7 @@ public class RegistroEntradaClientThread  extends Thread{
     }
 
     try{
-    	log.info("[Thread " + idThread + "]: Iniciant Registre d'entrada!");
+    	log.debug("[Thread " + idThread + "]: Iniciant Registre d'entrada!");
       // Usuario que está accediendo
       ren.fijaUsuario("rwedes");
 
@@ -119,7 +119,7 @@ public class RegistroEntradaClientThread  extends Thread{
         log.error("Registro de entrada con errores:\n" + ht);
       }
       
-      else log.info("[Thread " + idThread + "]: Registro de entrada efectuado con éxito!");
+      else log.debug("[Thread " + idThread + "]: Registro de entrada efectuado con éxito!");
 
     }
     catch(Exception e){

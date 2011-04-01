@@ -71,7 +71,7 @@ public class UtilWebServlet extends HttpServlet{
         //resultado += "http://" + request.getServerName();
         //resultado += ":" + request.getServerPort();
         resultado += request.getContextPath();
-        log.info("Contexte="+resultado);
+        log.debug("Contexte="+resultado);
         return resultado;
     }
     

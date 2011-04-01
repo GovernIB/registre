@@ -79,33 +79,32 @@ public class ControllerAdminServlet extends UtilWebServlet {
 		if (accion!=null && !accion.equals(""))
 			param = request.getParameter("accion").trim();
 		
-		if ("index".equals(accion)) param = indexAdmin(request, sesion);
-		if ("comptadors".equals(accion)) param = comptadorsAdmin(request, sesion);
-		if ("autoritzUsuari".equals(accion)) param = autoritzUsuariAdmin(request, sesion);
-		if ("oficines".equals(accion)) param = oficinesAdmin(request, sesion);
-		if ("totesOficines".equals(accion)) param = totesOficinesAdmin(request, sesion);
-		if ("organismesOficina".equals(accion)) param = organismesOficinaAdmin(request, sesion);
-		if ("organismes".equals(accion)) param = organismesAdmin(request, sesion);
-		if ("totsOrganismes".equals(accion)) param = totsOrganismesAdmin(request, sesion);
-		if ("agrupacionsgeografiques".equals(accion)) param = agrupacionsgeografiquesAdmin(request, sesion);
-		if ("totesAgruGeo".equals(accion)) param = totesAgruGeoAdmin(request, sesion);
-		if ("entitats".equals(accion)) param = entitatsAdmin(request, sesion);
-		if ("totesEntitats".equals(accion)) param = totesEntitatsAdmin(request, sesion);
-		if ("oficinesFisiques".equals(accion)) param = oficinesFisiquesAdmin(request, sesion);
-		if ("totesOficinesFisiques".equals(accion)) param = totesOficinesFisiquesAdmin(request, sesion);
-		if ("modelsOficis".equals(accion)) param = modelsOficisAdmin(request, sesion);
-		if ("totsModelsOficis".equals(accion)) param = totsModelsOficisAdmin(request, sesion);
 		if ("altaModelOfici".equals(accion)) param = altaModelOficiAdmin(request, sesion, response);
-		if ("modelsRebuts".equals(accion)) param = modelsRebutsAdmin(request, sesion);
-		if ("totsModelsRebuts".equals(accion)) param = totsModelsRebutsAdmin(request, sesion);
 		if ("altaModelRebut".equals(accion)) param = altaModelRebutAdmin(request, sesion, response);
+		if ("agrupacionsgeografiques".equals(accion)) param = agrupacionsgeografiquesAdmin(request, sesion);
+		if ("autoritzUsuari".equals(accion)) param = autoritzUsuariAdmin(request, sesion);
+		if ("comptadors".equals(accion)) param = comptadorsAdmin(request, sesion);
+		if ("entitats".equals(accion)) param = entitatsAdmin(request, sesion);
+		if ("index".equals(accion)) param = indexAdmin(request, sesion);
+		if ("modelsOficis".equals(accion)) param = modelsOficisAdmin(request, sesion);
+		if ("modelsRebuts".equals(accion)) param = modelsRebutsAdmin(request, sesion);
 		if ("municipis060".equals(accion)) param = municipis060Admin(request, sesion);
-		if ("totsMunicipis060".equals(accion)) param = totsMunicipis060Admin(request, sesion);
-		if ("totsTipusDoc".equals(accion)) param = totsTipusDocAdmin(request, sesion);
+		if ("oficines".equals(accion)) param = oficinesAdmin(request, sesion);
+		if ("oficinesFisiques".equals(accion)) param = oficinesFisiquesAdmin(request, sesion);
+		if ("organismes".equals(accion)) param = organismesAdmin(request, sesion);
+		if ("organismesOficina".equals(accion)) param = organismesOficinaAdmin(request, sesion);
 		if ("passaTraspassos".equals(accion)) param = passaTraspassosAdmin(request, sesion);
-		if ("traspassos".equals(accion)) param = traspassosAdmin(request, sesion);
 		if ("tipusDocuments".equals(accion)) param = tipusDocumentsAdmin(request, sesion);
-		
+		if ("totesAgruGeo".equals(accion)) param = totesAgruGeoAdmin(request, sesion);
+		if ("totesEntitats".equals(accion)) param = totesEntitatsAdmin(request, sesion);
+		if ("totesOficines".equals(accion)) param = totesOficinesAdmin(request, sesion);
+		if ("totesOficinesFisiques".equals(accion)) param = totesOficinesFisiquesAdmin(request, sesion);
+		if ("totsModelsOficis".equals(accion)) param = totsModelsOficisAdmin(request, sesion);
+		if ("totsModelsRebuts".equals(accion)) param = totsModelsRebutsAdmin(request, sesion);
+		if ("totsMunicipis060".equals(accion)) param = totsMunicipis060Admin(request, sesion);
+		if ("totsOrganismes".equals(accion)) param = totsOrganismesAdmin(request, sesion);
+		if ("totsTipusDoc".equals(accion)) param = totsTipusDocAdmin(request, sesion);
+		if ("traspassos".equals(accion)) param = traspassosAdmin(request, sesion);
 		
 		String url = response.encodeURL(param);
 		context.getRequestDispatcher(url).forward(request, response);
@@ -220,12 +219,6 @@ public class ControllerAdminServlet extends UtilWebServlet {
 
 		try{            
 
-            
-            
-            
-            
-            
-
             AutoritzacionsUsuariData autUsuData = null;
 
             AdminFacade autUsu = AdminFacadeUtil.getHome().create();
@@ -262,12 +255,6 @@ public class ControllerAdminServlet extends UtilWebServlet {
 
             String elementFocus = ""; //Element que tendrà el focus de la pàgina.
             
-            
-            
-
-
-
-
             boolean hayUsuario = !usuariAutoritzar.equals("");
             boolean existeOficina = false;
             String ofiInput = "";
@@ -358,16 +345,10 @@ public class ControllerAdminServlet extends UtilWebServlet {
 
 		try{            
 
-            
-            
-            
-            
-            
-
-            AutoritzacionsUsuariData autUsuData = null;
+            //AutoritzacionsUsuariData autUsuData = null;
 
             AdminFacade autUsu = AdminFacadeUtil.getHome().create();
-            ValoresFacade valores = ValoresFacadeUtil.getHome().create();
+            //ValoresFacade valores = ValoresFacadeUtil.getHome().create();
 
             /* Gestió errors. */
             String missatge = (String) request.getAttribute("missatge");
@@ -379,7 +360,7 @@ public class ControllerAdminServlet extends UtilWebServlet {
                 j++;
             }
 
-            String usuario=request.getRemoteUser();
+            //String usuario=request.getRemoteUser();
             String oficinaGestionar="";
 
             String valorAccio = ""; //Valor de l'acció a fer (alta, modificació)
@@ -467,9 +448,6 @@ public class ControllerAdminServlet extends UtilWebServlet {
 
 		try{            
 
-            
-            
-            
             ValoresFacade valores = ValoresFacadeUtil.getHome().create();
           
             Vector oficines=valores.buscarOficinas("tots","totes");
@@ -492,20 +470,8 @@ public class ControllerAdminServlet extends UtilWebServlet {
 
 		try{
 
-            
-            
-            
-            
-            
-
-            AutoritzacionsUsuariData autUsuData = null;
-
             AdminFacade autUsu = AdminFacadeUtil.getHome().create();
             ValoresFacade valores = ValoresFacadeUtil.getHome().create();
-
-
-
-            String usuario=request.getRemoteUser();
             String oficinaGestionar="";
 
             if ( request.getParameter("oficinaGestionar") != null
@@ -586,20 +552,14 @@ public class ControllerAdminServlet extends UtilWebServlet {
 
             
             
-            
-
-            AutoritzacionsUsuariData autUsuData = null;
-
             AdminFacade autUsu = AdminFacadeUtil.getHome().create();
             ValoresFacade valores = ValoresFacadeUtil.getHome().create();
-
-            String usuario=request.getRemoteUser();
 
             /* Gestió errors. */
                	String missatge = (String) request.getAttribute("missatge");
                 String descMissatge = (String) request.getAttribute("descMissatge");
             	String mesInfoMissatge = "";
-            	String indexInfoMissatge = "";
+            	
             	int j=0;
             	while ( request.getAttribute("mesInfoMissatge"+j)!=null ) {
             		mesInfoMissatge = mesInfoMissatge + "\t<p>"+((String) request.getAttribute("mesInfoMissatge"+j)).replaceAll ("\\n", "")+ "</p>";
@@ -719,24 +679,13 @@ public class ControllerAdminServlet extends UtilWebServlet {
 
 		try{            
 
-            
-            
-            
-            
-            
-
-            AutoritzacionsUsuariData autUsuData = null;
-
             AdminFacade autUsu = AdminFacadeUtil.getHome().create();
             ValoresFacade valores = ValoresFacadeUtil.getHome().create();
-
-            String usuario=request.getRemoteUser();
 
             /* Gestió errors. */
                	String missatge = (String) request.getAttribute("missatge");
                 String descMissatge = (String) request.getAttribute("descMissatge");
             	String mesInfoMissatge = "";
-            	String indexInfoMissatge = "";
             	int i=0;
             	while ( request.getAttribute("mesInfoMissatge"+i)!=null ) {
             		mesInfoMissatge = mesInfoMissatge + "\t<p>"+((String) request.getAttribute("mesInfoMissatge"+i)).replaceAll ("\\n", "")+ "</p>";
@@ -768,11 +717,11 @@ public class ControllerAdminServlet extends UtilWebServlet {
 
             /* Cercam l'entitat passada com a paràmetre */
             AgrupacioGeograficaData agruGeografiques = new AgrupacioGeograficaData();
-            log.info("tipusAgruGeoGestionar="+tipusAgruGeoGestionar+" codiAgruGeoGestionar="+codiAgruGeoGestionar);
+            log.debug("tipusAgruGeoGestionar="+tipusAgruGeoGestionar+" codiAgruGeoGestionar="+codiAgruGeoGestionar);
             if (tipusAgruGeoGestionar!=null && !tipusAgruGeoGestionar.equals("")
             		&& codiAgruGeoGestionar!=null && !codiAgruGeoGestionar.equals("")   ) {
             	agruGeografiques = autUsu.getAgrupacioGeografica(tipusAgruGeoGestionar, codiAgruGeoGestionar );
-            	if (agruGeografiques!=null)log.info(agruGeografiques.toString());
+            	if (agruGeografiques!=null)log.debug(agruGeografiques.toString());
             }
 
             String elementFocus = ""; //Element que tendrà el focus de la pàgina.
@@ -907,7 +856,7 @@ public class ControllerAdminServlet extends UtilWebServlet {
 
             /* Cercam l'entitat passada com a paràmetre */
             EntitatData entitats = new EntitatData();
-            log.info("entitatGestionar="+entitatGestionar+" subentitatGestionar="+subentitatGestionar);
+            log.debug("entitatGestionar="+entitatGestionar+" subentitatGestionar="+subentitatGestionar);
             if (entitatGestionar!=null && !entitatGestionar.equals("")
             		&& subentitatGestionar!=null && !subentitatGestionar.equals("")   ) {
             	entitats = autUsu.getEntitat( entitatGestionar, subentitatGestionar );
@@ -992,31 +941,29 @@ public class ControllerAdminServlet extends UtilWebServlet {
 
 		try{            
 
-            
-            
-            
-            
-            
-
-            AutoritzacionsUsuariData autUsuData = null;
-
             AdminFacade autUsu = AdminFacadeUtil.getHome().create();
-            ValoresFacade valores = ValoresFacadeUtil.getHome().create();
 
-            /* Gestió errors. */
+            
                	String missatge = (String) request.getAttribute("missatge");
                 String descMissatge = (String) request.getAttribute("descMissatge");
             	String mesInfoMissatge = "";
-            	String indexInfoMissatge = "";
+        	Vector oficines = new Vector();
+            Vector historicOficinesFisiques = new Vector();
+            String oficinaGestionar="";
+            String oficinaGestionarFisica="";
+            String fecBaixa="";
+            String elementFocus = ""; //Element que tendra el focus de la pagina.
+            String ofiInput="";
+            boolean hayOficina=false;
+            boolean existeOficina = false;
+            
+            /* Gestió errors. */
             	int j=0;
             	while ( request.getAttribute("mesInfoMissatge"+j)!=null ) {
             		mesInfoMissatge = mesInfoMissatge + "\t<p>"+((String) request.getAttribute("mesInfoMissatge"+j)).replaceAll ("\\n", "")+ "</p>";
             		j++;
             	}
 
-            String usuario=request.getRemoteUser();
-            String oficinaGestionar="";
-            String oficinaGestionarFisica="";
 
             String valorAccio = ""; //Valor de l'acció a fer (alta, modificació)
 
@@ -1030,12 +977,9 @@ public class ControllerAdminServlet extends UtilWebServlet {
             }
 
             /* Cercam l'oficina */
-            Vector oficines = new Vector();
-            Vector historicOficines = new Vector();
-
             if (oficinaGestionar!=null &&!oficinaGestionar.equals("") && oficinaGestionarFisica!=null &&!oficinaGestionarFisica.equals("") ) {
             	oficines = autUsu.getOficinaFisica( oficinaGestionar, oficinaGestionarFisica );
-            	//historicOficines = autUsu.getHistOficina(oficinaGestionar);
+            	historicOficinesFisiques = autUsu.getHistOficinaFisica(oficinaGestionar, oficinaGestionarFisica);
             }
 
             //Si l'atribut "init" és "init", buidam oficinaGestionar per a que ens presenti el formulari inicial.
@@ -1045,81 +989,95 @@ public class ControllerAdminServlet extends UtilWebServlet {
             	oficinaGestionarFisica="";
             }
 
-            String elementFocus = ""; //Element que tendrà el focus de la pàgina.
 
-            String ofiInput="";
+            hayOficina = !(oficinaGestionar.equals("") || oficinaGestionarFisica.equals("") );
+            
 
-            boolean hayOficina = !(oficinaGestionar.equals("") || oficinaGestionarFisica.equals("") );
-            boolean existeOficina = false;
             if (!hayOficina) {
                 elementFocus="oficinaGestionar";
             } else {
                 if ( oficines!=null && !oficines.get(0).toString().equals("")) {     		
         		    // Si la oficina existeix...	
         			existeOficina = true;		
-            		valorAccio="nouNomOficinaFisica";
-            		String Orgchecked="";
+    				boolean impresoTextoOfiHist = false;
+    				boolean hayOficinaHistorica = !historicOficinesFisiques.get(0).toString().equals("");
 
-            		ofiInput="\n<tr>\n\t<th>Codi Oficina</th>\n\t<th>Codi Oficina F\u00edsica</th>\n\t<th>Descripci\u00f3 Oficina</th>\n\t</tr>\n\t<tr>\n\t\t<td></td>\n\t\t<td></td>\n\t</tr>";
-            		ofiInput = ofiInput+"\n<tr>\n\t<td><input type=\"text\" name=\"codiOficina\" id=\"codiOficina\"  size=\"2\" maxlength=\"2\" readonly=\"true\" value=\""+oficinaGestionar+"\" style=\"width: 30px;\"</td>";
-            		ofiInput = ofiInput+"\n\t<td><input type=\"text\" name=\"codiOficinaFisica\" id=\"codiOficinaFisica\"  size=\"4\" maxlength=\"4\" readonly=\"true\" value=\""+oficinaGestionarFisica+"\" style=\"width: 50px;\"/></td>";
-            		ofiInput = ofiInput+"\n\t<td><input type=\"text\" name=\"descOficina\" id=\"descOficina\" size=\"20\" maxlength=\"20\"  value=\""+oficines.get(2).toString()+"\" style=\"width: 200px;\"/></td>\n\t</tr>";
-            		ofiInput = ofiInput +"\n<tr>\n\t<td align=\"center\" colspan=\"2\"><input type=\"submit\" value=\"Actualitzar\"/></td>\n</tr>";
-            		
-            		/* ofiInput=ofiInput+"<tr>\n\t\t<th>Oficina</th>\n\t\t<th>Data alta<br/>(dd/mm/yyyy)</th>\n\t\t<th>Data baixa<br/>(dd/mm/yyyy)</th>\n\t</tr>";
-            		if ( historicOficines.size()>4)
-            			ofiInput = ofiInput+"\n<tr><td colspan=3>Hist\u00f2ric de l'oficina</td></tr>";
-            		for (int i=0;i<historicOficines.size();i=i+4){
-            			Orgchecked="";
-            			String codigo=historicOficines.get(i).toString();
-            		    String descripcion=historicOficines.get(i+1).toString();
-            			String fecAlta=historicOficines.get(i+2).toString();
-            			String fecBaixa=historicOficines.get(i+3).toString();
+            		ofiInput="<tr><th>Oficina</th><th>Data alta<br/>(dd/mm/yyyy)</th><th>Data baixa<br/>(dd/mm/yyyy)</th></tr>";
 
-            			if (!fecBaixa.equals("0") && i<4 ) {
-            				//El darrer històric d'oficina té data de baixa, aleshores no hi ha cap oficina activa, donam l'opció de crear d'activar
-            				//l'oficina donant un nou nom i data d'alta!
+            		for (int i=0;i<historicOficinesFisiques.size();i=i+5){
+            			String descripcion=historicOficinesFisiques.get(i+2).toString();
+            			String fecAlta=historicOficinesFisiques.get(i+3).toString();
+            			fecBaixa=historicOficinesFisiques.get(i+4).toString();	
+            			
+            			if(!hayOficinaHistorica){
+            				fecBaixa = "0";
+                			descripcion=oficines.get(2).toString();
+                			fecAlta=oficines.get(3).toString();
+            			}
+
+
+            			if (!fecBaixa.equals("0") && i<5 ) {
+            				//El darrer històric d'oficina fisica té data de baixa, aleshores no hi ha cap oficina fisica activa, donam l'opció de crear d'activar
+            				//l'oficina fisica donant un nou nom i data d'alta!
             				elementFocus="descOficina";
-            				ofiInput = ofiInput+"\n<tr>\n\t<td><input type=\"hidden\" name=\"codiOficina\" id=\"codiOficina\" readonly=\"true\" value=\""+oficinaGestionar+"\" />";
-            				ofiInput = ofiInput+oficinaGestionar+" - <input type=\"text\" name=\"descOficina\" id=\"descOficina\" size=\"20\" maxlength=\"20\"  value=\"\" style=\"width: 200px;\"/></td>\n\t";
-            				ofiInput = ofiInput+"\n\t<td><input type=\"text\" name=\"dataAlta\" id=\"dataAlta\" size=\"10\" maxlength=\"10\" value=\"\" style=\"width: 70px;\"/></td>\n\t";
-            				ofiInput = ofiInput+"\n\t<td><input type=\"text\" readonly=\"true\" name=\"dataBaixa\" id=\"dataBaixa\" size=\"10\" maxlength=\"10\" value=\"0\" style=\"width: 70px;\"/></td>\n\t</tr>";
-            				ofiInput = ofiInput +"\n<tr>\n\t<td align=\"center\" colspan=\"3\"><input type=\"submit\" value=\"Dona d'alta\"/></td>\n</tr>";
-            				ofiInput = ofiInput +"\n<tr>\n\t<td align=\"center\" colspan=\"3\">&nbsp;</td>\n</tr>";
+
+            				ofiInput = ofiInput+"<tr><td>"+oficinaGestionar+" - "+oficinaGestionarFisica+" - <input type=\"text\" name=\"descOficina\" id=\"descOficina\" size=\"20\" maxlength=\"20\"  value=\"\" style=\"width: 200px;\"></td>";
+            				ofiInput = ofiInput+"<td><input type=\"text\" name=\"dataAlta\" id=\"dataAlta\" size=\"10\" maxlength=\"10\" value=\"\" style=\"width: 70px;\" onKeyPress=\"return goodchars(event,'0123456789/')\"></td>";
+            				ofiInput = ofiInput+"<td><input type=\"text\" readonly=\"true\" name=\"dataBaixa\" id=\"dataBaixa\" size=\"10\" maxlength=\"10\" value=\"0\" style=\"width: 70px;\"></td></tr>";
+            				//Botón
+            				ofiInput = ofiInput +"<tr><td align=\"center\" colspan=\"3\"><input type=\"submit\" value=\"Dona d'alta\" ></td>\n</tr>";
+            				//Parámetros ocultos
+            				ofiInput = ofiInput +"<tr><td align=\"center\" colspan=\"3\">&nbsp;";
+            				ofiInput = ofiInput+"<input type=\"hidden\" name=\"codiOficina\" id=\"codiOficina\" readonly=\"true\" value=\""+oficinaGestionar+"\" >";
+            				ofiInput = ofiInput+"<input type=\"hidden\" name=\"codiOficinaFisica\" id=\"codiOficinaFisica\" readonly=\"true\" value=\""+oficinaGestionarFisica+"\" >";
+            				ofiInput = ofiInput +"</td></tr>";
             				valorAccio="nouNomOficinaFisica";
             			}
 
             			if ( fecBaixa.equals("0") ) {
-            				elementFocus="descOficina";
-            				ofiInput = ofiInput+"\n\t<tr><td>"+codigo+" - "+"<input type=\"text\" readonly=\"true\" name=\"descOficina\"  id=\"descOficina\" size=\"20\" maxlength=\"20\"  value=\""+descripcion+"\" style=\"width: 200px;\"/></td>";
-            			} else
-            				ofiInput = ofiInput+"\n\t<tr><td>"+codigo+" - "+descripcion+"</td>";
-
-            			ofiInput = ofiInput+"\n\t<td>"+fecAlta+"</td>";
-            			ofiInput = ofiInput+"<input type=\"hidden\" name=\"dataAlta\" id=\"dataAlta\" value=\""+fecAlta+"\"/>";
-
-            			if ( fecBaixa.equals("0") ) {
+            				//El darrer històric d'oficina fisica NO té data de baixa, aleshores  hi ha una oficina fisica activa, donam l'opció de crear dar de baixa
+            				//l'oficina fisica donant una data de baixa.
             				elementFocus="dataBaixa";
-            				ofiInput = ofiInput+"\n\t<td><input type=\"text\" name=\"dataBaixa\" id=\"dataBaixa\" size=\"10\" maxlength=\"10\"  value=\"0\" style=\"width: 70px;\"/></td>";
-            			} else {
-            				ofiInput = ofiInput+"\n\t<td>"+fecBaixa+"</td>";
-            			}
-
-            			ofiInput = ofiInput+"\n</tr>\n";
-            			if ( (fecBaixa.equals("0") && i<4) ) {
+            				ofiInput = ofiInput+"<tr><td>"+oficinaGestionar+" - "+oficinaGestionarFisica+" "+"<input type=\"text\" readonly=\"true\" name=\"descOficina\"  id=\"descOficina\" size=\"20\" maxlength=\"20\"  value=\""+descripcion+"\" style=\"width: 200px;\"></td>";
+            				ofiInput = ofiInput+"<td>"+fecAlta+"</td>";
+            				ofiInput = ofiInput+"<td><input type=\"text\" name=\"dataBaixa\" id=\"dataBaixa\" size=\"10\" maxlength=\"10\"  value=\"0\" style=\"width: 70px;\" onKeyPress=\"return goodchars(event,'0123456789/')\"></td>";
             				valorAccio="baixaOficinaFisica";
-            				ofiInput = ofiInput +"<tr>\n\t<td align=\"center\" colspan=\"4\"><input type=\"submit\" value=\"Actualitza\"/></td></tr>";
+            				// Añadimos el botón Actualitza
+            				ofiInput = ofiInput +"<tr><td align=\"center\" colspan=\"3\"><input type=\"submit\" value=\"Actualitza\"/></td></tr>";
+            				//Parámetros ocultos
+            				ofiInput = ofiInput +"<tr><td align=\"center\" colspan=\"3\">&nbsp;";
+            				ofiInput = ofiInput+"<input type=\"hidden\" name=\"codiOficina\" id=\"codiOficina\" readonly=\"true\" value=\""+oficinaGestionar+"\" >";
+            				ofiInput = ofiInput+"<input type=\"hidden\" name=\"codiOficinaFisica\" id=\"codiOficinaFisica\" readonly=\"true\" value=\""+oficinaGestionarFisica+"\" >";
+            				ofiInput = ofiInput+"<input type=\"hidden\" name=\"dataAlta\" id=\"dataAlta\" value=\""+fecAlta+"\"  onKeyPress=\"return goodchars(event,'0123456789/')\">";
+            				ofiInput = ofiInput +"</td></tr>";
             			}
-            		} */
 
+            			if(hayOficinaHistorica){	
+            				//Si hay historico
+            				if(!impresoTextoOfiHist){
+            					if (!fecBaixa.equals("0")/*||(fecBaixa.equals("0") && i==5)*/){
+            						ofiInput = ofiInput+"\n<tr><td colspan=3>Hist&ograve;ric de l'oficina f\u00edsica</td></tr>";
+            						impresoTextoOfiHist=true;
+            					}
+            				}
+                			
+            				if ( !fecBaixa.equals("0") ) {
+            					ofiInput = ofiInput+"<tr><td>"+oficinaGestionar+" - "+oficinaGestionarFisica+" - "+descripcion+"</td><td>"+fecAlta+"</td><td>"+fecBaixa+"</td></tr>";
+            				}
+            			}
+            		} //Fin for
+
+            		log.debug("Admin/oficinesFisiques.jsp. Formulari per modificar l'oficina f�sica amb codi:"+oficinaGestionar+"-"+oficinaGestionarFisica);
                 } else {
         			//Si la oficina no existeix, l'hem de crear! 
         			valorAccio="altaOficinaFisica";
-        			ofiInput="\n<tr>\n\t<th>Codi Oficina</th>\n\t<th>Codi Oficina F\u00edsica</th>\n\t<th>Descripci\u00f3 Oficina</th>\n\t</tr>\n\t<tr>\n\t\t<td></td>\n\t\t<td></td>\n\t</tr>";
-        			ofiInput = ofiInput+"\n<tr>\n\t<td><input type=\"text\" name=\"codiOficina\" id=\"codiOficina\"  size=\"2\" maxlength=\"2\" readonly=\"true\" value=\""+oficinaGestionar+"\" style=\"width: 30px;\"/></td>";
-        			ofiInput = ofiInput+"\n\t<td><input type=\"text\" name=\"codiOficinaFisica\" id=\"codiOficinaFisica\"  size=\"4\" maxlength=\"4\" readonly=\"true\" value=\""+oficinaGestionarFisica+"\" style=\"width: 50px;\"/></td>";
-        			ofiInput = ofiInput+"\n\t<td><input type=\"text\" name=\"descOficina\" id=\"descOficina\" size=\"20\" maxlength=\"20\"  value=\"\" style=\"width: 200px;\"/></td>\n\t</tr>";
-        			ofiInput = ofiInput +"\n<tr>\n\t<td align=\"center\" colspan=\"2\"><input type=\"submit\" value=\"Dona d'alta\"/></td>\n</tr>";
+            		ofiInput="<tr><th>Codi Oficina</th><th>Codi Oficina F\u00edsica</th><th>Descripci\u00f3 Oficina</th><th>Data alta<br/>(dd/mm/yyyy)</th></tr><tr><td></td><td></td><td></td><td></td></tr>";
+            		ofiInput = ofiInput+"<tr><td><input type=\"text\" name=\"oficinaGestionar\" id=\"oficinaGestionar\"  size=\"2\" maxlength=\"2\" readonly=\"true\" value=\""+oficinaGestionar+"\" style=\"width: 30px;\"/></td>";
+            		ofiInput = ofiInput+"<td>" +
+                            "<input type=\"text\" name=\"oficinaGestionarFisica\" id=\"oficinaGestionarFisica\"  size=\"4\" maxlength=\"4\" readonly=\"true\" value=\""+oficinaGestionarFisica+"\" style=\"width: 50px;\"/></td>";
+            		ofiInput = ofiInput+"<td><input type=\"text\" name=\"descOficina\" id=\"descOficina\" size=\"20\" maxlength=\"20\"  value=\"\" style=\"width: 200px;\"/></td>";
+            		ofiInput = ofiInput +"<td><input type=\"text\" name=\"dataAlta\" id=\"dataAlta\" size=\"10\" maxlength=\"10\" value=\"\" style=\"width: 100px;\" onKeyPress=\"return goodchars(event,'0123456789/')\"></td></tr>";
+            		ofiInput = ofiInput +"<tr>\n\t<td align=\"center\" colspan=\"4\"><input type=\"submit\" value=\"Dona d'alta\"/></td>\n</tr>";
         	    }
             }
 
@@ -1136,8 +1094,7 @@ public class ControllerAdminServlet extends UtilWebServlet {
         	request.setAttribute("descMissatge", descMissatge);
         	request.setAttribute("mesInfoMissatge", mesInfoMissatge);
         } catch(Exception ex) {
-			log.debug("Capturam excepci\u00f3 estranya!");
-			ex.printStackTrace();
+			log.error("Capturam excepci\u00f3 estranya!",ex);
 		}    		
 		
     	return resultado;
@@ -1148,13 +1105,6 @@ public class ControllerAdminServlet extends UtilWebServlet {
 
 		try{            
 
-            
-            //
-            
-            //
-            
-            //AutoritzacionsUsuariData autUsuData = null;
-            //AdminFacade autUsu = AdminFacadeUtil.getHome().create();
             ValoresFacade valores = ValoresFacadeUtil.getHome().create();
           
             Vector oficines=valores.buscarOficinasFisicasDescripcion("tots","totes");
@@ -1165,8 +1115,7 @@ public class ControllerAdminServlet extends UtilWebServlet {
             request.setAttribute("oficinesSize", new Integer(oficinesSize));
           
         } catch(Exception ex) {
-			log.debug("Capturam excepci\u00f3 estranya!");
-			ex.printStackTrace();
+			log.error("Capturam excepci\u00f3 estranya!",ex);
 		}    		
 		
     	return resultado;
@@ -1247,8 +1196,7 @@ public class ControllerAdminServlet extends UtilWebServlet {
         	request.setAttribute("descMissatge", descMissatge);
         	request.setAttribute("mesInfoMissatge", mesInfoMissatge);
         } catch(Exception ex) {
-			log.debug("Capturam excepci\u00f3 estranya!");
-			ex.printStackTrace();
+        	log.error("Capturam excepci\u00f3 estranya!",ex);
 		}    		
 		
     	return resultado;
@@ -1276,8 +1224,7 @@ public class ControllerAdminServlet extends UtilWebServlet {
             request.setAttribute("modelsSize", new Integer(modelsSize));
           
         } catch(Exception ex) {
-			log.debug("Capturam excepci\u00f3 estranya!");
-			ex.printStackTrace();
+        	log.error("Capturam excepci\u00f3 estranya!",ex);
 		}    		
 		
     	return resultado;
@@ -1352,8 +1299,7 @@ public class ControllerAdminServlet extends UtilWebServlet {
      	   log.debug("Excepci\u00f3 tractada");
      	   log.debug(e);
         } catch(Exception ex) {
-			log.debug("Capturam excepci\u00f3 estranya!");
-			ex.printStackTrace();
+        	log.error("Capturam excepci\u00f3 estranya!",ex);
 		}    		
 		
     	return resultado;
@@ -1437,8 +1383,7 @@ public class ControllerAdminServlet extends UtilWebServlet {
         	request.setAttribute("descMissatge", descMissatge);
         	request.setAttribute("mesInfoMissatge", mesInfoMissatge);
         } catch(Exception ex) {
-			log.debug("Capturam excepci\u00f3 estranya!");
-			ex.printStackTrace();
+        	log.error("Capturam excepci\u00f3 estranya!",ex);
 		}    		
 		
     	return resultado;
@@ -1449,11 +1394,6 @@ public class ControllerAdminServlet extends UtilWebServlet {
 
 		try{            
 
-            
-            //
-            
-            //
-            
             //AutoritzacionsUsuariData autUsuData = null;
             //AdminFacade autUsu = AdminFacadeUtil.getHome().create();
             ValoresFacade valores = ValoresFacadeUtil.getHome().create();
@@ -1466,8 +1406,7 @@ public class ControllerAdminServlet extends UtilWebServlet {
             request.setAttribute("modelsSize", new Integer(modelsSize));
           
         } catch(Exception ex) {
-			log.debug("Capturam excepci\u00f3 estranya!");
-			ex.printStackTrace();
+        	log.error("Capturam excepci\u00f3 estranya!",ex);
 		}    		
 		
     	return resultado;
@@ -1477,11 +1416,6 @@ public class ControllerAdminServlet extends UtilWebServlet {
 		String resultado = new String("/admin/pages/altaModelRebut.jsp");
 
 		try{            
-
-            
-            
-            
-
             AutoritzacionsUsuariData autUsuData = null;
 
             AdminFacade autUsu = AdminFacadeUtil.getHome().create();
@@ -1542,8 +1476,7 @@ public class ControllerAdminServlet extends UtilWebServlet {
      	   log.debug("Excepci\u00f3 tractada");
      	   log.debug(e);
         } catch(Exception ex) {
-			log.debug("Capturam excepci\u00f3 estranya!");
-			ex.printStackTrace();
+        	log.error("Capturam excepci\u00f3 estranya!",ex);
 		}    		
 		
     	return resultado;
@@ -1553,13 +1486,6 @@ public class ControllerAdminServlet extends UtilWebServlet {
 		String resultado = new String("/admin/pages/municipis060.jsp");
 
 		try{            
-
-            
-            
-            
-            
-            
-
             AutoritzacionsUsuariData autUsuData = null;
 
             AdminFacade autUsu = AdminFacadeUtil.getHome().create();
@@ -1600,16 +1526,10 @@ public class ControllerAdminServlet extends UtilWebServlet {
 
             if (mun060Gestionar!=null && !mun060Gestionar.equals("") ) {
             	municipi060 = autUsu.getMunicipi060( mun060Gestionar );
-            	if ( municipi060 !=null ) log.info(mun060Gestionar.toString());
+            	if ( municipi060 !=null ) log.debug(mun060Gestionar.toString());
             }
 
             String elementFocus = ""; //Element que tendrà el focus de la pàgina.
-            
-            
-            
-
-
-
     		String readonly="";
             boolean hayMunicipio = !mun060Gestionar.equals("");
             boolean existeMunicipio = false;
@@ -1645,8 +1565,7 @@ public class ControllerAdminServlet extends UtilWebServlet {
         	request.setAttribute("descMissatge", descMissatge);
         	request.setAttribute("mesInfoMissatge", mesInfoMissatge);
         } catch(Exception ex) {
-			log.debug("Capturam excepci\u00f3 estranya!");
-			ex.printStackTrace();
+        	log.error("Capturam excepci\u00f3 estranya!",ex);
 		}    		
 		
     	return resultado;
@@ -1667,8 +1586,7 @@ public class ControllerAdminServlet extends UtilWebServlet {
             request.setAttribute("municipis060Size", new Integer(municipis060Size));
           
         } catch(Exception ex) {
-			log.debug("Capturam excepci\u00f3 estranya!");
-			ex.printStackTrace();
+        	log.error("Capturam excepci\u00f3 estranya!",ex);
 		}    		
 		
     	return resultado;
@@ -1692,8 +1610,7 @@ public class ControllerAdminServlet extends UtilWebServlet {
             request.setAttribute("tipusDocsSize", new Integer(tipusDocsSize));
           
         } catch(Exception ex) {
-			log.debug("Capturam excepci\u00f3 estranya!");
-			ex.printStackTrace();
+        	log.error("Capturam excepci\u00f3 estranya!",ex);
 		}    		
 		
     	return resultado;
@@ -1701,14 +1618,6 @@ public class ControllerAdminServlet extends UtilWebServlet {
 
 	private String traspassosAdmin(HttpServletRequest request, HttpSession sesion) {
 		String resultado = new String("/admin/pages/traspassos.jsp");
-
-		try{            
-
-        } catch(Exception ex) {
-			log.debug("Capturam excepci\u00f3 estranya!");
-			ex.printStackTrace();
-		}    		
-		
     	return resultado;
     }
 
@@ -1739,7 +1648,7 @@ public class ControllerAdminServlet extends UtilWebServlet {
             int nombreLinies = 0;
             if ( fitxer!=null ) {
             	request.setAttribute("fitxer",fitxer);
-            	log.info("fitxer="+fitxer);
+            	log.debug("fitxer="+fitxer);
             	fitxer = fitxer.trim();
 
                	try{
@@ -1748,11 +1657,11 @@ public class ControllerAdminServlet extends UtilWebServlet {
                		int j=0;
                		while ( (tmp = buffReader.readLine())!=null ) {
             			j++;
-               			log.info("línia "+j+": "+tmp);   		
+               			log.debug("línia "+j+": "+tmp);   		
                		}
             		nombreLinies=j;
                	}catch(Exception ex){
-               		ex.printStackTrace();
+               		log.error("Capturam excepci\u00f3 estranya!",ex);
                 }
             }
 
@@ -1770,8 +1679,7 @@ public class ControllerAdminServlet extends UtilWebServlet {
         	request.setAttribute("mesInfoMissatge", mesInfoMissatge);
 
         } catch(Exception ex) {
-			log.debug("Capturam excepció estranya!");
-			ex.printStackTrace();
+        	log.error("Capturam excepci\u00f3 estranya!",ex);
 		}    		
 		
     	return resultado;
@@ -1825,10 +1733,10 @@ public class ControllerAdminServlet extends UtilWebServlet {
 
             /* Cercam l'entitat passada com a paràmetre */
             TipusDocumentData tipusDocuments = new TipusDocumentData();
-            log.info("tipDocGestionar="+tipDocGestionar);
+            log.debug("tipDocGestionar="+tipDocGestionar);
             if (tipDocGestionar!=null && !tipDocGestionar.equals("") ) {
             	tipusDocuments = autUsu.getTipusDocument( tipDocGestionar );
-            	if ( tipusDocuments !=null ) log.info(tipusDocuments.toString());
+            	if ( tipusDocuments !=null ) log.debug(tipusDocuments.toString());
             }
 
             String elementFocus = ""; //Element que tendrà el focus de la pàgina.
@@ -1869,8 +1777,7 @@ public class ControllerAdminServlet extends UtilWebServlet {
         	request.setAttribute("descMissatge", descMissatge);
         	request.setAttribute("mesInfoMissatge", mesInfoMissatge);
         } catch(Exception ex) {
-			log.debug("Capturam excepci\u00f3 estranya!");
-			ex.printStackTrace();
+        	log.error("Capturam excepci\u00f3 estranya!",ex);
 		}    		
 		
     	return resultado;

@@ -11,6 +11,7 @@ ParametrosListadoRegistrosEntrada parametros = new ParametrosListadoRegistrosEnt
 int pagina=(request.getParameter("pagina")==null) ? 1: Integer.parseInt(request.getParameter("pagina"));
 // Constantes
 int sizePagina=100;
+boolean mostrarNumReg012 = false;
 
 String usuario=request.getRemoteUser();
 String oficinaDesde="";
@@ -41,6 +42,7 @@ if (request.getParameter("any")==null) {
     destinatarioBusqueda=request.getParameter("destinatario");
     codidestinatariBusqueda=request.getParameter("codidestinatari");
     veureNombreTotalRegistres=(request.getParameter("veureNombreTotalRegistres")!=null) ? request.getParameter("veureNombreTotalRegistres") : "";
+    mostrarNumReg012=(request.getParameter("mostrarNumReg012")!=null) ? true: false;
     cadenaEnlace="oficinaDesde="+oficinaDesde+"&oficinaHasta="+oficinaHasta+"&fechaDesde="+fechaDesde+"&fechaHasta="+fechaHasta+
             "&extracto="+extractoBusqueda+"&tipo="+tipoBusqueda+"&remitente="+remitenteBusqueda+"&procedencia="+procedenciaBusqueda+
             "&destinatario="+destinatarioBusqueda+"&codidestinatari="+codidestinatariBusqueda;
@@ -87,7 +89,14 @@ if (!ok){
     <% } else { %>
         <jsp:forward page="busquedaEntradasXRegistro.jsp" />
     <% }  %>
-<% } else { %>
+<% } else { 
+    
+	if(parametros.isCalcularTotalRegistres()|| mostrarNumReg012){
+		mostrarNumReg012 = true;
+		cadenaEnlace+="&mostrarNumReg012=on";
+	}
+
+%>
 
 <html>
 <head><title><fmt:message key='registre_entrades'/></title>
@@ -160,7 +169,7 @@ if (registros.size()==0) {
 /* No hi ha cap element al llistat, eliminam el llistat de la sessió.*/
         	session.removeAttribute("listadoEntrada");
         	%>
-<p><p>
+<br/><br/>
 <center><b><fmt:message key='no_shan_trobat_registres_que_compleixin_els_criteris_seleccionats'/></B></center>
 <!-- &nbsp;<br><center>[&nbsp;<a href="<%=(request.getParameter("any")==null) ? "busquedaEntradasXFechas.jsp" : "busquedaEntradasXRegistro.jsp"%>"><fmt:message key='tornar_a_seleccionar'/></a>&nbsp;]</center> -->
      <% } else { %>
@@ -171,7 +180,7 @@ if (registros.size()==0) {
             <%
             if (pagina>1) {
             %>
-            <a href="listado.jsp?<%=cadenaEnlace%>&pagina=<%=pagina-1%>" title="Retrocedir" style="text-decoration:none;"><< 100 <fmt:message key='anteriors'/></a>
+            <a href="listado.jsp?<%=cadenaEnlace%>&pagina=<%=pagina-1%>" title="Retrocedir" style="text-decoration:none;">&lt;&lt; 100 <fmt:message key='anteriors'/></a>
             <%
             }
             %>
@@ -189,15 +198,19 @@ if (registros.size()==0) {
             %>
         </td>
     </tr>
-   <% if (parametros.isCalcularTotalRegistres() ) { %>
+   <% if (parametros.isCalcularTotalRegistres() ) { 
+   %>
     <tr>
     	<td align="center" colspan="3"><fmt:message key='nombre_total_registres_criteris_consulta'/> <strong><%=parametros.getTotalFiles()%></strong></td>
+    </tr>
+        <tr>
+    	<td align="center" colspan="3"><fmt:message key='nombre_total_documents_060_consulta'/><strong><%=listado.getTotalRegistres060()%></strong></td>
     </tr>
    <% } %>
 </table>
 
 
-<table width="100%" border=0>
+<table width="100%" border="0">
     <tr>
         <td align="left">
             <font color="red"><fmt:message key='nota_registres_vermell_anulats'/></font>
@@ -224,12 +237,15 @@ if (registros.size()==0) {
            <td width="10%" class="cabeceraTabla">&nbsp;&nbsp;<fmt:message key='extracte'/></td>
            <td align="left">
                <a href="javascript: buscar()"> 
-                   <img src="imagenes/buscar.gif" border=0  title="<fmt:message key='cercar_extracte'/>">
+                   <img src="imagenes/buscar.gif" border="0"  title="<fmt:message key='cercar_extracte'/>">
                </a>
            </td>
        </tr>
        </table>
     </td>
+     <% if (mostrarNumReg012 ) { %>
+    <td align="center" class="cabeceraTabla"><fmt:message key='numero_registres_012'/></td>
+    <% } %>
     </tr>
     <%   
     int hasta= (registros.size()>sizePagina) ?  sizePagina : registros.size();
@@ -249,13 +265,14 @@ if (registros.size()==0) {
         String tipoDocumento=reg.getDescripcionDocumento();
         String claveRegistro=anoEntrada+"-"+numeroEntrada;
         String extracto=reg.getExtracto();
+        int numDocumentosRegistro = reg.getNumeroDocumentosRegistro060();
         boolean anulado=(reg.getRegistroAnulado().equals("") || reg.getRegistroAnulado().equals(" ")) ? false : true;
     %>
     <tr id="<%="fila"+i%>" class="<%=((i%2)==0)? "par":"impar"%>"> 
      
         <td>
         <a id="<%="ref"+i%>" href="ficha.jsp?oficina=<%=oficina%>&numeroEntrada=<%=numeroEntrada%>&anoEntrada=<%=anoEntrada%>">
-            <img src="imagenes/open24.gif" border=0  title="Veure document">
+            <img src="imagenes/open24.gif" border="0"  title="Veure document">
         </a>
         </td> 
         <td style="<%= (anulado) ? "color:red;" : "" %>"><%=fechaEntrada%></td>
@@ -267,6 +284,9 @@ if (registros.size()==0) {
         <td style="<%= (anulado) ? "color:red;" : "" %>"><%=destinatario%></td>
         <c:set var="texto" scope="page"><%=extracto%></c:set>
         <td style="<%= (anulado) ? "color:red;" : "" %>" width="25%"><c:out escapeXml="false" value="${texto}"/><script>cargarDatos("<c:out escapeXml="true" value="${texto}"/>");</script></td>
+        <% if (mostrarNumReg012) { %>
+        <td style="<%= (anulado) ? "color:red;" : "" %>" align="center"><%=numDocumentosRegistro%></td>
+        <%} %>
     </tr>
     <% }%>
 </table>
@@ -287,7 +307,7 @@ if (registros.size()==0) {
             <%
             if (pagina>1) {
             %>
-            <a href="listado.jsp?<%=cadenaEnlace%>&pagina=<%=pagina-1%>" title="Retrocedir" style="text-decoration:none;"><< 100 <fmt:message key='anteriors'/></a>
+            <a href="listado.jsp?<%=cadenaEnlace%>&pagina=<%=pagina-1%>" title="Retrocedir" style="text-decoration:none;">&lt;&lt; 100 <fmt:message key='anteriors'/></a>
             <%
 }
             %>

@@ -25,6 +25,8 @@ public class RegistroSeleccionado implements Comparable {
 	
 	private int ano;
 	private int numero;
+	private int numeroDocumentosRegistro060 = 1;
+
 	
 	public void setAnoEntrada(String anoEntrada) {
 		this.anoEntrada=anoEntrada;
@@ -146,6 +148,18 @@ public class RegistroSeleccionado implements Comparable {
 		} else {
 			return numero;
 		}
+	}
+	/**
+	 * @return the numeroDocumentosRegistro060
+	 */
+	public int getNumeroDocumentosRegistro060() {
+		return numeroDocumentosRegistro060;
+	}
+	/**
+	 * @param numeroDocumentosRegistro060 the numeroDocumentosRegistro060 to set
+	 */
+	public void setNumeroDocumentosRegistro060(int numeroDocumentosRegistro060) {
+		this.numeroDocumentosRegistro060 = numeroDocumentosRegistro060;
 	}
 	
 }

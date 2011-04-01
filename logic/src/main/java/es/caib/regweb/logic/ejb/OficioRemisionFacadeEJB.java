@@ -30,14 +30,19 @@ import org.apache.log4j.Logger;
  */
 public abstract class OficioRemisionFacadeEJB extends HibernateEJB {
     
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
     private Logger log = Logger.getLogger(this.getClass());
     
-    private String usuario="";
+    //private String usuario="";
 
     private DateFormat dateF= new SimpleDateFormat("dd/MM/yyyy");
     private Date fechaTest=null;
-    private DateFormat horaF=new SimpleDateFormat("HH:mm");
-    private Date horaTest=null;
+    //private DateFormat horaF=new SimpleDateFormat("HH:mm");
+   // private Date horaTest=null;
 
     private String SENTENCIA_UPDATE="update OficioRemision " +
     		"set fechaOficio=?, contenido=?, anyoSalida=?, oficinaSalida=?, numeroSalida=?, nula=?, motivosNula=?, usuarioNula=?, fechaNula=?, "+
@@ -64,16 +69,16 @@ public abstract class OficioRemisionFacadeEJB extends HibernateEJB {
 
             /* Recuperamos la fecha y la hora del sistema, fzafsis(aaaammdd) y fzahsis (hhMMssmm) */
             Date fechaSystem=new Date();
-            DateFormat aaaammdd=new SimpleDateFormat("yyyyMMdd");
-            int fzafsis=Integer.parseInt(aaaammdd.format(fechaSystem));
+            //DateFormat aaaammdd=new SimpleDateFormat("yyyyMMdd");
+            //int fzafsis=Integer.parseInt(aaaammdd.format(fechaSystem));
 
-            DateFormat hhmmss=new SimpleDateFormat("HHmmss");
+            //DateFormat hhmmss=new SimpleDateFormat("HHmmss");
             DateFormat sss=new SimpleDateFormat("S");
             String ss=sss.format(fechaSystem);
             if (ss.length()>2) {
                 ss=ss.substring(0,2);
             }
-            int fzahsis=Integer.parseInt(hhmmss.format(fechaSystem)+ss);
+           // int fzahsis=Integer.parseInt(hhmmss.format(fechaSystem)+ss);
 
             Calendar c2=Calendar.getInstance();
             c2.setTime(fechaSystem);
@@ -147,7 +152,7 @@ public abstract class OficioRemisionFacadeEJB extends HibernateEJB {
    
    
     /**
-     * Actualitza el registre d'entrada
+     * Actualitza la taula de gestió dels ofici de remissió.
      * @throws ClassNotFoundException
      * @throws Exception
      * @ejb.interface-method
@@ -162,16 +167,16 @@ public abstract class OficioRemisionFacadeEJB extends HibernateEJB {
 
             /* Recuperamos la fecha y la hora del sistema, fzafsis(aaaammdd) y fzahsis (hhMMssmm) */
             Date fechaSystem=new Date();
-            DateFormat aaaammdd=new SimpleDateFormat("yyyyMMdd");
-            int fzafsis=Integer.parseInt(aaaammdd.format(fechaSystem));
+            //DateFormat aaaammdd=new SimpleDateFormat("yyyyMMdd");
+            //int fzafsis=Integer.parseInt(aaaammdd.format(fechaSystem));
             
-            DateFormat hhmmss=new SimpleDateFormat("HHmmss");
+            //DateFormat hhmmss=new SimpleDateFormat("HHmmss");
             DateFormat sss=new SimpleDateFormat("S");
             String ss=sss.format(fechaSystem);
             if (ss.length()>2) {
                 ss=ss.substring(0,2);
             }
-            int fzahsis=Integer.parseInt(hhmmss.format(fechaSystem)+ss);
+            //int fzahsis=Integer.parseInt(hhmmss.format(fechaSystem)+ss);
             
             /* Ejecutamos sentencias SQL */
             q=session.createQuery(SENTENCIA_UPDATE);
@@ -313,7 +318,7 @@ public abstract class OficioRemisionFacadeEJB extends HibernateEJB {
      * Valida la data donada
      * @param fecha
      */
-    private boolean validarFecha(String fecha) {
+ /*   private boolean validarFecha(String fecha) {
         boolean error=false;
         try {
             dateF.setLenient(false);
@@ -326,7 +331,7 @@ public abstract class OficioRemisionFacadeEJB extends HibernateEJB {
         }
         return !error;
     }
-    
+  */  
     /** 
      * Lee un registro del fichero BZENTRA, para ello le
      * deberemos pasar el usuario, el codigo de oficina, el numero de registro de
@@ -343,7 +348,7 @@ public abstract class OficioRemisionFacadeEJB extends HibernateEJB {
 
         ParametrosOficioRemision res = new ParametrosOficioRemision();
         
-        boolean leidos=false;
+        //boolean leidos=false;
 		DateFormat yyyymmdd=new SimpleDateFormat("yyyyMMdd");
 		DateFormat ddmmyyyy=new SimpleDateFormat("dd/MM/yyyy");
 		java.util.Date fechaDocumento=null;
@@ -366,7 +371,7 @@ public abstract class OficioRemisionFacadeEJB extends HibernateEJB {
             if (rs.next()) {
             	/* Recuperamos la fecha y la hora del sistema, fzafsis(aaaammdd) y fzahsis (hhMMssmm) */
             	
-                leidos=true;
+                //leidos=true;
                 res.setAnoOficio(String.valueOf(rs.getInteger(0)));
                 res.setNumeroOficio(String.valueOf(rs.getInteger(1)));
                 res.setOficinaOficio(String.valueOf(rs.getInteger(2)));

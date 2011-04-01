@@ -4,7 +4,7 @@
 <% request.setCharacterEncoding("UTF-8"); %>
 
 <%-- Consulta de registros de entrada. ficha --%>
-<%@page import="java.util.*, es.caib.regweb.logic.interfaces.*, es.caib.regweb.logic.util.*, es.caib.regweb.logic.helper.*" contentType="text/html"%>
+<%@page import="java.util.*,java.text.*, es.caib.regweb.logic.interfaces.*, es.caib.regweb.logic.util.*, es.caib.regweb.logic.helper.*" contentType="text/html"%>
 
 <%String usuario=request.getRemoteUser();
 String codOficina=request.getParameter("oficina");
@@ -263,9 +263,65 @@ String ano=request.getParameter("anoEntrada");
                     </form>
                  </td>
 			</tr>     
+			<c:if test="${initParam['registro.entrada.view.infoBOIB']}">
+			<%-- Si la oficina es 32 lanzamos datos para fichero de publicaciones --%>
+            <% if (reg.getOficina().equals(application.getInitParameter("registro.oficinaBOIB"))) { 
+            	RegistroPublicadoEntradaFacade registroPublicado = RegistroPublicadoEntradaFacadeUtil.getHome().create();
+            	ParametrosRegistroPublicadoEntrada registroPublicadoParametros = new ParametrosRegistroPublicadoEntrada();
+            	
+            	registroPublicadoParametros.setOficina(Integer.parseInt(reg.getOficina()));
+            	registroPublicadoParametros.setNumero(Integer.parseInt(reg.getNumeroEntrada()));
+            	registroPublicadoParametros.setAnoEntrada(Integer.parseInt(reg.getAnoEntrada()));
+
+                
+                String dataPublicacion="";
+                String numeroBOCAIB="";
+                String pagina="";
+                String lineas="";
+                String textoPublic="";
+                String observaciones="";
+
+                
+                registroPublicadoParametros = registroPublicado.leer(registroPublicadoParametros); 
+                if (registroPublicadoParametros.getLeido()) {
+                    dataPublicacion=(registroPublicadoParametros.getFecha()==0) ? "" : registroPublicadoParametros.getFechaTexto();           
+                    numeroBOCAIB=(registroPublicadoParametros.getNumeroBOCAIB()==0) ? "" :registroPublicadoParametros.getNumeroBOCAIB()+"";
+                    pagina=(registroPublicadoParametros.getPagina()==0) ? "" : registroPublicadoParametros.getPagina()+"";
+                    lineas=(registroPublicadoParametros.getLineas()==0) ? "" : registroPublicadoParametros.getLineas()+"";
+                    textoPublic=registroPublicadoParametros.getContenido().trim();
+                    observaciones=registroPublicadoParametros.getObservaciones().trim();
+                }
+                
+            %> 
+                        <tr>
+                <td>
+                    &nbsp;<br>
+                    &nbsp;<b>Dades de Publicació</b>
+                    &nbsp;<br>&nbsp;<br>
+                    &nbsp;Data Public.:
+                    <font class="ficha"><%=dataPublicacion%></font>
+                    &nbsp;&nbsp;&nbsp;
+                    Número BOIB:
+                    <font class="ficha"><%=numeroBOCAIB%></font>&nbsp;
+                    Pàg.:
+                    <font class="ficha"><%=pagina%></font>&nbsp;
+                    Línies:
+                    <font class="ficha"><%=lineas%></font>&nbsp;
+                    &nbsp;<br>&nbsp;<br>
+                    &nbsp;Texte:&nbsp;<c:set var="texto" scope="page"><%=textoPublic%></c:set>
+                    <font class="ficha"><c:out value="${texto}"/></font>
+                    &nbsp;<br>&nbsp;<br>
+                    &nbsp;Observacions:&nbsp;<c:set var="texto" scope="page"><%=observaciones%></c:set>
+                    <font class="ficha"><c:out value="${texto}"/></font>
+                </td>
+            </tr>
+            <%
+            registroPublicado.remove();
+            } %>
+            </c:if>
         </table>
         </center>
-        <p>
+        <p/>
             <center>
                 [&nbsp;<a href="busquedaEntradasIndex.jsp"><fmt:message key='tornar_a_seleccionar_criteris'/></a>&nbsp;]
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

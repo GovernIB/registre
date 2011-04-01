@@ -96,7 +96,7 @@
             	 <ul style="margin-right: 5px">
 					<li><p><fmt:message key='usuari_a_autoritzar_q'/></p></li>
                 	<li>	<form id="cercaUsuari" name="cercaUsuari" action="<c:url value='/admin/controller.do?accion=autoritzUsuari'/>" method="post">
-							<input style="width:70px;" type="text" name="usuariAutoritzar" id="usuariAutoritzar" size="9" maxlength="9"/>
+							<input style="width:70px;" type="text" name="usuariAutoritzar" id="usuariAutoritzar" size="10" maxlength="10"/>
 							<input type="submit" value="<fmt:message key='cercar'/>">
 							</form>
 					</li>

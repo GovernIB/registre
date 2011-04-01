@@ -26,6 +26,7 @@ String entidad2="";
 String altres="";
 String comentario="";
 String municipi060="";
+String numeroRegistres060="1";
 
 if (request.getAttribute("registroEntrada")!=null) {//Viene de error
     registro=(ParametrosRegistroEntrada)request.getAttribute("registroEntrada");
@@ -40,6 +41,7 @@ if (request.getAttribute("registroEntrada")!=null) {//Viene de error
         entidad2=registro.getEntidad2();
         altres=registro.getAltres();
         municipi060=registro.getMunicipi060();
+        numeroRegistres060 = String.valueOf(registro.getNumeroDocumentosRegistro060());
     } else {
         comentario=registro.getComentarioNuevo();
         entidad1=registro.getEntidad1Nuevo();
@@ -87,6 +89,7 @@ if (request.getAttribute("registroEntrada")!=null) {//Viene de error
     altres=registro.getAltres();
     comentario=registro.getComentario();
     municipi060=registro.getMunicipi060();
+    numeroRegistres060 = String.valueOf(registro.getNumeroDocumentosRegistro060());
         
     if (hora!=null && !hora.equals("") && !hora.equals("0") ) {
         if (hora.length()<4) {hora="0"+hora;}
@@ -198,9 +201,11 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
 		            if (valor){
 		           
 					    document.registroForm.mun_060.disabled = false;
+					    document.registroForm.numreg_060.disabled = false;
 		            }else{
 						document.registroForm.mun_060.value = "000";
 						document.registroForm.mun_060.disabled = true;
+						document.registroForm.numreg_060.disabled = true;
 					}
 					</c:if>
 			}
@@ -464,6 +469,7 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
                 </td>
             </tr>
         </table>
+         </div>
         <br>
         <%  } %>
         <%
@@ -486,17 +492,17 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
         </table>
 
         <form name="registroForm" action="ModiEntradaPaso.jsp" method="post" onsubmit="return confirmaProceso()">
-        
-            <div id="idCuerpo" style="display:block">
-                <table class="recuadroEntradas" width="630">
+        	<input type="hidden" name="numeroRegistro" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(registro.getNumeroEntrada())%>">
                     <input type="hidden" name="serie" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(intSerie+"")%>">
                     <input type="hidden" name="anoEntrada" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(ano)%>">
                     <input type="hidden" name="entidad1Anterior" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(entidad1Anterior)%>">
                     <input type="hidden" name="entidad2Anterior" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(entidad2Anterior)%>">
                     <input type="hidden" name="altresAnterior" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(altresAnterior)%>">
                     <input type="hidden" name="comentarioAnterior" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(comentarioAnterior)%>">
-                    <input type="hidden" name="numeroRegistro" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(registro.getNumeroEntrada())%>">
+        	<input type="hidden" name="numeroRegistros060mAnterior" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(String.valueOf(registro.getNumeroDocumentosRegistro060()))%>">
                     <input type="hidden" name="municipi060Anterior" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(registro.getMunicipi060())%>">
+            <div id="idCuerpo" style="display:block">
+                <table class="recuadroEntradas" width="630"> 
                     <tr>
                         <td>
                             <!-- Tabla para datos de cabecera -->
@@ -507,21 +513,21 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
                                         <font class="<%=errorEn(errores,"dataentrada")%>"> <fmt:message key='registro.fecha_entrada'/></font>
                                         <%String anteriorDataEntrada=(registro==null)? "":registro.getDataEntrada();%>
                                         <input type="hidden" name="dataentrada" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(anteriorDataEntrada)%>">
-                                        <input readonly type=text name=NNdataentrada value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(fechaEntrada)%>" size="10">
+                                        <input readonly="readonly" type="text" name="NNdataentrada" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(fechaEntrada)%>" size="10">
                                     </td>
                                     <td style="border:0">
                                         <!-- Hora d'entrada -->
                                         <font class="<%=errorEn(errores,"hora")%>"><fmt:message key='registro.hora'/></font>
-                                        <input type=text name=hora value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(hhmm)%>" size="5">
+                                        <input type="text" name="hora" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(hhmm)%>" size="5">
                                     </td>
                                     <td style="border:0">
                                         <!-- Despegable para Suprimir registro -->
                                         <font class="<%=errorEn(errores,"suprimir")%>"><fmt:message key='entrada_anulada'/>:</font>
                                         <!-- Idioma del Extracto -->
-                                        <select name=suprimir>
+                                        <select name="suprimir">
                                             <% String suprimir=(registro==null)? "": registro.getRegistroAnulado(); %>
-                                            <option value="S" <%=suprimir.equals("S") ? "selected" : "" %> > S
-                                            <option value=" " <%=suprimir.equals(" ") || suprimir.equals("") ? "selected" : "" %> > 
+                                            <option value="S" <%=suprimir.equals("S") ? "selected=\"selected\"" : "" %> > S</option>
+                                            <option value=" " <%=suprimir.equals(" ") || suprimir.equals("") ? "selected=\"selected\"" : "" %> > </option>
                                         </select>&nbsp;
                                     </td>
                                 </tr>
@@ -541,11 +547,11 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
                                         <%
                                         String registroAno=registro.getNumeroEntrada()+"/"+registro.getAnoEntrada();
                                         %>
-                                        <fmt:message key='num_registre'/> <input type="text" size="<%=registroAno.length()%>" maxlength="<%=registroAno.length()%>" name="numeroRegistroAno" readonly value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(registroAno)%>">
+                                        <fmt:message key='num_registre'/> <input type="text" size="<%=registroAno.length()%>" maxlength="<%=registroAno.length()%>" name="numeroRegistroAno" readonly="readonly" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(registroAno)%>">
                                         &nbsp;&nbsp;&nbsp;
                                     </td>
                                     <td style="border:0">
-                                        <fmt:message key='data_registre'/> <input readonly type=text maxlength="10" name=NNXdataentrada value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(fechaVisado)%>" size="10">
+                                        <fmt:message key='data_registre'/> <input readonly="readonly" type="text" maxlength="10" name="NNXdataentrada" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(fechaVisado)%>" size="10">
                                     </td>
                                 </tr>
                             </table>
@@ -559,7 +565,7 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
                     <!-- 1ª fila de la tabla -->
                     <tr>
                     <td style="border:0;" colspan="2">
-                    &nbsp;<br><b><fmt:message key='dades_del_document'/></b><p>
+                    &nbsp;<br><b><fmt:message key='dades_del_document'/></b><br/>
                     </TD>
                     </TR>
                     <!-- 2ª fila de la tabla -->  
@@ -568,7 +574,7 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
                         <td style="border:0;" colspan="2">
                             &nbsp;<br><font class="<%= errorEn(errores,"data") %>"><fmt:message key='registro.fecha'/></font>
                             <% String anteriorData=(registro==null)? "":registro.getData(); %>
-                            <input type=text name=data value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(anteriorData.equals("") ? valores.getFecha() : anteriorData) %>" size="10" > 
+                            <input type="text" name="data" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(anteriorData.equals("") ? valores.getFecha() : anteriorData) %>" size="10" > 
                             <!-- Despegable para Tipos de documentos -->
                             &nbsp;<font class="errorcampo">*</font>
                             <%-- Tipo de documento. Cuando sea DU no se saca desplegable y no se puede modificar el campo --%>          
@@ -586,7 +592,7 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
                             <% } %>          
                             <!-- Despegable para Idiomas -->
                             <font class="<%=errorEn(errores,"idioma")%>"><fmt:message key='registro.idioma'/></font>
-                            <select name=idioma size=1>
+                            <select name="idioma" size="1">
                                 <% escribeSelect(out, valores.buscarIdiomas(), (registro==null)? "":registro.getIdioma()); %>
                             </select>
                         </td>
@@ -598,11 +604,11 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
                     <br><font class="errorcampo">*</font>
                     <fmt:message key='remitent'/>........<font class="<%=errorEn(errores,"entidad1")%>"><fmt:message key='registro.entidad'/></font>
                     <!-- Remitente Entidad 1 -->
-                    <input type=text name=entidad1 size="7" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(entidad1)%>" onblur="recuperaDescripcionEntidad()">
+                    <input type="text" name="entidad1" size="7" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(entidad1)%>" onblur="recuperaDescripcionEntidad()">
                     <!-- Remitente Entidad 2 -->
-                    <input type=text name=entidad2 size="3" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(entidad2)%>" onblur="recuperaDescripcionEntidad()">
+                    <input type="text" name="entidad2" size="3" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(entidad2)%>" onblur="recuperaDescripcionEntidad()">
                     <a href="javascript:abreRemitentes()">
-                        <img border="0" src="imagenes/buscar.gif" align=middle alt="<fmt:message key='cercar'/>">
+                        <img border="0" src="imagenes/buscar.gif" align="middle" alt="<fmt:message key='cercar'/>">
                     </a>
                     </td>
                     <!-- Descipcion del Remitente  -->
@@ -616,9 +622,9 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
                     <!-- Remitente Altres entidades -->
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     &nbsp;&nbsp;&nbsp;&nbsp;
-                    <fmt:message key='altres'/>&nbsp;&nbsp;<input onkeypress="return check(event)" type=text name=altres maxlength="30" size="30" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(altres.trim())%>">
+                    <fmt:message key='altres'/>&nbsp;&nbsp;<input onkeypress="return check(event)" type="text" name="altres" maxlength="30" size="30" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(altres.trim())%>">
                     <%--<a href="javascript:abreBDP()">
-                    <img border="0" src="imagenes/buscar.gif" align=middle alt="<fmt:message key='cercar'/>">
+                    <img border="0" src="imagenes/buscar.gif" align="middle" alt="<fmt:message key='cercar'/>">
                     </a>--%>
                     </td>
                     </tr>
@@ -641,7 +647,7 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
                             <span class="<%=errorEn(errores,"balears")%>"> <fmt:message key='registro.baleares'/></span>
                         </td>
                         <td style="border:0">
-                        <select name=balears>
+                        <select name="balears">
                         <% escribeSelect(out, valores.buscarBaleares(), (registro==null)? "":registro.getBalears()); %>
                         </select>
                         </td>
@@ -650,7 +656,7 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
                             <td style="border:0">&nbsp;</td>
                             <td style="border:0" valign="bottom" colspan="2">
                                 <fmt:message key='registro.fuera_baleares'/>&nbsp;
-                                <input onkeypress="return check(event)" type=text name=fora size="25" maxlength="25" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml((registro==null)? "":registro.getFora().trim())%>">            
+                                <input onkeypress="return check(event)" type="text" name="fora" size="25" maxlength="25" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml((registro==null)? "":registro.getFora().trim())%>">            
                             </td>
                         </tr>
                         </table>
@@ -665,8 +671,8 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
                             String salida2=(registro==null)? "": (registro.getSalida2().equals("0")) ? "" : registro.getSalida2();
                             %>
                             &nbsp;<br><font class="<%=errorEn(errores,"salida1")%>">Num. sortida:</font>
-                            <input onKeyPress="return goodchars(event,'0123456789')" type=text name=salida1 maxlength="6" size="6" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(salida1)%>">&nbsp;&nbsp;/&nbsp; 
-                            <input onKeyPress="return goodchars(event,'0123456789')" type=text name=salida2 maxlength="4" size="4" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(salida2)%>">
+                            <input onKeyPress="return goodchars(event,'0123456789')" type="text" name="salida1" maxlength="6" size="6" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(salida1)%>">&nbsp;&nbsp;/&nbsp; 
+                            <input onKeyPress="return goodchars(event,'0123456789')" type="text" name="salida2" maxlength="4" size="4" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(salida2)%>">
                         </td>
                         </tr> 
                         <!-- 8ª fila de la tabla -->
@@ -674,9 +680,9 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
                             <td style="border:0">
                             <!-- Organismo destinatario -->
                             &nbsp;<br><font class="errorcampo">*</font><font class="<%=errorEn(errores,"destinatari")%>"><fmt:message key='registro.organismo_destinatario'/>..............:</font>
-                            <input type=text name=destinatari size="4" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml((registro==null)? "": registro.getDestinatari())%>" onblur="recuperaDestinatario()">
+                            <input type="text" name="destinatari" size="4" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml((registro==null)? "": registro.getDestinatari())%>" onblur="recuperaDestinatario()">
                             <a href="javascript:abreDestinatarios()">
-                                <img src="imagenes/buscar.gif" align=middle alt="<fmt:message key='cercar'/>" border="0">
+                                <img src="imagenes/buscar.gif" align="middle" alt="<fmt:message key='cercar'/>" border="0">
                             </a>
                             </td>
                             <td style="border:0">
@@ -687,18 +693,29 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
                 <c:if test="${initParam['registro.entrada.view.registre012']}">
                 <tr>
                             <td style="border:0" valign="bottom">
-                              <input TYPE="checkbox" NAME="Reg060" VALUE="Si" Onclick="activar_060()" <%=(registro==null)? "": retornarChecked(registro)%> ><fmt:message key='registre_012'/> </input>
+                         <input TYPE="checkbox" NAME="Reg060" VALUE="Si" Onclick="activar_060()" <%=(registro==null)? "": retornarChecked(registro)%>> <fmt:message key='registre_012'/> <!--   </input>-->
                             </td>
                             <td style="border:0" valign="middle">
                                 <!-- Despegable para AYUNTAMIENTOS DEL 060 -->
                                 &nbsp;<br><font class="<%= errorEn(errores,"mun_060")%>">Municipi:</font>
-                                <select name="mun_060" <%=(registro==null)? "disabled": retornarDisabled(registro)%>
+                           <select name="mun_060" <%=(registro==null)? "disabled": retornarDisabled(registro)%>>
                                     <% 
 										String munSeleccionat = (registro==null)? "000": registro.getMunicipi060();
 										munSeleccionat = (munSeleccionat.equals("")? "000": munSeleccionat);
 										escribeSelect(out, "S", valores.buscar_060(), munSeleccionat); %> 
                                 </select>
                             </td>
+                </tr>
+                <tr>
+                  <td style="border:0;" valign="bottom">&nbsp;</td> 	
+                  <td style="border:0;">&nbsp;<br><font class="<%= errorEn(errores,"numreg_060")%>">Núm. documents: </font>
+                    <select name="numreg_060" id="numreg_060" <%=(registro==null)?"disabled=\"disabled\"":retornarDisabled(registro)%>>
+                         <%
+                         for(int i=1; i<99; i++){ %>
+                             <option value="<%=i%>" <%=(Integer.parseInt(numeroRegistres060)==i)?"selected=\"selected\"":""%> ><%=i%></option>
+                         <%} %>
+                   </select>
+                  </td>
                 </tr>
                 </c:if>
                             </table>
@@ -724,19 +741,19 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
                                       <c:set var="idioText"><fmt:message key='registro.idioma.catala'/></c:set>
                                     </c:if>
                                     <input type="hidden" name="idioex" value="<c:out value='${anteriorIdioex}' />">
-                                    <input readonly type="text" name="idioexText" value="<c:out value='${idioText}' />" size="8">
+                                    <input readonly="readonly" type="text" name="idioexText" value="<c:out value='${idioText}' />" size="8">
                                     &nbsp;
 
                                     <c:choose>
                                     <c:when test="${initParam['registro.entrada.view.disquete_correo']}">
                                     <!--Numero de disquete -->
                                     <font class="<%=errorEn(errores,"disquet")%>"><fmt:message key='registro.num_disquete'/> </font>
-                                    <input onkeypress="return check(event)" type=text name=disquet size="8" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml((registro==null)? "":registro.getDisquet().trim())%>">
-                                    <a href="javascript:abreDisquete()"><img src="imagenes/buscar.gif" align=middle alt="Darrer disquet" border="0"></a>
+                                    <input onkeypress="return check(event)" type="text" name="disquet" size="8" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml((registro==null)? "":registro.getDisquet().trim())%>">
+                                    <a href="javascript:abreDisquete()"><img src="imagenes/buscar.gif" align="middle" alt="Darrer disquet" border="0"></a>
                                     <!--Numero de disquete -->
                                     &nbsp;&nbsp;
                                     <font class="<%=errorEn(errores,"correo")%>"><fmt:message key='registro.num_correo'/> </font>
-                                    <input onkeypress="return check(event)" type=text name=correo size="8" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml((registro==null)? "":(registro.getCorreo()==null) ? "": registro.getCorreo().trim()) %>">
+                                    <input onkeypress="return check(event)" type="text" name="correo" size="8" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml((registro==null)? "":(registro.getCorreo()==null) ? "": registro.getCorreo().trim()) %>">
                                     </c:when>
                                     <c:otherwise>
                                     <input type="hidden" name="disquet" value=""/>
@@ -755,13 +772,14 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
                                     <div align="center">
                                         <textarea cols="70" onkeypress="return check(event)" rows="3" name="comentario"><%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(comentario.trim())%></textarea>
                                     </div>
+                                    </font>
                                 </td>
                             </tr>
                             <tr>
                                 <td style="border:0">
                                     <!-- Boton de enviar -->          
                                     <p align="center">
-                                    <input type=submit value="<fmt:message key='enviar'/>">
+                                    <input type="submit" value="<fmt:message key='enviar'/>">
                                     </P>
                                 </td>
                             </tr>
@@ -776,7 +794,7 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
             <%-- Div para pedir motivo para cambios de remitentes o comentario --%>
         
             <div id="idMotivo" style="display:none">
-                <table border=0 width="599">
+                <table border="0" width="599">
                     <tr><td>&nbsp;</td></tr>
                     <tr>
                         <td>
@@ -858,6 +876,7 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
                         <td colspan="2">
                             <div id="remitenteAltresActual" style="font-size:14px; font: bold;background-color: #cccccc;"></div>
                         </td>
+                        </tr>
                     </table>
                         </td>
                     </tr>
@@ -875,7 +894,7 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
                         <td>
                             <font class="errorcampo">*</font>
                             <fmt:message key='motiu_del_canvi'/> :
-                            <input onkeypress="return check(event)" type=text name=motivo size="100" maxlength="150" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(motivo)%>">
+                            <input onkeypress="return check(event)" type="text" name="motivo" size="100" maxlength="150" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(motivo)%>">
                         </td>
                     </tr>
                     <tr><td>&nbsp;</td></tr>                
@@ -883,9 +902,9 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
                         <td style="border:0">
                             <!-- Boton de enviar -->          
                             <p align="center">
-                            <input type=button value="<fmt:message key='tornar'/>" onclick="volverAtras()">
+                            <input type="button" value="<fmt:message key='tornar'/>" onclick="volverAtras()">
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <input type=submit value="<fmt:message key='enviar'/>">
+                            <input type="submit" value="<fmt:message key='enviar'/>">
                             </P>
                         </td>
                     </tr>

@@ -1420,7 +1420,7 @@ public abstract class RegistroSalidaFacadeEJB extends HibernateEJB {
 				if (altresNuevo.trim().equals("")) {
 					altresNuevo="";
 					fzanentNuevo=Integer.parseInt(entidad2Nuevo);
-					fzacentNuevo=convierteEntidadCastellano(entidad1Nuevo, entidad2Nuevo, session);
+					fzacentNuevo=convierteEntidadCastellano(entidad1Nuevo, entidad2Nuevo);
 				} else {
 					fzanentNuevo=0;
 					fzacentNuevo="";
@@ -1531,10 +1531,12 @@ public abstract class RegistroSalidaFacadeEJB extends HibernateEJB {
 		return param;
 	}
 	
-	private String convierteEntidadCastellano(String entidadCatalan, String entidad2Nuevo, Session session) {
+	private String convierteEntidadCastellano(String entidadCatalan, String entidad2Nuevo) {
 		String eCastellano="";
         ScrollableResults rs = null;
         SQLQuery q1 = null;
+        Session session = getSession();
+        
 		try {
 			String sentenciaHql="SELECT FZGCENTI FROM BZENTID WHERE FZGCENT2=? AND FZGNENTI=? AND FZGFBAJA=0";
 			q1=session.createSQLQuery(sentenciaHql);
@@ -1552,6 +1554,7 @@ public abstract class RegistroSalidaFacadeEJB extends HibernateEJB {
 			eCastellano="";
 		} finally {
             if (rs!=null) rs.close();
+            close(session);
 		}
 		return eCastellano;
 	}

@@ -1,7 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!--
-  Registro General CAIB - Registro de Entradas
+  Registro General CAIB 
 -->
 
 <%@ page import = "java.util.*, es.caib.regweb.logic.interfaces.*, es.caib.regweb.logic.util.*, es.caib.regweb.logic.helper.*" %>
@@ -12,6 +12,7 @@ String codOficina=request.getParameter("oficinaSalida");
 String numeroSalida=request.getParameter("numeroSalida");
 String numeroOficio=request.getParameter("oficio");
 String ano=request.getParameter("ano");
+boolean errorCrearOfici =  false;
 %>
 <%
 RegistroEntradaFacade regent = RegistroEntradaFacadeUtil.getHome().create();
@@ -31,16 +32,9 @@ if (intSerie==null) {
 int serie=intSerie.intValue();
 int serieForm = Integer.parseInt(request.getParameter("serie"));
 
-/*
-if (serie>serieForm) {
-    session.setAttribute("errorAtras","1");
-%->
-    <jsp:forward page="pedirdatos.jsp" />
-       <-% }
- */
     
     serie++;
-    // intSerie++;
+    
     intSerie=Integer.valueOf(String.valueOf(serie));
     session.setAttribute("serie", intSerie);
     session.removeAttribute("errorAtras");
@@ -79,46 +73,35 @@ param.setOficinaOficio(codOficina);
 param.setNumeroOficio(numeroOficio);
 oficio = ofi.leer(param);
 
-
-
      registro=regent.validar(registro);
      boolean ok=registro.getValidado();
 
 if (!ok || oficio==null){
 	if (oficio==null) {
 		registro.getErrores().put("","Error inesperat, no s'ha pogut obtenir les dades de l'ofici");
-
 	}
     request.setAttribute("registroEntrada",registro);
-    
     request.setAttribute( "oficina", codOficina);
     request.setAttribute( "numeroSalida", numeroSalida);
     request.setAttribute( "oficio", numeroOficio);
     request.setAttribute( "ano", ano);
-
-
 %>
         <jsp:forward page="RemiSalidaPaso.jsp" />
 <% } else { 
     
     registro=regent.grabar(registro);
-
     boolean grabado=registro.getGrabado();
-
 
     if (!grabado) {
         request.setAttribute("registroEntrada",registro);
-
-
         request.setAttribute( "oficina", codOficina);
     	request.setAttribute( "numeroSalida", numeroSalida);
         request.setAttribute( "oficio", numeroOficio);
    		request.setAttribute( "ano", ano);
-
 %>
                 <jsp:forward page="RemiSalidaPaso.jsp" />
-
-<%            } else {
+<%            
+	} else {
 			oficio.setDescartadoEntrada("N");
 			oficio.setMotivosDescarteEntrada("");
 			oficio.setUsuarioEntrada(usuario);
@@ -126,8 +109,12 @@ if (!ok || oficio==null){
 			oficio.setOficinaEntrada(registro.getOficina());
 			oficio.setNumeroEntrada(registro.getNumeroEntrada());
 			oficio.setFechaEntrada(registro.getDataEntrada());
-			oficio = ofi.actualizar(oficio);
 
+		try{
+			oficio = ofi.actualizar(oficio);
+		}catch(Exception e){
+			errorCrearOfici = true;
+		}
 	
 		String bloqueoOficina=(session.getAttribute("bloqueoOficina")==null) ? "" : (String)session.getAttribute("bloqueoOficina");
         String bloqueoTipo=(session.getAttribute("bloqueoTipo")==null) ? "" : (String)session.getAttribute("bloqueoTipo");
@@ -164,31 +151,35 @@ if (!ok || oficio==null){
         <table class="recuadroEntradas" width="400" align="center">
             <tr>
                 <td style="border:0" >
-                    &nbsp;<br><center><b><fmt:message key='ofici'/> <%=oficio.getNumeroOficio()%>/<%=oficio.getAnoOficio()%></b></center></p>
+                <%if (errorCrearOfici==false){ %>
+                    &nbsp;<br><center><b><fmt:message key='ofici'/> <%=oficio.getNumeroOficio()%>/<%=oficio.getAnoOficio()%></b></center><br/>
+                <%}else{ %>
+                    &nbsp;<br><center><b><fmt:message key='error_ofici.generacio'/></b></center><br/>
+                <%} %>
                 </td>
             </tr>   
             <tr>   
                 <td style="border:0" >
-                    &nbsp;<br><center><b><fmt:message key='registre'/> <%=registro.getNumeroEntrada()%>/<%=registro.getAnoEntrada()%> <fmt:message key='desat_correctament'/></b></center></p>
+                    &nbsp;<br/><center><b><fmt:message key='registre'/> <%=registro.getNumeroEntrada()%>/<%=registro.getAnoEntrada()%> <fmt:message key='desat_correctament'/></b></center><br/>
                 </td>
             </tr>   
             <tr><td style="border:0" >&nbsp;</td></tr>
             <tr>
                 <td style="border:0" >
-                    <p><center><b><fmt:message key='oficina'/>:&nbsp;<%=registro.getOficina()%>-<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%></b></center>
+                    <br/><center><b><fmt:message key='oficina'/>:&nbsp;<%=registro.getOficina()%>-<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%></b></center>
                 </td>
             </tr>
             <tr><td style="border:0" >&nbsp;</td></tr>
             <tr>
                 <td style="border:0" >
-                    <p>
+                    <br/>
                     <center>
                     	<a style="text-decoration: none;" type="button" target="_blank" class="botonFormulario" href="imprimeSello?data=<%=registro.getDataEntrada()%>&tipo=4&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroEntrada()%>&ano=<%=registro.getAnoEntrada()%>&ES=E">
                         &nbsp;<fmt:message key='imprimir_segell'/>&nbsp;</a>
                     	<a style="text-decoration: none;" type="button" class="botonFormulario" href="RemiSalidaLis.jsp">
                         &nbsp;<fmt:message key='tornar'/>&nbsp;</a>
                     </center>
-                    </p>
+                    <br/>
                 </td>
             </tr>
             <tr><td style="border:0" >&nbsp;</td></tr>

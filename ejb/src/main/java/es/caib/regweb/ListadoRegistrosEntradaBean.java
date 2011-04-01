@@ -6,12 +6,12 @@ package es.caib.regweb;
 
 import java.util.*;
 import java.sql.Connection;
-import java.sql.SQLException;
+//import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.*;
 
-import java.rmi.*;
+//import java.rmi.*;
 
 import javax.ejb.*;
 
@@ -23,7 +23,11 @@ import javax.ejb.*;
 
 public class ListadoRegistrosEntradaBean implements SessionBean {
 	
-	private SessionContext contextoSesion;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5485064752581290572L;
+	//private SessionContext contextoSesion;
 	
 	private String oficinaDesde="";
 	private String oficinaHasta="";
@@ -47,7 +51,7 @@ public class ListadoRegistrosEntradaBean implements SessionBean {
 	private String totalFiles="";
 	private String codiMun060="";
 	
-	
+	private int totalRegistres060=0;
 	
 	
 	/**
@@ -71,6 +75,14 @@ public class ListadoRegistrosEntradaBean implements SessionBean {
 		return totalFiles;   
 	}
 
+	/**
+	 * @return Returns the totalFiles.
+	 */
+	public int getTotalRegistres060() {
+		return totalRegistres060;   
+	}
+	
+	
 	/**
 	 * @param totalFiles The totalFiles to set.
 	 */
@@ -221,11 +233,11 @@ public class ListadoRegistrosEntradaBean implements SessionBean {
 			Connection conn = null;
 			
 			ResultSet rs = null;
-			ResultSet rsHist = null;
+			//ResultSet rsHist = null;
 			PreparedStatement ps = null;
-			PreparedStatement psHist = null;
+			//PreparedStatement psHist = null;
 			try {
-				int codiDestinatari = Integer.parseInt(CodiDestinatari);
+				//int codiDestinatari = Integer.parseInt(CodiDestinatari);
 				conn=ToolsBD.getConn();
 				String sentenciaSql="SELECT * FROM BORGANI WHERE FAXCORGA=? ";
 				ps=conn.prepareStatement(sentenciaSql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -358,18 +370,27 @@ public class ListadoRegistrosEntradaBean implements SessionBean {
 			}
 			
 			if (pagina<=1 && isCalcularTotalRegistres()) {
-			// La primera vegada, calculam el nombre màxim de registres que tornarà la consulta
+				int totalRegistres060 = 0;
+				// La primera vegada, calculam el nombre màxim de registres que tornarà la consulta
 			rs=ps.executeQuery();
-			System.out.println("Nombre total de registres ="+rs.getFetchSize());
-//			 Point to the last row in resultset.
+				//System.out.println("Nombre total de registres ="+rs.getFetchSize());
+				
+				while (rs.next()) {
+					//System.out.println("reg:"+rs.getInt("fzanumen")+". -> "+rs.getInt("ENT_NUMREG"));
+					if(!rs.getString("FZAENULA").equalsIgnoreCase("S")){
+						totalRegistres060 += rs.getInt("ENT_NUMREG");
+					}
+				}
+				
+//				// Point to the last row in resultset.
 		      rs.last();      
 		      // Get the row position which is also the number of rows in the resultset.
 		      int rowcount = rs.getRow();
 		      // Reposition at the beginning of the ResultSet to take up rs.next() call.
 		      rs.beforeFirst();
-		      System.out.println("Total rows for the query using Scrollable ResultSet: "
-		                         +rowcount);
+				//System.out.println("Total rows for the query using Scrollable ResultSet: "+rowcount+"; Total Registres 060: "+totalRegistres060);
 		      this.totalFiles= String.valueOf(rowcount);
+				this.totalRegistres060 = totalRegistres060;
 			}
 		    
 		    // Numero maximo de registros a devolver
@@ -523,7 +544,7 @@ public class ListadoRegistrosEntradaBean implements SessionBean {
                 if (ss.length()>2) {
                     ss=ss.substring(0,2);
                 }
-                int fzahsis=Integer.parseInt(hhmmss.format(fechaSystem)+ss);
+                //int fzahsis=Integer.parseInt(hhmmss.format(fechaSystem)+ss);
                 
                 switch (Stringsss.length()) {
                 //Hem d'emplenar amb 0s.
@@ -537,6 +558,7 @@ public class ListadoRegistrosEntradaBean implements SessionBean {
                 int horamili=Integer.parseInt(hhmmss.format(fechaSystem)+Stringsss);
                 logLopdBZENTRA("SELECT", usuario, fzafsis, horamili, rs.getInt("FZANUMEN"), rs.getInt("FZAANOEN"), rs.getInt("FZACAGCO"));
                 
+                registro.setNumeroDocumentosRegistro060(rs.getInt("ENT_NUMREG"));
                 registrosVector.addElement(registro);
 			}
 			
