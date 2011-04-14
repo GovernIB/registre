@@ -28,10 +28,11 @@ import es.caib.regweb.logic.interfaces.ValoresFacade;
 import es.caib.regweb.logic.util.ValoresFacadeUtil;
 import es.caib.regweb.logic.interfaces.AdminFacade;
 import es.caib.regweb.logic.util.AdminFacadeUtil;
-
+import es.caib.regweb.logic.helper.ParametrosRegistroPublicadoEntrada;
 import es.caib.regweb.model.LogEntradaLopd;
 import es.caib.regweb.model.LogEntradaLopdId;
-
+import es.caib.regweb.logic.interfaces.RegistroPublicadoEntradaFacade;
+import es.caib.regweb.logic.util.RegistroPublicadoEntradaFacadeUtil;
 import org.apache.log4j.Logger;
 
 
@@ -72,8 +73,6 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
         ScrollableResults rs=null;
         Query q = null;
         
-        
-        //String dataVisado=param.getDataVisado();
         String dataentrada=param.getDataEntrada();
         String hora=param.getHora();
         String oficina=param.getOficina();
@@ -82,7 +81,6 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
         String tipo=param.getTipo();
         String idioma=param.getIdioma();
         String entidad1=param.getEntidad1();
-        //String entidad1Grabada=param.getEntidad1Grabada();
         String entidad2=param.getEntidad2();
         String altres=param.getAltres();
         String balears=param.getBalears();
@@ -94,33 +92,25 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
         String disquet=param.getDisquet();
         String comentario=param.getComentario();
         String usuario=param.getUsuario();
-        // int fzanume=param.getFzanume();
-        //String correo=param.getCorreo();
-        //String registroAnulado=param.getRegistroAnulado();
         boolean actualizacion=param.getActualizacion();
-        //boolean leidos=param.getLeido();
         String motivo=param.getMotivo();
         String entidad1Nuevo=param.getEntidad1Nuevo();
         String entidad2Nuevo=param.getEntidad2Nuevo();
         String altresNuevo=param.getAltresNuevo();
         String comentarioNuevo=param.getComentarioNuevo();
-        //String password=param.getPassword();
-        //String municipi060=param.getMunicipi060();
-        //String descripcioMunicipi060=param.getDescripcionMunicipi060();
-        //String numeroDocumentosRegistro060=param.getNumeroDocumentosRegistro060();
         Hashtable errores=param.getErrores();
-        //String entidadCastellano=param.getEntidadCastellano();
-                
-        
-        
-        
-        
-        
+        boolean errorFechaPublicacion = false;  
         boolean validado=false;
+        
         errores.clear();
         try {
+        	errorFechaPublicacion = (param.getParamRegPubEnt()==null)? false:param.getParamRegPubEnt().getErrorfecha();  
+        	/* Validamos la fecha de publicación en el BOIB (solo CAIB oficina 32)*/
+            if (errorFechaPublicacion) {
+                errores.put("dataPublic","Data de publicació no es l\u00f2gica");
+            }
+            log.debug("here");
             /* Validamos la fecha de entrada */
-            
             if (!validarFecha(dataentrada)) {
                 errores.put("dataentrada","Data d'entrada no es l\u00f2gica");
             }
@@ -134,7 +124,7 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
             
             /* Validamos Hora */
             if (hora==null) {
-                errores.put("hora","Hora d'entrada no es logica");
+                errores.put("hora","Hora d'entrada no es l\u00e0gica");
             } else {
                 try {
                     horaF.setLenient(false);
@@ -345,6 +335,8 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
                 errores.put("idioex","L'idioma ha de ser 1 o 2, idioma="+idioex);
             }
             
+            
+            
             /* Validamos el numero de disquete */
             try {
                 if (!disquet.equals("")) {
@@ -491,9 +483,6 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
         String descripcioMunicipi060=param.getDescripcionMunicipi060();
         String numeroDocumentosRegistro060=(param.getNumeroDocumentosRegistro060()==null)?"1":param.getNumeroDocumentosRegistro060();
         Hashtable errores=param.getErrores();
-                
-        // String anoEntrada=param.getAnoEntrada();
-        // String numeroEntrada=param.getNumeroEntrada();
         String descripcionOficina=param.getDescripcionOficina();
         String descripcionOficinaFisica=param.getDescripcionOficinaFisica();
         String descripcionRemitente=param.getDescripcionRemitente();
@@ -503,7 +492,6 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
         String procedenciaGeografica=param.getProcedenciaGeografica();
         String idiomaExtracto=param.getIdiomaExtracto();
         String entidadCastellano=param.getEntidadCastellano();
-        
         
         boolean validado=false;
         boolean registroGrabado=false;
@@ -1006,7 +994,6 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
         String disquet=param.getDisquet();
         String comentario=param.getComentario();
         String usuario=param.getUsuario();
-        // int fzanume=param.getFzanume();
         String correo=param.getCorreo();
         String registroAnulado=param.getRegistroAnulado();
         boolean actualizacion=param.getActualizacion();
@@ -1021,7 +1008,6 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
         String descripcioMunicipi060=param.getDescripcionMunicipi060();
         String numeroDocumentosRegistro060=param.getNumeroDocumentosRegistro060();
         Hashtable errores=param.getErrores();
-                
         String anoEntrada=param.getAnoEntrada();
         String numeroEntrada=param.getNumeroEntrada();
         String descripcionOficina=param.getDescripcionOficina();
@@ -1033,14 +1019,7 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
         String procedenciaGeografica=param.getProcedenciaGeografica();
         String idiomaExtracto=param.getIdiomaExtracto();
         String entidadCastellano=param.getEntidadCastellano();
-        
-        String BOIBdata=param.getBOIBdata();
-        int BOIBnumeroBOCAIB=param.getBOIBnumeroBOCAIB();
-        int BOIBpagina=param.getBOIBpagina();
-        int BOIBlineas=param.getBOIBlineas();
-        String BOIBtexto=param.getBOIBtexto();
-        String BOIBobservaciones=param.getBOIBobservaciones();
-        
+        ParametrosRegistroPublicadoEntrada paramRegPubEnt = param.getParamRegPubEnt();
         
         boolean validado=false;
 
@@ -1057,6 +1036,15 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
         }
         
         boolean registroActualizado=false;
+        
+        //Comprobamos si hay que actualizar datos publicación BOIB
+        if(paramRegPubEnt!=null){
+        	 log.debug("PUBLI");
+        	RegistroPublicadoEntradaFacade regpubent = RegistroPublicadoEntradaFacadeUtil.getHome().create();
+        	regpubent.grabar(paramRegPubEnt);
+        }else{
+        	 log.debug("NO PUBLI");
+        }
         try {
             /* Descomponemos el año de la data de entrada, FZAANOEN y preparamos campo
              FZAFENT en formato aaaammdd */
@@ -1281,19 +1269,18 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
                     ValoresFacade valor = ValoresFacadeUtil.getHome().create();
                     remitente=valor.recuperaRemitenteCastellano(fzacent, fzanent+"");
                 }
+                
                 try {
                     Class t = Class.forName("es.caib.regweb.module.PluginHook");
 
                     Class [] partypes = {
                         String.class , Integer.class, Integer.class, Integer.class, Integer.class, String.class,
-                     	String.class, String.class, Integer.class, Integer.class, String.class, Integer.class, String.class,
-                     	String.class, Integer.class, Integer.class, Integer.class, String.class, String.class, String.class 
+                     	String.class, String.class, Integer.class, Integer.class, String.class, Integer.class, String.class, String.class 
                     };
 
                     Object [] params = {
                         "M", new Integer(fzaanoe), new Integer(fzanume), new Integer(fzacagc), new Integer(fzafdoc), remitente, 
-                        comentario, tipo, new Integer(fzafent), new Integer(fzacagge), fzaproce, new Integer(fzacorg), idioma,
-                        BOIBdata, new Integer(BOIBnumeroBOCAIB), new Integer(BOIBpagina), new Integer(BOIBlineas), BOIBtexto, BOIBobservaciones, correo
+                        comentario, tipo, new Integer(fzafent), new Integer(fzacagge), fzaproce, new Integer(fzacorg), idioma, correo
                     };
 
                     java.lang.reflect.Method metodo = t.getMethod("entrada", partypes);

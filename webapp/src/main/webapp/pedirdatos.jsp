@@ -5,9 +5,7 @@
 --%>
 <%@ page import = "java.util.*, es.caib.regweb.logic.interfaces.*, es.caib.regweb.logic.util.*, es.caib.regweb.logic.helper.*,java.net.URLDecoder" %>
 <%@ page pageEncoding="UTF-8"%>
-<% request.setCharacterEncoding("UTF-8"); %>
-
-<%
+<%  request.setCharacterEncoding("UTF-8"); 
     ParametrosRegistroEntrada registro;
     registro=(ParametrosRegistroEntrada)request.getAttribute("registroEntrada");
     if (registro!=null) registro.setNumeroEntrada(null);
@@ -158,12 +156,12 @@ function refrescaFisica(){
             	valor3=document.registroForm.correo.value;
             	valor4=document.registroForm.disquet.value;
             	if (valor.indexOf('€',0)>-1 || valor1.indexOf('¤',0)>-1 || valor2.indexOf('¤',0)>-1 || valor3.indexOf('¤',0)>-1 || valor4.indexOf('¤',0)>-1) {
-            		alert("El símbol \"€\" no és permès a l\'aplicació. Emprau \"euro\" o \"euros\" segons pertoqui");
+            		alert("<fmt:message key='pedirdatos.alert1'/>");
             		return false;
             	} else {
                     <c:if test="${initParam['registro.entrada.view.registre012']}">
                     if (document.registroForm.Reg060.checked && document.registroForm.mun_060.value == "000"){
-						alert("S'ha de seleccionar el municipi del 060.");
+						alert("<fmt:message key='pedirdatos.alert2'/>");
                         return false;
 					}
                     </c:if>
@@ -348,12 +346,9 @@ function refrescaFisica(){
             #destinatario_desc {background-color: #cccccc;}
             #remitente_desc {background-color: #cccccc;}
         </style>
-
     </head>
 
     <body bgcolor="#FFFFFF" onunload="cerrarVentana()">
-
-        
        	<!-- Molla pa --> 
 		<ul id="mollaPa">
 		<li><a href="index.jsp"><fmt:message key='inici'/></a></li>
@@ -390,19 +385,19 @@ function refrescaFisica(){
                     <font class="errorcampo">*</font>&nbsp;<fmt:message key='registro.campos_obligatorios'/>
                 </td>
                 <td width="5%">
-                    <a href="javascript:guarda_cookie();"><img src="imagenes/grabarMacro.gif" border="0" alt="Desar Repro" title="Desar Repro"></a>
+                    <a href="javascript:guarda_cookie();"><img src="imagenes/grabarMacro.gif" border="0" alt="<fmt:message key='repro.desar'/>" title="<fmt:message key='repro.desar'/>"></a>
                 </td>
                 <td width="5%" align="center">
-                    <a href="javascript:borra_cookie();"><img src="imagenes/borrarepro.gif" border="0" alt="Esborrar Repro" title="Esborrar Repro"></a>
+                    <a href="javascript:borra_cookie();"><img src="imagenes/borrarepro.gif" border="0" alt="<fmt:message key='repro.esborrar'/>" title="<fmt:message key='repro.esborrar'/>"></a>
                 </td>
                 <td  width="5%">
-                    <a href="javascript:lee_cookie();"><img src="imagenes/repro.gif"  alt="Llegir Repro" border="0" title="Llegir Repro"></a>
+                    <a href="javascript:lee_cookie();"><img src="imagenes/repro.gif"  alt="<fmt:message key='repro.llegir'/>" border="0" title="<fmt:message key='repro.llegir'/>"></a>
                 </td>
                 <td  width="5%">
-                    <a href="<c:url value='/repro/expImpRepro.jsp?tipusCookie=RWE' />"><img src="imagenes/exportar.gif"  alt="Exportar Repro" border="0" title="Exportar Repro"></a>
+                    <a href="<c:url value='/repro/expImpRepro.jsp?tipusCookie=RWE' />"><img src="imagenes/exportar.gif"  alt="<fmt:message key='repro.exportar'/>" border="0" title="<fmt:message key='repro.exportar'/>"></a>
                 </td>
                 <td  width="5%">
-                    <a href="javascript:importar_cookie();"><img src="imagenes/importar.gif"  alt="<fmt:message key='importar_repro'/>" border="0" title="<fmt:message key='importar_repro'/>"></a>
+                    <a href="javascript:importar_cookie();"><img src="imagenes/importar.gif"  alt="<fmt:message key='repro.importar'/>" border="0" title="<fmt:message key='repro.importar'/>"></a>
                 </td>
             </tr>
         </table>
@@ -456,7 +451,7 @@ function refrescaFisica(){
                 <!-- 1ª fila de la tabla -->
                 <tr>
                 <td style="border:0;" colspan="2">
-                &nbsp;<br><b><fmt:message key='dades_del_document'/></b><p/>
+                <b><fmt:message key='dades_del_document'/></b><p/>
                 </TD>
                 </TR>
                 <!-- 2ª fila de la tabla -->  
@@ -542,7 +537,7 @@ function refrescaFisica(){
                 <tr>
                 <td style="border:0;" colspan="2">
                     <!-- Numero de salida -->
-                    &nbsp;<br><font class="<%=errorEn(errores,"salida1")%>"><fmt:message key='registro.num_sortida'/></font>
+                    <font class="<%=errorEn(errores,"salida1")%>"><fmt:message key='registro.num_sortida'/></font>
                     <input onKeyPress="return goodchars(event,'0123456789')" type="text" name="salida1" maxlength="6" size="6" value="<%=(registro==null)? "":registro.getSalida1()%>">&nbsp;&nbsp;/&nbsp; 
                     <input onKeyPress="return goodchars(event,'0123456789')" type="text" name="salida2" maxlength="4" size="4" value="<%=(registro==null)? "":registro.getSalida2()%>">
                 </td>
@@ -551,7 +546,7 @@ function refrescaFisica(){
                 <tr>
                     <td style="border:0;">
                     <!-- Organismo destinatario -->
-                    &nbsp;<br><font class="errorcampo">*</font><font class="<%=errorEn(errores,"destinatari")%>"><fmt:message key='registro.organismo_destinatario'/>..............:</font>
+                    <font class="errorcampo">*</font><font class="<%=errorEn(errores,"destinatari")%>"><fmt:message key='registro.organismo_destinatario'/>..............:</font>
                     <input id="desti" type="text" name="destinatari" size="4"  maxlength="4" value="<%=(registro==null)? "":registro.getDestinatari()%>" onblur="recuperaDestinatario()">
                     <a href="javascript:abreDestinatarios()">
                         <img src="imagenes/buscar.gif" align="middle" alt="<fmt:message key='cercar'/>" border="0">
@@ -572,7 +567,7 @@ function refrescaFisica(){
                             </td> 	
                             <td style="border:0;">
                               <!-- Despegable para AYUNTAMIENTOS DEL 060 -->
-                                &nbsp;<br><font class="<%= errorEn(errores,"mun_060")%>"><fmt:message key='registro.entidad_local'/> </font>
+                                <font class="<%= errorEn(errores,"mun_060")%>"><fmt:message key='registro.entidad_local'/> </font>
                                 <select name="mun_060" <%=(registro==null)? "disabled=\"disabled\"":retornarDisabled(registro)%>>
                                     <% 
 										String munSeleccionat = (registro==null)? "000":registro.getMunicipi060();
@@ -584,7 +579,7 @@ function refrescaFisica(){
                         <tr>
                             <td style="border:0;" valign="bottom">&nbsp;</td> 	
                             <td style="border:0;">
-                                &nbsp;<br><font class="<%= errorEn(errores,"numreg_060")%>"><fmt:message key='registro.num_registres_060'/></font>
+                                <font class="<%= errorEn(errores,"numreg_060")%>"><fmt:message key='registro.num_registres_060'/></font>
                                 <select name="numreg_060" id="numreg_060" <%=(registro==null)?"disabled=\"disabled\"":retornarDisabled(registro)%>>
                                 <option value="1" selected="selected">1</option>
                                 <%for(int i=2; i<99; i++){ %>
@@ -609,13 +604,13 @@ function refrescaFisica(){
             <table class="bordeEntrada" style="border:0;" >
                 <tr>
                 <td style="border:0;">
-                &nbsp;<br><b><fmt:message key='dades_de_lextracte'/></b>
+                <b><fmt:message key='dades_de_lextracte'/></b>
                 </td>
                 </tr>
                 <tr>
                     <td style="border:0;">
                         <!-- Idioma del Extracto -->
-                        &nbsp;<br><font class="<%=errorEn(errores,"idioex")%>"><fmt:message key='registro.idioma'/></font>
+                        <font class="<%=errorEn(errores,"idioex")%>"><fmt:message key='registro.idioma'/></font>
                         <select name="idioex">
                             <% String anteriorIdioex=(registro==null)? "":registro.getIdioex(); %>
                             <option value="2" <%=anteriorIdioex.equals("2") ? "selected" : "" %> > <fmt:message key='registro.idioma.catala'/></option>
@@ -642,7 +637,6 @@ function refrescaFisica(){
                 </tr>
                 <tr>
                     <td style="border:0;">
-                        &nbsp;<br>
                         <!-- Extracto del documento -->
                         <font class="errorcampo">*</font>
                         <font class="<%=errorEn(errores,"comentario")%>"><fmt:message key='extracte_del_document'/>:</font>
@@ -660,7 +654,6 @@ function refrescaFisica(){
             </table>
                 </td>
             </tr>
-    
         </table>
         </form>
         </center>  
@@ -673,8 +666,5 @@ function refrescaFisica(){
 <script type="text/javascript">
 refrescaFisica();
 </script>
-
-        
-                 
     </body>
 </html> 

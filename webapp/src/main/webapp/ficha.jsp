@@ -6,23 +6,19 @@
 <%-- Consulta de registros de entrada. ficha --%>
 <%@page import="java.util.*,java.text.*, es.caib.regweb.logic.interfaces.*, es.caib.regweb.logic.util.*, es.caib.regweb.logic.helper.*" contentType="text/html"%>
 
-<%String usuario=request.getRemoteUser();
+<%
+	String usuario=request.getRemoteUser();
 String codOficina=request.getParameter("oficina");
 String numeroEntrada=request.getParameter("numeroEntrada");
 String ano=request.getParameter("anoEntrada");
-%>
-<%
+
     RegistroEntradaFacade regent = RegistroEntradaFacadeUtil.getHome().create();
     ParametrosRegistroEntrada param = new ParametrosRegistroEntrada();
     ParametrosRegistroEntrada reg = new ParametrosRegistroEntrada();
-    
     ParametrosListadoRegistrosEntrada parametros;
     parametros=(ParametrosListadoRegistrosEntrada)session.getAttribute("listadoEntrada");
     
-    
-    
     ValoresFacade valores = ValoresFacadeUtil.getHome().create();
-
     Vector modelosRecibos = valores.buscarModelosRecibos("tots","totes");
 
     param.fijaUsuario(usuario);
@@ -31,13 +27,9 @@ String ano=request.getParameter("anoEntrada");
     param.setAnoEntrada(ano);
     reg = regent.leer(param);
 %>
-<!-- Exploter no renderitza bé.  -->
+
 <html>
     <head><title><fmt:message key='registre_entrades'/></title>
-        
-        
-        
-    
         <script>
         function imprimeRecibo() {
         	var url = "imprimeixRebut?oficina="+encodeURIComponent("<%=reg.getOficina().toString()%>");
@@ -273,7 +265,6 @@ String ano=request.getParameter("anoEntrada");
             	registroPublicadoParametros.setNumero(Integer.parseInt(reg.getNumeroEntrada()));
             	registroPublicadoParametros.setAnoEntrada(Integer.parseInt(reg.getAnoEntrada()));
 
-                
                 String dataPublicacion="";
                 String numeroBOCAIB="";
                 String pagina="";
@@ -281,7 +272,6 @@ String ano=request.getParameter("anoEntrada");
                 String textoPublic="";
                 String observaciones="";
 
-                
                 registroPublicadoParametros = registroPublicado.leer(registroPublicadoParametros); 
                 if (registroPublicadoParametros.getLeido()) {
                     dataPublicacion=(registroPublicadoParametros.getFecha()==0) ? "" : registroPublicadoParametros.getFechaTexto();           
@@ -291,27 +281,25 @@ String ano=request.getParameter("anoEntrada");
                     textoPublic=registroPublicadoParametros.getContenido().trim();
                     observaciones=registroPublicadoParametros.getObservaciones().trim();
                 }
-                
             %> 
                         <tr>
                 <td>
                     &nbsp;<br>
-                    &nbsp;<b>Dades de Publicació</b>
+                    &nbsp;<b><fmt:message key='publicacio.text_dades_publicacio'/></b>
                     &nbsp;<br>&nbsp;<br>
-                    &nbsp;Data Public.:
+                    &nbsp;<fmt:message key='publicacio.text_data_public'/>
                     <font class="ficha"><%=dataPublicacion%></font>
-                    &nbsp;&nbsp;&nbsp;
-                    Número BOIB:
+                    &nbsp;&nbsp;&nbsp;<fmt:message key='publicacio.text_numero_boib'/>           
                     <font class="ficha"><%=numeroBOCAIB%></font>&nbsp;
-                    Pàg.:
+                    <fmt:message key='publicacio.text_pagines_boib'/>
                     <font class="ficha"><%=pagina%></font>&nbsp;
-                    Línies:
-                    <font class="ficha"><%=lineas%></font>&nbsp;
-                    &nbsp;<br>&nbsp;<br>
-                    &nbsp;Texte:&nbsp;<c:set var="texto" scope="page"><%=textoPublic%></c:set>
+                    <fmt:message key='publicacio.text_linies'/>
+                    <font class="ficha"><%=lineas%></font>&nbsp;&nbsp;<br>&nbsp;<br>&nbsp;
+                    <fmt:message key='publicacio.text_texte'/>&nbsp;
+                    <c:set var="texto" scope="page"><%=textoPublic%></c:set>
                     <font class="ficha"><c:out value="${texto}"/></font>
-                    &nbsp;<br>&nbsp;<br>
-                    &nbsp;Observacions:&nbsp;<c:set var="texto" scope="page"><%=observaciones%></c:set>
+                    &nbsp;<br>&nbsp;<br>&nbsp;
+                    <fmt:message key='publicacio.text_observacions'/>&nbsp;<c:set var="texto" scope="page"><%=observaciones%></c:set>
                     <font class="ficha"><c:out value="${texto}"/></font>
                 </td>
             </tr>

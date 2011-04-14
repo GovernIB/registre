@@ -57,7 +57,6 @@ if (request.getAttribute("registroEntrada")!=null) {//Viene de error
     numeroEntrada=(request.getParameter("numero")==null) ? "": request.getParameter("numero");
     codOficina=(request.getParameter("oficina")==null) ? "" :request.getParameter("oficina");
     ano=(request.getParameter("any")==null) ? "" : request.getParameter("any");
-    javax.naming.InitialContext contexto = new javax.naming.InitialContext();
 
     RegistroEntradaFacade regent = RegistroEntradaFacadeUtil.getHome().create();
     ParametrosRegistroEntrada param = new ParametrosRegistroEntrada();
@@ -106,9 +105,7 @@ if (request.getAttribute("registroEntrada")!=null) {//Viene de error
  //   hhmm=hora.substring(0,2)+":"+hora.substring(2,4);
 }
 
-javax.naming.InitialContext contexto = new javax.naming.InitialContext();
-
-
+//javax.naming.InitialContext contexto = new javax.naming.InitialContext();
 ValoresFacade valores = ValoresFacadeUtil.getHome().create();
 
 if (entidad1.equals("") && entidad2.equals("0")) { entidad2="";}
@@ -134,14 +131,6 @@ String errorEn(Hashtable errores, String campo) {
 }
 
 void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String referencia) throws java.io.IOException {
- /*   
-    for (int i=0;i<valores.size();i=i+2){
-        String codigo=valores.get(i).toString();
-        String descripcion=valores.get(i+1).toString();
-        out.write("<option value=\""+codigo+"\" "+ (codigo.equals(referencia) ? "selected" : "")+">");
-        out.write(descripcion);
-        out.write("</option>\n");
-    }*/
     escribeSelect (out, "N", valores, referencia);
 }
 
@@ -209,8 +198,13 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
 					}
 					</c:if>
 			}
-		</script>
-        <script>
+				
+		  function isInt(x) { 
+		    	   var y=parseInt(x); 
+		    	   if (isNaN(y)) return false; 
+		    	   return x==y && x.toString()==y.toString(); 
+		   } 
+
             comentarioAnterior="<%=es.caib.regweb.webapp.servlet.HtmlGen.toJavascript(comentarioAnterior)%>";
             entidad1Anterior="<%=es.caib.regweb.webapp.servlet.HtmlGen.toJavascript(entidad1Anterior)%>";
             entidad2Anterior="<%=es.caib.regweb.webapp.servlet.HtmlGen.toJavascript(entidad2Anterior)%>";
@@ -235,18 +229,42 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
             
             
             function confirmaProceso() {
-                
             valor=document.registroForm.comentario.value;
             valor1=document.registroForm.altres.value;
             valor2=document.registroForm.fora.value;
             valor3=document.registroForm.correo.value;
             valor4=document.registroForm.disquet.value;
             valor5=document.registroForm.motivo.value;
+           
+            if(document.registroForm.numeroBOCAIB){ 
+	             numeroBOCAIB=document.registroForm.numeroBOCAIB.value;
+	             pagina=document.registroForm.pagina.value;
+	             lineas=document.registroForm.lineas.value;
+	             textoPublic=document.registroForm.textoPublic.value;
+	             observaciones=document.registroForm.observaciones.value;
+	            
 			if (valor.indexOf('¤',0)>-1 || valor1.indexOf('¤',0)>-1 || valor2.indexOf('¤',0)>-1 || valor3.indexOf('¤',0)>-1 || valor4.indexOf('¤',0)>-1 || valor5.indexOf('¤',0)>-1) {
             	alert("El símbol \"¤\" no és permès a l\'aplicació. Emprau \"euro\" o \"euros\" segons pertoqui");
             	return false;
             }
+	            if(!isInt(numeroBOCAIB) && (numeroBOCAIB != "")){
+	            	alert("El camp 'Número de BOIB' ha de ser numèric");
+	            	return false;
+	            }
+	            if(!isInt(pagina) && (pagina != "")){
+	            	alert("El camp 'pàg.' del BOIB ha de ser numèric");
+	            	return false;
+	            }
+	            if(!isInt(lineas) && (lineas != "")){
+	            	alert("El camp 'línies' del BOIB ha de ser numèric");
+	            	return false;
+	            }
             
+				if((numeroBOCAIB == "")&&((lineas != "")||(pagina != "")||(textoPublic != "")||(observaciones != ""))){
+	            	alert("El camp 'Número de BOIB' és obligatori si s'ha omplit els altres camps de 'Publicació BOIB'");
+	            	return false;
+				}
+            }
             if ( trim(entidad1Anterior)!=trim(document.registroForm.entidad1.value) || trim(entidad2Anterior)!=trim(document.registroForm.entidad2.value) ||
             		trim(altresAnterior)!=trim(document.registroForm.altres.value) || trim(comentarioAnterior)!=trim(document.registroForm.comentario.value) ) {
 	            hayCambio=true;
@@ -432,12 +450,9 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
             #destinatario_desc {background-color: #cccccc;}
             #remitente_desc {background-color: #cccccc;}
         </style>
-
     </head>
 
     <body bgcolor="#FFFFFF" onunload="cerrarVentana()" onload="cargaDatos()">
-
-        
        	<!-- Molla pa --> 
 		<ul id="mollaPa">
 		<li><a href="index.jsp"><fmt:message key='inici'/></a></li>
@@ -786,8 +801,99 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
                             </table>
                         </td>
                     </tr>
-                
+                    <c:if test="${initParam['registro.entrada.view.infoBOIB']}">
+                <%-- Si la oficina es 32 lanzamos datos para fichero de publicaciones --%>
+                    <% if (registro.getOficina().equals(application.getInitParameter("registro.oficinaBOIB"))) { 
+                   
+                    	RegistroPublicadoEntradaFacade registroPublicado = RegistroPublicadoEntradaFacadeUtil.getHome().create();
+                    	ParametrosRegistroPublicadoEntrada paramRegPubEntrada = new ParametrosRegistroPublicadoEntrada();
 
+                    	String dataPublicacion=valores.getFecha(); //Obtenim data actual
+                    	String numeroBOCAIB="";
+                    	String pagina="";
+                    	String lineas="";
+                    	String textoPublic="";
+                    	String observaciones="";
+                        
+                    	paramRegPubEntrada.setOficina(Integer.parseInt(registro.getOficina()));
+                    	paramRegPubEntrada.setNumero(Integer.parseInt(registro.getNumeroEntrada()));
+                    	paramRegPubEntrada.setAnoEntrada(Integer.parseInt(registro.getAnoEntrada()));
+                    	
+                    	paramRegPubEntrada = registroPublicado.leer(paramRegPubEntrada);
+                    	
+	                    if (paramRegPubEntrada.getLeido()) {
+	                        dataPublicacion=(paramRegPubEntrada.getFecha()==0) ? "" : paramRegPubEntrada.getFechaTexto();
+	                        numeroBOCAIB=(paramRegPubEntrada.getNumeroBOCAIB()==0) ? "" :paramRegPubEntrada.getNumeroBOCAIB()+"";
+	                        pagina=(paramRegPubEntrada.getPagina()==0) ? "" : paramRegPubEntrada.getPagina()+"";
+	                        lineas=(paramRegPubEntrada.getLineas()==0) ? "" : paramRegPubEntrada.getLineas()+"";
+	                        textoPublic=paramRegPubEntrada.getContenido().trim();
+	                        observaciones=paramRegPubEntrada.getObservaciones().trim();
+	                    }
+                    %>
+                    <tr>
+                    <td>
+                    <table width="100%">
+                    <tr id="IDpublicacion1">
+                        <td style="border:0;">
+                            &nbsp;<br><b><fmt:message key='publicacio.text_dades_publicacio'/></b>
+                        </td>
+                    </tr>
+                            <tr id="IDpublicacion2">
+                                <td style="border:0;">
+                                    &nbsp;<br>
+                                    <fmt:message key='publicacio.text_data_public'/>
+                                    <input type="text" readonly="true" name="dataPublic" id="dataPublic" size="10" maxlength="10" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(dataPublicacion)%>">&nbsp;<a href="#"><img src="imagenes/enl_calendario_hab.gif" border="0" id="lanza_calendario1"></a>
+                                    &nbsp;&nbsp;
+                                    <fmt:message key='publicacio.text_numero_boib'/>
+                                    <input type="text" size="3" maxlength="3" name="numeroBOCAIB" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(numeroBOCAIB)%>">&nbsp;
+                                    <fmt:message key='publicacio.text_pagines_boib'/>
+                                    <input type="text" size="5" maxlength="5" name="pagina" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(pagina)%>">&nbsp;
+                                    <fmt:message key='publicacio.text_linies'/>
+                                    <input type="text" size="6" maxlength="6" name="lineas" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(lineas)%>">&nbsp;
+                                </td>
+                            </tr>
+                            <tr id="IDpublicacion3">
+                                <td style="border:0;">
+                                    &nbsp;<br>
+                                    <fmt:message key='publicacio.text_texte'/>&nbsp;
+                                    <input onkeypress="return check(event)" type="text" name="textoPublic" size="80" maxlength="159" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(textoPublic)%>">
+                                </td>
+                            </tr>
+                            <tr id="IDpublicacion4">
+                                <td style="border:0;">
+                                    &nbsp;<br>
+                                    <fmt:message key='publicacio.text_observacions'/>&nbsp;
+                                    <input onkeypress="return check(event)" type="text" name="observaciones" size="50" maxlength="50" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(observaciones)%>">
+                                </td>
+                            </tr>
+                            <tr id="IDpublicacion5">
+                                <td style="border:0;">&nbsp;</td>
+                            </tr>
+                
+                            <script>
+                                Calendar.setup(
+                                {
+                                inputField  : "dataPublic",      // ID of the input field
+                                ifFormat    : "%d/%m/%Y",    // the date format
+                                button      : "lanza_calendario1"    // ID of the button
+                                }
+                                );
+                            </script>
+                            <tr>
+                                <td style="border:0">
+                                    <!-- Boton de enviar -->          
+                                    <p align="center">
+                                    <input type="submit" value="Enviar">
+                                    </P>
+                                </td>
+                            </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <% registroPublicado.remove();%>
+                    <% } %>
+                    <%-- Fin de la opcion oficina=32--%>
+				</c:if>
                 </table>
             </div>
         

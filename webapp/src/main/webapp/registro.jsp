@@ -188,80 +188,6 @@ if (!ok){
         <!-- Nueva tabla -->
        <br/>
        <br/>
-
-       <%-- substituir per incloure la pàgina "sellos.jsp" --%>  
-       <%--
-        <table align="center">
-            <tr>
-                <td align="center"> 
-                   <iframe name="pdf1" HEIGHT="87" WIDTH="63" src="imprimeSello?data=<%=registro.getDataEntrada()%>&tipo=1&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroEntrada()%>&ano=<%=registro.getAnoEntrada()%>&ES=E"></iframe> 
-                </td>
-                <td>&nbsp;&nbsp;</td>
-                <td align="center">
-                    <iframe height="87" width="63" name="pdf2" src="imprimeSello?data=<%=registro.getDataEntrada()%>&tipo=2&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroEntrada()%>&ano=<%=registro.getAnoEntrada()%>&ES=E"></iframe>
-                </td>
-                <td>&nbsp;&nbsp;</td>
-                <td align="center">
-                    <iframe height="87" width="63" name="pdf3" src="imprimeSello?data=<%=registro.getDataEntrada()%>&tipo=3&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroEntrada()%>&ano=<%=registro.getAnoEntrada()%>&ES=E"></iframe>
-                </td>
-                <td>&nbsp;&nbsp;</td>
-                <td align="center">                       
-                    <iframe height="87" width="63" name="pdf4" src="imprimeSello?data=<%=registro.getDataEntrada()%>&tipo=4&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroEntrada()%>&ano=<%=registro.getAnoEntrada()%>&ES=E"></iframe>
-                </td>
-            </tr>
-            <tr>
-                <td align="center"> 
-                    <a target="_blank" href="imprimeSello?data=<%=registro.getDataEntrada()%>&tipo=1&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroEntrada()%>&ano=<%=registro.getAnoEntrada()%>&ES=E&auto_print=si"><fmt:message key='pdf_1'/></a> 
-                </td>
-                <td>&nbsp;&nbsp;</td>
-                <td align="center">
-                    <a target="_blank" href="imprimeSello?data=<%=registro.getDataEntrada()%>&tipo=2&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroEntrada()%>&ano=<%=registro.getAnoEntrada()%>&ES=E&auto_print=si"><fmt:message key='pdf_2'/></a> 
-                </td>
-                <td>&nbsp;&nbsp;</td>
-                <td align="center">
-                    <a target="_blank" href="imprimeSello?data=<%=registro.getDataEntrada()%>&tipo=3&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroEntrada()%>&ano=<%=registro.getAnoEntrada()%>&ES=E&auto_print=si"><fmt:message key='pdf_3'/></a>
-                </td>
-                <td>&nbsp;&nbsp;</td>
-                <td align="center">                       
-                    <a target="_blank" href="imprimeSello?data=<%=registro.getDataEntrada()%>&tipo=4&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroEntrada()%>&ano=<%=registro.getAnoEntrada()%>&ES=E&auto_print=si"><fmt:message key='pdf_4'/></a>
-                </td>
-            </tr>
-            <tr>
-                <td> 
-                    <iframe name="pdf5" HEIGHT="70" WIDTH="87" src="imprimeSello?data=<%=registro.getDataEntrada()%>&tipo=5&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroEntrada()%>&ano=<%=registro.getAnoEntrada()%>&ES=E"></iframe>
-                </td>
-                <td>&nbsp;&nbsp;</td>
-                <td>
-                    <iframe height="70" width="87" name="pdf6" src="imprimeSello?data=<%=registro.getDataEntrada()%>&tipo=6&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroEntrada()%>&ano=<%=registro.getAnoEntrada()%>&ES=E"></iframe>
-                </td>
-                <td>&nbsp;&nbsp;</td>
-                <td>
-                    <iframe height="70" width="87" name="pdf7" src="imprimeSello?data=<%=registro.getDataEntrada()%>&tipo=7&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroEntrada()%>&ano=<%=registro.getAnoEntrada()%>&ES=E"></iframe>
-                </td>
-                <td>&nbsp;&nbsp;</td>
-                <td>                       
-                    <iframe height="70" width="87" name="pdf8" src="imprimeSello?data=<%=registro.getDataEntrada()%>&tipo=8&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroEntrada()%>&ano=<%=registro.getAnoEntrada()%>&ES=E"></iframe>
-                </td>
-            </tr>
-           <tr>
-                <td align="center"> 
-                    <a target="_blank" href="imprimeSello?data=<%=registro.getDataEntrada()%>&tipo=5&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroEntrada()%>&ano=<%=registro.getAnoEntrada()%>&ES=E&auto_print=si"><fmt:message key='pdf_5'/></a> 
-                </td>
-                <td>&nbsp;&nbsp;</td>
-                <td align="center">
-                     <a target="_blank" href="imprimeSello?data=<%=registro.getDataEntrada()%>&tipo=6&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroEntrada()%>&ano=<%=registro.getAnoEntrada()%>&ES=E&auto_print=si"><fmt:message key='pdf_6'/></a> 
-                </td>
-                <td>&nbsp;&nbsp;</td>
-                <td align="center">
-                     <a target="_blank" href="imprimeSello?data=<%=registro.getDataEntrada()%>&tipo=7&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroEntrada()%>&ano=<%=registro.getAnoEntrada()%>&ES=E&auto_print=si"><fmt:message key='pdf_7'/></a> 
-                </td>
-                <td>&nbsp;&nbsp;</td>
-                <td align="center">                       
-                     <a target="_blank" href="imprimeSello?data=<%=registro.getDataEntrada()%>&tipo=8&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroEntrada()%>&ano=<%=registro.getAnoEntrada()%>&ES=E&auto_print=si"><fmt:message key='pdf_8'/></a> 
-                </td>
-            </tr>
-        </table>
-         --%>
          <c:set var="data" scope="request"><%=registro.getDataEntrada()%></c:set>
          <c:set var="hora" scope="request"><%=registro.getHora()%></c:set>
          <c:set var="oficina" scope="request"><%=valores.recuperaDescripcionOficina(registro.getOficina())%></c:set>
@@ -275,12 +201,8 @@ if (!ok){
         <%
 }
 }
-
-
         %>
 		<p>&nbsp;</p>
 		<p>&nbsp;</p>
-        
-                 
     </body>
 </html>

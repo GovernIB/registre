@@ -63,10 +63,7 @@ public abstract class RegistroPublicadoEntradaFacadeEJB extends HibernateEJB {
 
 			session.flush();
 		} catch (Exception e) {
-			e.printStackTrace();
-			throw new Exception("S'ha produ\u00e4t un error select BZPUBLI",e);
-        // } catch (HibernateException he) {
-        //     throw new EJBException(he);
+			throw new Exception("S'ha produït un error select BZPUBLI",e);
         } finally {
             close(session);
         }
@@ -91,10 +88,7 @@ public abstract class RegistroPublicadoEntradaFacadeEJB extends HibernateEJB {
 
 			session.flush();
 		} catch (Exception e) {
-			e.printStackTrace();
-			throw new Exception("S'ha produ\u00e4t un error delete BZPUBLI", e);
-        // } catch (HibernateException he) {
-        //     throw new EJBException(he);
+			throw new Exception("S'ha produït un error delete BZPUBLI", e);
         } finally {
             close(session);
         }
@@ -109,6 +103,7 @@ public abstract class RegistroPublicadoEntradaFacadeEJB extends HibernateEJB {
 		Session session = getSession();
 		Query q=null;
 		try {
+			log.debug("Update de BZPUBLI. Reg:"+param.getNumero()+"/"+param.getAnoEntrada());
 			String sentenciaHql="update Publicacion set numeroBocaib=?, fechaPublicacion=?, numeroPagina=?, numeroLineas=?, contenido=?, observaciones=?" +
 			" where id.anyo=? and id.numero=? and id.oficina=?";
 			q=session.createQuery(sentenciaHql);
@@ -125,6 +120,7 @@ public abstract class RegistroPublicadoEntradaFacadeEJB extends HibernateEJB {
 			int afectados=q.executeUpdate();
 			
 			if (afectados==0) {
+				log.debug("No hay registro BZPUBLI. Lo insertamos");
 			    Publicacion pub = new Publicacion(
 			        new PublicacionId(param.getAnoEntrada(),
 			            param.getNumero(),
@@ -142,10 +138,8 @@ public abstract class RegistroPublicadoEntradaFacadeEJB extends HibernateEJB {
 			session.flush();
 			
 		} catch (Exception e) {
-			e.printStackTrace();
-			throw new Exception("S'ha produ\357t un error delete BZPUBLI", e);
-        // } catch (HibernateException he) {
-        //     throw new EJBException(he);
+			log.warn("S'ha produït un error grabar BZPUBLI.");
+			throw new Exception("S'ha produït un error grabar BZPUBLI.", e);
         } finally {
             close(session);
         }

@@ -60,12 +60,13 @@ public class ParametrosRegistroEntrada implements Serializable {
     private String idiomaExtracto=null;
     
     // Variables para la publicacion de un registro
-    private String BOIBdata="";
-    private int BOIBnumeroBOCAIB=0;
-    private int BOIBpagina=0;
-    private int BOIBlineas=0;
-    private String BOIBtexto="";
-    private String BOIBobservaciones="";
+    //private String BOIBdata="";
+    //private int BOIBnumeroBOCAIB=0;
+    //private int BOIBpagina=0;
+    //private int BOIBlineas=0;
+    //private String BOIBtexto="";
+    //private String BOIBobservaciones="";
+    private ParametrosRegistroPublicadoEntrada paramRegPubEnt = null;
 
 	public void setEntidadCastellano(String entidadCastellano) {
 		this.entidadCastellano=entidadCastellano;
@@ -75,6 +76,15 @@ public class ParametrosRegistroEntrada implements Serializable {
 		return entidadCastellano;
 	}
 
+    public void setParamRegPubEnt(ParametrosRegistroPublicadoEntrada paramRegPubEnt) {
+        this.paramRegPubEnt=paramRegPubEnt;
+    }
+    
+    public ParametrosRegistroPublicadoEntrada getParamRegPubEnt() {
+        return this.paramRegPubEnt;
+    }
+    
+/*
     public void setBOIBdata(String BOIBdata) {
         this.BOIBdata=BOIBdata;
     }
@@ -122,7 +132,7 @@ public class ParametrosRegistroEntrada implements Serializable {
     public String getBOIBobservaciones() {
         return BOIBobservaciones;
     }
-
+*/
 
       public void setregistroActualizado(boolean es_actualizado) {
 		this.registroActualizado=es_actualizado;

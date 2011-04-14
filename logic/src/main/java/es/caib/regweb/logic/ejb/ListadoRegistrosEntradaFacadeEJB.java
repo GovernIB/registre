@@ -316,14 +316,22 @@ public abstract class ListadoRegistrosEntradaFacadeEJB extends HibernateEJB {
 			}
 		    
 		    // Numero maximo de registros a devolver
-			q.setMaxResults((sizePagina*pagina)+1);
+			// Código antiguo e incorrecto
+			//q.setMaxResults((sizePagina*pagina)+1);
+			
+			q.setFirstResult(sizePagina * (pagina-1));
+			// TODO: Ver porqué setMaxResults desordena los resultados
+			//
+			//q.setMaxResults((sizePagina+1));
+			
 			rs=q.scroll(ScrollMode.SCROLL_INSENSITIVE);
 		      
-		    if (pagina>1) {
-				rs.next();
-				rs.scroll((sizePagina*(pagina-1))-1);
-			}
-			while (rs.next()) {
+		    
+			//Controlamos el número de filas devuelta usando una variable local
+			//hasta solucionar la incidencia de setMaxResults
+		    int i = 0;
+			while (rs.next() && i<=sizePagina) {
+                i++;
 				RegistroSeleccionado registro=new RegistroSeleccionado();
 				
 				registro.setAnoEntrada(String.valueOf(rs.getInteger(0)));

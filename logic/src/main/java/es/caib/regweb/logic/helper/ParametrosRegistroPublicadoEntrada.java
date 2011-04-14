@@ -6,16 +6,21 @@ import java.text.*;
 
 public class ParametrosRegistroPublicadoEntrada implements Serializable {
 	
-	private int anoEntrada;
-	private int numero;
-	private int oficina;
-	private int numeroBOCAIB;
-	private int fecha;
-	private int pagina;
-	private int lineas;
+	private int anoEntrada = 0;
+	private int numero = 0;
+	private int oficina = 0;
+	private int numeroBOCAIB = 0;
+	private int fecha = 0;
+	private int pagina = 0;
+	private int lineas = 0;
 	private String contenido;
 	private String observaciones;
-	private boolean leido;
+	private boolean leido = false;
+	private boolean errorfecha = false;
+    
+    public boolean getErrorfecha() {
+		return this.errorfecha;
+	}
 
     public boolean getLeido() {
 		return this.leido;
@@ -59,6 +64,17 @@ public class ParametrosRegistroPublicadoEntrada implements Serializable {
 
     public void setFecha(int fecha) {
 		this.fecha = fecha;
+	}
+
+    public void setFecha(String fecha){
+    	int auxfecha = 0;
+    	
+	    try{
+	    	auxfecha = es.caib.regweb.logic.helper.Helper.convierteStringFechaAIntFecha(fecha);
+	    }catch(java.text.ParseException pExc){
+	    	errorfecha = true;
+	    }
+		this.fecha = auxfecha;
 	}
 
     public int getFecha() {

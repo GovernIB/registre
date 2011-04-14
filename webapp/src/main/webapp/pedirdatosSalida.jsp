@@ -120,7 +120,7 @@
             	valor3=document.registroForm.correo.value;
             	valor4=document.registroForm.disquet.value;
             	if (valor.indexOf('¤',0)>-1 || valor1.indexOf('¤',0)>-1 || valor2.indexOf('¤',0)>-1 || valor3.indexOf('¤',0)>-1 || valor4.indexOf('¤',0)>-1) {
-            		alert("El símbol \"¤\" no és permès a l\'aplicació. Emprau \"euro\" o \"euros\" segons pertoqui");
+            		alert("<fmt:message key='pedirdatossalida.alert1'/>");
             	    return false;
                 } else {   
                     confirmandoProceso=true; 
@@ -348,19 +348,19 @@
                     <font class="errorcampo">*</font>&nbsp;<fmt:message key='registro.campos_obligatorios'/>
                 </td>
                 <td width="5%">
-                    <a href="javascript:guarda_cookie();"><img src="imagenes/grabarMacro.gif" border="0" alt="Desar Repro" title="Desar Repro"></a>
+                    <a href="javascript:guarda_cookie();"><img src="imagenes/grabarMacro.gif" border="0" alt="<fmt:message key='repro.desar'/>" title="<fmt:message key='repro.desar'/>"></a>
                 </td>
                 <td width="5%" align="center">
-                    <a href="javascript:borra_cookie();"><img src="imagenes/borrarepro.gif" border="0" alt="Esborrar Repro" title="Esborrar Repro"></a>
+                    <a href="javascript:borra_cookie();"><img src="imagenes/borrarepro.gif" border="0" alt="<fmt:message key='repro.esborrar'/>" title="<fmt:message key='repro.esborrar'/>"></a>
                 </td>
                 <td  width="5%">
-                    <a href="javascript:lee_cookie();"><img src="imagenes/repro.gif"  alt="Llegir Repro" border="0" title="Llegir Repro"></a>
+                    <a href="javascript:lee_cookie();"><img src="imagenes/repro.gif"  alt="<fmt:message key='repro.llegir'/>" border="0" title="<fmt:message key='repro.llegir'/>"></a>
                 </td>
                 <td  width="5%">
-                    <a href="<c:url value='/repro/expImpRepro.jsp?tipusCookie=RWS' />"><img src="imagenes/exportar.gif"  alt="Exportar Repro" border="0" title="Exportar Repro"></a>
+                    <a href="<c:url value='/repro/expImpRepro.jsp?tipusCookie=RWS' />"><img src="imagenes/exportar.gif"  alt="<fmt:message key='repro.exportar'/>" border="0" title="<fmt:message key='repro.exportar'/>"></a>
                 </td>
                 <td  width="5%">
-                    <a href="javascript:importar_cookie();"><img src="imagenes/importar.gif"  alt="<fmt:message key='importar_repro'/>" border="0" title="<fmt:message key='importar_repro'/>"></a>
+                    <a href="javascript:importar_cookie();"><img src="imagenes/importar.gif"  alt="<fmt:message key='repro.importar'/>" border="0" title="<fmt:message key='repro.importar'/>"></a>
                 </td>
             </tr>
         </table>
@@ -389,14 +389,14 @@
                     <tr>
                     <td style="border:0">
                         <!-- Despegable para oficinas autorizadas para el usuario -->
-                        &nbsp;<br><font class="<%= errorEn(errores,"oficina")%>"><fmt:message key='oficina'/>:</font>
+                        <font class="<%= errorEn(errores,"oficina")%>"><fmt:message key='oficina'/>:</font>
                         <select name="oficina" id="oficina" onchange="refrescaFisica()">
                    <% escribeSelect(out, "S", valores.buscarOficinas(usuario, "AS"), (registro==null)?oficinaSesion:registro.getOficina()); %>
                         </select>
                     </td>
                     <td style="border:0">
                         <!-- Despegable para oficinas autorizadas para el usuario -->
-                        &nbsp;<br><font class="<%= errorEn(errores,"oficinafisica")%>"><fmt:message key='oficina_fisica'/>:</font>
+                        <font class="<%= errorEn(errores,"oficinafisica")%>"><fmt:message key='oficina_fisica'/>:</font>
                         <select name="oficinafisica" id="oficinafisica">
                                     <%  escribeSelect2(out, "N", valores.buscarOficinasFisicas(usuario, "AS"), (registro==null)?oficinaFisicaSesion:registro.getOficinafisica(), (registro==null)?oficinaSesion:registro.getOficina()); %>
                         </select>
@@ -413,7 +413,7 @@
                 <!-- 1ª fila de la tabla -->
                 <tr>
                 <td style="border:0;" colspan="2">
-                &nbsp;<br><b><fmt:message key='dades_del_document'/></b><p>
+                <b><fmt:message key='dades_del_document'/></b><p>
                 </td>
                 </tr>
                 <!-- 2ª fila de la tabla -->  
@@ -502,7 +502,7 @@
                 <tr>
                 <td style="border:0;" colspan="2">
                     <!-- Número d'entrada -->
-                    &nbsp;<br><font class="<%=errorEn(errores,"entrada1")%>"><fmt:message key='registro.num_entrada'/></font>
+                    <font class="<%=errorEn(errores,"entrada1")%>"><fmt:message key='registro.num_entrada'/></font>
                     <input onKeyPress="return goodchars(event,'0123456789')" type=text name="entrada1" maxlength="6" size="6" value="<%=(registro==null)? "":registro.getEntrada1()%>">&nbsp;&nbsp;/&nbsp; 
                     <input onKeyPress="return goodchars(event,'0123456789')" type=text name="entrada2" maxlength="4" size="4" value="<%=(registro==null)? "":registro.getEntrada2()%>">
                 </td>
@@ -511,7 +511,7 @@
                 <tr>
                 <td style="border:0;">
                 <!-- Organismo destinatario -->
-                &nbsp;<br><font class="errorcampo">*</font><font class="<%=errorEn(errores,"remitent")%>"><fmt:message key='registro.organismo_emisor'/>..............:</font>
+                <font class="errorcampo">*</font><font class="<%=errorEn(errores,"remitent")%>"><fmt:message key='registro.organismo_emisor'/>..............:</font>
                 <input type=text name="remitent" size="4" maxlength="4" value="<%=(registro==null)? "":registro.getRemitent()%>" onblur="recuperaRemitente()">
                 <a href="javascript:abreRemitentes()">
                 <img src="imagenes/buscar.gif" align=middle alt="<fmt:message key='cercar'/>" border="0">
@@ -530,13 +530,13 @@
             <table class="bordeSalida" style="border:0">
                 <tr>
                 <td style="border:0;">
-                &nbsp;<br><b><fmt:message key='dades_de_lextracte'/></b>
+                <b><fmt:message key='dades_de_lextracte'/></b>
                 </TD>
                 </TR>
                 <tr>
                 <td style="border:0;">
                     <!-- Idioma del Extracto -->
-                    &nbsp;<br><font class="<%=errorEn(errores,"idioex")%>"><fmt:message key='registro.idioma'/></font>
+                    <font class="<%=errorEn(errores,"idioex")%>"><fmt:message key='registro.idioma'/></font>
                     <select name="idioex">
           <% String anteriorIdioex=(registro==null)? "":registro.getIdioex(); %>
                     <option value="2" <%=anteriorIdioex.equals("2") ? "selected" : "" %> > <fmt:message key='registro.idioma.catala'/>
@@ -566,7 +566,6 @@
 
                 <tr>
                 <td style="border:0;">
-                    &nbsp;<br>
                     <!-- Extracto del documento -->
                     <font class="errorcampo">*</font>
                     <font class="<%=errorEn(errores,"comentario")%>"><fmt:message key='extracte_del_document'/>:

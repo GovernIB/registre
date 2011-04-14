@@ -19,9 +19,16 @@ import org.hibernate.SessionFactory;
 import java.net.URL;
 
 import java.util.Hashtable;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
+
+import org.apache.log4j.Logger;
 
 public class Helper {
 
+	private static Logger log = Logger.getLogger(Helper.class);
 
     public static int recogerNumeroEntrada(Session session, int anyo, String idOficina, Hashtable errores) throws HibernateException {
         return recogerNumero(session, anyo, idOficina, "E", errores);
@@ -248,13 +255,23 @@ public class Helper {
         return longitud;
     }
 
+    static int convierteStringFechaAIntFecha(String strFecha) throws java.text.ParseException{
+    	int intFecha = 0;
+    	DateFormat dateF= new SimpleDateFormat("dd/MM/yyyy");
+    	DateFormat date1=new SimpleDateFormat("yyyyMMdd");
+        //Calendar cal=Calendar.getInstance();
+        Date fechaAux = null;
+        
+        fechaAux = dateF.parse(strFecha);
+    	//cal.setTime(fechaAux);
+    	intFecha=Integer.parseInt(date1.format(fechaAux));
 
+    	return intFecha;
+    }
 
 
     /* metodos hibernate */
     
-    private static Logger log = Logger.getLogger(Helper.class);
-
     private static final SessionFactory sessionFactory;
 
     static {
