@@ -13,6 +13,7 @@
         <module>ejb</module>
         <module>logic</module>
         <module>model</module>
+        <module>integrationTests</module>
     </modules>
 
     <dependencies>
@@ -29,12 +30,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <dependency>
-            <groupId>postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>8.4-702.jdbc3</version>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
 
     <build>
