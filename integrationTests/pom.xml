@@ -13,7 +13,7 @@
     <artifactId>integrationTests</artifactId>
     <packaging>pom</packaging>
     <version>1.0</version>
-    <name>Registre Web - Tests Integració</name>
+    <name>Registre Web - integration tests</name>
 
     <dependencies>
         <dependency>
@@ -63,6 +63,20 @@
                     <username>regweb</username>
                     <password>regweb</password>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>init-db</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>operation</goal>
+                        </goals>
+                        <configuration>
+                            <url>jdbc:postgresql://localhost:5433/regweb</url>
+                            <type>CLEAN_INSERT</type>
+                            <src>${project.build.testOutputDirectory}/dbunit/initialData.xml</src>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>
@@ -89,19 +103,19 @@
                         <home>${project.build.directory}/jboss3x</home>
                         <configfiles>
                             <configfile>
-                                <file>${basedir}/src/test/resources/jboss3x/login-config.xml</file>
+                                <file>${project.build.testOutputDirectory}/jboss3x/login-config.xml</file>
                                 <todir>conf</todir>
                             </configfile>
                             <configfile>
-                                <file>${basedir}/src/test/resources/jboss3x/seycon-roles.properties</file>
+                                <file>${project.build.testOutputDirectory}/jboss3x/seycon-roles.properties</file>
                                 <todir>conf</todir>
                             </configfile>
                             <configfile>
-                                <file>${basedir}/src/test/resources/jboss3x/seycon-users.properties</file>
+                                <file>${project.build.testOutputDirectory}/jboss3x/seycon-users.properties</file>
                                 <todir>conf</todir>
                             </configfile>
                             <configfile>
-                                <file>${basedir}/src/test/resources/jboss3x/regweb-ds.xml</file>
+                                <file>${project.build.testOutputDirectory}/jboss3x/regweb-ds.xml</file>
                                 <todir>deploy</todir>
                             </configfile>
                         </configfiles>
@@ -171,6 +185,18 @@
                     <source>1.5</source>
                     <target>1.5</target>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>testResources</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>

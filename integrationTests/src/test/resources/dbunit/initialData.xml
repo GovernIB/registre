@@ -1,0 +1,410 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+  <table name="BAGECOM">
+    <column>FAACAGCO</column>
+    <column>FAAFBAJA</column>
+    <column>FAADAGCO</column>
+  </table>
+  <table name="BAGRUGE">
+    <column>FABCAGGE</column>
+    <column>FABCTAGG</column>
+    <column>FABFBAJA</column>
+    <column>FABDAGGE</column>
+    <column>FABCAGSU</column>
+    <column>FABCTASU</column>
+  </table>
+  <table name="BCODPOS">
+    <column>F12CPOST</column>
+    <column>F12CAGGE</column>
+    <column>F12CTAGG</column>
+  </table>
+  <table name="BHAGECO">
+    <column>FHACAGCO</column>
+    <column>FHAFALTA</column>
+    <column>FHAFBAJA</column>
+    <column>FHADAGCO</column>
+  </table>
+  <table name="BHOFIFIS">
+    <column>FZHCAGCO</column>
+    <column>OFH_CODI</column>
+    <column>OFH_FECALT</column>
+    <column>OFH_FECBAJ</column>
+    <column>OFH_NOM</column>
+  </table>
+  <table name="BHORGAN">
+    <column>FHXCORGA</column>
+    <column>FHXFALTA</column>
+    <column>FHXFBAJA</column>
+    <column>FHXDORGR</column>
+    <column>FHXDORGT</column>
+  </table>
+  <table name="BORGANI">
+    <column>FAXCORGA</column>
+    <column>FAXCOAGR</column>
+    <column>FAXFBAJA</column>
+    <column>FAXDORGR</column>
+    <column>FAXDORGT</column>
+  </table>
+  <table name="BTIPAGR">
+    <column>FLDFBAJA</column>
+    <column>FLDCTAGG</column>
+    <column>FLDDTAGG</column>
+    <column>FLDCTAGS</column>
+    <row>
+      <value>0</value>
+      <value>1</value>
+      <value><![CDATA[COMUNIDAD AUTONOMA]]></value>
+      <value>0</value>
+    </row>
+    <row>
+      <value>0</value>
+      <value>2</value>
+      <value>PROVINCIA</value>
+      <value>1</value>
+    </row>
+    <row>
+      <value>0</value>
+      <value>5</value>
+      <value>ISLA-COMARCA</value>
+      <value>2</value>
+    </row>
+    <row>
+      <value>0</value>
+      <value>90</value>
+      <value>MUNICIPIO</value>
+      <value>5</value>
+    </row>
+    <row>
+      <value>0</value>
+      <value>99</value>
+      <value>LOCALIDAD</value>
+      <value>90</value>
+    </row>
+  </table>
+  <table name="BZAUTOR">
+    <column>FZHCAUT</column>
+    <column>FZHCAGCO</column>
+    <column>FZHCUSU</column>
+  </table>
+  <table name="BZBLOQU">
+    <column>FZNAENSA</column>
+    <column>FZNCENSA</column>
+    <column>FZNCAGCO</column>
+    <column>FZNCUSU</column>
+  </table>
+  <table name="BZCONES">
+    <column>FZDAENSA</column>
+    <column>FZDCENSA</column>
+    <column>FZDCAGCO</column>
+    <column>FZDNUMER</column>
+  </table>
+  <table name="BZDISQU">
+    <column>FZLAENSA</column>
+    <column>FZLCENSA</column>
+    <column>FZLCAGCO</column>
+    <column>FZLNDIS</column>
+  </table>
+  <table name="BZENLPD">
+    <column>FZTANOEN</column>
+    <column>FZTDATAC</column>
+    <column>FZTHORAC</column>
+    <column>FZTNUMEN</column>
+    <column>FZTCAGCO</column>
+    <column>FZTTIPAC</column>
+    <column>FZTCUSU</column>
+  </table>
+  <table name="BZENTID">
+    <column>FZGCENTI</column>
+    <column>FZGFBAJA</column>
+    <column>FZGNENTI</column>
+    <column>FZGCENT2</column>
+    <column>FZGDENTI</column>
+    <column>FZGDENT2</column>
+  </table>
+  <table name="BZENTOFF">
+    <column>OFE_CODI</column>
+    <column>FOEANOEN</column>
+    <column>FOENUMEN</column>
+    <column>FOECAGCO</column>
+  </table>
+  <table name="BZENTRA">
+    <column>FZAANOEN</column>
+    <column>FZANUMEN</column>
+    <column>FZACAGCO</column>
+    <column>FZAALOC</column>
+    <column>FZACAGGE</column>
+    <column>FZACENTI</column>
+    <column>FZACIDI</column>
+    <column>FZACORGA</column>
+    <column>FZACONEN</column>
+    <column>FZACONE2</column>
+    <column>FZACEDIE</column>
+    <column>FZAFACTU</column>
+    <column>FZAFDOCU</column>
+    <column>FZAFENTR</column>
+    <column>FZAFSIS</column>
+    <column>FZAHORA</column>
+    <column>FZAHSIS</column>
+    <column>FZACIDIO</column>
+    <column>FZAENULA</column>
+    <column>FZANDIS</column>
+    <column>FZANENTI</column>
+    <column>FZANLOC</column>
+    <column>FZAPROCE</column>
+    <column>FZAREMIT</column>
+    <column>FZACTAGG</column>
+    <column>FZACTIPE</column>
+    <column>FZACUSU</column>
+  </table>
+  <table name="BZENTRA060">
+    <column>ENT_CODIMUN</column>
+    <column>ENT_NUMREG</column>
+    <column>ENT_ANY</column>
+    <column>ENT_NUM</column>
+    <column>ENT_OFI</column>
+  </table>
+  <table name="BZIDIOM">
+    <column>FZMCIDI</column>
+    <column>FZMDIDI</column>
+    <row>
+      <value>1</value>
+      <value>Castellano</value>
+    </row>
+    <row>
+      <value>2</value>
+      <value>Catal&#225;n</value>
+    </row>
+    <row>
+      <value>3</value>
+      <value>Biling&#252;e</value>
+    </row>
+    <row>
+      <value>4</value>
+      <value>Vasco</value>
+    </row>
+    <row>
+      <value>5</value>
+      <value>Gallego</value>
+    </row>
+    <row>
+      <value>6</value>
+      <value>Bable</value>
+    </row>
+    <row>
+      <value>A</value>
+      <value>Ingles</value>
+    </row>
+    <row>
+      <value>B</value>
+      <value>Frances</value>
+    </row>
+    <row>
+      <value>C</value>
+      <value>Aleman</value>
+    </row>
+    <row>
+      <value>D</value>
+      <value>Ruso</value>
+    </row>
+    <row>
+      <value>E</value>
+      <value>Italiano</value>
+    </row>
+    <row>
+      <value>F</value>
+      <value>Portugues</value>
+    </row>
+  </table>
+  <table name="BZLIBRO">
+    <column>FZCAENSA</column>
+    <column>FZCCENSA</column>
+    <column>FZCCAGCO</column>
+    <column>FZCNUMPA</column>
+    <column>FZCFECED</column>
+  </table>
+  <table name="BZMODIF">
+    <column>FZJANOEN</column>
+    <column>FZJCENSA</column>
+    <column>FZJFMODI</column>
+    <column>FZJHMODI</column>
+    <column>FZJNUMEN</column>
+    <column>FZJCAGCO</column>
+    <column>FZJCUSMO</column>
+    <column>FZJCENTI</column>
+    <column>FZJCONEN</column>
+    <column>FZJFVISA</column>
+    <column>FZJHVISA</column>
+    <column>FZJIEXTR</column>
+    <column>FZJIREMI</column>
+    <column>FZJNENTI</column>
+    <column>FZJREMIT</column>
+    <column>FZJTEXTO</column>
+    <column>FZJCUSVI</column>
+  </table>
+  <table name="BZMODOF">
+    <column>MOF_NOM</column>
+    <column>MOF_CONTYP</column>
+    <column>MOF_DATA</column>
+  </table>
+  <table name="BZMODREB">
+    <column>MOR_NOM</column>
+    <column>MOR_CONTYP</column>
+    <column>MOR_DATA</column>
+  </table>
+  <table name="BZMOLPD">
+    <column>FZVANOEN</column>
+    <column>FZVCENSA</column>
+    <column>FZVDATAC</column>
+    <column>FZVFMODI</column>
+    <column>FZVHORAC</column>
+    <column>FZVHMODI</column>
+    <column>FZVNUMEN</column>
+    <column>FZVCAGCO</column>
+    <column>FZVTIPAC</column>
+    <column>FZVCUSU</column>
+  </table>
+  <table name="BZMUN_060">
+    <column>MUN_CODI</column>
+    <column>MUN_FECBAJ</column>
+    <column>MUN_NOM</column>
+  </table>
+  <table name="BZNCORR">
+    <column>FZPANOEN</column>
+    <column>FZPCENSA</column>
+    <column>FZPNUMEN</column>
+    <column>FZPCAGCO</column>
+    <column>FZPNCORR</column>
+  </table>
+  <table name="BZOFIFIS">
+    <column>OFF_CODI</column>
+    <column>OFF_FECBAJ</column>
+    <column>OFF_NOM</column>
+    <column>FZOCAGCO</column>
+  </table>
+  <table name="BZOFIOR">
+    <column>FZFCAGCO</column>
+    <column>FZFCORGA</column>
+  </table>
+  <table name="BZOFIRE">
+    <column>FZFCAGCO</column>
+    <column>FZFCORGA</column>
+  </table>
+  <table name="BZOFREM">
+    <column>REM_OFANY</column>
+    <column>REM_OFNUM</column>
+    <column>REM_OFOFI</column>
+    <column>REM_ENTANY</column>
+    <column>REM_SALANY</column>
+    <column>REM_CONT</column>
+    <column>REM_ENTDES</column>
+    <column>REM_ENTFEC</column>
+    <column>REM_NULFEC</column>
+    <column>REM_OFFEC</column>
+    <column>REM_ENTMTD</column>
+    <column>REM_NULMTD</column>
+    <column>REM_NULA</column>
+    <column>REM_ENTNUM</column>
+    <column>REM_SALNUM</column>
+    <column>REM_ENTOFI</column>
+    <column>REM_SALOFI</column>
+    <column>REM_ENTUSU</column>
+    <column>REM_NULUSU</column>
+  </table>
+  <table name="BZOFRENT">
+    <column>REN_ENTANY</column>
+    <column>REN_ENTNUM</column>
+    <column>REN_ENTOFI</column>
+    <column>REN_OFANY</column>
+    <column>REN_ENTDES</column>
+    <column>REN_ENTMTD</column>
+    <column>REN_OFNUM</column>
+    <column>REN_OFOFI</column>
+    <column>REN_ENTUSU</column>
+  </table>
+  <table name="BZPUBLI">
+    <column>FZEANOEN</column>
+    <column>FZENUMEN</column>
+    <column>FZECAGCO</column>
+    <column>FZECONEN</column>
+    <column>FZEFPUBL</column>
+    <column>FZENBOCA</column>
+    <column>FZENLINE</column>
+    <column>FZENPAGI</column>
+    <column>FZEOBSER</column>
+  </table>
+  <table name="BZREPRO">
+    <column>FZCNREP</column>
+    <column>FZTIREP</column>
+    <column>FZCCUSU</column>
+    <column>FZCDREP</column>
+  </table>
+  <table name="BZSALIDA">
+    <column>FZSANOEN</column>
+    <column>FZSNUMEN</column>
+    <column>FZSCAGCO</column>
+    <column>FZSALOC</column>
+    <column>FZSCAGGE</column>
+    <column>FZSCENTI</column>
+    <column>FZSCIDI</column>
+    <column>FZSCORGA</column>
+    <column>FZSCONEN</column>
+    <column>FZSCONE2</column>
+    <column>FZSREMIT</column>
+    <column>FZSPROCE</column>
+    <column>FZSCEDIE</column>
+    <column>FZSFACTU</column>
+    <column>FZSFDOCU</column>
+    <column>FZSFENTR</column>
+    <column>FZSFSIS</column>
+    <column>FZSHORA</column>
+    <column>FZSHSIS</column>
+    <column>FZSCIDIO</column>
+    <column>FZSENULA</column>
+    <column>FZSNDIS</column>
+    <column>FZSNENTI</column>
+    <column>FZSNLOC</column>
+    <column>FZSCTAGG</column>
+    <column>FZSCTIPE</column>
+    <column>FZSCUSU</column>
+  </table>
+  <table name="BZSALOFF">
+    <column>OFS_CODI</column>
+    <column>FOSANOEN</column>
+    <column>FOSNUMEN</column>
+    <column>FOSCAGCO</column>
+  </table>
+  <table name="BZSALPD">
+    <column>FZUANOEN</column>
+    <column>FZUDATAC</column>
+    <column>FZUHORAC</column>
+    <column>FZUNUMEN</column>
+    <column>FZUCAGCO</column>
+    <column>FZUTIPAC</column>
+    <column>FZUCUSU</column>
+  </table>
+  <table name="BZTDOCU">
+    <column>FZICTIPE</column>
+    <column>FZIFBAJA</column>
+    <column>FZIDTIPE</column>
+  </table>
+  <table name="BZVISAD">
+    <column>FZKANOEN</column>
+    <column>FZKCENSA</column>
+    <column>FZKFVISA</column>
+    <column>FZKHVISA</column>
+    <column>FZKNUMEN</column>
+    <column>FZKCAGCO</column>
+    <column>FZKCENTF</column>
+    <column>FZKCENTI</column>
+    <column>FZKCONEF</column>
+    <column>FZKCONEI</column>
+    <column>FZKFENTF</column>
+    <column>FZKFENTI</column>
+    <column>FZKNENTF</column>
+    <column>FZKNENTI</column>
+    <column>FZKREMIF</column>
+    <column>FZKREMII</column>
+    <column>FZKTEXTO</column>
+    <column>FZKCUSVI</column>
+  </table>
+</dataset>
