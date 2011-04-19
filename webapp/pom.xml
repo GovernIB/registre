@@ -1,122 +1,122 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>es.caib.regweb</groupId>
-  <artifactId>webapp</artifactId>
-  <packaging>war</packaging>
-  <version>1.0</version>
-  <name>Registre Web - war</name>
-
-  <parent>
-    <groupId>es.caib</groupId>
-    <artifactId>regweb</artifactId>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>es.caib.regweb</groupId>
+    <artifactId>webapp</artifactId>
+    <packaging>war</packaging>
     <version>1.0</version>
-  </parent>
+    <name>Registre Web - war</name>
 
-  <dependencies>
+    <parent>
+        <groupId>es.caib</groupId>
+        <artifactId>regweb</artifactId>
+        <version>1.0</version>
+    </parent>
 
-    <dependency>
-      <groupId>es.caib.regweb</groupId>
-      <artifactId>logic</artifactId>
-      <version>1.0</version>
-      <type>ejb</type>
-      <scope>provided</scope>
-    </dependency>
+    <dependencies>
 
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-      <version>2.4</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet.jsp</groupId>
-      <artifactId>jsp-api</artifactId>
-      <version>2.0</version>
-      <scope>provided</scope>
-    </dependency>
+        <dependency>
+            <groupId>es.caib.regweb</groupId>
+            <artifactId>logic</artifactId>
+            <version>1.0</version>
+            <type>ejb</type>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.4</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>jsp-api</artifactId>
+            <version>2.0</version>
+            <scope>provided</scope>
+        </dependency>
 
 
-    <!-- librerias a incluir en WEB-INF/lib -->
-    <dependency>
-      <groupId>com.lowagie</groupId>
-      <artifactId>itext</artifactId>
-      <version>2.1.7</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.opensymphony.quartz</groupId>
-      <artifactId>quartz-all</artifactId>
-      <version>1.6.1</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>commons-fileupload</groupId>
-      <artifactId>commons-fileupload</artifactId>
-      <version>1.0</version>
-    </dependency>
-    <dependency>
-      <groupId>taglibs</groupId>
-      <artifactId>standard</artifactId>
-      <version>1.1.2</version>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>jstl</artifactId>
-      <version>1.1.2</version>
-    </dependency>
-    <dependency>
-        <groupId>opensymphony</groupId>
-        <artifactId>sitemesh</artifactId>
-        <version>2.2.1</version>
-    </dependency>
-    <dependency>
-        <groupId>commons-lang</groupId>
-        <artifactId>commons-lang</artifactId>
-        <version>2.5</version>
-    </dependency>
+        <!-- librerias a incluir en WEB-INF/lib -->
+        <dependency>
+            <groupId>com.lowagie</groupId>
+            <artifactId>itext</artifactId>
+            <version>2.1.7</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.opensymphony.quartz</groupId>
+            <artifactId>quartz-all</artifactId>
+            <version>1.6.1</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>taglibs</groupId>
+            <artifactId>standard</artifactId>
+            <version>1.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>opensymphony</groupId>
+            <artifactId>sitemesh</artifactId>
+            <version>2.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.5</version>
+        </dependency>
 
-  </dependencies>
+    </dependencies>
 
-  <build>
-    <finalName>regweb</finalName>
+    <build>
+        <finalName>regweb</finalName>
 
-    <plugins>
+        <plugins>
 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>2.1-alpha-2</version>
-        <configuration>
-          <filters>
-            <filter>config.properties</filter>
-          </filters>
-          <webResources>
-            <resource>
-              <directory>src/main/webapp/</directory>
-              <includes>
-                <include>**/*.jsp</include>
-                <include>**/*.xml</include>
-              </includes>
-              <filtering>true</filtering>
-            </resource>
-            <resource>
-              <directory>src/personalizacion</directory>
-              <filtering>true</filtering>
-            </resource>
-          </webResources>
-          <archive>
-            <manifestEntries>
-              <Class-Path>
-                lib/model.jar
-              </Class-Path>
-            </manifestEntries>
-            <addMavenDescriptor>false</addMavenDescriptor>
-          </archive> 
-        </configuration>
-      </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.1-alpha-2</version>
+                <configuration>
+                    <filters>
+                        <filter>config.properties</filter>
+                    </filters>
+                    <webResources>
+                        <resource>
+                            <directory>src/main/webapp/</directory>
+                            <includes>
+                                <include>**/*.jsp</include>
+                                <include>**/*.xml</include>
+                            </includes>
+                            <filtering>true</filtering>
+                        </resource>
+                        <resource>
+                            <directory>src/personalizacion</directory>
+                            <filtering>true</filtering>
+                        </resource>
+                    </webResources>
+                    <archive>
+                        <manifestEntries>
+                            <Class-Path>
+                                lib/model.jar
+                            </Class-Path>
+                        </manifestEntries>
+                        <addMavenDescriptor>false</addMavenDescriptor>
+                    </archive>
+                </configuration>
+            </plugin>
 
-    </plugins>
-  </build>
-  
+        </plugins>
+    </build>
+
 </project>

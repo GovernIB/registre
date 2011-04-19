@@ -1,226 +1,226 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>es.caib.regweb</groupId>
-  <artifactId>logic</artifactId>
-  <packaging>ejb</packaging>
-  <version>1.0</version>
-  <name>Registre Web - logic</name>
-
-  <parent>
-    <groupId>es.caib</groupId>
-    <artifactId>regweb</artifactId>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>es.caib.regweb</groupId>
+    <artifactId>logic</artifactId>
+    <packaging>ejb</packaging>
     <version>1.0</version>
-  </parent>
+    <name>Registre Web - logic</name>
 
-  <dependencies>
-    <dependency>
-      <groupId>es.caib.regweb</groupId>
-      <artifactId>model</artifactId>
-      <version>1.0</version>
-      <type>jar</type>
-      <scope>compile</scope>
-    </dependency>
-    
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-      <version>2.4</version>
-      <scope>provided</scope>
-    </dependency>
-    
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-core</artifactId>
-      <version>3.3.1.GA</version>
-      <scope>compile</scope>
-      <exclusions>
-          <exclusion>
-              <groupId>javax.transaction</groupId>
-              <artifactId>jta</artifactId>
-          </exclusion>
-      </exclusions>
-    </dependency>
+    <parent>
+        <groupId>es.caib</groupId>
+        <artifactId>regweb</artifactId>
+        <version>1.0</version>
+    </parent>
 
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-annotations</artifactId>
-      <version>3.4.0.GA</version>
-      <scope>compile</scope>
-    </dependency>
+    <dependencies>
+        <dependency>
+            <groupId>es.caib.regweb</groupId>
+            <artifactId>model</artifactId>
+            <version>1.0</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
 
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-validator</artifactId>
-      <version>3.1.0.GA</version>
-      <scope>runtime</scope>
-    </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.4</version>
+            <scope>provided</scope>
+        </dependency>
 
-    <dependency>
-      <groupId>javassist</groupId>
-      <artifactId>javassist</artifactId>
-      <version>3.8.0.GA</version>
-      <scope>runtime</scope>
-    </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>3.3.1.GA</version>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.transaction</groupId>
+                    <artifactId>jta</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>1.5.6</version>
-      <scope>compile</scope>
-    </dependency>    
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-annotations</artifactId>
+            <version>3.4.0.GA</version>
+            <scope>compile</scope>
+        </dependency>
 
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-      <version>1.5.6</version>
-      <scope>runtime</scope>
-      <exclusions>
-          <exclusion>
-              <groupId>log4j</groupId>
-              <artifactId>log4j</artifactId>
-          </exclusion>
-      </exclusions>
-    </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>3.1.0.GA</version>
+            <scope>runtime</scope>
+        </dependency>
 
-    <dependency>
-      <groupId>dom4j</groupId>
-      <artifactId>dom4j</artifactId>
-      <version>1.6.1</version>
-      <scope>runtime</scope>
-      <exclusions>
-          <exclusion>
-              <groupId>xml-apis</groupId>
-              <artifactId>xml-apis</artifactId>
-          </exclusion>
-      </exclusions>
-    </dependency>
+        <dependency>
+            <groupId>javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>3.8.0.GA</version>
+            <scope>runtime</scope>
+        </dependency>
 
-  </dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.5.6</version>
+            <scope>compile</scope>
+        </dependency>
 
-  <build>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.5.6</version>
+            <scope>runtime</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
-    <finalName>logic</finalName>
+        <dependency>
+            <groupId>dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+            <version>1.6.1</version>
+            <scope>runtime</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xml-apis</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
-    <filters>
-      <filter>../config.properties</filter>
-    </filters>
+    </dependencies>
 
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-        <filtering>true</filtering>
-        <includes>
-          <include>**/*.xml</include>
-           <include>**/*.properties</include>
-        </includes>
-      </resource>
-    </resources>
+    <build>
 
-    <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>hibernate3-maven-plugin</artifactId>
-        <version>2.2</version>
-        <configuration>
-          <components>
-            <component>
-              <name>hbm2ddl</name>
-              <outputDirectory>target</outputDirectory>
-            </component>
-          </components>
-          <componentProperties>
-            <persistenceunit>Default</persistenceunit>
-            <outputfilename>schema.sql</outputfilename>
-            <drop>false</drop>
-            <create>true</create>
-            <export>false</export>
-            <format>true</format>
-            <configurationfile>target/classes/hibernate.cfg.xml</configurationfile>
-            <propertyfile>../test.properties</propertyfile>
-          </componentProperties>
-        </configuration>
-        <dependencies>
-            <dependency>
-                <groupId>postgresql</groupId>
-                <artifactId>postgresql</artifactId>
-                <version>8.4-701.jdbc3</version>
-                <scope>test</scope>
-            </dependency>
-        </dependencies>
-      </plugin>
+        <finalName>logic</finalName>
 
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>xdoclet-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>xdoclet</goal>
-            </goals>
-            <configuration>
-              <generatedSourcesDirectory>${project.build.directory}/xdoclet</generatedSourcesDirectory>
-              <tasks>
-                <property file="../config.properties"/>
-                <ejbdoclet
-                    destdir="${project.build.directory}/xdoclet"
-                    excludedtags="@version,@author"
-                    ejbspec="2.0"
-                    force="false"
-                    verbose="true">
-                    <fileset dir="${project.build.sourceDirectory}">
-                        <include name="**/*EJB.java"/>
-                    </fileset>
+        <filters>
+            <filter>../config.properties</filter>
+        </filters>
 
-                    <packageSubstitution packages="ejb" substituteWith="interfaces" />
-                    <localinterface pattern="{0}Local"/>
-                    <localhomeinterface pattern="{0}LocalHome"/>
-                    <remoteinterface pattern="{0}"/>
-                    <homeinterface pattern="{0}Home"/>
-                    <session/>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*.xml</include>
+                    <include>**/*.properties</include>
+                </includes>
+            </resource>
+        </resources>
 
-                    <utilobject cacheHomes="true" kind="physical">
-                        <packageSubstitution packages="ejb" substituteWith="util"/>
-                    </utilobject>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>hibernate3-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <components>
+                        <component>
+                            <name>hbm2ddl</name>
+                            <outputDirectory>target</outputDirectory>
+                        </component>
+                    </components>
+                    <componentProperties>
+                        <persistenceunit>Default</persistenceunit>
+                        <outputfilename>schema.sql</outputfilename>
+                        <drop>false</drop>
+                        <create>true</create>
+                        <export>false</export>
+                        <format>true</format>
+                        <configurationfile>target/classes/hibernate.cfg.xml</configurationfile>
+                        <propertyfile>../test.properties</propertyfile>
+                    </componentProperties>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>8.4-701.jdbc3</version>
+                        <scope>test</scope>
+                    </dependency>
+                </dependencies>
+            </plugin>
 
-                    <deploymentdescriptor
-                        clientjar="es_caib_regweb_logic-client.jar"
-                        xmlencoding="UTF-8"
-                        destdir="${project.build.directory}/classes/META-INF"
-                        validatexml="true"
-                        />
-                    <jboss
-                        version="3.2"
-                        xmlencoding="UTF-8"
-                        destdir="${project.build.directory}/classes/META-INF"
-                        validatexml="true"
-                        securityDomain="java:/jaas/seycon"
-                        />
-                </ejbdoclet>
-              </tasks>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>xdoclet-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>xdoclet</goal>
+                        </goals>
+                        <configuration>
+                            <generatedSourcesDirectory>${project.build.directory}/xdoclet</generatedSourcesDirectory>
+                            <tasks>
+                                <property file="../config.properties"/>
+                                <ejbdoclet
+                                        destdir="${project.build.directory}/xdoclet"
+                                        excludedtags="@version,@author"
+                                        ejbspec="2.0"
+                                        force="false"
+                                        verbose="true">
+                                    <fileset dir="${project.build.sourceDirectory}">
+                                        <include name="**/*EJB.java"/>
+                                    </fileset>
 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-ejb-plugin</artifactId>
-        <configuration>
-          <generateClient>true</generateClient>
-          <clientIncludes>
-              <clientInclude>es/caib/regweb/logic/interfaces/**/*.class</clientInclude>
-              <clientInclude>es/caib/regweb/logic/helper/**/*.class</clientInclude>
-          </clientIncludes>
-          <clientExcludes>
-              <clientExclude>es/caib/regweb/logic/helper/Base64.class</clientExclude>
-              <clientExclude>es/caib/regweb/logic/helper/Conf.class</clientExclude>
-              <clientExclude>es/caib/regweb/logic/helper/Helper.class</clientExclude>
-          </clientExcludes>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+                                    <packageSubstitution packages="ejb" substituteWith="interfaces"/>
+                                    <localinterface pattern="{0}Local"/>
+                                    <localhomeinterface pattern="{0}LocalHome"/>
+                                    <remoteinterface pattern="{0}"/>
+                                    <homeinterface pattern="{0}Home"/>
+                                    <session/>
+
+                                    <utilobject cacheHomes="true" kind="physical">
+                                        <packageSubstitution packages="ejb" substituteWith="util"/>
+                                    </utilobject>
+
+                                    <deploymentdescriptor
+                                            clientjar="es_caib_regweb_logic-client.jar"
+                                            xmlencoding="UTF-8"
+                                            destdir="${project.build.directory}/classes/META-INF"
+                                            validatexml="true"
+                                            />
+                                    <jboss
+                                            version="3.2"
+                                            xmlencoding="UTF-8"
+                                            destdir="${project.build.directory}/classes/META-INF"
+                                            validatexml="true"
+                                            securityDomain="java:/jaas/seycon"
+                                            />
+                                </ejbdoclet>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-ejb-plugin</artifactId>
+                <configuration>
+                    <generateClient>true</generateClient>
+                    <clientIncludes>
+                        <clientInclude>es/caib/regweb/logic/interfaces/**/*.class</clientInclude>
+                        <clientInclude>es/caib/regweb/logic/helper/**/*.class</clientInclude>
+                    </clientIncludes>
+                    <clientExcludes>
+                        <clientExclude>es/caib/regweb/logic/helper/Base64.class</clientExclude>
+                        <clientExclude>es/caib/regweb/logic/helper/Conf.class</clientExclude>
+                        <clientExclude>es/caib/regweb/logic/helper/Helper.class</clientExclude>
+                    </clientExcludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
