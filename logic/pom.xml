@@ -136,18 +136,10 @@
                         <create>true</create>
                         <export>false</export>
                         <format>true</format>
-                        <configurationfile>target/classes/hibernate.cfg.xml</configurationfile>
+                        <configurationfile>${project.build.outputDirectory}/hibernate.cfg.xml</configurationfile>
                         <propertyfile>../test.properties</propertyfile>
                     </componentProperties>
                 </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>postgresql</groupId>
-                        <artifactId>postgresql</artifactId>
-                        <version>8.4-701.jdbc3</version>
-                        <scope>test</scope>
-                    </dependency>
-                </dependencies>
             </plugin>
 
             <plugin>
