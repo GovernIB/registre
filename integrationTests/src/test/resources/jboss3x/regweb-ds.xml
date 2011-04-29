@@ -2,9 +2,9 @@
 <datasources>
     <local-tx-datasource>
         <jndi-name>es.caib.regweb.db</jndi-name>
-        <driver-class>org.postgresql.Driver</driver-class>
-        <connection-url>jdbc:postgresql://localhost:5433/regweb</connection-url>
-        <user-name>regweb</user-name>
-        <password>regweb</password>
+        <driver-class>${db.driver}</driver-class>
+        <connection-url>${db.url}</connection-url>
+        <user-name>${db.user}</user-name>
+        <password>${db.pass}</password>
     </local-tx-datasource>
 </datasources>
