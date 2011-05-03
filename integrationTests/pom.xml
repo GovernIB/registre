@@ -76,7 +76,7 @@
             <properties>
                 <driver.groupId>com.oracle</driver.groupId>
                 <driver.artifactId>ojdbc14</driver.artifactId>
-                <driver.version>10.2.0.4.0</driver.version>
+                <driver.version>10.2.0.5.0</driver.version>
                 <db.driver>oracle.jdbc.driver.OracleDriver</db.driver>
                 <db.url>jdbc:oracle:thin:@localhost:1521:XE</db.url>
                 <dbunit.datatypeFactory>org.dbunit.ext.oracle.Oracle10DataTypeFactory</dbunit.datatypeFactory>
