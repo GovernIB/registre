@@ -30,6 +30,18 @@
 
     <build>
         <finalName>model</finalName>
+        
+        <plugins>
+	        <plugin>
+	            <groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-jar-plugin</artifactId>
+	            <configuration>
+	                <archive>
+	                    <addMavenDescriptor>false</addMavenDescriptor>
+	                </archive>
+	            </configuration>
+	        </plugin>        
+        </plugins>
     </build>
 
 </project>

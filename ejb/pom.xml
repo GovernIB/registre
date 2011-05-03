@@ -38,6 +38,23 @@
 
     <build>
         <finalName>regweb</finalName>
+        
+        <plugins>
+	        <plugin>
+	            <groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-ejb-plugin</artifactId>
+	            <configuration>
+	                <ejbVersion>2.0</ejbVersion>
+	                <archive>
+	                    <manifest>
+	                        <addClasspath>true</addClasspath>
+	                        <classpathPrefix>lib/</classpathPrefix>
+	                    </manifest>
+	                    <addMavenDescriptor>false</addMavenDescriptor>
+	                </archive>
+	            </configuration>
+	        </plugin>
+        </plugins>
     </build>
 
 </project>

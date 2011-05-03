@@ -115,8 +115,11 @@
                     <include>**/*.properties</include>
                 </includes>
             </resource>
+            <resource>
+                <directory>${project.build.directory}/xdoclet</directory>
+            </resource>            
         </resources>
-
+        
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -179,13 +182,13 @@
                                     <deploymentdescriptor
                                             clientjar="es_caib_regweb_logic-client.jar"
                                             xmlencoding="UTF-8"
-                                            destdir="${project.build.directory}/classes/META-INF"
+                                            destdir="${project.build.directory}/xdoclet/META-INF"
                                             validatexml="true"
                                             />
                                     <jboss
                                             version="3.2"
                                             xmlencoding="UTF-8"
-                                            destdir="${project.build.directory}/classes/META-INF"
+                                            destdir="${project.build.directory}/xdoclet/META-INF"
                                             validatexml="true"
                                             securityDomain="java:/jaas/seycon"
                                             />
@@ -200,6 +203,14 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-ejb-plugin</artifactId>
                 <configuration>
+                    <ejbVersion>2.0</ejbVersion>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                        </manifest>
+                        <addMavenDescriptor>false</addMavenDescriptor>
+                    </archive>
                     <generateClient>true</generateClient>
                     <clientIncludes>
                         <clientInclude>es/caib/regweb/logic/interfaces/**/*.class</clientInclude>
