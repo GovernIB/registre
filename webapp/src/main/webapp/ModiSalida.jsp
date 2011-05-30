@@ -663,7 +663,7 @@
                             <!-- Extracto del documento -->
                             <font class="errorcampo">*</font>
                             <font class="<%=errorEn(errores,"comentario")%>"><fmt:message key='extracte_del_document'/>:
-                            <textarea cols="70" onkeypress="return check(event)" rows="3" name="comentario"><%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(comentario.trim())%></textarea>
+                            <textarea cols="70" onkeypress="return checkComentario(event)" rows="3" name="comentario"><%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(comentario.trim())%></textarea>
                         </td>
                     </tr>
                                     <tr>

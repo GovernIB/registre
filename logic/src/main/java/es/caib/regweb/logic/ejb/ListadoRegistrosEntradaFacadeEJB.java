@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
-//import org.hibernate.Query;
+
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.ScrollableResults;
@@ -97,14 +97,16 @@ public abstract class ListadoRegistrosEntradaFacadeEJB extends HibernateEJB {
          String codiDestinatari=parametros.getCodiDestinatari();
          String totalFiles=parametros.getTotalFiles();
          String codiMun060=parametros.getCodiMunicipi060();
-        
+         String numeroRegistroSalidaRelacionado=parametros.getNumeroRegistroSalidaRelacionado();
+         String anyoRegistroSalidaRelacionado=parametros.getAnyoRegistroSalidaRelacionado();
         
 		boolean validado=false;
 		errores.clear();
 		
+		
 		// Validamos que la oficina desde sea < o = a oficina Hasta
 		if (oficinaDesde==null || oficinaHasta==null || oficinaDesde.equals("") || oficinaHasta.equals("")) {
-			errores.put("1","L\u00edmits incorrectes per a oficines");
+			errores.put("1","L\u00edmits incorrectes per a oficines. Falten dates.");
 		} else {
 			int oficinaInicio=Integer.parseInt(oficinaDesde);
 			int oficinaFin=Integer.parseInt(oficinaHasta);
@@ -114,6 +116,13 @@ public abstract class ListadoRegistrosEntradaFacadeEJB extends HibernateEJB {
 		}
 		// Validamos fecha inicio
 		validarFecha(parametros, fechaDesde, fechaHasta);
+		
+		// Validamos que los datos del registro de salida vinculado al registro de entrada est�n completos
+		if ( (numeroRegistroSalidaRelacionado.equals("") && !anyoRegistroSalidaRelacionado.equals("") ) || (!numeroRegistroSalidaRelacionado.equals("") && anyoRegistroSalidaRelacionado.equals("") )){
+				errores.put("5","El codi del registre de sortida vinculat no est\u00e0 complet.");
+			}
+		
+		
 		// Hem de validar que el codi d'organisme destinatari ficat sigui correcte, ja sigui dins BORGANI com BHORGANI
 		//log.debug("Codidestinatari="+CodiDestinatari);
 		if (codiDestinatari == null)
@@ -143,7 +152,7 @@ public abstract class ListadoRegistrosEntradaFacadeEJB extends HibernateEJB {
 					//log.error("ERROR: Codi "+CodiDestinatari+" no existeix!");
 				}
 			} catch ( NumberFormatException ne){
-				errores.put("2","Codi de destinatari no num\u00e8ric"); 	
+				errores.put("6","Codi de destinatari no num\u00e8ric"); 	
 			} catch (Exception e) {
 				log.error("Error: "+e.getMessage());
 				e.printStackTrace();
@@ -189,6 +198,8 @@ public abstract class ListadoRegistrosEntradaFacadeEJB extends HibernateEJB {
         String codiDestinatari=parametros.getCodiDestinatari();
         String totalFiles=parametros.getTotalFiles();
         String codiMun060=parametros.getCodiMunicipi060();
+        String numeroRegistroSalidaRelacionado=parametros.getNumeroRegistroSalidaRelacionado();
+        String anyoRegistroSalidaRelacionado=parametros.getAnyoRegistroSalidaRelacionado();
         
 		usuario=usuario.toUpperCase();
 		Vector registrosVector=new Vector();
@@ -225,6 +236,8 @@ public abstract class ListadoRegistrosEntradaFacadeEJB extends HibernateEJB {
 			" AND ( (FHXFALTA<=FZAFENTR AND ( (FHXFBAJA>= FZAFENTR AND FHXFBAJA !=0) OR FHXFBAJA = 0) ) ) " +
 			(!destinatario.trim().equals("") ? " AND UPPER(FHXDORGT) LIKE ? " : "") +
 			(!codiDestinatari.trim().equals("") ? " AND FZACORGA = ? " : "") +
+			(!(numeroRegistroSalidaRelacionado.trim().equals("") )? " AND FZANLOC = ? " : "") +
+			(!(anyoRegistroSalidaRelacionado.trim().equals("") )? " AND FZAALOC = ? " : "") +
 			(!(codiMun060.trim().equals("000") || codiMun060.trim().equals("999")) ? " AND ENT_CODIMUN = ? " : "") +
 			" ORDER BY FZACAGCO, FZAANOEN, FZANUMEN ";
 			//log.debug(sentenciaHql);
@@ -283,6 +296,14 @@ public abstract class ListadoRegistrosEntradaFacadeEJB extends HibernateEJB {
 			
 			if (!codiDestinatari.trim().equals("")) {
 				q.setInteger(contador++,Integer.valueOf(codiDestinatari));
+			}
+			
+			if (!numeroRegistroSalidaRelacionado.trim().equals("")) {
+				q.setInteger(contador++,Integer.valueOf(numeroRegistroSalidaRelacionado));
+			}
+			
+			if (!anyoRegistroSalidaRelacionado.trim().equals("")) {
+				q.setInteger(contador++,Integer.valueOf(anyoRegistroSalidaRelacionado));
 			}
 			
 			if (!(codiMun060.trim().equals("000") || codiMun060.trim().equals("999"))) {

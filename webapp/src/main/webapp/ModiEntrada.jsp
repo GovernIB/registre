@@ -244,24 +244,19 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
 	             observaciones=document.registroForm.observaciones.value;
 	            
 			if (valor.indexOf('¤',0)>-1 || valor1.indexOf('¤',0)>-1 || valor2.indexOf('¤',0)>-1 || valor3.indexOf('¤',0)>-1 || valor4.indexOf('¤',0)>-1 || valor5.indexOf('¤',0)>-1) {
-            	alert("El símbol \"¤\" no és permès a l\'aplicació. Emprau \"euro\" o \"euros\" segons pertoqui");
+	            	alert("<fmt:message key='pedirdatos.alert1'/>");
             	return false;
             }
 	            if(!isInt(numeroBOCAIB) && (numeroBOCAIB != "")){
-	            	alert("El camp 'Número de BOIB' ha de ser numèric");
+	            	alert("<fmt:message key='modiEntrada.alert1'/>");
 	            	return false;
 	            }
 	            if(!isInt(pagina) && (pagina != "")){
-	            	alert("El camp 'pàg.' del BOIB ha de ser numèric");
+	            	alert("<fmt:message key='modiEntrada.alert2'/>");	      
 	            	return false;
 	            }
 	            if(!isInt(lineas) && (lineas != "")){
-	            	alert("El camp 'línies' del BOIB ha de ser numèric");
-	            	return false;
-	            }
-            
-				if((numeroBOCAIB == "")&&((lineas != "")||(pagina != "")||(textoPublic != "")||(observaciones != ""))){
-	            	alert("El camp 'Número de BOIB' és obligatori si s'ha omplit els altres camps de 'Publicació BOIB'");
+	            	alert("<fmt:message key='modiEntrada.alert3'/>");
 	            	return false;
 				}
             }
@@ -685,7 +680,7 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
                             String salida1=(registro==null)? "": (registro.getSalida1().equals("0")) ? "" : registro.getSalida1();
                             String salida2=(registro==null)? "": (registro.getSalida2().equals("0")) ? "" : registro.getSalida2();
                             %>
-                            &nbsp;<br><font class="<%=errorEn(errores,"salida1")%>">Num. sortida:</font>
+                            &nbsp;<br><font class="<%=errorEn(errores,"salida1")%>"><fmt:message key='registro.num_sortida'/></font>
                             <input onKeyPress="return goodchars(event,'0123456789')" type="text" name="salida1" maxlength="6" size="6" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(salida1)%>">&nbsp;&nbsp;/&nbsp; 
                             <input onKeyPress="return goodchars(event,'0123456789')" type="text" name="salida2" maxlength="4" size="4" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(salida2)%>">
                         </td>
@@ -712,7 +707,7 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
                             </td>
                             <td style="border:0" valign="middle">
                                 <!-- Despegable para AYUNTAMIENTOS DEL 060 -->
-                                &nbsp;<br><font class="<%= errorEn(errores,"mun_060")%>">Municipi:</font>
+                                &nbsp;<br><font class="<%= errorEn(errores,"mun_060")%>"><fmt:message key='registro.entidad_local'/></font>
                            <select name="mun_060" <%=(registro==null)? "disabled": retornarDisabled(registro)%>>
                                     <% 
 										String munSeleccionat = (registro==null)? "000": registro.getMunicipi060();
@@ -723,7 +718,7 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
                 </tr>
                 <tr>
                   <td style="border:0;" valign="bottom">&nbsp;</td> 	
-                  <td style="border:0;">&nbsp;<br><font class="<%= errorEn(errores,"numreg_060")%>">Núm. documents: </font>
+                  <td style="border:0;">&nbsp;<br><font class="<%= errorEn(errores,"numreg_060")%>"><fmt:message key='registro.num_registres_060'/></font>
                     <select name="numreg_060" id="numreg_060" <%=(registro==null)?"disabled=\"disabled\"":retornarDisabled(registro)%>>
                          <%
                          for(int i=1; i<99; i++){ %>
@@ -764,7 +759,7 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
                                     <!--Numero de disquete -->
                                     <font class="<%=errorEn(errores,"disquet")%>"><fmt:message key='registro.num_disquete'/> </font>
                                     <input onkeypress="return check(event)" type="text" name="disquet" size="8" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml((registro==null)? "":registro.getDisquet().trim())%>">
-                                    <a href="javascript:abreDisquete()"><img src="imagenes/buscar.gif" align="middle" alt="Darrer disquet" border="0"></a>
+                                    <a href="javascript:abreDisquete()"><img src="imagenes/buscar.gif" align="middle" alt="<fmt:message key='registro.darrer_disquet'/>" border="0"></a>
                                     <!--Numero de disquete -->
                                     &nbsp;&nbsp;
                                     <font class="<%=errorEn(errores,"correo")%>"><fmt:message key='registro.num_correo'/> </font>
@@ -785,7 +780,7 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
                                     <font class="errorcampo">*</font>
                                     <font class="<%=errorEn(errores,"comentario")%>"><fmt:message key='extracte_del_document'/>:&nbsp;<br>
                                     <div align="center">
-                                        <textarea cols="70" onkeypress="return check(event)" rows="3" name="comentario"><%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(comentario.trim())%></textarea>
+                                        <textarea cols="70" onkeypress="return checkComentario(event)" rows="3" name="comentario"><%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(comentario.trim())%></textarea>
                                     </div>
                                     </font>
                                 </td>

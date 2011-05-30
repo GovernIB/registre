@@ -364,7 +364,7 @@
                 </td>
             </tr>
         </table>
-        <table width="599" class="recuadroSalidas">
+        <table width="630" class="recuadroSalidas">
             <input type="hidden" name="serie" value="<%=intSerie%>">
             <tr>
             <td class="cellaSortides">
@@ -413,7 +413,7 @@
                 <!-- 1ª fila de la tabla -->
                 <tr>
                 <td style="border:0;" colspan="2">
-                <b><fmt:message key='dades_del_document'/></b><p>
+                <b><fmt:message key='dades_del_document'/></b><br/>
                 </td>
                 </tr>
                 <!-- 2ª fila de la tabla -->  
@@ -432,7 +432,7 @@
                     <!-- Despegable para Idiomas -->
                     <font class="<%=errorEn(errores,"idioma")%>"><fmt:message key='registro.idioma'/></font>
                     <select name="idioma" size="1">
-                <% escribeSelect(out, "N", valores.buscarIdiomas(), (registro==null)? "":registro.getIdioma()); %>
+                <% escribeSelect(out, "N", valores.buscarIdiomas(), (registro==null)? application.getInitParameter("registro.salida.idiomaDocumento"):registro.getIdioma()); %>
                     </select>
                 </td>
                 </tr>
@@ -569,14 +569,14 @@
                     <!-- Extracto del documento -->
                     <font class="errorcampo">*</font>
                     <font class="<%=errorEn(errores,"comentario")%>"><fmt:message key='extracte_del_document'/>:
-                    <textarea cols="67" onkeypress="return check(event)" rows="3" name="comentario"><%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml((registro==null) ? "" : registro.getComentario())%></textarea>
+                    <textarea cols="67" onkeypress="return checkComentario(event)" rows="3" name="comentario"><%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml((registro==null) ? "" : registro.getComentario())%></textarea>
                 </td>
                 </tr>
                 <tr>
                     <td style="border:0">
                         <!-- Boton de enviar -->          
                         <p align="center">
-                        <input type=submit value="<fmt:message key='enviar'/>">
+                        <input type="submit" value="<fmt:message key='enviar'/>">
                         </P>
                     </td>
                 </tr>

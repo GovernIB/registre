@@ -51,12 +51,11 @@ void escribeSelect2(javax.servlet.jsp.JspWriter out, String tipo, Vector valores
 %>
 
 <html>
-    <head><title><fmt:message key='registre_entrades'/></title>
-        
-        
-        <jsp:include page="/jscripts/jscalendar/calendario.jsp" />
+    <head>
+       <title><fmt:message key='registre_entrades'/></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        
+       <jsp:include page="/jscripts/jscalendar/calendario.jsp" />
+       <script language="javascript" src="jscripts/TAO.js"></script>
         <script>
         var oficinasfisicasarray = new Array();
         <% for (int ii=0; oficinasfisicas!=null && ii<oficinasfisicas.size(); ii=ii+3) { %>
@@ -134,11 +133,6 @@ void escribeSelect2(javax.servlet.jsp.JspWriter out, String tipo, Vector valores
         <%  
         	/* Un cop mostrats els errors, eliminam el llistat.*/
         	session.removeAttribute("listadoEntrada");
-        	} else {
-            if (parametros==null) {
-            } else {
-                parametros.inizializar();
-            }
         }%>
 
         <table align="center" width="70%" class="recuadroEntradas" cols="3">
@@ -264,6 +258,22 @@ void escribeSelect2(javax.servlet.jsp.JspWriter out, String tipo, Vector valores
 		<tr>
             <td style="border:0" colspan="3" height="5px"></td>
         </tr>
+        <tr>
+           <td style="border:0">
+                &nbsp;<fmt:message key='registro.num_sortida'/>......................:
+           </td>
+           <td style="border:0" colspan="2">
+              <%
+                String numeroRegistroSalidaRelacionado =(parametros==null)? "": parametros.getNumeroRegistroSalidaRelacionado();
+                String anyoRegistroSalidaRelacionado =(parametros==null)? "": parametros.getAnyoRegistroSalidaRelacionado();
+              %>
+                <input onKeyPress="return goodchars(event,'0123456789')" type="text" name="numeroRegistroSalidaRelacionado" maxlength="6" size="6" value="<%=numeroRegistroSalidaRelacionado%>">&nbsp;&nbsp;/&nbsp; 
+                <input onKeyPress="return goodchars(event,'0123456789')" type="text" name="anyoRegistroSalidaRelacionado" maxlength="4" size="4" value="<%=anyoRegistroSalidaRelacionado%>">
+           </td>
+        </tr>
+        <tr>
+            <td style="border:0" colspan="3" height="5px"></td>
+        </tr>
         
         <c:choose>
         <c:when test="${initParam['registro.entrada.view.registre012']}">
@@ -293,6 +303,7 @@ void escribeSelect2(javax.servlet.jsp.JspWriter out, String tipo, Vector valores
         </c:choose>
       
         <tr>
+            <td style="border:0">&nbsp;</td>
             <td style="border:0">
                 &nbsp;<fmt:message key='mostrar_nombre_total_registres_trobats'/>:<input type="checkbox" name="veureNombreTotalRegistres" id="veureNombreTotalRegistres" />
             </td>

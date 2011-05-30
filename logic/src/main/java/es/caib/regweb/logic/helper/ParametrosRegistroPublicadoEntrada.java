@@ -128,4 +128,13 @@ public class ParametrosRegistroPublicadoEntrada implements Serializable {
 		this.observaciones = observaciones;
 	}
 
+    public boolean estaVacio(){
+    	boolean vacio = false;
+   	
+    	if (this.numeroBOCAIB==0 && this.pagina==0 && this.contenido.trim().equals("") && this.observaciones.trim().equals("")) {
+    		vacio = true;
+        } 
+    	return vacio;
+    }
+
 }

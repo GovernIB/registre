@@ -4,6 +4,7 @@
 <%@ page pageEncoding="UTF-8"%>
 <% request.setCharacterEncoding("UTF-8"); %>
 <%
+    String origen = request.getParameter("pag_origen");
 
     if (request.getParameter("numero")!=null && !request.getParameter("numero").trim().equals("") ) {
             %>
@@ -24,6 +25,26 @@ String oficinaSel=request.getParameter("oficina");
 String oficinaFisicaSel=request.getParameter("oficinafisica");
 String anyoSel=request.getParameter("any");
 String [] parametros = {oficinaSel, oficinaFisicaSel, anyoSel};
+
+String oficinaDesde="";
+String oficinaHasta="";
+String fechaDesde="";
+String fechaHasta="";
+String veureNombreTotalRegistres="";
+
+if(origen != null && origen.equalsIgnoreCase("busqOficiosFechas")){
+    oficinaDesde=request.getParameter("oficinaDesde");
+    oficinaHasta=request.getParameter("oficinaHasta");
+    fechaDesde=request.getParameter("fechaDesde");
+    fechaHasta=request.getParameter("fechaHasta");
+    veureNombreTotalRegistres=(request.getParameter("veureNombreTotalRegistres")!=null) ? request.getParameter("veureNombreTotalRegistres") : "";
+}else{
+    oficinaDesde=request.getParameter("oficina");
+    oficinaHasta=request.getParameter("oficina");
+    fechaDesde="01/01/"+request.getParameter("any");
+    fechaHasta="31/12/"+request.getParameter("any");
+}
+
 
 session.setAttribute("listadoOficios",parametros);
 %>
@@ -93,13 +114,16 @@ session.setAttribute("listadoOficios",parametros);
 		<!-- Fi Molla pa-->
 		<p>&nbsp;</p>
 <%
-Vector registros=listado.recuperarRegistros(usuario, oficinaSel, oficinaFisicaSel, anyoSel);
+
+Vector registros= listado.recuperarRegistros(usuario, oficinaDesde, oficinaHasta, oficinaFisicaSel, fechaDesde, fechaHasta);
+
+//registros = listado.recuperarRegistros(usuario, oficinaSel, oficinaFisicaSel, anyoSel);
 
 if (registros.size()==0) { 
 /* No hi ha cap element al llistat, eliminam el llistat de la sessió.*/
         	session.removeAttribute("listadoOficios");
         	%>
-<p><p>
+<p></p>
 <center><b><fmt:message key='no_shan_trobat_registres_que_compleixin_els_criteris_seleccionats'/></b></center>
      <% } else { %>
      
@@ -116,7 +140,7 @@ if (registros.size()==0) {
 </table>
 
 
-<table width="100%" border=0>
+<table width="100%" border="0">
     <tr>
         <td align="left">
             
@@ -141,7 +165,7 @@ if (registros.size()==0) {
            <td width="10%" class="cabeceraTabla">&nbsp;&nbsp;<fmt:message key='extracte'/></td>
            <td align="left">
                <a href="javascript: buscar()"> 
-                   <img src="imagenes/buscar.gif" border=0  title="<fmt:message key='cercar_extracte'/>">
+                   <img src="imagenes/buscar.gif" border="0"  title="<fmt:message key='cercar_extracte'/>">
                </a>
            </td>
        </tr>
@@ -173,7 +197,7 @@ if (registros.size()==0) {
      
         <td>
         <a id="<%="ref"+i%>" href="fichaOficio.jsp?numero=<%=oficio %>&oficina=<%=oficina%>&any=<%=anoSalida%>">
-            <img src="imagenes/open24.gif" border=0  title="Veure document">
+            <img src="imagenes/open24.gif" border="0"  title="Veure document">
         </a>
         </td> 
         <td style="<%= (anulado) ? "color:red;" : "" %>"><%=fechaSalida%></td>

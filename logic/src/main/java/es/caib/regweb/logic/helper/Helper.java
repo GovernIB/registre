@@ -254,19 +254,36 @@ public class Helper {
         }
         return longitud;
     }
-
-    static int convierteStringFechaAIntFecha(String strFecha) throws java.text.ParseException{
-    	int intFecha = 0;
+    /**
+     * 
+     * @param strFecha
+     * @return
+     * @throws java.text.ParseException
+     */
+    static public int convierteStringFechaAIntFecha(String strFecha) throws java.text.ParseException{
     	DateFormat dateF= new SimpleDateFormat("dd/MM/yyyy");
     	DateFormat date1=new SimpleDateFormat("yyyyMMdd");
-        //Calendar cal=Calendar.getInstance();
         Date fechaAux = null;
         
+        log.debug("Fecha a convertir: "+strFecha);
         fechaAux = dateF.parse(strFecha);
-    	//cal.setTime(fechaAux);
-    	intFecha=Integer.parseInt(date1.format(fechaAux));
+        return Integer.parseInt(date1.format(fechaAux));
+    }
 
-    	return intFecha;
+    /**
+     * 
+     * @param strFecha 
+     * @return
+     * @throws java.text.ParseException
+     */
+    static public String convierteyyyymmddFechaAddmmyyyyFecha(String strFecha) throws java.text.ParseException{
+		DateFormat yyyymmdd=new SimpleDateFormat("yyyyMMdd");
+		DateFormat ddmmyyyy=new SimpleDateFormat("dd/MM/yyyy");
+		java.util.Date fechaDocumento=null;		
+		
+		log.debug("Fecha a convertir: "+strFecha);
+		fechaDocumento=yyyymmdd.parse(strFecha);
+		return ddmmyyyy.format(fechaDocumento);
     }
 
 

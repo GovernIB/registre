@@ -103,6 +103,7 @@ void escribeSelect2(javax.servlet.jsp.JspWriter out, String tipo, Vector valores
         <center><font class="titulo"><fmt:message key='consulta_oficis'/></font></center>&nbsp;<p>
    
         <form id="busquedaForm" name="busquedaForm" action="listadoOficios.jsp" method="post" onsubmit="return confirmaProceso()">
+         <input type="hidden" name="pag_origen" value="busqNumOficio">
         <table align="center" class="recuadroEntradas">
         <tr>
             <td style="border:0">
@@ -147,24 +148,10 @@ void escribeSelect2(javax.servlet.jsp.JspWriter out, String tipo, Vector valores
         </tr>
         <tr>
         <td style="border:0">
-            &nbsp;&nbsp;
-            <fmt:message key='any'/>..................:
-            &nbsp;&nbsp;
+	            &nbsp;&nbsp;<fmt:message key='oficis.num_any'/>.............:&nbsp;&nbsp;
         </td>
         <td style="border:0">
-            <input type="text" name="any" size="4" onKeyPress="return goodchars(event,'0123456789')">
-            &nbsp;&nbsp;
-        </td>
-        </tr>
-        <tr>
-        <td style="border:0">
-            &nbsp;&nbsp;
-            <fmt:message key='num_ofici'/>.........:
-            &nbsp;&nbsp;
-        </td>
-        <td style="border:0">
-            <input type="text" name="numero" size="6" onKeyPress="return goodchars(event,'0123456789')">
-            &nbsp;&nbsp;
+	            <input type="text" name="numero" size="6" onKeyPress="return goodchars(event,'0123456789')">&nbsp;&nbsp;/&nbsp;<input type="text" name="any" size="4" onKeyPress="return goodchars(event,'0123456789')">
         </td>
         </tr>
         <tr>

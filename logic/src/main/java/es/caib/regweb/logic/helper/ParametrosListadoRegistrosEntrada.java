@@ -25,13 +25,28 @@ public class ParametrosListadoRegistrosEntrada implements Serializable {
 	private boolean calcularTotalRegistres=false;
 	private String totalFiles="";
 	private String codiMun060="";
-	
+	private String numeroRegistroSalidaRelacionado="";
+	private String anyoRegistroSalidaRelacionado="";
 	
 	
 	public boolean isCalcularTotalRegistres() {
 		return calcularTotalRegistres;
 	}
 	
+	public void setNumeroRegistroSalidaRelacionado(String numeroRegistroSalidaRelacionado) {
+		this.numeroRegistroSalidaRelacionado = numeroRegistroSalidaRelacionado;
+	}
+	
+	public String getNumeroRegistroSalidaRelacionado() {
+		return numeroRegistroSalidaRelacionado;   
+	}
+	public void setAnyoRegistroSalidaRelacionado(String anyoRegistroSalidaRelacionado) {
+		this.anyoRegistroSalidaRelacionado = anyoRegistroSalidaRelacionado;
+	}
+
+	public String getAnyoRegistroSalidaRelacionado() {
+		return anyoRegistroSalidaRelacionado;   
+	}
 	
 	public void setCalcularTotalRegistres(boolean calcularTotalRegistres) {
 		this.calcularTotalRegistres = calcularTotalRegistres;

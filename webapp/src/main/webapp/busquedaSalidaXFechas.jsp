@@ -137,12 +137,8 @@ void escribeSelect2(javax.servlet.jsp.JspWriter out, String tipo, Vector valores
         <%
         	/* Un cop mostrats els errors, eliminam el llistat.*/
         	session.removeAttribute("listadoSalida");
-        	  } else {
-            if (parametros==null) {
-            } else {
-                parametros.inizializar();
             }
-        }%>
+        %>
         <table align="center" width="70%" class="recuadroSalidas" cols="3">
         <form name="busquedaForm" action="listadoSalida.jsp" method="post">
         <tr>

@@ -51,6 +51,30 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
     
     private Logger log = Logger.getLogger(this.getClass());
 
+    /**
+     * @ejb.env-entry
+     *   name="registro.entrada.view.infoBOIB"
+     *   type="java.lang.String"
+     *   value="${registro.entrada.view.infoBOIB}"
+     */
+	 String infoBOIB;
+	 
+    /**
+     * @ejb.env-entry
+     *   name="registro.oficinaBOIB"
+     *   type="java.lang.String"
+     *   value="${registro.oficinaBOIB}"
+     */
+	 String oficinaBOIB;
+		 
+    /**
+     * @ejb.env-entry
+     *   name="registro.codiOrganismeBOIB"
+     *   type="java.lang.String"
+     *   value="${registro.codiOrganismeBOIB}"
+     */
+	 String codiOrganismeBOIB;	 
+
     private DateFormat dateF= new SimpleDateFormat("dd/MM/yyyy");
     private Date fechaTest=null;
     private DateFormat horaF=new SimpleDateFormat("HH:mm");
@@ -1038,13 +1062,21 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
         boolean registroActualizado=false;
         
         //Comprobamos si hay que actualizar datos publicación BOIB
-        if(paramRegPubEnt!=null){
-        	 log.debug("PUBLI");
+        if(infoBOIB.equals("true") && oficina.equals(oficinaBOIB)){
         	RegistroPublicadoEntradaFacade regpubent = RegistroPublicadoEntradaFacadeUtil.getHome().create();
+        	if(paramRegPubEnt!=null){
+		        if(destinatari.equals(codiOrganismeBOIB)){
+		        	if(paramRegPubEnt.estaVacio()){
+		        		regpubent.borrar(paramRegPubEnt);
+		        	}else{
         	regpubent.grabar(paramRegPubEnt);
+		        	}
         }else{
-        	 log.debug("NO PUBLI");
+		        		regpubent.borrar(paramRegPubEnt);
         }
+        	}
+        }
+        
         try {
             /* Descomponemos el año de la data de entrada, FZAANOEN y preparamos campo
              FZAFENT en formato aaaammdd */

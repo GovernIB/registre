@@ -159,12 +159,10 @@ Vector registros=null;
 registros=listado.recuperar(parametros, usuario, sizePagina, pagina);
 
 if (registros.size()==0) { 
-/* No hi ha cap element al llistat, eliminam el llistat de la sessió.*/
-        	session.removeAttribute("listadoSalida");
 %>
 <p><p>
 <center><b><fmt:message key='no_shan_trobat_registres_que_compleixin_els_criteris_seleccionats'/></B></center>
-<!-- &nbsp;<br><center>[&nbsp;<a href="<%=(request.getParameter("any")==null) ? "busquedaSalidaXFechas.jsp" : "busquedaSalidasXRegistro.jsp"%>"><fmt:message key='tornar_a_seleccionar'/></a>&nbsp;]</center> -->
+&nbsp;<br><center>[&nbsp;<a href="<%=(request.getParameter("any")==null) ? "busquedaSalidaXFechas.jsp" : "busquedaSalidasXRegistro.jsp"%>"><fmt:message key='tornar_a_seleccionar'/></a>&nbsp;]</center>
      <% } else { %>
 
 <table border="0" width="95%" align="center">

@@ -58,14 +58,10 @@ public class ParametrosRegistroEntrada implements Serializable {
     private String descripcionIdiomaDocumento=null;
     private String procedenciaGeografica=null;
     private String idiomaExtracto=null;
+    private String emailRemitent = null;
+    private String origenRegistro = null;
+    private String localitzadorsDocs[] = null;
     
-    // Variables para la publicacion de un registro
-    //private String BOIBdata="";
-    //private int BOIBnumeroBOCAIB=0;
-    //private int BOIBpagina=0;
-    //private int BOIBlineas=0;
-    //private String BOIBtexto="";
-    //private String BOIBobservaciones="";
     private ParametrosRegistroPublicadoEntrada paramRegPubEnt = null;
 
 	public void setEntidadCastellano(String entidadCastellano) {
@@ -84,56 +80,6 @@ public class ParametrosRegistroEntrada implements Serializable {
         return this.paramRegPubEnt;
     }
     
-/*
-    public void setBOIBdata(String BOIBdata) {
-        this.BOIBdata=BOIBdata;
-    }
-
-    public void setBOIBnumeroBOCAIB(int BOIBnumeroBOCAIB) {
-        this.BOIBnumeroBOCAIB=BOIBnumeroBOCAIB;
-    }
-
-    public void setBOIBpagina(int BOIBpagina) {
-        this.BOIBpagina=BOIBpagina;
-    }
-
-    public void setBOIBlineas(int BOIBlineas) {
-        this.BOIBlineas=BOIBlineas;
-    }
-
-    public void setBOIBtexto(String BOIBtexto) {
-        this.BOIBtexto=BOIBtexto;
-    }
-
-    public void setBOIBobservaciones(String BOIBobservaciones) {
-        this.BOIBobservaciones=BOIBobservaciones;
-    }
-    
-    public String getBOIBdata() {
-        return BOIBdata;
-    }
-
-    public int getBOIBnumeroBOCAIB() {
-        return BOIBnumeroBOCAIB;
-    }
-
-    public int getBOIBpagina() {
-        return BOIBpagina;
-    }
-
-    public int getBOIBlineas() {
-        return BOIBlineas;
-    }
-
-    public String getBOIBtexto() {
-        return BOIBtexto;
-    }
-
-    public String getBOIBobservaciones() {
-        return BOIBobservaciones;
-    }
-*/
-
       public void setregistroActualizado(boolean es_actualizado) {
 		this.registroActualizado=es_actualizado;
 	}
@@ -539,5 +485,47 @@ public class ParametrosRegistroEntrada implements Serializable {
 
 	public void setNumeroDocumentosRegistro060(String numeroDocumentosRegistro060) {
 		this.numeroDocumentosRegistro060 = numeroDocumentosRegistro060;
+	}
+
+	/**
+	 * @return the emailRemitent
+	 */
+	public String getEmailRemitent() {
+		return emailRemitent;
+	}
+
+	/**
+	 * @param emailRemitent the emailRemitent to set
+	 */
+	public void setEmailRemitent(String emailRemitent) {
+		this.emailRemitent = emailRemitent;
+	}
+
+	/**
+	 * @return the origenRegistro
+	 */
+	public String getOrigenRegistro() {
+		return origenRegistro;
+	}
+
+	/**
+	 * @param origenRegistro the origenRegistro to set
+	 */
+	public void setOrigenRegistro(String origenRegistro) {
+		this.origenRegistro = origenRegistro;
+	}
+
+	/**
+	 * @return the localitzadorsDocs
+	 */
+	public String[] getLocalitzadorsDocs() {
+		return localitzadorsDocs;
+	}
+
+	/**
+	 * @param localitzadorsDocs the localitzadorsDocs to set
+	 */
+	public void setLocalitzadorsDocs(String[] localitzadorsDocs) {
+		this.localitzadorsDocs = localitzadorsDocs;
 	}
 }

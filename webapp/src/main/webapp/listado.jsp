@@ -26,6 +26,8 @@ String destinatarioBusqueda="";
 String codidestinatariBusqueda="";
 String cadenaEnlace="";
 String veureNombreTotalRegistres="";
+String numeroRegistroSalidaRelacionado="";
+String anyoRegistroSalidaRelacionado="";
 String codiMun060=(request.getParameter("mun_060")==null)? "000":request.getParameter("mun_060");
 
 //System.out.println("codiMun060="+codiMun060);
@@ -42,6 +44,8 @@ if (request.getParameter("any")==null) {
     destinatarioBusqueda=request.getParameter("destinatario");
     codidestinatariBusqueda=request.getParameter("codidestinatari");
     veureNombreTotalRegistres=(request.getParameter("veureNombreTotalRegistres")!=null) ? request.getParameter("veureNombreTotalRegistres") : "";
+    numeroRegistroSalidaRelacionado=request.getParameter("numeroRegistroSalidaRelacionado");
+    anyoRegistroSalidaRelacionado=request.getParameter("anyoRegistroSalidaRelacionado");
     mostrarNumReg012=(request.getParameter("mostrarNumReg012")!=null) ? true: false;
     cadenaEnlace="oficinaDesde="+oficinaDesde+"&oficinaHasta="+oficinaHasta+"&fechaDesde="+fechaDesde+"&fechaHasta="+fechaHasta+
             "&extracto="+extractoBusqueda+"&tipo="+tipoBusqueda+"&remitente="+remitenteBusqueda+"&procedencia="+procedenciaBusqueda+
@@ -75,6 +79,8 @@ parametros.setProcedencia(procedenciaBusqueda);
 parametros.setDestinatario(destinatarioBusqueda);
 parametros.setCodiDestinatari(codidestinatariBusqueda);
 parametros.setCodiMunicipi060(codiMun060);
+parametros.setNumeroRegistroSalidaRelacionado(numeroRegistroSalidaRelacionado);
+parametros.setAnyoRegistroSalidaRelacionado(anyoRegistroSalidaRelacionado);
 
 session.setAttribute("listadoEntrada",parametros);
 %>
@@ -166,12 +172,9 @@ if (!ok){
 Vector registros=listado.recuperar(parametros, usuario, sizePagina, pagina);
 
 if (registros.size()==0) { 
-/* No hi ha cap element al llistat, eliminam el llistat de la sessió.*/
-        	session.removeAttribute("listadoEntrada");
         	%>
-<br/><br/>
 <center><b><fmt:message key='no_shan_trobat_registres_que_compleixin_els_criteris_seleccionats'/></B></center>
-<!-- &nbsp;<br><center>[&nbsp;<a href="<%=(request.getParameter("any")==null) ? "busquedaEntradasXFechas.jsp" : "busquedaEntradasXRegistro.jsp"%>"><fmt:message key='tornar_a_seleccionar'/></a>&nbsp;]</center> -->
+&nbsp;<br/><center>[&nbsp;<a href="<%=(request.getParameter("any")==null) ? "busquedaEntradasXFechas.jsp" : "busquedaEntradasXRegistro.jsp"%>"><fmt:message key='tornar_a_seleccionar'/></a>&nbsp;]</center>
      <% } else { %>
      
 <table border="0" width="95%" align="center">

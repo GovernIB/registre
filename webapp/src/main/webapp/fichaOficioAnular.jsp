@@ -48,4 +48,5 @@ String anyoSel=parametros[2];
                 <jsp:param name="oficina" value="<%=oficinaSel%>"/>
                 <jsp:param name="oficinafisica" value="<%=oficinaFisicaSel%>"/>
                 <jsp:param name="any" value="<%=anyoSel%>"/>
+                <jsp:param name="origen" value="fichaOficioAnular.jsp"/>
             </jsp:forward>

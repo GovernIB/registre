@@ -1,29 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
-
+<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
   <description>Registro WEB</description>
-
   <context-param>
-     <description><![CDATA[]]></description>
+  <param-name>admin.view.traspasos</param-name>
+  <param-value>${admin.view.traspasos}</param-value>
+ </context-param>
+ <context-param>
      <param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
      <param-value>messages</param-value>
   </context-param>
   <context-param>
-     <param-name>registro.oficinaBOIB</param-name>
-     <param-value>${registro.oficinaBOIB}</param-value>
+  <param-name>oficios.config.entidad</param-name>
+  <param-value>${oficios.config.entidad}</param-value>
   </context-param>
   <context-param>
-     <param-name>admin.view.traspasos</param-name>
-     <param-value>${admin.view.traspasos}</param-value>
+  <param-name>oficios.config.idioma</param-name>
+  <param-value>${oficios.config.idioma}</param-value>
+ </context-param>
+ <context-param>
+  <param-name>oficios.config.tipo_documento</param-name>
+  <param-value>${oficios.config.tipo_documento}</param-value>
   </context-param>
   <context-param>
      <param-name>registro.entrada.view.infoBOIB</param-name>
      <param-value>${registro.entrada.view.infoBOIB}</param-value>
   </context-param>
     <context-param>
-     <param-name>registro.sello.color</param-name>
-     <param-value>${registro.sello.color}</param-value>
+  <param-name>registro.entrada.idiomaDocumento</param-name>
+  <param-value>${registro.entrada.idiomaDocumento}</param-value>
+ </context-param>
+ <context-param>
+  <param-name>registro.entrada.integracionIBKEYActiva</param-name>
+  <param-value>${registro.entrada.integracionIBKEYActiva}</param-value>
   </context-param>
   <context-param>
      <param-name>registro.entrada.view.preregistre</param-name>
@@ -38,22 +47,21 @@
      <param-value>${registro.entrada.view.registre012}</param-value>
   </context-param>
   <context-param>
-     <param-name>oficios.config.tipo_documento</param-name>
-     <param-value>${oficios.config.tipo_documento}</param-value>
+  <param-name>registro.oficinaBOIB</param-name>
+  <param-value>${registro.oficinaBOIB}</param-value>
   </context-param>
   <context-param>
-     <param-name>oficios.config.idioma</param-name>
-     <param-value>${oficios.config.idioma}</param-value>
+  <param-name>registro.salida.idiomaDocumento</param-name>
+  <param-value>${registro.salida.idiomaDocumento}</param-value>
   </context-param>
   <context-param>
-     <param-name>oficios.config.entidad</param-name>
-     <param-value>${oficios.config.entidad}</param-value>
+  <param-name>registro.sello.color</param-name>
+  <param-value>${registro.sello.color}</param-value>
   </context-param>
     <context-param>
      <param-name>registro.solicituds.estat</param-name>
      <param-value>${registro.solicituds.estat}</param-value>
   </context-param>
-
   <filter>
       <filter-name>sitemesh</filter-name>
       <filter-class>com.opensymphony.module.sitemesh.filter.PageFilter</filter-class>
@@ -62,54 +70,46 @@
       <filter-name>sitemesh</filter-name>
       <url-pattern>/*</url-pattern>
   </filter-mapping>
-
   <servlet>
     <servlet-name>ControllerAdmin</servlet-name>
     <servlet-class>es.caib.regweb.webapp.servlet.admin.ControllerAdminServlet</servlet-class>
   </servlet>
-    
   <servlet>
     <servlet-name>Controller</servlet-name>
     <servlet-class>es.caib.regweb.webapp.servlet.ControllerServlet</servlet-class>
   </servlet>
-    
   <servlet>
     <servlet-name>ControllerPopup</servlet-name>
     <servlet-class>es.caib.regweb.webapp.servlet.ControllerPopupServlet</servlet-class>
   </servlet>
-    
-
   <servlet>
     <servlet-name>PujaFitxerTraspas</servlet-name>
     <servlet-class>es.caib.regweb.webapp.servlet.PujaFitxerTraspasServlet</servlet-class>
   </servlet>
-    
   <servlet>
     <servlet-name>UtilAdmin</servlet-name>
     <servlet-class>es.caib.regweb.webapp.servlet.UtilAdminServlet</servlet-class>
   </servlet>
-  
   <servlet>
     <display-name>Quartz Initializer Servlet</display-name>
   	<servlet-name>QuartzInitializer</servlet-name>
 	<servlet-class>org.quartz.ee.servlet.QuartzInitializerServlet</servlet-class>
 	<load-on-startup>1</load-on-startup>
   </servlet>
-  
   <servlet>
     <display-name>Quartz Servlet</display-name>
     <servlet-name>QuartzServlet</servlet-name>
 	<servlet-class>es.caib.regweb.webapp.servlet.QuartzServlet</servlet-class>
-	<init-param><param-name>cronExpr</param-name> 
+  <init-param>
+   <param-name>cronExpr</param-name>
 	<!-- Feim que s'executi cada vespre a les 4:30, després del backup online 
 		 de l'AS400. I només de dilluns a divendres.
 		 Es important que hagi acabat abans de les 7:30 que el dissabte comença
 		 la còpia de seguretat off-line -->
-	<param-value>0 30 4 ? * MON-SAT</param-value></init-param>
-	<!-- cada minut <param-value>0 * * * * ?</param-value></init-param> -->
+   <param-value>0 30 4 ? * MON-SAT</param-value>
+  </init-param>
 	<load-on-startup>2</load-on-startup>
   </servlet>
-  
   <servlet>
     <servlet-name>RecuperaDescripcionDestinatario</servlet-name>
     <servlet-class>es.caib.regweb.webapp.servlet.RecuperaDescripcionDestinatarioServlet</servlet-class>
@@ -146,42 +146,34 @@
     <servlet-name>DesbloqueaSession</servlet-name>
     <servlet-class>es.caib.regweb.webapp.servlet.DesbloqueaSessionServlet</servlet-class>
   </servlet>
- 
   <servlet-mapping>
     <servlet-name>ControllerAdmin</servlet-name>
     <url-pattern>/admin/controller.do</url-pattern>
   </servlet-mapping>
-  
   <servlet-mapping>
     <servlet-name>ControllerAdmin</servlet-name>
     <url-pattern>/admin/popup.do</url-pattern>
   </servlet-mapping>
-  
   <servlet-mapping>
     <servlet-name>Controller</servlet-name>
     <url-pattern>/controller.do</url-pattern>
   </servlet-mapping>
-  
   <servlet-mapping>
     <servlet-name>ControllerPopup</servlet-name>
     <url-pattern>/popup.do</url-pattern>
   </servlet-mapping>
-  
   <servlet-mapping>
     <servlet-name>Controller</servlet-name>
     <url-pattern>/index.jsp</url-pattern>
   </servlet-mapping>
-  
   <servlet-mapping>
     <servlet-name>UtilAdmin</servlet-name>
     <url-pattern>/UtilAdmin</url-pattern>
   </servlet-mapping>
-
   <servlet-mapping>
     <servlet-name>PujaFitxerTraspas</servlet-name>
     <url-pattern>/PujaFitxerTraspas</url-pattern>
   </servlet-mapping>
-
   <servlet-mapping>
     <servlet-name>RecuperaDescripcionRemitente</servlet-name>
     <url-pattern>/RecuperaDescripcionRemitente</url-pattern>
@@ -194,7 +186,6 @@
     <servlet-name>PdfServlet</servlet-name>
     <url-pattern>/imprimeSello</url-pattern>
   </servlet-mapping>
-
   <servlet-mapping>
     <servlet-name>ReciboServlet</servlet-name>
     <url-pattern>/imprimeixRebut</url-pattern>
@@ -219,28 +210,22 @@
   <servlet-name>DesbloqueaSession</servlet-name>
     <url-pattern>/DesbloqueaSession</url-pattern>
   </servlet-mapping>
-
   <welcome-file-list>
     <welcome-file>${webapp.welcomeFile}</welcome-file>
   </welcome-file-list>
-
   <error-page>
       <error-code>403</error-code>
       <location>/errors/noAutoritzat.jsp</location>
   </error-page>
-
  <!-- 	<error-page>
 		<error-code>404</error-code>
 		<location>error404.html</location>
-	</error-page>-->
-
-	<!-- <error-page>
+	</error-page>
+ <error-page>
 		<error-code>401</error-code>
 		<location>/error401.html</location>
-	</error-page> -->
-	
-    
-<!--     <taglib>
+	</error-page> 
+     <taglib>
        <taglib-uri>taglibs-request-1.0</taglib-uri>
        <taglib-location>/WEB-INF/tlds/request.tld</taglib-location>
     </taglib>
@@ -252,8 +237,6 @@
        <taglib-uri>jstl-c-rt</taglib-uri>
        <taglib-location>/WEB-INF/tlds/c-rt.tld</taglib-location>
     </taglib> -->
-
-   
   <security-constraint>
         <display-name>REGWEB</display-name>
         <web-resource-collection>
@@ -265,7 +248,6 @@
             <role-name>RWE_USUARI</role-name>
         </auth-constraint>
   </security-constraint>
-
   <security-constraint>
         <display-name>REGWEB</display-name>
         <web-resource-collection>
@@ -277,7 +259,6 @@
             <role-name>RWE_LOPD</role-name>
         </auth-constraint>
   </security-constraint>
-
   <security-constraint>
         <display-name>REGWEB</display-name>
         <web-resource-collection>
@@ -289,13 +270,10 @@
             <role-name>RWE_ADMIN</role-name>
         </auth-constraint>
   </security-constraint>
-
-    
   <login-config>
     <auth-method>BASIC</auth-method>
     <realm-name>Govern de les Illes Balears</realm-name>
   </login-config>
-  
   <security-role>
     <role-name>RWE_USUARI</role-name>
   </security-role>
@@ -305,34 +283,28 @@
   <security-role>
     <role-name>RWE_ADMIN</role-name>
   </security-role>
-  
     <env-entry>
-        <description />
             <env-entry-name>BDP.url</env-entry-name>
-            <env-entry-type>java.lang.String</env-entry-type>
             <!-- Direccion absoluta -->
+  <env-entry-type>java.lang.String</env-entry-type>
             <env-entry-value>${webapp.bdp.url}</env-entry-value>
     </env-entry>
     <env-entry>
-        <description />
             <env-entry-name>BDP.forward</env-entry-name>
-            <env-entry-type>java.lang.String</env-entry-type>
             <!-- Direccion absoluta -->
+  <env-entry-type>java.lang.String</env-entry-type>
             <env-entry-value>${webapp.bdp.forward}</env-entry-value>
     </env-entry>
     <env-entry>
-        <description />
             <env-entry-name>Repros.max</env-entry-name>
-            <env-entry-type>java.lang.Integer</env-entry-type>
             <!-- Nombre màxim de Repros d'entrada i sortida per usuari -->
+  <env-entry-type>java.lang.Integer</env-entry-type>
             <env-entry-value>${registro.repros.max}</env-entry-value>
     </env-entry>
     <env-entry>
-        <description />
             <env-entry-name>registro.registros.oficio.max</env-entry-name>
-            <env-entry-type>java.lang.String</env-entry-type>
             <!-- Nombre màxim de registres que pot contenir un ofici de remisió -->
+  <env-entry-type>java.lang.String</env-entry-type>
             <env-entry-value>${registro.registros.oficio.max}</env-entry-value>
     </env-entry>
-	
 </web-app>

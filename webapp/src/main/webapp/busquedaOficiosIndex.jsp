@@ -36,6 +36,7 @@
             	<ul style="margin-right: 5px">
 					<!-- li><a href="busquedaEntradasXFechas.jsp"><font class="menu"><fmt:message key='per_oficines_i_dates'/></font></a></li -->
                 	<li><a href="busquedaOficiosXOficio.jsp"><font class="menu"><fmt:message key='num_ofici_any'/></font></a></li>
+                	<li><a href="busquedaOficiosXFechas.jsp"><font class="menu"><fmt:message key='ofici.per_oficines_dates'/></font></a></li>
             	</ul>
             	</div>
             	</td>

@@ -97,11 +97,10 @@ if (motivo.equals("")) {
 
 //Comprobamos si es una oficina relacionada con el BOIB 
 if (application.getInitParameter("registro.entrada.view.infoBOIB").equalsIgnoreCase("true") && registro.getOficina().equals(application.getInitParameter("registro.oficinaBOIB"))) {
-	String numeroBOCAIB=(request.getParameter("numeroBOCAIB")==null) ? "0" : (request.getParameter("numeroBOCAIB").trim().equals("")) ? "0" : request.getParameter("numeroBOCAIB");
-    // Comprobamos si se ha recibido el número de BOCAIB
-    if(!numeroBOCAIB.equals("0")){
+
     	ParametrosRegistroPublicadoEntrada paramRegPubEnt = new ParametrosRegistroPublicadoEntrada();
 
+   	String numeroBOCAIB=(request.getParameter("numeroBOCAIB")==null) ? "0" : (request.getParameter("numeroBOCAIB").trim().equals("")) ? "0" : request.getParameter("numeroBOCAIB");
         String dataPublic=(request.getParameter("dataPublic")==null) ? "0" : (request.getParameter("dataPublic").trim().equals("")) ? "0" : request.getParameter("dataPublic");
         String pagina=(request.getParameter("pagina")==null) ? "0" : (request.getParameter("pagina").trim().equals("")) ? "0" : request.getParameter("pagina");
         String lineas=(request.getParameter("lineas")==null) ? "0" : (request.getParameter("lineas").trim().equals("")) ? "0" : request.getParameter("lineas");
@@ -122,7 +121,7 @@ if (application.getInitParameter("registro.entrada.view.infoBOIB").equalsIgnoreC
         }catch(Exception ex){
         	log.error("Parámetro de publicación del BOIB erróneo.",ex);
         }
-    }
+ 
 }
 
 registro = regent.validar(registro);
@@ -195,7 +194,7 @@ if (!ok){
             </tr>
             <tr><td style="border:0">&nbsp;</td></tr>
         </table>
-		&nbsp;</br>
+		&nbsp;<br/>
         <c:set var="data" scope="request"><%=registro.getDataEntrada()%></c:set>
         <c:set var="hora" scope="request"><%=registro.getHora()%></c:set>
         <c:set var="oficina" scope="request"><%=valores.recuperaDescripcionOficina(registro.getOficina())%></c:set>

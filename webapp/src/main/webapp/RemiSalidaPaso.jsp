@@ -399,7 +399,7 @@
                         <select name="tiposel" size="1" style="width: 250px" disabled>
                             <% escribeSelect(out, "N", valores.buscarDocumentos(), application.getInitParameter("oficios.config.tipo_documento")); %>
                         </select>
-                        <input type="hidden" name="tipo" value="${initParam['oficios.config.tipo_documento']}}"/>
+                        <input type="hidden" name="tipo" value="${initParam['oficios.config.tipo_documento']}"/>
                         <!-- Despegable para Idiomas -->
                         <font class="<%=errorEn(errores,"idioma")%>"><fmt:message key='registro.idioma'/></font>
                         <select name="idiomasel" size="1" disabled>

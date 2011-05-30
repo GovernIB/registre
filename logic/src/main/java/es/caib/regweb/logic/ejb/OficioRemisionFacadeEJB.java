@@ -41,8 +41,7 @@ public abstract class OficioRemisionFacadeEJB extends HibernateEJB {
 
     private DateFormat dateF= new SimpleDateFormat("dd/MM/yyyy");
     private Date fechaTest=null;
-    //private DateFormat horaF=new SimpleDateFormat("HH:mm");
-   // private Date horaTest=null;
+
 
     private String SENTENCIA_UPDATE="update OficioRemision " +
     		"set fechaOficio=?, contenido=?, anyoSalida=?, oficinaSalida=?, numeroSalida=?, nula=?, motivosNula=?, usuarioNula=?, fechaNula=?, "+
@@ -164,41 +163,12 @@ public abstract class OficioRemisionFacadeEJB extends HibernateEJB {
         
         boolean registroActualizado=false;
         try {
-
-            /* Recuperamos la fecha y la hora del sistema, fzafsis(aaaammdd) y fzahsis (hhMMssmm) */
-            Date fechaSystem=new Date();
-            //DateFormat aaaammdd=new SimpleDateFormat("yyyyMMdd");
-            //int fzafsis=Integer.parseInt(aaaammdd.format(fechaSystem));
-            
-            //DateFormat hhmmss=new SimpleDateFormat("HHmmss");
-            DateFormat sss=new SimpleDateFormat("S");
-            String ss=sss.format(fechaSystem);
-            if (ss.length()>2) {
-                ss=ss.substring(0,2);
-            }
-            //int fzahsis=Integer.parseInt(hhmmss.format(fechaSystem)+ss);
-            
             /* Ejecutamos sentencias SQL */
             q=session.createQuery(SENTENCIA_UPDATE);
 
-            if(parametros.getFechaOficio()!=null && !parametros.getFechaOficio().equals("")) {
-            	if (parametros.getFechaOficio().matches("\\d{8}")) {
-                  	q.setInteger(0,Integer.parseInt(parametros.getFechaOficio()));   
-            	} else {
-            		int fzafent = 0;
-            	
             		try{
-            			fechaTest = dateF.parse(parametros.getFechaOficio());
-            			Calendar cal=Calendar.getInstance();
-            			cal.setTime(fechaTest);
-            			DateFormat date1=new SimpleDateFormat("yyyyMMdd");
-                                  
-            			fzafent=Integer.parseInt(date1.format(fechaTest));
-            		} catch (Exception e) {}
-            		
-            		q.setInteger(0,fzafent);   
-            	}
-            } else {
+            	q.setInteger(0, Helper.convierteStringFechaAIntFecha(parametros.getFechaOficio()));
+            }catch( Exception ex){
             	q.setInteger(0, 0);	
             }
             q.setString(1, parametros.getDescripcion());
@@ -208,36 +178,15 @@ public abstract class OficioRemisionFacadeEJB extends HibernateEJB {
             q.setString(5,parametros.getNulo());
             q.setString(6,parametros.getMotivosNulo());
             q.setString(7,parametros.getUsuarioNulo());
-            if(parametros.getFechaNulo()!=null && !parametros.getFechaNulo().equals("")) {
-        		int fzafent = 0;
             	
         		try{
-                	fechaTest = dateF.parse(parametros.getFechaNulo());
-                    Calendar cal=Calendar.getInstance();
-                    cal.setTime(fechaTest);
-                    DateFormat date1=new SimpleDateFormat("yyyyMMdd");
-                                      
-                    fzafent=Integer.parseInt(date1.format(fechaTest));
-        		} catch (Exception e) {}
-        		
-              	q.setInteger(8,fzafent);            	
-            } else {
+            	q.setInteger(8, Helper.convierteStringFechaAIntFecha(parametros.getFechaNulo()));
+            }catch( Exception ex){
             	q.setInteger(8, 0);	
             }
-            if(parametros.getFechaEntrada()!=null && !parametros.getFechaEntrada().equals("")) {
-        		int fzafent = 0;
-            	
         		try{
-                	fechaTest = dateF.parse(parametros.getFechaEntrada());
-                    Calendar cal=Calendar.getInstance();
-                    cal.setTime(fechaTest);
-                    DateFormat date1=new SimpleDateFormat("yyyyMMdd");
-                                      
-                    fzafent=Integer.parseInt(date1.format(fechaTest));
-        		} catch (Exception e) {}
-        		
-              	q.setInteger(9,fzafent);            	
-            } else {
+            	q.setInteger(9, Helper.convierteStringFechaAIntFecha(parametros.getFechaEntrada()));
+            }catch( Exception ex){
             	q.setInteger(9, 0);	
             }
             q.setString(10,parametros.getDescartadoEntrada());
@@ -250,7 +199,6 @@ public abstract class OficioRemisionFacadeEJB extends HibernateEJB {
             q.setInteger(17,parametros.getOficinaOficio()!=null?Integer.parseInt(parametros.getOficinaOficio()):0);
             q.setInteger(18,parametros.getNumeroOficio()!=null?Integer.parseInt(parametros.getNumeroOficio()):0);
             
-            
             int afectados=q.executeUpdate();
             if (afectados>0){
                 registroActualizado=true;
@@ -258,7 +206,6 @@ public abstract class OficioRemisionFacadeEJB extends HibernateEJB {
                 registroActualizado=false;
             }
 
-            
     		session.flush();
         } catch (HibernateException he) {
             throw new EJBException(he);
@@ -271,7 +218,7 @@ public abstract class OficioRemisionFacadeEJB extends HibernateEJB {
     }
     
     /**
-     * Actualitza el registre d'entrada
+     * Anul·la el registre d'entrada
      * @throws ClassNotFoundException
      * @throws Exception
      * @ejb.interface-method
@@ -286,7 +233,10 @@ public abstract class OficioRemisionFacadeEJB extends HibernateEJB {
         try {
 
             /* Ejecutamos sentencias SQL */
-		    String sentencia_delete="delete from OficioRemision " +
+		   // String sentencia_delete="delete from OficioRemision " +
+    		//	" where id.anyoOficio=? and id.oficinaOficio=? and id.numeroOficio=?";
+ 		   String sentencia_delete="Update OficioRemision " +
+ 		                           "set nula = 'S'" +
     			" where id.anyoOficio=? and id.oficinaOficio=? and id.numeroOficio=?";
     			
             q=session.createQuery(sentencia_delete);
@@ -313,25 +263,6 @@ public abstract class OficioRemisionFacadeEJB extends HibernateEJB {
     }
 
     
-    
-    /**
-     * Valida la data donada
-     * @param fecha
-     */
- /*   private boolean validarFecha(String fecha) {
-        boolean error=false;
-        try {
-            dateF.setLenient(false);
-            fechaTest = dateF.parse(fecha);
-            error=false;
-        } catch (Exception ex) {
-        	log.error("Error validant la data:"+ex.getMessage());
-        	ex.printStackTrace();
-            error=true;
-        }
-        return !error;
-    }
-  */  
     /** 
      * Lee un registro del fichero BZENTRA, para ello le
      * deberemos pasar el usuario, el codigo de oficina, el numero de registro de
