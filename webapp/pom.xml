@@ -4,13 +4,12 @@
     <groupId>es.caib.regweb</groupId>
     <artifactId>webapp</artifactId>
     <packaging>war</packaging>
-    <version>1.0</version>
     <name>Registre Web - war</name>
 
     <parent>
         <groupId>es.caib</groupId>
         <artifactId>regweb</artifactId>
-        <version>1.0</version>
+        <version>1.0.1-SNAPSHOT</version>
     </parent>
 
     <dependencies>

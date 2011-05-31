@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>es.caib</groupId>
-    <version>1.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <artifactId>regweb</artifactId>
     <packaging>pom</packaging>
     <name>Registre Web</name>
@@ -32,6 +32,10 @@
 
     </dependencies>
 
+    <scm>
+        <developerConnection>scm:svn:https://registre.svn.sourceforge.net/svnroot/registre/registre-core/trunk</developerConnection>
+    </scm>
+    
     <build>
         <pluginManagement>
             <plugins>
@@ -66,6 +70,17 @@
 
             </plugins>
         </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.1</version>
+                <configuration>
+                    <tagBase>https://registre.svn.sourceforge.net/svnroot/registre/registre-core/tags</tagBase>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 
 </project>

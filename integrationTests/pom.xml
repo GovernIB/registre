@@ -5,14 +5,13 @@
     <parent>
         <groupId>es.caib</groupId>
         <artifactId>regweb</artifactId>
-        <version>1.0</version>
+        <version>1.0.1-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>es.caib.regweb</groupId>
     <artifactId>integrationTests</artifactId>
     <packaging>pom</packaging>
-    <version>1.0</version>
     <name>Registre Web - integration tests</name>
 
     <dependencies>
