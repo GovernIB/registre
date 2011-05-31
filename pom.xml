@@ -78,6 +78,7 @@
                 <version>2.1</version>
                 <configuration>
                     <tagBase>https://registre.svn.sourceforge.net/svnroot/registre/registre-core/tags</tagBase>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
                 </configuration>
             </plugin>
         </plugins>
