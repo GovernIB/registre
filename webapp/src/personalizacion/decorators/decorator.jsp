@@ -33,6 +33,7 @@
 
     <div style="position: relative;bottom:-1em; 0;width: 100%"> 
     	<div id="peu">
+        <div style="float:right;">${initParam['registro.version']}</div>
       	<a href="http://dgtic.caib.es/difusioad/00index.html" title="<fmt:message key='enllac_ad'/>"><img border="0" id="logoAD" src="<c:url value='/imagenes/peu/logo_ad.gif'/>" alt="<fmt:message key='logo_ad'/>" /></a>
         	<fmt:message key="copyright"/>
     	</div>

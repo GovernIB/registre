@@ -62,6 +62,10 @@
      <param-name>registro.solicituds.estat</param-name>
      <param-value>${registro.solicituds.estat}</param-value>
   </context-param>
+  <context-param>
+      <param-name>registro.version</param-name>
+      <param-value>${project.version}</param-value>
+  </context-param>
   <filter>
       <filter-name>sitemesh</filter-name>
       <filter-class>com.opensymphony.module.sitemesh.filter.PageFilter</filter-class>
