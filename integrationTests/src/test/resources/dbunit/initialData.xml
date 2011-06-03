@@ -121,12 +121,6 @@
     <column>FZGDENTI</column>
     <column>FZGDENT2</column>
   </table>
-  <table name="BZENTOFF">
-    <column>OFE_CODI</column>
-    <column>FOEANOEN</column>
-    <column>FOENUMEN</column>
-    <column>FOECAGCO</column>
-  </table>
   <table name="BZENTRA">
     <column>FZAANOEN</column>
     <column>FZANUMEN</column>
@@ -155,6 +149,12 @@
     <column>FZACTAGG</column>
     <column>FZACTIPE</column>
     <column>FZACUSU</column>
+  </table>
+  <table name="BZENTOFF">
+    <column>OFE_CODI</column>
+    <column>FOEANOEN</column>
+    <column>FOENUMEN</column>
+    <column>FOECAGCO</column>
   </table>
   <table name="BZENTRA060">
     <column>ENT_CODIMUN</column>

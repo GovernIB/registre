@@ -283,6 +283,9 @@
                                 </goals>
                                 <configuration>
                                     <skip>false</skip>
+                                    <includes>
+                                        <include>AdministracioTestSuite.java</include>
+                                    </includes>
                                 </configuration>
                             </execution>
                         </executions>
