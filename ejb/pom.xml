@@ -36,12 +36,12 @@
     </dependencies>
 
     <build>
-        <finalName>regweb</finalName>
         
         <plugins>
 	        <plugin>
 	            <groupId>org.apache.maven.plugins</groupId>
 	            <artifactId>maven-ejb-plugin</artifactId>
+                <version>2.3</version>
 	            <configuration>
 	                <ejbVersion>2.0</ejbVersion>
 	                <archive>

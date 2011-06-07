@@ -68,12 +68,6 @@
                             <artifactId>logic</artifactId>
                             <bundleFileName>logic.jar</bundleFileName>
                         </ejbModule>
-                        <jarModule>
-                            <groupId>es.caib.regweb</groupId>
-                            <artifactId>model</artifactId>
-                            <bundleFileName>model.jar</bundleFileName>
-                            <bundleDir>lib</bundleDir>
-                        </jarModule>
                     </modules>
                     <defaultLibBundleDir>lib</defaultLibBundleDir>
                     <archive>

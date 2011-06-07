@@ -98,9 +98,7 @@
     </dependencies>
 
     <build>
-
-        <finalName>logic</finalName>
-
+        
         <filters>
             <filter>../config.properties</filter>
         </filters>
@@ -147,6 +145,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>xdoclet-maven-plugin</artifactId>
+                <version>1.0</version>
                 <executions>
                     <execution>
                         <phase>generate-sources</phase>
@@ -201,6 +200,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-ejb-plugin</artifactId>
+                <version>2.3</version>
                 <configuration>
                     <ejbVersion>2.0</ejbVersion>
                     <archive>

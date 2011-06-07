@@ -78,7 +78,6 @@
     </dependencies>
 
     <build>
-        <finalName>regweb</finalName>
 
         <filters>
             <filter>../config.properties</filter>
@@ -106,11 +105,13 @@
                         </resource>
                     </webResources>
                     <archive>
+                        <!--
                         <manifestEntries>
                             <Class-Path>
-                                lib/model.jar
+                                lib/model-${project.version}.jar
                             </Class-Path>
                         </manifestEntries>
+                        -->
                         <addMavenDescriptor>false</addMavenDescriptor>
                     </archive>
                 </configuration>
