@@ -21,6 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import es.caib.regweb.logic.helper.ParametrosRegistroEntrada;
 import es.caib.regweb.logic.helper.ParametrosRegistroModificado;
+import es.caib.regweb.logic.helper.ParametrosRegistroSalida;
 
 import es.caib.regweb.logic.interfaces.RegistroModificadoEntradaFacade;
 import es.caib.regweb.logic.util.RegistroModificadoEntradaFacadeUtil;
@@ -291,7 +292,7 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
             if ( (balears.equals("") || balears == null) && ( fora.equals("") || fora == null )) {
                 errores.put("balears","Obligatori introduir Proced\u00e8ncia Geogr\u00e0fica");
             } else if (!balears.equals("") && !fora.equals("")) {
-                errores.put("balears","Heu d'introduir Balears o Fora de Balears");
+                errores.put("balears","Heu d'introduir Balears o Fora de Balears. Balears:"+balears+" - fora:" +fora);
             } else if (!balears.equals("")) {
                 try {
                     String sentenciaHql=" SELECT id.tipo FROM AgrupacionGeografica WHERE id.tipo=90 AND id.codigo=? AND fechaBaja=0";
@@ -463,13 +464,11 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
     /* Grabamos registro si las validaciones son correctas */
     
     /**
-     * @throws HibernateException
-     * @throws ClassNotFoundException
-     * @throws Exception
+     * @throws EJBException
      * @ejb.interface-method
      * @ejb.permission unchecked="true"
      */
-    public ParametrosRegistroEntrada grabar(ParametrosRegistroEntrada param) throws HibernateException, ClassNotFoundException, Exception {
+    public ParametrosRegistroEntrada grabar(ParametrosRegistroEntrada param) throws EJBException {
         
         String dataVisado=param.getDataVisado();
         String dataentrada=param.getDataEntrada();
@@ -523,13 +522,7 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
 		Session session = getSession();
 
         try {
-
             // Ejecuta algoritmo de registro
-
-
-
-
-
 
             /* Grabamos registro si las validaciones son correctas */
             SQLQuery ms = null;
@@ -541,7 +534,6 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
             if (!validado) {
                 throw new Exception("No s'ha realitzat la validaci\u00f3 de les dades del registre ");
             }
-
 
             /* Descomponemos el año de la data de entrada, FZAANOEN y preparamos campo
              FZAFENT en formato aaaammdd */
@@ -649,7 +641,6 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
                 ss=ss.substring(0,2);
             }
             int fzahsis=Integer.parseInt(hhmmss.format(fechaSystem)+ss);
-
 
             /* Ejecutamos sentencias SQL */
             ms=session.createSQLQuery(SENTENCIA);
@@ -770,17 +761,26 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
             logLopdBZENTRA("INSERT", (usuario.length()>10) ? usuario.substring(0,10) : usuario
             				, fzafsis, horamili, fzanume, fzaanoe, fzacagc);
 
-
-
             session.flush();
-
+        }catch(HibernateException he){
+            // Tratamos las excepciones generadas por Hibernate
+        	log.error("Error: S'ha generat una Hibernate Exception " + he.getMessage());
+        	registroGrabado=false;
+        	errores.put("","Error inesperat, no s'ha desat el registre"+": "+he.getClass()+"->"+he.getMessage());
+        	
+            throw new EJBException("Error: S'ha generat una Hibernate Exception " + he.getMessage()); 
+        } catch(ClassNotFoundException cnfe){
+        	log.error("Error: S'ha generat una ClassNotFound Exception" + cnfe.getMessage());
+        	registroGrabado=false;
+        	errores.put("","Error inesperat, no s'ha desat el registre"+": "+cnfe.getClass()+"->"+cnfe.getMessage());
+        	
+            throw new EJBException("Error: S'ha generat una ClassNotFound Exception" + cnfe.getMessage()); 
         } catch (Exception ex) {
         	log.error(usuario+": Excepci\u00f3: "+ex.getMessage());
-            ex.printStackTrace();
             registroGrabado=false;
             errores.put("","Error inesperat, no s'ha desat el registre"+": "+ex.getClass()+"->"+ex.getMessage());
 
-            throw new RemoteException("Error inesperat: No s'ha desat el registre", ex);
+            throw new EJBException("Error inesperat: No s'ha desat el registre", ex);
         } finally {
 			close(session);
         }
@@ -988,13 +988,11 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
 
     /**
      * Actualitza el registre d'entrada
-     * @throws HibernateException
-     * @throws ClassNotFoundException
-     * @throws Exception
+     * @throws EJBException
      * @ejb.interface-method
      * @ejb.permission unchecked="true"
      */
-    public ParametrosRegistroEntrada actualizar(ParametrosRegistroEntrada param) throws HibernateException, ClassNotFoundException, Exception {
+    public ParametrosRegistroEntrada actualizar(ParametrosRegistroEntrada param) throws EJBException {
 
         
         String dataVisado=param.getDataVisado();
@@ -1056,28 +1054,30 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
             validado=param.getValidado();
         }
         if (!validado) {
-            throw new Exception("No s'ha realitzat la validaci\u00f3 de les dades del registre ");
+            throw new EJBException("No s'ha realitzat la validaci\u00f3 de les dades del registre ");
         }
         
         boolean registroActualizado=false;
-        
-        //Comprobamos si hay que actualizar datos publicación BOIB
-        if(infoBOIB.equals("true") && oficina.equals(oficinaBOIB)){
-        	RegistroPublicadoEntradaFacade regpubent = RegistroPublicadoEntradaFacadeUtil.getHome().create();
-        	if(paramRegPubEnt!=null){
-		        if(destinatari.equals(codiOrganismeBOIB)){
-		        	if(paramRegPubEnt.estaVacio()){
-		        		regpubent.borrar(paramRegPubEnt);
-		        	}else{
-        	regpubent.grabar(paramRegPubEnt);
-		        	}
-        }else{
-		        		regpubent.borrar(paramRegPubEnt);
-        }
-        	}
-        }
-        
+            
         try {
+        	
+            //Comprobamos si hay que actualizar datos publicación BOIB
+            if(infoBOIB.equals("true") && oficina.equals(oficinaBOIB)){
+            	RegistroPublicadoEntradaFacade regpubent = RegistroPublicadoEntradaFacadeUtil.getHome().create();
+            	if(paramRegPubEnt!=null){
+    		        if(destinatari.equals(codiOrganismeBOIB)){
+    		        	if(paramRegPubEnt.estaVacio()){
+    		        		regpubent.borrar(paramRegPubEnt);
+    		        	}else{
+    		        		regpubent.grabar(paramRegPubEnt);
+    		        	}
+            }else{
+    		   regpubent.borrar(paramRegPubEnt);
+            }
+            	}
+            }
+            
+            
             /* Descomponemos el año de la data de entrada, FZAANOEN y preparamos campo
              FZAFENT en formato aaaammdd */
             int fzaanoe;
@@ -1331,10 +1331,7 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
                 } catch (LinkageError le) {
                 } catch (ClassNotFoundException le) {
                 }
-
-                
-                
-                
+         
                 /* Recuperamos la fecha y la hora del sistema, fzafsis(aaaammdd) y fzahsis (hhMMssmm) */
                 String Stringsss=sss.format(fechaSystem);
                 switch (Stringsss.length()) {
@@ -1367,16 +1364,27 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
             
             session.flush();
             log.debug("Actualizar registro de entrada ejecutado correctamente.");
-        } catch (Exception ex) {
-        	log.error("Error inesperat, no s'ha desat el registre: "+ex.getMessage());
-            ex.printStackTrace();
-            registroActualizado=false;
-            errores.put("","Error inesperat, no s'ha desat el registre"+": "+ex.getClass()+"->"+ex.getMessage());
-            throw new RemoteException("Error inesperat, no s'ha modifcat el registre", ex);
-        } finally {
-        	param.setregistroActualizado(registroActualizado);
-			close(session);
-        }
+
+    }catch(HibernateException he){
+        // Tratamos las excepciones generadas por Hibernate
+    	log.error("Error: S'ha generat una Hibernate Exception " + he.getMessage());
+    	registroActualizado=false;
+    	errores.put("","Error inesperat, no s'ha desat el registre"+": "+he.getClass()+"->"+he.getMessage());
+        throw new EJBException("Error: S'ha generat una Hibernate Exception. No s'ha desat el registre. " + he.getMessage()); 
+    } catch(ClassNotFoundException cnfe){
+    	log.error("Error: S'ha generat una ClassNotFound Exception. No s'ha desat el registre. " + cnfe.getMessage());
+    	registroActualizado=false;
+    	errores.put("","Error inesperat, no s'ha desat el registre"+": "+cnfe.getClass()+"->"+cnfe.getMessage());
+        throw new EJBException("Error: S'ha generat una ClassNotFound Exception" + cnfe.getMessage()); 
+    } catch (Exception ex) {
+    	log.error(usuario+": Excepci\u00f3: "+ex.getMessage());
+    	registroActualizado=false;
+        errores.put("","Error inesperat, no s'ha desat el registre"+": "+ex.getClass()+"->"+ex.getMessage());
+        throw new EJBException("Error inesperat: No s'ha modifcat el registre ", ex);
+    } finally {
+    	param.setregistroActualizado(registroActualizado);
+		close(session);
+    }
         log.debug("Fin");
         return param;
     }
@@ -1656,21 +1664,7 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
                     res.setDescripcionRemitente(rs.getString(12));
                 }
                 res.setdestinatari(String.valueOf(rs.getInteger(13)));
-                
-                /* Aquí hem d'anar a l'històric d'organismes 
-                MOVE W-FZACORGA-1   TO P3S-CORGA WC-FAXCORGA WC-FHXCORGA.
-                MOVE W-FZAFENTR-1   TO                       WC-FHXFALTA.
-                PERFORM START-BHORGAN02-RBHORGAN.
-                IF WSLE-BHORGAN02 AND
-                   W-FHXCORGA = WC-FHXCORGA AND
-                   W-FHXFALTA <= W-FZAFENTR-1 AND
-                 ((W-FZAFENTR-1 <= W-FHXFBAJA AND W-FHXFBAJA NOT = ZEROS) OR
-                   W-FHXFBAJA = ZEROS)
-                   MOVE W-FHXDORGT   TO P3S-DORGT
-                ELSE
-                   PERFORM READR-BORGANI01-RBORGANI
-                   IF WSLE-BORGANI01
-                      MOVE W-FAXDORGT   TO P3S-DORGT. */
+
                 String sentenciaHqlHistOrga="SELECT FHXDORGT FROM BHORGAN WHERE FHXCORGA=? AND FHXFALTA<=? " +
                 		"AND ( (FHXFBAJA>= ? AND FHXFBAJA !=0) OR FHXFBAJA = 0)";
                 qHist=session.createSQLQuery(sentenciaHqlHistOrga);
@@ -1711,22 +1705,21 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
                 res.setentidad1(Helper.convierteEntidad(rs.getString(21),session));
                 res.setEntidad1Grabada(rs.getString(21));
                 res.setentidad2(rs.getString(22));
-                res.setaltres(rs.getString(23));
+                res.setaltres((rs.getString(23)==null)?null:rs.getString(23).trim());
                 res.setbalears(rs.getString(24));
-                res.setfora(rs.getString(25));
-                
-                
+                res.setfora((rs.getString(25)==null)?null:rs.getString(25).trim());
+
                 if (rs.getString(26)==null) {
-                    res.setProcedenciaGeografica(rs.getString(25));
+                    res.setProcedenciaGeografica(((rs.getString(25)==null)?null:rs.getString(25).trim()));
                 } else {
-                    res.setProcedenciaGeografica(rs.getString(26));
+                    res.setProcedenciaGeografica(rs.getString(26).trim());
                 }
                 if (rs.getString(18).equals("1")) {
                     res.setIdiomaExtracto("CASTELLA");
                     res.setcomentario(rs.getString(27));
                 } else {
                     res.setIdiomaExtracto("CATALA");
-                    res.setcomentario(rs.getString(28));
+                    res.setcomentario(((rs.getString(28)==null)?null:rs.getString(28).trim()));
                 }
                 if (rs.getString(29).equals("0")) {
                     res.setdisquet("");
@@ -1818,4 +1811,107 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
 
     }
 
+	/**
+	* Anula el registro de salida si las validaciones son correctas
+	* 
+	* @param usuario Identificador del usuario que realiza la acción
+	* @param oficina Oficina de salida que queremos comprobar si tiene permisos
+	* @param session Session de base de datos
+	* 
+	* @return verdadero si tiene permiso para modificar, falso en caso contrario.
+	* 
+    */
+    private boolean tienePermisoEntrada(String usuario, String oficina, Session session ) throws Exception{
+    	boolean rtdo = false;
+    	ScrollableResults rs=null;
+    	Query q = null;
+
+    	String sentenciaHql=" FROM Autorizacion WHERE id.usuario=? AND id.codigoAutorizacion=? AND id.codigoOficina IN " +
+    	"(SELECT codigo FROM Oficina WHERE fechaBaja=0 AND codigo=?)";
+    	q=session.createQuery(sentenciaHql);
+    	q.setString(0,usuario.toUpperCase());
+    	q.setString(1,"AE");
+    	q.setInteger(2,Integer.parseInt(oficina));
+    	rs=q.scroll();
+
+    	if (rs.next()) {
+    		rtdo = true;
+    	}
+
+    	return rtdo;
+    }
+
+	/**
+	* Anula el registro de entrada si las validaciones son correctas
+	* 
+	* @param registro Identificador del registro afectado
+	* @param hay_que_anular Si es verdadero anulamos el registro, si es falso quitamos la anulación
+	* 
+	* @return verdadero si todo va bien, falso en caso contrario.
+	* 
+    * @ejb.interface-method
+    * @ejb.permission unchecked="true"
+    */
+    public boolean anular(ParametrosRegistroEntrada registro, boolean hay_que_anular) throws EJBException{
+    	Session session = getSession();
+    	ScrollableResults rs=null;
+    	Query q = null;
+
+    	boolean rtdo= false;
+    	String estadoAnulacionRegistro = ((hay_que_anular)?"S":"");
+    	String usuario = registro.getUsuario();
+    	String oficina = registro.getOficina();
+    	String numeroRegistro = registro.getNumeroEntrada();
+    	String anyo = registro.getAnoEntrada();
+
+    	try {
+    		if ( tienePermisoEntrada( usuario,  oficina,  session )){
+
+    			String sentenciaHql= "update Entrada " +
+    								 "set nula=?" +
+    								 "where  ( id.anyo = ?  and id.numero = ? and id.oficina = ?)";
+    			q=session.createQuery(sentenciaHql);
+    			//Campo a modificar
+    			q.setString(0,estadoAnulacionRegistro);
+    			//Claves primarias
+    			q.setString(1,anyo);
+    			q.setString(2,numeroRegistro);
+    			q.setString(3,oficina);
+
+    			if(q.executeUpdate()>0){    			
+    				log.debug("Registro de entrada:"+registro.getReferenciaRegistro()+((hay_que_anular)?". Anulado correctamente.":". Quitada la anulación correctamente."));
+    				rtdo = true;
+    			}else{
+    				log.debug("Registro de entrada:"+registro.getReferenciaRegistro()+" no encontrado.");
+    			}
+
+    			session.flush();
+    		}else{
+    			log.info("INFO: L'usuari " +usuario+" no te permisos per anular registres de l'oficina "+ oficina);
+    		}
+    	}catch(HibernateException he){
+    		// Tratamos las excepciones generadas por Hibernate
+    		log.error("Error: S'ha generat una Hibernate Exception " + he.getMessage());
+    		throw new EJBException("Error: S'ha generat una Hibernate Exception. No s'ha anulat el registre "+registro.getReferenciaRegistro()+". " + he.getMessage());
+    	} catch (Exception ex) {
+    		log.error(usuario+": Excepci\u00f3: "+ex.getMessage());
+    		throw new EJBException("Error inesperat: No s'ha anulat el registre "+registro.getReferenciaRegistro(), ex);
+    	} finally {
+    		close(session);
+    	}
+    	return rtdo;
+    }
+
+    private String arreglarHora(String hora){
+    	String hhmm;
+    	if (hora!=null && !hora.equals("") && !hora.equals("0") ) {
+    		if (hora.length()<4) {hora="0"+hora;}
+    		String hh=hora.substring(0,2);
+    		String mm=hora.substring(2,4);
+    		hhmm=hh+":"+mm;
+    	} else {
+    		hhmm=hora;
+    	}
+    	return hhmm;
+    }
 }

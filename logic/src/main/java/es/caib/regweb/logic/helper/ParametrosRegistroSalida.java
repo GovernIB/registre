@@ -448,6 +448,12 @@ public class ParametrosRegistroSalida implements Serializable {
 		return registroActualizado;
 	}
 	
-	
+    /**
+     * 
+     * @return String Cadena de texto con el identificador del registro: oficina, numero y anyo
+     */
+	public String getReferenciaRegistro(){
+		return oficina +"-"+  numeroSalida+"/"+anoSalida;
+	}
 
 }

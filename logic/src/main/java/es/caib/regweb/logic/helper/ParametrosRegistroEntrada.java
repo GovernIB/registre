@@ -528,4 +528,12 @@ public class ParametrosRegistroEntrada implements Serializable {
 	public void setLocalitzadorsDocs(String[] localitzadorsDocs) {
 		this.localitzadorsDocs = localitzadorsDocs;
 	}
+	
+    /**
+     * 
+     * @return String Cadena de texto con el identificador del registro: oficina, numero y anyo
+     */
+	public String getReferenciaRegistro(){
+		return oficina +"-"+  numeroEntrada+"/"+anoEntrada;
+	}
 }
