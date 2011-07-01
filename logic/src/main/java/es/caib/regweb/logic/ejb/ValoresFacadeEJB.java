@@ -1220,7 +1220,47 @@ public abstract class ValoresFacadeEJB extends HibernateEJB {
 		}
 		return models;
 	}
-	
+    
+    /**
+     * Devuelve la lista de todos los organismos activos de la aplicación
+     * 
+     * 
+     * @return Vector de Strings. Por cada organismo añade un string con su código, otro string con nombre corto y otro con su nombre largo. 
+     * 		  En el caso de no encontrar nada envía el vector con tres strings: <"&nbsp;","No hi ha Organismes","&nbsp;">
+     * 
+     * @throws EJBException
+     * 
+     * @ejb.interface-method
+     * @ejb.permission unchecked="true"
+     */
+     public Vector buscarTodosDestinatarios() throws EJBException{
+ 		Vector destino=new Vector();
+ 		Session session = getSession();
+ 		ScrollableResults rs=null;
+ 		
+ 		try {
+ 			
+ 			String sentenciaHql="select codigo, nombreCorto, nombreLargo from Organismo where fechaBaja=0 order by codigo";
+ 			Query query=session.createQuery(sentenciaHql);
+ 			rs = query.scroll(ScrollMode.SCROLL_INSENSITIVE);
+ 			while (rs.next()) {
+ 				destino.addElement(rs.getInteger(0).toString());
+ 				destino.addElement(rs.getString(1));
+ 				destino.addElement(rs.getString(2));
+ 			}
+ 			if (destino.size()==0) {
+ 				destino.addElement("&nbsp;");
+ 				destino.addElement("No hi ha Organismes");
+ 				destino.addElement("&nbsp;");
+ 			}
+ 			session.flush();
+         } catch (Exception e) {
+        	 throw new EJBException(e);
+         } finally {
+             close(session);
+         }
+ 		return destino;
+ 	}
 	 /**
      * @ejb.create-method
      * @ejb.permission unchecked="true"
