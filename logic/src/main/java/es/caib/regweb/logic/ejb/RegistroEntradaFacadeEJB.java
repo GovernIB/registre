@@ -2,12 +2,14 @@ package es.caib.regweb.logic.ejb;
 
 
 import java.util.*;
+import java.sql.SQLException;
 import java.text.*;
 
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
+import org.hibernate.ScrollMode;
 import org.hibernate.Session;
 import org.hibernate.ScrollableResults;
 //import org.hibernate.ScrollMode;
@@ -19,11 +21,14 @@ import javax.ejb.*;
 
 import java.lang.reflect.InvocationTargetException;
 
+import es.caib.regweb.logic.helper.ParametrosLineaOficioRemision;
 import es.caib.regweb.logic.helper.ParametrosRegistroEntrada;
 import es.caib.regweb.logic.helper.ParametrosRegistroModificado;
 import es.caib.regweb.logic.helper.ParametrosRegistroSalida;
 
+import es.caib.regweb.logic.interfaces.LineaOficioRemisionFacade;
 import es.caib.regweb.logic.interfaces.RegistroModificadoEntradaFacade;
+import es.caib.regweb.logic.util.LineaOficioRemisionFacadeUtil;
 import es.caib.regweb.logic.util.RegistroModificadoEntradaFacadeUtil;
 import es.caib.regweb.logic.interfaces.ValoresFacade;
 import es.caib.regweb.logic.util.ValoresFacadeUtil;
@@ -51,6 +56,11 @@ import org.apache.log4j.Logger;
 public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
     
     private Logger log = Logger.getLogger(this.getClass());
+    
+    /**
+     * Texto guardado como comentario en el descarte de los oficios
+     */
+    static private String DESCARTE_AUTOMATICO =  "Ofici descartat automàticament.";
 
     /**
      * @ejb.env-entry
@@ -704,6 +714,10 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
     		ms.setInteger(3,off_codi);
     		ms.executeUpdate();
 
+            //Descartamos el oficio de remisi�n en caso de que sea necesario
+            if(hayQueDescartarOficio(session, fzacagc , fzacorg)){
+            	descartarOficio(fzaanoe, fzanume, fzacagc, usuario);
+            }
             
             // desacoplamiento cobol
             String remitente="";
@@ -1914,4 +1928,56 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
     	}
     	return hhmm;
     }
+    
+    /**
+     * Este m�todo hace que un registro de entrada no genere un oficio de remisi�n
+     * 
+     * @param anoEntrada
+     * @param numeroEntrada
+     * @param codiOficina
+     * @param usuario
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     * @throws Exception
+     */
+    private void descartarOficio(int anoEntrada, int numeroEntrada, int codiOficina, String usuario) throws SQLException, ClassNotFoundException, Exception {
+    	LineaOficioRemisionFacade lin = LineaOficioRemisionFacadeUtil.getHome().create();
+    	ParametrosLineaOficioRemision param = new ParametrosLineaOficioRemision();
+
+    	param.setAnoEntrada(String.valueOf(anoEntrada));
+    	param.setOficinaEntrada(String.valueOf(codiOficina));
+    	param.setNumeroEntrada(String.valueOf(numeroEntrada));
+    	param.setDescartadoEntrada("S");
+    	param.setMotivosDescarteEntrada(DESCARTE_AUTOMATICO);
+    	param.setUsuarioEntrada(usuario);
+    	param.setAnoOficio(null);
+    	param.setOficinaOficio(null);
+    	param.setNumeroOficio(null);
+    	lin.grabar(param);	
+    	log.debug("Oficio descartado");
+    }
+    
+	 /**
+     * M�todo que comprueba si entre una oficina de registro y el organismo destinatario
+     * de la documentaci�n registrada hay que descartar el oficio
+     * @param codiOficina
+     * @param codiOrganismo
+     * @return
+     */
+    private boolean hayQueDescartarOficio(Session session, int codiOficina, int codiOrganismo)throws HibernateException {
+		boolean rtdo = false;
+		ScrollableResults rs=null;
+		String sentenciaHql = "select 1 from OficinaOrganismoNoRemision where id.oficina.codigo=? and id.organismo.codigo = ?";
+		
+		Query query=session.createQuery(sentenciaHql);
+		query.setInteger(0,Integer.valueOf(codiOficina));
+		query.setInteger(1,Integer.valueOf(codiOrganismo));
+		
+		rs = query.scroll(ScrollMode.SCROLL_INSENSITIVE);
+		if(rs.next()) {
+			rtdo = true;
+			log.debug("Hay que descartar un oficio. oficina - oragnismo:"+codiOficina+" - "+ codiOrganismo);
+		}
+		return rtdo;
+	}
 }
