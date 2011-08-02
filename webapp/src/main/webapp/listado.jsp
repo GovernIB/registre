@@ -24,7 +24,7 @@ String remitenteBusqueda="";
 String procedenciaBusqueda="";
 String destinatarioBusqueda="";
 String codidestinatariBusqueda="";
-String cadenaEnlace="";
+StringBuffer cadenaEnlace = new StringBuffer("");
 String veureNombreTotalRegistres="";
 String numeroRegistroSalidaRelacionado="";
 String anyoRegistroSalidaRelacionado="";
@@ -47,15 +47,17 @@ if (request.getParameter("any")==null) {
     numeroRegistroSalidaRelacionado=request.getParameter("numeroRegistroSalidaRelacionado");
     anyoRegistroSalidaRelacionado=request.getParameter("anyoRegistroSalidaRelacionado");
     mostrarNumReg012=(request.getParameter("mostrarNumReg012")!=null) ? true: false;
-    cadenaEnlace="oficinaDesde="+oficinaDesde+"&oficinaHasta="+oficinaHasta+"&fechaDesde="+fechaDesde+"&fechaHasta="+fechaHasta+
+    cadenaEnlace.append("oficinaDesde="+oficinaDesde+"&oficinaHasta="+oficinaHasta+"&fechaDesde="+fechaDesde+"&fechaHasta="+fechaHasta+
             "&extracto="+extractoBusqueda+"&tipo="+tipoBusqueda+"&remitente="+remitenteBusqueda+"&procedencia="+procedenciaBusqueda+
-            "&destinatario="+destinatarioBusqueda+"&codidestinatari="+codidestinatariBusqueda;
+            "&destinatario="+destinatarioBusqueda+"&codidestinatari="+codidestinatariBusqueda);
+    if((numeroRegistroSalidaRelacionado != null)&&(anyoRegistroSalidaRelacionado != null)) 
+    	cadenaEnlace.append("&numeroRegistroSalidaRelacionado="+anyoRegistroSalidaRelacionado+"&anyoRegistroSalidaRelacionado="+anyoRegistroSalidaRelacionado); 
 } else {
     oficinaDesde=request.getParameter("oficina");
     oficinaHasta=request.getParameter("oficina");
     fechaDesde="01/01/"+request.getParameter("any");
     fechaHasta="31/12/"+request.getParameter("any");
-    cadenaEnlace="oficina="+oficinaDesde+"&any="+request.getParameter("any");
+    cadenaEnlace.append("oficina="+oficinaDesde+"&any="+request.getParameter("any"));
     if (request.getParameter("numero")!=null && !request.getParameter("numero").trim().equals("") ) {
             %>
             <jsp:forward page="ficha.jsp" >
@@ -83,9 +85,7 @@ parametros.setNumeroRegistroSalidaRelacionado(numeroRegistroSalidaRelacionado);
 parametros.setAnyoRegistroSalidaRelacionado(anyoRegistroSalidaRelacionado);
 
 session.setAttribute("listadoEntrada",parametros);
-%>
 
-<%
 parametros=listado.validarBusqueda(parametros);
 boolean ok=parametros.getValidado();
 if (!ok){
@@ -99,16 +99,11 @@ if (!ok){
     
 	if(parametros.isCalcularTotalRegistres()|| mostrarNumReg012){
 		mostrarNumReg012 = true;
-		cadenaEnlace+="&mostrarNumReg012=on";
+		cadenaEnlace.append("&mostrarNumReg012=on");
 	}
-
 %>
-
 <html>
-<head><title><fmt:message key='registre_entrades'/></title>
-    
-    
-    
+<head><title><fmt:message key='registre_entrades'/></title> 
     <script src="jscripts/TAO.js"></script>
     <script>
         var listaExtractos=new Array();
@@ -123,42 +118,43 @@ if (!ok){
         var resultados=false;
         var cadena=prompt("Text a cercar en l'extracte","");
         if (cadena==null || trim(cadena)=="") {
-        return;
+        	return;
         }
         
         enfocado=false;
         encontrados=0;
+        
         for (var n=0;n < i; n++) {
-        var elemento=listaExtractos[n];
-        trId = "fila" + n;
-        refId= "ref" + n;
-        var fila=document.getElementById(trId);
-        if (elemento.lastIndexOf(trim(cadena.toUpperCase()))>-1) {
-        fila.style.background="#fff8a7"; 
-        if (!enfocado) {
-        document.getElementById(refId).focus();
-        enfocado=true;
-        }
-        resultados=true;
-        encontrados++;
-        } else {
-        if (n%2==0) {
-        fila.style.background="";
-        } else {
-        fila.style.background="#DDDDFF";
-        }
-        }
-        }
-        if (!resultados) {
-        alert("Text "+'"'+cadena+'"'+" no trobat dins l'extracte");
-        } else {
-        alert("Trobats "+encontrados+" registres amb el text "+'"'+cadena+'"'+" a l'extracte");
-        }
+	        var elemento=listaExtractos[n];
+	        trId = "fila" + n;
+	        refId= "ref" + n;
+	        var fila=document.getElementById(trId);
+	        
+	        if (elemento.lastIndexOf(trim(cadena.toUpperCase()))>-1) {
+		        fila.style.background="#fff8a7"; 
+		        if (!enfocado) {
+			        document.getElementById(refId).focus();
+			        enfocado=true;
+			        }
+		        resultados=true;
+		        encontrados++;
+	        } else {
+		        if (n%2==0) {
+			        fila.style.background="";
+			        } else {
+			        fila.style.background="#DDDDFF";
+			        }
+		        }
+	        }
+	        if (!resultados) {
+		        alert("Text "+'"'+cadena+'"'+" no trobat dins l'extracte");
+		        } else {
+		        alert("Trobats "+encontrados+" registres amb el text "+'"'+cadena+'"'+" a l'extracte");
+	        }
         }
     </script>
 </head>
 <body>
-
      	<!-- Molla pa --> 
 		<ul id="mollaPa">
 		<li><a href="index.jsp"><fmt:message key='inici'/></a></li>
@@ -175,15 +171,14 @@ if (registros.size()==0) {
         	%>
 <center><b><fmt:message key='no_shan_trobat_registres_que_compleixin_els_criteris_seleccionats'/></B></center>
 &nbsp;<br/><center>[&nbsp;<a href="<%=(request.getParameter("any")==null) ? "busquedaEntradasXFechas.jsp" : "busquedaEntradasXRegistro.jsp"%>"><fmt:message key='tornar_a_seleccionar'/></a>&nbsp;]</center>
-     <% } else { %>
-     
+     <% } else { %>     
 <table border="0" width="95%" align="center">
     <tr>
         <td align="left" width="33%">
             <%
             if (pagina>1) {
             %>
-            <a href="listado.jsp?<%=cadenaEnlace%>&pagina=<%=pagina-1%>" title="Retrocedir" style="text-decoration:none;">&lt;&lt; 100 <fmt:message key='anteriors'/></a>
+            <a href="listado.jsp?<%=cadenaEnlace.toString()%>&pagina=<%=pagina-1%>" title="Retrocedir" style="text-decoration:none;">&lt;&lt; 100 <fmt:message key='anteriors'/></a>
             <%
             }
             %>
@@ -195,7 +190,7 @@ if (registros.size()==0) {
             <%
             if (registros.size()>sizePagina) {
             %>
-            <a href="listado.jsp?<%=cadenaEnlace%>&pagina=<%=pagina+1%>" title="Avançar" style="text-decoration:none;">100 <fmt:message key='seguents'/> >></a>
+            <a href="listado.jsp?<%=cadenaEnlace.toString()%>&pagina=<%=pagina+1%>" title="Avançar" style="text-decoration:none;">100 <fmt:message key='seguents'/> >></a>
             <%
             }
             %>
@@ -211,7 +206,6 @@ if (registros.size()==0) {
     </tr>
    <% } %>
 </table>
-
 
 <table width="100%" border="0">
     <tr>
@@ -271,8 +265,7 @@ if (registros.size()==0) {
         int numDocumentosRegistro = reg.getNumeroDocumentosRegistro060();
         boolean anulado=(reg.getRegistroAnulado().equals("") || reg.getRegistroAnulado().equals(" ")) ? false : true;
     %>
-    <tr id="<%="fila"+i%>" class="<%=((i%2)==0)? "par":"impar"%>"> 
-     
+    <tr id="<%="fila"+i%>" class="<%=((i%2)==0)? "par":"impar"%>">      
         <td>
         <a id="<%="ref"+i%>" href="ficha.jsp?oficina=<%=oficina%>&numeroEntrada=<%=numeroEntrada%>&anoEntrada=<%=anoEntrada%>">
             <img src="imagenes/open24.gif" border="0"  title="Veure document">
@@ -310,7 +303,7 @@ if (registros.size()==0) {
             <%
             if (pagina>1) {
             %>
-            <a href="listado.jsp?<%=cadenaEnlace%>&pagina=<%=pagina-1%>" title="Retrocedir" style="text-decoration:none;">&lt;&lt; 100 <fmt:message key='anteriors'/></a>
+            <a href="listado.jsp?<%=cadenaEnlace.toString()%>&pagina=<%=pagina-1%>" title="Retrocedir" style="text-decoration:none;">&lt;&lt; 100 <fmt:message key='anteriors'/></a>
             <%
 }
             %>
@@ -322,18 +315,14 @@ if (registros.size()==0) {
             <%
             if (registros.size()>sizePagina) {
             %>
-            <a href="listado.jsp?<%=cadenaEnlace%>&pagina=<%=pagina+1%>" title="Avançar" style="text-decoration:none;">100 <fmt:message key='seguents'/> >></a>
+            <a href="listado.jsp?<%=cadenaEnlace.toString()%>&pagina=<%=pagina+1%>" title="Avançar" style="text-decoration:none;">100 <fmt:message key='seguents'/> >></a>
             <%
 }
             %>
         </td>
     </tr>
 </table>
-
  <%}%>
-<% } %>
- 		
-                 
-   		
+<% } %>  		
 	</body>
-</html>   
+</html>

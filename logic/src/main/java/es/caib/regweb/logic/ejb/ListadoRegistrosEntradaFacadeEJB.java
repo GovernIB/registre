@@ -97,8 +97,8 @@ public abstract class ListadoRegistrosEntradaFacadeEJB extends HibernateEJB {
          String codiDestinatari=parametros.getCodiDestinatari();
          String totalFiles=parametros.getTotalFiles();
          String codiMun060=parametros.getCodiMunicipi060();
-         String numeroRegistroSalidaRelacionado=parametros.getNumeroRegistroSalidaRelacionado();
-         String anyoRegistroSalidaRelacionado=parametros.getAnyoRegistroSalidaRelacionado();
+         String numeroRegistroSalidaRelacionado=(parametros.getNumeroRegistroSalidaRelacionado()==null)?"":parametros.getNumeroRegistroSalidaRelacionado();
+         String anyoRegistroSalidaRelacionado=(parametros.getAnyoRegistroSalidaRelacionado()==null)?"":parametros.getAnyoRegistroSalidaRelacionado();
         
 		boolean validado=false;
 		errores.clear();

@@ -816,6 +816,89 @@ public abstract class AdminFacadeEJB extends HibernateEJB {
 	
 	/**
 
+	/**
+	 * Devuelve los usuarios y sus permisos para una oficina determinada. 
+	 * @param oficina Codi de la 0ficina a buscar
+	 * @return Información de los usuarios autorizados a una oficina encapsulado dentro de la clase AutoritzacionsOficinaData
+	 * @throws RemoteException
+     * @ejb.interface-method
+     * @ejb.permission unchecked="true"
+	 */
+	public AutoritzacionsOficinaData getUsuarisOficina(String oficina, boolean verPermisosConsulta) throws RemoteException{
+    	
+		AutoritzacionsOficinaData autUsuData = new AutoritzacionsOficinaData(oficina);
+    	
+    	TreeMap autUsuAE = new TreeMap();
+    	TreeMap autUsuCE = new TreeMap();
+    	TreeMap autUsuAS = new TreeMap();
+    	TreeMap autUsuCS = new TreeMap();
+    	TreeMap autUsuVE = new TreeMap();
+    	TreeMap autUsuVS = new TreeMap();
+    	Vector UsuariosDeLaOficina = new Vector();
+    	
+    	String tipusAut = "";
+    	String codigoUsuario = "";
+		Session session = getSession();
+		ScrollableResults rs=null;
+		
+		Vector oficinas=new Vector();
+		
+		try {
+			
+			String sentenciaHql="SELECT id.codigoAutorizacion, id.usuario  FROM Autorizacion " +
+								"WHERE id.codigoOficina=? " +
+								(!verPermisosConsulta? " and id.usuario in (select distinct id.usuario FROM Autorizacion where id.codigoAutorizacion not in ('CE','CS','VE','VS')  and id.codigoOficina = '"+oficina+ "') ":"") +
+								" ORDER BY id.usuario, id.codigoAutorizacion ";
+			Query query=session.createQuery(sentenciaHql);
+			query.setInteger(0,new Integer(oficina));		
+			rs = query.scroll();
+			
+			int i=0;
+			while (rs.next()) {				
+				tipusAut = rs.getString(0);				
+				
+				//Comprobamos si leemos un nuevo usuario
+				if(!codigoUsuario.equals(rs.getString(1))){
+					codigoUsuario = rs.getString(1);
+					UsuariosDeLaOficina.add(codigoUsuario);
+				}
+			
+				if ( tipusAut.equals("AE")) {
+					autUsuAE.put(codigoUsuario,"X");
+				} else if ( tipusAut.equals("CE")) {
+					autUsuCE.put(codigoUsuario,"X");
+				} else if ( tipusAut.equals("AS")) {
+					autUsuAS.put(codigoUsuario,"X");
+				} else if ( tipusAut.equals("CS")) {
+					autUsuCS.put(codigoUsuario,"X");
+				} else if ( tipusAut.equals("VE")) {
+					autUsuVE.put(codigoUsuario,"X");
+				} else if ( tipusAut.equals("VS")) {
+					autUsuVS.put(codigoUsuario,"X");
+				}
+				i++;
+			}
+			if (i==0) {
+				return null;
+			} else {
+				autUsuData.setAutModifEntrada(autUsuAE);
+				autUsuData.setAutConsultaEntrada(autUsuCE);
+				autUsuData.setAutModifSortida(autUsuAS);
+				autUsuData.setAutConsultaSortida(autUsuCS);
+				autUsuData.setAutVisaEntrada(autUsuVE);
+				autUsuData.setAutVisaSortida(autUsuVS);
+				autUsuData.setUsuariosDeLaOficina(UsuariosDeLaOficina);
+			}		
+			session.flush();
+
+        } catch (Exception e) {
+        	log.error(e.getMessage(),e);
+        	throw new RemoteException("getUsuarisOficina Error en la SELECT",e);
+        } finally {
+            close(session);
+        }
+    	return autUsuData;
+    }
 	
 	/**
 	 * Retorna les oficines autoritzades a l'usuari.
@@ -835,16 +918,14 @@ public abstract class AdminFacadeEJB extends HibernateEJB {
     	TreeMap autUsuCS = new TreeMap();
     	TreeMap autUsuVE = new TreeMap();
     	TreeMap autUsuVS = new TreeMap();
-    	
+
     	String tipusAut = "";
-    	//String oficinaAut = "";
+    	Integer codigoOficina;
+
 		Session session = getSession();
 		ScrollableResults rs=null;
-		
-		Vector oficinas=new Vector();
-		
-		try {
-			
+	
+		try {			
 			String sentenciaHql="SELECT id.codigoAutorizacion, id.codigoOficina FROM Autorizacion " +
 					"WHERE id.usuario=? " +
 					"ORDER BY id.codigoAutorizacion, id.codigoOficina";
@@ -855,19 +936,20 @@ public abstract class AdminFacadeEJB extends HibernateEJB {
 			int i=0;
 			while (rs.next()) {
 				tipusAut = rs.getString(0);
-				//oficinaAut = String.valueOf(rs.getInteger(1)); 
+				codigoOficina = new Integer(rs.getInteger(1));
+				
 				if ( tipusAut.equals("AE")) {
-					autUsuAE.put(new Integer(rs.getInteger(1)),"X");
+					autUsuAE.put(codigoOficina,"X");
 				} else if ( tipusAut.equals("CE")) {
-					autUsuCE.put(new Integer(rs.getInteger(1)),"X");
+					autUsuCE.put(codigoOficina,"X");
 				} else if ( tipusAut.equals("AS")) {
-					autUsuAS.put(new Integer(rs.getInteger(1)),"X");
+					autUsuAS.put(codigoOficina,"X");
 				} else if ( tipusAut.equals("CS")) {
-					autUsuCS.put(new Integer(rs.getInteger(1)),"X");
+					autUsuCS.put(codigoOficina,"X");
 				} else if ( tipusAut.equals("VE")) {
-					autUsuVE.put(new Integer(rs.getInteger(1)),"X");
+					autUsuVE.put(codigoOficina,"X");
 				} else if ( tipusAut.equals("VS")) {
-					autUsuVS.put(new Integer(rs.getInteger(1)),"X");
+					autUsuVS.put(codigoOficina,"X");
 				}
 				i++;
 			}
@@ -883,11 +965,10 @@ public abstract class AdminFacadeEJB extends HibernateEJB {
 			}
 				
 			session.flush();
-
-        } catch (Exception e) {
-         oficinas.addElement("");
-         oficinas.addElement("BuscarOficinas Error en la SELECT");
-         log.error(e.getMessage());
+			
+        } catch (Exception e) {     
+        	//log.error("getAutoritzacionsUsuari Error en la SELECT",e);
+        	throw new RemoteException("getAutoritzacionsUsuari Error en la SELECT",e);
         } finally {
             close(session);
         }

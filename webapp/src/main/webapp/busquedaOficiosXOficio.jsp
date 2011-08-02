@@ -121,7 +121,7 @@ void escribeSelect2(javax.servlet.jsp.JspWriter out, String tipo, Vector valores
             </td>
             <td style="border:0">
                 <select name="oficina" id="oficina"  onchange="refrescaFisica()">
-                    <% escribeSelect(out, valores.buscarOficinas(usuario,"CE"), "");%>
+                    <% escribeSelect(out, valores.buscarOficinas(usuario,"CE",false), "");%>
                 </select>
             </td>
         </tr>

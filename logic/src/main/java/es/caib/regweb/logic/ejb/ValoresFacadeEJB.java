@@ -136,15 +136,38 @@ public abstract class ValoresFacadeEJB extends HibernateEJB {
 
 
     /**
+     * Consula de las oficinas ACTIVAS que un usuario deteminado puede acceder segÃºn un tipo de autorizaciÃ³n
+     * 
+     * @param usuario Usuario que realiza la consulta
+     * @param autorizacion Tipo de permiso sobre la oficina
+     * 
+     * @return Vector con las oficinas asignadas 
+     * 
     * @ejb.interface-method
     * @ejb.permission unchecked="true"
     */
     public Vector buscarOficinas(String usuario, String autorizacion) {
+		return this.buscarOficinas(usuario,autorizacion,true);
+	}
+	
+    /**
+     * Consula de las oficinas ACTIVAS que un usuario deteminado puede acceder segÃºn un tipo de autorizaciÃ³n
+     * 
+     * @param usuario Usuario que realiza la consulta
+     * @param autorizacion Tipo de permiso sobre la oficina
+     * @param soloActivas Indicamos si solo hay que mostrar las oficinas activas o todas
+     * 
+     * @return Vector con las oficinas asignadas 
+     * 
+    * @ejb.interface-method
+    * @ejb.permission unchecked="true"
+    */
+    public Vector buscarOficinas(String usuario, String autorizacion, boolean soloActivas) {
 		Session session = getSession();
 		ScrollableResults rs=null;
+		Vector oficinas=new Vector();
 		
 		usuario=usuario.toUpperCase();
-		Vector oficinas=new Vector();
 		
 		if ( usuario.equalsIgnoreCase("tots") && autorizacion.equalsIgnoreCase("totes")) {
 			oficinas=getOficines();
@@ -152,8 +175,10 @@ public abstract class ValoresFacadeEJB extends HibernateEJB {
 			
 			try {
 				
-				String sentenciaHql="select codigo, nombre from Oficina where fechaBaja=0 and codigo " +
-				"in (select id.codigoOficina from Autorizacion where id.usuario=? and id.codigoAutorizacion=?) order by codigo";
+				String sentenciaHql="select codigo, nombre from Oficina " + 
+				                    " where codigo in (select id.codigoOficina from Autorizacion where id.usuario=? and id.codigoAutorizacion=?) " +
+				                    ((soloActivas)?" and fechaBaja=0 ":"") +
+				                    " order by codigo";
 				Query query=session.createQuery(sentenciaHql);
 				query.setString(0,usuario);
 				query.setString(1,autorizacion);
@@ -172,15 +197,16 @@ public abstract class ValoresFacadeEJB extends HibernateEJB {
             } catch (Exception e) {
              oficinas.addElement("");
              oficinas.addElement("BuscarOficinas Error en la SELECT");
-             log.error("ERROR: "+usuario);
+             log.error("ERROR dins buscarOficinas(). Usuari "+usuario,e);
             } finally {
                 close(session);
             }
 		}
 		return oficinas;
 	}
-	
-	
+    
+    
+    
 	private Vector getOficinesFisiques() {
 		Session session = getSession();
 		ScrollableResults rs=null;
@@ -1222,11 +1248,11 @@ public abstract class ValoresFacadeEJB extends HibernateEJB {
 	}
     
     /**
-     * Devuelve la lista de todos los organismos activos de la aplicación
+     * Devuelve la lista de todos los organismos activos de la aplicaciï¿½n
      * 
      * 
-     * @return Vector de Strings. Por cada organismo añade un string con su código, otro string con nombre corto y otro con su nombre largo. 
-     * 		  En el caso de no encontrar nada envía el vector con tres strings: <"&nbsp;","No hi ha Organismes","&nbsp;">
+     * @return Vector de Strings. Por cada organismo aï¿½ade un string con su cï¿½digo, otro string con nombre corto y otro con su nombre largo. 
+     * 		  En el caso de no encontrar nada envï¿½a el vector con tres strings: <"&nbsp;","No hi ha Organismes","&nbsp;">
      * 
      * @throws EJBException
      * 

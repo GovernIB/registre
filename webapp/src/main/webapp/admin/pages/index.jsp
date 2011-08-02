@@ -25,16 +25,17 @@
   	    <p><strong><fmt:message key="actualitzacio_informacio_permanent"/></strong></p>
   			<ul style="padding-top:0px;">
   				<li><a href="<c:url value='/admin/controller.do?accion=autoritzUsuari'/>"><fmt:message key="autoritzacions"/></a></li>
-					<li><a href="<c:url value='/admin/controller.do?accion=oficines'/>"><fmt:message key="oficines"/></a></li>
+  				<li><a href="<c:url value='/admin/controller.do?accion=autoritzOficina'/>"><fmt:message key="autorizacions_oficina"/></a></li>
+				<li><a href="<c:url value='/admin/controller.do?accion=oficines'/>"><fmt:message key="oficines"/></a></li>
   				<li><a href="<c:url value='/admin/controller.do?accion=oficinesFisiques'/>"><fmt:message key="oficines_fisiques"/></a></li>
   				<li><a href="<c:url value='/admin/controller.do?accion=organismesOficina'/>"><fmt:message key="organismes_per_oficina"/></a></li>
   				<li><a href="<c:url value='/admin/controller.do?accion=organismes'/>"><fmt:message key="organismes"/></a></li>
   				<li><a href="<c:url value='/admin/controller.do?accion=entitats'/>"><fmt:message key="entitats"/></a></li>
   				<li><a href="<c:url value='/admin/controller.do?accion=comptadors'/>"><fmt:message key="inicialitzacio_comptador"/></a></li>
-					<li><a href="<c:url value='/admin/controller.do?accion=agrupacionsgeografiques'/>"><fmt:message key="agrupacions_geografiques"/></a></li>
+				<li><a href="<c:url value='/admin/controller.do?accion=agrupacionsgeografiques'/>"><fmt:message key="agrupacions_geografiques"/></a></li>
   				<li><a href="<c:url value='/admin/controller.do?accion=tipusDocuments'/>"><fmt:message key="tipus_documents"/></a></li>
-          <c:if test="${initParam['registro.entrada.view.registre012']}">
-  				<li><a href="<c:url value='/admin/controller.do?accion=municipis060'/>"><fmt:message key="municipis_012"/></a></li>
+          		<c:if test="${initParam['registro.entrada.view.registre012']}">
+  					<li><a href="<c:url value='/admin/controller.do?accion=municipis060'/>"><fmt:message key="municipis_012"/></a></li>
   				</c:if>
   		 		<li><a href="<c:url value='/admin/controller.do?accion=modelsOficis'/>"><fmt:message key="models_oficis"/></a></li>
   		 		<li><a href="<c:url value='/admin/controller.do?accion=modelsRebuts'/>"><fmt:message key="models_rebuts"/></a></li>
