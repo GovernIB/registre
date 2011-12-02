@@ -11,9 +11,7 @@
 
 <html>
     <head>
-        <title><fmt:message key='registre_entrades'/></title>
-        
-        
+        <title><fmt:message key='registre_entrades'/></title>       
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <script type="text/javascript">
    function init() {
@@ -41,19 +39,8 @@
    /* for other browsers */
    window.onload = init;
   </script>
-<!-- Script antic, el deix per ara per si l'he de recuperar.
-	Si s'ha de tornar a emprar, s'ha de posar "onload="redirige();"
-	a l'etiqueta "body".
-  <script type="text/javascript">
-           function redirige() {
-             setTimeout("document.getElementById('pasoForm').submit()", 500);
-           }
-        </script> -->
-    </head>
-    
-   <%-- <body > --%>
+</head>
      <body>
-        
 		<p class="pasoEntrada"><strong><fmt:message key='processant_registre'/> . . . . . . .</strong></p>    
     <%-- cambiar la direccion --%>
         <form id="pasoForm" name="pasoForm" action="registro.jsp" method="post">
@@ -75,15 +62,8 @@
             <input type="hidden" name="<%=nombreParametro%>" value="<c:out escapeXml="true" value="${texto}"/>">
             <% } %>
         <%
-    }
-%>
-       <%-- <input type=submit value="enviar"> --%>
-        </form>
+    }%>
+</form>
 <p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
- 		
-                 
-    </body>
+</body>
 </html>

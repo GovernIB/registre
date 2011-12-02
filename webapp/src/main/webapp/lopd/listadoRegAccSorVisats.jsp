@@ -235,7 +235,7 @@ if (registros.size()==0) {
      
  <!--       <td>
         <a id="<%="ref"+i%>" href="fichaRegAccEntrada.jsp?oficina=<%=oficina%>&numeroEntrada=<%=numeroEntrada%>&anoEntrada=<%=anyEntrada%>">
-            <img src="imagenes/open24.gif" border=0  title="Veure document">
+            <img src="imagenes/open24.gif" border=0  title="<fmt:message key='veure_document'/>">
         </a>
         </td>  -->
         <td align="center"><%=TipusAcces%></td>

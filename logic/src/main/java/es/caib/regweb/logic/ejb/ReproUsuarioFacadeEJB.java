@@ -5,15 +5,12 @@ import java.util.Vector;
 
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
-
 import es.caib.regweb.logic.helper.ParametrosReproUsuario;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.ScrollableResults;
-
 import org.apache.log4j.Logger;
-
 import es.caib.regweb.logic.helper.RegistroRepro;
 import es.caib.regweb.model.Repro;
 import es.caib.regweb.model.ReproId;
@@ -31,9 +28,8 @@ import es.caib.regweb.model.ReproId;
  */
 public abstract class ReproUsuarioFacadeEJB extends HibernateEJB {
 
+	private static final long serialVersionUID = 2L;
 	private Logger log = Logger.getLogger(this.getClass());
-    private static final long serialVersionUID = 1L;
-
 
     /**
     * @ejb.interface-method
@@ -44,12 +40,13 @@ public abstract class ReproUsuarioFacadeEJB extends HibernateEJB {
 		ScrollableResults rs=null;
 		Query q = null;
         ParametrosReproUsuario res = new ParametrosReproUsuario();
-        
         String datosleidos = null;
+        
+        log.debug("Preparat per llegir una Repro. Usuari:"+codUsuario+" ,Repro:"+nomRepro);
         try {
 
             String sentenciaHql="select datos from Repro " +
-                            "where id.usuario=? and id.nombre=? ";
+                                "where id.usuario=? and id.nombre=? ";
             q=session.createQuery(sentenciaHql);
             q.setString(0,codUsuario);
             q.setString(1,nomRepro);
@@ -90,6 +87,9 @@ public abstract class ReproUsuarioFacadeEJB extends HibernateEJB {
         Session session = getSession();
 		ScrollableResults rs=null;
 		Query q = null;
+		
+		log.debug("Preparat per eliminar una Repro. Usuari:"+codUsuario+" ,Repro:"+nomRepro);
+		
         try {
             String sentenciaHql= "delete from Repro  " +
                                  "where  ( id.usuario = ?  and id.nombre = ?)";
@@ -100,6 +100,7 @@ public abstract class ReproUsuarioFacadeEJB extends HibernateEJB {
 
     		session.flush();
         } catch (HibernateException he) {
+        	log.error("Error al eliminar una Repro. Usuari:"+codUsuario+" ,Repro:"+nomRepro);
             throw new EJBException(he);
         } finally {
             close(session);
@@ -120,18 +121,19 @@ public abstract class ReproUsuarioFacadeEJB extends HibernateEJB {
 		return this.grabar(param);
 	}
 
-	private boolean grabar(ParametrosReproUsuario param) throws SQLException, ClassNotFoundException, Exception{
+	private boolean grabar(ParametrosReproUsuario param){
         Session session = getSession();
 
         boolean ok = true;
       
+        log.debug("Preparat per grabar una Repro. Usuari:"+param.getUsuario()+" ,NomRepro:"+param.getNombre()+"Repro:"+param.getRepro());
         try {
             Repro r = new Repro(new ReproId(param.getUsuario(),param.getNombre(),param.getTipRepro()), param.getRepro());
             session.save(r);
     		session.flush();
-        } catch (HibernateException he) {
+        } catch (Exception he) {
             ok=false;
-            throw new EJBException(he);
+            //throw new EJBException(he);
         } finally {
             close(session);
         }

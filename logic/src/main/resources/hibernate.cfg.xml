@@ -40,6 +40,8 @@
   		<mapping class="es.caib.regweb.model.EntradaId"/>
   		<mapping class="es.caib.regweb.model.EntradaOficinaFisica"/>
   		<mapping class="es.caib.regweb.model.EntradaOficinaFisicaId"/>
+  		<mapping class="es.caib.regweb.model.HistoricoEmailsId"/>
+  		<mapping class="es.caib.regweb.model.HistoricoEmails"/>
   		<mapping class="es.caib.regweb.model.Idioma"/>
   		<mapping class="es.caib.regweb.model.Libro"/>
   		<mapping class="es.caib.regweb.model.LibroId"/>
@@ -51,6 +53,8 @@
   		<mapping class="es.caib.regweb.model.LogModificacionLopdId"/>
   		<mapping class="es.caib.regweb.model.LogSalidaLopd"/>
   		<mapping class="es.caib.regweb.model.LogSalidaLopdId"/>
+  		<mapping class="es.caib.regweb.model.ModeloEmail"/>
+  		<mapping class="es.caib.regweb.model.ModeloEmailId"/>
   		<mapping class="es.caib.regweb.model.ModeloOficio"/>
   		<mapping class="es.caib.regweb.model.ModeloRecibo"/>
   		<mapping class="es.caib.regweb.model.Modificacion"/>
@@ -69,6 +73,8 @@
   		<mapping class="es.caib.regweb.model.OficinaOrganismoId"/>
   		<mapping class="es.caib.regweb.model.OficinaOrganismoNoRemision"/>
   		<mapping class="es.caib.regweb.model.OficinaOrganismoNoRemisionId"/>
+  		<mapping class="es.caib.regweb.model.OficinaOrganismoPermetEnviarEmail"/>
+  		<mapping class="es.caib.regweb.model.OficinaOrganismoPermetEnviarEmailId"/>
   		<mapping class="es.caib.regweb.model.OficioRemision"/>
   		<mapping class="es.caib.regweb.model.OficioRemisionId"/>
   		<mapping class="es.caib.regweb.model.Organismo"/>
@@ -86,6 +92,8 @@
   		<mapping class="es.caib.regweb.model.TipoAgrupacionGeograficaId"/>
   		<mapping class="es.caib.regweb.model.TipoDocumento"/>
   		<mapping class="es.caib.regweb.model.TipoDocumentoId"/>
+  		<mapping class="es.caib.regweb.model.UnidadDeGestion"/>
+  		<mapping class="es.caib.regweb.model.UnidadDeGestionId"/>
    		<mapping class="es.caib.regweb.model.Visado"/>
     </session-factory>
     

@@ -120,47 +120,41 @@ void escribeSelect2(javax.servlet.jsp.JspWriter out, String tipo, Vector valores
    		<br/>
         <p>&nbsp;</p>
 <!--   		<div id="RecuadreCentrat"> --> 
-        <table  class="recuadroEntradas" align="center">
+        <table  class="recuadroEntradasRegistro" align="center">
         <form name="busquedaForm" action="RemiEntradaLis.jsp" method="post">
         <tr>
-            <td style="border:0">
-            &nbsp;
-            </td>
+            <td colspan="2">&nbsp;</td>
         </tr>
         <tr>
-            <td style="border:0">
-                &nbsp;&nbsp;
-                <fmt:message key='oficina'/>:
-                &nbsp;&nbsp;
-                <select name="oficina" id="oficina" onchange="refrescaFisica()">
+            <td>&nbsp;<fmt:message key='oficina'/>:</td>
+            <td><select name="oficina" id="oficina" onchange="refrescaFisica()">
                     <option value="00">00 - <fmt:message key='registro.todas_autorizadas'/> </option>
               <% escribeSelect(out, valores.buscarOficinas(usuario,"AS"), "");%>
                 </select>
-                &nbsp;&nbsp;
+                &nbsp;
             </td>
         </tr>
         <tr>
-            <td style="border:0">
-                &nbsp;&nbsp;
-                <fmt:message key="oficina_fisica"/>:
-                &nbsp;&nbsp;
-                <select name="oficinafisica" id="oficinafisica">
+            <td>&nbsp;<fmt:message key="oficina_fisica"/>:&nbsp;</td>
+            <td><select name="oficinafisica" id="oficinafisica">
                     <option value="">00 - <fmt:message key='registro.todas_autorizadas'/> </option>
                 </select>
-                &nbsp;&nbsp;
+                &nbsp;
             </td>
         </tr>
+         <% if (es.caib.regweb.logic.helper.Conf.get("integracionIBKEYActiva","false").equalsIgnoreCase("true")){%>
         <tr>
-            <td style="border:0">
-            &nbsp;<br>
-            </td>
+           <td style="align:left" colspan="2">
+                &nbsp;<fmt:message key='mostrarRegistrosConDocElectronicos'/>:<input type="checkbox" name="mostrarRegistrosConDocElectronicos" id="mostrarRegistrosConDocElectronicos" />
+           </td>
         </tr>
+         <%} %>
         <tr>
-        <td style="border:0">
+          <td colspan="2">
             <p align="center">
-            <input type=submit value="<fmt:message key='cercar'/>">
+            <input type="submit" value="<fmt:message key='cercar'/>">
             </p>
-        </td>
+          </td>
         </tr>
         </form>
         </table>

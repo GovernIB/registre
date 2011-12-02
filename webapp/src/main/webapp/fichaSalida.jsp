@@ -5,17 +5,16 @@
 <%@ page pageEncoding="UTF-8"%>
 <% request.setCharacterEncoding("UTF-8"); %>
 
-<%String usuario=request.getRemoteUser();
+<%
+String usuario=request.getRemoteUser();
 String codOficina=request.getParameter("oficina");
 String numeroSalida=request.getParameter("numeroSalida");
 String ano=request.getParameter("anoSalida");
+String localitzadorsDocs[] ; 
 %>
 <!-- Exploter no renderitza bé.  -->
 <html>
-    <head><title><fmt:message key='registre_de_sortides'/></title>
-        
-        
-        
+    <head><title><fmt:message key='registre_de_sortides'/></title>    
     </head>
     <body bgcolor="#FFFFFF">
     <%
@@ -31,6 +30,7 @@ String ano=request.getParameter("anoSalida");
     pregsal.setNumeroSalida(numeroSalida);
     pregsal.setAnoSalida(ano);
     reg=regsal.leer(pregsal);
+    localitzadorsDocs = reg.getArrayLocalitzadorsDocs();
     %>
     
           	<!-- Molla pa --> 
@@ -105,7 +105,7 @@ String ano=request.getParameter("anoSalida");
         <table width="591" class="recuadroSalidas">
             <tr>
                 <td class="cellaSortides" width="581">
-                    <table width="100%" border=0>
+                    <table width="100%" border="0">
                         <tr>
                             <td style="border:0" >
                                 &nbsp;<fmt:message key='data_sortida'/> :<font class="ficha"><%=fechaSalida%></font>
@@ -126,8 +126,10 @@ String ano=request.getParameter("anoSalida");
                                 <fmt:message key='num_registre'/> <font class="ficha"><%=reg.getNumeroSalida()%>/<%=reg.getAnoSalida()%></font>
                             </td>
                             <td style="border:0" >
-                                <c:set var="texto" scope="page"><%=fechaVisado%></c:set>
-                                <fmt:message key='data_registre'/> <font class="ficha"><c:out escapeXml="false" value="${texto}"/></font>
+                            	<% if(fechaVisado!=null && !fechaVisado.equals("")){ %>
+	                                <c:set var="texto" scope="page"><%=fechaVisado%></c:set>
+	                                <fmt:message key='data_visado'/> <font class="ficha"><c:out escapeXml="false" value="${texto}"/></font>
+	                            <%} %>
                             </td>
                         </tr>
                     </table>
@@ -201,6 +203,22 @@ String ano=request.getParameter("anoSalida");
 					<p></p>
                 </td>
             </tr> 
+		<% if (es.caib.regweb.logic.helper.Conf.get("integracionIBKEYActiva","false").equalsIgnoreCase("true")){
+             if(localitzadorsDocs!=null){ %>
+            <tr>
+	            <td>
+		             <b><fmt:message key='registro.datosDocumentosAnexados'/></b>
+		             <p><fmt:message key='registro.emailRemitente'/>:&nbsp;<font class="ficha"><%=(reg.getEmailRemitent()==null) ? "" : reg.getEmailRemitent()%></font></p>
+		             <fmt:message key='registro.textoEnlaces'/>:<br/>
+		             <ul>
+			            <%for(int i=0; i<localitzadorsDocs.length; i++){ %>
+			            	<li><a href="<%= localitzadorsDocs[i]%>" target="_blank"><%= localitzadorsDocs[i]%></a></li>
+			            <%} %>	            
+				     </ul>
+				</td>
+            </tr>
+            <%}
+           }%>
         </table>
         </center>
         <p>
@@ -226,8 +244,6 @@ String ano=request.getParameter("anoSalida");
                 <% } %>
             </center>
         </p>
-        <% } %>
-   		
-                  
+        <% } %>             
     </body>
 </html>

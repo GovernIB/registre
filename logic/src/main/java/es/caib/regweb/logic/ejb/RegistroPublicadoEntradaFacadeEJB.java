@@ -26,6 +26,7 @@ import es.caib.regweb.model.PublicacionId;
  */
 public abstract class RegistroPublicadoEntradaFacadeEJB extends HibernateEJB {
 	
+	private static final long serialVersionUID = 1L;
 	private Logger log = Logger.getLogger(this.getClass());
     
     /**

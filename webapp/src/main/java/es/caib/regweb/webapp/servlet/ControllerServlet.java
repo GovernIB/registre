@@ -81,10 +81,12 @@ public class ControllerServlet extends UtilWebServlet {
             boolean autorizadoVisadoEntradas = valores.usuarioAutorizadoVisar(usuario,"VE");
             boolean autorizadoVisadoSalidas = valores.usuarioAutorizadoVisar(usuario,"VS");
         	String preregistre = Conf.get("preregistre");
+        	String viewPreregistre = Conf.get("viewPreregistre", "false");
 
             request.setAttribute("autorizadoVisadoEntradas", Boolean.valueOf(autorizadoVisadoEntradas));
             request.setAttribute("autorizadoVisadoSalidas", Boolean.valueOf(autorizadoVisadoSalidas));
             request.setAttribute("preregistre", preregistre);
+            request.setAttribute("viewPreregistre", viewPreregistre);
 
         } catch(Exception ex) {
 			log.debug("Capturam excepci\u00f3 estranya!");

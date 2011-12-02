@@ -35,6 +35,7 @@ import org.hibernate.ScrollableResults;
  */
 public abstract class ListadoRegAccesosVisatFacadeEJB extends HibernateEJB {
 	
+	private static final long serialVersionUID = 1L;
     private Logger log = Logger.getLogger(this.getClass());
 	
 	private DateFormat dateF= new SimpleDateFormat("dd/MM/yyyy");

@@ -9,16 +9,13 @@ ListadoRegOficiosSalidaFacade listado=ListadoRegOficiosSalidaFacadeUtil.getHome(
 
 String usuario=request.getRemoteUser().toUpperCase();
 String oficinaSel=request.getParameter("oficina");
+boolean mostrarRegElec = ((( (request.getParameter("mostrarRegistrosConDocElectronicos")!=null) ? request.getParameter("mostrarRegistrosConDocElectronicos") : "")=="")?false:true);
 
 session.setAttribute("listadoOficiosSalida",oficinaSel);
+session.setAttribute("mostrarRegistrosConDocElectronicos",String.valueOf(mostrarRegElec));
 %>
-
-
 <html>
-<head><title><fmt:message key='registre_de_sortides'/></title>
-    
-    
-    
+<head><title><fmt:message key='registre_de_sortides'/></title> 
     <script src="jscripts/TAO.js"></script>
     <script>
         var listaExtractos=new Array();
@@ -78,13 +75,13 @@ session.setAttribute("listadoOficiosSalida",oficinaSel);
 		<!-- Fi Molla pa-->
 		<p>&nbsp;</p>
 <%
-Vector registros=listado.recuperarRegistros(usuario, oficinaSel);
+Vector registros=listado.recuperarRegistros(usuario, oficinaSel, mostrarRegElec);
 
 if (registros.size()==0) { 
 /* No hi ha cap element al llistat, eliminam el llistat de la sessió.*/
         	session.removeAttribute("listadoOficiosSalida");
         	%>
-<p><p>
+<br/>
 <center><b><fmt:message key='no_shan_trobat_registres_que_compleixin_els_criteris_seleccionats'/></B></center>
      <% } else { %>
      
@@ -101,7 +98,7 @@ if (registros.size()==0) {
 </table>
 
 
-<table width="100%" border=0>
+<table width="100%" border="0">
     <tr>
         <td align="left">
             
@@ -128,7 +125,7 @@ if (registros.size()==0) {
            <td width="10%" class="cabeceraTabla">&nbsp;&nbsp;<fmt:message key='extracte'/></td>
            <td align="left">
                <a href="javascript: buscar()"> 
-                   <img src="imagenes/buscar.gif" border=0  title="<fmt:message key='cercar_extracte'/>">
+                   <img src="imagenes/buscar.gif" border="0"  title="<fmt:message key='cercar_extracte'/>">
                </a>
            </td>
        </tr>
@@ -160,7 +157,7 @@ if (registros.size()==0) {
      
         <td>
         <a id="<%="ref"+i%>" href="RemiSalidaFicha.jsp?oficio=<%=oficio %>&oficina=<%=oficina%>&numeroSalida=<%=numeroSalida%>&anoSalida=<%=anoSalida%>">
-            <img src="imagenes/open24.gif" border=0  title="Veure document">
+            <img src="imagenes/open24.gif" border="0"  title="<fmt:message key='veure_document'/>">
         </a>
         </td> 
         <td style="<%= (anulado) ? "color:red;" : "" %>"><%=fechaSalida%></td>

@@ -27,6 +27,9 @@ String altres="";
 String comentario="";
 String municipi060="";
 String numeroRegistres060="1";
+String pLocalitzadorsDocs = "";
+String localitzadorsDocs[] = null; 
+String emailRemitent = null;
 
 if (request.getAttribute("registroEntrada")!=null) {//Viene de error
     registro=(ParametrosRegistroEntrada)request.getAttribute("registroEntrada");
@@ -53,6 +56,7 @@ if (request.getAttribute("registroEntrada")!=null) {//Viene de error
     numeroEntrada=registro.getNumeroEntrada();
     hhmm=registro.getHora();
     
+
 } else {
     numeroEntrada=(request.getParameter("numero")==null) ? "": request.getParameter("numero");
     codOficina=(request.getParameter("oficina")==null) ? "" :request.getParameter("oficina");
@@ -89,6 +93,8 @@ if (request.getAttribute("registroEntrada")!=null) {//Viene de error
     comentario=registro.getComentario();
     municipi060=registro.getMunicipi060();
     numeroRegistres060 = String.valueOf(registro.getNumeroDocumentosRegistro060());
+
+
         
     if (hora!=null && !hora.equals("") && !hora.equals("0") ) {
         if (hora.length()<4) {hora="0"+hora;}
@@ -98,12 +104,11 @@ if (request.getAttribute("registroEntrada")!=null) {//Viene de error
     } else {
        hhmm=hora;
     }
-    /*
-       Comentat per a solventar el problema que no es visualitzaven registres
-       antics debut a que no tenien hora de entrada/sortida */
- //   if (hora.length()<4) {hora="0"+hora;}
- //   hhmm=hora.substring(0,2)+":"+hora.substring(2,4);
+
 }
+emailRemitent = registro.getEmailRemitent();
+pLocalitzadorsDocs=registro.getLocalitzadorsDocs();
+localitzadorsDocs = registro.getArrayLocalitzadorsDocs();
 
 //javax.naming.InitialContext contexto = new javax.naming.InitialContext();
 ValoresFacade valores = ValoresFacadeUtil.getHome().create();
@@ -184,7 +189,7 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
         <script language="javascript" src="jscripts/TAO.js"></script>
         <script language="javascript">
 		     function activar_060(){
-           <c:if test="${initParam['registro.entrada.view.registre012']}">
+		    	 if ("<%=es.caib.regweb.logic.helper.Conf.get("viewRegistre012","false").toLowerCase()%>"=="true"){
 					valor=document.registroForm.Reg060.checked;
 		            
 		            if (valor){
@@ -196,7 +201,7 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
 						document.registroForm.mun_060.disabled = true;
 						document.registroForm.numreg_060.disabled = true;
 					}
-					</c:if>
+		    	}
 			}
 				
 		  function isInt(x) { 
@@ -228,8 +233,8 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
             }
             
             
-            function confirmaProceso() {
-            valor=document.registroForm.comentario.value;
+  		 function confirmaProceso() {       
+	   		valor=document.registroForm.comentario.value;
             valor1=document.registroForm.altres.value;
             valor2=document.registroForm.fora.value;
             valor3=document.registroForm.correo.value;
@@ -243,10 +248,10 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
 	             textoPublic=document.registroForm.textoPublic.value;
 	             observaciones=document.registroForm.observaciones.value;
 	            
-			if (valor.indexOf('¤',0)>-1 || valor1.indexOf('¤',0)>-1 || valor2.indexOf('¤',0)>-1 || valor3.indexOf('¤',0)>-1 || valor4.indexOf('¤',0)>-1 || valor5.indexOf('¤',0)>-1) {
+				if (valor.indexOf('¤',0)>-1 || valor1.indexOf('¤',0)>-1 || valor2.indexOf('¤',0)>-1 || valor3.indexOf('¤',0)>-1 || valor4.indexOf('¤',0)>-1 || valor5.indexOf('¤',0)>-1) {
 	            	alert("<fmt:message key='pedirdatos.alert1'/>");
-            	return false;
-            }
+	            	return false;
+	            }
 	            if(!isInt(numeroBOCAIB) && (numeroBOCAIB != "")){
 	            	alert("<fmt:message key='modiEntrada.alert1'/>");
 	            	return false;
@@ -258,7 +263,7 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
 	            if(!isInt(lineas) && (lineas != "")){
 	            	alert("<fmt:message key='modiEntrada.alert3'/>");
 	            	return false;
-				}
+	            }
             }
             if ( trim(entidad1Anterior)!=trim(document.registroForm.entidad1.value) || trim(entidad2Anterior)!=trim(document.registroForm.entidad2.value) ||
             		trim(altresAnterior)!=trim(document.registroForm.altres.value) || trim(comentarioAnterior)!=trim(document.registroForm.comentario.value) ) {
@@ -503,14 +508,14 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
 
         <form name="registroForm" action="ModiEntradaPaso.jsp" method="post" onsubmit="return confirmaProceso()">
         	<input type="hidden" name="numeroRegistro" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(registro.getNumeroEntrada())%>">
-                    <input type="hidden" name="serie" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(intSerie+"")%>">
-                    <input type="hidden" name="anoEntrada" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(ano)%>">
-                    <input type="hidden" name="entidad1Anterior" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(entidad1Anterior)%>">
-                    <input type="hidden" name="entidad2Anterior" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(entidad2Anterior)%>">
-                    <input type="hidden" name="altresAnterior" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(altresAnterior)%>">
-                    <input type="hidden" name="comentarioAnterior" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(comentarioAnterior)%>">
+            <input type="hidden" name="serie" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(intSerie+"")%>">
+            <input type="hidden" name="anoEntrada" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(ano)%>">
+            <input type="hidden" name="entidad1Anterior" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(entidad1Anterior)%>">
+            <input type="hidden" name="entidad2Anterior" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(entidad2Anterior)%>">
+            <input type="hidden" name="altresAnterior" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(altresAnterior)%>">
+            <input type="hidden" name="comentarioAnterior" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(comentarioAnterior)%>">
         	<input type="hidden" name="numeroRegistros060mAnterior" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(String.valueOf(registro.getNumeroDocumentosRegistro060()))%>">
-                    <input type="hidden" name="municipi060Anterior" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(registro.getMunicipi060())%>">
+            <input type="hidden" name="municipi060Anterior" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(registro.getMunicipi060())%>">
             <div id="idCuerpo" style="display:block">
                 <table class="recuadroEntradas" width="630"> 
                     <tr>
@@ -561,7 +566,9 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
                                         &nbsp;&nbsp;&nbsp;
                                     </td>
                                     <td style="border:0">
-                                        <fmt:message key='data_registre'/> <input readonly="readonly" type="text" maxlength="10" name="NNXdataentrada" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(fechaVisado)%>" size="10">
+                                    <% if(fechaVisado!=null && !fechaVisado.equals("")){ %>
+                                        <fmt:message key='data_visado'/> <%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(fechaVisado)%>
+                                    <%} %>
                                     </td>
                                 </tr>
                             </table>
@@ -700,7 +707,7 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
                             </td>
                         </tr>
                                         <!-- 9ª fila de la tabla -->
-                <c:if test="${initParam['registro.entrada.view.registre012']}">
+               <% if (es.caib.regweb.logic.helper.Conf.get("viewRegistre012","false").equalsIgnoreCase("true")){%>
                 <tr>
                             <td style="border:0" valign="bottom">
                          <input TYPE="checkbox" NAME="Reg060" VALUE="Si" Onclick="activar_060()" <%=(registro==null)? "": retornarChecked(registro)%>> <fmt:message key='registre_012'/> <!--   </input>-->
@@ -727,11 +734,38 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
                    </select>
                   </td>
                 </tr>
-                </c:if>
+                <%} %>
                             </table>
                         </td>
                     </tr>
-                    
+            <% if (es.caib.regweb.logic.helper.Conf.get("integracionIBKEYActiva","false").equalsIgnoreCase("true")){
+            	if(localitzadorsDocs!=null){ %>
+            <tr>
+            <td class="cellaEntrades">
+            <!-- tabla de datos de la compulsa electrònica -->
+            <table class="bordeEntrada" style="border:0;" >
+                <tr>
+                	<td style="border:0;"><b><fmt:message key='registro.datosDocumentosAnexados'/></b></td>
+                </tr>
+	            <tr>
+	            	<td style="border:0;"><fmt:message key='registro.emailRemitente'/>&nbsp;&nbsp;<input onkeypress="return check(event)" type="text" name="emailRemitente" size="50" maxlength="50" value="<%=(registro==null)? emailRemitent :registro.getEmailRemitent()%>"></td>
+	            </tr>
+	            <tr>
+		            <td style="border:0;">
+		            <input type="hidden" name="localitzadorsDocs" value="<%=pLocalitzadorsDocs%>">
+		            <fmt:message key='registro.textoEnlaces'/><br/>
+		            <ul>
+		            <%for(int i=0; i<localitzadorsDocs.length; i++){ %>
+		            	<li><a href="<%= localitzadorsDocs[i]%>" target="_blank"><%= localitzadorsDocs[i]%></a></li>
+		            <%} %>	            
+		            </ul>
+		            </td>
+	            </tr>
+            </table>
+            </td>
+            </tr>
+             <%}
+           	}%>                   
                     <tr>
                     <td>
                     <!-- tabla de datos del Extracto -->
@@ -796,9 +830,10 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
                             </table>
                         </td>
                     </tr>
-                    <c:if test="${initParam['registro.entrada.view.infoBOIB']}">
-                <%-- Si la oficina es 32 lanzamos datos para fichero de publicaciones --%>
-                    <% if (registro.getOficina().equals(application.getInitParameter("registro.oficinaBOIB"))) { 
+                <%
+                if (Conf.get("infoBOIB","false").equalsIgnoreCase("true")){
+                // Si la oficina es 32 lanzamos datos para fichero de publicaciones
+                     if (registro.getOficina().equals(Conf.get("oficinaBOIB","32"))) { 
                    
                     	RegistroPublicadoEntradaFacade registroPublicado = RegistroPublicadoEntradaFacadeUtil.getHome().create();
                     	ParametrosRegistroPublicadoEntrada paramRegPubEntrada = new ParametrosRegistroPublicadoEntrada();
@@ -864,7 +899,7 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
                             <tr id="IDpublicacion5">
                                 <td style="border:0;">&nbsp;</td>
                             </tr>
-                
+
                             <script>
                                 Calendar.setup(
                                 {
@@ -885,10 +920,8 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
                             </table>
                         </td>
                     </tr>
-                    <% registroPublicado.remove();%>
-                    <% } %>
-                    <%-- Fin de la opcion oficina=32--%>
-				</c:if>
+                <% registroPublicado.remove();}
+                } // Fin if (Conf.get("infoBOIB","false").equalsIgnoreCase("true"))%>
                 </table>
             </div>
         

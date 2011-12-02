@@ -20,7 +20,6 @@
     ValoresFacade valores = ValoresFacadeUtil.getHome().create();
 	String codiCookies = "RWS";
 %>
-
 <%! 
     String errorEn(Hashtable errores, String campo) {
         return (errores.containsKey(campo))? "errorcampo" : "";
@@ -313,14 +312,7 @@
 		<li><fmt:message key='registre_de_sortides'/></li>
 		</ul>
 		<!-- Fi Molla pa-->
-<!--         <div align="center"> --> 
-<!--        <center>
-            <font class="titulo">
-                Usuari : <%=usuario%>
-            </font>
-        </center> -->
         <!-- Mostramos Errores si los hubiera -->
-
 <% Hashtable errores = (registro==null)?new Hashtable():registro.getErrores();
     if (errores.size() > 0) {%>
         <table class="recuadroErrors" width="599" align="center">
@@ -375,14 +367,14 @@
                         <!-- Data d'entrada -->
                         <font class="<%=errorEn(errores,"datasalida")%>"><fmt:message key='registro.fecha_salida'/></font>
               <%String anteriorDataSalida=(registro==null)? "":registro.getDataSalida();%>
-                        <input id="datasalida" type=text name="datasalida" value="<%=anteriorDataSalida.equals("") ? valores.getFecha() : anteriorDataSalida %>" size="10" >
+                        <input id="datasalida" type="text" name="datasalida" value="<%=anteriorDataSalida.equals("") ? valores.getFecha() : anteriorDataSalida %>" size="10" >
                     </td>
                     <td style="border:0">
                         <!-- Hora d'entrada -->
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         <font class="<%=errorEn(errores,"hora")%>"><fmt:message key='registro.hora'/></font>
               <% String anteriorHora=(registro==null)? "":registro.getHora();%>
-                        <input type=text name=hora value="<%=anteriorHora.equals("") ? valores.getHorasMinutos() : anteriorHora %>" size="5">
+                        <input type="text" name="hora" value="<%=anteriorHora.equals("") ? valores.getHorasMinutos() : anteriorHora %>" size="5">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     </td>
                     </tr>
@@ -421,8 +413,8 @@
                 <!-- Fecha del documento -->
                 <td style="border:0;" colspan="2">
                     <font class="<%= errorEn(errores,"data") %>"><fmt:message key='registro.fecha'/></font>
-          <% String anteriorData=(registro==null)? "":registro.getData(); %>
-                    <input type=text name=data value="<%=anteriorData.equals("") ? valores.getFecha() : anteriorData %>" maxlength="10" size="10" >
+          		<% String anteriorData=(registro==null)? "":registro.getData(); %>
+                    <input type="text" name="data" value="<%=anteriorData.equals("") ? valores.getFecha() : anteriorData %>" maxlength="10" size="10" >
                     <!-- Despegable para Tipos de documentos -->
                     &nbsp;<font class="errorcampo">*</font>
                     <font class="<%=errorEn(errores, "tipo")%>"><fmt:message key='registro.tipo'/></font>
@@ -443,10 +435,10 @@
                 <br><font class="errorcampo">*</font>
                 <fmt:message key='destinatari'/>..<font class="<%=errorEn(errores,"entidad1")%>"><fmt:message key='registro.entidad'/></font>
                 <!-- Remitente Entidad 1 -->
-                <input type=text name="entidad1" size="7" value="<%=(registro==null)? "":registro.getEntidad1()%>" onblur="recuperaDescripcionEntidad()"> 
+                <input type="text" name="entidad1" size="7" value="<%=(registro==null)? "":registro.getEntidad1()%>" onblur="recuperaDescripcionEntidad()"> 
                 <!-- Remitente Entidad 2 -->
-                <input type=text name="entidad2" size="3" value="<%=(registro==null)? "":registro.getEntidad2()%>" onblur="recuperaDescripcionEntidad()">
-                <a href="javascript:abreDestinatarios()"><img border="0" src="imagenes/buscar.gif" align=middle alt="<fmt:message key='cercar'/>"></a>
+                <input type="text" name="entidad2" size="3" value="<%=(registro==null)? "":registro.getEntidad2()%>" onblur="recuperaDescripcionEntidad()">
+                <a href="javascript:abreDestinatarios()"><img border="0" src="imagenes/buscar.gif" align="middle" alt="<fmt:message key='cercar'/>"></a>
                 </td>
                 <!-- Descipcion del Destinatario  -->
                 <td width="45%" style="border:0;">
@@ -459,7 +451,7 @@
                 <!-- Remitente Altres entidades -->
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 &nbsp;&nbsp;&nbsp;
-                <fmt:message key='altres'/>&nbsp;&nbsp;<input onkeypress="return check(event)" type=text name="altres" size="30" maxlength="30" value="<%=(registro==null)? "":registro.getAltres().trim()%>">
+                <fmt:message key='altres'/>&nbsp;&nbsp;<input onkeypress="return check(event)" type="text" name="altres" size="30" maxlength="30" value="<%=(registro==null)? "":registro.getAltres().trim()%>">
                 <!--<a href="javascript:abreBDP()">
                 <img border="0" src="imagenes/buscar.gif" align=middle alt="<fmt:message key='cercar'/>">
                 </a>-->
@@ -491,7 +483,7 @@
                             <td style="border:0;">&nbsp;</td>
                             <td style="border:0;" valign="bottom" colspan="2">
                                 <fmt:message key='registro.fuera_baleares'/>&nbsp;
-                                <input onkeypress="return check(event)" type=text name="fora" size="25" maxlength="25" value="<%=(registro==null)? "":registro.getFora().trim()%>">            
+                                <input onkeypress="return check(event)" type="text" name="fora" size="25" maxlength="25" value="<%=(registro==null)? "":registro.getFora().trim()%>">            
                             </td>
                         </tr>
                     </table>
@@ -503,8 +495,8 @@
                 <td style="border:0;" colspan="2">
                     <!-- Número d'entrada -->
                     <font class="<%=errorEn(errores,"entrada1")%>"><fmt:message key='registro.num_entrada'/></font>
-                    <input onKeyPress="return goodchars(event,'0123456789')" type=text name="entrada1" maxlength="6" size="6" value="<%=(registro==null)? "":registro.getEntrada1()%>">&nbsp;&nbsp;/&nbsp; 
-                    <input onKeyPress="return goodchars(event,'0123456789')" type=text name="entrada2" maxlength="4" size="4" value="<%=(registro==null)? "":registro.getEntrada2()%>">
+                    <input onKeyPress="return goodchars(event,'0123456789')" type="text" name="entrada1" maxlength="6" size="6" value="<%=(registro==null)? "":registro.getEntrada1()%>">&nbsp;&nbsp;/&nbsp; 
+                    <input onKeyPress="return goodchars(event,'0123456789')" type="text" name="entrada2" maxlength="4" size="4" value="<%=(registro==null)? "":registro.getEntrada2()%>">
                 </td>
                 </TR> 
                 <!-- 8ª fila de la tabla -->
@@ -512,9 +504,9 @@
                 <td style="border:0;">
                 <!-- Organismo destinatario -->
                 <font class="errorcampo">*</font><font class="<%=errorEn(errores,"remitent")%>"><fmt:message key='registro.organismo_emisor'/>..............:</font>
-                <input type=text name="remitent" size="4" maxlength="4" value="<%=(registro==null)? "":registro.getRemitent()%>" onblur="recuperaRemitente()">
+                <input type="text" name="remitent" size="4" maxlength="4" value="<%=(registro==null)? "":registro.getRemitent()%>" onblur="recuperaRemitente()">
                 <a href="javascript:abreRemitentes()">
-                <img src="imagenes/buscar.gif" align=middle alt="<fmt:message key='cercar'/>" border="0">
+                <img src="imagenes/buscar.gif" align="middle" alt="<fmt:message key='cercar'/>" border="0">
                 </a>
                 </td>
                 <td style="border:0" >
@@ -539,20 +531,20 @@
                     <font class="<%=errorEn(errores,"idioex")%>"><fmt:message key='registro.idioma'/></font>
                     <select name="idioex">
           <% String anteriorIdioex=(registro==null)? "":registro.getIdioex(); %>
-                    <option value="2" <%=anteriorIdioex.equals("2") ? "selected" : "" %> > <fmt:message key='registro.idioma.catala'/>
-                    <option value="1" <%=anteriorIdioex.equals("1") ? "selected" : "" %> > <fmt:message key='registro.idioma.castella'/>
+                    <option value="2" <%=anteriorIdioex.equals("2") ? "selected" : "" %> > <fmt:message key='registro.idioma.catala'/></option>
+                    <option value="1" <%=anteriorIdioex.equals("1") ? "selected" : "" %> > <fmt:message key='registro.idioma.castella'/></option>
                     </select>&nbsp;
 
                     <c:choose>
                     <c:when test="${initParam['registro.entrada.view.disquete_correo']}">
                     <!--Numero de disquete -->
                     <font class="<%=errorEn(errores,"disquet")%>"><fmt:message key='registro.num_disquete'/> </font>
-                    <input type=text onkeypress="return check(event)" name=disquet size="8" value="<%=(registro==null)? "":registro.getDisquet().trim()%>">
-                    <a href="javascript:abreDisquete()"><img src="imagenes/buscar.gif" align=middle alt="Darrer disquet" border="0"></a>
+                    <input type="text" onkeypress="return check(event)" name="disquet" size="8" value="<%=(registro==null)? "":registro.getDisquet().trim()%>">
+                    <a href="javascript:abreDisquete()"><img src="imagenes/buscar.gif" align="middle" alt="Darrer disquet" border="0"></a>
                     <!--Numero de disquete -->
                     &nbsp;&nbsp;
                     <font class="<%=errorEn(errores,"correo")%>"><fmt:message key='registro.num_correo'/> </font>
-                    <input onkeypress="return check(event)" type=text name=correo size="8" value="<%=(registro==null)? "":registro.getCorreo().trim()%>">
+                    <input onkeypress="return check(event)" type="text" name="correo" size="8" value="<%=(registro==null)? "":registro.getCorreo().trim()%>">
                     </c:when>
                     <c:otherwise>
                     <input type="hidden" name="disquet" value=""/>
@@ -568,7 +560,7 @@
                 <td style="border:0;">
                     <!-- Extracto del documento -->
                     <font class="errorcampo">*</font>
-                    <font class="<%=errorEn(errores,"comentario")%>"><fmt:message key='extracte_del_document'/>:
+                    <font class="<%=errorEn(errores,"comentario")%>"><fmt:message key='extracte_del_document'/>:</font>
                     <textarea cols="67" onkeypress="return checkComentario(event)" rows="3" name="comentario"><%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml((registro==null) ? "" : registro.getComentario())%></textarea>
                 </td>
                 </tr>

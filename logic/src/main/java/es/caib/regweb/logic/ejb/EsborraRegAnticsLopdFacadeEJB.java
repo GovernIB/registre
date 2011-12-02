@@ -25,7 +25,9 @@ import org.apache.log4j.Logger;
  */
 public abstract class EsborraRegAnticsLopdFacadeEJB extends HibernateEJB {
 	
-    private Logger log = Logger.getLogger(this.getClass());
+
+	private static final long serialVersionUID = 1L;
+	private Logger log = Logger.getLogger(this.getClass());
 	
 	/** Crea una nova instància de EsborraRegAnticsLopd */
 	public EsborraRegAnticsLopdFacadeEJB() {

@@ -5,21 +5,14 @@
 <%@ page pageEncoding="UTF-8"%>
 <% request.setCharacterEncoding("UTF-8"); %>
 <%
-    String usuario=request.getRemoteUser();
-    
+    String usuario=request.getRemoteUser();    
     ValoresFacade valores = ValoresFacadeUtil.getHome().create();
     boolean autorizadoVisadoEntradas=valores.usuarioAutorizadoVisar(usuario,"AES60T01");
     boolean autorizadoVisadoSalidas=valores.usuarioAutorizadoVisar(usuario,"AES65T01");
-
-//	response.setHeader("Cache-Control", "store");
-//    response.setHeader("Pragma", "cache");
-         %>
-
+%>
 <html>
     <head>
-        <title><fmt:message key='registre_entrades'/> / <fmt:message key='sortides'/></title>
-        
-        
+        <title><fmt:message key='registre_entrades'/> / <fmt:message key='sortides'/></title>      
         <meta http-equiv="Cache-Control" content="store">
         <meta http-equiv="Pragma" content="cache"> 
         <link rel="shortcut icon" href="favicon.ico"/>
@@ -31,7 +24,6 @@
             ventana.focus();
             }
         </script>
-
     </head>
     <body bgcolor="#FFFFFF" text="#000000">
     
@@ -42,8 +34,7 @@
 	</ul>
 	<!-- Fi Molla pa-->
 	<br/>
- <!--       <center><font class="titulo"><fmt:message key='usuari'/> : <%=usuario%></font></center>&nbsp;<p> -->
-        <br/>
+    <br/>
         <table align="center">
             <%-- Fila para los literales --%>
             <tr>

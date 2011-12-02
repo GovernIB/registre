@@ -6,6 +6,7 @@
 
 package es.caib.regweb.webapp.servlet;
 
+import es.caib.regweb.logic.helper.Conf;
 import es.caib.regweb.logic.helper.RegistroRepro;
 import org.apache.commons.fileupload.*;
 
@@ -52,9 +53,12 @@ public class FileUploader {
 		vectorRepros=repro.recuperarRepros(usuario,tipusRepro);
 
 		//Cercam el número màxim de repros per usuari
-		javax.naming.Context myenv = (javax.naming.Context) contexto.lookup("java:comp/env");
-	    int maxRepros = ((Integer)myenv.lookup("Repros.max")).intValue();
-		
+		int maxRepros  = 20;
+		try{
+			maxRepros =  Integer.parseInt(es.caib.regweb.logic.helper.Conf.get("numMaxRepros", "20"));
+		}catch( NumberFormatException ex){
+			log.error("Error al leer la propiedad 'numMaxRepros'.",ex);
+		}
 		java.util.List fileItems = fu.parseRequest(request);
 		java.util.Iterator i = fileItems.iterator();		
 		

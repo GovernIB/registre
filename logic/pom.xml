@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>es.caib.regweb</groupId>
     <artifactId>logic</artifactId>
@@ -8,7 +9,7 @@
     <parent>
         <groupId>es.caib</groupId>
         <artifactId>regweb</artifactId>
-        <version>1.0.3-SNAPSHOT</version>
+        <version>1.0.5</version>
     </parent>
 
     <dependencies>
@@ -94,6 +95,13 @@
             </exclusions>
         </dependency>
 
+        <dependency>
+        	<groupId>javax.mail</groupId>
+        	<artifactId>mail</artifactId>
+        	<version>1.4.1</version>
+        	<type>jar</type>
+        	<scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -154,25 +162,41 @@
                         <configuration>
                             <generatedSourcesDirectory>${project.build.directory}/xdoclet</generatedSourcesDirectory>
                             <tasks>
-                                <property file="../config.properties" />
-                                <ejbdoclet destdir="${project.build.directory}/xdoclet" excludedtags="@version,@author" ejbspec="2.0" force="false" verbose="true">
+                                <property file="../config.properties"/>
+                                <ejbdoclet
+                                        destdir="${project.build.directory}/xdoclet"
+                                        excludedtags="@version,@author"
+                                        ejbspec="2.0"
+                                        force="false"
+                                        verbose="true">
                                     <fileset dir="${project.build.sourceDirectory}">
-                                        <include name="**/*EJB.java" />
+                                        <include name="**/*EJB.java"/>
                                     </fileset>
 
-                                    <packageSubstitution packages="ejb" substituteWith="interfaces" />
-                                    <localinterface pattern="{0}Local" />
-                                    <localhomeinterface pattern="{0}LocalHome" />
-                                    <remoteinterface pattern="{0}" />
-                                    <homeinterface pattern="{0}Home" />
-                                    <session />
+                                    <packageSubstitution packages="ejb" substituteWith="interfaces"/>
+                                    <localinterface pattern="{0}Local"/>
+                                    <localhomeinterface pattern="{0}LocalHome"/>
+                                    <remoteinterface pattern="{0}"/>
+                                    <homeinterface pattern="{0}Home"/>
+                                    <session/>
 
                                     <utilobject cacheHomes="true" kind="physical">
-                                        <packageSubstitution packages="ejb" substituteWith="util" />
+                                        <packageSubstitution packages="ejb" substituteWith="util"/>
                                     </utilobject>
 
-                                    <deploymentdescriptor clientjar="es_caib_regweb_logic-client.jar" xmlencoding="UTF-8" destdir="${project.build.directory}/xdoclet/META-INF" validatexml="true" />
-                                    <jboss version="3.2" xmlencoding="UTF-8" destdir="${project.build.directory}/xdoclet/META-INF" validatexml="true" securityDomain="java:/jaas/seycon" />
+                                    <deploymentdescriptor
+                                            clientjar="es_caib_regweb_logic-client.jar"
+                                            xmlencoding="UTF-8"
+                                            destdir="${project.build.directory}/xdoclet/META-INF"
+                                            validatexml="true"
+                                            />
+                                    <jboss
+                                            version="3.2"
+                                            xmlencoding="UTF-8"
+                                            destdir="${project.build.directory}/xdoclet/META-INF"
+                                            validatexml="true"
+                                            securityDomain="java:/jaas/seycon"
+                                            />
                                 </ejbdoclet>
                             </tasks>
                         </configuration>

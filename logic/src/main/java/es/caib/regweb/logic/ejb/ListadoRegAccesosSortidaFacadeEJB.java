@@ -36,6 +36,7 @@ import org.apache.log4j.Logger;
  */
 public abstract class ListadoRegAccesosSortidaFacadeEJB extends HibernateEJB {
 	
+	private static final long serialVersionUID = 1L;
     private Logger log = Logger.getLogger(this.getClass());
 	
 	private DateFormat dateF= new SimpleDateFormat("dd/MM/yyyy");

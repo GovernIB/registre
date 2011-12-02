@@ -18,10 +18,17 @@ import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
 import java.net.URL;
 
+import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+
+import javax.mail.Message;
+import javax.mail.SendFailedException;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 
 import org.apache.log4j.Logger;
@@ -255,6 +262,7 @@ public class Helper {
         return longitud;
     }
     /**
+     * Convierte una fecha de tipo string y formato "dd/MM/yyyy" a fecha de tipo Integer y formato "yyyyMMdd"
      * 
      * @param strFecha
      * @return
@@ -269,8 +277,25 @@ public class Helper {
         fechaAux = dateF.parse(strFecha);
         return Integer.parseInt(date1.format(fechaAux));
     }
-
+    
     /**
+     * 
+     * @param strHora
+     * @return
+     * @throws java.text.ParseException
+     */
+    static public int convierteStringHoraAIntHora(String strHora)throws java.text.ParseException{
+    	Calendar cal=Calendar.getInstance();
+    	Date horaTest=null;
+    	DateFormat horaF=new SimpleDateFormat("HH:mm");
+        horaTest=horaF.parse(strHora);
+        cal.setTime(horaTest);
+        DateFormat hhmm=new SimpleDateFormat("HHmm");
+        return Integer.parseInt(hhmm.format(horaTest));
+    }
+    
+    /**
+     * Convierte una fecha de tipo string y formato "yyyyMMdd" a fecha de tipo String y formato "dd/MM/yyyy"
      * 
      * @param strFecha 
      * @return
@@ -285,8 +310,85 @@ public class Helper {
 		fechaDocumento=yyyymmdd.parse(strFecha);
 		return ddmmyyyy.format(fechaDocumento);
     }
-
-
+    
+    /**
+     * Obtiene un int con el año de una fecha de tipo string y formato "dd/MM/yyyy"
+     * 
+     * @param strFecha 
+     * @return
+     * @throws java.text.ParseException
+     */
+    static public int obtenerAnyoDeFechadd_MM_YYY(String strFecha) throws java.text.ParseException{
+    	//TODO Pensar optimización
+    	Calendar cal=Calendar.getInstance();
+    	DateFormat dateF= new SimpleDateFormat("dd/MM/yyyy");
+    	Date fechaTest = dateF.parse(strFecha);
+    	cal.setTime(fechaTest);
+		return cal.get(Calendar.YEAR);
+    }
+    
+    /**
+     * Obtiene un int con el año de una fecha de tipo string y formato "yyyymmdd"
+     * 
+     * @param strFecha 
+     * @return
+     * @throws java.text.ParseException
+     */
+    static public int obtenerAnyoDeFechayyyyMMdd(String strFecha) throws java.text.ParseException{
+    	//TODO Pensar optimización
+    	Calendar cal=Calendar.getInstance();
+    	DateFormat dateF= new SimpleDateFormat("yyyyMMdd");
+    	Date fechaTest = dateF.parse(strFecha);
+    	cal.setTime(fechaTest);
+		return cal.get(Calendar.YEAR);
+    }
+    /**
+     * 
+     * 
+     * @return devuelve fecha del sistema en formato yyyyMMdd
+     */
+    static public int obtenerFechaSistemayyyyMMdd(){
+    	Date fechaSystem=new Date();
+		DateFormat aaaammdd=new SimpleDateFormat("yyyyMMdd");
+		return Integer.parseInt(aaaammdd.format(fechaSystem));
+    }
+    
+    /**
+     * 
+     * 
+     * @return devuelve hora del sistema en formato HHmmssS
+     */
+    static public int obtenerHoraSistemaHHmmssS(){
+    	Date fechaSystem=new Date();
+    	DateFormat hhmmss=new SimpleDateFormat("HHmmss");
+		DateFormat sss=new SimpleDateFormat("S");
+		String ss=sss.format(fechaSystem);
+		if (ss.length()>2) {
+			ss=ss.substring(0,2);
+		}
+		return Integer.parseInt(hhmmss.format(fechaSystem)+ss);
+    }
+    /**
+     * 
+     * 
+     * @return devuelve hora del sistema en formato HHmmssS
+     */
+    static public int obtenerHoraSistemaHHmmssSS(){
+    	Date fechaSystem=new Date();
+    	DateFormat hhmmss=new SimpleDateFormat("HHmmss");
+		DateFormat sss=new SimpleDateFormat("S");
+		String ss=sss.format(fechaSystem);
+		switch (ss.length()) {
+         //Hem d'emplenar amb 0s.
+         case (1):
+         	ss="00"+ss;
+         break;
+         case (2):
+         	ss="0"+ss;
+         break;
+         }
+		return Integer.parseInt(hhmmss.format(fechaSystem)+ss);
+    }
     /* metodos hibernate */
     
     private static final SessionFactory sessionFactory;
@@ -344,5 +446,33 @@ public class Helper {
        }
     }
 
-	
+    public static boolean enviarCorreu (String mailService, String emailTo, String subject, String msg) {
+    	Logger log = Logger.getLogger("es.caib.regweb.logic.helper");
+    	try { 
+    		
+    		InitialContext ctx = new InitialContext();
+    		javax.mail.Session sesion = (javax.mail.Session) ctx.lookup(mailService);
+    		MimeMessage mensaje = new MimeMessage(sesion);    		
+    		//mensaje.setFrom(new InternetAddress(emailFrom)); // ve del mail service
+    		mensaje.addRecipient(Message.RecipientType.TO, new InternetAddress(emailTo));      		
+    		mensaje.setSubject(subject); 
+       		// mensaje.setText(msg); 
+       		mensaje.setContent(msg, "text/html; charset=utf-8");
+			try {   
+				Transport.send(mensaje); 
+			} catch (SendFailedException ex) {
+				log.error("Error enviant correu (To: " + emailTo + ") " + ex.toString()); 
+				return false;
+			} catch (Exception ex) {
+    			log.error("Error enviant correu (To: " + emailTo + ") " + ex.toString()); 
+    			return false;
+    		} 
+
+    	} catch (Exception ex) {
+    		log.error("Error enviant correu (To: " + emailTo + ") " + ex.toString()); 
+    		return false;
+    	} 
+
+    	return true; 
+    }
 }

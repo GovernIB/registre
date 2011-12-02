@@ -10,6 +10,18 @@
     registro=(ParametrosRegistroEntrada)request.getAttribute("registroEntrada");
     if (registro!=null) registro.setNumeroEntrada(null);
   
+    String nomRemitent = (request.getParameter("nomRemitent")==null)?"":request.getParameter("nomRemitent");
+    String emailRemitent = (request.getParameter("emailRemitent")==null)?"":request.getParameter("emailRemitent");
+    String origenRegistro = (request.getParameter("origenRegistro")==null)?"":request.getParameter("origenRegistro");
+    String pextracte = (request.getParameter("pextracte")==null)?"":request.getParameter("pextracte");
+    String pLocalitzadorsDocs = request.getParameter("localitzadorsDocs");
+    String localitzadorsDocs[]; 
+    try{
+    	localitzadorsDocs = request.getParameter("localitzadorsDocs").split(",");
+    }catch( Exception ex){
+    	localitzadorsDocs = null;
+    }
+    
     String oficinaSesion = (String) session.getAttribute("oficinaSesion");
     String oficinaFisicaSesion = (String) session.getAttribute("oficinaFisicaSesion");
     if (oficinaSesion==null) oficinaSesion = "";
@@ -132,7 +144,7 @@ function refrescaFisica(){
    }
 
      function activar_060(){
-        <c:if test="${initParam['registro.entrada.view.registre012']}">
+    	 if ("<%=es.caib.regweb.logic.helper.Conf.get("viewRegistre012","false").toLowerCase()%>"=="true"){
 			valor=document.registroForm.Reg060.checked;
             
             if (valor){
@@ -142,7 +154,7 @@ function refrescaFisica(){
 				document.registroForm.mun_060.disabled = true;
 				document.registroForm.numreg_060.disabled = true;
 			}
-        </c:if>
+    	 }
 }
 </script>
         <script>
@@ -155,16 +167,23 @@ function refrescaFisica(){
             	valor2=document.registroForm.fora.value;
             	valor3=document.registroForm.correo.value;
             	valor4=document.registroForm.disquet.value;
+            	campEmail = document.registroForm.emailRemitente;
+            	
             	if (valor.indexOf('€',0)>-1 || valor1.indexOf('¤',0)>-1 || valor2.indexOf('¤',0)>-1 || valor3.indexOf('¤',0)>-1 || valor4.indexOf('¤',0)>-1) {
             		alert("<fmt:message key='pedirdatos.alert1'/>");
             		return false;
             	} else {
-                    <c:if test="${initParam['registro.entrada.view.registre012']}">
-                    if (document.registroForm.Reg060.checked && document.registroForm.mun_060.value == "000"){
-						alert("<fmt:message key='pedirdatos.alert2'/>");
-                        return false;
-					}
-                    </c:if>
+            		if (es.caib.regweb.logic.helper.Conf.get("viewRegistre012","false").equalsIgnoreCase("true")){
+	                    if (document.registroForm.Reg060.checked && document.registroForm.mun_060.value == "000"){
+							alert("<fmt:message key='pedirdatos.alert2'/>");
+	                        return false;
+						}
+            		}
+                     if (es.caib.regweb.logic.helper.Conf.get("integracionIBKEYActiva","false").equalsIgnoreCase("true"))
+	                    if((campEmail.value.length > 0)&&(esEmail(campEmail))){
+	                    	alert("<fmt:message key='pedirdatos.alert3'/>");
+	                        return false;          
+	                    }
                     confirmandoProceso=true;
                     return true;
             	}
@@ -497,7 +516,7 @@ function refrescaFisica(){
                 <!-- Remitente Altres entidades -->
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 &nbsp;&nbsp;&nbsp;&nbsp;
-                <fmt:message key='altres'/>&nbsp;&nbsp;<input onkeypress="return check(event)" type="text" name="altres" size="30" maxlength="30" value="<%=(registro==null)? "":registro.getAltres().trim()%>">
+                <fmt:message key='altres'/>&nbsp;&nbsp;<input onkeypress="return check(event)" type="text" name="altres" size="30" maxlength="30" value="<%=(registro==null)? nomRemitent :registro.getAltres().trim()%>">
                 </td>
                 </tr>
                 <tr>
@@ -557,7 +576,7 @@ function refrescaFisica(){
                     </td>
                 </tr>
                 <!-- 9ª fila de la tabla -->
-                <c:if test="${initParam['registro.entrada.view.registre012']}">
+                <% if (es.caib.regweb.logic.helper.Conf.get("viewRegistre012","false").equalsIgnoreCase("true")){%>
                 <tr>
 					<td style="border:0;" colspan="2">
                     <table>
@@ -591,13 +610,40 @@ function refrescaFisica(){
                     </table>
 					</td>
                 </tr>
-                </c:if>
+                <%} %>
 				<tr>
             		<td style="border:0" colspan="2" height="5px"></td>
         		</tr>
             </table>
                 </td>
             </tr>
+       <% if (es.caib.regweb.logic.helper.Conf.get("integracionIBKEYActiva","false").equalsIgnoreCase("true")){
+            if(localitzadorsDocs!=null){ %>
+            <td class="cellaEntrades">
+            <!-- tabla de datos de la compulsa electrònica -->
+            <table class="bordeEntrada" style="border:0;" >
+                <tr>
+                	<td style="border:0;"><b><fmt:message key='registro.datosDocumentosAnexados'/></b></td>
+                </tr>
+	            <tr>
+	            	<td style="border:0;"><fmt:message key='registro.emailRemitente'/>&nbsp;&nbsp;<input onkeypress="return check(event)" type="text" name="emailRemitente" size="50" maxlength="50" value="<%=(registro==null)? emailRemitent :registro.getEmailRemitent().trim()%>"></td>
+	            </tr>
+	            <tr>
+		            <td style="border:0;">
+		            <input type="hidden" name="localitzadorsDocs" value="<%=pLocalitzadorsDocs%>">
+		            <fmt:message key='registro.textoEnlaces'/><br/>
+		            <ul>
+		            <%for(int i=0; i<localitzadorsDocs.length; i++){ %>
+		            	<li><a href="<%= localitzadorsDocs[i]%>" target="_blank"><%= localitzadorsDocs[i]%></a></li>
+		            <%} %>	            
+		            </ul>
+		            </td>
+	            </tr>
+            </table>
+            </td>
+            </tr>
+             <%}
+            }%>
             <tr>
             <td class="cellaEntrades">
             <!-- tabla de datos del Extracto -->
@@ -636,11 +682,11 @@ function refrescaFisica(){
                     </td>
                 </tr>
                 <tr>
-                    <td style="border:0;">
+                    <td style="border:0;">                     
                         <!-- Extracto del documento -->
                         <font class="errorcampo">*</font>
                         <font class="<%=errorEn(errores,"comentario")%>"><fmt:message key='extracte_del_document'/>:</font>
-                        <textarea cols="67" onkeypress="return checkComentario(event)" rows="3" name="comentario"><%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml((registro==null) ? "" : registro.getComentario())%></textarea>
+                        <textarea cols="67" onkeypress="return checkComentario(event)" rows="3" name="comentario"><%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml((registro==null) ? pextracte : registro.getComentario())%></textarea>
                     </td>
                 </tr>
                 <tr>
@@ -653,7 +699,7 @@ function refrescaFisica(){
                 </tr>
             </table>
                 </td>
-            </tr>
+            </tr>  
         </table>
         </form>
         </center>  
@@ -665,6 +711,6 @@ function refrescaFisica(){
 </script>
 <script type="text/javascript">
 refrescaFisica();
-</script>
-    </body>
+</script>            
+</body>
 </html> 

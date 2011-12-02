@@ -72,15 +72,15 @@
         if (key == 8364) return false; // No dejemos introducir el caracter euro
         if (key==13) return false;
     } 
-
+    
     function checkComentario(e){     
-        if (document.registroForm.comentario &&document.registroForm.comentario.value.length>159) {
+        if (document.registroForm.comentario && document.registroForm.comentario.value.length>159) {
             alert("No es permeten més caràcters a l'extracte.");
             return false;
         } else {
             return check(e);
         }
-    } 
+    }
 
 // Leemos todas las Cookies
     function leeAllCookies(nombre) {
@@ -161,7 +161,7 @@ function URLEncode(plaintext)
 	} // for
 
     return encoded;
-}
+};
 
 function URLDecode(encoded) {
    // Replace + with ' '
@@ -193,7 +193,7 @@ function URLDecode(encoded) {
 	} // while
 
    return plaintext;
-}
+};
 
 function esEmail (obj) 
 {
@@ -202,5 +202,11 @@ function esEmail (obj)
 	if (!er_email.test(obj.value))
 		MsgError = MsgError + nomCamp(obj) + ": " + lit_error[idi][4];
 	return 0;
-}
+};
 
+function verHistoricoEmails(ofi,num,ano,tipus)
+{
+	var url = "veureHistoric?oficina="+ofi+"&numero="+num+"&ano="+ano+"&tipus="+tipus;
+	miVentana = window.open(url, "Veure Hist&ograve;ric","scrollbars,resizable,width=600,height=500");
+	miVentana.focus(); 		
+};

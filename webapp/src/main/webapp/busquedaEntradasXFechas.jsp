@@ -53,10 +53,10 @@ void escribeSelect2(javax.servlet.jsp.JspWriter out, String tipo, Vector valores
 <html>
     <head>
        <title><fmt:message key='registre_entrades'/></title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">    
        <jsp:include page="/jscripts/jscalendar/calendario.jsp" />
        <script language="javascript" src="jscripts/TAO.js"></script>
-        <script>
+       <script>
         var oficinasfisicasarray = new Array();
         <% for (int ii=0; oficinasfisicas!=null && ii<oficinasfisicas.size(); ii=ii+3) { %>
         	oficinasfisicasarray.push([<%= oficinasfisicas.get(ii).toString() %>, <%= oficinasfisicas.get(ii+1).toString() %>,"<%= oficinasfisicas.get(ii+2).toString() %>"]);
@@ -133,7 +133,7 @@ void escribeSelect2(javax.servlet.jsp.JspWriter out, String tipo, Vector valores
         <%  
         	/* Un cop mostrats els errors, eliminam el llistat.*/
         	session.removeAttribute("listadoEntrada");
-        }%>
+        	} %>
 
         <table align="center" width="70%" class="recuadroEntradas" cols="3">
         <form name="busquedaForm" action="listado.jsp" method="post">
@@ -275,8 +275,7 @@ void escribeSelect2(javax.servlet.jsp.JspWriter out, String tipo, Vector valores
             <td style="border:0" colspan="3" height="5px"></td>
         </tr>
         
-        <c:choose>
-        <c:when test="${initParam['registro.entrada.view.registre012']}">
+        <% if (es.caib.regweb.logic.helper.Conf.get("viewRegistre012","false").equalsIgnoreCase("true")){ %>
         <tr>
             <td style="border:0">
                 &nbsp;<fmt:message key='entitat_local_012'/> ...............:
@@ -292,15 +291,13 @@ void escribeSelect2(javax.servlet.jsp.JspWriter out, String tipo, Vector valores
                 </select> 
             </td>          
         </tr>
-        </c:when>
-        <c:otherwise>
+		<%}else{ %>
         <tr>
           <td colspan="2">
             <input type="hidden" name="mun_060" value="000"/>
           </td>
         </tr>
-        </c:otherwise>
-        </c:choose>
+        <%} %>
       
         <tr>
             <td style="border:0">&nbsp;</td>

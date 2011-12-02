@@ -55,6 +55,8 @@ public class ParametrosRegistroSalida implements Serializable {
 	private String descripcionIdiomaDocumento=null;
 	private String destinoGeografico=null;
 	private String idiomaExtracto=null;
+	private String emailRemitent = es.caib.regweb.logic.helper.Constantes.VALOR_POR_DEFECTO_EMAIL;
+	private String localitzadorsDocs = null;
 
 
     public void setAnoSalida(String anoSalida) {
@@ -447,13 +449,62 @@ public class ParametrosRegistroSalida implements Serializable {
     public boolean getActualizado() {
 		return registroActualizado;
 	}
-	
-    /**
-     * 
-     * @return String Cadena de texto con el identificador del registro: oficina, numero y anyo
-     */
-	public String getReferenciaRegistro(){
-		return oficina +"-"+  numeroSalida+"/"+anoSalida;
+
+	/**
+	 * @return the emailRemitent
+	 */
+	public String getEmailRemitent() {
+		return ((emailRemitent==null)?es.caib.regweb.logic.helper.Constantes.VALOR_POR_DEFECTO_EMAIL:emailRemitent);
 	}
 
+	/**
+	 * @param emailRemitent the emailRemitent to set
+	 */
+	public void setEmailRemitent(String emailRemitent) {
+		if (emailRemitent!=null)
+			emailRemitent=emailRemitent.trim();
+		this.emailRemitent = ((emailRemitent!=null))?emailRemitent:es.caib.regweb.logic.helper.Constantes.VALOR_POR_DEFECTO_EMAIL;
+	}
+
+	/**
+	 * @return the localitzadorsDocs
+	 */
+	public String getLocalitzadorsDocs() {
+		return localitzadorsDocs;
+	}
+
+	/**
+	 * @param localitzadorsDocs the localitzadorsDocs to set
+	 */
+	public void setLocalitzadorsDocs(String localitzadorsDocs) {
+		this.localitzadorsDocs = localitzadorsDocs;
+	}
+	
+	 /**
+	  * @return the localitzadorsDocs in Array format
+	  */
+	 public String[] getArrayLocalitzadorsDocs() {
+		 String[] rtdo;
+		 try{
+			 rtdo = localitzadorsDocs.split(",");
+		 }catch( Exception ex){
+			 rtdo=null;
+		 }
+		 return rtdo;
+	 }
+	    /**
+	     * 
+	     * @return String Cadena de texto con el identificador del registro: oficina, numero y anyo
+	     */
+		public String getReferenciaRegistro(){
+			return oficina +"-"+  numeroSalida+"/"+anoSalida;
+		}
+		
+		 /**
+		  * Comprueba si el registro tienen documentos electrónicos
+		  * @return
+		  */
+		 public boolean tieneDocsElectronicos(){
+			 return (this.localitzadorsDocs!=null);
+		 }
 }

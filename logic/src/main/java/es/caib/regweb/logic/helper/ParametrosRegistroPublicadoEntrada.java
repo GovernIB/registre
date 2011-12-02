@@ -21,7 +21,7 @@ public class ParametrosRegistroPublicadoEntrada implements Serializable {
     public boolean getErrorfecha() {
 		return this.errorfecha;
 	}
-
+    
     public boolean getLeido() {
 		return this.leido;
 	}
@@ -65,7 +65,7 @@ public class ParametrosRegistroPublicadoEntrada implements Serializable {
     public void setFecha(int fecha) {
 		this.fecha = fecha;
 	}
-
+    
     public void setFecha(String fecha){
     	int auxfecha = 0;
     	
@@ -127,7 +127,7 @@ public class ParametrosRegistroPublicadoEntrada implements Serializable {
     public void setObservaciones(String observaciones) {
 		this.observaciones = observaciones;
 	}
-
+    
     public boolean estaVacio(){
     	boolean vacio = false;
    	

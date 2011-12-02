@@ -24,6 +24,7 @@ import javax.servlet.http.HttpSession;
 import es.caib.regweb.logic.helper.AgrupacioGeograficaData;
 import es.caib.regweb.logic.helper.AutoritzacionsOficinaData;
 import es.caib.regweb.logic.helper.AutoritzacionsUsuariData;
+import es.caib.regweb.logic.helper.ModeloDocumentoData;
 import es.caib.regweb.logic.helper.Municipi060Data;
 import es.caib.regweb.logic.helper.TipusDocumentData;
 import es.caib.regweb.logic.helper.EntitatData;
@@ -45,9 +46,9 @@ import es.caib.regweb.logic.util.ValoresFacadeUtil;
  */
 public class ControllerAdminServlet extends UtilWebServlet {
 	
-	/**
-	 * 
-	 */
+
+	private static final long serialVersionUID = 1L;
+
 	private Logger log = Logger.getLogger(this.getClass());
 	
 	public ControllerAdminServlet() {
@@ -540,7 +541,9 @@ public class ControllerAdminServlet extends UtilWebServlet {
         	if ("autoritzOficina".equals(accion)) param = autoritzOficinaAdmin(request, sesion);
         	if ("comptadors".equals(accion)) param = comptadorsAdmin(request, sesion);
         	if ("entitats".equals(accion)) param = entitatsAdmin(request, sesion);
+        	if ("gestioDocuments".equals(accion)) param = gestioDocumentsAdmin(request, sesion);
         	if ("index".equals(accion)) param = indexAdmin(request, sesion);
+        	if ("modelsEmail".equals(accion)) param = modelsEmailAdmin(request, sesion);
         	if ("modelsOficis".equals(accion)) param = modelsOficisAdmin(request, sesion);
         	if ("modelsRebuts".equals(accion)) param = modelsRebutsAdmin(request, sesion);
         	if ("municipis060".equals(accion)) param = municipis060Admin(request, sesion);
@@ -554,12 +557,14 @@ public class ControllerAdminServlet extends UtilWebServlet {
         	if ("totesEntitats".equals(accion)) param = totesEntitatsAdmin(request, sesion);
         	if ("totesOficines".equals(accion)) param = totesOficinesAdmin(request, sesion);
         	if ("totesOficinesFisiques".equals(accion)) param = totesOficinesFisiquesAdmin(request, sesion);
+        	if ("totesUnitatsDeGestio".equals(accion)) param = totesUnitatsDeGestioAdmin(request, sesion);
         	if ("totsModelsOficis".equals(accion)) param = totsModelsOficisAdmin(request, sesion);
         	if ("totsModelsRebuts".equals(accion)) param = totsModelsRebutsAdmin(request, sesion);
         	if ("totsMunicipis060".equals(accion)) param = totsMunicipis060Admin(request, sesion);
         	if ("totsOrganismes".equals(accion)) param = totsOrganismesAdmin(request, sesion);
         	if ("totsTipusDoc".equals(accion)) param = totsTipusDocAdmin(request, sesion);
         	if ("traspassos".equals(accion)) param = traspassosAdmin(request, sesion);
+        	if ("unitatsDeGestio".equals(accion)) param = unitatsGestioAdmin(request, sesion);
         }
         
 		String url = response.encodeURL(param);
@@ -640,6 +645,15 @@ public class ControllerAdminServlet extends UtilWebServlet {
     	return resultado;
     }
 
+	/**
+	 * Método que devuelve url de acceso al apartado de gestión de documentos de la aplicación
+	 * @param request
+	 * @param sesion
+	 * @return
+	 */
+	private String gestioDocumentsAdmin(HttpServletRequest request, HttpSession sesion) {		
+    	return new String("/admin/pages/gestioDocuments.jsp");
+    }
 	/**
 	 * Método para leer y procesar los atributos de error de la petición
 	 */
@@ -739,6 +753,68 @@ public class ControllerAdminServlet extends UtilWebServlet {
     	return resultado;
     }
 
+	private String modelsEmailAdmin(HttpServletRequest request, HttpSession sesion) {
+		String resultado = new String("/admin/pages/modelsEmail.jsp");
+		String missatge = "";
+		String descMissatge = "";
+		String mesInfoMissatge = "";
+
+        String valorAccio = ""; //Valor de l'acció a fer (alta, modificació)
+        ModeloDocumentoData modelGestionar = null;
+        String elementFocus = ""; 
+        boolean existeModel = false;
+        boolean hayModeloEmail = false;
+        String idioma = "";
+        String tipo = "";
+
+
+		try{            
+            AdminFacade autUsu = AdminFacadeUtil.getHome().create();
+
+			/* Gestión errores. */
+			gestionMensajesError( request, missatge, descMissatge, mesInfoMissatge);
+			
+			// Buscamos el parámetro "idioma"
+			idioma = obtenerParametro( request,"idioma",false);
+			
+			// Buscamos el parámetro "tipo"
+			tipo = obtenerParametro( request,"tipo",false);
+
+            /* Cercam l'organisme */
+            if (idioma!=null &&!idioma.equals("") &&
+            		tipo!=null &&!tipo.equals("")) {
+            	modelGestionar = autUsu.getModelEmail( idioma,tipo );
+            	elementFocus = "titol";
+            	hayModeloEmail = true;
+            }else{
+            	elementFocus = "tipo";
+            }
+
+            existeModel = (modelGestionar != null);
+            if(existeModel)
+            	valorAccio = "modificacioModelEmail";
+            else
+            	valorAccio = "altaModelEmail";
+
+        } catch(Exception ex) {
+        	log.error("Capturam excepci\u00f3 estranya!",ex);
+		}finally{
+            request.setAttribute("hayModeloEmail", hayModeloEmail);
+            request.setAttribute("valorAccio", valorAccio);
+            request.setAttribute("existeModel", existeModel);
+            request.setAttribute("modelGestionar", modelGestionar);
+            request.setAttribute("tipo", tipo);
+            request.setAttribute("idioma", idioma);
+            /*request.setAttribute("titulo", ((modelGestionar==null)?"":modelGestionar.getTitulo()));
+            request.setAttribute("cuerpo", ((modelGestionar==null)?"":modelGestionar.getCuerpo()));*/
+            request.setAttribute("elementFocus", elementFocus);
+            request.setAttribute("missatge", missatge);
+        	request.setAttribute("descMissatge", descMissatge);
+        	request.setAttribute("mesInfoMissatge", mesInfoMissatge);
+		}
+		
+    	return resultado;
+    }
 	private String modelsRebutsAdmin(HttpServletRequest request, HttpSession sesion) {
 		String resultado = new String("/admin/pages/modelsRebuts.jsp");
 		String missatge = "";
@@ -990,14 +1066,11 @@ public class ControllerAdminServlet extends UtilWebServlet {
 			/* Gestión errores. */
 			gestionMensajesError( request, missatge, descMissatge, mesInfoMissatge);
 
-
 			// Buscamos el parámetro "oficinaGestionar"
 			oficinaGestionar = obtenerParametro( request,"oficinaGestionar",false);
 
 			// Buscamos el parámetro "oficinaGestionarFisica"
 			oficinaGestionarFisica = obtenerParametro( request,"oficinaGestionarFisica",false);
-            
-
 
             /* Cercam l'oficina */
             if (oficinaGestionar!=null &&!oficinaGestionar.equals("") && oficinaGestionarFisica!=null &&!oficinaGestionarFisica.equals("") ) {
@@ -1210,6 +1283,7 @@ public class ControllerAdminServlet extends UtilWebServlet {
         Vector oficines = new Vector();
         Vector organismesOficina = new Vector();
         Vector noRemetreOficina = new Vector();
+        Vector permetCorreu = new Vector();
         String oficinaGestionar="";
 
 		try{
@@ -1224,6 +1298,7 @@ public class ControllerAdminServlet extends UtilWebServlet {
             	oficines = autUsu.getOficina( oficinaGestionar );
             	organismesOficina = valores.buscarDestinatarios(oficinaGestionar);
             	noRemetreOficina = valores.buscarNoRemision(oficinaGestionar);
+            	permetCorreu = valores.buscarOrganimosEmail(oficinaGestionar);
             }
 
             Vector organismes = autUsu.getOrganismes();
@@ -1233,12 +1308,14 @@ public class ControllerAdminServlet extends UtilWebServlet {
             if (!hayOficina) {
             	elementFocus="organismeGestionar";
             } else {
-
             		String Orgchecked="";
             		String Remchecked="";
+            		String Emachecked="";
+            		
             		for (int i=0;i<organismes.size();i=i+3){
             			Orgchecked="";
             			Remchecked="";
+            			Emachecked="";
             			String codigo=organismes.get(i).toString();
             		    String descripcion=organismes.get(i+2).toString();
             			if ( organismesOficina.contains( codigo ) ) {
@@ -1247,9 +1324,13 @@ public class ControllerAdminServlet extends UtilWebServlet {
             			if ( noRemetreOficina.contains( codigo ) ) {
             				Remchecked="checked=\"true\""; 
             			}
+            			if ( permetCorreu.contains( codigo ) ) {
+            				Emachecked="checked=\"true\""; 
+            			}
             		    ofiInput = ofiInput+"<tr>";
             		    ofiInput = ofiInput+"\n\t<td><input type=\"checkbox\" name=\"org\" id=\"org"+codigo+"\" value=\""+codigo+"\" "+Orgchecked+" style=\"width: 60px;\"/></td>";
             		    ofiInput = ofiInput+"\n\t<td><input type=\"checkbox\" name=\"rem\" id=\"rem"+codigo+"\" value=\""+codigo+"\" "+Remchecked+" style=\"width: 60px;\"/></td>";
+            		    ofiInput = ofiInput+"\n\t<td><input type=\"checkbox\" name=\"ema\" id=\"ema"+codigo+"\" value=\""+codigo+"\" "+Emachecked+" style=\"width: 60px;\"/></td>";
             			ofiInput = ofiInput+"\n\t<td>"+codigo+" - "+descripcion+"</td>";
             			ofiInput = ofiInput+"\n</tr>\n";
             		}		
@@ -1557,6 +1638,25 @@ public class ControllerAdminServlet extends UtilWebServlet {
     	return resultado;
     }
 
+	private String totesUnitatsDeGestioAdmin(HttpServletRequest request, HttpSession sesion) {
+		String resultado = new String("/admin/pages/totesUnitatsDeGestio.jsp");
+		int totesUnitatsDeGestioSize=0;
+
+		try{            
+            AdminFacade autUsu = AdminFacadeUtil.getHome().create();        
+            Vector totesUnitatsDeGestio=autUsu.getTotesUnitatDeGestio();
+            
+            if (totesUnitatsDeGestio!=null) totesUnitatsDeGestioSize=totesUnitatsDeGestio.size();
+
+            request.setAttribute("unitatDeGestio", totesUnitatsDeGestio);
+            request.setAttribute("unitatDeGestioSize", new Integer(totesUnitatsDeGestioSize));
+          
+        } catch(Exception ex) {
+        	log.error("Error dins ControllerAdminServlet totesUnitatsDeGestio()",ex);
+		}    		
+		
+    	return resultado;
+    }
 	private String totsOrganismesAdmin(HttpServletRequest request, HttpSession sesion) {
 		String resultado = new String("/admin/pages/totsOrganismes.jsp");
 		int organismesSize=0;
@@ -1599,5 +1699,106 @@ public class ControllerAdminServlet extends UtilWebServlet {
 		String resultado = new String("/admin/pages/traspassos.jsp");
     	return resultado;
     }
+	
+	
+	private String unitatsGestioAdmin(HttpServletRequest request, HttpSession sesion) {
+		String resultado = new String("/admin/pages/unitatDeGestio.jsp");
 
+		try{            
+            AdminFacade autUsu = AdminFacadeUtil.getHome().create();       
+            String missatge = (String) request.getAttribute("missatge");
+            String descMissatge = (String) request.getAttribute("descMissatge");
+            String mesInfoMissatge = "";
+        	Vector unitats = new Vector();
+            String codiOficina="";
+            String codiUnitat="";
+            String elementFocus = ""; //Element que tendra el focus de la pagina.
+            String ofiInput="";
+            String cabecera ="";
+            boolean HayIdUnidad=false;
+            //boolean existeUnitat = false;
+            String valorAccio = ""; //Valor de l'acció a fer (alta, modificació)
+            
+			/* Gestión errores. */
+			gestionMensajesError( request, missatge, descMissatge, mesInfoMissatge);
+			
+			// Buscamos el parámetro "codiOficina"
+			codiOficina = obtenerParametro( request,"codiOficina",false);
+			
+			// Buscamos el parámetro "codUnitat"
+			codiUnitat = obtenerParametro( request,"codiUnitat",false);  
+			
+
+            /* Cercam l'oficina */
+            if (codiOficina!=null &&!codiOficina.equals("") && codiUnitat!=null &&!codiUnitat.equals("") ) {
+            	unitats = autUsu.getUnitatDeGestio( Integer.parseInt(codiOficina), Integer.parseInt(codiUnitat) );
+            	HayIdUnidad = true;
+            }
+
+            //Si l'atribut "init" és "init", buidam oficinaGestionar per a que ens presenti el formulari inicial.
+            String ini= (request.getAttribute("init") != null ? (String) request.getAttribute("init"):"");
+            if  ( ini.equals("init") ) {
+            	codiOficina="";
+            	codiUnitat="";
+            	HayIdUnidad = false;
+            }
+         
+            if(HayIdUnidad){
+            // Si tenemos una clave primaria de la unidad	
+               if ( unitats!=null && !unitats.get(0).toString().equals("")) {
+            	 //Unidad de gestión encontrada en BBDD
+                	boolean actiu = unitats.get(4).toString().trim().equals("S");
+                	String nom_unitat = unitats.get(2).toString().trim();
+        			//existeUnitat = true;	
+        			valorAccio="modificacionUnidad";
+        			elementFocus="nomUnitat"; 
+        			cabecera = "La unitat de gestió: <b>"+codiOficina+" - "+codiUnitat+" - "+nom_unitat+"</b><br/>";
+            		ofiInput = "<tr><th>Codi unitat<br/>de gestió</th><th>Nom de la unitat</th><th>Email</th><th>Actiu</th></tr>";   								
+    				ofiInput = ofiInput+"<tr><td>"+codiOficina+" - "+codiUnitat+"</td>";
+    				ofiInput = ofiInput+"<td><input type=\"text\" name=\"nomUnitat\" id=\"nomUnitat\" size=\"20\" maxlength=\"20\"  value=\""+nom_unitat+"\"></td>";
+    				ofiInput = ofiInput+"<td><input type=\"text\" name=\"email\" id=\"email\" size=\"50\" maxlength=\"50\"  value=\""+unitats.get(3).toString().trim()+"\"></td>";
+    				ofiInput = ofiInput+"<td><select name=\"actiu\" id=\"actiu\">";
+    				ofiInput = ofiInput+"<option value='S' "+((actiu)?"selected='selected' ":"")+">S&iacute;</option>";
+    				ofiInput = ofiInput+"<option value='N' "+((!actiu)?"selected='selected' ":"")+">No</option>";
+    				ofiInput = ofiInput+"</select></td>";
+    				// Añadimos el botón Actualitza
+    				ofiInput = ofiInput +"<tr><td align=\"center\" colspan=\"4\"><input type=\"submit\" value=\"Actualitza\"/><br/>";
+    				ofiInput = ofiInput +"</td></tr>";
+               } else {    
+            	 //Unidad de gestión NO encontrada en BBDD
+        			//existeUnitat = false;	
+        			valorAccio="altaUnidad";
+        			elementFocus="nomUnitat"; 
+        			cabecera = "Atenció;, aquesta unitat de gestió: <b>("+codiOficina+" - "+codiUnitat+")</b> no existeix, la donarem d&apos;alta. <br/>";
+        			ofiInput = "<tr><th>Codi unitat<br/>de gestió</th><th>Nom de la unitat</th><th>Email</th><th>Actiu</th></tr>";   								
+    				ofiInput = ofiInput+"<tr><td>"+codiOficina+" - "+codiUnitat+"</td>";
+    				ofiInput = ofiInput+"<td><input type=\"text\" name=\"nomUnitat\" id=\"nomUnitat\" size=\"20\" maxlength=\"20\"  value=''></td>";
+    				ofiInput = ofiInput+"<td><input type=\"text\" name=\"email\" id=\"email\" size=\"50\" maxlength=\"50\"  value=''></td>";
+    				ofiInput = ofiInput+"<td><select name=\"actiu\" id=\"actiu\">";
+    				ofiInput = ofiInput+"<option value='S' selected='selected'>S&iacute;</option>";
+    				ofiInput = ofiInput+"<option value='N'>No</option>";
+    				ofiInput = ofiInput+"</select></td>";
+    				// Añadimos el botón Actualitza
+    				ofiInput = ofiInput +"<tr><td align=\"center\" colspan=\"4\"><input type=\"submit\" value=\"Alta\"/><br/>";
+    				ofiInput = ofiInput +"</td></tr>";        		
+               } 
+            }// fin if(HayIdUnidad){cabecera
+           
+            request.setAttribute("mostrarDatosUnidad", Boolean.valueOf(HayIdUnidad));
+            request.setAttribute("codiOficina", codiOficina);
+            request.setAttribute("codiUnitat", codiUnitat);
+            request.setAttribute("accion", valorAccio);
+            request.setAttribute("elementFocus", elementFocus);
+            request.setAttribute("ofiInput", ofiInput);
+            request.setAttribute("cabecera", cabecera);
+            request.setAttribute("missatge", missatge);
+        	request.setAttribute("descMissatge", descMissatge);
+        	request.setAttribute("mesInfoMissatge", mesInfoMissatge);
+        } catch(Exception ex) {
+			log.error("Capturam excepci\u00f3 estranya!",ex);
+		}    		
+		
+    	return resultado;
+    }
+	
 }

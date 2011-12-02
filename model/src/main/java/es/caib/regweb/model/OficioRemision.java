@@ -17,23 +17,23 @@ import javax.persistence.Table;
 @org.hibernate.annotations.Table(appliesTo = "BZOFREM", comment = "OficioRemision")
 public class OficioRemision implements java.io.Serializable {
 
-	private OficioRemisionId id;
-	private int fechaOficio;
-	private String contenido;
-	private int anyoSalida;
-	private int oficinaSalida;
-	private int numeroSalida;
-	private String nula;
-	private String motivosNula;
-	private String usuarioNula;
-	private int fechaNula;
-	private int fechaEntrada;
-	private String descarteEntrada;
-	private String usuarioEntrada;
-	private String motivosDescarteEntrada;
 	private int anyoEntrada;
-	private int oficinaEntrada;
+	private int anyoSalida;
+	private String contenido;
+	private String descarteEntrada;	
+	private int fechaEntrada;
+	private int fechaOficio;
+	private int fechaNula;	
+	private String motivosDescarteEntrada;
+	private String motivosNula;
+	private String nula;
 	private int numeroEntrada;
+	private int numeroSalida;
+	private int oficinaEntrada;
+	private int oficinaSalida;
+	private OficioRemisionId id;
+	private String usuarioEntrada;
+	private String usuarioNula;
 
 	public OficioRemision() {
 	}

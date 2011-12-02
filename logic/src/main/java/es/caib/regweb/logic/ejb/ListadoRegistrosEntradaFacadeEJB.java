@@ -35,7 +35,8 @@ import org.hibernate.ScrollMode;
  *
  */
 public abstract class ListadoRegistrosEntradaFacadeEJB extends HibernateEJB {
-	
+
+	private static final long serialVersionUID = 1L;
 	private Logger log = Logger.getLogger(this.getClass());
     
 	private DateFormat dateF= new SimpleDateFormat("dd/MM/yyyy");
@@ -564,6 +565,9 @@ public abstract class ListadoRegistrosEntradaFacadeEJB extends HibernateEJB {
 			texto +
 			" ORDER BY FZACAGCO, FZAANOEN, FZANUMEN " +
 			(accion.equals("R") ? "DESC" : "ASC") ;
+			
+			log.debug("SentenciaHQL: "+sentenciaHql);
+			
 			q=session.createSQLQuery(sentenciaHql);
 			q.addScalar("FZAANOEN", Hibernate.INTEGER);
             q.addScalar("FZANUMEN", Hibernate.INTEGER);

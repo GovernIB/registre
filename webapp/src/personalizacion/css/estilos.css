@@ -167,6 +167,16 @@ table {text-align: left}
 		border-left-width: 2px;
 		background-color: white}
 
+.recuadroEntradasRegistro
+		{
+		border-style: solid;
+		border-color: #0000FF;
+		border-top-width: 2px;
+		border-bottom-width: 2px;
+		border-right-width: 2px;
+		border-left-width: 2px;
+		background-color: white}
+		
 .recuadroSalidas
 		{border-style: solid;
 		border-color: #A52A2A;
@@ -176,10 +186,28 @@ table {text-align: left}
 		border-left-width: 2px;
 		background-color: white}
 
+.recuadroSalidasRegistro
+		{border-style: solid;
+		border-color: #A52A2A;
+		border-top-width: 2px;
+		border-bottom-width: 2px;
+		border-right-width: 2px;
+		border-left-width: 2px;
+		background-color: white}
+
 .recuadroEntradas td
-/*.cellaEntrades*/
 { 
 	border-width: 1px 1px 1px 1px;
+	padding: 1px 1px 1px 1px;
+	border-style: solid solid solid solid;
+	border-color: #0000FF;
+	background-color: white;
+	-moz-border-radius: 0px 0px 0px 0px;
+}
+
+.recuadroEntradasRegistro td
+{ 
+	border-width: 0px 0px 0px 0px;
 	padding: 1px 1px 1px 1px;
 	border-style: solid solid solid solid;
 	border-color: #0000FF;
@@ -190,6 +218,16 @@ table {text-align: left}
 .recuadroSalidas td /*.cellaSortides*/
 { 
 	border-width: 1px 1px 1px 1px;
+	padding: 1px 1px 1px 1px;
+	border-style: solid solid solid solid;
+	border-color: #A52A2A;
+	background-color: white;
+	-moz-border-radius: 0px 0px 0px 0px;
+}
+
+.recuadroSalidasRegistro td /*.cellaSortides*/
+{ 
+	border-width: 0px 0px 0px 0px;
 	padding: 1px 1px 1px 1px;
 	border-style: solid solid solid solid;
 	border-color: #A52A2A;
@@ -344,3 +382,38 @@ ul#mollaPa li {
 	overflow: auto;
 }
 		
+.numeroRegistroEntrada {
+      font-weight: bold;
+      font-size: 120%;
+      color: blue;
+      }
+.textoResaltadoRegistro {
+      font-weight: bold;
+      }
+      
+.cuerpoPopUp {
+      background-color: #F7D8B7;
+      }
+      
+.cuerpoPopUp table{
+		border:2px solid #C19565; 
+	}
+.cuerpoPopUp th{
+      background-color: #FE9A2E;
+      font-size: 12px;
+      font-weight: bold;
+      }
+
+.cuerpoPopUp .par{
+	background-color: #F5D0A9
+}
+
+.cuerpoPopUp .impar{
+	background-color: #FAAC58
+}
+
+.bloqueCentrado {
+	display: block;
+	margin-left: auto;
+	margin-right: auto 
+	}

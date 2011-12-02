@@ -109,7 +109,7 @@
   </c:when>
   <c:otherwise>
 
-	<div class="RecuadreCentrat" style="width:500px;">
+	<div class="RecuadreCentrat" style="width:600px;">
 	<p><fmt:message key='oficina_a_gestionar'/><b><c:out value="${oficines[0]}"/> - <c:out value="${oficines[1]}"/></b></p>
 	<br/>
 <form name="altaOrgsOfi" id="altaOrgsOfi" action="/regweb/UtilAdmin" method="post">	
@@ -119,16 +119,18 @@
 <tr>
 	<th><fmt:message key='assignar'/></th>
 	<th><fmt:message key='no_remetre'/></th>
+	<th><fmt:message key='permis_enviar_email'/></th>
 	<th><fmt:message key='organisme'/></th>
 </tr>
 <tr>
 	<td></td>
 	<td></td>
 	<td></td>
+	<td></td>
 </tr>
 	<c:out escapeXml="false" value='${ofiInput}'/>
 <tr>
-	<td align="center" colspan="2"><input type="submit" value="<fmt:message key='desa'/>"/></td>
+	<td align="center" colspan="4"><input type="submit" value="<fmt:message key='desa'/>"/></td>
 </tr>
 
 </form>

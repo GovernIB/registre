@@ -32,6 +32,7 @@ import javax.ejb.*;
  */
 public abstract class ListadoOficiosFacadeEJB extends HibernateEJB {
 	
+	private static final long serialVersionUID = 1L;
 	private Logger log = Logger.getLogger(this.getClass());
 
 	/** Creates a new instance of Valores */
@@ -42,6 +43,7 @@ public abstract class ListadoOficiosFacadeEJB extends HibernateEJB {
     * @ejb.interface-method
     * @ejb.permission unchecked="true"
     */
+
     public Vector recuperarRegistros(String usuario, String oficina, String oficinaFisica, String anyo)
 	        throws java.rmi.RemoteException, Exception {
 
@@ -301,7 +303,7 @@ public abstract class ListadoOficiosFacadeEJB extends HibernateEJB {
  			close(session);
  		}
 
-	
+
  		return registrosVector;
 
  	}

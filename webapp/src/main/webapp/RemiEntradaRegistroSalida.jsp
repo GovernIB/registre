@@ -59,7 +59,7 @@ Vector modelosOficios = valores.buscarModelos("tots","totes");
 
 param.setOficinaOficio(request.getParameter("oficina"));
 param.setFechaOficio(request.getParameter("datasalida"));
-
+param.setFechaEntrada(request.getParameter("datasalida"));
 param = ofi.grabar(param);
 oficio = ofi.leer(param);
 
@@ -82,43 +82,31 @@ registro.setentrada2(request.getParameter("entrada2"));
 registro.setremitent(request.getParameter("remitent"));
 registro.setidioex(request.getParameter("idioex"));
 registro.setdisquet(request.getParameter("disquet"));
+registro.setEmailRemitent(request.getParameter("emailRemitente"));
+registro.setLocalitzadorsDocs(request.getParameter("localitzadorsDocs"));
 registro.setcomentario("Ofici de sortida de documentació amb núm. d'ofici " + oficio.getNumeroOficio() + "/" + oficio.getAnoOficio());
-%>
 
-<%
-     registro=regsal.validar(registro);
-     boolean ok=registro.getValidado();
-
-
-
+registro=regsal.validar(registro);
+boolean ok=registro.getValidado();
 
 if (!ok){
-    request.setAttribute("registroSalida",registro);
-    
+    request.setAttribute("registroSalida",registro);   
     request.setAttribute( "oficina", codOficina);
     request.setAttribute( "numeroEntrada", numeroEntrada);
     request.setAttribute( "ano", ano);
-
-
 %>
-        <jsp:forward page="RemiEntradaPaso.jsp" />
+   <jsp:forward page="RemiEntradaPaso.jsp" />
 <% } else { 
-
      registro=regsal.grabar(registro);
-
      boolean grabado=registro.getregistroSalidaGrabado();
 
     if (!grabado) {
-        request.setAttribute("registroSalida",registro);
-
-        
+        request.setAttribute("registroSalida",registro);   
         request.setAttribute( "oficina", codOficina);
     	request.setAttribute( "numeroEntrada", numeroEntrada);
 		request.setAttribute( "ano", ano);
-
 %>
                 <jsp:forward page="RemiEntradaPaso.jsp" />
-
 <%            } else {
 		registro = regsal.leer(registro);
 		
@@ -150,7 +138,7 @@ if (!ok){
 
 		    descripcion += "("+ campos[0] + " - " + valores.recuperaDescripcionOficina(reg.getOficina().toString()).trim() + ") " + campos[1] + "/" + campos[2] + " - " + reg.getDescripcionRemitente().trim() + ";";
 		  
-		  paraml = new ParametrosLineaOficioRemision();
+		    paraml = new ParametrosLineaOficioRemision();
 			paraml.setOficinaEntrada(campos[0]);
 			paraml.setNumeroEntrada(campos[1]);
 			paraml.setAnoEntrada(campos[2]);
@@ -160,8 +148,7 @@ if (!ok){
 			paraml.setAnoOficio(oficio.getAnoOficio());
 			paraml.setOficinaOficio(oficio.getOficinaOficio());
 			paraml.setNumeroOficio(oficio.getNumeroOficio());
-			lin.grabar(paraml);
-		    
+			lin.grabar(paraml);	    
 		}
 		oficio.setDescripcion(descripcion);
 		oficio=ofi.actualizar(oficio);
@@ -197,13 +184,12 @@ if (!ok){
         }
         </script>
     </head>
-    <body>
-        
+    <body>        
        	<!-- Molla pa --> 
 		<ul id="mollaPa">
 		<li><a href="index.jsp"><fmt:message key='inici'/></a></li>
 		<li><a href="RemiEntradaSel.jsp"><fmt:message key='consulta_registres_pendents_remisio'/></a></li>
-		<li><fmt:message key='registre_ofici_remisio'/> creat</li>
+		<li><fmt:message key='registre_ofici_remisio'/></li>
 		</ul>
 		<!-- Fi Molla pa-->
         <!-- <p>&nbsp;
@@ -213,18 +199,18 @@ if (!ok){
         <table class="recuadroSalidas" width="400" align="center">
             <tr>
                 <td style="border:0" >
-                    &nbsp;<br><center><b><fmt:message key='ofici'/> <%=oficio.getNumeroOficio()%>/<%=oficio.getAnoOficio()%> <fmt:message key='desat_correctament'/></B></center></p>
+                    &nbsp;<br><center><b><fmt:message key='ofici'/> <%=oficio.getNumeroOficio()%>/<%=oficio.getAnoOficio()%> <fmt:message key='desat_correctament'/></B></center><br/>
                 </td>
             </tr>   
             <tr>
                 <td style="border:0" >
-                    &nbsp;<br><center><b><fmt:message key='registre_de_sortida'/> <%=oficio.getNumeroSalida()%>/<%=oficio.getAnoSalida()%> <fmt:message key='desat_correctament'/></B></center></p>
+                    &nbsp;<br><center><b><fmt:message key='registre_de_sortida'/> <%=oficio.getNumeroSalida()%>/<%=oficio.getAnoSalida()%> <fmt:message key='desat_correctament'/></B></center><br/>
                 </td>
             </tr>   
             <tr><td style="border:0" >&nbsp;</td></tr>
             <tr>
                 <td style="border:0" >
-                    <p><center><b><fmt:message key='oficina'/>:&nbsp;<%=registro.getOficina()%>-<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%></b></center>
+                    <p><center><b><fmt:message key='oficina'/>:&nbsp;<%=registro.getOficina()%>-<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%></b></center></p>
                 </td>
             </tr>
             <tr><td style="border:0" >&nbsp;</td></tr>
@@ -249,10 +235,8 @@ if (!ok){
                         <p align="center">
                         <fmt:message key="no_hi_ha_models_ofici"/>
                         </p>
-                      <% } %>
-                		
-                        <br/>
-                
+                      <% } %>              		
+                        <br/>              
                 	    <a style="text-decoration: none;" type="button" class="botonFormulario" href="RemiEntradaLis.jsp">
                         &nbsp;<fmt:message key='tornar'/>&nbsp;</a>
                     </center>

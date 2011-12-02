@@ -1,8 +1,8 @@
-<%@page import="java.util.*, es.caib.regweb.logic.interfaces.*, es.caib.regweb.logic.util.*, es.caib.regweb.logic.helper.*, java.net.URLDecoder"%>
+<%@page import="java.util.*, es.caib.regweb.logic.interfaces.*, es.caib.regweb.logic.util.*, es.caib.regweb.logic.helper.*, java.net.URLDecoder, org.apache.log4j.Logger"%>
 <%@ page pageEncoding="UTF-8"%>
 <% request.setCharacterEncoding("UTF-8"); %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-
+<%! private Logger log = Logger.getLogger(this.getClass()); %>
 
 <html lang="es">
     <head>
@@ -23,11 +23,15 @@
 		javax.naming.InitialContext contexto = new javax.naming.InitialContext();
 		
 		//Cercam el EJB daccès al repositori de Repros
-    ReproUsuarioFacade repro = ReproUsuarioFacadeUtil.getHome().create();
+    	ReproUsuarioFacade repro = ReproUsuarioFacadeUtil.getHome().create();
 		
 		//Cercam el número màxim de repros per usuari
-		javax.naming.Context myenv = (javax.naming.Context) contexto.lookup("java:comp/env");
-	    Integer maxRepros = (Integer)myenv.lookup("Repros.max");
+		Integer maxRepros = new Integer(20);
+        try{
+	    	maxRepros = new Integer(Conf.get("numMaxRepros","20"));
+        }catch(Exception ex){
+        	log.error("Error al leer la propiedad 'numMaxRepros'.",ex);
+        }
 
 		// Si no hay nombre para la nueva Repro aparece la página para solicitarla
 		// Tambien comprobamos que el valor de la repro haya llegado correctamente
@@ -120,7 +124,7 @@
 //				 Hay que grabar la nueva Repro
 				try{
 
-					if (repro.grabar(usuario, nomRepro, valorRepro, tipusCookies)){
+					if (repro.grabar(usuario, java.net.URLEncoder.encode(nomRepro,"UTF-8"), valorRepro, tipusCookies)){
 							out.println("<p></p><p></p><p></p>");
 							out.println("<div align=\"center\"><b>Repro desada correctament.</b></div>");
 							}else{

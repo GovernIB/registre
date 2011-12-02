@@ -65,32 +65,28 @@
    		<br/>
         <p>&nbsp;</p>
 <!--   		<div id="RecuadreCentrat"> --> 
-        <table  class="recuadroSalidas" align="center">
+        <table  class="recuadroSalidasRegistro" align="center">
         <form name="busquedaForm" action="RemiSalidaLis.jsp" method="post">
         <tr>
-            <td style="border:0">
-            &nbsp;
-            </td>
+            <td colspan="2">&nbsp;</td>
         </tr>
         <tr>
-            <td style="border:0">
-                &nbsp;&nbsp;
-                <fmt:message key='oficina'/>:
-                &nbsp;&nbsp;
-                <select name="oficina" id="oficina">
+            <td>&nbsp;<fmt:message key='oficina'/>:&nbsp;</td>
+            <td><select name="oficina" id="oficina">
                     <option value="00">00 - <fmt:message key='registro.todas_autorizadas'/> </option>
               <% escribeSelect(out, valores.buscarOficinas(usuario,"AE"), "");%>
-                </select>
-                &nbsp;&nbsp;
+             </select>
             </td>
         </tr>
+        <% if (es.caib.regweb.logic.helper.Conf.get("integracionIBKEYActiva","false").equalsIgnoreCase("true")){ %>
         <tr>
-            <td style="border:0">
-            &nbsp;<br>
-            </td>
+           <td style="align:left" colspan="2">
+                &nbsp;<fmt:message key='mostrarRegistrosConDocElectronicos'/>:<input type="checkbox" name="mostrarRegistrosConDocElectronicos" id="mostrarRegistrosConDocElectronicos" />
+           </td>
         </tr>
+        <%} %>
         <tr>
-        <td style="border:0">
+        <td style="align:center" colspan="2">
             <p align="center">
             <input type=submit value="<fmt:message key='cercar'/>">
             </p>
