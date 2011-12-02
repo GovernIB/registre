@@ -58,7 +58,12 @@ import org.apache.log4j.Logger;
  */
 public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
     
-	private static final long serialVersionUID = 2L;
+	private static final long serialVersionUID = 3L;
+	private static int CORRECTE = 1;
+	private static int FECHA_NO_LOGICA = 2;
+	private static int FECHA_POSTERIOR_ACTUAL = 3;
+	private static int FECHA_DEMASIADO_ANTIGUA = 4;
+	
     private Logger log = Logger.getLogger(this.getClass());
     
     /**
@@ -761,7 +766,7 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
             }
 
             Calendar cal=Calendar.getInstance();
-            cal.setTime(fechaTest);
+            cal.setTime(dateF.parse(dataentrada));
             int anoEntrada =cal.get(Calendar.YEAR);
             param.setAnoEntrada(String.valueOf(anoEntrada));
 
@@ -1478,23 +1483,48 @@ public ParametrosRegistroEntrada validar(ParametrosRegistroEntrada param) {
     
     errores.clear();
     try {
+    	int error_fecha;
+    	
     	errorFechaPublicacion = (param.getParamRegPubEnt()==null)? false:param.getParamRegPubEnt().getErrorfecha();  
     	/* Validamos la fecha de publicación en el BOIB (solo CAIB oficina 32)*/
         if (errorFechaPublicacion) {
             errores.put("dataPublic","Data de publicació no es l\u00f2gica");
         }
-        log.debug("here");
-        /* Validamos la fecha de entrada */
-        if (!validarFecha(dataentrada)) {
-            errores.put("dataentrada","Data d'entrada no es l\u00f2gica");
-        }
+        
+		/* Validamos la fecha del registro */
+		error_fecha = validarFecha(dataentrada);
+		if (error_fecha==FECHA_NO_LOGICA) {
+			errores.put("datasalida","Data de sortida no \u00e9s l\u00f2gica.");
+		}
 
-        /* La fecha de entrada sera <= que la fecha del dia */
-        Date fechaHoy=new Date();
-        fechaTest = dateF.parse(dataentrada);
-        if (fechaTest.after(fechaHoy)) {
-            errores.put("dataentrada","Data d'entrada posterior a la del dia");
-        }
+		if (error_fecha==FECHA_POSTERIOR_ACTUAL) {
+			errores.put("datasalida","Data de sortida \u00e9s posterior a la del dia.");
+		}
+		
+		if (error_fecha==FECHA_DEMASIADO_ANTIGUA) {
+			errores.put("datasalida","Data de sortida \u00e9s massa antiga.");
+		}
+		
+		/* Validamos Fecha del documento */
+		if (data==null) {
+			//Si no tenemos fecha de documento, copiamos la del registro
+			data=dataentrada;
+			param.setdata(data);
+		}else{
+			error_fecha = validarFecha(data);
+			
+			if (error_fecha==FECHA_NO_LOGICA) {
+				errores.put("data","Data de document \u00e9s no \u00e9s l\u00f2gica.");
+			}
+
+			if (error_fecha==FECHA_POSTERIOR_ACTUAL) {
+				errores.put("data","Data de document \u00e9s posterior a la del dia.");
+			}
+			
+			if (error_fecha==FECHA_DEMASIADO_ANTIGUA) {
+				errores.put("data","Data de document \u00e9s massa antiga.");
+			}
+		}
         
         /* Validamos Hora */
         if (hora==null) {
@@ -1557,15 +1587,7 @@ public ParametrosRegistroEntrada validar(ParametrosRegistroEntrada param) {
             errores.put("oficinafisica","Oficina f\u00EDsica no v\u00e0lida.");
         }
 
-/* Validamos Fecha del documento */
-        if (data==null) {
-            data=dataentrada;
-            param.setdata(data);
-        }
 
-        if (!validarFecha(data)) {
-            errores.put("data","Data document, no es l\u00f2gica");
-        }
         
         /* Validamos Tipo de documento */
         try {
@@ -1585,8 +1607,6 @@ public ParametrosRegistroEntrada validar(ParametrosRegistroEntrada param) {
         	rs.close();
         }
 
-        
-        
         /* Validamos el idioma del documento */
         try {
             String sentenciaHql=" FROM Idioma WHERE codigo=?";
@@ -1802,17 +1822,37 @@ public ParametrosRegistroEntrada validar(ParametrosRegistroEntrada param) {
  * Valida la data donada
  * @param fecha
  */
-private boolean validarFecha(String fecha) {
-    boolean error=false;
-    try {
-        dateF.setLenient(false);
-        fechaTest = dateF.parse(fecha);
-        log.debug("Fecha validada:"+fechaTest.toString());
-        error=false;
-    } catch (Exception ex) {
-    	log.error("Error validant la data:"+ex.getMessage());
-        error=true;
-    }
-    return !error;
+/**
+ * @param fecha
+ */
+private int validarFecha(String fecha) {
+	int ok=CORRECTE;
+	SimpleDateFormat  dateF= new SimpleDateFormat("dd/MM/yyyy");
+	Date fechaTest = null;
+	Date fechaHoy = new Date();
+	Date fechaMinimo = null;
+
+	try {
+		fechaMinimo = dateF.parse("01/01/1900");
+		dateF.setLenient(false);
+		fechaTest = dateF.parse(fecha);
+	} catch (Exception ex) {
+		log.error("Error al validar la fecha: "+fecha);
+		ok=FECHA_NO_LOGICA;
+	}
+	
+	if(ok==CORRECTE){
+		//Comprobamos que la fecha no sea posterior a la actual
+		if(fechaTest.after(fechaHoy)){
+			log.error("Error al validar la fecha: "+fecha+". Fecha posterior a la actual.");
+			ok=FECHA_POSTERIOR_ACTUAL;
+		}
+		//Comprobamos que la fecha no sea demasiado antigua
+		if(fechaTest.before(fechaMinimo)){
+			log.error("Error al validar la fecha: "+fecha+". No puede anterior a la fecha 01/01/1950.");
+			ok=FECHA_DEMASIADO_ANTIGUA;
+		}
+	}
+	return ok;
 }
 }

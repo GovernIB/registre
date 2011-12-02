@@ -47,7 +47,12 @@ import es.caib.regweb.logic.helper.ParametrosRegistroSalida;
  */
 public abstract class RegistroSalidaFacadeEJB extends HibernateEJB {
 	
-	private static final long serialVersionUID = 2L;
+	private static final long serialVersionUID = 3L;
+	private static int CORRECTE = 1;
+	private static int FECHA_NO_LOGICA = 2;
+	private static int FECHA_POSTERIOR_ACTUAL = 3;
+	private static int FECHA_DEMASIADO_ANTIGUA = 4;
+	
 	private Logger log = Logger.getLogger(this.getClass());
 	private DateFormat dateF= new SimpleDateFormat("dd/MM/yyyy");
 	private Date fechaTest=null;
@@ -101,23 +106,47 @@ public abstract class RegistroSalidaFacadeEJB extends HibernateEJB {
     	boolean error=param.getError();
     	boolean validado=param.getValidado();
     	Hashtable errores=param.getErrores();
-
+    	int error_fecha = CORRECTE;
+    	
 		validado=false;
-		
 		errores.clear();
+		
 		try {
-			/* Validamos la fecha de entrada */
-			validarFecha(datasalida);
-			if (error) {
-				errores.put("datasalida","Data de sortida no \u00e9s l\u00f2gica");
+			/* Validamos la fecha del registro */
+			error_fecha = validarFecha(datasalida);
+			if (error_fecha==FECHA_NO_LOGICA) {
+				errores.put("datasalida","Data de sortida no \u00e9s l\u00f2gica.");
 			}
-			/* La fecha de salida sera <= que la fecha del dia */
-			Date fechaHoy=new Date();
-			fechaTest = dateF.parse(datasalida);
-			if (fechaTest.after(fechaHoy)) {
-				errores.put("datasalida","Data de sortida posterior a la del dia");
+
+			if (error_fecha==FECHA_POSTERIOR_ACTUAL) {
+				errores.put("datasalida","Data de sortida \u00e9s posterior a la del dia.");
 			}
 			
+			if (error_fecha==FECHA_DEMASIADO_ANTIGUA) {
+				errores.put("datasalida","Data de sortida \u00e9s massa antiga.");
+			}
+			
+			/* Validamos Fecha del documento */
+			if (data==null) {
+				//Si no tenemos fecha de documento, copiamos la del registro
+				data=datasalida;
+				param.setdata(data);
+			}else{
+				error_fecha = validarFecha(data);
+				
+				if (error_fecha==FECHA_NO_LOGICA) {
+					errores.put("data","Data de document \u00e9s no \u00e9s l\u00f2gica.");
+				}
+
+				if (error_fecha==FECHA_POSTERIOR_ACTUAL) {
+					errores.put("data","Data de document \u00e9s posterior a la del dia.");
+				}
+				
+				if (error_fecha==FECHA_DEMASIADO_ANTIGUA) {
+					errores.put("data","Data de document \u00e9s massa antiga.");
+				}
+			}
+		
 			/* Validamos Hora */
 			if (hora==null) {
 				errores.put("hora","Hora de sortida no \u00e9s l\u00f2gica Valor:"+hora);
@@ -162,13 +191,6 @@ public abstract class RegistroSalidaFacadeEJB extends HibernateEJB {
 
             /* Validamos el contador de la oficina */
             if (!oficina.equals("")) {
-            //
-            //    int fzsanoe;
-    			//fechaTest = dateF.parse(datasalida);
-    			//Calendar cal=Calendar.getInstance();
-    			//cal.setTime(fechaTest);
-    			//DateFormat date1=new SimpleDateFormat("yyyyMMdd");
-    			//fzsanoe=cal.get(Calendar.YEAR);
     			
                 int fzsanoe=Helper.obtenerAnyoDeFechadd_MM_YYY(datasalida);
                 
@@ -178,16 +200,6 @@ public abstract class RegistroSalidaFacadeEJB extends HibernateEJB {
                 }
             }
 
-			/* Validamos Fecha del documento */
-			if (data==null) {
-				data=datasalida;
-				param.setdata(data);
-			}
-			validarFecha(data);
-			if (error) {
-				errores.put("data","Data document, no es l\u00f2gica");
-			}
-			
 			/* Validamos Tipo de documento */
 			try {
 				String sentenciaHql=" FROM TipoDocumento WHERE id.codigo=? AND id.fechaBaja=0";
@@ -361,7 +373,7 @@ public abstract class RegistroSalidaFacadeEJB extends HibernateEJB {
 			/* Validamos el numero de disquete */
 			try {
 				if (!disquet.equals("")) {
-					int chk1=Integer.parseInt(disquet);
+					Integer.parseInt(disquet);
 				}
 			} catch (Exception e) {
 				errores.put("disquet","Numero de disquet no v\u00e0lid");
@@ -475,7 +487,7 @@ public abstract class RegistroSalidaFacadeEJB extends HibernateEJB {
 			validado=param.getValidado();
 		}
 		if (!validado) {
-			throw new EJBException("No s'ha realitzat la validaci\u00f3 de les dades del registre ");
+			throw new EJBException("No s'ha realitzat la validaci\u00f3 de les dades del registre. ");
 		}
 
 		registroSalidaGrabado=false;
@@ -488,7 +500,7 @@ public abstract class RegistroSalidaFacadeEJB extends HibernateEJB {
 
 			//fechaTest = dateF.parse(datasalida);
 			Calendar cal=Calendar.getInstance();
-			cal.setTime(fechaTest);
+			cal.setTime(dateF.parse(datasalida));
 			//
 			//fzsanoe=cal.get(Calendar.YEAR);
 			fzsanoe=Helper.obtenerAnyoDeFechadd_MM_YYY(datasalida);
@@ -605,7 +617,7 @@ public abstract class RegistroSalidaFacadeEJB extends HibernateEJB {
 			ms.setString(26,idioma);
 			ms.setString(27,emailRemitente);
 			
-			int numRegistroSalidaGrabado=ms.executeUpdate();
+			ms.executeUpdate();
 			registroSalidaGrabado=true;
 
             /* Grabamos numero de correo si tuviera */
@@ -706,17 +718,35 @@ public abstract class RegistroSalidaFacadeEJB extends HibernateEJB {
 	/**
 	 * @param fecha
 	 */
-	private boolean validarFecha(String fecha) {
-	    boolean error=false;
-	    DateFormat dateF= new SimpleDateFormat("dd/MM/yyyy");
+	private int validarFecha(String fecha) {
+		int ok=CORRECTE;
+		SimpleDateFormat  dateF= new SimpleDateFormat("dd/MM/yyyy");
+		Date fechaTest = null;
+		Date fechaHoy = new Date();
+		Date fechaMinimo = null;
+
 		try {
+			fechaMinimo = dateF.parse("01/01/1900");
 			dateF.setLenient(false);
 			fechaTest = dateF.parse(fecha);
-			error=false;
 		} catch (Exception ex) {
-			error=true;
+			log.error("Error al validar la fecha: "+fecha);
+			ok=FECHA_NO_LOGICA;
 		}
-		return !error;
+		
+		if(ok==CORRECTE){
+			//Comprobamos que la fecha no sea posterior a la actual
+			if(fechaTest.after(fechaHoy)){
+				log.error("Error al validar la fecha: "+fecha+". Fecha posterior a la actual.");
+				ok=FECHA_POSTERIOR_ACTUAL;
+			}
+			//Comprobamos que la fecha no sea demasiado antigua
+			if(fechaTest.before(fechaMinimo)){
+				log.error("Error al validar la fecha: "+fecha+". No puede anterior a la fecha 01/01/1950.");
+				ok=FECHA_DEMASIADO_ANTIGUA;
+			}
+		}
+		return ok;
 	}
 	
 	/** 
