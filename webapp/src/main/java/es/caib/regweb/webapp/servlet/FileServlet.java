@@ -60,7 +60,7 @@ public class FileServlet extends HttpServlet {
         }
        
         if ( nomfitxer.compareTo("manualusuari")==0 ) {
-        	nomfitxer="REGWEB-Manual Usuari.pdf";
+        	nomfitxer="REGISTRE WEB - MANUAL USUARI.pdf";
         }
         if ( nomfitxer.compareTo("requisits")==0 ) {
         	nomfitxer="Requisits_tecnologics_REGWEB.pdf";
