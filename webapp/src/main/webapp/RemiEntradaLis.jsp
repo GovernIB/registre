@@ -13,12 +13,12 @@ String oficinaFisSel = request.getParameter("oficinafisica");
 boolean mostrarRegElec = ((( (request.getParameter("mostrarRegistrosConDocElectronicos")!=null) ? request.getParameter("mostrarRegistrosConDocElectronicos") : "")=="")?false:true);
 
 String parametros[] = {oficinaSel, oficinaFisSel, String.valueOf(mostrarRegElec)};
-String numMaxRegistes = "500";
+String numMaxRegistes = "25";
 
 session.setAttribute("listadoOficiosEntrada",parametros);
 
 //Cercam el número màxim de registres que pot contenir un ofici de remisió
-numMaxRegistes = Conf.get("numMaxRegistrosxOficio","500");
+numMaxRegistes = Conf.get("NumMaxRegOfici","25");
 %>
 <html>
 <head><title><fmt:message key='registre_entrades'/></title>
