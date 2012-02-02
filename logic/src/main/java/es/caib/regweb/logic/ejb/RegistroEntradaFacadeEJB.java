@@ -165,7 +165,7 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
         
         // Cogemos los datos sobre el BOIB del fichero SAR de la aplicación
         String codiOrganismeBOIB = Conf.get("codiOficinaBOIB", "1141");
-        String oficinaBOIB = Conf.get("oficinaBOIB", "42");
+        String oficinaBOIB = Conf.get("oficinaBOIB", "32");
         String infoBOIB = Conf.get("infoBOIB", "false");
         try {
 	        //Comprobamos si hay que actualizar datos publicación BOIB

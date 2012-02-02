@@ -18,6 +18,7 @@ import org.apache.log4j.Logger;
 import es.caib.regweb.model.HistoricoEmails;
 import es.caib.regweb.model.HistoricoEmailsId;
 
+
 /**
  * SessionBean per a gestió del històric de emails generats per l'aplicació
  *
@@ -56,7 +57,7 @@ public abstract class HistoricoEmailsFacadeEJB extends HibernateEJB {
 		Query q = null;
 		Vector registrosLeidos = new Vector();
 		ParametrosHistoricoEmails res = null;    
-        
+		tipoCorreo = ((tipoCorreo.equals("EX"))?"C":"I");
         try {
             String sentenciaHql="select id.numero,emailDestinatario,codigoUsuario,tipusEmail,fecha,hora "+ 
             					"  from HistoricoEmails " +

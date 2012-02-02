@@ -11,7 +11,7 @@
 <html>
 <head>
 <script src="<c:url value='/jscripts/TAO.js'/>"></script>
-    <script>
+<script language='javascript'>
 	function addLoadEvent(func) {
     	var oldonload = window.onload;
     	
@@ -56,20 +56,18 @@
 		}
 
 		function abreUnidades() {
-            	miOficinas=open("<c:url value='/admin/popup.do?accion=totesUnitatsDeGestio'/>","<fmt:message key='unitat_de_gestio'/>","scrollbars,resizable,width=400,height=400");
-            	miOficinas.focus();
-        }
-        
+           	unidades=open("<c:url value='/admin/popup.do?accion=totesUnitatsDeGestio'/>","Unitat_de_gestio","scrollbars,resizable,width=400,height=400");
+           	unidades.focus();
+        }  
         function setUnitat(codOficina,codUnitat) {
-            	var formulari = document.getElementById("cercaUnitat");
+            	var formulari = document.getElementById("cercaUnitatForm");
             	document.getElementById("codiOficina").value=codOficina;
             	document.getElementById("codiUnitat").value=codUnitat;
             	formulari.submit();
         }
 
-        function validaGestioOficina() {
-            	var formulari = document.getElementById("gestionaOficines");
-            	if (document.getElementById("descOficina").value=="" || document.getElementById("dataAlta").value=="" ) {
+        function validaGestioUnitat() {
+            	if (document.getElementById("nomUnitat").value=="" || document.getElementById("email").value=="" ) {
             		alert("<fmt:message key='error_desc_data_alta_oficina'/>");
             		return false;
             	} else {
@@ -117,8 +115,14 @@
 	            <td>
 	            	 <div  id="menuDocAdm" style="width:250px">
 	            	 <ul style="margin-right: 5px">
-						<li><p><fmt:message key='unitat_de_gestio_a_gestionar'/> <a href="javascript:abreUnidades()"><img border="0" src="<c:url value='/imagenes/buscar.gif'/>" align="middle" alt="<fmt:message key='cercar'/>"></a></p></li>
-	                	<li>	<form id="cercaUnitat" name="cercaUnitat" action="<c:url value='/admin/controller.do?accion=unitatsDeGestio'/>" method="post">
+						<li>
+						<p><fmt:message key='unitat_de_gestio_a_gestionar'/> 
+						  <a href="javascript:abreUnidades()">
+						    <img border="0" src="<c:url value='/imagenes/buscar.gif'/>" align="middle" alt="<fmt:message key='cercar'/>">
+						  </a>
+						</p>				
+						</li>
+	                	<li>	<form id="cercaUnitatForm" name="cercaUnitatForm" action="<c:url value='/admin/controller.do?accion=unitatsDeGestio'/>" method="post">
 									<input onKeyPress="return goodchars(event,'0123456789')" style="width:20px;" type="text" name="codiOficina" id="codiOficina" size="2" maxlength="2"/>
 									<input onKeyPress="return goodchars(event,'0123456789')" style="width:40px;" type="text" name="codiUnitat" id="codiUnitat" size="4" maxlength="4"/>
 									<input type="submit" value="<fmt:message key='cercar_alta'/>">
@@ -137,7 +141,7 @@
 	  <c:otherwise>
 	<div class="RecuadreCentrat" style="width:900px;">
 		<br/>
-		<form name="gestionaOficines" id="gestionaOficines" action="<c:url value='/UtilAdmin'/>" method="post" onSubmit="return validaGestioOficina();">	
+		<form name="gestionaOficinesForm" id="gestionaOficinesForm" action="<c:url value='/UtilAdmin'/>" method="post" onSubmit="return validaGestioUnitat();">	
 			<input type="hidden" name="accion" id="accion" value="<c:out escapeXml="true" value='${accion}'/>"/>
 			<input type="hidden" name="codiOficina" id="codiOficina" value="<c:out escapeXml="true" value='${codiOficina}'/>"/>
 			<input type="hidden" name="codiUnitat" id="codiUnitat" value="<c:out escapeXml="true" value='${codiUnitat}'/>"/>

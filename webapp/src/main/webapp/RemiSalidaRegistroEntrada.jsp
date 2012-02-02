@@ -242,7 +242,7 @@ if (!ok || oficio==null){
 	        <tr>
 	            <% 	if(valores.permiteEnviarEmailAlOrganismo(Integer.parseInt(registro.getOficina()),Integer.parseInt(registro.getDestinatari()))){ 
                       	//Si la oficina de registro puede enviar correos al organismo destinatario	
-                    		Vector unitatsGestio = valores.buscarUnitatsGestioEmail(registro.getDestinatari());
+                    		Vector unitatsGestio = valores.buscarUnitatsGestioEmail(registro.getOficina(),registro.getDestinatari());
                     %>
                             
                     <td><fmt:message key='registro.emailUnidadGestion'/></td>

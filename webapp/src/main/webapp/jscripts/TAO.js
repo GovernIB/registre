@@ -207,6 +207,6 @@ function esEmail (obj)
 function verHistoricoEmails(ofi,num,ano,tipus)
 {
 	var url = "veureHistoric?oficina="+ofi+"&numero="+num+"&ano="+ano+"&tipus="+tipus;
-	miVentana = window.open(url, "Veure Hist&ograve;ric","scrollbars,resizable,width=600,height=500");
+	miVentana = window.open(url, "veureHistoric","scrollbars,resizable,width=600,height=500");
 	miVentana.focus(); 		
 };

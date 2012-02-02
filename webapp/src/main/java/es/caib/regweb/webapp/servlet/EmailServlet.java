@@ -308,7 +308,7 @@ public class EmailServlet extends UtilWebServlet {
 		asunto=asunto.replace("$(DataReg)",  registro.getDataEntrada());
 		asunto=asunto.replace("$(DesOfi)",   registro.getDescripcionOficina());
 		asunto=asunto.replace("$(DesRem)",   registro.getDescripcionRemitente());
-		asunto=asunto.replace("$(ExtReg)",   registro.getMotivo());
+		asunto=asunto.replace("$(ExtReg)",   registro.getComentario());
 		asunto=asunto.replace("$(LliDoc)",   localizadoresStr);
 		asunto=asunto.replace("$(NumOfi)",   registro.getOficina());
 		asunto=asunto.replace("$(NumOfiFi)", registro.getOficinafisica());

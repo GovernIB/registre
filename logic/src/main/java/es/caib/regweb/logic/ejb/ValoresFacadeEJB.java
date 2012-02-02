@@ -817,12 +817,15 @@ public abstract class ValoresFacadeEJB extends HibernateEJB {
 		return unitats;
 	}
 
-
+    
     /**
+     * Donat una oficina i un organisme, mostra el unitats de gestió a les que pot enviar el justificant del correu electrònic.
+     * Si l'oficina es null, 
+     * 
      * @ejb.interface-method
      * @ejb.permission unchecked="true"
      */
-     public Vector buscarUnitatsGestioEmail(String organisme) {
+     public Vector buscarUnitatsGestioEmail(String oficina, String organisme) {
  		Vector destino=new Vector();
  		Session session = getSession();
  		ScrollableResults rs=null;
@@ -836,8 +839,9 @@ public abstract class ValoresFacadeEJB extends HibernateEJB {
  			                   "    and  UnidadDeGestion.actiu = 'S' " +
  			                   " order by UnidadDeGestion.id.codigoOficina,UnidadDeGestion.id.codigoUnidad";*/
 			String sentenciaHql= " select id.codigoOficina, id.codigoUnidad, nombre, direccionEmail" +
-					             " from UnidadDeGestion "+
-					             " where id.codigoOficina IN (select id.oficina.codigo from OficinaOrganismo where id.organismo.codigo = ?)" +			                 
+					             "   from UnidadDeGestion "+
+					             " where id.codigoOficina IN (select id.oficina from OficinaOrganismoPermetEnviarEmail where id.organismo = ? " +
+					             ((oficina==null)?") ":" and id.oficina = '"+oficina+"') ") +
 					             "   and  actiu = 'S' " +
 					             " order by id.codigoOficina, id.codigoUnidad";
 
@@ -868,6 +872,16 @@ public abstract class ValoresFacadeEJB extends HibernateEJB {
              close(session);
          }
  		return destino;
+ 	}
+
+    /**
+     * Donat un organisme, mostra el unitats de gestió a les que pot enviar el justificant del correu electrònic
+     * 
+     * @ejb.interface-method
+     * @ejb.permission unchecked="true"
+     */
+     public Vector buscarUnitatsGestioEmail(String organisme) {
+ 		return buscarUnitatsGestioEmail(null, organisme);
  	}
 	
 	//    public String buscarDisquete(String oficina) {

@@ -51,15 +51,18 @@
            	 email = llista.options[llista.selectedIndex].value;
            	 url+="&email="+email;
         	}
-        	if(document.getElementById("idiomaEmail")!=null){
-        		var idiomaEmail = document.getElementById("idiomaEmail").value;
-            	if(idiomaEmail=="<%=es.caib.regweb.webapp.servlet.EmailServlet.IDIOMA_NO_DETERMINADO %>"){
-            		alert (msgNoIdioma);
-            		enviar= false;
-            		return;
-                	}
-            	url+="&idioma="+idiomaEmail;
-        	}
+
+        	if(tipus=="<%=es.caib.regweb.webapp.servlet.EmailServlet.TIPUS_CIUTADA %>"){
+	        	if(document.getElementById("idiomaEmail")!=null){
+	        		var idiomaEmail = document.getElementById("idiomaEmail").value;
+	            	if(idiomaEmail=="<%=es.caib.regweb.webapp.servlet.EmailServlet.IDIOMA_NO_DETERMINADO %>"){
+	            		alert (msgNoIdioma);
+	            		enviar= false;
+	            		return;
+	                	}
+	            	url+="&idioma="+idiomaEmail;
+	        	}
+       		}
 
         	if(enviar){
 	        	miVentana = window.open(url, "enviaEmail","scrollbars,resizable,width=300,height=200");
@@ -293,7 +296,7 @@
 				        <tr><td colspan="3">&nbsp;</td></tr>				        
 				     <% 	if(valores.permiteEnviarEmailAlOrganismo(Integer.parseInt(reg.getOficina()),Integer.parseInt(reg.getDestinatari()))){ 
 			                      	//Si la oficina de registro puede enviar correos al organismo destinatario	
-			                    		Vector unitatsGestio = valores.buscarUnitatsGestioEmail(reg.getDestinatari());
+			                    		Vector unitatsGestio = valores.buscarUnitatsGestioEmail(reg.getOficina(),reg.getDestinatari());
 			                    %>	
 			            <tr>	                    
 		                    <td>&nbsp;&nbsp;<fmt:message key='registro.emailUnidadGestion'/></td>
