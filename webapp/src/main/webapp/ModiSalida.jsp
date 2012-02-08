@@ -598,96 +598,96 @@
                     	<div id="destinatario_desc" style="font-size:12px; font: bold;"></div>
                     </td>
                 </tr>
-                    </table>
+                </table>
                 </td>
             </tr>
-            <tr>
-            <td>
          <% if (es.caib.regweb.logic.helper.Conf.get("integracionIBKEYActiva","false").equalsIgnoreCase("true")){
             if(localitzadorsDocs!=null){ %>
             <tr>
-            <td class="cellaEntrades">
-            <!-- tabla de datos de la compulsa electrònica -->
-            <table class="bordeEntrada" style="border:0;" >
-                <tr>
-                	<td style="border:0;"><b><fmt:message key='registro.datosDocumentosAnexados'/></b></td>
-                </tr>
-	            <tr>
-	            	<td style="border:0;"><fmt:message key='registro.emailRemitente'/>&nbsp;&nbsp;<input onkeypress="return check(event)" type="text" name="emailRemitente" size="50" maxlength="50" value="<%=(registro==null)? emailRemitent :registro.getEmailRemitent()%>"></td>
-	            </tr>
-	            <tr>
-		            <td style="border:0;">
-		            <input type="hidden" name="localitzadorsDocs" value="<%=pLocalitzadorsDocs%>">
-		            <fmt:message key='registro.textoEnlaces'/><br/>
-		            <ul>
-		            <%for(int i=0; i<localitzadorsDocs.length; i++){ %>
-		            	<li><a href="<%= localitzadorsDocs[i]%>" target="_blank"><%= localitzadorsDocs[i]%></a></li>
-		            <%} %>	            
-		            </ul>
-		            </td>
-	            </tr>
-            </table>
-            </td>
+	            <td class="cellaEntrades">
+	            <!-- tabla de datos de la compulsa electrònica -->
+	            <table class="bordeEntrada" style="border:0;" >
+	                <tr>
+	                	<td style="border:0;"><b><fmt:message key='registro.datosDocumentosAnexados'/></b></td>
+	                </tr>
+		            <tr>
+		            	<td style="border:0;"><fmt:message key='registro.emailRemitente'/>&nbsp;&nbsp;<input onkeypress="return check(event)" type="text" name="emailRemitente" size="50" maxlength="50" value="<%=(registro==null)? emailRemitent :registro.getEmailRemitent()%>"></td>
+		            </tr>
+		            <tr>
+			            <td style="border:0;">
+			            <input type="hidden" name="localitzadorsDocs" value="<%=pLocalitzadorsDocs%>">
+			            <fmt:message key='registro.textoEnlaces'/><br/>
+			            <ul>
+			            <%for(int i=0; i<localitzadorsDocs.length; i++){ %>
+			            	<li><a href="<%= localitzadorsDocs[i]%>" target="_blank"><%= localitzadorsDocs[i]%></a></li>
+			            <%} %>	            
+			            </ul>
+			            </td>
+		            </tr>
+	            </table>
+	            </td>
             </tr>
              <%}
-             }%>                
-            <!-- tabla de datos del Extracto -->
-            <table class="bordeSalida" style="border:0">
+             }%>
             <tr>
-                <td style="border:0;">
-                    &nbsp;<br><b><fmt:message key='dades_de_lextracte'/></b>
-                    </td>
-                    </tr>
-                    <tr>
-                        <td style="border:0;">
-                            <!-- Idioma del Extracto -->
-                            &nbsp;<br><font class="<%=errorEn(errores,"idioex")%>"><fmt:message key='registro.idioma'/></font>
-          <c:set var="anteriorIdioex" value="${registro.idioex}" />
-          <c:set var="idioText"><fmt:message key='registro.idioma.castella'/></c:set>
-          <c:if test="${anteriorIdioex eq '2'}">
-            <c:set var="idioText"><fmt:message key='registro.idioma.catala'/></c:set>
-          </c:if>
-                            <input type="hidden" name="idioex" value="<c:out value='${anteriorIdioex}' />">
-                            <input readonly="readonly" type="text" name="idioexText" value="<c:out value='${idioText}' />" size="8">
-                            &nbsp;
-
-                            <c:choose>
-                            <c:when test="${initParam['registro.entrada.view.disquete_correo']}">
-                            <!--Numero de disquete -->
-                            <font class="<%=errorEn(errores,"disquet")%>"><fmt:message key='registro.num_disquete'/> </font>
-                            <input onkeypress="return check(event)" type="text" name="disquet" size="8" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml((registro==null)? "":registro.getDisquet().trim())%>">
-                            <a href="javascript:abreDisquete()"><img src="imagenes/buscar.gif" align="middle" alt="Darrer disquet" border="0"></a>
-                            <!--Numero de disquete -->
-                            &nbsp;&nbsp;
-                            <font class="<%=errorEn(errores,"correo")%>"><fmt:message key='registro.num_correo'/> </font>
-                            <input onkeypress="return check(event)" type="text" name="correo" size="8" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml((registro==null)? "":(registro.getCorreo()==null) ? "": registro.getCorreo().trim())%>">
-                            </c:when>
-                            <c:otherwise>
-                            <input type="hidden" name="disquet" value=""/>
-                            <input type="hidden" name="correo" value=""/>
-                            </c:otherwise>
-                            </c:choose>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="border:0;">
-                            &nbsp;<br>
-                            <!-- Extracto del documento -->
-                            <font class="errorcampo">*</font>
-                            <font class="<%=errorEn(errores,"comentario")%>"><fmt:message key='extracte_del_document'/>:</font>
-                            <textarea cols="70" onkeypress="return checkComentario(event)" rows="3" name="comentario"><%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(comentario.trim())%></textarea>
-                        </td>
-                  </tr>
-                  <tr>
-                	<td style="border:0">
-                      <!-- Boton de enviar -->          
-                      <p align="center">
-                      <input type="submit" value="<fmt:message key='enviar'/>">
-                      </P>
-                    </td>
-                  </tr>
-              </table>
-           </td>
+	            <td>                
+	            <!-- tabla de datos del Extracto -->
+	            <table class="bordeSalida" style="border:0">
+	            <tr>
+	                <td style="border:0;">
+	                    &nbsp;<br><b><fmt:message key='dades_de_lextracte'/></b>
+	                    </td>
+	                    </tr>
+	                    <tr>
+	                        <td style="border:0;">
+	                            <!-- Idioma del Extracto -->
+	                            &nbsp;<br><font class="<%=errorEn(errores,"idioex")%>"><fmt:message key='registro.idioma'/></font>
+						        <c:set var="anteriorIdioex" value="${registro.idioex}" />
+						        <c:set var="idioText"><fmt:message key='registro.idioma.castella'/></c:set>
+						        <c:if test="${anteriorIdioex eq '2'}">
+						        <c:set var="idioText"><fmt:message key='registro.idioma.catala'/></c:set>
+						        </c:if>
+	                            <input type="hidden" name="idioex" value="<c:out value='${anteriorIdioex}' />">
+	                            <input readonly="readonly" type="text" name="idioexText" value="<c:out value='${idioText}' />" size="8">
+	                            &nbsp;
+	
+	                            <c:choose>
+	                            <c:when test="${initParam['registro.entrada.view.disquete_correo']}">
+	                            <!--Numero de disquete -->
+	                            <font class="<%=errorEn(errores,"disquet")%>"><fmt:message key='registro.num_disquete'/> </font>
+	                            <input onkeypress="return check(event)" type="text" name="disquet" size="8" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml((registro==null)? "":registro.getDisquet().trim())%>">
+	                            <a href="javascript:abreDisquete()"><img src="imagenes/buscar.gif" align="middle" alt="Darrer disquet" border="0"></a>
+	                            <!--Numero de disquete -->
+	                            &nbsp;&nbsp;
+	                            <font class="<%=errorEn(errores,"correo")%>"><fmt:message key='registro.num_correo'/> </font>
+	                            <input onkeypress="return check(event)" type="text" name="correo" size="8" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml((registro==null)? "":(registro.getCorreo()==null) ? "": registro.getCorreo().trim())%>">
+	                            </c:when>
+	                            <c:otherwise>
+	                            <input type="hidden" name="disquet" value=""/>
+	                            <input type="hidden" name="correo" value=""/>
+	                            </c:otherwise>
+	                            </c:choose>
+	                        </td>
+	                    </tr>
+	                    <tr>
+	                        <td style="border:0;">
+	                            &nbsp;<br>
+	                            <!-- Extracto del documento -->
+	                            <font class="errorcampo">*</font>
+	                            <font class="<%=errorEn(errores,"comentario")%>"><fmt:message key='extracte_del_document'/>:</font>
+	                            <textarea cols="70" onkeypress="return checkComentario(event)" rows="3" name="comentario"><%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(comentario.trim())%></textarea>
+	                        </td>
+	                  </tr>
+	                  <tr>
+	                	<td style="border:0">
+	                      <!-- Boton de enviar -->          
+	                      <p align="center">
+	                      <input type="submit" value="<fmt:message key='enviar'/>">
+	                      </P>
+	                    </td>
+	                  </tr>
+	              </table>
+	           </td>
            </tr>
         </table>
         </div>    
