@@ -159,7 +159,7 @@ function refrescaFisica(){
 </script>
         <script>
             confirmandoProceso=false;
- 
+
             function confirmaProceso() {
 
             	valor=document.registroForm.comentario.value;
@@ -168,19 +168,21 @@ function refrescaFisica(){
             	valor3=document.registroForm.correo.value;
             	valor4=document.registroForm.disquet.value;
             	campEmail = document.registroForm.emailRemitente;
+                registre012Actiu = <%=es.caib.regweb.logic.helper.Conf.get("viewRegistre012","false")%>;
+                IBKEYActivaActiu = <%=es.caib.regweb.logic.helper.Conf.get("integracionIBKEYActiva","false")%>;
             	
             	if (valor.indexOf('€',0)>-1 || valor1.indexOf('¤',0)>-1 || valor2.indexOf('¤',0)>-1 || valor3.indexOf('¤',0)>-1 || valor4.indexOf('¤',0)>-1) {
             		alert("<fmt:message key='pedirdatos.alert1'/>");
             		return false;
             	} else {
-            		if (es.caib.regweb.logic.helper.Conf.get("viewRegistre012","false").equalsIgnoreCase("true")){
+            		if (registre012Actiu){
 	                    if (document.registroForm.Reg060.checked && document.registroForm.mun_060.value == "000"){
 							alert("<fmt:message key='pedirdatos.alert2'/>");
 	                        return false;
 						}
             		}
-                     if (es.caib.regweb.logic.helper.Conf.get("integracionIBKEYActiva","false").equalsIgnoreCase("true"))
-	                    if((campEmail.value.length > 0)&&(esEmail(campEmail))){
+                     if (IBKEYActivaActiu && campEmail)
+	                    if((campEmail.value.length > 0)&&(!esEmail(campEmail))){
 	                    	alert("<fmt:message key='pedirdatos.alert3'/>");
 	                        return false;          
 	                    }

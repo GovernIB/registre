@@ -240,6 +240,22 @@ void escribeSelect(javax.servlet.jsp.JspWriter out, Vector valores, String refer
             valor3=document.registroForm.correo.value;
             valor4=document.registroForm.disquet.value;
             valor5=document.registroForm.motivo.value;
+            campEmail = document.registroForm.emailRemitente;
+            registre012Actiu = <%=es.caib.regweb.logic.helper.Conf.get("viewRegistre012","false")%>;
+            IBKEYActivaActiu = <%=es.caib.regweb.logic.helper.Conf.get("integracionIBKEYActiva","false")%>;
+ 
+    		if (registre012Actiu){
+                if (document.registroForm.Reg060.checked && document.registroForm.mun_060.value == "000"){
+					alert("<fmt:message key='pedirdatos.alert2'/>");
+                    return false;
+				}
+    		}
+            if (IBKEYActivaActiu && campEmail){
+                if((campEmail.value.length > 0)&&(!esEmail(campEmail))){
+                	alert("<fmt:message key='pedirdatos.alert3'/>");
+                    return false;          
+                }
+       		}
            
             if(document.registroForm.numeroBOCAIB){ 
 	             numeroBOCAIB=document.registroForm.numeroBOCAIB.value;

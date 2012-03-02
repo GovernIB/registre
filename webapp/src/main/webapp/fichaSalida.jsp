@@ -114,7 +114,11 @@ String localitzadorsDocs[] ;
                                 <fmt:message key='registro.hora'/> <font class="ficha"><%=hhmm%></font>
                             </td>
                             <td style="border:0" >
+                            <%if(reg.getRegistroAnulado().trim().equals("")){ %>
+                            	 &nbsp;
+                            <%}else{ %>
                                 <fmt:message key='sortida_anulada'/>:&nbsp;<%=(reg.getRegistroAnulado().trim().equals("")) ? "" : "S" %>
+                            <%} %>               
                             </td>
                         </tr>
                         <tr>
