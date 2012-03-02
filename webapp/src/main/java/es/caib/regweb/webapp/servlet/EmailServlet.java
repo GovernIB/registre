@@ -83,33 +83,11 @@ public class EmailServlet extends UtilWebServlet {
 		String idioma = ((request.getParameter("idioma")!=null)?request.getParameter("idioma"):IDIOMA_CATALAN);
 		String asunto = "";
 		AdminFacade autUsu = null;
-		ModeloDocumentoData modeloEmail = null;
-		
+		ModeloDocumentoData modeloEmail = null;	
 		
 		//Leemos el registro de base de datos
 		ParametrosRegistroEntrada registro =leerRegistro(request);
 		registro.fijaUsuario(request.getRemoteUser());
-		
-		//Comprobamos que ha sido leido correctamente
-		/*if(registro.getLeido()){
-			if(tipus.equalsIgnoreCase(TIPUS_CIUTADA)){		
-				dir_destinatario = registro.getEmailRemitent();
-				contenido = generarContenidoCiudadano( registro, idioma);
-				asunto = generarAsunto( registro,  idioma, TIPUS_CIUTADA);
-				envioCorrecto = Mail.enviarCorreu(dir_destinatario,asunto,contenido.toString());
-			}else{
-				if(tipus.equalsIgnoreCase(TIPUS_INTERN)){
-					dir_destinatario = request.getParameter("email");
-					if(dir_destinatario!=null){
-						asunto = generarAsunto( registro,  idioma, TIPUS_INTERN);
-						contenido = generarContenidoInterno( registro);
-						envioCorrecto = Mail.enviarCorreu(dir_destinatario,asunto,contenido.toString());
-					}else{
-						log.error("No se puede enviar un correo interno al no poder leer el parámetro de entrada 'email'. Registro:"+registro.getReferenciaRegistro());
-					}
-				}
-			}
-		}*/
 		
 		try{
 			//Comprobamos que ha sido leido correctamente
@@ -148,59 +126,6 @@ public class EmailServlet extends UtilWebServlet {
 
 		String url = response.encodeURL(param.toString());
 		context.getRequestDispatcher(url).forward(request, response);
-	}
-
-	/**
-	 * Genera el contenido y el asunto del justificante que se enviara por email al ciudadano. 
-	 * 
-	 * @param registro Objeto con los datos del registro
-	 * @param idioma Idioma en que se enviara el correo. Valores dependen de las constantes de clase IDIOMA_CATALAN o IDIOMA_CASTELLANO
-	 * @return
-	 */
-	private StringBuilder generarContenidoCiudadano(ParametrosRegistroEntrada registro, String idioma){
-		StringBuilder rtdo = new StringBuilder("");
-		String localitzadorsDocs[] = registro.getArrayLocalitzadorsDocs();
-
-		if(idioma.equals(IDIOMA_CATALAN)){
-			rtdo.append("<p>Hem registrat el seu escrit a l'oficina ").append(registro.getOficina()).append(" amb el número ").append(registro.getNumeroEntrada()).append("/").append(registro.getAnoEntrada()).append(".</p>");
-			rtdo.append("<p>El registre de la documentació es va realitzar el dia "+registro.getDataEntrada()+".</p>");
-			rtdo.append("Els documents registrats són:<br/>");
-		}else{
-			rtdo.append("<p>Hemos registrado su escrito en la oficina "+registro.getOficina()+" con el número "+registro.getNumeroEntrada()+"/"+registro.getAnoEntrada()+".</p>");
-			rtdo.append("<p>El registro de la documentación se  realizó el día "+registro.getDataEntrada()+".</p>");
-			rtdo.append("Els documentos registrados son:<br/>");
-		}
-		
-		rtdo.append("<ul>");
-        for(int i=0; i<localitzadorsDocs.length; i++){ 
-        	rtdo.append("<li><a href="+localitzadorsDocs[i]+" target='_blank'>"+localitzadorsDocs[i]+"</a></li>");
-        } 	            
-
-		return rtdo;
-	}
-
-	/**
-	 * Genera el contenido y el asunto del justificante que se enviara a la unidad de gestión. 
-	 * 
-	 * @param registro Objeto con los datos del registro
-	 * @return
-	 */
-	private StringBuilder generarContenidoInterno(ParametrosRegistroEntrada registro){
-		StringBuilder rtdo  = new StringBuilder("");
-		String localitzadorsDocs[] = registro.getArrayLocalitzadorsDocs();
-	
-		rtdo.append("<p>Hem registrat un escrit a l'oficina "+registro.getOficina()+" amb el número "+registro.getNumeroEntrada()+"/"+registro.getAnoEntrada()+".</p>");
-		rtdo.append("<p>El registre de la documentació es va realitzar el dia "+registro.getDataEntrada()+". </br>");  
-		rtdo.append("El remitent de la documentació és "+registro.getDescripcionRemitente());
-		rtdo.append(" L'extracte del registre és: '"+registro.getMotivo()+"'</p>");
-		rtdo.append("Els documents registrats són:<br/>");
-		rtdo.append("<ul>");
-        for(int i=0; i<localitzadorsDocs.length; i++){ 
-        	rtdo.append("<li><a href="+localitzadorsDocs[i]+" target='_blank'>"+localitzadorsDocs[i]+"</a></li>");
-        } 	            
-        rtdo.append("</ul>");
-	
-		return rtdo;
 	}
 	
 	/**
@@ -245,7 +170,6 @@ public class EmailServlet extends UtilWebServlet {
 			}catch(Exception ex){
 				throw new ServletException("Error al cridar al EJB HistoricoEmailsFacade.",ex);
 		}
-	   
 	}
 	
 	public void init(ServletConfig config) throws ServletException {
@@ -284,7 +208,6 @@ public class EmailServlet extends UtilWebServlet {
 		
 		return registro;
 	}
-	
 
 	/**
 	 * Genera el asunto que deberá llevar el correo electrónico a enviar
@@ -315,7 +238,6 @@ public class EmailServlet extends UtilWebServlet {
 		asunto=asunto.replace("$(NumReg)",   registro.getNumeroEntrada());
 		asunto=asunto.replace("$(RefReg)",   registro.getReferenciaRegistro());
 		
-
 		return asunto;
 	}
 

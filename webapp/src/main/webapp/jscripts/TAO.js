@@ -197,11 +197,11 @@ function URLDecode(encoded) {
 
 function esEmail (obj) 
 {
-    if (obj.value.length == 0) return 0;
+    if (obj.value.length == 0) return false;
 	var er_email = /^([^@\s]+@[^@\.\s]+(\.[^@\.\s]+)+|^)$/
 	if (!er_email.test(obj.value))
-		MsgError = MsgError + nomCamp(obj) + ": " + lit_error[idi][4];
-	return 0;
+		return false;
+	return true;
 };
 
 function verHistoricoEmails(ofi,num,ano,tipus)

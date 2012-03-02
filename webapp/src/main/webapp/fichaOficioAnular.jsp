@@ -13,9 +13,6 @@ String codOficina=request.getParameter("oficina");
 String ano=request.getParameter("ano");
 String numOficio=request.getParameter("oficio");
 String motivo=request.getParameter("motius");
-%>
-
-<%
 OficioRemisionFacade oficio = OficioRemisionFacadeUtil.getHome().create();
 ParametrosOficioRemision param = new ParametrosOficioRemision();
 ParametrosOficioRemision param2 = new ParametrosOficioRemision();
@@ -33,20 +30,9 @@ param2.setNumeroEntrada(null);
 param2.setFechaEntrada(null);
 param2=oficio.actualizar(param2);
 oficio.anular(param2);
-
 %>
-<%
-String [] parametros=(String [])session.getAttribute("listadoOficios");
-
-String oficinaSel=parametros[0];
-String oficinaFisicaSel=parametros[1];
-String anyoSel=parametros[2];
-
-%>
-
-            <jsp:forward page="listadoOficios.jsp" >
-                <jsp:param name="oficina" value="<%=oficinaSel%>"/>
-                <jsp:param name="oficinafisica" value="<%=oficinaFisicaSel%>"/>
-                <jsp:param name="any" value="<%=anyoSel%>"/>
-                <jsp:param name="origen" value="fichaOficioAnular.jsp"/>
-            </jsp:forward>
+ <jsp:forward page="listadoOficios.jsp" >
+     <jsp:param name="oficina" value="<%=codOficina%>"/>
+     <jsp:param name="any" value="<%=ano%>"/>
+     <jsp:param name="origen" value="fichaOficioAnular.jsp"/>
+ </jsp:forward>
