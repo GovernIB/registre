@@ -4,7 +4,10 @@
         FAAFBAJA integer,
         FAADAGCO varchar(255),
         primary key (FAACAGCO)
-    ) comment='Oficina';
+    );
+
+    comment on table BAGECOM is
+        'Oficina';
 
     create table BAGRUGE (
         FABCAGGE integer not null,
@@ -14,14 +17,20 @@
         FABCAGSU integer,
         FABCTASU integer,
         primary key (FABCAGGE, FABCTAGG)
-    ) comment='AgrupacionGeografica';
+    );
+
+    comment on table BAGRUGE is
+        'AgrupacionGeografica';
 
     create table BCODPOS (
         F12CPOST integer not null,
         F12CAGGE integer not null,
         F12CTAGG integer not null,
         primary key (F12CAGGE, F12CTAGG)
-    ) comment='CodigoPostal';
+    );
+
+    comment on table BCODPOS is
+        'CodigoPostal';
 
     create table BHAGECO (
         FHACAGCO integer not null,
@@ -29,7 +38,10 @@
         FHAFBAJA integer not null,
         FHADAGCO varchar(20) not null,
         primary key (FHACAGCO, FHAFALTA)
-    ) comment='OficinaHistorico';
+    );
+
+    comment on table BHAGECO is
+        'OficinaHistorico';
 
     create table BHOFIFIS (
         FZHCAGCO integer not null,
@@ -38,7 +50,10 @@
         OFH_FECBAJ integer not null,
         OFH_NOM varchar(20) not null,
         primary key (FZHCAGCO, OFH_CODI, OFH_FECALT)
-    ) comment='OficinaFisicaHistorico';
+    );
+
+    comment on table BHOFIFIS is
+        'OficinaFisicaHistorico';
 
     create table BHORGAN (
         FHXCORGA integer not null,
@@ -47,7 +62,10 @@
         FHXDORGR varchar(15) not null,
         FHXDORGT varchar(40) not null,
         primary key (FHXCORGA, FHXFALTA)
-    ) comment='OrganismoHistorico';
+    );
+
+    comment on table BHORGAN is
+        'OrganismoHistorico';
 
     create table BORGANI (
         FAXCORGA integer not null,
@@ -56,7 +74,10 @@
         FAXDORGR varchar(15) not null,
         FAXDORGT varchar(40) not null,
         primary key (FAXCORGA)
-    ) comment='Organismo';
+    );
+
+    comment on table BORGANI is
+        'Organismo';
 
     create table BTIPAGR (
         FLDFBAJA integer not null,
@@ -64,14 +85,20 @@
         FLDDTAGG varchar(30) not null,
         FLDCTAGS integer not null,
         primary key (FLDFBAJA, FLDCTAGG)
-    ) comment='TipoAgrupacionGeografica';
+    );
+
+    comment on table BTIPAGR is
+        'TipoAgrupacionGeografica';
 
     create table BZAUTOR (
         FZHCAUT varchar(2) not null,
         FZHCAGCO integer not null,
         FZHCUSU varchar(10) not null,
         primary key (FZHCAUT, FZHCAGCO, FZHCUSU)
-    ) comment='Autorizacion';
+    );
+
+    comment on table BZAUTOR is
+        'Autorizacion';
 
     create table BZBLOQU (
         FZNAENSA integer not null,
@@ -79,7 +106,10 @@
         FZNCAGCO integer not null,
         FZNCUSU varchar(10) not null,
         primary key (FZNAENSA, FZNCENSA, FZNCAGCO)
-    ) comment='BloqueoDisquete';
+    );
+
+    comment on table BZBLOQU is
+        'BloqueoDisquete';
 
     create table BZCONES (
         FZDAENSA integer not null,
@@ -87,7 +117,10 @@
         FZDCAGCO integer not null,
         FZDNUMER integer not null,
         primary key (FZDAENSA, FZDCENSA, FZDCAGCO)
-    ) comment='Contador';
+    );
+
+    comment on table BZCONES is
+        'Contador';
 
     create table BZDISQU (
         FZLAENSA integer not null,
@@ -95,7 +128,10 @@
         FZLCAGCO integer not null,
         FZLNDIS integer not null,
         primary key (FZLAENSA, FZLCENSA, FZLCAGCO)
-    ) comment='Disquete';
+    );
+
+    comment on table BZDISQU is
+        'Disquete';
 
     create table BZENLPD (
         FZTANOEN integer not null,
@@ -106,7 +142,10 @@
         FZTTIPAC varchar(10) not null,
         FZTCUSU varchar(10) not null,
         primary key (FZTANOEN, FZTDATAC, FZTHORAC, FZTNUMEN, FZTCAGCO, FZTTIPAC, FZTCUSU)
-    ) comment='LogEntradaLopd';
+    );
+
+    comment on table BZENLPD is
+        'LogEntradaLopd';
 
     create table BZENTID (
         FZGCENTI varchar(7) not null,
@@ -116,7 +155,10 @@
         FZGDENTI varchar(30) not null,
         FZGDENT2 varchar(30) not null,
         primary key (FZGCENTI, FZGFBAJA, FZGNENTI)
-    ) comment='EntidadRemitente';
+    );
+
+    comment on table BZENTID is
+        'EntidadRemitente';
 
     create table BZENTOFF (
         OFE_CODI integer not null,
@@ -124,7 +166,10 @@
         FOENUMEN integer not null,
         FOECAGCO integer not null,
         primary key (FOEANOEN, FOENUMEN, FOECAGCO)
-    ) comment='EntradaOficinaFisica';
+    );
+
+    comment on table BZENTOFF is
+        'EntradaOficinaFisica';
 
     create table BZENTRA (
         FZAANOEN integer not null,
@@ -155,21 +200,31 @@
         FZACTIPE varchar(2) not null,
         FZACUSU varchar(10) not null,
         primary key (FZAANOEN, FZANUMEN, FZACAGCO)
-    ) comment='Entrada';
+    );
+
+    comment on table BZENTRA is
+        'Entrada';
 
     create table BZENTRA060 (
         ENT_CODIMUN varchar(3) not null,
         ENT_ANY integer not null,
         ENT_NUM integer not null,
         ENT_OFI integer not null,
+		ENT_NUMREG VARCHAR(5) NOT NULL,
         primary key (ENT_ANY, ENT_NUM, ENT_OFI)
-    ) comment='Entrada060';
+    );
+
+    comment on table BZENTRA060 is
+        'Entrada060';
 
     create table BZIDIOM (
         FZMCIDI varchar(1) not null,
         FZMDIDI varchar(15) not null,
         primary key (FZMCIDI)
-    ) comment='Idioma';
+    );
+
+    comment on table BZIDIOM is
+        'Idioma';
 
     create table BZLIBRO (
         FZCAENSA integer not null,
@@ -178,7 +233,10 @@
         FZCNUMPA integer not null,
         FZCFECED integer not null,
         primary key (FZCAENSA, FZCCENSA, FZCCAGCO)
-    ) comment='Libro';
+    );
+
+    comment on table BZLIBRO is
+        'Libro';
 
     create table BZMODIF (
         FZJANOEN integer not null,
@@ -199,21 +257,30 @@
         FZJTEXTO varchar(150) not null,
         FZJCUSVI varchar(10) not null,
         primary key (FZJANOEN, FZJCENSA, FZJFMODI, FZJHMODI, FZJNUMEN, FZJCAGCO, FZJCUSMO)
-    ) comment='Modificacion';
+    );
+
+    comment on table BZMODIF is
+        'Modificacion';
 
     create table BZMODOF (
         MOF_NOM varchar(25) not null unique,
         MOF_CONTYP varchar(32),
-        MOF_DATA longblob,
+        MOF_DATA blob(1048576),
         primary key (MOF_NOM)
-    ) comment='ModeloOficio';
+    );
+
+    comment on table BZMODOF is
+        'ModeloOficio';
 
     create table BZMODREB (
         MOR_NOM varchar(25) not null unique,
         MOR_CONTYP varchar(32),
-        MOR_DATA longblob,
+        MOR_DATA blob(1048576),
         primary key (MOR_NOM)
-    ) comment='ModeloRecibo';
+    );
+
+    comment on table BZMODREB is
+        'ModeloRecibo';
 
     create table BZMOLPD (
         FZVANOEN integer not null,
@@ -227,15 +294,20 @@
         FZVTIPAC varchar(10) not null,
         FZVCUSU varchar(10) not null,
         primary key (FZVANOEN, FZVCENSA, FZVDATAC, FZVFMODI, FZVHORAC, FZVHMODI, FZVNUMEN, FZVCAGCO, FZVTIPAC, FZVCUSU)
-    ) comment='LogModificacionLopd';
+    );
+
+    comment on table BZMOLPD is
+        'LogModificacionLopd';
 
     create table BZMUN_060 (
         MUN_CODI varchar(3) not null unique,
         MUN_FECBAJ integer,
-        MUN_NOM varchar(30) unique,
-        primary key (MUN_CODI),
-        unique (MUN_NOM)
-    ) comment='Municipio060';
+        MUN_NOM varchar(30),
+        primary key (MUN_CODI)
+    );
+
+    comment on table BZMUN_060 is
+        'Municipio060';
 
     create table BZNCORR (
         FZPANOEN integer not null,
@@ -244,7 +316,10 @@
         FZPCAGCO integer not null,
         FZPNCORR varchar(8) not null,
         primary key (FZPANOEN, FZPCENSA, FZPNUMEN, FZPCAGCO)
-    ) comment='NumeroCorreo';
+    );
+
+    comment on table BZNCORR is
+        'NumeroCorreo';
 
     create table BZOFIFIS (
         OFF_CODI integer not null,
@@ -252,19 +327,28 @@
         OFF_NOM varchar(25) not null,
         FZOCAGCO integer not null,
         primary key (OFF_CODI, FZOCAGCO)
-    ) comment='OficinaFisica';
+    );
+
+    comment on table BZOFIFIS is
+        'OficinaFisica';
 
     create table BZOFIOR (
         FZFCAGCO integer not null,
         FZFCORGA integer not null,
         primary key (FZFCAGCO, FZFCORGA)
-    ) comment='OficinaOrganismo';
+    );
+
+    comment on table BZOFIOR is
+        'OficinaOrganismo';
 
     create table BZOFIRE (
         FZFCAGCO integer not null,
         FZFCORGA integer not null,
         primary key (FZFCAGCO, FZFCORGA)
-    ) comment='OficinaOrganismoNoRemision';
+    );
+
+    comment on table BZOFIRE is
+        'OficinaOrganismoNoRemision';
 
     create table BZOFREM (
         REM_OFANY integer not null,
@@ -272,7 +356,7 @@
         REM_OFOFI integer not null,
         REM_ENTANY integer,
         REM_SALANY integer,
-        REM_CONT longtext,
+        REM_CONT varchar(1500),
         REM_ENTDES varchar(1),
         REM_ENTFEC integer,
         REM_NULFEC integer,
@@ -287,7 +371,10 @@
         REM_ENTUSU varchar(10),
         REM_NULUSU varchar(10),
         primary key (REM_OFANY, REM_OFNUM, REM_OFOFI)
-    ) comment='OficioRemision';
+    );
+
+    comment on table BZOFREM is
+        'OficioRemision';
 
     create table BZOFRENT (
         REN_ENTANY integer not null,
@@ -300,7 +387,10 @@
         REN_OFOFI integer,
         REN_ENTUSU varchar(10),
         primary key (REN_ENTANY, REN_ENTNUM, REN_ENTOFI)
-    ) comment='LiniaOficioRemision';
+    );
+
+    comment on table BZOFRENT is
+        'LiniaOficioRemision';
 
     create table BZPUBLI (
         FZEANOEN integer not null,
@@ -313,15 +403,21 @@
         FZENPAGI integer not null,
         FZEOBSER varchar(50) not null,
         primary key (FZEANOEN, FZENUMEN, FZECAGCO)
-    ) comment='Publicacion';
+    );
+
+    comment on table BZPUBLI is
+        'Publicacion';
 
     create table BZREPRO (
         FZCNREP varchar(50) not null,
         FZTIREP varchar(10) not null,
         FZCCUSU varchar(10) not null,
-        FZCDREP longtext,
+        FZCDREP varchar(65535),
         primary key (FZCNREP, FZTIREP, FZCCUSU)
-    ) comment='Repro';
+    );
+
+    comment on table BZREPRO is
+        'Repro';
 
     create table BZSALIDA (
         FZSANOEN integer not null,
@@ -352,7 +448,10 @@
         FZSCTIPE varchar(2) not null,
         FZSCUSU varchar(10) not null,
         primary key (FZSANOEN, FZSNUMEN, FZSCAGCO)
-    ) comment='Salida';
+    );
+
+    comment on table BZSALIDA is
+        'Salida';
 
     create table BZSALOFF (
         OFS_CODI integer not null,
@@ -360,7 +459,10 @@
         FOSNUMEN integer not null,
         FOSCAGCO integer not null,
         primary key (FOSANOEN, FOSNUMEN, FOSCAGCO)
-    ) comment='SalidaOficinaFisica';
+    );
+
+    comment on table BZSALOFF is
+        'SalidaOficinaFisica';
 
     create table BZSALPD (
         FZUANOEN integer not null,
@@ -371,14 +473,20 @@
         FZUTIPAC varchar(10) not null,
         FZUCUSU varchar(10) not null,
         primary key (FZUANOEN, FZUDATAC, FZUHORAC, FZUNUMEN, FZUCAGCO, FZUTIPAC, FZUCUSU)
-    ) comment='LogSalidaLopd';
+    );
+
+    comment on table BZSALPD is
+        'LogSalidaLopd';
 
     create table BZTDOCU (
         FZICTIPE varchar(2) not null,
         FZIFBAJA integer not null,
         FZIDTIPE varchar(30) not null,
         primary key (FZICTIPE, FZIFBAJA)
-    ) comment='TipoDocumento';
+    );
+
+    comment on table BZTDOCU is
+        'TipoDocumento';
 
     create table BZVISAD (
         FZKANOEN integer not null,
@@ -400,64 +508,57 @@
         FZKTEXTO varchar(150) not null,
         FZKCUSVI varchar(10) not null,
         primary key (FZKANOEN, FZKCENSA, FZKFVISA, FZKHVISA, FZKNUMEN, FZKCAGCO)
-    ) comment='Visado';
+    );
+
+    comment on table BZVISAD is
+        'Visado';
 
     alter table BAGRUGE 
-        add index FK16555A49B801F7D0 (FABCAGSU, FABCTASU), 
         add constraint FK16555A49B801F7D0 
         foreign key (FABCAGSU, FABCTASU) 
-        references BAGRUGE (FABCAGGE, FABCTAGG);
+        references BAGRUGE;
 
     alter table BCODPOS 
-        add index FK1A29589E3DDA80CA (F12CAGGE, F12CTAGG), 
         add constraint FK1A29589E3DDA80CA 
         foreign key (F12CAGGE, F12CTAGG) 
-        references BAGRUGE (FABCAGGE, FABCTAGG);
+        references BAGRUGE;
 
     alter table BZENTOFF 
-        add index FKDB2F52FC78808496 (FOEANOEN, FOENUMEN, FOECAGCO), 
         add constraint FKDB2F52FC78808496 
         foreign key (FOEANOEN, FOENUMEN, FOECAGCO) 
-        references BZENTRA (FZAANOEN, FZANUMEN, FZACAGCO);
+        references BZENTRA;
 
     alter table BZENTRA060 
-        add index FKCCCE38C84AAEDA83 (ENT_ANY, ENT_NUM, ENT_OFI), 
         add constraint FKCCCE38C84AAEDA83 
         foreign key (ENT_ANY, ENT_NUM, ENT_OFI) 
-        references BZENTRA (FZAANOEN, FZANUMEN, FZACAGCO);
+        references BZENTRA;
 
     alter table BZOFIFIS 
-        add index FKEBC9EBB6C691C709 (FZOCAGCO), 
         add constraint FKEBC9EBB6C691C709 
         foreign key (FZOCAGCO) 
-        references BAGECOM (FAACAGCO);
+        references BAGECOM;
 
     alter table BZOFIOR 
-        add index FK41699D5DB7362972 (FZFCAGCO), 
         add constraint FK41699D5DB7362972 
         foreign key (FZFCAGCO) 
-        references BAGECOM (FAACAGCO);
+        references BAGECOM;
 
     alter table BZOFIOR 
-        add index FK41699D5DFF12CC2F (FZFCORGA), 
         add constraint FK41699D5DFF12CC2F 
         foreign key (FZFCORGA) 
-        references BORGANI (FAXCORGA);
+        references BORGANI;
 
     alter table BZOFIRE 
-        add index FK41699DADB7362972 (FZFCAGCO), 
         add constraint FK41699DADB7362972 
         foreign key (FZFCAGCO) 
-        references BAGECOM (FAACAGCO);
+        references BAGECOM;
 
     alter table BZOFIRE 
-        add index FK41699DADFF12CC2F (FZFCORGA), 
         add constraint FK41699DADFF12CC2F 
         foreign key (FZFCORGA) 
-        references BORGANI (FAXCORGA);
+        references BORGANI;
 
     alter table BZSALOFF 
-        add index FKF25857299C93D355 (FOSANOEN, FOSNUMEN, FOSCAGCO), 
         add constraint FKF25857299C93D355 
         foreign key (FOSANOEN, FOSNUMEN, FOSCAGCO) 
-        references BZSALIDA (FZSANOEN, FZSNUMEN, FZSCAGCO);
+        references BZSALIDA;
