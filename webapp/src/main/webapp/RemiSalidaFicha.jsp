@@ -24,10 +24,10 @@ String oficio=request.getParameter("oficio");
     ParametrosOficioRemision ofi = new ParametrosOficioRemision();
 
     String listado = (String)session.getAttribute("listadoOficiosSalida");
+    String docsElec = ((session.getAttribute("mostrarRegistrosConDocElectronicos")!=null)?"true":"");
     
     Vector modelosOficios = valores.buscarModelos("tots","totes");
 
-    
     pregsal.fijaUsuario(usuario);
     pregsal.setoficina(codOficina);
     pregsal.setNumeroSalida(numeroSalida);
@@ -134,7 +134,7 @@ String oficio=request.getParameter("oficio");
         <table width="591" class="recuadroSalidas">
             <tr>
                 <td class="cellaSortides" width="581">
-                    <table width="100%" border=0>
+                    <table width="100%" border="0">
                         <tr>
                             <td style="border:0" >
                                 &nbsp;<fmt:message key='data_sortida'/> :<font class="ficha"><%=fechaSalida%></font>
@@ -154,8 +154,10 @@ String oficio=request.getParameter("oficio");
                                 <fmt:message key='num_registre'/> <font class="ficha"><%=reg.getNumeroSalida()%>/<%=reg.getAnoSalida()%></font>
                             </td>
                             <td style="border:0" >
+                            <% if(fechaVisado!=null && !fechaVisado.equals("")){ %>
                                 <c:set var="texto" scope="page"><%=fechaVisado%></c:set>
-                                <fmt:message key='data_registre'/> <font class="ficha"><c:out escapeXml="false" value="${texto}"/></font>
+                                <fmt:message key='data_visado'/> <font class="ficha"><c:out escapeXml="false" value="${texto}"/></font>
+                            <%} %>
                             </td>
                         </tr>
                     </table>
@@ -208,26 +210,33 @@ String oficio=request.getParameter("oficio");
                 <td class="cellaSortides" width="581">&nbsp;
                 	<p><b>&nbsp;&nbsp;<fmt:message key='dades_de_lextracte'/></b></p>
                     <!-- Idioma del Extracto -->
-                    &nbsp;&nbsp;<fmt:message key='registro.idioma'/> <font class="ficha"><%=reg.getIdiomaExtracto()%></font>
-                    &nbsp;
-
+                    &nbsp;&nbsp;<fmt:message key='registro.idioma'/> <font class="ficha"><%=reg.getIdiomaExtracto()%></font>&nbsp;
                     <c:choose>
-                    <c:when test="${initParam['registro.entrada.view.disquete_correo']}">
-                    <!--Numero de disquete -->
-                    <fmt:message key='registro.num_disquete'/> <font class="ficha"><%=reg.getDisquet()%></font>
-                    &nbsp;
-                    <!--Numero de disquete -->
-                    <fmt:message key='registro.num_correo'/> <font class="ficha"><%=(reg.getCorreo()==null) ? "" : reg.getCorreo()%></font>
-                    </c:when>
-                    <c:otherwise>
-                    </c:otherwise>
+	                    <c:when test="${initParam['registro.entrada.view.disquete_correo']}">
+	                    <!--Numero de disquete -->
+	                    <fmt:message key='registro.num_disquete'/> <font class="ficha"><%=reg.getDisquet()%></font>
+	                    &nbsp;
+	                    <!--Numero de disquete -->
+	                    <fmt:message key='registro.num_correo'/> <font class="ficha"><%=(reg.getCorreo()==null) ? "" : reg.getCorreo()%></font>
+	                    </c:when>
+	                    <c:otherwise>
+	                    </c:otherwise>
                     </c:choose>
-                    </p>
-                    
+                    <br/>   
                     <!-- Extracto del documento -->
                     <c:set var="texto" scope="page"><%=reg.getComentario()%></c:set>                
                     <p>&nbsp;&nbsp;<fmt:message key='extracte_del_document'/>: <font class="ficha"><c:out escapeXml="false" value="${texto}"/></font></p>
 					<p></p>
+					 <% if (es.caib.regweb.logic.helper.Conf.get("integracionIBKEYActiva","false").equalsIgnoreCase("true")){ 
+						//Mostramos aviso si el registro reitido tiene documenos electrónicos anexados.
+						 if(reg.tieneDocsElectronicos()) {%>
+						 	<p>
+	          				&nbsp;&nbsp;<img src="imagenes/icono_document.gif" border="0"  title="<fmt:message key='document_electronic'/>">
+	          				<fmt:message key='oficis.tieneDocsElectronicos'/>
+	        				</p>
+	        				<br/>
+	        	<%		}
+        			}%>
                 </td>
             </tr> 
            <tr>
@@ -263,7 +272,7 @@ String oficio=request.getParameter("oficio");
 
             <%-- formulario --%>
         <div align="center">        
-                <table border=0 width="50%">
+                <table border="0" width="50%">
                             <tr>
                             <td>
           				     <form name="oficioForm" action="RemiSalidaPaso.jsp" method="post">
@@ -302,7 +311,7 @@ String oficio=request.getParameter("oficio");
             if (listado!=null) { 
                     String oficina=listado;
             %>
-            [&nbsp;<a href="RemiEntradaLis.jsp?oficina=<%=oficina%>"><fmt:message key='tornar_a_seleccionar_registre'/></a>&nbsp;]
+            [&nbsp;<a href="RemiEntradaLis.jsp?oficina=<%=oficina%><%="&mostrarRegistrosConDocElectronicos="+docsElec%>"><fmt:message key='tornar_a_seleccionar_registre'/></a>&nbsp;]
             <% } %>
             </center>
         </p>

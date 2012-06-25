@@ -13,10 +13,6 @@ String ano=request.getParameter("anoEntrada");
 <!-- Exploter no renderitza bé.  -->
 <html>
     <head><title><fmt:message key='registre_entrades'/></title>
-        
-        
-        
-
         <script>
             function confirmaDescarta() {
                 var cadena=prompt("<fmt:message key='esta_segur_anular_ofici_motius'/>","");
@@ -37,6 +33,7 @@ String ano=request.getParameter("anoEntrada");
     ParametrosRegistroEntrada param = new ParametrosRegistroEntrada();
     ParametrosRegistroEntrada reg = new ParametrosRegistroEntrada();
     
+    String localitzadorsDocs[] ; 
     String [] listado=(String [])session.getAttribute("listadoOficiosEntrada");
     
     param.fijaUsuario(usuario);
@@ -44,6 +41,11 @@ String ano=request.getParameter("anoEntrada");
     param.setNumeroEntrada(numeroEntrada);
     param.setAnoEntrada(ano);
     reg = regent.leer(param);
+    try{
+    	localitzadorsDocs = reg.getLocalitzadorsDocs().split(",");
+    }catch( Exception ex){
+    	localitzadorsDocs=null;
+    }
     %>
     
       	<!-- Molla pa --> 
@@ -89,15 +91,6 @@ String ano=request.getParameter("anoEntrada");
        } else {
           hhmm=hora;
        }
-       /*
-       Comentat per a solventar el problema que no es visualitzaven registres
-       antics debut a que no tenien hora de entrada/sortida 
-       String hora=reg.getHora();
-       if (hora.length()<4) {hora="0"+hora;}
-       String hh=hora.substring(0,2);
-       String mm=hora.substring(2,4);
-       String hhmm=hh+":"+mm;
-       */
        if (Helper.estaPdteVisado("E", reg.getOficina(), reg.getAnoEntrada(), reg.getNumeroEntrada())) {
            %>
            <SCRIPT>
@@ -109,7 +102,7 @@ String ano=request.getParameter("anoEntrada");
         <table width="700" class="recuadroEntradas">
             <tr>
                 <td class="cellaEntrades"width="581">
-                    <table width="100%" border=0>
+                    <table width="100%" border="0">
                         <tr>
                             <td style="border:0" >
                                 &nbsp;<fmt:message key='registro.fecha_entrada'/> <font class="ficha"><%=fechaEntrada%></font>
@@ -130,8 +123,10 @@ String ano=request.getParameter("anoEntrada");
                                 <fmt:message key='num_registre'/> <font class="ficha"><%=reg.getNumeroEntrada()%>/<%=reg.getAnoEntrada()%></font>
                             </td>
                             <td style="border:0" >
+                            	<% if(fechaVisado!=null && !fechaVisado.equals("")){ %>
                                 <c:set var="texto" scope="page"><%=fechaVisado%></c:set>
-                                <fmt:message key='data_registre'/> <font class="ficha"><c:out escapeXml="false" value="${texto}"/></font>
+                                <fmt:message key='data_visado'/> <font class="ficha"><c:out escapeXml="false" value="${texto}"/></font>
+                                <%} %>
                             </td>
                         </tr>
                     </table>
@@ -197,7 +192,7 @@ String ano=request.getParameter("anoEntrada");
             </tr>
             <!-- Fila de datos del Extracto -->
             <tr>
-                <td class="cellaEntrades" width="581">&nbsp;<p>
+                <td class="cellaEntrades" width="581">&nbsp;<br/>
                     <b>&nbsp;&nbsp;<fmt:message key='dades_de_lextracte'/></b>
                     <!-- Idioma del Extracto -->
                     <p>&nbsp;&nbsp;<fmt:message key='registro.idioma'/> <font class="ficha"><%=reg.getIdiomaExtracto()%></font>
@@ -218,17 +213,31 @@ String ano=request.getParameter("anoEntrada");
                     
                     <!-- Extracto del documento -->
                     <c:set var="texto" scope="page"><%=reg.getComentario()%></c:set>
-                    <p>&nbsp;&nbsp;<fmt:message key='extracte_del_document'/>: <font class="ficha"><c:out escapeXml="false" value="${texto}"/></font><p>
+                    <p>&nbsp;&nbsp;<fmt:message key='extracte_del_document'/>: <font class="ficha"><c:out escapeXml="false" value="${texto}"/></font></p>
                 </td>
             </tr> 
-     
-
+     	<% if (es.caib.regweb.logic.helper.Conf.get("integracionIBKEYActiva","false").equalsIgnoreCase("true")){
+     		if(localitzadorsDocs!=null){ %>
+            <tr>
+            <td>
+             <b><fmt:message key='registro.datosDocumentosAnexados'/></b>
+             <p><fmt:message key='registro.emailRemitente'/>:&nbsp;<font class="ficha"><%=(reg.getEmailRemitent()==null) ? "" : reg.getEmailRemitent()%></font></p>
+             <fmt:message key='registro.textoEnlaces'/>:<br/>
+             <ul>
+	            <%for(int i=0; i<localitzadorsDocs.length; i++){ %>
+	            	<li><a href="<%= localitzadorsDocs[i]%>" target="_blank"><%= localitzadorsDocs[i]%></a></li>
+	            <%} %>	            
+		     </ul>
+			</td>
+            </tr>
+            <%}
+     	}%>
         </table>
         </center>
         
         <%-- formulario --%>
     <div align="center">        
-            <table border=0 width="50%">
+            <table border="0" width="50%">
                     <tr>
                         <td>
       				     <form name="oficioForm" action="RemiEntradaPaso.jsp" method="post">
@@ -267,8 +276,10 @@ String ano=request.getParameter("anoEntrada");
                 if (listado!=null) { 
                     String oficina=listado[0];
                     String oficinaFisica=listado[1];
+                    boolean docsElec = (listado[2].equalsIgnoreCase("true"));
+                    
                 %>
-                [&nbsp;<a href="RemiEntradaLis.jsp?oficina=<%=oficina%>&oficinafisica=<%=oficinaFisica%>"><fmt:message key='tornar_a_seleccionar_registre'/></a>&nbsp;]
+                [&nbsp;<a href="RemiEntradaLis.jsp?oficina=<%=oficina%>&oficinafisica=<%=oficinaFisica%><%=((docsElec)?"&mostrarRegistrosConDocElectronicos=true":"") %>"><fmt:message key='tornar_a_seleccionar_registre'/></a>&nbsp;]
                 <% } %>
             </center>
         </p>

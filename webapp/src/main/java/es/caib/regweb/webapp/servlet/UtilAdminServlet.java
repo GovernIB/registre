@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringReader;
+//import java.rmi.RemoteException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -52,9 +53,7 @@ import es.caib.regweb.logic.util.RegistroSalidaFacadeUtil;
  */
 public class UtilAdminServlet extends UtilWebServlet {
 	
-	/**
-	 * 
-	 */
+
 	private Logger log = null;
 	
 	public UtilAdminServlet() {
@@ -84,46 +83,40 @@ public class UtilAdminServlet extends UtilWebServlet {
 		if (accion!=null && !accion.equals(""))
 			param = request.getParameter("accion").trim();
 		
-		if ("altaAutUsu".equals(accion)) param = altaAutUsu(request, sesion, "alta");
+		if ("actualitzaAgruGeo".equals(accion)) param = actualitzaAgrupacioGeografica(request, sesion);
+		if ("actualitzaTipusDoc".equals(accion)) param = actualitzaTipusDoc(request, sesion);
+		if ("actualitzaMunicipi060".equals(accion)) param = actualitzaMunicipi060(request, sesion);	
 		
+		if ("altaAgruGeo".equals(accion)) param = altaAgrupacioGeografica(request, sesion);
+		if ("altaAutUsu".equals(accion)) param = altaAutUsu(request, sesion, "alta");
+		if ("altaComptadorOficina".equals(accion)) param = altaComptadors(request, sesion);
+		if ("altaModelEmail".equals(accion)) param = altaEmail(request, sesion);
+		if ("altaMunicipi060".equals(accion)) param = altaMunicipi060(request, sesion);
 		if ("altaOficina".equals(accion)) param = altaOficina(request, sesion);
 		if ("altaOficinaFisica".equals(accion)) param = altaOficinaFisica(request, sesion);
-		if ("nouNomOficina".equals(accion)) param = actualitzaOficina(request, sesion);
-		if ("nouNomOficinaFisica".equals(accion)) param = actualitzaOficinaFisica(request, sesion);
+		if ("altaOrganisme".equals(accion)) param = altaOrganisme(request, sesion);
+		if ("altaOrganismesOficina".equals(accion)) param = altaOrgsOfi(request, sesion);
+		if ("altaTipusDoc".equals(accion)) param = altaTipusDoc(request, sesion);
+		if ("altaTraspas".equals(accion)) param = altaTraspas(request, sesion, response);
+		if ("altaUnidad".equals(accion)) param = altaUnitatGestio(request, sesion);
+		
 		if ("baixaOficina".equals(accion)) param = actualitzaOficina(request, sesion);
 		if ("baixaOficinaFisica".equals(accion)) param = actualitzaOficinaFisica(request, sesion);
-
-		if ("altaOrganisme".equals(accion)) param = altaOrganisme(request, sesion);
-		if ("nouNomOrganisme".equals(accion)) param = actualitzaOrganisme(request, sesion);
 		if ("baixaOrganisme".equals(accion)) param = actualitzaOrganisme(request, sesion);
-		
-		if ("altaOrganismesOficina".equals(accion)) param = altaOrgsOfi(request, sesion);
 		
 		if ("gestionaEntitat".equals(accion)) param = gestionaEntitat(request, sesion);
 		
-		if ("altaComptadorOficina".equals(accion)) param = altaComptadors(request, sesion);
+		if ("nouNomOficina".equals(accion)) param = actualitzaOficina(request, sesion);
+		if ("nouNomOficinaFisica".equals(accion)) param = actualitzaOficinaFisica(request, sesion);
+		if ("nouNomOrganisme".equals(accion)) param = actualitzaOrganisme(request, sesion);
+
+		if ("modificacionUnidad".equals(accion)) param = actualitzaUnitatGestio(request, sesion);
+		if ("modificacioModelEmail".equals(accion)) param = actualitzaEmail(request, sesion);
 		
-		if ("actualitzaAgruGeo".equals(accion)) param = actualitzaAgrupacioGeografica(request, sesion);
+		//Acció per defecte
+		String url = response.encodeURL(param);
+		context.getRequestDispatcher(url).forward(request, response);
 		
-		if ("altaAgruGeo".equals(accion)) param = altaAgrupacioGeografica(request, sesion);
-		
-		if ("actualitzaTipusDoc".equals(accion)) param = actualitzaTipusDoc(request, sesion);
-		
-		if ("altaTipusDoc".equals(accion)) param = altaTipusDoc(request, sesion);
-		
-		if ("actualitzaMunicipi060".equals(accion)) param = actualitzaMunicipi060(request, sesion);
-		
-		if ("altaMunicipi060".equals(accion)) param = altaMunicipi060(request, sesion);
-		
-		if ("altaTraspas".equals(accion)) {
-			//A altaTraspas tornam el fitxer de sortida amb els nombres de registre etc. ja feim el response, no hem de
-			//fer el dispatch url.
-			param = altaTraspas(request, sesion, response);
-		} else {
-			//log.debug("param="+param);
-			String url = response.encodeURL(param);
-			context.getRequestDispatcher(url).forward(request, response);
-		}
 	}
 	
 	private String altaTraspas(HttpServletRequest request, HttpSession sesion, HttpServletResponse response) {
@@ -342,7 +335,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 				response.setHeader("Cache-Control",  "store");
 				response.setHeader("Pragma", "cache");
 				
-				StringReader sr = new StringReader(fitxerSortida);
+				//StringReader sr = new StringReader(fitxerSortida);
 				OutputStream out=response.getOutputStream();
 				response.setHeader("Content-Length", ""+fitxerSortida.getBytes().length);
 				//int llegir=0;
@@ -385,7 +378,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 		
 		try{            
 			String msg="";
-			String idPropAct = "";
+
 			request.setAttribute("init","init"); //Posam atribut a init per a que torni a la pàgina inicial.
 			//log.debug("Dins altaAutUsu (servlet)");
 			String AE[] = request.getParameterValues("AE"); // Autorització entrades
@@ -489,26 +482,12 @@ public class UtilAdminServlet extends UtilWebServlet {
 		String resultado = new String("/admin/controller.do?accion=index");
 		
 		try{            
-			String msg="";
-			String idPropAct = "";
 			//log.debug("Dins altaOrgsOfi (servlet)");
 			String oficinaGestionar = request.getParameter("oficinaGestionar").trim(); // Oficina a gestionar.
 			String orgs[] = request.getParameterValues("org"); // Organismes a autoritzar a l'oficina
 			String rems[] = request.getParameterValues("rem"); // Organismes per a remitir 
-			
-			/*if (orgs != null ) 
-				for (int i=0 ; i<orgs.length;i++ )
-					log.debug("orgs["+i+"]: "+orgs[i]);
-			 if (CE != null ) 
-			 for (int i=0 ; i<CE.length;i++ )
-			 log.debug("CE["+i+"]: "+CE[i]);
-			 if (AS != null ) 
-			 for (int i=0 ; i<AS.length;i++ )
-			 log.debug("AS["+i+"]: "+AS[i]);
-			 if (CS != null ) 
-			 for (int i=0 ; i<CS.length;i++ )
-			 log.debug("CS["+i+"]: "+CS[i]);
-			 */
+			String emas[] = request.getParameterValues("ema"); // Organismes amb permís per enviar emails
+
 			/* Agafam el bean */
 			AdminFacade autoritzaUsuari = AdminFacadeUtil.getHome().create();
 			
@@ -530,6 +509,15 @@ public class UtilAdminServlet extends UtilWebServlet {
 				for (int i=0 ; i<rems.length;i++ ) {   				 
 					//log.debug("Insertam per a remisio a l'oficina "+oficinaGestionar+" l'organisme["+i+"]: "+rems[i]);
 					autoritzaUsuari.addNoRemetreOficina(oficinaGestionar,rems[i]);
+				}
+			
+			//Primer esborram tots els organismes amb comunicació email.
+			autoritzaUsuari.deleteOfiOrgEmail(oficinaGestionar);
+			
+			/* Ara insertam tots els organimes per a remisio */ 
+			if (emas != null ) 
+				for (int i=0 ; i<emas.length;i++ ) {   				 
+					autoritzaUsuari.addfiOrgEmail(Integer.parseInt(oficinaGestionar),Integer.parseInt(emas[i]));
 				}
 
 		} catch(RegwebException RWEex) {
@@ -557,8 +545,6 @@ public class UtilAdminServlet extends UtilWebServlet {
 		String resultado = new String("/admin/controller.do?accion=index");
 		
 		try{            
-			String msg="";
-			String idPropAct = "";
 			//log.debug("Dins altaOrganisme (servlet)");
 			String organismeGestionar = request.getParameter("organismeGestionar").trim(); // Oficina a gestionar.
 			String descCurtaOrganisme = request.getParameter("descCurtaOrganisme").trim(); // Descripció curta de l'organisme
@@ -638,10 +624,6 @@ public class UtilAdminServlet extends UtilWebServlet {
 		String resultado = new String("/admin/controller.do?accion=index");
 		
 		try{            
-			String msg="";
-			String idPropAct = "";
-			//log.debug("Dins actualitzaOficina (servlet)");
-			
 			String codOrganisme = request.getParameter("organismeGestionar").trim(); // Oficina a gestionar.
 			String descCurtaOrganisme = request.getParameter("descCurtaOrganisme").trim(); // Descripció curta de l'organisme
 			String descLlargaOrganisme = request.getParameter("descLlargaOrganisme").trim(); // Descripció llarga de l'organisme
@@ -755,8 +737,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 		
 		try{        
 			String dataBaixa = "0";
-			String msg="";
-			String idPropAct = "";
+
 			request.setAttribute("init","init"); //Posam atribut a init per a que torni a la pàgina inicial.
 			//log.debug("Dins gestionaEntitat (servlet)");
 			String codEntidad = request.getParameter("codEntidad").trim(); // Codi entitat a gestionar (castella)
@@ -830,8 +811,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 		String resultado = new String("/admin/controller.do?accion=index");
 		
 		try{            
-			String msg="";
-			String idPropAct = "";
+
 			log.debug("Dins altaOficina (servlet)");
 			String oficinaGestionar = request.getParameter("oficinaGestionar").trim(); // Oficina a gestionar.
 			String descOficina = request.getParameter("descOficina").trim(); // Descripció de l'oficina
@@ -903,8 +883,7 @@ public class UtilAdminServlet extends UtilWebServlet {
 		String resultado = new String("/admin/controller.do?accion=index");
 		
 		try{            
-			String msg="";
-			String idPropAct = "";
+
 			//log.debug("Dins actualitzaOficina (servlet)");
 			String codOficina = request.getParameter("oficinaGestionar").trim(); // Codi Oficina a gestionar
 			String descOficina = request.getParameter("descOficina").trim(); // Descripció llarga de l'Oficina 
@@ -1203,8 +1182,6 @@ public class UtilAdminServlet extends UtilWebServlet {
 		String resultado = new String("/admin/controller.do?accion=index");
 		
 		try{            
-			String msg="";
-			String idPropAct = "";
 			log.debug("Dins altaComptadors (servlet)");
 			String oficinesAltaComptador[] = request.getParameterValues("Ini"); // Oficines on s'ha de donar l'alta del comptador
 			String anyGestionar = request.getParameter("anyGestionar").trim(); // Oficina a gestionar.
@@ -1256,13 +1233,52 @@ public class UtilAdminServlet extends UtilWebServlet {
 		return resultado;
 	}    
 	
+	
+	private String altaEmail(HttpServletRequest request, HttpSession sesion) {
+		String resultado = new String("/admin/controller.do?accion=index");
+		String tipo = "";
+		String idioma = ""; 
+		String titulo= ""; 
+		String cuerpo = ""; 
+		
+		try{    
+			request.setAttribute("init","init"); //Posam atribut a init per a que torni a la pàgina inicial.
+			log.debug("Dins actualitzaEmail (UtilAdminServlet)");
+			
+			tipo = request.getParameter("tipo");
+			idioma = request.getParameter("idioma"); 
+			titulo = request.getParameter("titulo").trim(); 
+			cuerpo = request.getParameter("cuerpo").trim(); 
+
+			AdminFacade autoritzaUsuari = AdminFacadeUtil.getHome().create();
+		
+			autoritzaUsuari.altaModelEmail( idioma,  tipo,  titulo,  cuerpo);	
+
+		} catch(Exception ex) {
+			log.error("Error dins actualitzaEmail()",ex);
+			request.setAttribute("missatge", "true");
+			request.setAttribute("descMissatge", ex.getMessage());
+			
+			StackTraceElement elements[] = ex.getStackTrace();
+			for (int i = 0, n = elements.length; i < n; i++) {       
+				String linia = elements[i].getFileName() + ":" 
+				+ elements[i].getLineNumber() 
+				+ ">> " 
+				+ elements[i].getMethodName() + "()\n";
+				request.setAttribute("mesInfoMissatge"+i,linia);
+			}
+			request.setAttribute("init",""); //Buidam atribut init per a que no inicialitzi els valors de la pantalla actual.
+			
+			resultado="/admin/controller.do?accion=modelsEmail";
+		}
+		
+		return resultado;
+	} 
 	private String altaAgrupacioGeografica(HttpServletRequest request, HttpSession sesion) {
 		String resultado = new String("/admin/controller.do?accion=index");
 		
 		try{            
 			request.setAttribute("init","init"); //Posam atribut a init per a que torni a la pàgina inicial.
-			String msg="";
-			String idPropAct = "";
 			log.debug("Dins altaAgrupacioGeografica (servlet)");
 			String codTipuAgruGeo = request.getParameter("codTipuAgruGeo").trim(); // Codi tipus agrupació geogràfica a gestionar.
 			String codAgruGeo = request.getParameter("codAgruGeo").trim(); // Codi agrupació geogràfica a gestionar.
@@ -1335,8 +1351,6 @@ public class UtilAdminServlet extends UtilWebServlet {
 		
 		try{            
 			request.setAttribute("init","init"); //Posam atribut a init per a que torni a la pàgina inicial.
-			String msg="";
-			String idPropAct = "";
 			log.debug("Dins actualitzaAgrupacioGeografica (servlet)");
 			String codTipuAgruGeo = request.getParameter("codTipuAgruGeo").trim(); // Codi tipus agrupació geogràfica a gestionar.
 			String codAgruGeo = request.getParameter("codAgruGeo").trim(); // Codi agrupació geogràfica a gestionar.
@@ -1406,12 +1420,10 @@ public class UtilAdminServlet extends UtilWebServlet {
 		String resultado = new String("/admin/controller.do?accion=index");
 		try{ 
 			request.setAttribute("init","init"); //Posam atribut a init per a que torni a la pàgina inicial.
-			String msg="";
-			String idPropAct = "";
 			log.debug("Dins altaTipusDoc (servlet)");
 			String codTipusDoc = request.getParameter("codTipusDoc").trim(); // Oficina a gestionar.
 			String descTipusDoc = request.getParameter("descTipusDoc").trim(); // Descripció de l'oficina
-			String dataBaixa = "0"; // Data Baixa
+			//String dataBaixa = "0"; // Data Baixa
 			/* Validam l'entrada de dades */
 			if ( codTipusDoc.length()>2 || descTipusDoc.length()>30)
 				throw new RegwebException("Camp massa llarg");
@@ -1454,8 +1466,6 @@ public class UtilAdminServlet extends UtilWebServlet {
 		
 		try{    
 			request.setAttribute("init","init"); //Posam atribut a init per a que torni a la pàgina inicial.
-			String msg="";
-			String idPropAct = "";
 			log.debug("Dins actualitzaTipusDoc (servlet)");
 			String codTipusDoc = request.getParameter("codTipusDoc").trim(); // Codi Oficina a gestionar
 			String descTipusDoc = request.getParameter("descTipusDoc").trim(); // Descripció llarga de l'Oficina 
@@ -1514,14 +1524,51 @@ public class UtilAdminServlet extends UtilWebServlet {
 		return resultado;
 	}    
 	
+	private String actualitzaEmail(HttpServletRequest request, HttpSession sesion) {
+		String resultado = new String("/admin/controller.do?accion=index");
+		String tipo= "";
+		String idioma = ""; 
+		String titulo= ""; 
+		String cuerpo = ""; 
+		
+		try{    
+			request.setAttribute("init","init"); //Posam atribut a init per a que torni a la pàgina inicial.";
+			log.debug("Dins actualitzaEmail (UtilAdminServlet)");
+			
+			tipo = request.getParameter("tipo");
+			idioma = request.getParameter("idioma"); 
+			titulo = request.getParameter("titulo").trim(); 
+			cuerpo = request.getParameter("cuerpo").trim(); 
+
+			AdminFacade autoritzaUsuari = AdminFacadeUtil.getHome().create();
+		
+			autoritzaUsuari.actualitzaModelEmail( idioma,  tipo,  titulo,  cuerpo);	
+
+		} catch(Exception ex) {
+			log.error("Error dins actualitzaEmail()",ex);
+			request.setAttribute("missatge", "true");
+			request.setAttribute("descMissatge", ex.getMessage());
+			
+			StackTraceElement elements[] = ex.getStackTrace();
+			for (int i = 0, n = elements.length; i < n; i++) {       
+				String linia = elements[i].getFileName() + ":" 
+				+ elements[i].getLineNumber() 
+				+ ">> " 
+				+ elements[i].getMethodName() + "()\n";
+				request.setAttribute("mesInfoMissatge"+i,linia);
+			}
+			request.setAttribute("init",""); //Buidam atribut init per a que no inicialitzi els valors de la pantalla actual.		
+			resultado="/admin/controller.do?accion=modelsEmail";
+		}
+		
+		return resultado;
+	}    
 	
 	private String actualitzaMunicipi060(HttpServletRequest request, HttpSession sesion) {
 		String resultado = new String("/admin/controller.do?accion=index");
 		
 		try{    
 			request.setAttribute("init","init"); //Posam atribut a init per a que torni a la pàgina inicial.
-			String msg="";
-			String idPropAct = "";
 			log.debug("Dins actualitzaMunicipi060 (servlet)");
 			String codMunicipi = request.getParameter("codMunicipi").trim(); // Codi Oficina a gestionar
 			String descMunicipi = request.getParameter("descMunicipi").trim(); // Descripció llarga de l'Oficina 
@@ -1584,12 +1631,12 @@ public class UtilAdminServlet extends UtilWebServlet {
 		String resultado = new String("/admin/controller.do?accion=index");
 		try{ 
 			request.setAttribute("init","init"); //Posam atribut a init per a que torni a la pàgina inicial.
-			String msg="";
-			String idPropAct = "";
+			//String msg="";
+			//String idPropAct = "";
 			//log.debug("Dins altaMunicipi060 (servlet)");
 			String codTipusDoc = request.getParameter("codMunicipi").trim(); // Oficina a gestionar.
 			String descTipusDoc = request.getParameter("descMunicipi").trim(); // Descripció de l'oficina
-			String dataBaixa = "0"; // Data Baixa
+			//String dataBaixa = "0"; // Data Baixa
 			/* Validam l'entrada de dades */
 			if ( codTipusDoc.length()>3 || descTipusDoc.length()>30)
 				throw new RegwebException("Camp massa llarg");
@@ -1627,4 +1674,104 @@ public class UtilAdminServlet extends UtilWebServlet {
 		return resultado;
 	}    
 	
+	private String altaUnitatGestio(HttpServletRequest request, HttpSession sesion) {
+		String resultado = new String("/admin/controller.do?accion=index");
+		
+		try{            
+			log.debug("Dins altaUnitatGestio (servlet)");
+			String codiOficina = request.getParameter("codiOficina").trim(); 
+			String codiUnitat = request.getParameter("codiUnitat").trim(); 
+			String nomUnitat = request.getParameter("nomUnitat").trim(); 
+			String email= request.getParameter("email").trim(); 
+			String actiu= request.getParameter("actiu").trim(); 
+			
+			/* Validam l'entrada de dades */
+			if ( nomUnitat.length()>20) 
+				throw new RegwebException("Camp nom unitat massa llarg.");
+			if ( email.length()>50) 
+				throw new RegwebException("Camp email de la unitat massa llarg.");
+
+			
+			/* Agafam el bean */
+			AdminFacade adminBean = AdminFacadeUtil.getHome().create();
+			if( !adminBean.altaUnitatGestio(Integer.parseInt(codiOficina), Integer.parseInt(codiUnitat),  nomUnitat,  email,  actiu)){
+				resultado="/admin/controller.do?accion=unitatsDeGestio";
+				request.setAttribute("missatge", "true");
+				request.setAttribute("descMissatge", "No hem pogut donar d'alta la unitat orgànica");
+			}
+
+		} catch(RegwebException RWEex) {
+			log.debug("Capturam excepcio regweb!");
+			request.setAttribute("missatge", "true");
+			request.setAttribute("descMissatge", RWEex.getMessage());
+		
+			StackTraceElement elements[] = RWEex.getStackTrace();
+			for (int i = 0, n = elements.length; i < n; i++) {       
+				String linia = elements[i].getFileName() + ":" 
+				+ elements[i].getLineNumber() 
+				+ ">> " 
+				+ elements[i].getMethodName() + "()\n";
+				request.setAttribute("mesInfoMissatge"+i,linia);
+			}
+			log.error(RWEex);
+			resultado="/admin/controller.do?accion=unitatsDeGestio";
+		} catch(Exception ex) {
+			log.error(ex);
+		}
+		return resultado;
+	}   
+	
+	private String actualitzaUnitatGestio(HttpServletRequest request, HttpSession sesion) {
+		String resultado = new String("/admin/controller.do?accion=index");
+		
+		try{    
+			log.debug("Dins actualitzaUnitatGestio (servlet)");
+			String codiOficina = request.getParameter("codiOficina"); 
+			String codiUnitat = request.getParameter("codiUnitat"); 
+			String nomUnitat = request.getParameter("nomUnitat").trim(); 
+			String email= request.getParameter("email").trim(); 
+			String actiu= request.getParameter("actiu").trim(); 
+			
+			
+			/* Validam l'entrada de dades */
+			if ( nomUnitat.length()>20){ 
+				log.debug("Error: Camp nomUnitat de la unitat massa llarg."+nomUnitat);
+				throw new RegwebException("Camp nom unitat massa llarg.");
+			}
+			if ( email.length()>50){ 
+				log.debug("Error: Camp email de la unitat massa llarg."+email);
+				throw new RegwebException("Camp email de la unitat massa llarg.");
+			}
+
+			/* Agafam el bean */
+			AdminFacade autoritzaUsuari = AdminFacadeUtil.getHome().create();
+			
+			autoritzaUsuari.actualitzaUnitatGestio(Integer.parseInt(codiOficina), Integer.parseInt(codiUnitat),  nomUnitat,  email,  actiu);
+			
+		} catch(NumberFormatException NFe) {
+			log.debug("Error: camp no num\u00e8ric.");
+			request.setAttribute("missatge", "true");
+			request.setAttribute("descMissatge", "Error: camp no num\u00e8ric.");
+			request.setAttribute("init",""); //Buidam atribut "init" per a que segueixi a la pàgina actual.
+			resultado = new String("/admin/controller.do?accion=tipusDocuments");
+		} catch(RegwebException RWEex) {
+			log.debug("Capturam excepci\u00f3 regweb!",RWEex);
+			request.setAttribute("missatge", "true");
+			request.setAttribute("descMissatge", RWEex.getMessage());
+			
+			StackTraceElement elements[] = RWEex.getStackTrace();
+			for (int i = 0, n = elements.length; i < n; i++) {       
+				String linia = elements[i].getFileName() + ":" 
+				+ elements[i].getLineNumber() 
+				+ ">> " 
+				+ elements[i].getMethodName() + "()\n";
+				request.setAttribute("mesInfoMissatge"+i,linia);
+			}
+			request.setAttribute("init",""); //Buidam atribut init per a que no inicialitzi els valors de la pantalla actual.
+			resultado="/admin/controller.do?accion=unitatsDeGestio";
+		} catch(Exception ex) {
+			log.error("Capturam excepci\u00f3 estranya!",ex);
+		}
+		return resultado;
+	}    
 }

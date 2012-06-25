@@ -252,7 +252,7 @@ if (registros.size()==0) {
      
         <td>
         <a id="<%="ref"+i%>" href="fichaSalida.jsp?oficina=<%=oficina%>&numeroSalida=<%=numeroSalida%>&anoSalida=<%=anoSalida%>">
-            <img src="imagenes/open24.gif" border=0  alt="Veure document">
+            <img src="imagenes/open24.gif" border=0  alt="<fmt:message key='veure_document'/>">
         </a>
         </td> 
         <td style="<%= (anulado) ? "color:red;" : "" %>"><%=fechaSalida%></td>

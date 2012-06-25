@@ -63,6 +63,7 @@ registro.setremitent(request.getParameter("remitent"));
 registro.setidioex(request.getParameter("idioex"));
 registro.setdisquet(request.getParameter("disquet"));
 registro.setRegistroAnulado(request.getParameter("suprimir"));
+registro.setEmailRemitent(request.getParameter("emailRemitente"));
 registro.setActualizacion(true);
 
 registro.setMotivo(motivo);
@@ -129,13 +130,9 @@ if (!ok){
 
 <html>
     <head><title><fmt:message key='registre_de_sortides'/></title>
-        
-        
-        
         <script src="jscripts/TAO.js"></script>
     </head>
-    <body>
-        
+    <body>       
       	<!-- Molla pa --> 
 		<ul id="mollaPa">
 		<li><a href="index.jsp"><fmt:message key='inici'/></a></li>
@@ -143,111 +140,32 @@ if (!ok){
 		<li><fmt:message key='registre_de_sortida_modificat'/></li>
 		</ul>
 		<!-- Fi Molla pa-->
-<!--
-        <p>&nbsp;
-        <center><font class="titulo"><fmt:message key='usuari'/> : <%=usuario%></font></center>&nbsp;<p>
--->
 		<p>&nbsp;</p>
         <table class="recuadroSalidas" width="400" align="center">
             <tr>
                 <td style="border:0">
-                    &nbsp;<br><center><b><fmt:message key='registre'/> <%=registro.getNumeroSalida()%>/<%=registro.getAnoSalida()%> <fmt:message key='modificat_correctament'/></B></center></p>
+                    &nbsp;<br><center><b><fmt:message key='registre'/> <%=registro.getNumeroSalida()%>/<%=registro.getAnoSalida()%> <fmt:message key='modificat_correctament'/></B></center><br/>
                 </td>
             </tr>   
             <tr><td style="border:0">&nbsp;</td></tr>
             <tr>
                 <td style="border:0">
-                    <p><center><b><fmt:message key='oficina'/>:&nbsp;<%=registro.getOficina()%>-<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%></b></center>
+                    <center><b><fmt:message key='oficina'/>:&nbsp;<%=registro.getOficina()%>-<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%></b></center>
                 </td>
             </tr>
             <tr><td style="border:0">&nbsp;</td></tr>
             <tr>
                 <td style="border:0">
-                    <p><center><a style="text-decoration: none;" type="button" class="botonFormulario" href="ModiSalidaClave.jsp">
+                    <center><a style="text-decoration: none;" type="button" class="botonFormulario" href="ModiSalidaClave.jsp">
                         &nbsp;<fmt:message key='boton.nueva_modificacion'/>&nbsp;
                     </a>
-                    </center>
-                    </p>
+                    </center>     
                 </td>
             </tr>
             <tr><td style="border:0">&nbsp;</td></tr>
         </table>
         <!-- Nueva tabla -->
 &nbsp;<br>
-        <%-- substituir per incloure la pàgina "sellos.jsp" --%>
-        <%--
-        <table align="center">
-            <tr>
-                <td align="center">
-                    <iframe height="87" width="63" name="pdf1" src="imprimeSello?data=<%=registro.getDataSalida()%>&tipo=1&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroSalida()%>&ano=<%=registro.getAnoSalida()%>&ES=S"></iframe>
-                </td>
-                <td>&nbsp;&nbsp;</td>
-                <td align="center">
-                    <iframe height="87" width="63" name="pdf2" src="imprimeSello?data=<%=registro.getDataSalida()%>&tipo=2&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroSalida()%>&ano=<%=registro.getAnoSalida()%>&ES=S"></iframe>
-                </td>
-                <td>&nbsp;&nbsp;</td>
-                <td align="center">
-                    <iframe height="87" width="63" name="pdf3" src="imprimeSello?data=<%=registro.getDataSalida()%>&tipo=3&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroSalida()%>&ano=<%=registro.getAnoSalida()%>&ES=S"></iframe>
-                </td>
-                <td>&nbsp;&nbsp;</td>
-                <td align="center">                       
-                    <iframe height="87" width="63" name="pdf4" src="imprimeSello?data=<%=registro.getDataSalida()%>&tipo=4&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroSalida()%>&ano=<%=registro.getAnoSalida()%>&ES=S"></iframe>
-                </td>
-            </tr>
-            <tr>
-                <td align="center">
-                    <a target="_blank" href="imprimeSello?data=<%=registro.getDataSalida()%>&tipo=1&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroSalida()%>&ano=<%=registro.getAnoSalida()%>&ES=S&auto_print=si"><fmt:message key='pdf_1'/></a> 
-                </td>
-                <td>&nbsp;&nbsp;</td>
-                <td align="center">
-                    <a target="_blank" href="imprimeSello?data=<%=registro.getDataSalida()%>&tipo=2&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroSalida()%>&ano=<%=registro.getAnoSalida()%>&ES=S&auto_print=si"><fmt:message key='pdf_2'/></a> 
-                </td>
-                <td>&nbsp;&nbsp;</td>
-                <td align="center">
-                    <a target="_blank" href="imprimeSello?data=<%=registro.getDataSalida()%>&tipo=3&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroSalida()%>&ano=<%=registro.getAnoSalida()%>&ES=S&auto_print=si"><fmt:message key='pdf_3'/></a> 
-                </td>
-                <td>&nbsp;&nbsp;</td>
-                <td align="center">                       
-                    <a target="_blank" href="imprimeSello?data=<%=registro.getDataSalida()%>&tipo=4&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroSalida()%>&ano=<%=registro.getAnoSalida()%>&ES=S&auto_print=si"><fmt:message key='pdf_4'/></a> 
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <iframe height="70" width="87" name="pdf5" src="imprimeSello?data=<%=registro.getDataSalida()%>&tipo=5&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroSalida()%>&ano=<%=registro.getAnoSalida()%>&ES=S"></iframe>
-                </td>
-                <td>&nbsp;&nbsp;</td>
-                <td>
-                    <iframe height="70" width="87" name="pdf6" src="imprimeSello?data=<%=registro.getDataSalida()%>&tipo=6&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroSalida()%>&ano=<%=registro.getAnoSalida()%>&ES=S"></iframe>
-                </td>
-                <td>&nbsp;&nbsp;</td>
-                <td>
-                    <iframe height="70" width="87" name="pdf7" src="imprimeSello?data=<%=registro.getDataSalida()%>&tipo=7&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroSalida()%>&ano=<%=registro.getAnoSalida()%>&ES=S"></iframe>
-                </td>
-                <td>&nbsp;&nbsp;</td>
-                <td>                       
-                    <iframe height="70" width="87" name="pdf8" src="imprimeSello?data=<%=registro.getDataSalida()%>&tipo=8&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroSalida()%>&ano=<%=registro.getAnoSalida()%>&ES=S"></iframe>
-                </td>
-            </tr>
-            <tr>
-                <td align="center">
-                    <a target="_blank" href="imprimeSello?data=<%=registro.getDataSalida()%>&tipo=5&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroSalida()%>&ano=<%=registro.getAnoSalida()%>&ES=S&auto_print=si"><fmt:message key='pdf_5'/></a> 
-                </td>
-                <td>&nbsp;&nbsp;</td>
-                <td align="center">
-                    <a target="_blank" href="imprimeSello?data=<%=registro.getDataSalida()%>&tipo=6&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroSalida()%>&ano=<%=registro.getAnoSalida()%>&ES=S&auto_print=si"><fmt:message key='pdf_6'/></a> 
-                </td>
-                <td>&nbsp;&nbsp;</td>
-                <td align="center">
-                    <a target="_blank" href="imprimeSello?data=<%=registro.getDataSalida()%>&tipo=7&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroSalida()%>&ano=<%=registro.getAnoSalida()%>&ES=S&auto_print=si"><fmt:message key='pdf_7'/></a> 
-                </td>
-                <td>&nbsp;&nbsp;</td>
-                <td align="center">
-                    <a target="_blank" href="imprimeSello?data=<%=registro.getDataSalida()%>&tipo=8&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroSalida()%>&ano=<%=registro.getAnoSalida()%>&ES=S&auto_print=si"><fmt:message key='pdf_8'/></a> 
-                </td>
-            </tr>
-
-        </table>
-        --%>
         <c:set var="data" scope="request"><%=registro.getDataSalida()%></c:set>
         <c:set var="hora" scope="request"><%=registro.getHora()%></c:set>
         <c:set var="oficina" scope="request"><%=valores.recuperaDescripcionOficina(registro.getOficina())%></c:set>

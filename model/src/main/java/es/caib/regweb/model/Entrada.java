@@ -17,6 +17,11 @@ import javax.persistence.Table;
 @org.hibernate.annotations.Table(appliesTo = "BZENTRA", comment = "Entrada")
 public class Entrada implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private EntradaId id;
 	private int fechaDocumento;
 	private String remitente;
@@ -42,6 +47,8 @@ public class Entrada implements java.io.Serializable {
 	private int horaSistema;
 	private String usuario;
 	private String codigoIdioma;
+	private String emailRemitent;
+	private String origenRegistro;
 
 	public Entrada() {
 	}
@@ -52,7 +59,7 @@ public class Entrada implements java.io.Serializable {
 			int codigoAgrupacionGeografica, int codigoOrganismo, int fechaActualizacion, String codigoEntidad,
 			int numeroEntidad, int horaEntrada, String idioma, String contenidoCatalan,
 			int numeroLocalizador, int anyoLocalizador, int numeroDisquete, int fechaSistema, int horaSistema,
-			String usuario, String codigoIdioma) {
+			String usuario, String codigoIdioma, String emailRemitent, String origenRegistro) {
 		this.id = id;
 		this.fechaDocumento = fechaDocumento;
 		this.remitente = remitente;
@@ -78,6 +85,8 @@ public class Entrada implements java.io.Serializable {
 		this.horaSistema = horaSistema;
 		this.usuario = usuario;
 		this.codigoIdioma = codigoIdioma;
+		this.emailRemitent = emailRemitent;
+		this.origenRegistro = origenRegistro;
 	}
 
 	@EmbeddedId
@@ -307,6 +316,24 @@ public class Entrada implements java.io.Serializable {
 
 	public void setCodigoIdioma(String codigoIdioma) {
 		this.codigoIdioma = codigoIdioma;
+	}
+	
+	@Column(name = "EMAILREMITENT ", nullable = false, length = 50)
+	public String getEmailRemitent() {
+		return emailRemitent;
+	}
+
+	public void setEmailRemitent(String emailRemitent) {
+		this.emailRemitent = emailRemitent;
+	}
+
+	@Column(name = "ORIGENREGISTRO ", nullable = false, length = 10)
+	public String getOrigenRegistro() {
+		return origenRegistro;
+	}
+
+	public void setOrigenRegistro(String origenRegistro) {
+		this.origenRegistro = origenRegistro;
 	}
 
 }

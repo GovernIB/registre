@@ -7,15 +7,14 @@
     String origen = request.getParameter("pag_origen");
 
     if (request.getParameter("numero")!=null && !request.getParameter("numero").trim().equals("") ) {
-            %>
+%>
             <jsp:forward page="fichaOficio.jsp" >
                 <jsp:param name="oficina" value="<%=request.getParameter("oficina")%>"/>
                 <jsp:param name="numero" value="<%=request.getParameter("numero")%>"/>
                 <jsp:param name="any" value="<%=request.getParameter("any")%>"/>
             </jsp:forward>
-            <%
+<%
     }
-
 %>
 <%
 ListadoOficiosFacade listado=ListadoOficiosFacadeUtil.getHome().create();
@@ -69,37 +68,37 @@ session.setAttribute("listadoOficios",parametros);
         var resultados=false;
         var cadena=prompt("Text a cercar en l'extracte","");
         if (cadena==null || trim(cadena)=="") {
-        return;
-        }
+        	return;
+        	}
         
         enfocado=false;
         encontrados=0;
         for (var n=0;n < i; n++) {
-        var elemento=listaExtractos[n];
-        trId = "fila" + n;
-        refId= "ref" + n;
-        var fila=document.getElementById(trId);
-        if (elemento.lastIndexOf(trim(cadena.toUpperCase()))>-1) {
-        fila.style.background="#fff8a7"; 
-        if (!enfocado) {
-        document.getElementById(refId).focus();
-        enfocado=true;
-        }
-        resultados=true;
-        encontrados++;
-        } else {
-        if (n%2==0) {
-        fila.style.background="";
-        } else {
-        fila.style.background="#DDDDFF";
-        }
-        }
-        }
-        if (!resultados) {
-        alert("Text "+'"'+cadena+'"'+" no trobat dins l'extracte");
-        } else {
-        alert("Trobats "+encontrados+" registres amb el text "+'"'+cadena+'"'+" a l'extracte");
-        }
+	        var elemento=listaExtractos[n];
+	        trId = "fila" + n;
+	        refId= "ref" + n;
+	        var fila=document.getElementById(trId);
+	        if (elemento.lastIndexOf(trim(cadena.toUpperCase()))>-1) {
+		        fila.style.background="#fff8a7"; 
+		        if (!enfocado) {
+		        	document.getElementById(refId).focus();
+		        	enfocado=true;
+		        	}
+	        	resultados=true;
+	        	encontrados++;
+	        } else {
+		        if (n%2==0) {
+		        	fila.style.background="";
+		        	} else {
+		        	fila.style.background="#DDDDFF";
+		        	}
+		        }
+	        }
+	        if (!resultados) {
+	        	alert("Text "+'"'+cadena+'"'+" no trobat dins l'extracte");
+	        	} else {
+	        	alert("Trobats "+encontrados+" registres amb el text "+'"'+cadena+'"'+" a l'extracte");
+	        	}
         }
     </script>
 </head>
@@ -197,7 +196,7 @@ if (registros.size()==0) {
      
         <td>
         <a id="<%="ref"+i%>" href="fichaOficio.jsp?numero=<%=oficio %>&oficina=<%=oficina%>&any=<%=anoSalida%>">
-            <img src="imagenes/open24.gif" border="0"  title="Veure document">
+            <img src="imagenes/open24.gif" border="0"  title="<fmt:message key='veure_document'/>">
         </a>
         </td> 
         <td style="<%= (anulado) ? "color:red;" : "" %>"><%=fechaSalida%></td>

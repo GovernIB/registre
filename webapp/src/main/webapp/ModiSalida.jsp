@@ -7,8 +7,8 @@
 
 <%@ page import = "java.util.*, es.caib.regweb.logic.interfaces.*, es.caib.regweb.logic.util.*, es.caib.regweb.logic.helper.*" %>
 <%@ page pageEncoding="UTF-8"%>
-<% request.setCharacterEncoding("UTF-8"); %>
 
+<% request.setCharacterEncoding("UTF-8"); %>
 <%
     String usuario=request.getRemoteUser(); 
     String hora="";
@@ -26,6 +26,9 @@
     String entidad2="";
     String altres="";
     String comentario="";
+    String pLocalitzadorsDocs = "";
+    String localitzadorsDocs[] = null; 
+    String emailRemitent = null;
 
     if (request.getAttribute("registroSalida")!=null) {//Viene de error
         registro=(ParametrosRegistroSalida)request.getAttribute("registroSalida");
@@ -66,8 +69,7 @@
         pregsal.setAnoSalida(ano);
         registro=regsal.leer(pregsal);
 
-        if (!registro.getLeido()) { 
-
+        if (!registro.getLeido()) {
 %>
         <jsp:forward page="ModiSalidaClave.jsp">
             <jsp:param name="error" value="S"/>
@@ -94,18 +96,13 @@
         } else {
             hhmm=hora;
         }
-        /*
-       Comentat per a solventar el problema que no es visualitzaven registres
-       antics debut a que no tenien hora de entrada/sortida */
-        //if (hora.length()<4) {hora="0"+hora;}
-        //hhmm=hora.substring(0,2)+":"+hora.substring(2,4);
+        emailRemitent = registro.getEmailRemitent();
+        pLocalitzadorsDocs=registro.getLocalitzadorsDocs();
+        localitzadorsDocs = registro.getArrayLocalitzadorsDocs();
     }
 
     javax.naming.InitialContext contexto = new javax.naming.InitialContext();
-    
-    
     ValoresFacade valores = ValoresFacadeUtil.getHome().create();
-    
 
     if (entidad1.equals("") && entidad2.equals("0")) { entidad2="";}
 
@@ -361,11 +358,7 @@
         </style>
 
     </head>
-
-    <body bgcolor="#FFFFFF" onunload="cerrarVentana()" onload="cargaDatos()">
-
-      
-        
+    <body bgcolor="#FFFFFF" onunload="cerrarVentana()" onload="cargaDatos()">     
        	<!-- Molla pa --> 
 		<ul id="mollaPa">
 		<li><a href="index.jsp"><fmt:message key='inici'/></a></li>
@@ -373,16 +366,8 @@
 		<li><fmt:message key='modificacio_registre_sortida'/></li>
 		</ul>
 		<!-- Fi Molla pa-->
-<!--        <p>
-        <center>
-        <font class="titulo">
-            Usuari : <%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(usuario)%>
-        </font>
-        </center>
-        &nbsp;<p>-->
         <div align="center">  
         <!-- Mostramos Errores si los hubiera -->
-
 <% Hashtable errores = (registro==null)?new Hashtable():registro.getErrores();
     if (errores.size() > 0) {%>
         <table class="recuadroErrors" width="610" align="center">
@@ -439,18 +424,18 @@
                                 <font class="<%=errorEn(errores,"dataentrada")%>"><fmt:message key='registro.fecha_salida'/></font>
                                  <%String anteriorDataSalida=(registro==null)? "":registro.getDataSalida();%>
                                 <input type="hidden" name="datasalida" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(anteriorDataSalida)%>">
-                                <input readonly type=text name=NNdatasalida value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(fechaSalida)%>" size="10" >
+                                <input readonly="readonly" type="text" name="NNdatasalida" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(fechaSalida)%>" size="10" >
                             </td>
                             <td style="border:0">
                                 <font class="<%=errorEn(errores,"hora")%>"><fmt:message key='registro.hora'/></font>
-                                <input type=text name=hora value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(hhmm)%>" size="5">
+                                <input type="text" name="hora" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(hhmm)%>" size="5">
                             </td>
                             <td style="border:0">
                                 <font class="<%=errorEn(errores,"suprimir")%>"><fmt:message key='sortida_anulada'/>:</font>
-                                <select name=suprimir>
+                                <select name="suprimir">
                     <% String suprimir=(registro==null)? "":registro.getRegistroAnulado(); %>
-                                    <option value="S" <%=suprimir.equals("S") ? "selected" : "" %> > S
-                                    <option value=" " <%=suprimir.equals(" ") || suprimir.equals("") ? "selected" : "" %> > 
+                                    <option value="S" <%=suprimir.equals("S") ? "selected" : "" %> > S</option>
+                                    <option value=" " <%=suprimir.equals(" ") || suprimir.equals("") ? "selected" : "" %> > </option>
                                 </select>
                             </td>
                         </tr>
@@ -460,7 +445,7 @@
                                 <c:set var="texto" scope="page"><%=valores.recuperaDescripcionOficina(registro.getOficina())%></c:set>
                                 <c:set var="texto2" scope="page"><%=registro.getDescripcionOficinaFisica()%></c:set>
                                 <font style="background-color: #DEDEDE; font-size: 14px;">&nbsp;<c:out escapeXml="false" value="${texto}"/>&nbsp;-&nbsp;<c:out escapeXml="false" value="${texto2}"/>&nbsp;</font>
-                                <%-- <input type="text" name="desOficina" readonly value="<%=valores.recuperaDescripcionOficina(registro.getOficina())%>"> --%>
+                                <%-- <input type="text" name="desOficina" readonly="readonly" value="<%=valores.recuperaDescripcionOficina(registro.getOficina())%>"> --%>
                                 <input type="hidden" name="oficina" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(registro.getOficina())%>">
                                 <input type="hidden" name="oficinafisica" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(registro.getOficinafisica())%>">
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -469,11 +454,13 @@
                                <%
                                     String registroAno=registro.getNumeroSalida()+"/"+registro.getAnoSalida();
                                 %>
-                                <fmt:message key='num_registre'/> <input type="text" size="<%=registroAno.length()%>" maxlength="<%=registroAno.length()%>" name="numeroRegistro" readonly value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(registro.getNumeroSalida()+"/"+registro.getAnoSalida())%>">
+                                <fmt:message key='num_registre'/> <input type="text" size="<%=registroAno.length()%>" maxlength="<%=registroAno.length()%>" name="numeroRegistro" readonly="readonly" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(registro.getNumeroSalida()+"/"+registro.getAnoSalida())%>">
                                 &nbsp;&nbsp;&nbsp;
                             </td>
                             <td style="border:0">
-                                <fmt:message key='data_registre'/> <input readonly type=text maxlength="10" name=NNXdataentrada value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(fechaVisado)%>" size="10">
+                             <% if(fechaVisado!=null && !fechaVisado.equals("")){ %>
+                                <fmt:message key='data_visado'/> <%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(fechaVisado)%>
+                             <%} %>
                             </td>
                         </tr>
                     </table>
@@ -487,7 +474,7 @@
             <!-- 1ª fila de la tabla -->
             <tr>
             <td style="border:0;" colspan="2">
-            &nbsp;<br><b><fmt:message key='dades_del_document'/></b><p>
+            &nbsp;<br/><b><fmt:message key='dades_del_document'/></b><br/>
             </td>
             </tr>
             <!-- 2ª fila de la tabla -->  
@@ -497,8 +484,7 @@
                 &nbsp;<br>
                     <font class="<%= errorEn(errores,"data") %>"><fmt:message key='registro.fecha'/></font>
           <% String anteriorData=(registro==null)? "":registro.getData(); %>
-                    <input type=text name=data value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(anteriorData.equals("") ? valores.getFecha() : anteriorData)%>" size="10" > 
-
+                    <input type="text" name="data" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(anteriorData.equals("") ? valores.getFecha() : anteriorData)%>" size="10" > 
                     <!-- Despegable para Tipos de documentos -->
                     &nbsp;<font class="errorcampo">*</font>
           <%-- Tipo de documento. Cuando sea DU no se saca desplegable y no se puede modificar el campo --%>          
@@ -517,7 +503,7 @@
                     
                     <!-- Despegable para Idiomas -->
                     <font class="<%=errorEn(errores,"idioma")%>"><fmt:message key='registro.idioma'/></font>
-                    <select name=idioma size=1>
+                    <select name="idioma" size="1">
                 <% escribeSelect(out, valores.buscarIdiomas(), (registro==null)? "":registro.getIdioma()); %>
                     </select>
                 </td>
@@ -529,11 +515,11 @@
             <br><font class="errorcampo">*</font>
             <fmt:message key='destinatari'/>..<font class="<%=errorEn(errores,"entidad1")%>"><fmt:message key='registro.entidad'/></font>
             <!-- Remitente Entidad 1 -->
-            <input type=text name=entidad1 size="7" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(entidad1)%>" onblur="recuperaDescripcionEntidad()">
+            <input type="text" name="entidad1" size="7" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(entidad1)%>" onblur="recuperaDescripcionEntidad()">
             <!-- Remitente Entidad 2 -->
-            <input type=text name=entidad2 size="3" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(entidad2)%>" onblur="recuperaDescripcionEntidad()">
+            <input type="text" name="entidad2" size="3" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(entidad2)%>" onblur="recuperaDescripcionEntidad()">
             <a href="javascript:abreRemitentes()">
-                <img border="0" src="imagenes/buscar.gif" align=middle alt="<fmt:message key='cercar'/>">
+                <img border="0" src="imagenes/buscar.gif" align="middle" alt="<fmt:message key='cercar'/>">
             </a>
             </td>
             <!-- Descipcion del Remitente  -->
@@ -547,7 +533,7 @@
             <!-- Remitente Altres entidades -->
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             &nbsp;&nbsp;&nbsp;&nbsp;
-            <fmt:message key='altres'/>&nbsp;&nbsp;<input onkeypress="return check(event)" type=text name=altres maxlength="30" size="30" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(altres.trim())%>">
+            <fmt:message key='altres'/>&nbsp;&nbsp;<input onkeypress="return check(event)" type="text" name="altres" maxlength="30" size="30" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(altres.trim())%>">
             <%--<a href="javascript:abreBDP()">
             <img border="0" src="imagenes/buscar.gif" align=middle alt="<fmt:message key='cercar'/>">
             </a>--%>
@@ -570,7 +556,7 @@
                                 <span class="<%=errorEn(errores,"balears")%>"> <fmt:message key='registro.baleares'/></span>
                             </td>
                             <td style="border:0">
-                                <select name=balears>
+                                <select name="balears">
                                     <% escribeSelect(out, valores.buscarBaleares(), (registro==null)? "":registro.getBalears()); %>
                                 </select>
                             </td>
@@ -579,7 +565,7 @@
                             <td style="border:0">&nbsp;</td>
                             <td style="border:0" valign="bottom" colspan="2">
                                 <fmt:message key='registro.fuera_baleares'/>&nbsp;
-                                <input onkeypress="return check(event)" type=text name=fora size="25" maxlength="25" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml((registro==null)? "":registro.getFora().trim())%>">            
+                                <input onkeypress="return check(event)" type="text" name="fora" size="25" maxlength="25" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml((registro==null)? "":registro.getFora().trim())%>">            
                             </td>
                         </tr>
                     </table>
@@ -594,8 +580,8 @@
                         String entrada2=(registro==null)? "": (registro.getEntrada2().equals("0")) ? "" : registro.getEntrada2();
                     %>
                     &nbsp;<br><font class="<%=errorEn(errores,"entrada1")%>"><fmt:message key='registro.num_entrada'/></font>
-                    <input onKeyPress="return goodchars(event,'0123456789')" type=text name=entrada1 maxlength="6" size="6" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(entrada1)%>">&nbsp;&nbsp;/&nbsp; 
-                    <input onKeyPress="return goodchars(event,'0123456789')" type=text name=entrada2 maxlength="4" size="4" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(entrada2)%>">
+                    <input onKeyPress="return goodchars(event,'0123456789')" type="text" name="entrada1" maxlength="6" size="6" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(entrada1)%>">&nbsp;&nbsp;/&nbsp; 
+                    <input onKeyPress="return goodchars(event,'0123456789')" type="text" name="entrada2" maxlength="4" size="4" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(entrada2)%>">
                 </td>
                 </tr> 
                 <!-- 8ª fila de la tabla -->
@@ -603,89 +589,111 @@
                     <td style="border:0;">
                     <!-- Organismo destinatario -->
                     &nbsp;<br><font class="errorcampo">*</font><font class="<%=errorEn(errores,"remitent")%>"><fmt:message key='registro.organismo_emisor'/>..............:</font>
-                    <input type=text name=remitent size="4" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml((registro==null)? "":registro.getRemitent())%>" onblur="recuperaDestinatario()">
+                    <input type="text" name="remitent" size="4" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml((registro==null)? "":registro.getRemitent())%>" onblur="recuperaDestinatario()">
                     <a href="javascript:abreDestinatarios()">
-                        <img src="imagenes/buscar.gif" align=middle alt="<fmt:message key='cercar'/>" border="0">
+                        <img src="imagenes/buscar.gif" align="middle" alt="<fmt:message key='cercar'/>" border="0">
                     </a>
                     </td>
                     <td style="border:0">
                     	<div id="destinatario_desc" style="font-size:12px; font: bold;"></div>
                     </td>
                 </tr>
-                    </table>
+                </table>
                 </td>
             </tr>
+         <% if (es.caib.regweb.logic.helper.Conf.get("integracionIBKEYActiva","false").equalsIgnoreCase("true")){
+            if(localitzadorsDocs!=null){ %>
             <tr>
-            <td>
-            <!-- tabla de datos del Extracto -->
-            <table class="bordeSalida" style="border:0">
-            <tr>
-                <td style="border:0;">
-                    &nbsp;<br><b><fmt:message key='dades_de_lextracte'/></b>
-                    </td>
-                    </tr>
-                    <tr>
-                        <td style="border:0;">
-                            <!-- Idioma del Extracto -->
-                            &nbsp;<br><font class="<%=errorEn(errores,"idioex")%>"><fmt:message key='registro.idioma'/></font>
-          <c:set var="anteriorIdioex" value="${registro.idioex}" />
-          <c:set var="idioText"><fmt:message key='registro.idioma.castella'/></c:set>
-          <c:if test="${anteriorIdioex eq '2'}">
-            <c:set var="idioText"><fmt:message key='registro.idioma.catala'/></c:set>
-          </c:if>
-                            <input type="hidden" name="idioex" value="<c:out value='${anteriorIdioex}' />">
-                            <input readonly type="text" name="idioexText" value="<c:out value='${idioText}' />" size="8">
-                            &nbsp;
-
-                            <c:choose>
-                            <c:when test="${initParam['registro.entrada.view.disquete_correo']}">
-                            <!--Numero de disquete -->
-                            <font class="<%=errorEn(errores,"disquet")%>"><fmt:message key='registro.num_disquete'/> </font>
-                            <input onkeypress="return check(event)" type=text name=disquet size="8" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml((registro==null)? "":registro.getDisquet().trim())%>">
-                            <a href="javascript:abreDisquete()"><img src="imagenes/buscar.gif" align=middle alt="Darrer disquet" border="0"></a>
-                            <!--Numero de disquete -->
-                            &nbsp;&nbsp;
-                            <font class="<%=errorEn(errores,"correo")%>"><fmt:message key='registro.num_correo'/> </font>
-                            <input onkeypress="return check(event)" type=text name=correo size="8" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml((registro==null)? "":(registro.getCorreo()==null) ? "": registro.getCorreo().trim())%>">
-                            </c:when>
-                            <c:otherwise>
-                            <input type="hidden" name="disquet" value=""/>
-                            <input type="hidden" name="correo" value=""/>
-                            </c:otherwise>
-                            </c:choose>
-
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td style="border:0;">
-                            &nbsp;<br>
-                            <!-- Extracto del documento -->
-                            <font class="errorcampo">*</font>
-                            <font class="<%=errorEn(errores,"comentario")%>"><fmt:message key='extracte_del_document'/>:
-                            <textarea cols="70" onkeypress="return checkComentario(event)" rows="3" name="comentario"><%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(comentario.trim())%></textarea>
-                        </td>
-                    </tr>
-                                    <tr>
-                  <td style="border:0">
-                            <!-- Boton de enviar -->          
-                        <p align="center">
-                            <input type=submit value="<fmt:message key='enviar'/>">
-                            </P>
-                        </td>
-                    </tr>
-
-                    </table>
-                </td>
+	            <td class="cellaEntrades">
+	            <!-- tabla de datos de la compulsa electrònica -->
+	            <table class="bordeEntrada" style="border:0;" >
+	                <tr>
+	                	<td style="border:0;"><b><fmt:message key='registro.datosDocumentosAnexados'/></b></td>
+	                </tr>
+		            <tr>
+		            	<td style="border:0;"><fmt:message key='registro.emailRemitente'/>&nbsp;&nbsp;<input onkeypress="return check(event)" type="text" name="emailRemitente" size="50" maxlength="50" value="<%=(registro==null)? emailRemitent :registro.getEmailRemitent()%>"></td>
+		            </tr>
+		            <tr>
+			            <td style="border:0;">
+			            <input type="hidden" name="localitzadorsDocs" value="<%=pLocalitzadorsDocs%>">
+			            <fmt:message key='registro.textoEnlaces'/><br/>
+			            <ul>
+			            <%for(int i=0; i<localitzadorsDocs.length; i++){ %>
+			            	<li><a href="<%= localitzadorsDocs[i]%>" target="_blank"><%= localitzadorsDocs[i]%></a></li>
+			            <%} %>	            
+			            </ul>
+			            </td>
+		            </tr>
+	            </table>
+	            </td>
             </tr>
-    
-            </table>
-        </div>
-        
+             <%}
+             }%>
+            <tr>
+	            <td>                
+	            <!-- tabla de datos del Extracto -->
+	            <table class="bordeSalida" style="border:0">
+	            <tr>
+	                <td style="border:0;">
+	                    &nbsp;<br><b><fmt:message key='dades_de_lextracte'/></b>
+	                    </td>
+	                    </tr>
+	                    <tr>
+	                        <td style="border:0;">
+	                            <!-- Idioma del Extracto -->
+	                            &nbsp;<br><font class="<%=errorEn(errores,"idioex")%>"><fmt:message key='registro.idioma'/></font>
+						        <c:set var="anteriorIdioex" value="${registro.idioex}" />
+						        <c:set var="idioText"><fmt:message key='registro.idioma.castella'/></c:set>
+						        <c:if test="${anteriorIdioex eq '2'}">
+						        <c:set var="idioText"><fmt:message key='registro.idioma.catala'/></c:set>
+						        </c:if>
+	                            <input type="hidden" name="idioex" value="<c:out value='${anteriorIdioex}' />">
+	                            <input readonly="readonly" type="text" name="idioexText" value="<c:out value='${idioText}' />" size="8">
+	                            &nbsp;
+	
+	                            <c:choose>
+	                            <c:when test="${initParam['registro.entrada.view.disquete_correo']}">
+	                            <!--Numero de disquete -->
+	                            <font class="<%=errorEn(errores,"disquet")%>"><fmt:message key='registro.num_disquete'/> </font>
+	                            <input onkeypress="return check(event)" type="text" name="disquet" size="8" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml((registro==null)? "":registro.getDisquet().trim())%>">
+	                            <a href="javascript:abreDisquete()"><img src="imagenes/buscar.gif" align="middle" alt="Darrer disquet" border="0"></a>
+	                            <!--Numero de disquete -->
+	                            &nbsp;&nbsp;
+	                            <font class="<%=errorEn(errores,"correo")%>"><fmt:message key='registro.num_correo'/> </font>
+	                            <input onkeypress="return check(event)" type="text" name="correo" size="8" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml((registro==null)? "":(registro.getCorreo()==null) ? "": registro.getCorreo().trim())%>">
+	                            </c:when>
+	                            <c:otherwise>
+	                            <input type="hidden" name="disquet" value=""/>
+	                            <input type="hidden" name="correo" value=""/>
+	                            </c:otherwise>
+	                            </c:choose>
+	                        </td>
+	                    </tr>
+	                    <tr>
+	                        <td style="border:0;">
+	                            &nbsp;<br>
+	                            <!-- Extracto del documento -->
+	                            <font class="errorcampo">*</font>
+	                            <font class="<%=errorEn(errores,"comentario")%>"><fmt:message key='extracte_del_document'/>:</font>
+	                            <textarea cols="70" onkeypress="return checkComentario(event)" rows="3" name="comentario"><%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(comentario.trim())%></textarea>
+	                        </td>
+	                  </tr>
+	                  <tr>
+	                	<td style="border:0">
+	                      <!-- Boton de enviar -->          
+	                      <p align="center">
+	                      <input type="submit" value="<fmt:message key='enviar'/>">
+	                      </P>
+	                    </td>
+	                  </tr>
+	              </table>
+	           </td>
+           </tr>
+        </table>
+        </div>    
         <%-- Div para pedir motivo para cambios de remitentes o comentario --%>
-        
         <div id="idMotivo" style="display:none">
-            <table border=0 width="599">
+            <table border="0" width="599">
                 <tr><td>&nbsp;</td></tr>
                 <tr>
                     <td>
@@ -699,7 +707,6 @@
                                 <td>
                                     <fmt:message key='destinatari'/>:
                                 </td>
-
                         <%
                             if (altresAnterior.trim().equals("")) { 
                         %>  
@@ -738,8 +745,7 @@
                     <td>
                         <b><fmt:message key='valor_final'/></b>
                     </td>
-                </tr>
-                
+                </tr>               
                 <tr>
                     <td> 
                         <table>
@@ -767,10 +773,10 @@
                                 <td colspan="2">
                                     <div id="remitenteAltresActual" style="font-size:14px; font: bold;background-color: #cccccc;"></div>
                                 </td>
+                            </tr>
                         </table>
                     </td>
-                </tr>
-                
+                </tr>                
                 <tr>
                     <td>
                         <fmt:message key='extracte'/>:
@@ -784,7 +790,7 @@
                     <td>
                         <font class="errorcampo">*</font>
                         <fmt:message key='motiu_del_canvi'/> :
-                        <input onkeypress="return check(event)" type=text name=motivo size="100" maxlength="150" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(motivo)%>">
+                        <input onkeypress="return check(event)" type="text" name="motivo" size="100" maxlength="150" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(motivo)%>">
                     </td>
                 </tr>
                 <tr><td>&nbsp;</td></tr>                
@@ -792,9 +798,9 @@
                   <td style="border:0">
                             <!-- Boton de enviar -->          
                         <p align="center">
-                            <input type=button value="<fmt:message key='tornar'/>" onclick="volverAtras()">
+                            <input type="button" value="<fmt:message key='tornar'/>" onclick="volverAtras()">
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <input type=submit value="<fmt:message key='enviar'/>">
+                            <input type="submit" value="<fmt:message key='enviar'/>">
                             </P>
                         </td>
                     </tr>
@@ -803,9 +809,6 @@
         </form>
         </center>
 		</div>
-        <!-- Fin Cuerpo central -->
-		
-                 
-		
+        <!-- Fin Cuerpo central -->	
     </body>
 </html> 

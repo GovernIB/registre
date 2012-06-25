@@ -25,9 +25,6 @@ import java.util.Vector;
  */
 public class ControllerPopupServlet extends UtilWebServlet {
 
-	/**
-	 *
-	 */
 	private Logger log = null;
 
 	public ControllerPopupServlet() {
@@ -53,7 +50,7 @@ public class ControllerPopupServlet extends UtilWebServlet {
 		String accion = request.getParameter("accion");
 		String param = "/popup.do";
 
-		//log.debug("Servlet, accion="+accion);
+		log.debug("Servlet ControllerPopupServlet, accion="+accion);
 		if (accion!=null && !accion.equals(""))
 			param = "/popup/pages/index.jsp";
 
@@ -83,8 +80,7 @@ public class ControllerPopupServlet extends UtilWebServlet {
             request.setAttribute("remitentesSize", remitentes.size());
 
         } catch(Exception ex) {
-			log.debug("Capturam excepci\u00f3 estranya!");
-			ex.printStackTrace();
+			log.error("Error a remitentes()",ex);
 		}
 
 		return resultado;

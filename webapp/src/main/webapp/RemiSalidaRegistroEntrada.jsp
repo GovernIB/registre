@@ -5,6 +5,7 @@
 -->
 
 <%@ page import = "java.util.*, es.caib.regweb.logic.interfaces.*, es.caib.regweb.logic.util.*, es.caib.regweb.logic.helper.*" %>
+<%@page import="es.caib.regweb.webapp.servlet.EmailServlet"%>
 <%@ page pageEncoding="UTF-8"%>
 <% request.setCharacterEncoding("UTF-8"); %>
 <%String usuario=request.getRemoteUser();
@@ -32,15 +33,11 @@ if (intSerie==null) {
 int serie=intSerie.intValue();
 int serieForm = Integer.parseInt(request.getParameter("serie"));
 
-    
-    serie++;
-    
-    intSerie=Integer.valueOf(String.valueOf(serie));
-    session.setAttribute("serie", intSerie);
-    session.removeAttribute("errorAtras");
-%>
+serie++;   
+intSerie=Integer.valueOf(String.valueOf(serie));
+session.setAttribute("serie", intSerie);
+session.removeAttribute("errorAtras");
 
-<%
 registro.fijaUsuario(usuario);
 registro.setCorreo(request.getParameter("correo"));
 registro.setdataentrada(request.getParameter("dataentrada"));
@@ -60,6 +57,8 @@ registro.setsalida2(request.getParameter("salida2"));
 registro.setdestinatari(request.getParameter("destinatari"));
 registro.setidioex(request.getParameter("idioex"));
 registro.setdisquet(request.getParameter("disquet"));
+registro.setLocalitzadorsDocs(request.getParameter("localitzadorsDocs"));
+registro.setEmailRemitent(request.getParameter("emailRemitente"));
 if(request.getParameter("mun_060")!=null)
 	registro.setMunicipi060(request.getParameter("mun_060"));
 
@@ -131,24 +130,51 @@ if (!ok || oficio==null){
 %> 
 
 <html>
-    <head><title><fmt:message key='registre_entrades'/></title>
-        
-        
+    <head><title><fmt:message key='registre_entrades'/></title>  
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="Cache-Control" content="no-cache">
         <script src="jscripts/TAO.js"></script>
+        <script>
+        function enviaEmail(ofi,num,ano,tipus, msgNoIdioma) {
+        	var llista = document.getElementById("UnitatGestio");
+        	var email = null;
+			
+			var enviar = true;
+        	var url = "enviaEmail?oficina="+ofi+"&numero="+num+"&ano="+ano+"&tipus="+tipus;
+
+        	if(llista!=null){
+           	 email = llista.options[llista.selectedIndex].value;
+           	 url+="&email="+email;
+        	}
+        	if(tipus=="<%=es.caib.regweb.webapp.servlet.EmailServlet.TIPUS_CIUTADA%>"){
+	        	if(document.getElementById("idiomaEmail")!=null){
+	        		var idiomaEmail = document.getElementById("idiomaEmail").value;
+	            	if(idiomaEmail=="<%=EmailServlet.IDIOMA_NO_DETERMINADO %>"){
+	            		alert (msgNoIdioma);
+	            		enviar= false;
+	            		return;
+	                	}
+	            	url+="&idioma="+idiomaEmail;
+	        	}
+        	}
+			
+        	if(enviar){
+	        	miVentana = window.open(url, "enviaEmail","scrollbars,resizable,width=300,height=200");
+	        	miVentana.focus(); 	
+        	}	
+        }
+        </script>
     </head>
-    <body>
-        
+    <body>        
      	<!-- Molla pa --> 
 		<ul id="mollaPa">
-		<li><a href="index.jsp"><fmt:message key='inici'/></a></li>
-		<li><a href="pedirdatos.jsp"><fmt:message key='registre_entrades'/></a></li>
-		<li><fmt:message key='registre_entrada_creat'/></li>
+			<li><a href="index.jsp"><fmt:message key='inici'/></a></li>
+			<li><a href="pedirdatos.jsp"><fmt:message key='registre_entrades'/></a></li>
+			<li><fmt:message key='registre_entrada_creat'/></li>
 		</ul>
 		<!-- Fi Molla pa-->
 		<p>&nbsp;</p>
-        <table class="recuadroEntradas" width="400" align="center">
+        <table class="recuadroEntradas" width="600" align="center">
             <tr>
                 <td style="border:0" >
                 <%if (errorCrearOfici==false){ %>
@@ -166,13 +192,12 @@ if (!ok || oficio==null){
             <tr><td style="border:0" >&nbsp;</td></tr>
             <tr>
                 <td style="border:0" >
-                    <br/><center><b><fmt:message key='oficina'/>:&nbsp;<%=registro.getOficina()%>-<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%></b></center>
+                    <center><b><fmt:message key='oficina'/>:&nbsp;<%=registro.getOficina()%>-<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%></b></center>
                 </td>
             </tr>
             <tr><td style="border:0" >&nbsp;</td></tr>
             <tr>
-                <td style="border:0" >
-                    <br/>
+                <td style="border:0" >                  
                     <center>
                     	<a style="text-decoration: none;" type="button" target="_blank" class="botonFormulario" href="imprimeSello?data=<%=registro.getDataEntrada()%>&tipo=4&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroEntrada()%>&ano=<%=registro.getAnoEntrada()%>&ES=E">
                         &nbsp;<fmt:message key='imprimir_segell'/>&nbsp;</a>
@@ -183,17 +208,74 @@ if (!ok || oficio==null){
                 </td>
             </tr>
             <tr><td style="border:0" >&nbsp;</td></tr>
+        </table>      
+		<p>&nbsp;</p>  
+		<!-- tabla envio emails-->
+   <% if (es.caib.regweb.logic.helper.Conf.get("integracionIBKEYActiva","false").equalsIgnoreCase("true")){                                                        
+        if(registro.tieneDocsElectronicos()){
+        	 //Si el registro contiene documentos electronicos.%>
+        <table class="recuadroEntradasRegistro" id="tablaEmails" width="600" align="center">
+	        <tr><td colspan="3"> <font class="textoResaltadoRegistro"><fmt:message key='registro.titol1'/></font></td></tr>
+	        <tr>
+	        	<%if(registro.getEmailRemitent()!=null){ 
+                    //Pasamos los datos del registro a la pantalla de envio de correo                   	
+                %>
+	              <td><fmt:message key='registro.emailRemitente'/></td>
+	              <td><input type="text" name="emailRemitente" size="30" maxlength="50" value="<%=registro.getEmailRemitent()%>" readonly="readonly"></td>
+	              <td rowspan="2" ><a style="text-decoration: none;" type="button" class="botonFormulario" href="#" onclick="enviaEmail('<%=registro.getOficina()%>','<%=registro.getNumeroEntrada() %>','<%=registro.getAnoEntrada() %>','<%=es.caib.regweb.webapp.servlet.EmailServlet.TIPUS_CIUTADA %>','<fmt:message key='registro.msgNoIdioma'/>');">&nbsp;<fmt:message key='enviar_email'/>&nbsp;</a></td>                 
+                    <%}else{ %>
+                  <td colspan="3"><fmt:message key='registro.noEmailRemitente'/></td>
+                    <%} %>
+	        </tr>
+	        <%if(registro.getEmailRemitent()!=null){ %>
+	        <tr>
+	        	<td ><fmt:message key='registro.idioma'/></td>
+	        	<td ><select name="idiomaEmail" id="idiomaEmail">
+                            <option selected="selected" value="<%=EmailServlet.IDIOMA_NO_DETERMINADO %>" ><fmt:message key='registro.idioma.noDeterminado'/></option>
+                            <option value="<%=EmailServlet.IDIOMA_CATALAN %>" > <fmt:message key='registro.idioma.catala'/></option>
+                            <option value="<%=EmailServlet.IDIOMA_CASTELLANO %>" > <fmt:message key='registro.idioma.castella'/></option>
+                       </select>
+                </td>
+	        </tr>
+	        <%} %>	        
+	        <tr><td colspan="3">&nbsp;</td></tr>
+	        <tr>
+	            <% 	if(valores.permiteEnviarEmailAlOrganismo(Integer.parseInt(registro.getOficina()),Integer.parseInt(registro.getDestinatari()))){ 
+                      	//Si la oficina de registro puede enviar correos al organismo destinatario	
+                    		Vector unitatsGestio = valores.buscarUnitatsGestioEmail(registro.getOficina(),registro.getDestinatari());
+                    %>
+                            
+                    <td><fmt:message key='registro.emailUnidadGestion'/></td>
+                    <td>
+                    <form name="emailUG" id="emailUG""> 
+                    <select name="UnitatGestio" id="UnitatGestio">
+                    	<%     
+                    	for (int i=0;i<unitatsGestio.size();i=i+4) { 
+                            String codiOficina=unitatsGestio.get(i).toString();
+                            String codiUnitat=unitatsGestio.get(i+1).toString();
+                            String nomUnitat=unitatsGestio.get(i+2).toString();
+                            String email=unitatsGestio.get(i+3).toString();  
+                        %>
+                            <option value="<%=email%>"><%=nomUnitat+" - "+email %></option>
+                        <% }// fin for %>
+                    	</select>
+                    	 </form>
+                    </td>
+                    <td><a style="text-decoration: none;" type="button" class="botonFormulario" href="#" onclick="enviaEmail('<%=registro.getOficina()%>','<%=registro.getNumeroEntrada() %>','<%=registro.getAnoEntrada() %>','<%=es.caib.regweb.webapp.servlet.EmailServlet.TIPUS_INTERN %>','');">&nbsp;<fmt:message key='enviar_email'/>&nbsp;</a>  
+                    </td>                                               
+                    <% 	}else{
+                    	//Es un registro con documentos electrónicos pero sin permisos para enviar el email
+                    	%>
+					 <td colspan="3"><fmt:message key='registro.NoEmailUnitatGestio'/></td>            
+                    <%} 
+                     %>
+	        </tr>
+	        <tr><td colspan="3">&nbsp;</td></tr>
         </table>
-        
-        <%
-}
-}
-
-
-        %>
-		<p>&nbsp;</p>
-		<p>&nbsp;</p>
-        
-                 
+        <%} //if(registro.tieneDocsElectronicos()) 
+        }%>          
+<%
+		}
+	}%> 
     </body>
 </html>

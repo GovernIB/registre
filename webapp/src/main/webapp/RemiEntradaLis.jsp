@@ -7,26 +7,21 @@
 <% 
 ListadoRegOficiosEntradaFacade listado=ListadoRegOficiosEntradaFacadeUtil.getHome().create();
 
-String usuario=request.getRemoteUser().toUpperCase();
-String oficinaSel=request.getParameter("oficina");
-String oficinaFisSel=request.getParameter("oficinafisica");
-String parametros[] = {oficinaSel, oficinaFisSel};
-String numMaxRegistes = "500";
+String usuario = request.getRemoteUser().toUpperCase();
+String oficinaSel = request.getParameter("oficina");
+String oficinaFisSel = request.getParameter("oficinafisica");
+boolean mostrarRegElec = ((( (request.getParameter("mostrarRegistrosConDocElectronicos")!=null) ? request.getParameter("mostrarRegistrosConDocElectronicos") : "")=="")?false:true);
+
+String parametros[] = {oficinaSel, oficinaFisSel, String.valueOf(mostrarRegElec)};
+String numMaxRegistes = "25";
 
 session.setAttribute("listadoOficiosEntrada",parametros);
 
 //Cercam el número màxim de registres que pot contenir un ofici de remisió
-javax.naming.InitialContext contexto = new javax.naming.InitialContext();
-javax.naming.Context myenv = (javax.naming.Context) contexto.lookup("java:comp/env");
-numMaxRegistes = (String)myenv.lookup("registro.registros.oficio.max");
+numMaxRegistes = Conf.get("NumMaxRegOfici","25");
 %>
-
-
 <html>
 <head><title><fmt:message key='registre_entrades'/></title>
-    
-    
-    
     <script src="jscripts/TAO.js"></script>
         <script>
             function confirmaDescarta() {
@@ -132,7 +127,6 @@ numMaxRegistes = (String)myenv.lookup("registro.registros.oficio.max");
 				}
 			}
 		}
-
 		
 		if (!valor) {
 			alert("<fmt:message key='error_ofici.ha_de_seleccionar_un_registre' />");
@@ -216,7 +210,7 @@ numMaxRegistes = (String)myenv.lookup("registro.registros.oficio.max");
 		<!-- Fi Molla pa-->
 		<p>&nbsp;</p>
 <%
-Vector registros=listado.recuperarRegistros(usuario,oficinaSel,oficinaFisSel);
+Vector registros=listado.recuperarRegistros(usuario,oficinaSel,oficinaFisSel,mostrarRegElec);
 
 if (registros.size()==0) { 
 /* No hi ha cap element al llistat, eliminam el llistat de la sessió.*/
@@ -295,16 +289,21 @@ if (registros.size()==0) {
         String claveRegistro=anoEntrada+"-"+numeroEntrada;
         String extracto=reg.getExtracto();
         boolean anulado=(reg.getRegistroAnulado().equals("") || reg.getRegistroAnulado().equals(" ")) ? false : true;
+        boolean tieneDocsElectronicos = reg.getTieneDocsElectronicos();
     %>
     <tr id="<%="fila"+i%>" class="<%=((i%2)==0)? "par":"impar"%>"> 
      
         <td>
         <a id="<%="ref"+i%>" href="RemiEntradaFicha.jsp?oficina=<%=oficina%>&numeroEntrada=<%=numeroEntrada%>&anoEntrada=<%=anoEntrada%>">
-            <img src="imagenes/open24.gif" border="0"  title="Veure document">
+            <img src="imagenes/open24.gif" border="0"  title="<fmt:message key='veure_document'/>">
         </a>
         </td> 
         <td>
+        <%if(tieneDocsElectronicos) {%>
+          <img src="imagenes/icono_document.gif" border="0"  title="<fmt:message key='document_electronic'/>">
+        <%}else{ %>
         <input type="checkbox" name="registre" value="<%=oficina%>-<%=numeroEntrada%>-<%=anoEntrada%>-<%=oficinaFisica %>">
+        <%}%>
         <input type="hidden" disabled="disabled" name="destinatario" id="dest-<%=oficina%>-<%=numeroEntrada%>-<%=anoEntrada%>-<%=oficinaFisica %>" value="<%=destinatario %>">
         <input type="hidden" disabled="disabled" name="origen" id="ori-<%=oficina%>-<%=numeroEntrada%>-<%=anoEntrada%>-<%=oficinaFisica %>" value="<%=oficina %>">
         <input type="hidden" disabled="disabled" name="origenfisico" id="ofis-<%=oficina%>-<%=numeroEntrada%>-<%=anoEntrada%>-<%=oficinaFisica %>" value="<%=oficinaFisica %>">
@@ -322,33 +321,27 @@ if (registros.size()==0) {
     <% }%>
 </table>
 </form>
-
-        <%-- formulario --%>
     <div align="center">        
-            <table border="0" width="50%">
-                    <tr>
-                        <td>
-				            <!-- Boton de enviar -->          
-                            <p align="center">
-                                <input type="button" name="crearSortida" value="<fmt:message key='crear_ofici_remisio'/>"  onclick="return validar()">
-                            </p>
-                        </td>
-                        <td>
-                           <form name="oficioDescartaForm" id="oficioDescartaForm" action="RemiEntradaDescartarMultiple.jsp" method="post" >
-				            <input type="hidden" name="registre" value="">
-            				<input type="hidden" name="motius" value=""/>
-                            <!-- Boton de enviar -->          
-                            <p align="center">
-                                <input type="button" name="descartar" value="<fmt:message key='descartar'/>" onclick="return confirmaDescarta()">
-                            </P>
-                            </form>
-                        </td>
-
-                    </tr>
-
-            </table>
+       <table border="0" width="50%">
+            <tr>
+                <td valign="middle">
+        <!-- Boton de enviar -->          
+                    <p align="center">
+                        <input type="button" name="crearSortida" value="<fmt:message key='crear_ofici_remisio'/>"  onclick="return validar()">
+                    </p>
+                </td>
+                <td valign="middle">
+                    <p align="center">
+                     	<input type="button" name="descartar" value="<fmt:message key='descartar'/>" onclick="return confirmaDescarta()"/>
+                    </p>
+                </td>
+              </tr>
+       </table>
     </div>
-
+       <form name="oficioDescartaForm" id="oficioDescartaForm" action="RemiEntradaDescartarMultiple.jsp" method="post" >
+			<input type="hidden" name="registre" value=""/>
+			<input type="hidden" name="motius" value=""/>
+       </form>
 <%
 	/* Per maquetar quan només apareixen pocs
 	   registres al llistat */
@@ -359,18 +352,6 @@ if (registros.size()==0) {
 	}
 %>
 &nbsp;<br>
-<table border="0" width="95%" align="center">
-    <tr>
-        <td align="left" width="33%">
-        </td>
-        <td align="right" width="33%">
-        </td>
-    </tr>
-</table>
-
-<% } %>
- 		
-                 
-   		
+<% } %>	
 	</body>
 </html>   

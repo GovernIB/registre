@@ -8,16 +8,17 @@
 
 <%
 	String usuario=request.getRemoteUser();
-String codOficina=request.getParameter("oficina");
-String numeroEntrada=request.getParameter("numeroEntrada");
-String ano=request.getParameter("anoEntrada");
-
+	String codOficina=request.getParameter("oficina");
+	String numeroEntrada=request.getParameter("numeroEntrada");
+	String ano=request.getParameter("anoEntrada");
+	String localitzadorsDocs[] ; 
+	
     RegistroEntradaFacade regent = RegistroEntradaFacadeUtil.getHome().create();
     ParametrosRegistroEntrada param = new ParametrosRegistroEntrada();
     ParametrosRegistroEntrada reg = new ParametrosRegistroEntrada();
     ParametrosListadoRegistrosEntrada parametros;
     parametros=(ParametrosListadoRegistrosEntrada)session.getAttribute("listadoEntrada");
-    
+
     ValoresFacade valores = ValoresFacadeUtil.getHome().create();
     Vector modelosRecibos = valores.buscarModelosRecibos("tots","totes");
 
@@ -26,39 +27,71 @@ String ano=request.getParameter("anoEntrada");
     param.setNumeroEntrada(numeroEntrada);
     param.setAnoEntrada(ano);
     reg = regent.leer(param);
+    localitzadorsDocs = reg.getArrayLocalitzadorsDocs();
 %>
-
 <html>
     <head><title><fmt:message key='registre_entrades'/></title>
-        <script>
+ 	<script>
         function imprimeRecibo() {
         	var url = "imprimeixRebut?oficina="+encodeURIComponent("<%=reg.getOficina().toString()%>");
         	url += "&numeroentrada="+encodeURIComponent("<%=reg.getNumeroEntrada()%>")+"&anoentrada="+encodeURIComponent("<%=reg.getAnoEntrada()%>");
         	url += '&mode=N&modelo='+encodeURIComponent(document.getElementById('model').value);
         	window.open(url, "recibo");  		
+        };
+
+      
+        function enviaEmail(ofi,num,ano,tipus, msgNoIdioma) {
+        	var llista = document.getElementById("UnitatGestio");
+        	var email = null;
+			
+			var enviar = true;
+        	var url = "enviaEmail?oficina="+ofi+"&numero="+num+"&ano="+ano+"&tipus="+tipus;
+
+        	if(llista!=null){
+           	 email = llista.options[llista.selectedIndex].value;
+           	 url+="&email="+email;
+        	}
+
+        	if(tipus=="<%=es.caib.regweb.webapp.servlet.EmailServlet.TIPUS_CIUTADA %>"){
+	        	if(document.getElementById("idiomaEmail")!=null){
+	        		var idiomaEmail = document.getElementById("idiomaEmail").value;
+	            	if(idiomaEmail=="<%=es.caib.regweb.webapp.servlet.EmailServlet.IDIOMA_NO_DETERMINADO %>"){
+	            		alert (msgNoIdioma);
+	            		enviar= false;
+	            		return;
+	                	}
+	            	url+="&idioma="+idiomaEmail;
+	        	}
+       		}
+
+        	if(enviar){
+	        	miVentana = window.open(url, "enviaEmail","scrollbars,resizable,width=300,height=200");
+	        	miVentana.focus(); 	
+        	}	
         }
-        </script>
-    
+      
+    </script>
+     <script src="jscripts/TAO.js"></script>
     </head>
     <body bgcolor="#FFFFFF">
-    
+   
       	<!-- Molla pa --> 
 		<ul id="mollaPa">
 		<li><a href="index.jsp"><fmt:message key='inici'/></a></li>		
 		<li><a href="busquedaEntradasIndex.jsp"><fmt:message key='consulta_entrades'/></a></li>
-                <% 
-                if (parametros!=null) { 
-                        String oficinaDesde=parametros.getOficinaDesde();
-                        String oficinaHasta=parametros.getOficinaHasta();
-                        String fechaDesde=parametros.getFechaDesde();
-                        String fechaHasta=parametros.getFechaHasta();
-                        String extractoBusqueda=parametros.getExtracto();
-                        String tipoBusqueda=parametros.getTipo();
-                        String remitenteBusqueda=parametros.getRemitente();
-                        String procedenciaBusqueda=parametros.getProcedencia();
-                        String destinatarioBusqueda=parametros.getDestinatario();
-						String codidestinatariBusqueda=parametros.getCodiDestinatari();
-				%>
+        <% 
+              if (parametros!=null) { 
+                String oficinaDesde=parametros.getOficinaDesde();
+                String oficinaHasta=parametros.getOficinaHasta();
+                String fechaDesde=parametros.getFechaDesde();
+                String fechaHasta=parametros.getFechaHasta();
+                String extractoBusqueda=parametros.getExtracto();
+                String tipoBusqueda=parametros.getTipo();
+                String remitenteBusqueda=parametros.getRemitente();
+                String procedenciaBusqueda=parametros.getProcedencia();
+                String destinatarioBusqueda=parametros.getDestinatario();
+				String codidestinatariBusqueda=parametros.getCodiDestinatari();
+		%>
                 <!-- <li><a href="busquedaEntradasXFechas.jsp"><fmt:message key='consulta_per_oficines_i_dates'/></a></li> -->
                 <li><a href="listado.jsp?oficinaDesde=<%=oficinaDesde%>&oficinaHasta=<%=oficinaHasta%>&fechaDesde=<%=fechaDesde%>&fechaHasta=<%=fechaHasta%>&extracto=<%=extractoBusqueda%>&tipo=<%=tipoBusqueda%>&remitente=<%=remitenteBusqueda%>&procedencia=<%=procedenciaBusqueda%>&destinatario=<%=destinatarioBusqueda%>&codidestinatari=<%=codidestinatariBusqueda%>"><fmt:message key='tornar_a_seleccionar_registre'/></a></li>
                 <%    } else { %>
@@ -67,10 +100,6 @@ String ano=request.getParameter("anoEntrada");
 		<li><fmt:message key='registre_entrada'/></li>
 		</ul>
 		<!-- Fi Molla pa-->
-  
-
-
-<!--         <CENTER><font class="titulo"><fmt:message key='usuari'/> : <%=usuario%></font></center> -->
         <p></p>
         <!-- Cuerpo central -->
         <% if(!reg.getLeido()) {%>
@@ -97,15 +126,6 @@ String ano=request.getParameter("anoEntrada");
        } else {
           hhmm=hora;
        }
-       /*
-       Comentat per a solventar el problema que no es visualitzaven registres
-       antics debut a que no tenien hora de entrada/sortida 
-       String hora=reg.getHora();
-       if (hora.length()<4) {hora="0"+hora;}
-       String hh=hora.substring(0,2);
-       String mm=hora.substring(2,4);
-       String hhmm=hh+":"+mm;
-       */
        if (Helper.estaPdteVisado("E", reg.getOficina(), reg.getAnoEntrada(), reg.getNumeroEntrada())) {
            %>
            <SCRIPT>
@@ -116,8 +136,8 @@ String ano=request.getParameter("anoEntrada");
         <center>
         <table width="700" class="recuadroEntradas">
             <tr>
-                <td class="cellaEntrades"width="581">
-                    <table width="100%" border=0>
+                <td class="cellaEntrades" width="581">
+                    <table width="100%" border="0">
                         <tr>
                             <td style="border:0" >
                                 &nbsp;<fmt:message key='registro.fecha_entrada'/> <font class="ficha"><%=fechaEntrada%></font>
@@ -126,7 +146,11 @@ String ano=request.getParameter("anoEntrada");
                                 <fmt:message key='registro.hora'/> <font class="ficha"><%=hhmm%></font>
                             </td>
                             <td style="border:0" >
+                            <%if(reg.getRegistroAnulado().trim().equals("")){ %>
+                            	 &nbsp;
+                            <%}else{ %>
                                 <fmt:message key='entrada_anulada'/>:&nbsp;<%=(reg.getRegistroAnulado().trim().equals("")) ? "" : "S" %>
+                            <%} %>
                             </td>
                         </tr>
                         <tr>
@@ -137,9 +161,11 @@ String ano=request.getParameter("anoEntrada");
                             <td style="border:0" >
                                 <fmt:message key='num_registre'/> <font class="ficha"><%=reg.getNumeroEntrada()%>/<%=reg.getAnoEntrada()%></font>
                             </td>
-                            <td style="border:0" >
-                                <c:set var="texto" scope="page"><%=fechaVisado%></c:set>
-                                <fmt:message key='data_registre'/> <font class="ficha"><c:out escapeXml="false" value="${texto}"/></font>
+                            <td style="border:0" >                                
+                                <% if(fechaVisado!=null && !fechaVisado.equals("")){ %>
+	                                <c:set var="texto" scope="page"><%=fechaVisado%></c:set>
+	                                <fmt:message key='data_visado'/> <font class="ficha"><c:out escapeXml="false" value="${texto}"/></font>
+                                <%} %>
                             </td>
                         </tr>
                     </table>
@@ -147,7 +173,8 @@ String ano=request.getParameter("anoEntrada");
             </tr>
             <!-- Fila de datos del documento -->
             <tr>
-                <td class="cellaEntrades" width="581">&nbsp;<p><b>&nbsp;&nbsp;<fmt:message key='dades_del_document'/></b></p>
+                <td class="cellaEntrades" width="581">
+                	<p><b>&nbsp;&nbsp;<fmt:message key='dades_del_document'/></b></p>
                     <!-- Fecha del documento --> <c:set var="texto" scope="page"><%=reg.getData()%></c:set>
                     &nbsp;&nbsp;<fmt:message key='registro.fecha'/> <font class="ficha"><c:out escapeXml="false" value="${texto}"/></font>
                     &nbsp;&nbsp;&nbsp;
@@ -205,7 +232,7 @@ String ano=request.getParameter("anoEntrada");
             </tr>
             <!-- Fila de datos del Extracto -->
             <tr>
-                <td class="cellaEntrades" width="581">&nbsp;<p>
+                <td class="cellaEntrades" width="581">
                     <b>&nbsp;&nbsp;<fmt:message key='dades_de_lextracte'/></b>
                     <!-- Idioma del Extracto -->
                     <p>&nbsp;&nbsp;<fmt:message key='registro.idioma'/> <font class="ficha"><%=reg.getIdiomaExtracto()%></font>
@@ -226,18 +253,98 @@ String ano=request.getParameter("anoEntrada");
                     
                     <!-- Extracto del documento -->
                     <c:set var="texto" scope="page"><%=reg.getComentario()%></c:set>
-                    <p>&nbsp;&nbsp;<fmt:message key='extracte_del_document'/>: <font class="ficha"><c:out escapeXml="false" value="${texto}"/></font><p>
+                    <p>&nbsp;&nbsp;<fmt:message key='extracte_del_document'/>: <font class="ficha"><c:out escapeXml="false" value="${texto}"/></font></p>
                 </td>
             </tr> 
-           <tr>
-           		<td class="cellaEntrades" width="581">
+		<% if (es.caib.regweb.logic.helper.Conf.get("integracionIBKEYActiva","false").equalsIgnoreCase("true")){
+			 if(localitzadorsDocs!=null){ %>
+            <tr>
+	            <td>
+	            	 <br/>
+		             <b>&nbsp;&nbsp;<fmt:message key='registro.datosDocumentosAnexados'/></b>
+		             <p>&nbsp;&nbsp;<fmt:message key='registro.emailRemitente'/>:&nbsp;<font class="ficha"><%=(reg.getEmailRemitent()==null) ? "" : reg.getEmailRemitent()%></font></p>
+		             &nbsp;&nbsp;<fmt:message key='registro.textoEnlaces'/>:
+		             <ul>
+			            <%for(int i=0; i<localitzadorsDocs.length; i++){ %>
+			            	<li><a href="<%= localitzadorsDocs[i]%>" target="_blank"><%= localitzadorsDocs[i]%></a></li>
+			            <%} %>	            
+				     </ul>
+				</td>
+            </tr>
+            <tr>
+            	<td>
+		            <table class="recuadroEntradasRegistro" id="tablaEmails" width="100%" align="center">
+				        <tr><td colspan="3">&nbsp;&nbsp;<font class="textoResaltadoRegistro"><fmt:message key='registro.titol1'/></font></td></tr>
+				        <tr>
+				        	<%if(reg.getEmailRemitent()!=null){ 
+			                    //Pasamos los datos del registro a la pantalla de envio de correo                   	
+			                %>
+				              <td>&nbsp;&nbsp;<fmt:message key='registro.emailRemitente'/></td>
+				              <td><input type="text" name="emailRemitente" size="30" maxlength="50" value="<%=reg.getEmailRemitent()%>" readonly="readonly"></td>
+				              <td rowspan="2" ><a style="text-decoration: none;" type="button" class="botonFormulario" href="#" onclick="enviaEmail('<%=reg.getOficina()%>','<%=reg.getNumeroEntrada() %>','<%=reg.getAnoEntrada() %>','<%=es.caib.regweb.webapp.servlet.EmailServlet.TIPUS_CIUTADA %>','<fmt:message key='registro.msgNoIdioma'/>');">&nbsp;<fmt:message key='enviar_email'/>&nbsp;</a></td>                 
+			                    <%}else{ %>
+			                  <td colspan="3">&nbsp;&nbsp;<fmt:message key='registro.noEmailRemitente'/></td>
+			                    <%} %>
+				        </tr>
+				        <%if(reg.getEmailRemitent()!=null){ %>
+				        <tr>
+				        	<td >&nbsp;&nbsp;<fmt:message key='registro.idioma'/></td>
+				        	<td ><select name="idiomaEmail" id="idiomaEmail">
+			                            <option selected="selected" value="<%=es.caib.regweb.webapp.servlet.EmailServlet.IDIOMA_NO_DETERMINADO %>" ><fmt:message key='registro.idioma.noDeterminado'/></option>
+			                            <option value="<%=es.caib.regweb.webapp.servlet.EmailServlet.IDIOMA_CATALAN %>" > <fmt:message key='registro.idioma.catala'/></option>
+			                            <option value="<%=es.caib.regweb.webapp.servlet.EmailServlet.IDIOMA_CASTELLANO %>" > <fmt:message key='registro.idioma.castella'/></option>
+			                       </select>
+			                </td>
+				        </tr>
+				        <%} %>	 
+				        <tr><td colspan="3">&nbsp;</td></tr>				        
+				     <% 	if(valores.permiteEnviarEmailAlOrganismo(Integer.parseInt(reg.getOficina()),Integer.parseInt(reg.getDestinatari()))){ 
+			                      	//Si la oficina de registro puede enviar correos al organismo destinatario	
+			                    		Vector unitatsGestio = valores.buscarUnitatsGestioEmail(reg.getOficina(),reg.getDestinatari());
+			                    %>	
+			            <tr>	                    
+		                    <td>&nbsp;&nbsp;<fmt:message key='registro.emailUnidadGestion'/></td>
+		                    <td><select name="UnitatGestio" id="UnitatGestio">
+		                    	<%     
+		                    	for (int i=0;i<unitatsGestio.size();i=i+4) { 
+		                            String codiOficina=unitatsGestio.get(i).toString();
+		                            String codiUnitat=unitatsGestio.get(i+1).toString();
+		                            String nomUnitat=unitatsGestio.get(i+2).toString();
+		                            String email=unitatsGestio.get(i+3).toString();  
+		                        %>
+		                            <option value="<%=email%>"><%=nomUnitat+" - "+email %></option>
+		                        <% }// fin for %>
+		                    	</select>
+		                    </td>
+		                    <td><a style="text-decoration: none;" type="button" class="botonFormulario" href="#" onclick="enviaEmail('<%=reg.getOficina()%>','<%=reg.getNumeroEntrada() %>','<%=reg.getAnoEntrada() %>','<%=es.caib.regweb.webapp.servlet.EmailServlet.TIPUS_INTERN %>','');">&nbsp;<fmt:message key='enviar_email'/>&nbsp;</a></td>  
+			            </tr>                                 	
+			         <% 	}else{
+			                    	//Es un registro con documentos electrónicos pero sin permisos para enviar el email
+			         %>
+						  <tr><td colspan="3">&nbsp;&nbsp;<fmt:message key='registro.NoEmailUnitatGestio'/></td></tr>								             
+			          <%} // Fin if(valores.permiteEnviarEmailAlOrganismo(%>
+				        <tr>
+				        	<td colspan="3">
+					        	<div style='text-align:center;'>
+						        	<p>[&nbsp;<a href="#" onclick="verHistoricoEmails('<%=reg.getOficina()%>','<%=reg.getNumeroEntrada() %>','<%=reg.getAnoEntrada() %>','E');"><fmt:message key='verHistorico'/></a>&nbsp;]</p>
+					        	</div>
+				        	</td>	
+				        </tr>
+		        </table>
+	        </td>
+        </tr>
+            <%}
+           } // Fin if (es.caib.regweb.logic.helper.Conf.get("integracionIBKEYActiva","false")
+           %>
+        <tr>
+           	<td class="cellaEntrades" width="581">
           			<form name="imprimirRecibo" action="" method="post">
     					<input type="hidden" name="oficina" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(codOficina)%>">
        					<input type="hidden" name="numeroEntrada" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(numeroEntrada)%>">
         				<input type="hidden" name="ano" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(ano)%>">
-
                 <% if (modelosRecibos.size()>0) { %>
-                        <!-- Boton de enviar -->          
+                        <!-- Boton de enviar --> 
+                        <br/>         
                         <p align="center">
                         	<select name="model" id="model">
                     		<%     for (int i=0;i<modelosRecibos.size();i++) {
@@ -255,12 +362,14 @@ String ano=request.getParameter("anoEntrada");
                     </form>
                  </td>
 			</tr>     
-			<c:if test="${initParam['registro.entrada.view.infoBOIB']}">
-			<%-- Si la oficina es 32 lanzamos datos para fichero de publicaciones --%>
-            <% if (reg.getOficina().equals(application.getInitParameter("registro.oficinaBOIB"))) { 
+			
+		<%
+		// Si esta actida la opción de mostrar los datos del BOIB
+		if (Conf.get("infoBOIB","false").equalsIgnoreCase("true")) {
+			// Si la oficina es la del BOIB lanzamos datos para fichero de publicaciones
+             if (reg.getOficina().equals(Conf.get("oficinaBOIB","32"))) { 
             	RegistroPublicadoEntradaFacade registroPublicado = RegistroPublicadoEntradaFacadeUtil.getHome().create();
-            	ParametrosRegistroPublicadoEntrada registroPublicadoParametros = new ParametrosRegistroPublicadoEntrada();
-            	
+            	ParametrosRegistroPublicadoEntrada registroPublicadoParametros = new ParametrosRegistroPublicadoEntrada();            	
             	registroPublicadoParametros.setOficina(Integer.parseInt(reg.getOficina()));
             	registroPublicadoParametros.setNumero(Integer.parseInt(reg.getNumeroEntrada()));
             	registroPublicadoParametros.setAnoEntrada(Integer.parseInt(reg.getAnoEntrada()));
@@ -282,10 +391,10 @@ String ano=request.getParameter("anoEntrada");
                     observaciones=registroPublicadoParametros.getObservaciones().trim();
                 }
             %> 
-                        <tr>
+            <tr>
                 <td>
-                    &nbsp;<br>
-                    &nbsp;<b><fmt:message key='publicacio.text_dades_publicacio'/></b>
+                    <br>
+                    &nbsp;&nbsp;<b><fmt:message key='publicacio.text_dades_publicacio'/></b>
                     &nbsp;<br>&nbsp;<br>
                     &nbsp;<fmt:message key='publicacio.text_data_public'/>
                     <font class="ficha"><%=dataPublicacion%></font>
@@ -305,11 +414,13 @@ String ano=request.getParameter("anoEntrada");
             </tr>
             <%
             registroPublicado.remove();
-            } %>
-            </c:if>
+            } 
+		} // Fin if (Conf.get("infoBOIB","false").equalsIgnoreCase("true")) {
+            %>
+            
         </table>
         </center>
-        <p/>
+        <br/>
             <center>
                 [&nbsp;<a href="busquedaEntradasIndex.jsp"><fmt:message key='tornar_a_seleccionar_criteris'/></a>&nbsp;]
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -331,10 +442,6 @@ String ano=request.getParameter("anoEntrada");
                 [&nbsp;<a href="busquedaEntradasXRegistro.jsp"><fmt:message key='tornar_a_seleccionar_registre'/></a>&nbsp;]
                 <% } %>
             </center>
-        </p>
-        <% } %>
-   		
-                 
-   		
+        <% } %>	
     </body>
 </html>

@@ -40,7 +40,7 @@
           <div id="menuEntrada">
             <ul>
               <li><a href="pedirdatos.jsp"><font class="menu"><fmt:message key='registre_entrades'/></font></a></li>
-              <c:if test="${initParam['registro.entrada.view.preregistre']}">
+              <c:if test="${viewPreregistre}">
               <li><a href="<c:out escapeXml="true" value='${preregistre}'/>/zonaperback/"><font class="menu"><fmt:message key='carrega_preregistre'/></font></a></li>
               </c:if>
               <li><a href="busquedaEntradasIndex.jsp"><font class="menu"><fmt:message key='consulta_entrades'/></font></a></li>

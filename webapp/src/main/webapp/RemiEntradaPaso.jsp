@@ -30,9 +30,7 @@ if (listaregistros!=null && listaregistros.length>0) {
 	ano = campos[2];
 	oficinaFisica = campos[3];
 }
-%>
 
-<%
     ParametrosRegistroSalida registro;
     registro=(ParametrosRegistroSalida)request.getAttribute("registroSalida");
  
@@ -40,21 +38,21 @@ if (listaregistros!=null && listaregistros.length>0) {
     ParametrosRegistroEntrada param = new ParametrosRegistroEntrada();
     ParametrosRegistroEntrada reg = new ParametrosRegistroEntrada();
 
-    
-    
+    String localitzadorsDocs[] ;
     ValoresFacade valores = ValoresFacadeUtil.getHome().create();
 	String codiCookies = "RWS";
 
-	  param.fijaUsuario(usuario);
+	param.fijaUsuario(usuario);
     param.setoficina(codOficina);
     param.setNumeroEntrada(numeroEntrada);
     param.setAnoEntrada(ano);
     reg = regent.leer(param);
+       
+    localitzadorsDocs = reg.getArrayLocalitzadorsDocs();
 
     // para que no rellene el numero de entrada y año de entrada en el registro de salida
     reg.setNumeroEntrada("");
-    reg.setAnoEntrada("");
-    
+    reg.setAnoEntrada("");   
 %>
 
 <%! 
@@ -278,8 +276,7 @@ if (listaregistros!=null && listaregistros.length>0) {
 
     </head>
 
-    <body bgcolor="#FFFFFF" onunload="cerrarVentana()">
-        
+    <body bgcolor="#FFFFFF" onunload="cerrarVentana()">    
        	<!-- Molla pa --> 
 		<ul id="mollaPa">
 		<li><a href="index.jsp"><fmt:message key='inici'/></a></li>
@@ -287,12 +284,6 @@ if (listaregistros!=null && listaregistros.length>0) {
 		<li><fmt:message key='registre_ofici_remisio'/></li>
 		</ul>
 		<!-- Fi Molla pa-->
-<!--         <div align="center"> --> 
-<!--        <center>
-            <font class="titulo">
-                Usuari : <%=usuario%>
-            </font>
-        </center> -->
         <!-- Mostramos Errores si los hubiera -->
 
 <% Hashtable errores = (registro==null)?new Hashtable():registro.getErrores();
@@ -333,15 +324,15 @@ if (listaregistros!=null && listaregistros.length>0) {
                     <td style="border:0" width="60%">
                         <!-- Data d'entrada -->
                         <font class="<%=errorEn(errores,"datasalida")%>"><fmt:message key='registro.fecha_salida'/></font>
-              <%String anteriorDataSalida=(registro==null)? "":registro.getDataSalida();%>
-                        <input id="datasalida" type=text name="datasalida" value="<%=anteriorDataSalida.equals("") ? valores.getFecha() : anteriorDataSalida %>" size="10" >
+              			<%String anteriorDataSalida=(registro==null)? "":registro.getDataSalida();%>
+                        <input id="datasalida" type="text" name="datasalida" value="<%=anteriorDataSalida.equals("") ? valores.getFecha() : anteriorDataSalida %>" size="10" >
                     </td>
                     <td style="border:0">
                         <!-- Hora d'entrada -->
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         <font class="<%=errorEn(errores,"hora")%>"><fmt:message key='registro.hora'/></font>
               <% String anteriorHora=(registro==null)? "":registro.getHora();%>
-                        <input type=text name=hora value="<%=anteriorHora.equals("") ? valores.getHorasMinutos() : anteriorHora %>" size="5">
+                        <input type="text" name="hora" value="<%=anteriorHora.equals("") ? valores.getHorasMinutos() : anteriorHora %>" size="5">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     </td>
                     </tr>
@@ -349,7 +340,7 @@ if (listaregistros!=null && listaregistros.length>0) {
                     <td style="border:0">
                         <!-- Despegable para oficinas autorizadas para el usuario -->
                         &nbsp;<br><font class="<%= errorEn(errores,"oficina")%>"><fmt:message key='oficina'/>:</font>
-                        <select name="oficinasel" disabled>
+                        <select name="oficinasel" disabled="disabled">
                    <% escribeSelect(out, "S", valores.buscarOficinas(usuario, "AS"), codOficina); %>
                         </select>
                         <input type="hidden" name="oficina" id="oficina" value="<%=codOficina%>"/>
@@ -357,7 +348,7 @@ if (listaregistros!=null && listaregistros.length>0) {
                     <td style="border:0">
                         <!-- Despegable para oficinas autorizadas para el usuario -->
                         &nbsp;<br><font class="<%= errorEn(errores,"oficinafisica")%>"><fmt:message key='oficina_fisica'/>:</font>
-                        <select name="oficinafisicasel"  disabled>
+                        <select name="oficinafisicasel"  disabled="disabled">
                         <%  escribeSelect2(out, "N", valores.buscarOficinasFisicas(usuario, "AS"), oficinaFisica, codOficina); %>
                         </select>
                         <input type="hidden" name="oficinafisica" id="oficinafisica" value="<%=oficinaFisica%>"/>
@@ -375,7 +366,7 @@ if (listaregistros!=null && listaregistros.length>0) {
                 <!-- 1ª fila de la tabla -->
                 <tr>
                 <td style="border:0;" colspan="2">
-                &nbsp;<br><b><fmt:message key='dades_del_document'/></b><p>
+                &nbsp;<br/><b><fmt:message key='dades_del_document'/></b><br/>
                 </td>
                 </tr>
                 <!-- 2ª fila de la tabla -->  
@@ -384,17 +375,17 @@ if (listaregistros!=null && listaregistros.length>0) {
                 <td style="border:0;" colspan="2">
                     <font class="<%= errorEn(errores,"data") %>"><fmt:message key='registro.fecha'/></font>
           <% String anteriorData=(registro==null)? "":registro.getData(); %>
-                    <input type=text name=data value="<%=anteriorData.equals("") ? valores.getFecha() : anteriorData %>" maxlength="10" size="10" >
+                    <input type="text" name="data" value="<%=anteriorData.equals("") ? valores.getFecha() : anteriorData %>" maxlength="10" size="10" >
                     <!-- Despegable para Tipos de documentos -->
                     &nbsp;<font class="errorcampo">*</font>
                     <font class="<%=errorEn(errores, "tipo")%>"><fmt:message key='registro.tipo'/></font>
-                    <select name="tiposel" size="1" style="width: 250px" disabled>
+                    <select name="tiposel" size="1" style="width: 250px" disabled="disabled">
                 <% escribeSelect(out, "N", valores.buscarDocumentos(), application.getInitParameter("oficios.config.tipo_documento")); %>
                     </select>
                     <input type="hidden" name="tipo" value="${initParam['oficios.config.tipo_documento']}"/>
                     <!-- Despegable para Idiomas -->
                     <font class="<%=errorEn(errores,"idioma")%>"><fmt:message key='registro.idioma'/></font>
-                    <select name="idiomasel" size="1" disabled>
+                    <select name="idiomasel" size="1" disabled="disabled">
                 <% escribeSelect(out, "N", valores.buscarIdiomas(), application.getInitParameter("oficios.config.idioma")); %>
                     </select>
                     <input type="hidden" name="idioma" value="${initParam['oficios.config.idioma']}"/>
@@ -407,15 +398,15 @@ if (listaregistros!=null && listaregistros.length>0) {
                 <br><font class="errorcampo">*</font>
                 <fmt:message key='destinatari'/>..<font class="<%=errorEn(errores,"entidad1")%>"><fmt:message key='registro.entidad'/></font>
                 <!-- Remitente Entidad 1 -->
-                <input type=text name="entidad1" readonly size="7" value="${initParam['oficios.config.entidad']}" onblur="recuperaDescripcionEntidad()"> 
+                <input type="text" name="entidad1" readonly="readonly" size="7" value="${initParam['oficios.config.entidad']}" onblur="recuperaDescripcionEntidad()"> 
                 <!-- Remitente Entidad 2 -->
                 
                <%
-               // <input type=text name="entidad2" readonly size="3" value="<-%=reg.getDestinatari().substring(0,2)% >" onblur="javascript:recuperaDescripcionEntidad()">
+               // <input type="text" name="entidad2" readonly size="3" value="<-%=reg.getDestinatari().substring(0,2)% >" onblur="javascript:recuperaDescripcionEntidad()">
                Double num_ent2 = new Double(Math.ceil(Integer.parseInt(reg.getDestinatari())/100));
                String str_ent2 = Integer.toString(num_ent2.intValue());
                %>
-                <input type=text name="entidad2" readonly size="3" value="<%= str_ent2%>" onblur="recuperaDescripcionEntidad()">
+                <input type="text" name="entidad2" readonly="readonly" size="3" value="<%= str_ent2%>" onblur="recuperaDescripcionEntidad()">
                 </td>
                 <!-- Descipcion del Destinatario  -->
                 <td width="45%" style="border:0;">
@@ -428,7 +419,7 @@ if (listaregistros!=null && listaregistros.length>0) {
                 <!-- Remitente Altres entidades -->
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 &nbsp;&nbsp;&nbsp;
-                <fmt:message key='altres'/>&nbsp;&nbsp;<input onkeypress="return check(event)" readonly type=text name="altres" size="30" maxlength="30" value="">
+                <fmt:message key='altres'/>&nbsp;&nbsp;<input onkeypress="return check(event)" readonly="readonly" type="text" name="altres" size="30" maxlength="30" value="">
                 <!--<a href="javascript:abreBDP()">
                 <img border="0" src="imagenes/buscar.gif" align=middle alt="<fmt:message key='cercar'/>">
                 </a>-->
@@ -460,7 +451,7 @@ if (listaregistros!=null && listaregistros.length>0) {
                             <td style="border:0;">&nbsp;</td>
                             <td style="border:0;" valign="bottom" colspan="2">
                                 <fmt:message key='registro.fuera_baleares'/>&nbsp;
-                                <input onkeypress="return check(event)" type=text name="fora" size="25" maxlength="25" value="">            
+                                <input onkeypress="return check(event)" type="text" name="fora" size="25" maxlength="25" value="">            
                             </td>
                         </tr>
                     </table>
@@ -469,23 +460,23 @@ if (listaregistros!=null && listaregistros.length>0) {
                 
                 <!-- 7ª fila de la tabla -->
                 <tr>
-                <td style="border:0;" colspan="2">
-                    <!-- Número d'entrada -->
-                    &nbsp;<br><font class="<%=errorEn(errores,"entrada1")%>"><fmt:message key='registro.num_entrada'/></font>
-                    <input readonly onKeyPress="return goodchars(event,'0123456789')" type=text name="entrada1" maxlength="6" size="6" value="<%=reg.getNumeroEntrada()%>">&nbsp;&nbsp;/&nbsp; 
-                    <input readonly onKeyPress="return goodchars(event,'0123456789')" type=text name="entrada2" maxlength="4" size="4" value="<%=reg.getAnoEntrada()%>">
-                </td>
+	                <td style="border:0;" colspan="2">
+	                    <!-- Número d'entrada -->
+	                    &nbsp;<br><font class="<%=errorEn(errores,"entrada1")%>"><fmt:message key='registro.num_entrada'/></font>
+	                    <input readonly="readonly" onKeyPress="return goodchars(event,'0123456789')" type="text" name="entrada1" maxlength="6" size="6" value="<%=reg.getNumeroEntrada()%>">&nbsp;&nbsp;/&nbsp; 
+	                    <input readonly="readonly" onKeyPress="return goodchars(event,'0123456789')" type="text" name="entrada2" maxlength="4" size="4" value="<%=reg.getAnoEntrada()%>">
+	                </td>
                 </TR> 
                 <!-- 8ª fila de la tabla -->
                 <tr>
-                <td style="border:0;">
-                <!-- Organismo destinatario -->
-                &nbsp;<br><font class="errorcampo">*</font><font class="<%=errorEn(errores,"remitent")%>"><fmt:message key='registro.organismo_emisor'/>..............:</font>
-                <input type=text name="remitent" size="4" maxlength="4" value="<%=reg.getOficina()+"00"%>" readonly onblur="recuperaRemitente()">
+	                <td style="border:0;">
+	                <!-- Organismo destinatario -->
+	                &nbsp;<br><font class="errorcampo">*</font><font class="<%=errorEn(errores,"remitent")%>"><fmt:message key='registro.organismo_emisor'/>..............:</font>
+	                <input type="text" name="remitent" size="4" maxlength="4" value="<%=reg.getOficina()+"00"%>" readonly="readonly" onblur="recuperaRemitente()">
                 </td>
-                <td style="border:0" >
-                <div id="remitente_desc" style="font-size:12px; font: bold;"></div>
-                </td>
+	                <td style="border:0" >
+	                <div id="remitente_desc" style="font-size:12px; font: bold;"></div>
+	                </td>
                 </tr>
             </table>
             </td>
@@ -495,63 +486,51 @@ if (listaregistros!=null && listaregistros.length>0) {
             <!-- tabla de datos del Extracto -->
             <table class="bordeSalida" style="border:0">
                 <tr>
-                <td style="border:0;">
-          <!--       &nbsp;<br><b><fmt:message key='dades_de_lextracte'/></b>-->
-                </TD>
-                </TR>
-                <tr>
-                <td style="border:0;">
-                
-          	<% String anteriorIdioex="2";//reg.getIdioex(); %>
-              <!-- &nbsp;<br><font class="<%=errorEn(errores,"idioex")%>"><fmt:message key='registro.idioma'/></font>
-                     <select name="idioexsel" disabled>
-                    <option value="2" <%=anteriorIdioex.equals("2") ? "selected" : "" %> > <fmt:message key='registro.idioma.catala'/>
-                    <option value="1" <%=anteriorIdioex.equals("1") ? "selected" : "" %> > <fmt:message key='registro.idioma.castella'/>
-                    </select>&nbsp; -->
-                    <input type="hidden" name="idioex" value="<%=anteriorIdioex%>"/>
-
-                    <c:choose>
-                    <c:when test="${initParam['registro.entrada.view.disquete_correo']}">
-                    <!-- Numero de disquete -->
-                    <!--  <font class="<%=errorEn(errores,"disquet")%>"><fmt:message key='registro.num_disquete'/> </font> -->
-                    <input readonly type=hidden onkeypress="return check(event)" name=disquet size="8" value="<%=reg.getDisquet()!=null?reg.getDisquet().trim():""%>">
-					<!--<a href="javascript:abreDisquete()"><img src="imagenes/buscar.gif" align=middle alt="Darrer disquet" border="0"></a>-->
-                    <!--Numero de disquete -->
-                    &nbsp;&nbsp;
-                    <!-- <font class="<%=errorEn(errores,"correo")%>"><fmt:message key='registro.num_correo'/> </font>-->
-                    <input readonly onkeypress="return check(event)" type=hidden name=correo size="8" value="<%=reg.getCorreo()!=null?reg.getCorreo().trim():""%>">
-                    </c:when>
-                    <c:otherwise>
-                    <input type="hidden" name="disquet" value=""/>
-                    <input type="hidden" name="correo" value=""/>
-                    </c:otherwise>
-                    </c:choose>
-                    
-                </td>
+	                <td style="border:0;">              
+	          		<% String anteriorIdioex="2";//reg.getIdioex(); %>
+	                   <input type="hidden" name="idioex" value="<%=anteriorIdioex%>"/>
+	                    <c:choose>
+	                    	<c:when test="${initParam['registro.entrada.view.disquete_correo']}">
+	                    		<!-- Numero de disquete -->
+	                    		<input readonly="readonly" type="hidden" onkeypress="return check(event)" name="disquet" size="8" value="<%=reg.getDisquet()!=null?reg.getDisquet().trim():""%>">
+	                    		<!--Numero de disquete -->
+	                   	 		<input readonly="readonly" onkeypress="return check(event)" type="hidden" name="correo" size="8" value="<%=reg.getCorreo()!=null?reg.getCorreo().trim():""%>">
+	                    	</c:when>
+	                    	<c:otherwise>
+	                    		<input type="hidden" name="disquet" value=""/>
+	                    		<input type="hidden" name="correo" value=""/>
+	                    	</c:otherwise>
+	                    </c:choose>
+	                </td>
                 </tr>
-
-                <!--  tr>
-                <td style="border:0;">
-                    &nbsp;<br>
-                    <font class="errorcampo">*</font>
-                    <font class="<%=errorEn(errores,"comentario")%>"><fmt:message key='extracte_del_document'/>:
-                    <textarea cols="67" readonly onkeypress="return check(event)" rows="3" name="comentario"><%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml("Ofici de sortida de documentació amb núm. de registre " + reg.getNumeroEntrada() + "/" + reg.getAnoEntrada())%></textarea>
-                </td>
-                </tr -->
-                <tr>
-                    <td style="border:0">
-                        <!-- Boton de enviar -->          
-                        <p align="center">
-                        <input type=submit value="<fmt:message key='enviar'/>">
-                        </P>
-                    </td>
-                </tr>
+			<% if (es.caib.regweb.logic.helper.Conf.get("integracionIBKEYActiva","false").equalsIgnoreCase("true")){
+	             if(localitzadorsDocs!=null){ %>
+		            <tr>
+			            <td style="border:0;">
+				             <b><fmt:message key='registro.datosDocumentosAnexados'/></b>
+				             <br/>
+				             <fmt:message key='registro.emailRemitente'/>:&nbsp;
+				             <input readonly="readonly" type="text" name="emailRemitente" size="50" maxlength="50" value="<%=(reg.getEmailRemitent()==null) ? "" : reg.getEmailRemitent()%>">
+							 <br/>
+							 <input type="hidden" name="localitzadorsDocs" value="<%=reg.getLocalitzadorsDocs()%>">
+				             <fmt:message key='registro.textoEnlaces'/>:<br/>
+				             <ul>
+					            <%for(int i=0; i<localitzadorsDocs.length; i++){ %>
+					            	<li><a href="<%= localitzadorsDocs[i]%>" target="_blank"><%= localitzadorsDocs[i]%></a></li>
+					            <%} %>	            
+						     </ul>
+						</td>
+		            </tr>
+	            <%}
+	           }%>
             </table>
+            <!-- Boton de enviar -->          
+	        <p align="center">
+	        	<input type="submit" value="<fmt:message key='enviar'/>">
+	        </p>
             </td>
             </tr>
-    
         </table>
-        
         <input type="hidden" name="numeroEntrada" value="<%=numeroEntrada %>"/>
         <input type="hidden" name="ano" value="<%=ano %>"/>
         <%

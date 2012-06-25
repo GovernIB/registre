@@ -20,6 +20,7 @@ import com.lowagie.text.pdf.*;
 
 import es.caib.regweb.logic.interfaces.ValoresFacade;
 import es.caib.regweb.logic.util.ValoresFacadeUtil;
+import es.caib.regweb.logic.helper.Conf;
 
 import com.lowagie.text.pdf.PdfAction.*;
 import com.lowagie.text.Chunk;
@@ -60,7 +61,8 @@ public class PdfServlet extends HttpServlet {
 
         // Color per defecte
         Color color = Color.BLACK;
-        String colorParam = this.getServletContext().getInitParameter("registro.sello.color");
+        //String colorParam = this.getServletContext().getInitParameter("registro.sello.color");
+        String colorParam = Conf.get("colorSello", "0,0,0");
         if (StringUtils.isNotBlank(colorParam)) {
             color = getColor(colorParam);
             if (color == null) {

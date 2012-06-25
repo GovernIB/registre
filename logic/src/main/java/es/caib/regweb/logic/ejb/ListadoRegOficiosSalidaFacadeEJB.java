@@ -35,6 +35,7 @@ import org.hibernate.ScrollMode;
  */
 public abstract class ListadoRegOficiosSalidaFacadeEJB extends HibernateEJB {
 	
+	private static final long serialVersionUID = 1L;
 	private Logger log = Logger.getLogger(this.getClass());
     
 
@@ -42,7 +43,7 @@ public abstract class ListadoRegOficiosSalidaFacadeEJB extends HibernateEJB {
     * @ejb.interface-method
     * @ejb.permission unchecked="true"
     */
-    public Vector recuperarRegistros(String usuario, String oficina)
+    public Vector recuperarRegistros(String usuario, String oficina, boolean mostrarRegElec)
 	throws java.rmi.RemoteException, Exception {
 
 		Session session = getSession();
@@ -76,6 +77,7 @@ public abstract class ListadoRegOficiosSalidaFacadeEJB extends HibernateEJB {
 				 " AND (REM_NULA IS NULL OR REM_NULA='N' OR REM_NULA='') " +
 				 " AND REM_ENTFEC=0 " +
 				 " AND NOT FZSENULA='S' " +
+				 ((mostrarRegElec)?"  AND EXISTS (SELECT * FROM BZDOCLOC WHERE LOC_ANY = REM_SALANY AND LOC_NUMREG= REM_SALNUM AND LOC_OFI=REM_SALOFI AND LOC_TIPUS='S' ) ":"") +
 				 " ORDER BY FZSCAGCO, FZSANOEN, FZSNUMEN ";
 
  			q=session.createSQLQuery(sentenciaSql); //, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);

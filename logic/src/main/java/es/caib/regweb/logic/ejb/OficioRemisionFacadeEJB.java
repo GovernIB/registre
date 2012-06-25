@@ -29,28 +29,12 @@ import org.apache.log4j.Logger;
  *
  */
 public abstract class OficioRemisionFacadeEJB extends HibernateEJB {
-    
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-
     private Logger log = Logger.getLogger(this.getClass());
-    
-    //private String usuario="";
-
-    private DateFormat dateF= new SimpleDateFormat("dd/MM/yyyy");
-    private Date fechaTest=null;
-
-
     private String SENTENCIA_UPDATE="update OficioRemision " +
     		"set fechaOficio=?, contenido=?, anyoSalida=?, oficinaSalida=?, numeroSalida=?, nula=?, motivosNula=?, usuarioNula=?, fechaNula=?, "+
             "fechaEntrada=?, descarteEntrada=?, usuarioEntrada=?, motivosDescarteEntrada=?, anyoEntrada=?, oficinaEntrada=?, numeroEntrada=? "+
-    		" where id.anyoOficio=? and id.oficinaOficio=? and id.numeroOficio=?";
-   
-
-
-
+    		" where id.anyoOficio=? and id.oficinaOficio=? and id.numeroOficio=? ";
 
 	/**
      * @throws ClassNotFoundException
@@ -62,49 +46,15 @@ public abstract class OficioRemisionFacadeEJB extends HibernateEJB {
         Session session = getSession();
         boolean registroGrabado=false;
         try {
-
-
-
-
-            /* Recuperamos la fecha y la hora del sistema, fzafsis(aaaammdd) y fzahsis (hhMMssmm) */
-            Date fechaSystem=new Date();
-            //DateFormat aaaammdd=new SimpleDateFormat("yyyyMMdd");
-            //int fzafsis=Integer.parseInt(aaaammdd.format(fechaSystem));
-
-            //DateFormat hhmmss=new SimpleDateFormat("HHmmss");
-            DateFormat sss=new SimpleDateFormat("S");
-            String ss=sss.format(fechaSystem);
-            if (ss.length()>2) {
-                ss=ss.substring(0,2);
-            }
-           // int fzahsis=Integer.parseInt(hhmmss.format(fechaSystem)+ss);
-
-            Calendar c2=Calendar.getInstance();
-            c2.setTime(fechaSystem);
-
-
-            fechaTest = dateF.parse(parametros.getFechaOficio());
-            Calendar cal=Calendar.getInstance();
-            cal.setTime(fechaTest);
-            DateFormat date1=new SimpleDateFormat("yyyyMMdd");
-
-            int fzaanoe=cal.get(Calendar.YEAR);
-            parametros.setAnoOficio(String.valueOf(fzaanoe));
-
-            int dataofici=Integer.parseInt(date1.format(fechaTest));
-
-
+            parametros.setAnoOficio(String.valueOf(Helper.obtenerAnyoDeFechadd_MM_YYY(parametros.getFechaOficio())));
+            int dataofici=Helper.convierteStringFechaAIntFecha(parametros.getFechaOficio());
             int numof= Helper.recogerNumeroOficio(session, Integer.parseInt(parametros.getAnoOficio()), parametros.getOficinaOficio(), parametros.getErrores());
             parametros.setNumeroOficio(String.valueOf(numof));
             
             int fzafent = 0;
             if(parametros.getFechaEntrada()!=null && !parametros.getFechaEntrada().equals("")) {
-            	fechaTest = dateF.parse(parametros.getFechaEntrada());
-                cal.setTime(fechaTest);
-
-                fzafent=Integer.parseInt(date1.format(fechaTest));
+                fzafent=Helper.convierteStringFechaAIntFecha(parametros.getFechaEntrada());
             }
-
 
             OficioRemision oficio = new OficioRemision(
                 new OficioRemisionId(Integer.parseInt(parametros.getAnoOficio()),
@@ -127,15 +77,10 @@ public abstract class OficioRemisionFacadeEJB extends HibernateEJB {
                 (parametros.getAnoEntrada()!=null ? Integer.parseInt(parametros.getAnoEntrada()) : 0),
                 (parametros.getOficinaEntrada()!=null ? Integer.parseInt(parametros.getOficinaEntrada()) : 0),
                 (parametros.getNumeroEntrada()!=null ? Integer.parseInt(parametros.getNumeroEntrada()) : 0)
-            );
-            
+            );           
             session.save(oficio);
-
             session.flush();
-
             registroGrabado=true;
-
-
         } catch (HibernateException he) {
             registroGrabado=false;
 
@@ -143,12 +88,9 @@ public abstract class OficioRemisionFacadeEJB extends HibernateEJB {
         } finally {
             close(session);
         }
-
         parametros.setGrabado(registroGrabado);
         return parametros;
-    }
-
-   
+    }  
    
     /**
      * Actualitza la taula de gestió dels ofici de remissió.
@@ -162,14 +104,14 @@ public abstract class OficioRemisionFacadeEJB extends HibernateEJB {
 		Query q = null;
         
         boolean registroActualizado=false;
-        try {
+        try {          
             /* Ejecutamos sentencias SQL */
             q=session.createQuery(SENTENCIA_UPDATE);
 
-            		try{
+            try{
             	q.setInteger(0, Helper.convierteStringFechaAIntFecha(parametros.getFechaOficio()));
             }catch( Exception ex){
-            	q.setInteger(0, 0);	
+            	q.setInteger(0,0);
             }
             q.setString(1, parametros.getDescripcion());
             q.setInteger(2,Integer.parseInt(parametros.getAnoSalida()));
@@ -178,17 +120,17 @@ public abstract class OficioRemisionFacadeEJB extends HibernateEJB {
             q.setString(5,parametros.getNulo());
             q.setString(6,parametros.getMotivosNulo());
             q.setString(7,parametros.getUsuarioNulo());
-            	
-        		try{
+            
+            try{
             	q.setInteger(8, Helper.convierteStringFechaAIntFecha(parametros.getFechaNulo()));
             }catch( Exception ex){
-            	q.setInteger(8, 0);	
+            	q.setInteger(8,0);
             }
-        		try{
+            try{
             	q.setInteger(9, Helper.convierteStringFechaAIntFecha(parametros.getFechaEntrada()));
             }catch( Exception ex){
-            	q.setInteger(9, 0);	
-            }
+            	q.setInteger(9,0);
+            }            
             q.setString(10,parametros.getDescartadoEntrada());
             q.setString(11,parametros.getUsuarioEntrada());
             q.setString(12,parametros.getMotivosDescarteEntrada());
@@ -197,28 +139,27 @@ public abstract class OficioRemisionFacadeEJB extends HibernateEJB {
             q.setInteger(15,parametros.getNumeroEntrada()!=null?Integer.parseInt(parametros.getNumeroEntrada()):0);
             q.setInteger(16,parametros.getAnoOficio()!=null?Integer.parseInt(parametros.getAnoOficio()):0);
             q.setInteger(17,parametros.getOficinaOficio()!=null?Integer.parseInt(parametros.getOficinaOficio()):0);
-            q.setInteger(18,parametros.getNumeroOficio()!=null?Integer.parseInt(parametros.getNumeroOficio()):0);
-            
+            q.setInteger(18,parametros.getNumeroOficio()!=null?Integer.parseInt(parametros.getNumeroOficio()):0);           
+       
             int afectados=q.executeUpdate();
             if (afectados>0){
                 registroActualizado=true;
             } else {
                 registroActualizado=false;
             }
-
+            log.debug("Oficio de remision grabado. Of:"+parametros.getOficinaOficio()+" - "+parametros.getNumeroOficio()+"/"+parametros.getAnoOficio());
     		session.flush();
         } catch (HibernateException he) {
             throw new EJBException(he);
         } finally {
             close(session);
         }
-
         parametros.setActualizado(registroActualizado);
         return parametros;
     }
     
     /**
-     * Anul·la el registre d'entrada
+     * Anul�la el registre d'entrada
      * @throws ClassNotFoundException
      * @throws Exception
      * @ejb.interface-method
@@ -226,8 +167,7 @@ public abstract class OficioRemisionFacadeEJB extends HibernateEJB {
      */
     public boolean anular(ParametrosOficioRemision parametros) throws ClassNotFoundException, Exception {
 		Session session = getSession();
-		Query q = null;
-        
+		Query q = null;      
         boolean registroActualizado=false;
         
         try {
@@ -237,22 +177,21 @@ public abstract class OficioRemisionFacadeEJB extends HibernateEJB {
     		//	" where id.anyoOficio=? and id.oficinaOficio=? and id.numeroOficio=?";
  		   String sentencia_delete="Update OficioRemision " +
  		                           "set nula = 'S'" +
-    			" where id.anyoOficio=? and id.oficinaOficio=? and id.numeroOficio=?";
-    			
+ 		                           " where id.anyoOficio=? and id.oficinaOficio=? and id.numeroOficio=?";
+        	
             q=session.createQuery(sentencia_delete);
             q.setInteger(0,parametros.getAnoOficio()!=null?Integer.parseInt(parametros.getAnoOficio()):0);
             q.setInteger(1,parametros.getOficinaOficio()!=null?Integer.parseInt(parametros.getOficinaOficio()):0);
-            q.setInteger(2,parametros.getNumeroOficio()!=null?Integer.parseInt(parametros.getNumeroOficio()):0);
-            
+            q.setInteger(2,parametros.getNumeroOficio()!=null?Integer.parseInt(parametros.getNumeroOficio()):0);           
             
             int afectados=q.executeUpdate();
             if (afectados>0){
+            	log.debug("Oficio de remision anulado. Of:"+parametros.getOficinaOficio()+" - "+parametros.getNumeroOficio()+"/"+parametros.getAnoOficio());
                 registroActualizado=true;
             } else {
+            	log.debug("Oficio de remision NO anulado. No se ha encontrado. Of:"+parametros.getOficinaOficio()+" - "+parametros.getNumeroOficio()+"/"+parametros.getAnoOficio());
                 registroActualizado=false;
             }
-
-
     		session.flush();
         } catch (HibernateException he) {
             throw new EJBException(he);
@@ -261,8 +200,7 @@ public abstract class OficioRemisionFacadeEJB extends HibernateEJB {
         }
         return registroActualizado;
     }
-
-    
+     
     /** 
      * Lee un registro del fichero BZENTRA, para ello le
      * deberemos pasar el usuario, el codigo de oficina, el numero de registro de
@@ -276,13 +214,9 @@ public abstract class OficioRemisionFacadeEJB extends HibernateEJB {
         Session session = getSession();
 		ScrollableResults rs=null;
 		Query q = null;
-
-        ParametrosOficioRemision res = new ParametrosOficioRemision();
+        ParametrosOficioRemision res = new ParametrosOficioRemision();       
+        boolean leidos=false;
         
-        //boolean leidos=false;
-		DateFormat yyyymmdd=new SimpleDateFormat("yyyyMMdd");
-		DateFormat ddmmyyyy=new SimpleDateFormat("dd/MM/yyyy");
-		java.util.Date fechaDocumento=null;
         try {
 
             String sentenciaHql="select id.anyoOficio, id.numeroOficio, id.oficinaOficio, fechaOficio, " +
@@ -292,7 +226,6 @@ public abstract class OficioRemisionFacadeEJB extends HibernateEJB {
                     " usuarioEntrada, fechaEntrada " +
                     " from OficioRemision " +
             		" where id.anyoOficio=? and id.oficinaOficio=? and id.numeroOficio=?";
-            		
 
             q=session.createQuery(sentenciaHql);
             q.setInteger(0,Integer.parseInt(parametros.getAnoOficio()));
@@ -300,37 +233,29 @@ public abstract class OficioRemisionFacadeEJB extends HibernateEJB {
             q.setInteger(2,Integer.parseInt(parametros.getNumeroOficio()));
             rs=q.scroll();
             if (rs.next()) {
-            	/* Recuperamos la fecha y la hora del sistema, fzafsis(aaaammdd) y fzahsis (hhMMssmm) */
-            	
-                //leidos=true;
                 res.setAnoOficio(String.valueOf(rs.getInteger(0)));
                 res.setNumeroOficio(String.valueOf(rs.getInteger(1)));
                 res.setOficinaOficio(String.valueOf(rs.getInteger(2)));
 				String fechaO=String.valueOf(rs.getInteger(3));
 				try {
-					fechaDocumento=yyyymmdd.parse(fechaO);
-					res.setFechaOficio(ddmmyyyy.format(fechaDocumento));
+					res.setFechaOficio(Helper.convierteyyyymmddFechaAddmmyyyyFecha(fechaO));
 				} catch (Exception e) {
 					res.setFechaOficio(fechaO);
 				}
 
-				res.setDescripcion(rs.getString(4));
-                
+				res.setDescripcion(rs.getString(4));               
                 res.setAnoSalida(String.valueOf(rs.getInteger(5)));
                 res.setNumeroSalida(String.valueOf(rs.getInteger(6)));
                 res.setOficinaSalida(String.valueOf(rs.getInteger(7)));
-
                 res.setNulo(rs.getString(8));
                 res.setMotivosNulo(rs.getString(9));
                 res.setUsuarioNulo(rs.getString(10));
 				String fechaN=String.valueOf(rs.getInteger(11));
 				try {
-					fechaDocumento=yyyymmdd.parse(fechaN);
-					res.setFechaNulo(ddmmyyyy.format(fechaDocumento));
+					res.setFechaNulo(Helper.convierteyyyymmddFechaAddmmyyyyFecha(fechaN));
 				} catch (Exception e) {
 					res.setFechaNulo(fechaN);
 				}
-
                 res.setAnoEntrada(String.valueOf(rs.getInteger(12)));
                 res.setNumeroEntrada(String.valueOf(rs.getInteger(13)));
                 res.setOficinaEntrada(String.valueOf(rs.getInteger(14)));
@@ -339,19 +264,18 @@ public abstract class OficioRemisionFacadeEJB extends HibernateEJB {
                 res.setUsuarioEntrada(rs.getString(17));
 				String fechaE=String.valueOf(rs.getInteger(18));
 				try {
-					fechaDocumento=yyyymmdd.parse(fechaE);
-					res.setFechaEntrada(ddmmyyyy.format(fechaDocumento));
+					res.setFechaEntrada(Helper.convierteyyyymmddFechaAddmmyyyyFecha(fechaE));
 				} catch (Exception e) {
 					res.setFechaEntrada(fechaE);
 				}
-
-
+	            leidos=true;
+	            log.debug("Oficio de remision leido. Of:"+parametros.getOficinaOficio()+" - "+parametros.getNumeroOficio()+"/"+parametros.getAnoOficio());
             }
-
     		session.flush();
         } catch (HibernateException he) {
             throw new EJBException(he);
         } finally {
+        	res.setLeidos(leidos);
             close(session);
         }
         return res;

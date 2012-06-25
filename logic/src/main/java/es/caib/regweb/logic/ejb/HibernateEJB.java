@@ -39,6 +39,7 @@ import org.apache.log4j.Logger;
 
 public abstract class HibernateEJB implements SessionBean {
 
+	private static final long serialVersionUID = 1L;
     private Logger log = Logger.getLogger(this.getClass());
 
     protected SessionFactory sf = null;

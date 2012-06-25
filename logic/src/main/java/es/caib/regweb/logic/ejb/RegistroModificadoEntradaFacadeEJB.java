@@ -4,11 +4,11 @@ import java.util.*;
 import java.text.*;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
-import org.hibernate.Query;
+//import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.ScrollableResults;
-import org.hibernate.ScrollMode;
+//import org.hibernate.ScrollMode;
 
 import javax.ejb.*;
 
@@ -43,6 +43,7 @@ import es.caib.regweb.logic.helper.ParametrosRegistroModificado;
  */
 public abstract class RegistroModificadoEntradaFacadeEJB extends HibernateEJB {
 	
+	private static final long serialVersionUID = 2L;
 	private Logger log = Logger.getLogger(this.getClass());
     private SessionContext sessioEjb;
 	
@@ -122,8 +123,8 @@ public abstract class RegistroModificadoEntradaFacadeEJB extends HibernateEJB {
 				DateFormat aaaammdd=new SimpleDateFormat("yyyyMMdd");
 				DateFormat hhmmss=new SimpleDateFormat("HHmmss");
 				DateFormat sss=new SimpleDateFormat("S");
-				String ss=sss.format(fechaSystem);
-				int fzahsis=Integer.parseInt(hhmmss.format(fechaSystem)+ss);
+				//String ss=sss.format(fechaSystem);
+				//int fzahsis=Integer.parseInt(hhmmss.format(fechaSystem)+ss);
 				
                 String Stringsss=sss.format(fechaSystem);
                 switch (Stringsss.length()) {
@@ -158,7 +159,7 @@ public abstract class RegistroModificadoEntradaFacadeEJB extends HibernateEJB {
     * @ejb.interface-method
     * @ejb.permission unchecked="true"
     */
-    public ParametrosRegistroModificado visar(ParametrosRegistroModificado param) throws HibernateException, ClassNotFoundException, Exception {
+    public ParametrosRegistroModificado visar(ParametrosRegistroModificado param) throws EJBException {
 
 		Session session = getSession();
 		SQLQuery q = null;
@@ -266,12 +267,14 @@ public abstract class RegistroModificadoEntradaFacadeEJB extends HibernateEJB {
                 } catch (SecurityException se) {
                 } catch (LinkageError le) {
                 } catch (ClassNotFoundException le) {
+                } catch (Exception e){
+                	throw new EJBException();
                 }
 
 			}
 
 			/* Recuperamos la fecha y la hora del sistema, fzafsis(aaaammdd) y fzahsis (hhMMssmm) */
-			int fzahsis=Integer.parseInt(hhmmss.format(fechaSystem)+ss);
+			//int fzahsis=Integer.parseInt(hhmmss.format(fechaSystem)+ss);
             String Stringsss=sss.format(fechaSystem);
             switch (Stringsss.length()) {
             //Hem d'emplenar amb 0s.
@@ -356,8 +359,8 @@ public abstract class RegistroModificadoEntradaFacadeEJB extends HibernateEJB {
 		    
 			/* Recuperamos la fecha y la hora del sistema, fzafsis(aaaammdd) y fzahsis (hhMMssmm) */
 			DateFormat sss=new SimpleDateFormat("S");
-            String ss=sss.format(fechaSystem);
-			int fzahsis=Integer.parseInt(hhmmss.format(fechaSystem)+ss);
+            //String ss=sss.format(fechaSystem);
+			//int fzahsis=Integer.parseInt(hhmmss.format(fechaSystem)+ss);
             String Stringsss=sss.format(fechaSystem);
             switch (Stringsss.length()) {
             //Hem d'emplenar amb 0s.

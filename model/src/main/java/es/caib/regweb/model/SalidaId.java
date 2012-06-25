@@ -11,6 +11,7 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class SalidaId implements java.io.Serializable {
 
+	
 	private int anyo;
 	private int numero;
 	private int oficina;

@@ -1,20 +1,16 @@
 <%@page import="java.util.*, es.caib.regweb.logic.interfaces.*, es.caib.regweb.logic.util.*, es.caib.regweb.logic.helper.*"%>
 <%@ page pageEncoding="UTF-8"%>
-<% request.setCharacterEncoding("UTF-8"); %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-
+<% request.setCharacterEncoding("UTF-8"); %>
 
 <% 
 	String tipusCookies=request.getParameter("tipusCookie");
     String nomRepro=request.getParameter("nomRepro");
 	String usuario=request.getRemoteUser();	
-	//String nomRepros = new String("(");
 	
 	try {
 		Vector vectorRepros = new Vector();
-
-    ReproUsuarioFacade repro = ReproUsuarioFacadeUtil.getHome().create();
-		
+    	ReproUsuarioFacade repro = ReproUsuarioFacadeUtil.getHome().create();
 		vectorRepros=repro.recuperarRepros(usuario,tipusCookies);
 %>
 <html lang="es" >
@@ -55,7 +51,7 @@
 					<tr>
 						<td height="20px">
 							<a href="#">
-								<div onclick='borrarRepro("<%=regRepro.getNomRepro()%>")'><%=java.net.URLDecoder.decode(regRepro.getNomRepro(),"UTF-8")%></div>
+								<div onclick='borrarRepro("<%=java.net.URLEncoder.encode(regRepro.getNomRepro(),"UTF-8")%>")'><%=java.net.URLDecoder.decode(regRepro.getNomRepro(),"UTF-8")%></div>
 							</a>
 						</td>
 					</tr>
@@ -63,6 +59,8 @@
 %>
 	</table>
 <%}else{ 	
+	//Decodificamos el nombre de la repro
+	nomRepro = java.net.URLDecoder.decode(nomRepro,"UTF-8");
 	try{ // try (2)
 		repro.eliminar(usuario,nomRepro);
 %>
@@ -74,7 +72,7 @@
 		        ex.printStackTrace();
 %>
 <p></p><p></p><p></p><p></p>
-<div align="center"><b>Error al esborrar la Repro "<%=nomRepro%>".</b></div>
+<div align="center"><b>Error al esborrar la Repro "<%=java.net.URLDecoder.decode(nomRepro,"UTF-8")%>".</b></div>
 <%
 			} // fin try (2)
    } // Fin if(nomRepro == null){ 

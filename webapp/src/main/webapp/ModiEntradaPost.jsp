@@ -61,6 +61,7 @@ registro.setdestinatari(request.getParameter("destinatari"));
 registro.setidioex(request.getParameter("idioex"));
 registro.setdisquet(request.getParameter("disquet"));
 registro.setRegistroAnulado(request.getParameter("suprimir"));
+registro.setEmailRemitent(request.getParameter("emailRemitente"));
 if (request.getParameter("mun_060")!=null){
    registro.setMunicipi060(request.getParameter("mun_060"));
 	   try{
@@ -95,32 +96,33 @@ if (motivo.equals("")) {
     registro.setComentarioNuevo(request.getParameter("comentario"));
 }
 
+
 //Comprobamos si es una oficina relacionada con el BOIB 
-if (application.getInitParameter("registro.entrada.view.infoBOIB").equalsIgnoreCase("true") && registro.getOficina().equals(application.getInitParameter("registro.oficinaBOIB"))) {
+if (Conf.get("infoBOIB","false").equalsIgnoreCase("true") && registro.getOficina().equals(Conf.get("oficinaBOIB","false"))) {
 
-    	ParametrosRegistroPublicadoEntrada paramRegPubEnt = new ParametrosRegistroPublicadoEntrada();
-
+   	ParametrosRegistroPublicadoEntrada paramRegPubEnt = new ParametrosRegistroPublicadoEntrada();
+   	
    	String numeroBOCAIB=(request.getParameter("numeroBOCAIB")==null) ? "0" : (request.getParameter("numeroBOCAIB").trim().equals("")) ? "0" : request.getParameter("numeroBOCAIB");
-        String dataPublic=(request.getParameter("dataPublic")==null) ? "0" : (request.getParameter("dataPublic").trim().equals("")) ? "0" : request.getParameter("dataPublic");
-        String pagina=(request.getParameter("pagina")==null) ? "0" : (request.getParameter("pagina").trim().equals("")) ? "0" : request.getParameter("pagina");
-        String lineas=(request.getParameter("lineas")==null) ? "0" : (request.getParameter("lineas").trim().equals("")) ? "0" : request.getParameter("lineas");
-        String contenido = (request.getParameter("textoPublic")==null) ? "" : request.getParameter("textoPublic");
-        String observaciones = (request.getParameter("observaciones")==null) ? "" : request.getParameter("observaciones");
-    	
-        try{
-    	paramRegPubEnt.setAnoEntrada(Integer.parseInt(request.getParameter("anoEntrada")));
-    	paramRegPubEnt.setNumero(Integer.parseInt(request.getParameter("numeroRegistro")));
-    	paramRegPubEnt.setOficina(Integer.parseInt(request.getParameter("oficina")));
-    	paramRegPubEnt.setFecha(dataPublic);
-	    paramRegPubEnt.setNumeroBOCAIB(Integer.parseInt(numeroBOCAIB));
-	    paramRegPubEnt.setPagina(Integer.parseInt(pagina));
-	    paramRegPubEnt.setLineas(Integer.parseInt(lineas));
-	    paramRegPubEnt.setContenido(contenido);
-	    paramRegPubEnt.setObservaciones(observaciones);
-	    registro.setParamRegPubEnt(paramRegPubEnt);   
-        }catch(Exception ex){
-        	log.error("Parámetro de publicación del BOIB erróneo.",ex);
-        }
+    String dataPublic=(request.getParameter("dataPublic")==null) ? "0" : (request.getParameter("dataPublic").trim().equals("")) ? "0" : request.getParameter("dataPublic");
+    String pagina=(request.getParameter("pagina")==null) ? "0" : (request.getParameter("pagina").trim().equals("")) ? "0" : request.getParameter("pagina");
+    String lineas=(request.getParameter("lineas")==null) ? "0" : (request.getParameter("lineas").trim().equals("")) ? "0" : request.getParameter("lineas");
+    String contenido = (request.getParameter("textoPublic")==null) ? "" : request.getParameter("textoPublic");
+    String observaciones = (request.getParameter("observaciones")==null) ? "" : request.getParameter("observaciones");
+ 	
+    try{
+		  paramRegPubEnt.setAnoEntrada(Integer.parseInt(request.getParameter("anoEntrada")));
+		  paramRegPubEnt.setNumero(Integer.parseInt(request.getParameter("numeroRegistro")));
+		  paramRegPubEnt.setOficina(Integer.parseInt(request.getParameter("oficina")));
+		  paramRegPubEnt.setFecha(dataPublic);
+		  paramRegPubEnt.setNumeroBOCAIB(Integer.parseInt(numeroBOCAIB));
+		  paramRegPubEnt.setPagina(Integer.parseInt(pagina));
+		  paramRegPubEnt.setLineas(Integer.parseInt(lineas));
+		  paramRegPubEnt.setContenido(contenido);
+		  paramRegPubEnt.setObservaciones(observaciones);
+		  registro.setParamRegPubEnt(paramRegPubEnt);   
+    }catch(Exception ex){
+    		log.error("Parámetro de publicación del BOIB erróneo.",ex);
+    }
  
 }
 
@@ -158,8 +160,8 @@ if (!ok){
 
 <html>
     <head><title><fmt:message key='registre_entrades'/></title>
-        
-        <script src="jscripts/TAO.js"></script>
+
+    <script src="jscripts/TAO.js"></script>
     </head>
     <body>
        
@@ -203,15 +205,13 @@ if (!ok){
         <c:set var="ano" scope="request"><%=registro.getAnoEntrada()%></c:set>
         <c:set var="ES" scope="request">E</c:set>
         <jsp:include page="sellos.jsp" flush="true" />
-
         <!-- Fin de la nueva tabla -->
-
         <%
-}
+	}
 }
 
         %>
 		<p>&nbsp;</p>
-		<p>&nbsp;</p>
+		<p>&nbsp;</p>	
     </body>
 </html>

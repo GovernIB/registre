@@ -43,6 +43,7 @@ import es.caib.regweb.model.LogModificacionLopdId;
  */
 public abstract class RegistroModificadoSalidaFacadeEJB extends HibernateEJB {
 
+	private static final long serialVersionUID = 2L;
 	private SessionContext sessioEjb;
 	private Logger log = Logger.getLogger(this.getClass());
     
@@ -122,7 +123,7 @@ public abstract class RegistroModificadoSalidaFacadeEJB extends HibernateEJB {
 			DateFormat hhmmss=new SimpleDateFormat("HHmmss");
 			DateFormat sss=new SimpleDateFormat("S");
 			String ss=sss.format(fechaSystem);
-			int fzahsis=Integer.parseInt(hhmmss.format(fechaSystem)+ss);
+			//int fzahsis=Integer.parseInt(hhmmss.format(fechaSystem)+ss);
             String Stringsss=sss.format(fechaSystem);
             switch (Stringsss.length()) {
             //Hem d'emplenar amb 0s.
@@ -153,7 +154,7 @@ public abstract class RegistroModificadoSalidaFacadeEJB extends HibernateEJB {
     * @ejb.interface-method
     * @ejb.permission unchecked="true"
     */
-    public ParametrosRegistroModificado visar(ParametrosRegistroModificado param) throws HibernateException, ClassNotFoundException, Exception {
+    public ParametrosRegistroModificado visar(ParametrosRegistroModificado param) throws EJBException {
 
 		Session session = getSession();
 		SQLQuery q = null;
@@ -260,12 +261,14 @@ public abstract class RegistroModificadoSalidaFacadeEJB extends HibernateEJB {
                 } catch (SecurityException se) {
                 } catch (LinkageError le) {
                 } catch (ClassNotFoundException le) {
+                } catch(Exception e){
+                	throw new EJBException(e);
                 }
                 
 			}
 
 			/* Recuperamos la fecha y la hora del sistema, fzafsis(aaaammdd) y fzahsis (hhMMssmm) */
-			int fzahsis=Integer.parseInt(hhmmss.format(fechaSystem)+ss);
+			//int fzahsis=Integer.parseInt(hhmmss.format(fechaSystem)+ss);
             String Stringsss=sss.format(fechaSystem);
             switch (Stringsss.length()) {
             //Hem d'emplenar amb 0s.
@@ -286,7 +289,6 @@ public abstract class RegistroModificadoSalidaFacadeEJB extends HibernateEJB {
 
 		} catch (Exception e) {
 			log.error("Error: "+e.getMessage());
-			e.printStackTrace();
 			visado=false;
 		} finally {
 			close(session);
@@ -296,7 +298,7 @@ public abstract class RegistroModificadoSalidaFacadeEJB extends HibernateEJB {
 	}
 	
 	
-	private boolean actualizarBZSALIDA(ParametrosRegistroModificado param, Session session) throws HibernateException, ClassNotFoundException, Exception {
+	private boolean actualizarBZSALIDA(ParametrosRegistroModificado param, Session session) throws EJBException {
 		boolean generado=false;
 		SQLQuery q = null;
 		
@@ -349,8 +351,8 @@ public abstract class RegistroModificadoSalidaFacadeEJB extends HibernateEJB {
 
 			/* Recuperamos la fecha y la hora del sistema, fzafsis(aaaammdd) y fzahsis (hhMMssmm) */
 			DateFormat sss=new SimpleDateFormat("S");
-            String ss=sss.format(fechaSystem);
-			int fzahsis=Integer.parseInt(hhmmss.format(fechaSystem)+ss);
+            //String ss=sss.format(fechaSystem);
+			//int fzahsis=Integer.parseInt(hhmmss.format(fechaSystem)+ss);
             String Stringsss=sss.format(fechaSystem);
             switch (Stringsss.length()) {
             //Hem d'emplenar amb 0s.
@@ -368,13 +370,12 @@ public abstract class RegistroModificadoSalidaFacadeEJB extends HibernateEJB {
 		} catch (Exception e){
 			generado=false;
 			log.error("Error: "+e.getMessage());
-			e.printStackTrace();
-			throw new Exception("S'ha produ\357t un error actualizant BZSALIDA");
+			throw new EJBException("S'ha produ\357t un error actualizant BZSALIDA");
 		}
 		return generado;
 	}
 	
-	private boolean generarBZVISAD(ParametrosRegistroModificado param, Session session, int fecha, int hora) throws HibernateException, ClassNotFoundException, Exception {
+	private boolean generarBZVISAD(ParametrosRegistroModificado param, Session session, int fecha, int hora) throws EJBException {
 		boolean generado=false;
 		SQLQuery q = null;
 
@@ -449,13 +450,10 @@ public abstract class RegistroModificadoSalidaFacadeEJB extends HibernateEJB {
 			
 			q.executeUpdate();
 			generado=true;
-
-			
 		} catch (Exception e){
 			generado=false;
 			log.error("Error: "+e.getMessage());
-			e.printStackTrace();
-			throw new Exception("S'ha produ\357t un error insert BZVISAD");
+			throw new EJBException("S'ha produ\357t un error insert BZVISAD");
 		}
 		return generado;
 	}

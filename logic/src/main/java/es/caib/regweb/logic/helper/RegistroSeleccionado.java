@@ -27,6 +27,7 @@ public class RegistroSeleccionado implements Comparable,Serializable  {
 	private int ano;
 	private int numero;
 	private int numeroDocumentosRegistro060 = 1;
+	private boolean tieneDocsElectronicos = false;
 	
 	public void setAnoEntrada(String anoEntrada) {
 		this.anoEntrada=anoEntrada;
@@ -154,6 +155,18 @@ public class RegistroSeleccionado implements Comparable,Serializable  {
 	}
 	public void setNumeroDocumentosRegistro060(int numeroDocumentosRegistro060) {
 		this.numeroDocumentosRegistro060 = numeroDocumentosRegistro060;
+	}
+	/**
+	 * @return the tieneDocsElectronicos
+	 */
+	public boolean getTieneDocsElectronicos() { 
+		return tieneDocsElectronicos;
+	}
+	/**
+	 * @param tieneDocsElectronicos the tieneDocsElectronicos to set
+	 */
+	public void setTieneDocsElectronicos(boolean tieneDocsElectronicos) {
+		this.tieneDocsElectronicos = tieneDocsElectronicos;
 	}
 	
 }

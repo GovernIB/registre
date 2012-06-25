@@ -8,6 +8,9 @@ import java.text.*;
 import javax.ejb.*;
 
 import es.caib.regweb.logic.helper.RegistroSeleccionado;
+import es.caib.regweb.logic.interfaces.RegistroEntradaFacade;
+import es.caib.regweb.logic.util.RegistroEntradaFacadeUtil;
+
 import org.apache.log4j.Logger;
 
 import es.caib.regweb.model.LogEntradaLopd;
@@ -34,6 +37,7 @@ import org.hibernate.ScrollMode;
  */
 public abstract class ListadoRegOficiosEntradaFacadeEJB extends HibernateEJB {
 	
+	private static final long serialVersionUID = 1L;
 	private Logger log = Logger.getLogger(this.getClass());
     
 	
@@ -41,7 +45,7 @@ public abstract class ListadoRegOficiosEntradaFacadeEJB extends HibernateEJB {
     * @ejb.interface-method
     * @ejb.permission unchecked="true"
     */
-    public Vector recuperarRegistros(String usuario, String oficina, String oficinaFisica) throws java.rmi.RemoteException, Exception {
+    public Vector recuperarRegistros(String usuario, String oficina, String oficinaFisica, boolean mostrarRegElec) throws java.rmi.RemoteException, Exception {
 
 		Session session = getSession();
 		ScrollableResults rs = null;
@@ -53,6 +57,9 @@ public abstract class ListadoRegOficiosEntradaFacadeEJB extends HibernateEJB {
 		DateFormat ddmmyyyy=new SimpleDateFormat("dd/MM/yyyy");
 		java.util.Date fechaDocumento=null;
 		java.util.Date fechaEESS=null;
+		
+		RegistroEntradaFacade regent = RegistroEntradaFacadeUtil.getHome().create();
+		
 		try {
 			String sentenciaSql="SELECT FZAANOEN, FZANUMEN, FZACAGCO, FAADAGCO, OFE_CODI, " +
             " OFF_NOM, FZAFDOCU, FZAFENTR, FZGCENTI, FZAREMIT, " +
@@ -76,6 +83,7 @@ public abstract class ListadoRegOficiosEntradaFacadeEJB extends HibernateEJB {
 			" AND REN_ENTOFI IS NULL" +
 			" AND NOT FLOOR(FZACORGA/100)=FZACAGCO " +
 			" AND NOT FZAENULA='S' " +
+			((mostrarRegElec)?"  AND EXISTS (SELECT * FROM BZDOCLOC WHERE LOC_ANY = FZAANOEN AND LOC_NUMREG= FZANUMEN AND LOC_OFI= FZACAGCO AND LOC_TIPUS='E' ) ":"") +
 			" ORDER BY FZACAGCO, FZAANOEN, FZANUMEN";
 
 
@@ -161,6 +169,7 @@ public abstract class ListadoRegOficiosEntradaFacadeEJB extends HibernateEJB {
 				registro.setDescripcionDocumento(rs.getString(17));
 				registro.setDescripcionIdiomaDocumento(rs.getString(18));
 				registro.setRegistroAnulado(rs.getString(19));
+				registro.setTieneDocsElectronicos(regent.ExisteListaLocalizadoresDoc(Integer.parseInt(registro.getAnoEntrada()), registro.getNumero(), Integer.parseInt(registro.getOficina())));
 				registrosVector.addElement(registro);
 			}
 		} catch (Exception e) {
