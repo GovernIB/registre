@@ -3,7 +3,7 @@
     <parent>
         <groupId>es.caib</groupId>
         <artifactId>regweb</artifactId>
-        <version>1.0.5</version>
+        <version>2.0.0</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -52,7 +52,7 @@
                 <driver.artifactId>postgresql</driver.artifactId>
                 <driver.version>8.4-702.jdbc3</driver.version>
                 <db.driver>org.postgresql.Driver</db.driver>
-                <db.url>jdbc:postgresql://localhost:5433/regweb</db.url>
+                <db.url>jdbc:postgresql://localhost:5432/regweb</db.url>
                 <dbunit.datatypeFactory>org.dbunit.ext.postgresql.PostgresqlDataTypeFactory</dbunit.datatypeFactory>
             </properties>
         </profile>

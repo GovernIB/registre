@@ -1,0 +1,7 @@
+package es.caib.regweb.logic.helper;
+/**
+* Codi autogenerat a partir del fitxer Versio.java.template.
+*/
+public final class Versio {
+public static final String VERSIO="@project.version@";
+}

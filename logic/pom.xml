@@ -6,10 +6,17 @@
     <packaging>ejb</packaging>
     <name>Registre Web - logic</name>
 
+    <properties>
+        <version.template.file>src/Versio.java.template</version.template.file>
+        <version.file>src/main/java/es/caib/regweb/logic/helper/Versio.java</version.file>
+        <version.txt.template.file>src/main/resources/versio.txt.template</version.txt.template.file>
+        <version.txt.file>../versio.txt</version.txt.file>
+    </properties>
+
     <parent>
         <groupId>es.caib</groupId>
         <artifactId>regweb</artifactId>
-        <version>1.0.5</version>
+        <version>2.0.0</version>
     </parent>
 
     <dependencies>
@@ -227,6 +234,54 @@
                         <clientExclude>es/caib/regweb/logic/helper/Conf.class</clientExclude>
                         <clientExclude>es/caib/regweb/logic/helper/Helper.class</clientExclude>
                     </clientExcludes>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.google.code.maven-replacer-plugin</groupId>
+                <artifactId>maven-replacer-plugin</artifactId>
+                <version>1.4.0</version>
+                <executions>
+                    <execution>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>replace</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <file>${version.template.file}</file>
+                    <outputFile>${version.file}</outputFile>
+                    <replacements>
+                        <replacement>
+                            <token>@project.version@</token>
+                            <value>${project.version}</value>
+                        </replacement>
+                    </replacements>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.google.code.maven-replacer-plugin</groupId>
+                <artifactId>maven-replacer-plugin</artifactId>
+                <version>1.4.0</version>
+                <executions>
+                    <execution>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>replace</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <file>${version.txt.template.file}</file>
+                    <outputFile>${version.txt.file}</outputFile>
+                    <replacements>
+                        <replacement>
+                            <token>@project.version@</token>
+                            <value>${project.version}</value>
+                        </replacement>
+                    </replacements>
                 </configuration>
             </plugin>
         </plugins>

@@ -1,5 +1,5 @@
-<%@page pageEncoding="UTF-8"%>
-<%@page import="java.util.*, es.caib.regweb.*" contentType="text/html; charset=UTF-8"%>
+<%@ page pageEncoding="UTF-8"%>
+<%@ page import="java.util.*, es.caib.regweb.logic.helper.*" contentType="text/html; charset=UTF-8"%>
 <%@ taglib uri="sitemesh-decorator" prefix="decorator"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -18,6 +18,7 @@
     <%
       String usuario=request.getRemoteUser();	
       session.setAttribute("nombre_usuario",usuario);
+      Versio versio = new Versio();
     %>
     <div id="capsal">
       <a href="http://intranet.caib.es"><fmt:message key="tornar_intranet"/></a>
@@ -33,7 +34,8 @@
 
     <div style="position: relative;bottom:-1em; 0;width: 100%"> 
     	<div id="peu">
-        <div style="float:right;">${initParam['registro.version']}</div>
+        <%--<div style="float:right;">${initParam['registro.version']}</div>--%>
+        <div style="float:right;"><%=versio.VERSIO%></div>
       	<a href="http://dgtic.caib.es/difusioad/00index.html" title="<fmt:message key='enllac_ad'/>"><img border="0" id="logoAD" src="<c:url value='/imagenes/peu/logo_ad.gif'/>" alt="<fmt:message key='logo_ad'/>" /></a>
         	<fmt:message key="copyright"/>
     	</div>
