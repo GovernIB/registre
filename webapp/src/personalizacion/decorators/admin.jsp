@@ -10,7 +10,8 @@
     <title><fmt:message key="registre_e_s"/></title>
     <link type="text/CSS" rel="stylesheet" href="<c:url value='/css/estilos.css'/>"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link rel="shortcut icon" href="<c:url value='/favicon.ico'/>"/>
+    <%-- <link rel="shortcut icon" href="<c:url value='/favicon.ico'/>"/>--%>
+    <jsp:include page="favicon.jsp"/>
 
     <decorator:head />
   </head>
@@ -20,9 +21,13 @@
       session.setAttribute("nombre_usuario",usuario);
       Versio versio = new Versio();
     %>
-    <div id="capsal">
+    <%
+      String logourl = System.getProperty("entitat.logourl");
+      String alt= System.getProperty("entitat.alt");
+    %>
+    <div id="capsal" >
       <a href="http://intranet.caib.es"><fmt:message key="tornar_intranet"/></a>
-      <img src="<c:url value='/imagenes/aplicacio/logo_caib.gif'/>" alt="Govern de les Illes Balears" />
+      <img src="<c:url value='<%=logourl%>'/>" alt="<%=alt%>" />
       <!-- Si es vol canviar el logo de l'aplicació, anyadir el següent estil al h1: style="background-image:url(imagenes/aplicacio/marcsup_titol_ico.gif);" -->
       <h1><fmt:message key="registre_general"/></h1>
     </div>  
@@ -32,11 +37,19 @@
 
     <decorator:body />
 
+
+
     <div style="position: relative;bottom:-1em; 0;width: 100%"> 
     	<div id="peu">
         <div style="float:right;"><%=versio.VERSIO%></div>
-      	<a href="http://dgtic.caib.es/difusioad/00index.html" title="<fmt:message key='enllac_ad'/>"><img border="0" id="logoAD" src="<c:url value='/imagenes/peu/logo_ad.gif'/>" alt="<fmt:message key='logo_ad'/>" /></a>
-        	<fmt:message key="copyright"/>
+
+        <%String appTitol = System.getProperty("entitat.aplicacio.titol");
+        if (appTitol==null) {%>
+        <fmt:message key="copyright"/>
+        <% } else {%>
+        <%=appTitol%>
+        <% } %>
+
     	</div>
     </div>
   </body>

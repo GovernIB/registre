@@ -10,7 +10,8 @@
     <title><fmt:message key="registre_e_s"/></title>
     <link type="text/CSS" rel="stylesheet" href="<c:url value='/css/estilos.css'/>"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link rel="shortcut icon" href="<c:url value='/favicon.ico'/>"/>
+     <%-- <link rel="shortcut icon" href="<c:url value='/favicon.ico'/>"/>--%>
+    <jsp:include page="favicon.jsp"/>
 
     <decorator:head />
   </head>
