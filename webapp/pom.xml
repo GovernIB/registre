@@ -9,7 +9,7 @@
     <parent>
         <groupId>es.caib</groupId>
         <artifactId>regweb</artifactId>
-        <version>1.0.5</version>
+        <version>1.0.8</version>
     </parent>
 
 
@@ -115,7 +115,7 @@
                                 <include>Sol autoritzacio registre web NOU USUARI.pdf</include>
                                 <include>Sol autoritzacio registre web usuari que ja empra AS400.pdf</include>
                             </includes>
-							<filtering>true</filtering>
+							<filtering>false</filtering>
 						</resource>
                     </webResources>
 
