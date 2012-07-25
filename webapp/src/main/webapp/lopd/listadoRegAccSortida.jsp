@@ -6,7 +6,7 @@
 
 <% 
 
-ListadoRegAccesosEntradaFacade listado = ListadoRegAccesosEntradaFacadeUtil.getHome().create();
+ListadoRegAccesosSortidaFacade listado = ListadoRegAccesosSortidaFacadeUtil.getHome().create();
 ParametrosListadoAcceso parametros = new ParametrosListadoAcceso();
 
 int pagina=(request.getParameter("pagina")==null) ? 1: Integer.parseInt(request.getParameter("pagina"));
