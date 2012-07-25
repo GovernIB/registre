@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datasources>
+    <local-tx-datasource>
+        <jndi-name>es.caib.regweb.db</jndi-name>
+        <driver-class>org.postgresql.Driver</driver-class>
+        <connection-url>jdbc:postgresql://localhost:5432/regweb</connection-url>
+        <user-name>regweb</user-name>
+        <password>regweb</password>
+    </local-tx-datasource>
+</datasources>
