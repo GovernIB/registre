@@ -19,20 +19,19 @@
     <%
       String usuario=request.getRemoteUser();	
       session.setAttribute("nombre_usuario",usuario);
-      Versio versio = new Versio();
-
     %>
     <%
       String logourl = System.getProperty("entitat.logourl");
-      String alt= System.getProperty("entitat.alt");
-      /*String style = "";
-      if (logourl != null) {
-        style = "style=\"background-image:url(" + logourl + ");\"";
-      }*/
+      String appTitol= System.getProperty("entitat.aplicacio.titol");
+      if(logourl == null){
+          logourl = "/imagenes/aplicacio/logo_caib.gif";
+      }
+      if(appTitol == null){
+          appTitol = "Govern de les illes Balears";
+      }
     %>
     <div id="capsal">
-      <a href="http://intranet.caib.es"><fmt:message key="tornar_intranet"/></a>
-     <img src="<c:url value='<%=logourl%>'/>" alt="<%=alt%>" />
+     <img src="<c:url value='<%=logourl%>'/>" alt="<%=appTitol%>" />
       <!-- Si es vol canviar el logo de l'aplicació, anyadir el següent estil al h1: style="background-image:url(imagenes/aplicacio/marcsup_titol_ico.gif);" -->
       <h1><fmt:message key="registre_general"/></h1>
     </div>  
@@ -42,11 +41,10 @@
 
     <decorator:body />
 
-    <div style="position: relative;bottom:-1em; 0;width: 100%"> 
+    <div style="position: relative;bottom:-1em; 0; width: 100%">
     	<div id="peu">
-         <div style="float:right;"><%=versio.VERSIO%></div>
-            <%String appTitol = System.getProperty("entitat.aplicacio.titol");
-            if (appTitol==null) {%>
+         <div style="float:right;"><%=Versio.VERSIO%></div>
+          <%  if (appTitol==null) {%>
             <fmt:message key="copyright"/>
             <% } else {%>
             <%=appTitol%>
