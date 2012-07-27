@@ -34,6 +34,11 @@
     <scm>
         <developerConnection>scm:svn:https://registre.svn.sourceforge.net/svnroot/registre/registre-core/trunk</developerConnection>
     </scm>
+
+   <properties>
+        <version.txt.template.file>./scripts/templates/versio.txt.template</version.txt.template.file>
+        <version.txt.file>./versio.txt</version.txt.file>
+    </properties>
     
     <build>
         <pluginManagement>
@@ -80,6 +85,33 @@
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>com.google.code.maven-replacer-plugin</groupId>
+                <artifactId>maven-replacer-plugin</artifactId>
+                <version>1.4.0</version>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>replace</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <file>${version.txt.template.file}</file>
+                    <outputFile>${version.txt.file}</outputFile>
+                    <replacements>
+                        <replacement>
+                            <token>@project.version@</token>
+                            <value>${project.version}</value>
+                        </replacement>
+                    </replacements>
+                </configuration>
+            </plugin>
+
+
         </plugins>
     </build>
 
