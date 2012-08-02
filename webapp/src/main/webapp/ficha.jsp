@@ -143,7 +143,9 @@
                                 &nbsp;<fmt:message key='registro.fecha_entrada'/> <font class="ficha"><%=fechaEntrada%></font>
                             </td>
                             <td style="border:0" >
-                                <fmt:message key='registro.hora'/> <font class="ficha"><%=hhmm%></font>
+                                <%--<fmt:message key='registro.hora'/> <font class="ficha"><%=hhmm%></font>--%>
+                                <fmt:message key='registro.hora'/> <font class="ficha"><%=Helper.convierteHora_a_HHmmss(reg.getHora())%></font>
+
                             </td>
                             <td style="border:0" >
                             <%if(reg.getRegistroAnulado().trim().equals("")){ %>

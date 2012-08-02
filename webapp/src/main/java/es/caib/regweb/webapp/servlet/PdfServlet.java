@@ -26,6 +26,7 @@ import com.lowagie.text.pdf.PdfAction.*;
 import com.lowagie.text.Chunk;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import es.caib.regweb.logic.helper.Helper;
 
 /**
  *
@@ -78,6 +79,7 @@ public class PdfServlet extends HttpServlet {
         String numeroEntrada=request.getParameter("numero");
         String anoEntrada=request.getParameter("ano");
         String dataEntrada=request.getParameter("data");
+        String hora = Helper.convierteHora_a_HHmmss(request.getParameter("hora"));
         String tipo=request.getParameter("tipo");
         String es=(request.getParameter("ES").equals("E")) ? "ENTRADES":"SORTIDES";
         String auto_print=request.getParameter("auto_print");
@@ -171,7 +173,7 @@ public class PdfServlet extends HttpServlet {
             cb.showText(checkUTF(messages.getString("pdf.num") + " " + numeroEntrada + "/" + anoEntrada));
             y=y-13;
             cb.setTextMatrix(x,y);
-            cb.showText(checkUTF(messages.getString("pdf.data") + " " + dataEntrada));
+            cb.showText(checkUTF(messages.getString("pdf.data") + " " + dataEntrada+ " "+hora));
          // we tell the contentByte, we've finished drawing text
             
             if(auto_print.equals("si")){

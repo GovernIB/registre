@@ -373,8 +373,8 @@
                         <!-- Hora d'entrada -->
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         <font class="<%=errorEn(errores,"hora")%>"><fmt:message key='registro.hora'/></font>
-              <% String anteriorHora=(registro==null)? "":registro.getHora();%>
-                        <input type="text" name="hora" value="<%=anteriorHora.equals("") ? valores.getHorasMinutos() : anteriorHora %>" size="5">
+                        <% String anteriorHora=(registro==null)? "":registro.getHora();%>
+                        <input type="text" name="hora" value="<%=anteriorHora.equals("") ? valores.getHorasMinutosSegundos() : anteriorHora %>" size="6">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     </td>
                     </tr>

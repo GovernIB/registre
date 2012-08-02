@@ -1,5 +1,6 @@
 package es.caib.regweb.logic.helper;
 
+import es.caib.regweb.logic.interfaces.HibernateHome;
 import org.hibernate.Hibernate;
 import org.hibernate.SQLQuery;
 import org.hibernate.Query;
@@ -18,6 +19,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
 import java.net.URL;
 
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.Date;
@@ -294,6 +296,22 @@ public class Helper {
 		return Integer.parseInt(hhmm.format(horaTest));
 	}
 
+    /**
+	 *  Añadido MARILEN
+	 * @param strHora
+	 * @return
+	 * @throws java.text.ParseException
+	 */
+	static public int convierteStringHoraAIntHoraSeg(String strHora)throws java.text.ParseException{
+		Calendar cal=Calendar.getInstance();
+		Date horaTest=null;
+		DateFormat horaF=new SimpleDateFormat("HH:mm:ss");
+		horaTest=horaF.parse(strHora);
+		cal.setTime(horaTest);
+		DateFormat hhmm=new SimpleDateFormat("HHmmss");
+		return Integer.parseInt(hhmm.format(horaTest));
+	}
+
 	/**
 	 * Convierte una fecha de tipo string y formato "yyyyMMdd" a fecha de tipo String y formato "dd/MM/yyyy"
 	 * 
@@ -494,6 +512,30 @@ public class Helper {
 		}
 		return hhmm;
 	}
+
+   /**
+    * Añadido Marilen
+    *  Convierte una hora al formato "04:00:00"
+    *
+    */
+    public static String convierteHora_a_HHmmss(String hora){
+
+        String hhmmss = "";
+
+		if (hora != null && !hora.equals("") && !hora.equals("0")) {
+			if (hora.length() < 6)
+				hora = "0" + hora;
+
+			String hh = hora.substring(0, 2);
+			String mm = hora.substring(2, 4);
+            String ss = hora.substring(4, 6);
+			hhmmss = hh + ":" + mm+ ":" +ss;
+		} else {
+			hhmmss = hora;
+		}
+		return hhmmss;
+	}
+
 	
 	/*
 	 * Devuelve un String con el codigo del registro de entrada asociado a un registro de salida

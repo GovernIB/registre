@@ -199,7 +199,7 @@ if (!ok || oficio==null){
             <tr>
                 <td style="border:0" >                  
                     <center>
-                    	<a style="text-decoration: none;" type="button" target="_blank" class="botonFormulario" href="imprimeSello?data=<%=registro.getDataEntrada()%>&tipo=4&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroEntrada()%>&ano=<%=registro.getAnoEntrada()%>&ES=E">
+                    	<a style="text-decoration: none;" type="button" target="_blank" class="botonFormulario" href="imprimeSello?data=<%=registro.getDataEntrada()%>&tipo=4&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroEntrada()%>&ano=<%=registro.getAnoEntrada()%>&ES=E&hora=<%=registro.getHora()%>">
                         &nbsp;<fmt:message key='imprimir_segell'/>&nbsp;</a>
                     	<a style="text-decoration: none;" type="button" class="botonFormulario" href="RemiSalidaLis.jsp">
                         &nbsp;<fmt:message key='tornar'/>&nbsp;</a>

@@ -5,6 +5,7 @@ import java.util.*;
 import java.sql.SQLException;
 import java.text.*;
 
+import es.caib.regweb.logic.helper.*;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -13,9 +14,6 @@ import org.hibernate.ScrollMode;
 import org.hibernate.Session;
 import org.hibernate.ScrollableResults;
 
-import es.caib.regweb.logic.helper.Conf;
-import es.caib.regweb.logic.helper.Helper;
-
 //import java.rmi.*;
 
 import javax.ejb.*;
@@ -23,9 +21,6 @@ import javax.ejb.*;
 
 import java.lang.reflect.InvocationTargetException;
 
-import es.caib.regweb.logic.helper.ParametrosLineaOficioRemision;
-import es.caib.regweb.logic.helper.ParametrosRegistroEntrada;
-import es.caib.regweb.logic.helper.ParametrosRegistroModificado;
 import es.caib.regweb.logic.interfaces.LineaOficioRemisionFacade;
 import es.caib.regweb.logic.interfaces.RegistroModificadoEntradaFacade;
 import es.caib.regweb.logic.util.LineaOficioRemisionFacadeUtil;
@@ -34,7 +29,6 @@ import es.caib.regweb.logic.interfaces.ValoresFacade;
 import es.caib.regweb.logic.util.ValoresFacadeUtil;
 import es.caib.regweb.logic.interfaces.AdminFacade;
 import es.caib.regweb.logic.util.AdminFacadeUtil;
-import es.caib.regweb.logic.helper.ParametrosRegistroPublicadoEntrada;
 import es.caib.regweb.model.LogEntradaLopd;
 import es.caib.regweb.model.LogEntradaLopdId;
 import es.caib.regweb.logic.interfaces.RegistroPublicadoEntradaFacade;
@@ -102,8 +96,8 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
     private String SENTENCIA="INSERT INTO BZENTRA (" +
             "FZAANOEN, FZANUMEN, FZACAGCO, FZAFDOCU, FZAREMIT, FZACONEN, FZACTIPE, FZACEDIE, FZAENULA,"+
             "FZAPROCE, FZAFENTR, FZACTAGG, FZACAGGE, FZACORGA, FZAFACTU, FZACENTI, FZANENTI, FZAHORA,"+
-            "FZACIDIO, FZACONE2, FZANLOC, FZAALOC, FZANDIS, FZAFSIS, FZAHSIS, FZACUSU, FZACIDI,EMAILREMITENT"+
-            ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            "FZACIDIO, FZACONE2, FZANLOC, FZAALOC, FZANDIS, FZAFSIS, FZAHSIS, FZACUSU, FZACIDI,EMAILREMITENT, ORIGENREGISTRO"+
+            ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 
     /**
@@ -830,7 +824,7 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
             int fzacidi=Integer.parseInt(idioex);
 
             /* Hora del documento, fzahora mmss */
-            int fzahora=Helper.convierteStringHoraAIntHora(hora);
+            int fzahora=Helper.convierteStringHoraAIntHoraSeg(hora);
             
             /* Numero localizador y año localizador, fzanloc y fzaaloc */
             int fzanloc=Integer.parseInt((salida1.equals(""))?"0":salida1);
@@ -887,6 +881,7 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
             ms.setString(25,(usuario.toUpperCase().length()>10) ? usuario.toUpperCase().substring(0,10) : usuario.toUpperCase()); // 10 pos.
             ms.setString(26,idioma);
             ms.setString(27,emailRemitente);
+            ms.setString(28, Constantes.VALOR_POR_DEFECTO_ORIGEN);
             
  //           int numRegistrosGrabado=
             ms.executeUpdate();

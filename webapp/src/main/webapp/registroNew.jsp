@@ -193,19 +193,19 @@ registro.setcomentario(request.getParameter("comentario"));
             <table align="center">
             <tr>
             <td>
-              <iframe height="120" width="80" name="pdf1" src="imprimeSello?tipo=1&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroEntrada()%>&ano=<%=registro.getAnoEntrada()%>&data=<%=registro.getDataEntrada()%>&ES=E"></iframe>
+              <iframe height="120" width="80" name="pdf1" src="imprimeSello?tipo=1&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroEntrada()%>&ano=<%=registro.getAnoEntrada()%>&data=<%=registro.getDataEntrada()%>&ES=E&hora=<%=registro.getHora()%>"></iframe>
             </td>
             <td>&nbsp;&nbsp;</td>
             <td>
-                <iframe height="120" width="80" name="pdf2" src="imprimeSello?tipo=2&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroEntrada()%>&ano=<%=registro.getAnoEntrada()%>&data=<%=registro.getDataEntrada()%>&ES=E"></iframe>
+                <iframe height="120" width="80" name="pdf2" src="imprimeSello?tipo=2&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroEntrada()%>&ano=<%=registro.getAnoEntrada()%>&data=<%=registro.getDataEntrada()%>&ES=E&hora=<%=registro.getHora()%>"></iframe>
             </td>
             <td>&nbsp;&nbsp;</td>
             <td>
-                <iframe height="120" width="80" name="pdf3" src="imprimeSello?tipo=3&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroEntrada()%>&ano=<%=registro.getAnoEntrada()%>&data=<%=registro.getDataEntrada()%>&ES=E"></iframe>
+                <iframe height="120" width="80" name="pdf3" src="imprimeSello?tipo=3&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroEntrada()%>&ano=<%=registro.getAnoEntrada()%>&data=<%=registro.getDataEntrada()%>&ES=E&hora=<%=registro.getHora()%>"></iframe>
             </td>
             <td>&nbsp;&nbsp;</td>
             <td>                       
-                <iframe height="120" width="80" name="pdf4" src="imprimeSello?tipo=4&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroEntrada()%>&ano=<%=registro.getAnoEntrada()%>&data=<%=registro.getDataEntrada()%>&ES=E"></iframe>
+                <iframe height="120" width="80" name="pdf4" src="imprimeSello?tipo=4&oficina=<%=valores.recuperaDescripcionOficina(registro.getOficina().toString())%>&oficinaid=<%=registro.getOficina().toString()%>&numero=<%=registro.getNumeroEntrada()%>&ano=<%=registro.getAnoEntrada()%>&data=<%=registro.getDataEntrada()%>&ES=E&hora=<%=registro.getHora()%>"></iframe>
             </td>
             </tr>
             <tr>

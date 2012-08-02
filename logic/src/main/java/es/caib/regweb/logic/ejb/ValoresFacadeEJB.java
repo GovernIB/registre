@@ -972,6 +972,17 @@ public abstract class ValoresFacadeEJB extends HibernateEJB {
 		java.util.Date fechaTest=new java.util.Date();
 		return dateF.format(fechaTest);
 	}
+
+    /**
+    *  Añadido MARILEN
+    * @ejb.interface-method
+    * @ejb.permission unchecked="true"
+    */
+    public String getHorasMinutosSegundos() {
+		DateFormat dateF=new SimpleDateFormat("HH:mm:ss");
+		java.util.Date fechaTest=new java.util.Date();
+		return dateF.format(fechaTest);
+	}
 	
 	
 	/** Devuelve en String la descripcion de la Oficina

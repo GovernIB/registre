@@ -111,7 +111,7 @@ String localitzadorsDocs[] ;
                                 &nbsp;<fmt:message key='data_sortida'/> :<font class="ficha"><%=fechaSalida%></font>
                             </td>
                             <td style="border:0" >
-                                <fmt:message key='registro.hora'/> <font class="ficha"><%=hhmm%></font>
+                                <fmt:message key='registro.hora'/> <font class="ficha"><%=Helper.convierteHora_a_HHmmss(reg.getHora())%></font>
                             </td>
                             <td style="border:0" >
                             <%if(reg.getRegistroAnulado().trim().equals("")){ %>

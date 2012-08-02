@@ -57,7 +57,8 @@
 		hayRegistroEntrada = !(ofi.getAnoEntrada()==null || ofi.getAnoEntrada().equals("0"));
 		motivoAnulacionOficio = ofi.getMotivosNulo();
 		fechaSalida = reg.getDataSalida();
-		hhmmSalida = Helper.convierteHora_a_HHSS(reg.getHora());
+		//hhmmSalida = Helper.convierteHora_a_HHSS(reg.getHora());
+		hhmmSalida = Helper.convierteHora_a_HHmmss(reg.getHora());
 		fechaVisadoSalida = ((reg.getDataVisado() != null && !reg.getDataVisado().trim().equals("0"))?reg.getDataVisado():"");
 		entrada = Helper.obtenerCodigoRegistroEntradaAsociado(reg);
 		//Si el oficio ha sido registrado de entrada
@@ -69,7 +70,8 @@
 			ParamRegEntrada = regEntrada.leer(ParamRegEntrada);
 			
 			fechaEntrada = ParamRegEntrada.getDataEntrada();
-			hhmmEntrada = Helper.convierteHora_a_HHSS(ParamRegEntrada.getHora());
+		//	hhmmEntrada = Helper.convierteHora_a_HHSS(ParamRegEntrada.getHora());
+			hhmmEntrada = Helper.convierteHora_a_HHmmss(ParamRegEntrada.getHora());
 			fechaVisadoEntrada = ((ParamRegEntrada.getDataVisado() != null && !ParamRegEntrada.getDataVisado().trim().equals("0"))?ParamRegEntrada.getDataVisado():"");
 		}		
 	}else{
