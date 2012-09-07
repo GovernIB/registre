@@ -1,0 +1,4 @@
+
+
+-------------------
+ALTER TABLE BZSALIDA ADD EMAILREMITENT CHAR(50);
