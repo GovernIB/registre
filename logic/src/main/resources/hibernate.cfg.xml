@@ -32,6 +32,8 @@
   		<mapping class="es.caib.regweb.model.ContadorId"/>
   		<mapping class="es.caib.regweb.model.Disquete"/>
   		<mapping class="es.caib.regweb.model.DisqueteId"/>
+  		<mapping class="es.caib.regweb.model.DocumentoCareo"/>
+  		<mapping class="es.caib.regweb.model.DocumentoCareoId"/>
   		<mapping class="es.caib.regweb.model.EntidadRemitente"/>
   		<mapping class="es.caib.regweb.model.EntidadRemitenteId"/>
   		<mapping class="es.caib.regweb.model.Entrada"/>
