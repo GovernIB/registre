@@ -42,6 +42,8 @@ public class Salida implements java.io.Serializable {
 	private int horaSistema;
 	private String usuario;
 	private String codigoIdioma;
+    //ticket 57
+    private String emailRemitent;
 
 	public Salida() {
 	}
@@ -52,7 +54,7 @@ public class Salida implements java.io.Serializable {
 			int codigoOrganismo, int fechaActualizacion, String codigoEntidad, int numeroEntidad,
 			int hora, String idioma, String contenidoCatalan, int numeroLocalizador,
 			int anyoLocalizador, int numeroDisquete, int fechaSistema, int horaSistema,
-			String usuario, String codigoIdioma) {
+			String usuario, String codigoIdioma, String emailRemitent) {
 		this.id = id;
 		this.fechaDocumento = fechaDocumento;
 		this.destinatario = destinatario;
@@ -78,6 +80,7 @@ public class Salida implements java.io.Serializable {
 		this.horaSistema = horaSistema;
 		this.usuario = usuario;
 		this.codigoIdioma = codigoIdioma;
+        this.emailRemitent = emailRemitent;
 	}
 
 	@EmbeddedId
@@ -307,6 +310,16 @@ public class Salida implements java.io.Serializable {
 
 	public void setCodigoIdioma(String codigoIdioma) {
 		this.codigoIdioma = codigoIdioma;
+	}
+
+    //TICKET 57
+    @Column(name = "EMAILREMITENT ", nullable = false, length = 50)
+	public String getEmailRemitent() {
+		return emailRemitent;
+	}
+
+	public void setEmailRemitent(String emailRemitent) {
+		this.emailRemitent = emailRemitent;
 	}
 
 }
