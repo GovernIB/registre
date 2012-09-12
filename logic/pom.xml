@@ -9,7 +9,7 @@
     <parent>
         <groupId>es.caib</groupId>
         <artifactId>regweb</artifactId>
-        <version>1.0.5</version>
+        <version>1.0.8</version>
     </parent>
 
     <dependencies>
@@ -195,7 +195,7 @@
                         </component>
                     </components>
                     <componentProperties>
-                        <configurationfile>${project.build.outputDirectory}/hibernate.cfg.xml</configurationfile>                        
+                        <configurationfile>${project.build.outputDirectory}/hibernate.cfg.xml</configurationfile>
 						<outputfilename>${hibernate.dialect}_schema.sql</outputfilename> <!-- ${hibernate.dialect} -->
                         <namingstrategy>es.caib.regweb.model</namingstrategy>						
                         <drop>false</drop>
