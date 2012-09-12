@@ -29,7 +29,8 @@ public class DocumentoCareo implements Serializable {
     @AttributeOverride(name = "any", column = @Column(name = "LOC_ANY", nullable = false, length = 4)),
     @AttributeOverride(name = "codigoOficina", column = @Column(name = "LOC_OFI", nullable = false, length = 2)),
     @AttributeOverride(name = "codigoRegistro", column = @Column(name = "LOC_NUMREG", nullable = false, length = 5)),
-    @AttributeOverride(name = "codigoDocumento", column = @Column(name = "LOC_NUMDOC", nullable = false, length = 2)) })
+    @AttributeOverride(name = "codigoDocumento", column = @Column(name = "LOC_NUMDOC", nullable = false, length = 2)),
+    @AttributeOverride(name = "tipo", column = @Column(name = "LOC_TIPUS", nullable = false, length = 1)) })
     public DocumentoCareoId getId() {
         return id;
     }

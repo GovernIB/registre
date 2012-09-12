@@ -18,12 +18,14 @@ public class DocumentoCareoId implements Serializable {
     private int codigoOficina;
     private int codigoRegistro;
     private int codigoDocumento;
+    private String tipo;
 
-    public DocumentoCareoId(int any, int codigoOficina, int codigoRegistro, int codigoDocumento) {
+    public DocumentoCareoId(int any, int codigoOficina, int codigoRegistro, int codigoDocumento, String tipo) {
         this.any = any;
         this.codigoOficina = codigoOficina;
         this.codigoRegistro = codigoRegistro;
         this.codigoDocumento = codigoDocumento;
+        this.tipo = tipo;
     }
 
     public DocumentoCareoId() {
@@ -61,5 +63,14 @@ public class DocumentoCareoId implements Serializable {
 
     public void setCodigoDocumento(int codigoDocumento) {
         this.codigoDocumento = codigoDocumento;
+    }
+
+    @Column(name = "LOC_TIPUS", nullable = false, length = 1)
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 }
