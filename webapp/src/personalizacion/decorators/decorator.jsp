@@ -27,7 +27,7 @@
           logourl = "/imagenes/aplicacio/logo_caib.gif";
       }
       if(appTitol == null){
-          appTitol = "Govern de les illes Balears";
+          appTitol = "Govern de les Illes Balears";
       }
     %>
     <div id="capsal">
