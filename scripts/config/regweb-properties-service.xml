@@ -4,8 +4,6 @@
     <attribute name="Properties">      
       <!-- URL al logo de la entitat. Si no es defineix llavors s'empra ../imagenes/aplicacio/logo_caib.gif 120px X 42 px-->
       <!-- entitat.logourl= URL_LOGO -->
-	  <!-- Nom de l'entitat al Logo. Si no es defineix el seu valor és "Govern de les Illes Balears"  -->
-	  <!-- entitat.alt=NOM_ENTITAT_LOGO -->
       <!-- URL al favicon de la entitat. Si no es defineix llavors s'empra /img/favicon.ico -->
       <!-- entitat.favicon=URL_A_FAVICON -->
       <!-- Títol de l'aplicació. Si no es defineix llavors s'empra "Govern de les Illes Balears" -->
