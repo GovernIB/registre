@@ -161,7 +161,11 @@ public class PdfServlet extends HttpServlet {
             cb.setFontAndSize(bf, 10);
             // 
             cb.setTextMatrix(x,y);
-            cb.showText(checkUTF( messages.getString("pdf.titol") ));
+			String pdf_titol = System.getProperty("entitat.pdf.titol");
+			if (pdf_titol == null) {
+			  pdf_titol = messages.getString("pdf.titol");
+			}
+            cb.showText(checkUTF( pdf_titol ));
             y=y-13;
             cb.setTextMatrix(x,y);
             cb.showText(nom_oficina);

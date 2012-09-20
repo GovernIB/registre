@@ -8,6 +8,8 @@
       <!-- entitat.favicon=URL_A_FAVICON -->
       <!-- Títol de l'aplicació. Si no es defineix llavors s'empra "Govern de les Illes Balears" -->
       <!-- entitat.aplicacio.titol= TITOL_APLICACIO -->
+	  <!-- Nom de l'entitat en el PDF. Si no es defineix llavors s'empra "GOVERN DE LES ILLES BALEARS" -->
+      <!-- entitat.pdf.titol= NOM_ENTITAT_EN_PDF -->
     </attribute>
   </mbean>
 </server>
