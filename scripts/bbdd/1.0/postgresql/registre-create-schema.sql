@@ -210,6 +210,7 @@
         ENT_ANY int4 not null,
         ENT_NUM int4 not null,
         ENT_OFI int4 not null,
+		ENT_NUMREG VARCHAR(5) NOT NULL,
         primary key (ENT_ANY, ENT_NUM, ENT_OFI)
     );
 
