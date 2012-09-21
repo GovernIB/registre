@@ -139,6 +139,7 @@
         LOC_OFI int4 not null,
         LOC_NUMREG int4 not null,
         LOC_TIPUS varchar(1) not null,
+        LOC_DOC  varchar(100) not null,
         primary key (LOC_ANY, LOC_NUMDOC, LOC_OFI, LOC_NUMREG, LOC_TIPUS)
     );
 
@@ -376,8 +377,8 @@
         'OficinaFisica';
 
     create table BZOFIOR (
-        FZFCAGCO int4 not null,
         FZFCORGA int4 not null,
+        FZFCAGCO int4 not null,
         primary key (FZFCAGCO, FZFCORGA)
     );
 
@@ -385,8 +386,8 @@
         'OficinaOrganismo';
 
     create table BZOFIRE (
-        FZFCAGCO int4 not null,
         FZFCORGA int4 not null,
+        FZFCAGCO int4 not null,
         primary key (FZFCAGCO, FZFCORGA)
     );
 

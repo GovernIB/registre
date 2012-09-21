@@ -5,6 +5,7 @@ create table BZDOCLOC (
 	LOC_OFI int4 not null,
 	LOC_NUMREG int4 not null,
 	LOC_TIPUS varchar(1) not null,
+	LOC_DOC  varchar(100) not null,
 	primary key (LOC_ANY, LOC_NUMDOC, LOC_OFI, LOC_NUMREG, LOC_TIPUS)
 );
 
