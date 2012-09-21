@@ -16,6 +16,7 @@ import java.io.Serializable;
 public class DocumentoCareo implements Serializable {
 
     private DocumentoCareoId id;
+    private String urlDocumentoCareo;
 
     public DocumentoCareo(DocumentoCareoId id) {
         this.id = id;
@@ -37,6 +38,16 @@ public class DocumentoCareo implements Serializable {
 
     public void setId(DocumentoCareoId id) {
         this.id = id;
+    }
+
+
+    @Column(name = "LOC_DOC ", nullable = false, length = 100)
+    public String getUrlDocumentoCareo() {
+        return urlDocumentoCareo;
+    }
+
+    public void setUrlDocumentoCareo(String urlDocumentoCareo) {
+        this.urlDocumentoCareo = urlDocumentoCareo;
     }
 }
     
