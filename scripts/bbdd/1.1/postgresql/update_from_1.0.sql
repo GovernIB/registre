@@ -1,71 +1,73 @@
 
+create table BZDOCLOC (
+	LOC_ANY int4 not null,
+	LOC_NUMDOC int4 not null,
+	LOC_OFI int4 not null,
+	LOC_NUMREG int4 not null,
+	LOC_TIPUS varchar(1) not null,
+	primary key (LOC_ANY, LOC_NUMDOC, LOC_OFI, LOC_NUMREG, LOC_TIPUS)
+);
 
--------------------
+comment on table BZDOCLOC is 'DocumentoCareo';
 
-ALTER TABLE BZSALIDA ADD EMAILREMITENT CHAR(50);
-ALTER TABLE BZENTRA ADD EMAILREMITENT CHAR(50);
-ALTER TABLE BZENTRA ADD ORIGENREGISTRO CHAR(10);
-
--------------------
-
-CREATE TABLE BZDOCLOC(
-   LOC_ANY decimal(4,0),
-   LOC_OFI decimal(2,0),
-   LOC_NUMREG decimal(5,0),
-   LOC_NUMDOC decimal(2,0),
-   LOC_TIPUS CHAR(1),
-   LOC_DOC char(100) NOT NULL
- );
-
-alter table BZDOCLOC Add CONSTRAINT BZDOCLOC_PK PRIMARY KEY ( LOC_ANY,LOC_OFI,LOC_NUMREG,LOC_NUMDOC,LOC_TIPUS);
 alter table BZDOCLOC add constraint LOC_TIPUS_CK check (LOC_TIPUS IN ('E','S'));
 
 -------------------
 
-CREATE TABLE BZUNIGES(
-UNI_CODI decimal(3,0),
-UNI_CODIOFI integer CONSTRAINT BZUNIGES_BAGECOM_FK   references BAGECOM(FAACAGCO),
-UNI_NOM char(20) NOT NULL,
-UNI_BAJA CHAR(1) CONSTRAINT  UNI_BAJA_CK  check ( UNI_BAJA IN ('N','S')),
-UNI_EMAIL char(50) NOT NULL
+ALTER TABLE BZENTRA ADD EMAILREMITENT CHAR(50);
+ALTER TABLE BZENTRA ADD ORIGENREGISTRO CHAR(10);
+
+
+create table BZHISEMAIL (
+	BHE_ANY int4 not null,
+	BHE_TIPUS varchar(1) not null,
+	BHE_NUM int4 not null,
+	BHE_NUMREG int4 not null,
+	BHE_CODIOFI int4 not null,
+	BHE_CODUSU varchar(10) not null,
+	BHE_EMAIL varchar(50) not null,
+	BHE_DATA varchar(10) not null,
+	BHE_HORA varchar(5) not null,
+	BHE_TIPUSMAIL varchar(1) not null,
+	primary key (BHE_ANY, BHE_TIPUS, BHE_NUM, BHE_NUMREG, BHE_CODIOFI)
 );
 
-alter table BZUNIGES ADD CONSTRAINT BZUNIGES_PK PRIMARY KEY (UNI_CODI,UNI_CODIOFI);
+comment on table BZHISEMAIL is
+	'Modificacion';
 
--------------------
-
-CREATE TABLE BZOFOR(
-OFO_CODIORG  decimal(4,0),
-OFO_CODIOFI integer CONSTRAINT BZOFOR_BAGECOM_FK   references BAGECOM(FAACAGCO)
-);
-
-alter table BZOFOR ADD CONSTRAINT BZOFOR_PK PRIMARY KEY (OFO_CODIORG,OFO_CODIOFI);
-
--------------------
-
-CREATE TABLE BZHISEMAIL(
-   BHE_ANY decimal(4,0),
-   BHE_CODIOFI decimal(2,0),
-   BHE_NUMREG decimal(5,0),
-   BHE_NUM decimal(3,0),
-   BHE_TIPUS CHAR(1),
-   BHE_TIPUSMAIL CHAR(1) not null,
-   BHE_HORA CHAR(5) not null,
-   BHE_DATA CHAR(10) not null,
-   BHE_CODUSU char(10) not null,
-   BHE_EMAIL char(50) not null
- );
-
-alter table BZHISEMAIL add CONSTRAINT BZHISEMAIL_PK PRIMARY KEY (BHE_ANY, BHE_CODIOFI , BHE_NUMREG, BHE_NUM, BHE_TIPUS );
 alter table BZHISEMAIL add constraint BHE_TIPUS_CK check ( BHE_TIPUS IN ('E','S'));
 alter table BZHISEMAIL add constraint BHE_TIPUSMAIL_CK check ( BHE_TIPUSMAIL IN ('I','C'));
 
 
-CREATE TABLE BZMODEMAIL(
-   BME_IDIOMA CHAR(2),
-   BME_TIPO CHAR(2),
-   BME_TITULO CHAR(100),
-   BME_CUERPO CHAR(1000)
- );
 
-alter table BZMODEMAIL ADD CONSTRAINT BZMODEMAIL_PK PRIMARY KEY (BME_IDIOMA,BME_TIPO);
+create table BZMODEMAIL (
+	BME_IDIOMA  varchar(2) not null,
+	BME_TIPO  varchar(2) not null,
+	BME_CUERPO varchar(1000) not null,
+	BME_TITULO varchar(100) not null,
+	primary key (BME_IDIOMA , BME_TIPO )
+);
+
+comment on table BZMODEMAIL is 'ModeloEmail';
+
+
+create table BZOFOR (
+	OFO_CODIOFI int4 not null,
+	OFO_CODIORG int4 not null,
+	primary key (OFO_CODIOFI, OFO_CODIORG)
+);
+
+comment on table BZOFOR is'OficinaOrganismoPermetEnviarEmail';
+
+ALTER TABLE BZSALIDA ADD EMAILREMITENT VARCHAR(50) not null;
+
+create table BZUNIGES (
+	UNI_CODIOFI int4 not null,
+	UNI_CODI  int4 not null,
+	UNI_BAJA  varchar(1) not null,
+	UNI_EMAIL varchar(50) not null,
+	UNI_NOM varchar(20) not null,
+	primary key (UNI_CODIOFI, UNI_CODI )
+);
+
+comment on table BZUNIGES is 'Unidad de Gestion';

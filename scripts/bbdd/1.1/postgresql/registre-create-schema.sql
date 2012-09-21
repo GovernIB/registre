@@ -133,6 +133,18 @@
     comment on table BZDISQU is
         'Disquete';
 
+    create table BZDOCLOC (
+        LOC_ANY int4 not null,
+        LOC_NUMDOC int4 not null,
+        LOC_OFI int4 not null,
+        LOC_NUMREG int4 not null,
+        LOC_TIPUS varchar(1) not null,
+        primary key (LOC_ANY, LOC_NUMDOC, LOC_OFI, LOC_NUMREG, LOC_TIPUS)
+    );
+
+    comment on table BZDOCLOC is
+        'DocumentoCareo';
+
     create table BZENLPD (
         FZTANOEN int4 not null,
         FZTDATAC int4 not null,
@@ -183,6 +195,7 @@
         FZACONEN varchar(160) not null,
         FZACONE2 varchar(160) not null,
         FZACEDIE varchar(1) not null,
+        EMAILREMITENT  varchar(50) not null,
         FZAFACTU int4 not null,
         FZAFDOCU int4 not null,
         FZAFENTR int4 not null,
@@ -194,6 +207,7 @@
         FZANDIS int4 not null,
         FZANENTI int4 not null,
         FZANLOC int4 not null,
+        ORIGENREGISTRO  varchar(10) not null,
         FZAPROCE varchar(25) not null,
         FZAREMIT varchar(30) not null,
         FZACTAGG int4 not null,
@@ -207,6 +221,7 @@
 
     create table BZENTRA060 (
         ENT_CODIMUN varchar(3) not null,
+        ENT_NUMREG varchar(5) not null,
         ENT_ANY int4 not null,
         ENT_NUM int4 not null,
         ENT_OFI int4 not null,
@@ -215,6 +230,23 @@
 
     comment on table BZENTRA060 is
         'Entrada060';
+
+    create table BZHISEMAIL (
+        BHE_ANY int4 not null,
+        BHE_TIPUS varchar(1) not null,
+        BHE_NUM int4 not null,
+        BHE_NUMREG int4 not null,
+        BHE_CODIOFI int4 not null,
+        BHE_CODUSU varchar(10) not null,
+        BHE_EMAIL varchar(50) not null,
+        BHE_DATA varchar(10) not null,
+        BHE_HORA varchar(5) not null,
+        BHE_TIPUSMAIL varchar(1) not null,
+        primary key (BHE_ANY, BHE_TIPUS, BHE_NUM, BHE_NUMREG, BHE_CODIOFI)
+    );
+
+    comment on table BZHISEMAIL is
+        'Modificacion';
 
     create table BZIDIOM (
         FZMCIDI varchar(1) not null,
@@ -236,6 +268,17 @@
 
     comment on table BZLIBRO is
         'Libro';
+
+    create table BZMODEMAIL (
+        BME_IDIOMA  varchar(2) not null,
+        BME_TIPO  varchar(2) not null,
+        BME_CUERPO varchar(1000) not null,
+        BME_TITULO varchar(100) not null,
+        primary key (BME_IDIOMA , BME_TIPO )
+    );
+
+    comment on table BZMODEMAIL is
+        'ModeloEmail';
 
     create table BZMODIF (
         FZJANOEN int4 not null,
@@ -333,8 +376,8 @@
         'OficinaFisica';
 
     create table BZOFIOR (
-        FZFCAGCO int4 not null,
         FZFCORGA int4 not null,
+        FZFCAGCO int4 not null,
         primary key (FZFCAGCO, FZFCORGA)
     );
 
@@ -349,6 +392,15 @@
 
     comment on table BZOFIRE is
         'OficinaOrganismoNoRemision';
+
+    create table BZOFOR (
+        OFO_CODIOFI int4 not null,
+        OFO_CODIORG int4 not null,
+        primary key (OFO_CODIOFI, OFO_CODIORG)
+    );
+
+    comment on table BZOFOR is
+        'OficinaOrganismoPermetEnviarEmail';
 
     create table BZOFREM (
         REM_OFANY int4 not null,
@@ -433,6 +485,7 @@
         FZSREMIT varchar(30) not null,
         FZSPROCE varchar(25) not null,
         FZSCEDIE varchar(1) not null,
+        EMAILREMITENT  varchar(50) not null,
         FZSFACTU int4 not null,
         FZSFDOCU int4 not null,
         FZSFENTR int4 not null,
@@ -487,6 +540,18 @@
 
     comment on table BZTDOCU is
         'TipoDocumento';
+
+    create table BZUNIGES (
+        UNI_CODIOFI int4 not null,
+        UNI_CODI  int4 not null,
+        UNI_BAJA  varchar(1) not null,
+        UNI_EMAIL varchar(50) not null,
+        UNI_NOM varchar(20) not null,
+        primary key (UNI_CODIOFI, UNI_CODI )
+    );
+
+    comment on table BZUNIGES is
+        'Unidad de Gestion';
 
     create table BZVISAD (
         FZKANOEN int4 not null,
