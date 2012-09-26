@@ -4,12 +4,21 @@
     <attribute name="Properties">      
       <!-- URL al logo de la entitat. Si no es defineix llavors s'empra ../imagenes/aplicacio/logo_caib.gif 120px X 42 px-->
       <!-- entitat.logourl= URL_LOGO -->
+
       <!-- URL al favicon de la entitat. Si no es defineix llavors s'empra /img/favicon.ico -->
       <!-- entitat.favicon=URL_A_FAVICON -->
+
       <!-- Títol de l'aplicació. Si no es defineix llavors s'empra "Govern de les Illes Balears" -->
       <!-- entitat.aplicacio.titol= TITOL_APLICACIO -->
-	  <!-- Nom de l'entitat en el PDF. Si no es defineix llavors s'empra "GOVERN DE LES ILLES BALEARS" -->
+
+      <!-- Nom de l'entitat en el PDF. Si no es defineix llavors s'empra "GOVERN DE LES ILLES BALEARS" -->
       <!-- entitat.pdf.titol= NOM_ENTITAT_EN_PDF -->
+
+	  <!-- Nom de l'entitat . Si no es defineix llavors s'empra "Govern de les Illes Balears" -->
+	  <!-- entitat.nom= NOM_ENTITAT -->
+	  
+      <!-- Atribut que indica al registre si han d'apareixer els camps d'acarament -->
+      <!--es.caib.regweb.integracionIBKEYActiva=true-->
     </attribute>
   </mbean>
 </server>
