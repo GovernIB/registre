@@ -100,3 +100,13 @@ insert into bagruge (fabcagge, fabctagg, fabfbaja, fabdagge, fabcagsu, fabctasu)
 insert into bagruge (fabcagge, fabctagg, fabfbaja, fabdagge, fabcagsu, fabctasu) values (65, 90, 0, 'Vilafranca de Bonany', 2, 5);
 insert into bagruge (fabcagge, fabctagg, fabfbaja, fabdagge, fabcagsu, fabctasu) values (901, 90, 0, 'Ariany', 2, 5);
 insert into bagruge (fabcagge, fabctagg, fabfbaja, fabdagge, fabcagsu, fabctasu) values (902, 90, 0, 'Migjorn Gran (Es)', 3, 5);
+
+-- <<<<<<<<<<<< Models de Correu >>>>>>>>>>>>>>>>>
+
+INSERT INTO bzmodemail (BME_IDIOMA,BME_TIPO,BME_TITULO,BME_CUERPO) VALUES ('ES','EX','Justificante del registro de entrada número $(RefReg) ','Hemos registrado su escrito en la oficina $(NumOfi) con el número $(NumReg)/$(AnoReg).</p> <p>El registro de la documentación se realizó el día $(DataReg).</p> Los documentos registrados son:<br/> $(LliDoc) <br/> <p> $(NomEnt) ha compulsado de manera electrónica sus documentos. Podréis ver el documento firmado utilizando los enlaces adjuntos. El documento estará disponible en esta dirección durante un periodo de 15  años. </p> ');
+
+INSERT INTO bzmodemail (BME_IDIOMA,BME_TIPO,BME_TITULO,BME_CUERPO) VALUES ('CT','EX','Justificant del registre d''entrada número $(RefReg) ','Hem registrat el seu escrit a l''oficina $(NumOfi) amb el número $(NumReg)/$(AnoReg).</p> <p>El registre de la documentació es va realitzar el dia $(DataReg).</p> Els documents registrats són:<br/> $(LliDoc) <p> $(NomEnt) ha compulsat de manera electrònica el seus documents. Podeu veure els documents signat utilitzant el enllaços adjunts al correu electrònic. El document estarà disponible en aquesta adreça durant un període de 15 anys.</p> ');
+
+INSERT INTO bzmodemail (BME_IDIOMA,BME_TIPO,BME_TITULO,BME_CUERPO) VALUES ('ES','IN','buit ','buit ');
+
+INSERT INTO bzmodemail (BME_IDIOMA,BME_TIPO,BME_TITULO,BME_CUERPO) VALUES ('CT','IN','Documentació del registre d''entrada número $(RefReg) ','Hem registrat un escrit a l''oficina $(NumOfi) amb el número $(NumReg)/ $(AnoReg) </p> <p>El registre de la documentació es va realitzar el dia $(DataReg) </br> El remitent de la documentació és $(DesRem). L''extracte del registre és: ''$(ExtReg)''</p> Els documents registrats són:<br/> $(LliDoc) <p> $(NomEnt) ha compulsat de manera electrònica els documents registrats. Podeu veure els documents signat utilitzant el enllaços adjunts al correu electrònic. El document estarà disponible en aquesta adreça durant un període de 15 anys. </p> ');

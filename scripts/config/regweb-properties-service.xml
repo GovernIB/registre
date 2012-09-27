@@ -9,13 +9,14 @@
       <!-- entitat.favicon=URL_A_FAVICON -->
 
       <!-- Títol de l'aplicació. Si no es defineix llavors s'empra "Govern de les Illes Balears" -->
-      <!-- entitat.aplicacio.titol= TITOL_APLICACIO -->
+      <!-- entitat.aplicacio.titol=TITOL_APLICACIO -->
 
       <!-- Nom de l'entitat en el PDF. Si no es defineix llavors s'empra "GOVERN DE LES ILLES BALEARS" -->
-      <!-- entitat.pdf.titol= NOM_ENTITAT_EN_PDF -->
+      <!-- entitat.pdf.titol=NOM_ENTITAT_EN_PDF -->
 
-	  <!-- Nom de l'entitat . Si no es defineix llavors s'empra "Govern de les Illes Balears" -->
-	  <!-- entitat.nom= NOM_ENTITAT -->
+      <!-- Nom de l'entitat en el Correu de Notificació. Substitueix la clau ${NomEnt} en el model de correu.
+           Si no es defineix llavors s'empra "El Govern de les Illes Balears" -->
+      <!-- entitat.correu.nom=NOM_ENTITAT_CORREU -->
 	  
       <!-- Atribut que indica al registre si han d'apareixer els camps d'acarament -->
       <!--es.caib.regweb.integracionIBKEYActiva=true-->

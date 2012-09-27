@@ -226,7 +226,12 @@ public class EmailServlet extends UtilWebServlet {
         	localizadoresStr+=("<li><a href="+localitzadorsDocs[i]+" target='_blank'>"+localitzadorsDocs[i]+"</a></li>");
         } 
         localizadoresStr+="</ul>";
-        	
+
+        String nomEntitat = System.getProperty("entitat.correu.nom");
+        if (nomEntitat == null) {
+           nomEntitat = "El Govern de les Illes Balears";
+        }
+        asunto=asunto.replace("$(NomEnt)",  nomEntitat);
 		asunto=asunto.replace("$(AnoReg)",   registro.getAnoEntrada());
 		asunto=asunto.replace("$(DataReg)",  registro.getDataEntrada());
 		asunto=asunto.replace("$(DesOfi)",   registro.getDescripcionOficina());
@@ -237,7 +242,7 @@ public class EmailServlet extends UtilWebServlet {
 		asunto=asunto.replace("$(NumOfiFi)", registro.getOficinafisica());
 		asunto=asunto.replace("$(NumReg)",   registro.getNumeroEntrada());
 		asunto=asunto.replace("$(RefReg)",   registro.getReferenciaRegistro());
-		
+
 		return asunto;
 	}
 
