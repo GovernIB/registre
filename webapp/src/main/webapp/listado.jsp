@@ -16,6 +16,7 @@ boolean mostrarNumReg012 = false;
 String usuario=request.getRemoteUser();
 String oficinaDesde="";
 String oficinaHasta="";
+String oficinaFisica="";
 String fechaDesde="";
 String fechaHasta="";
 String extractoBusqueda="";
@@ -33,6 +34,7 @@ String codiMun060=(request.getParameter("mun_060")==null)? "000":request.getPara
 if (request.getParameter("any")==null) {
     oficinaDesde=request.getParameter("oficinaDesde");
     oficinaHasta=request.getParameter("oficinaHasta");
+    oficinaFisica = request.getParameter("oficinafisica");
     fechaDesde=request.getParameter("fechaDesde");
     fechaHasta=request.getParameter("fechaHasta");
     extractoBusqueda=request.getParameter("extracto");
@@ -48,24 +50,27 @@ if (request.getParameter("any")==null) {
     cadenaEnlace.append("oficinaDesde="+oficinaDesde+"&oficinaHasta="+oficinaHasta+"&fechaDesde="+fechaDesde+"&fechaHasta="+fechaHasta+
             "&extracto="+extractoBusqueda+"&tipo="+tipoBusqueda+"&remitente="+remitenteBusqueda+"&procedencia="+procedenciaBusqueda+
             "&destinatario="+destinatarioBusqueda+"&codidestinatari="+codidestinatariBusqueda);
+    
+    if(oficinaFisica!=null) cadenaEnlace.append("&oficinafisica="+oficinaFisica);
+    
     if((numeroRegistroSalidaRelacionado != null)&&(anyoRegistroSalidaRelacionado != null)) 
     	cadenaEnlace.append("&numeroRegistroSalidaRelacionado="+anyoRegistroSalidaRelacionado+"&anyoRegistroSalidaRelacionado="+anyoRegistroSalidaRelacionado);
-} else {
-    oficinaDesde=request.getParameter("oficina");
-    oficinaHasta=request.getParameter("oficina");
-    fechaDesde="01/01/"+request.getParameter("any");
-    fechaHasta="31/12/"+request.getParameter("any");
-    cadenaEnlace.append("oficina="+oficinaDesde+"&any="+request.getParameter("any"));
-    if (request.getParameter("numero")!=null && !request.getParameter("numero").trim().equals("") ) {
-            %>
-            <jsp:forward page="ficha.jsp" >
-                <jsp:param name="oficina" value="<%=request.getParameter("oficina")%>"/>
-                <jsp:param name="numeroEntrada" value="<%=request.getParameter("numero")%>"/>
-                <jsp:param name="anoEntrada" value="<%=request.getParameter("any")%>"/>
-            </jsp:forward>
-            <%
-    }
-}
+	} else {
+    	oficinaDesde=request.getParameter("oficina");
+    	oficinaHasta=request.getParameter("oficina");
+    	fechaDesde="01/01/"+request.getParameter("any");
+    	fechaHasta="31/12/"+request.getParameter("any");
+    	cadenaEnlace.append("oficina="+oficinaDesde+"&any="+request.getParameter("any"));
+    	if (request.getParameter("numero")!=null && !request.getParameter("numero").trim().equals("") ) {
+	            %>
+	            <jsp:forward page="ficha.jsp" >
+	                <jsp:param name="oficina" value="<%=request.getParameter("oficina")%>"/>
+	                <jsp:param name="numeroEntrada" value="<%=request.getParameter("numero")%>"/>
+	                <jsp:param name="anoEntrada" value="<%=request.getParameter("any")%>"/>
+	            </jsp:forward>
+	            <%
+	    }
+	}
 parametros.setoficinaFisica(request.getParameter("oficinafisica"));
 parametros.setCalcularTotalRegistres( (veureNombreTotalRegistres.equals("on") ? true : false) );
 parametros.setfechaDesde(fechaDesde);
