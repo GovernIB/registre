@@ -16,6 +16,7 @@ String usuario=request.getRemoteUser();
 
 String oficinaDesde="";
 String oficinaHasta="";
+String oficinaFisica="";
 String fechaDesde="";
 String fechaHasta="";
 String extractoBusqueda="";
@@ -30,6 +31,7 @@ String veureNombreTotalRegistres="";
 if (request.getParameter("any")==null) {
     oficinaDesde=request.getParameter("oficinaDesde");
     oficinaHasta=request.getParameter("oficinaHasta");
+    oficinaFisica = request.getParameter("oficinafisica");
     fechaDesde=request.getParameter("fechaDesde");
     fechaHasta=request.getParameter("fechaHasta");
     extractoBusqueda=request.getParameter("extracto");
@@ -42,7 +44,9 @@ if (request.getParameter("any")==null) {
 	cadenaEnlace="oficinaDesde="+oficinaDesde+"&oficinaHasta="+oficinaHasta+"&fechaDesde="+fechaDesde+"&fechaHasta="+fechaHasta+
             "&extracto="+extractoBusqueda+"&tipo="+tipoBusqueda+"&remitente="+remitenteBusqueda
             +"&destinatario="+destinatarioBusqueda+"&destino="+destinoBusqueda+"&codiremitent="+codiremitentBusqueda;
-    
+	
+	if(oficinaFisica!=null) cadenaEnlace = cadenaEnlace+"&oficinafisica="+oficinaFisica;
+	
 } else {
     oficinaDesde=request.getParameter("oficina");
     oficinaHasta=request.getParameter("oficina");
