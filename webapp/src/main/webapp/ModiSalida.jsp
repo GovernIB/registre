@@ -88,18 +88,28 @@
         altres=registro.getAltres();
         comentario=registro.getComentario();
 
-        if (hora!=null && !hora.equals("") && !hora.equals("0") ) {
-            if (hora.length()<4) {hora="0"+hora;}
-            String hh=hora.substring(0,2);
-            String mm=hora.substring(2,4);
-            hhmm=hh+":"+mm;
-        } else {
-            hhmm=hora;
-        }
         emailRemitent = registro.getEmailRemitent();
         pLocalitzadorsDocs=registro.getLocalitzadorsDocs();
         localitzadorsDocs = registro.getArrayLocalitzadorsDocs();
     }
+
+	if ( (hora != null) && (hora.trim().length() != 0)) {
+
+	    if (hora.length() < 6) {
+	      for(int h = hora.length(); h < 6; h++) {
+		hora = '0' + hora;
+	      }
+	    }
+
+	   String hh=hora.substring(0,2);
+	   String mm=hora.substring(2,4);
+	   String ss=hora.substring(4,6);
+	   hhmm=hh + ":" + mm + ":" + ss;
+	} else {
+	   hhmm=hora;
+	}
+
+
 
     javax.naming.InitialContext contexto = new javax.naming.InitialContext();
     ValoresFacade valores = ValoresFacadeUtil.getHome().create();
@@ -428,7 +438,7 @@
                             </td>
                             <td style="border:0">
                                 <font class="<%=errorEn(errores,"hora")%>"><fmt:message key='registro.hora'/></font>
-                                <input type="text" name="hora" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(hhmm)%>" size="5">
+                                <input readonly="readonly" type="text" name="hora" value="<%=es.caib.regweb.webapp.servlet.HtmlGen.toHtml(hhmm)%>" size="5">
                             </td>
                             <td style="border:0">
                                 <font class="<%=errorEn(errores,"suprimir")%>"><fmt:message key='sortida_anulada'/>:</font>
@@ -503,6 +513,7 @@
                     
                     <!-- Despegable para Idiomas -->
                     <font class="<%=errorEn(errores,"idioma")%>"><fmt:message key='registro.idioma'/></font>
+
                     <select name="idioma" size="1">
                 <% escribeSelect(out, valores.buscarIdiomas(), (registro==null)? "":registro.getIdioma()); %>
                     </select>

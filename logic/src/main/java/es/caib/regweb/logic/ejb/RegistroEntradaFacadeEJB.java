@@ -87,11 +87,11 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
      *   type="java.lang.String"
      *   value="${registro.codiOrganismeBOIB}"
      */
-	 //String codiOrganismeBOIB;	 
+	 //String codiOrganismeBOIB;
 
     private DateFormat dateF= new SimpleDateFormat("dd/MM/yyyy");
     private Date fechaTest=null;
-    private DateFormat horaF=new SimpleDateFormat("HH:mm");
+    private DateFormat horaF=new SimpleDateFormat("HH:mm:ss");
    
     private String SENTENCIA="INSERT INTO BZENTRA (" +
             "FZAANOEN, FZANUMEN, FZACAGCO, FZAFDOCU, FZAREMIT, FZACONEN, FZACTIPE, FZACEDIE, FZAENULA,"+
@@ -256,7 +256,7 @@ public abstract class RegistroEntradaFacadeEJB extends HibernateEJB {
             cal.setTime(horaTest);
             DateFormat hhmm=new SimpleDateFormat("HHmm");
             int fzahora=Integer.parseInt(hhmm.format(horaTest));*/
-            int fzahora=Helper.convierteStringHoraAIntHora(hora);
+            int fzahora=Helper.convierteStringHoraAIntHoraSeg(hora);
             
             /* Numero localizador y año localizador, fzanloc y fzaaloc */
             if (salida1.equals("")) {salida1="0";}
@@ -1523,7 +1523,7 @@ public ParametrosRegistroEntrada validar(ParametrosRegistroEntrada param) {
         
         /* Validamos Hora */
         if (hora==null) {
-            errores.put("hora","Hora d'entrada no es l\u00e0gica");
+            errores.put("hora","Hora d'entrada no es l\u00f2gica");
         } else {
             try {
                 horaF.setLenient(false);

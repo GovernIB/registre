@@ -56,7 +56,7 @@ public abstract class RegistroSalidaFacadeEJB extends HibernateEJB {
 	private Logger log = Logger.getLogger(this.getClass());
 	private DateFormat dateF= new SimpleDateFormat("dd/MM/yyyy");
 	private Date fechaTest=null;
-	private DateFormat horaF=new SimpleDateFormat("HH:mm");
+	private DateFormat horaF=new SimpleDateFormat("HH:mm:ss");
 	private Date horaTest=null;
 
 	private String SENTENCIA="INSERT INTO BZSALIDA (" +
@@ -564,11 +564,12 @@ public abstract class RegistroSalidaFacadeEJB extends HibernateEJB {
 			/* Idioma del extracto, fzscidi */
 			int fzscidi=Integer.parseInt(idioex);
 			
-			/* Hora del documento, fzshora mmss */
+			/* Hora del documento, fzshora hhmmss */
 			horaTest=horaF.parse(hora);
 			cal.setTime(horaTest);
-			DateFormat hhmm=new SimpleDateFormat("HHmm");
-			int fzshora=Integer.parseInt(hhmm.format(horaTest));
+			int fzshora=Helper.convierteStringHoraAIntHoraSeg(hora);
+
+                        log.error(" HORAAAAAA: " + fzshora);
 			
 			/* Numero localizador y año localizador, fzsnloc y fzsaloc */
 			int fzsnloc=Integer.parseInt((entrada1.equals(""))?"0":entrada1);
@@ -1116,9 +1117,8 @@ public abstract class RegistroSalidaFacadeEJB extends HibernateEJB {
 			
 			/* Hora del documento, fzahora mmss */
 			horaTest=horaF.parse(hora);
-			cal.setTime(horaTest);
-			DateFormat hhmm=new SimpleDateFormat("HHmm");
-			int fzahora=Integer.parseInt(hhmm.format(horaTest));
+			cal.setTime(horaTest);			
+			int fzahora=Helper.convierteStringHoraAIntHoraSeg(hora);
 			
 			/* Numero localizador y año localizador, fzanloc y fzaaloc */
 			int fzanloc=Integer.parseInt((entrada1.equals(""))?"0":entrada1);

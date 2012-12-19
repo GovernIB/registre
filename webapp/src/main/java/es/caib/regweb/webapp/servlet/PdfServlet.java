@@ -79,7 +79,13 @@ public class PdfServlet extends HttpServlet {
         String numeroEntrada=request.getParameter("numero");
         String anoEntrada=request.getParameter("ano");
         String dataEntrada=request.getParameter("data");
-        String hora = Helper.convierteHora_a_HHmmss(request.getParameter("hora"));
+        //String hora = Helper.convierteHora_a_HHmmss(request.getParameter("hora"));
+        String hora = request.getParameter("hora");
+        if (hora.indexOf(':') != -1) {
+          hora = hora.replace(":", "");
+        }
+        hora = Helper.convierteHora_a_HHmmss(hora);
+
         String tipo=request.getParameter("tipo");
         String es=(request.getParameter("ES").equals("E")) ? "ENTRADES":"SORTIDES";
         String auto_print=request.getParameter("auto_print");
