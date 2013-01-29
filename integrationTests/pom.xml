@@ -8,14 +8,14 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>es.caib.regweb</groupId>
-    <artifactId>integrationTests</artifactId>
+    <artifactId>regweb-integrationTests</artifactId>
     <packaging>pom</packaging>
     <name>Registre Web - integration tests</name>
 
     <dependencies>
         <dependency>
             <groupId>es.caib.regweb</groupId>
-            <artifactId>ear</artifactId>
+            <artifactId>regweb-ear</artifactId>
             <version>${project.version}</version>
             <type>ear</type>
         </dependency>

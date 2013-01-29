@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>es.caib.regweb</groupId>
-    <artifactId>logic</artifactId>
+    <artifactId>regweb-logic</artifactId>
     <packaging>ejb</packaging>
     <name>Registre Web - logic</name>
 
@@ -20,7 +20,7 @@
     <dependencies>
         <dependency>
             <groupId>es.caib.regweb</groupId>
-            <artifactId>model</artifactId>
+            <artifactId>regweb-model</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
             <scope>compile</scope>

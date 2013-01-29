@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>es.caib.regweb</groupId>
-    <artifactId>ear</artifactId>
+    <artifactId>regweb-ear</artifactId>
     <packaging>ear</packaging>
     <name>Registre Web - ear</name>
 
@@ -15,21 +15,21 @@
     <dependencies>
         <dependency>
             <groupId>es.caib.regweb</groupId>
-            <artifactId>webapp</artifactId>
+            <artifactId>regweb-webapp</artifactId>
             <version>${project.version}</version>
             <type>war</type>
         </dependency>
 
         <dependency>
             <groupId>es.caib.regweb</groupId>
-            <artifactId>ejb</artifactId>
+            <artifactId>regweb-ejb</artifactId>
             <version>${project.version}</version>
             <type>ejb</type>
         </dependency>
 
         <dependency>
             <groupId>es.caib.regweb</groupId>
-            <artifactId>logic</artifactId>
+            <artifactId>regweb-logic</artifactId>
             <version>${project.version}</version>
             <type>ejb</type>
         </dependency>
@@ -56,18 +56,18 @@
                     <modules>
                         <webModule>
                             <groupId>es.caib.regweb</groupId>
-                            <artifactId>webapp</artifactId>
+                            <artifactId>regweb-webapp</artifactId>
                             <contextRoot>regweb</contextRoot>
                             <bundleFileName>regweb.war</bundleFileName>
                         </webModule>
                         <ejbModule>
                             <groupId>es.caib.regweb</groupId>
-                            <artifactId>ejb</artifactId>
+                            <artifactId>regweb-ejb</artifactId>
                             <bundleFileName>regweb.jar</bundleFileName>
                         </ejbModule>
                         <ejbModule>
                             <groupId>es.caib.regweb</groupId>
-                            <artifactId>logic</artifactId>
+                            <artifactId>regweb-logic</artifactId>
                             <bundleFileName>logic.jar</bundleFileName>
                         </ejbModule>
                     </modules>
