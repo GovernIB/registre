@@ -4,7 +4,7 @@
     <groupId>es.caib.regweb</groupId>
     <artifactId>regweb-ear</artifactId>
     <packaging>ear</packaging>
-    <name>Registre Web - ear</name>
+    <name>Registre - ear</name>
 
     <parent>
         <groupId>es.caib</groupId>
@@ -13,6 +13,14 @@
     </parent>
 
     <dependencies>
+	
+	    <dependency>
+            <groupId>es.caib.regweb</groupId>
+            <artifactId>regweb-ws</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependency>
+	
         <dependency>
             <groupId>es.caib.regweb</groupId>
             <artifactId>regweb-webapp</artifactId>
@@ -54,6 +62,12 @@
                         <loader-repository-config>java2ParentDelegation=false</loader-repository-config>
                     </jboss>
                     <modules>
+					    <webModule>
+                            <groupId>es.caib.regweb</groupId>
+                            <artifactId>regweb-ws</artifactId>
+                            <contextRoot>regwebWS</contextRoot>
+                            <bundleFileName>regweb-ws.war</bundleFileName>
+                        </webModule>
                         <webModule>
                             <groupId>es.caib.regweb</groupId>
                             <artifactId>regweb-webapp</artifactId>

@@ -4,7 +4,7 @@
     <groupId>es.caib.regweb</groupId>
     <artifactId>regweb-ejb</artifactId>
     <packaging>ejb</packaging>
-    <name>Registre Web - ejb</name>
+    <name>Registre - ejb</name>
 
     <parent>
         <groupId>es.caib</groupId>

@@ -2,12 +2,10 @@
 <!DOCTYPE jboss PUBLIC "-//JBoss//DTD JBOSS 3.0//EN" "http://www.jboss.org/j2ee/dtd/jboss_3_0.dtd">
 
 <jboss>
- 
+ <!-- <enforce-ejb-restrictions>true</enforce-ejb-restrictions> -->
  <security-domain>java:/jaas/seycon</security-domain>  
  <unauthenticated-principal>nobody</unauthenticated-principal>
 
-   <container-configurations/>
-   <resource-managers />
    <enterprise-beans>
 
   <session>
@@ -186,4 +184,8 @@
         </resource-ref>
       </session>
    </enterprise-beans>
+
+   <resource-managers />
+   
+   <container-configurations/>
 </jboss>

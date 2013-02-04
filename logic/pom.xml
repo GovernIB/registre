@@ -4,7 +4,7 @@
     <groupId>es.caib.regweb</groupId>
     <artifactId>regweb-logic</artifactId>
     <packaging>ejb</packaging>
-    <name>Registre Web - logic</name>
+    <name>Registre - logic</name>
 
     <properties>
         <version.template.file>../scripts/templates/Versio.java.template</version.template.file>

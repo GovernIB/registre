@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE ejb-jar PUBLIC '-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0//EN' 'http://java.sun.com/dtd/ejb-jar_2_0.dtd'>
 
 <ejb-jar>
@@ -45,16 +45,16 @@
       <ejb-class>es.caib.regweb.ListadoRegAccesosEntradaBean</ejb-class>
       <session-type>Stateless</session-type>
       <transaction-type>Container</transaction-type>
+	  <security-role-ref>
+            <role-name>RWE_LOPD</role-name>
+            <role-link>RWE_LOPD</role-link>
+      </security-role-ref>
       <resource-ref>
 		<description>DataSource DB</description>
 		<res-ref-name>es.caib.regweb.db</res-ref-name>
 		<res-type>javax.sql.DataSource</res-type>
 		<res-auth>Container</res-auth>
        </resource-ref>
-       <security-role-ref>
-            <role-name>RWE_LOPD</role-name>
-            <role-link>RWE_LOPD</role-link>
-      </security-role-ref>
     </session>
     
     <session>
@@ -65,16 +65,16 @@
       <ejb-class>es.caib.regweb.ListadoRegAccesosSortidaBean</ejb-class>
       <session-type>Stateless</session-type>
       <transaction-type>Container</transaction-type>
+	  <security-role-ref>
+            <role-name>RWE_LOPD</role-name>
+            <role-link>RWE_LOPD</role-link>
+      </security-role-ref>
       <resource-ref>
 		<description>DataSource DB</description>
 		<res-ref-name>es.caib.regweb.db</res-ref-name>
 		<res-type>javax.sql.DataSource</res-type>
 		<res-auth>Container</res-auth>
        </resource-ref>
-       <security-role-ref>
-            <role-name>RWE_LOPD</role-name>
-            <role-link>RWE_LOPD</role-link>
-      </security-role-ref>
     </session>
     
     <session>
@@ -85,16 +85,16 @@
       <ejb-class>es.caib.regweb.ListadoRegAccesosVisatBean</ejb-class>
       <session-type>Stateless</session-type>
       <transaction-type>Container</transaction-type>
+      <security-role-ref>
+            <role-name>RWE_LOPD</role-name>
+            <role-link>RWE_LOPD</role-link>
+      </security-role-ref>
       <resource-ref>
 		<description>DataSource DB</description>
 		<res-ref-name>es.caib.regweb.db</res-ref-name>
 		<res-type>javax.sql.DataSource</res-type>
 		<res-auth>Container</res-auth>
        </resource-ref>
-       <security-role-ref>
-            <role-name>RWE_LOPD</role-name>
-            <role-link>RWE_LOPD</role-link>
-      </security-role-ref>
     </session>
 
     <session>
@@ -105,16 +105,16 @@
       <ejb-class>es.caib.regweb.ListadoOficiosBean</ejb-class>
       <session-type>Stateless</session-type>
       <transaction-type>Container</transaction-type>
+      <security-role-ref>
+            <role-name>RWE_USUARI</role-name>
+            <role-link>RWE_USUARI</role-link>
+      </security-role-ref>
       <resource-ref>
 		<description>DataSource DB</description>
 		<res-ref-name>es.caib.regweb.db</res-ref-name>
 		<res-type>javax.sql.DataSource</res-type>
 		<res-auth>Container</res-auth>
        </resource-ref>
-       <security-role-ref>
-            <role-name>RWE_USUARI</role-name>
-            <role-link>RWE_USUARI</role-link>
-      </security-role-ref>
     </session>
 
     <session>
@@ -125,16 +125,16 @@
       <ejb-class>es.caib.regweb.ListadoRegOficiosEntradaBean</ejb-class>
       <session-type>Stateless</session-type>
       <transaction-type>Container</transaction-type>
+      <security-role-ref>
+            <role-name>RWE_USUARI</role-name>
+            <role-link>RWE_USUARI</role-link>
+      </security-role-ref>
       <resource-ref>
 		<description>DataSource DB</description>
 		<res-ref-name>es.caib.regweb.db</res-ref-name>
 		<res-type>javax.sql.DataSource</res-type>
 		<res-auth>Container</res-auth>
        </resource-ref>
-       <security-role-ref>
-            <role-name>RWE_USUARI</role-name>
-            <role-link>RWE_USUARI</role-link>
-      </security-role-ref>
     </session>
     <session>
       <description>Ejb para listar registros remitidos pendientes llegar</description>
@@ -144,16 +144,16 @@
       <ejb-class>es.caib.regweb.ListadoRegOficiosSalidaBean</ejb-class>
       <session-type>Stateless</session-type>
       <transaction-type>Container</transaction-type>
+      <security-role-ref>
+            <role-name>RWE_USUARI</role-name>
+            <role-link>RWE_USUARI</role-link>
+      </security-role-ref>
       <resource-ref>
 		<description>DataSource DB</description>
 		<res-ref-name>es.caib.regweb.db</res-ref-name>
 		<res-type>javax.sql.DataSource</res-type>
 		<res-auth>Container</res-auth>
        </resource-ref>
-       <security-role-ref>
-            <role-name>RWE_USUARI</role-name>
-            <role-link>RWE_USUARI</role-link>
-      </security-role-ref>
     </session>
     <session>
       <description>Ejb para listar registros entrada</description>
@@ -163,16 +163,16 @@
       <ejb-class>es.caib.regweb.ListadoRegistrosEntradaBean</ejb-class>
       <session-type>Stateless</session-type>
       <transaction-type>Container</transaction-type>
+       <security-role-ref>
+            <role-name>RWE_USUARI</role-name>
+            <role-link>RWE_USUARI</role-link>
+      </security-role-ref>
       <resource-ref>
 		<description>DataSource DB</description>
 		<res-ref-name>es.caib.regweb.db</res-ref-name>
 		<res-type>javax.sql.DataSource</res-type>
 		<res-auth>Container</res-auth>
        </resource-ref>
-       <security-role-ref>
-            <role-name>RWE_USUARI</role-name>
-            <role-link>RWE_USUARI</role-link>
-      </security-role-ref>
     </session>
     <session>
       <description>Ejb para listar registros salida</description>
@@ -182,16 +182,16 @@
       <ejb-class>es.caib.regweb.ListadoRegistrosSalidaBean</ejb-class>
       <session-type>Stateless</session-type>
       <transaction-type>Container</transaction-type>
+       <security-role-ref>
+            <role-name>RWE_USUARI</role-name>
+            <role-link>RWE_USUARI</role-link>
+      </security-role-ref>
       <resource-ref>
 		<description>DataSource DB</description>
 		<res-ref-name>es.caib.regweb.db</res-ref-name>
 		<res-type>javax.sql.DataSource</res-type>
 		<res-auth>Container</res-auth>
        </resource-ref>
-       <security-role-ref>
-            <role-name>RWE_USUARI</role-name>
-            <role-link>RWE_USUARI</role-link>
-      </security-role-ref>
     </session>
         <session>
       <description>Ejb para Modelos Recibos</description>
@@ -201,18 +201,17 @@
       <ejb-class>es.caib.regweb.ModeloReciboBean</ejb-class>
       <session-type>Stateful</session-type> 
       <transaction-type>Bean</transaction-type>
+       <security-role-ref>
+            <role-name>RWE_USUARI</role-name>
+            <role-link>RWE_USUARI</role-link>
+      </security-role-ref>
       <resource-ref>
 		<description>DataSource DB</description>
 		<res-ref-name>es.caib.regweb.db</res-ref-name>
 		<res-type>javax.sql.DataSource</res-type>
 		<res-auth>Container</res-auth>
        </resource-ref>	
-       <security-role-ref>
-            <role-name>RWE_USUARI</role-name>
-            <role-link>RWE_USUARI</role-link>
-      </security-role-ref>
-
-    </session>
+   </session>
 
         <session>
       <description>Ejb para Modelos Oficios de Remision</description>
@@ -222,17 +221,16 @@
       <ejb-class>es.caib.regweb.ModeloOficioBean</ejb-class>
       <session-type>Stateful</session-type> 
       <transaction-type>Bean</transaction-type>
+       <security-role-ref>
+            <role-name>RWE_USUARI</role-name>
+            <role-link>RWE_USUARI</role-link>
+      </security-role-ref>
       <resource-ref>
 		<description>DataSource DB</description>
 		<res-ref-name>es.caib.regweb.db</res-ref-name>
 		<res-type>javax.sql.DataSource</res-type>
 		<res-auth>Container</res-auth>
        </resource-ref>	
-       <security-role-ref>
-            <role-name>RWE_USUARI</role-name>
-            <role-link>RWE_USUARI</role-link>
-      </security-role-ref>
-
     </session>
 
         <session>
@@ -243,17 +241,16 @@
       <ejb-class>es.caib.regweb.LineaOficioRemisionBean</ejb-class>
       <session-type>Stateful</session-type> 
       <transaction-type>Bean</transaction-type>
+       <security-role-ref>
+            <role-name>RWE_USUARI</role-name>
+            <role-link>RWE_USUARI</role-link>
+      </security-role-ref>
       <resource-ref>
 		<description>DataSource DB</description>
 		<res-ref-name>es.caib.regweb.db</res-ref-name>
 		<res-type>javax.sql.DataSource</res-type>
 		<res-auth>Container</res-auth>
        </resource-ref>	
-       <security-role-ref>
-            <role-name>RWE_USUARI</role-name>
-            <role-link>RWE_USUARI</role-link>
-      </security-role-ref>
-
     </session>
 
         <session>
@@ -264,17 +261,16 @@
       <ejb-class>es.caib.regweb.OficioRemisionBean</ejb-class>
       <session-type>Stateful</session-type> 
       <transaction-type>Bean</transaction-type>
+       <security-role-ref>
+            <role-name>RWE_USUARI</role-name>
+            <role-link>RWE_USUARI</role-link>
+      </security-role-ref>
       <resource-ref>
 		<description>DataSource DB</description>
 		<res-ref-name>es.caib.regweb.db</res-ref-name>
 		<res-type>javax.sql.DataSource</res-type>
 		<res-auth>Container</res-auth>
        </resource-ref>	
-       <security-role-ref>
-            <role-name>RWE_USUARI</role-name>
-            <role-link>RWE_USUARI</role-link>
-      </security-role-ref>
-
     </session>
     <session>
       <description>Ejb para Registro de Entrada</description>
@@ -284,16 +280,8 @@
       <ejb-class>es.caib.regweb.RegistroEntradaBean</ejb-class>
       <session-type>Stateful</session-type> 
       <transaction-type>Bean</transaction-type>
-      <resource-ref>
-		<description>DataSource DB</description>
-		<res-ref-name>es.caib.regweb.db</res-ref-name>
-		<res-type>javax.sql.DataSource</res-type>
-		<res-auth>Container</res-auth>
-       </resource-ref>	
-       <security-role-ref>
-            <role-name>RWE_USUARI</role-name>
-            <role-link>RWE_USUARI</role-link>
-      </security-role-ref>
+       	
+
       
     <env-entry>
       <description>Nombre del certificado a usar</description>
@@ -310,7 +298,7 @@
     </env-entry>
     
     <env-entry>
-      <description>ContraseÃ±a del certificado del registro</description>
+      <description>Contraseña del certificado del registro</description>
       <env-entry-name>certPassword</env-entry-name>
       <env-entry-type>java.lang.String</env-entry-type>
       <env-entry-value>12341234</env-entry-value>
@@ -329,6 +317,17 @@
       <env-entry-type>java.lang.String</env-entry-type>
       <env-entry-value>telreg</env-entry-value>
     </env-entry>
+	<security-role-ref>
+            <role-name>RWE_USUARI</role-name>
+            <role-link>RWE_USUARI</role-link>
+      </security-role-ref>
+      <resource-ref>
+		<description>DataSource DB</description>
+		<res-ref-name>es.caib.regweb.db</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+       </resource-ref>
+	
     </session>
     
     <session>
@@ -339,17 +338,7 @@
       <ejb-class>es.caib.regweb.RegistroSalidaBean</ejb-class>
       <session-type>Stateful</session-type>
       <transaction-type>Bean</transaction-type>
-      <resource-ref>
-		<description>DataSource DB</description>
-		<res-ref-name>es.caib.regweb.db</res-ref-name>
-		<res-type>javax.sql.DataSource</res-type>
-		<res-auth>Container</res-auth>
-       </resource-ref>	
-       <security-role-ref>
-            <role-name>RWE_USUARI</role-name>
-            <role-link>RWE_USUARI</role-link>
-      </security-role-ref>
-      
+
     <env-entry>
       <description>Usuari d'enllac d'AS400 per VPO i CSS</description>
       <env-entry-name>usuEnllac</env-entry-name>
@@ -363,6 +352,18 @@
       <env-entry-type>java.lang.String</env-entry-type>
       <env-entry-value>telreg</env-entry-value>
     </env-entry>
+	
+	<security-role-ref>
+            <role-name>RWE_USUARI</role-name>
+            <role-link>RWE_USUARI</role-link>
+      </security-role-ref>
+      <resource-ref>
+		<description>DataSource DB</description>
+		<res-ref-name>es.caib.regweb.db</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+       </resource-ref>	
+	
     </session>
     <session>
       <description>Ejb para recuperar datos adicionales</description>
@@ -387,16 +388,8 @@
       <ejb-class>es.caib.regweb.RegistroModificadoEntradaBean</ejb-class>
       <session-type>Stateful</session-type> 
       <transaction-type>Bean</transaction-type>
-      <resource-ref>
-		<description>DataSource DB</description>
-		<res-ref-name>es.caib.regweb.db</res-ref-name>
-		<res-type>javax.sql.DataSource</res-type>
-		<res-auth>Container</res-auth>
-       </resource-ref>	
-       <security-role-ref>
-            <role-name>RWE_USUARI</role-name>
-            <role-link>RWE_USUARI</role-link>
-      </security-role-ref>
+
+
       
           <env-entry>
       <description>Usuari d'enllac d'AS400 per VPO i CSS</description>
@@ -411,6 +404,17 @@
       <env-entry-type>java.lang.String</env-entry-type>
       <env-entry-value>telreg</env-entry-value>
     </env-entry>
+	
+	<security-role-ref>
+            <role-name>RWE_USUARI</role-name>
+            <role-link>RWE_USUARI</role-link>
+      </security-role-ref>
+      <resource-ref>
+		<description>DataSource DB</description>
+		<res-ref-name>es.caib.regweb.db</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+       </resource-ref>	
       
     </session>
     <session>
@@ -421,18 +425,10 @@
       <ejb-class>es.caib.regweb.RegistroModificadoSalidaBean</ejb-class>
       <session-type>Stateful</session-type> 
       <transaction-type>Bean</transaction-type>
-      <resource-ref>
-		<description>DataSource DB</description>
-		<res-ref-name>es.caib.regweb.db</res-ref-name>
-		<res-type>javax.sql.DataSource</res-type>
-		<res-auth>Container</res-auth>
-       </resource-ref>	
-       <security-role-ref>
-            <role-name>RWE_USUARI</role-name>
-            <role-link>RWE_USUARI</role-link>
-      </security-role-ref>
+
+
       
-          <env-entry>
+	  <env-entry>
       <description>Usuari d'enllac d'AS400 per VPO i CSS</description>
       <env-entry-name>usuEnllac</env-entry-name>
       <env-entry-type>java.lang.String</env-entry-type>
@@ -445,8 +441,21 @@
       <env-entry-type>java.lang.String</env-entry-type>
       <env-entry-value>telreg</env-entry-value>
     </env-entry>
+	
+	   <security-role-ref>
+            <role-name>RWE_USUARI</role-name>
+            <role-link>RWE_USUARI</role-link>
+      </security-role-ref>
+      <resource-ref>
+		<description>DataSource DB</description>
+		<res-ref-name>es.caib.regweb.db</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+       </resource-ref>	
       
     </session>
+	
+	
     <session>
       <description>Ejb para Registro Publicado</description>
       <ejb-name>RegistroPublicadoEntrada</ejb-name>
@@ -455,16 +464,17 @@
       <ejb-class>es.caib.regweb.RegistroPublicadoEntradaBean</ejb-class>
       <session-type>Stateful</session-type> 
       <transaction-type>Bean</transaction-type>
+       <security-role-ref>
+            <role-name>RWE_USUARI</role-name>
+            <role-link>RWE_USUARI</role-link>
+      </security-role-ref>
       <resource-ref>
 		<description>DataSource DB</description>
 		<res-ref-name>es.caib.regweb.db</res-ref-name>
 		<res-type>javax.sql.DataSource</res-type>
 		<res-auth>Container</res-auth>
        </resource-ref>	
-       <security-role-ref>
-            <role-name>RWE_USUARI</role-name>
-            <role-link>RWE_USUARI</role-link>
-      </security-role-ref>
+
     </session>
 
    <session>
@@ -475,16 +485,16 @@
       <ejb-class>es.caib.regweb.ReproUsuarioBean</ejb-class>
       <session-type>Stateless</session-type> 
       <transaction-type>Container</transaction-type>
+       <security-role-ref>
+            <role-name>RWE_USUARI</role-name>
+            <role-link>RWE_USUARI</role-link>
+      </security-role-ref>
       <resource-ref>
 		<description>DataSource DB</description>
 		<res-ref-name>es.caib.regweb.db</res-ref-name>
 		<res-type>javax.sql.DataSource</res-type>
 		<res-auth>Container</res-auth>
        </resource-ref>	
-       <security-role-ref>
-            <role-name>RWE_USUARI</role-name>
-            <role-link>RWE_USUARI</role-link>
-      </security-role-ref>
     </session>
 
 

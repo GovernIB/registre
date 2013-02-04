@@ -10,7 +10,7 @@
     <groupId>es.caib.regweb</groupId>
     <artifactId>regweb-integrationTests</artifactId>
     <packaging>pom</packaging>
-    <name>Registre Web - integration tests</name>
+    <name>Registre - integration tests</name>
 
     <dependencies>
         <dependency>

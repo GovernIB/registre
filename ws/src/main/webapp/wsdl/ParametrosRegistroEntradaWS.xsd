@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"  
+	xmlns:tns="urn:es:caib:regweb:ws:v1:model:ParametrosRegistroEntradaWS" 
+	targetNamespace="urn:es:caib:regweb:ws:v1:model:ParametrosRegistroEntradaWS" version="1.0">
+	<xs:complexType name="ParametrosRegistroEntradaWS">
+			<xs:sequence>
+				<xs:element name="usuario" type="xs:string"/>
+				<xs:element name="password" type="xs:string"/>
+				<xs:element name="actualizacion" type="xs:boolean" minOccurs="0"/>
+				<xs:element name="altres" type="xs:string" minOccurs="0"/>
+				<xs:element name="altresNuevo" type="xs:string" minOccurs="0"/>
+				<xs:element name="anoEntrada" type="xs:string" minOccurs="0"/>
+				<xs:element name="balears" type="xs:string" minOccurs="0"/>
+				<xs:element name="comentario" type="xs:string" minOccurs="0"/>
+				<xs:element name="comentarioNuevo" type="xs:string" minOccurs="0"/>
+				<xs:element name="correo" type="xs:string" minOccurs="0"/>
+				<xs:element name="data" type="xs:string" minOccurs="0"/>
+				<xs:element name="dataentrada" type="xs:string" minOccurs="0"/>
+				<xs:element name="dataVisado" type="xs:string" minOccurs="0"/>
+				<xs:element name="descripcionDocumento" type="xs:string" minOccurs="0"/>
+				<xs:element name="descripcionIdiomaDocumento" type="xs:string" minOccurs="0"/>
+				<xs:element name="descripcionMunicipi060" type="xs:string" minOccurs="0"/>
+				<xs:element name="descripcionOficina" type="xs:string" minOccurs="0"/>
+				<xs:element name="descripcionOficinaFisica" type="xs:string" minOccurs="0"/>
+				<xs:element name="descripcionOrganismoDestinatario" type="xs:string" minOccurs="0"/>
+				<xs:element name="descripcionRemitente" type="xs:string" minOccurs="0"/>
+				<xs:element name="destinatari" type="xs:string" minOccurs="0"/>
+				<xs:element name="disquet" type="xs:string" minOccurs="0"/>
+				<xs:element name="emailRemitent" type="xs:string" minOccurs="0"/>
+				<xs:element name="entidad1" type="xs:string" minOccurs="0"/>
+				<xs:element name="entidad1Grabada" type="xs:string" minOccurs="0"/>
+				<xs:element name="entidad1Nuevo" type="xs:string" minOccurs="0"/>
+				<xs:element name="entidad2" type="xs:string" minOccurs="0"/>
+				<xs:element name="entidad2Nuevo" type="xs:string" minOccurs="0"/>
+				<xs:element name="entidadCastellano" type="xs:string" minOccurs="0"/>
+				<xs:element name="fora" type="xs:string" minOccurs="0"/>
+				<xs:element name="hora" type="xs:string" minOccurs="0"/>
+				<xs:element name="idioex" type="xs:string" minOccurs="0"/>
+				<xs:element name="idioma" type="xs:string" minOccurs="0"/>
+				<xs:element name="idiomaExtracto" type="xs:string" minOccurs="0"/>
+				<xs:element name="leido" type="xs:boolean" minOccurs="0"/>
+				<xs:element name="localitzadorsDocs" type="xs:string" minOccurs="0"/>
+				<xs:element name="motivo" type="xs:string" minOccurs="0"/>
+				<xs:element name="municipi060" type="xs:string" minOccurs="0"/>
+				<xs:element name="numeroDocumentosRegistro060" type="xs:string" minOccurs="0"/>
+				<xs:element name="numeroEntrada" type="xs:string" minOccurs="0"/>
+				<xs:element name="oficina" type="xs:string" minOccurs="0"/>
+				<xs:element name="oficinafisica" type="xs:string" minOccurs="0"/>
+				<xs:element name="origenRegistro" type="xs:string" minOccurs="0"/>
+				<xs:element name="paramRegPubEnt" type="tns:ParametrosRegistroPublicadoEntradaWS" minOccurs="0"/>
+				<xs:element name="procedenciaGeografica" type="xs:string" minOccurs="0"/>
+				<xs:element name="registroActualizado" type="xs:boolean" minOccurs="0"/>
+				<xs:element name="registroAnulado" type="xs:string" minOccurs="0"/>
+				<xs:element name="registroGrabado" type="xs:boolean" minOccurs="0"/>
+				<xs:element name="salida1" type="xs:string" minOccurs="0"/>
+				<xs:element name="salida2" type="xs:string" minOccurs="0"/>
+				<xs:element name="tipo" type="xs:string" minOccurs="0"/>
+				<xs:element name="validado" type="xs:boolean" minOccurs="0"/>   
+				<xs:element name="errores" type="tns:listaErroresEntrada" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ParametrosRegistroPublicadoEntradaWS">
+		<xs:sequence>
+			<xs:element name="anoEntrada" type="xs:int"/>
+			<xs:element name="numero" type="xs:int"/>
+			<xs:element name="oficina" type="xs:int"/>
+			<xs:element name="numeroBOCAIB" type="xs:int"/>
+			<xs:element name="fecha" type="xs:int"/>
+			<xs:element name="pagina" type="xs:int"/>
+			<xs:element name="lineas" type="xs:int"/>
+			<xs:element name="contenido" type="xs:string"/>
+			<xs:element name="observaciones" type="xs:string"/>			
+			<xs:element name="leido" type="xs:boolean"/>
+			<xs:element name="errorfecha" type="xs:boolean"/>						
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="listaErroresEntrada">
+		<xs:sequence>
+			<xs:element name="errores" type="tns:errorEntrada" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="errorEntrada">
+		<xs:sequence>
+			<xs:element name="codigo" type="xs:string"/>
+			<xs:element name="descripcion" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

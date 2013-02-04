@@ -1,0 +1,622 @@
+<wsdl:definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+xmlns:impl="urn:es:caib:regweb:ws:v1:services" 
+xmlns:intf="urn:es:caib:regweb:ws:v1:model:RegwebFacade" 
+xmlns:tns1="urn:es:caib:regweb:ws:v1:model:ParametrosRegistroEntradaWS" 
+xmlns:tns2="urn:es:caib:regweb:ws:v1:model:ParametrosRegistroSalidaWS" 
+targetNamespace="urn:es:caib:regweb:ws:v1:services" 
+name="RegwebFacade">
+	<wsdl:types>
+		<schema elementFormDefault="qualified" targetNamespace="urn:es:caib:regweb:ws:v1:model:RegwebFacade" 
+		xmlns="http://www.w3.org/2001/XMLSchema" version="1.0">
+			<xsd:import namespace="urn:es:caib:regweb:ws:v1:model:ParametrosRegistroEntradaWS" schemaLocation="ParametrosRegistroEntradaWS.xsd"/>
+			<xsd:import namespace="urn:es:caib:regweb:ws:v1:model:ParametrosRegistroSalidaWS" schemaLocation="ParametrosRegistroSalidaWS.xsd"/>
+			
+			<xsd:element name="actualizarEntrada">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="parametrosEntrada" type="tns1:ParametrosRegistroEntradaWS"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="actualizarEntradaResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="actualizarEntradaReturn" type="tns1:ParametrosRegistroEntradaWS"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="actualizarSalida">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="parametrosSalida" type="tns2:ParametrosRegistroSalidaWS"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="actualizarSalidaResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="actualizarSalidaReturn" type="tns2:ParametrosRegistroSalidaWS"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="anularEntrada">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="parametrosEntrada" type="tns1:ParametrosRegistroEntradaWS"/>
+						<xsd:element name="anular" type="xsd:boolean"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="anularEntradaResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="anularEntradaReturn" type="xsd:boolean"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="anularSalida">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="parametrosSalida" type="tns2:ParametrosRegistroSalidaWS"/>
+						<xsd:element name="anular" type="xsd:boolean"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="anularSalidaResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="anularSalidaReturn" type="xsd:boolean"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="grabarEntrada">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="parametrosEntrada" type="tns1:ParametrosRegistroEntradaWS"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="grabarEntradaResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="grabarEntradaReturn" type="tns1:ParametrosRegistroEntradaWS"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="grabarSalida">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="parametrosSalida" type="tns2:ParametrosRegistroSalidaWS"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="grabarSalidaResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="grabarSalidaReturn" type="tns2:ParametrosRegistroSalidaWS"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="leerEntrada">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="parametrosEntrada" type="tns1:ParametrosRegistroEntradaWS"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="leerEntradaResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="leerEntradaReturn" type="tns1:ParametrosRegistroEntradaWS"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="leerSalida">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="parametrosSalida" type="tns2:ParametrosRegistroSalidaWS"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="leerSalidaResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="leerSalidaReturn" type="tns2:ParametrosRegistroSalidaWS"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="validarEntrada">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="parametrosEntrada" type="tns1:ParametrosRegistroEntradaWS"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="validarEntradaResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="validarEntradaReturn" type="tns1:ParametrosRegistroEntradaWS"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="validarSalida">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="parametrosSalida" type="tns2:ParametrosRegistroSalidaWS"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="validarSalidaResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="validarSalidaReturn" type="tns2:ParametrosRegistroSalidaWS"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:complexType name="listaResultados">
+				<xsd:sequence>
+					<xsd:element name="resultado" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:element name="buscarOficinasFisicasDescripcion">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="usuario" type="xsd:string"/>
+						<xsd:element name="password" type="xsd:string"/>
+						<xsd:element name="filtro" type="xsd:string"/>
+						<xsd:element name="tipo" type="xsd:string"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="buscarOficinasFisicasDescripcionResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="buscarOficinasFisicasDescripcionReturn" type="intf:listaResultados"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="buscarOficinasFisicas">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="usuario" type="xsd:string"/>
+						<xsd:element name="password" type="xsd:string"/>
+						<xsd:element name="usuarioRegistro" type="xsd:string"/>
+						<xsd:element name="tipo" type="xsd:string"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="buscarOficinasFisicasResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="buscarOficinasFisicasReturn" type="intf:listaResultados"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="buscarDocumentos">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="usuario" type="xsd:string"/>
+						<xsd:element name="password" type="xsd:string"/>						
+					</xsd:sequence>
+				</xsd:complexType>			
+			</xsd:element>
+			<xsd:element name="buscarDocumentosResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="buscarDocumentosReturn" type="intf:listaResultados"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+						
+			<xsd:element name="buscarTodosDestinatarios">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="usuario" type="xsd:string"/>
+						<xsd:element name="password" type="xsd:string"/>						
+					</xsd:sequence>
+				</xsd:complexType>				
+			</xsd:element>
+			<xsd:element name="buscarTodosDestinatariosResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="buscarTodosDestinatariosReturn" type="intf:listaResultados"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>						
+									
+						
+			<complexType name="RegwebFacadeException">
+				<sequence/>
+			</complexType>
+			
+			<xsd:element name="fault" type="intf:RegwebFacadeException"/>
+		</schema>
+	</wsdl:types>
+	
+	<wsdl:message name="RegwebFacadeException">
+		<wsdl:part name="fault" element="intf:fault"/>
+	</wsdl:message>
+	
+	<wsdl:message name="actualizarEntradaRequest">
+		<wsdl:part name="parameters" element="intf:actualizarEntrada"/>
+	</wsdl:message>
+	<wsdl:message name="actualizarEntradaResponse">
+		<wsdl:part name="parameters" element="intf:actualizarEntradaResponse"/>
+	</wsdl:message>
+	
+	<wsdl:message name="actualizarSalidaRequest">
+		<wsdl:part name="parameters" element="intf:actualizarSalida"/>
+	</wsdl:message>
+	<wsdl:message name="actualizarSalidaResponse">
+		<wsdl:part name="parameters" element="intf:actualizarSalidaResponse"/>
+	</wsdl:message>
+		
+	<wsdl:message name="anularEntradaRequest">
+		<wsdl:part name="parameters" element="intf:anularEntrada"/>
+	</wsdl:message>
+	<wsdl:message name="anularEntradaResponse">
+		<wsdl:part name="parameters" element="intf:anularEntradaResponse"/>
+	</wsdl:message>
+	
+	<wsdl:message name="anularSalidaRequest">
+		<wsdl:part name="parameters" element="intf:anularSalida"/>
+	</wsdl:message>
+	<wsdl:message name="anularSalidaResponse">
+		<wsdl:part name="parameters" element="intf:anularSalidaResponse"/>
+	</wsdl:message>
+	
+	<wsdl:message name="grabarEntradaRequest">
+		<wsdl:part name="parameters" element="intf:grabarEntrada"/>
+	</wsdl:message>
+	<wsdl:message name="grabarEntradaResponse">
+		<wsdl:part name="parameters" element="intf:grabarEntradaResponse"/>
+	</wsdl:message>
+	
+	<wsdl:message name="grabarSalidaRequest">
+		<wsdl:part name="parameters" element="intf:grabarSalida"/>
+	</wsdl:message>
+	<wsdl:message name="grabarSalidaResponse">
+		<wsdl:part name="parameters" element="intf:grabarSalidaResponse"/>
+	</wsdl:message>
+	
+	<wsdl:message name="leerEntradaRequest">
+		<wsdl:part name="parameters" element="intf:leerEntrada"/>
+	</wsdl:message>
+	<wsdl:message name="leerEntradaResponse">
+		<wsdl:part name="parameters" element="intf:leerEntradaResponse"/>
+	</wsdl:message>
+	
+	<wsdl:message name="leerSalidaRequest">
+		<wsdl:part name="parameters" element="intf:leerSalida"/>
+	</wsdl:message>
+	<wsdl:message name="leerSalidaResponse">
+		<wsdl:part name="parameters" element="intf:leerSalidaResponse"/>
+	</wsdl:message>
+	
+	<wsdl:message name="validarEntradaRequest">
+		<wsdl:part name="parameters" element="intf:validarEntrada"/>
+	</wsdl:message>
+	<wsdl:message name="validarEntradaResponse">
+		<wsdl:part name="parameters" element="intf:validarEntradaResponse"/>
+	</wsdl:message>
+	
+	<wsdl:message name="validarSalidaRequest">
+		<wsdl:part name="parameters" element="intf:validarSalida"/>
+	</wsdl:message>
+	<wsdl:message name="validarSalidaResponse">
+		<wsdl:part name="parameters" element="intf:validarSalidaResponse"/>
+	</wsdl:message>
+	
+	<wsdl:message name="buscarOficinasFisicasDescripcionRequest">
+		<wsdl:part name="parameters" element="intf:buscarOficinasFisicasDescripcion"/>
+	</wsdl:message>
+	<wsdl:message name="buscarOficinasFisicasDescripcionResponse">
+		<wsdl:part name="parameters" element="intf:buscarOficinasFisicasDescripcionResponse"/>
+	</wsdl:message>
+	
+	<wsdl:message name="buscarOficinasFisicasRequest">
+		<wsdl:part name="parameters" element="intf:buscarOficinasFisicas"/>
+	</wsdl:message>
+	<wsdl:message name="buscarOficinasFisicasResponse">
+		<wsdl:part name="parameters" element="intf:buscarOficinasFisicasResponse"/>
+	</wsdl:message>
+	
+	<wsdl:message name="buscarDocumentosRequest">
+		<wsdl:part name="parameters" element="intf:buscarDocumentos"/>
+	</wsdl:message>
+	<wsdl:message name="buscarDocumentosResponse">
+		<wsdl:part name="parameters" element="intf:buscarDocumentosResponse"/>
+	</wsdl:message>
+	
+	<wsdl:message name="buscarTodosDestinatariosRequest">
+		<wsdl:part name="parameters" element="intf:buscarTodosDestinatarios"/>
+	</wsdl:message>
+	<wsdl:message name="buscarTodosDestinatariosResponse">
+		<wsdl:part name="parameters" element="intf:buscarTodosDestinatariosResponse"/>
+	</wsdl:message>
+	
+	<wsdl:portType name="RegwebFacade">
+		
+		<wsdl:operation name="actualizarEntrada">
+			<wsdl:input name="actualizarEntradaRequest" message="impl:actualizarEntradaRequest"/>
+			<wsdl:output name="actualizarEntradaResponse" message="impl:actualizarEntradaResponse"/>
+			<wsdl:fault name="RegwebFacadeException" message="impl:RegwebFacadeException"/>
+		</wsdl:operation>
+		<wsdl:operation name="actualizarSalida">
+			<wsdl:input name="actualizarSalidaRequest" message="impl:actualizarSalidaRequest"/>
+			<wsdl:output name="actualizarSalidaResponse" message="impl:actualizarSalidaResponse"/>
+			<wsdl:fault name="RegwebFacadeException" message="impl:RegwebFacadeException"/>
+		</wsdl:operation>
+		
+		<wsdl:operation name="anularEntrada">
+			<wsdl:input name="anularEntradaRequest" message="impl:anularEntradaRequest"/>
+			<wsdl:output name="anularEntradaResponse" message="impl:anularEntradaResponse"/>
+			<wsdl:fault name="RegwebFacadeException" message="impl:RegwebFacadeException"/>
+		</wsdl:operation>
+		<wsdl:operation name="anularSalida">
+			<wsdl:input name="anularSalidaRequest" message="impl:anularSalidaRequest"/>
+			<wsdl:output name="anularSalidaResponse" message="impl:anularSalidaResponse"/>
+			<wsdl:fault name="RegwebFacadeException" message="impl:RegwebFacadeException"/>
+		</wsdl:operation>
+		
+		<wsdl:operation name="grabarEntrada">
+			<wsdl:input name="grabarEntradaRequest" message="impl:grabarEntradaRequest"/>
+			<wsdl:output name="grabarEntradaResponse" message="impl:grabarEntradaResponse"/>
+			<wsdl:fault name="RegwebFacadeException" message="impl:RegwebFacadeException"/>
+		</wsdl:operation>
+		<wsdl:operation name="grabarSalida">
+			<wsdl:input name="grabarSalidaRequest" message="impl:grabarSalidaRequest"/>
+			<wsdl:output name="grabarSalidaResponse" message="impl:grabarSalidaResponse"/>
+			<wsdl:fault name="RegwebFacadeException" message="impl:RegwebFacadeException"/>
+		</wsdl:operation>
+		
+		<wsdl:operation name="leerEntrada">
+			<wsdl:input name="leerEntradaRequest" message="impl:leerEntradaRequest"/>
+			<wsdl:output name="leerEntradaResponse" message="impl:leerEntradaResponse"/>
+			<wsdl:fault name="RegwebFacadeException" message="impl:RegwebFacadeException"/>
+		</wsdl:operation>
+		<wsdl:operation name="leerSalida">
+			<wsdl:input name="leerSalidaRequest" message="impl:leerSalidaRequest"/>
+			<wsdl:output name="leerSalidaResponse" message="impl:leerSalidaResponse"/>
+			<wsdl:fault name="RegwebFacadeException" message="impl:RegwebFacadeException"/>
+		</wsdl:operation>
+		
+		<wsdl:operation name="validarEntrada">
+			<wsdl:input name="validarEntradaRequest" message="impl:validarEntradaRequest"/>
+			<wsdl:output name="validarEntradaResponse" message="impl:validarEntradaResponse"/>
+			<wsdl:fault name="RegwebFacadeException" message="impl:RegwebFacadeException"/>
+		</wsdl:operation>
+		<wsdl:operation name="validarSalida">
+			<wsdl:input name="validarSalidaRequest" message="impl:validarSalidaRequest"/>
+			<wsdl:output name="validarSalidaResponse" message="impl:validarSalidaResponse"/>
+			<wsdl:fault name="RegwebFacadeException" message="impl:RegwebFacadeException"/>
+		</wsdl:operation>
+		
+		<wsdl:operation name="buscarOficinasFisicasDescripcion">
+			<wsdl:input name="buscarOficinasFisicasDescripcionRequest" message="impl:buscarOficinasFisicasDescripcionRequest"/>
+			<wsdl:output name="buscarOficinasFisicasDescripcionResponse" message="impl:buscarOficinasFisicasDescripcionResponse"/>
+			<wsdl:fault name="RegwebFacadeException" message="impl:RegwebFacadeException"/>
+		</wsdl:operation>
+		
+		<wsdl:operation name="buscarOficinasFisicas">
+			<wsdl:input name="buscarOficinasFisicasRequest" message="impl:buscarOficinasFisicasRequest"/>
+			<wsdl:output name="buscarOficinasFisicasResponse" message="impl:buscarOficinasFisicasResponse"/>
+			<wsdl:fault name="RegwebFacadeException" message="impl:RegwebFacadeException"/>
+		</wsdl:operation>
+		
+		<wsdl:operation name="buscarDocumentos">
+			<wsdl:input name="buscarDocumentosRequest" message="impl:buscarDocumentosRequest"/>
+			<wsdl:output name="buscarDocumentosResponse" message="impl:buscarDocumentosResponse"/>
+			<wsdl:fault name="RegwebFacadeException" message="impl:RegwebFacadeException"/>
+		</wsdl:operation>
+		
+		<wsdl:operation name="buscarTodosDestinatarios">
+			<wsdl:input name="buscarTodosDestinatariosRequest" message="impl:buscarTodosDestinatariosRequest"/>
+			<wsdl:output name="buscarTodosDestinatariosResponse" message="impl:buscarTodosDestinatariosResponse"/>
+			<wsdl:fault name="RegwebFacadeException" message="impl:RegwebFacadeException"/>
+		</wsdl:operation>
+		
+	</wsdl:portType>
+	
+	<wsdl:binding name="RegwebFacadeSoapBinding" type="impl:RegwebFacade">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		
+		<wsdl:operation name="actualizarEntrada">
+			<soap:operation/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="RegwebFacadeException">
+				<soap:fault name="RegwebFacadeException" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="actualizarSalida">
+			<soap:operation/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="RegwebFacadeException">
+				<soap:fault name="RegwebFacadeException" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="anularEntrada">
+			<soap:operation/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="RegwebFacadeException">
+				<soap:fault name="RegwebFacadeException" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="anularSalida">
+			<soap:operation/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="RegwebFacadeException">
+				<soap:fault name="RegwebFacadeException" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="grabarEntrada">
+			<soap:operation/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="RegwebFacadeException">
+				<soap:fault name="RegwebFacadeException" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="grabarSalida">
+			<soap:operation/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="RegwebFacadeException">
+				<soap:fault name="RegwebFacadeException" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="leerEntrada">
+			<soap:operation/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="RegwebFacadeException">
+				<soap:fault name="RegwebFacadeException" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="leerSalida">
+			<soap:operation/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="RegwebFacadeException">
+				<soap:fault name="RegwebFacadeException" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="validarEntrada">
+			<soap:operation/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="RegwebFacadeException">
+				<soap:fault name="RegwebFacadeException" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="validarSalida">
+			<soap:operation/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="RegwebFacadeException">
+				<soap:fault name="RegwebFacadeException" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="buscarOficinasFisicasDescripcion">
+			<soap:operation/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="RegwebFacadeException">
+				<soap:fault name="RegwebFacadeException" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="buscarOficinasFisicas">
+			<soap:operation/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="RegwebFacadeException">
+				<soap:fault name="RegwebFacadeException" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="buscarDocumentos">
+			<soap:operation/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="RegwebFacadeException">
+				<soap:fault name="RegwebFacadeException" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="buscarTodosDestinatarios">
+			<soap:operation/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="RegwebFacadeException">
+				<soap:fault name="RegwebFacadeException" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		
+	</wsdl:binding>
+	<wsdl:service name="RegwebFacadeService">
+		<wsdl:port name="RegwebFacade" binding="impl:RegwebFacadeSoapBinding">
+			<soap:address location="http://intranet.caib.es/regweb/services/v1/RegwebFacade"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

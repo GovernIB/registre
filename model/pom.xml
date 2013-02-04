@@ -4,7 +4,7 @@
     <groupId>es.caib.regweb</groupId>
     <artifactId>regweb-model</artifactId>
     <packaging>jar</packaging>
-    <name>Registre Web - model</name>
+    <name>Registre - model</name>
 
     <parent>
         <groupId>es.caib</groupId>

@@ -1,0 +1,164 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+	<groupId>es.caib.regweb</groupId>
+	<artifactId>regweb-ws</artifactId>
+	<packaging>war</packaging>
+	<name>Registre - ws</name>
+	
+	<parent>
+        <groupId>es.caib</groupId>
+        <artifactId>regweb</artifactId>
+        <version>2.0.0</version>
+    </parent>
+	
+	<build>
+	<!--
+		<finalName>regweb</finalName>
+		-->
+		<plugins>
+			<plugin>
+				
+				<!--  Maven compiler plugin -->
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+					<optimize>true</optimize>
+				</configuration>
+			</plugin>
+			
+			
+			<plugin>
+			    <groupId>org.codehaus.mojo</groupId>
+                <artifactId>axistools-maven-plugin</artifactId>
+				<version>1.4</version>
+                <executions>
+                    <execution>
+                        <id>ax-ws-autogen</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>wsdl2java</goal>
+                        </goals>
+                        <configuration>
+							<!--	
+						    <urls>
+							   <url>http://localhost:8080/regwebWS/services/RegwebFacade?wsdl</url>
+							</urls>
+							-->			
+                            <allElements>false</allElements>
+						
+	
+                            <sourceDirectory>src/main/webapp/wsdl</sourceDirectory>
+                            <wsdlFiles>
+                                <wsdlFile>RegwebFacade.wsdl</wsdlFile>
+                            </wsdlFiles>
+                            <packageSpace>es.caib.regweb.ws.services.regwebfacade</packageSpace>
+							<typeMappingVersion>1.2</typeMappingVersion>
+                            <testCases>false</testCases>
+                            <serverSide>false</serverSide>
+                            <subPackageByFileName>false</subPackageByFileName>
+                            <outputDirectory>client/src/main/java</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+		</plugins>
+
+	</build>
+	
+	<dependencies>
+	
+	
+        <dependency>
+            <groupId>es.caib.regweb</groupId>
+            <artifactId>regweb-logic</artifactId>
+            <version>${project.version}</version>
+            <type>ejb</type>
+            <scope>provided</scope>
+        </dependency>
+
+	
+		  <dependency>
+			<groupId>org.apache.axis</groupId>
+			<artifactId>axis</artifactId>
+			<version>1.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.axis</groupId>
+			<artifactId>axis-jaxrpc</artifactId>
+			<version>1.4</version>
+			<scope>provided</scope>
+		</dependency>
+	   
+		<dependency>
+			<groupId>org.apache.axis</groupId>
+			<artifactId>axis-saaj</artifactId>
+			<version>1.4</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-discovery</groupId>
+			<artifactId>commons-discovery</artifactId>
+			<version>0.5</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.4</version>			
+		</dependency>
+
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+			<version>1.0.4</version>
+            <scope>provided</scope>
+        </dependency>
+		<!--
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.4</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>commons-modeler</groupId>
+			<artifactId>commons-modeler</artifactId>
+			<version>2.0.1</version>
+		</dependency>
+		
+		-->
+		
+		<dependency>
+			<groupId>axis</groupId>
+			<artifactId>axis-wsdl4j</artifactId>
+			<version>1.5.1</version>
+		</dependency>
+		
+		<dependency>
+		  <groupId>axis</groupId>
+		  <artifactId>axis-ant</artifactId>
+		  <version>1.4</version>
+		</dependency>
+  
+		
+		<dependency>
+			<groupId>jboss</groupId>
+			<artifactId>jbossall-client</artifactId>
+			<version>3.2.3</version>			
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>jboss</groupId>
+			<artifactId>jbosssx</artifactId>
+			<version>3.2.3</version>
+			<scope>provided</scope>
+		</dependency>
+            
+	</dependencies>
+		
+</project>

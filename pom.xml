@@ -4,14 +4,15 @@
     <version>2.0.0</version>
     <artifactId>regweb</artifactId>
     <packaging>pom</packaging>
-    <name>Registre Web</name>
+    <name>Registre</name>
 
     <modules>
-        <module>ear</module>
+	    <module>model</module>
+		<module>logic</module>
+		<module>ejb</module>
         <module>webapp</module>
-        <module>ejb</module>
-        <module>logic</module>
-        <module>model</module>
+		<module>ws</module>
+		<module>ear</module>
         <module>integrationTests</module>
     </modules>
 
