@@ -19,7 +19,13 @@
         <script>
             function abre() {
             //ventana=window.open("http://suport.caib.es/sacmicrofront/contenido.do?mkey=M207&lang=CA&cont=9853");
+            <% String suport = System.getProperty("registre.suport");
+               if (suport == null || suport.trim().length() == 0) {
+            %>
             ventana=window.open("<fmt:message key='urlPinfos'/>");
+            <% } else { %>
+            ventana=window.open("<%=suport%>");
+            <% } %>
             ventana.moveTo(0,0);
             ventana.focus();
             }

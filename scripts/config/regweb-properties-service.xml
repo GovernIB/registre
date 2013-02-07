@@ -18,6 +18,9 @@
            Si no es defineix llavors s'empra "El Govern de les Illes Balears" -->
       <!-- entitat.correu.nom=NOM_ENTITAT_CORREU -->
 	  
+	  <!-- URL a una pàgina de support. Si no es defineix, llavors el valor és el del missatge amb codi "urlPinfos" -->
+	  <!-- registre.suport=URL A SUPORT -->
+	  
       <!-- Atribut que indica al registre si han d'apareixer els camps d'acarament -->
       <!--es.caib.regweb.integracionIBKEYActiva=true-->
     </attribute>
