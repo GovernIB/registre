@@ -241,7 +241,7 @@
         BHE_CODUSU varchar(10) not null,
         BHE_EMAIL varchar(50) not null,
         BHE_DATA varchar(10) not null,
-        BHE_HORA varchar(5) not null,
+        BHE_HORA varchar(8) not null,
         BHE_TIPUSMAIL varchar(1) not null,
         primary key (BHE_ANY, BHE_TIPUS, BHE_NUM, BHE_NUMREG, BHE_CODIOFI)
     );

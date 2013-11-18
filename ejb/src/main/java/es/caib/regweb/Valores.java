@@ -147,7 +147,14 @@ public interface Valores extends EJBObject {
 	 * @throws RemoteException
 	 * @return String, con la hora y minutos del sistema (HH:mm).
 	 */
+	@Deprecated
 	public String getHorasMinutos() throws RemoteException;
+	
+	 /** Devuelve en un String la hora, minutos y segundos del sistema en formato hh:mm:ss.
+   * @throws RemoteException
+   * @return String, con la hora,minutos y segundos del sistema (HH:mm).
+   */
+	public String getHorasMinutosSegundos() throws RemoteException;
 	
 	/** Devuelve un Vector cargado con las Entidades que pueden enviar documentos. Este
 	 * metodo recibe un <I>String</I> para realizar la busqueda tanto por la

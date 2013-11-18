@@ -16,7 +16,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
@@ -29,7 +28,6 @@ import es.caib.regweb.logic.util.AdminFacadeUtil;
 import es.caib.regweb.logic.util.RegistroEntradaFacadeUtil;
 import es.caib.regweb.logic.util.ValoresFacadeUtil;
 import es.caib.regweb.logic.util.HistoricoEmailsFacadeUtil;
-import es.caib.regweb.logic.helper.Conf;
 import es.caib.regweb.logic.helper.ModeloDocumentoData;
 import es.caib.regweb.logic.helper.ParametrosRegistroEntrada;
 import es.caib.regweb.logic.helper.ParametrosHistoricoEmails;
@@ -153,7 +151,7 @@ public class EmailServlet extends UtilWebServlet {
 			param.setCodigoUsuario(registro.getUsuario());
 			param.setEmailDestinatario(dir_destinatario);
 			param.setFecha(valores.getFecha());
-			param.setHora(valores.getHorasMinutos());
+			param.setHora(valores.getHorasMinutosSegundos());
 			param.setNumeroRegistro(Integer.parseInt(registro.getNumeroEntrada()));
 			param.setTipoEmail((tipus.equalsIgnoreCase(TIPUS_CIUTADA)?"C":"I"));
 			param.setTipoRegistro("E");

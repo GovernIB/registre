@@ -505,11 +505,19 @@ public class ValoresBean implements SessionBean {
 		return dateF.format(fechaTest);
 	}
 	
+	@Deprecated
 	public String getHorasMinutos() {
 		DateFormat dateF=new SimpleDateFormat("HH:mm");
 		java.util.Date fechaTest=new java.util.Date();
 		return dateF.format(fechaTest);
 	}
+	
+	 public String getHorasMinutosSegundos() {
+	    DateFormat dateF=new SimpleDateFormat("HH:mm:ss");
+	    java.util.Date fechaTest=new java.util.Date();
+	    return dateF.format(fechaTest);
+	  }
+	
 	
 	public Vector buscarRemitentes(String subcadenaCodigo, String subcadenaTexto) {
 		Connection conn = null;

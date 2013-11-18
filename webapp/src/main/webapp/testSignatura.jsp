@@ -51,7 +51,7 @@
 
 registro.fijaUsuario(usuario);
 registro.setdataentrada(valores.getFecha());
-registro.sethora(valores.getHorasMinutos());
+registro.sethora(valores.getHorasMinutosSegundos());
 
 registro.setoficina("2");
 registro.setdata("01/06/2006");
