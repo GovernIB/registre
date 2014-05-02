@@ -8,9 +8,11 @@
 package es.caib.regweb.ws.services.regwebfacade;
 
 public class ParametrosRegistroEntradaWS  implements java.io.Serializable {
-    private java.lang.String usuario;
+    private java.lang.String usuarioRegistro;
 
     private java.lang.String password;
+
+    private java.lang.String usuarioConexion;
 
     private java.lang.Boolean actualizacion;
 
@@ -118,8 +120,9 @@ public class ParametrosRegistroEntradaWS  implements java.io.Serializable {
     }
 
     public ParametrosRegistroEntradaWS(
-           java.lang.String usuario,
+           java.lang.String usuarioRegistro,
            java.lang.String password,
+           java.lang.String usuarioConexion,
            java.lang.Boolean actualizacion,
            java.lang.String altres,
            java.lang.String altresNuevo,
@@ -171,8 +174,9 @@ public class ParametrosRegistroEntradaWS  implements java.io.Serializable {
            java.lang.String tipo,
            java.lang.Boolean validado,
            es.caib.regweb.ws.services.regwebfacade.ListaErroresEntrada errores) {
-           this.usuario = usuario;
+           this.usuarioRegistro = usuarioRegistro;
            this.password = password;
+           this.usuarioConexion = usuarioConexion;
            this.actualizacion = actualizacion;
            this.altres = altres;
            this.altresNuevo = altresNuevo;
@@ -228,22 +232,22 @@ public class ParametrosRegistroEntradaWS  implements java.io.Serializable {
 
 
     /**
-     * Gets the usuario value for this ParametrosRegistroEntradaWS.
+     * Gets the usuarioRegistro value for this ParametrosRegistroEntradaWS.
      * 
-     * @return usuario
+     * @return usuarioRegistro
      */
-    public java.lang.String getUsuario() {
-        return usuario;
+    public java.lang.String getUsuarioRegistro() {
+        return usuarioRegistro;
     }
 
 
     /**
-     * Sets the usuario value for this ParametrosRegistroEntradaWS.
+     * Sets the usuarioRegistro value for this ParametrosRegistroEntradaWS.
      * 
-     * @param usuario
+     * @param usuarioRegistro
      */
-    public void setUsuario(java.lang.String usuario) {
-        this.usuario = usuario;
+    public void setUsuarioRegistro(java.lang.String usuarioRegistro) {
+        this.usuarioRegistro = usuarioRegistro;
     }
 
 
@@ -264,6 +268,26 @@ public class ParametrosRegistroEntradaWS  implements java.io.Serializable {
      */
     public void setPassword(java.lang.String password) {
         this.password = password;
+    }
+
+
+    /**
+     * Gets the usuarioConexion value for this ParametrosRegistroEntradaWS.
+     * 
+     * @return usuarioConexion
+     */
+    public java.lang.String getUsuarioConexion() {
+        return usuarioConexion;
+    }
+
+
+    /**
+     * Sets the usuarioConexion value for this ParametrosRegistroEntradaWS.
+     * 
+     * @param usuarioConexion
+     */
+    public void setUsuarioConexion(java.lang.String usuarioConexion) {
+        this.usuarioConexion = usuarioConexion;
     }
 
 
@@ -1298,12 +1322,15 @@ public class ParametrosRegistroEntradaWS  implements java.io.Serializable {
         __equalsCalc = obj;
         boolean _equals;
         _equals = true && 
-            ((this.usuario==null && other.getUsuario()==null) || 
-             (this.usuario!=null &&
-              this.usuario.equals(other.getUsuario()))) &&
+            ((this.usuarioRegistro==null && other.getUsuarioRegistro()==null) || 
+             (this.usuarioRegistro!=null &&
+              this.usuarioRegistro.equals(other.getUsuarioRegistro()))) &&
             ((this.password==null && other.getPassword()==null) || 
              (this.password!=null &&
               this.password.equals(other.getPassword()))) &&
+            ((this.usuarioConexion==null && other.getUsuarioConexion()==null) || 
+             (this.usuarioConexion!=null &&
+              this.usuarioConexion.equals(other.getUsuarioConexion()))) &&
             ((this.actualizacion==null && other.getActualizacion()==null) || 
              (this.actualizacion!=null &&
               this.actualizacion.equals(other.getActualizacion()))) &&
@@ -1468,11 +1495,14 @@ public class ParametrosRegistroEntradaWS  implements java.io.Serializable {
         }
         __hashCodeCalc = true;
         int _hashCode = 1;
-        if (getUsuario() != null) {
-            _hashCode += getUsuario().hashCode();
+        if (getUsuarioRegistro() != null) {
+            _hashCode += getUsuarioRegistro().hashCode();
         }
         if (getPassword() != null) {
             _hashCode += getPassword().hashCode();
+        }
+        if (getUsuarioConexion() != null) {
+            _hashCode += getUsuarioConexion().hashCode();
         }
         if (getActualizacion() != null) {
             _hashCode += getActualizacion().hashCode();
@@ -1638,14 +1668,20 @@ public class ParametrosRegistroEntradaWS  implements java.io.Serializable {
     static {
         typeDesc.setXmlType(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroEntradaWS", "ParametrosRegistroEntradaWS"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("usuario");
-        elemField.setXmlName(new javax.xml.namespace.QName("", "usuario"));
+        elemField.setFieldName("usuarioRegistro");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "usuarioRegistro"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("password");
         elemField.setXmlName(new javax.xml.namespace.QName("", "password"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("usuarioConexion");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "UsuarioConexion"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);

@@ -5,11 +5,18 @@
  * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
  */
 
-package es.caib.regweb.ws.services;
+package es.caib.regweb.ws.services.regwebfacade;
 
+import es.caib.regweb.ws.model.ErrorEntrada;
+import es.caib.regweb.ws.model.ErrorSalida;
+import es.caib.regweb.ws.model.ListaErroresEntrada;
+import es.caib.regweb.ws.model.ListaErroresSalida;
 import es.caib.regweb.ws.model.ListaResultados;
+import es.caib.regweb.ws.model.ParametrosRegistroEntradaWS;
+import es.caib.regweb.ws.model.ParametrosRegistroPublicadoEntradaWS;
+import es.caib.regweb.ws.model.ParametrosRegistroSalidaWS;
 
-public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub implements es.caib.regweb.ws.services.RegwebFacade {
+public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub implements es.caib.regweb.ws.services.regwebfacade.RegwebFacade_PortType {
     private java.util.Vector cachedSerClasses = new java.util.Vector();
     private java.util.Vector cachedSerQNames = new java.util.Vector();
     private java.util.Vector cachedSerFactories = new java.util.Vector();
@@ -28,16 +35,16 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
         org.apache.axis.description.ParameterDesc param;
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("actualizarEntrada");
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "parametrosEntrada"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroEntradaWS", "ParametrosRegistroEntradaWS"), es.caib.regweb.ws.model.ParametrosRegistroEntradaWS.class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "parametrosEntrada"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroEntradaWS", "ParametrosRegistroEntradaWS"), ParametrosRegistroEntradaWS.class, false, false);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroEntradaWS", "ParametrosRegistroEntradaWS"));
-        oper.setReturnClass(es.caib.regweb.ws.model.ParametrosRegistroEntradaWS.class);
+        oper.setReturnClass(ParametrosRegistroEntradaWS.class);
         oper.setReturnQName(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "actualizarEntradaReturn"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
         oper.addFault(new org.apache.axis.description.FaultDesc(
                       new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "fault"),
-                      "es.caib.regweb.ws.model.RegwebFacadeException",
+                      "es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException",
                       new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "RegwebFacadeException"), 
                       true
                      ));
@@ -45,16 +52,16 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("actualizarSalida");
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "parametrosSalida"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroSalidaWS", "ParametrosRegistroSalidaWS"), es.caib.regweb.ws.model.ParametrosRegistroSalidaWS.class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "parametrosSalida"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroSalidaWS", "ParametrosRegistroSalidaWS"), ParametrosRegistroSalidaWS.class, false, false);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroSalidaWS", "ParametrosRegistroSalidaWS"));
-        oper.setReturnClass(es.caib.regweb.ws.model.ParametrosRegistroSalidaWS.class);
+        oper.setReturnClass(ParametrosRegistroSalidaWS.class);
         oper.setReturnQName(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "actualizarSalidaReturn"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
         oper.addFault(new org.apache.axis.description.FaultDesc(
                       new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "fault"),
-                      "es.caib.regweb.ws.model.RegwebFacadeException",
+                      "es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException",
                       new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "RegwebFacadeException"), 
                       true
                      ));
@@ -62,7 +69,7 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("anularEntrada");
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "parametrosEntrada"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroEntradaWS", "ParametrosRegistroEntradaWS"), es.caib.regweb.ws.model.ParametrosRegistroEntradaWS.class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "parametrosEntrada"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroEntradaWS", "ParametrosRegistroEntradaWS"), ParametrosRegistroEntradaWS.class, false, false);
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "anular"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "boolean"), boolean.class, false, false);
         oper.addParameter(param);
@@ -73,7 +80,7 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
         oper.addFault(new org.apache.axis.description.FaultDesc(
                       new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "fault"),
-                      "es.caib.regweb.ws.model.RegwebFacadeException",
+                      "es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException",
                       new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "RegwebFacadeException"), 
                       true
                      ));
@@ -81,7 +88,7 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("anularSalida");
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "parametrosSalida"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroSalidaWS", "ParametrosRegistroSalidaWS"), es.caib.regweb.ws.model.ParametrosRegistroSalidaWS.class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "parametrosSalida"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroSalidaWS", "ParametrosRegistroSalidaWS"), ParametrosRegistroSalidaWS.class, false, false);
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "anular"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "boolean"), boolean.class, false, false);
         oper.addParameter(param);
@@ -92,7 +99,7 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
         oper.addFault(new org.apache.axis.description.FaultDesc(
                       new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "fault"),
-                      "es.caib.regweb.ws.model.RegwebFacadeException",
+                      "es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException",
                       new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "RegwebFacadeException"), 
                       true
                      ));
@@ -100,16 +107,16 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("grabarEntrada");
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "parametrosEntrada"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroEntradaWS", "ParametrosRegistroEntradaWS"), es.caib.regweb.ws.model.ParametrosRegistroEntradaWS.class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "parametrosEntrada"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroEntradaWS", "ParametrosRegistroEntradaWS"), ParametrosRegistroEntradaWS.class, false, false);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroEntradaWS", "ParametrosRegistroEntradaWS"));
-        oper.setReturnClass(es.caib.regweb.ws.model.ParametrosRegistroEntradaWS.class);
+        oper.setReturnClass(ParametrosRegistroEntradaWS.class);
         oper.setReturnQName(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "grabarEntradaReturn"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
         oper.addFault(new org.apache.axis.description.FaultDesc(
                       new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "fault"),
-                      "es.caib.regweb.ws.model.RegwebFacadeException",
+                      "es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException",
                       new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "RegwebFacadeException"), 
                       true
                      ));
@@ -117,16 +124,16 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("grabarSalida");
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "parametrosSalida"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroSalidaWS", "ParametrosRegistroSalidaWS"), es.caib.regweb.ws.model.ParametrosRegistroSalidaWS.class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "parametrosSalida"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroSalidaWS", "ParametrosRegistroSalidaWS"), ParametrosRegistroSalidaWS.class, false, false);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroSalidaWS", "ParametrosRegistroSalidaWS"));
-        oper.setReturnClass(es.caib.regweb.ws.model.ParametrosRegistroSalidaWS.class);
+        oper.setReturnClass(ParametrosRegistroSalidaWS.class);
         oper.setReturnQName(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "grabarSalidaReturn"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
         oper.addFault(new org.apache.axis.description.FaultDesc(
                       new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "fault"),
-                      "es.caib.regweb.ws.model.RegwebFacadeException",
+                      "es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException",
                       new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "RegwebFacadeException"), 
                       true
                      ));
@@ -134,16 +141,16 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("leerEntrada");
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "parametrosEntrada"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroEntradaWS", "ParametrosRegistroEntradaWS"), es.caib.regweb.ws.model.ParametrosRegistroEntradaWS.class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "parametrosEntrada"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroEntradaWS", "ParametrosRegistroEntradaWS"), ParametrosRegistroEntradaWS.class, false, false);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroEntradaWS", "ParametrosRegistroEntradaWS"));
-        oper.setReturnClass(es.caib.regweb.ws.model.ParametrosRegistroEntradaWS.class);
+        oper.setReturnClass(ParametrosRegistroEntradaWS.class);
         oper.setReturnQName(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "leerEntradaReturn"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
         oper.addFault(new org.apache.axis.description.FaultDesc(
                       new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "fault"),
-                      "es.caib.regweb.ws.model.RegwebFacadeException",
+                      "es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException",
                       new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "RegwebFacadeException"), 
                       true
                      ));
@@ -151,16 +158,16 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("leerSalida");
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "parametrosSalida"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroSalidaWS", "ParametrosRegistroSalidaWS"), es.caib.regweb.ws.model.ParametrosRegistroSalidaWS.class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "parametrosSalida"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroSalidaWS", "ParametrosRegistroSalidaWS"), ParametrosRegistroSalidaWS.class, false, false);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroSalidaWS", "ParametrosRegistroSalidaWS"));
-        oper.setReturnClass(es.caib.regweb.ws.model.ParametrosRegistroSalidaWS.class);
+        oper.setReturnClass(ParametrosRegistroSalidaWS.class);
         oper.setReturnQName(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "leerSalidaReturn"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
         oper.addFault(new org.apache.axis.description.FaultDesc(
                       new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "fault"),
-                      "es.caib.regweb.ws.model.RegwebFacadeException",
+                      "es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException",
                       new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "RegwebFacadeException"), 
                       true
                      ));
@@ -168,16 +175,16 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("validarEntrada");
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "parametrosEntrada"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroEntradaWS", "ParametrosRegistroEntradaWS"), es.caib.regweb.ws.model.ParametrosRegistroEntradaWS.class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "parametrosEntrada"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroEntradaWS", "ParametrosRegistroEntradaWS"), ParametrosRegistroEntradaWS.class, false, false);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroEntradaWS", "ParametrosRegistroEntradaWS"));
-        oper.setReturnClass(es.caib.regweb.ws.model.ParametrosRegistroEntradaWS.class);
+        oper.setReturnClass(ParametrosRegistroEntradaWS.class);
         oper.setReturnQName(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "validarEntradaReturn"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
         oper.addFault(new org.apache.axis.description.FaultDesc(
                       new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "fault"),
-                      "es.caib.regweb.ws.model.RegwebFacadeException",
+                      "es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException",
                       new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "RegwebFacadeException"), 
                       true
                      ));
@@ -185,16 +192,16 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("validarSalida");
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "parametrosSalida"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroSalidaWS", "ParametrosRegistroSalidaWS"), es.caib.regweb.ws.model.ParametrosRegistroSalidaWS.class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "parametrosSalida"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroSalidaWS", "ParametrosRegistroSalidaWS"), ParametrosRegistroSalidaWS.class, false, false);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroSalidaWS", "ParametrosRegistroSalidaWS"));
-        oper.setReturnClass(es.caib.regweb.ws.model.ParametrosRegistroSalidaWS.class);
+        oper.setReturnClass(ParametrosRegistroSalidaWS.class);
         oper.setReturnQName(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "validarSalidaReturn"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
         oper.addFault(new org.apache.axis.description.FaultDesc(
                       new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "fault"),
-                      "es.caib.regweb.ws.model.RegwebFacadeException",
+                      "es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException",
                       new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "RegwebFacadeException"), 
                       true
                      ));
@@ -205,6 +212,7 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
     private static void _initOperationDesc2(){
         org.apache.axis.description.OperationDesc oper;
         org.apache.axis.description.ParameterDesc param;
+        
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("buscarOficinasFisicasDescripcion");
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "usuario"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
@@ -216,13 +224,13 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "tipo"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "listaResultados"));
-        oper.setReturnClass(es.caib.regweb.ws.model.ListaResultados.class);
+        oper.setReturnClass(ListaResultados.class);
         oper.setReturnQName(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "buscarOficinasFisicasDescripcionReturn"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
         oper.addFault(new org.apache.axis.description.FaultDesc(
                       new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "fault"),
-                      "es.caib.regweb.ws.model.RegwebFacadeException",
+                      "es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException",
                       new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "RegwebFacadeException"), 
                       true
                      ));
@@ -239,13 +247,13 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "tipo"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "listaResultados"));
-        oper.setReturnClass(es.caib.regweb.ws.model.ListaResultados.class);
+        oper.setReturnClass(ListaResultados.class);
         oper.setReturnQName(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "buscarOficinasFisicasReturn"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
         oper.addFault(new org.apache.axis.description.FaultDesc(
                       new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "fault"),
-                      "es.caib.regweb.ws.model.RegwebFacadeException",
+                      "es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException",
                       new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "RegwebFacadeException"), 
                       true
                      ));
@@ -258,13 +266,13 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "password"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "listaResultados"));
-        oper.setReturnClass(es.caib.regweb.ws.model.ListaResultados.class);
+        oper.setReturnClass(ListaResultados.class);
         oper.setReturnQName(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "buscarDocumentosReturn"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
         oper.addFault(new org.apache.axis.description.FaultDesc(
                       new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "fault"),
-                      "es.caib.regweb.ws.model.RegwebFacadeException",
+                      "es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException",
                       new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "RegwebFacadeException"), 
                       true
                      ));
@@ -277,19 +285,17 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "password"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "listaResultados"));
-        oper.setReturnClass(es.caib.regweb.ws.model.ListaResultados.class);
+        oper.setReturnClass(ListaResultados.class);
         oper.setReturnQName(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "buscarTodosDestinatariosReturn"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
         oper.addFault(new org.apache.axis.description.FaultDesc(
                       new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "fault"),
-                      "es.caib.regweb.ws.model.RegwebFacadeException",
+                      "es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException",
                       new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "RegwebFacadeException"), 
                       true
                      ));
         _operations[13] = oper;
-        
-
 
     }
 
@@ -302,7 +308,8 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
          super.cachedEndpoint = endpointURL;
     }
 
-    public RegwebFacadeSoapBindingStub(javax.xml.rpc.Service service) throws org.apache.axis.AxisFault {
+    @SuppressWarnings("rawtypes")
+	public RegwebFacadeSoapBindingStub(javax.xml.rpc.Service service) throws org.apache.axis.AxisFault {
         if (service == null) {
             super.service = new org.apache.axis.client.Service();
         } else {
@@ -324,63 +331,63 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
             java.lang.Class simplelistdf = org.apache.axis.encoding.ser.SimpleListDeserializerFactory.class;
             qName = new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroEntradaWS", "errorEntrada");
             cachedSerQNames.add(qName);
-            cls = es.caib.regweb.ws.model.ErrorEntrada.class;
+            cls = ErrorEntrada.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
             qName = new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroEntradaWS", "listaErroresEntrada");
             cachedSerQNames.add(qName);
-            cls = es.caib.regweb.ws.model.ListaErroresEntrada.class;
+            cls = ListaErroresEntrada.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
             qName = new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroEntradaWS", "ParametrosRegistroEntradaWS");
             cachedSerQNames.add(qName);
-            cls = es.caib.regweb.ws.model.ParametrosRegistroEntradaWS.class;
+            cls = ParametrosRegistroEntradaWS.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
             qName = new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroEntradaWS", "ParametrosRegistroPublicadoEntradaWS");
             cachedSerQNames.add(qName);
-            cls = es.caib.regweb.ws.model.ParametrosRegistroPublicadoEntradaWS.class;
+            cls = ParametrosRegistroPublicadoEntradaWS.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
             qName = new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroSalidaWS", "errorSalida");
             cachedSerQNames.add(qName);
-            cls = es.caib.regweb.ws.model.ErrorSalida.class;
+            cls = ErrorSalida.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
             qName = new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroSalidaWS", "listaErroresSalida");
             cachedSerQNames.add(qName);
-            cls = es.caib.regweb.ws.model.ListaErroresSalida.class;
+            cls = ListaErroresSalida.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
             qName = new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:ParametrosRegistroSalidaWS", "ParametrosRegistroSalidaWS");
             cachedSerQNames.add(qName);
-            cls = es.caib.regweb.ws.model.ParametrosRegistroSalidaWS.class;
+            cls = ParametrosRegistroSalidaWS.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
             qName = new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "listaResultados");
             cachedSerQNames.add(qName);
-            cls = es.caib.regweb.ws.model.ListaResultados.class;
+            cls = ListaResultados.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
             qName = new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "RegwebFacadeException");
             cachedSerQNames.add(qName);
-            cls = es.caib.regweb.ws.model.RegwebFacadeException.class;
+            cls = es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
@@ -451,7 +458,7 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
         }
     }
 
-    public es.caib.regweb.ws.model.ParametrosRegistroEntradaWS actualizarEntrada(es.caib.regweb.ws.model.ParametrosRegistroEntradaWS parametrosEntrada) throws java.rmi.RemoteException, es.caib.regweb.ws.model.RegwebFacadeException {
+    public ParametrosRegistroEntradaWS actualizarEntrada(ParametrosRegistroEntradaWS parametrosEntrada) throws java.rmi.RemoteException, es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -473,9 +480,9 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
         else {
             extractAttachments(_call);
             try {
-                return (es.caib.regweb.ws.model.ParametrosRegistroEntradaWS) _resp;
+                return (ParametrosRegistroEntradaWS) _resp;
             } catch (java.lang.Exception _exception) {
-                return (es.caib.regweb.ws.model.ParametrosRegistroEntradaWS) org.apache.axis.utils.JavaUtils.convert(_resp, es.caib.regweb.ws.model.ParametrosRegistroEntradaWS.class);
+                return (ParametrosRegistroEntradaWS) org.apache.axis.utils.JavaUtils.convert(_resp, ParametrosRegistroEntradaWS.class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {
@@ -483,15 +490,15 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
         if (axisFaultException.detail instanceof java.rmi.RemoteException) {
               throw (java.rmi.RemoteException) axisFaultException.detail;
          }
-        if (axisFaultException.detail instanceof es.caib.regweb.ws.model.RegwebFacadeException) {
-              throw (es.caib.regweb.ws.model.RegwebFacadeException) axisFaultException.detail;
+        if (axisFaultException.detail instanceof es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException) {
+              throw (es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException) axisFaultException.detail;
          }
    }
   throw axisFaultException;
 }
     }
 
-    public es.caib.regweb.ws.model.ParametrosRegistroSalidaWS actualizarSalida(es.caib.regweb.ws.model.ParametrosRegistroSalidaWS parametrosSalida) throws java.rmi.RemoteException, es.caib.regweb.ws.model.RegwebFacadeException {
+    public ParametrosRegistroSalidaWS actualizarSalida(ParametrosRegistroSalidaWS parametrosSalida) throws java.rmi.RemoteException, es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -513,9 +520,9 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
         else {
             extractAttachments(_call);
             try {
-                return (es.caib.regweb.ws.model.ParametrosRegistroSalidaWS) _resp;
+                return (ParametrosRegistroSalidaWS) _resp;
             } catch (java.lang.Exception _exception) {
-                return (es.caib.regweb.ws.model.ParametrosRegistroSalidaWS) org.apache.axis.utils.JavaUtils.convert(_resp, es.caib.regweb.ws.model.ParametrosRegistroSalidaWS.class);
+                return (ParametrosRegistroSalidaWS) org.apache.axis.utils.JavaUtils.convert(_resp, ParametrosRegistroSalidaWS.class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {
@@ -523,15 +530,15 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
         if (axisFaultException.detail instanceof java.rmi.RemoteException) {
               throw (java.rmi.RemoteException) axisFaultException.detail;
          }
-        if (axisFaultException.detail instanceof es.caib.regweb.ws.model.RegwebFacadeException) {
-              throw (es.caib.regweb.ws.model.RegwebFacadeException) axisFaultException.detail;
+        if (axisFaultException.detail instanceof es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException) {
+              throw (es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException) axisFaultException.detail;
          }
    }
   throw axisFaultException;
 }
     }
 
-    public boolean anularEntrada(es.caib.regweb.ws.model.ParametrosRegistroEntradaWS parametrosEntrada, boolean anular) throws java.rmi.RemoteException, es.caib.regweb.ws.model.RegwebFacadeException {
+    public boolean anularEntrada(ParametrosRegistroEntradaWS parametrosEntrada, boolean anular) throws java.rmi.RemoteException, es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -563,15 +570,15 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
         if (axisFaultException.detail instanceof java.rmi.RemoteException) {
               throw (java.rmi.RemoteException) axisFaultException.detail;
          }
-        if (axisFaultException.detail instanceof es.caib.regweb.ws.model.RegwebFacadeException) {
-              throw (es.caib.regweb.ws.model.RegwebFacadeException) axisFaultException.detail;
+        if (axisFaultException.detail instanceof es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException) {
+              throw (es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException) axisFaultException.detail;
          }
    }
   throw axisFaultException;
 }
     }
 
-    public boolean anularSalida(es.caib.regweb.ws.model.ParametrosRegistroSalidaWS parametrosSalida, boolean anular) throws java.rmi.RemoteException, es.caib.regweb.ws.model.RegwebFacadeException {
+    public boolean anularSalida(ParametrosRegistroSalidaWS parametrosSalida, boolean anular) throws java.rmi.RemoteException, es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -603,15 +610,15 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
         if (axisFaultException.detail instanceof java.rmi.RemoteException) {
               throw (java.rmi.RemoteException) axisFaultException.detail;
          }
-        if (axisFaultException.detail instanceof es.caib.regweb.ws.model.RegwebFacadeException) {
-              throw (es.caib.regweb.ws.model.RegwebFacadeException) axisFaultException.detail;
+        if (axisFaultException.detail instanceof es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException) {
+              throw (es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException) axisFaultException.detail;
          }
    }
   throw axisFaultException;
 }
     }
 
-    public es.caib.regweb.ws.model.ParametrosRegistroEntradaWS grabarEntrada(es.caib.regweb.ws.model.ParametrosRegistroEntradaWS parametrosEntrada) throws java.rmi.RemoteException, es.caib.regweb.ws.model.RegwebFacadeException {
+    public ParametrosRegistroEntradaWS grabarEntrada(ParametrosRegistroEntradaWS parametrosEntrada) throws java.rmi.RemoteException, es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -633,9 +640,9 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
         else {
             extractAttachments(_call);
             try {
-                return (es.caib.regweb.ws.model.ParametrosRegistroEntradaWS) _resp;
+                return (ParametrosRegistroEntradaWS) _resp;
             } catch (java.lang.Exception _exception) {
-                return (es.caib.regweb.ws.model.ParametrosRegistroEntradaWS) org.apache.axis.utils.JavaUtils.convert(_resp, es.caib.regweb.ws.model.ParametrosRegistroEntradaWS.class);
+                return (ParametrosRegistroEntradaWS) org.apache.axis.utils.JavaUtils.convert(_resp, ParametrosRegistroEntradaWS.class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {
@@ -643,15 +650,15 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
         if (axisFaultException.detail instanceof java.rmi.RemoteException) {
               throw (java.rmi.RemoteException) axisFaultException.detail;
          }
-        if (axisFaultException.detail instanceof es.caib.regweb.ws.model.RegwebFacadeException) {
-              throw (es.caib.regweb.ws.model.RegwebFacadeException) axisFaultException.detail;
+        if (axisFaultException.detail instanceof es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException) {
+              throw (es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException) axisFaultException.detail;
          }
    }
   throw axisFaultException;
 }
     }
 
-    public es.caib.regweb.ws.model.ParametrosRegistroSalidaWS grabarSalida(es.caib.regweb.ws.model.ParametrosRegistroSalidaWS parametrosSalida) throws java.rmi.RemoteException, es.caib.regweb.ws.model.RegwebFacadeException {
+    public ParametrosRegistroSalidaWS grabarSalida(ParametrosRegistroSalidaWS parametrosSalida) throws java.rmi.RemoteException, es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -673,9 +680,9 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
         else {
             extractAttachments(_call);
             try {
-                return (es.caib.regweb.ws.model.ParametrosRegistroSalidaWS) _resp;
+                return (ParametrosRegistroSalidaWS) _resp;
             } catch (java.lang.Exception _exception) {
-                return (es.caib.regweb.ws.model.ParametrosRegistroSalidaWS) org.apache.axis.utils.JavaUtils.convert(_resp, es.caib.regweb.ws.model.ParametrosRegistroSalidaWS.class);
+                return (ParametrosRegistroSalidaWS) org.apache.axis.utils.JavaUtils.convert(_resp, ParametrosRegistroSalidaWS.class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {
@@ -683,15 +690,15 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
         if (axisFaultException.detail instanceof java.rmi.RemoteException) {
               throw (java.rmi.RemoteException) axisFaultException.detail;
          }
-        if (axisFaultException.detail instanceof es.caib.regweb.ws.model.RegwebFacadeException) {
-              throw (es.caib.regweb.ws.model.RegwebFacadeException) axisFaultException.detail;
+        if (axisFaultException.detail instanceof es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException) {
+              throw (es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException) axisFaultException.detail;
          }
    }
   throw axisFaultException;
 }
     }
 
-    public es.caib.regweb.ws.model.ParametrosRegistroEntradaWS leerEntrada(es.caib.regweb.ws.model.ParametrosRegistroEntradaWS parametrosEntrada) throws java.rmi.RemoteException, es.caib.regweb.ws.model.RegwebFacadeException {
+    public ParametrosRegistroEntradaWS leerEntrada(ParametrosRegistroEntradaWS parametrosEntrada) throws java.rmi.RemoteException, es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -713,9 +720,9 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
         else {
             extractAttachments(_call);
             try {
-                return (es.caib.regweb.ws.model.ParametrosRegistroEntradaWS) _resp;
+                return (ParametrosRegistroEntradaWS) _resp;
             } catch (java.lang.Exception _exception) {
-                return (es.caib.regweb.ws.model.ParametrosRegistroEntradaWS) org.apache.axis.utils.JavaUtils.convert(_resp, es.caib.regweb.ws.model.ParametrosRegistroEntradaWS.class);
+                return (ParametrosRegistroEntradaWS) org.apache.axis.utils.JavaUtils.convert(_resp, ParametrosRegistroEntradaWS.class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {
@@ -723,15 +730,15 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
         if (axisFaultException.detail instanceof java.rmi.RemoteException) {
               throw (java.rmi.RemoteException) axisFaultException.detail;
          }
-        if (axisFaultException.detail instanceof es.caib.regweb.ws.model.RegwebFacadeException) {
-              throw (es.caib.regweb.ws.model.RegwebFacadeException) axisFaultException.detail;
+        if (axisFaultException.detail instanceof es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException) {
+              throw (es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException) axisFaultException.detail;
          }
    }
   throw axisFaultException;
 }
     }
 
-    public es.caib.regweb.ws.model.ParametrosRegistroSalidaWS leerSalida(es.caib.regweb.ws.model.ParametrosRegistroSalidaWS parametrosSalida) throws java.rmi.RemoteException, es.caib.regweb.ws.model.RegwebFacadeException {
+    public ParametrosRegistroSalidaWS leerSalida(ParametrosRegistroSalidaWS parametrosSalida) throws java.rmi.RemoteException, es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -753,9 +760,9 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
         else {
             extractAttachments(_call);
             try {
-                return (es.caib.regweb.ws.model.ParametrosRegistroSalidaWS) _resp;
+                return (ParametrosRegistroSalidaWS) _resp;
             } catch (java.lang.Exception _exception) {
-                return (es.caib.regweb.ws.model.ParametrosRegistroSalidaWS) org.apache.axis.utils.JavaUtils.convert(_resp, es.caib.regweb.ws.model.ParametrosRegistroSalidaWS.class);
+                return (ParametrosRegistroSalidaWS) org.apache.axis.utils.JavaUtils.convert(_resp, ParametrosRegistroSalidaWS.class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {
@@ -763,15 +770,15 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
         if (axisFaultException.detail instanceof java.rmi.RemoteException) {
               throw (java.rmi.RemoteException) axisFaultException.detail;
          }
-        if (axisFaultException.detail instanceof es.caib.regweb.ws.model.RegwebFacadeException) {
-              throw (es.caib.regweb.ws.model.RegwebFacadeException) axisFaultException.detail;
+        if (axisFaultException.detail instanceof es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException) {
+              throw (es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException) axisFaultException.detail;
          }
    }
   throw axisFaultException;
 }
     }
 
-    public es.caib.regweb.ws.model.ParametrosRegistroEntradaWS validarEntrada(es.caib.regweb.ws.model.ParametrosRegistroEntradaWS parametrosEntrada) throws java.rmi.RemoteException, es.caib.regweb.ws.model.RegwebFacadeException {
+    public ParametrosRegistroEntradaWS validarEntrada(ParametrosRegistroEntradaWS parametrosEntrada) throws java.rmi.RemoteException, es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -793,9 +800,9 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
         else {
             extractAttachments(_call);
             try {
-                return (es.caib.regweb.ws.model.ParametrosRegistroEntradaWS) _resp;
+                return (ParametrosRegistroEntradaWS) _resp;
             } catch (java.lang.Exception _exception) {
-                return (es.caib.regweb.ws.model.ParametrosRegistroEntradaWS) org.apache.axis.utils.JavaUtils.convert(_resp, es.caib.regweb.ws.model.ParametrosRegistroEntradaWS.class);
+                return (ParametrosRegistroEntradaWS) org.apache.axis.utils.JavaUtils.convert(_resp, ParametrosRegistroEntradaWS.class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {
@@ -803,15 +810,15 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
         if (axisFaultException.detail instanceof java.rmi.RemoteException) {
               throw (java.rmi.RemoteException) axisFaultException.detail;
          }
-        if (axisFaultException.detail instanceof es.caib.regweb.ws.model.RegwebFacadeException) {
-              throw (es.caib.regweb.ws.model.RegwebFacadeException) axisFaultException.detail;
+        if (axisFaultException.detail instanceof es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException) {
+              throw (es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException) axisFaultException.detail;
          }
    }
   throw axisFaultException;
 }
     }
 
-    public es.caib.regweb.ws.model.ParametrosRegistroSalidaWS validarSalida(es.caib.regweb.ws.model.ParametrosRegistroSalidaWS parametrosSalida) throws java.rmi.RemoteException, es.caib.regweb.ws.model.RegwebFacadeException {
+    public ParametrosRegistroSalidaWS validarSalida(ParametrosRegistroSalidaWS parametrosSalida) throws java.rmi.RemoteException, es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -833,9 +840,9 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
         else {
             extractAttachments(_call);
             try {
-                return (es.caib.regweb.ws.model.ParametrosRegistroSalidaWS) _resp;
+                return (ParametrosRegistroSalidaWS) _resp;
             } catch (java.lang.Exception _exception) {
-                return (es.caib.regweb.ws.model.ParametrosRegistroSalidaWS) org.apache.axis.utils.JavaUtils.convert(_resp, es.caib.regweb.ws.model.ParametrosRegistroSalidaWS.class);
+                return (ParametrosRegistroSalidaWS) org.apache.axis.utils.JavaUtils.convert(_resp, ParametrosRegistroSalidaWS.class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {
@@ -843,15 +850,15 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
         if (axisFaultException.detail instanceof java.rmi.RemoteException) {
               throw (java.rmi.RemoteException) axisFaultException.detail;
          }
-        if (axisFaultException.detail instanceof es.caib.regweb.ws.model.RegwebFacadeException) {
-              throw (es.caib.regweb.ws.model.RegwebFacadeException) axisFaultException.detail;
+        if (axisFaultException.detail instanceof es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException) {
+              throw (es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException) axisFaultException.detail;
          }
    }
   throw axisFaultException;
 }
     }
 
-    public es.caib.regweb.ws.model.ListaResultados buscarOficinasFisicasDescripcion(java.lang.String usuario, java.lang.String password, java.lang.String filtro, java.lang.String tipo) throws java.rmi.RemoteException, es.caib.regweb.ws.model.RegwebFacadeException {
+    public ListaResultados buscarOficinasFisicasDescripcion(java.lang.String usuario, java.lang.String password, java.lang.String filtro, java.lang.String tipo) throws java.rmi.RemoteException, es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -873,9 +880,9 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
         else {
             extractAttachments(_call);
             try {
-                return (es.caib.regweb.ws.model.ListaResultados) _resp;
+                return (ListaResultados) _resp;
             } catch (java.lang.Exception _exception) {
-                return (es.caib.regweb.ws.model.ListaResultados) org.apache.axis.utils.JavaUtils.convert(_resp, es.caib.regweb.ws.model.ListaResultados.class);
+                return (ListaResultados) org.apache.axis.utils.JavaUtils.convert(_resp, ListaResultados.class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {
@@ -883,15 +890,15 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
         if (axisFaultException.detail instanceof java.rmi.RemoteException) {
               throw (java.rmi.RemoteException) axisFaultException.detail;
          }
-        if (axisFaultException.detail instanceof es.caib.regweb.ws.model.RegwebFacadeException) {
-              throw (es.caib.regweb.ws.model.RegwebFacadeException) axisFaultException.detail;
+        if (axisFaultException.detail instanceof es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException) {
+              throw (es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException) axisFaultException.detail;
          }
    }
   throw axisFaultException;
 }
     }
 
-    public es.caib.regweb.ws.model.ListaResultados buscarOficinasFisicas(java.lang.String usuario, java.lang.String password, java.lang.String usuarioRegistro, java.lang.String tipo) throws java.rmi.RemoteException, es.caib.regweb.ws.model.RegwebFacadeException {
+    public ListaResultados buscarOficinasFisicas(java.lang.String usuario, java.lang.String password, java.lang.String usuarioRegistro, java.lang.String tipo) throws java.rmi.RemoteException, es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -913,9 +920,9 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
         else {
             extractAttachments(_call);
             try {
-                return (es.caib.regweb.ws.model.ListaResultados) _resp;
+                return (ListaResultados) _resp;
             } catch (java.lang.Exception _exception) {
-                return (es.caib.regweb.ws.model.ListaResultados) org.apache.axis.utils.JavaUtils.convert(_resp, es.caib.regweb.ws.model.ListaResultados.class);
+                return (ListaResultados) org.apache.axis.utils.JavaUtils.convert(_resp, ListaResultados.class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {
@@ -923,15 +930,15 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
         if (axisFaultException.detail instanceof java.rmi.RemoteException) {
               throw (java.rmi.RemoteException) axisFaultException.detail;
          }
-        if (axisFaultException.detail instanceof es.caib.regweb.ws.model.RegwebFacadeException) {
-              throw (es.caib.regweb.ws.model.RegwebFacadeException) axisFaultException.detail;
+        if (axisFaultException.detail instanceof es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException) {
+              throw (es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException) axisFaultException.detail;
          }
    }
   throw axisFaultException;
 }
     }
 
-    public es.caib.regweb.ws.model.ListaResultados buscarDocumentos(java.lang.String usuario, java.lang.String password) throws java.rmi.RemoteException, es.caib.regweb.ws.model.RegwebFacadeException {
+    public ListaResultados buscarDocumentos(java.lang.String usuario, java.lang.String password) throws java.rmi.RemoteException, es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -953,9 +960,9 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
         else {
             extractAttachments(_call);
             try {
-                return (es.caib.regweb.ws.model.ListaResultados) _resp;
+                return (ListaResultados) _resp;
             } catch (java.lang.Exception _exception) {
-                return (es.caib.regweb.ws.model.ListaResultados) org.apache.axis.utils.JavaUtils.convert(_resp, es.caib.regweb.ws.model.ListaResultados.class);
+                return (ListaResultados) org.apache.axis.utils.JavaUtils.convert(_resp, ListaResultados.class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {
@@ -963,15 +970,15 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
         if (axisFaultException.detail instanceof java.rmi.RemoteException) {
               throw (java.rmi.RemoteException) axisFaultException.detail;
          }
-        if (axisFaultException.detail instanceof es.caib.regweb.ws.model.RegwebFacadeException) {
-              throw (es.caib.regweb.ws.model.RegwebFacadeException) axisFaultException.detail;
+        if (axisFaultException.detail instanceof es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException) {
+              throw (es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException) axisFaultException.detail;
          }
    }
   throw axisFaultException;
 }
     }
 
-    public es.caib.regweb.ws.model.ListaResultados buscarTodosDestinatarios(java.lang.String usuario, java.lang.String password) throws java.rmi.RemoteException, es.caib.regweb.ws.model.RegwebFacadeException {
+    public ListaResultados buscarTodosDestinatarios(java.lang.String usuario, java.lang.String password) throws java.rmi.RemoteException, es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -993,9 +1000,9 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
         else {
             extractAttachments(_call);
             try {
-                return (es.caib.regweb.ws.model.ListaResultados) _resp;
+                return (ListaResultados) _resp;
             } catch (java.lang.Exception _exception) {
-                return (es.caib.regweb.ws.model.ListaResultados) org.apache.axis.utils.JavaUtils.convert(_resp, es.caib.regweb.ws.model.ListaResultados.class);
+                return (ListaResultados) org.apache.axis.utils.JavaUtils.convert(_resp, ListaResultados.class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {
@@ -1003,8 +1010,8 @@ public class RegwebFacadeSoapBindingStub extends org.apache.axis.client.Stub imp
         if (axisFaultException.detail instanceof java.rmi.RemoteException) {
               throw (java.rmi.RemoteException) axisFaultException.detail;
          }
-        if (axisFaultException.detail instanceof es.caib.regweb.ws.model.RegwebFacadeException) {
-              throw (es.caib.regweb.ws.model.RegwebFacadeException) axisFaultException.detail;
+        if (axisFaultException.detail instanceof es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException) {
+              throw (es.caib.regweb.ws.services.regwebfacade.RegwebFacadeException) axisFaultException.detail;
          }
    }
   throw axisFaultException;

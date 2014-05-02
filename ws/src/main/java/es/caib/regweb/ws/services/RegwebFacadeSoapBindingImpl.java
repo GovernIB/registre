@@ -67,6 +67,7 @@ public class RegwebFacadeSoapBindingImpl implements es.caib.regweb.ws.services.R
 		return crearFacade().buscarOficinasFisicasDescripcion(usuario, password, filtro, tipo);
 	}
 
+	
 	public ListaResultados buscarTodosDestinatarios(String usuario,
 			String password) throws RemoteException, RegwebFacadeException {
 		

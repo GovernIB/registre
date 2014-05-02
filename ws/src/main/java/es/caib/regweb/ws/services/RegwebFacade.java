@@ -22,4 +22,5 @@ public interface RegwebFacade extends java.rmi.Remote {
     public es.caib.regweb.ws.model.ListaResultados buscarOficinasFisicas(java.lang.String usuario, java.lang.String password, java.lang.String usuarioRegistro, java.lang.String tipo) throws java.rmi.RemoteException, es.caib.regweb.ws.model.RegwebFacadeException;
     public es.caib.regweb.ws.model.ListaResultados buscarDocumentos(java.lang.String usuario, java.lang.String password) throws java.rmi.RemoteException, es.caib.regweb.ws.model.RegwebFacadeException;
     public es.caib.regweb.ws.model.ListaResultados buscarTodosDestinatarios(java.lang.String usuario, java.lang.String password) throws java.rmi.RemoteException, es.caib.regweb.ws.model.RegwebFacadeException;
+
 }

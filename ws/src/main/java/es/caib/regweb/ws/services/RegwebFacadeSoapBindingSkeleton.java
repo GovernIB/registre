@@ -260,6 +260,7 @@ public class RegwebFacadeSoapBindingSkeleton implements es.caib.regweb.ws.servic
         _fault.setClassName("es.caib.regweb.ws.model.RegwebFacadeException");
         _fault.setXmlType(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "RegwebFacadeException"));
         _oper.addFault(_fault);
+        
         _params = new org.apache.axis.description.ParameterDesc [] {
             new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "usuario"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false), 
             new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "password"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false), 
@@ -278,6 +279,7 @@ public class RegwebFacadeSoapBindingSkeleton implements es.caib.regweb.ws.servic
         _fault.setClassName("es.caib.regweb.ws.model.RegwebFacadeException");
         _fault.setXmlType(new javax.xml.namespace.QName("urn:es:caib:regweb:ws:v1:model:RegwebFacade", "RegwebFacadeException"));
         _oper.addFault(_fault);
+        
     }
 
     public RegwebFacadeSoapBindingSkeleton() {
@@ -370,5 +372,8 @@ public class RegwebFacadeSoapBindingSkeleton implements es.caib.regweb.ws.servic
         es.caib.regweb.ws.model.ListaResultados ret = impl.buscarTodosDestinatarios(usuario, password);
         return ret;
     }
+    
+
+
 
 }

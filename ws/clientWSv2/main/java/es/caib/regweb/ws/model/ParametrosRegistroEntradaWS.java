@@ -7,7 +7,8 @@
 
 package es.caib.regweb.ws.model;
 
-@SuppressWarnings("serial")
+import es.caib.regweb.ws.model.ListaErroresEntrada;
+
 public class ParametrosRegistroEntradaWS  implements java.io.Serializable {
     private java.lang.String usuarioConexion;
 
@@ -97,7 +98,7 @@ public class ParametrosRegistroEntradaWS  implements java.io.Serializable {
 
     private java.lang.String origenRegistro;
 
-    private es.caib.regweb.ws.model.ParametrosRegistroPublicadoEntradaWS paramRegPubEnt;
+    private ParametrosRegistroPublicadoEntradaWS paramRegPubEnt;
 
     private java.lang.String procedenciaGeografica;
 
@@ -115,7 +116,7 @@ public class ParametrosRegistroEntradaWS  implements java.io.Serializable {
 
     private java.lang.Boolean validado;
 
-    private es.caib.regweb.ws.model.ListaErroresEntrada errores;
+    private ListaErroresEntrada errores;
 
     public ParametrosRegistroEntradaWS() {
     }
@@ -165,7 +166,7 @@ public class ParametrosRegistroEntradaWS  implements java.io.Serializable {
            java.lang.String oficina,
            java.lang.String oficinafisica,
            java.lang.String origenRegistro,
-           es.caib.regweb.ws.model.ParametrosRegistroPublicadoEntradaWS paramRegPubEnt,
+           ParametrosRegistroPublicadoEntradaWS paramRegPubEnt,
            java.lang.String procedenciaGeografica,
            java.lang.Boolean registroActualizado,
            java.lang.String registroAnulado,
@@ -174,10 +175,9 @@ public class ParametrosRegistroEntradaWS  implements java.io.Serializable {
            java.lang.String salida2,
            java.lang.String tipo,
            java.lang.Boolean validado,
-           es.caib.regweb.ws.model.ListaErroresEntrada errores) {
+           ListaErroresEntrada errores) {
            this.usuarioConexion = usuarioConexion;
            this.password = password;
-           this.usuarioRegistro = usuarioRegistro;
            this.actualizacion = actualizacion;
            this.altres = altres;
            this.altresNuevo = altresNuevo;
@@ -235,10 +235,10 @@ public class ParametrosRegistroEntradaWS  implements java.io.Serializable {
     /**
      * Gets the usuario value for this ParametrosRegistroEntradaWS.
      * 
-     * @return usuarioRegistro
+     * @return usuario
      */
-    public java.lang.String getUsuarioRegistro() {
-        return usuarioRegistro;
+    public java.lang.String getUsuarioConexion() {
+        return usuarioConexion;
     }
 
 
@@ -247,8 +247,8 @@ public class ParametrosRegistroEntradaWS  implements java.io.Serializable {
      * 
      * @param usuario
      */
-    public void setUsuarioRegistro(java.lang.String usuarioRegistro) {
-        this.usuarioRegistro = usuarioRegistro;
+    public void setUsuarioConexion(java.lang.String usuarioConexion) {
+        this.usuarioConexion = usuarioConexion;
     }
 
 
@@ -275,20 +275,20 @@ public class ParametrosRegistroEntradaWS  implements java.io.Serializable {
     /**
      * Gets the usuario value for this ParametrosRegistroEntradaWS.
      * 
-     * @return usuarioConexion
+     * @return usuarioRegistro
      */
-    public java.lang.String getUsuarioConexion() {
-        return usuarioConexion;
+    public java.lang.String getUsuarioRegistro() {
+        return usuarioRegistro;
     }
 
 
     /**
      * Sets the usuario value for this ParametrosRegistroEntradaWS.
      * 
-     * @param usuarioConexion
+     * @param usuarioRegistro
      */
-    public void setUsuarioConexion(java.lang.String usuarioConexion) {
-        this.usuarioConexion = usuarioConexion;
+    public void setUsuarioRegistro(java.lang.String usuarioRegistro) {
+        this.usuarioRegistro = usuarioRegistro;
     }
 
     /**
@@ -1116,7 +1116,7 @@ public class ParametrosRegistroEntradaWS  implements java.io.Serializable {
      * 
      * @return paramRegPubEnt
      */
-    public es.caib.regweb.ws.model.ParametrosRegistroPublicadoEntradaWS getParamRegPubEnt() {
+    public ParametrosRegistroPublicadoEntradaWS getParamRegPubEnt() {
         return paramRegPubEnt;
     }
 
@@ -1126,7 +1126,7 @@ public class ParametrosRegistroEntradaWS  implements java.io.Serializable {
      * 
      * @param paramRegPubEnt
      */
-    public void setParamRegPubEnt(es.caib.regweb.ws.model.ParametrosRegistroPublicadoEntradaWS paramRegPubEnt) {
+    public void setParamRegPubEnt(ParametrosRegistroPublicadoEntradaWS paramRegPubEnt) {
         this.paramRegPubEnt = paramRegPubEnt;
     }
 
@@ -1296,7 +1296,7 @@ public class ParametrosRegistroEntradaWS  implements java.io.Serializable {
      * 
      * @return errores
      */
-    public es.caib.regweb.ws.model.ListaErroresEntrada getErrores() {
+    public ListaErroresEntrada getErrores() {
         return errores;
     }
 
@@ -1306,7 +1306,7 @@ public class ParametrosRegistroEntradaWS  implements java.io.Serializable {
      * 
      * @param errores
      */
-    public void setErrores(es.caib.regweb.ws.model.ListaErroresEntrada errores) {
+    public void setErrores(ListaErroresEntrada errores) {
         this.errores = errores;
     }
 
@@ -1314,7 +1314,7 @@ public class ParametrosRegistroEntradaWS  implements java.io.Serializable {
     public synchronized boolean equals(java.lang.Object obj) {
         if (!(obj instanceof ParametrosRegistroEntradaWS)) return false;
         ParametrosRegistroEntradaWS other = (ParametrosRegistroEntradaWS) obj;
-        // dead code: if (obj == null) return false;
+        if (obj == null) return false;
         if (this == obj) return true;
         if (__equalsCalc != null) {
             return (__equalsCalc == obj);
@@ -1328,9 +1328,9 @@ public class ParametrosRegistroEntradaWS  implements java.io.Serializable {
             ((this.password==null && other.getPassword()==null) || 
              (this.password!=null &&
               this.password.equals(other.getPassword()))) &&
-              		  ((this.usuarioRegistro==null && other.getUsuarioRegistro()==null) || 
+              		  ((this.usuarioRegistro==null && other.getPassword()==null) || 
                       (this.usuarioRegistro!=null &&
-                       this.usuarioRegistro.equals(other.getUsuarioRegistro()))) &&
+                       this.usuarioRegistro.equals(other.getPassword()))) &&
             ((this.actualizacion==null && other.getActualizacion()==null) || 
              (this.actualizacion!=null &&
               this.actualizacion.equals(other.getActualizacion()))) &&
@@ -1495,14 +1495,14 @@ public class ParametrosRegistroEntradaWS  implements java.io.Serializable {
         }
         __hashCodeCalc = true;
         int _hashCode = 1;
-        if (getUsuarioRegistro() != null) {
-            _hashCode += getUsuarioRegistro().hashCode();
+        if (getUsuarioConexion() != null) {
+            _hashCode += getUsuarioConexion().hashCode();
         }
         if (getPassword() != null) {
             _hashCode += getPassword().hashCode();
         }
-        if (getUsuarioConexion() != null) {
-            _hashCode += getUsuarioConexion().hashCode();
+        if (getUsuarioRegistro() != null) {
+            _hashCode += getUsuarioRegistro().hashCode();
         }
         if (getActualizacion() != null) {
             _hashCode += getActualizacion().hashCode();
@@ -1680,8 +1680,8 @@ public class ParametrosRegistroEntradaWS  implements java.io.Serializable {
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("usuarioConexion");
-        elemField.setXmlName(new javax.xml.namespace.QName("", "usuarioConexion"));
+        elemField.setFieldName("usuarioRegistro");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "usuarioRegistro"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);

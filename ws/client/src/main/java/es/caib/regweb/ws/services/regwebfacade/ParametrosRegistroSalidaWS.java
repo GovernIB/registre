@@ -12,6 +12,8 @@ public class ParametrosRegistroSalidaWS  implements java.io.Serializable {
 
     private java.lang.String password;
 
+    private java.lang.String usuarioConexion;
+
     private java.lang.String anoSalida;
 
     private java.lang.Boolean actualizacion;
@@ -110,6 +112,7 @@ public class ParametrosRegistroSalidaWS  implements java.io.Serializable {
     public ParametrosRegistroSalidaWS(
            java.lang.String usuario,
            java.lang.String password,
+           java.lang.String usuarioConexion,
            java.lang.String anoSalida,
            java.lang.Boolean actualizacion,
            java.lang.Boolean registroSalidaGrabado,
@@ -158,6 +161,7 @@ public class ParametrosRegistroSalidaWS  implements java.io.Serializable {
            es.caib.regweb.ws.services.regwebfacade.ListaErroresSalida errores) {
            this.usuario = usuario;
            this.password = password;
+           this.usuarioConexion = usuarioConexion;
            this.anoSalida = anoSalida;
            this.actualizacion = actualizacion;
            this.registroSalidaGrabado = registroSalidaGrabado;
@@ -244,6 +248,26 @@ public class ParametrosRegistroSalidaWS  implements java.io.Serializable {
      */
     public void setPassword(java.lang.String password) {
         this.password = password;
+    }
+
+
+    /**
+     * Gets the usuarioConexion value for this ParametrosRegistroSalidaWS.
+     * 
+     * @return usuarioConexion
+     */
+    public java.lang.String getUsuarioConexion() {
+        return usuarioConexion;
+    }
+
+
+    /**
+     * Sets the usuarioConexion value for this ParametrosRegistroSalidaWS.
+     * 
+     * @param usuarioConexion
+     */
+    public void setUsuarioConexion(java.lang.String usuarioConexion) {
+        this.usuarioConexion = usuarioConexion;
     }
 
 
@@ -1184,6 +1208,9 @@ public class ParametrosRegistroSalidaWS  implements java.io.Serializable {
             ((this.password==null && other.getPassword()==null) || 
              (this.password!=null &&
               this.password.equals(other.getPassword()))) &&
+            ((this.usuarioConexion==null && other.getUsuarioConexion()==null) || 
+             (this.usuarioConexion!=null &&
+              this.usuarioConexion.equals(other.getUsuarioConexion()))) &&
             ((this.anoSalida==null && other.getAnoSalida()==null) || 
              (this.anoSalida!=null &&
               this.anoSalida.equals(other.getAnoSalida()))) &&
@@ -1338,6 +1365,9 @@ public class ParametrosRegistroSalidaWS  implements java.io.Serializable {
         }
         if (getPassword() != null) {
             _hashCode += getPassword().hashCode();
+        }
+        if (getUsuarioConexion() != null) {
+            _hashCode += getUsuarioConexion().hashCode();
         }
         if (getAnoSalida() != null) {
             _hashCode += getAnoSalida().hashCode();
@@ -1496,6 +1526,12 @@ public class ParametrosRegistroSalidaWS  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("password");
         elemField.setXmlName(new javax.xml.namespace.QName("", "password"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("usuarioConexion");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "UsuarioConexion"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);

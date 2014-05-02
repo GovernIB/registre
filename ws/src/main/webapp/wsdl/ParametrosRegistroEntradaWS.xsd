@@ -4,8 +4,9 @@
 	targetNamespace="urn:es:caib:regweb:ws:v1:model:ParametrosRegistroEntradaWS" version="1.0">
 	<xs:complexType name="ParametrosRegistroEntradaWS">
 			<xs:sequence>
-				<xs:element name="usuario" type="xs:string"/>
+				<xs:element name="usuarioRegistro" type="xs:string"/>
 				<xs:element name="password" type="xs:string"/>
+				<xs:element name="UsuarioConexion" type="xs:string" />
 				<xs:element name="actualizacion" type="xs:boolean" minOccurs="0"/>
 				<xs:element name="altres" type="xs:string" minOccurs="0"/>
 				<xs:element name="altresNuevo" type="xs:string" minOccurs="0"/>

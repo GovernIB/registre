@@ -5,7 +5,8 @@
 	<xs:complexType name="ParametrosRegistroSalidaWS">
 			<xs:sequence>
 				<xs:element name="usuario" type="xs:string"/>
-				<xs:element name="password" type="xs:string"/>				
+				<xs:element name="password" type="xs:string"/>
+				<xs:element name="UsuarioConexion" type="xs:string" />				
 				<xs:element name="anoSalida" type="xs:string" minOccurs="0"/>
 				<xs:element name="actualizacion" type="xs:boolean" minOccurs="0"/>
 				<xs:element name="registroSalidaGrabado" type="xs:boolean" minOccurs="0"/>

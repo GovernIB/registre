@@ -7,6 +7,7 @@
 
 package es.caib.regweb.ws.model;
 
+@SuppressWarnings("serial")
 public class ParametrosRegistroSalidaWS  implements java.io.Serializable {
 	private java.lang.String usuarioConexion;
 
@@ -1174,7 +1175,7 @@ public class ParametrosRegistroSalidaWS  implements java.io.Serializable {
     public synchronized boolean equals(java.lang.Object obj) {
         if (!(obj instanceof ParametrosRegistroSalidaWS)) return false;
         ParametrosRegistroSalidaWS other = (ParametrosRegistroSalidaWS) obj;
-        if (obj == null) return false;
+        //if (obj == null) return false;
         if (this == obj) return true;
         if (__equalsCalc != null) {
             return (__equalsCalc == obj);
@@ -1843,6 +1844,7 @@ public class ParametrosRegistroSalidaWS  implements java.io.Serializable {
     /**
      * Get Custom Serializer
      */
+    @SuppressWarnings("rawtypes")
     public static org.apache.axis.encoding.Serializer getSerializer(
            java.lang.String mechType, 
            java.lang.Class _javaType,  
@@ -1855,7 +1857,8 @@ public class ParametrosRegistroSalidaWS  implements java.io.Serializable {
     /**
      * Get Custom Deserializer
      */
-    public static org.apache.axis.encoding.Deserializer getDeserializer(
+    @SuppressWarnings("rawtypes")
+	public static org.apache.axis.encoding.Deserializer getDeserializer(
            java.lang.String mechType, 
            java.lang.Class _javaType,  
            javax.xml.namespace.QName _xmlType) {

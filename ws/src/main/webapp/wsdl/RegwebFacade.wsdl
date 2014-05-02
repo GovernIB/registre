@@ -188,7 +188,7 @@ name="RegwebFacade">
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
-			
+					
 			<xsd:element name="buscarOficinasFisicas">
 				<xsd:complexType>
 					<xsd:sequence>

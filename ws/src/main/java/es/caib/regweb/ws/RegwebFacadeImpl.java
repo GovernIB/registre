@@ -49,7 +49,7 @@ public class RegwebFacadeImpl implements RegwebFacade{
 			ParametrosRegistroEntrada registro = parametrosEntradaWStoParametrosEntrada(parametrosEntrada);
 			
 			// Conectamos a Registro
-			lc = doLogin(parametrosEntrada.getUsuario(), parametrosEntrada.getPassword());
+			lc = doLogin(parametrosEntrada.getUsuarioConexion(), parametrosEntrada.getPassword());
 			ctx = getInitialContext();
 			Object objRef = ctx.lookup("es.caib.regweb.logic.RegistroEntradaFacade");
 			RegistroEntradaFacadeHome home = (RegistroEntradaFacadeHome)javax.rmi.PortableRemoteObject.narrow(
@@ -87,7 +87,7 @@ public class RegwebFacadeImpl implements RegwebFacade{
 			ParametrosRegistroSalida registro = parametrosSalidaWStoParametrosSalida(parametrosSalida);
 			
 			// Conectamos a Registro
-			lc = doLogin(parametrosSalida.getUsuario(), parametrosSalida.getPassword());
+			lc = doLogin(parametrosSalida.getUsuarioConexion(), parametrosSalida.getPassword());
 			ctx = getInitialContext();
 			Object objRef = ctx.lookup("es.caib.regweb.logic.RegistroSalidaFacade");
 			RegistroSalidaFacadeHome home = (RegistroSalidaFacadeHome)javax.rmi.PortableRemoteObject.narrow(
@@ -126,7 +126,7 @@ public class RegwebFacadeImpl implements RegwebFacade{
 		try {
 			// Establecemos parametros
 			ParametrosRegistroEntrada registro = new ParametrosRegistroEntrada();
-			registro.fijaUsuario(parametrosEntrada.getUsuario());
+			registro.fijaUsuario(parametrosEntrada.getUsuarioRegistro());
 			registro.fijaPasswordUser(parametrosEntrada.getPassword());
 			registro.setOrigenRegistro(parametrosEntrada.getOrigenRegistro()); 
 			registro.setoficina(parametrosEntrada.getOficina());
@@ -134,7 +134,7 @@ public class RegwebFacadeImpl implements RegwebFacade{
 			registro.setAnoEntrada(parametrosEntrada.getAnoEntrada());
 			
 			// Conectamos a Registro
-			lc = doLogin(parametrosEntrada.getUsuario(), parametrosEntrada.getPassword());
+			lc = doLogin(parametrosEntrada.getUsuarioConexion(), parametrosEntrada.getPassword());
 			ctx = getInitialContext();
 			Object objRef = ctx.lookup("es.caib.regweb.logic.RegistroEntradaFacade");
 			RegistroEntradaFacadeHome home = (RegistroEntradaFacadeHome)javax.rmi.PortableRemoteObject.narrow(
@@ -167,14 +167,14 @@ public class RegwebFacadeImpl implements RegwebFacade{
 		try {
 			// Establecemos parametros
 			ParametrosRegistroSalida registro = new ParametrosRegistroSalida();
-			registro.fijaUsuario(parametrosSalida.getUsuario());
+			registro.fijaUsuario(parametrosSalida.getUsuarioConexion());
 			registro.fijaPasswordUser(parametrosSalida.getPassword());
 			registro.setoficina(parametrosSalida.getOficina());
 			registro.setNumeroSalida(parametrosSalida.getNumeroSalida()); 			
 			registro.setAnoSalida(parametrosSalida.getAnoSalida());
 			
 			// Conectamos a Registro
-			lc = doLogin(parametrosSalida.getUsuario(), parametrosSalida.getPassword());
+			lc = doLogin(parametrosSalida.getUsuarioConexion(), parametrosSalida.getPassword());
 			ctx = getInitialContext();
 			Object objRef = ctx.lookup("es.caib.regweb.logic.RegistroSalidaFacade");
 			RegistroSalidaFacadeHome home = (RegistroSalidaFacadeHome)javax.rmi.PortableRemoteObject.narrow(
@@ -373,8 +373,7 @@ public class RegwebFacadeImpl implements RegwebFacade{
 		}				
 	}
 
-	public ParametrosRegistroEntradaWS grabarEntrada(
-			ParametrosRegistroEntradaWS parametrosEntrada)
+	public ParametrosRegistroEntradaWS grabarEntrada(ParametrosRegistroEntradaWS parametrosEntrada)
 			throws RemoteException, RegwebFacadeException {
 		logger.debug("grabarEntrada");
 		
@@ -385,7 +384,7 @@ public class RegwebFacadeImpl implements RegwebFacade{
 			ParametrosRegistroEntrada registro = parametrosEntradaWStoParametrosEntrada(parametrosEntrada);
 			
 			// Conectamos a Registro
-			lc = doLogin(parametrosEntrada.getUsuario(), parametrosEntrada.getPassword());
+			lc = doLogin(parametrosEntrada.getUsuarioConexion(), parametrosEntrada.getPassword());
 			ctx = getInitialContext();
 			Object objRef = ctx.lookup("es.caib.regweb.logic.RegistroEntradaFacade");
 			RegistroEntradaFacadeHome home = (RegistroEntradaFacadeHome)javax.rmi.PortableRemoteObject.narrow(
@@ -423,7 +422,7 @@ public class RegwebFacadeImpl implements RegwebFacade{
 			ParametrosRegistroSalida registro = parametrosSalidaWStoParametrosSalida(parametrosSalida);
 			
 			// Conectamos a Registro
-			lc = doLogin(parametrosSalida.getUsuario(), parametrosSalida.getPassword());
+			lc = doLogin(parametrosSalida.getUsuarioConexion(), parametrosSalida.getPassword());
 			ctx = getInitialContext();
 			Object objRef = ctx.lookup("es.caib.regweb.logic.RegistroSalidaFacade");
 			RegistroSalidaFacadeHome home = (RegistroSalidaFacadeHome)javax.rmi.PortableRemoteObject.narrow(
@@ -462,7 +461,7 @@ public class RegwebFacadeImpl implements RegwebFacade{
 			ParametrosRegistroEntrada registro = parametrosEntradaWStoParametrosEntrada(parametrosEntrada);
 			
 			// Conectamos a Registro
-			lc = doLogin(parametrosEntrada.getUsuario(), parametrosEntrada.getPassword());
+			lc = doLogin(parametrosEntrada.getUsuarioConexion(), parametrosEntrada.getPassword());
 			ctx = getInitialContext();
 			Object objRef = ctx.lookup("es.caib.regweb.logic.RegistroEntradaFacade");
 			RegistroEntradaFacadeHome home = (RegistroEntradaFacadeHome)javax.rmi.PortableRemoteObject.narrow(
@@ -500,7 +499,7 @@ public class RegwebFacadeImpl implements RegwebFacade{
 			ParametrosRegistroSalida registro = parametrosSalidaWStoParametrosSalida(parametrosSalida);
 			
 			// Conectamos a Registro
-			lc = doLogin(parametrosSalida.getUsuario(), parametrosSalida.getPassword());
+			lc = doLogin(parametrosSalida.getUsuarioConexion(), parametrosSalida.getPassword());
 			ctx = getInitialContext();
 			Object objRef = ctx.lookup("es.caib.regweb.logic.RegistroSalidaFacade");
 			RegistroSalidaFacadeHome home = (RegistroSalidaFacadeHome)javax.rmi.PortableRemoteObject.narrow(
@@ -539,7 +538,7 @@ public class RegwebFacadeImpl implements RegwebFacade{
 			ParametrosRegistroEntrada registro = parametrosEntradaWStoParametrosEntrada(parametrosEntrada);
 			
 			// Conectamos a Registro
-			lc = doLogin(parametrosEntrada.getUsuario(), parametrosEntrada.getPassword());
+			lc = doLogin(parametrosEntrada.getUsuarioConexion(), parametrosEntrada.getPassword());
 			ctx = getInitialContext();
 			Object objRef = ctx.lookup("es.caib.regweb.logic.RegistroEntradaFacade");
 			RegistroEntradaFacadeHome home = (RegistroEntradaFacadeHome)javax.rmi.PortableRemoteObject.narrow(
@@ -578,7 +577,7 @@ public class RegwebFacadeImpl implements RegwebFacade{
 			ParametrosRegistroSalida registro = parametrosSalidaWStoParametrosSalida(parametrosSalida);
 			
 			// Conectamos a Registro
-			lc = doLogin(parametrosSalida.getUsuario(), parametrosSalida.getPassword());
+			lc = doLogin(parametrosSalida.getUsuarioConexion(), parametrosSalida.getPassword());
 			ctx = getInitialContext();
 			Object objRef = ctx.lookup("es.caib.regweb.logic.RegistroSalidaFacade");
 			RegistroSalidaFacadeHome home = (RegistroSalidaFacadeHome)javax.rmi.PortableRemoteObject.narrow(
@@ -608,8 +607,10 @@ public class RegwebFacadeImpl implements RegwebFacade{
 	private ParametrosRegistroEntradaWS parametrosEntradaToParametrosEntradaWS(
 			ParametrosRegistroEntrada parametrosEntrada) {
 		ParametrosRegistroEntradaWS registro = new ParametrosRegistroEntradaWS();
-		registro.setUsuario(parametrosEntrada.getUsuario());
-		registro.setPassword(parametrosEntrada.getPassword());
+		registro.setUsuarioConexion(""); 
+		registro.setPassword("");
+		registro.setUsuarioRegistro(parametrosEntrada.getUsuario());
+//TODO
 		registro.setActualizacion(parametrosEntrada.getActualizacion());
 		registro.setAltres(parametrosEntrada.getAltres());
 		registro.setAltresNuevo(parametrosEntrada.getAltresNuevo());
@@ -691,14 +692,14 @@ public class RegwebFacadeImpl implements RegwebFacade{
 		return registro;
 	}
 
-	private ParametrosRegistroEntrada parametrosEntradaWStoParametrosEntrada(
-			ParametrosRegistroEntradaWS parametrosEntrada) {
+	private ParametrosRegistroEntrada parametrosEntradaWStoParametrosEntrada(ParametrosRegistroEntradaWS parametrosEntrada) {
+		
 		ParametrosRegistroEntrada registro = new ParametrosRegistroEntrada();		
-		registro.fijaUsuario(parametrosEntrada.getUsuario());
-		registro.fijaPasswordUser(parametrosEntrada.getPassword());
+		registro.fijaUsuario(parametrosEntrada.getUsuarioRegistro());
+		registro.fijaPasswordUser(parametrosEntrada.getPassword()); 
+	    //registro.setaltres(parametrosEntrada.getUsuarioRegistro());
 		if (parametrosEntrada.getActualizacion() != null)
-			registro.setActualizacion(booleanValue(parametrosEntrada
-					.getActualizacion()));
+			registro.setActualizacion(booleanValue(parametrosEntrada.getActualizacion()));
 		if (parametrosEntrada.getAltres() != null)
 			registro.setaltres(parametrosEntrada.getAltres());
 		if (parametrosEntrada.getAltresNuevo() != null)
@@ -720,26 +721,19 @@ public class RegwebFacadeImpl implements RegwebFacade{
 		if (parametrosEntrada.getDataVisado() != null)
 			registro.setDataVisado(parametrosEntrada.getDataVisado());
 		if (parametrosEntrada.getDescripcionDocumento() != null)
-			registro.setDescripcionDocumento(parametrosEntrada
-					.getDescripcionDocumento());
+			registro.setDescripcionDocumento(parametrosEntrada.getDescripcionDocumento());
 		if (parametrosEntrada.getDescripcionIdiomaDocumento() != null)
-			registro.setDescripcionIdiomaDocumento(parametrosEntrada
-					.getDescripcionIdiomaDocumento());
+			registro.setDescripcionIdiomaDocumento(parametrosEntrada.getDescripcionIdiomaDocumento());
 		if (parametrosEntrada.getDescripcionMunicipi060() != null)
-			registro.setDescripcionMunicipi060(parametrosEntrada
-					.getDescripcionMunicipi060());
+			registro.setDescripcionMunicipi060(parametrosEntrada.getDescripcionMunicipi060());
 		if (parametrosEntrada.getDescripcionOficina() != null)
-			registro.setDescripcionOficina(parametrosEntrada
-					.getDescripcionOficina());
+			registro.setDescripcionOficina(parametrosEntrada.getDescripcionOficina());
 		if (parametrosEntrada.getDescripcionOficinaFisica() != null)
-			registro.setDescripcionOficinaFisica(parametrosEntrada
-					.getDescripcionOficinaFisica());
+			registro.setDescripcionOficinaFisica(parametrosEntrada.getDescripcionOficinaFisica());
 		if (parametrosEntrada.getDescripcionOrganismoDestinatario() != null)
-			registro.setDescripcionOrganismoDestinatario(parametrosEntrada
-					.getDescripcionOrganismoDestinatario());
+			registro.setDescripcionOrganismoDestinatario(parametrosEntrada.getDescripcionOrganismoDestinatario());
 		if (parametrosEntrada.getDescripcionRemitente() != null)
-			registro.setDescripcionRemitente(parametrosEntrada
-					.getDescripcionRemitente());
+			registro.setDescripcionRemitente(parametrosEntrada.getDescripcionRemitente());
 		if (parametrosEntrada.getDestinatari() != null)
 			registro.setdestinatari(parametrosEntrada.getDestinatari());
 		if (parametrosEntrada.getDisquet() != null)
@@ -757,8 +751,7 @@ public class RegwebFacadeImpl implements RegwebFacade{
 		if (parametrosEntrada.getEntidad2Nuevo() != null)
 			registro.setEntidad2Nuevo(parametrosEntrada.getEntidad2Nuevo());
 		if (parametrosEntrada.getEntidadCastellano() != null)
-			registro.setEntidadCastellano(parametrosEntrada
-					.getEntidadCastellano());
+			registro.setEntidadCastellano(parametrosEntrada.getEntidadCastellano());
 		if (parametrosEntrada.getFora() != null)
 			registro.setfora(parametrosEntrada.getFora());
 		if (parametrosEntrada.getHora() != null)
@@ -772,15 +765,13 @@ public class RegwebFacadeImpl implements RegwebFacade{
 		if (parametrosEntrada.getLeido() != null)
 			registro.setLeido(booleanValue(parametrosEntrada.getLeido()));
 		if (parametrosEntrada.getLocalitzadorsDocs() != null)
-			registro.setLocalitzadorsDocs(parametrosEntrada
-					.getLocalitzadorsDocs());
+			registro.setLocalitzadorsDocs(parametrosEntrada.getLocalitzadorsDocs());
 		if (parametrosEntrada.getMotivo() != null)
 			registro.setMotivo(parametrosEntrada.getMotivo());
 		if (parametrosEntrada.getMunicipi060() != null)
 			registro.setMunicipi060(parametrosEntrada.getMunicipi060());
 		if (parametrosEntrada.getNumeroDocumentosRegistro060() != null)
-			registro.setNumeroDocumentosRegistro060(parametrosEntrada
-					.getNumeroDocumentosRegistro060());
+			registro.setNumeroDocumentosRegistro060(parametrosEntrada.getNumeroDocumentosRegistro060());
 		if (parametrosEntrada.getNumeroEntrada() != null)
 			registro.setNumeroEntrada(parametrosEntrada.getNumeroEntrada());
 		if (parametrosEntrada.getOficina() != null)
@@ -792,20 +783,15 @@ public class RegwebFacadeImpl implements RegwebFacade{
 
 		if (parametrosEntrada.getParamRegPubEnt() != null) {
 			ParametrosRegistroPublicadoEntrada pub = new ParametrosRegistroPublicadoEntrada();
-			pub.setAnoEntrada(parametrosEntrada.getParamRegPubEnt()
-					.getAnoEntrada());
-			pub.setContenido(parametrosEntrada.getParamRegPubEnt()
-					.getContenido());
+			pub.setAnoEntrada(parametrosEntrada.getParamRegPubEnt().getAnoEntrada());
+			pub.setContenido(parametrosEntrada.getParamRegPubEnt().getContenido());
 			pub.setFecha(parametrosEntrada.getParamRegPubEnt().getFecha());
 			pub.setLeido(parametrosEntrada.getParamRegPubEnt().isLeido());
 			pub.setLineas(parametrosEntrada.getParamRegPubEnt().getLineas());
 			pub.setNumero(parametrosEntrada.getParamRegPubEnt().getNumero());
-			pub.setNumeroBOCAIB(parametrosEntrada.getParamRegPubEnt()
-					.getNumeroBOCAIB());
-			if (parametrosEntrada.getParamRegPubEnt()
-					.getObservaciones() != null)
-				pub.setObservaciones(parametrosEntrada.getParamRegPubEnt()
-					.getObservaciones());
+			pub.setNumeroBOCAIB(parametrosEntrada.getParamRegPubEnt().getNumeroBOCAIB());
+			if (parametrosEntrada.getParamRegPubEnt().getObservaciones() != null)
+				pub.setObservaciones(parametrosEntrada.getParamRegPubEnt().getObservaciones());
 			pub.setOficina(parametrosEntrada.getParamRegPubEnt().getOficina());
 			pub.setPagina(parametrosEntrada.getParamRegPubEnt().getPagina());
 			registro.setParamRegPubEnt(pub);
@@ -865,8 +851,10 @@ public class RegwebFacadeImpl implements RegwebFacade{
 	private ParametrosRegistroSalidaWS parametrosSalidaToParametrosSalidaWS(
 			ParametrosRegistroSalida parametrosSalida) {
 		ParametrosRegistroSalidaWS registro = new ParametrosRegistroSalidaWS();
-		registro.setUsuario(parametrosSalida.getUsuario());
-		registro.setPassword(parametrosSalida.getPassword());
+
+		registro.setUsuarioConexion(""); 
+		registro.setPassword("");
+		registro.setUsuarioRegistro(parametrosSalida.getUsuario());
 		registro.setActualizacion(parametrosSalida.getActualizacion());
 		registro.setAltres(parametrosSalida.getAltres());
 		registro.setAltresNuevo(parametrosSalida.getAltresNuevo());
@@ -935,7 +923,7 @@ public class RegwebFacadeImpl implements RegwebFacade{
 	private ParametrosRegistroSalida parametrosSalidaWStoParametrosSalida(
 			ParametrosRegistroSalidaWS parametrosSalida) {
 		ParametrosRegistroSalida registro = new ParametrosRegistroSalida();
-		registro.fijaUsuario(parametrosSalida.getUsuario());
+		registro.fijaUsuario(parametrosSalida.getUsuarioRegistro());
 		registro.fijaPasswordUser(parametrosSalida.getPassword());
 		if (parametrosSalida.getActualizacion() != null) registro.setActualizacion(booleanValue(parametrosSalida.getActualizacion()));
 		if (parametrosSalida.getAltres() != null) registro.setaltres(parametrosSalida.getAltres());
