@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions name="RegWebHelloWorldWithSecurityWsService" targetNamespace="http://impl.v3.ws.regweb.caib.es/" xmlns:ns1="http://schemas.xmlsoap.org/wsdl/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://impl.v3.ws.regweb.caib.es/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <wsdl:message name="getVersion">
+  </wsdl:message>
+  <wsdl:message name="getVersionWsResponse">
+    <wsdl:part name="return" type="xsd:int">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getVersionWs">
+  </wsdl:message>
+  <wsdl:message name="getVersionResponse">
+    <wsdl:part name="return" type="xsd:string">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="echoResponse">
+    <wsdl:part name="return" type="xsd:string">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="echo">
+    <wsdl:part name="echo" type="xsd:string">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="RegWebHelloWorldWithSecurityWs">
+    <wsdl:operation name="echo">
+      <wsdl:input message="tns:echo" name="echo">
+    </wsdl:input>
+      <wsdl:output message="tns:echoResponse" name="echoResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getVersion">
+      <wsdl:input message="tns:getVersion" name="getVersion">
+    </wsdl:input>
+      <wsdl:output message="tns:getVersionResponse" name="getVersionResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getVersionWs">
+      <wsdl:input message="tns:getVersionWs" name="getVersionWs">
+    </wsdl:input>
+      <wsdl:output message="tns:getVersionWsResponse" name="getVersionWsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="RegWebHelloWorldWithSecurityWsServiceSoapBinding" type="tns:RegWebHelloWorldWithSecurityWs">
+    <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="echo">
+      <soap:operation soapAction="" style="rpc" />
+      <wsdl:input name="echo">
+        <soap:body namespace="http://impl.v3.ws.regweb.caib.es/" use="literal" />
+      </wsdl:input>
+      <wsdl:output name="echoResponse">
+        <soap:body namespace="http://impl.v3.ws.regweb.caib.es/" use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getVersion">
+      <soap:operation soapAction="" style="rpc" />
+      <wsdl:input name="getVersion">
+        <soap:body namespace="http://impl.v3.ws.regweb.caib.es/" use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getVersionResponse">
+        <soap:body namespace="http://impl.v3.ws.regweb.caib.es/" use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getVersionWs">
+      <soap:operation soapAction="" style="rpc" />
+      <wsdl:input name="getVersionWs">
+        <soap:body namespace="http://impl.v3.ws.regweb.caib.es/" use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getVersionWsResponse">
+        <soap:body namespace="http://impl.v3.ws.regweb.caib.es/" use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="RegWebHelloWorldWithSecurityWsService">
+    <wsdl:port binding="tns:RegWebHelloWorldWithSecurityWsServiceSoapBinding" name="RegWebHelloWorldWithSecurityWs">
+      <soap:address location="http://ibit157:8080/regweb/ws/v3/RegWebHelloWorldWithSecurity" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
