@@ -50,6 +50,9 @@ public class UsuarioService {
     @EJB(mappedName = "regweb/RegistroMigradoEJB/local")
     public RegistroMigradoLocal registroMigradoEjb;
 
+    @EJB(mappedName = "regweb/PreRegistroEJB/local")
+    public PreRegistroLocal preRegistroEjb;
+
 
     /**
      * Dado un usuario autenticado, realiza todas las configuraciones necesarias para su funcionamiento en REGWEB.
@@ -312,6 +315,7 @@ public class UsuarioService {
         // Comprobamos la última Oficina utilizada por el usuario
         if(oficinasRegistro.contains(usuarioEntidad.getUltimaOficina())){
             session.setAttribute(RegwebConstantes.SESSION_OFICINA,oficinaEjb.findById(usuarioEntidad.getUltimaOficina().getId()));
+            session.setAttribute(RegwebConstantes.SESSION_TIENEPREREGISTROS, preRegistroEjb.tienePreRegistros(usuarioEntidad.getUltimaOficina().getCodigo()));
 
         }else if(oficinasRegistro.size() > 0){
             session.setAttribute(RegwebConstantes.SESSION_OFICINA,oficinasRegistro.iterator().next());
