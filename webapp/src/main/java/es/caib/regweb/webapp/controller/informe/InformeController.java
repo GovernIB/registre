@@ -11,7 +11,6 @@ import es.caib.regweb.webapp.form.InformeIndicadoresBusquedaForm;
 import es.caib.regweb.webapp.form.InformeLibroBusquedaForm;
 import es.caib.regweb.webapp.form.RegistroLopdBusquedaForm;
 import es.caib.regweb.webapp.form.UsuarioLopdBusquedaForm;
-import es.caib.regweb.webapp.utils.Mensaje;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -80,11 +79,6 @@ public class InformeController extends BaseController {
      */
     @RequestMapping(value = "/libroRegistro", method = RequestMethod.GET)
     public String libroRegistro(Model model, HttpServletRequest request)throws Exception {
-
-        if(!isAdminEntidad(request)){
-            Mensaje.saveMessageError(request, getMessage("error.rol.incorrecto"));
-            return "redirect:/inici";
-        }
 
         InformeLibroBusquedaForm informeLibroBusquedaForm = new InformeLibroBusquedaForm();
         informeLibroBusquedaForm.setFechaFin(new Date());
@@ -532,11 +526,6 @@ public class InformeController extends BaseController {
     @RequestMapping(value = "/indicadores", method = RequestMethod.GET)
     public String indicadores(Model model, HttpServletRequest request)throws Exception {
 
-        if(!isAdminEntidad(request)){
-            Mensaje.saveMessageError(request, getMessage("error.rol.incorrecto"));
-            return "redirect:/inici";
-        }
-
         InformeIndicadoresBusquedaForm informeIndicadoresBusquedaForm = new InformeIndicadoresBusquedaForm();
         informeIndicadoresBusquedaForm.setFechaFin(new Date());
         model.addAttribute("informeIndicadoresBusquedaForm",informeIndicadoresBusquedaForm);
@@ -842,11 +831,6 @@ public class InformeController extends BaseController {
     @RequestMapping(value = "/usuarioLopd", method = RequestMethod.GET)
     public String usuarioLopd(Model model, HttpServletRequest request)throws Exception {
 
-        if(!(isOperador(request)||isAdminEntidad(request))){
-            Mensaje.saveMessageError(request, getMessage("error.rol.incorrecto"));
-            return "redirect:/inici";
-        }
-
         UsuarioLopdBusquedaForm usuarioLopdBusquedaForm = new UsuarioLopdBusquedaForm();
         usuarioLopdBusquedaForm.setFechaFin(new Date());
         model.addAttribute("usuarioLopdBusquedaForm",usuarioLopdBusquedaForm);
@@ -973,11 +957,6 @@ public class InformeController extends BaseController {
      */
     @RequestMapping(value = "/registroLopd", method = RequestMethod.GET)
     public String registroLopd(Model model, HttpServletRequest request)throws Exception {
-
-        if(!(isOperador(request)||isAdminEntidad(request))){
-            Mensaje.saveMessageError(request, getMessage("error.rol.incorrecto"));
-            return "redirect:/inici";
-        }
 
         RegistroLopdBusquedaForm registroLopdBusquedaForm = new RegistroLopdBusquedaForm();
         model.addAttribute("registroLopdBusquedaForm",registroLopdBusquedaForm);

@@ -115,7 +115,7 @@ public class RegistroMigradoController extends BaseController {
             }
 
             // Alta en tabla LOPD
-            if(paginacion != null){
+            if(paginacion != null && paginacion.getTotalResults() > 0){
                 registroMigradoEjb.insertarRegistrosLopdMigrado(paginacion, usuarioEntidad.getId());
             }
 
