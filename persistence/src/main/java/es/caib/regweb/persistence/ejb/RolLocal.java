@@ -1,0 +1,26 @@
+package es.caib.regweb.persistence.ejb;
+
+import es.caib.regweb.model.Rol;
+
+import javax.annotation.security.RolesAllowed;
+import javax.ejb.Local;
+import java.util.List;
+
+/**
+ * Created by Fundació BIT.
+ *
+ * @author earrivi
+ * Date: 16/01/14
+ */
+@Local
+@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
+public interface RolLocal extends BaseEjb<Rol, Long> {
+
+    /**
+     * Retorna los {@link es.caib.regweb.model.Rol} a partir de una lista de roles.
+     * @param roles
+     * @return
+     * @throws Exception
+     */
+    public List<Rol> getByRol(List<String> roles) throws Exception;
+}

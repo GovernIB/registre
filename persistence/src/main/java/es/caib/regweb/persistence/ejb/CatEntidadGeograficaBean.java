@@ -1,0 +1,77 @@
+package es.caib.regweb.persistence.ejb;
+
+import es.caib.regweb.model.CatEntidadGeografica;
+import org.apache.log4j.Logger;
+import org.jboss.ejb3.annotation.SecurityDomain;
+
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import java.util.List;
+
+/**
+ * Created by Fundació BIT.
+ *
+ * @author earrivi
+ * Date: 16/01/14
+ */
+
+@Stateless(name = "CatEntidadGeograficaEJB")
+@SecurityDomain("seycon")
+public class CatEntidadGeograficaBean extends BaseEjbJPA<CatEntidadGeografica, Long> implements CatEntidadGeograficaLocal{
+
+    protected final Logger log = Logger.getLogger(getClass());
+
+    @PersistenceContext(unitName="regweb")
+    private EntityManager em;
+
+
+    @Override
+    public CatEntidadGeografica findById(Long id) throws Exception {
+
+        return em.find(CatEntidadGeografica.class, id);
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<CatEntidadGeografica> getAll() throws Exception {
+
+        return  em.createQuery("Select catEntidadGeografica from CatEntidadGeografica as catEntidadGeografica order by catEntidadGeografica.id").getResultList();
+    }
+
+    @Override
+    public Long getTotal() throws Exception {
+
+        Query q = em.createQuery("Select count(catEntidadGeografica.id) from CatEntidadGeografica as catEntidadGeografica");
+
+        return (Long) q.getSingleResult();
+    }
+
+
+    @Override
+    public List<CatEntidadGeografica> getPagination(int inicio) throws Exception {
+
+        Query q = em.createQuery("Select catEntidadGeografica from CatEntidadGeografica as catEntidadGeografica order by catEntidadGeografica.id");
+        q.setFirstResult(inicio);
+        q.setMaxResults(RESULTADOS_PAGINACION);
+
+        return q.getResultList();
+    }
+
+    @Override
+    public CatEntidadGeografica findByCodigo(String codigo) throws Exception {
+        Query q = em.createQuery("Select catEntidadGeografica from CatEntidadGeografica as catEntidadGeografica where catEntidadGeografica.codigoEntidadGeografica = :codigo");
+
+        q.setParameter("codigo",codigo);
+
+        List<CatEntidadGeografica> catEntidadGeografica = q.getResultList();
+        if(catEntidadGeografica.size() == 1){
+            return catEntidadGeografica.get(0);
+        }else{
+            return  null;
+        }
+
+    }
+
+}
