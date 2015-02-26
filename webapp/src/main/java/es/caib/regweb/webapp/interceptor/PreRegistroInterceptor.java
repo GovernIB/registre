@@ -18,7 +18,7 @@ import javax.servlet.http.HttpSession;
 /**
  * Created by Fundació BIT.
  *
- * Interceptor para el Registro de Entrada
+ * Interceptor para el PreRegistro
  *
  * @author jpernia
  * Date: 5/12/14
