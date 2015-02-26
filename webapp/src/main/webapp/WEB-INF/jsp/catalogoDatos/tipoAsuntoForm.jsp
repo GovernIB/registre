@@ -141,8 +141,11 @@
                                         <tr>
                                             <td><i:trad value="${codigoAsunto}" property="nombre"/></td>
                                             <td class="center">
-                                                <a class="btn btn-warning" href="javascript:void(0);" onclick="javascript:showModalEditar('${codigoAsunto.id}','${codigoAsunto.traducciones['ca'].nombre}','${codigoAsunto.traducciones['es'].nombre}', '${codigoAsunto.codigo}')" title="Editar"><span class="fa fa-pencil"></span></a>
-                                                <a class="btn btn-danger" title="Eliminar" onclick="javascript:confirm('<c:url value="/codigoAsunto/${codigoAsunto.id}/delete"/>')" href="javascript:void(0);"><span class="fa fa-eraser"></span></a>
+
+                                               <%-- <a class="btn btn-warning" href="javascript:void(0);" onclick='showModalEditar("${codigoAsunto.id}", "<c:out value="${fn:escapeXml(codigoAsunto.traducciones['ca'].nombre)}" />", "<c:out value="${fn:escapeXml(codigoAsunto.traducciones['es'].nombre)}" />", "${codigoAsunto.codigo}")' title="Editar"><span class="fa fa-pencil"></span></a>
+                                                <a class="btn btn-warning" href="javascript:void(0);" onclick='showModalEditar("${codigoAsunto.id}", "<c:out value="${codigoAsunto.traducciones['ca'].nombre}" escapeXml="true"/>", "<c:out value="${codigoAsunto.traducciones['es'].nombre}" escapeXml="true"/>", "${codigoAsunto.codigo}")' title="Editar"><span class="fa fa-pencil"></span></a>--%>
+                                                <a class="btn btn-warning" href="javascript:void(0);" onclick='showModalEditar("${codigoAsunto.id}", "${fn:escapeXml(codigoAsunto.traducciones['ca'].nombre)}", "${fn:escapeXml(codigoAsunto.traducciones['es'].nombre)}", "${codigoAsunto.codigo}")' title="Editar"><span class="fa fa-pencil"></span></a>
+                                                <a class="btn btn-danger" title="Eliminar" onclick="confirm('<c:url value="/codigoAsunto/${codigoAsunto.id}/delete"/>', '<spring:message code="regweb.confirmar.eliminacion" htmlEscape="true"/>')" href="javascript:void(0);"><span class="fa fa-eraser"></span></a>
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -237,9 +240,10 @@
 <c:import url="../modulos/pie.jsp"/>
 <script>
 
+
+
+
 function showModalEditar(id, nombreca, nombrees, codigo) {
-
-
     $('#id').val(id);
     $('[name="traducciones[\'ca\'].nombre"]').val(nombreca);
     $('[name="traducciones[\'es\'].nombre"]').val(nombrees);
@@ -270,6 +274,8 @@ function validateModal(){
         return false;
     }
 }
+
+
 </script>
 
 
