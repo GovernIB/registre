@@ -81,7 +81,7 @@
 	    </repository>
 		
 		<repository>
-            <id>itagelib-spring-maven-repos</id>
+            <id>itaglib-spring-maven-repos</id>
             <name>ITagLib-Spring Maven Repository</name>
             <url>http://registre.sourceforge.net/maven/itaglib-spring</url>
         </repository>

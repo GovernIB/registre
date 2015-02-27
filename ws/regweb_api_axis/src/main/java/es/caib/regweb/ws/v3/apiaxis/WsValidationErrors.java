@@ -92,11 +92,11 @@ public class WsValidationErrors  extends org.apache.axis.AxisFault  implements j
         new org.apache.axis.description.TypeDesc(WsValidationErrors.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "WsValidationErrors"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("http://personas.impl.v3.ws.regweb.caib.es/", "WsValidationErrors"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("fieldFaults");
         elemField.setXmlName(new javax.xml.namespace.QName("", "fieldFaults"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "wsFieldValidationError"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://personas.impl.v3.ws.regweb.caib.es/", "wsFieldValidationError"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);
         elemField.setMaxOccursUnbounded(true);

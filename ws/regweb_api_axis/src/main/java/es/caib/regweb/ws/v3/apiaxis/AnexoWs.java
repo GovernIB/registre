@@ -662,7 +662,7 @@ public class AnexoWs  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(AnexoWs.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "anexoWs"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("http://registroentrada.impl.v3.ws.regweb.caib.es/", "anexoWs"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("certificado");
         elemField.setXmlName(new javax.xml.namespace.QName("", "certificado"));
