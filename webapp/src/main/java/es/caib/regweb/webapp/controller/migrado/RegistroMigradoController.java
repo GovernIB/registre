@@ -9,7 +9,6 @@ import es.caib.regweb.persistence.utils.RegistroUtils;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.webapp.controller.BaseController;
 import es.caib.regweb.webapp.form.RegistroMigradoBusqueda;
-import es.caib.regweb.webapp.utils.Mensaje;
 import es.caib.regweb.webapp.validator.RegistroMigradoBusquedaValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -138,14 +137,6 @@ public class RegistroMigradoController extends BaseController {
 
         RegistroMigrado registroMigrado = registroMigradoEjb.findById(idRegistro);
 
-        // Comprueba que el Registro Migrado que consulta es de la Entidad Activa
-        if(!registroMigrado.getEntidad().getId().equals(getEntidadActiva(request).getId())){
-            log.info("Aviso: No existe este registro en esta Entidad");
-            Mensaje.saveMessageError(request, getMessage("aviso.registromigrado.detalle"));
-
-            return "redirect:/registroMigrado/list";
-        }
-
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
         model.addAttribute("registroMigrado",registroMigrado);
@@ -167,14 +158,6 @@ public class RegistroMigradoController extends BaseController {
 
         // Añade la información del Registro Migrado
         RegistroMigrado registroMigrado = registroMigradoEjb.findById(idRegistroMigrado);
-
-        // Comprueba que el Registro Migrado que consulta es de la Entidad Activa
-        if(!registroMigrado.getEntidad().getId().equals(getEntidadActiva(request).getId())){
-            log.info("Aviso: No existe este registro en esta Entidad");
-            Mensaje.saveMessageError(request, getMessage("aviso.registromigrado.detalle"));
-            mav = new ModelAndView("redirect:/registroMigrado/list");
-            return mav;
-        }
 
         mav.addObject("registroMigrado", registroMigrado);
 
