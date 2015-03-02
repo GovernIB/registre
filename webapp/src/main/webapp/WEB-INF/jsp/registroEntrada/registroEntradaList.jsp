@@ -138,7 +138,8 @@
                                                         <colgroup>
                                                             <col width="80">
                                                             <col>
-                                                            <col width="100">
+                                                            <col width="80">
+                                                            <col>
                                                             <col>
                                                             <col>
                                                             <col>
@@ -159,6 +160,7 @@
                                                                 <c:if test="${registroEntradaBusqueda.registroEntrada.estado != 2}">
                                                                     <th><spring:message code="registroEntrada.extracto"/></th>
                                                                 </c:if>
+                                                                <th><spring:message code="registroEntrada.anexos"/></th>
 
                                                                 <th class="center"><spring:message code="regweb.acciones"/></th>
                                                             </tr>
@@ -178,6 +180,12 @@
                                                                     </c:if>
                                                                     <c:if test="${registroEntrada.estado != 2}">
                                                                         <td>${registroEntrada.registroDetalle.extracto}</td>
+                                                                    </c:if>
+                                                                    <c:if test="${registroEntrada.registroDetalle.anexos != null}">
+                                                                        <td>${fn:length(registroEntrada.registroDetalle.anexos)}</td>
+                                                                    </c:if>
+                                                                    <c:if test="${registroEntrada.registroDetalle.anexos == null}">
+                                                                        <td>0</td>
                                                                     </c:if>
 
                                                                     <td class="center">

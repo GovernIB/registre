@@ -426,6 +426,13 @@
 
         actualizarSelect2('${obtenerOrganismosLibro}',idSelect,$('#libro\\.id option:selected').val(),valorSelected,false);
     }--%>
+
+
+    window.onbeforeunload = OnBeforeUnLoad;
+    function OnBeforeUnLoad () {
+        return "<spring:message code="regweb.cerrar.pagina"/>";
+    }
+
 </script>
 
 <script type="text/javascript" src="<c:url value="/js/repro.js"/>"></script>

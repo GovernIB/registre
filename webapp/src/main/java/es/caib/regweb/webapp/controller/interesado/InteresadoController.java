@@ -115,22 +115,29 @@ public class InteresadoController extends BaseController{
 
                     case (int)RegwebConstantes.CONFIGURACION_PERSONA_SIN_GUARDAR: // No se guardan
                         persona.setId((long)(Math.random()*10000));
-                        log.info("Id generado: " + persona.getId());
+                        //log.info("Id generado: " + persona.getId());
                         interesado.setId(persona.getId());
                     break;
 
                     case (int)RegwebConstantes.CONFIGURACION_PERSONA_GUARDAR_TODOS: // Se guardan las Personas
-                        persona = personaEjb.persist(persona);
+
+                        if(StringUtils.isEmpty(persona.getDocumento())){ // Si no hay documento, no se guarda en la bbdd
+                            persona.setId((long)(Math.random()*10000));
+                        }else{
+                            persona = personaEjb.persist(persona);
+                        }
+
                         interesado.setId(persona.getId());
                     break;
 
                     case (int)RegwebConstantes.CONFIGURACION_PERSONA_CONFIRMAR_NUEVA_PERSONA: // Se pregunta antes de Guardar
-                        if(persona.isGuardarInteresado()){
+
+                        if(persona.isGuardarInteresado() && !StringUtils.isEmpty(persona.getDocumento())){
                             persona = personaEjb.persist(persona);
                         }else{
                             persona.setId((long)(Math.random()*10000));
-                            log.info("Id generado: " + persona.getId());
                         }
+
                         interesado.setId(persona.getId());
                     break;
 

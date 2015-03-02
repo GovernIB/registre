@@ -6,7 +6,6 @@ import es.caib.regweb.persistence.ejb.CatPaisLocal;
 import es.caib.regweb.persistence.ejb.InteresadoLocal;
 import es.caib.regweb.persistence.ejb.PersonaLocal;
 import es.caib.regweb.utils.RegwebConstantes;
-
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.validation.IValidatorResult;
 
@@ -298,15 +297,15 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
         if (formatoCorrecto) {
           if (documento.endsWith("" + letras.charAt(valor % 23)) == false) {
             rejectValue(errors, "documento", "error.documento.formato","Lletra de document incorrecta");
-          } /*else {
+          } else {
             boolean existe;
             try {
               if (interesado.getId() == null) {
-                log.info("dentro 1");
-                existe = interesadoEjb.existeDocumentoNew(interesado.getDocumento());
+                  log.info("dentro existeDocumentoNew");
+                existe = personaEjb.existeDocumentoNew(interesado.getDocumento());
               } else {
-                log.info("dentro 2");
-                existe = interesadoEjb.existeDocumentoEdit(interesado.getDocumento(),interesado.getId());
+                  log.info("dentro existeDocumentoEdit");
+                existe = personaEjb.existeDocumentoEdit(interesado.getDocumento(),interesado.getId());
               }
 
             } catch (Exception e) {
@@ -315,10 +314,9 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
             }
 
             if (existe) {
-              rejectValue(errors, "documento", "error.document.existe",
-                  "El document ja existeix");
+              rejectValue(errors, "documento", "error.document.existe", "El document ja existeix");
             }
-          }*/
+          }
         }
 
     }
