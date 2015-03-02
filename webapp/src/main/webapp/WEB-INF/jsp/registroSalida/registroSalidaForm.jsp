@@ -88,7 +88,7 @@
 
                     <div class="form-group col-xs-12">
                         <div class="col-xs-2 pull-left etiqueta_regweb control-label">
-                            <label id="registroDetalle.extracto" for="registroDetalle.extracto" rel="ayuda" data-content="<spring:message code="registro.ayuda.extracto"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.extracto"/></label>
+                            <label id="registroDetalle.extracto" for="registroDetalle.extracto" rel="ayuda" data-content="<spring:message code="registro.ayuda.extracto.salida"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.extracto"/></label>
                         </div>
                         <div class="col-xs-10">
                             <form:textarea path="registroDetalle.extracto" rows="2" cssClass="form-control" maxlength="240"/> <form:errors path="registroDetalle.extracto" cssClass="help-block" element="span"/>

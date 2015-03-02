@@ -43,7 +43,12 @@
 
             <div class="form-group col-xs-12">
                 <div class="col-xs-2 pull-left etiqueta_regweb control-label">
-                    <label rel="ayuda" data-content="<spring:message code="registro.ayuda.tipoInteresado"/>" data-toggle="popover"><spring:message code="interesado.tipoInteresado"/></label>
+                        <c:if test="${param.registro == 'entrada'}">
+                            <label rel="ayuda" data-content="<spring:message code="registro.ayuda.tipoInteresado.entrada"/>" data-toggle="popover"><spring:message code="interesado.tipoInteresado"/></label>
+                        </c:if>
+                        <c:if test="${param.registro == 'salida'}">
+                    <label rel="ayuda" data-content="<spring:message code="registro.ayuda.tipoInteresado.salida"/>" data-toggle="popover"><spring:message code="interesado.tipoDestinatario"/></label>
+                        </c:if>
                 </div>
                 <div class="col-xs-10">
                     <c:forEach items="${tiposInteresado}" var="tipoInteresado">
