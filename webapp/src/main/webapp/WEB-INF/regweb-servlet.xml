@@ -24,6 +24,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
             <mvc:exclude-mapping path="/ico/**"/>
             <mvc:exclude-mapping path="/img/**"/>
             <mvc:exclude-mapping path="/js/**"/>
+            <mvc:exclude-mapping path="/doc/**"/>
             <bean class="es.caib.regweb.webapp.interceptor.InicioInterceptor" />
         </mvc:interceptor>
 
@@ -155,5 +156,6 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
     <mvc:resources mapping="/ico/**" location="/ico/" />
     <mvc:resources mapping="/img/**" location="/img/" />
     <mvc:resources mapping="/js/**" location="/js/" />
+    <mvc:resources mapping="/doc/**" location="/doc/" />
 
 </beans>

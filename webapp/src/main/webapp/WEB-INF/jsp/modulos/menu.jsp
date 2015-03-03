@@ -184,6 +184,9 @@
                                     <li class="divider"></li>
                                     <li class="submenu-complet"><a href="<c:url value="/registroMigrado/list"/>"><spring:message code="registroMigrado.consultaRegistro"/></a></li>
                                 </c:if>
+                                 
+                                <li class="divider"></li>
+                                <li class="submenu-complet"><a href="<c:url value="/doc/Manual_de_Usuari_Operador_de_RegWeb.pdf"/>" target="_blank" ><spring:message code="menu.manual.oper"/></a></li>
 
                             </ul>
                         </div><!-- /btn-group -->
@@ -234,6 +237,9 @@
                                             <li><a href="<c:url value="/modeloOficioRemision/list/"/>" ><spring:message code="menu.modeloOficioRemision"/></a></li>
                                         </ul>
                                     </li>
+                                    
+                                    <li class="divider"></li>
+                                    <li class="submenu-complet"><a href="<c:url value="/doc/Manual_de_Usuari_Administrador_Entitat_de_RegWeb.pdf"/>" target="_blank" ><spring:message code="menu.manual.aden"/></a></li>
 
                                 </ul>
                             </div><!-- /btn-group -->
@@ -252,6 +258,8 @@
                             <li class="submenu-complet"><a href="<c:url value="/entidad/list"/>"><spring:message code="entidad.entidades"/></a></li>
                             <li class="submenu-complet"><a href="<c:url value="/usuario/list"/>"><spring:message code="menu.usuarios"/></a></li>
                             <li class="submenu-complet"><a href="<c:url value="/dir3/datosCatalogo"/>" tabindex="-1"><spring:message code="menu.dir3"/></a></li>
+                            <li class="divider"></li>
+                            <li class="submenu-complet"><a href="<c:url value="/doc/Manual_de_Usuari_Administrador_de_RegWeb.pdf"/>" target="_blank" ><spring:message code="menu.manual.admin"/></a></li>
                         </ul>
                     </div><!-- /btn-group -->
                 </c:if>
