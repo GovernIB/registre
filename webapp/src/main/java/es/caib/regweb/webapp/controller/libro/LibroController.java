@@ -1,16 +1,13 @@
 package es.caib.regweb.webapp.controller.libro;
 
 import es.caib.regweb.model.*;
-import es.caib.regweb.persistence.ejb.ContadorLocal;
-import es.caib.regweb.persistence.ejb.IdiomaLocal;
-import es.caib.regweb.persistence.ejb.LibroLocal;
-import es.caib.regweb.persistence.ejb.OrganismoLocal;
+import es.caib.regweb.persistence.ejb.*;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.webapp.controller.BaseController;
 import es.caib.regweb.webapp.editor.UsuarioEditor;
 import es.caib.regweb.webapp.utils.Mensaje;
 import es.caib.regweb.webapp.validator.LibroValidator;
-
+import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,8 +20,9 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Fundació BIT.
@@ -54,6 +52,9 @@ public class LibroController extends BaseController {
     @EJB(mappedName = "regweb/IdiomaEJB/local")
     public IdiomaLocal idiomaEjb;
 
+    @EJB(mappedName = "regweb/RelacionOrganizativaOfiEJB/local")
+    public RelacionOrganizativaOfiLocal relacionOrganizativaOfiLocalEjb;
+
     /**
      * Listado de libros de un Organismo
      * @param idOrganismo
@@ -61,14 +62,22 @@ public class LibroController extends BaseController {
      * @throws Exception
      */
     @RequestMapping(value = "/{idOrganismo}/libros", method = RequestMethod.GET)
-    public ModelAndView libros(@PathVariable Long idOrganismo)throws Exception {
+    public ModelAndView libros(@PathVariable Long idOrganismo, HttpServletRequest request)throws Exception {
 
         ModelAndView mav = new ModelAndView("libro/librosList");
 
         Organismo organismo = organismoEjb.findById(idOrganismo);
-
         mav.addObject("organismo", organismo);
 
+        Set<Oficina> oficinas = new HashSet<Oficina>();  // Utilizamos un Set porque no permite duplicados
+        oficinas.addAll(oficinaEjb.findByOrganismoResponsable(organismo.getId()));
+        oficinas.addAll(relacionOrganizativaOfiLocalEjb.getOficinasByOrganismo(organismo.getId()));
+        if(oficinas.size() == 0){
+            log.info("El organismo no tiene Oficinas");
+            Mensaje.saveMessageError(request, I18NUtils.tradueix("aviso.organismo.oficinas"));
+        }
+
+        mav.addObject("oficinas", oficinas.size() > 0);
 
         return mav;
     }
