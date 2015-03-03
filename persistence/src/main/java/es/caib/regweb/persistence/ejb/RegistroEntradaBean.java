@@ -428,14 +428,16 @@ public class RegistroEntradaBean extends BaseEjbJPA<RegistroEntrada, Long> imple
     public List<RegistroEntrada> buscaIndicadores(Date fechaInicio, Date fechaFin, Long idEntidad) throws Exception{
 
         Query q;
-// TODO Emprar constants de regweb !!!!!
+
         q = em.createQuery("Select registroEntrada from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
-                "and registroEntrada.fecha <= :fechaFin and registroEntrada.estado != 8 and registroEntrada.estado != 2 and " +
+                "and registroEntrada.fecha <= :fechaFin and registroEntrada.estado != :anulado and registroEntrada.estado != :pendiente and " +
                 "registroEntrada.libro.organismo.entidad.id = :idEntidad order by registroEntrada.fecha desc");
 
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("idEntidad", idEntidad);
+        q.setParameter("anulado",RegwebConstantes.ESTADO_ANULADO);
+        q.setParameter("pendiente",RegwebConstantes.ESTADO_PENDIENTE);
 
         return q.getResultList();
     }
@@ -444,13 +446,15 @@ public class RegistroEntradaBean extends BaseEjbJPA<RegistroEntrada, Long> imple
     public Long buscaEntradaPorConselleria(Date fechaInicio, Date fechaFin, Long conselleria) throws Exception{
 
         Query q;
-// TODO Emprar Constants de regweb !!!
+
         q = em.createQuery("Select count(registroEntrada.id) from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
-                "and registroEntrada.fecha <= :fechaFin and registroEntrada.oficina.organismoResponsable.id = :conselleria and registroEntrada.estado != 8 and registroEntrada.estado != 2");
+                "and registroEntrada.fecha <= :fechaFin and registroEntrada.oficina.organismoResponsable.id = :conselleria and registroEntrada.estado != :anulado and registroEntrada.estado != :pendiente");
 
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("conselleria", conselleria);
+        q.setParameter("anulado",RegwebConstantes.ESTADO_ANULADO);
+        q.setParameter("pendiente",RegwebConstantes.ESTADO_PENDIENTE);
 
         return (Long) q.getSingleResult();
     }
@@ -459,15 +463,17 @@ public class RegistroEntradaBean extends BaseEjbJPA<RegistroEntrada, Long> imple
     public Long buscaEntradaPorAsunto(Date fechaInicio, Date fechaFin, Long tipoAsunto, Long idEntidad) throws Exception{
 
         Query q;
-     // TODO Emprar Constants de regweb !!!
+
         q = em.createQuery("Select count(registroEntrada.id) from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
                 "and registroEntrada.fecha <= :fechaFin and registroEntrada.registroDetalle.tipoAsunto.id = :tipoAsunto and " +
-                "registroEntrada.estado != 8 and registroEntrada.estado != 2 and registroEntrada.libro.organismo.entidad.id = :idEntidad");
+                "registroEntrada.estado != :anulado and registroEntrada.estado != :pendiente and registroEntrada.libro.organismo.entidad.id = :idEntidad");
 
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("tipoAsunto", tipoAsunto);
         q.setParameter("idEntidad", idEntidad);
+        q.setParameter("anulado",RegwebConstantes.ESTADO_ANULADO);
+        q.setParameter("pendiente",RegwebConstantes.ESTADO_PENDIENTE);
 
         return (Long) q.getSingleResult();
     }
@@ -476,15 +482,17 @@ public class RegistroEntradaBean extends BaseEjbJPA<RegistroEntrada, Long> imple
     public Long buscaEntradaPorIdioma(Date fechaInicio, Date fechaFin, Long idioma, Long idEntidad) throws Exception{
 
         Query q;
-     // TODO Emprar Constants de regweb !!!
+
         q = em.createQuery("Select count(registroEntrada.id) from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
                 "and registroEntrada.fecha <= :fechaFin and registroEntrada.registroDetalle.idioma.id = :idioma and " +
-                "registroEntrada.estado != 8 and registroEntrada.estado != 2 and registroEntrada.libro.organismo.entidad.id = :idEntidad");
+                "registroEntrada.estado != :anulado and registroEntrada.estado != :pendiente and registroEntrada.libro.organismo.entidad.id = :idEntidad");
 
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("idioma", idioma);
         q.setParameter("idEntidad", idEntidad);
+        q.setParameter("anulado",RegwebConstantes.ESTADO_ANULADO);
+        q.setParameter("pendiente",RegwebConstantes.ESTADO_PENDIENTE);
 
         return (Long) q.getSingleResult();
     }
@@ -493,13 +501,15 @@ public class RegistroEntradaBean extends BaseEjbJPA<RegistroEntrada, Long> imple
     public Long buscaEntradaPorLibro(Date fechaInicio, Date fechaFin, Long libro) throws Exception{
 
         Query q;
-     // TODO Emprar Constants de regweb !!!
+
         q = em.createQuery("Select count(registroEntrada.id) from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
-                "and registroEntrada.fecha <= :fechaFin and registroEntrada.libro.id = :libro and registroEntrada.estado != 8  and registroEntrada.estado != 2");
+                "and registroEntrada.fecha <= :fechaFin and registroEntrada.libro.id = :libro and registroEntrada.estado != :anulado  and registroEntrada.estado != :pendiente");
 
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("libro", libro);
+        q.setParameter("anulado",RegwebConstantes.ESTADO_ANULADO);
+        q.setParameter("pendiente",RegwebConstantes.ESTADO_PENDIENTE);
 
         return (Long) q.getSingleResult();
     }
@@ -508,13 +518,15 @@ public class RegistroEntradaBean extends BaseEjbJPA<RegistroEntrada, Long> imple
     public Long buscaEntradaPorOficina(Date fechaInicio, Date fechaFin, Long oficina) throws Exception{
 
         Query q;
-     // TODO Emprar Constants de regweb !!!
+
         q = em.createQuery("Select count(registroEntrada.id) from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
-                "and registroEntrada.fecha <= :fechaFin and registroEntrada.oficina.id = :oficina and registroEntrada.estado != 8 and registroEntrada.estado != 2");
+                "and registroEntrada.fecha <= :fechaFin and registroEntrada.oficina.id = :oficina and registroEntrada.estado != :anulado and registroEntrada.estado != :pendiente");
 
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("oficina", oficina);
+        q.setParameter("anulado",RegwebConstantes.ESTADO_ANULADO);
+        q.setParameter("pendiente",RegwebConstantes.ESTADO_PENDIENTE);
 
         return (Long) q.getSingleResult();
     }
@@ -555,14 +567,15 @@ public class RegistroEntradaBean extends BaseEjbJPA<RegistroEntrada, Long> imple
     public List<RegistroEntrada> buscaEntradaPorUsuarioLibro(Date fechaInicio, Date fechaFin, Long idUsuario, Long idLibro) throws Exception{
 
         Query q;
-     // TODO Emprar Constants de regweb !!!
+
         q = em.createQuery("Select registroEntrada from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
-                "and registroEntrada.fecha <= :fechaFin and registroEntrada.usuario.id = :idUsuario and registroEntrada.libro.id = :idLibro and registroEntrada.estado != 2 order by registroEntrada.fecha desc");
+                "and registroEntrada.fecha <= :fechaFin and registroEntrada.usuario.id = :idUsuario and registroEntrada.libro.id = :idLibro and registroEntrada.estado != :pendiente order by registroEntrada.fecha desc");
 
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("idUsuario", idUsuario);
         q.setParameter("idLibro", idLibro);
+        q.setParameter("pendiente",RegwebConstantes.ESTADO_PENDIENTE);
 
         return q.getResultList();
     }

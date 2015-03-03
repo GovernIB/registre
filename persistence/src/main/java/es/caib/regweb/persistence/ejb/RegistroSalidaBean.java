@@ -237,14 +237,16 @@ public class RegistroSalidaBean extends BaseEjbJPA<RegistroSalida, Long> impleme
     public List<RegistroSalida> buscaIndicadores(Date fechaInicio, Date fechaFin, Long idEntidad) throws Exception{
 
         Query q;
-     // TODO Emprar Constants de regweb !!!
+
         q = em.createQuery("Select registroSalida from RegistroSalida as registroSalida where registroSalida.fecha >= :fechaInicio " +
-                "and registroSalida.fecha <= :fechaFin and registroSalida.estado != 8 and registroSalida.estado != 2 and " +
+                "and registroSalida.fecha <= :fechaFin and registroSalida.estado != :anulado and registroSalida.estado != :pendiente and " +
                 "registroSalida.libro.organismo.entidad.id = :idEntidad order by registroSalida.fecha desc");
 
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("idEntidad", idEntidad);
+        q.setParameter("anulado",RegwebConstantes.ESTADO_ANULADO);
+        q.setParameter("pendiente",RegwebConstantes.ESTADO_PENDIENTE);
 
         return q.getResultList();
     }
@@ -268,15 +270,17 @@ public class RegistroSalidaBean extends BaseEjbJPA<RegistroSalida, Long> impleme
     public Long buscaSalidaPorAsunto(Date fechaInicio, Date fechaFin, Long tipoAsunto, Long idEntidad) throws Exception{
 
         Query q;
-     // TODO Emprar Constants de regweb !!!
+
         q = em.createQuery("Select count(registroSalida.id) from RegistroSalida as registroSalida where registroSalida.fecha >= :fechaInicio " +
                 "and registroSalida.fecha <= :fechaFin and registroSalida.registroDetalle.tipoAsunto.id = :tipoAsunto and " +
-                "registroSalida.estado != 8 and registroSalida.estado != 2 and registroSalida.libro.organismo.entidad.id = :idEntidad");
+                "registroSalida.estado != :anulado and registroSalida.estado != :pendiente and registroSalida.libro.organismo.entidad.id = :idEntidad");
 
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("tipoAsunto", tipoAsunto);
         q.setParameter("idEntidad", idEntidad);
+        q.setParameter("anulado",RegwebConstantes.ESTADO_ANULADO);
+        q.setParameter("pendiente",RegwebConstantes.ESTADO_PENDIENTE);
 
         return (Long) q.getSingleResult();
     }
@@ -285,15 +289,17 @@ public class RegistroSalidaBean extends BaseEjbJPA<RegistroSalida, Long> impleme
     public Long buscaSalidaPorIdioma(Date fechaInicio, Date fechaFin, Long idioma, Long idEntidad) throws Exception{
 
         Query q;
-     // TODO Emprar Constants de regweb !!!
+
         q = em.createQuery("Select count(registroSalida.id) from RegistroSalida as registroSalida where registroSalida.fecha >= :fechaInicio " +
                 "and registroSalida.fecha <= :fechaFin and registroSalida.registroDetalle.idioma.id = :idioma and " +
-                "registroSalida.estado != 8 and registroSalida.estado != 2 and registroSalida.libro.organismo.entidad.id = :idEntidad");
+                "registroSalida.estado != :anulado and registroSalida.estado != :pendiente and registroSalida.libro.organismo.entidad.id = :idEntidad");
 
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("idioma", idioma);
         q.setParameter("idEntidad", idEntidad);
+        q.setParameter("anulado",RegwebConstantes.ESTADO_ANULADO);
+        q.setParameter("pendiente",RegwebConstantes.ESTADO_PENDIENTE);
 
         return (Long) q.getSingleResult();
     }
@@ -317,13 +323,15 @@ public class RegistroSalidaBean extends BaseEjbJPA<RegistroSalida, Long> impleme
     public Long buscaSalidaPorOficina(Date fechaInicio, Date fechaFin, Long oficina) throws Exception{
 
         Query q;
-     // TODO Emprar Constants de regweb !!!
+
         q = em.createQuery("Select count(registroSalida.id) from RegistroSalida as registroSalida where registroSalida.fecha >= :fechaInicio " +
-                "and registroSalida.fecha <= :fechaFin and registroSalida.oficina.id = :oficina and registroSalida.estado != 8 and registroSalida.estado != 2");
+                "and registroSalida.fecha <= :fechaFin and registroSalida.oficina.id = :oficina and registroSalida.estado != :anulado and registroSalida.estado != :pendiente");
 
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("oficina", oficina);
+        q.setParameter("anulado",RegwebConstantes.ESTADO_ANULADO);
+        q.setParameter("pendiente",RegwebConstantes.ESTADO_PENDIENTE);
 
         return (Long) q.getSingleResult();
     }
@@ -348,14 +356,15 @@ public class RegistroSalidaBean extends BaseEjbJPA<RegistroSalida, Long> impleme
     public List<RegistroSalida> buscaSalidaPorUsuarioLibro(Date fechaInicio, Date fechaFin, Long idUsuario, Long idLibro) throws Exception{
 
         Query q;
-     // TODO Emprar Constants de regweb !!!
+
         q = em.createQuery("Select registroSalida from RegistroSalida as registroSalida where registroSalida.fecha >= :fechaInicio " +
-                "and registroSalida.fecha <= :fechaFin and registroSalida.usuario.id = :idUsuario and registroSalida.libro.id = :idLibro and registroSalida.estado != 2 order by registroSalida.fecha desc");
+                "and registroSalida.fecha <= :fechaFin and registroSalida.usuario.id = :idUsuario and registroSalida.libro.id = :idLibro and registroSalida.estado != :pendiente order by registroSalida.fecha desc");
 
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("idUsuario", idUsuario);
         q.setParameter("idLibro", idLibro);
+        q.setParameter("pendiente",RegwebConstantes.ESTADO_PENDIENTE);
 
         return q.getResultList();
     }

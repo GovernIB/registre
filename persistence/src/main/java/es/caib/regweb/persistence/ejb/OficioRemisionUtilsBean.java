@@ -1,25 +1,17 @@
 package es.caib.regweb.persistence.ejb;
 
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
+import es.caib.regweb.model.*;
+import es.caib.regweb.model.utils.OficioPendienteLlegada;
+import es.caib.regweb.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
-import es.caib.regweb.model.Libro;
-import es.caib.regweb.model.Oficina;
-import es.caib.regweb.model.OficioRemision;
-import es.caib.regweb.model.Organismo;
-import es.caib.regweb.model.RegistroEntrada;
-import es.caib.regweb.model.Trazabilidad;
-import es.caib.regweb.model.UsuarioEntidad;
-import es.caib.regweb.model.utils.OficioPendienteLlegada;
-import es.caib.regweb.utils.RegwebConstantes;
-
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -136,19 +128,6 @@ public class OficioRemisionUtilsBean implements OficioRemisionUtilsLocal {
       }
 
       oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision, RegwebConstantes.ESTADO_OFICIO_EXTERNO);
-
-      /*  TODO
-          Hay que hacer:
-
-          1- RegistroSalida en la oficina origen
-          2- Oficio remisión en la oficina origen y destino
-          3- RegistroEntrada en la oficina destinataria???
-          4- Marcar los Registros que componen el Oficio de remisión como "remisión interna"
-          5- Avisar a la Oficina destino, que tiene Oficios de remisión pendientes
-          6- La Oficina acepta el Oficio de remisión cuando crea oportuno.
-          7- Se crean Registros de Entrada
-
-      */
 
       return oficioRemision;
 
