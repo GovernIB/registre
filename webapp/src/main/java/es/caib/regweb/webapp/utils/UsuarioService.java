@@ -405,6 +405,19 @@ public class UsuarioService {
     }
 
     /**
+     * Comprueba si un usuario existe en el sistema de usuarios, mediante su identificador
+     * @param identificador
+     * @return
+     * @throws Exception
+     */
+    public Boolean existeIdentificador(String identificador) throws  Exception{
+        IUserInformationPlugin loginPlugin = RegwebLoginPluginManager.getInstance();
+        UserInfo regwebUserInfo = loginPlugin.getUserInfoByUserName(identificador);
+
+        return regwebUserInfo != null;
+    }
+
+    /**
      * Limpia de la {@link javax.servlet.http.HttpSession} las variables utilizadas
      * @param session
      * @throws Exception

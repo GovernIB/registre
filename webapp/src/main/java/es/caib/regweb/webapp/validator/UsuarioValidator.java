@@ -3,8 +3,9 @@ package es.caib.regweb.webapp.validator;
 import es.caib.regweb.model.Usuario;
 import es.caib.regweb.persistence.ejb.UsuarioLocal;
 import es.caib.regweb.utils.RegwebConstantes;
-
+import es.caib.regweb.webapp.utils.UsuarioService;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -25,6 +26,9 @@ public class UsuarioValidator implements Validator {
 
     @EJB(mappedName = "regweb/UsuarioEJB/local")
     public UsuarioLocal usuarioEjb;
+
+    @Autowired
+    private UsuarioService usuarioService;
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -80,6 +84,10 @@ public class UsuarioValidator implements Validator {
 
                 // Identificador único
                 if (usuario.getIdentificador() != null && usuario.getIdentificador().length() > 0) {
+
+                    if(!usuarioService.existeIdentificador(usuario.getIdentificador())){
+                        errors.rejectValue("identificador", "usuario.identificador.no.existe", "L'identificador no existeix al sistema de usuaris");
+                    }
 
                     if (usuario.getId() != null) {  // Se trata de una modificación
                         if (usuarioEjb.existeIdentificadorEdit(usuario.getIdentificador(), usuario.getId())) {
