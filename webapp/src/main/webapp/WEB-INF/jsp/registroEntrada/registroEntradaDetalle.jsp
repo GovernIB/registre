@@ -138,7 +138,7 @@
                             </c:if>
 
                             <%--Si el registro está pendiente--%>
-                            <c:if test="${registro.estado == 2 && puedeEditar}">
+                            <c:if test="${(registro.estado == 1 || registro.estado == 2 || registro.estado == 3) && puedeEditar}">
                                 <button type="button" onclick='javascript:confirm("<c:url value="/registroEntrada/${registro.id}/anular"/>","<spring:message code="regweb.confirmar.anular" htmlEscape="true"/>")' class="btn btn-danger btn-sm btn-block"><spring:message code="regweb.anular"/></button>
                             </c:if>
 
