@@ -53,6 +53,7 @@ public class ReciboRtfView extends AbstractView {
         DatosRecibo datosRecibo = null;
         String formatNumRegistre = null;
         String interessats = "";
+        String annexes = "";
 
         // Registre Entrada
         if(object.getClass().getSimpleName().equals("RegistroEntrada")){
@@ -113,17 +114,28 @@ public class ReciboRtfView extends AbstractView {
         if (datosRecibo.getInteresados()!=null){
             // TODO Optimitzar foreach i switch
             for(int i=0;i<datosRecibo.getInteresados().size();i++){
-                if(datosRecibo.getInteresados().get(i).getTipo() == RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION){
+                if(datosRecibo.getInteresados().get(i).getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
                     interessats = interessats + datosRecibo.getInteresados().get(i).getNombre();
                 }
-                if(datosRecibo.getInteresados().get(i).getTipo() == RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA){
+                if(datosRecibo.getInteresados().get(i).getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)){
                     interessats = interessats + datosRecibo.getInteresados().get(i).getNombrePersonaFisica();
                 }
-                if(datosRecibo.getInteresados().get(i).getTipo() == RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA){
+                if(datosRecibo.getInteresados().get(i).getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)){
                     interessats = interessats + datosRecibo.getInteresados().get(i).getNombrePersonaJuridica();
                 }
                 if(i<datosRecibo.getInteresados().size()-1){
                     interessats = interessats + ", ";
+                }
+            }
+        }
+
+        // Annexes
+        if (datosRecibo.getAnexos()!=null){
+            for(int i=0;i<datosRecibo.getAnexos().size();i++){
+                annexes = annexes + datosRecibo.getAnexos().get(i).getTitulo();
+
+                if(i<datosRecibo.getAnexos().size()-1){
+                    annexes = annexes + ", ";
                 }
             }
         }
@@ -145,7 +157,8 @@ public class ReciboRtfView extends AbstractView {
         if (datosRecibo.getUsuarioNombreCompleto()!=null) ht.put("(nomUsuariCompletRegistre)", ConvertirTexto.toCp1252(datosRecibo.getUsuarioNombreCompleto()));
         if (datosRecibo.getEntitat()!=null) ht.put("(entitat)", ConvertirTexto.toCp1252(datosRecibo.getEntitat()));
         if (datosRecibo.getDecodificacioEntitat()!=null) ht.put("(decodificacioEntitat)", ConvertirTexto.toCp1252(datosRecibo.getDecodificacioEntitat()));
-        if (interessats!=null) ht.put("(interessats)", ConvertirTexto.toCp1252(interessats));
+        if (interessats.length()>0) ht.put("(interessats)", ConvertirTexto.toCp1252(interessats));
+        if (annexes.length()>0) ht.put("(annexes)", ConvertirTexto.toCp1252(annexes));
         if (usuario!=null) ht.put("(nomUsuari)", ConvertirTexto.toCp1252(usuario.getNombreCompleto()));
         if (fechaRecibo!=null) ht.put("(dataRebut)", ConvertirTexto.toCp1252(fechaRecibo));
         ht.put("(formatNumRegistre)", ConvertirTexto.toCp1252(formatNumRegistre));
