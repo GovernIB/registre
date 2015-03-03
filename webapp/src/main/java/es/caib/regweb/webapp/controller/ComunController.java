@@ -118,7 +118,9 @@ public class ComunController extends BaseController {
                 if(isOperador(request)){
                     usuarioService.asignarOficinasRegistro(getUsuarioAutenticado(request),session);
                     session.setAttribute(RegwebConstantes.SESSION_MIGRADOS, registroMigradoEjb.tieneRegistrosMigrados(entidadNueva.getId()));
-                    session.setAttribute(RegwebConstantes.SESSION_TIENEPREREGISTROS, preRegistroEjb.tienePreRegistros(getOficinaActiva(request).getCodigo()));
+                    if(getOficinaActiva(request) != null) {
+                        session.setAttribute(RegwebConstantes.SESSION_TIENEPREREGISTROS, preRegistroEjb.tienePreRegistros(getOficinaActiva(request).getCodigo()));
+                    }
                 }else{
                     session.setAttribute(RegwebConstantes.SESSION_MIGRADOS, false);
                     session.setAttribute(RegwebConstantes.SESSION_TIENEPREREGISTROS, false);
