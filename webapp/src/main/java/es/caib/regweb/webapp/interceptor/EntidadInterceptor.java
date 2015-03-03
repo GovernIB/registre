@@ -5,7 +5,6 @@ import es.caib.regweb.model.Rol;
 import es.caib.regweb.persistence.ejb.EntidadLocal;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.webapp.utils.Mensaje;
-
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -19,7 +18,7 @@ import javax.servlet.http.HttpSession;
 /**
  * Created by Fundació BIT.
  *
- * Interceptor para la gestión de Usuarios
+ * Interceptor para la gestión de Entidad
  *
  * @author earrivi
  * Date: 5/06/14

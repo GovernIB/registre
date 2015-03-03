@@ -26,7 +26,16 @@
                             <c:import url="modulos/migadepan.jsp"/>
                         </ol>
 
+                        <c:if test="${rolAutentidado.nombre == 'RWE_SUPERADMIN' || rolAutentidado.nombre == 'RWE_ADMIN'}">
+                            <c:if test="${catalogo == null}">
+                                <div class="alert alert-danger">
+                                    <strong><spring:message code="regweb.aviso"/>: </strong> <spring:message code="catalogoDir3.catalogo.vacio"/>
+                                </div>
+                            </c:if>
+                        </c:if>
+
                     </div>
+
 
                     <%--ÚLTIMOS REGISTROS DE ENTRADA DE LA OFICINA ACTIVA--%>
                     <c:if test="${not empty registroEntradas}">

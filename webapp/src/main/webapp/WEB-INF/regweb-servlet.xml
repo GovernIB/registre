@@ -63,6 +63,12 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
             <bean class="es.caib.regweb.webapp.interceptor.EntidadInterceptor"/>
         </mvc:interceptor>
 
+        <!--Interceptor para Organismo-->
+        <mvc:interceptor>
+            <mvc:mapping path="/organismo/**"/>
+            <bean class="es.caib.regweb.webapp.interceptor.OrganismoInterceptor"/>
+        </mvc:interceptor>
+
         <!--Interceptor para el PreRegistro-->
         <mvc:interceptor>
             <mvc:mapping path="/preRegistro/**"/>

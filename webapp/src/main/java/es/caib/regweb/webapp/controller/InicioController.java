@@ -26,9 +26,6 @@ import java.util.Set;
 public class InicioController extends BaseController{
 
     //protected final Logger log = Logger.getLogger(getClass());
-
-    //@Autowired
-    //private UsuarioService usuarioService;
     
     @EJB(mappedName = "regweb/RelacionOrganizativaOfiEJB/local")
     public RelacionOrganizativaOfiLocal relacionOrganizativaOfiLocalEjb;
@@ -47,6 +44,9 @@ public class InicioController extends BaseController{
 
     @EJB(mappedName = "regweb/LopdEJB/local")
     public LopdLocal lopdEjb;
+
+    @EJB(mappedName = "regweb/DescargaEJB/local")
+    public DescargaLocal descargaEjb;
 
 
     @RequestMapping(value = "/inici")
@@ -127,6 +127,12 @@ public class InicioController extends BaseController{
 
             model.addAttribute("preRegistros", preRegistros);
 
+        }
+
+        // Comprobación de si se ha hecho alguna sincronización del Catálogo DIR3
+        if (isSuperAdmin(request) || isAdminEntidad(request)) {
+            Descarga catalogo = descargaEjb.findByTipo(RegwebConstantes.CATALOGO);
+            model.addAttribute("catalogo", catalogo);
         }
 
 
