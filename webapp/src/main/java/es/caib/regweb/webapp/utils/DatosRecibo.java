@@ -1,5 +1,6 @@
 package es.caib.regweb.webapp.utils;
 
+import es.caib.regweb.model.Anexo;
 import es.caib.regweb.model.Interesado;
 import es.caib.regweb.model.RegistroEntrada;
 import es.caib.regweb.model.RegistroSalida;
@@ -31,6 +32,7 @@ public class DatosRecibo implements Serializable {
     private String entitat;
     private String decodificacioEntitat;
     private List<Interesado> interesados;
+    private List<Anexo> anexos;
 
 
     public DatosRecibo(RegistroEntrada registro, String tipoRegistro) {
@@ -52,6 +54,7 @@ public class DatosRecibo implements Serializable {
         this.entitat = registro.getUsuario().getEntidad().getNombre();
         this.decodificacioEntitat = registro.getUsuario().getEntidad().getDescripcion();
         this.interesados = registro.getRegistroDetalle().getInteresados();
+        this.anexos = registro.getRegistroDetalle().getAnexos();
     }
 
     public DatosRecibo(RegistroSalida registro, String tipoRegistro) {
@@ -73,6 +76,7 @@ public class DatosRecibo implements Serializable {
         this.entitat = registro.getUsuario().getEntidad().getNombre();
         this.decodificacioEntitat = registro.getUsuario().getEntidad().getDescripcion();
         this.interesados = registro.getRegistroDetalle().getInteresados();
+        this.anexos = registro.getRegistroDetalle().getAnexos();
     }
 
     public String getCodigoOficina() {
@@ -185,6 +189,14 @@ public class DatosRecibo implements Serializable {
 
     public void setInteresados(List<Interesado> interesados) {
         this.interesados = interesados;
+    }
+
+    public List<Anexo> getAnexos() {
+        return anexos;
+    }
+
+    public void setAnexos(List<Anexo> anexos) {
+        this.anexos = anexos;
     }
 
     public String getNumLibro() {
