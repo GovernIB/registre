@@ -1,7 +1,9 @@
 package es.caib.regweb.webapp.interceptor;
 
+import es.caib.regweb.model.Descarga;
 import es.caib.regweb.model.Entidad;
 import es.caib.regweb.model.Rol;
+import es.caib.regweb.persistence.ejb.DescargaLocal;
 import es.caib.regweb.persistence.ejb.EntidadLocal;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.webapp.utils.Mensaje;
@@ -30,6 +32,9 @@ public class EntidadInterceptor extends HandlerInterceptorAdapter {
 
     @EJB(mappedName = "regweb/EntidadEJB/local")
     public EntidadLocal entidadEjb;
+
+    @EJB(mappedName = "regweb/DescargaEJB/local")
+    public DescargaLocal descargaEjb;
 
 
     @Override
@@ -74,6 +79,16 @@ public class EntidadInterceptor extends HandlerInterceptorAdapter {
                   response.sendRedirect("/regweb/aviso");
                   return false;
               }
+            }
+
+            // Sincronizar/Actualizar organismos
+            if((url.contains("actualizar") || url.contains("sincronizar"))){
+                Descarga catalogo = descargaEjb.findByTipo(RegwebConstantes.CATALOGO);
+                if(catalogo == null){
+                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("catalogoDir3.catalogo.vacio"));
+                    response.sendRedirect("/regweb/aviso");
+                    return false;
+                }
             }
 
             return true;
