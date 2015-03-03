@@ -145,7 +145,7 @@ public class RegistroEntradaListController extends BaseController {
             // Ponemos la hora 23:59 a la fecha fin
             Date fechaFin = RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin());
 
-            Paginacion paginacion = registroEntradaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroEntrada, librosConsulta);
+            Paginacion paginacion = registroEntradaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroEntrada, librosConsulta, busqueda.getAnexos());
 
             // Alta en tabla LOPD
             lopdEjb.insertarRegistrosEntrada(paginacion, usuarioEntidad.getId());

@@ -44,7 +44,7 @@ public interface RegistroSalidaLocal extends BaseEjb<RegistroSalida, Long> {
      * @return
      * @throws Exception
      */
-    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, List<Libro> libros) throws Exception;
+    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, List<Libro> libros, Boolean anexos) throws Exception;
 
     
     /**

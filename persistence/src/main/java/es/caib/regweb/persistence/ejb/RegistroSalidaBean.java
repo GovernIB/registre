@@ -1,17 +1,12 @@
 package es.caib.regweb.persistence.ejb;
 
-import es.caib.regweb.model.Anexo;
-import es.caib.regweb.model.Interesado;
-import es.caib.regweb.model.Libro;
-import es.caib.regweb.model.RegistroSalida;
-import es.caib.regweb.model.UsuarioEntidad;
+import es.caib.regweb.model.*;
 import es.caib.regweb.persistence.utils.DataBaseUtils;
 import es.caib.regweb.persistence.utils.NumeroRegistro;
 import es.caib.regweb.persistence.utils.Paginacion;
 import es.caib.regweb.persistence.utils.RegistroUtils;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.utils.StringUtils;
-
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -20,7 +15,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-
 import java.util.*;
 
 /**
@@ -144,7 +138,7 @@ public class RegistroSalidaBean extends BaseEjbJPA<RegistroSalida, Long> impleme
     }
 
     @Override
-    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, List<Libro> libros) throws Exception{
+    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, List<Libro> libros, Boolean anexos) throws Exception{
 
         Query q;
         Query q2;
@@ -172,6 +166,11 @@ public class RegistroSalidaBean extends BaseEjbJPA<RegistroSalida, Long> impleme
             where.add(" registroSalida.libro.id = :idLibro"); parametros.put("idLibro",registroSalida.getLibro().getId());
         }else{
             where.add(" registroSalida.libro in (:libros)"); parametros.put("libros",libros);
+        }
+
+        // Buscamos registros de sañida con anexos
+        if(anexos){
+            where.add(" registroSalida.registroDetalle.id in (select distinct(a.registroDetalle.id) from Anexo as a) ");
         }
 
         if (parametros.size() != 0) {

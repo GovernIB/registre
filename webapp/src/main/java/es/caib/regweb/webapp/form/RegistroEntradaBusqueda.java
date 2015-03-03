@@ -16,6 +16,7 @@ public class RegistroEntradaBusqueda implements Serializable {
     private Integer pageNumber;
     private Date fechaInicio;
     private Date fechaFin;
+    private Boolean anexos;
 
 
     public RegistroEntradaBusqueda() {}
@@ -55,5 +56,13 @@ public class RegistroEntradaBusqueda implements Serializable {
 
     public void setFechaFin(Date fechaFin) {
         this.fechaFin = fechaFin;
+    }
+
+    public Boolean getAnexos() {
+        return anexos;
+    }
+
+    public void setAnexos(Boolean anexos) {
+        this.anexos = anexos;
     }
 }

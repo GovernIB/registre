@@ -100,7 +100,12 @@
 
                                 </div>
                             </div>
-
+                            <div class="form-group col-xs-6">
+                                <div class="col-xs-4 "><spring:message code="registroEntrada.anexos"/></div>
+                                <div class="col-xs-8">
+                                    <form:checkbox path="anexos"/>
+                                </div>
+                            </div>
 
                             <div class="form-group col-xs-12">
                                 <button type="submit" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></button>

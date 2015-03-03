@@ -621,6 +621,7 @@ function quitarError(campo){
 
 function doForm(formulario){
 
+    $(window).unbind('beforeunload');
     $(formulario).submit();
 }
 

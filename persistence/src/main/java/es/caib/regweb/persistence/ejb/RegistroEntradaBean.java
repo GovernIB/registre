@@ -145,7 +145,7 @@ public class RegistroEntradaBean extends BaseEjbJPA<RegistroEntrada, Long> imple
     }
 
     @Override
-    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroEntrada registroEntrada, List<Libro> libros) throws Exception{
+    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroEntrada registroEntrada, List<Libro> libros, Boolean anexos) throws Exception{
 
          Query q;
          Query q2;
@@ -174,6 +174,11 @@ public class RegistroEntradaBean extends BaseEjbJPA<RegistroEntrada, Long> imple
          }else{
             where.add(" registroEntrada.libro in (:libros)"); parametros.put("libros",libros);
          }
+
+        // Buscamos registros de entrada con anexos
+        if(anexos){
+            where.add(" registroEntrada.registroDetalle.id in (select distinct(a.registroDetalle.id) from Anexo as a) ");
+        }
 
          if (parametros.size() != 0) {
              query.append("where ");
