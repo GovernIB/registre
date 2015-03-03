@@ -31,7 +31,8 @@
                 <div class="panel panel-success">
 
                     <div class="panel-heading">
-                        <a class="btn btn-success btn-xs pull-right" href="<c:url value="/modeloRecibo/new"/>" role="button"><span class="fa fa-plus"></span> <spring:message code="modeloRecibo.nuevo"/></a>
+                        <a class="btn btn-success btn-xs pull-right margin-left10" href="<c:url value="/modeloRecibo/new"/>" role="button"><span class="fa fa-plus"></span> <spring:message code="modeloRecibo.nuevo"/></a>
+                        <a data-toggle="modal" href="#myModalModeloRecibo" class="btn btn-warning btn-xs pull-right"><spring:message code="regweb.ayuda"/></a>
                         <h3 class="panel-title"><i class="fa fa-list"></i> <strong><spring:message code="modeloRecibo.listado"/></strong></h3>
                     </div>
 
@@ -104,6 +105,35 @@
 
     </div>
 </div> <!-- /container -->
+
+<!-- ************* <spring:message code="regweb.inicio"/> Modal Ayuda Modelo Recibo ************************** -->
+<div class="modal fade bs-example-modal-lg" id="myModalModeloRecibo">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title"><spring:message code="modeloRecibo.ayuda.modeloRecibo"/></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="panel panel-success">
+                            <div class="panel-body">
+                                <div class="form-group col-xs-12">
+                                    <div class="col-xs-12 pull-left"><spring:message code="modeloRecibo.ayuda.contenido.modeloRecibo"/></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-warning"><spring:message code="regweb.cerrar"/></a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- *************Fi Modal Ayuda Modelo Recibo ************************** -->
 
 <c:import url="../modulos/pie.jsp"/>
 
