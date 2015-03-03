@@ -202,6 +202,7 @@ public class ReproController extends BaseController {
             repro.setNombre(reproEnviada.getNombre());
             repro.setUsuario(usuarioEntidad);
             repro.setTipoRegistro(reproEnviada.getTipoRegistro());
+            repro.setRepro(reproEnviada.getRepro());
 
             int orden = 0;
             List<Repro> repros = reproEjb.getAllbyUsuario(usuarioId);
