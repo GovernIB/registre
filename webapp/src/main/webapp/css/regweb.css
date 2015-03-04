@@ -220,6 +220,12 @@ textarea{
 .pad-bottom5 {
     padding-bottom: 5px;
 }
+.alert-dismissable .close {
+    position: relative;
+    top: -2px;
+    right: -11px;
+    color: inherit;
+}
 /* FI Canvis estils generals */
 
 
@@ -331,11 +337,25 @@ textarea{
 }
 .table>thead>tr>th{
     height: 30px;
-	padding: 4px;
+    padding: 4px;
+}
+.table1 {
+    width: 100%;
+    margin-bottom: 20px;
+}
+.table1>tbody>tr>td {
+    padding: 2px;
+    height: 20px;
+    vertical-align: middle;
+    font-size: 13px;
 }
 .table-responsive {
 	margin-right: 20px;
 	margin-left: 20px;
+}
+.table-responsive-inici {
+    margin-right: 0px;
+    margin-left: 0px;
 }
 
 .center{
