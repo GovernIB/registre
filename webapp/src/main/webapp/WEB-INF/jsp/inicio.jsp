@@ -47,9 +47,9 @@
 
                                 <div class="panel-body">
 
-                                    <div class="table-responsive">
+                                    <div class="table-responsive-inici">
 
-                                        <table class="table table-bordered table-hover table-striped tablesorter">
+                                        <table class="table1 table-bordered table-hover table-striped tablesorter">
                                             <colgroup>
                                                 <col width="80">
                                                 <col>
@@ -100,9 +100,9 @@
 
                                 <div class="panel-body">
 
-                                    <div class="table-responsive">
+                                    <div class="table-responsive-inici">
 
-                                        <table class="table table-bordered table-hover table-striped tablesorter">
+                                        <table class="table1 table-bordered table-hover table-striped tablesorter">
                                             <colgroup>
                                                 <col width="80">
                                                 <col>
@@ -153,9 +153,9 @@
 
                                 <div class="panel-body">
 
-                                    <div class="table-responsive">
+                                    <div class="table-responsive-inici">
 
-                                        <table class="table table-bordered table-hover table-striped tablesorter">
+                                        <table class="table1 table-bordered table-hover table-striped tablesorter">
                                             <colgroup>
                                                 <col width="80">
                                                 <col>
@@ -207,9 +207,9 @@
 
                                 <div class="panel-body">
 
-                                    <div class="table-responsive">
+                                    <div class="table-responsive-inici">
 
-                                        <table class="table table-bordered table-hover table-striped tablesorter">
+                                        <table class="table1 table-bordered table-hover table-striped tablesorter">
                                             <colgroup>
                                                 <col>
                                                 <col>
@@ -258,9 +258,9 @@
 
                                 <div class="panel-body">
 
-                                    <div class="table-responsive">
+                                    <div class="table-responsive-inici">
 
-                                        <table class="table table-bordered table-hover table-striped tablesorter">
+                                        <table class="table1 table-bordered table-hover table-striped tablesorter">
                                             <colgroup>
                                                 <col width="80">
                                                 <col>
@@ -312,9 +312,9 @@
 
                                 <div class="panel-body">
 
-                                    <div class="table-responsive">
+                                    <div class="table-responsive-inici">
 
-                                        <table class="table table-bordered table-hover table-striped tablesorter">
+                                        <table class="table1 table-bordered table-hover table-striped tablesorter">
                                             <colgroup>
                                                 <col>
                                                 <col width="51">
@@ -358,9 +358,9 @@
 
                                 <div class="panel-body">
 
-                                    <div class="table-responsive">
+                                    <div class="table-responsive-inici">
 
-                                        <table class="table table-bordered table-hover table-striped tablesorter">
+                                        <table class="table1 table-bordered table-hover table-striped tablesorter">
                                             <colgroup>
                                                 <col>
                                                 <col width="51">
@@ -404,9 +404,9 @@
 
                                 <div class="panel-body">
 
-                                    <div class="table-responsive">
+                                    <div class="table-responsive-inici">
 
-                                        <table class="table table-bordered table-hover table-striped tablesorter">
+                                        <table class="table1 table-bordered table-hover table-striped tablesorter">
                                             <colgroup>
                                                 <col>
                                                 <col>
