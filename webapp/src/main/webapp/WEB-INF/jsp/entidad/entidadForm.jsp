@@ -100,8 +100,8 @@
                               <sec:authorize access="hasRole('RWE_ADMIN')">
                                 <ul class="nav nav-tabs" id="myTab">
                                     <li><a href="#Datos" data-toggle="tab"><spring:message code="entidad.datos"/></a></li>
-                                    <li><a href="#Configuracion" data-toggle="tab"><spring:message code="entidad.configuracion"/></a></li>
                                     <li><a href="#Formatos" data-toggle="tab"><spring:message code="entidad.formatos"/></a></li>
+                                    <li><a href="#Configuracion" data-toggle="tab"><spring:message code="entidad.configuracion"/></a></li>
                                 </ul>
                                 <div id='content' class="tab-content">
 
@@ -149,6 +149,27 @@
                                             </div>
                                             <div class="col-xs-8">
                                                 <form:checkbox path="entidad.sir"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane" id="Formatos">
+                                        <div class="form-group col-xs-6">
+                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                                <form:label path="entidad.sello"><span class="text-danger">*</span> <spring:message code="entidad.sello"/></form:label>
+                                            </div>
+                                            <div class="col-xs-8">
+                                                <form:textarea path="entidad.sello" rows="5" cssClass="form-control"/> <form:errors path="entidad.sello" cssClass="help-block" element="span"/>
+                                                <a data-toggle="modal" href="#myModalSello" class="btn btn-warning btn-xs button-right"><spring:message code="regweb.ayuda"/></a>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-xs-6">
+                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                                <form:label path="entidad.numRegistro"><span class="text-danger">*</span> <spring:message code="entidad.numRegistro"/></form:label>
+                                            </div>
+                                            <div class="col-xs-8">
+                                                <form:input path="entidad.numRegistro" cssClass="form-control"/> <form:errors path="entidad.numRegistro" cssClass="help-block" element="span"/>
+                                                <a data-toggle="modal" href="#myModalNumRegistro" class="btn btn-warning btn-xs button-right"><spring:message code="regweb.ayuda"/></a>
                                             </div>
                                         </div>
                                     </div>
@@ -263,26 +284,6 @@
                                         </div>
                                     </div>
 
-                                    <div class="tab-pane" id="Formatos">
-                                        <div class="form-group col-xs-6">
-                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                                <form:label path="entidad.sello"><span class="text-danger">*</span> <spring:message code="entidad.sello"/></form:label>
-                                            </div>
-                                            <div class="col-xs-8">
-                                                <form:textarea path="entidad.sello" rows="5" cssClass="form-control"/> <form:errors path="entidad.sello" cssClass="help-block" element="span"/>
-                                                <a data-toggle="modal" href="#myModalSello" class="btn btn-warning btn-xs button-right"><spring:message code="regweb.ayuda"/></a>
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-xs-6">
-                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                                <form:label path="entidad.numRegistro"><span class="text-danger">*</span> <spring:message code="entidad.numRegistro"/></form:label>
-                                            </div>
-                                            <div class="col-xs-8">
-                                                <form:input path="entidad.numRegistro" cssClass="form-control"/> <form:errors path="entidad.numRegistro" cssClass="help-block" element="span"/>
-                                                <a data-toggle="modal" href="#myModalNumRegistro" class="btn btn-warning btn-xs button-right"><spring:message code="regweb.ayuda"/></a>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                               </sec:authorize>
                             </c:if>
