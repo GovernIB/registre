@@ -70,7 +70,12 @@
                                     <form:label path="idioma"><spring:message code="usuario.idioma"/></form:label>
                                 </div>
                                 <div class="col-xs-8">
-                                    <form:select path="idioma.id" items="${idiomas}" itemValue="id" itemLabel="nombre" cssClass="chosen-select"/>
+                                    <form:select path="idioma" cssClass="chosen-select">
+                                       <c:forEach var="idioma_var" items="${idiomas}">
+                                            <form:option value="${idioma_var}"><spring:message code="idioma.${idioma_var}"/></form:option>
+                                        </c:forEach>
+                                    </form:select>
+                                    
                                 </div>
                             </div>
 

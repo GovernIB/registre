@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
-
+<un:useConstants var="RegwebConstantes" className="es.caib.regweb.utils.RegwebConstantes"/>
 <!DOCTYPE html>
 <html lang="ca">
 <head>
@@ -60,20 +60,23 @@
                             <div class="form-group col-xs-12">
                                 <ul class="nav nav-tabs" id="myTab">
                                     <c:forEach var="idioma" items="${idiomas}" varStatus="index">
-                                        <li><a href="#${idioma.lang}" data-toggle="tab">${idioma.nombre}</a></li>
+                                        <c:set var="idioma_lang" value="${RegwebConstantes.CODIGO_BY_IDIOMA_ID[idioma]}" />
+                                        <li><a href="#${idioma_lang}" data-toggle="tab"><spring:message code="idioma.${idioma}"/></a></li>
                                     </c:forEach>
                                 </ul>
 
                                 <div id='content' class="tab-content">
                                     <c:forEach var="idioma" items="${idiomas}" varStatus="index">
-                                        <div class="tab-pane" id="${idioma.lang}">
+                                        <c:set var="idioma_lang" value="${RegwebConstantes.CODIGO_BY_IDIOMA_ID[idioma]}" />
+                                        <div class="tab-pane" id="${idioma_lang}">
 
                                             <div class="form-group col-xs-6">
                                                 <div class="col-xs-4 pull-lef etiqueta_regweb control-label">
-                                                    <form:label path="traducciones['${idioma.lang}'].nombre"><span class="text-danger">*</span> <spring:message code="regweb.nombre"/></form:label>
+                                                    <form:label path="traducciones['${idioma_lang}'].nombre"><span class="text-danger">*</span> <spring:message code="regweb.nombre"/></form:label>
                                                 </div>
                                                 <div class="col-xs-8">
-                                                    <form:input path="traducciones['${idioma.lang}'].nombre" cssClass="form-control"/> <form:errors path="traducciones['${idioma.lang}'].nombre" cssClass="help-block" element="span"/>
+                                                    <form:input path="traducciones['${idioma_lang}'].nombre" cssClass="form-control"/>
+                                                    <form:errors path="traducciones['${idioma_lang}'].nombre" cssClass="help-block" element="span"/>
                                                 </div>
                                             </div>
                                         </div>

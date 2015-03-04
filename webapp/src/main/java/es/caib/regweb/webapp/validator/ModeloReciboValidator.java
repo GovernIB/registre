@@ -1,6 +1,5 @@
 package es.caib.regweb.webapp.validator;
 
-import es.caib.regweb.persistence.ejb.IdiomaLocal;
 import es.caib.regweb.webapp.form.ModeloReciboForm;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
@@ -8,12 +7,11 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-import javax.ejb.EJB;
-
 /**
  * Created by Fundació BIT.
  * Gestiona las Validaciones del formulario para crear o editar una {@link es.caib.regweb.model.ModeloRecibo}
  * @author earrivi
+ * @author anadal
  * Date: 11/02/14
  */
 @Component
@@ -21,8 +19,6 @@ public class ModeloReciboValidator implements Validator {
 
     protected final Logger log = Logger.getLogger(getClass());
 
-    @EJB(mappedName = "regweb/IdiomaEJB/local")
-    public IdiomaLocal idiomaEjb;
 
     @Override
     public boolean supports(Class<?> clazz) {

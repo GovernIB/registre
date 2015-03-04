@@ -291,7 +291,7 @@ public class RegistroSalidaBean extends BaseEjbJPA<RegistroSalida, Long> impleme
         Query q;
 
         q = em.createQuery("Select count(registroSalida.id) from RegistroSalida as registroSalida where registroSalida.fecha >= :fechaInicio " +
-                "and registroSalida.fecha <= :fechaFin and registroSalida.registroDetalle.idioma.id = :idioma and " +
+                "and registroSalida.fecha <= :fechaFin and registroSalida.registroDetalle.idioma = :idioma and " +
                 "registroSalida.estado != :anulado and registroSalida.estado != :pendiente and registroSalida.libro.organismo.entidad.id = :idEntidad");
 
         q.setParameter("fechaInicio", fechaInicio);

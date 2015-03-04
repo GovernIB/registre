@@ -28,7 +28,7 @@ public class RegistroSalidaValidator<T> extends AbstractRegWebValidator<T> {
 
         rejectIfEmptyOrWhitespace(errors, __target__,  "registroDetalle.extracto", "error.valor.requerido", "El camp és obligatori");
         rejectIfEmptyOrWhitespace(errors, __target__,  "registroDetalle.tipoDocumentacionFisica", "error.valor.requerido", "El camp és obligatori");
-        rejectIfEmptyOrWhitespace(errors, __target__,  "registroDetalle.idioma.id", "error.valor.requerido", "El camp és obligatori");
+        rejectIfEmptyOrWhitespace(errors, __target__,  "registroDetalle.idioma", "error.valor.requerido", "El camp és obligatori");
 
         /*if(registroEntrada.getDestino() == null && registroEntrada.getDestinoExternoCodigo() == null){
            if(registroEntrada.getDestino() == null){

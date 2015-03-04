@@ -10,7 +10,6 @@ http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
 
         <jta-data-source>java:/es.caib.regweb.db</jta-data-source>
-        <class>es.caib.regweb.model.Idioma</class>
         <class>es.caib.regweb.model.Entidad</class>
         <class>es.caib.regweb.model.Libro</class>
         <class>es.caib.regweb.model.Contador</class>
@@ -26,7 +25,6 @@ http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
         <class>es.caib.regweb.model.TipoAsunto</class>
         <class>es.caib.regweb.model.CodigoAsunto</class>
         <class>es.caib.regweb.model.TipoDocumental</class>
-        <class>es.caib.regweb.model.IdiomaRegistro</class>
         <class>es.caib.regweb.model.CatNivelAdministracion</class>
         <class>es.caib.regweb.model.CatPais</class>
         <class>es.caib.regweb.model.CatComunidadAutonoma</class>

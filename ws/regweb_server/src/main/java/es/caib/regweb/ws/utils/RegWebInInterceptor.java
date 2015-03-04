@@ -1,6 +1,5 @@
 package es.caib.regweb.ws.utils;
 
-import es.caib.regweb.model.Idioma;
 import es.caib.regweb.model.Usuario;
 import es.caib.regweb.model.UsuarioEntidad;
 import es.caib.regweb.persistence.utils.I18NLogicUtils;
@@ -150,7 +149,7 @@ public class RegWebInInterceptor extends AbstractPhaseInterceptor<Message> {
     log.error("RegWebInInterceptor::handleFault() - Msg = " + f.getMessage());
 
     Throwable cause = f.getCause();
-      Idioma idioma = null;
+     Long idioma = null;
     // Obtenir Idioma de l'usuari aplicacio
 
       if(UsuarioAplicacionCache.get() != null){
@@ -158,10 +157,10 @@ public class RegWebInInterceptor extends AbstractPhaseInterceptor<Message> {
       }
 
     String language;
-    if (idioma == null || idioma.getLang() == null) {
+    if (idioma == null) {
       language = Configuracio.getDefaultLanguage();      
     } else {
-      language = idioma.getLang();
+      language = RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(idioma);
     }
 
     log.error("RegWebInInterceptor::handleFault() - Cause = " + cause);

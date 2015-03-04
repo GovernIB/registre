@@ -3,10 +3,12 @@ package es.caib.regweb.webapp.controller.catalogoDatos;
 import es.caib.regweb.model.*;
 import es.caib.regweb.persistence.ejb.*;
 import es.caib.regweb.persistence.utils.Paginacion;
+import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.webapp.controller.BaseController;
 import es.caib.regweb.webapp.utils.Mensaje;
 import es.caib.regweb.webapp.validator.TipoAsuntoValidator;
 import es.caib.regweb.webapp.validator.TipoDocumentalValidator;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
@@ -20,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -49,10 +52,6 @@ public class CatalogoDatosController extends BaseController {
     
     @EJB(mappedName = "regweb/TipoAsuntoEJB/local")
     public TipoAsuntoLocal tipoAsuntoEjb;
-    
-    @EJB(mappedName = "regweb/IdiomaEJB/local")
-    public IdiomaLocal idiomaEjb;
-
 
 
     /* GESTIÓN DE TIPOS DE ASUNTO */
@@ -100,13 +99,13 @@ public class CatalogoDatosController extends BaseController {
          Entidad entidad = getEntidadActiva(request);
          tipoAsunto.setEntidad(entidad);
 
-         for(Idioma idioma: idiomas()){
-             tipoAsunto.setTraduccion(idioma.getLang(), new TraduccionTipoAsunto());
+         for(Long idioma: RegwebConstantes.IDIOMAS_UI){
+             tipoAsunto.setTraduccion(RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(idioma), new TraduccionTipoAsunto());
          }
 
          CodigoAsunto codigoAsunto = new CodigoAsunto();
-         for(Idioma idioma: idiomas()){
-             codigoAsunto.setTraduccion(idioma.getLang(), new TraduccionCodigoAsunto());
+         for(Long idioma: RegwebConstantes.IDIOMAS_UI){
+             codigoAsunto.setTraduccion(RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(idioma), new TraduccionCodigoAsunto());
          }
 
 
@@ -158,8 +157,8 @@ public class CatalogoDatosController extends BaseController {
          CodigoAsunto codigoAsunto = new CodigoAsunto();
          codigoAsunto.setTipoAsunto(tipoAsunto);
 
-         for(Idioma idioma: idiomas()){
-           codigoAsunto.setTraduccion(idioma.getLang(), new TraduccionCodigoAsunto());
+         for(Long idioma: RegwebConstantes.IDIOMAS_UI){
+           codigoAsunto.setTraduccion(RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(idioma), new TraduccionCodigoAsunto());
          }
 
          model.addAttribute(tipoAsunto);
@@ -389,8 +388,8 @@ public class CatalogoDatosController extends BaseController {
         Entidad entidad = getEntidadActiva(request);
         tipoDocumental.setEntidad(entidad);
 
-        for(Idioma idioma: idiomas()){
-            tipoDocumental.setTraduccion(idioma.getLang(), new TraduccionTipoDocumental());
+        for(Long idioma: RegwebConstantes.IDIOMAS_UI){
+            tipoDocumental.setTraduccion(RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(idioma), new TraduccionTipoDocumental());
         }
         model.addAttribute(tipoDocumental);
 
@@ -489,8 +488,8 @@ public class CatalogoDatosController extends BaseController {
 
 
      @ModelAttribute("idiomas")
-     public List<Idioma> idiomas() throws Exception {
-         return idiomaEjb.getAll();
+     public Long[] idiomas() throws Exception {
+         return RegwebConstantes.IDIOMAS_UI;
      }
 
 

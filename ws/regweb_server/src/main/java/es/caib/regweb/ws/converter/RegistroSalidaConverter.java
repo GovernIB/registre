@@ -2,7 +2,6 @@ package es.caib.regweb.ws.converter;
 
 import es.caib.regweb.model.*;
 import es.caib.regweb.persistence.ejb.CodigoAsuntoLocal;
-import es.caib.regweb.persistence.ejb.IdiomaRegistroLocal;
 import es.caib.regweb.persistence.ejb.TipoAsuntoLocal;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.ws.model.InteresadoWs;
@@ -30,8 +29,8 @@ public class RegistroSalidaConverter extends CommonConverter {
      */
     public static RegistroSalida getRegistroSalida(RegistroSalidaWs registroSalidaWs,
         UsuarioEntidad usuario,Libro libro, Oficina oficina,
-        Organismo organismo,IdiomaRegistroLocal idiomaRegistroEjb,
-        CodigoAsuntoLocal codigoAsuntoEjb, TipoAsuntoLocal tipoAsuntoEjb) throws Exception, I18NException{
+        Organismo organismo,  CodigoAsuntoLocal codigoAsuntoEjb,
+        TipoAsuntoLocal tipoAsuntoEjb) throws Exception, I18NException {
 
         if (registroSalidaWs == null){
             return  null;
@@ -51,7 +50,7 @@ public class RegistroSalidaConverter extends CommonConverter {
         registroDetalle.setCodigoAsunto(getCodigoAsunto(registroSalidaWs.getCodigoAsunto(), codigoAsuntoEjb));
         registroDetalle.setTipoDocumentacionFisica(registroSalidaWs.getDocFisica());
         registroDetalle.setTransporte(RegwebConstantes.TRANSPORTE_BY_CODIGO_SICRES.get(registroSalidaWs.getTipoTransporte()));
-        registroDetalle.setIdioma(getIdiomaRegistro(registroSalidaWs.getIdioma(), idiomaRegistroEjb));
+        registroDetalle.setIdioma(getIdiomaRegistro(registroSalidaWs.getIdioma()));
         registroDetalle.setExtracto(registroSalidaWs.getExtracto());
         registroDetalle.setAplicacion(registroSalidaWs.getAplicacion());
         registroDetalle.setVersion(registroSalidaWs.getVersion());
@@ -87,7 +86,7 @@ public class RegistroSalidaConverter extends CommonConverter {
 
         registroWs.setExtracto(registroSalida.getRegistroDetalle().getExtracto());
         registroWs.setDocFisica(registroSalida.getRegistroDetalle().getTipoDocumentacionFisica());
-        registroWs.setIdioma(registroSalida.getRegistroDetalle().getIdioma().getCodigo());
+        registroWs.setIdioma(RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(registroSalida.getRegistroDetalle().getIdioma()));
         registroWs.setTipoAsunto(registroSalida.getRegistroDetalle().getTipoAsunto().getCodigo());
 
         registroWs.setAplicacion(registroSalida.getRegistroDetalle().getAplicacion());

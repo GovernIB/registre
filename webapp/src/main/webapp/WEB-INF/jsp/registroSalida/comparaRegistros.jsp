@@ -87,7 +87,7 @@
                                            <label><spring:message code="registroSalida.idioma"/></label>
                                        </div>
                                        <div class="col-xs-8">
-                                           ${registro.registroDetalle.idioma.nombre}
+                                          <spring:message code="idioma.${registro.registroDetalle.idioma}"/>
                                        </div>
                                    </div>
 
@@ -327,14 +327,16 @@
                                                </div>
                                            </c:if>
 
+                                           <c:if test="${not empty reOriginal.registroDetalle.idioma}">
                                            <div class="form-group col-xs-12">
                                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                                   <label path="idioma.id"><spring:message code="registroSalida.idioma"/></label>
+                                                   <label path="idioma"><spring:message code="registroSalida.idioma"/></label>
                                                </div>
                                                <div class="col-xs-8">
-                                                       ${reOriginal.registroDetalle.idioma.nombre}
+                                                    <spring:message code="idioma.${reOriginal.registroDetalle.idioma}"/>
                                                </div>
                                            </div>
+                                           </c:if>
 
                                            <c:if test="${not empty reOriginal.registroDetalle.codigoAsunto}">
                                                <div class="form-group col-xs-12">

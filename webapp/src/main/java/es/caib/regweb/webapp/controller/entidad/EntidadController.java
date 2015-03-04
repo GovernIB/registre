@@ -76,11 +76,6 @@ public class EntidadController extends BaseController {
     @EJB(mappedName = "regweb/UsuarioEJB/local")
     public UsuarioLocal usuarioEjb;
 
-    @EJB(mappedName = "regweb/IdiomaEJB/local")
-    public IdiomaLocal idiomaEjb;
-
-
-
     /**
      * Listado de todas las Entidades
      */
@@ -722,8 +717,8 @@ public class EntidadController extends BaseController {
 
 
     @ModelAttribute("idiomas")
-    public List<Idioma> idiomas() throws Exception {
-        return idiomaEjb.getAll();
+    public Long[] idiomas() throws Exception {
+        return RegwebConstantes.IDIOMAS_UI;
     }
 
     @ModelAttribute("configuraciones")

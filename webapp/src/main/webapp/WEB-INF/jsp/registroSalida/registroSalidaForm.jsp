@@ -160,10 +160,15 @@
 
                     <div class="form-group col-xs-12">
                         <div class="col-xs-2 pull-left etiqueta_regweb control-label">
-                            <label for="registroDetalle.idioma.id" rel="ayuda" data-content="<spring:message code="registro.ayuda.idioma"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.idioma"/></label>
+                            <label for="registroDetalle.idioma" rel="ayuda" data-content="<spring:message code="registro.ayuda.idioma"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.idioma"/></label>
                         </div>
                         <div class="col-xs-10">
-                            <form:select path="registroDetalle.idioma.id" items="${idiomas}" itemValue="id" itemLabel="nombre" cssClass="chosen-select"/> <form:errors path="registroDetalle.idioma.id" cssClass="help-block" element="span"/>
+                            <form:select path="registroDetalle.idioma" cssClass="chosen-select">
+                            <c:forEach items="${idiomas}" var="idioma">
+                               <form:option value="${idioma}"><spring:message code="idioma.${idioma}"/></form:option>
+                            </c:forEach>
+                           </form:select>
+                            <form:errors path="registroDetalle.idioma" cssClass="help-block" element="span"/>
                         </div>
                     </div>
 

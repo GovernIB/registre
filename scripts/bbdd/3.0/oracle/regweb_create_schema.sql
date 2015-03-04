@@ -2,6 +2,7 @@
     create table RWE_ANEXO (
         ID number(19,0) not null,
         CERTIFICADO varchar2(255 char),
+        CSV varchar2(255 char),
         FECHACAPTURA timestamp not null,
         FIRMACSV varchar2(255 char),
         MODOFIRMA number(10,0),
@@ -112,6 +113,7 @@
         TEXTOPIE varchar2(4000 char),
         LOGOMENU number(19,0),
         LOGOPIE number(19,0),
+        LOGOSELLO number(19,0),
         PROPIETARIO number(19,0)
     );
 
@@ -143,20 +145,6 @@
         RS_ORIGINAL clob,
         REGISTRO_SALIDA number(19,0),
         USUARIO number(19,0),
-    );
-
-    create table RWE_IDIOMA (
-        ID number(19,0) not null,
-        LANG varchar2(5 char) not null,
-        NOMBRE varchar2(255 char) not null,
-        orden number(10,0) not null
-    );
-
-    create table RWE_IDIOMA_REGISTRO (
-        ID number(19,0) not null,
-        CODIGO varchar2(255 char) not null,
-        NOMBRE varchar2(255 char) not null,
-        orden number(10,0) not null
     );
 
     create table RWE_INTERESADO (
@@ -352,6 +340,7 @@
         EXPONE varchar2(4000 char),
         EXTRACTO varchar2(240 char),
         FECHAORIGEN timestamp,
+        IDIOMA number(19,0),
         NUMREG_ORIGEN varchar2(20 char),
         NUMTRANSPORTE varchar2(20 char),
         OBSERVACIONES varchar2(50 char),
@@ -364,7 +353,6 @@
         TRANSPORTE number(19,0),
         VERSION varchar2(255 char),
         CODASUNTO number(19,0),
-        IDIOMA number(19,0),
         OFICINAORIG number(19,0),
         TIPOASUNTO number(19,0)
     );
@@ -405,6 +393,7 @@
         FECHADOC timestamp not null,
         FECHAREG timestamp not null,
         FECHAVIS timestamp,
+        infoAdicional varchar2(255 char),
         DESIDIEXT varchar2(15 char) not null,
         NUMERO number(10,0) not null,
         NUMCORREO varchar2(8 char),
@@ -510,12 +499,12 @@
         DOCUMENTO varchar2(255 char),
         EMAIL varchar2(255 char) not null,
         IDENTIFICADOR varchar2(255 char) not null,
+        IDIOMA number(19,0),
         NOMBRE varchar2(255 char) not null,
         RWE_ADMIN number(1,0) not null,
         RWE_SUPERADMIN number(1,0) not null,
         RWE_USUARI number(1,0) not null,
-        TIPOUSUARIO number(19,0),
-        IDIOMA number(19,0)
+        TIPOUSUARIO number(19,0)
     );
 
     create table RWE_USUARIO_ENTIDAD (
@@ -613,10 +602,6 @@
     alter table RWE_HISTORICO_REGISTRO_ENTRADA add constraint RWE_HIST_REGISTRO_ENTRADA_PK primary key (ID);
 
     alter table RWE_HISTORICO_REGISTRO_SALIDA add constraint RWE_HIST_REGISTRO_SALIDA_PK primary key (ID);
-
-    alter table RWE_IDIOMA add constraint RWE_IDIOMA_pk primary key (ID);
-
-    alter table RWE_IDIOMA_REGISTRO add constraint RWE_IDIOMA_REGISTRO_pk primary key (ID);
 
     alter table RWE_INTERESADO add constraint RWE_INTERESADO_pk primary key (ID);
 
@@ -721,6 +706,11 @@
         add constraint RWE_DESCARGA_ENTIDAD_FK 
         foreign key (ENTIDAD) 
         references RWE_ENTIDAD;
+
+    alter table RWE_ENTIDAD 
+        add constraint RWE_ENTIDAD_LOGOSELLO_FK 
+        foreign key (LOGOSELLO) 
+        references RWE_ARCHIVO;
 
     alter table RWE_ENTIDAD 
         add constraint RWE_ENTIDAD_LOGOMENU_FK 
@@ -997,11 +987,6 @@
         foreign key (TIPOASUNTO) 
         references RWE_TIPOASUNTO;
 
-    alter table RWE_REGISTRO_DETALLE 
-        add constraint RWE_REGDET_IDIOMA_FK 
-        foreign key (IDIOMA) 
-        references RWE_IDIOMA_REGISTRO;
-
     alter table RWE_REGISTRO_ENTRADA 
         add constraint RWE_REGENT_DESTINO_FK 
         foreign key (DESTINO) 
@@ -1137,11 +1122,6 @@
         foreign key (IDTIPOASUNTO) 
         references RWE_TIPOASUNTO;
 
-    alter table RWE_USUARIO 
-        add constraint RWE_USUARIO_IDIOMA_FK 
-        foreign key (IDIOMA) 
-        references RWE_IDIOMA;
-
     alter table RWE_USUARIO_ENTIDAD 
         add constraint RWE_USUENT_ENTIDAD_FK 
         foreign key (ENTIDAD) 
@@ -1162,12 +1142,6 @@
     alter table RWE_CATESTADOENTIDAD add constraint RWE_CATESTENT_CODESTENT_UK unique (CODIGOESTADOENTIDAD);
     alter table RWE_CODIGOASUNTO add constraint RWE_CODIGOASUNTO_CODIGO_uk unique (CODIGO);
     alter table RWE_ENTIDAD add constraint RWE_ENTIDAD_CODIGODIR3_uk unique (CODIGODIR3);
-    alter table RWE_IDIOMA add constraint RWE_IDIOMA_LANG_uk unique (LANG);
-    alter table RWE_IDIOMA add constraint RWE_IDIOMA_NOMBRE_uk unique (NOMBRE);
-    alter table RWE_IDIOMA add constraint RWE_IDIOMA_orden_uk unique (orden);
-    alter table RWE_IDIOMA_REGISTRO add constraint RWE_IDIOMA_REGISTRO_CODIGO_uk unique (CODIGO);
-    alter table RWE_IDIOMA_REGISTRO add constraint RWE_IDIOMA_REGISTRO_NOMBRE_uk unique (NOMBRE);
-    alter table RWE_IDIOMA_REGISTRO add constraint RWE_IDIOMA_REGISTRO_orden_uk unique (orden);
     alter table RWE_OFICINA add constraint RWE_OFICINA_CODIGO_uk unique (CODIGO);
     alter table RWE_REGISTRO_MIGRADO add constraint RWE_REGMIGRADO_AN_NUM_OF_UK unique (ANO, NUMERO, CODOFICINA, TREGISTRO, IDENTIDAD);
     alter table RWE_ROL add constraint RWE_ROL_NOMBRE_uk unique (NOMBRE);

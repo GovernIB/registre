@@ -31,9 +31,43 @@ public interface RegwebConstantes {
     public static final String SESSION_TIENEPREREGISTROS = "tienePreRegistros";
 
     /* -------------- IDIOMA --------------*/
-    public static final String IDIOMA_DEFAULT = "ca";
-    public static final String IDIOMA_CATALAN = "ca";
-    public static final String IDIOMA_CASTELLANO = "es";
+
+    public static final Long IDIOMA_CATALAN_ID = 1L;
+    public static final String IDIOMA_CATALAN_CODIGO = "ca";
+    
+    public static final Long IDIOMA_CASTELLANO_ID = 2L;
+    public static final String IDIOMA_CASTELLANO_CODIGO = "es";
+    
+    public static final Long IDIOMA_GALLEGO_ID = 3L;
+    public static final String IDIOMA_GALLEGO_CODIGO = "gl";
+    
+    public static final Long IDIOMA_EUSKERA_ID = 4L;
+    public static final String IDIOMA_EUSKERA_CODIGO = "eu";
+    
+    public static final Long IDIOMA_INGLES_ID = 5L;
+    public static final String IDIOMA_INGLES_CODIGO = "en";
+    
+    public static final Long[] IDIOMAS_UI = {
+      IDIOMA_CATALAN_ID, IDIOMA_CASTELLANO_ID
+    };
+
+    public static final Long[] IDIOMAS_REGISTRO = {
+      IDIOMA_CATALAN_ID, IDIOMA_CASTELLANO_ID,
+      IDIOMA_GALLEGO_ID, IDIOMA_EUSKERA_ID,
+      IDIOMA_INGLES_ID
+    };
+    
+    public static final Map<Long, String> CODIGO_BY_IDIOMA_ID = new HashMap<Long, String>(){{
+      put(IDIOMA_CATALAN_ID,IDIOMA_CATALAN_CODIGO);
+      put(IDIOMA_CASTELLANO_ID, IDIOMA_CASTELLANO_CODIGO);
+      put(IDIOMA_GALLEGO_ID,IDIOMA_GALLEGO_CODIGO);
+      put(IDIOMA_EUSKERA_ID, IDIOMA_EUSKERA_CODIGO);
+      put(IDIOMA_INGLES_ID, IDIOMA_INGLES_CODIGO);
+    }};
+    
+    
+    public static final Map<String, Long> IDIOMA_ID_BY_CODIGO
+      = RegwebUtils.invert(CODIGO_BY_IDIOMA_ID); 
 
     /* -------------- PROPERTIES DE APLICACIÓN --------------*/
     public static final String ARCHIVOS_LOCATION_PROPERTY = "es.caib.regweb.archivos.path";

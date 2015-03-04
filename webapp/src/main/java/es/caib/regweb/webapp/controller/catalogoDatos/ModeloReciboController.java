@@ -3,7 +3,6 @@ package es.caib.regweb.webapp.controller.catalogoDatos;
 import es.caib.regweb.model.*;
 import es.caib.regweb.persistence.ejb.ArchivoLocal;
 import es.caib.regweb.persistence.ejb.BaseEjbJPA;
-import es.caib.regweb.persistence.ejb.IdiomaLocal;
 import es.caib.regweb.persistence.ejb.ModeloReciboLocal;
 import es.caib.regweb.persistence.ejb.RegistroEntradaLocal;
 import es.caib.regweb.persistence.ejb.RegistroSalidaLocal;
@@ -55,9 +54,6 @@ public class ModeloReciboController extends BaseController {
    @EJB(mappedName = "regweb/RegistroEntradaEJB/local")
    public RegistroEntradaLocal registroEntradaEjb;
    
-   @EJB(mappedName = "regweb/IdiomaEJB/local")
-   public IdiomaLocal idiomaEjb;
-
   /**
    * Listado de todos los Modelos de Recibo
    */
@@ -287,8 +283,8 @@ public class ModeloReciboController extends BaseController {
     }
 
     @ModelAttribute("idiomas")
-    public List<Idioma> idiomas() throws Exception {
-        return idiomaEjb.getAll();
+    public Long[] idiomas() throws Exception {
+        return RegwebConstantes.IDIOMAS_UI;
     }
 
     @InitBinder("modeloReciboForm")

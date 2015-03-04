@@ -3,6 +3,7 @@ package es.caib.regweb.webapp.validator;
 import es.caib.regweb.model.TipoAsunto;
 import es.caib.regweb.persistence.ejb.TipoAsuntoLocal;
 import es.caib.regweb.utils.RegwebConstantes;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -37,8 +38,12 @@ public class TipoAsuntoValidator implements Validator {
 
         ValidationUtils.rejectIfEmpty(errors, "codigo", "error.valor.requerido", "El camp nom és obligatori");
 
-        ValidationUtils.rejectIfEmpty(errors, "traducciones[" + RegwebConstantes.IDIOMA_DEFAULT + "].nombre", "error.valor.requerido", "El camp nom és obligatori");
-        ValidationUtils.rejectIfEmpty(errors, "traducciones[" + RegwebConstantes.IDIOMA_CASTELLANO + "].nombre", "error.valor.requerido", "El camp nom és obligatori");
+        
+        for (Long idioma :  RegwebConstantes.IDIOMAS_UI) {
+          ValidationUtils.rejectIfEmpty(errors, "traducciones[" + RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(idioma) + "].nombre", "error.valor.requerido", "El camp nom és obligatori");
+        }
+        //ValidationUtils.rejectIfEmpty(errors, "traducciones[" + RegwebConstantes.IDIOMA_DEFAULT + "].nombre", "error.valor.requerido", "El camp nom és obligatori");
+        //ValidationUtils.rejectIfEmpty(errors, "traducciones[" + RegwebConstantes.IDIOMA_CASTELLANO + "].nombre", "error.valor.requerido", "El camp nom és obligatori");
 
         // Identificador único
         try {

@@ -1,9 +1,7 @@
 package es.caib.regweb.webapp.controller.usuario;
 
-import es.caib.regweb.model.Idioma;
 import es.caib.regweb.model.Usuario;
 import es.caib.regweb.model.UsuarioEntidad;
-import es.caib.regweb.persistence.ejb.IdiomaLocal;
 import es.caib.regweb.persistence.ejb.UsuarioLocal;
 import es.caib.regweb.persistence.utils.Paginacion;
 import es.caib.regweb.utils.RegwebConstantes;
@@ -26,7 +24,6 @@ import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import java.util.List;
 
 /**
  * Created 14/02/14 12:52
@@ -49,9 +46,6 @@ public class UsuarioController extends BaseController {
     @EJB(mappedName = "regweb/UsuarioEJB/local")
     public UsuarioLocal usuarioEjb;
     
-    @EJB(mappedName = "regweb/IdiomaEJB/local")
-    public IdiomaLocal idiomaEjb;
-
      /**
       * Listado de todos los Usuarios
       */
@@ -275,8 +269,8 @@ public class UsuarioController extends BaseController {
 
 
      @ModelAttribute("idiomas")
-     public List<Idioma> idiomas() throws Exception {
-         return idiomaEjb.getAll();
+     public Long[] idiomas() throws Exception {
+         return RegwebConstantes.IDIOMAS_UI;
      }
 
      @ModelAttribute("tiposUsuario")

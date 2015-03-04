@@ -38,7 +38,7 @@ public class Configuracio implements RegwebConstantes {
   
   public static String getDefaultLanguage() {
     String def = System.getProperty(REGWEB_PROPERTY_BASE + "defaultlanguage");
-    return (def == null)? "ca" : def;
+    return (def == null)? RegwebConstantes.IDIOMA_CATALAN_CODIGO : def;
   }
   
   

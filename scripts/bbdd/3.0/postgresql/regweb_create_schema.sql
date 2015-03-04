@@ -2,6 +2,7 @@
     create table RWE_ANEXO (
         ID int8 not null,
         CERTIFICADO varchar(255),
+        CSV varchar(255),
         FECHACAPTURA timestamp not null,
         FIRMACSV varchar(255),
         MODOFIRMA int4,
@@ -124,6 +125,7 @@
         TEXTOPIE varchar(4000),
         LOGOMENU int8,
         LOGOPIE int8,
+        LOGOSELLO int8,
         PROPIETARIO int8,
         primary key (ID)
     );
@@ -159,22 +161,6 @@
         RS_ORIGINAL text,
         REGISTRO_SALIDA int8,
         USUARIO int8,
-        primary key (ID)
-    );
-
-    create table RWE_IDIOMA (
-        ID int8 not null,
-        LANG varchar(5) not null unique,
-        NOMBRE varchar(255) not null unique,
-        orden int4 not null unique,
-        primary key (ID)
-    );
-
-    create table RWE_IDIOMA_REGISTRO (
-        ID int8 not null,
-        CODIGO varchar(255) not null unique,
-        NOMBRE varchar(255) not null unique,
-        orden int4 not null unique,
         primary key (ID)
     );
 
@@ -385,6 +371,7 @@
         EXPONE varchar(4000),
         EXTRACTO varchar(240),
         FECHAORIGEN timestamp,
+        IDIOMA int8,
         NUMREG_ORIGEN varchar(20),
         NUMTRANSPORTE varchar(20),
         OBSERVACIONES varchar(50),
@@ -397,7 +384,6 @@
         TRANSPORTE int8,
         VERSION varchar(255),
         CODASUNTO int8,
-        IDIOMA int8,
         OFICINAORIG int8,
         TIPOASUNTO int8,
         primary key (ID)
@@ -440,6 +426,7 @@
         FECHADOC timestamp not null,
         FECHAREG timestamp not null,
         FECHAVIS timestamp,
+        infoAdicional varchar(255),
         DESIDIEXT varchar(15) not null,
         NUMERO int4 not null,
         NUMCORREO varchar(8),
@@ -558,12 +545,12 @@
         DOCUMENTO varchar(255),
         EMAIL varchar(255) not null,
         IDENTIFICADOR varchar(255) not null unique,
+        IDIOMA int8,
         NOMBRE varchar(255) not null,
         RWE_ADMIN bool not null,
         RWE_SUPERADMIN bool not null,
         RWE_USUARI bool not null,
         TIPOUSUARIO int8,
-        IDIOMA int8,
         primary key (ID)
     );
 
@@ -633,6 +620,11 @@
         references RWE_ENTIDAD;
 
     create index RWE_ENTIDA_PRO_FK_I on RWE_ENTIDAD (PROPIETARIO);
+
+    alter table RWE_ENTIDAD 
+        add constraint RWE_ENTIDAD_LOGOSELLO_FK 
+        foreign key (LOGOSELLO) 
+        references RWE_ARCHIVO;
 
     alter table RWE_ENTIDAD 
         add constraint RWE_ENTIDAD_LOGOMENU_FK 
@@ -971,11 +963,6 @@
         foreign key (TIPOASUNTO) 
         references RWE_TIPOASUNTO;
 
-    alter table RWE_REGISTRO_DETALLE 
-        add constraint RWE_REGDET_IDIOMA_FK 
-        foreign key (IDIOMA) 
-        references RWE_IDIOMA_REGISTRO;
-
     alter table RWE_REGISTRO_ENTRADA 
         add constraint RWE_REGENT_DESTINO_FK 
         foreign key (DESTINO) 
@@ -1124,11 +1111,6 @@
         add constraint RWE_TASUNTO_TRATASUNTO_FK 
         foreign key (IDTIPOASUNTO) 
         references RWE_TIPOASUNTO;
-
-    alter table RWE_USUARIO 
-        add constraint RWE_USUARIO_IDIOMA_FK 
-        foreign key (IDIOMA) 
-        references RWE_IDIOMA;
 
     alter table RWE_USUARIO_ENTIDAD 
         add constraint RWE_USUENT_ENTIDAD_FK 

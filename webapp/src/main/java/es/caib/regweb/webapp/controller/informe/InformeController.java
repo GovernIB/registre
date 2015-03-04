@@ -49,9 +49,7 @@ public class InformeController extends BaseController {
     
     @EJB(mappedName = "regweb/RegistroEntradaEJB/local")
     public RegistroEntradaLocal registroEntradaEjb;
-    
-    @EJB(mappedName = "regweb/IdiomaRegistroEJB/local")
-    public IdiomaRegistroLocal idiomaRegistroEjb;
+
     
     @EJB(mappedName = "regweb/TipoAsuntoEJB/local")
     public TipoAsuntoLocal tipoAsuntoEjb;
@@ -218,8 +216,9 @@ public class InformeController extends BaseController {
                         }
                     }
                     if(valorCamp.equals("idiom")){
-                        if(registroEntrada.getRegistroDetalle().getIdioma() != null){
-                            registrosLibro.get(i).add(registroEntrada.getRegistroDetalle().getIdioma().getNombre());
+                        if(registroEntrada.getRegistroDetalle().getIdioma() != null) {
+                            final String nombre = I18NUtils.tradueix("idioma." + registroEntrada.getRegistroDetalle().getIdioma());
+                            registrosLibro.get(i).add(nombre);
                         }else{
                             registrosLibro.get(i).add("");
                         }
@@ -240,7 +239,8 @@ public class InformeController extends BaseController {
                     }
                     if(valorCamp.equals("numTr")){
                         if(registroEntrada.getRegistroDetalle().getNumeroTransporte() != null){
-                            registrosLibro.get(i).add(registroEntrada.getRegistroDetalle().getIdioma().getNombre());
+                          final String nombre = I18NUtils.tradueix("idioma." +registroEntrada.getRegistroDetalle().getIdioma()); 
+                            registrosLibro.get(i).add(nombre);
                         }else{
                             registrosLibro.get(i).add("");
                         }
@@ -413,7 +413,8 @@ public class InformeController extends BaseController {
                     }
                     if(valorCamp.equals("idiom")){
                         if(registroSalida.getRegistroDetalle().getIdioma() != null){
-                            registrosLibro.get(i).add(registroSalida.getRegistroDetalle().getIdioma().getNombre());
+                          final String nombre = I18NUtils.tradueix("idioma." + registroSalida.getRegistroDetalle().getIdioma()); 
+                            registrosLibro.get(i).add(nombre);
                         }else{
                             registrosLibro.get(i).add("");
                         }
@@ -434,7 +435,8 @@ public class InformeController extends BaseController {
                     }
                     if(valorCamp.equals("numTr")){
                         if(registroSalida.getRegistroDetalle().getNumeroTransporte() != null){
-                            registrosLibro.get(i).add(registroSalida.getRegistroDetalle().getIdioma().getNombre());
+                          final String nombre = I18NUtils.tradueix("idioma." + registroSalida.getRegistroDetalle().getIdioma()); 
+                            registrosLibro.get(i).add(nombre);
                         }else{
                             registrosLibro.get(i).add("");
                         }
@@ -780,13 +782,13 @@ public class InformeController extends BaseController {
         List<String> entradaIdiomaNombre = new ArrayList<String>();
         List<String> salidaIdiomaValor = new ArrayList<String>();
         List<String> salidaIdiomaNombre = new ArrayList<String>();
-        List<IdiomaRegistro> idiomas = idiomaRegistroEjb.getAll();
-        for(int i=0; i<idiomas.size(); i++){
-            IdiomaRegistro idioma = idiomas.get(i);
-            entradaIdiomaNombre.add(idioma.getNombre());
-            salidaIdiomaNombre.add(idioma.getNombre());
-            entradaIdiomaValor.add(String.valueOf(registroEntradaEjb.buscaEntradaPorIdioma(dataInici, dataFi, idioma.getId(), entidadActiva.getId())));
-            salidaIdiomaValor.add(String.valueOf(registroSalidaEjb.buscaSalidaPorIdioma(dataInici, dataFi, idioma.getId(), entidadActiva.getId())));
+        
+        for(Long idioma : RegwebConstantes.IDIOMAS_REGISTRO){
+            final String nombre = I18NUtils.tradueix("idioma." + idioma);
+            entradaIdiomaNombre.add(nombre);
+            salidaIdiomaNombre.add(nombre);
+            entradaIdiomaValor.add(String.valueOf(registroEntradaEjb.buscaEntradaPorIdioma(dataInici, dataFi, idioma, entidadActiva.getId())));
+            salidaIdiomaValor.add(String.valueOf(registroSalidaEjb.buscaSalidaPorIdioma(dataInici, dataFi, idioma, entidadActiva.getId())));
         }
         mav.addObject("entradaIdiomaValor", entradaIdiomaValor);
         mav.addObject("entradaIdiomaNombre", entradaIdiomaNombre);

@@ -17,8 +17,11 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
  */
 public class CommonConverter {
 
-    public static IdiomaRegistro getIdiomaRegistro(String codigo, IdiomaRegistroLocal idiomaRegistroEjb) throws Exception{
-        return  idiomaRegistroEjb.findByCodigo(codigo);
+    public static Long getIdiomaRegistro(String codigo) throws Exception {
+      if (codigo == null) {
+        return null;
+      }
+      return RegwebConstantes.IDIOMA_ID_BY_CODIGO.get(codigo);
     }
 
 

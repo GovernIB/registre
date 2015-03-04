@@ -56,9 +56,6 @@ public class RegistroSalidaListController extends BaseController {
     @EJB(mappedName = "regweb/RegistroSalidaEJB/local")
     public RegistroSalidaLocal registroSalidaEjb;
    
-    @EJB(mappedName = "regweb/IdiomaRegistroEJB/local")
-    public IdiomaRegistroLocal idiomaRegistroEjb;
-    
     @EJB(mappedName = "regweb/TipoAsuntoEJB/local")
     public TipoAsuntoLocal tipoAsuntoEjb;
     

@@ -2,7 +2,6 @@ package es.caib.regweb.model;
 
 import es.caib.regweb.utils.RegwebConstantes;
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.hibernate.annotations.ForeignKey;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
@@ -46,7 +45,7 @@ public class Usuario implements Serializable {
     @XmlTransient
     private Boolean rwe_usuari = false;
     @XmlTransient
-    private Idioma idioma;
+    private Long idioma;
 
 
 
@@ -124,15 +123,13 @@ public class Usuario implements Serializable {
 
 
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name="IDIOMA")
-    @ForeignKey(name="RWE_USUARIO_IDIOMA_FK")
-    @JsonIgnore
-    public Idioma getIdioma() {
+
+    @Column(name="IDIOMA")
+    public Long getIdioma() {
         return idioma;
     }
 
-    public void setIdioma(Idioma idioma) {
+    public void setIdioma(Long idioma) {
         this.idioma = idioma;
     }
 

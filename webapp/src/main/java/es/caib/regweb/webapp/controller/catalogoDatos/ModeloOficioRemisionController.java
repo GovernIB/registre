@@ -3,7 +3,6 @@ package es.caib.regweb.webapp.controller.catalogoDatos;
 import es.caib.regweb.model.*;
 import es.caib.regweb.persistence.ejb.ArchivoLocal;
 import es.caib.regweb.persistence.ejb.BaseEjbJPA;
-import es.caib.regweb.persistence.ejb.IdiomaLocal;
 import es.caib.regweb.persistence.ejb.ModeloOficioRemisionLocal;
 import es.caib.regweb.persistence.utils.FileSystemManager;
 import es.caib.regweb.persistence.utils.Paginacion;
@@ -46,10 +45,7 @@ public class ModeloOficioRemisionController extends BaseController {
     @EJB(mappedName = "regweb/ArchivoEJB/local")
     public ArchivoLocal archivoEjb;
     
-    @EJB(mappedName = "regweb/IdiomaEJB/local")
-    public IdiomaLocal idiomaEjb;
-    
-
+   
     /**
      * Listado de todos los Modelos de Oficio de Remisión
      */
@@ -254,8 +250,8 @@ public class ModeloOficioRemisionController extends BaseController {
 
 
     @ModelAttribute("idiomas")
-    public List<Idioma> idiomas() throws Exception {
-        return idiomaEjb.getAll();
+    public Long[] idiomas() throws Exception {
+        return RegwebConstantes.IDIOMAS_UI;
     }
 
     @InitBinder("modeloOficioRemisionForm")

@@ -31,13 +31,14 @@ public class RegWebSessionLocaleResolver extends SessionLocaleResolver {
       Usuario usuario = (Usuario)request.getSession().getAttribute(RegwebConstantes.SESSION_USUARIO);
             
 
-      String idioma;
-      if (usuario == null || usuario.getIdioma() == null) {
-        idioma = Configuracio.getDefaultLanguage();
-      } else {
-        idioma = usuario.getIdioma().getLang();
+      String idioma = null;
+      if (usuario != null && usuario.getIdioma() != null) {
+        idioma = RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(usuario.getIdioma());
       }
-      
+        
+      if (idioma == null) {
+        idioma = Configuracio.getDefaultLanguage();
+      }
           
       Locale loc = new Locale(idioma);
       LocaleContextHolder.setLocale(loc);

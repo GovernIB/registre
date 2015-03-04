@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
+<un:useConstants var="RegwebConstantes" className="es.caib.regweb.utils.RegwebConstantes"/>
 
 <!DOCTYPE html>
 <html lang="ca">
@@ -67,18 +68,21 @@
 
                                 <ul class="nav nav-tabs" id="myTab">
                                     <c:forEach items="${idiomas}" var="idioma" varStatus="index">
-                                        <li><a href="#${idioma.lang}" data-toggle="tab">${idioma.nombre}</a></li>
+                                        <li><a href="#${RegwebConstantes.CODIGO_BY_IDIOMA_ID[idioma]}" data-toggle="tab"><spring:message code="idioma.${idioma}"/></a></li>
                                     </c:forEach>
                                 </ul>
                                 <div id='content' class="tab-content">
                                     <c:forEach items="${idiomas}" var="idioma" varStatus="index">
-                                        <div class="tab-pane" id="${idioma.lang}">
+                                        <c:set var="idioma_lang" value="${RegwebConstantes.CODIGO_BY_IDIOMA_ID[idioma]}" />
+                                        <div class="tab-pane" id="${idioma_lang}">
                                             <div class="form-group col-xs-6">
                                                 <div class="col-xs-4 pull-lef etiqueta_regweb control-label">
-                                                    <form:label path="traducciones['${idioma.lang}'].nombre"><span class="text-danger">*</span> <spring:message code="regweb.nombre"/></form:label>
+                                                    <form:label path="traducciones['${idioma_lang}'].nombre"><span class="text-danger">*</span>
+                                                     <spring:message code="regweb.nombre"/></form:label>
                                                 </div>
                                                 <div class="col-xs-8">
-                                                    <form:input path="traducciones['${idioma.lang}'].nombre" cssClass="form-control"/> <form:errors path="traducciones['${idioma.lang}'].nombre" cssClass="help-block" element="span"/>
+                                                    <form:input path="traducciones['${idioma_lang}'].nombre" cssClass="form-control"/>
+                                                    <form:errors path="traducciones['${idioma_lang}'].nombre" cssClass="help-block" element="span"/>
                                                 </div>
                                             </div>
                                          </div>
@@ -191,21 +195,24 @@
                                         <div class="form-group col-xs-12">
                                         <ul class="nav nav-tabs" id="myTab2">
                                             <c:forEach items="${idiomas}" var="idioma" varStatus="index">
-                                                <li><a href="#${idioma.lang}_modal" data-toggle="tab">${idioma.nombre}</a></li>
+                                                <c:set var="idioma_lang" value="${RegwebConstantes.CODIGO_BY_IDIOMA_ID[idioma]}" />
+                                                <li><a href="#${idioma_lang}_modal" data-toggle="tab"><spring:message code="idioma.${idioma}"/></a></li>
                                             </c:forEach>
                                         </ul>
 
 
                                         <div id="myTabContent2" class="tab-content">
                                             <c:forEach items="${idiomas}" var="idioma" varStatus="index">
-                                                <div class="tab-pane" id="${idioma.lang}_modal">
+                                                <c:set var="idioma_lang" value="${RegwebConstantes.CODIGO_BY_IDIOMA_ID[idioma]}" />
+                                                <div class="tab-pane" id="${idioma_lang}_modal">
                                                     <br>
                                                     <div class="form-group col-xs-8">
                                                         <div class="col-xs-4 pull-lef etiqueta_regweb control-label">
-                                                            <form:label path="traducciones['${idioma.lang}'].nombre"><spring:message code="regweb.nombre"/></form:label>
+                                                            <form:label path="traducciones['${idioma_lang}'].nombre"><spring:message code="regweb.nombre"/></form:label>
                                                         </div>
                                                         <div class="col-xs-8">
-                                                            <form:input path="traducciones['${idioma.lang}'].nombre" cssClass="form-control"/> <form:errors path="traducciones['${idioma.lang}'].nombre" cssClass="help-block" element="span"/>
+                                                            <form:input path="traducciones['${idioma_lang}'].nombre" cssClass="form-control"/>
+                                                             <form:errors path="traducciones['${idioma_lang}'].nombre" cssClass="help-block" element="span"/>
                                                         </div>
                                                     </div>
 
@@ -244,6 +251,17 @@
 
 
 function showModalEditar(id, nombreca, nombrees, codigo) {
+
+    $('#id').val(id);
+    
+    <%--
+    <c:forEach items="${idiomas}" var="idioma" varStatus="index">
+    <c:set var="idioma_lang" value="${RegwebConstantes.CODIGO_BY_IDIOMA_ID[idioma]}" />
+    </c:forEach>
+    -->
+    
+    <%--  TODO  NO ES CORRECTE QUAN HI HAGI MES IDIOMES QUE ???? --%> 
+
     nombreca = nombreca.replace(/\"/g,'&quot;');
     nombreca = nombreca.replace(/'/g, "\\'");
     nombrees = nombrees.replace(/\"/g,'&quot;');
@@ -257,31 +275,37 @@ function showModalEditar(id, nombreca, nombrees, codigo) {
     $("#modal-form #codigo").val(codigo);
 
 
+
     $('#myModal .modal-header h3').html("<spring:message code="codigoAsunto.editar"/>");
 	$('#myModal').modal('show');
 }
 
 function showModalNuevo() {
 
+
     $('#modal-form #id').val("");
-  //  $('[name="traducciones[\'ca\'].nombre"]').val("");
-    $("#modal-form #traducciones\\'ca\\'\\.nombre").val("");
-    $("#modal-form #traducciones\\'es\\'\\.nombre").val("");
-    //$('[name="traducciones[\'es\'].nombre"]').val(""); falta añadir el modal delante
-    //$('[name="codigo"]').val("");
+    <c:forEach items="${idiomas}" var="idioma" varStatus="index">
+    <c:set var="idioma_lang" value="${RegwebConstantes.CODIGO_BY_IDIOMA_ID[idioma]}" />
+    $("#modal-form #traducciones\\'${idioma_lang}\\'\\.nombre").val("");
+    </c:forEach>
+
     $("#modal-form #codigo").val("");
     $('#myModal .modal-header h3').html("<spring:message code="codigoAsunto.nuevo"/>");
 	$('#myModal').modal('show');
 }
 
-function validateModal(){
-    if(($("#modal-form input#traducciones\\'ca\\'\\.nombre").val() != '') && ($("#modal-form input#traducciones\\'es\\'\\.nombre").val() != '')){
-        $('#modal-form').submit();
-        return true;
-    }else{
+function validateModal() {
+    <c:forEach items="${idiomas}" var="idioma" varStatus="index">
+    <c:set var="idioma_lang" value="${RegwebConstantes.CODIGO_BY_IDIOMA_ID[idioma]}" />
+    if ($("#modal-form input#traducciones\\'${idioma_lang}\\'\\.nombre").val() == '') {
         alert("<spring:message code="codigoAsunto.nombre.obligatorio"/>");
         return false;
     }
+    </c:forEach>
+    
+    $('#modal-form').submit();
+    return true;
+
 }
 
 function escapeHtml(unsafe) {

@@ -130,7 +130,7 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
 
     List<TipoAsuntoWs> tiposWs = new ArrayList<TipoAsuntoWs>();
 
-    final String idioma = UsuarioAplicacionCache.get().getUsuario().getIdioma().getLang();
+    final String idioma = RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(UsuarioAplicacionCache.get().getUsuario().getIdioma());
 
     for (TipoAsunto tipoAsunto : tipos) {
       tiposWs.add(CommonConverter.getTipoAsuntoWs(tipoAsunto, idioma));
@@ -162,7 +162,7 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
 
     List<CodigoAsuntoWs> codigosWs = new ArrayList<CodigoAsuntoWs>();
 
-    final String idioma = UsuarioAplicacionCache.get().getUsuario().getIdioma().getLang();
+    final String idioma = RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(UsuarioAplicacionCache.get().getUsuario().getIdioma());
 
     for (CodigoAsunto codigoAsunto : codigoAsuntos) {
       codigosWs.add(CommonConverter.getCodigoAsuntoWs(codigoAsunto, idioma));

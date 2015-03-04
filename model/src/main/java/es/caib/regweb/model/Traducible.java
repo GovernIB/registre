@@ -2,7 +2,7 @@ package es.caib.regweb.model;
 
 import javax.xml.bind.annotation.XmlTransient;
 
-import es.caib.regweb.utils.RegwebConstantes;
+import es.caib.regweb.utils.Configuracio;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -44,7 +44,7 @@ public class Traducible implements Serializable {
      * @return La traduccion en el idioma per defecto.
      */
     public Traduccion getTraduccion() {
-        return (Traduccion) traducciones.get(RegwebConstantes.IDIOMA_DEFAULT);
+        return (Traduccion) traducciones.get(Configuracio.getDefaultLanguage());
     }
 
     /**

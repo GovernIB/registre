@@ -34,7 +34,7 @@ public class RegistroDetalle implements Serializable {
     @XmlElement
     private TipoAsunto tipoAsunto;
     @XmlElement
-    private IdiomaRegistro idioma;
+    private Long idioma;
     @XmlElement
     private CodigoAsunto codigoAsunto;
     @XmlElement
@@ -124,14 +124,13 @@ public class RegistroDetalle implements Serializable {
         this.tipoAsunto = tipoAsunto;
     }
 
-    @ManyToOne(cascade= CascadeType.PERSIST)
-    @JoinColumn(name="IDIOMA")
-    @ForeignKey(name="RWE_REGDET_IDIOMA_FK")
-    public IdiomaRegistro getIdioma() {
+
+    @Column(name="IDIOMA")
+    public Long getIdioma() {
         return idioma;
     }
 
-    public void setIdioma(IdiomaRegistro idioma) {
+    public void setIdioma(Long idioma) {
         this.idioma = idioma;
     }
 

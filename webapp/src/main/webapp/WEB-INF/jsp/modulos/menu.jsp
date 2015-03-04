@@ -37,7 +37,7 @@
                             <li><a href="<c:url value="${requestScope.requestURI}?lang=es"/>"><i class="fa fa-bullhorn"></i> <spring:message code="menu.idioma.castellano"/></a></li>
                         </c:if>
                         <c:if test="${pageContext.response.locale == 'es'}">
-                            <li><a href="${requestScope.requestURI}?lang=ca"><i class="fa fa-bullhorn"></i> <spring:message code="menu.idioma.catalan"/></a></li>
+                            <li><a href="<c:url value="${requestScope.requestURI}?lang=ca"/>"><i class="fa fa-bullhorn"></i> <spring:message code="menu.idioma.catalan"/></a></li>
                         </c:if>
                         <li><a href="<c:url value="/usuario/${usuarioAutenticado.id}/edit"/>"><i class="fa fa-gear"></i> <spring:message code="menu.configuracion"/></a></li>
 

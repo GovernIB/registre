@@ -1,6 +1,9 @@
 package es.caib.regweb.webapp.controller.libro;
 
 import es.caib.regweb.model.*;
+import es.caib.regweb.persistence.ejb.ContadorLocal;
+import es.caib.regweb.persistence.ejb.LibroLocal;
+import es.caib.regweb.persistence.ejb.OrganismoLocal;
 import es.caib.regweb.persistence.ejb.*;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.webapp.controller.BaseController;
@@ -49,9 +52,6 @@ public class LibroController extends BaseController {
     @EJB(mappedName = "regweb/OrganismoEJB/local")
     public OrganismoLocal organismoEjb;
     
-    @EJB(mappedName = "regweb/IdiomaEJB/local")
-    public IdiomaLocal idiomaEjb;
-
     @EJB(mappedName = "regweb/RelacionOrganizativaOfiEJB/local")
     public RelacionOrganizativaOfiLocal relacionOrganizativaOfiLocalEjb;
 
@@ -227,8 +227,8 @@ public class LibroController extends BaseController {
 
 
     @ModelAttribute("idiomas")
-    public List<Idioma> idiomas() throws Exception {
-        return idiomaEjb.getAll();
+    public Long[] idiomas() throws Exception {
+        return RegwebConstantes.IDIOMAS_UI;
     }
 
 

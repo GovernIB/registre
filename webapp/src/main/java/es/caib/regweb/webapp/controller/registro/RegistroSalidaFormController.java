@@ -61,9 +61,6 @@ public class RegistroSalidaFormController extends BaseController {
     @EJB(mappedName = "regweb/RegistroSalidaEJB/local")
     public RegistroSalidaLocal registroSalidaEjb;
 
-    @EJB(mappedName = "regweb/IdiomaRegistroEJB/local")
-    public IdiomaRegistroLocal idiomaRegistroEjb;
-
     @EJB(mappedName = "regweb/TipoAsuntoEJB/local")
     public TipoAsuntoLocal tipoAsuntoEjb;
 
@@ -512,8 +509,8 @@ public class RegistroSalidaFormController extends BaseController {
     }
 
     @ModelAttribute("idiomas")
-    public List<IdiomaRegistro> idiomas() throws Exception {
-        return idiomaRegistroEjb.getAll();
+    public Long[] idiomas() throws Exception {
+        return RegwebConstantes.IDIOMAS_REGISTRO;
     }
 
     @ModelAttribute("transportes")

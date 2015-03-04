@@ -87,9 +87,6 @@ public class RegWebRegistroSalidaWsImpl extends AuthenticatedBaseWsImpl implemen
     @EJB(mappedName = "regweb/LibroEJB/local")
     public LibroLocal libroEjb;
 
-    @EJB(mappedName = "regweb/IdiomaRegistroEJB/local")
-    public IdiomaRegistroLocal idiomaRegistroEjb;
-
     @EJB(mappedName = "regweb/TipoAsuntoEJB/local")
     public TipoAsuntoLocal tipoAsuntoEjb;
 
@@ -175,8 +172,9 @@ public class RegWebRegistroSalidaWsImpl extends AuthenticatedBaseWsImpl implemen
         }
 
         // 5.- Convertir RegistroEntradaWs a RegistroEntrada
-        RegistroSalida registroSalida = RegistroSalidaConverter.getRegistroSalida(registroSalidaWs, usuario, libro, oficina, origen,
-                idiomaRegistroEjb, codigoAsuntoEjb, tipoAsuntoEjb);
+        RegistroSalida registroSalida = RegistroSalidaConverter.getRegistroSalida(
+            registroSalidaWs, usuario, libro, oficina, origen,
+            codigoAsuntoEjb, tipoAsuntoEjb);
 
         // 6.- Validar el RegistroEntrada
         validateRegistroSalida(registroSalida);
