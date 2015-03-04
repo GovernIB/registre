@@ -142,9 +142,9 @@
                                             <td><i:trad value="${codigoAsunto}" property="nombre"/></td>
                                             <td class="center">
 
-                                               <%-- <a class="btn btn-warning" href="javascript:void(0);" onclick='showModalEditar("${codigoAsunto.id}", "<c:out value="${fn:escapeXml(codigoAsunto.traducciones['ca'].nombre)}" />", "<c:out value="${fn:escapeXml(codigoAsunto.traducciones['es'].nombre)}" />", "${codigoAsunto.codigo}")' title="Editar"><span class="fa fa-pencil"></span></a>
-                                                <a class="btn btn-warning" href="javascript:void(0);" onclick='showModalEditar("${codigoAsunto.id}", "<c:out value="${codigoAsunto.traducciones['ca'].nombre}" escapeXml="true"/>", "<c:out value="${codigoAsunto.traducciones['es'].nombre}" escapeXml="true"/>", "${codigoAsunto.codigo}")' title="Editar"><span class="fa fa-pencil"></span></a>--%>
-                                                <a class="btn btn-warning" href="javascript:void(0);" onclick='showModalEditar("${codigoAsunto.id}", "${fn:escapeXml(codigoAsunto.traducciones['ca'].nombre)}", "${fn:escapeXml(codigoAsunto.traducciones['es'].nombre)}", "${codigoAsunto.codigo}")' title="Editar"><span class="fa fa-pencil"></span></a>
+                                               <%-- <a class="btn btn-warning" href="javascript:void(0);" onclick='showModalEditar("${codigoAsunto.id}", "<c:out value="${fn:escapeXml(codigoAsunto.traducciones['ca'].nombre)}" />", "<c:out value="${fn:escapeXml(codigoAsunto.traducciones['es'].nombre)}" />", "${codigoAsunto.codigo}")' title="Editar"><span class="fa fa-pencil"></span></a> --%>
+                                                <a class="btn btn-warning" href="javascript:void(0);" onclick='showModalEditar("${codigoAsunto.id}", "<c:out value="${codigoAsunto.traducciones['ca'].nombre}" escapeXml="true"/>", "<c:out value="${codigoAsunto.traducciones['es'].nombre}" escapeXml="true"/>", "${codigoAsunto.codigo}")' title="Editar"><span class="fa fa-pencil"></span></a>
+                                               <%-- <a class="btn btn-warning" href="javascript:void(0);" onclick='showModalEditar("${codigoAsunto.id}", "${fn:escapeXml(codigoAsunto.traducciones['ca'].nombre)}", "${fn:escapeXml(codigoAsunto.traducciones['es'].nombre)}", "${codigoAsunto.codigo}")' title="Editar"><span class="fa fa-pencil"></span></a>--%>
                                                 <a class="btn btn-danger" title="Eliminar" onclick="confirm('<c:url value="/codigoAsunto/${codigoAsunto.id}/delete"/>', '<spring:message code="regweb.confirmar.eliminacion" htmlEscape="true"/>')" href="javascript:void(0);"><span class="fa fa-eraser"></span></a>
                                             </td>
                                         </tr>
@@ -244,10 +244,17 @@
 
 
 function showModalEditar(id, nombreca, nombrees, codigo) {
-    $('#id').val(id);
-    $('[name="traducciones[\'ca\'].nombre"]').val(nombreca);
-    $('[name="traducciones[\'es\'].nombre"]').val(nombrees);
-    $('[name="codigo"]').val(codigo);
+    nombreca = nombreca.replace(/\"/g,'&quot;');
+    nombreca = nombreca.replace(/'/g, "\\'");
+    nombrees = nombrees.replace(/\"/g,'&quot;');
+    nombrees = nombrees.replace(/'/g, "\\'");
+    $('#modal-form #id').val(id);
+    $("#modal-form #traducciones\\'ca\\'\\.nombre").val(nombreca);
+    $("#modal-form #traducciones\\'es\\'\\.nombre").val(nombrees);
+   // $('[name="traducciones[\'ca\'].nombre"]').val(unescapeHtml(nombreca));
+   // $('[name="traducciones[\'es\'].nombre"]').val(nombrees);
+    //$('[name="codigo"]').val(codigo);
+    $("#modal-form #codigo").val(codigo);
 
 
     $('#myModal .modal-header h3').html("<spring:message code="codigoAsunto.editar"/>");
@@ -256,11 +263,13 @@ function showModalEditar(id, nombreca, nombrees, codigo) {
 
 function showModalNuevo() {
 
-    $('#id').val("");
-    $('[name="traducciones[\'ca\'].nombre"]').val("");
-   // $("#traducciones\\'ca\\'\\.nombre").val(""); tambien funciona
-    $('[name="traducciones[\'es\'].nombre"]').val("");
-    $('[name="codigo"]').val("");
+    $('#modal-form #id').val("");
+  //  $('[name="traducciones[\'ca\'].nombre"]').val("");
+    $("#modal-form #traducciones\\'ca\\'\\.nombre").val("");
+    $("#modal-form #traducciones\\'es\\'\\.nombre").val("");
+    //$('[name="traducciones[\'es\'].nombre"]').val(""); falta añadir el modal delante
+    //$('[name="codigo"]').val("");
+    $("#modal-form #codigo").val("");
     $('#myModal .modal-header h3').html("<spring:message code="codigoAsunto.nuevo"/>");
 	$('#myModal').modal('show');
 }
@@ -275,6 +284,23 @@ function validateModal(){
     }
 }
 
+function escapeHtml(unsafe) {
+    return unsafe
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
+ }
+
+function unescapeHtml(safe) {
+    return safe
+         .replace("&amp;", /&/g)
+         .replace("&lt;", /</g)
+         .replace( "&gt;", />/g)
+         .replace("&quot;", /"/g)
+         .replace("&#039;", /'/g);
+ }
 
 </script>
 

@@ -55,7 +55,7 @@
                                                   </div>
                                             </c:forEach>
                                             <div class="form-group col-xs-6">
-                                                <input type="button" onclick="procesarExtinguido('${extinguido.id}')" title="<spring:message code="regweb.procesar"/>" value="<spring:message code="regweb.procesar"/>" class="btn btn-warning btn-sm">
+                                                <input type="button" onclick="procesarExtinguido('${extinguido.id}','${pageContext.response.locale}')" title="<spring:message code="regweb.procesar"/>" value="<spring:message code="regweb.procesar"/>" class="btn btn-warning btn-sm">
                                             </div>
                                       </form>
                                    </div>

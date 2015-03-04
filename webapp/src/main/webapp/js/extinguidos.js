@@ -2,7 +2,7 @@
  * Función que envia los datos del formulario de un organismo extinguido para procesarlo
  * @param extinguido id del organismo extinguido
  */
-function procesarExtinguido(extinguido) {
+function procesarExtinguido(extinguido,idioma) {
 
     var url = $("#extinguidoForm"+extinguido).attr("action");
     var total =  $('#total'+extinguido).val(); // valor total de libros
@@ -33,7 +33,7 @@ function procesarExtinguido(extinguido) {
             }else if(respuesta.status == 'SUCCESS'){
                   mostrarMensaje('#pendientes', "S'ha processat correctament l'organisme extingit " + extinguido);
                   $(idPanel).hide();
-                  mostrarProcesado(extinguido, respuesta.result.nombre,respuesta.result.libroOrganismos);
+                  mostrarProcesado(extinguido, respuesta.result.nombre,respuesta.result.libroOrganismos,idioma);
             }
         }
      });
@@ -57,12 +57,18 @@ function mostrarMensaje(idPanel, mensaje){
  * @param extinguidoNombre  nombre del Organismos extinguido
  * @param librosOrganismos  conjunto de relaciones de libro-organismo del organismo extinguido
  */
- function mostrarProcesado(extinguidoId, extinguidoNombre, librosOrganismos){
+ function mostrarProcesado(extinguidoId, extinguidoNombre, librosOrganismos, idioma){
+
+  var trad = {
+        ca: {orgext: "Organisme Extingit:", llibre: "Llibre", orgasi: "Organisme Assignat"},
+        es: {orgext: "Organismo Extinguido:", llibre: "Libro", orgasi: "Organismo Asignado"}
+  };
 
     // El html que se coge es el del resumen de los organismos procesados automaticamente
     // a este código se añadirá la nueva información a mostrar en una tabla
     var html=$("#resumen").html();
-    html +=  "Organisme Extingit: <strong>"+extinguidoNombre+"</strong>"
+    html +=  trad[idioma].titol+" <strong>"+extinguidoNombre+"</strong>"
+   // html +=  "Organisme Extingit: <strong>"+extinguidoNombre+"</strong>"
     html += "<table class='table table-bordered table-hover table-striped'  id=\"procesado"+extinguidoId +"\">";
     html += '<colgroup>';
     html += '<col>';
@@ -70,8 +76,8 @@ function mostrarMensaje(idPanel, mensaje){
     html += '</colgroup>';
     html += '<thead>';
     html += '<tr>';
-    html += '<th>Llibre</th>';
-    html += '<th>Organisme Asignat </th>';
+    html += '<th>'+trad[idioma].llibre+'</th>';
+    html += '<th>'+trad[idioma].orgasi+' </th>';
     html += '</tr>';
     html += '</thead>';
     html += '<tbody></tbody></table>';

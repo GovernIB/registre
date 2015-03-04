@@ -22,7 +22,7 @@
                ESTADO 6 -> Enviado
           -->
           <c:if test="${registro.estado == 1 || registro.estado == 2 || registro.estado == 3}">
-              <a href="#modalNuevoAnexo" class="btn btn-${color} btn-xs pull-right" role="button" data-toggle="modal" onclick="nuevoAnexo('${registro.id}', '${registro.registroDetalle.id}', '${param.registro}')"><i class="fa fa-plus"></i> <spring:message code="anexo.nuevo"/></a>
+              <a href="#modalNuevoAnexo" class="btn btn-${color} btn-xs pull-right" role="button" data-toggle="modal" onclick="nuevoAnexo('${registro.id}', '${registro.registroDetalle.id}', '${param.registro}', '${pageContext.response.locale}')"><i class="fa fa-plus"></i> <spring:message code="anexo.nuevo"/></a>
           </c:if>
           <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong><spring:message code="anexo.anexos"/></strong></h3>
       </div>
@@ -64,7 +64,7 @@
                                               ESTADO 6 -> Enviado
                                           -->
                                          <c:if test="${registro.estado == 1 || registro.estado == 2 || registro.estado ==3}">
-                                             <a class="btn btn-warning btn-sm" data-toggle="modal" role="button" href="#modalNuevoAnexo" onclick="cargarAnexo('${anexo.id}','${registro.id}','${registro.registroDetalle.id}','${param.registro}')" title="Editar"><span class="fa fa-pencil"></span></a>
+                                             <a class="btn btn-warning btn-sm" data-toggle="modal" role="button" href="#modalNuevoAnexo" onclick="cargarAnexo('${anexo.id}','${registro.id}','${registro.registroDetalle.id}','${param.registro}','${pageContext.response.locale}')" title="Editar"><span class="fa fa-pencil"></span></a>
                                              <a class="btn btn-danger btn-default btn-sm"  onclick="eliminarAnexo('${anexo.id}','${registro.registroDetalle.id}')" href="javascript:void(0);" title="Eliminar"><span class="fa fa-eraser"></span></a>
                                          </c:if>
                                          <c:if test="${registro.estado != 1 && registro.estado != 2 && registro.estado != 3}">

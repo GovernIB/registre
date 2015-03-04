@@ -281,7 +281,7 @@
                         <img src="<c:url value="/img/712.GIF"/>" width="20" height="20"/>
                 </div>
                 <div class="modal-footer">
-                    <input type="button" onclick="procesarAnexo()" title="<spring:message code="regweb.guardar"/>" value="<spring:message code="regweb.guardar"/>" class="btn btn-warning btn-sm">
+                    <input type="button" onclick="procesarAnexo('${pageContext.response.locale}')" title="<spring:message code="regweb.guardar"/>" value="<spring:message code="regweb.guardar"/>" class="btn btn-warning btn-sm">
                     <button class="btn btn-sm" data-dismiss="modal" aria-hidden="true" onclick="limpiarAnexo()"><spring:message code="regweb.cerrar"/></button>
                 </div>
             </form>
