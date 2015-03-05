@@ -73,11 +73,11 @@ public class InicioController extends BaseController{
             Paginacion paginacionEntrada = new Paginacion(0, 0);
             List<Object> entradasList = new ArrayList<Object>(registroEntradas);
             paginacionEntrada.setListado(entradasList);
-            lopdEjb.insertarRegistrosEntrada(paginacionEntrada, usuarioEntidad.getId());
+            //lopdEjb.insertarRegistrosEntrada(paginacionEntrada, usuarioEntidad.getId());
             Paginacion paginacionSalida = new Paginacion(0, 0);
             List<Object> salidasList = new ArrayList<Object>(registroSalidas);
             paginacionSalida.setListado(salidasList);
-            lopdEjb.insertarRegistrosSalida(paginacionSalida, usuarioEntidad.getId());
+            //lopdEjb.insertarRegistrosSalida(paginacionSalida, usuarioEntidad.getId());
 
 
             /*Registros Pendientes de Visar y con Reserva de Numero*/
