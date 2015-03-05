@@ -76,7 +76,7 @@
                                 <ul class="dropdown-menu">
                                     <c:forEach var="oficina" items="${oficinas}">
                                         <c:if test="${oficina.id != oficinaActiva.id}">
-                                            <li><a href="<c:url value="/cambioOficina/${oficina.id}"/>"><i class="fa fa-home"></i> ${oficina.denominacion}</a></li>
+                                            <li><a href="<c:url value="/cambioOficina/${oficina.id}"/>"><i class="fa fa-home"></i> ${oficina.nombre}</a></li>
                                         </c:if>
                                     </c:forEach>
                                 </ul>

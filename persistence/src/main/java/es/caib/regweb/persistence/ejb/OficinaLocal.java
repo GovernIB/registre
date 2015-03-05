@@ -1,6 +1,7 @@
 package es.caib.regweb.persistence.ejb;
 
 import es.caib.regweb.model.Oficina;
+import es.caib.regweb.model.utils.ObjetoBasico;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
@@ -39,6 +40,14 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @throws Exception
      */
     public List<Oficina> findByOrganismoResponsable(Long idOrganismo) throws Exception;
+
+    /**
+     * Obtiene las Oficinas cuyo Organismo responsable es el indicado
+     * @param idOrganismo
+     * @return
+     * @throws Exception
+     */
+    public List<ObjetoBasico> findByOrganismoResponsableVO(Long idOrganismo) throws Exception;
 
     /**
      * Obtiene las Oficinas cuya Entidad responsable es la indicada

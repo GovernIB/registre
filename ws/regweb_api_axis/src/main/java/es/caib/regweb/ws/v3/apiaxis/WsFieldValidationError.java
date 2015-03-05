@@ -166,7 +166,7 @@ public class WsFieldValidationError  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(WsFieldValidationError.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("http://personas.impl.v3.ws.regweb.caib.es/", "wsFieldValidationError"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("http://registroentrada.impl.v3.ws.regweb.caib.es/", "wsFieldValidationError"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("label");
         elemField.setXmlName(new javax.xml.namespace.QName("", "label"));
@@ -182,7 +182,7 @@ public class WsFieldValidationError  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("translation");
         elemField.setXmlName(new javax.xml.namespace.QName("", "translation"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://personas.impl.v3.ws.regweb.caib.es/", "wsI18NTranslation"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://registroentrada.impl.v3.ws.regweb.caib.es/", "wsI18NTranslation"));
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();

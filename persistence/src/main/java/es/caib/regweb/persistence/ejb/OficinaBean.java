@@ -1,8 +1,8 @@
 package es.caib.regweb.persistence.ejb;
 
 import es.caib.regweb.model.Oficina;
+import es.caib.regweb.model.utils.ObjetoBasico;
 import es.caib.regweb.utils.RegwebConstantes;
-
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -11,6 +11,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -113,6 +114,30 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         for(Oficina oficina:oficinas){
           Hibernate.initialize(oficina.getOrganizativasOfi());
         }
+        return oficinas;
+    }
+
+    @Override
+    public List<ObjetoBasico> findByOrganismoResponsableVO(Long idOrganismo) throws Exception{
+        Query q = em.createQuery("Select oficina.id, oficina.denominacion as nombre from Oficina as oficina where " +
+                "oficina.organismoResponsable.id =:idOrganismo and " +
+                "oficina.estado.codigoEstadoEntidad=:vigente");
+
+        q.setParameter("idOrganismo",idOrganismo);
+        q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+
+        List<ObjetoBasico> oficinas =  new ArrayList<ObjetoBasico>();
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result){
+            ObjetoBasico objetoBasico = new ObjetoBasico((Long)object[0],(String)object[1]);
+
+            oficinas.add(objetoBasico);
+        }
+
+
+
         return oficinas;
     }
 

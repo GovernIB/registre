@@ -1,6 +1,7 @@
 package es.caib.regweb.webapp.utils;
 
 import es.caib.regweb.model.*;
+import es.caib.regweb.model.utils.ObjetoBasico;
 import es.caib.regweb.persistence.ejb.*;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.utils.login.RegwebLoginPluginManager;
@@ -300,26 +301,26 @@ public class UsuarioService {
         List<Libro> librosRegistro = permisoLibroUsuarioEjb.getLibrosRegistro(usuarioEntidad.getId());
         log.info("Libros registro usuario: " + Arrays.toString(librosRegistro.toArray()));
 
-        Set<Oficina> oficinasRegistro = new HashSet<Oficina>();  // Utilizamos un Set porque no permite duplicados
+        Set<ObjetoBasico> oficinasRegistro = new HashSet<ObjetoBasico>();  // Utilizamos un Set porque no permite duplicados
 
         // Recorremos los Libros y a partir del Organismo al que pertenecen, obtenemos las Oficinas que pueden Registrar en el.
         for (Libro libro : librosRegistro) {
             Long idOrganismo = libro.getOrganismo().getId();
-            oficinasRegistro.addAll(oficinaEjb.findByOrganismoResponsable(idOrganismo));
-            oficinasRegistro.addAll(relacionOrganizativaOfiLocalEjb.getOficinasByOrganismo(idOrganismo));
+            oficinasRegistro.addAll(oficinaEjb.findByOrganismoResponsableVO(idOrganismo));
+            oficinasRegistro.addAll(relacionOrganizativaOfiLocalEjb.getOficinasByOrganismoVO(idOrganismo));
         }
 
         log.info("Oficinas registro usuario: " + Arrays.toString(oficinasRegistro.toArray()));
         session.setAttribute(RegwebConstantes.SESSION_OFICINAS,oficinasRegistro);
 
         // Comprobamos la última Oficina utilizada por el usuario
-        if(oficinasRegistro.contains(usuarioEntidad.getUltimaOficina())){
+        if(oficinasRegistro.contains(new ObjetoBasico(usuarioEntidad.getUltimaOficina().getId()))){
             session.setAttribute(RegwebConstantes.SESSION_OFICINA,oficinaEjb.findById(usuarioEntidad.getUltimaOficina().getId()));
             session.setAttribute(RegwebConstantes.SESSION_TIENEPREREGISTROS, preRegistroEjb.tienePreRegistros(usuarioEntidad.getUltimaOficina().getCodigo()));
 
         }else if(oficinasRegistro.size() > 0){
-            session.setAttribute(RegwebConstantes.SESSION_OFICINA,oficinasRegistro.iterator().next());
-            usuarioEntidadEjb.actualizarOficinaUsuario(usuarioEntidad.getId(),oficinasRegistro.iterator().next());
+            session.setAttribute(RegwebConstantes.SESSION_OFICINA,oficinaEjb.findById(oficinasRegistro.iterator().next().getId()));
+            usuarioEntidadEjb.actualizarOficinaUsuario(usuarioEntidad.getId(),oficinasRegistro.iterator().next().getId());
         }
 
         //Obtenemos los Libros donde que el UsuarioEntidad puede Administrar

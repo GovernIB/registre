@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
+<un:useConstants var="RegwebConstantes" className="es.caib.regweb.utils.RegwebConstantes"/>
 
 <!DOCTYPE html>
 <html lang="ca">
@@ -196,32 +197,28 @@
                                                                     <td class="center">
                                                                         <a class="btn btn-info btn-sm" href="<c:url value="/registroEntrada/${registroEntrada.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
                                                                         <%--Acciones según el estado--%>
-                                                                        <c:choose>
-                                                                            <c:when test="${registroEntrada.estado == 1 && puedeEditar}">  <%--Válido--%>
-                                                                                <a class="btn btn-warning btn-sm" href="<c:url value="/registroEntrada/${registroEntrada.id}/edit"/>" title="<spring:message code="regweb.editar"/>"><span class="fa fa-pencil"></span></a>
-                                                                                <a class="btn btn-danger btn-sm" href="javascript:void(0);" onclick='javascript:confirm("<c:url value="/registroEntrada/${registroEntrada.id}/anular"/>","<spring:message code="regweb.confirmar.anular" htmlEscape="true"/>")' title="<spring:message code="regweb.anular"/>"><span class="fa fa-thumbs-o-down"></span></a>
-                                                                            </c:when>
-                                                                            <c:when test="${registroEntrada.estado == 2 && puedeEditar}">  <%--Pendiente--%>
-                                                                                <a class="btn btn-warning btn-sm" href="<c:url value="/registroEntrada/${registroEntrada.id}/edit"/>" title="<spring:message code="regweb.editar"/>"><span class="fa fa-pencil"></span></a>
-                                                                                <a class="btn btn-danger btn-sm" href="javascript:void(0);" onclick='javascript:confirm("<c:url value="/registroEntrada/${registroEntrada.id}/anular"/>","<spring:message code="regweb.confirmar.anular" htmlEscape="true"/>")' title="<spring:message code="regweb.anular"/>"><span class="fa fa-thumbs-o-down"></span></a>
-                                                                            </c:when>
-                                                                            <c:when test="${registroEntrada.estado == 3 && isAdministradorLibro}">  <%--Pendiente de Visar--%>
-                                                                                <a class="btn btn-danger btn-sm" href="javascript:void(0);" onclick='javascript:confirm("<c:url value="/registroEntrada/${registroEntrada.id}/anular"/>","<spring:message code="regweb.confirmar.anular" htmlEscape="true"/>")' title="<spring:message code="regweb.anular"/>"><span class="fa fa-thumbs-o-down"></span></a>
-                                                                            </c:when>
-                                                                            <c:when test="${registroEntrada.estado == 4 || registroEntrada.estado == 5}">  <%--Oficio externo e interno--%>
+                                                                            <%--Si no nos encontramos en la misma Oficia en la que se creó el Registro, no podemos hacer nada con el--%>
+                                                                        <c:if test="${registroEntrada.oficina.id == oficinaActiva.id}">
+                                                                            <c:choose>
+                                                                                <c:when test="${(registroEntrada.estado == RegwebConstantes.ESTADO_VALIDO || registroEntrada.estado == RegwebConstantes.ESTADO_PENDIENTE) && puedeEditar}">  <%--Válido--%>
+                                                                                    <a class="btn btn-warning btn-sm" href="<c:url value="/registroEntrada/${registroEntrada.id}/edit"/>" title="<spring:message code="regweb.editar"/>"><span class="fa fa-pencil"></span></a>
+                                                                                    <a class="btn btn-danger btn-sm" href="javascript:void(0);" onclick='javascript:confirm("<c:url value="/registroEntrada/${registroEntrada.id}/anular"/>","<spring:message code="regweb.confirmar.anular" htmlEscape="true"/>")' title="<spring:message code="regweb.anular"/>"><span class="fa fa-thumbs-o-down"></span></a>
+                                                                                </c:when>
 
-                                                                            </c:when>
-                                                                            <c:when test="${registroEntrada.estado == 6}"> <%--Enviado--%>
+                                                                                <c:when test="${registroEntrada.estado == RegwebConstantes.ESTADO_PENDIENTE_VISAR && isAdministradorLibro}">  <%--Pendiente de Visar--%>
+                                                                                    <a class="btn btn-danger btn-sm" href="javascript:void(0);" onclick='javascript:confirm("<c:url value="/registroEntrada/${registroEntrada.id}/anular"/>","<spring:message code="regweb.confirmar.anular" htmlEscape="true"/>")' title="<spring:message code="regweb.anular"/>"><span class="fa fa-thumbs-o-down"></span></a>
+                                                                                </c:when>
+                                                                                <c:when test="${registroEntrada.estado == RegwebConstantes.ESTADO_OFICIO_EXTERNO || registroEntrada.estado == RegwebConstantes.ESTADO_OFICIO_INTERNO}">  <%--Oficio externo e interno--%>
 
-                                                                            </c:when>
-                                                                            <c:when test="${registroEntrada.estado == 7}"> <%--Tramitado--%>
+                                                                                </c:when>
 
-                                                                            </c:when>
-                                                                            <c:when test="${registroEntrada.estado == 8 && puedeEditar}">  <%--Anulado--%>
-                                                                                <a class="btn btn-primary btn-sm" onclick='javascript:confirm("<c:url value="/registroEntrada/${registroEntrada.id}/activar"/>","<spring:message code="regweb.confirmar.activar" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.activar"/>"><span class="fa fa-thumbs-o-up"></span></a>
-                                                                            </c:when>
+                                                                                <c:when test="${registroEntrada.estado == RegwebConstantes.ESTADO_ANULADO && puedeEditar}">  <%--Anulado--%>
+                                                                                    <a class="btn btn-primary btn-sm" onclick='javascript:confirm("<c:url value="/registroEntrada/${registroEntrada.id}/activar"/>","<spring:message code="regweb.confirmar.activar" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.activar"/>"><span class="fa fa-thumbs-o-up"></span></a>
+                                                                                </c:when>
 
-                                                                        </c:choose>
+                                                                            </c:choose>
+                                                                        </c:if>
+
 
                                                                     </td>
                                                                 </tr>

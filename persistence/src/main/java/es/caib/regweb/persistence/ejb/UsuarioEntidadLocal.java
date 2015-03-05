@@ -1,6 +1,5 @@
 package es.caib.regweb.persistence.ejb;
 
-import es.caib.regweb.model.Oficina;
 import es.caib.regweb.model.UsuarioEntidad;
 import es.caib.regweb.persistence.utils.Paginacion;
 
@@ -127,8 +126,8 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
     /**
      * Modifica la última Oficina utilizada por el usuario
      * @param idUsuario
-     * @param oficina
+     * @param idOficina
      * @throws Exception
      */
-    public void actualizarOficinaUsuario(Long idUsuario, Oficina oficina) throws Exception;
+    public void actualizarOficinaUsuario(Long idUsuario, Long idOficina) throws Exception;
 }

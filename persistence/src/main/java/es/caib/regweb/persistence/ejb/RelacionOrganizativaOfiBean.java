@@ -5,6 +5,7 @@ import es.caib.regweb.model.Oficina;
 import es.caib.regweb.model.Organismo;
 import es.caib.regweb.model.RelacionOrganizativaOfi;
 import es.caib.regweb.model.RelacionOrganizativaOfiPK;
+import es.caib.regweb.model.utils.ObjetoBasico;
 import es.caib.regweb.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
@@ -14,6 +15,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -89,6 +91,28 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
         List<Oficina> oficinas = q.getResultList();
         for(Oficina oficina:oficinas){
             Hibernate.initialize(oficina.getOrganizativasOfi());
+        }
+
+        return oficinas;
+    }
+
+    @Override
+    public List<ObjetoBasico> getOficinasByOrganismoVO(Long idOrganismo) throws Exception {
+
+        Query q = em.createQuery("Select distinct roo.oficina.id,roo.oficina.denominacion as nombre  from RelacionOrganizativaOfi as roo " +
+                "where roo.organismo.id = :idOrganismo and roo.estado.codigoEstadoEntidad = :vigente");
+
+        q.setParameter("idOrganismo", idOrganismo);
+        q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+
+        List<ObjetoBasico> oficinas =  new ArrayList<ObjetoBasico>();
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result){
+            ObjetoBasico objetoBasico = new ObjetoBasico((Long)object[0],(String)object[1]);
+
+            oficinas.add(objetoBasico);
         }
 
         return oficinas;

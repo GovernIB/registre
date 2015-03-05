@@ -1,9 +1,9 @@
 package es.caib.regweb.webapp.controller;
 
 import es.caib.regweb.model.*;
+import es.caib.regweb.model.utils.ObjetoBasico;
 import es.caib.regweb.persistence.ejb.*;
 import es.caib.regweb.utils.RegwebConstantes;
-
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.validation.FieldError;
@@ -11,12 +11,7 @@ import org.springframework.validation.FieldError;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Fundació BIT.
@@ -217,10 +212,10 @@ public class BaseController {
      * @param request
      * @return
      */
-    protected Set<Oficina> getOficinasAutenticado(HttpServletRequest request){
+    protected Set<ObjetoBasico> getOficinasAutenticado(HttpServletRequest request){
 
         HttpSession session = request.getSession();
-        Set<Oficina> oficinas = (Set<Oficina>) session.getAttribute(RegwebConstantes.SESSION_OFICINAS);
+        Set<ObjetoBasico> oficinas = (Set<ObjetoBasico>) session.getAttribute(RegwebConstantes.SESSION_OFICINAS);
 
         return oficinas;
 

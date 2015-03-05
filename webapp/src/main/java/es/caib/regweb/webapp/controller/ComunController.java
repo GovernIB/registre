@@ -1,6 +1,7 @@
 package es.caib.regweb.webapp.controller;
 
 import es.caib.regweb.model.*;
+import es.caib.regweb.model.utils.ObjetoBasico;
 import es.caib.regweb.persistence.ejb.*;
 import es.caib.regweb.persistence.utils.sir.FicheroIntercambioSICRES3;
 import es.caib.regweb.persistence.utils.sir.SirUtils;
@@ -143,14 +144,14 @@ public class ComunController extends BaseController {
         HttpSession session = request.getSession();
         UsuarioEntidad usuarioEntidad= getUsuarioEntidadActivo(request);
 
-        Set<Oficina> oficinasAutenticado = getOficinasAutenticado(request);
+        Set<ObjetoBasico> oficinasAutenticado = getOficinasAutenticado(request);
+
         try {
             Oficina oficinaNueva = oficinaEjb.findById(oficinaId);
-
-            if(oficinasAutenticado.contains(oficinaNueva)){
+            if(oficinasAutenticado.contains(new ObjetoBasico(oficinaNueva.getId()))){
                 session.setAttribute(RegwebConstantes.SESSION_OFICINA, oficinaNueva);
                 session.setAttribute(RegwebConstantes.SESSION_TIENEPREREGISTROS, preRegistroEjb.tienePreRegistros(oficinaNueva.getCodigo()));
-                usuarioEntidadEjb.actualizarOficinaUsuario(usuarioEntidad.getId(), oficinaNueva);
+                usuarioEntidadEjb.actualizarOficinaUsuario(usuarioEntidad.getId(), oficinaNueva.getId());
             }else{
                 Mensaje.saveMessageError(request, getMessage("error.oficina.autorizacion"));
             }

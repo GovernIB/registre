@@ -1,6 +1,5 @@
 package es.caib.regweb.persistence.ejb;
 
-import es.caib.regweb.model.Oficina;
 import es.caib.regweb.model.UsuarioEntidad;
 import es.caib.regweb.persistence.utils.DataBaseUtils;
 import es.caib.regweb.persistence.utils.Paginacion;
@@ -286,12 +285,12 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
     }
 
     @Override
-    public void actualizarOficinaUsuario(Long idUsuario, Oficina oficina) throws Exception{
+    public void actualizarOficinaUsuario(Long idUsuario, Long idOficina) throws Exception{
 
-        Query q = em.createQuery("Update UsuarioEntidad set ultimaOficina = :oficina " +
+        Query q = em.createQuery("Update UsuarioEntidad set ultimaOficina.id = :idOficina " +
                 "where id = :idUsuario");
 
-        q.setParameter("oficina",oficina);
+        q.setParameter("idOficina",idOficina);
         q.setParameter("idUsuario",idUsuario);
         q.executeUpdate();
 

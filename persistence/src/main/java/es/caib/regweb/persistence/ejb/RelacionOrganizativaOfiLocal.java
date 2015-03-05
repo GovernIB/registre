@@ -4,6 +4,7 @@ import es.caib.regweb.model.Oficina;
 import es.caib.regweb.model.Organismo;
 import es.caib.regweb.model.RelacionOrganizativaOfi;
 import es.caib.regweb.model.RelacionOrganizativaOfiPK;
+import es.caib.regweb.model.utils.ObjetoBasico;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
@@ -30,6 +31,14 @@ public interface RelacionOrganizativaOfiLocal extends BaseEjb<RelacionOrganizati
      * @throws Exception
      */
     public List<Oficina> getOficinasByOrganismo(Long idOrganismo) throws Exception;
+
+    /**
+     * Obtiene las Oficinas relacionadas con el Organismo seleccionado
+     * @param idOrganismo
+     * @return
+     * @throws Exception
+     */
+    public List<ObjetoBasico> getOficinasByOrganismoVO(Long idOrganismo) throws Exception;
 
     /**
      * Obtiene los Organismosr elacionados con la Oficina seleccionada

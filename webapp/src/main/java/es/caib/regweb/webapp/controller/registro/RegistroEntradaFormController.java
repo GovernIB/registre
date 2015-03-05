@@ -7,7 +7,6 @@ import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.webapp.controller.BaseController;
 import es.caib.regweb.webapp.utils.Mensaje;
 import es.caib.regweb.webapp.validator.RegistroEntradaWebValidator;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.support.SessionStatus;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -435,12 +433,12 @@ public class RegistroEntradaFormController extends BaseController {
         // Gestionamos el Organismo, determinando si es Interno o Externo
         Organismo orgDestino = organismoEjb.findByCodigoVigente(organismoDestino.getCodigo());
         if(orgDestino != null){ // es interno
-          log.info("orgDestino interno: " + orgDestino.getDenominacion());
+          //log.info("orgDestino interno: " + orgDestino.getDenominacion());
           registroEntrada.setDestino(orgDestino);
           registroEntrada.setDestinoExternoCodigo(null);
           registroEntrada.setDestinoExternoDenominacion(null);
         } else { // es externo
-           log.info("orgDestino externo: " + registroEntrada.getDestino().getDenominacion());
+           //log.info("orgDestino externo: " + registroEntrada.getDestino().getDenominacion());
            registroEntrada.setDestinoExternoCodigo(registroEntrada.getDestino().getCodigo());
            registroEntrada.setDestinoExternoDenominacion(registroEntrada.getDestino().getDenominacion());
            registroEntrada.setDestino(null);
