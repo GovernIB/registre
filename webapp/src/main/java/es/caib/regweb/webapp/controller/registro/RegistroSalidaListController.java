@@ -74,9 +74,6 @@ public class RegistroSalidaListController extends BaseController {
     @EJB(mappedName = "regweb/PersonaEJB/local")
     public PersonaLocal personaEjb;
 
-    //@EJB(mappedName = "regweb/TipoPersonaEJB/local")
-    //public TipoPersonaLocal tipoPersonaEjb;
-
     @EJB(mappedName = "regweb/CatProvinciaEJB/local")
     public CatProvinciaLocal catProvinciaEjb;
 
@@ -180,6 +177,7 @@ public class RegistroSalidaListController extends BaseController {
 
         ModeloRecibo modeloRecibo = new ModeloRecibo();
         model.addAttribute("modeloRecibo", modeloRecibo);
+        model.addAttribute("modelosRecibo", modeloReciboEjb.getByEntidad(getEntidadActiva(request).getId()));
 
         // Permisos
         model.addAttribute("isAdministradorLibro", permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(),registro.getLibro().getId()));
@@ -198,9 +196,17 @@ public class RegistroSalidaListController extends BaseController {
             model.addAttribute("tiposDocumento",RegwebConstantes.TIPOS_DOCUMENTOID);
             model.addAttribute("nivelesAdministracion",catNivelAdministracionEjb.getAll());
             model.addAttribute("comunidadesAutonomas",catComunidadAutonomaEjb.getAll());
+            model.addAttribute("organismosOficinaActiva",organismoEjb.getByOficinaActiva(getOficinaActiva(request).getId()));
+
         }
         // Anexos
         model.addAttribute("anexos", anexoEjb.getByRegistroSalida(idRegistro));
+        model.addAttribute("tiposDocumental", tipoDocumentalEjb.getByEntidad(getEntidadActiva(request).getId()));
+        model.addAttribute("tiposDocumentoAnexo", RegwebConstantes.TIPOS_DOCUMENTO);
+        model.addAttribute("tiposFirma", RegwebConstantes.TIPOS_FIRMA);
+        model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
+
+        // Historicos
         model.addAttribute("historicos", historicoRegistroSalidaEjb.getByRegistroSalida(idRegistro));
 
         // Trazabilidad
@@ -340,35 +346,6 @@ public class RegistroSalidaListController extends BaseController {
         return permisoLibroUsuarioEjb.getLibrosRegistroOficina(organismos, usuarioEntidad);
     }
 
-    @ModelAttribute("organismosOficinaActiva")
-    public Set<Organismo> organismosOficinaActiva(HttpServletRequest request) throws Exception {
-        return organismoEjb.getByOficinaActiva(getOficinaActiva(request).getId());
-    }
-
-
-    @ModelAttribute("modelosRecibo")
-    public List<ModeloRecibo> modelosRecibo(HttpServletRequest request) throws Exception {
-        return modeloReciboEjb.getByEntidad(getEntidadActiva(request).getId());
-    }
-    @ModelAttribute("tiposDocumental")
-    public List<TipoDocumental> tiposDocumental(HttpServletRequest request) throws Exception {
-        return tipoDocumentalEjb.getByEntidad(getEntidadActiva(request).getId());
-    }
-
-    @ModelAttribute("tiposDocumentoAnexo")
-    public Long[] tiposDocumento(HttpServletRequest request) throws Exception {
-        return RegwebConstantes.TIPOS_DOCUMENTO;
-    }
-
-    @ModelAttribute("tiposFirma")
-    public Long[] tiposFirma(HttpServletRequest request) throws Exception {
-        return RegwebConstantes.TIPOS_FIRMA;
-    }
-
-    @ModelAttribute("tiposValidezDocumento")
-    public Long[] tiposValidezDocumento(HttpServletRequest request) throws Exception {
-        return RegwebConstantes.TIPOS_VALIDEZDOCUMENTO;
-    }
 
     @ModelAttribute("estados")
     public Long[] estados(HttpServletRequest request) throws Exception {

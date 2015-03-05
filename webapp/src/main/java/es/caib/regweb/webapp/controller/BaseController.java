@@ -233,7 +233,6 @@ public class BaseController {
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         Entidad entidadActiva = getEntidadActiva(request);
 
-
         return permisoLibroUsuarioEjb.getLibrosEntidadPermiso(entidadActiva.getId(), usuarioEntidad, RegwebConstantes.PERMISO_CONSULTA_REGISTRO_ENTRADA);
     }
 

@@ -3,6 +3,7 @@ package es.caib.regweb.persistence.ejb;
 import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb.model.*;
+import es.caib.regweb.model.utils.RegistroBasico;
 import es.caib.regweb.persistence.utils.*;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.utils.StringUtils;
@@ -532,18 +533,19 @@ public class RegistroEntradaBean extends BaseEjbJPA<RegistroEntrada, Long> imple
     }
 
     @Override
-    public List<RegistroEntrada> getByOficinaEstado(Long idOficinaActiva, Long idEstado, Integer total) throws Exception {
+    public List<RegistroBasico> getByOficinaEstado(Long idOficinaActiva, Long idEstado, Integer total) throws Exception {
 
         Query q;
 
-        q = em.createQuery("Select registroEntrada from RegistroEntrada as registroEntrada where registroEntrada.oficina.id = :idOficinaActiva " +
-                "and registroEntrada.estado = :idEstado order by registroEntrada.fecha desc");
+        q = em.createQuery("Select re.id, re.numeroRegistroFormateado, re.fecha, re.libro.nombre, re.usuario.usuario.identificador, re.registroDetalle.reserva " +
+                "from RegistroEntrada as re where re.oficina.id = :idOficinaActiva " +
+                "and re.estado = :idEstado order by re.fecha desc");
 
         q.setMaxResults(total);
         q.setParameter("idOficinaActiva", idOficinaActiva);
         q.setParameter("idEstado", idEstado);
 
-        return  q.getResultList();
+       return getRegistroBasicoList(q.getResultList());
 
     }
 
@@ -581,17 +583,19 @@ public class RegistroEntradaBean extends BaseEjbJPA<RegistroEntrada, Long> imple
     }
 
     @Override
-    public List<RegistroEntrada> getByLibrosEstado(List<Libro> libros, Long idEstado) throws Exception {
+    public List<RegistroBasico> getByLibrosEstado(List<Libro> libros, Long idEstado) throws Exception {
 
         Query q;
 
-        q = em.createQuery("Select registroEntrada from RegistroEntrada as registroEntrada where registroEntrada.libro in (:libros) " +
-                "and registroEntrada.estado = :idEstado order by registroEntrada.fecha desc");
+        q = em.createQuery("Select re.id, re.numeroRegistroFormateado, re.fecha, re.libro.nombre, re.usuario.usuario.identificador, re.registroDetalle.extracto " +
+                "from RegistroEntrada as re where re.libro in (:libros) " +
+                "and re.estado = :idEstado order by re.fecha desc");
 
         q.setParameter("libros", libros);
         q.setParameter("idEstado", idEstado);
 
-        return  q.getResultList();
+        return  getRegistroBasicoList(q.getResultList());
+
     }
 
     @Override
@@ -634,19 +638,20 @@ public class RegistroEntradaBean extends BaseEjbJPA<RegistroEntrada, Long> imple
         merge(registroEntrada);
     }
 
-    public List<RegistroEntrada> getUltimosRegistros(Long idOficina, Integer total) throws Exception{
+    public List<RegistroBasico> getUltimosRegistros(Long idOficina, Integer total) throws Exception{
 
         Query q;
 
-        q = em.createQuery("Select registroEntrada from RegistroEntrada as registroEntrada where registroEntrada.oficina.id = :idOficina " +
-                "and registroEntrada.estado = :idEstadoRegistro " +
-                "order by registroEntrada.fecha desc");
+        q = em.createQuery("Select re.id, re.numeroRegistroFormateado, re.fecha, re.libro.nombre, re.usuario.usuario.identificador, re.registroDetalle.extracto " +
+                "from RegistroEntrada as re where re.oficina.id = :idOficina " +
+                "and re.estado = :idEstadoRegistro " +
+                "order by re.fecha desc");
 
         q.setMaxResults(total);
         q.setParameter("idOficina", idOficina);
         q.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
 
-        return  q.getResultList();
+        return  getRegistroBasicoList(q.getResultList());
     }
 
     @Override
@@ -729,6 +734,25 @@ public class RegistroEntradaBean extends BaseEjbJPA<RegistroEntrada, Long> imple
         historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(old,
             usuarioEntidad,RegwebConstantes.TIPO_MODIF_ESTADO,false);
 
+    }
+
+    /**
+     * Convierte los resultados de una query en una lista de {@link es.caib.regweb.model.utils.RegistroBasico}
+     * @param result
+     * @return
+     * @throws Exception
+     */
+    private List<RegistroBasico> getRegistroBasicoList(List<Object[]> result) throws Exception{
+
+        List<RegistroBasico> registros = new ArrayList<RegistroBasico>();
+
+        for (Object[] object : result){
+            RegistroBasico registroBasico = new RegistroBasico((Long)object[0],(String)object[1],(Date)object[2],(String)object[3],(String)object[4],(String)object[5]);
+
+            registros.add(registroBasico);
+        }
+
+        return  registros;
     }
 
 

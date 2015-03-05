@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * Bean básico para reutilizar
- * @user earrivi on 05/03/2015.
+ * @author earrivi on 05/03/2015.
  */
 public class ObjetoBasico implements Serializable{
 

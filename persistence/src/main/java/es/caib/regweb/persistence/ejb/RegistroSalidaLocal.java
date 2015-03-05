@@ -3,6 +3,7 @@ package es.caib.regweb.persistence.ejb;
 import es.caib.regweb.model.Libro;
 import es.caib.regweb.model.RegistroSalida;
 import es.caib.regweb.model.UsuarioEntidad;
+import es.caib.regweb.model.utils.RegistroBasico;
 import es.caib.regweb.persistence.utils.Paginacion;
 
 import javax.annotation.security.RolesAllowed;
@@ -178,7 +179,7 @@ public interface RegistroSalidaLocal extends BaseEjb<RegistroSalida, Long> {
      * @return
      * @throws Exception
      */
-    public List<RegistroSalida> getUltimosRegistros(Long idOficina, Integer total) throws Exception;
+    public List<RegistroBasico> getUltimosRegistros(Long idOficina, Integer total) throws Exception;
 
     /**
      * Obtiene el RegistroSalida a partir de su numero de registro formateado

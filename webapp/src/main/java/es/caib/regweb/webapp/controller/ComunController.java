@@ -201,8 +201,8 @@ public class ComunController extends BaseController {
         Oficina oficinaActiva = (Oficina) session.getAttribute(RegwebConstantes.SESSION_OFICINA);
 
         if(oficinaActiva != null) {
-            List<RegistroEntrada> pendientesVisar = registroEntradaEjb.getByOficinaEstado(oficinaActiva.getId(), RegwebConstantes.ESTADO_PENDIENTE_VISAR, RegwebConstantes.REGISTROS_PANTALLA_INICIO);
-            List<RegistroEntrada> pendientes = registroEntradaEjb.getByOficinaEstado(oficinaActiva.getId(), RegwebConstantes.ESTADO_PENDIENTE, RegwebConstantes.REGISTROS_PANTALLA_INICIO);
+            //List<RegistroEntrada> pendientesVisar = registroEntradaEjb.getByOficinaEstado(oficinaActiva.getId(), RegwebConstantes.ESTADO_PENDIENTE_VISAR, RegwebConstantes.REGISTROS_PANTALLA_INICIO);
+            //List<RegistroEntrada> pendientes = registroEntradaEjb.getByOficinaEstado(oficinaActiva.getId(), RegwebConstantes.ESTADO_PENDIENTE, RegwebConstantes.REGISTROS_PANTALLA_INICIO);
 
             /*OFICIOS PENDIENTES DE LLEGADA*/
             // Buscamos los Organismos en los que la OficinaActiva puede registrar
@@ -211,8 +211,8 @@ public class ComunController extends BaseController {
             organismos.addAll(relacionOrganizativaOfiLocalEjb.getOrganismosByOficina(oficinaActiva.getId()));
             List<OficioRemision> oficiosPendientesLlegada = oficioRemisionEjb.oficiosPendientesLlegada(organismos);
 
-            mav.addObject("pendientesVisar", pendientesVisar.size());
-            mav.addObject("pendientes", pendientes.size());
+            //mav.addObject("pendientesVisar", pendientesVisar.size());
+           // mav.addObject("pendientes", pendientes.size());
             mav.addObject("oficiosPendientesLlegada", oficiosPendientesLlegada);
         }
 

@@ -74,9 +74,9 @@
                                                 <tr>
                                                     <td>${registroEntrada.numeroRegistroFormateado}</td>
                                                     <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
-                                                    <td>${registroEntrada.libro.nombre}</td>
-                                                    <td>${registroEntrada.usuario.usuario.identificador}</td>
-                                                    <td>${registroEntrada.registroDetalle.extracto}</td>
+                                                    <td>${registroEntrada.libro}</td>
+                                                    <td>${registroEntrada.usuario}</td>
+                                                    <td>${registroEntrada.extracto}</td>
                                                     <td class="center">
                                                         <a class="btn btn-info btn-sm" href="<c:url value="/registroEntrada/${registroEntrada.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
                                                     </td>
@@ -127,9 +127,9 @@
                                                 <tr>
                                                     <td>${registroSalida.numeroRegistroFormateado}</td>
                                                     <td><fmt:formatDate value="${registroSalida.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
-                                                    <td>${registroSalida.libro.nombre}</td>
-                                                    <td>${registroSalida.usuario.usuario.identificador}</td>
-                                                    <td>${registroSalida.registroDetalle.extracto}</td>
+                                                    <td>${registroSalida.libro}</td>
+                                                    <td>${registroSalida.usuario}</td>
+                                                    <td>${registroSalida.extracto}</td>
                                                     <td class="center">
                                                         <a class="btn btn-info btn-sm" href="<c:url value="/registroSalida/${registroSalida.id}/detalle"/>" title="<spring:message code="registroSalida.detalle"/>"><span class="fa fa-eye"></span></a>
                                                     </td>
@@ -180,9 +180,9 @@
                                                 <tr>
                                                     <td>${registroEntrada.numeroRegistroFormateado}</td>
                                                     <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy"/></td>
-                                                    <td>${registroEntrada.libro.nombre}</td>
-                                                    <td>${registroEntrada.usuario.usuario.identificador}</td>
-                                                    <td>${registroEntrada.registroDetalle.extracto}</td>
+                                                    <td>${registroEntrada.libro}</td>
+                                                    <td>${registroEntrada.usuario}</td>
+                                                    <td>${registroEntrada.extracto}</td>
                                                     <td class="center">
                                                         <a class="btn btn-info btn-sm" href="<c:url value="/registroEntrada/${registroEntrada.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
                                                     </td>
@@ -285,9 +285,9 @@
                                                 <tr>
                                                     <td>${registroEntrada.numeroRegistroFormateado}</td>
                                                     <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy"/></td>
-                                                    <td>${registroEntrada.libro.nombre}</td>
-                                                    <td>${registroEntrada.usuario.usuario.identificador}</td>
-                                                    <td>${registroEntrada.registroDetalle.reserva}</td>
+                                                    <td>${registroEntrada.libro}</td>
+                                                    <td>${registroEntrada.usuario}</td>
+                                                    <td>${registroEntrada.extracto}</td>
                                                     <td class="center">
                                                         <a class="btn btn-info btn-sm" href="<c:url value="/registroEntrada/${registroEntrada.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
                                                     </td>

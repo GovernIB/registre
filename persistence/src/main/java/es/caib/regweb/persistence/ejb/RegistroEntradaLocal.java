@@ -4,6 +4,7 @@ import es.caib.regweb.model.Entidad;
 import es.caib.regweb.model.Libro;
 import es.caib.regweb.model.RegistroEntrada;
 import es.caib.regweb.model.UsuarioEntidad;
+import es.caib.regweb.model.utils.RegistroBasico;
 import es.caib.regweb.persistence.utils.OficiosRemisionOrganismo;
 import es.caib.regweb.persistence.utils.Paginacion;
 
@@ -196,7 +197,7 @@ public interface RegistroEntradaLocal extends BaseEjb<RegistroEntrada, Long> {
      * @return
      * @throws Exception
      */
-    public List<RegistroEntrada> getByOficinaEstado(Long idOficinaActiva, Long idEstado, Integer total) throws Exception;
+    public List<RegistroBasico> getByOficinaEstado(Long idOficinaActiva, Long idEstado, Integer total) throws Exception;
 
     /**
      * Busca los Registros de Entrada de un listado de Libros en función de su estado.
@@ -205,7 +206,7 @@ public interface RegistroEntradaLocal extends BaseEjb<RegistroEntrada, Long> {
      * @return
      * @throws Exception
      */
-    public List<RegistroEntrada> getByLibrosEstado(List<Libro> libros, Long idEstado) throws Exception;
+    public List<RegistroBasico> getByLibrosEstado(List<Libro> libros, Long idEstado) throws Exception;
 
     /**
      * Cambia el estado de un RegistroEntrada
@@ -255,7 +256,7 @@ public interface RegistroEntradaLocal extends BaseEjb<RegistroEntrada, Long> {
      * @return
      * @throws Exception
      */
-    public List<RegistroEntrada> getUltimosRegistros(Long idOficina, Integer total) throws Exception;
+    public List<RegistroBasico> getUltimosRegistros(Long idOficina, Integer total) throws Exception;
 
     /**
      * Obtiene el RegistroEntrada a partir de su numero de registro formateado

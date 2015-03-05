@@ -1,6 +1,7 @@
 package es.caib.regweb.webapp.controller;
 
 import es.caib.regweb.model.*;
+import es.caib.regweb.model.utils.RegistroBasico;
 import es.caib.regweb.persistence.ejb.*;
 import es.caib.regweb.persistence.utils.Paginacion;
 import es.caib.regweb.utils.RegwebConstantes;
@@ -63,8 +64,8 @@ public class InicioController extends BaseController{
             List<Libro> librosAdministrados = getLibrosAdministrados(request);
 
             /* Últimos Registros de entrada y salida */
-            List<RegistroEntrada> registroEntradas = registroEntradaEjb.getUltimosRegistros(oficinaActiva.getId(), RegwebConstantes.REGISTROS_PANTALLA_INICIO);
-            List<RegistroSalida> registroSalidas = registroSalidaEjb.getUltimosRegistros(oficinaActiva.getId(), RegwebConstantes.REGISTROS_PANTALLA_INICIO);
+            List<RegistroBasico> registroEntradas = registroEntradaEjb.getUltimosRegistros(oficinaActiva.getId(), RegwebConstantes.REGISTROS_PANTALLA_INICIO);
+            List<RegistroBasico> registroSalidas = registroSalidaEjb.getUltimosRegistros(oficinaActiva.getId(), RegwebConstantes.REGISTROS_PANTALLA_INICIO);
             model.addAttribute("registroEntradas", registroEntradas);
             model.addAttribute("registroSalidas", registroSalidas);
 
@@ -79,18 +80,14 @@ public class InicioController extends BaseController{
             lopdEjb.insertarRegistrosSalida(paginacionSalida, usuarioEntidad.getId());
 
 
-
-
             /*Registros Pendientes de Visar y con Reserva de Numero*/
             if(librosAdministrados!= null && librosAdministrados.size() > 0){
-                List<RegistroEntrada> pendientesVisar = registroEntradaEjb.getByLibrosEstado(librosAdministrados, RegwebConstantes.ESTADO_PENDIENTE_VISAR);
-                List<RegistroEntrada> pendientes = registroEntradaEjb.getByOficinaEstado(oficinaActiva.getId(), RegwebConstantes.ESTADO_PENDIENTE, RegwebConstantes.REGISTROS_PANTALLA_INICIO);
+                List<RegistroBasico> pendientesVisar = registroEntradaEjb.getByLibrosEstado(librosAdministrados, RegwebConstantes.ESTADO_PENDIENTE_VISAR);
+                List<RegistroBasico> pendientes = registroEntradaEjb.getByOficinaEstado(oficinaActiva.getId(), RegwebConstantes.ESTADO_PENDIENTE, RegwebConstantes.REGISTROS_PANTALLA_INICIO);
 
                 model.addAttribute("pendientesVisar", pendientesVisar);
                 model.addAttribute("pendientes", pendientes);
-
             }
-
 
             /* OFICIOS PENDIENTES DE REMISIÓN */
             // Obtenemos los Libros donde el Usuario puede Registrar de la Oficina Activa

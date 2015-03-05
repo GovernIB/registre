@@ -27,7 +27,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Fundació BIT.
@@ -54,7 +53,6 @@ public class RegistroEntradaListController extends BaseController {
     
     @EJB(mappedName = "regweb/TrazabilidadEJB/local")
     public TrazabilidadLocal trazabilidadEjb;
-    
    
     @EJB(mappedName = "regweb/ArchivoEJB/local")
     public ArchivoLocal archivoEjb;
@@ -178,6 +176,7 @@ public class RegistroEntradaListController extends BaseController {
 
         ModeloRecibo modeloRecibo = new ModeloRecibo();
         model.addAttribute("modeloRecibo", modeloRecibo);
+        model.addAttribute("modelosRecibo", modeloReciboEjb.getByEntidad(getEntidadActiva(request).getId()));
 
         // Permisos
         model.addAttribute("isAdministradorLibro", permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(),registro.getLibro().getId()));
@@ -199,9 +198,16 @@ public class RegistroEntradaListController extends BaseController {
             model.addAttribute("tiposDocumento", RegwebConstantes.TIPOS_DOCUMENTOID);
             model.addAttribute("nivelesAdministracion",catNivelAdministracionEjb.getAll());
             model.addAttribute("comunidadesAutonomas",catComunidadAutonomaEjb.getAll());
+            model.addAttribute("organismosOficinaActiva",organismoEjb.getByOficinaActiva(getOficinaActiva(request).getId()));
         }
         // Anexos
         model.addAttribute("anexos", anexoEjb.getByRegistroEntrada(idRegistro));
+        model.addAttribute("tiposDocumental", tipoDocumentalEjb.getByEntidad(getEntidadActiva(request).getId()));
+        model.addAttribute("tiposDocumentoAnexo", RegwebConstantes.TIPOS_DOCUMENTO);
+        model.addAttribute("tiposFirma", RegwebConstantes.TIPOS_FIRMA);
+        model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
+
+        // Historicos
         model.addAttribute("historicos", historicoRegistroEntradaEjb.getByRegistroEntrada(idRegistro));
 
         // Trazabilidad
@@ -428,25 +434,6 @@ public class RegistroEntradaListController extends BaseController {
     }
 
 
-
-    /**
-     * Obtenemos los Libros de los Organismos a los que la OficinaActiva da servicio y en los que el Usuario tiene permisos
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    @ModelAttribute("libros")
-    public List<Libro> libros(HttpServletRequest request) throws Exception {
-
-        return getLibrosConsultaEntradas(request);
-    }
-
-
-    @ModelAttribute("organismosOficinaActiva")
-    public Set<Organismo> organismosOficinaActiva(HttpServletRequest request) throws Exception {
-      return organismoEjb.getByOficinaActiva(getOficinaActiva(request).getId());
-    }
-
     @ModelAttribute("estados")
     public Long[] estados(HttpServletRequest request) throws Exception {
         if(getEntidadActiva(request).getSir()){
@@ -455,32 +442,6 @@ public class RegistroEntradaListController extends BaseController {
             return RegwebConstantes.ESTADOS_REGISTRO;
         }
     }
-
-    @ModelAttribute("modelosRecibo")
-    public List<ModeloRecibo> modelosRecibo(HttpServletRequest request) throws Exception {
-        return modeloReciboEjb.getByEntidad(getEntidadActiva(request).getId());
-    }
-
-    @ModelAttribute("tiposDocumental")
-    public List<TipoDocumental> tiposDocumental(HttpServletRequest request) throws Exception {
-        return tipoDocumentalEjb.getByEntidad(getEntidadActiva(request).getId());
-    }
-
-    @ModelAttribute("tiposDocumentoAnexo")
-    public Long[]tiposDocumento(HttpServletRequest request) throws Exception {
-        return RegwebConstantes.TIPOS_DOCUMENTO;
-    }
-
-    @ModelAttribute("tiposFirma")
-    public Long[] tiposFirma(HttpServletRequest request) throws Exception {
-      return RegwebConstantes.TIPOS_FIRMA;
-    }
-
-    @ModelAttribute("tiposValidezDocumento")
-    public Long[] tiposValidezDocumento(HttpServletRequest request) throws Exception {
-      return RegwebConstantes.TIPOS_VALIDEZDOCUMENTO;
-    }
-
 
 
     @InitBinder("registroEntradaBusqueda")

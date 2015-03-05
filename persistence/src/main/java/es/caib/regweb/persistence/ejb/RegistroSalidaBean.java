@@ -1,6 +1,7 @@
 package es.caib.regweb.persistence.ejb;
 
 import es.caib.regweb.model.*;
+import es.caib.regweb.model.utils.RegistroBasico;
 import es.caib.regweb.persistence.utils.DataBaseUtils;
 import es.caib.regweb.persistence.utils.NumeroRegistro;
 import es.caib.regweb.persistence.utils.Paginacion;
@@ -435,19 +436,20 @@ public class RegistroSalidaBean extends BaseEjbJPA<RegistroSalida, Long> impleme
         merge(registroSalida);
     }
 
-    public List<RegistroSalida> getUltimosRegistros(Long idOficina, Integer total) throws Exception{
+    public List<RegistroBasico> getUltimosRegistros(Long idOficina, Integer total) throws Exception{
 
         Query q;
 
-        q = em.createQuery("Select registroSalida from RegistroSalida as registroSalida where registroSalida.oficina.id = :idOficina " +
-                "and registroSalida.estado = :idEstadoRegistro " +
-                "order by registroSalida.fecha desc");
+        q = em.createQuery("Select re.id, re.numeroRegistroFormateado, re.fecha, re.libro.nombre, re.usuario.usuario.identificador, re.registroDetalle.extracto " +
+                "from RegistroSalida as re where re.oficina.id = :idOficina " +
+                "and re.estado = :idEstadoRegistro " +
+                "order by re.fecha desc");
 
         q.setMaxResults(total);
         q.setParameter("idOficina", idOficina);
         q.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
 
-        return  q.getResultList();
+        return  getRegistroBasicoList(q.getResultList());
     }
 
     @Override
@@ -481,6 +483,25 @@ public class RegistroSalidaBean extends BaseEjbJPA<RegistroSalida, Long> impleme
         historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(old,usuarioEntidad,RegwebConstantes.TIPO_MODIF_ESTADO,false);
 
 
+    }
+
+    /**
+     * Convierte los resultados de una query en una lista de {@link es.caib.regweb.model.utils.RegistroBasico}
+     * @param result
+     * @return
+     * @throws Exception
+     */
+    private List<RegistroBasico> getRegistroBasicoList(List<Object[]> result) throws Exception{
+
+        List<RegistroBasico> registros = new ArrayList<RegistroBasico>();
+
+        for (Object[] object : result){
+            RegistroBasico registroBasico = new RegistroBasico((Long)object[0],(String)object[1],(Date)object[2],(String)object[3],(String)object[4],(String)object[5]);
+
+            registros.add(registroBasico);
+        }
+
+        return  registros;
     }
 
 }
