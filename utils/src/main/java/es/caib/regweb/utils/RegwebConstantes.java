@@ -211,12 +211,22 @@ public interface RegwebConstantes {
     public static final Long ESTADO_ANULADO =  8L;
     
     
-    public static final Long[] ESTADOS_REGISTRO = {
-        ESTADO_VALIDO, ESTADO_PENDIENTE,
+    public static final Long[] ESTADOS_REGISTRO_SIR = {
+        ESTADO_VALIDO,
+        ESTADO_PENDIENTE,
         ESTADO_PENDIENTE_VISAR, 
         ESTADO_OFICIO_EXTERNO,
         ESTADO_OFICIO_INTERNO,
         ESTADO_ENVIADO,
+        ESTADO_TRAMITADO,
+        ESTADO_ANULADO };
+
+    public static final Long[] ESTADOS_REGISTRO = {
+        ESTADO_VALIDO,
+        ESTADO_PENDIENTE,
+        ESTADO_PENDIENTE_VISAR,
+        ESTADO_OFICIO_EXTERNO,
+        ESTADO_OFICIO_INTERNO,
         ESTADO_TRAMITADO,
         ESTADO_ANULADO };
     

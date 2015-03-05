@@ -371,8 +371,12 @@ public class RegistroSalidaListController extends BaseController {
     }
 
     @ModelAttribute("estados")
-    public Long[] modelosRecibo() throws Exception {
-        return RegwebConstantes.ESTADOS_REGISTRO;
+    public Long[] estados(HttpServletRequest request) throws Exception {
+        if(getEntidadActiva(request).getSir()){
+            return RegwebConstantes.ESTADOS_REGISTRO_SIR;
+        }else {
+            return RegwebConstantes.ESTADOS_REGISTRO;
+        }
     }
 
     @InitBinder("registroSalidaBusqueda")
