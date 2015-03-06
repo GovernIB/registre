@@ -72,7 +72,7 @@
                    <div class="panel panel-info">
 
                        <div class="panel-heading">
-                           <h3 class="panel-title"><i class="fa fa-pencil-square"></i> <strong>Dades obligatòries</strong></h3>
+                           <h3 class="panel-title"><i class="fa fa-pencil-square"></i> <strong><spring:message code="registro.datos.obligatorios"/></strong></h3>
                        </div>
 
                        <div class="panel-body">
@@ -185,7 +185,7 @@
                    <div class="panel panel-info">
 
                        <div class="panel-heading">
-                           <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong>Dades opcionals</strong></h3>
+                           <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong><spring:message code="registro.datos.opcionales"/></strong></h3>
                        </div>
 
                        <div class="panel-body">
@@ -353,6 +353,14 @@
 <script type="text/javascript">
     var urlObtenerAnexo = '<c:url value="/anexo/obtenerAnexo"/>';
     var urlObtenerRepro = '<c:url value="/repro/obtenerRepro"/>';
+</script>
+
+
+<%-- traduccions para busquedaorganismo.js--%>
+<script type="text/javascript">
+  var trads = new Array();
+  trads['organismo.denominacion'] = "<spring:message code='organismo.denominacion' javaScriptEscape='true' />";
+  trads['regweb.acciones'] = "<spring:message code='regweb.acciones' javaScriptEscape='true' />";
 </script>
 
 <script type="text/javascript" src="<c:url value="/js/busquedaorganismo.js"/>"></script>

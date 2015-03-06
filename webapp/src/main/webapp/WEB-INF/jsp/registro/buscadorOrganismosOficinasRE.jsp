@@ -75,7 +75,7 @@ que se le indica -->
             <img  src="<c:url value="/img/712.GIF"/>" width="20" height="20"/>
           </div>
 
-          <input type="button" id="buscarorganimos${param.tipo}"  onclick="organismoBusqueda('${param.tipo}','<%=Configuracio.getDir3CaibServer()%>','${param.idRegistroDetalle}', '${pageContext.response.locale}')" class="btn btn-warning btn-sm" title="<spring:message code="regweb.buscar"/>" value="<spring:message code="regweb.buscar"/>" />
+          <input type="button" id="buscarorganimos${param.tipo}"  onclick="organismoBusqueda('${param.tipo}','<%=Configuracio.getDir3CaibServer()%>','${param.idRegistroDetalle}')" class="btn btn-warning btn-sm" title="<spring:message code="regweb.buscar"/>" value="<spring:message code="regweb.buscar"/>" />
 
 
           <!-- Mostrar llistat de la busqueda-->

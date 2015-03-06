@@ -37,12 +37,22 @@ public class RegWebRegistroSalidaTest extends RegWebTestUtils{
         Assert.assertEquals(3, registroSalidaApi.getVersionWs());
     }
 
-    //@Test
+    @Test
     public void obtenerRegistroSalida() {
 
         try {
-            RegistroSalidaWs registroSalidaWs = registroSalidaApi.obtenerRegistroSalida("ADMP-S-1/2014", "earrivi","A04006741");
+            RegistroSalidaWs registroSalidaWs = registroSalidaApi.obtenerRegistroSalida("SACO-S-3/2015", "mgonzalez","A04006741");
             System.out.printf("Origen: " + registroSalidaWs.getOrigen());
+
+            for (InteresadoWs interesadoWs : registroSalidaWs.getInteresados()) {
+                System.out.println(interesadoWs.getInteresado().getNombre() + " " + interesadoWs.getInteresado().getApellido1()+ " " + interesadoWs.getInteresado().getApellido2());
+
+            }
+
+            for (AnexoWs anexoWs : registroSalidaWs.getAnexos()) {
+                System.out.println(anexoWs.getTitulo() + " " + anexoWs.getTipoDocumental());
+
+            }
 
         } catch (WsI18NException e) {
             e.printStackTrace();
@@ -66,7 +76,7 @@ public class RegWebRegistroSalidaTest extends RegWebTestUtils{
         }
     }
 
-    @Test
+    //@Test
     public void crearRegistroSalida() {
 
         for(int i=0;i<10;i++){

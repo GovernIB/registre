@@ -8,7 +8,7 @@
  @param tipoOrganismo indica desde donde se realiza la búsqueda para poder asignar
  los resultados al select que corresponde.
  */
-function organismoBusqueda(tipoOrganismo, urlServidor,idRegistroDetalle, idioma){
+function organismoBusqueda(tipoOrganismo, urlServidor,idRegistroDetalle){
 
       // obtenemos los valores del formulario para realizar la búsqueda.
       var denominacion = $('#denominacion'+tipoOrganismo).val();
@@ -60,11 +60,8 @@ function organismoBusqueda(tipoOrganismo, urlServidor,idRegistroDetalle, idioma)
       var table = $('<table id="'+idTablaResultados+'"></table>').addClass('paginated table table-bordered table-hover table-striped tablesorter ');
       table.append('<colgroup><col><col width="50"></colgroup>');
 
-      var trad = {
-        ca: {denom: "Denominació", accio: "Accions"},
-        es: {denom: "Denominación",accio: "Acciones"}
-      };
-      table.append('<thead><tr><th>'+trad[idioma].denom+'</th><th>'+trad[idioma].accio+'</th></tr></thead><tbody></tbody>');
+
+      table.append('<thead><tr><th>'+trads['organismo.denominacion']+'</th><th>'+trads['regweb.acciones']+'</th></tr></thead><tbody></tbody>');
 
       //Mostram la imatge de reload
       $('#reloadorg'+tipoOrganismo).show();

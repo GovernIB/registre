@@ -4,6 +4,7 @@ import es.caib.regweb.model.*;
 import es.caib.regweb.persistence.ejb.CodigoAsuntoLocal;
 import es.caib.regweb.persistence.ejb.TipoAsuntoLocal;
 import es.caib.regweb.utils.RegwebConstantes;
+import es.caib.regweb.ws.model.AnexoWs;
 import es.caib.regweb.ws.model.InteresadoWs;
 import es.caib.regweb.ws.model.RegistroSalidaWs;
 import es.caib.regweb.ws.v3.impl.CommonConverter;
@@ -124,6 +125,13 @@ public class RegistroSalidaConverter extends CommonConverter {
             List<InteresadoWs> interesadosWs = procesarInteresadosWs(registroSalida.getRegistroDetalle().getInteresados());
 
             registroWs.setInteresados(interesadosWs);
+        }
+
+         //Interesados
+        if(registroSalida.getRegistroDetalle().getAnexos() != null){
+            List<AnexoWs> anexosWs = procesarAnexosWs(registroSalida.getRegistroDetalle().getAnexos());
+
+            registroWs.setAnexos(anexosWs);
         }
         
         // Creamos el RegistroSalidaWs

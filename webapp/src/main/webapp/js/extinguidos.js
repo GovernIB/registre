@@ -2,7 +2,7 @@
  * Función que envia los datos del formulario de un organismo extinguido para procesarlo
  * @param extinguido id del organismo extinguido
  */
-function procesarExtinguido(extinguido,idioma) {
+function procesarExtinguido(extinguido) {
 
     var url = $("#extinguidoForm"+extinguido).attr("action");
     var total =  $('#total'+extinguido).val(); // valor total de libros
@@ -67,7 +67,7 @@ function mostrarMensaje(idPanel, mensaje){
     // El html que se coge es el del resumen de los organismos procesados automaticamente
     // a este código se añadirá la nueva información a mostrar en una tabla
     var html=$("#resumen").html();
-    html +=  trad[idioma].titol+" <strong>"+extinguidoNombre+"</strong>"
+    html +=  trads['organismo.extinguido']+" <strong>"+extinguidoNombre+"</strong>"
    // html +=  "Organisme Extingit: <strong>"+extinguidoNombre+"</strong>"
     html += "<table class='table table-bordered table-hover table-striped'  id=\"procesado"+extinguidoId +"\">";
     html += '<colgroup>';
@@ -76,8 +76,8 @@ function mostrarMensaje(idPanel, mensaje){
     html += '</colgroup>';
     html += '<thead>';
     html += '<tr>';
-    html += '<th>'+trad[idioma].llibre+'</th>';
-    html += '<th>'+trad[idioma].orgasi+' </th>';
+    html += '<th>'+trads['libro.libro']+'</th>';
+    html += '<th>'+trads['organismo.asignado']+' </th>';
     html += '</tr>';
     html += '</thead>';
     html += '<tbody></tbody></table>';

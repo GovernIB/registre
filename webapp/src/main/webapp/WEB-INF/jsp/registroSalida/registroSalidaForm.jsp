@@ -72,7 +72,7 @@
             <div class="panel panel-danger">
 
                 <div class="panel-heading">
-                    <h3 class="panel-title"><i class="fa fa-pencil-square"></i> <strong>Dades obligatòries</strong></h3>
+                    <h3 class="panel-title"><i class="fa fa-pencil-square"></i> <strong><spring:message code="registro.datos.obligatorios"/></strong></h3>
                 </div>
 
                 <div class="panel-body">
@@ -184,7 +184,7 @@
             <div class="panel panel-danger">
 
                 <div class="panel-heading">
-                    <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong>Dades opcionals</strong></h3>
+                    <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong><spring:message code="registro.datos.opcionales"/></strong></h3>
                 </div>
 
                 <div class="panel-body">
@@ -355,7 +355,7 @@
     var urlObtenerRepro = '<c:url value="/repro/obtenerRepro"/>';
 </script>
 
-<script type="text/javascript" src="<c:url value="/js/busquedaorganismo.js"/>"></script>
+<%--<script type="text/javascript" src="<c:url value="/js/busquedaorganismo.js"/>"></script>--%>
 <script type="text/javascript" src="<c:url value="/js/interesados.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/representantes.js"/>"></script>
 

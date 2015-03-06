@@ -41,11 +41,16 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils{
     public void obtenerRegistroEntrada() {
 
         try {
-            RegistroEntradaWs registroEntradaWs = registroEntradaApi.obtenerRegistroEntrada("ADM-E-1/2015", "earrivi","A04006741");
+            RegistroEntradaWs registroEntradaWs = registroEntradaApi.obtenerRegistroEntrada("SACO-E-1/2015", "mgonzalez","A04006741");
             System.out.printf("Destino: " + registroEntradaWs.getDestino());
 
             for (InteresadoWs interesadoWs : registroEntradaWs.getInteresados()) {
                 System.out.println(interesadoWs.getInteresado().getNombre() + " " + interesadoWs.getInteresado().getApellido1()+ " " + interesadoWs.getInteresado().getApellido2());
+
+            }
+
+            for (AnexoWs anexoWs : registroEntradaWs.getAnexos()) {
+                System.out.println(anexoWs.getTitulo() + " " + anexoWs.getTipoDocumental());
 
             }
 

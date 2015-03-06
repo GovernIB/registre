@@ -25,7 +25,9 @@ public class AnexoWs {
     private Long tamanoFicheroAnexado;
     private String tipoMIMEFicheroAnexado;
     private String tipoDocumental;
+    // TODO Marilen Revisar validezDocumento porque no es un Long
     private String validezDocumento;
+    // TODO Marilen Revisar tipoDocumento porque no es un Long
     private String tipoDocumento;
     private String observaciones;
     private Integer origenCiudadanoAdmin;

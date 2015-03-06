@@ -468,8 +468,17 @@
 
 
 <c:import url="../modulos/pie.jsp"/>
+<%-- traduccions para anexo.js--%>
+<script type="text/javascript">
+  var trads = new Array();
+  trads['anexo.nuevo'] = "<spring:message code='anexo.nuevo' javaScriptEscape='true' />";
+  trads['anexo.editar'] = "<spring:message code='anexo.editar' javaScriptEscape='true' />";
+  trads['anexo.titulo'] = "<spring:message code='anexo.titulo' javaScriptEscape='true' />";
+  trads['anexo.tipusdoc'] = "<spring:message code='anexo.tipoDocumento' javaScriptEscape='true' />";
+  trads['regweb.acciones'] = "<spring:message code='regweb.acciones' javaScriptEscape='true' />";
+</script>
 
-<script type="text/javascript" src="<c:url value="/js/busquedaorganismo.js"/>"></script>
+<%--<script type="text/javascript" src="<c:url value="/js/busquedaorganismo.js"/>"></script>--%>
 <script type="text/javascript" src="<c:url value="/js/interesados.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/representantes.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/sello.js"/>"></script>

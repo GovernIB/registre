@@ -121,7 +121,7 @@
 
                         <div class="btn-group">
                             <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
-                                Entrades <span class="caret"></span>
+                                <spring:message code="menu.entradas"/> <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
                                 <li class="submenu-complet"><a href="<c:url value="/registroEntrada/new"/>"><spring:message code="registroEntrada.registroEntrada"/></a></li>
@@ -145,7 +145,7 @@
 
                         <div class="btn-group">
                             <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">
-                                Sortides <span class="caret"></span>
+                                <spring:message code="menu.salidas"/> <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
                                 <li class="submenu-complet"><a href="<c:url value="/registroSalida/new"/>"><spring:message code="registroSalida.registroSalida"/></a></li>
@@ -156,7 +156,7 @@
 
                         <div class="btn-group">
                             <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown">
-                                Administració <span class="caret"></span>
+                               <spring:message code="menu.administracion"/> <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
                                 <c:if test="${entidadActiva != null}">

@@ -3,12 +3,13 @@ package es.caib.regweb.ws.v3.impl;
 import es.caib.regweb.model.*;
 import es.caib.regweb.persistence.ejb.*;
 import es.caib.regweb.utils.RegwebConstantes;
-import es.caib.regweb.ws.model.CodigoAsuntoWs;
-import es.caib.regweb.ws.model.LibroWs;
-import es.caib.regweb.ws.model.OrganismoWs;
-import es.caib.regweb.ws.model.TipoAsuntoWs;
+import es.caib.regweb.ws.converter.AnexoConverter;
+import es.caib.regweb.ws.model.*;
 
 import org.fundaciobit.genapp.common.i18n.I18NException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -197,6 +198,26 @@ public class CommonConverter {
     return (tValDocCodigoSicres == null )?null : RegwebConstantes.TIPOVALIDEZDOCUMENTO_BY_CODIGO_SICRES.get(tValDocCodigoSicres);
 
   }
+
+   /**
+   *
+   * @param anexos
+   * @return
+   * @throws Exception
+   */
+   public static List<AnexoWs> procesarAnexosWs(List<Anexo> anexos) throws Exception{
+
+      List<AnexoWs> anexosWs = new ArrayList<AnexoWs>();
+
+      for (Anexo anexo : anexos) {
+
+          AnexoWs anexoWs =  AnexoConverter.getAnexoWs(anexo);
+
+          anexosWs.add(anexoWs);
+      }
+
+      return anexosWs;
+   }
 
 
 }

@@ -55,7 +55,7 @@
                                                   </div>
                                             </c:forEach>
                                             <div class="form-group col-xs-6">
-                                                <input type="button" onclick="procesarExtinguido('${extinguido.id}','${pageContext.response.locale}')" title="<spring:message code="regweb.procesar"/>" value="<spring:message code="regweb.procesar"/>" class="btn btn-warning btn-sm">
+                                                <input type="button" onclick="procesarExtinguido('${extinguido.id}')" title="<spring:message code="regweb.procesar"/>" value="<spring:message code="regweb.procesar"/>" class="btn btn-warning btn-sm">
                                             </div>
                                       </form>
                                    </div>
@@ -129,6 +129,14 @@
 
 </div>
 <c:import url="../modulos/pie.jsp"/>
+<%-- traduccions para extinguidos.js--%>
+<script type="text/javascript">
+  var trads = new Array();
+  trads['organismo.extinguido'] = "<spring:message code='organismo.extinguido' javaScriptEscape='true' />";
+  trads['libro.libro'] = "<spring:message code='libro.libro' javaScriptEscape='true' />";
+  trads['organismo.asignado'] = "<spring:message code='organismo.asignado' javaScriptEscape='true' />";
+</script>
+
 <script type="text/javascript" src="<c:url value="/js/extinguidos.js"/>"></script>
 </body>
 </html>

@@ -4,6 +4,7 @@ import es.caib.regweb.model.*;
 import es.caib.regweb.persistence.ejb.CodigoAsuntoLocal;
 import es.caib.regweb.persistence.ejb.TipoAsuntoLocal;
 import es.caib.regweb.utils.RegwebConstantes;
+import es.caib.regweb.ws.model.AnexoWs;
 import es.caib.regweb.ws.model.InteresadoWs;
 import es.caib.regweb.ws.model.RegistroEntradaWs;
 import es.caib.regweb.ws.v3.impl.CommonConverter;
@@ -126,7 +127,11 @@ public class RegistroEntradaConverter extends CommonConverter {
             registroWs.setInteresados(interesadosWs);
         }
 
-        //Anexos todo Marilen!
+        if(registroEntrada.getRegistroDetalle().getAnexos() != null){
+            List<AnexoWs> anexosWs = procesarAnexosWs(registroEntrada.getRegistroDetalle().getAnexos());
+
+            registroWs.setAnexos(anexosWs);
+        }
 
 
 
@@ -157,4 +162,5 @@ public class RegistroEntradaConverter extends CommonConverter {
 
         return interesadosWs;
     }
+
 }

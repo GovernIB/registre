@@ -1,3 +1,4 @@
+
 /**
  *
  * Agrupa todas las funcionalidades relacionadas con los anexos de un registro.
@@ -20,16 +21,14 @@ $(window).load(function() {
     });
 });
 
-function nuevoAnexo(idRegistro, idRegistroDetalle, tipoRegistro, idioma){
-    var trad = {
-        ca: {titulo: "Nou Annexe"},
-        es: {titulo: "Nuevo Anexo" }
-    };
+function nuevoAnexo(idRegistro, idRegistroDetalle, tipoRegistro){
+
 
     limpiarAnexo();
 
     // inicializamos la accion el titulo y el registro
-    $('#anexoTitulo').html(trad[idioma].titulo);
+    //$('#anexoTitulo').html(trad[idioma].titulo);
+    $('#anexoTitulo').html(trads['anexo.nuevo']);
     $('#accion').val('nuevo');
     parametrosAnexo(idRegistro, idRegistroDetalle, tipoRegistro);
     $('#sinfirma').prop("checked", "checked");
@@ -45,7 +44,7 @@ function nuevoAnexo(idRegistro, idRegistroDetalle, tipoRegistro, idioma){
  * el archivo en texto. Aparte en los controller trabajan con diferentes clases de request
  * que no he podido utilizar conjuntamente.
  */
-function procesarAnexo( idioma) {
+function procesarAnexo( ) {
     var accion = $('#accion').val();
     var idRegistro = $('#idRegistro').val();
     var idRegistroDetalle = $('#idRegistroDetalle').val();
@@ -111,9 +110,9 @@ function procesarAnexo( idioma) {
                  if(accion == 'nuevo'){// Si es nuevo añadimos la fila a la tabla
                     if(respuesta.result.primerAnexo){
 
-                        addPrimerAnexo(respuesta.result.nombre, $('#tipoDocumento option:selected').text(), respuesta.result.id ,idRegistro, idRegistroDetalle, tipoRegistro, idioma);
+                        addPrimerAnexo(respuesta.result.nombre, $('#tipoDocumento option:selected').text(), respuesta.result.id ,idRegistro, idRegistroDetalle, tipoRegistro);
                     }else{
-                        addAnexo(respuesta.result.nombre, $('#tipoDocumento option:selected').text(), respuesta.result.id, idRegistro, idRegistroDetalle, tipoRegistro,idioma);
+                        addAnexo(respuesta.result.nombre, $('#tipoDocumento option:selected').text(), respuesta.result.id, idRegistro, idRegistroDetalle, tipoRegistro);
                     }
                  }else {// si es modif actualizamos los campos visibles de la fila.
                      actualizarTituloTipoDocumentoAnexo(respuesta.result.id, respuesta.result.nombre,$('#tipoDocumento option:selected').text() );
@@ -134,17 +133,13 @@ function procesarAnexo( idioma) {
  * Carga los datos de un Anexo en el formulario correspondiente para su posterios edición
  * @param idAnexo
  */
-function cargarAnexo(idAnexo, idRegistro, idRegistroDetalle, tipoRegistro, idioma){
+function cargarAnexo(idAnexo, idRegistro, idRegistroDetalle, tipoRegistro){
 
-    var trad = {
-        ca: {titulo: "Editar Annexe"},
-        es: {titulo: "Editar Anexo" }
-    };
     limpiarAnexo();
 
     // Marcamos la acción para Editar
     $('#accion').val('editar');
-    $('#anexoTitulo').html(trad[idioma].titulo);
+    $('#anexoTitulo').html(trads['anexo.editar']);
     //configuraciones basicas
     parametrosAnexo(idRegistro, idRegistroDetalle, tipoRegistro);
     configuracionBasicaAnexo();
@@ -260,11 +255,11 @@ function quitarErroresAnexo(){
  * @param idAnexo identificador del anexo
  * @param idRegistroDetalle identificador del anexo
  */
-function addAnexo(titulo, tipoDocumento, idAnexo, idRegistro, idRegistroDetalle, tipoRegistro,idioma){
+function addAnexo(titulo, tipoDocumento, idAnexo, idRegistro, idRegistroDetalle, tipoRegistro){
 
     var fila = "<tr id=\"anexo"+idAnexo+"\"><td>"+titulo+"</td><td>"+tipoDocumento+"</td>"+
         "<td class=\"center\">"+
-        "<a class=\"btn btn-warning btn-default btn-sm\" data-toggle=\"modal\" role=\"button\" href=\"#modalNuevoAnexo\" onclick=\"cargarAnexo('"+idAnexo+"','"+idRegistro+"','"+idRegistroDetalle+"','"+tipoRegistro+"','"+idioma+"')\" title=\"Editar\"><span class=\"fa fa-pencil\"></span></a> "+
+        "<a class=\"btn btn-warning btn-default btn-sm\" data-toggle=\"modal\" role=\"button\" href=\"#modalNuevoAnexo\" onclick=\"cargarAnexo('"+idAnexo+"','"+idRegistro+"','"+idRegistroDetalle+"','"+tipoRegistro+"')\" title=\"Editar\"><span class=\"fa fa-pencil\"></span></a> "+
         "<a class=\"btn btn-danger btn-default btn-sm\"  onclick=\"eliminarAnexo('"+idAnexo+"','"+idRegistroDetalle+"')\" href=\"javascript:void(0);\" title=\"Eliminar\"><span class=\"fa fa-eraser\"></span></a></td></tr>";
     $('#anexos').append(fila);
 }
@@ -278,13 +273,7 @@ function addAnexo(titulo, tipoDocumento, idAnexo, idRegistro, idRegistroDetalle,
  * @param idRegistroDetalle  identificador del registro detalle
  * @param tipoRegistro  tipo de registro (Entrada o Salida)
  */
-function addPrimerAnexo(titulo, tipoDocumento, idAnexo, idRegistro, idRegistroDetalle, tipoRegistro, idioma){
-
-  var trad = {
-        ca: {titol: "Títol", tipus: "Tipus Document Annexat", accio: "Accions"},
-        es: {titol: "Título", tipus: "Tipo Documento Anexado", accio: "Acciones"}
-  };
-
+function addPrimerAnexo(titulo, tipoDocumento, idAnexo, idRegistro, idRegistroDetalle, tipoRegistro){
 
     // Html de la tabla
     var html='';
@@ -296,9 +285,9 @@ function addPrimerAnexo(titulo, tipoDocumento, idAnexo, idRegistro, idRegistroDe
     html += '</colgroup>';
     html += '<thead>';
     html += '<tr>';
-    html += '<th>'+trad[idioma].titol+'</th>';
-    html += '<th>'+trad[idioma].tipus+'</th>';
-    html += '<th>'+trad[idioma].accio+'</th>';
+    html += '<th>'+trads['anexo.titulo']+'</th>';
+    html += '<th>'+trads['anexo.tipusdoc']+'</th>';
+    html += '<th>'+trads['regweb.acciones']+'</th>';
     html += '</tr>';
     html += '</thead>';
 
@@ -310,7 +299,7 @@ function addPrimerAnexo(titulo, tipoDocumento, idAnexo, idRegistro, idRegistroDe
     //Fila con los datos del anexo
     var fila = "<tr id=\"anexo"+idAnexo+"\"><td>"+titulo+"</td><td>"+tipoDocumento+"</td>"+
         "<td class=\"center\">"+
-        "<a class=\"btn btn-warning btn-default btn-sm\" data-toggle=\"modal\" role=\"button\" href=\"#modalNuevoAnexo\" onclick=\"cargarAnexo('"+idAnexo+"','"+idRegistro+"','"+idRegistroDetalle+"','"+tipoRegistro+"','"+idioma+"')\" title=\"Editar\"><span class=\"fa fa-pencil\"></span></a> "+
+        "<a class=\"btn btn-warning btn-default btn-sm\" data-toggle=\"modal\" role=\"button\" href=\"#modalNuevoAnexo\" onclick=\"cargarAnexo('"+idAnexo+"','"+idRegistro+"','"+idRegistroDetalle+"','"+tipoRegistro+"')\" title=\"Editar\"><span class=\"fa fa-pencil\"></span></a> "+
         "<a class=\"btn btn-danger btn-default btn-sm\"  onclick=\"eliminarAnexo('"+idAnexo+"','"+idRegistroDetalle+"')\" href=\"javascript:void(0);\" title=\"Eliminar\"><span class=\"fa fa-eraser\"></span></a></td></tr>";
 
 
