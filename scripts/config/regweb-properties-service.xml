@@ -3,6 +3,10 @@
     <mbean code="org.jboss.varia.property.SystemPropertiesService" name="jboss:type=Service,name=RegwebSystemProperties">
         <attribute name="Properties">
 		
+			<!-- General -->
+			es.caib.regweb.defaultlanguage=ca
+		    es.caib.regweb.iscaib=false
+		
 			<!-- Dialecte de la BBDD -->
 		    # es.caib.regweb.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 		    # es.caib.regweb.hibernate.dialect=org.hibernate.dialect.MySQLDialect      
@@ -12,8 +16,7 @@
 		    es.caib.regweb.hibernate.dialect=org.hibernate.dialect.Oracle10gDialect
 		    es.caib.regweb.hibernate.query.substitutions=true 1, false 0
 			
-			<!-- General -->
-			es.caib.regweb.defaultlanguage=ca
+
 		
             <!-- Directorio de oficinas, unidades y catálogos -->
             es.caib.regweb.dir3caib.server=http://195.57.128.134:8080/dir3caib
