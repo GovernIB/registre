@@ -177,9 +177,9 @@
                                                                 <tr>
                                                                     <td>${registroEntrada.numeroRegistroFormateado}</td>
                                                                     <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy"/></td>
-                                                                    <td>${registroEntrada.libro.nombre}</td>
+                                                                    <td><label class="no-bold" rel="ayuda" data-content="${registroEntrada.libro.nombre}" data-toggle="popover">${registroEntrada.libro.codigo}</label></td>
                                                                     <td>${registroEntrada.usuario.usuario.identificador}</td>
-                                                                    <td>${registroEntrada.oficina.denominacion}</td>
+                                                                    <td><label class="no-bold" rel="ayuda" data-content="${registroEntrada.oficina.denominacion}" data-toggle="popover">${registroEntrada.oficina.codigo}</label></td>
                                                                     <td>${(empty registroEntrada.destino)? registroEntrada.destinoExternoDenominacion : registroEntrada.destino.denominacion}</td>
                                                                     <c:if test="${registroEntrada.estado == 2}">
                                                                         <td>${registroEntrada.registroDetalle.reserva}</td>

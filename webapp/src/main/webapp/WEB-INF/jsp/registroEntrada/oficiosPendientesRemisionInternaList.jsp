@@ -142,8 +142,8 @@
                                                                             <td><form:checkbox path="registros[${indice.index}].id" value="${registroEntrada.id}"/></td>
                                                                             <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="yyyy"/> / ${registroEntrada.numeroRegistro}</td>
                                                                             <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy"/></td>
-                                                                            <td>${registroEntrada.libro.nombre}</td>
-                                                                            <td>${registroEntrada.oficina.denominacion}</td>
+                                                                            <td><label class="no-bold" rel="ayuda" data-content="${registroEntrada.libro.nombre}" data-toggle="popover">${registroEntrada.libro.codigo}</label></td>
+                                                                            <td><label class="no-bold" rel="ayuda" data-content="${registroEntrada.oficina.denominacion}" data-toggle="popover">${registroEntrada.oficina.codigo}</label></td>
                                                                             <c:if test="${registroEntrada.destino != null}">
                                                                                 <td>${registroEntrada.destino.denominacion} (${registroEntrada.destino.estado.descripcionEstadoEntidad})</td>
                                                                             </c:if>

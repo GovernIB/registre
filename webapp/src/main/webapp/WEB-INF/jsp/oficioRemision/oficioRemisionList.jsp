@@ -136,7 +136,7 @@
                                                                 <td><fmt:formatDate value="${oficioRemision.fecha}" pattern="yyyy"/> / ${oficioRemision.numeroOficio}</td>
                                                                 <td><fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy"/></td>
                                                                 <%--<td>${oficioRemision.libro.nombreCompleto}</td>--%>
-                                                                <td>${oficioRemision.oficina.denominacion}</td>
+                                                                <td><label class="no-bold" rel="ayuda" data-content="${oficioRemision.oficina.denominacion}" data-toggle="popover">${oficioRemision.oficina.codigo}</label></td>
                                                                 <td>${(empty oficioRemision.organismoDestinatario)? oficioRemision.destinoExternoDenominacion : oficioRemision.organismoDestinatario.denominacion}</td>
                                                                 <td>${fn:length(oficioRemision.registrosEntrada)}</td>
                                                                 <td>
