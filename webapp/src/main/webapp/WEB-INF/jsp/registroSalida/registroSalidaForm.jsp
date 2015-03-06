@@ -238,7 +238,7 @@
                     </div>
 
                     <div class="form-group col-xs-12">
-                        <div class="col-xs-2 pull-left etiqueta_regweb control-label">
+                        <div class="col-xs-2 pull-left etiqueta_regweb12 control-label">
                             <label for="registroDetalle.observaciones" rel="ayuda" data-content="<spring:message code="registro.ayuda.observaciones"/>" data-toggle="popover"><spring:message code="registroEntrada.observaciones"/></label>
                         </div>
                         <div class="col-xs-10">
