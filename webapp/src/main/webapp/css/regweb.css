@@ -44,6 +44,10 @@ textarea{
 	padding: 0px;
 	font-size: 13px;
 }
+.etiqueta_regweb12{
+    padding: 0px;
+    font-size: 12px;
+}
 .etiqueta_regweb_left {
     padding: 0px;
     font-size: 13px;
@@ -225,6 +229,9 @@ textarea{
     top: -2px;
     right: -11px;
     color: inherit;
+}
+.no-bold{
+    font-weight: normal;
 }
 /* FI Canvis estils generals */
 
