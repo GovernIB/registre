@@ -66,7 +66,7 @@ public class RegWebPersonasTest extends RegWebTestUtils {
       System.err.println(WsClientUtils.toString(ve));
       Assert.fail("WsValidationException no esperada");
     } catch (Exception e) {
-      System.err.println("Error desconegut: " + e.getMessage());
+      System.err.println("Error desconegut(" + e.getClass().getName() + "): " + e.getMessage());
       Assert.fail("WsValidationException no esperada");
     }
 

@@ -2,7 +2,7 @@ package es.caib.regweb.ws.v3.impl.info;
 
 import es.caib.regweb.model.*;
 import es.caib.regweb.persistence.ejb.*;
-import es.caib.regweb.utils.CompileConstants;
+
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.ws.model.CodigoAsuntoWs;
 import es.caib.regweb.ws.model.LibroWs;
@@ -42,7 +42,7 @@ import java.util.List;
 @org.apache.cxf.interceptor.InFaultInterceptors(interceptors = { "es.caib.regweb.ws.utils.RegWebInInterceptor" })
 @WebService(name = RegWebInfoWsImpl.NAME_WS, portName = RegWebInfoWsImpl.NAME_WS, serviceName = RegWebInfoWsImpl.NAME_WS
     + "Service", endpointInterface = "es.caib.regweb.ws.v3.impl.info.RegWebInfoWs")
-@WebContext(contextRoot = "/regweb/ws", urlPattern = "/v3/" + RegWebInfoWsImpl.NAME, transportGuarantee = TransportGuarantee.NONE, secureWSDLAccess = false, authMethod = CompileConstants.AUTH_METHOD)
+@WebContext(contextRoot = "/regweb/ws", urlPattern = "/v3/" + RegWebInfoWsImpl.NAME, transportGuarantee = TransportGuarantee.NONE, secureWSDLAccess = false, authMethod = "WSBASIC")
 //@Component
 public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebInfoWs {
 

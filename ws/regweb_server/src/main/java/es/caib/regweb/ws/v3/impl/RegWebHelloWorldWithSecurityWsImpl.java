@@ -13,7 +13,6 @@ import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.wsf.spi.annotation.TransportGuarantee;
 import org.jboss.wsf.spi.annotation.WebContext;
 
-import es.caib.regweb.utils.CompileConstants;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.ws.utils.AuthenticatedBaseWsImpl;
 
@@ -35,7 +34,7 @@ import javax.validation.constraints.Null;
 @WebService(name = RegWebHelloWorldWithSecurityWsImpl.NAME_WS, portName = RegWebHelloWorldWithSecurityWsImpl.NAME_WS, serviceName = RegWebHelloWorldWithSecurityWsImpl.NAME_WS
     + "Service")
 @WebContext(contextRoot = "/regweb/ws", urlPattern = "/v3/"
-    + RegWebHelloWorldWithSecurityWsImpl.NAME, transportGuarantee = TransportGuarantee.NONE, secureWSDLAccess = false, authMethod = CompileConstants.AUTH_METHOD)
+    + RegWebHelloWorldWithSecurityWsImpl.NAME, transportGuarantee = TransportGuarantee.NONE, secureWSDLAccess = false, authMethod = "WSBASIC")
 public class RegWebHelloWorldWithSecurityWsImpl extends AuthenticatedBaseWsImpl {
 
   public static final String NAME = "RegWebHelloWorldWithSecurity";

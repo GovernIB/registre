@@ -8,7 +8,6 @@ import es.caib.regweb.persistence.validator.InteresadoBeanValidator;
 import es.caib.regweb.persistence.validator.InteresadoValidator;
 import es.caib.regweb.persistence.validator.RegistroEntradaBeanValidator;
 import es.caib.regweb.persistence.validator.RegistroEntradaValidator;
-import es.caib.regweb.utils.CompileConstants;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.utils.StringUtils;
 import es.caib.regweb.ws.converter.AnexoConverter;
@@ -54,7 +53,7 @@ import java.util.List;
 @WebService(name = RegWebRegistroEntradaWsImpl.NAME_WS, portName = RegWebRegistroEntradaWsImpl.NAME_WS,
         serviceName = RegWebRegistroEntradaWsImpl.NAME_WS  + "Service",
         endpointInterface = "es.caib.regweb.ws.v3.impl.registroentrada.RegWebRegistroEntradaWs")
-@WebContext(contextRoot = "/regweb/ws", urlPattern = "/v3/" + RegWebRegistroEntradaWsImpl.NAME, transportGuarantee = TransportGuarantee.NONE, secureWSDLAccess = false, authMethod = CompileConstants.AUTH_METHOD)
+@WebContext(contextRoot = "/regweb/ws", urlPattern = "/v3/" + RegWebRegistroEntradaWsImpl.NAME, transportGuarantee = TransportGuarantee.NONE, secureWSDLAccess = false, authMethod = "WSBASIC")
 public class RegWebRegistroEntradaWsImpl extends AuthenticatedBaseWsImpl 
     implements RegWebRegistroEntradaWs {
 

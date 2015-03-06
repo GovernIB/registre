@@ -1,2 +1,2 @@
 Parametres Opcionals:
-         -Dcaib : Compila amb les opcions de seguretat per WS de la CAIB
+         clean : neteja el projecte abans de recompilar

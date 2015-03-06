@@ -9,10 +9,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 
@@ -36,13 +34,9 @@ import es.caib.regweb.logic.helper.ParametrosRegistroEntrada;
 import es.caib.regweb.logic.helper.ParametrosRegistroSalida;
 import es.caib.regweb.logic.helper.RegistroSeleccionado;
 import es.caib.regweb.model.EntradaId;
-import es.caib.regweb.model.LogEntradaLopd;
 import es.caib.regweb.model.LogEntradaLopdId;
-import es.caib.regweb.model.LogModificacionLopd;
 import es.caib.regweb.model.LogModificacionLopdId;
-import es.caib.regweb.model.LogSalidaLopd;
 import es.caib.regweb.model.LogSalidaLopdId;
-import es.caib.regweb.model.Salida;
 import es.caib.regweb.model.SalidaId;
 
 /**

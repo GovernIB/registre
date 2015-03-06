@@ -5,7 +5,7 @@ import javax.jws.WebMethod;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import es.caib.regweb.utils.CompileConstants;
+import es.caib.regweb.utils.Configuracio;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.utils.Versio;
 
@@ -28,7 +28,7 @@ public class BaseWsImpl implements RegwebConstantes {
   
   @WebMethod
   public String getVersion() {
-    return Versio.VERSIO + (CompileConstants.IS_CAIB?"-caib" :"");
+    return Versio.VERSIO + (Configuracio.isCAIB()?"-caib" :"");
   }
 
 

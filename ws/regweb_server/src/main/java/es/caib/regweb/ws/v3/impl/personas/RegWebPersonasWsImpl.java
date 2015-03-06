@@ -31,7 +31,6 @@ import es.caib.regweb.persistence.ejb.EntidadLocal;
 import es.caib.regweb.persistence.ejb.PersonaLocal;
 import es.caib.regweb.persistence.validator.PersonaBeanValidator;
 import es.caib.regweb.persistence.validator.PersonaValidator;
-import es.caib.regweb.utils.CompileConstants;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.ws.utils.AuthenticatedBaseWsImpl;
 import es.caib.regweb.ws.utils.UsuarioAplicacionCache;
@@ -51,7 +50,7 @@ import es.caib.regweb.ws.utils.UsuarioInfo;
 @WebService(name = RegWebPersonasWsImpl.NAME_WS, portName = RegWebPersonasWsImpl.NAME_WS,
     serviceName = RegWebPersonasWsImpl.NAME_WS  + "Service",
     endpointInterface = "es.caib.regweb.ws.v3.impl.personas.RegWebPersonasWs")
-@WebContext(contextRoot = "/regweb/ws", urlPattern = "/v3/" + RegWebPersonasWsImpl.NAME, transportGuarantee = TransportGuarantee.NONE, secureWSDLAccess = false, authMethod = CompileConstants.AUTH_METHOD)
+@WebContext(contextRoot = "/regweb/ws", urlPattern = "/v3/" + RegWebPersonasWsImpl.NAME, transportGuarantee = TransportGuarantee.NONE, secureWSDLAccess = false, authMethod = "WSBASIC")
 public class RegWebPersonasWsImpl  extends AuthenticatedBaseWsImpl implements RegWebPersonasWs {
 
   protected final Logger log = Logger.getLogger(getClass());

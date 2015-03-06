@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import es.caib.regweb.persistence.utils.DataBaseUtils;
 import es.caib.regweb.persistence.utils.I18NLogicUtils;
-import es.caib.regweb.utils.CompileConstants;
 import es.caib.regweb.utils.Configuracio;
 import es.caib.regweb.utils.Versio;
 
@@ -74,7 +73,7 @@ public class InitServlet extends HttpServlet {
     }
 
     // Mostrar Versió
-    String ver = Versio.VERSIO + (CompileConstants.IS_CAIB?"-caib" : "");
+    String ver = Versio.VERSIO + (Configuracio.isCAIB()?"-caib" : "");
     try {
       log.info("RegWeb Version: " + ver);
     } catch (Throwable e) {

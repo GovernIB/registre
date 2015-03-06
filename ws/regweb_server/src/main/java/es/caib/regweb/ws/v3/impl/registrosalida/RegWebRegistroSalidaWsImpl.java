@@ -8,7 +8,6 @@ import es.caib.regweb.persistence.validator.InteresadoBeanValidator;
 import es.caib.regweb.persistence.validator.InteresadoValidator;
 import es.caib.regweb.persistence.validator.RegistroSalidaBeanValidator;
 import es.caib.regweb.persistence.validator.RegistroSalidaValidator;
-import es.caib.regweb.utils.CompileConstants;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.utils.StringUtils;
 import es.caib.regweb.ws.converter.AnexoConverter;
@@ -54,7 +53,7 @@ import java.util.List;
 @WebService(name = RegWebRegistroSalidaWsImpl.NAME_WS, portName = RegWebRegistroSalidaWsImpl.NAME_WS,
         serviceName = RegWebRegistroSalidaWsImpl.NAME_WS  + "Service",
         endpointInterface = "es.caib.regweb.ws.v3.impl.registrosalida.RegWebRegistroSalidaWs")
-@WebContext(contextRoot = "/regweb/ws", urlPattern = "/v3/" + RegWebRegistroSalidaWsImpl.NAME, transportGuarantee = TransportGuarantee.NONE, secureWSDLAccess = false, authMethod = CompileConstants.AUTH_METHOD)
+@WebContext(contextRoot = "/regweb/ws", urlPattern = "/v3/" + RegWebRegistroSalidaWsImpl.NAME, transportGuarantee = TransportGuarantee.NONE, secureWSDLAccess = false, authMethod = "WSBASIC")
 public class RegWebRegistroSalidaWsImpl extends AuthenticatedBaseWsImpl implements RegWebRegistroSalidaWs {
 
     protected final Logger log = Logger.getLogger(getClass());

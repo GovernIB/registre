@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+cat help.txt
+
 env mvn $@ -DskipTests install 
 
 if [ $? == 0 ]; then

@@ -1,6 +1,5 @@
 package es.caib.regweb.utils;
 
-import es.caib.regweb.utils.CompileConstants;
 
 /**
  * 
@@ -8,11 +7,10 @@ import es.caib.regweb.utils.CompileConstants;
  * 
  */
 public class Configuracio implements RegwebConstantes {
-  
 
 
   public static boolean isCAIB() {
-    return CompileConstants.IS_CAIB;
+    return Boolean.getBoolean(REGWEB_PROPERTY_BASE + "iscaib");
   }
 
   
