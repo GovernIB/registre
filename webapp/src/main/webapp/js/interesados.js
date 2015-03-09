@@ -200,8 +200,8 @@ function addInteresadoHtml(idPersona, nombre,tipo,representante,idRegistroDetall
     var representanteButton = "<div class=\"btn-group\">"+
         "<button type=\"button\" class=\"btn btn-danger btn-sm dropdown-toggle\" data-toggle=\"dropdown\">"+representante+"<span class=\"caret\"></span></button>"+
         "<ul class=\"dropdown-menu\" role=\"menu\">"+
-        "<li><a href=\"#modalInteresado\" onclick=\"gestionarRepresentante('"+vacio+"',"+idPersona+",'"+urlObtenerInteresado+"')\">Nou representant</a></li>"+
-        "<li><a data-toggle=\"modal\" href=\"#modalBuscadorPersonasTodas\" onclick=\"busquedaRepresentantes("+idPersona+")\">Cercar representant</a></li></ul></div>";
+        "<li><a href=\"#modalInteresado\" onclick=\"gestionarRepresentante('"+vacio+"',"+idPersona+",'"+urlObtenerInteresado+"')\">"+tradsinteresado['interesado.representante.nuevo']+"</a></li>"+
+        "<li><a data-toggle=\"modal\" href=\"#modalBuscadorPersonasTodas\" onclick=\"busquedaRepresentantes("+idPersona+")\">"+tradsinteresado['interesado.representante.buscar']+"</a></li></ul></div>";
 
     var fila = "<tr id=\"persona"+idPersona+"\"><td>"+nombre+"</td><td>"+tipo+"</td><td>"+representanteButton+"</td>"+
         "<td class=\"center\">"+
@@ -227,15 +227,15 @@ function addInteresadoRepresentanteHtml(idInteresado,nombre,tipo,idRepresentante
         var representanteButton = "<div class=\"btn-group\">"+
             "<button type=\"button\" class=\"btn btn-success btn-sm dropdown-toggle\" data-toggle=\"dropdown\">Si <span class=\"caret\"></span></button>"+
             "<ul class=\"dropdown-menu\" role=\"menu\">"+
-            "<li><a href=\"#modalInteresado\" onclick=\"gestionarRepresentante("+idRepresentante+","+idInteresado+",'"+urlObtenerInteresado+"')\">Editar representant</a></li>"+
-            "<li><a href=\"javascript:void(0);\" onclick=\"eliminarRepresentante("+idRepresentante+","+idInteresado+",'"+idRegistroDetalle+"')\">Eliminar representant</a></li></ul></div>";
+            "<li><a href=\"#modalInteresado\" onclick=\"gestionarRepresentante("+idRepresentante+","+idInteresado+",'"+urlObtenerInteresado+"')\">"+tradsinteresado['interesado.representante.editar']+"</a></li>"+
+            "<li><a href=\"javascript:void(0);\" onclick=\"eliminarRepresentante("+idRepresentante+","+idInteresado+",'"+idRegistroDetalle+"')\">"+tradsinteresado['interesado.representante.eliminar']+"</a></li></ul></div>";
             //"<li><a data-toggle=\"modal\" href=\"#modalBuscadorPersonasTodas\" onclick=\"busquedaRepresentantes("+idInteresado+")\">Buscar representante</a></li></ul></div>";
     }else{
         var representanteButton = "<div class=\"btn-group\">"+
             "<button type=\"button\" class=\"btn btn-danger btn-sm dropdown-toggle\" data-toggle=\"dropdown\">No<span class=\"caret\"></span></button>"+
             "<ul class=\"dropdown-menu\" role=\"menu\">"+
-            "<li><a href=\"#modalInteresado\" onclick=\"gestionarRepresentante('"+vacio+"',"+idInteresado+",'"+urlObtenerInteresado+"')\">Nou representant</a></li>"+
-            "<li><a data-toggle=\"modal\" href=\"#modalBuscadorPersonasTodas\" onclick=\"busquedaRepresentantes("+idInteresado+")\">Cercar representant</a></li></ul></div>";
+            "<li><a href=\"#modalInteresado\" onclick=\"gestionarRepresentante('"+vacio+"',"+idInteresado+",'"+urlObtenerInteresado+"')\">"+tradsinteresado['interesado.representante.nuevo']+"</a></li>"+
+            "<li><a data-toggle=\"modal\" href=\"#modalBuscadorPersonasTodas\" onclick=\"busquedaRepresentantes("+idInteresado+")\">"+tradsinteresado['interesado.representante.buscar']+"</a></li></ul></div>";
     }
 
 
@@ -268,10 +268,10 @@ function editarInteresado(id){
     var tipoInteresado = $('input[name=tipoInteresado]:radio:checked').val();
 
     if(tipoInteresado == 2){
-        $('#interesadoTitulo').html("Editar persona física");
+        $('#interesadoTitulo').html(tradsinteresado['interesado.personafisica.editar']);
         $('#tipo').val("2");
     }else if(tipoInteresado == 3){
-        $('#interesadoTitulo').html("Editar persona jurídica");
+        $('#interesadoTitulo').html(tradsinteresado['interesado.personajuridica.editar']);
         $('#tipo').val("3");
     }
 
@@ -502,21 +502,21 @@ function buscarPersonas(tipoPersonas){
         var tipo = '2';
         var json = { "nombre" : $('#nombre'+tipoPersonas).val(), "apellido1" : $('#apellido1'+tipoPersonas).val(), "apellido2" : $('#apellido2'+tipoPersonas).val(), "documento" : $('#documento'+tipoPersonas).val(), "tipo": tipo};
 
-        tabla.append('<thead><tr><th>Nombre</th><th>Document</th><th>Accions</th></tr></thead><tbody></tbody>');
+        tabla.append('<thead><tr><th>'+tradsinteresado['regweb.nombre']+'</th><th>'+tradsinteresado['persona.documento']+'</th><th>'+tradsinteresado['regweb.acciones']+'</th></tr></thead><tbody></tbody>');
 
     }else if(tipoPersonas == 'Juridicas'){ // Personas Jurídicas
 
         var tipo = '3';
         var json = { "razonSocial" : $('#razonSocial'+tipoPersonas).val(), "documento" : $('#documento'+tipoPersonas).val(), "tipo": tipo};
 
-        tabla.append('<thead><tr><th>Razón social</th><th>Document</th><th>Accions</th></tr></thead><tbody></tbody>');
+        tabla.append('<thead><tr><th>'+tradsinteresado['persona.razonSocial']+'</th><th>'+tradsinteresado['persona.documento']+'</th><th>'+tradsinteresado['regweb.acciones']+'</th></tr></thead><tbody></tbody>');
 
     }else if(tipoPersonas == 'Todas'){ // Todas las personas Personas
 
         var tipo = '0';
         var json = { "nombre" : $('#nombre'+tipoPersonas).val(), "apellido1" : $('#apellido1'+tipoPersonas).val(), "apellido2" : $('#apellido2'+tipoPersonas).val(), "documento" : $('#documento'+tipoPersonas).val(),"razonSocial" : $('#razonSocial'+tipoPersonas).val(), "tipo": tipo};
 
-        tabla.append('<thead><tr><th>Persona</th><th>Document</th><th>Accions</th></tr></thead><tbody></tbody>');
+        tabla.append('<thead><tr><th>'+tradsinteresado['persona.persona']+'</th><th>'+tradsinteresado['persona.documento']+'</th><th>'+tradsinteresado['regweb.acciones']+'</th></tr></thead><tbody></tbody>');
     }
 
 
@@ -539,9 +539,9 @@ function buscarPersonas(tipoPersonas){
             if(total == 0){ // Si no hay resultados
 
                 if(tipoPersonas == 'Todas'){
-                    $('#resultadosBusquedaPersonas'+tipoPersonas).html("<div class=\"alert alert-warning\" style=\"text-align:left;\">No s\'han trobat resultats, tria a <a href=\"#modalInteresado\" onclick=\"gestionarRepresentante("+representado+",'','"+urlObtenerInteresado+"')\">Afegir un representant.</a></div>");
+                    $('#resultadosBusquedaPersonas'+tipoPersonas).html("<div class=\"alert alert-warning\" style=\"text-align:left;\">"+tradsinteresado['interesado.noresultados.escoge']+"<a href=\"#modalInteresado\" onclick=\"gestionarRepresentante("+representado+",'','"+urlObtenerInteresado+"')\">"+tradsinteresado['interesado.representate.anadir']+"</a></div>");
                 }else{
-                    $('#resultadosBusquedaPersonas'+tipoPersonas).html('<div class="alert alert-warning" style="text-align:left;">No s\'han trobat resultats</div>');
+                    $('#resultadosBusquedaPersonas'+tipoPersonas).html('<div class="alert alert-warning" style="text-align:left;">'+tradsinteresado['interesado.noresultados']+'</div>');
                 }
 
             }else if(total != 0){
@@ -582,7 +582,7 @@ function buscarPersonas(tipoPersonas){
 
                 // Mensaje con el total de resultados obtenidos
                 $('#resultadosBusquedaPersonas'+tipoPersonas).attr("display:block");
-                $('#resultadosBusquedaPersonas'+tipoPersonas).append('<div class="alert-grey" style="text-align:left;">Hi ha <strong>'+total+'</strong> resultats</div>');
+                $('#resultadosBusquedaPersonas'+tipoPersonas).append('<div class="alert-grey" style="text-align:left;">'+tradsinteresado['interesado.hay']+' <strong>'+total+'</strong> '+tradsinteresado['interesado.resultados']+'</div>');
                 $('#resultadosBusquedaPersonas'+tipoPersonas).append(tabla);
 
                 // Paginamos el listado

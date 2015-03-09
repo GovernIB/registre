@@ -21,14 +21,14 @@ function gestionarRepresentante(idRepresentante,idRepresentado,urlEditar){
     // Comprbamos si se trata de una Creación o una modificación
     if(idRepresentante == null || idRepresentante.length == 0){ // Nuevo Representante
         $('#accion').val('nuevo');
-        $('#interesadoTitulo').html("Nou representant");
+        $('#interesadoTitulo').html(tradsinteresado['interesado.representante.nuevo']);
         $('#tipoInteresadoSelect').show();
 
 
     }else{ // Editar Representante
         $('#eliminarRepresentante').show();
         $('#accion').val('editar');
-        $('#interesadoTitulo').html("Editar representant");
+        $('#interesadoTitulo').html(tradsinteresado['interesado.representante.editar']);
 
         var json = { "id": $('#id').val(), "tipo": $('#tipo').val(), "nombre" : $('#nombre').val(), "apellido1" : $('#apellido1').val(), "apellido2" : $('#apellido2').val(),"tipoDocumentoIdentificacion": $('#tipoDocumentoIdentificacion').val(), "documento" : $('#documento').val(),
             "pais" : $('#pais\\.id').val(),"provincia" : $('#provincia\\.id').val(), "localidad" : $('#localidad\\.id').val(), "direccion" : $('#direccion').val(), "razonSocial": $('#razonSocial').val(), "email" : $('#email').val(), "cp" : $('#cp').val(), "telefono" : $('#telefono').val(),
@@ -102,8 +102,8 @@ function addRepresentanteHtml(idRepresentante, idRepresentado,idRegistroDetalle)
     var representanteButton = "<div class=\"btn-group\">"+
         "<button type=\"button\" class=\"btn btn-success btn-sm dropdown-toggle\" data-toggle=\"dropdown\">Si <span class=\"caret\"></span></button>"+
         "<ul class=\"dropdown-menu\" role=\"menu\">"+
-        "<li><a href=\"#modalInteresado\" onclick=\"gestionarRepresentante("+idRepresentante+","+idRepresentado+",'"+urlObtenerInteresado+"')\">Editar representant</a></li>"+
-        "<li><a href=\"javascript:void(0);\" onclick=\"eliminarRepresentante("+idRepresentante+","+idRepresentado+",'"+idRegistroDetalle+"')\">Eliminar representant</a></li></ul></div>";
+        "<li><a href=\"#modalInteresado\" onclick=\"gestionarRepresentante("+idRepresentante+","+idRepresentado+",'"+urlObtenerInteresado+"')\">"+tradsinteresado['interesado.representante.editar']+"</a></li>"+
+        "<li><a href=\"javascript:void(0);\" onclick=\"eliminarRepresentante("+idRepresentante+","+idRepresentado+",'"+idRegistroDetalle+"')\">"+tradsinteresado['interesado.representante.eliminar']+"</a></li></ul></div>";
         //"<li><a data-toggle=\"modal\" href=\"#modalBuscadorPersonasTodas\" onclick=\"busquedaRepresentantes("+idRepresentado+")\">Buscar representante</a></li></ul></div>";
 
     // Añadimos a la celda la nueva información
@@ -125,8 +125,8 @@ function eliminarRepresentanteHtml(idRepresentado){
     var representanteButton = "<div class=\"btn-group\">"+
         "<button type=\"button\" class=\"btn btn-danger btn-sm dropdown-toggle\" data-toggle=\"dropdown\">No <span class=\"caret\"></span></button>"+
         "<ul class=\"dropdown-menu\" role=\"menu\">"+
-        "<li><a href=\"#modalInteresado\" onclick=\"gestionarRepresentante('"+vacio+"',"+idRepresentado+",'"+urlObtenerInteresado+"')\">Nou representant</a></li>"+
-        "<li><a data-toggle=\"modal\" href=\"#modalBuscadorPersonasTodas\" onclick=\"busquedaRepresentantes("+idRepresentado+")\">Cercar representant</a></li></ul></div>";
+        "<li><a href=\"#modalInteresado\" onclick=\"gestionarRepresentante('"+vacio+"',"+idRepresentado+",'"+urlObtenerInteresado+"')\">"+tradsinteresado['interesado.representante.nuevo']+"</a></li>"+
+        "<li><a data-toggle=\"modal\" href=\"#modalBuscadorPersonasTodas\" onclick=\"busquedaRepresentantes("+idRepresentado+")\">"+tradsinteresado['interesado.representante.buscar']+"</a></li></ul></div>";
 
     // Añadimos a la celda la nueva información
     $(elemento + ' td:nth-child(3)').html(representanteButton);
@@ -161,11 +161,11 @@ function eliminarRepresentante(idRepresentante,idRepresentado,idRegistroDetalle)
         "<div class=\"modal-content\">"+
         "<div class=\"modal-header\">" +
         "<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>" +
-        "<h4 class=\"modal-title\">Confirmar</h4>" +
+        "<h4 class=\"modal-title\">"+tradsinteresado['regweb.confirmar']+"</h4>" +
         "</div>" +
 
         "<div class=\"modal-body\">" +
-        "<p>Està segur d'eliminar el representant</p>" +
+        "<p>"+tradsinteresado['representante.eliminar']+"</p>" +
         "</div>" +
 
         "<div class=\"modal-footer\">" +
