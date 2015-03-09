@@ -22,7 +22,7 @@ public class RegWebHelloWorldWithSecurityWsServiceLocator extends org.apache.axi
     }
 
     // Use to get a proxy class for RegWebHelloWorldWithSecurityWs
-    private java.lang.String RegWebHelloWorldWithSecurityWs_address = "http://ibit157:8080/regweb/ws/v3/RegWebHelloWorldWithSecurity";
+    private java.lang.String RegWebHelloWorldWithSecurityWs_address = "http://localhost:8080/regweb/ws/v3/RegWebHelloWorldWithSecurity";
 
     public java.lang.String getRegWebHelloWorldWithSecurityWsAddress() {
         return RegWebHelloWorldWithSecurityWs_address;

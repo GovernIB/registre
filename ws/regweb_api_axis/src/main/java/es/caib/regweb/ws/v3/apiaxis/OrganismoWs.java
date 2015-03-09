@@ -106,7 +106,7 @@ public class OrganismoWs  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(OrganismoWs.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("http://info.impl.v3.ws.regweb.caib.es/", "organismoWs"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "organismoWs"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("codigo");
         elemField.setXmlName(new javax.xml.namespace.QName("", "codigo"));

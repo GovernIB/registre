@@ -136,7 +136,7 @@ public class CodigoAsuntoWs  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(CodigoAsuntoWs.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("http://info.impl.v3.ws.regweb.caib.es/", "codigoAsuntoWs"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "codigoAsuntoWs"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("codigo");
         elemField.setXmlName(new javax.xml.namespace.QName("", "codigo"));
@@ -154,7 +154,7 @@ public class CodigoAsuntoWs  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("tipoAsunto");
         elemField.setXmlName(new javax.xml.namespace.QName("", "tipoAsunto"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://info.impl.v3.ws.regweb.caib.es/", "tipoAsuntoWs"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "tipoAsuntoWs"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);

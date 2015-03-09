@@ -106,18 +106,18 @@ public class InteresadoWs  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(InteresadoWs.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("http://registroentrada.impl.v3.ws.regweb.caib.es/", "interesadoWs"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "interesadoWs"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("interesado");
         elemField.setXmlName(new javax.xml.namespace.QName("", "interesado"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://registroentrada.impl.v3.ws.regweb.caib.es/", "datosInteresadoWs"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "datosInteresadoWs"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("representante");
         elemField.setXmlName(new javax.xml.namespace.QName("", "representante"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://registroentrada.impl.v3.ws.regweb.caib.es/", "datosInteresadoWs"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "datosInteresadoWs"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);

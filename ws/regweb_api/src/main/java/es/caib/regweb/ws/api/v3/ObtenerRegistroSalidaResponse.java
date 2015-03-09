@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="return" type="{http://registrosalida.impl.v3.ws.regweb.caib.es/}registroSalidaWs" minOccurs="0"/>
+ *         &lt;element name="return" type="{http://impl.v3.ws.regweb.caib.es/}registroSalidaWs" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>

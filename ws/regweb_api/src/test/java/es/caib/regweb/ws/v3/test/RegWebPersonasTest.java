@@ -67,6 +67,7 @@ public class RegWebPersonasTest extends RegWebTestUtils {
       Assert.fail("WsValidationException no esperada");
     } catch (Exception e) {
       System.err.println("Error desconegut(" + e.getClass().getName() + "): " + e.getMessage());
+      e.printStackTrace();
       Assert.fail("WsValidationException no esperada");
     }
 
@@ -88,9 +89,10 @@ public class RegWebPersonasTest extends RegWebTestUtils {
       Assert.fail("WsValidationException no esperada");
     } catch (WsValidationException ve) {
       System.err.println(WsClientUtils.toString(ve));
-      Assert.assertEquals(3, ve.getFaultInfo().getFieldFaults().size());
+      Assert.assertEquals(1, ve.getFaultInfo().getFieldFaults().size());
     } catch (Exception e) {
       System.err.println("Error desconegut: " + e.getMessage());
+      e.printStackTrace();
       Assert.fail("WsValidationException no esperada");
     }
     
@@ -117,6 +119,7 @@ public class RegWebPersonasTest extends RegWebTestUtils {
       Assert.assertEquals(3, ve.getFaultInfo().getFieldFaults().size());
     } catch (Exception e) {
       System.err.println("Error desconegut: " + e.getMessage());
+      e.printStackTrace();
       Assert.fail("WsValidationException no esperada");
     } finally {
       if (id != null) {
@@ -153,6 +156,7 @@ public class RegWebPersonasTest extends RegWebTestUtils {
       Assert.assertEquals(3, ve.getFaultInfo().getFieldFaults().size());
     } catch (Exception e) {
       System.err.println("Error desconegut: " + e.getMessage());
+      e.printStackTrace();
       Assert.fail("WsValidationException no esperada");
     } finally {
 

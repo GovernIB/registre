@@ -1,4 +1,4 @@
-package es.caib.regweb.ws.v3.impl.info;
+package es.caib.regweb.ws.v3.impl;
 
 import java.util.List;
 

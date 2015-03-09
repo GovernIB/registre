@@ -123,7 +123,7 @@ public class RegistroSalidaWs  extends es.caib.regweb.ws.v3.apiaxis.RegistroWs  
         new org.apache.axis.description.TypeDesc(RegistroSalidaWs.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "registroSalidaWs"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "registroSalidaWs"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("origen");
         elemField.setXmlName(new javax.xml.namespace.QName("", "origen"));

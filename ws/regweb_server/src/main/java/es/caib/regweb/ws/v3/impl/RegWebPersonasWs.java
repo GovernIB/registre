@@ -1,4 +1,4 @@
-package es.caib.regweb.ws.v3.impl.personas;
+package es.caib.regweb.ws.v3.impl;
 
 import java.util.List;
 
@@ -9,6 +9,7 @@ import javax.jws.WebService;
 import org.fundaciobit.genapp.common.ws.WsI18NException;
 import org.fundaciobit.genapp.common.ws.WsValidationException;
 
+import es.caib.regweb.ws.model.PersonaWs;
 import es.caib.regweb.ws.utils.IBaseWs;
 
 

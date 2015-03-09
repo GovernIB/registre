@@ -1,9 +1,10 @@
-package es.caib.regweb.ws.v3.impl.personas;
+package es.caib.regweb.ws.converter;
 
 import es.caib.regweb.model.CatLocalidad;
 import es.caib.regweb.model.Persona;
 import es.caib.regweb.persistence.ejb.*;
 import es.caib.regweb.utils.RegwebConstantes;
+import es.caib.regweb.ws.model.PersonaWs;
 import es.caib.regweb.ws.v3.impl.CommonConverter;
 
 import org.fundaciobit.genapp.common.i18n.I18NException;

@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions name="RegWebHelloWorldWsService" targetNamespace="http://impl.v3.ws.regweb.caib.es/" xmlns:ns1="http://schemas.xmlsoap.org/wsdl/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://impl.v3.ws.regweb.caib.es/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions name="RegWebHelloWorldWsService" targetNamespace="http://impl.v3.ws.regweb.caib.es/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://impl.v3.ws.regweb.caib.es/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <wsdl:message name="getVersion">
   </wsdl:message>
   <wsdl:message name="getVersionWsResponse">
@@ -71,7 +71,7 @@
   </wsdl:binding>
   <wsdl:service name="RegWebHelloWorldWsService">
     <wsdl:port binding="tns:RegWebHelloWorldWsServiceSoapBinding" name="RegWebHelloWorldWs">
-      <soap:address location="http://ibit157:8080/regweb/ws/v3/RegWebHelloWorld" />
+      <soap:address location="http://localhost:8080/regweb/ws/v3/RegWebHelloWorld" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

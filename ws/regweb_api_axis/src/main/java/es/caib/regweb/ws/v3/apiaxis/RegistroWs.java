@@ -764,11 +764,11 @@ public class RegistroWs  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(RegistroWs.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("http://registroentrada.impl.v3.ws.regweb.caib.es/", "registroWs"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "registroWs"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("anexos");
         elemField.setXmlName(new javax.xml.namespace.QName("", "anexos"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://registroentrada.impl.v3.ws.regweb.caib.es/", "anexoWs"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "anexoWs"));
         elemField.setMinOccurs(0);
         elemField.setNillable(true);
         elemField.setMaxOccursUnbounded(true);
@@ -839,7 +839,7 @@ public class RegistroWs  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("interesados");
         elemField.setXmlName(new javax.xml.namespace.QName("", "interesados"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://registroentrada.impl.v3.ws.regweb.caib.es/", "interesadoWs"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "interesadoWs"));
         elemField.setMinOccurs(0);
         elemField.setNillable(true);
         elemField.setMaxOccursUnbounded(true);

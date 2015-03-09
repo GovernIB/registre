@@ -1,4 +1,4 @@
-package es.caib.regweb.ws.v3.impl.personas;
+package es.caib.regweb.ws.v3.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +32,8 @@ import es.caib.regweb.persistence.ejb.PersonaLocal;
 import es.caib.regweb.persistence.validator.PersonaBeanValidator;
 import es.caib.regweb.persistence.validator.PersonaValidator;
 import es.caib.regweb.utils.RegwebConstantes;
+import es.caib.regweb.ws.converter.PersonaConverter;
+import es.caib.regweb.ws.model.PersonaWs;
 import es.caib.regweb.ws.utils.AuthenticatedBaseWsImpl;
 import es.caib.regweb.ws.utils.UsuarioAplicacionCache;
 import es.caib.regweb.ws.utils.UsuarioInfo;
@@ -49,7 +51,7 @@ import es.caib.regweb.ws.utils.UsuarioInfo;
 @org.apache.cxf.interceptor.InFaultInterceptors(interceptors = { "es.caib.regweb.ws.utils.RegWebInInterceptor" })
 @WebService(name = RegWebPersonasWsImpl.NAME_WS, portName = RegWebPersonasWsImpl.NAME_WS,
     serviceName = RegWebPersonasWsImpl.NAME_WS  + "Service",
-    endpointInterface = "es.caib.regweb.ws.v3.impl.personas.RegWebPersonasWs")
+    endpointInterface = "es.caib.regweb.ws.v3.impl.RegWebPersonasWs")
 @WebContext(contextRoot = "/regweb/ws", urlPattern = "/v3/" + RegWebPersonasWsImpl.NAME, transportGuarantee = TransportGuarantee.NONE, secureWSDLAccess = false, authMethod = "WSBASIC")
 public class RegWebPersonasWsImpl  extends AuthenticatedBaseWsImpl implements RegWebPersonasWs {
 

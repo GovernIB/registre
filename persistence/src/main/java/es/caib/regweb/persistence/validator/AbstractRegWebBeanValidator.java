@@ -1,5 +1,6 @@
 package es.caib.regweb.persistence.validator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -31,7 +32,7 @@ public abstract  class AbstractRegWebBeanValidator <T> extends AbstractBeanValid
       
       if (!fieldErrorList.isEmpty()) {
         
-          
+          List<I18NFieldError> fieldErrors = new ArrayList<I18NFieldError>(); 
           
           for(I18NFieldError error : fieldErrorList) {
             
@@ -78,11 +79,11 @@ public abstract  class AbstractRegWebBeanValidator <T> extends AbstractBeanValid
 
             I18NFieldError i18nErrorField = new I18NFieldError(f, trans);
             
-            fieldErrorList.add(i18nErrorField);
+            fieldErrors.add(i18nErrorField);
           }
 
 
-          I18NValidationException valError = new I18NValidationException(fieldErrorList);
+          I18NValidationException valError = new I18NValidationException(fieldErrors);
           
           // it's an exception, so you can throw it if needed
           throw valError;

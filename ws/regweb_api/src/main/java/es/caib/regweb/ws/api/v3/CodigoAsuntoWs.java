@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;sequence>
  *         &lt;element name="codigo" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="nombre" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="tipoAsunto" type="{http://info.impl.v3.ws.regweb.caib.es/}tipoAsuntoWs" minOccurs="0"/>
+ *         &lt;element name="tipoAsunto" type="{http://impl.v3.ws.regweb.caib.es/}tipoAsuntoWs" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>

@@ -1,4 +1,4 @@
-package es.caib.regweb.ws.v3.impl.registroentrada;
+package es.caib.regweb.ws.v3.impl;
 
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.ws.model.IdentificadorWs;

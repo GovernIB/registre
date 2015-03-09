@@ -22,7 +22,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="anexos" type="{http://registrosalida.impl.v3.ws.regweb.caib.es/}anexoWs" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="anexos" type="{http://impl.v3.ws.regweb.caib.es/}anexoWs" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;element name="aplicacion" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="codigoAsunto" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="codigoUsuario" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
@@ -32,7 +32,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *         &lt;element name="extracto" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="fecha" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="0"/>
  *         &lt;element name="idioma" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="interesados" type="{http://registrosalida.impl.v3.ws.regweb.caib.es/}interesadoWs" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="interesados" type="{http://impl.v3.ws.regweb.caib.es/}interesadoWs" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;element name="libro" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="numExpediente" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="numTransporte" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>

@@ -132,7 +132,7 @@ public class TipoAsuntoWs  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(TipoAsuntoWs.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("http://info.impl.v3.ws.regweb.caib.es/", "tipoAsuntoWs"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "tipoAsuntoWs"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("activo");
         elemField.setXmlName(new javax.xml.namespace.QName("", "activo"));

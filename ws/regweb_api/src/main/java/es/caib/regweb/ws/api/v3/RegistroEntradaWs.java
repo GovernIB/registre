@@ -14,7 +14,7 @@ import javax.xml.bind.annotation.XmlType;
  * <pre>
  * &lt;complexType name="registroEntradaWs">
  *   &lt;complexContent>
- *     &lt;extension base="{http://registroentrada.impl.v3.ws.regweb.caib.es/}registroWs">
+ *     &lt;extension base="{http://impl.v3.ws.regweb.caib.es/}registroWs">
  *       &lt;sequence>
  *         &lt;element name="destino" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *       &lt;/sequence>

@@ -672,7 +672,7 @@ public class PersonaWs  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(PersonaWs.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("http://personas.impl.v3.ws.regweb.caib.es/", "personaWs"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "personaWs"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("apellido1");
         elemField.setXmlName(new javax.xml.namespace.QName("", "apellido1"));

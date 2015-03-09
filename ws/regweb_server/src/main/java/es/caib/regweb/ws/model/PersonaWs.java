@@ -1,4 +1,4 @@
-package es.caib.regweb.ws.v3.impl.personas;
+package es.caib.regweb.ws.model;
 
 import java.io.Serializable;
 

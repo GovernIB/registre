@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;sequence>
  *         &lt;element name="label" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="field" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="translation" type="{http://registrosalida.impl.v3.ws.regweb.caib.es/}wsI18NTranslation"/>
+ *         &lt;element name="translation" type="{http://impl.v3.ws.regweb.caib.es/}wsI18NTranslation"/>
  *         &lt;element name="error" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
  *     &lt;/restriction>

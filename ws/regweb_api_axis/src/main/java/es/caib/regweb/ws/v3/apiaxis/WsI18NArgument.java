@@ -102,7 +102,7 @@ public class WsI18NArgument  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(WsI18NArgument.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("http://registroentrada.impl.v3.ws.regweb.caib.es/", "wsI18NArgument"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "wsI18NArgument"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("value");
         elemField.setXmlName(new javax.xml.namespace.QName("", "value"));

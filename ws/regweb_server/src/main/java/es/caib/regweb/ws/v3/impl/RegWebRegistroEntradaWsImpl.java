@@ -1,4 +1,4 @@
-package es.caib.regweb.ws.v3.impl.registroentrada;
+package es.caib.regweb.ws.v3.impl;
 
 import es.caib.regweb.model.*;
 import es.caib.regweb.persistence.ejb.*;
@@ -52,7 +52,7 @@ import java.util.List;
 @org.apache.cxf.interceptor.InFaultInterceptors(interceptors = { "es.caib.regweb.ws.utils.RegWebInInterceptor" })
 @WebService(name = RegWebRegistroEntradaWsImpl.NAME_WS, portName = RegWebRegistroEntradaWsImpl.NAME_WS,
         serviceName = RegWebRegistroEntradaWsImpl.NAME_WS  + "Service",
-        endpointInterface = "es.caib.regweb.ws.v3.impl.registroentrada.RegWebRegistroEntradaWs")
+        endpointInterface = "es.caib.regweb.ws.v3.impl.RegWebRegistroEntradaWs")
 @WebContext(contextRoot = "/regweb/ws", urlPattern = "/v3/" + RegWebRegistroEntradaWsImpl.NAME, transportGuarantee = TransportGuarantee.NONE, secureWSDLAccess = false, authMethod = "WSBASIC")
 public class RegWebRegistroEntradaWsImpl extends AuthenticatedBaseWsImpl 
     implements RegWebRegistroEntradaWs {

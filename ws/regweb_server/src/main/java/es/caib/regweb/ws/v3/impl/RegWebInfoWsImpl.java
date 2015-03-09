@@ -1,8 +1,7 @@
-package es.caib.regweb.ws.v3.impl.info;
+package es.caib.regweb.ws.v3.impl;
 
 import es.caib.regweb.model.*;
 import es.caib.regweb.persistence.ejb.*;
-
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.ws.model.CodigoAsuntoWs;
 import es.caib.regweb.ws.model.LibroWs;
@@ -10,7 +9,7 @@ import es.caib.regweb.ws.model.OrganismoWs;
 import es.caib.regweb.ws.model.TipoAsuntoWs;
 import es.caib.regweb.ws.utils.AuthenticatedBaseWsImpl;
 import es.caib.regweb.ws.utils.UsuarioAplicacionCache;
-import es.caib.regweb.ws.v3.impl.CommonConverter;
+
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.ws.WsI18NException;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -19,6 +18,7 @@ import org.jboss.wsf.spi.annotation.WebContext;
 
 //import org.springframework.stereotype.Component;
 
+
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -26,6 +26,7 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +42,7 @@ import java.util.List;
 @org.apache.cxf.interceptor.InInterceptors(interceptors = { "es.caib.regweb.ws.utils.RegWebInInterceptor" })
 @org.apache.cxf.interceptor.InFaultInterceptors(interceptors = { "es.caib.regweb.ws.utils.RegWebInInterceptor" })
 @WebService(name = RegWebInfoWsImpl.NAME_WS, portName = RegWebInfoWsImpl.NAME_WS, serviceName = RegWebInfoWsImpl.NAME_WS
-    + "Service", endpointInterface = "es.caib.regweb.ws.v3.impl.info.RegWebInfoWs")
+    + "Service", endpointInterface = "es.caib.regweb.ws.v3.impl.RegWebInfoWs")
 @WebContext(contextRoot = "/regweb/ws", urlPattern = "/v3/" + RegWebInfoWsImpl.NAME, transportGuarantee = TransportGuarantee.NONE, secureWSDLAccess = false, authMethod = "WSBASIC")
 //@Component
 public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebInfoWs {

@@ -24,22 +24,22 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _ListarOrganismos_QNAME = new QName("http://info.impl.v3.ws.regweb.caib.es/", "listarOrganismos");
-    private final static QName _TipoAsuntoWs_QNAME = new QName("http://info.impl.v3.ws.regweb.caib.es/", "tipoAsuntoWs");
-    private final static QName _GetVersion_QNAME = new QName("http://info.impl.v3.ws.regweb.caib.es/", "getVersion");
-    private final static QName _CodigoAsuntoWs_QNAME = new QName("http://info.impl.v3.ws.regweb.caib.es/", "codigoAsuntoWs");
-    private final static QName _GetVersionWsResponse_QNAME = new QName("http://info.impl.v3.ws.regweb.caib.es/", "getVersionWsResponse");
-    private final static QName _WsI18NError_QNAME = new QName("http://info.impl.v3.ws.regweb.caib.es/", "WsI18NError");
-    private final static QName _ListarTipoAsunto_QNAME = new QName("http://info.impl.v3.ws.regweb.caib.es/", "listarTipoAsunto");
-    private final static QName _GetVersionWs_QNAME = new QName("http://info.impl.v3.ws.regweb.caib.es/", "getVersionWs");
-    private final static QName _ListarLibrosResponse_QNAME = new QName("http://info.impl.v3.ws.regweb.caib.es/", "listarLibrosResponse");
-    private final static QName _ListarOrganismosResponse_QNAME = new QName("http://info.impl.v3.ws.regweb.caib.es/", "listarOrganismosResponse");
-    private final static QName _ListarLibros_QNAME = new QName("http://info.impl.v3.ws.regweb.caib.es/", "listarLibros");
-    private final static QName _ListarCodigoAsuntoResponse_QNAME = new QName("http://info.impl.v3.ws.regweb.caib.es/", "listarCodigoAsuntoResponse");
-    private final static QName _GetVersionResponse_QNAME = new QName("http://info.impl.v3.ws.regweb.caib.es/", "getVersionResponse");
-    private final static QName _LibroWs_QNAME = new QName("http://info.impl.v3.ws.regweb.caib.es/", "libroWs");
-    private final static QName _ListarCodigoAsunto_QNAME = new QName("http://info.impl.v3.ws.regweb.caib.es/", "listarCodigoAsunto");
-    private final static QName _ListarTipoAsuntoResponse_QNAME = new QName("http://info.impl.v3.ws.regweb.caib.es/", "listarTipoAsuntoResponse");
+    private final static QName _TipoAsuntoWs_QNAME = new QName("http://impl.v3.ws.regweb.caib.es/", "tipoAsuntoWs");
+    private final static QName _ListarOrganismos_QNAME = new QName("http://impl.v3.ws.regweb.caib.es/", "listarOrganismos");
+    private final static QName _GetVersion_QNAME = new QName("http://impl.v3.ws.regweb.caib.es/", "getVersion");
+    private final static QName _CodigoAsuntoWs_QNAME = new QName("http://impl.v3.ws.regweb.caib.es/", "codigoAsuntoWs");
+    private final static QName _GetVersionWsResponse_QNAME = new QName("http://impl.v3.ws.regweb.caib.es/", "getVersionWsResponse");
+    private final static QName _WsI18NError_QNAME = new QName("http://impl.v3.ws.regweb.caib.es/", "WsI18NError");
+    private final static QName _GetVersionWs_QNAME = new QName("http://impl.v3.ws.regweb.caib.es/", "getVersionWs");
+    private final static QName _ListarTipoAsunto_QNAME = new QName("http://impl.v3.ws.regweb.caib.es/", "listarTipoAsunto");
+    private final static QName _ListarLibrosResponse_QNAME = new QName("http://impl.v3.ws.regweb.caib.es/", "listarLibrosResponse");
+    private final static QName _ListarOrganismosResponse_QNAME = new QName("http://impl.v3.ws.regweb.caib.es/", "listarOrganismosResponse");
+    private final static QName _ListarLibros_QNAME = new QName("http://impl.v3.ws.regweb.caib.es/", "listarLibros");
+    private final static QName _ListarCodigoAsuntoResponse_QNAME = new QName("http://impl.v3.ws.regweb.caib.es/", "listarCodigoAsuntoResponse");
+    private final static QName _GetVersionResponse_QNAME = new QName("http://impl.v3.ws.regweb.caib.es/", "getVersionResponse");
+    private final static QName _LibroWs_QNAME = new QName("http://impl.v3.ws.regweb.caib.es/", "libroWs");
+    private final static QName _ListarCodigoAsunto_QNAME = new QName("http://impl.v3.ws.regweb.caib.es/", "listarCodigoAsunto");
+    private final static QName _ListarTipoAsuntoResponse_QNAME = new QName("http://impl.v3.ws.regweb.caib.es/", "listarTipoAsuntoResponse");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: es.caib.regweb.ws.api.v3
@@ -49,11 +49,43 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link WsI18NArgument }
+     * Create an instance of {@link ListarTipoAsuntoResponse }
      * 
      */
-    public WsI18NArgument createWsI18NArgument() {
-        return new WsI18NArgument();
+    public ListarTipoAsuntoResponse createListarTipoAsuntoResponse() {
+        return new ListarTipoAsuntoResponse();
+    }
+
+    /**
+     * Create an instance of {@link ListarTipoAsunto }
+     * 
+     */
+    public ListarTipoAsunto createListarTipoAsunto() {
+        return new ListarTipoAsunto();
+    }
+
+    /**
+     * Create an instance of {@link WsI18NError }
+     * 
+     */
+    public WsI18NError createWsI18NError() {
+        return new WsI18NError();
+    }
+
+    /**
+     * Create an instance of {@link ListarOrganismosResponse }
+     * 
+     */
+    public ListarOrganismosResponse createListarOrganismosResponse() {
+        return new ListarOrganismosResponse();
+    }
+
+    /**
+     * Create an instance of {@link ListarOrganismos }
+     * 
+     */
+    public ListarOrganismos createListarOrganismos() {
+        return new ListarOrganismos();
     }
 
     /**
@@ -81,38 +113,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link TipoAsuntoWs }
-     * 
-     */
-    public TipoAsuntoWs createTipoAsuntoWs() {
-        return new TipoAsuntoWs();
-    }
-
-    /**
-     * Create an instance of {@link CodigoAsuntoWs }
-     * 
-     */
-    public CodigoAsuntoWs createCodigoAsuntoWs() {
-        return new CodigoAsuntoWs();
-    }
-
-    /**
-     * Create an instance of {@link OrganismoWs }
-     * 
-     */
-    public OrganismoWs createOrganismoWs() {
-        return new OrganismoWs();
-    }
-
-    /**
-     * Create an instance of {@link GetVersion }
-     * 
-     */
-    public GetVersion createGetVersion() {
-        return new GetVersion();
-    }
-
-    /**
      * Create an instance of {@link ListarCodigoAsuntoResponse }
      * 
      */
@@ -129,6 +129,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link LibroWs }
+     * 
+     */
+    public LibroWs createLibroWs() {
+        return new LibroWs();
+    }
+
+    /**
      * Create an instance of {@link ListarCodigoAsunto }
      * 
      */
@@ -137,19 +145,27 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link WsI18NError }
+     * Create an instance of {@link OrganismoWs }
      * 
      */
-    public WsI18NError createWsI18NError() {
-        return new WsI18NError();
+    public OrganismoWs createOrganismoWs() {
+        return new OrganismoWs();
     }
 
     /**
-     * Create an instance of {@link ListarTipoAsuntoResponse }
+     * Create an instance of {@link WsI18NArgument }
      * 
      */
-    public ListarTipoAsuntoResponse createListarTipoAsuntoResponse() {
-        return new ListarTipoAsuntoResponse();
+    public WsI18NArgument createWsI18NArgument() {
+        return new WsI18NArgument();
+    }
+
+    /**
+     * Create an instance of {@link CodigoAsuntoWs }
+     * 
+     */
+    public CodigoAsuntoWs createCodigoAsuntoWs() {
+        return new CodigoAsuntoWs();
     }
 
     /**
@@ -169,60 +185,44 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link LibroWs }
+     * Create an instance of {@link GetVersion }
      * 
      */
-    public LibroWs createLibroWs() {
-        return new LibroWs();
+    public GetVersion createGetVersion() {
+        return new GetVersion();
     }
 
     /**
-     * Create an instance of {@link ListarOrganismos }
+     * Create an instance of {@link TipoAsuntoWs }
      * 
      */
-    public ListarOrganismos createListarOrganismos() {
-        return new ListarOrganismos();
-    }
-
-    /**
-     * Create an instance of {@link ListarTipoAsunto }
-     * 
-     */
-    public ListarTipoAsunto createListarTipoAsunto() {
-        return new ListarTipoAsunto();
-    }
-
-    /**
-     * Create an instance of {@link ListarOrganismosResponse }
-     * 
-     */
-    public ListarOrganismosResponse createListarOrganismosResponse() {
-        return new ListarOrganismosResponse();
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link ListarOrganismos }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://info.impl.v3.ws.regweb.caib.es/", name = "listarOrganismos")
-    public JAXBElement<ListarOrganismos> createListarOrganismos(ListarOrganismos value) {
-        return new JAXBElement<ListarOrganismos>(_ListarOrganismos_QNAME, ListarOrganismos.class, null, value);
+    public TipoAsuntoWs createTipoAsuntoWs() {
+        return new TipoAsuntoWs();
     }
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link TipoAsuntoWs }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://info.impl.v3.ws.regweb.caib.es/", name = "tipoAsuntoWs")
+    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb.caib.es/", name = "tipoAsuntoWs")
     public JAXBElement<TipoAsuntoWs> createTipoAsuntoWs(TipoAsuntoWs value) {
         return new JAXBElement<TipoAsuntoWs>(_TipoAsuntoWs_QNAME, TipoAsuntoWs.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link ListarOrganismos }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb.caib.es/", name = "listarOrganismos")
+    public JAXBElement<ListarOrganismos> createListarOrganismos(ListarOrganismos value) {
+        return new JAXBElement<ListarOrganismos>(_ListarOrganismos_QNAME, ListarOrganismos.class, null, value);
     }
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link GetVersion }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://info.impl.v3.ws.regweb.caib.es/", name = "getVersion")
+    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb.caib.es/", name = "getVersion")
     public JAXBElement<GetVersion> createGetVersion(GetVersion value) {
         return new JAXBElement<GetVersion>(_GetVersion_QNAME, GetVersion.class, null, value);
     }
@@ -231,7 +231,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link CodigoAsuntoWs }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://info.impl.v3.ws.regweb.caib.es/", name = "codigoAsuntoWs")
+    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb.caib.es/", name = "codigoAsuntoWs")
     public JAXBElement<CodigoAsuntoWs> createCodigoAsuntoWs(CodigoAsuntoWs value) {
         return new JAXBElement<CodigoAsuntoWs>(_CodigoAsuntoWs_QNAME, CodigoAsuntoWs.class, null, value);
     }
@@ -240,7 +240,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link GetVersionWsResponse }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://info.impl.v3.ws.regweb.caib.es/", name = "getVersionWsResponse")
+    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb.caib.es/", name = "getVersionWsResponse")
     public JAXBElement<GetVersionWsResponse> createGetVersionWsResponse(GetVersionWsResponse value) {
         return new JAXBElement<GetVersionWsResponse>(_GetVersionWsResponse_QNAME, GetVersionWsResponse.class, null, value);
     }
@@ -249,34 +249,34 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link WsI18NError }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://info.impl.v3.ws.regweb.caib.es/", name = "WsI18NError")
+    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb.caib.es/", name = "WsI18NError")
     public JAXBElement<WsI18NError> createWsI18NError(WsI18NError value) {
         return new JAXBElement<WsI18NError>(_WsI18NError_QNAME, WsI18NError.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link ListarTipoAsunto }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://info.impl.v3.ws.regweb.caib.es/", name = "listarTipoAsunto")
-    public JAXBElement<ListarTipoAsunto> createListarTipoAsunto(ListarTipoAsunto value) {
-        return new JAXBElement<ListarTipoAsunto>(_ListarTipoAsunto_QNAME, ListarTipoAsunto.class, null, value);
     }
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link GetVersionWs }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://info.impl.v3.ws.regweb.caib.es/", name = "getVersionWs")
+    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb.caib.es/", name = "getVersionWs")
     public JAXBElement<GetVersionWs> createGetVersionWs(GetVersionWs value) {
         return new JAXBElement<GetVersionWs>(_GetVersionWs_QNAME, GetVersionWs.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link ListarTipoAsunto }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb.caib.es/", name = "listarTipoAsunto")
+    public JAXBElement<ListarTipoAsunto> createListarTipoAsunto(ListarTipoAsunto value) {
+        return new JAXBElement<ListarTipoAsunto>(_ListarTipoAsunto_QNAME, ListarTipoAsunto.class, null, value);
     }
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link ListarLibrosResponse }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://info.impl.v3.ws.regweb.caib.es/", name = "listarLibrosResponse")
+    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb.caib.es/", name = "listarLibrosResponse")
     public JAXBElement<ListarLibrosResponse> createListarLibrosResponse(ListarLibrosResponse value) {
         return new JAXBElement<ListarLibrosResponse>(_ListarLibrosResponse_QNAME, ListarLibrosResponse.class, null, value);
     }
@@ -285,7 +285,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link ListarOrganismosResponse }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://info.impl.v3.ws.regweb.caib.es/", name = "listarOrganismosResponse")
+    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb.caib.es/", name = "listarOrganismosResponse")
     public JAXBElement<ListarOrganismosResponse> createListarOrganismosResponse(ListarOrganismosResponse value) {
         return new JAXBElement<ListarOrganismosResponse>(_ListarOrganismosResponse_QNAME, ListarOrganismosResponse.class, null, value);
     }
@@ -294,7 +294,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link ListarLibros }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://info.impl.v3.ws.regweb.caib.es/", name = "listarLibros")
+    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb.caib.es/", name = "listarLibros")
     public JAXBElement<ListarLibros> createListarLibros(ListarLibros value) {
         return new JAXBElement<ListarLibros>(_ListarLibros_QNAME, ListarLibros.class, null, value);
     }
@@ -303,7 +303,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link ListarCodigoAsuntoResponse }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://info.impl.v3.ws.regweb.caib.es/", name = "listarCodigoAsuntoResponse")
+    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb.caib.es/", name = "listarCodigoAsuntoResponse")
     public JAXBElement<ListarCodigoAsuntoResponse> createListarCodigoAsuntoResponse(ListarCodigoAsuntoResponse value) {
         return new JAXBElement<ListarCodigoAsuntoResponse>(_ListarCodigoAsuntoResponse_QNAME, ListarCodigoAsuntoResponse.class, null, value);
     }
@@ -312,7 +312,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link GetVersionResponse }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://info.impl.v3.ws.regweb.caib.es/", name = "getVersionResponse")
+    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb.caib.es/", name = "getVersionResponse")
     public JAXBElement<GetVersionResponse> createGetVersionResponse(GetVersionResponse value) {
         return new JAXBElement<GetVersionResponse>(_GetVersionResponse_QNAME, GetVersionResponse.class, null, value);
     }
@@ -321,7 +321,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link LibroWs }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://info.impl.v3.ws.regweb.caib.es/", name = "libroWs")
+    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb.caib.es/", name = "libroWs")
     public JAXBElement<LibroWs> createLibroWs(LibroWs value) {
         return new JAXBElement<LibroWs>(_LibroWs_QNAME, LibroWs.class, null, value);
     }
@@ -330,7 +330,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link ListarCodigoAsunto }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://info.impl.v3.ws.regweb.caib.es/", name = "listarCodigoAsunto")
+    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb.caib.es/", name = "listarCodigoAsunto")
     public JAXBElement<ListarCodigoAsunto> createListarCodigoAsunto(ListarCodigoAsunto value) {
         return new JAXBElement<ListarCodigoAsunto>(_ListarCodigoAsunto_QNAME, ListarCodigoAsunto.class, null, value);
     }
@@ -339,7 +339,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link ListarTipoAsuntoResponse }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://info.impl.v3.ws.regweb.caib.es/", name = "listarTipoAsuntoResponse")
+    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb.caib.es/", name = "listarTipoAsuntoResponse")
     public JAXBElement<ListarTipoAsuntoResponse> createListarTipoAsuntoResponse(ListarTipoAsuntoResponse value) {
         return new JAXBElement<ListarTipoAsuntoResponse>(_ListarTipoAsuntoResponse_QNAME, ListarTipoAsuntoResponse.class, null, value);
     }

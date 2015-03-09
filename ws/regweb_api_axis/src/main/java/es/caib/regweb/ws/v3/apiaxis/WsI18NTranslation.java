@@ -122,7 +122,7 @@ public class WsI18NTranslation  implements java.io.Serializable {
         new org.apache.axis.description.TypeDesc(WsI18NTranslation.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("http://registroentrada.impl.v3.ws.regweb.caib.es/", "wsI18NTranslation"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "wsI18NTranslation"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("code");
         elemField.setXmlName(new javax.xml.namespace.QName("", "code"));
@@ -133,7 +133,7 @@ public class WsI18NTranslation  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("args");
         elemField.setXmlName(new javax.xml.namespace.QName("", "args"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://registroentrada.impl.v3.ws.regweb.caib.es/", "wsI18NArgument"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "wsI18NArgument"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);
         elemField.setMaxOccursUnbounded(true);

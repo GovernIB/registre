@@ -22,7 +22,7 @@ public class RegWebPersonasWsServiceLocator extends org.apache.axis.client.Servi
     }
 
     // Use to get a proxy class for RegWebPersonasWs
-    private java.lang.String RegWebPersonasWs_address = "http://ibit157:8080/regweb/ws/v3/RegWebPersonas";
+    private java.lang.String RegWebPersonasWs_address = "http://localhost:8080/regweb/ws/v3/RegWebPersonas";
 
     public java.lang.String getRegWebPersonasWsAddress() {
         return RegWebPersonasWs_address;
@@ -105,7 +105,7 @@ public class RegWebPersonasWsServiceLocator extends org.apache.axis.client.Servi
     }
 
     public javax.xml.namespace.QName getServiceName() {
-        return new javax.xml.namespace.QName("http://personas.impl.v3.ws.regweb.caib.es/", "RegWebPersonasWsService");
+        return new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "RegWebPersonasWsService");
     }
 
     private java.util.HashSet ports = null;
@@ -113,7 +113,7 @@ public class RegWebPersonasWsServiceLocator extends org.apache.axis.client.Servi
     public java.util.Iterator getPorts() {
         if (ports == null) {
             ports = new java.util.HashSet();
-            ports.add(new javax.xml.namespace.QName("http://personas.impl.v3.ws.regweb.caib.es/", "RegWebPersonasWs"));
+            ports.add(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "RegWebPersonasWs"));
         }
         return ports.iterator();
     }

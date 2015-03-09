@@ -24,13 +24,67 @@ public class RegWebRegistroSalidaWsServiceSoapBindingStub extends org.apache.axi
         org.apache.axis.description.OperationDesc oper;
         org.apache.axis.description.ParameterDesc param;
         oper = new org.apache.axis.description.OperationDesc();
-        oper.setName("getVersionWs");
-        oper.setReturnType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"));
-        oper.setReturnClass(int.class);
+        oper.setName("getVersion");
+        oper.setReturnType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        oper.setReturnClass(java.lang.String.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
         _operations[0] = oper;
+
+        oper = new org.apache.axis.description.OperationDesc();
+        oper.setName("obtenerRegistroSalida");
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "numeroRegistro"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        param.setOmittable(true);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "usuario"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        param.setOmittable(true);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "entidad"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        param.setOmittable(true);
+        oper.addParameter(param);
+        oper.setReturnType(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "registroSalidaWs"));
+        oper.setReturnClass(es.caib.regweb.ws.v3.apiaxis.RegistroSalidaWs.class);
+        oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
+        oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
+        oper.setUse(org.apache.axis.constants.Use.LITERAL);
+        oper.addFault(new org.apache.axis.description.FaultDesc(
+                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsValidationErrors"),
+                      "es.caib.regweb.ws.v3.apiaxis.WsValidationErrors",
+                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsValidationErrors"), 
+                      true
+                     ));
+        oper.addFault(new org.apache.axis.description.FaultDesc(
+                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsI18NError"),
+                      "es.caib.regweb.ws.v3.apiaxis.WsI18NError",
+                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsI18NError"), 
+                      true
+                     ));
+        _operations[1] = oper;
+
+        oper = new org.apache.axis.description.OperationDesc();
+        oper.setName("altaRegistroSalida");
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "registroSalidaWs"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "registroSalidaWs"), es.caib.regweb.ws.v3.apiaxis.RegistroSalidaWs.class, false, false);
+        param.setOmittable(true);
+        oper.addParameter(param);
+        oper.setReturnType(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "identificadorWs"));
+        oper.setReturnClass(es.caib.regweb.ws.v3.apiaxis.IdentificadorWs.class);
+        oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
+        oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
+        oper.setUse(org.apache.axis.constants.Use.LITERAL);
+        oper.addFault(new org.apache.axis.description.FaultDesc(
+                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsValidationErrors"),
+                      "es.caib.regweb.ws.v3.apiaxis.WsValidationErrors",
+                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsValidationErrors"), 
+                      true
+                     ));
+        oper.addFault(new org.apache.axis.description.FaultDesc(
+                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsI18NError"),
+                      "es.caib.regweb.ws.v3.apiaxis.WsI18NError",
+                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsI18NError"), 
+                      true
+                     ));
+        _operations[2] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("anularRegistroSalida");
@@ -49,18 +103,27 @@ public class RegWebRegistroSalidaWsServiceSoapBindingStub extends org.apache.axi
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
         oper.addFault(new org.apache.axis.description.FaultDesc(
-                      new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "WsValidationErrors"),
+                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsValidationErrors"),
                       "es.caib.regweb.ws.v3.apiaxis.WsValidationErrors",
-                      new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "WsValidationErrors"), 
+                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsValidationErrors"), 
                       true
                      ));
         oper.addFault(new org.apache.axis.description.FaultDesc(
-                      new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "WsI18NError"),
+                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsI18NError"),
                       "es.caib.regweb.ws.v3.apiaxis.WsI18NError",
-                      new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "WsI18NError"), 
+                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsI18NError"), 
                       true
                      ));
-        _operations[1] = oper;
+        _operations[3] = oper;
+
+        oper = new org.apache.axis.description.OperationDesc();
+        oper.setName("getVersionWs");
+        oper.setReturnType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"));
+        oper.setReturnClass(int.class);
+        oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
+        oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
+        oper.setUse(org.apache.axis.constants.Use.LITERAL);
+        _operations[4] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("obtenerRegistroSalidaID");
@@ -77,78 +140,15 @@ public class RegWebRegistroSalidaWsServiceSoapBindingStub extends org.apache.axi
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "entidad"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         param.setOmittable(true);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "identificadorWs"));
+        oper.setReturnType(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "identificadorWs"));
         oper.setReturnClass(es.caib.regweb.ws.v3.apiaxis.IdentificadorWs.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
         oper.addFault(new org.apache.axis.description.FaultDesc(
-                      new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "WsI18NError"),
+                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsI18NError"),
                       "es.caib.regweb.ws.v3.apiaxis.WsI18NError",
-                      new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "WsI18NError"), 
-                      true
-                     ));
-        _operations[2] = oper;
-
-        oper = new org.apache.axis.description.OperationDesc();
-        oper.setName("obtenerRegistroSalida");
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "numeroRegistro"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
-        param.setOmittable(true);
-        oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "usuario"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
-        param.setOmittable(true);
-        oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "entidad"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
-        param.setOmittable(true);
-        oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "registroSalidaWs"));
-        oper.setReturnClass(es.caib.regweb.ws.v3.apiaxis.RegistroSalidaWs.class);
-        oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
-        oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
-        oper.setUse(org.apache.axis.constants.Use.LITERAL);
-        oper.addFault(new org.apache.axis.description.FaultDesc(
-                      new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "WsValidationErrors"),
-                      "es.caib.regweb.ws.v3.apiaxis.WsValidationErrors",
-                      new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "WsValidationErrors"), 
-                      true
-                     ));
-        oper.addFault(new org.apache.axis.description.FaultDesc(
-                      new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "WsI18NError"),
-                      "es.caib.regweb.ws.v3.apiaxis.WsI18NError",
-                      new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "WsI18NError"), 
-                      true
-                     ));
-        _operations[3] = oper;
-
-        oper = new org.apache.axis.description.OperationDesc();
-        oper.setName("getVersion");
-        oper.setReturnType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
-        oper.setReturnClass(java.lang.String.class);
-        oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
-        oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
-        oper.setUse(org.apache.axis.constants.Use.LITERAL);
-        _operations[4] = oper;
-
-        oper = new org.apache.axis.description.OperationDesc();
-        oper.setName("altaRegistroSalida");
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "registroSalidaWs"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "registroSalidaWs"), es.caib.regweb.ws.v3.apiaxis.RegistroSalidaWs.class, false, false);
-        param.setOmittable(true);
-        oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "identificadorWs"));
-        oper.setReturnClass(es.caib.regweb.ws.v3.apiaxis.IdentificadorWs.class);
-        oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
-        oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
-        oper.setUse(org.apache.axis.constants.Use.LITERAL);
-        oper.addFault(new org.apache.axis.description.FaultDesc(
-                      new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "WsValidationErrors"),
-                      "es.caib.regweb.ws.v3.apiaxis.WsValidationErrors",
-                      new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "WsValidationErrors"), 
-                      true
-                     ));
-        oper.addFault(new org.apache.axis.description.FaultDesc(
-                      new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "WsI18NError"),
-                      "es.caib.regweb.ws.v3.apiaxis.WsI18NError",
-                      new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "WsI18NError"), 
+                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsI18NError"), 
                       true
                      ));
         _operations[5] = oper;
@@ -184,77 +184,77 @@ public class RegWebRegistroSalidaWsServiceSoapBindingStub extends org.apache.axi
             java.lang.Class simpledf = org.apache.axis.encoding.ser.SimpleDeserializerFactory.class;
             java.lang.Class simplelistsf = org.apache.axis.encoding.ser.SimpleListSerializerFactory.class;
             java.lang.Class simplelistdf = org.apache.axis.encoding.ser.SimpleListDeserializerFactory.class;
-            qName = new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "anexoWs");
+            qName = new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "anexoWs");
             cachedSerQNames.add(qName);
             cls = es.caib.regweb.ws.v3.apiaxis.AnexoWs.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "datosInteresadoWs");
+            qName = new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "datosInteresadoWs");
             cachedSerQNames.add(qName);
             cls = es.caib.regweb.ws.v3.apiaxis.DatosInteresadoWs.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "identificadorWs");
+            qName = new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "identificadorWs");
             cachedSerQNames.add(qName);
             cls = es.caib.regweb.ws.v3.apiaxis.IdentificadorWs.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "interesadoWs");
+            qName = new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "interesadoWs");
             cachedSerQNames.add(qName);
             cls = es.caib.regweb.ws.v3.apiaxis.InteresadoWs.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "registroSalidaWs");
+            qName = new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "registroSalidaWs");
             cachedSerQNames.add(qName);
             cls = es.caib.regweb.ws.v3.apiaxis.RegistroSalidaWs.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "registroWs");
+            qName = new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "registroWs");
             cachedSerQNames.add(qName);
             cls = es.caib.regweb.ws.v3.apiaxis.RegistroWs.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "wsFieldValidationError");
+            qName = new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "wsFieldValidationError");
             cachedSerQNames.add(qName);
             cls = es.caib.regweb.ws.v3.apiaxis.WsFieldValidationError.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "wsI18NArgument");
+            qName = new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "wsI18NArgument");
             cachedSerQNames.add(qName);
             cls = es.caib.regweb.ws.v3.apiaxis.WsI18NArgument.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "WsI18NError");
+            qName = new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsI18NError");
             cachedSerQNames.add(qName);
             cls = es.caib.regweb.ws.v3.apiaxis.WsI18NError.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "wsI18NTranslation");
+            qName = new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "wsI18NTranslation");
             cachedSerQNames.add(qName);
             cls = es.caib.regweb.ws.v3.apiaxis.WsI18NTranslation.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "WsValidationErrors");
+            qName = new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsValidationErrors");
             cachedSerQNames.add(qName);
             cls = es.caib.regweb.ws.v3.apiaxis.WsValidationErrors.class;
             cachedSerClasses.add(cls);
@@ -327,7 +327,7 @@ public class RegWebRegistroSalidaWsServiceSoapBindingStub extends org.apache.axi
         }
     }
 
-    public int getVersionWs() throws java.rmi.RemoteException {
+    public java.lang.String getVersion() throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -339,7 +339,7 @@ public class RegWebRegistroSalidaWsServiceSoapBindingStub extends org.apache.axi
         _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
         _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "getVersionWs"));
+        _call.setOperationName(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "getVersion"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -351,9 +351,9 @@ public class RegWebRegistroSalidaWsServiceSoapBindingStub extends org.apache.axi
         else {
             extractAttachments(_call);
             try {
-                return ((java.lang.Integer) _resp).intValue();
+                return (java.lang.String) _resp;
             } catch (java.lang.Exception _exception) {
-                return ((java.lang.Integer) org.apache.axis.utils.JavaUtils.convert(_resp, int.class)).intValue();
+                return (java.lang.String) org.apache.axis.utils.JavaUtils.convert(_resp, java.lang.String.class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {
@@ -361,7 +361,7 @@ public class RegWebRegistroSalidaWsServiceSoapBindingStub extends org.apache.axi
 }
     }
 
-    public void anularRegistroSalida(java.lang.String numeroRegistro, java.lang.String usuario, java.lang.String entidad, boolean anular) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsValidationErrors, es.caib.regweb.ws.v3.apiaxis.WsI18NError {
+    public es.caib.regweb.ws.v3.apiaxis.RegistroSalidaWs obtenerRegistroSalida(java.lang.String numeroRegistro, java.lang.String usuario, java.lang.String entidad) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsValidationErrors, es.caib.regweb.ws.v3.apiaxis.WsI18NError {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -373,87 +373,7 @@ public class RegWebRegistroSalidaWsServiceSoapBindingStub extends org.apache.axi
         _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
         _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "anularRegistroSalida"));
-
-        setRequestHeaders(_call);
-        setAttachments(_call);
- try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {numeroRegistro, usuario, entidad, new java.lang.Boolean(anular)});
-
-        if (_resp instanceof java.rmi.RemoteException) {
-            throw (java.rmi.RemoteException)_resp;
-        }
-        extractAttachments(_call);
-  } catch (org.apache.axis.AxisFault axisFaultException) {
-    if (axisFaultException.detail != null) {
-        if (axisFaultException.detail instanceof java.rmi.RemoteException) {
-              throw (java.rmi.RemoteException) axisFaultException.detail;
-         }
-        if (axisFaultException.detail instanceof es.caib.regweb.ws.v3.apiaxis.WsValidationErrors) {
-              throw (es.caib.regweb.ws.v3.apiaxis.WsValidationErrors) axisFaultException.detail;
-         }
-        if (axisFaultException.detail instanceof es.caib.regweb.ws.v3.apiaxis.WsI18NError) {
-              throw (es.caib.regweb.ws.v3.apiaxis.WsI18NError) axisFaultException.detail;
-         }
-   }
-  throw axisFaultException;
-}
-    }
-
-    public es.caib.regweb.ws.v3.apiaxis.IdentificadorWs obtenerRegistroSalidaID(int any, int numeroRegistro, java.lang.String libro, java.lang.String usuario, java.lang.String entidad) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsI18NError {
-        if (super.cachedEndpoint == null) {
-            throw new org.apache.axis.NoEndPointException();
-        }
-        org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[2]);
-        _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("");
-        _call.setEncodingStyle(null);
-        _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
-        _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
-        _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "obtenerRegistroSalidaID"));
-
-        setRequestHeaders(_call);
-        setAttachments(_call);
- try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {new java.lang.Integer(any), new java.lang.Integer(numeroRegistro), libro, usuario, entidad});
-
-        if (_resp instanceof java.rmi.RemoteException) {
-            throw (java.rmi.RemoteException)_resp;
-        }
-        else {
-            extractAttachments(_call);
-            try {
-                return (es.caib.regweb.ws.v3.apiaxis.IdentificadorWs) _resp;
-            } catch (java.lang.Exception _exception) {
-                return (es.caib.regweb.ws.v3.apiaxis.IdentificadorWs) org.apache.axis.utils.JavaUtils.convert(_resp, es.caib.regweb.ws.v3.apiaxis.IdentificadorWs.class);
-            }
-        }
-  } catch (org.apache.axis.AxisFault axisFaultException) {
-    if (axisFaultException.detail != null) {
-        if (axisFaultException.detail instanceof java.rmi.RemoteException) {
-              throw (java.rmi.RemoteException) axisFaultException.detail;
-         }
-        if (axisFaultException.detail instanceof es.caib.regweb.ws.v3.apiaxis.WsI18NError) {
-              throw (es.caib.regweb.ws.v3.apiaxis.WsI18NError) axisFaultException.detail;
-         }
-   }
-  throw axisFaultException;
-}
-    }
-
-    public es.caib.regweb.ws.v3.apiaxis.RegistroSalidaWs obtenerRegistroSalida(java.lang.String numeroRegistro, java.lang.String usuario, java.lang.String entidad) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsValidationErrors, es.caib.regweb.ws.v3.apiaxis.WsI18NError {
-        if (super.cachedEndpoint == null) {
-            throw new org.apache.axis.NoEndPointException();
-        }
-        org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[3]);
-        _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("");
-        _call.setEncodingStyle(null);
-        _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
-        _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
-        _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "obtenerRegistroSalida"));
+        _call.setOperationName(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "obtenerRegistroSalida"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -486,53 +406,19 @@ public class RegWebRegistroSalidaWsServiceSoapBindingStub extends org.apache.axi
 }
     }
 
-    public java.lang.String getVersion() throws java.rmi.RemoteException {
-        if (super.cachedEndpoint == null) {
-            throw new org.apache.axis.NoEndPointException();
-        }
-        org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[4]);
-        _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("");
-        _call.setEncodingStyle(null);
-        _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
-        _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
-        _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "getVersion"));
-
-        setRequestHeaders(_call);
-        setAttachments(_call);
- try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {});
-
-        if (_resp instanceof java.rmi.RemoteException) {
-            throw (java.rmi.RemoteException)_resp;
-        }
-        else {
-            extractAttachments(_call);
-            try {
-                return (java.lang.String) _resp;
-            } catch (java.lang.Exception _exception) {
-                return (java.lang.String) org.apache.axis.utils.JavaUtils.convert(_resp, java.lang.String.class);
-            }
-        }
-  } catch (org.apache.axis.AxisFault axisFaultException) {
-  throw axisFaultException;
-}
-    }
-
     public es.caib.regweb.ws.v3.apiaxis.IdentificadorWs altaRegistroSalida(es.caib.regweb.ws.v3.apiaxis.RegistroSalidaWs registroSalidaWs) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsValidationErrors, es.caib.regweb.ws.v3.apiaxis.WsI18NError {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[5]);
+        _call.setOperation(_operations[2]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setEncodingStyle(null);
         _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
         _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("http://registrosalida.impl.v3.ws.regweb.caib.es/", "altaRegistroSalida"));
+        _call.setOperationName(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "altaRegistroSalida"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -556,6 +442,120 @@ public class RegWebRegistroSalidaWsServiceSoapBindingStub extends org.apache.axi
          }
         if (axisFaultException.detail instanceof es.caib.regweb.ws.v3.apiaxis.WsValidationErrors) {
               throw (es.caib.regweb.ws.v3.apiaxis.WsValidationErrors) axisFaultException.detail;
+         }
+        if (axisFaultException.detail instanceof es.caib.regweb.ws.v3.apiaxis.WsI18NError) {
+              throw (es.caib.regweb.ws.v3.apiaxis.WsI18NError) axisFaultException.detail;
+         }
+   }
+  throw axisFaultException;
+}
+    }
+
+    public void anularRegistroSalida(java.lang.String numeroRegistro, java.lang.String usuario, java.lang.String entidad, boolean anular) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsValidationErrors, es.caib.regweb.ws.v3.apiaxis.WsI18NError {
+        if (super.cachedEndpoint == null) {
+            throw new org.apache.axis.NoEndPointException();
+        }
+        org.apache.axis.client.Call _call = createCall();
+        _call.setOperation(_operations[3]);
+        _call.setUseSOAPAction(true);
+        _call.setSOAPActionURI("");
+        _call.setEncodingStyle(null);
+        _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
+        _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
+        _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
+        _call.setOperationName(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "anularRegistroSalida"));
+
+        setRequestHeaders(_call);
+        setAttachments(_call);
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {numeroRegistro, usuario, entidad, new java.lang.Boolean(anular)});
+
+        if (_resp instanceof java.rmi.RemoteException) {
+            throw (java.rmi.RemoteException)_resp;
+        }
+        extractAttachments(_call);
+  } catch (org.apache.axis.AxisFault axisFaultException) {
+    if (axisFaultException.detail != null) {
+        if (axisFaultException.detail instanceof java.rmi.RemoteException) {
+              throw (java.rmi.RemoteException) axisFaultException.detail;
+         }
+        if (axisFaultException.detail instanceof es.caib.regweb.ws.v3.apiaxis.WsValidationErrors) {
+              throw (es.caib.regweb.ws.v3.apiaxis.WsValidationErrors) axisFaultException.detail;
+         }
+        if (axisFaultException.detail instanceof es.caib.regweb.ws.v3.apiaxis.WsI18NError) {
+              throw (es.caib.regweb.ws.v3.apiaxis.WsI18NError) axisFaultException.detail;
+         }
+   }
+  throw axisFaultException;
+}
+    }
+
+    public int getVersionWs() throws java.rmi.RemoteException {
+        if (super.cachedEndpoint == null) {
+            throw new org.apache.axis.NoEndPointException();
+        }
+        org.apache.axis.client.Call _call = createCall();
+        _call.setOperation(_operations[4]);
+        _call.setUseSOAPAction(true);
+        _call.setSOAPActionURI("");
+        _call.setEncodingStyle(null);
+        _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
+        _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
+        _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
+        _call.setOperationName(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "getVersionWs"));
+
+        setRequestHeaders(_call);
+        setAttachments(_call);
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {});
+
+        if (_resp instanceof java.rmi.RemoteException) {
+            throw (java.rmi.RemoteException)_resp;
+        }
+        else {
+            extractAttachments(_call);
+            try {
+                return ((java.lang.Integer) _resp).intValue();
+            } catch (java.lang.Exception _exception) {
+                return ((java.lang.Integer) org.apache.axis.utils.JavaUtils.convert(_resp, int.class)).intValue();
+            }
+        }
+  } catch (org.apache.axis.AxisFault axisFaultException) {
+  throw axisFaultException;
+}
+    }
+
+    public es.caib.regweb.ws.v3.apiaxis.IdentificadorWs obtenerRegistroSalidaID(int any, int numeroRegistro, java.lang.String libro, java.lang.String usuario, java.lang.String entidad) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsI18NError {
+        if (super.cachedEndpoint == null) {
+            throw new org.apache.axis.NoEndPointException();
+        }
+        org.apache.axis.client.Call _call = createCall();
+        _call.setOperation(_operations[5]);
+        _call.setUseSOAPAction(true);
+        _call.setSOAPActionURI("");
+        _call.setEncodingStyle(null);
+        _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
+        _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
+        _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
+        _call.setOperationName(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "obtenerRegistroSalidaID"));
+
+        setRequestHeaders(_call);
+        setAttachments(_call);
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {new java.lang.Integer(any), new java.lang.Integer(numeroRegistro), libro, usuario, entidad});
+
+        if (_resp instanceof java.rmi.RemoteException) {
+            throw (java.rmi.RemoteException)_resp;
+        }
+        else {
+            extractAttachments(_call);
+            try {
+                return (es.caib.regweb.ws.v3.apiaxis.IdentificadorWs) _resp;
+            } catch (java.lang.Exception _exception) {
+                return (es.caib.regweb.ws.v3.apiaxis.IdentificadorWs) org.apache.axis.utils.JavaUtils.convert(_resp, es.caib.regweb.ws.v3.apiaxis.IdentificadorWs.class);
+            }
+        }
+  } catch (org.apache.axis.AxisFault axisFaultException) {
+    if (axisFaultException.detail != null) {
+        if (axisFaultException.detail instanceof java.rmi.RemoteException) {
+              throw (java.rmi.RemoteException) axisFaultException.detail;
          }
         if (axisFaultException.detail instanceof es.caib.regweb.ws.v3.apiaxis.WsI18NError) {
               throw (es.caib.regweb.ws.v3.apiaxis.WsI18NError) axisFaultException.detail;

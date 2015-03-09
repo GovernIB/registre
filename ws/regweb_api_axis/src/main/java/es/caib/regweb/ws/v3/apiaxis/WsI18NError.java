@@ -76,11 +76,11 @@ public class WsI18NError  extends org.apache.axis.AxisFault  implements java.io.
         new org.apache.axis.description.TypeDesc(WsI18NError.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("http://registroentrada.impl.v3.ws.regweb.caib.es/", "WsI18NError"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsI18NError"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("translation");
         elemField.setXmlName(new javax.xml.namespace.QName("", "translation"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://registroentrada.impl.v3.ws.regweb.caib.es/", "wsI18NTranslation"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "wsI18NTranslation"));
         elemField.setNillable(true);
         typeDesc.addFieldDesc(elemField);
     }

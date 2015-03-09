@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="translation" type="{http://info.impl.v3.ws.regweb.caib.es/}wsI18NTranslation"/>
+ *         &lt;element name="translation" type="{http://impl.v3.ws.regweb.caib.es/}wsI18NTranslation"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>

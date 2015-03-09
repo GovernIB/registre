@@ -33,13 +33,43 @@ public class RegWebInfoWsServiceSoapBindingStub extends org.apache.axis.client.S
         _operations[0] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
-        oper.setName("getVersionWs");
-        oper.setReturnType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"));
-        oper.setReturnClass(int.class);
+        oper.setName("listarOrganismos");
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "entidadCodigoDir3"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        param.setOmittable(true);
+        oper.addParameter(param);
+        oper.setReturnType(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "organismoWs"));
+        oper.setReturnClass(es.caib.regweb.ws.v3.apiaxis.OrganismoWs[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
+        oper.addFault(new org.apache.axis.description.FaultDesc(
+                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsI18NError"),
+                      "es.caib.regweb.ws.v3.apiaxis.WsI18NError",
+                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsI18NError"), 
+                      true
+                     ));
         _operations[1] = oper;
+
+        oper = new org.apache.axis.description.OperationDesc();
+        oper.setName("listarTipoAsunto");
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "usuario"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        param.setOmittable(true);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "entidadCodigoDir3"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        param.setOmittable(true);
+        oper.addParameter(param);
+        oper.setReturnType(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "tipoAsuntoWs"));
+        oper.setReturnClass(es.caib.regweb.ws.v3.apiaxis.TipoAsuntoWs[].class);
+        oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
+        oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
+        oper.setUse(org.apache.axis.constants.Use.LITERAL);
+        oper.addFault(new org.apache.axis.description.FaultDesc(
+                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsI18NError"),
+                      "es.caib.regweb.ws.v3.apiaxis.WsI18NError",
+                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsI18NError"), 
+                      true
+                     ));
+        _operations[2] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("listarCodigoAsunto");
@@ -49,33 +79,15 @@ public class RegWebInfoWsServiceSoapBindingStub extends org.apache.axis.client.S
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "codigoTipoAsunto"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         param.setOmittable(true);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("http://info.impl.v3.ws.regweb.caib.es/", "codigoAsuntoWs"));
+        oper.setReturnType(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "codigoAsuntoWs"));
         oper.setReturnClass(es.caib.regweb.ws.v3.apiaxis.CodigoAsuntoWs[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
         oper.addFault(new org.apache.axis.description.FaultDesc(
-                      new javax.xml.namespace.QName("http://info.impl.v3.ws.regweb.caib.es/", "WsI18NError"),
+                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsI18NError"),
                       "es.caib.regweb.ws.v3.apiaxis.WsI18NError",
-                      new javax.xml.namespace.QName("http://info.impl.v3.ws.regweb.caib.es/", "WsI18NError"), 
-                      true
-                     ));
-        _operations[2] = oper;
-
-        oper = new org.apache.axis.description.OperationDesc();
-        oper.setName("listarOrganismos");
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "entidadCodigoDir3"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
-        param.setOmittable(true);
-        oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("http://info.impl.v3.ws.regweb.caib.es/", "organismoWs"));
-        oper.setReturnClass(es.caib.regweb.ws.v3.apiaxis.OrganismoWs[].class);
-        oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
-        oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
-        oper.setUse(org.apache.axis.constants.Use.LITERAL);
-        oper.addFault(new org.apache.axis.description.FaultDesc(
-                      new javax.xml.namespace.QName("http://info.impl.v3.ws.regweb.caib.es/", "WsI18NError"),
-                      "es.caib.regweb.ws.v3.apiaxis.WsI18NError",
-                      new javax.xml.namespace.QName("http://info.impl.v3.ws.regweb.caib.es/", "WsI18NError"), 
+                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsI18NError"), 
                       true
                      ));
         _operations[3] = oper;
@@ -91,38 +103,26 @@ public class RegWebInfoWsServiceSoapBindingStub extends org.apache.axis.client.S
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "autorizacion"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         param.setOmittable(true);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("http://info.impl.v3.ws.regweb.caib.es/", "libroWs"));
+        oper.setReturnType(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "libroWs"));
         oper.setReturnClass(es.caib.regweb.ws.v3.apiaxis.LibroWs[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
         oper.addFault(new org.apache.axis.description.FaultDesc(
-                      new javax.xml.namespace.QName("http://info.impl.v3.ws.regweb.caib.es/", "WsI18NError"),
+                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsI18NError"),
                       "es.caib.regweb.ws.v3.apiaxis.WsI18NError",
-                      new javax.xml.namespace.QName("http://info.impl.v3.ws.regweb.caib.es/", "WsI18NError"), 
+                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsI18NError"), 
                       true
                      ));
         _operations[4] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
-        oper.setName("listarTipoAsunto");
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "usuario"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
-        param.setOmittable(true);
-        oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "entidadCodigoDir3"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
-        param.setOmittable(true);
-        oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("http://info.impl.v3.ws.regweb.caib.es/", "tipoAsuntoWs"));
-        oper.setReturnClass(es.caib.regweb.ws.v3.apiaxis.TipoAsuntoWs[].class);
+        oper.setName("getVersionWs");
+        oper.setReturnType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"));
+        oper.setReturnClass(int.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
-        oper.addFault(new org.apache.axis.description.FaultDesc(
-                      new javax.xml.namespace.QName("http://info.impl.v3.ws.regweb.caib.es/", "WsI18NError"),
-                      "es.caib.regweb.ws.v3.apiaxis.WsI18NError",
-                      new javax.xml.namespace.QName("http://info.impl.v3.ws.regweb.caib.es/", "WsI18NError"), 
-                      true
-                     ));
         _operations[5] = oper;
 
     }
@@ -156,49 +156,49 @@ public class RegWebInfoWsServiceSoapBindingStub extends org.apache.axis.client.S
             java.lang.Class simpledf = org.apache.axis.encoding.ser.SimpleDeserializerFactory.class;
             java.lang.Class simplelistsf = org.apache.axis.encoding.ser.SimpleListSerializerFactory.class;
             java.lang.Class simplelistdf = org.apache.axis.encoding.ser.SimpleListDeserializerFactory.class;
-            qName = new javax.xml.namespace.QName("http://info.impl.v3.ws.regweb.caib.es/", "codigoAsuntoWs");
+            qName = new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "codigoAsuntoWs");
             cachedSerQNames.add(qName);
             cls = es.caib.regweb.ws.v3.apiaxis.CodigoAsuntoWs.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("http://info.impl.v3.ws.regweb.caib.es/", "libroWs");
+            qName = new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "libroWs");
             cachedSerQNames.add(qName);
             cls = es.caib.regweb.ws.v3.apiaxis.LibroWs.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("http://info.impl.v3.ws.regweb.caib.es/", "organismoWs");
+            qName = new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "organismoWs");
             cachedSerQNames.add(qName);
             cls = es.caib.regweb.ws.v3.apiaxis.OrganismoWs.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("http://info.impl.v3.ws.regweb.caib.es/", "tipoAsuntoWs");
+            qName = new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "tipoAsuntoWs");
             cachedSerQNames.add(qName);
             cls = es.caib.regweb.ws.v3.apiaxis.TipoAsuntoWs.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("http://info.impl.v3.ws.regweb.caib.es/", "wsI18NArgument");
+            qName = new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "wsI18NArgument");
             cachedSerQNames.add(qName);
             cls = es.caib.regweb.ws.v3.apiaxis.WsI18NArgument.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("http://info.impl.v3.ws.regweb.caib.es/", "WsI18NError");
+            qName = new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsI18NError");
             cachedSerQNames.add(qName);
             cls = es.caib.regweb.ws.v3.apiaxis.WsI18NError.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("http://info.impl.v3.ws.regweb.caib.es/", "wsI18NTranslation");
+            qName = new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "wsI18NTranslation");
             cachedSerQNames.add(qName);
             cls = es.caib.regweb.ws.v3.apiaxis.WsI18NTranslation.class;
             cachedSerClasses.add(cls);
@@ -283,7 +283,7 @@ public class RegWebInfoWsServiceSoapBindingStub extends org.apache.axis.client.S
         _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
         _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("http://info.impl.v3.ws.regweb.caib.es/", "getVersion"));
+        _call.setOperationName(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "getVersion"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -305,7 +305,7 @@ public class RegWebInfoWsServiceSoapBindingStub extends org.apache.axis.client.S
 }
     }
 
-    public int getVersionWs() throws java.rmi.RemoteException {
+    public es.caib.regweb.ws.v3.apiaxis.OrganismoWs[] listarOrganismos(java.lang.String entidadCodigoDir3) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsI18NError {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -317,83 +317,7 @@ public class RegWebInfoWsServiceSoapBindingStub extends org.apache.axis.client.S
         _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
         _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("http://info.impl.v3.ws.regweb.caib.es/", "getVersionWs"));
-
-        setRequestHeaders(_call);
-        setAttachments(_call);
- try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {});
-
-        if (_resp instanceof java.rmi.RemoteException) {
-            throw (java.rmi.RemoteException)_resp;
-        }
-        else {
-            extractAttachments(_call);
-            try {
-                return ((java.lang.Integer) _resp).intValue();
-            } catch (java.lang.Exception _exception) {
-                return ((java.lang.Integer) org.apache.axis.utils.JavaUtils.convert(_resp, int.class)).intValue();
-            }
-        }
-  } catch (org.apache.axis.AxisFault axisFaultException) {
-  throw axisFaultException;
-}
-    }
-
-    public es.caib.regweb.ws.v3.apiaxis.CodigoAsuntoWs[] listarCodigoAsunto(java.lang.String usuario, java.lang.String codigoTipoAsunto) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsI18NError {
-        if (super.cachedEndpoint == null) {
-            throw new org.apache.axis.NoEndPointException();
-        }
-        org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[2]);
-        _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("");
-        _call.setEncodingStyle(null);
-        _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
-        _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
-        _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("http://info.impl.v3.ws.regweb.caib.es/", "listarCodigoAsunto"));
-
-        setRequestHeaders(_call);
-        setAttachments(_call);
- try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {usuario, codigoTipoAsunto});
-
-        if (_resp instanceof java.rmi.RemoteException) {
-            throw (java.rmi.RemoteException)_resp;
-        }
-        else {
-            extractAttachments(_call);
-            try {
-                return (es.caib.regweb.ws.v3.apiaxis.CodigoAsuntoWs[]) _resp;
-            } catch (java.lang.Exception _exception) {
-                return (es.caib.regweb.ws.v3.apiaxis.CodigoAsuntoWs[]) org.apache.axis.utils.JavaUtils.convert(_resp, es.caib.regweb.ws.v3.apiaxis.CodigoAsuntoWs[].class);
-            }
-        }
-  } catch (org.apache.axis.AxisFault axisFaultException) {
-    if (axisFaultException.detail != null) {
-        if (axisFaultException.detail instanceof java.rmi.RemoteException) {
-              throw (java.rmi.RemoteException) axisFaultException.detail;
-         }
-        if (axisFaultException.detail instanceof es.caib.regweb.ws.v3.apiaxis.WsI18NError) {
-              throw (es.caib.regweb.ws.v3.apiaxis.WsI18NError) axisFaultException.detail;
-         }
-   }
-  throw axisFaultException;
-}
-    }
-
-    public es.caib.regweb.ws.v3.apiaxis.OrganismoWs[] listarOrganismos(java.lang.String entidadCodigoDir3) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsI18NError {
-        if (super.cachedEndpoint == null) {
-            throw new org.apache.axis.NoEndPointException();
-        }
-        org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[3]);
-        _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("");
-        _call.setEncodingStyle(null);
-        _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
-        _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
-        _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("http://info.impl.v3.ws.regweb.caib.es/", "listarOrganismos"));
+        _call.setOperationName(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "listarOrganismos"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -423,6 +347,90 @@ public class RegWebInfoWsServiceSoapBindingStub extends org.apache.axis.client.S
 }
     }
 
+    public es.caib.regweb.ws.v3.apiaxis.TipoAsuntoWs[] listarTipoAsunto(java.lang.String usuario, java.lang.String entidadCodigoDir3) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsI18NError {
+        if (super.cachedEndpoint == null) {
+            throw new org.apache.axis.NoEndPointException();
+        }
+        org.apache.axis.client.Call _call = createCall();
+        _call.setOperation(_operations[2]);
+        _call.setUseSOAPAction(true);
+        _call.setSOAPActionURI("");
+        _call.setEncodingStyle(null);
+        _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
+        _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
+        _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
+        _call.setOperationName(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "listarTipoAsunto"));
+
+        setRequestHeaders(_call);
+        setAttachments(_call);
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {usuario, entidadCodigoDir3});
+
+        if (_resp instanceof java.rmi.RemoteException) {
+            throw (java.rmi.RemoteException)_resp;
+        }
+        else {
+            extractAttachments(_call);
+            try {
+                return (es.caib.regweb.ws.v3.apiaxis.TipoAsuntoWs[]) _resp;
+            } catch (java.lang.Exception _exception) {
+                return (es.caib.regweb.ws.v3.apiaxis.TipoAsuntoWs[]) org.apache.axis.utils.JavaUtils.convert(_resp, es.caib.regweb.ws.v3.apiaxis.TipoAsuntoWs[].class);
+            }
+        }
+  } catch (org.apache.axis.AxisFault axisFaultException) {
+    if (axisFaultException.detail != null) {
+        if (axisFaultException.detail instanceof java.rmi.RemoteException) {
+              throw (java.rmi.RemoteException) axisFaultException.detail;
+         }
+        if (axisFaultException.detail instanceof es.caib.regweb.ws.v3.apiaxis.WsI18NError) {
+              throw (es.caib.regweb.ws.v3.apiaxis.WsI18NError) axisFaultException.detail;
+         }
+   }
+  throw axisFaultException;
+}
+    }
+
+    public es.caib.regweb.ws.v3.apiaxis.CodigoAsuntoWs[] listarCodigoAsunto(java.lang.String usuario, java.lang.String codigoTipoAsunto) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsI18NError {
+        if (super.cachedEndpoint == null) {
+            throw new org.apache.axis.NoEndPointException();
+        }
+        org.apache.axis.client.Call _call = createCall();
+        _call.setOperation(_operations[3]);
+        _call.setUseSOAPAction(true);
+        _call.setSOAPActionURI("");
+        _call.setEncodingStyle(null);
+        _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
+        _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
+        _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
+        _call.setOperationName(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "listarCodigoAsunto"));
+
+        setRequestHeaders(_call);
+        setAttachments(_call);
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {usuario, codigoTipoAsunto});
+
+        if (_resp instanceof java.rmi.RemoteException) {
+            throw (java.rmi.RemoteException)_resp;
+        }
+        else {
+            extractAttachments(_call);
+            try {
+                return (es.caib.regweb.ws.v3.apiaxis.CodigoAsuntoWs[]) _resp;
+            } catch (java.lang.Exception _exception) {
+                return (es.caib.regweb.ws.v3.apiaxis.CodigoAsuntoWs[]) org.apache.axis.utils.JavaUtils.convert(_resp, es.caib.regweb.ws.v3.apiaxis.CodigoAsuntoWs[].class);
+            }
+        }
+  } catch (org.apache.axis.AxisFault axisFaultException) {
+    if (axisFaultException.detail != null) {
+        if (axisFaultException.detail instanceof java.rmi.RemoteException) {
+              throw (java.rmi.RemoteException) axisFaultException.detail;
+         }
+        if (axisFaultException.detail instanceof es.caib.regweb.ws.v3.apiaxis.WsI18NError) {
+              throw (es.caib.regweb.ws.v3.apiaxis.WsI18NError) axisFaultException.detail;
+         }
+   }
+  throw axisFaultException;
+}
+    }
+
     public es.caib.regweb.ws.v3.apiaxis.LibroWs[] listarLibros(java.lang.String usuario, java.lang.String entidadCodigoDir3, java.lang.String autorizacion) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsI18NError {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
@@ -435,7 +443,7 @@ public class RegWebInfoWsServiceSoapBindingStub extends org.apache.axis.client.S
         _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
         _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("http://info.impl.v3.ws.regweb.caib.es/", "listarLibros"));
+        _call.setOperationName(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "listarLibros"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -465,7 +473,7 @@ public class RegWebInfoWsServiceSoapBindingStub extends org.apache.axis.client.S
 }
     }
 
-    public es.caib.regweb.ws.v3.apiaxis.TipoAsuntoWs[] listarTipoAsunto(java.lang.String usuario, java.lang.String entidadCodigoDir3) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsI18NError {
+    public int getVersionWs() throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -477,11 +485,11 @@ public class RegWebInfoWsServiceSoapBindingStub extends org.apache.axis.client.S
         _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
         _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("http://info.impl.v3.ws.regweb.caib.es/", "listarTipoAsunto"));
+        _call.setOperationName(new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "getVersionWs"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
- try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {usuario, entidadCodigoDir3});
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {});
 
         if (_resp instanceof java.rmi.RemoteException) {
             throw (java.rmi.RemoteException)_resp;
@@ -489,20 +497,12 @@ public class RegWebInfoWsServiceSoapBindingStub extends org.apache.axis.client.S
         else {
             extractAttachments(_call);
             try {
-                return (es.caib.regweb.ws.v3.apiaxis.TipoAsuntoWs[]) _resp;
+                return ((java.lang.Integer) _resp).intValue();
             } catch (java.lang.Exception _exception) {
-                return (es.caib.regweb.ws.v3.apiaxis.TipoAsuntoWs[]) org.apache.axis.utils.JavaUtils.convert(_resp, es.caib.regweb.ws.v3.apiaxis.TipoAsuntoWs[].class);
+                return ((java.lang.Integer) org.apache.axis.utils.JavaUtils.convert(_resp, int.class)).intValue();
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {
-    if (axisFaultException.detail != null) {
-        if (axisFaultException.detail instanceof java.rmi.RemoteException) {
-              throw (java.rmi.RemoteException) axisFaultException.detail;
-         }
-        if (axisFaultException.detail instanceof es.caib.regweb.ws.v3.apiaxis.WsI18NError) {
-              throw (es.caib.regweb.ws.v3.apiaxis.WsI18NError) axisFaultException.detail;
-         }
-   }
   throw axisFaultException;
 }
     }
