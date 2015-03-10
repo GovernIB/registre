@@ -357,9 +357,9 @@
 
 <script type="text/javascript">
   <%-- traduccions para busquedaorganismo.js--%>
-  var trads = new Array();
-  trads['organismo.denominacion'] = "<spring:message code='organismo.denominacion' javaScriptEscape='true' />";
-  trads['regweb.acciones'] = "<spring:message code='regweb.acciones' javaScriptEscape='true' />";
+  var tradorganismo = new Array();
+  tradorganismo['organismo.denominacion'] = "<spring:message code='organismo.denominacion' javaScriptEscape='true' />";
+  tradorganismo['regweb.acciones'] = "<spring:message code='regweb.acciones' javaScriptEscape='true' />";
   <%-- Traducciones para interesados.js --%>
   var tradsinteresado = new Array();
   tradsinteresado['interesado.representante.anadir'] = "<spring:message code='interesado.representante.anadir' javaScriptEscape='true' />";
