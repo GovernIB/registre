@@ -41,27 +41,28 @@ public class TipoDocumentalValidator implements Validator {
         //ValidationUtils.rejectIfEmpty(errors, "traducciones[" + RegwebConstantes.IDIOMA_CATALAN_CODIGO + "].nombre", "error.valor.requerido", "El camp nom és obligatori");
         //ValidationUtils.rejectIfEmpty(errors, "traducciones[" + RegwebConstantes.IDIOMA_CASTELLANO_CODIGO + "].nombre", "error.valor.requerido", "El camp nom és obligatori");
 
-        try {
-            if (tipoDocumental.getCodigoNTI() != null && tipoDocumental.getCodigoNTI().length() > 0) {
+      try {
+        if (tipoDocumental.getCodigoNTI() != null && tipoDocumental.getCodigoNTI().length() > 0) {
 
-                if (tipoDocumental.getId() != null) {  // Se trata de una modificación
+          if (tipoDocumental.getId() != null) {  // Se trata de una modificación
 
-                    if (tipoDocumentalEjb.existeCodigoEdit(tipoDocumental.getCodigoNTI(), tipoDocumental.getId(),tipoDocumental.getEntidad().getId())) {
-                        errors.rejectValue("codigoNTI", "error.codigo.existe", "El codi ja existeix");
-                    }
-
-                } else {
-
-                    if (tipoDocumentalEjb.findByCodigoEntidad(tipoDocumental.getCodigoNTI(),tipoDocumental.getEntidad().getId()) != null) {
-                        errors.rejectValue("codigoNTI", "error.codigo.existe", "El codi ja existeix");
-                    }
-                }
-
+            if (tipoDocumentalEjb.existeCodigoEdit(tipoDocumental.getCodigoNTI(), tipoDocumental.getId(), tipoDocumental.getEntidad().getId())) {
+              errors.rejectValue("codigoNTI", "error.codigo.existe", "El codi ja existeix");
             }
-        } catch (Exception e) {
-          // TODO NO!!!!!!!!!
-            e.printStackTrace();
+
+          } else {
+
+            if (tipoDocumentalEjb.findByCodigoEntidad(tipoDocumental.getCodigoNTI(), tipoDocumental.getEntidad().getId()) != null) {
+              errors.rejectValue("codigoNTI", "error.codigo.existe", "El codi ja existeix");
+            }
+          }
+
         }
+
+      }catch(Exception e){
+         e.printStackTrace();
+      }
+
     }
 
 

@@ -444,7 +444,7 @@ public class CatalogoDatosController extends BaseController {
     public String editarTipoDocumental(@ModelAttribute @Valid TipoDocumental tipoDocumental,BindingResult result,
                                    SessionStatus status, HttpServletRequest request) {
 
-        new TipoDocumentalValidator().validate(tipoDocumental, result);
+        tipoDocumentalValidator.validate(tipoDocumental, result);
 
         if (result.hasErrors()) { // Si hay errores volvemos a la vista del formulario
             return "catalogoDatos/tipoDocumentalForm";
