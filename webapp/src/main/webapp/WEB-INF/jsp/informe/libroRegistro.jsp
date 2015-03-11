@@ -40,7 +40,7 @@
                                 <div class="row">
                                     <div class="form-group col-xs-6 pad-left">
                                         <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                            <form:label path="tipo"><spring:message code="informe.tipoLibro"/></form:label>
+                                            <form:label path="tipo"><span class="text-danger">*</span> <spring:message code="informe.tipoLibro"/></form:label>
                                         </div>
                                         <div class="col-xs-9 no-pad-right">
                                             <form:select path="tipo" cssClass="chosen-select">
@@ -51,7 +51,7 @@
                                     </div>
                                     <div class="form-group col-xs-6  pad-left">
                                         <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                            <form:label path="formato"><spring:message code="regweb.formato"/></form:label>
+                                            <form:label path="formato"><span class="text-danger">*</span> <spring:message code="regweb.formato"/></form:label>
                                         </div>
                                         <div class="col-xs-9 no-pad-right">
                                             <form:select path="formato" cssClass="chosen-select">
@@ -62,9 +62,9 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="form-group col-xs-6  pad-left">
+                                    <div class="form-group col-xs-6 pad-left libros1">
                                         <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                            <form:label path="libros"><spring:message code="registroEntrada.libro"/></form:label>
+                                            <form:label path="libros"><span class="text-danger">*</span> <spring:message code="registroEntrada.libro"/></form:label>
                                         </div>
                                         <div class="col-xs-9 no-pad-right" id="libros">
                                             <c:if test="${fn:length(libros) eq 1}">
@@ -77,9 +77,9 @@
                                             <span id="librosErrors"></span>
                                         </div>
                                     </div>
-                                    <div class="form-group col-xs-6  pad-left">
+                                    <div class="form-group col-xs-6 pad-left campos1">
                                         <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                            <form:label path="campos"><spring:message code="regweb.campos"/></form:label>
+                                            <form:label path="campos"><span class="text-danger">*</span> <spring:message code="regweb.campos"/></form:label>
                                         </div>
                                         <div class="col-xs-9 no-pad-right" id="campos">
                                             <spring:message code="informe.campos" var="varCampos"/>
@@ -113,7 +113,7 @@
                                 <div class="row">
                                     <div class="form-group col-xs-6  pad-left">
                                         <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                            <form:label path="fechaInicio"><spring:message code="informe.fechaInicio"/></form:label>
+                                            <form:label path="fechaInicio"><span class="text-danger">*</span> <spring:message code="informe.fechaInicio"/></form:label>
                                         </div>
                                         <div class="col-xs-9 no-pad-right" id="fechaInicio">
                                             <div class="input-group date no-pad-right">
@@ -125,7 +125,7 @@
                                     </div>
                                     <div class="form-group col-xs-6  pad-left">
                                         <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                            <form:label path="fechaFin"><spring:message code="informe.fechaFin"/></form:label>
+                                            <form:label path="fechaFin"><span class="text-danger">*</span> <spring:message code="informe.fechaFin"/></form:label>
                                         </div>
                                         <div class="col-xs-9 no-pad-right" id="fechaFin">
                                             <div class="input-group date no-pad-right">
@@ -329,8 +329,40 @@ function validaFechasConjuntas(fechaInicio, fechaFin, campInicio, campFin){
     }
 }
 
+//Valida los libros seleccionados (libros, nombre del libro)
+function librosSeleccionados(select, camp) {
+    var variable = '';
+    var htmlBuit = '';
+    // Valor de los libros
+    var value = $(select).val();
+    var numLibros = 0;
+    if (value!=null && value!=""){
+        // Número de los libros en el select
+        numLibros = value.length;
+    }
+    // Si hay menos de un libro seleccionado, retorna error
+    if (numLibros<1){
+        variable = "#" + camp + " span#librosErrors";
+        htmlBuit = "<span id='librosErrors' class='help-block'>És obligatori elegir almanco 1 llibre</span>";
+        $(variable).html(htmlBuit);
+        $(variable).parents(".libros1").addClass("has-error");
+        $('ul.chosen-choices').css('border-color','#a94442');
+        return false;
+    }else{
+        variable = "#" + camp + " span:contains('elegir')";
+        $(variable).removeClass("help-block");
+        $(variable).parents(".libros1").removeClass("has-error");
+        htmlBuit = "<span id='librosErrors'></span>";
+        $(variable).html(htmlBuit);
+        $('ul.chosen-choices').css('border-color','#aaa');
+        return true;
+    }
+}
+
 //Valida los campos seleccionados (campos, nombre del campo)
 function camposSeleccionados(select, camp) {
+    var variable = '';
+    var htmlBuit = '';
     // Valor de los campos
     var value = $(select).val();
     var numCampos = 0;
@@ -340,17 +372,17 @@ function camposSeleccionados(select, camp) {
     }
     // Si hay menos de dos campos seleccionados, retorna error
     if (numCampos<2){
-        var variable = "#" + camp + " span#camposErrors";
-        var htmlBuit = "<span id='camposErrors' class='help-block'>És obligatori elegir almanco 2 camps</span>";
+        variable = "#" + camp + " span#camposErrors";
+        htmlBuit = "<span id='camposErrors' class='help-block'>És obligatori elegir almanco 2 camps</span>";
         $(variable).html(htmlBuit);
-        $(variable).parents(".form-group").addClass("has-error");
+        $(variable).parents(".campos1").addClass("has-error");
         $('ul.chosen-choices').css('border-color','#a94442');
         return false;
     }else{
-        var variable = "#" + camp + " span:contains('elegir')";
+        variable = "#" + camp + " span:contains('elegir')";
         $(variable).removeClass("help-block");
-        $(variable).parents(".form-group").removeClass("has-error");
-        var htmlBuit = "<span id='camposErrors'></span>";
+        $(variable).parents(".campos1").removeClass("has-error");
+        htmlBuit = "<span id='camposErrors'></span>";
         $(variable).html(htmlBuit);
         $('ul.chosen-choices').css('border-color','#aaa');
         return true;
@@ -361,6 +393,7 @@ function camposSeleccionados(select, camp) {
 function validaFormulario(form) {
     var fechaInicio = true;
     var fechaFin = true;
+    var libros = true;
     var campos = true;
     var fechas = true;
     // Valida el formato de Fecha de Inicio
@@ -377,12 +410,16 @@ function validaFormulario(form) {
             fechas = false;
         }
     }
+    // Valida los libros seleccionados
+    if (!librosSeleccionados(form.libros, 'libros')){
+        libros = false;
+    }
     // Valida los campos seleccionados
     if (!camposSeleccionados(form.campos, 'campos')){
         campos = false;
     }
     // Si todos los campos son correctos, hace el submit
-    if((fechaInicio)&&(fechaFin)&&(campos)&&(fechas)){
+    if((fechaInicio)&&(fechaFin)&&(libros)&&(campos)&&(fechas)){
         return true;
     } else{
         return false;
