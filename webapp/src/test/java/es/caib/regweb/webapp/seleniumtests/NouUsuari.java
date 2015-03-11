@@ -56,9 +56,9 @@ public class NouUsuari extends RegistreSeleniumUtils {
     driver.findElement(By.id("email")).sendKeys(mail);
     driver.findElement(By.xpath("//input[@value='Desar']")).click();
 
-    assertPaginaWebConte("S'ha realitzat correctament l'alta", SearchType.HTMLTAGS);
+    assertPaginaWebConte("S´ha realitzat correctament l´alta", SearchType.HTMLTAGS);
 
-    // Cercam l'usuari que acabam de realitzar i validar que surt al llistat
+    // Cercam l´usuari que acabam de realitzar i validar que surt al llistat
 
     driver.findElement(By.id("usuario.identificador")).clear();
     driver.findElement(By.id("usuario.identificador")).sendKeys(identificador);
@@ -66,7 +66,7 @@ public class NouUsuari extends RegistreSeleniumUtils {
 
     assertPaginaWebConte(mail);
 
-    // Borram l'usuari
+    // Borram l´usuari
     // TODO confirmRW
     String idusuari = getValueBetweenStrings("javascript:confirmRW(&quot;/regweb/usuario/",
         "/delete");
@@ -80,9 +80,9 @@ public class NouUsuari extends RegistreSeleniumUtils {
     // closeAlertAndGetItsText());
     driver.findElement(By.id("okButton")).click();
 
-    assertPaginaWebConte("S'ha realitzat correctament la baixa", SearchType.HTMLTAGS);
+    assertPaginaWebConte("S´ha realitzat correctament la baixa", SearchType.HTMLTAGS);
 
-    // Cercam l'usuari que acabam de borrar
+    // Cercam l´usuari que acabam de borrar
     driver.findElement(By.id("usuario.identificador")).clear();
     driver.findElement(By.id("usuario.identificador")).sendKeys(identificador);
     driver.findElement(By.xpath("//input[@value='Cercar']")).click();

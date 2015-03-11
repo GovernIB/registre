@@ -1,9 +1,7 @@
 package es.caib.regweb.webapp.seleniumtests;
 
 import java.util.concurrent.TimeUnit;
-
 import org.junit.*;
-
 import static org.junit.Assert.*;
 
 import org.openqa.selenium.*;
@@ -28,6 +26,7 @@ public class NovaEntitat extends RegistreSeleniumUtils {
 
   @Test
   public void testNovaEntitat() throws Exception {
+
     doLogin();
 
     canviaRolAdministrador();
@@ -41,7 +40,7 @@ public class NovaEntitat extends RegistreSeleniumUtils {
     {
       String htmlCode = getHtmlCode();
       if (htmlCode.indexOf(nomEntitat) != -1) {
-        fail("L'entitat [" + nomEntitat + "] ja existeix.\n\n" + htmlCode);
+        fail("L´entitat [" + nomEntitat + "] ja existeix.\n\n" + htmlCode);
       }
     }
 
@@ -61,46 +60,48 @@ public class NovaEntitat extends RegistreSeleniumUtils {
 
     driver.findElement(By.xpath("//input[@value='Desar']")).click();
 
-    assertPaginaWebConte("S'ha realitzat correctament l'alta", SearchType.HTMLTAGS);
+    assertPaginaWebConte("S´ha realitzat correctament l´alta", SearchType.HTMLTAGS);
 
     assertPaginaWebConte(nomEntitat);
 
     // Cercam en quina fila es troba la nova entrada
-    int fila = -1;
+    
     String entitatId = null;
-    for (int f = 1; f < 15; f++) {
-      WebElement we = driver.findElement(By.xpath("//tr[" + f + "]/td[1]"));
-      // System.out.println(" ZZZZZZZZZZZZZ ]" + we + "[");
-      // System.out.println(" XXXXXXXXXXXXX ]" + we.getText() + "[");
-      // System.out.println(" FFFFFFF ]" + by.findElement(SearchContext.) +
-      // "[");
-      if (nomEntitat.trim().equals(we.getText().trim())) {
-        fila = f;
-
-        WebElement we2 = driver.findElement(By.xpath("//tr[" + f + "]/td[3]"));
-        // System.out.println(" TD = " + we2.getAttribute("innerHTML"));
-
-        entitatId = getValueBetweenStringOfString(we2.getAttribute("innerHTML"),
-            "/regweb/entidad/", "/edit");
-
-        break;
-      }
+    
+    
+    String INPUT = getHtmlCode();
+    int pos = INPUT.indexOf(nomEntitat); 
+    if (pos== -1) {
+      System.out.println(INPUT);
+      fail("No he trobat ]" + nomEntitat + "[ dins el codi html");
+    } else {
+    
+      String REGEX = "/regweb/entidad/";
+  
+      int posE1 = INPUT.indexOf(REGEX, pos);
+      int posE2 = INPUT.indexOf("/", posE1 + REGEX.length() + 1);
+      
+      System.out.println(" Pos E1 = " + posE1);
+      System.out.println(" Pos E2 = " + posE2);
+      
+      
+      entitatId = INPUT.substring(posE1 + REGEX.length(), posE2);
     }
 
-    if (fila == -1) {
-      fail("No s'ha trobat l'Entitat " + nomEntitat + " dins la columna de nom\n\n"
-          + getHtmlCode());
-    }
-    System.out.println("FILA = " + fila);
+
     System.out.println("ENTITAT_ID = " + entitatId);
 
-    // Editar Entrada
-    driver.findElement(By.xpath("//tr[" + fila + "]/td[3]/a/span")).click();
+    // Editar Entrada    
+    
+    callUrl("/entidad/" + entitatId + "/edit");
+
+    
+    //driver.findElement(By.xpath("//tr[" + fila + "]/td[3]/a/span")).click();
     driver.findElement(By.xpath("//input[@value='Desar']")).click();
 
-    assertPaginaWebConte("S'ha realitzat correctament la modificació", SearchType.HTMLTAGS);
+    assertPaginaWebConte("S´ha realitzat correctament la modificació", SearchType.HTMLTAGS);
 
-    // Editar dins Administrador d'Entitat
+    // Editar dins Administrador d´Entitat
 
     canviaRolAdministradorEntitat(); // driver.findElement(By.linkText("Admin. Entitat")).click();
     callUrl("/cambioEntidad/" + entitatId); // driver.findElement(By.linkText("Ajuntament Formentera")).click();
@@ -126,13 +127,13 @@ public class NovaEntitat extends RegistreSeleniumUtils {
     driver.findElement(By.id("entidad.sir1")).click();
     driver.findElement(By.xpath("//input[@value='Desar']")).click();
 
-    assertPaginaWebConte("S'ha realitzat correctament la modificació", SearchType.HTMLTAGS);
+    assertPaginaWebConte("S´ha realitzat correctament la modificació", SearchType.HTMLTAGS);
 
 
 
     // ------------------------------
     // TODO Pendent que es solucioni Tiquet   0000103 de mantis
-    // Quan es crea un usuari encara que despres es borri ja no deixa borrar l'entitat
+    // Quan es crea un usuari encara que despres es borri ja no deixa borrar l´entitat
     /*
     callUrl("/entidad/usuarios");  //driver.findElement(By.linkText("Gestió usuaris")).click();
     callUrl("/usuario/existeUsuario"); //driver.findElement(By.linkText("Introduir usuari")).click();
@@ -190,11 +191,11 @@ public class NovaEntitat extends RegistreSeleniumUtils {
     driver.findElement(By.id("codigoNTI")).sendKeys("TD01");
     driver.findElement(By.id("traducciones'ca'.nombre")).clear();
     driver.findElement(By.id("traducciones'ca'.nombre")).sendKeys("Resolució");
-    driver.findElement(By.xpath("(//a[contains(text(),'Castellano')])[2]")).click();
+    driver.findElement(By.linkText("Castellà")).click();
     driver.findElement(By.id("traducciones'es'.nombre")).clear();
     driver.findElement(By.id("traducciones'es'.nombre")).sendKeys("Resolución");
     driver.findElement(By.xpath("//input[@value='Desar']")).click();
-
+    
     // Despres de desar torna al llistat, revisar si s'ha creat TD01
     assertPaginaWebConte("TD01");
     
@@ -208,7 +209,7 @@ public class NovaEntitat extends RegistreSeleniumUtils {
     
     
     
-    assertPaginaWebConte("S'ha realitzat correctament la baixa", SearchType.HTMLTAGS);
+    assertPaginaWebConte("S´ha realitzat correctament la baixa", SearchType.HTMLTAGS);
     
     
     // ---------------------------------
@@ -222,12 +223,13 @@ public class NovaEntitat extends RegistreSeleniumUtils {
     driver.findElement(By.id("codigo")).sendKeys("AS01");
     driver.findElement(By.id("traducciones'ca'.nombre")).clear();
     driver.findElement(By.id("traducciones'ca'.nombre")).sendKeys("Ajudes i subvencions");
-    driver.findElement(By.xpath("(//a[contains(text(),'Castellano')])[2]")).click();
+    driver.findElement(By.linkText("Castellà")).click();
+    //driver.findElement(By.xpath("(//a[contains(text(),'Castellà')])[2]")).click();
     driver.findElement(By.id("traducciones'es'.nombre")).clear();
     driver.findElement(By.id("traducciones'es'.nombre")).sendKeys("Ayudas y subvenciones");
     driver.findElement(By.xpath("//input[@value='Desar']")).click();
     
-    assertPaginaWebConte("S'ha realitzat correctament l'alta", SearchType.HTMLTAGS);
+    assertPaginaWebConte("S´ha realitzat correctament l´alta", SearchType.HTMLTAGS);
     
     
     // Borrar 
@@ -242,22 +244,23 @@ public class NovaEntitat extends RegistreSeleniumUtils {
     callUrl("/entidad/list/1");
 
     // Borrar Entitat
+    /*
     driver.findElement(By.xpath("//tr[" + fila + "]/td[3]/a/span")).click();
     acceptNextAlert = false;
     driver.findElement(By.xpath("//input[@value='Eliminar']")).click();
     // assertEquals("/regweb/entidad/12411/delete", closeAlertAndGetItsText());
     driver.findElement(By.id("okButton")).click();
 
-    assertPaginaWebConte("S'ha realitzat correctament la baixa", SearchType.HTMLTAGS);
+    assertPaginaWebConte("S´ha realitzat correctament la baixa", SearchType.HTMLTAGS);
 
     // Verificar que entitat no existeix
     {
       String htmlCode = getHtmlCode();
       if (htmlCode.indexOf(nomEntitat) != -1) {
-        fail("L'entitat [" + nomEntitat + "] ja existeix.\n\n" + htmlCode);
+        fail("L´entitat [" + nomEntitat + "] ja existeix.\n\n" + htmlCode);
       }
     }
-
+*/
   }
 
   @After

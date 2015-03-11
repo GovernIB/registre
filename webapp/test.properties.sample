@@ -1,6 +1,6 @@
 baseUrl=http://localhost:8080
 context=/regweb
 iscaib=true
-username=mgonzalez
-password=mgonzalez
+username=test
+password=test
 timeoutseconds=15
