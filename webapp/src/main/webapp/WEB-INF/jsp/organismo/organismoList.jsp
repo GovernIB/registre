@@ -52,7 +52,7 @@
 
                             <div class="form-group col-xs-6">
                                 <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <form:label path="organismo.estado.id"><spring:message code="organismo.estado"/></form:label>
+                                    <form:label path="organismo.estado.id"><span class="text-danger">*</span> <spring:message code="organismo.estado"/></form:label>
                                 </div>
                                 <div class="col-xs-8">
 
