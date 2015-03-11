@@ -1,6 +1,9 @@
 package es.caib.regweb.persistence.ejb;
 
-import es.caib.regweb.model.*;
+import es.caib.regweb.model.Oficina;
+import es.caib.regweb.model.Organismo;
+import es.caib.regweb.model.RelacionOrganizativaOfi;
+import es.caib.regweb.model.RelacionSirOfi;
 import es.caib.regweb.persistence.utils.DataBaseUtils;
 import es.caib.regweb.persistence.utils.Paginacion;
 import es.caib.regweb.utils.RegwebConstantes;
@@ -190,7 +193,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     public List<Organismo> getOrganismosByNivel(Long nivel, Long idEntidad, String estado) throws Exception{
 
         Query q = em.createQuery("Select organismo from Organismo as organismo where " +
-                "organismo.nivelJerarquico = :nivel and organismo.entidad.id = :idEntidad and organismo.estado.codigoEstadoEntidad = :estado");
+                "organismo.nivelJerarquico = :nivel and organismo.entidad.id = :idEntidad and organismo.estado.codigoEstadoEntidad = :estado order by organismo.codigo");
 
         q.setParameter("nivel",nivel);
         q.setParameter("idEntidad",idEntidad);

@@ -169,7 +169,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     public List<Oficina> responsableByEntidadEstado(Long idEntidad, String estado) throws Exception{
         Query q = em.createQuery("Select oficina from Oficina as oficina where " +
                 "oficina.organismoResponsable.entidad.id =:idEntidad and oficina.estado.codigoEstadoEntidad =:estado and " +
-                "oficina.oficinaResponsable.id = null");
+                "oficina.oficinaResponsable.id = null order by oficina.codigo");
 
         q.setParameter("idEntidad",idEntidad);
         q.setParameter("estado",estado);
@@ -185,7 +185,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     public List<Oficina> dependienteByEntidadEstado(Long idEntidad, String estado) throws Exception{
         Query q = em.createQuery("Select oficina from Oficina as oficina where " +
                 "oficina.organismoResponsable.entidad.id =:idEntidad and oficina.estado.codigoEstadoEntidad =:estado and " +
-                "oficina.oficinaResponsable.id != null");
+                "oficina.oficinaResponsable.id != null order by oficina.codigo");
 
         q.setParameter("idEntidad",idEntidad);
         q.setParameter("estado",estado);
