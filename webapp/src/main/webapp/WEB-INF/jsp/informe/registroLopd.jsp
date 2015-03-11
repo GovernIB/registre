@@ -66,7 +66,7 @@
                             <div class="row">
                                 <div class="form-group col-xs-6 pad-left">
                                     <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                        <form:label path="libro"><spring:message code="libro.libro"/></form:label>
+                                        <form:label path="libro"><span class="text-danger">*</span> <spring:message code="libro.libro"/></form:label>
                                     </div>
                                     <div class="col-xs-9 no-pad-right">
                                         <form:select path="libro" items="${libros}" itemValue="id" itemLabel="nombre" cssClass="chosen-select"/>
@@ -74,7 +74,7 @@
                                 </div>
                                 <div class="form-group col-xs-6 pad-left">
                                     <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                        <form:label path="tipoRegistro"><spring:message code="regweb.tipoRegistro"/></form:label>
+                                        <form:label path="tipoRegistro"><span class="text-danger">*</span> <spring:message code="regweb.tipoRegistro"/></form:label>
                                     </div>
                                     <div class="col-xs-9 no-pad-right">
                                         <div>
