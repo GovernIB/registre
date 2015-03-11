@@ -40,7 +40,7 @@
                             <div class="row">
                                 <div class="form-group col-xs-6 pad-left">
                                     <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                        <form:label path="tipo"><spring:message code="informe.tipoLibro"/></form:label>
+                                        <form:label path="tipo"><span class="text-danger">*</span> <spring:message code="informe.tipoLibro"/></form:label>
                                     </div>
                                     <div class="col-xs-9 no-pad-right">
                                         <form:select path="tipo" cssClass="chosen-select">
@@ -52,7 +52,7 @@
                                 </div>
                                 <div class="form-group col-xs-6  pad-left">
                                     <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                        <form:label path="formato"><spring:message code="regweb.formato"/></form:label>
+                                        <form:label path="formato"><span class="text-danger">*</span> <spring:message code="regweb.formato"/></form:label>
                                     </div>
                                     <div class="col-xs-9 no-pad-right">
                                         <form:select path="formato" cssClass="chosen-select">
@@ -65,7 +65,7 @@
                             <div class="row">
                                 <div class="form-group col-xs-6  pad-left">
                                     <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                        <form:label path="fechaInicio"><spring:message code="informe.fechaInicio"/></form:label>
+                                        <form:label path="fechaInicio"><span class="text-danger">*</span> <spring:message code="informe.fechaInicio"/></form:label>
                                     </div>
                                     <div class="col-xs-9 no-pad-right" id="fechaInicio">
                                         <div class="input-group date no-pad-right">
@@ -77,7 +77,7 @@
                                 </div>
                                 <div class="form-group col-xs-6  pad-left">
                                     <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                        <form:label path="fechaFin"><spring:message code="informe.fechaFin"/></form:label>
+                                        <form:label path="fechaFin"><span class="text-danger">*</span> <spring:message code="informe.fechaFin"/></form:label>
                                     </div>
                                     <div class="col-xs-9 no-pad-right" id="fechaFin">
                                         <div class="input-group date no-pad-right">
@@ -91,7 +91,7 @@
                             <div class="row">
                                 <div class="form-group col-xs-6  pad-left">
                                     <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                        <form:label path="campoCalendario"><spring:message code="informe.mostrar"/></form:label>
+                                        <form:label path="campoCalendario"><span class="text-danger">*</span> <spring:message code="informe.mostrar"/></form:label>
                                     </div>
                                     <div class="col-xs-9 no-pad-right">
                                         <form:select path="campoCalendario" cssClass="chosen-select">
