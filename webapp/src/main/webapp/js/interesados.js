@@ -770,6 +770,9 @@ function camposTipoPersona(){
         $('#apellido1').removeAttr("disabled", "disabled");
         $('#apellido2').removeAttr("disabled", "disabled");
         $('#tipo').val("2");
+        $('#nom').html("<span class=\"text-danger\">*</span> " + tradsinteresado['regweb.nombre']);
+        $('#llinatge1').html("<span class=\"text-danger\">*</span> " + tradsinteresado['usuario.apellido1']);
+        $('#rao').html(tradsinteresado['persona.razonSocial']);
     }
 
     if(tipoInteresado == 3){
@@ -779,6 +782,9 @@ function camposTipoPersona(){
         $('#apellido1').attr("disabled", "disabled");
         $('#apellido2').attr("disabled", "disabled");
         $('#tipo').val("3");
+        $('#rao').html("<span class=\"text-danger\">*</span> " + tradsinteresado['persona.razonSocial']);
+        $('#nom').html(tradsinteresado['regweb.nombre']);
+        $('#llinatge1').html(tradsinteresado['usuario.apellido1']);
     }
 
 }

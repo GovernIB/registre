@@ -36,7 +36,7 @@
 
                     <div class="form-group col-xs-6">
                         <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                            <label for="nombre"><spring:message code="regweb.nombre"/></label>
+                            <label for="nombre" id="nom"><spring:message code="regweb.nombre"/></label>
                         </div>
                         <div class="col-xs-8">
                             <input id="nombre" name="nombre" class="form-control" type="text" value=""/>
@@ -45,7 +45,7 @@
                     </div>
                     <div class="form-group col-xs-6">
                         <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                            <label for="apellido1"><spring:message code="usuario.apellido1"/></label>
+                            <label for="apellido1" id="llinatge1"><spring:message code="usuario.apellido1"/></label>
                         </div>
                         <div class="col-xs-8">
                             <input id="apellido1" name="apellido1" class="form-control" type="text" value=""/>
@@ -168,7 +168,7 @@
 
                     <div class="form-group col-xs-6">
                         <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                            <label for="razonSocial"><spring:message code="persona.razonSocial"/></label>
+                            <label for="razonSocial" id="rao"><spring:message code="persona.razonSocial"/></label>
                         </div>
                         <div class="col-xs-8">
                             <input id="razonSocial" name="razonSocial" class="form-control" type="text" value=""/>

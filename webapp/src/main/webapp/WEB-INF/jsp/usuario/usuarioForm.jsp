@@ -53,7 +53,7 @@
 
                             <div class="form-group col-xs-6">
                                 <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <form:label path="tipoUsuario"><spring:message code="usuario.tipoUsuario"/></form:label>
+                                    <form:label path="tipoUsuario"><span class="text-danger">*</span> <spring:message code="usuario.tipoUsuario"/></form:label>
                                 </div>
                                 <div class="col-xs-8">
                                     <form:select path="tipoUsuario" cssClass="chosen-select">
@@ -67,7 +67,7 @@
 
                             <div class="form-group col-xs-6">
                                 <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <form:label path="idioma"><spring:message code="usuario.idioma"/></form:label>
+                                    <form:label path="idioma"><span class="text-danger">*</span> <spring:message code="usuario.idioma"/></form:label>
                                 </div>
                                 <div class="col-xs-8">
                                     <form:select path="idioma" cssClass="chosen-select">

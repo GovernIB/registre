@@ -44,7 +44,7 @@
 
             <div class="panel-body">
                 <div class="form-group col-xs-6">
-                    <div class="col-xs-4"><spring:message code="registroMigrado.tipoRegistro"/></div>
+                    <div class="col-xs-4"><span class="text-danger">*</span> <spring:message code="registroMigrado.tipoRegistro"/></div>
                     <div class="col-xs-8">
                         <form:select path="registroMigrado.tipoRegistro" cssClass="chosen-select" multiple="false">
                             <form:option path="registroMigrado.tipoRegistro" value="true"><spring:message code="informe.entrada"/></form:option>
@@ -53,7 +53,7 @@
                     </div>
                 </div>
                 <div class="form-group col-xs-6">
-                    <div class="col-xs-4"><spring:message code="registroMigrado.oficina"/></div>
+                    <div class="col-xs-4"><span class="text-danger">*</span> <spring:message code="registroMigrado.oficina"/></div>
                     <div class="col-xs-8">
                         <form:select path="registroMigrado.codigoOficina" cssClass="chosen-select">
                             <c:forEach var="oficinaMigrado" items="${oficinasMigrado}" varStatus="status">

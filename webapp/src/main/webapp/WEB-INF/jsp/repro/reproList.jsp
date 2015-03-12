@@ -139,7 +139,7 @@
 
                             <div class="form-group col-xs-12">
                                 <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <label for="usuario"><spring:message code="usuario.identificador"/></label>
+                                    <label for="usuario"><span class="text-danger">*</span> <spring:message code="usuario.identificador"/></label>
                                 </div>
                                 <div class="col-xs-8" id="reproEnviar">
                                     <select id="usuario" name="usuario" class="chosen-select">

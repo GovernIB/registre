@@ -8,16 +8,11 @@ body { background-image:url(../img/background-pattern.png); color:#666666; paddi
     margin-bottom: 10px;
     color: #a94442;
 }
-
 .well-white{
     background-color: #ffffff;
     box-shadow: #888888;
-    margin-top: 0px;
-    margin-right: 20px;
-    margin-bottom: 0px;
-    margin-left: 20px;
+    margin: 0px 20px;
 }
-
 .alert-grey {
     max-width: 100%;
     padding: 8px 15px;
@@ -29,14 +24,12 @@ body { background-image:url(../img/background-pattern.png); color:#666666; paddi
 .alert-grey .alert-link {
     color: #245269;
 }
-
 .alert-warning {
     max-width: 100%;
     padding: 8px 15px;
     margin-bottom: 20px;
     border-radius: 4px;
 }
-
 textarea{
 	width: 100%;
 }
@@ -69,7 +62,6 @@ textarea{
 	position:fixed;
 	top: 0px;
 	margin-bottom: 20px;
-	position:fixed;
 	width:100%;
 	-moz-box-shadow: 0px 0px 5px #888;
 	-webkit-box-shadow: 0px 0px 5px#888;
@@ -189,14 +181,13 @@ textarea{
 .navbar-header {
 	margin-right: 0px;
 	margin-left: 0px;
-	background-color:#ff9523;
+	background-color: #ff9523;
 	padding-bottom: 10px;
 	position:fixed;
 	top: 0px;
 	left: 0px;
 	margin-bottom: 20px;
-	position:fixed;
-	width:100%;
+	width: 100%;
 	-moz-box-shadow: 0px 0px 5px #888;
 	-webkit-box-shadow: 0px 0px 5px #888;
 	box-shadow: 0px 0px 5px #888;
@@ -235,7 +226,6 @@ textarea{
 }
 /* FI Canvis estils generals */
 
-
 /* Text de titols al menu Configuracio */
 .text-success-submenu {
 	color: #47a447;
@@ -250,7 +240,6 @@ textarea{
 	padding-left: 10px;
 }
 /* FI Text de titols al menu Configuracio */
-
 
 /* Canviar submenu cap a l'esquerra i dreta*/
 .chevron-right {
@@ -329,16 +318,14 @@ textarea{
 }
 /* FI Canviar submenu cap a l'esquerra i dreta */
 
-
 /* Tamany INPUTS, Taules */
 .form-control {
     height: 25px;
 	padding: 3px;
 }
 .table>tbody>tr>td {
-    padding: 2px;
-	padding-left: 10px;
-	height: 20px;
+    padding: 2px 2px 2px 10px;
+    height: 20px;
 	vertical-align: middle;
 	font-size: 13px;
 }
@@ -364,7 +351,6 @@ textarea{
     margin-right: 0px;
     margin-left: 0px;
 }
-
 .center{
    text-align: center;
 }
@@ -373,7 +359,6 @@ textarea{
     margin-top: 5px;
 }
 /* FI Tamany INPUTS, Taules */
-
 
 .detalle_registro dt {
     float: left;
@@ -393,7 +378,6 @@ textarea{
 }
 /* Fi CALENDAR */
 
-
 /* Pagination */
 .pagination>.active>a, .pagination>.active>span, .pagination>.active>a:hover, .pagination>.active>span:hover, .pagination>.active>a:focus, .pagination>.active>span:focus {
 	background-color: #ff9523;
@@ -407,13 +391,11 @@ textarea{
 }
 /* FI Pagination */
 
-
 /* Estil per submenu normal */
 .submenu-complet {
     width: 100%;
 }
 /* FI Estil submenu normal */
-
 
 /* TABS */
 .tab-content {
@@ -437,7 +419,6 @@ textarea{
 	color: #000000;}
 /* FI TABS */
 
-
 /* MODAL */
 .modal-content {
 	z-index: 100000;
@@ -446,7 +427,6 @@ textarea{
     width: 500px;
 }
 /* FI MODAL */
-
 
 /* ARXIU */
 .btn-file {
@@ -474,25 +454,16 @@ input[readonly] {
     cursor: text !important;
 }
 .arxiu_actual {
-    margin-top: 6px;
-    margin-left: 0px;
-    margin-bottom: 0px;
-    margin-right: 0px;
+    margin: 6px 0px 0px;
 }
 /* FI ARXIU */
 
 /* ColorPicker */
 .pick-a-color-markup .hex-pound {
-    padding-left: 8px;
-    padding-right: 8px;
-    padding-top: 0px;
-    padding-bottom: 0px;
+    padding: 0px 8px;
 }
 .pick-a-color-markup .input-group-btn .color-dropdown {
-    padding-left: 8px;
-    padding-right: 4px;
-    padding-top: 1px;
-    padding-bottom: 2px;
+    padding: 1px 4px 2px 8px;
 }
 .pick-a-color-markup .color-preview {
     margin-right: 0px;
@@ -515,7 +486,6 @@ input[readonly] {
 .modal-sello {
     width: 350px;
 }
-
 .representante{
     cursor:pointer;
 }
@@ -525,7 +495,6 @@ input[readonly] {
     min-height:20px;
     margin-bottom:20px;
     background-color:#fff;
-/* border:1px solid #999;*/
     margin-left: 15px;
     padding-left: 50px;
     padding-top: 50px;
@@ -669,20 +638,14 @@ input[readonly] {
 
 /* REGISTROS MIGRADOS */
 .panel-heading-migrado {
-    padding-top: 5px;
-    padding-bottom: 5px;
-    padding-left: 15px;
-    padding-right: 0px;
+    padding: 5px 0px 5px 15px;
     border-bottom: 1px solid transparent;
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
 }
 
 .alert-lopd {
-    padding-bottom: 0px;
-    padding-top: 0px;
-    padding-right: 15px;
-    padding-left: 15px;
+    padding: 0px 15px;
     margin-bottom: 20px;
     border: 1px solid transparent;
     border-radius: 4px;

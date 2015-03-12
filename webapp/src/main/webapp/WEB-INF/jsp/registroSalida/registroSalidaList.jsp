@@ -46,7 +46,7 @@
 
             <div class="panel-body">
                 <div class="form-group col-xs-6">
-                    <div class="col-xs-4"><spring:message code="registroSalida.libro"/></div>
+                    <div class="col-xs-4"><span class="text-danger">*</span> <spring:message code="registroSalida.libro"/></div>
                     <div class="col-xs-8">
                         <form:select path="registroSalida.libro.id" items="${librosConsulta}" itemLabel="nombreCompleto" itemValue="id" cssClass="chosen-select"/>
                     </div>

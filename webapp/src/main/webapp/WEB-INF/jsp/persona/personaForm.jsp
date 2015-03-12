@@ -68,7 +68,7 @@
 
                             <div class="form-group col-xs-6">
                                 <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <form:label path="nombre"><span class="text-danger">*</span> <spring:message code="regweb.nombre"/></form:label>
+                                    <form:label path="nombre"><span id="nombreLabel" class="text-danger">*</span> <spring:message code="regweb.nombre"/></form:label>
                                 </div>
                                 <div class="col-xs-8">
                                     <form:input path="nombre" cssClass="form-control" disabled="true" maxlength="30"/> <form:errors path="nombre" cssClass="help-block" element="span"/>
@@ -77,7 +77,7 @@
 
                             <div class="form-group col-xs-6">
                                 <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <form:label path="apellido1"><span class="text-danger">*</span> <spring:message code="persona.apellido1"/></form:label>
+                                    <form:label path="apellido1"><span id="apellido1Label" class="text-danger">*</span> <spring:message code="persona.apellido1"/></form:label>
                                 </div>
                                 <div class="col-xs-8">
                                     <form:input path="apellido1" cssClass="form-control" disabled="true" maxlength="30"/> <form:errors path="apellido1" cssClass="help-block" element="span"/>
@@ -309,16 +309,21 @@
             $('#nombre').removeAttr("disabled", "disabled");
             $('#apellido1').removeAttr("disabled", "disabled");
             $('#apellido2').removeAttr("disabled", "disabled");
+            $('#nombreLabel').show();
+            $('#apellido1Label').show();
         }
 
         if (tipoPersona == 3) { //Persona juridica
             $('#razonSocial').removeAttr("disabled", "disabled");
+            $('#razonSocialLabel').show();
             $('#nombre').val('');
             $('#apellido1').val('');
             $('#apellido2').val('');
             $('#nombre').attr("disabled", "disabled");
             $('#apellido1').attr("disabled", "disabled");
             $('#apellido2').attr("disabled", "disabled");
+            $('#nombreLabel').hide();
+            $('#apellido1Label').hide();
         }
     }
 
