@@ -105,7 +105,7 @@ public class RegistroMigrado implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @ForeignKey(name="RWE_REGMIG_ENTIDAD_FK")
-    @JoinColumn(name = "IDENTIDAD", referencedColumnName ="ID", nullable = true, insertable=false, updatable=false)
+    @JoinColumn(name = "IDENTIDAD", referencedColumnName ="ID", nullable = true)
     public Entidad getEntidad() {
         return entidad;
     }
