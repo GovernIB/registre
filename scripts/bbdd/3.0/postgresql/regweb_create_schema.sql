@@ -89,9 +89,10 @@
 
     create table RWE_CODIGOASUNTO (
         ID int8 not null,
-        CODIGO varchar(16) not null unique,
+        CODIGO varchar(16) not null,
         TIPOASUNTO int8,
-        primary key (ID)
+        primary key (ID),
+        unique (CODIGO, TIPOASUNTO)
     );
 
     create table RWE_CONTADOR (

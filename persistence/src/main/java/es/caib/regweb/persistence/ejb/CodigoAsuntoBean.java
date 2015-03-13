@@ -104,5 +104,22 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
         }
     }
 
+    @Override
+    public CodigoAsunto findByCodigoEntidad(String codigo, Long idEntidad) throws Exception {
+
+        Query q = em.createQuery("Select codigoAsunto from CodigoAsunto as codigoAsunto where codigoAsunto.codigo = :codigo and codigoAsunto.tipoAsunto.entidad.id = :idEntidad");
+
+        q.setParameter("codigo",codigo);
+        q.setParameter("idEntidad",idEntidad);
+
+        List<CodigoAsunto> codigoAsunto = q.getResultList();
+
+        if(codigoAsunto.size() == 1){
+            return codigoAsunto.get(0);
+        }else{
+            return  null;
+        }
+    }
+
 
 }

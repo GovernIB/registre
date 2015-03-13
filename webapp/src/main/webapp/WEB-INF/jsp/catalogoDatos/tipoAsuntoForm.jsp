@@ -167,7 +167,7 @@
                 <div class="modal-dialog">
                    <div class="modal-content">
                         <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="limpiarModal()">×</button>
                             <h3><spring:message code="codigoAsunto.nuevo"/></h3>
                         </div>
 
@@ -186,10 +186,10 @@
 
                                         <div class="form-group col-xs-6">
                                            <div class="col-xs-4 pull-left etiqueta_regweb_left control-label">
-                                               <form:label path="codigo"><spring:message code="codigoAsunto.codigo"/></form:label>
+                                               <form:label path="codigo"><span class="text-danger">*</span> <spring:message code="codigoAsunto.codigo"/></form:label>
                                            </div>
-                                           <div class="col-xs-8">
-                                               <form:input path="codigo" cssClass="form-control" maxlength="16"/> <form:errors path="codigo" cssClass="help-block" element="span"/>
+                                           <div class="col-xs-8" id="cod">
+                                               <form:input path="codigo" cssClass="form-control" maxlength="16"/><span class="errors"></span>
                                            </div>
                                         </div>
                                         <div class="form-group col-xs-12">
@@ -208,11 +208,10 @@
                                                     <br>
                                                     <div class="form-group col-xs-8">
                                                         <div class="col-xs-4 pull-lef etiqueta_regweb control-label">
-                                                            <form:label path="traducciones['${idioma_lang}'].nombre"><spring:message code="regweb.nombre"/></form:label>
+                                                            <form:label path="traducciones['${idioma_lang}'].nombre"><span class="text-danger">*</span> <spring:message code="regweb.nombre"/></form:label>
                                                         </div>
-                                                        <div class="col-xs-8">
-                                                            <form:input path="traducciones['${idioma_lang}'].nombre" cssClass="form-control"/>
-                                                             <form:errors path="traducciones['${idioma_lang}'].nombre" cssClass="help-block" element="span"/>
+                                                        <div class="col-xs-8" id="nom_${idioma_lang}">
+                                                            <form:input path="traducciones['${idioma_lang}'].nombre" cssClass="form-control"/><span class="errors"></span>
                                                         </div>
                                                     </div>
 
@@ -230,14 +229,13 @@
 
                         </div>
                         <div class="modal-footer">
-                            <button class="btn" data-dismiss="modal" aria-hidden="true"><spring:message code="regweb.cerrar"/></button>
+                            <button class="btn" data-dismiss="modal" aria-hidden="true" onclick="limpiarModal()"><spring:message code="regweb.cerrar"/></button>
                         </div>
                    </div>
                 </div>
             </div>
 
             </c:if>
-
 
 
     </div>
@@ -282,7 +280,6 @@ function showModalEditar(id, nombreca, nombrees, codigo) {
 
 function showModalNuevo() {
 
-
     $('#modal-form #id').val("");
     <c:forEach items="${idiomas}" var="idioma" varStatus="index">
     <c:set var="idioma_lang" value="${RegwebConstantes.CODIGO_BY_IDIOMA_ID[idioma]}" />
@@ -295,17 +292,49 @@ function showModalNuevo() {
 }
 
 function validateModal() {
+
+    var nombreCorrecto = false;
+    var traduccionesCorrecto = false;
+    var noErrorTraducciones = true;
+    var nombreRepro = $("#modal-form input#codigo").val();
+    // Comprueba si Codigo tiene algún valor e indica el posible error
+    if (nombreRepro == "") {
+        var variable = "#cod span.errors";
+        var formatoHtml = "<span id='cod.errors' class='help-block'>El camp és obligatori</span>";
+        $(variable).html(formatoHtml);
+        $(variable).parents(".form-group").addClass("has-error");
+        nombreCorrecto = false;
+    } else {
+        var variable = "#cod span.errors";
+        var htmlNormal = "<span id='cod.errors'></span>";
+        $(variable).html(htmlNormal);
+        $(variable).parents(".form-group").removeClass("has-error");
+        nombreCorrecto = true;
+    }
+    // Comprueba si las Traducciones tienen algún valor e indica el posible error
     <c:forEach items="${idiomas}" var="idioma" varStatus="index">
-    <c:set var="idioma_lang" value="${RegwebConstantes.CODIGO_BY_IDIOMA_ID[idioma]}" />
-    if ($("#modal-form input#traducciones\\'${idioma_lang}\\'\\.nombre").val() == '') {
-        alert("<spring:message code="codigoAsunto.nombre.obligatorio"/>");
+        <c:set var="idioma_lang" value="${RegwebConstantes.CODIGO_BY_IDIOMA_ID[idioma]}" />
+        if ($("#modal-form input#traducciones\\'${idioma_lang}\\'\\.nombre").val() == "") {
+            var variable = "#nom_${idioma_lang} span.errors";
+            var formatoHtml = "<span id='nom_${idioma_lang}.errors' class='help-block'>El camp és obligatori</span>";
+            $(variable).html(formatoHtml);
+            $(variable).parents(".form-group").addClass("has-error");
+            traduccionesCorrecto = false;
+            noErrorTraducciones = false;
+        } else {
+            var variable = "#nom_${idioma_lang} span.errors";
+            var htmlNormal = "<span id='nom_${idioma_lang}.errors'></span>";
+            $(variable).html(htmlNormal);
+            $(variable).parents(".form-group").removeClass("has-error");
+            traduccionesCorrecto = true;
+        }
+    </c:forEach>
+    // Si no hay errores hace el submit
+    if ((nombreCorrecto)&&(traduccionesCorrecto)&&(noErrorTraducciones)) {
+        $('#modal-form').submit();
+    }else{
         return false;
     }
-    </c:forEach>
-    
-    $('#modal-form').submit();
-    return true;
-
 }
 
 function escapeHtml(unsafe) {
@@ -325,6 +354,33 @@ function unescapeHtml(safe) {
          .replace("&quot;", /"/g)
          .replace("&#039;", /'/g);
  }
+
+/**
+ * Limpia el formulario del Modal y los posibles mensajes de error
+ */
+function limpiarModal(){
+    clearForm("#modal-form");
+    quitarErroresModal();
+    $('#codigo').val(null);
+    <c:forEach items="${idiomas}" var="idioma" varStatus="index">
+        <c:set var="idioma_lang" value="${RegwebConstantes.CODIGO_BY_IDIOMA_ID[idioma]}" />
+        $("#modal-form input#traducciones\\'${idioma_lang}\\'\\.nombre").val(null);
+    </c:forEach>
+}
+
+function quitarErroresModal(){
+    var variable = "#cod span.errors";
+    var htmlNormal = "<span id='cod.errors'></span>";
+    $(variable).html(htmlNormal);
+    $(variable).parents(".form-group").removeClass("has-error");
+    <c:forEach items="${idiomas}" var="idioma" varStatus="index">
+        <c:set var="idioma_lang" value="${RegwebConstantes.CODIGO_BY_IDIOMA_ID[idioma]}" />
+        variable = "#nom_${idioma_lang} span.errors";
+        htmlNormal = "<span id='nom_${idioma_lang}.errors'></span>";
+        $(variable).html(htmlNormal);
+        $(variable).parents(".form-group").removeClass("has-error");
+    </c:forEach>
+}
 
 </script>
 

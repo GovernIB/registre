@@ -49,4 +49,13 @@ public interface CodigoAsuntoLocal extends BaseEjb<CodigoAsunto, Long> {
      */
     public CodigoAsunto findByCodigo(String codigo) throws Exception;
 
+    /**
+     * Comprueba que el {@link es.caib.regweb.model.CodigoAsunto} codigo de asunto ya no existe para una Entidad.
+     * @param codigo
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public CodigoAsunto findByCodigoEntidad(String codigo, Long idEntidad) throws Exception;
+
 }

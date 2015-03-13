@@ -1,14 +1,16 @@
 package es.caib.regweb.webapp.controller.catalogoDatos;
 
 import es.caib.regweb.model.*;
-import es.caib.regweb.persistence.ejb.*;
+import es.caib.regweb.persistence.ejb.BaseEjbJPA;
+import es.caib.regweb.persistence.ejb.CodigoAsuntoLocal;
+import es.caib.regweb.persistence.ejb.TipoAsuntoLocal;
+import es.caib.regweb.persistence.ejb.TipoDocumentalLocal;
 import es.caib.regweb.persistence.utils.Paginacion;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.webapp.controller.BaseController;
 import es.caib.regweb.webapp.utils.Mensaje;
 import es.caib.regweb.webapp.validator.TipoAsuntoValidator;
 import es.caib.regweb.webapp.validator.TipoDocumentalValidator;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
@@ -22,7 +24,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-
 import java.util.List;
 import java.util.Locale;
 
@@ -249,10 +250,19 @@ public class CatalogoDatosController extends BaseController {
         }else { // Si no hay errores actualizamos el registro
             try {
 
-                codigoAsuntoEjb.persist(codigoAsunto);
+                Long idEntidad = getEntidadActiva(request).getId();
+                CodigoAsunto codAsunto = codigoAsuntoEjb.findByCodigoEntidad(codigoAsunto.getCodigo(), idEntidad);
 
-                Mensaje.saveMessageInfo(request, getMessage("regweb.guardar.registro"));
-                status.setComplete();
+                // Mira si el código del CodigoAsunto ya existe. Si existe no se puede crear
+                if((codAsunto != null) && (codAsunto.getId() != codigoAsunto.getId())){
+                    Mensaje.saveMessageError(request, getMessage("error.codidoAsunto.existe"));
+                }else {
+
+                    codigoAsuntoEjb.persist(codigoAsunto);
+
+                    Mensaje.saveMessageInfo(request, getMessage("regweb.guardar.registro"));
+                    status.setComplete();
+                }
 
             }catch (Exception e) {
                 e.printStackTrace();
@@ -275,11 +285,18 @@ public class CatalogoDatosController extends BaseController {
             return "catalogoDatos/tipoAsuntoForm";
         }else { // Si no hay errores actualizamos el registro
             try {
+                Long idEntidad = getEntidadActiva(request).getId();
+                CodigoAsunto codAsunto = codigoAsuntoEjb.findByCodigoEntidad(codigoAsunto.getCodigo(), idEntidad);
 
-                codigoAsuntoEjb.merge(codigoAsunto);
+                // Mira si el código del CodigoAsunto ya existe. Si existe no se puede crear
+                if((codAsunto != null) && (!codAsunto.getId().equals(codigoAsunto.getId()))){
+                    Mensaje.saveMessageError(request, getMessage("error.codidoAsunto.existe"));
+                }else {
+                    codigoAsuntoEjb.merge(codigoAsunto);
 
-                Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
-                status.setComplete();
+                    Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
+                    status.setComplete();
+                }
 
             }catch (Exception e) {
                 e.printStackTrace();

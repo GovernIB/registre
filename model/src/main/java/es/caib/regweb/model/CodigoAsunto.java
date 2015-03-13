@@ -19,7 +19,8 @@ import java.util.Map;
  * Date: 19/03/14
  */
 @Entity
-@Table(name = "RWE_CODIGOASUNTO")
+@Table(name = "RWE_CODIGOASUNTO",
+        uniqueConstraints= @UniqueConstraint(columnNames={"CODIGO", "TIPOASUNTO"}))
 @org.hibernate.annotations.Table(appliesTo = "RWE_CODIGOASUNTO", indexes = {
     @Index(name="RWE_CODASU_TASUN_FK_I", columnNames = {"TIPOASUNTO"})
 })
@@ -69,7 +70,7 @@ public class CodigoAsunto extends Traducible {
         this.tipoAsunto = tipoAsunto;
     }
 
-    @Column(name = "CODIGO", length = 16, unique = true, nullable = false)
+    @Column(name = "CODIGO", length = 16, nullable = false)
     public String getCodigo() {
       return codigo;
     }
