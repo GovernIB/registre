@@ -204,7 +204,7 @@ public class Organismo implements Serializable {
     }
 
     @ManyToOne(cascade=CascadeType.PERSIST)
-    @JoinColumn(name="CODAMBPROVINCIA", insertable = false, updatable = false)
+    @JoinColumn(name="CODAMBPROVINCIA")
     @ForeignKey(name="RWE_ORGANISMO_CATPROVINCIA_FK")
     @JsonIgnore
     public CatProvincia getCodAmbProvincia() {

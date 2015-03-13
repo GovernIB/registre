@@ -62,6 +62,10 @@
                             <token>@project.version@</token>
                             <value>${project.version}</value>
                         </replacement>
+						<replacement>
+                            <token>@timestamp@</token>
+                            <value>${timestamp}</value>
+                        </replacement>
                     </replacements>
                 </configuration>
             </plugin>

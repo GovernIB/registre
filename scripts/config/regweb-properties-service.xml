@@ -6,6 +6,7 @@
 			<!-- General -->
 			es.caib.regweb.defaultlanguage=ca
 		    es.caib.regweb.iscaib=false
+			es.caib.regweb.showtimestamp=false
 		
 			<!-- Dialecte de la BBDD -->
 		    # es.caib.regweb.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect

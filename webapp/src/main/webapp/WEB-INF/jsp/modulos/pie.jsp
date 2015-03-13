@@ -3,7 +3,7 @@
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 
 <div class="container peu row-fluid">
-    <div class="pull-left colophon">REGWEB &copy; | <fmt:message key="regweb.titulo"/> - <fmt:message key="regweb.version"/> <%=Versio.VERSIO + (Configuracio.isCAIB()?"-caib":"") %></div>
+    <div class="pull-left colophon">REGWEB &copy; | <fmt:message key="regweb.titulo"/> - <fmt:message key="regweb.version"/> <%=Versio.VERSIO + (Configuracio.isCAIB()?"-caib":"") + " " + (Configuracio.showTimeStamp()?Versio.TIMESTAMP : "") %></div>
     <c:if test="${entidadActiva != null}">
         <div class="col-xs-4 centrat-float-left text-center">${entidadActiva.textoPie}</div>
     </c:if>

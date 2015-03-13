@@ -16,6 +16,8 @@
         <version.txt.template.file>./scripts/templates/versio.txt.template</version.txt.template.file>
         <version.txt.file>./versio.txt</version.txt.file>
 		<cxf.version>2.2.12</cxf.version>
+        <timestamp>${maven.build.timestamp}</timestamp>
+        <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
     </properties>
 
     <modules>
