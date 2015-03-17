@@ -111,6 +111,7 @@
         SELLO varchar2(4000 char),
         SIR number(1,0) not null,
         TEXTOPIE varchar2(4000 char),
+        TIPSCAN varchar2(20 char),
         LOGOMENU number(19,0),
         LOGOPIE number(19,0),
         LOGOSELLO number(19,0),

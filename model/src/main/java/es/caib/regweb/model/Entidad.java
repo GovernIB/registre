@@ -64,9 +64,9 @@ public class Entidad implements Serializable {
     private Boolean sir = false;
     @XmlTransient
     private Boolean activo = true;
-
-
-
+    @XmlTransient
+    private String tipoScan;
+   
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
     @Column(name="ID")
@@ -74,9 +74,27 @@ public class Entidad implements Serializable {
         return id;
     }
 
+
+
     public void setId(Long id) {
         this.id = id;
     }
+    
+    /**
+     * Identificadors de tipus d'escaneig suportats per aquesta entitat
+     *  (numeros definits en les propietats separats per comes).
+     *   En aquesta primera versió només es suporta un tipus d'escaneig. 
+     * @return
+     */
+    @Column(name="TIPSCAN", length = 20)
+    public String getTipoScan() {
+      return tipoScan;
+    }
+
+    public void setTipoScan(String tipoScan) {
+      this.tipoScan = tipoScan;
+    }
+    
 
     @Column(name = "NOMBRE", nullable = false)
     public String getNombre() {

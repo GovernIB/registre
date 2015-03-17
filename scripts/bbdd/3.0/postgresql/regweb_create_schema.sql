@@ -124,6 +124,7 @@
         SELLO varchar(4000),
         SIR bool not null,
         TEXTOPIE varchar(4000),
+        TIPSCAN varchar(20),
         LOGOMENU int8,
         LOGOPIE int8,
         LOGOSELLO int8,
