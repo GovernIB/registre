@@ -8,6 +8,8 @@ import org.hibernate.annotations.ForeignKey;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
+
 import org.hibernate.annotations.Index;
 
 
@@ -25,9 +27,9 @@ import org.hibernate.annotations.Index;
 public class Descarga implements Serializable {
   
   private Long id;
-  private String fechaInicio;
-  private String fechaFin;
-  private String fechaImportacion;  
+  private Date fechaInicio;
+  private Date fechaFin;
+  private Date fechaImportacion;
   private String tipo;
   private Entidad entidad;
 
@@ -46,29 +48,29 @@ public class Descarga implements Serializable {
   }
   
   @Column(name = "FECHAINICIO")  
-  public String getFechaInicio() {
+  public Date getFechaInicio() {
     return fechaInicio;
   }
 
-  public void setFechaInicio(String fechaInicio) {
+  public void setFechaInicio(Date fechaInicio) {
     this.fechaInicio = fechaInicio;
   }
 
   @Column(name = "FECHAFIN")  
-  public String getFechaFin() {
+  public Date getFechaFin() {
     return fechaFin;
   }
 
-  public void setFechaFin(String fechaFin) {
+  public void setFechaFin(Date fechaFin) {
     this.fechaFin = fechaFin;
   }
   
   @Column(name = "FECHAIMPORTACION")
-  public String getFechaImportacion() {
+  public Date getFechaImportacion() {
     return fechaImportacion;
   }
 
-  public void setFechaImportacion(String fechaImportacion) {
+  public void setFechaImportacion(Date fechaImportacion) {
     this.fechaImportacion = fechaImportacion;
   }
   

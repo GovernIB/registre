@@ -418,7 +418,7 @@ public class EntidadController extends BaseController {
 
        try{
           Descarga ultimaDescarga = descargaEjb.findByTipoEntidad(RegwebConstantes.UNIDAD,entidadId);
-          String fechaUltimaActualizacion = ultimaDescarga.getFechaImportacion();
+          Date fechaUltimaActualizacion =  ultimaDescarga.getFechaImportacion();
 
           // Determinamos si es actualizacion o sincronizacion
           if(ultimaDescarga != null){
@@ -426,7 +426,8 @@ public class EntidadController extends BaseController {
           }
           // Establecemos la fecha de la primera sincronizacion
           Descarga primeraDescarga = descargaEjb.findByTipoEntidadInverse(RegwebConstantes.UNIDAD, entidadId);
-          String fechaSincronizacion = primeraDescarga.getFechaImportacion();
+          Date fechaSincronizacion = primeraDescarga.getFechaImportacion();
+
 
           sincronizadorDIR3Ejb.sincronizarActualizar(entidadId, fechaUltimaActualizacion, fechaSincronizacion);
 

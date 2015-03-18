@@ -62,7 +62,7 @@
 
                                     <tbody>
                                             <tr>
-                                                <td>${descarga.fechaImportacion}</td>
+                                                <td><fmt:formatDate pattern="dd/MM/yyyy" value="${descarga.fechaImportacion}" /></td>
                                             </tr>
                                     </tbody>
                                 </table>

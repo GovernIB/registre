@@ -91,9 +91,9 @@
 
     create table RWE_DESCARGA (
         ID number(19,0) not null,
-        FECHAFIN varchar2(255 char),
-        FECHAIMPORTACION varchar2(255 char),
-        FECHAINICIO varchar2(255 char),
+        FECHAFIN timestamp,
+        FECHAIMPORTACION timestamp,
+        FECHAINICIO timestamp,
         TIPO varchar2(255 char),
         ENTIDAD number(19,0)
     );
@@ -135,7 +135,7 @@
         MODIFICACION varchar2(255 char) not null,
         RE_ORIGINAL clob,
         REGISTRO_ENTRADA number(19,0),
-        USUARIO number(19,0),
+        USUARIO number(19,0)
     );
 
     create table RWE_HISTORICO_REGISTRO_SALIDA (
@@ -145,7 +145,7 @@
         MODIFICACION varchar2(255 char) not null,
         RS_ORIGINAL clob,
         REGISTRO_SALIDA number(19,0),
-        USUARIO number(19,0),
+        USUARIO number(19,0)
     );
 
     create table RWE_INTERESADO (
@@ -193,7 +193,7 @@
         NUMREGISTRO number(10,0) not null,
         TIPOREGISTRO number(19,0) not null,
         LIBRO number(19,0) not null,
-        USUARIO number(19,0) not null,
+        USUARIO number(19,0) not null
     );
 
     create table RWE_MODELO_OFICIO_REMISION (
@@ -216,7 +216,7 @@
         FECHAMOD timestamp not null,
         TIPOACCESO varchar2(10 char) not null,
         USUARIO varchar2(10 char) not null,
-        REGMIG number(19,0),
+        REGMIG number(19,0)
     );
 
     create table RWE_OFICINA (
@@ -331,7 +331,7 @@
         FECHA timestamp not null,
         TIPOACCESO varchar2(10 char) not null,
         USUARIO varchar2(10 char) not null,
-        REGMIG number(19,0),
+        REGMIG number(19,0)
     );
 
     create table RWE_REGISTRO_DETALLE (
@@ -370,7 +370,7 @@
         LIBRO number(19,0) not null,
         OFICINA number(19,0) not null,
         REGISTRO_DETALLE number(19,0),
-        USUARIO number(19,0) not null,
+        USUARIO number(19,0) not null
     );
 
     create table RWE_REGISTRO_MIGRADO (
@@ -406,7 +406,7 @@
         PRODESGEOFUE varchar2(25 char),
         TIPODOC varchar2(2 char) not null,
         TREGISTRO number(1,0),
-        IDENTIDAD number(19,0),
+        IDENTIDAD number(19,0)
     );
 
     create table RWE_REGISTRO_SALIDA (
@@ -421,7 +421,7 @@
         OFICINA number(19,0) not null,
         ORIGEN number(19,0),
         REGISTRO_DETALLE number(19,0),
-        USUARIO number(19,0) not null,
+        USUARIO number(19,0) not null
     );
 
     create table RWE_RELORGOFI (
@@ -443,7 +443,7 @@
         ORDEN number(10,0) not null,
         REPRO clob,
         TIPOREGISTRO number(19,0) not null,
-        USUARIOENTIDAD number(19,0),
+        USUARIOENTIDAD number(19,0)
     );
 
     create table RWE_ROL (
@@ -1141,11 +1141,18 @@
 
  -- INICI UNIQUES
     alter table RWE_CATESTADOENTIDAD add constraint RWE_CATESTENT_CODESTENT_UK unique (CODIGOESTADOENTIDAD);
+
     alter table RWE_CODIGOASUNTO add constraint RWE_CODASUN_CODIGO_TIPASUN_UK unique (CODIGO, TIPOASUNTO);
+
     alter table RWE_ENTIDAD add constraint RWE_ENTIDAD_CODIGODIR3_uk unique (CODIGODIR3);
+
     alter table RWE_OFICINA add constraint RWE_OFICINA_CODIGO_uk unique (CODIGO);
+
     alter table RWE_REGISTRO_MIGRADO add constraint RWE_REGMIGRADO_AN_NUM_OF_UK unique (ANO, NUMERO, CODOFICINA, TREGISTRO, IDENTIDAD);
+
     alter table RWE_ROL add constraint RWE_ROL_NOMBRE_uk unique (NOMBRE);
+
     alter table RWE_USUARIO add constraint RWE_USUARIO_IDENTIFICADOR_uk unique (IDENTIFICADOR);
+
  -- FINAL UNIQUES
 

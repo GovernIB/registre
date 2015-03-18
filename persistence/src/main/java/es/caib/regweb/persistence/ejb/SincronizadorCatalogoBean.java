@@ -169,8 +169,7 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
         descarga.setEntidad(null);
         descarga.setTipo(RegwebConstantes.CATALOGO);
         Date hoy = new Date();
-        String sHoy = formatoFecha.format(hoy);
-        descarga.setFechaImportacion(sHoy);
+        descarga.setFechaImportacion(hoy);
 
         return descarga = descargaEjb.persist(descarga);
     }
@@ -353,8 +352,7 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
         descarga.setTipo(RegwebConstantes.CATALOGO);
         descarga.setEntidad(null);
         Date hoy = new Date();
-        String sHoy = formatoFecha.format(hoy);
-        descarga.setFechaImportacion(sHoy);
+        descarga.setFechaImportacion(hoy);
 
         return descarga = descargaEjb.persist(descarga);
 

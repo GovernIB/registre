@@ -103,9 +103,9 @@
 
     create table RWE_DESCARGA (
         ID int8 not null,
-        FECHAFIN varchar(255),
-        FECHAIMPORTACION varchar(255),
-        FECHAINICIO varchar(255),
+        FECHAFIN timestamp,
+        FECHAIMPORTACION timestamp,
+        FECHAINICIO timestamp,
         TIPO varchar(255),
         ENTIDAD int8,
         primary key (ID)
