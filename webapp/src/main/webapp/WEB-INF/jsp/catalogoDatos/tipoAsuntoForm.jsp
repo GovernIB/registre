@@ -145,10 +145,9 @@
                                         <tr>
                                             <td><i:trad value="${codigoAsunto}" property="nombre"/></td>
                                             <td class="center">
-
-                                               <%-- <a class="btn btn-warning" href="javascript:void(0);" onclick='showModalEditar("${codigoAsunto.id}", "<c:out value="${fn:escapeXml(codigoAsunto.traducciones['ca'].nombre)}" />", "<c:out value="${fn:escapeXml(codigoAsunto.traducciones['es'].nombre)}" />", "${codigoAsunto.codigo}")' title="Editar"><span class="fa fa-pencil"></span></a> --%>
-                                                <a class="btn btn-warning" href="javascript:void(0);" onclick='showModalEditar("${codigoAsunto.id}", "<c:out value="${codigoAsunto.traducciones['ca'].nombre}" escapeXml="true"/>", "<c:out value="${codigoAsunto.traducciones['es'].nombre}" escapeXml="true"/>", "${codigoAsunto.codigo}")' title="Editar"><span class="fa fa-pencil"></span></a>
-                                               <%-- <a class="btn btn-warning" href="javascript:void(0);" onclick='showModalEditar("${codigoAsunto.id}", "${fn:escapeXml(codigoAsunto.traducciones['ca'].nombre)}", "${fn:escapeXml(codigoAsunto.traducciones['es'].nombre)}", "${codigoAsunto.codigo}")' title="Editar"><span class="fa fa-pencil"></span></a>--%>
+                                                <a class="btn btn-warning" href="javascript:void(0);" onclick='showModalEditar("${codigoAsunto.id}", "<c:out value="${fn:escapeXml(codigoAsunto.traducciones['ca'].nombre)}" />", "<c:out value="${fn:escapeXml(codigoAsunto.traducciones['es'].nombre)}" />", "<c:out value="${fn:escapeXml(codigoAsunto.codigo)}" />")' title="Editar"><span class="fa fa-pencil"></span></a>
+                                                    <%--<a class="btn btn-warning" onclick='showModalEditar("${codigoAsunto.id}", "<c:out value="${codigoAsunto.traducciones['ca'].nombre}" escapeXml="true"/>", "<c:out value="${codigoAsunto.traducciones['es'].nombre}" escapeXml="true"/>", "${codigoAsunto.codigo}")' title="Editar" href="javascript:void(0);"><span class="fa fa-pencil"></span></a>--%>
+                                                   <%-- <a class="btn btn-warning" href="javascript:void(0);" onclick='showModalEditar("${codigoAsunto.id}", "${fn:escapeXml(codigoAsunto.traducciones['ca'].nombre)}", "${fn:escapeXml(codigoAsunto.traducciones['es'].nombre)}", "${codigoAsunto.codigo}")' title="Editar"><span class="fa fa-pencil"></span></a>--%>
                                                 <a class="btn btn-danger" title="Eliminar" onclick="confirm('<c:url value="/codigoAsunto/${codigoAsunto.id}/delete"/>', '<spring:message code="regweb.confirmar.eliminacion" htmlEscape="true"/>')" href="javascript:void(0);"><span class="fa fa-eraser"></span></a>
                                             </td>
                                         </tr>
@@ -251,25 +250,22 @@
 function showModalEditar(id, nombreca, nombrees, codigo) {
 
     $('#id').val(id);
-    
+
     <%--
     <c:forEach items="${idiomas}" var="idioma" varStatus="index">
     <c:set var="idioma_lang" value="${RegwebConstantes.CODIGO_BY_IDIOMA_ID[idioma]}" />
     </c:forEach>
     -->
-    
-    <%--  TODO  NO ES CORRECTE QUAN HI HAGI MES IDIOMES QUE ???? --%> 
 
-    nombreca = nombreca.replace(/\"/g,'&quot;');
-    nombreca = nombreca.replace(/'/g, "\\'");
-    nombrees = nombrees.replace(/\"/g,'&quot;');
-    nombrees = nombrees.replace(/'/g, "\\'");
+    <%--  TODO  NO ES CORRECTE QUAN HI HAGI MES IDIOMES QUE ???? --%>
+
+    codigo = unescapeHtml(codigo);
+    nombreca = unescapeHtml(nombreca);
+    nombrees = unescapeHtml(nombrees);
+
     $('#modal-form #id').val(id);
     $("#modal-form #traducciones\\'ca\\'\\.nombre").val(nombreca);
     $("#modal-form #traducciones\\'es\\'\\.nombre").val(nombrees);
-   // $('[name="traducciones[\'ca\'].nombre"]').val(unescapeHtml(nombreca));
-   // $('[name="traducciones[\'es\'].nombre"]').val(nombrees);
-    //$('[name="codigo"]').val(codigo);
     $("#modal-form #codigo").val(codigo);
 
 
@@ -337,22 +333,17 @@ function validateModal() {
     }
 }
 
-function escapeHtml(unsafe) {
-    return unsafe
-         .replace(/&/g, "&amp;")
-         .replace(/</g, "&lt;")
-         .replace(/>/g, "&gt;")
-         .replace(/"/g, "&quot;")
-         .replace(/'/g, "&#039;");
- }
-
+/**
+ * Sustituye caracteres por su simbolo
+ */
 function unescapeHtml(safe) {
     return safe
-         .replace("&amp;", /&/g)
-         .replace("&lt;", /</g)
-         .replace( "&gt;", />/g)
-         .replace("&quot;", /"/g)
-         .replace("&#039;", /'/g);
+        .replace("&amp;","&")
+        .replace("&#034;","\"")
+        .replace("&#039;", "\'")
+        .replace("&lt;", "<")
+        .replace("&quot;","\"")
+        .replace("&gt;", ">");
  }
 
 /**
