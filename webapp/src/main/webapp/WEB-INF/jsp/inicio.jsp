@@ -36,218 +36,6 @@
 
                     </div>
 
-
-                    <%--ÚLTIMOS REGISTROS DE ENTRADA DE LA OFICINA ACTIVA--%>
-                    <c:if test="${not empty registroEntradas}">
-                        <div class="col-xs-6">
-                            <div class="panel panel-info">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title"><i class="fa fa-search"></i> <strong>${fn:length(registroEntradas)} <spring:message code="registroEntrada.ultimos"/></strong> </h3>
-                                </div>
-
-                                <div class="panel-body">
-
-                                    <div class="table-responsive-inici">
-
-                                        <table class="table1 table-bordered table-hover table-striped tablesorter">
-                                            <colgroup>
-                                                <col width="80">
-                                                <col>
-                                                <col>
-                                                <col>
-                                                <col>
-                                                <col width="51">
-                                            </colgroup>
-                                            <thead>
-                                            <tr>
-                                                <th><spring:message code="registroEntrada.numeroRegistro"/></th>
-                                                <th><spring:message code="registroEntrada.fecha"/></th>
-                                                <th><spring:message code="registroEntrada.libro.corto"/></th>
-                                                <th><spring:message code="registroEntrada.usuario"/></th>
-                                                <th><spring:message code="registroEntrada.extracto"/></th>
-                                                <th class="center"><spring:message code="regweb.acciones"/></th>
-                                            </tr>
-                                            </thead>
-
-                                            <tbody>
-                                            <c:forEach var="registroEntrada" items="${registroEntradas}" varStatus="status">
-                                                <tr>
-                                                    <td>${registroEntrada.numeroRegistroFormateado}</td>
-                                                    <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
-                                                    <td>${registroEntrada.libro}</td>
-                                                    <td>${registroEntrada.usuario}</td>
-                                                    <td>${registroEntrada.extracto}</td>
-                                                    <td class="center">
-                                                        <a class="btn btn-info btn-sm" href="<c:url value="/registroEntrada/${registroEntrada.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
-                                                    </td>
-                                                </tr>
-                                            </c:forEach>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </c:if>
-
-                    <%--ÚLTIMOS REGISTROS DE SALIDA DE LA OFICINA ACTIVA--%>
-                    <c:if test="${not empty registroSalidas}">
-                        <div class="col-xs-6">
-                            <div class="panel panel-danger">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title"><i class="fa fa-search"></i> <strong>${fn:length(registroSalidas)} <spring:message code="registroSalida.ultimos"/></strong> </h3>
-                                </div>
-
-                                <div class="panel-body">
-
-                                    <div class="table-responsive-inici">
-
-                                        <table class="table1 table-bordered table-hover table-striped tablesorter">
-                                            <colgroup>
-                                                <col width="80">
-                                                <col>
-                                                <col>
-                                                <col>
-                                                <col>
-                                                <col width="51">
-                                            </colgroup>
-                                            <thead>
-                                            <tr>
-                                                <th><spring:message code="registroSalida.numeroRegistro"/></th>
-                                                <th><spring:message code="registroSalida.fecha"/></th>
-                                                <th><spring:message code="registroSalida.libro.corto"/></th>
-                                                <th><spring:message code="registroSalida.usuario"/></th>
-                                                <th><spring:message code="registroSalida.extracto"/></th>
-                                                <th class="center"><spring:message code="regweb.acciones"/></th>
-                                            </tr>
-                                            </thead>
-
-                                            <tbody>
-                                            <c:forEach var="registroSalida" items="${registroSalidas}" varStatus="status">
-                                                <tr>
-                                                    <td>${registroSalida.numeroRegistroFormateado}</td>
-                                                    <td><fmt:formatDate value="${registroSalida.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
-                                                    <td>${registroSalida.libro}</td>
-                                                    <td>${registroSalida.usuario}</td>
-                                                    <td>${registroSalida.extracto}</td>
-                                                    <td class="center">
-                                                        <a class="btn btn-info btn-sm" href="<c:url value="/registroSalida/${registroSalida.id}/detalle"/>" title="<spring:message code="registroSalida.detalle"/>"><span class="fa fa-eye"></span></a>
-                                                    </td>
-                                                </tr>
-                                            </c:forEach>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </c:if>
-
-                    <%--REGISTROS DE ENTRADA PENDIENTES DE VISAR--%>
-                    <c:if test="${not empty pendientesVisar}">
-                        <div class="col-xs-6">
-                            <div class="panel panel-primary">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="registroEntrada.pendientesVisar"/></strong> </h3>
-                                </div>
-
-                                <div class="panel-body">
-
-                                    <div class="table-responsive-inici">
-
-                                        <table class="table1 table-bordered table-hover table-striped tablesorter">
-                                            <colgroup>
-                                                <col width="80">
-                                                <col>
-                                                <col>
-                                                <col>
-                                                <col>
-                                                <col width="51">
-                                            </colgroup>
-                                            <thead>
-                                            <tr>
-                                                <th><spring:message code="registroEntrada.numeroRegistro"/></th>
-                                                <th><spring:message code="registroEntrada.fecha"/></th>
-                                                <th><spring:message code="registroEntrada.libro.corto"/></th>
-                                                <th><spring:message code="registroEntrada.usuario"/></th>
-                                                <th><spring:message code="registroEntrada.extracto"/></th>
-                                                <th class="center"><spring:message code="regweb.acciones"/></th>
-                                            </tr>
-                                            </thead>
-
-                                            <tbody>
-                                            <c:forEach var="registroEntrada" items="${pendientesVisar}" varStatus="status">
-                                                <tr>
-                                                    <td>${registroEntrada.numeroRegistroFormateado}</td>
-                                                    <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy"/></td>
-                                                    <td>${registroEntrada.libro}</td>
-                                                    <td>${registroEntrada.usuario}</td>
-                                                    <td>${registroEntrada.extracto}</td>
-                                                    <td class="center">
-                                                        <a class="btn btn-info btn-sm" href="<c:url value="/registroEntrada/${registroEntrada.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
-                                                    </td>
-                                                </tr>
-                                            </c:forEach>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        </c:if>
-
-                    <%--OFICIONS PENDIENTES DE LLEGADA--%>
-                    <c:if test="${not empty oficiosPendientesLlegada}">
-                        <div class="col-xs-6">
-
-                            <div class="panel panel-info">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="oficioRemision.pendientesLlegada.ultimos"/></strong> </h3>
-                                </div>
-
-                                <div class="panel-body">
-
-                                    <div class="table-responsive-inici">
-
-                                        <table class="table1 table-bordered table-hover table-striped tablesorter">
-                                            <colgroup>
-                                                <col>
-                                                <col>
-                                                <col>
-                                                <col width="51">
-                                            </colgroup>
-                                            <thead>
-                                                <tr>
-                                                    <th><spring:message code="oficioRemision.numeroOficio"/></th>
-                                                    <th><spring:message code="oficioRemision.fecha"/></th>
-                                                    <th><spring:message code="oficioRemision.oficina"/></th>
-                                                    <th class="center"><spring:message code="regweb.acciones"/></th>
-                                                </tr>
-                                            </thead>
-
-                                            <tbody>
-                                            <c:forEach var="oficioRemision" items="${oficiosPendientesLlegada}" end="5">
-                                                <tr>
-                                                    <td><fmt:formatDate value="${oficioRemision.fecha}" pattern="yyyy"/> / ${oficioRemision.numeroOficio}</td>
-                                                    <td><fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy"/></td>
-                                                    <td>${oficioRemision.oficina.denominacion}</td>
-                                                    <td class="center">
-                                                        <a class="btn btn-success btn-sm" href="<c:url value="/oficioRemision/${oficioRemision.id}/procesar"/>" title="<spring:message code="oficioRemision.procesar"/>"><span class="fa fa-check"></span></a>
-                                                    </td>
-                                                </tr>
-                                            </c:forEach>
-
-                                            </tbody>
-                                        </table>
-
-                                    </div>
-
-                                </div>
-                            </div>
-
-                        </div>
-                    </c:if>
-
                     <%--REGISTROS DE ENTRADA PENDIENTES (RESERVA)--%>
                     <c:if test="${not empty pendientes}">
                         <div class="col-xs-6">
@@ -298,6 +86,58 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </c:if>
+
+                    <%--OFICIONS PENDIENTES DE LLEGADA--%>
+                    <c:if test="${not empty oficiosPendientesLlegada}">
+                        <div class="col-xs-6">
+
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="oficioRemision.pendientesLlegada.ultimos"/></strong> </h3>
+                                </div>
+
+                                <div class="panel-body">
+
+                                    <div class="table-responsive-inici">
+
+                                        <table class="table1 table-bordered table-hover table-striped tablesorter">
+                                            <colgroup>
+                                                <col>
+                                                <col>
+                                                <col>
+                                                <col width="51">
+                                            </colgroup>
+                                            <thead>
+                                                <tr>
+                                                    <th><spring:message code="oficioRemision.numeroOficio"/></th>
+                                                    <th><spring:message code="oficioRemision.fecha"/></th>
+                                                    <th><spring:message code="oficioRemision.oficina"/></th>
+                                                    <th class="center"><spring:message code="regweb.acciones"/></th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+                                            <c:forEach var="oficioRemision" items="${oficiosPendientesLlegada}" end="5">
+                                                <tr>
+                                                    <td><fmt:formatDate value="${oficioRemision.fecha}" pattern="yyyy"/> / ${oficioRemision.numeroOficio}</td>
+                                                    <td><fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy"/></td>
+                                                    <td>${oficioRemision.oficina.denominacion}</td>
+                                                    <td class="center">
+                                                        <a class="btn btn-success btn-sm" href="<c:url value="/oficioRemision/${oficioRemision.id}/procesar"/>" title="<spring:message code="oficioRemision.procesar"/>"><span class="fa fa-check"></span></a>
+                                                    </td>
+                                                </tr>
+                                            </c:forEach>
+
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+
+                                </div>
+                            </div>
+
                         </div>
                     </c:if>
 

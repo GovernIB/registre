@@ -8,7 +8,6 @@ import es.caib.regweb.webapp.controller.BaseController;
 import es.caib.regweb.webapp.utils.Mensaje;
 import es.caib.regweb.webapp.validator.RegistroSalidaBusquedaValidator;
 import es.caib.regweb.webapp.validator.RegistroSalidaWebValidator;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.support.SessionStatus;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -64,9 +62,6 @@ public class RegistroSalidaFormController extends BaseController {
     @EJB(mappedName = "regweb/TipoAsuntoEJB/local")
     public TipoAsuntoLocal tipoAsuntoEjb;
 
-    @EJB(mappedName = "regweb/OrganismoEJB/local")
-    public OrganismoLocal organismoEjb;
-
     @EJB(mappedName = "regweb/PermisoLibroUsuarioEJB/local")
     public PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
 
@@ -90,9 +85,6 @@ public class RegistroSalidaFormController extends BaseController {
 
     @EJB(mappedName = "regweb/CatNivelAdministracionEJB/local")
     public CatNivelAdministracionLocal catNivelAdministracionEjb;
-
-    @EJB(mappedName = "regweb/InteresadoEJB/local")
-    public InteresadoLocal interesadoEjb;
 
     /**
      * Carga el formulario para un nuevo {@link es.caib.regweb.model.RegistroSalida}

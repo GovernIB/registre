@@ -58,12 +58,6 @@ public class RegistroSalidaListController extends BaseController {
    
     @EJB(mappedName = "regweb/TipoAsuntoEJB/local")
     public TipoAsuntoLocal tipoAsuntoEjb;
-    
-    @EJB(mappedName = "regweb/OrganismoEJB/local")
-    public OrganismoLocal organismoEjb;
-    
-    @EJB(mappedName = "regweb/PermisoLibroUsuarioEJB/local")
-    public PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
 
     @EJB(mappedName = "regweb/HistoricoRegistroSalidaEJB/local")
     public HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
@@ -79,7 +73,6 @@ public class RegistroSalidaListController extends BaseController {
 
     @EJB(mappedName = "regweb/CatPaisEJB/local")
     public CatPaisLocal catPaisEjb;
-
 
     @EJB(mappedName = "regweb/CatComunidadAutonomaEJB/local")
     public CatComunidadAutonomaLocal catComunidadAutonomaEjb;

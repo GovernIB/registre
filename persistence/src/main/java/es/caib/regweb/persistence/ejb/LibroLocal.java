@@ -57,6 +57,14 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
      * @return
      * @throws Exception
      */
+    public List<Libro> getLibrosActivosOrganismo(Long idOrganismo) throws Exception;
+
+    /**
+     * Lista los Libros de un Organismo
+     * @param idOrganismo
+     * @return
+     * @throws Exception
+     */
     public List<Libro> getLibrosOrganismo(Long idOrganismo) throws Exception;
 
 }

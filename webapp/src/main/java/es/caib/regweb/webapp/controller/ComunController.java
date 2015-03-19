@@ -51,9 +51,6 @@ public class ComunController extends BaseController {
     @EJB(mappedName = "regweb/RegistroEntradaEJB/local")
     public RegistroEntradaLocal registroEntradaEjb;
     
-    @EJB(mappedName = "regweb/OficinaEJB/local")
-    public OficinaLocal oficinaEjb;
-    
     @EJB(mappedName = "regweb/EntidadEJB/local")
     public EntidadLocal entidadEjb;
 

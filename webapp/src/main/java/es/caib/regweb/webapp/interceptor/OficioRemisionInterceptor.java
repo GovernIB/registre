@@ -1,10 +1,10 @@
 package es.caib.regweb.webapp.interceptor;
 
 import es.caib.regweb.model.*;
-import es.caib.regweb.persistence.ejb.*;
+import es.caib.regweb.persistence.ejb.ModeloOficioRemisionLocal;
+import es.caib.regweb.persistence.ejb.OficioRemisionLocal;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.webapp.utils.Mensaje;
-
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -13,7 +13,6 @@ import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import java.util.List;
 
 /**
@@ -27,15 +26,6 @@ import java.util.List;
 public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
 
     protected final Logger log = Logger.getLogger(getClass());
-
-    @EJB(mappedName = "regweb/UsuarioEntidadEJB/local")
-    public UsuarioEntidadLocal usuarioEntidadEjb;
-
-    @EJB(mappedName = "regweb/PermisoLibroUsuarioEJB/local")
-    public PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
-
-    @EJB(mappedName = "regweb/RegistroEntradaEJB/local")
-    public RegistroEntradaLocal registroEntradaEjb;
 
     @EJB(mappedName = "regweb/OficioRemisionEJB/local")
     public OficioRemisionLocal oficioRemisionEjb;

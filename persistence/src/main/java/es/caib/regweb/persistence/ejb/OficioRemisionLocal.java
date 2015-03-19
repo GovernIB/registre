@@ -1,6 +1,9 @@
 package es.caib.regweb.persistence.ejb;
 
-import es.caib.regweb.model.*;
+import es.caib.regweb.model.Libro;
+import es.caib.regweb.model.OficioRemision;
+import es.caib.regweb.model.Organismo;
+import es.caib.regweb.model.RegistroEntrada;
 import es.caib.regweb.persistence.utils.Paginacion;
 
 import javax.annotation.security.RolesAllowed;

@@ -42,20 +42,15 @@ public class InformeController extends BaseController {
     
     @EJB(mappedName = "regweb/LopdEJB/local")
     public LopdLocal lopdEjb;
-    
- 
+
     @EJB(mappedName = "regweb/RegistroSalidaEJB/local")
     public RegistroSalidaLocal registroSalidaEjb;
     
     @EJB(mappedName = "regweb/RegistroEntradaEJB/local")
     public RegistroEntradaLocal registroEntradaEjb;
 
-    
     @EJB(mappedName = "regweb/TipoAsuntoEJB/local")
     public TipoAsuntoLocal tipoAsuntoEjb;
-    
-    @EJB(mappedName = "regweb/OficinaEJB/local")
-    public OficinaLocal oficinaEjb;
     
     @EJB(mappedName = "regweb/LibroEJB/local")
     public LibroLocal libroEjb;
@@ -66,8 +61,6 @@ public class InformeController extends BaseController {
     @EJB(mappedName = "regweb/RegistroLopdMigradoEJB/local")
     public RegistroLopdMigradoLocal registroLopdMigradoEjb;
 
-    @EJB(mappedName = "regweb/UsuarioEJB/local")
-    public UsuarioLocal usuarioEjb;
 
 
     /**

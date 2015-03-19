@@ -9,7 +9,6 @@ import es.caib.regweb.utils.AnnexFileSystemManager;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.utils.StringUtils;
 import es.caib.regweb.utils.Versio;
-
 import org.apache.log4j.Logger;
 import org.fundaciobit.plugins.documentcustody.DocumentCustody;
 import org.fundaciobit.plugins.utils.Base64;
@@ -26,7 +25,6 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.helpers.DefaultValidationEventHandler;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -50,9 +48,6 @@ public class SirBean implements SirLocal {
 
     @EJB(mappedName = "regweb/AnexoEJB/local")
     public AnexoLocal anexoEjb;
-
-    @EJB(mappedName = "regweb/OrganismoEJB/local")
-    public OrganismoLocal organismoEjb;
 
     @EJB(mappedName = "regweb/CatLocalidadEJB/local")
     public CatLocalidadLocal catLocalidadEjb;

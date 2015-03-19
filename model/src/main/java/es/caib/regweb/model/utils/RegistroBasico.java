@@ -1,11 +1,12 @@
 package es.caib.regweb.model.utils;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @author earrivi on 05/03/2015.
  */
-public class RegistroBasico {
+public class RegistroBasico implements Serializable{
 
     private Long id;
     private String numeroRegistroFormateado;
@@ -13,6 +14,12 @@ public class RegistroBasico {
     private String libro;
     private String usuario;
     private String extracto;
+
+    private Long idOficina;
+    private String oficina;
+    private String destinatario;
+    private Long anexos;
+    private Long estado;
 
     public RegistroBasico() {
     }
@@ -72,5 +79,45 @@ public class RegistroBasico {
 
     public void setExtracto(String extracto) {
         this.extracto = extracto;
+    }
+
+    public Long getIdOficina() {
+        return idOficina;
+    }
+
+    public void setIdOficina(Long idOficina) {
+        this.idOficina = idOficina;
+    }
+
+    public String getOficina() {
+        return oficina;
+    }
+
+    public void setOficina(String oficina) {
+        this.oficina = oficina;
+    }
+
+    public String getDestinatario() {
+        return destinatario;
+    }
+
+    public void setDestinatario(String destinatario) {
+        this.destinatario = destinatario;
+    }
+
+    public Long getAnexos() {
+        return anexos;
+    }
+
+    public void setAnexos(Long anexos) {
+        this.anexos = anexos;
+    }
+
+    public Long getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Long estado) {
+        this.estado = estado;
     }
 }

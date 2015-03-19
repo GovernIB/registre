@@ -35,9 +35,6 @@ public class BaseController {
     @EJB(mappedName = "regweb/OficinaEJB/local")
     public OficinaLocal oficinaEjb;
 
-    @EJB(mappedName = "regweb/RegistroMigradoEJB/local")
-    public RegistroMigradoLocal registroMigradoEjb;
-
     @EJB(mappedName = "regweb/InteresadoEJB/local")
     public InteresadoLocal interesadoEjb;
 

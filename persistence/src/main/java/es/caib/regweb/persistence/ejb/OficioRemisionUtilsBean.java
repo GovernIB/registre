@@ -30,12 +30,6 @@ public class OficioRemisionUtilsBean implements OficioRemisionUtilsLocal {
   @EJB(mappedName = "regweb/RegistroEntradaEJB/local")
   public RegistroEntradaLocal registroEntradaEjb;
 
-  @EJB(mappedName = "regweb/RegistroSalidaEJB/local")
-  public RegistroSalidaLocal registroSalidaEjb;
-
-  @EJB(mappedName = "regweb/OficinaEJB/local")
-  public OficinaLocal oficinaEjb;
-
   @EJB(mappedName = "regweb/OficioRemisionEJB/local")
   public OficioRemisionLocal oficioRemisionEjb;
 

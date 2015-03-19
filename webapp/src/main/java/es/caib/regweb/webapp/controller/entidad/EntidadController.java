@@ -42,15 +42,15 @@ import java.util.*;
 public class EntidadController extends BaseController {
 
     //protected final Logger log = Logger.getLogger(getClass());
-    
-    @EJB(mappedName = "regweb/DescargaEJB/local")
-    public DescargaLocal descargaEjb;
 
     @Autowired
     private EntidadValidator entidadValidator;
 
     @Autowired
     private UsuarioService usuarioService;
+
+    @EJB(mappedName = "regweb/DescargaEJB/local")
+    public DescargaLocal descargaEjb;
 
     @EJB(mappedName = "regweb/SincronizadorDir3EJB/local")
     private SincronizadorDir3Local sincronizadorDIR3Ejb;
@@ -66,12 +66,6 @@ public class EntidadController extends BaseController {
 
     @EJB(mappedName = "regweb/ArchivoEJB/local")
     public ArchivoLocal archivoEjb;
-
-    @EJB(mappedName = "regweb/OficinaEJB/local")
-    public OficinaLocal oficinaEjb;
-
-    @EJB(mappedName = "regweb/OrganismoEJB/local")
-    public OrganismoLocal organismoEjb;
 
     @EJB(mappedName = "regweb/UsuarioEJB/local")
     public UsuarioLocal usuarioEjb;
@@ -581,6 +575,42 @@ public class EntidadController extends BaseController {
         }
 
         return "redirect:/entidad/usuarios";
+    }
+
+    /**
+     * Eliminar la asignación de un Usuario a un Organismo
+     */
+    //@RequestMapping(value = "/{idEntidad}/delete")
+    public String eliminarEntidad(@PathVariable Long idEntidad, HttpServletRequest request) {
+    log.info("idEntidad: " + idEntidad);
+        try {
+
+            // Eliminar RegistroEntrada: RegistroDetalle, Modificaciones
+            // Eliminar RegistroSalida: RegistroDetalle, Modificaciones
+            // Eliminar Oficios Remisión
+            // Eliminar Anexos
+            // Eliminar Trazabilidad
+            // Eliminar Personas
+            // Eliminar Interesados
+            // Eliminar Repro
+            // Eliminar LOPD
+            // Eliminar PermisosLibroUsuario
+            // Eliminar Libros
+            // Eliminar Oficinas
+            // Eliminar Organismos
+            // Eliminar Catálogo Datos
+            // Eliminar UsuarioEntidad
+            // Eliminar Entidad
+            entidadEjb.eliminarEntidad(idEntidad);
+
+            Mensaje.saveMessageInfo(request, "S'ha eliminat l'entitat");
+
+        } catch (Exception e) {
+            Mensaje.saveMessageError(request, "No s'ha eliminat el registre perque està relacionat amb un altra entitat.");
+            e.printStackTrace();
+        }
+
+        return "redirect:/entidad/list";
     }
 
 

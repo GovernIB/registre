@@ -3,8 +3,7 @@ package es.caib.regweb.webapp.controller.libro;
 import es.caib.regweb.model.*;
 import es.caib.regweb.persistence.ejb.ContadorLocal;
 import es.caib.regweb.persistence.ejb.LibroLocal;
-import es.caib.regweb.persistence.ejb.OrganismoLocal;
-import es.caib.regweb.persistence.ejb.*;
+import es.caib.regweb.persistence.ejb.RelacionOrganizativaOfiLocal;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.webapp.controller.BaseController;
 import es.caib.regweb.webapp.editor.UsuarioEditor;
@@ -48,9 +47,6 @@ public class LibroController extends BaseController {
     
     @EJB(mappedName = "regweb/LibroEJB/local")
     public LibroLocal libroEjb;
-
-    @EJB(mappedName = "regweb/OrganismoEJB/local")
-    public OrganismoLocal organismoEjb;
     
     @EJB(mappedName = "regweb/RelacionOrganizativaOfiEJB/local")
     public RelacionOrganizativaOfiLocal relacionOrganizativaOfiLocalEjb;

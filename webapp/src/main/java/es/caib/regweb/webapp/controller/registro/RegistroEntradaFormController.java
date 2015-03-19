@@ -65,9 +65,6 @@ public class RegistroEntradaFormController extends BaseController {
     @EJB(mappedName = "regweb/TipoAsuntoEJB/local")
     public TipoAsuntoLocal tipoAsuntoEjb;
     
-    @EJB(mappedName = "regweb/OficinaEJB/local")
-    public OficinaLocal oficinaEjb;
-    
     @EJB(mappedName = "regweb/CatLocalidadEJB/local")
     public CatLocalidadLocal catLocalidadEjb;
     
@@ -82,9 +79,6 @@ public class RegistroEntradaFormController extends BaseController {
     
     @EJB(mappedName = "regweb/CatNivelAdministracionEJB/local")
     public CatNivelAdministracionLocal catNivelAdministracionEjb;
-    
-    @EJB(mappedName = "regweb/OrganismoEJB/local")
-    public OrganismoLocal organismoEjb;
 
 
     /**
