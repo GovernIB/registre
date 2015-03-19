@@ -1141,18 +1141,11 @@
 
  -- INICI UNIQUES
     alter table RWE_CATESTADOENTIDAD add constraint RWE_CATESTENT_CODESTENT_UK unique (CODIGOESTADOENTIDAD);
-
     alter table RWE_CODIGOASUNTO add constraint RWE_CODASUN_CODIGO_TIPASUN_UK unique (CODIGO, TIPOASUNTO);
-
     alter table RWE_ENTIDAD add constraint RWE_ENTIDAD_CODIGODIR3_uk unique (CODIGODIR3);
-
     alter table RWE_OFICINA add constraint RWE_OFICINA_CODIGO_uk unique (CODIGO);
-
     alter table RWE_REGISTRO_MIGRADO add constraint RWE_REGMIGRADO_AN_NUM_OF_UK unique (ANO, NUMERO, CODOFICINA, TREGISTRO, IDENTIDAD);
-
     alter table RWE_ROL add constraint RWE_ROL_NOMBRE_uk unique (NOMBRE);
-
     alter table RWE_USUARIO add constraint RWE_USUARIO_IDENTIFICADOR_uk unique (IDENTIFICADOR);
-
  -- FINAL UNIQUES
 
