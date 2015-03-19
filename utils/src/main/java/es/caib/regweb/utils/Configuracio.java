@@ -12,6 +12,10 @@ public class Configuracio implements RegwebConstantes {
   public static boolean isCAIB() {
     return Boolean.getBoolean(REGWEB_PROPERTY_BASE + "iscaib");
   }
+
+    public static String getUrlPreregistre() {
+        return System.getProperty(REGWEB_PROPERTY_BASE + "preregistre");
+    }
   
   
   public static boolean showTimeStamp() {

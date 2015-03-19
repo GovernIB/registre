@@ -1,4 +1,5 @@
-﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+﻿<%@ page import="es.caib.regweb.utils.Configuracio" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 
 <div class="container-fluid">
@@ -131,6 +132,11 @@
                                     <li class="divider"></li>
                                     <li class="submenu-complet"><a href="<c:url value="/preRegistro/list"/>"><spring:message code="preRegistro.listado"/></a></li>
                                 </c:if>
+
+                                <%if(Configuracio.isCAIB()){%>
+                                    <li class="submenu-complet"><a href="<%=Configuracio.getUrlPreregistre()%>" target="_blank"><spring:message code="regweb.preregistro.caib"/></a></li>
+                                <%}%>
+
                                 <li class="divider"></li>
                                 <li class="dropdown-submenu-left toggle-left">
                                     <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> Oficios</a>
