@@ -27,7 +27,7 @@ public class RegwebInfoTest extends RegWebTestUtils {
     infoApi = getInfoApi();
   }
 
-  //@Test
+  @Test
   public void testVersio() throws Exception {
     String version = infoApi.getVersion();
     if (version.indexOf('-') != -1) {
@@ -37,7 +37,7 @@ public class RegwebInfoTest extends RegWebTestUtils {
     }
   }
 
-  //@Test
+  @Test
   public void testVersioWs() throws Exception {
     Assert.assertEquals(3, infoApi.getVersionWs());
   }
@@ -58,7 +58,7 @@ public class RegwebInfoTest extends RegWebTestUtils {
 
     } catch (Exception e) {
       System.err.println("Error desconegut: " + e.getMessage());
-      Assert.fail("WsValidationException no esperada");
+      Assert.fail("Exception no esperada");
     }
 
   }

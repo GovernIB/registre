@@ -5,5 +5,5 @@ package es.caib.regweb.utils;
 public final class Versio {
   public static final String VERSIO="3.0.0";
   public static final String VERSIO_SIR="RWE3";
-  public static final String TIMESTAMP="2015-03-19 13:06";
+  public static final String TIMESTAMP="2015-03-20 08:52";
 }

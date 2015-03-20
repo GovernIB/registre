@@ -1,449 +1,450 @@
-<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions name="RegWebRegistroEntradaWsService" targetNamespace="http://impl.v3.ws.regweb.caib.es/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://impl.v3.ws.regweb.caib.es/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="RegWebRegistroEntradaWsService" targetNamespace="http://impl.v3.ws.regweb.caib.es/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://impl.v3.ws.regweb.caib.es/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
   <wsdl:types>
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://impl.v3.ws.regweb.caib.es/" xmlns:tns="http://impl.v3.ws.regweb.caib.es/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-<xs:element name="altaRegistroEntrada" type="tns:altaRegistroEntrada" />
-<xs:element name="altaRegistroEntradaResponse" type="tns:altaRegistroEntradaResponse" />
-<xs:element name="anexoWs" type="tns:anexoWs" />
-<xs:element name="anularRegistroEntrada" type="tns:anularRegistroEntrada" />
-<xs:element name="anularRegistroEntradaResponse" type="tns:anularRegistroEntradaResponse" />
-<xs:element name="datosInteresadoWs" type="tns:datosInteresadoWs" />
-<xs:element name="getVersion" type="tns:getVersion" />
-<xs:element name="getVersionResponse" type="tns:getVersionResponse" />
-<xs:element name="getVersionWs" type="tns:getVersionWs" />
-<xs:element name="getVersionWsResponse" type="tns:getVersionWsResponse" />
-<xs:element name="identificadorWs" type="tns:identificadorWs" />
-<xs:element name="interesadoWs" type="tns:interesadoWs" />
-<xs:element name="obtenerRegistroEntrada" type="tns:obtenerRegistroEntrada" />
-<xs:element name="obtenerRegistroEntradaID" type="tns:obtenerRegistroEntradaID" />
-<xs:element name="obtenerRegistroEntradaIDResponse" type="tns:obtenerRegistroEntradaIDResponse" />
-<xs:element name="obtenerRegistroEntradaResponse" type="tns:obtenerRegistroEntradaResponse" />
-<xs:element name="registroEntradaWs" type="tns:registroEntradaWs" />
-<xs:element name="registroWs" type="tns:registroWs" />
-<xs:element name="tramitarRegistroEntrada" type="tns:tramitarRegistroEntrada" />
-<xs:element name="tramitarRegistroEntradaResponse" type="tns:tramitarRegistroEntradaResponse" />
-<xs:complexType name="getVersion">
-<xs:sequence />
-</xs:complexType>
-<xs:complexType name="getVersionResponse">
-<xs:sequence>
-<xs:element minOccurs="0" name="return" type="xs:string" />
-</xs:sequence>
-</xs:complexType>
-<xs:complexType name="obtenerRegistroEntrada">
-<xs:sequence>
-<xs:element minOccurs="0" name="numeroRegistroFormateado" type="xs:string" />
-<xs:element minOccurs="0" name="usuario" type="xs:string" />
-<xs:element minOccurs="0" name="entidad" type="xs:string" />
-</xs:sequence>
-</xs:complexType>
-<xs:complexType name="obtenerRegistroEntradaResponse">
-<xs:sequence>
-<xs:element minOccurs="0" name="return" type="tns:registroEntradaWs" />
-</xs:sequence>
-</xs:complexType>
-<xs:complexType name="registroEntradaWs">
-<xs:complexContent>
-<xs:extension base="tns:registroWs">
-<xs:sequence>
-<xs:element minOccurs="0" name="destino" type="xs:string" />
-</xs:sequence>
-</xs:extension>
-</xs:complexContent>
-</xs:complexType>
-<xs:complexType name="registroWs">
-<xs:sequence>
-<xs:element maxOccurs="unbounded" minOccurs="0" name="anexos" nillable="true" type="tns:anexoWs" />
-<xs:element minOccurs="0" name="aplicacion" type="xs:string" />
-<xs:element minOccurs="0" name="codigoAsunto" type="xs:string" />
-<xs:element minOccurs="0" name="codigoUsuario" type="xs:string" />
-<xs:element minOccurs="0" name="contactoUsuario" type="xs:string" />
-<xs:element minOccurs="0" name="docFisica" type="xs:long" />
-<xs:element minOccurs="0" name="expone" type="xs:string" />
-<xs:element minOccurs="0" name="extracto" type="xs:string" />
-<xs:element minOccurs="0" name="fecha" type="xs:dateTime" />
-<xs:element minOccurs="0" name="idioma" type="xs:string" />
-<xs:element maxOccurs="unbounded" minOccurs="0" name="interesados" nillable="true" type="tns:interesadoWs" />
-<xs:element minOccurs="0" name="libro" type="xs:string" />
-<xs:element minOccurs="0" name="numExpediente" type="xs:string" />
-<xs:element minOccurs="0" name="numTransporte" type="xs:string" />
-<xs:element name="numero" type="xs:int" />
-<xs:element minOccurs="0" name="numeroRegistroFormateado" type="xs:string" />
-<xs:element minOccurs="0" name="observaciones" type="xs:string" />
-<xs:element minOccurs="0" name="oficina" type="xs:string" />
-<xs:element minOccurs="0" name="refExterna" type="xs:string" />
-<xs:element minOccurs="0" name="solicita" type="xs:string" />
-<xs:element minOccurs="0" name="tipoAsunto" type="xs:string" />
-<xs:element minOccurs="0" name="tipoTransporte" type="xs:string" />
-<xs:element minOccurs="0" name="version" type="xs:string" />
-</xs:sequence>
-</xs:complexType>
-<xs:complexType name="anexoWs">
-<xs:sequence>
-<xs:element minOccurs="0" name="titulo" type="xs:string" />
-<xs:element minOccurs="0" name="nombreFicheroAnexado" type="xs:string" />
-<xs:element minOccurs="0" name="ficheroAnexado" type="xs:base64Binary" />
-<xs:element minOccurs="0" name="tamanoFicheroAnexado" type="xs:long" />
-<xs:element minOccurs="0" name="tipoMIMEFicheroAnexado" type="xs:string" />
-<xs:element minOccurs="0" name="tipoDocumental" type="xs:string" />
-<xs:element minOccurs="0" name="validezDocumento" type="xs:string" />
-<xs:element minOccurs="0" name="tipoDocumento" type="xs:string" />
-<xs:element minOccurs="0" name="observaciones" type="xs:string" />
-<xs:element minOccurs="0" name="origenCiudadanoAdmin" type="xs:int" />
-<xs:element minOccurs="0" name="fechaCaptura" type="xs:dateTime" />
-<xs:element minOccurs="0" name="modoFirma" type="xs:int" />
-<xs:element minOccurs="0" name="nombreFirmaAnexada" type="xs:string" />
-<xs:element minOccurs="0" name="firmaAnexada" type="xs:base64Binary" />
-<xs:element minOccurs="0" name="tamanoFirmaAnexada" type="xs:long" />
-<xs:element minOccurs="0" name="tipoMIMEFirmaAnexada" type="xs:string" />
-<xs:element minOccurs="0" name="certificado" type="xs:string" />
-<xs:element minOccurs="0" name="firmacsv" type="xs:string" />
-<xs:element minOccurs="0" name="timestamp" type="xs:string" />
-<xs:element minOccurs="0" name="validacionOCSP" type="xs:string" />
-</xs:sequence>
-</xs:complexType>
-<xs:complexType name="interesadoWs">
-<xs:sequence>
-<xs:element minOccurs="0" name="interesado" type="tns:datosInteresadoWs" />
-<xs:element minOccurs="0" name="representante" type="tns:datosInteresadoWs" />
-</xs:sequence>
-</xs:complexType>
-<xs:complexType name="datosInteresadoWs">
-<xs:sequence>
-<xs:element minOccurs="0" name="apellido1" type="xs:string" />
-<xs:element minOccurs="0" name="apellido2" type="xs:string" />
-<xs:element minOccurs="0" name="canal" type="xs:long" />
-<xs:element minOccurs="0" name="cp" type="xs:string" />
-<xs:element minOccurs="0" name="direccion" type="xs:string" />
-<xs:element minOccurs="0" name="direccionElectronica" type="xs:string" />
-<xs:element minOccurs="0" name="documento" type="xs:string" />
-<xs:element minOccurs="0" name="email" type="xs:string" />
-<xs:element minOccurs="0" name="localidad" type="xs:long" />
-<xs:element minOccurs="0" name="nombre" type="xs:string" />
-<xs:element minOccurs="0" name="observaciones" type="xs:string" />
-<xs:element minOccurs="0" name="pais" type="xs:long" />
-<xs:element minOccurs="0" name="provincia" type="xs:long" />
-<xs:element minOccurs="0" name="razonSocial" type="xs:string" />
-<xs:element minOccurs="0" name="telefono" type="xs:string" />
-<xs:element minOccurs="0" name="tipoDocumentoIdentificacion" type="xs:unsignedShort" />
-<xs:element minOccurs="0" name="tipoInteresado" type="xs:long" />
-</xs:sequence>
-</xs:complexType>
-<xs:complexType name="wsI18NTranslation">
-<xs:sequence>
-<xs:element minOccurs="0" name="code" type="xs:string" />
-<xs:element maxOccurs="unbounded" minOccurs="0" name="args" type="tns:wsI18NArgument" />
-</xs:sequence>
-</xs:complexType>
-<xs:complexType name="wsI18NArgument">
-<xs:sequence>
-<xs:element minOccurs="0" name="value" type="xs:string" />
-<xs:element name="translate" type="xs:boolean" />
-</xs:sequence>
-</xs:complexType>
-<xs:complexType name="wsFieldValidationError">
-<xs:sequence>
-<xs:element name="label" type="xs:string" />
-<xs:element name="field" type="xs:string" />
-<xs:element name="translation" type="tns:wsI18NTranslation" />
-<xs:element name="error" type="xs:string" />
-</xs:sequence>
-</xs:complexType>
-<xs:complexType name="tramitarRegistroEntrada">
-<xs:sequence>
-<xs:element minOccurs="0" name="numeroRegistroFormateado" type="xs:string" />
-<xs:element minOccurs="0" name="usuario" type="xs:string" />
-<xs:element minOccurs="0" name="entidad" type="xs:string" />
-</xs:sequence>
-</xs:complexType>
-<xs:complexType name="tramitarRegistroEntradaResponse">
-<xs:sequence />
-</xs:complexType>
-<xs:complexType name="altaRegistroEntrada">
-<xs:sequence>
-<xs:element minOccurs="0" name="registroEntradaWs" type="tns:registroEntradaWs" />
-</xs:sequence>
-</xs:complexType>
-<xs:complexType name="altaRegistroEntradaResponse">
-<xs:sequence>
-<xs:element minOccurs="0" name="return" type="tns:identificadorWs" />
-</xs:sequence>
-</xs:complexType>
-<xs:complexType name="identificadorWs">
-<xs:sequence>
-<xs:element minOccurs="0" name="fecha" type="xs:dateTime" />
-<xs:element minOccurs="0" name="numero" type="xs:int" />
-<xs:element minOccurs="0" name="numeroRegistroFormateado" type="xs:string" />
-</xs:sequence>
-</xs:complexType>
-<xs:complexType name="anularRegistroEntrada">
-<xs:sequence>
-<xs:element minOccurs="0" name="numeroRegistroFormateado" type="xs:string" />
-<xs:element minOccurs="0" name="usuario" type="xs:string" />
-<xs:element minOccurs="0" name="entidad" type="xs:string" />
-<xs:element name="anular" type="xs:boolean" />
-</xs:sequence>
-</xs:complexType>
-<xs:complexType name="anularRegistroEntradaResponse">
-<xs:sequence />
-</xs:complexType>
-<xs:complexType name="obtenerRegistroEntradaID">
-<xs:sequence>
-<xs:element name="any" type="xs:int" />
-<xs:element name="numeroRegistro" type="xs:int" />
-<xs:element minOccurs="0" name="libro" type="xs:string" />
-<xs:element minOccurs="0" name="usuario" type="xs:string" />
-<xs:element minOccurs="0" name="entidad" type="xs:string" />
-</xs:sequence>
-</xs:complexType>
-<xs:complexType name="obtenerRegistroEntradaIDResponse">
-<xs:sequence>
-<xs:element minOccurs="0" name="return" type="tns:identificadorWs" />
-</xs:sequence>
-</xs:complexType>
-<xs:complexType name="getVersionWs">
-<xs:sequence />
-</xs:complexType>
-<xs:complexType name="getVersionWsResponse">
-<xs:sequence>
-<xs:element name="return" type="xs:int" />
-</xs:sequence>
-</xs:complexType>
-<xs:element name="WsI18NError" type="tns:WsI18NError" />
-<xs:complexType name="WsI18NError">
-<xs:sequence>
-<xs:element name="translation" nillable="true" type="tns:wsI18NTranslation" />
-</xs:sequence>
-</xs:complexType>
-<xs:element name="WsValidationErrors" type="tns:WsValidationErrors" />
-<xs:complexType name="WsValidationErrors">
-<xs:sequence>
-<xs:element maxOccurs="unbounded" minOccurs="0" name="fieldFaults" type="tns:wsFieldValidationError" />
-</xs:sequence>
-</xs:complexType>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://impl.v3.ws.regweb.caib.es/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://impl.v3.ws.regweb.caib.es/">
+  <xs:element name="altaRegistroEntrada" type="tns:altaRegistroEntrada"/>
+  <xs:element name="altaRegistroEntradaResponse" type="tns:altaRegistroEntradaResponse"/>
+  <xs:element name="anexoWs" type="tns:anexoWs"/>
+  <xs:element name="anularRegistroEntrada" type="tns:anularRegistroEntrada"/>
+  <xs:element name="anularRegistroEntradaResponse" type="tns:anularRegistroEntradaResponse"/>
+  <xs:element name="datosInteresadoWs" type="tns:datosInteresadoWs"/>
+  <xs:element name="getVersion" type="tns:getVersion"/>
+  <xs:element name="getVersionResponse" type="tns:getVersionResponse"/>
+  <xs:element name="getVersionWs" type="tns:getVersionWs"/>
+  <xs:element name="getVersionWsResponse" type="tns:getVersionWsResponse"/>
+  <xs:element name="identificadorWs" type="tns:identificadorWs"/>
+  <xs:element name="interesadoWs" type="tns:interesadoWs"/>
+  <xs:element name="obtenerRegistroEntrada" type="tns:obtenerRegistroEntrada"/>
+  <xs:element name="obtenerRegistroEntradaID" type="tns:obtenerRegistroEntradaID"/>
+  <xs:element name="obtenerRegistroEntradaIDResponse" type="tns:obtenerRegistroEntradaIDResponse"/>
+  <xs:element name="obtenerRegistroEntradaResponse" type="tns:obtenerRegistroEntradaResponse"/>
+  <xs:element name="registroEntradaWs" type="tns:registroEntradaWs"/>
+  <xs:element name="registroWs" type="tns:registroWs"/>
+  <xs:element name="tramitarRegistroEntrada" type="tns:tramitarRegistroEntrada"/>
+  <xs:element name="tramitarRegistroEntradaResponse" type="tns:tramitarRegistroEntradaResponse"/>
+  <xs:complexType name="getVersion">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="getVersionResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="obtenerRegistroEntrada">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="numeroRegistroFormateado" type="xs:string"/>
+      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
+      <xs:element minOccurs="0" name="entidad" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="obtenerRegistroEntradaResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:registroEntradaWs"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="registroEntradaWs">
+    <xs:complexContent>
+      <xs:extension base="tns:registroWs">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="destino" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="registroWs">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="anexos" nillable="true" type="tns:anexoWs"/>
+      <xs:element minOccurs="0" name="aplicacion" type="xs:string"/>
+      <xs:element minOccurs="0" name="codigoAsunto" type="xs:string"/>
+      <xs:element minOccurs="0" name="codigoUsuario" type="xs:string"/>
+      <xs:element minOccurs="0" name="contactoUsuario" type="xs:string"/>
+      <xs:element minOccurs="0" name="docFisica" type="xs:long"/>
+      <xs:element minOccurs="0" name="expone" type="xs:string"/>
+      <xs:element minOccurs="0" name="extracto" type="xs:string"/>
+      <xs:element minOccurs="0" name="fecha" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="idioma" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="interesados" nillable="true" type="tns:interesadoWs"/>
+      <xs:element minOccurs="0" name="libro" type="xs:string"/>
+      <xs:element minOccurs="0" name="numExpediente" type="xs:string"/>
+      <xs:element minOccurs="0" name="numTransporte" type="xs:string"/>
+      <xs:element name="numero" type="xs:int"/>
+      <xs:element minOccurs="0" name="numeroRegistroFormateado" type="xs:string"/>
+      <xs:element minOccurs="0" name="observaciones" type="xs:string"/>
+      <xs:element minOccurs="0" name="oficina" type="xs:string"/>
+      <xs:element minOccurs="0" name="refExterna" type="xs:string"/>
+      <xs:element minOccurs="0" name="solicita" type="xs:string"/>
+      <xs:element minOccurs="0" name="tipoAsunto" type="xs:string"/>
+      <xs:element minOccurs="0" name="tipoTransporte" type="xs:string"/>
+      <xs:element minOccurs="0" name="version" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="anexoWs">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="titulo" type="xs:string"/>
+      <xs:element minOccurs="0" name="nombreFicheroAnexado" type="xs:string"/>
+      <xs:element minOccurs="0" name="ficheroAnexado" type="xs:base64Binary"/>
+      <xs:element minOccurs="0" name="tamanoFicheroAnexado" type="xs:long"/>
+      <xs:element minOccurs="0" name="tipoMIMEFicheroAnexado" type="xs:string"/>
+      <xs:element minOccurs="0" name="tipoDocumental" type="xs:string"/>
+      <xs:element minOccurs="0" name="validezDocumento" type="xs:string"/>
+      <xs:element minOccurs="0" name="tipoDocumento" type="xs:string"/>
+      <xs:element minOccurs="0" name="observaciones" type="xs:string"/>
+      <xs:element minOccurs="0" name="origenCiudadanoAdmin" type="xs:int"/>
+      <xs:element minOccurs="0" name="fechaCaptura" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="modoFirma" type="xs:int"/>
+      <xs:element minOccurs="0" name="nombreFirmaAnexada" type="xs:string"/>
+      <xs:element minOccurs="0" name="firmaAnexada" type="xs:base64Binary"/>
+      <xs:element minOccurs="0" name="tamanoFirmaAnexada" type="xs:long"/>
+      <xs:element minOccurs="0" name="tipoMIMEFirmaAnexada" type="xs:string"/>
+      <xs:element minOccurs="0" name="certificado" type="xs:string"/>
+      <xs:element minOccurs="0" name="firmacsv" type="xs:string"/>
+      <xs:element minOccurs="0" name="timestamp" type="xs:string"/>
+      <xs:element minOccurs="0" name="validacionOCSP" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="interesadoWs">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="interesado" type="tns:datosInteresadoWs"/>
+      <xs:element minOccurs="0" name="representante" type="tns:datosInteresadoWs"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="datosInteresadoWs">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="apellido1" type="xs:string"/>
+      <xs:element minOccurs="0" name="apellido2" type="xs:string"/>
+      <xs:element minOccurs="0" name="canal" type="xs:long"/>
+      <xs:element minOccurs="0" name="cp" type="xs:string"/>
+      <xs:element minOccurs="0" name="direccion" type="xs:string"/>
+      <xs:element minOccurs="0" name="direccionElectronica" type="xs:string"/>
+      <xs:element minOccurs="0" name="documento" type="xs:string"/>
+      <xs:element minOccurs="0" name="email" type="xs:string"/>
+      <xs:element minOccurs="0" name="localidad" type="xs:long"/>
+      <xs:element minOccurs="0" name="nombre" type="xs:string"/>
+      <xs:element minOccurs="0" name="observaciones" type="xs:string"/>
+      <xs:element minOccurs="0" name="pais" type="xs:long"/>
+      <xs:element minOccurs="0" name="provincia" type="xs:long"/>
+      <xs:element minOccurs="0" name="razonSocial" type="xs:string"/>
+      <xs:element minOccurs="0" name="telefono" type="xs:string"/>
+      <xs:element minOccurs="0" name="tipoDocumentoIdentificacion" type="xs:unsignedShort"/>
+      <xs:element minOccurs="0" name="tipoInteresado" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="wsI18NTranslation">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="code" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="args" type="tns:wsI18NArgument"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="wsI18NArgument">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="value" type="xs:string"/>
+      <xs:element name="translate" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="wsFieldValidationError">
+    <xs:sequence>
+      <xs:element name="label" type="xs:string"/>
+      <xs:element name="field" type="xs:string"/>
+      <xs:element name="translation" type="tns:wsI18NTranslation"/>
+      <xs:element name="error" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tramitarRegistroEntrada">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="numeroRegistroFormateado" type="xs:string"/>
+      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
+      <xs:element minOccurs="0" name="entidad" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tramitarRegistroEntradaResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="altaRegistroEntrada">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="registroEntradaWs" type="tns:registroEntradaWs"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="altaRegistroEntradaResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:identificadorWs"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="identificadorWs">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="fecha" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="numero" type="xs:int"/>
+      <xs:element minOccurs="0" name="numeroRegistroFormateado" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="anularRegistroEntrada">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="numeroRegistroFormateado" type="xs:string"/>
+      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
+      <xs:element minOccurs="0" name="entidad" type="xs:string"/>
+      <xs:element name="anular" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="anularRegistroEntradaResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="obtenerRegistroEntradaID">
+    <xs:sequence>
+      <xs:element name="any" type="xs:int"/>
+      <xs:element name="numeroRegistro" type="xs:int"/>
+      <xs:element minOccurs="0" name="libro" type="xs:string"/>
+      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
+      <xs:element minOccurs="0" name="entidad" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="obtenerRegistroEntradaIDResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:identificadorWs"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getVersionWs">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="getVersionWsResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="WsI18NError" type="tns:WsI18NError"/>
+  <xs:complexType name="WsI18NError">
+    <xs:sequence>
+      <xs:element name="translation" nillable="true" type="tns:wsI18NTranslation"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="WsValidationErrors" type="tns:WsValidationErrors"/>
+  <xs:complexType name="WsValidationErrors">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="fieldFaults" type="tns:wsFieldValidationError"/>
+    </xs:sequence>
+  </xs:complexType>
 </xs:schema>
   </wsdl:types>
   <wsdl:message name="getVersion">
-    <wsdl:part element="tns:getVersion" name="parameters">
+    <wsdl:part name="parameters" element="tns:getVersion">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="WsValidationException">
-    <wsdl:part element="tns:WsValidationErrors" name="WsValidationException">
+    <wsdl:part name="WsValidationException" element="tns:WsValidationErrors">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="altaRegistroEntrada">
-    <wsdl:part element="tns:altaRegistroEntrada" name="parameters">
+    <wsdl:part name="parameters" element="tns:altaRegistroEntrada">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getVersionWsResponse">
-    <wsdl:part element="tns:getVersionWsResponse" name="parameters">
+    <wsdl:part name="parameters" element="tns:getVersionWsResponse">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="anularRegistroEntradaResponse">
-    <wsdl:part element="tns:anularRegistroEntradaResponse" name="parameters">
+    <wsdl:part name="parameters" element="tns:anularRegistroEntradaResponse">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="tramitarRegistroEntradaResponse">
-    <wsdl:part element="tns:tramitarRegistroEntradaResponse" name="parameters">
+    <wsdl:part name="parameters" element="tns:tramitarRegistroEntradaResponse">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getVersionWs">
-    <wsdl:part element="tns:getVersionWs" name="parameters">
+    <wsdl:part name="parameters" element="tns:getVersionWs">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="anularRegistroEntrada">
-    <wsdl:part element="tns:anularRegistroEntrada" name="parameters">
+    <wsdl:part name="parameters" element="tns:anularRegistroEntrada">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="obtenerRegistroEntradaIDResponse">
-    <wsdl:part element="tns:obtenerRegistroEntradaIDResponse" name="parameters">
+    <wsdl:part name="parameters" element="tns:obtenerRegistroEntradaIDResponse">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="obtenerRegistroEntradaID">
-    <wsdl:part element="tns:obtenerRegistroEntradaID" name="parameters">
+    <wsdl:part name="parameters" element="tns:obtenerRegistroEntradaID">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="obtenerRegistroEntrada">
-    <wsdl:part element="tns:obtenerRegistroEntrada" name="parameters">
+    <wsdl:part name="parameters" element="tns:obtenerRegistroEntrada">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getVersionResponse">
-    <wsdl:part element="tns:getVersionResponse" name="parameters">
+    <wsdl:part name="parameters" element="tns:getVersionResponse">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="tramitarRegistroEntrada">
-    <wsdl:part element="tns:tramitarRegistroEntrada" name="parameters">
+    <wsdl:part name="parameters" element="tns:tramitarRegistroEntrada">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="obtenerRegistroEntradaResponse">
-    <wsdl:part element="tns:obtenerRegistroEntradaResponse" name="parameters">
+    <wsdl:part name="parameters" element="tns:obtenerRegistroEntradaResponse">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="WsI18NException">
-    <wsdl:part element="tns:WsI18NError" name="WsI18NException">
+    <wsdl:part name="WsI18NException" element="tns:WsI18NError">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="altaRegistroEntradaResponse">
-    <wsdl:part element="tns:altaRegistroEntradaResponse" name="parameters">
+    <wsdl:part name="parameters" element="tns:altaRegistroEntradaResponse">
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="RegWebRegistroEntradaWs">
     <wsdl:operation name="getVersion">
-      <wsdl:input message="tns:getVersion" name="getVersion">
+      <wsdl:input name="getVersion" message="tns:getVersion">
     </wsdl:input>
-      <wsdl:output message="tns:getVersionResponse" name="getVersionResponse">
+      <wsdl:output name="getVersionResponse" message="tns:getVersionResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="obtenerRegistroEntrada">
-      <wsdl:input message="tns:obtenerRegistroEntrada" name="obtenerRegistroEntrada">
+      <wsdl:input name="obtenerRegistroEntrada" message="tns:obtenerRegistroEntrada">
     </wsdl:input>
-      <wsdl:output message="tns:obtenerRegistroEntradaResponse" name="obtenerRegistroEntradaResponse">
+      <wsdl:output name="obtenerRegistroEntradaResponse" message="tns:obtenerRegistroEntradaResponse">
     </wsdl:output>
-      <wsdl:fault message="tns:WsValidationException" name="WsValidationException">
+      <wsdl:fault name="WsValidationException" message="tns:WsValidationException">
     </wsdl:fault>
-      <wsdl:fault message="tns:WsI18NException" name="WsI18NException">
+      <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
     </wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="tramitarRegistroEntrada">
-      <wsdl:input message="tns:tramitarRegistroEntrada" name="tramitarRegistroEntrada">
+      <wsdl:input name="tramitarRegistroEntrada" message="tns:tramitarRegistroEntrada">
     </wsdl:input>
-      <wsdl:output message="tns:tramitarRegistroEntradaResponse" name="tramitarRegistroEntradaResponse">
+      <wsdl:output name="tramitarRegistroEntradaResponse" message="tns:tramitarRegistroEntradaResponse">
     </wsdl:output>
-      <wsdl:fault message="tns:WsValidationException" name="WsValidationException">
+      <wsdl:fault name="WsValidationException" message="tns:WsValidationException">
     </wsdl:fault>
-      <wsdl:fault message="tns:WsI18NException" name="WsI18NException">
+      <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
     </wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="altaRegistroEntrada">
-      <wsdl:input message="tns:altaRegistroEntrada" name="altaRegistroEntrada">
+      <wsdl:input name="altaRegistroEntrada" message="tns:altaRegistroEntrada">
     </wsdl:input>
-      <wsdl:output message="tns:altaRegistroEntradaResponse" name="altaRegistroEntradaResponse">
+      <wsdl:output name="altaRegistroEntradaResponse" message="tns:altaRegistroEntradaResponse">
     </wsdl:output>
-      <wsdl:fault message="tns:WsValidationException" name="WsValidationException">
+      <wsdl:fault name="WsValidationException" message="tns:WsValidationException">
     </wsdl:fault>
-      <wsdl:fault message="tns:WsI18NException" name="WsI18NException">
+      <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
     </wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="anularRegistroEntrada">
-      <wsdl:input message="tns:anularRegistroEntrada" name="anularRegistroEntrada">
+      <wsdl:input name="anularRegistroEntrada" message="tns:anularRegistroEntrada">
     </wsdl:input>
-      <wsdl:output message="tns:anularRegistroEntradaResponse" name="anularRegistroEntradaResponse">
+      <wsdl:output name="anularRegistroEntradaResponse" message="tns:anularRegistroEntradaResponse">
     </wsdl:output>
-      <wsdl:fault message="tns:WsValidationException" name="WsValidationException">
+      <wsdl:fault name="WsValidationException" message="tns:WsValidationException">
     </wsdl:fault>
-      <wsdl:fault message="tns:WsI18NException" name="WsI18NException">
+      <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
     </wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="obtenerRegistroEntradaID">
-      <wsdl:input message="tns:obtenerRegistroEntradaID" name="obtenerRegistroEntradaID">
+      <wsdl:input name="obtenerRegistroEntradaID" message="tns:obtenerRegistroEntradaID">
     </wsdl:input>
-      <wsdl:output message="tns:obtenerRegistroEntradaIDResponse" name="obtenerRegistroEntradaIDResponse">
+      <wsdl:output name="obtenerRegistroEntradaIDResponse" message="tns:obtenerRegistroEntradaIDResponse">
     </wsdl:output>
-      <wsdl:fault message="tns:WsI18NException" name="WsI18NException">
+      <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
     </wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="getVersionWs">
-      <wsdl:input message="tns:getVersionWs" name="getVersionWs">
+      <wsdl:input name="getVersionWs" message="tns:getVersionWs">
     </wsdl:input>
-      <wsdl:output message="tns:getVersionWsResponse" name="getVersionWsResponse">
+      <wsdl:output name="getVersionWsResponse" message="tns:getVersionWsResponse">
     </wsdl:output>
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="RegWebRegistroEntradaWsServiceSoapBinding" type="tns:RegWebRegistroEntradaWs">
-    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
     <wsdl:operation name="getVersion">
-      <soap:operation soapAction="" style="document" />
+      <soap:operation soapAction="" style="document"/>
       <wsdl:input name="getVersion">
-        <soap:body use="literal" />
+        <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="getVersionResponse">
-        <soap:body use="literal" />
+        <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="obtenerRegistroEntrada">
-      <soap:operation soapAction="" style="document" />
+      <soap:operation soapAction="" style="document"/>
       <wsdl:input name="obtenerRegistroEntrada">
-        <soap:body use="literal" />
+        <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="obtenerRegistroEntradaResponse">
-        <soap:body use="literal" />
+        <soap:body use="literal"/>
       </wsdl:output>
       <wsdl:fault name="WsValidationException">
-        <soap:fault name="WsValidationException" use="literal" />
+        <soap:fault name="WsValidationException" use="literal"/>
       </wsdl:fault>
       <wsdl:fault name="WsI18NException">
-        <soap:fault name="WsI18NException" use="literal" />
+        <soap:fault name="WsI18NException" use="literal"/>
       </wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="altaRegistroEntrada">
-      <soap:operation soapAction="" style="document" />
+      <soap:operation soapAction="" style="document"/>
       <wsdl:input name="altaRegistroEntrada">
-        <soap:body use="literal" />
+        <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="altaRegistroEntradaResponse">
-        <soap:body use="literal" />
+        <soap:body use="literal"/>
       </wsdl:output>
       <wsdl:fault name="WsValidationException">
-        <soap:fault name="WsValidationException" use="literal" />
+        <soap:fault name="WsValidationException" use="literal"/>
       </wsdl:fault>
       <wsdl:fault name="WsI18NException">
-        <soap:fault name="WsI18NException" use="literal" />
+        <soap:fault name="WsI18NException" use="literal"/>
       </wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="tramitarRegistroEntrada">
-      <soap:operation soapAction="" style="document" />
+      <soap:operation soapAction="" style="document"/>
       <wsdl:input name="tramitarRegistroEntrada">
-        <soap:body use="literal" />
+        <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="tramitarRegistroEntradaResponse">
-        <soap:body use="literal" />
+        <soap:body use="literal"/>
       </wsdl:output>
       <wsdl:fault name="WsValidationException">
-        <soap:fault name="WsValidationException" use="literal" />
+        <soap:fault name="WsValidationException" use="literal"/>
       </wsdl:fault>
       <wsdl:fault name="WsI18NException">
-        <soap:fault name="WsI18NException" use="literal" />
+        <soap:fault name="WsI18NException" use="literal"/>
       </wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="anularRegistroEntrada">
-      <soap:operation soapAction="" style="document" />
+      <soap:operation soapAction="" style="document"/>
       <wsdl:input name="anularRegistroEntrada">
-        <soap:body use="literal" />
+        <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="anularRegistroEntradaResponse">
-        <soap:body use="literal" />
+        <soap:body use="literal"/>
       </wsdl:output>
       <wsdl:fault name="WsValidationException">
-        <soap:fault name="WsValidationException" use="literal" />
+        <soap:fault name="WsValidationException" use="literal"/>
       </wsdl:fault>
       <wsdl:fault name="WsI18NException">
-        <soap:fault name="WsI18NException" use="literal" />
+        <soap:fault name="WsI18NException" use="literal"/>
       </wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="obtenerRegistroEntradaID">
-      <soap:operation soapAction="" style="document" />
+      <soap:operation soapAction="" style="document"/>
       <wsdl:input name="obtenerRegistroEntradaID">
-        <soap:body use="literal" />
+        <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="obtenerRegistroEntradaIDResponse">
-        <soap:body use="literal" />
+        <soap:body use="literal"/>
       </wsdl:output>
       <wsdl:fault name="WsI18NException">
-        <soap:fault name="WsI18NException" use="literal" />
+        <soap:fault name="WsI18NException" use="literal"/>
       </wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="getVersionWs">
-      <soap:operation soapAction="" style="document" />
+      <soap:operation soapAction="" style="document"/>
       <wsdl:input name="getVersionWs">
-        <soap:body use="literal" />
+        <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="getVersionWsResponse">
-        <soap:body use="literal" />
+        <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="RegWebRegistroEntradaWsService">
-    <wsdl:port binding="tns:RegWebRegistroEntradaWsServiceSoapBinding" name="RegWebRegistroEntradaWs">
-      <soap:address location="http://localhost:8080/regweb/ws/v3/RegWebRegistroEntrada" />
+    <wsdl:port name="RegWebRegistroEntradaWs" binding="tns:RegWebRegistroEntradaWsServiceSoapBinding">
+      <soap:address location="http://localhost:8080/regweb/ws/v3/RegWebRegistroEntrada"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>
