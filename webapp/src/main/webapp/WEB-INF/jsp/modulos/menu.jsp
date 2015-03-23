@@ -139,8 +139,10 @@
 
                                 <li class="divider"></li>
                                 <li class="dropdown-submenu-left toggle-left">
-                                    <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> Oficios</a>
+                                    <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> <spring:message code="oficioRemision.oficiosRemision"/></a>
                                     <ul class="dropdown-menu">
+                                        <li><a href="<c:url value="/oficioRemision/oficiosPendientesLlegada"/>"><spring:message code="oficioRemision.pendientesLlegada"/></a></li>
+                                        <li class="divider"></li>
                                         <li><a href="<c:url value="/oficioRemision/oficiosPendientesRemisionInterna"/>"><spring:message code="registroEntrada.oficiosRemisionInterna"/></a></li>
                                         <li><a href="<c:url value="/oficioRemision/oficiosPendientesRemisionExterna"/>"><spring:message code="registroEntrada.oficiosRemisionExterna"/></a></li>
                                         <li><a href="<c:url value="/oficioRemision/list"/>"><spring:message code="oficioRemision.listado"/></a></li>
