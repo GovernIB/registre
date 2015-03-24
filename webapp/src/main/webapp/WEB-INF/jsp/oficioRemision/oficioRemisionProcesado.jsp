@@ -34,7 +34,7 @@
                 <div class="panel panel-info">
 
                     <div class="panel-heading">
-                        <h3 class="panel-title"><i class="fa fa-search"></i><strong><spring:message code="oficioRemision.oficioRemision"/></strong> </h3>
+                        <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="oficioRemision.oficioRemision"/></strong> </h3>
                     </div>
 
                     <div class="panel-body">
@@ -42,7 +42,7 @@
                         <div class="row">
                             <div class="col-xs-12">
 
-                                <div class="alert alert-grey">
+                                <div class="alert alert-warning">
                                     <spring:message code="oficioRemision.procesado.resumen"/> <strong>${fn:length(registrosEntrada)}</strong> <spring:message code="registroEntrada.registroEntradas"/>
                                 </div>
 
