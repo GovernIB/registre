@@ -314,7 +314,7 @@ public class UsuarioService {
         session.setAttribute(RegwebConstantes.SESSION_OFICINAS,oficinasRegistro);
 
         // Comprobamos la última Oficina utilizada por el usuario
-        if(oficinasRegistro.contains(new ObjetoBasico(usuarioEntidad.getUltimaOficina().getId()))){
+        if(usuarioEntidad.getUltimaOficina()!= null && oficinasRegistro.contains(new ObjetoBasico(usuarioEntidad.getUltimaOficina().getId()))){
             session.setAttribute(RegwebConstantes.SESSION_OFICINA,oficinaEjb.findById(usuarioEntidad.getUltimaOficina().getId()));
             session.setAttribute(RegwebConstantes.SESSION_TIENEPREREGISTROS, preRegistroEjb.tienePreRegistros(usuarioEntidad.getUltimaOficina().getCodigo()));
 
