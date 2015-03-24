@@ -288,7 +288,7 @@
         <c:if test="${not empty trazabilidades}">
 
             <div class="col-xs-8 pull-right">
-                                       In
+
                 <div class="panel panel-info">
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-clock-o fa-fw"></i> <strong><spring:message code="registroEntrada.trazabilidad"/></strong></h3>
