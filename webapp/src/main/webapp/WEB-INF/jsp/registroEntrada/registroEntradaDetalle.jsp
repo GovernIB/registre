@@ -157,7 +157,13 @@
                     </div>
 
                     <div class="panel-footer">
-                        <button type="button" onclick="goTo('/regweb/registroEntrada/new')" class="btn btn-info btn-sm btn-block"><spring:message code="registroEntrada.nuevo"/></button>
+                        <c:if test="${registro.estado != RegwebConstantes.ESTADO_PENDIENTE}">
+                            <button type="button" onclick="goTo('/regweb/registroEntrada/new')" class="btn btn-info btn-sm btn-block"><spring:message code="registroEntrada.nuevo"/></button>
+                        </c:if>
+
+                        <c:if test="${registro.estado == RegwebConstantes.ESTADO_PENDIENTE}">
+                            <button type="button" onclick="goTo('/regweb/registroEntrada/reserva')" class="btn btn-info btn-sm btn-block"><spring:message code="registroEntrada.reserva.nuevo"/></button>
+                        </c:if>
                     </div>
 
                 </div>
