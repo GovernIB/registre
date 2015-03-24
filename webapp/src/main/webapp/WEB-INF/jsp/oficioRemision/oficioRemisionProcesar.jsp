@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
-
+<un:useConstants var="RegwebConstantes" className="es.caib.regweb.utils.RegwebConstantes"/>
 <!DOCTYPE html>
 <html lang="ca">
 <head>
@@ -20,7 +20,6 @@
        <div class="row">
             <div class="col-xs-12">
                 <ol class="breadcrumb">
-                    <%--<li><a href="<c:url value="/inici"/>" ><i class="fa fa-power-off"></i> <spring:message code="regweb.inicio"/></a></li>--%>
                     <li><a href="<c:url value="/inici"/>"><i class="fa fa-globe"></i> ${oficinaActiva.denominacion}</a></li>
                     <li><a href="<c:url value="/oficioRemision/oficiosPendientesLlegada"/>" ><i class="fa fa-list"></i> <spring:message code="oficioRemision.pendientesLlegada"/></a></li>
                     <li class="active"><i class="fa fa-pencil-square-o"></i> <spring:message code="oficioRemision.oficioRemision"/> <fmt:formatDate value="${oficioRemision.fecha}" pattern="yyyy"/> / ${oficioRemision.numeroOficio}</li>
@@ -41,14 +40,14 @@
                     <div class="panel-body">
 
                         <dl class="detalle_registro">
-                            <dt><i class="fa fa-globe"></i> Entidad: </dt> <dd> ${oficioRemision.oficina.organismoResponsable.entidad.nombre}</dd>
+                            <dt><i class="fa fa-globe"></i> <spring:message code="entidad.entidad"/>: </dt> <dd> ${oficioRemision.oficina.organismoResponsable.entidad.nombre}</dd>
                             <dt><i class="fa fa-briefcase"></i> <spring:message code="registroEntrada.oficina"/>: </dt> <dd> ${oficioRemision.oficina.denominacion}</dd>
-                            <dt><i class="fa fa-clock-o"></i> Fecha: </dt> <dd> <fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></dd>
+                            <dt><i class="fa fa-clock-o"></i> <spring:message code="registroEntrada.fecha"/>: </dt> <dd> <fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></dd>
                             <dt><i class="fa fa-book"></i> <spring:message code="libro.libro"/>: </dt> <dd> ${oficioRemision.libro.nombre}</dd>
                             <dt><i class="fa fa-user"></i> <spring:message code="usuario.usuario"/>: </dt> <dd> ${oficioRemision.usuarioResponsable.usuario.nombreCompleto}</dd>
                             <dt><i class="fa fa-exchange"></i> <spring:message code="oficioRemision.organismoDestino"/>: </dt> 
                             <dd>${(empty oficioRemision.organismoDestinatario)? oficioRemision.destinoExternoDenominacion : oficioRemision.organismoDestinatario.denominacion}</dd>
-                            <dt><i class="fa fa-bookmark"></i> <spring:message code="oficioRemision.estado"/> </dt>
+                            <dt><i class="fa fa-bookmark"></i> <spring:message code="oficioRemision.estado"/>: </dt>
                             <dd>
                                 <span class="label ${(oficioRemision.estado == 2)?'label-success':'label-danger'}">
                                 <spring:message code="oficioRemision.estado.${oficioRemision.estado}"/>
@@ -61,13 +60,27 @@
                         </dl>
 
                     </div>
-
-                    <c:if test="${oficioRemision.estado == 0}">
-                        <div class="panel-footer">
-                            <button type="button" onclick="doForm('#oficioPendienteLlegadaForm')" class="btn btn-success btn-sm btn-block"><spring:message code="oficioRemision.procesar"/></button>
-                        </div>
+                    <div class="panel-footer">
+                    <c:if test="${fn:length(modelosOficioRemision) > 0}">
+                        <form:form modelAttribute="modeloOficioRemision" method="post" cssClass="form-horizontal row pad-lateral-10">
+                            <div class="col-xs-12 btn-block">
+                                <div class="col-xs-6 no-pad-lateral list-group-item-heading">
+                                    <form:select path="id" cssClass="chosen-select">
+                                        <form:options items="${modelosOficioRemision}" itemValue="id" itemLabel="nombre"/>
+                                    </form:select>
+                                </div>
+                                <div class="col-xs-6 no-pad-right list-group-item-heading">
+                                    <button type="button" class="btn btn-warning btn-sm btn-block" onclick="imprimirRecibo('<c:url value="/oficioRemision/${oficioRemision.id}/imprimir/"/>')"><spring:message code="oficioRemision.descargar"/></button>
+                                </div>
+                            </div>
+                        </form:form>
                     </c:if>
 
+                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ESTADO_NO_PROCESADO}">
+                        <button type="button" onclick="doForm('#oficioPendienteLlegadaForm')" class="btn btn-success btn-sm btn-block"><spring:message code="oficioRemision.procesar"/></button>
+                    </c:if>
+
+                    </div>
                 </div>
 
             </div>

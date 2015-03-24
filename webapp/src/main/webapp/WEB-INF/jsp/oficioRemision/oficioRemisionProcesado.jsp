@@ -20,7 +20,7 @@
             <div class="col-xs-12">
                 <ol class="breadcrumb">
                     <li><a href="<c:url value="/inici"/>"><i class="fa fa-globe"></i> ${oficinaActiva.denominacion}</a></li>
-                    <li class="active"><i class="fa fa-list-ul"></i> <strong>Oficio procesado</strong></li>
+                    <li class="active"><i class="fa fa-list-ul"></i> <strong><spring:message code="oficioRemision.procesado"/></strong></li>
                 </ol>
             </div>
         </div><!-- /.row -->
@@ -34,7 +34,7 @@
                 <div class="panel panel-info">
 
                     <div class="panel-heading">
-                        <h3 class="panel-title"><i class="fa fa-search"></i><strong>Oficio de Remisión</strong> </h3>
+                        <h3 class="panel-title"><i class="fa fa-search"></i><strong><spring:message code="oficioRemision.oficioRemision"/></strong> </h3>
                     </div>
 
                     <div class="panel-body">
