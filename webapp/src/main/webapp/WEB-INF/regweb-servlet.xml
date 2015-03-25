@@ -82,6 +82,12 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
             <bean class="es.caib.regweb.webapp.interceptor.RegistroMigradoInterceptor"/>
         </mvc:interceptor>
 
+        <!--Interceptor para Informe-->
+        <mvc:interceptor>
+            <mvc:mapping path="/informe/**"/>
+            <bean class="es.caib.regweb.webapp.interceptor.InformeInterceptor"/>
+        </mvc:interceptor>
+
         <!-- Configuración de Idioma -->
         <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
             <property name="paramName" value="lang" />

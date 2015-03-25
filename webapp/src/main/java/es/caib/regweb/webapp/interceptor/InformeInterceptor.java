@@ -40,9 +40,9 @@ public class InformeInterceptor extends HandlerInterceptorAdapter {
                 }
             }
 
-            // Comprobamos que el usuario dispone del Rol RWE_USUARI o RWE_ADMIN
+            // Comprobamos que el usuario dispone del Rol RWE_ADMIN o tiene Libros Administrados
             if(url.equals("/informe/registroLopd")||url.equals("/informe/usuarioLopd")) {
-                if (!(librosAdm != null || rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN))) {
+                if (!(librosAdm != null || rolActivo.getId().equals(RegwebConstantes.ROL_ADMIN_ID))) {
                     log.info("Error de rol");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
                     response.sendRedirect("/regweb/aviso");
@@ -51,8 +51,18 @@ public class InformeInterceptor extends HandlerInterceptorAdapter {
             }
 
             // Comprobamos que el usuario dispone del RWE_ADMIN
-            if(url.equals("/informe/indicadores")||url.equals("/informe/libroRegistro")) {
-                if (!rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN)) {
+            if(url.equals("/informe/indicadores")) {
+                if (!rolActivo.getId().equals(RegwebConstantes.ROL_ADMIN_ID)) {
+                    log.info("Error de rol");
+                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
+                    response.sendRedirect("/regweb/aviso");
+                    return false;
+                }
+            }
+
+            // Comprobamos que el usuario dispone del RWE_ADMIN o RWE_USUARI
+            if(url.equals("/informe/libroRegistro")) {
+                if (!(rolActivo.getId().equals(RegwebConstantes.ROL_ADMIN_ID) || rolActivo.getId().equals(RegwebConstantes.ROL_USUARI_ID))) {
                     log.info("Error de rol");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
                     response.sendRedirect("/regweb/aviso");

@@ -43,9 +43,9 @@
                                             <form:label path="tipo"><span class="text-danger">*</span> <spring:message code="informe.tipoLibro"/></form:label>
                                         </div>
                                         <div class="col-xs-9 no-pad-right">
-                                            <form:select path="tipo" cssClass="chosen-select">
-                                                <form:option value="0" default="default"><spring:message code="informe.entrada"/></form:option>
-                                                <form:option value="1"><spring:message code="informe.salida"/></form:option>
+                                            <form:select path="tipo" cssClass="chosen-select" onchange="actualizarLibros(this)">
+                                                <form:option value="1" default="default"><spring:message code="informe.entrada"/></form:option>
+                                                <form:option value="2"><spring:message code="informe.salida"/></form:option>
                                             </form:select>
                                         </div>
                                     </div>
@@ -66,7 +66,7 @@
                                         <div class="col-xs-3 pull-left etiqueta_regweb control-label">
                                             <form:label path="libros"><span class="text-danger">*</span> <spring:message code="registroEntrada.libro"/></form:label>
                                         </div>
-                                        <div class="col-xs-9 no-pad-right" id="libros">
+                                        <div class="col-xs-9 no-pad-right" id="libr">
                                             <c:if test="${fn:length(libros) eq 1}">
                                                 <form:select path="libros" items="${libros}" itemValue="id" itemLabel="libroOrganismo" cssClass="chosen-select" multiple="false"/>
                                             </c:if>
@@ -152,6 +152,16 @@
 
 <c:import url="../modulos/pie.jsp"/>
 
+
+<!-- Modifica los Libros según el tipo de Registro elegido -->
+<script type="text/javascript">
+
+    function actualizarLibros(){
+        <c:url var="obtenerLibros" value="/informe/obtenerLibros" />
+        actualizarLibrosTodos('${obtenerLibros}','#libros',$('#tipo option:selected').val(),$('#libros option:selected').val(),true);
+    }
+
+</script>
 
 <!-- VALIDADOR DE FORMULARI -->
 <script type="text/javascript">
@@ -411,7 +421,7 @@ function validaFormulario(form) {
         }
     }
     // Valida los libros seleccionados
-    if (!librosSeleccionados(form.libros, 'libros')){
+    if (!librosSeleccionados(form.libros, 'libr')){
         libros = false;
     }
     // Valida los campos seleccionados
@@ -426,6 +436,45 @@ function validaFormulario(form) {
     }
 }
 
+</script>
+
+<script type="text/javascript">
+    function actualizarLibrosTodos(url, idSelect, seleccion, valorSelected, todos){
+        var html = '';
+        if(seleccion != '-1'){
+            jQuery.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                data: { id: seleccion },
+                contentType: 'application/json',
+                success: function(result) {
+                    if(todos){html = '';}
+                    var len = result.length;
+                    var selected='';
+                    for ( var i = 0; i < len; i++) {
+                        selected='';
+                        if(result.length == 1){
+                            selected = 'selected="selected"';
+                        }
+                        html += '<option '+selected+' value="' + result[i].id + '">'
+                        + result[i].libroOrganismo + '</option>';
+                    }
+                    html += '</option>';
+
+                    if(len != 0){
+                        $(idSelect).html(html);
+                        $(idSelect).attr("disabled",false).trigger("chosen:updated");
+                    }else if(len==0){
+                        var html='';
+                        $(idSelect).html(html);
+                        $(idSelect).attr("disabled",true).trigger("chosen:updated");
+                    }
+                }
+            });
+
+        }
+    }
 </script>
 
 </body>
