@@ -4,6 +4,7 @@ import es.caib.regweb.model.*;
 import es.caib.regweb.persistence.ejb.*;
 import es.caib.regweb.persistence.utils.FileSystemManager;
 import es.caib.regweb.persistence.utils.Paginacion;
+import es.caib.regweb.utils.Configuracio;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.utils.login.RegwebLoginPluginManager;
 import es.caib.regweb.webapp.controller.BaseController;
@@ -14,6 +15,7 @@ import es.caib.regweb.webapp.form.PermisoLibroUsuarioForm;
 import es.caib.regweb.webapp.form.UsuarioEntidadBusquedaForm;
 import es.caib.regweb.webapp.utils.*;
 import es.caib.regweb.webapp.validator.EntidadValidator;
+
 import org.fundaciobit.plugins.userinformation.IUserInformationPlugin;
 import org.fundaciobit.plugins.userinformation.RolesInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+
 import java.util.*;
 
 /**
@@ -213,8 +216,8 @@ public class EntidadController extends BaseController {
                     return "redirect:/inici";
                 }
             }
-
             model.addAttribute("administradoresEntidad", administradoresEntidadModificar(entidad.getPropietario(), entidad));
+            model.addAttribute("tipoScan", Configuracio.getTipusScanejat());
 
         }catch (Exception e) {
             e.printStackTrace();
@@ -237,27 +240,28 @@ public class EntidadController extends BaseController {
 
         if (result.hasErrors()) { // Si hay errores volvemos a la vista del formulario
 
-            try {
+           try {
                 model.addAttribute("administradoresEntidad", administradoresEntidadModificar(entidadForm.getEntidad().getPropietario(), entidadForm.getEntidad()));
+                model.addAttribute("tipoScan", Configuracio.getTipusScanejat());
             } catch (Exception e) {
                 e.printStackTrace();
             }
+           return "entidad/entidadForm";
+        }
+        // Si no hay errores actualizamos el registro
+          ArchivoFormManager afm = null;
 
-            return "entidad/entidadForm";
-        }else { // Si no hay errores actualizamos el registro
-
-            ArchivoFormManager afm = null;
-
-            try {
-
+          try {
                 Entidad entidad = entidadForm.getEntidad();
 
-                if((entidadForm.getLogoMenu() != null)||(entidadForm.getLogoPie() != null)){ //Modificación con archivo Logo Menú o Logo Pie
+              //Modificación con archivo Logo Menú, Logo Pie o imagen sello
+                if((entidadForm.getLogoMenu() != null)||(entidadForm.getLogoPie() != null) || entidadForm.getLogoSello()!=null){ 
 
                     Archivo eliminarLogoMenu = null;
                     Archivo eliminarLogoPie = null;
+                    Archivo eliminarImagenSello = null;
 
-                    if(entidadForm.getLogoMenu() != null){
+                    if(entidadForm.getLogoMenu() != null && !entidadForm.getLogoMenu().isEmpty() ){
 
                         afm = new ArchivoFormManager(archivoEjb,entidadForm.getLogoMenu(), RegwebConstantes.ARCHIVOS_LOCATION_PROPERTY);
 
@@ -268,7 +272,7 @@ public class EntidadController extends BaseController {
                         entidad.setLogoMenu(afm.prePersist());
                     }
 
-                    if(entidadForm.getLogoPie() != null){
+                    if(entidadForm.getLogoPie() != null && !entidadForm.getLogoPie().isEmpty()){
 
                         afm = new ArchivoFormManager(archivoEjb,entidadForm.getLogoPie(), RegwebConstantes.ARCHIVOS_LOCATION_PROPERTY);
 
@@ -279,7 +283,17 @@ public class EntidadController extends BaseController {
                         entidad.setLogoPie(afm.prePersist());
                     }
 
-                    // Si se selecciona el check de borrar Logo Menu y/o Logo Pie, se pone a null
+                    if( entidadForm.getLogoSello()!= null && !entidadForm.getLogoSello().isEmpty()){
+                    	afm = new ArchivoFormManager(archivoEjb,entidadForm.getLogoSello(), RegwebConstantes.ARCHIVOS_LOCATION_PROPERTY);
+                    	Entidad entidadGuardada = entidadEjb.findById(entidadForm.getEntidad().getId());
+                    	eliminarImagenSello = entidadGuardada.getLogoSello();
+                    	
+                    	// Asociamos el nuevo archivo
+                        entidad.setLogoSello(afm.prePersist());
+                    }
+                    
+                    
+                    // Si se selecciona el check de borrar Logo Menu , Logo Pie y/o Imagen Sello, se pone a null
                     if(entidadForm.isBorrarLogoMenu()){
                         Entidad entidadGuardada = entidadEjb.findById(entidadForm.getEntidad().getId());
                         eliminarLogoMenu = entidadGuardada.getLogoMenu();
@@ -289,6 +303,11 @@ public class EntidadController extends BaseController {
                         Entidad entidadGuardada = entidadEjb.findById(entidadForm.getEntidad().getId());
                         eliminarLogoPie = entidadGuardada.getLogoPie();
                         entidad.setLogoPie(null);
+                    }
+                    if(entidadForm.isBorrarLogoSello()){
+                    	Entidad entidadGuardada = entidadEjb.findById(entidadForm.getEntidad().getId());
+                        eliminarImagenSello = entidadGuardada.getLogoSello();
+                        entidad.setLogoSello(null);
                     }
 
                     entidadEjb.merge(entidad);
@@ -306,23 +325,31 @@ public class EntidadController extends BaseController {
                         FileSystemManager.eliminarArchivo(eliminarLogoPie.getId());
                         archivoEjb.remove(eliminarLogoPie);
                     }
+                    //Eliminamos la anterior imagen del sello
+                    if( eliminarImagenSello!=null){
+                    	FileSystemManager.eliminarArchivo(eliminarImagenSello.getId());
+                    	archivoEjb.remove(eliminarImagenSello);
+                    }
 
 
                 }else{
 
                     Archivo eliminarLogoMenu = null;
                     Archivo eliminarLogoPie = null;
-
+                    Archivo eliminarImagenSello = null;
+                    Entidad entidadGuardada = entidadEjb.findById(entidadForm.getEntidad().getId());
                     // Si se selecciona el check de borrar Logo Menu y/o Logo Pie, se pone a null
                     if(entidadForm.isBorrarLogoMenu()){
-                        Entidad entidadGuardada = entidadEjb.findById(entidadForm.getEntidad().getId());
                         eliminarLogoMenu = entidadGuardada.getLogoMenu();
                         entidad.setLogoMenu(null);
                     }
                     if(entidadForm.isBorrarLogoPie()){
-                        Entidad entidadGuardada = entidadEjb.findById(entidadForm.getEntidad().getId());
                         eliminarLogoPie = entidadGuardada.getLogoPie();
                         entidad.setLogoPie(null);
+                    }
+                    if( entidadForm.isBorrarLogoSello()){
+                    	eliminarImagenSello = entidadGuardada.getLogoSello();
+                    	entidad.setLogoSello(null);
                     }
 
                     if(entidadForm.getEntidad().getLogoMenu() != null){
@@ -344,6 +371,12 @@ public class EntidadController extends BaseController {
                         FileSystemManager.eliminarArchivo(eliminarLogoPie.getId());
                         archivoEjb.remove(eliminarLogoPie);
                     }
+                    
+                    //Eliminamos el anterior sello
+                    if( eliminarImagenSello!=null){
+                    	FileSystemManager.eliminarArchivo(eliminarImagenSello.getId());
+                    	archivoEjb.remove(eliminarImagenSello);
+                    }
                 }
 
                 if(isAdminEntidad(request)){ // Si un Administrador de Entidad, la edita.
@@ -361,7 +394,7 @@ public class EntidadController extends BaseController {
             }
 
             return destino;
-        }
+        
     }
 
     /**

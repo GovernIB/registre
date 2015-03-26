@@ -5,9 +5,11 @@ import es.caib.regweb.persistence.ejb.*;
 import es.caib.regweb.persistence.utils.Paginacion;
 import es.caib.regweb.persistence.utils.RegistroUtils;
 import es.caib.regweb.utils.RegwebConstantes;
+import es.caib.regweb.utils.ScannerManager;
 import es.caib.regweb.webapp.controller.BaseController;
 import es.caib.regweb.webapp.form.RegistroSalidaBusqueda;
 import es.caib.regweb.webapp.validator.RegistroSalidaBusquedaValidator;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -20,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
@@ -216,6 +219,19 @@ public class RegistroSalidaListController extends BaseController {
         // Alta en tabla LOPD
         lopdEjb.insertarRegistroSalida(idRegistro, usuarioEntidad.getId());
 
+        // Scan
+        Integer tipusScan = 0;
+        if (entidad.getTipoScan() != null && !"".equals(entidad.getTipoScan())) {
+        	tipusScan = Integer.parseInt(entidad.getTipoScan());
+        }
+        //      Integer tipusScan = 2;
+        boolean teScan = (tipusScan != null && tipusScan > 0);
+        model.addAttribute("teScan", teScan);
+        if (teScan) {
+        	model.addAttribute("headerScan", ScannerManager.getHeaderJSP(request, tipusScan));
+        	model.addAttribute("coreScan", ScannerManager.getCoreJSP(request, tipusScan));
+        }
+        
         return "registroSalida/registroSalidaDetalle";
     }
 

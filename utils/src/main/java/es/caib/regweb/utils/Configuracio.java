@@ -1,5 +1,8 @@
 package es.caib.regweb.utils;
 
+import java.util.Arrays;
+import java.util.List;
+
 
 /**
  * 
@@ -49,6 +52,12 @@ public class Configuracio implements RegwebConstantes {
     return  System.getProperty(RegwebConstantes.REGWEB_PROPERTY_BASE + "sir.serverbase");
   }
   
+  public static List<String> getTipusScanejat(){
+	  String plugins = System.getProperty(RegwebConstantes.REGWEB_PROPERTY_BASE  + "scan.plugins");
+	  String[] values = plugins.split(",");
+	  return Arrays.asList(values);
+
+  }
   
   
   public static boolean useDirectApiSir() {

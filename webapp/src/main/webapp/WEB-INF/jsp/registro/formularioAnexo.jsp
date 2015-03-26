@@ -207,9 +207,18 @@
                         <div class="clearfix"></div>
                 </form>
             </div>
+            	 <%-- TODO refactorizar en un futuro. Esto está en dos formularios separados porque tenemos contentTypes, datas diferentes.--%>
 
-             <%-- TODO refactorizar en un futuro. Esto está en dos formularios separados porque tenemos contentTypes, datas diferentes.--%>
-
+				<c:if test="${teScan}">
+					<ul class="nav nav-tabs">
+						<li class="active"><a href="#fitxer" data-toggle="tab">Fitxer</a></li>
+						<li><a href="#scan" data-toggle="tab">Scan</a></li>
+					</ul>
+						
+					<div class="tab-content">
+						<div class="tab-pane active" id="fitxer">
+				</c:if>
+				
                 <%-- Formulario que contiene solo el input file del anexo. --%>
                 <form id="archivoAnexoForm" class="form-horizontal" action="${pageContext.request.contextPath}/anexo/guardarArchivo" method="post" enctype="multipart/form-data" >
                     <input type="hidden" id="nombreFicheroAnexado" name="nombreFicheroAnexado" value=""/>
@@ -280,11 +289,18 @@
                 <div class="col-xs-12 text-center centrat" id="reload">
                         <img src="<c:url value="/img/712.GIF"/>" width="20" height="20"/>
                 </div>
-                <div class="modal-footer">
-                    <input type="button" onclick="procesarAnexo('${pageContext.response.locale}')" title="<spring:message code="regweb.guardar"/>" value="<spring:message code="regweb.guardar"/>" class="btn btn-warning btn-sm">
-                    <button class="btn btn-sm" data-dismiss="modal" aria-hidden="true" onclick="limpiarAnexo()"><spring:message code="regweb.cerrar"/></button>
-                </div>
             </form>
-         </div>
+       		<c:if test="${teScan}">
+						<div class="tab-pane" id="scan">
+							${coreScan}
+						</div>
+					</div>
+				</div>
+			</c:if>
+		   	</div>
+		    <div class="modal-footer">
+		    	<input type="button" onclick="procesarAnexo('${pageContext.response.locale}')" title="<spring:message code="regweb.guardar"/>" value="<spring:message code="regweb.guardar"/>" class="btn btn-warning btn-sm">
+	        	<button class="btn btn-sm" data-dismiss="modal" aria-hidden="true" onclick="limpiarAnexo()"><spring:message code="regweb.cerrar"/></button>
+	        </div>
      </div>
 </div>

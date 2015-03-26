@@ -48,9 +48,6 @@
                         <!-- Formulario -->
                         
                         <div class="panel-body">
-
-
-
                         
                             <form:errors path="entidad.sello" cssClass="has-error help-block" element="span"><span class="help-block-red"><spring:message code="entidad.sello.obligatorio"/></span></form:errors>
                             <form:errors path="entidad.numRegistro" cssClass="has-error help-block" element="span"><span class="help-block-red"><spring:message code="entidad.numRegistro.obligatorio"/></span></form:errors>
@@ -222,6 +219,17 @@
                                                 <form:errors path="entidad.diasVisado" cssClass="help-block" element="span"/>
                                             </div>
                                         </div>
+                                         <div class="form-group col-xs-6">
+                                        	<div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                            	<form:label path="entidad.tipoScan"><span class="text-danger">*</span> <spring:message code="entidad.tipoScan"/></form:label>
+                                            </div>
+                                             <div class="col-xs-8">
+                                        		<form:select id="entidad.tipoScan" path="entidad.tipoScan" class="chosen-select">
+							                		<form:options items="${tipoScan}"/>
+							                	</form:select>
+							                	<br/>
+                                        	</div>
+                                        <!--  logo menu -->
                                         <div class="col-xs-12 no-pad-left">
                                             <div class="form-group col-xs-6">
                                                 <div class="col-xs-4 pull-left etiqueta_regweb control-label">
@@ -250,8 +258,41 @@
                                                         <form:checkbox path="borrarLogoMenu"></form:checkbox><spring:message code="regweb.eliminar"/>
                                                     </div>
                                                 </div>
+                                                <br/>
+                                            </c:if>
+                                           <!--  logo sello --> 
+                                            <div class="col-xs-12 no-pad-left">
+                                             <div class="form-group col-xs-6">
+                                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                                    <form:label path="logoSello"><spring:message code="entidad.logoSello"/></form:label>
+                                                </div>
+                                                <div class="col-xs-8">
+                                                    <div class="input-group">
+                                                        <span class="input-group-btn">
+                                                            <span class="btn btn-success btn-sm btn-file">
+                                                                Explorar&hellip; <input id="logoSello" name="logoSello" type="file" multiple>
+                                                            </span>
+                                                        </span>
+                                                        <input type="text" class="form-control" readonly>
+                                                    </div>
+                                                    <form:errors path="logoSello" cssClass="help-block" element="span"/>
+                                                </div>
+                                            </div>
+                                            
+                                            <c:if test="${not empty entidadForm.entidad.logoSello}">
+                                                <div class="form-group col-xs-6">
+                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                                        <form:label path="logoMenu"><spring:message code="entidad.logoSello.existente"/></form:label>
+                                                        <form:hidden path="entidad.logoMenu.id"/>
+                                                    </div>
+                                                    <div class="col-xs-8 arxiu_actual">
+                                                        <a href="<c:url value="/archivo/${entidadForm.entidad.logoSello.id}"/>" target="_blank">${entidadForm.entidad.logoSello.nombre}</a>  <br>
+                                                        <form:checkbox path="borrarLogoSello"></form:checkbox><spring:message code="regweb.eliminar"/>
+                                                    </div>
+                                                </div>
                                             </c:if>
                                         </div>
+                                        <!--  logo pie -->
                                         <div class="col-xs-12 no-pad-left">
                                             <div class="form-group col-xs-6">
                                                 <div class="col-xs-4 pull-left etiqueta_regweb control-label">
@@ -317,6 +358,7 @@
                 </div>
            
            </div>
+         
            </form:form>
 
     </div>

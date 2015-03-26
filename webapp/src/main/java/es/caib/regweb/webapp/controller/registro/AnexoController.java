@@ -1,36 +1,52 @@
 package es.caib.regweb.webapp.controller.registro;
 
-import es.caib.regweb.model.*;
-import es.caib.regweb.persistence.ejb.*;
-import es.caib.regweb.persistence.utils.RegistroUtils;
-import es.caib.regweb.utils.AnnexFileSystemManager;
-import es.caib.regweb.utils.RegwebConstantes;
-import es.caib.regweb.webapp.controller.BaseController;
-import es.caib.regweb.webapp.utils.AnexoFormManager;
-import es.caib.regweb.webapp.utils.AnexoJson;
-import es.caib.regweb.webapp.utils.JsonResponse;
-import es.caib.regweb.webapp.validator.AnexoWebValidator;
-
-import org.fundaciobit.plugins.documentcustody.DocumentCustody;
-import org.fundaciobit.plugins.documentcustody.SignatureCustody;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.util.Date;
+import java.util.List;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.util.Date;
-import java.util.List;
+import org.fundaciobit.plugins.documentcustody.DocumentCustody;
+import org.fundaciobit.plugins.documentcustody.SignatureCustody;
+import org.fundaciobit.plugins.scanweb.ScanWebResource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import es.caib.regweb.model.Anexo;
+import es.caib.regweb.model.Entidad;
+import es.caib.regweb.model.RegistroEntrada;
+import es.caib.regweb.model.RegistroSalida;
+import es.caib.regweb.model.UsuarioEntidad;
+import es.caib.regweb.persistence.ejb.AnexoLocal;
+import es.caib.regweb.persistence.ejb.HistoricoRegistroEntradaLocal;
+import es.caib.regweb.persistence.ejb.HistoricoRegistroSalidaLocal;
+import es.caib.regweb.persistence.ejb.RegistroDetalleLocal;
+import es.caib.regweb.persistence.ejb.RegistroEntradaLocal;
+import es.caib.regweb.persistence.ejb.RegistroSalidaLocal;
+import es.caib.regweb.persistence.utils.RegistroUtils;
+import es.caib.regweb.utils.AnnexFileSystemManager;
+import es.caib.regweb.utils.RegwebConstantes;
+import es.caib.regweb.utils.ScannerManager;
+import es.caib.regweb.webapp.controller.BaseController;
+import es.caib.regweb.webapp.utils.AnexoFormManager;
+import es.caib.regweb.webapp.utils.AnexoJson;
+import es.caib.regweb.webapp.utils.JsonResponse;
+import es.caib.regweb.webapp.validator.AnexoWebValidator;
 
 /**
  * Created 3/06/14 14:22
@@ -166,8 +182,38 @@ public class AnexoController extends BaseController {
         return anexo;
     }
 
+    /**
+     * Obtiene el {@link es.caib.regweb.model.Anexo} según su identificador.
+     *
+     */
+    @RequestMapping(value = "/scanwebresource/{path}/{resourcename:.+}", method = RequestMethod.GET)
+    public Object obtenerRecursoPath(
+    		@PathVariable String path,
+    		@PathVariable String resourcename, 
+    		HttpServletRequest request,
+    		HttpServletResponse response) throws Exception {
 
+    	Integer tipusScan = 2;
+    	String resource = (path != null ? path + "/" : "") + resourcename;
+        ScanWebResource recurs = ScannerManager.getResource(request, tipusScan, resource);
+
+        response.setHeader("Pragma", "");
+		response.setHeader("Expires", "");
+		response.setHeader("Cache-Control", "");
+		response.setHeader("Content-Disposition", "inline; filename=\"" + recurs.getName() + "\"");
+		response.setContentType(recurs.getMime());
+		response.getOutputStream().write(recurs.getContent());
+        
+        return null;
+    }
     
+    @RequestMapping(value = "/scanwebresource/{resourcename:.+}", method = RequestMethod.GET)
+    public Object obtenerRecurso(
+    		@PathVariable String resourcename, 
+    		HttpServletRequest request,
+    		HttpServletResponse response) throws Exception {
+    	return obtenerRecursoPath(null, resourcename, request, response);
+    }
 
    /**
     * Crea o modifica un Anexo. Los datos vienen desde un formulario plano y en Json.
