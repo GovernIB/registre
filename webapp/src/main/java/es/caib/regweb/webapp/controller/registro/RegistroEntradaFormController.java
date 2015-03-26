@@ -80,6 +80,9 @@ public class RegistroEntradaFormController extends BaseController {
     @EJB(mappedName = "regweb/CatNivelAdministracionEJB/local")
     public CatNivelAdministracionLocal catNivelAdministracionEjb;
 
+    @EJB(mappedName = "regweb/RegistroDetalleEJB/local")
+    public RegistroDetalleLocal registroDetalleEjb;
+
 
     /**
      * Carga el formulario para un nuevo {@link es.caib.regweb.model.RegistroEntrada}
@@ -328,7 +331,24 @@ public class RegistroEntradaFormController extends BaseController {
 
         registroEntradaValidator.validate(registro, result);
 
-        if (result.hasErrors()) { // Si hay errores volvemos a la vista del formulario
+        // Actualizamos los Interesados modificados, en el caso que de un RE Pendiente.
+        Boolean errorInteresado = false;
+        if(registro.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE)){
+            List<Interesado> interesados = registroDetalleEjb.findById(registro.getRegistroDetalle().getId()).getInteresados();
+            registro.getRegistroDetalle().setInteresados(interesados);
+
+            if(interesados == null || interesados.size() == 0){
+                errorInteresado = true;
+            }
+        }
+
+        if (result.hasErrors() || errorInteresado) { // Si hay errores volvemos a la vista del formulario
+
+            // Si no hay ningún interesado, generamos un error.
+            if(errorInteresado){
+                model.addAttribute("errorInteresado", errorInteresado);
+            }
+
             model.addAttribute(getOficinaActiva(request));
             model.addAttribute(getUsuarioAutenticado(request));
             model.addAttribute(getEntidadActiva(request));

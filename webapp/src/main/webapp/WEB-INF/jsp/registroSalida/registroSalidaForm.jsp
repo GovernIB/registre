@@ -409,36 +409,9 @@
             actualizarLocalidad();
         </c:if>
 
-        // GESTIÓN INTERESADOS CUANDO HAY ERRORES DE VALIDACIÓN
-        <c:if test="${empty registro.id && not empty interesados}">
+        // CARGA DE INTERESADOS REGISTRO ENTRADA DESDE LA SESION
+        <c:import url="../registro/addInteresadosSesion.jsp"/>
 
-            <c:forEach var="interesado" items="${interesados}">
-                <c:if test="${!interesado.isRepresentante}">
-
-                    <c:if test="${interesado.tipo == RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION}">  /*Organismo*/
-                        var nombre = '<c:out value="${interesado.nombre}" escapeXml="true"/>';
-                        nombre = nombre.replace(/\"/g,'&quot;');
-                        nombre = nombre.replace(/'/g, "\\'");
-                        addOrganismoInteresadoHtml('${interesado.codigoDir3}',nombre,'<spring:message code="interesado.administracion"/>','${registro.registroDetalle.id}');
-                    </c:if>
-                    <c:if test="${interesado.tipo == RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA}">  /*Fisica*/
-                        addInteresadoRepresentanteHtml('${interesado.id}','<c:out value="${interesado.nombrePersonaFisica}" escapeXml="true"/>','<spring:message code="persona.fisica.corto"/>','${interesado.representante.id}','${registro.registroDetalle.id}');
-                    </c:if>
-
-                    <c:if test="${interesado.tipo == RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA}">  /*Juridica*/
-                        addInteresadoRepresentanteHtml('${interesado.id}','<c:out value="${interesado.nombrePersonaJuridica}" escapeXml="true"/>','<spring:message code="persona.juridica.corto"/>','${interesado.representante.id}','${registro.registroDetalle.id}');
-                    </c:if>
-                </c:if>
-            </c:forEach>
-
-            <%--<c:forEach var="interesado" items="${interesados}">
-            // Representantes
-                <c:if test="${interesado.isRepresentante}">
-                    addRepresentanteHtml('${interesado.id}','${interesado.representado.id}','${registro.registroDetalle}');
-                </c:if>
-            </c:forEach>--%>
-        </c:if>
-        // FIN GESTIÓN INTERESADOS CUANDO HAY ERRORES DE VALIDACIÓN
 
     });
 

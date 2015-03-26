@@ -307,7 +307,7 @@
                </form:form>
 
                <!-- INTERESADOS -->
-               <c:if test="${empty registro.id}">
+               <c:if test="${empty registro.id || registro.estado == RegwebConstantes.ESTADO_PENDIENTE}">
                    <c:import url="../registro/interesados.jsp">
                        <c:param name="tipo" value="nuevo"/>
                        <c:param name="registro" value="entrada"/>
@@ -413,35 +413,18 @@
             actualizarLocalidad();
         </c:if>
 
-        // GESTIÓN INTERESADOS CUANDO HAY ERRORES DE VALIDACIÓN
-        <c:if test="${empty registro.id && not empty interesados}">
-
-            <c:forEach var="interesado" items="${interesados}">
-                <c:if test="${!interesado.isRepresentante}">
-
-                    <c:if test="${interesado.tipo == RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION}">  /*Organismo*/
-                        var nombre = "${interesado.nombre}";
-                        nombre = nombre.replace(/\"/g,'&quot;');
-                        addOrganismoInteresadoHtml('${interesado.codigoDir3}',nombre,'<spring:message code="interesado.administracion"/>','${registro.registroDetalle.id}');
-                    </c:if>
-                    <c:if test="${interesado.tipo == RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA}">  /*Fisica*/
-                        addInteresadoRepresentanteHtml('${interesado.id}','${interesado.nombrePersonaFisica}','<spring:message code="persona.fisica.corto"/>','${interesado.representante.id}','${registro.registroDetalle.id}');
-                    </c:if>
-
-                    <c:if test="${interesado.tipo == RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA}">  /*Juridica*/
-                        addInteresadoRepresentanteHtml('${interesado.id}','${interesado.nombrePersonaJuridica}','<spring:message code="persona.juridica.corto"/>','${interesado.representante.id}','${registro.registroDetalle.id}');
-                    </c:if>
-                </c:if>
-            </c:forEach>
-
-            <%--<c:forEach var="interesado" items="${interesados}">
-                // Representantes
-                <c:if test="${interesado.isRepresentante}">
-                    addRepresentanteHtml('${interesado.id}','${interesado.representado.id}','${registro.registroDetalle.id}');
-                </c:if>
-            </c:forEach>--%>
+        // CARGA DE INTERESADOS REGISTRO ENTRADA DESDE LA SESION
+        <c:if test="${registro.estado != RegwebConstantes.ESTADO_PENDIENTE}">
+        <c:import url="../registro/addInteresadosSesion.jsp"/>
         </c:if>
-        // FIN GESTIÓN INTERESADOS CUANDO HAY ERRORES DE VALIDACIÓN
+
+
+        /* CARGA DE INTERESADOS REGISTRO ENTRADA DESDE LA BBDD*/
+        <c:if test="${registro.estado == RegwebConstantes.ESTADO_PENDIENTE}">
+            <c:import url="../registro/addInteresadosBbdd.jsp"/>
+        </c:if>
+
+
 
     });
 
