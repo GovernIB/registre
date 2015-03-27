@@ -227,7 +227,7 @@ public class RegistroEntradaListController extends BaseController {
         	tipusScan = Integer.parseInt(entidad.getTipoScan());
         }
         //      Integer tipusScan = 2;
-        boolean teScan = (tipusScan != null && tipusScan > 0);
+        boolean teScan = ScannerManager.teScan(tipusScan);
         model.addAttribute("teScan", teScan);
         if (teScan) {
         	model.addAttribute("headerScan", ScannerManager.getHeaderJSP(request, tipusScan));

@@ -31,7 +31,8 @@ public class ScannerManager {
         String className = System.getProperty(propertyName);
 //        String className = "es.limit.plugins.scanweb.dynamicwebtwain.DynamicWebTwainScanWebPlugin";
         if (className == null || className.trim().length()<=0) {
-          throw new Exception("No hi ha cap propietat " + propertyName + " definint la classe que gestiona el plugin de scanner");
+        	log.error("No hi ha cap propietat " + propertyName + " definint la classe que gestiona el plugin de scanner");
+        	throw new Exception("No hi ha cap propietat " + propertyName + " definint la classe que gestiona el plugin de scanner");
         }
         // Carregant la classe
         Object obj;
@@ -43,6 +44,24 @@ public class ScannerManager {
       }      
 
       return plugins.get(tipusScan); 
+    }
+    
+    /**
+     * Comprueba si la entidad tiene definido un tipo de escaneo vàlido
+     * @param tipusScan
+     * @return
+     */
+    public static boolean teScan(Integer tipusScan) {
+    	IScanWebPlugin plugin = null;
+    	if (tipusScan != null && tipusScan > 0) {
+	    	try {
+	    		plugin = getInstance(tipusScan);
+	    	} catch (Exception e) {
+	    		// En cas d'error el plugin serà null
+	    		log.error("Error al obtenir el plugin d'escaneig " + tipusScan, e);
+	    	}
+    	}
+   		return plugin != null;
     }
     
     /**
