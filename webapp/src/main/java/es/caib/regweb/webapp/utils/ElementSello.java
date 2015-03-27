@@ -3,6 +3,7 @@ package es.caib.regweb.webapp.utils;
 import org.apache.log4j.Logger;
 
 import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.pdf.BaseFont;
 
@@ -26,6 +27,7 @@ public class ElementSello {
 	private Float posx;
 	private Float posy;
 	private Integer ample;
+	private Integer alineacio = Element.ALIGN_LEFT;
 	private float fontSize;
 	private int fontStyle;
 	private BaseColor color;
@@ -70,7 +72,8 @@ public class ElementSello {
 					posxRefLinia = this.posx;
 					posxRef = this.posx;
 				} else if ("posy".equalsIgnoreCase(paramName)) {
-					posyRef = Integer.parseInt(paramValue);
+					this.posy = -Float.parseFloat(paramValue);
+					posyRef = this.posy;
 					// Si es defineix una nova posició y,
 					// aquesta posició serà el nou origen del text.
 					changedPosy = true;
@@ -127,6 +130,17 @@ public class ElementSello {
 						this.color = BaseColor.YELLOW;
 					}
 					colorRef = this.color;
+				} else if("alineacio".equalsIgnoreCase(paramName)) {
+					String strAlign = paramValue.toUpperCase();
+					if (strAlign.equalsIgnoreCase("LEFT")) {
+						alineacio = Element.ALIGN_LEFT;
+					} else if (strAlign.equalsIgnoreCase("RIGHT")) {
+						alineacio = Element.ALIGN_RIGHT;
+					} else if (strAlign.equalsIgnoreCase("CENTER")) {
+						alineacio = Element.ALIGN_CENTER;
+					} else if (strAlign.equalsIgnoreCase("JUSTIFIED")) {
+						alineacio = Element.ALIGN_JUSTIFIED;
+					}
 				}
 			}
 		}
@@ -174,10 +188,10 @@ public class ElementSello {
 		maxPosy = Math.min(maxPosy, this.posy);
 	}
 
-	public int getAmple() {
+	public Integer getAmple() {
 		return ample;
 	}
-	public void setAmple(int ample) {
+	public void setAmple(Integer ample) {
 		this.ample = ample;
 	}
 
@@ -201,6 +215,10 @@ public class ElementSello {
 
 	public int getFontStyle() {
 		return fontStyle;
+	}
+
+	public Integer getAlineacio() {
+		return alineacio;
 	}
 
 	private static float getMaxFontSize(BaseFont bf, String text, int ample, float maxSize){

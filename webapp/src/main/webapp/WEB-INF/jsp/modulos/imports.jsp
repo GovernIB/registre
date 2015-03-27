@@ -1,4 +1,4 @@
-﻿﻿<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
     <meta charset="utf-8">
@@ -18,7 +18,7 @@
     <!-- ColorPicker -->
     <link href="<c:url value="/css/colorpicker/pick-a-color-1.2.3.min.css"/>" rel="stylesheet">
 
-    <!-- Css específico del proyecto -->
+    <!-- Css espec�fico del proyecto -->
     <link href="<c:url value="/css/regweb.css"/>" rel="stylesheet">
 
     <!-- Timeline -->

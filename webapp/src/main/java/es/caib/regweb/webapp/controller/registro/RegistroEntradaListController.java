@@ -418,6 +418,7 @@ public class RegistroEntradaListController extends BaseController {
         mav.addObject("x", request.getParameter("x"));
         mav.addObject("y", request.getParameter("y"));
         mav.addObject("orientacion", request.getParameter("orientacion"));
+        mav.addObject("tipoRegistro", getMessage("informe.entrada"));
 
         return mav;
     }

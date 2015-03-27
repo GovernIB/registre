@@ -184,13 +184,21 @@
 		  <version>1.0.0</version>
 		</dependency>
 		
-		
 		<dependency>
 		  <groupId>org.fundaciobit.plugins</groupId>
 		  <artifactId>plugin-userinformation-ldap</artifactId>				  
 		  <version>1.0.0</version>
 		</dependency>
 		
+		
+		<!-- ============================================ -->
+		<!-- ============= PLUGINS DE SCANNER =========== -->
+		<!-- ============================================ -->
+		<dependency>
+			<groupId>org.fundaciobit.plugins</groupId>
+			<artifactId>plugin-scanweb-dynamicwebtwain</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 
 
         <!-- Externas -->

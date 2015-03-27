@@ -1,27 +1,32 @@
 package es.caib.regweb.webapp.view;
 
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
 import com.itextpdf.text.Document;
-import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
+import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.ColumnText;
 import com.itextpdf.text.pdf.PdfAction;
 import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfWriter;
 
+import es.caib.regweb.model.Entidad;
 import es.caib.regweb.model.RegistroEntrada;
 import es.caib.regweb.model.RegistroSalida;
+import es.caib.regweb.persistence.utils.FileSystemManager;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.webapp.utils.AbstractIText5PdfView;
 import es.caib.regweb.webapp.utils.ElementSello;
@@ -41,6 +46,8 @@ public class SelloPdfView extends AbstractIText5PdfView {
     private String numRegistre = null;
     
     private String dataRegistre = null;
+    private String dataDiaRegistre = null;
+    private String dataHoraRegistre = null;
     private String anyRegistre = null;
     private String mesRegistre = null;
     private String nomMesRegistre = null;
@@ -52,6 +59,7 @@ public class SelloPdfView extends AbstractIText5PdfView {
     private String destinatari = null;
     private String origen = null;
     private String tipusRegistre = null;
+    private String tipusRegistreComplet = null;
     private String extracte = null;
     private String llibre = null;
     private String nomUsuari = null;
@@ -59,6 +67,9 @@ public class SelloPdfView extends AbstractIText5PdfView {
     private String entitat = null;
     private String decodificacioEntitat = null;
     private String formatNumRegistre = null;
+    
+    private ElementSello logoSello = null;
+    private Entidad entidad = null;
     
     @Override
     protected void buildPdfDocument(Map<String, Object> model, Document document, PdfWriter writer, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -68,6 +79,7 @@ public class SelloPdfView extends AbstractIText5PdfView {
         String x = (String) model.get("x");
         String y = (String) model.get("y");
         String orientacion = (String) model.get("orientacion");
+        tipusRegistreComplet = (String) model.get("tipoRegistro");
 
         // Configuraciones generales formato pdf
         if(orientacion.equals("V")){
@@ -89,6 +101,8 @@ public class SelloPdfView extends AbstractIText5PdfView {
         
         //String numRegistreCompost = null;
         SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        SimpleDateFormat formatDiaDate = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat formatHoraDate = new SimpleDateFormat("HH:mm:ss");
         SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
         SimpleDateFormat formatMonth = new SimpleDateFormat("MM");
         SimpleDateFormat formatMonthName = new SimpleDateFormat("MMMM"); // Afegir el locale?
@@ -101,9 +115,10 @@ public class SelloPdfView extends AbstractIText5PdfView {
         if(registro.getClass().getSimpleName().equals("RegistroEntrada")){
 
             RegistroEntrada registroEntrada = (RegistroEntrada) model.get("registro");
-
-            sello = registroEntrada.getUsuario().getEntidad().getSello();
-            formatNumRegistre = registroEntrada.getUsuario().getEntidad().getNumRegistro();
+            entidad = registroEntrada.getUsuario().getEntidad();
+            
+            sello = entidad.getSello();
+            formatNumRegistre = entidad.getNumRegistro();
 
             if(	registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_VALIDO) ||
             	registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE)){
@@ -113,6 +128,8 @@ public class SelloPdfView extends AbstractIText5PdfView {
 	            numRegistre = String.valueOf(registroEntrada.getNumeroRegistro());
 	            // Data registre
 	            dataRegistre = formatDate.format(registroEntrada.getFecha());
+	            dataDiaRegistre = formatDiaDate.format(registroEntrada.getFecha());
+	            dataHoraRegistre = formatHoraDate.format(registroEntrada.getFecha());
 	            anyRegistre = formatYear.format(registroEntrada.getFecha());
 	            mesRegistre = formatMonth.format(registroEntrada.getFecha());
 	            nomMesRegistre = formatMonthName.format(registroEntrada.getFecha());
@@ -152,15 +169,18 @@ public class SelloPdfView extends AbstractIText5PdfView {
         if(registro.getClass().getSimpleName().equals("RegistroSalida")){
 
             RegistroSalida registroSalida = (RegistroSalida) model.get("registro");
-
-            sello = registroSalida.getUsuario().getEntidad().getSello();
-            formatNumRegistre = registroSalida.getUsuario().getEntidad().getNumRegistro();
+            entidad = registroSalida.getUsuario().getEntidad();
+            
+            sello = entidad.getSello();
+            formatNumRegistre = entidad.getNumRegistro();
 
             codiOficina = registroSalida.getOficina().getCodigo();
             nomOficina = registroSalida.getOficina().getDenominacion();
             numRegistre = String.valueOf(registroSalida.getNumeroRegistro());
             // Data registre
             dataRegistre = formatDate.format(registroSalida.getFecha());
+            dataDiaRegistre = formatDiaDate.format(registroSalida.getFecha());
+            dataHoraRegistre = formatHoraDate.format(registroSalida.getFecha());
             anyRegistre = formatYear.format(registroSalida.getFecha());
             mesRegistre = formatMonth.format(registroSalida.getFecha());
             nomMesRegistre = formatMonthName.format(registroSalida.getFecha());
@@ -203,12 +223,32 @@ public class SelloPdfView extends AbstractIText5PdfView {
 	        	float fx = calculaOrigenX(x, max, orientacion);
         		float fy = calculaOrigenY(y, may, orientacion);// - linies.get(0).getPosy();
 	        	
+        		// LogoSello
+        		if (logoSello != null && entidad.getLogoSello() != null) {
+            		File file = FileSystemManager.getArchivo(entidad.getLogoSello().getId());
+//            		java.awt.image.BufferedImage logo = ImageIO.read(file);
+//            		Image imatgeSello = Image.getInstance(logo, null);
+            		Image imatgeSello = Image.getInstance(file.getAbsolutePath());
+            		float heigh = imatgeSello.getHeight();
+            		float width = imatgeSello.getWidth();
+            		if (logoSello.getAmple() != null) {
+            			float proporcio = logoSello.getAmple()/imatgeSello.getWidth();
+            			width = logoSello.getAmple();
+            			heigh *= proporcio;
+            			imatgeSello.scaleToFit(width, heigh);
+            		}
+            		imatgeSello.setAbsolutePosition(fx + logoSello.getPosx(), fy - logoSello.getPosy() - heigh); 
+            		PdfContentByte canvas = writer.getDirectContent();
+            		canvas.addImage(imatgeSello); 
+            	}
+        	
+        		// ElementsSello
 	            for(ElementSello element: linies) {
 	            	Font font = new Font(element.getBf(), element.getFontSize(), element.getFontStyle(), element.getColor());
 	                Phrase frase = new Phrase(element.getText(), font);
 	                PdfContentByte canvas = writer.getDirectContent();
 	                //int yu = (int) (Float.valueOf(y)-12*j);
-	                ColumnText.showTextAligned(canvas, Element.ALIGN_LEFT, frase, fx + element.getPosx(), fy + element.getPosy(), 0);
+	                ColumnText.showTextAligned(canvas, element.getAlineacio(), frase, fx + element.getPosx(), fy + element.getPosy(), 0);
 	            }
             }
 
@@ -282,14 +322,18 @@ public class SelloPdfView extends AbstractIText5PdfView {
 	    			// Paràmetre
 	    			String param = liniaSello.substring(liniaSello.indexOf("${") + 2, liniaSello.indexOf("}"));
 	    			ElementSello ls = new ElementSello(param, true);
-	    			ls.setText(getParamValue(ls.getParam()));
-	    			if (ls.isChangedPosy()) {
-	    				actualitzaPos(partLinia);
-	    				linies.addAll(partLinia);
-	    				partLinia = new ArrayList<ElementSello>();
-	    				partLinia.add(ls);
+	    			if (ls.getParam().equalsIgnoreCase("logoSello")) {
+	    				logoSello = ls;
 	    			} else {
-	    				partLinia.add(ls);
+		    			ls.setText(getParamValue(ls.getParam()));
+		    			if (ls.isChangedPosy()) {
+		    				actualitzaPos(partLinia);
+		    				linies.addAll(partLinia);
+		    				partLinia = new ArrayList<ElementSello>();
+		    				partLinia.add(ls);
+		    			} else {
+		    				partLinia.add(ls);
+		    			}
 	    			}
 	    			// Text posterior al primer paràmetre
 	    			liniaSello = liniaSello.substring(liniaSello.indexOf("}") + 1);
@@ -331,6 +375,10 @@ public class SelloPdfView extends AbstractIText5PdfView {
     		return formatNumRegistre;
     	} else if ("dataRegistre".equalsIgnoreCase(paramName)) {
     		return dataRegistre;
+    	} else if ("dataDiaRegistre".equalsIgnoreCase(paramName)) {
+    		return dataDiaRegistre;
+    	} else if ("dataHoraRegistre".equalsIgnoreCase(paramName)) {
+    		return dataHoraRegistre;
     	} else if ("anyRegistre".equalsIgnoreCase(paramName)) {
     		return anyRegistre;
     	} else if ("mesRegistre".equalsIgnoreCase(paramName)) {
@@ -365,6 +413,8 @@ public class SelloPdfView extends AbstractIText5PdfView {
     		return decodificacioEntitat;
     	} else if ("formatNumRegistre".equalsIgnoreCase(paramName)) {
     		return formatNumRegistre;
+    	} else if ("tipusRegistreComplet".equalsIgnoreCase(paramName)) {
+    		return tipusRegistreComplet;
     	}
     	return paramName;
     }

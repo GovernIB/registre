@@ -78,7 +78,9 @@ public class EntidadForm {
 	}
 
 	public void setLogoSello(CommonsMultipartFile logoSello) {
-		this.logoSello = logoSello;
+		if(logoSello != null && !logoSello.isEmpty()){
+			this.logoSello = logoSello;
+		}
 	}
 
 	public boolean isBorrarLogoSello() {

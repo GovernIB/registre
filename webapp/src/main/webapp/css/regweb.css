@@ -426,6 +426,10 @@ textarea{
 .modal-medio {
     width: 500px;
 }
+.modal-maxh-600 {
+	max-height: 600px;
+	overflow: auto;
+}
 /* FI MODAL */
 
 /* ARXIU */

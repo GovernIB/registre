@@ -217,7 +217,7 @@ public class EntidadController extends BaseController {
                 }
             }
             model.addAttribute("administradoresEntidad", administradoresEntidadModificar(entidad.getPropietario(), entidad));
-            model.addAttribute("tipoScan", Configuracio.getTipusScanejat());
+            model.addAttribute("tipoScan", Configuracio.getTipusScanejat(request.getLocale(), getMessage("scan.noScan")));
 
         }catch (Exception e) {
             e.printStackTrace();
@@ -242,7 +242,7 @@ public class EntidadController extends BaseController {
 
            try {
                 model.addAttribute("administradoresEntidad", administradoresEntidadModificar(entidadForm.getEntidad().getPropietario(), entidadForm.getEntidad()));
-                model.addAttribute("tipoScan", Configuracio.getTipusScanejat());
+                model.addAttribute("tipoScan", Configuracio.getTipusScanejat(request.getLocale(), getMessage("scan.noScan")));
             } catch (Exception e) {
                 e.printStackTrace();
             }

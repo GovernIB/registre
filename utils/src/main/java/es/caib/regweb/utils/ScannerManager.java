@@ -10,9 +10,6 @@ import org.apache.log4j.Logger;
 import org.fundaciobit.plugins.scanweb.IScanWebPlugin;
 import org.fundaciobit.plugins.scanweb.ScanWebResource;
 import org.fundaciobit.plugins.utils.PluginsManager;
-
-import es.limit.plugins.scanweb.dynamicwebtwain.DynamicWebTwainScanWebPlugin;
-
 /**
  * Created by Limit Tecnologies.
  * User: sandreu
@@ -37,13 +34,12 @@ public class ScannerManager {
           throw new Exception("No hi ha cap propietat " + propertyName + " definint la classe que gestiona el plugin de scanner");
         }
         // Carregant la classe
-        //FIXME
-        //Object obj = PluginsManager.instancePluginByClassName(className, propertyName + ".");
-        //IScanWebPlugin obj = new DynamicWebTwainScanWebPlugin();
-        //plugins.put(tipusScan, (IScanWebPlugin)obj);
-        Class<?> clazz = Class.forName("es.limit.plugins.scanweb.dynamicwebtwain.DynamicWebTwainScanWebPlugin");
-        IScanWebPlugin plugin = (IScanWebPlugin)clazz.newInstance();
-        plugins.put(tipusScan, plugin);
+        Object obj;
+        obj = PluginsManager.instancePluginByClassName(className, propertyName + ".");
+        plugins.put(tipusScan, (IScanWebPlugin)obj);
+//        Class<?> clazz = Class.forName(className);
+//        IScanWebPlugin plugin = (IScanWebPlugin)clazz.newInstance();
+//        plugins.put(tipusScan, plugin);
       }      
 
       return plugins.get(tipusScan); 
@@ -56,7 +52,7 @@ public class ScannerManager {
      * @return
      */
     public static String getName(Integer tipusScan, Locale locale) throws Exception {
-      return getInstance(tipusScan).getName(locale);
+   		return getInstance(tipusScan).getName(locale);
     }
 
     /**
