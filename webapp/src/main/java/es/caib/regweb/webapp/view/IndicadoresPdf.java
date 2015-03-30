@@ -10,7 +10,6 @@ import org.apache.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -19,7 +18,6 @@ import java.util.Map;
  * Date: 6/05/14
  */
 public class IndicadoresPdf extends AbstractIText5PdfView {
-
 
     protected final Logger log = Logger.getLogger(getClass());
 
@@ -57,13 +55,10 @@ public class IndicadoresPdf extends AbstractIText5PdfView {
         ArrayList<String> entradaOficinaNombre = (ArrayList<String>) model.get("entradaOficinaNombre");
         ArrayList<String> salidaOficinaValor = (ArrayList<String>) model.get("salidaOficinaValor");
         ArrayList<String> salidaOficinaNombre = (ArrayList<String>) model.get("salidaOficinaNombre");
-
         ArrayList<String> entradaIdiomaValor = (ArrayList<String>) model.get("entradaIdiomaValor");
         ArrayList<String> entradaIdiomaNombre = (ArrayList<String>) model.get("entradaIdiomaNombre");
         ArrayList<String> salidaIdiomaValor = (ArrayList<String>) model.get("salidaIdiomaValor");
         ArrayList<String> salidaIdiomaNombre = (ArrayList<String>) model.get("salidaIdiomaNombre");
-
-
 
         //Configuraciones generales formato pdf
         document.setPageSize(PageSize.A4);
@@ -91,13 +86,11 @@ public class IndicadoresPdf extends AbstractIText5PdfView {
         String campCalendari = "";
         if(campoCalendario == 0){
             campCalendari = "Anys i Mesos";
-        }
-        if(campoCalendario == 1){
-            campCalendari = "Anys";
-        }
-        if(campoCalendario == 2){
-            campCalendari = "Mesos";
-        }
+        }else if(campoCalendario == 1){
+                campCalendari = "Anys";
+            }else if(campoCalendario == 2){
+                    campCalendari = "Mesos";
+                }
         titulo.addCell(new Paragraph("Mostrar: " + campCalendari));
         document.add(titulo);
         document.add(new Paragraph(" "));
@@ -341,17 +334,15 @@ public class IndicadoresPdf extends AbstractIText5PdfView {
                 tableIdiomesEntrada.getDefaultCell().setBackgroundColor(BaseColor.LIGHT_GRAY);
                 tableIdiomesEntrada.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
 
-                for(Iterator<String> it = entradaIdiomaNombre.iterator(); it.hasNext();) {
-                    String nomIdioma = (String) it.next();
-                    tableIdiomesEntrada.addCell(new Paragraph(nomIdioma,font10));
+                for (String nomIdioma : entradaIdiomaNombre) {
+                    tableIdiomesEntrada.addCell(new Paragraph(nomIdioma, font10));
                 }
                 document.add(tableIdiomesEntrada);
                 tableIdiomesEntrada.deleteBodyRows();
                 tableIdiomesEntrada.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                 tableIdiomesEntrada.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                for(Iterator<String> it = entradaIdiomaValor.iterator(); it.hasNext();) {
-                    String valorIdioma = (String) it.next();
-                    tableIdiomesEntrada.addCell(new Paragraph(valorIdioma,font10));
+                for (String valorIdioma : entradaIdiomaValor) {
+                    tableIdiomesEntrada.addCell(new Paragraph(valorIdioma, font10));
                 }
                 document.add(tableIdiomesEntrada);
                 document.add(new Paragraph(" "));
@@ -612,17 +603,15 @@ public class IndicadoresPdf extends AbstractIText5PdfView {
                 tableIdiomesSalida.getDefaultCell().setBackgroundColor(BaseColor.LIGHT_GRAY);
                 tableIdiomesSalida.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
 
-                for(Iterator<String> it = salidaIdiomaNombre.iterator(); it.hasNext();) {
-                    String nomIdioma = (String) it.next();
-                    tableIdiomesSalida.addCell(new Paragraph(nomIdioma,font10));
+                for (String nomIdioma : salidaIdiomaNombre) {
+                    tableIdiomesSalida.addCell(new Paragraph(nomIdioma, font10));
                 }
                 document.add(tableIdiomesSalida);
                 tableIdiomesSalida.deleteBodyRows();
                 tableIdiomesSalida.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                 tableIdiomesSalida.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                for(Iterator<String> it = salidaIdiomaValor.iterator(); it.hasNext();) {
-                    String valorIdioma = (String) it.next();
-                    tableIdiomesSalida.addCell(new Paragraph(valorIdioma,font10));
+                for (String valorIdioma : salidaIdiomaValor) {
+                    tableIdiomesSalida.addCell(new Paragraph(valorIdioma, font10));
                 }
                 document.add(tableIdiomesSalida);
                 document.add(new Paragraph(" "));
@@ -641,7 +630,6 @@ public class IndicadoresPdf extends AbstractIText5PdfView {
             }
 
         }
-
 
 
         String nombreFichero = "Informe_Indicadors_"+ tipo +".pdf";

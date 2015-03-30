@@ -46,7 +46,6 @@ public class ReciboRtfView extends AbstractView {
     @Override
     protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-
         Object object = model.get("registro");
         ModeloRecibo modeloRecibo = (ModeloRecibo) model.get("modeloRecibo");
 
@@ -99,8 +98,7 @@ public class ReciboRtfView extends AbstractView {
         if(idiomaActual.equals("es")){
             mesRecibo = sdf2.format(dataActual);
             fechaRecibo = diaRecibo + " de " + mesRecibo + " de " + anoRecibo;
-        }
-        if(idiomaActual.equals("ca")){
+        } else if(idiomaActual.equals("ca")){
             mesRecibo = sdf4.format(dataActual);
             if(mesRecibo.startsWith("a") || mesRecibo.startsWith("o")){
                 mesRecibo= " d'" + mesRecibo;
@@ -112,17 +110,15 @@ public class ReciboRtfView extends AbstractView {
 
         // Interessats
         if (datosRecibo.getInteresados()!=null){
-            // TODO Optimitzar foreach i switch
+
             for(int i=0;i<datosRecibo.getInteresados().size();i++){
                 if(datosRecibo.getInteresados().get(i).getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
-                    interessats = interessats + datosRecibo.getInteresados().get(i).getNombre();
-                }
-                if(datosRecibo.getInteresados().get(i).getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)){
-                    interessats = interessats + datosRecibo.getInteresados().get(i).getNombrePersonaFisica();
-                }
-                if(datosRecibo.getInteresados().get(i).getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)){
-                    interessats = interessats + datosRecibo.getInteresados().get(i).getNombrePersonaJuridica();
-                }
+                        interessats = interessats + datosRecibo.getInteresados().get(i).getNombre();
+                    }else if(datosRecibo.getInteresados().get(i).getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)){
+                            interessats = interessats + datosRecibo.getInteresados().get(i).getNombrePersonaFisica();
+                        }else if(datosRecibo.getInteresados().get(i).getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)){
+                                interessats = interessats + datosRecibo.getInteresados().get(i).getNombrePersonaJuridica();
+                            }
                 if(i<datosRecibo.getInteresados().size()-1){
                     interessats = interessats + ", ";
                 }

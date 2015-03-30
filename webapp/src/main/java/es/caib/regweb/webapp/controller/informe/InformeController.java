@@ -249,7 +249,7 @@ public class InformeController extends BaseController {
                             String interessats = "";
 
                             for(int k=0;k<registroEntrada.getRegistroDetalle().getInteresados().size();k++) {
-                                Interesado interesado = registroEntrada.getRegistroDetalle().getInteresados().get(k); 
+                                Interesado interesado = registroEntrada.getRegistroDetalle().getInteresados().get(k);
                                 if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
                                     interessats = interessats + interesado.getNombre();
                                 } else if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)){
@@ -1133,46 +1133,6 @@ public class InformeController extends BaseController {
             valorRegistro.add(registro.getOficina().getDenominacion());
 
             mav.addObject("valorRegistro", valorRegistro);
-
-            // Obtiene los datos del histórico del registro de salida
-//            ArrayList<ArrayList<String>> registros = new ArrayList<ArrayList<String>>();
-//
-//            List<HistoricoRegistroSalida> historicos = historicoRegistroSalidaaEjb.getByRegistroSalida(idRegistro);
-//
-//            for (int i = 0; i < historicos.size(); i++) {
-//                registros.add(new ArrayList<String>());
-//                HistoricoRegistroSalida historicoRegistroSalida = historicos.get(i);
-//                registros.get(i).add(historicoRegistroSalida.getRegistroEntrada().getNumeroRegistro().toString());
-//                registros.get(i).add(historicoRegistroSalida.getUsuario().getNombreCompleto());
-//                registros.get(i).add(historicoRegistroSalida.getUsuario().getUsuario().getIdentificador());
-//                if(historicoRegistroSalida.getEstado().getId().equals(RegwebConstantes.ESTADO_VALIDO)) {
-//                    registros.get(i).add("VÀLID");
-//                }
-//                if(historicoRegistroSalida.getEstado().getId().equals(RegwebConstantes.ESTADO_TRAMITADO)) {
-//                    registros.get(i).add("TRAMITAT");
-//                }
-//                if(historicoRegistroSalida.getEstado().getId().equals(RegwebConstantes.ESTADO_ANULADO)) {
-//                    registros.get(i).add("ANULAT");
-//                }
-//                if(historicoRegistroSalida.getEstado().getId().equals(RegwebConstantes.ESTADO_ENVIADO)) {
-//                    registros.get(i).add("ENVIAT");
-//                }
-//                if(historicoRegistroSalida.getEstado().getId().equals(RegwebConstantes.ESTADO_OFICIO_EXTERNO)) {
-//                    registros.get(i).add("OFICI EXTERN");
-//                }
-//                if(historicoRegistroSalida.getEstado().getId().equals(RegwebConstantes.ESTADO_OFICIO_INTERNO)) {
-//                    registros.get(i).add("OFICI INTERN");
-//                }
-//                if(historicoRegistroSalida.getEstado().getId().equals(RegwebConstantes.ESTADO_PENDIENTE)) {
-//                    registros.get(i).add("PENDENT");
-//                }
-//                if(historicoRegistroSalida.getEstado().getId().equals(RegwebConstantes.ESTADO_PENDIENTE_VISAR)) {
-//                    registros.get(i).add("PENDENT VISAR");
-//                }
-//                registros.get(i).add(historicoRegistroSalida.getModificacion());
-//            }
-//
-//            mav.addObject("registros", registros);
 
         }
 

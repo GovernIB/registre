@@ -56,13 +56,10 @@ public class IndicadoresExcel extends AbstractExcelView {
         ArrayList<String> entradaOficinaNombre = (ArrayList<String>) model.get("entradaOficinaNombre");
         ArrayList<String> salidaOficinaValor = (ArrayList<String>) model.get("salidaOficinaValor");
         ArrayList<String> salidaOficinaNombre = (ArrayList<String>) model.get("salidaOficinaNombre");
-
         ArrayList<String> entradaIdiomaValor = (ArrayList<String>) model.get("entradaIdiomaValor");
         ArrayList<String> entradaIdiomaNombre = (ArrayList<String>) model.get("entradaIdiomaNombre");
         ArrayList<String> salidaIdiomaValor = (ArrayList<String>) model.get("salidaIdiomaValor");
         ArrayList<String> salidaIdiomaNombre = (ArrayList<String>) model.get("salidaIdiomaNombre");
-
-
 
         HSSFSheet sheet = workbook.createSheet("REGWEB");
         sheet.setFitToPage(true);
@@ -159,13 +156,11 @@ public class IndicadoresExcel extends AbstractExcelView {
         String campCalendari = "";
         if(campoCalendario == 0){
             campCalendari = "Anys i Mesos";
-        }
-        if(campoCalendario == 1){
-            campCalendari = "Anys";
-        }
-        if(campoCalendario == 2){
-            campCalendari = "Mesos";
-        }
+            }else if(campoCalendario == 1){
+                    campCalendari = "Anys";
+                }else if(campoCalendario == 2){
+                    campCalendari = "Mesos";
+                }
         mostrarCell.setCellValue("Mostrar: " + campCalendari);
         mostrarCell.setCellStyle(paramCerca);
         sheet.addMergedRegion(CellRangeAddress.valueOf("$A$6:$G$6"));
@@ -672,13 +667,7 @@ public class IndicadoresExcel extends AbstractExcelView {
                 }
             }
 
-            //Espai buit
-            rowNum = rowNum + 1;
-
         }
-
-
-
 
         // Ajustamos el ancho de cada columna a su contenido
         for (int i = 0; i < tamanyMaxColum; i++) {
