@@ -1192,9 +1192,13 @@ public class InformeController extends BaseController {
      */
     @RequestMapping(value = "/obtenerUsuarios", method = RequestMethod.GET)
     public @ResponseBody
-    List<UsuarioEntidad> obtenerUsuarios(@RequestParam Long id) throws Exception {
+    List<UsuarioEntidad> obtenerUsuarios(@RequestParam Long id,HttpServletRequest request) throws Exception {
 
-        return permisoLibroUsuarioEjb.getUsuariosEntidadByLibro(id);
+        if(id != -1) {
+            return permisoLibroUsuarioEjb.getUsuariosEntidadByLibro(id);
+        }else{
+            return usuarioEntidadEjb.findByEntidad(getEntidadActiva(request).getId());
+        }
 
     }
 
