@@ -9,15 +9,11 @@ import es.caib.regweb.ws.model.OrganismoWs;
 import es.caib.regweb.ws.model.TipoAsuntoWs;
 import es.caib.regweb.ws.utils.AuthenticatedBaseWsImpl;
 import es.caib.regweb.ws.utils.UsuarioAplicacionCache;
-
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.ws.WsI18NException;
 import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.wsf.spi.annotation.TransportGuarantee;
 import org.jboss.wsf.spi.annotation.WebContext;
-
-//import org.springframework.stereotype.Component;
-
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
@@ -26,9 +22,10 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
-
 import java.util.ArrayList;
 import java.util.List;
+
+//import org.springframework.stereotype.Component;
 
 /**
  * Created by Fundació BIT.
@@ -110,8 +107,7 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
   public CodigoAsuntoLocal codigoAsuntoEjb;
 
   /**
-   * 
-   * @param usuario
+   *
    * @param entidadCodigoDir3
    * @return
    * @throws Throwable
@@ -120,8 +116,7 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
   @Override
   @WebMethod
   @RolesAllowed({ RegwebConstantes.ROL_USUARI })
-  public List<TipoAsuntoWs> listarTipoAsunto(@WebParam(name = "usuario") String usuario,
-      @WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3) throws Throwable,
+  public List<TipoAsuntoWs> listarTipoAsunto(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3) throws Throwable,
       WsI18NException {
 
     // TODO Checks
@@ -143,7 +138,6 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
 
   /**
    *
-   * @param usuario
    * @param codigoTipoAsunto
    * @return
    * @throws Throwable
@@ -152,8 +146,7 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
   @Override
   @WebMethod
   @RolesAllowed({ RegwebConstantes.ROL_USUARI })
-  public List<CodigoAsuntoWs> listarCodigoAsunto(@WebParam(name = "usuario") String usuario,
-      @WebParam(name = "codigoTipoAsunto") String codigoTipoAsunto) throws Throwable,
+  public List<CodigoAsuntoWs> listarCodigoAsunto(@WebParam(name = "codigoTipoAsunto") String codigoTipoAsunto) throws Throwable,
       WsI18NException {
 
     // TODO Checks
@@ -176,8 +169,7 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
   @Override
   @WebMethod
   @RolesAllowed({ RegwebConstantes.ROL_USUARI })
-  public List<LibroWs> listarLibros(@WebParam(name = "usuario") String usuario,
-      @WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3,
+  public List<LibroWs> listarLibros(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3,
       @WebParam(name = "autorizacion") String autorizacion) throws Throwable, WsI18NException {
 
     // TODO com proces lo d'AUTORIZACION: CE, CS , CV 

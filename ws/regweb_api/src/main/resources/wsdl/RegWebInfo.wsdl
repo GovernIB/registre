@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions name="RegWebInfoWsService" targetNamespace="http://impl.v3.ws.regweb.caib.es/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://impl.v3.ws.regweb.caib.es/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+<wsdl:definitions name="RegWebInfoWsService" targetNamespace="http://impl.v3.ws.regweb.caib.es/"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://impl.v3.ws.regweb.caib.es/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
   <wsdl:types>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://impl.v3.ws.regweb.caib.es/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://impl.v3.ws.regweb.caib.es/">
   <xs:element name="codigoAsuntoWs" type="tns:codigoAsuntoWs"/>
@@ -55,7 +57,6 @@
   </xs:complexType>
   <xs:complexType name="listarTipoAsunto">
     <xs:sequence>
-      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
       <xs:element minOccurs="0" name="entidadCodigoDir3" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
@@ -73,7 +74,6 @@
   </xs:complexType>
   <xs:complexType name="listarCodigoAsunto">
     <xs:sequence>
-      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
       <xs:element minOccurs="0" name="codigoTipoAsunto" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
@@ -91,7 +91,6 @@
   </xs:complexType>
   <xs:complexType name="listarLibros">
     <xs:sequence>
-      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
       <xs:element minOccurs="0" name="entidadCodigoDir3" type="xs:string"/>
       <xs:element minOccurs="0" name="autorizacion" type="xs:string"/>
     </xs:sequence>

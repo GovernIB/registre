@@ -38,7 +38,7 @@ public class DatosInteresadoWs  implements java.io.Serializable {
 
     private java.lang.String telefono;
 
-    private org.apache.axis.types.UnsignedShort tipoDocumentoIdentificacion;
+    private java.lang.String tipoDocumentoIdentificacion;
 
     private java.lang.Long tipoInteresado;
 
@@ -61,7 +61,7 @@ public class DatosInteresadoWs  implements java.io.Serializable {
            java.lang.Long provincia,
            java.lang.String razonSocial,
            java.lang.String telefono,
-           org.apache.axis.types.UnsignedShort tipoDocumentoIdentificacion,
+           java.lang.String tipoDocumentoIdentificacion,
            java.lang.Long tipoInteresado) {
            this.apellido1 = apellido1;
            this.apellido2 = apellido2;
@@ -388,7 +388,7 @@ public class DatosInteresadoWs  implements java.io.Serializable {
      * 
      * @return tipoDocumentoIdentificacion
      */
-    public org.apache.axis.types.UnsignedShort getTipoDocumentoIdentificacion() {
+    public java.lang.String getTipoDocumentoIdentificacion() {
         return tipoDocumentoIdentificacion;
     }
 
@@ -398,7 +398,7 @@ public class DatosInteresadoWs  implements java.io.Serializable {
      * 
      * @param tipoDocumentoIdentificacion
      */
-    public void setTipoDocumentoIdentificacion(org.apache.axis.types.UnsignedShort tipoDocumentoIdentificacion) {
+    public void setTipoDocumentoIdentificacion(java.lang.String tipoDocumentoIdentificacion) {
         this.tipoDocumentoIdentificacion = tipoDocumentoIdentificacion;
     }
 
@@ -665,7 +665,7 @@ public class DatosInteresadoWs  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("tipoDocumentoIdentificacion");
         elemField.setXmlName(new javax.xml.namespace.QName("", "tipoDocumentoIdentificacion"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "unsignedShort"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
