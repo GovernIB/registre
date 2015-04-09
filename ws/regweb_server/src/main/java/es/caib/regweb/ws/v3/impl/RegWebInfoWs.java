@@ -38,6 +38,15 @@ public interface RegWebInfoWs {
     @WebMethod
     public List<CodigoAsuntoWs> listarCodigoAsunto(@WebParam(name = "codigoTipoAsunto") String codigoTipoAsunto)
       throws Throwable, WsI18NException;
+
+    /**
+     * Obtiene las Oficinas donde el usuario tiene permisos para realizar Registros de Entrada
+     * @param entidadCodigoDir3
+     * @return
+     * @throws Throwable
+     * @throws WsI18NException
+     */
+    //public List<OficinaWs> listarOficinas(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3) throws Throwable, WsI18NException
     
     @WebMethod
     @RolesAllowed({ RegwebConstantes.ROL_USUARI })

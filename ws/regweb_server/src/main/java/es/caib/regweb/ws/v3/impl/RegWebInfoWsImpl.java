@@ -50,46 +50,6 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
 
   public static final String NAME_WS = NAME + "Ws";
 
-  /*
-   * @Autowired RegistroSalidaValidator validator = new
-   * RegistroSalidaValidator();
-   * 
-   * @EJB(mappedName = "regweb/OficinaEJB/local") public OficinaLocal
-   * oficinaEjb;
-   * 
-   * @EJB(mappedName = "regweb/OrganismoEJB/local") public OrganismoLocal
-   * organismoEjb;
-   * 
-   * @EJB(mappedName = "regweb/PermisoLibroUsuarioEJB/local") public
-   * PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
-   * 
-   * @EJB(mappedName = "regweb/UsuarioEntidadEJB/local") public
-   * UsuarioEntidadLocal usuarioEntidadEjb;
-   * 
-   * 
-   * 
-   * @EJB(mappedName = "regweb/IdiomaRegistroEJB/local") public
-   * IdiomaRegistroLocal idiomaRegistroEjb;
-   * 
-   * 
-   * 
-   * @EJB(mappedName = "regweb/TransporteEJB/local") public TransporteLocal
-   * transporteEjb;
-   * 
-   * @EJB(mappedName = "regweb/CodigoAsuntoEJB/local") public CodigoAsuntoLocal
-   * codigoAsuntoEjb;
-   * 
-   * @EJB(mappedName = "regweb/TipoDocumentacionFisicaEJB/local") public
-   * TipoDocumentacionFisicaLocal tipoDocumentacionFisicaEjb;
-   * 
-   * @EJB(mappedName = "regweb/RegistroSalidaEJB/local") public
-   * RegistroSalidaLocal registroSalidaEjb;
-   * 
-   * @EJB(mappedName = "regweb/HistoricoRegistroSalidaEJB/local") public
-   * HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
-   * 
-   * @EJB(mappedName = "regweb/LopdEJB/local") public LopdLocal lopdEjb;
-   */
 
   @EJB(mappedName = "regweb/EntidadEJB/local")
   public EntidadLocal entidadEjb;
@@ -105,6 +65,18 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
 
   @EJB(mappedName = "regweb/CodigoAsuntoEJB/local")
   public CodigoAsuntoLocal codigoAsuntoEjb;
+
+  @EJB(mappedName = "regweb/UsuarioEntidadEJB/local")
+  public UsuarioEntidadLocal usuarioEntidadEjb;
+
+  @EJB(mappedName = "regweb/PermisoLibroUsuarioEJB/local")
+  public PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
+
+  @EJB(mappedName = "regweb/OficinaEJB/local")
+  public OficinaLocal oficinaEjb;
+
+  @EJB(mappedName = "regweb/RelacionOrganizativaOfiEJB/local")
+  public RelacionOrganizativaOfiLocal relacionOrganizativaOfiLocalEjb;
 
   /**
    *
@@ -150,7 +122,7 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
       WsI18NException {
 
     // TODO Checks
-    TipoAsunto tipoAsuntoObj = CommonConverter.getTipoAsunto(codigoTipoAsunto,tipoAsuntoEjb);
+    TipoAsunto tipoAsuntoObj = CommonConverter.getTipoAsunto(codigoTipoAsunto, tipoAsuntoEjb);
 
     List<CodigoAsunto> codigoAsuntos = codigoAsuntoEjb.getByTipoAsunto(tipoAsuntoObj.getId());
 
@@ -166,6 +138,35 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
 
   }
 
+ /* @Override
+  @WebMethod
+  @RolesAllowed({ RegwebConstantes.ROL_USUARI })
+  public List<OficinaWs> listarOficinas(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3) throws Throwable, WsI18NException {
+
+    Entidad entidad = CommonConverter.getEntidad(entidadCodigoDir3, entidadEjb);
+    UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByIdentificadorCodigoEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidad.getCodigoDir3());
+
+    List<Libro> librosRegistro = permisoLibroUsuarioEjb.getLibrosRegistro(usuarioEntidad.getId());
+
+    Set<Oficina> oficinasRegistro = new HashSet<Oficina>();  // Utilizamos un Set porque no permite duplicados
+
+    // Recorremos los Libros y a partir del Organismo al que pertenecen, obtenemos las Oficinas que pueden Registrar en el.
+    for (Libro libro : librosRegistro) {
+      Long idOrganismo = libro.getOrganismo().getId();
+      oficinasRegistro.addAll(oficinaEjb.findByOrganismoResponsable(idOrganismo));
+      oficinasRegistro.addAll(relacionOrganizativaOfiLocalEjb.getOficinasByOrganismo(idOrganismo));
+    }
+
+    List<OficinaWs> listOficinaWs = new ArrayList<OficinaWs>(oficinasRegistro.size());
+    for (Oficina oficina : oficinasRegistro) {
+      listOficinaWs.add(CommonConverter.getOficinaWs(oficina));
+    }
+
+
+    return listOficinaWs;
+
+  }*/
+
   @Override
   @WebMethod
   @RolesAllowed({ RegwebConstantes.ROL_USUARI })
@@ -175,9 +176,13 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
     // TODO com proces lo d'AUTORIZACION: CE, CS , CV 
     
     // TODO Checks
-    Entidad entidadObj = CommonConverter.getEntidad(entidadCodigoDir3, entidadEjb);
+    Entidad entidad = CommonConverter.getEntidad(entidadCodigoDir3, entidadEjb);
 
-    List<Libro> listLibro = libroEjb.getLibrosEntidad(entidadObj.getId());
+    UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByIdentificadorCodigoEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidad.getCodigoDir3());
+
+
+
+    List<Libro> listLibro = libroEjb.getLibrosEntidad(entidad.getId());
 
     List<LibroWs> listLibroWs = new ArrayList<LibroWs>(listLibro.size());
 
