@@ -1,6 +1,9 @@
 package es.caib.regweb.ws.v3.test;
 
-import es.caib.regweb.ws.api.v3.*;
+import es.caib.regweb.ws.api.v3.CodigoAsuntoWs;
+import es.caib.regweb.ws.api.v3.RegWebInfoWs;
+import es.caib.regweb.ws.api.v3.TipoAsuntoWs;
+import es.caib.regweb.ws.api.v3.WsI18NException;
 import es.caib.regweb.ws.api.v3.utils.WsClientUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -48,7 +51,7 @@ public class RegwebInfoTest extends RegWebTestUtils {
     String codigoEntidadDir3 = "A04006741";
 
     try {
-      List<TipoAsuntoWs> tas= infoApi.listarTipoAsunto(usuario, codigoEntidadDir3);
+      List<TipoAsuntoWs> tas= infoApi.listarTipoAsunto(codigoEntidadDir3);
 
       System.out.println("tas num: " + tas.size());
 
@@ -69,12 +72,12 @@ public class RegwebInfoTest extends RegWebTestUtils {
     String codigoEntidadDir3 = "A04006741";
 
     try {
-      List<TipoAsuntoWs> tas= infoApi.listarTipoAsunto(usuario, codigoEntidadDir3);
+      List<TipoAsuntoWs> tas= infoApi.listarTipoAsunto(codigoEntidadDir3);
 
 
       TipoAsuntoWs tasws = tas.get(0);
 
-      List<CodigoAsuntoWs> cas = infoApi.listarCodigoAsunto(usuario, tasws.getCodigo());
+      List<CodigoAsuntoWs> cas = infoApi.listarCodigoAsunto(tasws.getCodigo());
       System.out.println("cas num: " + cas.size());
       System.out.println("CA nombre "+ cas.get(0).getNombre());
 
