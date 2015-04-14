@@ -52,9 +52,6 @@ public class RegWebInfoWsServiceSoapBindingStub extends org.apache.axis.client.S
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("listarTipoAsunto");
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "usuario"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
-        param.setOmittable(true);
-        oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "entidadCodigoDir3"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         param.setOmittable(true);
         oper.addParameter(param);
@@ -73,9 +70,6 @@ public class RegWebInfoWsServiceSoapBindingStub extends org.apache.axis.client.S
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("listarCodigoAsunto");
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "usuario"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
-        param.setOmittable(true);
-        oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "codigoTipoAsunto"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         param.setOmittable(true);
         oper.addParameter(param);
@@ -94,9 +88,6 @@ public class RegWebInfoWsServiceSoapBindingStub extends org.apache.axis.client.S
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("listarLibros");
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "usuario"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
-        param.setOmittable(true);
-        oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "entidadCodigoDir3"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         param.setOmittable(true);
         oper.addParameter(param);
@@ -347,7 +338,7 @@ public class RegWebInfoWsServiceSoapBindingStub extends org.apache.axis.client.S
 }
     }
 
-    public es.caib.regweb.ws.v3.apiaxis.TipoAsuntoWs[] listarTipoAsunto(java.lang.String usuario, java.lang.String entidadCodigoDir3) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsI18NError {
+    public es.caib.regweb.ws.v3.apiaxis.TipoAsuntoWs[] listarTipoAsunto(java.lang.String entidadCodigoDir3) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsI18NError {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -363,7 +354,7 @@ public class RegWebInfoWsServiceSoapBindingStub extends org.apache.axis.client.S
 
         setRequestHeaders(_call);
         setAttachments(_call);
- try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {usuario, entidadCodigoDir3});
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {entidadCodigoDir3});
 
         if (_resp instanceof java.rmi.RemoteException) {
             throw (java.rmi.RemoteException)_resp;
@@ -389,7 +380,7 @@ public class RegWebInfoWsServiceSoapBindingStub extends org.apache.axis.client.S
 }
     }
 
-    public es.caib.regweb.ws.v3.apiaxis.CodigoAsuntoWs[] listarCodigoAsunto(java.lang.String usuario, java.lang.String codigoTipoAsunto) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsI18NError {
+    public es.caib.regweb.ws.v3.apiaxis.CodigoAsuntoWs[] listarCodigoAsunto(java.lang.String codigoTipoAsunto) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsI18NError {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -405,7 +396,7 @@ public class RegWebInfoWsServiceSoapBindingStub extends org.apache.axis.client.S
 
         setRequestHeaders(_call);
         setAttachments(_call);
- try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {usuario, codigoTipoAsunto});
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {codigoTipoAsunto});
 
         if (_resp instanceof java.rmi.RemoteException) {
             throw (java.rmi.RemoteException)_resp;
@@ -431,7 +422,7 @@ public class RegWebInfoWsServiceSoapBindingStub extends org.apache.axis.client.S
 }
     }
 
-    public es.caib.regweb.ws.v3.apiaxis.LibroWs[] listarLibros(java.lang.String usuario, java.lang.String entidadCodigoDir3, java.lang.String autorizacion) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsI18NError {
+    public es.caib.regweb.ws.v3.apiaxis.LibroWs[] listarLibros(java.lang.String entidadCodigoDir3, java.lang.String autorizacion) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsI18NError {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -447,7 +438,7 @@ public class RegWebInfoWsServiceSoapBindingStub extends org.apache.axis.client.S
 
         setRequestHeaders(_call);
         setAttachments(_call);
- try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {usuario, entidadCodigoDir3, autorizacion});
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {entidadCodigoDir3, autorizacion});
 
         if (_resp instanceof java.rmi.RemoteException) {
             throw (java.rmi.RemoteException)_resp;
