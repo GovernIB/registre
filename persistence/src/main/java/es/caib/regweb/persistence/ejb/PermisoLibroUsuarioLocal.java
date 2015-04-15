@@ -163,4 +163,14 @@ public interface PermisoLibroUsuarioLocal extends BaseEjb<PermisoLibroUsuario, L
      */
     public List<UsuarioEntidad> getUsuariosEntidadEnLibros(List<Libro> libros) throws Exception;
 
+    /**
+     * Modifica el estado de un Permiso que tiene un Usuario sobre un Libro
+     * @param idUsuarioEntidad
+     * @param idLibro
+     * @param idPermiso
+     * @param activo
+     * @throws Exception
+     */
+    public void actualizarPermiso(Long idUsuarioEntidad, Long idLibro, Long idPermiso, Boolean activo) throws Exception;
+
 }

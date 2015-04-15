@@ -81,7 +81,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     public List<PermisoLibroUsuario> findByUsuarioLibro(Long idUsuarioEntidad, Long idLibro) throws Exception{
 
         Query q = em.createQuery("Select plu from PermisoLibroUsuario as plu where " +
-                "plu.usuario.id = :idUsuarioEntidad and plu.libro.id = :idLibro");
+                "plu.usuario.id = :idUsuarioEntidad and plu.libro.id = :idLibro order by plu.permiso");
 
         q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
         q.setParameter("idLibro",idLibro);
@@ -288,5 +288,19 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
         q.setParameter("libros",libros);
 
         return q.getResultList();
+    }
+
+    @Override
+    public void actualizarPermiso(Long idUsuarioEntidad, Long idLibro, Long idPermiso, Boolean esActivo) throws Exception {
+
+        Query q = em.createQuery("UPDATE PermisoLibroUsuario SET activo = :esActivo WHERE " +
+                "usuario.id = :idUsuarioEntidad AND libro.id = :idLibro AND permiso = :idPermiso");
+
+        q.setParameter("esActivo",esActivo);
+        q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
+        q.setParameter("idLibro",idLibro);
+        q.setParameter("idPermiso",idPermiso);
+
+        q.executeUpdate();
     }
 }

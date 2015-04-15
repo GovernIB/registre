@@ -524,13 +524,12 @@ public class EntidadController extends BaseController {
                   log.debug("Inicio: " + plu.getLibro().getNombre());
                 }
                 plu.setUsuario(usuarioEntidad);
+//                log.info("ID: " + plu.getId());
+//                log.info("Libro: " + plu.getLibro().getId());
+//                log.info("Permiso: " + plu.getPermiso());
+//                log.info("Activo: " + plu.getActivo());
 
-                /*log.info("Libro: " + plu.getLibro().getId());
-                log.info("Permiso: " + plu.getPermiso().getId());
-                log.info("Activo: " + plu.getActivo());
-                log.info("  ");
-                log.info("  ");*/
-                permisoLibroUsuarioEjb.merge(plu);
+                permisoLibroUsuarioEjb.actualizarPermiso(Long.valueOf(idUsuarioEntidad), plu.getLibro().getId(), plu.getPermiso(), plu.getActivo());
                 if  (debug) {
                   log.info("Fin: " + plu.getLibro().getNombre());
                 }
