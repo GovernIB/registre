@@ -21,17 +21,17 @@ public class ReproJson implements Serializable {
     @XmlElement
     private String idTipoDocumentacionFisica;
     @XmlElement
-    private String destino;
+    private String destinoCodigo;
     @XmlElement
-    private String destinoExternoCodigo;
+    private String destinoDenominacion;
     @XmlElement
-    private String destinoExternoDenominacion;
+    private Boolean destinoExterno;
     @XmlElement
-    private String origen;
+    private String origenCodigo;
     @XmlElement
-    private String origenExternoCodigo;
+    private String origenDenominacion;
     @XmlElement
-    private String origenExternoDenominacion;
+    private Boolean origenExterno;
     @XmlElement
     private String idTipoAsunto;
     @XmlElement
@@ -49,11 +49,11 @@ public class ReproJson implements Serializable {
     @XmlElement
     private String observaciones;
     @XmlElement
-    private String oficinaOrigen;
+    private String oficinaCodigo;
     @XmlElement
-    private String oficinaOrigenExterno;
+    private String oficinaDenominacion;
     @XmlElement
-    private String denominacionOfiOrigenExt;
+    private Boolean oficinaExterna;
     @XmlElement
     private String numeroRegistroOrigen;
     @XmlElement
@@ -86,52 +86,52 @@ public class ReproJson implements Serializable {
         this.idTipoDocumentacionFisica = idTipoDocumentacionFisica;
     }
 
-    public String getDestino() {
-        return destino;
+    public String getDestinoCodigo() {
+        return destinoCodigo;
     }
 
-    public void setDestino(String destino) {
-        this.destino = destino;
+    public void setDestinoCodigo(String destinoCodigo) {
+        this.destinoCodigo = destinoCodigo;
     }
 
-    public String getDestinoExternoCodigo() {
-        return destinoExternoCodigo;
+    public String getDestinoDenominacion() {
+        return destinoDenominacion;
     }
 
-    public void setDestinoExternoCodigo(String destinoExternoCodigo) {
-        this.destinoExternoCodigo = destinoExternoCodigo;
+    public void setDestinoDenominacion(String destinoDenominacion) {
+        this.destinoDenominacion = destinoDenominacion;
     }
 
-    public String getDestinoExternoDenominacion() {
-        return destinoExternoDenominacion;
+    public Boolean isDestinoExterno() {
+        return destinoExterno;
     }
 
-    public void setDestinoExternoDenominacion(String destinoExternoDenominacion) {
-        this.destinoExternoDenominacion = destinoExternoDenominacion;
+    public void setDestinoExterno(Boolean destinoExterno) {
+        this.destinoExterno = destinoExterno;
     }
 
-    public String getOrigen() {
-        return origen;
+    public String getOrigenCodigo() {
+        return origenCodigo;
     }
 
-    public void setOrigen(String origen) {
-        this.origen = origen;
+    public void setOrigenCodigo(String origenCodigo) {
+        this.origenCodigo = origenCodigo;
     }
 
-    public String getOrigenExternoCodigo() {
-        return origenExternoCodigo;
+    public String getOrigenDenominacion() {
+        return origenDenominacion;
     }
 
-    public void setOrigenExternoCodigo(String origenExternoCodigo) {
-        this.origenExternoCodigo = origenExternoCodigo;
+    public void setOrigenDenominacion(String origenDenominacion) {
+        this.origenDenominacion = origenDenominacion;
     }
 
-    public String getOrigenExternoDenominacion() {
-        return origenExternoDenominacion;
+    public Boolean isOrigenExterno() {
+        return origenExterno;
     }
 
-    public void setOrigenExternoDenominacion(String origenExternoDenominacion) {
-        this.origenExternoDenominacion = origenExternoDenominacion;
+    public void setOrigenExterno(Boolean origenExterno) {
+        this.origenExterno = origenExterno;
     }
 
     public String getIdTipoAsunto() {
@@ -198,36 +198,36 @@ public class ReproJson implements Serializable {
         this.observaciones = observaciones;
     }
 
+    public String getOficinaCodigo() {
+        return oficinaCodigo;
+    }
+
+    public void setOficinaCodigo(String oficinaCodigo) {
+        this.oficinaCodigo = oficinaCodigo;
+    }
+
+    public String getOficinaDenominacion() {
+        return oficinaDenominacion;
+    }
+
+    public void setOficinaDenominacion(String oficinaDenominacion) {
+        this.oficinaDenominacion = oficinaDenominacion;
+    }
+
+    public Boolean isOficinaExterna() {
+        return oficinaExterna;
+    }
+
+    public void setOficinaExterna(Boolean oficinaExterna) {
+        this.oficinaExterna = oficinaExterna;
+    }
+
     public String getNumeroRegistroOrigen() {
         return numeroRegistroOrigen;
     }
 
     public void setNumeroRegistroOrigen(String numeroRegistroOrigen) {
         this.numeroRegistroOrigen = numeroRegistroOrigen;
-    }
-
-    public String getOficinaOrigen() {
-        return oficinaOrigen;
-    }
-
-    public void setOficinaOrigen(String oficinaOrigen) {
-        this.oficinaOrigen = oficinaOrigen;
-    }
-
-    public String getOficinaOrigenExterno() {
-        return oficinaOrigenExterno;
-    }
-
-    public void setOficinaOrigenExterno(String oficinaOrigenExterno) {
-        this.oficinaOrigenExterno = oficinaOrigenExterno;
-    }
-
-    public String getDenominacionOfiOrigenExt() {
-        return denominacionOfiOrigenExt;
-    }
-
-    public void setDenominacionOfiOrigenExt(String denominacionOfiOrigenExt) {
-        this.denominacionOfiOrigenExt = denominacionOfiOrigenExt;
     }
 
     public String getFechaOrigen() {
