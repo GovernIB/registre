@@ -1,8 +1,11 @@
 package es.caib.regweb.webapp.controller.repro;
 
+import es.caib.regweb.model.Oficina;
+import es.caib.regweb.model.Organismo;
 import es.caib.regweb.model.Repro;
 import es.caib.regweb.model.UsuarioEntidad;
 import es.caib.regweb.model.utils.ReproJson;
+import es.caib.regweb.persistence.ejb.OrganismoLocal;
 import es.caib.regweb.persistence.ejb.ReproLocal;
 import es.caib.regweb.persistence.utils.Paginacion;
 import es.caib.regweb.persistence.utils.RegistroUtils;
@@ -31,6 +34,9 @@ public class ReproController extends BaseController {
     
     @EJB(mappedName = "regweb/ReproEJB/local")
     public ReproLocal reproEjb;
+
+    @EJB(mappedName = "regweb/OrganismoEJB/local")
+    public OrganismoLocal organismoEjb;
 
     /**
      * Listado de todas las Repros de un Usuario Entidad
@@ -81,6 +87,51 @@ public class ReproController extends BaseController {
         repro.setNombre(nombre);
         repro.setTipoRegistro(tipoRegistro);
         repro.setUsuario(usuarioEntidad);
+
+        switch (tipoRegistro.intValue()){
+
+            case 1: //RegistroEntrada
+                log.info("Repro entrada");
+                Organismo organismoDestino = organismoEjb.findByCodigoVigente(reproJson.getDestinoCodigo());
+
+                if(organismoDestino != null) { // es interno
+                    log.info("Origen: " +reproJson.getDestinoDenominacion() + " Interno");
+                    reproJson.setDestinoExterno(false);
+
+                }else{ // es externo
+                    reproJson.setDestinoExterno(true);
+                    log.info("Origen: " +reproJson.getDestinoDenominacion() + " Externo");
+                }
+
+            break;
+
+            case 2: //RegistroSalida
+                log.info("Repro salida");
+                Organismo organismoOrigen = organismoEjb.findByCodigoVigente(reproJson.getOrigenCodigo());
+
+                if(organismoOrigen != null) { // es interno
+                    log.info("Destino: " + reproJson.getOrigenDenominacion() + " Interno");
+                    reproJson.setDestinoExterno(false);
+
+                }else{ // es externo
+                    reproJson.setOrigenExterno(true);
+                    log.info("Destino: " +reproJson.getOrigenDenominacion() + " Externo");
+                }
+
+            break;
+        }
+
+        Oficina oficina = oficinaEjb.findByCodigo(reproJson.getOficinaCodigo());
+
+        if(oficina != null){ // es interna
+            log.info("Oficina: " +reproJson.getOficinaDenominacion() + " Interno");
+            reproJson.setOficinaExterna(false);
+        }else{ // es externa
+            log.info("Oficina: " +reproJson.getOficinaDenominacion() + " Externa");
+            reproJson.setOficinaExterna(true);
+        }
+
+
         repro.setRepro(RegistroUtils.serilizarXml(reproJson));
 
         int orden = 0;
@@ -253,7 +304,52 @@ public class ReproController extends BaseController {
 
         Repro repro = reproEjb.findById(idRepro);
 
-        return RegistroUtils.desSerilizarReproXml(repro.getRepro());
+        ReproJson reproJson = RegistroUtils.desSerilizarReproXml(repro.getRepro());
+
+       /* switch (repro.getTipoRegistro().intValue()){
+
+            case 1: //RegistroEntrada
+                log.info("Repro entrada");
+
+                if(reproJson.isDestinoExterno()){
+                    Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService();
+                    UnidadTF unidad = unidadesService.obtenerUnidad(reproJson.getDestinoCodigo(), null, null);
+
+                    if(!unidad.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)){
+                        reproJson.setDestinoExterno(null);
+                        reproJson.setDestinoCodigo(null);
+                        reproJson.setDestinoDenominacion(null);
+                    }
+
+                }else{
+                    Organismo organismoDestino = organismoEjb.findByCodigoVigente(reproJson.getDestinoCodigo());
+                    if(organismoDestino == null){ // Ya no es vigente
+                        reproJson.setDestinoExterno(null);
+                        reproJson.setDestinoCodigo(null);
+                        reproJson.setDestinoDenominacion(null);
+                    }
+
+                }
+            break;
+
+            case 2: //RegistroSalida
+                log.info("Repro salida");
+                Organismo organismoOrigen = organismoEjb.findByCodigoVigente(reproJson.getOrigenCodigo());
+
+                if(reproJson.isOrigenExterno()){
+
+                }else{
+
+                }
+
+            break;
+        }
+        */
+
+
+
+
+        return reproJson;
     }
 
 
