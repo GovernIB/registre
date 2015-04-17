@@ -113,7 +113,8 @@ public class LoginInfo {
    */
   public void setEntidadActiva(Long novaEntitatID) {
     Entidad novaEntitat = this.entidadesPorID.get(novaEntitatID);
-    if (novaEntitat != null) {      
+    if (novaEntitat != null) {
+      // TODO Aqui s'ha de fer tot lo necessari per Canviar d'Entitat
       this.entidadActiva = novaEntitat;
     }
   }
@@ -164,11 +165,11 @@ public class LoginInfo {
   }
 
 
-
+/*
   public void setOficinas(Set<ObjetoBasico> oficinas) {
     this.oficinas = oficinas;
   }
-
+*/
 
 
   public User getSpringSecurityUser() {
@@ -182,11 +183,11 @@ public class LoginInfo {
   }
 
 
-
+/*
   public void setEntidadActiva(Entidad entidadActiva) {
     this.entidadActiva = entidadActiva;
   }
-
+*/
 
 
   public Collection<GrantedAuthority> getSpringRoles() {
@@ -227,24 +228,28 @@ public class LoginInfo {
   public Oficina getOficinaActiva() {
     return oficinaActiva;
   }
+  
+  
+  public void setOficinaActiva(Oficina oficinaActiva) {
+    
+    // TODO Aqui s'ha de fer tot lo necessari per Canviar d'Oficina
+    
+    this.oficinaActiva = oficinaActiva;
+  }
+  
 
-
+/*
   public void setRolesAutenticado(List<Rol> rolesAutenticado) {
     this.rolesAutenticado = rolesAutenticado;
   }
-
-
+*/
 
   public void setRolAutenticado(Rol rolAutenticado) {
+    
+    // TODO Aqui s'ha de fer tot lo necessari per Canviar de Rol
+    
     this.rolAutenticado = rolAutenticado;
   }
-
-
-
-  public void setOficinaActiva(Oficina oficinaActiva) {
-    this.oficinaActiva = oficinaActiva;
-  }
-
 
 
   public List<Rol> getRolesAutenticado() {
