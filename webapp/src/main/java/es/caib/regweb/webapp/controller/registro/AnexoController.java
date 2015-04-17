@@ -186,15 +186,16 @@ public class AnexoController extends BaseController {
      * Obtiene el {@link es.caib.regweb.model.Anexo} según su identificador.
      *
      */
-    @RequestMapping(value = "/scanwebresource/{path}/{resourcename:.+}", method = RequestMethod.GET)
-    public Object obtenerRecursoPath(
-    		@PathVariable String path,
+    @RequestMapping(value = "/scanwebresource/{path1}/{path2}/{resourcename:.+}", method = RequestMethod.GET)
+    public Object obtenerRecursoPath2(
+    		@PathVariable String path1,
+    		@PathVariable String path2,
     		@PathVariable String resourcename, 
     		HttpServletRequest request,
     		HttpServletResponse response) throws Exception {
 
     	Integer tipusScan = 2;
-    	String resource = (path != null ? path + "/" : "") + resourcename;
+    	String resource = (path1 != null ? path1 + "/" : "") + (path2 != null ? path2 + "/" : "") + resourcename;
         ScanWebResource recurs = ScannerManager.getResource(request, tipusScan, resource);
 
         response.setHeader("Pragma", "");
@@ -207,12 +208,22 @@ public class AnexoController extends BaseController {
         return null;
     }
     
+    @RequestMapping(value = "/scanwebresource/{path}/{resourcename:.+}", method = RequestMethod.GET)
+    public Object obtenerRecursoPath1(
+    		@PathVariable String path,
+    		@PathVariable String resourcename, 
+    		HttpServletRequest request,
+    		HttpServletResponse response) throws Exception {
+
+        return obtenerRecursoPath2(path, null, resourcename, request, response);
+    }
+    
     @RequestMapping(value = "/scanwebresource/{resourcename:.+}", method = RequestMethod.GET)
     public Object obtenerRecurso(
     		@PathVariable String resourcename, 
     		HttpServletRequest request,
     		HttpServletResponse response) throws Exception {
-    	return obtenerRecursoPath(null, resourcename, request, response);
+    	return obtenerRecursoPath2(null, null, resourcename, request, response);
     }
 
    /**

@@ -209,7 +209,7 @@
             </div>
             	 <%-- TODO refactorizar en un futuro. Esto está en dos formularios separados porque tenemos contentTypes, datas diferentes.--%>
 
-<%-- 				<c:if test="${teScan}"> --%>
+			<c:if test="${teScan}">
 			<ul class="nav nav-tabs">
 				<li class="active"><a href="#fitxer" data-toggle="tab">Fitxer</a></li>
 				<li><a href="#scan" data-toggle="tab">Scan</a></li>
@@ -217,7 +217,7 @@
 						
 			<div class="tab-content">
 				<div class="tab-pane active" id="fitxer">
-<%-- 				</c:if> --%>
+			</c:if>
 				
 	                <%-- Formulario que contiene solo el input file del anexo. --%>
 	                <form id="archivoAnexoForm" class="form-horizontal" action="${pageContext.request.contextPath}/anexo/guardarArchivo" method="post" enctype="multipart/form-data" >
@@ -290,17 +290,17 @@
 		                        <img src="<c:url value="/img/712.GIF"/>" width="20" height="20"/>
 		                </div>
 		            </form>
-<%--        		<c:if test="${teScan}"> --%>
-					<div class="tab-pane" id="scan">
-						${coreScan}
-					</div>
+		     	</div>
+       		<c:if test="${teScan}">
+				<div class="tab-pane" id="scan">
+					${coreScan}
 				</div>
 			</div>
-<%-- 			</c:if> --%>
-		</div>
-	    <div class="modal-footer">
-	    	<input type="button" onclick="procesarAnexo('${pageContext.response.locale}')" title="<spring:message code="regweb.guardar"/>" value="<spring:message code="regweb.guardar"/>" class="btn btn-warning btn-sm">
-        	<button class="btn btn-sm" data-dismiss="modal" aria-hidden="true" onclick="limpiarAnexo()"><spring:message code="regweb.cerrar"/></button>
+			</c:if>
+		    <div class="modal-footer">
+		    	<input type="button" onclick="procesarAnexo('${pageContext.response.locale}')" title="<spring:message code="regweb.guardar"/>" value="<spring:message code="regweb.guardar"/>" class="btn btn-warning btn-sm">
+	        	<button class="btn btn-sm" data-dismiss="modal" aria-hidden="true" onclick="limpiarAnexo()"><spring:message code="regweb.cerrar"/></button>
+			</div>
 		</div>
 	</div>
 </div>
