@@ -26,7 +26,7 @@
                             <c:import url="modulos/migadepan.jsp"/>
                         </ol>
 
-                        <c:if test="${rolAutentidado.nombre == 'RWE_SUPERADMIN' || rolAutentidado.nombre == 'RWE_ADMIN'}">
+                        <c:if test="${rolAutenticado.nombre == 'RWE_SUPERADMIN' || rolAutenticado.nombre == 'RWE_ADMIN'}">
                             <c:if test="${catalogo == null}">
                                 <div class="alert alert-danger">
                                     <strong><spring:message code="regweb.aviso"/>: </strong> <spring:message code="catalogoDir3.catalogo.vacio"/>

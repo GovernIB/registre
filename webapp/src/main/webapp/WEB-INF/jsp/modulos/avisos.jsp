@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 
-<c:if test="${rolAutentidado.nombre == 'RWE_USUARI'}">
+<c:if test="${rolAutenticado.nombre == 'RWE_USUARI'}">
     <ul class="list-inline pull-right">
 
         <li class="dropdown">

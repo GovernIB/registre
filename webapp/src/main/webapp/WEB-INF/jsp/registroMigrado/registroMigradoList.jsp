@@ -199,10 +199,10 @@
                                         <td>${registroMigrado.extracto}</td>
 
                                         <td class="center">
-                                            <c:if test="${rolAutentidado.nombre == 'RWE_USUARI'}">
+                                            <c:if test="${rolAutenticado.nombre == 'RWE_USUARI'}">
                                                 <a class="btn btn-info btn-sm" href="<c:url value="/registroMigrado/${registroMigrado.id}/detalle"/>" title="<spring:message code="registroMigrado.detalle"/>"><span class="fa fa-eye"></span></a>
                                             </c:if>
-                                            <c:if test="${rolAutentidado.nombre == 'RWE_ADMIN'}">
+                                            <c:if test="${rolAutenticado.nombre == 'RWE_ADMIN'}">
                                                 <a class="btn btn-success btn-sm" href="<c:url value="/registroMigrado/${registroMigrado.id}/lopd"/>" title="<spring:message code="registroMigrado.lopd"/>"><span class="fa fa-lock"></span></a>
                                             </c:if>
                                         </td>

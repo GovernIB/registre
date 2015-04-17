@@ -63,16 +63,24 @@
 	    <location>/error/404</location>
 	</error-page>
 
-    <!--<error-page>
+   <error-page>
         <error-code>403</error-code>
-        <location>/error.jsp?error=403</location>
+        <location>/error.jsp?errortype=403</location>
+    </error-page>
+
+    <error-page>
+        <exception-type>es.caib.regweb.webapp.security.LoginException</exception-type>
+        <location>/error.jsp?errortype=-1</location>
     </error-page>
 
     <error-page>
         <exception-type>java.lang.Exception</exception-type>
-        <location>/error.jsp?error=exception</location>
+        <location>/error.jsp</location>
     </error-page>
--->
+
+
+
+
 	<!-- Spring 3 tld's requeridos en los jsp -->
 
     <jsp-config>
@@ -85,6 +93,19 @@
             <taglib-location>/WEB-INF/tld/spring-form.tld</taglib-location>
         </taglib>
      </jsp-config>
+    
+     <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>regweb_public</web-resource-name>   
+            <url-pattern>/css/*</url-pattern>
+            <url-pattern>/img/*</url-pattern>
+            <url-pattern>/js/*</url-pattern>
+            <url-pattern>/error.jsp</url-pattern>
+        </web-resource-collection>
+        <!-- No auth-constraint means everybody has access! -->
+    </security-constraint>
+    
+    
 
     <security-constraint>
 		<web-resource-collection>

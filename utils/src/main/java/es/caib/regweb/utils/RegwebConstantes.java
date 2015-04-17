@@ -12,15 +12,15 @@ import java.util.Map;
  * Date: 6/02/14
  */
 public interface RegwebConstantes {
-    /* --------------- SISTEMA -------------- */
+    /** --------------- SISTEMA -------------- */
     public static final String REGWEB_PROPERTY_BASE = "es.caib.regweb.";
     public static final String SECURITY_DOMAIN = "seycon";
-  
+ 
 
-    /* -------------- VARIABLES DE SESION --------------*/
+    /** -------------- VARIABLES DE SESION --------------*/
     public static final String SESSION_USUARIO = "usuarioAutenticado";
-    public static final String SESSION_ROLES = "rolesAutentidado";
-    public static final String SESSION_ROL = "rolAutentidado";
+    public static final String SESSION_ROLES = "rolesAutenticado";
+    public static final String SESSION_ROL = "rolAutenticado";
     public static final String SESSION_ENTIDADES = "entidades";
     public static final String SESSION_ENTIDAD = "entidadActiva";
     public static final String SESSION_OFICINAS = "oficinas";
@@ -30,7 +30,7 @@ public interface RegwebConstantes {
     public static final String SESSION_MIGRADOS = "registrosMigrados";
     public static final String SESSION_TIENEPREREGISTROS = "tienePreRegistros";
 
-    /* -------------- IDIOMA --------------*/
+    /** -------------- IDIOMA --------------*/
 
     public static final Long IDIOMA_CATALAN_ID = 1L;
     public static final String IDIOMA_CATALAN_CODIGO = "ca";
