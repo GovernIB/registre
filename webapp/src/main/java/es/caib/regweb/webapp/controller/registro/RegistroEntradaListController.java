@@ -91,6 +91,15 @@ public class RegistroEntradaListController extends BaseController {
     @EJB(mappedName = "regweb/SirEJB/local")
     public SirLocal sirEjb;
     
+    @ModelAttribute("comunidadesAutonomas")
+    public List<CatComunidadAutonoma> comunidadesAutonomas() throws Exception {
+        return catComunidadAutonomaEjb.getAll();
+    }
+
+    @ModelAttribute("nivelesAdministracion")
+    public List<CatNivelAdministracion> nivelesAdministracion() throws Exception {
+        return catNivelAdministracionEjb.getAll();
+    }    
 
     /**
     * Listado de todos los Registros de Entrada
@@ -100,6 +109,23 @@ public class RegistroEntradaListController extends BaseController {
        return "redirect:/registroEntrada/list";
     }
 
+   private Set<Organismo> getOrganismosInternosMasExternos(HttpServletRequest request) throws Exception {
+	   
+	   Set<Organismo> allOrganismos = getOrganismosOficinaActiva(request);
+	   /*List<RegistroEntrada> regsEntrada = registroEntradaEjb.getAll();
+	   
+	   for(int r=0; r<regsEntrada.size(); r++) {
+		   if (regsEntrada.get(r).getDestinoExternoCodigo()!=null && !"".equals(regsEntrada.get(r).getDestinoExternoCodigo()) && !"null".equalsIgnoreCase(regsEntrada.get(r).getDestinoExternoCodigo())) {
+			   Organismo org = new Organismo();
+			   org.setCodigo(regsEntrada.get(r).getDestinoExternoCodigo());
+			   org.setDenominacion(regsEntrada.get(r).getDestinoExternoDenominacion());
+			   allOrganismos.add(org);
+		   }
+	   }*/
+	   
+	   return allOrganismos;
+   }
+   
     /**
     * Listado de registros de entrada
     * @return
@@ -116,8 +142,12 @@ public class RegistroEntradaListController extends BaseController {
         RegistroEntradaBusqueda registroEntradaBusqueda = new RegistroEntradaBusqueda(new RegistroEntrada(),1);
         registroEntradaBusqueda.setFechaFin(new Date());
 
+        Oficina oficina = getOficinaActiva(request);
+        
+        model.addAttribute(oficina);
         model.addAttribute("librosConsulta", librosConsulta);
         model.addAttribute("registroEntradaBusqueda", registroEntradaBusqueda);
+        model.addAttribute("organosDestino",  getOrganismosInternosMasExternos(request));
 
         return "registroEntrada/registroEntradaList";
     }
@@ -136,35 +166,41 @@ public class RegistroEntradaListController extends BaseController {
 
         registroEntradaBusquedaValidator.validate(busqueda,result);
 
+        Oficina oficina = getOficinaActiva(request);
+        mav.addObject(oficina);
+        
+        Set<Organismo> todosOrganismos = getOrganismosInternosMasExternos(request);
+        
+        if (busqueda.getOrganDestinatari()!=null && !"".equals(busqueda.getOrganDestinatari())) {
+		    Organismo org = new Organismo();
+		    org.setCodigo(busqueda.getOrganDestinatari());
+		    org.setDenominacion(busqueda.getOrganDestinatariNom());
+		    todosOrganismos.add(org);
+        }
+	    
+        mav.addObject("organosDestino",  todosOrganismos);
+        
         if (result.hasErrors()) { // Si hay errores volvemos a la vista del formulario
-
             mav.addObject("errors", result.getAllErrors());
             mav.addObject("librosConsulta", librosConsulta);
             mav.addObject("registroEntradaBusqueda", busqueda);
             return mav;
         }else { // Si no hay errores realizamos la búsqueda
-
             // Ponemos la hora 23:59 a la fecha fin
             Date fechaFin = RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin());
-
-            Paginacion paginacion = registroEntradaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroEntrada, librosConsulta, busqueda.getAnexos());
-
+            Paginacion paginacion = registroEntradaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroEntrada, librosConsulta, busqueda.getInteressatNom(), busqueda.getInteressatDoc(), busqueda.getOrganDestinatari(), busqueda.getAnexos());
             // Alta en tabla LOPD
             lopdEjb.insertarRegistrosEntrada(paginacion, usuarioEntidad.getId());
-
             busqueda.setPageNumber(1);
             mav.addObject("paginacion", paginacion);
             mav.addObject("librosConsulta", librosConsulta);
-            mav.addObject("registroEntradaBusqueda", busqueda);
+            mav.addObject("registroEntradaBusqueda", busqueda);            
             mav.addObject("isAdministradorLibro", permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(),registroEntrada.getLibro().getId()));
             mav.addObject("puedeEditar", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),registroEntrada.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA));
         }
 
         return mav;
-
     }
-
-
 
     /**
      * Carga el formulario para ver el detalle de un {@link es.caib.regweb.model.RegistroEntrada}

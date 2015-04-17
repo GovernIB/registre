@@ -10,6 +10,7 @@ import es.caib.regweb.persistence.utils.Paginacion;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
+
 import java.util.Date;
 import java.util.List;
 
@@ -49,7 +50,7 @@ public interface RegistroEntradaLocal extends BaseEjb<RegistroEntrada, Long> {
      * @return
      * @throws Exception
      */
-    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroEntrada registroEntrada, List<Libro> libros, Boolean anexos) throws Exception;
+    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroEntrada registroEntrada, List<Libro> libros, String interesadoNom, String interesadoDoc, String organoDest, Boolean anexos) throws Exception;
 
     /**
      * Obtenemos los Organismos destinatarios PROPIOS que tiene Oficios de Remision pendientes de tramitar

@@ -101,6 +101,33 @@ public class RegistroSalidaListController extends BaseController {
        return "redirect:/registroSalida/list";
     }
 
+   @ModelAttribute("comunidadesAutonomas")
+   public List<CatComunidadAutonoma> comunidadesAutonomas() throws Exception {
+       return catComunidadAutonomaEjb.getAll();
+   }
+
+   @ModelAttribute("nivelesAdministracion")
+   public List<CatNivelAdministracion> nivelesAdministracion() throws Exception {
+       return catNivelAdministracionEjb.getAll();
+   }    
+   
+   private Set<Organismo> getOrganismosInternosMasExternos(HttpServletRequest request) throws Exception {
+	   
+	   Set<Organismo> allOrganismos = getOrganismosOficinaActiva(request);
+	   /*List<RegistroEntrada> regsEntrada = registroEntradaEjb.getAll();
+	   
+	   for(int r=0; r<regsEntrada.size(); r++) {
+		   if (regsEntrada.get(r).getDestinoExternoCodigo()!=null && !"".equals(regsEntrada.get(r).getDestinoExternoCodigo()) && !"null".equalsIgnoreCase(regsEntrada.get(r).getDestinoExternoCodigo())) {
+			   Organismo org = new Organismo();
+			   org.setCodigo(regsEntrada.get(r).getDestinoExternoCodigo());
+			   org.setDenominacion(regsEntrada.get(r).getDestinoExternoDenominacion());
+			   allOrganismos.add(org);
+		   }
+	   }*/
+	   
+	   return allOrganismos;
+   }   
+   
     /**
      * Listado de registros de salida
      * @return
@@ -117,9 +144,12 @@ public class RegistroSalidaListController extends BaseController {
         RegistroSalidaBusqueda registroSalidaBusqueda = new RegistroSalidaBusqueda(new RegistroSalida(),1);
         registroSalidaBusqueda.setFechaFin(new Date());
 
+        Oficina oficina = getOficinaActiva(request);
+        model.addAttribute(oficina);
         model.addAttribute("librosConsulta", librosConsulta);
         model.addAttribute("registroSalidaBusqueda", registroSalidaBusqueda);
-
+        model.addAttribute("organosOrigen",  getOrganismosInternosMasExternos(request));
+        
         return "registroSalida/registroSalidaList";
 
     }
@@ -138,22 +168,31 @@ public class RegistroSalidaListController extends BaseController {
 
         registroSalidaBusquedaValidator.validate(busqueda,result);
 
+        Oficina oficina = getOficinaActiva(request);
+        mav.addObject(oficina);
+        
+        Set<Organismo> todosOrganismos = getOrganismosInternosMasExternos(request);
+        
+        if (busqueda.getOrganOrigen()!=null && !"".equals(busqueda.getOrganOrigen())) {
+		    Organismo org = new Organismo();
+		    org.setCodigo(busqueda.getOrganOrigen());
+		    org.setDenominacion(busqueda.getOrganOrigenNom());
+		    todosOrganismos.add(org);
+        }
+	    
+        mav.addObject("organosOrigen",  todosOrganismos);        
+        
         if (result.hasErrors()) { // Si hay errores volvemos a la vista del formulario
-
             mav.addObject("errors", result.getAllErrors());
             mav.addObject("librosConsulta", librosConsulta);
             mav.addObject("registroSalidaBusqueda", busqueda);
             return mav;
         }else { // Si no hay errores realizamos la búsqueda
-
-            // Ponemos la hora 23:59 a la fecha fin
+        	// Ponemos la hora 23:59 a la fecha fin
             Date fechaFin = RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin());
-
-            Paginacion paginacion = registroSalidaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroSalida, librosConsulta, busqueda.getAnexos());
-
+            Paginacion paginacion = registroSalidaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroSalida, librosConsulta, busqueda.getInteressatNom(), busqueda.getInteressatDoc(), busqueda.getOrganOrigen(), busqueda.getAnexos());
             // Alta en tabla LOPD
             lopdEjb.insertarRegistrosSalida(paginacion, usuarioEntidad.getId());
-
             busqueda.setPageNumber(1);
             mav.addObject("paginacion", paginacion);
             mav.addObject("librosConsulta", librosConsulta);
@@ -163,7 +202,6 @@ public class RegistroSalidaListController extends BaseController {
         }
 
         return mav;
-
     }
 
     /**

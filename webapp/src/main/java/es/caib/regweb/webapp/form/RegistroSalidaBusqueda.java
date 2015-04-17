@@ -17,7 +17,10 @@ public class RegistroSalidaBusqueda implements Serializable {
     private Date fechaInicio;
     private Date fechaFin;
     private Boolean anexos;
-
+    private String interessatNom;
+    private String interessatDoc;
+    private String organOrigen;
+    private String organOrigenNom;
 
     public RegistroSalidaBusqueda() {}
 
@@ -65,4 +68,37 @@ public class RegistroSalidaBusqueda implements Serializable {
     public void setAnexos(Boolean anexos) {
         this.anexos = anexos;
     }
+
+	public String getInteressatNom() {
+		return interessatNom;
+	}
+
+	public void setInteressatNom(String interessatNom) {
+		this.interessatNom = interessatNom;
+	}
+
+	public String getInteressatDoc() {
+		return interessatDoc;
+	}
+
+	public void setInteressatDoc(String interessatDoc) {
+		this.interessatDoc = interessatDoc;
+	}
+
+	public String getOrganOrigen() {
+		return organOrigen;
+	}
+
+	public void setOrganOrigen(String organOrigen) {
+		this.organOrigen = organOrigen;
+	}
+
+	public String getOrganOrigenNom() {
+		return organOrigenNom;
+	}
+
+	public void setOrganOrigenNom(String organOrigenNom) {
+		this.organOrigenNom = organOrigenNom;
+	}
+
 }
