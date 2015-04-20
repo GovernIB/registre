@@ -495,10 +495,15 @@ public class EntidadController extends BaseController {
 
             permisoLibroUsuarioForm.setPermisoLibroUsuarios(plus);
 
+            List<Libro> librosConPermiso = permisoLibroUsuarioEjb.getLibrosConPermisoCreado(entidad.getId(), usuarioEntidad);
+            List<Libro> librosSinPermiso = permisoLibroUsuarioEjb.getLibrosSinPermisoCreado(entidad.getId(), usuarioEntidad);
+
             model.addAttribute(permisoLibroUsuarioForm);
             model.addAttribute("entidad", entidad);
             model.addAttribute("libros", libros);
             model.addAttribute("permisos", RegwebConstantes.PERMISOS);
+            model.addAttribute("librosConPermiso", librosConPermiso);
+            model.addAttribute("librosSinPermiso", librosSinPermiso);
 
             return "usuario/permisoLibroUsuarioForm";
         }else{
@@ -511,11 +516,12 @@ public class EntidadController extends BaseController {
      * Guardar un nuevo {@link es.caib.regweb.model.PermisoLibroUsuario}
      */
     @RequestMapping(value = "/permisos/{idUsuarioEntidad}", method = RequestMethod.POST)
-    public String asignarUsuario(@ModelAttribute PermisoLibroUsuarioForm permisoLibroUsuarioForm,@PathVariable Integer idUsuarioEntidad, SessionStatus status, HttpServletRequest request) {
+    public String asignarUsuario(@ModelAttribute PermisoLibroUsuarioForm permisoLibroUsuarioForm,
+                                 @PathVariable Integer idUsuarioEntidad, SessionStatus status, HttpServletRequest request) {
 
         try {
 
-            UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findById(permisoLibroUsuarioForm.getUsuarioEntidad().getId());
+            UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findById(Long.valueOf(idUsuarioEntidad));
 
             final boolean debug = log.isDebugEnabled();
             
@@ -525,11 +531,15 @@ public class EntidadController extends BaseController {
                 }
                 plu.setUsuario(usuarioEntidad);
 //                log.info("ID: " + plu.getId());
-//                log.info("Libro: " + plu.getLibro().getId());
-//                log.info("Permiso: " + plu.getPermiso());
 //                log.info("Activo: " + plu.getActivo());
 
-                permisoLibroUsuarioEjb.actualizarPermiso(Long.valueOf(idUsuarioEntidad), plu.getLibro().getId(), plu.getPermiso(), plu.getActivo());
+                // Si ya existe el Permiso, actualiza el valor de ctivo. Si no existe, crea el Permiso en BBDD
+                if(plu.getId()!=null) {
+                    permisoLibroUsuarioEjb.actualizarPermiso(plu.getId(), plu.getActivo());
+                }else{
+                    permisoLibroUsuarioEjb.merge(plu);
+                }
+
                 if  (debug) {
                   log.info("Fin: " + plu.getLibro().getNombre());
                 }

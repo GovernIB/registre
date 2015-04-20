@@ -165,12 +165,30 @@ public interface PermisoLibroUsuarioLocal extends BaseEjb<PermisoLibroUsuario, L
 
     /**
      * Modifica el estado de un Permiso que tiene un Usuario sobre un Libro
-     * @param idUsuarioEntidad
-     * @param idLibro
-     * @param idPermiso
+     * @param idPermisoLibroUsuario
      * @param activo
      * @throws Exception
      */
-    public void actualizarPermiso(Long idUsuarioEntidad, Long idLibro, Long idPermiso, Boolean activo) throws Exception;
+    public void actualizarPermiso(Long idPermisoLibroUsuario, Boolean activo) throws Exception;
+
+    /**
+     * Retorna los {@link es.caib.regweb.model.Libro} de una Entidad donde un UsuarioEntidad tiene permisos creados
+     * según el permiso que se le pasa por parámetro.
+     * @param idEntidad
+     * @param usuario
+     * @return
+     * @throws Exception
+     */
+    public List<Libro> getLibrosConPermisoCreado(Long idEntidad, UsuarioEntidad usuario) throws Exception;
+
+    /**
+     * Retorna los {@link es.caib.regweb.model.Libro} de una Entidad donde un UsuarioEntidad NO tiene permisos creados
+     * según el permiso que se le pasa por parámetro.
+     * @param idEntidad
+     * @param usuario
+     * @return
+     * @throws Exception
+     */
+    public List<Libro> getLibrosSinPermisoCreado(Long idEntidad, UsuarioEntidad usuario) throws Exception;
 
 }

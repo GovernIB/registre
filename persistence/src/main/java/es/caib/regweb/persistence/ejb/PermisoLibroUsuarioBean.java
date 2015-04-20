@@ -291,16 +291,42 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     }
 
     @Override
-    public void actualizarPermiso(Long idUsuarioEntidad, Long idLibro, Long idPermiso, Boolean esActivo) throws Exception {
+    public void actualizarPermiso(Long idPermisoLibroUsuario, Boolean esActivo) throws Exception {
 
         Query q = em.createQuery("UPDATE PermisoLibroUsuario SET activo = :esActivo WHERE " +
-                "usuario.id = :idUsuarioEntidad AND libro.id = :idLibro AND permiso = :idPermiso");
+                "id = :idPermisoLibroUsuario");
 
         q.setParameter("esActivo",esActivo);
-        q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
-        q.setParameter("idLibro",idLibro);
-        q.setParameter("idPermiso",idPermiso);
+        q.setParameter("idPermisoLibroUsuario",idPermisoLibroUsuario);
 
         q.executeUpdate();
     }
+
+    @Override
+    public List<Libro> getLibrosConPermisoCreado(Long idEntidad, UsuarioEntidad usuario) throws Exception {
+
+        Query q = em.createQuery("Select distinct plu.libro from PermisoLibroUsuario as plu where " +
+                "plu.libro.organismo.entidad.id = :idEntidad and plu.usuario.id = :idUsuarioEntidad and " +
+                "plu.libro.activo = true");
+
+        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idUsuarioEntidad",usuario.getId());
+
+        return q.getResultList();
+    }
+
+    @Override
+    public List<Libro> getLibrosSinPermisoCreado(Long idEntidad, UsuarioEntidad usuario) throws Exception {
+
+        Query q = em.createQuery("Select distinct libro from Libro as libro where libro.organismo.entidad.id = :idEntidad and " +
+                "libro.activo = true and libro.id not in (Select distinct plu.libro.id from PermisoLibroUsuario as plu where " +
+                "plu.libro.organismo.entidad.id = :idEntidad and plu.usuario.id = :idUsuarioEntidad and " +
+                "plu.libro.activo = true)");
+
+        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idUsuarioEntidad",usuario.getId());
+
+        return q.getResultList();
+    }
+
 }
