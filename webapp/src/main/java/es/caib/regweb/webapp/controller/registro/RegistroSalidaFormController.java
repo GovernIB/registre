@@ -406,15 +406,20 @@ public class RegistroSalidaFormController extends BaseController {
         // Gestionamos el Organismo, determinando si es Interno o Externo
         Organismo orgDestino = organismoEjb.findByCodigoVigente(organismoDestino.getCodigo());
         if(orgDestino != null){ // es interno
-            log.info("orgDestino interno: " + orgDestino.getDenominacion());
+
             registroSalida.setOrigen(orgDestino);
             registroSalida.setOrigenExternoCodigo(null);
             registroSalida.setOrigenExternoDenominacion(null);
         } else { // es externo
-            log.info("orgDestino externo: " + registroSalida.getOrigen().getDenominacion());
-            registroSalida.setOrigenExternoCodigo(registroSalida.getOrigen().getCodigo());
-            registroSalida.setOrigenExternoDenominacion(registroSalida.getOrigen().getDenominacion());
             registroSalida.setOrigen(null);
+
+            registroSalida.setOrigenExternoCodigo(registroSalida.getOrigen().getCodigo());
+            if(registroSalida.getId()!= null){//es una modificación
+                registroSalida.setOrigenExternoDenominacion(registroSalida.getOrigenExternoDenominacion());
+            }else{
+                registroSalida.setOrigenExternoDenominacion(registroSalida.getOrigen().getDenominacion());
+            }
+
         }
 
         // Cogemos los dos posibles campos
@@ -431,11 +436,15 @@ public class RegistroSalidaFormController extends BaseController {
                   registroSalida.getRegistroDetalle().setOficinaOrigen(ofiOrigen);
                   registroSalida.getRegistroDetalle().setOficinaOrigenExternoCodigo(null);
                   registroSalida.getRegistroDetalle().setOficinaOrigenExternoDenominacion(null);
-              } else {  // es interna
-                  // log.info("oficina externo");
-                  registroSalida.getRegistroDetalle().setOficinaOrigenExternoCodigo(registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo());
-                  registroSalida.getRegistroDetalle().setOficinaOrigenExternoDenominacion(registroSalida.getRegistroDetalle().getOficinaOrigen().getDenominacion());
+              } else {  // es externa
                   registroSalida.getRegistroDetalle().setOficinaOrigen(null);
+                  registroSalida.getRegistroDetalle().setOficinaOrigenExternoCodigo(registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo());
+                  if(registroSalida.getId()!= null){//es una modificación
+                      registroSalida.getRegistroDetalle().setOficinaOrigenExternoDenominacion(registroSalida.getRegistroDetalle().getOficinaOrigenExternoDenominacion());
+                  }else{
+                      registroSalida.getRegistroDetalle().setOficinaOrigenExternoDenominacion(registroSalida.getRegistroDetalle().getOficinaOrigen().getDenominacion());
+                  }
+
               }
           }else { // No han indicado oficina de origen
               registroSalida.getRegistroDetalle().setOficinaOrigen(null);
