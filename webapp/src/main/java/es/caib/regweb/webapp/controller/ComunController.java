@@ -81,7 +81,7 @@ public class ComunController extends BaseController {
 
         try {
             //Obtenemos los Roles del Usuario mediante el pluging de identificación
-            List<Rol> rolesAutentido = usuarioService.obtenerRoles(getUsuarioAutenticado(request));
+            List<Rol> rolesAutentido = getRolesAutenticado(request);
 
             Rol rolNuevo = rolEjb.findById(rolId);
 
