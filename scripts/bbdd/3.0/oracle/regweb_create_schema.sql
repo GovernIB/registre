@@ -68,7 +68,7 @@
         ALFA2PAIS varchar2(2 char),
         ALFA3PAIS varchar2(3 char),
         CODIGOPAIS number(19,0) not null,
-        DESCRIPCIONPAIS varchar2(50 char) not null
+        DESCRIPCIONPAIS varchar2(100 char) not null
     );
 
     create table RWE_CATPROVINCIA (
