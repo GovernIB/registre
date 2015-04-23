@@ -29,3 +29,11 @@ alter table RWE_DESCARGA RENAME COLUMN FECHAIMPORTACION2 to FECHAIMPORTACION;
 -- 17/03/2015  Camp TipusScan dins Entitat (anadal)
 
 alter table RWE_ENTIDAD add TIPSCAN varchar2(20 char);
+
+-- 23/04/2015 Ampliació longitud camps (ve de dir3 madrid)   (POSTGRESQL)
+
+ALTER TABLE rwe_catpais  alter column descripcionpais type character varying(100);
+
+-- 23/04/2015 Ampliació longitud camps (ve de dir3 madrid)     (ORACLE)
+
+ALTER TABLE rwe_catpais MODIFY descripcionpais VARCHAR2(100 CHAR);
