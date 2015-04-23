@@ -65,9 +65,6 @@ public class RegistroEntradaListController extends BaseController {
     
     @EJB(mappedName = "regweb/TipoDocumentalEJB/local")
     public TipoDocumentalLocal tipoDocumentalEjb;
-    
-    @EJB(mappedName = "regweb/OrganismoEJB/local")
-    public OrganismoLocal organismoEjb;
 
     @EJB(mappedName = "regweb/PersonaEJB/local")
     public PersonaLocal personaEjb;
@@ -104,10 +101,8 @@ public class RegistroEntradaListController extends BaseController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String list(Model model, HttpServletRequest request)throws Exception {
 
-        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-
         // Obtenemos los Libros donde el usuario tiene permisos de Consulta
-        List<Libro> librosConsulta = permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_ENTRADA);
+        List<Libro> librosConsulta = getLibrosConsultaEntradas(request);
 
         RegistroEntradaBusqueda registroEntradaBusqueda = new RegistroEntradaBusqueda(new RegistroEntrada(),1);
         registroEntradaBusqueda.setFechaFin(new Date());

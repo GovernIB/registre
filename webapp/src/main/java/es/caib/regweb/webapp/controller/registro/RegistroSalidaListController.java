@@ -99,10 +99,8 @@ public class RegistroSalidaListController extends BaseController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String list(Model model, HttpServletRequest request)throws Exception {
 
-        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-
         // Obtenemos los Libros donde el usuario tiene permisos de Consulta
-        List<Libro> librosConsulta = permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_SALIDA);
+        List<Libro> librosConsulta = getLibrosConsultaSalidas(request);
 
         RegistroSalidaBusqueda registroSalidaBusqueda = new RegistroSalidaBusqueda(new RegistroSalida(),1);
         registroSalidaBusqueda.setFechaFin(new Date());
