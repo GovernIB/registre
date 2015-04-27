@@ -1,7 +1,9 @@
 package es.caib.regweb.webapp.controller.registro;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Date;
 import java.util.List;
@@ -10,7 +12,10 @@ import javax.activation.MimetypesFileTypeMap;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.fundaciobit.plugins.documentcustody.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.SignatureCustody;
 import org.fundaciobit.plugins.scanweb.ScanWebResource;
@@ -26,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import es.caib.regweb.model.Anexo;
 import es.caib.regweb.model.Entidad;
@@ -89,8 +95,9 @@ public class AnexoController extends BaseController {
    * @param borrar  indica si se ha de borrar el archivo asociado
    */
    @RequestMapping(value = "/guardarArchivo/{idAnexo}/{accion}/{borrar}", method = RequestMethod.POST)
-   public void  archivo(@PathVariable Long idAnexo,@PathVariable String accion, @PathVariable boolean borrar,  MultipartHttpServletRequest request, HttpServletResponse response)  {
+   public void archivo(@PathVariable Long idAnexo,@PathVariable String accion, @PathVariable boolean borrar,  MultipartHttpServletRequest request, HttpServletResponse response)  {
 
+	  Object scan = null;
       MultipartFile doc = null;
       MultipartFile firma = null;
       AnexoFormManager afm;
@@ -100,7 +107,51 @@ public class AnexoController extends BaseController {
           Anexo anexo = anexoEjb.findById(idAnexo);
 
           //Cogemos el archivo
-          doc = request.getFile("archivo");
+          HttpSession session = request.getSession(true);
+          scan = session.getAttribute("scan_" + idAnexo);
+          
+          if (scan != null) {
+        	  File scanFile = (File)scan;
+        	  
+        	  InputStream inputStream = new FileInputStream(scanFile);
+//              int availableBytes = inputStream.available();
+//
+//              // Write the inputStream to a FileItem
+//              File outFile = new File("c:\\tmp\\scan.pdf"); // This is your tmp file, the code stores the file here in order to avoid storing it in memory
+//              FileItem fileItem = new DiskFileItem("fileUpload", "plain/text", false, "sometext.txt", availableBytes, outFile); // You link FileItem to the tmp outFile 
+//              OutputStream outputStream = fileItem.getOutputStream(); // Last step is to get FileItem's output stream, and write your inputStream in it. This is the way to write to your FileItem. 
+//
+//              int read = 0;
+//              byte[] bytes = new byte[1024];
+//              while ((read = inputStream.read(bytes)) != -1) {
+//                  outputStream.write(bytes, 0, read);
+//              }
+//
+//              // Don't forget to release all the resources when you're done with them, or you may encounter memory/resource leaks.
+//              inputStream.close();
+//              outputStream.flush(); // This actually causes the bytes to be written.
+//              outputStream.close();
+        	  
+        	  
+        	  DiskFileItem fileItem = new DiskFileItem("file", "application/pdf", false, scanFile.getName(), (int) scanFile.length() , scanFile.getParentFile());
+        	  OutputStream outputStream = fileItem.getOutputStream();
+        	  int read = 0;
+              byte[] bytes = new byte[1024];
+              while ((read = inputStream.read(bytes)) != -1) {
+                  outputStream.write(bytes, 0, read);
+              }
+
+              // Don't forget to release all the resources when you're done with them, or you may encounter memory/resource leaks.
+              inputStream.close();
+              outputStream.flush(); // This actually causes the bytes to be written.
+              outputStream.close();
+              
+        	  doc = new CommonsMultipartFile(fileItem);
+        	  fileItem.delete();
+          } else {
+        	  doc = request.getFile("archivo");
+          }
+          
 
           if(anexo.getModoFirma() == 1 || anexo.getModoFirma() == 0){// no hay firma detached  o no hay firma
               if(doc != null){ // Modificamos archivo
@@ -161,6 +212,9 @@ public class AnexoController extends BaseController {
               }
 
           }
+          
+          if (scan != null)
+        	  session.removeAttribute("scan_" + idAnexo);
 
       }catch (Exception e) {
          e.printStackTrace();
@@ -226,6 +280,32 @@ public class AnexoController extends BaseController {
     	return obtenerRecursoPath2(null, null, resourcename, request, response);
     }
 
+    @RequestMapping(value = "/guardarScan/{idRegistro}", method = RequestMethod.POST)
+    public void scan(
+    		@PathVariable Long idRegistro, 
+    		MultipartHttpServletRequest request, 
+    		HttpServletResponse response)  {
+
+       MultipartFile scan = null;
+
+       try {
+           //Cogemos el archivo
+    	   scan = request.getFile("RemoteFile");
+    	   
+    	   File temp = File.createTempFile("scan", ".pdf");
+    	   FileOutputStream fos = new FileOutputStream(temp);
+    	   fos.write(scan.getBytes());
+    	   fos.close();
+    	   temp.deleteOnExit();
+    	   
+           //Obtain the session object, create a new session if doesn't exist
+           HttpSession session = request.getSession(true);
+           session.setAttribute("scan_" + idRegistro, temp);
+       }catch (Exception e) {
+          e.printStackTrace();
+       }
+    }
+    
    /**
     * Crea o modifica un Anexo. Los datos vienen desde un formulario plano y en Json.
     * @param anexo
@@ -256,6 +336,9 @@ public class AnexoController extends BaseController {
            List<FieldError> errores = setDefaultMessageToErrors(result.getFieldErrors(), "Anexo");
 
            jsonResponse.setErrores(errores);
+           
+           HttpSession session = request.getSession(true);
+           session.removeAttribute("scan_" + idRegistro);
            
            
        } else { // Si no hay errores
@@ -351,8 +434,17 @@ public class AnexoController extends BaseController {
                anexoJson.setPrimerAnexo(isPrimerAnexo);
 
                jsonResponse.setResult(anexoJson);
+               
+               // Guardam el document escanejat a una variable de sessió amb l'identificador de l'annex
+               HttpSession session = request.getSession(true);
+               Object scan = session.getAttribute("scan_" + idRegistro);
+               session.setAttribute("scan_" + anexo.getId(), scan);
+               session.removeAttribute("scan_" + idRegistro);
+               
            } catch (Exception e) {
                e.printStackTrace();
+               HttpSession session = request.getSession(true);
+               session.removeAttribute("scan_" + idRegistro);
            }
        }
 

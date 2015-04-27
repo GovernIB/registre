@@ -210,7 +210,7 @@
             	 <%-- TODO refactorizar en un futuro. Esto está en dos formularios separados porque tenemos contentTypes, datas diferentes.--%>
 
 			<c:if test="${teScan}">
-			<ul class="nav nav-tabs">
+			<ul class="nav nav-tabs" id="pestanyes">
 				<li class="active"><a href="#fitxer" data-toggle="tab">Fitxer</a></li>
 				<li><a href="#scan" data-toggle="tab">Scan</a></li>
 			</ul>
@@ -298,7 +298,7 @@
 			</div>
 			</c:if>
 		    <div class="modal-footer">
-		    	<input type="button" onclick="procesarAnexo('${pageContext.response.locale}')" title="<spring:message code="regweb.guardar"/>" value="<spring:message code="regweb.guardar"/>" class="btn btn-warning btn-sm">
+		    	<input type="button" id="desaAnnex" onclick="procesarAnexo('${pageContext.response.locale}')" title="<spring:message code="regweb.guardar"/>" value="<spring:message code="regweb.guardar"/>" class="btn btn-warning btn-sm">
 	        	<button class="btn btn-sm" data-dismiss="modal" aria-hidden="true" onclick="limpiarAnexo()"><spring:message code="regweb.cerrar"/></button>
 			</div>
 		</div>

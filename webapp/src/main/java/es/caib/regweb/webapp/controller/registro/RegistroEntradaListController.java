@@ -14,6 +14,7 @@ import es.caib.regweb.webapp.form.RegistroEntradaBusqueda;
 import es.caib.regweb.webapp.utils.Mensaje;
 import es.caib.regweb.webapp.validator.RegistroEntradaBusquedaValidator;
 
+import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -266,6 +267,9 @@ public class RegistroEntradaListController extends BaseController {
         boolean teScan = ScannerManager.teScan(tipusScan);
         model.addAttribute("teScan", teScan);
         if (teScan) {
+        	if (request.getParameter("lang") == null) {
+        		request.setAttribute("lang", I18NUtils.getLocale().getLanguage());
+        	}
         	model.addAttribute("headerScan", ScannerManager.getHeaderJSP(request, tipusScan));
         	model.addAttribute("coreScan", ScannerManager.getCoreJSP(request, tipusScan));
         }
