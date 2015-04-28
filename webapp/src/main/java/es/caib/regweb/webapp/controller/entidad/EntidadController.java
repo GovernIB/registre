@@ -556,7 +556,7 @@ public class EntidadController extends BaseController {
     }
 
     /**
-     * Eliminar la asignación de un Usuario a un Organismo
+     * Eliminar la asignación de un Usuario a una Entidad
      */
     @RequestMapping(value = "/permisos/{idUsuarioEntidad}/delete")
     public String eliminarAsignacion(@PathVariable Long idUsuarioEntidad, HttpServletRequest request) {
@@ -589,7 +589,7 @@ public class EntidadController extends BaseController {
     /**
      * Eliminar la asignación de un Usuario a un Organismo
      */
-    //@RequestMapping(value = "/{idEntidad}/delete")
+    //@RequestMapping(value = "/{idEntidad}/eliminar")
     public String eliminarEntidad(@PathVariable Long idEntidad, HttpServletRequest request) {
     log.info("idEntidad: " + idEntidad);
         try {
