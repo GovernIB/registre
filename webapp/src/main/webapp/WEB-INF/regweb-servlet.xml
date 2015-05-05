@@ -36,7 +36,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 
         <!--Interceptor para el Registro de salida-->
         <mvc:interceptor>
-            <mvc:mapping path="/registrSalida/**"/>
+            <mvc:mapping path="/registroSalida/**"/>
             <bean class="es.caib.regweb.webapp.interceptor.RegistroSalidaInterceptor"/>
         </mvc:interceptor>
 
