@@ -244,6 +244,7 @@ public class RegistroEntradaFormController extends BaseController {
             }catch (Exception e) {
                 Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
                 e.printStackTrace();
+                return "redirect:/inici";
             }finally {
 
                 //Eliminamos los posibles interesados de la Sesion

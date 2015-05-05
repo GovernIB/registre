@@ -384,6 +384,7 @@ public class RegistroSalidaFormController extends BaseController {
             }catch (Exception e) {
                 e.printStackTrace();
                 Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
+                return "redirect:/inici";
             }
 
             return "redirect:/registroSalida/"+registro.getId()+"/detalle";
