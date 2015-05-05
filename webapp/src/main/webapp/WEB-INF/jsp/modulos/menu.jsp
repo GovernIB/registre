@@ -182,13 +182,16 @@
                                     <li class="submenu-complet"><a href="<c:url value="/persona/list"/>"><spring:message code="menu.personas"/></a></li>
                                 </c:if>
                                 <li class="submenu-complet"><a href="<c:url value="/repro/list"/>"><spring:message code="menu.repros"/></a></li>
-                                <li class="divider"></li>
-                                <li class="dropdown-submenu-left toggle-left">
-                                    <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> <spring:message code="menu.estadisticas"/></a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="<c:url value="/informe/libroRegistro"/>"><spring:message code="menu.libro"/></a></li>
-                                    </ul>
-                                </li>
+
+                                <c:if test="${oficinaActiva != null}">
+                                    <li class="divider"></li>
+                                    <li class="dropdown-submenu-left toggle-left">
+                                        <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> <spring:message code="menu.estadisticas"/></a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="<c:url value="/informe/libroRegistro"/>"><spring:message code="menu.libro"/></a></li>
+                                        </ul>
+                                    </li>
+                                </c:if>
 
                                 <c:if test="${fn:length(librosAdministrados) > 0}">
                                     <li class="divider"></li>
