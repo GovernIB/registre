@@ -57,8 +57,16 @@ public class Configuracio implements RegwebConstantes {
 	}
 
 	public static List<TipoScan> getTipusScanejat(Locale locale, String noScanName){
-		String plugins = System.getProperty(RegwebConstantes.REGWEB_PROPERTY_BASE  + "scan.plugins");
-		String[] values = plugins.split(",");
+		String[] values = new String[] {"0"};
+		try {
+			String plugins = System.getProperty(RegwebConstantes.REGWEB_PROPERTY_BASE  + "scan.plugins");
+			if (plugins != null && !"".equals(plugins))
+				values = plugins.split(",");
+			
+//			log.info("SCAN: Codis de plugins d'escaneig: " + plugins);
+		} catch (Exception e) {
+//			log.error("SCAN: Error al obtenir els plugins definits al sistema", e);
+		}
 
 		List<TipoScan> tiposScan = new ArrayList<TipoScan>();
 		for(String value: values) {
@@ -67,8 +75,9 @@ public class Configuracio implements RegwebConstantes {
 				String nombre = codigo.equals(0) ? noScanName : ScannerManager.getName(codigo, locale);
 				TipoScan tipoScan = new TipoScan(codigo, nombre);
 				tiposScan.add(tipoScan);
+//				log.info("SCAN:   " + codigo + " - " + nombre);
 			} catch (Exception e){
-				log.warn("El codi " + value + " no és un codi de tipus d'escanejat vàlid.");
+				log.warn("SCAN: El codi " + value + " no és un codi de tipus d'escanejat vàlid.");
 			}
 		}
 		return tiposScan;

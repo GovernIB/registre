@@ -30,6 +30,7 @@ public class ScannerManager {
         final String propertyName = RegwebConstantes.REGWEB_PROPERTY_BASE + "scan.plugin." + tipusScan;
         String className = System.getProperty(propertyName);
 //        String className = "es.limit.plugins.scanweb.dynamicwebtwain.DynamicWebTwainScanWebPlugin";
+//        log.info("SCAN: Classe del plugin " + tipusScan + " = " + className);
         if (className == null || className.trim().length()<=0) {
         	log.error("No hi ha cap propietat " + propertyName + " definint la classe que gestiona el plugin de scanner");
         	throw new Exception("No hi ha cap propietat " + propertyName + " definint la classe que gestiona el plugin de scanner");
@@ -37,6 +38,7 @@ public class ScannerManager {
         // Carregant la classe
         Object obj;
         obj = PluginsManager.instancePluginByClassName(className, propertyName + ".");
+//        log.info("SCAN: Obtinguda instància de classe -> " + obj.toString());
         plugins.put(tipusScan, (IScanWebPlugin)obj);
 //        Class<?> clazz = Class.forName(className);
 //        IScanWebPlugin plugin = (IScanWebPlugin)clazz.newInstance();
@@ -58,9 +60,10 @@ public class ScannerManager {
 	    		plugin = getInstance(tipusScan);
 	    	} catch (Exception e) {
 	    		// En cas d'error el plugin serà null
-	    		log.error("Error al obtenir el plugin d'escaneig " + tipusScan, e);
+	    		log.error("SCAN: Error al obtenir el plugin d'escaneig " + tipusScan, e);
 	    	}
     	}
+//    	log.info("SCAN: TeScan de " + tipusScan + " = " + plugin != null);
    		return plugin != null;
     }
     
@@ -71,6 +74,7 @@ public class ScannerManager {
      * @return
      */
     public static String getName(Integer tipusScan, Locale locale) throws Exception {
+//    	log.info("Obtenint nom del tipus d'escaneig " + tipusScan);
    		return getInstance(tipusScan).getName(locale);
     }
 
@@ -80,7 +84,8 @@ public class ScannerManager {
      * @return
      */
     public static String getHeaderJSP(HttpServletRequest request, Integer tipusScan) throws Exception {
-      return getInstance(tipusScan).getHeaderJSP(request);
+//    	log.info("Obtenint header del tipus d'escaneig " + tipusScan);
+    	return getInstance(tipusScan).getHeaderJSP(request);
     }
 
     /**
@@ -89,7 +94,8 @@ public class ScannerManager {
      * @return
      */
     public static String getCoreJSP(HttpServletRequest request, Integer tipusScan) throws Exception {
-    	 return getInstance(tipusScan).getCoreJSP(request);
+//    	log.info("Obtenint core del tipus d'escaneig " + tipusScan);
+    	return getInstance(tipusScan).getCoreJSP(request);
     }
 
     /**
@@ -100,6 +106,7 @@ public class ScannerManager {
      * @throws Exception
      */
     public static ScanWebResource getResource(HttpServletRequest request, Integer tipusScan, String resourcename) throws Exception {
+//    	log.info("Obtenint recurs " + resourcename + " del tipus d'escaneig " + tipusScan);
     	return getInstance(tipusScan).getResource(request, resourcename);
     }
 

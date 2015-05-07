@@ -140,11 +140,14 @@ public class UsuarioService {
         RolesInfo rolesInfo = loginPlugin.getRolesByUsername(usuario.getIdentificador());
         
         List<String> roles = new ArrayList<String>();
-        Collections.addAll(roles, rolesInfo.getRoles());
         List<Rol> rolesUsuario = null;
 
-        if(roles.size() > 0){
-            rolesUsuario = rolEjb.getByRol(roles);
+        if (rolesInfo.getRoles().length > 0) {
+        	
+        	Collections.addAll(roles, rolesInfo.getRoles());
+	        if(roles.size() > 0){
+	            rolesUsuario = rolEjb.getByRol(roles);
+	        }
         }
 
         return rolesUsuario;
@@ -314,7 +317,7 @@ public class UsuarioService {
         session.setAttribute(RegwebConstantes.SESSION_OFICINAS,oficinasRegistro);
 
         // Comprobamos la última Oficina utilizada por el usuario
-        if(oficinasRegistro.contains(new ObjetoBasico(usuarioEntidad.getUltimaOficina().getId()))){
+        if(usuarioEntidad.getUltimaOficina() != null && oficinasRegistro.contains(new ObjetoBasico(usuarioEntidad.getUltimaOficina().getId()))){
             session.setAttribute(RegwebConstantes.SESSION_OFICINA,oficinaEjb.findById(usuarioEntidad.getUltimaOficina().getId()));
             session.setAttribute(RegwebConstantes.SESSION_TIENEPREREGISTROS, preRegistroEjb.tienePreRegistros(usuarioEntidad.getUltimaOficina().getCodigo()));
 

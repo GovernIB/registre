@@ -216,8 +216,8 @@ public class EntidadController extends BaseController {
                     return "redirect:/inici";
                 }
             }
-            model.addAttribute("administradoresEntidad", administradoresEntidadModificar(entidad.getPropietario(), entidad));
             model.addAttribute("tipoScan", Configuracio.getTipusScanejat(request.getLocale(), getMessage("scan.noScan")));
+            model.addAttribute("administradoresEntidad", administradoresEntidadModificar(entidad.getPropietario(), entidad));
 
         }catch (Exception e) {
             e.printStackTrace();
