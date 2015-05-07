@@ -1,10 +1,7 @@
 package es.caib.regweb.ws.v3.impl;
 
 import es.caib.regweb.utils.RegwebConstantes;
-import es.caib.regweb.ws.model.CodigoAsuntoWs;
-import es.caib.regweb.ws.model.LibroWs;
-import es.caib.regweb.ws.model.OrganismoWs;
-import es.caib.regweb.ws.model.TipoAsuntoWs;
+import es.caib.regweb.ws.model.*;
 import org.fundaciobit.genapp.common.ws.WsI18NException;
 
 import javax.annotation.security.RolesAllowed;
@@ -40,20 +37,33 @@ public interface RegWebInfoWs {
       throws Throwable, WsI18NException;
 
     /**
-     * Obtiene las Oficinas donde el usuario tiene permisos para realizar Registros de Entrada
+     * Obtiene las Oficinas donde el usuario tiene permisos para realizar Registros
      * @param entidadCodigoDir3
+     * @param autorizacion
      * @return
      * @throws Throwable
      * @throws WsI18NException
      */
-    //public List<OficinaWs> listarOficinas(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3) throws Throwable, WsI18NException
-    
+    @WebMethod
+    @RolesAllowed({ RegwebConstantes.ROL_USUARI })
+    public List<OficinaWs> listarOficinas(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3,
+                                          @WebParam(name = "autorizacion") Long autorizacion) throws Throwable, WsI18NException;
+
+    /**
+     * Obtiene los Libros a los que una Oficina da servicio y en los que el UsuarioEntidad actual tiene permisos para registrar entradas
+     * @param entidadCodigoDir3
+     * @param oficinaCodigoDir3
+     * @param autorizacion
+     * @return
+     * @throws Throwable
+     * @throws WsI18NException
+     */
     @WebMethod
     @RolesAllowed({ RegwebConstantes.ROL_USUARI })
     public List<LibroWs> listarLibros(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3,
-        @WebParam(name = "autorizacion") String autorizacion)
-    throws Throwable, WsI18NException;
-    
+        @WebParam(name = "oficinaCodigoDir3") String oficinaCodigoDir3, @WebParam(name = "autorizacion") Long autorizacion) throws Throwable, WsI18NException;
+
+
     @WebMethod
     @RolesAllowed({ RegwebConstantes.ROL_USUARI })
     public List<OrganismoWs> listarOrganismos(        

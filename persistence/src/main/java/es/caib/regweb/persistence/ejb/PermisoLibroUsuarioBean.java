@@ -143,51 +143,6 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     }
 
     @Override
-    public List<Libro> getLibrosRegistroEntrada(Long idUsuarioEntidad) throws Exception{
-
-        Query q = em.createQuery("Select distinct plu.libro from PermisoLibroUsuario as plu where " +
-                "plu.usuario.id = :idUsuarioEntidad and plu.libro.activo = true and "
-                + "(plu.permiso = " + PERMISO_REGISTRO_ENTRADA + " and plu.activo = true)");
-
-        q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
-
-        return q.getResultList();
-    }
-
-    @Override
-    public List<Libro> getLibrosRegistroSalida(Long idUsuarioEntidad) throws Exception{
-
-        Query q = em.createQuery("Select distinct plu.libro from PermisoLibroUsuario as plu where " +
-                "plu.usuario.id = :idUsuarioEntidad and plu.libro.activo = true and (plu.permiso = " + PERMISO_REGISTRO_SALIDA + " and plu.activo = true)");
-
-        q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
-
-        return q.getResultList();
-    }
-
-    @Override
-    public List<Libro> getLibrosConsultaEntrada(Long idUsuarioEntidad) throws Exception{
-
-        Query q = em.createQuery("Select distinct plu.libro from PermisoLibroUsuario as plu where " +
-                "plu.usuario.id = :idUsuarioEntidad and plu.libro.activo = true and (plu.permiso = " + PERMISO_CONSULTA_REGISTRO_ENTRADA + " and plu.activo = true)");
-
-        q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
-
-        return q.getResultList();
-    }
-
-    @Override
-    public List<Libro> getLibrosConsultaSalida(Long idUsuarioEntidad) throws Exception{
-
-        Query q = em.createQuery("Select distinct plu.libro from PermisoLibroUsuario as plu where " +
-                "plu.usuario.id = :idUsuarioEntidad and plu.libro.activo = true and (plu.permiso = " + PERMISO_CONSULTA_REGISTRO_SALIDA + " and plu.activo = true)");
-
-        q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
-
-        return q.getResultList();
-    }
-
-    @Override
     public List<Libro> getLibrosPermiso(Long idUsuarioEntidad, Long idPermiso) throws Exception{
 
         Query q = em.createQuery("Select distinct plu.libro from PermisoLibroUsuario as plu where " +

@@ -54,7 +54,7 @@ public interface PermisoLibroUsuarioLocal extends BaseEjb<PermisoLibroUsuario, L
     public List<UsuarioEntidad> getUsuariosEntidadByLibro( Long idLibro) throws Exception;
 
     /**
-     * Retorna los {@link es.caib.regweb.model.Libro} en los que un Usuario tiene permisos de Registro de Entrada y Salida
+     * Retorna los {@link es.caib.regweb.model.Libro} en los que un Usuario tiene permisos de Registro de Entrada o Salida
      * @param idUsuarioEntidad
      * @return
      * @throws Exception
@@ -68,38 +68,6 @@ public interface PermisoLibroUsuarioLocal extends BaseEjb<PermisoLibroUsuario, L
      * @throws Exception
      */
     public List<Libro> getLibrosAdministrados(Long idUsuarioEntidad) throws Exception;
-
-    /**
-     * Retorna los {@link es.caib.regweb.model.Libro} de una Entidad a los que el Usuario puede hacer un RegistroEntrada
-     * @param idUsuarioEntidad
-     * @return
-     * @throws Exception
-     */
-    public List<Libro> getLibrosRegistroEntrada(Long idUsuarioEntidad) throws Exception;
-
-    /**
-     * Retorna los {@link es.caib.regweb.model.Libro} de una Entidad a los que el Usuario puede hacer un RegistroSalida
-     * @param idUsuarioEntidad
-     * @return
-     * @throws Exception
-     */
-    public List<Libro> getLibrosRegistroSalida(Long idUsuarioEntidad) throws Exception;
-
-    /**
-     * Retorna los {@link es.caib.regweb.model.Libro} a los que un UsuarioEntidad puede Consultar sus RegistroEntrada
-     * @param idUsuarioEntidad
-     * @return
-     * @throws Exception
-     */
-    public List<Libro> getLibrosConsultaEntrada(Long idUsuarioEntidad) throws Exception;
-
-    /**
-     * Retorna los {@link es.caib.regweb.model.Libro} a los que un UsuarioEntidad puede Consultar sus RegistroSalida
-     * @param idUsuarioEntidad
-     * @return
-     * @throws Exception
-     */
-    public List<Libro> getLibrosConsultaSalida(Long idUsuarioEntidad) throws Exception;
 
     /**
      * Retorna los {@link es.caib.regweb.model.Libro} a los que un UsuarioEntidad

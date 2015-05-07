@@ -749,8 +749,6 @@ public class RegistroEntradaBean extends BaseEjbJPA<RegistroEntrada, Long> imple
 
         List<RegistroBasico> registros = new ArrayList<RegistroBasico>();
 
-        log.info("Total registros: " + result.size());
-
         for (Object[] object : result){
             //RegistroBasico registroBasico = new RegistroBasico((Long)object[0],(String)object[1],(Date)object[2],(String)object[3],(String)object[4],(String)object[5]);
             RegistroBasico registroBasico = new RegistroBasico();

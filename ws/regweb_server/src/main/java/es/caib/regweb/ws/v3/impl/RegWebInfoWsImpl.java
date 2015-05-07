@@ -3,13 +3,12 @@ package es.caib.regweb.ws.v3.impl;
 import es.caib.regweb.model.*;
 import es.caib.regweb.persistence.ejb.*;
 import es.caib.regweb.utils.RegwebConstantes;
-import es.caib.regweb.ws.model.CodigoAsuntoWs;
-import es.caib.regweb.ws.model.LibroWs;
-import es.caib.regweb.ws.model.OrganismoWs;
-import es.caib.regweb.ws.model.TipoAsuntoWs;
+import es.caib.regweb.utils.StringUtils;
+import es.caib.regweb.ws.model.*;
 import es.caib.regweb.ws.utils.AuthenticatedBaseWsImpl;
 import es.caib.regweb.ws.utils.UsuarioAplicacionCache;
 import org.apache.log4j.Logger;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.ws.WsI18NException;
 import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.wsf.spi.annotation.TransportGuarantee;
@@ -23,7 +22,9 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 //import org.springframework.stereotype.Component;
 
@@ -91,7 +92,11 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
   public List<TipoAsuntoWs> listarTipoAsunto(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3) throws Throwable,
       WsI18NException {
 
-    // TODO Checks
+    // 1.- Comprobaciones de parámetros obligatórios
+    if(StringUtils.isEmpty(entidadCodigoDir3)){
+      throw new I18NException("error.valor.requerido.ws", "entidadCodigoDir3");
+    }
+
     Entidad entidadObj = CommonConverter.getEntidad(entidadCodigoDir3, entidadEjb);
 
     List<TipoAsunto> tipos = tipoAsuntoEjb.getAll(entidadObj.getId());
@@ -121,7 +126,12 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
   public List<CodigoAsuntoWs> listarCodigoAsunto(@WebParam(name = "codigoTipoAsunto") String codigoTipoAsunto) throws Throwable,
       WsI18NException {
 
-    // TODO Checks
+
+    // 1.- Comprobaciones de parámetros obligatórios
+    if(StringUtils.isEmpty(codigoTipoAsunto)){
+      throw new I18NException("error.valor.requerido.ws", "codigoTipoAsunto");
+    }
+
     TipoAsunto tipoAsuntoObj = CommonConverter.getTipoAsunto(codigoTipoAsunto, tipoAsuntoEjb);
 
     List<CodigoAsunto> codigoAsuntos = codigoAsuntoEjb.getByTipoAsunto(tipoAsuntoObj.getId());
@@ -138,61 +148,99 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
 
   }
 
- /* @Override
-  @WebMethod
-  @RolesAllowed({ RegwebConstantes.ROL_USUARI })
-  public List<OficinaWs> listarOficinas(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3) throws Throwable, WsI18NException {
+    @Override
+    @WebMethod
+    @RolesAllowed({ RegwebConstantes.ROL_USUARI })
+    public List<OficinaWs> listarOficinas(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3,
+                                          @WebParam(name = "autorizacion") Long autorizacion) throws Throwable, WsI18NException {
 
-    Entidad entidad = CommonConverter.getEntidad(entidadCodigoDir3, entidadEjb);
-    UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByIdentificadorCodigoEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidad.getCodigoDir3());
+      // 1.- Comprobaciones de parámetros obligatórios
+      if(StringUtils.isEmpty(entidadCodigoDir3)){
+        throw new I18NException("error.valor.requerido.ws", "entidadCodigoDir3");
+      }
 
-    List<Libro> librosRegistro = permisoLibroUsuarioEjb.getLibrosRegistro(usuarioEntidad.getId());
+      if(autorizacion == null){
+        throw new I18NException("error.valor.requerido.ws", "autorizacion");
+      }
 
-    Set<Oficina> oficinasRegistro = new HashSet<Oficina>();  // Utilizamos un Set porque no permite duplicados
+      if(!validarAutorizacion(autorizacion)){
+        throw new I18NException("error.autorizacion");
+      }
 
-    // Recorremos los Libros y a partir del Organismo al que pertenecen, obtenemos las Oficinas que pueden Registrar en el.
-    for (Libro libro : librosRegistro) {
-      Long idOrganismo = libro.getOrganismo().getId();
-      oficinasRegistro.addAll(oficinaEjb.findByOrganismoResponsable(idOrganismo));
-      oficinasRegistro.addAll(relacionOrganizativaOfiLocalEjb.getOficinasByOrganismo(idOrganismo));
+        Entidad entidad = CommonConverter.getEntidad(entidadCodigoDir3, entidadEjb);
+        UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByIdentificadorCodigoEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidad.getCodigoDir3());
+
+        List<Libro> librosRegistro = permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), autorizacion);
+
+        Set<Oficina> oficinasRegistro = new HashSet<Oficina>();  // Utilizamos un Set porque no permite duplicados
+
+        // Recorremos los Libros y a partir del Organismo al que pertenecen, obtenemos las Oficinas que pueden Registrar en el.
+        for (Libro libro : librosRegistro) {
+          Long idOrganismo = libro.getOrganismo().getId();
+          oficinasRegistro.addAll(oficinaEjb.findByOrganismoResponsable(idOrganismo));
+          oficinasRegistro.addAll(relacionOrganizativaOfiLocalEjb.getOficinasByOrganismo(idOrganismo));
+        }
+
+        // Convertimos el Listado de Oficinas en un Listado de OficinaWs
+        List<OficinaWs> listOficinaWs = new ArrayList<OficinaWs>(oficinasRegistro.size());
+        for (Oficina oficina : oficinasRegistro) {
+          listOficinaWs.add(CommonConverter.getOficinaWs(oficina));
+        }
+
+        return listOficinaWs;
+
     }
 
-    List<OficinaWs> listOficinaWs = new ArrayList<OficinaWs>(oficinasRegistro.size());
-    for (Oficina oficina : oficinasRegistro) {
-      listOficinaWs.add(CommonConverter.getOficinaWs(oficina));
+    @Override
+    @WebMethod
+    @RolesAllowed({ RegwebConstantes.ROL_USUARI })
+    public List<LibroWs> listarLibros(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3,
+        @WebParam(name = "oficinaCodigoDir3") String oficinaCodigoDir3, @WebParam(name = "autorizacion") Long autorizacion) throws Throwable, WsI18NException {
+
+      // 1.- Comprobaciones de parámetros obligatórios
+      if(StringUtils.isEmpty(entidadCodigoDir3)){
+        throw new I18NException("error.valor.requerido.ws", "entidadCodigoDir3");
+      }
+
+      if(StringUtils.isEmpty(oficinaCodigoDir3)){
+        throw new I18NException("error.valor.requerido.ws", "oficinaCodigoDir3");
+      }
+
+      if(autorizacion == null){
+        throw new I18NException("error.valor.requerido.ws", "autorizacion");
+      }
+
+      if(!validarAutorizacion(autorizacion)){
+        throw new I18NException("error.autorizacion");
+      }
+
+      Entidad entidad = CommonConverter.getEntidad(entidadCodigoDir3, entidadEjb);
+      UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByIdentificadorCodigoEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidad.getCodigoDir3());
+      Oficina oficina = CommonConverter.getOficina(oficinaCodigoDir3, oficinaEjb);
+
+      // Comprobar que la Oficina está vigente
+      if(oficina == null){ //No existe
+        throw new I18NException("registro.oficina.noExiste", oficinaCodigoDir3);
+
+      }else if(!oficina.getEstado().getCodigoEstadoEntidad().equals(ESTADO_ENTIDAD_VIGENTE)){ //Si está extinguido
+        throw new I18NException("registro.oficina.extinguido", oficina.getNombreCompleto());
+      }
+
+      // Obtenemos los organismos funcionales a la que da servicio al Oficina seleccionada
+      Set<Organismo> organismos = oficina.getOrganismosFuncionales();
+
+      // Obtenemos los libros a los que el usuario puede registrar
+      List<Libro> listLibro = permisoLibroUsuarioEjb.getLibrosOrganismoPermiso(organismos, usuarioEntidad, autorizacion);
+
+      List<LibroWs> listLibroWs = new ArrayList<LibroWs>(listLibro.size());
+
+      for (Libro libro : listLibro) {
+        listLibroWs.add(CommonConverter.getLibroWs(libro));
+      }
+
+      return listLibroWs;
+
     }
-
-
-    return listOficinaWs;
-
-  }*/
-
-  @Override
-  @WebMethod
-  @RolesAllowed({ RegwebConstantes.ROL_USUARI })
-  public List<LibroWs> listarLibros(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3,
-      @WebParam(name = "autorizacion") String autorizacion) throws Throwable, WsI18NException {
-
-    // TODO com proces lo d'AUTORIZACION: CE, CS , CV 
-    
-    // TODO Checks
-    Entidad entidad = CommonConverter.getEntidad(entidadCodigoDir3, entidadEjb);
-
-    UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByIdentificadorCodigoEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidad.getCodigoDir3());
-
-
-
-    List<Libro> listLibro = libroEjb.getLibrosEntidad(entidad.getId());
-
-    List<LibroWs> listLibroWs = new ArrayList<LibroWs>(listLibro.size());
-
-    for (Libro libro : listLibro) {
-      listLibroWs.add(CommonConverter.getLibroWs(libro));
-    }
-
-    return listLibroWs;
-
-  }
   
   
   @Override
@@ -202,7 +250,11 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
       @WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3)
       throws Throwable, WsI18NException {
 
-    // TODO Checks
+    // 1.- Comprobaciones de parámetros obligatórios
+    if(StringUtils.isEmpty(entidadCodigoDir3)){
+      throw new I18NException("error.valor.requerido.ws", "entidadCodigoDir3");
+    }
+
     Entidad entidadObj = CommonConverter.getEntidad(entidadCodigoDir3, entidadEjb);
 
     List<Organismo> listOrganismo = organismoEjb.getAllByEntidad(entidadObj.getId());
@@ -215,6 +267,37 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
 
     return listOrganismoWs;
   }
+
+  /**
+   * Valida la obligatoriedad de los campos
+   * @param numeroRegistro
+   * @param usuario
+   * @param entidad
+   * @throws I18NException
+   */
+  private void validarObligatorios(String numeroRegistro, String usuario, String entidad) throws  I18NException, Exception{
+
+    // 1.- Comprobaciones de parámetros obligatórios
+    if(StringUtils.isEmpty(numeroRegistro)){
+      throw new I18NException("error.valor.requerido.ws", "identificador");
+    }
+
+    if(StringUtils.isEmpty(usuario)){
+      throw new I18NException("error.valor.requerido.ws", "usuario");
+    }
+
+    if(StringUtils.isEmpty(entidad)){
+      throw new I18NException("error.valor.requerido.ws", "entidad");
+    }
+
+  }
+
+  private Boolean validarAutorizacion(Long autorizacion) throws Exception {
+
+    return autorizacion.equals(PERMISO_REGISTRO_ENTRADA) || autorizacion.equals(PERMISO_REGISTRO_SALIDA) || autorizacion.equals(PERMISO_CONSULTA_REGISTRO_ENTRADA) || autorizacion.equals(PERMISO_CONSULTA_REGISTRO_SALIDA);
+
+  }
+
   
 
 }

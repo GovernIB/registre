@@ -122,6 +122,13 @@ public class CommonConverter {
     }
     return localidad.getEntidadGeografica().getCodigoEntidadGeografica();
   }
+
+    public static Oficina getOficina(String oficinaCodigoDir3, OficinaLocal oficinaEjb) throws Exception {
+        if (oficinaCodigoDir3 == null) {
+            return null;
+        }
+        return oficinaEjb.findByCodigo(oficinaCodigoDir3);
+    }
   
   
   public static LibroWs getLibroWs(Libro libro) {

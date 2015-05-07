@@ -14,6 +14,8 @@
   <xs:element name="listarCodigoAsuntoResponse" type="tns:listarCodigoAsuntoResponse"/>
   <xs:element name="listarLibros" type="tns:listarLibros"/>
   <xs:element name="listarLibrosResponse" type="tns:listarLibrosResponse"/>
+  <xs:element name="listarOficinas" type="tns:listarOficinas"/>
+  <xs:element name="listarOficinasResponse" type="tns:listarOficinasResponse"/>
   <xs:element name="listarOrganismos" type="tns:listarOrganismos"/>
   <xs:element name="listarOrganismosResponse" type="tns:listarOrganismosResponse"/>
   <xs:element name="listarTipoAsunto" type="tns:listarTipoAsunto"/>
@@ -72,6 +74,23 @@
       <xs:element minOccurs="0" name="nombre" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
+  <xs:complexType name="listarOficinas">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="entidadCodigoDir3" type="xs:string"/>
+      <xs:element minOccurs="0" name="autorizacion" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="listarOficinasResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:oficinaWs"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="oficinaWs">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="codigo" type="xs:string"/>
+      <xs:element minOccurs="0" name="nombre" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
   <xs:complexType name="listarCodigoAsunto">
     <xs:sequence>
       <xs:element minOccurs="0" name="codigoTipoAsunto" type="xs:string"/>
@@ -92,7 +111,8 @@
   <xs:complexType name="listarLibros">
     <xs:sequence>
       <xs:element minOccurs="0" name="entidadCodigoDir3" type="xs:string"/>
-      <xs:element minOccurs="0" name="autorizacion" type="xs:string"/>
+      <xs:element minOccurs="0" name="oficinaCodigoDir3" type="xs:string"/>
+      <xs:element minOccurs="0" name="autorizacion" type="xs:long"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="listarLibrosResponse">
@@ -136,12 +156,20 @@
     <wsdl:part name="parameters" element="tns:getVersionWsResponse">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="listarOficinas">
+    <wsdl:part name="parameters" element="tns:listarOficinas">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="getVersionWs">
     <wsdl:part name="parameters" element="tns:getVersionWs">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="listarTipoAsunto">
     <wsdl:part name="parameters" element="tns:listarTipoAsunto">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listarOficinasResponse">
+    <wsdl:part name="parameters" element="tns:listarOficinasResponse">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="listarLibrosResponse">
@@ -199,6 +227,14 @@
       <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
     </wsdl:fault>
     </wsdl:operation>
+    <wsdl:operation name="listarOficinas">
+      <wsdl:input name="listarOficinas" message="tns:listarOficinas">
+    </wsdl:input>
+      <wsdl:output name="listarOficinasResponse" message="tns:listarOficinasResponse">
+    </wsdl:output>
+      <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
+    </wsdl:fault>
+    </wsdl:operation>
     <wsdl:operation name="listarCodigoAsunto">
       <wsdl:input name="listarCodigoAsunto" message="tns:listarCodigoAsunto">
     </wsdl:input>
@@ -251,6 +287,18 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="listarTipoAsuntoResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="WsI18NException">
+        <soap:fault name="WsI18NException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="listarOficinas">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="listarOficinas">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="listarOficinasResponse">
         <soap:body use="literal"/>
       </wsdl:output>
       <wsdl:fault name="WsI18NException">

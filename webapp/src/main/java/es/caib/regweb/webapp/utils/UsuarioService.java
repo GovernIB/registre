@@ -337,11 +337,14 @@ public class UsuarioService {
         RolesInfo rolesInfo = loginPlugin.getRolesByUsername(usuario.getIdentificador());
 
         List<String> roles = new ArrayList<String>();
-        Collections.addAll(roles, rolesInfo.getRoles());
         List<Rol> rolesUsuario = null;
 
-        if(roles.size() > 0){
-            rolesUsuario = rolEjb.getByRol(roles);
+        if(rolesInfo.getRoles().length > 0){
+
+            Collections.addAll(roles, rolesInfo.getRoles());
+            if(roles.size() > 0){
+                rolesUsuario = rolEjb.getByRol(roles);
+            }
         }
 
         return rolesUsuario;

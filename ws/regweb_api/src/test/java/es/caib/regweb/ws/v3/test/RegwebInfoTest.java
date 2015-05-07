@@ -1,9 +1,6 @@
 package es.caib.regweb.ws.v3.test;
 
-import es.caib.regweb.ws.api.v3.CodigoAsuntoWs;
-import es.caib.regweb.ws.api.v3.RegWebInfoWs;
-import es.caib.regweb.ws.api.v3.TipoAsuntoWs;
-import es.caib.regweb.ws.api.v3.WsI18NException;
+import es.caib.regweb.ws.api.v3.*;
 import es.caib.regweb.ws.api.v3.utils.WsClientUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -30,7 +27,7 @@ public class RegwebInfoTest extends RegWebTestUtils {
     infoApi = getInfoApi();
   }
 
-  @Test
+  //@Test
   public void testVersio() throws Exception {
     String version = infoApi.getVersion();
     if (version.indexOf('-') != -1) {
@@ -40,12 +37,12 @@ public class RegwebInfoTest extends RegWebTestUtils {
     }
   }
 
-  @Test
+  //@Test
   public void testVersioWs() throws Exception {
     Assert.assertEquals(3, infoApi.getVersionWs());
   }
 
-  @Test
+  //@Test
   public void testTiposAsuntos(){
     String usuario = "earrivi";
     String codigoEntidadDir3 = "A04006741";
@@ -66,7 +63,7 @@ public class RegwebInfoTest extends RegWebTestUtils {
 
   }
 
-  @Test
+  //@Test
   public void testCodigosAsuntos(){
     String usuario = "earrivi";
     String codigoEntidadDir3 = "A04006741";
@@ -88,6 +85,53 @@ public class RegwebInfoTest extends RegWebTestUtils {
     } catch (Exception e) {
       System.err.println("Error desconegut: " + e.getMessage());
       Assert.fail("WsValidationException no esperada");
+    }
+
+  }
+
+  @Test
+  public void testOficinas(){
+    String codigoEntidadDir3 = "A04006741";
+    try {
+      List<OficinaWs> oficinas = infoApi.listarOficinas(codigoEntidadDir3, (long) 1);
+
+      for (OficinaWs oficina : oficinas) {
+        System.out.println("Oficina: " + oficina.getNombre());
+      }
+
+
+    } catch (WsI18NException i18ne) {
+      System.err.println(WsClientUtils.toString(i18ne));
+      //Assert.assertEquals("error.valor.requerido.ws", i18ne.getFaultInfo().getTranslation().getCode());
+
+    } catch (Exception e) {
+      System.err.println("Error desconegut: " + e.getMessage());
+      //Assert.fail("WsValidationException no esperada");
+    }
+
+  }
+
+  @Test
+  public void testLibros(){
+
+    String codigoEntidadDir3 = "A04006741";
+    String codigoOficinaDir3 = "O0001597";
+
+    try {
+      List<LibroWs> libros = infoApi.listarLibros(codigoEntidadDir3, codigoOficinaDir3,(long) 4);
+
+      for (LibroWs libro : libros) {
+        System.out.println("Libro: " + libro.getNombreLargo());
+      }
+
+
+    } catch (WsI18NException i18ne) {
+      System.err.println(WsClientUtils.toString(i18ne));
+      //Assert.assertEquals("error.valor.requerido.ws", i18ne.getFaultInfo().getTranslation().getCode());
+
+    } catch (Exception e) {
+      System.err.println("Error desconegut: " + e.getMessage());
+      //Assert.fail("WsValidationException no esperada");
     }
 
   }
