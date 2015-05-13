@@ -43,47 +43,63 @@
 
             <!-- Configuració del plugin de Información de usuarios -->
 
-		  <!-- ======== PLUGIN USER-INFORMATION - DATABASE ======= -->
-		  es.caib.regweb.userinformationplugin=org.fundaciobit.plugins.userinformation.database.DataBaseUserInformationPlugin
-		  es.caib.regweb.plugins.userinformation.database.jndi=java:/es.caib.seycon.db.wl
-		  es.caib.regweb.plugins.userinformation.database.users_table=SC_WL_USUARI
-		  es.caib.regweb.plugins.userinformation.database.username_column=USU_CODI
-		  es.caib.regweb.plugins.userinformation.database.administrationid_column=USU_NIF
-		  es.caib.regweb.plugins.userinformation.database.name_column=USU_NOM
-		  #es.caib.regweb.plugins.userinformation.database.surname_1_column
-		  #es.caib.regweb.plugins.userinformation.database.surname_2_column      
-		  #es.caib.regweb.plugins.userinformation.database.language_column
-		  #es.caib.regweb.plugins.userinformation.database.telephone_column
-		  #es.caib.regweb.plugins.userinformation.database.email_column
-		  #es.caib.regweb.plugins.userinformation.database.gender_column
-		  #es.caib.regweb.plugins.userinformation.database.password_column
-		  es.caib.regweb.plugins.userinformation.database.userroles_table=SC_WL_USUGRU
-		  es.caib.regweb.plugins.userinformation.database.userroles_rolename_column=UGR_CODGRU
-		  es.caib.regweb.plugins.userinformation.database.userroles_username_column=UGR_CODUSU
-		  
-		  
-		  <!-- ======== PLUGIN USER-INFORMATION - LDAP ======= -->
-		  <!--
-		  es.caib.regweb.userinformationplugin=org.fundaciobit.plugins.userinformation.ldap.LdapUserInformationPlugin
-		  
-		  es.caib.regweb.plugins.userinformation.ldap.host_url=ldap://ldap.ibit.org:389
-		  es.caib.regweb.plugins.userinformation.ldap.security_principal=[LDAPUSERNAME]
-		  es.caib.regweb.plugins.userinformation.ldap.security_authentication=simple
-		  es.caib.regweb.plugins.userinformation.ldap.security_credentials=[PASSWORD of LDAPUSERNAME]
-		  es.caib.regweb.plugins.userinformation.ldap.users_context_dn=cn=Users,dc=ibitnet,dc=lan
-		  es.caib.regweb.plugins.userinformation.ldap.search_scope=onelevel
-		  es.caib.regweb.plugins.userinformation.ldap.search_filter=(|(memberOf=CN=@PFI_ADMIN,CN=Users,DC=ibitnet,DC=lan)(memberOf=CN=@PFI_USER,CN=Users,DC=ibitnet,DC=lan))
-		  es.caib.regweb.plugins.userinformation.ldap.attribute.username=sAMAccountName
-		  es.caib.regweb.plugins.userinformation.ldap.attribute.mail=mail
-		  es.caib.regweb.plugins.userinformation.ldap.attribute.administration_id=postOfficeBox
-		  es.caib.regweb.plugins.userinformation.ldap.attribute.name=givenName
-		  es.caib.regweb.plugins.userinformation.ldap.attribute.surname=sn
-		  es.caib.regweb.plugins.userinformation.ldap.attribute.telephone=telephoneNumber
-		  es.caib.regweb.plugins.userinformation.ldap.attribute.memberof=memberOf
-		  es.caib.regweb.plugins.userinformation.ldap.prefix_role_match_memberof=CN=@
-		  es.caib.regweb.plugins.userinformation.ldap.suffix_role_match_memberof=,CN=Users,DC=ibitnet,DC=lan
-		  -->
+			<!-- ======== PLUGIN USER-INFORMATION - DATABASE ======= -->
+			es.caib.regweb.userinformationplugin=org.fundaciobit.plugins.userinformation.database.DataBaseUserInformationPlugin
+			es.caib.regweb.plugins.userinformation.database.jndi=java:/es.caib.seycon.db.wl
+			es.caib.regweb.plugins.userinformation.database.users_table=SC_WL_USUARI
+			es.caib.regweb.plugins.userinformation.database.username_column=USU_CODI
+			es.caib.regweb.plugins.userinformation.database.administrationid_column=USU_NIF
+			es.caib.regweb.plugins.userinformation.database.name_column=USU_NOM
+			#es.caib.regweb.plugins.userinformation.database.surname_1_column
+			#es.caib.regweb.plugins.userinformation.database.surname_2_column      
+			#es.caib.regweb.plugins.userinformation.database.language_column
+			#es.caib.regweb.plugins.userinformation.database.telephone_column
+			#es.caib.regweb.plugins.userinformation.database.email_column
+			#es.caib.regweb.plugins.userinformation.database.gender_column
+			#es.caib.regweb.plugins.userinformation.database.password_column
+			es.caib.regweb.plugins.userinformation.database.userroles_table=SC_WL_USUGRU
+			es.caib.regweb.plugins.userinformation.database.userroles_rolename_column=UGR_CODGRU
+			es.caib.regweb.plugins.userinformation.database.userroles_username_column=UGR_CODUSU
 			
+			
+			<!-- ======== PLUGIN USER-INFORMATION - LDAP ======= -->
+			<!--
+			es.caib.regweb.userinformationplugin=org.fundaciobit.plugins.userinformation.ldap.LdapUserInformationPlugin
+			
+			es.caib.regweb.plugins.userinformation.ldap.host_url=ldap://ldap.ibit.org:389
+			es.caib.regweb.plugins.userinformation.ldap.security_principal=[LDAPUSERNAME]
+			es.caib.regweb.plugins.userinformation.ldap.security_authentication=simple
+			es.caib.regweb.plugins.userinformation.ldap.security_credentials=[PASSWORD of LDAPUSERNAME]
+			es.caib.regweb.plugins.userinformation.ldap.users_context_dn=cn=Users,dc=ibitnet,dc=lan
+			es.caib.regweb.plugins.userinformation.ldap.search_scope=onelevel
+			es.caib.regweb.plugins.userinformation.ldap.search_filter=(|(memberOf=CN=@PFI_ADMIN,CN=Users,DC=ibitnet,DC=lan)(memberOf=CN=@PFI_USER,CN=Users,DC=ibitnet,DC=lan))
+			es.caib.regweb.plugins.userinformation.ldap.attribute.username=sAMAccountName
+			es.caib.regweb.plugins.userinformation.ldap.attribute.mail=mail
+			es.caib.regweb.plugins.userinformation.ldap.attribute.administration_id=postOfficeBox
+			es.caib.regweb.plugins.userinformation.ldap.attribute.name=givenName
+			es.caib.regweb.plugins.userinformation.ldap.attribute.surname=sn
+			es.caib.regweb.plugins.userinformation.ldap.attribute.telephone=telephoneNumber
+			es.caib.regweb.plugins.userinformation.ldap.attribute.memberof=memberOf
+			es.caib.regweb.plugins.userinformation.ldap.prefix_role_match_memberof=CN=@
+			es.caib.regweb.plugins.userinformation.ldap.suffix_role_match_memberof=,CN=Users,DC=ibitnet,DC=lan
+			-->
+			
+			<!-- ======== PLUGIN SCANNER ======= -->
+		   <!-- Possibles valors: [0:NO, 2:DWT, 3:CAIB]-->
+		   es.caib.regweb.scan.plugins=0
+		   
+		   <!-- Sense escaneig -->
+		   es.caib.regweb.scan.plugin.0=
+		   
+		   <!-- Altres plugins (disabled)-->
+		   es.caib.regweb.scan.plugin.1=
+		   
+		   <!-- Dynamic Web Twain -->
+		   es.caib.regweb.scan.plugin.2=es.limit.plugins.scanweb.dynamicwebtwain.DynamicWebTwainScanWebPlugin
+		   es.caib.regweb.scan.plugin.2.plugins.scanweb.dynamicwebtwain.applicationPath=regweb
+		   
+		   <!-- Applet CAIB -->
+		   es.caib.regweb.plugin.3=
 			
         </attribute>
     </mbean>
