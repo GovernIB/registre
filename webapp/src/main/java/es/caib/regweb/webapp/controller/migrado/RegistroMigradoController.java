@@ -50,7 +50,7 @@ public class RegistroMigradoController extends BaseController {
     public ModificacionLopdMigradoLocal modificacionLopdMigradoEjb;
 
     /**
-     * Listado de todos los Registros Migrados
+     * Listado de {@link es.caib.regweb.model.RegistroMigrado}
      */
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String listado() {
@@ -149,7 +149,7 @@ public class RegistroMigradoController extends BaseController {
 
 
     /**
-     * Realiza el informe Lopd del Registro Migrado seleccionado
+     * Realiza el informe Lopd del {@link es.caib.regweb.model.RegistroMigrado} seleccionado
      */
     @RequestMapping(value = "/{idRegistroMigrado}/lopd", method = RequestMethod.GET)
     public ModelAndView informeRegistroLopd(@PathVariable Long idRegistroMigrado, HttpServletRequest request)throws Exception {

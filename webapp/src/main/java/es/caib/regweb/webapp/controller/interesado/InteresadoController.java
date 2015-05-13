@@ -5,7 +5,6 @@ import es.caib.regweb.model.Interesado;
 import es.caib.regweb.model.Persona;
 import es.caib.regweb.model.RegistroDetalle;
 import es.caib.regweb.persistence.ejb.CatPaisLocal;
-import es.caib.regweb.persistence.ejb.InteresadoLocal;
 import es.caib.regweb.persistence.ejb.PersonaLocal;
 import es.caib.regweb.persistence.ejb.RegistroDetalleLocal;
 import es.caib.regweb.utils.RegwebConstantes;
@@ -24,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,9 +43,6 @@ public class InteresadoController extends BaseController{
 
     @EJB(mappedName = "regweb/CatPaisEJB/local")
     public CatPaisLocal catPaisEjb;
-
-    @EJB(mappedName = "regweb/InteresadoEJB/local")
-    public InteresadoLocal interesadoEjb;
 
     @EJB(mappedName = "regweb/PersonaEJB/local")
     public PersonaLocal personaEjb;
@@ -446,13 +443,15 @@ public class InteresadoController extends BaseController{
     @ResponseBody
     public Boolean addOrganismoInteresado(@RequestParam String codigoDir3, @RequestParam String denominacion, @RequestParam String idRegistroDetalle, HttpServletRequest request) {
 
-        log.info("Dentro de organismoInteresado: " + codigoDir3 + " " + denominacion);
-        log.info("RegistroDetalle: " + idRegistroDetalle);
-
         HttpSession session = request.getSession();
 
         try {
-            Interesado organismo = new Interesado(codigoDir3,denominacion);
+            String converted = URLDecoder.decode(denominacion, "UTF-8");
+
+            log.info("Dentro de organismoInteresado: " + codigoDir3 + " " + denominacion);
+            log.info("RegistroDetalle: " + idRegistroDetalle);
+
+            Interesado organismo = new Interesado(codigoDir3,converted);
 
             if(StringUtils.isEmpty(idRegistroDetalle)){ // Se trata de un nuevo Registro, utilizamos la sesion.
 

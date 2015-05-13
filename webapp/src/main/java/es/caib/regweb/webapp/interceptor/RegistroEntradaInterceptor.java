@@ -1,10 +1,11 @@
 package es.caib.regweb.webapp.interceptor;
 
 import es.caib.regweb.model.*;
-import es.caib.regweb.persistence.ejb.*;
+import es.caib.regweb.persistence.ejb.PermisoLibroUsuarioLocal;
+import es.caib.regweb.persistence.ejb.RegistroEntradaLocal;
+import es.caib.regweb.persistence.ejb.UsuarioEntidadLocal;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.webapp.utils.Mensaje;
-
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -13,7 +14,6 @@ import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,15 +40,23 @@ public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-     //final long start = System.currentTimeMillis();
-     
-      try {
+
+
         String url = request.getServletPath();
         HttpSession session = request.getSession();
         Rol rolActivo = (Rol) session.getAttribute(RegwebConstantes.SESSION_ROL);
         Usuario usuarioAutenticado = (Usuario)session.getAttribute(RegwebConstantes.SESSION_USUARIO);
         Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
         Oficina oficinaActiva = (Oficina) session.getAttribute(RegwebConstantes.SESSION_OFICINA);
+
+
+        // Comprobamos que el usuario dispone del Rol RWE_USUARI
+        if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_USUARI)){
+          log.info("Error de rol");
+          Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
+          response.sendRedirect("/regweb/aviso");
+          return false;
+        }
 
         // Comprobamos que el usuario dispone del una EntidadActiva
         if(entidadActiva == null){
@@ -63,14 +71,6 @@ public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
         if(entidadActiva.getNumRegistro() == null || entidadActiva.getNumRegistro().length()==0){
             log.info("No hay configurado el formato del numero de registro para la Entidad activa");
             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.entidad.formatoRegistro"));
-            response.sendRedirect("/regweb/aviso");
-            return false;
-        }
-
-        // Comprobamos que el usuario dispone del Rol RWE_USUARI
-        if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_USUARI)){
-            log.info("Error de rol");
-            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
             response.sendRedirect("/regweb/aviso");
             return false;
         }
@@ -128,17 +128,13 @@ public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
 
             if(!estados.contains(registroEntrada.getEstado())){
                 log.info("Este RegistroEntrada no se puede modificar");
-                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registroEntrada.modificar"));
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registro.modificar"));
                 response.sendRedirect("/regweb/aviso");
                 return false;
             }
         }
 
         return true;
-    } finally {
-      //log.info("Interceptor Registro Entrada: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - start));
     }
-    }
-
 
 }

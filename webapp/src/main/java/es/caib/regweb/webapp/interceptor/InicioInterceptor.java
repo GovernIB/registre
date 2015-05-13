@@ -22,6 +22,10 @@ import javax.servlet.http.HttpSession;
  *
  * @author earrivi
  * Date: 6/02/14
+ * 
+ * TODO S'ha de moure la funcionalitat d'aquesta classe 
+ * a es.caib.regweb.webapp.securit.AuthenticationSuccessListener
+ * 
  */
 public class InicioInterceptor extends HandlerInterceptorAdapter {
 
@@ -39,10 +43,10 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
     @EJB(mappedName = "regweb/EntidadEJB/local")
     private EntidadLocal entidadEjb;
 
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
         Object handler) throws Exception {
+      //log.info(" ++++++++++++++++++++ ENTRA InicioInterceptor ++++++++++++++");
       //long start = System.currentTimeMillis();
       try {
 

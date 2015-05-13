@@ -12,6 +12,11 @@
     <sec:http create-session="never" use-expressions="true" auto-config="false" entry-point-ref="preAuthenticatedProcessingFilterEntryPoint">
         <sec:logout logout-success-url="/inici" invalidate-session="true" delete-cookies="true"/>
 
+        <sec:intercept-url pattern="/js/**" access="permitAll"/>
+        <sec:intercept-url pattern="/img/**" access="permitAll"/>
+        <sec:intercept-url pattern="/css/**" access="permitAll"/>
+        <sec:intercept-url pattern="/error.jsp" access="permitAll"/>
+
         <sec:intercept-url pattern="/entidad/**" access="hasAnyRole('RWE_SUPERADMIN','RWE_ADMIN')"/>
         <sec:intercept-url pattern="/entidad/**/delete" access="hasRole('RWE_SUPERADMIN')"/>
         <sec:intercept-url pattern="/entidad/pendientesprocesar" access="hasRole('RWE_ADMIN')"/>
@@ -52,8 +57,11 @@
               <map>
                   <entry key="RWE_SUPERADMIN" value="RWE_SUPERADMIN"/>
                   <entry key="RWE_ADMIN" value="RWE_ADMIN"/>
-                  <!--<entry key="RWE_LOPD" value="RWE_LOPD"/>-->
                   <entry key="RWE_USUARI" value="RWE_USUARI"/>
+                  <entry key="@RWE_SUPERADMIN" value="RWE_SUPERADMIN"/>
+                  <entry key="@RWE_ADMIN" value="RWE_ADMIN"/>
+                  <entry key="@RWE_USUARI" value="RWE_USUARI"/>
+                  
               </map>
           </property>
       </bean>
@@ -77,6 +85,8 @@
           </property>
           <property name="authenticationManager" ref="authenticationManager"/>
       </bean>
+
+      <bean class="es.caib.regweb.webapp.security.AuthenticationSuccessListener" />
 
 
 </beans>

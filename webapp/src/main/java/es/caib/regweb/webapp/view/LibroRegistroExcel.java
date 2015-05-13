@@ -11,7 +11,6 @@ import org.springframework.web.servlet.view.document.AbstractExcelView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -34,9 +33,6 @@ public class LibroRegistroExcel extends AbstractExcelView {
         String fechaFin = (String) model.get("fechaFin");
         Set<String> campos = (Set<String>) model.get("campos");
         ArrayList<ArrayList<String>> registrosLibro = (ArrayList<ArrayList<String>>) model.get("registrosLibro");
-
-        log.info("Fecha Inicio (Excel): " + fechaInicio);
-        log.info("Fecha Fin (Excel): " + fechaFin);
 
         HSSFSheet sheet = workbook.createSheet("REGWEB");
         sheet.setFitToPage(true);
@@ -91,9 +87,6 @@ public class LibroRegistroExcel extends AbstractExcelView {
         HSSFRow titleRow = sheet.createRow(0);
         titleRow.setHeightInPoints(25);
         HSSFCell tittleCell = titleRow.createCell(0);
-//        HSSFRow llibreRow = sheet.createRow(1);
-//        llibreRow.setHeightInPoints(15);
-//        HSSFCell llibreCell = llibreRow.createCell(0);
         HSSFRow tipusRow = sheet.createRow(2);
         tipusRow.setHeightInPoints(15);
         HSSFCell tipusCell = tipusRow.createCell(0);
@@ -133,102 +126,79 @@ public class LibroRegistroExcel extends AbstractExcelView {
 
         if(campos.size()!=0){
 
-            for( Iterator<String> it = campos.iterator(); it.hasNext();) {
-                String valorCamp = (String) it.next();
-
-                if(valorCamp.equals("codAs")){
+            for (String valorCamp : campos) {
+                if (valorCamp.equals("codAs")) {
                     columnas[h] = "CODI ASSUMPTE";
-                    h = h+1;
-                }
-                if(valorCamp.equals("anyRe")){
+                    h = h + 1;
+                }else if (valorCamp.equals("anyRe")) {
                     columnas[h] = "ANY REGISTRE";
-                    h = h+1;
-                }
-                if(valorCamp.equals("estat")){
+                    h = h + 1;
+                }else if (valorCamp.equals("estat")) {
                     columnas[h] = "ESTAT";
-                    h = h+1;
-                }
-                if(valorCamp.equals("exped")){
+                    h = h + 1;
+                }else if (valorCamp.equals("exped")) {
                     columnas[h] = "EXPEDIENT";
-                    h = h+1;
-                }
-                if(valorCamp.equals("extra")){
+                    h = h + 1;
+                }else if (valorCamp.equals("extra")) {
                     columnas[h] = "EXTRACTE";
-                    h = h+1;
-                }
-                if(valorCamp.equals("datOr")){
+                    h = h + 1;
+                }else if (valorCamp.equals("datOr")) {
                     columnas[h] = "DATA ORIGEN";
-                    h = h+1;
-                }
-                if(valorCamp.equals("numRe")){
+                    h = h + 1;
+                }else if (valorCamp.equals("numRe")) {
                     columnas[h] = "NUM REGISTRE";
-                    h = h+1;
-                }
-                if(valorCamp.equals("ofici")){
+                    h = h + 1;
+                }else if (valorCamp.equals("ofici")) {
                     columnas[h] = "OFICINA";
-                    h = h+1;
-                }
-                if(valorCamp.equals("tipAs")){
+                    h = h + 1;
+                }else if (valorCamp.equals("tipAs")) {
                     columnas[h] = "TIPUS ASSUMPTE";
-                    h = h+1;
-                }
-                if(valorCamp.equals("obser")){
+                    h = h + 1;
+                }else if (valorCamp.equals("obser")) {
                     columnas[h] = "OBSERVACIONS";
-                    h = h+1;
-                }
-                if(valorCamp.equals("llibr")){
+                    h = h + 1;
+                }else if (valorCamp.equals("llibr")) {
                     columnas[h] = "LLIBRE";
-                    h = h+1;
-                }
-                if(valorCamp.equals("data")){
+                    h = h + 1;
+                }else if (valorCamp.equals("data")) {
                     columnas[h] = "DATA REGISTRE";
-                    h = h+1;
-                }
-                if(valorCamp.equals("docFi")){
+                    h = h + 1;
+                }else if (valorCamp.equals("docFi")) {
                     columnas[h] = "DOC FÍSICA";
-                    h = h+1;
-                }
-                if(valorCamp.equals("orgDe")){
-                    if(tipo.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO)){
+                    h = h + 1;
+                }else if (valorCamp.equals("orgDe")) {
+                    if (tipo.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO)) {
                         columnas[h] = "ORGANISME DESTÍ";
-                        h = h+1;
+                        h = h + 1;
                     }
-                    if(tipo.equals(RegwebConstantes.REGISTRO_SALIDA_ESCRITO)){
+                    if (tipo.equals(RegwebConstantes.REGISTRO_SALIDA_ESCRITO)) {
                         columnas[h] = "ORGANISME ORIGEN";
-                        h = h+1;
+                        h = h + 1;
                     }
-                }
-                if(valorCamp.equals("idiom")){
+                }else if (valorCamp.equals("idiom")) {
                     columnas[h] = "IDIOMA";
-                    h = h+1;
-                }
-                if(valorCamp.equals("refEx")){
+                    h = h + 1;
+                }else if (valorCamp.equals("refEx")) {
                     columnas[h] = "REF EXTERNA";
-                    h = h+1;
-                }
-                if(valorCamp.equals("trans")){
+                    h = h + 1;
+                }else if (valorCamp.equals("trans")) {
                     columnas[h] = "TRANSPORT";
-                    h = h+1;
-                }
-                if(valorCamp.equals("numTr")){
+                    h = h + 1;
+                }else if (valorCamp.equals("numTr")) {
                     columnas[h] = "NUM TRANSPORT";
-                    h = h+1;
-                }
-                if(valorCamp.equals("orgOr")){
+                    h = h + 1;
+                }else if (valorCamp.equals("orgOr")) {
                     columnas[h] = "OFICINA ORIGEN";
-                    h = h+1;
-                }
-                if(valorCamp.equals("numOr")){
+                    h = h + 1;
+                }else if (valorCamp.equals("numOr")) {
                     columnas[h] = "NUM REGISTRE ORIGEN";
-                    h = h+1;
-                }
-                if(valorCamp.equals("nomIn")){
+                    h = h + 1;
+                }else if (valorCamp.equals("nomIn")) {
                     columnas[h] = "INTERESSATS";
-                    h = h+1;
+                    h = h + 1;
                 }
             }
         }
-
 
         for (int i = 0; i < columnas.length; i++){
             HSSFCell columna = header.createCell(i);
@@ -238,13 +208,13 @@ public class LibroRegistroExcel extends AbstractExcelView {
 
         // Filas
         if(registrosLibro.size()>0){
-            for(int n=0;n<registrosLibro.size();n++){
+            for (ArrayList<String> aRegistrosLibro : registrosLibro) {
                 HSSFRow row = sheet.createRow(rowNum++);
-                for(int g=0;g<registrosLibro.get(n).size();g++){
-                    row.createCell(g).setCellValue(registrosLibro.get(n).get(g));
+                for (int g = 0; g < aRegistrosLibro.size(); g++) {
+                    row.createCell(g).setCellValue(aRegistrosLibro.get(g));
                 }
                 // Aplicamos el estilo a las celdas
-                for(int g=0;g<registrosLibro.get(n).size();g++){
+                for (int g = 0; g < aRegistrosLibro.size(); g++) {
                     row.getCell(g).setCellStyle(fila);
                 }
             }
@@ -253,7 +223,6 @@ public class LibroRegistroExcel extends AbstractExcelView {
             row.createCell(0).setCellValue("No hi ha registres per mostrar");
             row.getCell(0).setCellStyle(fila);
         }
-
 
 
         // Ajustamos el ancho de cada columna a su contenido

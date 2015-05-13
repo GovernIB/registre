@@ -72,7 +72,7 @@ public class EntidadInterceptor extends HandlerInterceptorAdapter {
             }
 
             // Activar/Anular entidad
-            if((url.contains("activar") || url.contains("anular"))){
+            if((url.contains("activar") || url.contains("anular") || url.contains("eliminar"))){
               if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_SUPERADMIN)){
                   log.info("Error de rol");
                   Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));

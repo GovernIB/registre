@@ -12,7 +12,7 @@ import java.io.Serializable;
 public class DatosInteresadoWs implements Serializable {
 
     private Long tipoInteresado;
-    private Character tipoDocumentoIdentificacion;
+    private String tipoDocumentoIdentificacion;
     private String documento;
     private String razonSocial;
     private String nombre;
@@ -37,11 +37,11 @@ public class DatosInteresadoWs implements Serializable {
         this.tipoInteresado = tipoInteresado;
     }
 
-    public Character getTipoDocumentoIdentificacion() {
+    public String getTipoDocumentoIdentificacion() {
         return tipoDocumentoIdentificacion;
     }
 
-    public void setTipoDocumentoIdentificacion(Character tipoDocumentoIdentificacion) {
+    public void setTipoDocumentoIdentificacion(String tipoDocumentoIdentificacion) {
         this.tipoDocumentoIdentificacion = tipoDocumentoIdentificacion;
     }
 

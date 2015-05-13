@@ -16,9 +16,9 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="usuario" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="entidadCodigoDir3" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="autorizacion" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="oficinaCodigoDir3" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="autorizacion" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -29,39 +29,15 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "listarLibros", propOrder = {
-    "usuario",
     "entidadCodigoDir3",
+    "oficinaCodigoDir3",
     "autorizacion"
 })
 public class ListarLibros {
 
-    protected String usuario;
     protected String entidadCodigoDir3;
-    protected String autorizacion;
-
-    /**
-     * Gets the value of the usuario property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getUsuario() {
-        return usuario;
-    }
-
-    /**
-     * Sets the value of the usuario property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setUsuario(String value) {
-        this.usuario = value;
-    }
+    protected String oficinaCodigoDir3;
+    protected Long autorizacion;
 
     /**
      * Gets the value of the entidadCodigoDir3 property.
@@ -88,14 +64,38 @@ public class ListarLibros {
     }
 
     /**
-     * Gets the value of the autorizacion property.
+     * Gets the value of the oficinaCodigoDir3 property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getAutorizacion() {
+    public String getOficinaCodigoDir3() {
+        return oficinaCodigoDir3;
+    }
+
+    /**
+     * Sets the value of the oficinaCodigoDir3 property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setOficinaCodigoDir3(String value) {
+        this.oficinaCodigoDir3 = value;
+    }
+
+    /**
+     * Gets the value of the autorizacion property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Long }
+     *     
+     */
+    public Long getAutorizacion() {
         return autorizacion;
     }
 
@@ -104,10 +104,10 @@ public class ListarLibros {
      * 
      * @param value
      *     allowed object is
-     *     {@link String }
+     *     {@link Long }
      *     
      */
-    public void setAutorizacion(String value) {
+    public void setAutorizacion(Long value) {
         this.autorizacion = value;
     }
 

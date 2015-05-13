@@ -5,7 +5,6 @@ import es.caib.regweb.persistence.utils.NumeroRegistro;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -28,9 +27,6 @@ public class ContadorBean extends BaseEjbJPA<Contador, Long> implements Contador
 
     @PersistenceContext(unitName="regweb")
     private EntityManager em;
-
-    @EJB(mappedName = "regweb/LibroEJB/local")
-    public LibroLocal libroEjb;
 
 
     @Override

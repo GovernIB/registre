@@ -45,15 +45,15 @@ import java.util.*;
 public class EntidadController extends BaseController {
 
     //protected final Logger log = Logger.getLogger(getClass());
-    
-    @EJB(mappedName = "regweb/DescargaEJB/local")
-    public DescargaLocal descargaEjb;
 
     @Autowired
     private EntidadValidator entidadValidator;
 
     @Autowired
     private UsuarioService usuarioService;
+
+    @EJB(mappedName = "regweb/DescargaEJB/local")
+    public DescargaLocal descargaEjb;
 
     @EJB(mappedName = "regweb/SincronizadorDir3EJB/local")
     private SincronizadorDir3Local sincronizadorDIR3Ejb;
@@ -69,12 +69,6 @@ public class EntidadController extends BaseController {
 
     @EJB(mappedName = "regweb/ArchivoEJB/local")
     public ArchivoLocal archivoEjb;
-
-    @EJB(mappedName = "regweb/OficinaEJB/local")
-    public OficinaLocal oficinaEjb;
-
-    @EJB(mappedName = "regweb/OrganismoEJB/local")
-    public OrganismoLocal organismoEjb;
 
     @EJB(mappedName = "regweb/UsuarioEJB/local")
     public UsuarioLocal usuarioEjb;
@@ -534,10 +528,15 @@ public class EntidadController extends BaseController {
 
             permisoLibroUsuarioForm.setPermisoLibroUsuarios(plus);
 
+            List<Libro> librosConPermiso = permisoLibroUsuarioEjb.getLibrosConPermisoCreado(entidad.getId(), usuarioEntidad);
+            List<Libro> librosSinPermiso = permisoLibroUsuarioEjb.getLibrosSinPermisoCreado(entidad.getId(), usuarioEntidad);
+
             model.addAttribute(permisoLibroUsuarioForm);
             model.addAttribute("entidad", entidad);
             model.addAttribute("libros", libros);
             model.addAttribute("permisos", RegwebConstantes.PERMISOS);
+            model.addAttribute("librosConPermiso", librosConPermiso);
+            model.addAttribute("librosSinPermiso", librosSinPermiso);
 
             return "usuario/permisoLibroUsuarioForm";
         }else{
@@ -550,11 +549,12 @@ public class EntidadController extends BaseController {
      * Guardar un nuevo {@link es.caib.regweb.model.PermisoLibroUsuario}
      */
     @RequestMapping(value = "/permisos/{idUsuarioEntidad}", method = RequestMethod.POST)
-    public String asignarUsuario(@ModelAttribute PermisoLibroUsuarioForm permisoLibroUsuarioForm,@PathVariable Integer idUsuarioEntidad, SessionStatus status, HttpServletRequest request) {
+    public String asignarUsuario(@ModelAttribute PermisoLibroUsuarioForm permisoLibroUsuarioForm,
+                                 @PathVariable Integer idUsuarioEntidad, SessionStatus status, HttpServletRequest request) {
 
         try {
 
-            UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findById(permisoLibroUsuarioForm.getUsuarioEntidad().getId());
+            UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findById(Long.valueOf(idUsuarioEntidad));
 
             final boolean debug = log.isDebugEnabled();
             
@@ -563,13 +563,16 @@ public class EntidadController extends BaseController {
                   log.debug("Inicio: " + plu.getLibro().getNombre());
                 }
                 plu.setUsuario(usuarioEntidad);
+//                log.info("ID: " + plu.getId());
+//                log.info("Activo: " + plu.getActivo());
 
-                /*log.info("Libro: " + plu.getLibro().getId());
-                log.info("Permiso: " + plu.getPermiso().getId());
-                log.info("Activo: " + plu.getActivo());
-                log.info("  ");
-                log.info("  ");*/
-                permisoLibroUsuarioEjb.merge(plu);
+                // Si ya existe el Permiso, actualiza el valor de ctivo. Si no existe, crea el Permiso en BBDD
+                if(plu.getId()!=null) {
+                    permisoLibroUsuarioEjb.actualizarPermiso(plu.getId(), plu.getActivo());
+                }else{
+                    permisoLibroUsuarioEjb.merge(plu);
+                }
+
                 if  (debug) {
                   log.info("Fin: " + plu.getLibro().getNombre());
                 }
@@ -586,7 +589,7 @@ public class EntidadController extends BaseController {
     }
 
     /**
-     * Eliminar la asignación de un Usuario a un Organismo
+     * Eliminar la asignación de un Usuario a una Entidad
      */
     @RequestMapping(value = "/permisos/{idUsuarioEntidad}/delete")
     public String eliminarAsignacion(@PathVariable Long idUsuarioEntidad, HttpServletRequest request) {
@@ -614,6 +617,42 @@ public class EntidadController extends BaseController {
         }
 
         return "redirect:/entidad/usuarios";
+    }
+
+    /**
+     * Eliminar la asignación de un Usuario a un Organismo
+     */
+    //@RequestMapping(value = "/{idEntidad}/eliminar")
+    public String eliminarEntidad(@PathVariable Long idEntidad, HttpServletRequest request) {
+    log.info("idEntidad: " + idEntidad);
+        try {
+
+            // Eliminar RegistroEntrada: RegistroDetalle, Modificaciones
+            // Eliminar RegistroSalida: RegistroDetalle, Modificaciones
+            // Eliminar Oficios Remisión
+            // Eliminar Anexos
+            // Eliminar Trazabilidad
+            // Eliminar Personas
+            // Eliminar Interesados
+            // Eliminar Repro
+            // Eliminar LOPD
+            // Eliminar PermisosLibroUsuario
+            // Eliminar Libros
+            // Eliminar Oficinas
+            // Eliminar Organismos
+            // Eliminar Catálogo Datos
+            // Eliminar UsuarioEntidad
+            // Eliminar Entidad
+            entidadEjb.eliminarEntidad(idEntidad);
+
+            Mensaje.saveMessageInfo(request, "S'ha eliminat l'entitat");
+
+        } catch (Exception e) {
+            Mensaje.saveMessageError(request, "No s'ha eliminat el registre perque està relacionat amb un altra entitat.");
+            e.printStackTrace();
+        }
+
+        return "redirect:/entidad/list";
     }
 
 
@@ -795,9 +834,9 @@ public class EntidadController extends BaseController {
 
         // Obtenemos todos los UsuarioEntidad con Rol RWE_ADMIN
         List<UsuarioEntidad> administradoresEntidad = usuarioEntidadEjb.findAdministradoresByEntidad(entidad.getId());
-        for (UsuarioEntidad usuario : administradoresEntidad) {
+        /*for (UsuarioEntidad usuario : administradoresEntidad) {
             usuarioService.actualizarRoles(usuario.getUsuario());
-        }
+        }*/
 
         // Eliminamos el Propietario de la Entidad
         UsuarioEntidad usuarioPropietario = usuarioEntidadEjb.findByUsuarioEntidad(propietario.getId(),entidad.getId());

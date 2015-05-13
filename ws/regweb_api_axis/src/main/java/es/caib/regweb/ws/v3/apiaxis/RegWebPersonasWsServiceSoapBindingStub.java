@@ -77,15 +77,15 @@ public class RegWebPersonasWsServiceSoapBindingStub extends org.apache.axis.clie
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
         oper.addFault(new org.apache.axis.description.FaultDesc(
-                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsValidationErrors"),
-                      "es.caib.regweb.ws.v3.apiaxis.WsValidationErrors",
-                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsValidationErrors"), 
-                      true
-                     ));
-        oper.addFault(new org.apache.axis.description.FaultDesc(
                       new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsI18NError"),
                       "es.caib.regweb.ws.v3.apiaxis.WsI18NError",
                       new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsI18NError"), 
+                      true
+                     ));
+        oper.addFault(new org.apache.axis.description.FaultDesc(
+                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsValidationErrors"),
+                      "es.caib.regweb.ws.v3.apiaxis.WsValidationErrors",
+                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsValidationErrors"), 
                       true
                      ));
         _operations[3] = oper;
@@ -108,15 +108,15 @@ public class RegWebPersonasWsServiceSoapBindingStub extends org.apache.axis.clie
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
         oper.addFault(new org.apache.axis.description.FaultDesc(
-                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsValidationErrors"),
-                      "es.caib.regweb.ws.v3.apiaxis.WsValidationErrors",
-                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsValidationErrors"), 
-                      true
-                     ));
-        oper.addFault(new org.apache.axis.description.FaultDesc(
                       new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsI18NError"),
                       "es.caib.regweb.ws.v3.apiaxis.WsI18NError",
                       new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsI18NError"), 
+                      true
+                     ));
+        oper.addFault(new org.apache.axis.description.FaultDesc(
+                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsValidationErrors"),
+                      "es.caib.regweb.ws.v3.apiaxis.WsValidationErrors",
+                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsValidationErrors"), 
                       true
                      ));
         _operations[5] = oper;
@@ -371,7 +371,7 @@ public class RegWebPersonasWsServiceSoapBindingStub extends org.apache.axis.clie
 }
     }
 
-    public java.lang.Long crearPersona(es.caib.regweb.ws.v3.apiaxis.PersonaWs personaWs) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsValidationErrors, es.caib.regweb.ws.v3.apiaxis.WsI18NError {
+    public java.lang.Long crearPersona(es.caib.regweb.ws.v3.apiaxis.PersonaWs personaWs) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsI18NError, es.caib.regweb.ws.v3.apiaxis.WsValidationErrors {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -405,11 +405,11 @@ public class RegWebPersonasWsServiceSoapBindingStub extends org.apache.axis.clie
         if (axisFaultException.detail instanceof java.rmi.RemoteException) {
               throw (java.rmi.RemoteException) axisFaultException.detail;
          }
-        if (axisFaultException.detail instanceof es.caib.regweb.ws.v3.apiaxis.WsValidationErrors) {
-              throw (es.caib.regweb.ws.v3.apiaxis.WsValidationErrors) axisFaultException.detail;
-         }
         if (axisFaultException.detail instanceof es.caib.regweb.ws.v3.apiaxis.WsI18NError) {
               throw (es.caib.regweb.ws.v3.apiaxis.WsI18NError) axisFaultException.detail;
+         }
+        if (axisFaultException.detail instanceof es.caib.regweb.ws.v3.apiaxis.WsValidationErrors) {
+              throw (es.caib.regweb.ws.v3.apiaxis.WsValidationErrors) axisFaultException.detail;
          }
    }
   throw axisFaultException;
@@ -450,7 +450,7 @@ public class RegWebPersonasWsServiceSoapBindingStub extends org.apache.axis.clie
 }
     }
 
-    public void actualizarPersona(es.caib.regweb.ws.v3.apiaxis.PersonaWs personaWs) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsValidationErrors, es.caib.regweb.ws.v3.apiaxis.WsI18NError {
+    public void actualizarPersona(es.caib.regweb.ws.v3.apiaxis.PersonaWs personaWs) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsI18NError, es.caib.regweb.ws.v3.apiaxis.WsValidationErrors {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -477,11 +477,11 @@ public class RegWebPersonasWsServiceSoapBindingStub extends org.apache.axis.clie
         if (axisFaultException.detail instanceof java.rmi.RemoteException) {
               throw (java.rmi.RemoteException) axisFaultException.detail;
          }
-        if (axisFaultException.detail instanceof es.caib.regweb.ws.v3.apiaxis.WsValidationErrors) {
-              throw (es.caib.regweb.ws.v3.apiaxis.WsValidationErrors) axisFaultException.detail;
-         }
         if (axisFaultException.detail instanceof es.caib.regweb.ws.v3.apiaxis.WsI18NError) {
               throw (es.caib.regweb.ws.v3.apiaxis.WsI18NError) axisFaultException.detail;
+         }
+        if (axisFaultException.detail instanceof es.caib.regweb.ws.v3.apiaxis.WsValidationErrors) {
+              throw (es.caib.regweb.ws.v3.apiaxis.WsValidationErrors) axisFaultException.detail;
          }
    }
   throw axisFaultException;

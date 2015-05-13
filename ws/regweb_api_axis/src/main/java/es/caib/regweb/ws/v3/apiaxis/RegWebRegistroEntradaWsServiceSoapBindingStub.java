@@ -49,15 +49,15 @@ public class RegWebRegistroEntradaWsServiceSoapBindingStub extends org.apache.ax
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
         oper.addFault(new org.apache.axis.description.FaultDesc(
-                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsValidationErrors"),
-                      "es.caib.regweb.ws.v3.apiaxis.WsValidationErrors",
-                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsValidationErrors"), 
-                      true
-                     ));
-        oper.addFault(new org.apache.axis.description.FaultDesc(
                       new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsI18NError"),
                       "es.caib.regweb.ws.v3.apiaxis.WsI18NError",
                       new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsI18NError"), 
+                      true
+                     ));
+        oper.addFault(new org.apache.axis.description.FaultDesc(
+                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsValidationErrors"),
+                      "es.caib.regweb.ws.v3.apiaxis.WsValidationErrors",
+                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsValidationErrors"), 
                       true
                      ));
         _operations[1] = oper;
@@ -73,15 +73,15 @@ public class RegWebRegistroEntradaWsServiceSoapBindingStub extends org.apache.ax
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
         oper.addFault(new org.apache.axis.description.FaultDesc(
-                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsValidationErrors"),
-                      "es.caib.regweb.ws.v3.apiaxis.WsValidationErrors",
-                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsValidationErrors"), 
-                      true
-                     ));
-        oper.addFault(new org.apache.axis.description.FaultDesc(
                       new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsI18NError"),
                       "es.caib.regweb.ws.v3.apiaxis.WsI18NError",
                       new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsI18NError"), 
+                      true
+                     ));
+        oper.addFault(new org.apache.axis.description.FaultDesc(
+                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsValidationErrors"),
+                      "es.caib.regweb.ws.v3.apiaxis.WsValidationErrors",
+                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsValidationErrors"), 
                       true
                      ));
         _operations[2] = oper;
@@ -101,15 +101,15 @@ public class RegWebRegistroEntradaWsServiceSoapBindingStub extends org.apache.ax
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
         oper.addFault(new org.apache.axis.description.FaultDesc(
-                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsValidationErrors"),
-                      "es.caib.regweb.ws.v3.apiaxis.WsValidationErrors",
-                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsValidationErrors"), 
-                      true
-                     ));
-        oper.addFault(new org.apache.axis.description.FaultDesc(
                       new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsI18NError"),
                       "es.caib.regweb.ws.v3.apiaxis.WsI18NError",
                       new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsI18NError"), 
+                      true
+                     ));
+        oper.addFault(new org.apache.axis.description.FaultDesc(
+                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsValidationErrors"),
+                      "es.caib.regweb.ws.v3.apiaxis.WsValidationErrors",
+                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsValidationErrors"), 
                       true
                      ));
         _operations[3] = oper;
@@ -131,15 +131,15 @@ public class RegWebRegistroEntradaWsServiceSoapBindingStub extends org.apache.ax
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
         oper.addFault(new org.apache.axis.description.FaultDesc(
-                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsValidationErrors"),
-                      "es.caib.regweb.ws.v3.apiaxis.WsValidationErrors",
-                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsValidationErrors"), 
-                      true
-                     ));
-        oper.addFault(new org.apache.axis.description.FaultDesc(
                       new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsI18NError"),
                       "es.caib.regweb.ws.v3.apiaxis.WsI18NError",
                       new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsI18NError"), 
+                      true
+                     ));
+        oper.addFault(new org.apache.axis.description.FaultDesc(
+                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsValidationErrors"),
+                      "es.caib.regweb.ws.v3.apiaxis.WsValidationErrors",
+                      new javax.xml.namespace.QName("http://impl.v3.ws.regweb.caib.es/", "WsValidationErrors"), 
                       true
                      ));
         _operations[4] = oper;
@@ -389,7 +389,7 @@ public class RegWebRegistroEntradaWsServiceSoapBindingStub extends org.apache.ax
 }
     }
 
-    public es.caib.regweb.ws.v3.apiaxis.RegistroEntradaWs obtenerRegistroEntrada(java.lang.String numeroRegistroFormateado, java.lang.String usuario, java.lang.String entidad) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsValidationErrors, es.caib.regweb.ws.v3.apiaxis.WsI18NError {
+    public es.caib.regweb.ws.v3.apiaxis.RegistroEntradaWs obtenerRegistroEntrada(java.lang.String numeroRegistroFormateado, java.lang.String usuario, java.lang.String entidad) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsI18NError, es.caib.regweb.ws.v3.apiaxis.WsValidationErrors {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -423,18 +423,18 @@ public class RegWebRegistroEntradaWsServiceSoapBindingStub extends org.apache.ax
         if (axisFaultException.detail instanceof java.rmi.RemoteException) {
               throw (java.rmi.RemoteException) axisFaultException.detail;
          }
-        if (axisFaultException.detail instanceof es.caib.regweb.ws.v3.apiaxis.WsValidationErrors) {
-              throw (es.caib.regweb.ws.v3.apiaxis.WsValidationErrors) axisFaultException.detail;
-         }
         if (axisFaultException.detail instanceof es.caib.regweb.ws.v3.apiaxis.WsI18NError) {
               throw (es.caib.regweb.ws.v3.apiaxis.WsI18NError) axisFaultException.detail;
+         }
+        if (axisFaultException.detail instanceof es.caib.regweb.ws.v3.apiaxis.WsValidationErrors) {
+              throw (es.caib.regweb.ws.v3.apiaxis.WsValidationErrors) axisFaultException.detail;
          }
    }
   throw axisFaultException;
 }
     }
 
-    public es.caib.regweb.ws.v3.apiaxis.IdentificadorWs altaRegistroEntrada(es.caib.regweb.ws.v3.apiaxis.RegistroEntradaWs registroEntradaWs) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsValidationErrors, es.caib.regweb.ws.v3.apiaxis.WsI18NError {
+    public es.caib.regweb.ws.v3.apiaxis.IdentificadorWs altaRegistroEntrada(es.caib.regweb.ws.v3.apiaxis.RegistroEntradaWs registroEntradaWs) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsI18NError, es.caib.regweb.ws.v3.apiaxis.WsValidationErrors {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -468,18 +468,18 @@ public class RegWebRegistroEntradaWsServiceSoapBindingStub extends org.apache.ax
         if (axisFaultException.detail instanceof java.rmi.RemoteException) {
               throw (java.rmi.RemoteException) axisFaultException.detail;
          }
-        if (axisFaultException.detail instanceof es.caib.regweb.ws.v3.apiaxis.WsValidationErrors) {
-              throw (es.caib.regweb.ws.v3.apiaxis.WsValidationErrors) axisFaultException.detail;
-         }
         if (axisFaultException.detail instanceof es.caib.regweb.ws.v3.apiaxis.WsI18NError) {
               throw (es.caib.regweb.ws.v3.apiaxis.WsI18NError) axisFaultException.detail;
+         }
+        if (axisFaultException.detail instanceof es.caib.regweb.ws.v3.apiaxis.WsValidationErrors) {
+              throw (es.caib.regweb.ws.v3.apiaxis.WsValidationErrors) axisFaultException.detail;
          }
    }
   throw axisFaultException;
 }
     }
 
-    public void tramitarRegistroEntrada(java.lang.String numeroRegistroFormateado, java.lang.String usuario, java.lang.String entidad) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsValidationErrors, es.caib.regweb.ws.v3.apiaxis.WsI18NError {
+    public void tramitarRegistroEntrada(java.lang.String numeroRegistroFormateado, java.lang.String usuario, java.lang.String entidad) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsI18NError, es.caib.regweb.ws.v3.apiaxis.WsValidationErrors {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -506,18 +506,18 @@ public class RegWebRegistroEntradaWsServiceSoapBindingStub extends org.apache.ax
         if (axisFaultException.detail instanceof java.rmi.RemoteException) {
               throw (java.rmi.RemoteException) axisFaultException.detail;
          }
-        if (axisFaultException.detail instanceof es.caib.regweb.ws.v3.apiaxis.WsValidationErrors) {
-              throw (es.caib.regweb.ws.v3.apiaxis.WsValidationErrors) axisFaultException.detail;
-         }
         if (axisFaultException.detail instanceof es.caib.regweb.ws.v3.apiaxis.WsI18NError) {
               throw (es.caib.regweb.ws.v3.apiaxis.WsI18NError) axisFaultException.detail;
+         }
+        if (axisFaultException.detail instanceof es.caib.regweb.ws.v3.apiaxis.WsValidationErrors) {
+              throw (es.caib.regweb.ws.v3.apiaxis.WsValidationErrors) axisFaultException.detail;
          }
    }
   throw axisFaultException;
 }
     }
 
-    public void anularRegistroEntrada(java.lang.String numeroRegistroFormateado, java.lang.String usuario, java.lang.String entidad, boolean anular) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsValidationErrors, es.caib.regweb.ws.v3.apiaxis.WsI18NError {
+    public void anularRegistroEntrada(java.lang.String numeroRegistroFormateado, java.lang.String usuario, java.lang.String entidad, boolean anular) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsI18NError, es.caib.regweb.ws.v3.apiaxis.WsValidationErrors {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -544,11 +544,11 @@ public class RegWebRegistroEntradaWsServiceSoapBindingStub extends org.apache.ax
         if (axisFaultException.detail instanceof java.rmi.RemoteException) {
               throw (java.rmi.RemoteException) axisFaultException.detail;
          }
-        if (axisFaultException.detail instanceof es.caib.regweb.ws.v3.apiaxis.WsValidationErrors) {
-              throw (es.caib.regweb.ws.v3.apiaxis.WsValidationErrors) axisFaultException.detail;
-         }
         if (axisFaultException.detail instanceof es.caib.regweb.ws.v3.apiaxis.WsI18NError) {
               throw (es.caib.regweb.ws.v3.apiaxis.WsI18NError) axisFaultException.detail;
+         }
+        if (axisFaultException.detail instanceof es.caib.regweb.ws.v3.apiaxis.WsValidationErrors) {
+              throw (es.caib.regweb.ws.v3.apiaxis.WsValidationErrors) axisFaultException.detail;
          }
    }
   throw axisFaultException;

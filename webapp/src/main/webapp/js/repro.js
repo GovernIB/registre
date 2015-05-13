@@ -37,28 +37,25 @@ function nuevaRepro(){
         "extracto": $('#registroDetalle\\.extracto').val(),
         "idTipoDocumentacionFisica": $('#registroDetalle\\.tipoDocumentacionFisica').val(),
         "idTipoAsunto": $('#registroDetalle\\.tipoAsunto\\.id').val(),
-        "idIdioma": $('#registroDetalle\\.idioma\\.id').val(),
+        "idIdioma": $('#registroDetalle\\.idioma').val(),
         "idCodigoAsunto": $('#registroDetalle\\.codigoAsunto\\.id').val(),
         "referenciaExterna": $('#registroDetalle\\.referenciaExterna').val(),
         "expediente": $('#registroDetalle\\.expediente').val(),
         "idTransporte": $('#registroDetalle\\.transporte').val(),
         "numeroTransporte": $('#registroDetalle\\.numeroTransporte').val(),
         "observaciones": $('#registroDetalle\\.observaciones').val(),
-        "oficinaOrigen": $('#registroDetalle\\.oficinaOrigen\\.codigo').val(),
-        "oficinaOrigenExterno": $('#registroDetalle\\.oficinaOrigenExterno').val(),
-        "denominacionOfiOrigenExt": $('#registroDetalle\\.denominacionOfiOrigenExt').val(),
+        "oficinaCodigo": $('#registroDetalle\\.oficinaOrigen\\.codigo option:selected').val(),
+        "oficinaDenominacion": $('#registroDetalle\\.oficinaOrigen\\.codigo option:selected').text(),
         "numeroRegistroOrigen": $('#registroDetalle\\.numeroRegistroOrigen').val(),
         "fechaOrigen": $('#registroDetalle\\.fechaOrigen').val()};
 
     if(tipoRegistro == 1){ // RegistroEntrada
-        json['destino'] = $('#destino\\.codigo').val();
-        json['destinoExternoCodigo'] = $('#destinoExternoCodigo').val();
-        json['destinoExternoDenominacion'] = $('#destinoExternoDenominacion').val();
+        json['destinoCodigo'] = $('#destino\\.codigo option:selected').val();
+        json['destinoDenominacion'] = $('#destino\\.codigo option:selected').text();
 
     }else  if(tipoRegistro == 2){ // Registro Salida
-        json['origen'] = $('#origen\\.codigo').val();
-        json['origenExternoCodigo'] = $('#origenExternoCodigo').val();
-        json['origenExternoDenominacion'] = $('#origenExternoDenominacion').val();
+        json['origenCodigo'] = $('#registroDetalle\\.oficinaOrigen\\.codigo option:selected').val();
+        json['origenDenominacion'] = $('#registroDetalle\\.oficinaOrigen\\.codigo option:selected').text();
     }
 
     $.ajax({
@@ -101,7 +98,8 @@ function rellenarFormulario(idRepro,tipoRegistro){
             $('#registroDetalle\\.tipoAsunto\\.id').val(repro.idTipoAsunto);
             $('#registroDetalle\\.tipoAsunto\\.id').trigger("chosen:updated");
             actualizarCodigosAsunto();
-            $('#registroDetalle\\.idioma\\.id').val(repro.idIdioma);
+            $('#registroDetalle\\.idioma').val(repro.idIdioma);
+            $('#registroDetalle\\.idioma').trigger("chosen:updated");
             $('#registroDetalle\\.codigoAsunto\\.id').val(repro.idCodigoAsunto);
             $('#registroDetalle\\.referenciaExterna').val(repro.referenciaExterna);
             $('#registroDetalle\\.expediente').val(repro.expediente);
@@ -123,9 +121,19 @@ function rellenarFormulario(idRepro,tipoRegistro){
             $('#registroDetalle\\.transporte').trigger("chosen:updated");
 
             if(tipoRegistro == 1){ // RegistroEntrada
-                $('#destino\\.codigo').val(repro.destino);
-                $('#destinoExternoCodigo').val();
-                //$('#destinoExternoDenominacion').val();
+                if(repro.destino != null){
+                    $('#destino\\.codigo').val(repro.destino);
+                    $('#destino\\.codigo').trigger("chosen:updated");
+                }else{
+                    var html= '';
+                    var selected = 'selected="selected"';
+                    html += '<option '+selected+' value="' + repro.destinoExternoCodigo + '">'
+                    + repro.destinoExternoDenominacion + '</option>';
+
+                    $('#destino\\.codigo').append(html);
+                    $('#destino\\.codigo').trigger("chosen:updated");
+                    $(idDenominacion).val(repro.destinoExternoDenominacion);
+                }
 
             }else  if(tipoRegistro == 2){ // Registro Salida
 

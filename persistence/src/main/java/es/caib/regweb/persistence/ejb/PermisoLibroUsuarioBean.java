@@ -81,7 +81,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     public List<PermisoLibroUsuario> findByUsuarioLibro(Long idUsuarioEntidad, Long idLibro) throws Exception{
 
         Query q = em.createQuery("Select plu from PermisoLibroUsuario as plu where " +
-                "plu.usuario.id = :idUsuarioEntidad and plu.libro.id = :idLibro");
+                "plu.usuario.id = :idUsuarioEntidad and plu.libro.id = :idLibro order by plu.permiso");
 
         q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
         q.setParameter("idLibro",idLibro);
@@ -138,51 +138,6 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
 
         q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
         q.setParameter("vigente",vigente.getId());
-
-        return q.getResultList();
-    }
-
-    @Override
-    public List<Libro> getLibrosRegistroEntrada(Long idUsuarioEntidad) throws Exception{
-
-        Query q = em.createQuery("Select distinct plu.libro from PermisoLibroUsuario as plu where " +
-                "plu.usuario.id = :idUsuarioEntidad and plu.libro.activo = true and "
-                + "(plu.permiso = " + PERMISO_REGISTRO_ENTRADA + " and plu.activo = true)");
-
-        q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
-
-        return q.getResultList();
-    }
-
-    @Override
-    public List<Libro> getLibrosRegistroSalida(Long idUsuarioEntidad) throws Exception{
-
-        Query q = em.createQuery("Select distinct plu.libro from PermisoLibroUsuario as plu where " +
-                "plu.usuario.id = :idUsuarioEntidad and plu.libro.activo = true and (plu.permiso = " + PERMISO_REGISTRO_SALIDA + " and plu.activo = true)");
-
-        q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
-
-        return q.getResultList();
-    }
-
-    @Override
-    public List<Libro> getLibrosConsultaEntrada(Long idUsuarioEntidad) throws Exception{
-
-        Query q = em.createQuery("Select distinct plu.libro from PermisoLibroUsuario as plu where " +
-                "plu.usuario.id = :idUsuarioEntidad and plu.libro.activo = true and (plu.permiso = " + PERMISO_CONSULTA_REGISTRO_ENTRADA + " and plu.activo = true)");
-
-        q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
-
-        return q.getResultList();
-    }
-
-    @Override
-    public List<Libro> getLibrosConsultaSalida(Long idUsuarioEntidad) throws Exception{
-
-        Query q = em.createQuery("Select distinct plu.libro from PermisoLibroUsuario as plu where " +
-                "plu.usuario.id = :idUsuarioEntidad and plu.libro.activo = true and (plu.permiso = " + PERMISO_CONSULTA_REGISTRO_SALIDA + " and plu.activo = true)");
-
-        q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
 
         return q.getResultList();
     }
@@ -289,4 +244,44 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
 
         return q.getResultList();
     }
+
+    @Override
+    public void actualizarPermiso(Long idPermisoLibroUsuario, Boolean esActivo) throws Exception {
+
+        Query q = em.createQuery("UPDATE PermisoLibroUsuario SET activo = :esActivo WHERE " +
+                "id = :idPermisoLibroUsuario");
+
+        q.setParameter("esActivo",esActivo);
+        q.setParameter("idPermisoLibroUsuario",idPermisoLibroUsuario);
+
+        q.executeUpdate();
+    }
+
+    @Override
+    public List<Libro> getLibrosConPermisoCreado(Long idEntidad, UsuarioEntidad usuario) throws Exception {
+
+        Query q = em.createQuery("Select distinct plu.libro from PermisoLibroUsuario as plu where " +
+                "plu.libro.organismo.entidad.id = :idEntidad and plu.usuario.id = :idUsuarioEntidad and " +
+                "plu.libro.activo = true");
+
+        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idUsuarioEntidad",usuario.getId());
+
+        return q.getResultList();
+    }
+
+    @Override
+    public List<Libro> getLibrosSinPermisoCreado(Long idEntidad, UsuarioEntidad usuario) throws Exception {
+
+        Query q = em.createQuery("Select distinct libro from Libro as libro where libro.organismo.entidad.id = :idEntidad and " +
+                "libro.activo = true and libro.id not in (Select distinct plu.libro.id from PermisoLibroUsuario as plu where " +
+                "plu.libro.organismo.entidad.id = :idEntidad and plu.usuario.id = :idUsuarioEntidad and " +
+                "plu.libro.activo = true)");
+
+        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idUsuarioEntidad",usuario.getId());
+
+        return q.getResultList();
+    }
+
 }

@@ -20,11 +20,13 @@ public class Configuracio implements RegwebConstantes {
 		return Boolean.getBoolean(REGWEB_PROPERTY_BASE + "iscaib");
 	}
 
-
-	public static boolean showTimeStamp() {
-		return Boolean.getBoolean(REGWEB_PROPERTY_BASE + "showtimestamp");
-	}
-
+    public static String getUrlPreregistre() {
+        return System.getProperty(REGWEB_PROPERTY_BASE + "preregistre");
+    }
+  
+    public static boolean showTimeStamp() {
+    	return Boolean.getBoolean(REGWEB_PROPERTY_BASE + "showtimestamp");
+    }
 
 	public static boolean isDevelopment() {
 		return Boolean.getBoolean(REGWEB_PROPERTY_BASE + "development");

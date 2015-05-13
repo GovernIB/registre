@@ -11,7 +11,7 @@ public interface RegWebPersonasWs_PortType extends java.rmi.Remote {
     public java.lang.String getVersion() throws java.rmi.RemoteException;
     public void borrarPersona(java.lang.Long personaID) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsI18NError;
     public es.caib.regweb.ws.v3.apiaxis.PersonaWs[] listarPersonas(java.lang.String entidadCodigoDir3) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsI18NError;
-    public java.lang.Long crearPersona(es.caib.regweb.ws.v3.apiaxis.PersonaWs personaWs) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsValidationErrors, es.caib.regweb.ws.v3.apiaxis.WsI18NError;
+    public java.lang.Long crearPersona(es.caib.regweb.ws.v3.apiaxis.PersonaWs personaWs) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsI18NError, es.caib.regweb.ws.v3.apiaxis.WsValidationErrors;
     public int getVersionWs() throws java.rmi.RemoteException;
-    public void actualizarPersona(es.caib.regweb.ws.v3.apiaxis.PersonaWs personaWs) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsValidationErrors, es.caib.regweb.ws.v3.apiaxis.WsI18NError;
+    public void actualizarPersona(es.caib.regweb.ws.v3.apiaxis.PersonaWs personaWs) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsI18NError, es.caib.regweb.ws.v3.apiaxis.WsValidationErrors;
 }

@@ -35,23 +35,19 @@ public class RegistroEntradaBean extends BaseEjbJPA<RegistroEntrada, Long> imple
     @PersistenceContext(unitName="regweb")
     private EntityManager em;
 
-    @EJB(mappedName = "regweb/LibroEJB/local")
+    @EJB(name = "LibroEJB")
     public LibroLocal libroEjb;
 
-    @EJB(mappedName = "regweb/ContadorEJB/local")
+    @EJB(name = "ContadorEJB")
     public ContadorLocal contadorEjb;
 
-    @EJB(mappedName = "regweb/OrganismoEJB/local")
-    public OrganismoLocal organismoEjb;
-
-    @EJB(mappedName = "regweb/OficinaEJB/local")
+    @EJB(name = "OficinaEJB")
     public OficinaLocal oficinaEjb;
 
-    @EJB(mappedName = "regweb/HistoricoRegistroEntradaEJB/local")
+    @EJB(name = "HistoricoRegistroEntradaEJB")
     public HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
 
-    @EJB(mappedName = "regweb/EntidadEJB/local")
-    public EntidadLocal entidadEjb;
+
 
     @Override
     public RegistroEntrada findById(Long id) throws Exception {
@@ -461,7 +457,8 @@ public class RegistroEntradaBean extends BaseEjbJPA<RegistroEntrada, Long> imple
             OficiosRemisionOrganismo  oficios = new OficiosRemisionOrganismo();
 
             // Consulta en base de datos si la Entidad Actual está en SIR
-            Entidad entidadActual = entidadEjb.findById(entidadActiva.getId());
+            //Entidad entidadActual = entidadEjb.findById(entidadActiva.getId());
+            Entidad entidadActual = (Entidad) em.createQuery("select e from Entidad as e where e.id = : id").setParameter("id", entidadActiva.getId()).getSingleResult();
             if(entidadActual.getSir()) {
 
                 // Averiguamos si el Organismos Externo está en Sir o no
@@ -649,7 +646,13 @@ public class RegistroEntradaBean extends BaseEjbJPA<RegistroEntrada, Long> imple
 
         Query q;
 
-        q = em.createQuery("Select re.id, re.numeroRegistroFormateado, re.fecha, re.libro.nombre, re.usuario.usuario.identificador, re.registroDetalle.reserva " +
+        String s = "re.registroDetalle.extracto ";
+
+        if(idEstado.equals(RegwebConstantes.ESTADO_PENDIENTE)){
+            s = "re.registroDetalle.reserva ";
+        }
+
+        q = em.createQuery("Select re.id, re.numeroRegistroFormateado, re.fecha, re.libro.nombre, re.usuario.usuario.identificador, " + s +
                 "from RegistroEntrada as re where re.oficina.id = :idOficinaActiva " +
                 "and re.estado = :idEstado order by re.fecha desc");
 
@@ -859,12 +862,64 @@ public class RegistroEntradaBean extends BaseEjbJPA<RegistroEntrada, Long> imple
         List<RegistroBasico> registros = new ArrayList<RegistroBasico>();
 
         for (Object[] object : result){
-            RegistroBasico registroBasico = new RegistroBasico((Long)object[0],(String)object[1],(Date)object[2],(String)object[3],(String)object[4],(String)object[5]);
+            //RegistroBasico registroBasico = new RegistroBasico((Long)object[0],(String)object[1],(Date)object[2],(String)object[3],(String)object[4],(String)object[5]);
+            RegistroBasico registroBasico = new RegistroBasico();
+            registroBasico.setId((Long)object[0]);
+            registroBasico.setNumeroRegistroFormateado((String)object[1]);
+            registroBasico.setFecha((Date)object[2]);
+            registroBasico.setLibro((String)object[3]);
+            registroBasico.setUsuario((String)object[4]);
+            if(StringUtils.isEmpty((String)object[5])){
+                registroBasico.setExtracto((String) object[6]);
+            }else{
+                registroBasico.setExtracto((String) object[5]);
+            }
 
+        }
+
+        return registros;
+    }
+
+    /**
+     * Convierte los resultados de una query en una lista de {@link es.caib.regweb.model.utils.RegistroBasico}
+     * @param result
+     * @return
+     * @throws Exception
+     */
+    private List<RegistroBasico> getRegistroBasicoCompleto(List<Object[]> result) throws Exception{
+
+        List<RegistroBasico> registros = new ArrayList<RegistroBasico>();
+
+        log.info("Total registros: " + result.size());
+
+        for (Object[] object : result){
+            //RegistroBasico registroBasico = new RegistroBasico((Long)object[0],(String)object[1],(Date)object[2],(String)object[3],(String)object[4],(String)object[5]);
+            RegistroBasico registroBasico = new RegistroBasico();
+            registroBasico.setId((Long)object[0]);
+            registroBasico.setNumeroRegistroFormateado((String)object[1]);
+            registroBasico.setFecha((Date)object[2]);
+            registroBasico.setLibro((String)object[3]);
+            registroBasico.setUsuario((String)object[4]);
+            if(StringUtils.isEmpty((String)object[5])){
+                registroBasico.setExtracto((String) object[6]);
+            }else{
+                registroBasico.setExtracto((String) object[5]);
+            }
+
+
+            registroBasico.setIdOficina((Long) object[7]);
+            registroBasico.setOficina((String)object[8]);
+            if(StringUtils.isEmpty((String)object[9])){
+                registroBasico.setDestinatario((String)object[10]);
+            }else{
+                registroBasico.setDestinatario((String)object[9]);
+            }
+            registroBasico.setEstado((Long)object[11]);
+            //registroBasico.setAnexos((Long)object[12]);
             registros.add(registroBasico);
         }
 
-        return  registros;
+        return registros;
     }
 
 

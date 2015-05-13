@@ -65,9 +65,6 @@ public class RegistroEntradaFormController extends BaseController {
     @EJB(mappedName = "regweb/TipoAsuntoEJB/local")
     public TipoAsuntoLocal tipoAsuntoEjb;
     
-    @EJB(mappedName = "regweb/OficinaEJB/local")
-    public OficinaLocal oficinaEjb;
-    
     @EJB(mappedName = "regweb/CatLocalidadEJB/local")
     public CatLocalidadLocal catLocalidadEjb;
     
@@ -82,9 +79,9 @@ public class RegistroEntradaFormController extends BaseController {
     
     @EJB(mappedName = "regweb/CatNivelAdministracionEJB/local")
     public CatNivelAdministracionLocal catNivelAdministracionEjb;
-    
-    @EJB(mappedName = "regweb/OrganismoEJB/local")
-    public OrganismoLocal organismoEjb;
+
+    @EJB(mappedName = "regweb/RegistroDetalleEJB/local")
+    public RegistroDetalleLocal registroDetalleEjb;
 
 
     /**
@@ -247,6 +244,7 @@ public class RegistroEntradaFormController extends BaseController {
             }catch (Exception e) {
                 Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
                 e.printStackTrace();
+                return "redirect:/inici";
             }finally {
 
                 //Eliminamos los posibles interesados de la Sesion
@@ -334,7 +332,24 @@ public class RegistroEntradaFormController extends BaseController {
 
         registroEntradaValidator.validate(registro, result);
 
-        if (result.hasErrors()) { // Si hay errores volvemos a la vista del formulario
+        // Actualizamos los Interesados modificados, en el caso que de un RE Pendiente.
+        Boolean errorInteresado = false;
+        if(registro.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE)){
+            List<Interesado> interesados = registroDetalleEjb.findById(registro.getRegistroDetalle().getId()).getInteresados();
+            registro.getRegistroDetalle().setInteresados(interesados);
+
+            if(interesados == null || interesados.size() == 0){
+                errorInteresado = true;
+            }
+        }
+
+        if (result.hasErrors() || errorInteresado) { // Si hay errores volvemos a la vista del formulario
+
+            // Si no hay ningún interesado, generamos un error.
+            if(errorInteresado){
+                model.addAttribute("errorInteresado", errorInteresado);
+            }
+
             model.addAttribute(getOficinaActiva(request));
             model.addAttribute(getUsuarioAutenticado(request));
             model.addAttribute(getEntidadActiva(request));
@@ -433,15 +448,20 @@ public class RegistroEntradaFormController extends BaseController {
         // Gestionamos el Organismo, determinando si es Interno o Externo
         Organismo orgDestino = organismoEjb.findByCodigoVigente(organismoDestino.getCodigo());
         if(orgDestino != null){ // es interno
-          //log.info("orgDestino interno: " + orgDestino.getDenominacion());
           registroEntrada.setDestino(orgDestino);
           registroEntrada.setDestinoExternoCodigo(null);
           registroEntrada.setDestinoExternoDenominacion(null);
+
         } else { // es externo
-           //log.info("orgDestino externo: " + registroEntrada.getDestino().getDenominacion());
-           registroEntrada.setDestinoExternoCodigo(registroEntrada.getDestino().getCodigo());
-           registroEntrada.setDestinoExternoDenominacion(registroEntrada.getDestino().getDenominacion());
-           registroEntrada.setDestino(null);
+            registroEntrada.setDestino(null);
+
+            registroEntrada.setDestinoExternoCodigo(registroEntrada.getDestino().getCodigo());
+            if(registroEntrada.getId()!= null){//es una modificación
+                registroEntrada.setDestinoExternoDenominacion(registroEntrada.getDestinoExternoDenominacion());
+            }else{
+                registroEntrada.setDestinoExternoDenominacion(registroEntrada.getDestino().getDenominacion());
+            }
+
         }
 
         // Cogemos los dos posibles campos
@@ -455,15 +475,19 @@ public class RegistroEntradaFormController extends BaseController {
           if(!oficinaOrigen.getCodigo().equals("-1")){ // si han indicado oficina origen
               Oficina ofiOrigen = oficinaEjb.findByCodigo(oficinaOrigen.getCodigo());
               if(ofiOrigen != null){ // Es interna
-               // log.info("oficina interna");
+
                 registroEntrada.getRegistroDetalle().setOficinaOrigen(ofiOrigen);
                 registroEntrada.getRegistroDetalle().setOficinaOrigenExternoCodigo(null);
                 registroEntrada.getRegistroDetalle().setOficinaOrigenExternoDenominacion(null);
-              } else {  // es interna
-                // log.info("oficina externo");
-                 registroEntrada.getRegistroDetalle().setOficinaOrigenExternoCodigo(registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo());
-                 registroEntrada.getRegistroDetalle().setOficinaOrigenExternoDenominacion(registroEntrada.getRegistroDetalle().getOficinaOrigen().getDenominacion());
-                 registroEntrada.getRegistroDetalle().setOficinaOrigen(null);
+              } else {  // es externa
+                  registroEntrada.getRegistroDetalle().setOficinaOrigen(null);
+                  registroEntrada.getRegistroDetalle().setOficinaOrigenExternoCodigo(registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo());
+                  if(registroEntrada.getId()!= null){//es una modificación
+                      registroEntrada.getRegistroDetalle().setOficinaOrigenExternoDenominacion(registroEntrada.getRegistroDetalle().getOficinaOrigenExternoDenominacion());
+                  }else{
+                      registroEntrada.getRegistroDetalle().setOficinaOrigenExternoDenominacion(registroEntrada.getRegistroDetalle().getOficinaOrigen().getDenominacion());
+                  }
+
               }
           }else { // No han indicado oficina de origen
                registroEntrada.getRegistroDetalle().setOficinaOrigen(null);

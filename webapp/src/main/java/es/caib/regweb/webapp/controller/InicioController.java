@@ -3,7 +3,6 @@ package es.caib.regweb.webapp.controller;
 import es.caib.regweb.model.*;
 import es.caib.regweb.model.utils.RegistroBasico;
 import es.caib.regweb.persistence.ejb.*;
-import es.caib.regweb.persistence.utils.Paginacion;
 import es.caib.regweb.utils.RegwebConstantes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,7 +11,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -60,32 +58,13 @@ public class InicioController extends BaseController{
         // Solo obtenemos los datos para el dashboard si el Usuario es Operador
         if(isOperador(request) && oficinaActiva != null){
 
-            UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByUsuarioEntidad(getUsuarioAutenticado(request).getId(), getEntidadActiva(request).getId());
             List<Libro> librosAdministrados = getLibrosAdministrados(request);
-
-            /* Últimos Registros de entrada y salida */
-            List<RegistroBasico> registroEntradas = registroEntradaEjb.getUltimosRegistros(oficinaActiva.getId(), RegwebConstantes.REGISTROS_PANTALLA_INICIO);
-            List<RegistroBasico> registroSalidas = registroSalidaEjb.getUltimosRegistros(oficinaActiva.getId(), RegwebConstantes.REGISTROS_PANTALLA_INICIO);
-            model.addAttribute("registroEntradas", registroEntradas);
-            model.addAttribute("registroSalidas", registroSalidas);
-
-            // Alta en tabla LOPD de los registros mostrados en la página de Inicio, de Entrada y de Salida
-            Paginacion paginacionEntrada = new Paginacion(0, 0);
-            List<Object> entradasList = new ArrayList<Object>(registroEntradas);
-            paginacionEntrada.setListado(entradasList);
-            //lopdEjb.insertarRegistrosEntrada(paginacionEntrada, usuarioEntidad.getId());
-            Paginacion paginacionSalida = new Paginacion(0, 0);
-            List<Object> salidasList = new ArrayList<Object>(registroSalidas);
-            paginacionSalida.setListado(salidasList);
-            //lopdEjb.insertarRegistrosSalida(paginacionSalida, usuarioEntidad.getId());
-
 
             /*Registros Pendientes de Visar y con Reserva de Numero*/
             if(librosAdministrados!= null && librosAdministrados.size() > 0){
-                List<RegistroBasico> pendientesVisar = registroEntradaEjb.getByLibrosEstado(librosAdministrados, RegwebConstantes.ESTADO_PENDIENTE_VISAR);
+                //List<RegistroBasico> pendientesVisar = registroEntradaEjb.getByLibrosEstado(librosAdministrados, RegwebConstantes.ESTADO_PENDIENTE_VISAR);
+                //model.addAttribute("pendientesVisar", pendientesVisar);
                 List<RegistroBasico> pendientes = registroEntradaEjb.getByOficinaEstado(oficinaActiva.getId(), RegwebConstantes.ESTADO_PENDIENTE, RegwebConstantes.REGISTROS_PANTALLA_INICIO);
-
-                model.addAttribute("pendientesVisar", pendientesVisar);
                 model.addAttribute("pendientes", pendientes);
             }
 

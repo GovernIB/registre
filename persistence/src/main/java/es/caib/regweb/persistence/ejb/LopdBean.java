@@ -33,9 +33,6 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
     @PersistenceContext(unitName="regweb")
     private EntityManager em;
 
-    @EJB(mappedName = "regweb/LopdEJB/local")
-    public LopdLocal lopdEjb;
-
     @EJB(mappedName = "regweb/RegistroEntradaEJB/local")
     public RegistroEntradaLocal registroEntradaEjb;
 
@@ -142,7 +139,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         lopd.setUsuario(usuarioEntidad);
         lopd.setAccion(RegwebConstantes.LOPD_CONSULTA);
 
-        lopdEjb.persist(lopd);
+        persist(lopd);
     }
 
     @Override
@@ -162,7 +159,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
             lopd.setUsuario(usuarioEntidad);
             lopd.setAccion(RegwebConstantes.LOPD_LISTADO);
 
-            lopdEjb.persist(lopd);
+            persist(lopd);
         }
     }
 
@@ -181,7 +178,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         lopd.setUsuario(usuarioEntidad);
         lopd.setAccion(RegwebConstantes.LOPD_CONSULTA);
 
-        lopdEjb.persist(lopd);
+        persist(lopd);
     }
 
     @Override
@@ -201,7 +198,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
             lopd.setUsuario(usuarioEntidad);
             lopd.setAccion(RegwebConstantes.LOPD_LISTADO);
 
-            lopdEjb.persist(lopd);
+            persist(lopd);
         }
     }
 

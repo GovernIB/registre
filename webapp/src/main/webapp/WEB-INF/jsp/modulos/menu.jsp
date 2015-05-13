@@ -1,4 +1,5 @@
-﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+﻿<%@ page import="es.caib.regweb.utils.Configuracio" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 
 <div class="container-fluid">
@@ -31,7 +32,12 @@
 
                 <%--MENÚ USUARIO--%>
                 <li class="dropdown">
-                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> ${usuarioAutenticado.nombreCompleto} <i class="fa fa-caret-down"></i></a>
+                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
+                       <i class="fa fa-user"></i>
+                       ${usuarioAutenticado.nombreCompleto}
+                       <%-- ${loginInfo.usuarioAutenticado.nombreCompleto} --%> 
+                       <i class="fa fa-caret-down"></i>
+                    </a>
                     <ul class="dropdown-menu">
                         <c:if test="${pageContext.response.locale == 'ca'}">
                             <li><a href="<c:url value="${requestScope.requestURI}?lang=es"/>"><i class="fa fa-bullhorn"></i> <spring:message code="menu.idioma.castellano"/></a></li>
@@ -39,14 +45,20 @@
                         <c:if test="${pageContext.response.locale == 'es'}">
                             <li><a href="<c:url value="${requestScope.requestURI}?lang=ca"/>"><i class="fa fa-bullhorn"></i> <spring:message code="menu.idioma.catalan"/></a></li>
                         </c:if>
-                        <li><a href="<c:url value="/usuario/${usuarioAutenticado.id}/edit"/>"><i class="fa fa-gear"></i> <spring:message code="menu.configuracion"/></a></li>
+                        <li>
+                        <%--    <a href="<c:url value="/usuario/${loginInfo.usuarioAutenticado.id}/edit"/>"> --%>
+                            <a href="<c:url value="/usuario/${usuarioAutenticado.id}/edit"/>">
+                              <i class="fa fa-gear"></i>
+                               <spring:message code="menu.configuracion"/>
+                            </a>
+                        </li>
 
                     </ul>
                 </li>
 
 
                 <%--MENÚ ENTIDADES ADMINISTRADOR--%>
-                <c:if test="${rolAutentidado.nombre == 'RWE_ADMIN' || rolAutentidado.nombre == 'RWE_USUARI'}">
+                <c:if test="${rolAutenticado.nombre == 'RWE_ADMIN' || rolAutenticado.nombre == 'RWE_USUARI'}">
                     <sec:authorize access="hasAnyRole('RWE_ADMIN','RWE_USUARI')">
                         <c:if test="${fn:length(entidades) > 1}">
 
@@ -67,7 +79,7 @@
                 </c:if>
 
                 <%--MENÚ OFICINAS--%>
-                <c:if test="${rolAutentidado.nombre == 'RWE_USUARI'}">
+                <c:if test="${rolAutenticado.nombre == 'RWE_USUARI'}">
                     <sec:authorize access="hasRole('RWE_USUARI')">
                         <c:if test="${fn:length(oficinas) > 1}">
 
@@ -87,18 +99,18 @@
                 </c:if>
 
                 <%--MENÚ ROLES DE USUARIO--%>
-                <c:if test="${fn:length(rolesAutentidado) == 1}">
-                    <li class="dropdown"><a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-lock"></i> ${rolAutentidado.descripcion}</a></li>
+                <c:if test="${fn:length(rolesAutenticado) == 1}">
+                    <li class="dropdown"><a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-lock"></i> ${rolAutenticado.descripcion}</a></li>
                 </c:if>
 
-                <c:if test="${fn:length(rolesAutentidado) > 1}">
+                <c:if test="${fn:length(rolesAutenticado) > 1}">
 
                     <li class="dropdown">
-                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-lock"></i> ${rolAutentidado.descripcion} <i class="fa fa-caret-down"></i></a>
+                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-lock"></i> ${rolAutenticado.descripcion} <i class="fa fa-caret-down"></i></a>
                         <ul class="dropdown-menu">
 
-                            <c:forEach var="rol" items="${rolesAutentidado}">
-                                <c:if test="${rol.id != rolAutentidado.id}">
+                            <c:forEach var="rol" items="${rolesAutenticado}">
+                                <c:if test="${rol.id != rolAutenticado.id}">
                                     <li><a href="<c:url value="/rol/${rol.id}"/>"><i class="fa fa-briefcase"></i> ${rol.descripcion}</a></li>
                                 </c:if>
                             </c:forEach>
@@ -116,7 +128,7 @@
             <div class="user-nav pull-right navbar-right">
 
                 <%--MENÚ REGISTRO ENTRADA Y SALIDA--%>
-                <c:if test="${rolAutentidado.nombre == 'RWE_USUARI'}">
+                <c:if test="${rolAutenticado.nombre == 'RWE_USUARI'}">
                     <sec:authorize access="hasRole('RWE_USUARI')">
 
                         <div class="btn-group">
@@ -131,10 +143,17 @@
                                     <li class="divider"></li>
                                     <li class="submenu-complet"><a href="<c:url value="/preRegistro/list"/>"><spring:message code="preRegistro.listado"/></a></li>
                                 </c:if>
+
+                                <%if(Configuracio.isCAIB()){%>
+                                    <li class="submenu-complet"><a href="<%=Configuracio.getUrlPreregistre()%>" target="_blank"><spring:message code="regweb.preregistro.caib"/></a></li>
+                                <%}%>
+
                                 <li class="divider"></li>
                                 <li class="dropdown-submenu-left toggle-left">
-                                    <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> Oficios</a>
+                                    <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> <spring:message code="oficioRemision.oficiosRemision"/></a>
                                     <ul class="dropdown-menu">
+                                        <li><a href="<c:url value="/oficioRemision/oficiosPendientesLlegada"/>"><spring:message code="oficioRemision.pendientesLlegada"/></a></li>
+                                        <li class="divider"></li>
                                         <li><a href="<c:url value="/oficioRemision/oficiosPendientesRemisionInterna"/>"><spring:message code="registroEntrada.oficiosRemisionInterna"/></a></li>
                                         <li><a href="<c:url value="/oficioRemision/oficiosPendientesRemisionExterna"/>"><spring:message code="registroEntrada.oficiosRemisionExterna"/></a></li>
                                         <li><a href="<c:url value="/oficioRemision/list"/>"><spring:message code="oficioRemision.listado"/></a></li>
@@ -163,12 +182,12 @@
                                     <li class="submenu-complet"><a href="<c:url value="/persona/list"/>"><spring:message code="menu.personas"/></a></li>
                                 </c:if>
                                 <li class="submenu-complet"><a href="<c:url value="/repro/list"/>"><spring:message code="menu.repros"/></a></li>
-                                <c:if test="${fn:length(oficinasAdministradas) > 0}">
+
+                                <c:if test="${oficinaActiva != null}">
                                     <li class="divider"></li>
                                     <li class="dropdown-submenu-left toggle-left">
                                         <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> <spring:message code="menu.estadisticas"/></a>
                                         <ul class="dropdown-menu">
-                                            <%--<li><a href="<c:url value="/informe/indicador"/>">Informe d'indicadors</a></li>--%>
                                             <li><a href="<c:url value="/informe/libroRegistro"/>"><spring:message code="menu.libro"/></a></li>
                                         </ul>
                                     </li>
@@ -197,7 +216,7 @@
 
                 <%--MENÚ ADMINISTRACIÓN ENTIDADES--%>
                 <sec:authorize access="hasRole('RWE_ADMIN')">
-                    <c:if test="${rolAutentidado.nombre == 'RWE_ADMIN'}">
+                    <c:if test="${rolAutenticado.nombre == 'RWE_ADMIN'}">
                         <c:if test="${entidadActiva != null}">
 
                             <div class="btn-group">
@@ -249,7 +268,7 @@
                 </sec:authorize>
 
                 <%--MENÚ ADMINISTRACIÓN--%>
-                <c:if test="${rolAutentidado.nombre == 'RWE_SUPERADMIN'}">
+                <c:if test="${rolAutenticado.nombre == 'RWE_SUPERADMIN'}">
                     <div class="btn-group">
                         <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown">
                             <spring:message code="menu.configuracion"/> <span class="caret"></span>

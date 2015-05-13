@@ -157,7 +157,13 @@
                     </div>
 
                     <div class="panel-footer">
-                        <button type="button" onclick="goTo('/regweb/registroEntrada/new')" class="btn btn-info btn-sm btn-block"><spring:message code="registroEntrada.nuevo"/></button>
+                        <c:if test="${registro.estado != RegwebConstantes.ESTADO_PENDIENTE}">
+                            <button type="button" onclick="goTo('/regweb/registroEntrada/new')" class="btn btn-info btn-sm btn-block"><spring:message code="registroEntrada.nuevo"/></button>
+                        </c:if>
+
+                        <c:if test="${registro.estado == RegwebConstantes.ESTADO_PENDIENTE}">
+                            <button type="button" onclick="goTo('/regweb/registroEntrada/reserva')" class="btn btn-info btn-sm btn-block"><spring:message code="registroEntrada.reserva.nuevo"/></button>
+                        </c:if>
                     </div>
 
                 </div>
@@ -282,7 +288,7 @@
         <c:if test="${not empty trazabilidades}">
 
             <div class="col-xs-8 pull-right">
-                                       In
+
                 <div class="panel panel-info">
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-clock-o fa-fw"></i> <strong><spring:message code="registroEntrada.trazabilidad"/></strong></h3>
@@ -524,36 +530,8 @@
         $(elemento).show();
     }
 
-    /* INTERESADOS REGISTRO ENTRADA */
-    <c:if test="${registro.estado == 1 || registro.estado == 2}">
-        // Mostramos los Interesados del RegistroEntrada
-        <c:forEach var="interesado" items="${registro.registroDetalle.interesados}">
-            <c:if test="${!interesado.isRepresentante}">
-                <c:choose>
-                    <c:when test="${interesado.tipo == RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION}">
-                        var nombre = '<c:out value="${interesado.nombre}" escapeXml="true"/>';
-                        nombre = nombre.replace(/\"/g,'&quot;');
-                        nombre = nombre.replace(/'/g, "\\'");
-                        addOrganismoInteresadoHtml('${interesado.codigoDir3}',nombre,'<spring:message code="interesado.administracion"/>','${registro.registroDetalle.id}');
-                    </c:when>
-                    <c:when test="${interesado.tipo == RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA}">
-                        addInteresadoRepresentanteHtml('${interesado.id}','<c:out value="${interesado.nombrePersonaFisica}" escapeXml="true"/>','<spring:message code="persona.fisica"/>' ,'${interesado.representante.id}','${registro.registroDetalle.id}');
-                    </c:when>
-                    <c:when test="${interesado.tipo == RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA}">
-                        addInteresadoRepresentanteHtml('${interesado.id}','<c:out value="${interesado.nombrePersonaJuridica}" escapeXml="true"/>','<spring:message code="persona.juridica"/>' ,'${interesado.representante.id}','${registro.registroDetalle.id}');
-                    </c:when>
-                </c:choose>
-            </c:if>
-        </c:forEach>
-
-        <%--<c:forEach var="interesado" items="${registro.registroDetalle.interesados}">
-        // Representantes
-            <c:if test="${interesado.isRepresentante}">
-                addRepresentanteHtml('${interesado.id}','${interesado.representado.id}','${registro.registroDetalle.id}');
-            </c:if>
-        </c:forEach>--%>
-
-    </c:if>
+    /*  CARGA DE INTERESADOS REGISTRO ENTRADA DESDE LA BBDD */
+    <c:import url="../registro/addInteresadosBbdd.jsp"/>
 
 </script>
 

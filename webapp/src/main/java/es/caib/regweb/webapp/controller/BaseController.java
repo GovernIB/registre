@@ -35,9 +35,6 @@ public class BaseController {
     @EJB(mappedName = "regweb/OficinaEJB/local")
     public OficinaLocal oficinaEjb;
 
-    @EJB(mappedName = "regweb/RegistroMigradoEJB/local")
-    public RegistroMigradoLocal registroMigradoEjb;
-
     @EJB(mappedName = "regweb/InteresadoEJB/local")
     public InteresadoLocal interesadoEjb;
 
@@ -249,7 +246,7 @@ public class BaseController {
         Oficina oficinaActiva = getOficinaActiva(request);
 
         // Obtenemos los Organismos a los que da servicio una Oficina
-        Set<Organismo> organismos = getOrganismosFuncionales(oficinaActiva);
+        Set<Organismo> organismos = oficinaActiva.getOrganismosFuncionales();
 
         return permisoLibroUsuarioEjb.getLibrosOrganismoPermiso(organismos, usuarioEntidad, RegwebConstantes.PERMISO_REGISTRO_ENTRADA);
     }
@@ -268,7 +265,7 @@ public class BaseController {
         Oficina oficinaActiva = getOficinaActiva(request);
 
         // Obtenemos los Organismos a los que da servicio una Oficina
-        Set<Organismo> organismos = getOrganismosFuncionales(oficinaActiva);
+        Set<Organismo> organismos = oficinaActiva.getOrganismosFuncionales();
 
         return permisoLibroUsuarioEjb.getLibrosOrganismoPermiso(organismos, usuarioEntidad, RegwebConstantes.PERMISO_REGISTRO_SALIDA);
     }
@@ -288,30 +285,6 @@ public class BaseController {
 
 
         return permisoLibroUsuarioEjb.getLibrosEntidadPermiso(entidadActiva.getId(), usuarioEntidad, RegwebConstantes.PERMISO_CONSULTA_REGISTRO_SALIDA);
-    }
-
-    /**
-     * Obtenemos los Organismos a los que da servicio una Oficia
-     * @param oficinaActiva
-     * @return
-     * @throws Exception
-     */
-    protected Set<Organismo> getOrganismosFuncionales(Oficina oficinaActiva) throws Exception{
-
-        // Listado de Organismos
-        Set<Organismo> organismos = new HashSet<Organismo>();
-
-        // Añadimos el Organismo responsable de la OficinaActiva
-        Organismo organismoResponsable = oficinaActiva.getOrganismoResponsable();
-        organismos.add(organismoResponsable);
-
-        // Añadimos los Organismos a los que la Oficina da servicio
-        Set<RelacionOrganizativaOfi> organismosFuncionales = oficinaActiva.getOrganizativasOfi();
-        for(RelacionOrganizativaOfi relacionOrganizativaOfi:organismosFuncionales){
-            organismos.add(relacionOrganizativaOfi.getOrganismo());
-        }
-
-        return  organismos;
     }
 
     /**

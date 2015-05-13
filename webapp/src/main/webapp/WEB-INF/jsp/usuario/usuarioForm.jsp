@@ -140,13 +140,13 @@
                 <!-- Botonera -->
                 <input type="submit" value="<spring:message code="regweb.guardar"/>" onclick="" class="btn btn-warning btn-sm"/>
 
-                <c:if test="${rolAutentidado.nombre == 'RWE_USUARI'}">
+                <c:if test="${rolAutenticado.nombre == 'RWE_USUARI'}">
                     <input type="button" value="<spring:message code="regweb.cancelar"/>" onclick="goTo('<c:url value="/inici"/>')" class="btn btn-sm">
                 </c:if>
-                <c:if test="${rolAutentidado.nombre == 'RWE_ADMIN'}">
+                <c:if test="${rolAutenticado.nombre == 'RWE_ADMIN'}">
                     <input type="button" value="<spring:message code="regweb.cancelar"/>" onclick="goTo('<c:url value="/entidad/usuarios"/>')" class="btn btn-sm">
                 </c:if>
-                <c:if test="${rolAutentidado.nombre == 'RWE_SUPERADMIN'}">
+                <c:if test="${rolAutenticado.nombre == 'RWE_SUPERADMIN'}">
                     <input type="button" value="<spring:message code="regweb.cancelar"/>" onclick="goTo('<c:url value="/usuario/list"/>')" class="btn btn-sm">
                     <c:if test="${not empty usuario.id}">
                         <input type="button" value="<spring:message code="regweb.eliminar"/>" onclick='javascript:confirm("<c:url value="/usuario/${usuario.id}/delete"/>","<spring:message code="regweb.confirmar.eliminacion" htmlEscape="true"/>")' class="btn btn-danger btn-sm"/>

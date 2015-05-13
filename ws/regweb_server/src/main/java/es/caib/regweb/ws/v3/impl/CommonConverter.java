@@ -5,7 +5,6 @@ import es.caib.regweb.persistence.ejb.*;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.ws.converter.AnexoConverter;
 import es.caib.regweb.ws.model.*;
-
 import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import java.util.ArrayList;
@@ -123,6 +122,13 @@ public class CommonConverter {
     }
     return localidad.getEntidadGeografica().getCodigoEntidadGeografica();
   }
+
+    public static Oficina getOficina(String oficinaCodigoDir3, OficinaLocal oficinaEjb) throws Exception {
+        if (oficinaCodigoDir3 == null) {
+            return null;
+        }
+        return oficinaEjb.findByCodigo(oficinaCodigoDir3);
+    }
   
   
   public static LibroWs getLibroWs(Libro libro) {
@@ -147,9 +153,9 @@ public class CommonConverter {
 
     TipoAsuntoWs taWs = new TipoAsuntoWs();
 
-    taWs.setActivo(tipoAsunto.getActivo() == null? false: tipoAsunto.getActivo());
+    taWs.setActivo(tipoAsunto.getActivo() == null ? false : tipoAsunto.getActivo());
     taWs.setCodigo(tipoAsunto.getCodigo());
-    taWs.setNombre(((TraduccionTipoAsunto)tipoAsunto.getTraduccion(idioma)).getNombre());
+    taWs.setNombre(((TraduccionTipoAsunto) tipoAsunto.getTraduccion(idioma)).getNombre());
 
     return taWs;
   }
@@ -181,6 +187,19 @@ public class CommonConverter {
     
     return taWs;
   }
+
+    public static OficinaWs getOficinaWs(Oficina oficina) {
+        if (oficina == null) {
+            return null;
+        }
+
+        OficinaWs oficinaWs = new OficinaWs();
+
+        oficinaWs.setCodigo(oficina.getCodigo());
+        oficinaWs.setNombre(oficina.getDenominacion());
+
+        return oficinaWs;
+    }
   
   public static TipoDocumental getTipoDocumental(String tipoDocCodigoNTI,
       TipoDocumentalLocal tipoDocumentalEjb) throws Exception {

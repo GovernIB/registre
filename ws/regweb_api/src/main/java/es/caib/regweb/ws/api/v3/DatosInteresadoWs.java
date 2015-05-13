@@ -3,7 +3,6 @@ package es.caib.regweb.ws.api.v3;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -32,7 +31,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="provincia" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
  *         &lt;element name="razonSocial" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="telefono" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="tipoDocumentoIdentificacion" type="{http://www.w3.org/2001/XMLSchema}unsignedShort" minOccurs="0"/>
+ *         &lt;element name="tipoDocumentoIdentificacion" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="tipoInteresado" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
@@ -79,8 +78,7 @@ public class DatosInteresadoWs {
     protected Long provincia;
     protected String razonSocial;
     protected String telefono;
-    @XmlSchemaType(name = "unsignedShort")
-    protected Integer tipoDocumentoIdentificacion;
+    protected String tipoDocumentoIdentificacion;
     protected Long tipoInteresado;
 
     /**
@@ -448,10 +446,10 @@ public class DatosInteresadoWs {
      * 
      * @return
      *     possible object is
-     *     {@link Integer }
+     *     {@link String }
      *     
      */
-    public Integer getTipoDocumentoIdentificacion() {
+    public String getTipoDocumentoIdentificacion() {
         return tipoDocumentoIdentificacion;
     }
 
@@ -460,10 +458,10 @@ public class DatosInteresadoWs {
      * 
      * @param value
      *     allowed object is
-     *     {@link Integer }
+     *     {@link String }
      *     
      */
-    public void setTipoDocumentoIdentificacion(Integer value) {
+    public void setTipoDocumentoIdentificacion(String value) {
         this.tipoDocumentoIdentificacion = value;
     }
 

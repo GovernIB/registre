@@ -54,7 +54,7 @@ public interface PermisoLibroUsuarioLocal extends BaseEjb<PermisoLibroUsuario, L
     public List<UsuarioEntidad> getUsuariosEntidadByLibro( Long idLibro) throws Exception;
 
     /**
-     * Retorna los {@link es.caib.regweb.model.Libro} en los que un Usuario tiene permisos de Registro de Entrada y Salida
+     * Retorna los {@link es.caib.regweb.model.Libro} en los que un Usuario tiene permisos de Registro de Entrada o Salida
      * @param idUsuarioEntidad
      * @return
      * @throws Exception
@@ -68,38 +68,6 @@ public interface PermisoLibroUsuarioLocal extends BaseEjb<PermisoLibroUsuario, L
      * @throws Exception
      */
     public List<Libro> getLibrosAdministrados(Long idUsuarioEntidad) throws Exception;
-
-    /**
-     * Retorna los {@link es.caib.regweb.model.Libro} de una Entidad a los que el Usuario puede hacer un RegistroEntrada
-     * @param idUsuarioEntidad
-     * @return
-     * @throws Exception
-     */
-    public List<Libro> getLibrosRegistroEntrada(Long idUsuarioEntidad) throws Exception;
-
-    /**
-     * Retorna los {@link es.caib.regweb.model.Libro} de una Entidad a los que el Usuario puede hacer un RegistroSalida
-     * @param idUsuarioEntidad
-     * @return
-     * @throws Exception
-     */
-    public List<Libro> getLibrosRegistroSalida(Long idUsuarioEntidad) throws Exception;
-
-    /**
-     * Retorna los {@link es.caib.regweb.model.Libro} a los que un UsuarioEntidad puede Consultar sus RegistroEntrada
-     * @param idUsuarioEntidad
-     * @return
-     * @throws Exception
-     */
-    public List<Libro> getLibrosConsultaEntrada(Long idUsuarioEntidad) throws Exception;
-
-    /**
-     * Retorna los {@link es.caib.regweb.model.Libro} a los que un UsuarioEntidad puede Consultar sus RegistroSalida
-     * @param idUsuarioEntidad
-     * @return
-     * @throws Exception
-     */
-    public List<Libro> getLibrosConsultaSalida(Long idUsuarioEntidad) throws Exception;
 
     /**
      * Retorna los {@link es.caib.regweb.model.Libro} a los que un UsuarioEntidad
@@ -162,5 +130,33 @@ public interface PermisoLibroUsuarioLocal extends BaseEjb<PermisoLibroUsuario, L
      * @throws Exception
      */
     public List<UsuarioEntidad> getUsuariosEntidadEnLibros(List<Libro> libros) throws Exception;
+
+    /**
+     * Modifica el estado de un Permiso que tiene un Usuario sobre un Libro
+     * @param idPermisoLibroUsuario
+     * @param activo
+     * @throws Exception
+     */
+    public void actualizarPermiso(Long idPermisoLibroUsuario, Boolean activo) throws Exception;
+
+    /**
+     * Retorna los {@link es.caib.regweb.model.Libro} de una Entidad donde un UsuarioEntidad tiene permisos creados
+     * según el permiso que se le pasa por parámetro.
+     * @param idEntidad
+     * @param usuario
+     * @return
+     * @throws Exception
+     */
+    public List<Libro> getLibrosConPermisoCreado(Long idEntidad, UsuarioEntidad usuario) throws Exception;
+
+    /**
+     * Retorna los {@link es.caib.regweb.model.Libro} de una Entidad donde un UsuarioEntidad NO tiene permisos creados
+     * según el permiso que se le pasa por parámetro.
+     * @param idEntidad
+     * @param usuario
+     * @return
+     * @throws Exception
+     */
+    public List<Libro> getLibrosSinPermisoCreado(Long idEntidad, UsuarioEntidad usuario) throws Exception;
 
 }

@@ -1,21 +1,14 @@
 package es.caib.regweb.ws.v3.impl;
 
-import java.util.List;
-
-
 import es.caib.regweb.utils.RegwebConstantes;
-import es.caib.regweb.ws.model.CodigoAsuntoWs;
-import es.caib.regweb.ws.model.LibroWs;
-import es.caib.regweb.ws.model.OrganismoWs;
-
-import es.caib.regweb.ws.model.TipoAsuntoWs;
-
+import es.caib.regweb.ws.model.*;
 import org.fundaciobit.genapp.common.ws.WsI18NException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
+import java.util.List;
 
 /**
  * Created by Fundació BIT.
@@ -27,8 +20,7 @@ public interface RegWebInfoWs {
 
 
     /**
-     * 
-     * @param usuario
+     *
      * @param entidadCodigoDir3
      * @return
      * @throws Throwable
@@ -36,26 +28,42 @@ public interface RegWebInfoWs {
      */
     @RolesAllowed({ RegwebConstantes.ROL_USUARI })
     @WebMethod
-    public List<TipoAsuntoWs> listarTipoAsunto(
-         @WebParam(name = "usuario") String usuario,
-         @WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3)
+    public List<TipoAsuntoWs> listarTipoAsunto(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3)
       throws Throwable, WsI18NException;
     
 
     @WebMethod
-    public List<CodigoAsuntoWs> listarCodigoAsunto(
-         @WebParam(name = "usuario") String usuario,
-         @WebParam(name = "codigoTipoAsunto") String codigoTipoAsunto)
+    public List<CodigoAsuntoWs> listarCodigoAsunto(@WebParam(name = "codigoTipoAsunto") String codigoTipoAsunto)
       throws Throwable, WsI18NException;
-    
+
+    /**
+     * Obtiene las Oficinas donde el usuario tiene permisos para realizar Registros
+     * @param entidadCodigoDir3
+     * @param autorizacion
+     * @return
+     * @throws Throwable
+     * @throws WsI18NException
+     */
     @WebMethod
     @RolesAllowed({ RegwebConstantes.ROL_USUARI })
-    public List<LibroWs> listarLibros(
-        @WebParam(name = "usuario") String usuario,
-        @WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3,
-        @WebParam(name = "autorizacion") String autorizacion)
-    throws Throwable, WsI18NException;
-    
+    public List<OficinaWs> listarOficinas(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3,
+                                          @WebParam(name = "autorizacion") Long autorizacion) throws Throwable, WsI18NException;
+
+    /**
+     * Obtiene los Libros a los que una Oficina da servicio y en los que el UsuarioEntidad actual tiene permisos para registrar entradas
+     * @param entidadCodigoDir3
+     * @param oficinaCodigoDir3
+     * @param autorizacion
+     * @return
+     * @throws Throwable
+     * @throws WsI18NException
+     */
+    @WebMethod
+    @RolesAllowed({ RegwebConstantes.ROL_USUARI })
+    public List<LibroWs> listarLibros(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3,
+        @WebParam(name = "oficinaCodigoDir3") String oficinaCodigoDir3, @WebParam(name = "autorizacion") Long autorizacion) throws Throwable, WsI18NException;
+
+
     @WebMethod
     @RolesAllowed({ RegwebConstantes.ROL_USUARI })
     public List<OrganismoWs> listarOrganismos(        

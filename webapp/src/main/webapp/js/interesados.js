@@ -70,6 +70,7 @@ function addOrganismoInteresado(tipo,idRegistroDetalle){
 
     var denominacion = $('#organismoInteresado option:selected').text();
     var codigoDir3 = $('#organismoInteresado option:selected').val();
+    var denominacionCodificada = encodeURI($('#organismoInteresado option:selected').text());
 
     if(codigoDir3 != '-1'){
 
@@ -77,11 +78,11 @@ function addOrganismoInteresado(tipo,idRegistroDetalle){
             url: urlAddOrganismoInteresado,
             type: 'GET',
             dataType: 'json',
-            data: { codigoDir3: codigoDir3, denominacion:denominacion, idRegistroDetalle:idRegistroDetalle },
             contentType: 'application/json',
+            data: { codigoDir3: codigoDir3, denominacion: denominacionCodificada, idRegistroDetalle: idRegistroDetalle },
 
             success: function(result) {
-                addOrganismoInteresadoHtml(codigoDir3, denominacion,tipo,idRegistroDetalle);
+                addOrganismoInteresadoHtml(codigoDir3,denominacion,tipo,idRegistroDetalle);
             }
         });
     }

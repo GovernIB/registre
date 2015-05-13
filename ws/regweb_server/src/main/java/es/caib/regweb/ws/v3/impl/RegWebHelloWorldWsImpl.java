@@ -32,7 +32,7 @@ import es.caib.regweb.ws.utils.BaseWsImpl;
     transportGuarantee= TransportGuarantee.NONE,
     secureWSDLAccess = false
 )
-public class RegWebHelloWorldWsImpl extends BaseWsImpl {
+public class RegWebHelloWorldWsImpl extends BaseWsImpl implements RegWebHelloWorldWs {
   
   public static final String NAME = "RegWebHelloWorld";
   

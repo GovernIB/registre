@@ -35,7 +35,8 @@ import javax.validation.constraints.Null;
     + "Service")
 @WebContext(contextRoot = "/regweb/ws", urlPattern = "/v3/"
     + RegWebHelloWorldWithSecurityWsImpl.NAME, transportGuarantee = TransportGuarantee.NONE, secureWSDLAccess = false, authMethod = "WSBASIC")
-public class RegWebHelloWorldWithSecurityWsImpl extends AuthenticatedBaseWsImpl {
+public class RegWebHelloWorldWithSecurityWsImpl extends AuthenticatedBaseWsImpl
+  implements RegWebHelloWorldWithSecurityWs {
 
   public static final String NAME = "RegWebHelloWorldWithSecurity";
 
@@ -48,7 +49,7 @@ public class RegWebHelloWorldWithSecurityWsImpl extends AuthenticatedBaseWsImpl 
 
   @RolesAllowed({ RegwebConstantes.ROL_SUPERADMIN , RegwebConstantes.ROL_ADMIN, RegwebConstantes.ROL_USUARI})
   @WebMethod
-  public String echo(@WebParam (name ="echo") @Null String echo) throws Throwable {
+  public String echo(@WebParam (name ="echo") @Null String echo)  {
 
     log.info("RegWebHelloWorldWithSecurityWsImpl :: echo = " + echo);
     return "USER: " + wsContext.getUserPrincipal().getName() + " | ECHO: " + echo;

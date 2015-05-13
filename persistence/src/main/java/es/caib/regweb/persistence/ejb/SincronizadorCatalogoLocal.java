@@ -13,7 +13,7 @@ import javax.ejb.Local;
  * Date: 6/03/13
  */
 @Local
-@RolesAllowed({"RWE_ADMIN"})
+@RolesAllowed({"RWE_SUPERADMIN"})
 public interface SincronizadorCatalogoLocal {
 
   public Descarga sincronizarCatalogo() throws Exception;

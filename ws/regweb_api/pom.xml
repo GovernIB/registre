@@ -18,8 +18,26 @@
 
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  
+      <!-- JBoss dependency versions -->  
+      <version.org.jboss.spec.jboss.javaee.6.0>3.0.0.Final</version.org.jboss.spec.jboss.javaee.6.0> 
+		
     </properties>
+	
+	
+   <dependencyManagement>  
+      <dependencies>
+         <dependency>
+            <groupId>org.jboss.spec</groupId>
+            <artifactId>jboss-javaee-6.0</artifactId>
+            <version>${version.org.jboss.spec.jboss.javaee.6.0}</version>
+            <type>pom</type>
+            <scope>import</scope>
+         </dependency>
+      </dependencies>  
+   </dependencyManagement> 
+	
 	
     <build>
 
@@ -34,6 +52,8 @@
 				</configuration>
 			</plugin>
 			
+
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
@@ -45,17 +65,7 @@
 					  <goal>shade</goal>
 					</goals>
 					<configuration>
-					<!--
-					  <artifactSet>
-						<excludes>
-						  <exclude>log4j:log4j</exclude>
-						  <exclude>es.gob.afirma:afirma-miniapplet-full</exclude>
-						  <exclude>com.itextpdf:itextpdf</exclude>
-						  <exclude>org.bouncycastle:*</exclude>
-						  <exclude>es.caib.portafib:portafib-ws-indra-callback-api</exclude>
-						</excludes>
-					  </artifactSet>
-					  -->
+
 					  <filters>
 						<filter>
 						  <artifact>es.caib.regweb:regweb-utils</artifact>
@@ -119,9 +129,227 @@
 				</executions>
 			</plugin>
 			
-		</plugins>
+			
+	    </plugins>
+    </build>	
+			
+	<profiles>
+	  <profile>
+		<id>regenerateapi</id>
+		<activation>
+		   <activeByDefault>false</activeByDefault>
+		   <property>				    
+				<name>regenerateapi</name>
+			</property>
+		</activation>
+		<build>
+			<plugins>
+			
+			
+			<plugin>
+				<groupId>org.apache.cxf</groupId>
+				<artifactId>cxf-java2ws-plugin</artifactId>
+				<version>${cxf.version}</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.cxf</groupId>
+						<artifactId>cxf-rt-frontend-jaxws</artifactId>
+						<version>${cxf.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.apache.cxf</groupId>
+						<artifactId>cxf-rt-frontend-simple</artifactId>
+						<version>${cxf.version}</version>
+					</dependency>
+					<dependency>
+					   <groupId>es.caib.regweb</groupId>
+					   <artifactId>regweb-ws-server</artifactId>  
+					   <version>${project.version}</version>
+					   <scope>compile</scope>
+				   </dependency>
+				   
+				   <dependency>
+					  <groupId>org.fundaciobit.genapp</groupId>
+					  <artifactId>genapp-core</artifactId>
+					  <version>1.0</version>
+					  <scope>compile</scope>
+					</dependency>
+					<dependency>
+						<groupId>${project.groupId}</groupId>
+						<artifactId>regweb-model</artifactId>
+						<version>${project.version}</version>
+						<scope>compile</scope>
+					</dependency>
+					
+				</dependencies>
+			 
+				<executions>
 
-    </build>
+				    <execution>
+						<id>generate-wsdl-RegWebHelloWorldWs</id>
+						<phase>generate-sources</phase>
+						<configuration>
+							<className>es.caib.regweb.ws.v3.impl.RegWebHelloWorldWs</className>
+							<genWsdl>true</genWsdl>							
+							<verbose>true</verbose>
+							<frontend>jaxws</frontend>
+							<databinding>jaxb</databinding>
+							<outputFile>${basedir}/src/main/resources/wsdl/RegWebHelloWorld.wsdl</outputFile>
+							<argline>-s ${basedir}/code -portname RegWebHelloWorldWs -address http://localhost:8080/regweb/ws/v3/RegWebHelloWorld</argline>
+						</configuration>
+						<goals><goal>java2ws</goal></goals>
+					</execution>
+					<execution>
+						<id>generate-wsdl-RegWebHelloWorldWithSecurityWs</id>
+						<phase>generate-sources</phase>
+						<configuration>
+							<className>es.caib.regweb.ws.v3.impl.RegWebHelloWorldWithSecurityWs</className>
+							<genWsdl>true</genWsdl>							
+							<verbose>true</verbose>
+							<outputFile>${basedir}/src/main/resources/wsdl/RegWebHelloWorldWithSecurity.wsdl</outputFile>
+							<argline>-s ${basedir}/code -portname RegWebHelloWorldWithSecurityWs -address http://localhost:8080/regweb/ws/v3/RegWebHelloWorldWithSecurity</argline>
+						</configuration>
+						<goals><goal>java2ws</goal></goals>
+					</execution>
+					
+					<execution>
+						<id>generate-wsdl-RegWebInfoWs</id>
+						<phase>generate-sources</phase>
+						<configuration>
+							<className>es.caib.regweb.ws.v3.impl.RegWebInfoWs</className>
+							<genWsdl>true</genWsdl>							
+							<verbose>true</verbose>
+							<outputFile>${basedir}/src/main/resources/wsdl/RegWebInfo.wsdl</outputFile>
+							<argline>-s ${basedir}/code -portname RegWebInfoWs -address http://localhost:8080/regweb/ws/v3/RegWebInfo</argline>
+						</configuration>
+						<goals><goal>java2ws</goal></goals>
+					</execution>
+					<execution>
+						<id>generate-wsdl-RegWebPersonasWs</id>
+						<phase>generate-sources</phase>
+						<configuration>
+							<className>es.caib.regweb.ws.v3.impl.RegWebPersonasWs</className>
+							<genWsdl>true</genWsdl>							
+							<verbose>true</verbose>
+							<outputFile>${basedir}/src/main/resources/wsdl/RegWebPersonas.wsdl</outputFile>
+							<argline>-s ${basedir}/code -portname RegWebPersonasWs -address http://localhost:8080/regweb/ws/v3/RegWebPersonas</argline>
+						</configuration>
+						<goals><goal>java2ws</goal></goals>
+					</execution>
+					<execution>
+						<id>generate-wsdl-RegWebRegistroEntradaWs</id>
+						<phase>generate-sources</phase>
+						<configuration>
+							<className>es.caib.regweb.ws.v3.impl.RegWebRegistroEntradaWs</className>
+							<genWsdl>true</genWsdl>							
+							<verbose>true</verbose>
+							<outputFile>${basedir}/src/main/resources/wsdl/RegWebRegistroEntrada.wsdl</outputFile>
+							<argline>-s ${basedir}/code -portname RegWebRegistroEntradaWs -address http://localhost:8080/regweb/ws/v3/RegWebRegistroEntrada</argline>
+						</configuration>
+						<goals><goal>java2ws</goal></goals>
+					</execution>
+					<execution>
+						<id>generate-wsdl-RegWebRegistroSalidaWs</id>
+						<phase>generate-sources</phase>
+						<configuration>
+							<className>es.caib.regweb.ws.v3.impl.RegWebRegistroSalidaWs</className>
+							<genWsdl>true</genWsdl>							
+							<verbose>true</verbose>
+							<outputFile>${basedir}/src/main/resources/wsdl/RegWebRegistroSalida.wsdl</outputFile>
+							<argline>-s ${basedir}/code -portname RegWebRegistroSalidaWs -address http://localhost:8080/regweb/ws/v3/RegWebRegistroSalida</argline>
+						</configuration>
+						<goals><goal>java2ws</goal></goals>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<plugin>  
+				  <groupId>org.jboss.ws.plugins</groupId>  
+				  <artifactId>maven-jaxws-tools-plugin</artifactId>  
+				  <version>1.1.1.Final</version>  
+				  <configuration>  
+					<verbose>true</verbose>  
+					<goalPrefix>wsconsume</goalPrefix>	
+                    <extension>true</extension>					
+					<sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
+					<targetPackage>es.caib.regweb.ws.api.v3</targetPackage>
+				  </configuration>  
+				  <executions>  
+					<execution>  
+					  <id>WSDL to Java API RegWebHelloWorld</id>  
+					  <goals><goal>wsconsume</goal></goals>  
+					  <configuration>  
+						<wsdls> 
+						  <wsdl>${basedir}/src/main/resources/wsdl/RegWebHelloWorld.wsdl</wsdl>  
+     					</wsdls>
+						<wsdlLocation>http://localhost:8080/regweb/ws/v3/RegWebHelloWorld?wsdl</wsdlLocation>
+						<argLine>-n</argLine>
+					  </configuration>  
+					</execution> 
+					<execution>  
+					  <id>WSDL to Java API RegWebHelloWorldWithSecurity </id>  
+					  <goals><goal>wsconsume</goal></goals>  
+					  <configuration>  
+						<wsdls> 
+						  <wsdl>${basedir}/src/main/resources/wsdl/RegWebHelloWorldWithSecurity.wsdl</wsdl>  
+     					</wsdls>
+						<wsdlLocation>http://localhost:8080/regweb/ws/v3/RegWebHelloWorldWithSecurity?wsdl</wsdlLocation>
+						<argLine>-n</argLine>
+					  </configuration>  
+					</execution> 
+					<execution>  
+					  <id>WSDL to Java API RegWebInfo</id>  
+					  <goals><goal>wsconsume</goal></goals>  
+					  <configuration>  
+						<wsdls> 
+						  <wsdl>${basedir}/src/main/resources/wsdl/RegWebInfo.wsdl</wsdl>  
+     					</wsdls>
+						<wsdlLocation>http://localhost:8080/regweb/ws/v3/RegWebInfo?wsdl</wsdlLocation>
+						<argLine>-n</argLine>
+					  </configuration>  
+					</execution> 
+					<execution>  
+					  <id>WSDL to Java API RegWebPersonas </id>  
+					  <goals><goal>wsconsume</goal></goals>  
+					  <configuration>  
+						<wsdls> 
+						  <wsdl>${basedir}/src/main/resources/wsdl/RegWebPersonas.wsdl</wsdl>  
+     					</wsdls>
+						<wsdlLocation>http://localhost:8080/regweb/ws/v3/RegWebPersonas?wsdl</wsdlLocation>
+						<argLine>-n</argLine>
+					  </configuration>  
+					</execution> 
+					<execution>
+					  <id>WSDL to Java API RegWebRegistroEntrada</id>  
+					  <goals><goal>wsconsume</goal></goals>  
+					  <configuration>  
+						<wsdls> 
+						   <wsdl>${basedir}/src/main/resources/wsdl/RegWebRegistroEntrada.wsdl</wsdl>  
+     					</wsdls>
+						<wsdlLocation>http://localhost:8080/regweb/ws/v3/RegWebRegistroEntrada?wsdl</wsdlLocation>
+						<argLine>-n</argLine>
+					  </configuration>  
+					</execution> 
+					<execution>
+					  <id>WSDL to Java API RegWebRegistroSalida</id>  
+					  <goals><goal>wsconsume</goal></goals>  
+					  <configuration>  
+						<wsdls>
+						  <wsdl>${basedir}/src/main/resources/wsdl/RegWebRegistroSalida.wsdl</wsdl>
+     					</wsdls>
+						<wsdlLocation>http://localhost:8080/regweb/ws/v3/RegWebRegistroSalida?wsdl</wsdlLocation>
+						<argLine>-n</argLine>
+					  </configuration>  
+					</execution> 
+			
+				  </executions>  
+			</plugin> 
+
+		  </plugins>
+
+        </build>
+	  </profile>
+	</profiles>
 
 	
 	<repositories>
@@ -134,6 +362,14 @@
 	
 	
     <dependencies>
+	
+	   <dependency>  
+			<groupId>org.jboss.ws.cxf</groupId>  
+			<artifactId>jbossws-cxf-client</artifactId>  
+			<version>4.1.1.Final</version>  
+			<scope>provided</scope>  
+      </dependency>  
+	 
 
 		<dependency>
             <groupId>commons-io</groupId>
@@ -155,7 +391,7 @@
           <version>1.0</version>
 		  <scope>compile</scope>
 		</dependency>
-
+		
     </dependencies>
 
 </project>

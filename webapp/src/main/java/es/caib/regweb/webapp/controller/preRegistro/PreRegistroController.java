@@ -108,24 +108,6 @@ public class PreRegistroController extends BaseController {
 
     }
 
-    /**
-     * Listado de PreRegistro pendientes de procesar
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(value = "/preRegistrosPendientesProcesar", method = RequestMethod.GET)
-    public ModelAndView preRegistrosPendientesProcesar(Model model, HttpServletRequest request)throws Exception {
-
-        ModelAndView mav = new ModelAndView("preRegistro/preRegistrosPendientesProcesarList");
-
-        PreRegistroBusquedaForm preRegistroBusquedaForm = new PreRegistroBusquedaForm(new PreRegistro(),1);
-
-        model.addAttribute("preRegistroBusqueda", preRegistroBusquedaForm);
-        model.addAttribute("estado", "Pendiente");
-
-
-        return mav;
-    }
 
     /**
      * Realiza la busqueda de Listado de PreRegistro pendientes de procesar
@@ -136,7 +118,6 @@ public class PreRegistroController extends BaseController {
         ModelAndView mav = new ModelAndView("preRegistro/preRegistroList");
 
         PreRegistro preRegistro = busqueda.getPreRegistro();
-        //preRegistro.setEstado(new EstadoPreRegistro(RegwebConstantes.ESTADO_PREREGISTRO_PENDIENTE_PROCESAR)); // Fijamos el Estado Pendiente Procesar por defecto
 
         Oficina oficinaActiva = getOficinaActiva(request);
 

@@ -42,20 +42,15 @@ public class InformeController extends BaseController {
     
     @EJB(mappedName = "regweb/LopdEJB/local")
     public LopdLocal lopdEjb;
-    
- 
+
     @EJB(mappedName = "regweb/RegistroSalidaEJB/local")
     public RegistroSalidaLocal registroSalidaEjb;
     
     @EJB(mappedName = "regweb/RegistroEntradaEJB/local")
     public RegistroEntradaLocal registroEntradaEjb;
 
-    
     @EJB(mappedName = "regweb/TipoAsuntoEJB/local")
     public TipoAsuntoLocal tipoAsuntoEjb;
-    
-    @EJB(mappedName = "regweb/OficinaEJB/local")
-    public OficinaLocal oficinaEjb;
     
     @EJB(mappedName = "regweb/LibroEJB/local")
     public LibroLocal libroEjb;
@@ -66,8 +61,6 @@ public class InformeController extends BaseController {
     @EJB(mappedName = "regweb/RegistroLopdMigradoEJB/local")
     public RegistroLopdMigradoLocal registroLopdMigradoEjb;
 
-    @EJB(mappedName = "regweb/UsuarioEJB/local")
-    public UsuarioLocal usuarioEjb;
 
 
     /**
@@ -81,6 +74,7 @@ public class InformeController extends BaseController {
         InformeLibroBusquedaForm informeLibroBusquedaForm = new InformeLibroBusquedaForm();
         informeLibroBusquedaForm.setFechaFin(new Date());
         model.addAttribute("informeLibroBusquedaForm",informeLibroBusquedaForm);
+        model.addAttribute("libros", libros(request));
 
         return "informe/libroRegistro";
     }
@@ -111,7 +105,7 @@ public class InformeController extends BaseController {
         Date dataFi = RegistroUtils.ajustarHoraBusqueda(informeLibroBusquedaForm.getFechaFin());
 
         // REGISTROS DE ENTRADA
-        if(informeLibroBusquedaForm.getTipo() == 0){
+        if(informeLibroBusquedaForm.getTipo().equals(RegwebConstantes.REGISTRO_ENTRADA)){
 
             List<RegistroEntrada> registrosEntrada = registroEntradaEjb.buscaLibroRegistro(informeLibroBusquedaForm.getFechaInicio(), dataFi, informeLibroBusquedaForm.getLibros());
 
@@ -127,84 +121,72 @@ public class InformeController extends BaseController {
                         }else{
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("anyRe")){
+                    } else if(valorCamp.equals("anyRe")){
                         if(registroEntrada.getFecha() != null){
                             String anoRegistro = formatYear.format(registroEntrada.getFecha());
                             registrosLibro.get(i).add(anoRegistro);
                         }else{
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("estat")){
+                    } else if(valorCamp.equals("estat")){
                         registrosLibro.get(i).add(I18NUtils.tradueix("registro.estado." +  registroEntrada.getEstado()));
-                    }
-                    if(valorCamp.equals("exped")){
+                    } else if(valorCamp.equals("exped")){
                         if(registroEntrada.getRegistroDetalle().getExpediente() != null){
                             registrosLibro.get(i).add(registroEntrada.getRegistroDetalle().getExpediente());
                         }else{
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("extra")){
+                    } else if(valorCamp.equals("extra")){
                         if(registroEntrada.getRegistroDetalle().getExtracto() != null){
                             registrosLibro.get(i).add(registroEntrada.getRegistroDetalle().getExtracto());
                         }else{
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("data")){
+                    } else if(valorCamp.equals("data")){
                         if(registroEntrada.getFecha() != null){
                             String fechaRegistro = formatDate.format(registroEntrada.getFecha());
                             registrosLibro.get(i).add(fechaRegistro);
                         }else{
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("numRe")){
+                    } else if(valorCamp.equals("numRe")){
                         if(registroEntrada.getNumeroRegistro() != null){
                             registrosLibro.get(i).add(registroEntrada.getNumeroRegistro().toString());
                         }else{
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("ofici")){
+                    } else if(valorCamp.equals("ofici")){
                         if(registroEntrada.getOficina().getDenominacion() != null){
                             registrosLibro.get(i).add(registroEntrada.getOficina().getDenominacion());
                         }else{
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("tipAs")){
+                    } else if(valorCamp.equals("tipAs")){
                         if(registroEntrada.getRegistroDetalle().getTipoAsunto() != null){
                             TraduccionTipoAsunto traduccionTipoAsunto = (TraduccionTipoAsunto) registroEntrada.getRegistroDetalle().getTipoAsunto().getTraduccion();
                             registrosLibro.get(i).add(traduccionTipoAsunto.getNombre());
                         }else{
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("obser")){
+                    } else if(valorCamp.equals("obser")){
                         if(registroEntrada.getRegistroDetalle().getObservaciones() != null){
                             registrosLibro.get(i).add(registroEntrada.getRegistroDetalle().getObservaciones());
                         }else{
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("llibr")){
+                    } else if(valorCamp.equals("llibr")){
                         if(registroEntrada.getLibro().getNombre() != null){
                             registrosLibro.get(i).add(registroEntrada.getLibro().getNombre());
                         }else{
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("docFi")){
+                    } else if(valorCamp.equals("docFi")){
                         if (registroEntrada.getRegistroDetalle().getTipoDocumentacionFisica() != null){
                             registrosLibro.get(i).add(I18NUtils.tradueix("tipoDocumentacionFisica." + registroEntrada.getRegistroDetalle().getTipoDocumentacionFisica()));
                         } else {
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("orgDe")){
+                    } else if(valorCamp.equals("orgDe")){
                         if(registroEntrada.getDestinoExternoCodigo() != null){
                             registrosLibro.get(i).add(registroEntrada.getDestinoExternoCodigo());
                         }else{
@@ -214,38 +196,33 @@ public class InformeController extends BaseController {
                                 registrosLibro.get(i).add("");
                             }
                         }
-                    }
-                    if(valorCamp.equals("idiom")){
+                    } else if(valorCamp.equals("idiom")){
                         if(registroEntrada.getRegistroDetalle().getIdioma() != null) {
                             final String nombre = I18NUtils.tradueix("idioma." + registroEntrada.getRegistroDetalle().getIdioma());
                             registrosLibro.get(i).add(nombre);
                         }else{
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("refEx")){
+                    } else if(valorCamp.equals("refEx")){
                         if(registroEntrada.getRegistroDetalle().getReferenciaExterna() != null){
                             registrosLibro.get(i).add(registroEntrada.getRegistroDetalle().getReferenciaExterna());
                         }else{
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("trans")){
+                    } else if(valorCamp.equals("trans")){
                         if(registroEntrada.getRegistroDetalle().getTransporte() != null){
                             registrosLibro.get(i).add( I18NUtils.tradueix("transporte." + registroEntrada.getRegistroDetalle().getTransporte()));
                         }else{
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("numTr")){
+                    } else if(valorCamp.equals("numTr")){
                         if(registroEntrada.getRegistroDetalle().getNumeroTransporte() != null){
                           final String nombre = I18NUtils.tradueix("idioma." +registroEntrada.getRegistroDetalle().getIdioma()); 
                             registrosLibro.get(i).add(nombre);
                         }else{
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("orgOr")){
+                    } else if(valorCamp.equals("orgOr")){
                         if(registroEntrada.getRegistroDetalle().getOficinaOrigenExternoCodigo() != null){
                             registrosLibro.get(i).add(registroEntrada.getRegistroDetalle().getOficinaOrigenExternoCodigo());
                         }else{
@@ -255,36 +232,31 @@ public class InformeController extends BaseController {
                                 registrosLibro.get(i).add("");
                             }
                         }
-                    }
-                    if(valorCamp.equals("numOr")){
+                    } else if(valorCamp.equals("numOr")){
                         if(registroEntrada.getRegistroDetalle().getNumeroRegistroOrigen() != null){
                             registrosLibro.get(i).add(registroEntrada.getRegistroDetalle().getNumeroRegistroOrigen());
                         }else{
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("datOr")){
+                    } else if(valorCamp.equals("datOr")){
                         if(registroEntrada.getRegistroDetalle().getFechaOrigen() != null){
                             registrosLibro.get(i).add(registroEntrada.getRegistroDetalle().getFechaOrigen().toString());
                         }else{
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("nomIn")){
+                    } else if(valorCamp.equals("nomIn")){
                         if(registroEntrada.getRegistroDetalle().getInteresados() != null){
                             String interessats = "";
-                            // TODO Optimitzar
+
                             for(int k=0;k<registroEntrada.getRegistroDetalle().getInteresados().size();k++) {
-                                Interesado interesado = registroEntrada.getRegistroDetalle().getInteresados().get(k); 
-                                if(interesado.getTipo() == RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION){
+                                Interesado interesado = registroEntrada.getRegistroDetalle().getInteresados().get(k);
+                                if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
                                     interessats = interessats + interesado.getNombre();
-                                }
-                                if(interesado.getTipo() == RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA){
-                                    interessats = interessats + interesado.getNombrePersonaFisica();
-                                }
-                                if(interesado.getTipo() == RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA){
-                                    interessats = interessats + interesado.getNombrePersonaJuridica();
-                                }
+                                } else if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)){
+                                        interessats = interessats + interesado.getNombrePersonaFisica();
+                                    } else if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)){
+                                            interessats = interessats + interesado.getNombrePersonaJuridica();
+                                        }
                                 if(k<registroEntrada.getRegistroDetalle().getInteresados().size()-1){
                                     interessats = interessats + ", ";
                                 }
@@ -307,7 +279,7 @@ public class InformeController extends BaseController {
 
 
         // REGISTROS DE SALIDA
-        }else if(informeLibroBusquedaForm.getTipo() == 1){
+        }else if(informeLibroBusquedaForm.getTipo().equals(RegwebConstantes.REGISTRO_SALIDA)){
 
             List<RegistroSalida> registrosSalida = registroSalidaEjb.buscaLibroRegistro(informeLibroBusquedaForm.getFechaInicio(), dataFi, informeLibroBusquedaForm.getLibros());
 
@@ -323,125 +295,108 @@ public class InformeController extends BaseController {
                         } else{
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("anyRe")){
+                    } else if(valorCamp.equals("anyRe")){
                         if(registroSalida.getFecha() != null){
                             String anoRegistro = formatYear.format(registroSalida.getFecha());
                             registrosLibro.get(i).add(anoRegistro);
                         } else{
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("estat")){
+                    } else if(valorCamp.equals("estat")){
                         if(registroSalida.getEstado() != null){
                             registrosLibro.get(i).add(I18NUtils.tradueix("registro.estado." + registroSalida.getEstado() ));
                         }else{
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("exped")){
+                    } else if(valorCamp.equals("exped")){
                         if(registroSalida.getRegistroDetalle().getExpediente() != null){
                             registrosLibro.get(i).add(registroSalida.getRegistroDetalle().getExpediente());
                         }else{
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("extra")){
+                    } else if(valorCamp.equals("extra")){
                         if(registroSalida.getRegistroDetalle().getExtracto() != null){
                             registrosLibro.get(i).add(registroSalida.getRegistroDetalle().getExtracto());
                         }else{
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("data")){
+                    } else if(valorCamp.equals("data")){
                         if(registroSalida.getFecha() != null){
                             registrosLibro.get(i).add(registroSalida.getFecha().toString());
                         }else{
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("numRe")){
+                    } else if(valorCamp.equals("numRe")){
                         if(registroSalida.getNumeroRegistro() != null){
                             registrosLibro.get(i).add(registroSalida.getNumeroRegistro().toString());
                         }else{
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("ofici")){
+                    } else if(valorCamp.equals("ofici")){
                         if(registroSalida.getOficina().getDenominacion() != null){
                             registrosLibro.get(i).add(registroSalida.getOficina().getDenominacion());
                         }else{
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("tipAs")){
+                    } else if(valorCamp.equals("tipAs")){
                         if(registroSalida.getRegistroDetalle().getTipoAsunto() != null){
                             TraduccionTipoAsunto traduccionTipoAsunto = (TraduccionTipoAsunto) registroSalida.getRegistroDetalle().getTipoAsunto().getTraduccion();
                             registrosLibro.get(i).add(traduccionTipoAsunto.getNombre());
                         }else{
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("obser")){
+                    } else if(valorCamp.equals("obser")){
                         if(registroSalida.getRegistroDetalle().getObservaciones() != null){
                             registrosLibro.get(i).add(registroSalida.getRegistroDetalle().getObservaciones());
                         }else{
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("llibr")){
+                    } else if(valorCamp.equals("llibr")){
                         if(registroSalida.getLibro().getNombre() != null){
                             registrosLibro.get(i).add(registroSalida.getLibro().getNombre());
                         }else{
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("docFi")){
+                    } else if(valorCamp.equals("docFi")){
                         if(registroSalida.getRegistroDetalle().getTipoDocumentacionFisica() != null){
                             
                             registrosLibro.get(i).add(I18NUtils.tradueix("tipoDocumentacionFisica." + registroSalida.getRegistroDetalle().getTipoDocumentacionFisica()));
                         }else{
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("orgDe")){
+                    } else if(valorCamp.equals("orgDe")){
                         if(registroSalida.getOrigen() != null){
                             registrosLibro.get(i).add(registroSalida.getOrigen().getDenominacion());
                         }else{
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("idiom")){
+                    } else if(valorCamp.equals("idiom")){
                         if(registroSalida.getRegistroDetalle().getIdioma() != null){
                           final String nombre = I18NUtils.tradueix("idioma." + registroSalida.getRegistroDetalle().getIdioma()); 
                             registrosLibro.get(i).add(nombre);
                         }else{
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("refEx")){
+                    } else if(valorCamp.equals("refEx")){
                         if(registroSalida.getRegistroDetalle().getReferenciaExterna() != null){
                             registrosLibro.get(i).add(registroSalida.getRegistroDetalle().getReferenciaExterna());
                         }else{
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("trans")){
+                    } else if(valorCamp.equals("trans")){
                         if(registroSalida.getRegistroDetalle().getTransporte() != null){
                             registrosLibro.get(i).add(I18NUtils.tradueix("transporte." + registroSalida.getRegistroDetalle().getTransporte()));
                         }else{
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("numTr")){
+                    } else if(valorCamp.equals("numTr")){
                         if(registroSalida.getRegistroDetalle().getNumeroTransporte() != null){
                           final String nombre = I18NUtils.tradueix("idioma." + registroSalida.getRegistroDetalle().getIdioma()); 
                             registrosLibro.get(i).add(nombre);
                         }else{
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("orgOr")){
+                    } else if(valorCamp.equals("orgOr")){
                         if(registroSalida.getRegistroDetalle().getOficinaOrigenExternoCodigo() != null){
                             registrosLibro.get(i).add(registroSalida.getRegistroDetalle().getOficinaOrigenExternoCodigo());
                         }else{
@@ -451,36 +406,31 @@ public class InformeController extends BaseController {
                                 registrosLibro.get(i).add("");
                             }
                         }
-                    }
-                    if(valorCamp.equals("numOr")){
+                    } else if(valorCamp.equals("numOr")){
                         if(registroSalida.getRegistroDetalle().getNumeroRegistroOrigen() != null){
                             registrosLibro.get(i).add(registroSalida.getRegistroDetalle().getNumeroRegistroOrigen());
                         }else{
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("datOr")){
+                    } else if(valorCamp.equals("datOr")){
                         if(registroSalida.getRegistroDetalle().getFechaOrigen() != null){
                             registrosLibro.get(i).add(registroSalida.getRegistroDetalle().getFechaOrigen().toString());
                         }else{
                             registrosLibro.get(i).add("");
                         }
-                    }
-                    if(valorCamp.equals("nomIn")){
+                    } else if(valorCamp.equals("nomIn")){
                         if(registroSalida.getRegistroDetalle().getInteresados() != null){
                             String interessats = null;
-                            // TODO Optimitzar
+
                             for(int k=0;k<registroSalida.getRegistroDetalle().getInteresados().size();k++){
-                              Interesado interesado = registroSalida.getRegistroDetalle().getInteresados().get(k);
-                                 if(interesado.getTipo() == RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION){
+                                Interesado interesado = registroSalida.getRegistroDetalle().getInteresados().get(k);
+                                if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
                                     interessats = interessats + interesado.getNombre();
-                                }
-                                if(interesado.getTipo() == RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA){
-                                    interessats = interessats + registroSalida.getRegistroDetalle().getInteresados().get(k).getNombrePersonaFisica();
-                                }
-                                if(interesado.getTipo() == RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA){
-                                    interessats = interessats + interesado.getNombrePersonaJuridica();
-                                }
+                                } else if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)){
+                                        interessats = interessats + registroSalida.getRegistroDetalle().getInteresados().get(k).getNombrePersonaFisica();
+                                    } else if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)){
+                                            interessats = interessats + interesado.getNombrePersonaJuridica();
+                                        }
                                 if(i<registroSalida.getRegistroDetalle().getInteresados().size()-1){
                                     interessats = interessats + ", ";
                                 }
@@ -714,26 +664,6 @@ public class InformeController extends BaseController {
         mav.addObject("salidaAsuntoValor", salidaAsuntoValor);
         mav.addObject("salidaAsuntoNombre", salidaAsuntoNombre);
 
-        // todo: Afegir els Òrgans destinataris si ens ho demanen (Abaix però encara no està fet)
-        // Busca los registros por Órgano Destinatario de Entrada y Salida entre las fechas
-//        List<String> entradaOrgDestValor = new ArrayList<String>();
-//        List<String> entradaOrgDestNombre = new ArrayList<String>();
-//        List<String> salidaOrgDestValor = new ArrayList<String>();
-//        List<String> salidaOrgDestNombre = new ArrayList<String>();
-//        List<Organismo> organsDestinataris = organismoEjb.;
-//        for(int i=0; i<tiposAsunto.size(); i++){
-//            TipoAsunto tipoAsunto = tiposAsunto.get(i);
-//            TraduccionTipoAsunto traduccionTipoAsunto = (TraduccionTipoAsunto) tipoAsunto.getTraduccion();
-//            entradaAsuntoNombre.add(traduccionTipoAsunto.getNombre());
-//            salidaAsuntoNombre.add(traduccionTipoAsunto.getNombre());
-//            entradaAsuntoValor.add(String.valueOf(registroEntradaEjb.buscaEntradaPorAsunto(dataInici, dataFi, tipoAsunto.getId())));
-//            salidaAsuntoValor.add(String.valueOf(registroSalidaEjb.buscaSalidaPorAsunto(dataInici, dataFi, tipoAsunto.getId())));
-//        }
-//        mav.addObject("entradaOrgDestValor", entradaOrgDestValor);
-//        mav.addObject("entradaOrgDestNombre", entradaOrgDestNombre);
-//        mav.addObject("salidaOrgDestValor", salidaOrgDestValor);
-//        mav.addObject("salidaOrgDestNombre", salidaOrgDestNombre);
-
 
         // Busca los registros por Libro de Registro de Entrada y Salida entre las fechas
         List<String> entradaLibroValor = new ArrayList<String>();
@@ -835,6 +765,9 @@ public class InformeController extends BaseController {
 
         UsuarioLopdBusquedaForm usuarioLopdBusquedaForm = new UsuarioLopdBusquedaForm();
         usuarioLopdBusquedaForm.setFechaFin(new Date());
+
+        model.addAttribute("usuarios", usuarios(request));
+        model.addAttribute("libros", libros(request));
         model.addAttribute("usuarioLopdBusquedaForm",usuarioLopdBusquedaForm);
 
         return "informe/usuarioLopd";
@@ -961,6 +894,7 @@ public class InformeController extends BaseController {
     public String registroLopd(Model model, HttpServletRequest request)throws Exception {
 
         RegistroLopdBusquedaForm registroLopdBusquedaForm = new RegistroLopdBusquedaForm();
+        model.addAttribute("libros", libros(request));
         model.addAttribute("registroLopdBusquedaForm",registroLopdBusquedaForm);
 
         return "informe/registroLopd";
@@ -991,7 +925,7 @@ public class InformeController extends BaseController {
 
         // Busca los registros según pasámetros de búsqueda
         if((dataInici != null) && (dataFi != null)) {
-            if (registroLopdBusquedaForm.getTipoRegistro() == RegwebConstantes.REGISTRO_ENTRADA) {
+            if (registroLopdBusquedaForm.getTipoRegistro().equals(RegwebConstantes.REGISTRO_ENTRADA)) {
                 entradas = registroEntradaEjb.buscaPorLibroTipoNumero(dataInici, dataFi, registroLopdBusquedaForm.getLibro(), registroLopdBusquedaForm.getNumeroRegistro());
                 // Alta en tabla LOPD de las entradas del listado
                 Paginacion paginacionEntrada = new Paginacion(0, 0);
@@ -999,7 +933,7 @@ public class InformeController extends BaseController {
                 paginacionEntrada.setListado(entradasList);
                 lopdEjb.insertarRegistrosEntrada(paginacionEntrada, usuarioEntidad.getId());
             }
-            if (registroLopdBusquedaForm.getTipoRegistro() == RegwebConstantes.REGISTRO_SALIDA) {
+            if (registroLopdBusquedaForm.getTipoRegistro().equals(RegwebConstantes.REGISTRO_SALIDA)) {
                 salidas = registroSalidaEjb.buscaPorLibroTipoNumero(dataInici, dataFi, registroLopdBusquedaForm.getLibro(), registroLopdBusquedaForm.getNumeroRegistro());
                 // Alta en tabla LOPD de las salidas del listado
                 Paginacion paginacionSalida = new Paginacion(0, 0);
@@ -1030,7 +964,7 @@ public class InformeController extends BaseController {
         String anyoRegistro = "";
         Libro libro = null;
 
-        if(idTipoRegistro == RegwebConstantes.REGISTRO_ENTRADA){
+        if(idTipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA)){
 
             // Añade la información del Registro creado
             RegistroEntrada registro = registroEntradaEjb.findById(idRegistro);
@@ -1057,7 +991,7 @@ public class InformeController extends BaseController {
             mav.addObject("listados", listados);
         }
 
-        if(idTipoRegistro == RegwebConstantes.REGISTRO_SALIDA){
+        if(idTipoRegistro.equals(RegwebConstantes.REGISTRO_SALIDA)){
 
             // Añade la información del Registro creado
             RegistroSalida registro = registroSalidaEjb.findById(idRegistro);
@@ -1126,31 +1060,23 @@ public class InformeController extends BaseController {
             valorRegistro.add(registro.getUsuario().getUsuario().getIdentificador());
             valorRegistro.add(registro.getOficina().getDenominacion());
 
-            // TODO Optimitzar amb IF-ELSE anidats !!!!
             if(registro.getEstado().equals(RegwebConstantes.ESTADO_VALIDO)) {
                 valorRegistro.add("VÀLID");
-            }
-            if(registro.getEstado().equals(RegwebConstantes.ESTADO_TRAMITADO)) {
-                valorRegistro.add("TRAMITAT");
-            }
-            if(registro.getEstado().equals(RegwebConstantes.ESTADO_ANULADO)) {
-                valorRegistro.add("ANUL·LAT");
-            }
-            if(registro.getEstado().equals(RegwebConstantes.ESTADO_ENVIADO)) {
-                valorRegistro.add("ENVIAT");
-            }
-            if(registro.getEstado().equals(RegwebConstantes.ESTADO_OFICIO_EXTERNO)) {
-                valorRegistro.add("OFICI EXTERN");
-            }
-            if(registro.getEstado().equals(RegwebConstantes.ESTADO_OFICIO_INTERNO)) {
-                valorRegistro.add("OFICI INTERN");
-            }
-            if(registro.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE)) {
-                valorRegistro.add("PENDENT");
-            }
-            if(registro.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE_VISAR)) {
-                valorRegistro.add("PENDENT VISAR");
-            }
+            } else if(registro.getEstado().equals(RegwebConstantes.ESTADO_TRAMITADO)) {
+                    valorRegistro.add("TRAMITAT");
+                } else if(registro.getEstado().equals(RegwebConstantes.ESTADO_ANULADO)) {
+                        valorRegistro.add("ANUL·LAT");
+                    } else if(registro.getEstado().equals(RegwebConstantes.ESTADO_ENVIADO)) {
+                            valorRegistro.add("ENVIAT");
+                        } else if(registro.getEstado().equals(RegwebConstantes.ESTADO_OFICIO_EXTERNO)) {
+                                valorRegistro.add("OFICI EXTERN");
+                            } else if(registro.getEstado().equals(RegwebConstantes.ESTADO_OFICIO_INTERNO)) {
+                                    valorRegistro.add("OFICI INTERN");
+                                } else if(registro.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE)) {
+                                        valorRegistro.add("PENDENT");
+                                    } else if(registro.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE_VISAR)) {
+                                            valorRegistro.add("PENDENT VISAR");
+                                        }
 
             valorRegistro.add(registro.getDestino().getDenominacion());
             valorRegistro.add(registro.getRegistroDetalle().getExtracto());
@@ -1170,31 +1096,23 @@ public class InformeController extends BaseController {
                 registros.get(i).add(historicoRegistroEntrada.getModificacion());
                 registros.get(i).add(historicoRegistroEntrada.getUsuario().getUsuario().getIdentificador());
 
-                // TODO Optimitzar amb IF-ELSE anidats !!!!
                 if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.ESTADO_VALIDO)) {
                     registros.get(i).add("VÀLID");
-                }
-                if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.ESTADO_TRAMITADO)) {
-                    registros.get(i).add("TRAMITAT");
-                }
-                if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.ESTADO_ANULADO)) {
-                    registros.get(i).add("ANUL·LAT");
-                }
-                if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.ESTADO_ENVIADO)) {
-                    registros.get(i).add("ENVIAT");
-                }
-                if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.ESTADO_OFICIO_EXTERNO)) {
-                    registros.get(i).add("OFICI EXTERN");
-                }
-                if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.ESTADO_OFICIO_INTERNO)) {
-                    registros.get(i).add("OFICI INTERN");
-                }
-                if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE)) {
-                    registros.get(i).add("PENDENT");
-                }
-                if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE_VISAR)) {
-                    registros.get(i).add("PENDENT VISAR");
-                }
+                } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.ESTADO_TRAMITADO)) {
+                        registros.get(i).add("TRAMITAT");
+                    } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.ESTADO_ANULADO)) {
+                            registros.get(i).add("ANUL·LAT");
+                        } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.ESTADO_ENVIADO)) {
+                                registros.get(i).add("ENVIAT");
+                            } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.ESTADO_OFICIO_EXTERNO)) {
+                                    registros.get(i).add("OFICI EXTERN");
+                                } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.ESTADO_OFICIO_INTERNO)) {
+                                        registros.get(i).add("OFICI INTERN");
+                                    } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE)) {
+                                            registros.get(i).add("PENDENT");
+                                        } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE_VISAR)) {
+                                                registros.get(i).add("PENDENT VISAR");
+                                            }
             }
 
             mav.addObject("registros", registros);
@@ -1216,63 +1134,25 @@ public class InformeController extends BaseController {
 
             mav.addObject("valorRegistro", valorRegistro);
 
-            // Obtiene los datos del histórico del registro de salida
-//            ArrayList<ArrayList<String>> registros = new ArrayList<ArrayList<String>>();
-//
-//            List<HistoricoRegistroSalida> historicos = historicoRegistroSalidaaEjb.getByRegistroSalida(idRegistro);
-//
-//            for (int i = 0; i < historicos.size(); i++) {
-//                registros.add(new ArrayList<String>());
-//                HistoricoRegistroSalida historicoRegistroSalida = historicos.get(i);
-//                registros.get(i).add(historicoRegistroSalida.getRegistroEntrada().getNumeroRegistro().toString());
-//                registros.get(i).add(historicoRegistroSalida.getUsuario().getNombreCompleto());
-//                registros.get(i).add(historicoRegistroSalida.getUsuario().getUsuario().getIdentificador());
-//                if(historicoRegistroSalida.getEstado().getId().equals(RegwebConstantes.ESTADO_VALIDO)) {
-//                    registros.get(i).add("VÀLID");
-//                }
-//                if(historicoRegistroSalida.getEstado().getId().equals(RegwebConstantes.ESTADO_TRAMITADO)) {
-//                    registros.get(i).add("TRAMITAT");
-//                }
-//                if(historicoRegistroSalida.getEstado().getId().equals(RegwebConstantes.ESTADO_ANULADO)) {
-//                    registros.get(i).add("ANULAT");
-//                }
-//                if(historicoRegistroSalida.getEstado().getId().equals(RegwebConstantes.ESTADO_ENVIADO)) {
-//                    registros.get(i).add("ENVIAT");
-//                }
-//                if(historicoRegistroSalida.getEstado().getId().equals(RegwebConstantes.ESTADO_OFICIO_EXTERNO)) {
-//                    registros.get(i).add("OFICI EXTERN");
-//                }
-//                if(historicoRegistroSalida.getEstado().getId().equals(RegwebConstantes.ESTADO_OFICIO_INTERNO)) {
-//                    registros.get(i).add("OFICI INTERN");
-//                }
-//                if(historicoRegistroSalida.getEstado().getId().equals(RegwebConstantes.ESTADO_PENDIENTE)) {
-//                    registros.get(i).add("PENDENT");
-//                }
-//                if(historicoRegistroSalida.getEstado().getId().equals(RegwebConstantes.ESTADO_PENDIENTE_VISAR)) {
-//                    registros.get(i).add("PENDENT VISAR");
-//                }
-//                registros.get(i).add(historicoRegistroSalida.getModificacion());
-//            }
-//
-//            mav.addObject("registros", registros);
-
         }
 
         return mav;
     }
 
 
-    @ModelAttribute("libros")
-    public List<Libro> libros(HttpServletRequest request) throws Exception {
+    List<Libro> libros(HttpServletRequest request) throws Exception {
 
         List<Libro> libros = null;
 
         // Es operador
         if(isOperador(request)){
-            UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
             // Obtenemos los Libros de los cuales el Usuario es administrador
-            libros = permisoLibroUsuarioEjb.getLibrosAdministrados(usuarioEntidad.getId());
+            if(getLibrosAdministrados(request).size()>0) {
+                libros = getLibrosAdministrados(request);
+            }else{
+                libros = getLibrosConsultaEntradas(request);
+            }
         }
 
         // Es Administrador de Entidad
@@ -1283,7 +1163,6 @@ public class InformeController extends BaseController {
         return libros;
     }
 
-    @ModelAttribute("usuarios")
     public List<UsuarioEntidad> usuarios(HttpServletRequest request) throws Exception {
 
         getRolActivo(request);
@@ -1313,10 +1192,44 @@ public class InformeController extends BaseController {
      */
     @RequestMapping(value = "/obtenerUsuarios", method = RequestMethod.GET)
     public @ResponseBody
-    List<UsuarioEntidad> obtenerUsuarios(@RequestParam Long id) throws Exception {
+    List<UsuarioEntidad> obtenerUsuarios(@RequestParam Long id,HttpServletRequest request) throws Exception {
 
-        return permisoLibroUsuarioEjb.getUsuariosEntidadByLibro(id);
+        if(id != -1) {
+            return permisoLibroUsuarioEjb.getUsuariosEntidadByLibro(id);
+        }else{
+            return usuarioEntidadEjb.findByEntidad(getEntidadActiva(request).getId());
+        }
 
+    }
+
+    /**
+     * Obtiene los {@link es.caib.regweb.model.Libro} del Usuario actual y Tipo Registro seleccionado
+     */
+    @RequestMapping(value = "/obtenerLibros", method = RequestMethod.GET)
+    public @ResponseBody
+    List<Libro> obtenerLibros(HttpServletRequest request, @RequestParam Long id) throws Exception {
+
+        List<Libro> libros = null;
+
+        // Es operador
+        if(isOperador(request)){
+
+            // Obtenemos los Libros de los cuales el Usuario es administrador
+            if(getLibrosAdministrados(request).size()>0) {
+                libros = getLibrosAdministrados(request);
+            }else if(id.equals(RegwebConstantes.REGISTRO_ENTRADA)) {
+                    libros = getLibrosConsultaEntradas(request);
+                }else{
+                    libros = getLibrosConsultaSalidas(request);
+                }
+        }
+
+        // Es Administrador de Entidad
+        if(isAdminEntidad(request)){
+            libros = libroEjb.getLibrosEntidad(getEntidadActiva(request).getId());
+        }
+
+        return libros;
     }
 
     @ModelAttribute("estados")

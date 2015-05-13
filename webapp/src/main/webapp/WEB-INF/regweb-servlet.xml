@@ -34,6 +34,12 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
             <bean class="es.caib.regweb.webapp.interceptor.RegistroEntradaInterceptor"/>
         </mvc:interceptor>
 
+        <!--Interceptor para el Registro de salida-->
+        <mvc:interceptor>
+            <mvc:mapping path="/registroSalida/**"/>
+            <bean class="es.caib.regweb.webapp.interceptor.RegistroSalidaInterceptor"/>
+        </mvc:interceptor>
+
         <!--Interceptor para el Oficio de Remisión-->
         <mvc:interceptor>
             <mvc:mapping path="/oficioRemision/**"/>
@@ -80,6 +86,12 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         <mvc:interceptor>
             <mvc:mapping path="/registroMigrado/**"/>
             <bean class="es.caib.regweb.webapp.interceptor.RegistroMigradoInterceptor"/>
+        </mvc:interceptor>
+
+        <!--Interceptor para Informe-->
+        <mvc:interceptor>
+            <mvc:mapping path="/informe/**"/>
+            <bean class="es.caib.regweb.webapp.interceptor.InformeInterceptor"/>
         </mvc:interceptor>
 
         <!-- Configuración de Idioma -->

@@ -1,20 +1,16 @@
 package es.caib.regweb.ws.v3.apiaxis.test;
 
-import org.apache.axis.client.Call;
-import org.apache.axis.client.Stub;
-
-import es.caib.regweb.ws.v3.apiaxis.RegWebHelloWorldWithSecurityWsServiceLocator;
-import es.caib.regweb.ws.v3.apiaxis.RegWebHelloWorldWithSecurityWs_PortType;
 import es.caib.regweb.ws.v3.apiaxis.RegWebHelloWorldWsServiceLocator;
 import es.caib.regweb.ws.v3.apiaxis.RegWebHelloWorldWs_PortType;
-import es.caib.regweb.ws.v3.apiaxis.RegWebRegistroSalidaWsServiceLocator;
-import es.caib.regweb.ws.v3.apiaxis.RegWebRegistroSalidaWsServiceSoapBindingStub;
-import es.caib.regweb.ws.v3.apiaxis.RegWebRegistroSalidaWs_PortType;
 
 
 
 
-
+/**
+ * 
+ * @author anadal
+ *
+ */
 public class TestApiAxis {
 
   

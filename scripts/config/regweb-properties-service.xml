@@ -7,7 +7,8 @@
 			es.caib.regweb.defaultlanguage=ca
 		    es.caib.regweb.iscaib=false
 			es.caib.regweb.showtimestamp=false
-		
+			es.caib.regweb.preregistre=http://www.caib.es
+
 			<!-- Dialecte de la BBDD -->
 		    # es.caib.regweb.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 		    # es.caib.regweb.hibernate.dialect=org.hibernate.dialect.MySQLDialect      

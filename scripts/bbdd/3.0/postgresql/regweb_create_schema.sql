@@ -75,7 +75,7 @@
         ALFA2PAIS varchar(2),
         ALFA3PAIS varchar(3),
         CODIGOPAIS int8 not null,
-        DESCRIPCIONPAIS varchar(50) not null,
+        DESCRIPCIONPAIS varchar(100) not null,
         primary key (ID)
     );
 

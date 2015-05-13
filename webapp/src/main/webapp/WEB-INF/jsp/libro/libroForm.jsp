@@ -53,7 +53,7 @@
                                     <form:label path="codigo"><span class="text-danger">*</span> <spring:message code="libro.codigo"/></form:label>
                                 </div>
                                 <div class="col-xs-8">
-                                    <form:input path="codigo" cssClass="form-control" maxlength="6"/> <form:errors path="codigo" cssClass="help-block" element="span"/>
+                                    <form:input path="codigo" cssClass="form-control" maxlength="4"/> <form:errors path="codigo" cssClass="help-block" element="span"/>
                                 </div>
                             </div>
                             <div class="form-group col-xs-6">

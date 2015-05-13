@@ -64,24 +64,13 @@ public class UsuarioService {
      */
     public void configurarUsuario(Usuario usuario, HttpServletRequest request) throws Exception {
 
-        HttpSession session = request.getSession();
-
         // Obtenemos y asignamos los Roles del Usuario y el Usuario a la sesión
-        Rol rolActivo = obtenerCredenciales(usuario, session);
+        Rol rolActivo = obtenerCredenciales(usuario, request);
 
         // Según el RolActivo, obtenemos sus autorizaciones
-        autorizarRol(rolActivo, request);
+        autorizarRol(rolActivo,null, request);
     }
 
-    /**
-     * Guardamos en la sesión el Usuario autenticado
-     * @param usuario
-     * @param request
-     */
-    public void setUsuarioAutenticado(Usuario usuario, HttpServletRequest request) throws Exception{
-        HttpSession session = request.getSession();
-        session.setAttribute(RegwebConstantes.SESSION_USUARIO, usuario);
-    }
 
     /**
      * Obtiene los Roles del usuario autenticado mediante el plugin de Login.
@@ -90,25 +79,23 @@ public class UsuarioService {
      * Crea la variable de sesión que contiene todos los Roles
      * Crea la variable de sesión que contiene el RolActivo
      * @param usuario
-     * @param session
+     * @param request
      * @throws Exception
      */
-    public Rol obtenerCredenciales(Usuario usuario, HttpSession session) throws Exception{
+    public Rol obtenerCredenciales(Usuario usuario, HttpServletRequest request) throws Exception{
+
+        HttpSession session = request.getSession();
+
+        log.info("Usuario autenticado: " + usuario.getNombreCompleto());
 
         // Eliminamos las variables
         eliminarVariablesSesionCredenciales(session);
 
-        IUserInformationPlugin loginPlugin = RegwebLoginPluginManager.getInstance();
-        RolesInfo rolesInfo = loginPlugin.getRolesByUsername(usuario.getIdentificador());
-        
-        List<String> roles = new ArrayList<String>();
-        Collections.addAll(roles, rolesInfo.getRoles());
+        List<Rol> rolesUsuario = obtenerRolesUsuarioAutenticado(request);
 
-        List<Rol> rolesUsuario = rolEjb.getByRol(roles);
+        log.info("Roles en regweb: " + Arrays.toString(rolesUsuario.toArray()));
 
-        log.info("Roles en regweb de "+ usuario.getIdentificador()+": " + Arrays.toString(rolesUsuario.toArray()));
-
-        // Actualizamos los Roles del usuario según sistema externo
+        // Actualizamos los Roles del usuario en la bbdd, según los obtenidos del sistema externo
         usuario.setRoles(rolesUsuario);
         usuario = usuarioEjb.merge(usuario);
 
@@ -128,92 +115,38 @@ public class UsuarioService {
         return rolActivo;
     }
 
-    /**
-     * Obtiene los Roles del usuario autenticado mediante el plugin de Login.
-     * @param usuario
-     * @return
-     * @throws Exception
-     */
-    public List<Rol> obtenerRoles(Usuario usuario) throws Exception{
 
-        IUserInformationPlugin loginPlugin = RegwebLoginPluginManager.getInstance();
-        RolesInfo rolesInfo = loginPlugin.getRolesByUsername(usuario.getIdentificador());
-        
-        List<String> roles = new ArrayList<String>();
-        List<Rol> rolesUsuario = null;
-
-        if (rolesInfo.getRoles().length > 0) {
-        	
-        	Collections.addAll(roles, rolesInfo.getRoles());
-	        if(roles.size() > 0){
-	            rolesUsuario = rolEjb.getByRol(roles);
-	        }
-        }
-
-        return rolesUsuario;
-    }
 
     /**
-     * Obtiene los Roles del usuario autenticado mediante el plugin de Login.
-     * Almacenanos los Roles del usuario
-     * @param usuario
-     * @throws Exception
-     */
-    public void actualizarRoles(Usuario usuario) throws Exception{
-
-        List<Rol> rolesUsuario = obtenerRoles(usuario);
-
-        if(rolesUsuario != null) {
-            //log.info("Roles " + usuario.getIdentificador() + ": " + rolesUsuario.toString());
-
-            // Actualizamos los Roles del usuario según sistema externo
-            usuario.setRoles(rolesUsuario);
-            usuarioEjb.merge(usuario);
-        }
-
-    }
-
-    /**
-     * Según el RolActivo del Usuario autenticado, le autoriza.
+     * Según el RolActivo del Usuario autenticado, obtiene sus entidades y oficinas de registro.
      * @param rolActivo
      * @param request
      * @throws Exception
      */
-    public void autorizarRol(Rol rolActivo, HttpServletRequest request) throws Exception{
+    public void autorizarRol(Rol rolActivo,Entidad entidadActiva, HttpServletRequest request) throws Exception{
+
 
         HttpSession session = request.getSession();
+        Usuario usuarioAutenticado = (Usuario) session.getAttribute(RegwebConstantes.SESSION_USUARIO);
+
+        log.info("Autorizando: " + usuarioAutenticado.getNombreCompleto() +" como "+ rolActivo.getNombre());
 
         // Limpiamos de la session las variables utilizadas
         eliminarVariablesSesion(session);
 
-        Usuario usuarioAutenticado = (Usuario)session.getAttribute(RegwebConstantes.SESSION_USUARIO);
-
-        log.info("RolActivo "+usuarioAutenticado.getIdentificador()+": " + rolActivo.getNombre());
-
         // Si el RolActivo del usuario autenticado es Administrador de Entidad
         if(rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN)){
 
-            asignarEntidades(usuarioAutenticado, session);
+            asignarEntidadesAdministradas(usuarioAutenticado,entidadActiva, session);
+
+        // Si RolActivo del usuario autenticado es Operador
+        }else if(rolActivo.getNombre().equals(RegwebConstantes.ROL_USUARI)){
+
+            asignarEntidadesOperador(usuarioAutenticado, entidadActiva, session);
         }
 
-        // Si RolActivo del usuario autenticado es Operador o LOPD
-        if(rolActivo.getNombre().equals(RegwebConstantes.ROL_USUARI)){
-
-            // Obtenemos todos sus UsuarioEntidad activos, de Entidades activas.
-            List<UsuarioEntidad> usuariosEntidad = usuarioEntidadEjb.findByUsuario(usuarioAutenticado.getId());
-
-            // Si el Usuario está presente en alguna Entidad
-            if(usuariosEntidad.size() > 0){
-
-                // Obtenemos y asignamos las Entidades a las que pertenece
-                entidadesAsociadas(usuariosEntidad, session);
-
-                // Obtenemos y asignamos las oficinas donde puede Registrar
-                asignarOficinasRegistro(usuarioAutenticado, session);
-            }
-
-        }
     }
+
 
     /**
      * Asigna las Entidades de las que el Usuario AdministradorEntidad es propietario o administrador.
@@ -221,7 +154,7 @@ public class UsuarioService {
      * @param session
      * @throws Exception
      */
-    public void asignarEntidades(Usuario usuario, HttpSession session) throws Exception{
+    public void asignarEntidadesAdministradas(Usuario usuario,Entidad entidadActiva, HttpSession session) throws Exception{
 
         ArrayList<Entidad> entidades = new ArrayList<Entidad>();
 
@@ -234,17 +167,16 @@ public class UsuarioService {
 
         // Obtenemos las entidades propietarias
         List<Entidad> entidadesPropietario = entidadEjb.getEntidadesPropietario(usuario.getId());
+
+        // Las guardamos en la sesion
         entidades.addAll(entidadesAdministrador);
         entidades.addAll(entidadesPropietario);
-
-        // Entidades de las cuales es Administrador
         session.setAttribute(RegwebConstantes.SESSION_ENTIDADES,entidades);
 
-        //log.info("Entidades administradas: " + entidadesAdministrador.size());
-        //log.info("Entidades propietario: " + entidadesPropietario.size());
-
         // Entidad Activa
-        if(entidadesPropietario.size() > 0){
+        if(entidades.contains(entidadActiva)){
+            session.setAttribute(RegwebConstantes.SESSION_ENTIDAD,entidadActiva);
+        }else if(entidadesPropietario.size() > 0){
             session.setAttribute(RegwebConstantes.SESSION_ENTIDAD,entidadesPropietario.get(0));
         }else if(entidadesAdministrador.size() > 0){
             session.setAttribute(RegwebConstantes.SESSION_ENTIDAD,entidadesAdministrador.get(0));
@@ -254,33 +186,49 @@ public class UsuarioService {
 
         // Eliminamos las Oficinas
         eliminarVariablesSesionOficina(session);
+
+        log.info("Entidades asociadas: " + entidades.size());
+        log.info("Entidades activa: " + (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD));
     }
 
     /**
-     * Asigna las Entidades a las que el Usuario está asociado.
-     * @param usuariosEntidad
+     * Obtiene las Entidades a las que el Usuario pertenece y las guarda en la sesion
      * @param session
      * @throws Exception
      */
-    public void entidadesAsociadas(List<UsuarioEntidad> usuariosEntidad, HttpSession session) throws Exception{
+    public void asignarEntidadesOperador(Usuario usuarioAutenticado,Entidad entidadActiva, HttpSession session) throws Exception{
 
         ArrayList<Entidad> entidades = new ArrayList<Entidad>();
 
-        // Obtenemos las entidades a las que el Usuario está asociado
-        for(UsuarioEntidad usuarioEntidad:usuariosEntidad){
-            entidades.add(usuarioEntidad.getEntidad());
+        // Obtenemos todos sus UsuarioEntidad activos, de Entidades activas.
+        List<UsuarioEntidad> usuariosEntidad = usuarioEntidadEjb.findByUsuario(usuarioAutenticado.getId());
+
+        // Si el Usuario está presente en alguna Entidad
+        if(usuariosEntidad.size() > 0){
+
+            // Obtenemos las entidades a las que el Usuario está asociado
+            for(UsuarioEntidad usuarioEntidad:usuariosEntidad){
+                entidades.add(usuarioEntidad.getEntidad());
+            }
+
+            // Almacenamos en la sesión las entidades a las cuales pertenece el Usuario
+            session.setAttribute(RegwebConstantes.SESSION_ENTIDADES, entidades);
+
+            // Entidad Activa
+            if(entidades.contains(entidadActiva)){
+                session.setAttribute(RegwebConstantes.SESSION_ENTIDAD,entidadActiva);
+            }else if(entidades.size() > 0){
+                session.setAttribute(RegwebConstantes.SESSION_ENTIDAD,entidades.get(0));
+                session.setAttribute(RegwebConstantes.SESSION_MIGRADOS, registroMigradoEjb.tieneRegistrosMigrados(entidades.get(0).getId()));
+            }
+
+            log.info("Entidades asociadas: " + entidades.size());
+            log.info("Entidades activa: " + (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD));
+
+            //Asignamos las oficinas donde tiene acceso
+            asignarOficinasRegistro(usuarioAutenticado, session);
         }
 
-        // Almacenamos en la sesión las entidades a las cuales pertenece el Usuario
-        session.setAttribute(RegwebConstantes.SESSION_ENTIDADES,entidades);
-
-        log.info("Entidades asociadas: " + entidades.size());
-        Entidad entidadActiva = entidades.get(0);
-        log.info("Entidad activa: " + entidadActiva.getNombre());
-
-        // Entidad Activa
-        session.setAttribute(RegwebConstantes.SESSION_ENTIDAD,entidadActiva);
-        session.setAttribute(RegwebConstantes.SESSION_MIGRADOS, registroMigradoEjb.tieneRegistrosMigrados(entidadActiva.getId()));
 
     }
 
@@ -297,8 +245,6 @@ public class UsuarioService {
 
         Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
         UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByUsuarioEntidad(usuarioAutenticado.getId(), entidadActiva.getId());
-
-        log.info("UsuarioEntidad activo: " + usuarioEntidad.getId());
 
         //Obtenemos los Libros, cuyo Organismo es Vigente y donde el UsuarioEntidad puede Registrar
         List<Libro> librosRegistro = permisoLibroUsuarioEjb.getLibrosRegistro(usuarioEntidad.getId());
@@ -317,30 +263,110 @@ public class UsuarioService {
         session.setAttribute(RegwebConstantes.SESSION_OFICINAS,oficinasRegistro);
 
         // Comprobamos la última Oficina utilizada por el usuario
-        if(usuarioEntidad.getUltimaOficina() != null && oficinasRegistro.contains(new ObjetoBasico(usuarioEntidad.getUltimaOficina().getId()))){
+        if(usuarioEntidad.getUltimaOficina()!= null && oficinasRegistro.contains(new ObjetoBasico(usuarioEntidad.getUltimaOficina().getId()))){
             session.setAttribute(RegwebConstantes.SESSION_OFICINA,oficinaEjb.findById(usuarioEntidad.getUltimaOficina().getId()));
             session.setAttribute(RegwebConstantes.SESSION_TIENEPREREGISTROS, preRegistroEjb.tienePreRegistros(usuarioEntidad.getUltimaOficina().getCodigo()));
 
         }else if(oficinasRegistro.size() > 0){
             session.setAttribute(RegwebConstantes.SESSION_OFICINA,oficinaEjb.findById(oficinasRegistro.iterator().next().getId()));
-            usuarioEntidadEjb.actualizarOficinaUsuario(usuarioEntidad.getId(),oficinasRegistro.iterator().next().getId());
+            usuarioEntidadEjb.actualizarOficinaUsuario(usuarioEntidad.getId(), oficinasRegistro.iterator().next().getId());
         }
 
         //Obtenemos los Libros donde que el UsuarioEntidad puede Administrar
         List<Libro> librosAdministrados = permisoLibroUsuarioEjb.getLibrosAdministrados(usuarioEntidad.getId());
         log.info("Libros administrados usuario: " + Arrays.toString(librosAdministrados.toArray()));
-        session.setAttribute(RegwebConstantes.SESSION_LIBROSADMINISTRADOS,librosAdministrados);
+        session.setAttribute(RegwebConstantes.SESSION_LIBROSADMINISTRADOS, librosAdministrados);
 
-        /*Set<Oficina> oficinasAdministradas = new HashSet<Oficina>();  // Utilizamos un Set porque no permite duplicados
+    }
 
-        for (Libro libro : librosAdministrados) {
-            oficinasAdministradas.addAll(oficinaEjb.findByOrganismoResponsable(libro.getOrganismo().getId()));
-            oficinasAdministradas.addAll(relacionOrganizativaOfiLocalEjb.getOficinasByOrganismo(libro.getOrganismo().getId()));
+    /**
+     * Realiza el cambio de Rol para un usuario autenticado
+     * @param rolNuevo
+     * @param request
+     * @throws Exception
+     */
+    public Boolean cambioRol(Rol rolNuevo, HttpServletRequest request) throws Exception{
+        log.info("Cambiando el rol a:" + rolNuevo.getNombre());
+        HttpSession session = request.getSession();
+        List<Rol> rolesAutentido = (List<Rol>) session.getAttribute(RegwebConstantes.SESSION_ROLES);
+        Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
+
+        if(rolesAutentido.contains(rolNuevo)){
+            session.setAttribute(RegwebConstantes.SESSION_ROL, rolNuevo);
+            autorizarRol(rolNuevo, entidadActiva,request);
+
+            return true;
+        }else{
+           return false;
         }
 
-        log.info("Oficinas administrados usuario: " + Arrays.toString(oficinasAdministradas.toArray()));
-        session.setAttribute(RegwebConstantes.SESSION_OFICINAS_ADMINISTRADAS,oficinasAdministradas);*/
+    }
 
+    /**
+     * Obtiene los Roles del usuario autenticado
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    public List<Rol> obtenerRolesUsuarioAutenticado(HttpServletRequest request) throws Exception{
+
+        List<Rol> rolesUsuario = null;
+
+        List<String> roles = new ArrayList<String>();
+
+        if(request.isUserInRole(RegwebConstantes.ROL_SUPERADMIN)){roles.add(RegwebConstantes.ROL_SUPERADMIN);}
+        if(request.isUserInRole(RegwebConstantes.ROL_ADMIN)){roles.add(RegwebConstantes.ROL_ADMIN);}
+        if(request.isUserInRole(RegwebConstantes.ROL_USUARI)){roles.add(RegwebConstantes.ROL_USUARI);}
+
+        if(roles.size() > 0){
+            rolesUsuario = rolEjb.getByRol(roles);
+        }
+
+        return rolesUsuario;
+    }
+
+    /**
+     * Obtiene los Roles del usuario mediante el plugin de Login.
+     * @param usuario
+     * @return
+     * @throws Exception
+     */
+    public List<Rol> obtenerRolesUserPlugin(Usuario usuario) throws Exception{
+
+        IUserInformationPlugin loginPlugin = RegwebLoginPluginManager.getInstance();
+        RolesInfo rolesInfo = loginPlugin.getRolesByUsername(usuario.getIdentificador());
+
+        List<String> roles = new ArrayList<String>();
+        List<Rol> rolesUsuario = null;
+
+        if(rolesInfo.getRoles().length > 0){
+
+            Collections.addAll(roles, rolesInfo.getRoles());
+            if(roles.size() > 0){
+                rolesUsuario = rolEjb.getByRol(roles);
+            }
+        }
+
+        return rolesUsuario;
+    }
+
+    /**
+     * Obtiene los Roles del usuario autenticado mediante el plugin de Login.
+     * Actualiza los Roles del usuario en la bbdd de REGWEB
+     * @param usuario
+     * @throws Exception
+     */
+    public void actualizarRoles(Usuario usuario) throws Exception{
+
+        List<Rol> rolesUsuario = obtenerRolesUserPlugin(usuario);
+
+        if(rolesUsuario != null) {
+            //log.info("Roles " + usuario.getIdentificador() + ": " + rolesUsuario.toString());
+
+            // Actualizamos los Roles del usuario según sistema externo
+            usuario.setRoles(rolesUsuario);
+            usuarioEjb.merge(usuario);
+        }
 
     }
 
@@ -391,7 +417,7 @@ public class UsuarioService {
             }
 
             // Roles
-            List<Rol> roles = obtenerRoles(usuario);
+            List<Rol> roles = obtenerRolesUserPlugin(usuario);
             if(roles == null || roles.size() == 0 ){
                 return null;
             }else{
@@ -406,6 +432,16 @@ public class UsuarioService {
             return null;
         }
 
+    }
+
+    /**
+     * Guardamos en la sesión el Usuario autenticado
+     * @param usuario
+     * @param request
+     */
+    public void setUsuarioAutenticado(Usuario usuario, HttpServletRequest request) throws Exception{
+        HttpSession session = request.getSession();
+        session.setAttribute(RegwebConstantes.SESSION_USUARIO, usuario);
     }
 
     /**

@@ -6,6 +6,7 @@ import org.hibernate.annotations.Index;
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -131,6 +132,25 @@ public class Oficina implements Serializable{
     @Transient
     public String getNombreCompleto(){
         return  getCodigo() +" "+ getDenominacion();
+    }
+
+    @Transient
+    public Set<Organismo> getOrganismosFuncionales(){
+
+        Set<Organismo> organismos = new HashSet<Organismo>();
+
+        // Añadimos el Organismo responsable de la OficinaActiva
+        Organismo organismoResponsable = this.getOrganismoResponsable();
+        organismos.add(organismoResponsable);
+
+        // Añadimos los Organismos a los que la Oficina da servicio
+        Set<RelacionOrganizativaOfi> organismosFuncionales = this.getOrganizativasOfi();
+        for(RelacionOrganizativaOfi relacionOrganizativaOfi:organismosFuncionales){
+            organismos.add(relacionOrganizativaOfi.getOrganismo());
+        }
+
+        return  organismos;
+
     }
 
     @Override

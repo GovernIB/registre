@@ -150,10 +150,10 @@
                                                         </td>
                                                         <td class="center">
                                                             <c:if test="${usuarioEntidad.usuario.rwe_usuari == true}">
-                                                                <a class="btn btn-warning btn-sm" href="<c:url value="/entidad/permisos/${usuarioEntidad.id}"/>" title="<spring:message code="usuario.modificar.permisos"/>"><span class="fa fa-check-circle-o"></span></a>
+                                                                <a class="btn btn-warning btn-sm" href="<c:url value="/entidad/permisos/${usuarioEntidad.id}"/>" title="<spring:message code="usuario.modificar.permisos"/>"><span class="fa fa-key"></span></a>
                                                             </c:if>
                                                             <c:if test="${usuarioEntidad.usuario.rwe_usuari == false}">
-                                                                <a class="btn btn-warning disabled btn-sm" title="<spring:message code="usuario.asignar.permisos.denegado"/> "><span class="fa fa-check-circle-o"></span></a>
+                                                                <a class="btn btn-warning disabled btn-sm" title="<spring:message code="usuario.asignar.permisos.denegado"/> "><span class="fa fa-key"></span></a>
                                                             </c:if>
 
                                                             <a class="btn btn-danger btn-sm" onclick='javascript:confirm("<c:url value="/entidad/permisos/${usuarioEntidad.id}/delete"/>","<spring:message code="regweb.confirmar.eliminacion" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.eliminar"/>"><span class="fa fa-eraser"></span></a>

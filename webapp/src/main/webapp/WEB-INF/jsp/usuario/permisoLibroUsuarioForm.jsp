@@ -71,7 +71,18 @@
                                                 </tr>
                                             </c:if>
                                             <c:if test="${not empty libros}">
-                                                <c:forEach var="libro" items="${libros}">
+                                                <c:forEach var="libro" items="${librosConPermiso}">
+                                                    <tr>
+                                                        <td>${libro.nombreCompleto}</td>
+                                                        <c:forEach var="plus" items="${permisoLibroUsuarioForm.permisoLibroUsuarios}" varStatus="status">
+                                                            <c:if test="${libro.id == plus.libro.id}">
+                                                                <form:hidden path="permisoLibroUsuarios[${status.index}].id"/>
+                                                                <td style="text-align:center;"><form:checkbox path="permisoLibroUsuarios[${status.index}].activo"/></td>
+                                                            </c:if>
+                                                        </c:forEach>
+                                                    </tr>
+                                                </c:forEach>
+                                                <c:forEach var="libro" items="${librosSinPermiso}">
                                                     <tr>
                                                         <td>${libro.nombreCompleto}</td>
                                                         <c:forEach var="plus" items="${permisoLibroUsuarioForm.permisoLibroUsuarios}" varStatus="status">

@@ -63,7 +63,7 @@ public class CatPais implements Serializable {
   /**
    * @return the descripcionPais
    */
-  @Column(name = "DESCRIPCIONPAIS", nullable = false, length = 50)
+  @Column(name = "DESCRIPCIONPAIS", nullable = false, length = 100)
   public String getDescripcionPais() {
     return descripcionPais;
   }

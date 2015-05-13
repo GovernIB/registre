@@ -93,6 +93,14 @@
                             <div class="form-group col-xs-12">
                                 <button type="submit" class="btn btn-warning"><spring:message code="regweb.buscar"/></button>
                             </div>
+
+                            <c:set var="errorInicio"><spring:message code="error.fechaInicio.posterior"/></c:set>
+                            <input id="error1" type="hidden" value="${errorInicio}"/>
+                            <c:set var="errorFin"><spring:message code="error.fechaFin.posterior"/></c:set>
+                            <input id="error2" type="hidden" value="${errorFin}"/>
+                            <c:set var="errorInicioFin"><spring:message code="error.fechaInicioFin.posterior"/></c:set>
+                            <input id="error3" type="hidden" value="${errorInicioFin}"/>
+
                         </form:form>
 
                      </div>
@@ -703,180 +711,6 @@ function actualizarUsuarios(){
 <!-- VALIDADOR DE FORMULARI -->
 <script type="text/javascript">
 
-//Valida las fechas (fecha, nombre del campo)
-function validaFecha(inputText, camp){
-    var formatoFecha = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/;
-    var variable = "#" + camp + " span.errors";
-    var formatoHtml = "<span id='"+ camp +".errors' class='help-block'>El format no és correcte</span>";
-
-    // Comprueba que la fecha tiene el formato adecuado (el día como máximo 31 y el mes 12)
-    if(inputText.value.match(formatoFecha)){
-        //Comprueba que los campos esten separados por una barra
-        var opera1 = inputText.value.split('/');
-        lopera1 = opera1.length;
-        // Separa la fecha en día, mes y año
-        if (lopera1>1){
-            var pdate = inputText.value.split('/');
-        }
-        var dd  = parseInt(pdate[0]);
-        var mm = parseInt(pdate[1]);
-        var yy = parseInt(pdate[2]);
-        // Crea lista de días máximos por cada mes
-        var ListofDays = [31,28,31,30,31,30,31,31,30,31,30,31];
-        // Comprueba si el mes es 2 (febrero)
-        if (mm==1 || mm>2){
-            // Si el valor del dia es mayor que el que marca la tabla de días, devuelve error
-            if (dd>ListofDays[mm-1]){
-                $(variable).html(formatoHtml);
-                $(variable).parents(".form-group").addClass("has-error");
-                return false;
-            }
-        }
-        // Entra si el mes es febrero
-        if (mm==2){
-            var lyear = false;
-            // Comprueba si el año es bisiesto
-            if ( (!(yy % 4) && yy % 100) || !(yy % 400)){
-                lyear = true;
-            }
-            // Retorna error si el año no es bisiesto y el día es mayor que 28
-            if ((lyear==false) && (dd>=29)){
-                $(variable).html(formatoHtml);
-                $(variable).parents(".form-group").addClass("has-error");
-                return false;
-            }
-            // Retorna error si el año es bisiesto y el día es mayor que 29
-            if ((lyear==true) && (dd>29)){
-                $(variable).html(formatoHtml);
-                $(variable).parents(".form-group").addClass("has-error");
-                return false;
-            }
-        }
-        // Si el formato es correcto y el día concuerda con el mes elegido y el año, elimina campo de error
-        var variable = "#" + camp + " span.errors";
-        var htmlNormal = "<span id='"+ camp +".errors'></span>";
-        $(variable).html(htmlNormal);
-        $(variable).parents(".form-group").removeClass("has-error");
-        return true;
-    } // Si el formato de la fecha no ese correcto, retorna error
-    else{
-        $(variable).html(formatoHtml);
-        $(variable).parents(".form-group").addClass("has-error");
-        return false;
-    }
-}
-
-// Valida si una fecha es anterior a otra
-function esAnterior(fechaInicio, fechaFin){
-    var anoInicio = parseInt(fechaInicio.substring(6,10));
-    var mesInicio = fechaInicio.substring(3,5);
-    var diaInicio = fechaInicio.substring(0,2);
-    var anoFin = parseInt(fechaFin.substring(6,10));
-    var mesFin = fechaFin.substring(3,5);
-    var diaFin = fechaFin.substring(0,2);
-
-    if(anoFin > anoInicio){
-        return true;
-    }else{
-        if (anoFin == anoInicio){
-            if(mesFin > mesInicio)
-                return true;
-            if(mesFin == mesInicio)
-                if(diaFin >= diaInicio)
-                    return true;
-                else
-                    return false;
-            else
-                return false;
-        }else
-            return false;
-    }
-}
-
-//Valida las fechas combinadas (fechaInicio, fechaFin, nombre del campo Inicio, nombre del campo Fin)
-function validaFechasConjuntas(fechaInicio, fechaFin, campInicio, campFin){
-    var posterior = false;
-    var inicioCorrecta = false;
-    var finCorrecta = false;
-
-    // Dia actual
-    var d = new Date();
-    var diaActual = d.getDate();
-    var mesActual = d.getMonth();
-    var anoActual = d.getFullYear();
-    mesActual = mesActual + 1;
-    if(mesActual < 10){
-        mesActual = "0" + mesActual;
-    }
-    if(diaActual< 10){
-        diaActual = "0" + diaActual;
-    }
-    var fechaActual = diaActual + "/" + mesActual + "/" + anoActual;
-
-    // Mira si la fecha Fin es posterior a la actual
-    if(!esAnterior(fechaFin.value,fechaActual)){
-        var variable = "#" + campFin + " span.errors";
-        var formatoHtml = "<span id='"+ campFin +".errors' class='help-block'>La Data Fi no pot ser posterior l'actual</span>";
-        $(variable).html(formatoHtml);
-        $(variable).parents(".form-group").addClass("has-error");
-        finCorrecta = false;
-    }else{
-        var variable = "#" + campFin + " span.errors";
-        var htmlNormal = "<span id='"+ campFin +".errors'></span>";
-        $(variable).html(htmlNormal);
-        $(variable).parents(".form-group").removeClass("has-error");
-        finCorrecta = true;
-    }
-
-    // Mira si la fecha Inicio es posterior a la actual
-    if(!esAnterior(fechaInicio.value,fechaActual)){
-        var variable = "#" + campInicio + " span.errors";
-        var formatoHtml = "<span id='"+ campInicio +".errors' class='help-block'>La Data <spring:message code="regweb.inicio"/> no pot ser posterior a l'actual</span>";
-        $(variable).html(formatoHtml);
-        $(variable).parents(".form-group").addClass("has-error");
-        inicioCorrecta = false;
-    }else{
-        var variable = "#" + campInicio + " span.errors";
-        var htmlNormal = "<span id='"+ campInicio +".errors'></span>";
-        $(variable).html(htmlNormal);
-        $(variable).parents(".form-group").removeClass("has-error");
-        inicioCorrecta = true;
-    }
-
-    // Comprueba si la fecha Inicio es anterior a la de Fin
-    if(inicioCorrecta && finCorrecta){
-        if(esAnterior(fechaInicio.value, fechaFin.value)){
-            var variable = "#" + campInicio + " span.errors";
-            var htmlNormal = "<span id='"+ campInicio +".errors'></span>";
-            $(variable).html(htmlNormal);
-            $(variable).parents(".form-group").removeClass("has-error");
-            var variable2 = "#" + campFin + " span.errors";
-            var htmlNormal2 = "<span id='"+ campFin +".errors'></span>";
-            $(variable2).html(htmlNormal2);
-            $(variable2).parents(".form-group").removeClass("has-error");
-            posterior = true;
-        }else{
-            var variable = "#" + campInicio + " span.errors";
-            var formatoHtml = "<span id='"+ campInicio +".errors' class='help-block'>La Data <spring:message code="regweb.inicio"/> no pot ser posterior a la Data Fi</span>";
-            $(variable).html(formatoHtml);
-            $(variable).parents(".form-group").addClass("has-error");
-            var variable2 = "#" + campFin + " span.errors";
-            var formatoHtml2 = "<span id='"+ campFin +".errors' class='help-block'>La Data <spring:message code="regweb.inicio"/> no pot ser posterior a la Data Fi</span>";
-            $(variable2).html(formatoHtml2);
-            $(variable2).parents(".form-group").addClass("has-error");
-            posterior = false;
-        }
-    }
-
-    // Si las fechas son anteriores o iguales a hoy, y la Inicio es menor o igual a la de Fin, retiorna true
-    if((posterior) && (inicioCorrecta) && (finCorrecta)){
-        return true;
-    } else{
-        return false;
-    }
-}
-
-
 //Valida si ha elegido un usuario en el formulario
 function validaUsuario(idUsuario, campInicio){
     if(idUsuario.value == -1){
@@ -893,7 +727,6 @@ function validaUsuario(idUsuario, campInicio){
         return true;
     }
 }
-
 
 // Valida el formuario si las fechas Inicio y Fin son correctas
 function validaFormulario(form) {
@@ -927,9 +760,6 @@ function validaFormulario(form) {
     }
 }
 
-</script>
-
-<script type="text/javascript">
 function actualizarUsuariosTodos(url, idSelect, seleccion, valorSelected, todos){
     var html = '';
     if(seleccion != '-1'){
@@ -967,15 +797,33 @@ function actualizarUsuariosTodos(url, idSelect, seleccion, valorSelected, todos)
         });
 
     }else{
-        var html='<option path="usuario" value="-1">...</option>';
-        $(idSelect).html(html);
+        jQuery.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'json',
+            data: { id: seleccion },
+            contentType: 'application/json',
+            success: function(result) {
+                html = '<option value="-1">...</option>';
+                var len = result.length;
+                for ( var i = 0; i < len; i++) {
+                    html += '<option value="' + result[i].id + '">' + result[i].nombreCompleto + '</option>';
+                }
+
+                if(len != 0){
+                    $(idSelect).html(html);
+                    $(idSelect).attr("disabled",false).trigger("chosen:updated");
+                }else if(len==0){
+                    var html='';
+                    $(idSelect).html(html);
+                    $(idSelect).attr("disabled",true).trigger("chosen:updated");
+                }
+            }
+        });
     }
 
 }
 </script>
-
-
-
 
 </body>
 </html>

@@ -41,11 +41,11 @@
                     <div class="panel-body">
 
                         <dl class="detalle_registro">
-                            <dt><i class="fa fa-globe"></i> Entidad: </dt> <dd> ${oficioRemision.oficina.organismoResponsable.entidad.nombre}</dd>
-                            <dt><i class="fa fa-briefcase"></i> Oficina: </dt> <dd> ${oficioRemision.oficina.denominacion}</dd>
-                            <dt><i class="fa fa-clock-o"></i> Fecha: </dt> <dd> <fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></dd>
-                            <dt><i class="fa fa-book"></i> Libro: </dt> <dd> ${oficioRemision.libro.nombre}</dd>
-                            <dt><i class="fa fa-user"></i> Usuario: </dt> <dd> ${oficioRemision.usuarioResponsable.usuario.nombreCompleto}</dd>
+                            <dt><i class="fa fa-globe"></i> <spring:message code="entidad.entidad"/>: </dt> <dd> ${oficioRemision.oficina.organismoResponsable.entidad.nombre}</dd>
+                            <dt><i class="fa fa-briefcase"></i> <spring:message code="registroEntrada.oficina"/>: </dt> <dd> ${oficioRemision.oficina.denominacion}</dd>
+                            <dt><i class="fa fa-clock-o"></i> <spring:message code="registroEntrada.fecha"/>: </dt> <dd> <fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></dd>
+                            <dt><i class="fa fa-book"></i> <spring:message code="registroEntrada.libro.corto"/>: </dt> <dd> ${oficioRemision.libro.nombre}</dd>
+                            <dt><i class="fa fa-user"></i> <spring:message code="usuario.usuario"/>: </dt> <dd> ${oficioRemision.usuarioResponsable.usuario.nombreCompleto}</dd>
                             <dt><i class="fa fa-exchange"></i> <spring:message code="oficioRemision.organismoDestino"/>: </dt> 
                             <dd> ${(empty oficioRemision.organismoDestinatario)? oficioRemision.destinoExternoDenominacion : oficioRemision.organismoDestinatario.denominacion}</dd>
                             <dt><i class="fa fa-bookmark"></i> <spring:message code="oficioRemision.estado"/>: </dt>
@@ -64,7 +64,6 @@
 
                     <c:if test="${fn:length(modelosOficioRemision) > 0}">
                         <div class="panel-footer">
-
                             <form:form modelAttribute="modeloOficioRemision" method="post" cssClass="form-horizontal row pad-lateral-10">
                                 <div class="col-xs-12 btn-block">
                                     <div class="col-xs-6 no-pad-lateral list-group-item-heading">
@@ -73,12 +72,10 @@
                                         </form:select>
                                     </div>
                                     <div class="col-xs-6 no-pad-right list-group-item-heading">
-                                        <button type="button" class="btn btn-warning btn-sm btn-block" onclick="imprimirRecibo('<c:url value="/oficioRemision/${oficioRemision.id}/imprimir/"/>')">Descarregar ofici</button>
+                                        <button type="button" class="btn btn-warning btn-sm btn-block" onclick="imprimirRecibo('<c:url value="/oficioRemision/${oficioRemision.id}/imprimir/"/>')"><spring:message code="oficioRemision.descargar"/></button>
                                     </div>
                                 </div>
                             </form:form>
-
-
                         </div>
                     </c:if>
 

@@ -51,9 +51,6 @@ public class ComunController extends BaseController {
     @EJB(mappedName = "regweb/RegistroEntradaEJB/local")
     public RegistroEntradaLocal registroEntradaEjb;
     
-    @EJB(mappedName = "regweb/OficinaEJB/local")
-    public OficinaLocal oficinaEjb;
-    
     @EJB(mappedName = "regweb/EntidadEJB/local")
     public EntidadLocal entidadEjb;
 
@@ -80,19 +77,10 @@ public class ComunController extends BaseController {
     @RequestMapping(value = "/rol/{rolId}")
     public String cambioRol(@PathVariable Long rolId, HttpServletRequest request) {
 
-        HttpSession session = request.getSession();
-
         try {
-            //Obtenemos los Roles del Usuario mediante el pluging de identificación
-            List<Rol> rolesAutentido = usuarioService.obtenerRoles(getUsuarioAutenticado(request));
-
             Rol rolNuevo = rolEjb.findById(rolId);
 
-            // Comprobamos que disponemos del Rol que queremos utilizar
-            if(rolesAutentido.contains(rolNuevo)){
-                session.setAttribute(RegwebConstantes.SESSION_ROL, rolNuevo);
-                usuarioService.autorizarRol(rolNuevo, request);
-            }else{
+            if(!usuarioService.cambioRol(rolNuevo, request)){
                 Mensaje.saveMessageError(request, getMessage("error.rol.autorizacion"));
             }
 
