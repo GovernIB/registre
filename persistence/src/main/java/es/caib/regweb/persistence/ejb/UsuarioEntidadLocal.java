@@ -79,6 +79,14 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
     public List<UsuarioEntidad> findByEntidad(Long idEntidad) throws Exception;
 
     /**
+     * Retorna todos los UsuarioEntidad activos de una entidad
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public List<UsuarioEntidad> findActivosByEntidad(Long idEntidad) throws Exception;
+
+    /**
      * Devuelve los UsuarioEntidad de una Entidad que tiene el ROL RWE_ADMIN
      * @param idEntidad
      * @return

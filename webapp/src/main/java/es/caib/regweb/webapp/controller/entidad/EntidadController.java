@@ -794,7 +794,7 @@ public class EntidadController extends BaseController {
     public List<UsuarioEntidad> administradoresEntidadModificar(Usuario propietario, Entidad entidad) throws Exception {
 
         // Antes de nada, actualizamos los Roles contra Seycon de los UsuarioEntidad
-        List<UsuarioEntidad> usuarios = usuarioEntidadEjb.findByEntidad(entidad.getId());
+        List<UsuarioEntidad> usuarios = usuarioEntidadEjb.findActivosByEntidad(entidad.getId());
         for (UsuarioEntidad usuario : usuarios) {
             usuarioService.actualizarRoles(usuario.getUsuario());
         }

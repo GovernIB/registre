@@ -73,7 +73,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
         Query q = em.createQuery("Select count(usuarioEntidad.id) from UsuarioEntidad as usuarioEntidad " +
                 "where usuarioEntidad.entidad.id = :idEntidad and usuarioEntidad.activo = true");
 
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idEntidad", idEntidad);
 
         return (Long) q.getSingleResult();
     }
@@ -95,7 +95,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad "
             + " where upper(usuarioEntidad.usuario.identificador) = :identificador");
 
-        q.setParameter("identificador",identificador.toUpperCase());
+        q.setParameter("identificador", identificador.toUpperCase());
 
         List<UsuarioEntidad> usuarioEntidad = q.getResultList();
         if(usuarioEntidad.size() == 1){
@@ -174,6 +174,17 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where " +
                 "usuarioEntidad.entidad.id= :idEntidad order by usuarioEntidad.usuario.apellido1");
+
+        q.setParameter("idEntidad",idEntidad);
+
+        return q.getResultList();
+    }
+
+    @Override
+    public List<UsuarioEntidad> findActivosByEntidad(Long idEntidad) throws Exception {
+
+        Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where " +
+                "usuarioEntidad.entidad.id= :idEntidad and usuarioEntidad.activo = true order by usuarioEntidad.usuario.apellido1");
 
         q.setParameter("idEntidad",idEntidad);
 

@@ -292,6 +292,12 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
 
   }
 
+  /**
+   * Valida la autorización recibida entre las disponibles
+   * @param autorizacion
+   * @return
+   * @throws Exception
+   */
   private Boolean validarAutorizacion(Long autorizacion) throws Exception {
 
     return autorizacion.equals(PERMISO_REGISTRO_ENTRADA) || autorizacion.equals(PERMISO_REGISTRO_SALIDA) || autorizacion.equals(PERMISO_CONSULTA_REGISTRO_ENTRADA) || autorizacion.equals(PERMISO_CONSULTA_REGISTRO_SALIDA);
