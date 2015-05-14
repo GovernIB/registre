@@ -72,7 +72,7 @@
 		  es.caib.regweb.plugins.userinformation.ldap.security_credentials=[PASSWORD of LDAPUSERNAME]
 		  es.caib.regweb.plugins.userinformation.ldap.users_context_dn=cn=Users,dc=ibitnet,dc=lan
 		  es.caib.regweb.plugins.userinformation.ldap.search_scope=onelevel
-		  es.caib.regweb.plugins.userinformation.ldap.search_filter=(|(memberOf=CN=@PFI_ADMIN,CN=Users,DC=ibitnet,DC=lan)(memberOf=CN=@PFI_USER,CN=Users,DC=ibitnet,DC=lan))
+		  es.caib.regweb.plugins.userinformation.ldap.search_filter=(|(memberOf=CN=@RWE_USUARI,CN=Users,DC=ibitnet,DC=lan)(memberOf=CN=@RWE_ADMIN,CN=Users,DC=ibitnet,DC=lan)(memberOf=CN=@RWE_SUPERADMIN,CN=Users,DC=ibitnet,DC=lan))
 		  es.caib.regweb.plugins.userinformation.ldap.attribute.username=sAMAccountName
 		  es.caib.regweb.plugins.userinformation.ldap.attribute.mail=mail
 		  es.caib.regweb.plugins.userinformation.ldap.attribute.administration_id=postOfficeBox
