@@ -64,9 +64,11 @@ public class InicioController extends BaseController{
             if(librosAdministrados!= null && librosAdministrados.size() > 0){
                 //List<RegistroBasico> pendientesVisar = registroEntradaEjb.getByLibrosEstado(librosAdministrados, RegwebConstantes.ESTADO_PENDIENTE_VISAR);
                 //model.addAttribute("pendientesVisar", pendientesVisar);
-                List<RegistroBasico> pendientes = registroEntradaEjb.getByOficinaEstado(oficinaActiva.getId(), RegwebConstantes.ESTADO_PENDIENTE, RegwebConstantes.REGISTROS_PANTALLA_INICIO);
-                model.addAttribute("pendientes", pendientes);
             }
+
+            /* RESERVA DE NÚMERO */
+            List<RegistroBasico> pendientes = registroEntradaEjb.getByOficinaEstado(oficinaActiva.getId(), RegwebConstantes.ESTADO_PENDIENTE, RegwebConstantes.REGISTROS_PANTALLA_INICIO);
+            model.addAttribute("pendientes", pendientes);
 
             /* OFICIOS PENDIENTES DE REMISIÓN */
             // Obtenemos los Libros donde el Usuario puede Registrar de la Oficina Activa
