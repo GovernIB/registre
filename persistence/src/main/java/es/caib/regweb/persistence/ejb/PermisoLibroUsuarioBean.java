@@ -129,8 +129,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
 
         Query q = em.createQuery("Select distinct plu.libro from PermisoLibroUsuario as plu where " +
                 "plu.usuario.id = :idUsuarioEntidad and plu.libro.organismo.estado.id = :vigente and " +
-                "plu.libro.activo = true and " +
-                "(plu.permiso = " + PERMISO_REGISTRO_ENTRADA + " or plu.permiso = "  + PERMISO_REGISTRO_SALIDA + ") and plu.activo = true");
+                "plu.libro.activo = true and plu.activo = true");
 
         q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
         q.setParameter("vigente",vigente.getId());

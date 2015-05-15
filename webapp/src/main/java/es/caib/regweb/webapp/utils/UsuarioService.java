@@ -246,9 +246,9 @@ public class UsuarioService {
         Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
         UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByUsuarioEntidad(usuarioAutenticado.getId(), entidadActiva.getId());
 
-        //Obtenemos los Libros, cuyo Organismo es Vigente y donde el UsuarioEntidad puede Registrar
+        //Obtenemos los Libros, cuyo Organismo es Vigente y donde el UsuarioEntidad tenga algún permiso
         List<Libro> librosRegistro = permisoLibroUsuarioEjb.getLibrosRegistro(usuarioEntidad.getId());
-        log.info("Libros registro usuario: " + Arrays.toString(librosRegistro.toArray()));
+        log.info("Libros usuario: " + Arrays.toString(librosRegistro.toArray()));
 
         Set<ObjetoBasico> oficinasRegistro = new HashSet<ObjetoBasico>();  // Utilizamos un Set porque no permite duplicados
 
