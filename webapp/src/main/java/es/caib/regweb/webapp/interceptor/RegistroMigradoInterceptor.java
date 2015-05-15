@@ -40,8 +40,8 @@ public class RegistroMigradoInterceptor extends HandlerInterceptorAdapter {
             Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
             Boolean tieneRegistrosMigrados = (Boolean) session.getAttribute(RegwebConstantes.SESSION_MIGRADOS);
 
-            // Comprobamos que el usuario dispone del Rol RWE_USUARI
-            if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_USUARI)){
+            // Comprobamos que el usuario dispone del Rol RWE_USUARI o Rol RWE_ADMIN
+            if(!(rolActivo.getNombre().equals(RegwebConstantes.ROL_USUARI)||rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN))){
                 log.info("Error de rol");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
                 response.sendRedirect("/regweb/aviso");

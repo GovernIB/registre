@@ -244,7 +244,9 @@
 
                                     <li class="submenu-complet"><a href="<c:url value="/informe/usuarioLopd"/>"><spring:message code="informe.usuarioLopd"/></a></li>
                                     <li class="submenu-complet"><a href="<c:url value="/informe/registroLopd"/>"><spring:message code="informe.registroLopd"/></a></li>
-                                    <li class="submenu-complet"><a href="<c:url value="/registroMigrado/list"/>"><spring:message code="informe.migradoLopd"/></a></li>
+                                    <c:if test="${registrosMigrados}">
+                                        <li class="submenu-complet"><a href="<c:url value="/registroMigrado/list"/>"><spring:message code="informe.migradoLopd"/></a></li>
+                                    </c:if>
                                     <li class="divider"></li>
 
                                     <li class="dropdown-submenu-left toggle-left">
