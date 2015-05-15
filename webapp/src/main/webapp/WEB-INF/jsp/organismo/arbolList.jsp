@@ -121,7 +121,7 @@
                                                                                 <c:forEach var="oficinasDependiente2" items="${oficinasDependientes}">
                                                                                     <c:if test="${oficinasDependiente2.oficinaResponsable.id == oficinasDependiente.id}">
                                                                                         <li>
-                                                                                            <a href="javascript:void(0);"><span class="badge-arbre btn-ofaux" style="display:closed;"><i class="fa fa-home"></i> ${oficinasDependiente.codigo} - ${oficinasDependiente.denominacion}</span></a>
+                                                                                            <a href="javascript:void(0);"><span class="badge-arbre btn-ofaux" style="display:closed;"><i class="fa fa-home"></i> ${oficinasDependiente2.codigo} - ${oficinasDependiente2.denominacion}</span></a>
                                                                                         </li>
                                                                                     </c:if>
                                                                                 </c:forEach>
@@ -172,7 +172,7 @@
                                                                                                 <c:forEach var="oficinasDependiente2" items="${oficinasDependientes}">
                                                                                                     <c:if test="${oficinasDependiente2.oficinaResponsable.id == oficinasDependiente.id}">
                                                                                                         <li>
-                                                                                                            <a href="javascript:void(0);"><span class="badge-arbre btn-ofaux" style="display:closed;"><i class="fa fa-home"></i> ${oficinasDependiente.codigo} - ${oficinasDependiente.denominacion}</span></a>
+                                                                                                            <a href="javascript:void(0);"><span class="badge-arbre btn-ofaux" style="display:closed;"><i class="fa fa-home"></i> ${oficinasDependiente2.codigo} - ${oficinasDependiente2.denominacion}</span></a>
                                                                                                         </li>
                                                                                                     </c:if>
                                                                                                 </c:forEach>
@@ -223,7 +223,7 @@
                                                                                                                 <c:forEach var="oficinasDependiente2" items="${oficinasDependientes}">
                                                                                                                     <c:if test="${oficinasDependiente2.oficinaResponsable.id == oficinasDependiente.id}">
                                                                                                                         <li>
-                                                                                                                            <a href="javascript:void(0);"><span class="badge-arbre btn-ofaux" style="display:closed;"><i class="fa fa-home"></i> ${oficinasDependiente.codigo} - ${oficinasDependiente.denominacion}</span></a>
+                                                                                                                            <a href="javascript:void(0);"><span class="badge-arbre btn-ofaux" style="display:closed;"><i class="fa fa-home"></i> ${oficinasDependiente2.codigo} - ${oficinasDependiente2.denominacion}</span></a>
                                                                                                                         </li>
                                                                                                                     </c:if>
                                                                                                                 </c:forEach>
@@ -274,7 +274,7 @@
                                                                                                                                 <c:forEach var="oficinasDependiente2" items="${oficinasDependientes}">
                                                                                                                                     <c:if test="${oficinasDependiente2.oficinaResponsable.id == oficinasDependiente.id}">
                                                                                                                                         <li>
-                                                                                                                                            <a href="javascript:void(0);"><span class="badge-arbre btn-ofaux" style="display:closed;"><i class="fa fa-home"></i> ${oficinasDependiente.codigo} - ${oficinasDependiente.denominacion}</span></a>
+                                                                                                                                            <a href="javascript:void(0);"><span class="badge-arbre btn-ofaux" style="display:closed;"><i class="fa fa-home"></i> ${oficinasDependiente2.codigo} - ${oficinasDependiente2.denominacion}</span></a>
                                                                                                                                         </li>
                                                                                                                                     </c:if>
                                                                                                                                 </c:forEach>
@@ -325,7 +325,7 @@
                                                                                                                                                 <c:forEach var="oficinasDependiente2" items="${oficinasDependientes}">
                                                                                                                                                     <c:if test="${oficinasDependiente2.oficinaResponsable.id == oficinasDependiente.id}">
                                                                                                                                                         <li>
-                                                                                                                                                            <a href="javascript:void(0);"><span class="badge-arbre btn-ofaux" style="display:closed;"><i class="fa fa-home"></i> ${oficinasDependiente.codigo} - ${oficinasDependiente.denominacion}</span></a>
+                                                                                                                                                            <a href="javascript:void(0);"><span class="badge-arbre btn-ofaux" style="display:closed;"><i class="fa fa-home"></i> ${oficinasDependiente2.codigo} - ${oficinasDependiente2.denominacion}</span></a>
                                                                                                                                                         </li>
                                                                                                                                                     </c:if>
                                                                                                                                                 </c:forEach>
@@ -376,7 +376,7 @@
                                                                                                                                                                 <c:forEach var="oficinasDependiente2" items="${oficinasDependientes}">
                                                                                                                                                                     <c:if test="${oficinasDependiente2.oficinaResponsable.id == oficinasDependiente.id}">
                                                                                                                                                                         <li>
-                                                                                                                                                                            <a href="javascript:void(0);"><span class="badge-arbre btn-ofaux" style="display:closed;"><i class="fa fa-home"></i> ${oficinasDependiente.codigo} - ${oficinasDependiente.denominacion}</span></a>
+                                                                                                                                                                            <a href="javascript:void(0);"><span class="badge-arbre btn-ofaux" style="display:closed;"><i class="fa fa-home"></i> ${oficinasDependiente2.codigo} - ${oficinasDependiente2.denominacion}</span></a>
                                                                                                                                                                         </li>
                                                                                                                                                                     </c:if>
                                                                                                                                                                 </c:forEach>
@@ -427,7 +427,7 @@
                                                                                                                                                                                 <c:forEach var="oficinasDependiente2" items="${oficinasDependientes}">
                                                                                                                                                                                     <c:if test="${oficinasDependiente2.oficinaResponsable.id == oficinasDependiente.id}">
                                                                                                                                                                                         <li>
-                                                                                                                                                                                            <a href="javascript:void(0);"><span class="badge-arbre btn-ofaux" style="display:closed;"><i class="fa fa-home"></i> ${oficinasDependiente.codigo} - ${oficinasDependiente.denominacion}</span></a>
+                                                                                                                                                                                            <a href="javascript:void(0);"><span class="badge-arbre btn-ofaux" style="display:closed;"><i class="fa fa-home"></i> ${oficinasDependiente2.codigo} - ${oficinasDependiente2.denominacion}</span></a>
                                                                                                                                                                                         </li>
                                                                                                                                                                                     </c:if>
                                                                                                                                                                                 </c:forEach>
