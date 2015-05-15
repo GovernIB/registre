@@ -85,8 +85,8 @@
           </property>
           <property name="authenticationManager" ref="authenticationManager"/>
       </bean>
-
+<!-- 
       <bean class="es.caib.regweb.webapp.security.AuthenticationSuccessListener" />
-
+ -->
 
 </beans>
