@@ -163,6 +163,8 @@ function limpiarFormularioBusqueda(tipoOrganismo){
 
 
 function inicializarBuscador(selectNivelAdministracion, selectComunidadAutonoma, idNivelAdministracion, idComunidadAutonoma, tipoOrganismo){
+
+
          $('#reloadorg'+tipoOrganismo).hide();
          $(selectNivelAdministracion).val(idNivelAdministracion);
          $(selectNivelAdministracion).trigger("chosen:updated");

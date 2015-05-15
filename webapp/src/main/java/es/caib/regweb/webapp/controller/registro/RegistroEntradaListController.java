@@ -166,7 +166,9 @@ public class RegistroEntradaListController extends BaseController {
         RegistroEntrada registro = registroEntradaEjb.findById(idRegistro);
         Entidad entidad = getEntidadActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+        Oficina oficina = getOficinaActiva(request);
 
+        model.addAttribute("oficina", oficina);
         model.addAttribute("registro",registro);
 
         ModeloRecibo modeloRecibo = new ModeloRecibo();

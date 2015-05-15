@@ -510,7 +510,7 @@
   tradsinteresado['usuario.apellido1'] = "<spring:message code='usuario.apellido1' javaScriptEscape='true' />";
 </script>
 
-<%--<script type="text/javascript" src="<c:url value="/js/busquedaorganismo.js"/>"></script>--%>
+<script type="text/javascript" src="<c:url value="/js/busquedaorganismo.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/interesados.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/representantes.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/sello.js"/>"></script>

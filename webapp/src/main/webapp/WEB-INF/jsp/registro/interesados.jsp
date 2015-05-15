@@ -159,6 +159,17 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
 <%--Nuevo Interesado--%>
 <c:import url="../registro/formularioInteresado.jsp"/>
 
+<script type="text/javascript" src="<c:url value="/js/busquedaorganismo.js"/>"></script>
+
+<script type="text/javascript">
+  <%-- traduccions para busquedaorganismo.js--%>
+  var tradorganismo = new Array();
+  tradorganismo['organismo.denominacion'] = "<spring:message code='organismo.denominacion' javaScriptEscape='true' />";
+  tradorganismo['regweb.acciones'] = "<spring:message code='regweb.acciones' javaScriptEscape='true' />";
+
+
+</script>
+
 <script type="text/javascript">
     var urlObtenerPersona = '<c:url value="/persona/obtenerPersona"/>';
     var urlAddPersona = '<c:url value="/persona/addPersonaSesion"/>';
