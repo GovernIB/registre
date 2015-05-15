@@ -146,7 +146,7 @@ public class RegistroSalidaBean extends BaseEjbJPA<RegistroSalida, Long> impleme
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        StringBuffer query = new StringBuffer("Select DISTINCT registroSalida from RegistroSalida as registroSalida join registroSalida.registroDetalle.interesados interessat ");
+        StringBuffer query = new StringBuffer("Select DISTINCT registroSalida from RegistroSalida as registroSalida left join registroSalida.registroDetalle.interesados interessat ");
 
         if(registroSalida.getNumeroRegistroFormateado()!= null && registroSalida.getNumeroRegistroFormateado().length() > 0){
        	 where.add(" registroSalida.numeroRegistroFormateado LIKE :numeroRegistroFormateado");

@@ -152,7 +152,7 @@ public class RegistroEntradaBean extends BaseEjbJPA<RegistroEntrada, Long> imple
          Map<String, Object> parametros = new HashMap<String, Object>();
          List<String> where = new ArrayList<String>();
 
-         StringBuffer query = new StringBuffer("Select DISTINCT registroEntrada from RegistroEntrada as registroEntrada join registroEntrada.registroDetalle.interesados interessat ");
+         StringBuffer query = new StringBuffer("Select DISTINCT registroEntrada from RegistroEntrada as registroEntrada left join registroEntrada.registroDetalle.interesados interessat ");
          									 //+ ", registroDetalle from RegistroDetalle as registroDetalle "
         		 							 //+ ", interesado from Interesado as interesado ");
 
