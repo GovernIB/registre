@@ -141,4 +141,13 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
         return  q.getResultList();
     }
 
+    @Override
+    public List<Libro> getTodosLibrosEntidad(Long idEntidad) throws Exception{
+
+        Query q = em.createQuery("Select libro from Libro as libro where libro.organismo.entidad.id = :idEntidad order by libro.id");
+        q.setParameter("idEntidad",idEntidad);
+
+        return q.getResultList();
+    }
+
 }

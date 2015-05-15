@@ -140,23 +140,34 @@ public interface PermisoLibroUsuarioLocal extends BaseEjb<PermisoLibroUsuario, L
     public void actualizarPermiso(Long idPermisoLibroUsuario, Boolean activo) throws Exception;
 
     /**
-     * Retorna los {@link es.caib.regweb.model.Libro} de una Entidad donde un UsuarioEntidad tiene permisos creados
-     * según el permiso que se le pasa por parámetro.
+     * Crea los {@link es.caib.regweb.model.PermisoLibroUsuario} a False de un UsuarioEntidad para todos los Libros de una Entidad
      * @param idEntidad
-     * @param usuario
-     * @return
      * @throws Exception
      */
-    public List<Libro> getLibrosConPermisoCreado(Long idEntidad, UsuarioEntidad usuario) throws Exception;
+    public void crearPermisosUsuarioNuevo(UsuarioEntidad usuarioEntidad, Long idEntidad) throws Exception;
 
     /**
-     * Retorna los {@link es.caib.regweb.model.Libro} de una Entidad donde un UsuarioEntidad NO tiene permisos creados
-     * según el permiso que se le pasa por parámetro.
+     * Crea los {@link es.caib.regweb.model.PermisoLibroUsuario} a False de un Libro para todos los UsuariosEntidad de una Entidad
+     * @param libro
      * @param idEntidad
-     * @param usuario
-     * @return
      * @throws Exception
      */
-    public List<Libro> getLibrosSinPermisoCreado(Long idEntidad, UsuarioEntidad usuario) throws Exception;
+    public void crearPermisosLibroNuevo(Libro libro, Long idEntidad) throws Exception;
+
+    /**
+     * Crea los {@link es.caib.regweb.model.PermisoLibroUsuario} a False de todas las Entidades que todavía no estan creados
+     * @throws Exception
+     */
+    public void crearPermisosNoExistentes() throws Exception;
+
+    /**
+     * Comprueba si un Usuario tiene Inicializado el Permiso espeficicado sobre el Libro especificado.
+     * @param idUsuarioEntidad
+     * @param idLibro
+     * @param idPermiso
+     * @return true si ya existe el Permiso en la Base de Datos, false si no existe.
+     * @throws Exception
+     */
+    public Boolean existePermiso(Long idUsuarioEntidad, Long idLibro, Long idPermiso) throws Exception;
 
 }

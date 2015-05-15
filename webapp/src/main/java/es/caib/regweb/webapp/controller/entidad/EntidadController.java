@@ -472,38 +472,12 @@ public class EntidadController extends BaseController {
             PermisoLibroUsuarioForm permisoLibroUsuarioForm = new PermisoLibroUsuarioForm();
             permisoLibroUsuarioForm.setUsuarioEntidad(usuarioEntidad);
 
-            ArrayList<PermisoLibroUsuario> plus = new ArrayList<PermisoLibroUsuario>();
-
-            // Creamos la matriz de permisos-libros
-            for ( int row = 0; row < libros.size(); row ++ ){
-
-                //Obtenemos los permisos del Libro
-                List<PermisoLibroUsuario> plu = permisoLibroUsuarioEjb.findByUsuarioLibro(usuarioEntidad.getId(), libros.get(row).getId());
-
-                if(plu.size() == 0){ //Si no tiene los creamos
-
-                    for ( int column = 0; column < RegwebConstantes.PERMISOS.length; column++ ){
-                        PermisoLibroUsuario plu2 = new PermisoLibroUsuario();
-                        plu2.setLibro(libros.get(row));
-                        plu2.setPermiso(RegwebConstantes.PERMISOS[column]);
-                        plus.add(plu2);
-                    }
-                }else{ //Si tiene, los añadimos.
-                    plus.addAll(plu);
-                }
-            }
-
-            permisoLibroUsuarioForm.setPermisoLibroUsuarios(plus);
-
-            List<Libro> librosConPermiso = permisoLibroUsuarioEjb.getLibrosConPermisoCreado(entidad.getId(), usuarioEntidad);
-            List<Libro> librosSinPermiso = permisoLibroUsuarioEjb.getLibrosSinPermisoCreado(entidad.getId(), usuarioEntidad);
+            permisoLibroUsuarioForm.setPermisoLibroUsuarios(permisoLibroUsuarioEjb.findByUsuario(usuarioEntidad.getId()));
 
             model.addAttribute(permisoLibroUsuarioForm);
             model.addAttribute("entidad", entidad);
             model.addAttribute("libros", libros);
             model.addAttribute("permisos", RegwebConstantes.PERMISOS);
-            model.addAttribute("librosConPermiso", librosConPermiso);
-            model.addAttribute("librosSinPermiso", librosSinPermiso);
 
             return "usuario/permisoLibroUsuarioForm";
         }else{

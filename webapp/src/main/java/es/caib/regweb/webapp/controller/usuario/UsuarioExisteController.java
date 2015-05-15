@@ -92,19 +92,22 @@ public class UsuarioExisteController extends BaseController {
                 //Comprobamos si el usuario no pertecene ya a la Entidad
                 UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByUsuarioEntidad(usuarioExistente.getId(), entidad.getId());
 
-                // Si no pertenecía a la entidad, lo creamos y tiene el rol RWE_USUARI
+                // Si no pertenecía a la entidad, lo creamos
                 if (usuarioEntidad == null){
 
                     // Creamos el UsuarioEntidad
                     usuarioEntidad = new UsuarioEntidad();
                     usuarioEntidad.setUsuario(usuarioExistente);
                     usuarioEntidad.setEntidad(entidad);
-                    usuarioEntidadEjb.persist(usuarioEntidad);
+                    UsuarioEntidad usuarioEntidadCreado = usuarioEntidadEjb.persist(usuarioEntidad);
+
+                    // Se crean los permisos para el nuevo Usuario creado
+                    permisoLibroUsuarioEjb.crearPermisosUsuarioNuevo(usuarioEntidadCreado, getEntidadActiva(request).getId());
 
                     Mensaje.saveMessageInfo(request, getMessage("usuarioEntidad.nuevo.ok"));
                     return "redirect:/entidad/usuarios";
 
-                }else{ //Si tiene el rol RWE_USUARI
+                }else{ //Si ya pertenecia a la Entidad, lo volvemos a activar
 
                     if(usuarioEntidad.getActivo()){ // si ya está activo
                         Mensaje.saveMessageInfo(request, getMessage("usuarioEntidad.existente"));

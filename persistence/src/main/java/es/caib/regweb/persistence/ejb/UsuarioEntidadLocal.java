@@ -138,4 +138,12 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @throws Exception
      */
     public void actualizarOficinaUsuario(Long idUsuario, Long idOficina) throws Exception;
+
+    /**
+     * Devuelve los UsuarioEntidad de una Entidad que tiene el ROL RWE_USUARIO activos o no activos
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public List<UsuarioEntidad> findOperadoresByEntidad(Long idEntidad) throws Exception;
 }

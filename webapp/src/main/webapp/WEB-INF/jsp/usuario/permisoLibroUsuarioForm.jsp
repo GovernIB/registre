@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="es.caib.regweb.utils.RegwebConstantes" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
-
+<un:useConstants var="RegwebConstantes" className="es.caib.regweb.utils.RegwebConstantes"/>
 <!DOCTYPE html>
 <html lang="ca">
 <head>
@@ -40,9 +41,6 @@
                                 <c:if test="${permisoLibroUsuarioForm.usuarioEntidad != null}">
                                     <spring:message code="usuario.modificar.permisos"/> ${permisoLibroUsuarioForm.usuarioEntidad.usuario.nombreCompleto}
                                 </c:if>
-                                <c:if test="${permisoLibroUsuarioForm.usuarioEntidad == null}">
-                                    <spring:message code="usuario.asignar.permisos"/>
-                                </c:if>
                             </strong>
                         </h3>
                     </div>
@@ -71,27 +69,18 @@
                                                 </tr>
                                             </c:if>
                                             <c:if test="${not empty libros}">
-                                                <c:forEach var="libro" items="${librosConPermiso}">
+
+                                                <c:forEach var="libro" items="${libros}" varStatus="contador">
+                                                    <c:set var="sizePermisos" value="<%=RegwebConstantes.PERMISOS.length%>"/>
+                                                    <c:set var="inicio" value="${contador.index * sizePermisos}"/>
+                                                    <c:set var="fin" value="${inicio+sizePermisos-1}"/>
                                                     <tr>
                                                         <td>${libro.nombreCompleto}</td>
-                                                        <c:forEach var="plus" items="${permisoLibroUsuarioForm.permisoLibroUsuarios}" varStatus="status">
-                                                            <c:if test="${libro.id == plus.libro.id}">
+                                                        <c:forEach var="plus" items="${permisoLibroUsuarioForm.permisoLibroUsuarios}" varStatus="status" begin="${inicio}" end="${fin}">
                                                                 <form:hidden path="permisoLibroUsuarios[${status.index}].id"/>
+                                                                <%--<form:hidden path="permisoLibroUsuarios[${status.index}].libro.id"/>
+                                                                <form:hidden path="permisoLibroUsuarios[${status.index}].permiso"/>--%>
                                                                 <td style="text-align:center;"><form:checkbox path="permisoLibroUsuarios[${status.index}].activo"/></td>
-                                                            </c:if>
-                                                        </c:forEach>
-                                                    </tr>
-                                                </c:forEach>
-                                                <c:forEach var="libro" items="${librosSinPermiso}">
-                                                    <tr>
-                                                        <td>${libro.nombreCompleto}</td>
-                                                        <c:forEach var="plus" items="${permisoLibroUsuarioForm.permisoLibroUsuarios}" varStatus="status">
-                                                            <c:if test="${libro.id == plus.libro.id}">
-                                                                <form:hidden path="permisoLibroUsuarios[${status.index}].id"/>
-                                                                <form:hidden path="permisoLibroUsuarios[${status.index}].libro.id"/>
-                                                                <form:hidden path="permisoLibroUsuarios[${status.index}].permiso"/>
-                                                                <td style="text-align:center;"><form:checkbox path="permisoLibroUsuarios[${status.index}].activo"/></td>
-                                                            </c:if>
                                                         </c:forEach>
                                                     </tr>
                                                 </c:forEach>

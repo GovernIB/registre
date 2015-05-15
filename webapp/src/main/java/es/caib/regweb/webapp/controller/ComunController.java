@@ -286,4 +286,24 @@ public class ComunController extends BaseController {
         return "redirect:/inici";
 
     }
+
+
+    @RequestMapping(value = "/crearPermisos")
+    public String crearPermisos(HttpServletRequest request) throws Exception{
+
+        Rol rolActivo = getRolActivo(request);
+        if(rolActivo.getNombre().equals(RegwebConstantes.ROL_SUPERADMIN)){
+
+            log.info("Antes crearPermisosNoExistentes");
+            log.info("-------------------------------------------");
+            permisoLibroUsuarioEjb.crearPermisosNoExistentes();
+            log.info("-------------------------------------------");
+            log.info("despues crearPermisosNoExistentes");
+
+        }
+
+        return "redirect:/inici";
+
+    }
+
 }

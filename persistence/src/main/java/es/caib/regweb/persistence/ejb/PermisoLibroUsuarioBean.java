@@ -33,6 +33,18 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     @EJB(mappedName = "regweb/CatEstadoEntidadEJB/local")
     public CatEstadoEntidadLocal catEstadoEntidadEjb;
 
+    @EJB(mappedName = "regweb/UsuarioEntidadEJB/local")
+    public UsuarioEntidadLocal usuarioEntidadEjb;
+
+    @EJB(mappedName = "regweb/LibroEJB/local")
+    public LibroLocal libroEjb;
+
+    @EJB(mappedName = "regweb/PermisoLibroUsuarioEJB/local")
+    public PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
+
+    @EJB(mappedName = "regweb/EntidadEJB/local")
+    public EntidadLocal entidadEjb;
+
     @Override
     public PermisoLibroUsuario findById(Long id) throws Exception {
 
@@ -70,7 +82,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     public List<PermisoLibroUsuario> findByUsuario(Long idUsuarioEntidad) throws Exception {
 
         Query q = em.createQuery("Select plu from PermisoLibroUsuario as plu where " +
-                "plu.usuario.id = :idUsuarioEntidad");
+                "plu.usuario.id = :idUsuarioEntidad order by plu.libro.id, plu.permiso");
 
         q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
 
@@ -258,30 +270,82 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     }
 
     @Override
-    public List<Libro> getLibrosConPermisoCreado(Long idEntidad, UsuarioEntidad usuario) throws Exception {
+    public void crearPermisosUsuarioNuevo(UsuarioEntidad usuarioEntidad, Long idEntidad) throws Exception {
 
-        Query q = em.createQuery("Select distinct plu.libro from PermisoLibroUsuario as plu where " +
-                "plu.libro.organismo.entidad.id = :idEntidad and plu.usuario.id = :idUsuarioEntidad and " +
-                "plu.libro.activo = true");
+        List<Libro> librosEntidad = libroEjb.getTodosLibrosEntidad(idEntidad);
+        for (Libro libroEntidad : librosEntidad) {
+            for (int column = 0; column < RegwebConstantes.PERMISOS.length; column++) {
+                PermisoLibroUsuario plu = new PermisoLibroUsuario();
+                plu.setLibro(libroEntidad);
+                plu.setPermiso(RegwebConstantes.PERMISOS[column]);
+                plu.setUsuario(usuarioEntidad);
+                permisoLibroUsuarioEjb.persist(plu);
+            }
+        }
 
-        q.setParameter("idEntidad",idEntidad);
-        q.setParameter("idUsuarioEntidad",usuario.getId());
-
-        return q.getResultList();
     }
 
     @Override
-    public List<Libro> getLibrosSinPermisoCreado(Long idEntidad, UsuarioEntidad usuario) throws Exception {
+    public void crearPermisosLibroNuevo(Libro libro, Long idEntidad) throws Exception {
 
-        Query q = em.createQuery("Select distinct libro from Libro as libro where libro.organismo.entidad.id = :idEntidad and " +
-                "libro.activo = true and libro.id not in (Select distinct plu.libro.id from PermisoLibroUsuario as plu where " +
-                "plu.libro.organismo.entidad.id = :idEntidad and plu.usuario.id = :idUsuarioEntidad and " +
-                "plu.libro.activo = true)");
+        List<UsuarioEntidad> usuariosEntidad = usuarioEntidadEjb.findOperadoresByEntidad(idEntidad);
+        for (UsuarioEntidad usuario : usuariosEntidad) {
+            for ( int column = 0; column < RegwebConstantes.PERMISOS.length; column++ ){
+                PermisoLibroUsuario plu = new PermisoLibroUsuario();
+                plu.setLibro(libro);
+                plu.setPermiso(RegwebConstantes.PERMISOS[column]);
+                plu.setUsuario(usuario);
+                permisoLibroUsuarioEjb.persist(plu);
+            }
+        }
 
-        q.setParameter("idEntidad",idEntidad);
-        q.setParameter("idUsuarioEntidad",usuario.getId());
+    }
 
-        return q.getResultList();
+    @Override
+    public void crearPermisosNoExistentes() throws Exception {
+
+        List<Entidad> entidades = entidadEjb.getAll();
+
+        for (Entidad entidad : entidades) {
+            log.info("ENTITAT: " + entidad.getDescripcion());
+
+            List<UsuarioEntidad> usuariosEntidad = usuarioEntidadEjb.findOperadoresByEntidad(entidad.getId());
+            List<Libro> libros = libroEjb.getTodosLibrosEntidad(entidad.getId());
+
+            for (UsuarioEntidad usuario : usuariosEntidad) {
+                for (Libro libro : libros) {
+                    for (int column = 0; column < RegwebConstantes.PERMISOS.length; column++) {
+
+                        if (!permisoLibroUsuarioEjb.existePermiso(usuario.getId(),libro.getId(),Long.valueOf(column + 1))) {
+                            log.info("CREAT_PERMIS (LLIBRE/USUARI/PERMIS): " + libro.getCodigo() + " / " + usuario.getNombreCompleto() + " / " + RegwebConstantes.PERMISOS[column]);
+                            PermisoLibroUsuario plu = new PermisoLibroUsuario();
+                            plu.setLibro(libro);
+                            plu.setPermiso(RegwebConstantes.PERMISOS[column]);
+                            plu.setUsuario(usuario);
+                            permisoLibroUsuarioEjb.persist(plu);
+                        }
+
+                    }
+                }
+            }
+
+        }
+    }
+
+    @Override
+    public Boolean existePermiso(Long idUsuarioEntidad, Long idLibro, Long idPermiso) throws Exception{
+
+        Query q = em.createQuery("Select plu from PermisoLibroUsuario as plu where " +
+                "plu.usuario.id = :idUsuarioEntidad and plu.libro.id = :idLibro and " +
+                "plu.permiso = :idPermiso");
+
+        q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
+        q.setParameter("idLibro",idLibro);
+        q.setParameter("idPermiso",idPermiso);
+
+        List<PermisoLibroUsuario> permisos = q.getResultList();
+
+        return permisos.size() == 1;
     }
 
 }

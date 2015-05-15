@@ -17,7 +17,7 @@ import java.util.List;
 public interface LibroLocal extends BaseEjb<Libro, Long> {
 
     /**
-     * Devuelve todos los Libros de relacionados con algún Organismos de la Entidad
+     * Devuelve los Libros activos relacionados con algún Organismos de la Entidad
      * @param idEntidad
      * @return
      * @throws Exception
@@ -66,5 +66,13 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
      * @throws Exception
      */
     public List<Libro> getLibrosOrganismo(Long idOrganismo) throws Exception;
+
+    /**
+     * Retorna todos los Libros de relacionados con algún Organismos de la Entidad, activo o no
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public List<Libro> getTodosLibrosEntidad(Long idEntidad) throws Exception;
 
 }

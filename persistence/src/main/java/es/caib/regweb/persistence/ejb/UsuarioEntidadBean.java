@@ -306,4 +306,15 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
         q.executeUpdate();
 
     }
+
+    @Override
+    public List<UsuarioEntidad> findOperadoresByEntidad(Long idEntidad) throws Exception {
+
+        Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where " +
+                "usuarioEntidad.entidad.id= :idEntidad and usuarioEntidad.usuario.rwe_usuari = true order by usuarioEntidad.usuario.apellido1");
+
+        q.setParameter("idEntidad",idEntidad);
+
+        return q.getResultList();
+    }
 }

@@ -113,7 +113,10 @@ public class LibroController extends BaseController {
                 libro.setContadorEntrada(contadorEntrada);
                 libro.setContadorSalida(contadorSalida);
                 libro.setContadorOficioRemision(contadorOficio);
-                libroEjb.persist(libro);
+                Libro libroCreado =libroEjb.persist(libro);
+
+                // Se crean los permisos para el nuevo Libro creado
+                permisoLibroUsuarioEjb.crearPermisosLibroNuevo(libroCreado, getEntidadActiva(request).getId());
 
                 Mensaje.saveMessageInfo(request, getMessage("regweb.guardar.registro"));
                 status.setComplete();
