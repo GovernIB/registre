@@ -139,22 +139,41 @@ public class RegistroSalidaBean extends BaseEjbJPA<RegistroSalida, Long> impleme
     }
 
     @Override
-    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, List<Libro> libros, Boolean anexos) throws Exception{
+    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, List<Libro> libros, String interesadoNom, String interesadoDoc, String organoOrig, Boolean anexos) throws Exception{
 
         Query q;
         Query q2;
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        StringBuffer query = new StringBuffer("Select registroSalida from RegistroSalida as registroSalida ");
+        StringBuffer query = new StringBuffer("Select DISTINCT registroSalida from RegistroSalida as registroSalida left join registroSalida.registroDetalle.interesados interessat ");
 
+        if(registroSalida.getNumeroRegistroFormateado()!= null && registroSalida.getNumeroRegistroFormateado().length() > 0){
+       	 where.add(" registroSalida.numeroRegistroFormateado LIKE :numeroRegistroFormateado");
+       	 parametros.put("numeroRegistroFormateado", "%"+registroSalida.getNumeroRegistroFormateado()+"%");
+        }
 
-        if(registroSalida.getNumeroRegistroFormateado()!= null && registroSalida.getNumeroRegistroFormateado().length() > 0){where.add(" registroSalida.numeroRegistroFormateado = :numeroRegistroFormateado"); parametros.put("numeroRegistroFormateado",registroSalida.getNumeroRegistroFormateado());}
-
-        if(registroSalida.getRegistroDetalle().getExtracto() != null && registroSalida.getRegistroDetalle().getExtracto().length() > 0){where.add(DataBaseUtils.like("registroSalida.registroDetalle.extracto","extracto",parametros,registroSalida.getRegistroDetalle().getExtracto()));}
+        if(registroSalida.getRegistroDetalle().getExtracto() != null && registroSalida.getRegistroDetalle().getExtracto().length() > 0){
+        	where.add(DataBaseUtils.like("registroSalida.registroDetalle.extracto","extracto",parametros,registroSalida.getRegistroDetalle().getExtracto()));
+        }
+        
+        //Filtros para interesado y organo destinatario
+        boolean filtramosInteresado = false;
+        if (interesadoNom!=null && !"".equals(interesadoNom) && !"null".equalsIgnoreCase(interesadoNom)) {
+       	 where.add(" ((UPPER(interessat.nombre)||' '||UPPER(interessat.apellido1)||' '||UPPER(interessat.apellido2) LIKE UPPER(:interesadoNom)) or"
+       	 		+  " (UPPER(interessat.razonSocial) LIKE UPPER(:interesadoNom)) ) "); //or (UPPER(registroEntrada.destino.denominacion) LIKE UPPER(:interesadoNom))
+       	 parametros.put("interesadoNom", "%"+interesadoNom.trim()+"%");
+       	 filtramosInteresado=true;
+        }
+        boolean filtramosDoc = false;
+        if (interesadoDoc!=null && !"".equals(interesadoDoc) && !"null".equalsIgnoreCase(interesadoDoc)) {
+       	 where.add(" (UPPER(interessat.documento) LIKE UPPER(:interesadoDoc)) ");
+       	 parametros.put("interesadoDoc", "%"+interesadoDoc.trim()+"%");
+       	 filtramosDoc = true;
+        }        
 
         if(registroSalida.getEstado() != null && registroSalida.getEstado() > 0) {
-           where.add(" registroSalida.estado = :idEstadoRegistro");
+           where.add(" registroSalida.estado = :idEstadoRegistro ");
            parametros.put("idEstadoRegistro",registroSalida.getEstado());
          }
 
@@ -202,10 +221,29 @@ public class RegistroSalidaBean extends BaseEjbJPA<RegistroSalida, Long> impleme
 
 
         Paginacion paginacion = null;
+        List<Object> resultadosPrincipal = q.getResultList();
+        
+        if (filtramosInteresado && filtramosDoc) {
+       	 for (int r=resultadosPrincipal.size()-1; r>=0; r--) {
+       		 RegistroSalida re = (RegistroSalida)resultadosPrincipal.get(r);
+       		 if (!registreSortidaConteInteressat(re, interesadoNom, interesadoDoc)) {
+       			 resultadosPrincipal.remove(r);
+       		 }
+       	 }
+        }
+        
+        if (organoOrig!=null && !"".equals(organoOrig) && !"null".equalsIgnoreCase(organoOrig)) {
+       	 for (int r=resultadosPrincipal.size()-1; r>=0; r--) {
+       		RegistroSalida re = (RegistroSalida)resultadosPrincipal.get(r);
+       		 if (!registreSortidaEsDeOrganDesti(re, organoOrig)) {
+       			 resultadosPrincipal.remove(r);
+       		 }
+       	 }
+        }
 
         if(pageNumber != null){ // Comprobamos si es una busqueda paginada o no
-            Long total = (Long)q2.getSingleResult();
-            paginacion = new Paginacion(total.intValue(), pageNumber);
+            int total  = resultadosPrincipal.size();//(Long)q2.getSingleResult();
+            paginacion = new Paginacion(total, pageNumber);
             int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
             q.setFirstResult(inicio);
             q.setMaxResults(RESULTADOS_PAGINACION);
@@ -213,11 +251,44 @@ public class RegistroSalidaBean extends BaseEjbJPA<RegistroSalida, Long> impleme
             paginacion = new Paginacion(0, 0);
         }
 
-        paginacion.setListado(q.getResultList());
+        paginacion.setListado(resultadosPrincipal);
 
         return paginacion;
     }
 
+    private boolean registreSortidaConteInteressat(RegistroSalida ri, String int_nom, String int_doc) {
+  		 for (int i=0; i<ri.getRegistroDetalle().getInteresados().size(); i++) {
+			 Interesado interesat = ri.getRegistroDetalle().getInteresados().get(i);
+			 String nomComplet = "";
+			 
+			 if (interesat.getNombre()!=null && !"".equals(interesat.getNombre()) && !" ".equals(interesat.getNombre()) && !"null".equalsIgnoreCase(interesat.getNombre())) {
+				 nomComplet = interesat.getNombre() +" "+ interesat.getApellido1();
+				 if (interesat.getApellido2()!=null && !"".equals(interesat.getApellido2()) && !" ".equals(interesat.getApellido2()) && !"null".equalsIgnoreCase(interesat.getApellido2())) {
+					 nomComplet += " "+ interesat.getApellido2();
+				 }				 
+			 }else{
+				 nomComplet = interesat.getRazonSocial();
+			 }
+
+			 if (nomComplet.trim().toUpperCase().contains(int_nom.trim().toUpperCase()) && interesat.getDocumento().trim().toUpperCase().contains(int_doc.trim().toUpperCase())) {
+				 return true;
+			 }
+		 }
+  		 return false;
+    }
+    
+    private boolean registreSortidaEsDeOrganDesti(RegistroSalida ri, String org_cod) {
+    	
+    	if (org_cod.equals(ri.getOrigenExternoCodigo())) {
+    		return true;
+    	}
+    	
+    	if (ri.getOrigen()!=null && org_cod.equals(ri.getOrigen().getCodigo())) {
+    		return true;
+    	}
+    	
+    	return false;
+    }
 
     @Override
     public List<RegistroSalida> buscaLibroRegistro(Date fechaInicio, Date fechaFin, List<Libro> libros) throws Exception{

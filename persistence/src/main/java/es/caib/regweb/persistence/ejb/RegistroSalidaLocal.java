@@ -8,6 +8,7 @@ import es.caib.regweb.persistence.utils.Paginacion;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
+
 import java.util.Date;
 import java.util.List;
 
@@ -45,7 +46,7 @@ public interface RegistroSalidaLocal extends BaseEjb<RegistroSalida, Long> {
      * @return
      * @throws Exception
      */
-    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, List<Libro> libros, Boolean anexos) throws Exception;
+    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, List<Libro> libros, String interesadoNom, String interesadoDoc, String organoOrig, Boolean anexos) throws Exception;
 
     
     /**
