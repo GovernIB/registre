@@ -48,9 +48,6 @@
                         <!-- Formulario -->
                         
                         <div class="panel-body">
-
-
-
                         
                             <form:errors path="entidad.sello" cssClass="has-error help-block" element="span"><span class="help-block-red"><spring:message code="entidad.sello.obligatorio"/></span></form:errors>
                             <form:errors path="entidad.numRegistro" cssClass="has-error help-block" element="span"><span class="help-block-red"><spring:message code="entidad.numRegistro.obligatorio"/></span></form:errors>
@@ -152,27 +149,62 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <!-- Fi datos -->
 
                                     <div class="tab-pane" id="Formatos">
-                                        <div class="form-group col-xs-6">
-                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                        <div class="form-group col-xs-12">
+                                            <div class="col-xs-2 pull-left etiqueta_regweb control-label">
                                                 <form:label path="entidad.sello"><span class="text-danger">*</span> <spring:message code="entidad.sello"/></form:label>
                                             </div>
-                                            <div class="col-xs-8">
+                                            <div class="col-xs-10">
                                                 <form:textarea path="entidad.sello" rows="5" cssClass="form-control"/> <form:errors path="entidad.sello" cssClass="help-block" element="span"/>
                                                 <a data-toggle="modal" href="#myModalSello" class="btn btn-warning btn-xs button-right"><spring:message code="regweb.ayuda"/></a>
                                             </div>
                                         </div>
-                                        <div class="form-group col-xs-6">
-                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                        <div class="form-group col-xs-12">
+                                            <div class="col-xs-2 pull-left etiqueta_regweb control-label">
                                                 <form:label path="entidad.numRegistro"><span class="text-danger">*</span> <spring:message code="entidad.numRegistro"/></form:label>
                                             </div>
-                                            <div class="col-xs-8">
+                                            <div class="col-xs-10">
                                                 <form:input path="entidad.numRegistro" cssClass="form-control"/> <form:errors path="entidad.numRegistro" cssClass="help-block" element="span"/>
                                                 <a data-toggle="modal" href="#myModalNumRegistro" class="btn btn-warning btn-xs button-right"><spring:message code="regweb.ayuda"/></a>
                                             </div>
                                         </div>
-                                    </div>
+                                        
+                                        <!--  logo sello --> 
+                                       	<div class="col-xs-12 no-pad-left">
+                                             <div class="form-group col-xs-6">
+                                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                                    <form:label path="logoSello"><spring:message code="entidad.logoSello"/></form:label>
+                                                </div>
+                                                <div class="col-xs-8">
+                                                    <div class="input-group">
+                                                        <span class="input-group-btn">
+                                                            <span class="btn btn-success btn-sm btn-file">
+                                                                Explorar&hellip; <input id="logoSello" name="logoSello" type="file" multiple>
+                                                            </span>
+                                                        </span>
+                                                        <input type="text" class="form-control" readonly>
+                                                    </div>
+                                                    <form:errors path="logoSello" cssClass="help-block" element="span"/>
+                                                </div>
+                                            </div>
+                                            <c:if test="${not empty entidadForm.entidad.logoSello}">
+                                                <div class="form-group col-xs-6">
+                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                                        <form:label path="logoMenu"><spring:message code="entidad.logoSello.existente"/></form:label>
+                                                        <form:hidden path="entidad.logoMenu.id"/>
+                                                    </div>
+                                                    <div class="col-xs-8 arxiu_actual">
+                                                        <a href="<c:url value="/archivo/${entidadForm.entidad.logoSello.id}"/>" target="_blank">${entidadForm.entidad.logoSello.nombre}</a>  <br>
+                                                        <form:checkbox path="borrarLogoSello"></form:checkbox><spring:message code="regweb.eliminar"/>
+                                                    </div>
+                                                </div>
+                                            </c:if>
+                                        </div>
+                                        
+                                    </div> 
+                                    <!-- Fi formatos -->
 
                                     <div class="tab-pane" id="Configuracion">
                                         <div class="form-group col-xs-6">
@@ -222,6 +254,18 @@
                                                 <form:errors path="entidad.diasVisado" cssClass="help-block" element="span"/>
                                             </div>
                                         </div>
+                                        <div class="form-group col-xs-6">
+                                        	<div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                            	<form:label path="entidad.tipoScan"><span class="text-danger">*</span> <spring:message code="entidad.tipoScan"/></form:label>
+                                            </div>
+                                             <div class="col-xs-8">
+                                        		<form:select id="entidad.tipoScan" path="entidad.tipoScan" class="chosen-select">
+							                		<form:options items="${tipoScan}" itemValue="codigo" itemLabel="nombre"/>
+							                	</form:select>
+							                	<br/>
+                                        	</div>
+                                        </div>
+                                        <!--  logo menu -->
                                         <div class="col-xs-12 no-pad-left">
                                             <div class="form-group col-xs-6">
                                                 <div class="col-xs-4 pull-left etiqueta_regweb control-label">
@@ -251,7 +295,9 @@
                                                     </div>
                                                 </div>
                                             </c:if>
-                                        </div>
+                                      	</div>	
+                                      	<!-- Fi logo menu -->
+                                        <!--  logo pie -->
                                         <div class="col-xs-12 no-pad-left">
                                             <div class="form-group col-xs-6">
                                                 <div class="col-xs-4 pull-left etiqueta_regweb control-label">
@@ -281,8 +327,10 @@
                                                     </div>
                                                 </div>
                                             </c:if>
-                                        </div>
-                                    </div>
+                                        </div>	
+                                        <!-- Fi logo pie -->
+                                    </div>	
+                                    <!-- Fi Configuracion -->
 
                                 </div>
                               </sec:authorize>
@@ -317,7 +365,7 @@
                 </div>
            
            </div>
-           </form:form>
+    	</form:form>
 
     </div>
 </div> <!-- /container -->
@@ -330,7 +378,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <h4 class="modal-title"><spring:message code="entidad.ayuda.sello"/></h4>
             </div>
-            <div class="modal-body">
+            <div class="modal-body modal-maxh-600">
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="panel panel-info">

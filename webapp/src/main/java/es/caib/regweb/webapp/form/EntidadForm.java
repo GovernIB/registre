@@ -14,9 +14,11 @@ public class EntidadForm {
     private Entidad entidad;
     private CommonsMultipartFile logoMenu;
     private CommonsMultipartFile logoPie;
+    private CommonsMultipartFile logoSello;
     private boolean borrarLogoPie;
     private boolean borrarLogoMenu;
-
+    private boolean borrarLogoSello;
+    
     public EntidadForm() {
     }
 
@@ -69,4 +71,23 @@ public class EntidadForm {
     public void setBorrarLogoMenu(boolean borrarLogoMenu) {
         this.borrarLogoMenu = borrarLogoMenu;
     }
+
+	
+	public CommonsMultipartFile getLogoSello() {
+		return logoSello;
+	}
+
+	public void setLogoSello(CommonsMultipartFile logoSello) {
+		if(logoSello != null && !logoSello.isEmpty()){
+			this.logoSello = logoSello;
+		}
+	}
+
+	public boolean isBorrarLogoSello() {
+		return borrarLogoSello;
+	}
+
+	public void setBorrarLogoSello(boolean borrarLogoSello) {
+		this.borrarLogoSello = borrarLogoSello;
+	}
 }

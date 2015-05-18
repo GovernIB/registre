@@ -17,7 +17,10 @@ public class RegistroEntradaBusqueda implements Serializable {
     private Date fechaInicio;
     private Date fechaFin;
     private Boolean anexos;
-
+    private String interessatNom;
+    private String interessatDoc;
+    private String organDestinatari;
+    private String organDestinatariNom;
 
     public RegistroEntradaBusqueda() {}
 
@@ -65,4 +68,37 @@ public class RegistroEntradaBusqueda implements Serializable {
     public void setAnexos(Boolean anexos) {
         this.anexos = anexos;
     }
+
+	public String getInteressatNom() {
+		return interessatNom;
+	}
+
+	public void setInteressatNom(String interessatNom) {
+		this.interessatNom = interessatNom;
+	}
+
+	public String getInteressatDoc() {
+		return interessatDoc;
+	}
+
+	public void setInteressatDoc(String interessatDoc) {
+		this.interessatDoc = interessatDoc;
+	}
+
+	public String getOrganDestinatari() {
+		return organDestinatari;
+	}
+
+	public void setOrganDestinatari(String organDestinatari) {
+		this.organDestinatari = organDestinatari;
+	}
+
+	public String getOrganDestinatariNom() {
+		return organDestinatariNom;
+	}
+
+	public void setOrganDestinatariNom(String organDestinatariNom) {
+		this.organDestinatariNom = organDestinatariNom;
+	}
+
 }

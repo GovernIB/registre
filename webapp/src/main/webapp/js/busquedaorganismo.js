@@ -9,7 +9,7 @@
  los resultados al select que corresponde.
  */
 function organismoBusqueda(tipoOrganismo, urlServidor,idRegistroDetalle){
-
+	
       // obtenemos los valores del formulario para realizar la búsqueda.
       var denominacion = $('#denominacion'+tipoOrganismo).val();
       var codigoOrganismo= $('#codigoOrganismo'+tipoOrganismo).val();
@@ -41,13 +41,23 @@ function organismoBusqueda(tipoOrganismo, urlServidor,idRegistroDetalle){
       }
       /* REGISTRO SALIDA */
       // Caso Organismo Origen de registro salida
-       if(tipoOrganismo == 'OrganismoOrigen'){
-        idSelect = "#origen\\\\.codigo";
-        idDenominacion = "#origen\\\\.denominacion";
-        url = urlServidor+"/rest/busqueda/organismos";
+      if(tipoOrganismo == 'OrganismoOrigen'){
+    	  idSelect = "#origen\\\\.codigo";
+    	  idDenominacion = "#origen\\\\.denominacion";
+    	  url = urlServidor+"/rest/busqueda/organismos";
       }
 
-
+      if (tipoOrganismo == 'listaRegEntrada') {
+          idSelect = "#organDestinatari";
+          idDenominacion = "#organDestinatariNom";
+          url = urlServidor+"/rest/busqueda/organismos";
+      }
+      
+      if (tipoOrganismo == 'listaRegSalida') {
+          idSelect = "#organOrigen";
+          idDenominacion = "#organOrigenNom";
+          url = urlServidor+"/rest/busqueda/organismos";
+      }
 
       // Inicializamos el div del resultado de busqueda.
       $('#resultadosbusqueda'+tipoOrganismo).empty();
@@ -95,7 +105,6 @@ function organismoBusqueda(tipoOrganismo, urlServidor,idRegistroDetalle){
                     var linea ="<tr><td style=\"text-align:left;\">"+result[i].denominacion+"</td><td class=\"center\"><input type=\"button\" class=\"btn btn-sm\" value=\"Seleccionar\" onclick=\"asignarOrganismo('"+codigo+"','"+denominacion+"','"+idSelect+"','"+idDenominacion+"','"+tipoOrganismo+"')\"/></td></tr>";
 
                  }
-
 
                  table.append(linea);
                }
@@ -163,8 +172,7 @@ function limpiarFormularioBusqueda(tipoOrganismo){
 
 
 function inicializarBuscador(selectNivelAdministracion, selectComunidadAutonoma, idNivelAdministracion, idComunidadAutonoma, tipoOrganismo){
-
-
+	
          $('#reloadorg'+tipoOrganismo).hide();
          $(selectNivelAdministracion).val(idNivelAdministracion);
          $(selectNivelAdministracion).trigger("chosen:updated");
@@ -173,18 +181,16 @@ function inicializarBuscador(selectNivelAdministracion, selectComunidadAutonoma,
 
     }
 
-
-
-
 /* Función que asigna el valor seleccionado de la búsqueda al select correspondiente
 * y cierra el modal de la búsqueda */
 function asignarOrganismo(codigo, denominacion, idSelect, idDenominacion,tipoOrganismo){
     var anadir = true;
+
     var idModal = "#modalBuscador"+ tipoOrganismo;
     /* Miramos si el organismo ya existe en el select, si existe lo seleccionamos,
     si no lo indicamos con la variable anadir para añadirlo posteriormente */
-	$(idSelect +" option").each(function()
-    {
+	$(idSelect +" option").each(function() {
+
         if($(this).val() == codigo){
 			anadir = false;
 			$(this).prop("selected", true);
@@ -198,7 +204,7 @@ function asignarOrganismo(codigo, denominacion, idSelect, idDenominacion,tipoOrg
 		html += '<option '+selected+' value="' + codigo + '">'
 							+ denominacion + '</option>';
 
-		$(idSelect).append(html);
+		$(idSelect).append(html);	
 		$(idDenominacion).val(denominacion);
     }
 	$(idSelect).trigger("chosen:updated");

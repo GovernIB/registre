@@ -32,6 +32,9 @@
 
     <!-- Le fav and touch icons -->
     <link rel="shortcut icon" href="<c:url value="/ico/favicon.png"/>">
+	<c:if test="${teScan}">
+	${headerScan}
+	</c:if>
 <%--
 <% session.setAttribute("loginInfo", LoginInfo.getInstance()); %>
  --%>

@@ -7,6 +7,12 @@
 <head>
     <title><spring:message code="registroEntrada.buscador"/></title>
     <c:import url="../modulos/imports.jsp"/>
+    <script type="text/javascript" src="<c:url value="/js/busquedaorganismo.js"/>"></script>
+    <script type="text/javascript">
+  		var tradorganismo = new Array();
+  		tradorganismo['organismo.denominacion'] = "<spring:message code='organismo.denominacion' javaScriptEscape='true' />";
+  		tradorganismo['regweb.acciones'] = "<spring:message code='regweb.acciones' javaScriptEscape='true' />";
+  	</script>  
 </head>
 
 <body>
@@ -38,13 +44,19 @@
 
                     <div class="panel-heading">
                         <a class="btn btn-info btn-xs pull-right" href="<c:url value="/registroEntrada/new"/>" role="button"><span class="fa fa-plus"></span> <spring:message code="registroEntrada.nuevo"/></a>
-                        <h3 class="panel-title"><i class="fa fa-search"></i><strong><spring:message code="registroEntrada.buscador"/></strong> </h3>
+                        <h3 class="panel-title">
+                        	<i class="fa fa-search"></i><strong>&nbsp;
+                        	<spring:message code="registroEntrada.buscador"/></strong>
+                        </h3>
                     </div>
 
                     <form:form modelAttribute="registroEntradaBusqueda" method="post" cssClass="form-horizontal">
                         <form:hidden path="pageNumber"/>
 
                         <div class="panel-body">
+                        
+                        <div class="row">
+                        
                             <div class="form-group col-xs-6">
                                 <div class="col-xs-4"><span class="text-danger">*</span> <spring:message code="registroEntrada.libro"/></div>
                                 <div class="col-xs-8">
@@ -67,6 +79,10 @@
                                     <form:errors path="registroEntrada.estado" cssClass="help-block" element="span"/>
                                 </div>
                             </div>
+                            
+						</div>
+						<div class="row">
+                            
                             <div class="form-group col-xs-6">
                                 <div class="col-xs-4 "><spring:message code="registroEntrada.numeroRegistro"/></div>
                                 <div class="col-xs-8">
@@ -79,6 +95,10 @@
                                     <form:input path="registroEntrada.registroDetalle.extracto" cssClass="form-control" maxlength="200"/> <form:errors path="registroEntrada.registroDetalle.extracto" cssClass="help-block" element="span"/>
                                 </div>
                             </div>
+                            
+						</div>
+						<div class="row">
+                            
                             <div class="form-group col-xs-6">
                                 <div class="col-xs-4"><span class="text-danger">*</span> <spring:message code="informe.fechaInicio"/></div>
                                 <div class="col-xs-8" id="fechaInicio">
@@ -101,16 +121,71 @@
 
                                 </div>
                             </div>
+                            
+                         </div>
+                         <div class="row">
+                            
+                            <div class="form-group col-xs-6">
+                                <div class="col-xs-4 "><spring:message code="registroEntrada.nombreInteresado"/></div>
+                                <div class="col-xs-8">
+                                    <form:input  path="interessatNom" cssClass="form-control" maxlength="255"/> 
+                                    <form:errors path="interessatNom" cssClass="help-block" element="span"/>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-6">
+                                <div class="col-xs-4 "><spring:message code="registroEntrada.docInteresado"/></div>
+                                <div class="col-xs-8">
+                                    <form:input  path="interessatDoc" cssClass="form-control" maxlength="17"/>
+                                    <form:errors path="interessatDoc" cssClass="help-block" element="span"/>
+                                </div>
+                            </div>
+
+						</div>
+						<div class="row">
+
+                           <div class="form-group col-xs-6">
+
+                               <div class="col-xs-4"><spring:message code="registroEntrada.organDestinatari"/></div>
+                               <div class="col-xs-6">
+                                   <form:select path="organDestinatari" cssClass="chosen-select">
+                                   	   <form:option value="" label="..."/>
+                                       <c:forEach items="${organosDestino}" var="organismo">
+	                                      <option value="${organismo.codigo}" <c:if test="${registroEntradaBusqueda.organDestinatari == organismo.codigo}">selected="selected"</c:if>>${organismo.denominacion}</option>
+                                       </c:forEach>
+                                   </form:select>
+                                   <form:errors path="organDestinatari" cssClass="help-block" element="span"/>
+                                   <form:hidden path="organDestinatariNom"/>
+                               </div>
+                               <div class="col-xs-2 boto-panel">
+                                  <a data-toggle="modal" role="button" href="#modalBuscadorlistaRegEntrada" onclick="inicializarBuscador('#codNivelAdministracionlistaRegEntrada','#codComunidadAutonomalistaRegEntrada','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}', 'listaRegEntrada');" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
+                               </div>
+                           </div>
+                           <div class="form-group col-xs-6"><div class="col-xs-12">&nbsp;</div></div>
+
+						</div>
+
+						<div class="row">
+
                             <div class="form-group col-xs-6">
                                 <div class="col-xs-4 "><spring:message code="registroEntrada.anexos"/></div>
                                 <div class="col-xs-8">
                                     <form:checkbox path="anexos"/>
                                 </div>
                             </div>
+                            <div class="form-group col-xs-6"><div class="col-xs-12">&nbsp;</div></div>
+
+					 	</div>
+
+					 	<div class="row">
 
                             <div class="form-group col-xs-12">
-                                <button type="submit" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></button>
+                                <button type="submit" class="btn btn-warning btn-sm" style="margin-left: 15px;">
+                                	<spring:message code="regweb.buscar"/>
+                                </button>
                             </div>
+
+						</div>
+
                     </form:form>
 
                             <c:if test="${paginacion != null}">
@@ -249,7 +324,11 @@
 
         <!-- FIN BUSCADOR -->
 
-
+        <!-- Importamos el codigo jsp del modal del formulario para realizar la búsqueda de organismos Destino
+             Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
+        <c:import url="../registro/buscadorOrganismosOficinasRE.jsp">
+            <c:param name="tipo" value="listaRegEntrada"/>
+        </c:import>
 
 
     </div>

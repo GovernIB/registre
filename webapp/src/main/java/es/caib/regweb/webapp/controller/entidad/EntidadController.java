@@ -4,6 +4,7 @@ import es.caib.regweb.model.*;
 import es.caib.regweb.persistence.ejb.*;
 import es.caib.regweb.persistence.utils.FileSystemManager;
 import es.caib.regweb.persistence.utils.Paginacion;
+import es.caib.regweb.utils.Configuracio;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.utils.login.RegwebLoginPluginManager;
 import es.caib.regweb.webapp.controller.BaseController;
@@ -14,6 +15,7 @@ import es.caib.regweb.webapp.form.PermisoLibroUsuarioForm;
 import es.caib.regweb.webapp.form.UsuarioEntidadBusquedaForm;
 import es.caib.regweb.webapp.utils.*;
 import es.caib.regweb.webapp.validator.EntidadValidator;
+
 import org.fundaciobit.plugins.userinformation.IUserInformationPlugin;
 import org.fundaciobit.plugins.userinformation.RolesInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+
 import java.util.*;
 
 /**
@@ -233,6 +236,7 @@ public class EntidadController extends BaseController {
 
             try {
                 model.addAttribute("administradoresEntidad", administradoresEntidadModificar(entidadForm.getEntidad().getPropietario(), entidadForm.getEntidad()));
+                model.addAttribute("tipoScan", Configuracio.getTipusScanejat(request.getLocale(), getMessage("scan.noScan")));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -246,7 +250,8 @@ public class EntidadController extends BaseController {
 
                 Entidad entidad = entidadForm.getEntidad();
 
-                if((entidadForm.getLogoMenu() != null)||(entidadForm.getLogoPie() != null)){ //Modificación con archivo Logo Menú o Logo Pie
+              //Modificación con archivo Logo Menú, Logo Pie o imagen sello
+                if((entidadForm.getLogoMenu() != null)||(entidadForm.getLogoPie() != null) || entidadForm.getLogoSello()!=null){ 
 
                     Archivo eliminarLogoMenu = null;
                     Archivo eliminarLogoPie = null;

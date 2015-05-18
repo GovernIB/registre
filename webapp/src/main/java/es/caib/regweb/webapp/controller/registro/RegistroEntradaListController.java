@@ -8,10 +8,13 @@ import es.caib.regweb.persistence.utils.RegistroUtils;
 import es.caib.regweb.persistence.utils.sir.FicheroIntercambioSICRES3;
 import es.caib.regweb.persistence.utils.sir.SirUtils;
 import es.caib.regweb.utils.RegwebConstantes;
+import es.caib.regweb.utils.ScannerManager;
 import es.caib.regweb.webapp.controller.BaseController;
 import es.caib.regweb.webapp.form.RegistroEntradaBusqueda;
 import es.caib.regweb.webapp.utils.Mensaje;
 import es.caib.regweb.webapp.validator.RegistroEntradaBusquedaValidator;
+
+import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -23,10 +26,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Fundació BIT.
@@ -214,6 +219,21 @@ public class RegistroEntradaListController extends BaseController {
         // Alta en tabla LOPD
         lopdEjb.insertarRegistroEntrada(idRegistro, usuarioEntidad.getId());
 
+        // Scan
+        Integer tipusScan = 0;
+        if (entidad.getTipoScan() != null && !"".equals(entidad.getTipoScan())) {
+        	tipusScan = Integer.parseInt(entidad.getTipoScan());
+        }
+        //      Integer tipusScan = 2;
+        boolean teScan = ScannerManager.teScan(tipusScan);
+        model.addAttribute("teScan", teScan);
+        if (teScan) {
+        	if (request.getParameter("lang") == null) {
+        		request.setAttribute("lang", I18NUtils.getLocale().getLanguage());
+        	}
+        	model.addAttribute("headerScan", ScannerManager.getHeaderJSP(request, tipusScan));
+        	model.addAttribute("coreScan", ScannerManager.getCoreJSP(request, tipusScan));
+        }
         return "registroEntrada/registroEntradaDetalle";
     }
 
