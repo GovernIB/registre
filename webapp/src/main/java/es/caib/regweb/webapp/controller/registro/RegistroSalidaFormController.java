@@ -367,9 +367,6 @@ public class RegistroSalidaFormController extends BaseController {
 
                 if(dias >= 1){ // Si ha pasado 1 día o mas
                     registro.setEstado(RegwebConstantes.ESTADO_PENDIENTE_VISAR);
-                    Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
-                }else{
-                    Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
                 }
 
                 // Obtenemos el RS antes de guardarlos, para crear el histórico
@@ -380,6 +377,8 @@ public class RegistroSalidaFormController extends BaseController {
 
                 // Creamos el Historico RegistroSalida
                 historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(registroSalidaAntiguo, usuarioEntidad, RegwebConstantes.TIPO_MODIF_DATOS, true);
+
+                Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
 
             }catch (Exception e) {
                 e.printStackTrace();

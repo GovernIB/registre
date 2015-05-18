@@ -143,7 +143,7 @@
             
 
                             <%--Si el resgistro no está pendiente de visar o anulado o tramitado--%>
-                            <c:if test="${registro.estado == RegwebConstantes.ESTADO_VALIDO || registro.estado == RegwebConstantes.ESTADO_PENDIENTE}">
+                            <c:if test="${(registro.estado == RegwebConstantes.ESTADO_VALIDO || registro.estado == RegwebConstantes.ESTADO_PENDIENTE) && puedeEditar}">
                                 <button type="button" onclick="goTo('<c:url value="/registroSalida/${registro.id}/edit"/>')" class="btn btn-warning btn-sm btn-block"><spring:message code="registroSalida.editar"/></button>
                             </c:if>
             

@@ -404,15 +404,12 @@ public class RegistroEntradaFormController extends BaseController {
                 if(dias >= entidadActiva.getDiasVisado()){ // Si ha pasado los Dias de Visado establecidos por la entidad.
 
                     registro.setEstado(RegwebConstantes.ESTADO_PENDIENTE_VISAR);
-                    Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
-
-                }else{ // Si aún no ha pasado un día
+                }else{ // Si aún no ha pasado los días definidos
 
                     // Si el Registro de Entrada tiene Estado Pendiente, al editarlo pasa a ser Válido.
                     if(registro.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE)){
                         registro.setEstado(RegwebConstantes.ESTADO_VALIDO);
                     }
-                    Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
                 }
 
                 // Obtenemos el RE antes de guardarlos, para crear el histórico
@@ -424,9 +421,12 @@ public class RegistroEntradaFormController extends BaseController {
                 // Creamos el Historico RegistroEntrada
                 historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntradaAntiguo, usuarioEntidad, RegwebConstantes.TIPO_MODIF_DATOS,true);
 
+                Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
+
             }catch (Exception e) {
                 e.printStackTrace();
                 Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
+                return "redirect:/inici";
             }
 
             return "redirect:/registroEntrada/"+registro.getId()+"/detalle";

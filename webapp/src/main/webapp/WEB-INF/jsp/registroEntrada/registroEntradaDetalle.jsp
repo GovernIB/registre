@@ -147,7 +147,7 @@
                             </c:if>
 
 
-                            <c:if test="${registro.estado == RegwebConstantes.ESTADO_VALIDO || registro.estado == RegwebConstantes.ESTADO_PENDIENTE}">
+                            <c:if test="${(registro.estado == RegwebConstantes.ESTADO_VALIDO || registro.estado == RegwebConstantes.ESTADO_PENDIENTE) && puedeEditar}">
                                 <button type="button" onclick="goTo('<c:url value="/registroEntrada/${registro.id}/edit"/>')" class="btn btn-warning btn-sm btn-block"><spring:message code="registroEntrada.editar"/></button>
                             </c:if>
 
