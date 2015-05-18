@@ -497,15 +497,8 @@ public class EntidadController extends BaseController {
 
             UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findById(Long.valueOf(idUsuarioEntidad));
 
-            final boolean debug = log.isDebugEnabled();
-            
             for (PermisoLibroUsuario plu : permisoLibroUsuarioForm.getPermisoLibroUsuarios()) {
-                if  (debug) {
-                  log.debug("Inicio: " + plu.getLibro().getNombre());
-                }
                 plu.setUsuario(usuarioEntidad);
-//                log.info("ID: " + plu.getId());
-//                log.info("Activo: " + plu.getActivo());
 
                 // Si ya existe el Permiso, actualiza el valor de ctivo. Si no existe, crea el Permiso en BBDD
                 if(plu.getId()!=null) {
@@ -514,9 +507,6 @@ public class EntidadController extends BaseController {
                     permisoLibroUsuarioEjb.merge(plu);
                 }
 
-                if  (debug) {
-                  log.info("Fin: " + plu.getLibro().getNombre());
-                }
             }
 
             Mensaje.saveMessageInfo(request, getMessage("usuario.asignar.permisos.ok"));
