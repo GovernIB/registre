@@ -486,6 +486,7 @@ public class RegistroEntradaFormController extends BaseController {
                   }else{
                       registroEntrada.getRegistroDetalle().setOficinaOrigenExternoDenominacion(registroEntrada.getRegistroDetalle().getOficinaOrigen().getDenominacion());
                   }
+
                   registroEntrada.getRegistroDetalle().setOficinaOrigen(null);
 
               }

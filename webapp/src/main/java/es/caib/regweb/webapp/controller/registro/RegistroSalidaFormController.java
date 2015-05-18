@@ -438,13 +438,14 @@ public class RegistroSalidaFormController extends BaseController {
                   registroSalida.getRegistroDetalle().setOficinaOrigenExternoCodigo(null);
                   registroSalida.getRegistroDetalle().setOficinaOrigenExternoDenominacion(null);
               } else {  // es externa
-                  registroSalida.getRegistroDetalle().setOficinaOrigen(null);
+
                   registroSalida.getRegistroDetalle().setOficinaOrigenExternoCodigo(registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo());
                   if(registroSalida.getId()!= null){//es una modificación
                       registroSalida.getRegistroDetalle().setOficinaOrigenExternoDenominacion(registroSalida.getRegistroDetalle().getOficinaOrigenExternoDenominacion());
                   }else{
                       registroSalida.getRegistroDetalle().setOficinaOrigenExternoDenominacion(registroSalida.getRegistroDetalle().getOficinaOrigen().getDenominacion());
                   }
+                  registroSalida.getRegistroDetalle().setOficinaOrigen(null);
 
               }
           }else { // No han indicado oficina de origen
