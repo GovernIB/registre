@@ -480,13 +480,13 @@ public class RegistroEntradaFormController extends BaseController {
                 registroEntrada.getRegistroDetalle().setOficinaOrigenExternoCodigo(null);
                 registroEntrada.getRegistroDetalle().setOficinaOrigenExternoDenominacion(null);
               } else {  // es externa
-                  registroEntrada.getRegistroDetalle().setOficinaOrigen(null);
                   registroEntrada.getRegistroDetalle().setOficinaOrigenExternoCodigo(registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo());
                   if(registroEntrada.getId()!= null){//es una modificación
                       registroEntrada.getRegistroDetalle().setOficinaOrigenExternoDenominacion(registroEntrada.getRegistroDetalle().getOficinaOrigenExternoDenominacion());
                   }else{
                       registroEntrada.getRegistroDetalle().setOficinaOrigenExternoDenominacion(registroEntrada.getRegistroDetalle().getOficinaOrigen().getDenominacion());
                   }
+                  registroEntrada.getRegistroDetalle().setOficinaOrigen(null);
 
               }
           }else { // No han indicado oficina de origen
