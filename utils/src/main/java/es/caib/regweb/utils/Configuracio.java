@@ -1,10 +1,10 @@
 package es.caib.regweb.utils;
 
+import org.apache.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import org.apache.log4j.Logger;
 
 
 /**
@@ -89,7 +89,7 @@ public class Configuracio implements RegwebConstantes {
 				tiposScan.add(tipoScan);
 //				log.info("SCAN:   " + codigo + " - " + nombre);
 			} catch (Exception e){
-				log.warn("SCAN: El codi " + value + " no Ès un codi de tipus d'escanejat v‡lid.");
+				log.warn("SCAN: El codi " + value + " no √©s un codi de tipus d'escanejat v√°lid.");
 			}
 		}
 		return tiposScan;
