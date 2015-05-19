@@ -121,6 +121,14 @@ public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
                 return false;
             }
 
+            // Comprobamos si se la oficina activa es la misma donde se creó el registro
+            if(!registroEntrada.getOficina().getId().equals(oficinaActiva.getId())){
+                log.info("Aviso: No puede editar un registro si no se encuentra en la oficina donde se creó");
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registro.editar.oficina"));
+                response.sendRedirect("/regweb/aviso");
+                return false;
+            }
+
             // Comprobamos que el Registro de Entrada es válido para editarse
             final List<Long> estados = new ArrayList<Long>();
             estados.add(RegwebConstantes.ESTADO_PENDIENTE);
