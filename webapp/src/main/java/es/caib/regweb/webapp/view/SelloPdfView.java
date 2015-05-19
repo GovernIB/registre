@@ -30,6 +30,7 @@ import es.caib.regweb.persistence.utils.FileSystemManager;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.webapp.utils.AbstractIText5PdfView;
 import es.caib.regweb.webapp.utils.ElementSello;
+import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 
 
 /**
@@ -40,6 +41,15 @@ import es.caib.regweb.webapp.utils.ElementSello;
 public class SelloPdfView extends AbstractIText5PdfView {
 
     protected final Logger log = Logger.getLogger(getClass());
+
+    /**
+     * Retorna el mensaje traducido según el idioma del usuario
+     * @param key
+     * @return
+     */
+    protected String getMessage(String key){
+        return I18NUtils.tradueix(key);
+    }
 
     private String codiOficina = null;
     private String nomOficina = null;
@@ -60,6 +70,8 @@ public class SelloPdfView extends AbstractIText5PdfView {
     private String origen = null;
     private String tipusRegistre = null;
     private String tipusRegistreComplet = null;
+    private String tipusRegistreCompletCatala = null;
+    private String tipusRegistreCompletCastella = null;
     private String extracte = null;
     private String llibre = null;
     private String nomUsuari = null;
@@ -139,6 +151,8 @@ public class SelloPdfView extends AbstractIText5PdfView {
 	            segonRegistre = formatSeg.format(registroEntrada.getFecha());
 	            
 	            tipusRegistre = "E";
+                tipusRegistreCompletCatala = getMessage("sello.tipoRegistroCompletoCatalan.entrada");
+                tipusRegistreCompletCastella = getMessage("sello.tipoRegistroCompletoCastellano.entrada");
 	            
 	            nomUsuari = registroEntrada.getUsuario().getUsuario().getNombre();
 	            nomUsuariComplet = registroEntrada.getUsuario().getNombreCompleto();
@@ -195,6 +209,8 @@ public class SelloPdfView extends AbstractIText5PdfView {
                 origen = registroSalida.getOrigenExternoDenominacion();
             }
             tipusRegistre = "S";
+            tipusRegistreCompletCatala = getMessage("sello.tipoRegistroCompletoCatalan.salida");
+            tipusRegistreCompletCastella = getMessage("sello.tipoRegistroCompletoCastellano.salida");
             extracte = registroSalida.getRegistroDetalle().getExtracto();
             llibre = registroSalida.getLibro().getNombre();
             nomUsuari = registroSalida.getUsuario().getUsuario().getNombre();
@@ -415,7 +431,11 @@ public class SelloPdfView extends AbstractIText5PdfView {
     		return formatNumRegistre;
     	} else if ("tipusRegistreComplet".equalsIgnoreCase(paramName)) {
     		return tipusRegistreComplet;
-    	}
+    	} else if ("tipusRegistreCompletCatala".equalsIgnoreCase(paramName)) {
+            return tipusRegistreCompletCatala;
+        } else if ("tipusRegistreCompletCastella".equalsIgnoreCase(paramName)) {
+            return tipusRegistreCompletCastella;
+        }
     	return paramName;
     }
 }
