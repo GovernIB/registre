@@ -611,16 +611,16 @@ input[readonly] {
 }
 .btn-ofaux {
     color: #fff;
-    background-color: #fdc26f;
-    border-color: #e9b162;
+    background-color: #ff6669;
+    border-color: #fa6669;
 }
 .btn-ofaux:hover,
 .btn-ofaux:focus,
 .btn-ofaux:active,
 .btn-ofaux.active{
     color: #fff;
-    background-color: #f4b761;
-    border-color: #e9b162;
+    background-color: #ff4569;
+    border-color: #fa6669;
 }
 .btn-oficinafuncional {
     color: #fff;
