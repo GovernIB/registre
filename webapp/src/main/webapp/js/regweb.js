@@ -821,3 +821,44 @@ function validaFechasConjuntas(fechaInicio, fechaFin, campInicio, campFin){
     return !!((posterior) && (inicioCorrecta) && (finCorrecta));
 }
 
+// Valida que el valor introducido en el campo numeroRegistro sea un número entero
+function validaEntero(numeroRegistro, campNumeroRegistro){
+
+    //Compruebo si es un valor numérico
+    if(numeroRegistro.value.length>0) {
+
+        var contienePunto = numeroRegistro.value.indexOf('.');
+
+        if ((!isNaN(numeroRegistro.value))&&(contienePunto==-1)) {
+            var variable = "#" + campNumeroRegistro + " span.errors";
+            var htmlNormal = "<span id='" + campNumeroRegistro + ".errors'></span>";
+            $(variable).html(htmlNormal);
+            $(variable).parents(".form-group").removeClass("has-error");
+        } else {
+            var variable = "#" + campNumeroRegistro + " span.errors";
+            var formatoHtml = "<span id='" + campNumeroRegistro + ".errors' class='help-block'>" + $('#error4').val() + "</span>";
+            $(variable).html(formatoHtml);
+            $(variable).parents(".form-group").addClass("has-error");
+        }
+    }
+
+    return !isNaN(numeroRegistro.value);
+}
+
+// Valida que esté selecionado un libro
+function validaLibro(libro, campoLibro){
+    //Comprueba si hay un libro seleccionado
+    if (libro.value!='') {
+        var variable = "#" + campoLibro + " span.errors";
+        var htmlNormal = "<span id='" + campoLibro + ".errors'></span>";
+        $(variable).html(htmlNormal);
+        $(variable).parents(".form-group").removeClass("has-error");
+    } else {
+        var variable = "#" + campoLibro + " span.errors";
+        var formatoHtml = "<span id='" + campoLibro + ".errors' class='help-block'>" + $('#error5').val() + "</span>";
+        $(variable).html(formatoHtml);
+        $(variable).parents(".form-group").addClass("has-error");
+    }
+
+    return libro.value!='';
+}
