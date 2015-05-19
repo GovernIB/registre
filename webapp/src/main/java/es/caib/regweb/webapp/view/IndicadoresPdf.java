@@ -4,8 +4,12 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.webapp.utils.AbstractIText5PdfView;
 import org.apache.log4j.Logger;
+import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,11 +25,20 @@ public class IndicadoresPdf extends AbstractIText5PdfView {
 
     protected final Logger log = Logger.getLogger(getClass());
 
+    /**
+     * Retorna el mensaje traducido según el idioma del usuario
+     * @param key
+     * @return
+     */
+    protected String getMessage(String key){
+        return I18NUtils.tradueix(key);
+    }
+
     @Override
     protected void buildPdfDocument(Map<String, Object> model, Document document, PdfWriter writer, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         //Obtenemos mapas y arraays de valores
-        String tipo = (String) model.get("tipo");
+        Long tipo = (Long) model.get("tipo");
         String fechaInicio = (String) model.get("fechaInicio");
         String fechaFin = (String) model.get("fechaFin");
         Long campoCalendario = (Long) model.get("campoCalendario");
@@ -72,45 +85,54 @@ public class IndicadoresPdf extends AbstractIText5PdfView {
         Font font14Bold = FontFactory.getFont(FontFactory.HELVETICA, 14, Font.BOLD);
         Font font14BoldItalic = FontFactory.getFont(FontFactory.HELVETICA, 14, Font.BOLDITALIC);
 
+        String tipoRegistro = null;
+        if(tipo.equals(RegwebConstantes.INFORME_TIPO_REGISTRO_ENTRADASALIDA)){
+            tipoRegistro = getMessage("informe.ambosTipos");
+        }else if(tipo.equals(RegwebConstantes.INFORME_TIPO_REGISTRO_ENTRADA)){
+            tipoRegistro = getMessage("informe.entrada");
+        }else if(tipo.equals(RegwebConstantes.INFORME_TIPO_REGISTRO_SALIDA)){
+            tipoRegistro = getMessage("informe.salida");
+        }
+
         // Título
         PdfPTable titulo = new PdfPTable(1);
         titulo.setWidthPercentage(100);
         titulo.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
         titulo.getDefaultCell().setBorder(0);
         titulo.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-        document.addTitle("Informe Indicadors");
-        titulo.addCell(new Paragraph("Informe d'Indicadors", font14Bold));
-        titulo.addCell(new Paragraph("Tipus: " + tipo));
-        titulo.addCell(new Paragraph("Data Inici: " + fechaInicio));
-        titulo.addCell(new Paragraph("Data Fi: " + fechaFin));
+        document.addTitle(getMessage("informe.indicadores"));
+        titulo.addCell(new Paragraph(getMessage("informe.indicadores"), font14Bold));
+        titulo.addCell(new Paragraph(getMessage("informe.tipo") +": " + tipoRegistro));
+        titulo.addCell(new Paragraph(getMessage("informe.fechaInicio") +": " + fechaInicio));
+        titulo.addCell(new Paragraph(getMessage("informe.fechaFin") +": " + fechaFin));
         String campCalendari = "";
         if(campoCalendario == 0){
-            campCalendari = "Anys i Mesos";
+            campCalendari = getMessage("informe.ambosCalendario");
         }else if(campoCalendario == 1){
-                campCalendari = "Anys";
+                campCalendari = getMessage("informe.anys");
             }else if(campoCalendario == 2){
-                    campCalendari = "Mesos";
+                    campCalendari = getMessage("informe.mesos");
                 }
-        titulo.addCell(new Paragraph("Mostrar: " + campCalendari));
+        titulo.addCell(new Paragraph(getMessage("informe.mostrar") +": " + campCalendari));
         document.add(titulo);
         document.add(new Paragraph(" "));
 
         // DATOS A MOSTRAR
         // ENTRADA
-        if(tipo.equals("Entrada i Sortida") || tipo.equals("Entrada")){
+        if(tipo.equals(RegwebConstantes.INFORME_TIPO_REGISTRO_ENTRADASALIDA) || tipo.equals(RegwebConstantes.INFORME_TIPO_REGISTRO_ENTRADA)){
 
             PdfPTable seccion = new PdfPTable(1);
             seccion.setWidthPercentage(100);
             seccion.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
             seccion.getDefaultCell().setBorder(0);
             seccion.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-            seccion.addCell(new Paragraph("REGISTRES ENTRADA", font14BoldItalic));
+            seccion.addCell(new Paragraph(getMessage("informe.registrosEntrada"), font14BoldItalic));
             document.add(seccion);
             document.add(new Paragraph(" "));
 
             PdfPTable table = new PdfPTable(1);
             table.setWidthPercentage(100);
-            PdfPCell cell1 = new PdfPCell(new Paragraph("REGISTRES",font10Bold));
+            PdfPCell cell1 = new PdfPCell(new Paragraph(getMessage("informe.registros"),font10Bold));
             cell1.setBackgroundColor(BaseColor.LIGHT_GRAY);
             cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(cell1);
@@ -127,7 +149,7 @@ public class IndicadoresPdf extends AbstractIText5PdfView {
                 seccion11.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                 seccion11.getDefaultCell().setBorder(0);
                 seccion11.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-                seccion11.addCell(new Paragraph("Anys", font10Bold));
+                seccion11.addCell(new Paragraph(getMessage("informe.anys"), font10Bold));
                 document.add(seccion11);
                 document.add(new Paragraph(" "));
 
@@ -149,7 +171,7 @@ public class IndicadoresPdf extends AbstractIText5PdfView {
                 tableAnysEntrada.deleteBodyRows();
                 tableAnysEntrada.getDefaultCell().setBackgroundColor(BaseColor.LIGHT_GRAY);
                 tableAnysEntrada.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                tableAnysEntrada.addCell(new Paragraph("TOTAL",font10));
+                tableAnysEntrada.addCell(new Paragraph(getMessage("informe.total"),font10));
                 tableAnysEntrada.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                 tableAnysEntrada.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
                 tableAnysEntrada.addCell(new Paragraph(registrosEntrada.toString(),font10));
@@ -164,7 +186,7 @@ public class IndicadoresPdf extends AbstractIText5PdfView {
                 seccion12.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                 seccion12.getDefaultCell().setBorder(0);
                 seccion12.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-                seccion12.addCell(new Paragraph("Mesos", font10Bold));
+                seccion12.addCell(new Paragraph(getMessage("informe.mesos"), font10Bold));
                 document.add(seccion12);
                 document.add(new Paragraph(" "));
 
@@ -186,7 +208,7 @@ public class IndicadoresPdf extends AbstractIText5PdfView {
                 tableMesesEntrada.deleteBodyRows();
                 tableMesesEntrada.getDefaultCell().setBackgroundColor(BaseColor.LIGHT_GRAY);
                 tableMesesEntrada.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                tableMesesEntrada.addCell(new Paragraph("TOTAL",font10));
+                tableMesesEntrada.addCell(new Paragraph(getMessage("informe.total"),font10));
                 tableMesesEntrada.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                 tableMesesEntrada.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
                 tableMesesEntrada.addCell(new Paragraph(registrosEntrada.toString(),font10));
@@ -201,7 +223,7 @@ public class IndicadoresPdf extends AbstractIText5PdfView {
                 seccion13.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                 seccion13.getDefaultCell().setBorder(0);
                 seccion13.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-                seccion13.addCell(new Paragraph("Per Conselleries", font10Bold));
+                seccion13.addCell(new Paragraph(getMessage("informe.porOrganismos"), font10Bold));
                 document.add(seccion13);
                 document.add(new Paragraph(" "));
 
@@ -223,7 +245,7 @@ public class IndicadoresPdf extends AbstractIText5PdfView {
                 tableConselleriesEntrada.deleteBodyRows();
                 tableConselleriesEntrada.getDefaultCell().setBackgroundColor(BaseColor.LIGHT_GRAY);
                 tableConselleriesEntrada.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                tableConselleriesEntrada.addCell(new Paragraph("TOTAL",font10));
+                tableConselleriesEntrada.addCell(new Paragraph(getMessage("informe.total"),font10));
                 tableConselleriesEntrada.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                 tableConselleriesEntrada.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
                 tableConselleriesEntrada.addCell(new Paragraph(registrosEntrada.toString(),font10));
@@ -238,7 +260,7 @@ public class IndicadoresPdf extends AbstractIText5PdfView {
                 seccion14.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                 seccion14.getDefaultCell().setBorder(0);
                 seccion14.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-                seccion14.addCell(new Paragraph("Per Tipus d'Assumpte", font10Bold));
+                seccion14.addCell(new Paragraph(getMessage("informe.porTiposAsunto"), font10Bold));
                 document.add(seccion14);
                 document.add(new Paragraph(" "));
 
@@ -267,7 +289,7 @@ public class IndicadoresPdf extends AbstractIText5PdfView {
                 seccion15.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                 seccion15.getDefaultCell().setBorder(0);
                 seccion15.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-                seccion15.addCell(new Paragraph("Per Llibre de Registre", font10Bold));
+                seccion15.addCell(new Paragraph(getMessage("informe.porLibroRegistro"), font10Bold));
                 document.add(seccion15);
                 document.add(new Paragraph(" "));
 
@@ -296,7 +318,7 @@ public class IndicadoresPdf extends AbstractIText5PdfView {
                 seccion16.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                 seccion16.getDefaultCell().setBorder(0);
                 seccion16.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-                seccion16.addCell(new Paragraph("Per Oficina", font10Bold));
+                seccion16.addCell(new Paragraph(getMessage("informe.porOficina"), font10Bold));
                 document.add(seccion16);
                 document.add(new Paragraph(" "));
 
@@ -325,7 +347,7 @@ public class IndicadoresPdf extends AbstractIText5PdfView {
                 seccion112.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                 seccion112.getDefaultCell().setBorder(0);
                 seccion112.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-                seccion112.addCell(new Paragraph("Per Idioma", font10Bold));
+                seccion112.addCell(new Paragraph(getMessage("informe.porIdioma"), font10Bold));
                 document.add(seccion112);
                 document.add(new Paragraph(" "));
 
@@ -359,27 +381,27 @@ public class IndicadoresPdf extends AbstractIText5PdfView {
                 buit.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                 buit.getDefaultCell().setBorder(0);
                 buit.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                buit.addCell(new Paragraph("No hi ha registres per mostrar", font10Bold));
+                buit.addCell(new Paragraph(getMessage("informe.registros.vacio"), font10Bold));
                 document.add(buit);
             }
 
         }
 
         // SALIDA
-        if(tipo.equals("Entrada i Sortida") || tipo.equals("Sortida")){
+        if(tipo.equals(RegwebConstantes.INFORME_TIPO_REGISTRO_ENTRADASALIDA) || tipo.equals(RegwebConstantes.INFORME_TIPO_REGISTRO_SALIDA)){
 
             PdfPTable seccion2 = new PdfPTable(1);
             seccion2.setWidthPercentage(100);
             seccion2.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
             seccion2.getDefaultCell().setBorder(0);
             seccion2.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-            seccion2.addCell(new Paragraph("REGISTRES SORTIDA", font14BoldItalic));
+            seccion2.addCell(new Paragraph(getMessage("informe.registrosSalida"), font14BoldItalic));
             document.add(seccion2);
             document.add(new Paragraph(" "));
 
             PdfPTable table2 = new PdfPTable(1);
             table2.setWidthPercentage(100);
-            PdfPCell cell2 = new PdfPCell(new Paragraph("REGISTRES",font10Bold));
+            PdfPCell cell2 = new PdfPCell(new Paragraph(getMessage("informe.registros"),font10Bold));
             cell2.setBackgroundColor(BaseColor.LIGHT_GRAY);
             cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
             table2.addCell(cell2);
@@ -396,7 +418,7 @@ public class IndicadoresPdf extends AbstractIText5PdfView {
                 seccion21.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                 seccion21.getDefaultCell().setBorder(0);
                 seccion21.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-                seccion21.addCell(new Paragraph("Anys", font10Bold));
+                seccion21.addCell(new Paragraph(getMessage("informe.anys"), font10Bold));
                 document.add(seccion21);
                 document.add(new Paragraph(" "));
 
@@ -418,7 +440,7 @@ public class IndicadoresPdf extends AbstractIText5PdfView {
                 tableAnysSortida.deleteBodyRows();
                 tableAnysSortida.getDefaultCell().setBackgroundColor(BaseColor.LIGHT_GRAY);
                 tableAnysSortida.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                tableAnysSortida.addCell(new Paragraph("TOTAL",font10));
+                tableAnysSortida.addCell(new Paragraph(getMessage("informe.total"),font10));
                 tableAnysSortida.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                 tableAnysSortida.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
                 tableAnysSortida.addCell(new Paragraph(registrosSalida.toString(),font10));
@@ -433,7 +455,7 @@ public class IndicadoresPdf extends AbstractIText5PdfView {
                 seccion22.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                 seccion22.getDefaultCell().setBorder(0);
                 seccion22.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-                seccion22.addCell(new Paragraph("Mesos", font10Bold));
+                seccion22.addCell(new Paragraph(getMessage("informe.mesos"), font10Bold));
                 document.add(seccion22);
                 document.add(new Paragraph(" "));
 
@@ -455,7 +477,7 @@ public class IndicadoresPdf extends AbstractIText5PdfView {
                 tableMesesSalida.deleteBodyRows();
                 tableMesesSalida.getDefaultCell().setBackgroundColor(BaseColor.LIGHT_GRAY);
                 tableMesesSalida.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                tableMesesSalida.addCell(new Paragraph("TOTAL",font10));
+                tableMesesSalida.addCell(new Paragraph(getMessage("informe.total"),font10));
                 tableMesesSalida.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                 tableMesesSalida.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
                 tableMesesSalida.addCell(new Paragraph(registrosSalida.toString(),font10));
@@ -470,7 +492,7 @@ public class IndicadoresPdf extends AbstractIText5PdfView {
                 seccion23.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                 seccion23.getDefaultCell().setBorder(0);
                 seccion23.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-                seccion23.addCell(new Paragraph("Per Conselleries", font10Bold));
+                seccion23.addCell(new Paragraph(getMessage("informe.porOrganismos"), font10Bold));
                 document.add(seccion23);
                 document.add(new Paragraph(" "));
 
@@ -492,7 +514,7 @@ public class IndicadoresPdf extends AbstractIText5PdfView {
                 tableConselleriesSortida.deleteBodyRows();
                 tableConselleriesSortida.getDefaultCell().setBackgroundColor(BaseColor.LIGHT_GRAY);
                 tableConselleriesSortida.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                tableConselleriesSortida.addCell(new Paragraph("TOTAL",font10));
+                tableConselleriesSortida.addCell(new Paragraph(getMessage("informe.total"),font10));
                 tableConselleriesSortida.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                 tableConselleriesSortida.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
                 tableConselleriesSortida.addCell(new Paragraph(registrosSalida.toString(),font10));
@@ -507,7 +529,7 @@ public class IndicadoresPdf extends AbstractIText5PdfView {
                 seccion24.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                 seccion24.getDefaultCell().setBorder(0);
                 seccion24.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-                seccion24.addCell(new Paragraph("Per Tipus d'Assumpte", font10Bold));
+                seccion24.addCell(new Paragraph(getMessage("informe.porTiposAsunto"), font10Bold));
                 document.add(seccion24);
                 document.add(new Paragraph(" "));
 
@@ -536,7 +558,7 @@ public class IndicadoresPdf extends AbstractIText5PdfView {
                 seccion25.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                 seccion25.getDefaultCell().setBorder(0);
                 seccion25.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-                seccion25.addCell(new Paragraph("Per Llibre de Registre", font10Bold));
+                seccion25.addCell(new Paragraph(getMessage("informe.porLibroRegistro"), font10Bold));
                 document.add(seccion25);
                 document.add(new Paragraph(" "));
 
@@ -565,7 +587,7 @@ public class IndicadoresPdf extends AbstractIText5PdfView {
                 seccion26.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                 seccion26.getDefaultCell().setBorder(0);
                 seccion26.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-                seccion26.addCell(new Paragraph("Per Oficina", font10Bold));
+                seccion26.addCell(new Paragraph(getMessage("informe.porOficina"), font10Bold));
                 document.add(seccion26);
                 document.add(new Paragraph(" "));
 
@@ -594,7 +616,7 @@ public class IndicadoresPdf extends AbstractIText5PdfView {
                 seccion212.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                 seccion212.getDefaultCell().setBorder(0);
                 seccion212.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-                seccion212.addCell(new Paragraph("Per Idioma", font10Bold));
+                seccion212.addCell(new Paragraph(getMessage("informe.porIdioma"), font10Bold));
                 document.add(seccion212);
                 document.add(new Paragraph(" "));
 
@@ -625,14 +647,13 @@ public class IndicadoresPdf extends AbstractIText5PdfView {
                 buit.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                 buit.getDefaultCell().setBorder(0);
                 buit.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                buit.addCell(new Paragraph("No hi ha registres per mostrar", font10Bold));
+                buit.addCell(new Paragraph(getMessage("informe.registros.vacio"), font10Bold));
                 document.add(buit);
             }
 
         }
 
-
-        String nombreFichero = "Informe_Indicadors_"+ tipo +".pdf";
+        String nombreFichero = getMessage("informe.nombreFichero.indicadores")+ tipoRegistro +".pdf";
 
         // Cabeceras Response
         response.setHeader("Content-Disposition", "attachment; filename=" + nombreFichero);

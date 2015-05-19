@@ -508,4 +508,11 @@ public interface RegwebConstantes {
 
     public static final int REGISTROS_PANTALLA_INICIO = 5;
 
+
+    /* -------------- INFORMES - TIPOS REGISTRO --------------*/
+    public static final Long INFORME_TIPO_REGISTRO_ENTRADASALIDA =  0L;
+    public static final Long INFORME_TIPO_REGISTRO_ENTRADA =  1L;
+    public static final Long INFORME_TIPO_REGISTRO_SALIDA =  2L;
+
+
 }

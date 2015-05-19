@@ -6,6 +6,7 @@ import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.web.servlet.view.document.AbstractExcelView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,11 +25,20 @@ public class LibroRegistroExcel extends AbstractExcelView {
 
     protected final Logger log = Logger.getLogger(getClass());
 
+    /**
+     * Retorna el mensaje traducido según el idioma del usuario
+     * @param key
+     * @return
+     */
+    protected String getMessage(String key){
+        return I18NUtils.tradueix(key);
+    }
+
     @Override
     protected void buildExcelDocument(Map<String, Object> model, HSSFWorkbook workbook, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        //Obtenemos mapas y arraays de valores
-        String tipo = (String) model.get("tipo");
+        //Obtenemos mapas y arrays de valores
+        Long tipo = (Long) model.get("tipo");
         String fechaInicio = (String) model.get("fechaInicio");
         String fechaFin = (String) model.get("fechaFin");
         Set<String> campos = (Set<String>) model.get("campos");
@@ -97,19 +107,25 @@ public class LibroRegistroExcel extends AbstractExcelView {
         fechaFinRow.setHeightInPoints(15);
         HSSFCell fechaFinCell = fechaFinRow.createCell(0);
 
+        String tipoRegistro = null;
+        if(tipo.equals(RegwebConstantes.INFORME_TIPO_REGISTRO_ENTRADA)){
+            tipoRegistro = getMessage("informe.entrada");
+        }else if(tipo.equals(RegwebConstantes.INFORME_TIPO_REGISTRO_SALIDA)){
+            tipoRegistro = getMessage("informe.salida");
+        }
 
         //Título
         sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$G$1"));
-        tittleCell.setCellValue("Informe Llibre de Registres");
+        tittleCell.setCellValue(getMessage("informe.llibreRegistres.informe"));
         tittleCell.setCellStyle(titulo);
         sheet.addMergedRegion(CellRangeAddress.valueOf("$A$2:$G$2"));
-        tipusCell.setCellValue("Tipus: " + tipo);
+        tipusCell.setCellValue(getMessage("informe.tipo") + ": " + tipoRegistro);
         tipusCell.setCellStyle(paramCerca);
         sheet.addMergedRegion(CellRangeAddress.valueOf("$A$3:$G$3"));
-        fechaInicioCell.setCellValue("Data Inici: " + fechaInicio);
+        fechaInicioCell.setCellValue(getMessage("informe.fechaInicio") + ": " + fechaInicio);
         fechaInicioCell.setCellStyle(paramCerca);
         sheet.addMergedRegion(CellRangeAddress.valueOf("$A$4:$G$4"));
-        fechaFinCell.setCellValue("Data Fi: " + fechaFin);
+        fechaFinCell.setCellValue(getMessage("informe.fechaFin") + ": " + fechaFin);
         fechaFinCell.setCellStyle(paramCerca);
         sheet.addMergedRegion(CellRangeAddress.valueOf("$A$5:$G$5"));
 
@@ -128,73 +144,73 @@ public class LibroRegistroExcel extends AbstractExcelView {
 
             for (String valorCamp : campos) {
                 if (valorCamp.equals("codAs")) {
-                    columnas[h] = "CODI ASSUMPTE";
+                    columnas[h] = getMessage("informe.codigoAsunto");
                     h = h + 1;
                 }else if (valorCamp.equals("anyRe")) {
-                    columnas[h] = "ANY REGISTRE";
+                    columnas[h] = getMessage("informe.anoRegistro");
                     h = h + 1;
                 }else if (valorCamp.equals("estat")) {
-                    columnas[h] = "ESTAT";
+                    columnas[h] = getMessage("informe.estado");
                     h = h + 1;
                 }else if (valorCamp.equals("exped")) {
-                    columnas[h] = "EXPEDIENT";
+                    columnas[h] = getMessage("informe.expediente");
                     h = h + 1;
                 }else if (valorCamp.equals("extra")) {
-                    columnas[h] = "EXTRACTE";
+                    columnas[h] = getMessage("informe.extracto");
                     h = h + 1;
                 }else if (valorCamp.equals("datOr")) {
-                    columnas[h] = "DATA ORIGEN";
+                    columnas[h] = getMessage("informe.fechaOrigen");
                     h = h + 1;
                 }else if (valorCamp.equals("numRe")) {
-                    columnas[h] = "NUM REGISTRE";
+                    columnas[h] = getMessage("informe.numeroRegistro");
                     h = h + 1;
                 }else if (valorCamp.equals("ofici")) {
-                    columnas[h] = "OFICINA";
+                    columnas[h] = getMessage("informe.oficina");
                     h = h + 1;
                 }else if (valorCamp.equals("tipAs")) {
-                    columnas[h] = "TIPUS ASSUMPTE";
+                    columnas[h] = getMessage("informe.tipoAsunto");
                     h = h + 1;
                 }else if (valorCamp.equals("obser")) {
-                    columnas[h] = "OBSERVACIONS";
+                    columnas[h] = getMessage("informe.observaciones");
                     h = h + 1;
                 }else if (valorCamp.equals("llibr")) {
-                    columnas[h] = "LLIBRE";
+                    columnas[h] = getMessage("informe.libro");
                     h = h + 1;
                 }else if (valorCamp.equals("data")) {
-                    columnas[h] = "DATA REGISTRE";
+                    columnas[h] = getMessage("informe.fechaRegistro");
                     h = h + 1;
                 }else if (valorCamp.equals("docFi")) {
-                    columnas[h] = "DOC FÍSICA";
+                    columnas[h] = getMessage("informe.documentacionFisica");
                     h = h + 1;
                 }else if (valorCamp.equals("orgDe")) {
-                    if (tipo.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO)) {
-                        columnas[h] = "ORGANISME DESTÍ";
+                    if (tipo.equals(RegwebConstantes.INFORME_TIPO_REGISTRO_ENTRADA)) {
+                        columnas[h] = getMessage("informe.organismoDestino");
                         h = h + 1;
                     }
-                    if (tipo.equals(RegwebConstantes.REGISTRO_SALIDA_ESCRITO)) {
-                        columnas[h] = "ORGANISME ORIGEN";
+                    if (tipo.equals(RegwebConstantes.INFORME_TIPO_REGISTRO_SALIDA)) {
+                        columnas[h] = getMessage("informe.organismoOrigen");
                         h = h + 1;
                     }
                 }else if (valorCamp.equals("idiom")) {
-                    columnas[h] = "IDIOMA";
+                    columnas[h] = getMessage("informe.idioma");
                     h = h + 1;
                 }else if (valorCamp.equals("refEx")) {
-                    columnas[h] = "REF EXTERNA";
+                    columnas[h] = getMessage("informe.referenciaExterna");
                     h = h + 1;
                 }else if (valorCamp.equals("trans")) {
-                    columnas[h] = "TRANSPORT";
+                    columnas[h] = getMessage("informe.transporte");
                     h = h + 1;
                 }else if (valorCamp.equals("numTr")) {
-                    columnas[h] = "NUM TRANSPORT";
+                    columnas[h] = getMessage("informe.numeroTransporte");
                     h = h + 1;
                 }else if (valorCamp.equals("orgOr")) {
-                    columnas[h] = "OFICINA ORIGEN";
+                    columnas[h] = getMessage("informe.oficinaOrigen");
                     h = h + 1;
                 }else if (valorCamp.equals("numOr")) {
-                    columnas[h] = "NUM REGISTRE ORIGEN";
+                    columnas[h] = getMessage("informe.numeroRegistroOrigen");
                     h = h + 1;
                 }else if (valorCamp.equals("nomIn")) {
-                    columnas[h] = "INTERESSATS";
+                    columnas[h] = getMessage("informe.interesados");
                     h = h + 1;
                 }
             }
@@ -220,7 +236,7 @@ public class LibroRegistroExcel extends AbstractExcelView {
             }
         } else{
             HSSFRow row = sheet.createRow(rowNum++);
-            row.createCell(0).setCellValue("No hi ha registres per mostrar");
+            row.createCell(0).setCellValue(getMessage("informe.registros.vacio"));
             row.getCell(0).setCellStyle(fila);
         }
 
@@ -230,7 +246,7 @@ public class LibroRegistroExcel extends AbstractExcelView {
             sheet.autoSizeColumn(i);
         }
 
-        String nombreFichero = "Llibre_Registre_"+ tipo +".xls";
+        String nombreFichero = getMessage("informe.nombreFichero.libroRegistro") + tipoRegistro +".xls";
 
         // Cabeceras Response
         response.setHeader("Content-Disposition","attachment; filename="+nombreFichero);

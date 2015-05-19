@@ -1,10 +1,12 @@
 package es.caib.regweb.webapp.view;
 
+import es.caib.regweb.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.web.servlet.view.document.AbstractExcelView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,11 +24,20 @@ public class IndicadoresExcel extends AbstractExcelView {
 
     protected final Logger log = Logger.getLogger(getClass());
 
+    /**
+     * Retorna el mensaje traducido según el idioma del usuario
+     * @param key
+     * @return
+     */
+    protected String getMessage(String key){
+        return I18NUtils.tradueix(key);
+    }
+
     @Override
     protected void buildExcelDocument(Map<String, Object> model, HSSFWorkbook workbook, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         //Obtenemos mapas y arraays de valores
-        String tipo = (String) model.get("tipo");
+        Long tipo = (Long) model.get("tipo");
         String fechaInicio = (String) model.get("fechaInicio");
         String fechaFin = (String) model.get("fechaFin");
         Long campoCalendario = (Long) model.get("campoCalendario");
@@ -138,30 +149,38 @@ public class IndicadoresExcel extends AbstractExcelView {
         mostrarRow.setHeightInPoints(15);
         HSSFCell mostrarCell = mostrarRow.createCell(0);
 
+        String tipoRegistro = null;
+        if(tipo.equals(RegwebConstantes.INFORME_TIPO_REGISTRO_ENTRADASALIDA)){
+            tipoRegistro = getMessage("informe.ambosTipos");
+        }else if(tipo.equals(RegwebConstantes.INFORME_TIPO_REGISTRO_ENTRADA)){
+            tipoRegistro = getMessage("informe.entrada");
+        }else if(tipo.equals(RegwebConstantes.INFORME_TIPO_REGISTRO_SALIDA)){
+            tipoRegistro = getMessage("informe.salida");
+        }
 
         //Título
         sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$G$1"));
-        tittleCell.setCellValue("Informe Indicadors");
+        tittleCell.setCellValue(getMessage("informe.indicadores"));
         tittleCell.setCellStyle(titulo);
         sheet.addMergedRegion(CellRangeAddress.valueOf("$A$2:$G$2"));
-        tipusCell.setCellValue("Tipus: " + tipo);
+        tipusCell.setCellValue(getMessage("informe.tipo") +": " + tipoRegistro);
         tipusCell.setCellStyle(paramCerca);
         sheet.addMergedRegion(CellRangeAddress.valueOf("$A$3:$G$3"));
-        fechaInicioCell.setCellValue("Data Inici: " + fechaInicio);
+        fechaInicioCell.setCellValue(getMessage("informe.fechaInicio") +": " + fechaInicio);
         fechaInicioCell.setCellStyle(paramCerca);
         sheet.addMergedRegion(CellRangeAddress.valueOf("$A$4:$G$4"));
-        fechaFinCell.setCellValue("Data Fi: " + fechaFin);
+        fechaFinCell.setCellValue(getMessage("informe.fechaFin") +": " + fechaFin);
         fechaFinCell.setCellStyle(paramCerca);
         sheet.addMergedRegion(CellRangeAddress.valueOf("$A$5:$G$5"));
         String campCalendari = "";
         if(campoCalendario == 0){
-            campCalendari = "Anys i Mesos";
+            campCalendari = getMessage("informe.ambosCalendario");
             }else if(campoCalendario == 1){
-                    campCalendari = "Anys";
+                    campCalendari = getMessage("informe.anys");
                 }else if(campoCalendario == 2){
-                    campCalendari = "Mesos";
+                    campCalendari = getMessage("informe.mesos");
                 }
-        mostrarCell.setCellValue("Mostrar: " + campCalendari);
+        mostrarCell.setCellValue(getMessage("informe.mostrar") +": " + campCalendari);
         mostrarCell.setCellStyle(paramCerca);
         sheet.addMergedRegion(CellRangeAddress.valueOf("$A$6:$G$6"));
 
@@ -173,13 +192,13 @@ public class IndicadoresExcel extends AbstractExcelView {
 
         // DATOS A MOSTRAR
         // ENTRADA
-        if(tipo.equals("Entrada i Sortida") || tipo.equals("Entrada")){
+        if(tipo.equals(RegwebConstantes.INFORME_TIPO_REGISTRO_ENTRADASALIDA) || tipo.equals(RegwebConstantes.INFORME_TIPO_REGISTRO_ENTRADA)){
 
             HSSFRow entrRegRow = sheet.createRow(rowNum++);
             entrRegRow.setHeightInPoints(15);
             HSSFCell entrRegCell = entrRegRow.createCell(0);
             sheet.addMergedRegion(CellRangeAddress.valueOf("$A$"+rowNum+":$G$"+rowNum));
-            entrRegCell.setCellValue("Registres d'Entrada");
+            entrRegCell.setCellValue(getMessage("informe.registrosEntrada"));
             entrRegCell.setCellStyle(tituloSeccion);
 
             //Espai buit
@@ -188,7 +207,7 @@ public class IndicadoresExcel extends AbstractExcelView {
             //Registres totals
             HSSFRow regEntrNom = sheet.createRow(rowNum++);
             HSSFCell regEntrNomCol = regEntrNom.createCell(0);
-            regEntrNomCol.setCellValue("REGISTRES");
+            regEntrNomCol.setCellValue(getMessage("informe.registros"));
             regEntrNomCol.setCellStyle(cabecera);
             HSSFRow registreRow = sheet.createRow(rowNum++);
             registreRow.createCell(0).setCellValue(registrosEntrada.toString());
@@ -202,7 +221,7 @@ public class IndicadoresExcel extends AbstractExcelView {
                 HSSFRow anyRowTitle = sheet.createRow(rowNum++);
                 anyRowTitle.setHeightInPoints(15);
                 HSSFCell anyCell = anyRowTitle.createCell(0);
-                anyCell.setCellValue("Anys");
+                anyCell.setCellValue(getMessage("informe.anys"));
                 anyCell.setCellStyle(tituloSeccion);
                 sheet.addMergedRegion(CellRangeAddress.valueOf("$A$"+rowNum+":$G$"+rowNum));
                 //Espai buit
@@ -215,7 +234,7 @@ public class IndicadoresExcel extends AbstractExcelView {
                     anyNomCol.setCellStyle(cabecera);
                 }
                 HSSFCell anyNomCol = anyNom.createCell(entradaAnosNombre.size());
-                anyNomCol.setCellValue("TOTAL");
+                anyNomCol.setCellValue(getMessage("informe.total"));
                 anyNomCol.setCellStyle(cabecera);
                 HSSFRow anyValor = sheet.createRow(rowNum++);
                 for(int i=0;i<entradaAnosValor.size();i++){
@@ -239,7 +258,7 @@ public class IndicadoresExcel extends AbstractExcelView {
                 HSSFRow mesRowTitle = sheet.createRow(rowNum++);
                 mesRowTitle.setHeightInPoints(15);
                 HSSFCell mesCell = mesRowTitle.createCell(0);
-                mesCell.setCellValue("Mesos");
+                mesCell.setCellValue(getMessage("informe.mesos"));
                 mesCell.setCellStyle(tituloSeccion);
                 sheet.addMergedRegion(CellRangeAddress.valueOf("$A$"+rowNum+":$G$"+rowNum));
                 //Espai buit
@@ -270,7 +289,7 @@ public class IndicadoresExcel extends AbstractExcelView {
                 HSSFRow conselleriaRowTitle = sheet.createRow(rowNum++);
                 conselleriaRowTitle.setHeightInPoints(15);
                 HSSFCell conselleriaCell = conselleriaRowTitle.createCell(0);
-                conselleriaCell.setCellValue("Per Conselleries");
+                conselleriaCell.setCellValue(getMessage("informe.porOrganismos"));
                 conselleriaCell.setCellStyle(tituloSeccion);
                 sheet.addMergedRegion(CellRangeAddress.valueOf("$A$"+rowNum+":$G$"+rowNum));
                 //Espai buit
@@ -301,7 +320,7 @@ public class IndicadoresExcel extends AbstractExcelView {
                 HSSFRow asuntoRowTitle = sheet.createRow(rowNum++);
                 asuntoRowTitle.setHeightInPoints(15);
                 HSSFCell asuntoCell = asuntoRowTitle.createCell(0);
-                asuntoCell.setCellValue("Per Tipus d'Assumpte");
+                asuntoCell.setCellValue(getMessage("informe.porTiposAsunto"));
                 asuntoCell.setCellStyle(tituloSeccion);
                 sheet.addMergedRegion(CellRangeAddress.valueOf("$A$"+rowNum+":$G$"+rowNum));
                 //Espai buit
@@ -332,7 +351,7 @@ public class IndicadoresExcel extends AbstractExcelView {
                 HSSFRow libroRowTitle = sheet.createRow(rowNum++);
                 libroRowTitle.setHeightInPoints(15);
                 HSSFCell libroCell = libroRowTitle.createCell(0);
-                libroCell.setCellValue("Per Llibre de Registre");
+                libroCell.setCellValue(getMessage("informe.porLibroRegistro"));
                 libroCell.setCellStyle(tituloSeccion);
                 sheet.addMergedRegion(CellRangeAddress.valueOf("$A$"+rowNum+":$G$"+rowNum));
                 //Espai buit
@@ -363,7 +382,7 @@ public class IndicadoresExcel extends AbstractExcelView {
                 HSSFRow oficinaRowTitle = sheet.createRow(rowNum++);
                 oficinaRowTitle.setHeightInPoints(15);
                 HSSFCell oficinaCell = oficinaRowTitle.createCell(0);
-                oficinaCell.setCellValue("Per Oficina");
+                oficinaCell.setCellValue(getMessage("informe.porOficina"));
                 oficinaCell.setCellStyle(tituloSeccion);
                 sheet.addMergedRegion(CellRangeAddress.valueOf("$A$"+rowNum+":$G$"+rowNum));
                 //Espai buit
@@ -394,7 +413,7 @@ public class IndicadoresExcel extends AbstractExcelView {
                 HSSFRow idiomaRowTitle = sheet.createRow(rowNum++);
                 idiomaRowTitle.setHeightInPoints(15);
                 HSSFCell idiomaCell = idiomaRowTitle.createCell(0);
-                idiomaCell.setCellValue("Per Idioma");
+                idiomaCell.setCellValue(getMessage("informe.porIdioma"));
                 idiomaCell.setCellStyle(tituloSeccion);
                 sheet.addMergedRegion(CellRangeAddress.valueOf("$A$"+rowNum+":$G$"+rowNum));
                 //Espai buit
@@ -423,13 +442,13 @@ public class IndicadoresExcel extends AbstractExcelView {
         }
 
         // SALIDA
-        if(tipo.equals("Entrada i Sortida") || tipo.equals("Sortida")){
+        if(tipo.equals(RegwebConstantes.INFORME_TIPO_REGISTRO_ENTRADASALIDA) || tipo.equals(RegwebConstantes.INFORME_TIPO_REGISTRO_SALIDA)){
 
             HSSFRow salRegRow = sheet.createRow(rowNum++);
             salRegRow.setHeightInPoints(15);
             HSSFCell salRegCell = salRegRow.createCell(0);
             sheet.addMergedRegion(CellRangeAddress.valueOf("$A$"+rowNum+":$G$"+rowNum));
-            salRegCell.setCellValue("Registres de Sortida");
+            salRegCell.setCellValue(getMessage("informe.registrosSalida"));
             salRegCell.setCellStyle(tituloSeccion);
 
             //Espai buit
@@ -438,7 +457,7 @@ public class IndicadoresExcel extends AbstractExcelView {
             //Registres totals
             HSSFRow regSalNom = sheet.createRow(rowNum++);
             HSSFCell regSalNomCol = regSalNom.createCell(0);
-            regSalNomCol.setCellValue("REGISTRES");
+            regSalNomCol.setCellValue(getMessage("informe.registros"));
             regSalNomCol.setCellStyle(cabecera);
             HSSFRow registreSalRow = sheet.createRow(rowNum++);
             registreSalRow.createCell(0).setCellValue(registrosSalida.toString());
@@ -452,7 +471,7 @@ public class IndicadoresExcel extends AbstractExcelView {
                 HSSFRow anySalRowTitle = sheet.createRow(rowNum++);
                 anySalRowTitle.setHeightInPoints(15);
                 HSSFCell anySalCell = anySalRowTitle.createCell(0);
-                anySalCell.setCellValue("Anys");
+                anySalCell.setCellValue(getMessage("informe.anys"));
                 anySalCell.setCellStyle(tituloSeccion);
                 sheet.addMergedRegion(CellRangeAddress.valueOf("$A$"+rowNum+":$G$"+rowNum));
                 //Espai buit
@@ -465,7 +484,7 @@ public class IndicadoresExcel extends AbstractExcelView {
                     anySalNomCol.setCellStyle(cabecera);
                 }
                 HSSFCell anySalNomCol = anySalNom.createCell(salidaAnosNombre.size());
-                anySalNomCol.setCellValue("TOTAL");
+                anySalNomCol.setCellValue(getMessage("informe.total"));
                 anySalNomCol.setCellStyle(cabecera);
                 HSSFRow anySalValor = sheet.createRow(rowNum++);
                 for(int i=0;i<salidaAnosValor.size();i++){
@@ -489,7 +508,7 @@ public class IndicadoresExcel extends AbstractExcelView {
                 HSSFRow mesSalRowTitle = sheet.createRow(rowNum++);
                 mesSalRowTitle.setHeightInPoints(15);
                 HSSFCell mesSalCell = mesSalRowTitle.createCell(0);
-                mesSalCell.setCellValue("Mesos");
+                mesSalCell.setCellValue(getMessage("informe.mesos"));
                 mesSalCell.setCellStyle(tituloSeccion);
                 sheet.addMergedRegion(CellRangeAddress.valueOf("$A$"+rowNum+":$G$"+rowNum));
                 //Espai buit
@@ -520,7 +539,7 @@ public class IndicadoresExcel extends AbstractExcelView {
                 HSSFRow conselleriaSalRowTitle = sheet.createRow(rowNum++);
                 conselleriaSalRowTitle.setHeightInPoints(15);
                 HSSFCell conselleriaSalCell = conselleriaSalRowTitle.createCell(0);
-                conselleriaSalCell.setCellValue("Per Conselleries");
+                conselleriaSalCell.setCellValue(getMessage("informe.porOrganismos"));
                 conselleriaSalCell.setCellStyle(tituloSeccion);
                 sheet.addMergedRegion(CellRangeAddress.valueOf("$A$"+rowNum+":$G$"+rowNum));
                 //Espai buit
@@ -551,7 +570,7 @@ public class IndicadoresExcel extends AbstractExcelView {
                 HSSFRow asuntoSalRowTitle = sheet.createRow(rowNum++);
                 asuntoSalRowTitle.setHeightInPoints(15);
                 HSSFCell asuntoSalCell = asuntoSalRowTitle.createCell(0);
-                asuntoSalCell.setCellValue("Per Tipus d'Assumpte");
+                asuntoSalCell.setCellValue(getMessage("informe.porTiposAsunto"));
                 asuntoSalCell.setCellStyle(tituloSeccion);
                 sheet.addMergedRegion(CellRangeAddress.valueOf("$A$"+rowNum+":$G$"+rowNum));
                 //Espai buit
@@ -582,7 +601,7 @@ public class IndicadoresExcel extends AbstractExcelView {
                 HSSFRow libroSalRowTitle = sheet.createRow(rowNum++);
                 libroSalRowTitle.setHeightInPoints(15);
                 HSSFCell libroSalCell = libroSalRowTitle.createCell(0);
-                libroSalCell.setCellValue("Per Llibre de Registre");
+                libroSalCell.setCellValue(getMessage("informe.porLibroRegistro"));
                 libroSalCell.setCellStyle(tituloSeccion);
                 sheet.addMergedRegion(CellRangeAddress.valueOf("$A$"+rowNum+":$G$"+rowNum));
                 //Espai buit
@@ -613,7 +632,7 @@ public class IndicadoresExcel extends AbstractExcelView {
                 HSSFRow oficinaSalRowTitle = sheet.createRow(rowNum++);
                 oficinaSalRowTitle.setHeightInPoints(15);
                 HSSFCell oficinaSalCell = oficinaSalRowTitle.createCell(0);
-                oficinaSalCell.setCellValue("Per Oficina");
+                oficinaSalCell.setCellValue(getMessage("informe.porOficina"));
                 oficinaSalCell.setCellStyle(tituloSeccion);
                 sheet.addMergedRegion(CellRangeAddress.valueOf("$A$"+rowNum+":$G$"+rowNum));
                 //Espai buit
@@ -644,7 +663,7 @@ public class IndicadoresExcel extends AbstractExcelView {
                 HSSFRow idiomaSalRowTitle = sheet.createRow(rowNum++);
                 idiomaSalRowTitle.setHeightInPoints(15);
                 HSSFCell idiomaSalCell = idiomaSalRowTitle.createCell(0);
-                idiomaSalCell.setCellValue("Per Idioma");
+                idiomaSalCell.setCellValue(getMessage("informe.porIdioma"));
                 idiomaSalCell.setCellStyle(tituloSeccion);
                 sheet.addMergedRegion(CellRangeAddress.valueOf("$A$"+rowNum+":$G$"+rowNum));
                 //Espai buit
@@ -674,7 +693,7 @@ public class IndicadoresExcel extends AbstractExcelView {
             sheet.autoSizeColumn(i);
         }
 
-        String nombreFichero = "Informe_Indicadors_"+ tipo +".xls";
+        String nombreFichero = getMessage("informe.nombreFichero.indicadores")+ tipoRegistro +".xls";
 
         // Cabeceras Response
         response.setHeader("Content-Disposition","attachment; filename="+nombreFichero);

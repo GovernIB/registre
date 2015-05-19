@@ -275,7 +275,7 @@ public class InformeController extends BaseController {
             paginacionEntrada.setListado(entradasList);
             lopdEjb.insertarRegistrosEntrada(paginacionEntrada, usuarioEntidad.getId());
 
-            mav.addObject("tipo", "Entrada");
+            mav.addObject("tipo", RegwebConstantes.INFORME_TIPO_REGISTRO_ENTRADA);
 
 
         // REGISTROS DE SALIDA
@@ -449,7 +449,7 @@ public class InformeController extends BaseController {
             paginacionSalida.setListado(salidasList);
             lopdEjb.insertarRegistrosSalida(paginacionSalida, usuarioEntidad.getId());
 
-            mav.addObject("tipo", "Sortida");
+            mav.addObject("tipo", RegwebConstantes.INFORME_TIPO_REGISTRO_SALIDA);
         }
 
         if(informeLibroBusquedaForm.getFechaInicio() != null){
@@ -731,21 +731,21 @@ public class InformeController extends BaseController {
             for (int i = 0; i < registrosEntrada.size(); i++) {
                 registros.add(new ArrayList<String>());
             }
-            mav.addObject("tipo", "Entrada i Sortida");
+            mav.addObject("tipo", RegwebConstantes.INFORME_TIPO_REGISTRO_ENTRADASALIDA);
 
             // Registros de Entrada
         }else if(informeIndicadoresBusquedaForm.getTipo() == 1){
             for (int i = 0; i < registrosEntrada.size(); i++) {
                 registros.add(new ArrayList<String>());
             }
-            mav.addObject("tipo", "Entrada");
+            mav.addObject("tipo", RegwebConstantes.INFORME_TIPO_REGISTRO_ENTRADA);
 
             // Registros de Salida
         }else if(informeIndicadoresBusquedaForm.getTipo() == 2){
             for (int i = 0; i < registrosSalida.size(); i++) {
                 registros.add(new ArrayList<String>());
             }
-            mav.addObject("tipo", "Sortida");
+            mav.addObject("tipo", RegwebConstantes.INFORME_TIPO_REGISTRO_SALIDA);
         }
 
         mav.addObject("campoCalendario", informeIndicadoresBusquedaForm.getCampoCalendario());
@@ -944,6 +944,7 @@ public class InformeController extends BaseController {
         }
 
         mav.addObject("idTipoRegistro", registroLopdBusquedaForm.getTipoRegistro());
+        mav.addObject("libros", libros(request));
         mav.addObject("entradas", entradas);
         mav.addObject("salidas", salidas);
 
