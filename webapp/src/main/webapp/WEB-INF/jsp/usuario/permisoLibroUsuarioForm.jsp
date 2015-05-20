@@ -118,18 +118,36 @@
         columna = parseInt(columna);
         filas = filas / 7;
         var len = parseInt(filas);
+        var nombre = "#permisoLibroUsuarios"+columna+"\\.activo1";
 
-        for ( var i = 0; i < len; i++) {
-            var nombre = "#permisoLibroUsuarios"+columna+"\\.activo1";
-
+        //Selecciona todos los checks o los deselecciona todos a la vez
+        if(len>0) {
             if($(nombre).prop('checked')){
-
-                $(nombre).prop('checked', false);
-            }else {
-                $(nombre).prop('checked', true);
+                for ( var i = 0; i < len; i++){
+                    nombre = "#permisoLibroUsuarios"+columna+"\\.activo1";
+                    $(nombre).prop('checked', false);
+                    columna = columna + 7;
+                }
+            }else{
+                for ( var i = 0; i < len; i++){
+                    nombre = "#permisoLibroUsuarios"+columna+"\\.activo1";
+                    $(nombre).prop('checked', true);
+                    columna = columna + 7;
+                }
             }
-            columna = columna + 7;
         }
+//        //Invierte los valroes de los checks
+//        for ( var i = 0; i < len; i++) {
+//            var nombre = "#permisoLibroUsuarios"+columna+"\\.activo1";
+//
+//            if($(nombre).prop('checked')){
+//
+//                $(nombre).prop('checked', false);
+//            }else {
+//                $(nombre).prop('checked', true);
+//            }
+//            columna = columna + 7;
+//        }
     }
 
 </script>

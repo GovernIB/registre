@@ -333,6 +333,9 @@ textarea{
     height: 30px;
     padding: 4px;
 }
+.table-hover>thead>tr:hover>th{
+    cursor: pointer;
+}
 .table1 {
     width: 100%;
     margin-bottom: 20px;
