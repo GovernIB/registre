@@ -29,14 +29,14 @@
         <div class="row">
             <div class="col-xs-12">
 
+                <c:import url="../modulos/mensajes.jsp"/>
+
                 <div class="panel panel-success">
 
                     <div class="panel-heading">
                         <a class="btn btn-success btn-xs pull-right" href="<c:url value="/organismo/arbolList"/>" role="button"><i class="fa fa-sitemap"></i> <spring:message code="organismo.arbol"/></a>
                         <h3 class="panel-title"><i class="fa fa-list"></i> <strong><spring:message code="organismo.buscador"/> ${entidad.nombre}</strong></h3>
                     </div>
-
-                    <c:import url="../modulos/mensajes.jsp"/>
 
                     <div class="panel-body">
 
@@ -100,6 +100,7 @@
                                                 <tr>
                                                     <th><spring:message code="organismo.organismo"/></th>
                                                     <th><spring:message code="organismo.estado"/></th>
+                                                    <th><spring:message code="organismo.libros"/></th>
                                                     <th width="50"><spring:message code="regweb.acciones"/></th>
                                                 </tr>
                                                 </thead>
@@ -109,6 +110,7 @@
                                                     <tr>
                                                         <td>${organismo.denominacion}</td>
                                                         <td>${organismo.estado.descripcionEstadoEntidad}</td>
+                                                        <td>${fn:length(organismo.libros)}</td>
                                                         <td>
                                                             <c:if test="${organismo.estado.codigoEstadoEntidad == 'V'}">
                                                                 <a class="btn btn-warning btn-sm" href="<c:url value="/libro/${organismo.id}/libros"/>" title="<spring:message code="organismo.libros"/>"><span class="fa fa-book"></span></a>
@@ -149,6 +151,7 @@
             </c:if>
             <c:if test="${not empty descarga}">
                 <button type="button" id="actuali" class="btn btn-success btn-sm"><spring:message code="entidad.actualizar"/></button>
+                <spring:message code="catalogoDir3.sincronizar.fecha"/>: <fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${descarga.fechaImportacion}" />
             </c:if>
 
         </c:if>
