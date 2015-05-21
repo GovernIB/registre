@@ -94,7 +94,7 @@
 
                                <!-- Paginacion -->
                                <c:import url="../modulos/paginacion.jsp">
-                                   <c:param name="tipoAsunto" value="tipoAsunto"/>
+                                   <c:param name="entidad" value="tipoAsunto"/>
                                </c:import>
 
 

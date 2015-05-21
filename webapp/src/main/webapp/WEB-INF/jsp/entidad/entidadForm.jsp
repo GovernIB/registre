@@ -74,10 +74,10 @@
                                         <form:label path="entidad.codigoDir3"><span class="text-danger">*</span> <spring:message code="entidad.codigoDir3"/></form:label>
                                     </div>
                                     <div class="col-xs-8">
-                                        <c:if test="${fn:length(entidad.organismos) > 0}">
+                                        <c:if test="${fn:length(entidadForm.entidad.organismos) > 0}">
                                             <form:input path="entidad.codigoDir3" cssClass="form-control" readonly="true"/> <form:errors path="entidad.codigoDir3" cssClass="help-block" element="span"/>
                                         </c:if>
-                                        <c:if test="${fn:length(entidad.organismos) == 0}">
+                                        <c:if test="${fn:length(entidadForm.entidad.organismos) == 0}">
                                             <form:input path="entidad.codigoDir3" cssClass="form-control"/> <form:errors path="entidad.codigoDir3" cssClass="help-block" element="span"/>
                                         </c:if>
                                     </div>
@@ -124,10 +124,10 @@
                                                 <form:label path="entidad.codigoDir3"><span class="text-danger">*</span> <spring:message code="entidad.codigoDir3"/></form:label>
                                             </div>
                                             <div class="col-xs-8">
-                                                <c:if test="${fn:length(entidad.organismos) > 0}">
+                                                <c:if test="${fn:length(entidadForm.entidad.organismos) > 0}">
                                                     <form:input path="entidad.codigoDir3" cssClass="form-control" readonly="true"/> <form:errors path="entidad.codigoDir3" cssClass="help-block" element="span"/>
                                                 </c:if>
-                                                <c:if test="${fn:length(entidad.organismos) == 0}">
+                                                <c:if test="${fn:length(entidadForm.entidad.organismos) == 0}">
                                                     <form:input path="entidad.codigoDir3" cssClass="form-control"/> <form:errors path="entidad.codigoDir3" cssClass="help-block" element="span"/>
                                                 </c:if>
                                             </div>
