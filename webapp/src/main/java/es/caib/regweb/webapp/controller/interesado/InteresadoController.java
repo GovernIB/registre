@@ -412,14 +412,16 @@ public class InteresadoController extends BaseController{
 
                 representado.setRepresentante(null);
 
-                eliminarInteresadoSesion(representante,session);
+                eliminarInteresadoSesion(representante, session);
                 actualizarInteresadoSesion(representado,session);
+                return true;
 
             }else{ //Trabajamos en la bbdd
                 Interesado representado = interesadoEjb.findById(idRepresentado);
                 representado.setRepresentante(null);
                 interesadoEjb.merge(representado);
-                interesadoEjb.eliminarInteresadoRegistroDetalle(idRepresentante,idRegistroDetalle);
+                interesadoEjb.eliminarInteresadoRegistroDetalle(idRepresentante, idRegistroDetalle);
+                return true;
 
             }
 
@@ -429,7 +431,7 @@ public class InteresadoController extends BaseController{
             e.printStackTrace();
         }
 
-        return true;
+        return false;
     }
 
     /**
@@ -455,7 +457,7 @@ public class InteresadoController extends BaseController{
 
             if(StringUtils.isEmpty(idRegistroDetalle)){ // Se trata de un nuevo Registro, utilizamos la sesion.
 
-                añadirInteresadoSesion(organismo,session);
+                añadirInteresadoSesion(organismo, session);
 
             }else{ // Edición de un registro, lo añadimos a la bbdd
                 organismo.setRegistroDetalle(new RegistroDetalle(Long.valueOf(idRegistroDetalle)));
@@ -470,40 +472,6 @@ public class InteresadoController extends BaseController{
         return true;
     }
 
-    /**
-     * Elimina un Organismo de la variable de sesion que almacena los interesados
-     * @param codigoDir3
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "/eliminarOrganismo", method = RequestMethod.GET)
-    @ResponseBody
-    public Boolean eliminarOrganismoInteresado(@RequestParam String codigoDir3,@RequestParam String idRegistroDetalle, HttpServletRequest request) {
-
-        log.info("Dentro de eliminarOrganismo: " + codigoDir3);
-        log.info("RegistroDetalle: " + idRegistroDetalle);
-
-        HttpSession session = request.getSession();
-
-        try {
-
-            if(StringUtils.isEmpty(idRegistroDetalle)) { // Se trata de un nuevo Registro, lo eliminamos de la sesion
-
-                eliminarOrganimoSesion(codigoDir3,session);
-
-            }else{// Edición de un registro, lo eliminanos de la bbdd
-                Interesado interesado = interesadoEjb.findByCodigoDir3RegistroDetalle(codigoDir3, Long.valueOf(idRegistroDetalle));
-                if(interesado != null){
-                    interesadoEjb.eliminarInteresadoRegistroDetalle(interesado.getId(),Long.valueOf(idRegistroDetalle));
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return true;
-    }
 
     /**
      *  Añade una Persona existente a la variable de sesion que almacena los interesados que son de tipo Persona
@@ -578,17 +546,63 @@ public class InteresadoController extends BaseController{
                 }
 
                 // Eliminamos la Persona
-                eliminarInteresadoSesion(persona,session);
+                return eliminarInteresadoSesion(persona,session);
+
 
             }else{// Edición de un registro, lo eliminanos de la bbdd
-                interesadoEjb.eliminarInteresadoRegistroDetalle(id,Long.valueOf(idRegistroDetalle));
+                RegistroDetalle registroDetalle = registroDetalleEjb.findById(Long.valueOf(idRegistroDetalle));
+                if(registroDetalle != null && registroDetalle.getInteresados().size()>1 ) { // Si solo hay un Interesado, no permitimos eliminarlo.
+                    interesadoEjb.eliminarInteresadoRegistroDetalle(id,Long.valueOf(idRegistroDetalle));
+                    return true;
+                }
+
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return true;
+        return false;
+    }
+
+    /**
+     * Elimina un Organismo de la variable de sesion que almacena los interesados
+     * @param codigoDir3
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/eliminarOrganismo", method = RequestMethod.GET)
+    @ResponseBody
+    public Boolean eliminarOrganismoInteresado(@RequestParam String codigoDir3,@RequestParam String idRegistroDetalle, HttpServletRequest request) {
+
+        log.info("Dentro de eliminarOrganismo: " + codigoDir3);
+        log.info("RegistroDetalle: " + idRegistroDetalle);
+
+        HttpSession session = request.getSession();
+
+        try {
+
+            if(StringUtils.isEmpty(idRegistroDetalle)) { // Se trata de un nuevo Registro, lo eliminamos de la sesion
+
+                eliminarOrganimoSesion(codigoDir3, session);
+
+            }else{// Edición de un registro, lo eliminanos de la bbdd
+                RegistroDetalle registroDetalle = registroDetalleEjb.findById(Long.valueOf(idRegistroDetalle));
+
+                if(registroDetalle != null && registroDetalle.getInteresados().size()>1 ){ // Si solo hay un Interesado, no permitimos eliminarlo.
+                    Interesado interesado = interesadoEjb.findByCodigoDir3RegistroDetalle(codigoDir3, Long.valueOf(idRegistroDetalle));
+                    if(interesado != null){
+                        interesadoEjb.eliminarInteresadoRegistroDetalle(interesado.getId(),Long.valueOf(idRegistroDetalle));
+                        return true;
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 
 
@@ -624,7 +638,7 @@ public class InteresadoController extends BaseController{
      * @param interesado
      * @param session
      */
-    public void eliminarInteresadoSesion(Interesado interesado, HttpSession session)throws Exception{
+    public Boolean eliminarInteresadoSesion(Interesado interesado, HttpSession session)throws Exception{
 
         List<Interesado> interesados = (List<Interesado>) session.getAttribute("interesados");
 
@@ -632,7 +646,9 @@ public class InteresadoController extends BaseController{
             log.info("Eliminado!");
             interesados.remove(interesado);
             session.setAttribute("interesados", interesados);
+            return true;
         }
+        return false;
 
     }
 

@@ -67,6 +67,14 @@ public class RegistroSalidaInterceptor extends HandlerInterceptorAdapter {
             return false;
         }
 
+        // Comprobamos que el usuario dispone del una OficinaActiva
+        if(oficinaActiva == null){
+            log.info("No existe una OficinaActiva");
+            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficinaActiva"));
+            response.sendRedirect("/regweb/aviso");
+            return false;
+        }
+
         //todo Añadir comprobación de que todas las configuraciones de la entidad están realizadas.
         //Comprobamos que se haya definido un formato para el número de registro en la Entidad
         if(entidadActiva.getNumRegistro() == null || entidadActiva.getNumRegistro().length()==0){
@@ -92,10 +100,10 @@ public class RegistroSalidaInterceptor extends HandlerInterceptorAdapter {
         // Comprobaciones previas al registro de un RegistrSalida
         if(url.equals("/registroSalida/new")){
 
-            // Comprobamos que el usuario dispone del una EntidadActiva
-            if(oficinaActiva == null){
-                log.info("No existe una OficinaActiva");
-                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficinaActiva"));
+            //Comprobamos que se haya definido un formato para el número de registro en la Entidad
+            if(entidadActiva.getNumRegistro() == null || entidadActiva.getNumRegistro().length()==0){
+                log.info("No hay configurado el formato del numero de registro para la Entidad activa");
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.entidad.formatoRegistro"));
                 response.sendRedirect("/regweb/aviso");
                 return false;
             }

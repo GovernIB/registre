@@ -73,7 +73,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
         q.setParameter("registroDetalle",registroDetalle);
 
         List<Interesado> interesado = q.getResultList();
-        if(interesado.size() == 1){
+        if(interesado.size() > 0){
             return interesado.get(0);
         }else{
             return  null;

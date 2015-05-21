@@ -227,7 +227,7 @@
 
             </div>
             <div class="modal-footer">
-                <input type="button" onclick="procesarInteresado()" title="<spring:message code="regweb.guardar"/>" value="<spring:message code="regweb.guardar"/>" class="btn btn-warning btn-sm">
+                <input type="button" onclick="procesarInteresado()" title="<spring:message code="regweb.guardar"/>" value="<spring:message code="regweb.guardar"/>" class="btn btn-warning btn-sm" tabindex="1">
                 <button class="btn btn-sm" data-dismiss="modal" aria-hidden="true" onclick="limpiarInteresado()"><spring:message code="regweb.cerrar"/></button>
                 <%--<button id="eliminarRepresentante" class="btn btn-sm" data-dismiss="modal" aria-hidden="true" onclick="eliminarRepresentante($('#id').val(),$('#representado\\.id').val(),$('#idRegistroDetalle\\.id').val())"><spring:message code="regweb.eliminar"/></button>--%>
             </div>

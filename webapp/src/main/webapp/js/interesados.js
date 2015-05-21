@@ -122,7 +122,10 @@ function eliminarOrganisnoInteresado(codigoDir3,idRegistroDetalle){
         contentType: 'application/json',
 
         success: function(result) {
-            $(elemento).remove();
+            if(result==true){
+                $(elemento).remove();
+            }
+
         }
     });
 
@@ -182,7 +185,9 @@ function eliminarPersonaInteresado(idPersona,idRegistroDetalle){
         contentType: 'application/json',
 
         success: function(result) {
-            $(elemento).remove();
+            if(result==true){
+                $(elemento).remove();
+            }
         }
     });
 

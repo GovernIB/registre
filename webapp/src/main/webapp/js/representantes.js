@@ -186,7 +186,9 @@ function eliminarRepresentante(idRepresentante,idRepresentado,idRegistroDetalle)
             contentType: 'application/json',
 
             success: function(result) {
-                eliminarRepresentanteHtml(idRepresentado);
+                if(result==true){
+                    eliminarRepresentanteHtml(idRepresentado);
+                }
             }
         });
         confirmModal.modal("hide");
