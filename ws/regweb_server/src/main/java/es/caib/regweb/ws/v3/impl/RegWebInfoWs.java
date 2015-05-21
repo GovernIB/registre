@@ -37,6 +37,26 @@ public interface RegWebInfoWs {
       throws Throwable, WsI18NException;
 
     /**
+     * Obtiene los pares Libro-Oficina en los que el usuario autenticado puede registrar
+     * @param entidadCodigoDir3
+     * @param tipoRegistro
+     * @return
+     * @throws Throwable
+     * @throws WsI18NException
+     */
+    public List<LibroOficinaWs> obtenerLibrosOficina(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3,@WebParam(name = "tipoRegistro") Long tipoRegistro) throws Throwable, WsI18NException;
+
+    /**
+     * Obtiene los pares Libro-Oficina en los que el usuario indicado puede registrar
+     * @param entidadCodigoDir3
+     * @param usuario
+     * @param tipoRegistro
+     * @return
+     * @throws Throwable
+     * @throws WsI18NException
+     */
+    public List<LibroOficinaWs> obtenerLibrosOficinaUsuario(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3, @WebParam(name = "usuario") String usuario, @WebParam(name = "tipoRegistro") Long tipoRegistro) throws Throwable, WsI18NException;
+    /**
      * Obtiene las Oficinas donde el usuario tiene permisos para realizar Registros
      * @param entidadCodigoDir3
      * @param autorizacion

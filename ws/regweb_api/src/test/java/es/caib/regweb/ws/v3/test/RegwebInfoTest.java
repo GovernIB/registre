@@ -89,7 +89,60 @@ public class RegwebInfoTest extends RegWebTestUtils {
 
   }
 
+  //@Test
+  public void testObtenerLibrosOficina(){
+    String codigoEntidadDir3 = "A04006741";
+    try {
+      List<LibroOficinaWs> librosOficinas = infoApi.obtenerLibrosOficina(codigoEntidadDir3, (long) 1);
+
+      for (LibroOficinaWs libroOficinaWs : librosOficinas) {
+
+        System.out.println("Libro: " + libroOficinaWs.getLibroWs().getNombreLargo());
+        System.out.println("Oficina: " + libroOficinaWs.getOficinaWs().getNombre());
+        System.out.println("");
+
+      }
+
+
+    } catch (WsI18NException i18ne) {
+      System.err.println(WsClientUtils.toString(i18ne));
+      //Assert.assertEquals("error.valor.requerido.ws", i18ne.getFaultInfo().getTranslation().getCode());
+
+    } catch (Exception e) {
+      System.err.println("Error desconegut: " + e.getMessage());
+      //Assert.fail("WsValidationException no esperada");
+    }
+
+  }
+
   @Test
+  public void testObtenerLibrosOficinaUsuario(){
+    String codigoEntidadDir3 = "A04006741";
+    String usuario = "earrivi";
+    try {
+      List<LibroOficinaWs> librosOficinas = infoApi.obtenerLibrosOficinaUsuario(codigoEntidadDir3, usuario, (long) 1);
+
+      for (LibroOficinaWs libroOficinaWs : librosOficinas) {
+
+        System.out.println("Libro: " + libroOficinaWs.getLibroWs().getNombreLargo());
+        System.out.println("Oficina: " + libroOficinaWs.getOficinaWs().getNombre());
+        System.out.println("");
+
+      }
+
+
+    } catch (WsI18NException i18ne) {
+      System.err.println(WsClientUtils.toString(i18ne));
+      //Assert.assertEquals("error.valor.requerido.ws", i18ne.getFaultInfo().getTranslation().getCode());
+
+    } catch (Exception e) {
+      System.err.println("Error desconegut: " + e.getMessage());
+      //Assert.fail("WsValidationException no esperada");
+    }
+
+  }
+
+  //@Test
   public void testOficinas(){
     String codigoEntidadDir3 = "A04006741";
     try {
@@ -111,7 +164,7 @@ public class RegwebInfoTest extends RegWebTestUtils {
 
   }
 
-  @Test
+  //@Test
   public void testLibros(){
 
     String codigoEntidadDir3 = "A04006741";

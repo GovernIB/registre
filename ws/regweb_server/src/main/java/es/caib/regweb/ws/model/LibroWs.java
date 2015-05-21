@@ -10,13 +10,20 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class LibroWs {
 
-  private String nombreCorto;
-
-  private String nombreLargo;
-
   private String codigoLibro;
-
+  private String nombreCorto;
+  private String nombreLargo;
   private String codigoOrganismo;
+
+  public LibroWs() {
+  }
+
+  public LibroWs(String codigoLibro, String nombreCorto, String nombreLargo, String codigoOrganismo) {
+    this.codigoLibro = codigoLibro;
+    this.nombreCorto = nombreCorto;
+    this.nombreLargo = nombreLargo;
+    this.codigoOrganismo = codigoOrganismo;
+  }
 
   public String getCodigoLibro() {
     return codigoLibro;

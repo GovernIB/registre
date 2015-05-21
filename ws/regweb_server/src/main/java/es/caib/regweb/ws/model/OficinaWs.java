@@ -12,6 +12,14 @@ public class OficinaWs {
 
   private String nombre;
 
+  public OficinaWs() {
+  }
+
+  public OficinaWs(String codigo, String nombre) {
+    this.codigo = codigo;
+    this.nombre = nombre;
+  }
+
   public String getCodigo() {
     return codigo;
   }
