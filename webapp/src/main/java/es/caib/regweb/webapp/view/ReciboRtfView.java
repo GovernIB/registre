@@ -81,9 +81,10 @@ public class ReciboRtfView extends AbstractView {
         // Extraemos año de la fecha del registro
         SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
         String anoRegistro = formatYear.format(datosRecibo.getFechaRegistro());
-        SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
         String fechaRegistro = formatDate.format(datosRecibo.getFechaRegistro());
-        String fechaRecibo = "";
+        String fechaReciboCatalan = "";
+        String fechaReciboCastellano = "";
 
         // Fecha según el idioma y mes
         Date dataActual = new Date();
@@ -92,21 +93,22 @@ public class ReciboRtfView extends AbstractView {
         SimpleDateFormat sdf4 = new SimpleDateFormat("MMMMM", new Locale("ca"));
         SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy");
         String diaRecibo = sdf1.format(dataActual);
-        String mesRecibo = "";
+        String mesReciboCatalan = "";
+        String mesReciboCastellano = "";
         String anoRecibo = sdf3.format(dataActual);
 
-        if(idiomaActual.equals("es")){
-            mesRecibo = sdf2.format(dataActual);
-            fechaRecibo = diaRecibo + " de " + mesRecibo + " de " + anoRecibo;
-        } else if(idiomaActual.equals("ca")){
-            mesRecibo = sdf4.format(dataActual);
-            if(mesRecibo.startsWith("a") || mesRecibo.startsWith("o")){
-                mesRecibo= " d'" + mesRecibo;
-            }else{
-                mesRecibo= " de " + mesRecibo;
-            }
-            fechaRecibo = diaRecibo + mesRecibo + " de " + anoRecibo;
+        //Fecha Recibo en Castellano
+        mesReciboCastellano = sdf2.format(dataActual);
+        fechaReciboCastellano = diaRecibo + " de " + mesReciboCastellano + " de " + anoRecibo;
+        //Fecha Recibo en Catalan
+        mesReciboCatalan = sdf4.format(dataActual);
+        if(mesReciboCatalan.startsWith("a") || mesReciboCatalan.startsWith("o")){
+            mesReciboCatalan= " d'" + mesReciboCatalan;
+        }else{
+            mesReciboCatalan= " de " + mesReciboCatalan;
         }
+        fechaReciboCatalan = diaRecibo + mesReciboCatalan + " de " + anoRecibo;
+
 
         // Interessats
         if (datosRecibo.getInteresados()!=null){
@@ -156,7 +158,8 @@ public class ReciboRtfView extends AbstractView {
         if (interessats.length()>0) ht.put("(interessats)", ConvertirTexto.toCp1252(interessats));
         if (annexes.length()>0) ht.put("(annexes)", ConvertirTexto.toCp1252(annexes));
         if (usuario!=null) ht.put("(nomUsuari)", ConvertirTexto.toCp1252(usuario.getNombreCompleto()));
-        if (fechaRecibo!=null) ht.put("(dataRebut)", ConvertirTexto.toCp1252(fechaRecibo));
+        if (fechaReciboCatalan!=null) ht.put("(dataRebut)", ConvertirTexto.toCp1252(fechaReciboCatalan));
+        if (fechaReciboCastellano!=null) ht.put("(fechaRecibo)", ConvertirTexto.toCp1252(fechaReciboCastellano));
         ht.put("(formatNumRegistre)", ConvertirTexto.toCp1252(formatNumRegistre));
 
         // Reemplaza el texto completo
