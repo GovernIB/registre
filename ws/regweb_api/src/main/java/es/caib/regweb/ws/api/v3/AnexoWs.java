@@ -35,7 +35,6 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *         &lt;element name="tamanoFirmaAnexada" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
  *         &lt;element name="tipoMIMEFirmaAnexada" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="certificado" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="firmacsv" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="timestamp" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="validacionOCSP" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *       &lt;/sequence>
@@ -65,7 +64,6 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "tamanoFirmaAnexada",
     "tipoMIMEFirmaAnexada",
     "certificado",
-    "firmacsv",
     "timestamp",
     "validacionOCSP"
 })
@@ -89,7 +87,6 @@ public class AnexoWs {
     protected Long tamanoFirmaAnexada;
     protected String tipoMIMEFirmaAnexada;
     protected String certificado;
-    protected String firmacsv;
     protected String timestamp;
     protected String validacionOCSP;
 
@@ -495,30 +492,6 @@ public class AnexoWs {
      */
     public void setCertificado(String value) {
         this.certificado = value;
-    }
-
-    /**
-     * Gets the value of the firmacsv property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getFirmacsv() {
-        return firmacsv;
-    }
-
-    /**
-     * Sets the value of the firmacsv property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setFirmacsv(String value) {
-        this.firmacsv = value;
     }
 
     /**

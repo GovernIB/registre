@@ -8,7 +8,6 @@ import es.caib.regweb.ws.model.AnexoWs;
 import es.caib.regweb.ws.v3.impl.CommonConverter;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 
-import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 /**
@@ -79,7 +78,7 @@ public class AnexoConverter extends CommonConverter {
        if(!StringUtils.isEmpty(anexoWs.getObservaciones())){anexo.setObservaciones(anexoWs.getObservaciones());}
        if(anexoWs.getOrigenCiudadanoAdmin()!=null){anexo.setOrigenCiudadanoAdmin(anexoWs.getOrigenCiudadanoAdmin());}
        if(anexoWs.getCertificado() != null){anexo.setCertificado(anexoWs.getCertificado());}
-       if(anexoWs.getFirmacsv() != null){anexo.setFirmacsv(anexoWs.getFirmacsv());}
+       //if(anexoWs.getFirmacsv() != null){anexo.setFirmacsv(anexoWs.getFirmacsv());}
        if(anexoWs.getTimestamp() != null){anexo.setTimestamp(anexoWs.getTimestamp());}
        if(anexoWs.getValidacionOCSP() != null){anexo.setValidacionOCSP(anexoWs.getValidacionOCSP());}
 
@@ -125,7 +124,7 @@ public class AnexoConverter extends CommonConverter {
        if(!StringUtils.isEmpty(anexo.getObservaciones())){anexoWs.setObservaciones(anexo.getObservaciones());}
        if(anexo.getOrigenCiudadanoAdmin()!=null){anexoWs.setOrigenCiudadanoAdmin(anexo.getOrigenCiudadanoAdmin());}
        if(anexo.getCertificado() != null){anexoWs.setCertificado(anexo.getCertificado());}
-       if(anexo.getFirmacsv() != null){anexoWs.setFirmacsv(anexo.getFirmacsv());}
+       //if(anexo.getFirmacsv() != null){anexoWs.setFirmacsv(anexo.getFirmacsv());}
        if(anexo.getTimestamp() != null){anexoWs.setTimestamp(anexo.getTimestamp());}
        if(anexo.getValidacionOCSP() != null){anexoWs.setValidacionOCSP(anexo.getValidacionOCSP());}
 

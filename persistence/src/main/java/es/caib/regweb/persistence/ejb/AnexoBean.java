@@ -8,6 +8,7 @@ import es.caib.regweb.model.RegistroSalida;
 import es.caib.regweb.utils.AnnexFileSystemManager;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.utils.StringUtils;
+
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -17,6 +18,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
 import java.util.Date;
 import java.util.List;
 
@@ -88,7 +90,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal{
             registroDetalleEjb.merge(registroDetalle);
             remove(anexo);
         }
-        return AnnexFileSystemManager.eliminarArchivo(anexo.getId());
+        return AnnexFileSystemManager.eliminarCustodia(anexo.getCustodiaID());
     }
 
      /**
@@ -117,8 +119,10 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal{
       * @return
       */
      @Override
-     public Anexo actualizarAnexoConArchivos(Long idAnexo, byte[] ficheroAnexado,String nombreFicheroAnexado, String tipoMIMEFicheroAnexado, Long tamanoFicheroAnexado,
-                                    byte[] firmaAnexada, String nombreFirmaAnexada, String tipoMIMEFirmaAnexada, Long tamanoFirmaAnexada, Integer modoFirma, Date fechaCaptura ) throws Exception{
+     public Anexo actualizarAnexoConArchivos(Long idAnexo, byte[] ficheroAnexado,
+         String nombreFicheroAnexado, String tipoMIMEFicheroAnexado, Long tamanoFicheroAnexado,
+         byte[] firmaAnexada, String nombreFirmaAnexada, String tipoMIMEFirmaAnexada,
+         Long tamanoFirmaAnexada, Integer modoFirma, Date fechaCaptura ) throws Exception{
 
           log.info("Entramos en actualizarAnexoConArchivos");
           Anexo anexoActual = findById(idAnexo);
@@ -136,7 +140,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal{
               anexoActual.setTamano(tamanoFicheroAnexado);
               anexoActual.setFechaCaptura(fechaCaptura);
 
-
+              String custodiaID;
               // Si hay firma detached
               if(firmaAnexada != null && firmaAnexada.length>0 && !StringUtils.isEmpty(nombreFirmaAnexada)){
                 log.info("Entramos en firmaAnexada");
@@ -148,14 +152,35 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal{
 
                 // actualizarAnexo(anexoActual);
                 anexoActual = merge(anexoActual);
+                
+                // TODO Juntar mètode actualizarAnexo i crearArchivo
+                
+                // TODO  S'ha d'afegir registre en format JSON dins custodyParameters
+                final String custodyParameters = null;
+                
                 // Creamos el archivo
-                AnnexFileSystemManager.crearArchivo(nombreFicheroAnexadoRec, ficheroAnexado, nombreFirmaAnexadaRec, firmaAnexada , anexoActual.getId(), modoFirma);
+                custodiaID = AnnexFileSystemManager.crearArchivo(nombreFicheroAnexadoRec, ficheroAnexado,
+                    nombreFirmaAnexadaRec, firmaAnexada , modoFirma, anexoActual.getCustodiaID(), custodyParameters);
               }else{ // Si no hay se guarda el archivo solo sin firma
                 log.info("Entramos en else archivo");
                 anexoActual.setNombreFirmaAnexada("");
                 anexoActual = merge(anexoActual);
-                AnnexFileSystemManager.crearArchivo(nombreFicheroAnexadoRec, ficheroAnexado,null, null , anexoActual.getId(), modoFirma);
+                
+                // TODO Juntar mètode actualizarAnexo i crearArchivo
+                
+                // TODO  S'ha d'afegir registre en format JSON dins custodyParameters
+                final String custodyParameters = null;
+                
+                custodiaID = AnnexFileSystemManager.crearArchivo(nombreFicheroAnexadoRec,
+                    ficheroAnexado,null, null , modoFirma, anexoActual.getCustodiaID(), custodyParameters);
               }
+              
+              
+              log.info("XYZ 111 CREAR ARCHIVO ANEXO: " + custodiaID);
+              
+              anexoActual.setCustodiaID(custodiaID);
+              anexoActual = merge(anexoActual);
+              
           }
 
           return anexoActual;

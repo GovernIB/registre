@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.fundaciobit.plugins.documentcustody.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.SignatureCustody;
@@ -89,7 +88,8 @@ public class AnexoController extends BaseController {
 
 
    /**
-   * Método que guarda el archivo fisico asociado a un anexo a posteriori, en este metodo solo se gestiona el archivo asociado
+   * Método que guarda el archivo fisico asociado a un anexo a posteriori, en este metodo
+   *  solo se gestiona el archivo asociado
    * @param idAnexo identificador del anexo
    * @param accion  indica si es nuevo o edición
    * @param borrar  indica si se ha de borrar el archivo asociado
@@ -105,6 +105,12 @@ public class AnexoController extends BaseController {
       try {
 
           Anexo anexo = anexoEjb.findById(idAnexo);
+          
+          if (anexo == null) {
+            log.info(" archivo :: anexo = null");
+          } else {
+             log.info(" archivo :: anexo.getCustodiaID()  = " + anexo.getCustodiaID() );
+          }
 
           //Cogemos el archivo
           HttpSession session = request.getSession(true);
@@ -151,17 +157,20 @@ public class AnexoController extends BaseController {
           } else {
         	  doc = request.getFile("archivo");
           }
-          
 
           if(anexo.getModoFirma() == 1 || anexo.getModoFirma() == 0){// no hay firma detached  o no hay firma
               if(doc != null){ // Modificamos archivo
                   //Si editamos, eliminamos el anexo anterior
+                
+               
+                  /*
                   if(!accion.equals("nuevo") ){
                     // Eliminar el archivo fisico del sistema de archivos
-                    AnnexFileSystemManager.eliminarArchivo(anexo.getId());
+                    AnnexFileSystemManager.eliminarArchivo(anexo.getCustodiaID());
                   }
+                  */
                   //Inicializamos el archivo form manager con el nuevo archivo doc
-                  afm = new AnexoFormManager(anexoEjb, doc, null, RegwebConstantes.ARCHIVOS_LOCATION_PROPERTY);
+                  afm = new AnexoFormManager(anexoEjb, doc, null /*, RegwebConstantes.ARCHIVOS_LOCATION_PROPERTY*/);
                   // Método que actualiza el anexo asociandole el nuevo archivo.
                   afm.prePersist(anexo);
 
@@ -169,7 +178,7 @@ public class AnexoController extends BaseController {
 
                   if(borrar){ // No hay archivo nuevo y borramos el archivo antiguo
                      log.info("borrar");
-                     AnnexFileSystemManager.eliminarArchivo(anexo.getId());
+                     AnnexFileSystemManager.eliminarDocumento(anexo.getCustodiaID());
                      anexo.setNombreFicheroAnexado("");
                      anexoEjb.actualizarAnexo(anexo);
                   }
@@ -179,22 +188,25 @@ public class AnexoController extends BaseController {
               firma = request.getFile("firma");
               // Comprobar que doc y firma no sean null
               if(firma != null && doc != null){
-                  if(!accion.equals("nuevo") ){ // Si editamos
+
+                  /*if(!accion.equals("nuevo") ){ // Si editamos
                     // Eliminar los archivos fisicos del sistema de archivos
-                    AnnexFileSystemManager.eliminarArchivo(anexo.getId());
-                  }
+                    AnnexFileSystemManager.eliminarArchivo(anexo.getCustodiaID());
+                  } */
                   // Guardar el anexo con los dos archivos asociados
-                  afm = new AnexoFormManager(anexoEjb, doc, firma, RegwebConstantes.ARCHIVOS_LOCATION_PROPERTY);
+                  afm = new AnexoFormManager(anexoEjb, doc, firma /*, RegwebConstantes.ARCHIVOS_LOCATION_PROPERTY*/);
                   afm.prePersist(anexo);
               }else{
                    if(doc != null ){ //firma es null, gestionamos solo el doc
 
+                     /*
                       if(!accion.equals("nuevo") ){ //Editamos
                         // Eliminar el archivo fisico del sistema de archivos
-                        AnnexFileSystemManager.eliminarArchivo(anexo.getId());
+                        AnnexFileSystemManager.eliminarArchivo(anexo.getCustodiaID());
                       }
+                      */
                       //Inicializamos el archivo form manager con el nuevo archivo doc
-                      afm = new AnexoFormManager(anexoEjb, doc, null, RegwebConstantes.ARCHIVOS_LOCATION_PROPERTY);
+                      afm = new AnexoFormManager(anexoEjb, doc, null /*, RegwebConstantes.ARCHIVOS_LOCATION_PROPERTY*/);
                       // Método que actualiza el anexo asociandole el nuevo archivo.
                       afm.prePersist(anexo);
 
@@ -202,7 +214,7 @@ public class AnexoController extends BaseController {
 
                       if(borrar){ // No hay archivo nuevo y borramos el archivo antiguo
                          log.info("borrar");
-                         AnnexFileSystemManager.eliminarArchivo(anexo.getId());
+                         AnnexFileSystemManager.eliminarDocumento(anexo.getCustodiaID());
                          anexo.setNombreFicheroAnexado("");
                          anexo.setNombreFirmaAnexada("");
                          anexoEjb.actualizarAnexo(anexo);
@@ -319,15 +331,18 @@ public class AnexoController extends BaseController {
        @PathVariable Long idRegistroDetalle, @PathVariable String tipoRegistro,
        @RequestBody Anexo anexo, BindingResult result, HttpServletRequest request) {
 
+       log.info("\n\n);");
        log.info("Accion: " + accion);
        //Indica si es el primer anexo que se crea. Lo necesitamos al mostrar los datos en el registro detalle.
        Boolean isPrimerAnexo = false;
-
+       
+       if (anexo.getCustodiaID() != null && anexo.getCustodiaID().trim().length() == 0) {
+         anexo.setCustodiaID(null);
+       }
+       
 
        JsonResponse jsonResponse = new JsonResponse();
-
        anexoValidator.validate(anexo,result);
-
 
        if (result.hasErrors()){//si hay errores
            // Montamos la respuesta de los errores en json
@@ -478,16 +493,11 @@ public class AnexoController extends BaseController {
      * @param anexoId identificador del anexo
      */
      @RequestMapping(value = "/{anexoId}", method = RequestMethod.GET)
-     public void  anexo(@PathVariable("anexoId") Long anexoId, HttpServletRequest request, HttpServletResponse response)  {
+     public void  anexo(@PathVariable("anexoId") Long anexoId, HttpServletRequest request,
+         HttpServletResponse response)  throws Exception {
           Anexo anexo = null;
-
-          try {
-              anexo = anexoEjb.findById(anexoId);
-          } catch (Exception e) {
-              e.printStackTrace();
-          }
-
-          fullDownload(anexoId, anexo.getNombreFicheroAnexado(), anexo.getTipoMIME(), false,response);
+          anexo = anexoEjb.findById(anexoId);
+          fullDownload(anexo.getCustodiaID(), anexo.getNombreFicheroAnexado(), anexo.getTipoMIME(), false,response);
      }
 
       /**
@@ -495,17 +505,11 @@ public class AnexoController extends BaseController {
      * @param anexoId identificador del anexo
      */
      @RequestMapping(value = "/firma/{anexoId}", method = RequestMethod.GET)
-     public void  firma(@PathVariable("anexoId") Long anexoId, HttpServletRequest request, HttpServletResponse response)  {
+     public void  firma(@PathVariable("anexoId") Long anexoId, HttpServletRequest request, 
+         HttpServletResponse response)  throws Exception {
           Anexo anexo = null;
-
-          try {
-              anexo = anexoEjb.findById(anexoId);
-          } catch (Exception e) {
-              e.printStackTrace();
-          }
-
-          fullDownload(anexoId, anexo.getNombreFicheroAnexado(), anexo.getTipoMIME(), true,response);
-
+          anexo = anexoEjb.findById(anexoId);
+          fullDownload(anexo.getCustodiaID(), anexo.getNombreFicheroAnexado(), anexo.getTipoMIME(), true,response);
      }
 
      /**
@@ -515,20 +519,23 @@ public class AnexoController extends BaseController {
      * @param contentType
      * @param response
      */
-     public void fullDownload(Long archivoId, String filename, String contentType, boolean firma, HttpServletResponse response) {
+     public void fullDownload(String custodiaID, String filename, String contentType, boolean firma,
+         HttpServletResponse response)  {
 
           //FileInputStream input = null;
+       
+       
           OutputStream output = null;
           MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
           byte[] data;
           try {
-              if (archivoId != null) {
+              if (custodiaID != null) {
                   if(!firma){
-                    DocumentCustody dc = AnnexFileSystemManager.getArchivo(archivoId);
+                    DocumentCustody dc = AnnexFileSystemManager.getArchivo(custodiaID);
                     filename = dc.getName();
                     data = dc.getData();
                   }else{
-                    SignatureCustody sc = AnnexFileSystemManager.getFirma(archivoId);
+                    SignatureCustody sc = AnnexFileSystemManager.getFirma(custodiaID);
                     filename = sc.getName();
                     data = sc.getData();
                   }

@@ -38,6 +38,8 @@ public class Anexo implements Serializable {
     private Date fechaCaptura;
     private int modoFirma;
     private String nombreFirmaAnexada;
+    
+    private String custodiaID;
 
     private String certificado;
     private String firmacsv;
@@ -81,6 +83,15 @@ public class Anexo implements Serializable {
 
     public void setNombreFicheroAnexado(String nombreFicheroAnexado) {
       this.nombreFicheroAnexado = nombreFicheroAnexado;
+    }
+
+    @Column(name = "CUSTODIAID", length= 256)
+    public String getCustodiaID() {
+      return custodiaID;
+    }
+
+    public void setCustodiaID(String custodyID) {
+      this.custodiaID = custodyID;
     }
 
     @Column(name = "TAMANO")
@@ -199,6 +210,8 @@ public class Anexo implements Serializable {
     public void setCertificado(String certificado) {
       this.certificado = certificado;
     }
+    
+    
     @Column(name = "FIRMACSV")
     public String getFirmacsv() {
       return firmacsv;
@@ -207,6 +220,8 @@ public class Anexo implements Serializable {
     public void setFirmacsv(String firmacsv) {
       this.firmacsv = firmacsv;
     }
+    
+
     @Column(name = "TIMESTAMP")
     public String getTimestamp() {
       return timestamp;
@@ -224,6 +239,7 @@ public class Anexo implements Serializable {
       this.validacionOCSP = validacionOCSP;
     }
 
+
     @Column(name = "CSV")
     public String getCsv() {
         return csv;
@@ -232,6 +248,7 @@ public class Anexo implements Serializable {
     public void setCsv(String csv) {
         this.csv = csv;
     }
+
 
     @Transient
     public boolean isBorrar() {

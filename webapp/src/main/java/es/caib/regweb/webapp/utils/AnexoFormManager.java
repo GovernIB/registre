@@ -24,13 +24,13 @@ public class AnexoFormManager {
       private final MultipartFile anexoSubido;
       private final MultipartFile firmaAnexoSubido;
       private Anexo anexoActual;
-      private String ruta;
+      //private String ruta;
 
-      public AnexoFormManager(AnexoLocal anexoEjb, MultipartFile anexoSubido, MultipartFile firmaAnexoSubido, String ruta) {
+      public AnexoFormManager(AnexoLocal anexoEjb, MultipartFile anexoSubido, MultipartFile firmaAnexoSubido/*, String ruta*/) {
           this.anexoEjb = anexoEjb;
           this.anexoSubido = anexoSubido;
           this.firmaAnexoSubido = firmaAnexoSubido;
-          this.ruta = ruta;
+          //this.ruta = ruta;
       }
 
       /**
@@ -43,7 +43,8 @@ public class AnexoFormManager {
       public Anexo prePersist(Anexo anexo) throws Exception {
 
           //anexoActual = new Anexo();
-          log.info("Anexo id" + anexo.getId());
+          log.info("Anexo id = " + anexo.getId());
+          log.info("Anexo CustodiaID = " + anexo.getCustodiaID());
 
           // recortamos el nombre del fichero anexado al maximo que permite sicres3
           String nombreFicheroAnexado= StringUtils.recortarNombre(anexoSubido.getOriginalFilename(), RegwebConstantes.ANEXO_NOMBREARCHIVO_MAXLENGTH);
@@ -54,6 +55,7 @@ public class AnexoFormManager {
           anexoActual.setTamano(Long.valueOf(anexoSubido.getBytes().length));
           anexoActual.setFechaCaptura(new Date());
 
+          String custodiaID;
 
           // Si hay firma detached
           if(firmaAnexoSubido != null){
@@ -62,14 +64,30 @@ public class AnexoFormManager {
             // recortamos el nombre del fichero anexado al maximo que permite sicres3
              String nombreFirmaAnexada= StringUtils.recortarNombre(firmaAnexoSubido.getOriginalFilename(), RegwebConstantes.ANEXO_NOMBREARCHIVO_MAXLENGTH);
              anexoActual.setNombreFirmaAnexada(nombreFirmaAnexada);
+             
+             // TODO Juntar mètode actualizarAnexo i crearArchivo
+             
              anexoEjb.actualizarAnexo(anexoActual);
-            // Creamos el archivo
-            AnnexFileSystemManager.crearArchivo(nombreFicheroAnexado, anexoSubido.getBytes(), nombreFirmaAnexada, firmaAnexoSubido.getBytes() , anexoActual.getId(), anexo.getModoFirma());
+             // Creamos el archivo
+             // TODO  S'ha d'afegir registre en format JSON dins custodyParameters
+             final String custodyParameters = null;
+             custodiaID = AnnexFileSystemManager.crearArchivo(nombreFicheroAnexado, anexoSubido.getBytes(), 
+                nombreFirmaAnexada, firmaAnexoSubido.getBytes() , anexo.getModoFirma(), anexo.getCustodiaID(), custodyParameters );
           }else{ // Si no hay se guarda el archivo solo sin firma
             anexoActual.setNombreFirmaAnexada("");
+            // TODO Juntar mètode actualizarAnexo i crearArchivo
             anexoEjb.actualizarAnexo(anexoActual);
-            AnnexFileSystemManager.crearArchivo(nombreFicheroAnexado, anexoSubido.getBytes(),null, null , anexoActual.getId(), anexo.getModoFirma());
+            // TODO  S'ha d'afegir registre en format JSON dins custodyParameters
+            final String custodyParameters = null;
+            custodiaID = AnnexFileSystemManager.crearArchivo(nombreFicheroAnexado, anexoSubido.getBytes(),null, null , anexo.getModoFirma(), anexo.getCustodiaID(), custodyParameters);
           }
+          
+          log.info("XYZ 222 CREAR ARCHIVO ANEXO: " + custodiaID);
+          
+          // Actualitzan l'identificador de Custodia
+          anexoActual.setCustodiaID(custodiaID);
+          anexoEjb.persist(anexoActual);
+          
           return anexoActual;
       }
 
@@ -80,7 +98,7 @@ public class AnexoFormManager {
       public void processError() throws Exception {
 
           anexoEjb.remove(this.anexoActual);
-          AnnexFileSystemManager.eliminarArchivo(this.anexoActual.getId());
+          AnnexFileSystemManager.eliminarCustodia(this.anexoActual.getCustodiaID());
       }
 
       public void processErrorAnexosWithoutThrowException() {

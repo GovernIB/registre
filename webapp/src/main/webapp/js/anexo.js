@@ -54,7 +54,7 @@ function procesarAnexo( ) {
 
    // var borrarfirma = $('#borrarfirma').prop('checked');
 
-    var json = { "id": $('#id').val(), "titulo": $('#titulo').val(), "tipoDocumental" : $('#tipoDocumental').val(), "validezDocumento" : $('#validezDocumento').val(), "tipoDocumento" : $('#tipoDocumento').val(),"observaciones": $('#observacionesAnexo').val(), "origenCiudadanoAdmin" : $('#origenCiudadanoAdmin').val(), "nombreFicheroAnexado": $('#nombreFicheroAnexado').val(),"nombreFirmaAnexada": $('#nombreFirmaAnexada').val(),"borrar":$('#borrar').prop('checked'), "modoFirma":$('input[name=autofirma]:radio:checked').val()};
+    var json = { "id": $('#id').val(), "titulo": $('#titulo').val(), "tipoDocumental" : $('#tipoDocumental').val(), "validezDocumento" : $('#validezDocumento').val(), "tipoDocumento" : $('#tipoDocumento').val(),"observaciones": $('#observacionesAnexo').val(), "origenCiudadanoAdmin" : $('#origenCiudadanoAdmin').val(), "nombreFicheroAnexado": $('#nombreFicheroAnexado').val(),"nombreFirmaAnexada": $('#nombreFirmaAnexada').val(),"custodiaID": $('#custodiaID').val(),"borrar":$('#borrar').prop('checked'), "modoFirma":$('input[name=autofirma]:radio:checked').val()};
     $('#reload').show();
     $.ajax({
         url: url,
@@ -183,6 +183,7 @@ function cargarAnexo(idAnexo, idRegistro, idRegistroDetalle, tipoRegistro){
             $('#titulo').val(anexo.titulo);
             $('#tipoDocumental').val(anexo.tipoDocumental.id);
             $('#tipoDocumento').val(anexo.tipoDocumento);
+            $('#custodiaID').val(anexo.custodiaID);
 
             if(anexo.validezDocumento != null && anexo.validezDocumento != '-1'){
                 $('#validezDocumento').val(anexo.validezDocumento);

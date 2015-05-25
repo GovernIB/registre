@@ -30,10 +30,21 @@ alter table RWE_DESCARGA RENAME COLUMN FECHAIMPORTACION2 to FECHAIMPORTACION;
 
 alter table RWE_ENTIDAD add TIPSCAN varchar2(20 char);
 
--- 23/04/2015 Ampliació longitud camps (ve de dir3 madrid)   (POSTGRESQL)
+-- 23/04/2015 Ampliació longitud camps (ve de dir3 madrid)   
 
-ALTER TABLE rwe_catpais  alter column descripcionpais type character varying(100);
+-- POSTGRESQL
+-- ALTER TABLE rwe_catpais  alter column descripcionpais type character varying(100);
 
--- 23/04/2015 Ampliació longitud camps (ve de dir3 madrid)     (ORACLE)
-
+-- ORACLE
 ALTER TABLE rwe_catpais MODIFY descripcionpais VARCHAR2(100 CHAR);
+
+-- 25/05/2015 Afegir camp custodiaID a la taula anexo
+
+-- POSTGRESQL: 
+-- ALTER TABLE rwe_anexo ADD COLUMN custodiaid character varying(256);
+
+-- ORACLE
+ALTER TABLE rwe_anexo ADD  custodiaid  VARCHAR2(256);
+
+
+

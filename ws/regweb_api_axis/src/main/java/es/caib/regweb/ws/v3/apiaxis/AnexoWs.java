@@ -42,8 +42,6 @@ public class AnexoWs  implements java.io.Serializable {
 
     private java.lang.String certificado;
 
-    private java.lang.String firmacsv;
-
     private java.lang.String timestamp;
 
     private java.lang.String validacionOCSP;
@@ -69,7 +67,6 @@ public class AnexoWs  implements java.io.Serializable {
            java.lang.Long tamanoFirmaAnexada,
            java.lang.String tipoMIMEFirmaAnexada,
            java.lang.String certificado,
-           java.lang.String firmacsv,
            java.lang.String timestamp,
            java.lang.String validacionOCSP) {
            this.titulo = titulo;
@@ -89,7 +86,6 @@ public class AnexoWs  implements java.io.Serializable {
            this.tamanoFirmaAnexada = tamanoFirmaAnexada;
            this.tipoMIMEFirmaAnexada = tipoMIMEFirmaAnexada;
            this.certificado = certificado;
-           this.firmacsv = firmacsv;
            this.timestamp = timestamp;
            this.validacionOCSP = validacionOCSP;
     }
@@ -436,26 +432,6 @@ public class AnexoWs  implements java.io.Serializable {
 
 
     /**
-     * Gets the firmacsv value for this AnexoWs.
-     * 
-     * @return firmacsv
-     */
-    public java.lang.String getFirmacsv() {
-        return firmacsv;
-    }
-
-
-    /**
-     * Sets the firmacsv value for this AnexoWs.
-     * 
-     * @param firmacsv
-     */
-    public void setFirmacsv(java.lang.String firmacsv) {
-        this.firmacsv = firmacsv;
-    }
-
-
-    /**
      * Gets the timestamp value for this AnexoWs.
      * 
      * @return timestamp
@@ -557,9 +533,6 @@ public class AnexoWs  implements java.io.Serializable {
             ((this.certificado==null && other.getCertificado()==null) || 
              (this.certificado!=null &&
               this.certificado.equals(other.getCertificado()))) &&
-            ((this.firmacsv==null && other.getFirmacsv()==null) || 
-             (this.firmacsv!=null &&
-              this.firmacsv.equals(other.getFirmacsv()))) &&
             ((this.timestamp==null && other.getTimestamp()==null) || 
              (this.timestamp!=null &&
               this.timestamp.equals(other.getTimestamp()))) &&
@@ -643,9 +616,6 @@ public class AnexoWs  implements java.io.Serializable {
         }
         if (getCertificado() != null) {
             _hashCode += getCertificado().hashCode();
-        }
-        if (getFirmacsv() != null) {
-            _hashCode += getFirmacsv().hashCode();
         }
         if (getTimestamp() != null) {
             _hashCode += getTimestamp().hashCode();
@@ -778,13 +748,6 @@ public class AnexoWs  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("certificado");
         elemField.setXmlName(new javax.xml.namespace.QName("", "certificado"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
-        elemField.setMinOccurs(0);
-        elemField.setNillable(false);
-        typeDesc.addFieldDesc(elemField);
-        elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("firmacsv");
-        elemField.setXmlName(new javax.xml.namespace.QName("", "firmacsv"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);

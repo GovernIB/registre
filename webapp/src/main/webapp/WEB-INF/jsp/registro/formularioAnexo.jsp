@@ -87,6 +87,7 @@
                         <input type="hidden" id="idRegistro" name="idRegistro" value="${registro.id}"/>
                         <input type="hidden" id="idRegistroDetalle" name="idRegistroDetalle" value="${registro.registroDetalle.id}"/>
                         <input type="hidden" id="tipoRegistro" name="tipoRegistro" value="${param.registro}"/>
+                        <input type="hidden" id="custodiaID" name="custodiaID" value=""/>
 
                         <%--<div class="form-group col-xs-6" id="divautofirma">
                             <div class="col-xs-4 pull-left etiqueta_regweb control-label">

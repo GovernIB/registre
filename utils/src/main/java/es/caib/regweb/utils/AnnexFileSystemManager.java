@@ -44,8 +44,14 @@ public class AnnexFileSystemManager {
      * @param id
      * @return
      */
-    public static DocumentCustody getArchivo(Long id) throws Exception {
-      return getInstance().getDocumentInfo(String.valueOf(id));
+    public static DocumentCustody getArchivo(String custodiaID) throws Exception {
+      
+      if (custodiaID == null) {
+        log.warn("getArchivo :: CustodiaID vale null !!!!!", new Exception());
+        return null;
+      } 
+      
+      return getInstance().getDocumentInfo(custodiaID);
 
     }
 
@@ -54,61 +60,122 @@ public class AnnexFileSystemManager {
      * @param id
      * @return
      */
-    public static SignatureCustody getFirma(Long id) throws Exception {
-      return getInstance().getSignatureInfo(String.valueOf(id));
+    public static SignatureCustody getFirma(String custodiaID) throws Exception {
+      
+      if (custodiaID == null) {
+        log.warn("getFirma :: CustodiaID vale null !!!!!", new Exception());
+        return null;
+      } 
+      
+      return getInstance().getSignatureInfo(custodiaID);
     }
 
 
 
     /**
-     * Elimina un Archivo del sistema de archivos
+     * Elimina completamente una custodia ( = elimicion completa de Anexo)
      * @param id
      * @return true si l'arxiu no existeix o s'ha borrat. false en els altres
      *         casos.
      */
-    public static boolean eliminarArchivo(Long id) throws Exception {
+    public static boolean eliminarCustodia(String custodiaID) throws Exception {
 
-      
-        getInstance().deleteCustody(String.valueOf(id));
-        
+      if (custodiaID == null) {
+        log.warn("eliminarCustodia :: CustodiaID vale null !!!!!", new Exception());
+        return false;
+      } else {
+        getInstance().deleteCustody(custodiaID);
         return true;
+      }
+
     }
-
-
+    
+    
     /**
-     * Crea un file en el sistema de archivos
-     * @param file
-     * @param dstId
+     * Solo elimina el archivo asociado al documento.
+     * @param custodiaID
      * @return
      * @throws Exception
      */
-    public static void crearArchivo(String name, byte[] file, String signatureName, byte[] signature,  Long dstId, int signatureMode) throws Exception {
+    public static boolean eliminarDocumento(String custodiaID) throws Exception {
+
+      if (custodiaID == null) {
+        log.warn("eliminarDocumento :: CustodiaID vale null !!!!!", new Exception());
+        return false;
+      } else {
+        getInstance().deleteDocument(custodiaID);
+        getInstance().deleteSignature(custodiaID);
+        return true;
+      }
+
+    }
+    
+    
+    /**
+     * Solo elimina la el archivo asociado a la firma
+     * @param custodiaID
+     * @return
+     * @throws Exception
+     */
+    public static boolean eliminarFirma(String custodiaID) throws Exception {
+
+      if (custodiaID == null) {
+        log.warn("eliminarFirma :: CustodiaID vale null !!!!!", new Exception());
+        return false;
+      } else {
+        getInstance().deleteDocument(custodiaID);
+        return true;
+      }
+
+    }
+    
+
+
+    /**
+     * 
+     * @param file
+     * @param dstId
+     * @return Identificador de Custodia
+     * @throws Exception
+     */
+    
+    
+    /**
+     * Crea o actualiza un anexos en el sistema de custodia
+     * @param name
+     * @param file
+     * @param signatureName
+     * @param signature
+     * @param signatureMode
+     * @param custodyID Si vale null significa que creamos el archivo. Otherwise actualizamos el fichero.
+     * @param custodyParameters JSON del registre
+     * @return Identificador de custodia
+     * @throws Exception
+     */
+    public static String crearArchivo(String name, byte[] file, String signatureName, 
+        byte[] signature,  int signatureMode, String custodyID, String custodyParameters) throws Exception {
 
       IDocumentCustodyPlugin instance = getInstance();
-      
-      final String custodyParameters = null;
-      String dstIdProposed = String.valueOf(dstId);
-      String dstIdAssigned = instance.reserveCustodyID(dstIdProposed, custodyParameters);
-      
-      if (!dstIdProposed.equals(dstIdAssigned)) {
-        throw new Exception("El identificador assignador por el sistema de custodia" +
-        		" no és el mismo que el propuesto");
+
+      if (custodyID == null) {
+        custodyID = instance.reserveCustodyID(custodyParameters);
       }
 
       //Comprobamos el modo de Firma
       String documentType = signatureMode == 1? DocumentCustody.OTHER_DOCUMENT_WITH_SIGNATURE : DocumentCustody.DOCUMENT_ONLY;
 
       DocumentCustody document = new DocumentCustody(name, file, documentType);
-      instance.saveDocument(dstIdAssigned, custodyParameters, document);
+      instance.saveDocument(custodyID, custodyParameters, document);
 
       //
       if(signatureName != null && signature != null){
         SignatureCustody docSignature = new SignatureCustody(signatureName, signature, SignatureCustody.OTHER_SIGNATURE, false);
-        instance.saveSignature(dstIdAssigned, custodyParameters, docSignature);
+        instance.saveSignature(custodyID, custodyParameters, docSignature);
       }
       
       //log.info("Creamos el file: " + getArchivosPath()+dstId.toString());
 
+      return custodyID;
     }
 
 }

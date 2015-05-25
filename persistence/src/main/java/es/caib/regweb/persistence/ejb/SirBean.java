@@ -367,7 +367,7 @@ public class SirBean implements SirLocal {
             for (Integer i = 0; i <anexos.size(); i++) {
                 Anexo anexo = anexos.get(i);
 
-                DocumentCustody documento = AnnexFileSystemManager.getArchivo(anexo.getId());
+                DocumentCustody documento = AnnexFileSystemManager.getArchivo(anexo.getCustodiaID());
 
                 String secuencia = "";
                 switch (i.toString().length()){

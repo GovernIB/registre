@@ -40,7 +40,7 @@ public class AnexoWs {
     private String tipoMIMEFirmaAnexada;
 
     private String certificado;
-    private String firmacsv;
+    //private String firmacsv;
     private String timestamp;
     private String validacionOCSP;
 
@@ -181,6 +181,7 @@ public class AnexoWs {
       this.certificado = certificado;
     }
 
+    /*
     public String getFirmacsv() {
       return firmacsv;
     }
@@ -188,6 +189,7 @@ public class AnexoWs {
     public void setFirmacsv(String firmacsv) {
       this.firmacsv = firmacsv;
     }
+    */
 
     public String getTimestamp() {
       return timestamp;
