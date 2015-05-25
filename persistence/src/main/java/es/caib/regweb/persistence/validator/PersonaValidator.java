@@ -5,7 +5,6 @@ import es.caib.regweb.model.Persona;
 import es.caib.regweb.persistence.ejb.CatPaisLocal;
 import es.caib.regweb.persistence.ejb.PersonaLocal;
 import es.caib.regweb.utils.RegwebConstantes;
-
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.validation.IValidatorResult;
 
@@ -301,12 +300,10 @@ public class PersonaValidator<T> extends AbstractRegWebValidator<T> {
             boolean existe;
             try {
               if (persona.getId() == null) {
-                log.info("dentro 1");
-                existe = personaEjb.existeDocumentoNew(persona.getDocumento());
+                existe = personaEjb.existeDocumentoNew(persona.getDocumento(), persona.getEntidad().getId());
               } else {
-                log.info("dentro 2");
                 existe = personaEjb.existeDocumentoEdit(persona.getDocumento(),
-                    persona.getId());
+                    persona.getId(),persona.getEntidad().getId());
               }
 
             } catch (Exception e) {

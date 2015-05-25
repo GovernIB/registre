@@ -302,10 +302,10 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
             try {
               if (interesado.getId() == null) {
                   log.info("dentro existeDocumentoNew");
-                existe = personaEjb.existeDocumentoNew(interesado.getDocumento());
+                existe = personaEjb.existeDocumentoNew(interesado.getDocumento(),interesado.getEntidad());
               } else {
                   log.info("dentro existeDocumentoEdit");
-                existe = personaEjb.existeDocumentoEdit(interesado.getDocumento(),interesado.getId());
+                existe = personaEjb.existeDocumentoEdit(interesado.getDocumento(),interesado.getId(),interesado.getEntidad());
               }
 
             } catch (Exception e) {

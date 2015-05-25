@@ -80,6 +80,8 @@ public class Interesado implements Serializable{
     private RegistroDetalle registroDetalle;
     @XmlTransient
     private boolean guardarInteresado;
+    @XmlTransient
+    private Long entidad;
 
     public Interesado() {}
 
@@ -403,6 +405,15 @@ public class Interesado implements Serializable{
 
     public void setGuardarInteresado(boolean guardarInteresado) {
         this.guardarInteresado = guardarInteresado;
+    }
+
+    @Transient
+    public Long getEntidad() {
+        return entidad;
+    }
+
+    public void setEntidad(Long entidad) {
+        this.entidad = entidad;
     }
 
     @Transient

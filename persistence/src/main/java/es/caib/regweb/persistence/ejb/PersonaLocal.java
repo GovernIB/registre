@@ -31,7 +31,7 @@ public interface PersonaLocal extends BaseEjb<Persona, Long> {
      * @return
      * @throws Exception
      */
-    public Boolean existeDocumentoNew(String documento) throws Exception;
+    public Boolean existeDocumentoNew(String documento, Long idEntidad) throws Exception;
 
     /**
      * Comprueba la existencia de un Documento en el sistema para la edición de una Persona
@@ -40,7 +40,7 @@ public interface PersonaLocal extends BaseEjb<Persona, Long> {
      * @return
      * @throws Exception
      */
-    public Boolean existeDocumentoEdit(String documento, Long idPersona) throws Exception;
+    public Boolean existeDocumentoEdit(String documento, Long idPersona, Long idEntidad) throws Exception;
 
     /**
      * Realiza una busqueda de {@link es.caib.regweb.model.Persona} según los parámetros

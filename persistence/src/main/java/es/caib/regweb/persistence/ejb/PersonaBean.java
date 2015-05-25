@@ -88,22 +88,24 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
     }
 
     @Override
-    public Boolean existeDocumentoNew(String documento) throws Exception{
+    public Boolean existeDocumentoNew(String documento, Long idEntidad) throws Exception{
         Query q = em.createQuery("Select persona from Persona as persona where " +
-                "persona.documento = :documento");
+                "persona.documento = :documento and persona.entidad.id = :idEntidad");
 
         q.setParameter("documento",documento);
+        q.setParameter("idEntidad",idEntidad);
 
         return q.getResultList().size() > 0;
     }
 
     @Override
-    public Boolean existeDocumentoEdit(String documento, Long idPersona) throws Exception{
+    public Boolean existeDocumentoEdit(String documento, Long idPersona, Long idEntidad) throws Exception{
         Query q = em.createQuery("Select persona from Persona as persona where " +
-                "persona.id != :idPersona and persona.documento = :documento");
+                "persona.id != :idPersona and persona.documento = :documento and persona.entidad.id = :idEntidad");
 
         q.setParameter("documento",documento);
         q.setParameter("idPersona",idPersona);
+        q.setParameter("idEntidad",idEntidad);
 
         return q.getResultList().size() > 0;
     }

@@ -79,6 +79,7 @@ public class InteresadoController extends BaseController{
         }
 
         // Validamos el nuevo Interesado
+        interesado.setEntidad(getEntidadActiva(request).getId());
         interesadoValidator.validate(interesado,result);
 
         if (result.hasErrors()){ // Si hay errores, preparamos la respuesta.
@@ -239,6 +240,7 @@ public class InteresadoController extends BaseController{
         JsonResponse jsonResponse = new JsonResponse();
 
         // Validamos la nueva Persona
+        interesado.setEntidad(getEntidadActiva(request).getId());
         interesadoValidator.validate(interesado,result);
 
         if (result.hasErrors()) { // Si hay errores, preparamos la respuesta.
