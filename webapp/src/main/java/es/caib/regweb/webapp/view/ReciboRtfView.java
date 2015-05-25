@@ -11,6 +11,7 @@ import es.caib.regweb.webapp.utils.ConvertirTexto;
 import es.caib.regweb.webapp.utils.DatosRecibo;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.web.servlet.view.AbstractView;
 
 import javax.servlet.ServletOutputStream;
@@ -34,6 +35,15 @@ public class ReciboRtfView extends AbstractView {
 
     protected final Logger log = Logger.getLogger(getClass());
 
+    /**
+     * Retorna el mensaje traducido según el idioma del usuario
+     * @param key
+     * @return
+     */
+    protected String getMessage(String key){
+        return I18NUtils.tradueix(key);
+    }
+
     public ReciboRtfView() {
         setContentType("text/rtf;charset=UTF-8");
     }
@@ -53,6 +63,8 @@ public class ReciboRtfView extends AbstractView {
         String formatNumRegistre = null;
         String interessats = "";
         String annexes = "";
+        String tipoRegistroCa = "";
+        String tipoRegistroEs = "";
 
         // Registre Entrada
         if(object.getClass().getSimpleName().equals("RegistroEntrada")){
@@ -60,6 +72,9 @@ public class ReciboRtfView extends AbstractView {
             RegistroEntrada registro = (RegistroEntrada) model.get("registro");
             datosRecibo = new DatosRecibo(registro,"Entrada");
             formatNumRegistre = registro.getNumeroRegistroFormateado();
+            //Tipo de Registro en los dos idiomas
+            tipoRegistroCa = RegwebConstantes.REGISTRO_ENTRADA_ESCRITO;
+            tipoRegistroEs = RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO;
         }
 
         // Registre Sortida
@@ -68,6 +83,9 @@ public class ReciboRtfView extends AbstractView {
             RegistroSalida registro = (RegistroSalida) model.get("registro");
             datosRecibo = new DatosRecibo(registro,"Salida");
             formatNumRegistre = registro.getNumeroRegistroFormateado();
+            //Tipo de Registro en los dos idiomas
+            tipoRegistroCa = RegwebConstantes.REGISTRO_SALIDA_ESCRITO;
+            tipoRegistroEs = RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO;
         }
 
         String idiomaActual = request.getLocale().getLanguage();
@@ -148,7 +166,8 @@ public class ReciboRtfView extends AbstractView {
         if (anoRegistro!=null)ht.put("(anyRegistre)", ConvertirTexto.toCp1252(anoRegistro));
         if (fechaRegistro!=null) ht.put("(dataRegistre)", ConvertirTexto.toCp1252(fechaRegistro));
         if (datosRecibo.getDestinatario()!=null) ht.put("(destinatari)", ConvertirTexto.toCp1252(datosRecibo.getDestinatario()));
-        if (datosRecibo.getTipoRegistro()!=null) ht.put("(tipusRegistre)", ConvertirTexto.toCp1252(datosRecibo.getTipoRegistro()));
+        if (tipoRegistroCa!=null) ht.put("(tipusRegistreCA)", ConvertirTexto.toCp1252(tipoRegistroCa));
+        if (tipoRegistroEs!=null) ht.put("(tipusRegistreES)", ConvertirTexto.toCp1252(tipoRegistroEs));
         if (datosRecibo.getExtracto()!=null) ht.put("(extracte)", ConvertirTexto.toCp1252(datosRecibo.getExtracto()));
         if (datosRecibo.getLibro()!=null) ht.put("(llibre)", ConvertirTexto.toCp1252(datosRecibo.getLibro()));
         if (datosRecibo.getUsuarioNombre()!=null) ht.put("(nomUsuariRegistre)", ConvertirTexto.toCp1252(datosRecibo.getUsuarioNombre()));
@@ -158,8 +177,8 @@ public class ReciboRtfView extends AbstractView {
         if (interessats.length()>0) ht.put("(interessats)", ConvertirTexto.toCp1252(interessats));
         if (annexes.length()>0) ht.put("(annexes)", ConvertirTexto.toCp1252(annexes));
         if (usuario!=null) ht.put("(nomUsuari)", ConvertirTexto.toCp1252(usuario.getNombreCompleto()));
-        if (fechaReciboCatalan!=null) ht.put("(dataRebut)", ConvertirTexto.toCp1252(fechaReciboCatalan));
-        if (fechaReciboCastellano!=null) ht.put("(fechaRecibo)", ConvertirTexto.toCp1252(fechaReciboCastellano));
+        if (fechaReciboCatalan!=null) ht.put("(dataRebutCA)", ConvertirTexto.toCp1252(fechaReciboCatalan));
+        if (fechaReciboCastellano!=null) ht.put("(dataRebutES)", ConvertirTexto.toCp1252(fechaReciboCastellano));
         ht.put("(formatNumRegistre)", ConvertirTexto.toCp1252(formatNumRegistre));
 
         // Reemplaza el texto completo
@@ -170,7 +189,7 @@ public class ReciboRtfView extends AbstractView {
         try {
 
         // Retornamos el archivo
-        String nombreFichero = "Rebut_"+ formatNumRegistre +".rtf";
+        String nombreFichero = getMessage("modeloRecibo.nombreFichero")+ formatNumRegistre +".rtf";
 
         response.setHeader("Content-Type", "text/rtf;charset=UTF-8");
         response.setHeader("Content-Disposition", "attachment;filename="+nombreFichero);

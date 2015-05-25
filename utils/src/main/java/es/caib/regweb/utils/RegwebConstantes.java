@@ -372,6 +372,8 @@ public interface RegwebConstantes {
     public static final Long REGISTRO_SALIDA = 2L;
     public static final String REGISTRO_ENTRADA_ESCRITO = "Entrada";
     public static final String REGISTRO_SALIDA_ESCRITO = "Sortida";
+    public static final String REGISTRO_ENTRADA_ESCRITO_CASTELLANO = "Entrada";
+    public static final String REGISTRO_SALIDA_ESCRITO_CASTELLANO = "Salida";
     
     /* -------------- TIPO DOCUMENTO IDENTIFICACION --------------*/
     public static final char TIPODOCUMENTOID_NIF = 'N';
