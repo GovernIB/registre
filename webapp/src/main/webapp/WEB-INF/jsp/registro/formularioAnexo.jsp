@@ -291,8 +291,8 @@
 		                        <img src="<c:url value="/img/712.GIF"/>" width="20" height="20"/>
 		                </div>
 		            </form>
-		     	</div>
        		<c:if test="${teScan}">
+       			</div>
 				<div class="tab-pane" id="scan">
 					${coreScan}
 				</div>
