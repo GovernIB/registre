@@ -1,16 +1,15 @@
 package es.caib.regweb.ws.v3.impl;
 
+import es.caib.regweb.ws.utils.BaseWsImpl;
+import org.jboss.wsf.spi.annotation.TransportGuarantee;
+import org.jboss.wsf.spi.annotation.WebContext;
+
 import javax.ejb.Stateless;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.validation.constraints.Null;
-
-import org.jboss.wsf.spi.annotation.TransportGuarantee;
-import org.jboss.wsf.spi.annotation.WebContext;
-
-import es.caib.regweb.ws.utils.BaseWsImpl;
 
 /**
  * 

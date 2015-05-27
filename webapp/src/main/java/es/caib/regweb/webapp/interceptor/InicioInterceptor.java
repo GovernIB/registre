@@ -83,7 +83,7 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
 
                 }else{ // El usuario NO existe en REGWEB
 
-                    log.info("El usuario no existe en REGWEB, lo crearemos.");
+                    log.info("El usuario "+ identificador +" no existe en REGWEB, lo crearemos.");
 
                     Usuario nuevoUsuario = usuarioService.crearUsuario(identificador);
 

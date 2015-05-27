@@ -3,6 +3,7 @@ package es.caib.regweb.ws.converter;
 import es.caib.regweb.model.*;
 import es.caib.regweb.persistence.ejb.CodigoAsuntoLocal;
 import es.caib.regweb.persistence.ejb.TipoAsuntoLocal;
+import es.caib.regweb.persistence.utils.I18NLogicUtils;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.ws.model.AnexoWs;
 import es.caib.regweb.ws.model.InteresadoWs;
@@ -13,6 +14,7 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Fundació BIT.
@@ -67,79 +69,78 @@ public class RegistroEntradaConverter extends CommonConverter {
         return registroEntrada;
     }
 
-    public static RegistroEntradaWs getRegistroEntradaWs(RegistroEntrada registroEntrada) throws Exception{
+    public static RegistroEntradaWs getRegistroEntradaWs(RegistroEntrada registroEntrada, String idioma) throws Exception{
 
         if (registroEntrada == null) {
             return null;
         }
 
-        // Creamos el RegistroEntradaWs
-        
-
-
         // Creamos los datos comunes mediante RegistroWs
         RegistroEntradaWs registroWs = new RegistroEntradaWs();
+        RegistroDetalle registroDetalle = registroEntrada.getRegistroDetalle();
+
         registroWs.setFecha(registroEntrada.getFecha());
         registroWs.setNumero(registroEntrada.getNumeroRegistro());
         registroWs.setNumeroRegistroFormateado(registroEntrada.getNumeroRegistroFormateado());
 
-        registroWs.setOficina(registroEntrada.getOficina().getCodigo());
-        registroWs.setLibro(registroEntrada.getLibro().getCodigo());
+        registroWs.setOficina(registroEntrada.getOficina().getDenominacion());
+        registroWs.setLibro(registroEntrada.getLibro().getNombreCompleto());
 
-        registroWs.setExtracto(registroEntrada.getRegistroDetalle().getExtracto());
-        registroWs.setDocFisica(registroEntrada.getRegistroDetalle().getTipoDocumentacionFisica());
-        registroWs.setIdioma(RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(registroEntrada.getRegistroDetalle().getIdioma()));
-        registroWs.setTipoAsunto(registroEntrada.getRegistroDetalle().getTipoAsunto().getCodigo());
+        registroWs.setExtracto(registroDetalle.getExtracto());
+        registroWs.setDocFisica(registroDetalle.getTipoDocumentacionFisica());
 
-        registroWs.setAplicacion(registroEntrada.getRegistroDetalle().getAplicacion());
-        registroWs.setVersion(registroEntrada.getRegistroDetalle().getVersion());
+        registroWs.setIdioma(I18NLogicUtils.tradueix(new Locale(idioma), "idioma." + registroDetalle.getIdioma()));
+
+        TraduccionTipoAsunto traduccionTipoAsunto = (TraduccionTipoAsunto) registroDetalle.getTipoAsunto().getTraduccion(idioma);
+        registroWs.setTipoAsunto(traduccionTipoAsunto.getNombre());
+
+        registroWs.setAplicacion(registroDetalle.getAplicacion());
+        registroWs.setVersion(registroDetalle.getVersion());
 
         registroWs.setCodigoUsuario(registroEntrada.getUsuario().getUsuario().getIdentificador());
 
         registroWs.setContactoUsuario("");
 
-        registroWs.setNumExpediente(registroEntrada.getRegistroDetalle().getExpediente());
-        registroWs.setNumTransporte(registroEntrada.getRegistroDetalle().getNumeroTransporte());
-        registroWs.setObservaciones(registroEntrada.getRegistroDetalle().getObservaciones());
+        registroWs.setNumExpediente(registroDetalle.getExpediente());
+        registroWs.setNumTransporte(registroDetalle.getNumeroTransporte());
+        registroWs.setObservaciones(registroDetalle.getObservaciones());
 
-        registroWs.setRefExterna(registroEntrada.getRegistroDetalle().getReferenciaExterna());
+        registroWs.setRefExterna(registroDetalle.getReferenciaExterna());
 
-        if(registroEntrada.getRegistroDetalle().getCodigoAsunto() != null){
-            registroWs.setCodigoAsunto(registroEntrada.getRegistroDetalle().getCodigoAsunto().getCodigo());
+        if(registroDetalle.getCodigoAsunto() != null){
+            TraduccionCodigoAsunto traduccionCodigoAsunto = (TraduccionCodigoAsunto) registroDetalle.getCodigoAsunto().getTraduccion(idioma);
+            registroWs.setCodigoAsunto(traduccionCodigoAsunto.getNombre());
         }else{
             registroWs.setCodigoAsunto(null);
         }
 
-        if(registroEntrada.getRegistroDetalle().getTransporte() != null){
-            registroWs.setTipoTransporte(RegwebConstantes.CODIGO_SICRES_BY_TRANSPORTE.get(registroEntrada.getRegistroDetalle().getTransporte()));
+        if(registroDetalle.getTransporte() != null){
+            registroWs.setTipoTransporte(I18NLogicUtils.tradueix(new Locale(idioma), "transporte." + registroDetalle.getTransporte()));
         }else{
             registroWs.setTipoTransporte(null);
         }
 
 
-        registroWs.setExpone(registroEntrada.getRegistroDetalle().getExpone());
-        registroWs.setSolicita(registroEntrada.getRegistroDetalle().getSolicita());
+        registroWs.setExpone(registroDetalle.getExpone());
+        registroWs.setSolicita(registroDetalle.getSolicita());
 
         //Interesados
-        if(registroEntrada.getRegistroDetalle().getInteresados() != null){
-            List<InteresadoWs> interesadosWs = procesarInteresadosWs(registroEntrada.getRegistroDetalle().getInteresados());
+        if(registroDetalle.getInteresados() != null){
+            List<InteresadoWs> interesadosWs = procesarInteresadosWs(registroDetalle.getInteresados());
 
             registroWs.setInteresados(interesadosWs);
         }
 
-        if(registroEntrada.getRegistroDetalle().getAnexos() != null){
-            List<AnexoWs> anexosWs = procesarAnexosWs(registroEntrada.getRegistroDetalle().getAnexos());
+        if(registroDetalle.getAnexos() != null){
+            List<AnexoWs> anexosWs = procesarAnexosWs(registroDetalle.getAnexos());
 
             registroWs.setAnexos(anexosWs);
         }
 
+        // Campos únicos de RegistroEntrada
+        registroWs.setDestino(registroEntrada.getDestino().getDenominacion());
 
-
-        // Asociamos el RegistroWs a RegistroEntradaWs
-        RegistroEntradaWs registroEntradaWs = registroWs;
-        registroEntradaWs.setDestino(registroEntrada.getDestino().getCodigo());
-
-        return registroEntradaWs;
+        return registroWs;
 
     }
 

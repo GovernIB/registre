@@ -1,13 +1,14 @@
 package es.caib.regweb.ws.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.fundaciobit.genapp.common.i18n.I18NException;
-
 import es.caib.regweb.model.Entidad;
 import es.caib.regweb.model.Usuario;
 import es.caib.regweb.model.UsuarioEntidad;
+import es.caib.regweb.utils.Configuracio;
+import es.caib.regweb.utils.RegwebConstantes;
+import org.fundaciobit.genapp.common.i18n.I18NException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -72,6 +73,22 @@ public class UsuarioInfo {
       WsUtils.throwException(msg);
       */
     }
+  }
+
+  public String getIdioma(){
+    Long idioma = null;
+    if(usuario != null){
+      idioma = usuario.getIdioma();
+    }
+
+    String language;
+    if (idioma == null) {
+      language = Configuracio.getDefaultLanguage();
+    } else {
+      language = RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(idioma);
+    }
+
+    return language;
   }
 
 }

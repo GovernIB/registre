@@ -41,16 +41,21 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils{
     public void obtenerRegistroEntrada() {
 
         try {
-            RegistroEntradaWs registroEntradaWs = registroEntradaApi.obtenerRegistroEntrada("SACO-E-1/2015", "mgonzalez","A04006741");
-            System.out.printf("Destino: " + registroEntradaWs.getDestino());
+            RegistroEntradaWs registroEntradaWs = registroEntradaApi.obtenerRegistroEntrada("ADM-E-17/2015", "earrivi","A04006741");
+            System.out.printf("Idioma: " + registroEntradaWs.getIdioma()+"\n");
+            System.out.printf("TipoAsunto: " + registroEntradaWs.getTipoAsunto()+"\n");
+            System.out.printf("TipoTransporte: " + registroEntradaWs.getTipoTransporte()+"\n");
+            System.out.printf("Oficina: " + registroEntradaWs.getOficina()+"\n");
+            System.out.printf("Destino: " + registroEntradaWs.getDestino()+"\n");
+            System.out.printf("----\n");
 
             for (InteresadoWs interesadoWs : registroEntradaWs.getInteresados()) {
-                System.out.println(interesadoWs.getInteresado().getNombre() + " " + interesadoWs.getInteresado().getApellido1()+ " " + interesadoWs.getInteresado().getApellido2());
+                System.out.println(interesadoWs.getInteresado().getNombre() + " " + interesadoWs.getInteresado().getApellido1()+ " " + interesadoWs.getInteresado().getApellido2()+"\n");
 
             }
 
             for (AnexoWs anexoWs : registroEntradaWs.getAnexos()) {
-                System.out.println(anexoWs.getTitulo() + " " + anexoWs.getTipoDocumental());
+                System.out.println(anexoWs.getTitulo() + " " + anexoWs.getTipoDocumental()+"\n");
 
             }
 

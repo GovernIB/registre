@@ -327,14 +327,14 @@ public class UsuarioService {
 
     /**
      * Obtiene los Roles del usuario mediante el plugin de Login.
-     * @param usuario
+     * @param identificador
      * @return
      * @throws Exception
      */
-    public List<Rol> obtenerRolesUserPlugin(Usuario usuario) throws Exception{
+    public List<Rol> obtenerRolesUserPlugin(String identificador) throws Exception{
 
         IUserInformationPlugin loginPlugin = RegwebLoginPluginManager.getInstance();
-        RolesInfo rolesInfo = loginPlugin.getRolesByUsername(usuario.getIdentificador());
+        RolesInfo rolesInfo = loginPlugin.getRolesByUsername(identificador);
 
         List<String> roles = new ArrayList<String>();
         List<Rol> rolesUsuario = null;
@@ -358,7 +358,7 @@ public class UsuarioService {
      */
     public void actualizarRoles(Usuario usuario) throws Exception{
 
-        List<Rol> rolesUsuario = obtenerRolesUserPlugin(usuario);
+        List<Rol> rolesUsuario = obtenerRolesUserPlugin(usuario.getIdentificador());
 
         if(rolesUsuario != null) {
             //log.info("Roles " + usuario.getIdentificador() + ": " + rolesUsuario.toString());
@@ -417,7 +417,7 @@ public class UsuarioService {
             }
 
             // Roles
-            List<Rol> roles = obtenerRolesUserPlugin(usuario);
+            List<Rol> roles = obtenerRolesUserPlugin(identificador);
             if(roles == null || roles.size() == 0 ){
                 return null;
             }else{

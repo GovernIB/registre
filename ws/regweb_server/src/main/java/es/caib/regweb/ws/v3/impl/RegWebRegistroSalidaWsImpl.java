@@ -2,12 +2,7 @@ package es.caib.regweb.ws.v3.impl;
 
 import es.caib.regweb.model.*;
 import es.caib.regweb.persistence.ejb.*;
-import es.caib.regweb.persistence.validator.AnexoBeanValidator;
-import es.caib.regweb.persistence.validator.AnexoValidator;
-import es.caib.regweb.persistence.validator.InteresadoBeanValidator;
-import es.caib.regweb.persistence.validator.InteresadoValidator;
-import es.caib.regweb.persistence.validator.RegistroSalidaBeanValidator;
-import es.caib.regweb.persistence.validator.RegistroSalidaValidator;
+import es.caib.regweb.persistence.validator.*;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.utils.StringUtils;
 import es.caib.regweb.ws.converter.AnexoConverter;
@@ -18,7 +13,7 @@ import es.caib.regweb.ws.model.IdentificadorWs;
 import es.caib.regweb.ws.model.InteresadoWs;
 import es.caib.regweb.ws.model.RegistroSalidaWs;
 import es.caib.regweb.ws.utils.AuthenticatedBaseWsImpl;
-
+import es.caib.regweb.ws.utils.UsuarioAplicacionCache;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -35,7 +30,6 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -295,7 +289,7 @@ public class RegWebRegistroSalidaWsImpl extends AuthenticatedBaseWsImpl implemen
         lopdEjb.insertarRegistroSalida(registroSalida.getId(), usuarioEntidad.getId());
 
         // Retornamos el RegistroSalidaWs
-        return RegistroSalidaConverter.getRegistroSalidaWs(registroSalida);
+        return RegistroSalidaConverter.getRegistroSalidaWs(registroSalida, UsuarioAplicacionCache.get().getIdioma());
 
 
     }
