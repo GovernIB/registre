@@ -810,7 +810,13 @@ public class EntidadController extends BaseController {
 
         return administradoresEntidad;
     }
+    //TODO borrar, solo se emplea para testear
+   /* @RequestMapping(value="/organismosdestinatarios", method= RequestMethod.GET)
+    public void obtenerOrganismoDestinatarios()throws Exception {
+         sincronizadorDIR3Ejb.obtenerOrganismosDestinatarios("A04006741");
 
+    }
+*/
 
     @InitBinder("entidadForm")
     public void initBinder(WebDataBinder binder) {
