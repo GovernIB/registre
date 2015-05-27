@@ -217,6 +217,7 @@ public class UsuarioService {
             // Entidad Activa
             if(entidades.contains(entidadActiva)){
                 session.setAttribute(RegwebConstantes.SESSION_ENTIDAD,entidadActiva);
+                session.setAttribute(RegwebConstantes.SESSION_MIGRADOS, registroMigradoEjb.tieneRegistrosMigrados(entidadActiva.getId()));
             }else if(entidades.size() > 0){
                 session.setAttribute(RegwebConstantes.SESSION_ENTIDAD,entidades.get(0));
                 session.setAttribute(RegwebConstantes.SESSION_MIGRADOS, registroMigradoEjb.tieneRegistrosMigrados(entidades.get(0).getId()));
@@ -469,6 +470,7 @@ public class UsuarioService {
         session.removeAttribute(RegwebConstantes.SESSION_OFICINAS);
         session.removeAttribute(RegwebConstantes.SESSION_OFICINA);
         session.removeAttribute(RegwebConstantes.SESSION_OFICINAS_ADMINISTRADAS);
+        session.removeAttribute(RegwebConstantes.SESSION_MIGRADOS);
 
     }
 
