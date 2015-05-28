@@ -453,8 +453,6 @@ public class RegistroEntradaFormController extends BaseController {
           registroEntrada.setDestinoExternoDenominacion(null);
 
         } else { // es externo
-            registroEntrada.setDestino(null);
-
             registroEntrada.setDestinoExternoCodigo(registroEntrada.getDestino().getCodigo());
             if(registroEntrada.getId()!= null){//es una modificación
                 registroEntrada.setDestinoExternoDenominacion(registroEntrada.getDestinoExternoDenominacion());
@@ -462,6 +460,7 @@ public class RegistroEntradaFormController extends BaseController {
                 registroEntrada.setDestinoExternoDenominacion(registroEntrada.getDestino().getDenominacion());
             }
 
+            registroEntrada.setDestino(null);
         }
 
         // Cogemos los dos posibles campos

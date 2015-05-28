@@ -106,9 +106,6 @@ function rellenarFormulario(idRepro,tipoRegistro){
             $('#registroDetalle\\.transporte').val(repro.idTransporte);
             $('#registroDetalle\\.numeroTransporte').val(repro.numeroTransporte);
             $('#registroDetalle\\.observaciones').val(repro.observaciones);
-            //$('#registroDetalle\\.oficinaOrigen\\.codigo').val();
-            //$('#registroDetalle\\.oficinaOrigenExterno').val();
-            //$('#registroDetalle\\.denominacionOfiOrigenExt').val();
             $('#registroDetalle\\.numeroRegistroOrigen').val(repro.numeroRegistroOrigen);
             $('#registroDetalle\\.fechaOrigen').val(repro.fechaOrigen);
 
@@ -120,23 +117,55 @@ function rellenarFormulario(idRepro,tipoRegistro){
             $('#registroDetalle\\.codigoAsunto\\.id').trigger("chosen:updated");
             $('#registroDetalle\\.transporte').trigger("chosen:updated");
 
-            if(tipoRegistro == 1){ // RegistroEntrada
-                if(repro.destino != null){
-                    $('#destino\\.codigo').val(repro.destino);
-                    $('#destino\\.codigo').trigger("chosen:updated");
-                }else{
-                    var html= '';
-                    var selected = 'selected="selected"';
-                    html += '<option '+selected+' value="' + repro.destinoExternoCodigo + '">'
-                    + repro.destinoExternoDenominacion + '</option>';
+            //Oficina origen
+            if(repro.oficinaCodigo == null) {
+                mensajeError("#mensajes","La oficina seleccionada ya no está vigente, y se ha eliminado de su Repro.");
+            }else{
+                var oficina= '';
+                oficina += '<option value="' + repro.oficinaCodigo + '" selected="selected">'
+                + repro.oficinaDenominacion + '</option>';
 
-                    $('#destino\\.codigo').append(html);
+                $('#registroDetalle\\.oficinaOrigen\\.codigo').append(oficina);
+                $('#registroDetalle\\.oficinaOrigen\\.codigo').trigger("chosen:updated");
+                $('#registroDetalle\\.oficinaOrigen\\.denominacion').val(repro.oficinaDenominacion);
+            }
+
+            // Destino u Origen
+            if(tipoRegistro == 1){ // RegistroEntrada
+                if(repro.destinoCodigo == null){
+                    mensajeError("#mensajes","La unidad destino seleccionada ya no está vigente, y se ha eliminado de su Repro.");
+                }else{
+                    alert("Destino codigo: " + repro.destinoCodigo);
+                    alert("Destino denominacion: " + repro.destinoDenominacion);
+                    /*var unidad = '';
+                    unidad = "#destino\\\\.codigo option[value="+repro.destinoCodigo+"]";
+                    alert($("#destino\\.codigo option[value="+repro.destinoCodigo+"]").text());
+                    alert($(unidad).text());
+                    if($(unidad).text().length > 0){
+                        alert("encontrado: " + $(unidad).text());
+                    }else{
+                        alert("No encontrado");
+                    }*/
+                    var destino= '';
+                    destino += '<option value="' + repro.destinoCodigo + '" selected="selected">' + repro.destinoDenominacion + '</option>';
+
+                    $('#destino\\.codigo').append(destino);
                     $('#destino\\.codigo').trigger("chosen:updated");
-                    $(idDenominacion).val(repro.destinoExternoDenominacion);
+                    $('#destino\\.denominacion').val(repro.destinoDenominacion);
                 }
 
             }else  if(tipoRegistro == 2){ // Registro Salida
 
+                if(repro.origenCodigo == null){
+                    mensajeError("#mensajes","La unidad origen seleccionada ya no está vigente, y se ha eliminado de su Repro.");
+                }else{
+                    var origen= '';
+                    origen += '<option value="' + repro.origenCodigo + '" selected="selected">' + repro.origenDenominacion + '</option>';
+
+                    $('#origen\\.codigo').append(destino);
+                    $('#origen\\.codigo').trigger("chosen:updated");
+                    $('#origen\\.denominacion').val(repro.origenDenominacion);
+                }
             }
 
         }

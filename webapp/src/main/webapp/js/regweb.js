@@ -155,6 +155,19 @@ function registrarPreRegistro(url) {
     document.location.href=url2;
 }
 
+/**
+ * Añade un mensaje de error con el texto indicado en el div con el id indicado
+ * @param id
+ * @param texto
+ */
+function mensajeError(id,texto){
+ var mensaje = "<div class=\"alert alert-danger alert-dismissable\">"+
+    "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>"+
+    "<strong>"+texto+"</strong> </div>";
+
+    $(id).append(mensaje);
+}
+
 
 /**
  * Carga de valores un Select

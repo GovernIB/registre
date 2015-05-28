@@ -1,5 +1,7 @@
 package es.caib.regweb.webapp.controller.repro;
 
+import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
+import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb.model.Oficina;
 import es.caib.regweb.model.Organismo;
 import es.caib.regweb.model.Repro;
@@ -7,8 +9,10 @@ import es.caib.regweb.model.UsuarioEntidad;
 import es.caib.regweb.model.utils.ReproJson;
 import es.caib.regweb.persistence.ejb.OrganismoLocal;
 import es.caib.regweb.persistence.ejb.ReproLocal;
+import es.caib.regweb.persistence.utils.Dir3CaibUtils;
 import es.caib.regweb.persistence.utils.Paginacion;
 import es.caib.regweb.persistence.utils.RegistroUtils;
+import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.webapp.controller.BaseController;
 import es.caib.regweb.webapp.utils.Mensaje;
 import org.springframework.stereotype.Controller;
@@ -303,51 +307,68 @@ public class ReproController extends BaseController {
     ReproJson obtenerRepro(@RequestParam Long idRepro, HttpServletRequest request) throws Exception {
 
         Repro repro = reproEjb.findById(idRepro);
-
         ReproJson reproJson = RegistroUtils.desSerilizarReproXml(repro.getRepro());
 
-       /* switch (repro.getTipoRegistro().intValue()){
+        switch (repro.getTipoRegistro().intValue()){
 
             case 1: //RegistroEntrada
-                log.info("Repro entrada");
 
-                if(reproJson.isDestinoExterno()){
+                // Comprobamos la unidad destino
+                if(reproJson.getDestinoCodigo()!= null && reproJson.isDestinoExterno()){ // Preguntamos a DIR3 si está Vigente
                     Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService();
                     UnidadTF unidad = unidadesService.obtenerUnidad(reproJson.getDestinoCodigo(), null, null);
 
-                    if(!unidad.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)){
+                    if(!unidad.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)){// Ya no es vigente
                         reproJson.setDestinoExterno(null);
                         reproJson.setDestinoCodigo(null);
                         reproJson.setDestinoDenominacion(null);
+                        repro.setRepro(RegistroUtils.serilizarXml(reproJson));
+                        reproEjb.merge(repro);
                     }
 
-                }else{
+                }else{ // Comprobamso en REGWEB si está vigente
                     Organismo organismoDestino = organismoEjb.findByCodigoVigente(reproJson.getDestinoCodigo());
                     if(organismoDestino == null){ // Ya no es vigente
                         reproJson.setDestinoExterno(null);
                         reproJson.setDestinoCodigo(null);
                         reproJson.setDestinoDenominacion(null);
+                        repro.setRepro(RegistroUtils.serilizarXml(reproJson));
+                        reproEjb.merge(repro);
                     }
-
                 }
             break;
 
             case 2: //RegistroSalida
                 log.info("Repro salida");
-                Organismo organismoOrigen = organismoEjb.findByCodigoVigente(reproJson.getOrigenCodigo());
 
-                if(reproJson.isOrigenExterno()){
+                // Comprobamos la unidad origen
+                if(reproJson.getOrigenCodigo()!= null && reproJson.isOrigenExterno()){ // Preguntamos a DIR3 si está Vigente
+                    Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService();
+                    UnidadTF unidad = unidadesService.obtenerUnidad(reproJson.getOrigenCodigo(), null, null);
 
-                }else{
+                    if(!unidad.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)){// Ya no es vigente
+                        reproJson.setOrigenExterno(null);
+                        reproJson.setOrigenCodigo(null);
+                        reproJson.setOrigenDenominacion(null);
+                        repro.setRepro(RegistroUtils.serilizarXml(reproJson));
+                        reproEjb.merge(repro);
+                    }
 
+                }else{ // Comprobamso en REGWEB si está vigente
+                    Organismo organismoOrigen = organismoEjb.findByCodigoVigente(reproJson.getOrigenCodigo());
+                    if(organismoOrigen == null){ // Ya no es vigente
+                        reproJson.setOrigenExterno(null);
+                        reproJson.setOrigenCodigo(null);
+                        reproJson.setOrigenDenominacion(null);
+                        repro.setRepro(RegistroUtils.serilizarXml(reproJson));
+                        reproEjb.merge(repro);
+                    }
                 }
 
             break;
+
+
         }
-        */
-
-
-
 
         return reproJson;
     }

@@ -411,8 +411,6 @@ public class RegistroSalidaFormController extends BaseController {
             registroSalida.setOrigenExternoCodigo(null);
             registroSalida.setOrigenExternoDenominacion(null);
         } else { // es externo
-            registroSalida.setOrigen(null);
-
             registroSalida.setOrigenExternoCodigo(registroSalida.getOrigen().getCodigo());
             if(registroSalida.getId()!= null){//es una modificación
                 registroSalida.setOrigenExternoDenominacion(registroSalida.getOrigenExternoDenominacion());
@@ -420,6 +418,7 @@ public class RegistroSalidaFormController extends BaseController {
                 registroSalida.setOrigenExternoDenominacion(registroSalida.getOrigen().getDenominacion());
             }
 
+            registroSalida.setOrigen(null);
         }
 
         // Cogemos los dos posibles campos
