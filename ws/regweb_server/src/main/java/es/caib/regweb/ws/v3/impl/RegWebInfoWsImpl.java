@@ -60,6 +60,9 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
 
   @EJB(mappedName = "regweb/TipoAsuntoEJB/local")
   public TipoAsuntoLocal tipoAsuntoEjb;
+
+  @EJB(mappedName = "regweb/TipoDocumentalEJB/local")
+  public TipoDocumentalLocal tipoDocumentalEjb;
   
   @EJB(mappedName = "regweb/OrganismoEJB/local")
   public OrganismoLocal organismoEjb;
@@ -79,6 +82,47 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
   @EJB(mappedName = "regweb/RelacionOrganizativaOfiEJB/local")
   public RelacionOrganizativaOfiLocal relacionOrganizativaOfiLocalEjb;
 
+
+  /**
+   *
+   * @param entidadCodigoDir3
+   * @return
+   * @throws Throwable
+   * @throws WsI18NException
+   */
+  @Override
+  @WebMethod
+  @RolesAllowed({ RegwebConstantes.ROL_USUARI })
+  public List<TipoDocumentalWs> listarTipoDocumental(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3) throws Throwable,
+          WsI18NException {
+
+    // 1.- Comprobaciones de parámetros obligatórios
+    if(StringUtils.isEmpty(entidadCodigoDir3)){
+      throw new I18NException("error.valor.requerido.ws", "entidadCodigoDir3");
+    }
+
+    Entidad entidad = CommonConverter.getEntidad(entidadCodigoDir3, entidadEjb);
+
+    // 4.- Comprobaciones entidad existente
+    if(entidad == null){
+      throw new I18NException("registro.entidad.noExiste", entidadCodigoDir3);
+    }
+
+
+    List<TipoDocumental> tipos = tipoDocumentalEjb.getByEntidad(entidad.getId());
+
+    List<TipoDocumentalWs> tiposWs = new ArrayList<TipoDocumentalWs>();
+
+
+    for (TipoDocumental tipoDocumental : tipos) {
+      tiposWs.add(CommonConverter.getTipoDocumentalWs(tipoDocumental));
+    }
+
+    return tiposWs;
+
+  }
+
+
   /**
    *
    * @param entidadCodigoDir3
@@ -97,9 +141,14 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
       throw new I18NException("error.valor.requerido.ws", "entidadCodigoDir3");
     }
 
-    Entidad entidadObj = CommonConverter.getEntidad(entidadCodigoDir3, entidadEjb);
+    Entidad entidad = CommonConverter.getEntidad(entidadCodigoDir3, entidadEjb);
 
-    List<TipoAsunto> tipos = tipoAsuntoEjb.getAll(entidadObj.getId());
+    // 4.- Comprobaciones entidad existente
+    if(entidad == null){
+      throw new I18NException("registro.entidad.noExiste", entidadCodigoDir3);
+    }
+
+    List<TipoAsunto> tipos = tipoAsuntoEjb.getActivosEntidad(entidad.getId());
 
     List<TipoAsuntoWs> tiposWs = new ArrayList<TipoAsuntoWs>();
 
@@ -132,9 +181,14 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
       throw new I18NException("error.valor.requerido.ws", "codigoTipoAsunto");
     }
 
-    TipoAsunto tipoAsuntoObj = CommonConverter.getTipoAsunto(codigoTipoAsunto, tipoAsuntoEjb);
+    TipoAsunto tipoAsunto = CommonConverter.getTipoAsunto(codigoTipoAsunto, tipoAsuntoEjb);
 
-    List<CodigoAsunto> codigoAsuntos = codigoAsuntoEjb.getByTipoAsunto(tipoAsuntoObj.getId());
+    // 2. Comprobación TipoAsunto Activo
+    if(!tipoAsunto.getActivo()){
+      throw new I18NException("error.tipoAsunto.inactivo", codigoTipoAsunto);
+    }
+
+    List<CodigoAsunto> codigoAsuntos = codigoAsuntoEjb.getByTipoAsunto(tipoAsunto.getId());
 
     List<CodigoAsuntoWs> codigosWs = new ArrayList<CodigoAsuntoWs>();
 
@@ -418,14 +472,6 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
   private void validarObligatorios(String numeroRegistro, String usuario, String entidad) throws  I18NException, Exception{
 
     // 1.- Comprobaciones de parámetros obligatórios
-    if(StringUtils.isEmpty(numeroRegistro)){
-      throw new I18NException("error.valor.requerido.ws", "identificador");
-    }
-
-    if(StringUtils.isEmpty(usuario)){
-      throw new I18NException("error.valor.requerido.ws", "usuario");
-    }
-
     if(StringUtils.isEmpty(entidad)){
       throw new I18NException("error.valor.requerido.ws", "entidad");
     }
@@ -443,6 +489,8 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
     return tipoRegistro.equals(PERMISO_REGISTRO_ENTRADA) || tipoRegistro.equals(PERMISO_REGISTRO_SALIDA);
 
   }
+
+
 
   
 

@@ -145,6 +145,17 @@ public class CommonConverter {
     return libroWs;
 
   }
+
+    public static TipoDocumentalWs getTipoDocumentalWs(TipoDocumental tipoDocumental) {
+        if (tipoDocumental == null) {
+            return null;
+        }
+
+        TipoDocumentalWs tipoDocumentalWs = new TipoDocumentalWs();
+        tipoDocumentalWs.setCodigoNTI(tipoDocumental.getCodigoNTI());
+
+        return tipoDocumentalWs;
+    }
   
   public static TipoAsuntoWs getTipoAsuntoWs(TipoAsunto tipoAsunto, String idioma) {
     if (tipoAsunto == null) {

@@ -116,6 +116,24 @@ public class RegwebInfoTest extends RegWebTestUtils {
   }
 
   @Test
+  public void testObtenerTiposDocumental(){
+    String codigoEntidadDir3 = "A04006741";
+
+    try {
+      List<TipoDocumentalWs> tipos = infoApi.listarTipoDocumental(codigoEntidadDir3);
+
+      for(TipoDocumentalWs tipo:tipos){
+        System.out.println("TipoDocumental: " + tipo.getCodigoNTI());
+      }
+
+    } catch (WsI18NException e) {
+      e.printStackTrace();
+    }
+
+
+  }
+
+  @Test
   public void testObtenerLibrosOficinaUsuario(){
     String codigoEntidadDir3 = "A04006741";
     String usuario = "earrivi";

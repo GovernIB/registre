@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions name="RegWebInfoWsService" targetNamespace="http://impl.v3.ws.regweb.caib.es/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://impl.v3.ws.regweb.caib.es/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+<wsdl:definitions name="RegWebInfoWsService" targetNamespace="http://impl.v3.ws.regweb.caib.es/"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://impl.v3.ws.regweb.caib.es/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
   <wsdl:types>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://impl.v3.ws.regweb.caib.es/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://impl.v3.ws.regweb.caib.es/">
   <xs:element name="codigoAsuntoWs" type="tns:codigoAsuntoWs"/>
@@ -18,11 +20,14 @@
   <xs:element name="listarOrganismosResponse" type="tns:listarOrganismosResponse"/>
   <xs:element name="listarTipoAsunto" type="tns:listarTipoAsunto"/>
   <xs:element name="listarTipoAsuntoResponse" type="tns:listarTipoAsuntoResponse"/>
+  <xs:element name="listarTipoDocumental" type="tns:listarTipoDocumental"/>
+  <xs:element name="listarTipoDocumentalResponse" type="tns:listarTipoDocumentalResponse"/>
   <xs:element name="obtenerLibrosOficina" type="tns:obtenerLibrosOficina"/>
   <xs:element name="obtenerLibrosOficinaResponse" type="tns:obtenerLibrosOficinaResponse"/>
   <xs:element name="obtenerLibrosOficinaUsuario" type="tns:obtenerLibrosOficinaUsuario"/>
   <xs:element name="obtenerLibrosOficinaUsuarioResponse" type="tns:obtenerLibrosOficinaUsuarioResponse"/>
   <xs:element name="tipoAsuntoWs" type="tns:tipoAsuntoWs"/>
+  <xs:element name="tipoDocumentalWs" type="tns:tipoDocumentalWs"/>
   <xs:complexType name="obtenerLibrosOficinaUsuario">
     <xs:sequence>
       <xs:element minOccurs="0" name="entidadCodigoDir3" type="xs:string"/>
@@ -108,6 +113,21 @@
       <xs:element minOccurs="0" name="nombre" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
+  <xs:complexType name="listarTipoDocumental">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="entidadCodigoDir3" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="listarTipoDocumentalResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:tipoDocumentalWs"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tipoDocumentalWs">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="codigoNTI" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
   <xs:complexType name="listarOficinas">
     <xs:sequence>
       <xs:element minOccurs="0" name="entidadCodigoDir3" type="xs:string"/>
@@ -175,6 +195,10 @@
   </xs:complexType>
 </xs:schema>
   </wsdl:types>
+  <wsdl:message name="listarTipoDocumentalResponse">
+    <wsdl:part name="parameters" element="tns:listarTipoDocumentalResponse">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="listarOrganismos">
     <wsdl:part name="parameters" element="tns:listarOrganismos">
     </wsdl:part>
@@ -219,6 +243,10 @@
     <wsdl:part name="parameters" element="tns:listarOrganismosResponse">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="listarTipoDocumental">
+    <wsdl:part name="parameters" element="tns:listarTipoDocumental">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="obtenerLibrosOficinaUsuarioResponse">
     <wsdl:part name="parameters" element="tns:obtenerLibrosOficinaUsuarioResponse">
     </wsdl:part>
@@ -231,12 +259,12 @@
     <wsdl:part name="parameters" element="tns:listarCodigoAsuntoResponse">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getVersionResponse">
-    <wsdl:part name="parameters" element="tns:getVersionResponse">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="listarCodigoAsunto">
     <wsdl:part name="parameters" element="tns:listarCodigoAsunto">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getVersionResponse">
+    <wsdl:part name="parameters" element="tns:getVersionResponse">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="obtenerLibrosOficinaUsuario">
@@ -278,6 +306,14 @@
       <wsdl:input name="listarTipoAsunto" message="tns:listarTipoAsunto">
     </wsdl:input>
       <wsdl:output name="listarTipoAsuntoResponse" message="tns:listarTipoAsuntoResponse">
+    </wsdl:output>
+      <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="listarTipoDocumental">
+      <wsdl:input name="listarTipoDocumental" message="tns:listarTipoDocumental">
+    </wsdl:input>
+      <wsdl:output name="listarTipoDocumentalResponse" message="tns:listarTipoDocumentalResponse">
     </wsdl:output>
       <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
     </wsdl:fault>
@@ -374,6 +410,18 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="listarOficinasResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="WsI18NException">
+        <soap:fault name="WsI18NException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="listarTipoDocumental">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="listarTipoDocumental">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="listarTipoDocumentalResponse">
         <soap:body use="literal"/>
       </wsdl:output>
       <wsdl:fault name="WsI18NException">

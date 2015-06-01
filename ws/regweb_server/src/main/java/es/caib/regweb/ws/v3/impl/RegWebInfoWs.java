@@ -20,7 +20,18 @@ public interface RegWebInfoWs {
 
 
     /**
-     *
+     * Obtiene todos los TipoDocumental de una Entidad
+     * @param entidadCodigoDir3
+     * @return
+     * @throws Throwable
+     * @throws WsI18NException
+     */
+    @RolesAllowed({ RegwebConstantes.ROL_USUARI })
+    @WebMethod
+    public List<TipoDocumentalWs> listarTipoDocumental(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3) throws Throwable,
+            WsI18NException;
+    /**
+     * Obtiene todos los Tipos Asunto de una Entidad
      * @param entidadCodigoDir3
      * @return
      * @throws Throwable
