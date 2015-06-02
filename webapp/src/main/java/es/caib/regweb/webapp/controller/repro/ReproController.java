@@ -1,5 +1,7 @@
 package es.caib.regweb.webapp.controller.repro;
 
+import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
+import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
 import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb.model.Oficina;
@@ -326,8 +328,9 @@ public class ReproController extends BaseController {
                         reproEjb.merge(repro);
                     }
 
-                }else{ // Comprobamso en REGWEB si está vigente
+                }else{ // Comprobamos en REGWEB si está vigente
                     Organismo organismoDestino = organismoEjb.findByCodigoVigente(reproJson.getDestinoCodigo());
+
                     if(organismoDestino == null){ // Ya no es vigente
                         reproJson.setDestinoExterno(null);
                         reproJson.setDestinoCodigo(null);
@@ -369,6 +372,31 @@ public class ReproController extends BaseController {
 
 
         }
+
+        // Oficina Origen
+        if(reproJson.getOficinaCodigo()!= null && reproJson.isOficinaExterna()){// Preguntamos a DIR3 si está Vigente
+            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
+            OficinaTF oficina = oficinasService.obtenerOficina(reproJson.getOficinaCodigo(),null,null);
+
+            if(!oficina.getEstado().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)){// Ya no es vigente
+                reproJson.setOficinaCodigo(null);
+                reproJson.setOficinaDenominacion(null);
+                reproJson.setOficinaExterna(null);
+                repro.setRepro(RegistroUtils.serilizarXml(reproJson));
+                reproEjb.merge(repro);
+            }
+
+        }else{// Comprobamso en REGWEB si está vigente
+            Oficina oficinaOrigen = oficinaEjb.findByCodigoVigente(reproJson.getOficinaCodigo());
+            if(oficinaOrigen == null){
+                reproJson.setOficinaCodigo(null);
+                reproJson.setOficinaDenominacion(null);
+                reproJson.setOficinaExterna(null);
+                repro.setRepro(RegistroUtils.serilizarXml(reproJson));
+                reproEjb.merge(repro);
+            }
+        }
+
 
         return reproJson;
     }

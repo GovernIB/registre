@@ -31,7 +31,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @return
      * @throws Exception
      */
-    public Oficina getOficinaValidaByCodigo(String codigo) throws Exception;
+    public Oficina findByCodigoVigente(String codigo) throws Exception;
 
     /**
      * Obtiene las Oficinas cuyo Organismo responsable es el indicado

@@ -181,7 +181,7 @@ public class RegistroSalidaFormController extends BaseController {
             // Si la Oficina Origen es Externa, la añadimos al listado.
             Set<Oficina> oficinasOrigen = getOficinasOrigen(request);
             if(registro.getRegistroDetalle().getOficinaOrigen()!=null){
-                if(oficinaEjb.getOficinaValidaByCodigo(registro.getRegistroDetalle().getOficinaOrigen().getCodigo())== null){
+                if(oficinaEjb.findByCodigoVigente(registro.getRegistroDetalle().getOficinaOrigen().getCodigo())== null){
                     //log.info("externa : "+ registro.getRegistroDetalle().getOficinaOrigen().getDenominacion());
                     Oficina oficinaExterna = new Oficina();
                     oficinaExterna.setCodigo(registro.getRegistroDetalle().getOficinaOrigen().getCodigo());
@@ -339,7 +339,7 @@ public class RegistroSalidaFormController extends BaseController {
             Set<Oficina> oficinasOrigen = getOficinasOrigen(request);
             // Si han indicado OficinaOrigen
             if(registro.getRegistroDetalle().getOficinaOrigen()!=null){
-                if(oficinaEjb.getOficinaValidaByCodigo(registro.getRegistroDetalle().getOficinaOrigen().getCodigo())== null){
+                if(oficinaEjb.findByCodigoVigente(registro.getRegistroDetalle().getOficinaOrigen().getCodigo()) == null){
                     Oficina oficinaExterna = new Oficina();
                     oficinaExterna.setCodigo(registro.getRegistroDetalle().getOficinaOrigen().getCodigo());
                     oficinaExterna.setDenominacion(registro.getRegistroDetalle().getOficinaOrigen().getDenominacion());

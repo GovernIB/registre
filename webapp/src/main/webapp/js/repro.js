@@ -119,7 +119,7 @@ function rellenarFormulario(idRepro,tipoRegistro){
 
             //Oficina origen
             if(repro.oficinaCodigo == null) {
-                mensajeError("#mensajes","La oficina seleccionada ya no está vigente, y se ha eliminado de su Repro.");
+                mensajeError("#mensajes","L'oficina seleccionada ja no està vigent, i s'ha eliminat de la seva Repro.");
             }else{
                 var oficina= '';
                 oficina += '<option value="' + repro.oficinaCodigo + '" selected="selected">'
@@ -133,10 +133,10 @@ function rellenarFormulario(idRepro,tipoRegistro){
             // Destino u Origen
             if(tipoRegistro == 1){ // RegistroEntrada
                 if(repro.destinoCodigo == null){
-                    mensajeError("#mensajes","La unidad destino seleccionada ya no está vigente, y se ha eliminado de su Repro.");
+                    mensajeError("#mensajes","La unitat destino seleccionada ja no està vigent, i s'ha eliminat de la seva Repro.");
                 }else{
-                    alert("Destino codigo: " + repro.destinoCodigo);
-                    alert("Destino denominacion: " + repro.destinoDenominacion);
+                    //alert("Destino codigo: " + repro.destinoCodigo);
+                    //alert("Destino denominacion: " + repro.destinoDenominacion);
                     /*var unidad = '';
                     unidad = "#destino\\\\.codigo option[value="+repro.destinoCodigo+"]";
                     alert($("#destino\\.codigo option[value="+repro.destinoCodigo+"]").text());
@@ -157,7 +157,7 @@ function rellenarFormulario(idRepro,tipoRegistro){
             }else  if(tipoRegistro == 2){ // Registro Salida
 
                 if(repro.origenCodigo == null){
-                    mensajeError("#mensajes","La unidad origen seleccionada ya no está vigente, y se ha eliminado de su Repro.");
+                    mensajeError("#mensajes","La unitat origen seleccionada ja no està vigent, i s'ha eliminat de la seva Repro");
                 }else{
                     var origen= '';
                     origen += '<option value="' + repro.origenCodigo + '" selected="selected">' + repro.origenDenominacion + '</option>';

@@ -85,7 +85,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
-    public Oficina getOficinaValidaByCodigo(String codigo) throws Exception {
+    public Oficina findByCodigoVigente(String codigo) throws Exception {
 
         Query q = em.createQuery("Select oficina from Oficina as oficina where " +
                 "oficina.codigo =:codigo and " +
