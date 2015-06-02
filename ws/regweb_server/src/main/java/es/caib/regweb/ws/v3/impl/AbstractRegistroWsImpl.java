@@ -1,15 +1,5 @@
 package es.caib.regweb.ws.v3.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.ejb.EJB;
-
-import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.genapp.common.i18n.I18NValidationException;
-import org.fundaciobit.plugins.documentcustody.DocumentCustody;
-import org.fundaciobit.plugins.documentcustody.SignatureCustody;
-
 import es.caib.regweb.model.Anexo;
 import es.caib.regweb.model.UsuarioEntidad;
 import es.caib.regweb.persistence.ejb.AnexoFull;
@@ -20,6 +10,14 @@ import es.caib.regweb.persistence.validator.AnexoValidator;
 import es.caib.regweb.ws.converter.AnexoConverter;
 import es.caib.regweb.ws.model.AnexoWs;
 import es.caib.regweb.ws.utils.AuthenticatedBaseWsImpl;
+import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+import org.fundaciobit.plugins.documentcustody.DocumentCustody;
+import org.fundaciobit.plugins.documentcustody.SignatureCustody;
+
+import javax.ejb.EJB;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -52,7 +50,7 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
 
      for (AnexoWs anexoWs : anexosWs) {
          //Convertimos a anexo
-         AnexoFull anexoFull = AnexoConverter.getAnexo(anexoWs, tipoDocumentalEjb);
+         AnexoFull anexoFull = AnexoConverter.getAnexo(anexoWs, usuarioEntidad.getEntidad().getId(),tipoDocumentalEjb);
 
          validateAnexo(anexoFull.getAnexo(), true);
 

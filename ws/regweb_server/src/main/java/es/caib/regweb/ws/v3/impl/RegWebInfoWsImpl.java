@@ -143,7 +143,7 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
 
     Entidad entidad = CommonConverter.getEntidad(entidadCodigoDir3, entidadEjb);
 
-    // 4.- Comprobaciones entidad existente
+    // 2.- Comprobaciones entidad existente
     if(entidad == null){
       throw new I18NException("registro.entidad.noExiste", entidadCodigoDir3);
     }
@@ -172,18 +172,29 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
   @Override
   @WebMethod
   @RolesAllowed({ RegwebConstantes.ROL_USUARI })
-  public List<CodigoAsuntoWs> listarCodigoAsunto(@WebParam(name = "codigoTipoAsunto") String codigoTipoAsunto) throws Throwable,
+  public List<CodigoAsuntoWs> listarCodigoAsunto(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3, @WebParam(name = "codigoTipoAsunto") String codigoTipoAsunto) throws Throwable,
       WsI18NException {
 
-
     // 1.- Comprobaciones de parámetros obligatórios
+    if(StringUtils.isEmpty(entidadCodigoDir3)){
+      throw new I18NException("error.valor.requerido.ws", "entidadCodigoDir3");
+    }
+
+    Entidad entidad = CommonConverter.getEntidad(entidadCodigoDir3, entidadEjb);
+
+    // 2.- Comprobaciones entidad existente
+    if(entidad == null){
+      throw new I18NException("registro.entidad.noExiste", entidadCodigoDir3);
+    }
+
+    // 3.- Comprobaciones de parámetros obligatórios
     if(StringUtils.isEmpty(codigoTipoAsunto)){
       throw new I18NException("error.valor.requerido.ws", "codigoTipoAsunto");
     }
 
-    TipoAsunto tipoAsunto = CommonConverter.getTipoAsunto(codigoTipoAsunto, tipoAsuntoEjb);
+    TipoAsunto tipoAsunto = CommonConverter.getTipoAsunto(codigoTipoAsunto, entidad.getId(), tipoAsuntoEjb);
 
-    // 2. Comprobación TipoAsunto Activo
+    // 4. Comprobación TipoAsunto Activo
     if(!tipoAsunto.getActivo()){
       throw new I18NException("error.tipoAsunto.inactivo", codigoTipoAsunto);
     }

@@ -44,7 +44,7 @@ public interface RegWebInfoWs {
     
 
     @WebMethod
-    public List<CodigoAsuntoWs> listarCodigoAsunto(@WebParam(name = "codigoTipoAsunto") String codigoTipoAsunto)
+    public List<CodigoAsuntoWs> listarCodigoAsunto(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3, @WebParam(name = "codigoTipoAsunto") String codigoTipoAsunto)
       throws Throwable, WsI18NException;
 
     /**

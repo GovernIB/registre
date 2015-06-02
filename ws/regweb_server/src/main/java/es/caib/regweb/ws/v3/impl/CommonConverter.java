@@ -25,11 +25,11 @@ public class CommonConverter {
     }
 
 
-    public static TipoAsunto getTipoAsunto(String codigo, TipoAsuntoLocal tipoAsuntoEjb) throws Exception {
+    public static TipoAsunto getTipoAsunto(String codigo, Long idEntidad, TipoAsuntoLocal tipoAsuntoEjb) throws Exception {
         if (codigo == null) {
             return null;
         }
-        return tipoAsuntoEjb.findByCodigo(codigo);
+        return tipoAsuntoEjb.findByCodigoEntidad(codigo, idEntidad);
     }
 
 
@@ -212,13 +212,13 @@ public class CommonConverter {
         return oficinaWs;
     }
   
-  public static TipoDocumental getTipoDocumental(String tipoDocCodigoNTI,
+  public static TipoDocumental getTipoDocumental(String tipoDocCodigoNTI, Long idEntidad,
       TipoDocumentalLocal tipoDocumentalEjb) throws Exception {
     if (tipoDocCodigoNTI == null ) {
       return null;
     }
 
-    return tipoDocumentalEjb.findByCodigoNTI(tipoDocCodigoNTI);
+    return tipoDocumentalEjb.findByCodigoEntidad(tipoDocCodigoNTI, idEntidad);
 
   }
 

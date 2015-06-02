@@ -141,6 +141,7 @@
   </xs:complexType>
   <xs:complexType name="listarCodigoAsunto">
     <xs:sequence>
+      <xs:element minOccurs="0" name="entidadCodigoDir3" type="xs:string"/>
       <xs:element minOccurs="0" name="codigoTipoAsunto" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>

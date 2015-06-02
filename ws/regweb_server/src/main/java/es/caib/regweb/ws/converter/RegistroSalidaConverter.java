@@ -49,7 +49,7 @@ public class RegistroSalidaConverter extends CommonConverter {
         registroSalida.setEstado(RegwebConstantes.ESTADO_VALIDO);
         registroSalida.setLibro(libro);
 
-        registroDetalle.setTipoAsunto(getTipoAsunto(registroSalidaWs.getTipoAsunto(), tipoAsuntoEjb));
+        registroDetalle.setTipoAsunto(getTipoAsunto(registroSalidaWs.getTipoAsunto(),usuario.getEntidad().getId(), tipoAsuntoEjb));
         registroDetalle.setCodigoAsunto(getCodigoAsunto(registroSalidaWs.getCodigoAsunto(), codigoAsuntoEjb));
         registroDetalle.setTipoDocumentacionFisica(registroSalidaWs.getDocFisica());
         registroDetalle.setTransporte(RegwebConstantes.TRANSPORTE_BY_CODIGO_SICRES.get(registroSalidaWs.getTipoTransporte()));

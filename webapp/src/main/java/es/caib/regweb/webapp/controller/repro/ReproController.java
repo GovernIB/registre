@@ -307,7 +307,7 @@ public class ReproController extends BaseController {
     @RequestMapping(value = "/obtenerRepro", method = RequestMethod.GET)
     public @ResponseBody
     ReproJson obtenerRepro(@RequestParam Long idRepro, HttpServletRequest request) throws Exception {
-
+        //todo: Mejorar las Repro sustituyendo los organismos extinguidos por sus sustitutos
         Repro repro = reproEjb.findById(idRepro);
         ReproJson reproJson = RegistroUtils.desSerilizarReproXml(repro.getRepro());
 

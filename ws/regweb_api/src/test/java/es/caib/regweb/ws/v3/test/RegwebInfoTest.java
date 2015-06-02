@@ -42,7 +42,7 @@ public class RegwebInfoTest extends RegWebTestUtils {
     Assert.assertEquals(3, infoApi.getVersionWs());
   }
 
-  //@Test
+  @Test
   public void testTiposAsuntos(){
     String usuario = "earrivi";
     String codigoEntidadDir3 = "A04006741";
@@ -63,7 +63,7 @@ public class RegwebInfoTest extends RegWebTestUtils {
 
   }
 
-  //@Test
+  @Test
   public void testCodigosAsuntos(){
     String usuario = "earrivi";
     String codigoEntidadDir3 = "A04006741";
@@ -74,7 +74,7 @@ public class RegwebInfoTest extends RegWebTestUtils {
 
       TipoAsuntoWs tasws = tas.get(0);
 
-      List<CodigoAsuntoWs> cas = infoApi.listarCodigoAsunto(tasws.getCodigo());
+      List<CodigoAsuntoWs> cas = infoApi.listarCodigoAsunto(codigoEntidadDir3, tasws.getCodigo());
       System.out.println("cas num: " + cas.size());
       System.out.println("CA nombre "+ cas.get(0).getNombre());
 
