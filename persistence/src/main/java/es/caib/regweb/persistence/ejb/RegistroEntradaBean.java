@@ -7,7 +7,6 @@ import es.caib.regweb.model.utils.RegistroBasico;
 import es.caib.regweb.persistence.utils.*;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.utils.StringUtils;
-
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -16,7 +15,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-
 import java.util.*;
 
 /**
@@ -458,7 +456,7 @@ public class RegistroEntradaBean extends BaseEjbJPA<RegistroEntrada, Long> imple
 
             // Consulta en base de datos si la Entidad Actual está en SIR
             //Entidad entidadActual = entidadEjb.findById(entidadActiva.getId());
-            Entidad entidadActual = (Entidad) em.createQuery("select e from Entidad as e where e.id = : id").setParameter("id", entidadActiva.getId()).getSingleResult();
+            Entidad entidadActual = (Entidad) em.createQuery("select e from Entidad as e where e.id = :id").setParameter("id", entidadActiva.getId()).getSingleResult();
             if(entidadActual.getSir()) {
 
                 // Averiguamos si el Organismos Externo está en Sir o no
