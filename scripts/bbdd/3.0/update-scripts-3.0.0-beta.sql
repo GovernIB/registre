@@ -47,7 +47,7 @@ ALTER TABLE rwe_catpais MODIFY descripcionpais VARCHAR2(100 CHAR);
 
 -- ORACLE
 ALTER TABLE rwe_anexo ADD  custodiaid  VARCHAR2(256);
-ALTER TABLE rwe_anexo DROP COLUMN csv;
+-- ALTER TABLE rwe_anexo DROP COLUMN csv;
 ALTER TABLE rwe_anexo DROP COLUMN firmacsv;
 
 
