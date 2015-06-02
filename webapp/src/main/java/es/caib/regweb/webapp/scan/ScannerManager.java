@@ -89,7 +89,7 @@ public class ScannerManager {
      * @param tipusScan
      * @return
      */
-    public static String getHeaderJSP(HttpServletRequest request, Integer tipusScan, String docID) throws Exception {
+    public static String getHeaderJSP(HttpServletRequest request, Integer tipusScan, long docID) throws Exception {
 //    	log.info("Obtenint header del tipus d'escaneig " + tipusScan);
     	return getInstance(tipusScan).getHeaderJSP(request, docID);
     }
@@ -99,14 +99,14 @@ public class ScannerManager {
      * @param tipusScan
      * @return
      */
-    public static String getCoreJSP(HttpServletRequest request, Integer tipusScan, String docID) throws Exception {
+    public static String getCoreJSP(HttpServletRequest request, Integer tipusScan, long docID) throws Exception {
 //    	log.info("Obtenint core del tipus d'escaneig " + tipusScan);
     	return getInstance(tipusScan).getCoreJSP(request, docID );
     }
     
     
     
-    public static int getMinHeight(HttpServletRequest request, Integer tipusScan, String docID) throws Exception {
+    public static int getMinHeight(HttpServletRequest request, Integer tipusScan, long docID) throws Exception {
       return getInstance(tipusScan).getMinHeight(request, docID);
     }
     
@@ -119,7 +119,8 @@ public class ScannerManager {
      * @return
      * @throws Exception
      */
-    public static ScanWebResource getResource(HttpServletRequest request, Integer tipusScan, String resourcename, String docID) throws Exception {
+    public static ScanWebResource getResource(HttpServletRequest request, Integer tipusScan,
+        String resourcename, long docID) throws Exception {
 //    	log.info("Obtenint recurs " + resourcename + " del tipus d'escaneig " + tipusScan);
     	return getInstance(tipusScan).getResource(request, resourcename, docID);
     }

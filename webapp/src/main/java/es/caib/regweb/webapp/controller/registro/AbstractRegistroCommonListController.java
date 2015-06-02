@@ -65,9 +65,11 @@ public abstract class AbstractRegistroCommonListController extends BaseControlle
     model.addAttribute("teScan", teScan);
     if (teScan) {
 
-      model.addAttribute("iframe_anexos_height", AnexoController.BASE_IFRAME_HEIGHT + ScannerManager.getMinHeight(request, tipusScan, String.valueOf(registroID)));
+      model.addAttribute("iframe_anexos_height",
+          AnexoController.BASE_IFRAME_HEIGHT + ScannerManager.getMinHeight(request, tipusScan, registroID));
     } else {
-      model.addAttribute("iframe_anexos_height", AnexoController.BASE_IFRAME_HEIGHT + AnexoController.FILE_TAB_HEIGHT);
+      model.addAttribute("iframe_anexos_height",
+          AnexoController.BASE_IFRAME_HEIGHT + AnexoController.FILE_TAB_HEIGHT);
     }
   }
   

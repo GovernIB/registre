@@ -139,8 +139,8 @@ public class AnexoController extends BaseController {
         if (request.getParameter("lang") == null) {
           request.setAttribute("lang", I18NUtils.getLocale().getLanguage());
         }
-        model.addAttribute("headerScan", ScannerManager.getHeaderJSP(request, tipusScan, String.valueOf(registroID)));
-        model.addAttribute("coreScan", ScannerManager.getCoreJSP(request, tipusScan, String.valueOf(registroID)));
+        model.addAttribute("headerScan", ScannerManager.getHeaderJSP(request, tipusScan, registroID));
+        model.addAttribute("coreScan", ScannerManager.getCoreJSP(request, tipusScan, registroID));
         
         initScan(request, registroID);
         
@@ -866,7 +866,7 @@ public class AnexoController extends BaseController {
     		HttpServletResponse response) throws Exception {
 
     	Integer tipusScan = 2;
-    	String registroID = null;
+    	long registroID = 0; // TODO ???
     	String resource = (path1 != null ? path1 + "/" : "") + (path2 != null ? path2 + "/" : "") + resourcename;
         ScanWebResource recurs = ScannerManager.getResource(request, tipusScan, resource, registroID);
 
