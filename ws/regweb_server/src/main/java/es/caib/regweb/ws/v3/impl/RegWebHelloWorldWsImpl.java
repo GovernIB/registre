@@ -1,5 +1,6 @@
 package es.caib.regweb.ws.v3.impl;
 
+
 import es.caib.regweb.ws.utils.BaseWsImpl;
 import org.jboss.wsf.spi.annotation.TransportGuarantee;
 import org.jboss.wsf.spi.annotation.WebContext;
@@ -10,6 +11,7 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.validation.constraints.Null;
+
 
 /**
  * 
@@ -38,7 +40,7 @@ public class RegWebHelloWorldWsImpl extends BaseWsImpl implements RegWebHelloWor
   public static final String NAME_WS = NAME + "Ws";
   
   @WebMethod
-  public String echo(@WebParam (name ="echo") @Null String echo) {
+  public String echo(@WebParam (name ="echo") @Null String echo) {   
     log.info("RegWebHelloWorldWsImpl :: echo = " + echo);
     return echo;
   }

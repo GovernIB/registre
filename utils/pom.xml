@@ -26,6 +26,8 @@
 	</properties>
 	
 	<dependencies>
+	
+	<!--
 		<dependency>
 		   <groupId>org.fundaciobit.plugins</groupId>
 		   <artifactId>plugins-api</artifactId>
@@ -33,6 +35,14 @@
 		   <type>jar</type>
 		   <scope>provided</scope>
 		</dependency>
+		
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
+		</dependency>
+		-->
 
          <!-- Apache Commons IO -->
         <dependency>
@@ -42,12 +52,7 @@
             <scope>provided</scope>
         </dependency>
 
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.5</version>
-			<scope>provided</scope>
-		</dependency>
+
 	</dependencies>
 	
 	 <build>

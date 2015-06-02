@@ -1,111 +1,75 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
+<un:useConstants var="RegwebConstantes" className="es.caib.regweb.utils.RegwebConstantes"/>
+<!DOCTYPE html>
+<html lang="ca" >
+<head>
+    <title><spring:message code="regweb.titulo"/></title>
+    <c:import url="../modulos/imports.jsp"/>
+    
+    <c:if test="${teScan}">
+      ${headerScan}
+    </c:if>
+</head>
 
-<div id="modalNuevoAnexo" class="modal fade bs-example-modal-lg" >
-    <div class="modal-dialog modal-lg">
+<body style="background-image:none !important;">
+
+<c:if test="${not empty closeAndReload}">
+
+<script type="text/javascript" >
+
+  parent.closeAndReload();
+
+</script>
+
+<%-- XYZ  
+
+<a onclick="parent.abc();" href="#">Call Me</a>
+
+<a onclick="parent.closeAndReload();" href="#">Tanca i recarrega </a>
+
+ --%>
+
+</c:if>
+
+<c:if test="${empty closeAndReload}">
+
+<c:import url="../modulos/mensajes.jsp"/>
+
+<%-- Formulario que contiene el resto de campos del anexo. --%>
+<form:form id="anexoForm" action="${pageContext.request.contextPath}/anexo/${(empty anexoForm.anexo.id)?'nou' : 'editar'}" modelAttribute="anexoForm" method="POST"  enctype="multipart/form-data">
+                
+    <%-- <div class="modal-dialog modal-lg"> 
+    
         <div class="modal-content">
+        
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="limpiarAnexo()">×</button>
-                <h3 id="anexoTitulo"></h3>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" >×</button>
+                <h3 id="anexoTitulo">
+                
+                <spring:message code="anexo.${(empty anexoForm.anexo.id)?'nuevo' : 'editar'}"/>
+                </h3>
             </div>
+        --%>
+        <%--
+            <div  class="modal-body" --%>
+                        
+                        <form:hidden path="anexo.id" />
+                        <form:hidden path="anexo.registroDetalle.id" />
+                        <form:hidden path="anexo.custodiaID" />
+                        <form:hidden path="anexo.fechaCaptura" />
 
-            <div class="modal-body" >
-
-
-                <%-- TODO refactorizar en un futuro. Esto está en dos formularios separados porque tenemos contentTypes, datas diferentes.--%>
-
-                <%-- Formulario que contiene solo el input file del anexo. --%>
-               <%-- <form id="archivoAnexoForm" class="form-horizontal" action="${pageContext.request.contextPath}/anexo/guardarArchivo" method="post" enctype="multipart/form-data" >
-                    <input type="hidden" id="nombreFicheroAnexado" name="nombreFicheroAnexado" value=""/>
-                    <input type="hidden" id="nombreFirmaAnexada" name="nombreFirmaAnexada" value=""/>
-                    <!--ANEXO-->
-                    <div class="form-group col-xs-6">
-                       <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                            <label for="archivo"><spring:message code="anexo.archivo"/></label>
-                       </div>
-                       <div class="col-xs-8">
-                           <div class="input-group">
-                               <span class="input-group-btn">
-                                   <span class="btn btn-success btn-sm btn-file">
-                                       Explorar&hellip; <input id="archivo" name="archivo" type="file" multiple  maxlength="80">
-                                   </span>
-                               </span>
-                               <span id="archivoError"></span>
-                               <input type="text" class="form-control">
-                           </div>
-
-                       </div>
-                    </div>
-
-                    <div id="divArchivoActual" class="form-group col-xs-6">
-                        <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                            <label for="archivo"><spring:message code="anexo.archivo.existente"/></label>
-                        </div>
-                        <div class="col-xs-8 arxiu_actual">
-                            <a id="linkFichero" href="" target="_blank"></a>
-                                <label for="borrar"><spring:message code="anexo.archivo.borrar"/></label>&nbsp;<input type="checkbox" id="borrar" name="borrar" value="false" />
-                        </div>
-                    </div>
-                    <!--FIN ANEXO-->
-
-                    <!--FIRMA -->
-                    <div class="form-group col-xs-6" id="divInputFirma">
-                       <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                            <label for="firma"><spring:message code="anexo.firma"/></label>
-                       </div>
-                       <div class="col-xs-8">
-                           <div class="input-group">
-                               <span class="input-group-btn">
-                                   <span class="btn btn-success btn-sm btn-file">
-                                       Explorar&hellip; <input id="firma" name="firma" type="file" multiple  maxlength="80">
-                                   </span>
-                               </span>
-                               <span id="firmaError"></span>
-                               <input  id="textefirma" type="text" class="form-control" >
-                           </div>
-
-                       </div>
-                    </div>
-
-                    <div id="divFirmaActual" class="form-group col-xs-6">
-                        <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                            <label for="firma"><spring:message code="anexo.firma.existente"/></label>
-                        </div>
-                        <div class="col-xs-8 arxiu_actual">
-                            <a id="linkFirma" href="" target="_blank"></a>
-                            <label for="borrarfirma" id="labelborrarfirma"><spring:message code="anexo.archivo.borrar"/></label>&nbsp;<input type="checkbox" id="borrarfirma" name="borrarfirma" value="false" />
-                        </div>
-                    </div>
-                    <!--FIN FIRMA-->
-
-                </form>--%>
-
-                <%-- Formulario que contiene el resto de campos del anexo. --%>
-                <form id="anexoForm" class="form-horizontal" action="${pageContext.request.contextPath}/anexo" method="post" enctype="multipart/form-data">
-                        <input type="hidden" id="accion" name="accion" value="nuevo"/>
-                        <input type="hidden" id="id" name="id" value=""/>
-                        <input type="hidden" id="idRegistro" name="idRegistro" value="${registro.id}"/>
-                        <input type="hidden" id="idRegistroDetalle" name="idRegistroDetalle" value="${registro.registroDetalle.id}"/>
-                        <input type="hidden" id="tipoRegistro" name="tipoRegistro" value="${param.registro}"/>
-                        <input type="hidden" id="custodiaID" name="custodiaID" value=""/>
-
-                        <%--<div class="form-group col-xs-6" id="divautofirma">
-                            <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                  <label><spring:message code="anexo.autofirma"/></label>
-                            </div>
-                            <div class="col-xs-8" >
-                                <label class="radio-inline">
-                                    <input type="radio" id="autofirmasi" name="autofirma" value="1" checked><spring:message code="regweb.si"/>
-                                </label>
-                                 <label class="radio-inline">
-                                    <input type="radio" id="autofirmano" name="autofirma" value="2" ><spring:message code="regweb.no"/>
-                                </label>
-                                <label class="radio-inline">
-                                    <input type="radio" id="sinfirma" name="autofirma" value="0" checked><spring:message code="anexo.sinfirma"/>
-                                </label>
-                            </div>
-
-                        </div>--%>
+                        <form:hidden path="registroID" />
+                        <form:hidden path="tipoRegistro" />
+                        <%--
+                        <form:hidden path="returnURL" />
+                         
+                        <script>
+                          document.getElementById("returnURL").value = document.URL;
+                        </script>
+                        --%>
 
                         <div class="form-group col-xs-6">
                            <div class="col-xs-4 pull-left etiqueta_regweb control-label">
@@ -113,8 +77,8 @@
                                 <spring:message code="anexo.titulo"/></label>
                            </div>
                            <div class="col-xs-8">
-                               <input id="titulo"  class="form-control"  maxlength="200"/>
-                               <span id="tituloError"></span>
+                               <form:input path="anexo.titulo" class="form-control"  maxlength="200"/>
+                               <form:errors path="anexo.titulo" cssClass="label label-danger"/> 
                            </div>
                         </div>
 
@@ -124,13 +88,13 @@
                                 <label for="validezDocumento"><spring:message code="anexo.validezDocumento"/></label>
                             </div>
                             <div class="col-xs-8">
-                                <select id="validezDocumento" name="validezDocumento" class="chosen-select" onchange="bloquearFirma('${registro.id}','${registro.registroDetalle.id}','${param.registro}')">
-                                  <option value="-1">...</option>
+                                <form:select path="anexo.validezDocumento" class="chosen-select" onchange="bloquearFirma('${registro.id}','${registro.registroDetalle.id}','${param.registro}')">
+                                    <form:option value="-1">...</form:option>
                                     <c:forEach items="${tiposValidezDocumento}" var="validezDocumento">
-                                        <option value="${validezDocumento}"><spring:message code="tipoValidezDocumento.${validezDocumento}"/></option>
+                                        <form:option value="${validezDocumento}"><spring:message code="tipoValidezDocumento.${validezDocumento}"/></form:option>
                                     </c:forEach>
-                                </select>
-                                <span id="validezDocumentoError"></span>
+                                </form:select>
+                                <form:errors path="anexo.validezDocumento" cssClass="label label-danger"/>
                             </div>
                         </div>
 
@@ -139,12 +103,12 @@
                                <label for="tipoDocumento"><span class="text-danger">*</span> <spring:message code="anexo.tipoDocumento"/></label>
                            </div>
                            <div class="col-xs-8">
-                               <select id="tipoDocumento" name="tipoDocumento" class="chosen-select">
+                               <form:select path="anexo.tipoDocumento" class="chosen-select">
                                    <c:forEach items="${tiposDocumentoAnexo}" var="tipoDocumento">
-                                       <option value="${tipoDocumento}"><spring:message code="tipoDocumento.${tipoDocumento}"/></option>
+                                       <form:option value="${tipoDocumento}"><spring:message code="tipoDocumento.${tipoDocumento}"/></form:option>
                                    </c:forEach>
-                               </select>
-                               <span id="tipoDocumentoError"></span>
+                               </form:select>
+                               <form:errors path="anexo.tipoDocumento" cssClass="label label-danger"/>
                            </div>
                         </div>
 
@@ -154,8 +118,8 @@
                                 <label for="observacionesAnexo"><spring:message code="anexo.observaciones"/></label>
                            </div>
                            <div class="col-xs-8">
-                               <textarea id="observacionesAnexo" name="observaciones" class="form-control" rows="2"  maxlength="50"></textarea>
-                               <span id="observacionesAnexoError"></span>
+                               <form:textarea path="anexo.observaciones" class="form-control" rows="2"  maxlength="50"/>
+                               <form:errors path="anexo.observaciones" cssClass="label label-danger"/>
                            </div>
                         </div>
 
@@ -165,11 +129,11 @@
                              <label for="origenCiudadanoAdmin"><span class="text-danger">*</span> <spring:message code="anexo.origen"/></label>
                          </div>
                          <div class="col-xs-8">
-                             <select id="origenCiudadanoAdmin" name="origenCiudadanoAdmin" class="chosen-select">
-                                 <option value="0"><spring:message code="anexo.origen.ciudadano"/></option>
-                                 <option value="1"><spring:message code="anexo.origen.administracion"/></option>
-                             </select>
-                             <span id="origenCiudadanoAdminError"></span>
+                             <form:select path="anexo.origenCiudadanoAdmin" class="chosen-select">
+                                 <form:option value="0"><spring:message code="anexo.origen.ciudadano"/></form:option>
+                                 <form:option value="1"><spring:message code="anexo.origen.administracion"/></form:option>
+                             </form:select>
+                             <form:errors path="anexo.origenCiudadanoAdmin" cssClass="label label-danger"/>
                          </div>
                        </div>
 
@@ -178,130 +142,253 @@
                               <label for="tipoDocumental"><span class="text-danger">*</span> <spring:message code="anexo.tipoDocumental"/></label>
                           </div>
                           <div class="col-xs-8">
-                              <select id="tipoDocumental"  name="tipoDocumental" class="chosen-select">
+                              <form:select path="anexo.tipoDocumental" class="chosen-select">
                                  <c:forEach items="${tiposDocumental}" var="tipoDocumental">
-                                     <option value="${tipoDocumental.id}"><i:trad value="${tipoDocumental}" property="nombre"/></option>
+                                     <form:option value="${tipoDocumental.id}"><i:trad value="${tipoDocumental}" property="nombre"/></form:option>
                                  </c:forEach>
-                              </select>
-                              <span id="tipoDocumentalError"></span>
+                              </form:select>
+                              <form:errors path="anexo.tipoDocumental" cssClass="label label-danger"/>
                           </div>
                        </div>
 
-                       <div class="form-group col-xs-6" id="divautofirma">
+
+                       <div class="form-group col-xs-10" id="divmodofirma">
                             <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                  <label><spring:message code="anexo.autofirma"/></label>
+                                  <label><spring:message code="anexo.tipofirma"/></label>
                             </div>
-                            <div class="col-xs-8" >
+                            <div class="col-xs-10" >
                                 <label class="radio-inline">
-                                    <input type="radio" id="autofirmasi" name="autofirma" value="1" checked><spring:message code="regweb.si"/>
+                                    <form:radiobutton path="anexo.modoFirma" onclick="cambioTipoFirma();" value="1"/><spring:message code="anexo.tipofirma.attached"/>
                                 </label>
                                  <label class="radio-inline">
-                                    <input type="radio" id="autofirmano" name="autofirma" value="2" ><spring:message code="regweb.no"/>
+                                    <form:radiobutton path="anexo.modoFirma" onclick="cambioTipoFirma();" value="2"/><spring:message code="anexo.tipofirma.detached"/>
                                 </label>
                                 <label class="radio-inline">
-                                    <input type="radio" id="sinfirma" name="autofirma" value="0" checked><spring:message code="anexo.sinfirma"/>
+                                    <form:radiobutton id="sinfirma" path="anexo.modoFirma" onclick="cambioTipoFirma();" value="0"/><spring:message code="anexo.tipofirma.sinfirma"/>
                                 </label>
                             </div>
+                            <form:errors path="anexo.modoFirma" cssClass="label label-danger"/>
 
                         </div>
 
                         <div class="clearfix"></div>
-                </form>
-            </div>
-            	 <%-- TODO refactorizar en un futuro. Esto está en dos formularios separados porque tenemos contentTypes, datas diferentes.--%>
-
-			<c:if test="${teScan}">
+               
+			
 			<ul class="nav nav-tabs" id="pestanyes">
 				<li class="active"><a href="#fitxer" data-toggle="tab">Fitxer</a></li>
+                <c:if test="${teScan}">
 				<li><a href="#scan" data-toggle="tab">Scan</a></li>
+                </c:if>
 			</ul>
-						
-			<div class="tab-content">
-				<div class="tab-pane active" id="fitxer">
-			</c:if>
-				
-	                <%-- Formulario que contiene solo el input file del anexo. --%>
-	                <form id="archivoAnexoForm" class="form-horizontal" action="${pageContext.request.contextPath}/anexo/guardarArchivo" method="post" enctype="multipart/form-data" >
-	                    <input type="hidden" id="nombreFicheroAnexado" name="nombreFicheroAnexado" value=""/>
-	                    <input type="hidden" id="nombreFirmaAnexada" name="nombreFirmaAnexada" value=""/>
+
+			  <div class="tab-content" style="padding-bottom: 0px; padding-top: 5px">
+			      <div class="tab-pane active" id="fitxer">
+			
+                       
 	                    <!--ANEXO-->
-	                    <div class="form-group col-xs-6">
-	                       <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-	                            <label for="archivo"><spring:message code="anexo.archivo"/></label>
-	                       </div>
-	                       <div class="col-xs-8">
-	                           <div class="input-group">
-	                               <span class="input-group-btn">
-	                                   <span class="btn btn-success btn-sm btn-file">
-	                                       Explorar&hellip; <input id="archivo" name="archivo" type="file" multiple  maxlength="80">
-	                                   </span>
-	                               </span>
-	                               <span id="archivoError"></span>
-	                               <input type="text" class="form-control">
-	                           </div>
-	
-	                       </div>
-	                    </div>
-	
-	                    <div id="divArchivoActual" class="form-group col-xs-6">
-	                        <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-	                            <label for="archivo"><spring:message code="anexo.archivo.existente"/></label>
-	                        </div>
-	                        <div class="col-xs-8 arxiu_actual">
-	                            <a id="linkFichero" href="" target="_blank"></a>
-	                                <label for="borrar"><spring:message code="anexo.archivo.borrar"/></label>&nbsp;<input type="checkbox" id="borrar" name="borrar" value="false" />
-	                        </div>
-	                    </div>
+                        <div class="form-group col-xs-12" style="margin-bottom: 0px;">
+    	                    <div class="form-group col-xs-6">
+    	                       <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+    	                            <form:label path="documentoFile"><spring:message code="anexo.archivo"/></form:label>&nbsp;
+    	                       </div>
+    	                       <div class="col-xs-8">
+    	                           <div class="input-group">
+    	                               <span class="input-group-btn">
+    	                                   <span class="btn btn-success btn-sm btn-file">
+    	                                      <spring:message code="regweb.explorar"/>&hellip;
+                                              <input id="documentoFile" name="documentoFile" type="file" multiple />
+    	                                   </span>
+    	                               </span>
+    	                               <input type="text" class="form-control" readonly>
+    	                           </div>
+                                   <form:errors path="documentoFile" cssClass="help-block" element="span"/>
+    	                        </div>
+    	                    </div>
+                            <c:if test="${not empty anexoForm.documentoCustody}">
+    
+    	                    <div class="form-group col-xs-6">
+    	                        <div class="col-xs-2 pull-left etiqueta_regweb control-label">
+    	                            <label for="documentoFile"><spring:message code="anexo.archivo.existente"/></label>
+    	                        </div>
+                                
+    	                        <div class="col-xs-10 arxiu_actual">
+    	                            <a href="<c:url value="/anexo/descargarDocumento/${anexoForm.anexo.id}" />" target="_blank">
+                                    ${anexoForm.documentoCustody.name}
+                                    </a>
+                                    <form:checkbox id="documentoFileDelete" path="documentoFileDelete" />
+                                    <spring:message code="anexo.archivo.borrar"/>
+    	                        </div>
+                                
+    	                    </div>
+                            </c:if>
+                        </div>
+                        
 	                    <!--FIN ANEXO-->
-	
+
 	                    <!--FIRMA -->
-	                    <div class="form-group col-xs-6" id="divInputFirma">
-	                       <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-	                            <label for="firma"><spring:message code="anexo.firma"/></label>
-	                       </div>
-	                       <div class="col-xs-8">
-	                           <div class="input-group">
-	                               <span class="input-group-btn">
-	                                   <span class="btn btn-success btn-sm btn-file">
-	                                       Explorar&hellip; <input id="firma" name="firma" type="file" multiple  maxlength="80">
-	                                   </span>
-	                               </span>
-	                               <span id="firmaError"></span>
-	                               <input  id="textefirma" type="text" class="form-control" >
-	                           </div>
+                        <div class="form-group col-xs-12" style="margin-bottom: 0px;">
+    	                    <div class="form-group col-xs-6" id="divInputFirma">
+    	                       <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+    	                            <form:label path="firmaFile"><spring:message code="anexo.firma"/></form:label>
+    	                       </div>
+    	                       <div class="col-xs-8">
+    	                           <div class="input-group">
+    	                               <span class="input-group-btn">
+    	                                   <span class="btn btn-success btn-sm btn-file">
+    	                                      <spring:message code="regweb.explorar"/>&hellip;
+                                              <input id="firmaFile" name="firmaFile" type="file" multiple />
+    	                                   </span>
+    	                               </span>
+                                       <input type="text" class="form-control" readonly>
+    	                           </div>
+                                   <form:errors path="firmaFile" cssClass="help-block" element="span"/>	
+    	                       </div>
+    	                    </div>
+    	
+                            <c:if test="${not empty anexoForm.signatureCustody}">
+    	                    <div id="divFirmaActual" class="form-group col-xs-6">
+    	                        <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+    	                            <label for="firmaFile"><spring:message code="anexo.firma.existente"/></label>
+    	                        </div>
+    	                        <div class="col-xs-8 arxiu_actual">
+    	                            <a href="<c:url value="/anexo/descargarFirma/${anexoForm.anexo.id}" />" target="_blank">
+                                    ${anexoForm.signatureCustody.name}
+                                    </a>                            
+                                    <form:checkbox id="signatureFileDelete" path="signatureFileDelete" />
+                                    <spring:message code="anexo.archivo.borrar"/>
+    	                        </div>
+    	                    </div>
+                            </c:if>
+                        </div>
+                        
 	
-	                       </div>
-	                    </div>
-	
-	                    <div id="divFirmaActual" class="form-group col-xs-6">
-	                        <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-	                            <label for="firma"><spring:message code="anexo.firma.existente"/></label>
-	                        </div>
-	                        <div class="col-xs-8 arxiu_actual">
-	                            <a id="linkFirma" href="" target="_blank"></a>
-	                            <label for="borrarfirma" id="labelborrarfirma"><spring:message code="anexo.archivo.borrar"/></label>&nbsp;<input type="checkbox" id="borrarfirma" name="borrarfirma" value="false" />
-	                        </div>
-	                    </div>
-	
+    <%--
 	                    <div class="clearfix"></div>
+                         --%>
 	                    <!--FIN FIRMA-->
 	
-	
-		                <div class="col-xs-12 text-center centrat" id="reload">
-		                        <img src="<c:url value="/img/712.GIF"/>" width="20" height="20"/>
-		                </div>
-		            </form>
-       		<c:if test="${teScan}">
-       			</div>
-				<div class="tab-pane" id="scan">
-					${coreScan}
-				</div>
-			</div>
-			</c:if>
-		    <div class="modal-footer">
-		    	<input type="button" id="desaAnnex" onclick="procesarAnexo('${pageContext.response.locale}')" title="<spring:message code="regweb.guardar"/>" value="<spring:message code="regweb.guardar"/>" class="btn btn-warning btn-sm">
-	        	<button class="btn btn-sm" data-dismiss="modal" aria-hidden="true" onclick="limpiarAnexo()"><spring:message code="regweb.cerrar"/></button>
-			</div>
+
+
+
+    		     	</div>
+           		    <c:if test="${teScan}">
+        				<div class="tab-pane" id="scan">
+        					${coreScan}
+        				</div>
+                    </c:if>
+                    
+
+                    
+    			</div>
+                
+               <div class="hide col-xs-12 text-center centrat" id="reload">
+                        <img src="<c:url value="/img/712.GIF"/>" width="20" height="20"/>
+               </div>
+    			
+    		    <div class="pull-right" style="margin-top: 15px; "> <%--  class="modal-footer" --%>
+                    <%-- XYZ 
+                    
+                    <a onclick="abc();" href="#">Call Me</a>
+                    
+                    <button class="btn btn-warning btn-sm" onclick="$('#reload').show();"><spring:message code="regweb.guardar"/></button>
+                    
+                    
+                    X<input type="submit"  value="<spring:message code="regweb.guardar"/>" name="<spring:message code="regweb.guardar"/>">X
+                    
+                    ZZ
+                     --%>
+                    
+                    <button type="submit" class="btn btn-warning btn-sm" onclick="$('#reload').show();"><spring:message code="regweb.guardar"/></button>
+                    
+                    
+                    <%--
+    		    	<input type="button" id="desaAnnex" onclick="procesarAnexo('${pageContext.response.locale}')" title="<spring:message code="regweb.guardar"/>" value="<spring:message code="regweb.guardar"/>" class="btn btn-warning btn-sm">
+                    document.getElementById('anexoForm').submit();
+                     
+    	        	<button class="btn"  onclick=" $('#modalNuevoAnexo').modal('hide');"><spring:message code="regweb.cerrar"/></button>
+                    --%>
+                    
+    			</div>
+       
+       <%--         
+            </div>
+
+ 
 		</div>
-	</div>
-</div>
+	 </div> --%>
+
+</form:form>
+
+
+<script type="text/javascript" >
+
+    
+    /**
+     *  Oculta o muestra el bloque de firma en función de la validez del documento escogido.
+     * @param idRegistro
+     * @param idRegistroDetalle
+     * @param tipoRegistro
+     */
+    function bloquearFirma(idRegistro, idRegistroDetalle, tipoRegistro) {
+        var d=new Date();
+        console.log(d.getMilliseconds() + " :: passa per bloquear firma ---");
+    
+        // parametrosAnexo(idRegistro, idRegistroDetalle, tipoRegistro);
+        // Si la validez del documento es 1-> Copia no se puede adjuntar anexo con firma.
+         if ($('#anexo\\.validezDocumento').val() == 1) {
+           
+           $('#divmodofirma').hide();
+             
+           $('#divFirmaActual').hide();
+           $('#divInputFirma').hide();
+    
+           $('#sinfirma').prop("checked", "checked");
+         } else {
+           $('#divmodofirma').show();
+    
+           $('#divFirmaActual').hide();
+           $('#divInputFirma').hide();
+    
+           cambioTipoFirma();
+         }
+        
+    }
+    
+    
+    
+    
+    function cambioTipoFirma() {
+    
+        console.log("-----  Entra dins cambioTipoFirma   -----");
+        var autofirma = $('input[name=anexo\\.modoFirma]:radio:checked').val();
+        console.log("Entra dins cambioTipoFirma: Valor = " + autofirma);
+        if (autofirma == 1 || autofirma == 0) {
+            $('#divInputFirma').hide();
+            $('#divFirmaActual').hide();
+        } else if(autofirma == 2){
+            $('#divInputFirma').show();
+            $('#divFirmaActual').show();
+        }
+    
+       
+    };
+
+
+
+
+  
+    // Muestra u Oculta el input firma en función de si es autofirma
+    $('input[name=anexo\\.modoFirma]:radio').click(function () {
+        cambioTipoFirma();
+    });
+   
+    cambioTipoFirma();
+   
+    bloquearFirma('${registro.id}','${registro.registroDetalle.id}','${param.registro}');
+   
+</script>
+</c:if>
+
+</body>
+
+</html>

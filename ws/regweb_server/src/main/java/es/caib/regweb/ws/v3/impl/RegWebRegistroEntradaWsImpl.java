@@ -5,15 +5,13 @@ import es.caib.regweb.persistence.ejb.*;
 import es.caib.regweb.persistence.validator.*;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.utils.StringUtils;
-import es.caib.regweb.ws.converter.AnexoConverter;
 import es.caib.regweb.ws.converter.DatosInteresadoConverter;
 import es.caib.regweb.ws.converter.RegistroEntradaConverter;
-import es.caib.regweb.ws.model.AnexoWs;
 import es.caib.regweb.ws.model.IdentificadorWs;
 import es.caib.regweb.ws.model.InteresadoWs;
 import es.caib.regweb.ws.model.RegistroEntradaWs;
-import es.caib.regweb.ws.utils.AuthenticatedBaseWsImpl;
 import es.caib.regweb.ws.utils.UsuarioAplicacionCache;
+
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -30,6 +28,7 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +36,7 @@ import java.util.List;
  * Created by Fundació BIT.
  *
  * @author earrivi
+ * @author anadal
  */
 @SecurityDomain(RegwebConstantes.SECURITY_DOMAIN)
 @Stateless(name = RegWebRegistroEntradaWsImpl.NAME + "Ejb")
@@ -48,7 +48,7 @@ import java.util.List;
         serviceName = RegWebRegistroEntradaWsImpl.NAME_WS  + "Service",
         endpointInterface = "es.caib.regweb.ws.v3.impl.RegWebRegistroEntradaWs")
 @WebContext(contextRoot = "/regweb/ws", urlPattern = "/v3/" + RegWebRegistroEntradaWsImpl.NAME, transportGuarantee = TransportGuarantee.NONE, secureWSDLAccess = false, authMethod = "WSBASIC")
-public class RegWebRegistroEntradaWsImpl extends AuthenticatedBaseWsImpl 
+public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl 
     implements RegWebRegistroEntradaWs {
 
     protected final Logger log = Logger.getLogger(getClass());
@@ -63,7 +63,7 @@ public class RegWebRegistroEntradaWsImpl extends AuthenticatedBaseWsImpl
     InteresadoValidator<Interesado> interesadoValidator = new InteresadoValidator<Interesado>();
 
    
-    AnexoValidator<Anexo> anexoValidator = new AnexoValidator<Anexo>();
+    
 
     @EJB(mappedName = "regweb/OficinaEJB/local")
     public OficinaLocal oficinaEjb;
@@ -110,11 +110,7 @@ public class RegWebRegistroEntradaWsImpl extends AuthenticatedBaseWsImpl
     @EJB(mappedName = "regweb/CatLocalidadEJB/local")
     public CatLocalidadLocal catLocalidadEjb;
 
-    @EJB(mappedName = "regweb/AnexoEJB/local")
-    public AnexoLocal anexoEjb;
 
-    @EJB(mappedName = "regweb/TipoDocumentalEJB/local")
-    public TipoDocumentalLocal tipoDocumentalEjb;
 
 
     @Override
@@ -196,7 +192,7 @@ public class RegWebRegistroEntradaWsImpl extends AuthenticatedBaseWsImpl
         if(registroEntradaWs.getAnexos() != null && registroEntradaWs.getAnexos().size() > 0){
 
           // /Procesamos los anexos
-          anexos = procesarAnexos(registroEntradaWs.getAnexos());
+          anexos = procesarAnexos(registroEntradaWs.getAnexos(), usuario, registroEntrada.getId(), "entrada");
 
 
           //Asociamos los anexos al Registro de Entrada
@@ -453,18 +449,7 @@ public class RegWebRegistroEntradaWsImpl extends AuthenticatedBaseWsImpl
       ibv.throwValidationExceptionIfErrors(interesado, true);
     }
 
-    /**
-     *
-     * @param anexo
-     * @throws org.fundaciobit.genapp.common.i18n.I18NValidationException
-     */
-    private void validateAnexo(Anexo anexo, boolean isNou) throws I18NValidationException, I18NException {
-      //anexoValidator.validateStandalone(anexo);
-      AnexoBeanValidator pfbv = new AnexoBeanValidator(anexoValidator);
-      
-      //final boolean isNou = true;
-      pfbv.throwValidationExceptionIfErrors(anexo, isNou);
-    }
+
 
     /**
      * Procesa los Interesados recibidos
@@ -522,47 +507,6 @@ public class RegWebRegistroEntradaWsImpl extends AuthenticatedBaseWsImpl
         }
 
         return interesados;
-
-    }
-
-     /**
-     * Procesa los Anexos recibidos
-     * @param anexosWs
-     * @return
-     * @throws Exception
-     * @throws I18NValidationException
-     * @throws I18NException
-     */
-    private List<Anexo> procesarAnexos(List<AnexoWs> anexosWs) throws Exception, I18NValidationException, I18NException {
-
-        List<Anexo> anexos  = new ArrayList<Anexo>();
-
-        for (AnexoWs anexoWs : anexosWs) {
-            //Convertimos a anexo
-            Anexo anexo = AnexoConverter.getAnexo(anexoWs, tipoDocumentalEjb);
-
-            validateAnexo(anexo, true);
-
-            // Guardamos el Anexo datos básicos
-            anexo = anexoEjb.persist(anexo);
-            // Actualizamos el anexo y le asociamos los archivos
-            if(ANEXO_TIPOVALIDEZDOCUMENTO_COPIA.equals(anexoWs.getValidezDocumento())){ // Si validez Documento --> Copia no se admite firma
-                anexoWs.setNombreFirmaAnexada("");
-                anexoWs.setFirmaAnexada(null);
-                anexoWs.setTamanoFirmaAnexada(null);
-                anexoWs.setTipoMIMEFirmaAnexada(null);
-                anexo = anexoEjb.actualizarAnexoConArchivos(anexo.getId(),anexoWs.getFicheroAnexado(), anexoWs.getNombreFicheroAnexado(),anexoWs.getTipoMIMEFicheroAnexado(),
-                                             anexoWs.getTamanoFicheroAnexado(), anexoWs.getFirmaAnexada(), anexoWs.getNombreFirmaAnexada(), anexoWs.getTipoMIMEFirmaAnexada(),
-                                             anexoWs.getTamanoFirmaAnexada(), anexoWs.getModoFirma(), anexoWs.getFechaCaptura().getTime());
-            }else {
-                anexo = anexoEjb.actualizarAnexoConArchivos(anexo.getId(),anexoWs.getFicheroAnexado(), anexoWs.getNombreFicheroAnexado(),anexoWs.getTipoMIMEFicheroAnexado(),
-                                             anexoWs.getTamanoFicheroAnexado(), anexoWs.getFirmaAnexada(), anexoWs.getNombreFirmaAnexada(), anexoWs.getTipoMIMEFirmaAnexada(),
-                                             anexoWs.getTamanoFirmaAnexada(), anexoWs.getModoFirma(), anexoWs.getFechaCaptura().getTime());
-            }
-            anexos.add(anexo);
-        }
-
-        return anexos;
 
     }
 

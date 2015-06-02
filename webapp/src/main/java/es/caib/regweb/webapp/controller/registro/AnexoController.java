@@ -1,12 +1,10 @@
 package es.caib.regweb.webapp.controller.registro;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.ejb.EJB;
@@ -14,59 +12,66 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.fileupload.disk.DiskFileItem;
+import org.apache.axis.utils.StringUtils;
+import org.apache.commons.io.FileUtils;
+import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.fundaciobit.plugins.documentcustody.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.SignatureCustody;
 import org.fundaciobit.plugins.scanweb.ScanWebResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import es.caib.regweb.model.Anexo;
 import es.caib.regweb.model.Entidad;
-import es.caib.regweb.model.RegistroEntrada;
-import es.caib.regweb.model.RegistroSalida;
-import es.caib.regweb.model.UsuarioEntidad;
+import es.caib.regweb.model.RegistroDetalle;
+import es.caib.regweb.persistence.ejb.AnexoFull;
 import es.caib.regweb.persistence.ejb.AnexoLocal;
 import es.caib.regweb.persistence.ejb.HistoricoRegistroEntradaLocal;
 import es.caib.regweb.persistence.ejb.HistoricoRegistroSalidaLocal;
 import es.caib.regweb.persistence.ejb.RegistroDetalleLocal;
 import es.caib.regweb.persistence.ejb.RegistroEntradaLocal;
 import es.caib.regweb.persistence.ejb.RegistroSalidaLocal;
-import es.caib.regweb.persistence.utils.RegistroUtils;
-import es.caib.regweb.utils.AnnexFileSystemManager;
+import es.caib.regweb.persistence.ejb.TipoDocumentalLocal;
+import es.caib.regweb.persistence.utils.AnnexFileSystemManager;
 import es.caib.regweb.utils.RegwebConstantes;
-import es.caib.regweb.utils.ScannerManager;
 import es.caib.regweb.webapp.controller.BaseController;
-import es.caib.regweb.webapp.utils.AnexoFormManager;
-import es.caib.regweb.webapp.utils.AnexoJson;
-import es.caib.regweb.webapp.utils.JsonResponse;
+import es.caib.regweb.webapp.scan.ScannerManager;
+import es.caib.regweb.webapp.utils.Mensaje;
 import es.caib.regweb.webapp.validator.AnexoWebValidator;
 
 /**
  * Created 3/06/14 14:22
  *
  * @author mgonzalez
- * @author anadal (plugin de custodia i errores)
+ * @author anadal (plugin de custodia, errors i refactoring no ajax)
  */
 @Controller
 @RequestMapping(value = "/anexo")
+@SessionAttributes(types = {AnexoForm.class })
 public class AnexoController extends BaseController {
-
+  
+  
+    public static final int FILE_TAB_HEIGHT = 107;
+  
+    public static final int BASE_IFRAME_HEIGHT = 480 - FILE_TAB_HEIGHT;
+  
 
     @Autowired
     private AnexoWebValidator anexoValidator;
-
     
     @EJB(mappedName = "regweb/HistoricoRegistroEntradaEJB/local")
     public HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
@@ -76,7 +81,7 @@ public class AnexoController extends BaseController {
     
     @EJB(mappedName = "regweb/AnexoEJB/local")
     public AnexoLocal anexoEjb;
-    
+
     @EJB(mappedName = "regweb/RegistroEntradaEJB/local")
     public RegistroEntradaLocal registroEntradaEjb;
 
@@ -85,7 +90,599 @@ public class AnexoController extends BaseController {
 
     @EJB(mappedName = "regweb/RegistroDetalleEJB/local")
     public RegistroDetalleLocal registroDetalleEjb;
+    
+    @EJB(mappedName = "regweb/TipoDocumentalEJB/local")
+    public TipoDocumentalLocal tipoDocumentalEjb;
 
+    @RequestMapping(value = "/nou/{registroDetalleID}/{tipoRegistro}/{registroID}", method = RequestMethod.GET)
+    public String crearAnexoGet(HttpServletRequest request,
+        HttpServletResponse response, @PathVariable Long registroDetalleID,
+        @PathVariable Long registroID, @PathVariable String tipoRegistro,
+        Model model) throws I18NException, Exception {
+      
+      log.info(" Passa per AnexoController::crearAnexoGet(" + registroDetalleID 
+          + "," + tipoRegistro + ", " + registroID + ")");
+
+      RegistroDetalle registroDetalle = registroDetalleEjb.findById(registroDetalleID);
+     
+      AnexoForm anexoForm = new AnexoForm();
+      anexoForm.setRegistroID(registroID);
+      anexoForm.setTipoRegistro(tipoRegistro);
+      anexoForm.getAnexo().setRegistroDetalle(registroDetalle);
+      model.addAttribute("anexoForm" ,anexoForm);
+      // Anexos
+      
+      loadCommonAttributes(request, model, registroID);
+
+      return "registro/formularioAnexo";
+    }
+
+
+
+    protected void loadCommonAttributes(HttpServletRequest request, Model model, Long registroID) throws Exception {
+      model.addAttribute("tiposDocumental", tipoDocumentalEjb.getByEntidad(getEntidadActiva(request).getId()));
+      model.addAttribute("tiposDocumentoAnexo", RegwebConstantes.TIPOS_DOCUMENTO);
+      model.addAttribute("tiposFirma", RegwebConstantes.TIPOS_FIRMA);
+      model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
+      
+      
+      // Scan XYZ
+      Entidad entidad = getEntidadActiva(request);
+      Integer tipusScan = 0;
+      if (entidad.getTipoScan() != null && !"".equals(entidad.getTipoScan())) {
+        tipusScan = Integer.parseInt(entidad.getTipoScan());
+      }
+      //      Integer tipusScan = 2;
+      boolean teScan = ScannerManager.teScan(tipusScan);
+      model.addAttribute("teScan", teScan);
+      if (teScan) {
+        if (request.getParameter("lang") == null) {
+          request.setAttribute("lang", I18NUtils.getLocale().getLanguage());
+        }
+        model.addAttribute("headerScan", ScannerManager.getHeaderJSP(request, tipusScan, String.valueOf(registroID)));
+        model.addAttribute("coreScan", ScannerManager.getCoreJSP(request, tipusScan, String.valueOf(registroID)));
+        
+        initScan(request, registroID);
+        
+      }
+      
+    }
+    
+    
+    
+    @RequestMapping(value = "/nou", method = RequestMethod.POST)
+    public String crearAnexoPost(@ModelAttribute AnexoForm anexoForm,
+        BindingResult result, HttpServletRequest request,
+        HttpServletResponse response, Model model) throws Exception {
+      
+      log.info(" Passa per crearAnexoPost");
+
+      anexoValidator.validate(anexoForm.getAnexo(),result);
+      
+      if (result.hasErrors()){//si hay errores
+        
+        processErrors(result, request, anexoForm.getRegistroID());
+        
+        loadCommonAttributes(request, model, anexoForm.getRegistroID());
+
+        log.info("XYZ  crearAnexoPost: return X");
+        return "registro/formularioAnexo";
+        
+      } else { // Si no hay errores
+
+        
+        try {
+           manageDocumentCustodySignatureCustody(request, anexoForm);
+
+           anexoEjb.crearAnexo(anexoForm, getUsuarioEntidadActivo(request),
+               anexoForm.getRegistroID(), anexoForm.getTipoRegistro());
+           
+
+           
+           model.addAttribute("closeAndReload", "true");
+
+
+           return "registro/formularioAnexo";
+           
+        } catch(I18NException i18n) {
+          Mensaje.saveMessageError(request, I18NUtils.tradueix(i18n.getTraduccio()));   
+          log.info("XYZ  crearAnexoPost: return B");
+          return "registro/formularioAnexo";
+        } catch(Exception e) {
+          log.error(e.getMessage(), e);
+          Mensaje.saveMessageError(request, e.getMessage());
+          log.info("XYZ  crearAnexoPost: return C");
+          return "registro/formularioAnexo";
+        }
+      
+      }
+
+     
+      
+    }
+
+
+
+    public void processErrors(BindingResult result, HttpServletRequest request, Long registroID) {
+/*
+      log.error(" HI HA ERRORS ");
+
+      result.getFieldErrors();
+      
+      List<FieldError> errors = result.getFieldErrors();
+      StringBuffer str = new StringBuffer();
+      for (FieldError error : errors ) {
+        
+        log.error(" XYZ  =========================================== ");
+        log.error(" XYZ  getCode: " + error.getCode());
+        log.error(" XYZ  getDefaultMessage: " + error.getDefaultMessage());
+        log.error(" XYZ  getField: " + error.getField());
+        log.error(" XYZ  getObjectName: " + error.getObjectName());
+        log.error(" XYZ  getArguments: " + Arrays.toString(error.getArguments()));
+        log.error(" XYZ  getCodes: " + Arrays.toString(error.getCodes()));
+        log.error(" XYZ  getRejectedValue: " + error.getRejectedValue());
+        
+        if (error.getDefaultMessage() == null) {
+          String[] stringArray = null;
+          Object[] objectArray = error.getArguments();
+          if (objectArray != null) {
+             stringArray = Arrays.copyOf(objectArray, objectArray.length, String[].class);
+          }
+          str.append(I18NUtils.tradueix(error.getField()) + ": " +
+              I18NUtils.tradueix( error.getCode(), stringArray) + "<br/>");
+        } else {
+          str.append(error.getDefaultMessage() + "<br/>");
+        }
+
+      }
+      
+      Mensaje.saveMessageError(request, str.toString());
+*/
+    }
+    
+
+
+    // edit
+    
+    @RequestMapping(value = "/editar/{registroDetalleID}/{tipoRegistro}/{registroID}/{anexoID}",
+        method = RequestMethod.GET)
+    public String editarAnexoGet(HttpServletRequest request,
+        HttpServletResponse response,  @PathVariable Long registroDetalleID,
+        @PathVariable String tipoRegistro, @PathVariable Long registroID,
+        @PathVariable Long anexoID,  Model model) throws I18NException, Exception {
+      
+      log.info("XYZ Passa per AnexoController::editarAnexoGet("
+          + "registroDetalleID = " +  registroDetalleID 
+          + " | tipoRegistro = " + tipoRegistro
+          + " | registroID = " + registroID
+          + " | anexoID = " + anexoID + ")");
+
+      AnexoFull anexoFull2 = anexoEjb.getAnexoFull(anexoID);
+      
+      
+     
+      AnexoForm anexoForm = new AnexoForm(anexoFull2);
+      anexoForm.setRegistroID(registroID);
+      anexoForm.setTipoRegistro(tipoRegistro);
+      //anexoForm.setReturnURL(getRedirectURL(request, tipoRegistro, registroID));
+      
+      
+      
+      log.info("XYZ Carregant ANEXO: ");
+      log.info("XYZ     - anexoFull.getDocumentoCustody(): " + anexoForm.getDocumentoCustody());
+      if (anexoForm.getDocumentoCustody() != null) {
+        log.info("XYZ     - anexoFull.getDocumentoCustody().getName(): " + anexoForm.getDocumentoCustody().getName());
+      }
+      log.info("XYZ     - anexoFull.getSignatureCustody(): " + anexoForm.getSignatureCustody());
+      if (anexoForm.getSignatureCustody() != null) {
+        log.info("XYZ     - anexoFull.getSignatureCustody().getName(): " + anexoForm.getSignatureCustody().getName());
+      }
+      
+      
+      
+      initScan(request, registroID);
+
+      model.addAttribute("anexoForm", anexoForm);
+
+      loadCommonAttributes(request, model, registroID);
+
+      return "registro/formularioAnexo";
+    
+    }
+    
+    
+    
+    @RequestMapping(value = "/editar", method = RequestMethod.POST)
+    public String editarAnexoPost(@ModelAttribute AnexoForm anexoForm,
+        BindingResult result, HttpServletRequest request,
+        HttpServletResponse response, Model model) throws Exception {
+
+      anexoValidator.validate(anexoForm.getAnexo(),result);
+      
+      if (result.hasErrors()) { //si hay errores
+
+        processErrors(result, request, anexoForm.getRegistroID());
+        
+        loadCommonAttributes(request, model, anexoForm.getRegistroID());
+        
+        return "registro/formularioAnexo";
+        
+      } else { // Si no hay errores
+
+        try {
+        
+           manageDocumentCustodySignatureCustody(request, anexoForm);
+
+           anexoEjb.actualizarAnexo(anexoForm, getUsuarioEntidadActivo(request),
+               anexoForm.getRegistroID(), anexoForm.getTipoRegistro());
+           
+           model.addAttribute("closeAndReload", "true");
+           
+           
+           return "registro/formularioAnexo";
+           
+           
+        } catch(I18NException i18n) {
+          Mensaje.saveMessageError(request, I18NUtils.tradueix(i18n.getTraduccio())); 
+          return "registro/formularioAnexo";
+        } catch(Exception e) {
+          log.error(e.getMessage(), e);
+          Mensaje.saveMessageError(request, e.getMessage());
+          return "registro/formularioAnexo";
+        }
+      
+      }
+
+
+      
+    }
+    
+    
+    /**
+     * Elimina un Anexo de la variable de sesion que almacena los interesados
+     * @param idAnexo
+     * @param idRegistroDetalle
+     * @return
+     */
+      @RequestMapping(value = "/delete/{registroDetalleID}/{tipoRegistro}/{registroID}/{anexoID}", method = RequestMethod.GET)
+      public String eliminarAnexo( @PathVariable Long registroDetalleID,
+          @PathVariable String tipoRegistro, @PathVariable Long registroID,
+          @PathVariable Long anexoID, HttpServletRequest request) {
+
+          try {
+              anexoEjb.eliminarAnexoRegistroDetalle(anexoID, registroDetalleID);
+
+          } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            Mensaje.saveMessageError(request, e.getMessage());
+          }
+
+          return  getRedirectURL2(request, tipoRegistro, registroID);
+      }
+      
+
+    
+    protected void manageDocumentCustodySignatureCustody( 
+        HttpServletRequest request,  AnexoForm anexoForm) throws Exception {
+      
+      final Long registroID = anexoForm.getRegistroID();
+      
+      DocumentCustody dc;
+      
+      SignatureCustody sc;
+      
+      
+    //Cogemos el archivo
+      HttpSession session = request.getSession(true);
+      Object scan = session.getAttribute("scan_" + registroID);
+      
+      if (scan != null) {
+        File scanFile = (File)scan;
+        
+        //InputStream inputStream = new FileInputStream(scanFile);
+       
+        
+        //DiskFileItem fileItem = new DiskFileItem("file", "application/pdf", false, scanFile.getName(), (int) scanFile.length() , scanFile.getParentFile());
+         
+        
+        
+        
+        dc = new DocumentCustody();
+        dc.setData(FileUtils.readFileToByteArray(scanFile));
+        int modoFirma= anexoForm.getAnexo().getModoFirma();
+        if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) {
+          dc.setDocumentType(DocumentCustody.DOCUMENT_ONLY);
+        } else {
+          // TODO es podria especificar el tipus PDF, DOCX, ODT, ... a partir del tipus MIME
+          dc.setDocumentType(DocumentCustody.OTHER_DOCUMENT_WITH_SIGNATURE);
+        }
+        
+        
+        String mime = (String)session.getAttribute("scan_" + registroID + ".mime");
+        if (es.caib.regweb.utils.StringUtils.isEmpty(mime)) {
+          // TODO Quin tipus li pos aqui // JPG, PNG, TIFF, PDF, ...
+          // Mirar Mime manager de PortaFIB o de GenApp!!!!
+          mime = "application/pdf";
+          
+        }
+        dc.setMime(mime);
+        
+        String name = (String)session.getAttribute("scan_" + registroID + ".name");
+        if (name == null) {
+          name = "FitxerEscanejat.bin";
+        }
+        dc.setName(name);
+
+        if (!scanFile.delete()) {
+          scanFile.deleteOnExit();
+        };
+        
+        sc = null;
+        
+        initScan(request, registroID);
+        
+      } else {
+
+        // Formulari Fitxer de Sistema
+        dc = getDocumentCustody(anexoForm);
+        sc = getSignatureCustody(anexoForm, dc);
+        
+      }
+      
+      
+      anexoForm.setDocumentoCustody(dc);
+      anexoForm.setSignatureCustody(sc);
+      
+      
+    }
+    
+    
+    
+
+    
+    protected Long getRegistroDetalleID(AnexoForm anexoForm) {
+      try {
+        return anexoForm.getAnexo().getRegistroDetalle().getId();
+      } catch (Throwable e) {
+        return null;
+      }
+    }
+
+    
+    /*
+    protected String getRedirectURLStr(HttpServletRequest request, String returnURL,  String tipoRegistro,
+        Long registroID) {
+      if (StringUtils.isEmpty(returnURL)) {
+        String url = getRedirectURL(request, tipoRegistro, registroID); 
+        return "redirect:" + url;
+      } else {
+        return returnURL;
+      }
+      
+    }
+    */
+    
+
+    /*
+    protected String getRedirectURL(HttpServletRequest request, String returnURL,  String tipoRegistro,
+        Long registroID) {
+      //ModelAndView mav;
+      if (StringUtils.isEmpty(returnURL)) {
+        String url = getRedirectURL2(request, tipoRegistro, registroID); 
+        
+        return url;
+       // mav =  new ModelAndView(new RedirectView(url, true));
+      } else {
+        return returnURL; 
+        //mav = new ModelAndView(new RedirectView(returnURL, false));
+      }
+      //return mav;
+    }
+*/
+    
+    protected String getRedirectURL2(HttpServletRequest request, String tipoRegistro,
+        Long registroID) {
+      if (StringUtils.isEmpty(tipoRegistro)) {
+        
+        return request.getContextPath();
+        
+      } else {
+        String nombreCompleto =  getNombreCompletoTipoRegistro(tipoRegistro);
+        if (registroID == null || registroID == 0 ) {
+          String url = "redirect:/" + nombreCompleto + "/list";
+          log.info("DELETE XYZ URL 1 = " + url);
+          return url;
+        } else {
+          String url = "redirect:/" + nombreCompleto + "/" + registroID + "/detalle";
+          log.info("DELETE XYZ URL 2 = " + url);
+          return url;
+        }
+      }
+    }
+
+/*
+    protected String getRedirectURL(HttpServletRequest request, String tipoRegistro,
+        Long registroID) {
+      if (StringUtils.isEmpty(tipoRegistro)) {
+        
+        return request.getContextPath();
+        
+      } else {
+        String nombreCompleto =  getNombreCompletoTipoRegistro(tipoRegistro);
+        if (registroID == null || registroID == 0 ) {
+          String url = request.getContextPath()  +"/"+  nombreCompleto + "/list";
+          log.info("XYZ URL 1 = " + url);
+          return url;
+        } else {
+          String url = request.getContextPath() +"/"+ nombreCompleto + "/" + registroID + "/detalle";
+          log.info("XYZ URL 2 = " + url);
+          return url;
+        }
+      }
+    }
+*/
+
+
+    protected String getNombreCompletoTipoRegistro(String tipoRegistro) {
+      String nombreCompletoTipoRegistro = "registro" + Character.toUpperCase(tipoRegistro.charAt(0)) 
+          + tipoRegistro.substring(1);
+      return nombreCompletoTipoRegistro;
+    }
+
+
+
+    protected SignatureCustody getSignatureCustody(AnexoForm anexoForm, DocumentCustody dc) {
+      System.out.println("XYZ  ------------------------------");
+      System.out.println("XYZ anexoForm.getFirmaFile() = " + anexoForm.getFirmaFile());
+      System.out.println("XYZ anexoForm.getFirmaFile().isEmpty() = " + anexoForm.getFirmaFile().isEmpty());
+      System.out.println("XYZ anexoForm.isFirmaFileDelete() = " + anexoForm.isSignatureFileDelete());
+      SignatureCustody sc = null;
+      if (!anexoForm.getFirmaFile().isEmpty()) {
+        CommonsMultipartFile multipart = anexoForm.getFirmaFile();
+        sc = new SignatureCustody();
+        sc.setAttachedDocument(dc == null? true : false);
+        sc.setData(multipart.getBytes());
+        sc.setMime(multipart.getContentType());
+        sc.setName(multipart.getOriginalFilename());
+        sc.setSignatureType(SignatureCustody.OTHER_SIGNATURE);
+      }
+      return sc;
+    }
+
+
+
+    protected DocumentCustody getDocumentCustody(AnexoForm anexoForm) {
+      System.out.println("XYZ  ------------------------------");
+
+      System.out.println("XYZ anexoForm.getDocumentoFile() = " + anexoForm.getDocumentoFile());
+      System.out.println("XYZ anexoForm.getDocumentoFile().isEmpty() = " + anexoForm.getDocumentoFile().isEmpty());
+      System.out.println("XYZ anexoForm.isDocumentoFileDelete() = " + anexoForm.isDocumentoFileDelete());
+      DocumentCustody dc = null;
+      if (!anexoForm.getDocumentoFile().isEmpty()) {
+        dc = new DocumentCustody();
+        CommonsMultipartFile multipart = anexoForm.getDocumentoFile();
+        dc.setData(multipart.getBytes());
+        int modoFirma= anexoForm.getAnexo().getModoFirma();
+        if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) {
+          dc.setDocumentType(DocumentCustody.DOCUMENT_ONLY);
+        } else {
+          // TODO es podria especificar el tipus PDF, DOCX, ODT, ... a partir del tipus MIME
+          dc.setDocumentType(DocumentCustody.OTHER_DOCUMENT_WITH_SIGNATURE);
+        }
+        dc.setMime(multipart.getContentType());
+        dc.setName(multipart.getOriginalFilename());
+      }
+      return dc;
+    }
+
+
+    /**
+    * Función que nos permite mostrar el contenido de un anexo
+    * @param anexoId identificador del anexo
+    */
+    @RequestMapping(value = "/descargarDocumento/{anexoId}", method = RequestMethod.GET)
+    public void  anexo(@PathVariable("anexoId") Long anexoId, HttpServletRequest request,
+        HttpServletResponse response)  throws Exception {
+         Anexo anexo = null;
+         anexo = anexoEjb.findById(anexoId);
+         fullDownload(anexo.getCustodiaID(), anexo.getNombreFicheroAnexado(), anexo.getTipoMIME(), false,response);
+    }
+
+     /**
+    * Función que nos permite mostrar el contenido de un firma de un anexo
+    * @param anexoId identificador del anexo
+    */
+    @RequestMapping(value = "/descargarFirma/{anexoId}", method = RequestMethod.GET)
+    public void  firma(@PathVariable("anexoId") Long anexoId, HttpServletRequest request, 
+        HttpServletResponse response)  throws Exception {
+         Anexo anexo = null;
+         anexo = anexoEjb.findById(anexoId);
+         
+         // NOM i MIME no són correctes !!!!!!!
+         
+         fullDownload(anexo.getCustodiaID(), anexo.getNombreFicheroAnexado(), anexo.getTipoMIME(), true,response);
+    }
+
+    /**
+    *  Función que obtiene los datos de un archivo para mostrarlo
+    * @param archivoId  identificador del archivo
+    * @param filename   nombre del archivo
+    * @param contentType
+    * @param response
+    */
+    public void fullDownload(String custodiaID, String filename, String contentType, boolean firma,
+        HttpServletResponse response)  {
+
+         //FileInputStream input = null;
+      
+      
+         OutputStream output = null;
+         MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
+         byte[] data;
+         try {
+             if (custodiaID != null) {
+                 if(!firma){
+                   DocumentCustody dc = AnnexFileSystemManager.getArchivo(custodiaID);
+                   filename = dc.getName();
+                   data = dc.getData();
+                 }else{
+                   SignatureCustody sc = AnnexFileSystemManager.getFirma(custodiaID);
+                   filename = sc.getName();
+                   data = sc.getData();
+                 }
+
+
+                 if (contentType == null) {
+                   try {
+                    File tmp = File.createTempFile("regweb_annex_", filename);
+                    FileOutputStream fos = new FileOutputStream(tmp);
+                    fos.write(data);
+                    fos.flush();
+                    fos.close();
+                    contentType = mimeTypesMap.getContentType(tmp);
+                    if (!tmp.delete()) {
+                      tmp.deleteOnExit();
+                    }
+                   } catch(Throwable th) {
+                     log.error("Error intentant obtenir el tipus MIME: " + th.getMessage() , th);
+                     contentType = "application/octet-stream";
+                   }
+                 }
+                 response.setContentType(contentType);
+                 response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+                 response.setContentLength((int) data.length);
+
+                 output = response.getOutputStream();
+                 output.write(data);
+
+                 output.flush();
+             }
+
+         } catch (NumberFormatException e) {
+           // TODO XYZ QUE FER !!!!!
+             log.info(e);
+         }  catch (Exception e) {
+             e.printStackTrace();
+         }
+
+    }
+
+    
+    
+    
+    @InitBinder     
+    public void initBinder(WebDataBinder binder){
+         binder.registerCustomEditor(       Date.class,     
+                             new CustomDateEditor(new SimpleDateFormat("dd/MM/yyyy"), true, 10));   
+    }
+    
+    
+    
+    
+    // ---------------------------------------------------------------------------------------
+    
+    
+    
 
    /**
    * Método que guarda el archivo fisico asociado a un anexo a posteriori, en este metodo
@@ -94,8 +691,10 @@ public class AnexoController extends BaseController {
    * @param accion  indica si es nuevo o edición
    * @param borrar  indica si se ha de borrar el archivo asociado
    */
+    /*
    @RequestMapping(value = "/guardarArchivo/{idAnexo}/{accion}/{borrar}", method = RequestMethod.POST)
-   public void archivo(@PathVariable Long idAnexo,@PathVariable String accion, @PathVariable boolean borrar,  MultipartHttpServletRequest request, HttpServletResponse response)  {
+   public void archivo(@PathVariable Long idAnexo,@PathVariable String accion, @PathVariable boolean borrar,
+       MultipartHttpServletRequest request, HttpServletResponse response)  {
 
 	  Object scan = null;
       MultipartFile doc = null;
@@ -163,14 +762,14 @@ public class AnexoController extends BaseController {
                   //Si editamos, eliminamos el anexo anterior
                 
                
-                  /*
-                  if(!accion.equals("nuevo") ){
-                    // Eliminar el archivo fisico del sistema de archivos
-                    AnnexFileSystemManager.eliminarArchivo(anexo.getCustodiaID());
-                  }
-                  */
+                  
+//                  if(!accion.equals("nuevo") ){
+//                    // Eliminar el archivo fisico del sistema de archivos
+//                    AnnexFileSystemManager.eliminarArchivo(anexo.getCustodiaID());
+//                  }
+                  
                   //Inicializamos el archivo form manager con el nuevo archivo doc
-                  afm = new AnexoFormManager(anexoEjb, doc, null /*, RegwebConstantes.ARCHIVOS_LOCATION_PROPERTY*/);
+                  afm = new AnexoFormManager(anexoEjb, doc, null); //, RegwebConstantes.ARCHIVOS_LOCATION_PROPERTY);
                   // Método que actualiza el anexo asociandole el nuevo archivo.
                   afm.prePersist(anexo);
 
@@ -183,30 +782,33 @@ public class AnexoController extends BaseController {
                      anexoEjb.actualizarAnexo(anexo);
                   }
               }
-          }else{// Viene firma y gestion del doc
+          } else {// Viene firma y gestion del doc
               //Cogemos la firma
               firma = request.getFile("firma");
               // Comprobar que doc y firma no sean null
               if(firma != null && doc != null){
 
-                  /*if(!accion.equals("nuevo") ){ // Si editamos
-                    // Eliminar los archivos fisicos del sistema de archivos
-                    AnnexFileSystemManager.eliminarArchivo(anexo.getCustodiaID());
-                  } */
+                  
+//                  if(!accion.equals("nuevo") ){ // Si editamos
+//                   
+//                    // Eliminar los archivos fisicos del sistema de archivos
+//                    AnnexFileSystemManager.eliminarArchivo(anexo.getCustodiaID());
+//                  } 
+                  
                   // Guardar el anexo con los dos archivos asociados
-                  afm = new AnexoFormManager(anexoEjb, doc, firma /*, RegwebConstantes.ARCHIVOS_LOCATION_PROPERTY*/);
+                  afm = new AnexoFormManager(anexoEjb, doc, firma); //, RegwebConstantes.ARCHIVOS_LOCATION_PROPERTY);
                   afm.prePersist(anexo);
               }else{
                    if(doc != null ){ //firma es null, gestionamos solo el doc
 
-                     /*
-                      if(!accion.equals("nuevo") ){ //Editamos
-                        // Eliminar el archivo fisico del sistema de archivos
-                        AnnexFileSystemManager.eliminarArchivo(anexo.getCustodiaID());
-                      }
-                      */
+                     
+//                      if(!accion.equals("nuevo") ){ //Editamos
+//                        // Eliminar el archivo fisico del sistema de archivos
+//                        AnnexFileSystemManager.eliminarArchivo(anexo.getCustodiaID());
+//                      }
+                      
                       //Inicializamos el archivo form manager con el nuevo archivo doc
-                      afm = new AnexoFormManager(anexoEjb, doc, null /*, RegwebConstantes.ARCHIVOS_LOCATION_PROPERTY*/);
+                      afm = new AnexoFormManager(anexoEjb, doc, null); //, RegwebConstantes.ARCHIVOS_LOCATION_PROPERTY);
                       // Método que actualiza el anexo asociandole el nuevo archivo.
                       afm.prePersist(anexo);
 
@@ -232,13 +834,14 @@ public class AnexoController extends BaseController {
          e.printStackTrace();
       }
    }
-
+*/
 
 
     /**
      * Obtiene el {@link es.caib.regweb.model.Anexo} según su identificador.
-     *
+     * XYZ
      */
+    /*
     @RequestMapping(value = "/obtenerAnexo", method = RequestMethod.GET)
     public @ResponseBody
     Anexo obtenerAnexo(@RequestParam Long id, HttpServletRequest request) throws Exception {
@@ -247,7 +850,9 @@ public class AnexoController extends BaseController {
 
         return anexo;
     }
-
+*/
+    
+    
     /**
      * Obtiene el {@link es.caib.regweb.model.Anexo} según su identificador.
      *
@@ -261,8 +866,9 @@ public class AnexoController extends BaseController {
     		HttpServletResponse response) throws Exception {
 
     	Integer tipusScan = 2;
+    	String registroID = null;
     	String resource = (path1 != null ? path1 + "/" : "") + (path2 != null ? path2 + "/" : "") + resourcename;
-        ScanWebResource recurs = ScannerManager.getResource(request, tipusScan, resource);
+        ScanWebResource recurs = ScannerManager.getResource(request, tipusScan, resource, registroID);
 
         response.setHeader("Pragma", "");
 		response.setHeader("Expires", "");
@@ -313,10 +919,25 @@ public class AnexoController extends BaseController {
            //Obtain the session object, create a new session if doesn't exist
            HttpSession session = request.getSession(true);
            session.setAttribute("scan_" + idRegistro, temp);
+           session.setAttribute("scan_" + idRegistro +".name", scan.getOriginalFilename());
+           session.setAttribute("scan_" + idRegistro +".mime", scan.getContentType());
+
        }catch (Exception e) {
+         // TODO PROCESSSAR ERROR !!!!
           e.printStackTrace();
        }
     }
+    
+    
+    protected void initScan(HttpServletRequest request, Long registroID) {
+      HttpSession session = request.getSession(true);
+
+      session.removeAttribute("scan_" + registroID);
+      session.removeAttribute("scan_" + registroID +".name");
+      session.removeAttribute("scan_" + registroID +".mime");
+    }
+    
+    
     
    /**
     * Crea o modifica un Anexo. Los datos vienen desde un formulario plano y en Json.
@@ -325,6 +946,7 @@ public class AnexoController extends BaseController {
     * @param result
     * @return
     */
+    /*
    @RequestMapping(value="/{accion}/{idRegistro}/{idRegistroDetalle}/{tipoRegistro}", method= RequestMethod.POST)
    @ResponseBody
    public JsonResponse nuevoAnexo(@PathVariable String accion, @PathVariable Long idRegistro,
@@ -361,6 +983,7 @@ public class AnexoController extends BaseController {
            try {
                Entidad entidadActiva = getEntidadActiva(request);
                UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+
 
 
                //Miramos si es el primer anexo
@@ -465,115 +1088,11 @@ public class AnexoController extends BaseController {
 
        return jsonResponse;
    }
-
-
-   /**
-   * Elimina un Anexo de la variable de sesion que almacena los interesados
-   * @param idAnexo
-   * @param idRegistroDetalle
-   * @return
    */
-    @RequestMapping(value = "/delete", method = RequestMethod.GET)
-    @ResponseBody
-    public Boolean eliminarAnexo(@RequestParam String idAnexo,@RequestParam String idRegistroDetalle, HttpServletRequest request) {
-
-        try {
-            anexoEjb.eliminarAnexoRegistroDetalle(new Long(idAnexo), new Long(idRegistroDetalle));
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return true;
-    }
 
 
-     /**
-     * Función que nos permite mostrar el contenido de un anexo
-     * @param anexoId identificador del anexo
-     */
-     @RequestMapping(value = "/{anexoId}", method = RequestMethod.GET)
-     public void  anexo(@PathVariable("anexoId") Long anexoId, HttpServletRequest request,
-         HttpServletResponse response)  throws Exception {
-          Anexo anexo = null;
-          anexo = anexoEjb.findById(anexoId);
-          fullDownload(anexo.getCustodiaID(), anexo.getNombreFicheroAnexado(), anexo.getTipoMIME(), false,response);
-     }
-
-      /**
-     * Función que nos permite mostrar el contenido de un firma de un anexo
-     * @param anexoId identificador del anexo
-     */
-     @RequestMapping(value = "/firma/{anexoId}", method = RequestMethod.GET)
-     public void  firma(@PathVariable("anexoId") Long anexoId, HttpServletRequest request, 
-         HttpServletResponse response)  throws Exception {
-          Anexo anexo = null;
-          anexo = anexoEjb.findById(anexoId);
-          fullDownload(anexo.getCustodiaID(), anexo.getNombreFicheroAnexado(), anexo.getTipoMIME(), true,response);
-     }
-
-     /**
-     *  Función que obtiene los datos de un archivo para mostrarlo
-     * @param archivoId  identificador del archivo
-     * @param filename   nombre del archivo
-     * @param contentType
-     * @param response
-     */
-     public void fullDownload(String custodiaID, String filename, String contentType, boolean firma,
-         HttpServletResponse response)  {
-
-          //FileInputStream input = null;
-       
-       
-          OutputStream output = null;
-          MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
-          byte[] data;
-          try {
-              if (custodiaID != null) {
-                  if(!firma){
-                    DocumentCustody dc = AnnexFileSystemManager.getArchivo(custodiaID);
-                    filename = dc.getName();
-                    data = dc.getData();
-                  }else{
-                    SignatureCustody sc = AnnexFileSystemManager.getFirma(custodiaID);
-                    filename = sc.getName();
-                    data = sc.getData();
-                  }
 
 
-                  if (contentType == null) {
-                    try {
-                     File tmp = File.createTempFile("regweb_annex_", filename);
-                     FileOutputStream fos = new FileOutputStream(tmp);
-                     fos.write(data);
-                     fos.flush();
-                     fos.close();
-                     contentType = mimeTypesMap.getContentType(tmp);
-                     if (!tmp.delete()) {
-                       tmp.deleteOnExit();
-                     }
-                    } catch(Throwable th) {
-                      log.error("Error intentant obtenir el tipus MIME: " + th.getMessage() , th);
-                      contentType = "application/octet-stream";
-                    }
-                  }
-                  response.setContentType(contentType);
-                  response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
-                  response.setContentLength((int) data.length);
-
-                  output = response.getOutputStream();
-                  output.write(data);
-
-                  output.flush();
-              }
-
-          } catch (NumberFormatException e) {
-              log.info(e);
-          }  catch (Exception e) {
-              e.printStackTrace();
-          }
-
-     }
 
 
 }

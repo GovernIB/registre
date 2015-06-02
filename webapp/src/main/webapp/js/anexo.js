@@ -1,4 +1,10 @@
 
+// ---------------------------------------------------------
+// -------------------   IMPORTANT !!!!!!  -----------------
+//   Aquest .js no s'utilitza, es deixa aqui per si es vol 
+//   copiar funcionalitat ajax a un altra lloc.
+// ---------------------------------------------------------
+
 /**
  *
  * Agrupa todas las funcionalidades relacionadas con los anexos de un registro.

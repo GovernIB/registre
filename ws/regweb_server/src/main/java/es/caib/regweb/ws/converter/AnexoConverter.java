@@ -1,11 +1,13 @@
 package es.caib.regweb.ws.converter;
 
 import es.caib.regweb.model.Anexo;
+import es.caib.regweb.persistence.ejb.AnexoFull;
 import es.caib.regweb.persistence.ejb.TipoDocumentalLocal;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.utils.StringUtils;
 import es.caib.regweb.ws.model.AnexoWs;
 import es.caib.regweb.ws.v3.impl.CommonConverter;
+
 import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import java.util.GregorianCalendar;
@@ -24,14 +26,14 @@ public class AnexoConverter extends CommonConverter {
    * @throws Exception
    * @throws I18NException
    */
-   public static Anexo getAnexo(AnexoWs anexoWs, TipoDocumentalLocal tipoDocumentalEjb       
+   public static AnexoFull getAnexo(AnexoWs anexoWs, TipoDocumentalLocal tipoDocumentalEjb       
        ) throws Exception, I18NException {
 
         if (anexoWs == null){
             return  null;
         }
 
-        Anexo anexo = procesarAnexo(anexoWs, tipoDocumentalEjb);
+        AnexoFull anexo = procesarAnexo(anexoWs, tipoDocumentalEjb);
 
 
         return  anexo;
@@ -62,11 +64,11 @@ public class AnexoConverter extends CommonConverter {
    * @return
    * @throws Exception
    */
-  private static Anexo procesarAnexo(AnexoWs anexoWs,TipoDocumentalLocal tipoDocumentalEjb) throws Exception{
+  private static AnexoFull procesarAnexo(AnexoWs anexoWs,TipoDocumentalLocal tipoDocumentalEjb) throws Exception{
 
        Anexo anexo = new Anexo();
 
-       if(!StringUtils.isEmpty(anexoWs.getTitulo())){anexo.setTitulo(anexoWs.getTitulo());}
+       if(!StringUtils.isEmpty(anexoWs.getTitulo())){ anexo.setTitulo(anexoWs.getTitulo());}
 
        if(anexoWs.getTipoDocumental()!= null){anexo.setTipoDocumental(getTipoDocumental(anexoWs.getTipoDocumental(), tipoDocumentalEjb));}
        if(anexoWs.getValidezDocumento()!= null) {
@@ -96,7 +98,7 @@ public class AnexoConverter extends CommonConverter {
 
 
 
-        return anexo;
+        return new AnexoFull(anexo);
 
   }
 

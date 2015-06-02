@@ -194,6 +194,13 @@
 		<!-- ============================================ -->
 		<!-- ============= PLUGINS DE SCANNER =========== -->
 		<!-- ============================================ -->
+		
+		<dependency>
+		  <groupId>org.fundaciobit.plugins</groupId>
+		  <artifactId>plugin-scanweb-api</artifactId>
+		  <version>1.0.0</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.fundaciobit.plugins</groupId>
 			<artifactId>plugin-scanweb-dynamicwebtwain</artifactId>

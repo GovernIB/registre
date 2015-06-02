@@ -31,7 +31,7 @@ import es.caib.regweb.model.utils.ObjetoBasico;
 import es.caib.regweb.persistence.ejb.UsuarioEntidadLocal;
 import es.caib.regweb.persistence.ejb.UsuarioLocal;
 import es.caib.regweb.utils.RegwebConstantes;
-import es.caib.regweb.utils.login.RegwebLoginPluginManager;
+import es.caib.regweb.webapp.login.RegwebLoginPluginManager;
 
 
 /**

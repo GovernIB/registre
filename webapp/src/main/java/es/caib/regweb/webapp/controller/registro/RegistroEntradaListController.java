@@ -8,13 +8,10 @@ import es.caib.regweb.persistence.utils.RegistroUtils;
 import es.caib.regweb.persistence.utils.sir.FicheroIntercambioSICRES3;
 import es.caib.regweb.persistence.utils.sir.SirUtils;
 import es.caib.regweb.utils.RegwebConstantes;
-import es.caib.regweb.utils.ScannerManager;
-import es.caib.regweb.webapp.controller.BaseController;
 import es.caib.regweb.webapp.form.RegistroEntradaBusqueda;
 import es.caib.regweb.webapp.utils.Mensaje;
 import es.caib.regweb.webapp.validator.RegistroEntradaBusquedaValidator;
 
-import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -37,12 +34,13 @@ import java.util.Set;
  * Created by Fundació BIT.
  * Controller para los listados de los Registros de Entrada
  * @author earrivi
+ * @author anadal
  * Date: 31/03/14
  */
 @Controller
 @RequestMapping(value = "/registroEntrada")
 @SessionAttributes(types = {RegistroEntrada.class})
-public class RegistroEntradaListController extends BaseController {
+public class RegistroEntradaListController extends AbstractRegistroCommonListController {
 
     @Autowired
     private RegistroEntradaBusquedaValidator registroEntradaBusquedaValidator;
@@ -68,9 +66,6 @@ public class RegistroEntradaListController extends BaseController {
     @EJB(mappedName = "regweb/RegistroEntradaEJB/local")
     public RegistroEntradaLocal registroEntradaEjb;
     
-    @EJB(mappedName = "regweb/TipoDocumentalEJB/local")
-    public TipoDocumentalLocal tipoDocumentalEjb;
-
     @EJB(mappedName = "regweb/PersonaEJB/local")
     public PersonaLocal personaEjb;
 
@@ -79,25 +74,11 @@ public class RegistroEntradaListController extends BaseController {
 
     @EJB(mappedName = "regweb/CatPaisEJB/local")
     public CatPaisLocal catPaisEjb;
-
-    @EJB(mappedName = "regweb/CatComunidadAutonomaEJB/local")
-    public CatComunidadAutonomaLocal catComunidadAutonomaEjb;
-
-    @EJB(mappedName = "regweb/CatNivelAdministracionEJB/local")
-    public CatNivelAdministracionLocal catNivelAdministracionEjb;
-
+    
     @EJB(mappedName = "regweb/SirEJB/local")
     public SirLocal sirEjb;
-    
-    @ModelAttribute("comunidadesAutonomas")
-    public List<CatComunidadAutonoma> comunidadesAutonomas() throws Exception {
-        return catComunidadAutonomaEjb.getAll();
-    }
 
-    @ModelAttribute("nivelesAdministracion")
-    public List<CatNivelAdministracion> nivelesAdministracion() throws Exception {
-        return catNivelAdministracionEjb.getAll();
-    }    
+    
 
     /**
     * Listado de todos los Registros de Entrada
@@ -243,10 +224,7 @@ public class RegistroEntradaListController extends BaseController {
         }
         // Anexos
         model.addAttribute("anexos", anexoEjb.getByRegistroEntrada(idRegistro));
-        model.addAttribute("tiposDocumental", tipoDocumentalEjb.getByEntidad(getEntidadActiva(request).getId()));
-        model.addAttribute("tiposDocumentoAnexo", RegwebConstantes.TIPOS_DOCUMENTO);
-        model.addAttribute("tiposFirma", RegwebConstantes.TIPOS_FIRMA);
-        model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
+        initAnexos(entidad, model, request, registro.getId());
 
         // Historicos
         model.addAttribute("historicos", historicoRegistroEntradaEjb.getByRegistroEntrada(idRegistro));
@@ -257,24 +235,15 @@ public class RegistroEntradaListController extends BaseController {
 
         // Alta en tabla LOPD
         lopdEjb.insertarRegistroEntrada(idRegistro, usuarioEntidad.getId());
-
-        // Scan
-        Integer tipusScan = 0;
-        if (entidad.getTipoScan() != null && !"".equals(entidad.getTipoScan())) {
-        	tipusScan = Integer.parseInt(entidad.getTipoScan());
-        }
-        //      Integer tipusScan = 2;
-        boolean teScan = ScannerManager.teScan(tipusScan);
-        model.addAttribute("teScan", teScan);
-        if (teScan) {
-        	if (request.getParameter("lang") == null) {
-        		request.setAttribute("lang", I18NUtils.getLocale().getLanguage());
-        	}
-        	model.addAttribute("headerScan", ScannerManager.getHeaderJSP(request, tipusScan));
-        	model.addAttribute("coreScan", ScannerManager.getCoreJSP(request, tipusScan));
-        }
+        
         return "registroEntrada/registroEntradaDetalle";
     }
+    
+    
+    
+
+    
+    
 
     /**
      * Anular un {@link es.caib.regweb.model.RegistroEntrada}
@@ -491,14 +460,7 @@ public class RegistroEntradaListController extends BaseController {
     }
 
 
-    @ModelAttribute("estados")
-    public Long[] estados(HttpServletRequest request) throws Exception {
-        if(getEntidadActiva(request).getSir()){
-            return RegwebConstantes.ESTADOS_REGISTRO_SIR;
-        }else {
-            return RegwebConstantes.ESTADOS_REGISTRO;
-        }
-    }
+
 
 
     @InitBinder("registroEntradaBusqueda")

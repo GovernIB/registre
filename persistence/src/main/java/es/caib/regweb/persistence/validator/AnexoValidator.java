@@ -73,7 +73,12 @@ public class AnexoValidator<T> extends AbstractRegWebValidator<T> {
        rejectValue(errors,"origenCiudadanoAdmin", "error.valor.requerido", "El camp és obligatori");
     }
 
-    rejectIfEmptyOrWhitespace(errors, __target__, "titulo", "error.valor.requerido", "El camp és obligatori");
+    if (anexo.getTitulo() == null || anexo.getTitulo().trim().length() == 0) {
+      rejectValue(errors,"titulo", "error.valor.requerido", "El camp és obligatori");
+    }
+    
+    // TODO NO VA  
+    //rejectIfEmptyOrWhitespace(errors, __target__, "titulo", "error.valor.requerido", "El camp és obligatori");
 
     if(anexo.getTitulo() != null && anexo.getTitulo().length()>200 ){
        rejectValue(errors, "titulo", "error.valor.maxlenght", "El camp és massa llarg, màxim 200 caracters");

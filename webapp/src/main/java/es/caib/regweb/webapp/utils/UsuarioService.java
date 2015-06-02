@@ -4,7 +4,8 @@ import es.caib.regweb.model.*;
 import es.caib.regweb.model.utils.ObjetoBasico;
 import es.caib.regweb.persistence.ejb.*;
 import es.caib.regweb.utils.RegwebConstantes;
-import es.caib.regweb.utils.login.RegwebLoginPluginManager;
+import es.caib.regweb.webapp.login.RegwebLoginPluginManager;
+
 import org.apache.log4j.Logger;
 import org.fundaciobit.plugins.userinformation.IUserInformationPlugin;
 import org.fundaciobit.plugins.userinformation.RolesInfo;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 import java.util.*;
 
 /**

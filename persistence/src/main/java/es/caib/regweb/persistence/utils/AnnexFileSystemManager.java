@@ -1,4 +1,4 @@
-package es.caib.regweb.utils;
+package es.caib.regweb.persistence.utils;
 
 import org.apache.log4j.Logger;
 import org.fundaciobit.plugins.documentcustody.DocumentCustody;
@@ -6,7 +6,11 @@ import org.fundaciobit.plugins.documentcustody.IDocumentCustodyPlugin;
 import org.fundaciobit.plugins.documentcustody.SignatureCustody;
 import org.fundaciobit.plugins.utils.PluginsManager;
 
+import es.caib.regweb.utils.RegwebConstantes;
+
 /**
+ * XYZ Moure a EJB i ficar-ho dins del bean AnexoBean !!! 
+ * 
  * Created by Fundació BIT.
  * User: anadal
  * Date: 31/07/13
@@ -20,7 +24,7 @@ public class AnnexFileSystemManager {
     
     protected static IDocumentCustodyPlugin plugin;
     
-    protected  static IDocumentCustodyPlugin getInstance() throws Exception {
+    public  static IDocumentCustodyPlugin getInstance() throws Exception {
       
       if (plugin == null) {
         // Valor de la Clau

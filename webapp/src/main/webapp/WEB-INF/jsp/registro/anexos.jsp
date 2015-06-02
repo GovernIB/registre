@@ -17,12 +17,29 @@
     <div class="panel panel-${color}">
 
       <div class="panel-heading">
-          <!-- ESTADO 8 -> Anulado
+          <%-- ESTADO 8 -> Anulado
                ESTADO 7 -> Tramitado
                ESTADO 6 -> Enviado
-          -->
+          --%>
           <c:if test="${registro.estado == 1 || registro.estado == 2 || registro.estado == 3}">
+
+             <%-- XYZ 
+             
+<a class=" btn btn-danger" onClick="nouAnnexFull()" data-toggle="modal" data-target="#myModal">LINK</a>
+ --%>
+             
+             <%-- <span onclick="showIFrame('http://www.fundaciobit.org', 'HOLA CARACOLA');">Open modal</span>  --%>
+             
+          
+              <%--  XYZ 
               <a href="#modalNuevoAnexo" class="btn btn-${color} btn-xs pull-right" role="button" data-toggle="modal" onclick="nuevoAnexo('${registro.id}', '${registro.registroDetalle.id}', '${param.registro}')"><i class="fa fa-plus"></i> <spring:message code="anexo.nuevo"/></a>
+               --%>
+               <%--
+               <a onclick="nouAnnex()" class="btn btn-${color} btn-xs pull-right" role="button" data-toggle="modal" ><i class="fa fa-plus"></i> <spring:message code="anexo.nuevo"/></a>
+                --%>
+                <a onClick="nouAnnexFull()" data-toggle="modal" data-target="#myModal" class="btn btn-${color} btn-xs pull-right" role="button"><i class="fa fa-plus"></i> <spring:message code="anexo.nuevo"/></a>
+                
+                
           </c:if>
           <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong><spring:message code="anexo.anexos"/></strong></h3>
       </div>
@@ -64,8 +81,8 @@
                                               ESTADO 6 -> Enviado
                                           -->
                                          <c:if test="${registro.estado == 1 || registro.estado == 2 || registro.estado ==3}">
-                                             <a class="btn btn-warning btn-sm" data-toggle="modal" role="button" href="#modalNuevoAnexo" onclick="cargarAnexo('${anexo.id}','${registro.id}','${registro.registroDetalle.id}','${param.registro}')" title="Editar"><span class="fa fa-pencil"></span></a>
-                                             <a class="btn btn-danger btn-default btn-sm"  onclick="eliminarAnexo('${anexo.id}','${registro.registroDetalle.id}')" href="javascript:void(0);" title="Eliminar"><span class="fa fa-eraser"></span></a>
+                                             <a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#myModal"  onclick="editarAnexoFull('${anexo.id}','${registro.id}','${registro.registroDetalle.id}','${param.registro}')" title="Editar"><span class="fa fa-pencil"></span></a>
+                                             <a class="btn btn-danger btn-default btn-sm"  onclick="eliminarAnexo('${anexo.id}','${registro.id}','${registro.registroDetalle.id}','${param.registro}')" href="#" title="Eliminar"><span class="fa fa-eraser"></span></a>
                                          </c:if>
                                          <c:if test="${registro.estado != 1 && registro.estado != 2 && registro.estado != 3}">
                                              <a class="btn btn-warning disabled btn-sm" href="javascript:void(0);" title="Editar"><span class="fa fa-pencil"></span></a>
@@ -86,8 +103,82 @@
 
 </div>
 
-<c:import url="../registro/formularioAnexo.jsp"/>
-<script type="text/javascript">
-    var urlEliminarAnexo = '<c:url value="/anexo/delete"/>';
+<div class="modal fade" id="myModal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-dialog" style="width:910px;">
+  <div class="modal-content">
+    
+    <div class="modal-header" style="border:hidden; min-width: 5px;">
+    <%-- XYZ  
+      <button type="button" class="close" onClick="unloadiframe()" data-dismiss="modal" aria-label="Close">
+      <span hidden="true">&times;</span></button>
+      --%>
+      
+      <button type="button" class="close" onClick="unloadiframe()" data-dismiss="modal" aria-hidden="true" >×</button>
+      <h3 id="anexoTitulo" style="margin-top: 0px; margin-bottom: 0px;"></h3>
+      <hr style="margin-top: 5px;margin-bottom: 5px;"  />
+    </div>
+    
+    <div class="modal-body" style="padding-top:10px; padding-left:5px; padding-right:0px; padding-bottom:15px;">
+      
+      <%-- HEIGHT 480px --%>
+    <iframe src="" frameborder="0" id="targetiframe" style="width:885px; height:${iframe_anexos_height}px; " name="targetframe" allowtransparency="true">
+         
+    </iframe> <!-- target iframe -->
+      
+    </div>
+  </div>
+</div>
+</div>
 
+<script type="text/javascript">
+
+    var s ="<html><head></head><body><div class=\"hide col-xs-12 text-center centrat\"><img src=\"<c:url value="/img/712.GIF"/>\" width=\"20\" height=\"20\"/></div></body></html>";
+    $('#targetiframe').contents().find('html').html(s); 
+
+
+    
+    //load iframe
+    function loadiframe(htmlHref)  {
+    document.getElementById('targetiframe').src = htmlHref;
+    }
+    
+    //just for the kicks of it
+    function unloadiframe()  {
+        var frame = document.getElementById("targetiframe"),
+        frameHTML = frame.contentDocument || frame.contentWindow.document;
+        //frameHTML.removeChild(frameDoc.documentElement);    
+    }
+
+
+    function closeAndReload() {
+        unloadiframe();
+        window.location.href=window.location.href;
+    }
+
+
+    function nouAnnexFull() {
+
+      $('#anexoTitulo').html('<spring:message code="anexo.nuevo"/>');
+
+      loadiframe("<c:url value="/anexo/nou/${registro.registroDetalle.id}/${param.registro}/${registro.id}" />");
+    }
+
+
+    function editarAnexoFull(idAnexo, idRegistro, idRegistroDetalle, tipoRegistro) {
+        
+        $('#anexoTitulo').html('<spring:message code="anexo.editar"/>');
+        
+        loadiframe("<c:url value="/anexo/editar/"/>" + idRegistroDetalle + "/" + tipoRegistro + "/" + idRegistro + "/" + idAnexo);
+    }
+
+
+    /**
+     * Elimina el anexo seleccionado de la Sesion, y la quita en la tabla de anexos.
+     * @param idAnexo
+     * @param idRegistroDetalle
+     */
+    function eliminarAnexo(idAnexo, idRegistro, idRegistroDetalle, tipoRegistro) {        
+        document.location.href = "<c:url value="/anexo/delete"/>/" +  idRegistroDetalle + "/" + tipoRegistro + "/" + idRegistro + "/" + idAnexo;
+    }
+ 
 </script>

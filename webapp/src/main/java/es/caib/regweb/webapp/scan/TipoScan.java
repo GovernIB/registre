@@ -1,4 +1,4 @@
-package es.caib.regweb.utils;
+package es.caib.regweb.webapp.scan;
 
 public class TipoScan {
 	private Integer codigo;

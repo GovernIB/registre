@@ -1,6 +1,8 @@
-package es.caib.regweb.utils;
+package es.caib.regweb.webapp.scan;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -10,6 +12,10 @@ import org.apache.log4j.Logger;
 import org.fundaciobit.plugins.scanweb.IScanWebPlugin;
 import org.fundaciobit.plugins.scanweb.ScanWebResource;
 import org.fundaciobit.plugins.utils.PluginsManager;
+
+import es.caib.regweb.utils.Configuracio;
+import es.caib.regweb.utils.RegwebConstantes;
+
 /**
  * Created by Limit Tecnologies.
  * User: sandreu
@@ -83,9 +89,9 @@ public class ScannerManager {
      * @param tipusScan
      * @return
      */
-    public static String getHeaderJSP(HttpServletRequest request, Integer tipusScan) throws Exception {
+    public static String getHeaderJSP(HttpServletRequest request, Integer tipusScan, String docID) throws Exception {
 //    	log.info("Obtenint header del tipus d'escaneig " + tipusScan);
-    	return getInstance(tipusScan).getHeaderJSP(request);
+    	return getInstance(tipusScan).getHeaderJSP(request, docID);
     }
 
     /**
@@ -93,10 +99,18 @@ public class ScannerManager {
      * @param tipusScan
      * @return
      */
-    public static String getCoreJSP(HttpServletRequest request, Integer tipusScan) throws Exception {
+    public static String getCoreJSP(HttpServletRequest request, Integer tipusScan, String docID) throws Exception {
 //    	log.info("Obtenint core del tipus d'escaneig " + tipusScan);
-    	return getInstance(tipusScan).getCoreJSP(request);
+    	return getInstance(tipusScan).getCoreJSP(request, docID );
     }
+    
+    
+    
+    public static int getMinHeight(HttpServletRequest request, Integer tipusScan, String docID) throws Exception {
+      return getInstance(tipusScan).getMinHeight(request, docID);
+    }
+    
+    
 
     /**
      * Crea un file en el sistema de archivos
@@ -105,9 +119,39 @@ public class ScannerManager {
      * @return
      * @throws Exception
      */
-    public static ScanWebResource getResource(HttpServletRequest request, Integer tipusScan, String resourcename) throws Exception {
+    public static ScanWebResource getResource(HttpServletRequest request, Integer tipusScan, String resourcename, String docID) throws Exception {
 //    	log.info("Obtenint recurs " + resourcename + " del tipus d'escaneig " + tipusScan);
-    	return getInstance(tipusScan).getResource(request, resourcename);
+    	return getInstance(tipusScan).getResource(request, resourcename, docID);
     }
 
+    
+    
+    public static List<TipoScan> getTipusScanejat(Locale locale, String noScanName){
+      String[] values = new String[] {"0"};
+      try {
+        String plugins = Configuracio.getScanPlugins();
+        if (plugins != null && !"".equals(plugins))
+          values = plugins.split(",");
+        
+//        log.info("SCAN: Codis de plugins d'escaneig: " + plugins);
+      } catch (Exception e) {
+//        log.error("SCAN: Error al obtenir els plugins definits al sistema", e);
+      }
+
+      List<TipoScan> tiposScan = new ArrayList<TipoScan>();
+      for(String value: values) {
+        try {
+          Integer codigo = Integer.parseInt(value.trim());
+          String nombre = codigo.equals(0) ? noScanName : ScannerManager.getName(codigo, locale);
+          TipoScan tipoScan = new TipoScan(codigo, nombre);
+          tiposScan.add(tipoScan);
+//          log.info("SCAN:   " + codigo + " - " + nombre);
+        } catch (Exception e){
+          log.warn("SCAN: El codi " + value + " no és un codi de tipus d'escanejat válid.");
+        }
+      }
+      return tiposScan;
+      //    return Arrays.asList(values);
+    }
+    
 }

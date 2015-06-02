@@ -6,13 +6,14 @@ import es.caib.regweb.persistence.utils.FileSystemManager;
 import es.caib.regweb.persistence.utils.Paginacion;
 import es.caib.regweb.utils.Configuracio;
 import es.caib.regweb.utils.RegwebConstantes;
-import es.caib.regweb.utils.login.RegwebLoginPluginManager;
 import es.caib.regweb.webapp.controller.BaseController;
 import es.caib.regweb.webapp.editor.UsuarioEntidadEditor;
 import es.caib.regweb.webapp.form.EntidadForm;
 import es.caib.regweb.webapp.form.LibroOrganismo;
 import es.caib.regweb.webapp.form.PermisoLibroUsuarioForm;
 import es.caib.regweb.webapp.form.UsuarioEntidadBusquedaForm;
+import es.caib.regweb.webapp.login.RegwebLoginPluginManager;
+import es.caib.regweb.webapp.scan.ScannerManager;
 import es.caib.regweb.webapp.utils.*;
 import es.caib.regweb.webapp.validator.EntidadValidator;
 
@@ -210,7 +211,7 @@ public class EntidadController extends BaseController {
                     return "redirect:/inici";
                 }
             }
-            model.addAttribute("tipoScan", Configuracio.getTipusScanejat(request.getLocale(), getMessage("scan.noScan")));
+            model.addAttribute("tipoScan", ScannerManager.getTipusScanejat(request.getLocale(), getMessage("scan.noScan")));
             model.addAttribute("administradoresEntidad", administradoresEntidadModificar(entidad.getPropietario(), entidad));
 
         }catch (Exception e) {
@@ -236,7 +237,7 @@ public class EntidadController extends BaseController {
 
            try {
                 model.addAttribute("administradoresEntidad", administradoresEntidadModificar(entidadForm.getEntidad().getPropietario(), entidadForm.getEntidad()));
-                model.addAttribute("tipoScan", Configuracio.getTipusScanejat(request.getLocale(), getMessage("scan.noScan")));
+                model.addAttribute("tipoScan", ScannerManager.getTipusScanejat(request.getLocale(), getMessage("scan.noScan")));
             } catch (Exception e) {
                 e.printStackTrace();
             }

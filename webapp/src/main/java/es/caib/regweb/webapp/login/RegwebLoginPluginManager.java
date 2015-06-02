@@ -1,4 +1,4 @@
-package es.caib.regweb.utils.login;
+package es.caib.regweb.webapp.login;
 
 import org.fundaciobit.plugins.userinformation.IUserInformationPlugin;
 import org.fundaciobit.plugins.utils.PluginsManager;

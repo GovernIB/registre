@@ -104,6 +104,16 @@
         </dependency>
 		
 		<!-- Externas -->
+		
+		<dependency>
+		  <groupId>org.fundaciobit.plugins</groupId>
+		  <artifactId>plugins-api</artifactId>
+		  <version>1.0.0</version>
+		  <type>jar</type>
+		  <scope>provided</scope>
+		</dependency>
+		
+		
 		<dependency>
           <groupId>org.fundaciobit.genapp</groupId>
           <artifactId>genapp-core</artifactId>

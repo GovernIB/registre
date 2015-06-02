@@ -2,9 +2,15 @@ package es.caib.regweb.persistence.ejb;
 
 
 import es.caib.regweb.model.Anexo;
+import es.caib.regweb.model.UsuarioEntidad;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
+
+import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.plugins.documentcustody.DocumentCustody;
+import org.fundaciobit.plugins.documentcustody.SignatureCustody;
+
 import java.util.Date;
 import java.util.List;
 
@@ -18,7 +24,22 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public interface AnexoLocal extends BaseEjb<Anexo, Long> {
 
+  
+  public AnexoFull crearAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
+      Long registroID, String tipoRegistro) throws I18NException;
+    
 
+  
+  public AnexoFull getAnexoFull(Long anexoID) throws I18NException;
+  
+  
+  
+  public AnexoFull actualizarAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
+      Long registroID, String tipoRegistro) throws I18NException;
+    
+  
+  
+  
   /**
    *  Eliminar un anexo
    * @param idAnexo
@@ -34,7 +55,7 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
       * @return
       * @throws Exception
       */
-    public boolean actualizarAnexo(Anexo anexo) throws Exception;
+    //public boolean actualizarAnexo(Anexo anexo) throws Exception;
 
   /**
    * Actualiza un anexo y guarda sus archivos asociados
@@ -52,9 +73,10 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
    * @return
    * @throws Exception
    */
-    public Anexo actualizarAnexoConArchivos(Long idAnexo, byte[] ficheroAnexado,String nombreFicheroAnexado, String tipoMIMEFicheroAnexado, Long tamanoFicheroAnexado,
+   /* public Anexo actualizarAnexoConArchivos(Long idAnexo, byte[] ficheroAnexado,String nombreFicheroAnexado, String tipoMIMEFicheroAnexado, Long tamanoFicheroAnexado,
                                byte[] firmaAnexada, String nombreFirmaAnexada, String tipoMIMEFirmaAnexada, Long tamanoFirmaAnexada,
                                Integer modoFirma, Date fechaCaptura ) throws Exception;
+                               */
 
 
     /**

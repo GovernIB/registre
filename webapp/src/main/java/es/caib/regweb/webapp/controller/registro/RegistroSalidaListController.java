@@ -5,12 +5,9 @@ import es.caib.regweb.persistence.ejb.*;
 import es.caib.regweb.persistence.utils.Paginacion;
 import es.caib.regweb.persistence.utils.RegistroUtils;
 import es.caib.regweb.utils.RegwebConstantes;
-import es.caib.regweb.utils.ScannerManager;
-import es.caib.regweb.webapp.controller.BaseController;
 import es.caib.regweb.webapp.form.RegistroSalidaBusqueda;
 import es.caib.regweb.webapp.validator.RegistroSalidaBusquedaValidator;
 
-import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -34,12 +31,13 @@ import java.util.Set;
  * Created by Fundació BIT.
  * Controller para gestionar los Registros de Salida
  * @author earrivi
+ * @author anadal
  * Date: 31/03/14
  */
 @Controller
 @RequestMapping(value = "/registroSalida")
 @SessionAttributes(types = RegistroSalida.class)
-public class RegistroSalidaListController extends BaseController {
+public class RegistroSalidaListController extends AbstractRegistroCommonListController {
 
 
     @Autowired
@@ -81,11 +79,7 @@ public class RegistroSalidaListController extends BaseController {
     @EJB(mappedName = "regweb/CatComunidadAutonomaEJB/local")
     public CatComunidadAutonomaLocal catComunidadAutonomaEjb;
 
-    @EJB(mappedName = "regweb/CatNivelAdministracionEJB/local")
-    public CatNivelAdministracionLocal catNivelAdministracionEjb;
 
-    @EJB(mappedName = "regweb/TipoDocumentalEJB/local")
-    public TipoDocumentalLocal tipoDocumentalEjb;
 
     /**
     * Listado de todos los Registros de Salida
@@ -95,15 +89,8 @@ public class RegistroSalidaListController extends BaseController {
        return "redirect:/registroSalida/list";
     }
 
-   @ModelAttribute("comunidadesAutonomas")
-   public List<CatComunidadAutonoma> comunidadesAutonomas() throws Exception {
-       return catComunidadAutonomaEjb.getAll();
-   }
-
-   @ModelAttribute("nivelesAdministracion")
-   public List<CatNivelAdministracion> nivelesAdministracion() throws Exception {
-       return catNivelAdministracionEjb.getAll();
-   }    
+  
+   
    
    private Set<Organismo> getOrganismosInternosMasExternos(HttpServletRequest request) throws Exception {
 	   
@@ -234,10 +221,7 @@ public class RegistroSalidaListController extends BaseController {
         }
         // Anexos
         model.addAttribute("anexos", anexoEjb.getByRegistroSalida(idRegistro));
-        model.addAttribute("tiposDocumental", tipoDocumentalEjb.getByEntidad(getEntidadActiva(request).getId()));
-        model.addAttribute("tiposDocumentoAnexo", RegwebConstantes.TIPOS_DOCUMENTO);
-        model.addAttribute("tiposFirma", RegwebConstantes.TIPOS_FIRMA);
-        model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
+        initAnexos(entidad, model, request, registro.getId() );
 
         // Historicos
         model.addAttribute("historicos", historicoRegistroSalidaEjb.getByRegistroSalida(idRegistro));
@@ -248,23 +232,7 @@ public class RegistroSalidaListController extends BaseController {
 
         // Alta en tabla LOPD
         lopdEjb.insertarRegistroSalida(idRegistro, usuarioEntidad.getId());
-
-        // Scan
-        Integer tipusScan = 0;
-        if (entidad.getTipoScan() != null && !"".equals(entidad.getTipoScan())) {
-        	tipusScan = Integer.parseInt(entidad.getTipoScan());
-        }
-        //      Integer tipusScan = 2;
-        boolean teScan = ScannerManager.teScan(tipusScan);
-        model.addAttribute("teScan", teScan);
-        if (teScan) {
-        	if (request.getParameter("lang") == null) {
-        		request.setAttribute("lang", I18NUtils.getLocale().getLanguage());
-        	}
-        	model.addAttribute("headerScan", ScannerManager.getHeaderJSP(request, tipusScan));
-        	model.addAttribute("coreScan", ScannerManager.getCoreJSP(request, tipusScan));
-        }
-        
+       
         return "registroSalida/registroSalidaDetalle";
     }
 
@@ -397,14 +365,6 @@ public class RegistroSalidaListController extends BaseController {
     }
 
 
-    @ModelAttribute("estados")
-    public Long[] estados(HttpServletRequest request) throws Exception {
-        if(getEntidadActiva(request).getSir()){
-            return RegwebConstantes.ESTADOS_REGISTRO_SIR;
-        }else {
-            return RegwebConstantes.ESTADOS_REGISTRO;
-        }
-    }
 
     @InitBinder("registroSalidaBusqueda")
     public void registroSalidaBusqueda(WebDataBinder binder) {

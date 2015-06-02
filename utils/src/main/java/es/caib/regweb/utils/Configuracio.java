@@ -2,10 +2,6 @@ package es.caib.regweb.utils;
 
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
 
 /**
  * 
@@ -66,35 +62,10 @@ public class Configuracio implements RegwebConstantes {
     return "true".equals(
         System.getProperty(RegwebConstantes.REGWEB_PROPERTY_BASE + "sir.usedirectapi"));
   }
-
-
-	public static List<TipoScan> getTipusScanejat(Locale locale, String noScanName){
-		String[] values = new String[] {"0"};
-		try {
-			String plugins = System.getProperty(RegwebConstantes.REGWEB_PROPERTY_BASE  + "scan.plugins");
-			if (plugins != null && !"".equals(plugins))
-				values = plugins.split(",");
-			
-//			log.info("SCAN: Codis de plugins d'escaneig: " + plugins);
-		} catch (Exception e) {
-//			log.error("SCAN: Error al obtenir els plugins definits al sistema", e);
-		}
-
-		List<TipoScan> tiposScan = new ArrayList<TipoScan>();
-		for(String value: values) {
-			try {
-				Integer codigo = Integer.parseInt(value.trim());
-				String nombre = codigo.equals(0) ? noScanName : ScannerManager.getName(codigo, locale);
-				TipoScan tipoScan = new TipoScan(codigo, nombre);
-				tiposScan.add(tipoScan);
-//				log.info("SCAN:   " + codigo + " - " + nombre);
-			} catch (Exception e){
-				log.warn("SCAN: El codi " + value + " no és un codi de tipus d'escanejat válid.");
-			}
-		}
-		return tiposScan;
-		//	  return Arrays.asList(values);
-	}
   
+  
+  public static String getScanPlugins() {
+    return System.getProperty(RegwebConstantes.REGWEB_PROPERTY_BASE  + "scan.plugins");
+  }
 
 }

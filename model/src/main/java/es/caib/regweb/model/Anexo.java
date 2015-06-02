@@ -12,7 +12,7 @@ import java.util.Date;
  * Created 27/05/14 12:59
  * Clase que representa un anexo dentro de regweb.
  * @author mgonzalez
- * @author anadal (index)
+ * @author anadal (index, refactoring anexos)
  */
 
 @Entity
@@ -42,17 +42,11 @@ public class Anexo implements Serializable {
     private String custodiaID;
 
     private String certificado;
-    private String firmacsv;
+
     private String timestamp;
     private String validacionOCSP;
 
     private String csv; // código seguro verificación
-
-    private boolean borrar = false;
-    private boolean borrarfirma = false;
-
-
-
     public Anexo() {
     }
 
@@ -209,18 +203,7 @@ public class Anexo implements Serializable {
 
     public void setCertificado(String certificado) {
       this.certificado = certificado;
-    }
-    
-    
-    @Column(name = "FIRMACSV")
-    public String getFirmacsv() {
-      return firmacsv;
-    }
-
-    public void setFirmacsv(String firmacsv) {
-      this.firmacsv = firmacsv;
-    }
-    
+    }  
 
     @Column(name = "TIMESTAMP")
     public String getTimestamp() {
@@ -248,27 +231,8 @@ public class Anexo implements Serializable {
     public void setCsv(String csv) {
         this.csv = csv;
     }
-
-
-    @Transient
-    public boolean isBorrar() {
-      return borrar;
-    }
-
-    public void setBorrar(boolean borrar) {
-      this.borrar = borrar;
-    }
-
-    @Transient
-    public boolean isBorrarfirma() {
-      return borrarfirma;
-    }
-
-    public void setBorrarfirma(boolean borrarfirma) {
-      this.borrarfirma = borrarfirma;
-    }
-
-  @Override
+    
+    @Override
     public boolean equals(Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;

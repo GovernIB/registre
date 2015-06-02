@@ -452,13 +452,18 @@ public interface RegwebConstantes {
       ESTADO_PREREGISTRO_PROCESADO,
       ESTADO_PREREGISTRO_RECHAZADO 
     };
+    
+    
+    /* ----------------MODO FIRMA ANEXOS --------------------------*/
+    public static final int MODO_FIRMA_ANEXO_SINFIRMA =  0;
+    public static final int MODO_FIRMA_ANEXO_ATTACHED =  1;
+    public static final int MODO_FIRMA_ANEXO_DETACHED =  2;
 
+    
     /* -------- TIPO DOCUMENTO ---------- */
-
     public static final Long TIPO_DOCUMENTO_FORMULARIO = 1L;
     public static final Long TIPO_DOCUMENTO_DOC_ADJUNTO = 2L;
     public static final Long TIPO_DOCUMENTO_FICHERO_TECNICO =3L;
-
     
     public static final Long[] TIPOS_DOCUMENTO = {
       TIPO_DOCUMENTO_FORMULARIO,
