@@ -37,7 +37,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils{
         Assert.assertEquals(3, registroEntradaApi.getVersionWs());
     }
 
-    @Test
+    //@Test
     public void obtenerRegistroEntrada() {
 
         try {
@@ -94,22 +94,22 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils{
         }
     }
 
-    //@Test
+    @Test
     public void crearRegistroEntrada() {
 
-        for(int i=0;i<10;i++){
+        for(int i=0;i<1;i++){
 
 
         RegistroEntradaWs registroEntradaWs = new RegistroEntradaWs();
 
-        registroEntradaWs.setDestino("A04008544");
+        registroEntradaWs.setDestino("A04009221");
         registroEntradaWs.setOficina("O00015972");
-        registroEntradaWs.setLibro("ADMP");
+        registroEntradaWs.setLibro("ADM");
 
-        registroEntradaWs.setExtracto("earrivi-concurrencia");
+        registroEntradaWs.setExtracto("probando ws");
         registroEntradaWs.setDocFisica((long) 1);
         registroEntradaWs.setIdioma("es");
-        registroEntradaWs.setTipoAsunto("A01");
+        registroEntradaWs.setTipoAsunto("TS01");
 
         registroEntradaWs.setAplicacion("WsTest");
         registroEntradaWs.setVersion("1");
@@ -125,8 +125,8 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils{
         registroEntradaWs.setCodigoAsunto(null);
         registroEntradaWs.setTipoTransporte("");
 
-        registroEntradaWs.setExpone("");
-        registroEntradaWs.setSolicita("");
+        registroEntradaWs.setExpone("expone");
+        registroEntradaWs.setSolicita("solicita");
 
         // Interesados
         InteresadoWs interesadoWs = new InteresadoWs();

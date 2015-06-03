@@ -1,17 +1,15 @@
 package es.caib.regweb.webapp.controller.registro;
 
 import es.caib.regweb.model.*;
-import es.caib.regweb.persistence.ejb.*;
-import es.caib.regweb.persistence.utils.FileSystemManager;
+import es.caib.regweb.persistence.ejb.HistoricoRegistroEntradaLocal;
+import es.caib.regweb.persistence.ejb.RegistroEntradaLocal;
+import es.caib.regweb.persistence.ejb.SirLocal;
 import es.caib.regweb.persistence.utils.Paginacion;
 import es.caib.regweb.persistence.utils.RegistroUtils;
-import es.caib.regweb.persistence.utils.sir.FicheroIntercambioSICRES3;
-import es.caib.regweb.persistence.utils.sir.SirUtils;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.webapp.form.RegistroEntradaBusqueda;
 import es.caib.regweb.webapp.utils.Mensaje;
 import es.caib.regweb.webapp.validator.RegistroEntradaBusquedaValidator;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -23,7 +21,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -48,32 +45,8 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     @EJB(mappedName = "regweb/HistoricoRegistroEntradaEJB/local")
     public HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
     
-    @EJB(mappedName = "regweb/AnexoEJB/local")
-    public AnexoLocal anexoEjb;
-    
-    @EJB(mappedName = "regweb/LopdEJB/local")
-    public LopdLocal lopdEjb;
-    
-    @EJB(mappedName = "regweb/TrazabilidadEJB/local")
-    public TrazabilidadLocal trazabilidadEjb;
-   
-    @EJB(mappedName = "regweb/ArchivoEJB/local")
-    public ArchivoLocal archivoEjb;
-    
-    @EJB(mappedName = "regweb/ModeloReciboEJB/local")
-    public ModeloReciboLocal modeloReciboEjb;
-    
     @EJB(mappedName = "regweb/RegistroEntradaEJB/local")
     public RegistroEntradaLocal registroEntradaEjb;
-    
-    @EJB(mappedName = "regweb/PersonaEJB/local")
-    public PersonaLocal personaEjb;
-
-    @EJB(mappedName = "regweb/CatProvinciaEJB/local")
-    public CatProvinciaLocal catProvinciaEjb;
-
-    @EJB(mappedName = "regweb/CatPaisEJB/local")
-    public CatPaisLocal catPaisEjb;
     
     @EJB(mappedName = "regweb/SirEJB/local")
     public SirLocal sirEjb;
@@ -436,17 +409,13 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     /**
      * Crea el xml de un {@link es.caib.regweb.model.RegistroEntrada}
      */
-    @RequestMapping(value = "/{idRegistro}/xml", method = RequestMethod.GET)
+    /*@RequestMapping(value = "/{idRegistro}/xml", method = RequestMethod.GET)
     public String xmlRegistroEntrada(@PathVariable Long idRegistro) throws Exception {
 
         RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
-
-
-        // TODO Check  registroEntrada != null
         
         FicheroIntercambioSICRES3 fiSICRES3 =  sirEjb.writeFicheroIntercambioSICRES3(registroEntrada);
         String xml = SirUtils.marshallObject(fiSICRES3);
-
 
         Archivo archivo = new Archivo();
         archivo.setMime("application/xml");
@@ -457,7 +426,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         FileSystemManager.crearArchivo(xml.getBytes(), archivo.getId());
 
         return "redirect:/registroEntrada/list";
-    }
+    }*/
 
 
 

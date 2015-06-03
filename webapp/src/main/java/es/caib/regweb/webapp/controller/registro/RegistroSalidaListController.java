@@ -1,13 +1,13 @@
 package es.caib.regweb.webapp.controller.registro;
 
 import es.caib.regweb.model.*;
-import es.caib.regweb.persistence.ejb.*;
+import es.caib.regweb.persistence.ejb.HistoricoRegistroSalidaLocal;
+import es.caib.regweb.persistence.ejb.RegistroSalidaLocal;
 import es.caib.regweb.persistence.utils.Paginacion;
 import es.caib.regweb.persistence.utils.RegistroUtils;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.webapp.form.RegistroSalidaBusqueda;
 import es.caib.regweb.webapp.validator.RegistroSalidaBusquedaValidator;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -20,10 +20,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -42,42 +40,12 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
     @Autowired
     private RegistroSalidaBusquedaValidator registroSalidaBusquedaValidator;
-    
-    @EJB(mappedName = "regweb/CodigoAsuntoEJB/local")
-    public CodigoAsuntoLocal codigoAsuntoEjb;
-  
-    @EJB(mappedName = "regweb/LopdEJB/local")
-    public LopdLocal lopdEjb;
-    
-    @EJB(mappedName = "regweb/TrazabilidadEJB/local")
-    public TrazabilidadLocal trazabilidadEjb;
 
-    @EJB(mappedName = "regweb/ModeloReciboEJB/local")
-    public ModeloReciboLocal modeloReciboEjb;
-    
     @EJB(mappedName = "regweb/RegistroSalidaEJB/local")
     public RegistroSalidaLocal registroSalidaEjb;
-   
-    @EJB(mappedName = "regweb/TipoAsuntoEJB/local")
-    public TipoAsuntoLocal tipoAsuntoEjb;
 
     @EJB(mappedName = "regweb/HistoricoRegistroSalidaEJB/local")
     public HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
-
-    @EJB(mappedName = "regweb/AnexoEJB/local")
-    public AnexoLocal anexoEjb;
-
-    @EJB(mappedName = "regweb/PersonaEJB/local")
-    public PersonaLocal personaEjb;
-
-    @EJB(mappedName = "regweb/CatProvinciaEJB/local")
-    public CatProvinciaLocal catProvinciaEjb;
-
-    @EJB(mappedName = "regweb/CatPaisEJB/local")
-    public CatPaisLocal catPaisEjb;
-
-    @EJB(mappedName = "regweb/CatComunidadAutonomaEJB/local")
-    public CatComunidadAutonomaLocal catComunidadAutonomaEjb;
 
 
 
@@ -253,115 +221,6 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         mav.addObject("tipoRegistro", getMessage("informe.salida"));
 
         return mav;
-    }
-
-
-    /**
-     * Procesa las opciones de comunes de un RegistroEntrada, lo utilizamos en la creación y modificación.
-     * @param registroEntrada
-     * @return
-     * @throws Exception
-     */
-    public RegistroEntrada procesarRegistroEntrada(RegistroEntrada registroEntrada) throws Exception{
-
-        Organismo organismoDestino = registroEntrada.getDestino();
-
-        // Gestionamos el Organismo, determinando si es Interno o Externo
-        Organismo orgDestino = organismoEjb.findByCodigoVigente(organismoDestino.getCodigo());
-        if(orgDestino != null){ // es interno
-            log.info("orgDestino interno: " + orgDestino.getDenominacion());
-            registroEntrada.setDestino(orgDestino);
-            registroEntrada.setDestinoExternoCodigo(null);
-            registroEntrada.setDestinoExternoDenominacion(null);
-        } else { // es externo
-            log.info("orgDestino externo: " + registroEntrada.getDestino().getDenominacion());
-            registroEntrada.setDestinoExternoCodigo(registroEntrada.getDestino().getCodigo());
-            registroEntrada.setDestinoExternoDenominacion(registroEntrada.getDestino().getDenominacion());
-            registroEntrada.setDestino(null);
-        }
-
-        // Cogemos los dos posibles campos
-        Oficina oficinaOrigen = registroEntrada.getRegistroDetalle().getOficinaOrigen();
-        
-        // Si no han indicado ni externa ni interna, se establece la oficina en la que se realiza el registro.
-        if(oficinaOrigen == null){
-            registroEntrada.getRegistroDetalle().setOficinaOrigen(registroEntrada.getOficina());
-        } else {
-          if(!oficinaOrigen.getCodigo().equals("-1")){ // si han indicado oficina origen
-              Oficina ofiOrigen = oficinaEjb.findByCodigo(oficinaOrigen.getCodigo());
-              if(ofiOrigen != null){ // Es interna
-                  // log.info("oficina interna");
-                  registroEntrada.getRegistroDetalle().setOficinaOrigen(ofiOrigen);
-                  registroEntrada.getRegistroDetalle().setOficinaOrigenExternoCodigo(null);
-                  registroEntrada.getRegistroDetalle().setOficinaOrigenExternoDenominacion(null);
-              } else {  // es interna
-                  // log.info("oficina externo");
-                  registroEntrada.getRegistroDetalle().setOficinaOrigenExternoCodigo(registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo());
-                  registroEntrada.getRegistroDetalle().setOficinaOrigenExternoDenominacion(registroEntrada.getRegistroDetalle().getOficinaOrigen().getDenominacion());
-                  registroEntrada.getRegistroDetalle().setOficinaOrigen(null);
-              }
-          }else { // No han indicado oficina de origen
-              registroEntrada.getRegistroDetalle().setOficinaOrigen(null);
-              registroEntrada.getRegistroDetalle().setOficinaOrigenExternoCodigo(null);
-              registroEntrada.getRegistroDetalle().setOficinaOrigenExternoDenominacion(null);
-          }
-        }
-
-
-
-
-        // Solo se comprueba si es una modificación de RegistroEntrada
-        if(registroEntrada.getId() != null){
-            // Si no ha introducido ninguna fecha de Origen, se establece la fecha actual
-            if(registroEntrada.getRegistroDetalle().getFechaOrigen() == null){
-                registroEntrada.getRegistroDetalle().setFechaOrigen(new Date());
-            }
-
-            // Si no ha introducido ningún número de registro de Origen, le ponemos el actual.
-            if(registroEntrada.getRegistroDetalle().getNumeroRegistroOrigen() == null || registroEntrada.getRegistroDetalle().getNumeroRegistroOrigen().length() == 0){
-                registroEntrada.getRegistroDetalle().setNumeroRegistroOrigen(registroEntrada.getNumeroRegistroFormateado());
-            }
-        }
-
-        // No han especificado Codigo Asunto
-        if( registroEntrada.getRegistroDetalle().getCodigoAsunto().getId() == null || registroEntrada.getRegistroDetalle().getCodigoAsunto().getId() == -1){
-            registroEntrada.getRegistroDetalle().setCodigoAsunto(null);
-        }
-
-        // No han especificadoTransporte
-        if( registroEntrada.getRegistroDetalle().getTransporte() == -1){
-            registroEntrada.getRegistroDetalle().setTransporte(null);
-        }
-
-        // Organimo Interesado
-
-
-
-        return registroEntrada;
-    }
-
-
-
-    @ModelAttribute("libros")
-    public List<Libro> libros(HttpServletRequest request) throws Exception {
-
-        UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByUsuarioEntidad(getUsuarioAutenticado(request).getId(),getEntidadActiva(request).getId());
-        Oficina oficinaActiva = getOficinaActiva(request);
-
-        Set<Organismo> organismos = new HashSet<Organismo>();
-
-        Organismo organismoResponsable = oficinaActiva.getOrganismoResponsable();
-
-        // Añadimos el Organismo responsable
-        organismos.add(organismoResponsable);
-
-        // Añadimos los Organismos a los que la Oficina da servicio
-        Set<RelacionOrganizativaOfi> organismosFuncionales = oficinaActiva.getOrganizativasOfi();
-        for(RelacionOrganizativaOfi relacionOrganizativaOfi:organismosFuncionales){
-            organismos.add(relacionOrganizativaOfi.getOrganismo());
-        }
-
-        return permisoLibroUsuarioEjb.getLibrosRegistroOficina(organismos, usuarioEntidad);
     }
 
 

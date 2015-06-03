@@ -2,7 +2,10 @@ package es.caib.regweb.ws.v3.impl;
 
 import es.caib.regweb.model.*;
 import es.caib.regweb.persistence.ejb.*;
-import es.caib.regweb.persistence.validator.*;
+import es.caib.regweb.persistence.validator.InteresadoBeanValidator;
+import es.caib.regweb.persistence.validator.InteresadoValidator;
+import es.caib.regweb.persistence.validator.RegistroEntradaBeanValidator;
+import es.caib.regweb.persistence.validator.RegistroEntradaValidator;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.utils.StringUtils;
 import es.caib.regweb.ws.converter.DatosInteresadoConverter;
@@ -11,7 +14,6 @@ import es.caib.regweb.ws.model.IdentificadorWs;
 import es.caib.regweb.ws.model.InteresadoWs;
 import es.caib.regweb.ws.model.RegistroEntradaWs;
 import es.caib.regweb.ws.utils.UsuarioAplicacionCache;
-
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -28,7 +30,6 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -437,7 +438,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
      */
     private void validateRegistroEntrada(RegistroEntrada registroEntrada) throws I18NValidationException, I18NException {
       RegistroEntradaBeanValidator rebv = new RegistroEntradaBeanValidator(registroEntradaValidator);
-      rebv.validate(registroEntrada, true);
+      rebv.throwValidationExceptionIfErrors(registroEntrada, true);
     }
 
     /**

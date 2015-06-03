@@ -14,8 +14,6 @@ public class AnexoWs  implements java.io.Serializable {
 
     private byte[] ficheroAnexado;
 
-    private java.lang.Long tamanoFicheroAnexado;
-
     private java.lang.String tipoMIMEFicheroAnexado;
 
     private java.lang.String tipoDocumental;
@@ -36,11 +34,13 @@ public class AnexoWs  implements java.io.Serializable {
 
     private byte[] firmaAnexada;
 
-    private java.lang.Long tamanoFirmaAnexada;
-
     private java.lang.String tipoMIMEFirmaAnexada;
 
     private java.lang.String certificado;
+
+    private java.lang.String csv;
+
+    private java.lang.String firmacsv;
 
     private java.lang.String timestamp;
 
@@ -53,7 +53,6 @@ public class AnexoWs  implements java.io.Serializable {
            java.lang.String titulo,
            java.lang.String nombreFicheroAnexado,
            byte[] ficheroAnexado,
-           java.lang.Long tamanoFicheroAnexado,
            java.lang.String tipoMIMEFicheroAnexado,
            java.lang.String tipoDocumental,
            java.lang.String validezDocumento,
@@ -64,15 +63,15 @@ public class AnexoWs  implements java.io.Serializable {
            java.lang.Integer modoFirma,
            java.lang.String nombreFirmaAnexada,
            byte[] firmaAnexada,
-           java.lang.Long tamanoFirmaAnexada,
            java.lang.String tipoMIMEFirmaAnexada,
            java.lang.String certificado,
+           java.lang.String csv,
+           java.lang.String firmacsv,
            java.lang.String timestamp,
            java.lang.String validacionOCSP) {
            this.titulo = titulo;
            this.nombreFicheroAnexado = nombreFicheroAnexado;
            this.ficheroAnexado = ficheroAnexado;
-           this.tamanoFicheroAnexado = tamanoFicheroAnexado;
            this.tipoMIMEFicheroAnexado = tipoMIMEFicheroAnexado;
            this.tipoDocumental = tipoDocumental;
            this.validezDocumento = validezDocumento;
@@ -83,9 +82,10 @@ public class AnexoWs  implements java.io.Serializable {
            this.modoFirma = modoFirma;
            this.nombreFirmaAnexada = nombreFirmaAnexada;
            this.firmaAnexada = firmaAnexada;
-           this.tamanoFirmaAnexada = tamanoFirmaAnexada;
            this.tipoMIMEFirmaAnexada = tipoMIMEFirmaAnexada;
            this.certificado = certificado;
+           this.csv = csv;
+           this.firmacsv = firmacsv;
            this.timestamp = timestamp;
            this.validacionOCSP = validacionOCSP;
     }
@@ -148,26 +148,6 @@ public class AnexoWs  implements java.io.Serializable {
      */
     public void setFicheroAnexado(byte[] ficheroAnexado) {
         this.ficheroAnexado = ficheroAnexado;
-    }
-
-
-    /**
-     * Gets the tamanoFicheroAnexado value for this AnexoWs.
-     * 
-     * @return tamanoFicheroAnexado
-     */
-    public java.lang.Long getTamanoFicheroAnexado() {
-        return tamanoFicheroAnexado;
-    }
-
-
-    /**
-     * Sets the tamanoFicheroAnexado value for this AnexoWs.
-     * 
-     * @param tamanoFicheroAnexado
-     */
-    public void setTamanoFicheroAnexado(java.lang.Long tamanoFicheroAnexado) {
-        this.tamanoFicheroAnexado = tamanoFicheroAnexado;
     }
 
 
@@ -372,26 +352,6 @@ public class AnexoWs  implements java.io.Serializable {
 
 
     /**
-     * Gets the tamanoFirmaAnexada value for this AnexoWs.
-     * 
-     * @return tamanoFirmaAnexada
-     */
-    public java.lang.Long getTamanoFirmaAnexada() {
-        return tamanoFirmaAnexada;
-    }
-
-
-    /**
-     * Sets the tamanoFirmaAnexada value for this AnexoWs.
-     * 
-     * @param tamanoFirmaAnexada
-     */
-    public void setTamanoFirmaAnexada(java.lang.Long tamanoFirmaAnexada) {
-        this.tamanoFirmaAnexada = tamanoFirmaAnexada;
-    }
-
-
-    /**
      * Gets the tipoMIMEFirmaAnexada value for this AnexoWs.
      * 
      * @return tipoMIMEFirmaAnexada
@@ -428,6 +388,46 @@ public class AnexoWs  implements java.io.Serializable {
      */
     public void setCertificado(java.lang.String certificado) {
         this.certificado = certificado;
+    }
+
+
+    /**
+     * Gets the csv value for this AnexoWs.
+     * 
+     * @return csv
+     */
+    public java.lang.String getCsv() {
+        return csv;
+    }
+
+
+    /**
+     * Sets the csv value for this AnexoWs.
+     * 
+     * @param csv
+     */
+    public void setCsv(java.lang.String csv) {
+        this.csv = csv;
+    }
+
+
+    /**
+     * Gets the firmacsv value for this AnexoWs.
+     * 
+     * @return firmacsv
+     */
+    public java.lang.String getFirmacsv() {
+        return firmacsv;
+    }
+
+
+    /**
+     * Sets the firmacsv value for this AnexoWs.
+     * 
+     * @param firmacsv
+     */
+    public void setFirmacsv(java.lang.String firmacsv) {
+        this.firmacsv = firmacsv;
     }
 
 
@@ -491,9 +491,6 @@ public class AnexoWs  implements java.io.Serializable {
             ((this.ficheroAnexado==null && other.getFicheroAnexado()==null) || 
              (this.ficheroAnexado!=null &&
               java.util.Arrays.equals(this.ficheroAnexado, other.getFicheroAnexado()))) &&
-            ((this.tamanoFicheroAnexado==null && other.getTamanoFicheroAnexado()==null) || 
-             (this.tamanoFicheroAnexado!=null &&
-              this.tamanoFicheroAnexado.equals(other.getTamanoFicheroAnexado()))) &&
             ((this.tipoMIMEFicheroAnexado==null && other.getTipoMIMEFicheroAnexado()==null) || 
              (this.tipoMIMEFicheroAnexado!=null &&
               this.tipoMIMEFicheroAnexado.equals(other.getTipoMIMEFicheroAnexado()))) &&
@@ -524,15 +521,18 @@ public class AnexoWs  implements java.io.Serializable {
             ((this.firmaAnexada==null && other.getFirmaAnexada()==null) || 
              (this.firmaAnexada!=null &&
               java.util.Arrays.equals(this.firmaAnexada, other.getFirmaAnexada()))) &&
-            ((this.tamanoFirmaAnexada==null && other.getTamanoFirmaAnexada()==null) || 
-             (this.tamanoFirmaAnexada!=null &&
-              this.tamanoFirmaAnexada.equals(other.getTamanoFirmaAnexada()))) &&
             ((this.tipoMIMEFirmaAnexada==null && other.getTipoMIMEFirmaAnexada()==null) || 
              (this.tipoMIMEFirmaAnexada!=null &&
               this.tipoMIMEFirmaAnexada.equals(other.getTipoMIMEFirmaAnexada()))) &&
             ((this.certificado==null && other.getCertificado()==null) || 
              (this.certificado!=null &&
               this.certificado.equals(other.getCertificado()))) &&
+            ((this.csv==null && other.getCsv()==null) || 
+             (this.csv!=null &&
+              this.csv.equals(other.getCsv()))) &&
+            ((this.firmacsv==null && other.getFirmacsv()==null) || 
+             (this.firmacsv!=null &&
+              this.firmacsv.equals(other.getFirmacsv()))) &&
             ((this.timestamp==null && other.getTimestamp()==null) || 
              (this.timestamp!=null &&
               this.timestamp.equals(other.getTimestamp()))) &&
@@ -566,9 +566,6 @@ public class AnexoWs  implements java.io.Serializable {
                     _hashCode += obj.hashCode();
                 }
             }
-        }
-        if (getTamanoFicheroAnexado() != null) {
-            _hashCode += getTamanoFicheroAnexado().hashCode();
         }
         if (getTipoMIMEFicheroAnexado() != null) {
             _hashCode += getTipoMIMEFicheroAnexado().hashCode();
@@ -608,14 +605,17 @@ public class AnexoWs  implements java.io.Serializable {
                 }
             }
         }
-        if (getTamanoFirmaAnexada() != null) {
-            _hashCode += getTamanoFirmaAnexada().hashCode();
-        }
         if (getTipoMIMEFirmaAnexada() != null) {
             _hashCode += getTipoMIMEFirmaAnexada().hashCode();
         }
         if (getCertificado() != null) {
             _hashCode += getCertificado().hashCode();
+        }
+        if (getCsv() != null) {
+            _hashCode += getCsv().hashCode();
+        }
+        if (getFirmacsv() != null) {
+            _hashCode += getFirmacsv().hashCode();
         }
         if (getTimestamp() != null) {
             _hashCode += getTimestamp().hashCode();
@@ -651,13 +651,6 @@ public class AnexoWs  implements java.io.Serializable {
         elemField.setFieldName("ficheroAnexado");
         elemField.setXmlName(new javax.xml.namespace.QName("", "ficheroAnexado"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "base64Binary"));
-        elemField.setMinOccurs(0);
-        elemField.setNillable(false);
-        typeDesc.addFieldDesc(elemField);
-        elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("tamanoFicheroAnexado");
-        elemField.setXmlName(new javax.xml.namespace.QName("", "tamanoFicheroAnexado"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "long"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
@@ -732,13 +725,6 @@ public class AnexoWs  implements java.io.Serializable {
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("tamanoFirmaAnexada");
-        elemField.setXmlName(new javax.xml.namespace.QName("", "tamanoFirmaAnexada"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "long"));
-        elemField.setMinOccurs(0);
-        elemField.setNillable(false);
-        typeDesc.addFieldDesc(elemField);
-        elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("tipoMIMEFirmaAnexada");
         elemField.setXmlName(new javax.xml.namespace.QName("", "tipoMIMEFirmaAnexada"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
@@ -748,6 +734,20 @@ public class AnexoWs  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("certificado");
         elemField.setXmlName(new javax.xml.namespace.QName("", "certificado"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("csv");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "csv"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("firmacsv");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "firmacsv"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);

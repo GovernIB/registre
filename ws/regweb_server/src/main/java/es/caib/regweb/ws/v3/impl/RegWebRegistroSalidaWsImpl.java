@@ -2,16 +2,17 @@ package es.caib.regweb.ws.v3.impl;
 
 import es.caib.regweb.model.*;
 import es.caib.regweb.persistence.ejb.*;
-import es.caib.regweb.persistence.validator.*;
+import es.caib.regweb.persistence.validator.InteresadoBeanValidator;
+import es.caib.regweb.persistence.validator.InteresadoValidator;
+import es.caib.regweb.persistence.validator.RegistroSalidaBeanValidator;
+import es.caib.regweb.persistence.validator.RegistroSalidaValidator;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.utils.StringUtils;
 import es.caib.regweb.ws.converter.DatosInteresadoConverter;
 import es.caib.regweb.ws.converter.RegistroSalidaConverter;
-
 import es.caib.regweb.ws.model.IdentificadorWs;
 import es.caib.regweb.ws.model.InteresadoWs;
 import es.caib.regweb.ws.model.RegistroSalidaWs;
-
 import es.caib.regweb.ws.utils.UsuarioAplicacionCache;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -386,7 +387,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
        
       RegistroSalidaBeanValidator rsbv = new RegistroSalidaBeanValidator(validator);
       
-      rsbv.validate(registroSalida, true);
+      rsbv.throwValidationExceptionIfErrors(registroSalida, true);
     }
 
     /**
