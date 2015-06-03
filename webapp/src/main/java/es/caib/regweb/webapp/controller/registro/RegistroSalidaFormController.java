@@ -1,12 +1,11 @@
 package es.caib.regweb.webapp.controller.registro;
 
 import es.caib.regweb.model.*;
-import es.caib.regweb.persistence.ejb.*;
+import es.caib.regweb.persistence.ejb.HistoricoRegistroSalidaLocal;
+import es.caib.regweb.persistence.ejb.RegistroSalidaLocal;
 import es.caib.regweb.persistence.utils.RegistroUtils;
 import es.caib.regweb.utils.RegwebConstantes;
-import es.caib.regweb.webapp.controller.BaseController;
 import es.caib.regweb.webapp.utils.Mensaje;
-import es.caib.regweb.webapp.validator.RegistroSalidaBusquedaValidator;
 import es.caib.regweb.webapp.validator.RegistroSalidaWebValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -33,58 +32,20 @@ import java.util.Set;
  */
 @Controller
 @RequestMapping(value = "/registroSalida")
-@SessionAttributes(types = RegistroSalida.class)
-public class RegistroSalidaFormController extends BaseController {
+public class RegistroSalidaFormController extends AbstractRegistroCommonFormController {
 
     //protected final Logger log = Logger.getLogger(getClass());
 
     @Autowired
     private RegistroSalidaWebValidator registroSalidaValidator;
 
-    @Autowired
-    private RegistroSalidaBusquedaValidator registroSalidaBusquedaValidator;
-
-    @EJB(mappedName = "regweb/CodigoAsuntoEJB/local")
-    public CodigoAsuntoLocal codigoAsuntoEjb;
-
-    @EJB(mappedName = "regweb/LopdEJB/local")
-    public LopdLocal lopdEjb;
-
-    @EJB(mappedName = "regweb/TrazabilidadEJB/local")
-    public TrazabilidadLocal trazabilidadEjb;
-
-    @EJB(mappedName = "regweb/ModeloReciboEJB/local")
-    public ModeloReciboLocal modeloReciboEjb;
 
     @EJB(mappedName = "regweb/RegistroSalidaEJB/local")
     public RegistroSalidaLocal registroSalidaEjb;
 
-    @EJB(mappedName = "regweb/TipoAsuntoEJB/local")
-    public TipoAsuntoLocal tipoAsuntoEjb;
-
-    @EJB(mappedName = "regweb/PermisoLibroUsuarioEJB/local")
-    public PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
-
     @EJB(mappedName = "regweb/HistoricoRegistroSalidaEJB/local")
     public HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
 
-    @EJB(mappedName = "regweb/AnexoEJB/local")
-    public AnexoLocal anexoEjb;
-
-    @EJB(mappedName = "regweb/PersonaEJB/local")
-    public PersonaLocal personaEjb;
-
-    @EJB(mappedName = "regweb/CatProvinciaEJB/local")
-    public CatProvinciaLocal catProvinciaEjb;
-
-    @EJB(mappedName = "regweb/CatPaisEJB/local")
-    public CatPaisLocal catPaisEjb;
-
-    @EJB(mappedName = "regweb/CatComunidadAutonomaEJB/local")
-    public CatComunidadAutonomaLocal catComunidadAutonomaEjb;
-
-    @EJB(mappedName = "regweb/CatNivelAdministracionEJB/local")
-    public CatNivelAdministracionLocal catNivelAdministracionEjb;
 
     /**
      * Carga el formulario para un nuevo {@link es.caib.regweb.model.RegistroSalida}
@@ -485,103 +446,6 @@ public class RegistroSalidaFormController extends BaseController {
 
 
         return registroSalida;
-    }
-
-    @ModelAttribute("organismosOficinaActiva")
-    public Set<Organismo> getOrganismosOficinaActiva(HttpServletRequest request) throws Exception {
-        return organismoEjb.getByOficinaActiva(getOficinaActiva(request).getId());
-    }
-
-    @ModelAttribute("tiposAsunto")
-    public List<TipoAsunto> tiposAsunto(HttpServletRequest request) throws Exception {
-
-        Entidad entidadActiva = getEntidadActiva(request);
-        return tipoAsuntoEjb.getActivosEntidad(entidadActiva.getId());
-    }
-
-    @ModelAttribute("tiposPersona")
-    public Long[] tiposPersona() throws Exception {
-      return RegwebConstantes.TIPOS_PERSONA;
-    }
-    
-    @ModelAttribute("tiposInteresado")
-    public Long[] tiposInteresado() throws Exception {
-        return RegwebConstantes.TIPOS_INTERESADO;
-    }
-
-    @ModelAttribute("idiomas")
-    public Long[] idiomas() throws Exception {
-        return RegwebConstantes.IDIOMAS_REGISTRO;
-    }
-
-    @ModelAttribute("transportes")
-    public Long[] transportes() throws Exception {
-        return RegwebConstantes.TRANSPORTES;
-    }
-
-    @ModelAttribute("tiposDocumentacionFisica")
-    public Long[] tiposDocumentacionFisica() throws Exception {
-        return RegwebConstantes.TIPOS_DOCFISICA;
-    }
-
-    @ModelAttribute("tiposDocumento")
-    public long[] tiposDocumento() throws Exception {
-        return RegwebConstantes.TIPOS_DOCUMENTOID;
-    }
-
-    @ModelAttribute("paises")
-    public List<CatPais> paises() throws Exception {
-        return catPaisEjb.getAll();
-    }
-
-    @ModelAttribute("personasFisicas")
-    public List<Persona> personasFisicas(HttpServletRequest request) throws Exception {
-
-        Entidad entidad = getEntidadActiva(request);
-        return personaEjb.getAllbyEntidadTipo(entidad.getId(), RegwebConstantes.TIPO_PERSONA_FISICA);
-    }
-
-    @ModelAttribute("personasJuridicas")
-    public List<Persona> personasJuridicas(HttpServletRequest request) throws Exception {
-
-        Entidad entidad = getEntidadActiva(request);
-        return personaEjb.getAllbyEntidadTipo(entidad.getId(), RegwebConstantes.TIPO_PERSONA_JURIDICA);
-    }
-
-    @ModelAttribute("provincias")
-    public List<CatProvincia> provincias() throws Exception {
-        return catProvinciaEjb.getAll();
-    }
-
-    @ModelAttribute("canalesNotificacion")
-    public long[] canalesNotificacion() throws Exception {
-        return RegwebConstantes.CANALES_NOTIFICACION;
-    }
-
-    @ModelAttribute("comunidadesAutonomas")
-    public List<CatComunidadAutonoma> comunidadesAutonomas() throws Exception {
-        return catComunidadAutonomaEjb.getAll();
-    }
-
-    @ModelAttribute("nivelesAdministracion")
-    public List<CatNivelAdministracion> nivelesAdministracion() throws Exception {
-        return catNivelAdministracionEjb.getAll();
-    }
-
-    @ModelAttribute("estados")
-    public Long[] estados() throws Exception {
-        return RegwebConstantes.ESTADOS_REGISTRO;
-    }
-
-
-    /**
-     * Obtiene los {@link es.caib.regweb.model.CodigoAsunto} del TipoAsunto seleccionado
-     */
-    @RequestMapping(value = "/obtenerCodigosAsunto", method = RequestMethod.GET)
-    public @ResponseBody
-    List<CodigoAsunto> obtenerCodigosAsunto(@RequestParam Long id) throws Exception {
-
-        return codigoAsuntoEjb.getByTipoAsunto(id);
     }
 
     /**

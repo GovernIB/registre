@@ -1,10 +1,11 @@
 package es.caib.regweb.webapp.controller.registro;
 
 import es.caib.regweb.model.*;
-import es.caib.regweb.persistence.ejb.*;
+import es.caib.regweb.persistence.ejb.HistoricoRegistroEntradaLocal;
+import es.caib.regweb.persistence.ejb.RegistroDetalleLocal;
+import es.caib.regweb.persistence.ejb.RegistroEntradaLocal;
 import es.caib.regweb.persistence.utils.RegistroUtils;
 import es.caib.regweb.utils.RegwebConstantes;
-import es.caib.regweb.webapp.controller.BaseController;
 import es.caib.regweb.webapp.utils.Mensaje;
 import es.caib.regweb.webapp.validator.RegistroEntradaWebValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,51 +35,16 @@ import java.util.Set;
  */
 @Controller
 @RequestMapping(value = "/registroEntrada")
-@SessionAttributes({"registro"})
-public class RegistroEntradaFormController extends BaseController {
+public class RegistroEntradaFormController extends AbstractRegistroCommonFormController {
 
     @Autowired
     private RegistroEntradaWebValidator registroEntradaValidator;
-
-    
-    @EJB(mappedName = "regweb/CodigoAsuntoEJB/local")
-    public CodigoAsuntoLocal codigoAsuntoEjb;
     
     @EJB(mappedName = "regweb/HistoricoRegistroEntradaEJB/local")
     public HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
     
-    @EJB(mappedName = "regweb/AnexoEJB/local")
-    public AnexoLocal anexoEjb;
-    
-    @EJB(mappedName = "regweb/PersonaEJB/local")
-    public PersonaLocal personaEjb;
-  
-    @EJB(mappedName = "regweb/ModeloReciboEJB/local")
-    public ModeloReciboLocal modeloReciboEjb;
-    
     @EJB(mappedName = "regweb/RegistroEntradaEJB/local")
     public RegistroEntradaLocal registroEntradaEjb;
-    
-    @EJB(mappedName = "regweb/TipoDocumentalEJB/local")
-    public TipoDocumentalLocal tipoDocumentalEjb;
-    
-    @EJB(mappedName = "regweb/TipoAsuntoEJB/local")
-    public TipoAsuntoLocal tipoAsuntoEjb;
-    
-    @EJB(mappedName = "regweb/CatLocalidadEJB/local")
-    public CatLocalidadLocal catLocalidadEjb;
-    
-    @EJB(mappedName = "regweb/CatProvinciaEJB/local")
-    public CatProvinciaLocal catProvinciaEjb;
-    
-    @EJB(mappedName = "regweb/CatComunidadAutonomaEJB/local")
-    public CatComunidadAutonomaLocal catComunidadAutonomaEjb;
-    
-    @EJB(mappedName = "regweb/CatPaisEJB/local")
-    public CatPaisLocal catPaisEjb;
-    
-    @EJB(mappedName = "regweb/CatNivelAdministracionEJB/local")
-    public CatNivelAdministracionLocal catNivelAdministracionEjb;
 
     @EJB(mappedName = "regweb/RegistroDetalleEJB/local")
     public RegistroDetalleLocal registroDetalleEjb;
@@ -528,25 +494,9 @@ public class RegistroEntradaFormController extends BaseController {
     }
 
 
-    /**
-     * Obtiene los {@link es.caib.regweb.model.CodigoAsunto} del TipoAsunto seleccionado
-     */
-    @RequestMapping(value = "/obtenerCodigosAsunto", method = RequestMethod.GET)
-    public @ResponseBody
-    List<CodigoAsunto> obtenerCodigosAsunto(@RequestParam Long id) throws Exception {
 
-        return codigoAsuntoEjb.getByTipoAsunto(id);
-    }
 
-    /**
-     * Obtiene los {@link es.caib.regweb.model.CatLocalidad} de de la Provincia seleccionada
-     */
-    @RequestMapping(value = "/obtenerLocalidades", method = RequestMethod.GET)
-    public @ResponseBody
-    List<CatLocalidad> obtenerLocalidades(@RequestParam Long id) throws Exception {
 
-        return catLocalidadEjb.getByProvincia(id);
-    }
 
      /**
      * Obtiene los {@link es.caib.regweb.model.Organismo} a partir del llibre seleccionat
@@ -557,92 +507,6 @@ public class RegistroEntradaFormController extends BaseController {
 
         return organismoEjb.getByLibro(id);
     }*/
-
-    @ModelAttribute("organismosOficinaActiva")
-    public Set<Organismo> getOrganismosOficinaActiva(HttpServletRequest request) throws Exception {
-        return organismoEjb.getByOficinaActiva(getOficinaActiva(request).getId());
-    }
-
-    @ModelAttribute("tiposAsunto")
-    public List<TipoAsunto> tiposAsunto(HttpServletRequest request) throws Exception {
-
-        Entidad entidadActiva = getEntidadActiva(request);
-        return tipoAsuntoEjb.getActivosEntidad(entidadActiva.getId());
-    }
-
-    @ModelAttribute("tiposPersona")
-    public Long[] tiposPersona() throws Exception {
-        return RegwebConstantes.TIPOS_PERSONA;
-    }
-    
-    @ModelAttribute("tiposInteresado")
-    public Long[] tiposInteresado() throws Exception {
-        return  RegwebConstantes.TIPOS_INTERESADO;
-    }
-
-    @ModelAttribute("idiomas")
-    public Long[] idiomas() throws Exception {
-        return RegwebConstantes.IDIOMAS_REGISTRO;
-    }
-
-    @ModelAttribute("transportes")
-    public Long[] transportes() throws Exception {
-        return RegwebConstantes.TRANSPORTES;
-    }
-
-    @ModelAttribute("tiposDocumentacionFisica")
-    public Long[] tiposDocumentacionFisica() throws Exception {
-         return RegwebConstantes.TIPOS_DOCFISICA;
-    }
-
-    @ModelAttribute("tiposDocumento")
-    public long[] tiposDocumento() throws Exception {
-        return RegwebConstantes.TIPOS_DOCUMENTOID;
-    }
-
-    @ModelAttribute("paises")
-    public List<CatPais> paises() throws Exception {
-        return catPaisEjb.getAll();
-    }
-
-    @ModelAttribute("personasFisicas")
-    public List<Persona> personasFisicas(HttpServletRequest request) throws Exception {
-
-        Entidad entidad = getEntidadActiva(request);
-        return personaEjb.getAllbyEntidadTipo(entidad.getId(), RegwebConstantes.TIPO_PERSONA_FISICA);
-    }
-
-    @ModelAttribute("personasJuridicas")
-    public List<Persona> personasJuridicas(HttpServletRequest request) throws Exception {
-
-        Entidad entidad = getEntidadActiva(request);
-        return personaEjb.getAllbyEntidadTipo(entidad.getId(), RegwebConstantes.TIPO_PERSONA_JURIDICA);
-    }
-
-    @ModelAttribute("provincias")
-    public List<CatProvincia> provincias() throws Exception {
-        return catProvinciaEjb.getAll();
-    }
-
-    @ModelAttribute("canalesNotificacion")
-    public long[] canalesNotificacion() throws Exception {
-        return RegwebConstantes.CANALES_NOTIFICACION;
-    }
-
-    @ModelAttribute("comunidadesAutonomas")
-    public List<CatComunidadAutonoma> comunidadesAutonomas() throws Exception {
-        return catComunidadAutonomaEjb.getAll();
-    }
-
-    @ModelAttribute("nivelesAdministracion")
-    public List<CatNivelAdministracion> nivelesAdministracion() throws Exception {
-        return catNivelAdministracionEjb.getAll();
-    }
-
-    @ModelAttribute("estados")
-    public Long[] estados() throws Exception {
-        return RegwebConstantes.ESTADOS_REGISTRO;
-    }
 
 
 
