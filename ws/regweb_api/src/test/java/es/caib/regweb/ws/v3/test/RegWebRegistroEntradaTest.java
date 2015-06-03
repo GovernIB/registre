@@ -1,9 +1,16 @@
 package es.caib.regweb.ws.v3.test;
 
+import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 import es.caib.regweb.ws.api.v3.*;
+import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import javax.activation.MimetypesFileTypeMap;
+import java.io.File;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * Created by earrivi on 4/11/14.
@@ -155,7 +162,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils{
 
 
         // Anexos
-      /*  String fichero = "SENZA.pdf";
+        String fichero = "SENZA.pdf";
         String sfirma = "SpringMVC.pdf";
         // Anexo sin firma
         AnexoWs anexoWs = new AnexoWs();
@@ -180,7 +187,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils{
            anexoWs.setFicheroAnexado(FileUtils.readFileToByteArray(file));
            anexoWs.setNombreFicheroAnexado(file.getName());
            anexoWs.setTipoMIMEFicheroAnexado(mimeTypesMap.getContentType(file));
-           anexoWs.setTamanoFicheroAnexado(file.length());
+
 
         }catch (Exception e){
             e.printStackTrace();
@@ -190,7 +197,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils{
         gc.setTimeInMillis(new Date().getTime());
         anexoWs.setFechaCaptura(new XMLGregorianCalendarImpl(gc));
 
-        registroEntradaWs.getAnexos().add(anexoWs);   */
+        registroEntradaWs.getAnexos().add(anexoWs);
 
         /* ANEXO CON FIRMA ATACHED   */
      /*   AnexoWs anexoFirmaAtached = new AnexoWs();
