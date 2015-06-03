@@ -35,7 +35,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-import es.caib.regweb.model.Anexo;
 import es.caib.regweb.model.Entidad;
 import es.caib.regweb.model.RegistroDetalle;
 import es.caib.regweb.persistence.ejb.AnexoFull;
@@ -582,10 +581,10 @@ public class AnexoController extends BaseController {
     */
     @RequestMapping(value = "/descargarDocumento/{anexoId}", method = RequestMethod.GET)
     public void  anexo(@PathVariable("anexoId") Long anexoId, HttpServletRequest request,
-        HttpServletResponse response)  throws Exception {
-         Anexo anexo = null;
-         anexo = anexoEjb.findById(anexoId);
-         fullDownload(anexo.getCustodiaID(), anexo.getNombreFicheroAnexado(), anexo.getTipoMIME(), false,response);
+        HttpServletResponse response)  throws Exception, I18NException {
+         AnexoFull anexoFull = anexoEjb.getAnexoFull(anexoId);
+         fullDownload(anexoFull.getAnexo().getCustodiaID(), anexoFull.getDocumentoCustody().getName(),
+             anexoFull.getDocumentoCustody().getMime(), false,response);
     }
 
      /**
@@ -594,13 +593,13 @@ public class AnexoController extends BaseController {
     */
     @RequestMapping(value = "/descargarFirma/{anexoId}", method = RequestMethod.GET)
     public void  firma(@PathVariable("anexoId") Long anexoId, HttpServletRequest request, 
-        HttpServletResponse response)  throws Exception {
-         Anexo anexo = null;
-         anexo = anexoEjb.findById(anexoId);
+        HttpServletResponse response)  throws Exception, I18NException {
+         AnexoFull anexo = anexoEjb.getAnexoFull(anexoId);
          
          // NOM i MIME no són correctes !!!!!!!
          
-         fullDownload(anexo.getCustodiaID(), anexo.getNombreFicheroAnexado(), anexo.getTipoMIME(), true,response);
+         fullDownload(anexo.getAnexo().getCustodiaID(), anexo.getSignatureCustody().getName(),
+             anexo.getSignatureCustody().getMime(), true,response);
     }
 
     /**

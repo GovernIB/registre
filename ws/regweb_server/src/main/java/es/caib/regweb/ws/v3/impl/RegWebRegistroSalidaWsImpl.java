@@ -286,7 +286,8 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         lopdEjb.insertarRegistroSalida(registroSalida.getId(), usuarioEntidad.getId());
 
         // Retornamos el RegistroSalidaWs
-        return RegistroSalidaConverter.getRegistroSalidaWs(registroSalida, UsuarioAplicacionCache.get().getIdioma());
+        return RegistroSalidaConverter.getRegistroSalidaWs(registroSalida,
+            UsuarioAplicacionCache.get().getIdioma(), anexoEjb);
 
 
     }

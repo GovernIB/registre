@@ -3,11 +3,15 @@ package es.caib.regweb.ws.converter;
 import es.caib.regweb.model.Anexo;
 import es.caib.regweb.persistence.ejb.AnexoFull;
 import es.caib.regweb.persistence.ejb.TipoDocumentalLocal;
+import es.caib.regweb.persistence.utils.AnnexFileSystemManager;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.utils.StringUtils;
 import es.caib.regweb.ws.model.AnexoWs;
 import es.caib.regweb.ws.v3.impl.CommonConverter;
+import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.plugins.documentcustody.DocumentCustody;
+import org.fundaciobit.plugins.documentcustody.SignatureCustody;
 
 import java.util.GregorianCalendar;
 
@@ -15,8 +19,12 @@ import java.util.GregorianCalendar;
  * Created 1/12/14 13:45
  *
  * @author mgonzalez
+ * @author anadal
  */
 public class AnexoConverter extends CommonConverter {
+  
+  
+  public static final Logger log = Logger.getLogger(AnexoConverter.class);
 
   /**
    * Convierte un {@link es.caib.regweb.ws.model.AnexoWs} en un {@link es.caib.regweb.model.Anexo}
@@ -25,17 +33,63 @@ public class AnexoConverter extends CommonConverter {
    * @throws Exception
    * @throws I18NException
    */
-   public static AnexoFull getAnexo(AnexoWs anexoWs, Long idEntidad,TipoDocumentalLocal tipoDocumentalEjb
+
+   public static AnexoFull getAnexoFull(AnexoWs anexoWs, Long idEntidad,TipoDocumentalLocal tipoDocumentalEjb
+
        ) throws Exception, I18NException {
 
         if (anexoWs == null){
             return  null;
         }
 
-        AnexoFull anexo = procesarAnexo(anexoWs, idEntidad,tipoDocumentalEjb);
 
+        Anexo anexo = procesarAnexo(anexoWs, idEntidad,tipoDocumentalEjb);
+        
+        AnexoFull anexoFull = new AnexoFull(anexo);
+       
 
-        return  anexo;
+        // Guardamos el Anexo datos básicos
+        //anexo = anexoEjb.persist(anexo);
+        
+        
+        // Si validez Documento --> Copia no se admite firma
+        if(RegwebConstantes.ANEXO_TIPOVALIDEZDOCUMENTO_COPIA.equals(anexoWs.getValidezDocumento())){ 
+            anexoWs.setNombreFirmaAnexada("");
+            anexoWs.setFirmaAnexada(null);
+            //anexoWs.setTamanoFirmaAnexada(null);
+            anexoWs.setTipoMIMEFirmaAnexada(null);
+        }
+        
+        
+        
+        
+        
+        // AnexoFull anexoFull = 
+        DocumentCustody doc = null;
+        if (anexoWs.getNombreFicheroAnexado() != null && anexoWs.getFicheroAnexado() != null ) {
+          doc = new DocumentCustody();
+          doc.setData(anexoWs.getFicheroAnexado());
+          doc.setDocumentType(DocumentCustody.DOCUMENT_ONLY);
+          doc.setMime(anexoWs.getTipoMIMEFicheroAnexado());
+          doc.setName(anexoWs.getNombreFicheroAnexado());
+        }
+        anexoFull.setDocumentoCustody(doc);
+        anexoFull.setDocumentoFileDelete(false);
+        
+        
+        SignatureCustody  sign = null;
+        if (anexoWs.getNombreFirmaAnexada() != null && anexoWs.getFirmaAnexada() != null) {
+          sign = new SignatureCustody();
+          sign.setAttachedDocument(null);
+          sign.setData(anexoWs.getFirmaAnexada());
+          sign.setMime(anexoWs.getTipoMIMEFirmaAnexada());
+          sign.setName(anexoWs.getNombreFirmaAnexada());
+          sign.setSignatureType(SignatureCustody.OTHER_SIGNATURE);
+        }
+        anexoFull.setSignatureCustody(sign);
+        anexoFull.setSignatureFileDelete(false);
+
+        return  anexoFull;
    }
 
    /**
@@ -45,13 +99,13 @@ public class AnexoConverter extends CommonConverter {
    * @throws Exception
    * @throws I18NException
    */
-   public static AnexoWs getAnexoWs(Anexo anexo)  throws Exception {
+   public static AnexoWs getAnexoWs(AnexoFull anexoFull)  throws Exception {
 
-        if (anexo == null){
+        if (anexoFull == null || anexoFull.getAnexo() == null){
             return  null;
         }
 
-        AnexoWs anexoWs = procesarAnexoWs(anexo);
+        AnexoWs anexoWs = procesarAnexoWs(anexoFull);
         return anexoWs;
     }
 
@@ -63,7 +117,8 @@ public class AnexoConverter extends CommonConverter {
    * @return
    * @throws Exception
    */
-  private static AnexoFull procesarAnexo(AnexoWs anexoWs, Long idEntidad, TipoDocumentalLocal tipoDocumentalEjb) throws Exception{
+  private static Anexo procesarAnexo(AnexoWs anexoWs, Long idEntidad, 
+      TipoDocumentalLocal tipoDocumentalEjb) throws Exception{
 
        Anexo anexo = new Anexo();
 
@@ -79,25 +134,26 @@ public class AnexoConverter extends CommonConverter {
        if(!StringUtils.isEmpty(anexoWs.getObservaciones())){anexo.setObservaciones(anexoWs.getObservaciones());}
        if(anexoWs.getOrigenCiudadanoAdmin()!=null){anexo.setOrigenCiudadanoAdmin(anexoWs.getOrigenCiudadanoAdmin());}
        if(anexoWs.getCertificado() != null){anexo.setCertificado(anexoWs.getCertificado());}
-       //if(anexoWs.getFirmacsv() != null){anexo.setFirmacsv(anexoWs.getFirmacsv());}
+       if(anexoWs.getCsv() != null){anexo.setCsv(anexoWs.getCsv());}
+       if(anexoWs.getFirmacsv() != null){anexo.setFirmacsv(anexoWs.getFirmacsv());}
        if(anexoWs.getTimestamp() != null){anexo.setTimestamp(anexoWs.getTimestamp());}
        if(anexoWs.getValidacionOCSP() != null){anexo.setValidacionOCSP(anexoWs.getValidacionOCSP());}
 
 
        // Part de fichero Anexado
+       /*
        if(!StringUtils.isEmpty(anexoWs.getNombreFicheroAnexado())){anexo.setNombreFicheroAnexado(StringUtils.recortarNombre(anexoWs.getNombreFicheroAnexado(), RegwebConstantes.ANEXO_NOMBREARCHIVO_MAXLENGTH));}
        if(!StringUtils.isEmpty(anexoWs.getTipoMIMEFicheroAnexado())){anexo.setTipoMIME(anexoWs.getTipoMIMEFicheroAnexado());}
        anexo.setTamano(anexoWs.getTamanoFicheroAnexado());
+       */
        if(anexoWs.getFechaCaptura()!= null){anexo.setFechaCaptura(anexoWs.getFechaCaptura().getTime());}
 
        // Part de firma Anexada
        if(anexoWs.getModoFirma()!=null){anexo.setModoFirma(anexoWs.getModoFirma());}
-       if(!StringUtils.isEmpty(anexoWs.getNombreFirmaAnexada())){anexo.setNombreFirmaAnexada(StringUtils.recortarNombre(anexoWs.getNombreFirmaAnexada(), RegwebConstantes.ANEXO_NOMBREARCHIVO_MAXLENGTH));}
+       //if(!StringUtils.isEmpty(anexoWs.getNombreFirmaAnexada())){anexo.setNombreFirmaAnexada(StringUtils.recortarNombre(anexoWs.getNombreFirmaAnexada(), RegwebConstantes.ANEXO_NOMBREARCHIVO_MAXLENGTH));}
       // anexo.setTamano(anexoWs.getTamanoFirmaAnexada());
 
-
-
-        return new AnexoFull(anexo);
+        return anexo;
 
   }
 
@@ -108,10 +164,11 @@ public class AnexoConverter extends CommonConverter {
    * @return
    * @throws Exception
    */
-  private static AnexoWs procesarAnexoWs(Anexo anexo) throws Exception{
+  private static AnexoWs procesarAnexoWs(AnexoFull anexoFull) throws Exception{
 
        AnexoWs anexoWs = new AnexoWs();
 
+       Anexo anexo = anexoFull.getAnexo();
 
        if(!StringUtils.isEmpty(anexo.getTitulo())){anexoWs.setTitulo(anexo.getTitulo());}
 
@@ -125,15 +182,41 @@ public class AnexoConverter extends CommonConverter {
        if(!StringUtils.isEmpty(anexo.getObservaciones())){anexoWs.setObservaciones(anexo.getObservaciones());}
        if(anexo.getOrigenCiudadanoAdmin()!=null){anexoWs.setOrigenCiudadanoAdmin(anexo.getOrigenCiudadanoAdmin());}
        if(anexo.getCertificado() != null){anexoWs.setCertificado(anexo.getCertificado());}
-       //if(anexo.getFirmacsv() != null){anexoWs.setFirmacsv(anexo.getFirmacsv());}
+       if(anexo.getCsv() != null){anexoWs.setCsv(anexo.getCsv());}
+       if(anexo.getFirmacsv() != null){anexoWs.setFirmacsv(anexo.getFirmacsv());}
        if(anexo.getTimestamp() != null){anexoWs.setTimestamp(anexo.getTimestamp());}
        if(anexo.getValidacionOCSP() != null){anexoWs.setValidacionOCSP(anexo.getValidacionOCSP());}
 
+       
+       String custodyID = anexo.getCustodiaID();
+       
+       if (custodyID == null) {
+         if (custodyID == null) {
+           log.error("El anexo con id " + anexo.getId() 
+               + " de un registro no tiene identificador de custodia", new Exception());
+         }
+       } else {
+       
+         // Firma Fichero Anexado
+         if (anexoFull.getSignatureCustody() != null) {
+           SignatureCustody sign = anexoFull.getSignatureCustody();
+           anexoWs.setNombreFirmaAnexada(sign.getName());
+           anexoWs.setTipoMIMEFirmaAnexada(sign.getMime());
+           anexoWs.setFirmaAnexada(AnnexFileSystemManager.getInstance().getSignature(custodyID));
+         }
+         
+         
+  
+         // Documento fichero Anexado
+         if (anexoFull.getDocumentoCustody() != null) {
+            DocumentCustody doc = anexoFull.getDocumentoCustody();
+            anexoWs.setNombreFicheroAnexado(doc.getName());
+            anexoWs.setTipoMIMEFicheroAnexado(doc.getMime());
+            anexoWs.setFicheroAnexado(AnnexFileSystemManager.getInstance().getDocument(custodyID));
+         }
+       }
+       
 
-       // Part de fichero Anexado
-       if(!StringUtils.isEmpty(anexo.getNombreFicheroAnexado())){anexoWs.setNombreFicheroAnexado(anexo.getNombreFicheroAnexado());}
-       if(!StringUtils.isEmpty(anexo.getTipoMIME())){anexoWs.setTipoMIMEFicheroAnexado(anexo.getTipoMIME());}
-       anexoWs.setTamanoFicheroAnexado(anexo.getTamano());
        // Transformamos de Date a Calendar
        GregorianCalendar calendar = new GregorianCalendar();
        calendar.setTime(anexo.getFechaCaptura());
@@ -141,7 +224,7 @@ public class AnexoConverter extends CommonConverter {
 
        // Part de firma Anexada
        if(anexo.getModoFirma()!= 0){anexoWs.setModoFirma(anexo.getModoFirma());}
-       if(!StringUtils.isEmpty(anexo.getNombreFirmaAnexada())){anexoWs.setNombreFirmaAnexada(anexo.getNombreFirmaAnexada());}
+       
        // anexoWs.setTamanoFirmaAnexada(anexo.getTamano());
 
        return anexoWs;

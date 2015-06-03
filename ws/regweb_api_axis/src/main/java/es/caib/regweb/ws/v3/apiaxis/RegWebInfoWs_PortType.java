@@ -14,7 +14,7 @@ public interface RegWebInfoWs_PortType extends java.rmi.Remote {
     public es.caib.regweb.ws.v3.apiaxis.TipoAsuntoWs[] listarTipoAsunto(java.lang.String entidadCodigoDir3) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsI18NError;
     public es.caib.regweb.ws.v3.apiaxis.TipoDocumentalWs[] listarTipoDocumental(java.lang.String entidadCodigoDir3) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsI18NError;
     public es.caib.regweb.ws.v3.apiaxis.OficinaWs[] listarOficinas(java.lang.String entidadCodigoDir3, java.lang.Long autorizacion) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsI18NError;
-    public es.caib.regweb.ws.v3.apiaxis.CodigoAsuntoWs[] listarCodigoAsunto(java.lang.String codigoTipoAsunto) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsI18NError;
+    public es.caib.regweb.ws.v3.apiaxis.CodigoAsuntoWs[] listarCodigoAsunto(java.lang.String entidadCodigoDir3, java.lang.String codigoTipoAsunto) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsI18NError;
     public es.caib.regweb.ws.v3.apiaxis.LibroWs[] listarLibros(java.lang.String entidadCodigoDir3, java.lang.String oficinaCodigoDir3, java.lang.Long autorizacion) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsI18NError;
     public es.caib.regweb.ws.v3.apiaxis.LibroOficinaWs[] obtenerLibrosOficina(java.lang.String entidadCodigoDir3, java.lang.Long tipoRegistro) throws java.rmi.RemoteException, es.caib.regweb.ws.v3.apiaxis.WsI18NError;
     public int getVersionWs() throws java.rmi.RemoteException;

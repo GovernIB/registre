@@ -11,7 +11,7 @@ import es.caib.regweb.utils.StringUtils;
 import es.caib.regweb.utils.Versio;
 
 import org.apache.log4j.Logger;
-import org.fundaciobit.plugins.documentcustody.DocumentCustody;
+import org.fundaciobit.plugins.documentcustody.AnnexCustody;
 import org.fundaciobit.plugins.utils.Base64;
 import org.jboss.ejb3.annotation.SecurityDomain;
 import org.xml.sax.SAXException;
@@ -368,8 +368,35 @@ public class SirBean implements SirLocal {
 
             for (Integer i = 0; i <anexos.size(); i++) {
                 Anexo anexo = anexos.get(i);
+                
+                final String custodyID = anexo.getCustodiaID();
 
-                DocumentCustody documento = AnnexFileSystemManager.getArchivo(anexo.getCustodiaID());
+                if (custodyID == null) {
+                  log.error("El anexo con id " + anexo.getId() + " del registro de entrada "
+                    + re.getId() + " no tiene identificador de custodia", new Exception());
+                  continue;
+                }
+                
+                byte[] data = null;
+                AnnexCustody file = AnnexFileSystemManager.getInstance().getDocumentInfoOnly(custodyID);
+                if (file == null) {
+                  file = AnnexFileSystemManager.getInstance().getSignatureInfoOnly(custodyID);
+                  if (file != null) {
+                    data = AnnexFileSystemManager.getInstance().getSignature(custodyID);
+                  }
+                } else {
+                  data = AnnexFileSystemManager.getInstance().getDocument(custodyID);
+                }
+                
+                if (file == null) {
+                  log.error("El anexo con id " + anexo.getId() + " del registro de entrada "
+                      + re.getId() + " no tiene ni documento ni firma definidos", new Exception());
+                    continue;
+                }
+                
+
+                
+                
 
                 String secuencia = "";
                 switch (i.toString().length()){
@@ -380,21 +407,21 @@ public class SirBean implements SirLocal {
 
                 }
 
-                deAnexo.setNombreFicheroAnexado(anexo.getNombreFicheroAnexado());
-                deAnexo.setIdentificadorFichero(identificadorIntercambio +"_"+ "01" +"_"+ secuencia +"."+ getExtension(documento.getName()));
+                deAnexo.setNombreFicheroAnexado(file.getName());
+                deAnexo.setIdentificadorFichero(identificadorIntercambio +"_"+ "01" +"_"+ secuencia +"."+ getExtension(file.getName()));
                 deAnexo.setValidezDocumento(RegwebConstantes.CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento()));
                 deAnexo.setTipoDocumento("02"); //todo: Modificar en el futuro según si el documento viene de Sistra
                 deAnexo.setCertificado(null);
                 deAnexo.setFirmaDocumento(null);
                 deAnexo.setTimeStamp(null);
-                deAnexo.setHash(obtenerHash(documento));
+                deAnexo.setHash(obtenerHash(data));
 
-                if(anexo.getTipoMIME() != null && anexo.getTipoMIME().length() > 20){
+                if(file.getMime() != null && file.getMime().length() > 20){
                     deAnexo.setTipoMIME(null);    // Parrafo 48 de la Guia de Aplicación SICRES3
                 }else{
-                    deAnexo.setTipoMIME(anexo.getTipoMIME());
+                    deAnexo.setTipoMIME(file.getMime());
                 }
-                deAnexo.setAnexo(Base64.encode(documento.getData()).getBytes());
+                deAnexo.setAnexo(Base64.encode(data).getBytes());
 
                 deAnexo.setObservaciones(anexo.getObservaciones());
 
@@ -543,10 +570,10 @@ public class SirBean implements SirLocal {
      * @return
      * @throws Exception
      */
-    protected byte[] obtenerHash(DocumentCustody documento) throws Exception{
+    protected byte[] obtenerHash(byte[]  documentoData) throws Exception{
 
         MessageDigest md = MessageDigest.getInstance("MD5");
-        byte[] digest = md.digest(documento.getData());
+        byte[] digest = md.digest(documentoData);
 
         return Base64.encode(digest).getBytes();
 

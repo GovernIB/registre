@@ -83,7 +83,6 @@
       <xs:element minOccurs="0" name="titulo" type="xs:string"/>
       <xs:element minOccurs="0" name="nombreFicheroAnexado" type="xs:string"/>
       <xs:element minOccurs="0" name="ficheroAnexado" type="xs:base64Binary"/>
-      <xs:element minOccurs="0" name="tamanoFicheroAnexado" type="xs:long"/>
       <xs:element minOccurs="0" name="tipoMIMEFicheroAnexado" type="xs:string"/>
       <xs:element minOccurs="0" name="tipoDocumental" type="xs:string"/>
       <xs:element minOccurs="0" name="validezDocumento" type="xs:string"/>
@@ -94,9 +93,10 @@
       <xs:element minOccurs="0" name="modoFirma" type="xs:int"/>
       <xs:element minOccurs="0" name="nombreFirmaAnexada" type="xs:string"/>
       <xs:element minOccurs="0" name="firmaAnexada" type="xs:base64Binary"/>
-      <xs:element minOccurs="0" name="tamanoFirmaAnexada" type="xs:long"/>
       <xs:element minOccurs="0" name="tipoMIMEFirmaAnexada" type="xs:string"/>
       <xs:element minOccurs="0" name="certificado" type="xs:string"/>
+      <xs:element minOccurs="0" name="csv" type="xs:string"/>
+      <xs:element minOccurs="0" name="firmacsv" type="xs:string"/>
       <xs:element minOccurs="0" name="timestamp" type="xs:string"/>
       <xs:element minOccurs="0" name="validacionOCSP" type="xs:string"/>
     </xs:sequence>

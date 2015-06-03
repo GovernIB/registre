@@ -26,9 +26,8 @@ public class Anexo implements Serializable {
 
     private Long id;
     private String titulo; // Campo descriptivo del anexo.
-    private String nombreFicheroAnexado;
-    private Long tamano;
-    private String tipoMIME;
+    
+
     private TipoDocumental tipoDocumental; // reso, acord, factura, ..
     private Long validezDocumento;
     private Long tipoDocumento;
@@ -37,7 +36,7 @@ public class Anexo implements Serializable {
     private Integer origenCiudadanoAdmin;
     private Date fechaCaptura;
     private int modoFirma;
-    private String nombreFirmaAnexada;
+
     
     private String custodiaID;
 
@@ -47,6 +46,9 @@ public class Anexo implements Serializable {
     private String validacionOCSP;
 
     private String csv; // código seguro verificación
+    private String firmacsv;
+    
+    
     public Anexo() {
     }
 
@@ -70,14 +72,6 @@ public class Anexo implements Serializable {
       this.titulo = titulo;
     }
 
-    @Column(name = "NOMBREFICANEXADO", length= 80)
-    public String getNombreFicheroAnexado() {
-      return nombreFicheroAnexado;
-    }
-
-    public void setNombreFicheroAnexado(String nombreFicheroAnexado) {
-      this.nombreFicheroAnexado = nombreFicheroAnexado;
-    }
 
     @Column(name = "CUSTODIAID", length= 256)
     public String getCustodiaID() {
@@ -88,25 +82,6 @@ public class Anexo implements Serializable {
       this.custodiaID = custodyID;
     }
 
-    @Column(name = "TAMANO")
-    @JsonIgnore
-    public Long getTamano() {
-      return tamano;
-    }
-
-    public void setTamano(Long tamano) {
-      this.tamano = tamano;
-    }
-
-    @Column(name = "TIPOMIME")
-    @JsonIgnore
-    public String getTipoMIME() {
-      return tipoMIME;
-    }
-
-    public void setTipoMIME(String tipoMIME) {
-      this.tipoMIME = tipoMIME;
-    }
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "TDOCUMENTAL")
@@ -188,14 +163,7 @@ public class Anexo implements Serializable {
       this.modoFirma = modoFirma;
     }
 
-    @Column(name = "NOMBREFIRMAANEX", length= 80)
-    public String getNombreFirmaAnexada() {
-      return nombreFirmaAnexada;
-    }
-
-    public void setNombreFirmaAnexada(String nombreFirmaAnexada) {
-      this.nombreFirmaAnexada = nombreFirmaAnexada;
-    }
+    
     @Column(name = "CERTIFICADO")
     public String getCertificado() {
       return certificado;
@@ -231,6 +199,18 @@ public class Anexo implements Serializable {
     public void setCsv(String csv) {
         this.csv = csv;
     }
+    
+    
+    @Column(name = "FIRMACSV")
+    public String getFirmacsv() {
+      return firmacsv;
+    }
+
+    public void setFirmacsv(String firmacsv) {
+      this.firmacsv = firmacsv;
+    }
+    
+    
     
     @Override
     public boolean equals(Object o) {

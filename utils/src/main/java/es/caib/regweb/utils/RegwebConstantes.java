@@ -522,4 +522,8 @@ public interface RegwebConstantes {
     public static final Long INFORME_TIPO_REGISTRO_SALIDA =  2L;
 
 
+    /* -------------- ANEXO ORIGEN -------------------------- */
+    public static final Long ANEXO_ORIGEN_CIUDADANO = 0L;
+    public static final Long ANEXO_ORIGEN_ADMINISTRACION = 1L;
+
 }

@@ -13,6 +13,7 @@ import java.util.Calendar;
  *
  * @author earrivi
  * @author mgonzalez
+ * @author anadal
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -22,25 +23,45 @@ public class AnexoWs {
     private String nombreFicheroAnexado;
     @XmlInlineBinaryData
     private byte[] ficheroAnexado;
-    private Long tamanoFicheroAnexado;
+    //private Long tamanoFicheroAnexado;
     private String tipoMIMEFicheroAnexado;
     private String tipoDocumental;
-    // TODO Marilen Revisar validezDocumento porque no es un Long
+    /**
+     * Long TIPOVALIDEZDOCUMENTO_COPIA="01";
+     * TIPOVALIDEZDOCUMENTO_COPIA_COMPULSADA="02";
+     * TIPOVALIDEZDOCUMENTO_COPIA_ORIGINAL="03";
+     * TIPOVALIDEZDOCUMENTO_ORIGINAL="04";
+     */
     private String validezDocumento;
-    // TODO Marilen Revisar tipoDocumento porque no es un Long
+    /** 
+     * Codi NTI: 
+     * 
+     *  TIPO_DOCUMENTO_FORMULARIO = "01";
+     *  TIPO_DOCUMENTO_DOC_ADJUNTO = "02";
+     *  TIPO_DOCUMENTO_FICHERO_TECNICO ="03";
+     *  
+     */
     private String tipoDocumento;
     private String observaciones;
+    /**
+     * ANEXO_ORIGEN_CIUDADANO = 0L;
+     * ANEXO_ORIGEN_ADMINISTRACION = 1L;
+     */
     private Integer origenCiudadanoAdmin;
     private Calendar fechaCaptura;
     private Integer modoFirma;
+    
+    
     private String nombreFirmaAnexada;
     @XmlInlineBinaryData
     private byte[] firmaAnexada;
-    private Long tamanoFirmaAnexada;
+    //private Long tamanoFirmaAnexada;
     private String tipoMIMEFirmaAnexada;
 
     private String certificado;
-    //private String firmacsv;
+    
+    private String csv;
+    private String firmacsv;
     private String timestamp;
     private String validacionOCSP;
 
@@ -69,6 +90,7 @@ public class AnexoWs {
       this.ficheroAnexado = ficheroAnexado;
     }
 
+    /*
     public Long getTamanoFicheroAnexado() {
       return tamanoFicheroAnexado;
     }
@@ -76,6 +98,7 @@ public class AnexoWs {
     public void setTamanoFicheroAnexado(Long tamanoFicheroAnexado) {
       this.tamanoFicheroAnexado = tamanoFicheroAnexado;
     }
+    */
 
     public String getTipoMIMEFicheroAnexado() {
       return tipoMIMEFicheroAnexado;
@@ -157,6 +180,7 @@ public class AnexoWs {
       this.firmaAnexada = firmaAnexada;
     }
 
+    /*
     public Long getTamanoFirmaAnexada() {
       return tamanoFirmaAnexada;
     }
@@ -164,6 +188,7 @@ public class AnexoWs {
     public void setTamanoFirmaAnexada(Long tamanoFirmaAnexada) {
       this.tamanoFirmaAnexada = tamanoFirmaAnexada;
     }
+    */
 
     public String getTipoMIMEFirmaAnexada() {
       return tipoMIMEFirmaAnexada;
@@ -181,16 +206,6 @@ public class AnexoWs {
       this.certificado = certificado;
     }
 
-    /*
-    public String getFirmacsv() {
-      return firmacsv;
-    }
-
-    public void setFirmacsv(String firmacsv) {
-      this.firmacsv = firmacsv;
-    }
-    */
-
     public String getTimestamp() {
       return timestamp;
     }
@@ -206,4 +221,21 @@ public class AnexoWs {
     public void setValidacionOCSP(String validacionOCSP) {
       this.validacionOCSP = validacionOCSP;
     }
+
+    public String getCsv() {
+      return csv;
+    }
+
+    public void setCsv(String csv) {
+      this.csv = csv;
+    }
+
+    public String getFirmacsv() {
+      return firmacsv;
+    }
+
+    public void setFirmacsv(String firmacsv) {
+      this.firmacsv = firmacsv;
+    }
+
 }

@@ -1,6 +1,7 @@
 package es.caib.regweb.ws.converter;
 
 import es.caib.regweb.model.*;
+import es.caib.regweb.persistence.ejb.AnexoLocal;
 import es.caib.regweb.persistence.ejb.CodigoAsuntoLocal;
 import es.caib.regweb.persistence.ejb.TipoAsuntoLocal;
 import es.caib.regweb.persistence.utils.I18NLogicUtils;
@@ -9,6 +10,7 @@ import es.caib.regweb.ws.model.AnexoWs;
 import es.caib.regweb.ws.model.InteresadoWs;
 import es.caib.regweb.ws.model.RegistroEntradaWs;
 import es.caib.regweb.ws.v3.impl.CommonConverter;
+
 import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import java.util.ArrayList;
@@ -69,7 +71,8 @@ public class RegistroEntradaConverter extends CommonConverter {
         return registroEntrada;
     }
 
-    public static RegistroEntradaWs getRegistroEntradaWs(RegistroEntrada registroEntrada, String idioma) throws Exception{
+    public static RegistroEntradaWs getRegistroEntradaWs(RegistroEntrada registroEntrada,
+        String idioma, AnexoLocal anexoEjb) throws Exception, I18NException {
 
         if (registroEntrada == null) {
             return null;
@@ -132,7 +135,7 @@ public class RegistroEntradaConverter extends CommonConverter {
         }
 
         if(registroDetalle.getAnexos() != null){
-            List<AnexoWs> anexosWs = procesarAnexosWs(registroDetalle.getAnexos());
+            List<AnexoWs> anexosWs = procesarAnexosWs(registroDetalle.getAnexos(), anexoEjb);
 
             registroWs.setAnexos(anexosWs);
         }

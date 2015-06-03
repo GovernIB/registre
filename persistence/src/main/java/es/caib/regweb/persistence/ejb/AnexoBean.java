@@ -293,13 +293,15 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         doc = anexoFull.getDocumentoCustody();
 
         if (doc != null && doc.getData() != null) {
-          byte[] data = doc.getData();
+          //byte[] data = doc.getData();
 
-          anexo.setTipoMIME(doc.getMime() == null? "application/octet-stream" : doc.getMime());
+          if(doc.getMime() == null) {
+            doc.setMime("application/octet-stream");
+          }
 
-          anexo.setNombreFicheroAnexado(checkFileName(doc.getName() , "file.bin"));
+          doc.setName(checkFileName(doc.getName() , "file.bin"));
           // TODO CHECK
-          anexo.setTamano(new Long(data.length));
+          //anexo.setTamano(new Long(data.length));
           anexo.setFechaCaptura((Date)new Timestamp(new Date().getTime()));
 
           custody.saveDocument(custodyID, custodyParameters, doc);

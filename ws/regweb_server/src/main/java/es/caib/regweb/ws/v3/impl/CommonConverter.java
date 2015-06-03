@@ -5,6 +5,7 @@ import es.caib.regweb.persistence.ejb.*;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.ws.converter.AnexoConverter;
 import es.caib.regweb.ws.model.*;
+
 import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import java.util.ArrayList;
@@ -235,13 +236,15 @@ public class CommonConverter {
    * @return
    * @throws Exception
    */
-   public static List<AnexoWs> procesarAnexosWs(List<Anexo> anexos) throws Exception{
+   public static List<AnexoWs> procesarAnexosWs(List<Anexo> anexos, AnexoLocal anexoEjb) throws Exception, I18NException{
 
       List<AnexoWs> anexosWs = new ArrayList<AnexoWs>();
 
       for (Anexo anexo : anexos) {
 
-          AnexoWs anexoWs =  AnexoConverter.getAnexoWs(anexo);
+          AnexoFull anexoFull = anexoEjb.getAnexoFull(anexo.getId());
+        
+          AnexoWs anexoWs =  AnexoConverter.getAnexoWs(anexoFull);
 
           anexosWs.add(anexoWs);
       }
