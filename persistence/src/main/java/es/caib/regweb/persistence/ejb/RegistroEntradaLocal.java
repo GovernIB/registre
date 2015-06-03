@@ -11,6 +11,8 @@ import es.caib.regweb.persistence.utils.Paginacion;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 
+import org.fundaciobit.genapp.common.i18n.I18NException;
+
 import java.util.Date;
 import java.util.List;
 
@@ -32,14 +34,25 @@ public interface RegistroEntradaLocal extends BaseEjb<RegistroEntrada, Long> {
      * @throws Exception
      */
     public List<RegistroEntrada> getByUsuario(Long idUsuarioEntidad) throws Exception;
-
+    
+    
     /**
-     * Guarda un Registro de Entrada y le asocia un número de registro
+     * Guarda un Registro de Entrada y le asocia un número de registro (sin anexos)
      * @param registroEntrada
      * @return
      * @throws Exception
      */
-    public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada) throws Exception;
+    public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada)throws Exception, I18NException;
+    
+
+    /**
+     * Guarda un Registro de Entrada y le asocia un número de registro (con anexos)
+     * @param registroEntrada
+     * @return
+     * @throws Exception
+     */
+    public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada, 
+        UsuarioEntidad usuarioEntidad, List<AnexoFull> anexosFull) throws Exception, I18NException;
 
    /**
      * Busca los Registros de Entrada en función de los parámetros

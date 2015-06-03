@@ -12,6 +12,8 @@ import es.caib.regweb.webapp.controller.BaseController;
 import es.caib.regweb.webapp.form.*;
 import es.caib.regweb.webapp.utils.Mensaje;
 import es.caib.regweb.ws.sir.api.wssir6b.RespuestaWS;
+
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -216,7 +219,7 @@ public class OficioRemisionController extends BaseController {
      */
     @RequestMapping(value = "/new", method = RequestMethod.POST)
     public String oficioRemision(@ModelAttribute RegistroEntradaListForm registroEntradaListForm,
-        HttpServletRequest request)throws Exception {
+        HttpServletRequest request)throws Exception, I18NException {
 
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
@@ -577,7 +580,7 @@ public class OficioRemisionController extends BaseController {
     @RequestMapping(value = "/{idOficioRemision}/procesar", method = RequestMethod.POST)
     public String procesarOficioRemision(
         @ModelAttribute OficioPendienteLlegadaForm oficioPendienteLlegadaForm,
-        @PathVariable Long idOficioRemision, Model model, HttpServletRequest request) throws Exception {
+        @PathVariable Long idOficioRemision, Model model, HttpServletRequest request) throws Exception, I18NException {
 
         OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
         Oficina oficinaActiva = getOficinaActiva(request);

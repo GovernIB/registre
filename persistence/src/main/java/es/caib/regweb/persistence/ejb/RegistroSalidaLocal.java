@@ -9,6 +9,8 @@ import es.caib.regweb.persistence.utils.Paginacion;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 
+import org.fundaciobit.genapp.common.i18n.I18NException;
+
 import java.util.Date;
 import java.util.List;
 
@@ -31,12 +33,22 @@ public interface RegistroSalidaLocal extends BaseEjb<RegistroSalida, Long> {
     public List<RegistroSalida> getByUsuario(Long idUsuarioEntidad) throws Exception;
 
     /**
-     * Guarda un Registro de Salida
+     * Guarda un Registro de Salida (sin anexos)
      * @param registroSalida
      * @return
      * @throws Exception
      */
-    public RegistroSalida registrarSalida(RegistroSalida registroSalida) throws Exception;
+    public RegistroSalida registrarSalida(RegistroSalida registroSalida) throws Exception, I18NException;
+    
+    /**
+     * Guarda un Registro de Salida (con anexos)
+     * @param registroSalida
+     * @return
+     * @throws Exception
+     */
+    public RegistroSalida registrarSalida(RegistroSalida registroSalida,
+        UsuarioEntidad usuarioEntidad, List<AnexoFull> anexos) throws Exception, I18NException;
+    
 
     /**
      * Busca los Registros de Salida en función de los parametros

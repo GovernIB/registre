@@ -182,18 +182,19 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
             throw new I18NException("interesado.registro.obligatorio");
         }
 
-        // 8.- Validar los Anexos
+        
+          //Asociamos los anexos al Registro de Entrada
+         // 8.- Validar los Anexos
+        List<AnexoFull> anexosFull = null;
         if(registroSalidaWs.getAnexos() != null && registroSalidaWs.getAnexos().size() > 0){
           // /Procesamos los anexos
-          List<Anexo> anexos = procesarAnexos(registroSalidaWs.getAnexos(), usuario,
-              registroSalida.getId(), "salida");
+          anexosFull = procesarAnexos(registroSalidaWs.getAnexos(), usuario.getEntidad().getId());
 
-          //Asociamos los anexos al Registro de Entrada
-          registroSalida.getRegistroDetalle().setAnexos(anexos);
+          registroSalida.getRegistroDetalle().setAnexos(null);
         }
 
         // 7.- Creamos el Registro de Entrada
-        registroSalida = registroSalidaEjb.registrarSalida(registroSalida);
+        registroSalida = registroSalidaEjb.registrarSalida(registroSalida, usuario, anexosFull);
 
         if(registroSalida.getId() != null){
             // 8.- Creamos el Historico RegistroEntrada

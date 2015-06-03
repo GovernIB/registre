@@ -11,6 +11,8 @@ import es.caib.regweb.webapp.form.PreRegistroBusquedaForm;
 import es.caib.regweb.webapp.utils.Mensaje;
 import es.caib.regweb.ws.sir.api.wssir7.WS_SIR7ServiceLocator;
 import es.caib.regweb.ws.sir.api.wssir7.WS_SIR7_PortType;
+
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +22,7 @@ import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
+
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -183,7 +186,9 @@ public class PreRegistroController extends BaseController {
      * Procesa {@link es.caib.regweb.model.PreRegistro}, creando un RegistroEntrada
      */
     @RequestMapping(value = "/{idPreRegistro}/registrar/{idLibro}", method = RequestMethod.GET)
-    public String confirmarPreRegistro(@PathVariable Long idPreRegistro, @PathVariable Long idLibro, Model model, HttpServletRequest request) throws Exception {
+    public String confirmarPreRegistro(@PathVariable Long idPreRegistro,
+        @PathVariable Long idLibro, Model model, HttpServletRequest request)
+            throws Exception, I18NException {
 
         PreRegistro preRegistro = preRegistroEjb.findById(idPreRegistro);
         Oficina oficinaActiva = getOficinaActiva(request);

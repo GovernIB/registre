@@ -8,7 +8,9 @@ import es.caib.regweb.persistence.utils.Paginacion;
 import es.caib.regweb.persistence.utils.RegistroUtils;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.utils.StringUtils;
+
 import org.apache.log4j.Logger;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
@@ -16,6 +18,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
 import java.util.*;
 
 /**
@@ -45,6 +48,10 @@ public class RegistroSalidaBean extends BaseEjbJPA<RegistroSalida, Long> impleme
 
     @EJB(mappedName = "regweb/ContadorEJB/local")
     public ContadorLocal contadorEjb;
+    
+    
+    @EJB(mappedName = "regweb/AnexoEJB/local")
+    public AnexoLocal anexoEjb;
 
 
     @Override
@@ -89,8 +96,16 @@ public class RegistroSalidaBean extends BaseEjbJPA<RegistroSalida, Long> impleme
         return q.getResultList();
     }
 
-    
-    public synchronized RegistroSalida registrarSalida(RegistroSalida registroSalida)throws Exception{
+    @Override
+    public RegistroSalida registrarSalida(RegistroSalida registroSalida)throws Exception, I18NException{
+      return registrarSalida(registroSalida, null,null);
+    }
+      
+      
+      
+    @Override
+     public synchronized RegistroSalida registrarSalida(RegistroSalida registroSalida,
+          UsuarioEntidad usuarioEntidad, List<AnexoFull> anexos) throws Exception, I18NException {
 
         // Obtenemos el Número de registro
         Libro libro = libroEjb.findById(registroSalida.getLibro().getId());
@@ -115,13 +130,6 @@ public class RegistroSalidaBean extends BaseEjbJPA<RegistroSalida, Long> impleme
           }
         }
         
-        
-        List<Anexo> anexos  = registroSalida.getRegistroDetalle().getAnexos();
-        if (anexos != null && anexos.size() != 0) {
-          for (Anexo anexo : anexos) {
-            anexo.setRegistroDetalle(registroSalida.getRegistroDetalle());
-          }
-        }
 
         // Guardamos el RegistroSalida
         registroSalida = persist(registroSalida);
@@ -133,6 +141,18 @@ public class RegistroSalidaBean extends BaseEjbJPA<RegistroSalida, Long> impleme
 
             registroSalida = merge(registroSalida);
         }
+        
+        
+        // TODO Controlar custodyID y si hay fallo borrar todos los Custody
+        if (anexos != null && anexos.size() != 0) {
+          final Long registroID = registroSalida.getId();
+          for (AnexoFull anexoFull : anexos) {
+            anexoFull.getAnexo().setRegistroDetalle(registroSalida.getRegistroDetalle());
+            anexoFull = anexoEjb.crearAnexo(anexoFull, usuarioEntidad, registroID, "salida");
+          }
+        }
+        
+        
 
         return registroSalida;
 

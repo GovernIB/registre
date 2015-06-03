@@ -4,11 +4,14 @@ package es.caib.regweb.persistence.ejb;
 import es.caib.regweb.model.*;
 import es.caib.regweb.model.utils.OficioPendienteLlegada;
 import es.caib.regweb.utils.RegwebConstantes;
+
 import org.apache.log4j.Logger;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -59,8 +62,9 @@ public class OficioRemisionUtilsBean implements OficioRemisionUtilsLocal {
    * @return
    * @throws Exception
    */
-
-  public OficioRemision crearOficioRemisionInterno(List<RegistroEntrada> registrosEntrada, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, Long idOrganismo, Long idLibro) throws Exception{
+ @Override
+  public OficioRemision crearOficioRemisionInterno(List<RegistroEntrada> registrosEntrada,
+      Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, Long idOrganismo, Long idLibro) throws Exception, I18NException {
 
       Organismo organismoDestino = organismoEjb.findById(idOrganismo);
 
@@ -93,7 +97,8 @@ public class OficioRemisionUtilsBean implements OficioRemisionUtilsLocal {
 
   public OficioRemision crearOficioRemisionExterno(List<RegistroEntrada> registrosEntrada,
       Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, String organismoExterno,
-      String organismoExternoDenominacion, Long idLibro, String identificadorIntercambioSir) throws Exception{
+      String organismoExternoDenominacion, Long idLibro, String identificadorIntercambioSir)
+          throws Exception , I18NException{
 
       //Organismo organismoDestino = organismoEjb.findById(idOrganismo);
 
@@ -133,7 +138,10 @@ public class OficioRemisionUtilsBean implements OficioRemisionUtilsLocal {
    * @param oficioRemision
    * @throws Exception
    */
-  public List<RegistroEntrada> procesarOficioRemision(OficioRemision oficioRemision, UsuarioEntidad usuario, Oficina oficinaActiva, List<OficioPendienteLlegada> oficios) throws Exception{
+  @Override
+  public List<RegistroEntrada> procesarOficioRemision(OficioRemision oficioRemision, 
+      UsuarioEntidad usuario, Oficina oficinaActiva, 
+      List<OficioPendienteLlegada> oficios) throws Exception, I18NException{
 
       List<RegistroEntrada> registros = new ArrayList<RegistroEntrada>();
 

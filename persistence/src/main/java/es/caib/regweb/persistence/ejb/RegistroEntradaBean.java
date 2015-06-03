@@ -7,7 +7,9 @@ import es.caib.regweb.model.utils.RegistroBasico;
 import es.caib.regweb.persistence.utils.*;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.utils.StringUtils;
+
 import org.apache.log4j.Logger;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
@@ -15,6 +17,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
 import java.util.*;
 
 /**
@@ -26,7 +29,8 @@ import java.util.*;
 
 @Stateless(name = "RegistroEntradaEJB")
 @SecurityDomain("seycon")
-public class RegistroEntradaBean extends BaseEjbJPA<RegistroEntrada, Long> implements RegistroEntradaLocal{
+public class RegistroEntradaBean extends BaseEjbJPA<RegistroEntrada, Long>
+   implements RegistroEntradaLocal{
 
     protected final Logger log = Logger.getLogger(getClass());
 
@@ -44,6 +48,9 @@ public class RegistroEntradaBean extends BaseEjbJPA<RegistroEntrada, Long> imple
 
     @EJB(name = "HistoricoRegistroEntradaEJB")
     public HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
+    
+    @EJB(mappedName = "regweb/AnexoEJB/local")
+    public AnexoLocal anexoEjb;
 
 
 
@@ -89,9 +96,19 @@ public class RegistroEntradaBean extends BaseEjbJPA<RegistroEntrada, Long> imple
 
         return q.getResultList();
     }
+    
+    
+    
+    @Override
+    public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada)throws Exception, I18NException {
+      return registrarEntrada(registroEntrada,null, null);
+    }
+    
+    
 
     @Override
-    public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada)throws Exception{
+    public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
+        UsuarioEntidad usuarioEntidad, List<AnexoFull> anexosFull)throws Exception, I18NException {
 
 
         // Obtenemos el Número de registro
@@ -117,16 +134,7 @@ public class RegistroEntradaBean extends BaseEjbJPA<RegistroEntrada, Long> imple
             interesado.setRegistroDetalle(registroEntrada.getRegistroDetalle());
           }
         }
-        
-        
-        List<Anexo> anexos  = registroEntrada.getRegistroDetalle().getAnexos();
-        if (anexos != null && anexos.size() != 0) {
-          for (Anexo anexo : anexos) {
-            anexo.setRegistroDetalle(registroEntrada.getRegistroDetalle());
-          }
-        }
-        
-        
+
         registroEntrada = persist(registroEntrada);
 
         //Si no se ha espeficicado un NumeroRegistroOrigen, le asignamos el propio
@@ -135,6 +143,17 @@ public class RegistroEntradaBean extends BaseEjbJPA<RegistroEntrada, Long> imple
             registroEntrada.getRegistroDetalle().setNumeroRegistroOrigen(registroEntrada.getNumeroRegistroFormateado());
 
             registroEntrada = merge(registroEntrada);
+        }
+
+        // TODO Controlar custodyID y si hay fallo borrar todos los Custody
+        if (anexosFull != null && anexosFull.size() != 0) {
+          final Long registroID = registroEntrada.getId();
+          for (AnexoFull anexoFull : anexosFull) {
+            
+            anexoFull.getAnexo().setRegistroDetalle(registroEntrada.getRegistroDetalle());
+            anexoFull = anexoEjb.crearAnexo(anexoFull, usuarioEntidad, registroID, "entrada");
+            
+          }
         }
 
         return registroEntrada;

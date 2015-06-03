@@ -8,6 +8,9 @@ import es.caib.regweb.persistence.utils.Paginacion;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
+
+import org.fundaciobit.genapp.common.i18n.I18NException;
+
 import java.util.List;
 import java.util.Set;
 
@@ -39,7 +42,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @return
      * @throws Exception
      */
-    public OficioRemision registrarOficioRemision(OficioRemision oficioRemision, Long estado) throws Exception;
+    public OficioRemision registrarOficioRemision(OficioRemision oficioRemision, Long estado) throws Exception, I18NException;
 
     /**
      * Devuelve los Oficios de Remisión pendientes de procesar de los organismos seleccionados

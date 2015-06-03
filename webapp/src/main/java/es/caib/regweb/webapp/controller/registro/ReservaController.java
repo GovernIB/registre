@@ -6,6 +6,8 @@ import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.webapp.controller.BaseController;
 import es.caib.regweb.webapp.utils.Mensaje;
 import es.caib.regweb.webapp.validator.ReservaValidator;
+
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
+
 import java.text.SimpleDateFormat;
 
 /**
@@ -78,7 +81,9 @@ public class ReservaController  extends BaseController {
      * Guardar un nuevo {@link es.caib.regweb.model.RegistroEntrada}
      */
     @RequestMapping(value = "/reserva", method = RequestMethod.POST)
-    public String reserva(@ModelAttribute("registro") RegistroEntrada registro, BindingResult result, Model model,SessionStatus status, HttpServletRequest request) throws Exception{
+    public String reserva(@ModelAttribute("registro") RegistroEntrada registro, 
+        BindingResult result, Model model,SessionStatus status,
+        HttpServletRequest request) throws Exception, I18NException {
 
         reservaValidator.validate(registro, result);
 

@@ -189,19 +189,19 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         }
 
         // 8.- Validar los Anexos
-        List<Anexo> anexos = null;
+        List<AnexoFull> anexosFull = null;
         if(registroEntradaWs.getAnexos() != null && registroEntradaWs.getAnexos().size() > 0){
 
           // /Procesamos los anexos
-          anexos = procesarAnexos(registroEntradaWs.getAnexos(), usuario, registroEntrada.getId(), "entrada");
+          anexosFull = procesarAnexos(registroEntradaWs.getAnexos(), usuario.getEntidad().getId());
 
 
           //Asociamos los anexos al Registro de Entrada
-          registroEntrada.getRegistroDetalle().setAnexos(anexos);
+          registroEntrada.getRegistroDetalle().setAnexos(null);
         }
 
         // 7.- Creamos el Registro de Entrada
-        registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada);
+        registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuario, anexosFull);
 
         if(registroEntrada.getId() != null){
             // 8.- Creamos el Historico RegistroEntrada

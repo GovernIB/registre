@@ -7,6 +7,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
 import org.apache.log4j.Logger;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import es.caib.regweb.model.Libro;
@@ -62,8 +63,9 @@ public class PreRegistroUtilsBean implements PreRegistroUtilsLocal {
    * @param preRegistro
    * @throws Exception
    */
+  @Override
   public RegistroEntrada procesarPreRegistroEntrada(PreRegistro preRegistro, 
-      UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro) throws Exception {
+      UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro) throws Exception, I18NException  {
 
       RegistroEntrada nuevoRE = new RegistroEntrada();
 
@@ -121,8 +123,9 @@ public class PreRegistroUtilsBean implements PreRegistroUtilsLocal {
    * @param preRegistro
    * @throws Exception
    */
+  @Override
   public RegistroSalida procesarPreRegistroSalida(PreRegistro preRegistro, 
-      UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro) throws Exception {
+      UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro) throws Exception, I18NException {
 
       RegistroSalida nuevoRS = new RegistroSalida();
 

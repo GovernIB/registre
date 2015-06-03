@@ -44,15 +44,14 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
   * @throws I18NValidationException
   * @throws I18NException
   */
- protected List<Anexo> procesarAnexos(List<AnexoWs> anexosWs, UsuarioEntidad usuarioEntidad,
-     Long registroID, String tipoRegistro) throws Exception, I18NValidationException, I18NException {
+ protected List<AnexoFull> procesarAnexos(List<AnexoWs> anexosWs, Long entidadID) throws Exception, I18NValidationException, I18NException {
 
-     List<Anexo> anexos  = new ArrayList<Anexo>();
+     List<AnexoFull> anexos  = new ArrayList<AnexoFull>();
 
      for (AnexoWs anexoWs : anexosWs) {
          //Convertimos a anexo
 
-         AnexoFull anexoFull = AnexoConverter.getAnexoFull(anexoWs, usuarioEntidad.getEntidad().getId(),tipoDocumentalEjb);
+         AnexoFull anexoFull = AnexoConverter.getAnexoFull(anexoWs, entidadID,tipoDocumentalEjb);
 
          validateAnexo(anexoFull.getAnexo(), true);
 
@@ -68,9 +67,9 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
          */
          
          // Actualizamos el anexo y le asociamos los archivos
-         anexoFull = anexoEjb.crearAnexo(anexoFull, usuarioEntidad, registroID, tipoRegistro);
+         //anexoFull = anexoEjb.crearAnexo(anexoFull, usuarioEntidad, registroID, tipoRegistro);
                      
-         anexos.add(anexoFull.getAnexo());
+         anexos.add(anexoFull);
      }
 
      return anexos;
