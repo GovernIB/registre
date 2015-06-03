@@ -1,6 +1,5 @@
 package es.caib.regweb.persistence.ejb;
 
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.dir3caib.ws.api.oficina.RelacionOrganizativaOfiTF;
@@ -10,12 +9,15 @@ import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb.model.*;
 import es.caib.regweb.persistence.utils.Dir3CaibUtils;
 import es.caib.regweb.utils.RegwebConstantes;
+
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.xml.datatype.XMLGregorianCalendar;
+
+
+import java.sql.Timestamp;
 //import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -69,7 +71,8 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
      * Método que sincroniza o actualiza una entidad de regweb desde dir3caib. Lo hace en función de si se indica la
      * fecha de actualización o no. Si no se indica se sincroniza y si se indica se actualiza
      */
-    public void sincronizarActualizar(Long entidadId, Date fechaActualizacion, Date fechaSincronizacion) throws Exception {
+    @Override
+    public void sincronizarActualizar(Long entidadId, Timestamp fechaActualizacion, Timestamp fechaSincronizacion) throws Exception {
 
         // SimpleDateFormat formatoFecha = new SimpleDateFormat(RegwebConstantes.FORMATO_FECHA);
 
@@ -80,6 +83,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService();
         Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
 
+        /*
         GregorianCalendar gc = (GregorianCalendar)GregorianCalendar.getInstance();
         XMLGregorianCalendar xGcFechaActualizacion = null;
         XMLGregorianCalendar xGcFechaSincronizacion = null;
@@ -88,17 +92,20 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
           gc.setTimeInMillis(fechaActualizacion.getTime());
           xGcFechaActualizacion = new XMLGregorianCalendarImpl(gc);
         }
+        */
 
         //Transformamos fechaSincronizacion
+        /*
         if(fechaSincronizacion != null) {
           gc.setTimeInMillis(fechaSincronizacion.getTime());
           xGcFechaSincronizacion = new XMLGregorianCalendarImpl(gc);
         }
+        */
 
         // Obtenemos la Unidad Padre y las dependientes.
-        es.caib.dir3caib.ws.api.unidad.UnidadTF unidadPadre = unidadesService.obtenerUnidad(entidad.getCodigoDir3(),xGcFechaActualizacion, xGcFechaSincronizacion);
+        es.caib.dir3caib.ws.api.unidad.UnidadTF unidadPadre = unidadesService.obtenerUnidad(entidad.getCodigoDir3(),fechaActualizacion, fechaSincronizacion);
 
-        List<UnidadTF> arbol = unidadesService.obtenerArbolUnidades(entidad.getCodigoDir3(), xGcFechaActualizacion, xGcFechaSincronizacion);
+        List<UnidadTF> arbol = unidadesService.obtenerArbolUnidades(entidad.getCodigoDir3(), fechaActualizacion, fechaSincronizacion);
 
         log.info("Organimos obtenidos de " + entidad.getNombre() +": " + arbol.size());
 
@@ -167,7 +174,8 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
         // Obtenemos por cada Organismo, las Oficinas dependientes de el
         for(Organismo organismo: organismoEjb.findByEntidad(entidadId)){
-            List<OficinaTF> oficinas = oficinasService.obtenerArbolOficinas(organismo.getCodigo(),xGcFechaActualizacion,xGcFechaSincronizacion);
+            List<OficinaTF> oficinas = oficinasService.obtenerArbolOficinas(organismo.getCodigo(),
+                fechaActualizacion,fechaSincronizacion);
 
             // Creamos el arbol de oficinas
             for(OficinaTF oficinaTF:oficinas){

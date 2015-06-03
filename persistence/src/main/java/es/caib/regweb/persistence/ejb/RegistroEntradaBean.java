@@ -132,7 +132,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
          Query q;
          Query q2;
-         Query qInteressats;
+         // Query qInteressats;
          Map<String, Object> parametros = new HashMap<String, Object>();
          List<String> where = new ArrayList<String>();
 

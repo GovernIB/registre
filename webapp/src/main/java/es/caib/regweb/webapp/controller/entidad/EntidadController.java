@@ -4,7 +4,6 @@ import es.caib.regweb.model.*;
 import es.caib.regweb.persistence.ejb.*;
 import es.caib.regweb.persistence.utils.FileSystemManager;
 import es.caib.regweb.persistence.utils.Paginacion;
-import es.caib.regweb.utils.Configuracio;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.webapp.controller.BaseController;
 import es.caib.regweb.webapp.editor.UsuarioEntidadEditor;
@@ -32,6 +31,7 @@ import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import java.sql.Timestamp;
 import java.util.*;
 
 /**
@@ -446,7 +446,10 @@ public class EntidadController extends BaseController {
 
        try{
           Descarga ultimaDescarga = descargaEjb.findByTipoEntidad(RegwebConstantes.UNIDAD,entidadId);
-          Date fechaUltimaActualizacion =  ultimaDescarga.getFechaImportacion();
+          Timestamp fechaUltimaActualizacion = null;
+          if (ultimaDescarga.getFechaImportacion() != null) {
+            fechaUltimaActualizacion = new Timestamp(ultimaDescarga.getFechaImportacion().getTime());
+          }
 
           // Determinamos si es actualizacion o sincronizacion
           if(ultimaDescarga != null){
@@ -454,7 +457,10 @@ public class EntidadController extends BaseController {
           }
           // Establecemos la fecha de la primera sincronizacion
           Descarga primeraDescarga = descargaEjb.findByTipoEntidadInverse(RegwebConstantes.UNIDAD, entidadId);
-          Date fechaSincronizacion = primeraDescarga.getFechaImportacion();
+          Timestamp fechaSincronizacion = null;
+          if (primeraDescarga.getFechaImportacion() != null) {
+            fechaSincronizacion = new Timestamp(primeraDescarga.getFechaImportacion().getTime());
+          }
 
 
           sincronizadorDIR3Ejb.sincronizarActualizar(entidadId, fechaUltimaActualizacion, fechaSincronizacion);
