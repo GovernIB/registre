@@ -8,16 +8,14 @@ import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.plugins.documentcustody.DocumentCustody;
-import org.fundaciobit.plugins.documentcustody.SignatureCustody;
 
-import java.util.Date;
 import java.util.List;
 
 /**
  * Created by Fundacio Bit
  *
  * @author earrivi
+ * @author anadal
  * Date: 6/03/13
  */
 @Local

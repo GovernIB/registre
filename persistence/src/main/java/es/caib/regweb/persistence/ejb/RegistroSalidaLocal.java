@@ -22,7 +22,7 @@ import java.util.List;
  */
 @Local
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
-public interface RegistroSalidaLocal extends BaseEjb<RegistroSalida, Long> {
+public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
 
     /**
      * Obtiene los Registros de Salida de un Usuario.
@@ -176,14 +176,6 @@ public interface RegistroSalidaLocal extends BaseEjb<RegistroSalida, Long> {
      * @throws Exception
      */
     public List<RegistroSalida> buscaPorLibroTipoNumero(Date fechaInicio, Date fechaFin, Long idLibro, Integer numeroRegistro) throws Exception;
-
-    /**
-     * Cambiar el estado del registro
-     * @param idRegistro
-     * @param idEstado
-     * @throws Exception
-     */
-    public void cambiarEstado(Long idRegistro, Long idEstado) throws Exception;
 
     /**
      * Busca los últimos RegistroSalida de una Oficina

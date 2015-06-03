@@ -46,8 +46,7 @@ import java.util.List;
 @Stateless(name = "AnexoEJB")
 @SecurityDomain("seycon")
 public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
-  
-  
+
     public javax.ejb.SessionContext ejbContext;
 
     protected final Logger log = Logger.getLogger(getClass());
@@ -56,11 +55,11 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     private EntityManager em;
 
 
-    @EJB(mappedName = "regweb/RegistroEntradaEJB/local")
-    public RegistroEntradaLocal registroEntradaEjb;
+    @EJB(mappedName = "regweb/RegistroEntradaCambiarEstadoEJB/local")
+    public RegistroEntradaCambiarEstadoLocal registroEntradaEjb;
 
-    @EJB(mappedName = "regweb/RegistroSalidaEJB/local")
-    public RegistroSalidaLocal registroSalidaEjb;
+    @EJB(mappedName = "regweb/RegistroSalidaCambiarEstadoEJB/local")
+    public RegistroSalidaCambiarEstadoLocal registroSalidaEjb;
 
     @EJB(mappedName = "regweb/RegistroDetalleEJB/local")
     public RegistroDetalleLocal registroDetalleEjb;

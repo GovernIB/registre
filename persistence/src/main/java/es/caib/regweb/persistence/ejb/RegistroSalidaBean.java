@@ -30,7 +30,8 @@ import java.util.*;
 
 @Stateless(name = "RegistroSalidaEJB")
 @SecurityDomain("seycon")
-public class RegistroSalidaBean extends BaseEjbJPA<RegistroSalida, Long> implements RegistroSalidaLocal{
+public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean 
+    implements RegistroSalidaLocal{
 
     protected final Logger log = Logger.getLogger(getClass());
 
@@ -53,38 +54,6 @@ public class RegistroSalidaBean extends BaseEjbJPA<RegistroSalida, Long> impleme
     @EJB(mappedName = "regweb/AnexoEJB/local")
     public AnexoLocal anexoEjb;
 
-
-    @Override
-    public RegistroSalida findById(Long id) throws Exception {
-
-        return em.find(RegistroSalida.class, id);
-    }
-
-    @Override
-    @SuppressWarnings(value = "unchecked")
-    public List<RegistroSalida> getAll() throws Exception {
-
-        return  em.createQuery("Select registroSalida from RegistroSalida as registroSalida order by registroSalida.id").getResultList();
-    }
-
-    @Override
-    public Long getTotal() throws Exception {
-
-        Query q = em.createQuery("Select count(registroSalida.id) from RegistroSalida as registroSalida");
-
-        return (Long) q.getSingleResult();
-    }
-
-
-    @Override
-    public List<RegistroSalida> getPagination(int inicio) throws Exception {
-
-        Query q = em.createQuery("Select registroSalida from RegistroSalida as registroSalida order by registroSalida.id");
-        q.setFirstResult(inicio);
-        q.setMaxResults(RESULTADOS_PAGINACION);
-
-        return q.getResultList();
-    }
 
     @Override
     public List<RegistroSalida> getByUsuario(Long idUsuarioEntidad) throws Exception{
@@ -520,13 +489,8 @@ public class RegistroSalidaBean extends BaseEjbJPA<RegistroSalida, Long> impleme
         return q.getResultList();
     }
 
-    @Override
-    public void cambiarEstado(Long idRegistro, Long idEstado) throws Exception{
-        RegistroSalida registroSalida = findById(idRegistro);
-        registroSalida.setEstado(idEstado);
-        merge(registroSalida);
-    }
 
+    @Override
     public List<RegistroBasico> getUltimosRegistros(Long idOficina, Integer total) throws Exception{
 
         Query q;

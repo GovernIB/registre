@@ -16,7 +16,7 @@ import org.jboss.ejb3.annotation.SecurityDomain;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.xml.datatype.XMLGregorianCalendar;
-import java.text.SimpleDateFormat;
+//import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -71,7 +71,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
      */
     public void sincronizarActualizar(Long entidadId, Date fechaActualizacion, Date fechaSincronizacion) throws Exception {
 
-        SimpleDateFormat formatoFecha = new SimpleDateFormat(RegwebConstantes.FORMATO_FECHA);
+        // SimpleDateFormat formatoFecha = new SimpleDateFormat(RegwebConstantes.FORMATO_FECHA);
 
         Entidad entidad = entidadEjb.findById(entidadId);
 

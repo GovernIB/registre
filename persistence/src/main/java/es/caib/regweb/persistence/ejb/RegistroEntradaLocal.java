@@ -24,7 +24,7 @@ import java.util.List;
  */
 @Local
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
-public interface RegistroEntradaLocal extends BaseEjb<RegistroEntrada, Long> {
+public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal {
 
 
     /**

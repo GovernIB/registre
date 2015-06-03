@@ -29,7 +29,7 @@ import java.util.*;
 
 @Stateless(name = "RegistroEntradaEJB")
 @SecurityDomain("seycon")
-public class RegistroEntradaBean extends BaseEjbJPA<RegistroEntrada, Long>
+public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
    implements RegistroEntradaLocal{
 
     protected final Logger log = Logger.getLogger(getClass());
@@ -53,39 +53,6 @@ public class RegistroEntradaBean extends BaseEjbJPA<RegistroEntrada, Long>
     public AnexoLocal anexoEjb;
 
 
-
-    @Override
-    public RegistroEntrada findById(Long id) throws Exception {
-
-        return em.find(RegistroEntrada.class, id);
-    }
-
-
-    @Override
-    @SuppressWarnings(value = "unchecked")
-    public List<RegistroEntrada> getAll() throws Exception {
-
-        return  em.createQuery("Select registroEntrada from RegistroEntrada as registroEntrada order by registroEntrada.id").getResultList();
-    }
-
-    @Override
-    public Long getTotal() throws Exception {
-
-        Query q = em.createQuery("Select count(registroEntrada.id) from RegistroEntrada as registroEntrada");
-
-        return (Long) q.getSingleResult();
-    }
-
-
-    @Override
-    public List<RegistroEntrada> getPagination(int inicio) throws Exception {
-
-        Query q = em.createQuery("Select registroEntrada from RegistroEntrada as registroEntrada order by registroEntrada.id");
-        q.setFirstResult(inicio);
-        q.setMaxResults(RESULTADOS_PAGINACION);
-
-        return q.getResultList();
-    }
 
     @Override
     public List<RegistroEntrada> getByUsuario(Long idUsuarioEntidad) throws Exception{
