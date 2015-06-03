@@ -18,6 +18,7 @@ import java.util.*;
  * Created by Fundació BIT.
  *
  * @author earrivi
+ *  @author anadal
  * Date: 16/01/14
  */
 

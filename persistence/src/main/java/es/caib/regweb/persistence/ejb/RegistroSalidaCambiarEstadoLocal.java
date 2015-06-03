@@ -13,6 +13,7 @@ import javax.ejb.Local;
  * Created by Fundació BIT.
  *
  * @author earrivi
+ *  @author anadal
  * Date: 16/01/14
  */
 @Local
