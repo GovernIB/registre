@@ -1,6 +1,8 @@
 package es.caib.regweb.persistence.ejb;
 
+import es.caib.regweb.model.Anexo;
 import es.caib.regweb.model.RegistroDetalle;
+import es.caib.regweb.persistence.utils.AnnexFileSystemManager;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -57,5 +59,25 @@ public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> imple
         q.setMaxResults(RESULTADOS_PAGINACION);
 
         return q.getResultList();
+    }
+
+    @Override
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+
+        List registros =  em.createQuery("Select distinct(re.id) from RegistroDetalle as re where re.tipoAsunto.entidad.id = :idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+
+        for (Object id : registros) {
+            RegistroDetalle registroDetalle = findById((Long) id);
+
+            //Elimina los anexos
+            for(Anexo anexo: registroDetalle.getAnexos()){
+                AnnexFileSystemManager.eliminarCustodia(anexo.getCustodiaID());
+            }
+            remove(findById((Long) id));
+        }
+        em.flush();
+
+        return registros.size();
+
     }
 }

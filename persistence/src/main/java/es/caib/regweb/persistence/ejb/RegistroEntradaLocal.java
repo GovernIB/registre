@@ -7,12 +7,10 @@ import es.caib.regweb.model.UsuarioEntidad;
 import es.caib.regweb.model.utils.RegistroBasico;
 import es.caib.regweb.persistence.utils.OficiosRemisionOrganismo;
 import es.caib.regweb.persistence.utils.Paginacion;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
-
-import org.fundaciobit.genapp.common.i18n.I18NException;
-
 import java.util.Date;
 import java.util.List;
 
@@ -307,5 +305,13 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @throws Exception
      */
     public void tramitarRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad) throws Exception;
+
+    /**
+     * Elimina los RegistroEntrada de una Entidad
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
 
 }

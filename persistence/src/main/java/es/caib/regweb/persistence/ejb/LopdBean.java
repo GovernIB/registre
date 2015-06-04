@@ -202,4 +202,16 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         }
     }
 
+    @Override
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+
+        List lopd =  em.createQuery("select distinct(l.id) from Lopd as l where l.usuario.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+
+        if(lopd.size() > 0){
+            return em.createQuery("delete from Lopd where id in (:lopd)").setParameter("lopd", lopd).executeUpdate();
+        }
+        return 0;
+
+    }
+
 }

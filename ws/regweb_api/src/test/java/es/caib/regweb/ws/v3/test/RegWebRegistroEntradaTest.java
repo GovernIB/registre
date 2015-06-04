@@ -137,13 +137,13 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils{
 
         DatosInteresadoWs interesado = new DatosInteresadoWs();
         interesado.setTipoInteresado((long)2);
-        interesado.setNombre("Gerardo");
-        interesado.setApellido1("Martinez");
+        interesado.setNombre("Jaime");
+        interesado.setApellido1("Arrivi");
         interesadoWs.setInteresado(interesado);
 
         DatosInteresadoWs representante = new DatosInteresadoWs();
         representante.setTipoInteresado((long)3);
-        representante.setRazonSocial("Endesa");
+        representante.setRazonSocial("McDonalds");
         interesadoWs.setRepresentante(representante);
 
         registroEntradaWs.getInteresados().add(interesadoWs);
@@ -159,7 +159,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils{
 
 
         // Anexos
-        String fichero = "SpringMVC.pdf";
+        String fichero = "prueba.pdf";
         String sfirma = "SENZA.pdf";
         // Anexo sin firma
         AnexoWs anexoWs = new AnexoWs();
@@ -169,7 +169,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils{
         anexoWs.setTipoDocumental("TD01");
         anexoWs.setTipoDocumento("01");
         anexoWs.setOrigenCiudadanoAdmin(new Integer(0));
-        anexoWs.setObservaciones("Observaciones de Marilen");
+        anexoWs.setObservaciones("Observaciones earrivi");
 
         anexoWs.setModoFirma(0);
 

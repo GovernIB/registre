@@ -4,7 +4,6 @@ import es.caib.regweb.model.*;
 import es.caib.regweb.persistence.utils.NumeroRegistro;
 import es.caib.regweb.persistence.utils.Paginacion;
 import es.caib.regweb.utils.RegwebConstantes;
-
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -14,7 +13,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-
 import java.util.*;
 
 /**
@@ -222,5 +220,20 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         q.setParameter("idOficioRemision", idOficioRemision);
 
         return q.getResultList();
+    }
+
+    @Override
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+
+        Query or = em.createQuery("select distinct(id) from OficioRemision where usuarioResponsable.entidad.id = :idEntidad");
+        or.setParameter("idEntidad", idEntidad);
+        List<Object> oficiosRemision =  or.getResultList();
+
+        for (Object id : oficiosRemision) {
+            remove(findById((Long) id));
+        }
+
+        return oficiosRemision.size();
+
     }
 }

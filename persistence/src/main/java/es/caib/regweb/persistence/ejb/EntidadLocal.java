@@ -66,6 +66,15 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
    */
     public Boolean esAutorizado(Long idEntidad, Long idUsuario) throws Exception;
 
+
+    /**
+     * Elimina todos los Registros y relaciones de una Entidad.
+     * @param idEntidad
+     * @throws Exception
+     */
+    public void eliminarRegistros(Long idEntidad) throws Exception;
+
+
     /**
      * Elimina una Entidad y todos sus datos dependientes
      * @param idEntidad

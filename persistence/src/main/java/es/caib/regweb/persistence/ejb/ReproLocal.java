@@ -100,5 +100,13 @@ public interface ReproLocal extends BaseEjb<Repro, Long> {
      */
     public void cambiarEstado(Long idRepro) throws Exception;
 
+    /**
+     * Elimina las Repros de una Entidad
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+
 }
 

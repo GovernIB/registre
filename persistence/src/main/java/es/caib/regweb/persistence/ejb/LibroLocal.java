@@ -75,4 +75,11 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
      */
     public List<Libro> getTodosLibrosEntidad(Long idEntidad) throws Exception;
 
+    /**
+     * Pone a 0 todos los contadores de un Libro
+     * @param idLibro
+     * @throws Exception
+     */
+    public void reiniciarContadores(Long idLibro) throws Exception;
+
 }

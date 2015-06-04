@@ -4,6 +4,7 @@ import es.caib.regweb.model.Libro;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -25,6 +26,9 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
 
     @PersistenceContext(unitName="regweb")
     private EntityManager em;
+
+    @EJB
+    public ContadorLocal contadorEjb;
 
 
     @Override
@@ -148,6 +152,17 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
         q.setParameter("idEntidad",idEntidad);
 
         return q.getResultList();
+    }
+
+    @Override
+    public void reiniciarContadores(Long idLibro) throws Exception{
+
+        Libro libro = findById(idLibro);
+
+        contadorEjb.reiniciarContador(libro.getContadorEntrada().getId());
+        contadorEjb.reiniciarContador(libro.getContadorSalida().getId());
+        contadorEjb.reiniciarContador(libro.getContadorOficioRemision().getId());
+
     }
 
 }

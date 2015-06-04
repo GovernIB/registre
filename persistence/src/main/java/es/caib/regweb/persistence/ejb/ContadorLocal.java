@@ -24,4 +24,11 @@ public interface ContadorLocal extends BaseEjb<Contador, Long> {
      */
     public NumeroRegistro incrementarContador(Long idContador) throws Exception;
 
+    /**
+     * Pone a 0 el Contador
+     * @param idContador
+     * @throws Exception
+     */
+    public void reiniciarContador(Long idContador) throws Exception;
+
 }

@@ -88,4 +88,12 @@ public interface LopdLocal extends BaseEjb<Lopd, Long> {
      * @throws Exception
      */
     public void insertarRegistrosSalida(Paginacion paginacion, Long idUsuarioEntidad) throws Exception;
+
+    /**
+     * Elimina las Lopd de una Entidad
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
 }

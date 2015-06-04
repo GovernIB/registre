@@ -80,5 +80,14 @@ public class ContadorBean extends BaseEjbJPA<Contador, Long> implements Contador
 
     }
 
+    @Override
+    public void reiniciarContador(Long idContador) throws Exception{
+
+        Query q = em.createQuery("update Contador set numero = 0 where id = :idContador ");
+        q.setParameter("idContador", idContador);
+        q.executeUpdate();
+        em.flush();
+    }
+
 
 }

@@ -1,6 +1,9 @@
 package es.caib.regweb.persistence.ejb;
 
-import es.caib.regweb.model.*;
+import es.caib.regweb.model.Interesado;
+import es.caib.regweb.model.Libro;
+import es.caib.regweb.model.RegistroSalida;
+import es.caib.regweb.model.UsuarioEntidad;
 import es.caib.regweb.model.utils.RegistroBasico;
 import es.caib.regweb.persistence.utils.DataBaseUtils;
 import es.caib.regweb.persistence.utils.NumeroRegistro;
@@ -8,7 +11,6 @@ import es.caib.regweb.persistence.utils.Paginacion;
 import es.caib.regweb.persistence.utils.RegistroUtils;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.utils.StringUtils;
-
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -18,7 +20,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-
 import java.util.*;
 
 /**
@@ -557,6 +558,19 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         }
 
         return  registros;
+    }
+
+    @Override
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+
+        List registros =  em.createQuery("Select distinct(rs.id) from RegistroSalida as rs where rs.usuario.entidad.id = :idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+
+        for (Object id : registros) {
+            remove(findById((Long) id));
+        }
+        em.flush();
+
+        return registros.size();
     }
 
 }

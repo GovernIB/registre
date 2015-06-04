@@ -28,20 +28,21 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     private EntityManager em;
 
     @EJB public RegistroDetalleLocal registroDetalleEjb;
-
     @EJB public LibroLocal libroEjb;
-
     @EJB public CodigoAsuntoLocal codigoAsuntoEjb;
-
     @EJB public OficioRemisionLocal oficioRemisionEjb;
-
     @EJB public TipoDocumentalLocal tipoDocumentalEjb;
-
     @EJB public TipoAsuntoLocal tipoAsuntoEjb;
-
     @EJB public RegistroEntradaLocal registroEntradaEjb;
     @EJB public RegistroSalidaLocal registroSalidaEjb;
     @EJB public OrganismoLocal organismoEjb;
+    @EJB public TrazabilidadLocal trazabilidadEjb;
+    @EJB public PersonaLocal personaEjb;
+    @EJB public HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
+    @EJB public HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
+    @EJB public ReproLocal reproEjb;
+    @EJB public LopdLocal lopdEjb;
+    @EJB public AnexoLocal anexoEjb;
 
 
 
@@ -152,129 +153,58 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     }
 
     @Override
-    public void eliminarEntidad(Long idEntidad)throws Exception{
+    public void eliminarRegistros(Long idEntidad) throws Exception{
 
         /********* TRAZABILIDAD *********/
-        Query t = em.createQuery("Select id from Trazabilidad where oficioRemision.usuarioResponsable.entidad.id=:idEntidad");
-        t.setParameter("idEntidad",idEntidad);
-        List<Object> trazabilidades =  t.getResultList();
-
-        for (Object id : trazabilidades) {
-            Query trazabilidad = em.createQuery("delete from Trazabilidad where id=:id");
-            log.info("trazabilidad: " + trazabilidad.setParameter("id", id).executeUpdate());
-        }
-        em.flush();
+        log.info("Trazabilidades eliminadas: " +trazabilidadEjb.eliminarByEntidad(idEntidad));
 
         /********* OFICIOS REMISIÓN *********/
-        Query or = em.createQuery("select distinct(id) from OficioRemision where usuarioResponsable.entidad.id=:idEntidad");
-        or.setParameter("idEntidad", idEntidad);
-        List<Object> oficiosRemision =  or.getResultList();
-
-        for (Object id : oficiosRemision) {
-            oficioRemisionEjb.remove(oficioRemisionEjb.findById((Long) id));
-            Query oficioRemision = em.createQuery("delete from OficioRemision  where id=:id");
-            log.info("oficiosRemision: " + oficioRemision.setParameter("id", id).executeUpdate());
-        }
-        em.flush();
+        log.info("OficiosRemision eliminados: " +oficioRemisionEjb.eliminarByEntidad(idEntidad));
 
         /********* PERSONAS *********/
-        Query persona = em.createQuery("delete from Persona where entidad.id=:idEntidad");
-        log.info("personas: " + persona.setParameter("idEntidad", idEntidad).executeUpdate());
-        em.flush();
+        log.info("Personas eliminadas: " + personaEjb.eliminarByEntidad(idEntidad));
+
 
         /********* REGISTROS ENTRADA *********/
 
         // HistoricoRegistroEntrada
-        Query hre = em.createQuery("Select distinct(hre.id) from HistoricoRegistroEntrada as hre where hre.registroEntrada.usuario.entidad.id =:idEntidad");
-        hre.setParameter("idEntidad",idEntidad);
-        List<Object> historicosEntrada =  hre.getResultList();
-
-        for (Object id : historicosEntrada) {
-            log.info("historicosEntrada: "+ em.createQuery("delete from HistoricoRegistroEntrada where id =:id").setParameter("id",id).executeUpdate());
-        }
-        em.flush();
+        log.info("HistoricosEntrada eliminados: " + historicoRegistroEntradaEjb.eliminarByEntidad(idEntidad));
 
         // RegistroEntrada
-        Query re = em.createQuery("Select distinct(re.id) from RegistroEntrada as re where re.usuario.entidad.id =:idEntidad");
-        re.setParameter("idEntidad",idEntidad);
-        List<Object> registrosEntrada =  re.getResultList();
-
-        for (Object id : registrosEntrada) {
-            registroEntradaEjb.remove(registroEntradaEjb.findById((Long) id));
-            //em.createQuery("delete from RegistroEntrada where id =:id").setParameter("id",id).executeUpdate();
-        }
-        em.flush();
-
-        // RegistroDetalle
-       /* Query rde = em.createQuery("Select distinct(re.registroDetalle.id) from RegistroEntrada as re where re.usuario.entidad.id=:idEntidad");
-        rde.setParameter("idEntidad",idEntidad);
-        List<Object> registrosDetalleEntrada =  rde.getResultList();
-
-        for (Object id : registrosDetalleEntrada) {
-            log.info("RegistroDetalle id: " + id);
-            log.info("interesados: "+ em.createQuery("delete from Interesado where registroDetalle.id =:id").setParameter("id",id).executeUpdate());
-            log.info("anexos: "+ em.createQuery("delete from Anexo where registroDetalle.id =:id").setParameter("id",id).executeUpdate());
-            log.info("registroDetalle: "+ em.createQuery("delete from RegistroDetalle where id =:id").setParameter("id",id).executeUpdate());
-            //registroDetalleEjb.remove(registroDetalleEjb.findById((Long) id));
-        }
-        em.flush();*/
+        log.info("RegistrosEntrada eliminados: " +registroEntradaEjb.eliminarByEntidad(idEntidad));
 
         /********* REGISTROS SALIDA *********/
 
         // HistoricoRegistroSalida
-        Query hrs = em.createQuery("Select distinct(hrs.id) from HistoricoRegistroSalida as hrs where hrs.registroSalida.usuario.entidad.id =:idEntidad");
-        hrs.setParameter("idEntidad",idEntidad);
-        List<Object> historicosSalida =  hrs.getResultList();
-
-        for (Object id : historicosSalida) {
-            em.createQuery("delete from HistoricoRegistroSalida where id =:id").setParameter("id",id).executeUpdate();
-        }
-        em.flush();
+        log.info("HistoricosSalida eliminados: " + historicoRegistroSalidaEjb.eliminarByEntidad(idEntidad));
 
         // RegistroSalida
-        Query rs = em.createQuery("Select distinct(rs.id) from RegistroSalida as rs where rs.usuario.entidad.id =:idEntidad");
-        rs.setParameter("idEntidad",idEntidad);
-        List<Object> registrosSalida =  rs.getResultList();
+        log.info("RegistrosSalida eliminados: " +registroSalidaEjb.eliminarByEntidad(idEntidad));
 
-        for (Object id : registrosSalida) {
-            registroSalidaEjb.remove(registroSalidaEjb.findById((Long) id));
-            //em.createQuery("delete from RegistroSalida where id =:id").setParameter("id",id).executeUpdate();
-        }
-        em.flush();
 
         /********* REGISTROS DETALLE *********/
-
-        // RegistroDetalle
-        Query rd = em.createQuery("Select distinct(re.id) from RegistroDetalle as re where re.tipoAsunto.entidad.id =:idEntidad");
-        rd.setParameter("idEntidad",idEntidad);
-        List<Object> registrosDetalle =  rd.getResultList();
-
-        for (Object id : registrosDetalle) {
-            registroDetalleEjb.remove(registroDetalleEjb.findById((Long) id));
-        }
-        em.flush();
-
-
+        log.info("RegistrosDetalle eliminados: " +registroDetalleEjb.eliminarByEntidad(idEntidad));
 
         /********* REPRO *********/
-        Query repro = em.createQuery("select distinct(r.id) from Repro as r where r.usuario.entidad.id =:idEntidad");
-        repro.setParameter("idEntidad", idEntidad);
-        List<Object> repros =  repro.getResultList();
-
-        for (Object id : repros) {
-            em.createQuery("delete from Repro where id =:id").setParameter("id",id).executeUpdate();
-        }
-        em.flush();
+        log.info("Repros eliminados: " +reproEjb.eliminarByEntidad(idEntidad));
 
         /********* LOPD *********/
-        Query lopd = em.createQuery("select distinct(l.id) from Lopd as l where l.usuario.entidad.id =:idEntidad");
-        lopd.setParameter("idEntidad", idEntidad);
-        List<Object> lopds =  lopd.getResultList();
+        log.info("Lopds eliminados: " + lopdEjb.eliminarByEntidad(idEntidad));
 
-        for (Object id : lopds) {
-            em.createQuery("delete from Lopd where id =:id").setParameter("id",id).executeUpdate();
+        /********* LIBROS: PONER CONTADORES A 0  *********/
+        List<Libro> libros = libroEjb.getLibrosEntidad(idEntidad);
+        for (Libro libro : libros) {
+           libroEjb.reiniciarContadores(libro.getId());
         }
-        em.flush();
+        log.info("Libros reiniciados: " +libros.size());
+
+    }
+
+    @Override
+    public void eliminarEntidad(Long idEntidad)throws Exception{
+
+        //Eliminamos todos los datos relacionados con los RegistrosEntradad y RegistrosSalida
+        eliminarRegistros(idEntidad);
 
         /********* PERMISO LIBRO USUARIO *********/
         Query plu = em.createQuery("select distinct(plu.id) from PermisoLibroUsuario as plu where plu.usuario.entidad.id =:idEntidad");

@@ -311,4 +311,11 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
         return q.getResultList();
     }
+
+    @Override
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+
+        Query query = em.createQuery("delete from Persona where entidad.id = :idEntidad");
+        return query.setParameter("idEntidad", idEntidad).executeUpdate();
+    }
 }

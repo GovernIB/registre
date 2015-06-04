@@ -15,7 +15,6 @@ import es.caib.regweb.webapp.login.RegwebLoginPluginManager;
 import es.caib.regweb.webapp.scan.ScannerManager;
 import es.caib.regweb.webapp.utils.*;
 import es.caib.regweb.webapp.validator.EntidadValidator;
-
 import org.fundaciobit.plugins.userinformation.IUserInformationPlugin;
 import org.fundaciobit.plugins.userinformation.RolesInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +29,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -620,6 +618,26 @@ public class EntidadController extends BaseController {
 
         } catch (Exception e) {
             Mensaje.saveMessageError(request, "No s'ha eliminat el registre perque està relacionat amb un altra entitat.");
+            e.printStackTrace();
+        }
+
+        return "redirect:/entidad/list";
+    }
+
+    /**
+     * Eliminar todos los Registros de una Entidad
+     */
+    @RequestMapping(value = "/{idEntidad}/eliminarRegistros")
+    public String eliminarRegistrosEntidad(@PathVariable Long idEntidad, HttpServletRequest request) {
+        log.info("idEntidad: " + idEntidad);
+        try {
+
+            entidadEjb.eliminarRegistros(idEntidad);
+
+            Mensaje.saveMessageInfo(request, "S'han eliminat els registres de  l'entitat");
+
+        } catch (Exception e) {
+            Mensaje.saveMessageError(request, "Error: No s'ha eliminat els registres");
             e.printStackTrace();
         }
 

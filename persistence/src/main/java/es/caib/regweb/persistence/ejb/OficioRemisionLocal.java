@@ -5,12 +5,10 @@ import es.caib.regweb.model.OficioRemision;
 import es.caib.regweb.model.Organismo;
 import es.caib.regweb.model.RegistroEntrada;
 import es.caib.regweb.persistence.utils.Paginacion;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
-
-import org.fundaciobit.genapp.common.i18n.I18NException;
-
 import java.util.List;
 import java.util.Set;
 
@@ -59,4 +57,12 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @throws Exception
      */
     public List<RegistroEntrada> getByOficioRemision(Long idOficioRemision) throws Exception;
+
+    /**
+     * Elimina los Oficios de remisión de una Entidad
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
 }
