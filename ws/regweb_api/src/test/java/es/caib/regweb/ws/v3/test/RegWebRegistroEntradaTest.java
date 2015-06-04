@@ -324,4 +324,19 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils{
         }
 
     }
+    
+    
+    
+    public static void main(String[] args) {
+      try {
+        byte[] data  = RegWebTestUtils.constructFitxerFromResource("hola.txt");
+        System.out.println(new String(data));
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+     
+    }
+   
+    
+    
 }

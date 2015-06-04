@@ -4,8 +4,12 @@ import es.caib.regweb.ws.api.v3.*;
 import es.caib.regweb.ws.api.v3.utils.I18NUtils;
 
 import javax.xml.ws.BindingProvider;
+
+import org.apache.commons.io.IOUtils;
+
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Map;
 import java.util.Properties;
@@ -164,6 +168,29 @@ public abstract class RegWebTestUtils {
         configAddressUserPassword(getTestAppUserName(), getTestAppPassword(), endpoint, api);
 
         return api;
+    }
+    
+    
+    public static byte[] constructFitxerFromResource(String name) throws Exception  {
+      String filename;
+      if (name.startsWith("/")) {
+        filename = name.substring(1);
+      } else {
+        filename = '/' + name; 
+      }
+      InputStream is = RegWebTestUtils.class.getResourceAsStream(filename);
+      if (is == null) {
+        return null;
+      }
+      try {
+        return IOUtils.toByteArray(is);
+      } finally {
+        try {
+          is.close();
+        } catch (Exception e) {
+        }
+      }
+
     }
 
   
