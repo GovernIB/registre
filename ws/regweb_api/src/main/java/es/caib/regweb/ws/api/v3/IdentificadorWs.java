@@ -1,11 +1,13 @@
 
 package es.caib.regweb.ws.api.v3;
 
+import java.sql.Timestamp;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
-import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 
 /**
@@ -37,8 +39,10 @@ import javax.xml.datatype.XMLGregorianCalendar;
 })
 public class IdentificadorWs {
 
+    @XmlElement(type = String.class)
+    @XmlJavaTypeAdapter(Adapter1 .class)
     @XmlSchemaType(name = "dateTime")
-    protected XMLGregorianCalendar fecha;
+    protected Timestamp fecha;
     protected Integer numero;
     protected String numeroRegistroFormateado;
 
@@ -47,10 +51,10 @@ public class IdentificadorWs {
      * 
      * @return
      *     possible object is
-     *     {@link XMLGregorianCalendar }
+     *     {@link String }
      *     
      */
-    public XMLGregorianCalendar getFecha() {
+    public Timestamp getFecha() {
         return fecha;
     }
 
@@ -59,10 +63,10 @@ public class IdentificadorWs {
      * 
      * @param value
      *     allowed object is
-     *     {@link XMLGregorianCalendar }
+     *     {@link String }
      *     
      */
-    public void setFecha(XMLGregorianCalendar value) {
+    public void setFecha(Timestamp value) {
         this.fecha = value;
     }
 

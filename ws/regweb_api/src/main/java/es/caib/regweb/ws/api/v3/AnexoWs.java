@@ -1,11 +1,13 @@
 
 package es.caib.regweb.ws.api.v3;
 
+import java.sql.Timestamp;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
-import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 
 /**
@@ -78,8 +80,10 @@ public class AnexoWs {
     protected String tipoDocumento;
     protected String observaciones;
     protected Integer origenCiudadanoAdmin;
+    @XmlElement(type = String.class)
+    @XmlJavaTypeAdapter(Adapter1 .class)
     @XmlSchemaType(name = "dateTime")
-    protected XMLGregorianCalendar fechaCaptura;
+    protected Timestamp fechaCaptura;
     protected Integer modoFirma;
     protected String nombreFirmaAnexada;
     protected byte[] firmaAnexada;
@@ -309,10 +313,10 @@ public class AnexoWs {
      * 
      * @return
      *     possible object is
-     *     {@link XMLGregorianCalendar }
+     *     {@link String }
      *     
      */
-    public XMLGregorianCalendar getFechaCaptura() {
+    public Timestamp getFechaCaptura() {
         return fechaCaptura;
     }
 
@@ -321,10 +325,10 @@ public class AnexoWs {
      * 
      * @param value
      *     allowed object is
-     *     {@link XMLGregorianCalendar }
+     *     {@link String }
      *     
      */
-    public void setFechaCaptura(XMLGregorianCalendar value) {
+    public void setFechaCaptura(Timestamp value) {
         this.fechaCaptura = value;
     }
 

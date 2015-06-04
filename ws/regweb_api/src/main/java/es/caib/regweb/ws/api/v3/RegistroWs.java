@@ -1,6 +1,7 @@
 
 package es.caib.regweb.ws.api.v3;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -9,7 +10,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
-import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 
 /**
@@ -93,8 +94,10 @@ public class RegistroWs {
     protected Long docFisica;
     protected String expone;
     protected String extracto;
+    @XmlElement(type = String.class)
+    @XmlJavaTypeAdapter(Adapter1 .class)
     @XmlSchemaType(name = "dateTime")
-    protected XMLGregorianCalendar fecha;
+    protected Timestamp fecha;
     protected String idioma;
     @XmlElement(nillable = true)
     protected List<InteresadoWs> interesados;
@@ -313,10 +316,10 @@ public class RegistroWs {
      * 
      * @return
      *     possible object is
-     *     {@link XMLGregorianCalendar }
+     *     {@link String }
      *     
      */
-    public XMLGregorianCalendar getFecha() {
+    public Timestamp getFecha() {
         return fecha;
     }
 
@@ -325,10 +328,10 @@ public class RegistroWs {
      * 
      * @param value
      *     allowed object is
-     *     {@link XMLGregorianCalendar }
+     *     {@link String }
      *     
      */
-    public void setFecha(XMLGregorianCalendar value) {
+    public void setFecha(Timestamp value) {
         this.fecha = value;
     }
 

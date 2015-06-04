@@ -7,7 +7,6 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 /**
  * Created by Fundació BIT.
@@ -33,8 +32,8 @@ public class RegistroMigradoBusquedaValidator implements Validator {
 
         if(busqueda.getFechaInicio() != null && busqueda.getFechaFin() != null){
 
-            Calendar fechaInicio = new GregorianCalendar();
-            Calendar fechaFin = new GregorianCalendar();
+            Calendar fechaInicio = Calendar.getInstance();
+            Calendar fechaFin = Calendar.getInstance();
 
             fechaInicio.setTime(busqueda.getFechaInicio());
             fechaFin.setTime(busqueda.getFechaFin());

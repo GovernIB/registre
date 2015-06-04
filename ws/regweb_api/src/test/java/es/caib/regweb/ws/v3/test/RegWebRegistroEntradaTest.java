@@ -1,8 +1,12 @@
 package es.caib.regweb.ws.v3.test;
 
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
+import java.sql.Timestamp;
+import java.util.Date;
+
 import es.caib.regweb.ws.api.v3.*;
+
 import org.apache.commons.io.FileUtils;
+
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -176,6 +180,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils{
 
         anexoWs.setModoFirma(0);
         // Fichero Anexado
+        /*
         MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
         try{
 
@@ -193,9 +198,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils{
             e.printStackTrace();
         }
 
-        GregorianCalendar gc = (GregorianCalendar)GregorianCalendar.getInstance();
-        gc.setTimeInMillis(new Date().getTime());
-        anexoWs.setFechaCaptura(new XMLGregorianCalendarImpl(gc));
+        anexoWs.setFechaCaptura(new Timestamp(new Date().getTime()));
 
         registroEntradaWs.getAnexos().add(anexoWs);
 
@@ -223,9 +226,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils{
             e.printStackTrace();
         }
 
-
-        gc.setTimeInMillis(new Date().getTime());
-        anexoFirmaAtached.setFechaCaptura(new XMLGregorianCalendarImpl(gc));
+        anexoFirmaAtached.setFechaCaptura(new Timestamp(new Date().getTime()));
 
         registroEntradaWs.getAnexos().add(anexoFirmaAtached);  */
          /* FIN ANEXO CON FIRMA ATACHED   */
@@ -264,8 +265,8 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils{
         }
 
 
-        gc.setTimeInMillis(new Date().getTime());
-        anexoFirmaDetached.setFechaCaptura(new XMLGregorianCalendarImpl(gc));
+
+        anexoFirmaDetached.setFechaCaptura(new Timestamp(new Date().getTime()));
         registroEntradaWs.getAnexos().add(anexoFirmaDetached);   */
         /** FIN ANEXO CON FIRMA DETACHED */
 
@@ -303,8 +304,8 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils{
         }
 
 
-        gc.setTimeInMillis(new Date().getTime());
-        anexoFirmaDetachedCopia.setFechaCaptura(new XMLGregorianCalendarImpl(gc));
+        
+        anexoFirmaDetachedCopia.setFechaCaptura(new Timestamp(new Date().getTime()));
         registroEntradaWs.getAnexos().add(anexoFirmaDetachedCopia); */
         /** FIN ANEXO CON FIRMA DETACHED */
 

@@ -274,6 +274,9 @@
                     <extension>true</extension>					
 					<sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
 					<targetPackage>es.caib.regweb.ws.api.v3</targetPackage>
+					<bindingFiles>
+					   <bindingFile>${basedir}/bindings/bindings.xjc</bindingFile>
+					</bindingFiles>
 				  </configuration>  
 				  <executions>  
 					<execution>  

@@ -83,24 +83,6 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService();
         Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
 
-        /*
-        GregorianCalendar gc = (GregorianCalendar)GregorianCalendar.getInstance();
-        XMLGregorianCalendar xGcFechaActualizacion = null;
-        XMLGregorianCalendar xGcFechaSincronizacion = null;
-        //Transformamos fechaActualizacion
-        if(fechaActualizacion != null) {
-          gc.setTimeInMillis(fechaActualizacion.getTime());
-          xGcFechaActualizacion = new XMLGregorianCalendarImpl(gc);
-        }
-        */
-
-        //Transformamos fechaSincronizacion
-        /*
-        if(fechaSincronizacion != null) {
-          gc.setTimeInMillis(fechaSincronizacion.getTime());
-          xGcFechaSincronizacion = new XMLGregorianCalendarImpl(gc);
-        }
-        */
 
         // Obtenemos la Unidad Padre y las dependientes.
         es.caib.dir3caib.ws.api.unidad.UnidadTF unidadPadre = unidadesService.obtenerUnidad(entidad.getCodigoDir3(),fechaActualizacion, fechaSincronizacion);
