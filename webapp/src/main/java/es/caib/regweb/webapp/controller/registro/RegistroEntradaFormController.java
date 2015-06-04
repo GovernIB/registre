@@ -8,7 +8,6 @@ import es.caib.regweb.persistence.utils.RegistroUtils;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.webapp.utils.Mensaje;
 import es.caib.regweb.webapp.validator.RegistroEntradaWebValidator;
-
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.support.SessionStatus;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -481,7 +479,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         }
 
         // No han especificado Codigo Asunto
-        if( registroEntrada.getRegistroDetalle().getCodigoAsunto().getId() == null || registroEntrada.getRegistroDetalle().getCodigoAsunto().getId() == -1){
+        if( registroEntrada.getRegistroDetalle().getCodigoAsunto() == null || registroEntrada.getRegistroDetalle().getCodigoAsunto().getId() == -1){
             registroEntrada.getRegistroDetalle().setCodigoAsunto(null);
         }
 
