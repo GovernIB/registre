@@ -36,14 +36,8 @@ public class Anexo implements Serializable {
     private Integer origenCiudadanoAdmin;
     private Date fechaCaptura;
     private int modoFirma;
-
     
     private String custodiaID;
-
-    private String certificado;
-
-    private String timestamp;
-    private String validacionOCSP;
 
     private String csv; // código seguro verificación
     private String firmacsv;
@@ -163,6 +157,10 @@ public class Anexo implements Serializable {
       this.modoFirma = modoFirma;
     }
 
+    /*
+    private String certificado;
+    private String timestamp;
+    private String validacionOCSP;
     
     @Column(name = "CERTIFICADO")
     public String getCertificado() {
@@ -189,6 +187,7 @@ public class Anexo implements Serializable {
     public void setValidacionOCSP(String validacionOCSP) {
       this.validacionOCSP = validacionOCSP;
     }
+    */
 
 
     @Column(name = "CSV")

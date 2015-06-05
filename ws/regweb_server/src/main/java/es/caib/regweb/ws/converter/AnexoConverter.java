@@ -133,11 +133,15 @@ public class AnexoConverter extends CommonConverter {
        }
        if(!StringUtils.isEmpty(anexoWs.getObservaciones())){anexo.setObservaciones(anexoWs.getObservaciones());}
        if(anexoWs.getOrigenCiudadanoAdmin()!=null){anexo.setOrigenCiudadanoAdmin(anexoWs.getOrigenCiudadanoAdmin());}
-       if(anexoWs.getCertificado() != null){anexo.setCertificado(anexoWs.getCertificado());}
+       
        if(anexoWs.getCsv() != null){anexo.setCsv(anexoWs.getCsv());}
        if(anexoWs.getFirmacsv() != null){anexo.setFirmacsv(anexoWs.getFirmacsv());}
+       
+       /*
+       if(anexoWs.getCertificado() != null){anexo.setCertificado(anexoWs.getCertificado());}
        if(anexoWs.getTimestamp() != null){anexo.setTimestamp(anexoWs.getTimestamp());}
        if(anexoWs.getValidacionOCSP() != null){anexo.setValidacionOCSP(anexoWs.getValidacionOCSP());}
+       */
 
 
        // Part de fichero Anexado
@@ -181,11 +185,14 @@ public class AnexoConverter extends CommonConverter {
        }
        if(!StringUtils.isEmpty(anexo.getObservaciones())){anexoWs.setObservaciones(anexo.getObservaciones());}
        if(anexo.getOrigenCiudadanoAdmin()!=null){anexoWs.setOrigenCiudadanoAdmin(anexo.getOrigenCiudadanoAdmin());}
-       if(anexo.getCertificado() != null){anexoWs.setCertificado(anexo.getCertificado());}
+       
        if(anexo.getCsv() != null){anexoWs.setCsv(anexo.getCsv());}
        if(anexo.getFirmacsv() != null){anexoWs.setFirmacsv(anexo.getFirmacsv());}
+       /*
+       if(anexo.getCertificado() != null){anexoWs.setCertificado(anexo.getCertificado());}
        if(anexo.getTimestamp() != null){anexoWs.setTimestamp(anexo.getTimestamp());}
        if(anexo.getValidacionOCSP() != null){anexoWs.setValidacionOCSP(anexo.getValidacionOCSP());}
+       */
 
        
        String custodyID = anexo.getCustodiaID();
