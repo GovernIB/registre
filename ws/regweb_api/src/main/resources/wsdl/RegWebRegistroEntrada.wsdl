@@ -94,11 +94,8 @@
       <xs:element minOccurs="0" name="nombreFirmaAnexada" type="xs:string"/>
       <xs:element minOccurs="0" name="firmaAnexada" type="xs:base64Binary"/>
       <xs:element minOccurs="0" name="tipoMIMEFirmaAnexada" type="xs:string"/>
-      <xs:element minOccurs="0" name="certificado" type="xs:string"/>
       <xs:element minOccurs="0" name="csv" type="xs:string"/>
       <xs:element minOccurs="0" name="firmacsv" type="xs:string"/>
-      <xs:element minOccurs="0" name="timestamp" type="xs:string"/>
-      <xs:element minOccurs="0" name="validacionOCSP" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="interesadoWs">

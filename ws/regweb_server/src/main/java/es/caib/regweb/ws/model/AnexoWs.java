@@ -23,7 +23,7 @@ public class AnexoWs {
     private String nombreFicheroAnexado;
     @XmlInlineBinaryData
     private byte[] ficheroAnexado;
-    //private Long tamanoFicheroAnexado;
+
     private String tipoMIMEFicheroAnexado;
     private String tipoDocumental;
     /**
@@ -55,15 +55,19 @@ public class AnexoWs {
     private String nombreFirmaAnexada;
     @XmlInlineBinaryData
     private byte[] firmaAnexada;
-    //private Long tamanoFirmaAnexada;
+
     private String tipoMIMEFirmaAnexada;
 
-    private String certificado;
+    
     
     private String csv;
     private String firmacsv;
+    
+    /*
     private String timestamp;
     private String validacionOCSP;
+    private String certificado;
+    */
 
 
     public String getTitulo() {
@@ -89,16 +93,6 @@ public class AnexoWs {
     public void setFicheroAnexado(byte[] ficheroAnexado) {
       this.ficheroAnexado = ficheroAnexado;
     }
-
-    /*
-    public Long getTamanoFicheroAnexado() {
-      return tamanoFicheroAnexado;
-    }
-
-    public void setTamanoFicheroAnexado(Long tamanoFicheroAnexado) {
-      this.tamanoFicheroAnexado = tamanoFicheroAnexado;
-    }
-    */
 
     public String getTipoMIMEFicheroAnexado() {
       return tipoMIMEFicheroAnexado;
@@ -180,15 +174,6 @@ public class AnexoWs {
       this.firmaAnexada = firmaAnexada;
     }
 
-    /*
-    public Long getTamanoFirmaAnexada() {
-      return tamanoFirmaAnexada;
-    }
-
-    public void setTamanoFirmaAnexada(Long tamanoFirmaAnexada) {
-      this.tamanoFirmaAnexada = tamanoFirmaAnexada;
-    }
-    */
 
     public String getTipoMIMEFirmaAnexada() {
       return tipoMIMEFirmaAnexada;
@@ -197,7 +182,7 @@ public class AnexoWs {
     public void setTipoMIMEFirmaAnexada(String tipoMIMEFirmaAnexada) {
       this.tipoMIMEFirmaAnexada = tipoMIMEFirmaAnexada;
     }
-
+/*
     public String getCertificado() {
       return certificado;
     }
@@ -221,7 +206,7 @@ public class AnexoWs {
     public void setValidacionOCSP(String validacionOCSP) {
       this.validacionOCSP = validacionOCSP;
     }
-
+*/
     public String getCsv() {
       return csv;
     }

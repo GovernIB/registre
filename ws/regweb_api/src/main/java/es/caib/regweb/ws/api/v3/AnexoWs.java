@@ -34,11 +34,8 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  *         &lt;element name="nombreFirmaAnexada" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="firmaAnexada" type="{http://www.w3.org/2001/XMLSchema}base64Binary" minOccurs="0"/>
  *         &lt;element name="tipoMIMEFirmaAnexada" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="certificado" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="csv" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="firmacsv" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="timestamp" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="validacionOCSP" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -63,11 +60,8 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
     "nombreFirmaAnexada",
     "firmaAnexada",
     "tipoMIMEFirmaAnexada",
-    "certificado",
     "csv",
-    "firmacsv",
-    "timestamp",
-    "validacionOCSP"
+    "firmacsv"
 })
 public class AnexoWs {
 
@@ -88,11 +82,8 @@ public class AnexoWs {
     protected String nombreFirmaAnexada;
     protected byte[] firmaAnexada;
     protected String tipoMIMEFirmaAnexada;
-    protected String certificado;
     protected String csv;
     protected String firmacsv;
-    protected String timestamp;
-    protected String validacionOCSP;
 
     /**
      * Gets the value of the titulo property.
@@ -427,30 +418,6 @@ public class AnexoWs {
     }
 
     /**
-     * Gets the value of the certificado property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getCertificado() {
-        return certificado;
-    }
-
-    /**
-     * Sets the value of the certificado property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setCertificado(String value) {
-        this.certificado = value;
-    }
-
-    /**
      * Gets the value of the csv property.
      * 
      * @return
@@ -496,54 +463,6 @@ public class AnexoWs {
      */
     public void setFirmacsv(String value) {
         this.firmacsv = value;
-    }
-
-    /**
-     * Gets the value of the timestamp property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getTimestamp() {
-        return timestamp;
-    }
-
-    /**
-     * Sets the value of the timestamp property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setTimestamp(String value) {
-        this.timestamp = value;
-    }
-
-    /**
-     * Gets the value of the validacionOCSP property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getValidacionOCSP() {
-        return validacionOCSP;
-    }
-
-    /**
-     * Sets the value of the validacionOCSP property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setValidacionOCSP(String value) {
-        this.validacionOCSP = value;
     }
 
 }
