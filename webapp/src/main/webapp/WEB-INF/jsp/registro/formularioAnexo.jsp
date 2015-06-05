@@ -24,13 +24,6 @@
 
 </script>
 
-<%-- XYZ  
-
-<a onclick="parent.abc();" href="#">Call Me</a>
-
-<a onclick="parent.closeAndReload();" href="#">Tanca i recarrega </a>
-
- --%>
 
 </c:if>
 
@@ -41,20 +34,6 @@
 <%-- Formulario que contiene el resto de campos del anexo. --%>
 <form:form id="anexoForm" action="${pageContext.request.contextPath}/anexo/${(empty anexoForm.anexo.id)?'nou' : 'editar'}" modelAttribute="anexoForm" method="POST"  enctype="multipart/form-data">
                 
-    <%-- <div class="modal-dialog modal-lg"> 
-    
-        <div class="modal-content">
-        
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" >×</button>
-                <h3 id="anexoTitulo">
-                
-                <spring:message code="anexo.${(empty anexoForm.anexo.id)?'nuevo' : 'editar'}"/>
-                </h3>
-            </div>
-        --%>
-        <%--
-            <div  class="modal-body" --%>
                         
                         <form:hidden path="anexo.id" />
                         <form:hidden path="anexo.registroDetalle.id" />
@@ -142,7 +121,7 @@
                               <label for="tipoDocumental"><span class="text-danger">*</span> <spring:message code="anexo.tipoDocumental"/></label>
                           </div>
                           <div class="col-xs-8">
-                              <form:select path="anexo.tipoDocumental" class="chosen-select">
+                              <form:select path="anexo.tipoDocumental.id" class="chosen-select">
                                  <c:forEach items="${tiposDocumental}" var="tipoDocumental">
                                      <form:option value="${tipoDocumental.id}"><i:trad value="${tipoDocumental}" property="nombre"/></form:option>
                                  </c:forEach>
@@ -286,36 +265,14 @@
                </div>
     			
     		    <div class="pull-right" style="margin-top: 15px; "> <%--  class="modal-footer" --%>
-                    <%-- XYZ 
-                    
-                    <a onclick="abc();" href="#">Call Me</a>
-                    
-                    <button class="btn btn-warning btn-sm" onclick="$('#reload').show();"><spring:message code="regweb.guardar"/></button>
-                    
-                    
-                    X<input type="submit"  value="<spring:message code="regweb.guardar"/>" name="<spring:message code="regweb.guardar"/>">X
-                    
-                    ZZ
-                     --%>
+ 
                     
                     <button type="submit" class="btn btn-warning btn-sm" onclick="$('#reload').show();"><spring:message code="regweb.guardar"/></button>
                     
-                    
-                    <%--
-    		    	<input type="button" id="desaAnnex" onclick="procesarAnexo('${pageContext.response.locale}')" title="<spring:message code="regweb.guardar"/>" value="<spring:message code="regweb.guardar"/>" class="btn btn-warning btn-sm">
-                    document.getElementById('anexoForm').submit();
-                     
-    	        	<button class="btn"  onclick=" $('#modalNuevoAnexo').modal('hide');"><spring:message code="regweb.cerrar"/></button>
-                    --%>
+
                     
     			</div>
-       
-       <%--         
-            </div>
 
- 
-		</div>
-	 </div> --%>
 
 </form:form>
 

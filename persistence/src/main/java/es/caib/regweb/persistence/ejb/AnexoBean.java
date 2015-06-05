@@ -3,12 +3,16 @@ package es.caib.regweb.persistence.ejb;
 
 import es.caib.regweb.model.Anexo;
 import es.caib.regweb.model.Entidad;
+import es.caib.regweb.model.IRegistro;
 import es.caib.regweb.model.RegistroDetalle;
 import es.caib.regweb.model.RegistroEntrada;
 import es.caib.regweb.model.RegistroSalida;
+import es.caib.regweb.model.TraduccionTipoDocumental;
 import es.caib.regweb.model.UsuarioEntidad;
 import es.caib.regweb.persistence.utils.AnnexFileSystemManager;
+import es.caib.regweb.persistence.utils.I18NLogicUtils;
 import es.caib.regweb.persistence.utils.RegistroUtils;
+import es.caib.regweb.utils.Configuracio;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.utils.StringUtils;
 
@@ -18,9 +22,11 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.plugins.documentcustody.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.IDocumentCustodyPlugin;
 import org.fundaciobit.plugins.documentcustody.SignatureCustody;
+import org.fundaciobit.plugins.utils.Metadata;
 import org.hibernate.Hibernate;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
+import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -33,8 +39,10 @@ import java.beans.PersistenceDelegate;
 import java.beans.XMLEncoder;
 import java.io.ByteArrayOutputStream;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Fundacio Bit
@@ -47,6 +55,7 @@ import java.util.List;
 @SecurityDomain("seycon")
 public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
+    @Resource
     public javax.ejb.SessionContext ejbContext;
 
     protected final Logger log = Logger.getLogger(getClass());
@@ -189,18 +198,17 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         
         
         final String custodyID = anexo.getCustodiaID();
-  
-        updateCustodyInfoOfAnexo(anexoFull, custody, custodyParameters, custodyID,
-            registroID, tipoRegistro);
-
+        
         anexo = this.merge(anexo);
+        anexoFull.setAnexo(anexo);
         
         final boolean isNew = false;
         // Crea historico y lo enlaza con el RegistroDetalle
         crearHistorico(anexoFull, usuarioEntidad, registroID, tipoRegistro, isNew);
-        
-        anexoFull.setAnexo(anexo);
-        
+  
+        updateCustodyInfoOfAnexo(anexoFull, custody, custodyParameters, custodyID,
+            registroID, tipoRegistro);
+
         return anexoFull;
       
       } catch(I18NException i18n) {
@@ -283,10 +291,14 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
       // TODO Falta Check DOC
       Anexo anexo = anexoFull.getAnexo();
+      
+      boolean updateDate = false;
+      String mime = null;;
 
       DocumentCustody doc = null;
       if (anexoFull.isDocumentoFileDelete()) {
         custody.deleteDocument(custodyID);
+        updateDate = true;
       } else {
 
         doc = anexoFull.getDocumentoCustody();
@@ -297,6 +309,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
           if(doc.getMime() == null) {
             doc.setMime("application/octet-stream");
           }
+          mime = doc.getMime();
 
           doc.setName(checkFileName(doc.getName() , "file.bin"));
           // TODO CHECK
@@ -304,11 +317,14 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
           anexo.setFechaCaptura((Date)new Timestamp(new Date().getTime()));
 
           custody.saveDocument(custodyID, custodyParameters, doc);
+          
+          updateDate = true;
         }
       }
 
       if (anexoFull.isSignatureFileDelete()) {
         custody.deleteSignature(custodyID);
+        updateDate = true;
       } else {
         SignatureCustody signature = anexoFull.getSignatureCustody();
         if (signature != null && signature.getData() != null) {
@@ -318,6 +334,9 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
           if (signature.getMime() == null) {
             signature.setMime("application/octet-stream");
           }
+          if (mime == null) {
+            mime = signature.getMime();
+          }
           
           signature.setSignatureType(SignatureCustody.OTHER_SIGNATURE);
           // TODO Fallarà en update
@@ -325,34 +344,70 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
           
           custody.saveSignature(custodyID, custodyParameters, signature);
           
-          
+          updateDate = true;
         }
       }
 
       // TODO Actualitzar Metadades
-      /*
-      String tipoDeDocumento; //  varchar(100)
-      Date fechaDeEntradaEnElSistema; //             date
-      String oficinaQueLoAnexa; //  varchar(80)
-      String origen; //   varchar(25)
-      String validez; //  varchar25)
-      String formato; //  varchar(40)
-      String tipoDocumental; // varchar(20)
-      String  observacionRegistro; // varchar(100)
+      List<Metadata> metadades = new ArrayList<Metadata>();
       
-      
-      Anexo anexo = anexoFull.getAnexo();
-      if ("entrada".equals(tipoRegistro)) {
-        RegistroEntrada re = registroEntradaEjb.findById(registroID);
-        
-        origen = String anexo.getOrigenCiudadanoAdmin();
-        observacionRegistro = anexo.getObservaciones()
-        
-      } else {
-        RegistroSalida rs = registroSalidaEjb.findById(registroID);
+      // fechaDeEntradaEnElSistema 
+      if (updateDate) {
+        metadades.add(new Metadata("anexo.fechaCaptura", anexo.getFechaCaptura()));
       }
-      */
       
+
+      IRegistro registro;
+      if ("entrada".equals(tipoRegistro)) {
+        registro = registroEntradaEjb.findById(registroID);
+      } else {
+        registro = registroSalidaEjb.findById(registroID);
+      }
+      
+      // TODO String tipoDeDocumento; //  varchar(100)
+
+      if (registro.getOficina() != null) {
+        metadades.add(new Metadata("oficina",
+            registro.getOficina().getNombreCompleto()));
+      }
+
+      final String lang = Configuracio.getDefaultLanguage(); 
+      final Locale loc = new Locale(lang);
+      //  varchar(80)
+      
+      if ( anexo.getOrigenCiudadanoAdmin() != null) {
+        metadades.add(new Metadata("anexo.origen", 
+              I18NLogicUtils.tradueix(loc, "anexo.origen." + anexo.getOrigenCiudadanoAdmin())));
+      }
+      
+      /**
+       * tipoValidezDocumento.1=Còpia
+       * tipoValidezDocumento.2=Còpia Compulsada
+       * tipoValidezDocumento.3=Còpia Original
+       * tipoValidezDocumento.4=Original
+       */
+      if (anexo.getValidezDocumento() != null) {
+        metadades.add(new Metadata("anexo.validezDocumento", 
+            I18NLogicUtils.tradueix(loc, "tipoValidezDocumento." + anexo.getValidezDocumento())));
+      }
+      
+      if (mime != null) {
+        metadades.add(new Metadata("anexo.formato", mime));
+      }
+
+      if (anexo.getTipoDocumental() != null) {
+        metadades.add(new Metadata("anexo.tipoDocumental", anexo.getTipoDocumental().getCodigoNTI()));
+      }
+      if (anexo.getObservaciones() != null) {
+        metadades.add(new Metadata("anexo.observaciones", anexo.getObservaciones()));
+      }
+      
+      for (Metadata metadata : metadades) {
+        if (metadata.getValue() != null) {
+          custody.deleteMetadata(custodyID, metadata.getKey());
+          custody.addMetadata(custodyID, metadata);
+        }
+      }
       
     }
 
@@ -364,7 +419,6 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
       } else {
         return StringUtils.recortarNombre(name, RegwebConstantes.ANEXO_NOMBREARCHIVO_MAXLENGTH); 
       }
-      
     }
     
     
@@ -378,7 +432,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
       
       //ObjectMapper mapper = new ObjectMapper();
       //mapper.configure(Fe Config.FAIL_ON_EMPTY_BEANS, false);
-      log.info("XYZ Cercant registre amb id = '" + registroID + "' de tipus '" + tipoRegistro + "'");
+      log.info("Cercant registre amb id = '" + registroID + "' de tipus '" + tipoRegistro + "'");
       
       if ("entrada".equals(tipoRegistro)) {
         RegistroEntrada re = registroEntradaEjb.findById(registroID);
@@ -449,110 +503,6 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         }
         return AnnexFileSystemManager.eliminarCustodia(anexo.getCustodiaID());
     }
-
-    
-    // ----------------------------------------------------------------------
-    // TODO REVISAR SI AQUESTS METODE S'UTILITZEN
-    // ----------------------------------------------------------------------
-    
-     /**
-      * Actualiza un anexo de la bbdd y del sistema de anexos
-      * @param anexo
-      * @return
-      */
-    /*
-     @Override
-     public boolean actualizarAnexo(Anexo anexo) throws Exception{
-         if (anexo != null) {
-             try {
-                 if (findById(anexo.getId()) != null) {
-                     merge(anexo);
-                 }
-             } catch (Exception e) {
-                 log.error("Error actualitzant anexo amb id=" + anexo.getId()
-                         + "(" + anexo.getNombreFicheroAnexado() + ")");
-             }
-         }
-         return true;
-     }
-     */
-
-     /**
-      * XYZ Eliminar !!!!!
-      * 
-      * Actualiza un anexo de la bbdd y le asocia los archivos
-      * @param idAnexo
-      * @return
-      */
-    /*
-     @Override
-     public Anexo actualizarAnexoConArchivos(Long idAnexo, byte[] ficheroAnexado,
-         String nombreFicheroAnexado, String tipoMIMEFicheroAnexado, Long tamanoFicheroAnexado,
-         byte[] firmaAnexada, String nombreFirmaAnexada, String tipoMIMEFirmaAnexada,
-         Long tamanoFirmaAnexada, Integer modoFirma, Date fechaCaptura ) throws Exception{
-
-          log.info("Entramos en actualizarAnexoConArchivos");
-          Anexo anexoActual = findById(idAnexo);
-
-
-
-          if(ficheroAnexado!= null && ficheroAnexado.length>0 && !StringUtils.isEmpty(nombreFicheroAnexado)){
-              log.info("Entramos en if fichero anexado");
-              // recortamos el nombre del fichero anexado al maximo que permite sicres3
-              String nombreFicheroAnexadoRec= StringUtils.recortarNombre(nombreFicheroAnexado, RegwebConstantes.ANEXO_NOMBREARCHIVO_MAXLENGTH);
-
-              log.info("RECORTADO " + nombreFicheroAnexadoRec);
-              anexoActual.setTipoMIME(tipoMIMEFicheroAnexado);
-              anexoActual.setNombreFicheroAnexado(nombreFicheroAnexadoRec);
-              anexoActual.setTamano(tamanoFicheroAnexado);
-              anexoActual.setFechaCaptura(fechaCaptura);
-
-              String custodiaID;
-              // Si hay firma detached
-              if(firmaAnexada != null && firmaAnexada.length>0 && !StringUtils.isEmpty(nombreFirmaAnexada)){
-                log.info("Entramos en firmaAnexada");
-
-                // recortamos el nombre del fichero anexado al maximo que permite sicres3
-                 String nombreFirmaAnexadaRec= StringUtils.recortarNombre(nombreFirmaAnexada, RegwebConstantes.ANEXO_NOMBREARCHIVO_MAXLENGTH);
-                 log.info("RECORTADA " + nombreFirmaAnexadaRec);
-                 anexoActual.setNombreFirmaAnexada(nombreFirmaAnexadaRec);
-
-                // actualizarAnexo(anexoActual);
-                anexoActual = merge(anexoActual);
-                
-                // TODO Juntar mètode actualizarAnexo i crearArchivo
-                
-                // TODO  S'ha d'afegir registre en format JSON dins custodyParameters
-                final String custodyParameters = null;
-                
-                // Creamos el archivo
-                custodiaID = AnnexFileSystemManager.crearArchivo(nombreFicheroAnexadoRec, ficheroAnexado,
-                    nombreFirmaAnexadaRec, firmaAnexada , modoFirma, anexoActual.getCustodiaID(), custodyParameters);
-              }else{ // Si no hay se guarda el archivo solo sin firma
-                log.info("Entramos en else archivo");
-                anexoActual.setNombreFirmaAnexada("");
-                anexoActual = merge(anexoActual);
-                
-                // TODO Juntar mètode actualizarAnexo i crearArchivo
-                
-                // TODO  S'ha d'afegir registre en format JSON dins custodyParameters
-                final String custodyParameters = null;
-                
-                custodiaID = AnnexFileSystemManager.crearArchivo(nombreFicheroAnexadoRec,
-                    ficheroAnexado,null, null , modoFirma, anexoActual.getCustodiaID(), custodyParameters);
-              }
-              
-              
-              log.info("XYZ 111 CREAR ARCHIVO ANEXO: " + custodiaID);
-              
-              anexoActual.setCustodiaID(custodiaID);
-              anexoActual = merge(anexoActual);
-              
-          }
-
-          return anexoActual;
-     }
-     */
 
     @Override
     public List<Anexo> getByRegistroEntrada(Long idRegistro) throws Exception{

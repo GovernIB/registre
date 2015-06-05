@@ -23,20 +23,6 @@
           --%>
           <c:if test="${registro.estado == 1 || registro.estado == 2 || registro.estado == 3}">
 
-             <%-- XYZ 
-             
-<a class=" btn btn-danger" onClick="nouAnnexFull()" data-toggle="modal" data-target="#myModal">LINK</a>
- --%>
-             
-             <%-- <span onclick="showIFrame('http://www.fundaciobit.org', 'HOLA CARACOLA');">Open modal</span>  --%>
-             
-          
-              <%--  XYZ 
-              <a href="#modalNuevoAnexo" class="btn btn-${color} btn-xs pull-right" role="button" data-toggle="modal" onclick="nuevoAnexo('${registro.id}', '${registro.registroDetalle.id}', '${param.registro}')"><i class="fa fa-plus"></i> <spring:message code="anexo.nuevo"/></a>
-               --%>
-               <%--
-               <a onclick="nouAnnex()" class="btn btn-${color} btn-xs pull-right" role="button" data-toggle="modal" ><i class="fa fa-plus"></i> <spring:message code="anexo.nuevo"/></a>
-                --%>
                 <a onClick="nouAnnexFull()" data-toggle="modal" data-target="#myModal" class="btn btn-${color} btn-xs pull-right" role="button"><i class="fa fa-plus"></i> <spring:message code="anexo.nuevo"/></a>
                 
                 
@@ -108,10 +94,6 @@
   <div class="modal-content">
     
     <div class="modal-header" style="border:hidden; min-width: 5px;">
-    <%-- XYZ  
-      <button type="button" class="close" onClick="unloadiframe()" data-dismiss="modal" aria-label="Close">
-      <span hidden="true">&times;</span></button>
-      --%>
       
       <button type="button" class="close" onClick="unloadiframe()" data-dismiss="modal" aria-hidden="true" >×</button>
       <h3 id="anexoTitulo" style="margin-top: 0px; margin-bottom: 0px;"></h3>

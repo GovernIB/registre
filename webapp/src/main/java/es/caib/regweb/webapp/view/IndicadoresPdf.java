@@ -8,8 +8,6 @@ import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.webapp.utils.AbstractIText5PdfView;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

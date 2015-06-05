@@ -9,12 +9,13 @@ import org.fundaciobit.plugins.utils.PluginsManager;
 import es.caib.regweb.utils.RegwebConstantes;
 
 /**
- * XYZ Moure a EJB i ficar-ho dins del bean AnexoBean !!! 
+ *
  * 
  * Created by Fundació BIT.
  * User: anadal
  * Date: 31/07/13
  */
+// TODO  Moure a EJB i ficar-ho dins del bean AnexoBean !!! 
 public class AnnexFileSystemManager {
 
 

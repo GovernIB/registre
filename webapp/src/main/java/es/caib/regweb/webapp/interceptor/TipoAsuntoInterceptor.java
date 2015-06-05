@@ -1,17 +1,12 @@
 package es.caib.regweb.webapp.interceptor;
 
-import es.caib.regweb.model.Descarga;
-import es.caib.regweb.model.Entidad;
 import es.caib.regweb.model.Rol;
-import es.caib.regweb.persistence.ejb.DescargaLocal;
-import es.caib.regweb.persistence.ejb.EntidadLocal;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.webapp.utils.Mensaje;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -34,7 +29,7 @@ public class TipoAsuntoInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
         try {
-            String url = request.getServletPath();
+            // String url = request.getServletPath();
 
             HttpSession session = request.getSession();
             Rol rolActivo = (Rol) session.getAttribute(RegwebConstantes.SESSION_ROL);

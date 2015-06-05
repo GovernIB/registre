@@ -88,7 +88,7 @@ public class ReciboRtfView extends AbstractView {
             tipoRegistroEs = RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO;
         }
 
-        String idiomaActual = request.getLocale().getLanguage();
+        //String idiomaActual = request.getLocale().getLanguage();
         File archivo = FileSystemManager.getArchivo(modeloRecibo.getModelo().getId());
 
         // Convertimos el archivo a array de bytes

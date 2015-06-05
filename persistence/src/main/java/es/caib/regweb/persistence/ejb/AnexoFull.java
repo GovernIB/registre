@@ -4,6 +4,7 @@ import org.fundaciobit.plugins.documentcustody.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.SignatureCustody;
 
 import es.caib.regweb.model.Anexo;
+import es.caib.regweb.model.TipoDocumental;
 import es.caib.regweb.utils.RegwebConstantes;
 
 /**
@@ -41,6 +42,7 @@ public class AnexoFull {
   public AnexoFull() {
     this.anexo = new Anexo();
     this.anexo.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED);
+    this.anexo.setTipoDocumental(new TipoDocumental());
   }
   
   

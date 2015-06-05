@@ -13,9 +13,6 @@ import es.caib.regweb.persistence.ejb.AnexoFull;
  */
 public class AnexoForm extends AnexoFull {
 
-
-  // Only Form
-  //String returnURL;
   
   private CommonsMultipartFile documentoFile;
   
@@ -39,16 +36,8 @@ public class AnexoForm extends AnexoFull {
   public AnexoForm(AnexoFull anexoFull) {
     super(anexoFull);
   }
-  /*
-  public void setReturnURL(String returnURL) {
-    this.returnURL = returnURL;
-  }
-  
-  public String getReturnURL() {
-    return returnURL;
-  }
 
-  */
+
   public void setDocumentoFile(CommonsMultipartFile documentoFile) {
     this.documentoFile = documentoFile;
   }
@@ -86,7 +75,5 @@ public class AnexoForm extends AnexoFull {
   public void setRegistroID(Long registroID) {
     this.registroID = registroID;
   }
-  
-  
 
 }

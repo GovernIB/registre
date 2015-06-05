@@ -4,7 +4,6 @@ import org.hibernate.annotations.ForeignKey;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
-import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -18,7 +17,7 @@ import java.util.Date;
 @SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 @XmlRootElement(name = "registroSalida")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class RegistroSalida implements Serializable{
+public class RegistroSalida implements IRegistro {
 
     @XmlAttribute
     private Long id;
