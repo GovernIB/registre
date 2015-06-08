@@ -107,13 +107,7 @@ public class LibroController extends BaseController {
         }else{ // Si no hay errores guardamos el registro
 
             try {
-                Contador contadorEntrada = contadorEjb.persist(new Contador());
-                Contador contadorSalida = contadorEjb.persist(new Contador());
-                Contador contadorOficio = contadorEjb.persist(new Contador());
-                libro.setContadorEntrada(contadorEntrada);
-                libro.setContadorSalida(contadorSalida);
-                libro.setContadorOficioRemision(contadorOficio);
-                Libro libroCreado =libroEjb.persist(libro);
+                Libro libroCreado =libroEjb.crearLibro(libro);
 
                 // Se crean los permisos para el nuevo Libro creado
                 permisoLibroUsuarioEjb.crearPermisosLibroNuevo(libroCreado, getEntidadActiva(request).getId());

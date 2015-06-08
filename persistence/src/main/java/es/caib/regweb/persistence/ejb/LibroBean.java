@@ -1,5 +1,6 @@
 package es.caib.regweb.persistence.ejb;
 
+import es.caib.regweb.model.Contador;
 import es.caib.regweb.model.Libro;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -163,6 +164,19 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
         contadorEjb.reiniciarContador(libro.getContadorSalida().getId());
         contadorEjb.reiniciarContador(libro.getContadorOficioRemision().getId());
 
+    }
+
+    public Libro crearLibro(Libro libro) throws Exception{
+
+        Contador contadorEntrada = contadorEjb.persist(new Contador());
+        Contador contadorSalida = contadorEjb.persist(new Contador());
+        Contador contadorOficio = contadorEjb.persist(new Contador());
+
+        libro.setContadorEntrada(contadorEntrada);
+        libro.setContadorSalida(contadorSalida);
+        libro.setContadorOficioRemision(contadorOficio);
+
+        return persist(libro);
     }
 
 }

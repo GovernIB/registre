@@ -82,4 +82,12 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
      */
     public void reiniciarContadores(Long idLibro) throws Exception;
 
+    /**
+     * Crea un libro y le asocia sus contadores
+     * @param libro
+     * @return
+     * @throws Exception
+     */
+    public Libro crearLibro(Libro libro) throws Exception;
+
 }
