@@ -914,7 +914,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     @Override
     public Integer eliminarByEntidad(Long idEntidad) throws Exception{
 
-        List registros =  em.createQuery("Select distinct(re.id) from RegistroEntrada as re where re.usuario.entidad.id = :idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        List<?> registros =  em.createQuery("Select distinct(re.id) from RegistroEntrada as re where re.usuario.entidad.id = :idEntidad").setParameter("idEntidad",idEntidad).getResultList();
 
         for (Object id : registros) {
             remove(findById((Long) id));

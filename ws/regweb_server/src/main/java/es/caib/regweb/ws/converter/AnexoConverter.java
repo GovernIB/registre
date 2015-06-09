@@ -1,6 +1,9 @@
 package es.caib.regweb.ws.converter;
 
+import java.util.Calendar;
+
 import es.caib.regweb.model.Anexo;
+import es.caib.regweb.model.TipoDocumental;
 import es.caib.regweb.persistence.ejb.TipoDocumentalLocal;
 import es.caib.regweb.persistence.utils.AnexoFull;
 import es.caib.regweb.persistence.utils.AnnexFileSystemManager;
@@ -8,12 +11,12 @@ import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.utils.StringUtils;
 import es.caib.regweb.ws.model.AnexoWs;
 import es.caib.regweb.ws.v3.impl.CommonConverter;
+
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.plugins.documentcustody.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.SignatureCustody;
 
-import java.util.GregorianCalendar;
 
 /**
  * Created 1/12/14 13:45
@@ -124,7 +127,16 @@ public class AnexoConverter extends CommonConverter {
 
        if(!StringUtils.isEmpty(anexoWs.getTitulo())){ anexo.setTitulo(anexoWs.getTitulo());}
 
-       if(anexoWs.getTipoDocumental()!= null){anexo.setTipoDocumental(getTipoDocumental(anexoWs.getTipoDocumental(), idEntidad, tipoDocumentalEjb));}
+       if(anexoWs.getTipoDocumental()!= null) {
+         
+         String tdws = anexoWs.getTipoDocumental();
+         TipoDocumental td = getTipoDocumental(tdws, idEntidad, tipoDocumentalEjb);
+         if (td == null) {
+           log.warn("Se ha pasdo por parametro el tipoDocumental con ID '" 
+              + tdws + "' pero el sistema no ha encontrado ninguno con este código.");
+         }
+         anexo.setTipoDocumental(td);
+       }
        if(anexoWs.getValidezDocumento()!= null) {
          anexo.setValidezDocumento(getTipoValidezDocumento(anexoWs.getValidezDocumento()));
        }
@@ -225,7 +237,7 @@ public class AnexoConverter extends CommonConverter {
        
 
        // Transformamos de Date a Calendar
-       GregorianCalendar calendar = new GregorianCalendar();
+       Calendar calendar = Calendar.getInstance();
        calendar.setTime(anexo.getFechaCaptura());
        if(anexo.getFechaCaptura()!= null){anexoWs.setFechaCaptura(calendar);}
 

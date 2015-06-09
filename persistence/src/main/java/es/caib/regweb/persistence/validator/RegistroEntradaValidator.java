@@ -25,21 +25,9 @@ public class RegistroEntradaValidator<T> extends AbstractRegWebValidator<T> {
         RegistroEntrada registroEntrada = (RegistroEntrada)__target__;
         RegistroDetalle registroDetalle = registroEntrada.getRegistroDetalle();
 
-        //rejectIfEmptyOrWhitespace(errors, __target__, "registroDetalle.extracto", "error.valor.requerido", "El camp és obligatori");
-        //rejectIfEmptyOrWhitespace(errors, __target__, "registroDetalle.tipoDocumentacionFisica", "error.valor.requerido", "El camp és obligatori");
-        //rejectIfEmptyOrWhitespace(errors, __target__, "registroDetalle.idioma", "error.valor.requerido", "El camp és obligatori");
-
-        if(StringUtils.isEmpty(registroDetalle.getExtracto())){
-            rejectValue(errors,"registroDetalle.extracto","error.valor.requerido","El camp és obligatori");
-        }
-
-        if(registroDetalle.getTipoDocumentacionFisica() == null){
-            rejectValue(errors,"registroDetalle.tipoDocumentacionFisica","error.valor.requerido","El camp és obligatori");
-        }
-
-        if(registroDetalle.getIdioma() == null){
-            rejectValue(errors,"registroDetalle.idioma","error.valor.requerido","El camp és obligatori");
-        }
+        rejectIfEmptyOrWhitespace(errors, __target__, "registroDetalle.extracto", "error.valor.requerido", "El camp és obligatori");
+        rejectIfEmptyOrWhitespace(errors, __target__, "registroDetalle.tipoDocumentacionFisica", "error.valor.requerido", "El camp és obligatori");
+        rejectIfEmptyOrWhitespace(errors, __target__, "registroDetalle.idioma", "error.valor.requerido", "El camp és obligatori");
 
 
         if(registroDetalle.getExtracto() != null && registroDetalle.getExtracto().length() > 240){

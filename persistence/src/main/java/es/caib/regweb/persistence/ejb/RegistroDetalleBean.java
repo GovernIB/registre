@@ -64,7 +64,7 @@ public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> imple
     @Override
     public Integer eliminarByEntidad(Long idEntidad) throws Exception{
 
-        List registros =  em.createQuery("Select distinct(re.id) from RegistroDetalle as re where re.tipoAsunto.entidad.id = :idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        List<?> registros =  em.createQuery("Select distinct(re.id) from RegistroDetalle as re where re.tipoAsunto.entidad.id = :idEntidad").setParameter("idEntidad",idEntidad).getResultList();
 
         for (Object id : registros) {
             RegistroDetalle registroDetalle = findById((Long) id);

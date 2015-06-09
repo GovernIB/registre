@@ -1,8 +1,14 @@
 package es.caib.regweb.persistence.ejb;
 
-
-import es.caib.regweb.model.*;
+import es.caib.regweb.model.Anexo;
+import es.caib.regweb.model.Entidad;
+import es.caib.regweb.model.IRegistro;
+import es.caib.regweb.model.RegistroDetalle;
+import es.caib.regweb.model.RegistroEntrada;
+import es.caib.regweb.model.RegistroSalida;
+import es.caib.regweb.model.UsuarioEntidad;
 import es.caib.regweb.persistence.utils.AnexoFull;
+
 import es.caib.regweb.persistence.utils.AnnexFileSystemManager;
 import es.caib.regweb.persistence.utils.I18NLogicUtils;
 import es.caib.regweb.persistence.utils.RegistroUtils;
@@ -30,7 +36,7 @@ import java.beans.Expression;
 import java.beans.PersistenceDelegate;
 import java.beans.XMLEncoder;
 import java.io.ByteArrayOutputStream;
-import java.sql.Timestamp;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -127,7 +133,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         
         // TODO Validador
         
-        anexo.setFechaCaptura((Date)new Timestamp(new Date().getTime()));
+        anexo.setFechaCaptura(new Date());
 
         
         final String custodyParameters = getCustodyParameters(registroID, tipoRegistro);
@@ -182,7 +188,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         
         // TODO Validador
         
-        anexo.setFechaCaptura((Date)new Timestamp(new Date().getTime()));
+        anexo.setFechaCaptura(new Date());
         
         IDocumentCustodyPlugin custody = AnnexFileSystemManager.getInstance();
         
@@ -306,7 +312,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
           doc.setName(checkFileName(doc.getName() , "file.bin"));
           // TODO CHECK
           //anexo.setTamano(new Long(data.length));
-          anexo.setFechaCaptura((Date)new Timestamp(new Date().getTime()));
+          anexo.setFechaCaptura(new Date());
 
           custody.saveDocument(custodyID, custodyParameters, doc);
           
@@ -378,7 +384,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
        * tipoValidezDocumento.3=Còpia Original
        * tipoValidezDocumento.4=Original
        */
-      if (anexo.getValidezDocumento() != null) {
+      if (anexo.getValidezDocumento() != null && anexo.getValidezDocumento() != -1) {
         metadades.add(new Metadata("anexo.validezDocumento", 
             I18NLogicUtils.tradueix(loc, "tipoValidezDocumento." + anexo.getValidezDocumento())));
       }

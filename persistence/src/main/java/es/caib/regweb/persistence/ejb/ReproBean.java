@@ -201,7 +201,7 @@ public class ReproBean extends BaseEjbJPA<Repro, Long> implements ReproLocal{
     @Override
     public Integer eliminarByEntidad(Long idEntidad) throws Exception{
 
-        List repros =  em.createQuery("select distinct(r.id) from Repro as r where r.usuario.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        List<?> repros =  em.createQuery("select distinct(r.id) from Repro as r where r.usuario.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
 
         if(repros.size() > 0){
             return em.createQuery("delete from Repro where id in (:repros)").setParameter("repros", repros).executeUpdate();

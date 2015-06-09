@@ -56,6 +56,7 @@ public abstract class AbstractRegWebValidator<T> {
   public void rejectIfEmptyOrWhitespace(IValidatorResult<T> errors, T __target__,
       String field, String errorCode, String defaultValue) {
     StringField f =  getField(field);
+
     errors.rejectIfEmptyOrWhitespace(__target__, f, errorCode,
         new org.fundaciobit.genapp.common.i18n.I18NArgumentCode(getTranslationCode(f)));
   }

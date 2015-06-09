@@ -118,7 +118,9 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
     @Override
     @RolesAllowed({ ROL_USUARI })
     @WebMethod
-    public IdentificadorWs altaRegistroEntrada(@WebParam(name = "registroEntradaWs") RegistroEntradaWs registroEntradaWs) throws Throwable, WsI18NException, WsValidationException {
+    public IdentificadorWs altaRegistroEntrada(@WebParam(name = "registroEntradaWs") 
+       RegistroEntradaWs registroEntradaWs) 
+           throws Throwable, WsI18NException, WsValidationException {
 
         IdentificadorWs identificadorWs = null;
 
