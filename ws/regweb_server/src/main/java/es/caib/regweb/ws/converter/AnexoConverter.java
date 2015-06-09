@@ -1,8 +1,8 @@
 package es.caib.regweb.ws.converter;
 
 import es.caib.regweb.model.Anexo;
-import es.caib.regweb.persistence.ejb.AnexoFull;
 import es.caib.regweb.persistence.ejb.TipoDocumentalLocal;
+import es.caib.regweb.persistence.utils.AnexoFull;
 import es.caib.regweb.persistence.utils.AnnexFileSystemManager;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.utils.StringUtils;

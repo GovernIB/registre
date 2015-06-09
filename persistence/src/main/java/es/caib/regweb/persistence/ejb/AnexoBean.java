@@ -1,21 +1,14 @@
 package es.caib.regweb.persistence.ejb;
 
 
-import es.caib.regweb.model.Anexo;
-import es.caib.regweb.model.Entidad;
-import es.caib.regweb.model.IRegistro;
-import es.caib.regweb.model.RegistroDetalle;
-import es.caib.regweb.model.RegistroEntrada;
-import es.caib.regweb.model.RegistroSalida;
-import es.caib.regweb.model.TraduccionTipoDocumental;
-import es.caib.regweb.model.UsuarioEntidad;
+import es.caib.regweb.model.*;
+import es.caib.regweb.persistence.utils.AnexoFull;
 import es.caib.regweb.persistence.utils.AnnexFileSystemManager;
 import es.caib.regweb.persistence.utils.I18NLogicUtils;
 import es.caib.regweb.persistence.utils.RegistroUtils;
 import es.caib.regweb.utils.Configuracio;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.utils.StringUtils;
-
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -32,7 +25,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-
 import java.beans.Encoder;
 import java.beans.Expression;
 import java.beans.PersistenceDelegate;

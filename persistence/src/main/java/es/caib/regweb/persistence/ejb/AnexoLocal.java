@@ -3,12 +3,11 @@ package es.caib.regweb.persistence.ejb;
 
 import es.caib.regweb.model.Anexo;
 import es.caib.regweb.model.UsuarioEntidad;
+import es.caib.regweb.persistence.utils.AnexoFull;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
-
-import org.fundaciobit.genapp.common.i18n.I18NException;
-
 import java.util.List;
 
 /**

@@ -1,23 +1,20 @@
 package es.caib.regweb.ws.v3.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.ejb.EJB;
-
-import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.genapp.common.i18n.I18NValidationException;
-
 import es.caib.regweb.model.Anexo;
-import es.caib.regweb.model.UsuarioEntidad;
-import es.caib.regweb.persistence.ejb.AnexoFull;
 import es.caib.regweb.persistence.ejb.AnexoLocal;
 import es.caib.regweb.persistence.ejb.TipoDocumentalLocal;
+import es.caib.regweb.persistence.utils.AnexoFull;
 import es.caib.regweb.persistence.validator.AnexoBeanValidator;
 import es.caib.regweb.persistence.validator.AnexoValidator;
 import es.caib.regweb.ws.converter.AnexoConverter;
 import es.caib.regweb.ws.model.AnexoWs;
 import es.caib.regweb.ws.utils.AuthenticatedBaseWsImpl;
+import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+
+import javax.ejb.EJB;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**

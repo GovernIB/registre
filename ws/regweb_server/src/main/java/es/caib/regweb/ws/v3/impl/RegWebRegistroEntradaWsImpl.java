@@ -2,6 +2,7 @@ package es.caib.regweb.ws.v3.impl;
 
 import es.caib.regweb.model.*;
 import es.caib.regweb.persistence.ejb.*;
+import es.caib.regweb.persistence.utils.AnexoFull;
 import es.caib.regweb.persistence.validator.InteresadoBeanValidator;
 import es.caib.regweb.persistence.validator.InteresadoValidator;
 import es.caib.regweb.persistence.validator.RegistroEntradaBeanValidator;

@@ -1,11 +1,10 @@
-package es.caib.regweb.persistence.ejb;
-
-import org.fundaciobit.plugins.documentcustody.DocumentCustody;
-import org.fundaciobit.plugins.documentcustody.SignatureCustody;
+package es.caib.regweb.persistence.utils;
 
 import es.caib.regweb.model.Anexo;
 import es.caib.regweb.model.TipoDocumental;
 import es.caib.regweb.utils.RegwebConstantes;
+import org.fundaciobit.plugins.documentcustody.DocumentCustody;
+import org.fundaciobit.plugins.documentcustody.SignatureCustody;
 
 /**
  * 

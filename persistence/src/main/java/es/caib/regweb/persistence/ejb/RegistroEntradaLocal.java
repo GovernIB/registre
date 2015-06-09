@@ -5,6 +5,7 @@ import es.caib.regweb.model.Libro;
 import es.caib.regweb.model.RegistroEntrada;
 import es.caib.regweb.model.UsuarioEntidad;
 import es.caib.regweb.model.utils.RegistroBasico;
+import es.caib.regweb.persistence.utils.AnexoFull;
 import es.caib.regweb.persistence.utils.OficiosRemisionOrganismo;
 import es.caib.regweb.persistence.utils.Paginacion;
 import org.fundaciobit.genapp.common.i18n.I18NException;

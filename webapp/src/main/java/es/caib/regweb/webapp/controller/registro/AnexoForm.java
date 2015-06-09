@@ -1,10 +1,9 @@
 package es.caib.regweb.webapp.controller.registro;
 
 
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
-
 import es.caib.regweb.model.Anexo;
-import es.caib.regweb.persistence.ejb.AnexoFull;
+import es.caib.regweb.persistence.utils.AnexoFull;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 /**
  * 

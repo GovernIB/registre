@@ -269,10 +269,10 @@
                                                                         <td>${registroEntrada.registroDetalle.extracto}</td>
                                                                     </c:if>
                                                                     <c:if test="${registroEntrada.registroDetalle.anexos != null}">
-                                                                        <td>${fn:length(registroEntrada.registroDetalle.anexos)}</td>
+                                                                        <td class="center">${fn:length(registroEntrada.registroDetalle.anexos)}</td>
                                                                     </c:if>
                                                                     <c:if test="${registroEntrada.registroDetalle.anexos == null}">
-                                                                        <td>0</td>
+                                                                        <td class="center">0</td>
                                                                     </c:if>
 
                                                                     <td class="center">

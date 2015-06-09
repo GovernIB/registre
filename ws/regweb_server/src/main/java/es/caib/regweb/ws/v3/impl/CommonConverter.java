@@ -2,10 +2,10 @@ package es.caib.regweb.ws.v3.impl;
 
 import es.caib.regweb.model.*;
 import es.caib.regweb.persistence.ejb.*;
+import es.caib.regweb.persistence.utils.AnexoFull;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.ws.converter.AnexoConverter;
 import es.caib.regweb.ws.model.*;
-
 import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import java.util.ArrayList;

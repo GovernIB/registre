@@ -1,17 +1,15 @@
 package es.caib.regweb.webapp.controller.registro;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import javax.activation.MimetypesFileTypeMap;
-import javax.ejb.EJB;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import es.caib.regweb.model.Entidad;
+import es.caib.regweb.model.RegistroDetalle;
+import es.caib.regweb.persistence.ejb.*;
+import es.caib.regweb.persistence.utils.AnexoFull;
+import es.caib.regweb.persistence.utils.AnnexFileSystemManager;
+import es.caib.regweb.utils.RegwebConstantes;
+import es.caib.regweb.webapp.controller.BaseController;
+import es.caib.regweb.webapp.scan.ScannerManager;
+import es.caib.regweb.webapp.utils.Mensaje;
+import es.caib.regweb.webapp.validator.AnexoWebValidator;
 import org.apache.axis.utils.StringUtils;
 import org.apache.commons.io.FileUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -25,32 +23,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-import es.caib.regweb.model.Entidad;
-import es.caib.regweb.model.RegistroDetalle;
-import es.caib.regweb.persistence.ejb.AnexoFull;
-import es.caib.regweb.persistence.ejb.AnexoLocal;
-import es.caib.regweb.persistence.ejb.HistoricoRegistroEntradaLocal;
-import es.caib.regweb.persistence.ejb.HistoricoRegistroSalidaLocal;
-import es.caib.regweb.persistence.ejb.RegistroDetalleLocal;
-import es.caib.regweb.persistence.ejb.RegistroEntradaLocal;
-import es.caib.regweb.persistence.ejb.RegistroSalidaLocal;
-import es.caib.regweb.persistence.ejb.TipoDocumentalLocal;
-import es.caib.regweb.persistence.utils.AnnexFileSystemManager;
-import es.caib.regweb.utils.RegwebConstantes;
-import es.caib.regweb.webapp.controller.BaseController;
-import es.caib.regweb.webapp.scan.ScannerManager;
-import es.caib.regweb.webapp.utils.Mensaje;
-import es.caib.regweb.webapp.validator.AnexoWebValidator;
+import javax.activation.MimetypesFileTypeMap;
+import javax.ejb.EJB;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created 3/06/14 14:22
