@@ -8,6 +8,7 @@ import es.caib.regweb.webapp.utils.Mensaje;
 import es.caib.regweb.webapp.validator.ReservaValidator;
 
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -83,7 +84,7 @@ public class ReservaController  extends BaseController {
     @RequestMapping(value = "/reserva", method = RequestMethod.POST)
     public String reserva(@ModelAttribute("registro") RegistroEntrada registro, 
         BindingResult result, Model model,SessionStatus status,
-        HttpServletRequest request) throws Exception, I18NException {
+        HttpServletRequest request) throws Exception, I18NException, I18NValidationException {
 
         reservaValidator.validate(registro, result);
 

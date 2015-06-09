@@ -8,16 +8,19 @@ import es.caib.regweb.model.RegistroEntrada;
 import es.caib.regweb.model.RegistroSalida;
 import es.caib.regweb.model.UsuarioEntidad;
 import es.caib.regweb.persistence.utils.AnexoFull;
-
 import es.caib.regweb.persistence.utils.AnnexFileSystemManager;
 import es.caib.regweb.persistence.utils.I18NLogicUtils;
 import es.caib.regweb.persistence.utils.RegistroUtils;
+import es.caib.regweb.persistence.validator.AnexoBeanValidator;
+import es.caib.regweb.persistence.validator.AnexoValidator;
 import es.caib.regweb.utils.Configuracio;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.utils.StringUtils;
+
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.plugins.documentcustody.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.IDocumentCustodyPlugin;
 import org.fundaciobit.plugins.documentcustody.SignatureCustody;
@@ -31,12 +34,12 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
 import java.beans.Encoder;
 import java.beans.Expression;
 import java.beans.PersistenceDelegate;
 import java.beans.XMLEncoder;
 import java.io.ByteArrayOutputStream;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -122,27 +125,31 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     @Override
     public AnexoFull crearAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
-        Long registroID, String tipoRegistro) throws I18NException {
+        Long registroID, String tipoRegistro) throws I18NException, I18NValidationException {
       
       IDocumentCustodyPlugin custody = null;
       boolean error = false;
       String custodyID = null;
       try {
-        custody = AnnexFileSystemManager.getInstance();
+        
         Anexo anexo = anexoFull.getAnexo();
         
-        // TODO Validador
+        // Validador                
+        validateAnexo(anexo, true);
         
         anexo.setFechaCaptura(new Date());
 
+        custody = AnnexFileSystemManager.getInstance();
         
-        final String custodyParameters = getCustodyParameters(registroID, tipoRegistro);
+        IRegistro registro = getIRegistro(registroID, tipoRegistro);
+        
+        final String custodyParameters = getCustodyParameters(registro);
         
         custodyID = custody.reserveCustodyID(custodyParameters);
         anexo.setCustodiaID(custodyID);
   
         updateCustodyInfoOfAnexo(anexoFull, custody, custodyParameters, custodyID,
-            registroID, tipoRegistro);
+             registro);
 
         anexo = this.persist(anexo);
         
@@ -177,22 +184,38 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
       
     }
 
+
+
+
+    protected void validateAnexo(Anexo anexo, final boolean isNou)
+        throws I18NValidationException, I18NException {
+      AnexoValidator<Anexo> anexoValidator = new AnexoValidator<Anexo>();
+      AnexoBeanValidator pfbv = new AnexoBeanValidator(anexoValidator);        
+      pfbv.throwValidationExceptionIfErrors(anexo, isNou);
+    }
+
     
     @Override
     public AnexoFull actualizarAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
-        Long registroID, String tipoRegistro) throws I18NException {
+        Long registroID, String tipoRegistro) throws I18NException, I18NValidationException {
       
       try {
         
         Anexo anexo = anexoFull.getAnexo();
         
-        // TODO Validador
+        // Validador        
+        final boolean isNou = false;
+        validateAnexo(anexo, isNou);
         
         anexo.setFechaCaptura(new Date());
         
         IDocumentCustodyPlugin custody = AnnexFileSystemManager.getInstance();
         
-        final String custodyParameters = getCustodyParameters(registroID, tipoRegistro);
+        
+        IRegistro registro = getIRegistro(registroID, tipoRegistro);
+        
+        
+        final String custodyParameters = getCustodyParameters(registro);
         
         
         final String custodyID = anexo.getCustodiaID();
@@ -205,7 +228,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         crearHistorico(anexoFull, usuarioEntidad, registroID, tipoRegistro, isNew);
   
         updateCustodyInfoOfAnexo(anexoFull, custody, custodyParameters, custodyID,
-            registroID, tipoRegistro);
+            registro);
 
         return anexoFull;
       
@@ -216,6 +239,23 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         throw new I18NException(e, "anexo.error.guardando", new I18NArgumentString(e.getMessage()));
       }
       
+    }
+
+
+
+
+    protected IRegistro getIRegistro(Long registroID, String tipoRegistro) throws Exception {
+      IRegistro registro;
+      if ("entrada".equals(tipoRegistro)) {
+        registro = registroEntradaEjb.findById(registroID);
+      } else {
+        registro = registroSalidaEjb.findById(registroID);
+      }
+      
+      Hibernate.initialize(registro.getRegistroDetalle().getTipoAsunto());
+      Hibernate.initialize(registro.getRegistroDetalle().getInteresados());
+      
+      return registro;
     }
     
     
@@ -285,7 +325,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     protected void updateCustodyInfoOfAnexo(AnexoFull anexoFull, IDocumentCustodyPlugin custody,
         final String custodyParameters, final String custodyID, 
-        final Long registroID, final String tipoRegistro) throws Exception {
+        IRegistro registro) throws Exception {
 
       // TODO Falta Check DOC
       Anexo anexo = anexoFull.getAnexo();
@@ -355,12 +395,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
       }
       
 
-      IRegistro registro;
-      if ("entrada".equals(tipoRegistro)) {
-        registro = registroEntradaEjb.findById(registroID);
-      } else {
-        registro = registroSalidaEjb.findById(registroID);
-      }
+
+      
       
       // TODO String tipoDeDocumento; //  varchar(100)
 
@@ -421,28 +457,14 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     
     
     
-    protected String getCustodyParameters(Long registroID, String tipoRegistro) throws Exception {
+    protected String getCustodyParameters(IRegistro registro) throws Exception {
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
       XMLEncoder encoder = new XMLEncoder(baos);
       
       encoder.setPersistenceDelegate(java.sql.Date.class, new java_util_Date_PersistenceDelegate());
       encoder.setPersistenceDelegate(java.sql.Time.class, new java_util_Date_PersistenceDelegate());
-      
-      //ObjectMapper mapper = new ObjectMapper();
-      //mapper.configure(Fe Config.FAIL_ON_EMPTY_BEANS, false);
-      log.info("Cercant registre amb id = '" + registroID + "' de tipus '" + tipoRegistro + "'");
-      
-      if ("entrada".equals(tipoRegistro)) {
-        RegistroEntrada re = registroEntradaEjb.findById(registroID);
-       
-        encoder.writeObject(re);
-        //mapper.writeValue(baos, re);
-      } else {
-        RegistroSalida rs = registroSalidaEjb.findById(registroID);
-        encoder.writeObject(rs);
-        //mapper.writeValue(baos, rs);
-        
-      }
+
+      encoder.writeObject(registro);
       encoder.flush();
       encoder.close();
       return new String(baos.toByteArray());

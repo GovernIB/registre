@@ -7,6 +7,7 @@ import es.caib.regweb.utils.RegwebConstantes;
 
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
@@ -64,7 +65,8 @@ public class OficioRemisionUtilsBean implements OficioRemisionUtilsLocal {
    */
  @Override
   public OficioRemision crearOficioRemisionInterno(List<RegistroEntrada> registrosEntrada,
-      Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, Long idOrganismo, Long idLibro) throws Exception, I18NException {
+      Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, Long idOrganismo, Long idLibro)
+          throws Exception, I18NException, I18NValidationException {
 
       Organismo organismoDestino = organismoEjb.findById(idOrganismo);
 
@@ -77,7 +79,8 @@ public class OficioRemisionUtilsBean implements OficioRemisionUtilsLocal {
       oficioRemision.setOrganismoDestinatario(organismoDestino);
 
       synchronized (this){
-          oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision, RegwebConstantes.ESTADO_OFICIO_INTERNO);
+          oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision,
+              RegwebConstantes.ESTADO_OFICIO_INTERNO);
       }
 
       return oficioRemision;
@@ -98,7 +101,7 @@ public class OficioRemisionUtilsBean implements OficioRemisionUtilsLocal {
   public OficioRemision crearOficioRemisionExterno(List<RegistroEntrada> registrosEntrada,
       Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, String organismoExterno,
       String organismoExternoDenominacion, Long idLibro, String identificadorIntercambioSir)
-          throws Exception , I18NException{
+          throws Exception , I18NException, I18NValidationException {
 
       //Organismo organismoDestino = organismoEjb.findById(idOrganismo);
 
@@ -126,7 +129,8 @@ public class OficioRemisionUtilsBean implements OficioRemisionUtilsLocal {
         oficioRemision.setOrganismoDestinatario(organismoExt);
       }
 
-      oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision, RegwebConstantes.ESTADO_OFICIO_EXTERNO);
+      oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision,
+          RegwebConstantes.ESTADO_OFICIO_EXTERNO);
 
       return oficioRemision;
 
@@ -141,7 +145,7 @@ public class OficioRemisionUtilsBean implements OficioRemisionUtilsLocal {
   @Override
   public List<RegistroEntrada> procesarOficioRemision(OficioRemision oficioRemision, 
       UsuarioEntidad usuario, Oficina oficinaActiva, 
-      List<OficioPendienteLlegada> oficios) throws Exception, I18NException{
+      List<OficioPendienteLlegada> oficios) throws Exception, I18NException, I18NValidationException {
 
       List<RegistroEntrada> registros = new ArrayList<RegistroEntrada>();
 

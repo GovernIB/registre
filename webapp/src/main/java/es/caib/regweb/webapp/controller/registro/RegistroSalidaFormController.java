@@ -7,7 +7,9 @@ import es.caib.regweb.persistence.utils.RegistroUtils;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.webapp.utils.Mensaje;
 import es.caib.regweb.webapp.validator.RegistroSalidaWebValidator;
+
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -92,7 +95,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
     @RequestMapping(value = "/new", method = RequestMethod.POST)
     public String nuevoRegistroSalida(@ModelAttribute("registro") RegistroSalida registro,
         BindingResult result, Model model, SessionStatus status,
-        HttpServletRequest request) throws Exception, I18NException {
+        HttpServletRequest request) throws Exception, I18NException, I18NValidationException {
 
         HttpSession session = request.getSession();
 

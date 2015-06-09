@@ -4,10 +4,13 @@ package es.caib.regweb.persistence.ejb;
 import es.caib.regweb.model.Anexo;
 import es.caib.regweb.model.UsuarioEntidad;
 import es.caib.regweb.persistence.utils.AnexoFull;
+
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
+
 import java.util.List;
 
 /**
@@ -23,7 +26,7 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
 
   
   public AnexoFull crearAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
-      Long registroID, String tipoRegistro) throws I18NException;
+      Long registroID, String tipoRegistro) throws I18NException, I18NValidationException;
     
 
   
@@ -32,7 +35,7 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
   
   
   public AnexoFull actualizarAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
-      Long registroID, String tipoRegistro) throws I18NException;
+      Long registroID, String tipoRegistro) throws I18NException, I18NValidationException;
     
   
   

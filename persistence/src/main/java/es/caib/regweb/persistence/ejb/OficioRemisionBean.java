@@ -4,8 +4,10 @@ import es.caib.regweb.model.*;
 import es.caib.regweb.persistence.utils.NumeroRegistro;
 import es.caib.regweb.persistence.utils.Paginacion;
 import es.caib.regweb.utils.RegwebConstantes;
+
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
@@ -13,6 +15,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
 import java.util.*;
 
 /**
@@ -151,7 +154,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override    
     public synchronized OficioRemision registrarOficioRemision(OficioRemision oficioRemision,
-        Long estado) throws Exception, I18NException {
+        Long estado) throws Exception, I18NException, I18NValidationException {
 
         // Obtenemos el Número de registro del OficioRemision
         Libro libro = libroEjb.findById(oficioRemision.getLibro().getId());

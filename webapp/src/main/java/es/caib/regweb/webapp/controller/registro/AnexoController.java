@@ -10,9 +10,11 @@ import es.caib.regweb.webapp.controller.BaseController;
 import es.caib.regweb.webapp.scan.ScannerManager;
 import es.caib.regweb.webapp.utils.Mensaje;
 import es.caib.regweb.webapp.validator.AnexoWebValidator;
+
 import org.apache.axis.utils.StringUtils;
 import org.apache.commons.io.FileUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.fundaciobit.plugins.documentcustody.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.SignatureCustody;
@@ -33,6 +35,7 @@ import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -158,6 +161,11 @@ public class AnexoController extends BaseController {
 
            return "registro/formularioAnexo";
            
+        } catch(I18NValidationException i18n) {
+          log.error(i18n.getMessage(), i18n);
+          // TODO
+          Mensaje.saveMessageError(request, i18n.getMessage());   
+           
         } catch(I18NException i18n) {
           log.error(i18n.getMessage(), i18n);
           Mensaje.saveMessageError(request, I18NUtils.tradueix(i18n.getTraduccio()));   
@@ -237,7 +245,7 @@ public class AnexoController extends BaseController {
     @RequestMapping(value = "/editar", method = RequestMethod.POST)
     public String editarAnexoPost(@ModelAttribute AnexoForm anexoForm,
         BindingResult result, HttpServletRequest request,
-        HttpServletResponse response, Model model) throws Exception {
+        HttpServletResponse response, Model model) throws Exception, I18NValidationException {
 
       anexoValidator.validate(anexoForm.getAnexo(),result);
       

@@ -6,10 +6,13 @@ import es.caib.regweb.model.UsuarioEntidad;
 import es.caib.regweb.model.utils.RegistroBasico;
 import es.caib.regweb.persistence.utils.AnexoFull;
 import es.caib.regweb.persistence.utils.Paginacion;
+
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
+
 import java.util.Date;
 import java.util.List;
 
@@ -37,7 +40,8 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @return
      * @throws Exception
      */
-    public RegistroSalida registrarSalida(RegistroSalida registroSalida) throws Exception, I18NException;
+    public RegistroSalida registrarSalida(RegistroSalida registroSalida) 
+        throws Exception, I18NException, I18NValidationException;
     
     /**
      * Guarda un Registro de Salida (con anexos)
@@ -46,7 +50,8 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @throws Exception
      */
     public RegistroSalida registrarSalida(RegistroSalida registroSalida,
-        UsuarioEntidad usuarioEntidad, List<AnexoFull> anexos) throws Exception, I18NException;
+        UsuarioEntidad usuarioEntidad, List<AnexoFull> anexos) 
+            throws Exception, I18NException, I18NValidationException;
     
 
     /**

@@ -8,8 +8,10 @@ import es.caib.regweb.model.utils.RegistroBasico;
 import es.caib.regweb.persistence.utils.*;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.utils.StringUtils;
+
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
@@ -17,6 +19,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
 import java.util.*;
 
 /**
@@ -64,7 +67,8 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     }
 
     @Override
-    public RegistroSalida registrarSalida(RegistroSalida registroSalida)throws Exception, I18NException{
+    public RegistroSalida registrarSalida(RegistroSalida registroSalida) 
+        throws Exception, I18NException, I18NValidationException{
       return registrarSalida(registroSalida, null,null);
     }
       
@@ -72,7 +76,8 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
       
     @Override
      public synchronized RegistroSalida registrarSalida(RegistroSalida registroSalida,
-          UsuarioEntidad usuarioEntidad, List<AnexoFull> anexos) throws Exception, I18NException {
+          UsuarioEntidad usuarioEntidad, List<AnexoFull> anexos) 
+              throws Exception, I18NException, I18NValidationException {
 
         // Obtenemos el Número de registro
         Libro libro = libroEjb.findById(registroSalida.getLibro().getId());

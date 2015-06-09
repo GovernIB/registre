@@ -8,10 +8,13 @@ import es.caib.regweb.model.utils.RegistroBasico;
 import es.caib.regweb.persistence.utils.AnexoFull;
 import es.caib.regweb.persistence.utils.OficiosRemisionOrganismo;
 import es.caib.regweb.persistence.utils.Paginacion;
+
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
+
 import java.util.Date;
 import java.util.List;
 
@@ -41,7 +44,8 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada)throws Exception, I18NException;
+    public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada)
+        throws Exception, I18NException, I18NValidationException;
     
 
     /**
@@ -51,7 +55,8 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @throws Exception
      */
     public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada, 
-        UsuarioEntidad usuarioEntidad, List<AnexoFull> anexosFull) throws Exception, I18NException;
+        UsuarioEntidad usuarioEntidad, List<AnexoFull> anexosFull) 
+            throws Exception, I18NException, I18NValidationException;
 
    /**
      * Busca los Registros de Entrada en función de los parámetros

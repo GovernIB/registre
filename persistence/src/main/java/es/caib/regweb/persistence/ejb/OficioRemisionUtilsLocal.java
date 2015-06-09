@@ -7,6 +7,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
 import es.caib.regweb.model.Oficina;
 import es.caib.regweb.model.OficioRemision;
@@ -28,17 +29,17 @@ public interface OficioRemisionUtilsLocal  {
   
   public OficioRemision crearOficioRemisionInterno(List<RegistroEntrada> registrosEntrada,
       Oficina oficinaActiva, UsuarioEntidad usuarioEntidad,
-      Long idOrganismo, Long idLibro) throws Exception, I18NException;
+      Long idOrganismo, Long idLibro) throws Exception, I18NException, I18NValidationException;
 
   
   public OficioRemision crearOficioRemisionExterno(List<RegistroEntrada> registrosEntrada,
       Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, String organismoExterno,
       String organismoExternoDenominacion, Long idLibro,
-      String identificadorIntercambioSir) throws Exception, I18NException;
+      String identificadorIntercambioSir) throws Exception, I18NException, I18NValidationException;
   
   
   public List<RegistroEntrada> procesarOficioRemision(OficioRemision oficioRemision,
       UsuarioEntidad usuario, Oficina oficinaActiva,
-      List<OficioPendienteLlegada> oficios) throws Exception, I18NException;
+      List<OficioPendienteLlegada> oficios) throws Exception, I18NException, I18NValidationException;
   
 }

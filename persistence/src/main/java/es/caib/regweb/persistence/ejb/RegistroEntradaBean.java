@@ -7,8 +7,10 @@ import es.caib.regweb.model.utils.RegistroBasico;
 import es.caib.regweb.persistence.utils.*;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.utils.StringUtils;
+
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
@@ -16,6 +18,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
 import java.util.*;
 
 /**
@@ -65,7 +68,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     
     
     @Override
-    public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada)throws Exception, I18NException {
+    public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada)
+        throws Exception, I18NException, I18NValidationException {
       return registrarEntrada(registroEntrada,null, null);
     }
     
@@ -73,7 +77,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     @Override
     public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
-        UsuarioEntidad usuarioEntidad, List<AnexoFull> anexosFull)throws Exception, I18NException {
+        UsuarioEntidad usuarioEntidad, List<AnexoFull> anexosFull) 
+            throws Exception, I18NException, I18NValidationException {
 
 
         // Obtenemos el Número de registro

@@ -13,6 +13,7 @@ import es.caib.regweb.ws.sir.api.wssir7.WS_SIR7ServiceLocator;
 import es.caib.regweb.ws.sir.api.wssir7.WS_SIR7_PortType;
 
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -188,7 +189,7 @@ public class PreRegistroController extends BaseController {
     @RequestMapping(value = "/{idPreRegistro}/registrar/{idLibro}", method = RequestMethod.GET)
     public String confirmarPreRegistro(@PathVariable Long idPreRegistro,
         @PathVariable Long idLibro, Model model, HttpServletRequest request)
-            throws Exception, I18NException {
+            throws Exception, I18NException, I18NValidationException {
 
         PreRegistro preRegistro = preRegistroEjb.findById(idPreRegistro);
         Oficina oficinaActiva = getOficinaActiva(request);
@@ -240,7 +241,8 @@ public class PreRegistroController extends BaseController {
 
             }
             if(preRegistro.getTipoRegistro().equals(RegwebConstantes.PREREGISTRO_SALIDA.toString())) {
-                registroSalida = preRegistroUtils.procesarPreRegistroSalida(preRegistro, usuarioEntidad, oficinaActiva, idLibro);
+                registroSalida = preRegistroUtils.procesarPreRegistroSalida(preRegistro,
+                    usuarioEntidad, oficinaActiva, idLibro);
                 model.addAttribute("registroSalida",registroSalida);
                 variableReturn = "redirect:/registroSalida/" + registroSalida.getId() + "/detalle";
             }
