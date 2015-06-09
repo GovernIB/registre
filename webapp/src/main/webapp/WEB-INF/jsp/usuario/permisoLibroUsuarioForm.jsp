@@ -55,9 +55,9 @@
                                     <table class="table table-bordered table-hover table-striped">
                                         <thead>
                                             <tr>
-                                                <th style="text-align:center;"><spring:message code="libro.libros"/></th>
+                                                <th style="text-align:center;cursor: pointer;"><spring:message code="libro.libros"/></th>
                                                 <c:forEach var="permiso" items="${permisos}" varStatus="status">
-                                                    <th style="text-align:center;" onclick="seleccionarTodo('${status.index}','${fn:length(permisoLibroUsuarioForm.permisoLibroUsuarios)}');"><spring:message code="permiso.nombre.${permiso}" /></th>
+                                                    <th style="text-align:center;cursor: pointer;" onclick="seleccionarTodo('${status.index}','${fn:length(permisoLibroUsuarioForm.permisoLibroUsuarios)}');"><spring:message code="permiso.nombre.${permiso}" /></th>
                                                 </c:forEach>
                                             </tr>
                                         </thead>
