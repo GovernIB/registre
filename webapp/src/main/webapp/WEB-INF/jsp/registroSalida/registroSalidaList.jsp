@@ -270,12 +270,7 @@
                                                 <c:if test="${registroSalida.origen == null}">
                                                     <td>${registroSalida.origenExternoDenominacion}</td>
                                                 </c:if>
-                                                <c:if test="${registroSalida.estado == 2}">
-                                                    <td>${registroSalida.registroDetalle.reserva}</td>
-                                                </c:if>
-                                                <c:if test="${registroSalida.estado != 2}">
-                                                    <td>${registroSalida.registroDetalle.extracto}</td>
-                                                </c:if>
+                                                <td>${registroSalida.registroDetalle.extracto}</td>
                                                 <c:if test="${registroSalida.registroDetalle.anexos != null}">
                                                     <td class="center">${fn:length(registroEntrada.registroDetalle.anexos)}</td>
                                                 </c:if>

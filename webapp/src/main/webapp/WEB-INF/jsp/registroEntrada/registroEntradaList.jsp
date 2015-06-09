@@ -262,10 +262,10 @@
                                                                     <td>${registroEntrada.usuario.usuario.identificador}</td>
                                                                     <td><label class="no-bold" rel="ayuda" data-content="${registroEntrada.oficina.denominacion}" data-toggle="popover">${registroEntrada.oficina.codigo}</label></td>
                                                                     <td>${(empty registroEntrada.destino)? registroEntrada.destinoExternoDenominacion : registroEntrada.destino.denominacion}</td>
-                                                                    <c:if test="${registroEntrada.estado == 2}">
+                                                                    <c:if test="${registroEntrada.estado == RegwebConstantes.ESTADO_PENDIENTE}">
                                                                         <td>${registroEntrada.registroDetalle.reserva}</td>
                                                                     </c:if>
-                                                                    <c:if test="${registroEntrada.estado != 2}">
+                                                                    <c:if test="${registroEntrada.estado != RegwebConstantes.ESTADO_PENDIENTE}">
                                                                         <td>${registroEntrada.registroDetalle.extracto}</td>
                                                                     </c:if>
                                                                     <c:if test="${registroEntrada.registroDetalle.anexos != null}">

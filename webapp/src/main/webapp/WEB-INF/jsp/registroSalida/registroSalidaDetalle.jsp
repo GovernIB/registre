@@ -97,12 +97,11 @@
                         </dl>
             
                     </div>
-            
-                    <div class="panel-footer">  <%--Botonera--%>
-            
-                        <%--Si no nos encontramos en la misma Oficia en la que se creó el Registro, no podemos hacer nada con el--%>
-                        <c:if test="${registro.oficina.id == oficinaActiva.id}">
 
+                    <%--Si no nos encontramos en la misma Oficia en la que se creó el Registro, no podemos hacer nada con el--%>
+                    <c:if test="${registro.oficina.id == oficinaActiva.id}">
+
+                        <div class="panel-footer">  <%--Botonera--%>
                             <%--Si el resgistro no está pendiente de visar o anulado--%>
                             <c:if test="${registro.estado != 3 && registro.estado != 8}">
                                 <c:if test="${fn:length(modelosRecibo) > 1}">
@@ -125,31 +124,31 @@
 
                                 <button type="button" data-toggle="modal" data-target="#selloModal" class="btn btn-warning btn-sm btn-block"><spring:message code="sello.imprimir"/></button>
                             </c:if>
-            
+
                             <%--Si el registro está anulado--%>
                             <c:if test="${registro.estado == RegwebConstantes.ESTADO_ANULADO && puedeEditar}">
                                 <button type="button" onclick='javascript:confirm("<c:url value="/registroSalida/${registro.id}/activar"/>","<spring:message code="regweb.confirmar.activar" htmlEscape="true"/>")' class="btn btn-primary btn-sm btn-block"><spring:message code="regweb.activar"/></button>
                             </c:if>
-            
+
                             <%--Si el registro está pendiente de visar--%>
                             <c:if test="${registro.estado == RegwebConstantes.ESTADO_PENDIENTE_VISAR && isAdministradorLibro}">
                                 <button type="button" onclick='javascript:confirm("<c:url value="/registroSalida/${registro.id}/visar"/>","<spring:message code="regweb.confirmar.visar" htmlEscape="true"/>")' class="btn btn-success btn-sm btn-block"><spring:message code="regweb.visar"/></button>
                             </c:if>
-            
+
                             <%--Si el registro está pendiente--%>
                             <c:if test="${(registro.estado == RegwebConstantes.ESTADO_VALIDO || registro.estado == RegwebConstantes.ESTADO_PENDIENTE || registro.estado == RegwebConstantes.ESTADO_PENDIENTE_VISAR) && puedeEditar}">
                                 <button type="button" onclick='javascript:confirm("<c:url value="/registroSalida/${registro.id}/anular"/>","<spring:message code="regweb.confirmar.anular" htmlEscape="true"/>")' class="btn btn-danger btn-sm btn-block"><spring:message code="regweb.anular"/></button>
                             </c:if>
-            
+
 
                             <%--Si el resgistro no está pendiente de visar o anulado o tramitado--%>
                             <c:if test="${(registro.estado == RegwebConstantes.ESTADO_VALIDO || registro.estado == RegwebConstantes.ESTADO_PENDIENTE) && puedeEditar}">
                                 <button type="button" onclick="goTo('<c:url value="/registroSalida/${registro.id}/edit"/>')" class="btn btn-warning btn-sm btn-block"><spring:message code="registroSalida.editar"/></button>
                             </c:if>
-            
-                        </c:if>
+                        </div>
+                    </c:if>
 
-                    </div>
+
                     <div class="panel-footer">
                         <button type="button" onclick="goTo('/regweb/registroSalida/new')" class="btn btn-danger btn-sm btn-block">Introduir registre de sortida</button>
                     </div>
@@ -170,14 +169,15 @@
             </c:if>
 
             <%--INTERESADOS--%>
-            <c:if test="${registro.estado == 1 || registro.estado == 2}">
+            <c:if test="${(registro.estado == 1 || registro.estado == 2) && registro.oficina.id == oficinaActiva.id}">
                 <c:import url="../registro/interesados.jsp">
                     <c:param name="tipo" value="detalle"/>
                     <c:param name="registro" value="salida"/>
                 </c:import>
             </c:if>
 
-            <c:if test="${registro.estado != 1 && registro.estado != 2}">
+            <%--INTERESADOS SOLO LECTURA--%>
+            <c:if test="${(registro.estado != 1 && registro.estado != 2) || registro.oficina.id != oficinaActiva.id}">
                 <c:import url="../registro/interesadosLectura.jsp">
                     <c:param name="registro" value="salida"/>
                 </c:import>
@@ -374,35 +374,7 @@
 
 <c:import url="../modulos/pie.jsp"/>
 
-<script type="text/javascript">
-  <%-- Traducciones para interesados.js --%>
-  var tradsinteresado = new Array();
-  tradsinteresado['interesado.representante.anadir'] = "<spring:message code='interesado.representante.anadir' javaScriptEscape='true' />";
-  tradsinteresado['interesado.representante.buscar'] = "<spring:message code='interesado.representante.buscar' javaScriptEscape='true' />";
-  tradsinteresado['interesado.representante.editar'] = "<spring:message code='interesado.representante.editar' javaScriptEscape='true' />";
-  tradsinteresado['interesado.representante.eliminar'] = "<spring:message code='interesado.representante.eliminar' javaScriptEscape='true' />";
-  tradsinteresado['interesado.representante.nuevo'] = "<spring:message code='interesado.representante.nuevo' javaScriptEscape='true' />";
-  tradsinteresado['interesado.personafisica.editar'] = "<spring:message code='interesado.personafisica.editar' javaScriptEscape='true' />";
-  tradsinteresado['interesado.personajuridica.editar'] = "<spring:message code='interesado.personajuridica.editar' javaScriptEscape='true' />";
-  tradsinteresado['interesado.noresultados.escoge'] = "<spring:message code='interesado.noresultados.escoge' javaScriptEscape='true' />";
-  tradsinteresado['interesado.noresultados'] = "<spring:message code='interesado.noresultados' javaScriptEscape='true' />";
-  tradsinteresado['interesado.hay'] = "<spring:message code='interesado.hay' javaScriptEscape='true' />";
-  tradsinteresado['regweb.editar'] = "<spring:message code='regweb.editar' javaScriptEscape='true' />";
-  tradsinteresado['regweb.nombre'] = "<spring:message code='regweb.nombre' javaScriptEscape='true' />";
-  tradsinteresado['persona.documento'] = "<spring:message code='persona.documento' javaScriptEscape='true' />";
-  tradsinteresado['persona.razonSocial'] = "<spring:message code='persona.razonSocial' javaScriptEscape='true' />";
-  tradsinteresado['persona.persona'] = "<spring:message code='persona.persona' javaScriptEscape='true' />";
-  tradsinteresado['persona.razonSocial'] = "<spring:message code='persona.razonSocial' javaScriptEscape='true' />";
-  tradsinteresado['interesado.resultados'] = "<spring:message code='interesado.resultados' javaScriptEscape='true' />";
-  tradsinteresado['representante.eliminar'] = "<spring:message code='representante.eliminar' javaScriptEscape='true' />";
-  tradsinteresado['regweb.confirmar'] = "<spring:message code='regweb.confirmar' javaScriptEscape='true' />";
-  tradsinteresado['regweb.acciones'] = "<spring:message code='regweb.acciones' javaScriptEscape='true' />";
-  tradsinteresado['usuario.apellido1'] = "<spring:message code='usuario.apellido1' javaScriptEscape='true' />";
-</script>
-
 <%--<script type="text/javascript" src="<c:url value="/js/busquedaorganismo.js"/>"></script>--%>
-<script type="text/javascript" src="<c:url value="/js/interesados.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/representantes.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/sello.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/repro.js"/>"></script>
 
@@ -417,9 +389,6 @@
         var elemento = '#'+idHistorico;
         $(elemento).show();
     }
-
-    /* INTERESADOS REGISTRO ENTRADA */
-    <c:import url="../registro/addInteresadosBbdd.jsp"/>
 
 </script>
 
