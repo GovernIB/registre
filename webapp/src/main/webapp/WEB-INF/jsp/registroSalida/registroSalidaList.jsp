@@ -142,12 +142,25 @@
 
 			<div class="row">
 
-                <div class="form-group col-xs-6">
 
+
+                <div class="form-group col-xs-6">
+                    <div class="col-xs-4 "><spring:message code="registro.oficinaRegistro"/></div>
+                    <div class="col-xs-8">
+                        <form:select path="registroSalida.oficina.id" cssClass="chosen-select">
+                            <form:option value="" label="..."/>
+                            <c:forEach var="oficinaRegistro" items="${oficinasRegistro}">
+                                <form:option value="${oficinaRegistro.id}">${oficinaRegistro.denominacion}</form:option>
+                            </c:forEach>
+                        </form:select>
+                    </div>
+                </div>
+
+                <div class="form-group col-xs-6">
                     <div class="col-xs-4"><spring:message code="registroEntrada.organOrigen"/></div>
                     <div class="col-xs-6">
                         <form:select path="organOrigen" cssClass="chosen-select">
-                        	   <form:option value="" label="..."/>
+                               <form:option value="" label="..."/>
                             <c:forEach items="${organosOrigen}" var="organismo">
                             <option value="${organismo.codigo}" <c:if test="${registroSalidaBusqueda.organOrigen == organismo.codigo}">selected="selected"</c:if>>${organismo.denominacion}</option>
                             </c:forEach>
@@ -159,7 +172,6 @@
                        <a data-toggle="modal" role="button" href="#modalBuscadorlistaRegSalida" onclick="inicializarBuscador('#codNivelAdministracionlistaRegSalida','#codComunidadAutonomalistaRegSalida','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}', 'listaRegSalida');" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                     </div>
                 </div>
-                <div class="form-group col-xs-6"><div class="col-xs-12">&nbsp;</div></div>
 
 			</div>			
 			

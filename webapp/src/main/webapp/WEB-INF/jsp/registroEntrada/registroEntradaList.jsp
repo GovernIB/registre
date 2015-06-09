@@ -66,17 +66,12 @@
                             <div class="form-group col-xs-6">
                                 <div class="col-xs-4 "><spring:message code="registroEntrada.estado"/></div>
                                 <div class="col-xs-8">
-                                <%--
-                                    <form:select path="registroEntrada.estado" items="${estados}" itemValue="id" itemLabel="traduccion.nombre" cssClass="chosen-select"/>
-                                     --%>
                                     <form:select path="registroEntrada.estado" cssClass="chosen-select">
                                         <form:option value="" label="..."/>
                                         <c:forEach var="estado" items="${estados}">
                                             <form:option value="${estado}"><spring:message code="registro.estado.${estado}"/></form:option>
                                         </c:forEach>
                                     </form:select>
-                                    
-                                    <form:errors path="registroEntrada.estado" cssClass="help-block" element="span"/>
                                 </div>
                             </div>
                             
@@ -143,6 +138,18 @@
 						</div>
 						<div class="row">
 
+                            <div class="form-group col-xs-6">
+                                <div class="col-xs-4 "><spring:message code="registro.oficinaRegistro"/></div>
+                                <div class="col-xs-8">
+                                    <form:select path="registroEntrada.oficina.id" cssClass="chosen-select">
+                                        <form:option value="" label="..."/>
+                                        <c:forEach var="oficinaRegistro" items="${oficinasRegistro}">
+                                            <form:option value="${oficinaRegistro.id}">${oficinaRegistro.denominacion}</form:option>
+                                        </c:forEach>
+                                    </form:select>
+                                </div>
+                            </div>
+
                            <div class="form-group col-xs-6">
 
                                <div class="col-xs-4"><spring:message code="registroEntrada.organDestinatari"/></div>
@@ -160,7 +167,6 @@
                                   <a data-toggle="modal" role="button" href="#modalBuscadorlistaRegEntrada" onclick="inicializarBuscador('#codNivelAdministracionlistaRegEntrada','#codComunidadAutonomalistaRegEntrada','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}', 'listaRegEntrada');" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                                </div>
                            </div>
-                           <div class="form-group col-xs-6"><div class="col-xs-12">&nbsp;</div></div>
 
 						</div>
 

@@ -96,7 +96,8 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         model.addAttribute("librosConsulta", librosConsulta);
         model.addAttribute("registroSalidaBusqueda", registroSalidaBusqueda);
         model.addAttribute("organosOrigen",  getOrganismosInternosMasExternos(request));
-        
+        model.addAttribute("oficinasRegistro",  oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(),RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+
         return "registroSalida/registroSalidaList";
 
     }
@@ -146,6 +147,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             mav.addObject("registroSalidaBusqueda", busqueda);
             mav.addObject("isAdministradorLibro", permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(),registroSalida.getLibro().getId()));
             mav.addObject("puedeEditar", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),registroSalida.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA));
+            mav.addObject("oficinasRegistro",  oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(),RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
         }
 
         return mav;

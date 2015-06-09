@@ -160,12 +160,19 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
        	 where.add(" (UPPER(interessat.documento) LIKE UPPER(:interesadoDoc)) ");
        	 parametros.put("interesadoDoc", "%"+interesadoDoc.trim()+"%");
        	 filtramosDoc = true;
-        }        
+        }
 
+        // Estado registro
         if(registroSalida.getEstado() != null && registroSalida.getEstado() > 0) {
            where.add(" registroSalida.estado = :idEstadoRegistro ");
            parametros.put("idEstadoRegistro",registroSalida.getEstado());
-         }
+        }
+
+        // Oficina Registro
+        if(registroSalida.getOficina().getId() != null && registroSalida.getOficina().getId() > 0) {
+            where.add(" registroSalida.oficina.id = :idOficina ");
+            parametros.put("idOficina",registroSalida.getOficina().getId());
+        }
 
         where.add(" (registroSalida.fecha >= :fechaInicio  ");parametros.put("fechaInicio", fechaInicio);
         where.add(" registroSalida.fecha <= :fechaFin) ");parametros.put("fechaFin", fechaFin);

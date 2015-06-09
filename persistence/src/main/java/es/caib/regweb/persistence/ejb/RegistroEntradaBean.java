@@ -169,11 +169,18 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
        		 where.add(" ( (registroEntrada.destinoExternoCodigo = :organoDest) or (registroEntrada.destino.codigo = :organoDest) ) ");
        		 parametros.put("organoDest",organoDest);
          }*/
-         
+
+        // Estado registro
          if(registroEntrada.getEstado() != null && registroEntrada.getEstado() > 0) {
            where.add(" registroEntrada.estado = :idEstadoRegistro ");
            parametros.put("idEstadoRegistro",registroEntrada.getEstado());
          }
+
+        // Oficina Registro
+        if(registroEntrada.getOficina().getId() != null && registroEntrada.getOficina().getId() > 0) {
+            where.add(" registroEntrada.oficina.id = :idOficina ");
+            parametros.put("idOficina",registroEntrada.getOficina().getId());
+        }
 
 //         if (filtramosInteresado && filtramosDoc) {
 //	         //Forzamos a que el Nombre y Documento del interesado introducidos, pertenezcan al mismo interesado
