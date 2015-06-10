@@ -536,7 +536,7 @@ public class InteresadoController extends BaseController{
 
         try {
 
-            if(idRegistroDetalle.equals("null")) { // Se trata de un nuevo Registro, utilizamos la sesion.
+            if(idRegistroDetalle.equals("null") || StringUtils.isEmpty(idRegistroDetalle)) { // Se trata de un nuevo Registro, utilizamos la sesion.
 
                 Interesado persona = obtenerInteresadoSesion(id, session);
 

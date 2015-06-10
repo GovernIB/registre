@@ -166,9 +166,8 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         RegistroEntrada registro = registroEntradaEjb.findById(idRegistro);
         Entidad entidad = getEntidadActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-        Oficina oficina = getOficinaActiva(request);
+        Oficina oficinaActiva = getOficinaActiva(request);
 
-        model.addAttribute("oficina", oficina);
         model.addAttribute("registro",registro);
 
         ModeloRecibo modeloRecibo = new ModeloRecibo();
@@ -182,8 +181,9 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         // OficioRemision
         model.addAttribute("isOficioRemision",registroEntradaEjb.isOficioRemisionInterno(idRegistro));
 
-        // Interesados, solo si el Registro en Válio o Pendiente
-        if(registro.getEstado().equals(RegwebConstantes.ESTADO_VALIDO) || registro.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE)){
+        // Interesados, solo si el Registro en Válido, Pendiente o Estamos en la Oficina donde se registró
+        if((registro.getEstado().equals(RegwebConstantes.ESTADO_VALIDO) || registro.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE)
+            && registro.getOficina().getId().equals(oficinaActiva.getId()))){
 
             model.addAttribute("personasFisicas",personaEjb.getAllbyEntidadTipo(entidad.getId(), RegwebConstantes.TIPO_PERSONA_FISICA));
             model.addAttribute("personasJuridicas",personaEjb.getAllbyEntidadTipo(entidad.getId(), RegwebConstantes.TIPO_PERSONA_JURIDICA));

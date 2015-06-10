@@ -200,6 +200,12 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
             rejectValue(errors, "documento", "error.document.largo",
                 "Llargària de document incorrecta");
           }
+
+          if(formatoCorrecto){
+            if (documento.endsWith("" + letras.charAt(valor % 23)) == false) {
+              rejectValue(errors, "documento", "error.documento.formato","Lletra de document incorrecta");
+            }
+          }
           break;
 
         case (int) RegwebConstantes.TIPODOCUMENTOID_CIF_ID: /* CIF */
@@ -218,6 +224,7 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
             rejectValue(errors, "documento", "error.document.largo",
                 "Llargària de document incorrecta");
           }
+          formatoCorrecto = true;
           break;
 
         case (int) RegwebConstantes.TIPODOCUMENTOID_NIE_ID: /* NIE */
@@ -287,6 +294,12 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
             rejectValue(errors, "documento", "error.document.largo",
                 "Llargària de document incorrecta");
           }
+
+          if(formatoCorrecto){
+            if (documento.endsWith("" + letras.charAt(valor % 23)) == false) {
+              rejectValue(errors, "documento", "error.documento.formato","Lletra de document incorrecta");
+            }
+          }
           break;
 
         case (int) RegwebConstantes.TIPODOCUMENTOID_PASSAPORT_ID: /* PASAPORTE */
@@ -295,9 +308,6 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
         }
 
         if (formatoCorrecto) {
-          if (documento.endsWith("" + letras.charAt(valor % 23)) == false) {
-            rejectValue(errors, "documento", "error.documento.formato","Lletra de document incorrecta");
-          } else {
             boolean existe;
             try {
               if (interesado.getId() == null) {
@@ -316,9 +326,7 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
             if (existe) {
               rejectValue(errors, "documento", "error.document.existe", "El document ja existeix");
             }
-          }
         }
-
     }
     
     

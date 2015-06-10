@@ -344,12 +344,13 @@ public class Persona implements Serializable {
     @Transient
     public String getNombrePersonaJuridica(){
 
+        String personaJuridica = getRazonSocial();
 
-        if(getRazonSocial() != null && getRazonSocial().length() > 0){
-            return getRazonSocial();
-        }else{
-            return getNombre() + " " + getApellido1();
+        if(getDocumento() != null && getDocumento().length() > 0){
+            personaJuridica = personaJuridica.concat(" - " + getDocumento());
         }
+
+        return  personaJuridica;
     }
 
     @Override

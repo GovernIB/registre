@@ -68,7 +68,7 @@ public class InicioController extends BaseController{
 
             /* RESERVA DE NÚMERO */
             List<RegistroBasico> pendientes = registroEntradaEjb.getByOficinaEstado(oficinaActiva.getId(), RegwebConstantes.ESTADO_PENDIENTE, RegwebConstantes.REGISTROS_PANTALLA_INICIO);
-            model.addAttribute("pendientes", pendientes);
+            mav.addObject("pendientes", pendientes);
 
             /* OFICIOS PENDIENTES DE REMISIÓN */
             // Obtenemos los Libros donde el Usuario puede Registrar de la Oficina Activa
@@ -79,14 +79,14 @@ public class InicioController extends BaseController{
             for (Libro libro : librosRegistro) {
                 organismosOficioRemisionInterna.addAll(registroEntradaEjb.oficiosPendientesRemisionInterna(libro));
             }
-            model.addAttribute("organismosOficioRemisionInterna", organismosOficioRemisionInterna);
+            mav.addObject("organismosOficioRemisionInterna", organismosOficioRemisionInterna);
 
             // Obtenemos los Organismos Externos que tienen Registros pendientes de tramitar por medio de un Oficio de Revisión,
             Set<String> organismosOficioRemisionExterna = new HashSet<String>();
             for (Libro libro : librosRegistro) {
                 organismosOficioRemisionExterna.addAll(registroEntradaEjb.oficiosPendientesRemisionExterna(libro));
             }
-            model.addAttribute("organismosOficioRemisionExterna", organismosOficioRemisionExterna);
+            mav.addObject("organismosOficioRemisionExterna", organismosOficioRemisionExterna);
 
 
             /* OFICIOS PENDIENTES DE LLEGADA */
@@ -96,21 +96,21 @@ public class InicioController extends BaseController{
             organismos.addAll(relacionOrganizativaOfiLocalEjb.getOrganismosByOficina(oficinaActiva.getId()));
             List<OficioRemision> oficiosPendientesLlegada = oficioRemisionEjb.oficiosPendientesLlegada(organismos);
 
-            model.addAttribute("oficiosPendientesLlegada", oficiosPendientesLlegada);
+            mav.addObject("oficiosPendientesLlegada", oficiosPendientesLlegada);
 
 
             /* PREREGISTROS PENDIENTES DE PROCESAR */
             /* Buscamos los Últimos PreRegistros que están pendientes de procesar */
             List<PreRegistro> preRegistros = preRegistroEjb.getUltimosPreRegistrosPendientesProcesar(oficinaActiva.getCodigo(), RegwebConstantes.REGISTROS_PANTALLA_INICIO);
 
-            model.addAttribute("preRegistros", preRegistros);
+            mav.addObject("preRegistros", preRegistros);
 
         }
 
         // Comprobación de si se ha hecho alguna sincronización del Catálogo DIR3
         if (isSuperAdmin(request) || isAdminEntidad(request)) {
             Descarga catalogo = descargaEjb.findByTipo(RegwebConstantes.CATALOGO);
-            model.addAttribute("catalogo", catalogo);
+            mav.addObject("catalogo", catalogo);
         }
 
 
