@@ -17,19 +17,51 @@
         <sec:intercept-url pattern="/css/**" access="permitAll"/>
         <sec:intercept-url pattern="/error.jsp" access="permitAll"/>
 
-        <sec:intercept-url pattern="/entidad/**" access="hasAnyRole('RWE_SUPERADMIN','RWE_ADMIN')"/>
-        <sec:intercept-url pattern="/entidad/**/delete" access="hasRole('RWE_SUPERADMIN')"/>
+        <!--Entidad-->
+        <sec:intercept-url pattern="/entidad/new" access="hasRole('RWE_SUPERADMIN')"/>
+        <sec:intercept-url pattern="/entidad/list" access="hasRole('RWE_SUPERADMIN')"/>
+        <sec:intercept-url pattern="/entidad/permisos/**" access="hasRole('RWE_ADMIN')"/>
+        <sec:intercept-url pattern="/entidad/**/eliminar" access="hasRole('RWE_SUPERADMIN')"/>
         <sec:intercept-url pattern="/entidad/pendientesprocesar" access="hasRole('RWE_ADMIN')"/>
+        <sec:intercept-url pattern="/entidad/**/edit" access="hasAnyRole('RWE_SUPERADMIN','RWE_ADMIN')"/>
+        <sec:intercept-url pattern="/entidad/usuarios" access="hasRole('RWE_ADMIN')"/>
+        <sec:intercept-url pattern="/entidad/**/anular" access="hasRole('RWE_SUPERADMIN')"/>
+        <sec:intercept-url pattern="/entidad/**/activar" access="hasRole('RWE_SUPERADMIN')"/>
+        <sec:intercept-url pattern="/entidad/**/sincronizar" access="hasRole('RWE_ADMIN')"/>
+        <sec:intercept-url pattern="/entidad/**/actualizar" access="hasRole('RWE_ADMIN')"/>
+        <sec:intercept-url pattern="/entidad/procesarextinguido/**" access="hasRole('RWE_ADMIN')"/>
+        <!--TipoAsunto-->
+        <sec:intercept-url pattern="/tipoAsunto/**" access="hasRole('RWE_ADMIN')"/>
+        <!--Usuario-->
         <sec:intercept-url pattern="/usuario/new" access="hasAnyRole('RWE_SUPERADMIN','RWE_ADMIN')"/>
         <sec:intercept-url pattern="/usuario/existeUsuario" access="hasRole('RWE_ADMIN')"/>
         <sec:intercept-url pattern="/usuario/list" access="hasRole('RWE_SUPERADMIN')"/>
         <sec:intercept-url pattern="/usuario/**/edit" access="hasAnyRole('RWE_SUPERADMIN','RWE_ADMIN','RWE_USUARI')"/>
         <sec:intercept-url pattern="/usuario/**/delete" access="hasRole('RWE_SUPERADMIN')"/>
-        <sec:intercept-url pattern="/tipoAsunto/**" access="hasRole('RWE_ADMIN')"/>
+        <!--Dir3-->
+        <sec:intercept-url pattern="/dir3/**" access="hasRole('RWE_SUPERADMIN')"/>
+        <!--Organismo-->
         <sec:intercept-url pattern="/organismo/**" access="hasRole('RWE_ADMIN')"/>
+        <!--Informe-->
+        <sec:intercept-url pattern="/informe/**" access="hasAnyRole('RWE_ADMIN','RWE_USUARI')"/>
+        <!--TipoAsunto-->
+        <sec:intercept-url pattern="/tipoDocumental/**" access="hasRole('RWE_ADMIN')"/>
+        <!--TipoAsunto-->
+        <sec:intercept-url pattern="/modeloRecibo/**" access="hasRole('RWE_ADMIN')"/>
+        <!--TipoAsunto-->
+        <sec:intercept-url pattern="/modeloOficioRemision/**" access="hasRole('RWE_ADMIN')"/>
+        <!--RegistroEntrada-->
+        <sec:intercept-url pattern="/registroEntrada/**" access="hasRole('RWE_USUARI')"/>
+        <!--RegistroSalida-->
+        <sec:intercept-url pattern="/registroSalida/**" access="hasRole('RWE_USUARI')"/>
+        <!--OficioRemision-->
+        <sec:intercept-url pattern="/oficioRemision/**" access="hasRole('RWE_USUARI')"/>
+        <!--Persona-->
         <sec:intercept-url pattern="/persona/**" access="hasAnyRole('RWE_ADMIN','RWE_USUARI')"/>
+        <!--Repro-->
+        <sec:intercept-url pattern="/repro/**" access="hasRole('RWE_USUARI')"/>
+        <!--Libro-->
         <sec:intercept-url pattern="/libro/**" access="hasRole('RWE_ADMIN')"/>
-        <sec:intercept-url pattern="/registroEntrada/**" access="hasAnyRole('RWE_USUARI')"/>
 
         <sec:access-denied-handler error-page="/accesoDenegado"/>
         <sec:custom-filter position="PRE_AUTH_FILTER" ref="preauthFilter"/>

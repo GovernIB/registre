@@ -15,12 +15,12 @@ import javax.servlet.http.HttpSession;
 /**
  * Created by Fundació BIT.
  *
- * Interceptor para la gestión de Tipo Asunto
+ * Interceptor para la gestión de Tipo Documental
  *
  * @author jpernia
  * Date: 31/12/15
  */
-public class TipoAsuntoInterceptor extends HandlerInterceptorAdapter {
+public class TipoDocumentalInterceptor extends HandlerInterceptorAdapter {
 
     protected final Logger log = Logger.getLogger(getClass());
 
@@ -32,7 +32,7 @@ public class TipoAsuntoInterceptor extends HandlerInterceptorAdapter {
             HttpSession session = request.getSession();
             Rol rolActivo = (Rol) session.getAttribute(RegwebConstantes.SESSION_ROL);
 
-            // Cualquier accion con TipoAsunto
+            // Cualquier accion con Tipo Documental
             if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN)){
                 log.info("Error de rol");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
@@ -42,7 +42,7 @@ public class TipoAsuntoInterceptor extends HandlerInterceptorAdapter {
 
             return true;
         } finally {
-            //log.info("Interceptor TipoAsunto: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - start));
+            //log.info("Interceptor TipoDocumental: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - start));
         }
 
     }

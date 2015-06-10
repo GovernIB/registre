@@ -23,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -139,12 +140,29 @@ public class ModeloOficioRemisionController extends BaseController {
      * Carga el formulario para modificar un {@link es.caib.regweb.model.ModeloOficioRemision}
      */
     @RequestMapping(value = "/{modeloOficioRemisionId}/edit", method = RequestMethod.GET)
-    public String editarModeloOficioRemision(@PathVariable("modeloOficioRemisionId") Long modeloOficioRemisionId, Model model) {
+    public String editarModeloOficioRemision(@PathVariable("modeloOficioRemisionId") Long modeloOficioRemisionId, Model model, HttpServletRequest request) {
 
         ModeloOficioRemisionForm modeloOficioRemisionForm= new ModeloOficioRemisionForm();
         try {
+            HttpSession session = request.getSession();
+            Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
 
             ModeloOficioRemision modeloOficioRemision = modeloOficioRemisionEjb.findById(modeloOficioRemisionId);
+
+            // Comprueba que el Modelo OficioRemision existe
+            if(modeloOficioRemision == null) {
+                log.info("No existe este Modelo OficioRemision");
+                Mensaje.saveMessageError(request, getMessage("aviso.modeloOficioRemision.edit"));
+                return "redirect:/modeloOficioRemision/list/";
+            }
+
+            // Mira si el Modelo OficioRemision pertenece a la Entidad Activa
+            if(!modeloOficioRemision.getEntidad().equals(entidadActiva)) {
+                log.info("Error en Modelo OficioRemision");
+                Mensaje.saveMessageError(request, getMessage("aviso.modeloOficioRemision.edit"));
+                return "redirect:/modeloOficioRemision/list/";
+            }
+
             modeloOficioRemisionForm.setModeloOficioRemision(modeloOficioRemision);
 
         }catch (Exception e) {

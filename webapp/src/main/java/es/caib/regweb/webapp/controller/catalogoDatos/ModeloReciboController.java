@@ -26,6 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -146,12 +147,29 @@ public class ModeloReciboController extends BaseController {
      * Carga el formulario para modificar un {@link es.caib.regweb.model.ModeloRecibo}
      */
     @RequestMapping(value = "/{modeloReciboId}/edit", method = RequestMethod.GET)
-    public String editarModeloRecibo(@PathVariable("modeloReciboId") Long modeloReciboId, Model model) {
+    public String editarModeloRecibo(@PathVariable("modeloReciboId") Long modeloReciboId, Model model, HttpServletRequest request) {
 
         ModeloReciboForm modeloReciboForm= new ModeloReciboForm();
         try {
+            HttpSession session = request.getSession();
+            Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
 
             ModeloRecibo modeloRecibo = modeloReciboEjb.findById(modeloReciboId);
+
+            // Comprueba que el Modelo Recibo existe
+            if(modeloRecibo == null) {
+                log.info("No existe este Modelo Recibo");
+                Mensaje.saveMessageError(request, getMessage("aviso.modeloRecibo.edit"));
+                return "redirect:/modeloRecibo/list/";
+            }
+
+            // Mira si el Modelo Recibo pertenece a la Entidad Activa
+            if(!modeloRecibo.getEntidad().equals(entidadActiva)) {
+                log.info("Error en Modelo Recibo");
+                Mensaje.saveMessageError(request, getMessage("aviso.modeloRecibo.edit"));
+                return "redirect:/modeloRecibo/list/";
+            }
+
             modeloReciboForm.setModeloRecibo(modeloRecibo);
 
         }catch (Exception e) {

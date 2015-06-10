@@ -9,7 +9,6 @@ import es.caib.regweb.webapp.controller.BaseController;
 import es.caib.regweb.webapp.editor.UsuarioEditor;
 import es.caib.regweb.webapp.utils.Mensaje;
 import es.caib.regweb.webapp.validator.LibroValidator;
-import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,10 +16,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.servlet.ModelAndView;
-
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.List;
@@ -58,34 +56,86 @@ public class LibroController extends BaseController {
      * @throws Exception
      */
     @RequestMapping(value = "/{idOrganismo}/libros", method = RequestMethod.GET)
-    public ModelAndView libros(@PathVariable Long idOrganismo, HttpServletRequest request)throws Exception {
+    public String libros(Model model, @PathVariable Long idOrganismo, HttpServletRequest request)throws Exception {
 
-        ModelAndView mav = new ModelAndView("libro/librosList");
+//        ModelAndView mav = new ModelAndView("libro/librosList");
+        HttpSession session = request.getSession();
+        Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
 
         Organismo organismo = organismoEjb.findById(idOrganismo);
-        mav.addObject("organismo", organismo);
+
+        // Comprueba que el Organismo existe
+        if(organismo == null) {
+            log.info("No existe el organismo");
+            Mensaje.saveMessageError(request, getMessage("aviso.organismo.noExiste"));
+            return "redirect:/organismo/list";
+        }
+
+        // Comprueba que el usuario es administrador del Organismo
+        if(!organismo.getEntidad().equals(entidadActiva)) {
+            log.info("No es administrador de este organismo");
+            Mensaje.saveMessageError(request, getMessage("aviso.organismo.noAdministrador"));
+            return "redirect:/organismo/list";
+        }
+
+        // Comprueba que la entidad está vigente
+        if(!organismo.getEstado().getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)){
+            log.info("El Organismo no está vigente");
+            Mensaje.saveMessageError(request, getMessage("aviso.organismo.vigente"));
+            return "redirect:/organismo/list";
+        }
+
+        model.addAttribute("organismo", organismo);
 
         Set<Oficina> oficinas = new HashSet<Oficina>();  // Utilizamos un Set porque no permite duplicados
         oficinas.addAll(oficinaEjb.findByOrganismoResponsable(organismo.getId()));
         oficinas.addAll(relacionOrganizativaOfiLocalEjb.getOficinasByOrganismo(organismo.getId()));
         if(oficinas.size() == 0){
             log.info("El organismo no tiene Oficinas");
-            Mensaje.saveMessageError(request, I18NUtils.tradueix("aviso.organismo.oficinas"));
+            Mensaje.saveMessageError(request, getMessage("aviso.organismo.oficinas"));
         }
 
-        mav.addObject("oficinas", oficinas.size() > 0);
+        model.addAttribute("oficinas", oficinas.size() > 0);
 
-        return mav;
+        return "libro/librosList";
     }
 
     /**
      * Carga el formulario para un nuevo {@link es.caib.regweb.model.Libro}
      */
     @RequestMapping(value = "/{idOrganismo}/new", method = RequestMethod.GET)
-    public String nuevoLibro(Model model, @PathVariable("idOrganismo") Long idOrganismo) throws Exception {
+    public String nuevoLibro(Model model, @PathVariable("idOrganismo") Long idOrganismo, HttpServletRequest request) throws Exception {
+
+        HttpSession session = request.getSession();
+        Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
 
         Libro libro = new Libro();
         Organismo organismo = organismoEjb.findById(idOrganismo);
+
+        // Comprueba que el Organismo existe y está vigente
+        if(organismo == null || !organismo.getEstado().getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)) {
+            log.info("No existe el organismo");
+            Mensaje.saveMessageError(request, getMessage("aviso.organismo.noExiste"));
+            return "redirect:/organismo/list";
+        }
+
+        // Comprueba que el Usuario es Administrador de la Entidad
+        if(organismo.getEntidad().equals(entidadActiva)) {
+            Set<Oficina> oficinas = new HashSet<Oficina>();  // Utilizamos un Set porque no permite duplicados
+            oficinas.addAll(oficinaEjb.findByOrganismoResponsable(organismo.getId()));
+            oficinas.addAll(relacionOrganizativaOfiLocalEjb.getOficinasByOrganismo(organismo.getId()));
+            // Mira que tenga Oficinas
+            if (oficinas.size() == 0) {
+                log.info("El organismo no tiene Oficinas");
+                Mensaje.saveMessageError(request, getMessage("aviso.organismo.oficinas"));
+                return "redirect:/organismo/list";
+            }
+        }else{ // No es Administrador de la Entidad
+            log.info("No es administrador de este organismo");
+            Mensaje.saveMessageError(request, getMessage("aviso.organismo.noAdministrador"));
+            return "redirect:/organismo/list";
+        }
+
         libro.setOrganismo(organismo);
 
         model.addAttribute(libro);
@@ -127,13 +177,36 @@ public class LibroController extends BaseController {
      * Carga el formulario para modificar un {@link es.caib.regweb.model.Libro}
      */
     @RequestMapping(value = "{idOrganismo}/{idLibro}/edit", method = RequestMethod.GET)
-    public String editarLibro(@PathVariable("idOrganismo") Long idOrganismo,@PathVariable("idLibro") Long idLibro,  Model model) {
+    public String editarLibro(@PathVariable("idOrganismo") Long idOrganismo,@PathVariable("idLibro") Long idLibro,  Model model, HttpServletRequest request) {
 
+        HttpSession session = request.getSession();
+        Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
         Libro libro = null;
         Organismo organismo=null;
         try {
             organismo = organismoEjb.findById(idOrganismo);
             libro = libroEjb.findById(idLibro);
+
+            // Comprueba que el Organismo existe y está vigente
+            if(organismo == null || !organismo.getEstado().getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)) {
+                log.info("No existe el organismo");
+                Mensaje.saveMessageError(request, getMessage("aviso.organismo.noExiste"));
+                return "redirect:/organismo/list";
+            }
+
+            // Comprueba que el Libro existe
+            if(libro == null) {
+                log.info("No existe el libro o no está activo");
+                Mensaje.saveMessageError(request, getMessage("aviso.libro.noExiste"));
+                return "redirect:/organismo/list";
+            }
+
+            // Comprueba que el organismo pertenece a la Entidad Activa
+            if(!organismo.getEntidad().equals(entidadActiva)) {
+                log.info("No es administrador de este organismo");
+                Mensaje.saveMessageError(request, getMessage("aviso.organismo.noAdministrador"));
+                return "redirect:/organismo/list";
+            }
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -176,7 +249,24 @@ public class LibroController extends BaseController {
     @RequestMapping(value = "/{libroId}/inicializar", method = RequestMethod.GET)
     public String  inicializarLibro(@PathVariable("libroId") Long libroId, HttpServletRequest request) throws Exception {
 
+        HttpSession session = request.getSession();
+        Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
+
         Libro libro = libroEjb.findById(libroId);
+
+        // Comprueba que el Libro existe
+        if(libro == null) {
+            log.info("No existe el libro o no está activo");
+            Mensaje.saveMessageError(request, getMessage("aviso.libro.noExiste"));
+            return "redirect:/organismo/list";
+        }
+
+        // Comprueba que el Libro pertenece a la Entidad Activa
+        if(!libro.getOrganismo().getEntidad().equals(entidadActiva)) {
+            log.info("No es administrador de este libro");
+            Mensaje.saveMessageError(request, getMessage("aviso.libro.noAdministrador"));
+            return "redirect:/organismo/list";
+        }
 
         Contador contadorEntrada = contadorEjb.persist(new Contador());
         Contador contadorSalida = contadorEjb.persist(new Contador());
@@ -201,21 +291,38 @@ public class LibroController extends BaseController {
      * @throws Exception
      */
     @RequestMapping(value = "/{idLibro}/usuarios", method = RequestMethod.GET)
-    public ModelAndView usuariosLibro(@PathVariable Long idLibro)throws Exception {
+    public String usuariosLibro(Model model, @PathVariable Long idLibro, HttpServletRequest request)throws Exception {
 
-        ModelAndView mav = new ModelAndView("libro/usuariosLibroList");
+        HttpSession session = request.getSession();
+        Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
+
+//        ModelAndView mav = new ModelAndView("libro/usuariosLibroList");
 
         Libro libro = libroEjb.findById(idLibro);
+
+        // Comprueba que el Libro existe
+        if(libro == null) {
+            log.info("No existe este libro");
+            Mensaje.saveMessageError(request, getMessage("aviso.libro.noExiste"));
+            return "redirect:/organismo/list";
+        }
+
+        // Comprueba que el Libro pertenece a la Entida Activa
+        if(!libro.getOrganismo().getEntidad().equals(entidadActiva)) {
+            log.info("No es administrador de este libro");
+            Mensaje.saveMessageError(request, getMessage("aviso.libro.noAdministrador"));
+            return "redirect:/organismo/list";
+        }
 
         List<PermisoLibroUsuario> plu = permisoLibroUsuarioEjb.findByLibro(libro.getId());
         List<UsuarioEntidad> usuarios = permisoLibroUsuarioEjb.getUsuariosEntidadByLibro(libro.getId());
 
-        mav.addObject("libro", libro);
-        mav.addObject("plu", plu);
-        mav.addObject("permisos", RegwebConstantes.PERMISOS);
-        mav.addObject("usuarios", usuarios);
+        model.addAttribute("libro", libro);
+        model.addAttribute("plu", plu);
+        model.addAttribute("permisos", RegwebConstantes.PERMISOS);
+        model.addAttribute("usuarios", usuarios);
 
-        return mav;
+        return "libro/usuariosLibroList";
     }
 
 

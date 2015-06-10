@@ -9,6 +9,7 @@ import es.caib.regweb.persistence.utils.RegistroUtils;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.webapp.controller.BaseController;
 import es.caib.regweb.webapp.form.RegistroMigradoBusqueda;
+import es.caib.regweb.webapp.utils.Mensaje;
 import es.caib.regweb.webapp.validator.RegistroMigradoBusquedaValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -21,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -135,7 +137,23 @@ public class RegistroMigradoController extends BaseController {
     @RequestMapping(value = "/{idRegistro}/detalle", method = RequestMethod.GET)
     public String detalleRegistroMigrado(@PathVariable Long idRegistro, Model model, HttpServletRequest request) throws Exception {
 
+        HttpSession session = request.getSession();
+        Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
         RegistroMigrado registroMigrado = registroMigradoEjb.findById(idRegistro);
+
+        // Comprobamos que el Registro Migrado existe
+        if (registroMigrado == null) {
+            log.info("Aviso: No existeix aquest Registre Migrat");
+            Mensaje.saveMessageError(request, getMessage("aviso.registroMigrado.detalle"));
+            return "redirect:/registroMigrado/list";
+        }
+
+        // Comprueba que el Registro Migrado que consulta es de la Entidad Activa
+        if (!registroMigrado.getEntidad().getId().equals(entidadActiva.getId())) {
+            log.info("Aviso: No existe este registro Migrado en esta Entidad");
+            Mensaje.saveMessageError(request, getMessage("aviso.registroMigrado.detalle"));
+            return "redirect:/registroMigrado/list";
+        }
 
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
@@ -152,36 +170,51 @@ public class RegistroMigradoController extends BaseController {
      * Realiza el informe Lopd del {@link es.caib.regweb.model.RegistroMigrado} seleccionado
      */
     @RequestMapping(value = "/{idRegistroMigrado}/lopd", method = RequestMethod.GET)
-    public ModelAndView informeRegistroLopd(@PathVariable Long idRegistroMigrado, HttpServletRequest request)throws Exception {
+    public String informeRegistroLopd(Model model, @PathVariable Long idRegistroMigrado, HttpServletRequest request)throws Exception {
 
-        ModelAndView mav = new ModelAndView("registroMigrado/registroLopdMigrado");
+        HttpSession session = request.getSession();
+        Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
 
         // Añade la información del Registro Migrado
         RegistroMigrado registroMigrado = registroMigradoEjb.findById(idRegistroMigrado);
 
-        mav.addObject("registroMigrado", registroMigrado);
+        // Comprobamos que el Registro Migrado existe
+        if(registroMigrado == null){
+            log.info("Aviso: No existeix aquest Registre Migrat");
+            Mensaje.saveMessageError(request, getMessage("aviso.registroMigrado.detalle"));
+            return "redirect:/registroMigrado/list";
+        }
+
+        // Comprueba que el Registro Migrado que consulta es de la Entidad Activa
+        if(!registroMigrado.getEntidad().getId().equals(entidadActiva.getId())){
+            log.info("Aviso: No existe este registro Migrado en esta Entidad");
+            Mensaje.saveMessageError(request, getMessage("aviso.registroMigrado.detalle"));
+            return "redirect:/registroMigrado/list";
+        }
+
+        model.addAttribute("registroMigrado", registroMigrado);
 
         // Registros Migrados Listados y Consultados
         Long numRegistroMigrado = Long.valueOf(idRegistroMigrado);
 
         List<ModificacionLopdMigrado> visados = modificacionLopdMigradoEjb.getByRegistroMigrado(numRegistroMigrado);
-        mav.addObject("visados", visados);
+        model.addAttribute("visados", visados);
 
         RegistroLopdMigrado registroCreado = registroLopdMigradoEjb.getCreacion(numRegistroMigrado, RegwebConstantes.LOPDMIGRADO_CREACION);
-        mav.addObject("registroCreado", registroCreado);
+        model.addAttribute("registroCreado", registroCreado);
 
         List<RegistroLopdMigrado> modificaciones = registroLopdMigradoEjb.getByRegistroMigrado(numRegistroMigrado, RegwebConstantes.LOPDMIGRADO_MODIFICACION);
-        mav.addObject("modificaciones", modificaciones);
+        model.addAttribute("modificaciones", modificaciones);
 
         List<RegistroLopdMigrado> consultas = registroLopdMigradoEjb.getByRegistroMigrado(numRegistroMigrado, RegwebConstantes.LOPDMIGRADO_CONSULTA);
-        mav.addObject("consultas", consultas);
+        model.addAttribute("consultas", consultas);
 
         List<RegistroLopdMigrado> listados = registroLopdMigradoEjb.getByRegistroMigrado(numRegistroMigrado, RegwebConstantes.LOPDMIGRADO_LISTADO);
-        mav.addObject("listados", listados);
+        model.addAttribute("listados", listados);
 
-        mav.addObject("numRegistro", numRegistroMigrado);
+        model.addAttribute("numRegistro", numRegistroMigrado);
 
-        return mav;
+        return "registroMigrado/registroLopdMigrado";
     }
 
 

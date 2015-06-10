@@ -23,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Locale;
@@ -146,11 +147,29 @@ public class CatalogoDatosController extends BaseController {
       * Carga el formulario para modificar un {@link es.caib.regweb.model.TipoAsunto}
       */
      @RequestMapping(value = "/tipoAsunto/{tipoAsuntoId}/edit", method = RequestMethod.GET)
-     public String editarTipoAsunto(@PathVariable("tipoAsuntoId") Long tipoAsuntoId, Model model) throws Exception{
+     public String editarTipoAsunto(@PathVariable("tipoAsuntoId") Long tipoAsuntoId, Model model, HttpServletRequest request) throws Exception{
 
          TipoAsunto tipoAsunto = null;
          try {
+
+             HttpSession session = request.getSession();
+             Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
              tipoAsunto = tipoAsuntoEjb.findById(tipoAsuntoId);
+
+             // Comprueba que el TipoD Asunto existe
+             if(tipoAsunto == null) {
+                 log.info("No existe este Tipo Asunto");
+                 Mensaje.saveMessageError(request, getMessage("aviso.tipoAsunto.edit"));
+                 return "redirect:/tipoAsunto/list";
+             }
+
+             // Mira si el Tipo Asunto pertenece a la Entidad Activa
+             if(!tipoAsunto.getEntidad().equals(entidadActiva)) {
+                 log.info("Error en Tipo Asunto");
+                 Mensaje.saveMessageError(request, getMessage("aviso.tipoAsunto.edit"));
+                 return "redirect:/tipoAsunto/list";
+             }
+
          }catch (Exception e) {
              e.printStackTrace();
          }
@@ -442,11 +461,29 @@ public class CatalogoDatosController extends BaseController {
      * Carga el formulario para modificar un {@link es.caib.regweb.model.TipoDocumental}
      */
     @RequestMapping(value = "/tipoDocumental/{tipoDocumentalId}/edit", method = RequestMethod.GET)
-    public String editarTipoDocumental(@PathVariable("tipoDocumentalId") Long tipoDocumentalId, Model model) {
+    public String editarTipoDocumental(@PathVariable("tipoDocumentalId") Long tipoDocumentalId, Model model, HttpServletRequest request) {
 
         TipoDocumental tipoDocumental = null;
         try {
+            HttpSession session = request.getSession();
+            Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
+
             tipoDocumental = tipoDocumentalEjb.findById(tipoDocumentalId);
+
+            // Comprueba que el TipoDocumental existe
+            if(tipoDocumental == null) {
+                log.info("No existe este tipo documental");
+                Mensaje.saveMessageError(request, getMessage("aviso.tipoDocumental.edit"));
+                return "redirect:/tipoDocumental/list";
+            }
+
+            // Mira si el Tipo Documental pertenece a la Entidad Activa
+            if(!tipoDocumental.getEntidad().equals(entidadActiva)) {
+                log.info("Error en Tipo Documental");
+                Mensaje.saveMessageError(request, getMessage("aviso.tipoDocumental.edit"));
+                return "redirect:/tipoDocumental/list";
+            }
+
         }catch (Exception e) {
             e.printStackTrace();
         }

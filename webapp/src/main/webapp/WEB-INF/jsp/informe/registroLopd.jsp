@@ -16,6 +16,8 @@
 
     <div class="well well-white">
 
+        <c:import url="../modulos/mensajes.jsp"/>
+
         <div class="row">
             <div class="col-xs-12">
                 <ol class="breadcrumb">

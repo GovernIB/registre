@@ -100,6 +100,36 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
             <bean class="es.caib.regweb.webapp.interceptor.TipoAsuntoInterceptor"/>
         </mvc:interceptor>
 
+        <!--Interceptor para Dir3-->
+        <mvc:interceptor>
+            <mvc:mapping path="/dir3/**"/>
+            <bean class="es.caib.regweb.webapp.interceptor.Dir3Interceptor"/>
+        </mvc:interceptor>
+
+        <!--Interceptor para TipoDocumental-->
+        <mvc:interceptor>
+            <mvc:mapping path="/tipoDocumental/**"/>
+            <bean class="es.caib.regweb.webapp.interceptor.TipoDocumentalInterceptor"/>
+        </mvc:interceptor>
+
+        <!--Interceptor para ModeloRecibo-->
+        <mvc:interceptor>
+            <mvc:mapping path="/modeloRecibo/**"/>
+            <bean class="es.caib.regweb.webapp.interceptor.ModeloReciboInterceptor"/>
+        </mvc:interceptor>
+
+        <!--Interceptor para Dir3-->
+        <mvc:interceptor>
+            <mvc:mapping path="/modeloOficioRemision/**"/>
+            <bean class="es.caib.regweb.webapp.interceptor.ModeloOficioRemisionInterceptor"/>
+        </mvc:interceptor>
+
+        <!--Interceptor para Dir3-->
+        <mvc:interceptor>
+            <mvc:mapping path="/repro/**"/>
+            <bean class="es.caib.regweb.webapp.interceptor.ReproInterceptor"/>
+        </mvc:interceptor>
+
         <!-- Configuración de Idioma -->
         <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
             <property name="paramName" value="lang" />

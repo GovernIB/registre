@@ -1,10 +1,8 @@
 package es.caib.regweb.webapp.interceptor;
 
 import es.caib.regweb.model.Descarga;
-import es.caib.regweb.model.Entidad;
 import es.caib.regweb.model.Rol;
 import es.caib.regweb.persistence.ejb.DescargaLocal;
-import es.caib.regweb.persistence.ejb.EntidadLocal;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.webapp.utils.Mensaje;
 import org.apache.log4j.Logger;
@@ -29,10 +27,6 @@ public class EntidadInterceptor extends HandlerInterceptorAdapter {
 
     protected final Logger log = Logger.getLogger(getClass());
 
-
-    @EJB(mappedName = "regweb/EntidadEJB/local")
-    public EntidadLocal entidadEjb;
-
     @EJB(mappedName = "regweb/DescargaEJB/local")
     public DescargaLocal descargaEjb;
 
@@ -43,7 +37,6 @@ public class EntidadInterceptor extends HandlerInterceptorAdapter {
 
         try {
             String url = request.getServletPath();
-
 
             HttpSession session = request.getSession();
             Rol rolActivo = (Rol) session.getAttribute(RegwebConstantes.SESSION_ROL);
@@ -60,12 +53,39 @@ public class EntidadInterceptor extends HandlerInterceptorAdapter {
 
             // Editar entidad
             if((url.contains("edit"))){
-                String idEntidad =  url.replace("/entidad/","").replace("/edit", ""); //Obtenemos el id a partir de la url
-                Entidad entidad = entidadEjb.findById(Long.valueOf(idEntidad));
+                if(!(rolActivo.getNombre().equals(RegwebConstantes.ROL_SUPERADMIN) || rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN))) {
+                    log.info("Error, editar entidad");
+                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.entidad.edit"));
+                    response.sendRedirect("/regweb/aviso");
+                    return false;
+                }
+            }
 
-                if(!entidad.getActivo()){ //Si la entidad está anulada, no se puede editar
-                    log.info("Error, entidad anulada");
-                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.entidad.anulada"));
+            // Nueva entidad
+            if(url.equals("/entidad/new")){
+                if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_SUPERADMIN)){
+                    log.info("Error, nueva entidad");
+                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.entidad.alta"));
+                    response.sendRedirect("/regweb/aviso");
+                    return false;
+                }
+            }
+
+            // Listado de Entidades
+            if(url.equals("/entidad/list")){
+                if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_SUPERADMIN)){
+                    log.info("Error, listar entidades");
+                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.entidad.lista"));
+                    response.sendRedirect("/regweb/aviso");
+                    return false;
+                }
+            }
+
+            // Permisos Usuario
+            if((url.contains("permisos"))){
+                if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN)){
+                    log.info("Error, modificar permisos");
+                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.entidad.permisos"));
                     response.sendRedirect("/regweb/aviso");
                     return false;
                 }
@@ -83,9 +103,16 @@ public class EntidadInterceptor extends HandlerInterceptorAdapter {
 
             // Sincronizar/Actualizar organismos
             if((url.contains("actualizar") || url.contains("sincronizar"))){
-                Descarga catalogo = descargaEjb.findByTipo(RegwebConstantes.CATALOGO);
-                if(catalogo == null){
-                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("catalogoDir3.catalogo.vacio"));
+                if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN)) {
+                    Descarga catalogo = descargaEjb.findByTipo(RegwebConstantes.CATALOGO);
+                    if (catalogo == null) {
+                        Mensaje.saveMessageAviso(request, I18NUtils.tradueix("catalogoDir3.catalogo.vacio"));
+                        response.sendRedirect("/regweb/aviso");
+                        return false;
+                    }
+                }else{
+                    log.info("Error, actualizar/sincronizar");
+                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.entidad.sincronizar"));
                     response.sendRedirect("/regweb/aviso");
                     return false;
                 }

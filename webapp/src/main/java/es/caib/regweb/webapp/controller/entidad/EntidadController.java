@@ -28,6 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.util.*;
@@ -193,9 +194,19 @@ public class EntidadController extends BaseController {
     @RequestMapping(value = "/{entidadId}/edit", method = RequestMethod.GET)
     public String editarEntidad(@PathVariable("entidadId") Long entidadId, Model model, HttpServletRequest request) {
 
+        HttpSession session = request.getSession();
+        Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
         EntidadForm entidadForm = new EntidadForm();
         try {
             Entidad entidad = entidadEjb.findById(entidadId);
+
+            // Comprueba que la Entidad existe
+            if(entidad == null){
+                log.info("No existe esta entidad");
+                Mensaje.saveMessageError(request, getMessage("aviso.entidad.noExiste"));
+                return "redirect:/inici";
+            }
+
             entidadForm.setEntidad(entidad);
 
             // Comprobamos que el usuario puede editar la Entidad solicitada
@@ -208,7 +219,22 @@ public class EntidadController extends BaseController {
                     Mensaje.saveMessageError(request, getMessage("entidad.acceso.denedado"));
                     return "redirect:/inici";
                 }
+
+                //Si no es administrador de entidad de la entidad, no la puede editar
+                if (!entidad.getId().equals(entidadActiva.getId())) {
+                    log.info("Error, editar entidad");
+                    Mensaje.saveMessageError(request, getMessage("aviso.entidad.edit"));
+                    return "redirect:/inici";
+                }
+
+                //Si la entidad está anulada, no se puede editar
+                if (!entidad.getActivo()) {
+                    log.info("Error, entidad anulada");
+                    Mensaje.saveMessageError(request, getMessage("aviso.entidad.anulada"));
+                    return "redirect:/inici";
+                }
             }
+
             model.addAttribute("tipoScan", ScannerManager.getTipusScanejat(request.getLocale(), getMessage("scan.noScan")));
             model.addAttribute("administradoresEntidad", administradoresEntidadModificar(entidad.getPropietario(), entidad));
 

@@ -15,12 +15,12 @@ import javax.servlet.http.HttpSession;
 /**
  * Created by Fundació BIT.
  *
- * Interceptor para la gestión de Tipo Asunto
+ * Interceptor para la gestión de Modelo Oficio Remision
  *
  * @author jpernia
  * Date: 31/12/15
  */
-public class TipoAsuntoInterceptor extends HandlerInterceptorAdapter {
+public class ModeloOficioRemisionInterceptor extends HandlerInterceptorAdapter {
 
     protected final Logger log = Logger.getLogger(getClass());
 
@@ -42,7 +42,7 @@ public class TipoAsuntoInterceptor extends HandlerInterceptorAdapter {
 
             return true;
         } finally {
-            //log.info("Interceptor TipoAsunto: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - start));
+            //log.info("Interceptor ModeloOficioRemision: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - start));
         }
 
     }

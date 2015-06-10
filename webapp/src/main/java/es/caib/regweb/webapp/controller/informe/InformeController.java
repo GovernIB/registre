@@ -11,6 +11,7 @@ import es.caib.regweb.webapp.form.InformeIndicadoresBusquedaForm;
 import es.caib.regweb.webapp.form.InformeLibroBusquedaForm;
 import es.caib.regweb.webapp.form.RegistroLopdBusquedaForm;
 import es.caib.regweb.webapp.form.UsuarioLopdBusquedaForm;
+import es.caib.regweb.webapp.utils.Mensaje;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -956,9 +958,10 @@ public class InformeController extends BaseController {
      * Realiza el informe Lopd del Registro seleccionado
      */
     @RequestMapping(value = "/{idRegistro}/{idTipoRegistro}/informeRegistroLopd", method = RequestMethod.GET)
-    public ModelAndView informeRegistroLopd(@PathVariable Long idRegistro, @PathVariable Long idTipoRegistro)throws Exception {
+    public String informeRegistroLopd(Model model,@PathVariable Long idRegistro, @PathVariable Long idTipoRegistro, HttpServletRequest request)throws Exception {
 
-        ModelAndView mav = new ModelAndView("informe/informeRegistroLopd");
+        HttpSession session = request.getSession();
+        Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
 
         SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
         Integer numRegistro = null;
@@ -969,7 +972,21 @@ public class InformeController extends BaseController {
 
             // Añade la información del Registro creado
             RegistroEntrada registro = registroEntradaEjb.findById(idRegistro);
-            mav.addObject("registro", registro);
+
+            // Comprueba que el Registro existe
+            if(registro == null) {
+                log.info("No existe el Registro Entrada");
+                Mensaje.saveMessageError(request, getMessage("aviso.registroEntrada.noExiste"));
+                return "redirect:/informe/registroLopd";
+            }
+            // Comprueba que el registro es de la Entidad Activa
+            if(!registro.getUsuario().getEntidad().equals(entidadActiva)) {
+                log.info("No es administrador de este registro");
+                Mensaje.saveMessageError(request, getMessage("aviso.registro.noAdministrador"));
+                return "redirect:/informe/registroLopd";
+            }
+
+            model.addAttribute("registro", registro);
 
             // Añade la información de las modificaciones del Registro
             List<HistoricoRegistroEntrada> modificaciones = historicoRegistroEntradaEjb.getByRegistroEntrada(idRegistro);
@@ -977,7 +994,7 @@ public class InformeController extends BaseController {
             if(modificaciones.size()>0) {
                 modificaciones.remove(modificaciones.size()-1);
             }
-            mav.addObject("modificaciones", modificaciones);
+            model.addAttribute("modificaciones", modificaciones);
 
             // Registros Listados y Consultas
             anyoRegistro = formatYear.format(registro.getFecha());
@@ -986,17 +1003,31 @@ public class InformeController extends BaseController {
             numRegistro = registro.getNumeroRegistro();
 
             List<Lopd> consultas = lopdEjb.getByRegistro(anyoRegistro, numRegistro, idLibro, RegwebConstantes.LOPD_CONSULTA, RegwebConstantes.REGISTRO_ENTRADA);
-            mav.addObject("consultas", consultas);
+            model.addAttribute("consultas", consultas);
 
             List<Lopd> listados = lopdEjb.getByRegistro(anyoRegistro, numRegistro, idLibro, RegwebConstantes.LOPD_LISTADO, RegwebConstantes.REGISTRO_ENTRADA);
-            mav.addObject("listados", listados);
+            model.addAttribute("listados", listados);
         }
 
         if(idTipoRegistro.equals(RegwebConstantes.REGISTRO_SALIDA)){
 
             // Añade la información del Registro creado
             RegistroSalida registro = registroSalidaEjb.findById(idRegistro);
-            mav.addObject("registro", registro);
+
+            // Comprueba que el Registro existe
+            if(registro == null) {
+                log.info("No existe el Registro Salida");
+                Mensaje.saveMessageError(request, getMessage("aviso.registroSalida.noExiste"));
+                return  "redirect:/informe/registroLopd";
+            }
+            // Comprueba que el registro es de la Entidad Activa
+            if(!registro.getUsuario().getEntidad().equals(entidadActiva)) {
+                log.info("No es administrador de este registro");
+                Mensaje.saveMessageError(request, getMessage("aviso.registro.noAdministrador"));
+                return  "redirect:/informe/registroLopd";
+            }
+
+            model.addAttribute("registro", registro);
 
             // Añade la información de las modificaciones del Registro
             List<HistoricoRegistroSalida> modificaciones = historicoRegistroSalidaEjb.getByRegistroSalida(idRegistro);
@@ -1004,7 +1035,7 @@ public class InformeController extends BaseController {
             if(modificaciones.size()>0) {
                 modificaciones.remove(modificaciones.size()-1);
             }
-            mav.addObject("modificaciones", modificaciones);
+            model.addAttribute("modificaciones", modificaciones);
 
             // Registros Listados y Consultas
             anyoRegistro = formatYear.format(registro.getFecha());
@@ -1013,18 +1044,18 @@ public class InformeController extends BaseController {
             numRegistro = registro.getNumeroRegistro();
 
             List<Lopd> consultas = lopdEjb.getByRegistro(anyoRegistro, numRegistro, idLibro, RegwebConstantes.LOPD_CONSULTA, RegwebConstantes.REGISTRO_SALIDA);
-            mav.addObject("consultas", consultas);
+            model.addAttribute("consultas", consultas);
 
             List<Lopd> listados = lopdEjb.getByRegistro(anyoRegistro, numRegistro, idLibro, RegwebConstantes.LOPD_LISTADO, RegwebConstantes.REGISTRO_SALIDA);
-            mav.addObject("listados", listados);
+            model.addAttribute("listados", listados);
         }
 
-        mav.addObject("idTipoRegistro", idTipoRegistro);
-        mav.addObject("numRegistro", numRegistro);
-        mav.addObject("anyoRegistro", anyoRegistro);
-        mav.addObject("libro", libro);
+        model.addAttribute("idTipoRegistro", idTipoRegistro);
+        model.addAttribute("numRegistro", numRegistro);
+        model.addAttribute("anyoRegistro", anyoRegistro);
+        model.addAttribute("libro", libro);
 
-        return mav;
+        return "informe/informeRegistroLopd";
     }
 
     /**
