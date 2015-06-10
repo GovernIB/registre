@@ -6,6 +6,8 @@ import es.caib.regweb.model.IRegistro;
 import es.caib.regweb.model.RegistroDetalle;
 import es.caib.regweb.model.RegistroEntrada;
 import es.caib.regweb.model.RegistroSalida;
+import es.caib.regweb.model.TipoAsunto;
+import es.caib.regweb.model.TraduccionTipoAsunto;
 import es.caib.regweb.model.UsuarioEntidad;
 import es.caib.regweb.persistence.utils.AnexoFull;
 import es.caib.regweb.persistence.utils.AnnexFileSystemManager;
@@ -130,30 +132,32 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
       IDocumentCustodyPlugin custody = null;
       boolean error = false;
       String custodyID = null;
+      final boolean isNew = true;
       try {
         
         Anexo anexo = anexoFull.getAnexo();
         
         // Validador                
-        validateAnexo(anexo, true);
+        validateAnexo(anexo, isNew);
         
         anexo.setFechaCaptura(new Date());
 
         custody = AnnexFileSystemManager.getInstance();
         
-        IRegistro registro = getIRegistro(registroID, tipoRegistro);
+        IRegistro registro = getIRegistro(registroID, tipoRegistro, anexo, isNew);
         
         final String custodyParameters = getCustodyParameters(registro);
         
         custodyID = custody.reserveCustodyID(custodyParameters);
         anexo.setCustodiaID(custodyID);
   
+        
         updateCustodyInfoOfAnexo(anexoFull, custody, custodyParameters, custodyID,
-             registro);
+             registro, isNew);
 
         anexo = this.persist(anexo);
         
-        final boolean isNew = true;
+        
         crearHistorico(anexoFull, usuarioEntidad, registroID, tipoRegistro, isNew);
         
         anexoFull.setAnexo(anexo);
@@ -204,37 +208,39 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         Anexo anexo = anexoFull.getAnexo();
         
         // Validador        
-        final boolean isNou = false;
-        validateAnexo(anexo, isNou);
+        final boolean isNew = false;
+        validateAnexo(anexo, isNew);
         
         anexo.setFechaCaptura(new Date());
         
         IDocumentCustodyPlugin custody = AnnexFileSystemManager.getInstance();
         
         
-        IRegistro registro = getIRegistro(registroID, tipoRegistro);
+        IRegistro registro = getIRegistro(registroID, tipoRegistro, anexo, isNew);
         
         
         final String custodyParameters = getCustodyParameters(registro);
         
         
         final String custodyID = anexo.getCustodiaID();
+    
         
         anexo = this.merge(anexo);
         anexoFull.setAnexo(anexo);
-        
-        final boolean isNew = false;
+
         // Crea historico y lo enlaza con el RegistroDetalle
         crearHistorico(anexoFull, usuarioEntidad, registroID, tipoRegistro, isNew);
   
         updateCustodyInfoOfAnexo(anexoFull, custody, custodyParameters, custodyID,
-            registro);
+            registro, isNew);
 
         return anexoFull;
       
       } catch(I18NException i18n) {
+        ejbContext.setRollbackOnly();
         throw i18n;
       } catch(Exception e) {
+        ejbContext.setRollbackOnly();
         log.error("Error actualitzant un anexe: " + e.getMessage(), e);
         throw new I18NException(e, "anexo.error.guardando", new I18NArgumentString(e.getMessage()));
       }
@@ -244,7 +250,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
 
 
-    protected IRegistro getIRegistro(Long registroID, String tipoRegistro) throws Exception {
+    protected IRegistro getIRegistro(Long registroID, String tipoRegistro, Anexo anexo, boolean isNou) throws Exception {
       IRegistro registro;
       if ("entrada".equals(tipoRegistro)) {
         registro = registroEntradaEjb.findById(registroID);
@@ -254,6 +260,19 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
       
       Hibernate.initialize(registro.getRegistroDetalle().getTipoAsunto());
       Hibernate.initialize(registro.getRegistroDetalle().getInteresados());
+      
+      List<Anexo> anexos = registro.getRegistroDetalle().getAnexos();
+      if (isNou) {
+        anexos.add(anexo);
+      } else {
+        for (Anexo anexo2 : anexos) {
+          if (anexo2.getId().equals(anexo.getId())) {
+            anexos.remove(anexo2);
+            break;
+          }
+        }
+        anexos.add(anexo);
+      }
       
       return registro;
     }
@@ -325,13 +344,58 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     protected void updateCustodyInfoOfAnexo(AnexoFull anexoFull, IDocumentCustodyPlugin custody,
         final String custodyParameters, final String custodyID, 
-        IRegistro registro) throws Exception {
+        IRegistro registro, boolean isNou) throws Exception, I18NException {
+      
+      // Validador: Sempre amb algun arxiu
+      if (isNou) {
+        if (anexoFull.getDocumentoCustody() == null && anexoFull.getSignatureCustody() == null) {
+          //"No ha definit cap fitxer en aquest annex"
+          throw new I18NException("anexo.error.sinfichero");
+        }
+      } else {
+        
+        int total = 0;
+        
+        if (custody.getDocumentInfoOnly(custodyID) == null) {
+          // Afegim un
+          if (anexoFull.getDocumentoCustody() != null) {
+            total += 1;
+          }
+        } else {
+          total += 1;
+          if (anexoFull.isDocumentoFileDelete()) {
+            total -=1;
+          }
+        }
+        
+        
+        if (custody.getSignatureInfoOnly(custodyID) == null) {
+          // Afegim un
+          if (anexoFull.getSignatureCustody() != null) {
+            total += 1;
+          }
+        } else {
+          total += 1;
+          if (anexoFull.isSignatureFileDelete()) {
+            total -=1;
+          }
+        }
+        
+        if (total <= 0) {
+          //La combinació elegida deixa aquest annex sense cap fitxer
+          throw new I18NException("anexo.error.quedarsesinfichero");
+        }
+        
+        
+        
+      }
+      
 
       // TODO Falta Check DOC
       Anexo anexo = anexoFull.getAnexo();
       
       boolean updateDate = false;
-      String mime = null;;
+      String mime = null;
 
       DocumentCustody doc = null;
       if (anexoFull.isDocumentoFileDelete()) {
@@ -342,7 +406,6 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         doc = anexoFull.getDocumentoCustody();
 
         if (doc != null && doc.getData() != null) {
-          //byte[] data = doc.getData();
 
           if(doc.getMime() == null) {
             doc.setMime("application/octet-stream");
@@ -350,8 +413,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
           mime = doc.getMime();
 
           doc.setName(checkFileName(doc.getName() , "file.bin"));
-          // TODO CHECK
-          //anexo.setTamano(new Long(data.length));
+
           anexo.setFechaCaptura(new Date());
 
           custody.saveDocument(custodyID, custodyParameters, doc);
@@ -386,18 +448,14 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         }
       }
 
-      // TODO Actualitzar Metadades
+      // Actualitzar Metadades
       List<Metadata> metadades = new ArrayList<Metadata>();
       
       // fechaDeEntradaEnElSistema 
       if (updateDate) {
         metadades.add(new Metadata("anexo.fechaCaptura", anexo.getFechaCaptura()));
       }
-      
 
-
-      
-      
       // TODO String tipoDeDocumento; //  varchar(100)
 
       if (registro.getOficina() != null) {
