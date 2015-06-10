@@ -280,8 +280,10 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
              int total = resultadosPrincipal.size();//(Long)q2.getSingleResult();
              paginacion = new Paginacion(total, pageNumber);
              int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
-             q.setFirstResult(inicio);
-             q.setMaxResults(RESULTADOS_PAGINACION);
+             //q.setFirstResult(inicio);
+             //q.setMaxResults(RESULTADOS_PAGINACION);
+             int finalRes = Math.min(inicio+RESULTADOS_PAGINACION, total);
+             resultadosPrincipal = resultadosPrincipal.subList(inicio, finalRes);
          }else{
              paginacion = new Paginacion(0, 0);
          }

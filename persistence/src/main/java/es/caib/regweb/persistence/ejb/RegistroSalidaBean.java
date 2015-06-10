@@ -8,7 +8,6 @@ import es.caib.regweb.model.utils.RegistroBasico;
 import es.caib.regweb.persistence.utils.*;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.utils.StringUtils;
-
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -19,7 +18,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-
 import java.util.*;
 
 /**
@@ -244,8 +242,10 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
             int total  = resultadosPrincipal.size();//(Long)q2.getSingleResult();
             paginacion = new Paginacion(total, pageNumber);
             int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
-            q.setFirstResult(inicio);
-            q.setMaxResults(RESULTADOS_PAGINACION);
+            //q.setFirstResult(inicio);
+            //q.setMaxResults(RESULTADOS_PAGINACION);
+            int finalRes = Math.min(inicio+RESULTADOS_PAGINACION, total);
+            resultadosPrincipal = resultadosPrincipal.subList(inicio, finalRes);
         }else{
             paginacion = new Paginacion(0, 0);
         }
