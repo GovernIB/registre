@@ -7,7 +7,6 @@ import es.caib.regweb.persistence.utils.RegistroUtils;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.webapp.utils.Mensaje;
 import es.caib.regweb.webapp.validator.RegistroSalidaWebValidator;
-
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.support.SessionStatus;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -36,6 +34,7 @@ import java.util.Set;
  */
 @Controller
 @RequestMapping(value = "/registroSalida")
+@SessionAttributes({"registro"})
 public class RegistroSalidaFormController extends AbstractRegistroCommonFormController {
 
     //protected final Logger log = Logger.getLogger(getClass());
@@ -437,7 +436,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         }
 
         // No han especificado Codigo Asunto
-        if( registroSalida.getRegistroDetalle().getCodigoAsunto() == null || registroSalida.getRegistroDetalle().getCodigoAsunto().getId() == -1){
+        if( registroSalida.getRegistroDetalle().getCodigoAsunto().getId() == null || registroSalida.getRegistroDetalle().getCodigoAsunto().getId() == -1){
             registroSalida.getRegistroDetalle().setCodigoAsunto(null);
         }
 

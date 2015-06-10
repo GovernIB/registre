@@ -417,15 +417,8 @@
 
         // CARGA DE INTERESADOS REGISTRO ENTRADA DESDE LA SESION
         <c:if test="${registro.estado != RegwebConstantes.ESTADO_PENDIENTE}">
-        <c:import url="../registro/addInteresadosSesion.jsp"/>
+            <c:import url="../registro/addInteresadosSesion.jsp"/>
         </c:if>
-
-
-        /* CARGA DE INTERESADOS REGISTRO ENTRADA DESDE LA BBDD*/
-        <c:if test="${registro.estado == RegwebConstantes.ESTADO_PENDIENTE}">
-            <c:import url="../registro/addInteresadosBbdd.jsp"/>
-        </c:if>
-
 
 
     });
