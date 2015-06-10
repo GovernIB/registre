@@ -10,6 +10,7 @@ import javax.persistence.*;
 import javax.xml.bind.annotation.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -67,7 +68,7 @@ public class RegistroDetalle implements Serializable {
     @XmlElementWrapper( name="interesados" )
     private List<Interesado> interesados;
     @XmlTransient
-    private List<Anexo> anexos;
+    private List<Anexo> anexos = new ArrayList<Anexo>();
     @XmlTransient
     private String aplicacion = "REGWEB";
     @XmlTransient
