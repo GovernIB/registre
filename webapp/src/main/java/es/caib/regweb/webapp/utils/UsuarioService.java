@@ -184,13 +184,15 @@ public class UsuarioService {
             session.setAttribute(RegwebConstantes.SESSION_ENTIDAD,entidadesAdministrador.get(0));
         }
 
-        session.setAttribute(RegwebConstantes.SESSION_MIGRADOS, false);
+        // Registros migrados
+        Entidad entidad = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
+        tieneMigrados(entidad,session);
 
         // Eliminamos las Oficinas
         eliminarVariablesSesionOficina(session);
 
         log.info("Entidades asociadas: " + entidades.size());
-        log.info("Entidades activa: " + (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD));
+        log.info("Entidades activa: " + entidad.getNombre());
     }
 
     /**
@@ -219,14 +221,15 @@ public class UsuarioService {
             // Entidad Activa
             if(entidades.contains(entidadActiva)){
                 session.setAttribute(RegwebConstantes.SESSION_ENTIDAD,entidadActiva);
-                session.setAttribute(RegwebConstantes.SESSION_MIGRADOS, registroMigradoEjb.tieneRegistrosMigrados(entidadActiva.getId()));
             }else if(entidades.size() > 0){
                 session.setAttribute(RegwebConstantes.SESSION_ENTIDAD,entidades.get(0));
-                session.setAttribute(RegwebConstantes.SESSION_MIGRADOS, registroMigradoEjb.tieneRegistrosMigrados(entidades.get(0).getId()));
             }
 
+
+            Entidad entidad = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
+
             log.info("Entidades asociadas: " + entidades.size());
-            log.info("Entidades activa: " + (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD));
+            log.info("Entidades activa: " + entidad.getNombre());
 
             //Asignamos las oficinas donde tiene acceso
             asignarOficinasRegistro(usuarioAutenticado, session);
@@ -268,7 +271,6 @@ public class UsuarioService {
         // Comprobamos la última Oficina utilizada por el usuario
         if(usuarioEntidad.getUltimaOficina()!= null && oficinasRegistro.contains(new ObjetoBasico(usuarioEntidad.getUltimaOficina().getId()))){
             session.setAttribute(RegwebConstantes.SESSION_OFICINA,oficinaEjb.findById(usuarioEntidad.getUltimaOficina().getId()));
-            session.setAttribute(RegwebConstantes.SESSION_TIENEPREREGISTROS, preRegistroEjb.tienePreRegistros(usuarioEntidad.getUltimaOficina().getCodigo()));
 
         }else if(oficinasRegistro.size() > 0){
             session.setAttribute(RegwebConstantes.SESSION_OFICINA,oficinaEjb.findById(oficinasRegistro.iterator().next().getId()));
@@ -280,6 +282,35 @@ public class UsuarioService {
         log.info("Libros administrados usuario: " + Arrays.toString(librosAdministrados.toArray()));
         session.setAttribute(RegwebConstantes.SESSION_LIBROSADMINISTRADOS, librosAdministrados);
 
+        //RegistrosMigrados
+        tieneMigrados(entidadActiva,session);
+
+        //PreRegistros
+        Oficina oficinaActiva = (Oficina) session.getAttribute(RegwebConstantes.SESSION_OFICINA);
+        tienePreRegistros(oficinaActiva,session);
+
+
+    }
+
+
+    /**
+     * Actualiza la variable de sesion de Registros Migrados, según la entidad Activa
+     * @param entidadActiva
+     * @param session
+     * @throws Exception
+     */
+    public void tieneMigrados(Entidad entidadActiva, HttpSession session) throws Exception{
+        session.setAttribute(RegwebConstantes.SESSION_MIGRADOS, registroMigradoEjb.tieneRegistrosMigrados(entidadActiva.getId()));
+    }
+
+    /**
+     * Actualiza la variable de sesion de PreRegistros, según la oficina Activa
+     * @param oficinaActiva
+     * @param session
+     * @throws Exception
+     */
+    public void tienePreRegistros(Oficina oficinaActiva, HttpSession session) throws Exception{
+        session.setAttribute(RegwebConstantes.SESSION_TIENEPREREGISTROS, preRegistroEjb.tienePreRegistros(oficinaActiva.getCodigo()));
     }
 
     /**
@@ -473,6 +504,7 @@ public class UsuarioService {
         session.removeAttribute(RegwebConstantes.SESSION_OFICINA);
         session.removeAttribute(RegwebConstantes.SESSION_OFICINAS_ADMINISTRADAS);
         session.removeAttribute(RegwebConstantes.SESSION_MIGRADOS);
+        session.removeAttribute(RegwebConstantes.SESSION_TIENEPREREGISTROS);
 
     }
 

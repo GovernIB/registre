@@ -104,15 +104,12 @@ public class ComunController extends BaseController {
             if(entidadesAutenticado.contains(entidadNueva)){
                 session.removeAttribute(RegwebConstantes.SESSION_ENTIDAD);
                 session.setAttribute(RegwebConstantes.SESSION_ENTIDAD, entidadNueva);
+
                 if(isOperador(request)){
                     usuarioService.asignarOficinasRegistro(getUsuarioAutenticado(request),session);
-                    session.setAttribute(RegwebConstantes.SESSION_MIGRADOS, registroMigradoEjb.tieneRegistrosMigrados(entidadNueva.getId()));
-                    if(getOficinaActiva(request) != null) {
-                        session.setAttribute(RegwebConstantes.SESSION_TIENEPREREGISTROS, preRegistroEjb.tienePreRegistros(getOficinaActiva(request).getCodigo()));
-                    }
+
                 }else{
-                    session.setAttribute(RegwebConstantes.SESSION_MIGRADOS, false);
-                    session.setAttribute(RegwebConstantes.SESSION_TIENEPREREGISTROS, false);
+                   usuarioService.tieneMigrados(entidadNueva, session);
                 }
             }else{
                 Mensaje.saveMessageError(request, getMessage("error.entidad.autorizacion"));
@@ -138,7 +135,7 @@ public class ComunController extends BaseController {
             Oficina oficinaNueva = oficinaEjb.findById(oficinaId);
             if(oficinasAutenticado.contains(new ObjetoBasico(oficinaNueva.getId()))){
                 session.setAttribute(RegwebConstantes.SESSION_OFICINA, oficinaNueva);
-                session.setAttribute(RegwebConstantes.SESSION_TIENEPREREGISTROS, preRegistroEjb.tienePreRegistros(oficinaNueva.getCodigo()));
+                usuarioService.tienePreRegistros(oficinaNueva,session);
                 usuarioEntidadEjb.actualizarOficinaUsuario(usuarioEntidad.getId(), oficinaNueva.getId());
             }else{
                 Mensaje.saveMessageError(request, getMessage("error.oficina.autorizacion"));
