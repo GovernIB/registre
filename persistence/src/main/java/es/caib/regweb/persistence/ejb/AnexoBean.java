@@ -449,6 +449,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
       }
 
       // Actualitzar Metadades
+      final String lang = Configuracio.getDefaultLanguage(); 
+      final Locale loc = new Locale(lang);
       List<Metadata> metadades = new ArrayList<Metadata>();
       
       // fechaDeEntradaEnElSistema 
@@ -457,15 +459,16 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
       }
 
       // TODO String tipoDeDocumento; //  varchar(100)
+      if (anexo.getTipoDocumento() != null) {
+        metadades.add(new Metadata("anexo.tipoDocumento",
+            I18NLogicUtils.tradueix(loc,"tipoDocumento." + anexo.getTipoDocumento())));
+      }
 
       if (registro.getOficina() != null) {
         metadades.add(new Metadata("oficina",
             registro.getOficina().getNombreCompleto()));
       }
 
-      final String lang = Configuracio.getDefaultLanguage(); 
-      final Locale loc = new Locale(lang);
-      //  varchar(80)
       
       if ( anexo.getOrigenCiudadanoAdmin() != null) {
         metadades.add(new Metadata("anexo.origen", 
