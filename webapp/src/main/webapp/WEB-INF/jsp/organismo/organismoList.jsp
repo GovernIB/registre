@@ -99,6 +99,7 @@
                                                 <thead>
                                                 <tr>
                                                     <th><spring:message code="organismo.organismo"/></th>
+                                                    <th><spring:message code="entidad.codigoDir3"/></th>
                                                     <th><spring:message code="organismo.estado"/></th>
                                                     <th><spring:message code="organismo.libros"/></th>
                                                     <th width="50"><spring:message code="regweb.acciones"/></th>
@@ -109,6 +110,7 @@
                                                 <c:forEach var="organismo" items="${paginacion.listado}">
                                                     <tr>
                                                         <td>${organismo.denominacion}</td>
+                                                        <td>${organismo.codigo}</td>
                                                         <td>${organismo.estado.descripcionEstadoEntidad}</td>
                                                         <td>${fn:length(organismo.libros)}</td>
                                                         <td>
