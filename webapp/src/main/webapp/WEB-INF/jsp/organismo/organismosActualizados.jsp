@@ -16,7 +16,7 @@
 
     <div class="well well-white">
 
-        <!-- PANEL EXTINGUIDOS, TRANSITORIOS, ANULADOS POR PROCESAR-->
+        <!-- Este jsp muestra después del proceso de sincronización el PANEL de organismos EXTINGUIDOS, TRANSITORIOS, ANULADOS POR PROCESAR-->
         <c:if test="${not empty extinguidos}" >
         <div class="row">
             <div class="col-xs-12">
@@ -31,11 +31,11 @@
                             <div class="col-xs-12">
                                <div class="panel panel-success" id="panel${extinguido.id}">
                                    <div class="panel-heading">
-                                        <h3 class="panel-title"><i class="fa fa-globe"></i> <strong>Organismo Extinguido: ${extinguido.codigo} - ${extinguido.denominacion}</strong></h3>
+                                        <h3 class="panel-title"><i class="fa fa-globe"></i> <strong><spring:message code="organismo.extinguido"/>: ${extinguido.codigo} - ${extinguido.denominacion}</strong></h3>
                                    </div>
 
                                    <div  class="panel-body">
-                                      <form  id="extinguidoForm${extinguido.id}" action="${pageContext.request.contextPath}/entidad/procesarextinguido/${extinguido.id}" method="post" class="form-horizontal">
+                                      <form  id="extinguidoForm${extinguido.id}" action="${pageContext.request.contextPath}/entidad/procesarextinguido/${extinguido.id}/${true}" method="post" class="form-horizontal">
                                             <input type="hidden" id="total${extinguido.id}" value="${fn:length(extinguido.libros)}"/>
                                             <c:forEach var="libroextinguido" items="${extinguido.libros}" varStatus="contador">
                                                   <div class="form-group col-xs-8">
@@ -90,7 +90,7 @@
                     <div  class="panel-body" id="resumen">
                       <!-- EXTINGUIDOS AUTOMATICOS -->
                       <c:forEach var="extinguidoAutomatico" items="${extinguidosAutomaticos}">
-                        Organisme Extingit: <strong>${extinguidoAutomatico.key}</strong>
+                          <spring:message code="organismo.extinguido"/>: <strong>${extinguidoAutomatico.key}</strong>
                         <c:set var="organismoSustituye" value="${extinguidoAutomatico.value}"/>
                         <table id="automaticos${extinguidoAutomatico.key}" class="table table-bordered table-hover table-striped">
                              <colgroup>
