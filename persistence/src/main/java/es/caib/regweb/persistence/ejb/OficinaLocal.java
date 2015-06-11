@@ -87,6 +87,14 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
     public List<Oficina> dependienteByEntidadEstado(Long idEntidad, String estado) throws Exception;
 
     /**
+     * Dice si el organismo indicado tiene oficinas donde registrar
+     * @param idOrganismo
+     * @return
+     * @throws Exception
+     */
+    public Boolean tieneOficinasOrganismo(Long idOrganismo) throws Exception;
+
+    /**
      * Obtiene las Oficinas que dan servicio a los Libros seleccionados
      * @param libros
      * @return

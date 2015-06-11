@@ -155,7 +155,7 @@
                 <button type="button" id="actuali" class="btn btn-success btn-sm"><spring:message code="entidad.actualizar"/></button>
                 <spring:message code="catalogoDir3.sincronizar.fecha"/>: <fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${descarga.fechaImportacion}" />
             </c:if>
-
+            <a class="btn btn-success btn-xs pull-right" href="<c:url value="/entidad/librosCambiar"/>" role="button"><i class="fa fa-book"></i> <spring:message code="entidad.cambiarlibros"/></a>
         </c:if>
 
         <div id="modalSincro" class="modal fade bs-example-modal-lg" >

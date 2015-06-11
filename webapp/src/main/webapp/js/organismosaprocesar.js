@@ -1,16 +1,17 @@
 /**
- * Función que envia los datos del formulario de un organismo extinguido para procesarlo
- * @param extinguido id del organismo extinguido
+ * Función que envia los datos del formulario de un organismo para procesarlo
+ * @param organismoAProcesar id del organismo a procesar
  */
-function procesarExtinguido(extinguido) {
+function procesarOrganismo(organismoAProcesar) {
 
-    var url = $("#extinguidoForm"+extinguido).attr("action");
-    var total =  $('#total'+extinguido).val(); // valor total de libros
+    var url = $("#organismoAProcesarForm"+organismoAProcesar).attr("action");
+    var total =  $('#total'+organismoAProcesar).val(); // valor total de libros
     var array = [];
+
 
     // Montamos los pares libro-organismo en función del total de libros
     for( i = 1; i <= total; i++) {
-        var libroOrganismo = { "libro": $("#libro"+i+"-"+extinguido).val(), "organismo": $("#organismoSustituye"+i+"-"+extinguido).val()};
+        var libroOrganismo = { "libro": $("#libro"+i+"-"+organismoAProcesar).val(), "organismo": $("#organismoSustituye"+i+"-"+organismoAProcesar).val()};
         array[i-1] = libroOrganismo;
 
     }
@@ -25,15 +26,15 @@ function procesarExtinguido(extinguido) {
             xhr.setRequestHeader("Content-Type", "application/json");
         },
         success: function(respuesta) {
-            var idPanel = '#panel'+extinguido;
+            var idPanel = '#panel'+organismoAProcesar;
             if(respuesta.status == 'FAIL'){
-                  mostrarMensaje('#pendientes', "S'ha produit un error processant l'organisme extingit " + extinguido);
+                  mostrarMensaje('#pendientes', trads['mensajeprocesadoerror'] + " " + organismoAProcesar);
                   $(idPanel).hide();
 
             }else if(respuesta.status == 'SUCCESS'){
-                  mostrarMensaje('#pendientes', "S'ha processat correctament l'organisme extingit " + extinguido);
+                  mostrarMensaje('#pendientes', trads['mensajeprocesadook'] + " " + organismoAProcesar);
                   $(idPanel).hide();
-                  mostrarProcesado(extinguido, respuesta.result.nombre,respuesta.result.libroOrganismos,idioma);
+                  mostrarProcesado(organismoAProcesar, respuesta.result.nombre,respuesta.result.libroOrganismos,idioma);
             }
         }
      });
@@ -52,24 +53,24 @@ function mostrarMensaje(idPanel, mensaje){
 
 
 /**
- *  Función que muestra como quedan asignados los libros una vez procesado el organismo
- * @param extinguidoId identificador del organismo extinguido
- * @param extinguidoNombre  nombre del Organismos extinguido
- * @param librosOrganismos  conjunto de relaciones de libro-organismo del organismo extinguido
+ * Función que muestra como quedan asignados los libros una vez procesado el organismo
+ * @param organismoAProcesarId identificador del organismo a procesar
+ * @param organismoAProcesarNombre  nombre del Organismos a procesar
+ * @param librosOrganismos  conjunto de relaciones de libro-organismo del organismo a procesar
  */
- function mostrarProcesado(extinguidoId, extinguidoNombre, librosOrganismos, idioma){
-
-  var trad = {
+ function mostrarProcesado(organismoAProcesarId, organismoAProcesarNombre, librosOrganismos, idioma){
+  // TODO BORRAR SI NO SE EMPLEA.
+ /* var trad = {
         ca: {orgext: "Organisme Extingit:", llibre: "Llibre", orgasi: "Organisme Assignat"},
         es: {orgext: "Organismo Extinguido:", llibre: "Libro", orgasi: "Organismo Asignado"}
-  };
+  };   */
 
     // El html que se coge es el del resumen de los organismos procesados automaticamente
     // a este código se añadirá la nueva información a mostrar en una tabla
     var html=$("#resumen").html();
-    html +=  trads['organismo.extinguido']+" <strong>"+extinguidoNombre+"</strong>"
+    html +=  trads['organismo.extinguido']+" <strong>"+organismoAProcesarNombre+"</strong>"
    // html +=  "Organisme Extingit: <strong>"+extinguidoNombre+"</strong>"
-    html += "<table class='table table-bordered table-hover table-striped'  id=\"procesado"+extinguidoId +"\">";
+    html += "<table class='table table-bordered table-hover table-striped'  id=\"procesado"+organismoAProcesarId +"\">";
     html += '<colgroup>';
     html += '<col>';
     html += '<col>';
@@ -87,7 +88,7 @@ function mostrarMensaje(idPanel, mensaje){
     var fila;
     for(i=0; i<librosOrganismos.length; i++){
         fila = "<tr><td>"+librosOrganismos[i].libro+"</td><td>"+librosOrganismos[i].organismo+"</td>"
-        $('#procesado'+extinguidoId).append(fila);
+        $('#procesado'+organismoAProcesarId).append(fila);
     }
 
 }

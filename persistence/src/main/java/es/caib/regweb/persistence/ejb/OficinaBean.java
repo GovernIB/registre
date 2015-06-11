@@ -2,6 +2,7 @@ package es.caib.regweb.persistence.ejb;
 
 import es.caib.regweb.model.Libro;
 import es.caib.regweb.model.Oficina;
+import es.caib.regweb.model.RelacionOrganizativaOfi;
 import es.caib.regweb.model.utils.ObjetoBasico;
 import es.caib.regweb.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
@@ -216,5 +217,26 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         }
 
         return oficinas;
+    }
+
+    @Override
+    public Boolean tieneOficinasOrganismo(Long idOrganismo) throws Exception{
+        Query q = em.createQuery("Select oficina from Oficina as oficina where " +
+                "oficina.organismoResponsable.id =:idOrganismo and " +
+                "oficina.estado.codigoEstadoEntidad=:vigente");
+
+        q.setParameter("idOrganismo",idOrganismo);
+        q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        List<Oficina> oficinas = q.getResultList();
+        if(oficinas.size()>0){
+            return true;
+        }else{
+            q= em.createQuery("select relorg from RelacionOrganizativaOfi as relorg where relorg.organismo.id=:idOrganismo and relorg.estado.codigoEstadoEntidad=:vigente");
+            q.setParameter("idOrganismo",idOrganismo);
+            q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+            List<RelacionOrganizativaOfi> relorg= q.getResultList();
+            return relorg.size() > 0;
+        }
+
     }
 }

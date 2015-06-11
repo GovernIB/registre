@@ -671,15 +671,15 @@ public class EntidadController extends BaseController {
     }
 
 
-    /**
-     * Mostrar actualizados
-     */
+
   /**
    * Función que gestiona los organismos extinguidos. Procesa los que son automáticos(1 historico) y
-   * prepara los datos para los que no son automaticos y los envía al jsp para procesar manualmente
+   * prepara los datos para los que no son automáticos y los envía al jsp para procesar manualmente
+   * Esta función se llama justo después del proceso de sincronización de una entidad desde dir3.
+   * En el InicioInterceptor mira si hay organismos pendientes de procesar y si hay viene aquí.
    */
     @RequestMapping(value = "/pendientesprocesar", method = RequestMethod.GET)
-    public String mostrarActualizados(HttpServletRequest request, Model model) throws Exception {
+    public String mostrarPendientesProcesar(HttpServletRequest request, Model model) throws Exception {
         //log.info("Entro en pendiente de procesar " + new Date() );
         //SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
 
@@ -732,7 +732,9 @@ public class EntidadController extends BaseController {
           }
 
           model.addAttribute("extinguidosAutomaticos", extinguidosAutomaticos);
-          model.addAttribute("extinguidos", organismosExtinguidos);
+          model.addAttribute("organismosAProcesar", organismosExtinguidos);
+          model.addAttribute("esPendiente", true);
+
 
 
         }else {
@@ -740,20 +742,22 @@ public class EntidadController extends BaseController {
             Mensaje.saveMessageInfo(request, getMessage("organismo.nopendientesprocesar"));
             return "redirect:/organismo/list";
         }
-        return "organismo/organismosActualizados";
+        //return "organismo/organismosActualizados";
+        return "organismo/organismosACambiarLibro";
     }
 
 
      /**
-      * Procesa un organismo Extinguido con más de un organismo que lo sustituye, y monta la respuesta en json
+      * Procesa un organismo con libros  y monta la respuesta en json
       * para después mostrar los resultados
+      * Realmente lo que hace es asignar el libro al nuevo organismo indicado.
       */
-     @RequestMapping(value="/procesarextinguido/{extinguidoId}", method= RequestMethod.POST)
+     @RequestMapping(value="/procesarlibroorganismo/{organismoId}/{esPendiente}", method= RequestMethod.POST)
      @ResponseBody
-     public JsonResponse procesarExtinguido(@RequestBody List<LibroOrganismo> libroOrganismos, @PathVariable("extinguidoId") Long extinguidoId, BindingResult result, HttpServletRequest request) {
+     public JsonResponse procesarLibroOrganismo(@RequestBody List<LibroOrganismo> libroOrganismos, @PathVariable("organismoId") Long organismoId, @PathVariable("esPendiente") boolean esPendiente, BindingResult result, HttpServletRequest request) {
          JsonResponse jsonResponse = new JsonResponse();
          try {
-            log.info("PROCESANDO "+ extinguidoId);
+            log.info("PROCESANDO "+ organismoId);
             List<LibroOrganismo> nombresLibrosOrganismos= new ArrayList<LibroOrganismo>();  // Contendrá la lista de nombres de libro y organismo
 
             // Comenzamos a procesar los libros organismos que recibimos del request.
@@ -764,33 +768,37 @@ public class EntidadController extends BaseController {
 
                 //Obtenemos libro, el organismo que lo sustituye
               Libro libro = libroEjb.findById(new Long(libroOrganismo.getLibro()));
-              Organismo organismoSustituye = organismoEjb.findById(new Long(libroOrganismo.getOrganismo()));
+              if(!libroOrganismo.getOrganismo().equals( "-1")) {
+                  Organismo organismoSustituye = organismoEjb.findById(new Long(libroOrganismo.getOrganismo()));
 
-              libro.setOrganismo(organismoSustituye);
-              libroEjb.merge(libro);
+                  libro.setOrganismo(organismoSustituye);
+                  libroEjb.merge(libro);
 
-              //asignamos los nombres del libro y del organismo que lo sustituye, para ello
-              // emplearemos la clase LibroOrganismo para mostrarlos una vez procesado
-              LibroOrganismo nombreLibroOrganismo = new LibroOrganismo();
-              nombreLibroOrganismo.setLibro(libro.getNombre());
-              nombreLibroOrganismo.setOrganismo(organismoSustituye.getDenominacion());
+                  //asignamos los nombres del libro y del organismo que lo sustituye, para ello
+                  // emplearemos la clase LibroOrganismo para mostrarlos una vez procesado
+                  LibroOrganismo nombreLibroOrganismo = new LibroOrganismo();
+                  nombreLibroOrganismo.setLibro(libro.getNombre());
+                  nombreLibroOrganismo.setOrganismo(organismoSustituye.getDenominacion());
 
-              //lo añadimos a la lista
-              nombresLibrosOrganismos.add(nombreLibroOrganismo);
+                  //lo añadimos a la lista
+                  nombresLibrosOrganismos.add(nombreLibroOrganismo);
+              }
             }
-            Pendiente pendiente = pendienteEjb.findByIdOrganismo(extinguidoId);
-            pendiente.setProcesado(true);
-            pendiente.setFecha(RegwebUtils.formateaFecha(new Date(), RegwebConstantes.FORMATO_FECHA_HORA));
-            pendienteEjb.merge(pendiente);
+            if(esPendiente) {
+                Pendiente pendiente = pendienteEjb.findByIdOrganismo(organismoId);
+                pendiente.setProcesado(true);
+                pendiente.setFecha(RegwebUtils.formateaFecha(new Date(), RegwebConstantes.FORMATO_FECHA_HORA));
+                pendienteEjb.merge(pendiente);
+            }
 
             // Necesitamos su nombre
-            Organismo extinguido= organismoEjb.findById(extinguidoId);
+            Organismo extinguido= organismoEjb.findById(organismoId);
 
             // MONTAMOS LA RESPUESTA JSON
             jsonResponse.setStatus("SUCCESS");
 
             OrganismoJson organismoJson = new OrganismoJson();
-            organismoJson.setId(extinguidoId.toString());
+            organismoJson.setId(organismoId.toString());
             organismoJson.setNombre(extinguido.getDenominacion());
             organismoJson.setLibroOrganismos(nombresLibrosOrganismos);
 
@@ -802,7 +810,22 @@ public class EntidadController extends BaseController {
          return jsonResponse;
      }
 
+    @RequestMapping(value = "/librosCambiar", method = RequestMethod.GET)
+    public String librosCambiar(HttpServletRequest request, Model model) throws Exception {
 
+
+        Entidad entidad = getEntidadActiva(request);
+        List<Organismo> organismosEntidad = organismoEjb.findByEntidad(entidad.getId());
+
+        List<Organismo> organismosEntidadVigentes = organismoEjb.findByEntidadEstadoConOficinas(entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+
+
+        model.addAttribute("organismosAProcesar", organismosEntidad);
+        model.addAttribute("organismosSustituyentes", organismosEntidadVigentes);
+        model.addAttribute("esPendiente", false);
+
+        return "/organismo/organismosACambiarLibro";
+    }
 
     @ModelAttribute("idiomas")
     public Long[] idiomas() throws Exception {
