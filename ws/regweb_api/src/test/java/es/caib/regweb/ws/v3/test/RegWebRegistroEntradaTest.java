@@ -120,7 +120,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils  {
       registroEntradaWs.setOficina(getTestDestinoOficinaCodigoDir3());
       registroEntradaWs.setLibro(getTestDestinoLibro());
 
-      registroEntradaWs.setExtracto("probando ws");
+      registroEntradaWs.setExtracto(System.currentTimeMillis() + " probando ws");
       registroEntradaWs.setDocFisica((long) 1);
       registroEntradaWs.setIdioma("es");
       registroEntradaWs.setTipoAsunto("TS01");

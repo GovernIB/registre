@@ -6,8 +6,6 @@ import es.caib.regweb.model.IRegistro;
 import es.caib.regweb.model.RegistroDetalle;
 import es.caib.regweb.model.RegistroEntrada;
 import es.caib.regweb.model.RegistroSalida;
-import es.caib.regweb.model.TipoAsunto;
-import es.caib.regweb.model.TraduccionTipoAsunto;
 import es.caib.regweb.model.UsuarioEntidad;
 import es.caib.regweb.persistence.utils.AnexoFull;
 import es.caib.regweb.persistence.utils.AnnexFileSystemManager;
@@ -260,9 +258,13 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
       
       Hibernate.initialize(registro.getRegistroDetalle().getTipoAsunto());
       Hibernate.initialize(registro.getRegistroDetalle().getInteresados());
-      
+      /*
       List<Anexo> anexos = registro.getRegistroDetalle().getAnexos();
       if (isNou) {
+        if (anexos == null) {
+          anexos = new ArrayList<Anexo>();
+          registro.getRegistroDetalle().setAnexos(anexos);
+        }
         anexos.add(anexo);
       } else {
         for (Anexo anexo2 : anexos) {
@@ -273,7 +275,11 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         }
         anexos.add(anexo);
       }
-      
+
+      org.hibernate.Session session = (org.hibernate.Session) em.getDelegate();
+      session.evict(registro);
+      */
+
       return registro;
     }
     
