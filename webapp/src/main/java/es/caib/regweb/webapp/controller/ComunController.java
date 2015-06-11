@@ -2,6 +2,7 @@ package es.caib.regweb.webapp.controller;
 
 import es.caib.regweb.model.*;
 import es.caib.regweb.model.utils.ObjetoBasico;
+import es.caib.regweb.model.utils.RegistroBasico;
 import es.caib.regweb.persistence.ejb.*;
 import es.caib.regweb.persistence.utils.sir.FicheroIntercambioSICRES3;
 import es.caib.regweb.persistence.utils.sir.SirUtils;
@@ -21,6 +22,7 @@ import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -182,23 +184,45 @@ public class ComunController extends BaseController {
 
         ModelAndView mav = new ModelAndView("modulos/avisos");
 
-        HttpSession session = request.getSession();
-        Oficina oficinaActiva = (Oficina) session.getAttribute(RegwebConstantes.SESSION_OFICINA);
+        Oficina oficinaActiva = getOficinaActiva(request);
 
-        if(oficinaActiva != null) {
-            //List<RegistroEntrada> pendientesVisar = registroEntradaEjb.getByOficinaEstado(oficinaActiva.getId(), RegwebConstantes.ESTADO_PENDIENTE_VISAR, RegwebConstantes.REGISTROS_PANTALLA_INICIO);
-            //List<RegistroEntrada> pendientes = registroEntradaEjb.getByOficinaEstado(oficinaActiva.getId(), RegwebConstantes.ESTADO_PENDIENTE, RegwebConstantes.REGISTROS_PANTALLA_INICIO);
+        if(isOperador(request) && oficinaActiva != null) {
+
+            List<Libro> librosAdministrados = getLibrosAdministrados(request);
+            List<Libro> librosRegistro = getLibrosRegistroEntrada(request);
+            List<RegistroBasico> pendientesVisar = new ArrayList<RegistroBasico>();
+            /*Registros Pendientes de Visar*/
+            if(librosAdministrados!= null && librosAdministrados.size() > 0){
+                pendientesVisar = registroEntradaEjb.getByLibrosEstado(librosAdministrados, RegwebConstantes.ESTADO_PENDIENTE_VISAR);
+            }
+
+            //List<RegistroBasico> pendientesVisar = registroEntradaEjb.getByOficinaEstado(oficinaActiva.getId(), RegwebConstantes.ESTADO_PENDIENTE_VISAR, RegwebConstantes.REGISTROS_PANTALLA_INICIO);
+            List<RegistroBasico> pendientes = registroEntradaEjb.getByOficinaEstado(oficinaActiva.getId(), RegwebConstantes.ESTADO_PENDIENTE, RegwebConstantes.REGISTROS_PANTALLA_INICIO);
+
+            /* OFICIOS PENDIENTES DE REMISIÓN */
+
+            // Obtenemos los Organismos Internos que tienen Registros pendientes de tramitar por medio de un Oficio de Revisión,
+            Set<String> organismosOficioRemisionInterna = new HashSet<String>();
+            for (Libro libro : librosRegistro) {
+                organismosOficioRemisionInterna.addAll(registroEntradaEjb.oficiosPendientesRemisionInterna(libro));
+            }
+            mav.addObject("organismosOficioRemisionInterna", organismosOficioRemisionInterna.size());
+
+            // Obtenemos los Organismos Externos que tienen Registros pendientes de tramitar por medio de un Oficio de Revisión,
+            Set<String> organismosOficioRemisionExterna = new HashSet<String>();
+            for (Libro libro : librosRegistro) {
+                organismosOficioRemisionExterna.addAll(registroEntradaEjb.oficiosPendientesRemisionExterna(libro));
+            }
+            mav.addObject("organismosOficioRemisionExterna", organismosOficioRemisionExterna.size());
 
             /*OFICIOS PENDIENTES DE LLEGADA*/
             // Buscamos los Organismos en los que la OficinaActiva puede registrar
-            Set<Organismo> organismos = new HashSet<Organismo>();  // Utilizamos un Set porque no permite duplicados
-            organismos.add(oficinaActiva.getOrganismoResponsable());
-            organismos.addAll(relacionOrganizativaOfiLocalEjb.getOrganismosByOficina(oficinaActiva.getId()));
-            List<OficioRemision> oficiosPendientesLlegada = oficioRemisionEjb.oficiosPendientesLlegada(organismos);
 
-            //mav.addObject("pendientesVisar", pendientesVisar.size());
-           // mav.addObject("pendientes", pendientes.size());
-            mav.addObject("oficiosPendientesLlegada", oficiosPendientesLlegada);
+            List<OficioRemision> oficiosPendientesLlegada = oficioRemisionEjb.oficiosPendientesLlegada(getOrganismosOficinaActiva(request));
+
+            mav.addObject("pendientes", pendientes.size());
+            mav.addObject("oficiosPendientesLlegada", oficiosPendientesLlegada.size());
+            mav.addObject("pendientesVisar", pendientesVisar.size());
         }
 
 

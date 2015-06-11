@@ -1,11 +1,13 @@
 package es.caib.regweb.persistence.ejb;
 
+import es.caib.regweb.model.Libro;
 import es.caib.regweb.model.Oficina;
 import es.caib.regweb.model.utils.ObjetoBasico;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Fundació BIT.
@@ -83,4 +85,12 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @throws Exception
      */
     public List<Oficina> dependienteByEntidadEstado(Long idEntidad, String estado) throws Exception;
+
+    /**
+     * Obtiene las Oficinas que dan servicio a los Libros seleccionados
+     * @param libros
+     * @return
+     * @throws Exception
+     */
+    public Set<ObjetoBasico> oficinasRegistro(List<Libro> libros) throws Exception;
 }

@@ -90,11 +90,7 @@ public class InicioController extends BaseController{
 
 
             /* OFICIOS PENDIENTES DE LLEGADA */
-            // Buscamos los Organismos en los que la OficinaActiva puede registrar
-            Set<Organismo> organismos = new HashSet<Organismo>();  // Utilizamos un Set porque no permite duplicados
-            organismos.add(oficinaActiva.getOrganismoResponsable());
-            organismos.addAll(relacionOrganizativaOfiLocalEjb.getOrganismosByOficina(oficinaActiva.getId()));
-            List<OficioRemision> oficiosPendientesLlegada = oficioRemisionEjb.oficiosPendientesLlegada(organismos);
+            List<OficioRemision> oficiosPendientesLlegada = oficioRemisionEjb.oficiosPendientesLlegada(getOrganismosOficinaActiva(request));
 
             mav.addObject("oficiosPendientesLlegada", oficiosPendientesLlegada);
 

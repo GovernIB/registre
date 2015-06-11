@@ -24,7 +24,7 @@
                     <li><a href="<c:url value="/inici"/>" ><i class="fa fa-power-off"></i> <spring:message code="regweb.inicio"/></a></li>
                     <li><a href="<c:url value="/organismo/list"/>" ><i class="fa fa-globe"></i> ${entidad.nombre}</a></li>
                     <li><a href="<c:url value="/entidad/usuarios"/>" ><i class="fa fa-list-ul"></i> <spring:message code="organismo.usuarios"/></a></li>
-                    <li class="active"><i class="fa fa-pencil-square-o"></i><strong><spring:message code="usuario.modificar.permisos"/> a ${entidad.nombre}</strong></li>
+                    <li class="active"><i class="fa fa-pencil-square-o"></i><strong><spring:message code="usuario.modificar.permisos"/> a ${permisoLibroUsuarioForm.usuarioEntidad.usuario.nombreCompleto}</strong></li>
                 </ol>
             </div>
         </div><!-- Fin miga de pan -->

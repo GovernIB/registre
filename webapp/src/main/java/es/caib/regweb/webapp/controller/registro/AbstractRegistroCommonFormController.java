@@ -153,6 +153,99 @@ public abstract class AbstractRegistroCommonFormController extends BaseControlle
 
         return catLocalidadEjb.getByProvincia(id);
     }
+
+    /*private IRegistro procesarRegistro(IRegistro registro, String tipoRegistro) throws Exception{
+
+        if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO)){
+            registro = (RegistroEntrada) registro;
+        }else if(tipoRegistro.equals(RegwebConstantes.REGISTRO_SALIDA_ESCRITO)){
+            registro = (RegistroSalida) registro;
+        }
+
+        Organismo organismoDestino = registro.getDestino();
+
+        // Gestionamos el Organismo, determinando si es Interno o Externo
+        Organismo orgDestino = organismoEjb.findByCodigoVigente(organismoDestino.getCodigo());
+        if(orgDestino != null){ // es interno
+
+            registro.setDestino(orgDestino);
+            registro.setDestinoExternoCodigo(null);
+            registro.setDestinoExternoDenominacion(null);
+        } else { // es externo
+            registro.setDestinoExternoCodigo(registro.getDestino().getCodigo());
+            if(registro.getId()!= null){//es una modificación
+                registro.setDestinoExternoDenominacion(registro.getDestinoExternoDenominacion());
+            }else{
+                registro.setDestinoExternoDenominacion(registro.getDestino().getDenominacion());
+            }
+
+            registro.setDestino(null);
+        }
+
+        // Cogemos los dos posibles campos
+        Oficina oficinaOrigen = registro.getRegistroDetalle().getOficinaOrigen();
+
+        // Si no han indicado ni externa ni interna, se establece la oficina en la que se realiza el registro.
+        if(oficinaOrigen == null){
+            registro.getRegistroDetalle().setOficinaOrigen(registro.getOficina());
+        } else {
+
+            if(!oficinaOrigen.getCodigo().equals("-1")){ // si han indicado oficina origen
+                Oficina ofiOrigen = oficinaEjb.findByCodigo(oficinaOrigen.getCodigo());
+                if(ofiOrigen != null){ // Es interna
+
+                    registro.getRegistroDetalle().setOficinaOrigen(ofiOrigen);
+                    registro.getRegistroDetalle().setOficinaOrigenExternoCodigo(null);
+                    registro.getRegistroDetalle().setOficinaOrigenExternoDenominacion(null);
+                } else {  // es externa
+
+                    registro.getRegistroDetalle().setOficinaOrigenExternoCodigo(registro.getRegistroDetalle().getOficinaOrigen().getCodigo());
+                    if(registro.getId()!= null){//es una modificación
+                        registro.getRegistroDetalle().setOficinaOrigenExternoDenominacion(registro.getRegistroDetalle().getOficinaOrigenExternoDenominacion());
+                    }else{
+                        registro.getRegistroDetalle().setOficinaOrigenExternoDenominacion(registro.getRegistroDetalle().getOficinaOrigen().getDenominacion());
+                    }
+
+                    registro.getRegistroDetalle().setOficinaOrigen(null);
+
+                }
+            }else { // No han indicado oficina de origen
+                registro.getRegistroDetalle().setOficinaOrigen(null);
+                registro.getRegistroDetalle().setOficinaOrigenExternoCodigo(null);
+                registro.getRegistroDetalle().setOficinaOrigenExternoDenominacion(null);
+            }
+        }
+
+
+        // Solo se comprueba si es una modificación de RegistroEntrada
+        if(registro.getId() != null){
+            // Si no ha introducido ninguna fecha de Origen, se establece la fecha actual
+            if(registro.getRegistroDetalle().getFechaOrigen() == null){
+                registro.getRegistroDetalle().setFechaOrigen(new Date());
+            }
+
+            // Si no ha introducido ningún número de registro de Origen, le ponemos el actual.
+            if(registro.getRegistroDetalle().getNumeroRegistroOrigen() == null || registro.getRegistroDetalle().getNumeroRegistroOrigen().length() == 0){
+                registro.getRegistroDetalle().setNumeroRegistroOrigen(registro.getNumeroRegistroFormateado());
+            }
+        }
+
+        // No han especificado Codigo Asunto
+        if( registro.getRegistroDetalle().getCodigoAsunto().getId() == null || registro.getRegistroDetalle().getCodigoAsunto().getId() == -1){
+            registro.getRegistroDetalle().setCodigoAsunto(null);
+        }
+
+        // No han especificadoTransporte
+        if( registro.getRegistroDetalle().getTransporte() == -1){
+            registro.getRegistroDetalle().setTransporte(null);
+        }
+
+        // Organimo Interesado
+
+
+
+        return registro;
+    }*/
   
   
 }

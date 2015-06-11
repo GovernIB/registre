@@ -50,150 +50,151 @@
                 </h3>
             </div>
 
-            <form:form modelAttribute="registroSalidaBusqueda" method="post" cssClass="form-horizontal">
+            <c:url value="/registroSalida/busqueda" var="urlBusqueda"/>
+            <form:form modelAttribute="registroSalidaBusqueda" action="${urlBusqueda}" method="post" cssClass="form-horizontal">
             <form:hidden path="pageNumber"/>
 
-            <div class="panel-body">
-            
-            <div class="row">
-            
-                <div class="form-group col-xs-6">
-                    <div class="col-xs-4"><span class="text-danger">*</span> <spring:message code="registroSalida.libro"/></div>
-                    <div class="col-xs-8">
-                        <form:select path="registroSalida.libro.id" items="${librosConsulta}" itemLabel="nombreCompleto" itemValue="id" cssClass="chosen-select"/>
-                    </div>
-                </div>
-                <div class="form-group col-xs-6">
-                    <div class="col-xs-4 "><spring:message code="registroSalida.estado"/></div>
-                    <div class="col-xs-8">
-                        <form:select path="registroSalida.estado" cssClass="chosen-select">
-                            <form:option value="" label="..."/>
-                            <c:forEach var="estado" items="${estados}">
-                                <form:option value="${estado}"><spring:message code="registro.estado.${estado}"/></form:option>
-                            </c:forEach>
-                        </form:select>
-                        
-                         <form:errors path="registroSalida.estado" cssClass="help-block" element="span"/>
-                    </div>
-                </div>
-                
-			</div>
-			<div class="row">                
+                <div class="panel-body">
 
-                <div class="form-group col-xs-6">
-                    <div class="col-xs-4 "><spring:message code="registroSalida.numeroRegistro"/></div>
-                    <div class="col-xs-8">
-                        <form:input path="registroSalida.numeroRegistroFormateado" cssClass="form-control"/> <form:errors path="registroSalida.numeroRegistroFormateado" cssClass="help-block" element="span"/>
-                    </div>
-                </div>
-                <div class="form-group col-xs-6">
-                    <div class="col-xs-4 "><spring:message code="registroSalida.extracto"/></div>
-                    <div class="col-xs-8">
-                        <form:input path="registroSalida.registroDetalle.extracto" cssClass="form-control" maxlength="200"/> <form:errors path="registroSalida.registroDetalle.extracto" cssClass="help-block" element="span"/>
-                    </div>
-                </div>
-                
-			</div>
-			<div class="row">                
-                
-                <div class="form-group col-xs-6">
-                    <div class="col-xs-4"><span class="text-danger">*</span> <spring:message code="informe.fechaInicio"/></div>
-                    <div class="col-xs-8" id="fechaInicio">
-                        <div class="input-group date no-pad-right">
-                            <form:input path="fechaInicio" type="text" cssClass="form-control"  maxlength="10" placeholder="dd/mm/yyyy" name="fechaInicio"/>
-                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                <div class="row">
+
+                    <div class="form-group col-xs-6">
+                        <div class="col-xs-4"><span class="text-danger">*</span> <spring:message code="registroSalida.libro"/></div>
+                        <div class="col-xs-8">
+                            <form:select path="registroSalida.libro.id" items="${librosConsulta}" itemLabel="nombreCompleto" itemValue="id" cssClass="chosen-select"/>
                         </div>
-                        <form:errors path="fechaInicio" cssClass="help-block" element="span"/>
-
                     </div>
-                </div>
-                <div class="form-group col-xs-6">
-                    <div class="col-xs-4"><span class="text-danger">*</span> <spring:message code="informe.fechaFin"/></div>
-                    <div class="col-xs-8" id="fechaFin">
-                        <div class="input-group date no-pad-right">
-                            <form:input type="text" cssClass="form-control" path="fechaFin" maxlength="10" placeholder="dd/mm/yyyy" name="fechaFin"/>
-                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                    <div class="form-group col-xs-6">
+                        <div class="col-xs-4 "><spring:message code="registroSalida.estado"/></div>
+                        <div class="col-xs-8">
+                            <form:select path="registroSalida.estado" cssClass="chosen-select">
+                                <%--<form:option value="" label="..."/>--%>
+                                <c:forEach var="estado" items="${estados}">
+                                    <form:option value="${estado}"><spring:message code="registro.estado.${estado}"/></form:option>
+                                </c:forEach>
+                            </form:select>
+
+                             <form:errors path="registroSalida.estado" cssClass="help-block" element="span"/>
                         </div>
-                        <form:errors path="fechaFin" cssClass="help-block" element="span"/>
-
                     </div>
-                </div>
-                
-			</div>
 
-            <div class="row">
-               
-               <div class="form-group col-xs-6">
-                   <div class="col-xs-4 "><spring:message code="registroEntrada.nombreInteresado"/></div>
-                   <div class="col-xs-8">
-                       <form:input  path="interessatNom" cssClass="form-control" maxlength="255"/> 
-                       <form:errors path="interessatNom" cssClass="help-block" element="span"/>
+                </div>
+                <div class="row">
+
+                    <div class="form-group col-xs-6">
+                        <div class="col-xs-4 "><spring:message code="registroSalida.numeroRegistro"/></div>
+                        <div class="col-xs-8">
+                            <form:input path="registroSalida.numeroRegistroFormateado" cssClass="form-control"/> <form:errors path="registroSalida.numeroRegistroFormateado" cssClass="help-block" element="span"/>
+                        </div>
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <div class="col-xs-4 "><spring:message code="registroSalida.extracto"/></div>
+                        <div class="col-xs-8">
+                            <form:input path="registroSalida.registroDetalle.extracto" cssClass="form-control" maxlength="200"/> <form:errors path="registroSalida.registroDetalle.extracto" cssClass="help-block" element="span"/>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+
+                    <div class="form-group col-xs-6">
+                        <div class="col-xs-4"><span class="text-danger">*</span> <spring:message code="informe.fechaInicio"/></div>
+                        <div class="col-xs-8" id="fechaInicio">
+                            <div class="input-group date no-pad-right">
+                                <form:input path="fechaInicio" type="text" cssClass="form-control"  maxlength="10" placeholder="dd/mm/yyyy" name="fechaInicio"/>
+                                <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                            </div>
+                            <form:errors path="fechaInicio" cssClass="help-block" element="span"/>
+
+                        </div>
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <div class="col-xs-4"><span class="text-danger">*</span> <spring:message code="informe.fechaFin"/></div>
+                        <div class="col-xs-8" id="fechaFin">
+                            <div class="input-group date no-pad-right">
+                                <form:input type="text" cssClass="form-control" path="fechaFin" maxlength="10" placeholder="dd/mm/yyyy" name="fechaFin"/>
+                                <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                            </div>
+                            <form:errors path="fechaFin" cssClass="help-block" element="span"/>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                   <div class="form-group col-xs-6">
+                       <div class="col-xs-4 "><spring:message code="registroEntrada.nombreInteresado"/></div>
+                       <div class="col-xs-8">
+                           <form:input  path="interessatNom" cssClass="form-control" maxlength="255"/>
+                           <form:errors path="interessatNom" cssClass="help-block" element="span"/>
+                       </div>
                    </div>
-               </div>
-               <div class="form-group col-xs-6">
-                   <div class="col-xs-4 "><spring:message code="registroEntrada.docInteresado"/></div>
-                   <div class="col-xs-8">
-                       <form:input  path="interessatDoc" cssClass="form-control" maxlength="17"/>
-                       <form:errors path="interessatDoc" cssClass="help-block" element="span"/>
+                   <div class="form-group col-xs-6">
+                       <div class="col-xs-4 "><spring:message code="registroEntrada.docInteresado"/></div>
+                       <div class="col-xs-8">
+                           <form:input  path="interessatDoc" cssClass="form-control" maxlength="17"/>
+                           <form:errors path="interessatDoc" cssClass="help-block" element="span"/>
+                       </div>
                    </div>
-               </div>
 
-			</div>
-
-			<div class="row">
-
-
-
-                <div class="form-group col-xs-6">
-                    <div class="col-xs-4 "><spring:message code="registro.oficinaRegistro"/></div>
-                    <div class="col-xs-8">
-                        <form:select path="registroSalida.oficina.id" cssClass="chosen-select">
-                            <form:option value="" label="..."/>
-                            <c:forEach var="oficinaRegistro" items="${oficinasRegistro}">
-                                <form:option value="${oficinaRegistro.id}">${oficinaRegistro.denominacion}</form:option>
-                            </c:forEach>
-                        </form:select>
-                    </div>
                 </div>
 
-                <div class="form-group col-xs-6">
-                    <div class="col-xs-4"><spring:message code="registroEntrada.organOrigen"/></div>
-                    <div class="col-xs-6">
-                        <form:select path="organOrigen" cssClass="chosen-select">
-                               <form:option value="" label="..."/>
-                            <c:forEach items="${organosOrigen}" var="organismo">
-                            <option value="${organismo.codigo}" <c:if test="${registroSalidaBusqueda.organOrigen == organismo.codigo}">selected="selected"</c:if>>${organismo.denominacion}</option>
-                            </c:forEach>
-                        </form:select>
-                        <form:errors path="organOrigen" cssClass="help-block" element="span"/>
-                        <form:hidden path="organOrigenNom"/>
+                <div class="row">
+
+
+
+                    <div class="form-group col-xs-6">
+                        <div class="col-xs-4 "><spring:message code="registro.oficinaRegistro"/></div>
+                        <div class="col-xs-8">
+                            <form:select path="registroSalida.oficina.id" cssClass="chosen-select">
+                                <form:option value="" label="..."/>
+                                <c:forEach var="oficinaRegistro" items="${oficinasRegistro}">
+                                    <form:option value="${oficinaRegistro.id}">${oficinaRegistro.denominacion}</form:option>
+                                </c:forEach>
+                            </form:select>
+                        </div>
                     </div>
-                    <div class="col-xs-2 boto-panel">
-                       <a data-toggle="modal" role="button" href="#modalBuscadorlistaRegSalida" onclick="inicializarBuscador('#codNivelAdministracionlistaRegSalida','#codComunidadAutonomalistaRegSalida','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}', 'listaRegSalida');" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
+
+                    <div class="form-group col-xs-6">
+                        <div class="col-xs-4"><spring:message code="registroEntrada.organOrigen"/></div>
+                        <div class="col-xs-6">
+                            <form:select path="organOrigen" cssClass="chosen-select">
+                                   <form:option value="" label="..."/>
+                                <c:forEach items="${organosOrigen}" var="organismo">
+                                <option value="${organismo.codigo}" <c:if test="${registroSalidaBusqueda.organOrigen == organismo.codigo}">selected="selected"</c:if>>${organismo.denominacion}</option>
+                                </c:forEach>
+                            </form:select>
+                            <form:errors path="organOrigen" cssClass="help-block" element="span"/>
+                            <form:hidden path="organOrigenNom"/>
+                        </div>
+                        <div class="col-xs-2 boto-panel">
+                           <a data-toggle="modal" role="button" href="#modalBuscadorlistaRegSalida" onclick="inicializarBuscador('#codNivelAdministracionlistaRegSalida','#codComunidadAutonomalistaRegSalida','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}', 'listaRegSalida');" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
+                        </div>
                     </div>
+
                 </div>
 
-			</div>			
-			
-			<div class="row" style="display:none;">                
-                
-                <div class="form-group col-xs-6">
-                    <div class="col-xs-4 "><spring:message code="registroEntrada.anexos"/></div>
-                    <div class="col-xs-8">
-                        <form:checkbox path="anexos"/>
+                <div class="row" style="display:none;">
+
+                    <div class="form-group col-xs-6">
+                        <div class="col-xs-4 "><spring:message code="registroEntrada.anexos"/></div>
+                        <div class="col-xs-8">
+                            <form:checkbox path="anexos"/>
+                        </div>
                     </div>
+
+                    <div class="form-group col-xs-6"><div class="col-xs-12">&nbsp;</div></div>
+
                 </div>
+                <div class="row">
 
-				<div class="form-group col-xs-6"><div class="col-xs-12">&nbsp;</div></div>
+                    <div class="form-group col-xs-12">
+                        <button type="submit" class="btn btn-warning btn-sm" style="margin-left: 15px;"><spring:message code="regweb.buscar"/></button>
+                    </div>
 
-			</div>
-			<div class="row">
-
-                <div class="form-group col-xs-12">
-                    <button type="submit" class="btn btn-warning btn-sm" style="margin-left: 15px;"><spring:message code="regweb.buscar"/></button>
                 </div>
-                
-            </div>
                 
 			</form:form>
 

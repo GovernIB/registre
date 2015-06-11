@@ -50,7 +50,8 @@
                         </h3>
                     </div>
 
-                    <form:form modelAttribute="registroEntradaBusqueda" method="post" cssClass="form-horizontal">
+                    <c:url value="/registroEntrada/busqueda" var="urlBusqueda"/>
+                    <form:form modelAttribute="registroEntradaBusqueda" action="${urlBusqueda}" method="get" cssClass="form-horizontal">
                         <form:hidden path="pageNumber"/>
 
                         <div class="panel-body">
@@ -67,7 +68,7 @@
                                 <div class="col-xs-4 "><spring:message code="registroEntrada.estado"/></div>
                                 <div class="col-xs-8">
                                     <form:select path="registroEntrada.estado" cssClass="chosen-select">
-                                        <form:option value="" label="..."/>
+                                        <%--<form:option value="" label="..."/>--%>
                                         <c:forEach var="estado" items="${estados}">
                                             <form:option value="${estado}"><spring:message code="registro.estado.${estado}"/></form:option>
                                         </c:forEach>

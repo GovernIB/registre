@@ -1,19 +1,11 @@
 package es.caib.regweb.ws.v3.test;
 
+import es.caib.regweb.utils.RegwebConstantes;
+import es.caib.regweb.ws.api.v3.*;
+import es.caib.regweb.ws.api.v3.utils.WsClientUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import es.caib.regweb.utils.RegwebConstantes;
-import es.caib.regweb.ws.api.v3.AnexoWs;
-import es.caib.regweb.ws.api.v3.DatosInteresadoWs;
-import es.caib.regweb.ws.api.v3.IdentificadorWs;
-import es.caib.regweb.ws.api.v3.InteresadoWs;
-import es.caib.regweb.ws.api.v3.RegWebRegistroEntradaWs;
-import es.caib.regweb.ws.api.v3.RegistroEntradaWs;
-import es.caib.regweb.ws.api.v3.WsI18NException;
-import es.caib.regweb.ws.api.v3.WsValidationException;
-import es.caib.regweb.ws.api.v3.utils.WsClientUtils;
 
 
 /**
@@ -34,7 +26,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils  {
     registroEntradaApi = getRegistroEntradaApi();
   }
 
-  @Test
+  //@Test
   public void testVersio() throws Exception {
     String version = registroEntradaApi.getVersion();
     if (version.indexOf('-') != -1) {
@@ -44,7 +36,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils  {
     }
   }
 
-  @Test
+  //@Test
   public void testVersioWs() throws Exception {
     Assert.assertEquals(3, registroEntradaApi.getVersionWs());
   }
@@ -113,6 +105,8 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils  {
   public void crearRegistroEntrada() throws Exception {
 
     
+    for(int i=0;i<15;i++){
+
 
       RegistroEntradaWs registroEntradaWs = new RegistroEntradaWs();
 
@@ -168,7 +162,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils  {
 
       registroEntradaWs.getInteresados().add(interesadoWs2);
 
-      registroEntradaWs.getAnexos().addAll(getAnexos());
+      //registroEntradaWs.getAnexos().addAll(getAnexos());
 
       try {
         IdentificadorWs identificadorWs = registroEntradaApi
@@ -184,7 +178,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils  {
         System.out.println("Error WsValidationException: " + msg);
         throw e;
       }
-
+    }
   }
 
   // @Test

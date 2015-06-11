@@ -254,14 +254,8 @@ public class UsuarioService {
         List<Libro> librosRegistro = permisoLibroUsuarioEjb.getLibrosRegistro(usuarioEntidad.getId());
         log.info("Libros usuario: " + Arrays.toString(librosRegistro.toArray()));
 
-        Set<ObjetoBasico> oficinasRegistro = new HashSet<ObjetoBasico>();  // Utilizamos un Set porque no permite duplicados
-
-        // Recorremos los Libros y a partir del Organismo al que pertenecen, obtenemos las Oficinas que pueden Registrar en el.
-        for (Libro libro : librosRegistro) {
-            Long idOrganismo = libro.getOrganismo().getId();
-            oficinasRegistro.addAll(oficinaEjb.findByOrganismoResponsableVO(idOrganismo));
-            oficinasRegistro.addAll(relacionOrganizativaOfiLocalEjb.getOficinasByOrganismoVO(idOrganismo));
-        }
+        // Obtenemos las Oficinas que pueden registrar en los Libros
+        Set<ObjetoBasico> oficinasRegistro = oficinaEjb.oficinasRegistro(librosRegistro);  // Utilizamos un Set porque no permite duplicados
 
         log.info("Oficinas registro usuario: " + Arrays.toString(oficinasRegistro.toArray()));
         session.setAttribute(RegwebConstantes.SESSION_OFICINAS,oficinasRegistro);
