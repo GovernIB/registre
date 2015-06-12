@@ -59,7 +59,7 @@ function mostrarMensaje(idPanel, mensaje){
  * @param librosOrganismos  conjunto de relaciones de libro-organismo del organismo a procesar
  */
  function mostrarProcesado(organismoAProcesarId, organismoAProcesarNombre, librosOrganismos, idioma){
-  // TODO BORRAR SI NO SE EMPLEA.
+  // TODO BORRAR PARECE QUE NO SE EMPLEA
  /* var trad = {
         ca: {orgext: "Organisme Extingit:", llibre: "Llibre", orgasi: "Organisme Assignat"},
         es: {orgext: "Organismo Extinguido:", llibre: "Libro", orgasi: "Organismo Asignado"}
