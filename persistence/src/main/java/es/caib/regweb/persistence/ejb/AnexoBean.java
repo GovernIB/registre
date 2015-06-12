@@ -470,7 +470,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             I18NLogicUtils.tradueix(loc,"tipoDocumento." + anexo.getTipoDocumento())));
       }
 
-      if (registro.getOficina() != null) {
+      if (registro.getOficina() != null && registro.getOficina().getNombreCompleto() != null) {
         metadades.add(new Metadata("oficina",
             registro.getOficina().getNombreCompleto()));
       }
@@ -496,20 +496,16 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         metadades.add(new Metadata("anexo.formato", mime));
       }
 
-      if (anexo.getTipoDocumental() != null) {
+      if (anexo.getTipoDocumental() != null && 
+          anexo.getTipoDocumental().getCodigoNTI() != null) {
         metadades.add(new Metadata("anexo.tipoDocumental", anexo.getTipoDocumental().getCodigoNTI()));
       }
       if (anexo.getObservaciones() != null) {
         metadades.add(new Metadata("anexo.observaciones", anexo.getObservaciones()));
       }
-      
-      for (Metadata metadata : metadades) {
-        if (metadata.getValue() != null) {
-          custody.deleteMetadata(custodyID, metadata.getKey());
-          custody.addMetadata(custodyID, metadata);
-        }
-      }
-      
+
+      custody.updateMetadata(custodyID, metadades.toArray(new Metadata[metadades.size()]));
+
     }
 
     
