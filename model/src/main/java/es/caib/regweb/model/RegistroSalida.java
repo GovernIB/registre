@@ -52,7 +52,6 @@ public class RegistroSalida implements IRegistro {
      */
     public RegistroSalida() {
       super();
-      // TODO Auto-generated constructor stub
     }
 
     /**
