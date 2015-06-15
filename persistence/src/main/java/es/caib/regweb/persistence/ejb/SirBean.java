@@ -1,7 +1,7 @@
 package es.caib.regweb.persistence.ejb;
 
 import es.caib.regweb.model.*;
-import es.caib.regweb.persistence.utils.AnnexFileSystemManager;
+import es.caib.regweb.persistence.utils.AnnexDocumentCustodyManager;
 import es.caib.regweb.persistence.utils.Dir3CaibUtils;
 import es.caib.regweb.persistence.utils.Respuesta;
 import es.caib.regweb.persistence.utils.sir.FicheroIntercambioSICRES3;
@@ -378,14 +378,14 @@ public class SirBean implements SirLocal {
                 }
                 
                 byte[] data = null;
-                AnnexCustody file = AnnexFileSystemManager.getInstance().getDocumentInfoOnly(custodyID);
+                AnnexCustody file = AnnexDocumentCustodyManager.getInstance().getDocumentInfoOnly(custodyID);
                 if (file == null) {
-                  file = AnnexFileSystemManager.getInstance().getSignatureInfoOnly(custodyID);
+                  file = AnnexDocumentCustodyManager.getInstance().getSignatureInfoOnly(custodyID);
                   if (file != null) {
-                    data = AnnexFileSystemManager.getInstance().getSignature(custodyID);
+                    data = AnnexDocumentCustodyManager.getInstance().getSignature(custodyID);
                   }
                 } else {
-                  data = AnnexFileSystemManager.getInstance().getDocument(custodyID);
+                  data = AnnexDocumentCustodyManager.getInstance().getDocument(custodyID);
                 }
                 
                 if (file == null) {

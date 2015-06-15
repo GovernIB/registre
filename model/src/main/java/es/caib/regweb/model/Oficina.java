@@ -5,6 +5,7 @@ import org.hibernate.annotations.Index;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -42,6 +43,35 @@ public class Oficina implements Serializable{
     private Oficina oficinaResponsable;
     @XmlTransient
   	private Set<RelacionOrganizativaOfi> organizativasOfi;
+
+    /**
+     * 
+     */
+    public Oficina() {
+      super();
+    }
+
+
+    /**
+     * @param id
+     * @param codigo
+     * @param estado
+     * @param denominacion
+     * @param organismoResponsable
+     * @param oficinaResponsable
+     * @param organizativasOfi
+     */
+    public Oficina(Oficina o) {
+      super();
+      this.id = o.id;
+      this.codigo = o.codigo;
+      this.estado = o.estado;
+      this.denominacion = o.denominacion;
+      this.organismoResponsable = o.organismoResponsable;
+      this.oficinaResponsable = o.oficinaResponsable;
+      this.organizativasOfi = o.organizativasOfi;
+    }
+
 
 
     @Id

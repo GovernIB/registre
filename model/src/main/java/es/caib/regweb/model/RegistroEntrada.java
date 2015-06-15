@@ -4,6 +4,7 @@ import org.hibernate.annotations.ForeignKey;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
+
 import java.util.Date;
 
 /**
@@ -44,7 +45,45 @@ public class RegistroEntrada implements IRegistro {
     @XmlElement
     private RegistroDetalle registroDetalle;
 
+    
 
+
+    /**
+     * 
+     */
+    public RegistroEntrada() {
+      super();
+    }
+
+    /**
+     * @param id
+     * @param usuario
+     * @param oficina
+     * @param destino
+     * @param destinoExternoCodigo
+     * @param destinoExternoDenominacion
+     * @param fecha
+     * @param libro
+     * @param numeroRegistro
+     * @param numeroRegistroFormateado
+     * @param estado
+     * @param registroDetalle
+     */
+    public RegistroEntrada(RegistroEntrada re) {
+      
+      this.id = re.id;
+      this.usuario = re.usuario;
+      this.oficina = re.oficina;
+      this.destino = re.destino;
+      this.destinoExternoCodigo = re.destinoExternoCodigo;
+      this.destinoExternoDenominacion = re.destinoExternoDenominacion;
+      this.fecha = re.fecha;
+      this.libro = re.libro;
+      this.numeroRegistro = re.numeroRegistro;
+      this.numeroRegistroFormateado = re.numeroRegistroFormateado;
+      this.estado = re.estado;
+      this.registroDetalle = re.registroDetalle == null? null : new RegistroDetalle(re.registroDetalle);
+    }
 
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")

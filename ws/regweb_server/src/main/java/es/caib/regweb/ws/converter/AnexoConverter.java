@@ -6,7 +6,7 @@ import es.caib.regweb.model.Anexo;
 import es.caib.regweb.model.TipoDocumental;
 import es.caib.regweb.persistence.ejb.TipoDocumentalLocal;
 import es.caib.regweb.persistence.utils.AnexoFull;
-import es.caib.regweb.persistence.utils.AnnexFileSystemManager;
+import es.caib.regweb.persistence.utils.AnnexDocumentCustodyManager;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.utils.StringUtils;
 import es.caib.regweb.ws.model.AnexoWs;
@@ -221,7 +221,7 @@ public class AnexoConverter extends CommonConverter {
            SignatureCustody sign = anexoFull.getSignatureCustody();
            anexoWs.setNombreFirmaAnexada(sign.getName());
            anexoWs.setTipoMIMEFirmaAnexada(sign.getMime());
-           anexoWs.setFirmaAnexada(AnnexFileSystemManager.getInstance().getSignature(custodyID));
+           anexoWs.setFirmaAnexada(AnnexDocumentCustodyManager.getInstance().getSignature(custodyID));
          }
          
          
@@ -231,7 +231,7 @@ public class AnexoConverter extends CommonConverter {
             DocumentCustody doc = anexoFull.getDocumentoCustody();
             anexoWs.setNombreFicheroAnexado(doc.getName());
             anexoWs.setTipoMIMEFicheroAnexado(doc.getMime());
-            anexoWs.setFicheroAnexado(AnnexFileSystemManager.getInstance().getDocument(custodyID));
+            anexoWs.setFicheroAnexado(AnnexDocumentCustodyManager.getInstance().getDocument(custodyID));
          }
        }
        

@@ -6,6 +6,7 @@ import org.hibernate.annotations.Index;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
+
 import java.io.Serializable;
 
 
@@ -35,13 +36,27 @@ public class CatProvincia implements Serializable {
     private String descripcionProvincia;
 
     public CatProvincia(){
-
     }
+
     public CatProvincia(String id){
         this.id= Long.valueOf(id);
     }
 
-
+    
+    
+  /**
+     * @param id
+     * @param codigoProvincia
+     * @param comunidadAutonoma
+     * @param descripcionProvincia
+     */
+    public CatProvincia(CatProvincia cp) {
+      super();
+      this.id = cp.id;
+      this.codigoProvincia = cp.codigoProvincia;
+      this.comunidadAutonoma = cp.comunidadAutonoma;
+      this.descripcionProvincia = cp.descripcionProvincia;
+    }
 
   @Column(name = "ID")
   @Id

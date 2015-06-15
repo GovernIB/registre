@@ -4,6 +4,7 @@ import org.hibernate.annotations.ForeignKey;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
+
 import java.util.Date;
 
 /**
@@ -45,6 +46,44 @@ public class RegistroSalida implements IRegistro {
     private RegistroDetalle registroDetalle;
 
 
+
+    /**
+     * 
+     */
+    public RegistroSalida() {
+      super();
+      // TODO Auto-generated constructor stub
+    }
+
+    /**
+     * @param id
+     * @param usuario
+     * @param oficina
+     * @param origen
+     * @param origenExternoCodigo
+     * @param origenExternoDenominacion
+     * @param fecha
+     * @param libro
+     * @param numeroRegistro
+     * @param numeroRegistroFormateado
+     * @param estado
+     * @param registroDetalle
+     */
+    public RegistroSalida(RegistroSalida rs) {
+      super();
+      this.id = rs.id;
+      this.usuario = rs.usuario;
+      this.oficina = rs.oficina;
+      this.origen = rs.origen;
+      this.origenExternoCodigo = rs.origenExternoCodigo;
+      this.origenExternoDenominacion = rs.origenExternoDenominacion;
+      this.fecha = rs.fecha;
+      this.libro = rs.libro;
+      this.numeroRegistro = rs.numeroRegistro;
+      this.numeroRegistroFormateado = rs.numeroRegistroFormateado;
+      this.estado = rs.estado;
+      this.registroDetalle =  rs.registroDetalle == null? null : new RegistroDetalle(rs.registroDetalle);
+    }
 
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")

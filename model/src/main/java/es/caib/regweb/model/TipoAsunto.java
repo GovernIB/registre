@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.*;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +46,26 @@ public class TipoAsunto extends Traducible {
 
     public TipoAsunto(String id) {
         this.id = Long.valueOf(id);
+    }
+    
+    
+    
+
+    /**
+     * @param id
+     * @param entidad
+     * @param codigo
+     * @param codigosAsunto
+     * @param activo
+     */
+    public TipoAsunto(TipoAsunto ta) {
+      super();
+      this.id = ta.id;
+      this.entidad = ta.entidad;
+      this.codigo = ta.codigo;
+      // this.codigosAsunto = ta.codigosAsunto;
+      this.activo = ta.activo;
+      this.traducciones = new HashMap<String, Traduccion>(ta.getTraducciones());
     }
 
     @Id

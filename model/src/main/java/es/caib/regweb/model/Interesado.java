@@ -1,6 +1,7 @@
 package es.caib.regweb.model;
 
 import es.caib.regweb.utils.RegwebConstantes;
+
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.ForeignKey;
 import org.hibernate.annotations.Index;
@@ -8,7 +9,10 @@ import org.hibernate.annotations.Index;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.*;
+
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Fundació BIT.
@@ -28,7 +32,7 @@ import java.io.Serializable;
 @SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 @XmlRootElement(name = "interesado")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Interesado implements Serializable{
+public class Interesado implements Serializable {
 
     @XmlAttribute
     private Long id;
@@ -82,8 +86,10 @@ public class Interesado implements Serializable{
     private boolean guardarInteresado;
     @XmlTransient
     private Long entidad;
-
-    public Interesado() {}
+    
+    
+    public Interesado() {
+    }
 
     public Interesado(Long id) {
         this.id = id;
@@ -129,13 +135,62 @@ public class Interesado implements Serializable{
         this.observaciones = persona.getObservaciones();
     }
 
-
     public Interesado(String codigoDir3,String organismo){
         this.tipo = RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION;
         this.nombre = organismo;
         this.codigoDir3 = codigoDir3;
     }
+    
+    
+    
 
+    /**
+     * @param i
+     */
+    public Interesado(Interesado i) {
+      super();
+      this.id = i.id;
+      this.tipo = i.tipo;
+      this.nombre = i.nombre;
+      this.apellido1 = i.apellido1;
+      this.apellido2 = i.apellido2;
+      this.razonSocial = i.razonSocial;
+      this.codigoDir3 = i.codigoDir3;
+      this.tipoDocumentoIdentificacion = i.tipoDocumentoIdentificacion;
+      this.documento = i.documento;
+      this.pais = i.pais == null? null : new CatPais(i.pais);
+      this.provincia = i.provincia == null? null : new CatProvincia(i.provincia);
+      this.localidad = i.localidad == null? null : new CatLocalidad(i.localidad);
+      this.direccion = i.direccion;
+      this.cp = i.cp;
+      this.email = i.email;
+      this.telefono = i.telefono;
+      this.direccionElectronica = i.direccionElectronica;
+      this.canal = i.canal;
+      this.representado = i.representado == null? null : new Interesado(i.representado);
+      this.representante = i.representante == null? null : new Interesado(i.representante);
+      this.isRepresentante = i.isRepresentante;
+      this.observaciones = i.observaciones;
+      //this.registroDetalle = i.registroDetalle;
+      this.guardarInteresado = i.guardarInteresado;
+      this.entidad = i.entidad;
+    }
+
+    
+    public static List<Interesado> clone(List<Interesado> list) {
+      if (list == null) {
+        return null;
+      }
+      
+      List<Interesado> clone = new ArrayList<Interesado>(list.size());
+      for (Interesado interesado : list) {
+        clone.add(interesado == null ? null : new Interesado(interesado));
+      }
+      
+      return clone;
+    }
+    
+    
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
     @Column(name="ID")

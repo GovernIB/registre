@@ -1,5 +1,6 @@
 package es.caib.regweb.model;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.*;
 
@@ -8,6 +9,8 @@ import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.*;
+
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -46,6 +49,23 @@ public class CodigoAsunto extends Traducible {
     public CodigoAsunto(String id) {
         this.id = Long.valueOf(id);
     }
+    
+    
+
+    /**
+     * @param id
+     * @param tipoAsunto
+     * @param codigo
+     */
+    public CodigoAsunto(CodigoAsunto ta) {
+
+      this.id = ta.id;
+      this.tipoAsunto = (ta.tipoAsunto == null) ? null : new TipoAsunto(ta.tipoAsunto);
+      this.codigo = ta.codigo;
+      this.traducciones = new HashMap<String, Traduccion>(ta.getTraducciones());
+    }
+
+
 
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")

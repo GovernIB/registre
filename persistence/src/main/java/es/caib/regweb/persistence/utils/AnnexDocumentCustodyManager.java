@@ -16,11 +16,11 @@ import es.caib.regweb.utils.RegwebConstantes;
  * Date: 31/07/13
  */
 // TODO  Moure a EJB i ficar-ho dins del bean AnexoBean !!! 
-public class AnnexFileSystemManager {
+public class AnnexDocumentCustodyManager {
 
 
 
-    protected static final Logger log = Logger.getLogger(AnnexFileSystemManager.class);
+    protected static final Logger log = Logger.getLogger(AnnexDocumentCustodyManager.class);
     
     
     protected static IDocumentCustodyPlugin plugin;

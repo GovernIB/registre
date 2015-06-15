@@ -7,6 +7,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
@@ -66,7 +67,53 @@ public class Entidad implements Serializable {
     private Boolean activo = true;
     @XmlTransient
     private String tipoScan;
+    
+    
+    
    
+    /**
+     * 
+     */
+    public Entidad() {
+      super();
+    }
+    
+    
+    
+
+
+
+    /**
+     * @param e
+     */
+    public Entidad(Entidad e) {
+      super();
+      this.id = e.id;
+      this.nombre = e.nombre;
+      this.descripcion = e.descripcion;
+      this.codigoDir3 = e.codigoDir3;
+      this.sello = e.sello;
+      this.propietario = e.propietario;
+      this.administradores = e.administradores;
+      this.organismos = e.organismos;
+      this.numRegistro = e.numRegistro;
+      this.configuracionPersona = e.configuracionPersona;
+      this.colorMenu = e.colorMenu;
+      this.textoPie = e.textoPie;
+      this.logoMenu = e.logoMenu;
+      this.logoPie = e.logoPie;
+      this.logoSello = e.logoSello;
+      this.diasVisado = e.diasVisado;
+      this.sir = e.sir;
+      this.activo = e.activo;
+      this.tipoScan = e.tipoScan;
+    }
+
+
+
+
+
+
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
     @Column(name="ID")

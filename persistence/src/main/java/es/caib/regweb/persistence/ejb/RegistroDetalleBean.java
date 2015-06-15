@@ -2,7 +2,7 @@ package es.caib.regweb.persistence.ejb;
 
 import es.caib.regweb.model.Anexo;
 import es.caib.regweb.model.RegistroDetalle;
-import es.caib.regweb.persistence.utils.AnnexFileSystemManager;
+import es.caib.regweb.persistence.utils.AnnexDocumentCustodyManager;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -71,7 +71,7 @@ public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> imple
 
             //Elimina los anexos
             for(Anexo anexo: registroDetalle.getAnexos()){
-                AnnexFileSystemManager.eliminarCustodia(anexo.getCustodiaID());
+                AnnexDocumentCustodyManager.eliminarCustodia(anexo.getCustodiaID());
             }
             remove(findById((Long) id));
         }

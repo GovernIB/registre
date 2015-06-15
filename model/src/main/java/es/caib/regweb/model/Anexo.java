@@ -5,8 +5,12 @@ import org.hibernate.annotations.ForeignKey;
 import org.hibernate.annotations.Index;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlTransient;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created 27/05/14 12:59
@@ -31,6 +35,8 @@ public class Anexo implements Serializable {
     private TipoDocumental tipoDocumental; // reso, acord, factura, ..
     private Long validezDocumento;
     private Long tipoDocumento;
+
+    @XmlTransient
     private RegistroDetalle registroDetalle;
     private String observaciones;
     private Integer origenCiudadanoAdmin;
@@ -45,6 +51,56 @@ public class Anexo implements Serializable {
     
     public Anexo() {
     }
+    
+    
+    
+
+    /**
+     * @param id
+     * @param titulo
+     * @param tipoDocumental
+     * @param validezDocumento
+     * @param tipoDocumento
+     * @param registroDetalle
+     * @param observaciones
+     * @param origenCiudadanoAdmin
+     * @param fechaCaptura
+     * @param modoFirma
+     * @param custodiaID
+     * @param csv
+     * @param firmacsv
+     */
+    public Anexo(Anexo a) {
+      super();
+      this.id = a.id;
+      this.titulo = a.titulo;
+      this.tipoDocumental = a.tipoDocumental == null? null: new TipoDocumental(a.tipoDocumental);
+      this.validezDocumento = a.validezDocumento;
+      this.tipoDocumento = a.tipoDocumento;
+      //this.registroDetalle = a.registroDetalle;
+      this.observaciones = a.observaciones;
+      this.origenCiudadanoAdmin = a.origenCiudadanoAdmin;
+      this.fechaCaptura = a.fechaCaptura;
+      this.modoFirma = a.modoFirma;
+      this.custodiaID = a.custodiaID;
+      this.csv = a.csv;
+      this.firmacsv = a.firmacsv;
+    }
+
+    public static List<Anexo> clone(List<Anexo> list) {
+      if (list == null) {
+        return null;
+      }
+      
+      List<Anexo> clone = new ArrayList<Anexo>(list.size());
+      for (Anexo anexo : list) {
+        clone.add(anexo == null ? null : new Anexo(anexo));
+      }
+      
+      return clone;
+    }
+
+
 
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")

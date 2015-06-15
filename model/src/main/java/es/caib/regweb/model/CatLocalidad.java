@@ -6,6 +6,7 @@ import org.hibernate.annotations.Index;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
+
 import java.io.Serializable;
 
 
@@ -47,7 +48,25 @@ public class CatLocalidad implements Serializable {
     public CatLocalidad(String id){
         this.id= Long.valueOf(id);
     }
+    
+    
 
+
+  /**
+     * @param id
+     * @param codigoLocalidad
+     * @param provincia
+     * @param nombre
+     * @param entidadGeografica
+     */
+    public CatLocalidad(CatLocalidad cl) {
+      super();
+      this.id = cl.id;
+      this.codigoLocalidad = cl.codigoLocalidad;
+      this.provincia = cl.provincia == null ? null : new CatProvincia(cl.provincia);
+      this.nombre = cl.nombre;
+      this.entidadGeografica = cl.entidadGeografica;
+    }
 
   @Id
   @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")

@@ -2,6 +2,7 @@ package es.caib.regweb.model;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
+
 import java.io.Serializable;
 
 
@@ -27,14 +28,32 @@ public class CatPais implements Serializable {
     @XmlTransient
     private String alfa2Pais;
 
-	public CatPais(){
+  public CatPais() {
 
-	}
-    public CatPais(String id){
-        this.id= Long.valueOf(id);
-    }
+  }
 
-    @Column(name = "ID")
+  public CatPais(String id) {
+    this.id = Long.valueOf(id);
+  }
+  
+  
+
+  /**
+   * @param id
+   * @param codigoPais
+   * @param descripcionPais
+   * @param alfa3Pais
+   * @param alfa2Pais
+   */
+  public CatPais(CatPais cp) {
+    this.id = cp.id;
+    this.codigoPais = cp.codigoPais;
+    this.descripcionPais = cp.descripcionPais;
+    this.alfa3Pais = cp.alfa3Pais;
+    this.alfa2Pais = cp.alfa2Pais;
+  }
+
+  @Column(name = "ID")
   @Id
   @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
   public Long getId() {

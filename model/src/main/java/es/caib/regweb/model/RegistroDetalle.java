@@ -81,6 +81,62 @@ public class RegistroDetalle implements Serializable {
     public RegistroDetalle(Long id) {
         this.id = id;
     }
+    
+    
+    
+    
+    
+
+    /**
+     * @param id
+     * @param extracto
+     * @param tipoDocumentacionFisica
+     * @param tipoAsunto
+     * @param idioma
+     * @param codigoAsunto
+     * @param referenciaExterna
+     * @param expediente
+     * @param transporte
+     * @param numeroTransporte
+     * @param observaciones
+     * @param oficinaOrigen
+     * @param oficinaOrigenExternoCodigo
+     * @param oficinaOrigenExternoDenominacion
+     * @param numeroRegistroOrigen
+     * @param fechaOrigen
+     * @param expone
+     * @param solicita
+     * @param reserva
+     * @param interesados
+     * @param anexos
+     * @param aplicacion
+     * @param version
+     */
+    public RegistroDetalle(RegistroDetalle rd) {
+      this.id = rd.id;
+      this.extracto = rd.extracto;
+      this.tipoDocumentacionFisica = rd.tipoDocumentacionFisica;
+      this.tipoAsunto = rd.tipoAsunto == null? null : new TipoAsunto(rd.tipoAsunto);
+      this.idioma = rd.idioma;
+      this.codigoAsunto = rd.codigoAsunto == null? null : new CodigoAsunto(rd.codigoAsunto);
+      this.referenciaExterna = rd.referenciaExterna;
+      this.expediente = rd.expediente;
+      this.transporte = rd.transporte;
+      this.numeroTransporte = rd.numeroTransporte;
+      this.observaciones = rd.observaciones;
+      this.oficinaOrigen = rd.oficinaOrigen == null? null : new Oficina(rd.oficinaOrigen);
+      this.oficinaOrigenExternoCodigo = rd.oficinaOrigenExternoCodigo;
+      this.oficinaOrigenExternoDenominacion = rd.oficinaOrigenExternoDenominacion;
+      this.numeroRegistroOrigen = rd.numeroRegistroOrigen;
+      this.fechaOrigen = rd.fechaOrigen;
+      this.expone = rd.expone;
+      this.solicita = rd.solicita;
+      this.reserva = rd.reserva;
+      this.interesados = Interesado.clone(rd.interesados);
+      //this.anexos = rd.anexos;
+      this.aplicacion = rd.aplicacion;
+      this.version = rd.version;
+    }
 
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")

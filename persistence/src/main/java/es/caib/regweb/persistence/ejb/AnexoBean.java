@@ -3,12 +3,14 @@ package es.caib.regweb.persistence.ejb;
 import es.caib.regweb.model.Anexo;
 import es.caib.regweb.model.Entidad;
 import es.caib.regweb.model.IRegistro;
+import es.caib.regweb.model.Interesado;
 import es.caib.regweb.model.RegistroDetalle;
 import es.caib.regweb.model.RegistroEntrada;
 import es.caib.regweb.model.RegistroSalida;
+import es.caib.regweb.model.TraduccionTipoDocumental;
 import es.caib.regweb.model.UsuarioEntidad;
 import es.caib.regweb.persistence.utils.AnexoFull;
-import es.caib.regweb.persistence.utils.AnnexFileSystemManager;
+import es.caib.regweb.persistence.utils.AnnexDocumentCustodyManager;
 import es.caib.regweb.persistence.utils.I18NLogicUtils;
 import es.caib.regweb.persistence.utils.RegistroUtils;
 import es.caib.regweb.persistence.validator.AnexoBeanValidator;
@@ -26,6 +28,9 @@ import org.fundaciobit.plugins.documentcustody.IDocumentCustodyPlugin;
 import org.fundaciobit.plugins.documentcustody.SignatureCustody;
 import org.fundaciobit.plugins.utils.Metadata;
 import org.hibernate.Hibernate;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.AnnotationConfiguration;
+import org.hibernate.cfg.Configuration;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.annotation.Resource;
@@ -38,8 +43,11 @@ import javax.persistence.Query;
 import java.beans.Encoder;
 import java.beans.Expression;
 import java.beans.PersistenceDelegate;
+import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -81,13 +89,6 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     public HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
     
     
-    final class java_util_Date_PersistenceDelegate extends PersistenceDelegate {
-      protected Expression instantiate(Object oldInstance, Encoder out) {
-          Date date = (Date) oldInstance;
-          return new Expression(date, date.getClass(), "new", new Object[] {date.getTime()});
-      }
-  }
-    
     
     @Override
     public AnexoFull getAnexoFull(Long anexoID) throws I18NException {
@@ -99,7 +100,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         
         AnexoFull anexoFull = new AnexoFull(anexo);
 
-        IDocumentCustodyPlugin custody = AnnexFileSystemManager.getInstance();
+        IDocumentCustodyPlugin custody = AnnexDocumentCustodyManager.getInstance();
         
         anexoFull.setDocumentoCustody(custody.getDocumentInfoOnly(custodyID));
         
@@ -140,11 +141,11 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         
         anexo.setFechaCaptura(new Date());
 
-        custody = AnnexFileSystemManager.getInstance();
+        custody = AnnexDocumentCustodyManager.getInstance();
         
         IRegistro registro = getIRegistro(registroID, tipoRegistro, anexo, isNew);
         
-        final String custodyParameters = getCustodyParameters(registro);
+        final String custodyParameters = getCustodyParameters(registro, anexo);
         
         custodyID = custody.reserveCustodyID(custodyParameters);
         anexo.setCustodiaID(custodyID);
@@ -211,13 +212,13 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         
         anexo.setFechaCaptura(new Date());
         
-        IDocumentCustodyPlugin custody = AnnexFileSystemManager.getInstance();
+        IDocumentCustodyPlugin custody = AnnexDocumentCustodyManager.getInstance();
         
         
         IRegistro registro = getIRegistro(registroID, tipoRegistro, anexo, isNew);
         
         
-        final String custodyParameters = getCustodyParameters(registro);
+        final String custodyParameters = getCustodyParameters(registro, anexo);
         
         
         final String custodyID = anexo.getCustodiaID();
@@ -250,16 +251,27 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     protected IRegistro getIRegistro(Long registroID, String tipoRegistro, Anexo anexo, boolean isNou) throws Exception {
       IRegistro registro;
+      IRegistro cloneRegistro;
       if ("entrada".equals(tipoRegistro)) {
         registro = registroEntradaEjb.findById(registroID);
+        
       } else {
         registro = registroSalidaEjb.findById(registroID);
+        
       }
       
       Hibernate.initialize(registro.getRegistroDetalle().getTipoAsunto());
       Hibernate.initialize(registro.getRegistroDetalle().getInteresados());
+      
+      if ("entrada".equals(tipoRegistro)) {
+        cloneRegistro = new RegistroEntrada((RegistroEntrada)registro);
+      } else {
+        cloneRegistro = new RegistroSalida((RegistroSalida)registro);
+      }
+      
+
+      List<Anexo> anexos = Anexo.clone(registro.getRegistroDetalle().getAnexos());
       /*
-      List<Anexo> anexos = registro.getRegistroDetalle().getAnexos();
       if (isNou) {
         if (anexos == null) {
           anexos = new ArrayList<Anexo>();
@@ -275,12 +287,11 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         }
         anexos.add(anexo);
       }
-
-      org.hibernate.Session session = (org.hibernate.Session) em.getDelegate();
-      session.evict(registro);
       */
+      cloneRegistro.getRegistroDetalle().setAnexos(anexos);
 
-      return registro;
+
+      return cloneRegistro;
     }
     
     
@@ -475,12 +486,12 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             registro.getOficina().getNombreCompleto()));
       }
 
-      
+
       if ( anexo.getOrigenCiudadanoAdmin() != null) {
         metadades.add(new Metadata("anexo.origen", 
               I18NLogicUtils.tradueix(loc, "anexo.origen." + anexo.getOrigenCiudadanoAdmin())));
       }
-      
+
       /**
        * tipoValidezDocumento.1=Còpia
        * tipoValidezDocumento.2=Còpia Compulsada
@@ -491,14 +502,20 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         metadades.add(new Metadata("anexo.validezDocumento", 
             I18NLogicUtils.tradueix(loc, "tipoValidezDocumento." + anexo.getValidezDocumento())));
       }
-      
+
       if (mime != null) {
         metadades.add(new Metadata("anexo.formato", mime));
       }
 
       if (anexo.getTipoDocumental() != null && 
           anexo.getTipoDocumental().getCodigoNTI() != null) {
-        metadades.add(new Metadata("anexo.tipoDocumental", anexo.getTipoDocumental().getCodigoNTI()));
+        metadades.add(new Metadata("anexo.tipoDocumental.codigo", anexo.getTipoDocumental().getCodigoNTI()));
+        try {
+          metadades.add(new Metadata("anexo.tipoDocumental.descripcion", 
+              ((TraduccionTipoDocumental) anexo.getTipoDocumental().getTraduccion(loc.getLanguage())).getNombre()));
+        } catch(Throwable th) {
+          log.error("Error en la traduccion de tipo documental: " + th.getMessage(), th);
+        }
       }
       if (anexo.getObservaciones() != null) {
         metadades.add(new Metadata("anexo.observaciones", anexo.getObservaciones()));
@@ -520,16 +537,31 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     
     
     
-    protected String getCustodyParameters(IRegistro registro) throws Exception {
+    protected String getCustodyParameters(IRegistro registro, Anexo anexo) throws Exception {
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      
+      
+      
       XMLEncoder encoder = new XMLEncoder(baos);
       
-      encoder.setPersistenceDelegate(java.sql.Date.class, new java_util_Date_PersistenceDelegate());
-      encoder.setPersistenceDelegate(java.sql.Time.class, new java_util_Date_PersistenceDelegate());
-
       encoder.writeObject(registro);
+      encoder.writeObject(registro.getRegistroDetalle().getAnexos());
+      encoder.writeObject(new Anexo(anexo));
       encoder.flush();
       encoder.close();
+      
+      /*
+      try {
+        XMLDecoder xmlDec = new XMLDecoder(new ByteArrayInputStream(baos.toByteArray()));
+        xmlDec.readObject();
+        xmlDec.readObject();
+        xmlDec.readObject();
+        
+      } catch (Throwable e) {
+        log.error(" EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" , e);
+      }
+      */
+
       return new String(baos.toByteArray());
     }
     
@@ -584,7 +616,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             registroDetalleEjb.merge(registroDetalle);
             remove(anexo);
         }
-        return AnnexFileSystemManager.eliminarCustodia(anexo.getCustodiaID());
+        return AnnexDocumentCustodyManager.eliminarCustodia(anexo.getCustodiaID());
     }
 
     @Override

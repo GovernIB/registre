@@ -7,6 +7,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -29,6 +31,22 @@ public class TipoDocumental extends Traducible {
 
     public TipoDocumental(String id) {
       this.id= Long.valueOf(id);
+    }
+    
+    
+    
+
+    /**
+     * @param id
+     * @param codigoNTI
+     * @param entidad
+     */
+    public TipoDocumental(TipoDocumental td) {
+      super();
+      this.id = td.id;
+      this.codigoNTI = td.codigoNTI;
+      this.traducciones = new HashMap<String, Traduccion>(td.getTraducciones());
+      this.entidad = td.entidad == null? null : new Entidad(td.entidad);
     }
 
     @Id
