@@ -596,6 +596,20 @@ input[readonly] {
     background-color: #ac5fd0;
     border-color: #a357c7;
 }
+.btn-llibre-llegenda {
+    color: #fff;
+    background-color: #b374d1;
+    border-color: #B267D5;
+    cursor: default;
+}
+.btn-llibre-llegenda:hover,
+.btn-llibre-llegenda:focus,
+.btn-llibre-llegenda:active,
+.btn-llibre-llegenda.active{
+    color: #fff;
+    background-color: #b374d1;
+    border-color: #B267D5;
+}
 .btn-quart {
     color: #fff;
     background-color: #b1b0b0;

@@ -58,7 +58,7 @@
                             <div class="panel-footer">
                                 <div class="row">
                                     <div class="col-xs-12 pad-bottom5">
-                                        <button type="button" class="btn-llibre btn-xs"><i class="fa fa-book"></i> <spring:message code="libro.libros"/></button>
+                                        <button type="button" class="btn-llibre-llegenda btn-xs"><i class="fa fa-book"></i> <spring:message code="libro.libros"/></button>
                                     </div>
                                 </div>
                                 <div class="row">
