@@ -4,7 +4,6 @@ import es.caib.regweb.model.*;
 import es.caib.regweb.persistence.utils.NumeroRegistro;
 import es.caib.regweb.persistence.utils.Paginacion;
 import es.caib.regweb.utils.RegwebConstantes;
-
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -15,7 +14,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-
 import java.util.*;
 
 /**
@@ -213,6 +211,20 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         q.setParameter("organismos",organismos);
 
         return q.getResultList();
+    }
+
+    @Override
+    public Long oficiosPendientesLlegadaCount(Set<Organismo> organismos) throws Exception {
+
+        Query q = em.createQuery("Select count(oficioRemision.id) from OficioRemision as oficioRemision "
+                + "where oficioRemision.organismoDestinatario in (:organismos) "
+                + " and oficioRemision.estado = " + RegwebConstantes.OFICIO_REMISION_ESTADO_NO_PROCESADO
+                + " order by oficioRemision.id desc");
+
+
+        q.setParameter("organismos",organismos);
+
+        return (Long) q.getSingleResult();
     }
 
     @Override

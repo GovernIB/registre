@@ -2,7 +2,6 @@ package es.caib.regweb.webapp.controller;
 
 import es.caib.regweb.model.*;
 import es.caib.regweb.model.utils.ObjetoBasico;
-import es.caib.regweb.model.utils.RegistroBasico;
 import es.caib.regweb.persistence.ejb.*;
 import es.caib.regweb.persistence.utils.sir.FicheroIntercambioSICRES3;
 import es.caib.regweb.persistence.utils.sir.SirUtils;
@@ -22,8 +21,6 @@ import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -190,39 +187,26 @@ public class ComunController extends BaseController {
 
             List<Libro> librosAdministrados = getLibrosAdministrados(request);
             List<Libro> librosRegistro = getLibrosRegistroEntrada(request);
-            List<RegistroBasico> pendientesVisar = new ArrayList<RegistroBasico>();
+            Long pendientesVisar = (long) 0;
+
             /*Registros Pendientes de Visar*/
             if(librosAdministrados!= null && librosAdministrados.size() > 0){
-                pendientesVisar = registroEntradaEjb.getByLibrosEstado(librosAdministrados, RegwebConstantes.ESTADO_PENDIENTE_VISAR);
+                pendientesVisar = registroEntradaEjb.getByLibrosEstadoCount(librosAdministrados, RegwebConstantes.ESTADO_PENDIENTE_VISAR);
             }
+            mav.addObject("pendientesVisar", pendientesVisar);
 
-            //List<RegistroBasico> pendientesVisar = registroEntradaEjb.getByOficinaEstado(oficinaActiva.getId(), RegwebConstantes.ESTADO_PENDIENTE_VISAR, RegwebConstantes.REGISTROS_PANTALLA_INICIO);
-            List<RegistroBasico> pendientes = registroEntradaEjb.getByOficinaEstado(oficinaActiva.getId(), RegwebConstantes.ESTADO_PENDIENTE, RegwebConstantes.REGISTROS_PANTALLA_INICIO);
+            /*Rserva de número*/
+            Long pendientes = registroEntradaEjb.getByOficinaEstadoCount(oficinaActiva.getId(), RegwebConstantes.ESTADO_PENDIENTE);
+            mav.addObject("pendientes", pendientes);
 
             /* OFICIOS PENDIENTES DE REMISIÓN */
-
-            // Obtenemos los Organismos Internos que tienen Registros pendientes de tramitar por medio de un Oficio de Revisión,
-            Set<String> organismosOficioRemisionInterna = new HashSet<String>();
-            for (Libro libro : librosRegistro) {
-                organismosOficioRemisionInterna.addAll(registroEntradaEjb.oficiosPendientesRemisionInterna(libro));
-            }
-            mav.addObject("organismosOficioRemisionInterna", organismosOficioRemisionInterna.size());
-
-            // Obtenemos los Organismos Externos que tienen Registros pendientes de tramitar por medio de un Oficio de Revisión,
-            Set<String> organismosOficioRemisionExterna = new HashSet<String>();
-            for (Libro libro : librosRegistro) {
-                organismosOficioRemisionExterna.addAll(registroEntradaEjb.oficiosPendientesRemisionExterna(libro));
-            }
-            mav.addObject("organismosOficioRemisionExterna", organismosOficioRemisionExterna.size());
+            mav.addObject("oficiosRemisionInterna", registroEntradaEjb.oficiosPendientesRemisionInternaCount(librosRegistro));
+            mav.addObject("oficiosRemisionExterna", registroEntradaEjb.oficiosPendientesRemisionExternaCount(librosRegistro));
 
             /*OFICIOS PENDIENTES DE LLEGADA*/
-            // Buscamos los Organismos en los que la OficinaActiva puede registrar
+            Long oficiosPendientesLlegada = oficioRemisionEjb.oficiosPendientesLlegadaCount(getOrganismosOficinaActiva(request));
+            mav.addObject("oficiosPendientesLlegada", oficiosPendientesLlegada);
 
-            List<OficioRemision> oficiosPendientesLlegada = oficioRemisionEjb.oficiosPendientesLlegada(getOrganismosOficinaActiva(request));
-
-            mav.addObject("pendientes", pendientes.size());
-            mav.addObject("oficiosPendientesLlegada", oficiosPendientesLlegada.size());
-            mav.addObject("pendientesVisar", pendientesVisar.size());
         }
 
 

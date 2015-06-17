@@ -28,6 +28,8 @@
                 <ol class="breadcrumb">
                     <li><a href="<c:url value="/inici"/>"><i class="fa fa-globe"></i> ${oficinaActiva.denominacion}</a></li>
                     <li class="active"><i class="fa fa-list-ul"></i> <strong><spring:message code="registroEntrada.buscador"/></strong></li>
+                    <%--Importamos el menú de avisos--%>
+                    <c:import url="/avisos"/>
                 </ol>
             </div>
         </div><!-- /.row -->

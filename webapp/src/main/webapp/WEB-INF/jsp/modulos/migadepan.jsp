@@ -22,6 +22,6 @@
         <li><i class="fa fa-home"></i> <spring:message code="error.oficina.ninguna"/></li>
     </c:if>
 
-    <%--Importamos el menú de avisos
-    <c:import url="/avisos"/>--%>
+    <%--Importamos el menú de avisos--%>
+    <c:import url="/avisos"/>
 </c:if>

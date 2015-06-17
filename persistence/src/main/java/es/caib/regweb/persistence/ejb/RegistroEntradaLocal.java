@@ -8,13 +8,11 @@ import es.caib.regweb.model.utils.RegistroBasico;
 import es.caib.regweb.persistence.utils.AnexoFull;
 import es.caib.regweb.persistence.utils.OficiosRemisionOrganismo;
 import es.caib.regweb.persistence.utils.Paginacion;
-
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
-
 import java.util.Date;
 import java.util.List;
 
@@ -87,6 +85,14 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      */
     public List<OficiosRemisionOrganismo> oficiosPendientesRemisionInterna(Integer any, Libro libro) throws Exception;
 
+    /**
+     * Cuenta los Oficios pendientes de Remisión Interna de un conjunto de Libros
+     * @param libros
+     * @return
+     * @throws Exception
+     */
+    public Long oficiosPendientesRemisionInternaCount(List<Libro> libros) throws Exception;
+
 
     /**
      * Comprueba si un RegistroEntrada se considera un OficioRemision o no
@@ -114,6 +120,14 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @throws Exception
      */
     public List<OficiosRemisionOrganismo> oficiosPendientesRemisionExterna(Integer any, Libro libro, Entidad entidadActiva) throws Exception;
+
+    /**
+     * Cuenta los Oficios pendientes de Remisión Externa de un conjunto de Libros
+     * @param libros
+     * @return
+     * @throws Exception
+     */
+    public Long oficiosPendientesRemisionExternaCount(List<Libro> libros) throws Exception;
 
     /**
      * Busca Oficios de Remisión de un Organismo propio, según los parámetros.
@@ -217,6 +231,15 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      */
     public List<RegistroBasico> getByOficinaEstado(Long idOficinaActiva, Long idEstado, Integer total) throws Exception;
 
+ /**
+  * Busca los Registros de Entrada de una OficinaActiva en función de su estado.
+  * @param idOficinaActiva
+  * @param idEstado
+  * @return
+  * @throws Exception
+  */
+ public Long getByOficinaEstadoCount(Long idOficinaActiva, Long idEstado) throws Exception;
+
     /**
      * Busca los Registros de Entrada de un listado de Libros en función de su estado.
      * @param libros
@@ -225,6 +248,15 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @throws Exception
      */
     public List<RegistroBasico> getByLibrosEstado(List<Libro> libros, Long idEstado) throws Exception;
+
+ /**
+  * Busca los Registros de Entrada de un listado de Libros en función de su estado.
+  * @param libros
+  * @param idEstado
+  * @return
+  * @throws Exception
+  */
+ public Long getByLibrosEstadoCount(List<Libro> libros, Long idEstado) throws Exception;
 
     /**
      * Cambia el estado de un RegistroEntrada

@@ -21,6 +21,8 @@
                 <ol class="breadcrumb">
                     <li><a href="<c:url value="/inici"/>"><i class="fa fa-globe"></i> ${oficinaActiva.denominacion}</a></li>
                     <li class="active"><i class="fa fa-list-ul"></i> <strong><spring:message code="registroEntrada.oficiosRemisionExterna"/></strong></li>
+                    <%--Importamos el menú de avisos--%>
+                    <c:import url="/avisos"/>
                 </ol>
             </div>
         </div><!-- /.row -->
@@ -84,10 +86,6 @@
 
                                         <c:if test="${not empty oficiosRemisionOrganismos}">
 
-                                            <div class="alert-grey">
-                                                <spring:message code="regweb.resultados"/> <strong>${fn:length(oficiosRemisionOrganismos)}</strong> <spring:message code="registroEntrada.registroEntradas"/>
-                                            </div>
-
                                             <c:forEach var="oficiosRemisionOrganismo" items="${oficiosRemisionOrganismos}" varStatus="status">
 
                                                 <c:if test="${!oficiosRemisionOrganismo.sir}">
@@ -98,6 +96,10 @@
                                                         <c:if test="${oficiosRemisionOrganismo.oficiosRemision[0].destino == null}">
                                                             <strong>${oficiosRemisionOrganismo.oficiosRemision[0].destinoExternoDenominacion}</strong>
                                                         </c:if>
+                                                    </div>
+
+                                                    <div class="alert-grey">
+                                                        <spring:message code="regweb.resultados"/> <strong>${fn:length(oficiosRemisionOrganismo.oficiosRemision)}</strong> <spring:message code="registroEntrada.registroEntradas"/>
                                                     </div>
 
                                                     <div class="table-responsive">

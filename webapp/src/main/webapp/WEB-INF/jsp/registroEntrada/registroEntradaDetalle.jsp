@@ -23,6 +23,8 @@
                     <li><a href="<c:url value="/inici"/>"><i class="fa fa-globe"></i> ${oficinaActiva.denominacion}</a></li>
                     <li><a href="<c:url value="/registroEntrada/list"/>" ><i class="fa fa-list"></i> <spring:message code="registroEntrada.listado"/></a></li>
                     <li class="active"><i class="fa fa-pencil-square-o"></i> <spring:message code="registroEntrada.registroEntrada"/> ${registro.numeroRegistroFormateado}</li>
+                    <%--Importamos el menú de avisos--%>
+                    <c:import url="/avisos"/>
                 </ol>
             </div>
        </div><!-- Fin miga de pan -->

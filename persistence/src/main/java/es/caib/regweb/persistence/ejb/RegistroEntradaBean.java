@@ -392,6 +392,28 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     }
 
+    @Override
+    public Long oficiosPendientesRemisionInternaCount(List<Libro> libros) throws Exception{
+
+
+        Query q;
+        q = em.createQuery("Select count(re.id) from RegistroEntrada as re where " +
+                "re.estado = :idEstadoRegistro and re.libro in (:libros) and " +
+                "re.destino != null and " +
+                "re.oficina.organismoResponsable.id != re.destino.id and " +
+                "re.oficina.organismoResponsable.id != re.destino.organismoSuperior.id and " +
+                "re.destino.id not in (select rso.organismo.id from RelacionOrganizativaOfi as rso where rso.oficina.id = re.oficina.id and rso.estado.codigoEstadoEntidad = :vigente) and " +
+                "re.destino.organismoSuperior.id not in (select rso.organismo.id from RelacionOrganizativaOfi as rso where rso.oficina.id = re.oficina.id and rso.estado.codigoEstadoEntidad = :vigente) and " +
+                "re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
+
+        q.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
+        q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        q.setParameter("libros", libros);
+
+        return (Long) q.getSingleResult();
+
+    }
+
     public Boolean isOficioRemisionInterno(Long idRegistro) throws Exception{
         Query q;
         q = em.createQuery("Select re.id from RegistroEntrada as re where " +
@@ -399,12 +421,13 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                 "re.destino != null and " +
                 "re.oficina.organismoResponsable.id != re.destino.id and " +
                 "re.oficina.organismoResponsable.id != re.destino.organismoSuperior.id and " +
-                "re.destino.id not in (select rso.organismo.id from RelacionOrganizativaOfi as rso where rso.oficina.id = re.oficina.id and rso.estado.codigoEstadoEntidad='V') and " +
-                "re.destino.organismoSuperior.id not in (select rso.organismo.id from RelacionOrganizativaOfi as rso where rso.oficina.id = re.oficina.id and rso.estado.codigoEstadoEntidad='V') and " +
+                "re.destino.id not in (select rso.organismo.id from RelacionOrganizativaOfi as rso where rso.oficina.id = re.oficina.id and rso.estado.codigoEstadoEntidad = :vigente) and " +
+                "re.destino.organismoSuperior.id not in (select rso.organismo.id from RelacionOrganizativaOfi as rso where rso.oficina.id = re.oficina.id and rso.estado.codigoEstadoEntidad = :vigente) and " +
                 "re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
 
         q.setParameter("idRegistro", idRegistro);
         q.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
+        q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
 
         return q.getResultList().size() > 0;
     }
@@ -474,6 +497,22 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         }
 
         return oficiosRemisionOrganismo;
+
+    }
+
+    public Long oficiosPendientesRemisionExternaCount(List<Libro> libros) throws Exception{
+
+
+        Query q;
+        q = em.createQuery("Select count(registroEntrada.id) from RegistroEntrada as registroEntrada where " +
+                "registroEntrada.estado = :idEstadoRegistro  and registroEntrada.libro in (:libros) and " +
+                "registroEntrada.destino is null and " +
+                "registroEntrada.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
+
+        q.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
+        q.setParameter("libros", libros);
+
+        return (Long) q.getSingleResult();
 
     }
 
@@ -659,6 +698,20 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
+    public Long getByOficinaEstadoCount(Long idOficinaActiva, Long idEstado) throws Exception {
+
+        Query q;
+
+        q = em.createQuery("Select count(re.id) from RegistroEntrada as re where re.oficina.id = :idOficinaActiva " +
+                "and re.estado = :idEstado order by re.fecha desc");
+
+        q.setParameter("idOficinaActiva", idOficinaActiva);
+        q.setParameter("idEstado", idEstado);
+
+        return (Long) q.getSingleResult();
+    }
+
+    @Override
     public List<RegistroEntrada> buscaEntradaPorUsuario(Date fechaInicio, Date fechaFin, Long idUsuario, List<Libro> libros) throws Exception{
 
         Query q;
@@ -705,6 +758,20 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         return  getRegistroBasicoList(q.getResultList());
 
+    }
+
+    @Override
+    public Long getByLibrosEstadoCount(List<Libro> libros, Long idEstado) throws Exception {
+
+        Query q;
+
+        q = em.createQuery("Select count(re.id) from RegistroEntrada as re where re.libro in (:libros) " +
+                "and re.estado = :idEstado order by re.fecha desc");
+
+        q.setParameter("libros", libros);
+        q.setParameter("idEstado", idEstado);
+
+        return (Long) q.getSingleResult();
     }
 
     @Override

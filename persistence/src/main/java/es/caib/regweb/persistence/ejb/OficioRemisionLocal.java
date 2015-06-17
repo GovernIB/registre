@@ -5,13 +5,11 @@ import es.caib.regweb.model.OficioRemision;
 import es.caib.regweb.model.Organismo;
 import es.caib.regweb.model.RegistroEntrada;
 import es.caib.regweb.persistence.utils.Paginacion;
-
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
-
 import java.util.List;
 import java.util.Set;
 
@@ -53,6 +51,14 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @throws Exception
      */
     public List<OficioRemision> oficiosPendientesLlegada(Set<Organismo> organismos) throws Exception;
+
+    /**
+     * Devuelve los Oficios de Remisión pendientes de procesar de los organismos seleccionados
+     * @param organismos
+     * @return
+     * @throws Exception
+     */
+    public Long oficiosPendientesLlegadaCount(Set<Organismo> organismos) throws Exception;
 
     /**
      * Busca Registros de Entrada que pertenecen a un OficioRemision
