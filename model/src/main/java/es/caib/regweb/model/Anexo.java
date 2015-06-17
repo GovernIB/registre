@@ -5,8 +5,7 @@ import org.hibernate.annotations.ForeignKey;
 import org.hibernate.annotations.Index;
 
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlTransient;
-
+import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,26 +25,39 @@ import java.util.List;
     @Index(name="RWE_ANEXO_REGDET_FK_I", columnNames = {"REGISTRODETALLE"})
 })
 @SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@XmlRootElement(name = "anexo")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Anexo implements Serializable {
 
+    @XmlAttribute
     private Long id;
-    private String titulo; // Campo descriptivo del anexo.
-    
 
+    @XmlElement
+    private String titulo; // Campo descriptivo del anexo.
+
+    @XmlElement
     private TipoDocumental tipoDocumental; // reso, acord, factura, ..
+    @XmlElement
     private Long validezDocumento;
+    @XmlElement
     private Long tipoDocumento;
 
     @XmlTransient
     private RegistroDetalle registroDetalle;
+    @XmlElement
     private String observaciones;
+    @XmlElement
     private Integer origenCiudadanoAdmin;
+    @XmlElement
     private Date fechaCaptura;
+    @XmlElement
     private int modoFirma;
-    
-    private String custodiaID;
 
+    @XmlTransient
+    private String custodiaID;
+    @XmlTransient
     private String csv; // código seguro verificación
+    @XmlTransient
     private String firmacsv;
     
     

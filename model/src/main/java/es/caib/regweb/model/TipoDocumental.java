@@ -7,7 +7,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
+import javax.xml.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,10 +20,15 @@ import java.util.Map;
 @Entity
 @Table(name = "RWE_TIPODOCUMENTAL")
 @SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@XmlRootElement(name = "tipoDocumental")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class TipoDocumental extends Traducible {
 
+    @XmlAttribute
     private Long id;
+    @XmlElement
     private String codigoNTI;
+    @XmlTransient
     private Entidad entidad;
 
     public TipoDocumental() {
@@ -32,14 +37,11 @@ public class TipoDocumental extends Traducible {
     public TipoDocumental(String id) {
       this.id= Long.valueOf(id);
     }
-    
-    
-    
+
 
     /**
-     * @param id
-     * @param codigoNTI
-     * @param entidad
+     *
+     * @param td
      */
     public TipoDocumental(TipoDocumental td) {
       super();

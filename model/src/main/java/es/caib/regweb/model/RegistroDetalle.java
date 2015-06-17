@@ -1,14 +1,12 @@
 package es.caib.regweb.model;
 
 import es.caib.regweb.utils.Versio;
-
 import org.hibernate.annotations.ForeignKey;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -67,7 +65,7 @@ public class RegistroDetalle implements Serializable {
     @XmlElement( name="interesado" )
     @XmlElementWrapper( name="interesados" )
     private List<Interesado> interesados;
-    @XmlTransient
+    @XmlElementWrapper( name="anexos" )
     private List<Anexo> anexos = new ArrayList<Anexo>();
     @XmlTransient
     private String aplicacion = "REGWEB";
