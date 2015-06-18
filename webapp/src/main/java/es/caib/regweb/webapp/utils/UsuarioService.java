@@ -374,6 +374,8 @@ public class UsuarioService {
             if(roles.size() > 0){
                 rolesUsuario = rolEjb.getByRol(roles);
             }
+        }else{
+            log.info("El usuario " + identificador + " no dispone de ningun Rol de REGWEB en el sistema de autentificacion");
         }
 
         return rolesUsuario;
@@ -419,13 +421,13 @@ public class UsuarioService {
             if(regwebUserInfo.getSurname1() != null){
                 usuario.setApellido1(regwebUserInfo.getSurname1());
             }else{
-                usuario.setApellido1(" ");
+                usuario.setApellido1("");
             }
             
             if(regwebUserInfo.getSurname2() != null){
               usuario.setApellido2(regwebUserInfo.getSurname2());
             } else {
-                usuario.setApellido2(" ");
+                usuario.setApellido2("");
             }
 
             usuario.setDocumento(regwebUserInfo.getAdministrationID());
@@ -448,6 +450,7 @@ public class UsuarioService {
             // Roles
             List<Rol> roles = obtenerRolesUserPlugin(identificador);
             if(roles == null || roles.size() == 0 ){
+                log.info("El usuario " + identificador + " no dispone de ningun Rol valido paa REGWEB");
                 return null;
             }else{
                 usuario.setRoles(roles);
@@ -455,9 +458,10 @@ public class UsuarioService {
 
             // Guardamos el nuevo Usuario
             usuario = usuarioEjb.persist(usuario);
-
+            log.info("Usuario " + usuario.getNombreCompleto() + " creado correctamente");
             return usuario;
         }else{
+            log.info("Usuario " + identificador + " no encontrado en el sistema de usuarios");
             return null;
         }
 
