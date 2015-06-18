@@ -218,9 +218,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
         Query q = em.createQuery("Select count(oficioRemision.id) from OficioRemision as oficioRemision "
                 + "where oficioRemision.organismoDestinatario in (:organismos) "
-                + " and oficioRemision.estado = " + RegwebConstantes.OFICIO_REMISION_ESTADO_NO_PROCESADO
-                + " order by oficioRemision.id desc");
-
+                + " and oficioRemision.estado = " + RegwebConstantes.OFICIO_REMISION_ESTADO_NO_PROCESADO);
 
         q.setParameter("organismos",organismos);
 
