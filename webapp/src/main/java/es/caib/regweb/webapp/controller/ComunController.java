@@ -187,7 +187,10 @@ public class ComunController extends BaseController {
 
             List<Libro> librosAdministrados = getLibrosAdministrados(request);
             List<Libro> librosRegistro = getLibrosRegistroEntrada(request);
+
             Long pendientesVisar = (long) 0;
+            Long oficiosRemisionInterna = (long) 0;
+            Long oficiosRemisionExterna = (long) 0;
 
             /*Registros Pendientes de Visar*/
             if(librosAdministrados!= null && librosAdministrados.size() > 0){
@@ -200,8 +203,12 @@ public class ComunController extends BaseController {
             mav.addObject("pendientes", pendientes);
 
             /* OFICIOS PENDIENTES DE REMISIÓN */
-            mav.addObject("oficiosRemisionInterna", registroEntradaEjb.oficiosPendientesRemisionInternaCount(librosRegistro));
-            mav.addObject("oficiosRemisionExterna", registroEntradaEjb.oficiosPendientesRemisionExternaCount(librosRegistro));
+            if(librosRegistro!= null && librosRegistro.size() > 0){
+                oficiosRemisionInterna = registroEntradaEjb.oficiosPendientesRemisionInternaCount(librosRegistro);
+                oficiosRemisionExterna = registroEntradaEjb.oficiosPendientesRemisionExternaCount(librosRegistro);
+            }
+            mav.addObject("oficiosRemisionInterna", oficiosRemisionInterna);
+            mav.addObject("oficiosRemisionExterna", oficiosRemisionExterna);
 
             /*OFICIOS PENDIENTES DE LLEGADA*/
             Long oficiosPendientesLlegada = oficioRemisionEjb.oficiosPendientesLlegadaCount(getOrganismosOficinaActiva(request));
