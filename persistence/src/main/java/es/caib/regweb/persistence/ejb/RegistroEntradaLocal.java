@@ -345,6 +345,14 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
     public void tramitarRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad) throws Exception;
 
     /**
+     * Retorna el identificador del Libro al que pertenece el RegistroEntrada
+     * @param idRegistroEntrada
+     * @return
+     * @throws Exception
+     */
+    public Long getLibro(Long idRegistroEntrada) throws Exception;
+
+    /**
      * Elimina los RegistroEntrada de una Entidad
      * @param idEntidad
      * @return

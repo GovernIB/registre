@@ -88,6 +88,29 @@ public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
             }
         }
 
+        // Comprobaciones previas a la consulta de RegistroEntrada
+        if(url.contains("detalle")){
+
+            String idRegistroEntrada =  url.replace("/registroEntrada/","").replace("/detalle", ""); //Obtenemos el id a partir de la url
+
+            Long idLibro = registroEntradaEjb.getLibro(Long.valueOf(idRegistroEntrada));
+
+            if(idLibro != null){
+                if(!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),idLibro,RegwebConstantes.PERMISO_CONSULTA_REGISTRO_ENTRADA)){
+                    log.info("Aviso: No tiene permisos para consultar este registro");
+                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.consultaRegistro"));
+                    response.sendRedirect("/regweb/aviso");
+                    return false;
+                }
+            }else{ // Id de Registro invalido
+                log.info("Aviso: No tiene permisos para consultar este registro");
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.libro.noExiste"));
+                response.sendRedirect("/regweb/aviso");
+                return false;
+            }
+
+        }
+
         // Comprobaciones previas al registro de un RegistroEntrada
         if(url.equals("/registroEntrada/new") || url.equals("/registroEntrada/reserva")){
 

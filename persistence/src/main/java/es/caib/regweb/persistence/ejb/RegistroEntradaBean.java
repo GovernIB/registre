@@ -912,6 +912,24 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     }
 
+    @Override
+    public Long getLibro(Long idRegistroEntrada) throws Exception{
+
+        Query q;
+
+        q = em.createQuery("Select registroEntrada.libro.id from RegistroEntrada as registroEntrada where registroEntrada.id = :idRegistroEntrada ");
+
+        q.setParameter("idRegistroEntrada", idRegistroEntrada);
+
+        List<Long> libros = q.getResultList();
+
+        if(libros.size() > 0){
+            return libros.get(0);
+        }else{
+            return null;
+        }
+    }
+
     /**
      * Convierte los resultados de una query en una lista de {@link es.caib.regweb.model.utils.RegistroBasico}
      * @param result

@@ -97,9 +97,11 @@ public class InicioController extends BaseController{
 
             /* PREREGISTROS PENDIENTES DE PROCESAR */
             /* Buscamos los Últimos PreRegistros que están pendientes de procesar */
-            List<PreRegistro> preRegistros = preRegistroEjb.getUltimosPreRegistrosPendientesProcesar(oficinaActiva.getCodigo(), RegwebConstantes.REGISTROS_PANTALLA_INICIO);
+            if(getLibrosRegistroEntrada(request).size() > 0) { // Sólo muestra los PreRegistros si tiene permisos de RegistroEntrada
+                List<PreRegistro> preRegistros = preRegistroEjb.getUltimosPreRegistrosPendientesProcesar(oficinaActiva.getCodigo(), RegwebConstantes.REGISTROS_PANTALLA_INICIO);
 
-            mav.addObject("preRegistros", preRegistros);
+                mav.addObject("preRegistros", preRegistros);
+            }
 
         }
 

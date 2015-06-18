@@ -582,4 +582,22 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         return registros.size();
     }
 
+    @Override
+    public Long getLibro(Long idRegistroSalida) throws Exception{
+
+        Query q;
+
+        q = em.createQuery("Select registroSalida.libro.id from RegistroSalida as registroSalida where registroSalida.id = :idRegistroSalida ");
+
+        q.setParameter("idRegistroSalida", idRegistroSalida);
+
+        List<Long> libros = q.getResultList();
+
+        if(libros.size() > 0){
+            return libros.get(0);
+        }else{
+            return null;
+        }
+    }
+
 }

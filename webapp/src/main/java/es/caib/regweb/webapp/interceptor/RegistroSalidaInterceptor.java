@@ -97,6 +97,29 @@ public class RegistroSalidaInterceptor extends HandlerInterceptorAdapter {
             }
         }
 
+        // Comprobaciones previas a la consulta de RegistroSalida
+        if(url.contains("detalle")){
+
+            String idRegistroSalida =  url.replace("/registroSalida/","").replace("/detalle", ""); //Obtenemos el id a partir de la url
+
+            Long idLibro = registroSalidaEjb.getLibro(Long.valueOf(idRegistroSalida));
+
+            if(idLibro != null){
+                if(!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),idLibro,RegwebConstantes.PERMISO_CONSULTA_REGISTRO_SALIDA)){
+                    log.info("Aviso: No tiene permisos para consultar este registro");
+                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.consultaRegistro"));
+                    response.sendRedirect("/regweb/aviso");
+                    return false;
+                }
+            }else{ // Id de Registro invalido
+                log.info("Aviso: No tiene permisos para consultar este registro");
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.libro.noExiste"));
+                response.sendRedirect("/regweb/aviso");
+                return false;
+            }
+
+        }
+
         // Comprobaciones previas al registro de un RegistrSalida
         if(url.equals("/registroSalida/new")){
 
@@ -122,7 +145,7 @@ public class RegistroSalidaInterceptor extends HandlerInterceptorAdapter {
 
             RegistroSalida registroSalida = registroSalidaEjb.findById(Long.valueOf(idRegistroSalida));
 
-            // Comprobamos que el UsuarioActivo pueda editar ese registro de entrada
+            // Comprobamos que el UsuarioActivo pueda editar ese registro de salida
             if(!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),registroSalida.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA)){
                 log.info("Aviso: No dispone de los permisos necesarios para editar el registro");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registro.editar"));

@@ -1,9 +1,9 @@
 package es.caib.regweb.webapp.interceptor;
 
-import es.caib.regweb.model.Oficina;
-import es.caib.regweb.model.PreRegistro;
-import es.caib.regweb.model.Rol;
+import es.caib.regweb.model.*;
+import es.caib.regweb.persistence.ejb.PermisoLibroUsuarioLocal;
 import es.caib.regweb.persistence.ejb.PreRegistroLocal;
+import es.caib.regweb.persistence.ejb.UsuarioEntidadLocal;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.webapp.utils.Mensaje;
 import org.apache.log4j.Logger;
@@ -30,6 +30,12 @@ public class PreRegistroInterceptor extends HandlerInterceptorAdapter {
     @EJB(mappedName = "regweb/PreRegistroEJB/local")
     public PreRegistroLocal preRegistroEjb;
 
+    @EJB(mappedName = "regweb/PermisoLibroUsuarioEJB/local")
+    public PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
+
+    @EJB(mappedName = "regweb/UsuarioEntidadEJB/local")
+    public UsuarioEntidadLocal usuarioEntidadEjb;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
@@ -39,6 +45,8 @@ public class PreRegistroInterceptor extends HandlerInterceptorAdapter {
             Rol rolActivo = (Rol) session.getAttribute(RegwebConstantes.SESSION_ROL);
             Oficina oficinaActiva = (Oficina) session.getAttribute(RegwebConstantes.SESSION_OFICINA);
             Boolean tienePreRegistros = (Boolean) session.getAttribute(RegwebConstantes.SESSION_TIENEPREREGISTROS);
+            Usuario usuarioAutenticado = (Usuario)session.getAttribute(RegwebConstantes.SESSION_USUARIO);
+            Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
 
             // Comprobamos que el usuario dispone del Rol RWE_USUARI
             if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_USUARI)){
@@ -55,6 +63,16 @@ public class PreRegistroInterceptor extends HandlerInterceptorAdapter {
                 if(!tienePreRegistros){
                     log.info("Aviso: No hi ha PreRegistres");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.preregistro.list"));
+                    response.sendRedirect("/regweb/aviso");
+                    return false;
+                }
+
+                UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByUsuarioEntidad(usuarioAutenticado.getId(), entidadActiva.getId());
+
+                // Comprobamos que el usuario tiene permisos de Consulta de Registros de Entrada
+                if(permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_ENTRADA).size() == 0){
+                    log.info("Aviso: No hay ningún libro con permisos para consultar");
+                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.preregistro.noConsulta"));
                     response.sendRedirect("/regweb/aviso");
                     return false;
                 }

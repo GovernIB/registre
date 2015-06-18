@@ -214,4 +214,12 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      */
     public Integer eliminarByEntidad(Long idEntidad) throws Exception;
 
+    /**
+     * Retorna el identificador del Libro al que pertenece el RegistroSalida
+     * @param idRegistroSalida
+     * @return
+     * @throws Exception
+     */
+    public Long getLibro(Long idRegistroSalida) throws Exception;
+
 }

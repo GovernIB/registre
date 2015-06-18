@@ -3,6 +3,8 @@ package es.caib.regweb.webapp.interceptor;
 import es.caib.regweb.model.*;
 import es.caib.regweb.persistence.ejb.ModeloOficioRemisionLocal;
 import es.caib.regweb.persistence.ejb.OficioRemisionLocal;
+import es.caib.regweb.persistence.ejb.PermisoLibroUsuarioLocal;
+import es.caib.regweb.persistence.ejb.UsuarioEntidadLocal;
 import es.caib.regweb.utils.RegwebConstantes;
 import es.caib.regweb.webapp.utils.Mensaje;
 import org.apache.log4j.Logger;
@@ -14,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Fundació BIT.
@@ -33,6 +36,12 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
     @EJB(mappedName = "regweb/ModeloOficioRemisionEJB/local")
     public ModeloOficioRemisionLocal modeloOficioRemisionEjb;
 
+    @EJB(mappedName = "regweb/PermisoLibroUsuarioEJB/local")
+    public PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
+
+    @EJB(mappedName = "regweb/UsuarioEntidadEJB/local")
+    public UsuarioEntidadLocal usuarioEntidadEjb;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
@@ -42,9 +51,10 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
         String url = request.getServletPath();
         HttpSession session = request.getSession();
         Rol rolActivo = (Rol) session.getAttribute(RegwebConstantes.SESSION_ROL);
-        //Usuario usuarioAutenticado = (Usuario)session.getAttribute(RegwebConstantes.SESSION_USUARIO);
+        Usuario usuarioAutenticado = (Usuario)session.getAttribute(RegwebConstantes.SESSION_USUARIO);
         Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
         Oficina oficinaActiva = (Oficina) session.getAttribute(RegwebConstantes.SESSION_OFICINA);
+
 
         // Comprobamos que el usuario dispone del Rol RWE_USUARI
         if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_USUARI)){
@@ -62,6 +72,32 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.modeloOficioRemision"));
             response.sendRedirect("/regweb/aviso");
             return false;
+        }
+
+        Set<Organismo> organismos = oficinaActiva.getOrganismosFuncionales();
+        UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByUsuarioEntidad(usuarioAutenticado.getId(), entidadActiva.getId());
+        List<Libro> libros = permisoLibroUsuarioEjb.getLibrosOrganismoPermiso(organismos, usuarioEntidad, RegwebConstantes.PERMISO_REGISTRO_ENTRADA);
+
+        // Comprobaciones previas al listado de OficioRemision
+        if(url.equals("/oficioRemision/list")) {
+            // Mira que el usuario tiene permisos de Registro de Entrada
+            if (libros.size() == 0) {
+                log.info("Aviso: No tiene permisos para consultar Oficios de Remision");
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficioRemision.list"));
+                response.sendRedirect("/regweb/aviso");
+                return false;
+            }
+        }
+
+        // Comprobaciones previas a los Oficios de Remisión Pendientes
+        if(url.contains("oficiosPendientes")){
+            // Mira que el usuario tiene permisos de Registro de Entrada
+            if (libros.size() == 0) {
+                log.info("Aviso: No tiene permisos para consultar Oficios de Remision");
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficioRemision.list"));
+                response.sendRedirect("/regweb/aviso");
+                return false;
+            }
         }
 
         // Comprobaciones previas a la consulta de un OficioRemision

@@ -52,7 +52,7 @@ public class InformeInterceptor extends HandlerInterceptorAdapter {
 
             // Comprobamos que el usuario dispone del RWE_ADMIN
             if(url.equals("/informe/indicadores")) {
-                if (!rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN)) {
+                if (!(librosAdm != null || rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN))) {
                     log.info("Error de rol");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
                     response.sendRedirect("/regweb/aviso");
