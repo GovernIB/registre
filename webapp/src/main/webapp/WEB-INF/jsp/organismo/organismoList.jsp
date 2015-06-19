@@ -34,6 +34,7 @@
                 <div class="panel panel-success">
 
                     <div class="panel-heading">
+                        <a class="btn btn-success btn-xs pull-right" href="<c:url value="/entidad/librosCambiar"/>" role="button"><i class="fa fa-book"></i> <spring:message code="entidad.cambiarlibros"/></a>&nbsp;
                         <a class="btn btn-success btn-xs pull-right" href="<c:url value="/organismo/arbolList"/>" role="button"><i class="fa fa-sitemap"></i> <spring:message code="organismo.arbol"/></a>
                         <h3 class="panel-title"><i class="fa fa-list"></i> <strong><spring:message code="organismo.buscador"/> ${entidad.nombre}</strong></h3>
                     </div>
@@ -155,7 +156,6 @@
                 <button type="button" id="actuali" class="btn btn-success btn-sm"><spring:message code="entidad.actualizar"/></button>
                 <spring:message code="catalogoDir3.sincronizar.fecha"/>: <fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${descarga.fechaImportacion}" />
             </c:if>
-            <a class="btn btn-success btn-xs pull-right" href="<c:url value="/entidad/librosCambiar"/>" role="button"><i class="fa fa-book"></i> <spring:message code="entidad.cambiarlibros"/></a>
         </c:if>
 
         <div id="modalSincro" class="modal fade bs-example-modal-lg" >
@@ -180,33 +180,33 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $('#sincro').click(function(){
-            $.ajax({
-                url:'<c:url value="/entidad/${entidad.id}/sincronizar"/>',
-                type:'GET',
-                beforeSend: function(objeto){
-                    $('#modalSincro').modal('show');
-                },
-                complete:function(){
-                    $('#modalSincro').modal('hide');
-                    goTo('<c:url value="/organismo/list"/>');
-                }
-            });
+
+                $.ajax({
+                    url:'<c:url value="/entidad/${entidad.id}/sincronizar"/>',
+                    type:'GET',
+                    beforeSend: function(objeto){
+                        $('#modalSincro').modal('show');
+                    },
+                    complete:function(){
+                        $('#modalSincro').modal('hide');
+                        goTo('<c:url value="/organismo/list"/>');
+                    }
+                });
 
 
         });
         $('#actuali').click(function(){
-            $.ajax({
-                url:'<c:url value="/entidad/${entidad.id}/actualizar"/>',
-                type:'GET',
-                beforeSend: function(objeto){
-                    $('#modalSincro').modal('show');
-                },
-                complete:function(){
-                    $('#modalSincro').modal('hide');
-                    goTo('<c:url value="/entidad/pendientesprocesar"/>');
-                }
-            });
 
+                $.ajax({
+                    url:'<c:url value="/entidad/${entidad.id}/actualizar"/>',
+                    type:'GET',
+                    beforeSend: function(objeto){
+                        $('#modalSincro').modal('show');
+                    },
+                    complete:function(){
+                        goTo('<c:url value="/entidad/pendientesprocesar"/>');
+                    }
+                });
 
         });
     });

@@ -9,17 +9,15 @@ import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb.model.*;
 import es.caib.regweb.persistence.utils.Dir3CaibUtils;
 import es.caib.regweb.utils.RegwebConstantes;
-
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-
-
 import java.sql.Timestamp;
-//import java.text.SimpleDateFormat;
 import java.util.*;
+
+//import java.text.SimpleDateFormat;
 
 /**
  * Created 23/10/14 9:33
@@ -72,9 +70,8 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
      * fecha de actualización o no. Si no se indica se sincroniza y si se indica se actualiza
      */
     @Override
-    public void sincronizarActualizar(Long entidadId, Timestamp fechaActualizacion, Timestamp fechaSincronizacion) throws Exception {
+    public int sincronizarActualizar(Long entidadId, Timestamp fechaActualizacion, Timestamp fechaSincronizacion) throws Exception {
 
-        // SimpleDateFormat formatoFecha = new SimpleDateFormat(RegwebConstantes.FORMATO_FECHA);
 
         Entidad entidad = entidadEjb.findById(entidadId);
 
@@ -96,17 +93,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         Organismo padre = sincronizarOrganismo(unidadPadre, entidadId);
         // Clasificamos el padre en función de su estado
         if(padre != null){
-          if(RegwebConstantes.ESTADO_ENTIDAD_EXTINGUIDO.equals(padre.getEstado().getCodigoEstadoEntidad())
-              || RegwebConstantes.ESTADO_ENTIDAD_TRANSITORIO.equals(padre.getEstado().getCodigoEstadoEntidad())
-              || RegwebConstantes.ESTADO_ENTIDAD_ANULADO.equals(padre.getEstado().getCodigoEstadoEntidad())){
-               if(padre.getLibros()!=null){
-                   Pendiente pendiente = new Pendiente();
-                   pendiente.setIdOrganismo(padre.getId());
-                   pendiente.setProcesado(false);
-                   pendiente.setEstado(padre.getEstado().getCodigoEstadoEntidad());
-                   pendienteEjb.persist(pendiente);
-               }
-          }
+            guardarPendiente(padre);
         }
 
         // Sincronizamos el arbol de organismos
@@ -114,18 +101,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
             Organismo hijo = sincronizarOrganismo(unidadTF, entidadId);
             // Clasificamos el organismo hijo en función del estado
             if(hijo != null){
-              if(RegwebConstantes.ESTADO_ENTIDAD_EXTINGUIDO.equals(hijo.getEstado().getCodigoEstadoEntidad())
-              || RegwebConstantes.ESTADO_ENTIDAD_TRANSITORIO.equals(hijo.getEstado().getCodigoEstadoEntidad())
-              || RegwebConstantes.ESTADO_ENTIDAD_ANULADO.equals(hijo.getEstado().getCodigoEstadoEntidad())){
-                   if(hijo.getLibros()!= null){ // Si tiene libros, si no tiene ya ha sido procesado previamente.
-                     Pendiente pendiente = new Pendiente();
-                     pendiente.setIdOrganismo(hijo.getId());
-                     pendiente.setProcesado(false);
-                     pendiente.setEstado(hijo.getEstado().getCodigoEstadoEntidad());
-                     pendienteEjb.persist(pendiente);
-                   }
-              }
-
+                guardarPendiente(hijo);
             }
         }
 
@@ -141,19 +117,16 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
            }
         }
 
-        // Guardamos los datos de la ultima descarga
-        Descarga descarga = new Descarga();
-        descarga.setTipo(RegwebConstantes.UNIDAD);
-        descarga.setEntidad(entidad);
-        Date hoy = new Date();
-        descarga.setFechaImportacion(hoy);
-
-        descarga = descargaEjb.persist(descarga);
+        // Si no hay elementos en el arbol es que no hemos actualizado nada, por tanto no registramos la nueva descarga
+        if(arbol.size() != 0) {
+            // Guardamos los datos de la ultima descarga
+            nuevaDescarga(RegwebConstantes.UNIDAD, entidad);
+        }
 
         log.info("");
         log.info("Finalizada la importacion de Organismos");
         log.info("");
-
+        int oficinasActualizadas = 0;
         // Obtenemos por cada Organismo, las Oficinas dependientes de el
         for(Organismo organismo: organismoEjb.findByEntidad(entidadId)){
             List<OficinaTF> oficinas = oficinasService.obtenerArbolOficinas(organismo.getCodigo(),
@@ -163,18 +136,15 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
             for(OficinaTF oficinaTF:oficinas){
                 sincronizarOficina(oficinaTF);
             }
-
+            oficinasActualizadas += oficinas.size();
         }
+        // Si no hay elementos en el arbol es que no hemos actualizado nada, por tanto no registramos la nueva descarga
         // Guardamos la fecha de importacion con dir3caib
-        descarga = new Descarga();
-        descarga.setTipo(RegwebConstantes.OFICINA);
-        descarga.setEntidad(entidad);
-        hoy = new Date();
-        descarga.setFechaImportacion(hoy);
+        if( oficinasActualizadas != 0 ) {
+            nuevaDescarga(RegwebConstantes.OFICINA, entidad);
+        }
 
-        descarga = descargaEjb.persist(descarga);
-
-
+        return arbol.size();
 
 
     }
@@ -466,5 +436,29 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
           log.info(" Estado Entidad : " + cacheEstadoEntidad.size());
           return cacheEstadoEntidad;
 
-  }
+    }
+
+    private void nuevaDescarga(String tipo, Entidad entidad) throws Exception {
+        Descarga descarga = new Descarga();
+        descarga.setTipo(tipo);
+        descarga.setEntidad(entidad);
+        Date hoy = new Date();
+        descarga.setFechaImportacion(hoy);
+
+        descarga = descargaEjb.persist(descarga);
+    }
+
+    private void guardarPendiente(Organismo org) throws Exception {
+        if(RegwebConstantes.ESTADO_ENTIDAD_EXTINGUIDO.equals(org.getEstado().getCodigoEstadoEntidad())
+                || RegwebConstantes.ESTADO_ENTIDAD_TRANSITORIO.equals(org.getEstado().getCodigoEstadoEntidad())
+                || RegwebConstantes.ESTADO_ENTIDAD_ANULADO.equals(org.getEstado().getCodigoEstadoEntidad())){
+                    if(org.getLibros()!=null){
+                        Pendiente pendiente = new Pendiente();
+                        pendiente.setIdOrganismo(org.getId());
+                        pendiente.setProcesado(false);
+                        pendiente.setEstado(org.getEstado().getCodigoEstadoEntidad());
+                        pendienteEjb.persist(pendiente);
+                    }
+        }
+    }
 }

@@ -7,7 +7,6 @@ import es.caib.regweb.model.Organismo;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
-
 import java.sql.Timestamp;
 
 /**
@@ -20,7 +19,7 @@ import java.sql.Timestamp;
 @RolesAllowed({"RWE_ADMIN"})
 public interface SincronizadorDir3Local {
 
-  public void sincronizarActualizar(Long entidadId, Timestamp fechaActualizacion, Timestamp fechaSincronizacion) throws Exception;
+  public int sincronizarActualizar(Long entidadId, Timestamp fechaActualizacion, Timestamp fechaSincronizacion) throws Exception;
   public Organismo sincronizarOrganismo(UnidadTF unidadTF, Long idEntidad) throws Exception;
   public void sincronizarOficina(OficinaTF oficinaTF) throws Exception;
   public void sincronizarHistoricosOrganismo(Organismo organismo, UnidadTF unidadTF) throws Exception;

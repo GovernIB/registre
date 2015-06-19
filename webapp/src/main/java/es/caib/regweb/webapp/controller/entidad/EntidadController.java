@@ -487,8 +487,8 @@ public class EntidadController extends BaseController {
           }
 
 
-          sincronizadorDIR3Ejb.sincronizarActualizar(entidadId, fechaUltimaActualizacion, fechaSincronizacion);
-
+          int actualizados = sincronizadorDIR3Ejb.sincronizarActualizar(entidadId, fechaUltimaActualizacion, fechaSincronizacion);
+          Mensaje.saveMessageInfo(request, getMessage("regweb.sincronizados.numero") + actualizados);
        }catch(Exception e){
            log.error("Error sincro", e);
            Mensaje.saveMessageError(request, getMessage("regweb.actualizacion.nook"));
@@ -503,7 +503,8 @@ public class EntidadController extends BaseController {
     public String sincronizar(@PathVariable Long entidadId, Model model,  HttpServletRequest request) {
 
           try{
-            sincronizadorDIR3Ejb.sincronizarActualizar(entidadId, null, null);
+            int sincronizados = sincronizadorDIR3Ejb.sincronizarActualizar(entidadId, null, null);
+            Mensaje.saveMessageInfo(request, getMessage("regweb.sincronizados.numero") + sincronizados);
           }catch(Exception e){
              log.error("Error sincro", e);
              Mensaje.saveMessageError(request, getMessage("regweb.sincronizacion.nook"));
@@ -730,9 +731,12 @@ public class EntidadController extends BaseController {
               // TODO ANULADOS
             }
           }
-
-          model.addAttribute("extinguidosAutomaticos", extinguidosAutomaticos);
-          model.addAttribute("organismosAProcesar", organismosExtinguidos);
+          if(extinguidosAutomaticos.size()>0 || organismosExtinguidos.size()>0) {
+              model.addAttribute("extinguidosAutomaticos", extinguidosAutomaticos);
+              model.addAttribute("organismosAProcesar", organismosExtinguidos);
+          }else{
+              Mensaje.saveMessageInfo(request, getMessage("organismos.procesados.vacio"));
+          }
           model.addAttribute("esPendiente", true);
 
 
@@ -818,11 +822,13 @@ public class EntidadController extends BaseController {
         List<Organismo> organismosEntidad = organismoEjb.findByEntidad(entidad.getId());
 
         List<Organismo> organismosEntidadVigentes = organismoEjb.findByEntidadEstadoConOficinas(entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-
-
-        model.addAttribute("organismosAProcesar", organismosEntidad);
-        model.addAttribute("organismosSustituyentes", organismosEntidadVigentes);
-        model.addAttribute("esPendiente", false);
+        if(organismosEntidad.size()>0) {
+            model.addAttribute("organismosAProcesar", organismosEntidad);
+            model.addAttribute("organismosSustituyentes", organismosEntidadVigentes);
+            model.addAttribute("esPendiente", false);
+        }else{
+            Mensaje.saveMessageInfo(request, getMessage("organismos.procesados.vacio"));
+        }
 
         return "/organismo/organismosACambiarLibro";
     }

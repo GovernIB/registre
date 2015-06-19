@@ -15,11 +15,12 @@ de un proceso de sincronización/actualización de una entidad desde dir3caib --
 <body>
 
 <c:import url="../modulos/menu.jsp"/>
+<c:import url="../modulos/mensajes.jsp"/>
 
 <div class="row-fluid container main">
 
     <div class="well well-white">
-
+        <c:import url="../modulos/mensajes.jsp"/>
         <!-- PANEL LIBROS A CAMBIAR -->
         <c:if test="${not empty organismosAProcesar}" >
         <div class="row">
@@ -53,14 +54,22 @@ de un proceso de sincronización/actualización de una entidad desde dir3caib --
                                                                      <select id="organismoSustituye${contador.count}-${organismoAProcesar.id}" name="organismoSustituye${contador.count}-${organismoAProcesar.id}" class="chosen-select">
                                                                          <option value="-1">...</option>
                                                                          <c:if test="${esPendiente}">
-                                                                            <c:set var="organismosSustituyentes" property="${organismoAProcesar.historicoUO}"/>
+                                                                             <!-- Si es pendiente venimos del proceso de actualización y mostramos los organismos históricos que
+                                                                                  sustituyen al extinguido -->
+                                                                             <c:forEach items="${organismoAProcesar.historicoUO}" var="organismoSustituye" >
+                                                                                 <option value="${organismoSustituye.id}">${organismoSustituye.denominacion}</option>
+                                                                             </c:forEach>
                                                                          </c:if>
-                                                                         <c:forEach items="${organismosSustituyentes}" var="organismoSustituye">
-                                                                            <option value="${organismoSustituye.id}">${organismoSustituye.denominacion}</option>
-                                                                         </c:forEach>
+                                                                         <c:if test="${!esPendiente}">
+                                                                             <!-- Si no es pendiente venimos de cambiar libros de forma manual y se muestran los organismos con
+                                                                             oficinas que lo pueden sustituir -->
+                                                                            <c:forEach items="${organismosSustituyentes}" var="organismoSustituye" >
+                                                                                <option value="${organismoSustituye.id}">${organismoSustituye.denominacion}</option>
+                                                                            </c:forEach>
+                                                                         </c:if>
                                                                      </select>
                                                                      <span id="organismoSustituye${contador.count}-${organismoAProcesar.id}Error"></span>
-                                                                 </div>
+                                                                </div>
                                                           </div>
                                                     </c:forEach>
                                                     <div class="form-group col-xs-6">
@@ -92,47 +101,55 @@ de un proceso de sincronización/actualización de una entidad desde dir3caib --
 
         <!-- PANEL RESUMEN -->
         <c:if test="${esPendiente}">
-            <div class="row">
-                <div class="col-xs-8">
-                    <div class="panel panel-success">
-                        <div class="panel-heading">
-                            <h3 class="panel-title"><i class="fa fa-file-o"></i> <strong><spring:message code="organismos.extinguidos.resumen"/></strong></h3>
-                        </div>
-                        <div  class="panel-body" id="resumen">
-                            <!-- EXTINGUIDOS AUTOMATICOS -->
-                            <c:forEach var="extinguidoAutomatico" items="${extinguidosAutomaticos}">
-                                <spring:message code="organismo.extinguido"/>: <strong>${extinguidoAutomatico.key}</strong>
-                                <c:set var="organismoSustituye" value="${extinguidoAutomatico.value}"/>
-                                <table id="automaticos${extinguidoAutomatico.key}" class="table table-bordered table-hover table-striped">
-                                     <colgroup>
-                                         <col>
-                                         <col>
-                                     </colgroup>
-                                     <thead>
-                                         <tr>
-                                             <th><spring:message code="libro.libro"/></th>
-                                             <th><spring:message code="organismo.asignado"/></th>
-                                         </tr>
-                                     </thead>
-
-                                     <tbody>
-                                         <c:forEach var="libro" items="${organismoSustituye.libros}">
+            <c:if test="${not empty extinguidosAutomaticos}">
+                <div class="row">
+                    <div class="col-xs-8">
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-file-o"></i> <strong><spring:message code="organismos.extinguidos.resumen"/></strong></h3>
+                            </div>
+                            <div  class="panel-body" id="resumen">
+                                <!-- EXTINGUIDOS AUTOMATICOS -->
+                                <c:forEach var="extinguidoAutomatico" items="${extinguidosAutomaticos}">
+                                    <spring:message code="organismo.extinguido"/>: <strong>${extinguidoAutomatico.key}</strong>
+                                    <c:set var="organismoSustituye" value="${extinguidoAutomatico.value}"/>
+                                    <table id="automaticos${extinguidoAutomatico.key}" class="table table-bordered table-hover table-striped">
+                                         <colgroup>
+                                             <col>
+                                             <col>
+                                         </colgroup>
+                                         <thead>
                                              <tr>
-                                                 <td>${libro.nombre}</td>
-                                                 <td>${organismoSustituye.denominacion}</td>
+                                                 <th><spring:message code="libro.libro"/></th>
+                                                 <th><spring:message code="organismo.asignado"/></th>
                                              </tr>
-                                         </c:forEach>
-                                     </tbody>
-                                </table>
-                            </c:forEach>
+                                         </thead>
 
-                          <!-- LOS NO AUTOMATICOS SE MUESTRAN CON JQUERY en la funcion mostrarProcesado() en organismosaprocesar.js -->
+                                         <tbody>
+                                             <c:forEach var="libro" items="${organismoSustituye.libros}">
+                                                 <tr>
+                                                     <td>${libro.nombre}</td>
+                                                     <td>${organismoSustituye.denominacion}</td>
+                                                 </tr>
+                                             </c:forEach>
+                                         </tbody>
+                                    </table>
+                                </c:forEach>
+
+                              <!-- LOS NO AUTOMATICOS SE MUESTRAN CON JQUERY en la funcion mostrarProcesado() en organismosaprocesar.js -->
 
 
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </c:if>
+           <%-- <c:if test="${empty extinguidosAutomaticos && empty organismosAProcesar}">
+                <div class="alert alert-success alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <strong><spring:message code="organismos.procesados.vacio"/></strong><br>
+                </div>
+            </c:if>--%>
         </c:if>
     </div>
 </div>

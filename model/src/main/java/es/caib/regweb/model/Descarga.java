@@ -5,12 +5,11 @@
 package es.caib.regweb.model;
 
 import org.hibernate.annotations.ForeignKey;
+import org.hibernate.annotations.Index;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-
-import org.hibernate.annotations.Index;
 
 
 /**
@@ -66,6 +65,7 @@ public class Descarga implements Serializable {
   }
   
   @Column(name = "FECHAIMPORTACION")
+  @Temporal(TemporalType.DATE)
   public Date getFechaImportacion() {
     return fechaImportacion;
   }
