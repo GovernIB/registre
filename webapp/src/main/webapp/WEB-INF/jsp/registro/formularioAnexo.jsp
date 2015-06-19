@@ -267,7 +267,7 @@
     		    <div class="pull-right" style="margin-top: 15px; "> <%--  class="modal-footer" --%>
  
                     
-                    <button type="submit" class="btn btn-warning btn-sm" onclick="$('#reload').show();"><spring:message code="regweb.guardar"/></button>
+                    <button id="desaAnnex" type="submit" class="btn btn-warning btn-sm" onclick="$('#reload').show();"><spring:message code="regweb.guardar"/></button>
                     
 
                     
