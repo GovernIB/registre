@@ -113,7 +113,7 @@
                                                         <td>${organismo.denominacion}</td>
                                                         <td>${organismo.codigo}</td>
                                                         <td>${organismo.estado.descripcionEstadoEntidad}</td>
-                                                        <td>${fn:length(organismo.libros)}</td>
+                                                        <td class="center">${fn:length(organismo.libros)}</td>
                                                         <td>
                                                             <c:if test="${organismo.estado.codigoEstadoEntidad == 'V'}">
                                                                 <a class="btn btn-warning btn-sm" href="<c:url value="/libro/${organismo.id}/libros"/>" title="<spring:message code="organismo.libros"/>"><span class="fa fa-book"></span></a>

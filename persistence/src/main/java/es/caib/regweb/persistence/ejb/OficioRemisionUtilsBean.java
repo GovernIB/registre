@@ -4,7 +4,6 @@ package es.caib.regweb.persistence.ejb;
 import es.caib.regweb.model.*;
 import es.caib.regweb.model.utils.OficioPendienteLlegada;
 import es.caib.regweb.utils.RegwebConstantes;
-
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -12,7 +11,6 @@ import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -108,8 +106,8 @@ public class OficioRemisionUtilsBean implements OficioRemisionUtilsLocal {
       OficioRemision oficioRemision = new OficioRemision();
       oficioRemision.setIdentificadorIntercambioSir(identificadorIntercambioSir);
       
-      if (identificadorIntercambioSir == null) {
-        oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_ESTADO_NO_PROCESADO);
+      if (identificadorIntercambioSir == null) { //todo: modificar el estado cuando se implemente SIR
+        oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_ESTADO_ENVIADO);
         oficioRemision.setFechaEstado(null);
       } else {
         oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_ESTADO_ENVIADO);
