@@ -36,6 +36,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+
+import java.beans.Encoder;
+import java.beans.Expression;
+import java.beans.PersistenceDelegate;
 import java.beans.XMLEncoder;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -61,7 +65,6 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     @PersistenceContext(unitName="regweb")
     private EntityManager em;
-
 
     @EJB(mappedName = "regweb/RegistroEntradaCambiarEstadoEJB/local")
     public RegistroEntradaCambiarEstadoLocal registroEntradaEjb;
@@ -525,17 +528,27 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
       }
     }
     
+   
+    
+    public static class java_util_Date_PersistenceDelegate extends PersistenceDelegate {
+      protected Expression instantiate(Object oldInstance, Encoder out) {
+          Date date = (Date) oldInstance;
+          return new Expression(date, date.getClass(), "new", new Object[] {date.getTime()});
+      }
+  }
     
     
     protected String getCustodyParameters(IRegistro registro, Anexo anexo) throws Exception {
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      
-      
-      
+
       XMLEncoder encoder = new XMLEncoder(baos);
+
+      encoder.setPersistenceDelegate(java.sql.Date.class, new java_util_Date_PersistenceDelegate());
+      encoder.setPersistenceDelegate(java.sql.Time.class, new java_util_Date_PersistenceDelegate());
+      encoder.setPersistenceDelegate(java.sql.Timestamp.class, new java_util_Date_PersistenceDelegate());
+      encoder.setPersistenceDelegate(java.util.Date.class, new java_util_Date_PersistenceDelegate()); 
       
       encoder.writeObject(registro);
-      encoder.writeObject(registro.getRegistroDetalle().getAnexos());
       encoder.writeObject(new Anexo(anexo));
       encoder.flush();
       encoder.close();
@@ -543,13 +556,24 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
       /*
       try {
         XMLDecoder xmlDec = new XMLDecoder(new ByteArrayInputStream(baos.toByteArray()));
-        xmlDec.readObject();
-        xmlDec.readObject();
+        IRegistro registroDec = (IRegistro)xmlDec.readObject();
+        
+        System.out.println(" DDDDDDDDDDDDDDD = ]" + registroDec.getNumeroRegistroFormateado() + "[");
+        System.out.println(" zzzzzzzzzzzzzzz = ]" + registroDec.getRegistroDetalle().getFechaOrigen() + "[");
+
+        
+        //xmlDec.readObject();
         xmlDec.readObject();
         
       } catch (Throwable e) {
         log.error(" EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" , e);
       }
+
+
+      FileOutputStream fos = new FileOutputStream("c:\\tmp\\out.xml");
+      fos.write(baos.toByteArray());
+      fos.flush();
+      fos.close();
       */
 
       return new String(baos.toByteArray());
