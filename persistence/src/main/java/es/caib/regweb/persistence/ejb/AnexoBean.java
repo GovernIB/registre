@@ -6,6 +6,7 @@ import es.caib.regweb.model.IRegistro;
 import es.caib.regweb.model.RegistroDetalle;
 import es.caib.regweb.model.RegistroEntrada;
 import es.caib.regweb.model.RegistroSalida;
+import es.caib.regweb.model.TipoDocumental;
 import es.caib.regweb.model.TraduccionTipoDocumental;
 import es.caib.regweb.model.UsuarioEntidad;
 import es.caib.regweb.persistence.utils.AnexoFull;
@@ -38,6 +39,8 @@ import javax.persistence.Query;
 
 
 
+
+
 import java.beans.Encoder;
 import java.beans.Expression;
 import java.beans.PersistenceDelegate;
@@ -66,6 +69,10 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     @PersistenceContext(unitName="regweb")
     private EntityManager em;
+    
+    @EJB(mappedName = "regweb/TipoDocumentalEJB/local")
+    public TipoDocumentalLocal tipoDocumentalEjb;
+    
 
     @EJB(mappedName = "regweb/RegistroEntradaCambiarEstadoEJB/local")
     public RegistroEntradaCambiarEstadoLocal registroEntradaEjb;
@@ -130,10 +137,21 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         
         Anexo anexo = anexoFull.getAnexo();
         
-        // Validador                
+        // Validador
         validateAnexo(anexo, isNew);
         
         anexo.setFechaCaptura(new Date());
+        
+        // Revisar si tipusdocumental està carregat
+        Long id = anexo.getTipoDocumental().getId();
+        TipoDocumental td = tipoDocumentalEjb.findById(id);
+        if (td == null) {
+          I18NException i18n = new I18NException("anexo.tipoDocumental.obligatorio");
+          log.error("No trob tipoDocumental amb ID = ]" + id + "[");
+          throw i18n;
+        } else {
+          anexo.setTipoDocumental(td);
+        }
 
         custody = AnnexDocumentCustodyManager.getInstance();
         
@@ -265,23 +283,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
       
 
       List<Anexo> anexos = Anexo.clone(registro.getRegistroDetalle().getAnexos());
-      /*
-      if (isNou) {
-        if (anexos == null) {
-          anexos = new ArrayList<Anexo>();
-          registro.getRegistroDetalle().setAnexos(anexos);
-        }
-        anexos.add(anexo);
-      } else {
-        for (Anexo anexo2 : anexos) {
-          if (anexo2.getId().equals(anexo.getId())) {
-            anexos.remove(anexo2);
-            break;
-          }
-        }
-        anexos.add(anexo);
-      }
-      */
+
       cloneRegistro.getRegistroDetalle().setAnexos(anexos);
 
 
@@ -556,30 +558,37 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
       
       /*
       try {
-        java.beans.XMLDecoder xmlDec = new java.beans.XMLDecoder(new java.io.ByteArrayInputStream(baos.toByteArray()));
-        IRegistro registroDec = (IRegistro)xmlDec.readObject();
-        
-        System.out.println(" DDDDDDDDDDDDDDD = ]" + registroDec.getNumeroRegistroFormateado() + "[");
-        System.out.println(" zzzzzzzzzzzzzzz = ]" + registroDec.getRegistroDetalle().getFechaOrigen() + "[");
-       
+        java.beans.XMLDecoder xmlDec = new java.beans.XMLDecoder(
+            new java.io.ByteArrayInputStream(baos.toByteArray()));
+        IRegistro registroDec = (IRegistro) xmlDec.readObject();
+  
+        System.out.println(" DDDDDDDDDDDDDDD = ]" + registroDec.getNumeroRegistroFormateado()
+            + "[");
+        System.out.println(" zzzzzzzzzzzzzzz = ]"
+            + registroDec.getRegistroDetalle().getFechaOrigen() + "[");
+  
+        Anexo anex = (Anexo) xmlDec.readObject();
+  
+        System.out.println(" KKKKKKKK = ]"
+            + ((TraduccionTipoDocumental) anex.getTipoDocumental().getTraduccion("ca"))
+                .getNombre() + "[");
+  
 
-        Anexo anex =  (Anexo)xmlDec.readObject();
-
-        System.out.println(" KKKKKKKK = ]" + 
-            ((TraduccionTipoDocumental) anex.getTipoDocumental().getTraduccion("ca")).getNombre() + "[");
-        
-
-
+  
+      } catch (Throwable e) {
+        log.error(" EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE", e);
+      }
+  
+      try {
+  
         java.io.FileOutputStream fos = new java.io.FileOutputStream("c:\\tmp\\out.xml");
         fos.write(baos.toByteArray());
         fos.flush();
         fos.close();
-
-        
+  
       } catch (Throwable e) {
-        log.error(" EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" , e);
+        log.error(" FFFFFFFFFFFFFFFFF", e);
       }
-
       */
 
       
