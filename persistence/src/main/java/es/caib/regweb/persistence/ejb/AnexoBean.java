@@ -37,6 +37,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 
+
 import java.beans.Encoder;
 import java.beans.Expression;
 import java.beans.PersistenceDelegate;
@@ -555,26 +556,33 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
       
       /*
       try {
-        XMLDecoder xmlDec = new XMLDecoder(new ByteArrayInputStream(baos.toByteArray()));
+        java.beans.XMLDecoder xmlDec = new java.beans.XMLDecoder(new java.io.ByteArrayInputStream(baos.toByteArray()));
         IRegistro registroDec = (IRegistro)xmlDec.readObject();
         
         System.out.println(" DDDDDDDDDDDDDDD = ]" + registroDec.getNumeroRegistroFormateado() + "[");
         System.out.println(" zzzzzzzzzzzzzzz = ]" + registroDec.getRegistroDetalle().getFechaOrigen() + "[");
+       
 
+        Anexo anex =  (Anexo)xmlDec.readObject();
+
+        System.out.println(" KKKKKKKK = ]" + 
+            ((TraduccionTipoDocumental) anex.getTipoDocumental().getTraduccion("ca")).getNombre() + "[");
         
-        //xmlDec.readObject();
-        xmlDec.readObject();
+
+
+        java.io.FileOutputStream fos = new java.io.FileOutputStream("c:\\tmp\\out.xml");
+        fos.write(baos.toByteArray());
+        fos.flush();
+        fos.close();
+
         
       } catch (Throwable e) {
         log.error(" EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" , e);
       }
 
-
-      FileOutputStream fos = new FileOutputStream("c:\\tmp\\out.xml");
-      fos.write(baos.toByteArray());
-      fos.flush();
-      fos.close();
       */
+
+      
 
       return new String(baos.toByteArray());
     }

@@ -173,12 +173,13 @@
 			<artifactId>plugin-documentcustody-filesystem</artifactId>
 			<version>1.0.0</version>
 		</dependency>
-		
+		<!--
 		<dependency>
 			<groupId>org.fundaciobit.plugins</groupId>
 			<artifactId>plugin-documentcustody-alfresco</artifactId>
 			<version>1.0.0</version>
 		</dependency>		
+		-->
 		
 		<!-- ====================================== -->
 		<!-- ===== PLUGINS DE USERINFORMATION ===== -->
