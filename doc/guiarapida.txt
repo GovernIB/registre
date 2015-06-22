@@ -35,6 +35,10 @@
 	           * Introduir codi tipus assumpte:  AJSU
 			   * Afegir traduccions: Ajudes i Subvencions
 			   * Desar
+    (3.6) Codi d'Assumpte:  AdEn -> CAIB -> cataleg de dades -> Gestio Tipus Assumpte -> Seleccionar AJSU
+	          * Pitjar boto "Nou codi Assumpte"
+			  * Codi = AjudaSubvencio | ca = Ajudes i Subvencions | es = Ayudas i Subvenciones
+			  * Pitjar Desar
 	(3.7) Afegir usuaris: AdEn -> CAIB -> gestio usuaris: 
 	             * Pitjar Introduir usuari
 				 * Escriure "anadal" i pitjar "Desar"
