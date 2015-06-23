@@ -34,8 +34,8 @@
                 <div class="panel panel-success">
 
                     <div class="panel-heading">
-                        <a class="btn btn-success btn-xs pull-right" href="<c:url value="/entidad/librosCambiar"/>" role="button"><i class="fa fa-book"></i> <spring:message code="entidad.cambiarlibros"/></a>&nbsp;
-                        <a class="btn btn-success btn-xs pull-right" href="<c:url value="/organismo/arbolList"/>" role="button"><i class="fa fa-sitemap"></i> <spring:message code="organismo.arbol"/></a>
+                        <a class="btn btn-success btn-xs pull-right margin-left10" href="<c:url value="/organismo/arbolList"/>" role="button"><span class="fa fa-plus"></span> <spring:message code="organismo.arbol"/></a>
+                        <a class="btn btn-success btn-xs pull-right" href="<c:url value="/entidad/librosCambiar"/>" role="button"><span class="fa fa-book"></span> <spring:message code="entidad.cambiarlibros"/></a>
                         <h3 class="panel-title"><i class="fa fa-list"></i> <strong><spring:message code="organismo.buscador"/> ${entidad.nombre}</strong></h3>
                     </div>
 
@@ -179,7 +179,32 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
+        var confirmModal =
+                $("<div class=\"modal fade\">" +
+                "<div class=\"modal-dialog\">" +
+                "<div class=\"modal-content\">"+
+                "<div class=\"modal-header\">" +
+                "<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>" +
+                "<h4 class=\"modal-title\"><spring:message code="regweb.confirmar" htmlEscape="true"/></h4>" +
+                "</div>" +
+
+                "<div class=\"modal-body\">" +
+                "<p><spring:message code="catalogoDir3.confirmacion.actualizar" htmlEscape="true"/></p>" +
+                "</div>" +
+
+                "<div class=\"modal-footer\">" +
+                "<button type=\"button\" id=\"noButton\" class=\"btn btn-default\" data-dismiss=\"modal\">No</button>"+
+                "<button type=\"button\" id=\"okButton\" class=\"btn btn-danger\">Sí</button>"+
+                "</div>" +
+                "</div>" +
+                "</div>" +
+                "</div>");
+
         $('#sincro').click(function(){
+
+            confirmModal.modal("show");
+            confirmModal.find("#okButton").click(function(event) {
+                confirmModal.modal("hide");
 
                 $.ajax({
                     url:'<c:url value="/entidad/${entidad.id}/sincronizar"/>',
@@ -193,9 +218,14 @@
                     }
                 });
 
+            });
 
         });
         $('#actuali').click(function(){
+
+            confirmModal.modal("show");
+            confirmModal.find("#okButton").click(function(event) {
+                confirmModal.modal("hide");
 
                 $.ajax({
                     url:'<c:url value="/entidad/${entidad.id}/actualizar"/>',
@@ -207,6 +237,8 @@
                         goTo('<c:url value="/entidad/pendientesprocesar"/>');
                     }
                 });
+
+            });
 
         });
     });
