@@ -701,7 +701,7 @@ public class EntidadController extends BaseController {
                 if(organismoExtinguido.getHistoricoUO().size() == 1){// Se procesa internamente
                    log.info("Entramos en historicos 1 de extinguido" + organismoExtinguido.getDenominacion());
                    if(libros.size()>0){
-                      log.info("Entramos en hay libros de historico 1");
+                      log.info("Entramos en hay libros de historico 1 " + organismoExtinguido.getDenominacion());
                       // Asignamos libros misma numeración
                       Organismo orgSustituye = new ArrayList<Organismo>(organismoExtinguido.getHistoricoUO()).get(0);
 
@@ -724,6 +724,7 @@ public class EntidadController extends BaseController {
                 }else { // tiene más de un historico
                     log.info("Entramos en historicos +1 de extinguido " + organismoExtinguido.getDenominacion());
                     if(libros.size()>0){//Si tiene libros se añade para procesarlo
+                        log.info("Tiene libros " + organismoExtinguido.getDenominacion());
                       organismosExtinguidos.add(organismoExtinguido);
                     }
                 }
@@ -735,6 +736,7 @@ public class EntidadController extends BaseController {
               model.addAttribute("extinguidosAutomaticos", extinguidosAutomaticos);
               model.addAttribute("organismosAProcesar", organismosExtinguidos);
           }else{
+              log.info("no hay organismos a procesar ");
               Mensaje.saveMessageInfo(request, getMessage("organismos.procesados.vacio"));
           }
           model.addAttribute("esPendiente", true);
@@ -743,7 +745,7 @@ public class EntidadController extends BaseController {
 
         }else {
             log.debug("else no pendientes de procesar");
-            Mensaje.saveMessageInfo(request, getMessage("organismo.nopendientesprocesar"));
+            Mensaje.saveMessageInfo(request, "no hay pendientes de procesar");
             return "redirect:/organismo/list";
         }
         //return "organismo/organismosActualizados";

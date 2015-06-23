@@ -15,16 +15,16 @@ de un proceso de sincronización/actualización de una entidad desde dir3caib --
 <body>
 
 <c:import url="../modulos/menu.jsp"/>
-<c:import url="../modulos/mensajes.jsp"/>
 
 <div class="row-fluid container main">
 
     <div class="well well-white">
         <c:import url="../modulos/mensajes.jsp"/>
         <!-- PANEL LIBROS A CAMBIAR -->
-        <c:if test="${not empty organismosAProcesar}" >
+
         <div class="row">
             <div class="col-xs-12">
+                <c:if test="${not empty organismosAProcesar}" >
                 <div class="panel panel-success">
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-list"></i> <strong><spring:message code="organismo.procesar"/></strong></h3>
@@ -87,6 +87,7 @@ de un proceso de sincronización/actualización de una entidad desde dir3caib --
                     </div> <!--/.panel body-->
 
                 </div>
+                </c:if>
             </div>
             <%--Botonera--%>
             <div class="col-xs-12">
@@ -97,7 +98,7 @@ de un proceso de sincronización/actualización de una entidad desde dir3caib --
 
         <!-- /.PANEL LIBROS A CAMBIAR -->
         </div><!-- /.row-->
-        </c:if>
+
 
         <!-- PANEL RESUMEN -->
         <c:if test="${esPendiente}">
@@ -144,15 +145,10 @@ de un proceso de sincronización/actualización de una entidad desde dir3caib --
                     </div>
                 </div>
             </c:if>
-           <%-- <c:if test="${empty extinguidosAutomaticos && empty organismosAProcesar}">
-                <div class="alert alert-success alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    <strong><spring:message code="organismos.procesados.vacio"/></strong><br>
-                </div>
-            </c:if>--%>
         </c:if>
     </div>
 </div>
+
 <c:import url="../modulos/pie.jsp"/>
 <%-- traduccions para organismosaprocesar.js--%>
 <script type="text/javascript">
