@@ -290,6 +290,10 @@ public class OrganismoController extends BaseController {
             }
         }
 
+        int librosTotal = librosOrganismoPrimerNivel.size() + librosOrganismoSegundoNivel.size() + librosOrganismoTercerNivel.size() +
+                librosOrganismoCuartoNivel.size() + librosOrganismoQuintoNivel.size() + librosOrganismoSextoNivel.size() +
+                librosOrganismoSeptimoNivel.size();
+
         mav.addObject("organismosPrimerNivel", organismosPrimerNivel);
         mav.addObject("organismosSegundoNivel", organismosSegundoNivel);
         mav.addObject("organismosTercerNivel", organismosTercerNivel);
@@ -307,6 +311,7 @@ public class OrganismoController extends BaseController {
         mav.addObject("librosOrganismoQuintoNivel", librosOrganismoQuintoNivel);
         mav.addObject("librosOrganismoSextoNivel", librosOrganismoSextoNivel);
         mav.addObject("librosOrganismoSeptimoNivel", librosOrganismoSeptimoNivel);
+        mav.addObject("librosTotal", librosTotal);
         mav.addObject("entidad", entidad);
 
         return mav;

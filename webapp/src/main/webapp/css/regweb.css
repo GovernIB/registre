@@ -610,6 +610,20 @@ input[readonly] {
     background-color: #b374d1;
     border-color: #B267D5;
 }
+.btn-danger-llegenda {
+    color: #fff;
+    background-color: #d9534f;
+    border-color: #d43f3a;
+    cursor: default;
+}
+.btn-danger-llegenda:hover,
+.btn-danger-llegenda:focus,
+.btn-danger-llegenda:active,
+.btn-danger-llegenda.active{
+    color: #fff;
+    background-color: #d9534f;
+    border-color: #B267D5;
+}
 .btn-quart {
     color: #fff;
     background-color: #b1b0b0;
@@ -624,17 +638,17 @@ input[readonly] {
     border-color: #959494;
 }
 .btn-ofaux {
-    color: #fff;
-    background-color: #ff6669;
-    border-color: #fa6669;
+    color: #999999;
+    background-color: #FFD700;
+    border-color: #CBB11B;
 }
 .btn-ofaux:hover,
 .btn-ofaux:focus,
 .btn-ofaux:active,
 .btn-ofaux.active{
-    color: #fff;
-    background-color: #ff4569;
-    border-color: #fa6669;
+    color: #999999;
+    background-color: #E7C713;
+    border-color: #CBB11B;
 }
 .btn-oficinafuncional {
     color: #fff;

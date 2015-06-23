@@ -58,24 +58,42 @@
                             <div class="panel-footer">
                                 <div class="row">
                                     <div class="col-xs-12 pad-bottom5">
-                                        <button type="button" class="btn-llibre-llegenda btn-xs"><i class="fa fa-book"></i> <spring:message code="libro.libros"/></button>
+                                        <button type="button" class="btn-danger-llegenda btn-xs"><i class="fa fa-globe"></i> <spring:message code="entidad.entidad"/></button>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-12 pad-bottom5">
-                                        <button type="button" class="btn-warning btn-xs"><i class="fa fa-home"></i> <spring:message code="regweb.oficinas.principal"/></button>
+                                        <button type="button" class="btn-primary btn-xs"><i class="fa fa-globe"></i> <spring:message code="entidad.unidadOrganica"/></button>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-xs-12 pad-bottom5">
-                                        <button type="button" class="btn-ofaux btn-xs"><i class="fa fa-home"></i> <spring:message code="regweb.oficinas.auxiliar"/></button>
+                                <c:if test="${librosTotal > 0}">
+                                    <div class="row">
+                                        <div class="col-xs-12 pad-bottom5">
+                                            <button type="button" class="btn-llibre-llegenda btn-xs"><i class="fa fa-book"></i> <spring:message code="libro.libro"/></button>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-12 pad-bottom5">
-                                        <button type="button" class="btn-oficinafuncional btn-xs"><i class="fa fa-institution"></i> <spring:message code="regweb.oficinas.funcional"/></button>
+                                </c:if>
+                                <c:if test="${not empty oficinasResponsables}">
+                                    <div class="row">
+                                        <div class="col-xs-12 pad-bottom5">
+                                            <button type="button" class="btn-warning btn-xs"><i class="fa fa-home"></i> <spring:message code="regweb.oficina.principal"/></button>
+                                        </div>
                                     </div>
-                                </div>
+                                </c:if>
+                                <c:if test="${not empty oficinasDependientes}">
+                                    <div class="row">
+                                        <div class="col-xs-12 pad-bottom5">
+                                            <button type="button" class="btn-ofaux btn-xs"><i class="fa fa-home"></i> <spring:message code="regweb.oficina.auxiliar"/></button>
+                                        </div>
+                                    </div>
+                                </c:if>
+                                <c:if test="${not empty oficinasFuncionales}">
+                                    <div class="row">
+                                        <div class="col-xs-12 pad-bottom5">
+                                            <button type="button" class="btn-success btn-xs"><i class="fa fa-institution"></i> <spring:message code="regweb.oficina.funcional"/></button>
+                                        </div>
+                                    </div>
+                                </c:if>
                             </div>
                         </div>
                     </div>
@@ -95,7 +113,7 @@
 
                                     <c:forEach var="organismo1" items="${organismosPrimerNivel}">
                                         <li>
-                                            <span class="badge-arbre btn-success" id="govern" style="display:closed;"><i class=""></i> ${organismo1.codigo} - ${organismo1.denominacion}</span>
+                                            <span class="badge-arbre btn-primary" id="govern" style="display:closed;"><i class=""></i> ${organismo1.codigo} - ${organismo1.denominacion}</span>
 
                                             <ul>
                                                 <!-- **** Entra si algún Organismo de primer nivel tiene libros ***-->
@@ -137,7 +155,7 @@
                                                 <c:forEach var="oficinaFuncional" items="${oficinasFuncionales}">
                                                     <c:if test="${oficinaFuncional.id == organismo1.id}">
                                                         <li>
-                                                            <a href="javascript:void(0);"><span class="badge-arbre btn-oficinafuncional" style="display:closed;"><i class="fa fa-institution"></i> ${oficinaFuncional.nombre}</span></a>
+                                                            <a href="javascript:void(0);"><span class="badge-arbre btn-success" style="display:closed;"><i class="fa fa-institution"></i> ${oficinaFuncional.nombre}</span></a>
                                                         </li>
                                                     </c:if>
                                                 </c:forEach>
@@ -188,7 +206,7 @@
                                                                 <c:forEach var="oficinaFuncional" items="${oficinasFuncionales}">
                                                                     <c:if test="${oficinaFuncional.id == organismo2.id}">
                                                                         <li>
-                                                                            <a href="javascript:void(0);"><span class="badge-arbre btn-oficinafuncional" style="display:closed;"><i class="fa fa-institution"></i> ${oficinaFuncional.nombre}</span></a>
+                                                                            <a href="javascript:void(0);"><span class="badge-arbre btn-success" style="display:closed;"><i class="fa fa-institution"></i> ${oficinaFuncional.nombre}</span></a>
                                                                         </li>
                                                                     </c:if>
                                                                 </c:forEach>
@@ -196,7 +214,7 @@
                                                                 <c:forEach var="organismo3" items="${organismosTercerNivel}">
                                                                     <c:if test="${organismo3.organismoSuperior.id == organismo2.id}">
                                                                         <li>
-                                                                            <span class="badge-arbre btn-info" id="segonNivell${contadorSegon}" style="display:closed;"><i class=""></i> ${organismo3.codigo} - ${organismo3.denominacion}</span>
+                                                                            <span class="badge-arbre btn-primary" id="segonNivell${contadorSegon}" style="display:closed;"><i class=""></i> ${organismo3.codigo} - ${organismo3.denominacion}</span>
 
                                                                             <c:set var="contadorSegon" value="${contadorSegon+1}"></c:set>
                                                                             <ul>
@@ -239,7 +257,7 @@
                                                                                 <c:forEach var="oficinaFuncional" items="${oficinasFuncionales}">
                                                                                     <c:if test="${oficinaFuncional.id == organismo3.id}">
                                                                                         <li>
-                                                                                            <a href="javascript:void(0);"><span class="badge-arbre btn-oficinafuncional" style="display:closed;"><i class="fa fa-institution"></i> ${oficinaFuncional.nombre}</span></a>
+                                                                                            <a href="javascript:void(0);"><span class="badge-arbre btn-success" style="display:closed;"><i class="fa fa-institution"></i> ${oficinaFuncional.nombre}</span></a>
                                                                                         </li>
                                                                                     </c:if>
                                                                                 </c:forEach>
@@ -247,7 +265,7 @@
                                                                                 <c:forEach var="organismo4" items="${organismosCuartoNivel}">
                                                                                     <c:if test="${organismo4.organismoSuperior.id == organismo3.id}">
                                                                                         <li>
-                                                                                            <span class="badge-arbre btn-quart" id="tercerNivell${contadorTercer}" style="display:closed;"><i class=""></i> ${organismo4.codigo} - ${organismo4.denominacion}</span>
+                                                                                            <span class="badge-arbre btn-primary" id="tercerNivell${contadorTercer}" style="display:closed;"><i class=""></i> ${organismo4.codigo} - ${organismo4.denominacion}</span>
 
                                                                                             <c:set var="contadorTercer" value="${contadorTercer+1}"></c:set>
                                                                                             <ul>
@@ -290,7 +308,7 @@
                                                                                                 <c:forEach var="oficinaFuncional" items="${oficinasFuncionales}">
                                                                                                     <c:if test="${oficinaFuncional.id == organismo4.id}">
                                                                                                         <li>
-                                                                                                            <a href="javascript:void(0);"><span class="badge-arbre btn-oficinafuncional" style="display:closed;"><i class="fa fa-institution"></i> ${oficinaFuncional.nombre}</span></a>
+                                                                                                            <a href="javascript:void(0);"><span class="badge-arbre btn-success" style="display:closed;"><i class="fa fa-institution"></i> ${oficinaFuncional.nombre}</span></a>
                                                                                                         </li>
                                                                                                     </c:if>
                                                                                                 </c:forEach>
@@ -298,7 +316,7 @@
                                                                                                 <c:forEach var="organismo5" items="${organismosQuintoNivel}">
                                                                                                     <c:if test="${organismo5.organismoSuperior.id == organismo4.id}">
                                                                                                         <li>
-                                                                                                            <span class="badge-arbre btn-quart" id="quartNivell${contadorQuart}" style="display:closed;"><i class=""></i> ${organismo5.codigo} - ${organismo5.denominacion}</span>
+                                                                                                            <span class="badge-arbre btn-primary" id="quartNivell${contadorQuart}" style="display:closed;"><i class=""></i> ${organismo5.codigo} - ${organismo5.denominacion}</span>
 
                                                                                                             <c:set var="contadorQuart" value="${contadorQuart+1}"></c:set>
                                                                                                             <ul>
@@ -341,7 +359,7 @@
                                                                                                                 <c:forEach var="oficinaFuncional" items="${oficinasFuncionales}">
                                                                                                                     <c:if test="${oficinaFuncional.id == organismo5.id}">
                                                                                                                         <li>
-                                                                                                                            <a href="javascript:void(0);"><span class="badge-arbre btn-oficinafuncional" style="display:closed;"><i class="fa fa-institution"></i> ${oficinaFuncional.nombre}</span></a>
+                                                                                                                            <a href="javascript:void(0);"><span class="badge-arbre btn-success" style="display:closed;"><i class="fa fa-institution"></i> ${oficinaFuncional.nombre}</span></a>
                                                                                                                         </li>
                                                                                                                     </c:if>
                                                                                                                 </c:forEach>
@@ -349,7 +367,7 @@
                                                                                                                 <c:forEach var="organismo6" items="${organismosSextoNivel}">
                                                                                                                     <c:if test="${organismo6.organismoSuperior.id == organismo5.id}">
                                                                                                                         <li>
-                                                                                                                            <span class="badge-arbre btn-quart" id="cinqueNivell${contadorCinque}" style="display:closed;"><i class=""></i> ${organismo6.codigo} - ${organismo6.denominacion}</span>
+                                                                                                                            <span class="badge-arbre btn-primary" id="cinqueNivell${contadorCinque}" style="display:closed;"><i class=""></i> ${organismo6.codigo} - ${organismo6.denominacion}</span>
 
                                                                                                                             <c:set var="contadorCinque" value="${contadorCinque+1}"></c:set>
                                                                                                                             <ul>
@@ -392,7 +410,7 @@
                                                                                                                                 <c:forEach var="oficinaFuncional" items="${oficinasFuncionales}">
                                                                                                                                     <c:if test="${oficinaFuncional.id == organismo6.id}">
                                                                                                                                         <li>
-                                                                                                                                            <a href="javascript:void(0);"><span class="badge-arbre btn-oficinafuncional" style="display:closed;"><i class="fa fa-institution"></i> ${oficinaFuncional.nombre}</span></a>
+                                                                                                                                            <a href="javascript:void(0);"><span class="badge-arbre btn-success" style="display:closed;"><i class="fa fa-institution"></i> ${oficinaFuncional.nombre}</span></a>
                                                                                                                                         </li>
                                                                                                                                     </c:if>
                                                                                                                                 </c:forEach>
@@ -400,7 +418,7 @@
                                                                                                                                 <c:forEach var="organismo7" items="${organismosSeptimoNivel}">
                                                                                                                                     <c:if test="${organismo7.organismoSuperior.id == organismo6.id}">
                                                                                                                                         <li>
-                                                                                                                                            <span class="badge-arbre btn-quart" id="siseNivell${contadorSise}" style="display:closed;"><i class=""></i> ${organismo7.codigo} - ${organismo7.denominacion}</span>
+                                                                                                                                            <span class="badge-arbre btn-primary" id="siseNivell${contadorSise}" style="display:closed;"><i class=""></i> ${organismo7.codigo} - ${organismo7.denominacion}</span>
 
                                                                                                                                             <c:set var="contadorSise" value="${contadorSise+1}"></c:set>
                                                                                                                                             <ul>
@@ -443,7 +461,7 @@
                                                                                                                                                 <c:forEach var="oficinaFuncional" items="${oficinasFuncionales}">
                                                                                                                                                     <c:if test="${oficinaFuncional.id == organismo7.id}">
                                                                                                                                                         <li>
-                                                                                                                                                            <a href="javascript:void(0);"><span class="badge-arbre btn-oficinafuncional" style="display:closed;"><i class="fa fa-institution"></i> ${oficinaFuncional.nombre}</span></a>
+                                                                                                                                                            <a href="javascript:void(0);"><span class="badge-arbre btn-success" style="display:closed;"><i class="fa fa-institution"></i> ${oficinaFuncional.nombre}</span></a>
                                                                                                                                                         </li>
                                                                                                                                                     </c:if>
                                                                                                                                                 </c:forEach>
