@@ -31,13 +31,15 @@ de un proceso de sincronización/actualización de una entidad desde dir3caib --
                     </div>
 
                     <div  class="panel-body" id="pendientes">
+                        <p><spring:message code="organismo.modificar.libros"/></p>
+
                         <c:forEach var="organismoAProcesar" items="${organismosAProcesar}">
                             <c:if test="${not empty organismoAProcesar.libros}">
                                 <div class="row">
                                     <div class="col-xs-12">
                                        <div class="panel panel-success" id="panel${organismoAProcesar.id}">
                                            <div class="panel-heading">
-                                                <h3 class="panel-title"><i class="fa fa-globe"></i> <strong><spring:message code="organismo.organismo"/>: ${organismoAProcesar.codigo} - ${organismoAProcesar.denominacion}</strong></h3>
+                                                <h3 class="panel-title"><i class="fa fa-globe"></i> <strong><spring:message code="organismo.libros"/>: ${organismoAProcesar.denominacion} (${organismoAProcesar.codigo})</strong></h3>
                                            </div>
 
                                            <div  class="panel-body">
@@ -46,7 +48,7 @@ de un proceso de sincronización/actualización de una entidad desde dir3caib --
                                                     <c:forEach var="libroorganismoAProcesar" items="${organismoAProcesar.libros}" varStatus="contador">
                                                           <div class="form-group col-xs-8">
                                                                 <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                                                    <label for="libro${contador.count}-${organismoAProcesar.id}">${libroorganismoAProcesar.nombre}</label>
+                                                                    <label for="libro${contador.count}-${organismoAProcesar.id}"><spring:message code="libro.libro"/> <em>${libroorganismoAProcesar.nombre}</em></label>
                                                                     <input id="libro${contador.count}-${organismoAProcesar.id}" type="hidden" class="form-control" value="${libroorganismoAProcesar.id}"/>
                                                                     <span id="libro${contador.count}-${organismoAProcesar.id}Error"></span>
                                                                 </div>

@@ -51,7 +51,10 @@
                             <dd> ${(empty oficioRemision.organismoDestinatario)? oficioRemision.destinoExternoDenominacion : oficioRemision.organismoDestinatario.denominacion}</dd>
                             <dt><i class="fa fa-bookmark"></i> <spring:message code="oficioRemision.estado"/>: </dt>
                             <dd>
-                                <span class="label ${(oficioRemision.estado == 2)?'label-success':'label-danger'}">
+                                <c:if test="${oficioRemision.estado == 0}"><span class="label label-danger"></c:if>
+                                <c:if test="${oficioRemision.estado == 1}"><span class="label label-warning"></c:if>
+                                <c:if test="${oficioRemision.estado == 2}"><span class="label label-success"></c:if>
+
                                 <spring:message code="oficioRemision.estado.${oficioRemision.estado}"/>
                                 <c:if test="${not empty oficioRemision.fechaEstado && oficioRemision.estado != 0}">
                                     - <fmt:formatDate value="${oficioRemision.fechaEstado}" pattern="dd/MM/yyyy HH:mm:ss"/>
