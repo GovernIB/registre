@@ -53,7 +53,7 @@
             </div>
 
             <c:url value="/registroSalida/busqueda" var="urlBusqueda"/>
-            <form:form modelAttribute="registroSalidaBusqueda" action="${urlBusqueda}" method="post" cssClass="form-horizontal">
+            <form:form modelAttribute="registroSalidaBusqueda" action="${urlBusqueda}" method="get" cssClass="form-horizontal">
             <form:hidden path="pageNumber"/>
 
                 <div class="panel-body">
