@@ -489,8 +489,9 @@ public class EntidadController extends BaseController {
 
           int actualizados = sincronizadorDIR3Ejb.sincronizarActualizar(entidadId, fechaUltimaActualizacion, fechaSincronizacion);
           Mensaje.saveMessageInfo(request, getMessage("regweb.sincronizados.numero") + actualizados);
+
        }catch(Exception e){
-           log.error("Error sincro", e);
+           log.error("Error actualizacion", e);
            Mensaje.saveMessageError(request, getMessage("regweb.actualizacion.nook"));
        }
 
