@@ -56,9 +56,9 @@
     <div class="content">
         <div class="row">
             <div class="login-form">
-                <h2>REGWEB</h2>
+                <h2>REGWEB3</h2>
 
-                    El usuari <strong>${pageContext.request.userPrincipal.name}</strong> no te asociat cap usuari dins REGWEB, o es un usuari de tipus aplicació, per favor contacti amb l'Administrador.
+                    El usuari <strong>${pageContext.request.userPrincipal.name}</strong> no te asociat cap usuari dins REGWEB3, o es un usuari de tipus aplicació, per favor contacti amb l'Administrador.
 
 
             </div>

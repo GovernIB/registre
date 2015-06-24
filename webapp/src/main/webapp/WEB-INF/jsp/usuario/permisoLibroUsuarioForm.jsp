@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="es.caib.regweb.utils.RegwebConstantes" %>
+<%@ page import="es.caib.regweb3.utils.RegwebConstantes" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
-<un:useConstants var="RegwebConstantes" className="es.caib.regweb.utils.RegwebConstantes"/>
+<un:useConstants var="RegwebConstantes" className="es.caib.regweb3.utils.RegwebConstantes"/>
 <!DOCTYPE html>
 <html lang="ca">
 <head>

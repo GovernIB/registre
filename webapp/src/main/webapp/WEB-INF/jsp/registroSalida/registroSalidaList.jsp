@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
-<un:useConstants var="RegwebConstantes" className="es.caib.regweb.utils.RegwebConstantes"/>
+<un:useConstants var="RegwebConstantes" className="es.caib.regweb3.utils.RegwebConstantes"/>
 
 <!DOCTYPE html>
 <html lang="ca">
@@ -11,7 +11,7 @@
     <script type="text/javascript">
   		var tradorganismo = new Array();
   		tradorganismo['organismo.denominacion'] = "<spring:message code='organismo.denominacion' javaScriptEscape='true' />";
-  		tradorganismo['regweb.acciones'] = "<spring:message code='regweb.acciones' javaScriptEscape='true' />";
+  		tradorganismo['regweb3.acciones'] = "<spring:message code='regweb.acciones' javaScriptEscape='true' />";
   	</script>      
 </head>
 

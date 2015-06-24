@@ -2,18 +2,18 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-   <groupId>es.caib.regweb</groupId>
-	<artifactId>regweb-migraciodades</artifactId>  
+   <groupId>es.caib.regweb3</groupId>
+	<artifactId>regweb3-migraciodades</artifactId>
 	<version>3.0.0</version>
 	<packaging>jar</packaging>
 
 	<parent>
-		<groupId>es.caib.regweb</groupId>
-		<artifactId>regweb</artifactId>
+		<groupId>es.caib.regweb3</groupId>
+		<artifactId>regweb3</artifactId>
 		<version>3.0.0</version>
 	</parent>
 
-	<name>RegWeb - Migracio Dades</name>
+	<name>RegWeb3 - Migracio Dades</name>
 
 
     <repositories>
@@ -56,8 +56,8 @@
         </dependency>
 	
 	<dependency>
-        <groupId>es.caib.regweb.model.v2</groupId>
-		<artifactId>regweb-model</artifactId>
+        <groupId>es.caib.regweb3.model.v2</groupId>
+		<artifactId>regweb3-model</artifactId>
 		<version>1.0</version>
 		<type>jar</type>
 	</dependency>

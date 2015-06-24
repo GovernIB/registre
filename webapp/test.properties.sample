@@ -1,5 +1,5 @@
 baseUrl=http://localhost:8080
-context=/regweb
+context=/regweb3
 iscaib=true
 username=test
 password=test

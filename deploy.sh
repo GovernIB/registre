@@ -17,10 +17,10 @@ if [ $? == 0 ]; then
     else
 	echo --------- COPIANT EAR ---------
     fi
-    if [ -f './ear/target/regweb.ear' ]; then
-      cp ./ear/target/regweb.ear $REGWEB_DEPLOY_DIR
+    if [ -f './ear/target/regweb3.ear' ]; then
+      cp ./ear/target/regweb3.ear $REGWEB_DEPLOY_DIR
     else
-      echo NO S\'HA TROBAT regweb.ear!
+      echo NO S\'HA TROBAT regweb3.ear!
     fi
   fi
 fi

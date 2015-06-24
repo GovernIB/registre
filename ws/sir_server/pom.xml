@@ -3,18 +3,18 @@
 
    <modelVersion>4.0.0</modelVersion>    
     
-   <groupId>es.caib.regweb</groupId>
-   <artifactId>regweb-ws-sir-server</artifactId>  
+   <groupId>es.caib.regweb3</groupId>
+   <artifactId>regweb3-ws-sir-server</artifactId>
    <version>3.0.0</version>
    <packaging>ejb</packaging>
 
     <parent>
-        <groupId>es.caib.regweb</groupId>
-        <artifactId>regweb-ws</artifactId>
+        <groupId>es.caib.regweb3</groupId>
+        <artifactId>regweb3-ws</artifactId>
         <version>3.0.0</version>
     </parent>
 
-    <name>RegWeb - WS - SIR - Server</name>
+    <name>RegWeb3 - WS - SIR - Server</name>
     
     <build>
         <plugins>
@@ -61,7 +61,7 @@
                                 <wsdlFile>WS_SIR8_B.wsdl</wsdlFile>
                             </wsdlFiles>
                             <outputDirectory>src/main/java</outputDirectory>
-                            <packageSpace>es.caib.regweb.ws.sir.wssir8b</packageSpace>
+                            <packageSpace>es.caib.regweb3.ws.sir.wssir8b</packageSpace>
                         </configuration>
                         <goals>
                             <goal>wsdl2java</goal>
@@ -132,28 +132,28 @@
 	    <!--  Internas -->
 	
 	    <dependency>
-          <groupId>es.caib.regweb</groupId>
-          <artifactId>regweb-utils</artifactId>
+          <groupId>es.caib.regweb3</groupId>
+          <artifactId>regweb3-utils</artifactId>
           <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>es.caib.regweb</groupId>
-            <artifactId>regweb-persistence</artifactId>
+            <groupId>es.caib.regweb3</groupId>
+            <artifactId>regweb3-persistence</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
 		
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>regweb-model</artifactId>
+            <artifactId>regweb3-model</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>regweb-ws-sir-api</artifactId>
+            <artifactId>regweb3-ws-sir-api</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>

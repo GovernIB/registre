@@ -4,8 +4,8 @@
  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
-    <display-name>REGWEB</display-name>
-    <description>REGWEB</description>
+    <display-name>REGWEB3</display-name>
+    <description>REGWEB3</description>
 
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
@@ -14,7 +14,7 @@
     <!--  LOAD-ON-STARTUP SERVLET -->
     <servlet>
       <servlet-name>InitServlet</servlet-name>
-      <servlet-class>es.caib.regweb.webapp.utils.InitServlet</servlet-class>
+      <servlet-class>es.caib.regweb3.webapp.utils.InitServlet</servlet-class>
       <load-on-startup>1</load-on-startup>
     </servlet>
     
@@ -26,13 +26,13 @@
     </context-param>
 
     <servlet>
-      <servlet-name>regweb</servlet-name>
+      <servlet-name>regweb3</servlet-name>
       <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
       <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet-mapping>
-      <servlet-name>regweb</servlet-name>
+      <servlet-name>regweb3</servlet-name>
       <url-pattern>/</url-pattern>
     </servlet-mapping>
 
@@ -69,7 +69,7 @@
     </error-page>
 
     <error-page>
-        <exception-type>es.caib.regweb.webapp.security.LoginException</exception-type>
+        <exception-type>es.caib.regweb3.webapp.security.LoginException</exception-type>
         <location>/error.jsp?errortype=-1</location>
     </error-page>
 
@@ -125,17 +125,17 @@
 	</login-config>
 
 	<security-role>
-        <description>Administrador de REGWEB</description>
+        <description>Administrador de REGWEB3</description>
 		<role-name>RWE_SUPERADMIN</role-name>
 	</security-role>
 
 	<security-role>
-        <description>Administrador d'entitats de REGWEB</description>
+        <description>Administrador d'entitats de REGWEB3</description>
 		<role-name>RWE_ADMIN</role-name>
 	</security-role>
 
     <security-role>
-        <description>Usuari de REGWEB</description>
+        <description>Usuari de REGWEB3</description>
         <role-name>RWE_USUARI</role-name>
     </security-role>
 

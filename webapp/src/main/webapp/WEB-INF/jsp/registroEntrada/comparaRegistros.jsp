@@ -1,8 +1,8 @@
-<%@ page import="es.caib.regweb.model.RegistroEntrada" %>
-<%@ page import="es.caib.regweb.persistence.utils.RegistroUtils" %>
+<%@ page import="es.caib.regweb3.model.RegistroEntrada" %>
+<%@ page import="es.caib.regweb3.persistence.utils.RegistroUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
-<un:useConstants var="RegwebConstantes" className="es.caib.regweb.utils.RegwebConstantes"/>
+<un:useConstants var="RegwebConstantes" className="es.caib.regweb3.utils.RegwebConstantes"/>
 
 <div id="modalCompararRegistros" class="modal fade bs-example-modal-lg" >
 

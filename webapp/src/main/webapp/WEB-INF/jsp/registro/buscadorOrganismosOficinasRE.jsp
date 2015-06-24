@@ -1,4 +1,4 @@
-<%@ page import="es.caib.regweb.utils.Configuracio" %>
+<%@ page import="es.caib.regweb3.utils.Configuracio" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 
 <!-- Formulario de busqueda compartido. Se usa tanto para buscar organismos como oficinas, en función del parámetro

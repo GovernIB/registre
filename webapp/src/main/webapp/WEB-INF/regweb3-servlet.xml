@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:util="http://www.springframework.org/schema/util" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
+
+    <context:annotation-config/>
+    <context:component-scan base-package="es.caib.regweb3"/>
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <mvc:default-servlet-handler/>
+    <mvc:annotation-driven/>
+
+    <!-- Declaración de los Interceptors -->
+    <mvc:interceptors>
+
+        <!--Interceptor para toda la aplicación-->
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/css/**"/>
+            <mvc:exclude-mapping path="/font-awesome/**"/>
+            <mvc:exclude-mapping path="/ico/**"/>
+            <mvc:exclude-mapping path="/img/**"/>
+            <mvc:exclude-mapping path="/js/**"/>
+            <mvc:exclude-mapping path="/doc/**"/>
+            <bean class="es.caib.regweb3.webapp.interceptor.InicioInterceptor" />
+        </mvc:interceptor>
+
+        <!--Interceptor para el Registro de entrada-->
+        <mvc:interceptor>
+            <mvc:mapping path="/registroEntrada/**"/>
+            <bean class="es.caib.regweb3.webapp.interceptor.RegistroEntradaInterceptor"/>
+        </mvc:interceptor>
+
+        <!--Interceptor para el Registro de salida-->
+        <mvc:interceptor>
+            <mvc:mapping path="/registroSalida/**"/>
+            <bean class="es.caib.regweb3.webapp.interceptor.RegistroSalidaInterceptor"/>
+        </mvc:interceptor>
+
+        <!--Interceptor para el Oficio de Remisión-->
+        <mvc:interceptor>
+            <mvc:mapping path="/oficioRemision/**"/>
+            <bean class="es.caib.regweb3.webapp.interceptor.OficioRemisionInterceptor"/>
+        </mvc:interceptor>
+
+        <!--Interceptor para Persona-->
+        <mvc:interceptor>
+            <mvc:mapping path="/persona/**"/>
+            <bean class="es.caib.regweb3.webapp.interceptor.PersonaInterceptor"/>
+        </mvc:interceptor>
+
+        <!--Interceptor para Libro-->
+        <mvc:interceptor>
+            <mvc:mapping path="/libro/**"/>
+            <bean class="es.caib.regweb3.webapp.interceptor.LibroInterceptor"/>
+        </mvc:interceptor>
+
+        <!--Interceptor para Usuario-->
+        <mvc:interceptor>
+            <mvc:mapping path="/usuario/**"/>
+            <bean class="es.caib.regweb3.webapp.interceptor.UsuarioInterceptor"/>
+        </mvc:interceptor>
+
+        <!--Interceptor para Entidad-->
+        <mvc:interceptor>
+            <mvc:mapping path="/entidad/**"/>
+            <bean class="es.caib.regweb3.webapp.interceptor.EntidadInterceptor"/>
+        </mvc:interceptor>
+
+        <!--Interceptor para Organismo-->
+        <mvc:interceptor>
+            <mvc:mapping path="/organismo/**"/>
+            <bean class="es.caib.regweb3.webapp.interceptor.OrganismoInterceptor"/>
+        </mvc:interceptor>
+
+        <!--Interceptor para el PreRegistro-->
+        <mvc:interceptor>
+            <mvc:mapping path="/preRegistro/**"/>
+            <bean class="es.caib.regweb3.webapp.interceptor.PreRegistroInterceptor"/>
+        </mvc:interceptor>
+
+        <!--Interceptor para los Registros Migrados-->
+        <mvc:interceptor>
+            <mvc:mapping path="/registroMigrado/**"/>
+            <bean class="es.caib.regweb3.webapp.interceptor.RegistroMigradoInterceptor"/>
+        </mvc:interceptor>
+
+        <!--Interceptor para Informe-->
+        <mvc:interceptor>
+            <mvc:mapping path="/informe/**"/>
+            <bean class="es.caib.regweb3.webapp.interceptor.InformeInterceptor"/>
+        </mvc:interceptor>
+
+        <!--Interceptor para TipoAsunto-->
+        <mvc:interceptor>
+            <mvc:mapping path="/tipoAsunto/**"/>
+            <bean class="es.caib.regweb3.webapp.interceptor.TipoAsuntoInterceptor"/>
+        </mvc:interceptor>
+
+        <!--Interceptor para Dir3-->
+        <mvc:interceptor>
+            <mvc:mapping path="/dir3/**"/>
+            <bean class="es.caib.regweb3.webapp.interceptor.Dir3Interceptor"/>
+        </mvc:interceptor>
+
+        <!--Interceptor para TipoDocumental-->
+        <mvc:interceptor>
+            <mvc:mapping path="/tipoDocumental/**"/>
+            <bean class="es.caib.regweb3.webapp.interceptor.TipoDocumentalInterceptor"/>
+        </mvc:interceptor>
+
+        <!--Interceptor para ModeloRecibo-->
+        <mvc:interceptor>
+            <mvc:mapping path="/modeloRecibo/**"/>
+            <bean class="es.caib.regweb3.webapp.interceptor.ModeloReciboInterceptor"/>
+        </mvc:interceptor>
+
+        <!--Interceptor para Dir3-->
+        <mvc:interceptor>
+            <mvc:mapping path="/modeloOficioRemision/**"/>
+            <bean class="es.caib.regweb3.webapp.interceptor.ModeloOficioRemisionInterceptor"/>
+        </mvc:interceptor>
+
+        <!--Interceptor para Dir3-->
+        <mvc:interceptor>
+            <mvc:mapping path="/repro/**"/>
+            <bean class="es.caib.regweb3.webapp.interceptor.ReproInterceptor"/>
+        </mvc:interceptor>
+
+        <!-- Configuración de Idioma -->
+        <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+            <property name="paramName" value="lang" />
+        </bean>
+
+    </mvc:interceptors>
+
+    <bean class="org.springframework.web.servlet.view.BeanNameViewResolver" p:order="1"/>
+
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" p:prefix="/WEB-INF/jsp/"
+          p:suffix=".jsp" p:order="2"/>
+
+    <!-- Etiquetas idiomas -->
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+	    <!--  p:basename="/WEB-INF/classes/es/caib/regweb3/webapp/missatges" p:defaultEncoding="UTF-8"/> -->
+	    <property name="basenames">
+	          <list>
+	            <value>/WEB-INF/classes/es/caib/regweb3/webapp/missatges</value>
+	            <value>/WEB-INF/classes/logicmissatges</value>
+	          </list>
+	    </property>
+	    <property name="defaultEncoding" value="UTF-8"/> 
+    </bean>
+
+    <!-- Declare the Resolver org.springframework.web.servlet.i18n.SessionLocaleResolver -->
+    <bean id="localeResolver" class="es.caib.regweb3.webapp.utils.RegWebSessionLocaleResolver">
+      <property name="defaultLocale" value="ca"/>
+    </bean>
+
+    <!-- Soporte para archivos en los formularios -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="10000000"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+    </bean>
+
+
+    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+        <property name="messageConverters">
+            <util:list id="beanList">
+                <ref bean="mappingJacksonHttpMessageConverter"/>
+            </util:list>
+        </property>
+    </bean>
+
+    <bean id="mappingJacksonHttpMessageConverter"
+          class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"/>
+
+    <!-- Bean generar el Sello de un Registro -->
+    <bean id="sello" class="es.caib.regweb3.webapp.view.SelloPdfView"/>
+
+    <!-- Bean generar el Recibo de un Registro -->
+    <bean id="recibo" class="es.caib.regweb3.webapp.view.ReciboRtfView"/>
+
+    <!-- Bean generar el documento de un Oficio Remisión -->
+    <bean id="oficioRemision" class="es.caib.regweb3.webapp.view.OficioRemisionRtfView"/>
+
+    <!-- Bean generar el Informe de Libro de Registro en PDF -->
+    <bean id="libroRegistroPdf" class="es.caib.regweb3.webapp.view.LibroRegistroPdf"/>
+
+    <!-- Bean generar el Informe de Libro de Registro en EXCEL-->
+    <bean id="libroRegistroExcel" class="es.caib.regweb3.webapp.view.LibroRegistroExcel"/>
+
+    <!-- Bean generar el Informe de Indicadores en PDF -->
+    <bean id="indicadoresPdf" class="es.caib.regweb3.webapp.view.IndicadoresPdf"/>
+
+    <!-- Bean generar el Informe de Indicadores en EXCEL-->
+    <bean id="indicadoresExcel" class="es.caib.regweb3.webapp.view.IndicadoresExcel"/>
+
+    <!--Recursos estáticos-->
+    <mvc:resources mapping="/css/**" location="/css/" />
+    <mvc:resources mapping="/font-awesome/**" location="/font-awesome/" />
+    <mvc:resources mapping="/ico/**" location="/ico/" />
+    <mvc:resources mapping="/img/**" location="/img/" />
+    <mvc:resources mapping="/js/**" location="/js/" />
+    <mvc:resources mapping="/doc/**" location="/doc/" />
+
+</beans>

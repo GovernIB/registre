@@ -2,16 +2,16 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>es.caib.regweb</groupId>
-  <artifactId>regweb-sqlgenerator</artifactId>
+  <groupId>es.caib.regweb3</groupId>
+  <artifactId>regweb3-sqlgenerator</artifactId>
   <packaging>jar</packaging>
   <version>3.0.0</version>
 
-  <name>RegWeb - Scripts - SQL Generator</name>
+  <name>RegWeb3 - Scripts - SQL Generator</name>
   
   <parent>
-		<groupId>es.caib.regweb</groupId>
-		<artifactId>regweb-scripts</artifactId>
+		<groupId>es.caib.regweb3</groupId>
+		<artifactId>regweb3-scripts</artifactId>
 		<version>3.0.0</version>
   </parent>
   
@@ -23,14 +23,14 @@
   <dependencies>
 
   		<dependency>
-			 <groupId>es.caib.regweb</groupId>
-			 <artifactId>regweb-model</artifactId>
+			 <groupId>es.caib.regweb3</groupId>
+			 <artifactId>regweb3-model</artifactId>
 			 <version>3.0.0</version>
 		</dependency>
   
 		<dependency>
-			 <groupId>es.caib.regweb</groupId>
-			 <artifactId>regweb-persistence</artifactId>
+			 <groupId>es.caib.regweb3</groupId>
+			 <artifactId>regweb3-persistence</artifactId>
 			 <version>3.0.0</version>
 		</dependency>
 

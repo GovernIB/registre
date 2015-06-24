@@ -13,7 +13,7 @@ if %errorlevel% EQU 0 (
 	  @echo on
 	  echo --------- COPIANT EAR %REGWEB_VERSIO% ---------
 
-	  xcopy /Y ear\target\regweb.ear %REGWEB_DEPLOY_DIR%
+	  xcopy /Y ear\target\regweb3.ear %REGWEB_DEPLOY_DIR%
 
 	) ELSE (
 	  echo  =================================================================

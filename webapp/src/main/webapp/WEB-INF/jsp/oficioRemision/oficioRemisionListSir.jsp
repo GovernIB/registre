@@ -52,13 +52,13 @@
 <%--  
                                             <div class="alert-grey">
                                                 <c:if test="${paginacion.totalResults == 1}">
-                                                    <spring:message code="regweb.resultado"/> <strong>${paginacion.totalResults}</strong> <spring:message code="oficioRemision.oficioRemision"/>
+                                                    <spring:message code="regweb3.resultado"/> <strong>${paginacion.totalResults}</strong> <spring:message code="oficioRemision.oficioRemision"/>
                                                 </c:if>
                                                 <c:if test="${paginacion.totalResults > 1}">
-                                                    <spring:message code="regweb.resultados"/> <strong>${paginacion.totalResults}</strong> <spring:message code="oficioRemision.oficiosRemision"/>
+                                                    <spring:message code="regweb3.resultados"/> <strong>${paginacion.totalResults}</strong> <spring:message code="oficioRemision.oficiosRemision"/>
                                                 </c:if>
 
-                                                <p class="pull-right"><spring:message code="regweb.pagina"/> <strong>${paginacion.currentIndex}</strong> de ${paginacion.totalPages}</p>
+                                                <p class="pull-right"><spring:message code="regweb3.pagina"/> <strong>${paginacion.currentIndex}</strong> de ${paginacion.totalPages}</p>
                                             </div>
                                             
                                             --%>

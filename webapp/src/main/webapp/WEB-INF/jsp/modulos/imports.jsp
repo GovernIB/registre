@@ -1,5 +1,5 @@
 ﻿<%--
-<%@page import="es.caib.regweb.webapp.security.LoginInfo"
+<%@page import="es.caib.regweb3.webapp.security.LoginInfo"
 %>
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" 

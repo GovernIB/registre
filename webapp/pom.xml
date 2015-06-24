@@ -4,18 +4,18 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
-        <artifactId>regweb</artifactId>
-        <groupId>es.caib.regweb</groupId>
+        <artifactId>regweb3</artifactId>
+        <groupId>es.caib.regweb3</groupId>
         <version>3.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>es.caib.regweb</groupId>
-    <artifactId>regweb-webapp</artifactId>
+    <groupId>es.caib.regweb3</groupId>
+    <artifactId>regweb3-webapp</artifactId>
     <version>3.0.0</version>
     <packaging>war</packaging>
 
-    <name>RegWeb - WebApp</name>
+    <name>RegWeb3 - WebApp</name>
 	
 	<build>
       <plugins>
@@ -31,9 +31,9 @@
                              <directory>../doc/pdf</directory>
                              <targetPath>doc</targetPath>
                              <includes>
-								<include>Manual_de_Usuari_Administrador_de_RegWeb.pdf</include>
-								<include>Manual_de_Usuari_Administrador_Entitat_de_RegWeb.pdf</include>
-								<include>Manual_de_Usuari_Operador_de_RegWeb.pdf</include>
+								<include>Manual_de_Usuari_Administrador_de_RegWeb3.pdf</include>
+								<include>Manual_de_Usuari_Administrador_Entitat_de_RegWeb3.pdf</include>
+								<include>Manual_de_Usuari_Operador_de_RegWeb3.pdf</include>
                              </includes>
                              <filtering>false</filtering>
                         </resource>
@@ -100,21 +100,21 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>regweb-persistence</artifactId>
+            <artifactId>regweb3-persistence</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>regweb-model</artifactId>
+            <artifactId>regweb3-model</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>regweb-utils</artifactId>
+            <artifactId>regweb3-utils</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
@@ -129,7 +129,7 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>regweb-ws-sir-api</artifactId>
+            <artifactId>regweb3-ws-sir-api</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>

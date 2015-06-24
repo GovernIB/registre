@@ -6,52 +6,52 @@
              xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
 http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
 
-    <persistence-unit name="regweb" transaction-type="JTA">
+    <persistence-unit name="regweb3" transaction-type="JTA">
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
 
-        <jta-data-source>java:/es.caib.regweb.db</jta-data-source>
-        <class>es.caib.regweb.model.Entidad</class>
-        <class>es.caib.regweb.model.Libro</class>
-        <class>es.caib.regweb.model.Contador</class>
-        <class>es.caib.regweb.model.Usuario</class>
-        <class>es.caib.regweb.model.UsuarioEntidad</class>
-        <class>es.caib.regweb.model.Oficina</class>
-        <class>es.caib.regweb.model.Organismo</class>
-        <class>es.caib.regweb.model.CatEstadoEntidad</class>
-        <class>es.caib.regweb.model.RelacionOrganizativaOfi</class>
-        <class>es.caib.regweb.model.RelacionSirOfi</class>
-        <class>es.caib.regweb.model.Rol</class>
-        <class>es.caib.regweb.model.PermisoLibroUsuario</class>
-        <class>es.caib.regweb.model.TipoAsunto</class>
-        <class>es.caib.regweb.model.CodigoAsunto</class>
-        <class>es.caib.regweb.model.TipoDocumental</class>
-        <class>es.caib.regweb.model.CatNivelAdministracion</class>
-        <class>es.caib.regweb.model.CatPais</class>
-        <class>es.caib.regweb.model.CatComunidadAutonoma</class>
-        <class>es.caib.regweb.model.CatProvincia</class>
-        <class>es.caib.regweb.model.CatEntidadGeografica</class>
-        <class>es.caib.regweb.model.CatLocalidad</class>
-        <class>es.caib.regweb.model.RegistroEntrada</class>
-        <class>es.caib.regweb.model.RegistroSalida</class>
-        <class>es.caib.regweb.model.RegistroDetalle</class>
-        <class>es.caib.regweb.model.ModeloRecibo</class>
-        <class>es.caib.regweb.model.Archivo</class>
-        <class>es.caib.regweb.model.Persona</class>
-        <class>es.caib.regweb.model.Interesado</class>
-        <class>es.caib.regweb.model.Descarga</class>
-        <class>es.caib.regweb.model.Anexo</class>
-        <class>es.caib.regweb.model.HistoricoRegistroEntrada</class>
-        <class>es.caib.regweb.model.Repro</class>
-        <class>es.caib.regweb.model.ModeloOficioRemision</class>
-        <class>es.caib.regweb.model.OficioRemision</class>
-        <class>es.caib.regweb.model.Trazabilidad</class>
-        <class>es.caib.regweb.model.Lopd</class>
-        <class>es.caib.regweb.model.Pendiente</class>
-        <class>es.caib.regweb.model.HistoricoRegistroSalida</class>
-        <class>es.caib.regweb.model.RegistroMigrado</class>
-        <class>es.caib.regweb.model.RegistroLopdMigrado</class>
-        <class>es.caib.regweb.model.ModificacionLopdMigrado</class>
-        <class>es.caib.regweb.model.PreRegistro</class>
+        <jta-data-source>java:/es.caib.regweb3.db</jta-data-source>
+        <class>es.caib.regweb3.model.Entidad</class>
+        <class>es.caib.regweb3.model.Libro</class>
+        <class>es.caib.regweb3.model.Contador</class>
+        <class>es.caib.regweb3.model.Usuario</class>
+        <class>es.caib.regweb3.model.UsuarioEntidad</class>
+        <class>es.caib.regweb3.model.Oficina</class>
+        <class>es.caib.regweb3.model.Organismo</class>
+        <class>es.caib.regweb3.model.CatEstadoEntidad</class>
+        <class>es.caib.regweb3.model.RelacionOrganizativaOfi</class>
+        <class>es.caib.regweb3.model.RelacionSirOfi</class>
+        <class>es.caib.regweb3.model.Rol</class>
+        <class>es.caib.regweb3.model.PermisoLibroUsuario</class>
+        <class>es.caib.regweb3.model.TipoAsunto</class>
+        <class>es.caib.regweb3.model.CodigoAsunto</class>
+        <class>es.caib.regweb3.model.TipoDocumental</class>
+        <class>es.caib.regweb3.model.CatNivelAdministracion</class>
+        <class>es.caib.regweb3.model.CatPais</class>
+        <class>es.caib.regweb3.model.CatComunidadAutonoma</class>
+        <class>es.caib.regweb3.model.CatProvincia</class>
+        <class>es.caib.regweb3.model.CatEntidadGeografica</class>
+        <class>es.caib.regweb3.model.CatLocalidad</class>
+        <class>es.caib.regweb3.model.RegistroEntrada</class>
+        <class>es.caib.regweb3.model.RegistroSalida</class>
+        <class>es.caib.regweb3.model.RegistroDetalle</class>
+        <class>es.caib.regweb3.model.ModeloRecibo</class>
+        <class>es.caib.regweb3.model.Archivo</class>
+        <class>es.caib.regweb3.model.Persona</class>
+        <class>es.caib.regweb3.model.Interesado</class>
+        <class>es.caib.regweb3.model.Descarga</class>
+        <class>es.caib.regweb3.model.Anexo</class>
+        <class>es.caib.regweb3.model.HistoricoRegistroEntrada</class>
+        <class>es.caib.regweb3.model.Repro</class>
+        <class>es.caib.regweb3.model.ModeloOficioRemision</class>
+        <class>es.caib.regweb3.model.OficioRemision</class>
+        <class>es.caib.regweb3.model.Trazabilidad</class>
+        <class>es.caib.regweb3.model.Lopd</class>
+        <class>es.caib.regweb3.model.Pendiente</class>
+        <class>es.caib.regweb3.model.HistoricoRegistroSalida</class>
+        <class>es.caib.regweb3.model.RegistroMigrado</class>
+        <class>es.caib.regweb3.model.RegistroLopdMigrado</class>
+        <class>es.caib.regweb3.model.ModificacionLopdMigrado</class>
+        <class>es.caib.regweb3.model.PreRegistro</class>
 
 
         <properties>

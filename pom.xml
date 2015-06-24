@@ -4,12 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>es.caib.regweb</groupId>
-    <artifactId>regweb</artifactId>
+    <groupId>es.caib.regweb3</groupId>
+    <artifactId>regweb3</artifactId>
     <version>3.0.0</version>
     <packaging>pom</packaging>
 
-    <name>RegWeb</name>
+    <name>REGWEB3</name>
 
 	<properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -144,12 +144,12 @@
 	
 	<distributionManagement>
         <site>
-            <id>es.caib.regweb</id>
+            <id>es.caib.regweb3</id>
             <url>scp://shell.sourceforge.net/home/project-web/registre/htdocs/maven</url>
         </site>
         <repository>
-            <id>es.caib.regweb</id>
-            <name>Regweb Maven Repository</name>
+            <id>es.caib.regweb3</id>
+            <name>Regweb3 Maven Repository</name>
             <url>scp://shell.sourceforge.net/home/project-web/registre/htdocs/maven</url>
         </repository>
         
@@ -157,7 +157,7 @@
         <!--
         <repositories>
            <repository>
-             <id>regweb-maven-repos</id>
+             <id>regweb3-maven-repos</id>
              <name>Regweb Maven Repository</name>
              <url>http://registre.sourceforge.net/maven/</url>
            </repository>

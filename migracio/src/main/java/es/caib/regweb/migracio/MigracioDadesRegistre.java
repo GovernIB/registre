@@ -1,4 +1,4 @@
-package es.caib.regweb.migracio;
+package es.caib.regweb3.migracio;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -27,17 +27,17 @@ import org.hibernate.ScrollMode;
 import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
 
-import es.caib.regweb.logic.helper.Helper;
-import es.caib.regweb.logic.helper.ParametrosListadoRegistrosEntrada;
-import es.caib.regweb.logic.helper.ParametrosListadoRegistrosSalida;
-import es.caib.regweb.logic.helper.ParametrosRegistroEntrada;
-import es.caib.regweb.logic.helper.ParametrosRegistroSalida;
-import es.caib.regweb.logic.helper.RegistroSeleccionado;
-import es.caib.regweb.model.EntradaId;
-import es.caib.regweb.model.LogEntradaLopdId;
-import es.caib.regweb.model.LogModificacionLopdId;
-import es.caib.regweb.model.LogSalidaLopdId;
-import es.caib.regweb.model.SalidaId;
+import es.caib.regweb3.logic.helper.Helper;
+import es.caib.regweb3.logic.helper.ParametrosListadoRegistrosEntrada;
+import es.caib.regweb3.logic.helper.ParametrosListadoRegistrosSalida;
+import es.caib.regweb3.logic.helper.ParametrosRegistroEntrada;
+import es.caib.regweb3.logic.helper.ParametrosRegistroSalida;
+import es.caib.regweb3.logic.helper.RegistroSeleccionado;
+import es.caib.regweb3.model.EntradaId;
+import es.caib.regweb3.model.LogEntradaLopdId;
+import es.caib.regweb3.model.LogModificacionLopdId;
+import es.caib.regweb3.model.LogSalidaLopdId;
+import es.caib.regweb3.model.SalidaId;
 
 /**
  * 
@@ -169,9 +169,9 @@ public class MigracioDadesRegistre {
     /*
     prop.put("javax.persistence.jdbc.driver", "org.postgresql.Driver");
     // prop.put("javax.persistence.jdbc.url","jdbc:postgresql://192.168.35.151:5432/portafib");
-    prop.put("javax.persistence.jdbc.url", "jdbc:postgresql://192.168.35.42:5432/regweb");
-    prop.put("javax.persistence.jdbc.user", "regweb");
-    prop.put("javax.persistence.jdbc.password", "regweb");
+    prop.put("javax.persistence.jdbc.url", "jdbc:postgresql://192.168.35.42:5432/regweb3");
+    prop.put("javax.persistence.jdbc.user", "regweb3");
+    prop.put("javax.persistence.jdbc.password", "regweb3");
 
     */
     

@@ -1,8 +1,7 @@
-package es.caib.regweb.logic.helper;
+package es.caib.regweb3.logic.helper;
 
 import java.io.Serializable;
 import java.util.*;
-import java.text.*;
 
 public class ParametrosListadoRegistrosSalida  implements Serializable {
 	

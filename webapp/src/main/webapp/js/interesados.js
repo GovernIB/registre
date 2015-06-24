@@ -508,21 +508,21 @@ function buscarPersonas(tipoPersonas){
         var tipo = '2';
         var json = { "nombre" : $('#nombre'+tipoPersonas).val(), "apellido1" : $('#apellido1'+tipoPersonas).val(), "apellido2" : $('#apellido2'+tipoPersonas).val(), "documento" : $('#documento'+tipoPersonas).val(), "tipo": tipo};
 
-        tabla.append('<thead><tr><th>'+tradsinteresado['regweb.nombre']+'</th><th>'+tradsinteresado['persona.documento']+'</th><th>'+tradsinteresado['regweb.acciones']+'</th></tr></thead><tbody></tbody>');
+        tabla.append('<thead><tr><th>'+tradsinteresado['regweb3.nombre']+'</th><th>'+tradsinteresado['persona.documento']+'</th><th>'+tradsinteresado['regweb3.acciones']+'</th></tr></thead><tbody></tbody>');
 
     }else if(tipoPersonas == 'Juridicas'){ // Personas Jurídicas
 
         var tipo = '3';
         var json = { "razonSocial" : $('#razonSocial'+tipoPersonas).val(), "documento" : $('#documento'+tipoPersonas).val(), "tipo": tipo};
 
-        tabla.append('<thead><tr><th>'+tradsinteresado['persona.razonSocial']+'</th><th>'+tradsinteresado['persona.documento']+'</th><th>'+tradsinteresado['regweb.acciones']+'</th></tr></thead><tbody></tbody>');
+        tabla.append('<thead><tr><th>'+tradsinteresado['persona.razonSocial']+'</th><th>'+tradsinteresado['persona.documento']+'</th><th>'+tradsinteresado['regweb3.acciones']+'</th></tr></thead><tbody></tbody>');
 
     }else if(tipoPersonas == 'Todas'){ // Todas las personas Personas
 
         var tipo = '0';
         var json = { "nombre" : $('#nombre'+tipoPersonas).val(), "apellido1" : $('#apellido1'+tipoPersonas).val(), "apellido2" : $('#apellido2'+tipoPersonas).val(), "documento" : $('#documento'+tipoPersonas).val(),"razonSocial" : $('#razonSocial'+tipoPersonas).val(), "tipo": tipo};
 
-        tabla.append('<thead><tr><th>'+tradsinteresado['persona.persona']+'</th><th>'+tradsinteresado['persona.documento']+'</th><th>'+tradsinteresado['regweb.acciones']+'</th></tr></thead><tbody></tbody>');
+        tabla.append('<thead><tr><th>'+tradsinteresado['persona.persona']+'</th><th>'+tradsinteresado['persona.documento']+'</th><th>'+tradsinteresado['regweb3.acciones']+'</th></tr></thead><tbody></tbody>');
     }
 
 
@@ -776,7 +776,7 @@ function camposTipoPersona(){
         $('#apellido1').removeAttr("disabled", "disabled");
         $('#apellido2').removeAttr("disabled", "disabled");
         $('#tipo').val("2");
-        $('#nom').html("<span class=\"text-danger\">*</span> " + tradsinteresado['regweb.nombre']);
+        $('#nom').html("<span class=\"text-danger\">*</span> " + tradsinteresado['regweb3.nombre']);
         $('#llinatge1').html("<span class=\"text-danger\">*</span> " + tradsinteresado['usuario.apellido1']);
         $('#rao').html(tradsinteresado['persona.razonSocial']);
     }
@@ -789,7 +789,7 @@ function camposTipoPersona(){
         $('#apellido2').attr("disabled", "disabled");
         $('#tipo').val("3");
         $('#rao').html("<span class=\"text-danger\">*</span> " + tradsinteresado['persona.razonSocial']);
-        $('#nom').html(tradsinteresado['regweb.nombre']);
+        $('#nom').html(tradsinteresado['regweb3.nombre']);
         $('#llinatge1').html(tradsinteresado['usuario.apellido1']);
     }
 

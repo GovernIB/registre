@@ -2,17 +2,17 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>es.caib.regweb</groupId>
-        <artifactId>regweb</artifactId>
+        <groupId>es.caib.regweb3</groupId>
+        <artifactId>regweb3</artifactId>
         <version>3.0.0</version>
     </parent>
 
-    <groupId>es.caib.regweb</groupId>
-    <artifactId>regweb-scripts</artifactId>
+    <groupId>es.caib.regweb3</groupId>
+    <artifactId>regweb3-scripts</artifactId>
     <version>3.0.0</version>
     <packaging>pom</packaging>
 	
-	<name>RegWeb - Scripts</name>
+	<name>RegWeb3 - Scripts</name>
 	
     <modules>
 	   <module>sqlgenerator</module>

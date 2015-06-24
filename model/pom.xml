@@ -3,19 +3,19 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   
   <parent>
-        <artifactId>regweb</artifactId>
-        <groupId>es.caib.regweb</groupId>
+        <artifactId>regweb3</artifactId>
+        <groupId>es.caib.regweb3</groupId>
         <version>3.0.0</version>
    </parent>
 
     <modelVersion>4.0.0</modelVersion>
 
-  <groupId>es.caib.regweb</groupId>
-  <artifactId>regweb-model</artifactId>
+  <groupId>es.caib.regweb3</groupId>
+  <artifactId>regweb3-model</artifactId>
   <version>3.0.0</version>
   <packaging>jar</packaging>
 
-  <name>RegWeb - Model</name>
+  <name>RegWeb3 - Model</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -26,7 +26,7 @@
 	  
 	  <dependency>
           <groupId>${project.groupId}</groupId>
-          <artifactId>regweb-utils</artifactId>
+          <artifactId>regweb3-utils</artifactId>
           <version>${project.version}</version>
           <scope>provided</scope>
       </dependency>

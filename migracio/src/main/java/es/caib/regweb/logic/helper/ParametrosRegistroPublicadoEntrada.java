@@ -1,4 +1,4 @@
-package es.caib.regweb.logic.helper;
+package es.caib.regweb3.logic.helper;
 
 import java.io.Serializable;
 import java.text.*;
@@ -69,7 +69,7 @@ public class ParametrosRegistroPublicadoEntrada implements Serializable {
     	int auxfecha = 0;
     	
 	    try{
-	    	auxfecha = es.caib.regweb.logic.helper.Helper.convierteStringFechaAIntFecha(fecha);
+	    	auxfecha = es.caib.regweb3.logic.helper.Helper.convierteStringFechaAIntFecha(fecha);
 	    }catch(java.text.ParseException pExc){
 	    	errorfecha = true;
 	    }

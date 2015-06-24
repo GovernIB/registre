@@ -4,22 +4,22 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
-        <artifactId>regweb</artifactId>
-        <groupId>es.caib.regweb</groupId>
+        <artifactId>regweb3</artifactId>
+        <groupId>es.caib.regweb3</groupId>
         <version>3.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>es.caib.regweb</groupId>
-    <artifactId>regweb-ear</artifactId>
+    <groupId>es.caib.regweb3</groupId>
+    <artifactId>regweb3-ear</artifactId>
     <version>3.0.0</version>
     <packaging>ear</packaging>
 
-    <name>RegWeb - Ear</name>
+    <name>RegWeb3 - Ear</name>
 
     <build>
 
-        <finalName>regweb</finalName>
+        <finalName>regweb3</finalName>
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -27,57 +27,57 @@
             <version>2.8</version>
             <!-- configuring the ear plugin -->
             <configuration>
-              <applicationName>regweb</applicationName>
+              <applicationName>regweb3</applicationName>
               <displayName>Govern de les Illes Balears</displayName>
               <description>Registre Web</description>
               <defaultLibBundleDir>lib</defaultLibBundleDir>
 
               <jboss>
                   <version>5</version>
-                  <loader-repository>es.caib.regweb:loader=regweb.ear</loader-repository>
+                  <loader-repository>es.caib.regweb3:loader=regweb3.ear</loader-repository>
                   <loader-repository-config>java2ParentDelegation=false</loader-repository-config>
               </jboss>
 
               <modules>
 
                 <webModule>
-                  <groupId>es.caib.regweb</groupId>
-                  <artifactId>regweb-webapp</artifactId>
-                  <contextRoot>regweb</contextRoot>
+                  <groupId>es.caib.regweb3</groupId>
+                  <artifactId>regweb3-webapp</artifactId>
+                  <contextRoot>regweb3</contextRoot>
                 </webModule>
 
                 <ejbModule>
-                  <groupId>es.caib.regweb</groupId>
-                  <artifactId>regweb-persistence</artifactId>
+                  <groupId>es.caib.regweb3</groupId>
+                  <artifactId>regweb3-persistence</artifactId>
                 </ejbModule>
 
 
                 <ejbModule>
-                  <groupId>es.caib.regweb</groupId>
-                  <artifactId>regweb-ws-server</artifactId>
+                  <groupId>es.caib.regweb3</groupId>
+                  <artifactId>regweb3-ws-server</artifactId>
                 </ejbModule>
 
                   <ejbModule>
-                      <groupId>es.caib.regweb</groupId>
-                      <artifactId>regweb-ws-sir-server</artifactId>
+                      <groupId>es.caib.regweb3</groupId>
+                      <artifactId>regweb3-ws-sir-server</artifactId>
                   </ejbModule>
 
 
                 <jarModule>
-				  <groupId>es.caib.regweb</groupId>
-				  <artifactId>regweb-model</artifactId>
+				  <groupId>es.caib.regweb3</groupId>
+				  <artifactId>regweb3-model</artifactId>
 				  <includeInApplicationXml>true</includeInApplicationXml>
 				</jarModule>
 
                   <jarModule>
-                      <groupId>es.caib.regweb</groupId>
-                      <artifactId>regweb-utils</artifactId>
+                      <groupId>es.caib.regweb3</groupId>
+                      <artifactId>regweb3-utils</artifactId>
                       <includeInApplicationXml>true</includeInApplicationXml>
                   </jarModule>
 
                   <jarModule>
-                      <groupId>es.caib.regweb</groupId>
-                      <artifactId>regweb-ws-sir-api</artifactId>
+                      <groupId>es.caib.regweb3</groupId>
+                      <artifactId>regweb3-ws-sir-api</artifactId>
                       <includeInApplicationXml>true</includeInApplicationXml>
                   </jarModule>
 
@@ -93,7 +93,7 @@
             <configuration>
               <jbossHome>D:\servidores\jboss-eap-5.1\jboss-as</jbossHome>
               <serverName>default</serverName>
-              <fileName>target/regweb.ear</fileName>
+              <fileName>target/regweb3.ear</fileName>
             </configuration>
           </plugin>
 
@@ -106,49 +106,49 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>regweb-persistence</artifactId>
+            <artifactId>regweb3-persistence</artifactId>
             <version>${project.version}</version>
             <type>ejb</type>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>regweb-webapp</artifactId>
+            <artifactId>regweb3-webapp</artifactId>
             <version>${project.version}</version>
             <type>war</type>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>regweb-ws-server</artifactId>
+            <artifactId>regweb3-ws-server</artifactId>
             <version>${project.version}</version>
             <type>ejb</type>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>regweb-ws-sir-server</artifactId>
+            <artifactId>regweb3-ws-sir-server</artifactId>
             <version>${project.version}</version>
             <type>ejb</type>
         </dependency>
 		
 		<dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>regweb-model</artifactId>
+            <artifactId>regweb3-model</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>regweb-utils</artifactId>
+            <artifactId>regweb3-utils</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>regweb-ws-sir-api</artifactId>
+            <artifactId>regweb3-ws-sir-api</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>

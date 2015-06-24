@@ -84,7 +84,7 @@
           </property>
       </bean>
 
-      <bean id="attributes2GrantedAuthoritiesMapper" class="es.caib.regweb.webapp.security.RolesBasedAttributes2GrantedAuthoritiesMapper">
+      <bean id="attributes2GrantedAuthoritiesMapper" class="es.caib.regweb3.webapp.security.RolesBasedAttributes2GrantedAuthoritiesMapper">
           <property name="baseRoleMapping">
               <map>
                   <entry key="RWE_SUPERADMIN" value="RWE_SUPERADMIN"/>
@@ -97,7 +97,7 @@
               </map>
           </property>
       </bean>
-      <bean id="mappableAttributesRetriever" class="es.caib.regweb.webapp.security.RolesBasedMappableAttributesRetriever">
+      <bean id="mappableAttributesRetriever" class="es.caib.regweb3.webapp.security.RolesBasedMappableAttributesRetriever">
           <property name="defaultMappableAttributes">
               <set>
                   <value>RWE_SUPERADMIN</value>
@@ -118,7 +118,7 @@
           <property name="authenticationManager" ref="authenticationManager"/>
       </bean>
 <!-- 
-      <bean class="es.caib.regweb.webapp.security.AuthenticationSuccessListener" />
+      <bean class="es.caib.regweb3.webapp.security.AuthenticationSuccessListener" />
  -->
 
 </beans>

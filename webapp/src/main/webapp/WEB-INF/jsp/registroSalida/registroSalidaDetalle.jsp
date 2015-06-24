@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
-<un:useConstants var="RegwebConstantes" className="es.caib.regweb.utils.RegwebConstantes"/>
+<un:useConstants var="RegwebConstantes" className="es.caib.regweb3.utils.RegwebConstantes"/>
 <!DOCTYPE html>
 <html lang="ca">
 <head>
@@ -152,7 +152,7 @@
 
 
                     <div class="panel-footer">
-                        <button type="button" onclick="goTo('/regweb/registroSalida/new')" class="btn btn-danger btn-sm btn-block">Introduir registre de sortida</button>
+                        <button type="button" onclick="goTo('/regweb3/registroSalida/new')" class="btn btn-danger btn-sm btn-block">Introduir registre de sortida</button>
                     </div>
             
                 </div>

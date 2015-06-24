@@ -45,7 +45,7 @@
 	</wsdl:binding>
 	<wsdl:service name="WS_SIR8_BService">
 		<wsdl:port binding="impl:WS_SIR8_BSoapBinding" name="WS_SIR8_B">
-			<wsdlsoap:address location="http://ibit125:8080/regweb/ws/sir/v3/WS_SIR8_B"/>
+			<wsdlsoap:address location="http://ibit125:8080/regweb3/ws/sir/v3/WS_SIR8_B"/>
 		</wsdl:port>
 	</wsdl:service>
 </wsdl:definitions>

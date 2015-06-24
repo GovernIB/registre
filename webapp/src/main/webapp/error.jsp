@@ -1,12 +1,11 @@
-<%@page import="es.caib.regweb.utils.RegwebConstantes"%>
-<%@page import="es.caib.regweb.webapp.security.LoginInfo"
-%><%@page import="es.caib.regweb.webapp.security.LoginException"
-%><%@page import="org.fundaciobit.genapp.common.web.i18n.I18NUtils"
+<%@page import="es.caib.regweb3.utils.RegwebConstantes"%>
+<%@page import="es.caib.regweb3.webapp.security.LoginInfo"
 %><%@page import="org.apache.log4j.Logger"
-%><%@page import="org.fundaciobit.genapp.common.web.HtmlUtils"
-%><%@ page import="org.springframework.context.i18n.LocaleContextHolder"
-%><%@ page import="java.util.Locale"
-%><%@ include file="/WEB-INF/jsp/modulos/includes.jsp"
+%><%@page import="org.fundaciobit.genapp.common.web.i18n.I18NUtils"
+%><%@page import="org.springframework.context.i18n.LocaleContextHolder"
+%><%@page import="java.util.Locale"
+%>
+<%@ include file="/WEB-INF/jsp/modulos/includes.jsp"
 %><%@ page isErrorPage="true" language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
 %><%!
 
@@ -102,7 +101,7 @@ try {
            log.error("[[" + idError + "]] Exceptio de tipus " + e.getClass() );
            log.error("[[" + idError + "]] Exceptio MSG " + e.getMessage() );
            
-           if (es.caib.regweb.webapp.security.LoginException.class.equals(e.getClass())) {
+           if (es.caib.regweb3.webapp.security.LoginException.class.equals(e.getClass())) {
              loginError = true;
            }
            

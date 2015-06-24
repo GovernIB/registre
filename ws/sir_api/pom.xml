@@ -3,18 +3,18 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>es.caib.regweb</groupId>
-    <artifactId>regweb-ws-sir-api</artifactId>
+    <groupId>es.caib.regweb3</groupId>
+    <artifactId>regweb3-ws-sir-api</artifactId>
     <version>3.0.0</version>
     <packaging>jar</packaging>
 
     <parent>
-        <groupId>es.caib.regweb</groupId>
-        <artifactId>regweb-ws</artifactId>
+        <groupId>es.caib.regweb3</groupId>
+        <artifactId>regweb3-ws</artifactId>
         <version>3.0.0</version>
     </parent>
 
-    <name>RegWeb - WS - SIR - API</name>
+    <name>RegWeb3 - WS - SIR - API</name>
 
 
     <properties>
@@ -54,7 +54,7 @@
                                 <wsdlFile>WS_SIR6_A.wsdl</wsdlFile>
                             </wsdlFiles>
                             <outputDirectory>src/main/java</outputDirectory>
-                            <packageSpace>es.caib.regweb.ws.sir.api.wssir6a</packageSpace>
+                            <packageSpace>es.caib.regweb3.ws.sir.api.wssir6a</packageSpace>
                         </configuration>
                         <goals>
                             <goal>wsdl2java</goal>
@@ -69,7 +69,7 @@
                                 <wsdlFile>WS_SIR6_B.wsdl</wsdlFile>
                             </wsdlFiles>
                             <outputDirectory>src/main/java</outputDirectory>
-                            <packageSpace>es.caib.regweb.ws.sir.api.wssir6b</packageSpace>
+                            <packageSpace>es.caib.regweb3.ws.sir.api.wssir6b</packageSpace>
                         </configuration>
                         <goals>
                             <goal>wsdl2java</goal>
@@ -84,7 +84,7 @@
                                 <wsdlFile>WS_SIR7.wsdl</wsdlFile>
                             </wsdlFiles>
                             <outputDirectory>src/main/java</outputDirectory>
-                            <packageSpace>es.caib.regweb.ws.sir.api.wssir7</packageSpace>
+                            <packageSpace>es.caib.regweb3.ws.sir.api.wssir7</packageSpace>
                         </configuration>
                         <goals>
                             <goal>wsdl2java</goal>
@@ -126,9 +126,9 @@
 
                             <filters>
                                 <filter>
-                                    <artifact>es.caib.regweb:regweb-utils</artifact>
+                                    <artifact>es.caib.regweb3:regweb3-utils</artifact>
                                     <includes>
-                                        <include>es/caib/regweb/utils/RegwebConstantes.*</include>
+                                        <include>es/caib/regweb3/utils/RegwebConstantes.*</include>
                                     </includes>
                                 </filter>
                                 <filter>
@@ -233,8 +233,8 @@
         </dependency>
 
         <dependency>
-            <groupId>es.caib.regweb</groupId>
-            <artifactId>regweb-utils</artifactId>
+            <groupId>es.caib.regweb3</groupId>
+            <artifactId>regweb3-utils</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>

@@ -117,7 +117,7 @@
                                                 <th><spring:message code="registroEntrada.libro.corto"/></th>
                                                 <th><spring:message code="registroEntrada.usuario"/></th>
                                                 <th><spring:message code="registroEntrada.extracto"/></th>
-                                                <th class="center"><spring:message code="regweb.acciones"/></th>
+                                                <th class="center"><spring:message code="regweb3.acciones"/></th>
                                             </tr>
                                             </thead>
 

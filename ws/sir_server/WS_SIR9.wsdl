@@ -1,5 +1,9 @@
-<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions name="WS_SIR9WsService" targetNamespace="http://impl.wssir9.sir.ws.regweb.caib.es/" xmlns:ns1="http://impl.manager.cct.map.es" xmlns:ns2="http://schemas.xmlsoap.org/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://impl.wssir9.sir.ws.regweb.caib.es/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <wsdl:import location="http://localhost:8080/regweb/ws/sir/v3/WS_SIR9?wsdl=WS_SIR9.wsdl" namespace="http://impl.manager.cct.map.es">
+<?xml version='1.0' encoding='UTF-8'?>
+<wsdl:definitions name="WS_SIR9WsService" targetNamespace="http://impl.wssir9.sir.ws.regweb3.caib.es/"
+                  xmlns:ns1="http://impl.manager.cct.map.es"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:tns="http://impl.wssir9.sir.ws.regweb3.caib.es/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:import location="http://localhost:8080/regweb3/ws/sir/v3/WS_SIR9?wsdl=WS_SIR9.wsdl" namespace="http://impl.manager.cct.map.es">
     </wsdl:import>
   <wsdl:binding name="WS_SIR9WsServiceSoapBinding" type="ns1:WS_SIR9">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
@@ -15,7 +19,7 @@
   </wsdl:binding>
   <wsdl:service name="WS_SIR9WsService">
     <wsdl:port binding="tns:WS_SIR9WsServiceSoapBinding" name="WS_SIR9Ws">
-      <soap:address location="http://localhost:8080/regweb/ws/sir/v3/WS_SIR9" />
+      <soap:address location="http://localhost:8080/regweb3/ws/sir/v3/WS_SIR9" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

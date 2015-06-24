@@ -1,4 +1,4 @@
-package es.caib.regweb.logic.helper;
+package es.caib.regweb3.logic.helper;
 
  public class Constantes {
 	

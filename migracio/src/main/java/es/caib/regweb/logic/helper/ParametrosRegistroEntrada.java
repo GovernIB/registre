@@ -1,4 +1,4 @@
-package es.caib.regweb.logic.helper;
+package es.caib.regweb3.logic.helper;
 
 import java.io.Serializable;
 import java.util.*;
@@ -58,8 +58,8 @@ public class ParametrosRegistroEntrada implements Serializable {
 	private String descripcionIdiomaDocumento=null;
 	private String procedenciaGeografica=null;
 	private String idiomaExtracto=null;
-	private String emailRemitent = es.caib.regweb.logic.helper.Constantes.VALOR_POR_DEFECTO_EMAIL;
-	private String origenRegistro = es.caib.regweb.logic.helper.Constantes.VALOR_POR_DEFECTO_ORIGEN;
+	private String emailRemitent = es.caib.regweb3.logic.helper.Constantes.VALOR_POR_DEFECTO_EMAIL;
+	private String origenRegistro = es.caib.regweb3.logic.helper.Constantes.VALOR_POR_DEFECTO_ORIGEN;
 	private String localitzadorsDocs = null;
 
 	private ParametrosRegistroPublicadoEntrada paramRegPubEnt = null;
@@ -491,7 +491,7 @@ public class ParametrosRegistroEntrada implements Serializable {
 	 * @return the emailRemitent
 	 */
 	 public String getEmailRemitent() {
-		return ((emailRemitent==null)?es.caib.regweb.logic.helper.Constantes.VALOR_POR_DEFECTO_EMAIL:emailRemitent);
+		return ((emailRemitent==null)?es.caib.regweb3.logic.helper.Constantes.VALOR_POR_DEFECTO_EMAIL:emailRemitent);
 	}
 
 	/**
@@ -500,7 +500,7 @@ public class ParametrosRegistroEntrada implements Serializable {
 	 public void setEmailRemitent(String emailRemitent) {
 		if (emailRemitent!=null)
 			 emailRemitent=emailRemitent.trim();
-		this.emailRemitent = ((emailRemitent!=null))?emailRemitent:es.caib.regweb.logic.helper.Constantes.VALOR_POR_DEFECTO_EMAIL;
+		this.emailRemitent = ((emailRemitent!=null))?emailRemitent:es.caib.regweb3.logic.helper.Constantes.VALOR_POR_DEFECTO_EMAIL;
 	}
 
 	/**

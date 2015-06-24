@@ -1,10 +1,10 @@
-﻿<%@page import="es.caib.regweb.utils.TimeStamp"%>
-<%@page import="es.caib.regweb.utils.Configuracio"%>
-<%@ page import="es.caib.regweb.utils.Versio" %>
+﻿<%@page import="es.caib.regweb3.utils.Configuracio"%>
+<%@page import="es.caib.regweb3.utils.TimeStamp"%>
+<%@ page import="es.caib.regweb3.utils.Versio" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 
 <div class="container peu row-fluid">
-    <div class="pull-left colophon">REGWEB &copy; | <fmt:message key="regweb.titulo"/> - <fmt:message key="regweb.version"/> <%=Versio.VERSIO + (Configuracio.isCAIB()?"-caib":"") + " " + (Configuracio.showTimeStamp()?TimeStamp.TIMESTAMP : "") %></div>
+    <div class="pull-left colophon">REGWEB3 &copy; | <fmt:message key="regweb.titulo"/> - <fmt:message key="regweb.version"/> <%=Versio.VERSIO + (Configuracio.isCAIB()?"-caib":"") + " " + (Configuracio.showTimeStamp()?TimeStamp.TIMESTAMP : "") %></div>
     <c:if test="${entidadActiva != null}">
         <div class="col-xs-4 centrat-float-left text-center">${entidadActiva.textoPie}</div>
     </c:if>

@@ -71,7 +71,7 @@ function organismoBusqueda(tipoOrganismo, urlServidor,idRegistroDetalle){
       table.append('<colgroup><col><col width="50"></colgroup>');
 
 
-      table.append('<thead><tr><th>'+tradorganismo['organismo.denominacion']+'</th><th>'+tradorganismo['regweb.acciones']+'</th></tr></thead><tbody></tbody>');
+      table.append('<thead><tr><th>'+tradorganismo['organismo.denominacion']+'</th><th>'+tradorganismo['regweb3.acciones']+'</th></tr></thead><tbody></tbody>');
 
       //Mostram la imatge de reload
       $('#reloadorg'+tipoOrganismo).show();

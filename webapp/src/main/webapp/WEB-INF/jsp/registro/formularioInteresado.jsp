@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
-<un:useConstants var="RegwebConstantes" className="es.caib.regweb.utils.RegwebConstantes"/>
+<un:useConstants var="RegwebConstantes" className="es.caib.regweb3.utils.RegwebConstantes"/>
 <div id="modalInteresado" class="modal fade bs-example-modal-lg" >
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -229,7 +229,7 @@
             <div class="modal-footer">
                 <input type="button" onclick="procesarInteresado()" title="<spring:message code="regweb.guardar"/>" value="<spring:message code="regweb.guardar"/>" class="btn btn-warning btn-sm" tabindex="1">
                 <button class="btn btn-sm" data-dismiss="modal" aria-hidden="true" onclick="limpiarInteresado()"><spring:message code="regweb.cerrar"/></button>
-                <%--<button id="eliminarRepresentante" class="btn btn-sm" data-dismiss="modal" aria-hidden="true" onclick="eliminarRepresentante($('#id').val(),$('#representado\\.id').val(),$('#idRegistroDetalle\\.id').val())"><spring:message code="regweb.eliminar"/></button>--%>
+                <%--<button id="eliminarRepresentante" class="btn btn-sm" data-dismiss="modal" aria-hidden="true" onclick="eliminarRepresentante($('#id').val(),$('#representado\\.id').val(),$('#idRegistroDetalle\\.id').val())"><spring:message code="regweb3.eliminar"/></button>--%>
             </div>
              </form>
         </div>

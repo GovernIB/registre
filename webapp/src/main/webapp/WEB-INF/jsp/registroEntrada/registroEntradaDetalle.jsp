@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
-<un:useConstants var="RegwebConstantes" className="es.caib.regweb.utils.RegwebConstantes"/>
+<un:useConstants var="RegwebConstantes" className="es.caib.regweb3.utils.RegwebConstantes"/>
 <!DOCTYPE html>
 <html lang="ca">
 <head>
@@ -158,11 +158,11 @@
 
                     <div class="panel-footer">
                         <c:if test="${registro.estado != RegwebConstantes.ESTADO_PENDIENTE}">
-                            <button type="button" onclick="goTo('/regweb/registroEntrada/new')" class="btn btn-info btn-sm btn-block"><spring:message code="registroEntrada.nuevo"/></button>
+                            <button type="button" onclick="goTo('/regweb3/registroEntrada/new')" class="btn btn-info btn-sm btn-block"><spring:message code="registroEntrada.nuevo"/></button>
                         </c:if>
 
                         <c:if test="${registro.estado == RegwebConstantes.ESTADO_PENDIENTE}">
-                            <button type="button" onclick="goTo('/regweb/registroEntrada/reserva')" class="btn btn-info btn-sm btn-block"><spring:message code="registroEntrada.reserva.nuevo"/></button>
+                            <button type="button" onclick="goTo('/regweb3/registroEntrada/reserva')" class="btn btn-info btn-sm btn-block"><spring:message code="registroEntrada.reserva.nuevo"/></button>
                         </c:if>
                     </div>
 

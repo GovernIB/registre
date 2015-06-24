@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions name="WS_SIR8_BWsService" targetNamespace="http://impl.manager.cct.map.es" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://impl.manager.cct.map.es" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<wsdl:definitions name="WS_SIR8_BWsService" targetNamespace="http://impl.manager.cct.map.es"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://impl.manager.cct.map.es"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
   <wsdl:types>
 <xs:schema elementFormDefault="unqualified" targetNamespace="http://impl.manager.cct.map.es" version="1.0" xmlns:tns="http://impl.manager.cct.map.es" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 <xs:element name="envioFicherosAAplicacion" type="tns:envioFicherosAAplicacion"/>
@@ -53,7 +55,7 @@
   </wsdl:binding>
   <wsdl:service name="WS_SIR8_BWsService">
     <wsdl:port binding="tns:WS_SIR8_BWsServiceSoapBinding" name="WS_SIR8_BWs">
-      <soap:address location="http://localhost:8080/regweb/ws/sir/v3/WS_SIR8_B"/>
+      <soap:address location="http://localhost:8080/regweb3/ws/sir/v3/WS_SIR8_B"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

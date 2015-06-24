@@ -294,7 +294,7 @@ function addPrimerAnexo(titulo, tipoDocumento, idAnexo, idRegistro, idRegistroDe
     html += '<tr>';
     html += '<th>'+trads['anexo.titulo']+'</th>';
     html += '<th>'+trads['anexo.tipusdoc']+'</th>';
-    html += '<th>'+trads['regweb.acciones']+'</th>';
+    html += '<th>'+trads['regweb3.acciones']+'</th>';
     html += '</tr>';
     html += '</thead>';
 

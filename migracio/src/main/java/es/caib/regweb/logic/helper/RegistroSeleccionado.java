@@ -4,7 +4,7 @@
  * Created on 13 de octubre de 2004, 14:48
  */
 
-package es.caib.regweb.logic.helper;
+package es.caib.regweb3.logic.helper;
 
 import java.io.Serializable;
 /**

@@ -2,26 +2,25 @@
 
    <modelVersion>4.0.0</modelVersion>
 
-   <groupId>es.caib.regweb</groupId>
-   <artifactId>regweb-ws</artifactId>
+   <groupId>es.caib.regweb3</groupId>
+   <artifactId>regweb3-ws</artifactId>
    <version>3.0.0</version>
    <packaging>pom</packaging>
 
     <parent>
-        <groupId>es.caib.regweb</groupId>
-        <artifactId>regweb</artifactId>
+        <groupId>es.caib.regweb3</groupId>
+        <artifactId>regweb3</artifactId>
         <version>3.0.0</version>
     </parent>
 
-    <name>RegWeb - WS</name>
+    <name>RegWeb3 - WS</name>
 
     <modules>
-              <module>regweb_server</module>
-              <module>regweb_api</module>
-              <module>sir_server</module>
-              <module>sir_api</module>
-              <module>regweb_api_axis</module>
-
+        <module>regweb3_server</module>
+        <module>regweb3_api</module>
+        <module>sir_server</module>
+        <module>sir_api</module>
+        <module>regweb3_api_axis</module>
     </modules>
    
     <repositories>

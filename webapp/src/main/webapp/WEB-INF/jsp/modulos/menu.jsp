@@ -1,4 +1,4 @@
-﻿<%@ page import="es.caib.regweb.utils.Configuracio" %>
+﻿<%@ page import="es.caib.regweb3.utils.Configuracio" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 
@@ -21,7 +21,7 @@
         </c:if>
         <div class="aplication-logo pull-left">
           <a href="<c:url value="/"/>">
-            <img src="<c:url value="/img/logo-regweb.png"/>" width="180" height="48" alt="Regweb"/>
+            <img src="<c:url value="/img/logo-regweb.png"/>" width="180" height="48" alt="Regweb3"/>
           </a>
         </div>
         
