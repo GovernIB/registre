@@ -493,6 +493,11 @@
         $(elemento).show();
     }
 
+    function actualizarLocalidad(){
+        <c:url var="obtenerLocalidades" value="/registroEntrada/obtenerLocalidades" />
+        actualizarSelect('${obtenerLocalidades}','#localidad\\.id',$('#provincia\\.id option:selected').val(),$('#localidad\\.id option:selected').val(),false);
+    }
+
 </script>
 
 

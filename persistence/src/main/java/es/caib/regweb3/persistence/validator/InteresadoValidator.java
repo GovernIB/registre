@@ -308,15 +308,15 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
         }
 
         if (formatoCorrecto) {
-            boolean existe;
+            boolean existe = false;
             try {
               if (interesado.getId() == null) {
                   log.info("dentro existeDocumentoNew");
                 existe = personaEjb.existeDocumentoNew(interesado.getDocumento(),interesado.getEntidad());
-              } else {
+              }/* else {
                   log.info("dentro existeDocumentoEdit");
                 existe = personaEjb.existeDocumentoEdit(interesado.getDocumento(),interesado.getId(),interesado.getEntidad());
-              }
+              }*/
 
             } catch (Exception e) {
               log.error("Error comprobando si interesado ya existe: ", e);

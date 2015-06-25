@@ -273,6 +273,9 @@ function editarInteresado(id){
     // Según el valor del TipoInteresado que vayamos a crear, ponemos los mensajes correspondientes.
     var tipoInteresado = $('input[name=tipoInteresado]:radio:checked').val();
 
+    //Activamos o desactivamos los campos en función del TipoInteresado
+    camposTipoPersona(tipoInteresado)
+
     if(tipoInteresado == 2){
         $('#interesadoTitulo').html(tradsinteresado['interesado.personafisica.editar']);
         $('#tipo').val("2");
@@ -303,8 +306,15 @@ function editarInteresado(id){
             }
             $('#documento').val(result.documento);
             if(result.pais != null){$("#pais\\.id").val(result.pais.id);}
-            if(result.provincia != null){$("#provincia\\.id").val(result.provincia.id);}
-            if(result.localidad != null){$("#localidad\\.id").val(result.localidad.id);}
+            if(result.provincia != null){
+                $("#provincia\\.id").val(result.provincia.id);
+                $("#provincia\\.id").removeAttr("disabled","disabled");
+                actualizarLocalidad();
+            }
+            if(result.localidad != null){
+                $("#localidad\\.id").val(result.localidad.id);
+                $("#localidad\\.id").removeAttr("disabled","disabled");
+            }
             $('#direccion').val(result.direccion);
             $('#razonSocial').val(result.razonSocial);
             $('#direccionElectronica').val(result.direccionElectronica);
@@ -344,7 +354,8 @@ function nuevoInteresado(titulo){
     $('#isRepresentante').val('false');
 
     // Activamos o deshabilitamos campos según el TipoPersona escogido
-    camposTipoPersona();
+    var tipoInteresado = $('input[name=tipoInteresado]:radio:checked').val();
+    camposTipoPersona(tipoInteresado);
 }
 
 
@@ -764,10 +775,7 @@ function mostrarPersonaJuridica(){
 /*
  * Según el tipo persona seleccionado, habilita o deshabilita una serie de campos
  */
-function camposTipoPersona(){
-
-    // Activa o desactiva en función del tipoInteresado seleccionado
-    var tipoInteresado = $('input[name=tipoInteresado]:radio:checked').val();
+function camposTipoPersona(tipoInteresado){
 
     if(tipoInteresado == 2){
 

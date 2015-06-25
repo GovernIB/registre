@@ -640,6 +640,9 @@ public class EntidadController extends BaseController {
             // Eliminar Catálogo Datos
             // Eliminar UsuarioEntidad
             // Eliminar Entidad
+
+            // Eliminamos los registros
+            entidadEjb.eliminarRegistros(idEntidad);
             entidadEjb.eliminarEntidad(idEntidad);
 
             Mensaje.saveMessageInfo(request, "S'ha eliminat l'entitat");

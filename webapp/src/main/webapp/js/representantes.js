@@ -58,8 +58,15 @@ function gestionarRepresentante(idRepresentante,idRepresentado,urlEditar){
                 }
                 $('#documento').val(representante.documento);
                 if(representante.pais != null){$("#pais\\.id").val(representante.pais.id);}
-                if(representante.provincia != null){$("#provincia\\.id").val(representante.provincia.id);}
-                if(representante.localidad != null){$("#localidad\\.id").val(representante.localidad.id);}
+                if(representante.provincia != null){
+                    $("#provincia\\.id").val(representante.provincia.id);
+                    $('#provincia\\.id').removeAttr("disabled","disabled");
+                    actualizarLocalidad();
+                }
+                if(representante.localidad != null){
+                    $("#localidad\\.id").val(representante.localidad.id);
+                    $('#localidad\\.id').removeAttr("disabled","disabled");
+                }
                 $('#direccion').val(representante.direccion);
                 $('#razonSocial').val(representante.razonSocial);
                 $('#email').val(representante.email);
