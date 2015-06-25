@@ -456,8 +456,13 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
       if (updateDate) {
         metadades.add(new Metadata("anexo.fechaCaptura", anexo.getFechaCaptura()));
       }
+      
+      // String tipoDeDocumento; //  varchar(100)
+      if (anexo.getTitulo() != null) {
+        metadades.add(new Metadata("anexo.titulo", anexo.getTitulo()));
+      }
 
-      // TODO String tipoDeDocumento; //  varchar(100)
+      //  String tipoDeDocumento; //  varchar(100)
       if (anexo.getTipoDocumento() != null) {
         metadades.add(new Metadata("anexo.tipoDocumento",
             I18NLogicUtils.tradueix(loc,"tipoDocumento." + anexo.getTipoDocumento())));

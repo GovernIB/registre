@@ -9,7 +9,7 @@
     <version>3.0.0</version>
     <packaging>pom</packaging>
 
-    <name>REGWEB3</name>
+    <name>RegWeb3</name>
 
 	<properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
