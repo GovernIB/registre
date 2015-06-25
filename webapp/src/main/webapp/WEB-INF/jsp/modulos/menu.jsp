@@ -21,7 +21,7 @@
         </c:if>
         <div class="aplication-logo pull-left">
           <a href="<c:url value="/"/>">
-            <img src="<c:url value="/img/logo-regweb.png"/>" width="180" height="48" alt="Regweb3"/>
+            <img src="<c:url value="/img/logo-regweb3.png"/>" width="180" height="48" alt="Regweb3"/>
           </a>
         </div>
         
