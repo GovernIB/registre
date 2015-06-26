@@ -28,16 +28,26 @@ public class ModeloReciboInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
         try {
+            String url = request.getServletPath();
 
             HttpSession session = request.getSession();
             Rol rolActivo = (Rol) session.getAttribute(RegwebConstantes.SESSION_ROL);
 
-            // Cualquier accion con Modelo Recibo
-            if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN)){
-                log.info("Error de rol");
-                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
-                response.sendRedirect("/regweb3/aviso");
-                return false;
+            // Imprimir Recibo
+            if((url.contains("imprimir"))) {
+                if (!rolActivo.getNombre().equals(RegwebConstantes.ROL_USUARI)) {
+                    log.info("Error de rol");
+                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
+                    response.sendRedirect("/regweb3/aviso");
+                    return false;
+                }
+            }else{  // Cualquier accion con Modelo Recibo que no sea Imprimir
+                if (!rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN)) {
+                    log.info("Error de rol");
+                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
+                    response.sendRedirect("/regweb3/aviso");
+                    return false;
+                }
             }
 
             return true;
