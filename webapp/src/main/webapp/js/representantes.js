@@ -32,7 +32,7 @@ function gestionarRepresentante(idRepresentante,idRepresentado,urlEditar){
 
         var json = { "id": $('#id').val(), "tipo": $('#tipo').val(), "nombre" : $('#nombre').val(), "apellido1" : $('#apellido1').val(), "apellido2" : $('#apellido2').val(),"tipoDocumentoIdentificacion": $('#tipoDocumentoIdentificacion').val(), "documento" : $('#documento').val(),
             "pais" : $('#pais\\.id').val(),"provincia" : $('#provincia\\.id').val(), "localidad" : $('#localidad\\.id').val(), "direccion" : $('#direccion').val(), "razonSocial": $('#razonSocial').val(), "email" : $('#email').val(), "cp" : $('#cp').val(), "telefono" : $('#telefono').val(),
-            "canal":$('#canalNotificacion').val(), "observaciones":$('#observaciones').val(), "guardarInteresado":$('#guardarInteresado').prop('checked')};
+            "direccionElectronica":$('#direccionElectronica').val(),"canal":$('#canalNotificacion').val(), "observaciones":$('#observaciones').val(), "guardarInteresado":$('#guardarInteresado').prop('checked')};
 
         //Obtenemos los datos del Representante a editar
         $.ajax({
@@ -69,6 +69,7 @@ function gestionarRepresentante(idRepresentante,idRepresentado,urlEditar){
                 }
                 $('#direccion').val(representante.direccion);
                 $('#razonSocial').val(representante.razonSocial);
+                $('#direccionElectronica').val(representante.direccionElectronica);
                 $('#email').val(representante.email);
                 $('#cp').val(representante.cp);
                 $('#telefono').val(representante.telefono);
