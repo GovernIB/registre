@@ -117,11 +117,11 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
            }
         }
 
-        // Si no hay elementos en el arbol es que no hemos actualizado nada, por tanto no registramos la nueva descarga
-        if(arbol.size() != 0) {
-            // Guardamos los datos de la ultima descarga
-            nuevaDescarga(RegwebConstantes.UNIDAD, entidad);
-        }
+
+
+        // Guardamos los datos de la ultima descarga siempre, independiente de si no hay datos actualizados.
+        nuevaDescarga(RegwebConstantes.UNIDAD, entidad);
+
 
         log.info("");
         log.info("Finalizada la importacion de Organismos");
@@ -131,18 +131,16 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         for(Organismo organismo: organismoEjb.findByEntidad(entidadId)){
             List<OficinaTF> oficinas = oficinasService.obtenerArbolOficinas(organismo.getCodigo(),
                 fechaActualizacion,fechaSincronizacion);
-
             // Creamos el arbol de oficinas
             for(OficinaTF oficinaTF:oficinas){
                 sincronizarOficina(oficinaTF);
             }
             oficinasActualizadas += oficinas.size();
         }
-        // Si no hay elementos en el arbol es que no hemos actualizado nada, por tanto no registramos la nueva descarga
-        // Guardamos la fecha de importacion con dir3caib
-        if( oficinasActualizadas != 0 ) {
-            nuevaDescarga(RegwebConstantes.OFICINA, entidad);
-        }
+
+        nuevaDescarga(RegwebConstantes.OFICINA, entidad);
+        log.info(" REGWEB3 ORGANISMOS ACTUALIZADOS:  " + arbol.size() );
+        log.info(" REGWEB3 OFICINAS ACTUALIZADAS:  " + oficinasActualizadas );
 
         return arbol.size();
 

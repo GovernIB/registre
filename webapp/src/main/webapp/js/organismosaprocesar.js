@@ -32,7 +32,8 @@ function procesarOrganismo(organismoAProcesar) {
                   $(idPanel).hide();
 
             }else if(respuesta.status == 'SUCCESS'){
-                  mostrarMensaje('#pendientes', trads['mensajeprocesadook'] + " " + organismoAProcesar);
+                  //mostrarMensaje('#pendientes', trads['mensajeprocesadook'] + " " + organismoAProcesar);
+                  mostrarMensaje('#pendientes', trads['mensajeprocesadook'] + " " +respuesta.result.nombre);
                   $(idPanel).hide();
                   mostrarProcesado(organismoAProcesar, respuesta.result.nombre,respuesta.result.libroOrganismos,idioma);
             }

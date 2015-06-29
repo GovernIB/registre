@@ -749,7 +749,7 @@ public class EntidadController extends BaseController {
 
         }else {
             log.debug("else no pendientes de procesar");
-            Mensaje.saveMessageInfo(request, "no hay pendientes de procesar");
+            Mensaje.saveMessageInfo(request, getMessage("organismo.nopendientesprocesar"));
             return "redirect:/organismo/list";
         }
         //return "organismo/organismosActualizados";
