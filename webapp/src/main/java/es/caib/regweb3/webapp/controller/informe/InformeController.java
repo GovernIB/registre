@@ -881,6 +881,8 @@ public class InformeController extends BaseController {
         mav.addObject("salidasCreadas", salidasCreadas);
         mav.addObject("entradasModificadas", entradasModificadas);
         mav.addObject("salidasModificadas", salidasModificadas);
+        mav.addObject("usuarios", usuarios(request));
+        mav.addObject("libros", libros(request));
 
 
         return mav;
