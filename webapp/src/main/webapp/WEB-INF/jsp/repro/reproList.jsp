@@ -113,7 +113,7 @@
 
                                 <!-- Paginacion -->
                                 <c:import url="../modulos/paginacion.jsp">
-                                    <c:param name="repro" value="repro"/>
+                                    <c:param name="entidad" value="repro"/>
                                 </c:import>
 
 

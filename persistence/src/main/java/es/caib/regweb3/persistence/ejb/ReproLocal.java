@@ -26,6 +26,15 @@ public interface ReproLocal extends BaseEjb<Repro, Long> {
     public Repro findByOrden(Long idUsuario, int orden) throws Exception;
 
     /**
+     * Obtiene todas las {@link es.caib.regweb3.model.Repro} de un {@link es.caib.regweb3.model.Usuario}, paginadas.
+     * @param inicio
+     * @param idUsuario
+     * @return
+     * @throws Exception
+     */
+    public List<Repro> getPaginationUsuario(int inicio, Long idUsuario) throws Exception;
+
+    /**
      * Obtiene todas las {@link es.caib.regweb3.model.Repro} de un {@link es.caib.regweb3.model.Usuario}
      * @param idUsuario
      * @return

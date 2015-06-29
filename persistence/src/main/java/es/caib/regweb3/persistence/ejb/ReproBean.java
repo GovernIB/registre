@@ -71,6 +71,19 @@ public class ReproBean extends BaseEjbJPA<Repro, Long> implements ReproLocal{
     }
 
     @Override
+    public List<Repro> getPaginationUsuario(int inicio, Long idUsuario) throws Exception {
+
+        Query q = em.createQuery("Select repro from Repro as repro  " +
+                "where repro.usuario.id = :idUsuario order by repro.orden");
+
+        q.setParameter("idUsuario",idUsuario);
+        q.setFirstResult(inicio);
+        q.setMaxResults(RESULTADOS_PAGINACION);
+
+        return q.getResultList();
+    }
+
+    @Override
     public List<Repro> getAllbyUsuario(Long idUsuario) throws Exception {
 
         Query q = em.createQuery("Select repro from Repro as repro  " +

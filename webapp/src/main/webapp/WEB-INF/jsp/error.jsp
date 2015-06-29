@@ -21,7 +21,9 @@
                 <div class="col-xs-12">
 
                     <ol class="breadcrumb">
-                        <c:import url="modulos/migadepan.jsp"/>
+
+                        <li><a href="<c:url value="/inici"/>" ><i class="fa fa-power-off"></i> <spring:message code="regweb.inicio"/></a></li>
+
                     </ol>
 
                 </div>

@@ -9,6 +9,7 @@ import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.Repro;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.ReproJson;
+import es.caib.regweb3.persistence.ejb.BaseEjbJPA;
 import es.caib.regweb3.persistence.ejb.OrganismoLocal;
 import es.caib.regweb3.persistence.ejb.ReproLocal;
 import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
@@ -65,7 +66,7 @@ public class ReproController extends BaseController {
 
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
-        List<Repro> listado = reproEjb.getAllbyUsuario(usuarioEntidad.getId());
+        List<Repro> listado = reproEjb.getPaginationUsuario((pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION, usuarioEntidad.getId());
         Long total = reproEjb.getTotalbyUsuario(usuarioEntidad.getId());
 
         Paginacion paginacion = new Paginacion(total.intValue(), pageNumber);
