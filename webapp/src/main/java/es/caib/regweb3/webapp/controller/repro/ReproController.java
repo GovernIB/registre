@@ -375,7 +375,7 @@ public class ReproController extends BaseController {
         }
 
         // Oficina Origen
-        if(reproJson.getOficinaCodigo()!= null && reproJson.isOficinaExterna()){// Preguntamos a DIR3 si está Vigente
+        if(reproJson.getOficinaCodigo()!= null  && !reproJson.getOficinaCodigo().equals("-1") && reproJson.isOficinaExterna()){// Preguntamos a DIR3 si está Vigente
             Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
             OficinaTF oficina = oficinasService.obtenerOficina(reproJson.getOficinaCodigo(),null,null);
 
