@@ -198,6 +198,9 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
     tradsinteresado['regweb3.editar'] = "<spring:message code='regweb.editar' javaScriptEscape='true' />";
     tradsinteresado['regweb3.nombre'] = "<spring:message code='regweb.nombre' javaScriptEscape='true' />";
     tradsinteresado['persona.documento'] = "<spring:message code='persona.documento' javaScriptEscape='true' />";
+    tradsinteresado['persona.tipoPersona'] = "<spring:message code='persona.tipoPersona' javaScriptEscape='true' />";
+    tradsinteresado['persona.fisica'] = "<spring:message code='persona.fisica' javaScriptEscape='true' />";
+    tradsinteresado['persona.juridica'] = "<spring:message code='persona.juridica' javaScriptEscape='true' />";
     tradsinteresado['persona.razonSocial'] = "<spring:message code='persona.razonSocial' javaScriptEscape='true' />";
     tradsinteresado['persona.persona'] = "<spring:message code='persona.persona' javaScriptEscape='true' />";
     tradsinteresado['persona.razonSocial'] = "<spring:message code='persona.razonSocial' javaScriptEscape='true' />";

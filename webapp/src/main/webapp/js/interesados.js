@@ -512,7 +512,7 @@ function buscarPersonas(tipoPersonas){
     var idRegistroDetalle = $('#idRegistroDetalle').val();
 
     var tabla = $('<table id="resultadosBusquedaPersona"></table>').addClass('paginated table table-bordered table-hover table-striped');
-    tabla.append('<colgroup><col><col><col width="100"></colgroup>');
+    tabla.append('<colgroup><col><col><col><col width="100"></colgroup>');
 
     if(tipoPersonas == 'Fisicas'){ // Personas Físicas
 
@@ -533,7 +533,7 @@ function buscarPersonas(tipoPersonas){
         var tipo = '0';
         var json = { "nombre" : $('#nombre'+tipoPersonas).val(), "apellido1" : $('#apellido1'+tipoPersonas).val(), "apellido2" : $('#apellido2'+tipoPersonas).val(), "documento" : $('#documento'+tipoPersonas).val(),"razonSocial" : $('#razonSocial'+tipoPersonas).val(), "tipo": tipo};
 
-        tabla.append('<thead><tr><th>'+tradsinteresado['persona.persona']+'</th><th>'+tradsinteresado['persona.documento']+'</th><th>'+tradsinteresado['regweb3.acciones']+'</th></tr></thead><tbody></tbody>');
+        tabla.append('<thead><tr><th>'+tradsinteresado['persona.persona']+'</th><th>'+tradsinteresado['persona.documento']+'</th><th>'+tradsinteresado['persona.tipoPersona']+'</th><th>'+tradsinteresado['regweb3.acciones']+'</th></tr></thead><tbody></tbody>');
     }
 
 
@@ -572,27 +572,30 @@ function buscarPersonas(tipoPersonas){
 
                     if(tipoPersonas == 'Fisicas'){
 
-                        var linea ="<tr><td style=\"text-align:left;\">"+result[i].nombrePersonaFisica+"</td><td style=\"text-align:left;\">"+documento+"</td><td class=\"center\"><input type=\"button\" class=\"btn btn-sm\" value=\"Añadir\" onclick=\"addInteresado('"+result[i].id+"','"+result[i].nombrePersonaFisica+"','Persona Física','No','#modalBuscadorPersonasFisicas','"+idRegistroDetalle+"')\"/></td></tr>";
+                        var linea ="<tr><td style=\"text-align:left;\">"+result[i].nombrePersonaFisica+"</td><td style=\"text-align:left;\">"+documento+"</td><td style=\"text-align:left;\">"+tradsinteresado['persona.fisica']+"</td><td class=\"center\"><input type=\"button\" class=\"btn btn-sm\" value=\"Añadir\" onclick=\"addInteresado('"+result[i].id+"','"+result[i].nombrePersonaFisica+"','Persona Física','No','#modalBuscadorPersonasFisicas','"+idRegistroDetalle+"')\"/></td></tr>";
                         tabla.append(linea);
 
                     }else if(tipoPersonas == 'Juridicas'){
 
-                        var linea ="<tr><td style=\"text-align:left;\">"+result[i].nombrePersonaJuridica+"</td><td style=\"text-align:left;\">"+documento+"</td><td class=\"center\"><input type=\"button\" class=\"btn btn-sm\" value=\"Añadir\" onclick=\"addInteresado('"+result[i].id+"','"+result[i].nombrePersonaJuridica+"','Persona Juridica','No','#modalBuscadorPersonasJuridicas','"+idRegistroDetalle+"')\"/></td></tr>";
+                        var linea ="<tr><td style=\"text-align:left;\">"+result[i].nombrePersonaJuridica+"</td><td style=\"text-align:left;\">"+documento+"</td><td style=\"text-align:left;\">"+tradsinteresado['persona.juridica']+"</td><td class=\"center\"><input type=\"button\" class=\"btn btn-sm\" value=\"Añadir\" onclick=\"addInteresado('"+result[i].id+"','"+result[i].nombrePersonaJuridica+"','Persona Juridica','No','#modalBuscadorPersonasJuridicas','"+idRegistroDetalle+"')\"/></td></tr>";
                         tabla.append(linea);
 
                     }else if(tipoPersonas == 'Todas'){
                         var representado= $('#representado').val();
 
                         var nombre = '';
+                        var tipoPersona = '';
 
                         if(result[i].tipo==2){
                             nombre = result[i].nombrePersonaFisicaCorto;
+                            tipoPersona = tradsinteresado['persona.fisica'];
                         }else if(result[i].tipo==3){
                             nombre = result[i].nombrePersonaJuridica;
+                            tipoPersona = tradsinteresado['persona.juridica'];
                         }
 
 
-                        var linea ="<tr><td style=\"text-align:left;\">"+nombre+"</td><td style=\"text-align:left;\">"+documento+"</td><td class=\"center\"><input type=\"button\" class=\"btn btn-sm\" value=\"Afegir\" onclick=\"addRepresentante('"+result[i].id+"','"+representado+"','"+idRegistroDetalle+"')\"/></td></tr>";
+                        var linea ="<tr><td style=\"text-align:left;\">"+nombre+"</td><td style=\"text-align:left;\">"+documento+"</td><td style=\"text-align:left;\">"+tipoPersona+"</td><td class=\"center\"><input type=\"button\" class=\"btn btn-sm\" value=\"Afegir\" onclick=\"addRepresentante('"+result[i].id+"','"+representado+"','"+idRegistroDetalle+"')\"/></td></tr>";
                         tabla.append(linea);
                     }
                 }
