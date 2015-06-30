@@ -39,7 +39,7 @@
                             <label for="nombre" id="nom"><spring:message code="regweb.nombre"/></label>
                         </div>
                         <div class="col-xs-8">
-                            <input id="nombre" name="nombre" class="form-control" type="text" value=""/>
+                            <input id="nombre" name="nombre" class="form-control" type="text" value="" maxlength="30"/>
                             <span id="nombreError"></span>
                         </div>
                     </div>
@@ -48,7 +48,7 @@
                             <label for="apellido1" id="llinatge1"><spring:message code="usuario.apellido1"/></label>
                         </div>
                         <div class="col-xs-8">
-                            <input id="apellido1" name="apellido1" class="form-control" type="text" value=""/>
+                            <input id="apellido1" name="apellido1" class="form-control" type="text" value="" maxlength="30"/>
                             <span id="apellido1Error"></span>
                         </div>
                     </div>
@@ -58,7 +58,7 @@
                             <label for="apellido2"><spring:message code="usuario.apellido2"/></label>
                         </div>
                         <div class="col-xs-8">
-                            <input id="apellido2" name="apellido2" class="form-control" type="text" value=""/>
+                            <input id="apellido2" name="apellido2" class="form-control" type="text" value="" maxlength="30"/>
                         </div>
                     </div>
 
@@ -132,7 +132,7 @@
                             <label for="direccion"><spring:message code="persona.direccion"/></label>
                         </div>
                         <div class="col-xs-8">
-                            <input id="direccion" name="direccion" class="form-control" type="text" value=""/>
+                            <input id="direccion" name="direccion" class="form-control" type="text" value="" maxlength="160"/>
                             <span id="direccionError"></span>
                         </div>
                     </div>
@@ -152,7 +152,7 @@
                             <label for="email"><spring:message code="usuario.email"/></label>
                         </div>
                         <div class="col-xs-8">
-                            <input id="email" name="email" class="form-control" type="text" value=""/>
+                            <input id="email" name="email" class="form-control" type="text" value="" maxlength="160"/>
                             <span id="emailError"></span>
                         </div>
                     </div>
@@ -171,7 +171,7 @@
                             <label for="razonSocial" id="rao"><spring:message code="persona.razonSocial"/></label>
                         </div>
                         <div class="col-xs-8">
-                            <input id="razonSocial" name="razonSocial" class="form-control" type="text" value=""/>
+                            <input id="razonSocial" name="razonSocial" class="form-control" type="text" value="" maxlength="80"/>
                             <span id="razonSocialError"></span>
                         </div>
                     </div>
@@ -181,7 +181,7 @@
                             <label for="direccionElectronica"><spring:message code="persona.direccionElectronica"/></label>
                         </div>
                         <div class="col-xs-8">
-                            <input id="direccionElectronica" name="direccionElectronica" class="form-control" type="text" value=""/>
+                            <input id="direccionElectronica" name="direccionElectronica" class="form-control" type="text" value="" maxlength="160"/>
                             <span id="direccionElectronicaError"></span>
                         </div>
                     </div>
@@ -207,7 +207,7 @@
                             <label for="observaciones"><spring:message code="interesado.observaciones"/></label>
                         </div>
                         <div class="col-xs-8">
-                            <textarea id="observaciones" name="observaciones" class="form-control" rows="2"></textarea>
+                            <textarea id="observaciones" name="observaciones" class="form-control" rows="2" maxlength="160"></textarea>
                         </div>
                     </div>
 
