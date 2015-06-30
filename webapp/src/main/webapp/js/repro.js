@@ -68,7 +68,7 @@ function nuevaRepro(){
             xhr.setRequestHeader("Content-Type", "application/json");
         },
         success: function(result) {
-
+        mensajeSuccess("#mensajes","S´ha realitzat correctament la creació de la repro.");
         }
 
     });

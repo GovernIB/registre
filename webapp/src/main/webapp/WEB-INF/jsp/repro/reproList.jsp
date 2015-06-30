@@ -25,6 +25,7 @@
                 </ol>
             </div>
         </div><!-- /.row -->
+        <div id="mensajes"></div>
 
         <div class="row">
             <div class="col-xs-12">
@@ -226,7 +227,7 @@
                 xhr.setRequestHeader("Content-Type", "application/json");
             },
             success: function(result) {
-
+            mensajeSuccess("#mensajes","S´ha realitzat correctament l'enviament de la repro.");
             }
 
         });
