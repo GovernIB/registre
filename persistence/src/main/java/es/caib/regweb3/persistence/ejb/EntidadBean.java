@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.Libro;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -43,6 +44,15 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @EJB public ReproLocal reproEjb;
     @EJB public LopdLocal lopdEjb;
     @EJB public AnexoLocal anexoEjb;
+    @EJB public PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
+    @EJB public RelacionOrganizativaOfiLocal relacionOrganizativaOfiEjb;
+    @EJB public RelacionSirOfiLocal relacionSirOfiEjb;
+    @EJB public OficinaLocal oficinaEjb;
+    @EJB public UsuarioEntidadLocal usuarioEntidadEjb;
+    @EJB public DescargaLocal descargaEjb;
+    @EJB public ModeloOficioRemisionLocal modeloOficioRemisionEjb;
+    @EJB public ModeloReciboLocal modeloReciboEjb;
+    @EJB public RegistroMigradoLocal registroMigradoEjb;
 
 
 
@@ -155,6 +165,8 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @Override
     public void eliminarRegistros(Long idEntidad) throws Exception{
 
+        log.info("Dentro eliminar Registros Entidad");
+
         /********* TRAZABILIDAD *********/
         log.info("Trazabilidades eliminadas: " +trazabilidadEjb.eliminarByEntidad(idEntidad));
 
@@ -202,100 +214,57 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
     @Override
     public void eliminarEntidad(Long idEntidad)throws Exception{
+        //todo: Añadir pre-registros cuando se active SIR
+
+        log.info("Dentro eliminar Entidad");
 
         //Eliminamos todos los datos relacionados con los RegistrosEntradad y RegistrosSalida
         eliminarRegistros(idEntidad);
 
         /********* PERMISO LIBRO USUARIO *********/
-        Query plu = em.createQuery("select distinct(plu.id) from PermisoLibroUsuario as plu where plu.usuario.entidad.id =:idEntidad");
-        plu.setParameter("idEntidad", idEntidad);
-        List<Object> plus =  plu.getResultList();
-
-        for (Object id : plus) {
-            em.createQuery("delete from PermisoLibroUsuario where id =:id").setParameter("id",id).executeUpdate();
-        }
-        em.flush();
+        log.info("PermisoLibroUsuarios eliminados: " + permisoLibroUsuarioEjb.eliminarByEntidad(idEntidad));
 
         /********* LIBROS *********/
-       /* Query libro = em.createQuery("Select distinct(o.id) from Libro as o where o.organismo.entidad.id =:idEntidad");
-        libro.setParameter("idEntidad",idEntidad);
-        List<Object> libros =  libro.getResultList();
-
-        for (Object id : libros) {
-            log.info("Libro id: " + id);
-            Libro l = libroEjb.findById((Long) id);
-            log.info("Libro: " + l.getNombre());
-            libroEjb.remove(l);
-        }
-        em.flush();*/
-
-        Query o = em.createQuery("Select distinct(o.id) from Organismo as o where o.entidad.id =:idEntidad");
-        o.setParameter("idEntidad",idEntidad);
-        List<Object> organismos =  o.getResultList();
-
+        log.info("Libros eliminados: " + libroEjb.eliminarByEntidad(idEntidad));
 
         /********* RelacionOrganizativaOfi *********/
-        for (Object id : organismos) {
-            em.createQuery("delete from RelacionOrganizativaOfi where organismo.id =:id").setParameter("id",id).executeUpdate();
-        }
-        em.flush();
+        log.info("RelacionOrganizativaOfi eliminadas: " + relacionOrganizativaOfiEjb.eliminarByEntidad(idEntidad));
 
         /********* RelacionSirOfi *********/
-        for (Object id : organismos) {
-            em.createQuery("delete from RelacionSirOfi where organismo.id =:id").setParameter("id",id).executeUpdate();
-        }
-        em.flush();
+        log.info("RelacionOrganizativaOfi eliminadas: " + relacionSirOfiEjb.eliminarByEntidad(idEntidad));
 
         /********* USUARIOS ENTIDAD *********/
-        Query usuarioEntidad = em.createQuery("delete from UsuarioEntidad as r where entidad.id =:idEntidad");
-        usuarioEntidad.setParameter("idEntidad",idEntidad).executeUpdate();
+        log.info("UsuariosEntidad eliminados: " + usuarioEntidadEjb.eliminarByEntidad(idEntidad));
 
         /********* OFICINAS *********/
-        for (Object id : organismos) {
-            em.createQuery("delete from Oficina where organismoResponsable.id =:id and oficinaResponsable != null").setParameter("id",id).executeUpdate();
-        }
-        em.flush();
-
-        for (Object id : organismos) {
-            em.createQuery("delete from Oficina where organismoResponsable.id =:id and oficinaResponsable = null").setParameter("id",id).executeUpdate();
-        }
-        em.flush();
+        log.info("Oficinas eliminadas: " + oficinaEjb.eliminarByEntidad(idEntidad));
 
         /********* ORGANISMOS *********/
-        for (Object id : organismos) {
-            log.info("Organismo id: " + id);
-            Organismo organismo = organismoEjb.findById((Long) id);
-            organismoEjb.remove(organismo);
-
-            //em.createQuery("delete from Organismo where id =:id").setParameter("id",id).executeUpdate();
-            em.flush();
-        }
-
+        log.info("Organismos eliminados: " + organismoEjb.eliminarByEntidad(idEntidad));
 
         /********* TIPOS ASUNTO Y CODIGOS ASUNTO *********/
-        List<TipoAsunto> tiposAsunto = tipoAsuntoEjb.getAll(idEntidad);
-
-        for (TipoAsunto tipoAsunto : tiposAsunto) {
-            for (CodigoAsunto codigoAsunto : tipoAsunto.getCodigosAsunto()) {
-                codigoAsuntoEjb.remove(codigoAsunto);
-            }
-            tipoAsuntoEjb.remove(tipoAsunto);
-        }
-        em.flush();
+        log.info("TipoAsuntos: " + tipoAsuntoEjb.eliminarByEntidad(idEntidad));
 
         /********* TIPOS DOCUMENTAL *********/
-        List<TipoDocumental> tiposDocumental = tipoDocumentalEjb.getByEntidad(idEntidad);
+        log.info("TiposDocumental: " + tipoDocumentalEjb.eliminarByEntidad(idEntidad));
 
-        for (TipoDocumental tipoDocumental : tiposDocumental) {
+        /********* Modelo OficioRemision *********/
+        log.info("Modelo OficioRemision: " + modeloOficioRemisionEjb.eliminarByEntidad(idEntidad));
 
-            tipoDocumentalEjb.remove(tipoDocumental);
-        }
-        em.flush();
+        /********* Modelo Recibo *********/
+        log.info("Modelo Recibo: " + modeloReciboEjb.eliminarByEntidad(idEntidad));
+
+        /********* DESCARGAS *********/
+        log.info("Descargas: " + descargaEjb.eliminarByEntidad(idEntidad));
+
+        /********* REGISTROS MIGRADOS *********/
+        log.info("RegistrosMigrados: " + registroMigradoEjb.eliminarByEntidad(idEntidad));
 
         /********* ENTIDAD *********/
-        remove(findById(idEntidad));
-
+        em.flush();
+        em.createQuery("delete from Entidad where id = :idEntidad ").setParameter("idEntidad", idEntidad).executeUpdate();
 
     }
+
 
 }

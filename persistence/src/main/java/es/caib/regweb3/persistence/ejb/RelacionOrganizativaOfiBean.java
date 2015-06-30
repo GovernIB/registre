@@ -160,4 +160,17 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
         return q.getResultList();
     }
 
+    @Override
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+
+        List<?> relaciones = em.createQuery("Select distinct(o.id) from RelacionOrganizativaOfi as o where o.organismo.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+
+        if(relaciones.size() > 0){
+            return em.createQuery("delete from RelacionOrganizativaOfi where id in (:relaciones) ").setParameter("relaciones", relaciones).executeUpdate();
+        }
+
+        return 0;
+
+    }
+
 }

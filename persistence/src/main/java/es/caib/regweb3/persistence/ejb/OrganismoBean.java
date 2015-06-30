@@ -393,4 +393,17 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
        return  new ArrayList<Organismo>(totales);
      }
+
+    @Override
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+
+        List<?> organismos = em.createQuery("Select distinct(id) from Organismo where entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+
+        if(organismos.size() > 0){
+            return em.createQuery("delete from Organismo where id in (:organismos) ").setParameter("organismos", organismos).executeUpdate();
+        }
+
+        return 0;
+
+    }
 }

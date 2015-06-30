@@ -164,4 +164,17 @@ public class TipoAsuntoBean extends BaseEjbJPA<TipoAsunto, Long> implements Tipo
         return (Long) q.getSingleResult();
     }
 
+    @Override
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+
+        List<?> tipos = em.createQuery("Select distinct(id) from TipoAsunto where entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+
+        for (Object id : tipos) {
+            remove(findById((Long) id));
+        }
+
+        return tipos.size();
+
+    }
+
 }

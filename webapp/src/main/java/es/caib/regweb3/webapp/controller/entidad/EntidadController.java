@@ -619,30 +619,11 @@ public class EntidadController extends BaseController {
     /**
      * Eliminar la asignación de un Usuario a un Organismo
      */
-    //@RequestMapping(value = "/{idEntidad}/eliminar")
+    @RequestMapping(value = "/{idEntidad}/eliminar")
     public String eliminarEntidad(@PathVariable Long idEntidad, HttpServletRequest request) {
     log.info("idEntidad: " + idEntidad);
         try {
 
-            // Eliminar RegistroEntrada: RegistroDetalle, Modificaciones
-            // Eliminar RegistroSalida: RegistroDetalle, Modificaciones
-            // Eliminar Oficios Remisión
-            // Eliminar Anexos
-            // Eliminar Trazabilidad
-            // Eliminar Personas
-            // Eliminar Interesados
-            // Eliminar Repro
-            // Eliminar LOPD
-            // Eliminar PermisosLibroUsuario
-            // Eliminar Libros
-            // Eliminar Oficinas
-            // Eliminar Organismos
-            // Eliminar Catálogo Datos
-            // Eliminar UsuarioEntidad
-            // Eliminar Entidad
-
-            // Eliminamos los registros
-            entidadEjb.eliminarRegistros(idEntidad);
             entidadEjb.eliminarEntidad(idEntidad);
 
             Mensaje.saveMessageInfo(request, "S'ha eliminat l'entitat");

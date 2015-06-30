@@ -146,4 +146,12 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @throws Exception
      */
     public List<UsuarioEntidad> findOperadoresByEntidad(Long idEntidad) throws Exception;
+
+    /**
+     * Elimina las UsuarioEntidad de una Entidad
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
 }

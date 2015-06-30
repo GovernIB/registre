@@ -42,9 +42,6 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     @EJB(mappedName = "regweb3/PermisoLibroUsuarioEJB/local")
     public PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
 
-    @EJB(mappedName = "regweb3/EntidadEJB/local")
-    public EntidadLocal entidadEjb;
-
     @Override
     public PermisoLibroUsuario findById(Long id) throws Exception {
 
@@ -303,7 +300,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     @Override
     public void crearPermisosNoExistentes() throws Exception {
 
-        List<Entidad> entidades = entidadEjb.getAll();
+        List<Entidad> entidades = em.createQuery("Select entidad from Entidad as entidad order by entidad.id").getResultList();
 
         for (Entidad entidad : entidades) {
             log.info("ENTITAT: " + entidad.getDescripcion());
@@ -345,6 +342,18 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
         List<PermisoLibroUsuario> permisos = q.getResultList();
 
         return permisos.size() == 1;
+    }
+
+    @Override
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+
+        List<?> plus = em.createQuery("select distinct(plu.id) from PermisoLibroUsuario as plu where plu.usuario.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+
+        if(plus.size() > 0){
+            return em.createQuery("delete from PermisoLibroUsuario where id in (:plus) ").setParameter("plus", plus).executeUpdate();
+        }
+
+        return 0;
     }
 
 }

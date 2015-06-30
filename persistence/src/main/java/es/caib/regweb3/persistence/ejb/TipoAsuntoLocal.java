@@ -81,4 +81,12 @@ public interface TipoAsuntoLocal extends BaseEjb<TipoAsunto, Long> {
      * @throws Exception
      */
     public Long getTotalEntidad(Long idEntidad) throws Exception;
+
+    /**
+     * Elimina los {@link es.caib.regweb3.model.TipoAsunto} de una Entidad
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
 }

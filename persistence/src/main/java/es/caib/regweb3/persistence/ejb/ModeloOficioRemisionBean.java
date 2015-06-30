@@ -89,4 +89,17 @@ public class ModeloOficioRemisionBean extends BaseEjbJPA<ModeloOficioRemision, L
         return q.getResultList();
     }
 
+    @Override
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+
+        List<?> modelos = em.createQuery("Select distinct(id) from ModeloOficioRemision where entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+
+        for (Object id : modelos) {
+            remove(findById((Long) id));
+        }
+
+        return modelos.size();
+
+    }
+
 }

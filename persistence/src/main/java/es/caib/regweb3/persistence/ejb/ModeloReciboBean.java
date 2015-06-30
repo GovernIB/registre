@@ -87,4 +87,17 @@ public class ModeloReciboBean extends BaseEjbJPA<ModeloRecibo, Long> implements 
          return q.getResultList();
     }
 
+    @Override
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+
+        List<?> modelos = em.createQuery("Select distinct(id) from ModeloRecibo where entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+
+        for (Object id : modelos) {
+            remove(findById((Long) id));
+        }
+
+        return modelos.size();
+
+    }
+
 }

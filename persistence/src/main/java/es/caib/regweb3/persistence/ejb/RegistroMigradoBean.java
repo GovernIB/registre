@@ -204,4 +204,17 @@ public class RegistroMigradoBean extends BaseEjbJPA<RegistroMigrado, Long> imple
         }
     }
 
+    @Override
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+
+        List<?> tipos = em.createQuery("Select distinct(id) from RegistroMigrado where entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+
+        for (Object id : tipos) {
+            remove(findById((Long) id));
+        }
+
+        return tipos.size();
+
+    }
+
 }

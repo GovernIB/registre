@@ -1,6 +1,7 @@
 package es.caib.regweb3.model;
 
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.ForeignKey;
 
@@ -316,14 +317,19 @@ public class Persona implements Serializable {
     @Transient
     public String getNombrePersonaFisica(){
 
-        String personaFisica = getNombre()+ " " + getApellido1();
+        String personaFisica = "" ;
 
-        if(getApellido2() != null && getApellido2().length() > 0){
-            personaFisica = personaFisica.concat(" " + getApellido2());
-        }
+        if(!StringUtils.isEmpty(getNombre())){
 
-        if(getDocumento() != null && getDocumento().length() > 0){
-            personaFisica = personaFisica.concat(" - " + getDocumento());
+            personaFisica = getNombre()+ " " + getApellido1();
+
+            if(getApellido2() != null && getApellido2().length() > 0){
+                personaFisica = personaFisica.concat(" " + getApellido2());
+            }
+
+            if(getDocumento() != null && getDocumento().length() > 0){
+                personaFisica = personaFisica.concat(" - " + getDocumento());
+            }
         }
 
         return personaFisica;
@@ -332,10 +338,14 @@ public class Persona implements Serializable {
     @Transient
     public String getNombrePersonaFisicaCorto(){
 
-        String personaFisica = getNombre()+ " " + getApellido1();
+        String personaFisica = "";
 
-        if(getApellido2() != null && getApellido2().length() > 0){
-            personaFisica = personaFisica.concat(" " + getApellido2());
+        if(!StringUtils.isEmpty(getNombre())){
+            personaFisica = getNombre()+ " " + getApellido1();
+
+            if(getApellido2() != null && getApellido2().length() > 0){
+                personaFisica = personaFisica.concat(" " + getApellido2());
+            }
         }
 
         return personaFisica;
@@ -344,10 +354,15 @@ public class Persona implements Serializable {
     @Transient
     public String getNombrePersonaJuridica(){
 
-        String personaJuridica = getRazonSocial();
+        String personaJuridica = "";
 
-        if(getDocumento() != null && getDocumento().length() > 0){
-            personaJuridica = personaJuridica.concat(" - " + getDocumento());
+        if(!StringUtils.isEmpty(getRazonSocial())){
+
+            personaJuridica = getRazonSocial();
+
+            if(getDocumento() != null && getDocumento().length() > 0){
+                personaJuridica = personaJuridica.concat(" - " + getDocumento());
+            }
         }
 
         return  personaJuridica;

@@ -93,4 +93,18 @@ public class RelacionSirOfiBean extends BaseEjbJPA<RelacionSirOfi, RelacionSirOf
             return null;
         }
     }
+
+    @Override
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+
+        List<?> relaciones = em.createQuery("Select distinct(o.id) from RelacionSirOfi as o where o.organismo.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+
+        if(relaciones.size() > 0){
+            return em.createQuery("delete from RelacionSirOfi where id in (:relaciones) ").setParameter("relaciones", relaciones).executeUpdate();
+        }
+
+        return 0;
+
+    }
+
 }

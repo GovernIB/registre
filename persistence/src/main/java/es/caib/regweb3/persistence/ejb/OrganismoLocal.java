@@ -147,4 +147,12 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
    * @throws Exception
    */
     public List<Organismo> getByLibro(Long idLibro) throws Exception;
+
+    /**
+     * Elimina los Organismos de una Entidad
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
 }

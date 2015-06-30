@@ -66,4 +66,12 @@ public interface RelacionOrganizativaOfiLocal extends BaseEjb<RelacionOrganizati
      */
     public List<RelacionOrganizativaOfi> funcionalByEntidadEstado(Long idEntidad, String estado) throws Exception;
 
+    /**
+     * Elimina las RelacionOrganizativaOfi de una Entidad
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+
 }

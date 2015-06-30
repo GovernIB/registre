@@ -90,4 +90,12 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
      */
     public Libro crearLibro(Libro libro) throws Exception;
 
+    /**
+     * Elimina los Libros de una Entidad
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+
 }

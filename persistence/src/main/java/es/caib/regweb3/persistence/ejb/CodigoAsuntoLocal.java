@@ -58,4 +58,12 @@ public interface CodigoAsuntoLocal extends BaseEjb<CodigoAsunto, Long> {
      */
     public CodigoAsunto findByCodigoEntidad(String codigo, Long idEntidad) throws Exception;
 
+    /**
+     * Elimina los CodigoAsunto de una Entidad
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+
 }

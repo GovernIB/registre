@@ -38,4 +38,12 @@ public interface DescargaLocal extends BaseEjb<Descarga, Long> {
   public Descarga findByTipoEntidadInverse(String tipo, Long idEntidad) throws Exception;
 
   public void deleteByTipo(String tipo) throws Exception;
+
+  /**
+   * Eimina todas las Descargas de una Entidad
+   * @param idEntidad
+   * @return
+   * @throws Exception
+   */
+  public Integer eliminarByEntidad(Long idEntidad) throws Exception;
 }

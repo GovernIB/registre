@@ -1,6 +1,7 @@
 package es.caib.regweb3.model;
 
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.ForeignKey;
 import org.hibernate.annotations.Index;
@@ -426,14 +427,19 @@ public class Interesado implements Serializable {
     @Transient
     public String getNombrePersonaFisica(){
 
-        String personaFisica = getNombre()+ " " + getApellido1();
+        String personaFisica = "" ;
 
-        if(getApellido2() != null && getApellido2().length() > 0){
-            personaFisica = personaFisica.concat(" " + getApellido2());
-        }
+        if(!StringUtils.isEmpty(getNombre())){
 
-        if(getDocumento() != null && getDocumento().length() > 0){
-            personaFisica = personaFisica.concat(" - " + getDocumento());
+            personaFisica = getNombre()+ " " + getApellido1();
+
+            if(getApellido2() != null && getApellido2().length() > 0){
+                personaFisica = personaFisica.concat(" " + getApellido2());
+            }
+
+            if(getDocumento() != null && getDocumento().length() > 0){
+                personaFisica = personaFisica.concat(" - " + getDocumento());
+            }
         }
 
         return personaFisica;
@@ -442,12 +448,18 @@ public class Interesado implements Serializable {
     @Transient
     public String getNombrePersonaJuridica(){
 
+        String personaJuridica = "";
 
-        if(getRazonSocial() != null && getRazonSocial().length() > 0){
-            return getRazonSocial();
-        }else{
-            return getNombre() + " " + getApellido1();
+        if(!StringUtils.isEmpty(getRazonSocial())){
+
+            personaJuridica = getRazonSocial();
+
+            if(getDocumento() != null && getDocumento().length() > 0){
+                personaJuridica = personaJuridica.concat(" - " + getDocumento());
+            }
         }
+
+        return  personaJuridica;
     }
 
     @Transient

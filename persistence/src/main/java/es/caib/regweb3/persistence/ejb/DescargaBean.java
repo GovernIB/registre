@@ -103,5 +103,18 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
         query.executeUpdate();
          
     }
+
+    @Override
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+
+        List<?> descargas = em.createQuery("Select distinct(id) from Descarga where entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+
+        if(descargas.size() > 0){
+            return em.createQuery("delete from Descarga where id in (:descargas) ").setParameter("descargas", descargas).executeUpdate();
+        }
+
+        return 0;
+
+    }
     
 }

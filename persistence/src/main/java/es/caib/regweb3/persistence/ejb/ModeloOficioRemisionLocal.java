@@ -41,4 +41,12 @@ public interface ModeloOficioRemisionLocal extends BaseEjb<ModeloOficioRemision,
      */
     public List<ModeloOficioRemision> getPagination(int inicio, Long idEntidad) throws Exception;
 
+    /**
+     * Elimina los {@link es.caib.regweb3.model.ModeloOficioRemision} de una Entidad
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+
 }

@@ -101,4 +101,12 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @throws Exception
      */
     public Set<ObjetoBasico> oficinasRegistro(List<Libro> libros) throws Exception;
+
+    /**
+     * Elimina las Oficinas de una Entidad
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
 }

@@ -25,4 +25,12 @@ public interface RelacionSirOfiLocal extends BaseEjb<RelacionSirOfi, RelacionSir
      * @throws Exception
      */
     public RelacionSirOfi getRelacionSir(Long idOficina, Long idOrganismo) throws Exception;
+
+    /**
+     * Elimina las RelacionSirOfi de una Entidad
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
 }

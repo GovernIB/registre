@@ -68,5 +68,13 @@ public interface TipoDocumentalLocal extends BaseEjb<TipoDocumental, Long> {
    */
     public List<TipoDocumental> getByEntidad(Long idEntidad) throws Exception;
 
+    /**
+     * Elimina los TipoDocumental de una Entidad
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+
 
 }

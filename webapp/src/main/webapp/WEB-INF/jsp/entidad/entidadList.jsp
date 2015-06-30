@@ -66,7 +66,7 @@
                                         <col>
                                         <col>
                                         <col>
-                                        <col width="150">
+                                        <col width="200">
                                     </colgroup>
                                     <thead>
                                         <tr>
@@ -90,8 +90,9 @@
 
                                                     <c:if test="${entidad.activo}">
                                                         <a class="btn btn-warning btn-sm" href="<c:url value="/entidad/${entidad.id}/edit"/>" title="<spring:message code="regweb.editar"/>"><span class="fa fa-pencil"></span></a>
-                                                        <a class="btn btn-danger btn-sm" onclick='javascript:confirm("<c:url value="/entidad/${entidad.id}/eliminarRegistros"/>","<spring:message code="entidad.confirmar.eliminarRegistros" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="entidad.eliminarRegistros"/>"><span class="fa fa fa-eraser"></span></a>
                                                         <a class="btn btn-danger btn-sm" onclick='javascript:confirm("<c:url value="/entidad/${entidad.id}/anular"/>","<spring:message code="entidad.confirmar.anular" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="entidad.anular"/>"><span class="fa fa-thumbs-o-down"></span></a>
+                                                        <a class="btn btn-danger btn-sm" onclick='javascript:confirm("<c:url value="/entidad/${entidad.id}/eliminarRegistros"/>","<spring:message code="entidad.confirmar.eliminarRegistros" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="entidad.eliminarRegistros"/>"><span class="fa fa-envelope-o"></span></a>
+                                                        <a class="btn btn-danger btn-sm" onclick='javascript:confirm("<c:url value="/entidad/${entidad.id}/eliminar"/>","<spring:message code="entidad.confirmar.eliminar" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="entidad.eliminar"/>"><span class="fa fa fa-eraser"></span></a>
                                                     </c:if>
                                                     <c:if test="${not entidad.activo}">
                                                         <a class="btn btn-primary btn-sm" onclick='javascript:confirm("<c:url value="/entidad/${entidad.id}/activar"/>","<spring:message code="entidad.confirmar.activar" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="entidad.activar"/>"><span class="fa fa-thumbs-o-up"></span></a>

@@ -239,4 +239,27 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         }
 
     }
+
+    @Override
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+
+        Integer total = 0;
+
+
+        List<?> oficinas = em.createQuery("Select distinct(id) from Oficina where organismoResponsable.entidad.id =:idEntidad and oficinaResponsable != null ").setParameter("idEntidad",idEntidad).getResultList();
+
+        if(oficinas.size() > 0){
+            total =  em.createQuery("delete from Oficina where id in (:oficinas) ").setParameter("oficinas", oficinas).executeUpdate();
+        }
+
+        oficinas = em.createQuery("Select distinct(id) from Oficina  where organismoResponsable.entidad.id =:idEntidad and oficinaResponsable is null ").setParameter("idEntidad",idEntidad).getResultList();
+
+        if(oficinas.size() > 0){
+            total = total +  em.createQuery("delete from Oficina where id in (:oficinas) ").setParameter("oficinas", oficinas).executeUpdate();
+        }
+        return total;
+
+
+
+    }
 }

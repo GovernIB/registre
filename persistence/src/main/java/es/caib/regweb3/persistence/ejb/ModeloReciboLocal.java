@@ -41,4 +41,12 @@ public interface ModeloReciboLocal extends BaseEjb<ModeloRecibo, Long> {
    */
    public List<ModeloRecibo> getPagination(int inicio, Long idEntidad) throws Exception;
 
+    /**
+     * Elimina los {@link es.caib.regweb3.model.ModeloRecibo} de una Entidad
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+
 }

@@ -121,5 +121,20 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
         }
     }
 
+    @Override
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+
+
+        List<?> codigos = em.createQuery("Select distinct(id) from CodigoAsunto where tipoAsunto.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+
+        for (Object id : codigos) {
+            remove(findById((Long) id));
+        }
+
+
+        return codigos.size();
+
+    }
+
 
 }

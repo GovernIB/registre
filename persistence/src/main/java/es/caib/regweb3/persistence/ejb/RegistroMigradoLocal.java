@@ -63,4 +63,12 @@ public interface RegistroMigradoLocal extends BaseEjb<RegistroMigrado, Long> {
      */
     public void insertarRegistrosLopdMigrado(Paginacion paginacion, Long idUsuarioEntidad) throws Exception;
 
+    /**
+     * Elimina todos los RegistroMigrado de la Entidad
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+
 }
