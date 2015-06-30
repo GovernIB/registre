@@ -239,15 +239,8 @@
     	                    </div>
                             </c:if>
                         </div>
-                        
-	
-    <%--
-	                    <div class="clearfix"></div>
-                         --%>
+
 	                    <!--FIN FIRMA-->
-	
-
-
 
     		     	</div>
            		    <c:if test="${teScan}">

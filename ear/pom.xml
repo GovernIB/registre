@@ -213,6 +213,14 @@
 			<artifactId>plugin-scanweb-dynamicwebtwain</artifactId>
 			<version>1.0.0</version>
 		</dependency>
+		
+		<!-- 
+		<dependency>
+		    <groupId>org.fundaciobit.plugins</groupId>
+            <artifactId>scanmmscomputing-plugin</artifactId>
+            <version>1.0.0</version>
+		</dependency>
+		-->
 
 
         <!-- Externas -->

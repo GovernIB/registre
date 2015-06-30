@@ -10,6 +10,7 @@ import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.scan.ScannerManager;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.AnexoWebValidator;
+
 import org.apache.axis.utils.StringUtils;
 import org.apache.commons.io.FileUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -22,18 +23,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import org.springframework.web.servlet.HandlerMapping;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -566,10 +570,48 @@ public class AnexoController extends BaseController {
     }
     
     
+    
+    @RequestMapping(value = "/scanwebresource2/{tipusScan}/{registroID}/**", method = RequestMethod.GET)
+    public Object obtenerRecursoPath(
+        @PathVariable Integer tipusScan,
+        @PathVariable Long registroID,        
+        HttpServletRequest request,
+        HttpServletResponse response) throws Exception {
+      
+      
+      
+   // Don't repeat a pattern
+      String pattern = (String)
+          request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);  
+
+      String resourcePath  = new AntPathMatcher().extractPathWithinPattern(pattern, 
+          request.getServletPath());
+
+      log.info("Downloading Scan Resource:");
+      log.info("   + tipusScan = ]" + tipusScan+ "[");
+      log.info("   + registroID = ]" + registroID+ "[");
+      log.info("   + resourcePath = ]" + resourcePath + "[");
+      
+
+        ScanWebResource recurs = ScannerManager.getResource(request, tipusScan, resourcePath, registroID);
+
+        response.setHeader("Pragma", "");
+        response.setHeader("Expires", "");
+        response.setHeader("Cache-Control", "");
+        response.setHeader("Content-Disposition", "inline; filename=\"" + recurs.getName() + "\"");
+        response.setContentType(recurs.getMime());
+        response.getOutputStream().write(recurs.getContent());
+        
+        return null;
+    }
+
+    
+
     /**
      * Obtiene el {@link es.caib.regweb3.model.Anexo} según su identificador.
      *
      */
+    // TODO Borrar
     @RequestMapping(value = "/scanwebresource/{path1}/{path2}/{resourcename:.+}", method = RequestMethod.GET)
     public Object obtenerRecursoPath2(
     		@PathVariable String path1,
@@ -594,6 +636,7 @@ public class AnexoController extends BaseController {
     }
     
     @RequestMapping(value = "/scanwebresource/{path}/{resourcename:.+}", method = RequestMethod.GET)
+    // TODO Borrar
     public Object obtenerRecursoPath1(
     		@PathVariable String path,
     		@PathVariable String resourcename, 
@@ -604,6 +647,7 @@ public class AnexoController extends BaseController {
     }
     
     @RequestMapping(value = "/scanwebresource/{resourcename:.+}", method = RequestMethod.GET)
+    // TODO Borrar
     public Object obtenerRecurso(
     		@PathVariable String resourcename, 
     		HttpServletRequest request,
