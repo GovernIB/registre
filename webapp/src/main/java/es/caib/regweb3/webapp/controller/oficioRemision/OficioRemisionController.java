@@ -270,11 +270,11 @@ public class OficioRemisionController extends BaseController {
         } else {//Oficio externo todo: Acabar oficio remisión externo
 
           final String identificadorIntercambioSir = null;
-          // TODO Aqui falta el nom enlloc del codi dir3
-          final String organismoExternoDenominacion = registroEntradaListForm.getOrganismoExterno();
+
+          final String organismoExternoDenominacion = registroEntradaListForm.getOrganismoExternoDenominacion();
             oficioRemision = oficioRemisionUtils.crearOficioRemisionExterno(registrosEntrada,
                 getOficinaActiva(request), usuarioEntidad, 
-                registroEntradaListForm.getOrganismoExterno(),
+                registroEntradaListForm.getOrganismoExternoCodigo(),
                 organismoExternoDenominacion, registroEntradaListForm.getIdLibro(),
                 identificadorIntercambioSir);
         }

@@ -4,6 +4,7 @@ import es.caib.regweb3.model.RegistroDetalle;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
+import java.util.Set;
 
 /**
  * Created by Fundació BIT.
@@ -16,10 +17,18 @@ import javax.ejb.Local;
 public interface RegistroDetalleLocal extends BaseEjb<RegistroDetalle, Long> {
 
     /**
-     * Elimina los RegistroDetalle de una Entidad
+     * Elimina los RegistroDetalle
+     * @param ids
+     * @return
+     * @throws Exception
+     */
+    public Integer eliminar(Set<Long> ids) throws Exception;
+
+    /**
+     * Obtiene todos los RegistroDetalle de una Entidad
      * @param idEntidad
      * @return
      * @throws Exception
      */
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    public Set<Long> getRegistrosDetalle(Long idEntidad) throws Exception;
 }

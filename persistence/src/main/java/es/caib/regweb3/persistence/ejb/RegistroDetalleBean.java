@@ -10,7 +10,9 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Fundació BIT.
@@ -62,22 +64,31 @@ public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> imple
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+    public Integer eliminar(Set<Long> ids) throws Exception{
 
-        List<?> registros =  em.createQuery("Select distinct(re.id) from RegistroDetalle as re where re.tipoAsunto.entidad.id = :idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        for (Object id : ids) {
 
-        for (Object id : registros) {
-            RegistroDetalle registroDetalle = findById((Long) id);
+            RegistroDetalle registroDetalle = findById((Long)id);
 
             //Elimina los anexos
             for(Anexo anexo: registroDetalle.getAnexos()){
                 AnnexDocumentCustodyManager.eliminarCustodia(anexo.getCustodiaID());
             }
-            remove(findById((Long) id));
+            remove(registroDetalle);
+
+            em.flush();
         }
-        em.flush();
 
-        return registros.size();
+        return ids.size();
+    }
 
+    @Override
+    public Set<Long> getRegistrosDetalle(Long idEntidad) throws Exception{
+        Set<Long> registrosDetalle = new HashSet<Long>();
+
+        registrosDetalle.addAll(em.createQuery("Select distinct(registroDetalle.id) from RegistroEntrada where usuario.entidad.id = :idEntidad").setParameter("idEntidad",idEntidad).getResultList()) ;
+        registrosDetalle.addAll(em.createQuery("Select distinct(registroDetalle.id) from RegistroSalida where usuario.entidad.id = :idEntidad").setParameter("idEntidad",idEntidad).getResultList()) ;
+
+        return registrosDetalle;
     }
 }

@@ -328,7 +328,10 @@
                                             </div>
                                             <div class="timeline-body">
 
-                                                <p><small><i class="fa fa-exchange"></i> <strong><spring:message code="oficioRemision.organismoDestino"/>:</strong> ${trazabilidad.oficioRemision.organismoDestinatario}</small></p>
+                                                <p><small><i class="fa fa-exchange"></i> <strong><spring:message code="oficioRemision.organismoDestino"/>:</strong>
+                                                    <c:if test="${trazabilidad.oficioRemision.organismoDestinatario != null}">${trazabilidad.oficioRemision.organismoDestinatario.denominacion}</c:if>
+                                                    <c:if test="${trazabilidad.oficioRemision.organismoDestinatario == null}">${trazabilidad.oficioRemision.destinoExternoDenominacion}</c:if>
+                                                </small></p>
 
                                                 <p>
                                                     <small><i class="fa fa-bookmark"></i> <strong><spring:message code="oficioRemision.estado"/>:</strong>

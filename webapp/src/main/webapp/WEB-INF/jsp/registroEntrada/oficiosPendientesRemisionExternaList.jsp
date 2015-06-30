@@ -108,7 +108,8 @@
                                                                 <input type="hidden" id="idOrganismo" name="idOrganismo" value="${oficiosRemisionOrganismo.oficiosRemision[0].destino.id}"/>
                                                             </c:if>
                                                             <c:if test="${oficiosRemisionOrganismo.oficiosRemision[0].destino == null}">
-                                                                <input type="hidden" id="organismoExterno" name="organismoExterno" value="${oficiosRemisionOrganismo.oficiosRemision[0].destinoExternoCodigo}"/>
+                                                                <input type="hidden" id="organismoExternoCodigo" name="organismoExternoCodigo" value="${oficiosRemisionOrganismo.oficiosRemision[0].destinoExternoCodigo}"/>
+                                                                <input type="hidden" id="organismoExternoDenominacion" name="organismoExternoDenominacion" value="${oficiosRemisionOrganismo.oficiosRemision[0].destinoExternoDenominacion}"/>
                                                             </c:if>
 
                                                             <input type="hidden" id="idLibro" name="idLibro" value="${registroEntradaBusqueda.registroEntrada.libro.id}"/>

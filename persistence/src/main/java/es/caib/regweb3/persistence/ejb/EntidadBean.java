@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Fundació BIT.
@@ -183,6 +184,8 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         log.info("HistoricosEntrada eliminados: " + historicoRegistroEntradaEjb.eliminarByEntidad(idEntidad));
 
         // RegistroEntrada
+        Set<Long> registrosDetalle =  registroDetalleEjb.getRegistrosDetalle(idEntidad);
+
         log.info("RegistrosEntrada eliminados: " +registroEntradaEjb.eliminarByEntidad(idEntidad));
 
         /********* REGISTROS SALIDA *********/
@@ -195,7 +198,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
 
         /********* REGISTROS DETALLE *********/
-        log.info("RegistrosDetalle eliminados: " +registroDetalleEjb.eliminarByEntidad(idEntidad));
+        log.info("RegistrosDetalle eliminados: " +registroDetalleEjb.eliminar(registrosDetalle));
 
         /********* REPRO *********/
         log.info("Repros eliminados: " +reproEjb.eliminarByEntidad(idEntidad));
@@ -209,6 +212,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
            libroEjb.reiniciarContadores(libro.getId());
         }
         log.info("Libros reiniciados: " +libros.size());
+        em.flush();
 
     }
 

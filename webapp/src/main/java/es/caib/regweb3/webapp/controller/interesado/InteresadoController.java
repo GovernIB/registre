@@ -586,7 +586,7 @@ public class InteresadoController extends BaseController{
 
             if(StringUtils.isEmpty(idRegistroDetalle)) { // Se trata de un nuevo Registro, lo eliminamos de la sesion
 
-                eliminarOrganimoSesion(codigoDir3, session);
+               return eliminarOrganimoSesion(codigoDir3, session);
 
             }else{// Edición de un registro, lo eliminanos de la bbdd
                 RegistroDetalle registroDetalle = registroDetalleEjb.findById(Long.valueOf(idRegistroDetalle));
@@ -660,7 +660,7 @@ public class InteresadoController extends BaseController{
      * @param session
      * @throws Exception
      */
-    public void eliminarOrganimoSesion(String codigoDir3, HttpSession session) throws Exception{
+    public Boolean eliminarOrganimoSesion(String codigoDir3, HttpSession session) throws Exception{
 
         List<Interesado> interesados = (List<Interesado>) session.getAttribute("interesados");
 
@@ -671,10 +671,12 @@ public class InteresadoController extends BaseController{
                     interesados.remove(interesado);
                     session.setAttribute("interesados", interesados);
                     log.info("Organismo eliminado");
-                    break;
+                    return true;
                 }
             }
         }
+
+        return false;
     }
 
 

@@ -12,7 +12,8 @@ public class RegistroEntradaListForm {
 
     private List<RegistroEntrada> registros;
     private Long idOrganismo;
-    private String organismoExterno;
+    private String organismoExternoCodigo;
+    private String organismoExternoDenominacion;
     private Long idLibro;
 
     public RegistroEntradaListForm() {
@@ -42,11 +43,19 @@ public class RegistroEntradaListForm {
         this.idLibro = idLibro;
     }
 
-    public String getOrganismoExterno() {
-        return organismoExterno;
+    public String getOrganismoExternoCodigo() {
+        return organismoExternoCodigo;
     }
 
-    public void setOrganismoExterno(String organismoExterno) {
-        this.organismoExterno = organismoExterno;
+    public void setOrganismoExternoCodigo(String organismoExternoCodigo) {
+        this.organismoExternoCodigo = organismoExternoCodigo;
+    }
+
+    public String getOrganismoExternoDenominacion() {
+        return organismoExternoDenominacion;
+    }
+
+    public void setOrganismoExternoDenominacion(String organismoExternoDenominacion) {
+        this.organismoExternoDenominacion = organismoExternoDenominacion;
     }
 }
