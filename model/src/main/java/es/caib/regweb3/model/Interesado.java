@@ -166,7 +166,8 @@ public class Interesado implements Serializable {
       this.telefono = i.telefono;
       this.direccionElectronica = i.direccionElectronica;
       this.canal = i.canal;
-      this.representado = i.representado == null? null : new Interesado(i.representado);
+      // Comentada la linea porque provocaba una referencia cíclica
+      // this.representado = i.representado == null? null : new Interesado(i.representado);
       this.representante = i.representante == null? null : new Interesado(i.representante);
       this.isRepresentante = i.isRepresentante;
       this.observaciones = i.observaciones;
