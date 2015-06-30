@@ -22,10 +22,10 @@
                 <ol class="breadcrumb">
                     <li><a href="<c:url value="/registroMigrado/list"/>" ><i class="fa fa-list"></i> <spring:message code="registroMigrado.listado"/></a></li>
                     <c:if test="${registroMigrado.tipoRegistro}">
-                        <li class="active"><i class="fa fa-pencil-square-o"></i> <spring:message code="registroMigrado.registroMigrado"/> ${registroMigrado.numero}-${registroMigrado.ano}-${registroMigrado.denominacionOficina}-<spring:message code="informe.entrada"/></li>
+                        <li class="active"><i class="fa fa-pencil-square-o"></i> <spring:message code="registroMigrado.registroMigrado"/> <spring:message code="informe.entrada"/> ${registroMigrado.denominacionOficina}-${registroMigrado.numero}-${registroMigrado.ano}</li>
                     </c:if>
                     <c:if test="${!registroMigrado.tipoRegistro}">
-                        <li class="active"><i class="fa fa-pencil-square-o"></i> <spring:message code="registroMigrado.registroMigrado"/> ${registroMigrado.numero}-${registroMigrado.ano}-${registroMigrado.denominacionOficina}-<spring:message code="informe.salida"/></li>
+                        <li class="active"><i class="fa fa-pencil-square-o"></i> <spring:message code="registroMigrado.registroMigrado"/> <spring:message code="informe.salida"/> ${registroMigrado.denominacionOficina}-${registroMigrado.numero}-${registroMigrado.ano}</li>
                     </c:if>
                 </ol>
             </div>
@@ -40,6 +40,11 @@
 
                     <div class="panel panel-info">
                         <div class="panel-heading">
+                            <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i>
+                                <strong>
+                                    <spring:message code="registroMigrado.registroMigrado"/> <spring:message code="informe.entrada"/> ${registroMigrado.denominacionOficina}-${registroMigrado.numero}-${registroMigrado.ano}
+                                </strong>
+                            </h3>
                         </div>
                         <div class="panel-body">
                             <div class="form-group col-xs-12">
@@ -126,6 +131,11 @@
 
                         <div class="panel panel-danger">
                             <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i>
+                                    <strong>
+                                        <spring:message code="registroMigrado.registroMigrado"/> <spring:message code="informe.salida"/> ${registroMigrado.denominacionOficina}-${registroMigrado.numero}-${registroMigrado.ano}
+                                    </strong>
+                                </h3>
                             </div>
                             <div class="panel-body">
                                 <div class="form-group col-xs-12">
