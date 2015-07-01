@@ -85,7 +85,7 @@ public class RegistroEntradaConverter extends CommonConverter {
         registroWs.setNumero(registroEntrada.getNumeroRegistro());
         registroWs.setNumeroRegistroFormateado(registroEntrada.getNumeroRegistroFormateado());
 
-        registroWs.setOficina(registroEntrada.getOficina().getDenominacion());
+        registroWs.setOficina(registroEntrada.getOficina().getCodigo());
         registroWs.setLibro(registroEntrada.getLibro().getNombreCompleto());
 
         registroWs.setExtracto(registroDetalle.getExtracto());
