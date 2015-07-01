@@ -184,7 +184,9 @@ public class UsuarioService {
 
         // Registros migrados
         Entidad entidad = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
-        tieneMigrados(entidad,session);
+        if(entidad != null){
+            tieneMigrados(entidad,session);
+        }
 
         // Eliminamos las Oficinas
         eliminarVariablesSesionOficina(session);

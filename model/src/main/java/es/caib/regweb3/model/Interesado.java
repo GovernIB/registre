@@ -98,6 +98,10 @@ public class Interesado implements Serializable {
         this.id= Long.valueOf(id);
     }
 
+    /**
+     * Constructor para un Interesado de Tipo Persona
+     * @param persona
+     */
     public Interesado(Persona persona) {
 
         if(persona.getTipo().equals(RegwebConstantes.TIPO_PERSONA_FISICA)){
@@ -134,14 +138,20 @@ public class Interesado implements Serializable {
         this.observaciones = persona.getObservaciones();
     }
 
+    /**
+     * Constructor para un Interesado de Tipo Administración
+     * @param codigoDir3
+     * @param organismo
+     */
     public Interesado(String codigoDir3,String organismo){
         this.tipo = RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION;
         this.nombre = organismo;
+        this.tipoDocumentoIdentificacion = RegwebConstantes.TIPODOCUMENTOID_CODIGO_ORIGEN_ID;
+        this.documento = codigoDir3;
         this.codigoDir3 = codigoDir3;
     }
     
-    
-    
+
 
     /**
      * @param i

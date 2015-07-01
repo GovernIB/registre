@@ -182,8 +182,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         model.addAttribute("isOficioRemision",registroEntradaEjb.isOficioRemisionInterno(idRegistro));
 
         // Interesados, solo si el Registro en Válido, Pendiente o Estamos en la Oficina donde se registró
-        if((registro.getEstado().equals(RegwebConstantes.ESTADO_VALIDO) || registro.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE)
-            && registro.getOficina().getId().equals(oficinaActiva.getId()))){
+        if(registro.getEstado().equals(RegwebConstantes.ESTADO_VALIDO) && registro.getOficina().getId().equals(oficinaActiva.getId())){
 
             model.addAttribute("personasFisicas",personaEjb.getAllbyEntidadTipo(entidad.getId(), RegwebConstantes.TIPO_PERSONA_FISICA));
             model.addAttribute("personasJuridicas",personaEjb.getAllbyEntidadTipo(entidad.getId(), RegwebConstantes.TIPO_PERSONA_JURIDICA));

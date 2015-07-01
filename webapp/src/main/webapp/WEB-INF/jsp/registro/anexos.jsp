@@ -12,7 +12,7 @@
     <c:set var="color" value="warning"/>
 </c:if>
 
-<div class="col-xs-8 pull-right">
+<div class="col-xs-8 col-xs-offset pull-right">
 
     <div class="panel panel-${color}">
 
