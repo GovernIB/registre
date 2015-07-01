@@ -82,7 +82,7 @@ function organismoBusqueda(tipoOrganismo, urlServidor,idRegistroDetalle){
             url: url,
             type: 'GET',
             dataType: 'json',
-            data: { codigo: codigoOrganismo, denominacion: denominacion, codNivelAdministracion: codNivelAdministracion, codComunidadAutonoma: codComunidadAutonoma },
+            data: { codigo: codigoOrganismo, denominacion: denominacion, codNivelAdministracion: codNivelAdministracion, codComunidadAutonoma: codComunidadAutonoma, origen: tipoOrganismo },
             success: function(result) {
 
                $('#resultadosbusqueda'+tipoOrganismo).css('display', 'block');
