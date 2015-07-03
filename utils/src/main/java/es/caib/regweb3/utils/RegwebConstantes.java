@@ -56,6 +56,12 @@ public interface RegwebConstantes {
       IDIOMA_GALLEGO_ID, IDIOMA_EUSKERA_ID,
       IDIOMA_INGLES_ID
     };
+
+    public static final Long[] IDIOMAS_REGISTRO_ES = {
+            IDIOMA_CASTELLANO_ID, IDIOMA_CATALAN_ID,
+            IDIOMA_GALLEGO_ID, IDIOMA_EUSKERA_ID,
+            IDIOMA_INGLES_ID
+    };
     
     public static final Map<Long, String> CODIGO_BY_IDIOMA_ID = new HashMap<Long, String>(){{
       put(IDIOMA_CATALAN_ID,IDIOMA_CATALAN_CODIGO);

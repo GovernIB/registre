@@ -2,6 +2,7 @@ package es.caib.regweb3.webapp.controller.registro;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import org.springframework.stereotype.Controller;
@@ -71,6 +72,9 @@ public abstract class AbstractRegistroCommonFormController extends BaseControlle
 
     @ModelAttribute("idiomas")
     public Long[] idiomas() throws Exception {
+        if(Configuracio.getDefaultLanguage().equals(RegwebConstantes.IDIOMA_CASTELLANO_CODIGO)){
+            return RegwebConstantes.IDIOMAS_REGISTRO_ES;
+        }
         return RegwebConstantes.IDIOMAS_REGISTRO;
     }
 
