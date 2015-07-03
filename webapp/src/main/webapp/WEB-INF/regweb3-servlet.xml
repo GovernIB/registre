@@ -131,7 +131,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         </mvc:interceptor>
 
         <!-- Configuración de Idioma -->
-        <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+        <bean id="localeChangeInterceptor" class="es.caib.regweb3.webapp.interceptor.RegWebLocaleChangeInterceptor">
             <property name="paramName" value="lang" />
         </bean>
 
