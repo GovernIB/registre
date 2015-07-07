@@ -47,8 +47,6 @@
         <!--TipoAsunto-->
         <sec:intercept-url pattern="/tipoDocumental/**" access="hasRole('RWE_ADMIN')"/>
         <!--TipoAsunto-->
-        <sec:intercept-url pattern="/modeloRecibo/**" access="hasRole('RWE_ADMIN')"/>
-        <!--TipoAsunto-->
         <sec:intercept-url pattern="/modeloOficioRemision/**" access="hasRole('RWE_ADMIN')"/>
         <!--RegistroEntrada-->
         <sec:intercept-url pattern="/registroEntrada/**" access="hasRole('RWE_USUARI')"/>
