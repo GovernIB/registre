@@ -10,7 +10,6 @@ import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.scan.ScannerManager;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.AnexoWebValidator;
-
 import org.apache.axis.utils.StringUtils;
 import org.apache.commons.io.FileUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -37,7 +36,6 @@ import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -169,7 +167,7 @@ public class AnexoController extends BaseController {
           Mensaje.saveMessageError(request, i18n.getMessage());   
            
         } catch(I18NException i18n) {
-          log.error(i18n.getMessage(), i18n);
+          log.debug(i18n.getMessage(), i18n);
           Mensaje.saveMessageError(request, I18NUtils.tradueix(i18n.getTraduccio()));   
           
         } catch(Exception e) {
