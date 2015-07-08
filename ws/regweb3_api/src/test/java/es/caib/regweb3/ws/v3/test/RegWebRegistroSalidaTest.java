@@ -41,12 +41,12 @@ public class RegWebRegistroSalidaTest extends RegWebTestUtils{
     public void obtenerRegistroSalida() {
 
         try {
-            RegistroSalidaWs registroSalidaWs = registroSalidaApi.obtenerRegistroSalida("ADM-S-2/2015", "earrivi","A04006741");
-            System.out.printf("Idioma: " + registroSalidaWs.getIdioma()+"\n");
-            System.out.printf("TipoAsunto: " + registroSalidaWs.getTipoAsunto()+"\n");
-            System.out.printf("TipoTransporte: " + registroSalidaWs.getTipoTransporte() +"\n");
-            System.out.printf("Oficina: " + registroSalidaWs.getOficina()+"\n");
-            System.out.printf("Origen: " + registroSalidaWs.getOrigen()+"\n");
+            RegistroSalidaResponseWs registroSalidaWs = registroSalidaApi.obtenerRegistroSalida("PRES-S-2/2015", "mgonzalez","EA0004518");
+            System.out.printf("Idioma: " + registroSalidaWs.getIdioma() + "\n");
+            System.out.printf("TipoAsunto: " + registroSalidaWs.getTipoAsunto() + "\n");
+            System.out.printf("TipoTransporte: " + registroSalidaWs.getTipoTransporte() + "\n");
+            System.out.printf("Oficina: " + registroSalidaWs.getOficinaCodigo() + " - " + registroSalidaWs.getOficinaDenominacion() +"\n");
+            System.out.printf("Origen: " + registroSalidaWs.getOrigenCodigo() + " - " + registroSalidaWs.getOrigenDenominacion()+ "\n");
             System.out.printf("----\n");
 
             for (InteresadoWs interesadoWs : registroSalidaWs.getInteresados()) {

@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="return" type="{http://impl.v3.ws.regweb3.caib.es/}registroSalidaWs" minOccurs="0"/>
+ *         &lt;element name="return" type="{http://impl.v3.ws.regweb3.caib.es/}registroSalidaResponseWs" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -33,17 +33,17 @@ import javax.xml.bind.annotation.XmlType;
 public class ObtenerRegistroSalidaResponse {
 
     @XmlElement(name = "return")
-    protected RegistroSalidaWs _return;
+    protected RegistroSalidaResponseWs _return;
 
     /**
      * Gets the value of the return property.
      * 
      * @return
      *     possible object is
-     *     {@link RegistroSalidaWs }
+     *     {@link RegistroSalidaResponseWs }
      *     
      */
-    public RegistroSalidaWs getReturn() {
+    public RegistroSalidaResponseWs getReturn() {
         return _return;
     }
 
@@ -52,10 +52,10 @@ public class ObtenerRegistroSalidaResponse {
      * 
      * @param value
      *     allowed object is
-     *     {@link RegistroSalidaWs }
+     *     {@link RegistroSalidaResponseWs }
      *     
      */
-    public void setReturn(RegistroSalidaWs value) {
+    public void setReturn(RegistroSalidaResponseWs value) {
         this._return = value;
     }
 

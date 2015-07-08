@@ -8,6 +8,7 @@ import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.ws.model.AnexoWs;
 import es.caib.regweb3.ws.model.InteresadoWs;
+import es.caib.regweb3.ws.model.RegistroEntradaResponseWs;
 import es.caib.regweb3.ws.model.RegistroEntradaWs;
 import es.caib.regweb3.ws.v3.impl.CommonConverter;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -140,7 +141,95 @@ public class RegistroEntradaConverter extends CommonConverter {
         }
 
         // Campos únicos de RegistroEntrada
-        registroWs.setDestino(registroEntrada.getDestino().getDenominacion());
+        if(registroEntrada.getDestino() != null){
+            registroWs.setDestino(registroEntrada.getDestino().getDenominacion());
+        }else{
+            registroWs.setDestino(registroEntrada.getDestinoExternoDenominacion());
+        }
+
+        return registroWs;
+
+    }
+
+    public static RegistroEntradaResponseWs getRegistroEntradaResponseWs(RegistroEntrada registroEntrada,
+                                            String idioma, AnexoLocal anexoEjb) throws Exception, I18NException {
+
+        if (registroEntrada == null) {
+            return null;
+        }
+
+        // Creamos los datos comunes mediante RegistroWs
+        RegistroEntradaResponseWs registroWs = new RegistroEntradaResponseWs();
+        RegistroDetalle registroDetalle = registroEntrada.getRegistroDetalle();
+
+        registroWs.setEntidadCodigo(registroEntrada.getOficina().getOrganismoResponsable().getEntidad().getCodigoDir3());
+        registroWs.setEntidadDenominacion(registroEntrada.getOficina().getOrganismoResponsable().getEntidad().getNombre());
+
+        registroWs.setNumeroRegistro(registroEntrada.getNumeroRegistro());
+        registroWs.setNumeroRegistroFormateado(registroEntrada.getNumeroRegistroFormateado());
+        registroWs.setFechaRegistro(registroEntrada.getFecha());
+
+        registroWs.setCodigoUsuario(registroEntrada.getUsuario().getUsuario().getIdentificador());
+        registroWs.setNombreUsuario(registroEntrada.getUsuario().getNombreCompleto());
+        registroWs.setContactoUsuario(registroEntrada.getUsuario().getUsuario().getEmail());
+
+        registroWs.setOficinaCodigo(registroEntrada.getOficina().getCodigo());
+        registroWs.setOficinaDenominacion(registroEntrada.getOficina().getDenominacion());
+        registroWs.setLibro(registroEntrada.getLibro().getNombreCompleto());
+
+        registroWs.setExtracto(registroDetalle.getExtracto());
+        registroWs.setDocFisica(I18NLogicUtils.tradueix(new Locale(idioma), "tipoDocumentacionFisica." + registroDetalle.getTipoDocumentacionFisica()));
+
+        TraduccionTipoAsunto traduccionTipoAsunto = (TraduccionTipoAsunto) registroDetalle.getTipoAsunto().getTraduccion(idioma);
+        registroWs.setTipoAsunto(traduccionTipoAsunto.getNombre());
+        registroWs.setIdioma(I18NLogicUtils.tradueix(new Locale(idioma), "idioma." + registroDetalle.getIdioma()));
+
+        if(registroDetalle.getCodigoAsunto() != null){
+            TraduccionCodigoAsunto traduccionCodigoAsunto = (TraduccionCodigoAsunto) registroDetalle.getCodigoAsunto().getTraduccion(idioma);
+            registroWs.setCodigoAsunto(traduccionCodigoAsunto.getNombre());
+        }else{
+            registroWs.setCodigoAsunto(null);
+        }
+
+        registroWs.setRefExterna(registroDetalle.getReferenciaExterna());
+        registroWs.setNumExpediente(registroDetalle.getExpediente());
+
+        if(registroDetalle.getTransporte() != null){
+            registroWs.setTipoTransporte(I18NLogicUtils.tradueix(new Locale(idioma), "transporte." + registroDetalle.getTransporte()));
+        }else{
+            registroWs.setTipoTransporte(null);
+        }
+        registroWs.setNumTransporte(registroDetalle.getNumeroTransporte());
+        registroWs.setObservaciones(registroDetalle.getObservaciones());
+        registroWs.setFechaOrigen(registroDetalle.getFechaOrigen());
+        registroWs.setAplicacion(registroDetalle.getAplicacion());
+        registroWs.setVersion(registroDetalle.getVersion());
+
+        registroWs.setExpone(registroDetalle.getExpone());
+        registroWs.setSolicita(registroDetalle.getSolicita());
+
+        //Interesados
+        if(registroDetalle.getInteresados() != null){
+            List<InteresadoWs> interesadosWs = procesarInteresadosWs(registroDetalle.getInteresados());
+
+            registroWs.setInteresados(interesadosWs);
+        }
+
+        if(registroDetalle.getAnexos() != null){
+            List<AnexoWs> anexosWs = procesarAnexosWs(registroDetalle.getAnexos(), anexoEjb);
+
+            registroWs.setAnexos(anexosWs);
+        }
+
+        // Campos únicos de RegistroEntrada
+        if(registroEntrada.getDestino() != null ){
+            registroWs.setDestinoCodigo(registroEntrada.getDestino().getCodigo());
+            registroWs.setDestinoDenominacion(registroEntrada.getDestino().getDenominacion());
+        }else{
+            registroWs.setDestinoCodigo(registroEntrada.getDestinoExternoCodigo());
+            registroWs.setDestinoDenominacion(registroEntrada.getDestinoExternoDenominacion());
+        }
+
 
         return registroWs;
 

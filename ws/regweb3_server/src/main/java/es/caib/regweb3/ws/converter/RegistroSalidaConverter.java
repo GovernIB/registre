@@ -8,6 +8,7 @@ import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.ws.model.AnexoWs;
 import es.caib.regweb3.ws.model.InteresadoWs;
+import es.caib.regweb3.ws.model.RegistroSalidaResponseWs;
 import es.caib.regweb3.ws.model.RegistroSalidaWs;
 import es.caib.regweb3.ws.v3.impl.CommonConverter;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -87,7 +88,7 @@ public class RegistroSalidaConverter extends CommonConverter {
         registroWs.setNumero(registroSalida.getNumeroRegistro());
         registroWs.setNumeroRegistroFormateado(registroSalida.getNumeroRegistroFormateado());
 
-        registroWs.setOficina(registroSalida.getOficina().getDenominacion());
+        registroWs.setOficina(registroSalida.getOficina().getCodigo());
         registroWs.setLibro(registroSalida.getLibro().getNombreCompleto());
 
         registroWs.setExtracto(registroDetalle.getExtracto());
@@ -143,7 +144,94 @@ public class RegistroSalidaConverter extends CommonConverter {
         }
         
         // Campos únicos de RegistroSalida
-        registroWs.setOrigen(registroSalida.getOrigen().getDenominacion());
+        if(registroSalida.getOrigen() != null){
+            registroWs.setOrigen(registroSalida.getOrigen().getDenominacion());
+        }else{
+            registroWs.setOrigen(registroSalida.getOrigenExternoDenominacion());
+        }
+
+        return registroWs;
+
+    }
+
+    public static RegistroSalidaResponseWs getRegistroSalidaResponseWs(RegistroSalida registroSalida,
+                                                                         String idioma, AnexoLocal anexoEjb) throws Exception, I18NException {
+
+        if (registroSalida == null) {
+            return null;
+        }
+
+        // Creamos los datos comunes mediante RegistroWs
+        RegistroSalidaResponseWs registroWs = new RegistroSalidaResponseWs();
+        RegistroDetalle registroDetalle = registroSalida.getRegistroDetalle();
+
+        registroWs.setEntidadCodigo(registroSalida.getOficina().getOrganismoResponsable().getEntidad().getCodigoDir3());
+        registroWs.setEntidadDenominacion(registroSalida.getOficina().getOrganismoResponsable().getEntidad().getNombre());
+
+        registroWs.setNumeroRegistro(registroSalida.getNumeroRegistro());
+        registroWs.setNumeroRegistroFormateado(registroSalida.getNumeroRegistroFormateado());
+        registroWs.setFechaRegistro(registroSalida.getFecha());
+
+        registroWs.setCodigoUsuario(registroSalida.getUsuario().getUsuario().getIdentificador());
+        registroWs.setNombreUsuario(registroSalida.getUsuario().getNombreCompleto());
+        registroWs.setContactoUsuario(registroSalida.getUsuario().getUsuario().getEmail());
+
+        registroWs.setOficinaCodigo(registroSalida.getOficina().getCodigo());
+        registroWs.setOficinaDenominacion(registroSalida.getOficina().getDenominacion());
+        registroWs.setLibro(registroSalida.getLibro().getNombreCompleto());
+
+        registroWs.setExtracto(registroDetalle.getExtracto());
+        registroWs.setDocFisica(I18NLogicUtils.tradueix(new Locale(idioma), "tipoDocumentacionFisica." + registroDetalle.getTipoDocumentacionFisica()));
+
+        TraduccionTipoAsunto traduccionTipoAsunto = (TraduccionTipoAsunto) registroDetalle.getTipoAsunto().getTraduccion(idioma);
+        registroWs.setTipoAsunto(traduccionTipoAsunto.getNombre());
+        registroWs.setIdioma(I18NLogicUtils.tradueix(new Locale(idioma), "idioma." + registroDetalle.getIdioma()));
+
+        if(registroDetalle.getCodigoAsunto() != null){
+            TraduccionCodigoAsunto traduccionCodigoAsunto = (TraduccionCodigoAsunto) registroDetalle.getCodigoAsunto().getTraduccion(idioma);
+            registroWs.setCodigoAsunto(traduccionCodigoAsunto.getNombre());
+        }else{
+            registroWs.setCodigoAsunto(null);
+        }
+
+        registroWs.setRefExterna(registroDetalle.getReferenciaExterna());
+        registroWs.setNumExpediente(registroDetalle.getExpediente());
+
+        if(registroDetalle.getTransporte() != null){
+            registroWs.setTipoTransporte(I18NLogicUtils.tradueix(new Locale(idioma), "transporte." + registroDetalle.getTransporte()));
+        }else{
+            registroWs.setTipoTransporte(null);
+        }
+        registroWs.setNumTransporte(registroDetalle.getNumeroTransporte());
+        registroWs.setObservaciones(registroDetalle.getObservaciones());
+        registroWs.setFechaOrigen(registroDetalle.getFechaOrigen());
+        registroWs.setAplicacion(registroDetalle.getAplicacion());
+        registroWs.setVersion(registroDetalle.getVersion());
+
+        registroWs.setExpone(registroDetalle.getExpone());
+        registroWs.setSolicita(registroDetalle.getSolicita());
+
+        //Interesados
+        if(registroDetalle.getInteresados() != null){
+            List<InteresadoWs> interesadosWs = procesarInteresadosWs(registroDetalle.getInteresados());
+
+            registroWs.setInteresados(interesadosWs);
+        }
+
+        if(registroDetalle.getAnexos() != null){
+            List<AnexoWs> anexosWs = procesarAnexosWs(registroDetalle.getAnexos(), anexoEjb);
+
+            registroWs.setAnexos(anexosWs);
+        }
+
+        // Campos únicos de RegistroEntrada
+        if(registroSalida.getOrigen() != null ){
+            registroWs.setOrigenCodigo(registroSalida.getOrigen().getCodigo());
+            registroWs.setOrigenDenominacion(registroSalida.getOrigen().getDenominacion());
+        }else{
+            registroWs.setOrigenCodigo(registroSalida.getOrigenExternoCodigo());
+            registroWs.setOrigenDenominacion(registroSalida.getOrigenExternoDenominacion());
+        }
 
         return registroWs;
 

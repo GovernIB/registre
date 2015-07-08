@@ -13,6 +13,7 @@ import es.caib.regweb3.ws.converter.DatosInteresadoConverter;
 import es.caib.regweb3.ws.converter.RegistroSalidaConverter;
 import es.caib.regweb3.ws.model.IdentificadorWs;
 import es.caib.regweb3.ws.model.InteresadoWs;
+import es.caib.regweb3.ws.model.RegistroSalidaResponseWs;
 import es.caib.regweb3.ws.model.RegistroSalidaWs;
 import es.caib.regweb3.ws.utils.UsuarioAplicacionCache;
 import org.apache.log4j.Logger;
@@ -261,7 +262,10 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
     @RolesAllowed({ ROL_USUARI })
     @Override
     @WebMethod
-    public RegistroSalidaWs obtenerRegistroSalida(@WebParam(name = "numeroRegistro")String numeroRegistro, @WebParam(name = "usuario") String usuario, @WebParam(name = "entidad") String entidad) throws Throwable, WsI18NException, WsValidationException {
+    public RegistroSalidaResponseWs obtenerRegistroSalida(
+            @WebParam(name = "numeroRegistro")String numeroRegistro,
+            @WebParam(name = "usuario") String usuario,
+            @WebParam(name = "entidad") String entidad) throws Throwable, WsI18NException, WsValidationException {
 
         // 1.- Validaciones comunes
         validarObligatorios(numeroRegistro, usuario, entidad);
@@ -289,7 +293,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         lopdEjb.insertarRegistroSalida(registroSalida.getId(), usuarioEntidad.getId());
 
         // Retornamos el RegistroSalidaWs
-        return RegistroSalidaConverter.getRegistroSalidaWs(registroSalida,
+        return RegistroSalidaConverter.getRegistroSalidaResponseWs(registroSalida,
             UsuarioAplicacionCache.get().getIdioma(), anexoEjb);
 
 

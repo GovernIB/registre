@@ -2,6 +2,7 @@ package es.caib.regweb3.ws.v3.impl;
 
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.ws.model.IdentificadorWs;
+import es.caib.regweb3.ws.model.RegistroEntradaResponseWs;
 import es.caib.regweb3.ws.model.RegistroEntradaWs;
 import org.fundaciobit.genapp.common.ws.WsI18NException;
 import org.fundaciobit.genapp.common.ws.WsValidationException;
@@ -72,7 +73,7 @@ public interface RegWebRegistroEntradaWs /*extends IBaseWs*/ {
      */
     @RolesAllowed({ RegwebConstantes.ROL_USUARI })
     @WebMethod
-    public RegistroEntradaWs obtenerRegistroEntrada(@WebParam(name = "numeroRegistroFormateado")String numeroRegistroFormateado, @WebParam(name = "usuario")String usuario, @WebParam(name = "entidad")String entidad) throws Throwable, WsI18NException, WsValidationException;
+    public RegistroEntradaResponseWs obtenerRegistroEntrada(@WebParam(name = "numeroRegistroFormateado")String numeroRegistroFormateado, @WebParam(name = "usuario")String usuario, @WebParam(name = "entidad")String entidad) throws Throwable, WsI18NException, WsValidationException;
     
     /**
      * 

@@ -118,7 +118,7 @@
                         <div class="col-xs-2 pull-left etiqueta_regweb control-label">
                             <label for="origen.codigo" rel="ayuda" data-content="<spring:message code="registro.ayuda.origen"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroSalida.organismoOrigen"/></label>
                         </div>
-                        <div class="col-xs-8">
+                        <div class="col-xs-10">
                             <form:select path="origen.codigo" cssClass="chosen-select">
                                 <c:forEach items="${organismosOficinaActiva}" var="organismo">
                                     <c:if test="${registro.origen.codigo != null}">
@@ -134,9 +134,9 @@
                         </div>
 
 
-                        <div class="col-xs-2 boto-panel">
+                        <%--<div class="col-xs-2 boto-panel">
                             <a data-toggle="modal" role="button" href="#modalBuscadorOrganismoOrigen" onclick="inicializarBuscador('#codNivelAdministracionOrganismoOrigen','#codComunidadAutonomaOrganismoOrigen','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}', 'OrganismoOrigen');" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
-                        </div>
+                        </div>--%>
                         <c:if test="${empty registro.origenExternoCodigo}"><!-- Si es interno -->
                         <form:hidden path="origen.denominacion"/>
                         </c:if>

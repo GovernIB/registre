@@ -41,17 +41,16 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils  {
     Assert.assertEquals(3, registroEntradaApi.getVersionWs());
   }
 
-  // @Test
+   @Test
   public void obtenerRegistroEntrada() {
 
     try {
-      RegistroEntradaWs registroEntradaWs = registroEntradaApi.obtenerRegistroEntrada(
-          "ADM-E-17/2015", "earrivi", "A04006741");
+      RegistroEntradaResponseWs registroEntradaWs = registroEntradaApi.obtenerRegistroEntrada("PRES-E-3/2015", "mgonzalez", "EA0004518");
       System.out.printf("Idioma: " + registroEntradaWs.getIdioma() + "\n");
       System.out.printf("TipoAsunto: " + registroEntradaWs.getTipoAsunto() + "\n");
       System.out.printf("TipoTransporte: " + registroEntradaWs.getTipoTransporte() + "\n");
-      System.out.printf("Oficina: " + registroEntradaWs.getOficina() + "\n");
-      System.out.printf("Destino: " + registroEntradaWs.getDestino() + "\n");
+      System.out.printf("Oficina: " + registroEntradaWs.getOficinaCodigo() + " - " + registroEntradaWs.getOficinaDenominacion() +"\n");
+      System.out.printf("Destino: " + registroEntradaWs.getDestinoCodigo() + " - " + registroEntradaWs.getDestinoDenominacion()+ "\n");
       System.out.printf("----\n");
 
       for (InteresadoWs interesadoWs : registroEntradaWs.getInteresados()) {
@@ -101,7 +100,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils  {
     }
   }
 
-  @Test
+  //@Test
   public void crearRegistroEntrada() throws Exception {
 
     

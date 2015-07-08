@@ -2,6 +2,7 @@ package es.caib.regweb3.ws.v3.impl;
 
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.ws.model.IdentificadorWs;
+import es.caib.regweb3.ws.model.RegistroSalidaResponseWs;
 import es.caib.regweb3.ws.model.RegistroSalidaWs;
 import org.fundaciobit.genapp.common.ws.WsI18NException;
 import org.fundaciobit.genapp.common.ws.WsValidationException;
@@ -61,7 +62,7 @@ public interface RegWebRegistroSalidaWs /*extends IBaseWs*/ {
      * @throws org.fundaciobit.genapp.common.ws.WsValidationException
      */
     @WebMethod
-    public RegistroSalidaWs obtenerRegistroSalida(@WebParam(name = "numeroRegistro") String numeroRegistro, @WebParam(name = "usuario") String usuario, @WebParam(name = "entidad") String entidad) throws Throwable, WsI18NException, WsValidationException;
+    public RegistroSalidaResponseWs obtenerRegistroSalida(@WebParam(name = "numeroRegistro") String numeroRegistro, @WebParam(name = "usuario") String usuario, @WebParam(name = "entidad") String entidad) throws Throwable, WsI18NException, WsValidationException;
     
     /**
      * 

@@ -13,6 +13,7 @@ import es.caib.regweb3.ws.converter.DatosInteresadoConverter;
 import es.caib.regweb3.ws.converter.RegistroEntradaConverter;
 import es.caib.regweb3.ws.model.IdentificadorWs;
 import es.caib.regweb3.ws.model.InteresadoWs;
+import es.caib.regweb3.ws.model.RegistroEntradaResponseWs;
 import es.caib.regweb3.ws.model.RegistroEntradaWs;
 import es.caib.regweb3.ws.utils.UsuarioAplicacionCache;
 import org.apache.log4j.Logger;
@@ -396,7 +397,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
     @RolesAllowed({ ROL_USUARI })
     @Override
     @WebMethod
-    public RegistroEntradaWs obtenerRegistroEntrada(
+    public RegistroEntradaResponseWs obtenerRegistroEntrada(
         @WebParam(name = "numeroRegistroFormateado")String numeroRegistroFormateado,
         @WebParam(name = "usuario") String usuario,
         @WebParam(name = "entidad") String entidad) 
@@ -427,8 +428,8 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         // LOPD
         lopdEjb.insertarRegistroEntrada(registroEntrada.getId(), usuarioEntidad.getId());
 
-        // Retornamos el RegistroEntradaWs
-        return RegistroEntradaConverter.getRegistroEntradaWs(registroEntrada, 
+        // Retornamos el RegistroEntradaResponseWs
+        return RegistroEntradaConverter.getRegistroEntradaResponseWs(registroEntrada,
             UsuarioAplicacionCache.get().getIdioma(), anexoEjb);
 
 

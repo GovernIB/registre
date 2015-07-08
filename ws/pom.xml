@@ -2,8 +2,7 @@
 
    <modelVersion>4.0.0</modelVersion>
 
-   <groupId>es.caib.regweb3</groupId>
-   <artifactId>regweb3-ws</artifactId>
+    <artifactId>regweb3-ws</artifactId>
    <version>3.0.0</version>
    <packaging>pom</packaging>
 
@@ -39,6 +38,16 @@
             </snapshots>
         </repository>
     </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+
+            <id>genapp-maven-repos</id>
+            <name>GenApp Maven Repository</name>
+            <url>http://genapp.sourceforge.net/maven/</url>
+
+        </pluginRepository>
+    </pluginRepositories>
     
     <build>
         <pluginManagement>
@@ -65,10 +74,6 @@
             </plugins>
         </pluginManagement>
 
-        <plugins>
-
-
-        </plugins>
     </build>
 
 </project>
