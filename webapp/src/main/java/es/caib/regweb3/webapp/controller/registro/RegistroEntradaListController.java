@@ -90,6 +90,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         List<Libro> librosConsulta = getLibrosConsultaEntradas(request);
 
         RegistroEntradaBusqueda registroEntradaBusqueda = new RegistroEntradaBusqueda(new RegistroEntrada(),1);
+        registroEntradaBusqueda.setFechaInicio(new Date());
         registroEntradaBusqueda.setFechaFin(new Date());
 
         Oficina oficina = getOficinaActiva(request);
@@ -206,6 +207,12 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         // Trazabilidad
         List<Trazabilidad> trazabilidades = trazabilidadEjb.getByRegistroEntrada(registro.getId());
         model.addAttribute("trazabilidades", trazabilidades);
+
+        // Posicion sello
+        if(entidad.getPosXsello()!=null && entidad.getPosYsello()!=null){
+            model.addAttribute("posXsello",entidad.getPosXsello());
+            model.addAttribute("posYsello",entidad.getPosYsello());
+        }
 
         // Alta en tabla LOPD
         lopdEjb.insertarRegistroEntrada(idRegistro, usuarioEntidad.getId());

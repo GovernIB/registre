@@ -89,6 +89,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         List<Libro> librosConsulta = getLibrosConsultaSalidas(request);
 
         RegistroSalidaBusqueda registroSalidaBusqueda = new RegistroSalidaBusqueda(new RegistroSalida(),1);
+        registroSalidaBusqueda.setFechaInicio(new Date());
         registroSalidaBusqueda.setFechaFin(new Date());
 
         Oficina oficina = getOficinaActiva(request);
