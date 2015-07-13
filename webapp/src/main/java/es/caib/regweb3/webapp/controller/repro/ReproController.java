@@ -102,12 +102,12 @@ public class ReproController extends BaseController {
                 Organismo organismoDestino = organismoEjb.findByCodigoVigente(reproJson.getDestinoCodigo());
 
                 if(organismoDestino != null) { // es interno
-                    log.info("Origen: " +reproJson.getDestinoDenominacion() + " Interno");
+                    log.info("Destino: " +reproJson.getDestinoDenominacion() + " Interno");
                     reproJson.setDestinoExterno(false);
 
                 }else{ // es externo
                     reproJson.setDestinoExterno(true);
-                    log.info("Origen: " +reproJson.getDestinoDenominacion() + " Externo");
+                    log.info("Destino: " +reproJson.getDestinoDenominacion() + " Externo");
                 }
 
             break;
@@ -117,12 +117,12 @@ public class ReproController extends BaseController {
                 Organismo organismoOrigen = organismoEjb.findByCodigoVigente(reproJson.getOrigenCodigo());
 
                 if(organismoOrigen != null) { // es interno
-                    log.info("Destino: " + reproJson.getOrigenDenominacion() + " Interno");
-                    reproJson.setDestinoExterno(false);
+                    log.info("Origen: " + reproJson.getOrigenDenominacion() + " Interno");
+                    reproJson.setOrigenExterno(false);
 
                 }else{ // es externo
                     reproJson.setOrigenExterno(true);
-                    log.info("Destino: " +reproJson.getOrigenDenominacion() + " Externo");
+                    log.info("Origen: " +reproJson.getOrigenDenominacion() + " Externo");
                 }
 
             break;

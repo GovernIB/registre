@@ -54,8 +54,8 @@ function nuevaRepro(){
         json['destinoDenominacion'] = $('#destino\\.codigo option:selected').text();
 
     }else  if(tipoRegistro == 2){ // Registro Salida
-        json['origenCodigo'] = $('#registroDetalle\\.oficinaOrigen\\.codigo option:selected').val();
-        json['origenDenominacion'] = $('#registroDetalle\\.oficinaOrigen\\.codigo option:selected').text();
+        json['origenCodigo'] = $('#origen\\.codigo option:selected').val();
+        json['origenDenominacion'] = $('#origen\\.codigo option:selected').text();
     }
 
     $.ajax({

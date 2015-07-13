@@ -40,7 +40,7 @@
 
                 <div class="panel panel-danger">
                     <div class="panel-heading">
-                        <a data-toggle="modal" role="button" href="#modalSelectRepro" class="btn btn-danger btn-xs pull-right margin-left10" onclick="cargarRepros('<c:url value="/repro/obtenerRepros"/>','${usuario.id}','<%=RegwebConstantes.REGISTRO_SALIDA%>')"><span class="fa fa-refresh"></span> <spring:message code="repro.select"/></a>
+                        <c:if test="${empty registro.id}"><a data-toggle="modal" role="button" href="#modalSelectRepro" class="btn btn-danger btn-xs pull-right margin-left10" onclick="cargarRepros('<c:url value="/repro/obtenerRepros"/>','${usuario.id}','<%=RegwebConstantes.REGISTRO_SALIDA%>')"><span class="fa fa-refresh"></span> <spring:message code="repro.select"/></a></c:if>
                         <a data-toggle="modal" role="button" href="#modalNewRepro" class="btn btn-danger btn-xs pull-right" onclick="preparaFormularioRepro('<%=RegwebConstantes.REGISTRO_SALIDA%>')"><span class="fa fa-plus"></span> <spring:message code="repro.nuevo"/></a>
                         <h3 class="panel-title"><i class="fa fa-file-o"></i>
                             <strong>
@@ -90,7 +90,7 @@
 
                     <div class="form-group col-xs-12">
                         <div class="col-xs-2 pull-left etiqueta_regweb control-label">
-                            <label id="registroDetalle.extracto" for="registroDetalle.extracto" rel="ayuda" data-content="<spring:message code="registro.ayuda.extracto.salida"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.extracto"/></label>
+                            <label for="registroDetalle.extracto" rel="ayuda" data-content="<spring:message code="registro.ayuda.extracto.salida"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.extracto"/></label>
                         </div>
                         <div class="col-xs-10">
                             <form:textarea path="registroDetalle.extracto" rows="2" cssClass="form-control" maxlength="240"/> <form:errors path="registroDetalle.extracto" cssClass="help-block" element="span"/>
