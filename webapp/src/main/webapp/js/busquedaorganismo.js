@@ -82,7 +82,7 @@ function organismoBusqueda(tipoOrganismo, urlServidor,idRegistroDetalle){
             url: url,
             type: 'GET',
             dataType: 'json',
-            data: { codigo: codigoOrganismo, denominacion: denominacion, codNivelAdministracion: codNivelAdministracion, codComunidadAutonoma: codComunidadAutonoma, origen: tipoOrganismo },
+            data: { codigo: codigoOrganismo, denominacion: denominacion, codNivelAdministracion: codNivelAdministracion, codComunidadAutonoma: codComunidadAutonoma, origen: tipoOrganismo, unidadRaiz:false },
             success: function(result) {
 
                $('#resultadosbusqueda'+tipoOrganismo).css('display', 'block');
@@ -100,9 +100,11 @@ function organismoBusqueda(tipoOrganismo, urlServidor,idRegistroDetalle){
 
                  // definimos el contenido de la tabla en función de los resultados de la busqueda.
                  if(tipoOrganismo == 'OrganismoInteresado'){
-                    var linea ="<tr><td style=\"text-align:left;\">"+result[i].denominacion+"</td><td class=\"center\"><input type=\"button\" class=\"btn btn-sm\" value=\"Seleccionar\" onclick=\"addAdministracionInteresadosModal('"+codigo+"','"+denominacion+"','Administración','"+tipoOrganismo+"','"+idRegistroDetalle+"')\"/></td></tr>";
+                    var linea ="<tr><td style=\"text-align:left;\"><label class=\"no-bold\" rel=\"ayuda\" data-content=\""+result[i].unidadRaiz+"\" data-toggle=\"popover\">"+result[i].denominacion+"</label></td><td class=\"center\"><input type=\"button\" class=\"btn btn-sm\" value=\"Seleccionar\" onclick=\"addAdministracionInteresadosModal('"+codigo+"','"+denominacion+"','Administración','"+tipoOrganismo+"','"+idRegistroDetalle+"')\"/></td></tr>";
+
                  }else{
-                    var linea ="<tr><td style=\"text-align:left;\">"+result[i].denominacion+"</td><td class=\"center\"><input type=\"button\" class=\"btn btn-sm\" value=\"Seleccionar\" onclick=\"asignarOrganismo('"+codigo+"','"+denominacion+"','"+idSelect+"','"+idDenominacion+"','"+tipoOrganismo+"')\"/></td></tr>";
+                    var linea ="<tr><td style=\"text-align:left;\"><label class=\"no-bold\" rel=\"ayuda\" data-content=\""+result[i].unidadRaiz+"\" data-toggle=\"popover\">"+result[i].denominacion+"</label></td><td class=\"center\"><input type=\"button\" class=\"btn btn-sm\" value=\"Seleccionar\" onclick=\"asignarOrganismo('"+codigo+"','"+denominacion+"','"+idSelect+"','"+idDenominacion+"','"+tipoOrganismo+"')\"/></td></tr>";
+
 
                  }
 
@@ -238,4 +240,43 @@ function addAdministracionInteresadosModal(codigoDir3, denominacion,tipo,tipoOrg
 
     $(idModal).modal('hide');
 
+}
+
+/* función que busca via rest los organimos raiz de la comunidad indicada y los carga en el select indicado
+ **/
+function buscarOrganismosRaizComunidad(urlServidor,idSelect,valorSelected,todos, codComunidadAutonoma){
+    var url = urlServidor+"/rest/busqueda/organismos";
+
+    $.ajax({
+        async: false,
+        crossDomain: true,
+        url: url,
+        type: 'GET',
+        dataType: 'json',
+        data: { codigo:'', denominacion: '', codNivelAdministracion: '', codComunidadAutonoma: codComunidadAutonoma, origen: '', unidadRaiz:true },
+        success: function(result) {
+            if(todos){html = '<option value="-1">...</option>';}
+            var len = result.length;
+            var selected='';
+            for ( var i = 0; i < len; i++) {
+                selected='';
+                if(valorSelected != null && result[i].codigo == valorSelected){
+                    selected = 'selected="selected"';
+                }
+                html += '<option '+selected+' value="' + result[i].codigo + '">'
+                    + result[i].denominacion + '</option>';
+            }
+            html += '</option>';
+
+            if(len != 0){
+                $(idSelect).html(html);
+            }else if(len==0){
+                $(idSelect).attr("disabled","disabled");
+                var html='';
+                $(idSelect).html(html);
+            }
+            $(idSelect).trigger("chosen:updated");
+        }
+
+    });
 }
