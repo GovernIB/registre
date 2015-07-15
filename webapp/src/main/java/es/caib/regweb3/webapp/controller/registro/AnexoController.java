@@ -4,7 +4,6 @@ import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.RegistroDetalle;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.AnexoFull;
-import es.caib.regweb3.persistence.utils.AnnexDocumentCustodyManager;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.scan.ScannerManager;
@@ -513,11 +512,13 @@ public class AnexoController extends BaseController {
          try {
              if (custodiaID != null) {
                  if(!firma){
-                   DocumentCustody dc = AnnexDocumentCustodyManager.getArchivo(custodiaID);
+                   //DocumentCustody dc = AnnexDocumentCustodyManager.getArchivo(custodiaID);
+                   DocumentCustody dc = anexoEjb.getArchivo(custodiaID);
                    filename = dc.getName();
                    data = dc.getData();
                  }else{
-                   SignatureCustody sc = AnnexDocumentCustodyManager.getFirma(custodiaID);
+                   //SignatureCustody sc = AnnexDocumentCustodyManager.getFirma(custodiaID);
+                   SignatureCustody sc = anexoEjb.getFirma(custodiaID);
                    filename = sc.getName();
                    data = sc.getData();
                  }

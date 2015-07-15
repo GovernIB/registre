@@ -6,6 +6,8 @@ import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.AnexoFull;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+import org.fundaciobit.plugins.documentcustody.DocumentCustody;
+import org.fundaciobit.plugins.documentcustody.SignatureCustody;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
@@ -100,5 +102,9 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @throws Exception
      */
     public List<Anexo> getByRegistroDetalle(Long idRegistroDetalle) throws Exception;
+
+    /** TODO BORRAR PRUEBA MARILEN ERROR SION **/
+    public DocumentCustody getArchivo(String custodiaID) throws Exception;
+    public SignatureCustody getFirma(String custodiaID) throws Exception;
 
 }

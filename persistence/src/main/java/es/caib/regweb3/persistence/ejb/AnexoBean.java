@@ -667,5 +667,36 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     }
 
+     /* TODO BORRAR PRUEBA MARILEN ERROR SION */
 
+    /**
+     * Obtiene el fichero existente en el sistema de archivos
+     * @param id
+     * @return
+     */
+    public  DocumentCustody getArchivo(String custodiaID) throws Exception {
+
+        if (custodiaID == null) {
+            log.warn("getArchivo :: CustodiaID vale null !!!!!", new Exception());
+            return null;
+        }
+
+        return AnnexDocumentCustodyManager.getInstance().getDocumentInfo(custodiaID);
+
+    }
+
+    /**
+     * Obtiene la firma existente en el sistema de archivos
+     * @param id
+     * @return
+     */
+    public  SignatureCustody getFirma(String custodiaID) throws Exception {
+
+        if (custodiaID == null) {
+            log.warn("getFirma :: CustodiaID vale null !!!!!", new Exception());
+            return null;
+        }
+
+        return AnnexDocumentCustodyManager.getInstance().getSignatureInfo(custodiaID);
+    }
 }

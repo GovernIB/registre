@@ -32,7 +32,8 @@ import java.util.Set;
 @SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 @XmlRootElement(name = "organismo")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Organismo implements Serializable {
+public class
+        Organismo implements Serializable {
 
     @XmlAttribute
     private Long id;
