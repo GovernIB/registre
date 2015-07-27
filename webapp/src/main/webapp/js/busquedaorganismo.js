@@ -3,11 +3,28 @@
  En función del tipoOrganismo indicado, se realizará búsqueda de organismos u oficinas.
  */
 
+
+// Muestra la informacion de los Popover de la lista de Organismos
+$('a[rel=popover]').popover();
+
+mostraInformacio = function() {
+    var zIndices = new Array();
+    $('div.popover, div.modal').each( function() {
+        zIndices.push($(this).attr('class') + '; z-index: ' + $(this).css('z-index'));
+    });
+    var html = zIndices.join('<br>');
+    $('.show-z-index').html(html);
+};
+
+$('body').on('hover', 'a[rel=popover]', mostraInformacio);
+
+
 /*
  Función que pinta una tabla con los resultados obtenidos de la búsqueda.
  @param tipoOrganismo indica desde donde se realiza la búsqueda para poder asignar
  los resultados al select que corresponde.
  */
+
 function organismoBusqueda(tipoOrganismo, urlServidor,idRegistroDetalle){
 	
       // obtenemos los valores del formulario para realizar la búsqueda.
@@ -15,7 +32,12 @@ function organismoBusqueda(tipoOrganismo, urlServidor,idRegistroDetalle){
       var codigoOrganismo= $('#codigoOrganismo'+tipoOrganismo).val();
       var codNivelAdministracion= $('#codNivelAdministracion'+tipoOrganismo).val();
       var codComunidadAutonoma= $('#codComunidadAutonoma'+tipoOrganismo).val();
+      // indica si queremos obtener aquellos organismos que son unidad Raiz
       var unidadRaiz=false;
+      // indica que queremos obtener de la búsqueda de organismos aquellos que tienen oficinas
+      //de registro
+      var conOficinas= true;
+
 
       // Variables configurables en función del tipo de organismo indicado.
       var idSelect= '';
@@ -36,7 +58,7 @@ function organismoBusqueda(tipoOrganismo, urlServidor,idRegistroDetalle){
       }
       // Caso administracion interesado
       if(tipoOrganismo == 'OrganismoInteresado'){
-
+        conOficinas = false;
         unidadRaiz= $('#unidadRaiz'+tipoOrganismo).prop('checked');
         idSelect = "#registroDetalle\\\\.organismoInteresado\\\\.codigo";
         idDenominacion = "#registroDetalle\\\\.organismoInteresado\\\\.denominacion";
@@ -85,7 +107,7 @@ function organismoBusqueda(tipoOrganismo, urlServidor,idRegistroDetalle){
             url: url,
             type: 'GET',
             dataType: 'json',
-            data: { codigo: codigoOrganismo, denominacion: denominacion, codNivelAdministracion: codNivelAdministracion, codComunidadAutonoma: codComunidadAutonoma, origen: tipoOrganismo, unidadRaiz:unidadRaiz },
+            data: { codigo: codigoOrganismo, denominacion: denominacion, codNivelAdministracion: codNivelAdministracion, codComunidadAutonoma: codComunidadAutonoma, conOficinas: conOficinas, unidadRaiz:unidadRaiz },
             success: function(result) {
 
                $('#resultadosbusqueda'+tipoOrganismo).css('display', 'block');
@@ -101,13 +123,16 @@ function organismoBusqueda(tipoOrganismo, urlServidor,idRegistroDetalle){
                  denominacion = denominacion.replace(/'/g, "\\'");
                  codigo = result[i].codigo;
 
+                 var title = $('#organismo_raiz').val()+": "+result[i].unidadRaiz+" || "+$('#organismo_superior').val()+": "+result[i].unidadSuperior;
+
                  // definimos el contenido de la tabla en función de los resultados de la busqueda.
                  if(tipoOrganismo == 'OrganismoInteresado'){
-                    var linea ="<tr><td style=\"text-align:left;\"><label class=\"no-bold\" rel=\"ayuda\" data-content=\""+result[i].unidadRaiz+"\" data-toggle=\"popover\">"+result[i].denominacion+"</label></td><td class=\"center\"><input type=\"button\" class=\"btn btn-sm\" value=\"Seleccionar\" onclick=\"addAdministracionInteresadosModal('"+codigo+"','"+denominacion+"','Administración','"+tipoOrganismo+"','"+idRegistroDetalle+"')\"/></td></tr>";
+
+                     var linea ="<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\""+title+"\">"+result[i].denominacion+"</label></td><td class=\"center\"><input type=\"button\" class=\"btn btn-sm\" value=\"Seleccionar\" onclick=\"addAdministracionInteresadosModal('"+codigo+"','"+denominacion+"','Administración','"+tipoOrganismo+"','"+idRegistroDetalle+"')\"/></td></tr>";
 
                  }else{
-                    var linea ="<tr><td style=\"text-align:left;\"><label class=\"no-bold\" rel=\"ayuda\" data-content=\""+result[i].unidadRaiz+"\" data-toggle=\"popover\">"+result[i].denominacion+"</label></td><td class=\"center\"><input type=\"button\" class=\"btn btn-sm\" value=\"Seleccionar\" onclick=\"asignarOrganismo('"+codigo+"','"+denominacion+"','"+idSelect+"','"+idDenominacion+"','"+tipoOrganismo+"')\"/></td></tr>";
 
+                     var linea ="<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\""+title+"\">"+result[i].denominacion+"</label></td><td class=\"center\"><input type=\"button\" class=\"btn btn-sm\" value=\"Seleccionar\" onclick=\"asignarOrganismo('"+codigo+"','"+denominacion+"','"+idSelect+"','"+idDenominacion+"','"+tipoOrganismo+"')\"/></td></tr>";
 
                  }
 
@@ -256,7 +281,7 @@ function buscarOrganismosRaizComunidad(urlServidor,idSelect,valorSelected,todos,
         url: url,
         type: 'GET',
         dataType: 'json',
-        data: { codigo:'', denominacion: '', codNivelAdministracion: '', codComunidadAutonoma: codComunidadAutonoma, origen: '', unidadRaiz:true },
+        data: { codigo:'', denominacion: '', codNivelAdministracion: '', codComunidadAutonoma: codComunidadAutonoma, conOficinas:false, unidadRaiz:true },
         success: function(result) {
             if(todos){html = '<option value="-1">...</option>';}
             var len = result.length;

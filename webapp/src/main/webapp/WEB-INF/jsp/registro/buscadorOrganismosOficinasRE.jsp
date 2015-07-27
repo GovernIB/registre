@@ -103,3 +103,7 @@ que se le indica -->
   </div>
   </div>
 </div>
+<c:set var="val"><spring:message code="organismo.raiz"/></c:set>
+<input id="organismo_raiz" type="hidden" value="${val}"/>
+<c:set var="valor"><spring:message code="organismo.superior"/></c:set>
+<input id="organismo_superior" type="hidden" value="${valor}"/>

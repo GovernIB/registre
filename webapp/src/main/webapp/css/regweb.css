@@ -666,6 +666,11 @@ input[readonly] {
 .text-gris{
     color: #333;
 }
+a.text-gris:hover,
+a.text-gris:focus {
+    color: #333;
+    text-decoration: none;
+}
 /* FI ARBRE ORGANISMES */
 
 /* REGISTROS MIGRADOS */

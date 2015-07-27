@@ -1,17 +1,24 @@
 package es.caib.regweb3.webapp.controller.registro;
 
 import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.utils.JsonBasicoOrganismo;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * 
@@ -271,6 +278,75 @@ public abstract class AbstractRegistroCommonFormController extends BaseControlle
 
         return registro;
     }*/
-  
-  
+   /* @ModelAttribute("organismosInteresados")
+    // TODO BORRAR CUANDO OTRA SOLUCION
+    public List<JsonBasicoOrganismo> busquedaOrganimosInteresadosRest() {
+        List<JsonBasicoOrganismo> jsonBasicoOrganismos = new ArrayList<JsonBasicoOrganismo>();
+        try {
+            String urlServidor = Configuracio.getDir3CaibServer();
+            String params = "?codigo=&denominacion=&codNivelAdministracion=&codComunidadAutonoma=4&conOficinas=false&unidadRaiz=true";
+            URL url = new URL(urlServidor + "/rest/busqueda/organismos" + params);
+
+            ObjectMapper mapper = new ObjectMapper(); // just need one
+            // Got a Java class that data maps to nicely? If so:
+
+            log.info("Iniciamos llamada ");
+            JsonBasicoOrganismo[] array= mapper.readValue(url, JsonBasicoOrganismo[].class);
+            log.info("Acabamos llamada inicio montar lista " );
+            jsonBasicoOrganismos = Arrays.asList(array);
+            log.info("Lista montada " );
+
+        } catch (MalformedURLException e) {
+
+            e.printStackTrace();
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+
+        }
+        return jsonBasicoOrganismos;
+    }*/
+
+    /*@ModelAttribute("organismosInteresados")
+    // TODO BORRAR CUANDO OTRA SOLUCION
+    public String busquedaOrganimosInteresadosRest() {
+        List<JsonBasicoOrganismo> jsonBasicoOrganismos = new ArrayList<JsonBasicoOrganismo>();
+        String output="";
+        try {
+            String urlServidor = Configuracio.getDir3CaibServer();
+            String params = "?codigo=&denominacion=&codNivelAdministracion=&codComunidadAutonoma=4&conOficinas=false&unidadRaiz=true";
+            URL url = new URL(urlServidor + "/rest/busqueda/organismos" + params);
+            log.info("iniciamos llamada");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/json");
+
+            if (conn.getResponseCode() != 200) {
+                throw new RuntimeException("Failed : HTTP error code : "
+                        + conn.getResponseCode());
+            }
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(
+                    (conn.getInputStream())));
+            log.info("Finalizada llamada");
+
+            System.out.println("Output from Server .... \n");
+            while ((output = br.readLine()) != null) {
+                System.out.println(output);
+            }
+
+            conn.disconnect();
+
+        } catch (MalformedURLException e) {
+
+            e.printStackTrace();
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+
+        }
+        return output;
+    }*/
 }

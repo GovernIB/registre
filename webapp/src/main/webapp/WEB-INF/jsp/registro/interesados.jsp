@@ -68,10 +68,22 @@
                 </div>
                 <div class="col-xs-4">
 
-                    <select id="organismoInteresado" name="organismoInteresado" class="chosen-select">
+                   <select id="organismoInteresado" name="organismoInteresado" class="chosen-select">
+                        <c:forEach items="${organismosOficinaActiva}" var="organismoInteresado">
+                            <option value="${organismoInteresado.codigo}">${organismoInteresado.denominacion}</option>
+                        </c:forEach>
                     </select>
+                    <!-- TODO BORRAR cuando encontremos otra solucion-->
 
-                    <select id="personaFisica" name="personaFisica" class="chosen-select">
+                       <%-- <select id="organismoInteresado" name="organismoInteresado" class="chosen-select">
+                           <c:forEach items="${organismosInteresados}" var="organismoInteresado">
+                               <option value="${organismoInteresado.codigo}">${organismoInteresado.denominacion}</option>
+                           </c:forEach>
+                       </select>--%>
+
+
+
+                       <select id="personaFisica" name="personaFisica" class="chosen-select">
                         <option value="-1">...</option>
                         <c:forEach items="${personasFisicas}" var="fisica">
                             <option value="${fisica.id}">${fisica.nombrePersonaFisica}</option>
@@ -164,10 +176,10 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
 <script type="text/javascript" src="<c:url value="/js/representantes.js"/>"></script>
 
 <script type="text/javascript">
-
-    $(window).load(function() {
+<!-- TODO BORRAR-->
+  /*  $(window).load(function() {
         buscarOrganismosRaizComunidad('<%=Configuracio.getDir3CaibServer()%>','#organismoInteresado','',false,'${param.comunidad}');
-    });
+    });*/
 
 
   <%-- traduccions para busquedaorganismo.js--%>

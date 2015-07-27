@@ -64,7 +64,7 @@ function mostrarMensaje(idPanel, mensaje){
     // El html que se coge es el del resumen de los organismos procesados automaticamente
     // a este código se añadirá la nueva información a mostrar en una tabla
     var html=$("#resumen").html();
-    html +=  trads['organismo.extinguido']+" <strong>"+organismoAProcesarNombre+"</strong>"
+   /* html +=  trads['organismo.extinguido']+" <strong>"+organismoAProcesarNombre+"</strong>"*/
    // html +=  "Organisme Extingit: <strong>"+extinguidoNombre+"</strong>"
     html += "<table class='table table-bordered table-hover table-striped'  id=\"procesado"+organismoAProcesarId +"\">";
     html += '<colgroup>';
@@ -73,8 +73,9 @@ function mostrarMensaje(idPanel, mensaje){
     html += '</colgroup>';
     html += '<thead>';
     html += '<tr>';
-    html += '<th>'+trads['libro.libro']+'</th>';
+    html += '<th>'+trads['organismo.extinguido']+' </th>';
     html += '<th>'+trads['organismo.asignado']+' </th>';
+    html += '<th>'+trads['libro.libro']+'</th>';
     html += '</tr>';
     html += '</thead>';
     html += '<tbody></tbody></table>';
@@ -83,7 +84,7 @@ function mostrarMensaje(idPanel, mensaje){
     // añadimos la información de libro-organismo
     var fila;
     for(i=0; i<librosOrganismos.length; i++){
-        fila = "<tr><td>"+librosOrganismos[i].libro+"</td><td>"+librosOrganismos[i].organismo+"</td>"
+        fila = "<tr><td>"+librosOrganismos[i].libro+"</td><td>"+librosOrganismos[i].organismo+"</td><td>"+organismoAProcesarNombre+"</td>"
         $('#procesado'+organismoAProcesarId).append(fila);
     }
 
