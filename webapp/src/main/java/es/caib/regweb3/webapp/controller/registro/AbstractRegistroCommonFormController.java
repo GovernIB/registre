@@ -46,12 +46,15 @@ public abstract class AbstractRegistroCommonFormController extends BaseControlle
     @EJB(mappedName = "regweb3/CatNivelAdministracionEJB/local")
     public CatNivelAdministracionLocal catNivelAdministracionEjb;
 
+    @EJB(mappedName = "regweb3/EntidadEJB/local")
+    public EntidadLocal entidadEjb;
 
 
     @ModelAttribute("organismosOficinaActiva")
     public Set<Organismo> getOrganismosOficinaActiva(HttpServletRequest request) throws Exception {
         return organismoEjb.getByOficinaActiva(getOficinaActiva(request).getId());
     }
+
 
     @ModelAttribute("tiposAsunto")
     public List<TipoAsunto> tiposAsunto(HttpServletRequest request) throws Exception {
@@ -135,6 +138,24 @@ public abstract class AbstractRegistroCommonFormController extends BaseControlle
     @ModelAttribute("estados")
     public Long[] estados() throws Exception {
         return RegwebConstantes.ESTADOS_REGISTRO;
+    }
+
+    /**
+     * Para la busqueda de organismos en interesados
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @ModelAttribute("comunidad")
+    public CatComunidadAutonoma comunidad(HttpServletRequest request) throws Exception {
+        Entidad entidad = getEntidadActiva(request);
+        if ((entidad.getOrganismos() != null && entidad.getOrganismos().size() > 0)) {
+            if (entidad.getOrganismos().get(0).getCodAmbComunidad() != null){
+                return entidad.getOrganismos().get(0).getCodAmbComunidad();
+
+            }
+        }
+        return new CatComunidadAutonoma();
     }
 
 

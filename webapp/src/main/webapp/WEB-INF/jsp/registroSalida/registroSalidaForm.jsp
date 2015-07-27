@@ -1,13 +1,14 @@
 <%@ page import="es.caib.regweb3.utils.RegwebConstantes" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
+<un:useConstants var="RegwebConstantes" className="es.caib.regweb3.utils.RegwebConstantes"/>
 
 <!DOCTYPE html>
 <html lang="ca">
 <head>
     <title>
-        <c:if test="${not empty registro.id}"><spring:message code="registroSalida.editar"/> ${registro.numeroRegistroFormateado}</c:if>
-        <c:if test="${empty registro.id}"><spring:message code="registroSalida.nuevo"/></c:if>
+        <c:if test="${not empty registroSalida.id}"><spring:message code="registroSalida.editar"/> ${registroSalida.numeroRegistroFormateado}</c:if>
+        <c:if test="${empty registroSalida.id}"><spring:message code="registroSalida.nuevo"/></c:if>
     </title>
     <c:import url="../modulos/imports.jsp"/>
 </head>
@@ -26,8 +27,8 @@
                 <ol class="breadcrumb">
                     <li><a href="<c:url value="/inici"/>"><i class="fa fa-globe"></i> ${oficinaActiva.denominacion}</a></li>
                     <li class="active"><i class="fa fa-pencil-square-o"></i>
-                        <c:if test="${not empty registro.id}"><spring:message code="registroSalida.editar"/> ${registro.numeroRegistroFormateado}</c:if>
-                        <c:if test="${empty registro.id}"><spring:message code="registroSalida.nuevo"/></c:if>
+                        <c:if test="${not empty registroSalida.id}"><spring:message code="registroSalida.editar"/> ${registroSalida.numeroRegistroFormateado}</c:if>
+                        <c:if test="${empty registroSalida.id}"><spring:message code="registroSalida.nuevo"/></c:if>
                     </li>
                 </ol>
             </div>
@@ -40,12 +41,12 @@
 
                 <div class="panel panel-danger">
                     <div class="panel-heading">
-                        <c:if test="${empty registro.id}"><a data-toggle="modal" role="button" href="#modalSelectRepro" class="btn btn-danger btn-xs pull-right margin-left10" onclick="cargarRepros('<c:url value="/repro/obtenerRepros"/>','${usuario.id}','<%=RegwebConstantes.REGISTRO_SALIDA%>')"><span class="fa fa-refresh"></span> <spring:message code="repro.select"/></a></c:if>
+                        <c:if test="${empty registroSalida.id}"><a data-toggle="modal" role="button" href="#modalSelectRepro" class="btn btn-danger btn-xs pull-right margin-left10" onclick="cargarRepros('<c:url value="/repro/obtenerRepros"/>','${usuario.id}','<%=RegwebConstantes.REGISTRO_SALIDA%>')"><span class="fa fa-refresh"></span> <spring:message code="repro.select"/></a></c:if>
                         <a data-toggle="modal" role="button" href="#modalNewRepro" class="btn btn-danger btn-xs pull-right" onclick="preparaFormularioRepro('<%=RegwebConstantes.REGISTRO_SALIDA%>')"><span class="fa fa-plus"></span> <spring:message code="repro.nuevo"/></a>
                         <h3 class="panel-title"><i class="fa fa-file-o"></i>
                             <strong>
-                                <c:if test="${not empty registro.id}"><spring:message code="registroSalida.editar"/> ${registro.numeroRegistroFormateado}</c:if>
-                                <c:if test="${empty registro.id}"><spring:message code="registroSalida.nuevo"/></c:if>
+                                <c:if test="${not empty registroSalida.id}"><spring:message code="registroSalida.editar"/> ${registroSalida.numeroRegistroFormateado}</c:if>
+                                <c:if test="${empty registroSalida.id}"><spring:message code="registroSalida.nuevo"/></c:if>
                             </strong>
                         </h3>
                     </div>
@@ -54,8 +55,8 @@
                         <div class="col-xs-12"><strong>${oficina.denominacion}</strong></div>
                         <div class="form-group col-xs-12">
                             <strong>
-                                <c:if test="${not empty registro.id}"> <fmt:formatDate value="${registro.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></c:if>
-                                <c:if test="${empty registro.id}"><c:set var="now" value="<%=new java.util.Date()%>" /> <fmt:formatDate value="${now}" pattern="dd/MM/yyyy"/></c:if>
+                                <c:if test="${not empty registroSalida.id}"> <fmt:formatDate value="${registroSalida.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></c:if>
+                                <c:if test="${empty registroSalida.id}"><c:set var="now" value="<%=new java.util.Date()%>" /> <fmt:formatDate value="${now}" pattern="dd/MM/yyyy"/></c:if>
                             </strong>
                         </div>
                         <div class="col-xs-12"><strong>${usuario.nombreCompleto} (${usuario.email})</strong></div>
@@ -67,7 +68,7 @@
 
 
     <div class="row">
-        <form:form modelAttribute="registro" method="post" cssClass="form-horizontal">
+        <form:form modelAttribute="registroSalida" method="post" cssClass="form-horizontal">
 
         <div class="col-xs-6">
 
@@ -121,11 +122,11 @@
                         <div class="col-xs-10">
                             <form:select path="origen.codigo" cssClass="chosen-select">
                                 <c:forEach items="${organismosOficinaActiva}" var="organismo">
-                                    <c:if test="${registro.origen.codigo != null}">
-                                        <option value="${organismo.codigo}" <c:if test="${registro.origen.codigo == organismo.codigo}">selected="selected"</c:if>>${organismo.denominacion}</option>
+                                    <c:if test="${registroSalida.origen.codigo != null}">
+                                        <option value="${organismo.codigo}" <c:if test="${registroSalida.origen.codigo == organismo.codigo}">selected="selected"</c:if>>${organismo.denominacion}</option>
                                     </c:if>
-                                    <c:if test="${registro.origen.codigo == null}">
-                                        <option value="${organismo.codigo}" <c:if test="${registro.origenExternoCodigo == organismo.codigo}">selected="selected"</c:if>>${organismo.denominacion}</option>
+                                    <c:if test="${registroSalida.origen.codigo == null}">
+                                        <option value="${organismo.codigo}" <c:if test="${registroSalida.origenExternoCodigo == organismo.codigo}">selected="selected"</c:if>>${organismo.denominacion}</option>
                                     </c:if>
 
                                 </c:forEach>
@@ -137,10 +138,10 @@
                         <%--<div class="col-xs-2 boto-panel">
                             <a data-toggle="modal" role="button" href="#modalBuscadorOrganismoOrigen" onclick="inicializarBuscador('#codNivelAdministracionOrganismoOrigen','#codComunidadAutonomaOrganismoOrigen','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}', 'OrganismoOrigen');" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                         </div>--%>
-                        <c:if test="${empty registro.origenExternoCodigo}"><!-- Si es interno -->
+                        <c:if test="${empty registroSalida.origenExternoCodigo}"><!-- Si es interno -->
                         <form:hidden path="origen.denominacion"/>
                         </c:if>
-                        <c:if test="${not empty registro.origenExternoCodigo}"><!-- Si es externo -->
+                        <c:if test="${not empty registroSalida.origenExternoCodigo}"><!-- Si es externo -->
                         <form:hidden path="origenExternoDenominacion"/>
                         </c:if>
                         <!-- Fin de gestión de organismo origen -->
@@ -257,11 +258,11 @@
                             <form:select path="registroDetalle.oficinaOrigen.codigo" cssClass="chosen-select">
                                 <option value="-1">...</option>
                                 <c:forEach items="${oficinasOrigen}" var="oficina">
-                                    <c:if test="${registro.registroDetalle.oficinaOrigen.codigo != null}">
-                                        <option value="${oficina.codigo}" <c:if test="${registro.registroDetalle.oficinaOrigen.codigo == oficina.codigo}">selected="selected"</c:if>>${oficina.denominacion}</option>
+                                    <c:if test="${registroSalida.registroDetalle.oficinaOrigen.codigo != null}">
+                                        <option value="${oficina.codigo}" <c:if test="${registroSalida.registroDetalle.oficinaOrigen.codigo == oficina.codigo}">selected="selected"</c:if>>${oficina.denominacion}</option>
                                     </c:if>
-                                    <c:if test="${registro.registroDetalle.oficinaOrigen.codigo == null}">
-                                        <option value="${oficina.codigo}" <c:if test="${registro.registroDetalle.oficinaOrigenExternoCodigo == oficina.codigo}">selected="selected"</c:if>>${oficina.denominacion}</option>
+                                    <c:if test="${registroSalida.registroDetalle.oficinaOrigen.codigo == null}">
+                                        <option value="${oficina.codigo}" <c:if test="${registroSalida.registroDetalle.oficinaOrigenExternoCodigo == oficina.codigo}">selected="selected"</c:if>>${oficina.denominacion}</option>
                                     </c:if>
 
                                 </c:forEach>
@@ -272,10 +273,10 @@
                         <div class="col-xs-2 boto-panel">
                             <a data-toggle="modal" role="button" href="#modalBuscadorOficinaOrigen" onclick="inicializarBuscador('#codNivelAdministracionOficinaOrigen','#codComunidadAutonomaOficinaOrigen','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}', 'OficinaOrigen' );" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                         </div>
-                        <c:if test="${empty registro.registroDetalle.oficinaOrigenExternoCodigo}"><!-- Si es interno -->
+                        <c:if test="${empty registroSalida.registroDetalle.oficinaOrigenExternoCodigo}"><!-- Si es interno -->
                         <form:hidden path="registroDetalle.oficinaOrigen.denominacion"/>
                         </c:if>
-                        <c:if test="${not empty registro.registroDetalle.oficinaOrigenExternoCodigo}"><!-- Si es externo -->
+                        <c:if test="${not empty registroSalida.registroDetalle.oficinaOrigenExternoCodigo}"><!-- Si es externo -->
                         <form:hidden path="registroDetalle.oficinaOrigenExternoDenominacion"/>
                         </c:if>
                         <!-- Fin gestión de oficina origen(se prepara en función de si es interno o externo )-->
@@ -309,20 +310,22 @@
     </form:form>
 
     <!-- INTERESADOS -->
-    <c:if test="${empty registro.id}">
+    <c:if test="${empty registroSalida.id}">
+        <c:set var="registro" value="${registroSalida}"/>
         <c:import url="../registro/interesados.jsp">
             <c:param name="tipo" value="nuevo"/>
-            <c:param name="registro" value="salida"/>
+            <c:param name="tipoRegistro" value="salida"/>
+            <c:param name="comunidad" value="${comunidad.codigoComunidad}"/>
         </c:import>
     </c:if>
 
     <!-- Botonera -->
     <div class="col-xs-12">
-        <button type="button" class="btn btn-warning btn-sm" onclick="doForm('#registro')">
-            <c:if test="${empty registro.id}">
+        <button type="button" class="btn btn-warning btn-sm" onclick="doForm('#registroSalida')">
+            <c:if test="${empty registroSalida.id}">
                 <spring:message code="regweb.registrar"/>
             </c:if>
-            <c:if test="${not empty registro.id}">
+            <c:if test="${not empty registroSalida.id}">
                 <spring:message code="regweb.actualizar"/>
             </c:if>
         </button>
@@ -395,11 +398,11 @@
     $(window).load(function() {
 
         // Cargamos el select de organismo origen
-       <%-- <c:if test="${registro.origen.codigo != null}">
-            actualizarOrganismosLibro('${registro.origen.codigo}', '#origen\\.codigo');
+       <%-- <c:if test="${registroSalida.origen.codigo != null}">
+            actualizarOrganismosLibro('${registroSalida.origen.codigo}', '#origen\\.codigo');
         </c:if>
-        <c:if test="${registro.origen.codigo == null}">
-             actualizarOrganismosLibro('${registro.origenExternoCodigo}', '#origen\\.codigo');
+        <c:if test="${registroSalida.origen.codigo == null}">
+             actualizarOrganismosLibro('${registroSalida.origenExternoCodigo}', '#origen\\.codigo');
         </c:if>
 
         // Cargamos el select de organismo en interesados
@@ -407,19 +410,21 @@
 
         actualizarCodigosAsunto();
 
-        <c:if test="${empty registro.id}"> // Localidades para nuevos Interesados
+        <c:if test="${empty registroSalida.id}"> // Localidades para nuevos Interesados
             actualizarLocalidad();
         </c:if>
 
         // CARGA DE INTERESADOS REGISTRO ENTRADA DESDE LA SESION
-        <c:import url="../registro/addInteresadosSesion.jsp"/>
+        <c:import url="../registro/addInteresadosSesion.jsp">
+            <c:param name="variable" value="${RegwebConstantes.SESSION_INTERESADOS_SALIDA}"/>
+        </c:import>
 
 
     });
 
     function actualizarCodigosAsunto(){
         <c:url var="codigosAsunto" value="/registroEntrada/obtenerCodigosAsunto" />
-        actualizarSelectTraduccion('${codigosAsunto}','#registroDetalle\\.codigoAsunto\\.id',$('#registroDetalle\\.tipoAsunto\\.id option:selected').val(),'${registro.registroDetalle.codigoAsunto.id}',true);
+        actualizarSelectTraduccion('${codigosAsunto}','#registroDetalle\\.codigoAsunto\\.id',$('#registroDetalle\\.tipoAsunto\\.id option:selected').val(),'${registroSalida.registroDetalle.codigoAsunto.id}',true);
     }
 
     function actualizarLocalidad(){

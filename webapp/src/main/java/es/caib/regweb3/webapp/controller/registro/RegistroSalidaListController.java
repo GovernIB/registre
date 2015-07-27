@@ -237,15 +237,4 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         binder.registerCustomEditor(java.util.Date.class,dateEditor);
     }
 
-    /**
-     * Eliminamos los posibles interesados de la Sesion
-     * @param request
-     * @throws Exception
-     */
-    public void eliminarInteresadosSesion(HttpServletRequest request) throws Exception{
-        HttpSession session = request.getSession();
-
-        session.setAttribute("interesados", null);
-    }
-
 }

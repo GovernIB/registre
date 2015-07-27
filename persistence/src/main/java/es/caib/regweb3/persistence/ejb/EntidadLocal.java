@@ -64,7 +64,15 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
    * @return
    * @throws Exception
    */
-    public Boolean esAutorizado(Long idEntidad, Long idUsuario) throws Exception;
+   public Boolean esAutorizado(Long idEntidad, Long idUsuario) throws Exception;
+
+    /**
+     * Obtiene el codigo de la comunidad autónoma de la entidad a través de sus organismos.
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public Long getComunidadAutonomaEntidad(Long idEntidad) throws Exception;
 
 
     /**

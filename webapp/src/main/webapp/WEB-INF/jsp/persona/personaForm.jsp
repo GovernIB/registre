@@ -53,10 +53,6 @@
                                     <form:label path="tipo"><span class="text-danger">*</span> <spring:message code="persona.tipoPersona"/></form:label>
                                 </div>
                                 <div class="col-xs-8">
-                                <%--  
-                                    <form:select path="tipo" items="${tiposPersona}" itemValue="id" itemLabel="traduccion.nombre" cssClass="chosen-select"/>
-                                 --%>
-                                 
                                   <form:select path="tipo" cssClass="chosen-select">
                                     <c:forEach items="${tiposPersona}" var="tmp">
                                       <form:option value="${tmp}" > <spring:message code="persona.tipo.${tmp}"/></form:option>
@@ -92,7 +88,6 @@
                                     <form:input path="apellido2" cssClass="form-control" disabled="true" maxlength="30"/> <form:errors path="apellido2" cssClass="help-block" element="span"/>
                                 </div>
                             </div>
-
 
                             <div class="form-group col-xs-6">
                                 <div class="col-xs-4 pull-left etiqueta_regweb control-label">
@@ -268,6 +263,14 @@
             function() {
                 var tipoDocumento = $('#tipoDocumentoIdentificacion option:selected').val();
 
+                var tipoPersona = $('#tipo option:selected').val();
+
+                if (tipoPersona == 2) { //Persona fisica
+
+                }else if(tipoPersona == 3) { //Persona juridica
+
+                }
+
                 if(tipoDocumento != ''){
                     $('#documento').removeAttr("disabled","disabled");
                 }else{
@@ -275,10 +278,10 @@
                     $('#documento').attr("disabled","disabled");
                 }
 
-                if(tipoDocumento==2){
-                    $('#razonSocial').removeAttr("disabled","disabled");
-                }else{
+                if(tipoDocumento == 3 || tipoDocumento == 4 || tipoDocumento == 5 || tipoDocumento == 6){
                     $('#razonSocial').attr("disabled","disabled");
+                }else{
+                    $('#razonSocial').removeAttr("disabled","disabled");
                 }
          });
 

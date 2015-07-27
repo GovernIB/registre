@@ -167,22 +167,24 @@
             <!-- ANEXOS -->
             <c:if test="${registro.registroDetalle.tipoDocumentacionFisica != 4}">
                 <c:import url="../registro/anexos.jsp">
-                    <c:param name="registro" value="salida"/>
+                    <c:param name="tipoRegistro" value="salida"/>
                 </c:import>
             </c:if>
 
             <%--INTERESADOS--%>
             <c:if test="${(registro.estado == 1 || registro.estado == 2) && registro.oficina.id == oficinaActiva.id}">
+                <%--<c:set var="registro" value="${registroEntrada}"/>--%>
                 <c:import url="../registro/interesados.jsp">
                     <c:param name="tipo" value="detalle"/>
-                    <c:param name="registro" value="salida"/>
+                    <c:param name="tipoRegistro" value="salida"/>
+                    <c:param name="comunidad" value="${comunidad.codigoComunidad}"/>
                 </c:import>
             </c:if>
 
             <%--INTERESADOS SOLO LECTURA--%>
             <c:if test="${(registro.estado != 1 && registro.estado != 2) || registro.oficina.id != oficinaActiva.id}">
                 <c:import url="../registro/interesadosLectura.jsp">
-                    <c:param name="registro" value="salida"/>
+                    <c:param name="tipoRegistro" value="salida"/>
                 </c:import>
             </c:if>
 

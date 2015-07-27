@@ -6,8 +6,8 @@
 <html lang="ca">
 <head>
     <title>
-        <c:if test="${not empty registro.id}"><spring:message code="registroEntrada.editar"/> ${registro.numeroRegistroFormateado}</c:if>
-        <c:if test="${empty registro.id}"><spring:message code="registroEntrada.nuevo"/></c:if>
+        <c:if test="${not empty registroEntrada.id}"><spring:message code="registroEntrada.editar"/> ${registroEntrada.numeroRegistroFormateado}</c:if>
+        <c:if test="${empty registroEntrada.id}"><spring:message code="registroEntrada.nuevo"/></c:if>
     </title>
     <c:import url="../modulos/imports.jsp"/>
 </head>
@@ -26,8 +26,8 @@
                     <ol class="breadcrumb">
                         <li><a href="<c:url value="/inici"/>"><i class="fa fa-globe"></i> ${oficinaActiva.denominacion}</a></li>
                         <li class="active"><i class="fa fa-pencil-square-o"></i>
-                            <c:if test="${not empty registro.id}"><spring:message code="registroEntrada.editar"/> ${registro.numeroRegistroFormateado}</c:if>
-                            <c:if test="${empty registro.id}"><spring:message code="registroEntrada.nuevo"/></c:if>
+                            <c:if test="${not empty registroEntrada.id}"><spring:message code="registroEntrada.editar"/> ${registroEntrada.numeroRegistroFormateado}</c:if>
+                            <c:if test="${empty registroEntrada.id}"><spring:message code="registroEntrada.nuevo"/></c:if>
                         </li>
                     </ol>
                 </div>
@@ -40,12 +40,12 @@
 
                     <div class="panel panel-info">
                         <div class="panel-heading">
-                            <c:if test="${empty registro.id}"><a data-toggle="modal" role="button" href="#modalSelectRepro" class="btn btn-info btn-xs pull-right margin-left10" onclick="cargarRepros('<c:url value="/repro/obtenerRepros"/>','${usuario.id}','<%=RegwebConstantes.REGISTRO_ENTRADA%>')"><span class="fa fa-refresh"></span> <spring:message code="repro.select"/></a></c:if>
+                            <c:if test="${empty registroEntrada.id}"><a data-toggle="modal" role="button" href="#modalSelectRepro" class="btn btn-info btn-xs pull-right margin-left10" onclick="cargarRepros('<c:url value="/repro/obtenerRepros"/>','${usuario.id}','<%=RegwebConstantes.REGISTRO_ENTRADA%>')"><span class="fa fa-refresh"></span> <spring:message code="repro.select"/></a></c:if>
                             <a data-toggle="modal" role="button" href="#modalNewRepro" class="btn btn-info btn-xs pull-right" onclick="preparaFormularioRepro('<%=RegwebConstantes.REGISTRO_ENTRADA%>')"><span class="fa fa-plus"></span> <spring:message code="repro.nuevo"/></a>
                             <h3 class="panel-title"><i class="fa fa-file-o"></i>
                                 <strong>
-                                    <c:if test="${not empty registro.id}"><spring:message code="registroEntrada.editar"/> ${registro.numeroRegistroFormateado}</c:if>
-                                    <c:if test="${empty registro.id}"><spring:message code="registroEntrada.nuevo"/></c:if>
+                                    <c:if test="${not empty registroEntrada.id}"><spring:message code="registroEntrada.editar"/> ${registroEntrada.numeroRegistroFormateado}</c:if>
+                                    <c:if test="${empty registroEntrada.id}"><spring:message code="registroEntrada.nuevo"/></c:if>
                                 </strong>
                             </h3>
                         </div>
@@ -54,8 +54,8 @@
                             <div class="col-xs-12"><strong>${oficina.denominacion}</strong></div>
                             <div class="form-group col-xs-12">
                                 <strong>
-                                    <c:if test="${not empty registro.id}"> <fmt:formatDate value="${registro.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></c:if>
-                                    <c:if test="${empty registro.id}"><c:set var="now" value="<%=new java.util.Date()%>" /> <fmt:formatDate value="${now}" pattern="dd/MM/yyyy"/></c:if>
+                                    <c:if test="${not empty registroEntrada.id}"> <fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></c:if>
+                                    <c:if test="${empty registroEntrada.id}"><c:set var="now" value="<%=new java.util.Date()%>" /> <fmt:formatDate value="${now}" pattern="dd/MM/yyyy"/></c:if>
                                 </strong>
                             </div>
                             <div class="col-xs-12"><strong>${usuario.nombreCompleto} (${usuario.email})</strong></div>
@@ -67,7 +67,7 @@
 
 
            <div class="row">
-               <form:form modelAttribute="registro" method="post" cssClass="form-horizontal">
+               <form:form modelAttribute="registroEntrada" method="post" cssClass="form-horizontal">
 
                <div class="col-xs-6">
 
@@ -121,11 +121,11 @@
                                <div class="col-xs-8">
                                    <form:select path="destino.codigo" cssClass="chosen-select">
                                        <c:forEach items="${organismosOficinaActiva}" var="organismo">
-                                           <c:if test="${registro.destino.codigo != null}">
-                                               <option value="${organismo.codigo}" <c:if test="${registro.destino.codigo == organismo.codigo}">selected="selected"</c:if>>${organismo.denominacion}</option>
+                                           <c:if test="${registroEntrada.destino.codigo != null}">
+                                               <option value="${organismo.codigo}" <c:if test="${registroEntrada.destino.codigo == organismo.codigo}">selected="selected"</c:if>>${organismo.denominacion}</option>
                                            </c:if>
-                                           <c:if test="${registro.destino.codigo == null}">
-                                               <option value="${organismo.codigo}" <c:if test="${registro.destinoExternoCodigo == organismo.codigo}">selected="selected"</c:if>>${organismo.denominacion}</option>
+                                           <c:if test="${registroEntrada.destino.codigo == null}">
+                                               <option value="${organismo.codigo}" <c:if test="${registroEntrada.destinoExternoCodigo == organismo.codigo}">selected="selected"</c:if>>${organismo.denominacion}</option>
                                            </c:if>
 
                                        </c:forEach>
@@ -137,10 +137,10 @@
                                <div class="col-xs-2 boto-panel">
                                   <a data-toggle="modal" role="button" href="#modalBuscadorOrganismoDestino" onclick="inicializarBuscador('#codNivelAdministracionOrganismoDestino','#codComunidadAutonomaOrganismoDestino','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}', 'OrganismoDestino');" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                                </div>
-                               <c:if test="${empty registro.destinoExternoCodigo}"><!-- Si es interno -->
+                               <c:if test="${empty registroEntrada.destinoExternoCodigo}"><!-- Si es interno -->
                                    <form:hidden path="destino.denominacion"/>
                                </c:if>
-                               <c:if test="${not empty registro.destinoExternoCodigo}"><!-- Si es externo -->
+                               <c:if test="${not empty registroEntrada.destinoExternoCodigo}"><!-- Si es externo -->
                                    <form:hidden path="destinoExternoDenominacion"/>
                                </c:if>
                                <!-- Fin de gestión de organismo destino -->
@@ -257,11 +257,11 @@
                                         <form:select path="registroDetalle.oficinaOrigen.codigo" cssClass="chosen-select">
                                            <option value="-1">...</option>
                                            <c:forEach items="${oficinasOrigen}" var="oficina">
-                                               <c:if test="${registro.registroDetalle.oficinaOrigen.codigo != null}">
-                                                   <option value="${oficina.codigo}" <c:if test="${registro.registroDetalle.oficinaOrigen.codigo == oficina.codigo}">selected="selected"</c:if>>${oficina.denominacion}</option>
+                                               <c:if test="${registroEntrada.registroDetalle.oficinaOrigen.codigo != null}">
+                                                   <option value="${oficina.codigo}" <c:if test="${registroEntrada.registroDetalle.oficinaOrigen.codigo == oficina.codigo}">selected="selected"</c:if>>${oficina.denominacion}</option>
                                                </c:if>
-                                               <c:if test="${registro.registroDetalle.oficinaOrigen.codigo == null}">
-                                                   <option value="${oficina.codigo}" <c:if test="${registro.registroDetalle.oficinaOrigenExternoCodigo == oficina.codigo}">selected="selected"</c:if>>${oficina.denominacion}</option>
+                                               <c:if test="${registroEntrada.registroDetalle.oficinaOrigen.codigo == null}">
+                                                   <option value="${oficina.codigo}" <c:if test="${registroEntrada.registroDetalle.oficinaOrigenExternoCodigo == oficina.codigo}">selected="selected"</c:if>>${oficina.denominacion}</option>
                                                </c:if>
 
                                            </c:forEach>
@@ -272,10 +272,10 @@
                                <div class="col-xs-2 boto-panel">
                                       <a data-toggle="modal" role="button" href="#modalBuscadorOficinaOrigen" onclick="inicializarBuscador('#codNivelAdministracionOficinaOrigen','#codComunidadAutonomaOficinaOrigen','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}','OficinaOrigen' );" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                                </div>
-                               <c:if test="${empty registro.registroDetalle.oficinaOrigenExternoCodigo}"><!-- Si es interno -->
+                               <c:if test="${empty registroEntrada.registroDetalle.oficinaOrigenExternoCodigo}"><!-- Si es interno -->
                                    <form:hidden path="registroDetalle.oficinaOrigen.denominacion"/>
                                </c:if>
-                                <c:if test="${not empty registro.registroDetalle.oficinaOrigenExternoCodigo}"><!-- Si es externo -->
+                                <c:if test="${not empty registroEntrada.registroDetalle.oficinaOrigenExternoCodigo}"><!-- Si es externo -->
                                    <form:hidden path="registroDetalle.oficinaOrigenExternoDenominacion"/>
                                </c:if>
                                <!-- Fin gestión de oficina origen(se prepara en función de si es interno o externo )-->
@@ -309,20 +309,22 @@
                </form:form>
 
                <!-- INTERESADOS -->
-               <c:if test="${empty registro.id || registro.estado == RegwebConstantes.ESTADO_PENDIENTE}">
+               <c:if test="${empty registroEntrada.id || registroEntrada.estado == RegwebConstantes.ESTADO_PENDIENTE}">
+                   <c:set var="registro" value="${registroEntrada}"/>
                    <c:import url="../registro/interesados.jsp">
                        <c:param name="tipo" value="nuevo"/>
-                       <c:param name="registro" value="entrada"/>
+                       <c:param name="tipoRegistro" value="entrada"/>
+                       <c:param name="comunidad" value="${comunidad.codigoComunidad}"/>
                    </c:import>
                </c:if>
 
                <!-- Botonera -->
                <div class="col-xs-12">
-                   <button type="button" class="btn btn-warning btn-sm" onclick="doForm('#registro')">
-                       <c:if test="${empty registro.id}">
+                   <button type="button" class="btn btn-warning btn-sm" onclick="doForm('#registroEntrada')">
+                       <c:if test="${empty registroEntrada.id}">
                            <spring:message code="regweb.registrar"/>
                        </c:if>
-                       <c:if test="${not empty registro.id}">
+                       <c:if test="${not empty registroEntrada.id}">
                            <spring:message code="regweb.actualizar"/>
                        </c:if>
                    </button>
@@ -399,11 +401,11 @@
 
         // Obtenemos el valor que tiene que marcar como selected. Puede ser organismo interno o externo.
         // Cargamos el select de organismo destino.
-       <%-- <c:if test="${registro.destino.codigo != null}">
-            actualizarOrganismosLibro('${registro.destino.codigo}', '#destino\\.codigo');
+       <%-- <c:if test="${registroEntrada.destino.codigo != null}">
+            actualizarOrganismosLibro('${registroEntrada.destino.codigo}', '#destino\\.codigo');
         </c:if>
-        <c:if test="${registro.destino.codigo == null}">
-             actualizarOrganismosLibro('${registro.destinoExternoCodigo}', '#destino\\.codigo');
+        <c:if test="${registroEntrada.destino.codigo == null}">
+             actualizarOrganismosLibro('${registroEntrada.destinoExternoCodigo}', '#destino\\.codigo');
         </c:if>
 
         // Cargamos el select de organismo en interesados
@@ -411,13 +413,15 @@
 
          actualizarCodigosAsunto();
 
-         <c:if test="${empty registro.id}"> // Localidades para nuevos Interesados
+         <c:if test="${empty registroEntrada.id}"> // Localidades para nuevos Interesados
             actualizarLocalidad();
         </c:if>
 
         // CARGA DE INTERESADOS REGISTRO ENTRADA DESDE LA SESION
-        <c:if test="${registro.estado != RegwebConstantes.ESTADO_PENDIENTE}">
-            <c:import url="../registro/addInteresadosSesion.jsp"/>
+        <c:if test="${registroEntrada.estado != RegwebConstantes.ESTADO_PENDIENTE}">
+            <c:import url="../registro/addInteresadosSesion.jsp">
+                <c:param name="variable" value="${RegwebConstantes.SESSION_INTERESADOS_ENTRADA}"/>
+            </c:import>
         </c:if>
 
 
@@ -425,7 +429,7 @@
 
     function actualizarCodigosAsunto(){
         <c:url var="codigosAsunto" value="/registroEntrada/obtenerCodigosAsunto" />
-        actualizarSelectTraduccion('${codigosAsunto}','#registroDetalle\\.codigoAsunto\\.id',$('#registroDetalle\\.tipoAsunto\\.id option:selected').val(),'${registro.registroDetalle.codigoAsunto.id}',true);
+        actualizarSelectTraduccion('${codigosAsunto}','#registroDetalle\\.codigoAsunto\\.id',$('#registroDetalle\\.tipoAsunto\\.id option:selected').val(),'${registroEntrada.registroDetalle.codigoAsunto.id}',true);
     }
 
     function actualizarLocalidad(){

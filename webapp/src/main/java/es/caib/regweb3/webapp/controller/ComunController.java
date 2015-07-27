@@ -170,55 +170,8 @@ public class ComunController extends BaseController {
         return mav;
     }
 
-    /**
-     * Controller para gestionar los diferentes avisos de registros pendientes para el usuario
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(value = "/avisos")
-    public ModelAndView avisos(HttpServletRequest request) throws Exception{
-
-        ModelAndView mav = new ModelAndView("modulos/avisos");
-
-        Oficina oficinaActiva = getOficinaActiva(request);
-
-        if(isOperador(request) && oficinaActiva != null) {
-
-            List<Libro> librosAdministrados = getLibrosAdministrados(request);
-            List<Libro> librosRegistro = getLibrosRegistroEntrada(request);
-
-            Long pendientesVisar = (long) 0;
-            Long oficiosRemisionInterna = (long) 0;
-            Long oficiosRemisionExterna = (long) 0;
-
-            /*Registros Pendientes de Visar*/
-            if(librosAdministrados!= null && librosAdministrados.size() > 0){
-                pendientesVisar = registroEntradaEjb.getByLibrosEstadoCount(librosAdministrados, RegwebConstantes.ESTADO_PENDIENTE_VISAR);
-            }
-            mav.addObject("pendientesVisar", pendientesVisar);
-
-            /*Rserva de número*/
-            Long pendientes = registroEntradaEjb.getByOficinaEstadoCount(oficinaActiva.getId(), RegwebConstantes.ESTADO_PENDIENTE);
-            mav.addObject("pendientes", pendientes);
-
-            /* OFICIOS PENDIENTES DE REMISIÓN */
-            if(librosRegistro!= null && librosRegistro.size() > 0){
-                oficiosRemisionInterna = registroEntradaEjb.oficiosPendientesRemisionInternaCount(librosRegistro);
-                oficiosRemisionExterna = registroEntradaEjb.oficiosPendientesRemisionExternaCount(librosRegistro);
-            }
-            mav.addObject("oficiosRemisionInterna", oficiosRemisionInterna);
-            mav.addObject("oficiosRemisionExterna", oficiosRemisionExterna);
-
-            /*OFICIOS PENDIENTES DE LLEGADA*/
-            Long oficiosPendientesLlegada = oficioRemisionEjb.oficiosPendientesLlegadaCount(getOrganismosOficinaActiva(request));
-            mav.addObject("oficiosPendientesLlegada", oficiosPendientesLlegada);
-
-        }
 
 
-        return mav;
-    }
 
     @RequestMapping(value = "/sesion")
     public ModelAndView sesion(HttpServletRequest request, HttpServletResponse response) throws Exception{

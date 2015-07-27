@@ -504,9 +504,8 @@ public class Interesado implements Serializable {
 
         Interesado that = (Interesado) o;
 
-        if (!id.equals(that.id)) return false;
+        return !(id != null ? !id.equals(that.id) : that.id != null);
 
-        return true;
     }
 
 }

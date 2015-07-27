@@ -72,6 +72,22 @@ public abstract class AbstractRegistroCommonListController extends BaseControlle
       }
     }
 
+    /**
+     * Para la busqueda de organismos en interesados
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @ModelAttribute("comunidad")
+    public CatComunidadAutonoma comunidad(HttpServletRequest request) throws Exception {
+        Entidad entidad = getEntidadActiva(request);
+        if ((entidad.getOrganismos() != null && entidad.getOrganismos().size() > 0)) {
+            if (entidad.getOrganismos().get(0).getCodAmbComunidad() != null){
+                return entidad.getOrganismos().get(0).getCodAmbComunidad();
+            }
+        }
+        return new CatComunidadAutonoma();
+    }
 
     public void initAnexos(Entidad entidad, Model model, HttpServletRequest request, Long registroID) throws Exception {
     Integer tipusScan = 0;

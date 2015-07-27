@@ -2,10 +2,10 @@
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 <un:useConstants var="RegwebConstantes" className="es.caib.regweb3.utils.RegwebConstantes"/>
 <%--CONFIGURACIONES SEGÚN EL TIPO DE REGISTRO--%>
-<c:if test="${param.registro == 'entrada'}">
+<c:if test="${param.tipoRegistro == 'entrada'}">
     <c:set var="color" value="info"/>
 </c:if>
-<c:if test="${param.registro == 'salida'}">
+<c:if test="${param.tipoRegistro == 'salida'}">
     <c:set var="color" value="danger"/>
 </c:if>
 

@@ -38,8 +38,8 @@
                             <div class="panel-body">
 
 
-                                <c:if test="${not empty interesados}">
-                                    Listado de Interesados en la sesion <br>
+                                <c:if test="${not empty interesadosEntrada}">
+                                    Listado de InteresadosEntrada en la sesion <br>
 
                                     <div class="table-responsive">
                                         <table class="table table-bordered table-hover table-striped tablesorter">
@@ -59,7 +59,59 @@
                                             </thead>
 
                                             <tbody>
-                                            <c:forEach var="interesado" items="${interesados}">
+                                            <c:forEach var="interesado" items="${interesadosEntrada}">
+                                                <tr>
+                                                    <td>${interesado.id}</td>
+                                                    <td>
+                                                        <c:if test="${interesado.tipo == 1}"> ${interesado.nombreOrganismo} </c:if>
+                                                        <c:if test="${interesado.tipo == 2}"> ${interesado.nombrePersonaFisica} </c:if>
+                                                        <c:if test="${interesado.tipo == 3}"> ${interesado.nombrePersonaJuridica} </c:if>
+                                                    </td>
+                                                    <td>
+                                                        <c:if test="${interesado.tipo == 1}"> Organismo </c:if>
+                                                        <c:if test="${interesado.tipo == 2}"> Persona Física</c:if>
+                                                        <c:if test="${interesado.tipo == 3}"> Persona Jurídica </c:if>
+                                                    </td>
+                                                    <td>
+                                                        <c:if test="${interesado.isRepresentante}">
+                                                            Si - Representado: ${interesado.representado.id}
+                                                        </c:if>
+
+                                                        <c:if test="${!interesado.isRepresentante}">
+                                                            No  - Representante: ${interesado.representante.id}
+                                                        </c:if>
+                                                    </td>
+                                                </tr>
+                                            </c:forEach>
+
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </c:if>
+
+                                <c:if test="${not empty interesadosSalida}">
+                                    Listado de InteresadosSalida en la sesion <br>
+
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover table-striped tablesorter">
+                                            <colgroup>
+                                                <col>
+                                                <col>
+                                                <col>
+                                                <col>
+                                            </colgroup>
+                                            <thead>
+                                            <tr>
+                                                <th>id</th>
+                                                <th><spring:message code="regweb.nombre"/></th>
+                                                <th><spring:message code="persona.tipoPersona"/></th>
+                                                <th>Representante</th>
+                                            </tr>
+                                            </thead>
+
+                                            <tbody>
+                                            <c:forEach var="interesado" items="${interesadosSalida}">
                                                 <tr>
                                                     <td>${interesado.id}</td>
                                                     <td>

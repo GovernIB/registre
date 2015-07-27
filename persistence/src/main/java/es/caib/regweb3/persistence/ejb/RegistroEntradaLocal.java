@@ -231,6 +231,15 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      */
     public List<RegistroBasico> getByOficinaEstado(Long idOficinaActiva, Long idEstado, Integer total) throws Exception;
 
+    /**
+     * Busca los Registros de Entrada de una OficinaActiva en función de su estado.
+     * @param idOficinaActiva
+     * @param idEstado
+     * @return
+     * @throws Exception
+     */
+    public List<RegistroEntrada> getByOficinaEstado(Long idOficinaActiva, Long idEstado) throws Exception;
+
  /**
   * Busca los Registros de Entrada de una OficinaActiva en función de su estado.
   * @param idOficinaActiva
@@ -247,7 +256,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public List<RegistroBasico> getByLibrosEstado(List<Libro> libros, Long idEstado) throws Exception;
+    public List<RegistroEntrada> getByLibrosEstado(List<Libro> libros, Long idEstado) throws Exception;
 
  /**
   * Busca los Registros de Entrada de un listado de Libros en función de su estado.

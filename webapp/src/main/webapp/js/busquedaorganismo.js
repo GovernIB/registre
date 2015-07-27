@@ -15,6 +15,7 @@ function organismoBusqueda(tipoOrganismo, urlServidor,idRegistroDetalle){
       var codigoOrganismo= $('#codigoOrganismo'+tipoOrganismo).val();
       var codNivelAdministracion= $('#codNivelAdministracion'+tipoOrganismo).val();
       var codComunidadAutonoma= $('#codComunidadAutonoma'+tipoOrganismo).val();
+      var unidadRaiz=false;
 
       // Variables configurables en función del tipo de organismo indicado.
       var idSelect= '';
@@ -35,6 +36,8 @@ function organismoBusqueda(tipoOrganismo, urlServidor,idRegistroDetalle){
       }
       // Caso administracion interesado
       if(tipoOrganismo == 'OrganismoInteresado'){
+
+        unidadRaiz= $('#unidadRaiz'+tipoOrganismo).prop('checked');
         idSelect = "#registroDetalle\\\\.organismoInteresado\\\\.codigo";
         idDenominacion = "#registroDetalle\\\\.organismoInteresado\\\\.denominacion";
         url = urlServidor+"/rest/busqueda/organismos";
@@ -82,7 +85,7 @@ function organismoBusqueda(tipoOrganismo, urlServidor,idRegistroDetalle){
             url: url,
             type: 'GET',
             dataType: 'json',
-            data: { codigo: codigoOrganismo, denominacion: denominacion, codNivelAdministracion: codNivelAdministracion, codComunidadAutonoma: codComunidadAutonoma, origen: tipoOrganismo, unidadRaiz:false },
+            data: { codigo: codigoOrganismo, denominacion: denominacion, codNivelAdministracion: codNivelAdministracion, codComunidadAutonoma: codComunidadAutonoma, origen: tipoOrganismo, unidadRaiz:unidadRaiz },
             success: function(result) {
 
                $('#resultadosbusqueda'+tipoOrganismo).css('display', 'block');

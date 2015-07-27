@@ -73,5 +73,4 @@ public class CatComunidadAutonomaBean extends BaseEjbJPA<CatComunidadAutonoma, L
          }
 
     }
-
 }

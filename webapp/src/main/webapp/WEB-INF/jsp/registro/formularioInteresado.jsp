@@ -11,7 +11,7 @@
 
             <div class="modal-body">
 
-                <form id="interesadoForm" class="form-horizontal" action="${pageContext.request.contextPath}/interesado/gestionar" method="post">
+                <form id="interesadoForm" class="form-horizontal" action="${pageContext.request.contextPath}/interesado/gestionar/${param.registro}" method="post">
                     <input type="hidden" id="accion" name="accion" value="nuevo"/>
                     <input type="hidden" id="id" name="id" value=""/>
                     <input type="hidden" id="idRegistroDetalle" name="idRegistroDetalle" value="${registro.registroDetalle.id}"/>

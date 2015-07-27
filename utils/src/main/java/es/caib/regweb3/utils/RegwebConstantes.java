@@ -29,6 +29,8 @@ public interface RegwebConstantes {
     public static final String SESSION_LIBROSADMINISTRADOS = "librosAdministrados";
     public static final String SESSION_MIGRADOS = "registrosMigrados";
     public static final String SESSION_TIENEPREREGISTROS = "tienePreRegistros";
+    public static final String SESSION_INTERESADOS_ENTRADA = "interesadosEntrada";
+    public static final String SESSION_INTERESADOS_SALIDA = "interesadosSalida";
 
     /** -------------- IDIOMA --------------*/
 

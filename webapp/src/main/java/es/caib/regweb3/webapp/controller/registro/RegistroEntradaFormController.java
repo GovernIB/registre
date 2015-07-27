@@ -37,7 +37,7 @@ import java.util.Set;
  */
 @Controller
 @RequestMapping(value = "/registroEntrada")
-@SessionAttributes({"registro"})
+@SessionAttributes({"registroEntrada"})
 public class RegistroEntradaFormController extends AbstractRegistroCommonFormController {
 
     @Autowired
@@ -65,11 +65,11 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         }
 
         //Eliminamos los posibles interesados de la Sesion
-        eliminarInteresadosSesion(request);
+        eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_ENTRADA);
 
-        RegistroEntrada registro = new RegistroEntrada();
+        RegistroEntrada registroEntrada = new RegistroEntrada();
         RegistroDetalle registroDetalle = new RegistroDetalle();
-        registro.setRegistroDetalle(registroDetalle);
+        registroEntrada.setRegistroDetalle(registroDetalle);
 
         Oficina oficina = getOficinaActiva(request);
         Usuario usuario = getUsuarioAutenticado(request);
@@ -83,7 +83,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         model.addAttribute(entidad);
         model.addAttribute(usuario);
         model.addAttribute(oficina);
-        model.addAttribute("registro",registro);
+        model.addAttribute("registroEntrada",registroEntrada);
         model.addAttribute("libros", getLibrosRegistroEntrada(request));
        // model.addAttribute("organismosOficinaActiva", getOrganismosOficinaActiva(request));
         model.addAttribute("oficinasOrigen",  getOficinasOrigen(request));
@@ -96,16 +96,16 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
      * Guardar un nuevo {@link es.caib.regweb3.model.RegistroEntrada}
      */
     @RequestMapping(value = "/new", method = RequestMethod.POST)
-    public String nuevoRegistroEntrada(@ModelAttribute("registro") RegistroEntrada registro,
+    public String nuevoRegistroEntrada(@ModelAttribute("registroEntrada") RegistroEntrada registroEntrada,
         BindingResult result, Model model, SessionStatus status,
         HttpServletRequest request) throws Exception, I18NException, I18NValidationException {
 
         HttpSession session = request.getSession();
 
-        registroEntradaValidator.validate(registro, result);
+        registroEntradaValidator.validate(registroEntrada, result);
         
         // Comprobamos si el usuario ha añadido algún interesado
-        List<Interesado> interesadosSesion = (List<Interesado>) session.getAttribute("interesados");
+        List<Interesado> interesadosSesion = (List<Interesado>) session.getAttribute(RegwebConstantes.SESSION_INTERESADOS_ENTRADA);
         Boolean errorInteresado = true;
         if(interesadosSesion != null && interesadosSesion.size() > 0){
             errorInteresado = false;
@@ -128,8 +128,8 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             if(errorInteresado){
                 model.addAttribute("errorInteresado", errorInteresado);
             }
-
-            model.addAttribute(getEntidadActiva(request));
+            Entidad entidad = getEntidadActiva(request);
+            model.addAttribute(entidad);
             model.addAttribute(getUsuarioAutenticado(request));
             model.addAttribute(getOficinaActiva(request));
             model.addAttribute("oficinasOrigen",  getOficinasOrigen(request));
@@ -139,23 +139,23 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             Set<Organismo> organismosOficinaActiva = getOrganismosOficinaActiva(request);
            // List<Organismo> organismosOficinaActiva = organismoEjb.getByLibro(registro.getLibro().getId());
             
-            if (registro.getDestino() == null || registro.getDestino().getCodigo() == null) {
+            if (registroEntrada.getDestino() == null || registroEntrada.getDestino().getCodigo() == null) {
                // No han triat oficina destinataria: No fer res
             } else {
 
 
               // Si el organismo que han seleccionado es externo, lo creaamos nuevo y lo añadimos a la lista del select
-              if (organismoEjb.findByCodigoVigente(registro.getDestino().getCodigo())== null) {
+              if (organismoEjb.findByCodigoVigente(registroEntrada.getDestino().getCodigo())== null) {
                   //log.info("externo : "+ registro.getDestino().getDenominacion());
                   Organismo organismoExterno = new Organismo();
-                  organismoExterno.setCodigo(registro.getDestino().getCodigo());
-                  organismoExterno.setDenominacion(registro.getDestino().getDenominacion());
+                  organismoExterno.setCodigo(registroEntrada.getDestino().getCodigo());
+                  organismoExterno.setDenominacion(registroEntrada.getDestino().getDenominacion());
                   organismosOficinaActiva.add(organismoExterno);
   
                // si es interno, miramos si ya esta en la lista, si no, lo añadimos
-              } else if (!organismosOficinaActiva.contains(registro.getDestino())){
+              } else if (!organismosOficinaActiva.contains(registroEntrada.getDestino())){
                   //log.info("es interno : "+registro.getDestino().getCodigo());
-                  organismosOficinaActiva.add(organismoEjb.findByCodigo(registro.getDestino().getCodigo()));
+                  organismosOficinaActiva.add(organismoEjb.findByCodigo(registroEntrada.getDestino().getCodigo()));
               }
 
 
@@ -165,18 +165,18 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
             // Si la Oficina Origen es Externa, la añadimos al listado.
             Set<Oficina> oficinasOrigen = getOficinasOrigen(request);
-            if(registro.getRegistroDetalle().getOficinaOrigen()!=null){
-                if(oficinaEjb.findByCodigoVigente(registro.getRegistroDetalle().getOficinaOrigen().getCodigo())== null){
+            if(registroEntrada.getRegistroDetalle().getOficinaOrigen()!=null){
+                if(oficinaEjb.findByCodigoVigente(registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo())== null){
                     //log.info("externa : "+ registro.getRegistroDetalle().getOficinaOrigen().getDenominacion());
                     Oficina oficinaExterna = new Oficina();
-                    oficinaExterna.setCodigo(registro.getRegistroDetalle().getOficinaOrigen().getCodigo());
-                    oficinaExterna.setDenominacion(registro.getRegistroDetalle().getOficinaOrigen().getDenominacion());
+                    oficinaExterna.setCodigo(registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo());
+                    oficinaExterna.setDenominacion(registroEntrada.getRegistroDetalle().getOficinaOrigen().getDenominacion());
                     oficinasOrigen.add(oficinaExterna);
 
                  // si es interna, miramos si ya esta en la lista, si no, lo añadimos
-                }else if(!oficinasOrigen.contains(registro.getRegistroDetalle().getOficinaOrigen())){
+                }else if(!oficinasOrigen.contains(registroEntrada.getRegistroDetalle().getOficinaOrigen())){
                     //log.info("es interno : "+registro.getRegistroDetalle().getOficinaOrigen().getDenominacion());
-                    oficinasOrigen.add(oficinaEjb.findByCodigo(registro.getRegistroDetalle().getOficinaOrigen().getCodigo()));
+                    oficinasOrigen.add(oficinaEjb.findByCodigo(registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo()));
                 }
             }
             model.addAttribute("oficinasOrigen", oficinasOrigen);
@@ -188,27 +188,27 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
                 UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
-                registro.setOficina(getOficinaActiva(request));
-                registro.setUsuario(usuarioEntidad);
+                registroEntrada.setOficina(getOficinaActiva(request));
+                registroEntrada.setUsuario(usuarioEntidad);
 
                 // Estado Registro entrada
-                registro.setEstado(RegwebConstantes.ESTADO_VALIDO);
+                registroEntrada.setEstado(RegwebConstantes.ESTADO_VALIDO);
 
                 // Procesamos las opciones comunes del RegistroEntrada
-                registro = procesarRegistroEntrada(registro);
+                registroEntrada = procesarRegistroEntrada(registroEntrada);
 
                 // Procesamos lo Interesados de la session
                 List<Interesado> interesados = procesarInteresados(interesadosSesion);
 
-                registro.getRegistroDetalle().setInteresados(interesados);
+                registroEntrada.getRegistroDetalle().setInteresados(interesados);
 
                 //Guardamos el RegistroEntrada
                 synchronized (this){
-                    registro = registroEntradaEjb.registrarEntrada(registro);
+                    registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada);
                 }
 
                 //Guardamos el HistorioRegistroEntrada
-                historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registro, usuarioEntidad, RegwebConstantes.TIPO_MODIF_ALTA,false);
+                historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada, usuarioEntidad, RegwebConstantes.TIPO_MODIF_ALTA,false);
 
                 status.setComplete();
             }catch (Exception e) {
@@ -219,13 +219,13 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
                 //Eliminamos los posibles interesados de la Sesion
                 try {
-                    eliminarInteresadosSesion(request);
+                    eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_ENTRADA);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
 
-            return "redirect:/registroEntrada/"+registro.getId()+"/detalle";
+            return "redirect:/registroEntrada/"+registroEntrada.getId()+"/detalle";
         }
     }
 
@@ -236,37 +236,37 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
     @RequestMapping(value = "/{idRegistro}/edit", method = RequestMethod.GET)
     public String editarRegistroEntrada(@PathVariable("idRegistro") Long idRegistro,  Model model, HttpServletRequest request) {
 
-        RegistroEntrada registro = null;
+        RegistroEntrada registroEntrada = null;
 
         Oficina oficina = getOficinaActiva(request);
         Usuario usuario = getUsuarioAutenticado(request);
         Entidad entidad = getEntidadActiva(request);
 
         try {
-            registro = registroEntradaEjb.findById(idRegistro);
+            registroEntrada = registroEntradaEjb.findById(idRegistro);
 
             Set<Organismo> organismosOficinaActiva = getOrganismosOficinaActiva(request);
 
             // Si el Organismo Destino es Externo, lo añadimos al listado.
-            if(registro.getDestino() == null && registro.getDestinoExternoCodigo() != null){
+            if(registroEntrada.getDestino() == null && registroEntrada.getDestinoExternoCodigo() != null){
                 Organismo organismoExterno = new Organismo();
-                organismoExterno.setCodigo(registro.getDestinoExternoCodigo());
-                organismoExterno.setDenominacion(registro.getDestinoExternoDenominacion());
+                organismoExterno.setCodigo(registroEntrada.getDestinoExternoCodigo());
+                organismoExterno.setDenominacion(registroEntrada.getDestinoExternoDenominacion());
                 organismosOficinaActiva.add(organismoExterno);
 
              // Si es Interno, pero no esta relacionado con la Oficina Activa
-            }else if(!organismosOficinaActiva.contains(registro.getDestino())){
-                organismosOficinaActiva.add(registro.getDestino());
+            }else if(!organismosOficinaActiva.contains(registroEntrada.getDestino())){
+                organismosOficinaActiva.add(registroEntrada.getDestino());
             }
 
             Set<Oficina> oficinasOrigen = getOficinasOrigen(request);
 
             // Si la Oficina Origen es Externa, la añadimos al listado.
-            Oficina oficinaOrigen = registro.getRegistroDetalle().getOficinaOrigen();
+            Oficina oficinaOrigen = registroEntrada.getRegistroDetalle().getOficinaOrigen();
             if(oficinaOrigen == null){
                 Oficina oficinaExterna = new Oficina();
-                oficinaExterna.setCodigo(registro.getRegistroDetalle().getOficinaOrigenExternoCodigo());
-                oficinaExterna.setDenominacion(registro.getRegistroDetalle().getOficinaOrigenExternoDenominacion());
+                oficinaExterna.setCodigo(registroEntrada.getRegistroDetalle().getOficinaOrigenExternoCodigo());
+                oficinaExterna.setDenominacion(registroEntrada.getRegistroDetalle().getOficinaOrigenExternoDenominacion());
                 oficinasOrigen.add(oficinaExterna);
 
              // Si es Interna, pero no esta relacionado con la Oficina Activa
@@ -278,7 +278,6 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             model.addAttribute("organismosOficinaActiva", organismosOficinaActiva);
             model.addAttribute("oficinasOrigen", oficinasOrigen);
 
-
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -286,7 +285,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         model.addAttribute(entidad);
         model.addAttribute(usuario);
         model.addAttribute(oficina);
-        model.addAttribute("registro",registro);
+        model.addAttribute("registroEntrada",registroEntrada);
 
         return "registroEntrada/registroEntradaForm";
     }
@@ -296,17 +295,17 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
      * Editar un {@link es.caib.regweb3.model.RegistroEntrada}
      */
     @RequestMapping(value = "/{idRegistro}/edit", method = RequestMethod.POST)
-    public String editarRegistroEntrada(@ModelAttribute("registro") RegistroEntrada registro, BindingResult result,
+    public String editarRegistroEntrada(@ModelAttribute("registroEntrada") RegistroEntrada registroEntrada, BindingResult result,
                                         Model model, SessionStatus status,HttpServletRequest request) throws Exception{
 
 
-        registroEntradaValidator.validate(registro, result);
+        registroEntradaValidator.validate(registroEntrada, result);
 
         // Actualizamos los Interesados modificados, en el caso que de un RE Pendiente.
         Boolean errorInteresado = false;
-        if(registro.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE)){
-            List<Interesado> interesados = registroDetalleEjb.findById(registro.getRegistroDetalle().getId()).getInteresados();
-            registro.getRegistroDetalle().setInteresados(interesados);
+        if(registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE)){
+            List<Interesado> interesados = registroDetalleEjb.findById(registroEntrada.getRegistroDetalle().getId()).getInteresados();
+            registroEntrada.getRegistroDetalle().setInteresados(interesados);
 
             if(interesados == null || interesados.size() == 0){
                 errorInteresado = true;
@@ -319,8 +318,8 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             if(errorInteresado){
                 model.addAttribute("errorInteresado", errorInteresado);
             }
-
-            model.addAttribute(getOficinaActiva(request));
+            Entidad entidad = getEntidadActiva(request);
+            model.addAttribute(entidad);
             model.addAttribute(getUsuarioAutenticado(request));
             model.addAttribute(getEntidadActiva(request));
             model.addAttribute("libros", getLibrosRegistroEntrada(request));
@@ -328,15 +327,15 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             // Controlamos si el organismo destino es externo o interno
             Set<Organismo> organismosOficinaActiva = getOrganismosOficinaActiva(request);
             // Si el organismo que han seleccionado es externo, lo creamos nuevo y lo añadimos a la lista del select
-            if(organismoEjb.findByCodigoVigente(registro.getDestino().getCodigo())== null){
+            if(organismoEjb.findByCodigoVigente(registroEntrada.getDestino().getCodigo())== null){
                 Organismo organismoExterno = new Organismo();
-                organismoExterno.setCodigo(registro.getDestino().getCodigo());
-                organismoExterno.setDenominacion(registro.getDestino().getDenominacion());
+                organismoExterno.setCodigo(registroEntrada.getDestino().getCodigo());
+                organismoExterno.setDenominacion(registroEntrada.getDestino().getDenominacion());
                 organismosOficinaActiva.add(organismoExterno);
 
              // si es interno, miramos si ya esta en la lista, si no, lo añadimos
-            }else if(!organismosOficinaActiva.contains(registro.getDestino())){
-                organismosOficinaActiva.add(organismoEjb.findByCodigo(registro.getDestino().getCodigo()));
+            }else if(!organismosOficinaActiva.contains(registroEntrada.getDestino())){
+                organismosOficinaActiva.add(organismoEjb.findByCodigo(registroEntrada.getDestino().getCodigo()));
             }
             model.addAttribute("organismosOficinaActiva", organismosOficinaActiva);
 
@@ -344,16 +343,16 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             // Si la Oficina Origen es Externa, la añadimos al listado.
             Set<Oficina> oficinasOrigen = getOficinasOrigen(request);
             // Si han indicado OficinaOrigen
-            if(registro.getRegistroDetalle().getOficinaOrigen()!=null){
-                if(oficinaEjb.findByCodigoVigente(registro.getRegistroDetalle().getOficinaOrigen().getCodigo()) == null){
+            if(registroEntrada.getRegistroDetalle().getOficinaOrigen()!=null){
+                if(oficinaEjb.findByCodigoVigente(registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo()) == null){
                     Oficina oficinaExterna = new Oficina();
-                    oficinaExterna.setCodigo(registro.getRegistroDetalle().getOficinaOrigen().getCodigo());
-                    oficinaExterna.setDenominacion(registro.getRegistroDetalle().getOficinaOrigen().getDenominacion());
+                    oficinaExterna.setCodigo(registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo());
+                    oficinaExterna.setDenominacion(registroEntrada.getRegistroDetalle().getOficinaOrigen().getDenominacion());
                     oficinasOrigen.add(oficinaExterna);
 
                  // si es interna, miramos si ya esta en la lista, si no, lo añadimos
-                }else if(!oficinasOrigen.contains(registro.getRegistroDetalle().getOficinaOrigen())){
-                    oficinasOrigen.add(oficinaEjb.findByCodigo(registro.getRegistroDetalle().getOficinaOrigen().getCodigo()));
+                }else if(!oficinasOrigen.contains(registroEntrada.getRegistroDetalle().getOficinaOrigen())){
+                    oficinasOrigen.add(oficinaEjb.findByCodigo(registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo()));
                 }
             }
             model.addAttribute("oficinasOrigen", oficinasOrigen);
@@ -366,27 +365,27 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                 UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
                 // Procesamos las opciones comunes del RegistroEnrtrada
-                registro = procesarRegistroEntrada(registro);
+                registroEntrada = procesarRegistroEntrada(registroEntrada);
 
                 // Calculamos los días transcurridos desde que se Registró para asignarle un Estado
-                Long dias = RegistroUtils.obtenerDiasRegistro(registro.getFecha());
+                Long dias = RegistroUtils.obtenerDiasRegistro(registroEntrada.getFecha());
 
                 if(dias >= entidadActiva.getDiasVisado()){ // Si ha pasado los Dias de Visado establecidos por la entidad.
 
-                    registro.setEstado(RegwebConstantes.ESTADO_PENDIENTE_VISAR);
+                    registroEntrada.setEstado(RegwebConstantes.ESTADO_PENDIENTE_VISAR);
                 }else{ // Si aún no ha pasado los días definidos
 
                     // Si el Registro de Entrada tiene Estado Pendiente, al editarlo pasa a ser Válido.
-                    if(registro.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE)){
-                        registro.setEstado(RegwebConstantes.ESTADO_VALIDO);
+                    if(registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE)){
+                        registroEntrada.setEstado(RegwebConstantes.ESTADO_VALIDO);
                     }
                 }
 
                 // Obtenemos el RE antes de guardarlos, para crear el histórico
-                RegistroEntrada registroEntradaAntiguo = registroEntradaEjb.findById(registro.getId());
+                RegistroEntrada registroEntradaAntiguo = registroEntradaEjb.findById(registroEntrada.getId());
 
                 // Actualizamos el RegistroEntrada
-                registro = registroEntradaEjb.merge(registro);
+                registroEntrada = registroEntradaEjb.merge(registroEntrada);
 
                 // Creamos el Historico RegistroEntrada
                 historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntradaAntiguo, usuarioEntidad, RegwebConstantes.TIPO_MODIF_DATOS,true);
@@ -399,7 +398,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                 return "redirect:/inici";
             }
 
-            return "redirect:/registroEntrada/"+registro.getId()+"/detalle";
+            return "redirect:/registroEntrada/"+registroEntrada.getId()+"/detalle";
         }
     }
 
@@ -514,7 +513,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
 
 
-    @InitBinder("registro")
+    @InitBinder("registroEntrada")
     public void initBinder(WebDataBinder binder) {
         binder.setDisallowedFields("id");
         binder.setDisallowedFields("registroDetalle.id");

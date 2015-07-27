@@ -1,12 +1,13 @@
+<%@ page import="es.caib.regweb3.utils.Configuracio" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 <un:useConstants var="RegwebConstantes" className="es.caib.regweb3.utils.RegwebConstantes"/>
 
 <%--CONFIGURACIONES SEGÚN EL TIPO DE REGISTRO--%>
-<c:if test="${param.registro == 'entrada'}">
+<c:if test="${param.tipoRegistro == 'entrada'}">
     <c:set var="color" value="info"/>
 </c:if>
-<c:if test="${param.registro == 'salida'}">
+<c:if test="${param.tipoRegistro == 'salida'}">
     <c:set var="color" value="danger"/>
 </c:if>
 
@@ -23,10 +24,10 @@
             <h3 class="panel-title">
                 <i class="fa fa-pencil-square-o"></i>
                 <strong>
-                    <c:if test="${param.registro == 'entrada'}">
+                    <c:if test="${param.tipoRegistro == 'entrada'}">
                         <spring:message code="interesado.interesados"/>
                     </c:if>
-                    <c:if test="${param.registro == 'salida'}">
+                    <c:if test="${param.tipoRegistro == 'salida'}">
                         <spring:message code="registroSalida.destinatarios"/>
                     </c:if>
 
@@ -43,10 +44,10 @@
 
             <div class="form-group col-xs-12">
                 <div class="col-xs-2 pull-left etiqueta_regweb control-label">
-                        <c:if test="${param.registro == 'entrada'}">
+                        <c:if test="${param.tipoRegistro == 'entrada'}">
                             <label rel="ayuda" data-content="<spring:message code="registro.ayuda.tipoInteresado.entrada"/>" data-toggle="popover"><spring:message code="interesado.tipoInteresado"/></label>
                         </c:if>
-                        <c:if test="${param.registro == 'salida'}">
+                        <c:if test="${param.tipoRegistro == 'salida'}">
                     <label rel="ayuda" data-content="<spring:message code="registro.ayuda.tipoInteresado.salida"/>" data-toggle="popover"><spring:message code="interesado.tipoDestinatario"/></label>
                         </c:if>
                 </div>
@@ -68,9 +69,6 @@
                 <div class="col-xs-4">
 
                     <select id="organismoInteresado" name="organismoInteresado" class="chosen-select">
-                        <c:forEach var="organismo" items="${organismosOficinaActiva}">
-                            <option value="${organismo.codigo}">${organismo.denominacion}</option>
-                        </c:forEach>
                     </select>
 
                     <select id="personaFisica" name="personaFisica" class="chosen-select">
@@ -157,31 +155,36 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
 </c:import>
 
 <%--Nuevo Interesado--%>
-<c:import url="../registro/formularioInteresado.jsp"/>
+<c:import url="../registro/formularioInteresado.jsp">
+    <c:param name="registro" value="${param.tipoRegistro}"/>
+</c:import>
 
 <script type="text/javascript" src="<c:url value="/js/busquedaorganismo.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/interesados.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/representantes.js"/>"></script>
 
 <script type="text/javascript">
+
+    $(window).load(function() {
+        buscarOrganismosRaizComunidad('<%=Configuracio.getDir3CaibServer()%>','#organismoInteresado','',false,'${param.comunidad}');
+    });
+
+
   <%-- traduccions para busquedaorganismo.js--%>
   var tradorganismo = new Array();
   tradorganismo['organismo.denominacion'] = "<spring:message code='organismo.denominacion' javaScriptEscape='true' />";
   tradorganismo['regweb3.acciones'] = "<spring:message code='regweb.acciones' javaScriptEscape='true' />";
 
-
 </script>
 
 <script type="text/javascript">
-    var urlObtenerPersona = '<c:url value="/persona/obtenerPersona"/>';
-    var urlAddPersona = '<c:url value="/persona/addPersonaSesion"/>';
-    var urlAddOrganismoInteresado = '<c:url value="/interesado/addOrganismo"/>';
-    var urlEliminarOrganismoInteresado = '<c:url value="/interesado/eliminarOrganismo"/>';
-    var urlAddPersonaInteresado = '<c:url value="/interesado/addPersona"/>';
-    var urlEliminarPersonaInteresado = '<c:url value="/interesado/eliminarPersona"/>';
-    var urlAddRepresentante = '<c:url value="/interesado/addRepresentante"/>';
-    var urlEliminarRepresentante = '<c:url value="/interesado/eliminarRepresentante"/>';
-    var urlObtenerInteresado = '<c:url value="/interesado/obtenerInteresado"/>';
+    var urlAddOrganismoInteresado = '<c:url value="/interesado/${param.tipoRegistro}/addOrganismo"/>';
+    var urlEliminarOrganismoInteresado = '<c:url value="/interesado/${param.tipoRegistro}/eliminarOrganismo"/>';
+    var urlAddPersonaInteresado = '<c:url value="/interesado/${param.tipoRegistro}/addPersona"/>';
+    var urlEliminarPersonaInteresado = '<c:url value="/interesado/${param.tipoRegistro}/eliminarPersona"/>';
+    var urlAddRepresentante = '<c:url value="/interesado/${param.tipoRegistro}/addRepresentante"/>';
+    var urlEliminarRepresentante = '<c:url value="/interesado/${param.tipoRegistro}/eliminarRepresentante"/>';
+    var urlObtenerInteresado = '<c:url value="/interesado/${param.tipoRegistro}/obtenerInteresado"/>';
 
     <%-- Traducciones para interesados.js --%>
     var tradsinteresado = new Array();

@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Libro;
+import es.caib.regweb3.model.Organismo;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -161,6 +162,17 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
         return q.getResultList().size() > 0;
 
+    }
+
+    @Override
+    public Long getComunidadAutonomaEntidad(Long idEntidad) throws Exception {
+        Entidad entidad = findById(idEntidad);
+        if(entidad.getOrganismos() != null ) {
+            Organismo organismo = entidad.getOrganismos().get(0);
+            return organismo.getCodAmbComunidad().getCodigoComunidad();
+        }else {
+            return new Long(-1);
+        }
     }
 
     @Override

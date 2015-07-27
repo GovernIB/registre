@@ -50,6 +50,7 @@ que se le indica -->
               </div>
           </div>
 
+
           <!-- Comunidad Autonoma -->
           <div class="form-group col-xs-6">
               <div class="col-xs-4 pull-lef etiqueta_regweb control-label">
@@ -66,7 +67,19 @@ que se le indica -->
               </div>
           </div>
 
-           <div class="clearfix"></div>
+          <c:if test="${param.tipo == 'OrganismoInteresado'}">
+          <!-- Unidad Raiz -->
+          <div class="form-group col-xs-6">
+              <div class="col-xs-4 pull-lef etiqueta_regweb control-label">
+                 <label for="unidadRaiz${param.tipo}"><spring:message code="organismo.buscador.unidadRaiz"/></label>
+              </div>
+              <div class="col-xs-8">
+                 <input type="checkbox" id="unidadRaiz${param.tipo}"/>
+              </div>
+          </div>
+          </c:if>
+
+         <div class="clearfix"></div>
      </form>
  </div>
       <div class="modal-footer">

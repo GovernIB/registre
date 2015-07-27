@@ -20,6 +20,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 /**
  * Created by Fundació BIT.
@@ -48,9 +49,6 @@ public class ReservaController  extends BaseController {
             Mensaje.saveMessageError(request, getMessage("error.rol.operador"));
             return "redirect:/inici";
         }
-
-        //Eliminamos los posibles interesados de la Sesion
-        eliminarInteresadosSesion(request);
 
         RegistroEntrada registro = new RegistroEntrada();
         RegistroDetalle registroDetalle = new RegistroDetalle();
@@ -121,14 +119,6 @@ public class ReservaController  extends BaseController {
             }catch (Exception e) {
                 Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
                 e.printStackTrace();
-            }finally {
-
-                //Eliminamos los posibles interesados de la Sesion
-                try {
-                    eliminarInteresadosSesion(request);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
             }
 
             return "redirect:/registroEntrada/"+registro.getId()+"/detalle";

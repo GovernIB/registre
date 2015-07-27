@@ -49,7 +49,7 @@ $(window).load(function() {
                 $('#documento').attr("disabled","disabled");
             }
 
-            if(tipoDocumento==2){
+            if(tipoDocumento ==3 || tipoDocumento ==4 || tipoDocumento ==5 || tipoDocumento == 6){
                 $('#razonSocial').removeAttr("disabled","disabled");
             }else{
                 $('#razonSocial').attr("disabled","disabled");

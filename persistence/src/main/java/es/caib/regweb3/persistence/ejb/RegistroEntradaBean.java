@@ -68,7 +68,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     @Override
     public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada)
         throws Exception, I18NException, I18NValidationException {
-      return registrarEntrada(registroEntrada,null, null);
+      return registrarEntrada(registroEntrada, null, null);
     }
     
     
@@ -698,6 +698,22 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
+    public List<RegistroEntrada> getByOficinaEstado(Long idOficinaActiva, Long idEstado) throws Exception {
+
+        Query q;
+
+
+        q = em.createQuery("Select re from RegistroEntrada as re where re.oficina.id = :idOficinaActiva " +
+                "and re.estado = :idEstado order by re.fecha desc");
+
+        q.setParameter("idOficinaActiva", idOficinaActiva);
+        q.setParameter("idEstado", idEstado);
+
+        return q.getResultList();
+
+    }
+
+    @Override
     public Long getByOficinaEstadoCount(Long idOficinaActiva, Long idEstado) throws Exception {
 
         Query q;
@@ -745,18 +761,17 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
-    public List<RegistroBasico> getByLibrosEstado(List<Libro> libros, Long idEstado) throws Exception {
+    public List<RegistroEntrada> getByLibrosEstado(List<Libro> libros, Long idEstado) throws Exception {
 
         Query q;
 
-        q = em.createQuery("Select re.id, re.numeroRegistroFormateado, re.fecha, re.libro.nombre, re.usuario.usuario.identificador, re.registroDetalle.extracto " +
-                "from RegistroEntrada as re where re.libro in (:libros) " +
+        q = em.createQuery("Select re from RegistroEntrada as re where re.libro in (:libros) " +
                 "and re.estado = :idEstado order by re.fecha desc");
 
         q.setParameter("libros", libros);
         q.setParameter("idEstado", idEstado);
 
-        return  getRegistroBasicoList(q.getResultList());
+        return q.getResultList();
 
     }
 

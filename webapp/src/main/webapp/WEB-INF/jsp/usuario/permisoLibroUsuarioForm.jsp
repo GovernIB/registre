@@ -75,7 +75,7 @@
                                                     <c:set var="inicio" value="${contador.index * sizePermisos}"/>
                                                     <c:set var="fin" value="${inicio+sizePermisos-1}"/>
                                                     <tr>
-                                                        <td>${libro.nombreCompleto}</td>
+                                                        <td style="cursor: pointer;" onclick="seleccionarFila('${contador.index}','<%=RegwebConstantes.PERMISOS.length%>');">${libro.nombreCompleto}</td>
                                                         <c:forEach var="plus" items="${permisoLibroUsuarioForm.permisoLibroUsuarios}" varStatus="status" begin="${inicio}" end="${fin}">
                                                                 <form:hidden path="permisoLibroUsuarios[${status.index}].id"/>
                                                                 <%--<form:hidden path="permisoLibroUsuarios[${status.index}].libro.id"/>
@@ -114,6 +114,7 @@
 
 <script type="text/javascript">
 
+    //Selecciona todos los permisos de una columna (el mismo permiso de todos los libros)
     function seleccionarTodo(columna, filas){
         columna = parseInt(columna);
         filas = filas / 7;
@@ -148,6 +149,32 @@
 //            }
 //            columna = columna + 7;
 //        }
+    }
+
+
+    // Selecciona todos los permisos de una fila (todos los permisos de un libro)
+    function seleccionarFila(fila, permisos){
+        fila = parseInt(fila);
+        var len = parseInt(permisos);
+        var permiso = fila*len;
+        var nombre = "#permisoLibroUsuarios"+permiso+"\\.activo1";
+
+        //Selecciona todos los checks o los deselecciona todos a la vez
+        if(len>0) {
+            if($(nombre).prop('checked')){
+                for ( var i = 0; i < len; i++){
+                    nombre = "#permisoLibroUsuarios"+permiso+"\\.activo1";
+                    $(nombre).prop('checked', false);
+                    permiso = permiso + 1;
+                }
+            }else{
+                for ( var i = 0; i < len; i++){
+                    nombre = "#permisoLibroUsuarios"+permiso+"\\.activo1";
+                    $(nombre).prop('checked', true);
+                    permiso = permiso + 1;
+                }
+            }
+        }
     }
 
 </script>

@@ -190,7 +190,7 @@ function mensajeSuccess(id,texto){
  * @param valorSelected Valor seleccionado en el select, si es que lo hay. Sirve solo para las modificaciones.
  * @param todos Booleano para definir si incluir la opción de todos (...) en el Select
  */
-function cargarSelect(url,idEntidad,idSelect, valorSelected, todos){
+function cargarSelect(url,/*idEntidad,*/idSelect, valorSelected, todos){
     //alert( "cargarSelect " + idSelect);
     var html = '';
     jQuery.ajax({
@@ -198,7 +198,7 @@ function cargarSelect(url,idEntidad,idSelect, valorSelected, todos){
         url: url,
         type: 'GET',
         dataType: 'json',
-        data: { codigo: idEntidad },
+       /* data: { codigo: idEntidad },*/
         success: function(result) {
             if(todos){html = '<option value="-1">...</option>';}
             var len = result.length;

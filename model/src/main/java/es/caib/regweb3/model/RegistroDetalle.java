@@ -64,7 +64,7 @@ public class RegistroDetalle implements Serializable {
     private String reserva;
     @XmlElement( name="interesado" )
     @XmlElementWrapper( name="interesados" )
-    private List<Interesado> interesados;
+    private List<Interesado> interesados = new ArrayList<Interesado>();
     @XmlElementWrapper( name="anexos" )
     private List<Anexo> anexos = new ArrayList<Anexo>();
     @XmlTransient

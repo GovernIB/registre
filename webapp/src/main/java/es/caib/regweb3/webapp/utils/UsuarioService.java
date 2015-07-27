@@ -192,7 +192,10 @@ public class UsuarioService {
         eliminarVariablesSesionOficina(session);
 
         log.info("Entidades asociadas: " + entidades.size());
-        log.info("Entidades activa: " + entidad.getNombre());
+        if(entidades.size() > 0){
+            log.info("Entidades activa: " + entidad.getNombre());
+        }
+
     }
 
     /**

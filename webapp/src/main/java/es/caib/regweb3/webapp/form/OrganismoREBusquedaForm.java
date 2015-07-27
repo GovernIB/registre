@@ -13,6 +13,7 @@ public class OrganismoREBusquedaForm {
   private String denominacion;
   private Long codComunidadAutonoma;
   private Long codNivelAdministracion;
+  private Boolean unidadRaiz;
 
   public String getCodigoOrganismo() {
     return codigoOrganismo;
@@ -44,5 +45,13 @@ public class OrganismoREBusquedaForm {
 
   public void setCodNivelAdministracion(Long codNivelAdministracion) {
     this.codNivelAdministracion = codNivelAdministracion;
+  }
+
+  public boolean isUnidadRaiz() {
+    return unidadRaiz;
+  }
+
+  public void setUnidadRaiz(boolean unidadRaiz) {
+    this.unidadRaiz = unidadRaiz;
   }
 }

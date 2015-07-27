@@ -379,14 +379,14 @@ public class BaseController {
     }
 
     /**
-     * Eliminamos los posibles interesados de la Sesion
+     * Eliminamos la variable especificada de la Sesion
      * @param request
      * @throws Exception
      */
-    public void eliminarInteresadosSesion(HttpServletRequest request) throws Exception{
+    public void eliminarVariableSesion(HttpServletRequest request, String variable) throws Exception{
         HttpSession session = request.getSession();
 
-        session.setAttribute("interesados", null);
+        session.setAttribute(variable, null);
     }
     
     

@@ -2,13 +2,13 @@
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 
 <%--CONFIGURACIONES SEGÚN EL TIPO DE REGISTRO--%>
-<c:if test="${param.registro == 'entrada'}">
+<c:if test="${param.tipoRegistro == 'entrada'}">
     <c:set var="color" value="info"/>
 </c:if>
-<c:if test="${param.registro == 'salida'}">
+<c:if test="${param.tipoRegistro == 'salida'}">
     <c:set var="color" value="danger"/>
 </c:if>
-<c:if test="${param.registro == 'preRegistro'}">
+<c:if test="${param.tipoRegistro == 'preRegistro'}">
     <c:set var="color" value="warning"/>
 </c:if>
 
@@ -67,8 +67,8 @@
                                               ESTADO 6 -> Enviado
                                           -->
                                          <c:if test="${(registro.estado == 1 || registro.estado == 2 || registro.estado ==3) && registro.oficina.id == oficinaActiva.id}">
-                                             <a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#myModal"  onclick="editarAnexoFull('${anexo.id}','${registro.id}','${registro.registroDetalle.id}','${param.registro}')" title="Editar"><span class="fa fa-pencil"></span></a>
-                                             <a class="btn btn-danger btn-default btn-sm"  onclick="eliminarAnexo('${anexo.id}','${registro.id}','${registro.registroDetalle.id}','${param.registro}')" href="#" title="Eliminar"><span class="fa fa-eraser"></span></a>
+                                             <a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#myModal"  onclick="editarAnexoFull('${anexo.id}','${registro.id}','${registro.registroDetalle.id}','${param.tipoRegistro}')" title="Editar"><span class="fa fa-pencil"></span></a>
+                                             <a class="btn btn-danger btn-default btn-sm"  onclick="eliminarAnexo('${anexo.id}','${registro.id}','${registro.registroDetalle.id}','${param.tipoRegistro}')" href="#" title="Eliminar"><span class="fa fa-eraser"></span></a>
                                          </c:if>
                                          <c:if test="${(registro.estado != 1 && registro.estado != 2 && registro.estado != 3) || registro.oficina.id != oficinaActiva.id}">
                                              <a class="btn btn-warning disabled btn-sm" href="javascript:void(0);" title="Editar"><span class="fa fa-pencil"></span></a>
@@ -142,7 +142,7 @@
 
       $('#anexoTitulo').html('<spring:message code="anexo.nuevo"/>');
 
-      loadiframe("<c:url value="/anexo/nou/${registro.registroDetalle.id}/${param.registro}/${registro.id}" />");
+      loadiframe("<c:url value="/anexo/nou/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}" />");
     }
 
 

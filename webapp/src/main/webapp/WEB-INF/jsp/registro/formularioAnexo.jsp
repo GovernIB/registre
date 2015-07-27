@@ -68,7 +68,7 @@
                             </div>
                             <div class="col-xs-8">
                                 <form:select path="anexo.validezDocumento" class="chosen-select" onchange="bloquearFirma('${registro.id}','${registro.registroDetalle.id}','${param.registro}')">
-                                    <form:option value="-1">...</form:option>
+                                    <%--<form:option value="-1">...</form:option>--%>
                                     <c:forEach items="${tiposValidezDocumento}" var="validezDocumento">
                                         <form:option value="${validezDocumento}"><spring:message code="tipoValidezDocumento.${validezDocumento}"/></form:option>
                                     </c:forEach>
