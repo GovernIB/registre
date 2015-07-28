@@ -22,7 +22,8 @@
 					 * Arxiu: trobareu un arxiu d'exemple dins regweb-3.0\scripts\modelos\ModelOficiRemissio.rtf
 					 * Pitjar Desar
 	(3.5) Tipus Documental: AdEn -> CAIB -> cataleg de dades -> Gestio Tipus Documental:
-	           * Introduir Tipus Documental (Tipus de Document definit en les NTI)
+	           * Mitjançant script sql [regweb-3.0]\scripts\bbdd\3.0\alta_tipus_documentals.sql
+	           * Introduir Tipus Documental a mà (Tipus de Document definit en les NTI)
 					  /*Documentos de decisi�n*/ - TD01 - Resoluci�n. - TD02 - Acuerdo. - TD03 - Contrato. - TD04 - Convenio. - TD05 - Declaraci�n. 
 					  /*Documentos de transmisi�n*/ - TD06 - Comunicaci�n. - TD07 - Notificaci�n. - TD08 - Publicaci�n. - TD09 - Acuse de recibo. 
 					  /*Documentos de constancia*/ - TD10 - Acta. - TD11 - Certificado. - TD12 - Diligencia. 
@@ -33,7 +34,7 @@
 				* Desar
 	(3.5) Tipus Assumpte: AdEn -> CAIB -> cataleg de dades -> Gestio Tipus Assumpte:
 	           * Introduir codi tipus assumpte:  AJSU
-			   * Afegir traduccions: Ajudes i Subvencions
+			   * Afegir traduccions: Ajudes i Subvencions / Ayudas y Subvenciones
 			   * Desar
     (3.6) Codi d'Assumpte:  AdEn -> CAIB -> cataleg de dades -> Gestio Tipus Assumpte -> Seleccionar AJSU
 	          * Pitjar boto "Nou codi Assumpte"
@@ -50,9 +51,9 @@
 			        - Nom: Llibre de proves
 		    		- Codi: LLPR
 		    * Pitjar Desar
-	(4.2) Donar permisos d'acc�s a un llibre a un usuari:
+	(4.2) Donar permisos d'accés a un llibre a un usuari:
 	       * AdEn -> CAIB -> gestio usuaris: 
-		   * Cercar l'usuari en q�esti�
+		   * Cercar l'usuari en qüestió
 		   * Pitjar el boto de "permisos" de la fila de l'usuari
 		   * De la fila del llibre nou, marcar totes les caselles
 		   * Pitjar boto "desar".
