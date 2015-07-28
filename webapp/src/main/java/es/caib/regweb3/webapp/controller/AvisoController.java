@@ -3,16 +3,18 @@ package es.caib.regweb3.webapp.controller;
 import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.persistence.ejb.OficioRemisionLocal;
 import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
+import es.caib.regweb3.persistence.ejb.RegistroSalidaLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,6 +34,9 @@ public class AvisoController extends BaseController {
     @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
     public RegistroEntradaLocal registroEntradaEjb;
 
+    @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
+    public RegistroSalidaLocal registroSalidaEjb;
+
 
     /**
      * Controller para gestionar los diferentes avisos de registros pendientes para el usuario
@@ -50,15 +55,18 @@ public class AvisoController extends BaseController {
             List<Libro> librosAdministrados = getLibrosAdministrados(request);
             List<Libro> librosRegistro = getLibrosRegistroEntrada(request);
 
-            Long pendientesVisar = (long) 0;
+            Long pendientesVisarEntrada = (long) 0;
+            Long pendientesVisarSalida = (long) 0;
             Long oficiosRemisionInterna = (long) 0;
             Long oficiosRemisionExterna = (long) 0;
 
             /*Registros Pendientes de Visar*/
             if(librosAdministrados!= null && librosAdministrados.size() > 0){
-                pendientesVisar = registroEntradaEjb.getByLibrosEstadoCount(librosAdministrados, RegwebConstantes.ESTADO_PENDIENTE_VISAR);
+                pendientesVisarEntrada = registroEntradaEjb.getByLibrosEstadoCount(librosAdministrados, RegwebConstantes.ESTADO_PENDIENTE_VISAR);
+                pendientesVisarSalida = registroSalidaEjb.getByLibrosEstadoCount(librosAdministrados, RegwebConstantes.ESTADO_PENDIENTE_VISAR);
             }
-            mav.addObject("pendientesVisar", pendientesVisar);
+            mav.addObject("pendientesVisarEntrada", pendientesVisarEntrada);
+            mav.addObject("pendientesVisarSalida", pendientesVisarSalida);
 
             /*Rserva de número*/
             Long pendientes = registroEntradaEjb.getByOficinaEstadoCount(oficinaActiva.getId(), RegwebConstantes.ESTADO_PENDIENTE);
@@ -81,25 +89,33 @@ public class AvisoController extends BaseController {
         return mav;
     }
 
-    @RequestMapping(value = "/pendientesVisar")
-    public ModelAndView pendientesVisar(HttpServletRequest request) throws Exception{
+    @RequestMapping(value = "/pendientesVisar/{tipoRegistro}")
+    public ModelAndView pendientesVisar(@PathVariable String tipoRegistro, HttpServletRequest request) throws Exception{
 
         ModelAndView mav = new ModelAndView("avisos/avisosList");
-        mav.addObject("titulo",getMessage("registroEntrada.pendientesVisar"));
 
         Oficina oficinaActiva = getOficinaActiva(request);
+        List<Libro> librosAdministrados = getLibrosAdministrados(request);
 
-        if(isOperador(request) && oficinaActiva != null) {
+        if(isOperador(request) && oficinaActiva != null && (librosAdministrados!= null && librosAdministrados.size() > 0)) {
 
-            List<Libro> librosAdministrados = getLibrosAdministrados(request);
-            List<Libro> librosRegistro = getLibrosRegistroEntrada(request);
+            if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO)){
 
-            List<RegistroEntrada> registros = new ArrayList<RegistroEntrada>();
+                mav.addObject("titulo",getMessage("registroEntrada.pendientesVisar"));
+                List<RegistroEntrada> registrosEntrada = registroEntradaEjb.getByLibrosEstado(librosAdministrados, RegwebConstantes.ESTADO_PENDIENTE_VISAR);
+                mav.addObject("registros", registrosEntrada);
+                mav.addObject("tipoRegistro", RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO);
 
-            if(librosAdministrados!= null && librosAdministrados.size() > 0){
-                registros = registroEntradaEjb.getByLibrosEstado(librosAdministrados, RegwebConstantes.ESTADO_PENDIENTE_VISAR);
+            }else if(tipoRegistro.equals(RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO)){
+
+                mav.addObject("titulo", getMessage("registroSalida.pendientesVisar"));
+                List<RegistroSalida> registrosSalida = registroSalidaEjb.getByLibrosEstado(librosAdministrados, RegwebConstantes.ESTADO_PENDIENTE_VISAR);
+                mav.addObject("registros", registrosSalida);
+                mav.addObject("tipoRegistro", RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO);
+
+            }else{
+                mav.addObject("registros", null);
             }
-            mav.addObject("registros", registros);
 
         }
 

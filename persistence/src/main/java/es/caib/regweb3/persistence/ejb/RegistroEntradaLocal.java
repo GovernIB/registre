@@ -346,6 +346,22 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
     public void anularRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad) throws Exception;
 
     /**
+     * Activa un RegistroEntrada, cambiandole el estado a anulado.
+     * @param registroEntrada
+     * @param usuarioEntidad
+     * @throws Exception
+     */
+    public void activarRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad) throws Exception;
+
+    /**
+     * Visa un RegistroEntrada, cambiandole el estado a anulado.
+     * @param registroEntrada
+     * @param usuarioEntidad
+     * @throws Exception
+     */
+    public void visarRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad) throws Exception;
+
+    /**
      * Tramita un RegistroEntrada, cambiandole el estado a tramitado.
      * @param registroEntrada
      * @param usuarioEntidad

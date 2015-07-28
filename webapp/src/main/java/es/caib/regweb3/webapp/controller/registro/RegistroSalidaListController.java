@@ -7,6 +7,7 @@ import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.form.RegistroSalidaBusqueda;
+import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.RegistroSalidaBusquedaValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -19,7 +20,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -115,7 +115,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByUsuarioEntidad(getUsuarioAutenticado(request).getId(), getEntidadActiva(request).getId());
         List<Libro> librosConsulta = permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_SALIDA);
 
-        registroSalidaBusquedaValidator.validate(busqueda,result);
+        registroSalidaBusquedaValidator.validate(busqueda, result);
 
         Oficina oficina = getOficinaActiva(request);
         mav.addObject(oficina);
@@ -129,7 +129,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 		    todosOrganismos.add(org);
         }
 	    
-        mav.addObject("organosOrigen",  todosOrganismos);        
+        mav.addObject("organosOrigen", todosOrganismos);
         
         if (result.hasErrors()) { // Si hay errores volvemos a la vista del formulario
             mav.addObject("errors", result.getAllErrors());
@@ -207,6 +207,121 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         lopdEjb.insertarRegistroSalida(idRegistro, usuarioEntidad.getId());
        
         return "registroSalida/registroSalidaDetalle";
+    }
+
+    /**
+     * Anular un {@link es.caib.regweb3.model.RegistroSalida}
+     */
+    @RequestMapping(value = "/{idRegistro}/anular")
+    public String anularRegistroSalida(@PathVariable Long idRegistro, HttpServletRequest request) {
+
+        try {
+
+            RegistroSalida registroSalida = registroSalidaEjb.findById(idRegistro);
+            UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+
+            // Comprobamos si el RegistroSalida se puede anular según su estado.
+            if(!registroSalida.getEstado().equals(RegwebConstantes.ESTADO_VALIDO)){
+                Mensaje.saveMessageError(request, getMessage("registroSalida.anulado"));
+                return "redirect:/registroSalida/list";
+            }
+
+            // Comprobamos que el usuario dispone del permiso para Modificar el Registro
+            if(!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),registroSalida.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA)){
+                log.info("Aviso: No dispone de los permisos necesarios para editar el registro");
+                Mensaje.saveMessageAviso(request, getMessage("aviso.registro.editar"));
+
+                return "redirect:/registroSalida/list";
+            }
+
+            // Anulamos el RegistroSalida
+            registroSalidaEjb.anularRegistroSalida(registroSalida,usuarioEntidad);
+
+            Mensaje.saveMessageInfo(request, getMessage("registroSalida.anular"));
+
+        } catch (Exception e) {
+            Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
+            e.printStackTrace();
+        }
+
+        return "redirect:/registroSalida/list";
+    }
+
+    /**
+     * Activar un {@link es.caib.regweb3.model.RegistroEntrada}
+     */
+    @RequestMapping(value = "/{idRegistro}/activar")
+    public String activarRegistroSalida(@PathVariable Long idRegistro, HttpServletRequest request) {
+
+        try {
+
+            RegistroSalida registroSalida = registroSalidaEjb.findById(idRegistro);
+            UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+
+            // Comprobamos si el RegistroEntrada tiene el estado anulado
+            if(!registroSalida.getEstado().equals(RegwebConstantes.ESTADO_ANULADO)){
+
+                Mensaje.saveMessageError(request, getMessage("registro.activar.error"));
+                return "redirect:/registroEntrada/list";
+            }
+
+            // Comprobamos que el usuario dispone del permiso para Modificar el Registro
+            if(!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroSalida.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA)){
+                log.info("Aviso: No dispone de los permisos necesarios para editar el registro");
+                Mensaje.saveMessageAviso(request, getMessage("aviso.registro.editar"));
+
+                return "redirect:/registroEntrada/list";
+            }
+
+            // Activamos el RegistroSalida
+            registroSalidaEjb.activarRegistroSalida(registroSalida, usuarioEntidad);
+
+            Mensaje.saveMessageInfo(request, getMessage("registroSalida.activar"));
+
+        } catch (Exception e) {
+            Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
+            e.printStackTrace();
+        }
+
+        return "redirect:/registroSalida/list";
+    }
+
+    /**
+     * Visar un {@link es.caib.regweb3.model.RegistroSalida}
+     */
+    @RequestMapping(value = "/{idRegistro}/visar")
+    public String visarRegistroSalida(@PathVariable Long idRegistro, HttpServletRequest request) {
+
+        try {
+
+            RegistroSalida registroSalida = registroSalidaEjb.findById(idRegistro);
+            UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+
+            // Comprobamos si el RegistroEntrada tiene el estado Pendiente de Visar
+            if(!registroSalida.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE_VISAR)){
+
+                Mensaje.saveMessageError(request, getMessage("registro.visar.error"));
+                return "redirect:/registroEntrada/list";
+            }
+
+            // Comprobamos si el UsuarioEntidad tiene permisos para visar el RegistroSalida
+            if(!permisoLibroUsuarioEjb.isAdministradorLibro(usuarioEntidad.getId(), registroSalida.getLibro().getId())){
+
+                Mensaje.saveMessageError(request, getMessage("aviso.usuario.visar"));
+                return "redirect:/registroEntrada/list";
+            }
+
+            // Visamos el RegistroSalida
+            registroSalidaEjb.visarRegistroSalida(registroSalida,usuarioEntidad);
+
+            Mensaje.saveMessageInfo(request, getMessage("registroSalida.visar.ok"));
+
+        } catch (Exception e) {
+            Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
+            e.printStackTrace();
+        }
+
+        return "redirect:/avisos/pendientesVisar/Salida";
     }
 
     /**

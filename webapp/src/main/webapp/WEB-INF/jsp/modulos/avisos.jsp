@@ -3,7 +3,7 @@
 
 <c:if test="${rolAutenticado.nombre == 'RWE_USUARI' && oficinaActiva != null}">
 
-    <c:set var="total" value="${pendientesVisar + pendientes + oficiosRemisionInterna + oficiosRemisionExterna + oficiosPendientesLlegada}"/>
+    <c:set var="total" value="${pendientesVisarEntrada + pendientesVisarSalida + pendientes + oficiosRemisionInterna + oficiosRemisionExterna + oficiosPendientesLlegada}"/>
 
     <c:if test="${total > 0}">
 
@@ -14,12 +14,24 @@
                 </a>
 
                 <ul class="dropdown-menu pull-right">
-                    <c:if test="${pendientesVisar > 0}">
+                    <c:if test="${pendientesVisarEntrada > 0}">
                         <li>
-                            <a href="<c:url value="/avisos/pendientesVisar"/>">
+                            <a href="<c:url value="/avisos/pendientesVisar/Entrada"/>">
                                 <div>
-                                    <i class="fa fa-comment fa-fw"></i> <spring:message code="registroEntrada.pendientesVisar"/> (${pendientesVisar})
+                                    <i class="fa fa-comment fa-fw"></i> <spring:message code="registroEntrada.pendientesVisar"/> (${pendientesVisarEntrada})
                                     <%--<span class="pull-right text-muted small"><fmt:formatDate type="time" value="${ahora}" /></span>--%>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                    </c:if>
+
+                    <c:if test="${pendientesVisarSalida > 0}">
+                        <li>
+                            <a href="<c:url value="/avisos/pendientesVisar/Salida"/>">
+                                <div>
+                                    <i class="fa fa-comment fa-fw"></i> <spring:message code="registroSalida.pendientesVisar"/> (${pendientesVisarSalida})
+                                        <%--<span class="pull-right text-muted small"><fmt:formatDate type="time" value="${ahora}" /></span>--%>
                                 </div>
                             </a>
                         </li>

@@ -67,7 +67,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     @Override
     public RegistroSalida registrarSalida(RegistroSalida registroSalida) 
         throws Exception, I18NException, I18NValidationException{
-      return registrarSalida(registroSalida, null,null);
+      return registrarSalida(registroSalida, null, null);
     }
       
       
@@ -547,8 +547,41 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         // Creamos el HistoricoRegistroSalida para la modificación d estado
         historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(old,usuarioEntidad,RegwebConstantes.TIPO_MODIF_ESTADO,false);
 
+    }
+
+    @Override
+    public void activarRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception{
+
+        RegistroSalida old = registroSalida;
+
+        // Estado anulado
+        registroSalida.setEstado(RegwebConstantes.ESTADO_PENDIENTE_VISAR);
+
+        // Actualizamos el RegistroSalida
+        merge(registroSalida);
+
+        // Creamos el HistoricoRegistroSalida para la modificación d estado
+        historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(old, usuarioEntidad, RegwebConstantes.TIPO_MODIF_ESTADO, false);
 
     }
+
+
+    @Override
+    public void visarRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception{
+
+        RegistroSalida old = registroSalida;
+
+        // Estado anulado
+        registroSalida.setEstado(RegwebConstantes.ESTADO_VALIDO);
+
+        // Actualizamos el RegistroSalida
+        merge(registroSalida);
+
+        // Creamos el HistoricoRegistroSalida para la modificación d estado
+        historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(old, usuarioEntidad, RegwebConstantes.TIPO_MODIF_ESTADO, false);
+
+    }
+
 
     /**
      * Convierte los resultados de una query en una lista de {@link es.caib.regweb3.model.utils.RegistroBasico}
@@ -598,6 +631,35 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         }else{
             return null;
         }
+    }
+
+    @Override
+    public Long getByLibrosEstadoCount(List<Libro> libros, Long idEstado) throws Exception {
+
+        Query q;
+
+        q = em.createQuery("Select count(re.id) from RegistroSalida as re where re.libro in (:libros) " +
+                "and re.estado = :idEstado");
+
+        q.setParameter("libros", libros);
+        q.setParameter("idEstado", idEstado);
+
+        return (Long) q.getSingleResult();
+    }
+
+    @Override
+    public List<RegistroSalida> getByLibrosEstado(List<Libro> libros, Long idEstado) throws Exception {
+
+        Query q;
+
+        q = em.createQuery("Select re from RegistroSalida as re where re.libro in (:libros) " +
+                "and re.estado = :idEstado order by re.fecha desc");
+
+        q.setParameter("libros", libros);
+        q.setParameter("idEstado", idEstado);
+
+        return q.getResultList();
+
     }
 
 }

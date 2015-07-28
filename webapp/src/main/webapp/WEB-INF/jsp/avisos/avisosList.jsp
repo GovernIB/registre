@@ -28,6 +28,7 @@
             </div>
         </div><!-- /.row -->
 
+        <c:import url="../modulos/mensajes.jsp"/>
 
         <div class="row">
             <div class="col-xs-12">
@@ -81,7 +82,12 @@
                                             <th><spring:message code="registroEntrada.libro.corto"/></th>
                                             <th><spring:message code="registroEntrada.usuario"/></th>
                                             <th><spring:message code="registroEntrada.oficina"/></th>
-                                            <th><spring:message code="registroEntrada.organismoDestino"/></th>
+                                            <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO}">
+                                                <th><spring:message code="registroEntrada.organismoDestino"/></th>
+                                            </c:if>
+                                            <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO}">
+                                                <th><spring:message code="registroSalida.organismoOrigen"/></th>
+                                            </c:if>
                                             <c:if test="${registroEntrada.estado == RegwebConstantes.ESTADO_PENDIENTE}">
                                                 <th><spring:message code="registroEntrada.reserva"/></th>
                                             </c:if>
@@ -95,30 +101,43 @@
                                     </thead>
 
                                     <tbody>
-                                        <c:forEach var="registroEntrada" items="${registros}" varStatus="status">
+                                        <c:forEach var="registro" items="${registros}" varStatus="status">
                                             <tr>
-                                                <td>${registroEntrada.numeroRegistroFormateado}</td>
-                                                <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy"/></td>
-                                                <td><label class="no-bold" rel="ayuda" data-content="${registroEntrada.libro.nombre}" data-toggle="popover">${registroEntrada.libro.codigo}</label></td>
-                                                <td>${registroEntrada.usuario.usuario.identificador}</td>
-                                                <td><label class="no-bold" rel="ayuda" data-content="${registroEntrada.oficina.denominacion}" data-toggle="popover">${registroEntrada.oficina.codigo}</label></td>
-                                                <td>${(empty registroEntrada.destino)? registroEntrada.destinoExternoDenominacion : registroEntrada.destino.denominacion}</td>
+                                                <td>${registro.numeroRegistroFormateado}</td>
+                                                <td><fmt:formatDate value="${registro.fecha}" pattern="dd/MM/yyyy"/></td>
+                                                <td><label class="no-bold" rel="ayuda" data-content="${registro.libro.nombre}" data-toggle="popover">${registro.libro.codigo}</label></td>
+                                                <td>${registro.usuario.usuario.identificador}</td>
+                                                <td><label class="no-bold" rel="ayuda" data-content="${registro.oficina.denominacion}" data-toggle="popover">${registro.oficina.codigo}</label></td>
 
-                                                <c:if test="${registroEntrada.estado == RegwebConstantes.ESTADO_PENDIENTE}">
-                                                    <td>${registroEntrada.registroDetalle.reserva}</td>
+                                                <c:if test="${registro.class.simpleName == 'RegistroEntrada'}">
+                                                    <td>${(empty registro.destino)? registro.destinoExternoDenominacion : registro.destino.denominacion}</td>
                                                 </c:if>
-                                                <c:if test="${registroEntrada.estado != RegwebConstantes.ESTADO_PENDIENTE}">
-                                                    <td>${registroEntrada.registroDetalle.extracto}</td>
+
+                                                <c:if test="${registro.class.simpleName == 'RegistroSalida'}">
+                                                    <td>${(empty registro.origen)? registro.origenExternoDenominacion : registro.origen.denominacion}</td>
                                                 </c:if>
-                                                <c:if test="${registroEntrada.registroDetalle.anexos != null}">
-                                                    <td class="center">${fn:length(registroEntrada.registroDetalle.anexos)}</td>
+
+                                                <c:if test="${registro.estado == RegwebConstantes.ESTADO_PENDIENTE}">
+                                                    <td>${registro.registroDetalle.reserva}</td>
                                                 </c:if>
-                                                <c:if test="${registroEntrada.registroDetalle.anexos == null}">
+                                                <c:if test="${registro.estado != RegwebConstantes.ESTADO_PENDIENTE}">
+                                                    <td>${registro.registroDetalle.extracto}</td>
+                                                </c:if>
+                                                <c:if test="${registro.registroDetalle.anexos != null}">
+                                                    <td class="center">${fn:length(registro.registroDetalle.anexos)}</td>
+                                                </c:if>
+                                                <c:if test="${registro.registroDetalle.anexos == null}">
                                                     <td class="center">0</td>
                                                 </c:if>
 
                                                 <td class="center">
-                                                    <a class="btn btn-info btn-sm" href="<c:url value="/registroEntrada/${registroEntrada.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
+                                                    <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO}">
+                                                        <a class="btn btn-info btn-sm" href="<c:url value="/registroEntrada/${registro.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
+                                                    </c:if>
+                                                    <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO}">
+                                                        <a class="btn btn-info btn-sm" href="<c:url value="/registroSalida/${registro.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
+                                                    </c:if>
+
                                                 </td>
                                             </tr>
                                         </c:forEach>

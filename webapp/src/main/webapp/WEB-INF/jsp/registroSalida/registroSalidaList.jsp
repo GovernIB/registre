@@ -287,7 +287,7 @@
                                                         <%--Si no nos encontramos en la misma Oficia en la que se creó el Registro, no podemos hacer nada con el--%>
                                                     <c:if test="${registroSalida.oficina.id == oficinaActiva.id}">
                                                         <c:choose>
-                                                            <c:when test="${(registroSalida.estado == RegwebConstantes.ESTADO_VALIDO || registroSalida.estado == RegwebConstantes.ESTADO_PENDIENTE) && puedeEditar}">  <%--Válido--%>
+                                                            <c:when test="${registroSalida.estado == RegwebConstantes.ESTADO_VALIDO && puedeEditar}">  <%--Válido--%>
                                                                 <a class="btn btn-warning btn-sm" href="<c:url value="/registroSalida/${registroSalida.id}/edit"/>" title="<spring:message code="regweb.editar"/>"><span class="fa fa-pencil"></span></a>
                                                                 <a class="btn btn-danger btn-sm" href="javascript:void(0);" onclick='javascript:confirm("<c:url value="/registroSalida/${registroSalida.id}/anular"/>","<spring:message code="regweb.confirmar.anular" htmlEscape="true"/>")' title="<spring:message code="regweb.anular"/>"><span class="fa fa-thumbs-o-down"></span></a>
                                                             </c:when>

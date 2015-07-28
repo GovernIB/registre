@@ -277,7 +277,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             // Comprobamos si el RegistroEntrada tiene el estado anulado
             if(!registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_ANULADO)){
 
-                Mensaje.saveMessageError(request, getMessage("registroEntrada.activar.error"));
+                Mensaje.saveMessageError(request, getMessage("registro.activar.error"));
                 return "redirect:/registroEntrada/list";
             }
 
@@ -289,13 +289,8 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
                 return "redirect:/registroEntrada/list";
             }
 
-            // CREAMOS EL HISTORICO REGISTRO ENTRADA
-            historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada,usuarioEntidad,RegwebConstantes.TIPO_MODIF_ESTADO,false);
-
-            // Estado pendiente visar
-            registroEntrada.setEstado(RegwebConstantes.ESTADO_PENDIENTE_VISAR);
-
-            registroEntradaEjb.merge(registroEntrada);
+            // Activamos el RegistroEntrada
+            registroEntradaEjb.activarRegistroEntrada(registroEntrada, usuarioEntidad);
 
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.activar"));
 
@@ -321,7 +316,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             // Comprobamos si el RegistroEntrada tiene el estado Pendiente de Visar
             if(!registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE_VISAR)){
 
-                Mensaje.saveMessageError(request, getMessage("registroEntrada.visar.error"));
+                Mensaje.saveMessageError(request, getMessage("registro.visar.error"));
                 return "redirect:/registroEntrada/list";
             }
 
@@ -332,14 +327,8 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
                 return "redirect:/registroEntrada/list";
             }
 
-
-            // CREAMOS EL HISTORICO REGISTRO ENTRADA
-            historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada, usuarioEntidad, RegwebConstantes.TIPO_MODIF_ESTADO,false);
-
-            // Modificamos el estado del Registro de Entrada a Estado Válido
-            registroEntrada.setEstado(RegwebConstantes.ESTADO_VALIDO);
-
-            registroEntradaEjb.merge(registroEntrada);
+            // Visar el RegistroEntrada
+            registroEntradaEjb.visarRegistroEntrada(registroEntrada,usuarioEntidad);
 
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.visar.ok"));
 
@@ -348,7 +337,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             e.printStackTrace();
         }
 
-        return "redirect:/registroEntrada/list";
+        return "redirect:/avisos/pendientesVisar/Entrada";
     }
 
     /**

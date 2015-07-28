@@ -205,6 +205,22 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
     public void anularRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception;
 
     /**
+     * Activa un RegistroSalida, cambiandole el estado a anulado.
+     * @param registroSalida
+     * @param usuarioEntidad
+     * @throws Exception
+     */
+    public void activarRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception;
+
+    /**
+     * Visa un RegistroSalida, cambiandole el estado a anulado.
+     * @param registroSalida
+     * @param usuarioEntidad
+     * @throws Exception
+     */
+    public void visarRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception;
+
+    /**
      * Elimina los RegistroSalida de una Entidad
      * @param idEntidad
      * @return
@@ -219,5 +235,23 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @throws Exception
      */
     public Long getLibro(Long idRegistroSalida) throws Exception;
+
+    /**
+     * Busca los Registros de Salida de un listado de Libros en función de su estado.
+     * @param libros
+     * @param idEstado
+     * @return
+     * @throws Exception
+     */
+    public Long getByLibrosEstadoCount(List<Libro> libros, Long idEstado) throws Exception;
+
+    /**
+     * Busca los Registros de Salida de un listado de Libros en función de su estado.
+     * @param libros
+     * @param idEstado
+     * @return
+     * @throws Exception
+     */
+    public List<RegistroSalida> getByLibrosEstado(List<Libro> libros, Long idEstado) throws Exception;
 
 }

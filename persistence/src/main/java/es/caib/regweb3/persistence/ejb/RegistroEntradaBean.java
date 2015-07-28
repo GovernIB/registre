@@ -900,12 +900,48 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         registroEntrada.setEstado(RegwebConstantes.ESTADO_ANULADO);
 
         // Actualizamos el RegistroEntrada
-        registroEntrada = merge(registroEntrada);
+        merge(registroEntrada);
 
         // Creamos el HistoricoRegistroEntrada para la modificación d estado
         historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(old,
             usuarioEntidad,RegwebConstantes.TIPO_MODIF_ESTADO,false);
 
+
+    }
+
+    @Override
+    public void activarRegistroEntrada(RegistroEntrada registroEntrada,
+                                      UsuarioEntidad usuarioEntidad) throws Exception{
+
+        RegistroEntrada old = registroEntrada;
+
+        // Estado anulado
+        registroEntrada.setEstado(RegwebConstantes.ESTADO_PENDIENTE_VISAR);
+
+        // Actualizamos el RegistroEntrada
+        merge(registroEntrada);
+
+        // Creamos el HistoricoRegistroEntrada para la modificación d estado
+        historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(old,
+                usuarioEntidad,RegwebConstantes.TIPO_MODIF_ESTADO,false);
+
+    }
+
+    @Override
+    public void visarRegistroEntrada(RegistroEntrada registroEntrada,
+                                       UsuarioEntidad usuarioEntidad) throws Exception{
+
+        RegistroEntrada old = registroEntrada;
+
+        // Estado anulado
+        registroEntrada.setEstado(RegwebConstantes.ESTADO_VALIDO);
+
+        // Actualizamos el RegistroEntrada
+        merge(registroEntrada);
+
+        // Creamos el HistoricoRegistroEntrada para la modificación d estado
+        historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(old,
+                usuarioEntidad,RegwebConstantes.TIPO_MODIF_ESTADO,false);
 
     }
 
