@@ -8,6 +8,8 @@
 		    es.caib.regweb3.iscaib=false
 			es.caib.regweb3.showtimestamp=false
 			es.caib.regweb3.preregistre=http://www.caib.es
+			<!-- Tamany màxim de pujada de fitxer. Si no es defineix no hi ha límit. -->
+            #es.caib.regweb3.maxuploadsizeinbytes=10485760
 
 			<!-- Dialecte de la BBDD -->
 		    # es.caib.regweb3.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
