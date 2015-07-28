@@ -9,6 +9,7 @@ import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.scan.ScannerManager;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.AnexoWebValidator;
+
 import org.apache.axis.utils.StringUtils;
 import org.apache.commons.io.FileUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -29,12 +30,15 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.HandlerMapping;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -81,15 +85,49 @@ public class AnexoController extends BaseController {
     
     @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
     public TipoDocumentalLocal tipoDocumentalEjb;
+    
+    
+    /**
+     *  Si arriba aqui és que hi ha un error de  Tamany de Fitxer Superat   
+     */
+    @RequestMapping(value = "/nou", method = RequestMethod.GET)
+    public ModelAndView crearAnexoGet(HttpServletRequest request,
+        HttpServletResponse response,  Model model) throws I18NException, Exception {
+      
+      HttpSession session = request.getSession();
+      Long registroDetalleID = (Long)session.getAttribute("LAST_registroDetalleID");
+      String tipoRegistro = (String)session.getAttribute("LAST_tipoRegistro");
+      Long registroID = (Long)session.getAttribute("LAST_registroID");
+
+      Long anexoID = (Long)session.getAttribute("LAST_anexoID");
+      
+      
+      return new ModelAndView(new RedirectView("/anexo/" + (anexoID == null? "nou/" : "editar/") 
+          + registroDetalleID + "/" + tipoRegistro + "/" + registroID + (anexoID == null? "" : ("/" + anexoID)), true));
+    }
+    
+    /**
+     *  Si arriba aqui és que hi ha un error de  Tamany de Fitxer Superat   
+     */
+    @RequestMapping(value = "/editar", method = RequestMethod.GET)
+    public ModelAndView editarAnexoGet(HttpServletRequest request,
+        HttpServletResponse response,  Model model) throws I18NException, Exception {
+      return crearAnexoGet(request, response,   model);
+    }
+    
 
     @RequestMapping(value = "/nou/{registroDetalleID}/{tipoRegistro}/{registroID}", method = RequestMethod.GET)
     public String crearAnexoGet(HttpServletRequest request,
         HttpServletResponse response, @PathVariable Long registroDetalleID,
-        @PathVariable Long registroID, @PathVariable String tipoRegistro,
+        @PathVariable String tipoRegistro, @PathVariable Long registroID, 
         Model model) throws I18NException, Exception {
       
       log.info(" Passa per AnexoController::crearAnexoGet(" + registroDetalleID 
           + "," + tipoRegistro + ", " + registroID + ")");
+      
+      
+      saveLastAnnexoAction(request, registroDetalleID, registroID, tipoRegistro, null);
+     
 
       RegistroDetalle registroDetalle = registroDetalleEjb.findById(registroDetalleID);
      
@@ -103,6 +141,17 @@ public class AnexoController extends BaseController {
       loadCommonAttributes(request, model, registroID);
 
       return "registro/formularioAnexo";
+    }
+
+
+
+    protected void saveLastAnnexoAction(HttpServletRequest request, Long registroDetalleID,
+        Long registroID, String tipoRegistro, Long anexoID) {
+      HttpSession session = request.getSession();
+      session.setAttribute("LAST_registroDetalleID", registroDetalleID);
+      session.setAttribute("LAST_tipoRegistro", tipoRegistro);
+      session.setAttribute("LAST_registroID", registroID);
+      session.setAttribute("LAST_anexoID", anexoID); // nou = null o editar != null
     }
 
 
@@ -207,6 +256,8 @@ public class AnexoController extends BaseController {
 
       AnexoFull anexoFull2 = anexoEjb.getAnexoFull(anexoID);
       
+      
+      saveLastAnnexoAction(request, registroDetalleID, registroID, tipoRegistro, anexoID);
       
      
       AnexoForm anexoForm = new AnexoForm(anexoFull2);

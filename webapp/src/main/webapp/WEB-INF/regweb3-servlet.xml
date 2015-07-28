@@ -159,13 +159,6 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
       <property name="defaultLocale" value="ca"/>
     </bean>
 
-    <!-- Soporte para archivos en los formularios -->
-    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-        <property name="maxUploadSize" value="10000000"/>
-        <property name="defaultEncoding" value="UTF-8"/>
-    </bean>
-
-
     <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
         <property name="messageConverters">
             <util:list id="beanList">
@@ -205,5 +198,15 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
     <mvc:resources mapping="/img/**" location="/img/" />
     <mvc:resources mapping="/js/**" location="/js/" />
     <mvc:resources mapping="/doc/**" location="/doc/" />
+    
+        <!-- Suport per arxius en els formularis 
+     org.springframework.web.multipart.commons.CommonsMultipartResolver
+    -->
+    <bean id="multipartResolver" class="es.caib.regweb3.webapp.utils.CommonsMultipartResolver">
+      <!--    
+       <property name="maxUploadSize" value="10000000"/>   
+        <property name="defaultEncoding" value="UTF-8"/>
+      -->
+    </bean>
 
 </beans>

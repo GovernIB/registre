@@ -1,11 +1,19 @@
 package es.caib.regweb3.webapp.controller;
 
+import org.apache.commons.fileupload.FileUploadBase.SizeLimitExceededException;
 import org.apache.log4j.Logger;
+import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
+
+import es.caib.regweb3.webapp.utils.Mensaje;
+import es.caib.regweb3.webapp.utils.RegWebMaxUploadSizeExceededException;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 
@@ -13,6 +21,7 @@ import java.io.PrintWriter;
  * Created by Fundació BIT.
  *
  * @author earrivi
+ * @author anadal
  * Date: 16/01/14
  */
 @ControllerAdvice
@@ -79,4 +88,86 @@ public class ErrorController {
         return mav;
 
     }*/
+    
+    
+    // ERRORS DE PUJADA DE FITXERS
+    
+    
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ModelAndView handleRuntimeMaxUploadSizeExceededException(HttpServletRequest request,
+        Exception exception) {
+      return resolveFileSizeException(request, exception);
+    }
+
+    
+    @ExceptionHandler(RegWebMaxUploadSizeExceededException.class)
+    public ModelAndView handleRuntimeRegWebMaxUploadSizeExceededException(HttpServletRequest request,
+        Exception exception) {
+      return resolveFileSizeException(request, exception);
+    }
+    
+    
+    @ExceptionHandler(SizeLimitExceededException.class)
+    public ModelAndView handleRuntimeSizeLimitExceededException(HttpServletRequest request,
+        Exception exception) {
+      return resolveFileSizeException(request, exception);
+    }
+    
+    
+   
+    private ModelAndView resolveFileSizeException(HttpServletRequest request, Exception ex) {
+
+      
+      if (ex instanceof MaxUploadSizeExceededException
+          || ex instanceof RegWebMaxUploadSizeExceededException
+          || ex instanceof SizeLimitExceededException) {
+
+        /*
+          log.info(" ++++ Scheme: " + request.getScheme());
+         log.info(" ++++ PathInfo: " + request.getPathInfo());
+         log.info(" ++++ PathTrans: " + request.getPathTranslated());
+          log.info(" ++++ ContextPath: " + request.getContextPath());
+          log.info(" ++++ ServletPath: " + request.getServletPath());
+          log.info(" ++++ getRequestURI: " + request.getRequestURI());
+          log.info(" ++++ getRequestURL: " + request.getRequestURL().toString());
+          log.info(" ++++ getQueryString: " + request.getQueryString());
+          */
+         
+        String maxUploadSize = "???";
+        String currentSize = "???";
+        String msgCode;
+        if (ex instanceof MaxUploadSizeExceededException) {
+          MaxUploadSizeExceededException musee = (MaxUploadSizeExceededException) ex;
+          if (musee instanceof RegWebMaxUploadSizeExceededException) {
+            msgCode = ((RegWebMaxUploadSizeExceededException) musee).getMsgCode();
+          } else {
+            msgCode = "tamanyfitxerpujatsuperat";
+          }
+
+          // log.error(" YYYYYYYYYYYY  CAUSE: " + musee.getCause());
+          if (musee.getCause() instanceof SizeLimitExceededException) {
+            SizeLimitExceededException slee = (SizeLimitExceededException) musee.getCause();
+            maxUploadSize = String.valueOf(slee.getPermittedSize());
+            currentSize = String.valueOf(slee.getActualSize());
+          } else {
+            maxUploadSize = String.valueOf(musee.getMaxUploadSize());
+          }
+
+        } else {
+          SizeLimitExceededException slee = (SizeLimitExceededException) ex;
+          maxUploadSize = String.valueOf(slee.getPermittedSize());
+          currentSize = String.valueOf(slee.getActualSize());
+          msgCode = "tamanyfitxerpujatsuperat";
+        }
+
+        Mensaje.saveMessageError(request, I18NUtils.tradueix(msgCode, currentSize, maxUploadSize));
+
+        ModelAndView mav = new ModelAndView(new RedirectView(request.getServletPath(), true));
+        return mav;
+      }
+      return null;
+    }
+
+    
+    
 }
