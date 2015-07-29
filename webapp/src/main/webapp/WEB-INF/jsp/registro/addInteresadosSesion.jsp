@@ -16,17 +16,17 @@
   <c:forEach var="interesado" items="${interesados}">
     <c:if test="${!interesado.isRepresentante}">
 
-      <c:if test="${interesado.tipo == RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION}">  /*Organismo*/
+      <c:if test="${interesado.tipo == RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION}">
         var nombre = "${interesado.nombre}";
         nombre = nombre.replace(/\"/g,'&quot;');
         addOrganismoInteresadoHtml('${interesado.codigoDir3}',nombre,'<spring:message code="interesado.administracion"/>','${registro.registroDetalle.id}');
       </c:if>
-      <c:if test="${interesado.tipo == RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA}">  /*Fisica*/
-        addInteresadoRepresentanteHtml('${interesado.id}','${interesado.nombrePersonaFisica}','<spring:message code="persona.fisica.corto"/>','${interesado.representante.id}','${registro.registroDetalle.id}');
+      <c:if test="${interesado.tipo == RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA}">
+        addInteresadoRepresentanteHtml('${interesado.id}','${interesado.nombrePersonaFisica}','<spring:message code="persona.fisica.corto"/>','${interesado.representante.id}','${interesado.representante.nombreCompleto}','${registro.registroDetalle.id}');
       </c:if>
 
-      <c:if test="${interesado.tipo == RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA}">  /*Juridica*/
-        addInteresadoRepresentanteHtml('${interesado.id}','${interesado.nombrePersonaJuridica}','<spring:message code="persona.juridica.corto"/>','${interesado.representante.id}','${registro.registroDetalle.id}');
+      <c:if test="${interesado.tipo == RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA}">
+        addInteresadoRepresentanteHtml('${interesado.id}','${interesado.nombrePersonaJuridica}','<spring:message code="persona.juridica.corto"/>','${interesado.representante.id}','${interesado.representante.nombreCompleto}','${registro.registroDetalle.id}');
       </c:if>
     </c:if>
   </c:forEach>

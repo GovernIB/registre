@@ -432,7 +432,17 @@ public class Interesado implements Serializable {
 
     @Transient
     public String getNombreCompleto(){
-        return getNombre() + " " + getApellido1() + " " + getApellido2();
+
+        if(tipo.equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
+            return getNombreOrganismo();
+        }else if(tipo.equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)){
+            return getNombrePersonaFisicaCorto();
+        }else if(tipo.equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)){
+            return getNombrePersonaJuridica();
+        }
+
+        return "";
+
     }
 
     @Transient
@@ -451,6 +461,24 @@ public class Interesado implements Serializable {
             if(getDocumento() != null && getDocumento().length() > 0){
                 personaFisica = personaFisica.concat(" - " + getDocumento());
             }
+        }
+
+        return personaFisica;
+    }
+
+    @Transient
+    public String getNombrePersonaFisicaCorto(){
+
+        String personaFisica = "" ;
+
+        if(!StringUtils.isEmpty(getNombre())){
+
+            personaFisica = getNombre()+ " " + getApellido1();
+
+            if(getApellido2() != null && getApellido2().length() > 0){
+                personaFisica = personaFisica.concat(" " + getApellido2());
+            }
+
         }
 
         return personaFisica;

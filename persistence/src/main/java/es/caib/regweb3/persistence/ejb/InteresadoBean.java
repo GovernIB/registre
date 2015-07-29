@@ -88,7 +88,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
         RegistroDetalle registroDetalle = registroDetalleEjb.findById(idRegistroDetalle);
 
         if(interesado != null && registroDetalle != null){
-            log.info("Eliminar interesado: " + registroDetalle.getInteresados().remove(interesado));
+            registroDetalle.getInteresados().remove(interesado);
             registroDetalleEjb.merge(registroDetalle);
             remove(interesado);
         }

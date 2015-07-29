@@ -101,18 +101,18 @@ function gestionarRepresentante(idRepresentante,idRepresentado,urlEditar){
  * Vincula un Representante con un Interesado
  * @param idRepresentante
  * @param idRepresentado
+ * @param nombreRepresentante
  * @param idRegistroDetalle
  */
-function addRepresentanteHtml(idRepresentante, idRepresentado,idRegistroDetalle){
+function addRepresentanteHtml(idRepresentante, idRepresentado,nombreRepresentante,idRegistroDetalle){
     var elemento = "#persona"+idRepresentado;
 
     // Botonera de acciones de un representante
     var representanteButton = "<div class=\"btn-group\">"+
-        "<button type=\"button\" class=\"btn btn-success btn-sm dropdown-toggle\" data-toggle=\"dropdown\">Si <span class=\"caret\"></span></button>"+
+        "<button type=\"button\" class=\"btn btn-success btn-sm dropdown-toggle\" data-toggle=\"dropdown\">"+nombreRepresentante+" <span class=\"caret\"></span></button>"+
         "<ul class=\"dropdown-menu\" role=\"menu\">"+
         "<li><a href=\"#modalInteresado\" onclick=\"gestionarRepresentante("+idRepresentante+","+idRepresentado+",'"+urlObtenerInteresado+"')\">"+tradsinteresado['interesado.representante.editar']+"</a></li>"+
         "<li><a href=\"javascript:void(0);\" onclick=\"eliminarRepresentante("+idRepresentante+","+idRepresentado+",'"+idRegistroDetalle+"')\">"+tradsinteresado['interesado.representante.eliminar']+"</a></li></ul></div>";
-        //"<li><a data-toggle=\"modal\" href=\"#modalBuscadorPersonasTodas\" onclick=\"busquedaRepresentantes("+idRepresentado+")\">Buscar representante</a></li></ul></div>";
 
     // Añadimos a la celda la nueva información
     $(elemento + ' td:nth-child(3)').html(representanteButton);
@@ -152,8 +152,8 @@ function addRepresentante(idRepresentante,idRepresentado,idRegistroDetalle){
         data: { idRepresentante: idRepresentante, idRepresentado: idRepresentado, idRegistroDetalle:idRegistroDetalle },
         contentType: 'application/json',
 
-        success: function(result) {
-            addRepresentanteHtml(result, idRepresentado,idRegistroDetalle);
+        success: function(respuesta) {
+            addRepresentanteHtml(respuesta.result.id,idRepresentado,respuesta.result.nombre,idRegistroDetalle);
         }
     });
 }
@@ -162,6 +162,10 @@ function addRepresentante(idRepresentante,idRepresentado,idRegistroDetalle){
  * Eliminamos el representante de la sesion y lo desvinculamos del Interesado
  */
 function eliminarRepresentante(idRepresentante,idRepresentado,idRegistroDetalle){
+
+    if(idRegistroDetalle.length == 0){
+        idRegistroDetalle = 'null';
+    }
 
     var confirmModal =
         $("<div class=\"modal fade\">" +

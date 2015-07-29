@@ -171,6 +171,7 @@ public class InteresadoController extends BaseController{
                 }else{ // Edición de un registro, lo añadimos a la bbdd
 
                     if(isRepresentante) { // Si se trata de un representante lo indicamos
+                        interesado.setRegistroDetalle(new RegistroDetalle(Long.valueOf(idRegistroDetalle)));
                         personaJson.setRepresentado(new PersonaJson(idRepresentado));
 
                         // Guardamos el Nuevo representante
@@ -348,7 +349,7 @@ public class InteresadoController extends BaseController{
      */
     @RequestMapping(value = "/{tipoRegistro}/addRepresentante", method = RequestMethod.GET)
     @ResponseBody
-    public Long addRepresentante(@PathVariable String tipoRegistro,@RequestParam Long idRepresentante,@RequestParam Long idRepresentado,@RequestParam Long idRegistroDetalle, HttpServletRequest request) {
+    public JsonResponse addRepresentante(@PathVariable String tipoRegistro,@RequestParam Long idRepresentante,@RequestParam Long idRepresentado,@RequestParam Long idRegistroDetalle, HttpServletRequest request) {
 
         String variable = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
@@ -357,6 +358,7 @@ public class InteresadoController extends BaseController{
         log.info("idRegistroDetalle: " + idRegistroDetalle);
 
         HttpSession session = request.getSession();
+        JsonResponse jsonResponse = new JsonResponse();
 
         try {
 
@@ -364,17 +366,25 @@ public class InteresadoController extends BaseController{
             representante.setIsRepresentante(true);
             log.info("Representante seleccionado: " + representante.getNombreCompleto());
 
+            //Creamos la respuesta
+
+            PersonaJson personaJson = new PersonaJson();
+            personaJson.setId(representante.getId().toString());
+            personaJson.setNombre(representante.getNombreCompleto());
+            jsonResponse.setResult(personaJson);
+
             if(idRegistroDetalle == null){ // Sesion
 
                 Interesado representado = obtenerInteresadoSesion(idRepresentado,session, variable);
 
                 // Añadimos el representante a la sesion
                 representante.setRepresentado(representado);
-                añadirInteresadoSesion(representante,session, variable);
+                añadirInteresadoSesion(representante, session, variable);
 
                 //Actualizamos el representado
                 representado.setRepresentante(representante);
-                actualizarInteresadoSesion(representado,session, variable);
+                actualizarInteresadoSesion(representado, session, variable);
+
 
             }else{ // bbdd
                 Interesado representado = interesadoEjb.findById(idRepresentado);
@@ -382,7 +392,6 @@ public class InteresadoController extends BaseController{
                 representante.setRegistroDetalle(new RegistroDetalle(idRegistroDetalle));
                 representante.setRepresentado(representado);
                 representante = interesadoEjb.persist(representante);
-                idRepresentante = representante.getId();
 
                 // Actualizamos el representado
                 representado.setRepresentante(representante);
@@ -395,7 +404,7 @@ public class InteresadoController extends BaseController{
             e.printStackTrace();
         }
 
-        return idRepresentante;
+        return jsonResponse;
     }
 
     /**
@@ -407,7 +416,7 @@ public class InteresadoController extends BaseController{
      */
     @RequestMapping(value = "/{tipoRegistro}/eliminarRepresentante", method = RequestMethod.GET)
     @ResponseBody
-    public Boolean eliminarRepresentante(@PathVariable String tipoRegistro,@RequestParam Long idRepresentante,@RequestParam Long idRepresentado,@RequestParam Long idRegistroDetalle, HttpServletRequest request) {
+    public Boolean eliminarRepresentante(@PathVariable String tipoRegistro,@RequestParam Long idRepresentante,@RequestParam Long idRepresentado,@RequestParam String idRegistroDetalle, HttpServletRequest request) {
 
         String variable = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
@@ -419,7 +428,7 @@ public class InteresadoController extends BaseController{
 
         try {
 
-            if(idRegistroDetalle == null){ // Trabajamos en la sesión
+            if(idRegistroDetalle.equals("null")){ // Trabajamos en la sesión
 
                 Interesado representante = new Interesado(idRepresentante);
                 Interesado representado = obtenerInteresadoSesion(idRepresentado,session, variable);
@@ -434,7 +443,7 @@ public class InteresadoController extends BaseController{
                 Interesado representado = interesadoEjb.findById(idRepresentado);
                 representado.setRepresentante(null);
                 interesadoEjb.merge(representado);
-                interesadoEjb.eliminarInteresadoRegistroDetalle(idRepresentante, idRegistroDetalle);
+                interesadoEjb.eliminarInteresadoRegistroDetalle(idRepresentante, Long.valueOf(idRegistroDetalle));
                 return true;
 
             }

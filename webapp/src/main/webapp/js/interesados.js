@@ -225,17 +225,16 @@ function addInteresadoHtml(idPersona, nombre,tipo,representante,idRegistroDetall
  * @param idInteresado
  * @param idRegistroDetalle
  */
-function addInteresadoRepresentanteHtml(idInteresado,nombre,tipo,idRepresentante,idRegistroDetalle){
+function addInteresadoRepresentanteHtml(idInteresado,nombreInteresado,tipo,idRepresentante,nombreRepresentante,idRegistroDetalle){
 
     var vacio = "";
     if(idRepresentante != null && idRepresentante.length > 0){ // Si hay representate
         // Botonera de acciones de un representante
         var representanteButton = "<div class=\"btn-group\">"+
-            "<button type=\"button\" class=\"btn btn-success btn-sm dropdown-toggle\" data-toggle=\"dropdown\">Si <span class=\"caret\"></span></button>"+
+            "<button type=\"button\" class=\"btn btn-success btn-sm dropdown-toggle\" data-toggle=\"dropdown\">"+nombreRepresentante+" <span class=\"caret\"></span></button>"+
             "<ul class=\"dropdown-menu\" role=\"menu\">"+
             "<li><a href=\"#modalInteresado\" onclick=\"gestionarRepresentante("+idRepresentante+","+idInteresado+",'"+urlObtenerInteresado+"')\">"+tradsinteresado['interesado.representante.editar']+"</a></li>"+
             "<li><a href=\"javascript:void(0);\" onclick=\"eliminarRepresentante("+idRepresentante+","+idInteresado+",'"+idRegistroDetalle+"')\">"+tradsinteresado['interesado.representante.eliminar']+"</a></li></ul></div>";
-            //"<li><a data-toggle=\"modal\" href=\"#modalBuscadorPersonasTodas\" onclick=\"busquedaRepresentantes("+idInteresado+")\">Buscar representante</a></li></ul></div>";
     }else{
         var representanteButton = "<div class=\"btn-group\">"+
             "<button type=\"button\" class=\"btn btn-danger btn-sm dropdown-toggle\" data-toggle=\"dropdown\">No<span class=\"caret\"></span></button>"+
@@ -246,7 +245,7 @@ function addInteresadoRepresentanteHtml(idInteresado,nombre,tipo,idRepresentante
 
 
     // Fila con el interesado y su representante
-    var fila = "<tr id=\"persona"+idInteresado+"\"><td>"+nombre+"</td><td>"+tipo+"</td><td>"+representanteButton+"</td>"+
+    var fila = "<tr id=\"persona"+idInteresado+"\"><td>"+nombreInteresado+"</td><td>"+tipo+"</td><td>"+representanteButton+"</td>"+
         "<td class=\"center\">"+
         "<a class=\"btn btn-warning btn-default btn-sm\" data-toggle=\"modal\" role=\"button\" href=\"#modalInteresado\" onclick=\"editarInteresado('"+idInteresado+"')\" title=\"Editar\"><span class=\"fa fa-pencil\"></span></a> "+
         "<a class=\"btn btn-danger btn-default btn-sm\" onclick=\"eliminarPersonaInteresado('"+idInteresado+"','"+idRegistroDetalle+"')\" href=\"javascript:void(0);\" title=\"Eliminar\"><span class=\"fa fa-eraser\"></span></a></td></tr>";
@@ -416,7 +415,7 @@ function procesarInteresado() {
 
                     if(accion == 'nuevo'){ // Si es un representante nuevo
 
-                        addRepresentanteHtml(respuesta.result.id,respuesta.result.representado.id,idRegistroDetalle);
+                        addRepresentanteHtml(respuesta.result.id,respuesta.result.representado.id,respuesta.result.nombre,idRegistroDetalle);
 
                     }else if(accion == 'editar'){ // Si estamos editando un representante existente
                         actualizarNombrePersonaInteresados(respuesta.result.id,respuesta.result.nombre);

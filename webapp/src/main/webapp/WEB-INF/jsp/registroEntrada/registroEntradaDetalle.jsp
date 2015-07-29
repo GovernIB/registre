@@ -21,7 +21,7 @@
             <div class="col-xs-12">
                 <ol class="breadcrumb">
                     <li><a href="<c:url value="/inici"/>"><i class="fa fa-globe"></i> ${oficinaActiva.denominacion}</a></li>
-                    <li><a href="<c:url value="/registroEntrada/list"/>" ><i class="fa fa-list"></i> <spring:message code="registroEntrada.listado"/></a></li>
+                    <%--<li><a href="<c:url value="/registroEntrada/list"/>" ><i class="fa fa-list"></i> <spring:message code="registroEntrada.listado"/></a></li>--%>
                     <li class="active"><i class="fa fa-pencil-square-o"></i> <spring:message code="registroEntrada.registroEntrada"/> ${registro.numeroRegistroFormateado}</li>
                     <%--Importamos el menú de avisos--%>
                     <c:import url="/avisos"/>
@@ -184,7 +184,6 @@
 
              <%--INTERESADOS--%>
             <c:if test="${registro.estado == 1 && registro.oficina.id == oficinaActiva.id}">
-                <%--<c:set var="registro" value="${registroEntrada}"/>--%>
                 <c:import url="../registro/interesados.jsp">
                     <c:param name="tipo" value="detalle"/>
                     <c:param name="tipoRegistro" value="entrada"/>
@@ -211,73 +210,72 @@
                       </div>
 
                       <div class="panel-body">
-                          <div class="col-xs-12">
-                              <div class="table-responsive">
+                          <div class="table-responsive">
 
-                                     <table id="historicos" class="table table-bordered table-hover table-striped">
-                                         <colgroup>
-                                             <col>
-                                             <c:if test="${isAdministradorLibro}"> <col> </c:if>
-                                             <col>
-                                             <col width="100">
-                                         </colgroup>
-                                         <thead>
-                                             <tr>
-                                                 <th><spring:message code="historicoEntrada.fecha"/></th>
-                                                 <c:if test="${isAdministradorLibro}"> <th><spring:message code="historicoEntrada.usuario"/></th> </c:if>
-                                                 <th><spring:message code="historicoEntrada.modificacion"/></th>
-                                                 <th><spring:message code="historicoEntrada.estado"/></th>
-                                                 <th class="center"><spring:message code="regweb.acciones"/></th>
-                                             </tr>
-                                         </thead>
+                             <table id="historicos" class="table table-bordered table-hover table-striped">
+                                 <colgroup>
+                                     <col>
+                                     <c:if test="${isAdministradorLibro}"> <col> </c:if>
+                                     <col>
+                                     <col width="100">
+                                 </colgroup>
+                                 <thead>
+                                     <tr>
+                                         <th><spring:message code="historicoEntrada.fecha"/></th>
+                                         <c:if test="${isAdministradorLibro}"> <th><spring:message code="historicoEntrada.usuario"/></th> </c:if>
+                                         <th><spring:message code="historicoEntrada.modificacion"/></th>
+                                         <th><spring:message code="historicoEntrada.estado"/></th>
+                                         <th class="center"><spring:message code="regweb.acciones"/></th>
+                                     </tr>
+                                 </thead>
 
-                                         <tbody>
-                                             <c:forEach var="historico" items="${historicos}">
-                                                 <tr>
-                                                     <td><fmt:formatDate value="${historico.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
-                                                     <c:if test="${isAdministradorLibro}"> <td>${historico.usuario.nombreCompleto}</td> </c:if>
-                                                     <td>${historico.modificacion}</td>
-                                                     <td>
-                                                         <c:choose>
-                                                             <c:when test="${historico.estado == 1}">
-                                                                 <span class="label label-success"><spring:message code="registro.estado.${historico.estado}" /></span>
-                                                             </c:when>
-                                                             <c:when test="${historico.estado == 2}">
-                                                                 <span class="label label-warning"><spring:message code="registro.estado.${historico.estado}" /></span>
-                                                             </c:when>
-                                                             <c:when test="${historico.estado == 3}">
-                                                                 <span class="label label-info"><spring:message code="registro.estado.${historico.estado}" /></span>
-                                                             </c:when>
-                                                             <c:when test="${historico.estado == 4 || registro.estado == 5}">
-                                                                 <span class="label label-default"><spring:message code="registro.estado.${historico.estado}" /></span>
-                                                             </c:when>
-                                                             <c:when test="${historico.estado == 6}">
-                                                                 <span class="label label-primary"><spring:message code="registro.estado.${historico.estado}" /></span>
-                                                             </c:when>
-                                                             <c:when test="${historico.estado == 7}">
-                                                                 <span class="label label-primary"><spring:message code="registro.estado.${historico.estado}" /></span>
-                                                             </c:when>
-                                                             <c:when test="${historico.estado == 8}">
-                                                                 <span class="label label-danger"><spring:message code="registro.estado.${historico.estado}" /></span>
-                                                             </c:when>
-                                                         </c:choose>
+                                 <tbody>
+                                     <c:forEach var="historico" items="${historicos}">
+                                         <tr>
+                                             <td><fmt:formatDate value="${historico.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
+                                             <c:if test="${isAdministradorLibro}"> <td>${historico.usuario.nombreCompleto}</td> </c:if>
+                                             <td>${historico.modificacion}</td>
+                                             <td>
+                                                 <c:choose>
+                                                     <c:when test="${historico.estado == 1}">
+                                                         <span class="label label-success"><spring:message code="registro.estado.${historico.estado}" /></span>
+                                                     </c:when>
+                                                     <c:when test="${historico.estado == 2}">
+                                                         <span class="label label-warning"><spring:message code="registro.estado.${historico.estado}" /></span>
+                                                     </c:when>
+                                                     <c:when test="${historico.estado == 3}">
+                                                         <span class="label label-info"><spring:message code="registro.estado.${historico.estado}" /></span>
+                                                     </c:when>
+                                                     <c:when test="${historico.estado == 4 || registro.estado == 5}">
+                                                         <span class="label label-default"><spring:message code="registro.estado.${historico.estado}" /></span>
+                                                     </c:when>
+                                                     <c:when test="${historico.estado == 6}">
+                                                         <span class="label label-primary"><spring:message code="registro.estado.${historico.estado}" /></span>
+                                                     </c:when>
+                                                     <c:when test="${historico.estado == 7}">
+                                                         <span class="label label-primary"><spring:message code="registro.estado.${historico.estado}" /></span>
+                                                     </c:when>
+                                                     <c:when test="${historico.estado == 8}">
+                                                         <span class="label label-danger"><spring:message code="registro.estado.${historico.estado}" /></span>
+                                                     </c:when>
+                                                 </c:choose>
 
-                                                     </td>
-                                                     <td class="center">
-                                                         <c:if test="${not empty historico.registroEntradaOriginal}">
-                                                             <a data-toggle="modal" role="button" href="#modalCompararRegistros" onclick="comparaRegistros('${historico.id}')" class="btn btn-warning btn-sm">Comparar</a>
-                                                         </c:if>
-                                                         <c:if test="${empty historico.registroEntradaOriginal}">
-                                                             <a href="javascript:void(0);" class="btn btn-warning disabled btn-sm">Comparar</a>
-                                                         </c:if>
-                                                     </td>
-                                                 </tr>
-                                             </c:forEach>
+                                             </td>
+                                             <td class="center">
+                                                 <c:if test="${not empty historico.registroEntradaOriginal}">
+                                                     <a data-toggle="modal" role="button" href="#modalCompararRegistros" onclick="comparaRegistros('${historico.id}')" class="btn btn-warning btn-sm">Comparar</a>
+                                                 </c:if>
+                                                 <c:if test="${empty historico.registroEntradaOriginal}">
+                                                     <a href="javascript:void(0);" class="btn btn-warning disabled btn-sm">Comparar</a>
+                                                 </c:if>
+                                             </td>
+                                         </tr>
+                                     </c:forEach>
 
-                                         </tbody>
-                                     </table>
-                              </div>
+                                 </tbody>
+                             </table>
                           </div>
+
                       </div>
                   </div>
 

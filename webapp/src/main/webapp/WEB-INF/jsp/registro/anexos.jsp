@@ -31,7 +31,7 @@
       </div>
 
       <div class="panel-body">
-          <div class="col-xs-12">
+
               <div id="anexosdiv" class="table-responsive">
 
                  <c:if test="${empty registro.registroDetalle.anexos}">
@@ -83,7 +83,7 @@
                      </table>
                 </c:if>
               </div>
-          </div>
+
       </div>
     </div>
 

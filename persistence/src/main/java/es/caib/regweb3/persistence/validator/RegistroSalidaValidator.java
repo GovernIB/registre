@@ -2,7 +2,6 @@ package es.caib.regweb3.persistence.validator;
 
 import es.caib.regweb3.model.RegistroDetalle;
 import es.caib.regweb3.model.RegistroSalida;
-import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.validation.IValidatorResult;
 
@@ -26,24 +25,20 @@ public class RegistroSalidaValidator<T> extends AbstractRegWebValidator<T> {
         RegistroSalida registroSalida = (RegistroSalida)__target__;
         RegistroDetalle registroDetalle = registroSalida.getRegistroDetalle();
 
-        //rejectIfEmptyOrWhitespace(errors, __target__,  "registroDetalle.extracto", "error.valor.requerido", "El camp és obligatori");
-        //rejectIfEmptyOrWhitespace(errors, __target__,  "registroDetalle.tipoDocumentacionFisica", "error.valor.requerido", "El camp és obligatori");
-        //rejectIfEmptyOrWhitespace(errors, __target__,  "registroDetalle.idioma", "error.valor.requerido", "El camp és obligatori");
-
-      if(StringUtils.isEmpty(registroDetalle.getExtracto())){
-          rejectValue(errors,"registroDetalle.extracto","error.valor.requerido","El camp és obligatori");
-      }
-
-      if(registroDetalle.getTipoDocumentacionFisica() == null){
-          rejectValue(errors,"registroDetalle.tipoDocumentacionFisica","error.valor.requerido","El camp és obligatori");
-      }
-
-      if(registroDetalle.getIdioma() == null){
-          rejectValue(errors,"registroDetalle.idioma","error.valor.requerido","El camp és obligatori");
-      }
+        rejectIfEmptyOrWhitespace(errors, __target__,  "registroDetalle.extracto", "error.valor.requerido", "El camp és obligatori");
+        rejectIfEmptyOrWhitespace(errors, __target__,  "registroDetalle.tipoDocumentacionFisica", "error.valor.requerido", "El camp és obligatori");
+        rejectIfEmptyOrWhitespace(errors, __target__,  "registroDetalle.idioma", "error.valor.requerido", "El camp és obligatori");
 
         if(registroDetalle.getExtracto() != null && registroDetalle.getExtracto().length() > 240){
-            rejectValue(errors, "registroDetalle.extracto","error.valor.maxlenght","Tamaño demasiado largo");
+          rejectValue(errors, "registroDetalle.extracto","error.valor.maxlenght","Tamaño demasiado largo");
+        }
+
+        if(registroDetalle.getTipoDocumentacionFisica() == null){
+          rejectValue(errors,"registroDetalle.tipoDocumentacionFisica","error.valor.requerido","El camp és obligatori");
+        }
+
+        if(registroDetalle.getIdioma() == null){
+          rejectValue(errors,"registroDetalle.idioma","error.valor.requerido","El camp és obligatori");
         }
 
         if(registroDetalle.getReferenciaExterna() != null && registroDetalle.getReferenciaExterna().length() > 16){

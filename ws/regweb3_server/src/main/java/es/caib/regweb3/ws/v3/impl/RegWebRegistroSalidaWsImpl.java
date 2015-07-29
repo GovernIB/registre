@@ -446,6 +446,8 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
                     catPaisEjb,catProvinciaEjb,catLocalidadEjb);
                 validateInteresado(representante);
 
+                representante.setIsRepresentante(true);
+
                 // Guardamos el Interesado
                 interesado = interesadoEjb.persist(interesado);
 

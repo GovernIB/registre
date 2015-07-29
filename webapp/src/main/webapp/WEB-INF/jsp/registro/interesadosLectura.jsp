@@ -46,27 +46,27 @@
 
                             <tbody>
                             <c:forEach var="interesado" items="${registro.registroDetalle.interesados}">
-                                <tr>
-                                    <td>
-                                        <c:if test="${interesado.tipo == RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION}">${interesado.nombreOrganismo} </c:if>
-                                        <c:if test="${interesado.tipo == RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA}">${interesado.nombrePersonaFisica} </c:if>
-                                        <c:if test="${interesado.tipo == RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA}">${interesado.nombrePersonaJuridica} </c:if>
-                                    </td>
-                                    <td>
-                                        <c:if test="${interesado.tipo == RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION}"><spring:message code="interesado.administracion"/></c:if>
-                                        <c:if test="${interesado.tipo == RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA}"><spring:message code="persona.fisica"/></c:if>
-                                        <c:if test="${interesado.tipo == RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA}"><spring:message code="persona.juridica"/></c:if>
-                                    </td>
-                                    <td>
-                                        <c:if test="${interesado.isRepresentante}">
-                                            <span class="label label-success">Si, Representado: ${interesado.representado.nombreCompleto}</span>
-                                        </c:if>
+                                <c:if test="${!interesado.isRepresentante}">
+                                    <tr>
+                                        <td>
+                                            ${interesado.nombreCompleto}
+                                        </td>
+                                        <td>
+                                            <c:if test="${interesado.tipo == RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION}"><spring:message code="interesado.administracion"/></c:if>
+                                            <c:if test="${interesado.tipo == RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA}"><spring:message code="persona.fisica"/></c:if>
+                                            <c:if test="${interesado.tipo == RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA}"><spring:message code="persona.juridica"/></c:if>
+                                        </td>
+                                        <td>
+                                            <c:if test="${interesado.representante != null}">
+                                                <span class="label label-success">${interesado.representante.nombreCompleto}</span>
+                                            </c:if>
 
-                                        <c:if test="${!interesado.isRepresentante}">
-                                            <span class="label label-danger">No</span>
-                                        </c:if>
-                                    </td>
-                                </tr>
+                                            <c:if test="${interesado.representante == null}">
+                                                <span class="label label-danger">No</span>
+                                            </c:if>
+                                        </td>
+                                    </tr>
+                                </c:if>
                             </c:forEach>
                             </tbody>
                         </table>

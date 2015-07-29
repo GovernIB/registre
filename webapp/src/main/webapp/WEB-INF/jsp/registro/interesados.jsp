@@ -117,31 +117,28 @@
                 </div>
             </div>
 
-            <div class="col-xs-12">
+            <div class="table-responsive">
+                <table id="interesados" class="table table-bordered table-hover table-striped">
+                    <colgroup>
+                        <col>
+                        <col>
+                        <col>
+                        <col width="100">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th><spring:message code="registroEntrada.interesado"/></th>
+                        <th><spring:message code="interesado.tipoInteresado"/></th>
+                        <th><spring:message code="representante.representante"/></th>
+                        <th class="center"><spring:message code="regweb.acciones"/></th>
+                    </tr>
+                    </thead>
 
-                <div class="table-responsive">
-                    <table id="interesados" class="table table-bordered table-hover table-striped">
-                        <colgroup>
-                            <col>
-                            <col>
-                            <col>
-                            <col width="100">
-                        </colgroup>
-                        <thead>
-                        <tr>
-                            <th><spring:message code="registroEntrada.interesado"/></th>
-                            <th><spring:message code="interesado.tipoInteresado"/></th>
-                            <th><spring:message code="representante.representante"/></th>
-                            <th class="center"><spring:message code="regweb.acciones"/></th>
-                        </tr>
-                        </thead>
+                    <tbody>
 
-                        <tbody>
+                    </tbody>
+                </table>
 
-                        </tbody>
-                    </table>
-
-                </div>
             </div>
 
         </div>

@@ -34,7 +34,7 @@ import java.util.Set;
  */
 @Controller
 @RequestMapping(value = "/registroSalida")
-@SessionAttributes(types = RegistroSalida.class)
+/*@SessionAttributes(types = RegistroSalida.class)*/
 public class RegistroSalidaListController extends AbstractRegistroCommonListController {
 
 

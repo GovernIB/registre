@@ -1,6 +1,5 @@
 package es.caib.regweb3.ws.v3.test;
 
-import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.ws.api.v3.*;
 import es.caib.regweb3.ws.api.v3.utils.WsClientUtils;
 import org.junit.Assert;
@@ -41,7 +40,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils  {
     Assert.assertEquals(3, registroEntradaApi.getVersionWs());
   }
 
-   @Test
+   //@Test
   public void obtenerRegistroEntrada() {
 
     try {
@@ -100,11 +99,11 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils  {
     }
   }
 
-  //@Test
+  @Test
   public void crearRegistroEntrada() throws Exception {
 
     
-    for(int i=0;i<5;i++){
+    for(int i=0;i<1;i++){
 
 
       RegistroEntradaWs registroEntradaWs = new RegistroEntradaWs();
@@ -116,7 +115,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils  {
       registroEntradaWs.setExtracto(System.currentTimeMillis() + " probando ws");
       registroEntradaWs.setDocFisica((long) 1);
       registroEntradaWs.setIdioma("es");
-      registroEntradaWs.setTipoAsunto("TS01");
+      registroEntradaWs.setTipoAsunto(getTestTipoAsunto());
 
       registroEntradaWs.setAplicacion("WsTest");
       registroEntradaWs.setVersion("1");
@@ -134,32 +133,32 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils  {
 
       registroEntradaWs.setExpone("expone");
       registroEntradaWs.setSolicita("solicita");
-      
-      registroEntradaWs.setTipoAsunto(getTestTipoAsunto());
+
 
       // Interesados
       InteresadoWs interesadoWs = new InteresadoWs();
 
       DatosInteresadoWs interesado = new DatosInteresadoWs();
-      interesado.setTipoInteresado((long) 2);
-      interesado.setNombre("Jaime");
-      interesado.setApellido1("Arrivi");
+      interesado.setTipoInteresado(TIPO_INTERESADO_PERSONA_FISICA);
+      interesado.setNombre("Pepito");
+      interesado.setApellido1("Garcia");
       interesadoWs.setInteresado(interesado);
 
       DatosInteresadoWs representante = new DatosInteresadoWs();
-      representante.setTipoInteresado(TIPO_INTERESADO_PERSONA_JURIDICA); // == 3
-      representante.setRazonSocial("McDonalds");
+      representante.setTipoInteresado(TIPO_INTERESADO_PERSONA_FISICA); // == 3
+      representante.setNombre("Juanito");
+      representante.setApellido1("De la torre");
       interesadoWs.setRepresentante(representante);
 
       registroEntradaWs.getInteresados().add(interesadoWs);
 
-      InteresadoWs interesadoWs2 = new InteresadoWs();
+     /* InteresadoWs interesadoWs2 = new InteresadoWs();
       DatosInteresadoWs organismo = new DatosInteresadoWs();
       organismo.setTipoInteresado(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION); // == 1
       organismo.setNombre("Presidencia Govern de les Illes Balears");
       interesadoWs2.setInteresado(organismo);
 
-      registroEntradaWs.getInteresados().add(interesadoWs2);
+      registroEntradaWs.getInteresados().add(interesadoWs2);*/
 
       //registroEntradaWs.getAnexos().addAll(getAnexos());
 

@@ -37,7 +37,7 @@ public class RegWebRegistroSalidaTest extends RegWebTestUtils{
         Assert.assertEquals(3, registroSalidaApi.getVersionWs());
     }
 
-    @Test
+    //@Test
     public void obtenerRegistroSalida() {
 
         try {
@@ -81,27 +81,27 @@ public class RegWebRegistroSalidaTest extends RegWebTestUtils{
         }
     }
 
-    //@Test
+    @Test
     public void crearRegistroSalida() {
 
-        for(int i=0;i<10;i++){
+        for(int i=0;i<1;i++){
 
 
         RegistroSalidaWs registroSalidaWs = new RegistroSalidaWs();
 
-        registroSalidaWs.setOrigen("A04008542");
-        registroSalidaWs.setOficina("O00015972");
-        registroSalidaWs.setLibro("ADMP");
+        registroSalidaWs.setOrigen(getTestDestinoCodigoDir3());
+        registroSalidaWs.setOficina(getTestDestinoOficinaCodigoDir3());
+        registroSalidaWs.setLibro(getTestDestinoLibro());
 
-        registroSalidaWs.setExtracto("earrivi-concurrencia");
+        registroSalidaWs.setExtracto(System.currentTimeMillis() + " probando ws");
         registroSalidaWs.setDocFisica((long) 1);
-        registroSalidaWs.setIdioma("gl");
-        registroSalidaWs.setTipoAsunto("A01");
+        registroSalidaWs.setIdioma("es");
+        registroSalidaWs.setTipoAsunto(getTestTipoAsunto());
 
         registroSalidaWs.setAplicacion("WsTest");
         registroSalidaWs.setVersion("1");
 
-        registroSalidaWs.setCodigoUsuario("earrivi");
+        registroSalidaWs.setCodigoUsuario(getTestUserName());
         registroSalidaWs.setContactoUsuario("earrivi@gmail.com");
 
         registroSalidaWs.setNumExpediente("");
@@ -112,214 +112,34 @@ public class RegWebRegistroSalidaTest extends RegWebTestUtils{
         registroSalidaWs.setCodigoAsunto(null);
         registroSalidaWs.setTipoTransporte("");
 
-        registroSalidaWs.setExpone("");
-        registroSalidaWs.setSolicita("");
+        registroSalidaWs.setExpone("expone");
+        registroSalidaWs.setSolicita("solicita");
 
         // Interesados
         InteresadoWs interesadoWs = new InteresadoWs();
 
         DatosInteresadoWs interesado = new DatosInteresadoWs();
-        interesado.setTipoInteresado((long)2);
-        interesado.setNombre("Lucas");
-        interesado.setApellido1("Martinez");
+        interesado.setTipoInteresado(TIPO_INTERESADO_PERSONA_FISICA);
+        interesado.setNombre("Pepito");
+        interesado.setApellido1("Garcia");
         interesadoWs.setInteresado(interesado);
 
         DatosInteresadoWs representante = new DatosInteresadoWs();
-        representante.setTipoInteresado((long)3);
-        representante.setRazonSocial("Endesa");
+        representante.setTipoInteresado(TIPO_INTERESADO_PERSONA_FISICA); // == 3
+        representante.setNombre("Juanito");
+        representante.setApellido1("De la torre");
         interesadoWs.setRepresentante(representante);
 
         registroSalidaWs.getInteresados().add(interesadoWs);
 
-        InteresadoWs interesadoWs2 = new InteresadoWs();
+        /*InteresadoWs interesadoWs2 = new InteresadoWs();
         DatosInteresadoWs organismo = new DatosInteresadoWs();
         organismo.setTipoInteresado((long)1);
         organismo.setNombre("Presidencia Govern de les Illes Balears");
         interesadoWs2.setInteresado(organismo);
 
-        registroSalidaWs.getInteresados().add(interesadoWs2);
+        registroSalidaWs.getInteresados().add(interesadoWs2);*/
 
-/*
-        // Anexos
-        String fichero = "ITM_Formulario de solicitud de examen_MARILENGONZALEZ.doc";
-        String sfirma = "ITM_Formulario de solicitud de examen.doc";
-        // Anexo sin firma
-        AnexoWs anexoWs = new AnexoWs();
-
-        anexoWs.setTitulo("Primer Anexo via WS");
-        anexoWs.setValidezDocumento("01");
-        anexoWs.setTipoDocumental("TD01");
-        anexoWs.setTipoDocumento("01");
-        anexoWs.setOrigenCiudadanoAdmin(new Integer(0));
-        anexoWs.setObservaciones("Observaciones de Marilen");
-
-        anexoWs.setModoFirma(0);
-        // Fichero Anexado
-        MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
-        try{
-
-
-           File file = new File(getTestArchivosPath()+fichero);
-           System.out.println(file.exists());
-           System.out.println(file.getAbsolutePath());
-
-           anexoWs.setFicheroAnexado(FileUtils.readFileToByteArray(file));
-           anexoWs.setNombreFicheroAnexado(file.getName());
-           anexoWs.setTipoMIMEFicheroAnexado(mimeTypesMap.getContentType(file));
-           anexoWs.setTamanoFicheroAnexado(file.length());
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        GregorianCalendar gc = (GregorianCalendar)GregorianCalendar.getInstance();
-        gc.setTimeInMillis(new Date().getTime());
-        anexoWs.setFechaCaptura(new XMLGregorianCalendarImpl(gc));
-
-        registroSalidaWs.getAnexos().add(anexoWs);
-
-        *//* ANEXO CON FIRMA ATACHED   *//*
-        AnexoWs anexoFirmaAtached = new AnexoWs();
-
-        anexoFirmaAtached.setTitulo("Anexo firma atached");
-        anexoFirmaAtached.setValidezDocumento("02");
-        anexoFirmaAtached.setTipoDocumental("TD02");
-        anexoFirmaAtached.setTipoDocumento("02");
-        anexoFirmaAtached.setOrigenCiudadanoAdmin(new Integer(1));
-        anexoFirmaAtached.setObservaciones("Observaciones firma atached");
-        anexoFirmaAtached.setModoFirma(1);
-        // Fichero Anexado
-
-        try{
-           File file = new File(getTestArchivosPath()+fichero);
-
-           anexoFirmaAtached.setFicheroAnexado(FileUtils.readFileToByteArray(file));
-           anexoFirmaAtached.setNombreFicheroAnexado(file.getName());
-           anexoFirmaAtached.setTipoMIMEFicheroAnexado(mimeTypesMap.getContentType(file));
-           anexoFirmaAtached.setTamanoFicheroAnexado(file.length());
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-
-        gc.setTimeInMillis(new Date().getTime());
-        anexoFirmaAtached.setFechaCaptura(new XMLGregorianCalendarImpl(gc));
-
-        registroSalidaWs.getAnexos().add(anexoFirmaAtached);
-         *//* FIN ANEXO CON FIRMA ATACHED   *//*
-
-        *//** ANEXO CON FIRMA DETACHED *//*
-        AnexoWs anexoFirmaDetached = new AnexoWs();
-
-        anexoFirmaDetached.setTitulo("Anexo firma detached");
-        anexoFirmaDetached.setValidezDocumento("03");
-        anexoFirmaDetached.setTipoDocumental("TD03");
-        anexoFirmaDetached.setTipoDocumento("03");
-        anexoFirmaDetached.setOrigenCiudadanoAdmin(new Integer(0));
-        anexoFirmaDetached.setObservaciones("Observaciones firma detached");
-        anexoFirmaDetached.setModoFirma(2);
-        // Fichero Anexado
-
-        try{
-           //archivo
-           File file = new File(getTestArchivosPath()+ fichero);
-
-           anexoFirmaDetached.setFicheroAnexado(FileUtils.readFileToByteArray(file));
-           anexoFirmaDetached.setNombreFicheroAnexado(file.getName());
-           anexoFirmaDetached.setTipoMIMEFicheroAnexado(mimeTypesMap.getContentType(file));
-           anexoFirmaDetached.setTamanoFicheroAnexado(file.length());
-
-           //firma
-           File firma = new File(getTestArchivosPath()+ sfirma);
-
-           anexoFirmaDetached.setFirmaAnexada(FileUtils.readFileToByteArray(firma));
-           anexoFirmaDetached.setNombreFirmaAnexada(firma.getName());
-           anexoFirmaDetached.setTipoMIMEFirmaAnexada(mimeTypesMap.getContentType(firma));
-           anexoFirmaDetached.setTamanoFirmaAnexada(firma.length());
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-
-        gc.setTimeInMillis(new Date().getTime());
-        anexoFirmaDetached.setFechaCaptura(new XMLGregorianCalendarImpl(gc));
-        registroSalidaWs.getAnexos().add(anexoFirmaDetached);
-        *//** FIN ANEXO CON FIRMA DETACHED *//*
-
-        *//** ANEXO CON FIRMA DETACHED COPIA *//*
-        AnexoWs anexoFirmaDetachedCopia = new AnexoWs();
-
-        anexoFirmaDetachedCopia.setTitulo("Anexo firma detached copia");
-        anexoFirmaDetachedCopia.setValidezDocumento("01");
-        anexoFirmaDetachedCopia.setTipoDocumental("TD03");
-        anexoFirmaDetachedCopia.setTipoDocumento("01");
-        anexoFirmaDetachedCopia.setOrigenCiudadanoAdmin(new Integer(0));
-        anexoFirmaDetachedCopia.setObservaciones("Observaciones firma detached copia");
-        anexoFirmaDetachedCopia.setModoFirma(2);
-        // Fichero Anexado
-
-        try{
-           //archivo
-           File file = new File(getTestArchivosPath()+fichero);
-
-           anexoFirmaDetachedCopia.setFicheroAnexado(FileUtils.readFileToByteArray(file));
-           anexoFirmaDetachedCopia.setNombreFicheroAnexado(file.getName());
-           anexoFirmaDetachedCopia.setTipoMIMEFicheroAnexado(mimeTypesMap.getContentType(file));
-           anexoFirmaDetachedCopia.setTamanoFicheroAnexado(file.length());
-
-           //firma
-           File firma = new File(getTestArchivosPath()+sfirma);
-
-           anexoFirmaDetachedCopia.setFirmaAnexada(FileUtils.readFileToByteArray(firma));
-           anexoFirmaDetachedCopia.setNombreFirmaAnexada(firma.getName());
-           anexoFirmaDetachedCopia.setTipoMIMEFirmaAnexada(mimeTypesMap.getContentType(firma));
-           anexoFirmaDetachedCopia.setTamanoFirmaAnexada(firma.length());
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-
-        gc.setTimeInMillis(new Date().getTime());
-        anexoFirmaDetachedCopia.setFechaCaptura(new XMLGregorianCalendarImpl(gc));
-        registroSalidaWs.getAnexos().add(anexoFirmaDetachedCopia);
-        *//** FIN ANEXO CON FIRMA DETACHED *//*
-
-        *//* Probando VALIDADOR *//*
-        AnexoWs anexoWsInvalido = new AnexoWs();
-
-        anexoWsInvalido.setTitulo("");
-        anexoWsInvalido.setValidezDocumento("01");
-       // anexoWsInvalido.setTipoDocumental("TD01");
-       // anexoWsInvalido.setTipoDocumento("01");
-        anexoWsInvalido.setOrigenCiudadanoAdmin(new Integer(-1));
-        anexoWsInvalido.setObservaciones("Observaciones de Marilen Invalido");
-
-        anexoWsInvalido.setModoFirma(0);
-        // Fichero Anexado
-
-        try{
-
-
-           File file = new File(getTestArchivosPath()+fichero);
-           System.out.println(file.exists());
-           System.out.println(file.getAbsolutePath());
-
-           anexoWsInvalido.setFicheroAnexado(FileUtils.readFileToByteArray(file));
-           anexoWsInvalido.setNombreFicheroAnexado(file.getName());
-           anexoWsInvalido.setTipoMIMEFicheroAnexado(mimeTypesMap.getContentType(file));
-           anexoWsInvalido.setTamanoFicheroAnexado(file.length());
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        gc.setTimeInMillis(new Date().getTime());
-        anexoWsInvalido.setFechaCaptura(new XMLGregorianCalendarImpl(gc));
-
-        registroSalidaWs.getAnexos().add(anexoWsInvalido);*/
 
 
         try {
