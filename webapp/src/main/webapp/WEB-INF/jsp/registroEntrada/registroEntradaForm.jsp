@@ -366,6 +366,8 @@
   var tradorganismo = new Array();
   tradorganismo['organismo.denominacion'] = "<spring:message code='organismo.denominacion' javaScriptEscape='true' />";
   tradorganismo['regweb3.acciones'] = "<spring:message code='regweb.acciones' javaScriptEscape='true' />";
+  tradorganismo['organismo.superior'] = "<spring:message code='organismo.superior' javaScriptEscape='true' />";
+  tradorganismo['organismo.superior.vacio'] = "<spring:message code='organismo.superior.vacio' javaScriptEscape='true' />";
   <%-- Traducciones para interesados.js --%>
   var tradsinteresado = new Array();
   tradsinteresado['interesado.representante.anadir'] = "<spring:message code='interesado.representante.anadir' javaScriptEscape='true' />";
