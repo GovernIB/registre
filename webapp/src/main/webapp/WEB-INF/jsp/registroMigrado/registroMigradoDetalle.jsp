@@ -66,7 +66,7 @@
                                 <div class="col-xs-6"><i class="fa fa-briefcase"></i> <strong><spring:message code="registroMigrado.oficina"/>:</strong> ${registroMigrado.codigoOficina}-${registroMigrado.denominacionOficina} / ${registroMigrado.codigoOficinaFisica}-${registroMigrado.denominacionOficinaFisica}</div>
                                 <div class="col-xs-3"><i class="fa fa-asterisk"></i> <strong><spring:message code="registroMigrado.numeroRegistro"/>:</strong> ${registroMigrado.numero}/${registroMigrado.ano}</div>
                                 <c:if test="${not empty registroMigrado.fechaVisado}">
-                                    <div class="col-xs-3"><i class="fa fa-clock-o"></i> <strong><spring:message code="registroMigrado.fechaVisado"/>:</strong> ${registroMigrado.fechaVisado}</div>
+                                    <div class="col-xs-3"><i class="fa fa-clock-o"></i> <strong><spring:message code="registroMigrado.fechaVisado"/>:</strong> <fmt:formatDate value="${registroMigrado.fechaVisado}" pattern="dd/MM/yyyy HH:mm:ss"/></div>
                                 </c:if>
                             </div>
                             <div class="form-group col-xs-12">
@@ -157,7 +157,7 @@
                                     <div class="col-xs-6"><i class="fa fa-briefcase"></i> <strong><spring:message code="registroMigrado.oficina"/>:</strong> ${registroMigrado.codigoOficina}-${registroMigrado.denominacionOficina} / ${registroMigrado.codigoOficinaFisica}-${registroMigrado.denominacionOficinaFisica}</div>
                                     <div class="col-xs-3"><i class="fa fa-asterisk"></i> <strong><spring:message code="registroMigrado.numeroRegistro"/>:</strong> ${registroMigrado.numero}/${registroMigrado.ano}</div>
                                     <c:if test="${not empty registroMigrado.fechaVisado}">
-                                        <div class="col-xs-3"><i class="fa fa-clock-o"></i> <strong><spring:message code="registroMigrado.fechaVisado"/>:</strong> ${registroMigrado.fechaVisado}</div>
+                                        <div class="col-xs-3"><i class="fa fa-clock-o"></i> <strong><spring:message code="registroMigrado.fechaVisado"/>:</strong> <fmt:formatDate value="${registroMigrado.fechaVisado}" pattern="dd/MM/yyyy HH:mm:ss"/></div>
                                     </c:if>
                                 </div>
                                 <div class="form-group col-xs-12">
