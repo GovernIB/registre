@@ -247,6 +247,8 @@
 
 <c:import url="../modulos/pie.jsp"/>
 
+<script type="text/javascript" src="<c:url value="/js/interesados.js"/>"></script>
+
 <script type="text/javascript">
 
 
@@ -255,40 +257,7 @@
         actualizarLocalidad();
         actualizartipoPersona();
 
-        if($('#tipoDocumentoIdentificacion option:selected').val() != ''){
-            $('#documento').removeAttr("disabled","disabled");
-        }
 
-        $('#tipoDocumentoIdentificacion').change(
-            function() {
-                var tipoDocumento = $('#tipoDocumentoIdentificacion option:selected').val();
-
-                var tipoPersona = $('#tipo option:selected').val();
-
-                if (tipoPersona == 2) { //Persona fisica
-
-                }else if(tipoPersona == 3) { //Persona juridica
-
-                }
-
-                if(tipoDocumento != ''){
-                    $('#documento').removeAttr("disabled","disabled");
-                }else{
-                    $('#documento').val('');
-                    $('#documento').attr("disabled","disabled");
-                }
-
-                if(tipoDocumento == 3 || tipoDocumento == 4 || tipoDocumento == 5 || tipoDocumento == 6){
-                    $('#razonSocial').attr("disabled","disabled");
-                }else{
-                    $('#razonSocial').removeAttr("disabled","disabled");
-                }
-         });
-
-        $('#pais\\.id').change(
-                function() {
-                    actualizarPais();
-                });
 
         $('#tipo').change(
             function() {
@@ -314,6 +283,10 @@
             $('#apellido2').removeAttr("disabled", "disabled");
             $('#nombreLabel').show();
             $('#apellido1Label').show();
+
+
+            // Habilita/Deshabilita los tipos correspondientes
+            tiposDocumentoPersonaFisica();
         }
 
         if (tipoPersona == 3) { //Persona juridica
@@ -327,26 +300,12 @@
             $('#apellido2').attr("disabled", "disabled");
             $('#nombreLabel').hide();
             $('#apellido1Label').hide();
+
+            // Habilita/Deshabilita los tipos correspondientes
+            tiposDocumentoPersonaJuridica();
+
         }
     }
-
-    function actualizarPais(){
-        $('#pais\\.id').change(
-            function() {
-                if($('#pais\\.id option:selected').text() != 'España'){
-                    $('#provincia\\.id').val('-1');
-                    $('#localidad\\.id').val('-1');
-                    $('#provincia\\.id').attr("disabled","disabled");
-                    $('#localidad\\.id').attr("disabled","disabled");
-                }else{
-                    $('#provincia\\.id').removeAttr("disabled","disabled");
-                    //$('#localidad\\.id').removeAttr("disabled","disabled");
-                }
-                $('#provincia\\.id').trigger("chosen:updated");
-                $('#localidad\\.id').trigger("chosen:updated");
-            });
-    }
-
 
 </script>
 

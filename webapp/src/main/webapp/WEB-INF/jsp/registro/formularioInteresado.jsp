@@ -68,7 +68,7 @@
                         </div>
                         <div class="col-xs-8">
                             <select id="tipoDocumentoIdentificacion" name="tipoDocumentoIdentificacion" class="chosen-select">
-                                <option value="-1">...</option>
+                                <option value="">...</option>
                                 <c:forEach items="${tiposDocumento}" var="tipoDocumento">
                                     <option value="${tipoDocumento}"><spring:message code="tipoDocumentoIdentificacion.${tipoDocumento}"/></option>
                                 </c:forEach>

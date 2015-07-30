@@ -24,37 +24,11 @@ $(window).load(function() {
 
     // Gestión de los cambios de persona
     $('#pais\\.id').change(
-        function() {
-            if($('#pais\\.id option:selected').text() != 'España'){
-                $('#provincia\\.id').val('-1');
-                $('#localidad\\.id').val('-1');
-                $('#provincia\\.id').attr("disabled","disabled");
-                $('#localidad\\.id').attr("disabled","disabled");
-            }else{
-                $('#provincia\\.id').removeAttr("disabled","disabled");
-            }
-            $('#provincia\\.id').trigger("chosen:updated");
-            $('#localidad\\.id').trigger("chosen:updated");
-        });
+        function() {actualizarPais();});
 
     //Gestión de los cambios de tipo documento
     $('#tipoDocumentoIdentificacion').change(
-        function() {
-            var tipoDocumento = $('#tipoDocumentoIdentificacion option:selected').val();
-
-            if(tipoDocumento != '-1'){
-                $('#documento').removeAttr("disabled","disabled");
-            }else{
-                $('#documento').val('');
-                $('#documento').attr("disabled","disabled");
-            }
-
-            if(tipoDocumento ==3 || tipoDocumento ==4 || tipoDocumento ==5 || tipoDocumento == 6){
-                $('#razonSocial').removeAttr("disabled","disabled");
-            }else{
-                $('#razonSocial').attr("disabled","disabled");
-            }
-        });
+        function() {actualizarTipoDocumentoIdentificacion();});
 
 });
 
@@ -779,7 +753,7 @@ function mostrarPersonaJuridica(){
  */
 function camposTipoPersona(tipoInteresado){
 
-    if(tipoInteresado == 2){
+    if(tipoInteresado == 2){ //Persona fisica
 
         $('#razonSocial').attr("disabled", "disabled");
         $('#nombre').removeAttr("disabled", "disabled");
@@ -789,9 +763,11 @@ function camposTipoPersona(tipoInteresado){
         $('#nom').html("<span class=\"text-danger\">*</span> " + tradsinteresado['regweb3.nombre']);
         $('#llinatge1').html("<span class=\"text-danger\">*</span> " + tradsinteresado['usuario.apellido1']);
         $('#rao').html(tradsinteresado['persona.razonSocial']);
+
+        tiposDocumentoPersonaFisica();
     }
 
-    if(tipoInteresado == 3){
+    if(tipoInteresado == 3){ //Persona juridica
 
         $('#razonSocial').removeAttr("disabled", "disabled");
         $('#nombre').attr("disabled", "disabled");
@@ -801,6 +777,68 @@ function camposTipoPersona(tipoInteresado){
         $('#rao').html("<span class=\"text-danger\">*</span> " + tradsinteresado['persona.razonSocial']);
         $('#nom').html(tradsinteresado['regweb3.nombre']);
         $('#llinatge1').html(tradsinteresado['usuario.apellido1']);
+
+        tiposDocumentoPersonaJuridica()
     }
+
+}
+
+function actualizarTipoDocumentoIdentificacion(){
+
+    var tipoDocumento = $('#tipoDocumentoIdentificacion option:selected').val();
+
+    if(tipoDocumento != ''){
+        $('#documento').removeAttr("disabled","disabled");
+    }else{
+        $('#documento').val('');
+        $('#documento').attr("disabled","disabled");
+    }
+
+}
+
+function actualizarPais(){
+
+    if($('#pais\\.id option:selected').text() != 'España'){
+        $('#provincia\\.id').val('-1');
+        $('#localidad\\.id').val('-1');
+        $('#provincia\\.id').attr("disabled","disabled");
+        $('#localidad\\.id').attr("disabled","disabled");
+    }else{
+        $('#provincia\\.id').removeAttr("disabled","disabled");
+    }
+    $('#provincia\\.id').trigger("chosen:updated");
+    $('#localidad\\.id').trigger("chosen:updated");
+
+}
+
+/**
+ * Habilita/Deshabilita los tipos correspondientes
+ */
+function tiposDocumentoPersonaFisica(){
+
+    //$('#tipoDocumentoIdentificacion').val("0");
+    $('#tipoDocumentoIdentificacion option[value="1"]').removeAttr("disabled");
+    $('#tipoDocumentoIdentificacion option[value="2"]').removeAttr("disabled");
+    $('#tipoDocumentoIdentificacion option[value="3"]').removeAttr("disabled");
+    $('#tipoDocumentoIdentificacion option[value="4"]').removeAttr("disabled");
+    $('#tipoDocumentoIdentificacion option[value="5"]').removeAttr("disabled");
+    $('#tipoDocumentoIdentificacion option[value="6"]').removeAttr("disabled");
+    $('#tipoDocumentoIdentificacion').trigger("chosen:updated");
+
+}
+
+/**
+ * Habilita/Deshabilita los tipos correspondientes
+ */
+function tiposDocumentoPersonaJuridica(){
+
+    $('#tipoDocumentoIdentificacion').val("0");
+    $('#tipoDocumentoIdentificacion option[value="1"]').removeAttr("disabled");
+    $('#tipoDocumentoIdentificacion option[value="2"]').removeAttr("disabled");
+    $('#tipoDocumentoIdentificacion option[value="3"]').attr("disabled", "disabled");
+    $('#tipoDocumentoIdentificacion option[value="4"]').attr("disabled", "disabled");
+    $('#tipoDocumentoIdentificacion option[value="5"]').attr("disabled", "disabled");
+    $('#tipoDocumentoIdentificacion option[value="6"]').attr("disabled", "disabled");
+    $('#tipoDocumentoIdentificacion').trigger("chosen:updated");
 
 }
