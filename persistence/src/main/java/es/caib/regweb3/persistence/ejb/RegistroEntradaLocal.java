@@ -385,4 +385,12 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      */
     public Integer eliminarByEntidad(Long idEntidad) throws Exception;
 
+    /**
+     * Busca los Registros de Entrada de un Libro.
+     * @param idLibro
+     * @return
+     * @throws Exception
+     */
+    public Long getTotalByLibro(Long idLibro) throws Exception;
+
 }

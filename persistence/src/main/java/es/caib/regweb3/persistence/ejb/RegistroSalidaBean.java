@@ -662,4 +662,16 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
     }
 
+    @Override
+    public Long getTotalByLibro(Long idLibro) throws Exception {
+
+        Query q;
+
+        q = em.createQuery("Select count(rs.id) from RegistroSalida as rs where rs.libro.id = :idLibro ");
+
+        q.setParameter("idLibro", idLibro);
+
+        return (Long) q.getSingleResult();
+    }
+
 }

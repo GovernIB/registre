@@ -98,4 +98,12 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
      */
     public Integer eliminarByEntidad(Long idEntidad) throws Exception;
 
+    /**
+     * Elimina un Libro
+     * @param idLibro
+     * @return
+     * @throws Exception
+     */
+    public Long eliminarLibro(Long idLibro) throws Exception;
+
 }

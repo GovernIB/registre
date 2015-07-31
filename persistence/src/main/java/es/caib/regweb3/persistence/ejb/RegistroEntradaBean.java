@@ -1066,5 +1066,17 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         return registros.size();
     }
 
+    @Override
+    public Long getTotalByLibro(Long idLibro) throws Exception {
+
+        Query q;
+
+        q = em.createQuery("Select count(re.id) from RegistroEntrada as re where re.libro.id = :idLibro ");
+
+        q.setParameter("idLibro", idLibro);
+
+        return (Long) q.getSingleResult();
+    }
+
 
 }

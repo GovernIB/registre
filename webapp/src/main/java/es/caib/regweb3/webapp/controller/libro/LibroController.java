@@ -1,9 +1,7 @@
 package es.caib.regweb3.webapp.controller.libro;
 
 import es.caib.regweb3.model.*;
-import es.caib.regweb3.persistence.ejb.ContadorLocal;
-import es.caib.regweb3.persistence.ejb.LibroLocal;
-import es.caib.regweb3.persistence.ejb.RelacionOrganizativaOfiLocal;
+import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.editor.UsuarioEditor;
@@ -49,6 +47,12 @@ public class LibroController extends BaseController {
     
     @EJB(mappedName = "regweb3/RelacionOrganizativaOfiEJB/local")
     public RelacionOrganizativaOfiLocal relacionOrganizativaOfiLocalEjb;
+
+    @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
+    public RegistroEntradaLocal registroEntradaEjb;
+
+    @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
+    public RegistroSalidaLocal registroSalidaEjb;
 
     /**
      * Listado de libros de un Organismo
@@ -242,6 +246,47 @@ public class LibroController extends BaseController {
 
             return "redirect:/libro/"+libro.getOrganismo().getId()+"/libros";
         }
+    }
+
+    /**
+     * Eliminar un {@link es.caib.regweb3.model.Libro}
+     */
+    @RequestMapping(value = "/{idLibro}/{idOrganismo}/delete")
+    public String eliminarLibro(@PathVariable("idLibro") Long idLibro, @PathVariable("idOrganismo") Long idOrganismo, HttpServletRequest request) {
+
+        try {
+
+            Libro libro = libroEjb.findById(idLibro);
+
+            // Obtiene el valor de los contadores del libro
+//            Integer contadorEntrada = libro.getContadorEntrada().getNumero();
+//            Integer contadorSalida = libro.getContadorSalida().getNumero();
+//            Integer contadorOficio = libro.getContadorOficioRemision().getNumero();
+
+            Long registrosEntrada = registroEntradaEjb.getTotalByLibro(idLibro);
+            Long registrosSalida = registroSalidaEjb.getTotalByLibro(idLibro);
+
+            // Comprueba que los contadores del libro están a cero y no tiene registros de entrada ni de salida
+            if(registrosEntrada==0 && registrosSalida==0){
+
+                // Elimina el Libro
+                /********* LIBRO *********/
+                log.info("Libro eliminado: " + libroEjb.eliminarLibro(idLibro));
+
+                Mensaje.saveMessageInfo(request, getMessage("regweb.eliminar.registro"));
+
+            } else{
+
+                Mensaje.saveMessageError(request, getMessage("error.libro.eliminar"));
+
+            }
+
+        } catch (Exception e) {
+            Mensaje.saveMessageError(request, getMessage("regweb.relaciones.registro"));
+            e.printStackTrace();
+        }
+
+        return "redirect:/libro/"+idOrganismo+"/libros";
     }
 
     /**
