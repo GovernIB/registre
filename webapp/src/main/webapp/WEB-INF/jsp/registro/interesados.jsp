@@ -182,7 +182,7 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
   <%-- traduccions para busquedaorganismo.js--%>
   var tradorganismo = new Array();
   tradorganismo['organismo.denominacion'] = "<spring:message code='organismo.denominacion' javaScriptEscape='true' />";
-  tradorganismo['regweb3.acciones'] = "<spring:message code='regweb.acciones' javaScriptEscape='true' />";
+  tradorganismo['regweb.acciones'] = "<spring:message code='regweb.acciones' javaScriptEscape='true' />";
 
 </script>
 
@@ -218,12 +218,45 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
     tradsinteresado['persona.razonSocial'] = "<spring:message code='persona.razonSocial' javaScriptEscape='true' />";
     tradsinteresado['interesado.resultados'] = "<spring:message code='interesado.resultados' javaScriptEscape='true' />";
     tradsinteresado['representante.eliminar'] = "<spring:message code='representante.eliminar' javaScriptEscape='true' />";
-    tradsinteresado['regweb3.confirmar'] = "<spring:message code='regweb.confirmar' javaScriptEscape='true' />";
-    tradsinteresado['regweb3.acciones'] = "<spring:message code='regweb.acciones' javaScriptEscape='true' />";
+    tradsinteresado['regweb.confirmar'] = "<spring:message code='regweb.confirmar' javaScriptEscape='true' />";
+    tradsinteresado['regweb.acciones'] = "<spring:message code='regweb.acciones' javaScriptEscape='true' />";
     tradsinteresado['usuario.apellido1'] = "<spring:message code='usuario.apellido1' javaScriptEscape='true' />";
 
 
 
 <c:import url="../registro/addInteresadosBbdd.jsp"/>
+
+    $(window).load(function() {
+
+        mostrarOrganismos();
+
+        // Muestra u Oculta en función del tipoInteresado seleccionado
+        $('input[name=tipoInteresado]:radio').click(function () {
+            var tipoInteresado = $('input[name=tipoInteresado]:radio:checked').val();
+
+            if(tipoInteresado == 1){
+
+                mostrarOrganismos();
+
+            }else if(tipoInteresado == 2){
+
+                mostrarPersonaFisica();
+
+            }else if(tipoInteresado == 3){
+
+                mostrarPersonaJuridica();
+            }
+
+        });
+
+        // Gestión de los cambios de persona
+        $('#pais\\.id').change(
+                function() {actualizarPais();});
+
+        //Gestión de los cambios de tipo documento
+        $('#tipoDocumentoIdentificacion').change(
+                function() {actualizarTipoDocumentoIdentificacion();});
+
+    });
 
 </script>

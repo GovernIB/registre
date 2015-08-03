@@ -1,36 +1,5 @@
 /*Acciones cuando se carga la página*/
-$(window).load(function() {
 
-    mostrarOrganismos();
-
-    // Muestra u Oculta en función del tipoInteresado seleccionado
-    $('input[name=tipoInteresado]:radio').click(function () {
-        var tipoInteresado = $('input[name=tipoInteresado]:radio:checked').val();
-
-        if(tipoInteresado == 1){
-
-            mostrarOrganismos();
-
-        }else if(tipoInteresado == 2){
-
-            mostrarPersonaFisica();
-
-        }else if(tipoInteresado == 3){
-
-            mostrarPersonaJuridica();
-        }
-
-    });
-
-    // Gestión de los cambios de persona
-    $('#pais\\.id').change(
-        function() {actualizarPais();});
-
-    //Gestión de los cambios de tipo documento
-    $('#tipoDocumentoIdentificacion').change(
-        function() {actualizarTipoDocumentoIdentificacion();});
-
-});
 
 
 
@@ -492,21 +461,21 @@ function buscarPersonas(tipoPersonas){
         var tipo = '2';
         var json = { "nombre" : $('#nombre'+tipoPersonas).val(), "apellido1" : $('#apellido1'+tipoPersonas).val(), "apellido2" : $('#apellido2'+tipoPersonas).val(), "documento" : $('#documento'+tipoPersonas).val(), "tipo": tipo};
 
-        tabla.append('<thead><tr><th>'+tradsinteresado['regweb3.nombre']+'</th><th>'+tradsinteresado['persona.documento']+'</th><th>'+tradsinteresado['regweb3.acciones']+'</th></tr></thead><tbody></tbody>');
+        tabla.append('<thead><tr><th>'+tradsinteresado['regweb3.nombre']+'</th><th>'+tradsinteresado['persona.documento']+'</th><th>'+tradsinteresado['persona.tipoPersona']+'</th><th>'+tradsinteresado['regweb.acciones']+'</th></tr></thead><tbody></tbody>');
 
     }else if(tipoPersonas == 'Juridicas'){ // Personas Jurídicas
 
         var tipo = '3';
         var json = { "razonSocial" : $('#razonSocial'+tipoPersonas).val(), "documento" : $('#documento'+tipoPersonas).val(), "tipo": tipo};
 
-        tabla.append('<thead><tr><th>'+tradsinteresado['persona.razonSocial']+'</th><th>'+tradsinteresado['persona.documento']+'</th><th>'+tradsinteresado['regweb3.acciones']+'</th></tr></thead><tbody></tbody>');
+        tabla.append('<thead><tr><th>'+tradsinteresado['persona.razonSocial']+'</th><th>'+tradsinteresado['persona.documento']+'</th><th>'+tradsinteresado['persona.tipoPersona']+'</th><th>'+tradsinteresado['regweb.acciones']+'</th></tr></thead><tbody></tbody>');
 
     }else if(tipoPersonas == 'Todas'){ // Todas las personas Personas
 
         var tipo = '0';
         var json = { "nombre" : $('#nombre'+tipoPersonas).val(), "apellido1" : $('#apellido1'+tipoPersonas).val(), "apellido2" : $('#apellido2'+tipoPersonas).val(), "documento" : $('#documento'+tipoPersonas).val(),"razonSocial" : $('#razonSocial'+tipoPersonas).val(), "tipo": tipo};
 
-        tabla.append('<thead><tr><th>'+tradsinteresado['persona.persona']+'</th><th>'+tradsinteresado['persona.documento']+'</th><th>'+tradsinteresado['persona.tipoPersona']+'</th><th>'+tradsinteresado['regweb3.acciones']+'</th></tr></thead><tbody></tbody>');
+        tabla.append('<thead><tr><th>'+tradsinteresado['persona.persona']+'</th><th>'+tradsinteresado['persona.documento']+'</th><th>'+tradsinteresado['persona.tipoPersona']+'</th><th>'+tradsinteresado['regweb.acciones']+'</th></tr></thead><tbody></tbody>');
     }
 
 
@@ -823,6 +792,9 @@ function tiposDocumentoPersonaFisica(){
     $('#tipoDocumentoIdentificacion option[value="4"]').removeAttr("disabled");
     $('#tipoDocumentoIdentificacion option[value="5"]').removeAttr("disabled");
     $('#tipoDocumentoIdentificacion option[value="6"]').removeAttr("disabled");
+    if( $('#tipoDocumentoIdentificacion').val() > 0){
+        $('#documento').removeAttr("disabled","disabled");
+    }
     $('#tipoDocumentoIdentificacion').trigger("chosen:updated");
 
 }
@@ -839,6 +811,9 @@ function tiposDocumentoPersonaJuridica(){
     $('#tipoDocumentoIdentificacion option[value="4"]').attr("disabled", "disabled");
     $('#tipoDocumentoIdentificacion option[value="5"]').attr("disabled", "disabled");
     $('#tipoDocumentoIdentificacion option[value="6"]').attr("disabled", "disabled");
+    if( $('#tipoDocumentoIdentificacion').val() > 0){
+        $('#documento').removeAttr("disabled","disabled");
+    }
     $('#tipoDocumentoIdentificacion').trigger("chosen:updated");
 
 }

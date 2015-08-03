@@ -115,7 +115,7 @@
 
                             <div class="form-group col-xs-6">
                                 <div class="col-xs-4 pull-lef etiqueta_regweb control-label">
-                                    <form:label path="pais.id">Pais</form:label>
+                                    <form:label path="pais.id"><spring:message code="interesado.pais"/></form:label>
                                 </div>
                                 <div class="col-xs-8">
                                     <form:select path="pais.id" class="chosen-select">
@@ -130,11 +130,11 @@
 
                             <div class="form-group col-xs-6">
                                 <div class="col-xs-4 pull-lef etiqueta_regweb control-label">
-                                    <form:label path="provincia.id">Provincia</form:label>
+                                    <form:label path="provincia.id"><spring:message code="interesado.provincia"/></form:label>
                                 </div>
                                 <div class="col-xs-8">
 
-                                    <form:select path="provincia.id" class="chosen-select" onchange="actualizarLocalidad(this)">
+                                    <form:select path="provincia.id" class="chosen-select" disabled="disabled" onchange="actualizarLocalidad(this)">
                                         <form:option value="" label="..."/>
                                         <c:forEach var="provincia" items="${provincias}">
                                             <form:option value="${provincia.id}" label="${provincia.descripcionProvincia}" />
@@ -146,10 +146,10 @@
 
                             <div class="form-group col-xs-6">
                                 <div class="col-xs-4 pull-lef etiqueta_regweb control-label">
-                                    <form:label path="localidad.id">Localidad</form:label>
+                                    <form:label path="localidad.id"><spring:message code="interesado.localidad"/></form:label>
                                 </div>
                                 <div class="col-xs-8">
-                                    <form:select path="localidad.id" cssClass="chosen-select"/>
+                                    <form:select path="localidad.id" cssClass="chosen-select" disabled="disabled"/>
                                     <form:errors path="localidad.id" cssClass="help-block" element="span"/>
                                 </div>
                             </div>
@@ -256,13 +256,19 @@
 
         actualizarLocalidad();
         actualizartipoPersona();
+        actualizarPais();
 
+        // Gestión de los cambios de país
+        $('#pais\\.id').change(
+                function() {actualizarPais();});
 
+        //Gestión de los cambios de tipo documento
+        $('#tipoDocumentoIdentificacion').change(
+                function() {actualizarTipoDocumentoIdentificacion();});
 
+        // Gestión de tipo Persona
         $('#tipo').change(
-            function() {
-                actualizartipoPersona();
-          });
+            function() {actualizartipoPersona();});
     });
 
 

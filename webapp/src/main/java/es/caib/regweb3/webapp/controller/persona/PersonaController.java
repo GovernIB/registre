@@ -10,16 +10,12 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.PersonaBusquedaForm;
-import es.caib.regweb3.webapp.utils.JsonResponse;
 import es.caib.regweb3.webapp.utils.Mensaje;
-import es.caib.regweb3.webapp.utils.PersonaJson;
 import es.caib.regweb3.webapp.validator.PersonaWebValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
@@ -27,9 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -122,13 +116,7 @@ public class PersonaController extends BaseController {
     personaValidator.validate(persona, result);
 
     if (result.hasErrors()) {
-      // Si hay errores volvemos a la vista del formulario
-      /*
-      List<FieldError> errors = result.getFieldErrors();
-      for (FieldError error : errors) {
-        log.error("Error: " + error.getField() + " - " + error.getCode() + " - " + error.getDefaultMessage());
-      }
-      */
+
       return "persona/personaForm";
     } else { // Si no hay errores guardamos el registro
 
@@ -169,6 +157,8 @@ public class PersonaController extends BaseController {
 
     if (persona.getPais() == null || persona.getPais().getId() == null) {
       persona.setPais(null);
+        persona.setProvincia(null);
+        persona.setLocalidad(null);
     }
 
   }

@@ -365,7 +365,7 @@
   <%-- traduccions para busquedaorganismo.js--%>
   var tradorganismo = new Array();
   tradorganismo['organismo.denominacion'] = "<spring:message code='organismo.denominacion' javaScriptEscape='true' />";
-  tradorganismo['regweb3.acciones'] = "<spring:message code='regweb.acciones' javaScriptEscape='true' />";
+  tradorganismo['regweb.acciones'] = "<spring:message code='regweb.acciones' javaScriptEscape='true' />";
   tradorganismo['organismo.superior'] = "<spring:message code='organismo.superior' javaScriptEscape='true' />";
   tradorganismo['organismo.superior.vacio'] = "<spring:message code='organismo.superior.vacio' javaScriptEscape='true' />";
   <%-- Traducciones para interesados.js --%>
@@ -385,16 +385,20 @@
   tradsinteresado['persona.documento'] = "<spring:message code='persona.documento' javaScriptEscape='true' />";
   tradsinteresado['persona.razonSocial'] = "<spring:message code='persona.razonSocial' javaScriptEscape='true' />";
   tradsinteresado['persona.persona'] = "<spring:message code='persona.persona' javaScriptEscape='true' />";
+  tradsinteresado['persona.tipoPersona'] = "<spring:message code='persona.tipoPersona' javaScriptEscape='true' />";
   tradsinteresado['persona.razonSocial'] = "<spring:message code='persona.razonSocial' javaScriptEscape='true' />";
   tradsinteresado['interesado.resultados'] = "<spring:message code='interesado.resultados' javaScriptEscape='true' />";
   tradsinteresado['representante.eliminar'] = "<spring:message code='representante.eliminar' javaScriptEscape='true' />";
   tradsinteresado['regweb3.confirmar'] = "<spring:message code='regweb.confirmar' javaScriptEscape='true' />";
   tradsinteresado['usuario.apellido1'] = "<spring:message code='usuario.apellido1' javaScriptEscape='true' />";
+  tradsinteresado['regweb.acciones'] = "<spring:message code='regweb.acciones' javaScriptEscape='true' />";
+  tradsinteresado['persona.fisica'] = "<spring:message code='persona.fisica' javaScriptEscape='true' />";
+  tradsinteresado['persona.juridica'] = "<spring:message code='persona.juridica' javaScriptEscape='true' />";
 </script>
 
 <script type="text/javascript" src="<c:url value="/js/busquedaorganismo.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/interesados.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/representantes.js"/>"></script>
+<%--<script type="text/javascript" src="<c:url value="/js/interesados.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/representantes.js"/>"></script>--%>
 
 
 <script type="text/javascript" >
