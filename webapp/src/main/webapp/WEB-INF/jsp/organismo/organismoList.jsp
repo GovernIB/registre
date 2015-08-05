@@ -30,6 +30,7 @@
             <div class="col-xs-12">
 
                 <c:import url="../modulos/mensajes.jsp"/>
+                <div id="mensajes"></div>
 
                 <div class="panel panel-success">
 
@@ -233,8 +234,14 @@
                     beforeSend: function(objeto){
                         $('#modalSincro').modal('show');
                     },
-                    complete:function(){
-                        goTo('<c:url value="/entidad/pendientesprocesar"/>');
+                    success:function(result){
+
+                        if(result == true){
+                            goTo('<c:url value="/entidad/pendientesprocesar"/>');
+                        }else{
+                            mostrarMensaje('#mensajes','<spring:message code="regweb.actualizacion.nook"/>');
+                        }
+
                     }
                 });
 

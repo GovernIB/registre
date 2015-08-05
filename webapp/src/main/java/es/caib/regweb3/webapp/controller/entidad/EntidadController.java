@@ -466,7 +466,8 @@ public class EntidadController extends BaseController {
     * Actualizamos una {@link es.caib.regweb3.model.Entidad} de dir3caib
     */
     @RequestMapping(value = "/{entidadId}/actualizar")
-    public void actualizar(@PathVariable Long entidadId, Model model, HttpServletRequest request) {
+    @ResponseBody
+    public Boolean actualizar(@PathVariable Long entidadId, HttpServletRequest request) {
 
        try{
           Descarga ultimaDescarga = descargaEjb.findByTipoEntidad(RegwebConstantes.UNIDAD,entidadId);
@@ -475,10 +476,6 @@ public class EntidadController extends BaseController {
             fechaUltimaActualizacion = new Timestamp(ultimaDescarga.getFechaImportacion().getTime());
           }
 
-          // Determinamos si es actualizacion o sincronizacion
-          if(ultimaDescarga != null){
-            model.addAttribute("descarga", ultimaDescarga);
-          }
           // Establecemos la fecha de la primera sincronizacion
           Descarga primeraDescarga = descargaEjb.findByTipoEntidadInverse(RegwebConstantes.UNIDAD, entidadId);
           Timestamp fechaSincronizacion = null;
@@ -492,7 +489,11 @@ public class EntidadController extends BaseController {
        }catch(Exception e){
            log.error("Error actualizacion", e);
            Mensaje.saveMessageError(request, getMessage("regweb.actualizacion.nook"));
+
+           return false;
        }
+
+        return true;
     }
 
     /**
