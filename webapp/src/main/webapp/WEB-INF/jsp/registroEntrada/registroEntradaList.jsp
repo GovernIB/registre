@@ -243,7 +243,7 @@
                                                         <tr>
                                                             <th><spring:message code="registroEntrada.numeroRegistro"/></th>
                                                             <th><spring:message code="registroEntrada.fecha"/></th>
-                                                            <th><spring:message code="registroEntrada.libro.corto"/></th>
+                                                            <%--<th><spring:message code="registroEntrada.libro.corto"/></th>--%>
                                                             <th><spring:message code="registroEntrada.usuario"/></th>
                                                             <th><spring:message code="registroEntrada.oficina"/></th>
                                                             <th><spring:message code="registroEntrada.organismoDestino"/></th>
@@ -254,6 +254,7 @@
                                                                 <th><spring:message code="registroEntrada.extracto"/></th>
                                                             </c:if>
                                                             <th><spring:message code="registroEntrada.estado"/></th>
+                                                            <th><spring:message code="registroEntrada.interesados"/></th>
                                                             <th><spring:message code="registroEntrada.anexos"/></th>
 
                                                             <th class="center"><spring:message code="regweb.acciones"/></th>
@@ -265,7 +266,7 @@
                                                             <tr>
                                                                 <td>${registroEntrada.numeroRegistroFormateado}</td>
                                                                 <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy"/></td>
-                                                                <td><label class="no-bold" rel="ayuda" data-content="${registroEntrada.libro.nombre}" data-toggle="popover">${registroEntrada.libro.codigo}</label></td>
+                                                                <%--<td><label class="no-bold" rel="ayuda" data-content="${registroEntrada.libro.nombre}" data-toggle="popover">${registroEntrada.libro.codigo}</label></td>--%>
                                                                 <td>${registroEntrada.usuario.usuario.identificador}</td>
                                                                 <td><label class="no-bold" rel="ayuda" data-content="${registroEntrada.oficina.denominacion}" data-toggle="popover">${registroEntrada.oficina.codigo}</label></td>
                                                                 <td>${(empty registroEntrada.destino)? registroEntrada.destinoExternoDenominacion : registroEntrada.destino.denominacion}</td>
@@ -301,6 +302,12 @@
 
                                                                     </c:choose>
                                                                 </td>
+                                                                <c:if test="${registroEntrada.registroDetalle.interesados != null}">
+                                                                    <td class="center"><label class="no-bold" rel="ayuda" data-content="${registroEntrada.registroDetalle.nombreInteresadosHtml}" data-toggle="popover">${fn:length(registroEntrada.registroDetalle.interesados)}</label></td>
+                                                                </c:if>
+                                                                <c:if test="${registroEntrada.registroDetalle.interesados == null}">
+                                                                    <td class="center">0</td>
+                                                                </c:if>
                                                                 <c:if test="${registroEntrada.registroDetalle.anexos != null}">
                                                                     <td class="center">${fn:length(registroEntrada.registroDetalle.anexos)}</td>
                                                                 </c:if>

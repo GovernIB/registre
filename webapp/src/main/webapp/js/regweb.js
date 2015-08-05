@@ -61,7 +61,7 @@
         }
     });
 
-    $("[rel='ayuda']").popover({ trigger: "hover",placement: "bottom",container:"body"});
+    $("[rel='ayuda']").popover({ trigger: "hover",placement: "bottom",container:"body", html:true});
 
 });
 

@@ -357,6 +357,20 @@ public class RegistroDetalle implements Serializable {
         this.version = version;
     }
 
+    @Transient
+    public String getNombreInteresadosHtml(){
+        if(interesados != null && interesados.size() > 0){
+            String nombres = "";
+            for (Interesado interesado : interesados) {
+                nombres = nombres.concat(interesado.getNombreCompleto() + " <br/>");
+            }
+
+            return  nombres;
+        }
+
+        return "";
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -246,7 +246,7 @@
                                     <tr>
                                         <th><spring:message code="registroSalida.numeroRegistro"/></th>
                                         <th><spring:message code="registroSalida.fecha"/></th>
-                                        <th><spring:message code="registroSalida.libro.corto"/></th>
+                                        <%--<th><spring:message code="registroSalida.libro.corto"/></th>--%>
                                         <th><spring:message code="registroSalida.usuario"/></th>
                                         <th><spring:message code="registroSalida.oficina"/></th>
                                         <th><spring:message code="registroSalida.origen"/></th>
@@ -257,6 +257,7 @@
                                             <th><spring:message code="registroSalida.extracto"/></th>
                                         </c:if>
                                         <th><spring:message code="registroSalida.estado"/></th>
+                                        <th><spring:message code="registroEntrada.interesados"/></th>
                                         <th><spring:message code="registroEntrada.anexos"/></th>
 
                                         <th class="center"><spring:message code="regweb.acciones"/></th>
@@ -268,7 +269,7 @@
                                         <tr>
                                             <td>${registroSalida.numeroRegistroFormateado}</td>
                                             <td><fmt:formatDate value="${registroSalida.fecha}" pattern="dd/MM/yyyy"/></td>
-                                            <td><label class="no-bold" rel="ayuda" data-content="${registroSalida.libro.nombre}" data-toggle="popover">${registroSalida.libro.codigo}</label></td>
+                                            <%--<td><label class="no-bold" rel="ayuda" data-content="${registroSalida.libro.nombre}" data-toggle="popover">${registroSalida.libro.codigo}</label></td>--%>
                                             <td>${registroSalida.usuario.usuario.identificador}</td>
                                             <td><label class="no-bold" rel="ayuda" data-content="${registroSalida.oficina.denominacion}" data-toggle="popover">${registroSalida.oficina.codigo}</label></td>
                                             <c:if test="${registroSalida.origen != null}">
@@ -304,6 +305,12 @@
 
                                                 </c:choose>
                                             </td>
+                                            <c:if test="${registroSalida.registroDetalle.interesados != null}">
+                                                <td class="center"><label class="no-bold" rel="ayuda" data-content="${registroSalida.registroDetalle.nombreInteresadosHtml}" data-toggle="popover">${fn:length(registroSalida.registroDetalle.interesados)}</label></td>
+                                            </c:if>
+                                            <c:if test="${registroSalida.registroDetalle.interesados == null}">
+                                                <td class="center">0</td>
+                                            </c:if>
                                             <c:if test="${registroSalida.registroDetalle.anexos != null}">
                                                 <td class="center">${fn:length(registroSalida.registroDetalle.anexos)}</td>
                                             </c:if>
