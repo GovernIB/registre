@@ -64,10 +64,14 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
     public DescargaLocal descargaEjb;
 
 
-
-    /*
+    /**
      * Método que sincroniza o actualiza una entidad de regweb3 desde dir3caib. Lo hace en función de si se indica la
      * fecha de actualización o no. Si no se indica se sincroniza y si se indica se actualiza
+     * @param entidadId entidad a tratar
+     * @param fechaActualizacion fecha de la ultima actualización con dir3caib
+     * @param fechaSincronizacion fecha de la primera sincronización con dir3caib.
+     * @return
+     * @throws Exception
      */
     @Override
     public int sincronizarActualizar(Long entidadId, Timestamp fechaActualizacion, Timestamp fechaSincronizacion) throws Exception {
@@ -131,8 +135,8 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         for(Organismo organismo: organismoEjb.findByEntidad(entidadId)){
             List<OficinaTF> oficinas = oficinasService.obtenerArbolOficinas(organismo.getCodigo(), fechaActualizacion,fechaSincronizacion);
             // Creamos el arbol de oficinas
-            for(OficinaTF oficinaTF:oficinas){
-                sincronizarOficina(oficinaTF);
+            for(OficinaTF oficinaTF:oficinas) {
+               sincronizarOficina(oficinaTF);
             }
             oficinasActualizadas += oficinas.size();
         }
@@ -272,7 +276,6 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
             // RelacionSirOfi
             if(oficinaTF.getSirOfi() != null){
-
                 List<RelacionSirOfiTF> relacionSirOfiTFList = oficinaTF.getSirOfi();
                 log.info("Relaciones SIR " +oficinaTF.getDenominacion() +": " + oficinaTF.getSirOfi().size());
 
@@ -302,14 +305,12 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
             //Borramos las relaciones existentes para el caso de la actualizacion
             relacionOrganizativaOfiEjb.deleteByOficina(oficina.getId());
-        //    oficina.setOrganizativasOfi(null);
-            // RelacionOrganizativaOfi
             if(oficinaTF.getOrganizativasOfi() != null){
 
                 List<RelacionOrganizativaOfiTF> relacionOrganizativaOfiTFList = oficinaTF.getOrganizativasOfi();
                 log.info("Relaciones organizativas " +oficinaTF.getDenominacion()+ " : "  + relacionOrganizativaOfiTFList.size());
 
-                List<RelacionOrganizativaOfi> relacionOrganizativaOfiList = new ArrayList<RelacionOrganizativaOfi>();
+               // List<RelacionOrganizativaOfi> relacionOrganizativaOfiList = new ArrayList<RelacionOrganizativaOfi>();
                 for (RelacionOrganizativaOfiTF relacionOrganizativaOfiTF : relacionOrganizativaOfiTFList) {
 
                     RelacionOrganizativaOfi relacionOrganizativaOfi = new RelacionOrganizativaOfi();
@@ -328,7 +329,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
                     relacionOrganizativaOfi.setOrganismo(organismoOrg);
                     relacionOrganizativaOfi = relacionOrganizativaOfiEjb.persist(relacionOrganizativaOfi);
 
-                    relacionOrganizativaOfiList.add(relacionOrganizativaOfi);
+                   // relacionOrganizativaOfiList.add(relacionOrganizativaOfi);
                 }
                // oficina.setOrganizativasOfi(relacionOrganizativaOfiList);
             }
@@ -336,8 +337,11 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
             /* borramos cache */
           cacheEstadoEntidad.clear();
           //oficina = oficinaEjb.merge(oficina);
+
         }
+
     }
+
 
   /**
    * Método que sincroniza los históricos de un organismo. Se debe ejecutar después de sincronizarlos todos.
@@ -378,6 +382,18 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         log.info("Organismos destinatarios encontrados " + arbol.size());
     }*/
 
+
+    /**
+     * Función que actualiza un conjunto de datos del organismo
+     * @param organismo organismo a actualizar
+     * @param unidadTF  datos de la unidad transferida desde dir3caib
+     * @param entidad entidad que se está actualizando
+     * @param cacheEstadoEntidad
+     * @param cacheProvincia
+     * @param cacheComunidadAutonoma
+     * @param cacheNivelAdministracion
+     * @throws Exception
+     */
     private void procesarOrganismo(Organismo organismo, UnidadTF unidadTF, Entidad entidad,
         Map<String, CatEstadoEntidad> cacheEstadoEntidad, Map<Long,CatProvincia> cacheProvincia,
         Map<Long,CatComunidadAutonoma> cacheComunidadAutonoma,
@@ -402,16 +418,27 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
           CatProvincia provincia = cacheProvincia.get(unidadTF.getCodAmbProvincia());
           organismo.setCodAmbProvincia(provincia);
+        }else {
+            organismo.setCodAmbProvincia(null);
         }
 
         if(unidadTF.getCodAmbComunidad() != null){
 
           CatComunidadAutonoma comunidadAutonoma = cacheComunidadAutonoma.get(unidadTF.getCodAmbComunidad());
           organismo.setCodAmbComunidad(comunidadAutonoma);
+        }else {
+            organismo.setCodAmbComunidad(null);
         }
 
     }
 
+    /**
+     * Función que actualiza el estado y el organismo responsable de una oficina
+     * @param oficina oficina a tratar
+     * @param oficinaTF oficina transferida desde dir3caib
+     * @param cacheEstadoEntidad caché de EstadoEntidad
+     * @throws Exception
+     */
     private void procesarOficina(Oficina oficina, OficinaTF oficinaTF, Map<String, CatEstadoEntidad> cacheEstadoEntidad) throws Exception {
       oficina.setDenominacion(oficinaTF.getDenominacion());
 
@@ -434,6 +461,13 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
     }
 
+    /**
+     * Función que crea una nueva entrada en la tabla RWE_DESCARGA que indica que se ha producido una nueva descarga
+     * (sincronización o actualización) de la entidad indicada.
+     * @param tipo indica organismo o oficina.
+     * @param entidad entidad descargada
+     * @throws Exception
+     */
     private void nuevaDescarga(String tipo, Entidad entidad) throws Exception {
         Descarga descarga = new Descarga();
         descarga.setTipo(tipo);
@@ -444,6 +478,13 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         descarga = descargaEjb.persist(descarga);
     }
 
+    /**
+     * Función que crea una entrada en la tabla de RWE_PENDIENTE que indica que es un organismo que está pendiente
+     * de procesar(reasignar sus libros a los organismos que lo sustituyen). Se crea según el estado del organismo
+     * recibido y si tiene libros.
+     * @param org organismo a tratar
+     * @throws Exception
+     */
     private void guardarPendiente(Organismo org) throws Exception {
         if(RegwebConstantes.ESTADO_ENTIDAD_EXTINGUIDO.equals(org.getEstado().getCodigoEstadoEntidad())
                 || RegwebConstantes.ESTADO_ENTIDAD_TRANSITORIO.equals(org.getEstado().getCodigoEstadoEntidad())

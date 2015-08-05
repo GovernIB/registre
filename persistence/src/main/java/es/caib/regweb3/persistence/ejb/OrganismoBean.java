@@ -335,7 +335,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         List<String> oficinasSir = new ArrayList<String>();
 
         Query q = em.createQuery("Select relacionSirOfi from RelacionSirOfi as relacionSirOfi where " +
-                "relacionSirOfi.organismo.id = :idOrganismo");
+                "relacionSirOfi.organismo.id = :idOrganismo ");
 
         List<RelacionSirOfi> relSir= q.getResultList();
         if(!relSir.isEmpty()){

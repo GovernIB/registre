@@ -35,7 +35,7 @@ function procesarOrganismo(organismoAProcesar) {
                   //mostrarMensaje('#pendientes', trads['mensajeprocesadook'] + " " + organismoAProcesar);
                   mostrarMensaje('#pendientes', trads['mensajeprocesadook'] + " " +respuesta.result.nombre);
                   $(idPanel).hide();
-                  mostrarProcesado(organismoAProcesar, respuesta.result.nombre,respuesta.result.libroOrganismos,idioma);
+                  mostrarProcesado(organismoAProcesar, respuesta.result.nombre,respuesta.result.libroOrganismos);
             }
         }
      });
@@ -59,7 +59,7 @@ function mostrarMensaje(idPanel, mensaje){
  * @param organismoAProcesarNombre  nombre del Organismos a procesar
  * @param librosOrganismos  conjunto de relaciones de libro-organismo del organismo a procesar
  */
- function mostrarProcesado(organismoAProcesarId, organismoAProcesarNombre, librosOrganismos, idioma){
+ function mostrarProcesado(organismoAProcesarId, organismoAProcesarNombre, librosOrganismos){
 
     // El html que se coge es el del resumen de los organismos procesados automaticamente
     // a este código se añadirá la nueva información a mostrar en una tabla

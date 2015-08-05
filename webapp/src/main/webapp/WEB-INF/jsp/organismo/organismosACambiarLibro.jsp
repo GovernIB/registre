@@ -31,7 +31,7 @@ de un proceso de sincronización/actualización de una entidad desde dir3caib --
         </div><!-- /.row -->
 
 
-        <c:import url="../modulos/mensajes.jsp"/>
+       <c:import url="../modulos/mensajes.jsp"/>
         <!-- PANEL LIBROS A CAMBIAR -->
 
 
@@ -44,6 +44,9 @@ de un proceso de sincronización/actualización de una entidad desde dir3caib --
                     <div  class="panel-body" > <!-- Panel body  principal-->
                         <div class="row">
                             <div class="col-xs-12">
+                                <c:if test="${empty organismosAProcesar}" >
+                                    <p><spring:message code="organismos.procesados.vacio"/></p>
+                                </c:if>
                                 <c:if test="${not empty organismosAProcesar}" >
                                    <%-- <div class="panel panel-success">
                                         <div class="panel-heading">

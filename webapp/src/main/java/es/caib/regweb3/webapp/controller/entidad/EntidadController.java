@@ -488,13 +488,11 @@ public class EntidadController extends BaseController {
 
 
           int actualizados = sincronizadorDIR3Ejb.sincronizarActualizar(entidadId, fechaUltimaActualizacion, fechaSincronizacion);
-          Mensaje.saveMessageInfo(request, getMessage("regweb.sincronizados.numero") + actualizados);
-
+          // via ajax s'en va a "entidad/pendientesprocesar"
        }catch(Exception e){
            log.error("Error actualizacion", e);
            Mensaje.saveMessageError(request, getMessage("regweb.actualizacion.nook"));
        }
-
     }
 
     /**
@@ -684,9 +682,9 @@ public class EntidadController extends BaseController {
                 List<Libro> libros = organismoExtinguido.getLibros();
                 //Si solo tiene un organismo que le sustituye se asignan los libros a ese organismo
                 if(organismoExtinguido.getHistoricoUO().size() == 1){// Se procesa internamente
-                   log.info("Entramos en historicos 1 de extinguido" + organismoExtinguido.getDenominacion());
+                   log.info("Se procesa automaticamente porque solo tiene 1 historico" + organismoExtinguido.getDenominacion());
                    if(libros.size()>0){
-                      log.info("Entramos en hay libros de historico 1 " + organismoExtinguido.getDenominacion());
+                      log.info("El organismo " + organismoExtinguido.getDenominacion()+" con 1 histórico tiene libros");
                       // Asignamos libros misma numeración
                       Organismo orgSustituye = new ArrayList<Organismo>(organismoExtinguido.getHistoricoUO()).get(0);
 
@@ -697,6 +695,7 @@ public class EntidadController extends BaseController {
                       }
                       // asignamos los libros para mostrarlos en el jsp
                       orgSustituye.setLibros(libros);
+                       log.info("Libros del organismo: "+ organismoExtinguido.getDenominacion()+ "han sido reasigandos al organismo:  "+orgSustituye.getDenominacion() );
                       // Añadimos todos los organimos procesados automáticamente
                       extinguidosAutomaticos.put(organismoExtinguido.getDenominacion(),orgSustituye);
                    }
@@ -705,35 +704,41 @@ public class EntidadController extends BaseController {
                    pendiente.setFecha(RegwebUtils.formateaFecha(new Date(), RegwebConstantes.FORMATO_FECHA_HORA));
                    pendienteEjb.merge(pendiente);
                    //Mensaje.saveMessageInfo(request, getMessage("organismo.extinguido.procesado.automatico"));
-                   log.info("MAP " +extinguidosAutomaticos.get(organismoExtinguido.getDenominacion()));
+                   log.info("MAP de extinguidos automaticos " +extinguidosAutomaticos.get(organismoExtinguido.getDenominacion()));
                 }else { // tiene más de un historico
-                    log.info("Entramos en historicos +1 de extinguido " + organismoExtinguido.getDenominacion());
+                    log.info("Entramos en historicos +1 de extinguido(no se procesan automaticamente): " + organismoExtinguido.getDenominacion());
                     if(libros.size()>0){//Si tiene libros se añade para procesarlo
-                        log.info("Tiene libros " + organismoExtinguido.getDenominacion());
+                        log.info("Tiene libros el organismo:" + organismoExtinguido.getDenominacion());
                       organismosExtinguidos.add(organismoExtinguido);
+                    }else{// no tiene libros, no se hace nada pero se actualiza el estado a procesado
+                        pendiente.setProcesado(true);
+                        pendiente.setFecha(RegwebUtils.formateaFecha(new Date(), RegwebConstantes.FORMATO_FECHA_HORA));
+                        pendienteEjb.merge(pendiente);
                     }
+
                 }
             }else{  // ANULADOS
               // TODO ANULADOS
             }
           }
+
           if(extinguidosAutomaticos.size()>0 || organismosExtinguidos.size()>0) {
               model.addAttribute("extinguidosAutomaticos", extinguidosAutomaticos);
               model.addAttribute("organismosAProcesar", organismosExtinguidos);
-          }else{
+          }//TODO BORRAR
+           /*else{
               log.info("no hay organismos a procesar ");
               Mensaje.saveMessageInfo(request, getMessage("organismos.procesados.vacio"));
-          }
+          }*/
+            log.info("Extinguidos automaticos: " + extinguidosAutomaticos.size());
+            log.info("organismosAProcesar: " + organismosExtinguidos.size());
+          //con esPendiente indicamos que venimos de una sincro/actualizacion y hay que mostrar el resumen de los autómaticos.
           model.addAttribute("esPendiente", true);
 
 
 
-        }else {
-            log.debug("else no pendientes de procesar");
-            Mensaje.saveMessageInfo(request, getMessage("organismo.nopendientesprocesar"));
-            return "redirect:/organismo/list";
         }
-        //return "organismo/organismosActualizados";
+        model.addAttribute("tituloPagina",getMessage("organismos.resultado.actualizacion"));
         return "organismo/organismosACambiarLibro";
     }
 
@@ -813,10 +818,8 @@ public class EntidadController extends BaseController {
             model.addAttribute("organismosAProcesar", organismosEntidad);
             model.addAttribute("organismosSustituyentes", organismosEntidadVigentes);
             model.addAttribute("esPendiente", false);
-        }else{
-            Mensaje.saveMessageInfo(request, getMessage("organismos.procesados.vacio"));
         }
-
+        model.addAttribute("tituloPagina", getMessage("entidad.cambiarlibros"));
         return "/organismo/organismosACambiarLibro";
     }
 

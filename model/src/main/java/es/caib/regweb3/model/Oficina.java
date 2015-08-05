@@ -1,5 +1,6 @@
 package es.caib.regweb3.model;
 
+import es.caib.regweb3.utils.RegwebConstantes;
 import org.hibernate.annotations.ForeignKey;
 import org.hibernate.annotations.Index;
 
@@ -175,7 +176,9 @@ public class Oficina implements Serializable{
         // Añadimos los Organismos a los que la Oficina da servicio
         Set<RelacionOrganizativaOfi> organismosFuncionales = this.getOrganizativasOfi();
         for(RelacionOrganizativaOfi relacionOrganizativaOfi:organismosFuncionales){
-            organismos.add(relacionOrganizativaOfi.getOrganismo());
+            if(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE.equals(relacionOrganizativaOfi.getEstado().getCodigoEstadoEntidad())) {
+                organismos.add(relacionOrganizativaOfi.getOrganismo());
+            }
         }
 
         return  organismos;
