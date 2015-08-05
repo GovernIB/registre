@@ -141,6 +141,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             // Ponemos la hora 23:59 a la fecha fin
             Date fechaFin = RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin());
             Paginacion paginacion = registroEntradaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroEntrada, librosConsulta, busqueda.getInteressatNom(), busqueda.getInteressatDoc(), busqueda.getOrganDestinatari(), busqueda.getAnexos());
+
             // Alta en tabla LOPD
             lopdEjb.insertarRegistrosEntrada(paginacion, usuarioEntidad.getId());
             busqueda.setPageNumber(1);
