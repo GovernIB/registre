@@ -431,6 +431,40 @@ public class Interesado implements Serializable {
     }
 
     @Transient
+    public String getInformacionHtml(){
+        String info = "";
+
+        if(tipo.equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
+
+            info = getNombre() + " <br/>";
+            if(!StringUtils.isEmpty(getCodigoDir3())){info = info + "DIR3: " +getCodigoDir3()+ " <br/>";}
+
+        }else if(tipo.equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)){
+
+            info = getNombrePersonaFisica() + " <br/>";
+            if(!StringUtils.isEmpty(getDireccion())){info = info + getDireccion()+ " <br/>";}
+            if(getProvincia() != null){info = info + getProvincia().getDescripcionProvincia()+ " <br/>";}
+            if(getLocalidad() != null){info = info + getLocalidad().getNombre()+ " <br/>";}
+            if(!StringUtils.isEmpty(getCp())){info = info + "Cp: " +getCp()+ " <br/>";}
+            if(!StringUtils.isEmpty(getTelefono())){info = info + "Tlf: " +getTelefono()+ " <br/>";}
+            if(!StringUtils.isEmpty(getEmail())){info = info + "Email: " +getEmail()+ " <br/>";}
+            if(!StringUtils.isEmpty(getDireccionElectronica())){info = info + "Dir. elect: " +getEmail()+ " <br/>";}
+
+        }else if(tipo.equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)){
+            info = getNombrePersonaJuridica() + " <br/>";
+            if(!StringUtils.isEmpty(getDireccion())){info = info + getDireccion()+ " <br/>";}
+            if(getProvincia() != null){info = info + getProvincia().getDescripcionProvincia()+ " <br/>";}
+            if(getLocalidad() != null){info = info + getLocalidad().getNombre()+ " <br/>";}
+            if(!StringUtils.isEmpty(getCp())){info = info + "Cp: " +getCp()+ " <br/>";}
+            if(!StringUtils.isEmpty(getTelefono())){info = info + "Tlf: " +getTelefono()+ " <br/>";}
+            if(!StringUtils.isEmpty(getEmail())){info = info + "Email: " +getEmail()+ " <br/>";}
+            if(!StringUtils.isEmpty(getDireccionElectronica())){info = info + "Dir. elect: " +getEmail()+ " <br/>";}
+        }
+
+        return info;
+    }
+
+    @Transient
     public String getNombreCompleto(){
 
         if(tipo.equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){

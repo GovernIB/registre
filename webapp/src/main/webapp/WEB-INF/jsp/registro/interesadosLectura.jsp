@@ -49,7 +49,7 @@
                                 <c:if test="${!interesado.isRepresentante}">
                                     <tr>
                                         <td>
-                                            ${interesado.nombreCompleto}
+                                            <label class="no-bold" rel="ayuda" data-content="${interesado.informacionHtml}" data-toggle="popover">${interesado.nombreCompleto}</label>
                                         </td>
                                         <td>
                                             <c:if test="${interesado.tipo == RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION}"><spring:message code="interesado.administracion"/></c:if>
@@ -58,7 +58,7 @@
                                         </td>
                                         <td>
                                             <c:if test="${interesado.representante != null}">
-                                                <span class="label label-success">${interesado.representante.nombreCompleto}</span>
+                                                <label class="no-bold" rel="ayuda" data-content="${interesado.representante.informacionHtml}" data-toggle="popover"><span class="label label-success">${interesado.representante.nombreCompleto}</span></label>
                                             </c:if>
 
                                             <c:if test="${interesado.representante == null}">
