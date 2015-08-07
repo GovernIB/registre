@@ -2,7 +2,6 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Contador;
 import es.caib.regweb3.model.Libro;
-import es.caib.regweb3.model.PermisoLibroUsuario;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -154,6 +153,15 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
         q.setParameter("idEntidad",idEntidad);
 
         return q.getResultList();
+    }
+
+    @Override
+    public Boolean tieneLibrosEntidad(Long idEntidad) throws Exception {
+
+        Query q = em.createQuery("Select count(libro.id) from Libro as libro where libro.organismo.entidad.id = :idEntidad");
+        q.setParameter("idEntidad",idEntidad);
+
+        return (Long)q.getSingleResult()>0;
     }
 
     @Override

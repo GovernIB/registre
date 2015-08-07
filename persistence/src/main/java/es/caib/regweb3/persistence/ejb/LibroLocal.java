@@ -76,6 +76,14 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
     public List<Libro> getTodosLibrosEntidad(Long idEntidad) throws Exception;
 
     /**
+     * Retorna si la entidad indicada tiene libros.
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public Boolean tieneLibrosEntidad(Long idEntidad) throws Exception;
+
+    /**
      * Pone a 0 todos los contadores de un Libro
      * @param idLibro
      * @throws Exception

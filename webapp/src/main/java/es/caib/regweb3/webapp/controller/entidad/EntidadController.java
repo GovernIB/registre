@@ -484,7 +484,7 @@ public class EntidadController extends BaseController {
           }
 
 
-          int actualizados = sincronizadorDIR3Ejb.sincronizarActualizar(entidadId, fechaUltimaActualizacion, fechaSincronizacion);
+           sincronizadorDIR3Ejb.sincronizarActualizar(entidadId, fechaUltimaActualizacion, fechaSincronizacion);
           // via ajax s'en va a "entidad/pendientesprocesar"
        }catch(Exception e){
            log.error("Error actualizacion", e);
@@ -722,22 +722,28 @@ public class EntidadController extends BaseController {
               // TODO ANULADOS
             }
           }
-
+          // extinguidosAutomaticos --> organismos que se les ha asignado automaticamente los libros.
+          // organismosExtinguidos --> organismos que estan pendientes de procesar por el usuario que será el que decida
+          // donde colocar finalmente los libros.
           if(extinguidosAutomaticos.size()>0 || organismosExtinguidos.size()>0) {
               model.addAttribute("extinguidosAutomaticos", extinguidosAutomaticos);
               model.addAttribute("organismosAProcesar", organismosExtinguidos);
-          }//TODO BORRAR
-           /*else{
+          }else{
               log.info("no hay organismos a procesar ");
-              Mensaje.saveMessageInfo(request, getMessage("organismos.procesados.vacio"));
-          }*/
+              Mensaje.saveMessageInfo(request, getMessage("organismo.nopendientesprocesar"));
+              return "redirect:/organismo/list";
+          }
             log.info("Extinguidos automaticos: " + extinguidosAutomaticos.size());
             log.info("organismosAProcesar: " + organismosExtinguidos.size());
           //con esPendiente indicamos que venimos de una sincro/actualizacion y hay que mostrar el resumen de los autómaticos.
-          model.addAttribute("esPendiente", true);
+            model.addAttribute("esPendiente", true); //TODO REVISAR SI VA BIEN AQUI
 
 
 
+        }else {
+            log.debug("else no pendientes de procesar");
+            Mensaje.saveMessageInfo(request, getMessage("organismo.nopendientesprocesar"));
+            return "redirect:/organismo/list";
         }
         model.addAttribute("tituloPagina",getMessage("organismos.resultado.actualizacion"));
         return "organismo/organismosACambiarLibro";
@@ -821,6 +827,7 @@ public class EntidadController extends BaseController {
             model.addAttribute("esPendiente", false);
         }
         model.addAttribute("tituloPagina", getMessage("entidad.cambiarlibros"));
+        model.addAttribute("tieneLibros", libroEjb.tieneLibrosEntidad(entidad.getId()));
         return "/organismo/organismosACambiarLibro";
     }
 
