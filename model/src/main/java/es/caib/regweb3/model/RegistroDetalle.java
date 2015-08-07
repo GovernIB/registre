@@ -362,7 +362,7 @@ public class RegistroDetalle implements Serializable {
         if(interesados != null && interesados.size() > 0){
             String nombres = "";
             for (Interesado interesado : interesados) {
-                nombres = nombres.concat(interesado.getNombreCompleto() + " <br/>");
+                nombres = nombres.concat("- "+interesado.getNombreCompleto() + " <br/>");
             }
 
             return  nombres;
