@@ -50,6 +50,7 @@ function mostrarMensaje(idPanel, mensaje){
 
     $(idPanel).append('<div class="alert alert-success alert-dismissable"><strong>'+mensaje+'</strong><br></div>');
 
+
 }
 
 

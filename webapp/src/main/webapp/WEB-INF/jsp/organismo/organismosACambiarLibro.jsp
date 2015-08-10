@@ -41,7 +41,8 @@ de un proceso de sincronización/actualización de una entidad desde dir3caib --
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-file-o"></i> <strong>${tituloPagina}</strong></h3>
                     </div>
-                    <div  class="panel-body" id="pendientes"> <!-- Panel body  principal-->
+                    <div  class="panel-body"> <!-- Panel body  principal-->
+                        <div id="pendientes"></div>
                         <div class="row">
                             <div class="col-xs-12">
                                 <c:if test="${empty organismosAProcesar}" >
