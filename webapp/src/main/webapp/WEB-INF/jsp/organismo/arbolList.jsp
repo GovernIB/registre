@@ -46,7 +46,7 @@
                     </div>
 
                     <!-- LEYENDA -->
-                    <div class="col-xs-3 col-xs-6 button-right">
+                    <div class="col-xs-4 button-right">
                         <div class="panel panel-danger">
                             <div class="panel-heading">
                                 <div class="row">
@@ -57,43 +57,33 @@
                             </div>
                             <div class="panel-footer">
                                 <div class="row">
-                                    <div class="col-xs-12 pad-bottom5">
+                                    <div class="col-xs-6 pad-bottom5">
                                         <button type="button" class="btn-danger-llegenda btn-xs"><i class="fa fa-globe"></i> <spring:message code="entidad.entidad"/></button>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-12 pad-bottom5">
+                                    <div class="col-xs-6 pad-bottom5">
                                         <button type="button" class="btn-primary btn-xs"><i class="fa fa-globe"></i> <spring:message code="entidad.unidadOrganica"/></button>
                                     </div>
-                                </div>
                                 <c:if test="${librosTotal > 0}">
-                                    <div class="row">
-                                        <div class="col-xs-12 pad-bottom5">
-                                            <button type="button" class="btn-llibre-llegenda btn-xs"><i class="fa fa-book"></i> <spring:message code="libro.libro"/></button>
-                                        </div>
+                                    <div class="col-xs-6 pad-bottom5">
+                                        <button type="button" class="btn-llibre-llegenda btn-xs"><i class="fa fa-book"></i> <spring:message code="libro.libro"/></button>
                                     </div>
                                 </c:if>
                                 <c:if test="${not empty oficinasResponsables}">
-                                    <div class="row">
-                                        <div class="col-xs-12 pad-bottom5">
-                                            <button type="button" class="btn-warning btn-xs"><i class="fa fa-home"></i> <spring:message code="regweb.oficina.principal"/></button>
-                                        </div>
+                                    <div class="col-xs-6 pad-bottom5">
+                                        <button type="button" class="btn-warning btn-xs"><i class="fa fa-home"></i> <spring:message code="regweb.oficina.principal"/></button>
                                     </div>
                                 </c:if>
                                 <c:if test="${not empty oficinasDependientes}">
-                                    <div class="row">
-                                        <div class="col-xs-12 pad-bottom5">
-                                            <button type="button" class="btn-ofaux btn-xs"><i class="fa fa-home"></i> <spring:message code="regweb.oficina.auxiliar"/></button>
-                                        </div>
+                                    <div class="col-xs-6 pad-bottom5">
+                                        <button type="button" class="btn-ofaux btn-xs"><i class="fa fa-home"></i> <spring:message code="regweb.oficina.auxiliar"/></button>
                                     </div>
                                 </c:if>
                                 <c:if test="${not empty oficinasFuncionales}">
-                                    <div class="row">
-                                        <div class="col-xs-12 pad-bottom5">
-                                            <button type="button" class="btn-success btn-xs"><i class="fa fa-institution"></i> <spring:message code="regweb.oficina.funcional"/></button>
-                                        </div>
+                                    <div class="col-xs-6 pad-bottom5">
+                                        <button type="button" class="btn-success btn-xs"><i class="fa fa-institution"></i> <spring:message code="regweb.oficina.funcional"/></button>
                                     </div>
                                 </c:if>
+                                </div>
                             </div>
                         </div>
                     </div>
