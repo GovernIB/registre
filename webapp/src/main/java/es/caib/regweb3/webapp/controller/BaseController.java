@@ -311,14 +311,20 @@ public class BaseController {
     }
 
     /**
-     * Obtenemos y procesamos lo sInteresados almacenados en la Session
+     * Obtenemos y procesamos los Interesados almacenados en la Session
      * @param interesadosSesion
      * @return
      * @throws Exception
      */
-    public List<Interesado> procesarInteresados(List<Interesado> interesadosSesion) throws Exception{
+    public List<Interesado> procesarInteresados(List<Interesado> interesadosSesion, Long idRegistroDetalle) throws Exception{
 
         List<Interesado> interesados  = new ArrayList<Interesado>();
+
+        RegistroDetalle registroDetalle = null;
+
+        if(idRegistroDetalle != null){
+            registroDetalle = new RegistroDetalle(idRegistroDetalle);
+        }
 
         if(interesadosSesion != null){
 
@@ -336,11 +342,13 @@ public class BaseController {
 
                             //Guardamos el Interesado
                             interesado.setId(null); // ponemos su id a null
+                            interesado.setRegistroDetalle(registroDetalle);
                             interesado.setRepresentante(null);
                             interesado = interesadoEjb.persist(interesado);
 
                             // Guardamos el Representante
                             representante.setId(null);
+                            representante.setRegistroDetalle(registroDetalle);
                             representante.setRepresentado(interesado);
                             representante = interesadoEjb.persist(representante);
 
@@ -363,6 +371,7 @@ public class BaseController {
                     }else{
                         // Guardamos el nuevo Interesado
                         interesado.setId(null); // ponemos su id a null
+                        interesado.setRegistroDetalle(registroDetalle);
                         interesado = interesadoEjb.persist(interesado);
 
                         // Lo añadimos al Array

@@ -568,7 +568,7 @@ public class InteresadoController extends BaseController{
 
             if(idRegistroDetalle.equals("null") || StringUtils.isEmpty(idRegistroDetalle)) { // Se trata de un nuevo Registro, utilizamos la sesion.
 
-                Interesado persona = obtenerInteresadoSesion(id, session, tipoRegistro);
+                Interesado persona = obtenerInteresadoSesion(id, session, variable);
 
                 // Si tiene Representate, también lo eliminamos.
                 if(persona.getRepresentante() != null){
@@ -649,7 +649,7 @@ public class InteresadoController extends BaseController{
      * @return
      */
     public Interesado obtenerInteresadoSesion(Long idInteresado, HttpSession session, String variable){
-
+        log.info("Buscando en: " + variable);
         List<Interesado> interesados = (List<Interesado>) session.getAttribute(variable);
 
         Interesado interesado = new Interesado(idInteresado);

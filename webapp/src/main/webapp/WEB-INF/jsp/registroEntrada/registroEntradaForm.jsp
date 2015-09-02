@@ -424,11 +424,10 @@
         </c:if>
 
         // CARGA DE INTERESADOS REGISTRO ENTRADA DESDE LA SESION
-        <c:if test="${registroEntrada.estado != RegwebConstantes.ESTADO_PENDIENTE}">
-            <c:import url="../registro/addInteresadosSesion.jsp">
-                <c:param name="variable" value="${RegwebConstantes.SESSION_INTERESADOS_ENTRADA}"/>
-            </c:import>
-        </c:if>
+        <c:import url="../registro/addInteresadosSesion.jsp">
+            <c:param name="variable" value="${RegwebConstantes.SESSION_INTERESADOS_ENTRADA}"/>
+        </c:import>
+
 
 
     });

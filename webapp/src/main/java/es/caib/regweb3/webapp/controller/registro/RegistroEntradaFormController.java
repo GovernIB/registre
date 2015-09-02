@@ -197,7 +197,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                 registroEntrada = procesarRegistroEntrada(registroEntrada);
 
                 // Procesamos lo Interesados de la session
-                List<Interesado> interesados = procesarInteresados(interesadosSesion);
+                List<Interesado> interesados = procesarInteresados(interesadosSesion, null);
 
                 registroEntrada.getRegistroDetalle().setInteresados(interesados);
 
@@ -302,11 +302,14 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
         // Actualizamos los Interesados modificados, en el caso que de un RE Pendiente.
         Boolean errorInteresado = false;
-        if(registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE)){
-            List<Interesado> interesados = registroDetalleEjb.findById(registroEntrada.getRegistroDetalle().getId()).getInteresados();
-            registroEntrada.getRegistroDetalle().setInteresados(interesados);
+        List<Interesado> interesadosSesion = null;
 
-            if(interesados == null || interesados.size() == 0){
+        if(registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE)){
+            HttpSession session = request.getSession();
+            /*List<Interesado> interesados = registroDetalleEjb.findById(registroEntrada.getRegistroDetalle().getId()).getInteresados();*/
+            interesadosSesion = (List<Interesado>) session.getAttribute(RegwebConstantes.SESSION_INTERESADOS_ENTRADA);
+
+            if(interesadosSesion == null || interesadosSesion.size() == 0){
                 errorInteresado = true;
             }
         }
@@ -365,6 +368,12 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
                 // Procesamos las opciones comunes del RegistroEnrtrada
                 registroEntrada = procesarRegistroEntrada(registroEntrada);
+
+                // Procesamos lo Interesados de la session
+                if(registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE)){
+
+                    registroEntrada.getRegistroDetalle().setInteresados(procesarInteresados(interesadosSesion, registroEntrada.getRegistroDetalle().getId()));
+                }
 
                 // Calculamos los días transcurridos desde que se Registró para asignarle un Estado
                 Long dias = RegistroUtils.obtenerDiasRegistro(registroEntrada.getFecha());
@@ -515,7 +524,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
     @InitBinder("registroEntrada")
     public void initBinder(WebDataBinder binder) {
         binder.setDisallowedFields("id");
-        binder.setDisallowedFields("registroDetalle.id");
+        //binder.setDisallowedFields("registroDetalle.id");
         binder.setDisallowedFields("tipoInteresado");
         binder.setDisallowedFields("organismoInteresado");
         binder.setDisallowedFields("fecha");

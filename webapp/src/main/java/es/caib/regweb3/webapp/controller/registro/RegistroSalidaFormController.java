@@ -176,7 +176,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
                 registroSalida = procesarRegistroSalida(registroSalida);
 
                 // Procesamos lo Interesados de la session
-                List<Interesado> interesados = procesarInteresados(interesadosSesion);
+                List<Interesado> interesados = procesarInteresados(interesadosSesion, null);
 
                 registroSalida.getRegistroDetalle().setInteresados(interesados);
 
