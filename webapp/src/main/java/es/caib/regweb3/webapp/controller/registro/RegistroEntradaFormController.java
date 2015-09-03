@@ -87,6 +87,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         model.addAttribute("libros", getLibrosRegistroEntrada(request));
         model.addAttribute("organismosOficinaActiva", getOrganismosOficinaActiva(request));
         model.addAttribute("oficinasOrigen",  getOficinasOrigen(request));
+
         return "registroEntrada/registroEntradaForm";
     }
 
@@ -233,7 +234,15 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
      * Carga el formulario para modificar un {@link es.caib.regweb3.model.RegistroEntrada}
      */
     @RequestMapping(value = "/{idRegistro}/edit", method = RequestMethod.GET)
-    public String editarRegistroEntrada(@PathVariable("idRegistro") Long idRegistro,  Model model, HttpServletRequest request) {
+    public String editarRegistroEntrada(@PathVariable("idRegistro") Long idRegistro,  Model model, HttpServletRequest request) throws Exception{
+
+        if(!isOperador(request)){
+            Mensaje.saveMessageError(request, getMessage("error.rol.operador"));
+            return "redirect:/inici";
+        }
+
+        //Eliminamos los posibles interesados de la Sesion
+        eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_ENTRADA);
 
         RegistroEntrada registroEntrada = null;
 
@@ -241,37 +250,40 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         Usuario usuario = getUsuarioAutenticado(request);
         Entidad entidad = getEntidadActiva(request);
 
+
         try {
             registroEntrada = registroEntradaEjb.findById(idRegistro);
 
             Set<Organismo> organismosOficinaActiva = getOrganismosOficinaActiva(request);
-
-            // Si el Organismo Destino es Externo, lo añadimos al listado.
-            if(registroEntrada.getDestino() == null && registroEntrada.getDestinoExternoCodigo() != null){
-                Organismo organismoExterno = new Organismo();
-                organismoExterno.setCodigo(registroEntrada.getDestinoExternoCodigo());
-                organismoExterno.setDenominacion(registroEntrada.getDestinoExternoDenominacion());
-                organismosOficinaActiva.add(organismoExterno);
-
-             // Si es Interno, pero no esta relacionado con la Oficina Activa
-            }else if(!organismosOficinaActiva.contains(registroEntrada.getDestino())){
-                organismosOficinaActiva.add(registroEntrada.getDestino());
-            }
-
             Set<Oficina> oficinasOrigen = getOficinasOrigen(request);
 
-            // Si la Oficina Origen es Externa, la añadimos al listado.
-            Oficina oficinaOrigen = registroEntrada.getRegistroDetalle().getOficinaOrigen();
-            if(oficinaOrigen == null){
-                Oficina oficinaExterna = new Oficina();
-                oficinaExterna.setCodigo(registroEntrada.getRegistroDetalle().getOficinaOrigenExternoCodigo());
-                oficinaExterna.setDenominacion(registroEntrada.getRegistroDetalle().getOficinaOrigenExternoDenominacion());
-                oficinasOrigen.add(oficinaExterna);
+            if(!registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE)){ //Si no se trata de una reserva de número
+                // Si el Organismo Destino es Externo, lo añadimos al listado.
+                if(registroEntrada.getDestino() == null && registroEntrada.getDestinoExternoCodigo() != null){
+                    Organismo organismoExterno = new Organismo();
+                    organismoExterno.setCodigo(registroEntrada.getDestinoExternoCodigo());
+                    organismoExterno.setDenominacion(registroEntrada.getDestinoExternoDenominacion());
+                    organismosOficinaActiva.add(organismoExterno);
 
-             // Si es Interna, pero no esta relacionado con la Oficina Activa
-            }else if(!oficinasOrigen.contains(oficinaOrigen)){
-                oficinasOrigen.add(oficinaOrigen);
+                    // Si es Interno, pero no esta relacionado con la Oficina Activa
+                }else if(!organismosOficinaActiva.contains(registroEntrada.getDestino())){
+                    organismosOficinaActiva.add(registroEntrada.getDestino());
+                }
+
+                // Si la Oficina Origen es Externa, la añadimos al listado.
+                Oficina oficinaOrigen = registroEntrada.getRegistroDetalle().getOficinaOrigen();
+                if(oficinaOrigen == null){
+                    Oficina oficinaExterna = new Oficina();
+                    oficinaExterna.setCodigo(registroEntrada.getRegistroDetalle().getOficinaOrigenExternoCodigo());
+                    oficinaExterna.setDenominacion(registroEntrada.getRegistroDetalle().getOficinaOrigenExternoDenominacion());
+                    oficinasOrigen.add(oficinaExterna);
+
+                    // Si es Interna, pero no esta relacionado con la Oficina Activa
+                }else if(!oficinasOrigen.contains(oficinaOrigen)){
+                    oficinasOrigen.add(oficinaOrigen);
+                }
             }
+
 
             model.addAttribute("libros", getLibrosRegistroEntrada(request));
             model.addAttribute("organismosOficinaActiva", organismosOficinaActiva);

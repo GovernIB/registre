@@ -54,7 +54,7 @@
                        <div class="panel panel-info">
 
                            <div class="panel-heading">
-                               <h3 class="panel-title"><i class="fa fa-pencil-square"></i> <strong>Dades obligatòries</strong></h3>
+                               <h3 class="panel-title"><i class="fa fa-pencil-square"></i> <strong><spring:message code="registro.datos.obligatorios"/></strong></h3>
                            </div>
 
                            <div class="panel-body">

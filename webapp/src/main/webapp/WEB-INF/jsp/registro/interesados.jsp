@@ -69,6 +69,7 @@
                 <div class="col-xs-4">
 
                    <select id="organismoInteresado" name="organismoInteresado" class="chosen-select">
+                       <option value="-1">...</option>
                         <c:forEach items="${organismosOficinaActiva}" var="organismoInteresado">
                             <option value="${organismoInteresado.codigo}">${organismoInteresado.denominacion}</option>
                         </c:forEach>
