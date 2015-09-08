@@ -101,6 +101,10 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         model.addAttribute("organosDestino",  getOrganismosInternosMasExternos(request));
         model.addAttribute("oficinasRegistro",  oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(),RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
 
+        // Obtenemos los usuarios de la Entidad
+        List<UsuarioEntidad> usuariosEntidad = usuarioEntidadEjb.findByEntidad(getEntidadActiva(request).getId());
+        model.addAttribute("usuariosEntidad", usuariosEntidad);
+
         return "registroEntrada/registroEntradaList";
     }
 
@@ -116,11 +120,14 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByUsuarioEntidad(getUsuarioAutenticado(request).getId(), getEntidadActiva(request).getId());
         List<Libro> librosConsulta = permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_ENTRADA);
 
+        List<UsuarioEntidad> usuariosEntidad = usuarioEntidadEjb.findByEntidad(getEntidadActiva(request).getId());
+        mav.addObject("usuariosEntidad",usuariosEntidad);
+
         registroEntradaBusquedaValidator.validate(busqueda,result);
 
         Oficina oficina = getOficinaActiva(request);
         mav.addObject(oficina);
-        
+
         Set<Organismo> todosOrganismos = getOrganismosInternosMasExternos(request);
         
         if (busqueda.getOrganDestinatari()!=null && !"".equals(busqueda.getOrganDestinatari())) {
@@ -140,7 +147,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         }else { // Si no hay errores realizamos la búsqueda
             // Ponemos la hora 23:59 a la fecha fin
             Date fechaFin = RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin());
-            Paginacion paginacion = registroEntradaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroEntrada, librosConsulta, busqueda.getInteressatNom(), busqueda.getInteressatDoc(), busqueda.getOrganDestinatari(), busqueda.getAnexos());
+            Paginacion paginacion = registroEntradaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroEntrada, librosConsulta, busqueda.getInteressatNom(), busqueda.getInteressatDoc(), busqueda.getOrganDestinatari(), busqueda.getAnexos(), busqueda.getObservaciones(), busqueda.getUsuario());
 
             // Alta en tabla LOPD
             lopdEjb.insertarRegistrosEntrada(paginacion, usuarioEntidad.getId());
@@ -205,9 +212,15 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         // Historicos
         model.addAttribute("historicos", historicoRegistroEntradaEjb.getByRegistroEntrada(idRegistro));
 
-        // Trazabilidad
+        // Trazabilidadbus
         List<Trazabilidad> trazabilidades = trazabilidadEjb.getByRegistroEntrada(registro.getId());
         model.addAttribute("trazabilidades", trazabilidades);
+//
+//        // Posicion sello
+//        if(entidad.getPosXsello()!=null && entidad.getPosYsello()!=null){
+//            model.addAttribute("posXsello",entidad.getPosXsello());
+//            model.addAttribute("posYsello",entidad.getPosYsello());
+//        }
 
         // Alta en tabla LOPD
         lopdEjb.insertarRegistroEntrada(idRegistro, usuarioEntidad.getId());

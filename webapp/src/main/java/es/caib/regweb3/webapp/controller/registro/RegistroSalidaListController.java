@@ -99,6 +99,10 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         model.addAttribute("organosOrigen",  getOrganismosInternosMasExternos(request));
         model.addAttribute("oficinasRegistro",  oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(),RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
 
+        // Obtenemos los usuarios de la Entidad
+        List<UsuarioEntidad> usuariosEntidad = usuarioEntidadEjb.findByEntidad(getEntidadActiva(request).getId());
+        model.addAttribute("usuariosEntidad", usuariosEntidad);
+
         return "registroSalida/registroSalidaList";
 
     }
@@ -114,6 +118,9 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
         UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByUsuarioEntidad(getUsuarioAutenticado(request).getId(), getEntidadActiva(request).getId());
         List<Libro> librosConsulta = permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_SALIDA);
+
+        List<UsuarioEntidad> usuariosEntidad = usuarioEntidadEjb.findByEntidad(getEntidadActiva(request).getId());
+        mav.addObject("usuariosEntidad",usuariosEntidad);
 
         registroSalidaBusquedaValidator.validate(busqueda, result);
 
@@ -139,7 +146,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         }else { // Si no hay errores realizamos la búsqueda
         	// Ponemos la hora 23:59 a la fecha fin
             Date fechaFin = RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin());
-            Paginacion paginacion = registroSalidaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroSalida, librosConsulta, busqueda.getInteressatNom(), busqueda.getInteressatDoc(), busqueda.getOrganOrigen(), busqueda.getAnexos());
+            Paginacion paginacion = registroSalidaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroSalida, librosConsulta, busqueda.getInteressatNom(), busqueda.getInteressatDoc(), busqueda.getOrganOrigen(), busqueda.getAnexos(), busqueda.getObservaciones(), busqueda.getUsuario());
 
             // Alta en tabla LOPD
             lopdEjb.insertarRegistrosSalida(paginacion, usuarioEntidad.getId());
@@ -203,6 +210,12 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         // Trazabilidad
         List<Trazabilidad> trazabilidades = trazabilidadEjb.getByRegistroSalida(registro.getId());
         model.addAttribute("trazabilidades", trazabilidades);
+//
+//        // Posicion sello
+//        if(entidad.getPosXsello()!=null && entidad.getPosYsello()!=null){
+//            model.addAttribute("posXsello",entidad.getPosXsello());
+//            model.addAttribute("posYsello",entidad.getPosYsello());
+//        }
 
         // Alta en tabla LOPD
         lopdEjb.insertarRegistroSalida(idRegistro, usuarioEntidad.getId());

@@ -60,7 +60,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @return
      * @throws Exception
      */
-    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, List<Libro> libros, String interesadoNom, String interesadoDoc, String organoOrig, Boolean anexos) throws Exception;
+    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, List<Libro> libros, String interesadoNom, String interesadoDoc, String organoOrig, Boolean anexos, String observaciones, String usuario) throws Exception;
 
     
     /**

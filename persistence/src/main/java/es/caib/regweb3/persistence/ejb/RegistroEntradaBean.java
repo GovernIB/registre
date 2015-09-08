@@ -129,7 +129,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
-    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroEntrada registroEntrada, List<Libro> libros, String interesadoNom, String interesadoDoc, String organoDest, Boolean anexos) throws Exception{
+    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroEntrada registroEntrada, List<Libro> libros, String interesadoNom, String interesadoDoc, String organoDest, Boolean anexos, String observaciones, String usuario) throws Exception{
 
          Query q;
          Query q2;
@@ -149,6 +149,16 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
          if(registroEntrada.getRegistroDetalle().getExtracto() != null && registroEntrada.getRegistroDetalle().getExtracto().length() > 0){
         	 where.add(DataBaseUtils.like("registroEntrada.registroDetalle.extracto","extracto",parametros,registroEntrada.getRegistroDetalle().getExtracto()));
          }
+
+         // Observaciones
+         if(observaciones != null && observaciones.length() > 0){
+            where.add(DataBaseUtils.like("registroEntrada.registroDetalle.observaciones","observaciones",parametros,observaciones));
+         }
+
+        // Usuario
+        if(usuario != null && usuario.length() > 0){
+            where.add(DataBaseUtils.like("registroEntrada.usuario.usuario.identificador","usuario",parametros,usuario));
+        }
 
          //where.add(" (registroEntrada.registroDetalle.id = registroDetalle.id) ");
          //where.add(" (registroDetalle.interesados.id = interesado.id) ");

@@ -129,7 +129,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     }
 
     @Override
-    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, List<Libro> libros, String interesadoNom, String interesadoDoc, String organoOrig, Boolean anexos) throws Exception{
+    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, List<Libro> libros, String interesadoNom, String interesadoDoc, String organoOrig, Boolean anexos, String observaciones, String usuario) throws Exception{
 
         Query q;
         Query q2;
@@ -145,6 +145,16 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
         if(registroSalida.getRegistroDetalle().getExtracto() != null && registroSalida.getRegistroDetalle().getExtracto().length() > 0){
         	where.add(DataBaseUtils.like("registroSalida.registroDetalle.extracto","extracto",parametros,registroSalida.getRegistroDetalle().getExtracto()));
+        }
+
+        // Observaciones
+        if(observaciones != null && observaciones.length() > 0){
+            where.add(DataBaseUtils.like("registroSalida.registroDetalle.observaciones","observaciones",parametros,observaciones));
+        }
+
+        // Usuario
+        if(usuario != null && usuario.length() > 0){
+            where.add(DataBaseUtils.like("registroSalida.usuario.usuario.identificador","usuario",parametros,usuario));
         }
         
         //Filtros para interesado y organo destinatario
