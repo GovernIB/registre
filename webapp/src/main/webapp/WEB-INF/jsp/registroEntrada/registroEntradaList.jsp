@@ -263,7 +263,7 @@
                                             </div>
                                     </div>
 
-                                        <div class="table-responsive">
+                                        <div class="row table-responsive">
 
                                                 <table class="table table-bordered table-hover table-striped tablesorter">
                                                     <colgroup>
