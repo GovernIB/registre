@@ -117,6 +117,7 @@ public class UsuarioController extends BaseController {
                  e.printStackTrace();
              }
 
+             status.setComplete();
              return "redirect:/usuario/list";
          }
      }
@@ -179,6 +180,8 @@ public class UsuarioController extends BaseController {
                  e.printStackTrace();
                  Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
              }
+
+             status.setComplete();
 
              if (isOperador(request)) {
                  return "redirect:/inici";

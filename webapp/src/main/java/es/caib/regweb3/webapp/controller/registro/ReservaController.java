@@ -20,7 +20,6 @@ import org.springframework.web.bind.support.SessionStatus;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 
 /**
  * Created by Fundació BIT.
@@ -121,6 +120,7 @@ public class ReservaController  extends BaseController {
                 e.printStackTrace();
             }
 
+            status.setComplete();
             return "redirect:/registroEntrada/"+registro.getId()+"/detalle";
         }
     }

@@ -183,6 +183,7 @@ public class EntidadController extends BaseController {
                 e.printStackTrace();
             }
 
+            status.setComplete();
             return "redirect:/entidad/list";
         }
     }
@@ -412,6 +413,7 @@ public class EntidadController extends BaseController {
                 Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
             }
 
+            status.setComplete();
             return destino;
         
     }
@@ -581,6 +583,7 @@ public class EntidadController extends BaseController {
             e.printStackTrace();
         }
 
+        status.setComplete();
         return "redirect:/entidad/usuarios";
     }
 

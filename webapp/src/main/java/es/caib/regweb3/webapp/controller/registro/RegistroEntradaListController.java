@@ -36,7 +36,6 @@ import java.util.Set;
  */
 @Controller
 @RequestMapping(value = "/registroEntrada")
-/*@SessionAttributes(types = {RegistroEntrada.class})*/
 public class RegistroEntradaListController extends AbstractRegistroCommonListController {
 
     @Autowired

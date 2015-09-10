@@ -134,6 +134,7 @@ public class ModeloOficioRemisionController extends BaseController {
                 Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
             }
 
+            status.setComplete();
             return "redirect:/modeloOficioRemision/list";
         }
     }

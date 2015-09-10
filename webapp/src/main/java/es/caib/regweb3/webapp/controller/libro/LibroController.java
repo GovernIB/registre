@@ -174,6 +174,7 @@ public class LibroController extends BaseController {
                 e.printStackTrace();
             }
 
+            status.setComplete();
             return "redirect:/libro/"+idOrganismo+"/libros";
         }
     }
@@ -244,6 +245,7 @@ public class LibroController extends BaseController {
                 Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
             }
 
+            status.setComplete();
             return "redirect:/libro/"+libro.getOrganismo().getId()+"/libros";
         }
     }

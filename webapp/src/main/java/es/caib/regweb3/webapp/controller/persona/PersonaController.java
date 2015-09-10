@@ -135,6 +135,7 @@ public class PersonaController extends BaseController {
         e.printStackTrace();
       }
 
+        status.setComplete();
       return "redirect:/persona/list";
     }
   }
@@ -229,7 +230,7 @@ public class PersonaController extends BaseController {
                  Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
              }
 
-
+             status.setComplete();
              return "redirect:/persona/list";
 
          }

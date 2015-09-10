@@ -135,6 +135,7 @@ public class ModeloReciboController extends BaseController {
                 e.printStackTrace();
             }
 
+            status.setComplete();
             return "redirect:/modeloRecibo/list";
         }
     }

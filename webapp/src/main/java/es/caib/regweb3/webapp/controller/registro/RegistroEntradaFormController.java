@@ -216,7 +216,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                 e.printStackTrace();
                 return "redirect:/inici";
             }finally {
-
+                status.setComplete();
                 //Eliminamos los posibles interesados de la Sesion
                 try {
                     eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_ENTRADA);
@@ -225,6 +225,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                 }
             }
 
+            status.setComplete();
             return "redirect:/registroEntrada/"+registroEntrada.getId()+"/detalle";
         }
     }
@@ -416,8 +417,11 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                 e.printStackTrace();
                 Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
                 return "redirect:/inici";
+            }finally {
+                status.setComplete();
             }
 
+            status.setComplete();
             return "redirect:/registroEntrada/"+registroEntrada.getId()+"/detalle";
         }
     }
