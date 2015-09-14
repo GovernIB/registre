@@ -228,7 +228,19 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li class="submenu-complet"><a href="<c:url value="/entidad/${entidadActiva.id}/edit"/>"><spring:message code="menu.entidad.editar"/></a></li>
-                                    <li class="submenu-complet"><a href="<c:url value="/organismo/list"/>"><spring:message code="menu.oficinas"/></a></li>
+                                    <%--<li class="submenu-complet"><a href="<c:url value="/organismo/list"/>"><spring:message code="menu.oficinas"/></a></li>--%>
+                                    <li class="divider"></li>
+                                    <li class="dropdown-submenu-left toggle-left">
+                                        <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> <spring:message code="menu.oficinas"/></a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="<c:url value="/organismo/list"/>"><spring:message code="organismo.organigrama"/></a></li>
+                                            <li><a href="<c:url value="/organismo/arbolList"/>"> <spring:message code="organismo.arbol"/></a></li>
+                                            <li><a href="<c:url value="/entidad/librosCambiar"/>"><spring:message code="entidad.cambiarlibros"/></a></li>
+                                            <li><a href="<c:url value="/entidad/descargas/list"/>"><spring:message code="organismo.sincronizaciones"/></a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="divider"></li>
+
                                     <li class="submenu-complet"><a href="<c:url value="/entidad/usuarios"/>"><spring:message code="menu.usuarios"/></a></li>
                                     <c:if test="${entidadActiva.configuracionPersona != 1}">
                                         <li class="submenu-complet"><a href="<c:url value="/persona/list"/>"><spring:message code="menu.personas"/></a></li>

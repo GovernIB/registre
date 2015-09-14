@@ -898,6 +898,34 @@ public class EntidadController extends BaseController {
 
     }
 */
+    /**
+     * Listado de todas las Descargas
+     */
+    @RequestMapping(value = "/descargas/list", method = RequestMethod.GET)
+    public String descargaEntidadList() {
+        return "redirect:/entidad/descargas/list/1";
+    }
+
+    @RequestMapping(value = "/descargas/list/{pageNumber}", method = RequestMethod.GET)
+    public ModelAndView descargaEntidadList(@PathVariable Integer pageNumber, HttpServletRequest request) throws Exception {
+
+        ModelAndView mav = new ModelAndView("/entidad/descargasList");
+        Entidad entidad = getEntidadActiva(request);
+
+        List<Descarga> listado = descargaEjb.getPaginationByEntidad((pageNumber-1)* BaseEjbJPA.RESULTADOS_PAGINACION, entidad.getId());
+        Long total = descargaEjb.getTotalByEntidad(entidad.getId());
+
+        Paginacion paginacion = new Paginacion(total.intValue(), pageNumber);
+
+        mav.addObject("paginacion", paginacion);
+        mav.addObject("listado", listado);
+
+        mav.addObject("entidad", entidad);
+
+
+        return mav;
+    }
+
 
     @InitBinder("entidadForm")
     public void initBinder(WebDataBinder binder) {

@@ -86,10 +86,28 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
         return (Long) q.getSingleResult();
     }
 
+
+    public Long getTotalByEntidad(Long idEntidad) throws Exception {
+
+        Query q = em.createQuery("Select count(descarga.id) from Descarga as descarga where descarga.entidad.id=:idEntidad").setParameter("idEntidad",idEntidad);
+
+        return (Long) q.getSingleResult();
+    }
+
     @Override
     public List<Descarga> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select descarga from Descarga as descarga order by descarga.id");
+        q.setFirstResult(inicio);
+        q.setMaxResults(RESULTADOS_PAGINACION);
+
+        return q.getResultList();
+    }
+
+
+    public List<Descarga> getPaginationByEntidad(int inicio,Long idEntidad) throws Exception {
+
+        Query q = em.createQuery("Select descarga from Descarga as descarga where descarga.entidad.id=:idEntidad order by descarga.id").setParameter("idEntidad",idEntidad);
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
 
@@ -102,6 +120,13 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
         query.setParameter(1, tipo);
         query.executeUpdate();
          
+    }
+
+    @Override
+    public List<Descarga> findByEntidad(Long idEntidad) throws Exception{
+
+       return em.createQuery("Select descarga from Descarga as descarga where descarga.entidad.id =:idEntidad order by descarga.id").setParameter("idEntidad",idEntidad).getResultList();
+
     }
 
     @Override
