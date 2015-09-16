@@ -13,6 +13,13 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
     <mvc:default-servlet-handler/>
     <mvc:annotation-driven/>
 
+    <!--Configuración para mejorar el uso de @SessionAttributes, evitando problemas al utilizar varias pestañas en la misma sesión -->
+    <bean id="conversationalSessionAttributeStore" class="es.caib.regweb3.webapp.utils.ConversationalSessionAttributeStore">
+        <property name="keepAliveConversations" value="10"/>
+    </bean>
+
+    <bean name="requestDataValueProcessor" class="es.caib.regweb3.webapp.utils.ConversationIdRequestProcessor"/>
+
     <!-- Declaración de los Interceptors -->
     <mvc:interceptors>
 
