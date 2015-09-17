@@ -230,6 +230,7 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
     $(window).load(function() {
 
         mostrarOrganismos();
+        actualizarCanalNotificacion();
 
         // Muestra u Oculta en función del tipoInteresado seleccionado
         $('input[name=tipoInteresado]:radio').click(function () {
@@ -249,6 +250,10 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
             }
 
         });
+
+        // Gestión de los cambios del Canal de Notificación
+        $('#canal').change(
+                function() {actualizarCanalNotificacion();});
 
         // Gestión de los cambios de persona
         $('#pais\\.id').change(

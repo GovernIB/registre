@@ -67,21 +67,6 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
               }
           }
 
-        /*
-        if ((interesado.getNombre() == null || interesado.getNombre().length() == 0)
-            && (interesado.getApellido1() == null || interesado.getApellido1().length() == 0)) {
-          rejectValue(errors, "nombre", "error.valor.requerido", "El camp és obligatori");
-          rejectValue(errors, "apellido1", "error.valor.requerido", "El camp és obligatori");
-        }
-        */
-
-        /*
-         * rejectIfEmptyOrWhitespace(errors, __target__, "nombre",
-         * "error.valor.requerido", "El camp és obligatori");
-         * rejectIfEmptyOrWhitespace(errors, __target__, "apellido1",
-         * "error.valor.requerido", "El camp és obligatori");
-         */
-
       }
 
       // Validaciones si es Interesado Jurídica
@@ -101,8 +86,7 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
         if (interesado.getCanal().equals(RegwebConstantes.CANAL_DIRECCION_POSTAL)) {
 
           
-          rejectIfEmptyOrWhitespace(errors, __target__, "direccion",
-                "error.valor.requerido", "El camp és obligatori");
+          rejectIfEmptyOrWhitespace(errors, __target__, "direccion", "error.valor.requerido", "El camp és obligatori");
           
 
           // Validaciones si el país seleccionado es ESPAÑA
@@ -115,20 +99,18 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
 
               if (pais.getCodigoPais().equals(RegwebConstantes.PAIS_ESPAÑA)) {
 
-                if (interesado.getCp() == null || interesado.getCp().length() == 0) {
+                rejectIfEmptyOrWhitespace(errors, __target__, "cp", "error.valor.requerido", "El camp és obligatori");
 
-                  if (interesado.getProvincia() == null
-                      || interesado.getProvincia().getId() == null) {
-                    rejectValue(errors, "provincia.id", "error.valor.requerido",
-                        "El camp és obligatori");
+                if (interesado.getProvincia() == null || interesado.getProvincia().getId() == -1) {
+                  rejectValue(errors, "provincia.id", "error.valor.requerido", "El camp és obligatori");
+
+                }else{ // Comprobamos la Localidad
+
+                  if (interesado.getLocalidad() == null || interesado.getProvincia().getId() == -1) {
+                    rejectValue(errors, "localidad.id", "error.valor.requerido", "El camp és obligatori");
                   }
                 }
 
-                if (interesado.getProvincia() == null
-                    || interesado.getProvincia().getId() == null) {
-                  rejectIfEmptyOrWhitespace(errors, __target__, "cp", "error.valor.requerido",
-                      "El camp és obligatori");
-                }
               }
 
             } catch (Exception e) {
@@ -137,14 +119,11 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
 
           }
 
-        } else if (interesado.getCanal()
-            .equals(RegwebConstantes.CANAL_DIRECCION_ELECTRONICA)) {
+        } else if (interesado.getCanal().equals(RegwebConstantes.CANAL_DIRECCION_ELECTRONICA)) {
 
-          rejectIfEmptyOrWhitespace(errors, __target__, "direccionElectronica",
-              "error.valor.requerido", "El camp és obligatori");
+          rejectIfEmptyOrWhitespace(errors, __target__, "direccionElectronica", "error.valor.requerido", "El camp és obligatori");
 
-        } else if (interesado.getCanal()
-            .equals(RegwebConstantes.CANAL_COMPARECENCIA_ELECTRONICA)) {
+        } else if (interesado.getCanal().equals(RegwebConstantes.CANAL_COMPARECENCIA_ELECTRONICA)) {
 
         }
       }

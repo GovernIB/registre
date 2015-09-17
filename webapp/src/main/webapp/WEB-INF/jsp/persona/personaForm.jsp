@@ -114,65 +114,6 @@
                             </div>
 
                             <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-lef etiqueta_regweb control-label">
-                                    <form:label path="pais.id"><spring:message code="interesado.pais"/></form:label>
-                                </div>
-                                <div class="col-xs-8">
-                                    <form:select path="pais.id" class="chosen-select">
-                                        <form:option value="" label="..."/>
-                                        <c:forEach var="pais" items="${paises}">
-                                            <form:option value="${pais.id}" label="${pais.descripcionPais}" />
-                                        </c:forEach>
-                                    </form:select>
-                                    <form:errors path="pais.id" cssClass="help-block" element="span"/>
-                                </div>
-                            </div>
-
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-lef etiqueta_regweb control-label">
-                                    <form:label path="provincia.id"><spring:message code="interesado.provincia"/></form:label>
-                                </div>
-                                <div class="col-xs-8">
-
-                                    <form:select path="provincia.id" class="chosen-select" disabled="disabled" onchange="actualizarLocalidad(this)">
-                                        <form:option value="" label="..."/>
-                                        <c:forEach var="provincia" items="${provincias}">
-                                            <form:option value="${provincia.id}" label="${provincia.descripcionProvincia}" />
-                                        </c:forEach>
-                                    </form:select>
-                                    <form:errors path="provincia.id" cssClass="help-block" element="span"/>
-                                </div>
-                            </div>
-
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-lef etiqueta_regweb control-label">
-                                    <form:label path="localidad.id"><spring:message code="interesado.localidad"/></form:label>
-                                </div>
-                                <div class="col-xs-8">
-                                    <form:select path="localidad.id" cssClass="chosen-select" disabled="disabled"/>
-                                    <form:errors path="localidad.id" cssClass="help-block" element="span"/>
-                                </div>
-                            </div>
-
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <form:label path="direccion"><spring:message code="persona.direccion"/></form:label>
-                                </div>
-                                <div class="col-xs-8">
-                                    <form:textarea path="direccion" cssClass="form-control" cols="3" maxlength="160"/> <form:errors path="direccion" cssClass="help-block" element="span"/>
-                                </div>
-                            </div>
-
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <form:label path="cp"><spring:message code="persona.cp"/></form:label>
-                                </div>
-                                <div class="col-xs-8">
-                                    <form:input path="cp" cssClass="form-control" maxlength="5"/> <form:errors path="cp" cssClass="help-block" element="span"/>
-                                </div>
-                            </div>
-
-                            <div class="form-group col-xs-6">
                                 <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                                     <form:label path="email"><spring:message code="persona.email"/></form:label>
                                 </div>
@@ -192,6 +133,80 @@
 
                             <div class="form-group col-xs-6">
                                 <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                    <form:label path="canal"><spring:message code="persona.canal"/></form:label>
+                                </div>
+                                <div class="col-xs-8">
+                                    <form:select path="canal" cssClass="chosen-select">
+                                        <form:option value="-1" label="..."/>
+                                        <c:forEach var="canal" items="${canales}">
+                                            <form:option value="${canal}"><spring:message code="canalNotificacion.${canal}"/></form:option>
+                                        </c:forEach>
+                                    </form:select>
+                                    <form:errors path="canal" cssClass="help-block" element="span"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-xs-6">
+                                <div class="col-xs-4 pull-lef etiqueta_regweb control-label">
+                                    <form:label path="pais.id"><spring:message code="interesado.pais"/></form:label>
+                                </div>
+                                <div class="col-xs-8">
+                                    <form:select path="pais.id" class="chosen-select" disabled="true">
+                                        <form:option value="-1" label="..."/>
+                                        <c:forEach var="pais" items="${paises}">
+                                            <form:option value="${pais.id}" label="${pais.descripcionPais}" />
+                                        </c:forEach>
+                                    </form:select>
+                                    <form:errors path="pais.id" cssClass="help-block" element="span"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-xs-6">
+                                <div class="col-xs-4 pull-lef etiqueta_regweb control-label">
+                                    <form:label path="provincia.id"><spring:message code="interesado.provincia"/></form:label>
+                                </div>
+                                <div class="col-xs-8">
+
+                                    <form:select path="provincia.id" class="chosen-select" disabled="true" onchange="actualizarLocalidad(this)">
+                                        <form:option value="-1" label="..."/>
+                                        <c:forEach var="provincia" items="${provincias}">
+                                            <form:option value="${provincia.id}" label="${provincia.descripcionProvincia}" />
+                                        </c:forEach>
+                                    </form:select>
+                                    <form:errors path="provincia.id" cssClass="help-block" element="span"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-xs-6">
+                                <div class="col-xs-4 pull-lef etiqueta_regweb control-label">
+                                    <form:label path="localidad.id"><spring:message code="interesado.localidad"/></form:label>
+                                </div>
+                                <div class="col-xs-8">
+                                    <form:select path="localidad.id" cssClass="chosen-select" disabled="true"/>
+                                    <form:errors path="localidad.id" cssClass="help-block" element="span"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-xs-6">
+                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                    <form:label path="direccion"><spring:message code="persona.direccion"/></form:label>
+                                </div>
+                                <div class="col-xs-8">
+                                    <form:textarea path="direccion" cssClass="form-control" cols="3" maxlength="160" disabled="true"/> <form:errors path="direccion" cssClass="help-block" element="span"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-xs-6">
+                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                    <form:label path="cp"><spring:message code="persona.cp"/></form:label>
+                                </div>
+                                <div class="col-xs-8">
+                                    <form:input path="cp" cssClass="form-control" maxlength="5" disabled="true"/> <form:errors path="cp" cssClass="help-block" element="span"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-xs-6">
+                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                                     <form:label path="razonSocial"><span id="razonSocialLabel" class="text-danger">*</span> <spring:message code="persona.razonSocial"/></form:label>
                                 </div>
                                 <div class="col-xs-8">
@@ -204,26 +219,9 @@
                                     <form:label path="direccionElectronica"><spring:message code="persona.direccionElectronica"/></form:label>
                                 </div>
                                 <div class="col-xs-8">
-                                    <form:textarea path="direccionElectronica" cssClass="form-control" cols="3" maxlength="160"/> <form:errors path="direccionElectronica" cssClass="help-block" element="span"/>
+                                    <form:textarea path="direccionElectronica" cssClass="form-control" cols="3" maxlength="160" disabled="true"/> <form:errors path="direccionElectronica" cssClass="help-block" element="span"/>
                                 </div>
                             </div>
-
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <form:label path="canal"><spring:message code="persona.canal"/></form:label>
-                                </div>
-                                <div class="col-xs-8">
-                                    <form:select path="canal" cssClass="chosen-select">
-                                        <form:option value="" label="..."/>
-                                        <c:forEach var="canal" items="${canales}">
-                                            <form:option value="${canal}"><spring:message code="canalNotificacion.${canal}"/></form:option>
-                                        </c:forEach>
-                                    </form:select>
-                                    <form:errors path="canal" cssClass="help-block" element="span"/>
-                                </div>
-                            </div>
-
-
 
                     </div>
 
@@ -257,6 +255,11 @@
         actualizarLocalidad();
         actualizartipoPersona();
         actualizarPais();
+        actualizarCanalNotificacion();
+
+        // Gestión de los cambios del Canal de Notificación
+        $('#canal').change(
+                function() {actualizarCanalNotificacion();});
 
         // Gestión de los cambios de país
         $('#pais\\.id').change(
@@ -274,7 +277,10 @@
 
     function actualizarLocalidad(){
         <c:url var="obtenerLocalidades" value="/persona/obtenerLocalidades" />
-        actualizarSelect('${obtenerLocalidades}','#localidad\\.id',$('#provincia\\.id option:selected').val(),'${persona.localidad.id}',false);
+        if($('#provincia\\.id option:selected').val() != '-1'){
+            actualizarSelect('${obtenerLocalidades}','#localidad\\.id',$('#provincia\\.id option:selected').val(),'${persona.localidad.id}',false);
+        }
+
     }
 
     function actualizartipoPersona(){

@@ -65,20 +65,6 @@ public class PersonaValidator<T> extends AbstractRegWebValidator<T> {
               }
           }
 
-        /*
-        if ((persona.getNombre() == null || persona.getNombre().length() == 0)
-            && (persona.getApellido1() == null || persona.getApellido1().length() == 0)) {
-          rejectValue(errors, "nombre", "error.valor.requerido", "El camp és obligatori");
-          rejectValue(errors, "apellido1", "error.valor.requerido", "El camp és obligatori");
-        }
-        */
-
-        /*
-         *rejectIfEmptyOrWhitespace(errors, __target__,  "nombre",
-         * "error.valor.requerido", "El camp és obligatori");
-         *rejectIfEmptyOrWhitespace(errors, __target__,  "apellido1",
-         * "error.valor.requerido", "El camp és obligatori");
-         */
 
       }
 
@@ -99,8 +85,7 @@ public class PersonaValidator<T> extends AbstractRegWebValidator<T> {
         if (persona.getCanal().equals(RegwebConstantes.CANAL_DIRECCION_POSTAL)) {
 
           
-         rejectIfEmptyOrWhitespace(errors, __target__,  "direccion",
-                "error.valor.requerido", "El camp és obligatori");
+         rejectIfEmptyOrWhitespace(errors, __target__,  "direccion", "error.valor.requerido", "El camp és obligatori");
           
 
           // Validaciones si el país seleccionado es ESPAÑA
@@ -113,19 +98,16 @@ public class PersonaValidator<T> extends AbstractRegWebValidator<T> {
 
               if (pais.getCodigoPais().equals(RegwebConstantes.PAIS_ESPAÑA)) {
 
-                if (persona.getCp() == null || persona.getCp().length() == 0) {
+                rejectIfEmptyOrWhitespace(errors, __target__, "cp", "error.valor.requerido", "El camp és obligatori");
 
-                  if (persona.getProvincia() == null
-                      || persona.getProvincia().getId() == null) {
-                    rejectValue(errors, "provincia.id", "error.valor.requerido",
-                        "El camp és obligatori");
+                if (persona.getProvincia() == null || persona.getProvincia().getId() == -1) {
+                  rejectValue(errors, "provincia.id", "error.valor.requerido", "El camp és obligatori");
+
+                }else{ // Comprobamos la Localidad
+
+                  if (persona.getLocalidad() == null || persona.getProvincia().getId() == -1) {
+                    rejectValue(errors, "localidad.id", "error.valor.requerido", "El camp és obligatori");
                   }
-                }
-
-                if (persona.getProvincia() == null
-                    || persona.getProvincia().getId() == null) {
-                  rejectIfEmptyOrWhitespace(errors, __target__, "cp", "error.valor.requerido",
-                      "El camp és obligatori");
                 }
               }
 
@@ -135,14 +117,11 @@ public class PersonaValidator<T> extends AbstractRegWebValidator<T> {
 
           }
 
-        } else if (persona.getCanal()
-            .equals(RegwebConstantes.CANAL_DIRECCION_ELECTRONICA)) {
+        } else if (persona.getCanal().equals(RegwebConstantes.CANAL_DIRECCION_ELECTRONICA)) {
 
-         rejectIfEmptyOrWhitespace(errors, __target__,  "direccionElectronica",
-              "error.valor.requerido", "El camp és obligatori");
+         rejectIfEmptyOrWhitespace(errors, __target__,  "direccionElectronica", "error.valor.requerido", "El camp és obligatori");
 
-        } else if (persona.getCanal()
-            .equals(RegwebConstantes.CANAL_COMPARECENCIA_ELECTRONICA)) {
+        } else if (persona.getCanal().equals(RegwebConstantes.CANAL_COMPARECENCIA_ELECTRONICA)) {
 
         }
       }

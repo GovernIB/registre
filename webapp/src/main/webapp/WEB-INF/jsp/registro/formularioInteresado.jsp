@@ -89,10 +89,45 @@
 
                     <div class="form-group col-xs-6">
                         <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                            <label for="email"><spring:message code="usuario.email"/></label>
+                        </div>
+                        <div class="col-xs-8">
+                            <input id="email" name="email" class="form-control" type="text" value="" maxlength="160"/>
+                            <span id="emailError"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-xs-6">
+                        <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                            <label for="telefono"><spring:message code="persona.telefono"/></label>
+                        </div>
+                        <div class="col-xs-8">
+                            <input id="telefono" name="telefono" class="form-control" type="text" value="" maxlength="20"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-xs-6">
+                        <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                            <%--  TODO No està traduit !!!!! --%>
+                            <label for="canalNotificacion">Canal not.</label>
+                        </div>
+                        <div class="col-xs-8">
+                            <select id="canalNotificacion" name="canalNotificacion" class="chosen-select">
+                                <option value="-1">...</option>
+                                <c:forEach items="${canalesNotificacion}" var="canalNotificacion">
+                                    <option value="${canalNotificacion}"><spring:message code="canalNotificacion.${canalNotificacion}"/></option>
+                                </c:forEach>
+                            </select>
+                            <span id="canalNotificacionError"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-xs-6">
+                        <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                             <label for="pais.id"><spring:message code="interesado.pais"/></label>
                         </div>
                         <div class="col-xs-8">
-                            <select id="pais.id" name="pais.id" class="chosen-select">
+                            <select id="pais.id" name="pais.id" class="chosen-select" disabled="disabled">
                                 <option value="-1">...</option>
                                 <c:forEach items="${paises}" var="pais">
                                     <option value="${pais.id}">${pais.descripcionPais}</option>
@@ -132,7 +167,7 @@
                             <label for="direccion"><spring:message code="persona.direccion"/></label>
                         </div>
                         <div class="col-xs-8">
-                            <input id="direccion" name="direccion" class="form-control" type="text" value="" maxlength="160"/>
+                            <input id="direccion" name="direccion" class="form-control" type="text" value="" maxlength="160" disabled="disabled"/>
                             <span id="direccionError"></span>
                         </div>
                     </div>
@@ -142,27 +177,8 @@
                             <label for="cp"><spring:message code="persona.cp"/></label>
                         </div>
                         <div class="col-xs-8">
-                            <input id="cp" name="cp" class="form-control" type="text" value="" maxlength="5"/>
+                            <input id="cp" name="cp" class="form-control" type="text" value="" maxlength="5" disabled="disabled"/>
                             <span id="cpError"></span>
-                        </div>
-                    </div>
-
-                    <div class="form-group col-xs-6">
-                        <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                            <label for="email"><spring:message code="usuario.email"/></label>
-                        </div>
-                        <div class="col-xs-8">
-                            <input id="email" name="email" class="form-control" type="text" value="" maxlength="160"/>
-                            <span id="emailError"></span>
-                        </div>
-                    </div>
-
-                    <div class="form-group col-xs-6">
-                        <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                            <label for="telefono"><spring:message code="persona.telefono"/></label>
-                        </div>
-                        <div class="col-xs-8">
-                            <input id="telefono" name="telefono" class="form-control" type="text" value="" maxlength="20"/>
                         </div>
                     </div>
 
@@ -171,7 +187,7 @@
                             <label for="razonSocial" id="rao"><spring:message code="persona.razonSocial"/></label>
                         </div>
                         <div class="col-xs-8">
-                            <input id="razonSocial" name="razonSocial" class="form-control" type="text" value="" maxlength="80"/>
+                            <input id="razonSocial" name="razonSocial" class="form-control" type="text" value="" maxlength="80" disabled="disabled"/>
                             <span id="razonSocialError"></span>
                         </div>
                     </div>
@@ -181,24 +197,8 @@
                             <label for="direccionElectronica"><spring:message code="persona.direccionElectronica"/></label>
                         </div>
                         <div class="col-xs-8">
-                            <input id="direccionElectronica" name="direccionElectronica" class="form-control" type="text" value="" maxlength="160"/>
+                            <input id="direccionElectronica" name="direccionElectronica" class="form-control" type="text" value="" maxlength="160" disabled="disabled"/>
                             <span id="direccionElectronicaError"></span>
-                        </div>
-                    </div>
-
-                    <div class="form-group col-xs-6">
-                        <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                        <%--  TODO No està traduit !!!!! --%>
-                            <label for="canalNotificacion">Canal not.</label>
-                        </div>
-                        <div class="col-xs-8">
-                            <select id="canalNotificacion" name="canalNotificacion" class="chosen-select">
-                                <option value="-1">...</option>
-                                <c:forEach items="${canalesNotificacion}" var="canalNotificacion">
-                                    <option value="${canalNotificacion}"><spring:message code="canalNotificacion.${canalNotificacion}"/></option>
-                                </c:forEach>
-                            </select>
-                            <span id="canalNotificacionError"></span>
                         </div>
                     </div>
 

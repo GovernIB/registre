@@ -765,20 +765,81 @@ function actualizarTipoDocumentoIdentificacion(){
 
 }
 
+/**
+ * Activa o deshabilita campos en función del País seleccionado
+ */
 function actualizarPais(){
 
     if($('#pais\\.id option:selected').text() != 'España'){
         $('#provincia\\.id').val('-1');
         $('#localidad\\.id').val('-1');
-        $('#provincia\\.id').attr("disabled","disabled");
-        $('#localidad\\.id').attr("disabled","disabled");
-    }else{
-        $('#provincia\\.id').removeAttr("disabled","disabled");
+        $('#provincia\\.id').attr("disabled","disabled").trigger("chosen:updated");
+        $('#localidad\\.id').attr("disabled","disabled").trigger("chosen:updated");
+
+    }else if($('#pais\\.id option:selected').text() == 'España'){
+        $('#provincia\\.id').removeAttr("disabled","disabled").trigger("chosen:updated");
+
+    }else if($('#pais\\.id option:selected').text() == '-1'){
+       resetPais();
     }
-    $('#provincia\\.id').trigger("chosen:updated");
-    $('#localidad\\.id').trigger("chosen:updated");
 
 }
+
+/**
+ * Inicializa el campo país y sus relacionados
+ */
+function resetPais(){
+
+    $('#pais\\.id').val('-1').trigger("chosen:updated");
+    $('#provincia\\.id').val('-1').trigger("chosen:updated");
+    $('#localidad\\.id').html('').trigger("chosen:updated");
+    $('#pais\\.id').attr("disabled","disabled").trigger("chosen:updated");
+    $('#provincia\\.id').attr("disabled","disabled").trigger("chosen:updated");
+    $('#localidad\\.id').attr("disabled","disabled").trigger("chosen:updated");
+
+}
+
+/**
+ * Activa o deshabilita campos en función del Canal seleccionado
+ */
+function actualizarCanalNotificacion() {
+
+    if($('#canal option:selected').val() == '-1'){
+        $('#direccion').val('');
+        $('#direccion').attr("disabled","disabled");
+        $('#cp').val('');
+        $('#cp').attr("disabled","disabled");
+        $('#direccionElectronica').val('');
+        $('#direccionElectronica').attr("disabled","disabled");
+        resetPais();
+
+    }else if($('#canal option:selected').val() == '1'){
+        $('#direccion').removeAttr("disabled","disabled");
+        $('#pais\\.id').removeAttr("disabled","disabled").trigger("chosen:updated");
+        $('#cp').removeAttr("disabled","disabled");
+        $('#direccionElectronica').attr("disabled","disabled");
+
+    }else  if($('#canal option:selected').val() == '2'){
+        $('#direccion').val('');
+        $('#direccion').attr("disabled","disabled");
+        $('#cp').val('');
+        $('#cp').attr("disabled","disabled");
+        resetPais();
+
+        $('#direccionElectronica').removeAttr("disabled","disabled");
+
+    }else  if($('#canal option:selected').val() == '3'){
+        $('#direccion').val('');
+        $('#direccion').attr("disabled","disabled");
+        $('#cp').val('');
+        $('#cp').attr("disabled","disabled");
+        $('#direccionElectronica').val('');
+        $('#direccionElectronica').attr("disabled","disabled");
+        resetPais();
+    }
+
+}
+
 
 /**
  * Habilita/Deshabilita los tipos correspondientes
