@@ -236,10 +236,11 @@ function cargarSelect(url,/*idEntidad,*/idSelect, valorSelected, todos){
  * @param valorSelected Valor seleccionado en el select dependiente, si es que lo hay. Sirve solo para las modificaciones.
  * @param todos Booleano para definir si incluir la opción de todos (...) en el Select
  */
-function actualizarSelect(url, idSelect, seleccion, valorSelected, todos){
+function actualizarSelect(url, idSelect, seleccion, valorSelected, todos, async){
     var html = '';
     if(seleccion != '-1'){
         jQuery.ajax({
+            async: async,
             url: url,
             type: 'GET',
             dataType: 'json',

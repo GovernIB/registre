@@ -419,9 +419,9 @@
 
          actualizarCodigosAsunto();
 
-         <c:if test="${empty registroEntrada.id}"> // Localidades para nuevos Interesados
+        <%--  <c:if test="${empty registroEntrada.id}"> // Localidades para nuevos Interesados
             actualizarLocalidad();
-        </c:if>
+        </c:if>--%>
 
         // CARGA DE INTERESADOS REGISTRO ENTRADA DESDE LA SESION
         <c:import url="../registro/addInteresadosSesion.jsp">
@@ -439,7 +439,7 @@
 
     function actualizarLocalidad(){
         <c:url var="obtenerLocalidades" value="/registroEntrada/obtenerLocalidades" />
-        actualizarSelect('${obtenerLocalidades}','#localidad\\.id',$('#provincia\\.id option:selected').val(),$('#localidad\\.id option:selected').val(),false);
+        actualizarSelect('${obtenerLocalidades}','#localidad\\.id',$('#provincia\\.id option:selected').val(),$('#localidad\\.id option:selected').val(),false,false);
     }
 
 

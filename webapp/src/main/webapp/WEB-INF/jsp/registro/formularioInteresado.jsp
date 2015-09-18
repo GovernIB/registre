@@ -109,10 +109,10 @@
                     <div class="form-group col-xs-6">
                         <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                             <%--  TODO No està traduit !!!!! --%>
-                            <label for="canalNotificacion">Canal not.</label>
+                            <label for="canal">Canal not.</label>
                         </div>
                         <div class="col-xs-8">
-                            <select id="canalNotificacion" name="canalNotificacion" class="chosen-select">
+                            <select id="canal" name="canal" class="chosen-select">
                                 <option value="-1">...</option>
                                 <c:forEach items="${canalesNotificacion}" var="canalNotificacion">
                                     <option value="${canalNotificacion}"><spring:message code="canalNotificacion.${canalNotificacion}"/></option>

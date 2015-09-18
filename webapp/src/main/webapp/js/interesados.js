@@ -252,23 +252,28 @@ function editarInteresado(id){
                 $("#provincia\\.id").val(result.provincia.id);
                 $("#provincia\\.id").removeAttr("disabled","disabled");
                 actualizarLocalidad();
+
+                if(result.localidad != null){
+                    $("#localidad\\.id").val(result.localidad.id);
+                    $("#localidad\\.id").removeAttr("disabled","disabled");
+                }
             }
-            if(result.localidad != null){
-                $("#localidad\\.id").val(result.localidad.id);
-                $("#localidad\\.id").removeAttr("disabled","disabled");
-            }
+
             $('#direccion').val(result.direccion);
             $('#razonSocial').val(result.razonSocial);
             $('#direccionElectronica').val(result.direccionElectronica);
             $('#email').val(result.email);
             $('#cp').val(result.cp);
             $('#telefono').val(result.telefono);
-            if(result.canal != null){$("#canalNotificacion").val(result.canal);}
+            if(result.canal != null){
+                $("#canal").val(result.canal);
+                actualizarCanalNotificacion();
+            }
             $('#observaciones').val(result.observaciones);
 
             // Actualizamos los select Chosen
             $('#tipoDocumentoIdentificacion').trigger("chosen:updated");
-            $('#canalNotificacion').trigger("chosen:updated");
+            $('#canal').trigger("chosen:updated");
             $('#tipo').trigger("chosen:updated");
             $('#pais\\.id').trigger("chosen:updated");
             $('#provincia\\.id').trigger("chosen:updated");
@@ -316,7 +321,7 @@ function procesarInteresado() {
 
     var json = { "id": $('#id').val(), "tipo": $('#tipo').val(), "nombre" : $('#nombre').val(), "apellido1" : $('#apellido1').val(), "apellido2" : $('#apellido2').val(),"tipoDocumentoIdentificacion": $('#tipoDocumentoIdentificacion').val(), "documento" : $('#documento').val(),
         "pais" : $('#pais\\.id').val(),"provincia" : $('#provincia\\.id').val(), "localidad" : $('#localidad\\.id').val(), "direccion" : $('#direccion').val(), "razonSocial": $('#razonSocial').val(), "email" : $('#email').val(), "cp" : $('#cp').val(), "telefono" : $('#telefono').val(),
-        "direccionElectronica":$('#direccionElectronica').val(),"canal":$('#canalNotificacion').val(), "observaciones":$('#observaciones').val(), "guardarInteresado":$('#guardarInteresado').prop('checked'), "isRepresentante" : $('#isRepresentante').val()};
+        "direccionElectronica":$('#direccionElectronica').val(),"canal":$('#canal').val(), "observaciones":$('#observaciones').val(), "guardarInteresado":$('#guardarInteresado').prop('checked'), "isRepresentante" : $('#isRepresentante').val()};
 
     if($('#isRepresentante').val() == 'true'){ // Si es un representate, le añadimos a que persona representa
 
@@ -779,7 +784,7 @@ function actualizarPais(){
     }else if($('#pais\\.id option:selected').text() == 'España'){
         $('#provincia\\.id').removeAttr("disabled","disabled").trigger("chosen:updated");
 
-    }else if($('#pais\\.id option:selected').text() == '-1'){
+    }else if($('#pais\\.id option:selected').text() == '...'){
        resetPais();
     }
 
@@ -790,9 +795,9 @@ function actualizarPais(){
  */
 function resetPais(){
 
-    $('#pais\\.id').val('-1').trigger("chosen:updated");
-    $('#provincia\\.id').val('-1').trigger("chosen:updated");
-    $('#localidad\\.id').html('').trigger("chosen:updated");
+    $('#pais\\.id').val("...");
+    $('#provincia\\.id').val("...");
+    $('#localidad\\.id').empty();
     $('#pais\\.id').attr("disabled","disabled").trigger("chosen:updated");
     $('#provincia\\.id').attr("disabled","disabled").trigger("chosen:updated");
     $('#localidad\\.id').attr("disabled","disabled").trigger("chosen:updated");

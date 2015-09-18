@@ -795,10 +795,12 @@ public class InteresadoController extends BaseController{
         if(interesado.getCanal() != null && interesado.getCanal() == -1){interesado.setCanal(null);}
 
         // Si no se ha escogido ningúna Provincia, lo ponemos a null
-        if(interesado.getPais().getId() != null && interesado.getPais().getId() == -1){interesado.setPais(null);}
+        if (interesado.getPais() == null || interesado.getPais().getId() == null || interesado.getPais().getId() == -1) {
+            interesado.setPais(null);
+        }
 
         // Si no se ha escogido ningúna Provincia, lo ponemos a null
-        if(interesado.getProvincia().getId() != null && interesado.getProvincia().getId() == -1){
+        if(interesado.getProvincia() == null || interesado.getProvincia().getId() == null || interesado.getProvincia().getId() == -1){
             interesado.setProvincia(null);
             interesado.setLocalidad(null);
         }
