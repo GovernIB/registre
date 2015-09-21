@@ -89,7 +89,7 @@ public class PersonaValidator<T> extends AbstractRegWebValidator<T> {
           
 
           // Validaciones si el país seleccionado es ESPAÑA
-          if (persona.getPais() == null || persona.getPais().getId() == null) {
+          if (persona.getPais() == null || persona.getPais().getId() == null || persona.getPais().getId() == -1) {
             rejectValue(errors, "pais.id", "error.valor.requerido", "El camp és obligatori");
           } else {
 
