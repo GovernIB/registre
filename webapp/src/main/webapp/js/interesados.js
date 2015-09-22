@@ -233,6 +233,9 @@ function editarInteresado(id){
         type: "GET",
         dataType: 'json',
         contentType: 'application/json',
+        beforeSend: function(objeto){
+            $('#formularioInteresado').hide();
+        },
 
         success: function(result) {
 
@@ -278,6 +281,8 @@ function editarInteresado(id){
             $('#pais\\.id').trigger("chosen:updated");
             $('#provincia\\.id').trigger("chosen:updated");
             $('#localidad\\.id').trigger("chosen:updated");
+
+            $('#formularioInteresado').show();
 
         }
     });

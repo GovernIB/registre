@@ -1,8 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 <un:useConstants var="RegwebConstantes" className="es.caib.regweb3.utils.RegwebConstantes"/>
+
 <div id="modalInteresado" class="modal fade bs-example-modal-lg" >
-    <div class="modal-dialog modal-lg">
+
+    <div class="modal-dialog modal-lg" id="formularioInteresado">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="limpiarInteresado()">x</button>
