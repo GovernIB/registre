@@ -72,11 +72,11 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
     }
 
     @Override
-    public void deleteByOficina(Long idOficina) throws Exception {
+    public int deleteByOficina(Long idOficina) throws Exception {
 
       Query q= em.createQuery("delete from RelacionOrganizativaOfi as roo where roo.oficina.id = :idOficina");
       q.setParameter("idOficina", idOficina);
-      q.executeUpdate();
+      return q.executeUpdate();
     }
 
     @Override

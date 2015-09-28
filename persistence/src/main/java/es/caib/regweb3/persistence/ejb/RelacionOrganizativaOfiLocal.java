@@ -22,7 +22,7 @@ public interface RelacionOrganizativaOfiLocal extends BaseEjb<RelacionOrganizati
   
   public void deleteAll() throws Exception;
 
-  public void deleteByOficina(Long idOficina) throws Exception;
+  public int deleteByOficina(Long idOficina) throws Exception;
 
     /**
      * Obtiene las Oficinas relacionadas con el Organismo seleccionado

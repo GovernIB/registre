@@ -85,7 +85,7 @@ function mostrarMensaje(idPanel, mensaje){
     // añadimos la información de libro-organismo
     var fila;
     for(i=0; i<librosOrganismos.length; i++){
-        fila = "<tr><td>"+librosOrganismos[i].libro+"</td><td>"+librosOrganismos[i].organismo+"</td><td>"+organismoAProcesarNombre+"</td>"
+        fila = "<tr><td>"+organismoAProcesarNombre +"</td><td>"+librosOrganismos[i].organismo+"</td><td>"+librosOrganismos[i].libro+"</td>"
         $('#procesado'+organismoAProcesarId).append(fila);
     }
 
