@@ -143,16 +143,12 @@
     </build>
 	
 	<distributionManagement>
-        <site>
-            <id>es.caib.regweb3</id>
-            <url>scp://shell.sourceforge.net/home/project-web/registre/htdocs/maven</url>
-        </site>
+    
         <repository>
             <id>es.caib.regweb3</id>
-            <name>Regweb3 Maven Repository</name>
-            <url>scp://shell.sourceforge.net/home/project-web/registre/htdocs/maven</url>
+            <name>RegWeb3 Maven Repository</name>
+            <url>sftp://web.sourceforge.net/home/project-web/registre/htdocs/maven</url>
         </repository>
-        
         <!--   COM UTILITZAR: AFEGIR AQUEST CODI AL pom.xml    -->
         <!--
         <repositories>
