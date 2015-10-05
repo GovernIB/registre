@@ -16,20 +16,20 @@
 					 * Nom: Model basic
 					 * Arxiu: trobareu un arxiu d'exemple dins regweb-3.0\scripts\modelos\Rebut_model.rtf
 					 * Pitjar Desar
-    (3.4) Model Ofici Remissi�: AdEn -> CAIB -> cataleg de dades -> Gestio Model Ofici Remissi�: 
-	                 * Pitjar Introduir Model Ofici Remissi�
+    (3.4) Model Ofici Remissió: AdEn -> CAIB -> cataleg de dades -> Gestio Model Ofici Remissió:
+	                 * Pitjar Introduir Model Ofici Remissió
 					 * Nom: Model ofici remis
 					 * Arxiu: trobareu un arxiu d'exemple dins regweb-3.0\scripts\modelos\ModelOficiRemissio.rtf
 					 * Pitjar Desar
 	(3.5) Tipus Documental: AdEn -> CAIB -> cataleg de dades -> Gestio Tipus Documental:
 	           * Mitjançant script sql [regweb-3.0]\scripts\bbdd\3.0\alta_tipus_documentals.sql
 	           * Introduir Tipus Documental a mà (Tipus de Document definit en les NTI)
-					  /*Documentos de decisi�n*/ - TD01 - Resoluci�n. - TD02 - Acuerdo. - TD03 - Contrato. - TD04 - Convenio. - TD05 - Declaraci�n. 
-					  /*Documentos de transmisi�n*/ - TD06 - Comunicaci�n. - TD07 - Notificaci�n. - TD08 - Publicaci�n. - TD09 - Acuse de recibo. 
+					  /*Documentos de decisión*/ - TD01 - Resolución. - TD02 - Acuerdo. - TD03 - Contrato. - TD04 - Convenio. - TD05 - Declaración.
+					  /*Documentos de transmisión*/ - TD06 - Comunicación. - TD07 - Notificación. - TD08 - Publicación. - TD09 - Acuse de recibo.
 					  /*Documentos de constancia*/ - TD10 - Acta. - TD11 - Certificado. - TD12 - Diligencia. 
 					  /*Documentos de juicio*/ - TD13 - Informe. 
-					  /*Documentos de ciudadano*/ - TD14 - Solicitud. - TD15 - Denuncia. - TD16 - Alegaci�n
-					  TD17 - Recursos. - TD18 - Comunicaci�n ciudadano. - TD19 - Factura. - TD20 - Otros incautados. 
+					  /*Documentos de ciudadano*/ - TD14 - Solicitud. - TD15 - Denuncia. - TD16 - Alegación
+					  TD17 - Recursos. - TD18 - Comunicación ciudadano. - TD19 - Factura. - TD20 - Otros incautados.
 					  /*Otros*/ - TD99 - Otros.
 				* Desar
 	(3.5) Tipus Assumpte: AdEn -> CAIB -> cataleg de dades -> Gestio Tipus Assumpte:
@@ -46,7 +46,7 @@
 				 
 (4) Crear un llibre
      (4.1) Oficines i Organismes: AdEn -> CAIB -> Oficines i Organismes: 
-	        * Pitjar sobre el boto de llibres d'un organisme (CONSELLERIA D'AFERS SOCIALS, PROMOCI� I IMMIGRACI�)
+	        * Pitjar sobre el boto de llibres d'un organisme (CONSELLERIA D'AFERS SOCIALS, PROMOCIÓ I IMMIGRACIÓ)
 			* Pitjar sobre el boto "+Nou llibre"
 			        - Nom: Llibre de proves
 		    		- Codi: LLPR
