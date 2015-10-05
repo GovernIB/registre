@@ -214,12 +214,12 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         // Trazabilidadbus
         List<Trazabilidad> trazabilidades = trazabilidadEjb.getByRegistroEntrada(registro.getId());
         model.addAttribute("trazabilidades", trazabilidades);
-//
-//        // Posicion sello
-//        if(entidad.getPosXsello()!=null && entidad.getPosYsello()!=null){
-//            model.addAttribute("posXsello",entidad.getPosXsello());
-//            model.addAttribute("posYsello",entidad.getPosYsello());
-//        }
+
+        // Posicion sello
+        if(entidad.getPosXsello()!=null && entidad.getPosYsello()!=null){
+            model.addAttribute("posXsello",entidad.getPosXsello());
+            model.addAttribute("posYsello",entidad.getPosYsello());
+        }
 
         // Alta en tabla LOPD
         lopdEjb.insertarRegistroEntrada(idRegistro, usuarioEntidad.getId());

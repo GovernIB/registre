@@ -63,6 +63,8 @@
                     <input id="x" name="x" type="text" hidden="hidden" value="">
                     <input id="y" name="y" type="text" hidden="hidden" value="">
                     <input id="orientacion" name="orientacion" type="text" hidden="hidden" value="">
+                    <input id="posXsello" name="posXsello" type="text" hidden="hidden" value="${posXsello}">
+                    <input id="posYsello" name="posYsello" type="text" hidden="hidden" value="${posYsello}">
                     <button class="btn" type="submit"><spring:message code="regweb.imprimir"/></button>
                     <button type="button" class="btn btn-default" data-dismiss="modal"><spring:message code="regweb.cerrar"/></button>
                 </form>

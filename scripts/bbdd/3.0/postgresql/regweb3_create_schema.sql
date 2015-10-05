@@ -103,6 +103,15 @@
         unique (CODIGO, TIPOASUNTO)
     );
 
+    create table RWE_CONFIGURACION (
+        ID int8 not null,
+        COLORMENU varchar(255),
+        TEXTOPIE varchar(4000),
+        LOGOMENU int8,
+        LOGOPIE int8,
+        primary key (ID)
+    );
+
     create table RWE_CONTADOR (
         ID int8 not null,
         NUMERO int4 not null,
@@ -129,6 +138,8 @@
         DIASVISADO int4,
         NOMBRE varchar(255) not null,
         NUMREGISTRO varchar(4000),
+        POSXSELLO int4,
+        POSYSELLO int4,
         SELLO varchar(4000),
         SIR bool not null,
         TEXTOPIE varchar(4000),
@@ -445,13 +456,13 @@
         CODOFIFIS int4 not null,
         CODORGDESEMI int4 not null,
         DENOFICINA varchar(255) not null,
-        DENOFIFIS varchar(25) not null,
-        DESCDOC varchar(30) not null,
+        DENOFIFIS varchar(60) not null,
+        DESCDOC varchar(60) not null,
         DESIDIDOC varchar(15) not null,
-        DESORGDESEMI varchar(40),
-        DESREMDES varchar(30) not null,
+        DESORGDESEMI varchar(60),
+        DESREMDES varchar(160) not null,
         MAILREMITENTE varchar(50),
-        EXTRACTO varchar(160) not null,
+        EXTRACTO varchar(2000) not null,
         FECHADOC timestamp not null,
         FECHAREG timestamp not null,
         FECHAVIS timestamp,
@@ -462,9 +473,9 @@
         NUMDISQUET int4,
         NUMENTSAL int4 not null,
         OTROS varchar(255),
-        PRODESGEO varchar(30) not null,
+        PRODESGEO varchar(50) not null,
         PRODESGEOBAL int4 not null,
-        PRODESGEOFUE varchar(25),
+        PRODESGEOFUE varchar(50),
         TIPODOC varchar(2) not null,
         TREGISTRO bool,
         IDENTIDAD int8,
@@ -640,6 +651,16 @@
         add constraint RWE_CODASUNTO_TIPOASUNTO_FK
         foreign key (TIPOASUNTO)
         references RWE_TIPOASUNTO;
+
+    alter table RWE_CONFIGURACION
+        add constraint FKB556CB28A0B8343F
+        foreign key (LOGOMENU)
+        references RWE_ARCHIVO;
+
+    alter table RWE_CONFIGURACION
+        add constraint FKB556CB283C3DAEB6
+        foreign key (LOGOPIE)
+        references RWE_ARCHIVO;
 
     create index RWE_DESCAR_ENTIDA_FK_I on RWE_DESCARGA (ENTIDAD);
 

@@ -66,10 +66,13 @@ public class Entidad implements Serializable {
     private Boolean activo = true;
     @XmlTransient
     private String tipoScan;
+    @XmlTransient
+    private Integer posXsello;
+    @XmlTransient
+    private Integer posYsello;
     
     
-    
-   
+
     /**
      * 
      */
@@ -106,9 +109,9 @@ public class Entidad implements Serializable {
       this.sir = e.sir;
       this.activo = e.activo;
       this.tipoScan = e.tipoScan;
+      this.posXsello = e.posXsello;
+      this.posYsello = e.posYsello;
     }
-
-
 
 
 
@@ -285,17 +288,7 @@ public class Entidad implements Serializable {
         this.logoSello = logoSello;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
 
-        Entidad entidad = (Entidad) o;
-
-        if (id != null ? !id.equals(entidad.id) : entidad.id != null) return false;
-
-        return true;
-    }
     @Column(name="DIASVISADO")
     public Integer getDiasVisado() {
       return diasVisado;
@@ -323,9 +316,33 @@ public class Entidad implements Serializable {
         this.activo = activo;
     }
 
+    @Column(name="POSXSELLO",length = 3)
+    public Integer getPosXsello() { return posXsello; }
+
+    public void setPosXsello(Integer posXsello) { this.posXsello = posXsello; }
+
+    @Column(name="POSYSELLO",length = 3)
+    public Integer getPosYsello() { return posYsello; }
+
+    public void setPosYsello(Integer posYsello) { this.posYsello = posYsello; }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Entidad entidad = (Entidad) o;
+
+        if (id != null ? !id.equals(entidad.id) : entidad.id != null) return false;
+
+        return true;
+    }
+
     @Override
     public String toString() {
         return nombre;
     }
+
 
 }

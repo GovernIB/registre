@@ -1,5 +1,8 @@
 $(document).ready(function() {
 
+    var posXsello = $("#posXsello").val();
+    var posYsello = $("#posYsello").val();
+
     var offset;
     var pageX;
     var pageY;
@@ -9,7 +12,11 @@ $(document).ready(function() {
     var orientacion;
 
     //posicionaSegellXY(155,14,"( 155, 14)");
-    posicionaSegell('V1');
+    if (posXsello!='' && posYsello!='') {
+        posicionaSegell('V0');
+    } else {
+        posicionaSegell('V1');
+    }
     orientacion = "V";
     $("#orientacion").val('V');
 
@@ -35,7 +42,6 @@ $(document).ready(function() {
 });
 
 function posicionaSegellXY(x ,y, texto) {
-
     var pdfX=Math.floor(x/0.352777777777778);
     if(orientacion=="V"){
         var pdfY=Math.floor((297 - y)/0.352777777777778);
@@ -75,7 +81,6 @@ function posicionaSegellXY(x ,y, texto) {
 }
 
 function posicionaSegell(pos) {
-
     var borde=19;
     var ampleSegell=45;
     var altSegell=23;
@@ -97,6 +102,13 @@ function posicionaSegell(pos) {
     $("#sello").css("width",w + 'px');
 
     switch(parseInt(num)){
+
+        case 0:
+        var posX = parseFloat($("#posXsello").val());
+        var posY = parseFloat($("#posYsello").val());
+        var texto = "( " + posX+ ", " + posY + " )";
+        posicionaSegellXY(posX, posY, texto);
+        break;
 
         case 1:
         var texto = "( " + borde+ ", " + borde + " )";

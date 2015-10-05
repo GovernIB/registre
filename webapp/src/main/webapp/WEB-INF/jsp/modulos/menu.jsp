@@ -5,19 +5,29 @@
 <div class="container-fluid">
 
       <div class="navbar-header">
-
-        <c:if test="${entidadActiva == null}">
-            <div class="govern-logo pull-left"><img src="<c:url value="/img/govern-logo.png"/>" width="159" height="36" alt="Govern de les Illes Balears" /></div>
+        <%--Si el usuario es SuperAdministrador--%>
+        <c:if test="${rolAutenticado.nombre == 'RWE_SUPERADMIN'}">
+            <c:if test="${configuracion.logoMenu != null}">
+                <div class="govern-logo pull-left">
+                    <img src="<c:url value="/archivo/${configuracion.logoMenu.id}"/>" alt="${configuracion.logoMenu.nombre}" />
+                </div>
+            </c:if>
         </c:if>
-        <c:if test="${entidadActiva != null}">
-            <div class="govern-logo pull-left">
-                <c:if test="${entidadActiva.logoMenu != null}">
-                    <img src="<c:url value="/archivo/${entidadActiva.logoMenu.id}"/>" alt="${entidadActiva.nombre}" />
-                </c:if>
-                <c:if test="${entidadActiva.logoMenu == null}">
-                    <img src="<c:url value="/img/govern-logo.png"/>" width="159" height="36" alt="Govern de les Illes Balears" />
-                </c:if>
-            </div>
+        <%--Si el usuario no es SuperAdministrador--%>
+        <c:if test="${rolAutenticado.nombre != 'RWE_SUPERADMIN'}">
+            <c:if test="${entidadActiva == null}">
+                <div class="govern-logo pull-left"><img src="<c:url value="/img/govern-logo.png"/>" width="159" height="36" alt="Govern de les Illes Balears" /></div>
+            </c:if>
+            <c:if test="${entidadActiva != null}">
+                <div class="govern-logo pull-left">
+                    <c:if test="${entidadActiva.logoMenu != null}">
+                        <img src="<c:url value="/archivo/${entidadActiva.logoMenu.id}"/>" alt="${entidadActiva.nombre}" />
+                    </c:if>
+                    <c:if test="${entidadActiva.logoMenu == null}">
+                        <img src="<c:url value="/img/govern-logo.png"/>" width="159" height="36" alt="Govern de les Illes Balears" />
+                    </c:if>
+                </div>
+            </c:if>
         </c:if>
         <div class="aplication-logo pull-left">
           <a href="<c:url value="/"/>">
@@ -294,6 +304,7 @@
                             <li class="submenu-complet"><a href="<c:url value="/entidad/list"/>"><spring:message code="entidad.entidades"/></a></li>
                             <li class="submenu-complet"><a href="<c:url value="/usuario/list"/>"><spring:message code="menu.usuarios"/></a></li>
                             <li class="submenu-complet"><a href="<c:url value="/dir3/datosCatalogo"/>" tabindex="-1"><spring:message code="menu.dir3"/></a></li>
+                            <li class="submenu-complet"><a href="<c:url value="/configuracion/editar"/>"><spring:message code="menu.configuracion"/></a></li>
                             <li class="divider"></li>
                             <li class="submenu-complet"><a href="<c:url value="/doc/Manual_de_Usuari_Administrador_de_RegWeb3.pdf"/>" target="_blank" ><spring:message code="menu.manual.admin"/></a></li>
                         </ul>

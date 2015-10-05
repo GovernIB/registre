@@ -54,6 +54,9 @@ public class UsuarioService {
     @EJB(mappedName = "regweb3/PreRegistroEJB/local")
     public PreRegistroLocal preRegistroEjb;
 
+    @EJB(mappedName = "regweb3/ConfiguracionEJB/local")
+    public ConfiguracionLocal configuracionEjb;
+
 
     /**
      * Dado un usuario autenticado, realiza todas las configuraciones necesarias para su funcionamiento en REGWEB3.
@@ -143,6 +146,15 @@ public class UsuarioService {
         }else if(rolActivo.getNombre().equals(RegwebConstantes.ROL_USUARI)){
 
             asignarEntidadesOperador(usuarioAutenticado, entidadActiva, session);
+        }
+
+        // Asigna la Configuración del SuperAdministrador
+        if(rolActivo.getNombre().equals(RegwebConstantes.ROL_SUPERADMIN)){
+            List<Configuracion> configuraciones = configuracionEjb.getAll();
+            if(configuraciones.size()>0) {
+                Configuracion configuracion = configuraciones.get(0);
+                asignarConfiguracionAdministrador(configuracion, request);
+            }
         }
 
     }
@@ -537,6 +549,16 @@ public class UsuarioService {
         session.removeAttribute(RegwebConstantes.SESSION_ROLES);
         session.removeAttribute(RegwebConstantes.SESSION_ROL);
 
+    }
+
+    /**
+     * Guardamos en la sesión la Configuracion del SuperAdministrador
+     * @param configuracion
+     * @param request
+     */
+    public void asignarConfiguracionAdministrador(Configuracion configuracion, HttpServletRequest request) throws Exception{
+        HttpSession session = request.getSession();
+        session.setAttribute(RegwebConstantes.SESSION_CONFIGURACION, configuracion);
     }
 
 

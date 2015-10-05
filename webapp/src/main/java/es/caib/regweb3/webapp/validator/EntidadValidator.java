@@ -59,7 +59,7 @@ public class EntidadValidator implements Validator {
         }
 
         /*Validación del campo único CodigoDir3*/
-       if(entidad.getEntidad().getCodigoDir3() != null && entidad.getEntidad().getCodigoDir3().length() > 0){
+        if(entidad.getEntidad().getCodigoDir3() != null && entidad.getEntidad().getCodigoDir3().length() > 0){
             try {
                 if(entidad.getEntidad().getId() != null){ // Es una modificación
 
@@ -79,6 +79,35 @@ public class EntidadValidator implements Validator {
             }
 
         }
+
+        /*Validación de la Posición del Sello: (X, Y)*/
+        if(entidad.getEntidad().getPosXsello() != null){ //Comprueba que PosX tiene valor
+            try {
+                if(entidad.getEntidad().getPosYsello() != null){ //PosY también tiene valor
+                    if(entidad.getEntidad().getPosXsello() > 155){ //Valor máximo de PosX = 155
+                        errors.rejectValue("entidad.posXsello","entidad.sello.valorXmax","Valor máximo = 155");
+                    }else if(entidad.getEntidad().getPosXsello() < 10){ //Valor mínimo de PosX = 10
+                        errors.rejectValue("entidad.posXsello","entidad.sello.valorXmin","Valor mínimo = 10");
+                    }
+                    if(entidad.getEntidad().getPosYsello() > 264){ //Valor máximo de PosY = 264
+                        errors.rejectValue("entidad.posYsello","entidad.sello.valorYmax","Valor máximo = 264");
+                    }else if(entidad.getEntidad().getPosYsello() < 10){ //Valor mínimo de PosY = 10
+                        errors.rejectValue("entidad.posYsello","entidad.sello.valorYmin","Valor mínimo = 10");
+                    }
+                }else{ // Si PosY no tiene valor, indica error
+                    errors.rejectValue("entidad.posYsello","entidad.posicion.necesario","Debe completar las dos posiciones");
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }else{  // PosX no tiene valor
+            if(entidad.getEntidad().getPosYsello() != null){ // Si PosY tiene valor, indica error
+                errors.rejectValue("entidad.posXsello","entidad.posicion.necesario","Debe completar las dos posiciones");
+            }
+        }
+
     }
 
 

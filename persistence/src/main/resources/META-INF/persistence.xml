@@ -54,6 +54,7 @@ http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
         <class>es.caib.regweb3.model.RegistroLopdMigrado</class>
         <class>es.caib.regweb3.model.ModificacionLopdMigrado</class>
         <class>es.caib.regweb3.model.PreRegistro</class>
+        <class>es.caib.regweb3.model.Configuracion</class>
 
 
         <properties>

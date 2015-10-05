@@ -90,6 +90,14 @@
         TIPOASUNTO number(19,0)
     );
 
+    create table RWE_CONFIGURACION (
+        ID number(19,0) not null,
+        COLORMENU varchar2(255 char),
+        TEXTOPIE varchar2(4000 char),
+        LOGOMENU number(19,0),
+        LOGOPIE number(19,0)
+    );
+
     create table RWE_CONTADOR (
         ID number(19,0) not null,
         NUMERO number(10,0) not null
@@ -114,6 +122,8 @@
         DIASVISADO number(10,0),
         NOMBRE varchar2(255 char) not null,
         NUMREGISTRO varchar2(4000 char),
+        POSXSELLO number(10,0),
+        POSYSELLO number(10,0),
         SELLO varchar2(4000 char),
         SIR number(1,0) not null,
         TEXTOPIE varchar2(4000 char),
@@ -408,13 +418,13 @@
         CODOFIFIS number(10,0) not null,
         CODORGDESEMI number(10,0) not null,
         DENOFICINA varchar2(255 char) not null,
-        DENOFIFIS varchar2(25 char) not null,
-        DESCDOC varchar2(30 char) not null,
+        DENOFIFIS varchar2(60 char) not null,
+        DESCDOC varchar2(60 char) not null,
         DESIDIDOC varchar2(15 char) not null,
-        DESORGDESEMI varchar2(40 char),
-        DESREMDES varchar2(30 char) not null,
+        DESORGDESEMI varchar2(60 char),
+        DESREMDES varchar2(160 char) not null,
         MAILREMITENTE varchar2(50 char),
-        EXTRACTO varchar2(160 char) not null,
+        EXTRACTO varchar2(2000 char) not null,
         FECHADOC timestamp not null,
         FECHAREG timestamp not null,
         FECHAVIS timestamp,
@@ -425,9 +435,9 @@
         NUMDISQUET number(10,0),
         NUMENTSAL number(10,0) not null,
         OTROS varchar2(255 char),
-        PRODESGEO varchar2(30 char) not null,
+        PRODESGEO varchar2(50 char) not null,
         PRODESGEOBAL number(10,0) not null,
-        PRODESGEOFUE varchar2(25 char),
+        PRODESGEOFUE varchar2(50 char),
         TIPODOC varchar2(2 char) not null,
         TREGISTRO number(1,0),
         IDENTIDAD number(19,0)
@@ -625,6 +635,8 @@
 
     alter table RWE_CODIGOASUNTO add constraint RWE_CODIGOASUNTO_pk primary key (ID);
 
+    alter table RWE_CONFIGURACION add constraint RWE_CONFIGURACION_pk primary key (ID);
+
     alter table RWE_CONTADOR add constraint RWE_CONTADOR_pk primary key (ID);
 
     alter table RWE_DESCARGA add constraint RWE_DESCARGA_pk primary key (ID);
@@ -739,6 +751,16 @@
         add constraint RWE_CODASUNTO_TIPOASUNTO_FK
         foreign key (TIPOASUNTO)
         references RWE_TIPOASUNTO;
+
+    alter table RWE_CONFIGURACION
+        add constraint FKB556CB28A0B8343F
+        foreign key (LOGOMENU)
+        references RWE_ARCHIVO;
+
+    alter table RWE_CONFIGURACION
+        add constraint FKB556CB283C3DAEB6
+        foreign key (LOGOPIE)
+        references RWE_ARCHIVO;
 
     alter table RWE_DESCARGA
         add constraint RWE_DESCARGA_ENTIDAD_FK

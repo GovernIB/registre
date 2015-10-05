@@ -60,6 +60,8 @@
         <sec:intercept-url pattern="/repro/**" access="hasRole('RWE_USUARI')"/>
         <!--Libro-->
         <sec:intercept-url pattern="/libro/**" access="hasRole('RWE_ADMIN')"/>
+        <!--Configuracion-->
+        <sec:intercept-url pattern="/configuracion/**" access="hasRole('RWE_SUPERADMIN')"/>
 
         <sec:access-denied-handler error-page="/accesoDenegado"/>
         <sec:custom-filter position="PRE_AUTH_FILTER" ref="preauthFilter"/>

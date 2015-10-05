@@ -142,7 +142,7 @@ public class RegistroMigrado implements Serializable {
         this.codigoOficinaFisica = codigoOficinaFisica;
     }
 
-    @Column(name="DENOFIFIS", nullable = false, length = 25)
+    @Column(name="DENOFIFIS", nullable = false, length = 60)
     public String getDenominacionOficinaFisica() {
         return denominacionOficinaFisica;
     }
@@ -152,7 +152,7 @@ public class RegistroMigrado implements Serializable {
     }
 
     @Index(name="RWE_REGMIG_EXTR_I")
-    @Column(name="EXTRACTO", nullable = false, length = 160)
+    @Column(name="EXTRACTO", nullable = false, length = 2000)
     public String getExtracto() {
         return extracto;
     }
@@ -181,7 +181,7 @@ public class RegistroMigrado implements Serializable {
     }
 
     @Index(name="RWE_REGMIG_REMDES_I")
-    @Column(name="DESREMDES", nullable = false, length = 30)
+    @Column(name="DESREMDES", nullable = false, length = 160)
     public String getDescripcionRemitenteDestinatario() {
         return descripcionRemitenteDestinatario;
     }
@@ -199,7 +199,7 @@ public class RegistroMigrado implements Serializable {
         this.codigoOrganismoDestinatarioEmisor = codigoOrganismoDestinatarioEmisor;
     }
 
-    @Column(name="DESORGDESEMI", length = 40)
+    @Column(name="DESORGDESEMI", length = 60)
     public String getDescripcionOrganismoDestinatarioEmisor() {
         return descripcionOrganismoDestinatarioEmisor;
     }
@@ -217,7 +217,7 @@ public class RegistroMigrado implements Serializable {
         this.tipoDocumento = tipoDocumento;
     }
 
-    @Column(name="DESCDOC", nullable = false, length = 30)
+    @Column(name="DESCDOC", nullable = false, length = 60)
     public String getDescripcionDocumento() {
         return descripcionDocumento;
     }
@@ -280,7 +280,7 @@ public class RegistroMigrado implements Serializable {
         this.procedenciaDestinoGeograficoBaleares = procedenciaDestinoGeograficoBaleares;
     }
 
-    @Column(name="PRODESGEOFUE", length = 25)
+    @Column(name="PRODESGEOFUE", length = 50)
     public String getProcedenciaDestinoGeograficoFuera() {
         return procedenciaDestinoGeograficoFuera;
     }
@@ -289,7 +289,7 @@ public class RegistroMigrado implements Serializable {
         this.procedenciaDestinoGeograficoFuera = procedenciaDestinoGeograficoFuera;
     }
 
-    @Column(name="PRODESGEO", nullable = false, length = 30)
+    @Column(name="PRODESGEO", nullable = false, length = 50)
     public String getProcedenciaDestinoGeografico() {
         return procedenciaDestinoGeografico;
     }

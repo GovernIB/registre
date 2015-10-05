@@ -5,21 +5,33 @@
 
 <div class="container peu row-fluid">
     <div class="pull-left colophon">REGWEB3 &copy; | <fmt:message key="regweb.titulo"/> - <fmt:message key="regweb.version"/> <%=Versio.VERSIO + (Configuracio.isCAIB()?"-caib":"") + " " + (Configuracio.showTimeStamp()?TimeStamp.TIMESTAMP : "") %></div>
-    <c:if test="${entidadActiva != null}">
-        <div class="col-xs-4 centrat-float-left text-center">${entidadActiva.textoPie}</div>
+    <%--Si el usuario es SuperAdministrador--%>
+    <c:if test="${rolAutenticado.nombre == 'RWE_SUPERADMIN'}">
+        <div class="col-xs-4 centrat-float-left text-center">${configuracion.textoPie}</div>
+        <c:if test="${configuracion.logoPie != null}">
+            <div class="pull-right govern-footer">
+                <img src="<c:url value="/archivo/${configuracion.logoPie.id}"/>" alt="${configuracion.logoPie.nombre}" />
+            </div>
+        </c:if>
     </c:if>
-    <c:if test="${entidadActiva == null}">
-        <div class="pull-right govern-footer"> <img src="<c:url value="/img/govern-logo-neg.png"/>" width="129" height="30" alt="Govern de les Illes Balears" /></div>
-    </c:if>
-    <c:if test="${entidadActiva != null}">
-        <div class="pull-right govern-footer">
-            <c:if test="${entidadActiva.logoPie != null}">
-                <img src="<c:url value="/archivo/${entidadActiva.logoPie.id}"/>" alt="${entidadActiva.nombre}" />
-            </c:if>
-            <c:if test="${entidadActiva.logoPie == null}">
-                <img src="<c:url value="/img/govern-logo-neg.png"/>" width="129" height="30" alt="Govern de les Illes Balears" />
-            </c:if>
-        </div>
+    <%--Si el usuario no es SuperAdministrador--%>
+    <c:if test="${rolAutenticado.nombre != 'RWE_SUPERADMIN'}">
+        <c:if test="${entidadActiva != null}">
+            <div class="col-xs-4 centrat-float-left text-center">${entidadActiva.textoPie}</div>
+        </c:if>
+        <c:if test="${entidadActiva == null}">
+            <div class="pull-right govern-footer"> <img src="<c:url value="/img/govern-logo-neg.png"/>" width="129" height="30" alt="Govern de les Illes Balears" /></div>
+        </c:if>
+        <c:if test="${entidadActiva != null}">
+            <div class="pull-right govern-footer">
+                <c:if test="${entidadActiva.logoPie != null}">
+                    <img src="<c:url value="/archivo/${entidadActiva.logoPie.id}"/>" alt="${entidadActiva.nombre}" />
+                </c:if>
+                <c:if test="${entidadActiva.logoPie == null}">
+                    <img src="<c:url value="/img/govern-logo-neg.png"/>" width="129" height="30" alt="Govern de les Illes Balears" />
+                </c:if>
+            </div>
+        </c:if>
     </c:if>
 </div>
 
@@ -74,9 +86,15 @@
 <script>
     $(document).ready(function() {
         $(function () {
-            if(${entidadActiva != null}){
-                $('.navbar-header').css('background-color','#${entidadActiva.colorMenu}');
-                $('.navbar-nav > li > a').css('background-color','#${entidadActiva.colorMenu}');
+            <!--Si es SuperAdministrador-->
+            if(${rolAutenticado.nombre == 'RWE_SUPERADMIN'}){
+                $('.navbar-header').css('background-color','#${configuracion.colorMenu}');
+                $('.navbar-nav > li > a').css('background-color','#${configuracion.colorMenu}');
+            }else{ <!--Si No es SuperAdministrador-->
+                if(${entidadActiva != null}){
+                    $('.navbar-header').css('background-color','#${entidadActiva.colorMenu}');
+                    $('.navbar-nav > li > a').css('background-color','#${entidadActiva.colorMenu}');
+                }
             }
         });
     });
