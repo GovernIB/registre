@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.dir3caib.ws.api.catalogo.*;
 import es.caib.dir3caib.ws.api.catalogo.CatEstadoEntidad;
+import es.caib.dir3caib.ws.api.catalogo.CatTipoVia;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.CatPais;
 import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
@@ -53,12 +54,20 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
     @EJB(mappedName = "regweb3/DescargaEJB/local")
     public DescargaLocal descargaEjb;
 
+    @EJB(mappedName = "regweb3/CatServicioEJB/local")
+    public CatServicioLocal catServicioEjb;
+
+    @EJB(mappedName = "regweb3/CatTipoViaEJB/local")
+    public CatTipoViaLocal catTipoViaEjb;
+
     SimpleDateFormat formatoFecha = new SimpleDateFormat(RegwebConstantes.FORMATO_FECHA);
 
     @Override
     public Descarga sincronizarCatalogo() throws Exception {
 
-      Dir3CaibObtenerCatalogosWs catalogosService = Dir3CaibUtils.getObtenerCatalogosService();
+        log.info("Inicio sincronizacion catalogo DIR3");
+
+        Dir3CaibObtenerCatalogosWs catalogosService = Dir3CaibUtils.getObtenerCatalogosService();
 
        /* CACHE */
        Map<Long, CatPais> cachePais = new TreeMap<Long,CatPais>();
@@ -166,6 +175,25 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
 
         }
 
+        //Obtenemos todos los CatServicio
+        List<es.caib.dir3caib.ws.api.catalogo.Servicio> servicios = catalogosService.obtenerCatServicio();
+
+        for (Servicio servicio : servicios) {
+
+            es.caib.regweb3.model.CatServicio catServicio = new CatServicio(servicio.getCodServicio(),servicio.getDescServicio());
+            catServicioEjb.persist(catServicio);
+        }
+
+        //Obtenemos todos los CatTipoVia
+        List<es.caib.dir3caib.ws.api.catalogo.CatTipoVia> catTiposVia = catalogosService.obtenerCatTipoVia();
+
+        for (CatTipoVia catTipoVia : catTiposVia) {
+
+            es.caib.regweb3.model.CatTipoVia tipoVia = new es.caib.regweb3.model.CatTipoVia(catTipoVia.getCodigoTipoVia(),catTipoVia.getDescripcionTipoVia());
+            catTipoViaEjb.persist(tipoVia);
+        }
+
+        log.info("Fin sincronizacion catalogo DIR3");
 
         // Guardamos los datos de la ultima descarga
         Descarga descarga = new Descarga();
@@ -174,11 +202,13 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
         Date hoy = new Date();
         descarga.setFechaImportacion(hoy);
 
-        return descarga = descargaEjb.persist(descarga);
+        return descargaEjb.persist(descarga);
     }
 
      @Override
      public Descarga actualizarCatalogo() throws Exception {
+
+         log.info("Inicio actualizacion catalogo DIR3");
 
         /* CACHE */
         Map<Long, CatPais> cachePais = cachePais();
@@ -348,7 +378,46 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
             }
         }
 
-        log.info("Fin actualizacion catálogo DIR3");
+         //Obtenemos todos los CatServicio
+         List<es.caib.dir3caib.ws.api.catalogo.Servicio> servicios = catalogosService.obtenerCatServicio();
+
+         for (Servicio servicio : servicios) {
+
+             CatServicio cs = catServicioEjb.findByCodigo(servicio.getCodServicio());
+
+             if(cs != null){ //Actualización
+                 cs.setDescServicio(servicio.getDescServicio());
+                 catServicioEjb.merge(cs);
+
+             }else{ //Nuevo
+                 es.caib.regweb3.model.CatServicio catServicio = new CatServicio(servicio.getCodServicio(),servicio.getDescServicio());
+                 catServicioEjb.persist(catServicio);
+             }
+
+
+         }
+
+
+
+         //Obtenemos todos los CatTipoVia
+         List<es.caib.dir3caib.ws.api.catalogo.CatTipoVia> catTiposVia = catalogosService.obtenerCatTipoVia();
+
+         for (CatTipoVia catTipoVia : catTiposVia) {
+
+             es.caib.regweb3.model.CatTipoVia ctv = catTipoViaEjb.findByCodigo(catTipoVia.getCodigoTipoVia());
+
+             if(ctv != null){// Actualización
+                ctv.setDescripcionTipoVia(catTipoVia.getDescripcionTipoVia());
+                catTipoViaEjb.merge(ctv);
+             }else{ //Nuevo
+                es.caib.regweb3.model.CatTipoVia tipoVia = new es.caib.regweb3.model.CatTipoVia(catTipoVia.getCodigoTipoVia(),catTipoVia.getDescripcionTipoVia());
+                catTipoViaEjb.persist(tipoVia);
+             }
+
+
+         }
+
+        log.info("Fin actualizacion catalogo DIR3");
 
         // Guardamos los datos de la ultima descarga
         Descarga descarga = new Descarga();
@@ -357,7 +426,7 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
         Date hoy = new Date();
         descarga.setFechaImportacion(hoy);
 
-        return descarga = descargaEjb.persist(descarga);
+        return descargaEjb.persist(descarga);
 
      }
 

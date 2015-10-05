@@ -21,6 +21,10 @@ import java.util.Set;
 @Table(name = "RWE_OFICINA")
 @org.hibernate.annotations.Table(appliesTo = "RWE_OFICINA", indexes = {
     @Index(name="RWE_OFICIN_ESTENT_FK_I", columnNames = {"ESTADO"}),
+    @Index(name="RWE_OFICIN_PAIS_FK_I", columnNames = {"PAIS"}),
+    @Index(name="RWE_OFICIN_COMUNI_FK_I", columnNames = {"COMUNIDAD"}),
+    @Index(name="RWE_OFICIN_LOCALI_FK_I", columnNames = {"LOCALIDAD"}),
+    @Index(name="RWE_OFICIN_TVIA_FK_I", columnNames = {"TIPOVIA"}),
     @Index(name="RWE_OFICIN_ORGANI_FK_I", columnNames = {"ORGANISMORESPONSABLE"}),
     @Index(name="RWE_OFICIN_OFICIN_FK_I", columnNames = {"OFICINARESPONSABLE"})
 })
@@ -44,23 +48,28 @@ public class Oficina implements Serializable{
     @XmlTransient
   	private Set<RelacionOrganizativaOfi> organizativasOfi;
 
-    /**
-     * 
-     */
+    @XmlTransient
+    private CatPais codPais;
+    @XmlTransient
+    private CatComunidadAutonoma codComunidad;
+    @XmlTransient
+    private CatLocalidad localidad;
+    @XmlTransient
+    private CatTipoVia tipoVia;
+    @XmlTransient
+    private String nombreVia;
+    @XmlTransient
+    private String numVia;
+    @XmlTransient
+    private String codPostal;
+    @XmlTransient
+    private Set<CatServicio> servicios;
+
     public Oficina() {
       super();
     }
 
 
-    /**
-     * @param id
-     * @param codigo
-     * @param estado
-     * @param denominacion
-     * @param organismoResponsable
-     * @param oficinaResponsable
-     * @param organizativasOfi
-     */
     public Oficina(Oficina o) {
       super();
       this.id = o.id;
@@ -183,6 +192,89 @@ public class Oficina implements Serializable{
 
         return  organismos;
 
+    }
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "PAIS")
+    @ForeignKey(name = "RWE_OFICINA_PAIS_FK")
+    public CatPais getCodPais() {
+        return codPais;
+    }
+
+    public void setCodPais(CatPais codPais) {
+        this.codPais = codPais;
+    }
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "COMUNIDAD")
+    @ForeignKey(name = "RWE_OFICINA_COMUNIDAD_FK")
+    public CatComunidadAutonoma getCodComunidad() {
+        return codComunidad;
+    }
+
+    public void setCodComunidad(CatComunidadAutonoma codComunidad) {
+        this.codComunidad = codComunidad;
+    }
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "LOCALIDAD")
+    @ForeignKey(name = "RWE_OFICINA_LOCALIDAD_FK")
+    public CatLocalidad getLocalidad() {
+        return localidad;
+    }
+
+    public void setLocalidad(CatLocalidad localidad) {
+        this.localidad = localidad;
+    }
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "TIPOVIA")
+    @ForeignKey(name = "RWE_OFICINA_TIPOVIA_FK")
+    public CatTipoVia getTipoVia() {
+        return tipoVia;
+    }
+
+    public void setTipoVia(CatTipoVia tipoVia) {
+        this.tipoVia = tipoVia;
+    }
+
+    @Column(name = "NOMBREVIA", length = 300)
+    public String getNombreVia() {
+        return nombreVia;
+    }
+
+    public void setNombreVia(String nombreVia) {
+        this.nombreVia = nombreVia;
+    }
+
+    @Column(name = "NUMVIA", length = 20)
+    public String getNumVia() {
+        return numVia;
+    }
+
+    public void setNumVia(String numVia) {
+        this.numVia = numVia;
+    }
+
+    @Column(name = "CODPOSTAL", length = 14)
+    public String getCodPostal() {
+        return codPostal;
+    }
+
+    public void setCodPostal(String codPostal) {
+        this.codPostal = codPostal;
+    }
+
+    @ManyToMany(cascade = { CascadeType.PERSIST }, targetEntity = CatServicio.class, fetch = FetchType.EAGER)
+    @JoinTable(name = "RWE_OFICINA_SERVICIO", joinColumns = { @JoinColumn(name = "IDOFICINA") }, inverseJoinColumns = { @JoinColumn(name = "IDSERVICIO") })
+    @ForeignKey(name = "RWE_SERVICIO_OFICINA_FK", inverseName = "RWE_OFICINA_SERVICIO_FK")
+    @OrderBy("id")
+    public Set<CatServicio> getServicios() {
+        return servicios;
+    }
+
+    public void setServicios(Set<CatServicio> servicios) {
+        this.servicios = servicios;
     }
 
     @Override

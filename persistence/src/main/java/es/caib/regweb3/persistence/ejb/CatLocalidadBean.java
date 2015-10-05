@@ -63,8 +63,8 @@ public class CatLocalidadBean extends BaseEjbJPA<CatLocalidad, Long> implements 
     public CatLocalidad findByCodigo(Long codigoLocalidad, Long codigoProvincia, String codigoEntidadGeografica) throws Exception {
          Query q = em.createQuery("Select catLocalidad from CatLocalidad as catLocalidad where catLocalidad.codigoLocalidad =:codigoLocalidad and catLocalidad.provincia.codigoProvincia =:codigoProvincia and catLocalidad.entidadGeografica.codigoEntidadGeografica =:codigoEntidadGeografica");
 
-         q.setParameter("codigoLocalidad",codigoLocalidad);
-         q.setParameter("codigoProvincia",codigoProvincia);
+         q.setParameter("codigoLocalidad", codigoLocalidad);
+         q.setParameter("codigoProvincia", codigoProvincia);
          q.setParameter("codigoEntidadGeografica",codigoEntidadGeografica);
 
          List<CatLocalidad> catLocalidad = q.getResultList();
@@ -100,6 +100,21 @@ public class CatLocalidadBean extends BaseEjbJPA<CatLocalidad, Long> implements 
 
         return  q.getResultList();
 
+    }
+
+    @Override
+    public CatLocalidad findByNombre(String nombre) throws Exception{
+
+        Query q = em.createQuery("Select catLocalidad from CatLocalidad as catLocalidad where catLocalidad.nombre =:nombre");
+
+        q.setParameter("nombre",nombre);
+
+        List<CatLocalidad> catLocalidad = q.getResultList();
+        if(catLocalidad.size() == 1){
+            return catLocalidad.get(0);
+        }else{
+            return  null;
+        }
     }
 
 }

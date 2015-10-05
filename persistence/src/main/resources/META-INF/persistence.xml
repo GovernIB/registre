@@ -18,6 +18,8 @@ http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
         <class>es.caib.regweb3.model.Oficina</class>
         <class>es.caib.regweb3.model.Organismo</class>
         <class>es.caib.regweb3.model.CatEstadoEntidad</class>
+        <class>es.caib.regweb3.model.CatTipoVia</class>
+        <class>es.caib.regweb3.model.CatServicio</class>
         <class>es.caib.regweb3.model.RelacionOrganizativaOfi</class>
         <class>es.caib.regweb3.model.RelacionSirOfi</class>
         <class>es.caib.regweb3.model.Rol</class>

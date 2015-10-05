@@ -22,5 +22,13 @@ public interface CatLocalidadLocal extends BaseEjb<CatLocalidad, Long> {
 
     public List<CatLocalidad> getByProvincia(Long idProvincia) throws Exception;
 
+    /**
+     * Obtiene la Localidad a partir de su nombre
+     * @param nombre
+     * @return
+     * @throws Exception
+     */
+    public CatLocalidad findByNombre(String nombre) throws Exception;
+
 }
 

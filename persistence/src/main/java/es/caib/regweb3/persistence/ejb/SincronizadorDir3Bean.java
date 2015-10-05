@@ -9,6 +9,7 @@ import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -62,6 +63,18 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
     @EJB(mappedName = "regweb3/DescargaEJB/local")
     public DescargaLocal descargaEjb;
+
+    @EJB(mappedName = "regweb3/CatLocalidadEJB/local")
+    public CatLocalidadLocal catLocalidadEjb;
+
+    @EJB(mappedName = "regweb3/CatPaisEJB/local")
+    public CatPaisLocal catPaisEjb;
+
+    @EJB(mappedName = "regweb3/CatTipoViaEJB/local")
+    public CatTipoViaLocal catTipoViaEjb;
+
+    @EJB(mappedName = "regweb3/CatServicioEJB/local")
+    public CatServicioLocal catServicioEjb;
 
 
     /**
@@ -628,6 +641,13 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
             organismo.setCodAmbComunidad(null);
         }
 
+        if(unidadTF.getCodigoAmbPais() != null){organismo.setCodPais(catPaisEjb.findByCodigo(unidadTF.getCodigoAmbPais()));}
+        if(!StringUtils.isEmpty(unidadTF.getDescripcionLocalidad())){organismo.setLocalidad(catLocalidadEjb.findByNombre(unidadTF.getDescripcionLocalidad()));}
+        if(unidadTF.getCodigoTipoVia() != null){organismo.setTipoVia(catTipoViaEjb.findByCodigo(unidadTF.getCodigoTipoVia()));}
+        if(!StringUtils.isEmpty(unidadTF.getNombreVia())){organismo.setNombreVia(unidadTF.getNombreVia());}
+        if(!StringUtils.isEmpty(unidadTF.getNumVia())){organismo.setNumVia(unidadTF.getNumVia());}
+        if(!StringUtils.isEmpty(unidadTF.getCodPostal())){organismo.setCodPostal(unidadTF.getCodPostal());}
+
     }
 
     /**
@@ -638,14 +658,36 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
      * @throws Exception
      */
     private void procesarOficina(Oficina oficina, OficinaTF oficinaTF, Map<String, CatEstadoEntidad> cacheEstadoEntidad) throws Exception {
-      oficina.setDenominacion(oficinaTF.getDenominacion());
 
-        //TODO AÑADIR CAMPOS NUEVOS numVia, etc.
-      CatEstadoEntidad estado = cacheEstadoEntidad.get(oficinaTF.getEstado());
-      oficina.setEstado(estado);
+        oficina.setDenominacion(oficinaTF.getDenominacion());
 
-      Organismo organismoResponsable = organismoEjb.findByCodigo(oficinaTF.getCodUoResponsable());
-      oficina.setOrganismoResponsable(organismoResponsable);
+
+        CatEstadoEntidad estado = cacheEstadoEntidad.get(oficinaTF.getEstado());
+        oficina.setEstado(estado);
+
+        Organismo organismoResponsable = organismoEjb.findByCodigo(oficinaTF.getCodUoResponsable());
+        oficina.setOrganismoResponsable(organismoResponsable);
+
+        if(oficinaTF.getCodigoPais() != null){oficina.setCodPais(catPaisEjb.findByCodigo(oficinaTF.getCodigoPais()));}
+        if(oficinaTF.getCodigoComunidad() != null){oficina.setCodComunidad(catComunidadAutonomaEjb.findByCodigo(oficinaTF.getCodigoComunidad()));}
+
+        if(!StringUtils.isEmpty(oficinaTF.getDescripcionLocalidad())){oficina.setLocalidad(catLocalidadEjb.findByNombre(oficinaTF.getDescripcionLocalidad()));}
+
+        if(oficinaTF.getCodigoTipoVia() != null){oficina.setTipoVia(catTipoViaEjb.findByCodigo(oficinaTF.getCodigoTipoVia()));}
+        if(!StringUtils.isEmpty(oficinaTF.getNombreVia())){oficina.setNombreVia(oficinaTF.getNombreVia());}
+        if(!StringUtils.isEmpty(oficinaTF.getNumVia())){oficina.setNumVia(oficinaTF.getNumVia());}
+        if(!StringUtils.isEmpty(oficinaTF.getCodPostal())){oficina.setCodPostal(oficinaTF.getCodPostal());}
+
+        if(oficinaTF.getServicios() != null && oficinaTF.getServicios().size() > 0){
+
+            Set<CatServicio> servicios = new HashSet<CatServicio>();
+
+            for (Long servicio : oficinaTF.getServicios()) {
+                servicios.add(catServicioEjb.findByCodigo(servicio));
+            }
+
+            oficina.setServicios(servicios);
+        }
 
     }
 

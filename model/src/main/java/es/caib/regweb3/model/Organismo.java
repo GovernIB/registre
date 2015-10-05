@@ -27,6 +27,9 @@ import java.util.Set;
     @Index(name="RWE_ORGANI_SUPERI_FK_I", columnNames = {"ORGANISMOSUPERIOR"}),
     @Index(name="RWE_ORGANI_RAIZ_FK_I", columnNames = {"ORGANISMORAIZ"}),
     @Index(name="RWE_ORGANI_CAUTON_FK_I", columnNames = {"CODAMBCOMUNIDAD"}),
+    @Index(name="RWE_ORGANI_PAIS_FK_I", columnNames = {"PAIS"}),
+    @Index(name="RWE_ORGANI_LOCALI_FK_I", columnNames = {"LOCALIDAD"}),
+    @Index(name="RWE_ORGANI_TVIA_FK_I", columnNames = {"TIPOVIA"}),
     @Index(name="RWE_ORGANI_PROVIN_FK_I", columnNames = {"CODAMBPROVINCIA"})
 })
 @SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
@@ -53,8 +56,6 @@ public class
     private Organismo organismoRaiz;
     @XmlElement
     private String denominacion;
-     /*private List<RelacionOrganizativaOfi> organizativaOfi;
-     private List<RelacionSirOfi> sirOfi;*/
 
     //Externos
     @XmlTransient
@@ -65,12 +66,21 @@ public class
     private CatProvincia codAmbProvincia;
 
     @XmlTransient
+    private CatPais codPais;
+    @XmlTransient
+    private CatLocalidad localidad;
+    @XmlTransient
+    private CatTipoVia tipoVia;
+    @XmlTransient
+    private String nombreVia;
+    @XmlTransient
+    private String numVia;
+    @XmlTransient
+    private String codPostal;
+
+    @XmlTransient
     private Set<Organismo> historicoUO; // relacion de historicos
 
-
-     /*public Organismo(Long id) {
-         this.id = id;
-     } */
 
     @Id
     @GeneratedValue(strategy= GenerationType.SEQUENCE,generator = "generator")
@@ -214,6 +224,67 @@ public class
 
     public void setCodAmbProvincia(CatProvincia codAmbProvincia) {
         this.codAmbProvincia = codAmbProvincia;
+    }
+
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "PAIS")
+    @ForeignKey(name = "RWE_ORGANISMO_PAIS_FK")
+    public CatPais getCodPais() {
+        return codPais;
+    }
+
+    public void setCodPais(CatPais codPais) {
+        this.codPais = codPais;
+    }
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "LOCALIDAD")
+    @ForeignKey(name = "RWE_ORGANISMO_LOCALIDAD_FK")
+    public CatLocalidad getLocalidad() {
+        return localidad;
+    }
+
+    public void setLocalidad(CatLocalidad localidad) {
+        this.localidad = localidad;
+    }
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "TIPOVIA")
+    @ForeignKey(name = "RWE_ORGANISMO_TIPOVIA_FK")
+    public CatTipoVia getTipoVia() {
+        return tipoVia;
+    }
+
+    public void setTipoVia(CatTipoVia tipoVia) {
+        this.tipoVia = tipoVia;
+    }
+
+    @Column(name = "NOMBREVIA", length = 300)
+    public String getNombreVia() {
+        return nombreVia;
+    }
+
+    public void setNombreVia(String nombreVia) {
+        this.nombreVia = nombreVia;
+    }
+
+    @Column(name = "NUMVIA", length = 20)
+    public String getNumVia() {
+        return numVia;
+    }
+
+    public void setNumVia(String numVia) {
+        this.numVia = numVia;
+    }
+
+    @Column(name = "CODPOSTAL", length = 14)
+    public String getCodPostal() {
+        return codPostal;
+    }
+
+    public void setCodPostal(String codPostal) {
+        this.codPostal = codPostal;
     }
 
     @ManyToMany(cascade=CascadeType.PERSIST, fetch= FetchType.EAGER)

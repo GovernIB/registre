@@ -1,7 +1,6 @@
 
     create table RWE_ANEXO (
         ID int8 not null,
-        CERTIFICADO varchar(255),
         CSV varchar(255),
         CUSTODIAID varchar(256),
         FECHACAPTURA timestamp not null,
@@ -9,10 +8,8 @@
         MODOFIRMA int4,
         OBSERVACIONES varchar(50),
         ORIGEN int4,
-        TIMESTAMP varchar(255),
         TIPODOC int8,
         TITULO varchar(200) not null,
-        VALIDACIONOCSP varchar(255),
         TVALDOC int8,
         REGISTRODETALLE int8,
         TDOCUMENTAL int8,
@@ -84,6 +81,20 @@
         primary key (ID)
     );
 
+    create table RWE_CATSERVICIO (
+        ID int8 not null,
+        CODIGOSERVICIO int8 not null,
+        DESCRIPCIONSERVICIO varchar(300) not null,
+        primary key (ID)
+    );
+
+    create table RWE_CATTIPOVIA (
+        ID int8 not null,
+        CODIGOTIPOVIA int8 not null,
+        DESCRIPCIONTIPOVIA varchar(300) not null,
+        primary key (ID)
+    );
+
     create table RWE_CODIGOASUNTO (
         ID int8 not null,
         CODIGO varchar(16) not null,
@@ -101,7 +112,7 @@
     create table RWE_DESCARGA (
         ID int8 not null,
         FECHAFIN timestamp,
-        FECHAIMPORTACION timestamp,
+        FECHAIMPORTACION date,
         FECHAINICIO timestamp,
         TIPO varchar(255),
         ENTIDAD int8,
@@ -242,12 +253,25 @@
 
     create table RWE_OFICINA (
         ID int8 not null,
+        CODPOSTAL varchar(14),
         CODIGO varchar(9) not null unique,
         DENOMINACION varchar(300) not null,
+        NOMBREVIA varchar(300),
+        NUMVIA varchar(20),
+        COMUNIDAD int8,
+        PAIS int8,
         ESTADO int8,
+        LOCALIDAD int8,
         OFICINARESPONSABLE int8,
         ORGANISMORESPONSABLE int8,
+        TIPOVIA int8,
         primary key (ID)
+    );
+
+    create table RWE_OFICINA_SERVICIO (
+        IDOFICINA int8 not null,
+        IDSERVICIO int8 not null,
+        primary key (IDOFICINA, IDSERVICIO)
     );
 
     create table RWE_OFICIO_REMISION (
@@ -273,16 +297,22 @@
 
     create table RWE_ORGANISMO (
         ID int8 not null,
+        CODPOSTAL varchar(14),
         CODIGO varchar(9) not null,
         DENOMINACION varchar(300) not null,
         NIVELJERARQUICO int8,
+        NOMBREVIA varchar(300),
+        NUMVIA varchar(20),
         CODAMBCOMUNIDAD int8,
         CODAMBPROVINCIA int8,
+        PAIS int8,
         ENTIDAD int8,
         ESTADO int8,
+        LOCALIDAD int8,
         NIVELADMINISTRACION int8,
         ORGANISMORAIZ int8,
         ORGANISMOSUPERIOR int8,
+        TIPOVIA int8,
         primary key (ID)
     );
 
@@ -566,122 +596,122 @@
 
     create index RWE_ANEXO_TDOCAL_FK_I on RWE_ANEXO (TDOCUMENTAL);
 
-    alter table RWE_ANEXO 
-        add constraint RWE_ANEXO_REGDET_FK 
-        foreign key (REGISTRODETALLE) 
+    alter table RWE_ANEXO
+        add constraint RWE_ANEXO_REGDET_FK
+        foreign key (REGISTRODETALLE)
         references RWE_REGISTRO_DETALLE;
 
-    alter table RWE_ANEXO 
-        add constraint RWE_ANEXO_TDOCAL_FK 
-        foreign key (TDOCUMENTAL) 
+    alter table RWE_ANEXO
+        add constraint RWE_ANEXO_TDOCAL_FK
+        foreign key (TDOCUMENTAL)
         references RWE_TIPODOCUMENTAL;
 
     create index RWE_CATCOM_CATPAI_FK_I on RWE_CATCOMUNIDADAUTONOMA (PAIS);
 
-    alter table RWE_CATCOMUNIDADAUTONOMA 
-        add constraint RWE_CATCOMUNAUT_CATPAIS_FK 
-        foreign key (PAIS) 
+    alter table RWE_CATCOMUNIDADAUTONOMA
+        add constraint RWE_CATCOMUNAUT_CATPAIS_FK
+        foreign key (PAIS)
         references RWE_CATPAIS;
 
     create index RWE_CATLOC_CATENG_FK_I on RWE_CATLOCALIDAD (ENTIDADGEOGRAFICA);
 
     create index RWE_CATLOC_CATPRO_FK_I on RWE_CATLOCALIDAD (PROVINCIA);
 
-    alter table RWE_CATLOCALIDAD 
-        add constraint RWE_CATLOCAL_CATPROVIN_FK 
-        foreign key (PROVINCIA) 
+    alter table RWE_CATLOCALIDAD
+        add constraint RWE_CATLOCAL_CATPROVIN_FK
+        foreign key (PROVINCIA)
         references RWE_CATPROVINCIA;
 
-    alter table RWE_CATLOCALIDAD 
-        add constraint FK85A5389272D56104 
-        foreign key (ENTIDADGEOGRAFICA) 
+    alter table RWE_CATLOCALIDAD
+        add constraint FK85A538927273507F
+        foreign key (ENTIDADGEOGRAFICA)
         references RWE_CATENTIDADGEOGRAFICA;
 
     create index RWE_CATPRO_CATCAU_FK_I on RWE_CATPROVINCIA (COMUNIDADAUTONOMA);
 
-    alter table RWE_CATPROVINCIA 
-        add constraint RWE_CATPROVINC_CATCOMUNAUTO_FK 
-        foreign key (COMUNIDADAUTONOMA) 
+    alter table RWE_CATPROVINCIA
+        add constraint RWE_CATPROVINC_CATCOMUNAUTO_FK
+        foreign key (COMUNIDADAUTONOMA)
         references RWE_CATCOMUNIDADAUTONOMA;
 
     create index RWE_CODASU_TASUN_FK_I on RWE_CODIGOASUNTO (TIPOASUNTO);
 
-    alter table RWE_CODIGOASUNTO 
-        add constraint RWE_CODASUNTO_TIPOASUNTO_FK 
-        foreign key (TIPOASUNTO) 
+    alter table RWE_CODIGOASUNTO
+        add constraint RWE_CODASUNTO_TIPOASUNTO_FK
+        foreign key (TIPOASUNTO)
         references RWE_TIPOASUNTO;
 
     create index RWE_DESCAR_ENTIDA_FK_I on RWE_DESCARGA (ENTIDAD);
 
-    alter table RWE_DESCARGA 
-        add constraint RWE_DESCARGA_ENTIDAD_FK 
-        foreign key (ENTIDAD) 
+    alter table RWE_DESCARGA
+        add constraint RWE_DESCARGA_ENTIDAD_FK
+        foreign key (ENTIDAD)
         references RWE_ENTIDAD;
 
     create index RWE_ENTIDA_PRO_FK_I on RWE_ENTIDAD (PROPIETARIO);
 
-    alter table RWE_ENTIDAD 
-        add constraint RWE_ENTIDAD_LOGOSELLO_FK 
-        foreign key (LOGOSELLO) 
+    alter table RWE_ENTIDAD
+        add constraint RWE_ENTIDAD_LOGOSELLO_FK
+        foreign key (LOGOSELLO)
         references RWE_ARCHIVO;
 
-    alter table RWE_ENTIDAD 
-        add constraint RWE_ENTIDAD_LOGOMENU_FK 
-        foreign key (LOGOMENU) 
+    alter table RWE_ENTIDAD
+        add constraint RWE_ENTIDAD_LOGOMENU_FK
+        foreign key (LOGOMENU)
         references RWE_ARCHIVO;
 
-    alter table RWE_ENTIDAD 
-        add constraint RWE_ENTIDAD_LOGOPIE_FK 
-        foreign key (LOGOPIE) 
+    alter table RWE_ENTIDAD
+        add constraint RWE_ENTIDAD_LOGOPIE_FK
+        foreign key (LOGOPIE)
         references RWE_ARCHIVO;
 
-    alter table RWE_ENTIDAD 
-        add constraint RWE_ENTIDAD_USU_PROP_FK 
-        foreign key (PROPIETARIO) 
+    alter table RWE_ENTIDAD
+        add constraint RWE_ENTIDAD_USU_PROP_FK
+        foreign key (PROPIETARIO)
         references RWE_USUARIO;
 
-    alter table RWE_ENTIDAD_USUENT 
-        add constraint RWE_ENTIDAD_USU_ADM_FK 
-        foreign key (IDUSUENT) 
+    alter table RWE_ENTIDAD_USUENT
+        add constraint RWE_ENTIDAD_USU_ADM_FK
+        foreign key (IDUSUENT)
         references RWE_USUARIO_ENTIDAD;
 
-    alter table RWE_ENTIDAD_USUENT 
-        add constraint RWE_USU_ADM_ENTIDAD_FK 
-        foreign key (IDENTIDAD) 
+    alter table RWE_ENTIDAD_USUENT
+        add constraint RWE_USU_ADM_ENTIDAD_FK
+        foreign key (IDENTIDAD)
         references RWE_ENTIDAD;
 
-    alter table RWE_HISTORICOUO 
-        add constraint RWE_ORG_ORG_HISTANTE_FK 
-        foreign key (CODANTERIOR) 
+    alter table RWE_HISTORICOUO
+        add constraint RWE_ORG_ORG_HISTANTE_FK
+        foreign key (CODANTERIOR)
         references RWE_ORGANISMO;
 
-    alter table RWE_HISTORICOUO 
-        add constraint RWE_ORG_ORG_HISTULTI_FK 
-        foreign key (CODULTIMA) 
+    alter table RWE_HISTORICOUO
+        add constraint RWE_ORG_ORG_HISTULTI_FK
+        foreign key (CODULTIMA)
         references RWE_ORGANISMO;
 
     create index RWE_HRE_REGENT_FK_I on RWE_HISTORICO_REGISTRO_ENTRADA (REGISTRO_ENTRADA);
 
     create index RWE_HRE_USUENT_FK_I on RWE_HISTORICO_REGISTRO_ENTRADA (USUARIO);
 
-    alter table RWE_HISTORICO_REGISTRO_ENTRADA 
-        add constraint RWE_HISTORICO_USUARIO_FK 
-        foreign key (USUARIO) 
+    alter table RWE_HISTORICO_REGISTRO_ENTRADA
+        add constraint RWE_HISTORICO_USUARIO_FK
+        foreign key (USUARIO)
         references RWE_USUARIO_ENTIDAD;
 
-    alter table RWE_HISTORICO_REGISTRO_ENTRADA 
-        add constraint RWE_HITORICO_RE_FK 
-        foreign key (REGISTRO_ENTRADA) 
+    alter table RWE_HISTORICO_REGISTRO_ENTRADA
+        add constraint RWE_HITORICO_RE_FK
+        foreign key (REGISTRO_ENTRADA)
         references RWE_REGISTRO_ENTRADA;
 
-    alter table RWE_HISTORICO_REGISTRO_SALIDA 
-        add constraint RWE_HITORICO_RS_FK 
-        foreign key (REGISTRO_SALIDA) 
+    alter table RWE_HISTORICO_REGISTRO_SALIDA
+        add constraint RWE_HITORICO_RS_FK
+        foreign key (REGISTRO_SALIDA)
         references RWE_REGISTRO_SALIDA;
 
-    alter table RWE_HISTORICO_REGISTRO_SALIDA 
-        add constraint RWE_HISTORICO_USUARIO_RS_FK 
-        foreign key (USUARIO) 
+    alter table RWE_HISTORICO_REGISTRO_SALIDA
+        add constraint RWE_HISTORICO_USUARIO_RS_FK
+        foreign key (USUARIO)
         references RWE_USUARIO_ENTIDAD;
 
     create index RWE_INTERES_CATPAI_FK_I on RWE_INTERESADO (PAIS);
@@ -692,34 +722,34 @@
 
     create index RWE_INTERES_REPANT_FK_I on RWE_INTERESADO (REPRESENTANTE);
 
-    alter table RWE_INTERESADO 
-        add constraint RWE_INTERESADO_REPREANTE_FK 
-        foreign key (REPRESENTANTE) 
+    alter table RWE_INTERESADO
+        add constraint RWE_INTERESADO_REPREANTE_FK
+        foreign key (REPRESENTANTE)
         references RWE_INTERESADO;
 
-    alter table RWE_INTERESADO 
-        add constraint RWE_INTERESADO_REPRESENT_FK 
-        foreign key (REPRESENTADO) 
+    alter table RWE_INTERESADO
+        add constraint RWE_INTERESADO_REPRESENT_FK
+        foreign key (REPRESENTADO)
         references RWE_INTERESADO;
 
-    alter table RWE_INTERESADO 
-        add constraint RWE_INTERESADO_PAIS_FK 
-        foreign key (PAIS) 
+    alter table RWE_INTERESADO
+        add constraint RWE_INTERESADO_PAIS_FK
+        foreign key (PAIS)
         references RWE_CATPAIS;
 
-    alter table RWE_INTERESADO 
-        add constraint RWE_INTERESADO_PROVINCIA_FK 
-        foreign key (PROVINCIA) 
+    alter table RWE_INTERESADO
+        add constraint RWE_INTERESADO_PROVINCIA_FK
+        foreign key (PROVINCIA)
         references RWE_CATPROVINCIA;
 
-    alter table RWE_INTERESADO 
-        add constraint RWE_INTERESADO_REGDET_FK 
-        foreign key (REGISTRODETALLE) 
+    alter table RWE_INTERESADO
+        add constraint RWE_INTERESADO_REGDET_FK
+        foreign key (REGISTRODETALLE)
         references RWE_REGISTRO_DETALLE;
 
-    alter table RWE_INTERESADO 
-        add constraint RWE_INTERESADO_LOCALIDAD_FK 
-        foreign key (LOCALIDAD) 
+    alter table RWE_INTERESADO
+        add constraint RWE_INTERESADO_LOCALIDAD_FK
+        foreign key (LOCALIDAD)
         references RWE_CATLOCALIDAD;
 
     create index RWE_LIBRO_CONSAL_FK_I on RWE_LIBRO (CONTADOR_SALIDA);
@@ -730,93 +760,131 @@
 
     create index RWE_LIBRO_CONENT_FK_I on RWE_LIBRO (CONTADOR_ENTRADA);
 
-    alter table RWE_LIBRO 
-        add constraint RWE_LIBRO_CONT_SAL_FK 
-        foreign key (CONTADOR_SALIDA) 
+    alter table RWE_LIBRO
+        add constraint RWE_LIBRO_CONT_SAL_FK
+        foreign key (CONTADOR_SALIDA)
         references RWE_CONTADOR;
 
-    alter table RWE_LIBRO 
-        add constraint RWE_LIBRO_CONT_ENT_FK 
-        foreign key (CONTADOR_ENTRADA) 
+    alter table RWE_LIBRO
+        add constraint RWE_LIBRO_CONT_ENT_FK
+        foreign key (CONTADOR_ENTRADA)
         references RWE_CONTADOR;
 
-    alter table RWE_LIBRO 
-        add constraint RWE_LIBRO_ORGANISMO_FK 
-        foreign key (ORGANISMO) 
+    alter table RWE_LIBRO
+        add constraint RWE_LIBRO_ORGANISMO_FK
+        foreign key (ORGANISMO)
         references RWE_ORGANISMO;
 
-    alter table RWE_LIBRO 
-        add constraint RWE_LIBRO_CONT_ORM_FK 
-        foreign key (CONTADOR_OFICIO_REMISION) 
+    alter table RWE_LIBRO
+        add constraint RWE_LIBRO_CONT_ORM_FK
+        foreign key (CONTADOR_OFICIO_REMISION)
         references RWE_CONTADOR;
 
     create index RWE_LOPD_USUENT_FK_I on RWE_LOPD (USUARIO);
 
     create index RWE_LOPD_LIBRO_FK_I on RWE_LOPD (LIBRO);
 
-    alter table RWE_LOPD 
-        add constraint RWE_LOPD_USUENT_FK 
-        foreign key (USUARIO) 
+    alter table RWE_LOPD
+        add constraint RWE_LOPD_USUENT_FK
+        foreign key (USUARIO)
         references RWE_USUARIO_ENTIDAD;
 
-    alter table RWE_LOPD 
-        add constraint RWE_LOPD_LIBRO_FK 
-        foreign key (LIBRO) 
+    alter table RWE_LOPD
+        add constraint RWE_LOPD_LIBRO_FK
+        foreign key (LIBRO)
         references RWE_LIBRO;
 
     create index RWE_MODOFI_ENTIDA_FK_I on RWE_MODELO_OFICIO_REMISION (ENTIDAD);
 
     create index RWE_MODOFI_ARCHIV_FK_I on RWE_MODELO_OFICIO_REMISION (MODELO);
 
-    alter table RWE_MODELO_OFICIO_REMISION 
-        add constraint RWE_MODELOFREMISION_ENTIDAD_FK 
-        foreign key (ENTIDAD) 
+    alter table RWE_MODELO_OFICIO_REMISION
+        add constraint RWE_MODELOFREMISION_ENTIDAD_FK
+        foreign key (ENTIDAD)
         references RWE_ENTIDAD;
 
-    alter table RWE_MODELO_OFICIO_REMISION 
-        add constraint RWE_MODELOFREMISION_MODELO_FK 
-        foreign key (MODELO) 
+    alter table RWE_MODELO_OFICIO_REMISION
+        add constraint RWE_MODELOFREMISION_MODELO_FK
+        foreign key (MODELO)
         references RWE_ARCHIVO;
 
     create index RWE_MODREB_ENTIDA_FK_I on RWE_MODELO_RECIBO (ENTIDAD);
 
     create index RWE_MODREB_ARCHIV_FK_I on RWE_MODELO_RECIBO (MODELO);
 
-    alter table RWE_MODELO_RECIBO 
-        add constraint RWE_MODELRECIBO_ENTIDAD_FK 
-        foreign key (ENTIDAD) 
+    alter table RWE_MODELO_RECIBO
+        add constraint RWE_MODELRECIBO_ENTIDAD_FK
+        foreign key (ENTIDAD)
         references RWE_ENTIDAD;
 
-    alter table RWE_MODELO_RECIBO 
-        add constraint RWE_MODELRECIBO_ARCHIVO_FK 
-        foreign key (MODELO) 
+    alter table RWE_MODELO_RECIBO
+        add constraint RWE_MODELRECIBO_ARCHIVO_FK
+        foreign key (MODELO)
         references RWE_ARCHIVO;
 
-    alter table RWE_MODIFICACIONLOPD_MIGRADO 
-        add constraint RWE_MODLOPDMIG_REGMIG_FK 
-        foreign key (REGMIG) 
+    alter table RWE_MODIFICACIONLOPD_MIGRADO
+        add constraint RWE_MODLOPDMIG_REGMIG_FK
+        foreign key (REGMIG)
         references RWE_REGISTRO_MIGRADO;
 
+    create index RWE_OFICIN_PAIS_FK_I on RWE_OFICINA (PAIS);
+
     create index RWE_OFICIN_ESTENT_FK_I on RWE_OFICINA (ESTADO);
+
+    create index RWE_OFICIN_COMUNI_FK_I on RWE_OFICINA (COMUNIDAD);
+
+    create index RWE_OFICIN_TVIA_FK_I on RWE_OFICINA (TIPOVIA);
+
+    create index RWE_OFICIN_LOCALI_FK_I on RWE_OFICINA (LOCALIDAD);
 
     create index RWE_OFICIN_OFICIN_FK_I on RWE_OFICINA (OFICINARESPONSABLE);
 
     create index RWE_OFICIN_ORGANI_FK_I on RWE_OFICINA (ORGANISMORESPONSABLE);
 
-    alter table RWE_OFICINA 
-        add constraint RWE_OFICINA_ESTADO_FK 
-        foreign key (ESTADO) 
+    alter table RWE_OFICINA
+        add constraint RWE_OFICINA_TIPOVIA_FK
+        foreign key (TIPOVIA)
+        references RWE_CATTIPOVIA;
+
+    alter table RWE_OFICINA
+        add constraint RWE_OFICINA_PAIS_FK
+        foreign key (PAIS)
+        references RWE_CATPAIS;
+
+    alter table RWE_OFICINA
+        add constraint RWE_OFICINA_ESTADO_FK
+        foreign key (ESTADO)
         references RWE_CATESTADOENTIDAD;
 
-    alter table RWE_OFICINA 
-        add constraint RWE_OFICINA_ORGANISMO_FK 
-        foreign key (ORGANISMORESPONSABLE) 
+    alter table RWE_OFICINA
+        add constraint RWE_OFICINA_LOCALIDAD_FK
+        foreign key (LOCALIDAD)
+        references RWE_CATLOCALIDAD;
+
+    alter table RWE_OFICINA
+        add constraint RWE_OFICINA_ORGANISMO_FK
+        foreign key (ORGANISMORESPONSABLE)
         references RWE_ORGANISMO;
 
-    alter table RWE_OFICINA 
-        add constraint RWE_OFICINA_OFICINA_FK 
-        foreign key (OFICINARESPONSABLE) 
+    alter table RWE_OFICINA
+        add constraint RWE_OFICINA_OFICINA_FK
+        foreign key (OFICINARESPONSABLE)
         references RWE_OFICINA;
+
+    alter table RWE_OFICINA
+        add constraint RWE_OFICINA_COMUNIDAD_FK
+        foreign key (COMUNIDAD)
+        references RWE_CATCOMUNIDADAUTONOMA;
+
+    alter table RWE_OFICINA_SERVICIO
+        add constraint RWE_SERVICIO_OFICINA_FK
+        foreign key (IDOFICINA)
+        references RWE_OFICINA;
+
+    alter table RWE_OFICINA_SERVICIO
+        add constraint RWE_OFICINA_SERVICIO_FK
+        foreign key (IDSERVICIO)
+        references RWE_CATSERVICIO;
 
     create index RWE_OFIREM_ORGANI_FK_I on RWE_OFICIO_REMISION (ORGANISMODEST);
 
@@ -826,37 +894,41 @@
 
     create index RWE_OFIREM_USUARI_FK_I on RWE_OFICIO_REMISION (USUARIO);
 
-    alter table RWE_OFICIO_REMISION 
-        add constraint RWE_OFIREM_USUORM_FK 
-        foreign key (USUARIO) 
+    alter table RWE_OFICIO_REMISION
+        add constraint RWE_OFIREM_USUORM_FK
+        foreign key (USUARIO)
         references RWE_USUARIO_ENTIDAD;
 
-    alter table RWE_OFICIO_REMISION 
-        add constraint RWE_OFIREM_ORGANISMODEST_FK 
-        foreign key (ORGANISMODEST) 
+    alter table RWE_OFICIO_REMISION
+        add constraint RWE_OFIREM_ORGANISMODEST_FK
+        foreign key (ORGANISMODEST)
         references RWE_ORGANISMO;
 
-    alter table RWE_OFICIO_REMISION 
-        add constraint RWE_OFIREM_OFICINA_FK 
-        foreign key (OFICINA) 
+    alter table RWE_OFICIO_REMISION
+        add constraint RWE_OFIREM_OFICINA_FK
+        foreign key (OFICINA)
         references RWE_OFICINA;
 
-    alter table RWE_OFICIO_REMISION 
-        add constraint RWE_OFIREM_LIBRO_FK 
-        foreign key (LIBRO) 
+    alter table RWE_OFICIO_REMISION
+        add constraint RWE_OFIREM_LIBRO_FK
+        foreign key (LIBRO)
         references RWE_LIBRO;
 
-    alter table RWE_OFIREM_REGENT 
-        add constraint RWE_OFIREM_REGENT_FK 
-        foreign key (IDREGENT) 
+    alter table RWE_OFIREM_REGENT
+        add constraint RWE_OFIREM_REGENT_FK
+        foreign key (IDREGENT)
         references RWE_REGISTRO_ENTRADA;
 
-    alter table RWE_OFIREM_REGENT 
-        add constraint RWE_REGENT_OFIREM_FK 
-        foreign key (IDOFIREM) 
+    alter table RWE_OFIREM_REGENT
+        add constraint RWE_REGENT_OFIREM_FK
+        foreign key (IDOFIREM)
         references RWE_OFICIO_REMISION;
 
     create index RWE_ORGANI_SUPERI_FK_I on RWE_ORGANISMO (ORGANISMOSUPERIOR);
+
+    create index RWE_ORGANI_TVIA_FK_I on RWE_ORGANISMO (TIPOVIA);
+
+    create index RWE_ORGANI_LOCALI_FK_I on RWE_ORGANISMO (LOCALIDAD);
 
     create index RWE_ORGANI_PROVIN_FK_I on RWE_ORGANISMO (CODAMBPROVINCIA);
 
@@ -868,123 +940,140 @@
 
     create index RWE_ORGANI_CAUTON_FK_I on RWE_ORGANISMO (CODAMBCOMUNIDAD);
 
-    alter table RWE_ORGANISMO 
-        add constraint RWE_ORGANISMO_ORGRAIZ_FK 
-        foreign key (ORGANISMORAIZ) 
+    create index RWE_ORGANI_PAIS_FK_I on RWE_ORGANISMO (PAIS);
+
+    alter table RWE_ORGANISMO
+        add constraint RWE_ORGANISMO_ORGRAIZ_FK
+        foreign key (ORGANISMORAIZ)
         references RWE_ORGANISMO;
 
-    alter table RWE_ORGANISMO 
-        add constraint RWE_ORGANISMO_ENTIDAD_FK 
-        foreign key (ENTIDAD) 
+    alter table RWE_ORGANISMO
+        add constraint RWE_ORGANISMO_TIPOVIA_FK
+        foreign key (TIPOVIA)
+        references RWE_CATTIPOVIA;
+
+    alter table RWE_ORGANISMO
+        add constraint RWE_ORGANISMO_ENTIDAD_FK
+        foreign key (ENTIDAD)
         references RWE_ENTIDAD;
 
-    alter table RWE_ORGANISMO 
-        add constraint RWE_ORGANISMO_CATPROVINCIA_FK 
-        foreign key (CODAMBPROVINCIA) 
+    alter table RWE_ORGANISMO
+        add constraint RWE_ORGANISMO_CATPROVINCIA_FK
+        foreign key (CODAMBPROVINCIA)
         references RWE_CATPROVINCIA;
 
-    alter table RWE_ORGANISMO 
-        add constraint RWE_ORGANISMO_CATAMBCOMAUTO_FK 
-        foreign key (CODAMBCOMUNIDAD) 
+    alter table RWE_ORGANISMO
+        add constraint RWE_ORGANISMO_PAIS_FK
+        foreign key (PAIS)
+        references RWE_CATPAIS;
+
+    alter table RWE_ORGANISMO
+        add constraint RWE_ORGANISMO_CATAMBCOMAUTO_FK
+        foreign key (CODAMBCOMUNIDAD)
         references RWE_CATCOMUNIDADAUTONOMA;
 
-    alter table RWE_ORGANISMO 
-        add constraint RWE_ORGANISMO_ORG_SUPERIOR_FK 
-        foreign key (ORGANISMOSUPERIOR) 
+    alter table RWE_ORGANISMO
+        add constraint RWE_ORGANISMO_ORG_SUPERIOR_FK
+        foreign key (ORGANISMOSUPERIOR)
         references RWE_ORGANISMO;
 
-    alter table RWE_ORGANISMO 
-        add constraint RWE_ORGANISMO_CATNIVELADMIN_FK 
-        foreign key (NIVELADMINISTRACION) 
+    alter table RWE_ORGANISMO
+        add constraint RWE_ORGANISMO_CATNIVELADMIN_FK
+        foreign key (NIVELADMINISTRACION)
         references RWE_CATNIVELADMINISTRACION;
 
-    alter table RWE_ORGANISMO 
-        add constraint RWE_ORGANISMO_ESTADO_FK 
-        foreign key (ESTADO) 
+    alter table RWE_ORGANISMO
+        add constraint RWE_ORGANISMO_ESTADO_FK
+        foreign key (ESTADO)
         references RWE_CATESTADOENTIDAD;
+
+    alter table RWE_ORGANISMO
+        add constraint RWE_ORGANISMO_LOCALIDAD_FK
+        foreign key (LOCALIDAD)
+        references RWE_CATLOCALIDAD;
 
     create index RWE_PELIUS_USUARI_FK_I on RWE_PERMLIBUSU (USUARIO);
 
     create index RWE_PELIUS_LIBRO_FK_I on RWE_PERMLIBUSU (LIBRO);
 
-    alter table RWE_PERMLIBUSU 
-        add constraint RWE_PERMLIBUSU_USUENT_FK 
-        foreign key (USUARIO) 
+    alter table RWE_PERMLIBUSU
+        add constraint RWE_PERMLIBUSU_USUENT_FK
+        foreign key (USUARIO)
         references RWE_USUARIO_ENTIDAD;
 
-    alter table RWE_PERMLIBUSU 
-        add constraint RWE_PERMLIBUSU_LIBRO_FK 
-        foreign key (LIBRO) 
+    alter table RWE_PERMLIBUSU
+        add constraint RWE_PERMLIBUSU_LIBRO_FK
+        foreign key (LIBRO)
         references RWE_LIBRO;
 
-    alter table RWE_PERSONA 
-        add constraint RWE_PERSONA_ENTIDAD_FK 
-        foreign key (ENTIDAD) 
+    alter table RWE_PERSONA
+        add constraint RWE_PERSONA_ENTIDAD_FK
+        foreign key (ENTIDAD)
         references RWE_ENTIDAD;
 
-    alter table RWE_PERSONA 
-        add constraint RWE_PERSONA_PAIS_FK 
-        foreign key (PAIS) 
+    alter table RWE_PERSONA
+        add constraint RWE_PERSONA_PAIS_FK
+        foreign key (PAIS)
         references RWE_CATPAIS;
 
-    alter table RWE_PERSONA 
-        add constraint RWE_PERSONA_PROVINCIA_FK 
-        foreign key (PROVINCIA) 
+    alter table RWE_PERSONA
+        add constraint RWE_PERSONA_PROVINCIA_FK
+        foreign key (PROVINCIA)
         references RWE_CATPROVINCIA;
 
-    alter table RWE_PERSONA 
-        add constraint RWE_PERSONA_LOCALIDAD_FK 
-        foreign key (LOCALIDAD) 
+    alter table RWE_PERSONA
+        add constraint RWE_PERSONA_LOCALIDAD_FK
+        foreign key (LOCALIDAD)
         references RWE_CATLOCALIDAD;
 
-    alter table RWE_PRE_REGISTRO 
-        add constraint RWE_PREREG_REGDET_FK 
-        foreign key (REGISTRO_DETALLE) 
+    alter table RWE_PRE_REGISTRO
+        add constraint RWE_PREREG_REGDET_FK
+        foreign key (REGISTRO_DETALLE)
         references RWE_REGISTRO_DETALLE;
 
-    alter table RWE_REGISTROLOPD_MIGRADO 
-        add constraint RWE_REGLOPDMIG_REGMIG_FK 
-        foreign key (REGMIG) 
+    alter table RWE_REGISTROLOPD_MIGRADO
+        add constraint RWE_REGLOPDMIG_REGMIG_FK
+        foreign key (REGMIG)
         references RWE_REGISTRO_MIGRADO;
 
-    alter table RWE_REGISTRO_DETALLE 
-        add constraint RWE_REGDET_OFICINAORIG_FK 
-        foreign key (OFICINAORIG) 
+    alter table RWE_REGISTRO_DETALLE
+        add constraint RWE_REGDET_OFICINAORIG_FK
+        foreign key (OFICINAORIG)
         references RWE_OFICINA;
 
-    alter table RWE_REGISTRO_DETALLE 
-        add constraint RWE_REGDET_CODASUNTO_FK 
-        foreign key (CODASUNTO) 
+    alter table RWE_REGISTRO_DETALLE
+        add constraint RWE_REGDET_CODASUNTO_FK
+        foreign key (CODASUNTO)
         references RWE_CODIGOASUNTO;
 
-    alter table RWE_REGISTRO_DETALLE 
-        add constraint RWE_REGDET_TIPOASUNTO_FK 
-        foreign key (TIPOASUNTO) 
+    alter table RWE_REGISTRO_DETALLE
+        add constraint RWE_REGDET_TIPOASUNTO_FK
+        foreign key (TIPOASUNTO)
         references RWE_TIPOASUNTO;
 
-    alter table RWE_REGISTRO_ENTRADA 
-        add constraint RWE_REGENT_DESTINO_FK 
-        foreign key (DESTINO) 
+    alter table RWE_REGISTRO_ENTRADA
+        add constraint RWE_REGENT_DESTINO_FK
+        foreign key (DESTINO)
         references RWE_ORGANISMO;
 
-    alter table RWE_REGISTRO_ENTRADA 
-        add constraint RWE_REGENT_USUENT_FK 
-        foreign key (USUARIO) 
+    alter table RWE_REGISTRO_ENTRADA
+        add constraint RWE_REGENT_USUENT_FK
+        foreign key (USUARIO)
         references RWE_USUARIO_ENTIDAD;
 
-    alter table RWE_REGISTRO_ENTRADA 
-        add constraint RWE_REGENT_REGDET_FK 
-        foreign key (REGISTRO_DETALLE) 
+    alter table RWE_REGISTRO_ENTRADA
+        add constraint RWE_REGENT_REGDET_FK
+        foreign key (REGISTRO_DETALLE)
         references RWE_REGISTRO_DETALLE;
 
-    alter table RWE_REGISTRO_ENTRADA 
-        add constraint RWE_REGENT_OFICINA_FK 
-        foreign key (OFICINA) 
+    alter table RWE_REGISTRO_ENTRADA
+        add constraint RWE_REGENT_OFICINA_FK
+        foreign key (OFICINA)
         references RWE_OFICINA;
 
-    alter table RWE_REGISTRO_ENTRADA 
-        add constraint RWE_REGENT_LIBRO_FK 
-        foreign key (LIBRO) 
+    alter table RWE_REGISTRO_ENTRADA
+        add constraint RWE_REGENT_LIBRO_FK
+        foreign key (LIBRO)
         references RWE_LIBRO;
 
     create index RWE_REGMIG_FECREG_I on RWE_REGISTRO_MIGRADO (FECHAREG);
@@ -1001,129 +1090,129 @@
 
     create index RWE_REGMIG_TREG_I on RWE_REGISTRO_MIGRADO (TREGISTRO);
 
-    alter table RWE_REGISTRO_MIGRADO 
-        add constraint RWE_REGMIG_ENTIDAD_FK 
-        foreign key (IDENTIDAD) 
+    alter table RWE_REGISTRO_MIGRADO
+        add constraint RWE_REGMIG_ENTIDAD_FK
+        foreign key (IDENTIDAD)
         references RWE_ENTIDAD;
 
-    alter table RWE_REGISTRO_SALIDA 
-        add constraint RWE_REGSAL_USUSAL_FK 
-        foreign key (USUARIO) 
+    alter table RWE_REGISTRO_SALIDA
+        add constraint RWE_REGSAL_USUSAL_FK
+        foreign key (USUARIO)
         references RWE_USUARIO_ENTIDAD;
 
-    alter table RWE_REGISTRO_SALIDA 
-        add constraint RWE_REGSAL_REGDET_FK 
-        foreign key (REGISTRO_DETALLE) 
+    alter table RWE_REGISTRO_SALIDA
+        add constraint RWE_REGSAL_REGDET_FK
+        foreign key (REGISTRO_DETALLE)
         references RWE_REGISTRO_DETALLE;
 
-    alter table RWE_REGISTRO_SALIDA 
-        add constraint RWE_REGSAL_ORIGEN_FK 
-        foreign key (ORIGEN) 
+    alter table RWE_REGISTRO_SALIDA
+        add constraint RWE_REGSAL_ORIGEN_FK
+        foreign key (ORIGEN)
         references RWE_ORGANISMO;
 
-    alter table RWE_REGISTRO_SALIDA 
-        add constraint RWE_REGSAL_OFICINA_FK 
-        foreign key (OFICINA) 
+    alter table RWE_REGISTRO_SALIDA
+        add constraint RWE_REGSAL_OFICINA_FK
+        foreign key (OFICINA)
         references RWE_OFICINA;
 
-    alter table RWE_REGISTRO_SALIDA 
-        add constraint RWE_REGSAL_LIBRO_FK 
-        foreign key (LIBRO) 
+    alter table RWE_REGISTRO_SALIDA
+        add constraint RWE_REGSAL_LIBRO_FK
+        foreign key (LIBRO)
         references RWE_LIBRO;
 
-    alter table RWE_RELORGOFI 
-        add constraint RWE_RELORGOFI_ORGANISMO_FK 
-        foreign key (IDORGANISMO) 
+    alter table RWE_RELORGOFI
+        add constraint RWE_RELORGOFI_ORGANISMO_FK
+        foreign key (IDORGANISMO)
         references RWE_ORGANISMO;
 
-    alter table RWE_RELORGOFI 
-        add constraint RWE_OFICINA_RELORGOFI_FK 
-        foreign key (IDOFICINA) 
+    alter table RWE_RELORGOFI
+        add constraint RWE_OFICINA_RELORGOFI_FK
+        foreign key (IDOFICINA)
         references RWE_OFICINA;
 
-    alter table RWE_RELORGOFI 
-        add constraint RWE_RELORGANOFI_CATESTENT_FK 
-        foreign key (ESTADO) 
+    alter table RWE_RELORGOFI
+        add constraint RWE_RELORGANOFI_CATESTENT_FK
+        foreign key (ESTADO)
         references RWE_CATESTADOENTIDAD;
 
-    alter table RWE_RELSIROFI 
-        add constraint RWE_RELSIROFI_ORGANISMO_FK 
-        foreign key (IDORGANISMO) 
+    alter table RWE_RELSIROFI
+        add constraint RWE_RELSIROFI_ORGANISMO_FK
+        foreign key (IDORGANISMO)
         references RWE_ORGANISMO;
 
-    alter table RWE_RELSIROFI 
-        add constraint RWE_RELSIROFI_OFICINA_FK 
-        foreign key (IDOFICINA) 
+    alter table RWE_RELSIROFI
+        add constraint RWE_RELSIROFI_OFICINA_FK
+        foreign key (IDOFICINA)
         references RWE_OFICINA;
 
-    alter table RWE_RELSIROFI 
-        add constraint RWE_RELSIROFI_CATESTENTI_FK 
-        foreign key (ESTADO) 
+    alter table RWE_RELSIROFI
+        add constraint RWE_RELSIROFI_CATESTENTI_FK
+        foreign key (ESTADO)
         references RWE_CATESTADOENTIDAD;
 
-    alter table RWE_REPRO 
-        add constraint RWE_REPRO_USUARIO_FK 
-        foreign key (USUARIOENTIDAD) 
+    alter table RWE_REPRO
+        add constraint RWE_REPRO_USUARIO_FK
+        foreign key (USUARIOENTIDAD)
         references RWE_USUARIO_ENTIDAD;
 
-    alter table RWE_TIPOASUNTO 
-        add constraint RWE_TIPOASUNTO_ENTIDAD_FK 
-        foreign key (ENTIDAD) 
+    alter table RWE_TIPOASUNTO
+        add constraint RWE_TIPOASUNTO_ENTIDAD_FK
+        foreign key (ENTIDAD)
         references RWE_ENTIDAD;
 
-    alter table RWE_TIPODOCUMENTAL 
-        add constraint RWE_TIPODOCUMENTAL_ENTIDAD_FK 
-        foreign key (ENTIDAD) 
+    alter table RWE_TIPODOCUMENTAL
+        add constraint RWE_TIPODOCUMENTAL_ENTIDAD_FK
+        foreign key (ENTIDAD)
         references RWE_ENTIDAD;
 
-    alter table RWE_TRAZABILIDAD 
-        add constraint RWE_TRAZAB_REGSAL_FK 
-        foreign key (REGISTRO_SALIDA) 
+    alter table RWE_TRAZABILIDAD
+        add constraint RWE_TRAZAB_REGSAL_FK
+        foreign key (REGISTRO_SALIDA)
         references RWE_REGISTRO_SALIDA;
 
-    alter table RWE_TRAZABILIDAD 
-        add constraint RWE_TRAZAB_REGENTO_FK 
-        foreign key (REGENT_ORIGEN) 
+    alter table RWE_TRAZABILIDAD
+        add constraint RWE_TRAZAB_REGENTO_FK
+        foreign key (REGENT_ORIGEN)
         references RWE_REGISTRO_ENTRADA;
 
-    alter table RWE_TRAZABILIDAD 
-        add constraint RWE_TRAZAB_OFIREM_FK 
-        foreign key (OFICIO_REMISION) 
+    alter table RWE_TRAZABILIDAD
+        add constraint RWE_TRAZAB_OFIREM_FK
+        foreign key (OFICIO_REMISION)
         references RWE_OFICIO_REMISION;
 
-    alter table RWE_TRAZABILIDAD 
-        add constraint RWE_TRAZAB_REGENTD_FK 
-        foreign key (REGENT_DESTINO) 
+    alter table RWE_TRAZABILIDAD
+        add constraint RWE_TRAZAB_REGENTD_FK
+        foreign key (REGENT_DESTINO)
         references RWE_REGISTRO_ENTRADA;
 
-    alter table RWE_TRA_CODIGOASUNTO 
-        add constraint RWE_CODASUNTO_TRACODASUNTO_FK 
-        foreign key (IDCODIGOASUNTO) 
+    alter table RWE_TRA_CODIGOASUNTO
+        add constraint RWE_CODASUNTO_TRACODASUNTO_FK
+        foreign key (IDCODIGOASUNTO)
         references RWE_CODIGOASUNTO;
 
-    alter table RWE_TRA_TDOCUMENTAL 
-        add constraint RWE_TIPODOC_TRATIPODOC_FK 
-        foreign key (IDTDOCUMENTAL) 
+    alter table RWE_TRA_TDOCUMENTAL
+        add constraint RWE_TIPODOC_TRATIPODOC_FK
+        foreign key (IDTDOCUMENTAL)
         references RWE_TIPODOCUMENTAL;
 
-    alter table RWE_TRA_TIPOASUNTO 
-        add constraint RWE_TASUNTO_TRATASUNTO_FK 
-        foreign key (IDTIPOASUNTO) 
+    alter table RWE_TRA_TIPOASUNTO
+        add constraint RWE_TASUNTO_TRATASUNTO_FK
+        foreign key (IDTIPOASUNTO)
         references RWE_TIPOASUNTO;
 
-    alter table RWE_USUARIO_ENTIDAD 
-        add constraint RWE_USUENT_ENTIDAD_FK 
-        foreign key (ENTIDAD) 
+    alter table RWE_USUARIO_ENTIDAD
+        add constraint RWE_USUENT_ENTIDAD_FK
+        foreign key (ENTIDAD)
         references RWE_ENTIDAD;
 
-    alter table RWE_USUARIO_ENTIDAD 
-        add constraint RWE_USUENT_USUARIO_FK 
-        foreign key (USUARIO) 
+    alter table RWE_USUARIO_ENTIDAD
+        add constraint RWE_USUENT_USUARIO_FK
+        foreign key (USUARIO)
         references RWE_USUARIO;
 
-    alter table RWE_USUARIO_ENTIDAD 
-        add constraint RWE_USUENT_OFICINA_FK 
-        foreign key (ULTIMAOFICINA) 
+    alter table RWE_USUARIO_ENTIDAD
+        add constraint RWE_USUENT_OFICINA_FK
+        foreign key (ULTIMAOFICINA)
         references RWE_OFICINA;
 
     create sequence RWE_ALL_SEQ;
