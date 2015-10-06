@@ -212,19 +212,7 @@ function editarInteresado(id){
     // Marcamos la acción para Editar
     $('#accion').val('editar');
 
-    // Según el valor del TipoInteresado que vayamos a crear, ponemos los mensajes correspondientes.
-    var tipoInteresado = $('input[name=tipoInteresado]:radio:checked').val();
 
-    //Activamos o desactivamos los campos en función del TipoInteresado
-    camposTipoPersona(tipoInteresado)
-
-    if(tipoInteresado == 2){
-        $('#interesadoTitulo').html(tradsinteresado['interesado.personafisica.editar']);
-        $('#tipo').val("2");
-    }else if(tipoInteresado == 3){
-        $('#interesadoTitulo').html(tradsinteresado['interesado.personajuridica.editar']);
-        $('#tipo').val("3");
-    }
 
     //Obtenemos los datos de la Persona a editar
     $.ajax({
@@ -238,6 +226,16 @@ function editarInteresado(id){
         },
 
         success: function(result) {
+            //Activamos o desactivamos los campos en función del TipoInteresado
+            camposTipoPersona(result.tipo);
+
+            if(result.tipo == 2){
+                $('#interesadoTitulo').html(tradsinteresado['interesado.personafisica.editar']);
+                $('#tipo').val("2");
+            }else if(result.tipo == 3){
+                $('#interesadoTitulo').html(tradsinteresado['interesado.personajuridica.editar']);
+                $('#tipo').val("3");
+            }
 
             // Rellenamos los campos del formulario
             $('#id').val(result.id);
