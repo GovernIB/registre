@@ -162,6 +162,7 @@ public class ReciboRtfView extends AbstractView {
         // Mapeamos los campos del rtf con los del registro
         if (datosRecibo.getCodigoOficina()!=null) ht.put("(codiOficina)", ConvertirTexto.toCp1252(datosRecibo.getCodigoOficina()));
         if (datosRecibo.getNombreOficina()!=null) ht.put("(nomOficina)", ConvertirTexto.toCp1252(datosRecibo.getNombreOficina()));
+        if (datosRecibo.getLocalidadOficina()!=null) ht.put("(localitatOficina)", ConvertirTexto.toCp1252(datosRecibo.getLocalidadOficina()));
         if (datosRecibo.getNumeroRegistro()!=null) ht.put("(numRegistre)", ConvertirTexto.toCp1252(datosRecibo.getNumeroRegistro()));
         if (anoRegistro!=null)ht.put("(anyRegistre)", ConvertirTexto.toCp1252(anoRegistro));
         if (fechaRegistro!=null) ht.put("(dataRegistre)", ConvertirTexto.toCp1252(fechaRegistro));

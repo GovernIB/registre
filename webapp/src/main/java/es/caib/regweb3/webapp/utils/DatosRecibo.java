@@ -18,6 +18,7 @@ public class DatosRecibo implements Serializable {
 
     private String codigoOficina;
     private String nombreOficina;
+    private String localidadOficina;
     private Date fechaRegistro;
     private String destinatario;
     private String origen;
@@ -38,6 +39,9 @@ public class DatosRecibo implements Serializable {
     public DatosRecibo(RegistroEntrada registro, String tipoRegistro) {
         this.codigoOficina = registro.getOficina().getCodigo();
         this.nombreOficina = registro.getOficina().getDenominacion();
+        if(registro.getOficina().getLocalidad() != null) {
+            this.localidadOficina = registro.getOficina().getLocalidad().getNombre();
+        }
         this.fechaRegistro = registro.getFecha();
         if(registro.getDestino() != null) {
             this.destinatario = registro.getDestino().getDenominacion();
@@ -60,6 +64,9 @@ public class DatosRecibo implements Serializable {
     public DatosRecibo(RegistroSalida registro, String tipoRegistro) {
         this.codigoOficina = registro.getOficina().getCodigo();
         this.nombreOficina = registro.getOficina().getDenominacion();
+        if(registro.getOficina().getLocalidad() != null) {
+            this.localidadOficina = registro.getOficina().getLocalidad().getNombre();
+        }
         this.fechaRegistro = registro.getFecha();
         this.destinatario = null;
         if(registro.getOrigen() != null) {
@@ -93,6 +100,14 @@ public class DatosRecibo implements Serializable {
 
     public void setNombreOficina(String nombreOficina) {
         this.nombreOficina = nombreOficina;
+    }
+
+    public String getLocalidadOficina() {
+        return localidadOficina;
+    }
+
+    public void setLocalidadOficina(String localidadOficina) {
+        this.localidadOficina = localidadOficina;
     }
 
     public Date getFechaRegistro() {
