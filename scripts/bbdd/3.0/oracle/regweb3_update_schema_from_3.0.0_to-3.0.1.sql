@@ -32,7 +32,7 @@ alter table RWE_REGISTRO_MIGRADO MODIFY PRODESGEOFUE varchar2(50 char);
 alter table RWE_REGISTRO_MIGRADO MODIFY PRODESGEO varchar2(50 char);
 
 
-/********** 30/19/2015 NUEVA TABLA RWE_CATTIPOVIA **********/
+/********** 30/9/2015 NUEVA TABLA RWE_CATTIPOVIA **********/
 
 create table RWE_CATTIPOVIA (
     ID number(19,0) not null,
@@ -42,7 +42,7 @@ create table RWE_CATTIPOVIA (
 alter table RWE_CATTIPOVIA add constraint RWE_CATTIPOVIA_pk primary key (ID);
 
 
-/********** 30/19/2015 NUEVA TABLA RWE_CATSERVICIO **********/
+/********** 30/9/2015 NUEVA TABLA RWE_CATSERVICIO **********/
 
 create table RWE_CATSERVICIO (
     ID number(19,0) not null,
@@ -52,7 +52,7 @@ create table RWE_CATSERVICIO (
 alter table RWE_CATSERVICIO add constraint RWE_CATSERVICIO_pk primary key (ID);
 
 
-/********** 30/19/2015 NUEVOS CAMPOS EN RWE_OFICINA **********/
+/********** 30/9/2015 NUEVOS CAMPOS EN RWE_OFICINA **********/
 
 alter table RWE_OFICINA add PAIS number(19,0);
 alter table RWE_OFICINA add COMUNIDAD number(19,0);
@@ -73,7 +73,7 @@ create index RWE_OFICIN_TVIA_FK_I on RWE_OFICINA (TIPOVIA);
 create index RWE_OFICIN_LOCALI_FK_I on RWE_OFICINA (LOCALIDAD);
 
 
-/********** 30/19/2015 NUEVA TABLA RWE_OFICINA_SERVICIO **********/
+/********** 30/9/2015 NUEVA TABLA RWE_OFICINA_SERVICIO **********/
 
 create table RWE_OFICINA_SERVICIO (
     IDOFICINA number(19,0) not null,
@@ -84,7 +84,7 @@ alter table RWE_OFICINA_SERVICIO add constraint RWE_SERVICIO_OFICINA_FK foreign 
 alter table RWE_OFICINA_SERVICIO add constraint RWE_OFICINA_SERVICIO_FK foreign key (IDSERVICIO) references RWE_CATSERVICIO;
 
 
-/********** 30/19/2015 NUEVOS CAMPOS EN RWE_ORGANISMO **********/
+/********** 30/9/2015 NUEVOS CAMPOS EN RWE_ORGANISMO **********/
 
 alter table RWE_ORGANISMO add PAIS number(19,0);
 alter table RWE_ORGANISMO add LOCALIDAD number(19,0);
