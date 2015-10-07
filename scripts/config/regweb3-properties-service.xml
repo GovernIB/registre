@@ -87,14 +87,18 @@
 			-->
 			
 			<!-- ======== PLUGIN SCANNER ======= -->
-		   <!-- Possibles valors: [0:NO, 2:DWT, 3:CAIB]-->
+		   <!-- Possibles valors: [0:NO, 1:MMS, 2:DWT, 3:CAIB]-->
 		   es.caib.regweb3.scan.plugins=0
 		   
 		   <!-- Sense escaneig -->
 		   es.caib.regweb3.scan.plugin.0=
 		   
-		   <!-- Altres plugins (disabled)-->
-		   es.caib.regweb3.scan.plugin.1=
+           <!-- MMS Scan -->
+           es.caib.regweb3.scan.plugin.1=es.fundaciobit.plugins.scanweb.scan_mmscomputing.MmsComputingScanWebPlugin
+           es.caib.regweb3.scan.plugin.1.plugins.scanweb.mmscomputing.resourcePath=/anexo/scanwebresource2/1/{0}/
+           es.caib.regweb3.scan.plugin.1.plugins.scanweb.mmscomputing.uploadPath=/anexo/guardarScan/{0}
+           es.caib.regweb3.scan.plugin.1.plugins.scanweb.mmscomputing.fileFieldName=RemoteFile
+           es.caib.regweb3.scan.plugin.1.plugins.scanweb.mmscomputing.submitButton=desaAnnex
 		   
 		   <!-- Dynamic Web Twain -->
 		   es.caib.regweb3.scan.plugin.2=es.limit.plugins.scanweb.dynamicwebtwain.DynamicWebTwainScanWebPlugin
@@ -102,6 +106,7 @@
 		   
 		   <!-- Applet CAIB -->
 		   es.caib.regweb3.plugin.3=
+
 			
         </attribute>
     </mbean>
