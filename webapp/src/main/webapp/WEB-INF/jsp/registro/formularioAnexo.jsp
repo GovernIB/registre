@@ -64,7 +64,8 @@
 
                         <div class="form-group col-xs-6">
                             <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                <label for="validezDocumento"><spring:message code="anexo.validezDocumento"/></label>
+                                <label for="validezDocumento"><span class="text-danger">*</span>
+                                <spring:message code="anexo.validezDocumento"/></label>
                             </div>
                             <div class="col-xs-8">
                                 <form:select path="anexo.validezDocumento" class="chosen-select" onchange="bloquearFirma('${registro.id}','${registro.registroDetalle.id}','${param.registro}')">
