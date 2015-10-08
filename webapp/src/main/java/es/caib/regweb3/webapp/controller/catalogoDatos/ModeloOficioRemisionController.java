@@ -127,7 +127,6 @@ public class ModeloOficioRemisionController extends BaseController {
 
                 modeloOficioRemisionEjb.persist(modeloOficioRemision);
                 Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
-                status.setComplete();
 
             }catch (Exception e) {
                 e.printStackTrace();
@@ -214,7 +213,6 @@ public class ModeloOficioRemisionController extends BaseController {
 
                     modeloOficioRemisionEjb.merge(modeloOficioRemision);
                     Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
-                    status.setComplete();
 
                     // Eliminamos el anterior Modelo
                     if(eliminarModelo != null){
@@ -231,7 +229,6 @@ public class ModeloOficioRemisionController extends BaseController {
 
                     modeloOficioRemisionEjb.merge(modeloOficioRemisionForm.getModeloOficioRemision());
                     Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
-                    status.setComplete();
                 }
 
 

@@ -114,7 +114,6 @@ public class ReservaController  extends BaseController {
                     registro = registroEntradaEjb.registrarEntrada(registro);
                 }
 
-                status.setComplete();
             }catch (Exception e) {
                 Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
                 e.printStackTrace();

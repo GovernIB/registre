@@ -128,7 +128,6 @@ public class ModeloReciboController extends BaseController {
 
              modeloReciboEjb.persist(modeloRecibo);
              Mensaje.saveMessageInfo(request, getMessage("regweb.guardar.registro"));
-             status.setComplete();
 
             }catch (Exception e) {
                 Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
@@ -215,7 +214,6 @@ public class ModeloReciboController extends BaseController {
 
                    modeloReciboEjb.merge(modeloRecibo);
                    Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
-                   status.setComplete();
 
                    // Eliminamos el anterior Modelo
                    if(eliminarModelo != null){
@@ -232,7 +230,6 @@ public class ModeloReciboController extends BaseController {
 
                    modeloReciboEjb.merge(modeloReciboForm.getModeloRecibo());
                    Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
-                   status.setComplete();
                }
 
 

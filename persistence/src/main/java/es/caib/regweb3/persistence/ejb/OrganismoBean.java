@@ -400,6 +400,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         List<?> organismos = em.createQuery("Select distinct(id) from Organismo where entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
 
         if(organismos.size() > 0){
+            //log.info("Historico UO eliminados: " + em.createNativeQuery("delete from RWE_HISTORICOUO WHERE CODULTIMA in(:organismos)").setParameter("oficinas", oficinas).executeUpdate());
             return em.createQuery("delete from Organismo where id in (:organismos) ").setParameter("organismos", organismos).executeUpdate();
         }
 

@@ -249,12 +249,14 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         List<?> oficinas = em.createQuery("Select distinct(id) from Oficina where organismoResponsable.entidad.id =:idEntidad and oficinaResponsable != null ").setParameter("idEntidad",idEntidad).getResultList();
 
         if(oficinas.size() > 0){
+            log.info("Servicios oficina eliminados: " + em.createNativeQuery("delete from RWE_OFICINA_SERVICIO WHERE IDOFICINA in(:oficinas)").setParameter("oficinas", oficinas).executeUpdate());
             total =  em.createQuery("delete from Oficina where id in (:oficinas) ").setParameter("oficinas", oficinas).executeUpdate();
         }
 
         oficinas = em.createQuery("Select distinct(id) from Oficina  where organismoResponsable.entidad.id =:idEntidad and oficinaResponsable is null ").setParameter("idEntidad",idEntidad).getResultList();
 
         if(oficinas.size() > 0){
+            log.info("Servicios oficina eliminados: " + em.createNativeQuery("delete from RWE_OFICINA_SERVICIO WHERE IDOFICINA in(:oficinas)").setParameter("oficinas", oficinas).executeUpdate());
             total = total +  em.createQuery("delete from Oficina where id in (:oficinas) ").setParameter("oficinas", oficinas).executeUpdate();
         }
         return total;

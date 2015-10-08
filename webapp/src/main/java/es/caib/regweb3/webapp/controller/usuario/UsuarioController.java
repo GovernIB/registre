@@ -111,7 +111,7 @@ public class UsuarioController extends BaseController {
                  usuarioService.actualizarRoles(usuario);
 
                  Mensaje.saveMessageInfo(request, getMessage("regweb.guardar.registro"));
-                 status.setComplete();
+
              }catch (Exception e) {
                  Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
                  e.printStackTrace();
@@ -174,7 +174,6 @@ public class UsuarioController extends BaseController {
                  }
 
                  Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
-                 status.setComplete();
 
              } catch (Exception e) {
                  e.printStackTrace();
@@ -232,6 +231,7 @@ public class UsuarioController extends BaseController {
                     usuarioEntidadEjb.persist(usuarioEntidad);
 
                     Mensaje.saveMessageInfo(request, getMessage("usuarioEntidad.nuevo.ok"));
+                    status.setComplete();
                     return "redirect:/entidad/usuarios";
                 }
 

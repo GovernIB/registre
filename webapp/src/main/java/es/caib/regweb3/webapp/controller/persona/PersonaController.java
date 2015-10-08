@@ -129,7 +129,7 @@ public class PersonaController extends BaseController {
         personaEjb.persist(persona);
 
         Mensaje.saveMessageInfo(request, getMessage("regweb.guardar.registro"));
-        status.setComplete();
+
       } catch (Exception e) {
         Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
         e.printStackTrace();
@@ -223,7 +223,6 @@ public class PersonaController extends BaseController {
 
 
                  Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
-                 status.setComplete();
 
              } catch (Exception e) {
                  e.printStackTrace();

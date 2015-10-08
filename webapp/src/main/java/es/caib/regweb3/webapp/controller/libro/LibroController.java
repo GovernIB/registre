@@ -168,7 +168,6 @@ public class LibroController extends BaseController {
                 permisoLibroUsuarioEjb.crearPermisosLibroNuevo(libroCreado, getEntidadActiva(request).getId());
 
                 Mensaje.saveMessageInfo(request, getMessage("regweb.guardar.registro"));
-                status.setComplete();
             }catch (Exception e) {
                 Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
                 e.printStackTrace();
@@ -238,7 +237,6 @@ public class LibroController extends BaseController {
             try {
                 libroEjb.merge(libro);
                 Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
-                status.setComplete();
 
             }catch (Exception e) {
                 e.printStackTrace();

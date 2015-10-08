@@ -133,7 +133,7 @@ public class CatalogoDatosController extends BaseController {
              try {
                  tipoAsuntoEjb.persist(tipoAsunto);
                  Mensaje.saveMessageInfo(request, getMessage("regweb.guardar.registro"));
-                 status.setComplete();
+
              }catch (Exception e) {
                  Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
                  e.printStackTrace();
@@ -205,7 +205,7 @@ public class CatalogoDatosController extends BaseController {
                  tipoAsuntoEjb.merge(tipoAsunto);
 
                  Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
-                 status.setComplete();
+
 
              }catch (Exception e) {
                  e.printStackTrace();
@@ -282,7 +282,7 @@ public class CatalogoDatosController extends BaseController {
                     codigoAsuntoEjb.persist(codigoAsunto);
 
                     Mensaje.saveMessageInfo(request, getMessage("regweb.guardar.registro"));
-                    status.setComplete();
+
                 }
 
             }catch (Exception e) {
@@ -317,7 +317,6 @@ public class CatalogoDatosController extends BaseController {
                     codigoAsuntoEjb.merge(codigoAsunto);
 
                     Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
-                    status.setComplete();
                 }
 
             }catch (Exception e) {
@@ -451,7 +450,7 @@ public class CatalogoDatosController extends BaseController {
             try {
                 tipoDocumentalEjb.persist(tipoDocumental);
                 Mensaje.saveMessageInfo(request, getMessage("regweb.guardar.registro"));
-                status.setComplete();
+
             }catch (Exception e) {
                 Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
                 e.printStackTrace();
@@ -512,7 +511,7 @@ public class CatalogoDatosController extends BaseController {
             try {
                 tipoDocumentalEjb.merge(tipoDocumental);
                 Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
-                status.setComplete();
+
 
             }catch (Exception e) {
                 e.printStackTrace();

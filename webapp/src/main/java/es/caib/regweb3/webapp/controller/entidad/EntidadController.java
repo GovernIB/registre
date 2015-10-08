@@ -177,7 +177,6 @@ public class EntidadController extends BaseController {
                 entidadEjb.persist(entidad);
 
                 Mensaje.saveMessageInfo(request, getMessage("regweb.guardar.registro"));
-                status.setComplete();
             }catch (Exception e) {
                 Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
                 e.printStackTrace();
@@ -332,7 +331,6 @@ public class EntidadController extends BaseController {
 
                     entidadEjb.merge(entidad);
                     Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
-                    status.setComplete();
 
                     // Eliminamos el anterior Logo Menu
                     if(eliminarLogoMenu != null){
@@ -378,7 +376,6 @@ public class EntidadController extends BaseController {
 
                     entidadEjb.merge(entidadForm.getEntidad());
                     Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
-                    status.setComplete();
 
                     // Eliminamos el anterior Logo Menu
                     if(eliminarLogoMenu != null){
@@ -577,7 +574,7 @@ public class EntidadController extends BaseController {
             }
 
             Mensaje.saveMessageInfo(request, getMessage("usuario.asignar.permisos.ok"));
-            status.setComplete();
+
         }catch (Exception e) {
             Mensaje.saveMessageError(request, getMessage("organismo.usuario.asignar.error"));
             e.printStackTrace();

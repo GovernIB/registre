@@ -140,14 +140,24 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils  {
 
       DatosInteresadoWs interesado = new DatosInteresadoWs();
       interesado.setTipoInteresado(TIPO_INTERESADO_PERSONA_FISICA);
+      interesado.setTipoDocumentoIdentificacion("N");
+      interesado.setDocumento("00000001R");
+      interesado.setEmail("earrigi@gmail.com");
       interesado.setNombre("Pepito");
       interesado.setApellido1("Garcia");
+      interesado.setPais((long) 724);
+      interesado.setProvincia((long) 46);
       interesadoWs.setInteresado(interesado);
 
       DatosInteresadoWs representante = new DatosInteresadoWs();
       representante.setTipoInteresado(TIPO_INTERESADO_PERSONA_FISICA); // == 3
+      representante.setTipoDocumentoIdentificacion("N");
+      representante.setDocumento("33456299Q");
+      representante.setEmail("earrigi@gmail.com");
       representante.setNombre("Juanito");
       representante.setApellido1("De la torre");
+      representante.setPais((long) 724);
+      representante.setProvincia((long) 46);
       interesadoWs.setRepresentante(representante);
 
       registroEntradaWs.getInteresados().add(interesadoWs);
@@ -163,8 +173,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils  {
       //registroEntradaWs.getAnexos().addAll(getAnexos());
 
       try {
-        IdentificadorWs identificadorWs = registroEntradaApi
-            .altaRegistroEntrada(registroEntradaWs);
+        IdentificadorWs identificadorWs = registroEntradaApi.altaRegistroEntrada(registroEntradaWs);
         System.out.println("NumeroEntrada: " + identificadorWs.getNumero());
         System.out.println("Fecha: " + identificadorWs.getFecha());
       } catch (WsI18NException e) {

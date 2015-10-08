@@ -210,7 +210,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                 //Guardamos el HistorioRegistroEntrada
                 historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada, usuarioEntidad, RegwebConstantes.TIPO_MODIF_ALTA,false);
 
-                status.setComplete();
+
             }catch (Exception e) {
                 Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
                 e.printStackTrace();
@@ -225,7 +225,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                 }
             }
 
-            status.setComplete();
+
             return "redirect:/registroEntrada/"+registroEntrada.getId()+"/detalle";
         }
     }
@@ -421,7 +421,6 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                 status.setComplete();
             }
 
-            status.setComplete();
             return "redirect:/registroEntrada/"+registroEntrada.getId()+"/detalle";
         }
     }
