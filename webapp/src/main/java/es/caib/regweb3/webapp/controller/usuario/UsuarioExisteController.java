@@ -114,6 +114,8 @@ public class UsuarioExisteController extends BaseController {
                     }else{
                         usuarioEntidad.setActivo(true);
                         usuarioEntidadEjb.merge(usuarioEntidad);
+                        // Se crean los permisos para el Usuario activado
+                        permisoLibroUsuarioEjb.crearPermisosUsuarioNuevo(usuarioEntidad, getEntidadActiva(request).getId());
                         Mensaje.saveMessageInfo(request, getMessage("usuarioEntidad.existente.inactivo"));
                     }
                 }
