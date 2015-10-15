@@ -94,7 +94,7 @@ public class ConversationalSessionAttributeStore implements SessionAttributeStor
 
         Map<String, Object> conversationStore = getConversationStore(request, getConversationId(request));
 
-        if(!conversationStore.isEmpty()){
+        if(conversationStore != null){
             conversationStore.remove(attributeName);
         }
 
