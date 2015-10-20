@@ -210,14 +210,14 @@
                             </div>
 
                         </div>
-                        <div class="row pad-bottom15">
-                            <a class="masOpciones-info" data-toggle="collapse" data-target="#demo">
+                        <div class="row pad-bottom15 pad-right-75">
+                            <a class="btn btn-info btn-xs pull-right masOpciones-info" data-toggle="collapse" data-target="#demo">
                                 <%--Comprueba si debe mostrar mas opciones o menos--%>
                                 <c:if test="${empty registroEntradaBusqueda.registroEntrada.oficina.id && empty registroEntradaBusqueda.interessatDoc && empty registroEntradaBusqueda.interessatNom && empty registroEntradaBusqueda.organDestinatari && empty registroEntradaBusqueda.observaciones && empty registroEntradaBusqueda.usuario && !registroEntradaBusqueda.anexos}">
-                                    <span class="fa fa-plus-square-o"></span> <spring:message code="regweb.busquedaAvanzada"/>
+                                    <span class="fa fa-plus"></span> <spring:message code="regweb.busquedaAvanzada"/>
                                 </c:if>
                                 <c:if test="${not empty registroEntradaBusqueda.registroEntrada.oficina.id || not empty registroEntradaBusqueda.interessatDoc || not empty registroEntradaBusqueda.interessatNom || not empty registroEntradaBusqueda.organDestinatari || not empty registroEntradaBusqueda.observaciones || not empty registroEntradaBusqueda.usuario || registroEntradaBusqueda.anexos}">
-                                    <span class="fa fa-minus-square-o"></span> <spring:message code="regweb.busquedaAvanzada"/>
+                                    <span class="fa fa-minus"></span> <spring:message code="regweb.busquedaAvanzada"/>
                                 </c:if>
                             </a>
                         </div>
@@ -427,10 +427,10 @@
 
     $(function(){
         $("#demo").on("hide.bs.collapse", function(){
-            $(".masOpciones-info").html('<span class="fa fa-plus-square-o"></span> ' + traduccion['regweb.busquedaAvanzada']);
+            $(".masOpciones-info").html('<span class="fa fa-plus"></span> ' + traduccion['regweb.busquedaAvanzada']);
         });
         $("#demo").on("show.bs.collapse", function(){
-            $(".masOpciones-info").html('<span class="fa fa-minus-square-o"></span> ' + traduccion['regweb.busquedaAvanzada']);
+            $(".masOpciones-info").html('<span class="fa fa-minus"></span> ' + traduccion['regweb.busquedaAvanzada']);
         });
     });
 </script>

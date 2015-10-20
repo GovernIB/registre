@@ -709,37 +709,6 @@ a.text-gris:focus {
 }
 
 /*BUSQUEDA AVANZADA*/
-.masOpciones-info {
-    color: #31708f;
-    text-decoration: none;
-    background-color: #d9edf7;
-    padding: 3px;
-    margin-right: 75px;
-    float: right;
-}
-a.masOpciones-info:hover {
-    color: #31708f;
-    text-decoration: none;
-    cursor:pointer;
-    background-color: #afd9ee;
-    padding: 3px;
-    margin-right: 75px;
-    float: right;
-}
-.masOpciones-danger {
-    color: #a94442;
-    text-decoration: none;
-    background-color: #f2dede;
-    padding: 3px;
-    margin-right: 75px;
-    float: right;
-}
-a.masOpciones-danger:hover {
-    color: #a94442;
-    text-decoration: none;
-    cursor:pointer;
-    background-color: #e4b9b9;
-    padding: 3px;
-    margin-right: 75px;
-    float: right;
+.pad-right-75 {
+    padding-right: 75px;
 }
