@@ -145,7 +145,7 @@ public class Interesado implements Serializable {
      */
     public Interesado(String codigoDir3,String organismo){
         this.tipo = RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION;
-        this.nombre = organismo;
+        this.razonSocial = organismo;
         this.tipoDocumentoIdentificacion = RegwebConstantes.TIPODOCUMENTOID_CODIGO_ORIGEN_ID;
         this.documento = codigoDir3;
         this.codigoDir3 = codigoDir3;
@@ -436,7 +436,8 @@ public class Interesado implements Serializable {
 
         if(tipo.equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
 
-            info = getNombre() + " <br/>";
+            info = (getRazonSocial() != null) ? getRazonSocial() : getNombre();
+            info = info + " <br/>";
             if(!StringUtils.isEmpty(getCodigoDir3())){info = info + "DIR3: " +getCodigoDir3()+ " <br/>";}
 
         }else if(tipo.equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)){
@@ -537,7 +538,8 @@ public class Interesado implements Serializable {
 
     @Transient
     public String getNombreOrganismo(){
-        return getNombre() + " - " + getCodigoDir3() ;
+        //return getNombre() + " - " + getCodigoDir3() ;
+        return (getRazonSocial() != null) ? getRazonSocial() : getNombre();
 
     }
 

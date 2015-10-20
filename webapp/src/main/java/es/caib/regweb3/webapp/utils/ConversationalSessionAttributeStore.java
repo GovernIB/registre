@@ -99,7 +99,7 @@ public class ConversationalSessionAttributeStore implements SessionAttributeStor
         }
 
         // Delete the conversation store from the session if empty
-        if (conversationStore.isEmpty()) {
+        if (conversationStore != null && conversationStore.isEmpty()) {
             getSessionConversationsMap(request).remove(getConversationId(request));
         }
     }
