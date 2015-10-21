@@ -212,14 +212,14 @@
 
                     </div>
 
-                <div class="row pad-bottom15">
-                    <a class="masOpciones-danger" data-toggle="collapse" data-target="#demo">
+                <div class="row pad-bottom15 pad-right-75">
+                    <a class="btn btn-danger btn-xs pull-right masOpciones-danger" data-toggle="collapse" data-target="#demo">
                         <%--Comprueba si debe mostrar mas opciones o menos--%>
                         <c:if test="${empty registroSalidaBusqueda.registroSalida.oficina.id && empty registroSalidaBusqueda.interessatDoc && empty registroSalidaBusqueda.interessatNom && empty registroSalidaBusqueda.organOrigen && empty registroSalidaBusqueda.observaciones && empty registroSalidaBusqueda.usuario && !registroSalidaBusqueda.anexos}">
-                            <span class="fa fa-plus-square-o"></span> <spring:message code="regweb.busquedaAvanzada"/>
+                            <span class="fa fa-plus"></span> <spring:message code="regweb.busquedaAvanzada"/>
                         </c:if>
                         <c:if test="${not empty registroSalidaBusqueda.registroSalida.oficina.id || not empty registroSalidaBusqueda.interessatDoc || not empty registroSalidaBusqueda.interessatNom || not empty registroSalidaBusqueda.organOrigen || not empty registroSalidaBusqueda.observaciones || not empty registroSalidaBusqueda.usuario || registroSalidaBusqueda.anexos}">
-                            <span class="fa fa-minus-square-o"></span> <spring:message code="regweb.busquedaAvanzada"/>
+                            <span class="fa fa-minus"></span> <spring:message code="regweb.busquedaAvanzada"/>
                         </c:if>
                     </a>
                 </div>
@@ -422,10 +422,10 @@
 
         $(function(){
             $("#demo").on("hide.bs.collapse", function(){
-                $(".masOpciones-danger").html('<span class="fa fa-plus-square-o"></span> ' + traduccion['regweb.busquedaAvanzada']);
+                $(".masOpciones-danger").html('<span class="fa fa-plus"></span> ' + traduccion['regweb.busquedaAvanzada']);
             });
             $("#demo").on("show.bs.collapse", function(){
-                $(".masOpciones-danger").html('<span class="fa fa-minus-square-o"></span> ' + traduccion['regweb.busquedaAvanzada']);
+                $(".masOpciones-danger").html('<span class="fa fa-minus"></span> ' + traduccion['regweb.busquedaAvanzada']);
             });
         });
     </script>
