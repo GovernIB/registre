@@ -38,7 +38,7 @@
                 <div class="panel panel-info">
 
                     <div class="panel-heading">
-                        <h3 class="panel-title"><i class="fa fa-search"></i><strong><spring:message code="registroEntrada.buscador.oficiosRemision"/></strong> </h3>
+                        <h3 class="panel-title"><i class="fa fa-search"></i><strong><spring:message code="registroEntrada.buscador.oficiosRemisionExterna"/></strong> </h3>
                     </div>
 
                     <form:form modelAttribute="registroEntradaBusqueda" method="post" cssClass="form-horizontal">
@@ -167,7 +167,7 @@
 
                                                             <div class="btn-group">
                                                                 <button type="button" onclick="doForm('#oficio${status.count}')" class="btn btn-sm btn-warning dropdown-toggle">
-                                                                    Crear ofici de remisió
+                                                                    <spring:message code="oficioRemision.boton.crear"/>
                                                                 </button>
 
                                                             </div>
@@ -261,7 +261,7 @@
 
                                                         <div class="btn-group">
                                                             <button type="button" onclick="doForm('#oficio${status.count}')" class="btn btn-sm btn-warning dropdown-toggle">
-                                                                Crear ofici de remisió
+                                                                <spring:message code="oficioRemision.boton.crear"/>
                                                             </button>
 
                                                         </div>
