@@ -49,12 +49,13 @@ public class ReservaController  extends BaseController {
             return "redirect:/inici";
         }
 
-        RegistroEntrada registro = new RegistroEntrada();
-        RegistroDetalle registroDetalle = new RegistroDetalle();
-        registro.setRegistroDetalle(registroDetalle);
-
         Oficina oficina = getOficinaActiva(request);
         Usuario usuario = getUsuarioAutenticado(request);
+
+        RegistroEntrada registro = new RegistroEntrada();
+        registro.setOficina(oficina);
+        RegistroDetalle registroDetalle = new RegistroDetalle();
+        registro.setRegistroDetalle(registroDetalle);
 
         Entidad entidad = getEntidadActiva(request);
         if(oficina == null){

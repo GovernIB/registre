@@ -52,7 +52,7 @@
                     </div>
                     <div class="panel-body">
                         <div class="col-xs-12"><strong>${entidad.nombre}</strong></div>
-                        <div class="col-xs-12"><strong>${oficina.denominacion}</strong></div>
+                        <div class="col-xs-12"><strong>${registroSalida.oficina.denominacion}</strong></div>
                         <div class="form-group col-xs-12">
                             <strong>
                                 <c:if test="${not empty registroSalida.id}"> <fmt:formatDate value="${registroSalida.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></c:if>

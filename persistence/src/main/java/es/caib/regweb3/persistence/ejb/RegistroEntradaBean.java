@@ -343,7 +343,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         Query q1;
         q1 = em.createQuery("Select distinct(re.destino.denominacion) from RegistroEntrada as re where " +
                 "re.estado = :idEstadoRegistro and re.libro.id = :idLibro and " +
-                "re.destino != null and " +
+                "re.destino != null and re.oficina.organismoResponsable.nivelJerarquico != 1 and " +
                 "re.oficina.organismoResponsable.id != re.destino.id and " +
                 "re.oficina.organismoResponsable.id != re.destino.organismoSuperior.id and " +
                 "re.destino.id not in (select rso.organismo.id from RelacionOrganizativaOfi as rso where rso.oficina.id = re.oficina.id and rso.estado.codigoEstadoEntidad='V') and " +
@@ -365,7 +365,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         Query q1;
         q1 = em.createQuery("Select distinct(re.destino.id) from RegistroEntrada as re where " +
                 "re.estado = :idEstadoRegistro and year(re.fecha) = :any and re.libro.id = :idLibro and " +
-                "re.destino != null and " +
+                "re.destino != null and re.oficina.organismoResponsable.nivelJerarquico != 1 and " +
                 "re.oficina.organismoResponsable.id != re.destino.id and " +
                 "re.oficina.organismoResponsable.id != re.destino.organismoSuperior.id and " +
                 "re.destino.id not in (select rso.organismo.id from RelacionOrganizativaOfi as rso where rso.oficina.id = re.oficina.id and rso.estado.codigoEstadoEntidad='V') and " +
@@ -409,7 +409,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         Query q;
         q = em.createQuery("Select count(re.id) from RegistroEntrada as re where " +
                 "re.estado = :idEstadoRegistro and re.libro in (:libros) and " +
-                "re.destino != null and " +
+                "re.destino != null and re.oficina.organismoResponsable.nivelJerarquico != 1 and " +
                 "re.oficina.organismoResponsable.id != re.destino.id and " +
                 "re.oficina.organismoResponsable.id != re.destino.organismoSuperior.id and " +
                 "re.destino.id not in (select rso.organismo.id from RelacionOrganizativaOfi as rso where rso.oficina.id = re.oficina.id and rso.estado.codigoEstadoEntidad = :vigente) and " +
@@ -428,7 +428,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         Query q;
         q = em.createQuery("Select re.id from RegistroEntrada as re where " +
                 "re.id = :idRegistro and re.estado = :idEstadoRegistro and " +
-                "re.destino != null and " +
+                "re.destino != null and re.oficina.organismoResponsable.nivelJerarquico != 1 and " +
                 "re.oficina.organismoResponsable.id != re.destino.id and " +
                 "re.oficina.organismoResponsable.id != re.destino.organismoSuperior.id and " +
                 "re.destino.id not in (select rso.organismo.id from RelacionOrganizativaOfi as rso where rso.oficina.id = re.oficina.id and rso.estado.codigoEstadoEntidad = :vigente) and " +

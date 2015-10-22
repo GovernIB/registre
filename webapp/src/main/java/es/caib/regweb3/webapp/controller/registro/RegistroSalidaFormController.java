@@ -60,14 +60,15 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         }
 
         //Eliminamos los posibles interesados de la Sesion
-        eliminarVariableSesion(request,RegwebConstantes.SESSION_INTERESADOS_SALIDA);
-
-        RegistroSalida registroSalida = new RegistroSalida();
-        RegistroDetalle registroDetalle = new RegistroDetalle();
-        registroSalida.setRegistroDetalle(registroDetalle);
+        eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
         Oficina oficina = getOficinaActiva(request);
         Usuario usuario = getUsuarioAutenticado(request);
+
+        RegistroSalida registroSalida = new RegistroSalida();
+        registroSalida.setOficina(oficina);
+        RegistroDetalle registroDetalle = new RegistroDetalle();
+        registroSalida.setRegistroDetalle(registroDetalle);
 
         Entidad entidad = getEntidadActiva(request);
         if(oficina == null){

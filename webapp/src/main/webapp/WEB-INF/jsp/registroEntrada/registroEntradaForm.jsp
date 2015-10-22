@@ -51,7 +51,7 @@
                         </div>
                         <div class="panel-body">
                             <div class="col-xs-12"><strong>${entidad.nombre}</strong></div>
-                            <div class="col-xs-12"><strong>${oficina.denominacion}</strong></div>
+                            <div class="col-xs-12"><strong>${registroEntrada.oficina.denominacion}</strong></div>
                             <div class="form-group col-xs-12">
                                 <strong>
                                     <c:if test="${not empty registroEntrada.id}"> <fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></c:if>

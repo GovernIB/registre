@@ -67,12 +67,14 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         //Eliminamos los posibles interesados de la Sesion
         eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_ENTRADA);
 
+        Oficina oficina = getOficinaActiva(request);
+        Usuario usuario = getUsuarioAutenticado(request);
+
         RegistroEntrada registroEntrada = new RegistroEntrada();
+        registroEntrada.setOficina(oficina);
         RegistroDetalle registroDetalle = new RegistroDetalle();
         registroEntrada.setRegistroDetalle(registroDetalle);
 
-        Oficina oficina = getOficinaActiva(request);
-        Usuario usuario = getUsuarioAutenticado(request);
 
         Entidad entidad = getEntidadActiva(request);
         if(oficina == null){

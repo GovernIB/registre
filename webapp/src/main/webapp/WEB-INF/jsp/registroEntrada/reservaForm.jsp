@@ -37,7 +37,7 @@
                         </div>
                         <div class="panel-body">
                             <div class="col-xs-12"><strong>${entidad.nombre}</strong></div>
-                            <div class="col-xs-12"><strong>${oficina.denominacion}</strong></div>
+                            <div class="col-xs-12"><strong>${registro.oficina.denominacion}</strong></div>
                             <div class="form-group col-xs-12"><strong><c:set var="now" value="<%=new java.util.Date()%>" /> <fmt:formatDate value="${now}" pattern="dd/MM/yyyy"/></strong></div>
                             <div class="col-xs-12"><strong>${usuario.nombreCompleto} (${usuario.email})</strong></div>
                         </div>
