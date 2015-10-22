@@ -178,19 +178,21 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         model.addAttribute("registro",registro);
 
-        ModeloRecibo modeloRecibo = new ModeloRecibo();
-        model.addAttribute("modeloRecibo", modeloRecibo);
+        // Modelo Recibo
+        model.addAttribute("modeloRecibo", new ModeloRecibo());
         model.addAttribute("modelosRecibo", modeloReciboEjb.getByEntidad(getEntidadActiva(request).getId()));
 
         // Permisos
+        Boolean oficinaRegistral = registro.getOficina().getId().equals(oficinaActiva.getId()) || (registro.getOficina().getOficinaResponsable() != null && registro.getOficina().getOficinaResponsable().getId().equals(oficinaActiva.getId()));
+        model.addAttribute("oficinaRegistral", oficinaRegistral);
         model.addAttribute("isAdministradorLibro", permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(),registro.getLibro().getId()));
         model.addAttribute("puedeEditar", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),registro.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA));
 
         // OficioRemision
         model.addAttribute("isOficioRemision",registroEntradaEjb.isOficioRemisionInterno(idRegistro));
 
-        // Interesados, solo si el Registro en Válido, Pendiente o Estamos en la Oficina donde se registró
-        if(registro.getEstado().equals(RegwebConstantes.ESTADO_VALIDO) && registro.getOficina().getId().equals(oficinaActiva.getId())){
+        // Interesados, solo si el Registro en Válido o Estamos en la Oficina donde se registró, o en su Oficina Responsable
+        if(registro.getEstado().equals(RegwebConstantes.ESTADO_VALIDO) && oficinaRegistral){
 
             model.addAttribute("personasFisicas",personaEjb.getAllbyEntidadTipo(entidad.getId(), RegwebConstantes.TIPO_PERSONA_FISICA));
             model.addAttribute("personasJuridicas",personaEjb.getAllbyEntidadTipo(entidad.getId(), RegwebConstantes.TIPO_PERSONA_JURIDICA));
@@ -211,7 +213,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         // Historicos
         model.addAttribute("historicos", historicoRegistroEntradaEjb.getByRegistroEntrada(idRegistro));
 
-        // Trazabilidadbus
+        // Trazabilidad
         List<Trazabilidad> trazabilidades = trazabilidadEjb.getByRegistroEntrada(registro.getId());
         model.addAttribute("trazabilidades", trazabilidades);
 

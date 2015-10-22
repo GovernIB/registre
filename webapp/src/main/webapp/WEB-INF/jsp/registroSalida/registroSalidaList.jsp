@@ -358,8 +358,8 @@
                                             <td class="center">
                                                 <a class="btn btn-info btn-sm" href="<c:url value="/registroSalida/${registroSalida.id}/detalle"/>" title="<spring:message code="registroSalida.detalle"/>"><span class="fa fa-eye"></span></a>
                                                     <%--Acciones según el estado--%>
-                                                    <%--Si no nos encontramos en la misma Oficia en la que se creó el Registro, no podemos hacer nada con el--%>
-                                                <c:if test="${registroSalida.oficina.id == oficinaActiva.id}">
+                                                    <%--Si no nos encontramos en la misma Oficia en la que se creó el Registro o en su Oficina Responsable, no podemos hacer nada con el--%>
+                                                <c:if test="${registroSalida.oficina.id == oficinaActiva.id || registroSalida.oficina.oficinaResponsable.id == oficinaActiva.id}">
                                                     <c:choose>
                                                         <c:when test="${registroSalida.estado == RegwebConstantes.ESTADO_VALIDO && puedeEditar}">  <%--Válido--%>
                                                             <a class="btn btn-warning btn-sm" href="<c:url value="/registroSalida/${registroSalida.id}/edit"/>" title="<spring:message code="regweb.editar"/>"><span class="fa fa-pencil"></span></a>

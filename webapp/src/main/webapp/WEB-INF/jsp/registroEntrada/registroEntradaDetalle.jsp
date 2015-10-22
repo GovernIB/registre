@@ -102,8 +102,8 @@
                     </div>
 
 
-                    <%--Si no nos encontramos en la misma Oficia en la que se creó el Registro, no podemos hacer nada con el--%>
-                    <c:if test="${registro.oficina.id == oficinaActiva.id}">
+                    <%--Si no nos encontramos en la misma Oficia en la que se creó el Registro o en su Oficina Responsable, no podemos hacer nada con el--%>
+                    <c:if test="${oficinaRegistral}">
 
                         <div class="panel-footer">  <%--Botonera--%>
                             <%--Si el resgistro no está pendiente de visar o anulado--%>
@@ -183,7 +183,7 @@
             </c:if>
 
              <%--INTERESADOS--%>
-            <c:if test="${registro.estado == 1 && registro.oficina.id == oficinaActiva.id}">
+            <c:if test="${registro.estado == 1 && oficinaRegistral}">
                 <c:import url="../registro/interesados.jsp">
                     <c:param name="tipo" value="detalle"/>
                     <c:param name="tipoRegistro" value="entrada"/>
@@ -192,7 +192,7 @@
             </c:if>
 
             <%--INTERESADOS SOLO LECTURA--%>
-            <c:if test="${(registro.estado != 1 && registro.estado != 2) || registro.oficina.id != oficinaActiva.id}">
+            <c:if test="${(registro.estado != 1 && registro.estado != 2) || !oficinaRegistral}">
                 <c:import url="../registro/interesadosLectura.jsp">
                     <c:param name="tipoRegistro" value="entrada"/>
                 </c:import>

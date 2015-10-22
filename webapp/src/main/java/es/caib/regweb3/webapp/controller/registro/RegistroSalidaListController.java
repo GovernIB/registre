@@ -174,17 +174,18 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
         model.addAttribute("registro",registro);
 
-        ModeloRecibo modeloRecibo = new ModeloRecibo();
-        model.addAttribute("modeloRecibo", modeloRecibo);
+        // Modelo Recibo
+        model.addAttribute("modeloRecibo", new ModeloRecibo());
         model.addAttribute("modelosRecibo", modeloReciboEjb.getByEntidad(getEntidadActiva(request).getId()));
 
         // Permisos
+        Boolean oficinaRegistral = registro.getOficina().getId().equals(oficinaActiva.getId()) || (registro.getOficina().getOficinaResponsable() != null && registro.getOficina().getOficinaResponsable().getId().equals(oficinaActiva.getId()));
+        model.addAttribute("oficinaRegistral", oficinaRegistral);
         model.addAttribute("isAdministradorLibro", permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(),registro.getLibro().getId()));
         model.addAttribute("puedeEditar", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),registro.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA));
 
-        // Interesados, solo si el Registro en Válio o Pendiente
-        if((registro.getEstado().equals(RegwebConstantes.ESTADO_VALIDO) || registro.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE))
-                && registro.getOficina().getId().equals(oficinaActiva.getId())){
+        // Interesados, solo si el Registro en Válio
+        if(registro.getEstado().equals(RegwebConstantes.ESTADO_VALIDO) && oficinaRegistral){
 
             model.addAttribute("personasFisicas",personaEjb.getAllbyEntidadTipo(entidad.getId(), RegwebConstantes.TIPO_PERSONA_FISICA));
             model.addAttribute("personasJuridicas",personaEjb.getAllbyEntidadTipo(entidad.getId(), RegwebConstantes.TIPO_PERSONA_JURIDICA));
