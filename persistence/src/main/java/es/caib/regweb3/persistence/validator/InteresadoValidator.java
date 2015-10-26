@@ -6,6 +6,7 @@ import es.caib.regweb3.persistence.ejb.CatPaisLocal;
 import es.caib.regweb3.persistence.ejb.InteresadoLocal;
 import es.caib.regweb3.persistence.ejb.PersonaLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.validation.IValidatorResult;
 
@@ -89,7 +90,6 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
           rejectIfEmptyOrWhitespace(errors, __target__, "direccion", "error.valor.requerido", "El camp és obligatori");
           
 
-          // Validaciones si el país seleccionado es ESPAÑA
           if (interesado.getPais() == null || interesado.getPais().getId() == null || interesado.getPais().getId() == -1) {
             rejectValue(errors, "pais.id", "error.valor.requerido", "El camp és obligatori");
           } else {
@@ -97,18 +97,35 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
             try {
               CatPais pais = catPaisEjb.findById(interesado.getPais().getId());
 
+              // Validaciones si el país seleccionado es ESPAÑA
               if (pais.getCodigoPais().equals(RegwebConstantes.PAIS_ESPAÑA)) {
 
-                rejectIfEmptyOrWhitespace(errors, __target__, "cp", "error.valor.requerido", "El camp és obligatori");
 
-                if (interesado.getProvincia() == null || interesado.getProvincia().getId() == -1) {
-                  rejectValue(errors, "provincia.id", "error.valor.requerido", "El camp és obligatori");
-
-                }else{ // Comprobamos la Localidad
+                // Si hay Provincia, es obligatoria la Localidad
+                if (interesado.getProvincia() != null && interesado.getProvincia().getId() != -1) {
 
                   if (interesado.getLocalidad() == null || interesado.getProvincia().getId() == -1) {
                     rejectValue(errors, "localidad.id", "error.valor.requerido", "El camp és obligatori");
                   }
+
+                }else{
+                  rejectIfEmptyOrWhitespace(errors, __target__, "cp", "error.valor.requerido", "El camp és obligatori");
+                }
+
+                // Si no hay CP, es obligatoria la Provincia y Municipio
+                if(StringUtils.isEmpty(interesado.getCp())){
+
+                  if (interesado.getProvincia() == null || interesado.getProvincia().getId() == -1) {
+                    rejectValue(errors, "provincia.id", "error.valor.requerido", "El camp és obligatori");
+
+                  }else{ // Comprobamos la Localidad
+
+                    if (interesado.getLocalidad() == null || interesado.getProvincia().getId() == -1) {
+                      rejectValue(errors, "localidad.id", "error.valor.requerido", "El camp és obligatori");
+                    }
+
+                  }
+
                 }
 
               }
