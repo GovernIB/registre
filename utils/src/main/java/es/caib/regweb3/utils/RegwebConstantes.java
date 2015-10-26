@@ -535,4 +535,7 @@ public interface RegwebConstantes {
     public static final Long ANEXO_ORIGEN_CIUDADANO = 0L;
     public static final Long ANEXO_ORIGEN_ADMINISTRACION = 1L;
 
+    /* -------------- CAT SERVICIOS -------------------------- */
+    public static final Long REGISTRO_VIRTUAL_NO_PRESENCIAL = 4L;
+
 }

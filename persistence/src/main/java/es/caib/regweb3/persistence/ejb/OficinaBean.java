@@ -36,6 +36,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     private EntityManager em;
 
     @EJB private RelacionOrganizativaOfiLocal relacionOrganizativaOfiLocalEjb;
+    @EJB private CatServicioLocal catServicioLocalEjb;
 
 
     @Override
@@ -128,8 +129,10 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     public List<ObjetoBasico> findByOrganismoResponsableVO(Long idOrganismo) throws Exception{
         Query q = em.createQuery("Select oficina.id, oficina.denominacion as nombre from Oficina as oficina where " +
                 "oficina.organismoResponsable.id =:idOrganismo and " +
-                "oficina.estado.codigoEstadoEntidad=:vigente");
+                "oficina.estado.codigoEstadoEntidad=:vigente and " +
+                ":oficinaVirtual not in elements(oficina.servicios)");
 
+        q.setParameter("oficinaVirtual",catServicioLocalEjb.findByCodigo(RegwebConstantes.REGISTRO_VIRTUAL_NO_PRESENCIAL));
         q.setParameter("idOrganismo",idOrganismo);
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
 
