@@ -81,7 +81,7 @@ public class DatosInteresadoConverter extends CommonConverter {
         if(!StringUtils.isEmpty(datosInteresadoWs.getApellido1())){interesado.setApellido1(datosInteresadoWs.getApellido1());}
         if(!StringUtils.isEmpty(datosInteresadoWs.getApellido2())){interesado.setApellido2(datosInteresadoWs.getApellido2());}
         
-        if(datosInteresadoWs.getTipoDocumentoIdentificacion() != null) {
+        if(!StringUtils.isEmpty(datosInteresadoWs.getTipoDocumentoIdentificacion())) {
             interesado.setTipoDocumentoIdentificacion(RegwebConstantes.TIPODOCUMENTOID_BY_CODIGO_NTI.get(datosInteresadoWs.getTipoDocumentoIdentificacion().charAt(0)));
         }
         

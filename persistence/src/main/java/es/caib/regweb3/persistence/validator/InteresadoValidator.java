@@ -162,10 +162,19 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
 
     
     // DOCUMENTO (DNI, NIE, PASAPORTE)
+    if(!StringUtils.isEmpty(interesado.getDocumento())) {
+      if (interesado.getTipoDocumentoIdentificacion() == null) {
+        rejectIfEmptyOrWhitespace(errors, __target__, "tipoDocumentoIdentificacion", "error.valor.requerido", "El camp és obligatori");
+      }
+    }
+
     Long tipoDocumento = interesado.getTipoDocumentoIdentificacion();
 
-    if (tipoDocumento != null) {
-        //rejectIfEmptyOrWhitespace(errors, __target__, "documento", "error.valor.requerido", "El camp és obligatori");
+    if(tipoDocumento != null){
+      rejectIfEmptyOrWhitespace(errors, __target__, "documento", "error.valor.requerido", "El camp és obligatori");
+    }
+
+    if (tipoDocumento != null && !StringUtils.isEmpty(interesado.getDocumento())) {
 
       String documento = interesado.getDocumento().toUpperCase();
 

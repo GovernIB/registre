@@ -153,7 +153,7 @@
 
 
                     <div class="panel-footer">
-                        <button type="button" onclick="goTo('/regweb3/registroSalida/new')" class="btn btn-danger btn-sm btn-block">Introduir registre de sortida</button>
+                        <button type="button" onclick="goTo('/regweb3/registroSalida/new')" class="btn btn-danger btn-sm btn-block"><spring:message code="registroSalida.nuevo"/></button>
                     </div>
             
                 </div>
