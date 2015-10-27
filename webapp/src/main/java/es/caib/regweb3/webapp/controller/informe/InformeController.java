@@ -252,6 +252,9 @@ public class InformeController extends BaseController {
 
                             for(int k=0;k<registroEntrada.getRegistroDetalle().getInteresados().size();k++) {
                                 Interesado interesado = registroEntrada.getRegistroDetalle().getInteresados().get(k);
+                                if(interesado.getIsRepresentante()){
+                                    interessats = interessats + "(Rep.) ";
+                                }
                                 if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
                                     interessats = interessats + interesado.getNombre();
                                 } else if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)){
@@ -426,6 +429,9 @@ public class InformeController extends BaseController {
 
                             for(int k=0;k<registroSalida.getRegistroDetalle().getInteresados().size();k++){
                                 Interesado interesado = registroSalida.getRegistroDetalle().getInteresados().get(k);
+                                if(interesado.getIsRepresentante()){
+                                    interessats = interessats + "(Rep.) ";
+                                }
                                 if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
                                     interessats = interessats + interesado.getNombre();
                                 } else if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)){
