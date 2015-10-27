@@ -143,7 +143,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         }
 
         // 3.- Comprobar que el Libro está vigente
-        Libro libro = libroEjb.findByCodigo(registroSalidaWs.getLibro());
+        Libro libro = libroEjb.findByCodigoEntidad(registroSalidaWs.getLibro(),oficina.getOrganismoResponsable().getEntidad().getId());
 
         if(libro == null){ //No existe
             throw new I18NException("registro.libro.noExiste", registroSalidaWs.getLibro());
@@ -354,7 +354,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
       }
       
       // 3.- Existe libro
-      Libro libroObj = libroEjb.findByCodigo(libro);
+      Libro libroObj = libroEjb.findByCodigoEntidad(libro, usuarioEntidad.getEntidad().getId());
       if (libroObj == null) {
         throw new I18NException("registro.libro.noExiste", libro);
       }
