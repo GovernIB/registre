@@ -342,7 +342,7 @@
                                                                     </c:choose>
                                                                 </td>
                                                                 <c:if test="${registroEntrada.registroDetalle.interesados != null}">
-                                                                    <td class="center"><label class="no-bold" rel="ayuda" data-content="${registroEntrada.registroDetalle.nombreInteresadosHtml}" data-toggle="popover">${fn:length(registroEntrada.registroDetalle.interesados)}</label></td>
+                                                                    <td class="center"><label class="no-bold" rel="ayuda" data-content="${registroEntrada.registroDetalle.nombreInteresadosHtml}" data-toggle="popover">${registroEntrada.registroDetalle.totalInteresados}</label></td>
                                                                 </c:if>
                                                                 <c:if test="${registroEntrada.registroDetalle.interesados == null}">
                                                                     <td class="center">0</td>

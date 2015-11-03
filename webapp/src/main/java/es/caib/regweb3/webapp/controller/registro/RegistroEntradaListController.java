@@ -374,7 +374,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             }
 
             // Comprobamos que el RegistroEntrada es un OficioRemision
-            if(!registroEntradaEjb.isOficioRemisionInterno(idRegistro)){
+            if(registroEntradaEjb.isOficioRemisionInterno(idRegistro)){
                 Mensaje.saveMessageError(request, getMessage("registroEntrada.tramitar.error"));
                 return "redirect:/registroEntrada/list";
             }

@@ -79,36 +79,11 @@ public class RegistroDetalle implements Serializable {
     public RegistroDetalle(Long id) {
         this.id = id;
     }
-    
-    
-    
-    
-    
+
 
     /**
-     * @param id
-     * @param extracto
-     * @param tipoDocumentacionFisica
-     * @param tipoAsunto
-     * @param idioma
-     * @param codigoAsunto
-     * @param referenciaExterna
-     * @param expediente
-     * @param transporte
-     * @param numeroTransporte
-     * @param observaciones
-     * @param oficinaOrigen
-     * @param oficinaOrigenExternoCodigo
-     * @param oficinaOrigenExternoDenominacion
-     * @param numeroRegistroOrigen
-     * @param fechaOrigen
-     * @param expone
-     * @param solicita
-     * @param reserva
-     * @param interesados
-     * @param anexos
-     * @param aplicacion
-     * @param version
+     *
+     * @param rd
      */
     public RegistroDetalle(RegistroDetalle rd) {
       this.id = rd.id;
@@ -362,13 +337,36 @@ public class RegistroDetalle implements Serializable {
         if(interesados != null && interesados.size() > 0){
             String nombres = "";
             for (Interesado interesado : interesados) {
-                nombres = nombres.concat("- "+interesado.getNombreCompleto() + " <br/>");
+                if(!interesado.getIsRepresentante()){
+                    nombres = nombres.concat("- "+interesado.getNombreCompleto());
+
+                    if(interesado.getRepresentante() != null){
+                        nombres = nombres.concat(" (R: "+interesado.getRepresentante().getNombreCompleto()+")");
+
+                    }else{
+                        nombres = nombres.concat(" <br/>");
+                    }
+                }
+
+
             }
 
             return  nombres;
         }
 
         return "";
+    }
+
+    @Transient
+    public Integer getTotalInteresados(){
+
+        int total = 0;
+
+        for (Interesado interesado : interesados) {
+            if(!interesado.getIsRepresentante()){total = total +1;}
+        }
+
+        return  total;
     }
 
     @Override

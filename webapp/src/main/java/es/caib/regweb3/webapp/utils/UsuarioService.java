@@ -205,7 +205,7 @@ public class UsuarioService {
 
         log.info("Entidades asociadas: " + entidades.size());
         if(entidades.size() > 0){
-            log.info("Entidades activa: " + entidad.getNombre());
+            log.info("Entidad activa: " + entidad.getNombre());
         }
 
     }
@@ -244,7 +244,7 @@ public class UsuarioService {
             Entidad entidad = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
 
             log.info("Entidades asociadas: " + entidades.size());
-            log.info("Entidades activa: " + entidad.getNombre());
+            log.info("Entidad activa: " + entidad.getNombre());
 
             //Asignamos las oficinas donde tiene acceso
             asignarOficinasRegistro(usuarioAutenticado, session);
