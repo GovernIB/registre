@@ -30,11 +30,14 @@ function procesarOrganismo(organismoAProcesar) {
             if(respuesta.status == 'FAIL'){
                   mostrarMensaje('#pendientes', trads['mensajeprocesadoerror'] + " " + organismoAProcesar);
                   $(idPanel).hide();
-
+                  $("#notaimportante").hide();
+                  $("#organismosconerror").hide();
             }else if(respuesta.status == 'SUCCESS'){
                   //mostrarMensaje('#pendientes', trads['mensajeprocesadook'] + " " + organismoAProcesar);
                   mostrarMensaje('#pendientes', trads['mensajeprocesadook'] + " " +respuesta.result.nombre);
                   $(idPanel).hide();
+                  $("#notaimportante").hide();
+                  $("#organismosconerror").hide();
                   mostrarProcesado(organismoAProcesar, respuesta.result.nombre,respuesta.result.libroOrganismos);
             }
         }
@@ -74,9 +77,11 @@ function mostrarMensaje(idPanel, mensaje){
     html += '</colgroup>';
     html += '<thead>';
     html += '<tr>';
-    html += '<th>'+trads['organismo.extinguido']+' </th>';
-    html += '<th>'+trads['organismo.asignado']+' </th>';
     html += '<th>'+trads['libro.libro']+'</th>';
+    html += '<th>'+trads['organismo.extinguido']+' </th>';
+    html += '<th>&nbsp;&nbsp;&nbsp;</th>';
+    html += '<th>'+trads['organismo.asignado']+' </th>';
+
     html += '</tr>';
     html += '</thead>';
     html += '<tbody></tbody></table>';
@@ -85,7 +90,7 @@ function mostrarMensaje(idPanel, mensaje){
     // añadimos la información de libro-organismo
     var fila;
     for(i=0; i<librosOrganismos.length; i++){
-        fila = "<tr><td>"+organismoAProcesarNombre +"</td><td>"+librosOrganismos[i].organismo+"</td><td>"+librosOrganismos[i].libro+"</td>"
+        fila = "<tr><td>"+organismoAProcesarNombre +"</td><td>"+librosOrganismos[i].organismo+"</td><td><span class='fa fa-arrow-right' aria-hidden='true'></span></td><td>"+librosOrganismos[i].libro+"</td>"
         $('#procesado'+organismoAProcesarId).append(fila);
     }
 

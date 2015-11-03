@@ -45,9 +45,9 @@ de un proceso de sincronización/actualización de una entidad desde dir3caib --
                         <div id="pendientes"></div>
                         <div class="row">
                             <div class="col-xs-12">
-                                <c:if test="${empty organismosAProcesar}" >
+                               <%-- <c:if test="${empty organismosAProcesar}" >
                                     <p><spring:message code="organismos.procesados.vacio"/></p>
-                                </c:if>
+                                </c:if>--%>
                                 <c:if test="${not empty organismosAProcesar}" >
                                    <%-- <div class="panel panel-success">
                                         <div class="panel-heading">
@@ -57,6 +57,7 @@ de un proceso de sincronización/actualización de una entidad desde dir3caib --
                                         <div  class="panel-body" id="pendientes">--%>
                                            <c:if test="${tieneLibros == false}"><p><spring:message code="organismo.cambiar.libros.vacio"/></p></c:if>
                                            <c:if test="${tieneLibros == true}"><p><spring:message code="organismo.modificar.libros"/></p></c:if>
+                                           <c:if test="${esPendiente}"><div id="notaimportante"><strong><p class="text-danger"> <spring:message code="organismo.notaimportante" /></p></strong></div></c:if>
 
 
                                             <c:forEach var="organismoAProcesar" items="${organismosAProcesar}">
@@ -65,13 +66,22 @@ de un proceso de sincronización/actualización de una entidad desde dir3caib --
                                                         <div class="col-xs-12">
                                                             <div class="panel panel-warning" id="panel${organismoAProcesar.id}">
                                                                 <div class="panel-heading">
-                                                                    <h3 class="panel-title"><i class="fa fa-globe"></i> <strong><spring:message code="organismo.actual"/>: ${organismoAProcesar.denominacion} (${organismoAProcesar.codigo})</strong></h3>
+                                                                    <h3 class="panel-title"><i class="fa fa-globe"></i><strong> <c:if test="${esPendiente}"><spring:message code="organismo.extinguido"/>:</c:if><c:if test="${!esPendiente}"><spring:message code="organismo.actual"/>:</c:if> ${organismoAProcesar.denominacion} (${organismoAProcesar.codigo})</strong></h3>
                                                                 </div>
 
                                                                 <div  class="panel-body">
-                                                                    <form  id="organismoAProcesarForm${organismoAProcesar.id}" action="${pageContext.request.contextPath}/entidad/procesarlibroorganismo/${organismoAProcesar.id}/${esPendiente}" method="post" class="form-horizontal">
+                                                                    <form id="organismoAProcesarForm${organismoAProcesar.id}" action="${pageContext.request.contextPath}/entidad/procesarlibroorganismo/${organismoAProcesar.id}/${esPendiente}" method="post" class="form-horizontal">
                                                                         <input type="hidden" id="total${organismoAProcesar.id}" value="${fn:length(organismoAProcesar.libros)}"/>
+                                                                        <c:if test="${esPendiente}">
+                                                                            <strong><spring:message code="organismo.cambiar.ayuda"/></strong></br></br>
+                                                                            <spring:message code="organismo.historicos"/></br>
+                                                                            <c:forEach items="${organismoAProcesar.historicoUO}" var="organismoSustituye" >
+                                                                                ${organismoSustituye.codigo}: ${organismoSustituye.denominacion}</br>
+                                                                            </c:forEach>
+                                                                            </br>
+                                                                        </c:if>
                                                                         <c:forEach var="libroorganismoAProcesar" items="${organismoAProcesar.libros}" varStatus="contador">
+
                                                                             <div class="form-group col-xs-8">
                                                                                 <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                                                                                     <label for="libro${contador.count}-${organismoAProcesar.id}"><spring:message code="libro.libro"/> <em>${libroorganismoAProcesar.nombre}</em></label>
@@ -142,6 +152,7 @@ de un proceso de sincronización/actualización de una entidad desde dir3caib --
                                                 <c:forEach var="extinguidoAutomatico" items="${extinguidosAutomaticos}">
                                                    <%-- <spring:message code="organismo.extinguido"/>: <strong>${extinguidoAutomatico.key}</strong>--%>
                                                     <c:set var="organismoSustituye" value="${extinguidoAutomatico.value}"/>
+
                                                     <table id="automaticos${extinguidoAutomatico.key}" class="table table-bordered table-hover table-striped">
                                                         <colgroup>
                                                             <col>
@@ -149,18 +160,20 @@ de un proceso de sincronización/actualización de una entidad desde dir3caib --
                                                         </colgroup>
                                                         <thead>
                                                         <tr>
-                                                            <th><spring:message code="organismo.extinguido"/></th>
-                                                            <th><spring:message code="organismo.asignado"/></th>
                                                             <th><spring:message code="libro.libro"/></th>
+                                                            <th><spring:message code="organismo.extinguido"/></th>
+                                                            <th>&nbsp;&nbsp;&nbsp;</th>
+                                                            <th><spring:message code="organismo.asignado"/></th>
                                                         </tr>
                                                         </thead>
 
                                                         <tbody>
                                                         <c:forEach var="libro" items="${organismoSustituye.libros}">
                                                             <tr>
-                                                                <td>${extinguidoAutomatico.key}</td>
-                                                                <td>${organismoSustituye.denominacion}</td>
                                                                 <td>${libro.nombre}</td>
+                                                                <td>${extinguidoAutomatico.key}</td>
+                                                                <td><span class="fa fa-arrow-right" aria-hidden="true"></span></td>
+                                                                <td>${organismoSustituye.denominacion}</td>
                                                             </tr>
                                                         </c:forEach>
                                                         </tbody>
@@ -174,6 +187,56 @@ de un proceso de sincronización/actualización de una entidad desde dir3caib --
                                         </div>
                                     </div>
                                 </div>
+                            </c:if>
+                            <c:if test="${not empty organismosConError}">
+                                <div id="organismosconerror">
+                                    <strong><spring:message code="organismo.conerror"/></strong>
+                                    </br>
+                                    <spring:message code="organismo.conerror.ayuda"/>
+                                </div>
+                                <c:forEach var="organismoConError" items="${organismosConError}">
+                                    <c:if test="${not empty organismoConError.libros}">
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="panel panel-warning" id="panel${organismoConError.id}">
+                                                    <div class="panel-heading">
+                                                        <h3 class="panel-title"><i class="fa fa-globe"></i><strong> <c:if test="${esPendiente}"><spring:message code="organismo.extinguido"/>:</c:if><c:if test="${!esPendiente}"><spring:message code="organismo.actual"/>:</c:if> ${organismoConError.denominacion} (${organismoConError.codigo})</strong></h3>
+                                                    </div>
+
+                                                    <div  class="panel-body">
+                                                        <form id="organismoAProcesarForm${organismoConError.id}" action="${pageContext.request.contextPath}/entidad/procesarlibroorganismo/${organismoConError.id}/${esPendiente}" method="post" class="form-horizontal">
+                                                            <input type="hidden" id="total${organismoConError.id}" value="${fn:length(organismoConError.libros)}"/>
+                                                            <c:forEach var="libroorganismoConError" items="${organismoConError.libros}" varStatus="contador">
+
+                                                                <div class="form-group col-xs-8">
+                                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                                                        <label for="libro${contador.count}-${organismoConError.id}"><spring:message code="libro.libro"/> <em>${libroorganismoConError.nombre}</em></label>
+                                                                        <input id="libro${contador.count}-${organismoConError.id}" type="hidden" class="form-control" value="${libroorganismoConError.id}"/>
+                                                                        <span id="libro${contador.count}-${organismoConError.id}Error"></span>
+                                                                    </div>
+                                                                    <div class="col-xs-8">
+                                                                        <select id="organismoSustituye${contador.count}-${organismoConError.id}" name="organismoSustituye${contador.count}-${organismoConError.id}" class="chosen-select">
+                                                                            <option value="-1">...</option>
+                                                                                <!--Como es organismo con error, quiere decir que no tiene històricos y que se le debe asignar otro organismo -->
+                                                                                <c:forEach items="${organismosSustituyentes}" var="organismoSustituye" >
+                                                                                    <option value="${organismoSustituye.id}">${organismoSustituye.denominacion}</option>
+                                                                                </c:forEach>
+                                                                        </select>
+                                                                        <span id="organismoSustituye${contador.count}-${organismoConError.id}Error"></span>
+                                                                    </div>
+                                                                </div>
+                                                            </c:forEach>
+                                                            <div class="form-group col-xs-6">
+                                                                <input type="button" onclick="procesarOrganismo('${organismoConError.id}')" title="<spring:message code="regweb.procesar"/>" value="<spring:message code="regweb.procesar"/>" class="btn btn-warning btn-sm">
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </c:if>
+                                </c:forEach>
                             </c:if>
                         </c:if>
                     </div> <!-- ./panel body principal-->

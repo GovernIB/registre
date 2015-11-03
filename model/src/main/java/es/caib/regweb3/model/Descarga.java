@@ -65,7 +65,7 @@ public class Descarga implements Serializable {
   }
   
   @Column(name = "FECHAIMPORTACION")
-  @Temporal(TemporalType.DATE)
+  //@Temporal(TemporalType.DATE)
   public Date getFechaImportacion() {
     return fechaImportacion;
   }

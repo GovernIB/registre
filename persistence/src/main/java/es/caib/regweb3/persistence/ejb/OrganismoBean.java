@@ -142,12 +142,25 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     }
 
     @Override
-    public List<Organismo> findByEntidad(Long entidad) throws Exception {
+     public List<Organismo> findByEntidad(Long entidad) throws Exception {
 
         Query q = em.createQuery("Select organismo from Organismo as organismo where " +
                 "organismo.entidad.id = :entidad");
 
         q.setParameter("entidad",entidad);
+
+        return  q.getResultList();
+
+    }
+
+    @Override
+    public List<Organismo> findByEntidadByEstado(Long entidad, String estado) throws Exception {
+
+        Query q = em.createQuery("Select organismo from Organismo as organismo where " +
+                "organismo.entidad.id = :entidad and organismo.estado.codigoEstadoEntidad = :codigoEstado");
+
+        q.setParameter("entidad",entidad);
+        q.setParameter("codigoEstado",estado);
 
         return  q.getResultList();
 

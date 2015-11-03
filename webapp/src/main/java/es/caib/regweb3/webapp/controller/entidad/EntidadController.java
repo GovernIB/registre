@@ -668,55 +668,77 @@ public class EntidadController extends BaseController {
         //log.info("Entro en pendiente de procesar " + new Date() );
         //SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
 
-        /* Preparamos todos los organismos a procesar (extinguidos, anulados, transitorios*/
+        /* Preparamos todos los organismos a procesar (extinguidos, anulados, transitorios,vigentes)*/
         List<Pendiente> pendientesDeProcesar = pendienteEjb.findPendientesProcesar();
         //log.info("Pendientes procesar " + pendientesDeProcesar.size());
         if(!pendientesDeProcesar.isEmpty()){
           List<Organismo> organismosExtinguidos = new ArrayList<Organismo>();// Organismos extinguidos a procesar por usuario
           // Para mostrar información al usuario
-          Map<String,Organismo> extinguidosAutomaticos= new HashMap<String, Organismo>();   // Organismos extinguidos y sustitutos procesados automaticamente
+          Map<String,Organismo> extinguidosAutomaticos= new HashMap<String, Organismo>();// Organismos extinguidos y sustitutos procesados automaticamente
+          List<Organismo> organismosConError= new ArrayList<Organismo>();// Organismos con error pendientes de solucionar (por ejemplo sin oficinas)
           for(Pendiente pendiente :pendientesDeProcesar){
-            if(RegwebConstantes.ESTADO_ENTIDAD_EXTINGUIDO.equals(pendiente.getEstado()) || RegwebConstantes.ESTADO_ENTIDAD_TRANSITORIO.equals(pendiente.getEstado())){
+            if(RegwebConstantes.ESTADO_ENTIDAD_EXTINGUIDO.equals(pendiente.getEstado()) || RegwebConstantes.ESTADO_ENTIDAD_TRANSITORIO.equals(pendiente.getEstado()) || RegwebConstantes.ESTADO_ENTIDAD_VIGENTE.equals(pendiente.getEstado())){
                 // Obtenemos el organismo extinguido
                 Organismo organismoExtinguido = organismoEjb.findById(pendiente.getIdOrganismo());
                 //Obtenemos libros de organismo extinguido
                 List<Libro> libros = organismoExtinguido.getLibros();
                 //Si solo tiene un organismo que le sustituye se asignan los libros a ese organismo
-                if(organismoExtinguido.getHistoricoUO().size() == 1){// Se procesa internamente
-                   log.info("Se procesa automaticamente porque solo tiene 1 historico" + organismoExtinguido.getDenominacion());
-                   if(libros.size()>0){
-                      log.info("El organismo " + organismoExtinguido.getDenominacion()+" con 1 histórico tiene libros");
-                      // Asignamos libros misma numeración
-                      Organismo orgSustituye = new ArrayList<Organismo>(organismoExtinguido.getHistoricoUO()).get(0);
 
-                      //Asignamos el libro al organismo que lo sustituye
-                      for(Libro libro: libros){
-                        libro.setOrganismo(orgSustituye);
-                        libroEjb.merge(libro);
-                      }
-                      // asignamos los libros para mostrarlos en el jsp
-                      orgSustituye.setLibros(libros);
-                       log.info("Libros del organismo: "+ organismoExtinguido.getDenominacion()+ "han sido reasigandos al organismo:  "+orgSustituye.getDenominacion() );
-                      // Añadimos todos los organimos procesados automáticamente
-                      extinguidosAutomaticos.put(organismoExtinguido.getDenominacion(),orgSustituye);
-                   }
-                   //actualizar pendiente
-                   pendiente.setProcesado(true);
-                   pendiente.setFecha(RegwebUtils.formateaFecha(new Date(), RegwebConstantes.FORMATO_FECHA_HORA));
-                   pendienteEjb.merge(pendiente);
-                   //Mensaje.saveMessageInfo(request, getMessage("organismo.extinguido.procesado.automatico"));
-                   log.info("MAP de extinguidos automaticos " +extinguidosAutomaticos.get(organismoExtinguido.getDenominacion()));
-                }else { // tiene más de un historico
-                    log.info("Entramos en historicos +1 de extinguido(no se procesan automaticamente): " + organismoExtinguido.getDenominacion());
-                    if(libros.size()>0){//Si tiene libros se añade para procesarlo
-                        log.info("Tiene libros el organismo:" + organismoExtinguido.getDenominacion());
-                      organismosExtinguidos.add(organismoExtinguido);
-                    }else{// no tiene libros, no se hace nada pero se actualiza el estado a procesado
+
+                Set<Organismo> historicosUOconOficinas= new HashSet<Organismo>();
+                //Obtenemos los historicos hasta el final para que el usuario decida donde poner el libro.
+                Set<Organismo> historicosFinales= new HashSet<Organismo>();
+                obtenerHistoricosFinales(organismoExtinguido,historicosFinales);
+                log.info("HISTORICOS FINALES "+ historicosFinales.size());
+                for(Organismo orgHistorico:historicosFinales){
+                    if(oficinaEjb.tieneOficinasOrganismo(orgHistorico.getId())){
+                        historicosUOconOficinas.add(orgHistorico);
+                    }
+                }
+                //Reasignamos los historicosConOficina pero no se guardan en BD
+                organismoExtinguido.setHistoricoUO(historicosUOconOficinas);
+                //Si no tiene historicos lo marcamos como error
+                if(historicosUOconOficinas.size()==0){
+                    if(libros.size()>0) {
+                        organismosConError.add(organismoExtinguido);
+                    }
+                }else {
+                    if (historicosUOconOficinas.size() == 1/*organismoExtinguido.getHistoricoUO().size() == 1*/) {// Se procesa internamente
+                        log.info("Se procesa automaticamente porque solo tiene 1 historico" + organismoExtinguido.getDenominacion() + ":" + organismoExtinguido.getCodigo());
+                        if (libros.size() > 0) {
+                            log.info("El organismo " + organismoExtinguido.getDenominacion() + " con 1 histórico tiene libros");
+                            // Asignamos libros misma numeración
+                            Organismo orgSustituye = new ArrayList<Organismo>(organismoExtinguido.getHistoricoUO()).get(0);
+
+                            //Asignamos el libro al organismo que lo sustituye
+                            for (Libro libro : libros) {
+                                libro.setOrganismo(orgSustituye);
+                                libroEjb.merge(libro);
+                            }
+                            // asignamos los libros para mostrarlos en el jsp
+                            orgSustituye.setLibros(libros);
+                            log.info("Libros del organismo: " + organismoExtinguido.getDenominacion() + ":" + organismoExtinguido.getCodigo() + "han sido reasigandos al organismo:  " + orgSustituye.getDenominacion() + ":" + orgSustituye.getCodigo());
+                            // Añadimos todos los organimos procesados automáticamente
+                            extinguidosAutomaticos.put(organismoExtinguido.getDenominacion(), orgSustituye);
+
+                        }
+                        //actualizar pendiente
                         pendiente.setProcesado(true);
                         pendiente.setFecha(RegwebUtils.formateaFecha(new Date(), RegwebConstantes.FORMATO_FECHA_HORA));
                         pendienteEjb.merge(pendiente);
-                    }
+                        log.info("MAP de extinguidos automaticos " + extinguidosAutomaticos.get(organismoExtinguido.getDenominacion()));
+                    } else { // tiene más de un historico
+                        log.info("Entramos en historicos +1 de extinguido(no se procesan automaticamente): " + organismoExtinguido.getDenominacion() + ":" + organismoExtinguido.getCodigo());
+                        if (libros.size() > 0) {//Si tiene libros se añade para procesarlo
+                            log.info("Tiene libros el organismo:" + organismoExtinguido.getDenominacion() + ":" + organismoExtinguido.getCodigo());
+                            organismosExtinguidos.add(organismoExtinguido);
+                        } else {// no tiene libros, no se hace nada pero se actualiza el estado a procesado
+                            pendiente.setProcesado(true);
+                            pendiente.setFecha(RegwebUtils.formateaFecha(new Date(), RegwebConstantes.FORMATO_FECHA_HORA));
+                            pendienteEjb.merge(pendiente);
+                        }
 
+                    }
                 }
             }else{  // ANULADOS
               // TODO ANULADOS
@@ -725,21 +747,26 @@ public class EntidadController extends BaseController {
           // extinguidosAutomaticos --> organismos que se les ha asignado automaticamente los libros.
           // organismosExtinguidos --> organismos que estan pendientes de procesar por el usuario que será el que decida
           // donde colocar finalmente los libros.
-          if(extinguidosAutomaticos.size()>0 || organismosExtinguidos.size()>0) {
+          if(extinguidosAutomaticos.size()>0 || organismosExtinguidos.size()>0 ||organismosConError.size()>0) {
               model.addAttribute("extinguidosAutomaticos", extinguidosAutomaticos);
               model.addAttribute("organismosAProcesar", organismosExtinguidos);
+              model.addAttribute("organismosConError", organismosConError);
+              if(organismosConError.size()>0){
+                  Entidad entidad=getEntidadActiva(request);
+                  List<Organismo> organismosEntidadVigentes = organismoEjb.findByEntidadEstadoConOficinas(entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+                  model.addAttribute("organismosSustituyentes", organismosEntidadVigentes);
+              }
           }else{
               log.info("no hay organismos a procesar ");
               Mensaje.saveMessageInfo(request, getMessage("organismo.nopendientesprocesar"));
               return "redirect:/organismo/list";
           }
-            log.info("Extinguidos automaticos: " + extinguidosAutomaticos.size());
-            log.info("organismosAProcesar: " + organismosExtinguidos.size());
+          Mensaje.saveMessageInfo(request, getMessage("organismo.nopendientesprocesar"));
+          log.info("Extinguidos automaticos: " + extinguidosAutomaticos.size());
+          log.info("organismosAProcesar: " + organismosExtinguidos.size());
+          log.info("organismosConError: " + organismosConError.size());
           //con esPendiente indicamos que venimos de una sincro/actualizacion y hay que mostrar el resumen de los autómaticos.
-            model.addAttribute("esPendiente", true); //TODO REVISAR SI VA BIEN AQUI
-
-
-
+          model.addAttribute("esPendiente", true);
         }else {
             log.debug("else no pendientes de procesar");
             Mensaje.saveMessageInfo(request, getMessage("organismo.nopendientesprocesar"));
@@ -888,13 +915,7 @@ public class EntidadController extends BaseController {
 
         return administradoresEntidad;
     }
-    //TODO borrar, solo se emplea para testear
-   /* @RequestMapping(value="/organismosdestinatarios", method= RequestMethod.GET)
-    public void obtenerOrganismoDestinatarios()throws Exception {
-         sincronizadorDIR3Ejb.obtenerOrganismosDestinatarios("A04006741");
 
-    }
-*/
     /**
      * Listado de todas las Descargas
      */
@@ -931,6 +952,29 @@ public class EntidadController extends BaseController {
         binder.registerCustomEditor(UsuarioEntidad.class, "entidad.administradores",new UsuarioEntidadEditor());
         binder.setValidator(this.entidadValidator);
     }
+
+
+
+
+
+
+    private void obtenerHistoricosFinales(Organismo organismo, Set<Organismo> historicosFinales) throws Exception{
+        Set<Organismo> parciales=organismo.getHistoricoUO();
+        log.info("PARCIALES DE " +organismo.getCodigo() +":"+ parciales.size());
+        log.info("HISTORICOS FINALES: "+ historicosFinales.size());
+        for(Organismo parcial:parciales){
+            if(parcial.getHistoricoUO().size()==0){
+                historicosFinales.add(parcial);
+            }else{
+               obtenerHistoricosFinales(parcial,historicosFinales);
+            }
+        }
+
+    }
+
+
+
+
 
 
 }

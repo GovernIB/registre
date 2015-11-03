@@ -76,6 +76,9 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
     @EJB(mappedName = "regweb3/CatServicioEJB/local")
     public CatServicioLocal catServicioEjb;
 
+    @EJB(mappedName = "regweb3/RelacionOrganizativaOfiEJB/local")
+    public RelacionOrganizativaOfiLocal relacionOrganizativaOfiLocalEjb;
+
 
     /**
      * Método que sincroniza o actualiza una entidad de regweb3 desde dir3caib. Lo hace en función de si se indica la
@@ -166,6 +169,26 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
 
         nuevaDescarga(RegwebConstantes.OFICINA, entidad);
+
+        // Hay que revisar que organismos con libros que son vigentes han podido quedar sin oficinas y guardarlos como pendientes.
+        //Pueden quedar sin oficinas al borrarselas o quitarles las únicas relaciones organizativas que tengan.
+        List<Organismo> vigentes= organismoEjb.findByEntidadByEstado(entidadId, RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        for(Organismo organismo:vigentes){
+            if(organismo.getLibros()!=null && organismo.getLibros().size()>0){
+                Set<Oficina> oficinas = new HashSet<Oficina>();  // Utilizamos un Set porque no permite duplicados
+                oficinas.addAll(oficinaEjb.findByOrganismoResponsable(organismo.getId()));
+                oficinas.addAll(relacionOrganizativaOfiLocalEjb.getOficinasByOrganismo(organismo.getId()));
+                if(oficinas.size()==0){
+                    //guardar pendiente
+                    Pendiente pendiente = new Pendiente();
+                    pendiente.setIdOrganismo(organismo.getId());
+                    pendiente.setProcesado(false);
+                    pendiente.setEstado(organismo.getEstado().getCodigoEstadoEntidad());
+                    pendienteEjb.persist(pendiente);
+                }
+            }
+        }
+
         log.info(" REGWEB3 ORGANISMOS ACTUALIZADOS:  " + arbol.size() );
         log.info(" REGWEB3 OFICINAS ACTUALIZADAS:  " + oficinasActualizadas );
 
@@ -730,7 +753,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         if(RegwebConstantes.ESTADO_ENTIDAD_EXTINGUIDO.equals(org.getEstado().getCodigoEstadoEntidad())
                 || RegwebConstantes.ESTADO_ENTIDAD_TRANSITORIO.equals(org.getEstado().getCodigoEstadoEntidad())
                 || RegwebConstantes.ESTADO_ENTIDAD_ANULADO.equals(org.getEstado().getCodigoEstadoEntidad())){
-                    if(org.getLibros()!=null){
+                    if(org.getLibros()!=null && org.getLibros().size()>0){
                         Pendiente pendiente = new Pendiente();
                         pendiente.setIdOrganismo(org.getId());
                         pendiente.setProcesado(false);

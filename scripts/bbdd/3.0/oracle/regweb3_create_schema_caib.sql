@@ -106,7 +106,7 @@
     create table RWE_DESCARGA (
         ID number(19,0) not null,
         FECHAFIN timestamp,
-        FECHAIMPORTACION date,
+        FECHAIMPORTACION timestamp,
         FECHAINICIO timestamp,
         TIPO varchar2(255 char),
         ENTIDAD number(19,0)
