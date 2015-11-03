@@ -4,10 +4,7 @@ import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
 import es.caib.dir3caib.ws.api.unidad.UnidadTF;
-import es.caib.regweb3.model.Oficina;
-import es.caib.regweb3.model.Organismo;
-import es.caib.regweb3.model.Repro;
-import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.ReproJson;
 import es.caib.regweb3.persistence.ejb.BaseEjbJPA;
 import es.caib.regweb3.persistence.ejb.OrganismoLocal;
@@ -99,7 +96,7 @@ public class ReproController extends BaseController {
 
             case 1: //RegistroEntrada
                 log.info("Repro entrada");
-                Organismo organismoDestino = organismoEjb.findByCodigoVigente(reproJson.getDestinoCodigo());
+                Organismo organismoDestino = organismoEjb.findByCodigoVigente(reproJson.getDestinoCodigo(),usuarioEntidad.getEntidad().getId());
 
                 if(organismoDestino != null) { // es interno
                     log.info("Destino: " +reproJson.getDestinoDenominacion() + " Interno");
@@ -114,7 +111,7 @@ public class ReproController extends BaseController {
 
             case 2: //RegistroSalida
                 log.info("Repro salida");
-                Organismo organismoOrigen = organismoEjb.findByCodigoVigente(reproJson.getOrigenCodigo());
+                Organismo organismoOrigen = organismoEjb.findByCodigoVigente(reproJson.getOrigenCodigo(),usuarioEntidad.getEntidad().getId());
 
                 if(organismoOrigen != null) { // es interno
                     log.info("Origen: " + reproJson.getOrigenDenominacion() + " Interno");
@@ -311,6 +308,7 @@ public class ReproController extends BaseController {
         //todo: Mejorar las Repro sustituyendo los organismos extinguidos por sus sustitutos
         Repro repro = reproEjb.findById(idRepro);
         ReproJson reproJson = RegistroUtils.desSerilizarReproXml(repro.getRepro());
+        Entidad entidad = getEntidadActiva(request);
 
         switch (repro.getTipoRegistro().intValue()){
 
@@ -330,7 +328,7 @@ public class ReproController extends BaseController {
                     }
 
                 }else{ // Comprobamos en REGWEB3 si está vigente
-                    Organismo organismoDestino = organismoEjb.findByCodigoVigente(reproJson.getDestinoCodigo());
+                    Organismo organismoDestino = organismoEjb.findByCodigoVigente(reproJson.getDestinoCodigo(),entidad.getId());
 
                     if(organismoDestino == null){ // Ya no es vigente
                         reproJson.setDestinoExterno(null);
@@ -359,7 +357,7 @@ public class ReproController extends BaseController {
                     }
 
                 }else{ // Comprobamos en REGWEB3 si está vigente
-                    Organismo organismoOrigen = organismoEjb.findByCodigoVigente(reproJson.getOrigenCodigo());
+                    Organismo organismoOrigen = organismoEjb.findByCodigoVigente(reproJson.getOrigenCodigo(),entidad.getId());
                     if(organismoOrigen == null){ // Ya no es vigente
                         reproJson.setOrigenExterno(null);
                         reproJson.setOrigenCodigo(null);

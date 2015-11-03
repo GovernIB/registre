@@ -96,6 +96,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         HttpServletRequest request) throws Exception, I18NException, I18NValidationException {
 
         HttpSession session = request.getSession();
+        Entidad entidad = getEntidadActiva(request);
 
         registroSalidaValidator.validate(registroSalida, result);
 
@@ -113,7 +114,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
                 model.addAttribute("errorInteresado", errorInteresado);
             }
 
-            model.addAttribute(getEntidadActiva(request));
+            model.addAttribute(entidad);
             model.addAttribute(getUsuarioAutenticado(request));
             model.addAttribute(getOficinaActiva(request));
             model.addAttribute("oficinasOrigen",  getOficinasOrigen(request));
@@ -127,7 +128,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
             } else {
             
               // Si el organismo que han seleccionado es externo, lo creaamos nuevo y lo añadimos a la lista del select
-              if(organismoEjb.findByCodigoVigente(registroSalida.getOrigen().getCodigo())== null){
+              if(organismoEjb.findByCodigoVigente(registroSalida.getOrigen().getCodigo(),entidad.getId())== null){
                   //log.info("externo : "+ registroSalida.getDestino().getDenominacion());
                   Organismo organismoExterno = new Organismo();
                   organismoExterno.setCodigo(registroSalida.getOrigen().getCodigo());
@@ -174,7 +175,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
                 registroSalida.setEstado(RegwebConstantes.ESTADO_VALIDO);
 
                 // Procesamos las opciones comunes del RegistroSalida
-                registroSalida = procesarRegistroSalida(registroSalida);
+                registroSalida = procesarRegistroSalida(registroSalida, entidad);
 
                 // Procesamos lo Interesados de la session
                 List<Interesado> interesados = procesarInteresados(interesadosSesion, null);
@@ -285,17 +286,18 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
 
 
         registroSalidaValidator.validate(registroSalida, result);
+        Entidad entidad = getEntidadActiva(request);
 
         if (result.hasErrors()) { // Si hay errores volvemos a la vista del formulario
             model.addAttribute(getOficinaActiva(request));
             model.addAttribute(getUsuarioAutenticado(request));
-            model.addAttribute(getEntidadActiva(request));
+            model.addAttribute(entidad);
             model.addAttribute("libros", getLibrosRegistroSalida(request));
 
             // Controlamos si el organismo destino es externo o interno
             Set<Organismo> organismosOficinaActiva = getOrganismosOficinaActiva(request);
             // Si el organismo que han seleccionado es externo, lo creamos nuevo y lo añadimos a la lista del select
-            if(organismoEjb.findByCodigoVigente(registroSalida.getOrigen().getCodigo())== null){
+            if(organismoEjb.findByCodigoVigente(registroSalida.getOrigen().getCodigo(),entidad.getId())== null){
                 Organismo organismoExterno = new Organismo();
                 organismoExterno.setCodigo(registroSalida.getOrigen().getCodigo());
                 organismoExterno.setDenominacion(registroSalida.getOrigen().getDenominacion());
@@ -333,7 +335,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
                 UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
                 // Procesamos las opciones comunes del RegistroEnrtrada
-                registroSalida = procesarRegistroSalida(registroSalida);
+                registroSalida = procesarRegistroSalida(registroSalida, entidad);
 
                 // Calculamos los días transcurridos desde que se Registró para asignarle un Estado
                 Long dias = RegistroUtils.obtenerDiasRegistro(registroSalida.getFecha());
@@ -374,12 +376,12 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
      * @return
      * @throws Exception
      */
-    private RegistroSalida procesarRegistroSalida(RegistroSalida registroSalida) throws Exception{
+    private RegistroSalida procesarRegistroSalida(RegistroSalida registroSalida, Entidad entidad) throws Exception{
 
         Organismo organismoDestino = registroSalida.getOrigen();
 
         // Gestionamos el Organismo, determinando si es Interno o Externo
-        Organismo orgDestino = organismoEjb.findByCodigoVigente(organismoDestino.getCodigo());
+        Organismo orgDestino = organismoEjb.findByCodigoVigente(organismoDestino.getCodigo(), entidad.getId());
         if(orgDestino != null){ // es interno
 
             registroSalida.setOrigen(orgDestino);

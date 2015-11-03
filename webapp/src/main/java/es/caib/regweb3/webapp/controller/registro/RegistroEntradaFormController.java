@@ -103,6 +103,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         HttpServletRequest request) throws Exception, I18NException, I18NValidationException {
 
         HttpSession session = request.getSession();
+        Entidad entidad = getEntidadActiva(request);
 
         registroEntradaValidator.validate(registroEntrada, result);
         
@@ -124,13 +125,10 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             }
           }
 
-          
-
             // Si no hay ningún interesado, generamos un error.
             if(errorInteresado){
                 model.addAttribute("errorInteresado", errorInteresado);
             }
-            Entidad entidad = getEntidadActiva(request);
             model.addAttribute(entidad);
             model.addAttribute(getUsuarioAutenticado(request));
             model.addAttribute(getOficinaActiva(request));
@@ -147,7 +145,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
 
               // Si el organismo que han seleccionado es externo, lo creaamos nuevo y lo añadimos a la lista del select
-              if (organismoEjb.findByCodigoVigente(registroEntrada.getDestino().getCodigo())== null) {
+              if (organismoEjb.findByCodigoVigente(registroEntrada.getDestino().getCodigo(),entidad.getId())== null) {
                   //log.info("externo : "+ registro.getDestino().getDenominacion());
                   Organismo organismoExterno = new Organismo();
                   organismoExterno.setCodigo(registroEntrada.getDestino().getCodigo());
@@ -197,7 +195,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                 registroEntrada.setEstado(RegwebConstantes.ESTADO_VALIDO);
 
                 // Procesamos las opciones comunes del RegistroEntrada
-                registroEntrada = procesarRegistroEntrada(registroEntrada);
+                registroEntrada = procesarRegistroEntrada(registroEntrada, entidad);
 
                 // Procesamos lo Interesados de la session
                 List<Interesado> interesados = procesarInteresados(interesadosSesion, null);
@@ -314,6 +312,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
 
         registroEntradaValidator.validate(registroEntrada, result);
+        Entidad entidad = getEntidadActiva(request);
 
         // Actualizamos los Interesados modificados, en el caso que de un RE Pendiente.
         Boolean errorInteresado = false;
@@ -335,7 +334,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             if(errorInteresado){
                 model.addAttribute("errorInteresado", errorInteresado);
             }
-            Entidad entidad = getEntidadActiva(request);
+
             model.addAttribute(entidad);
             model.addAttribute(getUsuarioAutenticado(request));
             model.addAttribute(getEntidadActiva(request));
@@ -344,7 +343,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             // Controlamos si el organismo destino es externo o interno
             Set<Organismo> organismosOficinaActiva = getOrganismosOficinaActiva(request);
             // Si el organismo que han seleccionado es externo, lo creamos nuevo y lo añadimos a la lista del select
-            if(organismoEjb.findByCodigoVigente(registroEntrada.getDestino().getCodigo())== null){
+            if(organismoEjb.findByCodigoVigente(registroEntrada.getDestino().getCodigo(), entidad.getId())== null){
                 Organismo organismoExterno = new Organismo();
                 organismoExterno.setCodigo(registroEntrada.getDestino().getCodigo());
                 organismoExterno.setDenominacion(registroEntrada.getDestino().getDenominacion());
@@ -382,7 +381,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                 UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
                 // Procesamos las opciones comunes del RegistroEnrtrada
-                registroEntrada = procesarRegistroEntrada(registroEntrada);
+                registroEntrada = procesarRegistroEntrada(registroEntrada, entidad);
 
                 // Procesamos lo Interesados de la session
                 if(registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE)){
@@ -435,16 +434,16 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
      * @return
      * @throws Exception
      */
-    private RegistroEntrada procesarRegistroEntrada(RegistroEntrada registroEntrada) throws Exception{
+    private RegistroEntrada procesarRegistroEntrada(RegistroEntrada registroEntrada, Entidad entidad) throws Exception{
 
         Organismo organismoDestino = registroEntrada.getDestino();
 
         // Gestionamos el Organismo, determinando si es Interno o Externo
-        Organismo orgDestino = organismoEjb.findByCodigoVigente(organismoDestino.getCodigo());
+        Organismo orgDestino = organismoEjb.findByCodigoVigente(organismoDestino.getCodigo(),entidad.getId());
         if(orgDestino != null){ // es interno
-          registroEntrada.setDestino(orgDestino);
-          registroEntrada.setDestinoExternoCodigo(null);
-          registroEntrada.setDestinoExternoDenominacion(null);
+            registroEntrada.setDestino(orgDestino);
+            registroEntrada.setDestinoExternoCodigo(null);
+            registroEntrada.setDestinoExternoDenominacion(null);
 
         } else { // es externo
             registroEntrada.setDestinoExternoCodigo(registroEntrada.getDestino().getCodigo());
@@ -459,35 +458,35 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
         // Cogemos los dos posibles campos
         Oficina oficinaOrigen = registroEntrada.getRegistroDetalle().getOficinaOrigen();
-        
-     // Si no han indicado ni externa ni interna, se establece la oficina en la que se realiza el registro.
-        if(oficinaOrigen == null){
-           registroEntrada.getRegistroDetalle().setOficinaOrigen(registroEntrada.getOficina());
-        } else {
-        
-          if(!oficinaOrigen.getCodigo().equals("-1")){ // si han indicado oficina origen
-              Oficina ofiOrigen = oficinaEjb.findByCodigo(oficinaOrigen.getCodigo());
-              if(ofiOrigen != null){ // Es interna
 
-                registroEntrada.getRegistroDetalle().setOficinaOrigen(ofiOrigen);
+        // Si no han indicado ni externa ni interna, se establece la oficina en la que se realiza el registro.
+        if(oficinaOrigen == null){
+            registroEntrada.getRegistroDetalle().setOficinaOrigen(registroEntrada.getOficina());
+        } else {
+
+            if(!oficinaOrigen.getCodigo().equals("-1")){ // si han indicado oficina origen
+                Oficina ofiOrigen = oficinaEjb.findByCodigo(oficinaOrigen.getCodigo());
+                if(ofiOrigen != null){ // Es interna
+
+                    registroEntrada.getRegistroDetalle().setOficinaOrigen(ofiOrigen);
+                    registroEntrada.getRegistroDetalle().setOficinaOrigenExternoCodigo(null);
+                    registroEntrada.getRegistroDetalle().setOficinaOrigenExternoDenominacion(null);
+                } else {  // es externa
+                    registroEntrada.getRegistroDetalle().setOficinaOrigenExternoCodigo(registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo());
+                    if(registroEntrada.getId()!= null){//es una modificación
+                        registroEntrada.getRegistroDetalle().setOficinaOrigenExternoDenominacion(registroEntrada.getRegistroDetalle().getOficinaOrigenExternoDenominacion());
+                    }else{
+                        registroEntrada.getRegistroDetalle().setOficinaOrigenExternoDenominacion(registroEntrada.getRegistroDetalle().getOficinaOrigen().getDenominacion());
+                    }
+
+                    registroEntrada.getRegistroDetalle().setOficinaOrigen(null);
+
+                }
+            }else { // No han indicado oficina de origen
+                registroEntrada.getRegistroDetalle().setOficinaOrigen(null);
                 registroEntrada.getRegistroDetalle().setOficinaOrigenExternoCodigo(null);
                 registroEntrada.getRegistroDetalle().setOficinaOrigenExternoDenominacion(null);
-              } else {  // es externa
-                  registroEntrada.getRegistroDetalle().setOficinaOrigenExternoCodigo(registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo());
-                  if(registroEntrada.getId()!= null){//es una modificación
-                      registroEntrada.getRegistroDetalle().setOficinaOrigenExternoDenominacion(registroEntrada.getRegistroDetalle().getOficinaOrigenExternoDenominacion());
-                  }else{
-                      registroEntrada.getRegistroDetalle().setOficinaOrigenExternoDenominacion(registroEntrada.getRegistroDetalle().getOficinaOrigen().getDenominacion());
-                  }
-
-                  registroEntrada.getRegistroDetalle().setOficinaOrigen(null);
-
-              }
-          }else { // No han indicado oficina de origen
-               registroEntrada.getRegistroDetalle().setOficinaOrigen(null);
-               registroEntrada.getRegistroDetalle().setOficinaOrigenExternoCodigo(null);
-               registroEntrada.getRegistroDetalle().setOficinaOrigenExternoDenominacion(null);
-          }
+            }
         }
 
 
