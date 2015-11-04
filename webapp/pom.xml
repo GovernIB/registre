@@ -119,14 +119,6 @@
             <scope>provided</scope>
         </dependency>
 
-	
-		<dependency>
-		   <groupId>es.caib.dir3caib</groupId>
-           <artifactId>dir3caib-ws-api</artifactId>
-           <version>1.0.0</version>
-           <scope>provided</scope>
-		</dependency>
-
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>regweb3-ws-sir-api</artifactId>
