@@ -17,17 +17,17 @@
     <div class="well well-white">
 
         <!-- Miga de pan -->
-       <div class="row">
-            <div class="col-xs-12">
-                <ol class="breadcrumb">
+        <div class="row">
+             <div class="col-xs-12">
+                 <ol class="breadcrumb">
                     <li><a href="<c:url value="/inici"/>"><i class="fa fa-globe"></i> ${oficinaActiva.denominacion}</a></li>
                     <%--<li><a href="<c:url value="/registroEntrada/list"/>" ><i class="fa fa-list"></i> <spring:message code="registroEntrada.listado"/></a></li>--%>
                     <li class="active"><i class="fa fa-pencil-square-o"></i> <spring:message code="registroEntrada.registroEntrada"/> ${registro.numeroRegistroFormateado}</li>
                     <%--Importamos el menú de avisos--%>
                     <c:import url="/avisos"/>
-                </ol>
-            </div>
-       </div><!-- Fin miga de pan -->
+                 </ol>
+             </div>
+        </div><!-- Fin miga de pan -->
 
         <div class="row">
 
@@ -200,274 +200,17 @@
 
             <!-- MODIFICACIONES REGISTRO -->
             <c:if test="${not empty historicos}">
-
-             <div class="col-xs-8 pull-right">
-
-                  <div class="panel panel-info">
-
-                      <div class="panel-heading">
-                          <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong><spring:message code="regweb.modificaciones"/></strong></h3>
-                      </div>
-
-                      <div class="panel-body">
-                          <div class="table-responsive">
-
-                             <table id="historicos" class="table table-bordered table-hover table-striped">
-                                 <colgroup>
-                                     <col>
-                                     <c:if test="${isAdministradorLibro}"> <col> </c:if>
-                                     <col>
-                                     <col width="100">
-                                 </colgroup>
-                                 <thead>
-                                     <tr>
-                                         <th><spring:message code="historicoEntrada.fecha"/></th>
-                                         <c:if test="${isAdministradorLibro}"> <th><spring:message code="historicoEntrada.usuario"/></th> </c:if>
-                                         <th><spring:message code="historicoEntrada.modificacion"/></th>
-                                         <th><spring:message code="historicoEntrada.estado"/></th>
-                                         <th class="center"><spring:message code="regweb.acciones"/></th>
-                                     </tr>
-                                 </thead>
-
-                                 <tbody>
-                                     <c:forEach var="historico" items="${historicos}">
-                                         <tr>
-                                             <td><fmt:formatDate value="${historico.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
-                                             <c:if test="${isAdministradorLibro}"> <td>${historico.usuario.nombreCompleto}</td> </c:if>
-                                             <td>${historico.modificacion}</td>
-                                             <td>
-                                                 <c:choose>
-                                                     <c:when test="${historico.estado == 1}">
-                                                         <span class="label label-success"><spring:message code="registro.estado.${historico.estado}" /></span>
-                                                     </c:when>
-                                                     <c:when test="${historico.estado == 2}">
-                                                         <span class="label label-warning"><spring:message code="registro.estado.${historico.estado}" /></span>
-                                                     </c:when>
-                                                     <c:when test="${historico.estado == 3}">
-                                                         <span class="label label-info"><spring:message code="registro.estado.${historico.estado}" /></span>
-                                                     </c:when>
-                                                     <c:when test="${historico.estado == 4 || registro.estado == 5}">
-                                                         <span class="label label-default"><spring:message code="registro.estado.${historico.estado}" /></span>
-                                                     </c:when>
-                                                     <c:when test="${historico.estado == 6}">
-                                                         <span class="label label-primary"><spring:message code="registro.estado.${historico.estado}" /></span>
-                                                     </c:when>
-                                                     <c:when test="${historico.estado == 7}">
-                                                         <span class="label label-primary"><spring:message code="registro.estado.${historico.estado}" /></span>
-                                                     </c:when>
-                                                     <c:when test="${historico.estado == 8}">
-                                                         <span class="label label-danger"><spring:message code="registro.estado.${historico.estado}" /></span>
-                                                     </c:when>
-                                                 </c:choose>
-
-                                             </td>
-                                             <td class="center">
-                                                 <c:if test="${not empty historico.registroEntradaOriginal}">
-                                                     <a data-toggle="modal" role="button" href="#modalCompararRegistros" onclick="comparaRegistros('${historico.id}')" class="btn btn-warning btn-sm">Comparar</a>
-                                                 </c:if>
-                                                 <c:if test="${empty historico.registroEntradaOriginal}">
-                                                     <a href="javascript:void(0);" class="btn btn-warning disabled btn-sm">Comparar</a>
-                                                 </c:if>
-                                             </td>
-                                         </tr>
-                                     </c:forEach>
-
-                                 </tbody>
-                             </table>
-                          </div>
-
-                      </div>
-                  </div>
-
-                </div>
-
-                <c:import url="comparaRegistros.jsp"/>
-
-          </c:if>
-          <!-- Fin modificaciones -->
+                <c:import url="../registro/modificaciones.jsp">
+                    <c:param name="tipoRegistro" value="entrada"/>
+                </c:import>
+            </c:if>
 
             <%--Trazabilidad--%>
-        <c:if test="${not empty trazabilidades}">
+            <c:if test="${not empty trazabilidades}">
+                <c:import url="../registro/trazabilidadEntrada.jsp"/>
+            </c:if>
 
-            <div class="col-xs-8 pull-right">
-
-                <div class="panel panel-info">
-                    <div class="panel-heading">
-                        <h3 class="panel-title"><i class="fa fa-clock-o fa-fw"></i> <strong><spring:message code="registroEntrada.trazabilidad"/></strong></h3>
-                    </div>
-                    <!-- /.panel-heading -->
-                    <div class="panel-body">
-                        <ul class="timeline">
-
-                            <c:forEach var="trazabilidad" items="${trazabilidades}" varStatus="loopStatus">
-
-                                <c:if test="${registro.id == trazabilidad.registroEntradaOrigen.id}">
-
-                                    <li> <%--REGISTRO ENTRADA ORIGEN--%>
-                                        <div class="timeline-badge info"><i class="fa fa-file-o"></i></div>
-
-                                        <div class="timeline-panel timeline-panel-activo-re">
-                                            <div class="timeline-heading">
-                                                <h4 class="timeline-title"><spring:message code="registroEntrada.registroEntrada"/> ${registro.numeroRegistroFormateado}</h4>
-                                                <p><small class="text-muted"><i class="fa fa-clock-o"></i> <fmt:formatDate value="${registro.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></small></p>
-                                            </div>
-                                            <div class="timeline-body">
-                                                <p><small><i class="fa fa-exchange"></i> <strong><spring:message code="registroEntrada.oficina"/>:</strong> ${registro.oficina.denominacion}</small></p>
-                                            </div>
-                                        </div>
-                                    </li>
-
-                                    <li> <%--OFICIO REMISION--%>
-                                        <div class="timeline-badge success"><i class="fa fa-envelope-o"></i></div>
-
-                                        <div class="timeline-panel">
-                                            <div class="timeline-heading">
-                                                <h4 class="timeline-title">
-                                                    <a href="<c:url value="/oficioRemision/${trazabilidad.oficioRemision.id}/detalle"/>"><spring:message code="oficioRemision.oficioRemision"/> <fmt:formatDate value="${trazabilidad.oficioRemision.fecha}" pattern="yyyy"/> / ${trazabilidad.oficioRemision.numeroOficio}</a>
-                                                </h4>
-                                                <p><small class="text-muted"><i class="fa fa-clock-o"></i> <fmt:formatDate value="${trazabilidad.oficioRemision.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></small></p>
-                                            </div>
-                                            <div class="timeline-body">
-
-                                                <p><small><i class="fa fa-exchange"></i> <strong><spring:message code="oficioRemision.organismoDestino"/>:</strong>
-                                                    <c:if test="${trazabilidad.oficioRemision.organismoDestinatario != null}">${trazabilidad.oficioRemision.organismoDestinatario.denominacion}</c:if>
-                                                    <c:if test="${trazabilidad.oficioRemision.organismoDestinatario == null}">${trazabilidad.oficioRemision.destinoExternoDenominacion}</c:if>
-                                                </small></p>
-
-                                                <p>
-                                                    <small><i class="fa fa-bookmark"></i> <strong><spring:message code="oficioRemision.estado"/>:</strong>
-                                                    
-                                                        <span class="label ${(trazabilidad.oficioRemision.estado == 2)?'label-success':'label-danger'}">
-                                                          <spring:message code="oficioRemision.estado.${trazabilidad.oficioRemision.estado}"/>
-                                                          <c:if test="${not empty trazabilidad.oficioRemision.fechaEstado && trazabilidad.oficioRemision.estado != 0}">
-                                                              - <fmt:formatDate value="${trazabilidad.oficioRemision.fechaEstado}" pattern="dd/MM/yyyy HH:mm:ss"/>
-                                                          </c:if>
-                                                        </span>
-                                                    </small>
-                                                </p>
-
-                                            </div>
-                                        </div>
-                                    </li>
-
-                                    <li> <%--REGISTRO SALIDA--%>
-                                        <div class="timeline-badge danger"><i class="fa fa-external-link"></i></div>
-                                        <div class="timeline-panel">
-                                            <div class="timeline-heading">
-                                                <h4 class="timeline-title">
-                                                    <a href="<c:url value="/registroSalida/${trazabilidad.registroSalida.id}/detalle"/>"><spring:message code="registroSalida.registroSalida"/> ${trazabilidad.registroSalida.numeroRegistroFormateado}</a>
-                                                </h4>
-                                                <p><small class="text-muted"><i class="fa fa-clock-o"></i> <fmt:formatDate value="${trazabilidad.registroSalida.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></small></p>
-                                            </div>
-                                            <div class="timeline-body">
-                                                <p><small><i class="fa fa-exchange"></i> <strong><spring:message code="registroSalida.oficina"/>:</strong> ${trazabilidad.registroSalida.oficina.denominacion}</small></p>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <c:if test="${trazabilidad.registroEntradaDestino != null}">
-                                        <li class="timeline-inverted"> <%--REGISTRO ENTRADA DESTINO--%>
-                                            <div class="timeline-badge info"><i class="fa fa-file-o"></i></div>
-                                            <div class="timeline-panel">
-                                                <div class="timeline-heading">
-                                                    <h4 class="timeline-title"><spring:message code="registroEntrada.registroEntrada"/> ${trazabilidad.registroEntradaDestino.numeroRegistroFormateado}</h4>
-                                                    <p><small class="text-muted"><i class="fa fa-clock-o"></i> <fmt:formatDate value="${trazabilidad.registroEntradaDestino.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></small></p>
-                                                </div>
-                                                <div class="timeline-body">
-                                                    <p><small><i class="fa fa-exchange"></i> <strong><spring:message code="registroEntrada.oficina"/>:</strong> ${trazabilidad.registroEntradaDestino.oficina.denominacion}</small></p>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </c:if>
-
-
-                                </c:if>
-
-                                <c:if test="${registro.id == trazabilidad.registroEntradaDestino.id}">
-
-                                    <li class="timeline-inverted"> <%--REGISTRO ENTRADA ORIGEN--%>
-                                        <div class="timeline-badge info"><i class="fa fa-file-o"></i></div>
-                                        <div class="timeline-panel">
-                                            <div class="timeline-heading">
-                                                <h4 class="timeline-title"><spring:message code="registroEntrada.registroEntrada"/> ${trazabilidad.registroEntradaOrigen.numeroRegistroFormateado}</h4>
-                                                <p><small class="text-muted"><i class="fa fa-clock-o"></i> <fmt:formatDate value="${trazabilidad.registroEntradaOrigen.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></small></p>
-                                            </div>
-                                            <div class="timeline-body">
-                                                <p><small><i class="fa fa-exchange"></i> <strong><spring:message code="registroEntrada.oficina"/>:</strong> ${trazabilidad.registroEntradaOrigen.oficina.denominacion}</small></p>
-                                            </div>
-                                        </div>
-                                    </li>
-
-                                    <li class="timeline-inverted"> <%--OFICIO REMISION--%>
-                                        <div class="timeline-badge success"><i class="fa fa-envelope-o"></i></div>
-
-                                        <div class="timeline-panel">
-                                            <div class="timeline-heading">
-                                                <h4 class="timeline-title">
-                                                    <spring:message code="oficioRemision.oficioRemision"/> <fmt:formatDate value="${trazabilidad.oficioRemision.fecha}" pattern="yyyy"/> / ${trazabilidad.oficioRemision.numeroOficio}
-
-                                                </h4>
-                                                <p><small class="text-muted"><i class="fa fa-clock-o"></i> <fmt:formatDate value="${trazabilidad.oficioRemision.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></small></p>
-                                            </div>
-                                            <div class="timeline-body">
-
-                                                <p><small><i class="fa fa-exchange"></i> <strong><spring:message code="oficioRemision.oficina"/>:</strong> ${trazabilidad.oficioRemision.oficina.denominacion}</small></p>
-
-                                                <p>
-                                                    <small><i class="fa fa-bookmark"></i> <strong><spring:message code="oficioRemision.estado"/>:</strong>
-                                                       <span class="label ${(trazabilidad.oficioRemision.estado == 2)?'label-success':'label-danger'}">
-                                                          <spring:message code="oficioRemision.estado.${trazabilidad.oficioRemision.estado}"/>
-                                                          <c:if test="${not empty trazabilidad.oficioRemision.fechaEstado && trazabilidad.oficioRemision.estado != 0}">
-                                                              - <fmt:formatDate value="${trazabilidad.oficioRemision.fechaEstado}" pattern="dd/MM/yyyy HH:mm:ss"/>
-                                                          </c:if>
-                                                        </span>
-                                                    </small>
-                                                </p>
-
-                                            </div>
-                                        </div>
-                                    </li>
-
-                                    <li class="timeline-inverted"> <%--REGISTRO SALIDA--%>
-                                        <div class="timeline-badge danger"><i class="fa fa-external-link"></i></div>
-                                        <div class="timeline-panel">
-                                            <div class="timeline-heading">
-                                                <h4 class="timeline-title"><spring:message code="registroSalida.registroSalida"/> ${trazabilidad.registroSalida.numeroRegistroFormateado}</h4>
-                                                <p><small class="text-muted"><i class="fa fa-clock-o"></i> <fmt:formatDate value="${trazabilidad.registroSalida.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></small></p>
-                                            </div>
-                                            <div class="timeline-body">
-                                                <p><small><i class="fa fa-exchange"></i> <strong><spring:message code="registroSalida.oficina"/>:</strong> ${trazabilidad.registroSalida.oficina.denominacion}</small></p>
-                                            </div>
-                                        </div>
-                                    </li>
-
-                                    <li> <%--REGISTRO ENTRADA ORIGEN--%>
-                                        <div class="timeline-badge info"><i class="fa fa-file-o"></i></div>
-                                        <div class="timeline-panel timeline-panel-activo-re">
-                                            <div class="timeline-heading">
-                                                <h4 class="timeline-title"><spring:message code="registroEntrada.registroEntrada"/> ${registro.numeroRegistroFormateado}</h4>
-                                                <p><small class="text-muted"><i class="fa fa-clock-o"></i> <fmt:formatDate value="${registro.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></small></p>
-                                            </div>
-                                            <div class="timeline-body">
-                                                <p><small><i class="fa fa-exchange"></i> <strong><spring:message code="registroEntrada.oficina"/>:</strong> ${registro.oficina.denominacion}</small></p>
-                                            </div>
-                                        </div>
-                                    </li>
-
-                                </c:if>
-
-
-                            </c:forEach>
-
-                        </ul>
-                    </div>
-                    <!-- /.panel-body -->
-                </div>
-                <!-- /.panel -->
-            </div>
-
-            </div>
-        </c:if>
-
+        </div>
         </div><!-- /div.row-->
 
     <%--SELLO --%>

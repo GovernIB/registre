@@ -295,6 +295,8 @@
                                                             <th><spring:message code="registroEntrada.estado"/></th>
                                                             <th><spring:message code="registroEntrada.interesados"/></th>
                                                             <th><spring:message code="registroEntrada.anexos"/></th>
+                                                            <%--<th> <span class="fa fa-users" title="<spring:message code="registroEntrada.interesados"/>"></span> </th>
+                                                            <th> <span class="fa fa-file" title="<spring:message code="registroEntrada.anexos"/>"></span> </th>--%>
 
                                                             <th class="center"><spring:message code="regweb.acciones"/></th>
                                                         </tr>
@@ -304,10 +306,10 @@
                                                         <c:forEach var="registroEntrada" items="${paginacion.listado}" varStatus="status">
                                                             <tr>
                                                                 <td>${registroEntrada.numeroRegistroFormateado}</td>
-                                                                <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy"/></td>
+                                                                <td class="center"><fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy"/></td>
                                                                 <%--<td><label class="no-bold" rel="ayuda" data-content="${registroEntrada.libro.nombre}" data-toggle="popover">${registroEntrada.libro.codigo}</label></td>--%>
                                                                 <td>${registroEntrada.usuario.usuario.identificador}</td>
-                                                                <td><label class="no-bold" rel="ayuda" data-content="${registroEntrada.oficina.denominacion}" data-toggle="popover">${registroEntrada.oficina.codigo}</label></td>
+                                                                <td class="center"><label class="no-bold" rel="ayuda" data-content="${registroEntrada.oficina.denominacion}" data-toggle="popover">${registroEntrada.oficina.codigo}</label></td>
                                                                 <td>${(empty registroEntrada.destino)? registroEntrada.destinoExternoDenominacion : registroEntrada.destino.denominacion}</td>
                                                                 <c:if test="${registroEntrada.estado == RegwebConstantes.ESTADO_PENDIENTE}">
                                                                     <td>${registroEntrada.registroDetalle.reserva}</td>
@@ -315,7 +317,7 @@
                                                                 <c:if test="${registroEntrada.estado != RegwebConstantes.ESTADO_PENDIENTE}">
                                                                     <td>${registroEntrada.registroDetalle.extracto}</td>
                                                                 </c:if>
-                                                                <td>
+                                                                <td class="center">
                                                                     <c:choose>
                                                                         <c:when test="${registroEntrada.estado == RegwebConstantes.ESTADO_VALIDO}">
                                                                             <span class="label label-success"><spring:message code="registro.estado.${registroEntrada.estado}" /></span>

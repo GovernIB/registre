@@ -305,10 +305,10 @@
                                     <c:forEach var="registroSalida" items="${paginacion.listado}" varStatus="status">
                                         <tr>
                                             <td>${registroSalida.numeroRegistroFormateado}</td>
-                                            <td><fmt:formatDate value="${registroSalida.fecha}" pattern="dd/MM/yyyy"/></td>
+                                            <td  class="center"><fmt:formatDate value="${registroSalida.fecha}" pattern="dd/MM/yyyy"/></td>
                                             <%--<td><label class="no-bold" rel="ayuda" data-content="${registroSalida.libro.nombre}" data-toggle="popover">${registroSalida.libro.codigo}</label></td>--%>
                                             <td>${registroSalida.usuario.usuario.identificador}</td>
-                                            <td><label class="no-bold" rel="ayuda" data-content="${registroSalida.oficina.denominacion}" data-toggle="popover">${registroSalida.oficina.codigo}</label></td>
+                                            <td class="center"><label class="no-bold" rel="ayuda" data-content="${registroSalida.oficina.denominacion}" data-toggle="popover">${registroSalida.oficina.codigo}</label></td>
                                             <c:if test="${registroSalida.origen != null}">
                                                 <td>${registroSalida.origen.denominacion}</td>
                                             </c:if>
@@ -316,7 +316,7 @@
                                                 <td>${registroSalida.origenExternoDenominacion}</td>
                                             </c:if>
                                             <td>${registroSalida.registroDetalle.extracto}</td>
-                                            <td>
+                                            <td class="center">
                                                 <c:choose>
                                                     <c:when test="${registroSalida.estado == RegwebConstantes.ESTADO_VALIDO}">
                                                         <span class="label label-success"><spring:message code="registro.estado.${registroSalida.estado}" /></span>
