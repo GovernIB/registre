@@ -11,6 +11,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -95,7 +96,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
         Query q = em.createQuery("Select entidad from Entidad as entidad where entidad.codigoDir3 = :codigo ");
 
-        q.setParameter("codigo",codigo);
+        q.setParameter("codigo", codigo);
 
         List<Entidad> entidad =  q.getResultList();
 
@@ -119,25 +120,45 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     }
 
     @Override
-    public List<Entidad> getEntidadesAdministrador(Long idUsuarioEntidad) throws Exception{
+    public List<Entidad> getEntidadesAdministrador(Long idUsuario) throws Exception{
 
-        Query q = em.createQuery("Select entidad from Entidad as entidad, UsuarioEntidad as usuarioEntidad where usuarioEntidad in elements(entidad.administradores) " +
-                "and usuarioEntidad.id = :idUsuarioEntidad and entidad.activo = true");
+        Query q = em.createQuery("Select entidad.id, entidad.nombre from Entidad as entidad, UsuarioEntidad as usuarioEntidad where usuarioEntidad in elements(entidad.administradores) " +
+                "and usuarioEntidad.usuario.id = :idUsuario and entidad.activo = true");
 
-        q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
+        q.setParameter("idUsuario",idUsuario);
 
-        return q.getResultList();
+        List<Entidad> entidades =  new ArrayList<Entidad>();
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result){
+            Entidad entidad = new Entidad((Long)object[0],(String)object[1]);
+
+            entidades.add(entidad);
+        }
+
+        return entidades;
     }
 
     @Override
     public List<Entidad> getEntidadesPropietario(Long idUsuario) throws Exception {
 
-        Query q = em.createQuery("Select entidad from Entidad as entidad where entidad.propietario.id = :idUsuario " +
+        Query q = em.createQuery("Select entidad.id, entidad.nombre from Entidad as entidad where entidad.propietario.id = :idUsuario " +
                 "and entidad.activo = true");
 
         q.setParameter("idUsuario",idUsuario);
 
-        return q.getResultList();
+        List<Entidad> entidades =  new ArrayList<Entidad>();
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result){
+            Entidad entidad = new Entidad((Long)object[0],(String)object[1]);
+
+            entidades.add(entidad);
+        }
+
+        return entidades;
     }
 
     @Override
@@ -150,6 +171,17 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         q.setParameter("idEntidad",idEntidad);
 
         return q.getResultList().size() > 0;
+    }
+
+    @Override
+    public Boolean esAdministrador(Long idEntidad, Long idUsuario) throws Exception {
+
+        Query q = em.createQuery("Select entidad from Entidad as entidad, UsuarioEntidad as usuarioEntidad where entidad.id=:idEntidad and entidad.activo = true and usuarioEntidad in elements(entidad.administradores) ");
+
+        q.setParameter("idEntidad",idEntidad);
+
+        return q.getResultList().size() > 0;
+
     }
 
     @Override

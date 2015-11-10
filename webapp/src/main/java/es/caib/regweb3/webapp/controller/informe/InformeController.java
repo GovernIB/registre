@@ -95,7 +95,7 @@ public class InformeController extends BaseController {
             mav = new ModelAndView("libroRegistroExcel");
         }
 
-        UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByUsuarioEntidad(getUsuarioAutenticado(request).getId(), getEntidadActiva(request).getId());
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
         Set<String> campos = informeLibroBusquedaForm.getCampos();
         SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
@@ -918,7 +918,7 @@ public class InformeController extends BaseController {
 
         ModelAndView mav = new ModelAndView("informe/registroLopd");
 
-        UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByUsuarioEntidad(getUsuarioAutenticado(request).getId(), getEntidadActiva(request).getId());
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
         // Obtener los registros del usuario
         Date dataFi = registroLopdBusquedaForm.getFechaFin();

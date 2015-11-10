@@ -51,7 +51,6 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
         String url = request.getServletPath();
         HttpSession session = request.getSession();
         Rol rolActivo = (Rol) session.getAttribute(RegwebConstantes.SESSION_ROL);
-        Usuario usuarioAutenticado = (Usuario)session.getAttribute(RegwebConstantes.SESSION_USUARIO);
         Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
         Oficina oficinaActiva = (Oficina) session.getAttribute(RegwebConstantes.SESSION_OFICINA);
 
@@ -75,8 +74,8 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
         }
 
         Set<Organismo> organismos = oficinaActiva.getOrganismosFuncionales();
-        UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByUsuarioEntidad(usuarioAutenticado.getId(), entidadActiva.getId());
-        List<Libro> libros = permisoLibroUsuarioEjb.getLibrosOrganismoPermiso(organismos, usuarioEntidad, RegwebConstantes.PERMISO_REGISTRO_ENTRADA);
+        UsuarioEntidad usuarioEntidad = (UsuarioEntidad)session.getAttribute(RegwebConstantes.SESSION_USUARIO_ENTIDAD);
+        List<Libro> libros = permisoLibroUsuarioEjb.getLibrosOrganismoPermiso(organismos, usuarioEntidad.getId(), RegwebConstantes.PERMISO_REGISTRO_ENTRADA);
 
         // Comprobaciones previas al listado de OficioRemision
         if(url.equals("/oficioRemision/list")) {

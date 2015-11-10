@@ -179,8 +179,7 @@ public class Oficina implements Serializable{
         Set<Organismo> organismos = new HashSet<Organismo>();
 
         // Añadimos el Organismo responsable de la OficinaActiva
-        Organismo organismoResponsable = this.getOrganismoResponsable();
-        organismos.add(organismoResponsable);
+        organismos.add(this.getOrganismoResponsable());
 
         // Añadimos los Organismos a los que la Oficina da servicio
         Set<RelacionOrganizativaOfi> organismosFuncionales = this.getOrganizativasOfi();

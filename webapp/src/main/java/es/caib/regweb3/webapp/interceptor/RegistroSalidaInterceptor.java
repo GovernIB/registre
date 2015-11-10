@@ -1,6 +1,9 @@
 package es.caib.regweb3.webapp.interceptor;
 
-import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.Oficina;
+import es.caib.regweb3.model.RegistroSalida;
+import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.ejb.PermisoLibroUsuarioLocal;
 import es.caib.regweb3.persistence.ejb.RegistroSalidaLocal;
 import es.caib.regweb3.persistence.ejb.UsuarioEntidadLocal;
@@ -45,8 +48,6 @@ public class RegistroSalidaInterceptor extends AbstractRegistroCommonInterceptor
 
         String url = request.getServletPath();
         HttpSession session = request.getSession();
-        Rol rolActivo = (Rol) session.getAttribute(RegwebConstantes.SESSION_ROL);
-        Usuario usuarioAutenticado = (Usuario)session.getAttribute(RegwebConstantes.SESSION_USUARIO);
         Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
         Oficina oficinaActiva = (Oficina) session.getAttribute(RegwebConstantes.SESSION_OFICINA);
 
@@ -60,7 +61,7 @@ public class RegistroSalidaInterceptor extends AbstractRegistroCommonInterceptor
             return false;
         }
 
-        UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByUsuarioEntidad(usuarioAutenticado.getId(), entidadActiva.getId());
+        UsuarioEntidad usuarioEntidad = (UsuarioEntidad)session.getAttribute(RegwebConstantes.SESSION_USUARIO_ENTIDAD);
 
         // Comprobaciones previas al listado de RegistroSalida
         if(url.equals("/registroSalida/list")){

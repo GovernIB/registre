@@ -59,6 +59,8 @@ public class InicioController extends BaseController{
         if(isOperador(request) && oficinaActiva != null){
 
             List<Libro> librosAdministrados = getLibrosAdministrados(request);
+            // Obtenemos los Libros donde el Usuario puede Registrar de la Oficina Activa
+            List<Libro> librosRegistroEntrada = getLibrosRegistroEntrada(request);
 
             /*Registros Pendientes de Visar y con Reserva de Numero*/
             if(librosAdministrados!= null && librosAdministrados.size() > 0){
@@ -71,19 +73,17 @@ public class InicioController extends BaseController{
             mav.addObject("pendientes", pendientes);
 
             /* OFICIOS PENDIENTES DE REMISIÓN */
-            // Obtenemos los Libros donde el Usuario puede Registrar de la Oficina Activa
-            List<Libro> librosRegistro = getLibrosRegistroEntrada(request);
 
             // Obtenemos los Organismos Internos que tienen Registros pendientes de tramitar por medio de un Oficio de Revisión,
             Set<String> organismosOficioRemisionInterna = new HashSet<String>();
-            for (Libro libro : librosRegistro) {
+            for (Libro libro : librosRegistroEntrada) {
                 organismosOficioRemisionInterna.addAll(registroEntradaEjb.oficiosPendientesRemisionInterna(libro));
             }
             mav.addObject("organismosOficioRemisionInterna", organismosOficioRemisionInterna);
 
             // Obtenemos los Organismos Externos que tienen Registros pendientes de tramitar por medio de un Oficio de Revisión,
             Set<String> organismosOficioRemisionExterna = new HashSet<String>();
-            for (Libro libro : librosRegistro) {
+            for (Libro libro : librosRegistroEntrada) {
                 organismosOficioRemisionExterna.addAll(registroEntradaEjb.oficiosPendientesRemisionExterna(libro));
             }
             mav.addObject("organismosOficioRemisionExterna", organismosOficioRemisionExterna);
@@ -97,9 +97,8 @@ public class InicioController extends BaseController{
 
             /* PREREGISTROS PENDIENTES DE PROCESAR */
             /* Buscamos los Últimos PreRegistros que están pendientes de procesar */
-            if(getLibrosRegistroEntrada(request).size() > 0) { // Sólo muestra los PreRegistros si tiene permisos de RegistroEntrada
+            if(librosRegistroEntrada.size() > 0) { // Sólo muestra los PreRegistros si tiene permisos de RegistroEntrada
                 List<PreRegistro> preRegistros = preRegistroEjb.getUltimosPreRegistrosPendientesProcesar(oficinaActiva.getCodigo(), RegwebConstantes.REGISTROS_PANTALLA_INICIO);
-
                 mav.addObject("preRegistros", preRegistros);
             }
 

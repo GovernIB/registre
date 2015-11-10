@@ -35,8 +35,7 @@ import java.util.Set;
 @SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 @XmlRootElement(name = "organismo")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class
-        Organismo implements Serializable {
+public class Organismo implements Serializable {
 
     @XmlAttribute
     private Long id;
@@ -81,6 +80,12 @@ public class
     @XmlTransient
     private Set<Organismo> historicoUO; // relacion de historicos
 
+
+    public Organismo() {}
+
+    public Organismo(Long id) {
+        this.id = id;
+    }
 
     @Id
     @GeneratedValue(strategy= GenerationType.SEQUENCE,generator = "generator")

@@ -94,22 +94,14 @@ public class ComunController extends BaseController {
     @RequestMapping(value = "/cambioEntidad/{entidadId}")
     public String cambioEntidad(@PathVariable Long entidadId, HttpServletRequest request, HttpServletResponse response) {
 
-        HttpSession session = request.getSession();
-
         List<Entidad> entidadesAutenticado = getEntidadesAutenticado(request);
+
         try {
             Entidad entidadNueva = entidadEjb.findById(entidadId);
 
             if(entidadesAutenticado.contains(entidadNueva)){
-                session.removeAttribute(RegwebConstantes.SESSION_ENTIDAD);
-                session.setAttribute(RegwebConstantes.SESSION_ENTIDAD, entidadNueva);
 
-                if(isOperador(request)){
-                    usuarioService.asignarOficinasRegistro(getUsuarioAutenticado(request),session);
-
-                }else{
-                   usuarioService.tieneMigrados(entidadNueva, session);
-                }
+                usuarioService.cambioEntidad(entidadNueva, request);
             }else{
                 Mensaje.saveMessageError(request, getMessage("error.entidad.autorizacion"));
             }
@@ -134,8 +126,9 @@ public class ComunController extends BaseController {
             Oficina oficinaNueva = oficinaEjb.findById(oficinaId);
             if(oficinasAutenticado.contains(new ObjetoBasico(oficinaNueva.getId()))){
                 session.setAttribute(RegwebConstantes.SESSION_OFICINA, oficinaNueva);
-                usuarioService.tienePreRegistros(oficinaNueva,session);
+                usuarioService.tienePreRegistros(oficinaNueva, session);
                 usuarioEntidadEjb.actualizarOficinaUsuario(usuarioEntidad.getId(), oficinaNueva.getId());
+                log.info("Cambio Oficina activa: " + oficinaNueva.getDenominacion());
             }else{
                 Mensaje.saveMessageError(request, getMessage("error.oficina.autorizacion"));
             }

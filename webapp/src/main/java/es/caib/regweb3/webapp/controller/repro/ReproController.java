@@ -252,7 +252,7 @@ public class ReproController extends BaseController {
 
         try {
             Repro reproEnviada = reproEjb.findById(reproId);
-            UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByUsuarioEntidad(usuarioId,getEntidadActiva(request).getId());
+            UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
             Repro repro = new Repro();
             repro.setNombre(reproEnviada.getNombre());
             repro.setUsuario(usuarioEntidad);
@@ -293,7 +293,7 @@ public class ReproController extends BaseController {
     public @ResponseBody
     List<Repro> obtenerRepros(@RequestParam Long idUsuario, @RequestParam Long tipoRegistro, HttpServletRequest request) throws Exception {
 
-        UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByUsuarioEntidad(idUsuario, getEntidadActiva(request).getId());
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
         return reproEjb.getActivasbyUsuario(usuarioEntidad.getId(),tipoRegistro);
     }

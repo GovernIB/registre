@@ -19,6 +19,7 @@ public interface RegwebConstantes {
 
     /** -------------- VARIABLES DE SESION --------------*/
     public static final String SESSION_USUARIO = "usuarioAutenticado";
+    public static final String SESSION_USUARIO_ENTIDAD = "usuarioEntidadActivo";
     public static final String SESSION_ROLES = "rolesAutenticado";
     public static final String SESSION_ROL = "rolAutenticado";
     public static final String SESSION_ENTIDADES = "entidades";

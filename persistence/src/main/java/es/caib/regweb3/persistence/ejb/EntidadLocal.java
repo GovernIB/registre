@@ -34,11 +34,11 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
 
     /**
      * Obtiene las entidades de un Usuario
-     * @param idUsuarioEntidad
+     * @param idUsuario
      * @return
      * @throws Exception
      */
-    public List<Entidad> getEntidadesAdministrador(Long idUsuarioEntidad) throws Exception;
+    public List<Entidad> getEntidadesAdministrador(Long idUsuario) throws Exception;
 
     /**
      * Obtiene las entidades de un Usuario de las que es Propietario
@@ -57,7 +57,16 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
      */
     public Boolean existeCodigoDir3Edit(String codigo, Long idEntidad) throws Exception;
 
-  /**
+    /**
+     * Comprueba si un Usuario es Administrador de la Entidad
+     * @param idEntidad
+     * @param idUsuario
+     * @return
+     * @throws Exception
+     */
+    public Boolean esAdministrador(Long idEntidad, Long idUsuario) throws Exception;
+
+    /**
    * Determina si un usuario es propietario o administrador de esa entidad
    * @param idEntidad
    * @param idUsuario

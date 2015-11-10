@@ -1,6 +1,9 @@
 package es.caib.regweb3.webapp.interceptor;
 
-import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.Oficina;
+import es.caib.regweb3.model.PreRegistro;
+import es.caib.regweb3.model.Rol;
+import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.ejb.PermisoLibroUsuarioLocal;
 import es.caib.regweb3.persistence.ejb.PreRegistroLocal;
 import es.caib.regweb3.persistence.ejb.UsuarioEntidadLocal;
@@ -45,8 +48,6 @@ public class PreRegistroInterceptor extends HandlerInterceptorAdapter {
             Rol rolActivo = (Rol) session.getAttribute(RegwebConstantes.SESSION_ROL);
             Oficina oficinaActiva = (Oficina) session.getAttribute(RegwebConstantes.SESSION_OFICINA);
             Boolean tienePreRegistros = (Boolean) session.getAttribute(RegwebConstantes.SESSION_TIENEPREREGISTROS);
-            Usuario usuarioAutenticado = (Usuario)session.getAttribute(RegwebConstantes.SESSION_USUARIO);
-            Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
 
             // Comprobamos que el usuario dispone del Rol RWE_USUARI
             if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_USUARI)){
@@ -67,7 +68,7 @@ public class PreRegistroInterceptor extends HandlerInterceptorAdapter {
                     return false;
                 }
 
-                UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByUsuarioEntidad(usuarioAutenticado.getId(), entidadActiva.getId());
+                UsuarioEntidad usuarioEntidad = (UsuarioEntidad)session.getAttribute(RegwebConstantes.SESSION_USUARIO_ENTIDAD);
 
                 // Comprobamos que el usuario tiene permisos de Consulta de Registros de Entrada
                 if(permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_ENTRADA).size() == 0){

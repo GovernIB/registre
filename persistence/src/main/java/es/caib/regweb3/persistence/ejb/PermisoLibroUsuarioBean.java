@@ -10,6 +10,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -124,14 +125,24 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
 
         CatEstadoEntidad vigente = catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
 
-        Query q = em.createQuery("Select distinct plu.libro from PermisoLibroUsuario as plu where " +
+        Query q = em.createQuery("Select distinct plu.libro.id, plu.libro.nombre, plu.libro.organismo.id from PermisoLibroUsuario as plu where " +
                 "plu.usuario.id = :idUsuarioEntidad and plu.libro.organismo.estado.id = :vigente and " +
                 "plu.libro.activo = true and plu.activo = true");
 
         q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
         q.setParameter("vigente",vigente.getId());
 
-        return q.getResultList();
+        List<Libro> libros =  new ArrayList<Libro>();
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result){
+            Libro libro = new Libro((Long)object[0],(String)object[1],(Long)object[2]);
+
+            libros.add(libro);
+        }
+
+        return libros;
     }
 
     @Override
@@ -139,7 +150,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
 
         CatEstadoEntidad vigente = catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
 
-        Query q = em.createQuery("Select distinct plu.libro from PermisoLibroUsuario as plu where " +
+        Query q = em.createQuery("Select distinct plu.libro.id, plu.libro.nombre from PermisoLibroUsuario as plu where " +
                 "plu.usuario.id = :idUsuarioEntidad and plu.libro.organismo.estado.id = :vigente and " +
                 "plu.libro.activo = true and " +
                 "(plu.permiso = " + PERMISO_ADMINISTRACION_LIBRO + " and plu.activo = true)");
@@ -147,7 +158,17 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
         q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
         q.setParameter("vigente",vigente.getId());
 
-        return q.getResultList();
+        List<Libro> libros =  new ArrayList<Libro>();
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result){
+            Libro libro = new Libro((Long)object[0],(String)object[1]);
+
+            libros.add(libro);
+        }
+
+        return libros;
     }
 
     @Override
@@ -177,7 +198,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     }
 
     @Override
-    public List<Libro> getLibrosOrganismoPermiso(Set<Organismo> organismos, UsuarioEntidad usuario, Long idPermiso) throws Exception{
+    public List<Libro> getLibrosOrganismoPermiso(Set<Organismo> organismos, Long idUsuarioEntidad, Long idPermiso) throws Exception{
 
         Query q = em.createQuery("Select distinct plu.libro from PermisoLibroUsuario as plu where " +
                 "plu.libro.organismo in (:organismos) and plu.usuario.id = :idUsuarioEntidad and " +
@@ -185,14 +206,14 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
                 "(plu.permiso = :idPermiso and plu.activo = true)");
 
         q.setParameter("organismos",organismos);
-        q.setParameter("idUsuarioEntidad",usuario.getId());
+        q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
         q.setParameter("idPermiso",idPermiso);
 
         return q.getResultList();
     }
 
     @Override
-    public List<Libro> getLibrosEntidadPermiso(Long idEntidad, UsuarioEntidad usuario, Long idPermiso) throws Exception {
+    public List<Libro> getLibrosEntidadPermiso(Long idEntidad, Long idUsuarioEntidad, Long idPermiso) throws Exception {
 
         Query q = em.createQuery("Select distinct plu.libro from PermisoLibroUsuario as plu where " +
                 "plu.libro.organismo.entidad.id = :idEntidad and plu.usuario.id = :idUsuarioEntidad and " +
@@ -200,7 +221,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
                 "(plu.permiso = :idPermiso and plu.activo = true)");
 
         q.setParameter("idEntidad",idEntidad);
-        q.setParameter("idUsuarioEntidad",usuario.getId());
+        q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
         q.setParameter("idPermiso",idPermiso);
 
         return q.getResultList();

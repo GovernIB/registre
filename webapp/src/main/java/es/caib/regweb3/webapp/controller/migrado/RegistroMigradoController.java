@@ -93,7 +93,7 @@ public class RegistroMigradoController extends BaseController {
         ArrayList<String[]> oficinasMigrado = (ArrayList<String[]>) registroMigradoEjb.getOficinas();
 
         Entidad entidadActiva = getEntidadActiva(request);
-        UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByUsuarioEntidad(getUsuarioAutenticado(request).getId(), entidadActiva.getId());
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
         registroMigradoBusquedaValidator.validate(busqueda,result);
 

@@ -2,7 +2,6 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.Organismo;
-import es.caib.regweb3.model.RelacionOrganizativaOfi;
 import es.caib.regweb3.model.RelacionSirOfi;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
@@ -304,39 +303,23 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
   /**
    * Método que obtiene los organismos vigentes y en los que puede registrar de la oficina activa
-   * @param idOficina
+   * @param oficinaActiva
    * @return List
    * @throws Exception
    */
     @Override
-    public Set<Organismo> getByOficinaActiva(Long idOficina) throws Exception{
+    public Set<Organismo> getByOficinaActiva(Oficina oficinaActiva) throws Exception{
 
-         Set<Organismo> organismos = new HashSet<Organismo>();
-         //Cargamos oficina activa
-         Oficina oficinaActiva = oficinaEjb.findById(idOficina);
-         String vigente= RegwebConstantes.ESTADO_ENTIDAD_VIGENTE;
+        // Añadimos los organismos funcionales
+        Set<Organismo> organismos = oficinaActiva.getOrganismosFuncionales();
 
-         // Obtenemos el estado del organismo responsable de la oficina
-         String estadoOrganismo= oficinaActiva.getOrganismoResponsable().getEstado().getCodigoEstadoEntidad();
-         // si está vigente lo añadimos
-         if(vigente.equals(estadoOrganismo)){
-            organismos.add(oficinaActiva.getOrganismoResponsable());
-         }
+        // variable que representa el arbol de los organismos de la oficina activa
 
-         for(RelacionOrganizativaOfi relacionOrganizativaOfi: oficinaActiva.getOrganizativasOfi()){
-           String estadoOrg= relacionOrganizativaOfi.getOrganismo().getEstado().getCodigoEstadoEntidad();
-           // Añadimos solo los organismos que estan vigentes
-           if(vigente.equals(estadoOrg)){
-           organismos.add(relacionOrganizativaOfi.getOrganismo());
-           }
-         }
-         // variable que representa el arbol de los organismos de la oficina activa
+        Set<Organismo> hijosTotales = new HashSet<Organismo>();
+        obtenerHijosOrganismos(organismos, hijosTotales);
+        organismos.addAll(hijosTotales);
 
-         Set<Organismo> hijosTotales = new HashSet<Organismo>();
-         obtenerHijosOrganismos(organismos, hijosTotales);
-         organismos.addAll(hijosTotales);
-
-         return organismos;
+        return organismos;
 
     }
 

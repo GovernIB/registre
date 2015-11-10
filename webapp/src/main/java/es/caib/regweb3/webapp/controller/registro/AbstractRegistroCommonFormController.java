@@ -52,7 +52,7 @@ public abstract class AbstractRegistroCommonFormController extends BaseControlle
 
     @ModelAttribute("organismosOficinaActiva")
     public Set<Organismo> getOrganismosOficinaActiva(HttpServletRequest request) throws Exception {
-        return organismoEjb.getByOficinaActiva(getOficinaActiva(request).getId());
+        return organismoEjb.getByOficinaActiva(getOficinaActiva(request));
     }
 
 

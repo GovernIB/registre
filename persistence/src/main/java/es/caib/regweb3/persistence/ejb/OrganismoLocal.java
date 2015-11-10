@@ -1,5 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.persistence.utils.Paginacion;
 
@@ -135,11 +136,11 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
 
    /**
      * Método que obtiene los organismos vigentes y en los que puede registrar la oficina activa.
-     * @param idOficina
+     * @param oficinaActiva
      * @return List
      * @throws Exception
      */
-    public Set<Organismo> getByOficinaActiva(Long idOficina) throws Exception;
+    public Set<Organismo> getByOficinaActiva(Oficina oficinaActiva) throws Exception;
 
   /**
    * Método que nos devuelve los códigos DIR3 de las oficinas SIR de un organismo

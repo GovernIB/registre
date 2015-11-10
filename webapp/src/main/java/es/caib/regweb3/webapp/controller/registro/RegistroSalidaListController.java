@@ -115,7 +115,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         ModelAndView mav = new ModelAndView("registroSalida/registroSalidaList", result.getModel());
         RegistroSalida registroSalida = busqueda.getRegistroSalida();
 
-        UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByUsuarioEntidad(getUsuarioAutenticado(request).getId(), getEntidadActiva(request).getId());
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         List<Libro> librosConsulta = permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_SALIDA);
 
         List<UsuarioEntidad> usuariosEntidad = usuarioEntidadEjb.findByEntidad(getEntidadActiva(request).getId());
@@ -197,7 +197,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             model.addAttribute("tiposDocumento",RegwebConstantes.TIPOS_DOCUMENTOID);
             model.addAttribute("nivelesAdministracion",catNivelAdministracionEjb.getAll());
             model.addAttribute("comunidadesAutonomas",catComunidadAutonomaEjb.getAll());
-            model.addAttribute("organismosOficinaActiva",organismoEjb.getByOficinaActiva(getOficinaActiva(request).getId()));
+            model.addAttribute("organismosOficinaActiva",organismoEjb.getByOficinaActiva(getOficinaActiva(request)));
 
         }
         // Anexos

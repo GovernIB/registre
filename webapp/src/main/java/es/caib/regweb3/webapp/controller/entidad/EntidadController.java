@@ -591,11 +591,15 @@ public class EntidadController extends BaseController {
     public String eliminarAsignacion(@PathVariable Long idUsuarioEntidad, HttpServletRequest request) {
 
         try {
+            UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findById(idUsuarioEntidad);
+
+            if(entidadEjb.esAdministrador(usuarioEntidad.getEntidad().getId(), usuarioEntidad.getUsuario().getId())){
+                Mensaje.saveMessageError(request, getMessage("usuarioEntidad.administrador"));
+                return "redirect:/entidad/usuarios";
+            }
 
             // Desactivamos este usuario de la Entidad
-            UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findById(idUsuarioEntidad);
             usuarioEntidad.setActivo(false);
-
             usuarioEntidadEjb.merge(usuarioEntidad);
 
             //Eliminamos todos sus PermisoLibroUsuario

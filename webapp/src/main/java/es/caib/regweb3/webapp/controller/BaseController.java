@@ -55,10 +55,8 @@ public class BaseController {
     protected Usuario getUsuarioAutenticado(HttpServletRequest request){
 
         HttpSession session = request.getSession();
-        Usuario usuarioAutenticado = (Usuario)session.getAttribute(RegwebConstantes.SESSION_USUARIO);
 
-        return usuarioAutenticado;
-
+        return (Usuario)session.getAttribute(RegwebConstantes.SESSION_USUARIO);
     }
 
     /**
@@ -67,7 +65,9 @@ public class BaseController {
      * @return
      */
     protected UsuarioEntidad getUsuarioEntidadActivo(HttpServletRequest request) throws Exception{
-        return usuarioEntidadEjb.findByUsuarioEntidad(getUsuarioAutenticado(request).getId(), getEntidadActiva(request).getId());
+        //return usuarioEntidadEjb.findByUsuarioEntidad(getUsuarioAutenticado(request).getId(), getEntidadActiva(request).getId());
+        HttpSession session = request.getSession();
+        return (UsuarioEntidad)session.getAttribute(RegwebConstantes.SESSION_USUARIO_ENTIDAD);
     }
 
     /**
@@ -90,10 +90,8 @@ public class BaseController {
     protected Rol getRolActivo(HttpServletRequest request){
 
         HttpSession session = request.getSession();
-        Rol rolActivo = (Rol) session.getAttribute(RegwebConstantes.SESSION_ROL);
 
-        return rolActivo;
-
+        return (Rol) session.getAttribute(RegwebConstantes.SESSION_ROL);
     }
 
     /**
@@ -144,9 +142,8 @@ public class BaseController {
     protected List<Rol> getRolesAutenticado(HttpServletRequest request){
 
         HttpSession session = request.getSession();
-        List<Rol> roles = (List<Rol>) session.getAttribute(RegwebConstantes.SESSION_ROLES);
 
-        return roles;
+        return (List<Rol>) session.getAttribute(RegwebConstantes.SESSION_ROLES);
 
     }
 
@@ -158,9 +155,8 @@ public class BaseController {
     protected Entidad getEntidadActiva(HttpServletRequest request){
 
         HttpSession session = request.getSession();
-        Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
 
-        return entidadActiva;
+        return (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
 
     }
 
@@ -184,10 +180,8 @@ public class BaseController {
     protected List<Entidad> getEntidadesAutenticado(HttpServletRequest request){
 
         HttpSession session = request.getSession();
-        List<Entidad> entidades = (List<Entidad>) session.getAttribute(RegwebConstantes.SESSION_ENTIDADES);
 
-        return entidades;
-
+        return (List<Entidad>) session.getAttribute(RegwebConstantes.SESSION_ENTIDADES);
     }
 
     /**
@@ -198,10 +192,8 @@ public class BaseController {
     protected Oficina getOficinaActiva(HttpServletRequest request){
 
         HttpSession session = request.getSession();
-        Oficina oficinaActiva = (Oficina) session.getAttribute(RegwebConstantes.SESSION_OFICINA);
 
-        return oficinaActiva;
-
+        return (Oficina) session.getAttribute(RegwebConstantes.SESSION_OFICINA);
     }
 
     /**
@@ -212,9 +204,8 @@ public class BaseController {
     protected Set<ObjetoBasico> getOficinasAutenticado(HttpServletRequest request){
 
         HttpSession session = request.getSession();
-        Set<ObjetoBasico> oficinas = (Set<ObjetoBasico>) session.getAttribute(RegwebConstantes.SESSION_OFICINAS);
 
-        return oficinas;
+        return (Set<ObjetoBasico>) session.getAttribute(RegwebConstantes.SESSION_OFICINAS);
 
     }
     
@@ -230,7 +221,7 @@ public class BaseController {
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         Entidad entidadActiva = getEntidadActiva(request);
 
-        return permisoLibroUsuarioEjb.getLibrosEntidadPermiso(entidadActiva.getId(), usuarioEntidad, RegwebConstantes.PERMISO_CONSULTA_REGISTRO_ENTRADA);
+        return permisoLibroUsuarioEjb.getLibrosEntidadPermiso(entidadActiva.getId(), usuarioEntidad.getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_ENTRADA);
     }
 
     /**
@@ -248,7 +239,7 @@ public class BaseController {
         // Obtenemos los Organismos a los que da servicio una Oficina
         Set<Organismo> organismos = oficinaActiva.getOrganismosFuncionales();
 
-        return permisoLibroUsuarioEjb.getLibrosOrganismoPermiso(organismos, usuarioEntidad, RegwebConstantes.PERMISO_REGISTRO_ENTRADA);
+        return permisoLibroUsuarioEjb.getLibrosOrganismoPermiso(organismos, usuarioEntidad.getId(), RegwebConstantes.PERMISO_REGISTRO_ENTRADA);
     }
     
 
@@ -267,7 +258,7 @@ public class BaseController {
         // Obtenemos los Organismos a los que da servicio una Oficina
         Set<Organismo> organismos = oficinaActiva.getOrganismosFuncionales();
 
-        return permisoLibroUsuarioEjb.getLibrosOrganismoPermiso(organismos, usuarioEntidad, RegwebConstantes.PERMISO_REGISTRO_SALIDA);
+        return permisoLibroUsuarioEjb.getLibrosOrganismoPermiso(organismos, usuarioEntidad.getId(), RegwebConstantes.PERMISO_REGISTRO_SALIDA);
     }
 
 
@@ -284,7 +275,7 @@ public class BaseController {
         Entidad entidadActiva = getEntidadActiva(request);
 
 
-        return permisoLibroUsuarioEjb.getLibrosEntidadPermiso(entidadActiva.getId(), usuarioEntidad, RegwebConstantes.PERMISO_CONSULTA_REGISTRO_SALIDA);
+        return permisoLibroUsuarioEjb.getLibrosEntidadPermiso(entidadActiva.getId(), usuarioEntidad.getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_SALIDA);
     }
 
     /**
@@ -294,7 +285,7 @@ public class BaseController {
      * @throws Exception
      */
     public Set<Organismo> getOrganismosOficinaActiva(HttpServletRequest request) throws Exception {
-        return organismoEjb.getByOficinaActiva(getOficinaActiva(request).getId());
+        return organismoEjb.getByOficinaActiva(getOficinaActiva(request));
     }
 
 

@@ -113,8 +113,10 @@ public class Entidad implements Serializable {
       this.posYsello = e.posYsello;
     }
 
-
-
+    public Entidad(Long id, String nombre) {
+        this.id = id;
+        this.nombre = nombre;
+    }
 
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")

@@ -1,5 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
@@ -218,6 +219,47 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
         }else{
             return  null;
         }
+    }
+
+    @Override
+    public UsuarioEntidad findByUsuarioEntidadActivo(Long idUsuario, Long idEntidad) throws Exception{
+
+        Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where " +
+                "usuarioEntidad.entidad.id= :idEntidad and usuarioEntidad.usuario.id= :idUsuario and " +
+                "usuarioEntidad.activo = true");
+
+        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idUsuario", idUsuario);
+
+        List<UsuarioEntidad> usuarios =  q.getResultList();
+
+        if(usuarios.size()>0){
+            return usuarios.get(0);
+        }else{
+            return  null;
+        }
+    }
+
+    @Override
+    public List<Entidad> getEntidadesByUsuario(Long idUsuario) throws Exception {
+
+        Query q = em.createQuery("Select usuarioEntidad.entidad.id, usuarioEntidad.entidad.nombre from UsuarioEntidad as usuarioEntidad where " +
+                "usuarioEntidad.usuario.id = :idUsuario and usuarioEntidad.entidad.activo = true and usuarioEntidad.activo = true ");
+
+        q.setParameter("idUsuario",idUsuario);
+
+        List<Entidad> entidades =  new ArrayList<Entidad>();
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result){
+            Entidad entidad = new Entidad((Long)object[0],(String)object[1]);
+
+            entidades.add(entidad);
+        }
+
+        return entidades;
+
     }
 
     @Override

@@ -1,5 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.Paginacion;
 
@@ -96,11 +97,29 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
 
     /**
      *  Busca un UsuarioEntidad a partir del idUsuario y idEntidad
+     * @param idUsuario
      * @param idEntidad
      * @return
      * @throws Exception
      */
     public UsuarioEntidad findByUsuarioEntidad(Long idUsuario, Long idEntidad) throws Exception;
+
+    /**
+     * Busca un UsuarioEntidad activo a partir del idUsuario y idEntidad
+     * @param idUsuario
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public UsuarioEntidad findByUsuarioEntidadActivo(Long idUsuario, Long idEntidad) throws Exception;
+
+    /**
+     * Obtiene todas las Entidades en las cuales el Usuario está asociado
+     * @param idUsuario
+     * @return
+     * @throws Exception
+     */
+    public List<Entidad> getEntidadesByUsuario(Long idUsuario) throws Exception;
 
     /**
     * Retorna los {@link es.caib.regweb3.model.UsuarioEntidad} de un Usuario activos.

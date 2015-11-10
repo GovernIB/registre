@@ -100,7 +100,7 @@ public class ReservaController  extends BaseController {
                 // Generar número de registro
 
                 registro.setOficina(getOficinaActiva(request));
-                registro.setUsuario(usuarioEntidadEjb.findByUsuarioEntidad(getUsuarioAutenticado(request).getId(), getEntidadActiva(request).getId()));
+                registro.setUsuario(getUsuarioEntidadActivo(request));
 
                 // Estado Registro entrada
                 registro.setEstado(RegwebConstantes.ESTADO_PENDIENTE);
