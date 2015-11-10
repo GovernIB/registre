@@ -222,7 +222,7 @@ public class UsuarioService {
             if(entidadActiva != null && entidades.contains(entidadActiva)){
                 session.setAttribute(RegwebConstantes.SESSION_ENTIDAD,entidadActiva);
             }else if(entidades.size() > 0){
-                entidadActiva = entidades.get(0);
+                entidadActiva = entidadEjb.findById(entidades.get(0).getId());
                 session.setAttribute(RegwebConstantes.SESSION_ENTIDAD,entidadActiva);
             }
 
