@@ -47,4 +47,12 @@ public interface RegistroLopdMigradoLocal extends BaseEjb<RegistroLopdMigrado, L
      */
     public List<RegistroLopdMigrado> getByUsuario(Date dataInici, Date dataFi, String usuario, String accion) throws Exception;
 
+    /**
+     * Elimina todos los Registros LOPD de una entidad
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+
 }

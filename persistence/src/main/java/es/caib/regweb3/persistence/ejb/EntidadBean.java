@@ -55,6 +55,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @EJB public DescargaLocal descargaEjb;
     @EJB public ModeloOficioRemisionLocal modeloOficioRemisionEjb;
     @EJB public ModeloReciboLocal modeloReciboEjb;
+    @EJB public RegistroLopdMigradoLocal registroMigradoLopdEjb;
     @EJB public RegistroMigradoLocal registroMigradoEjb;
 
 
@@ -306,6 +307,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         log.info("Descargas: " + descargaEjb.eliminarByEntidad(idEntidad));
 
         /********* REGISTROS MIGRADOS *********/
+        log.info("RegistrosMigradosLopd: " + registroMigradoLopdEjb.eliminarByEntidad(idEntidad));
         log.info("RegistrosMigrados: " + registroMigradoEjb.eliminarByEntidad(idEntidad));
 
         /********* ENTIDAD *********/
