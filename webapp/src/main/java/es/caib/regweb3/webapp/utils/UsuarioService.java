@@ -260,6 +260,11 @@ public class UsuarioService {
         List<Libro> librosRegistro = permisoLibroUsuarioEjb.getLibrosRegistro(usuarioEntidad.getId());
         log.info("Libros usuario: " + Arrays.toString(librosRegistro.toArray()));
 
+        //Obtenemos los Libros donde que el UsuarioEntidad puede Administrar
+        List<Libro> librosAdministrados = permisoLibroUsuarioEjb.getLibrosAdministrados(usuarioEntidad.getId());
+        log.info("Libros administrados usuario: " + Arrays.toString(librosAdministrados.toArray()));
+        session.setAttribute(RegwebConstantes.SESSION_LIBROSADMINISTRADOS, librosAdministrados);
+
         // Obtenemos las Oficinas que pueden registrar en los Libros
         Set<ObjetoBasico> oficinasRegistro = oficinaEjb.oficinasRegistro(librosRegistro);  // Utilizamos un Set porque no permite duplicados
 
@@ -275,10 +280,6 @@ public class UsuarioService {
             usuarioEntidadEjb.actualizarOficinaUsuario(usuarioEntidad.getId(), oficinasRegistro.iterator().next().getId());
         }
 
-        //Obtenemos los Libros donde que el UsuarioEntidad puede Administrar
-        List<Libro> librosAdministrados = permisoLibroUsuarioEjb.getLibrosAdministrados(usuarioEntidad.getId());
-        log.info("Libros administrados usuario: " + Arrays.toString(librosAdministrados.toArray()));
-        session.setAttribute(RegwebConstantes.SESSION_LIBROSADMINISTRADOS, librosAdministrados);
         //RegistrosMigrados
         tieneMigrados(entidadActiva,session);
 
