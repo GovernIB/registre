@@ -174,7 +174,14 @@ public class EntidadController extends BaseController {
             try {
                 Entidad entidad = entidadForm.getEntidad();
                 //Guardamos la nueva Entidad
-                entidadEjb.persist(entidad);
+                entidad = entidadEjb.persist(entidad);
+
+                // Creamos el UsuarioEntidad del propietario
+                UsuarioEntidad usuarioEntidad = new UsuarioEntidad();
+                usuarioEntidad.setEntidad(entidad);
+                usuarioEntidad.setUsuario(entidad.getPropietario());
+
+                usuarioEntidadEjb.persist(usuarioEntidad);
 
                 Mensaje.saveMessageInfo(request, getMessage("regweb.guardar.registro"));
             }catch (Exception e) {
@@ -250,7 +257,7 @@ public class EntidadController extends BaseController {
      * Editar un {@link es.caib.regweb3.model.Entidad}
      */
     @RequestMapping(value = "/{entidadId}/edit", method = RequestMethod.POST)
-    public String editarEntidad(@ModelAttribute @Valid EntidadForm entidadForm,BindingResult result,Model model,
+    public String editarEntidad(@ModelAttribute @Valid EntidadForm entidadForm, @PathVariable("entidadId") Long entidadId, BindingResult result,Model model,
                                 SessionStatus status, HttpServletRequest request) {
 
         String destino = "redirect:/entidad/list";
@@ -272,6 +279,31 @@ public class EntidadController extends BaseController {
 
           try {
                 Entidad entidad = entidadForm.getEntidad();
+
+              // Gestionar el cambio de propietario
+              if(!entidadEjb.findById(entidadId).getPropietario().getId().equals(entidad.getPropietario().getId())){
+                  log.info("Cambio de propietario: " + entidad.getPropietario().getId());
+
+                  // Si ha cambiado, comprobamos si ya existia
+                  UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByUsuarioEntidad(entidad.getPropietario().getId(),entidadId);
+
+                  if(usuarioEntidad == null){ // SI no existe, lo creamos
+                      log.info("Lo creamos nuevo");
+                      usuarioEntidad = new UsuarioEntidad();
+                      usuarioEntidad.setEntidad(entidad);
+                      usuarioEntidad.setUsuario(entidad.getPropietario());
+
+                      usuarioEntidadEjb.persist(usuarioEntidad);
+                  }else if(!usuarioEntidad.getActivo()){ //Si existe, pero está inactivo, lo activamos.
+                      log.info("Lo activamos");
+                      usuarioEntidad.setActivo(true);
+                      usuarioEntidadEjb.merge(usuarioEntidad);
+                  }
+
+
+              }else{
+                  log.info("Mismo propietario: " + entidad.getPropietario().getId());
+              }
 
               //Modificación con archivo Logo Menú, Logo Pie o imagen sello
                 if((entidadForm.getLogoMenu() != null)||(entidadForm.getLogoPie() != null) || entidadForm.getLogoSello()!=null){ 
@@ -404,6 +436,9 @@ public class EntidadController extends BaseController {
                     }
 
                 }
+
+
+
 
             }catch (Exception e) {
                 e.printStackTrace();

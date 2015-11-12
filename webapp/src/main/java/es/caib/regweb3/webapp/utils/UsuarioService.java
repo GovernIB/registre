@@ -168,15 +168,19 @@ public class UsuarioService {
      */
     public void asignarEntidadesAdministradas(Usuario usuario,Entidad entidadActiva, HttpSession session) throws Exception{
 
+        ArrayList<Entidad> entidadesAdministradas = new ArrayList<Entidad>();
+        ArrayList<Entidad> entidadesPropietario = new ArrayList<Entidad>();
         ArrayList<Entidad> entidades = new ArrayList<Entidad>();
 
         // Obtenemos las entidades administradas
-        entidades.addAll(entidadEjb.getEntidadesAdministrador(usuario.getId()));
+        entidadesAdministradas.addAll(entidadEjb.getEntidadesAdministrador(usuario.getId()));
 
         // Obtenemos las entidades propietarias
-        entidades.addAll(entidadEjb.getEntidadesPropietario(usuario.getId()));
+        entidadesPropietario.addAll(entidadEjb.getEntidadesPropietario(usuario.getId()));
 
         // Las guardamos en la sesion
+        entidades.addAll(entidadesAdministradas);
+        entidades.addAll(entidadesPropietario);
         session.setAttribute(RegwebConstantes.SESSION_ENTIDADES, entidades);
 
         // Definimos la Entidad Activa
@@ -187,7 +191,8 @@ public class UsuarioService {
             session.setAttribute(RegwebConstantes.SESSION_ENTIDAD, entidadActiva);
         }
 
-        log.info("Entidades administradas: " + entidades.size());
+        log.info("Entidades administradas: " + entidadesAdministradas.size());
+        log.info("Entidades propietario: " + entidadesPropietario.size());
 
         if(entidadActiva != null){
             //UsuarioEntidadActivo
