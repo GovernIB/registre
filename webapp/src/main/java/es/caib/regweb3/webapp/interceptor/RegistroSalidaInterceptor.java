@@ -6,6 +6,7 @@ import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.ejb.PermisoLibroUsuarioLocal;
 import es.caib.regweb3.persistence.ejb.RegistroSalidaLocal;
+import es.caib.regweb3.persistence.ejb.TipoDocumentalLocal;
 import es.caib.regweb3.persistence.ejb.UsuarioEntidadLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.Mensaje;
@@ -40,6 +41,9 @@ public class RegistroSalidaInterceptor extends AbstractRegistroCommonInterceptor
 
     @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
     public RegistroSalidaLocal registroSalidaEjb;
+
+    @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
+    public TipoDocumentalLocal tipoDocumentalEjb;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -111,6 +115,13 @@ public class RegistroSalidaInterceptor extends AbstractRegistroCommonInterceptor
             if(permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), RegwebConstantes.PERMISO_REGISTRO_SALIDA).size() == 0){
                 log.info("Aviso: No hay ningún libro con permisos para registrar");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registro"));
+                response.sendRedirect("/regweb3/aviso");
+                return false;
+            }
+
+            if(tipoDocumentalEjb.getByEntidad(entidadActiva.getId()).size()==0){
+                log.info("Aviso: No hay ningún Tipo Documental para la Entidad Activa");
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.tipoDocumental"));
                 response.sendRedirect("/regweb3/aviso");
                 return false;
             }

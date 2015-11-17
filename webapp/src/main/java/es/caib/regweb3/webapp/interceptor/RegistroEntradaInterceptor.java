@@ -106,6 +106,7 @@ public class RegistroEntradaInterceptor extends AbstractRegistroCommonIntercepto
                 response.sendRedirect("/regweb3/aviso");
                 return false;
             }
+
             if(tipoDocumentalEjb.getByEntidad(entidadActiva.getId()).size()==0){
                 log.info("Aviso: No hay ningún Tipo Documental para la Entidad Activa");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.tipoDocumental"));
