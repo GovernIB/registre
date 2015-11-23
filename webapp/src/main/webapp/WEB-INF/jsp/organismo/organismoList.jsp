@@ -41,7 +41,6 @@
                     </div>
 
                     <div class="panel-body">
-
                         <form:form modelAttribute="organismoBusqueda" method="post" cssClass="form-horizontal">
                             <form:hidden path="pageNumber"/>
 
@@ -178,7 +177,13 @@
 
 <c:import url="../modulos/pie.jsp"/>
 
+<script type="text/javascript" src="<c:url value="/js/organismosaprocesar.js"/>"></script>
 <script type="text/javascript">
+    var trads = new Array();
+    trads['actualizacion.nook'] = "<spring:message code="regweb.actualizacion.nook" javaScriptEscape='true' />";
+    trads['actualizacion.nopermitido'] = "<spring:message code="regweb.actualizacion.nopermitido" javaScriptEscape='true' />";
+
+
     $(document).ready(function() {
         var confirmModal =
                 $("<div class=\"modal fade\">" +
@@ -234,12 +239,19 @@
                     beforeSend: function(objeto){
                         $('#modalSincro').modal('show');
                     },
-                    success:function(result){
+                    success:function(respuesta){
 
-                        if(result == true){
+                        if(respuesta.status == 'SUCCESS'){
                             goTo('<c:url value="/entidad/pendientesprocesar"/>');
                         }else{
-                            mostrarMensaje('#mensajes','<spring:message code="regweb.actualizacion.nook"/>');
+                            if(respuesta.status=='NOTALLOWED'){
+                                $('#modalSincro').modal('hide');
+                                mostrarMensajeError('#mensajes', trads['actualizacion.nopermitido']);
+                            }
+                            if(respuesta.status=='FAIL') {
+                                $('#modalSincro').modal('hide');
+                                mostrarMensajeError('#mensajes', trads['actualizacion.nook']);
+                            }
                         }
 
                     }

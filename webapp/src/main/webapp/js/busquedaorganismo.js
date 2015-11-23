@@ -28,7 +28,7 @@ $('body').on('hover', 'a[rel=popover]', mostraInformacio);
 function organismoBusqueda(tipoOrganismo, urlServidor,idRegistroDetalle){
 	
       // obtenemos los valores del formulario para realizar la búsqueda.
-      var denominacion = $('#denominacion'+tipoOrganismo).val();
+      var denominacion =$('#denominacion'+tipoOrganismo).val();
       var codigoOrganismo= $('#codigoOrganismo'+tipoOrganismo).val();
       var codNivelAdministracion= $('#codNivelAdministracion'+tipoOrganismo).val();
       var codComunidadAutonoma= $('#codComunidadAutonoma'+tipoOrganismo).val();

@@ -501,9 +501,10 @@ public class EntidadController extends BaseController {
     */
     @RequestMapping(value = "/{entidadId}/actualizar")
     @ResponseBody
-    public Boolean actualizar(@PathVariable Long entidadId, HttpServletRequest request) {
+    public /*Boolean*/ JsonResponse actualizar(@PathVariable Long entidadId, HttpServletRequest request) {
+        JsonResponse jsonResponse = new JsonResponse();
+        try{
 
-       try{
           Descarga ultimaDescarga = descargaEjb.findByTipoEntidad(RegwebConstantes.UNIDAD,entidadId);
           Timestamp fechaUltimaActualizacion = null;
           if (ultimaDescarga.getFechaImportacion() != null) {
@@ -518,16 +519,25 @@ public class EntidadController extends BaseController {
           }
 
 
-           sincronizadorDIR3Ejb.sincronizarActualizar(entidadId, fechaUltimaActualizacion, fechaSincronizacion);
+           int actualizados= sincronizadorDIR3Ejb.sincronizarActualizar(entidadId, fechaUltimaActualizacion, fechaSincronizacion);
+           if(actualizados == -1){
+               log.info("No se puede actualizar regweb hasta que no se haya actualizado dir3caib préviamente");
+              // Mensaje.saveMessageError(request, getMessage("regweb.actualizacion.nopermitido"));
+               //return false;
+               jsonResponse.setStatus("NOTALLOWED");
+               return jsonResponse;
+           }
           // via ajax s'en va a "entidad/pendientesprocesar"
        }catch(Exception e){
            log.error("Error actualizacion", e);
            Mensaje.saveMessageError(request, getMessage("regweb.actualizacion.nook"));
 
-           return false;
+           jsonResponse.setStatus("FAIL");
+            return jsonResponse;
        }
 
-        return true;
+        jsonResponse.setStatus("SUCCESS");
+        return jsonResponse;
     }
 
     /**
@@ -538,6 +548,10 @@ public class EntidadController extends BaseController {
 
           try{
             int sincronizados = sincronizadorDIR3Ejb.sincronizarActualizar(entidadId, null, null);
+            if(sincronizados == -1){
+                  log.info("No se puede sincronizar regweb hasta que no se haya actualizado dir3caib préviamente");
+                  Mensaje.saveMessageError(request, getMessage("regweb.actualizacion.nopermitido"));
+            }
             Mensaje.saveMessageInfo(request, getMessage("regweb.sincronizados.numero") + sincronizados);
           }catch(Exception e){
              log.error("Error sincro", e);

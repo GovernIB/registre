@@ -100,19 +100,33 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService();
         Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
 
+        //Obtener fecha ultima actualizacion di3caib
+        Timestamp fechaUltDir3caibUnidades = unidadesService.obtenerFechaUltimaActualizacion();
+        Timestamp fechaUltDir3caibOficinas = oficinasService.obtenerFechaUltimaActualizacion();
+        log.info("fechaUltDir3caibUnidades:" + fechaUltDir3caibUnidades);
+        log.info("fechaUltDir3caibUnidades:" + fechaUltDir3caibOficinas);
+        if(fechaActualizacion != null) {
+            if (fechaUltDir3caibUnidades.before(fechaActualizacion) || fechaUltDir3caibOficinas.before(fechaActualizacion)) {
+                return -1;
+            }
+        }else{
+            if (fechaUltDir3caibUnidades.before(fechaSincronizacion) || fechaUltDir3caibOficinas.before(fechaSincronizacion)) {
+                return -1;
+            }
+        }
 
         // Obtenemos la Unidad Padre y las dependientes.
-        es.caib.dir3caib.ws.api.unidad.UnidadTF unidadPadre = unidadesService.obtenerUnidad(entidad.getCodigoDir3(),fechaActualizacion, fechaSincronizacion);
+        es.caib.dir3caib.ws.api.unidad.UnidadTF unidadPadre = unidadesService.obtenerUnidad(entidad.getCodigoDir3(), fechaActualizacion, fechaSincronizacion);
 
         List<UnidadTF> arbol = unidadesService.obtenerArbolUnidades(entidad.getCodigoDir3(), fechaActualizacion, fechaSincronizacion);
 
-        log.info("Organimos obtenidos de " + entidad.getNombre() +": " + arbol.size());
+        log.info("Organimos obtenidos de " + entidad.getNombre() + ": " + arbol.size());
 
 
         // Guardamos el Organismo-Entidad sincronizado
         Organismo padre = sincronizarOrganismo(unidadPadre, entidadId);
         // Clasificamos el padre en función de su estado
-        if(padre != null){
+        if (padre != null) {
             guardarPendiente(padre);
         }
 
@@ -120,23 +134,22 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         for (UnidadTF unidadTF : arbol) {
             Organismo hijo = sincronizarOrganismo(unidadTF, entidadId);
             // Clasificamos el organismo hijo en función del estado
-            if(hijo != null){
+            if (hijo != null) {
                 guardarPendiente(hijo);
             }
         }
 
         // Sincronizamos históricos
-        if(unidadPadre != null){
-          sincronizarHistoricosOrganismo(padre, unidadPadre);// históricos del padre
+        if (unidadPadre != null) {
+            sincronizarHistoricosOrganismo(padre, unidadPadre);// históricos del padre
         }
 
-        for(UnidadTF unidadTF : arbol){ // Sincronizamos los históricos del arbol.
-           if(unidadTF != null){
-            Organismo hijo = organismoEjb.findByCodigo(unidadTF.getCodigo());
-            sincronizarHistoricosOrganismo(hijo, unidadTF);
-           }
+        for (UnidadTF unidadTF : arbol) { // Sincronizamos los históricos del arbol.
+            if (unidadTF != null) {
+                Organismo hijo = organismoEjb.findByCodigo(unidadTF.getCodigo());
+                sincronizarHistoricosOrganismo(hijo, unidadTF);
+            }
         }
-
 
 
         // Guardamos los datos de la ultima descarga siempre, independiente de si no hay datos actualizados.
@@ -148,10 +161,10 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         log.info("");
         int oficinasActualizadas = 0;
 
-        Set<OficinaTF> todasOficinasEntidad= new HashSet<OficinaTF>(); // Guardará todas las oficinas de la entidad
+        Set<OficinaTF> todasOficinasEntidad = new HashSet<OficinaTF>(); // Guardará todas las oficinas de la entidad
         // Obtenemos todas las oficinas de la entidad. Para ello obtenemos para cada Organismo las Oficinas dependientes de él
-        for(Organismo organismo: organismoEjb.findByEntidad(entidadId)){
-            List<OficinaTF> oficinas = oficinasService.obtenerArbolOficinas(organismo.getCodigo(), fechaActualizacion,fechaSincronizacion);
+        for (Organismo organismo : organismoEjb.findByEntidad(entidadId)) {
+            List<OficinaTF> oficinas = oficinasService.obtenerArbolOficinas(organismo.getCodigo(), fechaActualizacion, fechaSincronizacion);
             todasOficinasEntidad.addAll(oficinas);
         }
         // Procesamos todas las oficinas de la entidad
@@ -172,13 +185,13 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
         // Hay que revisar que organismos con libros que son vigentes han podido quedar sin oficinas y guardarlos como pendientes.
         //Pueden quedar sin oficinas al borrarselas o quitarles las únicas relaciones organizativas que tengan.
-        List<Organismo> vigentes= organismoEjb.findByEntidadByEstado(entidadId, RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-        for(Organismo organismo:vigentes){
-            if(organismo.getLibros()!=null && organismo.getLibros().size()>0){
+        List<Organismo> vigentes = organismoEjb.findByEntidadByEstado(entidadId, RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        for (Organismo organismo : vigentes) {
+            if (organismo.getLibros() != null && organismo.getLibros().size() > 0) {
                 Set<Oficina> oficinas = new HashSet<Oficina>();  // Utilizamos un Set porque no permite duplicados
                 oficinas.addAll(oficinaEjb.findByOrganismoResponsable(organismo.getId()));
                 oficinas.addAll(relacionOrganizativaOfiLocalEjb.getOficinasByOrganismo(organismo.getId()));
-                if(oficinas.size()==0){
+                if (oficinas.size() == 0) {
                     //guardar pendiente
                     Pendiente pendiente = new Pendiente();
                     pendiente.setIdOrganismo(organismo.getId());
@@ -189,8 +202,8 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
             }
         }
 
-        log.info(" REGWEB3 ORGANISMOS ACTUALIZADOS:  " + arbol.size() );
-        log.info(" REGWEB3 OFICINAS ACTUALIZADAS:  " + oficinasActualizadas );
+        log.info(" REGWEB3 ORGANISMOS ACTUALIZADOS:  " + arbol.size());
+        log.info(" REGWEB3 OFICINAS ACTUALIZADAS:  " + oficinasActualizadas);
 
         return arbol.size();
 

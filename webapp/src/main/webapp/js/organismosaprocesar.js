@@ -50,9 +50,17 @@ function procesarOrganismo(organismoAProcesar) {
  * @param mensaje
  */
 function mostrarMensaje(idPanel, mensaje){
-
     $(idPanel).append('<div class="alert alert-success alert-dismissable"><strong>'+mensaje+'</strong><br></div>');
 
+}
+
+/**
+ * Función que permite mostrar un mensaje de error en un panel
+ * @param idPanel
+ * @param mensaje
+ */
+function mostrarMensajeError(idPanel, mensaje){
+    $(idPanel).append('<div class="alert alert-danger alert-dismissable"><strong>'+mensaje+'</strong><br></div>');
 
 }
 
