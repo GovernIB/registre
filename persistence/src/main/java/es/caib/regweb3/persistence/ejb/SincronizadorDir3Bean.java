@@ -100,7 +100,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService();
         Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
 
-        //Obtener fecha ultima actualizacion di3caib
+       /* //Obtener fecha ultima actualizacion di3caib
         Timestamp fechaUltDir3caibUnidades = unidadesService.obtenerFechaUltimaActualizacion();
         Timestamp fechaUltDir3caibOficinas = oficinasService.obtenerFechaUltimaActualizacion();
         log.info("fechaUltDir3caibUnidades:" + fechaUltDir3caibUnidades);
@@ -113,7 +113,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
             if (fechaUltDir3caibUnidades.before(fechaSincronizacion) || fechaUltDir3caibOficinas.before(fechaSincronizacion)) {
                 return -1;
             }
-        }
+        }*/
 
         // Obtenemos la Unidad Padre y las dependientes.
         es.caib.dir3caib.ws.api.unidad.UnidadTF unidadPadre = unidadesService.obtenerUnidad(entidad.getCodigoDir3(), fechaActualizacion, fechaSincronizacion);
