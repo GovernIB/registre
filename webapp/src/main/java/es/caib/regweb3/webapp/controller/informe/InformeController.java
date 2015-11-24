@@ -1425,8 +1425,11 @@ public class InformeController extends BaseController {
 
         for(int i=0; i<organismos.size(); i++){
             Organismo organismo = organismos.get(i);
-            entradaConselleriaNombre.add(organismo.getDenominacion());
-            entradaConselleriaValor.add(String.valueOf(registroEntradaEjb.buscaEntradaPorConselleria(dataInici, dataFi, organismo.getId())));
+            Long total = registroEntradaEjb.buscaEntradaPorConselleria(dataInici, dataFi, organismo.getId());
+            if(total > 0){ // Solo lo añadimos al informe si tiene algún registro
+                entradaConselleriaNombre.add(organismo.getDenominacion());
+                entradaConselleriaValor.add(String.valueOf(total));
+            }
 
         }
         mav.addObject("entradaConselleriaValor", entradaConselleriaValor);
@@ -1449,9 +1452,12 @@ public class InformeController extends BaseController {
 
         for(int i=0; i<organismos.size(); i++){
             Organismo organismo = organismos.get(i);
+            Long total = registroSalidaEjb.buscaSalidaPorConselleria(dataInici, dataFi, organismo.getId());
+            if(total > 0){ // Solo lo añadimos al informe si tiene algún registro
+                salidaConselleriaNombre.add(organismo.getDenominacion());
+                salidaConselleriaValor.add(String.valueOf(total));
+            }
 
-            salidaConselleriaNombre.add(organismo.getDenominacion());
-            salidaConselleriaValor.add(String.valueOf(registroSalidaEjb.buscaSalidaPorConselleria(dataInici, dataFi, organismo.getId())));
         }
 
         mav.addObject("salidaConselleriaValor", salidaConselleriaValor);
@@ -1527,8 +1533,13 @@ public class InformeController extends BaseController {
             List<Libro> libros = organismo.getLibros();
             for(int j=0; j<libros.size(); j++){
                 Libro libro = libros.get(j);
-                entradaLibroNombre.add(libro.getNombre());
-                entradaLibroValor.add(String.valueOf(registroEntradaEjb.buscaEntradaPorLibro(dataInici, dataFi, libro.getId())));
+
+                Long total = registroEntradaEjb.buscaEntradaPorLibro(dataInici, dataFi, libro.getId());
+                if(total > 0){ // Solo lo añadimos al informe si tiene algún registro
+                    entradaLibroNombre.add(libro.getNombre());
+                    entradaLibroValor.add(String.valueOf(total));
+                }
+
             }
         }
         mav.addObject("entradaLibroValor", entradaLibroValor);
@@ -1554,8 +1565,12 @@ public class InformeController extends BaseController {
             for(int j=0; j<libros.size(); j++){
                 Libro libro = libros.get(j);
 
-                salidaLibroNombre.add(libro.getNombre());
-                salidaLibroValor.add(String.valueOf(registroSalidaEjb.buscaSalidaPorLibro(dataInici, dataFi, libro.getId())));
+                Long total = registroSalidaEjb.buscaSalidaPorLibro(dataInici, dataFi, libro.getId());
+                if(total > 0){ // Solo lo añadimos al informe si tiene algún registro
+                    salidaLibroNombre.add(libro.getNombre());
+                    salidaLibroValor.add(String.valueOf(total));
+                }
+
             }
         }
         mav.addObject("salidaLibroValor", salidaLibroValor);
@@ -1577,8 +1592,13 @@ public class InformeController extends BaseController {
 
         for(int i=0; i<oficinas.size(); i++){
             Oficina oficina = oficinas.get(i);
-            entradaOficinaNombre.add(oficina.getDenominacion());
-            entradaOficinaValor.add(String.valueOf(registroEntradaEjb.buscaEntradaPorOficina(dataInici, dataFi, oficina.getId())));
+
+            Long total = registroEntradaEjb.buscaEntradaPorOficina(dataInici, dataFi, oficina.getId());
+            if(total > 0){ // Solo lo añadimos al informe si tiene algún registro
+                entradaOficinaNombre.add(oficina.getDenominacion());
+                entradaOficinaValor.add(String.valueOf(total));
+            }
+
         }
         mav.addObject("entradaOficinaValor", entradaOficinaValor);
         mav.addObject("entradaOficinaNombre", entradaOficinaNombre);
@@ -1600,8 +1620,13 @@ public class InformeController extends BaseController {
 
         for(int i=0; i<oficinas.size(); i++){
             Oficina oficina = oficinas.get(i);
-            salidaOficinaNombre.add(oficina.getDenominacion());
-            salidaOficinaValor.add(String.valueOf(registroSalidaEjb.buscaSalidaPorOficina(dataInici, dataFi, oficina.getId())));
+
+            Long total = registroSalidaEjb.buscaSalidaPorOficina(dataInici, dataFi, oficina.getId());
+            if(total > 0){ // Solo lo añadimos al informe si tiene algún registro
+                salidaOficinaNombre.add(oficina.getDenominacion());
+                salidaOficinaValor.add(String.valueOf(total));
+            }
+
         }
         mav.addObject("salidaOficinaValor", salidaOficinaValor);
         mav.addObject("salidaOficinaNombre", salidaOficinaNombre);
