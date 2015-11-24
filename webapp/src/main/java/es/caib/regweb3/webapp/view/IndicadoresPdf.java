@@ -19,10 +19,38 @@ import java.util.Map;
  * User: jpernia
  * Date: 6/05/14
  */
-public class IndicadoresPdf extends AbstractIText5PdfView {
+public class IndicadoresPdf extends AbstractIText5PdfView{
 
     protected final Logger log = Logger.getLogger(getClass());
 
+    private ArrayList<String> entradaAnosValor = new ArrayList<String>();
+    private ArrayList<String> entradaAnosNombre = new ArrayList<String>();
+    private ArrayList<String> salidaAnosValor = new ArrayList<String>();
+    private ArrayList<String> salidaAnosNombre = new ArrayList<String>();
+    private ArrayList<String> entradaMesesValor = new ArrayList<String>();
+    private ArrayList<String> entradaMesesNombre = new ArrayList<String>();
+    private ArrayList<String> salidaMesesValor = new ArrayList<String>();
+    private ArrayList<String> salidaMesesNombre = new ArrayList<String>();
+    private ArrayList<String> entradaConselleriaValor = new ArrayList<String>();
+    private ArrayList<String> entradaConselleriaNombre = new ArrayList<String>();
+    private ArrayList<String> salidaConselleriaValor = new ArrayList<String>();
+    private ArrayList<String> salidaConselleriaNombre = new ArrayList<String>();
+    private ArrayList<String> entradaAsuntoValor = new ArrayList<String>();
+    private ArrayList<String> entradaAsuntoNombre = new ArrayList<String>();
+    private ArrayList<String> salidaAsuntoValor = new ArrayList<String>();
+    private ArrayList<String> salidaAsuntoNombre = new ArrayList<String>();
+    private ArrayList<String> entradaLibroValor = new ArrayList<String>();
+    private ArrayList<String> entradaLibroNombre = new ArrayList<String>();
+    private ArrayList<String> salidaLibroValor = new ArrayList<String>();
+    private ArrayList<String> salidaLibroNombre = new ArrayList<String>();
+    private ArrayList<String> entradaOficinaValor = new ArrayList<String>();
+    private ArrayList<String> entradaOficinaNombre = new ArrayList<String>();
+    private ArrayList<String> salidaOficinaValor = new ArrayList<String>();
+    private ArrayList<String> salidaOficinaNombre = new ArrayList<String>();
+    private ArrayList<String> entradaIdiomaValor = new ArrayList<String>();
+    private ArrayList<String> entradaIdiomaNombre = new ArrayList<String>();
+    private ArrayList<String> salidaIdiomaValor = new ArrayList<String>();
+    private ArrayList<String> salidaIdiomaNombre = new ArrayList<String>();
     /**
      * Retorna el mensaje traducido según el idioma del usuario
      * @param key
@@ -35,41 +63,45 @@ public class IndicadoresPdf extends AbstractIText5PdfView {
     @Override
     protected void buildPdfDocument(Map<String, Object> model, Document document, PdfWriter writer, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+
+
         //Obtenemos mapas y arraays de valores
         Long tipo = (Long) model.get("tipo");
+        String tipoInforme = null;
+
         String fechaInicio = (String) model.get("fechaInicio");
         String fechaFin = (String) model.get("fechaFin");
         Long campoCalendario = (Long) model.get("campoCalendario");
-        Integer registrosEntrada = (Integer) model.get("registrosEntrada");
-        Integer registrosSalida = (Integer) model.get("registrosSalida");
-        ArrayList<String> entradaAnosValor = (ArrayList<String>) model.get("entradaAnosValor");
-        ArrayList<String> entradaAnosNombre = (ArrayList<String>) model.get("entradaAnosNombre");
-        ArrayList<String> salidaAnosValor = (ArrayList<String>) model.get("salidaAnosValor");
-        ArrayList<String> salidaAnosNombre = (ArrayList<String>) model.get("salidaAnosNombre");
-        ArrayList<String> entradaMesesValor = (ArrayList<String>) model.get("entradaMesesValor");
-        ArrayList<String> entradaMesesNombre = (ArrayList<String>) model.get("entradaMesesNombre");
-        ArrayList<String> salidaMesesValor = (ArrayList<String>) model.get("salidaMesesValor");
-        ArrayList<String> salidaMesesNombre = (ArrayList<String>) model.get("salidaMesesNombre");
-        ArrayList<String> entradaConselleriaValor = (ArrayList<String>) model.get("entradaConselleriaValor");
-        ArrayList<String> entradaConselleriaNombre = (ArrayList<String>) model.get("entradaConselleriaNombre");
-        ArrayList<String> salidaConselleriaValor = (ArrayList<String>) model.get("salidaConselleriaValor");
-        ArrayList<String> salidaConselleriaNombre = (ArrayList<String>) model.get("salidaConselleriaNombre");
-        ArrayList<String> entradaAsuntoValor = (ArrayList<String>) model.get("entradaAsuntoValor");
-        ArrayList<String> entradaAsuntoNombre = (ArrayList<String>) model.get("entradaAsuntoNombre");
-        ArrayList<String> salidaAsuntoValor = (ArrayList<String>) model.get("salidaAsuntoValor");
-        ArrayList<String> salidaAsuntoNombre = (ArrayList<String>) model.get("salidaAsuntoNombre");
-        ArrayList<String> entradaLibroValor = (ArrayList<String>) model.get("entradaLibroValor");
-        ArrayList<String> entradaLibroNombre = (ArrayList<String>) model.get("entradaLibroNombre");
-        ArrayList<String> salidaLibroValor = (ArrayList<String>) model.get("salidaLibroValor");
-        ArrayList<String> salidaLibroNombre = (ArrayList<String>) model.get("salidaLibroNombre");
-        ArrayList<String> entradaOficinaValor = (ArrayList<String>) model.get("entradaOficinaValor");
-        ArrayList<String> entradaOficinaNombre = (ArrayList<String>) model.get("entradaOficinaNombre");
-        ArrayList<String> salidaOficinaValor = (ArrayList<String>) model.get("salidaOficinaValor");
-        ArrayList<String> salidaOficinaNombre = (ArrayList<String>) model.get("salidaOficinaNombre");
-        ArrayList<String> entradaIdiomaValor = (ArrayList<String>) model.get("entradaIdiomaValor");
-        ArrayList<String> entradaIdiomaNombre = (ArrayList<String>) model.get("entradaIdiomaNombre");
-        ArrayList<String> salidaIdiomaValor = (ArrayList<String>) model.get("salidaIdiomaValor");
-        ArrayList<String> salidaIdiomaNombre = (ArrayList<String>) model.get("salidaIdiomaNombre");
+
+        Integer registrosEntrada = 0;
+        Integer registrosSalida = 0;
+
+        if(tipo.equals(RegwebConstantes.INFORME_TIPO_REGISTRO_ENTRADASALIDA)){ // Entrada y Salida
+
+            tipoInforme = getMessage("informe.ambosTipos");
+
+            registrosEntrada = (Integer) model.get("registrosEntrada");
+            registrosSalida = (Integer) model.get("registrosSalida");
+
+            obtenerValoresEntrada(model);
+            obtenerValoresSalida(model);
+
+        }else if(tipo.equals(RegwebConstantes.INFORME_TIPO_REGISTRO_ENTRADA)){ // Entrada
+
+            tipoInforme = getMessage("informe.entrada");
+            registrosEntrada = (Integer) model.get("registrosEntrada");
+
+            obtenerValoresEntrada(model);
+
+        }else if(tipo.equals(RegwebConstantes.INFORME_TIPO_REGISTRO_SALIDA)){ // Salida
+
+            tipoInforme = getMessage("informe.salida");
+            registrosSalida = (Integer) model.get("registrosSalida");
+
+            obtenerValoresSalida(model);
+
+        }
+
 
         //Configuraciones generales formato pdf
         document.setPageSize(PageSize.A4);
@@ -83,15 +115,6 @@ public class IndicadoresPdf extends AbstractIText5PdfView {
         Font font14Bold = FontFactory.getFont(FontFactory.HELVETICA, 14, Font.BOLD);
         Font font14BoldItalic = FontFactory.getFont(FontFactory.HELVETICA, 14, Font.BOLDITALIC);
 
-        String tipoRegistro = null;
-        if(tipo.equals(RegwebConstantes.INFORME_TIPO_REGISTRO_ENTRADASALIDA)){
-            tipoRegistro = getMessage("informe.ambosTipos");
-        }else if(tipo.equals(RegwebConstantes.INFORME_TIPO_REGISTRO_ENTRADA)){
-            tipoRegistro = getMessage("informe.entrada");
-        }else if(tipo.equals(RegwebConstantes.INFORME_TIPO_REGISTRO_SALIDA)){
-            tipoRegistro = getMessage("informe.salida");
-        }
-
         // Título
         PdfPTable titulo = new PdfPTable(1);
         titulo.setWidthPercentage(100);
@@ -100,9 +123,11 @@ public class IndicadoresPdf extends AbstractIText5PdfView {
         titulo.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
         document.addTitle(getMessage("informe.indicadores"));
         titulo.addCell(new Paragraph(getMessage("informe.indicadores"), font14Bold));
-        titulo.addCell(new Paragraph(getMessage("informe.tipo") +": " + tipoRegistro));
+        titulo.addCell(new Paragraph(getMessage("informe.tipo") +": " + tipoInforme));
         titulo.addCell(new Paragraph(getMessage("informe.fechaInicio") +": " + fechaInicio));
         titulo.addCell(new Paragraph(getMessage("informe.fechaFin") +": " + fechaFin));
+
+
         String campCalendari = "";
         if(campoCalendario == 0){
             campCalendari = getMessage("informe.ambosCalendario");
@@ -651,7 +676,7 @@ public class IndicadoresPdf extends AbstractIText5PdfView {
 
         }
 
-        String nombreFichero = getMessage("informe.nombreFichero.indicadores")+ tipoRegistro +".pdf";
+        String nombreFichero = getMessage("informe.nombreFichero.indicadores")+ tipoInforme +".pdf";
 
         // Cabeceras Response
         response.setHeader("Content-Disposition", "attachment; filename=" + nombreFichero);
@@ -659,4 +684,49 @@ public class IndicadoresPdf extends AbstractIText5PdfView {
 
 
     }
+
+    /**
+     *
+     * @param model
+     * @throws Exception
+     */
+    public void obtenerValoresEntrada(Map<String, Object> model) throws Exception{
+        entradaAnosValor = (ArrayList<String>) model.get("entradaAnosValor");
+        entradaAnosNombre = (ArrayList<String>) model.get("entradaAnosNombre");
+        entradaMesesValor = (ArrayList<String>) model.get("entradaMesesValor");
+        entradaMesesNombre = (ArrayList<String>) model.get("entradaMesesNombre");
+        entradaConselleriaValor = (ArrayList<String>) model.get("entradaConselleriaValor");
+        entradaConselleriaNombre = (ArrayList<String>) model.get("entradaConselleriaNombre");
+        entradaAsuntoValor = (ArrayList<String>) model.get("entradaAsuntoValor");
+        entradaAsuntoNombre = (ArrayList<String>) model.get("entradaAsuntoNombre");
+        entradaLibroValor = (ArrayList<String>) model.get("entradaLibroValor");
+        entradaLibroNombre = (ArrayList<String>) model.get("entradaLibroNombre");
+        entradaOficinaValor = (ArrayList<String>) model.get("entradaOficinaValor");
+        entradaOficinaNombre = (ArrayList<String>) model.get("entradaOficinaNombre");
+        entradaIdiomaValor = (ArrayList<String>) model.get("entradaIdiomaValor");
+        entradaIdiomaNombre = (ArrayList<String>) model.get("entradaIdiomaNombre");
+    }
+
+    /**
+     *
+     * @param model
+     * @throws Exception
+     */
+    public void obtenerValoresSalida(Map<String, Object> model) throws Exception{
+        salidaAnosValor = (ArrayList<String>) model.get("salidaAnosValor");
+        salidaAnosNombre = (ArrayList<String>) model.get("salidaAnosNombre");
+        salidaMesesValor = (ArrayList<String>) model.get("salidaMesesValor");
+        salidaMesesNombre = (ArrayList<String>) model.get("salidaMesesNombre");
+        salidaConselleriaValor = (ArrayList<String>) model.get("salidaConselleriaValor");
+        salidaConselleriaNombre = (ArrayList<String>) model.get("salidaConselleriaNombre");
+        salidaAsuntoValor = (ArrayList<String>) model.get("salidaAsuntoValor");
+        salidaAsuntoNombre = (ArrayList<String>) model.get("salidaAsuntoNombre");
+        salidaLibroValor = (ArrayList<String>) model.get("salidaLibroValor");
+        salidaLibroNombre = (ArrayList<String>) model.get("salidaLibroNombre");
+        salidaOficinaValor = (ArrayList<String>) model.get("salidaOficinaValor");
+        salidaOficinaNombre = (ArrayList<String>) model.get("salidaOficinaNombre");
+        salidaIdiomaValor = (ArrayList<String>) model.get("salidaIdiomaValor");
+        salidaIdiomaNombre = (ArrayList<String>) model.get("salidaIdiomaNombre");
+    }
+
 }

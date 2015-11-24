@@ -10,6 +10,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -67,10 +68,20 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
     @Override
     public List<Libro> getLibrosEntidad(Long idEntidad) throws Exception{
 
-        Query q = em.createQuery("Select libro from Libro as libro where libro.activo = true and libro.organismo.entidad.id = :idEntidad order by libro.id");
+        Query q = em.createQuery("Select libro.id, libro.nombre, libro.organismo.id,libro.organismo.denominacion from Libro as libro where libro.activo = true and libro.organismo.entidad.id = :idEntidad order by libro.id");
         q.setParameter("idEntidad",idEntidad);
 
-        return q.getResultList();
+        List<Libro> libros =  new ArrayList<Libro>();
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result){
+            Libro libro = new Libro((Long)object[0],(String)object[1],(Long)object[2],(String)object[3]);
+
+            libros.add(libro);
+        }
+
+        return libros;
     }
 
 

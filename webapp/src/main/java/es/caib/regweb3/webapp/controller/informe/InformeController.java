@@ -499,266 +499,168 @@ public class InformeController extends BaseController {
     @RequestMapping(value = "/indicadores", method = RequestMethod.POST)
     public ModelAndView indicadores(@ModelAttribute InformeIndicadoresBusquedaForm informeIndicadoresBusquedaForm, HttpServletRequest request)throws Exception {
 
+        Entidad entidadActiva = getEntidadActiva(request);
+        String formato = informeIndicadoresBusquedaForm.getFormato();
+        Long calendario = informeIndicadoresBusquedaForm.getCampoCalendario();
+        Integer tipoLibro = informeIndicadoresBusquedaForm.getTipo().intValue();
+        List<TipoAsunto> tiposAsunto = tipoAsuntoEjb.getAll();
+        List<Oficina> oficinas = oficinaEjb.findByEntidad(entidadActiva.getId());
+        List<Organismo> organismos = entidadActiva.getOrganismos();
+
         ModelAndView mav = null;
 
-        if(informeIndicadoresBusquedaForm.getFormato().equals("pdf")){
+        if(formato.equals("pdf")){
             mav = new ModelAndView("indicadoresPdf");
-        }else if(informeIndicadoresBusquedaForm.getFormato().equals("excel")){
+        }else if(formato.equals("excel")){
             mav = new ModelAndView("indicadoresExcel");
         }
 
-        //Long mostrarCamps = informeIndicadoresBusquedaForm.getCampoCalendario();
-        SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
-        SimpleDateFormat formatMes = new SimpleDateFormat("MMMMM", new Locale("ca"));
-        SimpleDateFormat formatMonth = new SimpleDateFormat("MM");
+
         SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy");
 
-        String fechaInicio = "";
-        String fechaFin = "";
+        // Intervalo de fechas seleccionado
+        mav.addObject("fechaInicio", formatDate.format(informeIndicadoresBusquedaForm.getFechaInicio()));
+        mav.addObject("fechaFin", formatDate.format(informeIndicadoresBusquedaForm.getFechaFin()));
 
-        if(informeIndicadoresBusquedaForm.getFechaInicio() != null){
-            fechaInicio = formatDate.format(informeIndicadoresBusquedaForm.getFechaInicio());
-            mav.addObject("fechaInicio", fechaInicio);
-        }
+        // Calendario seleccionado
+        mav.addObject("campoCalendario", calendario);
 
-        if(informeIndicadoresBusquedaForm.getFechaFin() != null){
-            fechaFin = formatDate.format(informeIndicadoresBusquedaForm.getFechaFin());
-            mav.addObject("fechaFin", fechaFin);
-        }
-
-        // Obtener los registros del libro
-        ArrayList<ArrayList<String>> registros = new ArrayList<ArrayList<String>>();
 
         Date dataFi = RegistroUtils.ajustarHoraBusqueda(informeIndicadoresBusquedaForm.getFechaFin());
         Date dataInici = informeIndicadoresBusquedaForm.getFechaInicio();
 
-        // Busca los registros Totales de Entrada y Salida entre las fechas
-        Entidad entidadActiva = getEntidadActiva(request);
-        List<RegistroEntrada> registrosEntrada = registroEntradaEjb.buscaIndicadores(dataInici, dataFi, entidadActiva.getId());
-        List<RegistroSalida> registrosSalida = registroSalidaEjb.buscaIndicadores(dataInici, dataFi, entidadActiva.getId());
 
 
-        // Busca los registros por Años de Entrada y Salida entre las fechas
-        List<String> entradaAnosValor = new ArrayList<String>();
-        List<String> entradaAnosNombre = new ArrayList<String>();
-        List<String> salidaAnosValor = new ArrayList<String>();
-        List<String> salidaAnosNombre = new ArrayList<String>();
-        List<RegistroEntrada> entrades = new ArrayList<RegistroEntrada>();
-        List<RegistroSalida> sortides = new ArrayList<RegistroSalida>();
-        Date inicio = informeIndicadoresBusquedaForm.getFechaInicio();
-        while (inicio.compareTo(dataFi) < 0) {
-            String anyActual = formatYear.format(inicio);
-            entradaAnosNombre.add(anyActual);
-            salidaAnosNombre.add(anyActual);
-            Calendar cal = Calendar.getInstance();
-            cal.set(Calendar.MONTH, 11);
-            cal.set(Calendar.DATE, 31);
-            cal.set(Calendar.YEAR, Integer.parseInt(anyActual));
-            cal.set(Calendar.HOUR, 23);
-            cal.set(Calendar.MINUTE, 59);
-            cal.set(Calendar.SECOND, 59);
-            if(cal.getTime().compareTo(dataFi) < 0){
-                entrades = registroEntradaEjb.buscaIndicadores(inicio, cal.getTime(), entidadActiva.getId());
-                sortides = registroSalidaEjb.buscaIndicadores(inicio, cal.getTime(), entidadActiva.getId());
-                entradaAnosValor.add(String.valueOf(entrades.size()));
-                salidaAnosValor.add(String.valueOf(sortides.size()));
-            }else{
-                entrades = registroEntradaEjb.buscaIndicadores(inicio, dataFi, entidadActiva.getId());
-                sortides = registroSalidaEjb.buscaIndicadores(inicio, dataFi, entidadActiva.getId());
-                entradaAnosValor.add(String.valueOf(entrades.size()));
-                salidaAnosValor.add(String.valueOf(sortides.size()));
+        // Según el tipo de informe seleccionado
+        switch (tipoLibro){
+
+            case 0: // Entrada y Salida
+                mav.addObject("tipo", RegwebConstantes.INFORME_TIPO_REGISTRO_ENTRADASALIDA);
+
+                // Busca los registros Totales de Entrada y Salida entre las fechas
+                mav.addObject("registrosEntrada", registroEntradaEjb.buscaIndicadoresTotal(dataInici, dataFi, entidadActiva.getId()).intValue());
+                mav.addObject("registrosSalida", registroSalidaEjb.buscaIndicadoresTotal(dataInici, dataFi, entidadActiva.getId()).intValue());
+
+                // Busca los registros totales según el calendario seleccionado de Entrada y Salida entre las fechas
+                if(calendario.equals((long) 0)){ // Años y meses
+
+                    totalRegistresEntradaAny(mav,dataInici,dataFi,entidadActiva);
+                    totalRegistresSalidaAny(mav, dataInici, dataFi, entidadActiva);
+                    totalRegistresEntradaMes(mav, dataInici, dataFi, entidadActiva);
+                    totalRegistresSalidaMes(mav, dataInici, dataFi, entidadActiva);
+
+                }else if(calendario.equals((long) 1)){ // Años
+
+                    totalRegistresEntradaAny(mav, dataInici, dataFi, entidadActiva);
+                    totalRegistresSalidaAny(mav, dataInici, dataFi, entidadActiva);
+
+                }else if(calendario.equals((long) 2)){ // Meses
+                    totalRegistresEntradaMes(mav,dataInici,dataFi,entidadActiva);
+                    totalRegistresSalidaMes(mav,dataInici,dataFi,entidadActiva);
+                }
+
+                // Busca los registros totales por Organismo de Entrada y Salida entre las fechas
+                totalRegistresEntradaOrganismo(mav, dataInici, dataFi, organismos);
+                totalRegistresSalidaOrganismo(mav, dataInici, dataFi, organismos);
+
+                // Busca los registros totales por Tipos de Asunto de Entrada y Salida entre las fechas
+                totalRegistresEntradaTipoAsunto(mav, dataInici, dataFi, tiposAsunto, entidadActiva.getId());
+                totalRegistresSalidaTipoAsunto(mav, dataInici, dataFi, tiposAsunto, entidadActiva.getId());
+
+                // Busca los registros totales por Libro de Entrada y Salida entre las fechas
+                totalRegistresEntradaLibro(mav, dataInici, dataFi, organismos);
+                totalRegistresSalidaLibro(mav, dataInici, dataFi, organismos);
+
+                // Busca los registros totales por Oficina de Registro de Entrada y Salida entre las fechas
+                totalRegistresEntradaOficina(mav, dataInici, dataFi, oficinas);
+                totalRegistresSalidaOficina(mav, dataInici, dataFi, oficinas);
+
+                // Busca los registros totales por Idiomas de Entrada y Salida entre las fechas
+                totalRegistresEntradaIdioma(mav, dataInici, dataFi, entidadActiva.getId());
+                totalRegistresSalidaIdioma(mav, dataInici, dataFi, entidadActiva.getId());
+
+
                 break;
-            }
-            cal.add(Calendar.DATE, 1);
-            inicio = cal.getTime();
-        }
-        mav.addObject("entradaAnosValor", entradaAnosValor);
-        mav.addObject("entradaAnosNombre", entradaAnosNombre);
-        mav.addObject("salidaAnosValor", salidaAnosValor);
-        mav.addObject("salidaAnosNombre", salidaAnosNombre);
+
+            case 1: // Entrada
+                mav.addObject("tipo", RegwebConstantes.INFORME_TIPO_REGISTRO_ENTRADA);
+
+                // Busca los registros Totales de Entrada entre las fechas
+                mav.addObject("registrosEntrada", registroEntradaEjb.buscaIndicadoresTotal(dataInici, dataFi, entidadActiva.getId()).intValue());
+
+                // Busca los registros totales según el calendario seleccionado de Entrada entre las fechas
+                if(calendario.equals((long) 0)){ // Años y meses
+
+                    totalRegistresEntradaAny(mav,dataInici,dataFi,entidadActiva);
+                    totalRegistresEntradaMes(mav, dataInici, dataFi, entidadActiva);
+
+                }else if(calendario.equals((long) 1)){ // Años
+
+                    totalRegistresEntradaAny(mav, dataInici, dataFi, entidadActiva);
+
+                }else if(calendario.equals((long) 2)){ // Meses
+                    totalRegistresEntradaMes(mav,dataInici,dataFi,entidadActiva);
+                }
+
+                // Busca los registros totales por Organismo de Entrada entre las fechas
+                totalRegistresEntradaOrganismo(mav, dataInici, dataFi, organismos);
+
+                // Busca los registros totales por Tipos de Asunto de Entrada entre las fechas
+                totalRegistresEntradaTipoAsunto(mav, dataInici, dataFi, tiposAsunto, entidadActiva.getId());
+
+                // Busca los registros totales por Libro de Entrada entre las fechas
+                totalRegistresEntradaLibro(mav, dataInici, dataFi, organismos);
+
+                // Busca los registros totales por Oficina de Registro de Entrada entre las fechas
+                totalRegistresEntradaOficina(mav, dataInici, dataFi, oficinas);
+
+                // Busca los registros totales por Idiomas de Entrada entre las fechas
+                totalRegistresEntradaIdioma(mav, dataInici, dataFi, entidadActiva.getId());
 
 
-        // Busca los registros por Meses de Entrada y Salida entre las fechas
-        List<String> entradaMesesValor = new ArrayList<String>();
-        List<String> entradaMesesNombre = new ArrayList<String>();
-        List<String> salidaMesesValor = new ArrayList<String>();
-        List<String> salidaMesesNombre = new ArrayList<String>();
-        List<RegistroEntrada> entradesMesos = new ArrayList<RegistroEntrada>();
-        List<RegistroSalida> sortidesMesos = new ArrayList<RegistroSalida>();
-        inicio = dataInici;
-        while (inicio.compareTo(dataFi) < 0) {
-            String anyActual = formatYear.format(inicio);
-            String mesActualNom = formatMes.format(inicio);
-            String mesActual = formatMonth.format(inicio);
-            String mesActualCompost = mesActualNom + "/" + anyActual;
-            entradaMesesNombre.add(mesActualCompost);
-            salidaMesesNombre.add(mesActualCompost);
-            Calendar cal = Calendar.getInstance();
-            cal.set(Calendar.MONTH, Integer.parseInt(mesActual)-1);
-            int mesAra = Integer.parseInt(mesActual);
-            int anyAra = Integer.parseInt(anyActual);
-            if((mesAra == 1)|| (mesAra == 3)|| (mesAra == 5)|| (mesAra == 7)|| (mesAra == 8)|| (mesAra == 10)|| (mesAra == 12)){
-                cal.set(Calendar.DAY_OF_MONTH, 31);
-            } else if((mesAra == 4)|| (mesAra == 6)|| (mesAra == 9)|| (mesAra == 11)){
-                cal.set(Calendar.DAY_OF_MONTH, 30);
-            } else if((anyAra % 4 == 0) && ((anyAra % 100 != 0) || (anyAra % 400 == 0))){
-                cal.set(Calendar.DAY_OF_MONTH, 29);
-            } else{
-                cal.set(Calendar.DAY_OF_MONTH, 28);
-            }
-            cal.set(Calendar.YEAR, Integer.parseInt(anyActual));
-            cal.set(Calendar.HOUR, 23);
-            cal.set(Calendar.MINUTE, 59);
-            cal.set(Calendar.SECOND, 59);
-            if(cal.getTime().compareTo(dataFi) < 0){
-                entradesMesos = registroEntradaEjb.buscaIndicadores(inicio, cal.getTime(), entidadActiva.getId());
-                sortidesMesos = registroSalidaEjb.buscaIndicadores(inicio, cal.getTime(), entidadActiva.getId());
-                entradaMesesValor.add(String.valueOf(entradesMesos.size()));
-                salidaMesesValor.add(String.valueOf(sortidesMesos.size()));
-            }else{
-                entradesMesos = registroEntradaEjb.buscaIndicadores(inicio, dataFi, entidadActiva.getId());
-                sortidesMesos = registroSalidaEjb.buscaIndicadores(inicio, dataFi, entidadActiva.getId());
-                entradaMesesValor.add(String.valueOf(entradesMesos.size()));
-                salidaMesesValor.add(String.valueOf(sortidesMesos.size()));
-                break;
-            }
-            cal.add(Calendar.DATE, 1);
-            cal.set(Calendar.HOUR_OF_DAY, 00);
-            cal.set(Calendar.MINUTE, 00);
-            cal.set(Calendar.SECOND, 00);
-            inicio = cal.getTime();
-        }
-        mav.addObject("entradaMesesValor", entradaMesesValor);
-        mav.addObject("entradaMesesNombre", entradaMesesNombre);
-        mav.addObject("salidaMesesValor", salidaMesesValor);
-        mav.addObject("salidaMesesNombre", salidaMesesNombre);
+
+            break;
+
+            case 2: //  Salida
+                mav.addObject("tipo", RegwebConstantes.INFORME_TIPO_REGISTRO_SALIDA);
+
+                // Busca los registros Totales de Salida entre las fechas
+                mav.addObject("registrosSalida", registroSalidaEjb.buscaIndicadoresTotal(dataInici, dataFi, entidadActiva.getId()).intValue());
+
+                // Busca los registros totales según el calendario seleccionado de Salida entre las fechas
+                if(calendario.equals((long) 0)){ // Años y meses
+
+                    totalRegistresSalidaAny(mav, dataInici, dataFi, entidadActiva);
+                    totalRegistresSalidaMes(mav, dataInici, dataFi, entidadActiva);
+
+                }else if(calendario.equals((long) 1)){ // Años
+
+                    totalRegistresSalidaAny(mav,dataInici,dataFi,entidadActiva);
+
+                }else if(calendario.equals((long) 2)){ // Meses
+
+                    totalRegistresSalidaMes(mav,dataInici,dataFi,entidadActiva);
+                }
+
+                // Busca los registros totales por Organismo de Salida entre las fechas
+                totalRegistresSalidaOrganismo(mav, dataInici, dataFi, organismos);
+
+                // Busca los registros totales por Tipos de Asunto de Salida entre las fechas
+                totalRegistresSalidaTipoAsunto(mav, dataInici, dataFi, tiposAsunto, entidadActiva.getId());
+
+                // Busca los registros totales por Libro de Salida entre las fechas
+                totalRegistresSalidaLibro(mav, dataInici, dataFi, organismos);
+
+                //Busca los registros totales por Oficina de Registro Salida entre las fechas
+                totalRegistresSalidaOficina(mav, dataInici, dataFi, oficinas);
+
+                // Busca los registros totales por Idiomas de  Salida entre las fechas
+                totalRegistresSalidaIdioma(mav, dataInici, dataFi, entidadActiva.getId());
 
 
-        // Busca los registros por Conselleria de Entrada y Salida entre las fechas
-        List<String> entradaConselleriaValor = new ArrayList<String>();
-        List<String> entradaConselleriaNombre = new ArrayList<String>();
-        List<String> salidaConselleriaValor = new ArrayList<String>();
-        List<String> salidaConselleriaNombre = new ArrayList<String>();
-        List<Organismo> organismos = getEntidadActiva(request).getOrganismos();
-        for(int i=0; i<organismos.size(); i++){
-            Organismo organismo = organismos.get(i);
-            entradaConselleriaNombre.add(organismo.getDenominacion());
-            salidaConselleriaNombre.add(organismo.getDenominacion());
-            entradaConselleriaValor.add(String.valueOf(registroEntradaEjb.buscaEntradaPorConselleria(dataInici, dataFi, organismo.getId())));
-            salidaConselleriaValor.add(String.valueOf(registroSalidaEjb.buscaSalidaPorConselleria(dataInici, dataFi, organismo.getId())));
-        }
-        mav.addObject("entradaConselleriaValor", entradaConselleriaValor);
-        mav.addObject("entradaConselleriaNombre", entradaConselleriaNombre);
-        mav.addObject("salidaConselleriaValor", salidaConselleriaValor);
-        mav.addObject("salidaConselleriaNombre", salidaConselleriaNombre);
-
-
-        // Busca los registros por Tipos de Asunto de Entrada y Salida entre las fechas
-        List<String> entradaAsuntoValor = new ArrayList<String>();
-        List<String> entradaAsuntoNombre = new ArrayList<String>();
-        List<String> salidaAsuntoValor = new ArrayList<String>();
-        List<String> salidaAsuntoNombre = new ArrayList<String>();
-        List<TipoAsunto> tiposAsunto = tipoAsuntoEjb.getAll();
-        for(int i=0; i<tiposAsunto.size(); i++){
-            TipoAsunto tipoAsunto = tiposAsunto.get(i);
-            TraduccionTipoAsunto traduccionTipoAsunto = (TraduccionTipoAsunto) tipoAsunto.getTraduccion();
-            entradaAsuntoNombre.add(traduccionTipoAsunto.getNombre());
-            salidaAsuntoNombre.add(traduccionTipoAsunto.getNombre());
-            entradaAsuntoValor.add(String.valueOf(registroEntradaEjb.buscaEntradaPorAsunto(dataInici, dataFi, tipoAsunto.getId(), entidadActiva.getId())));
-            salidaAsuntoValor.add(String.valueOf(registroSalidaEjb.buscaSalidaPorAsunto(dataInici, dataFi, tipoAsunto.getId(), entidadActiva.getId())));
-        }
-        mav.addObject("entradaAsuntoValor", entradaAsuntoValor);
-        mav.addObject("entradaAsuntoNombre", entradaAsuntoNombre);
-        mav.addObject("salidaAsuntoValor", salidaAsuntoValor);
-        mav.addObject("salidaAsuntoNombre", salidaAsuntoNombre);
-
-
-        // Busca los registros por Libro de Registro de Entrada y Salida entre las fechas
-        List<String> entradaLibroValor = new ArrayList<String>();
-        List<String> entradaLibroNombre = new ArrayList<String>();
-        List<String> salidaLibroValor = new ArrayList<String>();
-        List<String> salidaLibroNombre = new ArrayList<String>();
-        for(int i=0; i<organismos.size(); i++){
-            Organismo organismo = organismos.get(i);
-            List<Libro> libros = organismo.getLibros();
-            for(int j=0; j<libros.size(); j++){
-                Libro libro = libros.get(j);
-                entradaLibroNombre.add(libro.getNombre());
-                salidaLibroNombre.add(libro.getNombre());
-                entradaLibroValor.add(String.valueOf(registroEntradaEjb.buscaEntradaPorLibro(dataInici, dataFi, libro.getId())));
-                salidaLibroValor.add(String.valueOf(registroSalidaEjb.buscaSalidaPorLibro(dataInici, dataFi, libro.getId())));
-            }
-        }
-        mav.addObject("entradaLibroValor", entradaLibroValor);
-        mav.addObject("entradaLibroNombre", entradaLibroNombre);
-        mav.addObject("salidaLibroValor", salidaLibroValor);
-        mav.addObject("salidaLibroNombre", salidaLibroNombre);
-
-
-        // Busca los registros por Oficina de Registro de Entrada y Salida entre las fechas
-        List<String> entradaOficinaValor = new ArrayList<String>();
-        List<String> entradaOficinaNombre = new ArrayList<String>();
-        List<String> salidaOficinaValor = new ArrayList<String>();
-        List<String> salidaOficinaNombre = new ArrayList<String>();
-        Entidad entitat = getEntidadActiva(request);
-        List<Oficina> oficinas = oficinaEjb.findByEntidad(entitat.getId());
-        for(int i=0; i<oficinas.size(); i++){
-            Oficina oficina = oficinas.get(i);
-            entradaOficinaNombre.add(oficina.getDenominacion());
-            salidaOficinaNombre.add(oficina.getDenominacion());
-            entradaOficinaValor.add(String.valueOf(registroEntradaEjb.buscaEntradaPorOficina(dataInici, dataFi, oficina.getId())));
-            salidaOficinaValor.add(String.valueOf(registroSalidaEjb.buscaSalidaPorOficina(dataInici, dataFi, oficina.getId())));
-        }
-        mav.addObject("entradaOficinaValor", entradaOficinaValor);
-        mav.addObject("entradaOficinaNombre", entradaOficinaNombre);
-        mav.addObject("salidaOficinaValor", salidaOficinaValor);
-        mav.addObject("salidaOficinaNombre", salidaOficinaNombre);
-
-
-        // Busca los registros por Idiomas de Entrada y Salida entre las fechas
-        List<String> entradaIdiomaValor = new ArrayList<String>();
-        List<String> entradaIdiomaNombre = new ArrayList<String>();
-        List<String> salidaIdiomaValor = new ArrayList<String>();
-        List<String> salidaIdiomaNombre = new ArrayList<String>();
-        
-        for(Long idioma : RegwebConstantes.IDIOMAS_REGISTRO){
-            final String nombre = I18NUtils.tradueix("idioma." + idioma);
-            entradaIdiomaNombre.add(nombre);
-            salidaIdiomaNombre.add(nombre);
-            entradaIdiomaValor.add(String.valueOf(registroEntradaEjb.buscaEntradaPorIdioma(dataInici, dataFi, idioma, entidadActiva.getId())));
-            salidaIdiomaValor.add(String.valueOf(registroSalidaEjb.buscaSalidaPorIdioma(dataInici, dataFi, idioma, entidadActiva.getId())));
-        }
-        mav.addObject("entradaIdiomaValor", entradaIdiomaValor);
-        mav.addObject("entradaIdiomaNombre", entradaIdiomaNombre);
-        mav.addObject("salidaIdiomaValor", salidaIdiomaValor);
-        mav.addObject("salidaIdiomaNombre", salidaIdiomaNombre);
-
-
-        // Registros de Entrada y Salida
-        if(informeIndicadoresBusquedaForm.getTipo() == 0){
-            for (int i = 0; i < registrosEntrada.size(); i++) {
-                registros.add(new ArrayList<String>());
-            }
-            mav.addObject("tipo", RegwebConstantes.INFORME_TIPO_REGISTRO_ENTRADASALIDA);
-
-            // Registros de Entrada
-        }else if(informeIndicadoresBusquedaForm.getTipo() == 1){
-            for (int i = 0; i < registrosEntrada.size(); i++) {
-                registros.add(new ArrayList<String>());
-            }
-            mav.addObject("tipo", RegwebConstantes.INFORME_TIPO_REGISTRO_ENTRADA);
-
-            // Registros de Salida
-        }else if(informeIndicadoresBusquedaForm.getTipo() == 2){
-            for (int i = 0; i < registrosSalida.size(); i++) {
-                registros.add(new ArrayList<String>());
-            }
-            mav.addObject("tipo", RegwebConstantes.INFORME_TIPO_REGISTRO_SALIDA);
+            break;
         }
 
-        mav.addObject("campoCalendario", informeIndicadoresBusquedaForm.getCampoCalendario());
-        mav.addObject("registrosEntrada", registrosEntrada.size());
-        mav.addObject("registrosSalida", registrosSalida.size());
 
         return mav;
     }
@@ -1188,9 +1090,9 @@ public class InformeController extends BaseController {
         if(isOperador(request)){
 
             // Obtenemos los Libros de los cuales el Usuario es administrador
-            if(getLibrosAdministrados(request).size()>0) {
-                libros = getLibrosAdministrados(request);
-            }else{
+            libros = getLibrosAdministrados(request);
+
+            if(libros.size()==0) {
                 libros = getLibrosConsultaEntradas(request);
             }
         }
@@ -1306,4 +1208,446 @@ public class InformeController extends BaseController {
         binder.registerCustomEditor(java.util.Date.class, dateEditor);
     }
 
+    /**
+     * Busca los registros de entrada totales por Años entre las fechas
+     * @param mav
+     * @param dataInici
+     * @param dataFi
+     * @param entidadActiva
+     * @throws Exception
+     */
+    public void totalRegistresEntradaAny(ModelAndView mav, Date dataInici, Date dataFi, Entidad entidadActiva) throws Exception{
+
+        SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
+        List<String> entradaAnosValor = new ArrayList<String>();
+        List<String> entradaAnosNombre = new ArrayList<String>();
+
+        while (dataInici.compareTo(dataFi) < 0) {
+            String anyActual = formatYear.format(dataInici);
+            entradaAnosNombre.add(anyActual);
+            Calendar cal = Calendar.getInstance();
+
+            cal.set(Calendar.MONTH, 11);
+            cal.set(Calendar.DATE, 31);
+            cal.set(Calendar.YEAR, Integer.parseInt(anyActual));
+            cal.set(Calendar.HOUR, 23);
+            cal.set(Calendar.MINUTE, 59);
+            cal.set(Calendar.SECOND, 59);
+            if(cal.getTime().compareTo(dataFi) < 0){
+                entradaAnosValor.add(String.valueOf(registroEntradaEjb.buscaIndicadoresTotal(dataInici, cal.getTime(), entidadActiva.getId())));
+
+            }else{
+                entradaAnosValor.add(String.valueOf(registroEntradaEjb.buscaIndicadoresTotal(dataInici, dataFi, entidadActiva.getId())));
+
+                break;
+            }
+            cal.add(Calendar.DATE, 1);
+            dataInici = cal.getTime();
+        }
+        mav.addObject("entradaAnosValor", entradaAnosValor);
+        mav.addObject("entradaAnosNombre", entradaAnosNombre);
+
+    }
+
+    /**
+     * Busca los registros de salida totales por Años entre las fechas
+     * @param mav
+     * @param dataInici
+     * @param dataFi
+     * @param entidadActiva
+     * @throws Exception
+     */
+    public void totalRegistresSalidaAny(ModelAndView mav, Date dataInici, Date dataFi, Entidad entidadActiva) throws Exception{
+
+        SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
+        List<String> salidaAnosValor = new ArrayList<String>();
+        List<String> salidaAnosNombre = new ArrayList<String>();
+
+        while (dataInici.compareTo(dataFi) < 0) {
+            String anyActual = formatYear.format(dataInici);
+            salidaAnosNombre.add(anyActual);
+
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.MONTH, 11);
+            cal.set(Calendar.DATE, 31);
+            cal.set(Calendar.YEAR, Integer.parseInt(anyActual));
+            cal.set(Calendar.HOUR, 23);
+            cal.set(Calendar.MINUTE, 59);
+            cal.set(Calendar.SECOND, 59);
+            if(cal.getTime().compareTo(dataFi) < 0){
+                salidaAnosValor.add(String.valueOf(registroSalidaEjb.buscaIndicadoresTotal(dataInici, cal.getTime(), entidadActiva.getId())));
+            }else{
+                salidaAnosValor.add(String.valueOf(registroSalidaEjb.buscaIndicadoresTotal(dataInici, dataFi, entidadActiva.getId())));
+                break;
+            }
+            cal.add(Calendar.DATE, 1);
+            dataInici = cal.getTime();
+        }
+        mav.addObject("salidaAnosValor", salidaAnosValor);
+        mav.addObject("salidaAnosNombre", salidaAnosNombre);
+    }
+
+    /**
+     * Busca los registros de entrada totales por Meses entre las fechas
+     * @param mav
+     * @param dataInici
+     * @param dataFi
+     * @param entidadActiva
+     * @throws Exception
+     */
+    public void totalRegistresEntradaMes(ModelAndView mav, Date dataInici, Date dataFi, Entidad entidadActiva) throws Exception{
+
+        SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
+        SimpleDateFormat formatMes = new SimpleDateFormat("MMMMM", new Locale("ca"));
+        SimpleDateFormat formatMonth = new SimpleDateFormat("MM");
+
+        List<String> entradaMesesValor = new ArrayList<String>();
+        List<String> entradaMesesNombre = new ArrayList<String>();
+
+        while (dataInici.compareTo(dataFi) < 0) {
+            String anyActual = formatYear.format(dataInici);
+            String mesActualNom = formatMes.format(dataInici);
+            String mesActual = formatMonth.format(dataInici);
+            String mesActualCompost = mesActualNom + "/" + anyActual;
+
+            entradaMesesNombre.add(mesActualCompost);
+
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.MONTH, Integer.parseInt(mesActual)-1);
+            int mesAra = Integer.parseInt(mesActual);
+            int anyAra = Integer.parseInt(anyActual);
+            if((mesAra == 1)|| (mesAra == 3)|| (mesAra == 5)|| (mesAra == 7)|| (mesAra == 8)|| (mesAra == 10)|| (mesAra == 12)){
+                cal.set(Calendar.DAY_OF_MONTH, 31);
+            } else if((mesAra == 4)|| (mesAra == 6)|| (mesAra == 9)|| (mesAra == 11)){
+                cal.set(Calendar.DAY_OF_MONTH, 30);
+            } else if((anyAra % 4 == 0) && ((anyAra % 100 != 0) || (anyAra % 400 == 0))){
+                cal.set(Calendar.DAY_OF_MONTH, 29);
+            } else{
+                cal.set(Calendar.DAY_OF_MONTH, 28);
+            }
+            cal.set(Calendar.YEAR, Integer.parseInt(anyActual));
+            cal.set(Calendar.HOUR, 23);
+            cal.set(Calendar.MINUTE, 59);
+            cal.set(Calendar.SECOND, 59);
+            if(cal.getTime().compareTo(dataFi) < 0){
+                entradaMesesValor.add(String.valueOf(registroEntradaEjb.buscaIndicadoresTotal(dataInici, cal.getTime(), entidadActiva.getId())));
+
+            }else{
+                entradaMesesValor.add(String.valueOf(registroEntradaEjb.buscaIndicadoresTotal(dataInici, dataFi, entidadActiva.getId())));
+
+                break;
+            }
+            cal.add(Calendar.DATE, 1);
+            cal.set(Calendar.HOUR_OF_DAY, 00);
+            cal.set(Calendar.MINUTE, 00);
+            cal.set(Calendar.SECOND, 00);
+            dataInici = cal.getTime();
+        }
+        mav.addObject("entradaMesesValor", entradaMesesValor);
+        mav.addObject("entradaMesesNombre", entradaMesesNombre);
+
+    }
+
+    /**
+     * Busca los registros de salida totales por Meses entre las fechas
+     * @param mav
+     * @param dataInici
+     * @param dataFi
+     * @param entidadActiva
+     * @throws Exception
+     */
+    public void totalRegistresSalidaMes(ModelAndView mav, Date dataInici, Date dataFi, Entidad entidadActiva) throws Exception{
+
+        SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
+        SimpleDateFormat formatMes = new SimpleDateFormat("MMMMM", new Locale("ca"));
+        SimpleDateFormat formatMonth = new SimpleDateFormat("MM");
+
+        List<String> salidaMesesValor = new ArrayList<String>();
+        List<String> salidaMesesNombre = new ArrayList<String>();
+
+
+        while (dataInici.compareTo(dataFi) < 0) {
+            String anyActual = formatYear.format(dataInici);
+            String mesActualNom = formatMes.format(dataInici);
+            String mesActual = formatMonth.format(dataInici);
+            String mesActualCompost = mesActualNom + "/" + anyActual;
+
+            salidaMesesNombre.add(mesActualCompost);
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.MONTH, Integer.parseInt(mesActual)-1);
+            int mesAra = Integer.parseInt(mesActual);
+            int anyAra = Integer.parseInt(anyActual);
+            if((mesAra == 1)|| (mesAra == 3)|| (mesAra == 5)|| (mesAra == 7)|| (mesAra == 8)|| (mesAra == 10)|| (mesAra == 12)){
+                cal.set(Calendar.DAY_OF_MONTH, 31);
+            } else if((mesAra == 4)|| (mesAra == 6)|| (mesAra == 9)|| (mesAra == 11)){
+                cal.set(Calendar.DAY_OF_MONTH, 30);
+            } else if((anyAra % 4 == 0) && ((anyAra % 100 != 0) || (anyAra % 400 == 0))){
+                cal.set(Calendar.DAY_OF_MONTH, 29);
+            } else{
+                cal.set(Calendar.DAY_OF_MONTH, 28);
+            }
+            cal.set(Calendar.YEAR, Integer.parseInt(anyActual));
+            cal.set(Calendar.HOUR, 23);
+            cal.set(Calendar.MINUTE, 59);
+            cal.set(Calendar.SECOND, 59);
+            if(cal.getTime().compareTo(dataFi) < 0){
+
+                salidaMesesValor.add(String.valueOf(registroSalidaEjb.buscaIndicadoresTotal(dataInici, cal.getTime(), entidadActiva.getId())));
+            }else{
+
+                salidaMesesValor.add(String.valueOf(registroSalidaEjb.buscaIndicadoresTotal(dataInici, dataFi, entidadActiva.getId())));
+                break;
+            }
+            cal.add(Calendar.DATE, 1);
+            cal.set(Calendar.HOUR_OF_DAY, 00);
+            cal.set(Calendar.MINUTE, 00);
+            cal.set(Calendar.SECOND, 00);
+            dataInici = cal.getTime();
+        }
+
+        mav.addObject("salidaMesesValor", salidaMesesValor);
+        mav.addObject("salidaMesesNombre", salidaMesesNombre);
+
+    }
+
+    /**
+     * Busca los registros de entrada totales por Organismo entre las fechas
+     * @param mav
+     * @param dataInici
+     * @param dataFi
+     * @param organismos
+     * @throws Exception
+     */
+    public void totalRegistresEntradaOrganismo(ModelAndView mav,Date dataInici, Date dataFi, List<Organismo> organismos) throws Exception{
+
+        List<String> entradaConselleriaValor = new ArrayList<String>();
+        List<String> entradaConselleriaNombre = new ArrayList<String>();
+
+        for(int i=0; i<organismos.size(); i++){
+            Organismo organismo = organismos.get(i);
+            entradaConselleriaNombre.add(organismo.getDenominacion());
+            entradaConselleriaValor.add(String.valueOf(registroEntradaEjb.buscaEntradaPorConselleria(dataInici, dataFi, organismo.getId())));
+
+        }
+        mav.addObject("entradaConselleriaValor", entradaConselleriaValor);
+        mav.addObject("entradaConselleriaNombre", entradaConselleriaNombre);
+
+    }
+
+    /**
+     * Busca los registros de salida totales por Organismo entre las fechas
+     * @param mav
+     * @param dataInici
+     * @param dataFi
+     * @param organismos
+     * @throws Exception
+     */
+    public void totalRegistresSalidaOrganismo(ModelAndView mav,Date dataInici, Date dataFi, List<Organismo> organismos) throws Exception{
+
+        List<String> salidaConselleriaValor = new ArrayList<String>();
+        List<String> salidaConselleriaNombre = new ArrayList<String>();
+
+        for(int i=0; i<organismos.size(); i++){
+            Organismo organismo = organismos.get(i);
+
+            salidaConselleriaNombre.add(organismo.getDenominacion());
+            salidaConselleriaValor.add(String.valueOf(registroSalidaEjb.buscaSalidaPorConselleria(dataInici, dataFi, organismo.getId())));
+        }
+
+        mav.addObject("salidaConselleriaValor", salidaConselleriaValor);
+        mav.addObject("salidaConselleriaNombre", salidaConselleriaNombre);
+    }
+
+    /**
+     * Busca los registros de entrada totales por Tipos de Asunto entre las fechas
+     * @param mav
+     * @param dataInici
+     * @param dataFi
+     * @param tiposAsunto
+     * @param idEntidad
+     * @throws Exception
+     */
+    public void totalRegistresEntradaTipoAsunto(ModelAndView mav,Date dataInici, Date dataFi,List<TipoAsunto> tiposAsunto, Long idEntidad) throws Exception{
+
+        List<String> entradaAsuntoValor = new ArrayList<String>();
+        List<String> entradaAsuntoNombre = new ArrayList<String>();
+
+        for(int i=0; i<tiposAsunto.size(); i++){
+            TipoAsunto tipoAsunto = tiposAsunto.get(i);
+            TraduccionTipoAsunto traduccionTipoAsunto = (TraduccionTipoAsunto) tipoAsunto.getTraduccion();
+            entradaAsuntoNombre.add(traduccionTipoAsunto.getNombre());
+            entradaAsuntoValor.add(String.valueOf(registroEntradaEjb.buscaEntradaPorAsunto(dataInici, dataFi, tipoAsunto.getId(), idEntidad)));
+        }
+        mav.addObject("entradaAsuntoValor", entradaAsuntoValor);
+        mav.addObject("entradaAsuntoNombre", entradaAsuntoNombre);
+    }
+
+    /**
+     * Busca los registros de salida totales por Tipos de Asunto entre las fechas
+     * @param mav
+     * @param dataInici
+     * @param dataFi
+     * @param tiposAsunto
+     * @param idEntidad
+     * @throws Exception
+     */
+    public void totalRegistresSalidaTipoAsunto(ModelAndView mav,Date dataInici, Date dataFi,List<TipoAsunto> tiposAsunto, Long idEntidad) throws Exception{
+
+          List<String> salidaAsuntoValor = new ArrayList<String>();
+        List<String> salidaAsuntoNombre = new ArrayList<String>();
+
+        for(int i=0; i<tiposAsunto.size(); i++){
+            TipoAsunto tipoAsunto = tiposAsunto.get(i);
+            TraduccionTipoAsunto traduccionTipoAsunto = (TraduccionTipoAsunto) tipoAsunto.getTraduccion();
+
+            salidaAsuntoNombre.add(traduccionTipoAsunto.getNombre());
+
+            salidaAsuntoValor.add(String.valueOf(registroSalidaEjb.buscaSalidaPorAsunto(dataInici, dataFi, tipoAsunto.getId(), idEntidad)));
+        }
+
+        mav.addObject("salidaAsuntoValor", salidaAsuntoValor);
+        mav.addObject("salidaAsuntoNombre", salidaAsuntoNombre);
+    }
+
+    /**
+     *  Busca los registros totales por Libro de Entrada entre las fechas
+     * @param mav
+     * @param dataInici
+     * @param dataFi
+     * @param organismos
+     * @throws Exception
+     */
+    public void totalRegistresEntradaLibro(ModelAndView mav,Date dataInici, Date dataFi,List<Organismo> organismos) throws Exception{
+
+        List<String> entradaLibroValor = new ArrayList<String>();
+        List<String> entradaLibroNombre = new ArrayList<String>();
+
+        for(int i=0; i<organismos.size(); i++){
+            Organismo organismo = organismos.get(i);
+            List<Libro> libros = organismo.getLibros();
+            for(int j=0; j<libros.size(); j++){
+                Libro libro = libros.get(j);
+                entradaLibroNombre.add(libro.getNombre());
+                entradaLibroValor.add(String.valueOf(registroEntradaEjb.buscaEntradaPorLibro(dataInici, dataFi, libro.getId())));
+            }
+        }
+        mav.addObject("entradaLibroValor", entradaLibroValor);
+        mav.addObject("entradaLibroNombre", entradaLibroNombre);
+    }
+
+    /**
+     *  Busca los registros totales por Libro de Salida entre las fechas
+     * @param mav
+     * @param dataInici
+     * @param dataFi
+     * @param organismos
+     * @throws Exception
+     */
+    public void totalRegistresSalidaLibro(ModelAndView mav,Date dataInici, Date dataFi,List<Organismo> organismos) throws Exception{
+
+        List<String> salidaLibroValor = new ArrayList<String>();
+        List<String> salidaLibroNombre = new ArrayList<String>();
+
+        for(int i=0; i<organismos.size(); i++){
+            Organismo organismo = organismos.get(i);
+            List<Libro> libros = organismo.getLibros();
+            for(int j=0; j<libros.size(); j++){
+                Libro libro = libros.get(j);
+
+                salidaLibroNombre.add(libro.getNombre());
+                salidaLibroValor.add(String.valueOf(registroSalidaEjb.buscaSalidaPorLibro(dataInici, dataFi, libro.getId())));
+            }
+        }
+        mav.addObject("salidaLibroValor", salidaLibroValor);
+        mav.addObject("salidaLibroNombre", salidaLibroNombre);
+    }
+
+    /**
+     * Busca los registros totales por Oficina de Entrada entre las fechas
+     * @param mav
+     * @param dataInici
+     * @param dataFi
+     * @param oficinas
+     * @throws Exception
+     */
+    public void totalRegistresEntradaOficina(ModelAndView mav,Date dataInici, Date dataFi,List<Oficina> oficinas) throws Exception{
+        List<String> entradaOficinaValor = new ArrayList<String>();
+        List<String> entradaOficinaNombre = new ArrayList<String>();
+
+
+        for(int i=0; i<oficinas.size(); i++){
+            Oficina oficina = oficinas.get(i);
+            entradaOficinaNombre.add(oficina.getDenominacion());
+            entradaOficinaValor.add(String.valueOf(registroEntradaEjb.buscaEntradaPorOficina(dataInici, dataFi, oficina.getId())));
+        }
+        mav.addObject("entradaOficinaValor", entradaOficinaValor);
+        mav.addObject("entradaOficinaNombre", entradaOficinaNombre);
+    }
+
+    /**
+     * Busca los registros totales por Oficina de Salida entre las fechas
+     * @param mav
+     * @param dataInici
+     * @param dataFi
+     * @param oficinas
+     * @throws Exception
+     */
+    public void totalRegistresSalidaOficina(ModelAndView mav,Date dataInici, Date dataFi,List<Oficina> oficinas) throws Exception{
+
+        List<String> salidaOficinaValor = new ArrayList<String>();
+        List<String> salidaOficinaNombre = new ArrayList<String>();
+
+
+        for(int i=0; i<oficinas.size(); i++){
+            Oficina oficina = oficinas.get(i);
+            salidaOficinaNombre.add(oficina.getDenominacion());
+            salidaOficinaValor.add(String.valueOf(registroSalidaEjb.buscaSalidaPorOficina(dataInici, dataFi, oficina.getId())));
+        }
+        mav.addObject("salidaOficinaValor", salidaOficinaValor);
+        mav.addObject("salidaOficinaNombre", salidaOficinaNombre);
+    }
+
+    /**
+     * Busca los registros totales por Idiomas de Entrada entre las fechas
+     * @param mav
+     * @param dataInici
+     * @param dataFi
+     * @param idEntidad
+     * @throws Exception
+     */
+    public void totalRegistresEntradaIdioma(ModelAndView mav,Date dataInici, Date dataFi, Long idEntidad) throws Exception{
+
+        List<String> entradaIdiomaValor = new ArrayList<String>();
+        List<String> entradaIdiomaNombre = new ArrayList<String>();
+
+        for(Long idioma : RegwebConstantes.IDIOMAS_REGISTRO){
+            final String nombre = I18NUtils.tradueix("idioma." + idioma);
+            entradaIdiomaNombre.add(nombre);
+            entradaIdiomaValor.add(String.valueOf(registroEntradaEjb.buscaEntradaPorIdioma(dataInici, dataFi, idioma, idEntidad)));
+        }
+        mav.addObject("entradaIdiomaValor", entradaIdiomaValor);
+        mav.addObject("entradaIdiomaNombre", entradaIdiomaNombre);
+    }
+
+    /**
+     * Busca los registros totales por Idiomas de Salida entre las fechas
+     * @param mav
+     * @param dataInici
+     * @param dataFi
+     * @param idEntidad
+     * @throws Exception
+     */
+    public void totalRegistresSalidaIdioma(ModelAndView mav,Date dataInici, Date dataFi, Long idEntidad) throws Exception{
+
+        List<String> salidaIdiomaValor = new ArrayList<String>();
+        List<String> salidaIdiomaNombre = new ArrayList<String>();
+
+        for(Long idioma : RegwebConstantes.IDIOMAS_REGISTRO){
+            final String nombre = I18NUtils.tradueix("idioma." + idioma);
+            salidaIdiomaNombre.add(nombre);
+            salidaIdiomaValor.add(String.valueOf(registroSalidaEjb.buscaSalidaPorIdioma(dataInici, dataFi, idioma, idEntidad)));
+        }
+        mav.addObject("salidaIdiomaValor", salidaIdiomaValor);
+        mav.addObject("salidaIdiomaNombre", salidaIdiomaNombre);
+    }
 }

@@ -65,6 +65,12 @@ public class Libro implements Serializable {
         this.organismo = new Organismo(idOrganismo);
     }
 
+    public Libro(Long id, String nombre, Long idOrganismo, String denominacionOrganismo) {
+        this.id = id;
+        this.nombre = nombre;
+        this.organismo = new Organismo(idOrganismo, denominacionOrganismo);
+    }
+
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
     @Column(name="ID")

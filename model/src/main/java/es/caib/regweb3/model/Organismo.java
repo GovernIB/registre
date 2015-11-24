@@ -86,6 +86,11 @@ public class Organismo implements Serializable {
     public Organismo(Long id) {
         this.id = id;
     }
+    public Organismo(Long id, String denominacion) {
+
+        this.id = id;
+        this.denominacion = denominacion;
+    }
 
     @Id
     @GeneratedValue(strategy= GenerationType.SEQUENCE,generator = "generator")

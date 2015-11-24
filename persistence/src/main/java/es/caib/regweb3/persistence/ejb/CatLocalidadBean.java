@@ -84,7 +84,7 @@ public class CatLocalidadBean extends BaseEjbJPA<CatLocalidad, Long> implements 
         q.setParameter("codigoProvincia",codigoProvincia);
 
         List<CatLocalidad> catLocalidad = q.getResultList();
-        if(catLocalidad.size() == 1){
+        if(catLocalidad.size() > 0){  //todo: revisar el caso en el que el código Localidad+Provincia retorna más de 1 resultado (Entidad Geografica)
             return catLocalidad.get(0);
         }else{
             return  null;

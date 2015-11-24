@@ -150,7 +150,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
 
         CatEstadoEntidad vigente = catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
 
-        Query q = em.createQuery("Select distinct plu.libro.id, plu.libro.nombre from PermisoLibroUsuario as plu where " +
+        Query q = em.createQuery("Select distinct plu.libro.id, plu.libro.nombre, plu.libro.organismo.id, plu.libro.organismo.denominacion from PermisoLibroUsuario as plu where " +
                 "plu.usuario.id = :idUsuarioEntidad and plu.libro.organismo.estado.id = :vigente and " +
                 "plu.libro.activo = true and " +
                 "(plu.permiso = " + PERMISO_ADMINISTRACION_LIBRO + " and plu.activo = true)");
@@ -163,7 +163,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result){
-            Libro libro = new Libro((Long)object[0],(String)object[1]);
+            Libro libro = new Libro((Long)object[0],(String)object[1],(Long)object[2],(String)object[3]);
 
             libros.add(libro);
         }
