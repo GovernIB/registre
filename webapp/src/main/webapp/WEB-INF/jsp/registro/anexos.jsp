@@ -69,7 +69,7 @@
                                          <a class="btn btn-success btn-default btn-sm"  href="<c:url value="/anexo/descargarDocumento/${anexo.id}"/>" target="_blank" title="<spring:message code="anexo.descargar"/>"><span class="fa fa-download"></span></a>
                                          <c:if test="${(registro.estado == 1 || registro.estado == 2 || registro.estado ==3) && oficinaRegistral}">
                                              <a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#myModal"  onclick="editarAnexoFull('${anexo.id}','${registro.id}','${registro.registroDetalle.id}','${param.tipoRegistro}')" title="Editar"><span class="fa fa-pencil"></span></a>
-                                             <a class="btn btn-danger btn-default btn-sm"  onclick="eliminarAnexo('${anexo.id}','${registro.id}','${registro.registroDetalle.id}','${param.tipoRegistro}')" href="#" title="Eliminar"><span class="fa fa-eraser"></span></a>
+                                             <a class="btn btn-danger btn-default btn-sm"  onclick="eliminarAnexo('${anexo.id}','${registro.id}','${registro.registroDetalle.id}','${param.tipoRegistro}', '<spring:message code="anexo.confirmar.eliminar" javaScriptEscape='true'/>')" href="#" title="Eliminar"><span class="fa fa-eraser"></span></a>
                                          </c:if>
                                          <c:if test="${(registro.estado != 1 && registro.estado != 2 && registro.estado != 3) || !oficinaRegistral}">
                                              <a class="btn btn-warning disabled btn-sm" href="javascript:void(0);" title="Editar"><span class="fa fa-pencil"></span></a>
@@ -160,8 +160,10 @@
      * @param idAnexo
      * @param idRegistroDetalle
      */
-    function eliminarAnexo(idAnexo, idRegistro, idRegistroDetalle, tipoRegistro) {        
-        document.location.href = "<c:url value="/anexo/delete"/>/" +  idRegistroDetalle + "/" + tipoRegistro + "/" + idRegistro + "/" + idAnexo;
+    function eliminarAnexo(idAnexo, idRegistro, idRegistroDetalle, tipoRegistro, mensaje) {
+
+        confirm("<c:url value="/anexo/delete"/>/"+  idRegistroDetalle + "/" + tipoRegistro + "/" + idRegistro + "/" + idAnexo, mensaje);
+
     }
  
 </script>
