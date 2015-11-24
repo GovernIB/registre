@@ -92,7 +92,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @return
      * @throws Exception
      */
-    public List<RegistroSalida> buscaIndicadores(Date fechaInicio, Date fechaFin, Long idEntidad) throws Exception;
+    public Long buscaIndicadoresTotal(Date fechaInicio, Date fechaFin, Long idEntidad) throws Exception;
 
     /**
      * Busca los Registros de Salida que no estén anulados ni pendientes en función de la una fecha inicio, una fecha fin, por Conselleria

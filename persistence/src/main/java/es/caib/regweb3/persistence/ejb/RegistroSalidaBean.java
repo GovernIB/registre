@@ -315,13 +315,13 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     }
 
     @Override
-    public List<RegistroSalida> buscaIndicadores(Date fechaInicio, Date fechaFin, Long idEntidad) throws Exception{
+    public Long buscaIndicadoresTotal(Date fechaInicio, Date fechaFin, Long idEntidad) throws Exception{
 
         Query q;
 
-        q = em.createQuery("Select registroSalida from RegistroSalida as registroSalida where registroSalida.fecha >= :fechaInicio " +
+        q = em.createQuery("Select count (registroSalida.id) from RegistroSalida as registroSalida where registroSalida.fecha >= :fechaInicio " +
                 "and registroSalida.fecha <= :fechaFin and registroSalida.estado != :anulado and registroSalida.estado != :pendiente and " +
-                "registroSalida.libro.organismo.entidad.id = :idEntidad order by registroSalida.fecha desc");
+                "registroSalida.libro.organismo.entidad.id = :idEntidad");
 
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
@@ -329,7 +329,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         q.setParameter("anulado",RegwebConstantes.ESTADO_ANULADO);
         q.setParameter("pendiente",RegwebConstantes.ESTADO_PENDIENTE);
 
-        return q.getResultList();
+        return (Long) q.getSingleResult();
     }
 
     @Override

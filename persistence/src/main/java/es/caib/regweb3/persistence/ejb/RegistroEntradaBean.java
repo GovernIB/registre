@@ -96,6 +96,11 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             registroEntrada.getRegistroDetalle().setFechaOrigen(registroEntrada.getFecha());
         }
 
+        // Si no ha introducido ninguna Oficina de Origen
+        if(registroEntrada.getRegistroDetalle().getOficinaOrigen() == null){
+            registroEntrada.getRegistroDetalle().setOficinaOrigen(registroEntrada.getOficina());
+        }
+
         List<Interesado> interesados = registroEntrada.getRegistroDetalle().getInteresados();
         if (interesados != null && interesados.size() != 0) {
           for (Interesado interesado : interesados) {
@@ -578,13 +583,13 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
-    public List<RegistroEntrada> buscaIndicadores(Date fechaInicio, Date fechaFin, Long idEntidad) throws Exception{
+    public Long buscaIndicadoresTotal(Date fechaInicio, Date fechaFin, Long idEntidad) throws Exception{
 
         Query q;
 
-        q = em.createQuery("Select registroEntrada from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
+        q = em.createQuery("Select count(registroEntrada.id) from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
                 "and registroEntrada.fecha <= :fechaFin and registroEntrada.estado != :anulado and registroEntrada.estado != :pendiente and " +
-                "registroEntrada.libro.organismo.entidad.id = :idEntidad order by registroEntrada.fecha desc");
+                "registroEntrada.libro.organismo.entidad.id = :idEntidad ");
 
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
@@ -592,7 +597,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         q.setParameter("anulado",RegwebConstantes.ESTADO_ANULADO);
         q.setParameter("pendiente",RegwebConstantes.ESTADO_PENDIENTE);
 
-        return q.getResultList();
+        return (Long) q.getSingleResult();
     }
 
     @Override
