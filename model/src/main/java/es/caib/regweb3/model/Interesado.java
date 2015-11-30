@@ -147,7 +147,7 @@ public class Interesado implements Serializable {
         this.tipo = RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION;
         this.razonSocial = organismo;
         this.tipoDocumentoIdentificacion = RegwebConstantes.TIPODOCUMENTOID_CODIGO_ORIGEN_ID;
-        this.documento = codigoDir3;
+        //this.documento = codigoDir3;
         this.codigoDir3 = codigoDir3;
     }
     
