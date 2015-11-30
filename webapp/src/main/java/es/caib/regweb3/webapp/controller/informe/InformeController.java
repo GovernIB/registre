@@ -255,13 +255,10 @@ public class InformeController extends BaseController {
                                 if(interesado.getIsRepresentante()){
                                     interessats = interessats + "(Rep.) ";
                                 }
-                                if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
-                                    interessats = interessats + interesado.getNombre();
-                                } else if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)){
-                                        interessats = interessats + interesado.getNombrePersonaFisica();
-                                    } else if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)){
-                                            interessats = interessats + interesado.getNombrePersonaJuridica();
-                                        }
+
+                                // Añadimos el nombre completo del interesado
+                                interessats = interessats + interesado.getNombreCompleto();
+
                                 if(k<registroEntrada.getRegistroDetalle().getInteresados().size()-1){
                                     interessats = interessats + ", ";
                                 }
@@ -432,13 +429,10 @@ public class InformeController extends BaseController {
                                 if(interesado.getIsRepresentante()){
                                     interessats = interessats + "(Rep.) ";
                                 }
-                                if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
-                                    interessats = interessats + interesado.getNombre();
-                                } else if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)){
-                                        interessats = interessats + registroSalida.getRegistroDetalle().getInteresados().get(k).getNombrePersonaFisica();
-                                    } else if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)){
-                                            interessats = interessats + interesado.getNombrePersonaJuridica();
-                                        }
+
+                                // Añadimos el nombre completo del interesado
+                                interessats = interessats + interesado.getNombreCompleto();
+
                                 if(i<registroSalida.getRegistroDetalle().getInteresados().size()-1){
                                     interessats = interessats + ", ";
                                 }
