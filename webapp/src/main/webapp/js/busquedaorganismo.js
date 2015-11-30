@@ -258,12 +258,13 @@ function asignarOrganismo(codigo, denominacion, idSelect, idDenominacion,tipoOrg
 function addAdministracionInteresadosModal(codigoDir3, denominacion,tipo,tipoOrganismo,idRegistroDetalle){
 
     var idModal = "#modalBuscador"+ tipoOrganismo;
+    var denominacionCodificada = encodeURI(denominacion);
 
     $.ajax({
         url: urlAddOrganismoInteresado,
         type: 'GET',
         dataType: 'json',
-        data: { codigoDir3: codigoDir3, denominacion:denominacion, idRegistroDetalle:idRegistroDetalle },
+        data: { codigoDir3: codigoDir3, denominacion:denominacionCodificada, idRegistroDetalle:idRegistroDetalle },
         contentType: 'application/json',
 
         success: function(result) {
