@@ -143,18 +143,10 @@
                                         <tr>
                                             <td><i:trad value="${codigoAsunto}" property="nombre"/></td>
                                             <td class="center">
-                                               <%-- <c:forEach items="${idiomas}" var="idioma" varStatus="index">
-                                                    <c:set var="idioma_lang" value="${RegwebConstantes.CODIGO_BY_IDIOMA_ID[idioma]}" />
-                                                    <c:set var="nombre${idioma_lang}"  value="${fn:escapeXml(codigoAsunto.traducciones[idioma_lang].nombre)}" />
-                                                </c:forEach>--%>
-
-                                                <a class="btn btn-warning" href="javascript:void(0);" onclick='showModalEditar("${codigoAsunto.id}", "<c:out value="${fn:escapeXml(codigoAsunto.traducciones['ca'].nombre)}" />", "<c:out value="${fn:escapeXml(codigoAsunto.traducciones['es'].nombre)}" />", "<c:out value="${fn:escapeXml(codigoAsunto.codigo)}" />")' title="Editar"><span class="fa fa-pencil"></span></a>
-                                               <%-- <a class="btn btn-warning" href="javascript:void(0);" onclick='showModalEditar("${codigoAsunto.id}", "<c:out value="${fn:escapeXml(codigoAsunto.codigo)}" />")' title="Editar"><span class="fa fa-pencil"></span></a>--%>
-
-
-                                                    <%--<a class="btn btn-warning" onclick='showModalEditar("${codigoAsunto.id}", "<c:out value="${codigoAsunto.traducciones['ca'].nombre}" escapeXml="true"/>", "<c:out value="${codigoAsunto.traducciones['es'].nombre}" escapeXml="true"/>", "${codigoAsunto.codigo}")' title="Editar" href="javascript:void(0);"><span class="fa fa-pencil"></span></a>--%>
-                                                   <%-- <a class="btn btn-warning" href="javascript:void(0);" onclick='showModalEditar("${codigoAsunto.id}", "${fn:escapeXml(codigoAsunto.traducciones['ca'].nombre)}", "${fn:escapeXml(codigoAsunto.traducciones['es'].nombre)}", "${codigoAsunto.codigo}")' title="Editar"><span class="fa fa-pencil"></span></a>--%>
-                                                <a class="btn btn-danger" title="Eliminar" onclick="confirm('<c:url value="/codigoAsunto/${codigoAsunto.id}/delete"/>', '<spring:message code="regweb.confirmar.eliminacion" htmlEscape="true"/>')" href="javascript:void(0);"><span class="fa fa-eraser"></span></a>
+                                               <!-- Definimos la variable scope request para que sea visible en el javascript-->
+                                               <c:set var="codAsunto" value="${codigoAsunto}" scope="request"/>
+                                               <a class="btn btn-warning" href="javascript:void(0);" onclick="showModalEditar()" title="Editar"><span class="fa fa-pencil"></span></a>
+                                               <a class="btn btn-danger" title="Eliminar" onclick="confirm('<c:url value="/codigoAsunto/${codigoAsunto.id}/delete"/>', '<spring:message code="regweb.confirmar.eliminacion" htmlEscape="true"/>')" href="javascript:void(0);"><span class="fa fa-eraser"></span></a>
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -253,29 +245,23 @@
 
 
 
-function showModalEditar(id, nombreca, nombrees, codigo) {
+function showModalEditar(){
 
-    $('#id').val(id);
+    $('#id').val(${codAsunto.id});
 
+    var trad;
+    var codigo;
+    <c:forEach items="${idiomas}" var="idioma" varStatus="index">
+        <c:set var="idioma_lang" value="${RegwebConstantes.CODIGO_BY_IDIOMA_ID[idioma]}" />
+        trad = unescapeHtml('<c:out value="${fn:escapeXml(codAsunto.traducciones[idioma_lang].nombre)}" />');
+        $("#modal-form #traducciones\\'${idioma_lang}\\'\\.nombre").val(trad);
+        /*  $("#modal-form #traducciones\\'ca\\'\\.nombre").val(nombreca);*/
+    </c:forEach>
 
-  /*  <c:forEach items="${idiomas}" var="idioma" varStatus="index">
-    <c:set var="idioma_lang" value="${RegwebConstantes.CODIGO_BY_IDIOMA_ID[idioma]}" />
-    var trad = $('#nombre'+idioma_lang).val();
-    $("#modal-form #traducciones\\'${idioma_lang}\\'\\.nombre").val(trad);
-    </c:forEach>*/
+    codigo = unescapeHtml('${codAsunto.codigo}');
 
-
-    <%--  TODO  NO ES CORRECTE QUAN HI HAGI MES IDIOMES QUE ???? --%>
-
-    codigo = unescapeHtml(codigo);
-   nombreca = unescapeHtml(nombreca);
-    nombrees = unescapeHtml(nombrees);
-
-    $('#modal-form #id').val(id);
-    $("#modal-form #traducciones\\'ca\\'\\.nombre").val(nombreca);
-    $("#modal-form #traducciones\\'es\\'\\.nombre").val(nombrees);
+    $('#modal-form #id').val(${codAsunto.id});
     $("#modal-form #codigo").val(codigo);
-
 
 
     $('#myModal .modal-header h3').html("<spring:message code="codigoAsunto.editar"/>");
