@@ -147,12 +147,37 @@ function imprimirRecibo(url) {
     document.location.href=url2;
 }
 
+// Realiza el Registro de un PreRegistro
 function registrarPreRegistro(url) {
+    var libro = true;
+    var idioma  = true;
+    var tipoAsunto  = true;
+    var idLibro = $('#idLibro').val();
+    var idIdioma = $('#idIdioma').val();
+    var idTipoAsunto = $('#idTipoAsunto').val();
 
-    var idLibro = $('#id').val();
-    var url2=url.concat(idLibro);
-
-    document.location.href=url2;
+    // Valida que haya un libro elegido
+    if(!validaCampo(idLibro, 'libro')){
+        libro = false;
+    }
+    // Valida que haya un idioma elegido
+    if(!validaCampo(idIdioma, 'idioma')){
+        idioma = false;
+    }
+    // Valida que haya un tipoAsunto elegido
+    if(!validaSelect(idTipoAsunto, 'tipoAsunto')){
+        tipoAsunto = false;
+    }
+    // Mira si todos los campos son correctos
+    if((libro)&&(idioma)&&(tipoAsunto)){
+        var url2=url.concat(idLibro+"/");
+        var url3=url2.concat(idIdioma+"/");
+        var url4=url3.concat(idTipoAsunto);
+        document.location.href=url4;
+        return true;
+    } else{
+        return false;
+    }
 }
 
 /**
@@ -888,4 +913,36 @@ function validaLibro(libro, campoLibro){
     }
 
     return libro.value!='';
+}
+
+// Valida que el campo tenga un valor, sin no tiene marca el error
+function validaCampo(valorCampo,campo){
+    if (valorCampo!='') {
+        var variable = "#" + campo + " span.errors";
+        var htmlNormal = "<span id='" + campo + ".errors'></span>";
+        $(variable).html(htmlNormal);
+        $(variable).parents(".form-group").removeClass("has-error");
+    } else {
+        var variable = "#" + campo + " span.errors";
+        var formatoHtml = "<span id='" + campo + ".errors' class='help-block'>" + $('#error').val() + "</span>";
+        $(variable).html(formatoHtml);
+        $(variable).parents(".form-group").addClass("has-error");
+    }
+    return valorCampo!='';
+}
+
+// Valida que el campo tenga un valor diferente de -1 (select), si no tiene marca el error
+function validaSelect(valorCampo,campo){
+    if (valorCampo!='-1') {
+        var variable = "#" + campo + " span.errors";
+        var htmlNormal = "<span id='" + campo + ".errors'></span>";
+        $(variable).html(htmlNormal);
+        $(variable).parents(".form-group").removeClass("has-error");
+    } else {
+        var variable = "#" + campo + " span.errors";
+        var formatoHtml = "<span id='" + campo + ".errors' class='help-block'>" + $('#error').val() + "</span>";
+        $(variable).html(formatoHtml);
+        $(variable).parents(".form-group").addClass("has-error");
+    }
+    return valorCampo!='-1';
 }

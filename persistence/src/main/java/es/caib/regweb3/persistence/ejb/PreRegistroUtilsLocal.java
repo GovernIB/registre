@@ -19,11 +19,11 @@ import javax.ejb.Local;
 public interface PreRegistroUtilsLocal  {
 
   public RegistroEntrada procesarPreRegistroEntrada(PreRegistro preRegistro, 
-      UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro)
+      UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto)
           throws Exception, I18NException, I18NValidationException;
   
   public RegistroSalida procesarPreRegistroSalida(PreRegistro preRegistro, 
-      UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro)
+      UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto)
           throws Exception, I18NException, I18NValidationException;
 
 }

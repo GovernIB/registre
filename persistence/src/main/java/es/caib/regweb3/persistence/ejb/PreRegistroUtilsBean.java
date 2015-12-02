@@ -58,7 +58,7 @@ public class PreRegistroUtilsBean implements PreRegistroUtilsLocal {
    */
   @Override
   public RegistroEntrada procesarPreRegistroEntrada(PreRegistro preRegistro, 
-      UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro) 
+      UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto)
           throws Exception, I18NException, I18NValidationException  {
 
       RegistroEntrada nuevoRE = new RegistroEntrada();
@@ -88,6 +88,15 @@ public class PreRegistroUtilsBean implements PreRegistroUtilsLocal {
           }
       }
       if(preRegistro.getRegistroDetalle() != null){
+
+          // Si no tiene idioma informado, es que viene de SIR (añadimos el Idioma y el TipoAsunto)
+          if(preRegistro.getRegistroDetalle().getIdioma() == null){
+              preRegistro.getRegistroDetalle().setIdioma(idIdioma);
+              TipoAsunto asunto = new TipoAsunto();
+              asunto.setId(idTipoAsunto);
+              preRegistro.getRegistroDetalle().setTipoAsunto(asunto);
+          }
+
           nuevoRE.setRegistroDetalle(preRegistro.getRegistroDetalle());
       }
 
@@ -119,7 +128,7 @@ public class PreRegistroUtilsBean implements PreRegistroUtilsLocal {
    */
   @Override
   public RegistroSalida procesarPreRegistroSalida(PreRegistro preRegistro, 
-      UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro)
+      UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto)
           throws Exception, I18NException, I18NValidationException {
 
       RegistroSalida nuevoRS = new RegistroSalida();
@@ -133,34 +142,42 @@ public class PreRegistroUtilsBean implements PreRegistroUtilsLocal {
           Organismo organismoOrigen = organismoEjb.findByCodigo(preRegistro.getCodigoUnidadTramitacionDestino());
           nuevoRS.setOrigen(organismoOrigen);
       }
-      if(preRegistro.getCodigoEntidadRegistralOrigen() != null){
-          nuevoRS.setOrigenExternoCodigo(preRegistro.getCodigoEntidadRegistralOrigen());
-      }
-      if(preRegistro.getDecodificacionEntidadRegistralOrigen() != null){
-          nuevoRS.setOrigenExternoDenominacion(preRegistro.getDecodificacionEntidadRegistralOrigen());
-      }
+
+      nuevoRS.setOrigenExternoCodigo(null);
+      nuevoRS.setOrigenExternoDenominacion(null);
+
       if(idLibro != null){
           Libro libro = libroEjb.findById(idLibro);
           nuevoRS.setLibro(libro);
       }
       if(preRegistro.getCodigoEntidadRegistralDestino() != null){
           Oficina oficina = oficinaEjb.findByCodigo(preRegistro.getCodigoEntidadRegistralDestino());
-          if(oficina == oficinaActiva){
+          // Comprobamos si esta Oficina Activa puede procesar este PreRegistro
+          if(oficina.getCodigo().equals(oficinaActiva.getCodigo())){
               nuevoRS.setOficina(oficina);
           }
       }
       if(preRegistro.getRegistroDetalle() != null){
+
+          // Si no tiene idioma informado, es que viene de SIR (añadimos el Idioma y el TipoAsunto)
+          if(preRegistro.getRegistroDetalle().getIdioma() == null){
+              preRegistro.getRegistroDetalle().setIdioma(idIdioma);
+              TipoAsunto asunto = new TipoAsunto();
+              asunto.setId(idTipoAsunto);
+              preRegistro.getRegistroDetalle().setTipoAsunto(asunto);
+          }
+
           nuevoRS.setRegistroDetalle(preRegistro.getRegistroDetalle());
       }
 
-      // Procesamos el Registro Salida
+      // Procesamos el Registro Entrada
       synchronized (this){
           nuevoRS = registroSalidaEjb.registrarSalida(nuevoRS);
       }
 
 
-      //Guardamos el HistorioRegistroSalida
-      historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(nuevoRS, usuario, RegwebConstantes.TIPO_MODIF_ALTA,false);
+      //Guardamos el HistorioRegistroEntrada
+      historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(nuevoRS, usuario, RegwebConstantes.TIPO_MODIF_ALTA, false);
 
 
       // Cambiamos el estado del PreRegistro

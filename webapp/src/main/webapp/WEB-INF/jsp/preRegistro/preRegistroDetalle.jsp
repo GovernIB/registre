@@ -101,25 +101,89 @@
 
                     <%-- Se muestra la Botonera si el PreRegistro está pendiente de procesar--%>
                     <c:if test="${preRegistro.estado==1}">
-                        <div class="panel-footer">  <%--Botonera--%>
-                            <c:if test="${fn:length(libros) > 1}">
-                                <form:form modelAttribute="libro" method="post" cssClass="form-horizontal">
-                                    <div class="col-xs-12 btn-block">
-                                        <div class="col-xs-6 no-pad-lateral list-group-item-heading">
-                                            <form:select path="id" cssClass="chosen-select">
+
+                        <div class="panel-footer">  <%--Formulari per completar dades del registre--%>
+                            <c:if test="${(fn:length(libros) > 1)||(empty preRegistro.registroDetalle.idioma)||(empty preRegistro.registroDetalle.idioma)}">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">
+                                        <strong><spring:message code="registro.completar"/></strong>
+                                    </h3>
+                                </div>
+                            </c:if>
+                            <form:form modelAttribute="registrarForm" method="post" cssClass="form-horizontal">
+                                <%--Si s'ha de triar llibre--%>
+                                <c:if test="${fn:length(libros) > 1}">
+                                    <div class="form-group col-xs-12">
+                                        <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                                            <form:label path="idLibro"><span class="text-danger">*</span> <spring:message code="libro.libro"/></form:label>
+                                        </div>
+                                        <div class="col-xs-7 no-pad-right" id="libro">
+                                            <form:select path="idLibro" cssClass="chosen-select">
                                                 <form:options items="${libros}" itemValue="id" itemLabel="nombre"/>
                                             </form:select>
-                                        </div>
-                                        <div class="col-xs-6 no-pad-right list-group-item-heading">
-                                            <button type="button" class="btn btn-success btn-sm btn-block" onclick="registrarPreRegistro('<c:url value="/preRegistro/${preRegistro.id}/registrar/"/>')"><spring:message code="preRegistro.estado.registrar"/></button>
+                                            <span class="errors"></span>
                                         </div>
                                     </div>
-                                </form:form>
-                            </c:if>
-                            <c:if test="${fn:length(libros) == 1}">
-                                <button type="button" class="btn btn-success btn-sm btn-block" onclick="goTo('<c:url value="/preRegistro/${preRegistro.id}/registrar/${libros[0].id}"/>')"><spring:message code="preRegistro.estado.registrar"/></button>
-                            </c:if>
+                                </c:if>
+                                <c:if test ="${fn:length(libros) == 1}">
+                                    <input id="idLibro" type="hidden" value="${libros[0].idLibro}"/>
+                                </c:if>
 
+                                <%--Si s'ha de posar valor per l'idioma--%>
+                                <c:if test="${empty preRegistro.registroDetalle.idioma}">
+                                    <div class="form-group col-xs-12">
+                                        <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                                            <form:label path="idIdioma"><span class="text-danger">*</span> <spring:message code="registroEntrada.idioma"/></form:label>
+                                        </div>
+                                        <div class="col-xs-7 no-pad-right" id="idioma">
+                                            <form:select path="idIdioma" cssClass="chosen-select">
+                                                <c:forEach items="${idiomas}" var="idioma">
+                                                    <c:if test="${idioma == RegwebConstantes.IDIOMA_CASTELLANO_ID}">
+                                                        <form:option value="${idioma}" selected="selected"><spring:message code="idioma.${idioma}"/></form:option>
+                                                    </c:if>
+                                                    <c:if test="${idioma != RegwebConstantes.IDIOMA_CASTELLANO_ID}">
+                                                        <form:option value="${idioma}"><spring:message code="idioma.${idioma}"/></form:option>
+                                                    </c:if>
+                                                </c:forEach>
+                                            </form:select>
+                                            <span class="errors"></span>
+                                        </div>
+                                    </div>
+                                </c:if>
+                                <c:if test ="${not empty preRegistro.registroDetalle.idioma}">
+                                    <input id="idIdioma" type="hidden" value="${preRegistro.registroDetalle.idioma}"/>
+                                </c:if>
+
+                                <%--Si s'ha de posar valor per tipoAsunto--%>
+                                <c:if test="${empty preRegistro.registroDetalle.tipoAsunto}">
+                                    <div class="form-group col-xs-12">
+                                        <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                                            <form:label path="idTipoAsunto"><span class="text-danger">*</span> <spring:message code="registroEntrada.tipoAsunto"/></form:label>
+                                        </div>
+                                        <div class="col-xs-7 no-pad-right" id="tipoAsunto">
+                                            <form:select path="idTipoAsunto"  cssClass="chosen-select">
+                                                <form:option value="-1">...</form:option>
+                                                <form:options items="${tiposAsunto}" itemValue="id" itemLabel="traduccion.nombre"/>
+                                            </form:select>
+                                            <span class="errors"></span>
+                                        </div>
+                                    </div>
+                                </c:if>
+                                <c:if test ="${not empty preRegistro.registroDetalle.tipoAsunto}">
+                                    <input id="idTipoAsunto" type="hidden" value="${preRegistro.registroDetalle.tipoAsunto.id}"/>
+                                </c:if>
+
+                                <div class="row">
+                                    <div class="col-xs-12 list-group-item-heading">
+                                        <button type="button" class="btn btn-success btn-sm btn-block" onclick="registrarPreRegistro('<c:url value="/preRegistro/${preRegistro.id}/registrar/"/>')"><spring:message code="preRegistro.estado.registrar"/></button>
+                                    </div>
+                                </div>
+                                <c:set var="errorObligatori"><spring:message code="error.valor.requerido"/></c:set>
+                                <input id="error" type="hidden" value="${errorObligatori}"/>
+                            </form:form>
+                        </div>
+
+                        <div class="panel-footer">  <%--Botonera--%>
                             <button type="button" onclick="goTo('/preRegistro/${preRegistro.id}/rechazar')" class="btn btn-danger btn-sm btn-block"><spring:message code="preRegistro.estado.rechazar"/></button>
                             <button type="button" onclick="goTo('/preRegistro/${preRegistro.id}/reenviar')" class="btn btn-info btn-sm btn-block"><spring:message code="preRegistro.estado.reenviar"/></button>
                         </div>

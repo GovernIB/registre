@@ -8,6 +8,7 @@ import es.caib.regweb3.persistence.utils.sir.DeMensajeFactory;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.PreRegistroBusquedaForm;
+import es.caib.regweb3.webapp.form.RegistrarForm;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.ws.sir.api.wssir7.WS_SIR7ServiceLocator;
 import es.caib.regweb3.ws.sir.api.wssir7.WS_SIR7_PortType;
@@ -60,6 +61,9 @@ public class PreRegistroController extends BaseController {
 
     @EJB(mappedName = "regweb3/AnexoEJB/local")
     public AnexoLocal anexoEjb;
+
+    @EJB(mappedName = "regweb3/TipoAsuntoEJB/local")
+    public TipoAsuntoLocal tipoAsuntoEjb;
 
     /**
      * Listado de todos los PreRegistros
@@ -158,8 +162,8 @@ public class PreRegistroController extends BaseController {
             }
             model.addAttribute("libros",libros);
 
-            Libro libro = new Libro();
-            model.addAttribute("libro", libro);
+            RegistrarForm registrarForm = new RegistrarForm();
+            model.addAttribute("registrarForm", registrarForm);
 
             // Interesados
             model.addAttribute("personasFisicas",personaEjb.getAllbyEntidadTipo(entidad.getId(), RegwebConstantes.TIPO_PERSONA_FISICA));
@@ -184,9 +188,9 @@ public class PreRegistroController extends BaseController {
     /**
      * Procesa {@link es.caib.regweb3.model.PreRegistro}, creando un RegistroEntrada
      */
-    @RequestMapping(value = "/{idPreRegistro}/registrar/{idLibro}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{idPreRegistro}/registrar/{idLibro}/{idIdioma}/{idTipoAsunto}", method = RequestMethod.GET)
     public String confirmarPreRegistro(@PathVariable Long idPreRegistro,
-        @PathVariable Long idLibro, Model model, HttpServletRequest request)
+        @PathVariable Long idLibro, @PathVariable Long idIdioma, @PathVariable Long idTipoAsunto, Model model, HttpServletRequest request)
             throws Exception, I18NException, I18NValidationException {
 
         PreRegistro preRegistro = preRegistroEjb.findById(idPreRegistro);
@@ -205,51 +209,62 @@ public class PreRegistroController extends BaseController {
         String variableReturn = "redirect:/preRegistro/"+idPreRegistro+"/detalle";
         try{
             if(preRegistro.getTipoRegistro().equals(RegwebConstantes.PREREGISTRO_ENTRADA.toString())) {
-                registroEntrada = preRegistroUtils.procesarPreRegistroEntrada(preRegistro, usuarioEntidad, oficinaActiva, idLibro);
+                registroEntrada = preRegistroUtils.procesarPreRegistroEntrada(preRegistro, usuarioEntidad, oficinaActiva, idLibro, idIdioma, idTipoAsunto);
                 model.addAttribute("registroEntrada",registroEntrada);
                 variableReturn = "redirect:/registroEntrada/" + registroEntrada.getId() + "/detalle";
-
-                //todo: Crear función genérica para enviar mensajes DeMensaje
-                WS_SIR7ServiceLocator locator = new WS_SIR7ServiceLocator();
-                JAXBContext jc = JAXBContext.newInstance(DeMensaje.class);
-                DeMensajeFactory deMensajeFactory = new DeMensajeFactory();
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-
-                WS_SIR7_PortType ws_sir7 = locator.getWS_SIR7();
-
-                DeMensaje confirmacion = deMensajeFactory.createDeMensaje();
-                confirmacion.setCodigoEntidadRegistralOrigen(preRegistro.getCodigoEntidadRegistralOrigen());
-                confirmacion.setCodigoEntidadRegistralDestino(preRegistro.getCodigoEntidadRegistralDestino());
-                confirmacion.setIdentificadorIntercambio(preRegistro.getIdIntercambio());
-                confirmacion.setTipoMensaje("03");
-                confirmacion.setDescripcionMensaje("CONFIRMACION");
-                confirmacion.setFechaHoraEntradaDestino(sdf.format(new Date()));
-                confirmacion.setIndicadorPrueba("1");
-
-                StringWriter cnf = new StringWriter();
-                Marshaller m = jc.createMarshaller();
-                //m.setSchema(schema); // validation purpose
-                //m.setEventHandler(new MyValidationEventHandler()); // validation purpose
-                m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-                m.marshal(confirmacion, cnf);
-
-                es.caib.regweb3.ws.sir.api.wssir7.RespuestaWS respuesta2 = ws_sir7.recepcionMensajeDatosControlDeAplicacion(cnf.toString());
-                log.info("RespuestaConfirmacion: " + respuesta2.getCodigo());
-                log.info("RespuestaConfirmacion: " + respuesta2.getDescripcion());
-
             }
             if(preRegistro.getTipoRegistro().equals(RegwebConstantes.PREREGISTRO_SALIDA.toString())) {
-                registroSalida = preRegistroUtils.procesarPreRegistroSalida(preRegistro,
-                    usuarioEntidad, oficinaActiva, idLibro);
+                registroSalida = preRegistroUtils.procesarPreRegistroSalida(preRegistro, usuarioEntidad, oficinaActiva, idLibro, idIdioma, idTipoAsunto);
                 model.addAttribute("registroSalida",registroSalida);
                 variableReturn = "redirect:/registroSalida/" + registroSalida.getId() + "/detalle";
             }
+
+            //todo: Crear función genérica para enviar mensajes DeMensaje
+            WS_SIR7ServiceLocator locator = new WS_SIR7ServiceLocator();
+            JAXBContext jc = JAXBContext.newInstance(DeMensaje.class);
+            DeMensajeFactory deMensajeFactory = new DeMensajeFactory();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+
+            WS_SIR7_PortType ws_sir7 = locator.getWS_SIR7();
+
+            DeMensaje confirmacion = deMensajeFactory.createDeMensaje();
+            confirmacion.setCodigoEntidadRegistralOrigen(preRegistro.getCodigoEntidadRegistralOrigen());
+            confirmacion.setCodigoEntidadRegistralDestino(preRegistro.getCodigoEntidadRegistralDestino());
+            confirmacion.setIdentificadorIntercambio(preRegistro.getIdIntercambio());
+            confirmacion.setTipoMensaje("03");
+            confirmacion.setDescripcionMensaje("CONFIRMACION");
+            confirmacion.setFechaHoraEntradaDestino(sdf.format(new Date()));
+            confirmacion.setIndicadorPrueba("1");
+
+            StringWriter cnf = new StringWriter();
+            Marshaller m = jc.createMarshaller();
+            //m.setSchema(schema); // validation purpose
+            //m.setEventHandler(new MyValidationEventHandler()); // validation purpose
+            m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            m.marshal(confirmacion, cnf);
+
+            es.caib.regweb3.ws.sir.api.wssir7.RespuestaWS respuesta2 = ws_sir7.recepcionMensajeDatosControlDeAplicacion(cnf.toString());
+            log.info("RespuestaConfirmacion: " + respuesta2.getCodigo());
+            log.info("RespuestaConfirmacion: " + respuesta2.getDescripcion());
+
         }catch (Exception e){
             Mensaje.saveMessageError(request, getMessage("preRegistro.error.confirmacion"));
             e.printStackTrace();
         }
 
         return variableReturn;
+    }
+
+    @ModelAttribute("idiomas")
+    public Long[] idiomas() throws Exception {
+        return RegwebConstantes.IDIOMAS_REGISTRO;
+    }
+
+    @ModelAttribute("tiposAsunto")
+    public List<TipoAsunto> tiposAsunto(HttpServletRequest request) throws Exception {
+
+        Entidad entidadActiva = getEntidadActiva(request);
+        return tipoAsuntoEjb.getActivosEntidad(entidadActiva.getId());
     }
 
 }
