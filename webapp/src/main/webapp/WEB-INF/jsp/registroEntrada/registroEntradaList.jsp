@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 <un:useConstants var="RegwebConstantes" className="es.caib.regweb3.utils.RegwebConstantes"/>
 
@@ -53,8 +53,10 @@
                         </h3>
                     </div>
 
-                    <c:url value="/registroEntrada/busqueda" var="urlBusqueda"/>
-                    <form:form modelAttribute="registroEntradaBusqueda" action="${urlBusqueda}" method="get" cssClass="form-horizontal">
+                    <c:url value="/registroEntrada/busqueda" var="urlBusqueda" scope="request"/>
+                    <!--  con esta opcion tambien funciona  pero depende de  javascript onsubmit="document.charset = 'ISO-8859-1'"-->
+                     <form:form modelAttribute="registroEntradaBusqueda" action="${urlBusqueda}"  method="get" cssClass="form-horizontal">
+
                         <form:hidden path="pageNumber"/>
 
                         <div class="panel-body">
@@ -91,7 +93,7 @@
                             <div class="form-group col-xs-6">
                                 <div class="col-xs-4 "><spring:message code="registroEntrada.extracto"/></div>
                                 <div class="col-xs-8">
-                                    <form:input path="registroEntrada.registroDetalle.extracto" cssClass="form-control" maxlength="200"/> <form:errors path="registroEntrada.registroDetalle.extracto" cssClass="help-block" element="span"/>
+                                    <form:input path="registroEntrada.registroDetalle.extracto" cssClass="form-control" maxlength="200" /> <form:errors path="registroEntrada.registroDetalle.extracto" cssClass="help-block" element="span"/>
                                 </div>
                             </div>
                             

@@ -134,8 +134,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             model.addAttribute(getOficinaActiva(request));
             model.addAttribute("oficinasOrigen",  getOficinasOrigen(request));
             model.addAttribute("libros", getLibrosRegistroEntrada(request));
-            
-            //TODO Obtener los organismo por libro. Revisar todo. Entrada y salida
+
             Set<Organismo> organismosOficinaActiva = getOrganismosOficinaActiva(request);
            // List<Organismo> organismosOficinaActiva = organismoEjb.getByLibro(registro.getLibro().getId());
             
