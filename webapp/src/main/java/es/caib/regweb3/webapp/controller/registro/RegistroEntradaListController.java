@@ -6,9 +6,7 @@ import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
 import es.caib.regweb3.persistence.ejb.SirLocal;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
-import es.caib.regweb3.plugins.distribucion.DistribucionPlugin;
 import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.webapp.distribucion.RegwebDistribucionPluginManager;
 import es.caib.regweb3.webapp.form.RegistroEntradaBusqueda;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.RegistroEntradaBusquedaValidator;
@@ -392,14 +390,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
 
 
-            DistribucionPlugin distribucionPlugin = RegwebDistribucionPluginManager.getInstance();
-            Boolean conAnexos = registroEntrada.getRegistroDetalle().getAnexos().size()>0;
-
-            String registroXML = RegistroUtils.serilizarXml(registroEntrada);
-
-            distribucionPlugin.distribuir(registroXML,conAnexos);
-
-            //registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, usuarioEntidad);
+            registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, usuarioEntidad);
 
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.tramitar.ok"));
 
