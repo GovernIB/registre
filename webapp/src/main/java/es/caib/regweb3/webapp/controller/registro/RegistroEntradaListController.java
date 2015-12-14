@@ -6,7 +6,9 @@ import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
 import es.caib.regweb3.persistence.ejb.SirLocal;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
+import es.caib.regweb3.plugins.distribucion.DistribucionPlugin;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.webapp.distribucion.RegwebDistribucionPluginManager;
 import es.caib.regweb3.webapp.form.RegistroEntradaBusqueda;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.RegistroEntradaBusquedaValidator;
@@ -21,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -76,7 +79,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 	   
 	   return allOrganismos;
    }
-   
+
     /**
     * Listado de registros de entrada
     * @return
@@ -111,7 +114,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     * Realiza la busqueda de {@link es.caib.regweb3.model.RegistroEntrada} según los parametros del formulario
     */
     @RequestMapping(value = "/busqueda", method = RequestMethod.GET)
-    public ModelAndView list(@ModelAttribute RegistroEntradaBusqueda busqueda, BindingResult result, HttpServletRequest request)throws Exception {
+    public ModelAndView list(@ModelAttribute RegistroEntradaBusqueda busqueda, BindingResult result, HttpServletRequest request, HttpServletResponse response)throws Exception {
 
         ModelAndView mav = new ModelAndView("registroEntrada/registroEntradaList", result.getModel());
         RegistroEntrada registroEntrada = busqueda.getRegistroEntrada();
@@ -159,6 +162,11 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             mav.addObject("oficinasRegistro", oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
         }
 
+
+        /* Solucion a los problemas de encoding del formulario GET */
+        busqueda.getRegistroEntrada().getRegistroDetalle().setExtracto(new String(busqueda.getRegistroEntrada().getRegistroDetalle().getExtracto().getBytes("ISO-8859-1"), "UTF-8"));
+        busqueda.setObservaciones(new String(busqueda.getObservaciones().getBytes("ISO-8859-1"), "UTF-8"));
+        busqueda.setInteressatNom(new String(busqueda.getInteressatNom().getBytes("ISO-8859-1"), "UTF-8"));
         return mav;
 
     }
@@ -379,7 +387,19 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
                 return "redirect:/registroEntrada/list";
             }
 
-            registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, usuarioEntidad);
+
+            //TODO aquí hay que hacer la gestión con el plugin que tengamos configurado
+
+
+
+            DistribucionPlugin distribucionPlugin = RegwebDistribucionPluginManager.getInstance();
+            Boolean conAnexos = registroEntrada.getRegistroDetalle().getAnexos().size()>0;
+
+            String registroXML = RegistroUtils.serilizarXml(registroEntrada);
+
+            distribucionPlugin.distribuir(registroXML,conAnexos);
+
+            //registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, usuarioEntidad);
 
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.tramitar.ok"));
 
