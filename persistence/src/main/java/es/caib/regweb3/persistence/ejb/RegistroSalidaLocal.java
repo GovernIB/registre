@@ -95,6 +95,17 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
     public Long buscaIndicadoresTotal(Date fechaInicio, Date fechaFin, Long idEntidad) throws Exception;
 
     /**
+     * Busca los Registros de Salida que no estén anulados ni pendientes en función de la una fecha inicio, una fecha fin, de una Oficina
+     * @param fechaInicio
+     * @param fechaFin
+     * @param idOficina
+     * @return
+     * @throws Exception
+     */
+    public Long buscaIndicadoresOficinaTotal(Date fechaInicio, Date fechaFin, Long idOficina) throws Exception;
+
+
+    /**
      * Busca los Registros de Salida que no estén anulados ni pendientes en función de la una fecha inicio, una fecha fin, por Conselleria
      * @param fechaInicio
      * @param fechaFin
@@ -120,11 +131,24 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @param fechaInicio
      * @param fechaFin
      * @param idioma
+     * @param idOficina
+     * @return
+     * @throws Exception
+     */
+    public Long buscaSalidaPorIdiomaOficina(Date fechaInicio, Date fechaFin, Long idioma, Long idOficina) throws Exception;
+
+    /**
+     * Busca los Registros de Salida que no estén anulados ni pendientes en función de la una fecha inicio, una fecha fin, por Idiomas, de la Entidad Activa
+     * @param fechaInicio
+     * @param fechaFin
+     * @param idioma
      * @param idEntidad
      * @return
      * @throws Exception
      */
     public Long buscaSalidaPorIdioma(Date fechaInicio, Date fechaFin, Long idioma, Long idEntidad) throws Exception;
+
+
 
     /**
      * Busca los Registros de Salida que no estén anulados ni pendientes en función de la una fecha inicio, una fecha fin, por Libros

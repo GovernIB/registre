@@ -1,16 +1,14 @@
 package es.caib.regweb3.webapp.controller.informe;
 
 import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.utils.ObjetoBasico;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.editor.LibroEditor;
-import es.caib.regweb3.webapp.form.InformeIndicadoresBusquedaForm;
-import es.caib.regweb3.webapp.form.InformeLibroBusquedaForm;
-import es.caib.regweb3.webapp.form.RegistroLopdBusquedaForm;
-import es.caib.regweb3.webapp.form.UsuarioLopdBusquedaForm;
+import es.caib.regweb3.webapp.form.*;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -538,40 +536,40 @@ public class InformeController extends BaseController {
                 // Busca los registros totales según el calendario seleccionado de Entrada y Salida entre las fechas
                 if(calendario.equals((long) 0)){ // Años y meses
 
-                    totalRegistresEntradaAny(mav,dataInici,dataFi,entidadActiva);
-                    totalRegistresSalidaAny(mav, dataInici, dataFi, entidadActiva);
-                    totalRegistresEntradaMes(mav, dataInici, dataFi, entidadActiva);
-                    totalRegistresSalidaMes(mav, dataInici, dataFi, entidadActiva);
+                    totalRegistresEntradaAny(mav,dataInici,dataFi,entidadActiva.getId(),null);
+                    totalRegistresSalidaAny(mav,dataInici,dataFi,entidadActiva.getId(),null);
+                    totalRegistresEntradaMes(mav,dataInici,dataFi,entidadActiva.getId(),null);
+                    totalRegistresSalidaMes(mav,dataInici,dataFi,entidadActiva.getId(),null);
 
                 }else if(calendario.equals((long) 1)){ // Años
 
-                    totalRegistresEntradaAny(mav, dataInici, dataFi, entidadActiva);
-                    totalRegistresSalidaAny(mav, dataInici, dataFi, entidadActiva);
+                    totalRegistresEntradaAny(mav,dataInici,dataFi,entidadActiva.getId(),null);
+                    totalRegistresSalidaAny(mav,dataInici,dataFi,entidadActiva.getId(),null);
 
                 }else if(calendario.equals((long) 2)){ // Meses
-                    totalRegistresEntradaMes(mav,dataInici,dataFi,entidadActiva);
-                    totalRegistresSalidaMes(mav,dataInici,dataFi,entidadActiva);
+                    totalRegistresEntradaMes(mav,dataInici,dataFi,entidadActiva.getId(),null);
+                    totalRegistresSalidaMes(mav,dataInici,dataFi,entidadActiva.getId(),null);
                 }
 
                 // Busca los registros totales por Organismo de Entrada y Salida entre las fechas
-                totalRegistresEntradaOrganismo(mav, dataInici, dataFi, organismos);
-                totalRegistresSalidaOrganismo(mav, dataInici, dataFi, organismos);
+                totalRegistresEntradaOrganismo(mav,dataInici,dataFi,organismos);
+                totalRegistresSalidaOrganismo(mav,dataInici,dataFi,organismos);
 
                 // Busca los registros totales por Tipos de Asunto de Entrada y Salida entre las fechas
-                totalRegistresEntradaTipoAsunto(mav, dataInici, dataFi, tiposAsunto, entidadActiva.getId());
-                totalRegistresSalidaTipoAsunto(mav, dataInici, dataFi, tiposAsunto, entidadActiva.getId());
+                totalRegistresEntradaTipoAsunto(mav,dataInici,dataFi,tiposAsunto,entidadActiva.getId());
+                totalRegistresSalidaTipoAsunto(mav,dataInici,dataFi,tiposAsunto,entidadActiva.getId());
 
                 // Busca los registros totales por Libro de Entrada y Salida entre las fechas
-                totalRegistresEntradaLibro(mav, dataInici, dataFi, organismos);
-                totalRegistresSalidaLibro(mav, dataInici, dataFi, organismos);
+                totalRegistresEntradaLibro(mav,dataInici,dataFi,organismos);
+                totalRegistresSalidaLibro(mav,dataInici,dataFi,organismos);
 
                 // Busca los registros totales por Oficina de Registro de Entrada y Salida entre las fechas
-                totalRegistresEntradaOficina(mav, dataInici, dataFi, oficinas);
-                totalRegistresSalidaOficina(mav, dataInici, dataFi, oficinas);
+                totalRegistresEntradaOficina(mav,dataInici,dataFi,oficinas);
+                totalRegistresSalidaOficina(mav,dataInici,dataFi,oficinas);
 
                 // Busca los registros totales por Idiomas de Entrada y Salida entre las fechas
-                totalRegistresEntradaIdioma(mav, dataInici, dataFi, entidadActiva.getId());
-                totalRegistresSalidaIdioma(mav, dataInici, dataFi, entidadActiva.getId());
+                totalRegistresEntradaIdioma(mav,dataInici,dataFi,entidadActiva.getId(),null);
+                totalRegistresSalidaIdioma(mav,dataInici,dataFi,entidadActiva.getId(),null);
 
 
                 break;
@@ -585,31 +583,31 @@ public class InformeController extends BaseController {
                 // Busca los registros totales según el calendario seleccionado de Entrada entre las fechas
                 if(calendario.equals((long) 0)){ // Años y meses
 
-                    totalRegistresEntradaAny(mav,dataInici,dataFi,entidadActiva);
-                    totalRegistresEntradaMes(mav, dataInici, dataFi, entidadActiva);
+                    totalRegistresEntradaAny(mav,dataInici,dataFi,entidadActiva.getId(),null);
+                    totalRegistresEntradaMes(mav,dataInici,dataFi,entidadActiva.getId(),null);
 
                 }else if(calendario.equals((long) 1)){ // Años
 
-                    totalRegistresEntradaAny(mav, dataInici, dataFi, entidadActiva);
+                    totalRegistresEntradaAny(mav,dataInici,dataFi,entidadActiva.getId(),null);
 
                 }else if(calendario.equals((long) 2)){ // Meses
-                    totalRegistresEntradaMes(mav,dataInici,dataFi,entidadActiva);
+                    totalRegistresEntradaMes(mav,dataInici,dataFi,entidadActiva.getId(),null);
                 }
 
                 // Busca los registros totales por Organismo de Entrada entre las fechas
-                totalRegistresEntradaOrganismo(mav, dataInici, dataFi, organismos);
+                totalRegistresEntradaOrganismo(mav,dataInici,dataFi,organismos);
 
                 // Busca los registros totales por Tipos de Asunto de Entrada entre las fechas
-                totalRegistresEntradaTipoAsunto(mav, dataInici, dataFi, tiposAsunto, entidadActiva.getId());
+                totalRegistresEntradaTipoAsunto(mav,dataInici,dataFi,tiposAsunto,entidadActiva.getId());
 
                 // Busca los registros totales por Libro de Entrada entre las fechas
-                totalRegistresEntradaLibro(mav, dataInici, dataFi, organismos);
+                totalRegistresEntradaLibro(mav,dataInici,dataFi,organismos);
 
                 // Busca los registros totales por Oficina de Registro de Entrada entre las fechas
-                totalRegistresEntradaOficina(mav, dataInici, dataFi, oficinas);
+                totalRegistresEntradaOficina(mav,dataInici,dataFi,oficinas);
 
                 // Busca los registros totales por Idiomas de Entrada entre las fechas
-                totalRegistresEntradaIdioma(mav, dataInici, dataFi, entidadActiva.getId());
+                totalRegistresEntradaIdioma(mav,dataInici,dataFi,entidadActiva.getId(),null);
 
 
 
@@ -624,32 +622,32 @@ public class InformeController extends BaseController {
                 // Busca los registros totales según el calendario seleccionado de Salida entre las fechas
                 if(calendario.equals((long) 0)){ // Años y meses
 
-                    totalRegistresSalidaAny(mav, dataInici, dataFi, entidadActiva);
-                    totalRegistresSalidaMes(mav, dataInici, dataFi, entidadActiva);
+                    totalRegistresSalidaAny(mav,dataInici,dataFi,entidadActiva.getId(),null);
+                    totalRegistresSalidaMes(mav,dataInici,dataFi,entidadActiva.getId(),null);
 
                 }else if(calendario.equals((long) 1)){ // Años
 
-                    totalRegistresSalidaAny(mav,dataInici,dataFi,entidadActiva);
+                    totalRegistresSalidaAny(mav,dataInici,dataFi,entidadActiva.getId(),null);
 
                 }else if(calendario.equals((long) 2)){ // Meses
 
-                    totalRegistresSalidaMes(mav,dataInici,dataFi,entidadActiva);
+                    totalRegistresSalidaMes(mav,dataInici,dataFi,entidadActiva.getId(),null);
                 }
 
                 // Busca los registros totales por Organismo de Salida entre las fechas
-                totalRegistresSalidaOrganismo(mav, dataInici, dataFi, organismos);
+                totalRegistresSalidaOrganismo(mav,dataInici,dataFi,organismos);
 
                 // Busca los registros totales por Tipos de Asunto de Salida entre las fechas
-                totalRegistresSalidaTipoAsunto(mav, dataInici, dataFi, tiposAsunto, entidadActiva.getId());
+                totalRegistresSalidaTipoAsunto(mav,dataInici,dataFi,tiposAsunto,entidadActiva.getId());
 
                 // Busca los registros totales por Libro de Salida entre las fechas
-                totalRegistresSalidaLibro(mav, dataInici, dataFi, organismos);
+                totalRegistresSalidaLibro(mav,dataInici,dataFi,organismos);
 
                 //Busca los registros totales por Oficina de Registro Salida entre las fechas
-                totalRegistresSalidaOficina(mav, dataInici, dataFi, oficinas);
+                totalRegistresSalidaOficina(mav,dataInici,dataFi,oficinas);
 
                 // Busca los registros totales por Idiomas de  Salida entre las fechas
-                totalRegistresSalidaIdioma(mav, dataInici, dataFi, entidadActiva.getId());
+                totalRegistresSalidaIdioma(mav,dataInici,dataFi,entidadActiva.getId(),null);
 
 
             break;
@@ -1076,6 +1074,73 @@ public class InformeController extends BaseController {
     }
 
 
+    /**
+     * Informe de Indicadores por Oficina
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/indicadoresOficina", method = RequestMethod.GET)
+    public String indicadoresOficina(Model model, HttpServletRequest request)throws Exception {
+
+        InformeIndicadoresOficinaBusquedaForm informeIndicadoresOficinaBusquedaForm = new InformeIndicadoresOficinaBusquedaForm();
+        informeIndicadoresOficinaBusquedaForm.setFechaFin(new Date());
+        model.addAttribute("oficinas", oficinas(request));
+        model.addAttribute("informeIndicadoresOficinaBusquedaForm",informeIndicadoresOficinaBusquedaForm);
+
+        return "informe/indicadoresOficina";
+    }
+
+    /**
+     * Realiza la busqueda de registros según los parametros del formulario de Indicadores por Oficina
+     */
+    @RequestMapping(value = "/indicadoresOficina", method = RequestMethod.POST)
+    public ModelAndView indicadoresOficina(@ModelAttribute InformeIndicadoresOficinaBusquedaForm informeIndicadoresOficinaBusquedaForm, HttpServletRequest request)throws Exception {
+
+        String formato = informeIndicadoresOficinaBusquedaForm.getFormato();
+
+        ModelAndView mav = null;
+
+        if(formato.equals("pdf")){
+            mav = new ModelAndView("indicadoresOficinaPdf");
+        }else if(formato.equals("excel")){
+            mav = new ModelAndView("indicadoresOficinaExcel");
+        }
+
+        SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy");
+
+        //Nombre de la Oficina seleccionada
+        Oficina oficina = oficinaEjb.findById(informeIndicadoresOficinaBusquedaForm.getOficina());
+        if(oficina != null) {
+            mav.addObject("nombreOficina", oficina.getDenominacion());
+            mav.addObject("codigoOficina", oficina.getCodigo());
+        }
+
+        // Intervalo de fechas seleccionado
+        mav.addObject("fechaInicio", formatDate.format(informeIndicadoresOficinaBusquedaForm.getFechaInicio()));
+        mav.addObject("fechaFin", formatDate.format(informeIndicadoresOficinaBusquedaForm.getFechaFin()));
+
+        Date dataFi = RegistroUtils.ajustarHoraBusqueda(informeIndicadoresOficinaBusquedaForm.getFechaFin());
+        Date dataInici = informeIndicadoresOficinaBusquedaForm.getFechaInicio();
+
+        // Busca los registros Totales de Entrada y Salida entre las fechas
+        mav.addObject("registrosEntrada", registroEntradaEjb.buscaIndicadoresOficinaTotal(dataInici, dataFi, oficina.getId()).intValue());
+        mav.addObject("registrosSalida", registroSalidaEjb.buscaIndicadoresOficinaTotal(dataInici, dataFi, oficina.getId()).intValue());
+
+        // Busca los registros totales según el calendario seleccionado de Entrada y Salida entre las fechas
+        // Años y meses
+        totalRegistresEntradaAny(mav,dataInici,dataFi,null,oficina.getId());
+        totalRegistresSalidaAny(mav, dataInici, dataFi,null,oficina.getId());
+        totalRegistresEntradaMes(mav, dataInici, dataFi,null,oficina.getId());
+        totalRegistresSalidaMes(mav, dataInici, dataFi,null,oficina.getId());
+
+        // Busca los registros totales por Idiomas de Entrada y Salida entre las fechas
+        totalRegistresEntradaIdioma(mav,dataInici,dataFi,null,oficina.getId());
+        totalRegistresSalidaIdioma(mav,dataInici,dataFi,null,oficina.getId());
+
+        return mav;
+    }
+
+
     List<Libro> libros(HttpServletRequest request) throws Exception {
 
         List<Libro> libros = null;
@@ -1097,6 +1162,30 @@ public class InformeController extends BaseController {
         }
 
         return libros;
+    }
+
+    /**
+     * Obtiene las {@link es.caib.regweb3.model.Oficina} del Usuario actual
+     */
+    List<Oficina> oficinas(HttpServletRequest request) throws Exception {
+
+        List<Oficina> oficinas = new ArrayList<Oficina>();
+
+        // Es operador
+        if(isOperador(request)){
+            Set<ObjetoBasico> llistaOficines = getOficinasAutenticado(request);
+            for(ObjetoBasico ofi:llistaOficines){
+                Oficina oficina = new Oficina(ofi.getId(),"",ofi.getNombre());
+                oficinas.add(oficina);
+            }
+        }
+
+        // Es Administrador de Entidad
+        if(isAdminEntidad(request)){
+            oficinas = oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        }
+
+        return oficinas;
     }
 
     public List<UsuarioEntidad> usuarios(HttpServletRequest request) throws Exception {
@@ -1154,10 +1243,10 @@ public class InformeController extends BaseController {
             if(getLibrosAdministrados(request).size()>0) {
                 libros = getLibrosAdministrados(request);
             }else if(id.equals(RegwebConstantes.REGISTRO_ENTRADA)) {
-                    libros = getLibrosConsultaEntradas(request);
-                }else{
-                    libros = getLibrosConsultaSalidas(request);
-                }
+                libros = getLibrosConsultaEntradas(request);
+            }else{
+                libros = getLibrosConsultaSalidas(request);
+            }
         }
 
         // Es Administrador de Entidad
@@ -1202,15 +1291,23 @@ public class InformeController extends BaseController {
         binder.registerCustomEditor(java.util.Date.class, dateEditor);
     }
 
+    @InitBinder("informeIndicadoresOficinaBusquedaForm")
+    public void initBinderIndicadoresOficina(WebDataBinder binder) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        CustomDateEditor dateEditor = new CustomDateEditor(sdf, true);
+        binder.registerCustomEditor(java.util.Date.class, dateEditor);
+    }
+
     /**
      * Busca los registros de entrada totales por Años entre las fechas
      * @param mav
      * @param dataInici
      * @param dataFi
-     * @param entidadActiva
+     * @param idEntidad
+     * @param idOficina
      * @throws Exception
      */
-    public void totalRegistresEntradaAny(ModelAndView mav, Date dataInici, Date dataFi, Entidad entidadActiva) throws Exception{
+    public void totalRegistresEntradaAny(ModelAndView mav, Date dataInici, Date dataFi, Long idEntidad, Long idOficina) throws Exception{
 
         SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
         List<String> entradaAnosValor = new ArrayList<String>();
@@ -1227,13 +1324,21 @@ public class InformeController extends BaseController {
             cal.set(Calendar.HOUR, 23);
             cal.set(Calendar.MINUTE, 59);
             cal.set(Calendar.SECOND, 59);
-            if(cal.getTime().compareTo(dataFi) < 0){
-                entradaAnosValor.add(String.valueOf(registroEntradaEjb.buscaIndicadoresTotal(dataInici, cal.getTime(), entidadActiva.getId())));
-
-            }else{
-                entradaAnosValor.add(String.valueOf(registroEntradaEjb.buscaIndicadoresTotal(dataInici, dataFi, entidadActiva.getId())));
-
-                break;
+            if((idEntidad!=null)&&(idOficina==null)) {
+                if (cal.getTime().compareTo(dataFi) < 0) {
+                    entradaAnosValor.add(String.valueOf(registroEntradaEjb.buscaIndicadoresTotal(dataInici, cal.getTime(), idEntidad)));
+                } else {
+                    entradaAnosValor.add(String.valueOf(registroEntradaEjb.buscaIndicadoresTotal(dataInici, dataFi, idEntidad)));
+                    break;
+                }
+            }
+            if((idEntidad==null)&&(idOficina!=null)) {
+                if (cal.getTime().compareTo(dataFi) < 0) {
+                    entradaAnosValor.add(String.valueOf(registroEntradaEjb.buscaIndicadoresOficinaTotal(dataInici, cal.getTime(), idOficina)));
+                } else {
+                    entradaAnosValor.add(String.valueOf(registroEntradaEjb.buscaIndicadoresOficinaTotal(dataInici, dataFi, idOficina)));
+                    break;
+                }
             }
             cal.add(Calendar.DATE, 1);
             dataInici = cal.getTime();
@@ -1248,10 +1353,11 @@ public class InformeController extends BaseController {
      * @param mav
      * @param dataInici
      * @param dataFi
-     * @param entidadActiva
+     * @param idEntidad
+     * @param idOficina
      * @throws Exception
      */
-    public void totalRegistresSalidaAny(ModelAndView mav, Date dataInici, Date dataFi, Entidad entidadActiva) throws Exception{
+    public void totalRegistresSalidaAny(ModelAndView mav, Date dataInici, Date dataFi, Long idEntidad, Long idOficina) throws Exception{
 
         SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
         List<String> salidaAnosValor = new ArrayList<String>();
@@ -1268,11 +1374,21 @@ public class InformeController extends BaseController {
             cal.set(Calendar.HOUR, 23);
             cal.set(Calendar.MINUTE, 59);
             cal.set(Calendar.SECOND, 59);
-            if(cal.getTime().compareTo(dataFi) < 0){
-                salidaAnosValor.add(String.valueOf(registroSalidaEjb.buscaIndicadoresTotal(dataInici, cal.getTime(), entidadActiva.getId())));
-            }else{
-                salidaAnosValor.add(String.valueOf(registroSalidaEjb.buscaIndicadoresTotal(dataInici, dataFi, entidadActiva.getId())));
-                break;
+            if((idEntidad!=null)&&(idOficina==null)) {
+                if (cal.getTime().compareTo(dataFi) < 0) {
+                    salidaAnosValor.add(String.valueOf(registroSalidaEjb.buscaIndicadoresTotal(dataInici, cal.getTime(), idEntidad)));
+                } else {
+                    salidaAnosValor.add(String.valueOf(registroSalidaEjb.buscaIndicadoresTotal(dataInici, dataFi, idEntidad)));
+                    break;
+                }
+            }
+            if((idEntidad==null)&&(idOficina!=null)) {
+                if (cal.getTime().compareTo(dataFi) < 0) {
+                    salidaAnosValor.add(String.valueOf(registroSalidaEjb.buscaIndicadoresOficinaTotal(dataInici, cal.getTime(), idOficina)));
+                } else {
+                    salidaAnosValor.add(String.valueOf(registroSalidaEjb.buscaIndicadoresOficinaTotal(dataInici, dataFi, idOficina)));
+                    break;
+                }
             }
             cal.add(Calendar.DATE, 1);
             dataInici = cal.getTime();
@@ -1281,15 +1397,18 @@ public class InformeController extends BaseController {
         mav.addObject("salidaAnosNombre", salidaAnosNombre);
     }
 
+
+
     /**
      * Busca los registros de entrada totales por Meses entre las fechas
      * @param mav
      * @param dataInici
      * @param dataFi
-     * @param entidadActiva
+     * @param idEntidad
+     * @param idOficina
      * @throws Exception
      */
-    public void totalRegistresEntradaMes(ModelAndView mav, Date dataInici, Date dataFi, Entidad entidadActiva) throws Exception{
+    public void totalRegistresEntradaMes(ModelAndView mav, Date dataInici, Date dataFi, Long idEntidad, Long idOficina) throws Exception{
 
         SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
         SimpleDateFormat formatMes = new SimpleDateFormat("MMMMM", new Locale("ca"));
@@ -1298,18 +1417,26 @@ public class InformeController extends BaseController {
         List<String> entradaMesesValor = new ArrayList<String>();
         List<String> entradaMesesNombre = new ArrayList<String>();
 
+        // Mientras no hemos llegado a la fecha final
         while (dataInici.compareTo(dataFi) < 0) {
             String anyActual = formatYear.format(dataInici);
             String mesActualNom = formatMes.format(dataInici);
             String mesActual = formatMonth.format(dataInici);
             String mesActualCompost = mesActualNom + "/" + anyActual;
 
+            // Añade el mes a la tabla
             entradaMesesNombre.add(mesActualCompost);
-
+            // Empezamos a montar una fecha del mes que se está tratando en este momento
             Calendar cal = Calendar.getInstance();
-            cal.set(Calendar.MONTH, Integer.parseInt(mesActual)-1);
+            cal.set(Calendar.MONTH, Integer.parseInt(mesActual) - 1);
             int mesAra = Integer.parseInt(mesActual);
             int anyAra = Integer.parseInt(anyActual);
+            // Borramos ponemos a 0 la hora de la fecha que estamos montando
+            cal.clear(Calendar.HOUR_OF_DAY);
+            cal.clear(Calendar.MINUTE);
+            cal.clear(Calendar.SECOND);
+            cal.clear(Calendar.MILLISECOND);
+            // Calculamos el último día del mes para la fecha que montamos
             if((mesAra == 1)|| (mesAra == 3)|| (mesAra == 5)|| (mesAra == 7)|| (mesAra == 8)|| (mesAra == 10)|| (mesAra == 12)){
                 cal.set(Calendar.DAY_OF_MONTH, 31);
             } else if((mesAra == 4)|| (mesAra == 6)|| (mesAra == 9)|| (mesAra == 11)){
@@ -1319,18 +1446,37 @@ public class InformeController extends BaseController {
             } else{
                 cal.set(Calendar.DAY_OF_MONTH, 28);
             }
-            cal.set(Calendar.YEAR, Integer.parseInt(anyActual));
-            cal.set(Calendar.HOUR, 23);
+            // Añadimos las 23:59:59 a la fecha que montamos, que será la fechaFin para la búsqueda (para calcular cada mes por separado)
+            cal.set(Calendar.HOUR_OF_DAY, 23);
             cal.set(Calendar.MINUTE, 59);
             cal.set(Calendar.SECOND, 59);
-            if(cal.getTime().compareTo(dataFi) < 0){
-                entradaMesesValor.add(String.valueOf(registroEntradaEjb.buscaIndicadoresTotal(dataInici, cal.getTime(), entidadActiva.getId())));
+            cal.set(Calendar.YEAR, Integer.parseInt(anyActual));
 
-            }else{
-                entradaMesesValor.add(String.valueOf(registroEntradaEjb.buscaIndicadoresTotal(dataInici, dataFi, entidadActiva.getId())));
-
-                break;
+            // Miramos si es informe por entidad o por oficina
+            if((idEntidad!=null)&&(idOficina==null)) {
+                // Es informe por entidad
+                if (cal.getTime().compareTo(dataFi) < 0) {
+                    // Si no estamos en el último mes de la búsqueda, coje la fecha montada como fechaFin
+                    entradaMesesValor.add(String.valueOf(registroEntradaEjb.buscaIndicadoresTotal(dataInici, cal.getTime(), idEntidad)));
+                } else {
+                    // Si estamos en el último mes de la búsqueda, utiliza la dataFi
+                    entradaMesesValor.add(String.valueOf(registroEntradaEjb.buscaIndicadoresTotal(dataInici, dataFi, idEntidad)));
+                    break;
+                }
             }
+            // Miramos si es informe por entidad o por oficina
+            if((idEntidad==null)&&(idOficina!=null)) {
+                // Es informe por oficina
+                if (cal.getTime().compareTo(dataFi) < 0) {
+                    // Si no estamos en el último mes de la búsqueda, coje la fecha montada como fechaFin
+                    entradaMesesValor.add(String.valueOf(registroEntradaEjb.buscaIndicadoresOficinaTotal(dataInici, cal.getTime(), idOficina)));
+                } else {
+                    // Si estamos en el último mes de la búsqueda, utiliza la dataFi
+                    entradaMesesValor.add(String.valueOf(registroEntradaEjb.buscaIndicadoresOficinaTotal(dataInici, dataFi, idOficina)));
+                    break;
+                }
+            }
+            // Montamos la fechaInicio para la búsqueda del próximo mes
             cal.add(Calendar.DATE, 1);
             cal.set(Calendar.HOUR_OF_DAY, 00);
             cal.set(Calendar.MINUTE, 00);
@@ -1347,10 +1493,11 @@ public class InformeController extends BaseController {
      * @param mav
      * @param dataInici
      * @param dataFi
-     * @param entidadActiva
+     * @param idEntidad
+     * @param idOficina
      * @throws Exception
      */
-    public void totalRegistresSalidaMes(ModelAndView mav, Date dataInici, Date dataFi, Entidad entidadActiva) throws Exception{
+    public void totalRegistresSalidaMes(ModelAndView mav, Date dataInici, Date dataFi, Long idEntidad, Long idOficina) throws Exception{
 
         SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
         SimpleDateFormat formatMes = new SimpleDateFormat("MMMMM", new Locale("ca"));
@@ -1359,18 +1506,26 @@ public class InformeController extends BaseController {
         List<String> salidaMesesValor = new ArrayList<String>();
         List<String> salidaMesesNombre = new ArrayList<String>();
 
-
+        // Mientras no hemos llegado a la fecha final
         while (dataInici.compareTo(dataFi) < 0) {
             String anyActual = formatYear.format(dataInici);
             String mesActualNom = formatMes.format(dataInici);
             String mesActual = formatMonth.format(dataInici);
             String mesActualCompost = mesActualNom + "/" + anyActual;
 
+            // Añade el mes a la tabla
             salidaMesesNombre.add(mesActualCompost);
+            // Empezamos a montar una fecha del mes que se está tratando en este momento
             Calendar cal = Calendar.getInstance();
-            cal.set(Calendar.MONTH, Integer.parseInt(mesActual)-1);
+            cal.set(Calendar.MONTH, Integer.parseInt(mesActual) - 1);
             int mesAra = Integer.parseInt(mesActual);
             int anyAra = Integer.parseInt(anyActual);
+            // Borramos ponemos a 0 la hora de la fecha que estamos montando
+            cal.clear(Calendar.HOUR_OF_DAY);
+            cal.clear(Calendar.MINUTE);
+            cal.clear(Calendar.SECOND);
+            cal.clear(Calendar.MILLISECOND);
+            // Calculamos el último día del mes para la fecha que montamos
             if((mesAra == 1)|| (mesAra == 3)|| (mesAra == 5)|| (mesAra == 7)|| (mesAra == 8)|| (mesAra == 10)|| (mesAra == 12)){
                 cal.set(Calendar.DAY_OF_MONTH, 31);
             } else if((mesAra == 4)|| (mesAra == 6)|| (mesAra == 9)|| (mesAra == 11)){
@@ -1380,18 +1535,37 @@ public class InformeController extends BaseController {
             } else{
                 cal.set(Calendar.DAY_OF_MONTH, 28);
             }
-            cal.set(Calendar.YEAR, Integer.parseInt(anyActual));
-            cal.set(Calendar.HOUR, 23);
+            // Añadimos las 23:59:59 a la fecha que montamos, que será la fechaFin para la búsqueda (para calcular cada mes por separado)
+            cal.set(Calendar.HOUR_OF_DAY, 23);
             cal.set(Calendar.MINUTE, 59);
             cal.set(Calendar.SECOND, 59);
-            if(cal.getTime().compareTo(dataFi) < 0){
+            cal.set(Calendar.YEAR, Integer.parseInt(anyActual));
 
-                salidaMesesValor.add(String.valueOf(registroSalidaEjb.buscaIndicadoresTotal(dataInici, cal.getTime(), entidadActiva.getId())));
-            }else{
-
-                salidaMesesValor.add(String.valueOf(registroSalidaEjb.buscaIndicadoresTotal(dataInici, dataFi, entidadActiva.getId())));
-                break;
+            // Miramos si es informe por entidad o por oficina
+            if((idEntidad!=null)&&(idOficina==null)) {
+                // Es informe por entidad
+                if (cal.getTime().compareTo(dataFi) < 0) {
+                    // Si no estamos en el último mes de la búsqueda, coje la fecha montada como fechaFin
+                    salidaMesesValor.add(String.valueOf(registroSalidaEjb.buscaIndicadoresTotal(dataInici, cal.getTime(), idEntidad)));
+                } else {
+                    // Si estamos en el último mes de la búsqueda, utiliza la dataFi
+                    salidaMesesValor.add(String.valueOf(registroSalidaEjb.buscaIndicadoresTotal(dataInici, dataFi, idEntidad)));
+                    break;
+                }
             }
+            // Miramos si es informe por entidad o por oficina
+            if((idEntidad==null)&&(idOficina!=null)) {
+                // Es informe por oficina
+                if (cal.getTime().compareTo(dataFi) < 0) {
+                    // Si no estamos en el último mes de la búsqueda, coje la fecha montada como fechaFin
+                    salidaMesesValor.add(String.valueOf(registroSalidaEjb.buscaIndicadoresOficinaTotal(dataInici, cal.getTime(), idOficina)));
+                } else {
+                    // Si estamos en el último mes de la búsqueda, utiliza la dataFi
+                    salidaMesesValor.add(String.valueOf(registroSalidaEjb.buscaIndicadoresOficinaTotal(dataInici, dataFi, idOficina)));
+                    break;
+                }
+            }
+            // Montamos la fechaInicio para la búsqueda del próximo mes
             cal.add(Calendar.DATE, 1);
             cal.set(Calendar.HOUR_OF_DAY, 00);
             cal.set(Calendar.MINUTE, 00);
@@ -1632,9 +1806,10 @@ public class InformeController extends BaseController {
      * @param dataInici
      * @param dataFi
      * @param idEntidad
+     * @param idOficina
      * @throws Exception
      */
-    public void totalRegistresEntradaIdioma(ModelAndView mav,Date dataInici, Date dataFi, Long idEntidad) throws Exception{
+    public void totalRegistresEntradaIdioma(ModelAndView mav,Date dataInici, Date dataFi, Long idEntidad, Long idOficina) throws Exception{
 
         List<String> entradaIdiomaValor = new ArrayList<String>();
         List<String> entradaIdiomaNombre = new ArrayList<String>();
@@ -1642,7 +1817,12 @@ public class InformeController extends BaseController {
         for(Long idioma : RegwebConstantes.IDIOMAS_REGISTRO){
             final String nombre = I18NUtils.tradueix("idioma." + idioma);
             entradaIdiomaNombre.add(nombre);
-            entradaIdiomaValor.add(String.valueOf(registroEntradaEjb.buscaEntradaPorIdioma(dataInici, dataFi, idioma, idEntidad)));
+            if((idEntidad!=null)&&(idOficina==null)) {
+                entradaIdiomaValor.add(String.valueOf(registroEntradaEjb.buscaEntradaPorIdioma(dataInici, dataFi, idioma, idEntidad)));
+            }
+            if((idEntidad==null)&&(idOficina!=null)) {
+                entradaIdiomaValor.add(String.valueOf(registroEntradaEjb.buscaEntradaPorIdiomaOficina(dataInici, dataFi, idioma, idOficina)));
+            }
         }
         mav.addObject("entradaIdiomaValor", entradaIdiomaValor);
         mav.addObject("entradaIdiomaNombre", entradaIdiomaNombre);
@@ -1654,9 +1834,10 @@ public class InformeController extends BaseController {
      * @param dataInici
      * @param dataFi
      * @param idEntidad
+     * @param idOficina
      * @throws Exception
      */
-    public void totalRegistresSalidaIdioma(ModelAndView mav,Date dataInici, Date dataFi, Long idEntidad) throws Exception{
+    public void totalRegistresSalidaIdioma(ModelAndView mav,Date dataInici, Date dataFi, Long idEntidad, Long idOficina) throws Exception{
 
         List<String> salidaIdiomaValor = new ArrayList<String>();
         List<String> salidaIdiomaNombre = new ArrayList<String>();
@@ -1664,8 +1845,14 @@ public class InformeController extends BaseController {
         for(Long idioma : RegwebConstantes.IDIOMAS_REGISTRO){
             final String nombre = I18NUtils.tradueix("idioma." + idioma);
             salidaIdiomaNombre.add(nombre);
-            salidaIdiomaValor.add(String.valueOf(registroSalidaEjb.buscaSalidaPorIdioma(dataInici, dataFi, idioma, idEntidad)));
+            if((idEntidad!=null)&&(idOficina==null)) {
+                salidaIdiomaValor.add(String.valueOf(registroSalidaEjb.buscaSalidaPorIdioma(dataInici, dataFi, idioma, idEntidad)));
+            }
+            if((idEntidad==null)&&(idOficina!=null)) {
+                salidaIdiomaValor.add(String.valueOf(registroSalidaEjb.buscaSalidaPorIdiomaOficina(dataInici, dataFi, idioma, idOficina)));
+            }
         }
+
         mav.addObject("salidaIdiomaValor", salidaIdiomaValor);
         mav.addObject("salidaIdiomaNombre", salidaIdiomaNombre);
     }

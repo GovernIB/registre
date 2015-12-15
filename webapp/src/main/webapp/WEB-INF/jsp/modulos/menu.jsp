@@ -200,6 +200,7 @@
                                         <ul class="dropdown-menu">
                                             <c:if test="${fn:length(librosAdministrados) > 0}">
                                                 <li><a href="<c:url value="/informe/indicadores"/>"><spring:message code="informe.indicadores"/></a></li>
+                                                <li><a href="<c:url value="/informe/indicadoresOficina"/>"><spring:message code="informe.indicadoresOficina"/></a></li>
                                             </c:if>
                                             <li><a href="<c:url value="/informe/libroRegistro"/>"><spring:message code="menu.libro"/></a></li>
                                         </ul>
@@ -262,6 +263,7 @@
                                         <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> <spring:message code="menu.estadisticas"/></a>
                                         <ul class="dropdown-menu">
                                             <li><a href="<c:url value="/informe/indicadores"/>"><spring:message code="informe.indicadores"/></a></li>
+                                            <li><a href="<c:url value="/informe/indicadoresOficina"/>"><spring:message code="informe.indicadoresOficina"/></a></li>
                                             <li><a href="<c:url value="/informe/libroRegistro"/>"><spring:message code="menu.libro"/></a></li>
                                         </ul>
                                     </li>

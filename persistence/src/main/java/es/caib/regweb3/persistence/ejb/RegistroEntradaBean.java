@@ -601,6 +601,24 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
+    public Long buscaIndicadoresOficinaTotal(Date fechaInicio, Date fechaFin, Long idOficina) throws Exception{
+
+        Query q;
+
+        q = em.createQuery("Select count(registroEntrada.id) from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
+                "and registroEntrada.fecha <= :fechaFin and registroEntrada.estado != :anulado and registroEntrada.estado != :pendiente and " +
+                "registroEntrada.registroDetalle.oficinaOrigen.id = :idOficina ");
+
+        q.setParameter("fechaInicio", fechaInicio);
+        q.setParameter("fechaFin", fechaFin);
+        q.setParameter("idOficina", idOficina);
+        q.setParameter("anulado",RegwebConstantes.ESTADO_ANULADO);
+        q.setParameter("pendiente",RegwebConstantes.ESTADO_PENDIENTE);
+
+        return (Long) q.getSingleResult();
+    }
+
+    @Override
     public Long buscaEntradaPorConselleria(Date fechaInicio, Date fechaFin, Long conselleria) throws Exception{
 
         Query q;
@@ -649,6 +667,25 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("idioma", idioma);
         q.setParameter("idEntidad", idEntidad);
+        q.setParameter("anulado",RegwebConstantes.ESTADO_ANULADO);
+        q.setParameter("pendiente",RegwebConstantes.ESTADO_PENDIENTE);
+
+        return (Long) q.getSingleResult();
+    }
+
+    @Override
+    public Long buscaEntradaPorIdiomaOficina(Date fechaInicio, Date fechaFin, Long idioma, Long idOficina) throws Exception{
+
+        Query q;
+
+        q = em.createQuery("Select count(registroEntrada.id) from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
+                "and registroEntrada.fecha <= :fechaFin and registroEntrada.registroDetalle.idioma = :idioma and " +
+                "registroEntrada.estado != :anulado and registroEntrada.estado != :pendiente and registroEntrada.registroDetalle.oficinaOrigen.id = :idOficina");
+
+        q.setParameter("fechaInicio", fechaInicio);
+        q.setParameter("fechaFin", fechaFin);
+        q.setParameter("idioma", idioma);
+        q.setParameter("idOficina", idOficina);
         q.setParameter("anulado",RegwebConstantes.ESTADO_ANULADO);
         q.setParameter("pendiente",RegwebConstantes.ESTADO_PENDIENTE);
 

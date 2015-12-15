@@ -69,6 +69,11 @@ public class Oficina implements Serializable{
       super();
     }
 
+    public Oficina(Long id, String codigo, String denominacion) {
+        this.id = id;
+        this.codigo = codigo;
+        this.denominacion = denominacion;
+    }
 
     public Oficina(Oficina o) {
       super();
