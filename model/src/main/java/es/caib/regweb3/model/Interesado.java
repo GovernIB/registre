@@ -147,7 +147,7 @@ public class Interesado implements Serializable {
         this.tipo = RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION;
         this.razonSocial = organismo;
         this.tipoDocumentoIdentificacion = RegwebConstantes.TIPODOCUMENTOID_CODIGO_ORIGEN_ID;
-        //this.documento = codigoDir3;
+        this.documento = codigoDir3;
         this.codigoDir3 = codigoDir3;
     }
     
@@ -296,7 +296,7 @@ public class Interesado implements Serializable {
         this.tipo = tipo;
     }
 
-    @Column(name = "RAZONSOCIAL", length = 80)
+    @Column(name = "RAZONSOCIAL", length = 2000) // Modificado a 2000 para permitir las Administraciones
     public String getRazonSocial() {
         return razonSocial;
     }
