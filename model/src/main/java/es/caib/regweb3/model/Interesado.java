@@ -296,7 +296,7 @@ public class Interesado implements Serializable {
         this.tipo = tipo;
     }
 
-    @Column(name = "RAZONSOCIAL", length = 80)
+    @Column(name = "RAZONSOCIAL", length = 2000) // Modificado a 2000 para permitir las Administraciones
     public String getRazonSocial() {
         return razonSocial;
     }
