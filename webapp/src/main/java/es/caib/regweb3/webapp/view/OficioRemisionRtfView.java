@@ -100,8 +100,23 @@ public class OficioRemisionRtfView extends AbstractView {
         // Mapeamos los campos del rtf con los del registro
         if(oficioRemision.getOrganismoDestinatario() != null) {
             ht.put("(organismoDestinatario)", ConvertirTexto.toCp1252(oficioRemision.getOrganismoDestinatario().getDenominacion()));
+            String direccion = "";
+            if(oficioRemision.getOrganismoDestinatario().getNombreVia() != null){
+                direccion = direccion + oficioRemision.getOrganismoDestinatario().getNombreVia() + " ";
+            }
+            if(oficioRemision.getOrganismoDestinatario().getNumVia() != null){
+                direccion = direccion + oficioRemision.getOrganismoDestinatario().getNumVia() + " ";
+            }
+            if(oficioRemision.getOrganismoDestinatario().getCodPostal() != null){
+                direccion = direccion + "- " + oficioRemision.getOrganismoDestinatario().getCodPostal() + " ";
+            }
+            if(oficioRemision.getOrganismoDestinatario().getLocalidad().getNombre() != null){
+                direccion = direccion + oficioRemision.getOrganismoDestinatario().getLocalidad().getNombre();
+            }
+            ht.put("(direccionOrgDest)", ConvertirTexto.toCp1252(direccion));
         } else{
             ht.put("(organismoDestinatario)", ConvertirTexto.toCp1252(oficioRemision.getDestinoExternoDenominacion()));
+            ht.put("(direccionOrgDest)", ConvertirTexto.toCp1252(""));
         }
         ht.put("(numeroOficio)", ConvertirTexto.toCp1252(oficioRemision.getNumeroOficio().toString()));
         ht.put("(anoOficio)", ConvertirTexto.toCp1252(anoOficio));
