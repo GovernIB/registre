@@ -1,9 +1,6 @@
 package es.caib.regweb3.webapp.interceptor;
 
-import es.caib.regweb3.model.Entidad;
-import es.caib.regweb3.model.Oficina;
-import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.PermisoLibroUsuarioLocal;
 import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
 import es.caib.regweb3.persistence.ejb.TipoDocumentalLocal;
@@ -12,6 +9,7 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
@@ -28,7 +26,7 @@ import java.util.List;
  * @author earrivi
  * Date: 5/06/14
  */
-public class RegistroEntradaInterceptor extends AbstractRegistroCommonInterceptor {
+public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
 
     protected final Logger log = Logger.getLogger(getClass());
 
@@ -47,12 +45,37 @@ public class RegistroEntradaInterceptor extends AbstractRegistroCommonIntercepto
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        super.preHandle(request,response,handler);
-
-        String url = request.getServletPath();
         HttpSession session = request.getSession();
+        Rol rolActivo = (Rol) session.getAttribute(RegwebConstantes.SESSION_ROL);
         Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
         Oficina oficinaActiva = (Oficina) session.getAttribute(RegwebConstantes.SESSION_OFICINA);
+
+
+        // Comprobamos que el usuario dispone del Rol RWE_USUARI
+        if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_USUARI)){
+            log.info("Error de rol");
+            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
+            response.sendRedirect("/regweb3/aviso");
+            return false;
+        }
+
+        // Comprobamos que el usuario dispone de una EntidadActiva
+        if(entidadActiva == null){
+            log.info("No existe una EntidadActiva");
+            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.entidadActiva"));
+            response.sendRedirect("/regweb3/aviso");
+            return false;
+        }
+
+        // Comprobamos que el usuario dispone de una OficinaActiva
+        if(oficinaActiva == null){
+            log.info("No existe una OficinaActiva");
+            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficinaActiva"));
+            response.sendRedirect("/regweb3/aviso");
+            return false;
+        }
+
+        String url = request.getServletPath();
         UsuarioEntidad usuarioEntidad = (UsuarioEntidad)session.getAttribute(RegwebConstantes.SESSION_USUARIO_ENTIDAD);
 
         // Comprobaciones previas al listado de RegistroEntrada
