@@ -139,16 +139,94 @@
                                     </tr>
                                     </thead>
                                     <tbody>
+                                    <c:set var="index" value="1"/>
                                     <c:forEach var="codigoAsunto" items="${tipoAsunto.codigosAsunto}">
                                         <tr>
                                             <td><i:trad value="${codigoAsunto}" property="nombre"/></td>
                                             <td class="center">
                                                <!-- Definimos la variable scope request para que sea visible en el javascript-->
                                                <c:set var="codAsunto" value="${codigoAsunto}" scope="request"/>
-                                               <a class="btn btn-warning" href="javascript:void(0);" onclick="showModalEditar()" title="Editar"><span class="fa fa-pencil"></span></a>
+                                               <a class="btn btn-warning" href="javascript:void(0);" onclick="showModalEditar('${codigoAsunto.id}')" title="Editar"><span class="fa fa-pencil"></span></a>
                                                <a class="btn btn-danger" title="Eliminar" onclick="confirm('<c:url value="/codigoAsunto/${codigoAsunto.id}/delete"/>', '<spring:message code="regweb.confirmar.eliminacion" htmlEscape="true"/>')" href="javascript:void(0);"><span class="fa fa-eraser"></span></a>
                                             </td>
                                         </tr>
+
+                                        <%--Creo el modal para la edición de los codigos Asunto--%>
+                                        <div id="myModal_${codigoAsunto.id}" class="modal fade bs-example-modal-lg" >
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="goTo('<c:url value="/tipoAsunto/${tipoAsunto.id}/edit/"/>')">×</button>
+                                                        <h3><spring:message code="codigoAsunto.editar"/></h3>
+                                                    </div>
+
+                                                    <div class="modal-body" >
+                                                        <c:url value="/codigoAsunto/edit" var="formAction"/>
+                                                        <form:form id="modal-form_${codigoAsunto.id}" modelAttribute="codigoAsunto" method="post" action="${formAction}" cssClass="form-horizontal">
+                                                            <form:hidden path="id" value="${codAsunto.id}"/>
+
+                                                            <div class="panel panel-success">
+
+                                                                <div class="panel-heading">
+                                                                    <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong>Dades codi Assumpte</strong></h3>
+                                                                </div>
+
+                                                                <div class="panel-body">
+
+                                                                    <div class="form-group col-xs-6">
+                                                                        <div class="col-xs-4 pull-left etiqueta_regweb_left control-label">
+                                                                            <form:label path="codigo"><span class="text-danger">*</span> <spring:message code="codigoAsunto.codigo"/></form:label>
+                                                                        </div>
+                                                                        <div class="col-xs-8" id="cod_${codigoAsunto.id}">
+                                                                            <form:input path="codigo" cssClass="form-control" maxlength="16" value="${codAsunto.codigo}"/><span class="errors"></span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group col-xs-12" id="myTab2_${codigoAsunto.id}">
+                                                                        <ul class="nav nav-tabs">
+                                                                            <c:forEach items="${idiomas}" var="idioma" varStatus="index">
+                                                                                <c:set var="idioma_lang" value="${RegwebConstantes.CODIGO_BY_IDIOMA_ID[idioma]}" />
+                                                                                <li id="a_${codigoAsunto.id}"><a href="#${idioma_lang}_modal_${codigoAsunto.id}" data-toggle="tab"><spring:message code="idioma.${idioma}"/></a></li>
+                                                                            </c:forEach>
+                                                                        </ul>
+
+                                                                        <div id="myTabContent2_${codigoAsunto.id}" class="tab-content">
+                                                                            <c:forEach items="${idiomas}" var="idioma" varStatus="index">
+                                                                                <c:set var="idioma_lang" value="${RegwebConstantes.CODIGO_BY_IDIOMA_ID[idioma]}" />
+                                                                                <div class="tab-pane" id="${idioma_lang}_modal_${codigoAsunto.id}">
+                                                                                    <br>
+                                                                                    <div class="form-group col-xs-8">
+                                                                                        <div class="col-xs-4 pull-lef etiqueta_regweb control-label">
+                                                                                            <form:label path="traducciones['${idioma_lang}'].nombre"><span class="text-danger">*</span> <spring:message code="regweb.nombre"/></form:label>
+                                                                                        </div>
+                                                                                        <div class="col-xs-8" id="nom_${idioma_lang}${codigoAsunto.id}">
+                                                                                            <form:input path="traducciones['${idioma_lang}'].nombre" cssClass="form-control" value="${fn:escapeXml(codAsunto.traducciones[idioma_lang].nombre)}"/><span class="errors"></span>
+                                                                                        </div>
+                                                                                    </div>
+
+                                                                                </div>
+                                                                            </c:forEach>
+                                                                        </div>
+                                                                    </div>
+                                                                </div> <!-- /.panel body -->
+                                                            </div> <!-- /.panel panel-info -->
+                                                            <div class="form-actions">
+                                                                <input type="submit" value="<spring:message code="regweb.guardar"/>" class="btn btn-warning btn-sm" onclick="return validateModalCodAsunto(${codigoAsunto.id})">
+                                                                <input type="button" value="<spring:message code="regweb.cancelar"/>" onclick="goTo('<c:url value="/tipoAsunto/${tipoAsunto.id}/edit/"/>')" class="btn btn-default btn-sm">
+                                                            </div>
+                                                        </form:form>
+
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button class="btn" data-dismiss="modal" aria-hidden="true" onclick="goTo('<c:url value="/tipoAsunto/${tipoAsunto.id}/edit/"/>')"><spring:message code="regweb.cerrar"/></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+
+                                        <c:set var="index" value="${index}+1"/>
                                     </c:forEach>
                                     </tbody>
                                 </table>
@@ -169,7 +247,7 @@
                         </div>
 
                         <div class="modal-body" >
-                            <c:url value="/codigoAsunto/edit" var="formAction"/>
+                            <c:url value="/codigoAsunto/new" var="formAction"/>
                             <form:form id="modal-form" modelAttribute="codigoAsunto" method="post" action="${formAction}" cssClass="form-horizontal" >
                                 <form:hidden path="id"/>
 
@@ -245,32 +323,14 @@
 
 
 
-function showModalEditar(){
-
-    $('#id').val(${codAsunto.id});
-
-    var trad;
-    var codigo;
-    <c:forEach items="${idiomas}" var="idioma" varStatus="index">
-        <c:set var="idioma_lang" value="${RegwebConstantes.CODIGO_BY_IDIOMA_ID[idioma]}" />
-        trad = unescapeHtml('<c:out value="${fn:escapeXml(codAsunto.traducciones[idioma_lang].nombre)}" />');
-        $("#modal-form #traducciones\\'${idioma_lang}\\'\\.nombre").val(trad);
-        /*  $("#modal-form #traducciones\\'ca\\'\\.nombre").val(nombreca);*/
-    </c:forEach>
-
-    codigo = unescapeHtml('${codAsunto.codigo}');
-
-    $('#modal-form #id').val(${codAsunto.id});
-    $("#modal-form #codigo").val(codigo);
-
-
-    $('#myModal .modal-header h3').html("<spring:message code="codigoAsunto.editar"/>");
-	$('#myModal').modal('show');
+function showModalEditar(codi){
+    $('#a_'+codi).addClass("active");
+    $('#ca_modal_'+codi).addClass("active");
+	$('#myModal_'+codi).modal('show');
 }
 
 
 function showModalNuevo() {
-
     $('#modal-form #id').val("");
     <c:forEach items="${idiomas}" var="idioma" varStatus="index">
     <c:set var="idioma_lang" value="${RegwebConstantes.CODIGO_BY_IDIOMA_ID[idioma]}" />
@@ -283,7 +343,6 @@ function showModalNuevo() {
 }
 
 function validateModal() {
-
     var nombreCorrecto = false;
     var traduccionesCorrecto = false;
     var noErrorTraducciones = true;
@@ -328,6 +387,55 @@ function validateModal() {
     }
 }
 
+
+function validateModalCodAsunto(idCodAsunto) {
+    var nombreCorrecto = false;
+    var traduccionesCorrecto = false;
+    var noErrorTraducciones = true;
+    var nombreRepro = $('#cod_'+idCodAsunto+' input#codigo').val();
+    // Comprueba si Codigo tiene algún valor e indica el posible error
+    if (nombreRepro == "") {
+        var variable = "#cod_"+idCodAsunto+" span.errors";
+        var formatoHtml = "<span id='cod.errors' class='help-block'>El camp és obligatori</span>";
+        $(variable).html(formatoHtml);
+        $(variable).parents(".form-group").addClass("has-error");
+        nombreCorrecto = false;
+    } else {
+        var variable = "#cod_"+idCodAsunto+" span.errors";
+        var htmlNormal = "<span id='cod.errors'></span>";
+        $(variable).html(htmlNormal);
+        $(variable).parents(".form-group").removeClass("has-error");
+        nombreCorrecto = true;
+    }
+    // Comprueba si las Traducciones tienen algún valor e indica el posible error
+    <c:forEach items="${idiomas}" var="idioma" varStatus="index">
+        <c:set var="idioma_lang" value="${RegwebConstantes.CODIGO_BY_IDIOMA_ID[idioma]}" />
+        var id_lang = "<c:out value='${idioma_lang}'/>";
+        var tradId = "#nom_"+id_lang+idCodAsunto+" input";
+        var traduccioIdioma = $(tradId).val();
+        if (traduccioIdioma == "") {
+            var variable = "#nom_"+id_lang+idCodAsunto+" span.errors";
+            var formatoHtml = "<span id='cod.errors' class='help-block'>El camp és obligatori</span>";
+            $(variable).html(formatoHtml);
+            $(variable).parents(".form-group").addClass("has-error");
+            traduccionesCorrecto = false;
+            noErrorTraducciones = false;
+        } else {
+            var variable = "#nom_"+id_lang+idCodAsunto+" span.errors";
+            var htmlNormal = "<span id='nom_${idioma_lang}.errors'></span>";
+            $(variable).html(htmlNormal);
+            $(variable).parents(".form-group").removeClass("has-error");
+            traduccionesCorrecto = true;
+        }
+    </c:forEach>
+    // Si no hay errores hace el submit
+    if ((nombreCorrecto)&&(traduccionesCorrecto)&&(noErrorTraducciones)) {
+        $('#modal-form_'+idCodAsunto).submit();
+    }else{
+        return false;
+    }
+}
+
 /**
  * Sustituye caracteres por su simbolo
  */
@@ -354,6 +462,25 @@ function limpiarModal(){
     </c:forEach>
 }
 
+<%--/**--%>
+ <%--* Limpia el formulario del Modal de Edición de Codigo Asunto y los posibles mensajes de error--%>
+ <%--*/--%>
+<%--function limpiarModalCodAsunto(idCodAsunto){--%>
+    <%--alert("limpiar: " + idCodAsunto);--%>
+    <%--clearForm("#modal-form_"+idCodAsunto);--%>
+    <%--quitarErroresModalCodAsunto(idCodAsunto);--%>
+    <%--var codigo = "#cod_"+idCodAsunto+" input#codigo";--%>
+    <%--var codigoOrigen = $(codigo).val();--%>
+    <%--alert("ponemos valor origen: " + codigoOrigen);--%>
+    <%--$(codigo).val(codigoOrigen);--%>
+    <%--<c:forEach items="${idiomas}" var="idioma" varStatus="index">--%>
+        <%--<c:set var="idioma_lang" value="${RegwebConstantes.CODIGO_BY_IDIOMA_ID[idioma]}" />--%>
+        <%--var id_lang = "<c:out value='${idioma_lang}'/>";--%>
+        <%--var tradId = "#nom_"+id_lang+idCodAsunto+" input";--%>
+        <%--$(tradId).val($(tradId).val());--%>
+    <%--</c:forEach>--%>
+<%--}--%>
+
 function quitarErroresModal(){
     var variable = "#cod span.errors";
     var htmlNormal = "<span id='cod.errors'></span>";
@@ -367,6 +494,23 @@ function quitarErroresModal(){
         $(variable).parents(".form-group").removeClass("has-error");
     </c:forEach>
 }
+
+<%--function quitarErroresModalCodAsunto(idCodAsunto){--%>
+    <%--alert("quitar errores: " + idCodAsunto);--%>
+    <%--var variable = "#cod_"+idCodAsunto+" span.errors";--%>
+    <%--var htmlNormal = "<span id='cod.errors'></span>";--%>
+    <%--$(variable).html(htmlNormal);--%>
+    <%--$(variable).parents(".form-group").removeClass("has-error");--%>
+    <%--<c:forEach items="${idiomas}" var="idioma" varStatus="index">--%>
+        <%--<c:set var="idioma_lang" value="${RegwebConstantes.CODIGO_BY_IDIOMA_ID[idioma]}" />--%>
+        <%--var id_lang = "<c:out value='${idioma_lang}'/>";--%>
+        <%--alert("quitar errores: " + id_lang);--%>
+        <%--variable = "#nom_"+id_lang+idCodAsunto+" span.errors";--%>
+        <%--htmlNormal = "<span id='nom_"+id_lang+".errors'></span>";--%>
+        <%--$(variable).html(htmlNormal);--%>
+        <%--$(variable).parents(".form-group").removeClass("has-error");--%>
+    <%--</c:forEach>--%>
+<%--}--%>
 
 </script>
 
