@@ -1,6 +1,6 @@
 /**
  * WS_SIR6_BSoapBindingStub.java
- * <p/>
+ *
  * This file was auto-generated from WSDL
  * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
  */
@@ -161,8 +161,8 @@ public class WS_SIR6_BSoapBindingStub extends org.apache.axis.client.Stub implem
                     return (es.caib.regweb3.sir.ws.api.wssir6b.RespuestaWS) _resp;
                 } catch (java.lang.Exception _exception) {
                     return (es.caib.regweb3.sir.ws.api.wssir6b.RespuestaWS) org.apache.axis.utils.JavaUtils.convert(_resp, es.caib.regweb3.sir.ws.api.wssir6b.RespuestaWS.class);
-                }
             }
+        }
         } catch (org.apache.axis.AxisFault axisFaultException) {
             throw axisFaultException;
         }

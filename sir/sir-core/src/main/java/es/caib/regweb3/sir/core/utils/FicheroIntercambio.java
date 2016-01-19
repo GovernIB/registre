@@ -549,7 +549,7 @@ public class FicheroIntercambio {
         StringWriter sw = new StringWriter();
 
         try {
-            jc = JAXBContext.newInstance(es.caib.regweb3.persistence.utils.sir.FicheroIntercambioSICRES3.class);
+            jc = JAXBContext.newInstance(FicheroIntercambioSICRES3.class);
             Marshaller m = jc.createMarshaller();
             m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
@@ -607,7 +607,7 @@ public class FicheroIntercambio {
     }
 
     /**
-     * Transforma un {@link es.caib.regweb3.persistence.utils.sir.FicheroIntercambioSICRES3.DeInteresado} en un {@link es.caib.regweb3.model.Interesado}
+     * Transforma un {@link es.caib.regweb3.sir.core.schema.FicheroIntercambioSICRES3.DeInteresado} en un {@link es.caib.regweb3.model.Interesado}
      *
      * @param deInteresado
      * @return
@@ -696,7 +696,7 @@ public class FicheroIntercambio {
     }
 
     /**
-     * Transforma un {@link es.caib.regweb3.persistence.utils.sir.FicheroIntercambioSICRES3.DeInteresado} en un {@link es.caib.regweb3.model.Interesado}
+     * Transforma un {@link es.caib.regweb3.sir.core.schema.FicheroIntercambioSICRES3.DeInteresado} en un {@link es.caib.regweb3.model.Interesado}
      *
      * @param deRepresentante
      * @return

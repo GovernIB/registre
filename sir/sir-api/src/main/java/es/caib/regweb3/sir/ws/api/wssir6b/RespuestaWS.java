@@ -1,6 +1,6 @@
 /**
  * RespuestaWS.java
- * <p/>
+ *
  * This file was auto-generated from WSDL
  * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
  */
@@ -25,7 +25,7 @@ public class RespuestaWS implements java.io.Serializable {
 
     /**
      * Gets the codigo value for this RespuestaWS.
-     *
+     * 
      * @return codigo
      */
     public java.lang.String getCodigo() {
@@ -35,7 +35,7 @@ public class RespuestaWS implements java.io.Serializable {
 
     /**
      * Sets the codigo value for this RespuestaWS.
-     *
+     * 
      * @param codigo
      */
     public void setCodigo(java.lang.String codigo) {
@@ -45,7 +45,7 @@ public class RespuestaWS implements java.io.Serializable {
 
     /**
      * Gets the descripcion value for this RespuestaWS.
-     *
+     * 
      * @return descripcion
      */
     public java.lang.String getDescripcion() {
@@ -55,7 +55,7 @@ public class RespuestaWS implements java.io.Serializable {
 
     /**
      * Sets the descripcion value for this RespuestaWS.
-     *
+     * 
      * @param descripcion
      */
     public void setDescripcion(java.lang.String descripcion) {
@@ -63,7 +63,6 @@ public class RespuestaWS implements java.io.Serializable {
     }
 
     private java.lang.Object __equalsCalc = null;
-
     public synchronized boolean equals(java.lang.Object obj) {
         if (!(obj instanceof RespuestaWS)) return false;
         RespuestaWS other = (RespuestaWS) obj;
@@ -86,7 +85,6 @@ public class RespuestaWS implements java.io.Serializable {
     }
 
     private boolean __hashCodeCalc = false;
-
     public synchronized int hashCode() {
         if (__hashCodeCalc) {
             return 0;
