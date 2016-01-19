@@ -151,6 +151,14 @@
 		</dependency>
 
         <dependency>
+            <groupId>org.fundaciobit.plugins</groupId>
+            <artifactId>plugins-distribucionregweb-api</artifactId>
+            <type>jar</type>
+            <version>1.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
             <version>6.0</version>

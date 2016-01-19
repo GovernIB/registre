@@ -234,6 +234,25 @@
         </dependency>
         -->
 
+        <!-- ============================================ -->
+        <!-- ======== PLUGINS DE DISTRIBUCION =========== -->
+        <!-- ============================================ -->
+
+        <dependency>
+            <groupId>org.fundaciobit.plugins</groupId>
+            <artifactId>plugins-distribucionregweb-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.fundaciobit.plugins</groupId>
+            <artifactId>plugins-distribucionregweb-distribucionlocal</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <!-- ============================================ -->
+        <!-- =============    FINAL PLUGINS   =========== -->
+        <!-- ============================================ -->
 
         <!-- Externas -->
         <dependency>

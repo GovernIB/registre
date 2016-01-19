@@ -107,6 +107,12 @@
 		   <!-- Applet CAIB -->
 		   es.caib.regweb3.plugin.3=
 
+			<!-- ======== PLUGIN DISTRIBUCION ======= -->
+			<!--Plugin Distribución -->
+			es.caib.regweb3.distribucion.plugin=0
+
+			es.caib.regweb3.distribucion.plugin.0=org.fundaciobit.plugins.distribucion.distribucionlocal.DistribucionLocalDistribucionPlugin
+			# es.caib.regweb3.distribucion.plugin.0.plugins.distribucion.distribucionlocal.exemple=Un valor
 			
         </attribute>
     </mbean>

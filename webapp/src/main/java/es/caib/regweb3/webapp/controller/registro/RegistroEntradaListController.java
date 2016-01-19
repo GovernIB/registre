@@ -6,9 +6,13 @@ import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.webapp.distribucion.DestinatarioWrapper;
+import es.caib.regweb3.webapp.distribucion.RegwebDistribucionPluginManager;
 import es.caib.regweb3.webapp.form.RegistroEntradaBusqueda;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.RegistroEntradaBusquedaValidator;
+import org.fundaciobit.plugins.distribucion.Destinatarios;
+import org.fundaciobit.plugins.distribucion.IDistribucionPlugin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -359,10 +363,12 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
     /**
      * Tramitar un {@link es.caib.regweb3.model.RegistroEntrada}
+     * OLD
      */
-    @RequestMapping(value = "/{idRegistro}/tramitar")
+    @RequestMapping(value = "/{idRegistro}/xxxxtramitarxxxx")
     public String tramitarRegistroEntrada(@PathVariable Long idRegistro, HttpServletRequest request) {
 
+        log.info("Llegamos a tramitar");
         try {
 
             RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
@@ -380,20 +386,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
                 Mensaje.saveMessageError(request, getMessage("registroEntrada.tramitar.error"));
                 return "redirect:/registroEntrada/list";
             }
-
-
-            //TODO aquí hay que hacer la gestión con el plugin que tengamos configurado
-
-/*
-            DistribucionPlugin distribucionPlugin = RegwebDistribucionPluginManager.getInstance();
-            Boolean conAnexos = registroEntrada.getRegistroDetalle().getAnexos().size()>0;
-
-            String registroXML = RegistroUtils.serilizarXml(registroEntrada);
-
-            distribucionPlugin.distribuir(registroXML,conAnexos);*/
-
-            //registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, usuarioEntidad);
-
+            registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, usuarioEntidad);
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.tramitar.ok"));
 
         } catch (Exception e) {
@@ -401,7 +394,67 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             e.printStackTrace();
         }
 
+
         return "redirect:/registroEntrada/list";
+    }
+
+    @RequestMapping(value = "/{idRegistro}/tramitar", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    Destinatarios distribuirRegistroEntrada(@PathVariable Long idRegistro, HttpServletRequest request) throws Exception {
+
+        RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
+        Destinatarios destinatarios = new Destinatarios();
+
+        // Comprobamos si el RegistroEntrada tiene el estado Válido
+        if (!registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_VALIDO)) {
+
+            Mensaje.saveMessageError(request, getMessage("registroEntrada.tramitar.error"));
+            return destinatarios;
+        }
+
+        // Comprobamos que el RegistroEntrada es un OficioRemision
+        if (registroEntradaEjb.isOficioRemisionInterno(idRegistro)) {
+            Mensaje.saveMessageError(request, getMessage("registroEntrada.tramitar.error"));
+            return destinatarios;
+        }
+        // Plugin de distribución
+        IDistribucionPlugin distribucionPlugin = RegwebDistribucionPluginManager.getInstance();
+        Boolean conAnexos = registroEntrada.getRegistroDetalle().getAnexos().size() > 0;
+
+        // TODO emplear el serializar de Toni Nadal(preguntarle a el)
+        String registroXML = RegistroUtils.serilizarXml(registroEntrada);
+
+        destinatarios = distribucionPlugin.distribuir(registroXML, conAnexos);
+        return destinatarios;
+    }
+
+
+    @RequestMapping(value = "/{idRegistro}/enviardestinatarios", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    Boolean enviarDestinatariosRegistroEntrada(@PathVariable Long idRegistro, @RequestBody DestinatarioWrapper wrapper, HttpServletRequest request) throws Exception {
+
+        RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+
+        log.info("Destinatarios obtenidos: " + wrapper.getDestinatarios().size());
+        log.info(" Observaciones obtenidas:" + wrapper.getObservaciones());
+
+        // Plugin de distribución
+        IDistribucionPlugin distribucionPlugin = RegwebDistribucionPluginManager.getInstance();
+
+
+        Boolean enviado = distribucionPlugin.enviarDestinatarios(wrapper.getDestinatarios(), wrapper.getObservaciones());
+        //registroEntradaEjb.tramitarRegistroEntrada(registroEntrada,usuarioEntidad);
+        if (enviado) {
+            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.tramitar.ok"));
+
+        } else {
+            Mensaje.saveMessageError(request, getMessage("registroEntrada.tramitar.error"));
+        }
+        return enviado;
+
     }
 
 
@@ -425,13 +478,14 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     }
 
 
-
     @InitBinder("registroEntradaBusqueda")
     public void registroEntradaBusqueda(WebDataBinder binder) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         CustomDateEditor dateEditor = new CustomDateEditor(sdf, true);
         binder.registerCustomEditor(java.util.Date.class,dateEditor);
     }
+
+
 
     
    
