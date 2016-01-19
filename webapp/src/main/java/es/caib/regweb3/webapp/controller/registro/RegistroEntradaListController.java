@@ -3,7 +3,6 @@ package es.caib.regweb3.webapp.controller.registro;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.HistoricoRegistroEntradaLocal;
 import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
-import es.caib.regweb3.persistence.ejb.SirLocal;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -47,9 +46,6 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     
     @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
     public RegistroEntradaLocal registroEntradaEjb;
-    
-    @EJB(mappedName = "regweb3/SirEJB/local")
-    public SirLocal sirEjb;
 
     
 
@@ -427,31 +423,6 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         return mav;
     }
-
-
-    /**
-     * Crea el xml de un {@link es.caib.regweb3.model.RegistroEntrada}
-     */
-    /*@RequestMapping(value = "/{idRegistro}/xml", method = RequestMethod.GET)
-    public String xmlRegistroEntrada(@PathVariable Long idRegistro) throws Exception {
-
-        RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
-        
-        FicheroIntercambioSICRES3 fiSICRES3 =  sirEjb.writeFicheroIntercambioSICRES3(registroEntrada);
-        String xml = SirUtils.marshallObject(fiSICRES3);
-
-        Archivo archivo = new Archivo();
-        archivo.setMime("application/xml");
-        archivo.setNombre(registroEntrada.getRegistroDetalle().getExtracto());
-        archivo.setTamano(Long.valueOf(xml.getBytes().length));
-
-        archivo = archivoEjb.persist(archivo);
-        FileSystemManager.crearArchivo(xml.getBytes(), archivo.getId());
-
-        return "redirect:/registroEntrada/list";
-    }*/
-
-
 
 
 

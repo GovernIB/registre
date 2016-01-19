@@ -4,13 +4,8 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.CatLocalidadLocal;
 import es.caib.regweb3.persistence.ejb.CatPaisLocal;
 import es.caib.regweb3.persistence.ejb.CatProvinciaLocal;
-import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
-import es.caib.regweb3.ws.sir.api.wssir6b.RespuestaWS;
-import es.caib.regweb3.ws.sir.api.wssir6b.WS_SIR6_BServiceLocator;
-import es.caib.regweb3.ws.sir.api.wssir6b.WS_SIR6_B_DirectApi;
-import es.caib.regweb3.ws.sir.api.wssir6b.WS_SIR6_B_PortType;
 import org.apache.log4j.Logger;
 import org.fundaciobit.plugins.documentcustody.DocumentCustody;
 import org.fundaciobit.plugins.utils.Base64;
@@ -578,12 +573,12 @@ public class SirUtils {
     }
 
     
-    
-    /**
+/*
+    *//**
      * 
      * @return
      * @throws Exception
-     */
+     *//*
     public static WS_SIR6_B_PortType getWS_SIR6_B() throws Exception {
        WS_SIR6_BServiceLocator locator = new WS_SIR6_BServiceLocator();
        URL url = new URL(Configuracio.getSirServerBase()  + "/WS_SIR6_B");
@@ -602,7 +597,7 @@ public class SirUtils {
         WS_SIR6_B_PortType ws_sir6_b = SirUtils.getWS_SIR6_B();
         return ws_sir6_b.recepcionFicheroDeAplicacion(xml);
       }
-    }
+    }*/
     
     
 

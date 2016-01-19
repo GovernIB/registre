@@ -1,16 +1,14 @@
 package es.caib.regweb3.webapp.controller;
 
-import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.Oficina;
+import es.caib.regweb3.model.Rol;
+import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.ObjetoBasico;
 import es.caib.regweb3.persistence.ejb.*;
-import es.caib.regweb3.persistence.utils.sir.FicheroIntercambioSICRES3;
-import es.caib.regweb3.persistence.utils.sir.SirUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.utils.UsuarioService;
-import es.caib.regweb3.ws.sir.api.wssir6b.RespuestaWS;
-import es.caib.regweb3.ws.sir.api.wssir6b.WS_SIR6_BServiceLocator;
-import es.caib.regweb3.ws.sir.api.wssir6b.WS_SIR6_B_PortType;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -52,9 +50,6 @@ public class ComunController extends BaseController {
     
     @EJB(mappedName = "regweb3/EntidadEJB/local")
     public EntidadLocal entidadEjb;
-
-    @EJB(mappedName = "regweb3/SirEJB/local")
-    public SirLocal sirEjb;
 
     @EJB(mappedName = "regweb3/RegistroMigradoEJB/local")
     public RegistroMigradoLocal registroMigradoEjb;
@@ -226,7 +221,7 @@ public class ComunController extends BaseController {
       
     }
 
-    @RequestMapping(value = "/sir/{registroId}")
+    /*@RequestMapping(value = "/sir/{registroId}")
     public String pruebaSir(@PathVariable Long registroId, HttpServletRequest request, HttpServletResponse response) throws Exception{
 
         RegistroEntrada registroEntrada = registroEntradaEjb.findById(registroId);
@@ -243,7 +238,7 @@ public class ComunController extends BaseController {
 
         return "redirect:/inici";
 
-    }
+    }*/
 
 
     @RequestMapping(value = "/crearPermisos")

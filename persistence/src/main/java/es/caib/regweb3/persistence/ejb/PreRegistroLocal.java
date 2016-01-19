@@ -2,7 +2,6 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.PreRegistro;
 import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.persistence.utils.Respuesta;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
@@ -38,15 +37,6 @@ public interface PreRegistroLocal extends BaseEjb<PreRegistro, Long> {
      * @throws Exception
      */
     public Paginacion busqueda(Integer pageNumber, Integer any, PreRegistro preRegistro, String codigoOficinaActiva, Long estado) throws Exception;
-
-
-    /**
-     * Crea un PreRegistro a partir de un asiento registral recibido desde SIR
-     * @param sicres3
-     * @return
-     * @throws Exception
-     */
-    public Respuesta<PreRegistro> crearPreRegistro(String sicres3) throws Exception;
 
 
     /**

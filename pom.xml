@@ -26,6 +26,7 @@
         <module>model</module>
      	<module>persistence</module>
         <module>ws</module>
+        <module>sir</module>
         <module>webapp</module>
         <module>ear</module>
     </modules>

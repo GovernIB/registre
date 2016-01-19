@@ -5,13 +5,15 @@ import es.caib.regweb3.model.utils.OficioPendienteLlegada;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
 import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.persistence.utils.sir.FicheroIntercambioSICRES3;
-import es.caib.regweb3.persistence.utils.sir.SirUtils;
+import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
+import es.caib.regweb3.sir.ws.api.manager.FicheroIntercambioManager;
+import es.caib.regweb3.sir.ws.api.manager.SicresXMLManager;
+import es.caib.regweb3.sir.ws.api.manager.impl.FicheroIntercambioManagerImpl;
+import es.caib.regweb3.sir.ws.api.manager.impl.SicresXMLManagerImpl;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.*;
 import es.caib.regweb3.webapp.utils.Mensaje;
-import es.caib.regweb3.ws.sir.api.wssir6b.RespuestaWS;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.springframework.stereotype.Controller;
@@ -56,8 +58,8 @@ public class OficioRemisionController extends BaseController {
     @EJB(mappedName = "regweb3/EntidadEJB/local")
     public EntidadLocal entidadEjb;
 
-    @EJB(mappedName = "regweb3/SirEJB/local")
-    public SirLocal sirEjb;
+    FicheroIntercambioManager ficheroIntercambioManager = new FicheroIntercambioManagerImpl();
+    public SicresXMLManager sicresXMLManager = new SicresXMLManagerImpl();
 
     /**
      * Listado de todos los Oficios de Remision
@@ -309,7 +311,7 @@ public class OficioRemisionController extends BaseController {
       }
 
       // Comprobamos que la Entidad que envía está en SIR
-      Entidad entidadActual = entidadEjb.findById(getEntidadActiva(request).getId());
+        Entidad entidadActual = getEntidadActiva(request);
       if (!entidadActual.getSir()) {
         log.error("Aviso: La entidad no está en SIR");
         Mensaje.saveMessageAviso(request, getMessage("aviso.registro.editar"));
@@ -382,19 +384,10 @@ public class OficioRemisionController extends BaseController {
           // o reenviar en bloque.
           for (RegistroEntrada registroEntradaAEnviar : registrosEntrada) {
 
-            FicheroIntercambioSICRES3 fiSicres3 = sirEjb.writeFicheroIntercambioSICRES3(registroEntradaAEnviar); 
-            String data = SirUtils.marshallObject(fiSicres3);
-            
-            
-            log.info(" Calling API  ws_sir6_b ...");
-            RespuestaWS respuestaWs = SirUtils.ws_sir6_b_recepcionFicheroDeAplicacion(data);
+              // Enviamos el Fichero de datos de intercambio al nodo SIR
+              FicheroIntercambio ficheroIntercambio = sicresXMLManager.crearFicheroIntercambioSICRES3(registroEntradaAEnviar);
+              ficheroIntercambioManager.enviarFicheroIntercambio(ficheroIntercambio);
 
-            log.info("---------  Reg. Entr. "
-                + registroEntradaAEnviar.getNumeroRegistroFormateado() + " --------------");
-            log.info("Resp. codigo: " + respuestaWs.getCodigo());
-            log.info("Resp. descr.: " + respuestaWs.getDescripcion());
-
-            if ("00".equals(respuestaWs.getCodigo())) {
               // Ho afegirem si el codi és el correcte
               //registrosEntradaProcesados.add(registroEntradaAEnviar);
 
@@ -403,8 +396,8 @@ public class OficioRemisionController extends BaseController {
               List<RegistroEntrada> registrosEntradaProcesados = new ArrayList<RegistroEntrada>();
 
               registrosEntradaProcesados.add(registroEntradaAEnviar);
-              
-              String identificadorIntercambioSir = fiSicres3.getDeInternosControl().getIdentificadorIntercambio();
+
+              String identificadorIntercambioSir = ficheroIntercambio.getIdentificadorIntercambio();
               
               OficioRemision oficioRemision;
               oficioRemision = oficioRemisionUtils.crearOficioRemisionExterno(
@@ -419,10 +412,10 @@ public class OficioRemisionController extends BaseController {
                   + " para el registro de entrada " 
                   + registroEntradaAEnviar.getNumeroRegistroFormateado());
 
-            } else {
+
               // TODO millorar error indicant quin registre falla
               Mensaje.saveMessageError(request, getMessage("sir.error.envio6b"));
-            }
+
 
           }
 
@@ -470,14 +463,6 @@ public class OficioRemisionController extends BaseController {
     }
 
   }
-  
-  
-  
-  
-
-  
-  
-  
   
 
     /**

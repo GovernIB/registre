@@ -3,15 +3,13 @@ package es.caib.regweb3.webapp.controller.preRegistro;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.persistence.utils.sir.DeMensaje;
-import es.caib.regweb3.persistence.utils.sir.DeMensajeFactory;
+import es.caib.regweb3.sir.ws.api.manager.RegistroManager;
+import es.caib.regweb3.sir.ws.api.manager.impl.RegistroManagerImpl;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.PreRegistroBusquedaForm;
 import es.caib.regweb3.webapp.form.RegistrarForm;
 import es.caib.regweb3.webapp.utils.Mensaje;
-import es.caib.regweb3.ws.sir.api.wssir7.WS_SIR7ServiceLocator;
-import es.caib.regweb3.ws.sir.api.wssir7.WS_SIR7_PortType;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.springframework.stereotype.Controller;
@@ -21,11 +19,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-import java.io.StringWriter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -64,6 +57,8 @@ public class PreRegistroController extends BaseController {
 
     @EJB(mappedName = "regweb3/TipoAsuntoEJB/local")
     public TipoAsuntoLocal tipoAsuntoEjb;
+
+    RegistroManager registroManager = new RegistroManagerImpl();
 
     /**
      * Listado de todos los PreRegistros
@@ -220,32 +215,7 @@ public class PreRegistroController extends BaseController {
             }
 
             //todo: Crear función genérica para enviar mensajes DeMensaje
-            WS_SIR7ServiceLocator locator = new WS_SIR7ServiceLocator();
-            JAXBContext jc = JAXBContext.newInstance(DeMensaje.class);
-            DeMensajeFactory deMensajeFactory = new DeMensajeFactory();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-
-            WS_SIR7_PortType ws_sir7 = locator.getWS_SIR7();
-
-            DeMensaje confirmacion = deMensajeFactory.createDeMensaje();
-            confirmacion.setCodigoEntidadRegistralOrigen(preRegistro.getCodigoEntidadRegistralOrigen());
-            confirmacion.setCodigoEntidadRegistralDestino(preRegistro.getCodigoEntidadRegistralDestino());
-            confirmacion.setIdentificadorIntercambio(preRegistro.getIdIntercambio());
-            confirmacion.setTipoMensaje("03");
-            confirmacion.setDescripcionMensaje("CONFIRMACION");
-            confirmacion.setFechaHoraEntradaDestino(sdf.format(new Date()));
-            confirmacion.setIndicadorPrueba("1");
-
-            StringWriter cnf = new StringWriter();
-            Marshaller m = jc.createMarshaller();
-            //m.setSchema(schema); // validation purpose
-            //m.setEventHandler(new MyValidationEventHandler()); // validation purpose
-            m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-            m.marshal(confirmacion, cnf);
-
-            es.caib.regweb3.ws.sir.api.wssir7.RespuestaWS respuesta2 = ws_sir7.recepcionMensajeDatosControlDeAplicacion(cnf.toString());
-            log.info("RespuestaConfirmacion: " + respuesta2.getCodigo());
-            log.info("RespuestaConfirmacion: " + respuesta2.getDescripcion());
+            registroManager.enviarMensajeConfirmacion(preRegistro);
 
         }catch (Exception e){
             Mensaje.saveMessageError(request, getMessage("preRegistro.error.confirmacion"));

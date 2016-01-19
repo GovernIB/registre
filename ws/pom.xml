@@ -17,8 +17,6 @@
     <modules>
         <module>regweb3_server</module>
         <module>regweb3_api</module>
-        <module>sir_server</module>
-        <module>sir_api</module>
         <module>regweb3_api_axis</module>
     </modules>
    

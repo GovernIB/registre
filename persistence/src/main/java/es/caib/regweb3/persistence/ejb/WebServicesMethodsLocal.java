@@ -1,7 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.PreRegistro;
-import es.caib.regweb3.persistence.utils.Respuesta;
 
 import javax.ejb.Local;
 
@@ -13,5 +12,5 @@ import javax.ejb.Local;
 @Local
 public interface WebServicesMethodsLocal {
 
-    public Respuesta<PreRegistro> crearPreRegistro(String sicres3) throws Exception;
+    public PreRegistro crearPreRegistro(PreRegistro preRegistro) throws Exception;
 }

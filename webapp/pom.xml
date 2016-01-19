@@ -10,7 +10,6 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>es.caib.regweb3</groupId>
     <artifactId>regweb3-webapp</artifactId>
     <version>3.0.3</version>
     <packaging>war</packaging>
@@ -121,7 +120,14 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>regweb3-ws-sir-api</artifactId>
+            <artifactId>regweb3-sir-core</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>regweb3-sir-api</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>

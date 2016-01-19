@@ -176,7 +176,7 @@ public class ReciboRtfView extends AbstractView {
         if (datosRecibo.getEntitat()!=null) ht.put("(entitat)", ConvertirTexto.toCp1252(datosRecibo.getEntitat()));
         if (datosRecibo.getDecodificacioEntitat()!=null) ht.put("(decodificacioEntitat)", ConvertirTexto.toCp1252(datosRecibo.getDecodificacioEntitat()));
         if (interessats.length()>0) ht.put("(interessats)", ConvertirTexto.toCp1252(interessats));
-        if (annexes.length()>0) ht.put("(annexes)", ConvertirTexto.toCp1252(annexes));
+        if (annexes.length() > 0) ht.put("(annexos)", ConvertirTexto.toCp1252(annexes));
         if (usuario!=null) ht.put("(nomUsuari)", ConvertirTexto.toCp1252(usuario.getNombreCompleto()));
         if (fechaReciboCatalan!=null) ht.put("(dataRebutCA)", ConvertirTexto.toCp1252(fechaReciboCatalan));
         if (fechaReciboCastellano!=null) ht.put("(dataRebutES)", ConvertirTexto.toCp1252(fechaReciboCastellano));

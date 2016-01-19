@@ -1,7 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.PreRegistro;
-import es.caib.regweb3.persistence.utils.Respuesta;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.annotation.security.RunAs;
@@ -23,7 +22,7 @@ public class WebServicesMethodsEJB implements WebServicesMethodsLocal {
 
 
     @Override
-    public Respuesta<PreRegistro> crearPreRegistro(String sicres3) throws Exception {
-        return preRegistroEjb.crearPreRegistro(sicres3);
+    public PreRegistro crearPreRegistro(PreRegistro preRegistro) throws Exception {
+        return preRegistroEjb.preRegistrar(preRegistro);
     }
 }

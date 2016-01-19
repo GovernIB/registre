@@ -5,26 +5,14 @@ import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.PreRegistro;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.persistence.utils.Respuesta;
-import es.caib.regweb3.persistence.utils.sir.DeMensaje;
-import es.caib.regweb3.persistence.utils.sir.DeMensajeFactory;
 import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.ws.sir.api.wssir7.WS_SIR7ServiceLocator;
-import es.caib.regweb3.ws.sir.api.wssir7.WS_SIR7_PortType;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -43,8 +31,6 @@ public class PreRegistroBean extends BaseEjbJPA<PreRegistro, Long> implements Pr
     @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
-    @EJB(mappedName = "regweb3/SirEJB/local")
-    public SirLocal sirEjb;
 
 
     @Override
@@ -205,80 +191,6 @@ public class PreRegistroBean extends BaseEjbJPA<PreRegistro, Long> implements Pr
         paginacion.setListado(q.getResultList());
 
         return paginacion;
-    }
-
-    @Override
-    public Respuesta<PreRegistro> crearPreRegistro(String sicres3) throws Exception{
-
-        // Creamos el PreRegistro a partir del xml recibido
-        Respuesta<PreRegistro> respuesta = sirEjb.readFicheroIntercambioSICRES3(sicres3);
-
-        // Si el xml no estaba correcto
-        if(respuesta.getObject() == null){
-            log.info("Error parseando el xml");
-            return respuesta;
-        }
-
-        PreRegistro preRegistro = (PreRegistro) respuesta.getObject();
-        preRegistro.setEstado(RegwebConstantes.ESTADO_PREREGISTRO_PENDIENTE_PROCESAR);
-
-        // Comprobar que el PreRegistro es correcto
-        // Campos obligatorios?
-        // Número de interesados?
-        // Oficina destino?
-
-        // Registramos el Pre-Registro
-        preRegistro = preRegistrar(preRegistro);
-
-        String mensajeACK = "";
-
-        try {
-
-            JAXBContext jc = JAXBContext.newInstance(DeMensaje.class);
-
-            DeMensajeFactory deMensajeFactory = new DeMensajeFactory();
-            DeMensaje ack = deMensajeFactory.createDeMensaje();
-
-            ack.setCodigoEntidadRegistralOrigen(preRegistro.getCodigoEntidadRegistralOrigen());
-            ack.setCodigoEntidadRegistralDestino(preRegistro.getCodigoEntidadRegistralDestino());
-            ack.setIdentificadorIntercambio(preRegistro.getIdIntercambio());
-            ack.setTipoMensaje("01");
-            ack.setDescripcionMensaje("ACK");
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-            ack.setFechaHoraEntradaDestino(sdf.format(new Date()));
-            ack.setIndicadorPrueba("1");
-
-            //SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI); // validation purpose
-            //Schema schema = sf.newSchema(new File("SICRES3_MENSAJE_APL.xsd")); // validation purpose
-
-            Marshaller m = jc.createMarshaller();
-            //m.setSchema(schema); // validation purpose
-            //m.setEventHandler(new MyValidationEventHandler()); // validation purpose
-            m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-
-            StringWriter sw = new StringWriter();
-
-            m.marshal(ack, sw);
-            mensajeACK = sw.toString();
-
-        }catch (JAXBException je) {
-            StringWriter sw = new StringWriter();
-            je.printStackTrace(new PrintWriter(sw));
-            System.err.println("Error W1: " + sw.toString());
-        }
-
-        log.info("mensajeACK: " + mensajeACK);
-
-        WS_SIR7ServiceLocator locator = new WS_SIR7ServiceLocator();
-        WS_SIR7_PortType ws_sir7 = locator.getWS_SIR7();
-
-        es.caib.regweb3.ws.sir.api.wssir7.RespuestaWS respuesta1 = ws_sir7.recepcionMensajeDatosControlDeAplicacion(mensajeACK);
-
-        log.info("RespuestaACK: " + respuesta1.getCodigo());
-        log.info("RespuestaACK: " + respuesta1.getDescripcion());
-
-        return respuesta;
-
     }
 
 
