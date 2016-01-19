@@ -199,7 +199,7 @@
         ISREPRESENTANTE bool,
         NOMBRE varchar(255),
         OBSERVACIONES varchar(160),
-        RAZONSOCIAL varchar(80),
+        RAZONSOCIAL varchar(2000),
         TELEFONO varchar(20),
         TIPOINTERESADO int8,
         TIPODOCIDENT int8,

@@ -178,7 +178,7 @@
         ISREPRESENTANTE number(1,0),
         NOMBRE varchar2(255 char),
         OBSERVACIONES varchar2(160 char),
-        RAZONSOCIAL varchar2(80 char),
+        RAZONSOCIAL varchar2(2000 char),
         TELEFONO varchar2(20 char),
         TIPOINTERESADO number(19,0),
         TIPODOCIDENT number(19,0),
