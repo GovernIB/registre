@@ -10,7 +10,7 @@
     (3.1) AdEn -> CAIB -> Editar Entitat
                + Pipella Formats: Definir un segell i un format
 			   + Pipella general: Marcar SIR
-	(3.2) Oficines i Organismes: AdEn -> CAIB -> Oficines i Organismes: Pitjar Sincronitzar
+	(3.2) Oficines i Organismes: AdEn -> CAIB -> Organismes -> llistat d'Organismes: Pitjar Sincronitzar
 	(3.3) Model Rebut: AdEn -> CAIB -> cataleg de dades -> Gestio model de Rebut: 
 	                 * Pitjar Introduir model de Rebut
 					 * Nom: Model basic
@@ -38,7 +38,7 @@
 			   * Desar
     (3.6) Codi d'Assumpte:  AdEn -> CAIB -> cataleg de dades -> Gestio Tipus Assumpte -> Seleccionar AJSU
 	          * Pitjar boto "Nou codi Assumpte"
-			  * Codi = AjudaSubvencio | ca = Ajudes i Subvencions | es = Ayudas i Subvenciones
+			  * Codi = AjudaSubvencio | ca = Ajudes i Subvencions | es = Ayudas y Subvenciones
 			  * Pitjar Desar
 	(3.7) Afegir usuaris: AdEn -> CAIB -> gestio usuaris: 
 	             * Pitjar Introduir usuari
