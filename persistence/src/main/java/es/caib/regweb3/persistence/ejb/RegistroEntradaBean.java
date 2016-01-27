@@ -170,12 +170,12 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
          //Filtros para interesado y organo destinatario
          boolean filtramosInteresado = false;
-         if (interesadoNom!=null && !"".equals(interesadoNom) && !"null".equalsIgnoreCase(interesadoNom)) {
-        	 where.add(" ((UPPER(interessat.nombre)||' '||UPPER(interessat.apellido1)||' '||UPPER(interessat.apellido2) LIKE UPPER(:interesadoNom)) or"
-        	 		+  " (UPPER(interessat.razonSocial) LIKE UPPER(:interesadoNom)) ) "); //or (UPPER(registroEntrada.destino.denominacion) LIKE UPPER(:interesadoNom))
-        	 parametros.put("interesadoNom", "%"+interesadoNom.trim()+"%");
-        	 filtramosInteresado=true;
-         }
+         where.add("((" + DataBaseUtils.like("interessat.nombre", "interesadoNom", parametros, interesadoNom) +
+                ") or (" + DataBaseUtils.like("interessat.apellido1", "interesadoNom", parametros, interesadoNom) +
+                ") or (" + DataBaseUtils.like("interessat.apellido2", "interesadoNom", parametros, interesadoNom) +
+                ") or (" + DataBaseUtils.like("interessat.razonSocial", "interesadoNom", parametros, interesadoNom) +
+                "))");
+
          boolean filtramosDoc = false;
          if (interesadoDoc!=null && !"".equals(interesadoDoc) && !"null".equalsIgnoreCase(interesadoDoc)) {
         	 where.add(" (UPPER(interessat.documento) LIKE UPPER(:interesadoDoc)) ");
