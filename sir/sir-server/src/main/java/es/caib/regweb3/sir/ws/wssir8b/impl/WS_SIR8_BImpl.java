@@ -24,8 +24,10 @@ import java.security.Principal;
 import java.util.Set;
 
 /**
- * Created by Fundació BIT.
+ * Implementación del servicio (WS_SIR8_B) que recibe en REGWEB3 los ficheros de datos de intercambio
+ * en formato SICRES 3.0 y sus anexos, desde un nodo distribuido.
  *
+ * Created by Fundació BIT.
  * @author earrivi
  */
 /*@DeclareRoles({ "RWE_USUARI" })
