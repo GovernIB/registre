@@ -29,6 +29,15 @@ public class PermisoLibroUsuario implements Serializable {
     private UsuarioEntidad usuario;
     private Boolean activo = false;
 
+    public PermisoLibroUsuario() {
+    }
+
+    public PermisoLibroUsuario(Long id, Boolean activo, Long idUsuario) {
+        this.id = id;
+        this.activo = activo;
+        this.usuario = new UsuarioEntidad(idUsuario);
+    }
+
 
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")

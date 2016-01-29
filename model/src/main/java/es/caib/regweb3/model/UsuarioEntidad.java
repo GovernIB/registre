@@ -31,6 +31,13 @@ public class UsuarioEntidad implements Serializable{
     @XmlTransient
     private Oficina ultimaOficina;
 
+    public UsuarioEntidad() {
+    }
+
+    public UsuarioEntidad(Long id) {
+        this.id = id;
+    }
+
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
     @Column(name="ID")
