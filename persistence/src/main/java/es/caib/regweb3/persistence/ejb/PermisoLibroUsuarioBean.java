@@ -102,7 +102,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     @Override
     public List<PermisoLibroUsuario> findByLibro(Long idLibro) throws Exception {
 
-        Query q = em.createQuery("Select plu.id, plu.activo, plu.usuario.id from PermisoLibroUsuario as plu where plu.libro.id = :idLibro");
+        Query q = em.createQuery("Select plu.id, plu.activo, plu.usuario.id from PermisoLibroUsuario as plu where plu.libro.id = :idLibro order by plu.permiso");
 
         q.setParameter("idLibro",idLibro);
 
