@@ -208,10 +208,10 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     }
 
     @Override
-    public List<Libro> getLibrosOrganismoPermiso(Set<Organismo> organismos, Long idUsuarioEntidad, Long idPermiso) throws Exception{
+    public List<Libro> getLibrosOrganismoPermiso(Set<Long> organismos, Long idUsuarioEntidad, Long idPermiso) throws Exception {
 
         Query q = em.createQuery("Select distinct plu.libro from PermisoLibroUsuario as plu where " +
-                "plu.libro.organismo in (:organismos) and plu.usuario.id = :idUsuarioEntidad and " +
+                "plu.libro.organismo.id in (:organismos) and plu.usuario.id = :idUsuarioEntidad and " +
                 "plu.libro.activo = true and " +
                 "(plu.permiso = :idPermiso and plu.activo = true)");
 
@@ -242,7 +242,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
 
         CatEstadoEntidad vigente = catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
 
-        Query q = em.createQuery("Select plu from PermisoLibroUsuario as plu where " +
+        Query q = em.createQuery("Select plu.id from PermisoLibroUsuario as plu where " +
                 "plu.usuario.id = :idUsuarioEntidad and plu.libro.id= :idLibro and plu.libro.organismo.estado.id = :vigente and " +
                 "plu.libro.activo = true and " +
                 "(plu.permiso = " + PERMISO_ADMINISTRACION_LIBRO + " and plu.activo = true)");
@@ -251,7 +251,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
         q.setParameter("idLibro",idLibro);
         q.setParameter("vigente",vigente.getId());
 
-        List<PermisoLibroUsuario> permisos = q.getResultList();
+        List<Long> permisos = q.getResultList();
 
         return permisos.size() == 1;
     }
@@ -259,7 +259,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     @Override
     public Boolean tienePermiso(Long idUsuarioEntidad, Long idLibro, Long idPermiso) throws Exception {
 
-        Query q = em.createQuery("Select plu from PermisoLibroUsuario as plu where " +
+        Query q = em.createQuery("Select plu.id from PermisoLibroUsuario as plu where " +
                 "plu.usuario.id = :idUsuarioEntidad and plu.libro.id = :idLibro and " +
                 "plu.libro.activo = true and " +
                 "(plu.permiso = :idPermiso and plu.activo = true)");
@@ -268,7 +268,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
         q.setParameter("idLibro",idLibro);
         q.setParameter("idPermiso",idPermiso);
 
-        List<PermisoLibroUsuario> permisos = q.getResultList();
+        List<Long> permisos = q.getResultList();
 
         return permisos.size() == 1;
     }
@@ -362,7 +362,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     @Override
     public Boolean existePermiso(Long idUsuarioEntidad, Long idLibro, Long idPermiso) throws Exception{
 
-        Query q = em.createQuery("Select plu from PermisoLibroUsuario as plu where " +
+        Query q = em.createQuery("Select plu.id from PermisoLibroUsuario as plu where " +
                 "plu.usuario.id = :idUsuarioEntidad and plu.libro.id = :idLibro and " +
                 "plu.permiso = :idPermiso");
 
@@ -370,9 +370,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
         q.setParameter("idLibro",idLibro);
         q.setParameter("idPermiso",idPermiso);
 
-        List<PermisoLibroUsuario> permisos = q.getResultList();
-
-        return permisos.size() == 1;
+        return q.getResultList().size() == 1;
     }
 
     @Override

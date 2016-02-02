@@ -100,7 +100,7 @@ public class TipoDocumentalBean extends BaseEjbJPA<TipoDocumental, Long> impleme
     @Override
     public Boolean existeCodigoEdit(String codigoNTI, Long idTipoDocumental, Long idEntidad) throws Exception {
 
-        Query q = em.createQuery("Select tipoDocumental from TipoDocumental as tipoDocumental where " +
+        Query q = em.createQuery("Select tipoDocumental.id from TipoDocumental as tipoDocumental where " +
                 "tipoDocumental.id != :idTipoDocumental and tipoDocumental.codigoNTI = :codigoNTI and tipoDocumental.entidad.id = :idEntidad");
 
         q.setParameter("codigoNTI",codigoNTI);

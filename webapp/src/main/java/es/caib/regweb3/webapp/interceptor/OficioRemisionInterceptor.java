@@ -73,7 +73,7 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
             return false;
         }
 
-        Set<Organismo> organismos = oficinaActiva.getOrganismosFuncionales();
+            Set<Long> organismos = oficinaActiva.getOrganismosFuncionalesId();
         UsuarioEntidad usuarioEntidad = (UsuarioEntidad)session.getAttribute(RegwebConstantes.SESSION_USUARIO_ENTIDAD);
         List<Libro> libros = permisoLibroUsuarioEjb.getLibrosOrganismoPermiso(organismos, usuarioEntidad.getId(), RegwebConstantes.PERMISO_REGISTRO_ENTRADA);
 

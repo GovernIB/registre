@@ -124,7 +124,7 @@ public class TipoAsuntoBean extends BaseEjbJPA<TipoAsunto, Long> implements Tipo
     @Override
     public Boolean existeCodigoEdit(String codigo, Long idTipoAsunto, Long idEntidad) throws Exception {
 
-        Query q = em.createQuery("Select tipoAsunto from TipoAsunto as tipoAsunto where " +
+        Query q = em.createQuery("Select tipoAsunto.id from TipoAsunto as tipoAsunto where " +
                 "tipoAsunto.id != :idTipoAsunto and tipoAsunto.codigo = :codigo and tipoAsunto.entidad.id = :idEntidad");
 
         q.setParameter("codigo",codigo);

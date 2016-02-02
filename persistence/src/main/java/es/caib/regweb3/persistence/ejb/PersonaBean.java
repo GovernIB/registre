@@ -89,7 +89,8 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
     @Override
     public Boolean existeDocumentoNew(String documento, Long idEntidad) throws Exception{
-        Query q = em.createQuery("Select persona from Persona as persona where " +
+
+        Query q = em.createQuery("Select persona.id from Persona as persona where " +
                 "persona.documento = :documento and persona.entidad.id = :idEntidad");
 
         q.setParameter("documento",documento);
@@ -100,7 +101,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
     @Override
     public Boolean existeDocumentoEdit(String documento, Long idPersona, Long idEntidad) throws Exception{
-        Query q = em.createQuery("Select persona from Persona as persona where " +
+        Query q = em.createQuery("Select persona.id from Persona as persona where " +
                 "persona.id != :idPersona and persona.documento = :documento and persona.entidad.id = :idEntidad");
 
         q.setParameter("documento",documento);

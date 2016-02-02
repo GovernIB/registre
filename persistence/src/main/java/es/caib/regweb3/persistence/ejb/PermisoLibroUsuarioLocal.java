@@ -93,7 +93,7 @@ public interface PermisoLibroUsuarioLocal extends BaseEjb<PermisoLibroUsuario, L
      * @return
      * @throws Exception
      */
-    public List<Libro> getLibrosOrganismoPermiso(Set<Organismo> organismos, Long idUsuarioEntidad, Long idPermiso) throws Exception;
+    public List<Libro> getLibrosOrganismoPermiso(Set<Long> organismos, Long idUsuarioEntidad, Long idPermiso) throws Exception;
 
     /**
      * Retorna los {@link es.caib.regweb3.model.Libro} de una Entidad donde un UsuarioEntidad puede hacer alguna acción

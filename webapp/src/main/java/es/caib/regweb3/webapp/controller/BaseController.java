@@ -237,7 +237,7 @@ public class BaseController {
         Oficina oficinaActiva = getOficinaActiva(request);
 
         // Obtenemos los Organismos a los que da servicio una Oficina
-        Set<Organismo> organismos = oficinaActiva.getOrganismosFuncionales();
+        Set<Long> organismos = oficinaActiva.getOrganismosFuncionalesId();
 
         return permisoLibroUsuarioEjb.getLibrosOrganismoPermiso(organismos, usuarioEntidad.getId(), RegwebConstantes.PERMISO_REGISTRO_ENTRADA);
     }
@@ -256,7 +256,7 @@ public class BaseController {
         Oficina oficinaActiva = getOficinaActiva(request);
 
         // Obtenemos los Organismos a los que da servicio una Oficina
-        Set<Organismo> organismos = oficinaActiva.getOrganismosFuncionales();
+        Set<Long> organismos = oficinaActiva.getOrganismosFuncionalesId();
 
         return permisoLibroUsuarioEjb.getLibrosOrganismoPermiso(organismos, usuarioEntidad.getId(), RegwebConstantes.PERMISO_REGISTRO_SALIDA);
     }

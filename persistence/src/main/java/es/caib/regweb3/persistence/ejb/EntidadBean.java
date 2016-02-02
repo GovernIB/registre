@@ -165,7 +165,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @Override
     public Boolean existeCodigoDir3Edit(String codigo, Long idEntidad) throws Exception {
 
-        Query q = em.createQuery("Select entidad from Entidad as entidad where " +
+        Query q = em.createQuery("Select entidad.id from Entidad as entidad where " +
                 "entidad.id != :idEntidad and entidad.codigoDir3 = :codigo");
 
         q.setParameter("codigo",codigo);
@@ -177,7 +177,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @Override
     public Boolean esAdministrador(Long idEntidad, Long idUsuario) throws Exception {
 
-        Query q = em.createQuery("Select entidad from Entidad as entidad, UsuarioEntidad as usuarioEntidad where entidad.id=:idEntidad and entidad.activo = true and usuarioEntidad in elements(entidad.administradores) ");
+        Query q = em.createQuery("Select entidad.id from Entidad as entidad, UsuarioEntidad as usuarioEntidad where entidad.id=:idEntidad and entidad.activo = true and usuarioEntidad in elements(entidad.administradores) ");
 
         q.setParameter("idEntidad",idEntidad);
 
@@ -188,7 +188,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @Override
     public Boolean esAutorizado(Long idEntidad, Long idUsuario) throws Exception {
 
-        Query q = em.createQuery("Select entidad from Entidad as entidad, UsuarioEntidad as usuarioEntidad where (entidad.propietario.id = :idUsuario or usuarioEntidad in elements(entidad.administradores) ) and entidad.id=:idEntidad");
+        Query q = em.createQuery("Select entidad.id from Entidad as entidad, UsuarioEntidad as usuarioEntidad where (entidad.propietario.id = :idUsuario or usuarioEntidad in elements(entidad.administradores) ) and entidad.id=:idEntidad");
 
         q.setParameter("idUsuario",idUsuario);
         q.setParameter("idEntidad",idEntidad);

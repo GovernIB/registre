@@ -231,19 +231,22 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
     @Override
     public Boolean tieneOficinasOrganismo(Long idOrganismo) throws Exception{
-        Query q = em.createQuery("Select oficina from Oficina as oficina where " +
+        Query q = em.createQuery("Select oficina.id from Oficina as oficina where " +
                 "oficina.organismoResponsable.id =:idOrganismo and " +
                 "oficina.estado.codigoEstadoEntidad=:vigente");
 
         q.setParameter("idOrganismo",idOrganismo);
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-        List<Oficina> oficinas = q.getResultList();
+
+        List<Long> oficinas = q.getResultList();
+
         if(oficinas.size()>0){
             return true;
         }else{
             q= em.createQuery("select relorg from RelacionOrganizativaOfi as relorg where relorg.organismo.id=:idOrganismo and relorg.estado.codigoEstadoEntidad=:vigente");
             q.setParameter("idOrganismo",idOrganismo);
             q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+
             List<RelacionOrganizativaOfi> relorg= q.getResultList();
             return relorg.size() > 0;
         }

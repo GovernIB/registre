@@ -88,7 +88,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
     @Override
     public Boolean existeCodigoEdit(String codigo, Long idLibro, Long idEntidad) throws Exception {
 
-        Query q = em.createQuery("Select libro from Libro as libro where " +
+        Query q = em.createQuery("Select libro.id from Libro as libro where " +
                 "libro.id != :idLibro and libro.codigo = :codigo and libro.organismo.entidad.id = :idEntidad");
 
         q.setParameter("codigo",codigo);

@@ -97,7 +97,7 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
     @Override
     public Boolean existeIdentificadorEdit(String identificador, Long idUsuario) throws Exception {
 
-        Query q = em.createQuery("Select usuario from Usuario as usuario where " +
+        Query q = em.createQuery("Select usuario.id from Usuario as usuario where " +
                 "usuario.id != :idUsuario and usuario.identificador = :identificador");
 
         q.setParameter("identificador",identificador);
@@ -109,7 +109,7 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
 
     @Override
     public Boolean existeDocumentioEdit(String documento, Long idUsuario) throws Exception{
-        Query q = em.createQuery("Select usuario from Usuario as usuario where " +
+        Query q = em.createQuery("Select usuario.id from Usuario as usuario where " +
                 "usuario.id != :idUsuario and usuario.documento = :documento");
 
         q.setParameter("documento",documento);

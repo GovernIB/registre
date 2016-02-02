@@ -198,6 +198,26 @@ public class Oficina implements Serializable{
 
     }
 
+    @Transient
+    public Set<Long> getOrganismosFuncionalesId() {
+
+        Set<Long> organismos = new HashSet<Long>();
+
+        // Añadimos el Organismo responsable de la OficinaActiva
+        organismos.add(this.getOrganismoResponsable().getId());
+
+        // Añadimos los Organismos a los que la Oficina da servicio
+        Set<RelacionOrganizativaOfi> organismosFuncionales = this.getOrganizativasOfi();
+        for (RelacionOrganizativaOfi relacionOrganizativaOfi : organismosFuncionales) {
+            if (RegwebConstantes.ESTADO_ENTIDAD_VIGENTE.equals(relacionOrganizativaOfi.getEstado().getCodigoEstadoEntidad())) {
+                organismos.add(relacionOrganizativaOfi.getOrganismo().getId());
+            }
+        }
+
+        return organismos;
+
+    }
+
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "PAIS")
     @ForeignKey(name = "RWE_OFICINA_PAIS_FK")

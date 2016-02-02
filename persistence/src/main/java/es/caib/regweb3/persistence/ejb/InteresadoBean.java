@@ -97,7 +97,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
 
     @Override
     public Boolean existeDocumentoNew(String documento) throws Exception{
-        Query q = em.createQuery("Select interesado from Interesado as interesado where " +
+        Query q = em.createQuery("Select interesado.id from Interesado as interesado where " +
                 "interesado.documento = :documento");
 
         q.setParameter("documento",documento);
@@ -107,7 +107,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
 
     @Override
     public Boolean existeDocumentoEdit(String documento, Long idInteresado) throws Exception{
-        Query q = em.createQuery("Select interesado from Interesado as interesado where " +
+        Query q = em.createQuery("Select interesado.id from Interesado as interesado where " +
                 "interesado.id != :idInteresado and interesado.documento = :documento");
 
         q.setParameter("documento",documento);

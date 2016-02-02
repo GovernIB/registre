@@ -432,7 +432,7 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
       }
 
       // Obtenemos los organismos funcionales a la que da servicio al Oficina seleccionada
-      Set<Organismo> organismos = oficina.getOrganismosFuncionales();
+      Set<Long> organismos = oficina.getOrganismosFuncionalesId();
 
       // Obtenemos los libros a los que el usuario puede registrar
       List<Libro> listLibro = permisoLibroUsuarioEjb.getLibrosOrganismoPermiso(organismos, usuarioEntidad.getId(), autorizacion);
