@@ -106,18 +106,20 @@ public class RespuestaWS implements java.io.Serializable {
             new org.apache.axis.description.TypeDesc(RespuestaWS.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("http://cir.impl.manager.cct.map.es", "RespuestaWS"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("http://impl.manager.cct.map.es", "respuestaWS"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("codigo");
         elemField.setXmlName(new javax.xml.namespace.QName("", "codigo"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
-        elemField.setNillable(true);
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("descripcion");
         elemField.setXmlName(new javax.xml.namespace.QName("", "descripcion"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
-        elemField.setNillable(true);
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
     }
 
