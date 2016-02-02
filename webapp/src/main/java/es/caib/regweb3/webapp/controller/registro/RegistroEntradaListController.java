@@ -416,13 +416,13 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         // Comprobamos si el RegistroEntrada tiene el estado Válido
         if (!registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_VALIDO)) {
 
-            Mensaje.saveMessageError(request, getMessage("registroEntrada.tramitar.error"));
+            Mensaje.saveMessageError(request, getMessage("registroEntrada.distribuir.error"));
             return destinatarios;
         }
 
         // Comprobamos que el RegistroEntrada es un OficioRemision
         if (registroEntradaEjb.isOficioRemisionInterno(idRegistro)) {
-            Mensaje.saveMessageError(request, getMessage("registroEntrada.tramitar.error"));
+            Mensaje.saveMessageError(request, getMessage("registroEntrada.distribuir.error"));
             return destinatarios;
         }
 
@@ -438,8 +438,8 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             destinatarios = distribucionPlugin.distribuir(registroXML, conAnexos);
 
         } else { // no han definido ningun plugin de distribución, hace el comportamiento anterior.
-            //   registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, usuarioEntidad);
-            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.tramitar.ok"));
+            registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, usuarioEntidad);
+            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
         }
 
         return destinatarios;
@@ -462,12 +462,12 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
 
         Boolean enviado = distribucionPlugin.enviarDestinatarios(wrapper.getDestinatarios(), wrapper.getObservaciones());
-        // registroEntradaEjb.tramitarRegistroEntrada(registroEntrada,usuarioEntidad);
+        registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, usuarioEntidad);
         if (enviado) {
-            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.tramitar.ok"));
+            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
 
         } else {
-            Mensaje.saveMessageError(request, getMessage("registroEntrada.tramitar.error"));
+            Mensaje.saveMessageError(request, getMessage("registroEntrada.distribuir.error"));
         }
         return enviado;
 
