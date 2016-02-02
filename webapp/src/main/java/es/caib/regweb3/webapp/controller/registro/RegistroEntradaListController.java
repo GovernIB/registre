@@ -353,7 +353,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             }
 
             // Visar el RegistroEntrada
-            registroEntradaEjb.visarRegistroEntrada(registroEntrada,usuarioEntidad);
+            registroEntradaEjb.visarRegistroEntrada(registroEntrada, usuarioEntidad);
 
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.visar.ok"));
 
@@ -369,7 +369,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
      * Tramitar un {@link es.caib.regweb3.model.RegistroEntrada}
      * OLD
      */
-    @RequestMapping(value = "/{idRegistro}/xxxxtramitarxxxx")
+    @RequestMapping(value = "/{idRegistro}/xxxxtramitarxxxxx")
     public String tramitarRegistroEntrada(@PathVariable Long idRegistro, HttpServletRequest request) {
 
         log.info("Llegamos a tramitar");
@@ -390,7 +390,9 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
                 Mensaje.saveMessageError(request, getMessage("registroEntrada.tramitar.error"));
                 return "redirect:/registroEntrada/list";
             }
-            registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, usuarioEntidad);
+
+
+            //registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, usuarioEntidad);
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.tramitar.ok"));
 
         } catch (Exception e) {
@@ -408,6 +410,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     Destinatarios distribuirRegistroEntrada(@PathVariable Long idRegistro, HttpServletRequest request) throws Exception {
 
         RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         Destinatarios destinatarios = new Destinatarios();
 
         // Comprobamos si el RegistroEntrada tiene el estado Válido
@@ -422,14 +425,23 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             Mensaje.saveMessageError(request, getMessage("registroEntrada.tramitar.error"));
             return destinatarios;
         }
+
+
         // Plugin de distribución
         IDistribucionPlugin distribucionPlugin = RegwebDistribucionPluginManager.getInstance();
-        Boolean conAnexos = registroEntrada.getRegistroDetalle().getAnexos().size() > 0;
+        if (distribucionPlugin != null) {
+            Boolean conAnexos = registroEntrada.getRegistroDetalle().getAnexos().size() > 0;
 
-        // TODO emplear el serializar de Toni Nadal(preguntarle a el)
-        String registroXML = RegistroUtils.serilizarXml(registroEntrada);
+            // TODO emplear el serializar de Toni Nadal(preguntarle a el)
+            String registroXML = RegistroUtils.serilizarXml(registroEntrada);
 
-        destinatarios = distribucionPlugin.distribuir(registroXML, conAnexos);
+            destinatarios = distribucionPlugin.distribuir(registroXML, conAnexos);
+
+        } else { // no han definido ningun plugin de distribución, hace el comportamiento anterior.
+            //   registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, usuarioEntidad);
+            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.tramitar.ok"));
+        }
+
         return destinatarios;
     }
 
@@ -450,7 +462,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
 
         Boolean enviado = distribucionPlugin.enviarDestinatarios(wrapper.getDestinatarios(), wrapper.getObservaciones());
-        //registroEntradaEjb.tramitarRegistroEntrada(registroEntrada,usuarioEntidad);
+        // registroEntradaEjb.tramitarRegistroEntrada(registroEntrada,usuarioEntidad);
         if (enviado) {
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.tramitar.ok"));
 

@@ -11,13 +11,10 @@
                 <div class="col-xs-4 centrat" id="carga">
                     <img src="<c:url value="/img/712.GIF"/>" width="60" height="60"/>
                 </div>
-                <div class="col-xs-12">
+                <div class="col-xs-12" id="divlistdestinatarios">
                     <spring:message code="regweb.distribuyendo"/>
-                    <%-- <ul>
-                     <c:forEach items="${propuestos}">
-                         <li>propuestos.name</li>
-                     </c:forEach>
-                     </ul>--%>
+                    <ul id="listadestin">
+                    </ul>
                 </div>
             </div>
         </div>

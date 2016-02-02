@@ -31,7 +31,7 @@ public class RegwebDistribucionPluginManager {
             String className = System.getProperty(basePlugin);
 
             if (className == null || className.trim().length() <= 0) {
-                log.error("No hi ha cap propietat " + propertyName + " definint la classe que gestiona el plugin de scanner");
+                log.info("No hi ha cap propietat " + propertyName + " definint la classe que gestiona el plugin de scanner");
                 return null;
             }
             // Carregant la classe

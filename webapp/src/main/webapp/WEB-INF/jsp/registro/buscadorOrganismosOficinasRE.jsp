@@ -17,7 +17,7 @@ que se le indica -->
            <input id="comunidadAutonoma" type="hidden" value="${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}"/>
 
            <div class="form-group col-xs-6">
-              <div class="col-xs-4 pull-lef etiqueta_regweb control-label">
+               <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                   <label for="codigoOrganismo${param.tipo}"><spring:message code="organismo.buscador.codigo"/></label>
               </div>
               <div class="col-xs-8">
@@ -25,7 +25,7 @@ que se le indica -->
               </div>
           </div>
           <div class="form-group col-xs-6">
-              <div class="col-xs-4 pull-lef etiqueta_regweb control-label">
+              <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                   <label for="denominacion${param.tipo}"><spring:message code="organismo.buscador.denominacion"/></label>
               </div>
               <div class="col-xs-8">
@@ -36,7 +36,7 @@ que se le indica -->
           <!-- Nivel Administracion -->
 
           <div class="form-group col-xs-6">
-              <div class="col-xs-4 pull-lef etiqueta_regweb control-label">
+              <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                   <label for="codNivelAdministracion${param.tipo}"><spring:message code="organismo.buscador.nivelAdministracion"/></label>
               </div>
               <div class="col-xs-8">
@@ -53,7 +53,7 @@ que se le indica -->
 
           <!-- Comunidad Autonoma -->
           <div class="form-group col-xs-6">
-              <div class="col-xs-4 pull-lef etiqueta_regweb control-label">
+              <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                   <label for="codComunidadAutonoma${param.tipo}"><spring:message code="organismo.buscador.comunidadAutonoma"/></label>
               </div>
               <div class="col-xs-8">
@@ -70,7 +70,7 @@ que se le indica -->
           <c:if test="${param.tipo == 'OrganismoInteresado'}">
           <!-- Unidad Raiz -->
           <div class="form-group col-xs-6">
-              <div class="col-xs-4 pull-lef etiqueta_regweb control-label">
+              <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                  <label for="unidadRaiz${param.tipo}"><spring:message code="organismo.buscador.unidadRaiz"/></label>
               </div>
               <div class="col-xs-8">

@@ -77,7 +77,7 @@ public class DistribucionLocalDistribucionPlugin extends AbstractPluginPropertie
 
         destinatarios.setPropuestos(destinatariosPropuestos);
         destinatarios.setPosibles(destinatariosPosibles);
-        destinatarios.setModificable(false);
+        destinatarios.setModificable(true);
         //TODO tratar el tema de los anexos
         if (anexos) {
             //TODO tratar anexos

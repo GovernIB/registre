@@ -12,7 +12,9 @@
 </c:if>
 
 <%--Modal tramitar--%>
+
 <div id="distribuirModal" class="modal fade bs-example-modal-lg">
+    <c:if test="${empty destinatarios}">No hay destinatarios</c:if>
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -20,28 +22,52 @@
             </div>
 
             <div class="modal-body">
-                <section class="container">
-                    <div>
-                        <select id="posibles" name="posibles" size="5" multiple></select>
-                    </div>
-                    <div>
-                        <input type="button" id="btnLeft" value="&lt;&lt;"/>
-                        <input type="button" id="btnRight" value="&gt;&gt;"/>
-                    </div>
-                    <div>
-                        <select id="propuestos" name="propuestos" size="4" multiple>
+                <div class="panel panel-success">
 
-                        </select>
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong>Llistat de
+                            destinataris</strong></h3>
+                    </div>
 
-                        <div>
-                            <input type="text" id="txtRight"/>
+                    <div class="panel-body">
+                        <%--<p>Puede modificar los destinos propuestos a los que distribuir el asiento</p>--%>
+                        <%--<section class="container">--%>
+                        <div class="form-group col-xs-6">
+                            <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                <label>Destinos Posibles</label>
+                            </div>
+                            <div class="col-xs-8">
+                                <select id="posibles" name="posibles" size="5" multiple></select>
+                            </div>
                         </div>
-                        <div>
-                            <textarea id="observtramit" name="observtramit"></textarea>
+                        <div class="form-group col-xs-6">
+                            <input type="button" id="btnLeft" value="&lt;&lt;"/>
+                            <input type="button" id="btnRight" value="&gt;&gt;"/>
                         </div>
+                        <div class="form-group col-xs-6">
+                            <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                <label>Destinos Propuestos</label>
+                            </div>
+                            <div class="col-xs-8">
+                                <select id="propuestos" name="propuestos" size="4" multiple></select>
+                            </div>
+
+                            <%-- <div>
+                                 <input type="text" id="txtRight"/>
+                             </div>--%>
+                            <div class="form-group col-xs-">
+                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                    <label>Observaciones</label>
+                                </div>
+                                <div class="col-xs-8">
+                                    <textarea id="observtramit" name="observtramit"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <%--</section>--%>
                     </div>
 
-                </section>
             </div>
             <div class="modal-footer">
                 <button class="btn" data-dismiss="modal" aria-hidden="true"><spring:message
@@ -69,7 +95,7 @@
 
     $("#propuestos").change(function () {
         var selectedItem = $("#propuestos option:selected");
-        $("#txtRight").val(selectedItem.text());
+        // $("#txtRight").val(selectedItem.text());
     });
 
 

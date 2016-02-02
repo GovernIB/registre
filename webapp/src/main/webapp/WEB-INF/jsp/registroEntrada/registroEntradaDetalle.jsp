@@ -131,7 +131,7 @@
 
                             <%--Si el registro es válido--%>
                             <c:if test="${registro.estado == RegwebConstantes.ESTADO_VALIDO && puedeEditar && registro.destino != null && isOficioRemision == false}">
-                                <%--<button type="button" onclick='javascript:confirm("<c:url value="/registroEntrada/${registro.id}/tramitar"/>","<spring:message code="regweb.confirmar.tramitar" htmlEscape="true"/>")' class="btn btn-success btn-sm btn-block"><spring:message code="regweb.distribuir"/></button>--%>
+                                <%-- <button type="button"  onclick='javascript:confirm("<c:url value="/registroEntrada/${registro.id}/tramitar"/>","<spring:message code="regweb.confirmar.tramitar" htmlEscape="true"/>")' class="btn btn-success btn-sm btn-block"><spring:message code="regweb.distribuir"/></button>--%>
                                 <button type="button" onclick='javascript:distribuir("<c:url
                                         value="/registroEntrada/${registro.id}/tramitar"/>")'
                                         class="btn btn-success btn-sm btn-block"><spring:message
@@ -228,8 +228,10 @@
     <c:import url="../registro/registroTramitar.jsp">
         <c:param name="tipoRegistro" value="registroEntrada"/>
     </c:import>
+
+    <%-- MODAL DISTRIBUIR--%>
     <c:import url="../modalDistribuir.jsp">
-        <%--<c:param name="propuestos" value=""/>--%>
+
     </c:import>
 
 </div>
@@ -259,6 +261,13 @@
         actualizarSelect('${obtenerLocalidades}','#localidad\\.id',$('#provincia\\.id option:selected').val(),$('#localidad\\.id option:selected').val(),false,false);
     }
 
+    /*
+     * Función que permite distribuir el registro a los destinatarios que se le indiquen.
+     * Realiza una llamada ajax para obtener los destinatarios
+     * si son modificables muestra el pop up para poder modificarlos
+     * si no lo son redirecciona directamente a los destinatarios devueltos.
+     * si no hay destinatarios se marca el registro como tramitado y listo.
+     */
     function distribuir(url) {
         var html = '';
         jQuery.ajax({
@@ -268,78 +277,92 @@
             dataType: 'json',
             contentType: 'application/json',
             success: function (result) {
-                //Debemos mirar si es modificable
-                if (!result.modificable) {
-                    //enviar destinatarios directamente sin popup
-                    alert("Entro en enviar destinatarios directamente");
-                    //TODO Show modal informativo de a donde se está enviando
-                    $('#modalDistribDestinatarios').modal('show');
-                    var destinatarios = [];
-                    var destinatariosarray = "";
-                    var lenpropuestos = result.propuestos.length;
-                    for (var j = 0; j < lenpropuestos; j++) {
-                        destinatariosarray = "[";
-                        destinatarios[j] = '{"id":"' + result.propuestos[j].id + '","name":"' + result.propuestos[j].name + '"}';
-                        // Colocamos la coma de separación
-                        if (j != 0 && j < lenpropuestos) {
-                            destinatariosarray += ",";
+                if (result.propuestos != null) { // Si hay destinatarios
+                    //Si no es modificable se distribuye directamente a la lista de propuestos
+                    if (!result.modificable) {
+                        //enviar destinatarios directamente sin popup
+
+                        //Pintamos los destinatarios
+                        var htmlul = "";
+
+                        // $('#modalDistribDestinatarios').modal('show');
+                        var destinatarios = [];
+                        var destinatariosarray = "";
+                        var lenpropuestos = result.propuestos.length;
+                        for (var j = 0; j < lenpropuestos; j++) {
+                            destinatariosarray = "[";
+                            destinatarios[j] = '{"id":"' + result.propuestos[j].id + '","name":"' + result.propuestos[j].name + '"}';
+
+                            htmlul += "<li>" + result.propuestos[j].name + "</li>";
+                            // Colocamos la coma de separación
+                            if (j != 0 && j < lenpropuestos) {
+                                destinatariosarray += ",";
+                            }
+                            destinatariosarray += destinatarios[j];
                         }
-                        destinatariosarray += destinatarios[j];
+                        $('#listadestin').html(htmlul);
+                        $('#modalDistribDestinatarios').modal('show');
+                        destinatariosarray += "]";
+                        var json = '{"destinatarios":' + destinatariosarray + ',"observaciones":""}';
+
+                        jQuery.ajax({
+                            url: '<c:url value="/registroEntrada/${registro.id}/enviardestinatarios"/>',
+                            type: 'POST',
+                            dataType: 'json',
+                            data: json,
+                            contentType: 'application/json',
+                            success: function (resultado) {
+                                // $('#modalDistribDestinatarios').modal('hide');
+                                goTo('<c:url value="/registroEntrada/${registro.id}/detalle"/>');
+
+                            }
+                        });
+                    } else { // Si es modificable mostramos el pop up para que cambien la lista de propuestos
+
+                        //Rellenamos el select de posibles
+                        var lenposibles = result.posibles.length;
+                        for (var i = 0; i < lenposibles; i++)
+                            html += '<option value="' + result.posibles[i].id + '">'
+                                    + result.posibles[i].name + '</option>';
+                        $('#posibles').trigger("chosen:updated");
+                        $('#posibles').html(html);
+
+
+                        //Rellenamos el select de propuestos
+                        html = '';
+                        var lenpropuestos = result.propuestos.length;
+                        for (var j = 0; j < lenpropuestos; j++)
+                            html += '<option value="' + result.propuestos[j].id + '">'
+                                    + result.propuestos[j].name + '</option>';
+                        $('#propuestos').html(html);
+
+                        $('#distribuirModal').modal('show');
                     }
-                    destinatariosarray += "]";
-                    var json = '{"destinatarios":' + destinatariosarray + ',"observaciones":""}';
-
-                    jQuery.ajax({
-                        url: '<c:url value="/registroEntrada/${registro.id}/enviardestinatarios"/>',
-                        type: 'POST',
-                        dataType: 'json',
-                        data: json,
-                        contentType: 'application/json',
-                        success: function (resultado) {
-                            $('#modalDistribDestinatarios').modal('hide');
-                            goTo('<c:url value="/registroEntrada/${registro.id}/detalle"/>');
-
-                        }
-                    });
-
-                } else {
-
-                    //Rellenamos el select de posibles
-                    var lenposibles = result.posibles.length;
-                    for (var i = 0; i < lenposibles; i++)
-                        html += '<option value="' + result.posibles[i].id + '">'
-                                + result.posibles[i].name + '</option>';
-                    $('#posibles').trigger("chosen:updated");
-                    $('#posibles').html(html);
-
-
-                    //Rellenamos el select de propuestos
-                    html = '';
-                    var lenpropuestos = result.propuestos.length;
-                    for (var j = 0; j < lenpropuestos; j++)
-                        html += '<option value="' + result.propuestos[j].id + '">'
-                                + result.propuestos[j].name + '</option>';
-                    $('#propuestos').html(html);
-
-                    $('#distribuirModal').modal('show');
+                } else { // No hay destinatarios, se marca como tramitado
+                    $('#divlistdestinatarios').hide()
+                    $('#modalDistribDestinatarios').modal('show');
+                    goTo('<c:url value="/registroEntrada/${registro.id}/detalle"/>');
                 }
             }
         });
     }
 
+    /**
+     * Función que recoge la lista de destinatarios propuestos y modificados por el usuario y los distribuye.
+     */
     function enviarDestinatarios(url) {
-        //$('#modalSincro').modal('show');
-        $('#modalDistribDestinatarios').modal('show');
-        $('#distribuirModal').modal('hide');
 
-        //TODO ver como mandar los valores del select multiple al controler
+        $('#distribuirModal').modal('hide');
+        var html = "";
         var destinatarios = [];
         var destinatariosarray = "";
+        //$('#propuestos option').attr('selected', 'selected');
+        // Coegemos los destinatarios que han seleccionado en el combo "propuestos"
         if ($('#propuestos :selected').length > 0) {
             //build an array of selected values
             destinatariosarray = "[";
             $('#propuestos :selected').each(function (i, selected) {
-
+                html += "<li>" + $(selected).text() + "</li>";
                 destinatarios[i] = '{"id":"' + $(selected).val() + '","name":"' + $(selected).text() + '"}';
                 // Colocamos la coma de separación
                 if (i != 0 && i < $('#propuestos :selected').length) {
@@ -351,6 +374,11 @@
         destinatariosarray += "]";
 
 
+        //Pintamos los destinatarios escogidos
+        $('#listadestin').html(html);
+        $('#modalDistribDestinatarios').modal('show');
+
+
         // var destinatarios = [{"id":"a","name":"shail1"}, {"id":"b","name":"shail2"}];
         //var destinatario = {"id":"a","name":"shail1"};
 
@@ -359,7 +387,6 @@
 
         /* HAY que montar el string manual(no se porque), pero funciona */
         var json = '{"destinatarios":' + destinatariosarray + ',"observaciones":"' + observ + '"}';
-        alert(json);
 
 
         jQuery.ajax({
@@ -369,8 +396,6 @@
             data: json,
             contentType: 'application/json',
             success: function (result) {
-                // $('#modalSincro').modal('hide');
-                $('#modalDistribDestinatarios').modal('hide');
                 goTo('<c:url value="/registroEntrada/${registro.id}/detalle"/>');
 
             }
