@@ -23,6 +23,4 @@ public interface SincronizadorDir3Local {
   public Organismo sincronizarOrganismo(UnidadTF unidadTF, Long idEntidad) throws Exception;
   public void sincronizarOficina(OficinaTF oficinaTF) throws Exception;
   public void sincronizarHistoricosOrganismo(Organismo organismo, UnidadTF unidadTF) throws Exception;
-  //TODO borrar, solo se emplea para testear
-  //public void obtenerOrganismosDestinatarios(String codigo) throws Exception;
 }

@@ -617,18 +617,6 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
     }
 
 
-    /**
-   * Método que obtiene organismos destinatarios que tienen oficinas donde registrar
-     TODO borrar, solo se emplea para testear
-   * @throws Exception
-   */
-    /*public void obtenerOrganismosDestinatarios(String codigo) throws Exception {
-        Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService();
-        List<UnidadTF> arbol = unidadesService.obtenerArbolUnidadesDestinatarias(codigo);
-
-        log.info("Organismos destinatarios encontrados " + arbol.size());
-    }*/
-
 
     /**
      * Función que actualiza un conjunto de datos del organismo
