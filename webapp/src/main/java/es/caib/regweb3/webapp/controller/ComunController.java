@@ -241,7 +241,7 @@ public class ComunController extends BaseController {
     }*/
 
 
-    @RequestMapping(value = "/crearPermisos")
+    /*@RequestMapping(value = "/crearPermisos")
     public String crearPermisos(HttpServletRequest request) throws Exception{
 
         Rol rolActivo = getRolActivo(request);
@@ -257,6 +257,6 @@ public class ComunController extends BaseController {
 
         return "redirect:/inici";
 
-    }
+    }*/
 
 }

@@ -340,7 +340,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
 
     }
 
-    @Override
+    /*@Override
     public void crearPermisosNoExistentes() throws Exception {
 
         List<Entidad> entidades = em.createQuery("Select entidad from Entidad as entidad order by entidad.id").getResultList();
@@ -369,7 +369,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
             }
 
         }
-    }
+    }*/
 
     @Override
     public Boolean existePermiso(Long idUsuarioEntidad, Long idLibro, Long idPermiso) throws Exception{
