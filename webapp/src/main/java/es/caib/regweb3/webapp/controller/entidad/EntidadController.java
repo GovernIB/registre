@@ -576,16 +576,16 @@ public class EntidadController extends BaseController {
         
         List<String> roles = new ArrayList<String>();
         Collections.addAll(roles, rolesInfo.getRoles());
-        
 
-        if(roles.contains("RWE_USUARI") || roles.contains("RWE_LOPD") || !usuarioEntidad.getActivo()){
+
+        if (roles.contains("RWE_USUARI") || !usuarioEntidad.getActivo()) {
 
             List<Libro> libros = libroEjb.getLibrosEntidad(entidad.getId());
 
             PermisoLibroUsuarioForm permisoLibroUsuarioForm = new PermisoLibroUsuarioForm();
             permisoLibroUsuarioForm.setUsuarioEntidad(usuarioEntidad);
 
-            permisoLibroUsuarioForm.setPermisoLibroUsuarios(permisoLibroUsuarioEjb.findByUsuario(usuarioEntidad.getId()));
+            permisoLibroUsuarioForm.setPermisoLibroUsuarios(permisoLibroUsuarioEjb.findByUsuarioLibros(usuarioEntidad.getId(), libros));
 
             model.addAttribute(permisoLibroUsuarioForm);
             model.addAttribute("entidad", entidad);

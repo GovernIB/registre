@@ -82,7 +82,19 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
         Query q = em.createQuery("Select plu from PermisoLibroUsuario as plu where " +
                 "plu.usuario.id = :idUsuarioEntidad order by plu.libro.id, plu.permiso");
 
-        q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
+        q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
+
+        return q.getResultList();
+    }
+
+    @Override
+    public List<PermisoLibroUsuario> findByUsuarioLibros(Long idUsuarioEntidad, List<Libro> libros) throws Exception {
+
+        Query q = em.createQuery("Select plu from PermisoLibroUsuario as plu where " +
+                "plu.usuario.id = :idUsuarioEntidad and plu.libro in(:libros) order by plu.libro.id, plu.permiso");
+
+        q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
+        q.setParameter("libros", libros);
 
         return q.getResultList();
     }
@@ -379,7 +391,23 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
         List<?> plus = em.createQuery("select distinct(plu.id) from PermisoLibroUsuario as plu where plu.usuario.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
 
         if(plus.size() > 0){
-            return em.createQuery("delete from PermisoLibroUsuario where id in (:plus) ").setParameter("plus", plus).executeUpdate();
+
+            if (plus.size() > 1000) {
+
+                while (plus.size() > 1000) {
+
+                    List<?> subList = plus.subList(0, 1000);
+                    em.createQuery("delete from PermisoLibroUsuario where id in (:subList) ").setParameter("subList", subList).executeUpdate();
+                    plus.subList(0, 1000).clear();
+                }
+                em.createQuery("delete from PermisoLibroUsuario where id in (:plus) ").setParameter("plus", plus).executeUpdate();
+
+            } else {
+                return em.createQuery("delete from PermisoLibroUsuario where id in (:plus) ").setParameter("plus", plus).executeUpdate();
+            }
+
+            return plus.size();
+
         }
 
         return 0;
