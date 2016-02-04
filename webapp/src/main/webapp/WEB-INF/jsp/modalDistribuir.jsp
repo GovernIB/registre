@@ -8,7 +8,7 @@
                 <h3><spring:message code="regweb.procesando"/></h3>
             </div>
             <div class="modal-body">
-                <div class="col-xs-4 centrat" id="carga">
+                <div class="col-xs-4 centrat" id="cargadist">
                     <img src="<c:url value="/img/712.GIF"/>" width="60" height="60"/>
                 </div>
                 <div class="col-xs-12" id="divlistdestinatarios">

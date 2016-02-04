@@ -22,7 +22,7 @@
             </div>
 
             <div class="modal-body">
-                <div class="panel panel-success">
+                <div class="panel panel-info">
 
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong>Llistat de
@@ -32,19 +32,19 @@
                     <div class="panel-body">
                         <%--<p>Puede modificar los destinos propuestos a los que distribuir el asiento</p>--%>
                         <%--<section class="container">--%>
-                        <div class="form-group col-xs-6">
+                            <div class="form-group col-xs-5">
                             <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                                 <label>Destinos Posibles</label>
                             </div>
                             <div class="col-xs-8">
-                                <select id="posibles" name="posibles" size="5" multiple></select>
+                                <select id="posibles" name="posibles" size="4" multiple></select>
                             </div>
                         </div>
-                        <div class="form-group col-xs-6">
+                            <div class="form-group col-xs-2">
                             <input type="button" id="btnLeft" value="&lt;&lt;"/>
                             <input type="button" id="btnRight" value="&gt;&gt;"/>
                         </div>
-                        <div class="form-group col-xs-6">
+                            <div class="form-group col-xs-5">
                             <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                                 <label>Destinos Propuestos</label>
                             </div>
@@ -55,14 +55,15 @@
                             <%-- <div>
                                  <input type="text" id="txtRight"/>
                              </div>--%>
-                            <div class="form-group col-xs-">
+
+                            </div>
+                            <div class="form-group col-xs-10">
                                 <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                                     <label>Observaciones</label>
-                                </div>
+                            </div>
                                 <div class="col-xs-8">
                                     <textarea id="observtramit" name="observtramit"></textarea>
                                 </div>
-                            </div>
                         </div>
 
                         <%--</section>--%>
@@ -75,8 +76,6 @@
                 <button class="btn" data-dismiss="modal" aria-hidden="true"
                         onclick="enviarDestinatarios('${urlDistribuir}')"><spring:message
                         code="regweb.enviar"/></button>
-
-
             </div>
         </div>
     </div>
@@ -86,11 +85,13 @@
     $("#btnLeft").click(function () {
         var selectedItem = $("#propuestos option:selected");
         $("#posibles").append(selectedItem);
+        $("#posibles option:selected").prop("selected", false);
     });
 
     $("#btnRight").click(function () {
         var selectedItem = $("#posibles option:selected");
         $("#propuestos").append(selectedItem);
+        $("#propuestos option:selected").prop("selected", false);
     });
 
     $("#propuestos").change(function () {

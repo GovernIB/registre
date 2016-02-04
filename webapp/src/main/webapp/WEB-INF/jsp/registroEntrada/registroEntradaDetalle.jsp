@@ -230,9 +230,7 @@
     </c:import>
 
     <%-- MODAL DISTRIBUIR--%>
-    <c:import url="../modalDistribuir.jsp">
-
-    </c:import>
+    <c:import url="../modalDistribuir.jsp"/>
 
 </div>
 
@@ -335,7 +333,6 @@
                             html += '<option value="' + result.propuestos[j].id + '">'
                                     + result.propuestos[j].name + '</option>';
                         $('#propuestos').html(html);
-
                         $('#distribuirModal').modal('show');
                     }
                 } else { // No hay destinatarios, se marca como tramitado
@@ -356,7 +353,9 @@
         var html = "";
         var destinatarios = [];
         var destinatariosarray = "";
-        //$('#propuestos option').attr('selected', 'selected');
+
+        //Seleccionamos todos por defecto y así el se enviaran todos, que es el comportamiento normal.
+        $('#propuestos option').prop('selected', true);
         // Coegemos los destinatarios que han seleccionado en el combo "propuestos"
         if ($('#propuestos :selected').length > 0) {
             //build an array of selected values
@@ -373,11 +372,9 @@
         }
         destinatariosarray += "]";
 
-
         //Pintamos los destinatarios escogidos
         $('#listadestin').html(html);
         $('#modalDistribDestinatarios').modal('show');
-
 
         // var destinatarios = [{"id":"a","name":"shail1"}, {"id":"b","name":"shail2"}];
         //var destinatario = {"id":"a","name":"shail1"};
