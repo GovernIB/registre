@@ -538,8 +538,13 @@ public class Interesado implements Serializable {
 
     @Transient
     public String getNombreOrganismo(){
-        //return getNombre() + " - " + getCodigoDir3() ;
-        return (getRazonSocial() != null) ? getRazonSocial() : getNombre();
+        String nombre = (getRazonSocial() != null) ? getRazonSocial() : getNombre();
+
+        if (getCodigoDir3() != null) {
+            nombre += " - " + getCodigoDir3();
+        }
+
+        return nombre;
 
     }
 
