@@ -396,13 +396,24 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     public Integer eliminarByEntidad(Long idEntidad) throws Exception{
 
         List<?> organismos = em.createQuery("Select distinct(id) from Organismo where entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        Integer total = organismos.size();
 
         if(organismos.size() > 0){
+
+            // Si hay más de 1000 registros, dividimos las queries (ORA-01795).
+            while (organismos.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
+
+                List<?> subList = organismos.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN);
+                log.info("Historico UO eliminados: " + em.createNativeQuery("delete from RWE_HISTORICOUO WHERE CODULTIMA in(:organismos)").setParameter("organismos", subList).executeUpdate());
+                em.createQuery("delete from Organismo where id in (:organismos) ").setParameter("organismos", subList).executeUpdate();
+                organismos.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN).clear();
+            }
+
             log.info("Historico UO eliminados: " + em.createNativeQuery("delete from RWE_HISTORICOUO WHERE CODULTIMA in(:organismos)").setParameter("organismos", organismos).executeUpdate());
-            return em.createQuery("delete from Organismo where id in (:organismos) ").setParameter("organismos", organismos).executeUpdate();
+            em.createQuery("delete from Organismo where id in (:organismos) ").setParameter("organismos", organismos).executeUpdate();
         }
 
-        return 0;
+        return total;
 
     }
 }

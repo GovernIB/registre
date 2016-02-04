@@ -243,6 +243,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
 
         /********* REGISTROS DETALLE *********/
+
         log.info("RegistrosDetalle eliminados: " +registroDetalleEjb.eliminar(registrosDetalle));
 
         /********* REPRO *********/

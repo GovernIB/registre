@@ -291,7 +291,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
         Query q = em.createQuery("Select distinct permisoLibroUsuario.usuario from PermisoLibroUsuario as permisoLibroUsuario where " +
                 "permisoLibroUsuario.libro in (:libros)");
 
-        q.setParameter("libros",libros);
+        q.setParameter("libros", libros);
 
         return q.getResultList();
     }
@@ -389,28 +389,22 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     public Integer eliminarByEntidad(Long idEntidad) throws Exception{
 
         List<?> plus = em.createQuery("select distinct(plu.id) from PermisoLibroUsuario as plu where plu.usuario.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        Integer total = plus.size();
 
         if(plus.size() > 0){
 
-            if (plus.size() > 1000) {
+            // Si hay más de 1000 registros, dividimos las queries (ORA-01795).
+            while (plus.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
 
-                while (plus.size() > 1000) {
-
-                    List<?> subList = plus.subList(0, 1000);
-                    em.createQuery("delete from PermisoLibroUsuario where id in (:subList) ").setParameter("subList", subList).executeUpdate();
-                    plus.subList(0, 1000).clear();
-                }
-                em.createQuery("delete from PermisoLibroUsuario where id in (:plus) ").setParameter("plus", plus).executeUpdate();
-
-            } else {
-                return em.createQuery("delete from PermisoLibroUsuario where id in (:plus) ").setParameter("plus", plus).executeUpdate();
+                List<?> subList = plus.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN);
+                em.createQuery("delete from PermisoLibroUsuario where id in (:id) ").setParameter("id", subList).executeUpdate();
+                plus.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN).clear();
             }
 
-            return plus.size();
-
+            em.createQuery("delete from PermisoLibroUsuario where id in (:plus) ").setParameter("plus", plus).executeUpdate();
         }
 
-        return 0;
+        return total;
     }
 
 }

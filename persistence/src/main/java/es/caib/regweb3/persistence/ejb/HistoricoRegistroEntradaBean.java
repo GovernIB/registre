@@ -5,6 +5,7 @@ import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
+import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -130,12 +131,22 @@ public class HistoricoRegistroEntradaBean extends BaseEjbJPA<HistoricoRegistroEn
     public Integer eliminarByEntidad(Long idEntidad) throws Exception{
 
         List<?> hre = em.createQuery("Select distinct(hre.id) from HistoricoRegistroEntrada as hre where hre.registroEntrada.usuario.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        Integer total = hre.size();
 
         if(hre.size() >0){
-            return em.createQuery("delete from HistoricoRegistroEntrada where id in (:hre) ").setParameter("hre",hre).executeUpdate();
+
+            // Si hay más de 1000 registros, dividimos las queries (ORA-01795).
+            while (hre.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
+
+                List<?> subList = hre.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN);
+                em.createQuery("delete from HistoricoRegistroEntrada where id in (:hre) ").setParameter("hre", subList).executeUpdate();
+                hre.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN).clear();
+            }
+
+            em.createQuery("delete from HistoricoRegistroEntrada where id in (:hre) ").setParameter("hre", hre).executeUpdate();
         }
 
-        return 0;
+        return total;
 
     }
 

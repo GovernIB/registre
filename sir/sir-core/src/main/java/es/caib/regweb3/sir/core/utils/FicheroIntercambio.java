@@ -15,7 +15,6 @@ import es.caib.regweb3.sir.core.schema.FicheroIntercambioSICRES3;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.util.CollectionUtils;
 
 import javax.ejb.EJB;
 import javax.xml.bind.JAXBContext;
@@ -489,7 +488,7 @@ public class FicheroIntercambio {
             // DeInteresados
             List<FicheroIntercambioSICRES3.DeInteresado> deInteresados = getFicheroIntercambio().getDeInteresado();
 
-            if (!CollectionUtils.isEmpty(deInteresados)) {
+            if (deInteresados.size() > 0) {
                 for (FicheroIntercambioSICRES3.DeInteresado deInteresado : deInteresados) {
                     if (deInteresado != null) {
                         Interesado interesado = transformarInteresado(deInteresado);
@@ -503,7 +502,7 @@ public class FicheroIntercambio {
 
 
             List<FicheroIntercambioSICRES3.DeAnexo> deAnexos = getFicheroIntercambio().getDeAnexo();
-            if (!CollectionUtils.isEmpty(deAnexos)) {
+            if (deInteresados.size() > 0) {
                 for (FicheroIntercambioSICRES3.DeAnexo deAnexo : deAnexos) {
                     if (deAnexo != null) {
                         Anexo anexo = new Anexo();

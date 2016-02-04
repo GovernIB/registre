@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Trazabilidad;
+import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -100,12 +101,22 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
     public Integer eliminarByEntidad(Long idEntidad) throws Exception{
 
         List<?> trazabilidades =  em.createQuery("Select id from Trazabilidad where oficioRemision.usuarioResponsable.entidad.id=:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        Integer total = trazabilidades.size();
 
-        if(trazabilidades.size() >0){
-            return em.createQuery("delete from Trazabilidad where id in (:id)").setParameter("id", trazabilidades).executeUpdate();
+        if (trazabilidades.size() > 0) {
+
+            // Si hay más de 1000 registros, dividimos las queries (ORA-01795).
+            while (trazabilidades.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
+
+                List<?> subList = trazabilidades.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN);
+                em.createQuery("delete from Trazabilidad where id in (:id)").setParameter("id", subList).executeUpdate();
+                trazabilidades.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN).clear();
+            }
+
+            em.createQuery("delete from Trazabilidad where id in (:id)").setParameter("id", trazabilidades).executeUpdate();
         }
 
-        return  0;
+        return total;
 
     }
 }

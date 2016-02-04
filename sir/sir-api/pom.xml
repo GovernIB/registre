@@ -112,49 +112,9 @@
 
             </plugin>
 
-            <!--<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>2.1</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-
-                            <filters>
-                                <filter>
-                                    <artifact>es.caib.regweb3:regweb3-utils</artifact>
-                                    <includes>
-                                        <include>es/caib/regweb3/utils/RegwebConstantes.*</include>
-                                    </includes>
-                                </filter>
-                                <filter>
-                                    <artifact>org.fundaciobit.genapp:genapp-core</artifact>
-                                    <includes>
-                                        <include>org/fundaciobit/genapp/common/i18n/I18N*.*</include>
-                                    </includes>
-                                </filter>
-                            </filters>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>-->
-
         </plugins>
 
     </build>
-
-
-    <!--<repositories>
-        <repository>
-            <id>java.net-m2</id>
-            <name>java.net - Maven 2</name>
-            <url>https://repository.jboss.org/nexus/content/repositories/java.net-m2</url>
-        </repository>
-    </repositories>-->
 
 
     <dependencies>
@@ -189,8 +149,19 @@
             <scope>provided</scope>
         </dependency>
 
-
         <!--Externas-->
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>3.2.6.RELEASE</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
         <dependency>
             <groupId>org.apache.axis</groupId>

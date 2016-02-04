@@ -22,7 +22,7 @@ public class WS_SIR8_BServiceLocator extends org.apache.axis.client.Service impl
     }
 
     // Use to get a proxy class for WS_SIR8_B
-    private java.lang.String WS_SIR8_B_address = "http://ibit125:8080/regweb3/ws/sir/v3/WS_SIR8_B";
+    private java.lang.String WS_SIR8_B_address = "http://localhost/services/WS_SIR8_B";
 
     public java.lang.String getWS_SIR8_BAddress() {
         return WS_SIR8_B_address;

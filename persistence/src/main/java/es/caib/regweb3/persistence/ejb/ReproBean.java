@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Repro;
+import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -215,11 +216,21 @@ public class ReproBean extends BaseEjbJPA<Repro, Long> implements ReproLocal{
     public Integer eliminarByEntidad(Long idEntidad) throws Exception{
 
         List<?> repros =  em.createQuery("select distinct(r.id) from Repro as r where r.usuario.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        Integer total = repros.size();
 
         if(repros.size() > 0){
-            return em.createQuery("delete from Repro where id in (:repros)").setParameter("repros", repros).executeUpdate();
+
+            // Si hay más de 1000 registros, dividimos las queries (ORA-01795).
+            while (repros.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
+
+                List<?> subList = repros.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN);
+                em.createQuery("delete from Repro where id in (:repros)").setParameter("repros", subList).executeUpdate();
+                repros.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN).clear();
+            }
+
+            em.createQuery("delete from Repro where id in (:repros)").setParameter("repros", repros).executeUpdate();
         }
-        return 0;
+        return total;
 
     }
 

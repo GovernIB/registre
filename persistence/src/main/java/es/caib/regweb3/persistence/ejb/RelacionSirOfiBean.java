@@ -98,12 +98,22 @@ public class RelacionSirOfiBean extends BaseEjbJPA<RelacionSirOfi, RelacionSirOf
     public Integer eliminarByEntidad(Long idEntidad) throws Exception{
 
         List<?> relaciones = em.createQuery("Select distinct(o.id) from RelacionSirOfi as o where o.organismo.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        Integer total = relaciones.size();
 
         if(relaciones.size() > 0){
-            return em.createQuery("delete from RelacionSirOfi where id in (:relaciones) ").setParameter("relaciones", relaciones).executeUpdate();
+
+            // Si hay más de 1000 registros, dividimos las queries (ORA-01795).
+            while (relaciones.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
+
+                List<?> subList = relaciones.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN);
+                em.createQuery("delete from RelacionSirOfi where id in (:relaciones) ").setParameter("relaciones", subList).executeUpdate();
+                relaciones.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN).clear();
+            }
+
+            em.createQuery("delete from RelacionSirOfi where id in (:relaciones) ").setParameter("relaciones", relaciones).executeUpdate();
         }
 
-        return 0;
+        return total;
 
     }
 
