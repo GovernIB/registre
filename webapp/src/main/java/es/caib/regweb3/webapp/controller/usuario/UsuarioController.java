@@ -182,7 +182,7 @@ public class UsuarioController extends BaseController {
 
              status.setComplete();
 
-             if (isOperador(request)) {
+             if (isOperador(request) || isAdminEntidad(request)) {
                  return "redirect:/inici";
              } else{
                  return "redirect:/usuario/list";
