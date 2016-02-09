@@ -14,6 +14,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.log4j.Logger;
 
 import javax.xml.ws.BindingProvider;
+import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URL;
 import java.util.Map;
@@ -116,12 +117,13 @@ public class Dir3CaibUtils {
    * @return
    * @throws Exception
    */
-  public static String denominacion(String codigoDir3, String tipo) throws Exception{
+  public static String denominacion(String codigoDir3, String tipo) {
     log.info("tipo: " + tipo);
     log.info("codigoDir3: " + codigoDir3);
 
     DefaultHttpClient httpClient = new DefaultHttpClient();
     String url = null;
+    String denominacion;
 
     if(tipo.toLowerCase().equals("oficina")){
       url = Configuracio.getDir3CaibServer() + OFICINA_DENOMINACION;
@@ -134,17 +136,25 @@ public class Dir3CaibUtils {
     HttpGet getRequest = new HttpGet(url);
     getRequest.addHeader("accept", "application/json");
 
-    HttpResponse response = httpClient.execute(getRequest);
+    HttpResponse response = null;
+    try {
+      response = httpClient.execute(getRequest);
 
-    if (response.getStatusLine().getStatusCode() != 200) {
-      //throw new RuntimeException("Failed : HTTP error code : "  + response.getStatusLine().getStatusCode());
-      log.info("Failed : HTTP error code : "  + response.getStatusLine().getStatusCode());
+      if (response.getStatusLine().getStatusCode() != 200) {
+        //throw new RuntimeException("Failed : HTTP error code : "  + response.getStatusLine().getStatusCode());
+        log.info("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
+        return null;
+      }
+
+      StringWriter writer = new StringWriter();
+      IOUtils.copy(response.getEntity().getContent(), writer, "UTF-8");
+      denominacion = writer.toString();
+
+    } catch (IOException e) {
+      e.printStackTrace();
       return null;
     }
 
-    StringWriter writer = new StringWriter();
-    IOUtils.copy(response.getEntity().getContent(), writer, "UTF-8");
-    String denominacion = writer.toString();
 
     log.info("denominacion: " + denominacion);
     log.info("");

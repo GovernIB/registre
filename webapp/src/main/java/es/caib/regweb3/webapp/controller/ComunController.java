@@ -123,7 +123,7 @@ public class ComunController extends BaseController {
                 session.setAttribute(RegwebConstantes.SESSION_OFICINA, oficinaNueva);
                 usuarioService.tienePreRegistros(oficinaNueva, session);
                 usuarioEntidadEjb.actualizarOficinaUsuario(usuarioEntidad.getId(), oficinaNueva.getId());
-                log.info("Cambio Oficina activa: " + oficinaNueva.getDenominacion());
+                log.info("Cambio Oficina activa: " + oficinaNueva.getDenominacion() + " - " + oficinaNueva.getCodigo());
             }else{
                 Mensaje.saveMessageError(request, getMessage("error.oficina.autorizacion"));
             }

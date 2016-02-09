@@ -84,7 +84,6 @@ public class PreRegistroInterceptor extends HandlerInterceptorAdapter {
             if(url.contains("detalle")){
 
                 String idPreRegistro =  url.replace("/preRegistro/","").replace("/detalle", ""); //Obtenemos el id a partir de la url
-                log.info("idPreRegistro: " + idPreRegistro);
 
                 PreRegistro preRegistro = preRegistroEjb.findById(Long.valueOf(idPreRegistro));
 

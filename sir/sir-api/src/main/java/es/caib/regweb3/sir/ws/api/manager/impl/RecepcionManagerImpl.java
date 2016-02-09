@@ -52,6 +52,8 @@ public class RecepcionManagerImpl implements RecepcionManager {
             // Convertimos la información recibida del asiento registral sir
             ficheroIntercambio = sicresXMLManager.parseXMLFicheroIntercambio(xmlFicheroIntercambio);
 
+            //log.info("FicheroIntercambio : " + ficheroIntercambio);
+
             // Creamos el PreRegistro a partir del xml recibido
             preRegistro = recibirFicheroIntercambio(ficheroIntercambio, xmlFicheroIntercambio, webServicesMethodsEjb);
 
