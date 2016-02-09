@@ -7,6 +7,7 @@ import es.caib.regweb3.model.RegistroDetalle;
 import es.caib.regweb3.persistence.ejb.CatLocalidadLocal;
 import es.caib.regweb3.persistence.ejb.CatPaisLocal;
 import es.caib.regweb3.persistence.ejb.CatProvinciaLocal;
+import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.sir.core.model.Errores;
 import es.caib.regweb3.sir.core.model.TipoAnotacion;
@@ -15,7 +16,6 @@ import es.caib.regweb3.sir.core.schema.FicheroIntercambioSICRES3;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.util.CollectionUtils;
 
 import javax.ejb.EJB;
 import javax.xml.bind.JAXBContext;
@@ -392,6 +392,7 @@ public class FicheroIntercambio {
     public PreRegistro getPreRegistro() {
 
         PreRegistro preRegistro = new PreRegistro();
+        preRegistro.setEstado(RegwebConstantes.ESTADO_PREREGISTRO_PENDIENTE_PROCESAR);
         RegistroDetalle registroDetalle = new RegistroDetalle();
         List<Interesado> interesados = new ArrayList<Interesado>();
         List<Anexo> anexos = new ArrayList<Anexo>();
@@ -403,18 +404,32 @@ public class FicheroIntercambio {
             if (deOrigenoRemitente != null) {
 
                 preRegistro.setCodigoEntidadRegistralOrigen(deOrigenoRemitente.getCodigoEntidadRegistralOrigen());
-                preRegistro.setDecodificacionEntidadRegistralOrigen(deOrigenoRemitente.getDecodificacionEntidadRegistralOrigen());
+
+                if (!StringUtils.isEmpty(deOrigenoRemitente.getDecodificacionEntidadRegistralOrigen())) {
+                    preRegistro.setDecodificacionEntidadRegistralOrigen(deOrigenoRemitente.getDecodificacionEntidadRegistralOrigen());
+                } else {
+                    preRegistro.setDecodificacionEntidadRegistralOrigen(Dir3CaibUtils.denominacion(deOrigenoRemitente.getCodigoEntidadRegistralOrigen(), "oficina"));
+                }
 
                 preRegistro.setCodigoUnidadTramitacionOrigen(deOrigenoRemitente.getCodigoUnidadTramitacionOrigen());
-                preRegistro.setDecodificacionUnidadTramitacionOrigen(deOrigenoRemitente.getDecodificacionUnidadTramitacionOrigen());
 
-                preRegistro.setNumeroPreregistro(deOrigenoRemitente.getNumeroRegistroEntrada());
+                if (!StringUtils.isEmpty(deOrigenoRemitente.getCodigoUnidadTramitacionOrigen())) {
+                    preRegistro.setCodigoUnidadTramitacionOrigen(deOrigenoRemitente.getCodigoUnidadTramitacionOrigen());
+
+                    if (!StringUtils.isEmpty(deOrigenoRemitente.getDecodificacionUnidadTramitacionOrigen())) {
+                        preRegistro.setDecodificacionUnidadTramitacionOrigen(deOrigenoRemitente.getDecodificacionUnidadTramitacionOrigen());
+                    } else {
+                        preRegistro.setDecodificacionUnidadTramitacionOrigen(Dir3CaibUtils.denominacion(deOrigenoRemitente.getCodigoUnidadTramitacionOrigen(), "unidad"));
+                    }
+                }
+
+                registroDetalle.setNumeroRegistroOrigen(deOrigenoRemitente.getNumeroRegistroEntrada());
                 //preRegistro.setTimestampRegistro(deOrigenoRemitente.getTimestampEntrada());
 
                 String fechaRegistro = deOrigenoRemitente.getFechaHoraEntrada();
                 if (StringUtils.isNotBlank(fechaRegistro)) {
                     try {
-                        preRegistro.setFecha(SDF.parse(fechaRegistro));
+                        registroDetalle.setFechaOrigen(SDF.parse(fechaRegistro));
                     } catch (ParseException e) {
                         log.error("Error al parsear la fecha de registro: [" + fechaRegistro + "]", e);
                         throw new ValidacionException(Errores.ERROR_0037, e);
@@ -427,10 +442,21 @@ public class FicheroIntercambio {
             if (deDestino != null) {
 
                 preRegistro.setCodigoEntidadRegistralDestino(deDestino.getCodigoEntidadRegistralDestino());
-                preRegistro.setDecodificacionEntidadRegistralDestino(deDestino.getDecodificacionEntidadRegistralDestino());
+                if (!StringUtils.isEmpty(deDestino.getDecodificacionEntidadRegistralDestino())) {
+                    preRegistro.setDecodificacionEntidadRegistralDestino(deDestino.getDecodificacionEntidadRegistralDestino());
+                } else {
+                    preRegistro.setDecodificacionEntidadRegistralDestino(Dir3CaibUtils.denominacion(deDestino.getCodigoEntidadRegistralDestino(), "oficina"));
+                }
 
-                preRegistro.setCodigoUnidadTramitacionDestino(deDestino.getCodigoUnidadTramitacionDestino());
-                preRegistro.setDecodificacionUnidadTramitacionDestino(deDestino.getDecodificacionUnidadTramitacionDestino());
+                if (!StringUtils.isEmpty(deDestino.getCodigoUnidadTramitacionDestino())) {
+                    preRegistro.setCodigoUnidadTramitacionDestino(deDestino.getCodigoUnidadTramitacionDestino());
+                    if (!StringUtils.isEmpty(deDestino.getDecodificacionUnidadTramitacionDestino())) {
+                        preRegistro.setDecodificacionUnidadTramitacionDestino(deDestino.getDecodificacionUnidadTramitacionDestino());
+                    } else {
+                        preRegistro.setDecodificacionUnidadTramitacionDestino(Dir3CaibUtils.denominacion(deDestino.getCodigoUnidadTramitacionDestino(), "unidad"));
+                    }
+                }
+
             }
 
             // DeAsunto
@@ -449,7 +475,7 @@ public class FicheroIntercambio {
                 preRegistro.setIdIntercambio(getIdentificadorIntercambio());
                 preRegistro.setIndicadorPrueba(deInternosControl.getIndicadorPrueba());
                 registroDetalle.setAplicacion(deInternosControl.getAplicacionVersionEmisora());
-                preRegistro.setTipoAnotacion(RegwebConstantes.TIPO_ANOTACION_BY_CODIGO.get(getTipoAnotacion()));
+                preRegistro.setTipoAnotacion(RegwebConstantes.TIPO_ANOTACION_BY_CODIGO.get(getTipoAnotacionXML()));
                 preRegistro.setDescripcionTipoAnotacion(getDescripcionTipoAnotacion());
 
                 registroDetalle.setNumeroTransporte(deInternosControl.getNumeroTransporteEntrada());
@@ -457,7 +483,12 @@ public class FicheroIntercambio {
                 preRegistro.setContactoUsuario(deInternosControl.getContactoUsuario());
                 registroDetalle.setObservaciones(deInternosControl.getObservacionesApunte());
                 preRegistro.setCodigoEntidadRegistralInicio(deInternosControl.getCodigoEntidadRegistralInicio());
-                preRegistro.setDecodificacionEntidadRegistralInicio(deInternosControl.getDecodificacionEntidadRegistralInicio());
+
+                if (!StringUtils.isEmpty(deInternosControl.getDecodificacionEntidadRegistralInicio())) {
+                    preRegistro.setDecodificacionEntidadRegistralInicio(deInternosControl.getDecodificacionEntidadRegistralInicio());
+                } else {
+                    preRegistro.setDecodificacionEntidadRegistralInicio(Dir3CaibUtils.denominacion(deInternosControl.getCodigoEntidadRegistralInicio(), "oficina"));
+                }
 
                 // Tipo de transporte
                 if (StringUtils.isNotBlank(deInternosControl.getTipoTransporteEntrada())) {
@@ -489,7 +520,7 @@ public class FicheroIntercambio {
             // DeInteresados
             List<FicheroIntercambioSICRES3.DeInteresado> deInteresados = getFicheroIntercambio().getDeInteresado();
 
-            if (!CollectionUtils.isEmpty(deInteresados)) {
+            if (deInteresados.size() > 0) {
                 for (FicheroIntercambioSICRES3.DeInteresado deInteresado : deInteresados) {
                     if (deInteresado != null) {
                         Interesado interesado = transformarInteresado(deInteresado);
@@ -503,7 +534,7 @@ public class FicheroIntercambio {
 
 
             List<FicheroIntercambioSICRES3.DeAnexo> deAnexos = getFicheroIntercambio().getDeAnexo();
-            if (!CollectionUtils.isEmpty(deAnexos)) {
+            if (deInteresados.size() > 0) {
                 for (FicheroIntercambioSICRES3.DeAnexo deAnexo : deAnexos) {
                     if (deAnexo != null) {
                         Anexo anexo = new Anexo();
@@ -778,5 +809,12 @@ public class FicheroIntercambio {
 
         return representante;
 
+    }
+
+    @Override
+    public String toString() {
+        return "FicheroIntercambio{" +
+                "ficheroIntercambio=" + ficheroIntercambio +
+                '}';
     }
 }

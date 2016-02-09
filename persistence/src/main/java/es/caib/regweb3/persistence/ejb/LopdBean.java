@@ -206,11 +206,21 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
     public Integer eliminarByEntidad(Long idEntidad) throws Exception{
 
         List<?> lopd =  em.createQuery("select distinct(l.id) from Lopd as l where l.usuario.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        Integer total = lopd.size();
 
         if(lopd.size() > 0){
-            return em.createQuery("delete from Lopd where id in (:lopd)").setParameter("lopd", lopd).executeUpdate();
+
+            // Si hay más de 1000 registros, dividimos las queries (ORA-01795).
+            while (lopd.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
+
+                List<?> subList = lopd.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN);
+                em.createQuery("delete from Lopd where id in (:lopd)").setParameter("lopd", subList).executeUpdate();
+                lopd.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN).clear();
+            }
+
+            em.createQuery("delete from Lopd where id in (:lopd)").setParameter("lopd", lopd).executeUpdate();
         }
-        return 0;
+        return total;
 
     }
 

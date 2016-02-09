@@ -82,7 +82,19 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
         Query q = em.createQuery("Select plu from PermisoLibroUsuario as plu where " +
                 "plu.usuario.id = :idUsuarioEntidad order by plu.libro.id, plu.permiso");
 
-        q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
+        q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
+
+        return q.getResultList();
+    }
+
+    @Override
+    public List<PermisoLibroUsuario> findByUsuarioLibros(Long idUsuarioEntidad, List<Libro> libros) throws Exception {
+
+        Query q = em.createQuery("Select plu from PermisoLibroUsuario as plu where " +
+                "plu.usuario.id = :idUsuarioEntidad and plu.libro in(:libros) order by plu.libro.id, plu.permiso");
+
+        q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
+        q.setParameter("libros", libros);
 
         return q.getResultList();
     }
@@ -279,7 +291,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
         Query q = em.createQuery("Select distinct permisoLibroUsuario.usuario from PermisoLibroUsuario as permisoLibroUsuario where " +
                 "permisoLibroUsuario.libro in (:libros)");
 
-        q.setParameter("libros",libros);
+        q.setParameter("libros", libros);
 
         return q.getResultList();
     }
@@ -328,7 +340,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
 
     }
 
-    @Override
+    /*@Override
     public void crearPermisosNoExistentes() throws Exception {
 
         List<Entidad> entidades = em.createQuery("Select entidad from Entidad as entidad order by entidad.id").getResultList();
@@ -357,7 +369,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
             }
 
         }
-    }
+    }*/
 
     @Override
     public Boolean existePermiso(Long idUsuarioEntidad, Long idLibro, Long idPermiso) throws Exception{
@@ -377,12 +389,22 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     public Integer eliminarByEntidad(Long idEntidad) throws Exception{
 
         List<?> plus = em.createQuery("select distinct(plu.id) from PermisoLibroUsuario as plu where plu.usuario.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        Integer total = plus.size();
 
         if(plus.size() > 0){
-            return em.createQuery("delete from PermisoLibroUsuario where id in (:plus) ").setParameter("plus", plus).executeUpdate();
+
+            // Si hay más de 1000 registros, dividimos las queries (ORA-01795).
+            while (plus.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
+
+                List<?> subList = plus.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN);
+                em.createQuery("delete from PermisoLibroUsuario where id in (:id) ").setParameter("id", subList).executeUpdate();
+                plus.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN).clear();
+            }
+
+            em.createQuery("delete from PermisoLibroUsuario where id in (:plus) ").setParameter("plus", plus).executeUpdate();
         }
 
-        return 0;
+        return total;
     }
 
 }

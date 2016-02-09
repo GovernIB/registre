@@ -115,7 +115,8 @@
                                 <c:if test="${fn:length(libros) > 1}">
                                     <div class="form-group col-xs-12">
                                         <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                                            <form:label path="idLibro"><span class="text-danger">*</span> <spring:message code="libro.libro"/></form:label>
+                                            <label for="idLibro"><span class="text-danger">*</span> <spring:message
+                                                    code="libro.libro"/></label>
                                         </div>
                                         <div class="col-xs-7 no-pad-right" id="libro">
                                             <form:select path="idLibro" cssClass="chosen-select">
@@ -126,14 +127,15 @@
                                     </div>
                                 </c:if>
                                 <c:if test ="${fn:length(libros) == 1}">
-                                    <input id="idLibro" type="hidden" value="${libros[0].idLibro}"/>
+                                    <input id="idLibro" type="hidden" value="${libros[0].id}"/>
                                 </c:if>
 
                                 <%--Si s'ha de posar valor per l'idioma--%>
                                 <c:if test="${empty preRegistro.registroDetalle.idioma}">
                                     <div class="form-group col-xs-12">
                                         <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                                            <form:label path="idIdioma"><span class="text-danger">*</span> <spring:message code="registroEntrada.idioma"/></form:label>
+                                            <label for="idIdioma"><span class="text-danger">*</span> <spring:message
+                                                    code="registroEntrada.idioma"/></label>
                                         </div>
                                         <div class="col-xs-7 no-pad-right" id="idioma">
                                             <form:select path="idIdioma" cssClass="chosen-select">
@@ -158,7 +160,8 @@
                                 <c:if test="${empty preRegistro.registroDetalle.tipoAsunto}">
                                     <div class="form-group col-xs-12">
                                         <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                                            <form:label path="idTipoAsunto"><span class="text-danger">*</span> <spring:message code="registroEntrada.tipoAsunto"/></form:label>
+                                            <label for="idTipoAsunto"><span class="text-danger">*</span> <spring:message
+                                                    code="registroEntrada.tipoAsunto"/></label>
                                         </div>
                                         <div class="col-xs-7 no-pad-right" id="tipoAsunto">
                                             <form:select path="idTipoAsunto"  cssClass="chosen-select">

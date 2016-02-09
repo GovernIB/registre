@@ -514,7 +514,7 @@ public class UsuarioService {
 
         session.setAttribute(RegwebConstantes.SESSION_USUARIO_ENTIDAD, usuarioEntidad);
 
-        log.info("Entidad activa usuario: " + usuarioEntidad.getEntidad().getNombre() + " - " + usuarioEntidad.getNombreCompleto());
+        log.info("Entidad activa usuario: " + entidad.getNombre() + " - " + usuario.getNombreCompleto());
 
         return usuarioEntidad;
     }

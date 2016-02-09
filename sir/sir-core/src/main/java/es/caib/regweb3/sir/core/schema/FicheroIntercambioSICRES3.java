@@ -10,6 +10,7 @@ package es.caib.regweb3.sir.core.schema;
 
 import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -1148,6 +1149,24 @@ public class FicheroIntercambioSICRES3 {
             this.observaciones = value;
         }
 
+        @Override
+        public String toString() {
+            return "DeAnexo{" +
+                    "nombreFicheroAnexado='" + nombreFicheroAnexado + '\'' +
+                    ", identificadorFichero='" + identificadorFichero + '\'' +
+                    ", validezDocumento='" + validezDocumento + '\'' +
+                    ", tipoDocumento='" + tipoDocumento + '\'' +
+                    ", certificado=" + Arrays.toString(certificado) +
+                    ", firmaDocumento=" + Arrays.toString(firmaDocumento) +
+                    ", timeStamp=" + Arrays.toString(timeStamp) +
+                    ", validacionOCSPCertificado=" + Arrays.toString(validacionOCSPCertificado) +
+                    ", hash=" + Arrays.toString(hash) +
+                    ", tipoMIME='" + tipoMIME + '\'' +
+                    ", anexo=" + Arrays.toString(anexo) +
+                    ", identificadorDocumentoFirmado='" + identificadorDocumentoFirmado + '\'' +
+                    ", observaciones='" + observaciones + '\'' +
+                    '}';
+        }
     }
 
 
@@ -1293,6 +1312,15 @@ public class FicheroIntercambioSICRES3 {
             this.numeroExpediente = value;
         }
 
+        @Override
+        public String toString() {
+            return "DeAsunto{" +
+                    "resumen='" + resumen + '\'' +
+                    ", codigoAsuntoSegunDestino='" + codigoAsuntoSegunDestino + '\'' +
+                    ", referenciaExterna='" + referenciaExterna + '\'' +
+                    ", numeroExpediente='" + numeroExpediente + '\'' +
+                    '}';
+        }
     }
 
 
@@ -1438,6 +1466,15 @@ public class FicheroIntercambioSICRES3 {
             this.decodificacionUnidadTramitacionDestino = value;
         }
 
+        @Override
+        public String toString() {
+            return "DeDestino{" +
+                    "codigoEntidadRegistralDestino='" + codigoEntidadRegistralDestino + '\'' +
+                    ", decodificacionEntidadRegistralDestino='" + decodificacionEntidadRegistralDestino + '\'' +
+                    ", codigoUnidadTramitacionDestino='" + codigoUnidadTramitacionDestino + '\'' +
+                    ", decodificacionUnidadTramitacionDestino='" + decodificacionUnidadTramitacionDestino + '\'' +
+                    '}';
+        }
     }
 
 
@@ -1523,6 +1560,13 @@ public class FicheroIntercambioSICRES3 {
             this.solicita = value;
         }
 
+        @Override
+        public String toString() {
+            return "DeFormularioGenerico{" +
+                    "expone='" + expone + '\'' +
+                    ", solicita='" + solicita + '\'' +
+                    '}';
+        }
     }
 
 
@@ -2478,6 +2522,42 @@ public class FicheroIntercambioSICRES3 {
             this.observaciones = value;
         }
 
+        @Override
+        public String toString() {
+            return "DeInteresado{" +
+                    "tipoDocumentoIdentificacionInteresado='" + tipoDocumentoIdentificacionInteresado + '\'' +
+                    ", documentoIdentificacionInteresado='" + documentoIdentificacionInteresado + '\'' +
+                    ", razonSocialInteresado='" + razonSocialInteresado + '\'' +
+                    ", nombreInteresado='" + nombreInteresado + '\'' +
+                    ", primerApellidoInteresado='" + primerApellidoInteresado + '\'' +
+                    ", segundoApellidoInteresado='" + segundoApellidoInteresado + '\'' +
+                    ", tipoDocumentoIdentificacionRepresentante='" + tipoDocumentoIdentificacionRepresentante + '\'' +
+                    ", documentoIdentificacionRepresentante='" + documentoIdentificacionRepresentante + '\'' +
+                    ", razonSocialRepresentante='" + razonSocialRepresentante + '\'' +
+                    ", nombreRepresentante='" + nombreRepresentante + '\'' +
+                    ", primerApellidoRepresentante='" + primerApellidoRepresentante + '\'' +
+                    ", segundoApellidoRepresentante='" + segundoApellidoRepresentante + '\'' +
+                    ", paisInteresado='" + paisInteresado + '\'' +
+                    ", provinciaInteresado='" + provinciaInteresado + '\'' +
+                    ", municipioInteresado='" + municipioInteresado + '\'' +
+                    ", direccionInteresado='" + direccionInteresado + '\'' +
+                    ", codigoPostalInteresado='" + codigoPostalInteresado + '\'' +
+                    ", correoElectronicoInteresado='" + correoElectronicoInteresado + '\'' +
+                    ", telefonoContactoInteresado='" + telefonoContactoInteresado + '\'' +
+                    ", direccionElectronicaHabilitadaInteresado='" + direccionElectronicaHabilitadaInteresado + '\'' +
+                    ", canalPreferenteComunicacionInteresado='" + canalPreferenteComunicacionInteresado + '\'' +
+                    ", paisRepresentante='" + paisRepresentante + '\'' +
+                    ", provinciaRepresentante='" + provinciaRepresentante + '\'' +
+                    ", municipioRepresentante='" + municipioRepresentante + '\'' +
+                    ", direccionRepresentante='" + direccionRepresentante + '\'' +
+                    ", codigoPostalRepresentante='" + codigoPostalRepresentante + '\'' +
+                    ", correoElectronicoRepresentante='" + correoElectronicoRepresentante + '\'' +
+                    ", telefonoContactoRepresentante='" + telefonoContactoRepresentante + '\'' +
+                    ", direccionElectronicaHabilitadaRepresentante='" + direccionElectronicaHabilitadaRepresentante + '\'' +
+                    ", canalPreferenteComunicacionRepresentante='" + canalPreferenteComunicacionRepresentante + '\'' +
+                    ", observaciones='" + observaciones + '\'' +
+                    '}';
+        }
     }
 
 
@@ -2930,6 +3010,25 @@ public class FicheroIntercambioSICRES3 {
             this.decodificacionEntidadRegistralInicio = value;
         }
 
+        @Override
+        public String toString() {
+            return "DeInternosControl{" +
+                    "tipoTransporteEntrada='" + tipoTransporteEntrada + '\'' +
+                    ", numeroTransporteEntrada='" + numeroTransporteEntrada + '\'' +
+                    ", nombreUsuario='" + nombreUsuario + '\'' +
+                    ", contactoUsuario='" + contactoUsuario + '\'' +
+                    ", identificadorIntercambio='" + identificadorIntercambio + '\'' +
+                    ", aplicacionVersionEmisora='" + aplicacionVersionEmisora + '\'' +
+                    ", tipoAnotacion='" + tipoAnotacion + '\'' +
+                    ", descripcionTipoAnotacion='" + descripcionTipoAnotacion + '\'' +
+                    ", tipoRegistro='" + tipoRegistro + '\'' +
+                    ", documentacionFisica='" + documentacionFisica + '\'' +
+                    ", observacionesApunte='" + observacionesApunte + '\'' +
+                    ", indicadorPrueba='" + indicadorPrueba + '\'' +
+                    ", codigoEntidadRegistralInicio='" + codigoEntidadRegistralInicio + '\'' +
+                    ", decodificacionEntidadRegistralInicio='" + decodificacionEntidadRegistralInicio + '\'' +
+                    '}';
+        }
     }
 
 
@@ -3159,6 +3258,30 @@ public class FicheroIntercambioSICRES3 {
             this.decodificacionUnidadTramitacionOrigen = value;
         }
 
+        @Override
+        public String toString() {
+            return "DeOrigenORemitente{" +
+                    "codigoEntidadRegistralOrigen='" + codigoEntidadRegistralOrigen + '\'' +
+                    ", decodificacionEntidadRegistralOrigen='" + decodificacionEntidadRegistralOrigen + '\'' +
+                    ", numeroRegistroEntrada='" + numeroRegistroEntrada + '\'' +
+                    ", fechaHoraEntrada='" + fechaHoraEntrada + '\'' +
+                    ", timestampEntrada=" + Arrays.toString(timestampEntrada) +
+                    ", codigoUnidadTramitacionOrigen='" + codigoUnidadTramitacionOrigen + '\'' +
+                    ", decodificacionUnidadTramitacionOrigen='" + decodificacionUnidadTramitacionOrigen + '\'' +
+                    '}';
+        }
     }
 
+    @Override
+    public String toString() {
+        return "FicheroIntercambioSICRES3{" +
+                "deOrigenORemitente=" + deOrigenORemitente +
+                ", deDestino=" + deDestino +
+                ", deInteresado=" + deInteresado +
+                ", deAsunto=" + deAsunto +
+                ", deAnexo=" + deAnexo +
+                ", deInternosControl=" + deInternosControl +
+                ", deFormularioGenerico=" + deFormularioGenerico +
+                '}';
+    }
 }

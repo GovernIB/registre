@@ -30,6 +30,15 @@ public interface PermisoLibroUsuarioLocal extends BaseEjb<PermisoLibroUsuario, L
 
     /**
      * Retorna los {@link es.caib.regweb3.model.PermisoLibroUsuario} a partir de un {@link es.caib.regweb3.model.UsuarioEntidad}
+     * y una lista de {@link es.caib.regweb3.model.Libro}
+     * @param idUsuarioEntidad
+     * @return
+     * @throws Exception
+     */
+    public List<PermisoLibroUsuario> findByUsuarioLibros(Long idUsuarioEntidad, List<Libro> libros) throws Exception;
+
+    /**
+     * Retorna los {@link es.caib.regweb3.model.PermisoLibroUsuario} a partir de un {@link es.caib.regweb3.model.UsuarioEntidad}
      * y de un {@link es.caib.regweb3.model.Libro}
      * @param idUsuarioEntidad
      * @return
@@ -154,11 +163,11 @@ public interface PermisoLibroUsuarioLocal extends BaseEjb<PermisoLibroUsuario, L
      */
     public void crearPermisosLibroNuevo(Libro libro, Long idEntidad) throws Exception;
 
-    /**
-     * Crea los {@link es.caib.regweb3.model.PermisoLibroUsuario} a False de todas las Entidades que todavía no estan creados
-     * @throws Exception
-     */
-    public void crearPermisosNoExistentes() throws Exception;
+//    /**
+//     * Crea los {@link es.caib.regweb3.model.PermisoLibroUsuario} a False de todas las Entidades que todavía no estan creados
+//     * @throws Exception
+//     */
+//    public void crearPermisosNoExistentes() throws Exception;
 
     /**
      * Comprueba si un Usuario tiene Inicializado el Permiso espeficicado sobre el Libro especificado.

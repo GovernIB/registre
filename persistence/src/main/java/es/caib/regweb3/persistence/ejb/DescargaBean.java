@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Descarga;
+import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -133,13 +134,23 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
     public Integer eliminarByEntidad(Long idEntidad) throws Exception{
 
         List<?> descargas = em.createQuery("Select distinct(id) from Descarga where entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        Integer total = descargas.size();
+
 
         if(descargas.size() > 0){
-            return em.createQuery("delete from Descarga where id in (:descargas) ").setParameter("descargas", descargas).executeUpdate();
+
+            // Si hay más de 1000 registros, dividimos las queries (ORA-01795).
+            while (descargas.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
+
+                List<?> subList = descargas.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN);
+                em.createQuery("delete from Descarga where id in (:descargas) ").setParameter("descargas", subList).executeUpdate();
+                descargas.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN).clear();
+            }
+
+            em.createQuery("delete from Descarga where id in (:descargas) ").setParameter("descargas", descargas).executeUpdate();
         }
 
-        return 0;
-
+        return total;
     }
     
 }

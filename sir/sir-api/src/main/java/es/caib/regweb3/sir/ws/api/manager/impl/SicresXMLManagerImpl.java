@@ -818,12 +818,9 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
         try {
 
             DeMensaje msg = new DeMensaje();
-            msg.setCodigoEntidadRegistralOrigen(mensaje
-                    .getCodigoEntidadRegistralOrigen());
-            msg.setCodigoEntidadRegistralDestino(mensaje
-                    .getCodigoEntidadRegistralDestino());
-            msg.setIdentificadorIntercambio(mensaje
-                    .getIdentificadorIntercambio());
+            msg.setCodigoEntidadRegistralOrigen(mensaje.getCodigoEntidadRegistralOrigen());
+            msg.setCodigoEntidadRegistralDestino(mensaje.getCodigoEntidadRegistralDestino());
+            msg.setIdentificadorIntercambio(mensaje.getIdentificadorIntercambio());
             msg.setDescripcionMensaje(mensaje.getDescripcionMensaje());
 
             if (mensaje.getNumeroRegistroEntradaDestino() != null) {
@@ -842,8 +839,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
             // Fecha y hora de entrada en destino
             if (mensaje.getFechaEntradaDestino() != null) {
-                msg.setFechaHoraEntradaDestino(SDF.format(mensaje
-                        .getFechaEntradaDestino()));
+                msg.setFechaHoraEntradaDestino(SDF.format(mensaje.getFechaEntradaDestino()));
             }
 
             // Tipo de mensaje

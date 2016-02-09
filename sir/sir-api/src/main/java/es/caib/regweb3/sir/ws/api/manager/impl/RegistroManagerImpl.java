@@ -34,6 +34,7 @@ public class RegistroManagerImpl implements RegistroManager {
         confirmacion.setDescripcionMensaje(TipoMensaje.CONFIRMACION.getName());
 
         //todo Añadir NumeroRegistro confirmacion.setNumeroRegistroEntradaDestino(preRegistro.getNumeroRegistro());
+        //confirmacion.setNumeroRegistroEntradaDestino("0000001");
         confirmacion.setFechaEntradaDestino(new Date());
 
         mensajeManager.enviarMensaje(confirmacion);

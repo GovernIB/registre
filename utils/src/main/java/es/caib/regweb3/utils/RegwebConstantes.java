@@ -539,4 +539,8 @@ public interface RegwebConstantes {
     /* -------------- CAT SERVICIOS -------------------------- */
     public static final Long REGISTRO_VIRTUAL_NO_PRESENCIAL = 4L;
 
+    /* -------- Límite expresiones en ORACLE in (:elements) (ORA-01795) ---------- */
+
+    public static final int NUMBER_EXPRESSIONS_IN = 1000;
+
 }
