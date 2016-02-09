@@ -88,17 +88,21 @@ que se le indica -->
             <img  src="<c:url value="/img/712.GIF"/>" width="20" height="20"/>
           </div>
 
-          <input type="button" id="buscarorganimos${param.tipo}"  onclick="organismoBusqueda('${param.tipo}','<%=Configuracio.getDir3CaibServer()%>','${param.idRegistroDetalle}')" class="btn btn-warning btn-sm" title="<spring:message code="regweb.buscar"/>" value="<spring:message code="regweb.buscar"/>" />
-
-
+          <input type="button" id="buscarorganimos${param.tipo}"
+                 onclick="organismoBusqueda('${param.tipo}','<%=Configuracio.getDir3CaibServer()%>','${param.idRegistroDetalle}')"
+                 class="btn btn-warning btn-sm" title="<spring:message code="regweb.buscar"/>"
+                 value="<spring:message code="regweb.buscar"/>"/>
+          <button class="btn btn-sm" data-dismiss="modal" aria-hidden="true"
+                  onclick="limpiarFormularioBusqueda('${param.tipo}')"><spring:message code="regweb.cerrar"/></button>
+          </br>
+          </br>
+          </br>
           <!-- Mostrar llistat de la busqueda-->
           <div class="form-group col-xs-12">
               <div id="resultadosbusqueda${param.tipo}">
               </div>
           </div>
 
-
-          <button class="btn btn-sm" data-dismiss="modal" aria-hidden="true" onclick="limpiarFormularioBusqueda('${param.tipo}')"><spring:message code="regweb.cerrar"/></button>
       </div>
   </div>
   </div>
