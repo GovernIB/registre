@@ -206,9 +206,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         initAnexos(entidadActiva, model, request, registro.getId());
 
         // Historicos
-        log.info("antes historicos");
         model.addAttribute("historicos", historicoRegistroEntradaEjb.getByRegistroEntrada(idRegistro));
-        log.info("despues historicos");
 
         // Trazabilidad
         List<Trazabilidad> trazabilidades = trazabilidadEjb.getByRegistroEntrada(registro.getId());
