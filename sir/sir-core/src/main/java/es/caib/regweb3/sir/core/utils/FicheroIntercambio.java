@@ -411,6 +411,10 @@ public class FicheroIntercambio {
                     preRegistro.setDecodificacionEntidadRegistralOrigen(Dir3CaibUtils.denominacion(deOrigenoRemitente.getCodigoEntidadRegistralOrigen(), "oficina"));
                 }
 
+                // Oficina Origen
+                registroDetalle.setOficinaOrigenExternoCodigo(deOrigenoRemitente.getCodigoEntidadRegistralOrigen());
+                registroDetalle.setOficinaOrigenExternoDenominacion(preRegistro.getDecodificacionEntidadRegistralOrigen());
+
                 preRegistro.setCodigoUnidadTramitacionOrigen(deOrigenoRemitente.getCodigoUnidadTramitacionOrigen());
 
                 if (!StringUtils.isEmpty(deOrigenoRemitente.getCodigoUnidadTramitacionOrigen())) {

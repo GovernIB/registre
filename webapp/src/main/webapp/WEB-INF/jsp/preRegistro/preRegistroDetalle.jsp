@@ -40,6 +40,23 @@
                     <div class="panel-body">
 
                         <dl class="detalle_registro">
+                            <c:if test="${not empty preRegistro.decodificacionEntidadRegistralDestino}">
+                                <dt><i class="fa fa-briefcase"></i> <spring:message code="preRegistro.oficinaDestino"/>:
+                                </dt>
+                                <dd> ${preRegistro.decodificacionEntidadRegistralDestino}</dd>
+                            </c:if>
+
+                            <c:if test="${not empty preRegistro.tipoRegistro}">
+                                <dt><i class="fa fa-file-o"></i> <spring:message code="preRegistro.tipoRegistro"/>:</dt>
+                                <c:if test="${preRegistro.tipoRegistro == '0'}">
+                                    <dd><span class="label label-info"><spring:message
+                                            code="preRegistro.entrada"/></span></dd>
+                                </c:if>
+                                <c:if test="${preRegistro.tipoRegistro == '1'}">
+                                    <dd><span class="label label-danger"><spring:message
+                                            code="preRegistro.salida"/></span></dd>
+                                </c:if>
+                            </c:if>
                             <c:if test="${not empty preRegistro.fecha}"><dt><i class="fa fa-clock-o"></i> <spring:message code="regweb.fecha"/>: </dt> <dd> <fmt:formatDate value="${preRegistro.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></dd></c:if>
                             <c:if test="${not empty preRegistro.usuario}"><dt><i class="fa fa-user"></i> <spring:message code="usuario.usuario"/>: </dt> <dd> ${preRegistro.usuario}</dd></c:if>
                             <c:if test="${not empty preRegistro.contactoUsuario}"><dt><i class="fa fa-at"></i> <spring:message code="preRegistro.contacto"/>: </dt> <dd> ${preRegistro.contactoUsuario}</dd></c:if>
@@ -207,7 +224,8 @@
 
                     <div class="panel-heading">
 
-                        <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong><spring:message code="preRegistro.preRegistroInicio"/></strong></h3>
+                        <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong><spring:message
+                                code="preRegistro.preRegistroOrigen"/></strong></h3>
                     </div>
 
                     <div class="panel-body">
@@ -218,7 +236,9 @@
                                     <colgroup>
                                         <col>
                                         <col>
-                                        <col>
+                                        <c:if test="${preRegistro.tipoAnotacion == RegwebConstantes.TIPO_ANOTACION_REENVIO}">
+                                            <col>
+                                        </c:if>
                                         <col>
                                         <col>
                                     </colgroup>
@@ -226,9 +246,12 @@
                                     <tr>
                                         <th><spring:message code="preRegistro.numeroOrigen"/></th>
                                         <th><spring:message code="preRegistro.fechaOrigen"/></th>
-                                        <th><spring:message code="preRegistro.unidadInicio"/></th>
-                                        <th><spring:message code="preRegistro.oficinaDestino"/></th>
-                                        <th><spring:message code="preRegistro.tipoRegistro"/></th>
+                                        <c:if test="${preRegistro.tipoAnotacion == RegwebConstantes.TIPO_ANOTACION_REENVIO}">
+                                            <th><spring:message code="preRegistro.oficinaInicio"/></th>
+                                        </c:if>
+                                        <th><spring:message code="preRegistro.unidadOrigen"/></th>
+                                        <th><spring:message code="preRegistro.oficinaOrigen"/></th>
+
                                     </tr>
                                     </thead>
 
@@ -236,70 +259,17 @@
                                         <tr>
                                             <td>${preRegistro.registroDetalle.numeroRegistroOrigen}</td>
                                             <td><fmt:formatDate value="${preRegistro.registroDetalle.fechaOrigen}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
+                                            <c:if test="${preRegistro.tipoAnotacion == RegwebConstantes.TIPO_ANOTACION_REENVIO}">
+                                                <td>${preRegistro.codigoEntidadRegistralInicio}</td>
+                                            </c:if>
+                                            <td>${preRegistro.codigoUnidadTramitacionOrigen}
+                                                - ${preRegistro.decodificacionUnidadTramitacionOrigen}</td>
                                             <td>
-                                                <c:if test="${not empty preRegistro.registroDetalle.oficinaOrigen}">${preRegistro.registroDetalle.oficinaOrigen.denominacion}</c:if>
-                                                <c:if test="${not empty preRegistro.registroDetalle.oficinaOrigenExternoCodigo}">${preRegistro.registroDetalle.oficinaOrigenExternoDenominacion}</c:if>
-                                                <c:if test="${(empty preRegistro.registroDetalle.oficinaOrigenExternoCodigo) && (empty preRegistro.registroDetalle.oficinaOrigen)}">${preRegistro.decodificacionEntidadRegistralInicio}</c:if>
+                                                <c:if test="${not empty preRegistro.registroDetalle.oficinaOrigen}">${preRegistro.registroDetalle.oficinaOrigen.nombreCompleto}</c:if>
+                                                <c:if test="${not empty preRegistro.registroDetalle.oficinaOrigenExternoCodigo}">${preRegistro.registroDetalle.oficinaOrigenExternoCodigo} - ${preRegistro.registroDetalle.oficinaOrigenExternoDenominacion}</c:if>
                                             </td>
-                                            <td>${preRegistro.decodificacionEntidadRegistralDestino}</td>
-                                            <td>
-                                                <c:if test="${preRegistro.tipoRegistro == '0'}">
-                                                    <span class="label label-info"><spring:message code="preRegistro.entrada"/></span>
-                                                </c:if>
-                                                <c:if test="${preRegistro.tipoRegistro == '1'}">
-                                                    <span class="label label-danger"><spring:message code="preRegistro.salida"/></span>
-                                                </c:if>
-                                            </td>
+
                                         </tr>
-                                    </tbody>
-                                </table>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <%--PRE REGISTRE--%>
-            <div class="col-xs-8 col-xs-offset">
-
-                <div class="panel panel-warning">
-
-                    <div class="panel-heading">
-
-                        <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong><spring:message code="preRegistro.preRegistro"/></strong></h3>
-                    </div>
-
-                    <div class="panel-body">
-                        <div class="col-xs-12">
-                            <div class="table-responsive">
-
-                                <table class="table table-bordered table-hover table-striped tablesorter">
-                                    <colgroup>
-                                        <col>
-                                        <col>
-                                        <col>
-                                        <col>
-                                        <col>
-                                    </colgroup>
-                                    <thead>
-                                    <tr>
-                                        <th><spring:message code="preRegistro.numero"/></th>
-                                        <th><spring:message code="preRegistro.unidadOrigen"/></th>
-                                        <th><spring:message code="preRegistro.oficinaOrigen"/></th>
-                                        <th><spring:message code="preRegistro.unidadDestino"/></th>
-                                        <th><spring:message code="preRegistro.oficinaDestino"/></th>
-                                    </tr>
-                                    </thead>
-
-                                    <tbody>
-                                    <tr>
-                                        <td>${preRegistro.numeroPreregistro}</td>
-                                        <td>${preRegistro.decodificacionUnidadTramitacionOrigen}</td>
-                                        <td>${preRegistro.decodificacionEntidadRegistralOrigen}</td>
-                                        <td>${preRegistro.decodificacionUnidadTramitacionDestino}</td>
-                                        <td>${preRegistro.decodificacionEntidadRegistralDestino}</td>
-                                    </tr>
                                     </tbody>
                                 </table>
 
@@ -315,7 +285,10 @@
                 <div class="panel panel-warning">
 
                     <div class="panel-heading">
-                        <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong><spring:message code="anexo.anexos"/></strong></h3>
+                        <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong><spring:message
+                                code="anexo.anexos"/></strong>: <spring:message
+                                code="tipoDocumentacionFisica.${preRegistro.registroDetalle.tipoDocumentacionFisica}"/>
+                        </h3>
                     </div>
 
                     <div class="panel-body">
