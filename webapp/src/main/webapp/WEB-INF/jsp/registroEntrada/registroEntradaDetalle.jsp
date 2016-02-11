@@ -189,7 +189,7 @@
             </c:if>
 
              <%--INTERESADOS--%>
-            <c:if test="${registro.estado == 1 && oficinaRegistral}">
+            <c:if test="${registro.estado == 1 && oficinaRegistral && puedeEditar}">
                 <c:import url="../registro/interesados.jsp">
                     <c:param name="tipo" value="detalle"/>
                     <c:param name="tipoRegistro" value="entrada"/>
@@ -198,7 +198,7 @@
             </c:if>
 
             <%--INTERESADOS SOLO LECTURA--%>
-            <c:if test="${(registro.estado != 1 && registro.estado != 2) || !oficinaRegistral}">
+            <c:if test="${(registro.estado != 1 && registro.estado != 2) || !oficinaRegistral || !puedeEditar}">
                 <c:import url="../registro/interesadosLectura.jsp">
                     <c:param name="tipoRegistro" value="entrada"/>
                 </c:import>

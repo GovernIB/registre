@@ -32,6 +32,8 @@ public class HistoricoRegistroEntrada implements Serializable {
     private String modificacion;
     private UsuarioEntidad usuario;
 
+    public HistoricoRegistroEntrada() {
+    }
 
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")

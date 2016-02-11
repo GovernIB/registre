@@ -134,12 +134,22 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     @Override
     public List<UsuarioEntidad> getUsuariosEntidadByLibro(Long idLibro) throws Exception {
 
-        Query q = em.createQuery("Select distinct plu.usuario from PermisoLibroUsuario as plu where " +
+        Query q = em.createQuery("Select distinct plu.usuario.id, plu.usuario.usuario from PermisoLibroUsuario as plu where " +
                 " plu.libro.id = :idLibro");
 
         q.setParameter("idLibro",idLibro);
 
-        return q.getResultList();
+        List<Object[]> result = q.getResultList();
+        List<UsuarioEntidad> usuarios = new ArrayList<UsuarioEntidad>();
+
+        for (Object[] object : result) {
+            UsuarioEntidad usuarioEntidad = new UsuarioEntidad((Long) object[0], (Usuario) object[1]);
+
+            usuarios.add(usuarioEntidad);
+        }
+
+        return usuarios;
+
     }
 
     @Override
@@ -172,7 +182,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
 
         CatEstadoEntidad vigente = catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
 
-        Query q = em.createQuery("Select distinct plu.libro.id, plu.libro.nombre, plu.libro.organismo.id, plu.libro.organismo.denominacion from PermisoLibroUsuario as plu where " +
+        Query q = em.createQuery("Select distinct plu.libro.id, plu.libro.nombre,plu.libro.codigo, plu.libro.organismo.id, plu.libro.organismo.denominacion from PermisoLibroUsuario as plu where " +
                 "plu.usuario.id = :idUsuarioEntidad and plu.libro.organismo.estado.id = :vigente and " +
                 "plu.libro.activo = true and " +
                 "(plu.permiso = " + PERMISO_ADMINISTRACION_LIBRO + " and plu.activo = true)");
@@ -185,7 +195,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result){
-            Libro libro = new Libro((Long)object[0],(String)object[1],(Long)object[2],(String)object[3]);
+            Libro libro = new Libro((Long) object[0], (String) object[1], (String) object[2], (Long) object[3], (String) object[4]);
 
             libros.add(libro);
         }
@@ -222,7 +232,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     @Override
     public List<Libro> getLibrosOrganismoPermiso(Set<Long> organismos, Long idUsuarioEntidad, Long idPermiso) throws Exception {
 
-        Query q = em.createQuery("Select distinct plu.libro from PermisoLibroUsuario as plu where " +
+        Query q = em.createQuery("Select distinct plu.libro.id, plu.libro.nombre, plu.libro.codigo, plu.libro.organismo.id, plu.libro.organismo.denominacion from PermisoLibroUsuario as plu where " +
                 "plu.libro.organismo.id in (:organismos) and plu.usuario.id = :idUsuarioEntidad and " +
                 "plu.libro.activo = true and " +
                 "(plu.permiso = :idPermiso and plu.activo = true)");
@@ -231,7 +241,17 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
         q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
         q.setParameter("idPermiso",idPermiso);
 
-        return q.getResultList();
+        List<Libro> libros = new ArrayList<Libro>();
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+            Libro libro = new Libro((Long) object[0], (String) object[1], (String) object[2], (Long) object[3], (String) object[4]);
+
+            libros.add(libro);
+        }
+
+        return libros;
     }
 
     @Override
@@ -288,12 +308,21 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     @Override
     public List<UsuarioEntidad> getUsuariosEntidadEnLibros(List<Libro> libros) throws Exception{
 
-        Query q = em.createQuery("Select distinct permisoLibroUsuario.usuario from PermisoLibroUsuario as permisoLibroUsuario where " +
+        Query q = em.createQuery("Select distinct permisoLibroUsuario.usuario.id, permisoLibroUsuario.usuario.usuario from PermisoLibroUsuario as permisoLibroUsuario where " +
                 "permisoLibroUsuario.libro in (:libros)");
 
         q.setParameter("libros", libros);
 
-        return q.getResultList();
+        List<Object[]> result = q.getResultList();
+        List<UsuarioEntidad> usuarios = new ArrayList<UsuarioEntidad>();
+
+        for (Object[] object : result) {
+            UsuarioEntidad usuarioEntidad = new UsuarioEntidad((Long) object[0], (Usuario) object[1]);
+
+            usuarios.add(usuarioEntidad);
+        }
+
+        return usuarios;
     }
 
     @Override

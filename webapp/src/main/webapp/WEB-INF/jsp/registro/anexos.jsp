@@ -21,7 +21,7 @@
                ESTADO 7 -> Tramitado
                ESTADO 6 -> Enviado
           --%>
-          <c:if test="${(registro.estado == 1 || registro.estado == 2 || registro.estado == 3) && oficinaRegistral}">
+              <c:if test="${(registro.estado == 1 || registro.estado == 2 || registro.estado == 3) && oficinaRegistral && puedeEditar}">
 
                 <a onClick="nouAnnexFull()" data-toggle="modal" data-target="#myModal" class="btn btn-${color} btn-xs pull-right" role="button"><i class="fa fa-plus"></i> <spring:message code="anexo.nuevo"/></a>
                 
@@ -67,11 +67,11 @@
                                               ESTADO 6 -> Enviado
                                           -->
                                          <a class="btn btn-success btn-default btn-sm"  href="<c:url value="/anexo/descargarDocumento/${anexo.id}"/>" target="_blank" title="<spring:message code="anexo.descargar"/>"><span class="fa fa-download"></span></a>
-                                         <c:if test="${(registro.estado == 1 || registro.estado == 2 || registro.estado ==3) && oficinaRegistral}">
+                                         <c:if test="${(registro.estado == 1 || registro.estado == 2 || registro.estado ==3) && oficinaRegistral && puedeEditar}">
                                              <a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#myModal"  onclick="editarAnexoFull('${anexo.id}','${registro.id}','${registro.registroDetalle.id}','${param.tipoRegistro}')" title="Editar"><span class="fa fa-pencil"></span></a>
                                              <a class="btn btn-danger btn-default btn-sm"  onclick="eliminarAnexo('${anexo.id}','${registro.id}','${registro.registroDetalle.id}','${param.tipoRegistro}', '<spring:message code="anexo.confirmar.eliminar" javaScriptEscape='true'/>')" href="#" title="Eliminar"><span class="fa fa-eraser"></span></a>
                                          </c:if>
-                                         <c:if test="${(registro.estado != 1 && registro.estado != 2 && registro.estado != 3) || !oficinaRegistral}">
+                                         <c:if test="${(registro.estado != 1 && registro.estado != 2 && registro.estado != 3) || !oficinaRegistral && puedeEditar}">
                                              <a class="btn btn-warning disabled btn-sm" href="javascript:void(0);" title="Editar"><span class="fa fa-pencil"></span></a>
                                              <a class="btn btn-danger disabled btn-sm" href="javascript:void(0);" title="<spring:message code="regweb.eliminar"/>"><span class="fa fa-eraser"></span></a>
                                          </c:if>

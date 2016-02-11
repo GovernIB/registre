@@ -85,7 +85,19 @@
                             <label for="libro.id" rel="ayuda" data-content="<spring:message code="registro.ayuda.libro"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.libro"/></label>
                         </div>
                         <div class="col-xs-10">
-                            <form:select path="libro.id" items="${libros}" itemValue="id" itemLabel="nombreCompleto" cssClass="chosen-select"/> <form:errors path="libro.id" cssClass="help-block" element="span"/>
+                            <c:if test="${empty registroSalida.id}">
+                                <form:select path="libro.id" items="${libros}" itemValue="id" itemLabel="nombreCompleto"
+                                             cssClass="chosen-select"/> <form:errors path="libro.id"
+                                                                                     cssClass="help-block"
+                                                                                     element="span"/>
+                            </c:if>
+
+                            <c:if test="${not empty registroSalida.id}">
+                                <form:select path="libro.id" class="chosen-select">
+                                    <form:option
+                                            value="${registroSalida.libro.id}">${registroSalida.libro.nombreCompleto}</form:option>
+                                </form:select>
+                            </c:if>
                         </div>
                     </div>
 
@@ -398,53 +410,32 @@
 </script>
 
 <script type="text/javascript" src="<c:url value="/js/busquedaorganismo.js"/>"></script>
-<%--<script type="text/javascript" src="<c:url value="/js/interesados.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/representantes.js"/>"></script>--%>
 
 <script type="text/javascript" >
 
     $(window).load(function() {
 
-        // Cargamos el select de organismo origen
-       <%-- <c:if test="${registroSalida.origen.codigo != null}">
-            actualizarOrganismosLibro('${registroSalida.origen.codigo}', '#origen\\.codigo');
-        </c:if>
-        <c:if test="${registroSalida.origen.codigo == null}">
-             actualizarOrganismosLibro('${registroSalida.origenExternoCodigo}', '#origen\\.codigo');
-        </c:if>
-
-        // Cargamos el select de organismo en interesados
-         actualizarOrganismosLibro('', '#organismoInteresado');--%>
-
         actualizarCodigosAsunto();
 
-        <%--<c:if test="${empty registroSalida.id}"> // Localidades para nuevos Interesados
-            actualizarLocalidad();
-        </c:if>--%>
 
         // CARGA DE INTERESADOS REGISTRO ENTRADA DESDE LA SESION
+        <c:if test="${empty registroSalida.id}">
         <c:import url="../registro/addInteresadosSesion.jsp">
-            <c:param name="variable" value="${RegwebConstantes.SESSION_INTERESADOS_SALIDA}"/>
+        <c:param name="variable" value="${RegwebConstantes.SESSION_INTERESADOS_SALIDA}"/>
         </c:import>
-
+        </c:if>
 
     });
 
     function actualizarCodigosAsunto(){
-        <c:url var="codigosAsunto" value="/registroEntrada/obtenerCodigosAsunto" />
+        <c:url var="codigosAsunto" value="/registroSalida/obtenerCodigosAsunto" />
         actualizarSelectTraduccion('${codigosAsunto}','#registroDetalle\\.codigoAsunto\\.id',$('#registroDetalle\\.tipoAsunto\\.id option:selected').val(),'${registroSalida.registroDetalle.codigoAsunto.id}',true);
     }
 
     function actualizarLocalidad(){
-        <c:url var="obtenerLocalidades" value="/registroEntrada/obtenerLocalidades" />
+        <c:url var="obtenerLocalidades" value="/registroSalida/obtenerLocalidades" />
         actualizarSelect('${obtenerLocalidades}','#localidad\\.id',$('#provincia\\.id option:selected').val(),$('#localidad\\.id option:selected').val(),false,true);
     }
-
-   <%-- function actualizarOrganismosLibro(valorSelected, idSelect){
-        <c:url var="obtenerOrganismosLibro" value="/registroEntrada/obtenerOrganismoLibro" />
-
-        actualizarSelect2('${obtenerOrganismosLibro}',idSelect,$('#libro\\.id option:selected').val(),valorSelected,false);
-    }--%>
 
     window.onbeforeunload = OnBeforeUnLoad;
     function OnBeforeUnLoad () {

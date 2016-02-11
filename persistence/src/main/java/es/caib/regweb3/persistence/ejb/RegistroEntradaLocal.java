@@ -73,7 +73,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public List<String> oficiosPendientesRemisionInterna(Libro libro) throws Exception;
+    public List<String> oficiosPendientesRemisionInterna(Long idLibro) throws Exception;
 
     /**
      * Busca los RegistroEntrada pendientes de tramitar mediante un OficioRemision INTERNI
@@ -108,7 +108,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public List<String> oficiosPendientesRemisionExterna(Libro libro) throws Exception;
+    public List<String> oficiosPendientesRemisionExterna(Long idLibro) throws Exception;
 
     /**
      * Busca los RegistroEntrada pendientes de tramitar mediante un OficioRemision EXTERNO, es decir, cuyo Organismo destino

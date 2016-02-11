@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Fundació BIT.
@@ -123,7 +124,9 @@ public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
                 return false;
             }
 
-            if(permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), RegwebConstantes.PERMISO_REGISTRO_ENTRADA).size() == 0){
+            // Obtenemos los Organismos a los que da servicio una Oficina
+            Set<Long> organismos = oficinaActiva.getOrganismosFuncionalesId();
+            if (permisoLibroUsuarioEjb.getLibrosOrganismoPermiso(organismos, usuarioEntidad.getId(), RegwebConstantes.PERMISO_REGISTRO_ENTRADA).size() == 0) {
                 log.info("Aviso: No hay ningún libro con permisos para registrar");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registro"));
                 response.sendRedirect("/regweb3/aviso");
@@ -144,6 +147,18 @@ public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
 
             RegistroEntrada registroEntrada = registroEntradaEjb.findById(Long.valueOf(idRegistroEntrada));
 
+            // Comprobamos que el Registro de Entrada es válido para editarse
+            final List<Long> estados = new ArrayList<Long>();
+            estados.add(RegwebConstantes.ESTADO_PENDIENTE);
+            estados.add(RegwebConstantes.ESTADO_VALIDO);
+
+            if (!estados.contains(registroEntrada.getEstado())) {
+                log.info("Este RegistroEntrada no se puede modificar");
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registro.modificar"));
+                response.sendRedirect("/regweb3/aviso");
+                return false;
+            }
+
             // Comprobamos que el UsuarioActivo pueda editar ese registro de entrada
             if(!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),registroEntrada.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA)){
                 log.info("Aviso: No dispone de los permisos necesarios para editar el registro");
@@ -160,17 +175,6 @@ public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
                 return false;
             }
 
-            // Comprobamos que el Registro de Entrada es válido para editarse
-            final List<Long> estados = new ArrayList<Long>();
-            estados.add(RegwebConstantes.ESTADO_PENDIENTE);
-            estados.add(RegwebConstantes.ESTADO_VALIDO);
-
-            if(!estados.contains(registroEntrada.getEstado())){
-                log.info("Este RegistroEntrada no se puede modificar");
-                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registro.modificar"));
-                response.sendRedirect("/regweb3/aviso");
-                return false;
-            }
         }
 
         return true;

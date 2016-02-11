@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
@@ -174,12 +175,21 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
     @Override
     public List<UsuarioEntidad> findByEntidad(Long idEntidad) throws Exception {
 
-        Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where " +
+        Query q = em.createQuery("Select usuarioEntidad.id, usuarioEntidad.usuario from UsuarioEntidad as usuarioEntidad where " +
                 "usuarioEntidad.entidad.id= :idEntidad order by usuarioEntidad.usuario.apellido1");
 
         q.setParameter("idEntidad",idEntidad);
 
-        return q.getResultList();
+        List<Object[]> result = q.getResultList();
+        List<UsuarioEntidad> usuarios = new ArrayList<UsuarioEntidad>();
+
+        for (Object[] object : result) {
+            UsuarioEntidad usuarioEntidad = new UsuarioEntidad((Long) object[0], (Usuario) object[1]);
+
+            usuarios.add(usuarioEntidad);
+        }
+
+        return usuarios;
     }
 
     @Override

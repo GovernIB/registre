@@ -123,7 +123,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     @Override
     public Organismo findByCodigoVigente(String codigo, Long idEntidad) throws Exception {
 
-        Query q = em.createQuery("Select organismo from Organismo as organismo where " +
+        Query q = em.createQuery("Select organismo.id,organismo.codigo, organismo.denominacion from Organismo as organismo where " +
                 "organismo.codigo = :codigo and organismo.entidad.id = :idEntidad and " +
                 "organismo.estado.codigoEstadoEntidad=:vigente");
 
@@ -131,9 +131,9 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         q.setParameter("idEntidad",idEntidad);
         q.setParameter("vigente",RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
 
-        List<Organismo> organismo = q.getResultList();
-        if(organismo.size() == 1){
-            return organismo.get(0);
+        List<Object[]> result = q.getResultList();
+        if (result.size() == 1) {
+            return new Organismo((Long) result.get(0)[0], (String) result.get(0)[1], (String) result.get(0)[2]);
         }else{
             return  null;
         }

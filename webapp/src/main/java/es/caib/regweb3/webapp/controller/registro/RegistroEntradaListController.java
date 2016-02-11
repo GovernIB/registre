@@ -61,22 +61,6 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
        return "redirect:/registroEntrada/list";
     }
 
-   private Set<Organismo> getOrganismosInternosMasExternos(HttpServletRequest request) throws Exception {
-	   
-	   Set<Organismo> allOrganismos = getOrganismosOficinaActiva(request);
-	   /*List<RegistroEntrada> regsEntrada = registroEntradaEjb.getAll();
-	   
-	   for(int r=0; r<regsEntrada.size(); r++) {
-		   if (regsEntrada.get(r).getDestinoExternoCodigo()!=null && !"".equals(regsEntrada.get(r).getDestinoExternoCodigo()) && !"null".equalsIgnoreCase(regsEntrada.get(r).getDestinoExternoCodigo())) {
-			   Organismo org = new Organismo();
-			   org.setCodigo(regsEntrada.get(r).getDestinoExternoCodigo());
-			   org.setDenominacion(regsEntrada.get(r).getDestinoExternoDenominacion());
-			   allOrganismos.add(org);
-		   }
-	   }*/
-	   
-	   return allOrganismos;
-   }
 
     /**
     * Listado de registros de entrada
@@ -93,12 +77,10 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         registroEntradaBusqueda.setFechaInicio(new Date());
         registroEntradaBusqueda.setFechaFin(new Date());
 
-        Oficina oficina = getOficinaActiva(request);
-        
-        model.addAttribute(oficina);
+        model.addAttribute(getOficinaActiva(request));
         model.addAttribute("librosConsulta", librosConsulta);
         model.addAttribute("registroEntradaBusqueda", registroEntradaBusqueda);
-        model.addAttribute("organosDestino",  getOrganismosInternosMasExternos(request));
+        model.addAttribute("organosDestino", getOrganismosOficinaActiva(request));
         model.addAttribute("oficinasRegistro",  oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(),RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
 
         // Obtenemos los usuarios de la Entidad
@@ -116,9 +98,10 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         ModelAndView mav = new ModelAndView("registroEntrada/registroEntradaList", result.getModel());
         RegistroEntrada registroEntrada = busqueda.getRegistroEntrada();
-
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-        List<Libro> librosConsulta = permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_ENTRADA);
+
+        // Obtenemos los Libros donde el usuario tiene permisos de Consulta
+        List<Libro> librosConsulta = getLibrosConsultaEntradas(request);
 
         List<UsuarioEntidad> usuariosEntidad = usuarioEntidadEjb.findByEntidad(getEntidadActiva(request).getId());
         mav.addObject("usuariosEntidad",usuariosEntidad);
@@ -128,7 +111,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         Oficina oficina = getOficinaActiva(request);
         mav.addObject(oficina);
 
-        Set<Organismo> todosOrganismos = getOrganismosInternosMasExternos(request);
+        Set<Organismo> todosOrganismos = getOrganismosOficinaActiva(request);
         
         if (busqueda.getOrganDestinatari()!=null && !"".equals(busqueda.getOrganDestinatari())) {
 		    Organismo org = new Organismo();
@@ -143,6 +126,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             mav.addObject("errors", result.getAllErrors());
             mav.addObject("librosConsulta", librosConsulta);
             mav.addObject("registroEntradaBusqueda", busqueda);
+            mav.addObject("oficinasRegistro", oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
             return mav;
         }else { // Si no hay errores realizamos la búsqueda
             // Ponemos la hora 23:59 a la fecha fin
@@ -182,7 +166,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     public String detalleRegistroEntrada(@PathVariable Long idRegistro, Model model, HttpServletRequest request) throws Exception {
 
         RegistroEntrada registro = registroEntradaEjb.findById(idRegistro);
-        Entidad entidad = getEntidadActiva(request);
+        Entidad entidadActiva = getEntidadActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         Oficina oficinaActiva = getOficinaActiva(request);
 
@@ -190,22 +174,22 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         // Modelo Recibo
         model.addAttribute("modeloRecibo", new ModeloRecibo());
-        model.addAttribute("modelosRecibo", modeloReciboEjb.getByEntidad(getEntidadActiva(request).getId()));
+        model.addAttribute("modelosRecibo", modeloReciboEjb.getByEntidad(entidadActiva.getId()));
 
         // Permisos
         Boolean oficinaRegistral = registro.getOficina().getId().equals(oficinaActiva.getId()) || (registro.getOficina().getOficinaResponsable() != null && registro.getOficina().getOficinaResponsable().getId().equals(oficinaActiva.getId()));
         model.addAttribute("oficinaRegistral", oficinaRegistral);
-        model.addAttribute("isAdministradorLibro", permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(),registro.getLibro().getId()));
-        model.addAttribute("puedeEditar", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),registro.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA));
+        model.addAttribute("isAdministradorLibro", permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(), registro.getLibro().getId()));
+        model.addAttribute("puedeEditar", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registro.getLibro().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA));
 
         // OficioRemision
-        model.addAttribute("isOficioRemision",registroEntradaEjb.isOficioRemisionInterno(idRegistro));
+        model.addAttribute("isOficioRemision", registroEntradaEjb.isOficioRemisionInterno(idRegistro));
 
         // Interesados, solo si el Registro en Válido o Estamos en la Oficina donde se registró, o en su Oficina Responsable
         if(registro.getEstado().equals(RegwebConstantes.ESTADO_VALIDO) && oficinaRegistral){
 
-            model.addAttribute("personasFisicas",personaEjb.getAllbyEntidadTipo(entidad.getId(), RegwebConstantes.TIPO_PERSONA_FISICA));
-            model.addAttribute("personasJuridicas",personaEjb.getAllbyEntidadTipo(entidad.getId(), RegwebConstantes.TIPO_PERSONA_JURIDICA));
+            model.addAttribute("personasFisicas", personaEjb.getAllbyEntidadTipo(entidadActiva.getId(), RegwebConstantes.TIPO_PERSONA_FISICA));
+            model.addAttribute("personasJuridicas", personaEjb.getAllbyEntidadTipo(entidadActiva.getId(), RegwebConstantes.TIPO_PERSONA_JURIDICA));
             model.addAttribute("tiposInteresado", RegwebConstantes.TIPOS_INTERESADO);
             model.addAttribute("tiposPersona",RegwebConstantes.TIPOS_PERSONA);
             model.addAttribute("paises",catPaisEjb.getAll());
@@ -216,26 +200,29 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             model.addAttribute("comunidadesAutonomas",catComunidadAutonomaEjb.getAll());
             model.addAttribute("organismosOficinaActiva",organismoEjb.getByOficinaActiva(getOficinaActiva(request)));
         }
+
         // Anexos
         model.addAttribute("anexos", anexoEjb.getByRegistroEntrada(idRegistro));
-        initAnexos(entidad, model, request, registro.getId());
+        initAnexos(entidadActiva, model, request, registro.getId());
 
         // Historicos
+        log.info("antes historicos");
         model.addAttribute("historicos", historicoRegistroEntradaEjb.getByRegistroEntrada(idRegistro));
+        log.info("despues historicos");
 
         // Trazabilidad
         List<Trazabilidad> trazabilidades = trazabilidadEjb.getByRegistroEntrada(registro.getId());
         model.addAttribute("trazabilidades", trazabilidades);
 
         // Posicion sello
-        if(entidad.getPosXsello()!=null && entidad.getPosYsello()!=null){
-            model.addAttribute("posXsello",entidad.getPosXsello());
-            model.addAttribute("posYsello",entidad.getPosYsello());
+        if (entidadActiva.getPosXsello() != null && entidadActiva.getPosYsello() != null) {
+            model.addAttribute("posXsello", entidadActiva.getPosXsello());
+            model.addAttribute("posYsello", entidadActiva.getPosYsello());
         }
 
         // Alta en tabla LOPD
         lopdEjb.insertarRegistroEntrada(idRegistro, usuarioEntidad.getId());
-        
+
         return "registroEntrada/registroEntradaDetalle";
     }
     

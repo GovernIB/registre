@@ -342,7 +342,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     	return false;
     }
 
-    public List<String> oficiosPendientesRemisionInterna(Libro libro) throws Exception{
+    public List<String> oficiosPendientesRemisionInterna(Long idLibro) throws Exception {
         // Obtenemos los Organismos destinatarios PROPIOS que tiene Oficios de Remision pendientes de tramitar
 
         Query q1;
@@ -356,7 +356,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                 "re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
 
         q1.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
-        q1.setParameter("idLibro", libro.getId());
+        q1.setParameter("idLibro", idLibro);
 
         return q1.getResultList();
 
@@ -447,7 +447,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         return q.getResultList().size() > 0;
     }
 
-    public List<String> oficiosPendientesRemisionExterna(Libro libro) throws Exception{
+    public List<String> oficiosPendientesRemisionExterna(Long idLibro) throws Exception {
 
         // Obtenemos los Organismos destinatarios EXTERNOS que tiene Oficios de Remision pendientes de tramitar
 
@@ -458,7 +458,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                 "registroEntrada.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
 
         q1.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
-        q1.setParameter("idLibro", libro.getId());
+        q1.setParameter("idLibro", idLibro);
 
         return q1.getResultList();
     }

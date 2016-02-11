@@ -38,6 +38,11 @@ public class UsuarioEntidad implements Serializable{
         this.id = id;
     }
 
+    public UsuarioEntidad(Long id, Usuario usuario) {
+        this.id = id;
+        this.usuario = usuario;
+    }
+
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
     @Column(name="ID")

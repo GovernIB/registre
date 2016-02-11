@@ -82,7 +82,7 @@
                                     </c:if>
                                 </c:if>
 
-                                <%--REGISTRO ENTRADA--%>
+                                        <%--REGISTRO SALIDA--%>
                                 <c:if test="${param.tipoRegistro == 'salida'}">
                                     <c:if test="${not empty historico.registroSalidaOriginal}">
                                         <a data-toggle="modal" role="button" href="#modalCompararRegistros" onclick="comparaRegistros('${historico.id}')" class="btn btn-warning btn-sm">Comparar</a>

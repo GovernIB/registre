@@ -285,7 +285,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             }
 
 
-            model.addAttribute("libros", getLibrosRegistroEntrada(request));
+            //model.addAttribute("libros", getLibrosRegistroEntrada(request));
             model.addAttribute("organismosOficinaActiva", organismosOficinaActiva);
             model.addAttribute("oficinasOrigen", oficinasOrigen);
 
@@ -337,7 +337,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             model.addAttribute(entidad);
             model.addAttribute(getUsuarioAutenticado(request));
             model.addAttribute(getEntidadActiva(request));
-            model.addAttribute("libros", getLibrosRegistroEntrada(request));
+            //model.addAttribute("libros", getLibrosRegistroEntrada(request));
 
             // Controlamos si el organismo destino es externo o interno
             Set<Organismo> organismosOficinaActiva = getOrganismosOficinaActiva(request);

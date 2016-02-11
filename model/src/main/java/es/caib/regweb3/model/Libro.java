@@ -67,8 +67,9 @@ public class Libro implements Serializable {
         this.codigo = codigo;
     }
 
-    public Libro(Long id, String nombre, Long idOrganismo, String denominacionOrganismo) {
+    public Libro(Long id, String nombre, String codigo, Long idOrganismo, String denominacionOrganismo) {
         this.id = id;
+        this.codigo = codigo;
         this.nombre = nombre;
         this.organismo = new Organismo(idOrganismo, denominacionOrganismo);
     }

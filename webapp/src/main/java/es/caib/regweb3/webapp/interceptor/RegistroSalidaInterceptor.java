@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -133,7 +134,9 @@ public class RegistroSalidaInterceptor extends HandlerInterceptorAdapter {
                 return false;
             }
 
-            if(permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), RegwebConstantes.PERMISO_REGISTRO_SALIDA).size() == 0){
+            // Obtenemos los Organismos a los que da servicio una Oficina
+            Set<Long> organismos = oficinaActiva.getOrganismosFuncionalesId();
+            if (permisoLibroUsuarioEjb.getLibrosOrganismoPermiso(organismos, usuarioEntidad.getId(), RegwebConstantes.PERMISO_REGISTRO_SALIDA).size() == 0) {
                 log.info("Aviso: No hay ningún libro con permisos para registrar");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registro"));
                 response.sendRedirect("/regweb3/aviso");
@@ -154,6 +157,18 @@ public class RegistroSalidaInterceptor extends HandlerInterceptorAdapter {
 
             RegistroSalida registroSalida = registroSalidaEjb.findById(Long.valueOf(idRegistroSalida));
 
+            // Comprobamos que el Registro de Salida es válido para editarse
+            final List<Long> estados = new ArrayList<Long>();
+            estados.add(RegwebConstantes.ESTADO_PENDIENTE);
+            estados.add(RegwebConstantes.ESTADO_VALIDO);
+
+            if (!estados.contains(registroSalida.getEstado())) {
+                log.info("Este Registro no se puede modificar");
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registro.modificar"));
+                response.sendRedirect("/regweb3/aviso");
+                return false;
+            }
+
             // Comprobamos que el UsuarioActivo pueda editar ese registro de salida
             if(!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),registroSalida.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA)){
                 log.info("Aviso: No dispone de los permisos necesarios para editar el registro");
@@ -170,17 +185,6 @@ public class RegistroSalidaInterceptor extends HandlerInterceptorAdapter {
                 return false;
             }
 
-            // Comprobamos que el Registro de Salida es válido para editarse
-            final List<Long> estados = new ArrayList<Long>();
-            estados.add(RegwebConstantes.ESTADO_PENDIENTE);
-            estados.add(RegwebConstantes.ESTADO_VALIDO);
-
-            if(!estados.contains(registroSalida.getEstado())){
-                log.info("Este Registro no se puede modificar");
-                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registro.modificar"));
-                response.sendRedirect("/regweb3/aviso");
-                return false;
-            }
         }
 
         return true;

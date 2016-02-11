@@ -39,9 +39,6 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
     @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
     public RegistroSalidaLocal registroSalidaEjb;
 
-    @EJB(mappedName = "regweb3/UsuarioEntidadEJB/local")
-    public UsuarioEntidadLocal usuarioEntidadEjb;
-
     @Override
     public Lopd findById(Long id) throws Exception {
 
@@ -128,7 +125,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
     public void insertarRegistroEntrada(Long idRegistro, Long idUsuarioEntidad) throws Exception{
 
         RegistroEntrada registroEntrada =registroEntradaEjb.findById(idRegistro);
-        UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findById(idUsuarioEntidad);
+
         SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
         Lopd lopd = new Lopd();
         lopd.setNumeroRegistro(registroEntrada.getNumeroRegistro());
@@ -136,7 +133,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         lopd.setAnyoRegistro(formatYear.format(registroEntrada.getFecha()));
         lopd.setLibro(registroEntrada.getLibro());
         lopd.setFecha(Calendar.getInstance().getTime());
-        lopd.setUsuario(usuarioEntidad);
+        lopd.setUsuario(new UsuarioEntidad(idUsuarioEntidad));
         lopd.setAccion(RegwebConstantes.LOPD_CONSULTA);
 
         persist(lopd);
@@ -146,7 +143,6 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
     public void insertarRegistrosEntrada(Paginacion paginacion, Long idUsuarioEntidad) throws Exception{
 
         SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
-        UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findById(idUsuarioEntidad);
 
         for (int i = 0; i<paginacion.getListado().size(); i++){
             RegistroEntrada registro = (RegistroEntrada) paginacion.getListado().get(i);
@@ -156,7 +152,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
             lopd.setAnyoRegistro(formatYear.format(registro.getFecha()));
             lopd.setLibro(registro.getLibro());
             lopd.setFecha(Calendar.getInstance().getTime());
-            lopd.setUsuario(usuarioEntidad);
+            lopd.setUsuario(new UsuarioEntidad(idUsuarioEntidad));
             lopd.setAccion(RegwebConstantes.LOPD_LISTADO);
 
             persist(lopd);
@@ -167,7 +163,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
     public void insertarRegistroSalida(Long idRegistro, Long idUsuarioEntidad) throws Exception{
 
         RegistroSalida registroSalida = registroSalidaEjb.findById(idRegistro);
-        UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findById(idUsuarioEntidad);
+
         SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
         Lopd lopd = new Lopd();
         lopd.setNumeroRegistro(registroSalida.getNumeroRegistro());
@@ -175,7 +171,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         lopd.setAnyoRegistro(formatYear.format(registroSalida.getFecha()));
         lopd.setLibro(registroSalida.getLibro());
         lopd.setFecha(Calendar.getInstance().getTime());
-        lopd.setUsuario(usuarioEntidad);
+        lopd.setUsuario(new UsuarioEntidad(idUsuarioEntidad));
         lopd.setAccion(RegwebConstantes.LOPD_CONSULTA);
 
         persist(lopd);
@@ -185,7 +181,6 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
     public void insertarRegistrosSalida(Paginacion paginacion, Long idUsuarioEntidad) throws Exception{
 
         SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
-        UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findById(idUsuarioEntidad);
 
         for (int i = 0; i<paginacion.getListado().size(); i++){
             RegistroSalida registro = (RegistroSalida) paginacion.getListado().get(i);
@@ -195,7 +190,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
             lopd.setAnyoRegistro(formatYear.format(registro.getFecha()));
             lopd.setLibro(registro.getLibro());
             lopd.setFecha(Calendar.getInstance().getTime());
-            lopd.setUsuario(usuarioEntidad);
+            lopd.setUsuario(new UsuarioEntidad(idUsuarioEntidad));
             lopd.setAccion(RegwebConstantes.LOPD_LISTADO);
 
             persist(lopd);

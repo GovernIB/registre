@@ -126,9 +126,10 @@ public class OficioRemisionUtilsBean implements OficioRemisionUtilsLocal {
       } else {
         oficioRemision.setOrganismoDestinatario(organismoExt);
       }
-
-      oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision,
-          RegwebConstantes.ESTADO_OFICIO_EXTERNO);
+      synchronized (this) {
+          oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision,
+                  RegwebConstantes.ESTADO_OFICIO_EXTERNO);
+      }
 
       return oficioRemision;
 
