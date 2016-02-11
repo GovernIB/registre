@@ -136,7 +136,7 @@ public class OrganismoController extends BaseController {
      * @throws Exception
      */
     @RequestMapping(value = "/arbolList", method = RequestMethod.GET)
-    public ModelAndView oficinaList(HttpServletRequest request)throws Exception {
+    public ModelAndView arbolList(HttpServletRequest request) throws Exception {
 
         ModelAndView mav = new ModelAndView("organismo/arbolList");
 

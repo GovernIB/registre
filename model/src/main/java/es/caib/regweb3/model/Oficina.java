@@ -69,10 +69,29 @@ public class Oficina implements Serializable{
       super();
     }
 
+    public Oficina(Long id) {
+        this.id = id;
+    }
+
     public Oficina(Long id, String codigo, String denominacion) {
         this.id = id;
         this.codigo = codigo;
         this.denominacion = denominacion;
+    }
+
+    public Oficina(Long id, String codigo, String denominacion, Long organismoResponsable) {
+        this.id = id;
+        this.codigo = codigo;
+        this.denominacion = denominacion;
+        this.organismoResponsable = new Organismo(organismoResponsable);
+    }
+
+    public Oficina(Long id, String codigo, String denominacion, Long oficinaResponsable, Long organismoResponsable) {
+        this.id = id;
+        this.codigo = codigo;
+        this.denominacion = denominacion;
+        this.oficinaResponsable = new Oficina(oficinaResponsable);
+        this.organismoResponsable = new Organismo(organismoResponsable);
     }
 
     public Oficina(Oficina o) {

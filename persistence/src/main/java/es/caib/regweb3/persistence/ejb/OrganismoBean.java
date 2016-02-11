@@ -222,14 +222,23 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     @Override
     public List<Organismo> getOrganismosByNivel(Long nivel, Long idEntidad, String estado) throws Exception{
 
-        Query q = em.createQuery("Select organismo from Organismo as organismo where " +
+        Query q = em.createQuery("Select organismo.id,organismo.codigo, organismo.denominacion, organismo.organismoSuperior.id from Organismo as organismo where " +
                 "organismo.nivelJerarquico = :nivel and organismo.entidad.id = :idEntidad and organismo.estado.codigoEstadoEntidad = :estado order by organismo.codigo");
 
         q.setParameter("nivel",nivel);
         q.setParameter("idEntidad",idEntidad);
         q.setParameter("estado",estado);
 
-        return  q.getResultList();
+        List<Organismo> organismos = new ArrayList<Organismo>();
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+            Organismo organismo = new Organismo((Long) object[0], (String) object[1], (String) object[2], (Long) object[3]);
+
+            organismos.add(organismo);
+        }
+
+        return organismos;
     }
 
 

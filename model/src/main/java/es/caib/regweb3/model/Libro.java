@@ -51,18 +51,20 @@ public class Libro implements Serializable {
     }
 
     public Libro(Long id) {
-        this.id = id;
-    }
 
-    public Libro(Long id, String nombre) {
         this.id = id;
-        this.nombre = nombre;
     }
 
     public Libro(Long id, String nombre, Long idOrganismo) {
         this.id = id;
         this.nombre = nombre;
         this.organismo = new Organismo(idOrganismo);
+    }
+
+    public Libro(Long id, String nombre, String codigo) {
+        this.id = id;
+        this.nombre = nombre;
+        this.codigo = codigo;
     }
 
     public Libro(Long id, String nombre, Long idOrganismo, String denominacionOrganismo) {

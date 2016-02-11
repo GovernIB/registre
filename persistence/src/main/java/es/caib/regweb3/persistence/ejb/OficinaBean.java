@@ -184,34 +184,49 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
     @Override
     public List<Oficina> responsableByEntidadEstado(Long idEntidad, String estado) throws Exception{
-        Query q = em.createQuery("Select oficina from Oficina as oficina where " +
+        Query q = em.createQuery("Select oficina.id, oficina.codigo, oficina.denominacion, oficina.organismoResponsable.id from Oficina as oficina where " +
                 "oficina.organismoResponsable.entidad.id =:idEntidad and oficina.estado.codigoEstadoEntidad =:estado and " +
                 "oficina.oficinaResponsable.id = null order by oficina.codigo");
 
         q.setParameter("idEntidad",idEntidad);
         q.setParameter("estado",estado);
 
-        List<Oficina> oficinas = q.getResultList();
-        for(Oficina oficina:oficinas){
-          Hibernate.initialize(oficina.getOrganizativasOfi());
+        List<Object[]> result = q.getResultList();
+        List<Oficina> oficinas = new ArrayList<Oficina>();
+
+        for (Object[] object : result) {
+            Oficina oficina = new Oficina((Long) object[0], (String) object[1], (String) object[2], (Long) object[3]);
+
+            oficinas.add(oficina);
         }
+
         return oficinas;
     }
 
     @Override
     public List<Oficina> dependienteByEntidadEstado(Long idEntidad, String estado) throws Exception{
-        Query q = em.createQuery("Select oficina from Oficina as oficina where " +
+        Query q = em.createQuery("Select oficina.id, oficina.codigo, oficina.denominacion, oficina.oficinaResponsable.id, oficina.organismoResponsable.id from Oficina as oficina where " +
                 "oficina.organismoResponsable.entidad.id =:idEntidad and oficina.estado.codigoEstadoEntidad =:estado and " +
                 "oficina.oficinaResponsable.id != null order by oficina.codigo");
 
         q.setParameter("idEntidad",idEntidad);
         q.setParameter("estado",estado);
 
-        List<Oficina> oficinas = q.getResultList();
-        for(Oficina oficina:oficinas){
-          Hibernate.initialize(oficina.getOrganizativasOfi());
+        List<Object[]> result = q.getResultList();
+        List<Oficina> oficinas = new ArrayList<Oficina>();
+
+        for (Object[] object : result) {
+            Oficina oficina = new Oficina((Long) object[0], (String) object[1], (String) object[2], (Long) object[3], (Long) object[4]);
+
+            oficinas.add(oficina);
         }
+
         return oficinas;
+
+
+        /*for(Oficina oficina:oficinas){
+          Hibernate.initialize(oficina.getOrganizativasOfi());
+        }*/
     }
 
     @Override
