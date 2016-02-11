@@ -43,7 +43,7 @@
                                         <form:label path="oficina"><span class="text-danger">*</span> <spring:message code="registroEntrada.oficina"/></form:label>
                                     </div>
                                     <div class="col-xs-9 no-pad-right" id="ofic">
-                                        <form:select path="oficina" items="${oficinas}" itemValue="id" itemLabel="denominacion" cssClass="chosen-select" multiple="false"/>
+                                        <form:select path="oficina" items="${oficinasInforme}" itemValue="id" itemLabel="denominacion" cssClass="chosen-select" multiple="false"/>
                                         <span id="oficinaErrors"></span>
                                     </div>
                                 </div>

@@ -1084,7 +1084,7 @@ public class InformeController extends BaseController {
 
         InformeIndicadoresOficinaBusquedaForm informeIndicadoresOficinaBusquedaForm = new InformeIndicadoresOficinaBusquedaForm();
         informeIndicadoresOficinaBusquedaForm.setFechaFin(new Date());
-        model.addAttribute("oficinas", oficinas(request));
+        model.addAttribute("oficinasInforme", oficinasInformeOficina(request));
         model.addAttribute("informeIndicadoresOficinaBusquedaForm",informeIndicadoresOficinaBusquedaForm);
 
         return "informe/indicadoresOficina";
@@ -1167,7 +1167,7 @@ public class InformeController extends BaseController {
     /**
      * Obtiene las {@link es.caib.regweb3.model.Oficina} del Usuario actual
      */
-    List<Oficina> oficinas(HttpServletRequest request) throws Exception {
+    List<Oficina> oficinasInformeOficina(HttpServletRequest request) throws Exception {
 
         List<Oficina> oficinas = new ArrayList<Oficina>();
 
