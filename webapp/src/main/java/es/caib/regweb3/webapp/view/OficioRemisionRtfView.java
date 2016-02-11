@@ -110,7 +110,7 @@ public class OficioRemisionRtfView extends AbstractView {
             if(oficioRemision.getOrganismoDestinatario().getCodPostal() != null){
                 direccion = direccion + "- " + oficioRemision.getOrganismoDestinatario().getCodPostal() + " ";
             }
-            if(oficioRemision.getOrganismoDestinatario().getLocalidad().getNombre() != null){
+            if(oficioRemision.getOrganismoDestinatario().getLocalidad() != null){
                 direccion = direccion + oficioRemision.getOrganismoDestinatario().getLocalidad().getNombre();
             }
             ht.put("(direccionOrgDest)", ConvertirTexto.toCp1252(direccion));
