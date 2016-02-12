@@ -70,13 +70,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         RegistroDetalle registroDetalle = new RegistroDetalle();
         registroSalida.setRegistroDetalle(registroDetalle);
 
-        Entidad entidad = getEntidadActiva(request);
-        if(oficina == null){
-            Mensaje.saveMessageInfo(request, getMessage("oficinaActiva.null"));
-            return "redirect:/inici";
-        }
-
-        model.addAttribute(entidad);
+        model.addAttribute(getEntidadActiva(request));
         model.addAttribute(usuario);
         model.addAttribute(oficina);
         model.addAttribute("registroSalida",registroSalida);

@@ -9,6 +9,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -98,13 +99,23 @@ public class ReproBean extends BaseEjbJPA<Repro, Long> implements ReproLocal{
     @Override
     public List<Repro> getActivasbyUsuario(Long idUsuario, Long tipoRegistro) throws Exception {
 
-        Query q = em.createQuery("Select repro from Repro as repro  " +
+        Query q = em.createQuery("Select repro.id, repro.nombre from Repro as repro  " +
                 "where repro.usuario.id = :idUsuario and repro.tipoRegistro = :tipoRegistro and repro.activo = true order by repro.orden");
 
         q.setParameter("idUsuario",idUsuario);
         q.setParameter("tipoRegistro",tipoRegistro);
 
-        return  q.getResultList();
+        List<Repro> repros = new ArrayList<Repro>();
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+            Repro repro = new Repro((Long) object[0], (String) object[1]);
+
+            repros.add(repro);
+        }
+
+        return repros;
     }
 
     @Override

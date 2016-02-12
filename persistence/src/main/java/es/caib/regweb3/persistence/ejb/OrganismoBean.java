@@ -365,13 +365,23 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
          // recorremos para todos los organismos Padres
          for(Organismo org: organismosPadres){
 
-           Query q = em.createQuery("select organismo from Organismo as organismo where organismo.organismoSuperior.id =:idOrganismoSuperior and organismo.estado.codigoEstadoEntidad =:vigente ");
+             Query q = em.createQuery("select organismo.id,organismo.codigo, organismo.denominacion from Organismo as organismo where organismo.organismoSuperior.id =:idOrganismoSuperior and organismo.estado.codigoEstadoEntidad =:vigente ");
            q.setParameter("idOrganismoSuperior", org.getId());
            q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
 
-           Set<Organismo> hijos = new HashSet<Organismo>(q.getResultList());
+             Set<Organismo> hijos = new HashSet<Organismo>();
 
-           totales.addAll(hijos);
+
+             List<Object[]> result = q.getResultList();
+
+             for (Object[] object : result) {
+                 Organismo hijo = new Organismo((Long) object[0], (String) object[1], (String) object[2]);
+
+                 hijos.add(hijo);
+             }
+
+
+             totales.addAll(hijos);
 
            // Hijos de cada organismo
            obtenerHijosOrganismos(hijos, totales);

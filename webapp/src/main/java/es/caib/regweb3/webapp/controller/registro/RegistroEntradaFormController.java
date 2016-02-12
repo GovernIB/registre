@@ -57,7 +57,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
      * Carga el formulario para un nuevo {@link es.caib.regweb3.model.RegistroEntrada}
      */
     @RequestMapping(value = "/new", method = RequestMethod.GET)
-    public String nuevoRegistroEntrada(Model model, HttpServletRequest request) throws Exception {
+    public String nuevoRegistroEntrada(Model model, HttpServletRequest request, Long idRepro) throws Exception {
 
         if(!isOperador(request)){
             Mensaje.saveMessageError(request, getMessage("error.rol.operador"));
@@ -76,13 +76,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         registroEntrada.setRegistroDetalle(registroDetalle);
 
 
-        Entidad entidad = getEntidadActiva(request);
-        if(oficina == null){
-            Mensaje.saveMessageInfo(request, getMessage("oficinaActiva.null"));
-            return "redirect:/inici";
-        }
-
-        model.addAttribute(entidad);
+        model.addAttribute(getEntidadActiva(request));
         model.addAttribute(usuario);
         model.addAttribute(oficina);
         model.addAttribute("registroEntrada",registroEntrada);

@@ -1,9 +1,6 @@
 package es.caib.regweb3.webapp.controller;
 
-import es.caib.regweb3.model.Entidad;
-import es.caib.regweb3.model.Oficina;
-import es.caib.regweb3.model.Rol;
-import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.ObjetoBasico;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -56,6 +53,9 @@ public class ComunController extends BaseController {
 
     @EJB(mappedName = "regweb3/PreRegistroEJB/local")
     public PreRegistroLocal preRegistroEjb;
+
+    @EJB(mappedName = "regweb3/ReproEJB/local")
+    public ReproLocal reproEjb;
     
 
     @RequestMapping(value = "/noAutorizado")
@@ -154,6 +154,17 @@ public class ComunController extends BaseController {
     public ModelAndView aviso(HttpServletRequest request) throws Exception{
 
         ModelAndView mav = new ModelAndView("aviso");
+
+        return mav;
+    }
+
+    @RequestMapping(value = "/reprosUsuario/{tipoRegistro}")
+    public ModelAndView reprosUsuario(@PathVariable Long tipoRegistro, HttpServletRequest request) throws Exception {
+
+        ModelAndView mav = new ModelAndView("modulos/menuRepros");
+
+        List<Repro> reprosUsuario = reproEjb.getActivasbyUsuario(getUsuarioEntidadActivo(request).getId(), tipoRegistro);
+        mav.addObject("reprosUsuario", reprosUsuario);
 
         return mav;
     }

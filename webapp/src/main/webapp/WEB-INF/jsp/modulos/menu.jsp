@@ -146,7 +146,7 @@
                                 <spring:message code="menu.entradas"/> <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
-                                <li class="submenu-complet"><a href="<c:url value="/registroEntrada/new"/>"><spring:message code="registroEntrada.registroEntrada"/></a></li>
+                                <c:import url="/reprosUsuario/1"/>
                                 <li class="submenu-complet"><a href="<c:url value="/registroEntrada/reserva"/>"><spring:message code="registroEntrada.reserva"/></a></li>
                                 <li class="submenu-complet"><a href="<c:url value="/registroEntrada/list"/>"><spring:message code="registroEntrada.listado"/></a></li>
                                 <c:if test="${entidadActiva.sir && tienePreRegistros}">

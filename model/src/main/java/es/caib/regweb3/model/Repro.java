@@ -25,6 +25,14 @@ public class Repro implements Serializable {
     private Boolean activo = true;
     private int orden;
 
+    public Repro() {
+    }
+
+    public Repro(Long id, String nombre) {
+        this.id = id;
+        this.nombre = nombre;
+    }
+
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
     @Column(name="ID")
