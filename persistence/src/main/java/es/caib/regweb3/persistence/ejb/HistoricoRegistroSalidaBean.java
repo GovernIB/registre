@@ -1,9 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.model.HistoricoRegistroSalida;
-import es.caib.regweb3.model.Libro;
-import es.caib.regweb3.model.RegistroSalida;
-import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
@@ -13,6 +10,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -69,9 +67,20 @@ public class HistoricoRegistroSalidaBean extends BaseEjbJPA<HistoricoRegistroSal
     @SuppressWarnings(value = "unchecked")
     public List<HistoricoRegistroSalida> getByRegistroSalida(Long idRegistro) throws Exception {
 
-        Query q = em.createQuery("Select historicoRegistroSalida from HistoricoRegistroSalida as historicoRegistroSalida where historicoRegistroSalida.registroSalida.id =:idRegistro order by historicoRegistroSalida.fecha desc");
+        Query q = em.createQuery("Select hrs.id, hrs.registroSalidaOriginal, hrs.estado, hrs.fecha, hrs.modificacion, hrs.usuario.id, hrs.usuario.usuario from HistoricoRegistroSalida as hrs where hrs.registroSalida.id =:idRegistro order by hrs.fecha desc");
         q.setParameter("idRegistro", idRegistro);
-        return q.getResultList();
+
+        List<HistoricoRegistroSalida> hrss = new ArrayList<HistoricoRegistroSalida>();
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+            HistoricoRegistroSalida hrs = new HistoricoRegistroSalida((Long) object[0], (String) object[1], (Long) object[2], (Date) object[3], (String) object[4], (Long) object[5], (Usuario) object[6]);
+
+            hrss.add(hrs);
+        }
+
+        return hrss;
     }
 
     @Override

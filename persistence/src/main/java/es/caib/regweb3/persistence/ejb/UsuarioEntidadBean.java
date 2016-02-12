@@ -281,7 +281,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        StringBuffer query = new StringBuffer("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad ");
+        StringBuffer query = new StringBuffer("Select usuarioEntidad.id, usuarioEntidad.usuario from UsuarioEntidad as usuarioEntidad ");
 
         if(identificador!= null && identificador.length() > 0){where.add(DataBaseUtils.like("usuarioEntidad.usuario.identificador","identificador",parametros,identificador));}
         if(nombre!= null && nombre.length() > 0){where.add(DataBaseUtils.like("usuarioEntidad.usuario.nombre","nombre",parametros,nombre));}
@@ -302,7 +302,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
                 query.append(w);
                 count++;
             }
-            q2 = em.createQuery(query.toString().replaceAll("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad ", "Select count(usuarioEntidad.id) from UsuarioEntidad as usuarioEntidad "));
+            q2 = em.createQuery(query.toString().replaceAll("Select usuarioEntidad.id, usuarioEntidad.usuario from UsuarioEntidad as usuarioEntidad ", "Select count(usuarioEntidad.usuario.id) from UsuarioEntidad as usuarioEntidad "));
             query.append("order by usuarioEntidad.usuario.apellido1");
             q = em.createQuery(query.toString());
 
@@ -312,7 +312,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
             }
 
         }else{
-            q2 = em.createQuery(query.toString().replaceAll("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad ", "Select count(usuarioEntidad.id) from UsuarioEntidad as usuarioEntidad "));
+            q2 = em.createQuery(query.toString().replaceAll("Select usuarioEntidad.id, usuarioEntidad.usuario from UsuarioEntidad as usuarioEntidad ", "Select count(usuarioEntidad.usuario.id) from UsuarioEntidad as usuarioEntidad "));
             query.append("order by usuarioEntidad.usuario.apellido1");
             q = em.createQuery(query.toString());
         }
@@ -330,7 +330,18 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
             paginacion = new Paginacion(0, 0);
         }
 
-        paginacion.setListado(q.getResultList());
+
+        List<UsuarioEntidad> usuarios = new ArrayList<UsuarioEntidad>();
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+            UsuarioEntidad usuario = new UsuarioEntidad((Long) object[0], (Usuario) object[1]);
+
+            usuarios.add(usuario);
+        }
+
+        paginacion.setListado(usuarios);
 
         return paginacion;
 

@@ -18,7 +18,7 @@ public class Paginacion {
     private int beginIndex;
     private int endIndex;
     private int currentIndex;
-    private List<Object> listado;
+    private List<?> listado;
 
     public Paginacion(int total, int pageNumber) {
         totalResults = total;
@@ -52,11 +52,11 @@ public class Paginacion {
     }
 
 
-    public List<Object> getListado() {
+    public List<?> getListado() {
         return listado;
     }
 
-    public void setListado(List<Object> listado) {
+    public void setListado(List<?> listado) {
         this.listado = listado;
     }
 

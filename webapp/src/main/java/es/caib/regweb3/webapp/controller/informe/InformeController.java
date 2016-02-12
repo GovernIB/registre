@@ -1025,7 +1025,7 @@ public class InformeController extends BaseController {
             for (int i = 0; i < historicos.size(); i++) {
                 registros.add(new ArrayList<String>());
                 HistoricoRegistroEntrada historicoRegistroEntrada = historicos.get(i);
-                registros.get(i).add(formatYear.format(historicoRegistroEntrada.getRegistroEntrada().getFecha()) + " / " + historicoRegistroEntrada.getRegistroEntrada().getNumeroRegistro().toString());
+                registros.get(i).add(formatYear.format(registro.getFecha()) + " / " + registro.getNumeroRegistro().toString());
                 registros.get(i).add(formatDateLong.format(historicoRegistroEntrada.getFecha()));
                 registros.get(i).add(historicoRegistroEntrada.getModificacion());
                 registros.get(i).add(historicoRegistroEntrada.getUsuario().getUsuario().getIdentificador());
@@ -1054,6 +1054,7 @@ public class InformeController extends BaseController {
 
         //  REGISTRO DE SALIDA
         } else if(tipoRegistro.equals("salida")){
+            //todo Joan Pernia, faltan las modificaciones?
 
             RegistroSalida registro = registroSalidaEjb.findById(idRegistro);
 

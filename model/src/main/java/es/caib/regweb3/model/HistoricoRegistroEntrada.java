@@ -35,6 +35,15 @@ public class HistoricoRegistroEntrada implements Serializable {
     public HistoricoRegistroEntrada() {
     }
 
+    public HistoricoRegistroEntrada(Long id, String registroEntradaOriginal, Long estado, Date fecha, String modificacion, Long usuarioEntidad, Usuario usuario) {
+        this.id = id;
+        this.registroEntradaOriginal = registroEntradaOriginal;
+        this.estado = estado;
+        this.fecha = fecha;
+        this.modificacion = modificacion;
+        this.usuario = new UsuarioEntidad(usuarioEntidad, usuario);
+    }
+
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
     @Column(name="ID")
