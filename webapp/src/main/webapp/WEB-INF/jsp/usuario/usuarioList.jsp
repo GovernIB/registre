@@ -75,7 +75,7 @@
                                 <div class="col-xs-4 pull-left align-right"><spring:message code="usuario.tipoUsuario"/></div>
                                 <div class="col-xs-8">
                                     <form:select path="usuario.tipoUsuario" cssClass="chosen-select">
-                                        <form:option value="0" default="default">---</form:option>
+                                        <form:option value="0" default="default">...</form:option>
                                         <form:option value="1"><spring:message code="usuario.tipo.1"/></form:option>
                                         <form:option value="2"><spring:message code="usuario.tipo.2"/></form:option>
                                     </form:select>

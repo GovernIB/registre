@@ -133,7 +133,10 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
         if(apellido1!= null && apellido1.length() > 0){where.add(DataBaseUtils.like("usuario.apellido1","apellido1",parametros,apellido1));}
         if(apellido2!= null && apellido2.length() > 0){where.add(DataBaseUtils.like("usuario.apellido2","apellido2",parametros,apellido2));}
         if(documento!= null && documento.length() > 0){where.add(" upper(usuario.documento) like upper(:documento) "); parametros.put("documento","%"+documento.toLowerCase()+"%");}
-        if(tipoUsuario != null && tipoUsuario > 0){where.add(" usuario.tipoUsuario.id = :tipoUsuario "); parametros.put("tipoUsuario",tipoUsuario);}
+        if (tipoUsuario != null && tipoUsuario > 0) {
+            where.add(" usuario.tipoUsuario = :tipoUsuario ");
+            parametros.put("tipoUsuario", tipoUsuario);
+        }
 
 
         if (parametros.size() != 0) {
