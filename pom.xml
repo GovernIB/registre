@@ -73,11 +73,11 @@
             <url>http://pluginsib.sourceforge.net/maven/</url>
         </repository>
 		
-		<repository>
-		    <id>genapp-maven-repos</id>
-		    <name>GenApp Maven Repository</name>
-		    <url>http://genapp.sourceforge.net/maven/</url>
-	    </repository>
+        <repository>
+            <id>genapp-maven-repos</id>
+            <name>GenApp Maven Repository</name>
+            <url>http://GovernIB.github.io/genapp/maven/</url>
+        </repository>
 		
 	    <repository>
 		    <id>dir3caib-maven-repos</id>
