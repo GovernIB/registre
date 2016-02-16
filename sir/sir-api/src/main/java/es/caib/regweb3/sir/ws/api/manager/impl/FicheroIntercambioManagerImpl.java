@@ -31,6 +31,8 @@ public class FicheroIntercambioManagerImpl implements FicheroIntercambioManager 
             RespuestaWS respuesta = ws_sir6_b_recepcionFicheroDeAplicacion(xml);
 
             if (respuesta != null) {
+                log.info("Respuesta: " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
+
                 if (!Errores.OK.getValue().equals(respuesta.getCodigo())) {
                     log.error("Respuesta: " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
                     throw new SIRException("Error " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
@@ -39,7 +41,7 @@ public class FicheroIntercambioManagerImpl implements FicheroIntercambioManager 
 
         } catch (Exception e) {
             log.error("Error al enviar el fichero de intercambio: " + e);
-            throw new SIRException("Error en la llamada al servicio de recepción de ficheros de datos de intercambio (WS_SIR6_A)");
+            throw new SIRException("Error en la llamada al servicio de recepción de ficheros de datos de intercambio (WS_SIR6_B)");
         }
 
     }

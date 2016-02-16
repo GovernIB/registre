@@ -32,9 +32,9 @@ public enum Errores {
     private final String name;
 
 
-    Errores(String value, String name) {
-        this.value = value;
+    Errores(String name, String value) {
         this.name = name;
+        this.value = value;
     }
 
     public String getValue() {
