@@ -759,7 +759,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
         }
 
         // Indicador_Prueba
-        deInternosControl.setIndicadorPrueba("1"); //todo: añadir propiedad que indique si es pruebas o producción
+        deInternosControl.setIndicadorPrueba("0"); //todo: añadir propiedad que indique si es pruebas o producción
 
         // Codigo_Entidad_Registral_Inicio
         deInternosControl.setCodigoEntidadRegistralInicio(obtenerCodigoOficinaOrigen(re));
