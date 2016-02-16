@@ -180,6 +180,13 @@ public interface PermisoLibroUsuarioLocal extends BaseEjb<PermisoLibroUsuario, L
     public Boolean existePermiso(Long idUsuarioEntidad, Long idLibro, Long idPermiso) throws Exception;
 
     /**
+     * Elimina las PermisoLibroUsuario de un Usuario
+     * @param idUsuarioEntidad
+     * @throws Exception
+     */
+    public void eliminarByUsuario(Long idUsuarioEntidad) throws Exception;
+
+    /**
      * Elimina las PermisoLibroUsuario de una Entidad
      * @param idEntidad
      * @return

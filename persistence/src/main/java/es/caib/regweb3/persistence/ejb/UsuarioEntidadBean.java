@@ -9,6 +9,7 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -33,6 +34,24 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
     @PersistenceContext(unitName="regweb3")
     private EntityManager em;
+
+    @EJB
+    public RegistroEntradaLocal registroEntradaEjb;
+
+    @EJB
+    public HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
+
+    @EJB
+    public RegistroSalidaLocal registroSalidaEjb;
+
+    @EJB
+    public HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
+
+    @EJB
+    public ReproLocal reproEjb;
+
+    @EJB
+    public LopdLocal lopdEjb;
 
 
     @Override
@@ -377,7 +396,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where " +
                 "usuarioEntidad.entidad.id= :idEntidad and usuarioEntidad.usuario.rwe_usuari = true order by usuarioEntidad.usuario.apellido1");
 
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idEntidad", idEntidad);
 
         return q.getResultList();
     }
@@ -407,5 +426,13 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
         return total;
 
+    }
+
+    @Override
+    public Boolean puedoEliminarlo(Long idUsuarioEntidad) throws Exception {
+
+        return !registroEntradaEjb.obtenerPorUsuario(idUsuarioEntidad) && !registroSalidaEjb.obtenerPorUsuario(idUsuarioEntidad)
+                && !historicoRegistroEntradaEjb.obtenerPorUsuario(idUsuarioEntidad) && !historicoRegistroSalidaEjb.obtenerPorUsuario(idUsuarioEntidad)
+                && !reproEjb.obtenerPorUsuario(idUsuarioEntidad) && !lopdEjb.obtenerPorUsuario(idUsuarioEntidad);
     }
 }

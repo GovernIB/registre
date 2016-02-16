@@ -173,4 +173,13 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @throws Exception
      */
     public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+
+    /**
+     * Comprueba las diferentes dependencias del UsuarioEntidad para saber si es posible eliminarlo
+     *
+     * @param idUsuarioEntidad
+     * @return
+     * @throws Exception
+     */
+    public Boolean puedoEliminarlo(Long idUsuarioEntidad) throws Exception;
 }

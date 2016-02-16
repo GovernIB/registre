@@ -261,7 +261,7 @@ public class UsuarioController extends BaseController {
              Mensaje.saveMessageInfo(request, getMessage("regweb.eliminar.registro"));
 
          } catch (Exception e) {
-             Mensaje.saveMessageError(request, getMessage("regweb.relaciones.registro"));
+             Mensaje.saveMessageError(request, getMessage("usuario.eliminar.relaciones"));
              e.printStackTrace();
          }
 

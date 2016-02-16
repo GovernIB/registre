@@ -286,4 +286,13 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      */
     public Long getTotalByLibro(Long idLibro) throws Exception;
 
+    /**
+     * Comprueba si un usuario tiene RegistroSalida
+     *
+     * @param idUsuarioEntidad
+     * @return
+     * @throws Exception
+     */
+    public Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws Exception;
+
 }

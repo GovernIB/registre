@@ -198,6 +198,18 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
     }
 
     @Override
+    public Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws Exception {
+
+        Query q;
+
+        q = em.createQuery("Select count(lopd.id) from Lopd as lopd where lopd.usuario.id = :idUsuarioEntidad ");
+
+        q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
+
+        return (Long) q.getSingleResult() > 0;
+    }
+
+    @Override
     public Integer eliminarByEntidad(Long idEntidad) throws Exception{
 
         List<?> lopd =  em.createQuery("select distinct(l.id) from Lopd as l where l.usuario.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();

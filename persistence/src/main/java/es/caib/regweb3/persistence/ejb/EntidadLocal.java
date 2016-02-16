@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.UsuarioEntidad;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
@@ -60,11 +61,11 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
     /**
      * Comprueba si un Usuario es Administrador de la Entidad
      * @param idEntidad
-     * @param idUsuario
+     * @param usuarioEntidad
      * @return
      * @throws Exception
      */
-    public Boolean esAdministrador(Long idEntidad, Long idUsuario) throws Exception;
+    public Boolean esAdministrador(Long idEntidad, UsuarioEntidad usuarioEntidad) throws Exception;
 
     /**
    * Determina si un usuario es propietario o administrador de esa entidad

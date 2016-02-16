@@ -56,6 +56,16 @@ public interface HistoricoRegistroSalidaLocal extends BaseEjb<HistoricoRegistroS
      */
     public HistoricoRegistroSalida crearHistoricoRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad, String modificacion, boolean serializar) throws Exception;
 
+
+    /**
+     * Comprueba si un usuario tiene HistoricoRegistroSalida
+     *
+     * @param idUsuarioEntidad
+     * @return
+     * @throws Exception
+     */
+    public Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws Exception;
+
     /**
      * Elimina las HistoricoRegistroEntrada de una Entidad
      * @param idEntidad

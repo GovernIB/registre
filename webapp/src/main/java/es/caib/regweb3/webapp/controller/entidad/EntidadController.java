@@ -642,23 +642,27 @@ public class EntidadController extends BaseController {
         try {
             UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findById(idUsuarioEntidad);
 
-            if(entidadEjb.esAdministrador(usuarioEntidad.getEntidad().getId(), usuarioEntidad.getUsuario().getId())){
+            if (entidadEjb.esAdministrador(usuarioEntidad.getEntidad().getId(), usuarioEntidad)) {
                 Mensaje.saveMessageError(request, getMessage("usuarioEntidad.administrador"));
                 return "redirect:/entidad/usuarios";
             }
 
-            // Desactivamos este usuario de la Entidad
-            usuarioEntidad.setActivo(false);
-            usuarioEntidadEjb.merge(usuarioEntidad);
+            // Eliminamos todos sus PermisoLibroUsuario
+            permisoLibroUsuarioEjb.eliminarByUsuario(idUsuarioEntidad);
 
-            //Eliminamos todos sus PermisoLibroUsuario
-            List<PermisoLibroUsuario> permisos = permisoLibroUsuarioEjb.findByUsuario(idUsuarioEntidad);
+            // Comprobar si el usuario tiene Registros en la Entidad
+            if (usuarioEntidadEjb.puedoEliminarlo(idUsuarioEntidad)) {
+                // Si no tiene registros relacinados, lo eliminamos definitivamente.
+                usuarioEntidadEjb.remove(usuarioEntidad);
 
-            for (PermisoLibroUsuario permiso : permisos) {
-                permisoLibroUsuarioEjb.remove(permiso);
+                Mensaje.saveMessageInfo(request, getMessage("usuario.eliminado"));
+            } else {
+                // Desactivamos este usuario de la Entidad
+                usuarioEntidad.setActivo(false);
+                usuarioEntidadEjb.merge(usuarioEntidad);
+
+                Mensaje.saveMessageInfo(request, getMessage("usuario.desactivado"));
             }
-
-            Mensaje.saveMessageInfo(request, "S'ha eliminat l'usuari de l'entitat i els seus permisos");
 
         } catch (Exception e) {
             Mensaje.saveMessageError(request, "No s'ha eliminat el registre perque està relacionat amb un altra entitat.");

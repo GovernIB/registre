@@ -136,6 +136,18 @@ public class HistoricoRegistroSalidaBean extends BaseEjbJPA<HistoricoRegistroSal
     }
 
     @Override
+    public Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws Exception {
+
+        Query q;
+
+        q = em.createQuery("Select count(hrs.id) from HistoricoRegistroSalida as hrs where hrs.usuario.id = :idUsuarioEntidad ");
+
+        q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
+
+        return (Long) q.getSingleResult() > 0;
+    }
+
+    @Override
     public Integer eliminarByEntidad(Long idEntidad) throws Exception{
 
         List<?> hrs = em.createQuery("Select distinct(hre.id) from HistoricoRegistroSalida as hre where hre.registroSalida.usuario.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();

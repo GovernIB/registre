@@ -91,7 +91,7 @@ public class ReproBean extends BaseEjbJPA<Repro, Long> implements ReproLocal{
         Query q = em.createQuery("Select repro from Repro as repro  " +
                 "where repro.usuario.id = :idUsuario order by repro.orden");
 
-        q.setParameter("idUsuario",idUsuario);
+        q.setParameter("idUsuario", idUsuario);
 
         return  q.getResultList();
     }
@@ -243,6 +243,18 @@ public class ReproBean extends BaseEjbJPA<Repro, Long> implements ReproLocal{
         }
         return total;
 
+    }
+
+    @Override
+    public Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws Exception {
+
+        Query q;
+
+        q = em.createQuery("Select count(repro.id) from Repro as repro where repro.usuario.id = :idUsuarioEntidad ");
+
+        q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
+
+        return (Long) q.getSingleResult() > 0;
     }
 
 }

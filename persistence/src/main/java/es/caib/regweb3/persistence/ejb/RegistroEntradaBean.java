@@ -1130,5 +1130,17 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         return (Long) q.getSingleResult();
     }
 
+    @Override
+    public Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws Exception {
+
+        Query q;
+
+        q = em.createQuery("Select count(re.id) from RegistroEntrada as re where re.usuario.id = :idUsuarioEntidad ");
+
+        q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
+
+        return (Long) q.getSingleResult() > 0;
+    }
+
 
 }

@@ -59,7 +59,7 @@ public class OficioRemisionController extends BaseController {
     public EntidadLocal entidadEjb;
 
     FicheroIntercambioManager ficheroIntercambioManager = new FicheroIntercambioManagerImpl();
-    public SicresXMLManager sicresXMLManager = new SicresXMLManagerImpl();
+    SicresXMLManager sicresXMLManager = new SicresXMLManagerImpl();
 
     /**
      * Listado de todos los Oficios de Remision

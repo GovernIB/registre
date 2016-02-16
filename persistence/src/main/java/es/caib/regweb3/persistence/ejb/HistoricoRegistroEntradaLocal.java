@@ -14,16 +14,17 @@ import java.util.List;
  * Created by Fundació BIT.
  *
  * @author earrivi
- * Date: 16/01/14
+ *         Date: 16/01/14
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public interface HistoricoRegistroEntradaLocal extends BaseEjb<HistoricoRegistroEntrada, Long> {
 
-  public List<HistoricoRegistroEntrada> getByRegistroEntrada(Long idRegistro) throws Exception;
+    public List<HistoricoRegistroEntrada> getByRegistroEntrada(Long idRegistro) throws Exception;
 
     /**
      * Busca los Registros de Entrada Modificada en función de la una fecha inicio, una fecha fin, por Usuario y Libros gestionados
+     *
      * @param fechaInicio
      * @param fechaFin
      * @param idUsuario
@@ -35,6 +36,7 @@ public interface HistoricoRegistroEntradaLocal extends BaseEjb<HistoricoRegistro
 
     /**
      * Busca los Registros de Entrada Modificada que no sean de 'Creación' en función de la una fecha inicio, una fecha fin, por Usuario y Libro
+     *
      * @param fechaInicio
      * @param fechaFin
      * @param idUsuario
@@ -46,6 +48,7 @@ public interface HistoricoRegistroEntradaLocal extends BaseEjb<HistoricoRegistro
 
     /**
      * Crea un HistoricoRegistroEntrada según los parámetros
+     *
      * @param registroEntrada
      * @param usuarioEntidad
      * @param modificacion
@@ -55,13 +58,23 @@ public interface HistoricoRegistroEntradaLocal extends BaseEjb<HistoricoRegistro
      */
     public HistoricoRegistroEntrada crearHistoricoRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad, String modificacion, boolean serializar) throws Exception;
 
-  /**
-   * Elimina las HistoricoRegistroSalida de una Entidad
-   * @param idEntidad
-   * @return
-   * @throws Exception
-   */
-  public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    /**
+     * Comprueba si un usuario tiene HistoricoRegistroEntrada
+     *
+     * @param idUsuarioEntidad
+     * @return
+     * @throws Exception
+     */
+    public Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws Exception;
+
+    /**
+     * Elimina las HistoricoRegistroSalida de una Entidad
+     *
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
 
 
 }

@@ -90,6 +90,15 @@ public interface LopdLocal extends BaseEjb<Lopd, Long> {
     public void insertarRegistrosSalida(Paginacion paginacion, Long idUsuarioEntidad) throws Exception;
 
     /**
+     * Comprueba si un usuario tiene Lopd
+     *
+     * @param idUsuarioEntidad
+     * @return
+     * @throws Exception
+     */
+    public Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws Exception;
+
+    /**
      * Elimina las Lopd de una Entidad
      * @param idEntidad
      * @return

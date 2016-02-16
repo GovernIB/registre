@@ -33,6 +33,10 @@ public abstract class SIRTestUtils {
         return testProperties.getProperty("test_host") + api;
     }
 
+    public static Long getIdRegistroEntrada() {
+        return Long.valueOf(testProperties.getProperty("idRegistroEntrada"));
+    }
+
     public static String getTestArchivosPath() {
         return testProperties.getProperty("test_archivos_path");
     }

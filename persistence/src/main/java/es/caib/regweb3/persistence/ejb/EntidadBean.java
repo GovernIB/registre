@@ -3,6 +3,7 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.model.Organismo;
+import es.caib.regweb3.model.UsuarioEntidad;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -175,11 +176,12 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     }
 
     @Override
-    public Boolean esAdministrador(Long idEntidad, Long idUsuario) throws Exception {
+    public Boolean esAdministrador(Long idEntidad, UsuarioEntidad usuarioEntidad) throws Exception {
 
-        Query q = em.createQuery("Select entidad.id from Entidad as entidad, UsuarioEntidad as usuarioEntidad where entidad.id=:idEntidad and entidad.activo = true and usuarioEntidad in elements(entidad.administradores) ");
+        Query q = em.createQuery("Select entidad.id from Entidad as entidad where entidad.id=:idEntidad and entidad.activo = true and :usuarioEntidad in elements(entidad.administradores) ");
 
         q.setParameter("idEntidad",idEntidad);
+        q.setParameter("usuarioEntidad", usuarioEntidad);
 
         return q.getResultList().size() > 0;
 

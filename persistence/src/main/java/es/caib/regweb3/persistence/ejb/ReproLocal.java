@@ -117,5 +117,14 @@ public interface ReproLocal extends BaseEjb<Repro, Long> {
      */
     public Integer eliminarByEntidad(Long idEntidad) throws Exception;
 
+    /**
+     * Comprueba si un usuario tiene Repro
+     *
+     * @param idUsuarioEntidad
+     * @return
+     * @throws Exception
+     */
+    public Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws Exception;
+
 }
 
