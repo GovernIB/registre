@@ -16,7 +16,7 @@ import java.util.List;
  * Date: 02/10/14
  */
 @Local
-@RolesAllowed({"RWE_ADMIN","RWE_USUARI"})
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public interface LopdLocal extends BaseEjb<Lopd, Long> {
 
     /**

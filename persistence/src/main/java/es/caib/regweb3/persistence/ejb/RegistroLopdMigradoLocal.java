@@ -14,7 +14,7 @@ import java.util.List;
  * Date: 19/11/14
  */
 @Local
-@RolesAllowed({"RWE_USUARI"})
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public interface RegistroLopdMigradoLocal extends BaseEjb<RegistroLopdMigrado, Long> {
 
     /**

@@ -3,6 +3,7 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.RelacionSirOfi;
 import es.caib.regweb3.model.RelacionSirOfiPK;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 
 /**
@@ -12,6 +13,7 @@ import javax.ejb.Local;
  * Date: 10/10/13
  */
 @Local
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public interface RelacionSirOfiLocal extends BaseEjb<RelacionSirOfi, RelacionSirOfiPK> {
   
   public void deleteAll() throws Exception;

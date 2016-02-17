@@ -69,7 +69,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 
     /**
      * Obtenemos los Organismos destinatarios PROPIOS que tiene Oficios de Remision pendientes de tramitar
-     * @param libro
+     * @param idLibro
      * @return
      * @throws Exception
      */
