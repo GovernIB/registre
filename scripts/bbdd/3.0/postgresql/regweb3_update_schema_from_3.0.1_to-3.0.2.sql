@@ -1,2 +1,2 @@
---(PENDIENTE DE APLICAR EN PORTS Y CAIB)
+--Modificación tipo de datos
 ALTER TABLE rwe_descarga ALTER COLUMN fechaimportacion TYPE timestamp;
