@@ -496,10 +496,13 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                 // Averiguamos si el Organismos Externo está en Sir o no
                 Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
                 if (!organismosExternos.isEmpty()) {
-                    List<OficinaTF> oficinasSIR = oficinasService.obtenerOficinasSIRUnidad(organismo);
+                    List<OficinaTF> oficinasSIR = oficinasService.obtenerOficinasSIRUnidad(organismo); //TODO: Revisar que la cerca d'Oficines SIR la fa correctament
                     if (oficinasSIR.size() > 0) {
                         oficios.setSir(true);
                         oficios.setOficinasSIR(oficinasSIR);
+                        log.info("El organismo externo " + organismo + " TIENE oficinas Sir: " + oficinasSIR.size());
+                    } else {
+                        log.info("El organismo externo " + organismo + " no tiene oficinas Sir");
                     }
                 }
             }

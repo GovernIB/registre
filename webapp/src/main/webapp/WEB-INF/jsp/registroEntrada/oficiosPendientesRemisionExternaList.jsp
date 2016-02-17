@@ -249,9 +249,11 @@
                                                         </table>
 
                                                         <div class="row">
-                                                            <div class="form-group col-xs-6">
-                                                                <div class="col-xs-4 pull-left align-right"><spring:message code="oficioRemision.oficinaSir"/></div>
-                                                                <div class="col-xs-8">
+                                                            <div class="form-group col-xs-12">
+                                                                <div class="col-xs-2 pull-left align-right">
+                                                                    <spring:message
+                                                                            code="oficioRemision.oficinaSir"/></div>
+                                                                <div class="col-xs-10">
                                                                     <form:select path="oficinaSIR" items="${oficiosRemisionOrganismo.oficinasSIR}" itemLabel="denominacion" itemValue="codOfiResponsable" class="form-control"/>
                                                                 </div>
                                                             </div>

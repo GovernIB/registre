@@ -1,5 +1,6 @@
 package es.caib.regweb3.ws.converter;
 
+import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.AnexoLocal;
 import es.caib.regweb3.persistence.ejb.CodigoAsuntoLocal;
@@ -33,7 +34,7 @@ public class RegistroEntradaConverter extends CommonConverter {
      * @throws I18NException
      */
     public static RegistroEntrada getRegistroEntrada(RegistroEntradaWs registroEntradaWs,
-        UsuarioEntidad usuario,Libro libro, Oficina oficina,  Organismo organismo,
+                                                     UsuarioEntidad usuario, Libro libro, Oficina oficina, Organismo destinoInterno, UnidadTF destinoExterno,
         CodigoAsuntoLocal codigoAsuntoEjb, TipoAsuntoLocal tipoAsuntoEjb)
             throws Exception, I18NException {
 
@@ -44,7 +45,14 @@ public class RegistroEntradaConverter extends CommonConverter {
         RegistroEntrada registroEntrada = new RegistroEntrada();
         RegistroDetalle registroDetalle = new RegistroDetalle();
 
-        registroEntrada.setDestino(organismo);
+        if (destinoInterno == null) {
+            registroEntrada.setDestino(null);
+            registroEntrada.setDestinoExternoCodigo(destinoExterno.getCodigo());
+            registroEntrada.setDestinoExternoDenominacion(destinoExterno.getDenominacion());
+        } else {
+            registroEntrada.setDestino(destinoInterno);
+        }
+
         registroEntrada.setOficina(oficina);
         registroEntrada.setFecha(new Date());
         registroEntrada.setUsuario(usuario);

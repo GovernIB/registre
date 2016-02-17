@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.validator;
 
 import es.caib.regweb3.model.RegistroDetalle;
 import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.query.Field;
 import org.fundaciobit.genapp.common.validation.IValidatorResult;
@@ -61,13 +62,13 @@ public class RegistroEntradaValidator<T> extends AbstractRegWebValidator<T> {
         if(registroDetalle.getTipoAsunto() == null || registroDetalle.getTipoAsunto().getId() == null || registroDetalle.getTipoAsunto().getId().equals((long) -1) ){
           rejectValue(errors, "registroDetalle.tipoAsunto.id", "error.valor.requerido", "El camp és obligatori");
         }
-        
-        
-        if (registroEntrada.getDestino() == null || registroEntrada.getDestino().getCodigo() == null || "".equals(registroEntrada.getDestino().getCodigo())) {
-          rejectValue(errors, "destino.codigo", "error.valor.requerido", "El camp és obligatori");
+
+        if (StringUtils.isEmpty(registroEntrada.getDestinoExternoCodigo())) {
+            if (registroEntrada.getDestino() == null || registroEntrada.getDestino().getCodigo() == null || "".equals(registroEntrada.getDestino().getCodigo())) {
+                rejectValue(errors, "destino.codigo", "error.valor.requerido", "El camp és obligatori");
+            }
         }
-        
-        
+
 
     }
 

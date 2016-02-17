@@ -1,12 +1,5 @@
 package es.caib.regweb3.ws.sir.api.test;
 
-import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
-import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
-import es.caib.regweb3.sir.ws.api.manager.FicheroIntercambioManager;
-import es.caib.regweb3.sir.ws.api.manager.SicresXMLManager;
-import es.caib.regweb3.sir.ws.api.manager.impl.FicheroIntercambioManagerImpl;
-import es.caib.regweb3.sir.ws.api.manager.impl.SicresXMLManagerImpl;
 import es.caib.regweb3.sir.ws.api.wssir6b.RespuestaWS;
 import es.caib.regweb3.sir.ws.api.wssir6b.WS_SIR6_BSoapBindingStub;
 import es.caib.regweb3.sir.ws.api.wssir6b.WS_SIR6_B_DirectApi;
@@ -15,19 +8,12 @@ import org.apache.commons.io.FileUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import javax.ejb.EJB;
 import java.io.File;
 
 /**
  * @author anadal
  */
 public class SIR6BTest extends SIRTestUtils {
-
-    SicresXMLManager sicresXMLManager = new SicresXMLManagerImpl();
-    FicheroIntercambioManager ficheroIntercambioManager = new FicheroIntercambioManagerImpl();
-
-    @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
-    public RegistroEntradaLocal registroEntradaEjb;
 
     /**
      * S'executa una vegada abans de l'execució de tots els tests d'aquesta classe
@@ -42,20 +28,17 @@ public class SIR6BTest extends SIRTestUtils {
     public void testDirectSir() throws Exception {
         try {
 
-            RegistroEntrada registroEntrada = registroEntradaEjb.findById(getIdRegistroEntrada());
-            FicheroIntercambio ficheroIntercambio = sicresXMLManager.crearFicheroIntercambioSICRES3(registroEntrada);
 
-            String xml = ficheroIntercambio.marshallObject();
-            /*String f = getTestArchivosPath();
+            String f = getTestArchivosPath();
             File file = new File(f);
             System.out.println("PATH = " + file.exists());
-            String str = new String(FileUtils.readFileToByteArray(file));*/
+            String str = new String(FileUtils.readFileToByteArray(file));
 
             // Get target URL
             String strURL = getEndPoint(SIR_6_B); // "http://localhost:9999/services/WS_SIR6_B";
             // Get SOAP action
 
-            RespuestaWS resp = WS_SIR6_B_DirectApi.recepcionFicheroDeAplicacion(xml, strURL);
+            RespuestaWS resp = WS_SIR6_B_DirectApi.recepcionFicheroDeAplicacion(str, strURL);
 
             System.out.println("Code: " + resp.getCodigo());
             System.out.println("Desc: " + resp.getDescripcion());

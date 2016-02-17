@@ -1,8 +1,11 @@
 package es.caib.regweb3.ws.v3.impl;
 
+import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
+import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.AnexoFull;
+import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
 import es.caib.regweb3.persistence.validator.InteresadoBeanValidator;
 import es.caib.regweb3.persistence.validator.InteresadoValidator;
 import es.caib.regweb3.persistence.validator.RegistroEntradaBeanValidator;
@@ -126,13 +129,24 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         IdentificadorWs identificadorWs = null;
 
         // 1.- Comprobar que el Organismo destino está vigente
-        Organismo destino = organismoEjb.findByCodigo(registroEntradaWs.getDestino());
+        Organismo destinoInterno = organismoEjb.findByCodigo(registroEntradaWs.getDestino());
+        UnidadTF destinoExterno = null;
 
-        if(destino == null){ //Si no existe todo: Hay que agregar destinos externos?
-            throw new I18NException("registro.organismo.noExiste", registroEntradaWs.getDestino());
+        if (destinoInterno == null) { // Se trata de un destino externo
 
-        }else if(!destino.getEstado().getCodigoEstadoEntidad().equals(ESTADO_ENTIDAD_VIGENTE)){ //Si está extinguido
-            throw new I18NException("registro.organismo.extinguido", destino.getNombreCompleto());
+            // Lo buscamos en DIR3CAIB
+            Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService();
+            destinoExterno = unidadesService.obtenerUnidad(registroEntradaWs.getDestino(), null, null);
+
+            if (destinoExterno == null) {
+                throw new I18NException("registro.organismo.noExiste", registroEntradaWs.getDestino());
+            } else if (!destinoExterno.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)) {
+                throw new I18NException("registro.organismo.extinguido", destinoExterno.getCodigo() + " - " + destinoExterno.getDenominacion());
+            }
+
+
+        } else if (!destinoInterno.getEstado().getCodigoEstadoEntidad().equals(ESTADO_ENTIDAD_VIGENTE)) { //Si está extinguido
+            throw new I18NException("registro.organismo.extinguido", destinoInterno.getNombreCompleto());
         }
 
         // 2.- Comprobar que la Oficina está vigente
@@ -173,7 +187,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
 
         // 5.- Convertir RegistroEntradaWs a RegistroEntrada
         RegistroEntrada registroEntrada = RegistroEntradaConverter.getRegistroEntrada(
-            registroEntradaWs, usuario, libro, oficina, destino,
+                registroEntradaWs, usuario, libro, oficina, destinoInterno, destinoExterno,
              codigoAsuntoEjb, tipoAsuntoEjb);
 
         // 6.- Validar el RegistroEntrada
