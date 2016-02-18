@@ -120,9 +120,6 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         
         if (result.hasErrors()) { // Si hay errores volvemos a la vista del formulario
             mav.addObject("errors", result.getAllErrors());
-            mav.addObject("librosConsulta", librosConsulta);
-            mav.addObject("registroSalidaBusqueda", busqueda);
-            mav.addObject("oficinasRegistro", oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
             return mav;
         }else { // Si no hay errores realizamos la búsqueda
         	// Ponemos la hora 23:59 a la fecha fin
@@ -133,12 +130,13 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             lopdEjb.insertarRegistrosSalida(paginacion, usuarioEntidad.getId());
             busqueda.setPageNumber(1);
             mav.addObject("paginacion", paginacion);
-            mav.addObject("librosConsulta", librosConsulta);
-            mav.addObject("registroSalidaBusqueda", busqueda);
-            mav.addObject("isAdministradorLibro", permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(),registroSalida.getLibro().getId()));
-            mav.addObject("puedeEditar", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),registroSalida.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA));
-            mav.addObject("oficinasRegistro",  oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(),RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+            mav.addObject("isAdministradorLibro", permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(), registroSalida.getLibro().getId()));
+            mav.addObject("puedeEditar", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroSalida.getLibro().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA));
         }
+
+        mav.addObject("librosConsulta", librosConsulta);
+        mav.addObject("registroSalidaBusqueda", busqueda);
+        mav.addObject("oficinasRegistro", oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
 
           /* Solucion a los problemas de encoding del formulario GET */
         busqueda.getRegistroSalida().getRegistroDetalle().setExtracto(new String(busqueda.getRegistroSalida().getRegistroDetalle().getExtracto().getBytes("ISO-8859-1"), "UTF-8"));

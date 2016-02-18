@@ -106,7 +106,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         List<UsuarioEntidad> usuariosEntidad = usuarioEntidadEjb.findByEntidad(getEntidadActiva(request).getId());
         mav.addObject("usuariosEntidad",usuariosEntidad);
 
-        registroEntradaBusquedaValidator.validate(busqueda,result);
+        registroEntradaBusquedaValidator.validate(busqueda, result);
 
         Oficina oficina = getOficinaActiva(request);
         mav.addObject(oficina);
@@ -124,9 +124,6 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         
         if (result.hasErrors()) { // Si hay errores volvemos a la vista del formulario
             mav.addObject("errors", result.getAllErrors());
-            mav.addObject("librosConsulta", librosConsulta);
-            mav.addObject("registroEntradaBusqueda", busqueda);
-            mav.addObject("oficinasRegistro", oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
             return mav;
         }else { // Si no hay errores realizamos la búsqueda
             // Ponemos la hora 23:59 a la fecha fin
@@ -141,13 +138,13 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             lopdEjb.insertarRegistrosEntrada(paginacion, usuarioEntidad.getId());
             busqueda.setPageNumber(1);
             mav.addObject("paginacion", paginacion);
-            mav.addObject("librosConsulta", librosConsulta);
-            mav.addObject("registroEntradaBusqueda", busqueda);            
-            mav.addObject("isAdministradorLibro", permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(),registroEntrada.getLibro().getId()));
-            mav.addObject("puedeEditar", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),registroEntrada.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA));
-            mav.addObject("oficinasRegistro", oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+            mav.addObject("isAdministradorLibro", permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(), registroEntrada.getLibro().getId()));
+            mav.addObject("puedeEditar", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroEntrada.getLibro().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA));
         }
 
+        mav.addObject("librosConsulta", librosConsulta);
+        mav.addObject("oficinasRegistro", oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+        mav.addObject("registroEntradaBusqueda", busqueda);
 
         /* Solucion a los problemas de encoding del formulario GET */
         busqueda.getRegistroEntrada().getRegistroDetalle().setExtracto(new String(busqueda.getRegistroEntrada().getRegistroDetalle().getExtracto().getBytes("ISO-8859-1"), "UTF-8"));
