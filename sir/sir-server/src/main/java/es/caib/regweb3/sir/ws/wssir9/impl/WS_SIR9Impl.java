@@ -1,7 +1,7 @@
 package es.caib.regweb3.sir.ws.wssir9.impl;
 
 import es.caib.regweb3.sir.ws.wssir9.RespuestaWS;
-import es.caib.regweb3.sir.ws.wssir9.WSSIR9;
+import es.caib.regweb3.sir.ws.wssir9.WS_SIR9_PortType;
 import org.apache.log4j.Logger;
 import org.jboss.wsf.spi.annotation.TransportGuarantee;
 import org.jboss.wsf.spi.annotation.WebContext;
@@ -28,7 +28,7 @@ import javax.jws.soap.SOAPBinding;
         transportGuarantee = TransportGuarantee.NONE,
         secureWSDLAccess = false
 )
-public class WS_SIR9Impl implements WSSIR9 {
+public class WS_SIR9Impl implements WS_SIR9_PortType {
 
     protected final Logger log = Logger.getLogger(getClass());
 

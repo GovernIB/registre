@@ -6,7 +6,6 @@ import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.ws.api.manager.FicheroIntercambioManager;
 import es.caib.regweb3.sir.ws.api.wssir6b.RespuestaWS;
 import es.caib.regweb3.sir.ws.api.wssir6b.WS_SIR6_BServiceLocator;
-import es.caib.regweb3.sir.ws.api.wssir6b.WS_SIR6_B_DirectApi;
 import es.caib.regweb3.sir.ws.api.wssir6b.WS_SIR6_B_PortType;
 import es.caib.regweb3.utils.Configuracio;
 import org.apache.log4j.Logger;
@@ -70,12 +69,12 @@ public class FicheroIntercambioManagerImpl implements FicheroIntercambioManager 
 
     public static RespuestaWS ws_sir6_b_recepcionFicheroDeAplicacion(String xml) throws Exception {
 
-        if (Configuracio.useDirectApiSir()) {
+        /*if (Configuracio.useDirectApiSir()) {
             String url = Configuracio.getSirServerBase() + "/WS_SIR6_B";
             return WS_SIR6_B_DirectApi.recepcionFicheroDeAplicacion(xml, url);
-        } else {
+        } else {*/
             WS_SIR6_B_PortType ws_sir6_b = getWS_SIR6_B();
             return ws_sir6_b.recepcionFicheroDeAplicacion(xml);
-        }
+        //}
     }
 }

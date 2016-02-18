@@ -39,36 +39,37 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>axistools-maven-plugin</artifactId>
                 <version>1.4</version>
-                <configuration>
+                <!--<configuration>
                     <sourceDirectory>src/main/resources/wsdl/axis</sourceDirectory>
                     <testCases>false</testCases>
                     <serverSide>false</serverSide>
-                </configuration>
+                </configuration>-->
                 <executions>
 
-                    <!--<execution>
+                    <execution>
                         <id>generate-sources-ws_sir6a</id>
                         <phase>generate-sources</phase>
                         <configuration>
+                            <sourceDirectory>${basedir}/src/main/resources/wsdl/axis</sourceDirectory>
                             <wsdlFiles>
                                 <wsdlFile>WS_SIR6_A.wsdl</wsdlFile>
                             </wsdlFiles>
-                            <outputDirectory>src/main/java</outputDirectory>
-                            <packageSpace>es.caib.regweb3.ws.sir.api.wssir6a</packageSpace>
+                            <packageSpace>es.caib.regweb3.sir.ws.api.wssir6a</packageSpace>
                         </configuration>
                         <goals>
                             <goal>wsdl2java</goal>
                         </goals>
-                    </execution>-->
+                    </execution>
 
                     <execution>
                         <id>generate-sources-ws_sir6b</id>
                         <phase>generate-sources</phase>
                         <configuration>
+                            <sourceDirectory>${basedir}/src/main/resources/wsdl/axis</sourceDirectory>
                             <wsdlFiles>
                                 <wsdlFile>WS_SIR6_B.wsdl</wsdlFile>
                             </wsdlFiles>
-                            <outputDirectory>src/main/java</outputDirectory>
+                            <!--<outputDirectory>src/main/java</outputDirectory>-->
                             <packageSpace>es.caib.regweb3.sir.ws.api.wssir6b</packageSpace>
                         </configuration>
                         <goals>
@@ -80,10 +81,11 @@
                         <id>generate-sources-ws_sir7</id>
                         <phase>generate-sources</phase>
                         <configuration>
+                            <sourceDirectory>${basedir}/src/main/resources/wsdl/axis</sourceDirectory>
                             <wsdlFiles>
                                 <wsdlFile>WS_SIR7.wsdl</wsdlFile>
                             </wsdlFiles>
-                            <outputDirectory>src/main/java</outputDirectory>
+                            <!--<outputDirectory>src/main/java</outputDirectory>-->
                             <packageSpace>es.caib.regweb3.sir.ws.api.wssir7</packageSpace>
                         </configuration>
                         <goals>

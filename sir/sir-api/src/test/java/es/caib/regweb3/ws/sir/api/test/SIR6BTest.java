@@ -2,7 +2,6 @@ package es.caib.regweb3.ws.sir.api.test;
 
 import es.caib.regweb3.sir.ws.api.wssir6b.RespuestaWS;
 import es.caib.regweb3.sir.ws.api.wssir6b.WS_SIR6_BSoapBindingStub;
-import es.caib.regweb3.sir.ws.api.wssir6b.WS_SIR6_B_DirectApi;
 import es.caib.regweb3.sir.ws.api.wssir6b.WS_SIR6_B_PortType;
 import org.apache.commons.io.FileUtils;
 import org.junit.BeforeClass;
@@ -38,7 +37,9 @@ public class SIR6BTest extends SIRTestUtils {
             String strURL = getEndPoint(SIR_6_B); // "http://localhost:9999/services/WS_SIR6_B";
             // Get SOAP action
 
-            RespuestaWS resp = WS_SIR6_B_DirectApi.recepcionFicheroDeAplicacion(str, strURL);
+            //RespuestaWS resp = WS_SIR6_B_DirectApi.recepcionFicheroDeAplicacion(str, strURL);
+            WS_SIR6_B_PortType ws_sir6_b = getSir6B();
+            RespuestaWS resp = ws_sir6_b.recepcionFicheroDeAplicacion(str);
 
             System.out.println("Code: " + resp.getCodigo());
             System.out.println("Desc: " + resp.getDescripcion());
