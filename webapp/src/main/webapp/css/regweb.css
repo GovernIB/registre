@@ -716,7 +716,7 @@ a.text-gris:focus {
 /* DUAL LIST BOX MARILEN */
 
 SELECT, INPUT[type="text"] {
-	width: 160px;
+	/*width: 160px;*/
 	box-sizing: border-box;
 }
 
