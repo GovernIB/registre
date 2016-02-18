@@ -13,6 +13,7 @@ import javax.ejb.Local;
  * Date: 6/03/13
  */
 @Local
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public interface ArchivoLocal extends BaseEjb<Archivo, Long> {
 
     /**

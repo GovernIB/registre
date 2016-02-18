@@ -288,14 +288,14 @@ public class EntidadController extends BaseController {
                   UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByUsuarioEntidad(entidad.getPropietario().getId(),entidadId);
 
                   if(usuarioEntidad == null){ // SI no existe, lo creamos
-                      log.info("Lo creamos nuevo");
+                      log.info("Creamos el nuevo UsuarioEntidad");
                       usuarioEntidad = new UsuarioEntidad();
                       usuarioEntidad.setEntidad(entidad);
                       usuarioEntidad.setUsuario(entidad.getPropietario());
 
                       usuarioEntidadEjb.persist(usuarioEntidad);
                   }else if(!usuarioEntidad.getActivo()){ //Si existe, pero está inactivo, lo activamos.
-                      log.info("Lo activamos");
+                      log.info("Ya existía el UsuarioEntidad, lo activamos");
                       usuarioEntidad.setActivo(true);
                       usuarioEntidadEjb.merge(usuarioEntidad);
                   }
@@ -677,10 +677,11 @@ public class EntidadController extends BaseController {
      */
     @RequestMapping(value = "/{idEntidad}/eliminar")
     public String eliminarEntidad(@PathVariable Long idEntidad, HttpServletRequest request) {
-    log.info("idEntidad: " + idEntidad);
+
         try {
 
             entidadEjb.eliminarEntidad(idEntidad);
+            entidadEjb.remove(entidadEjb.findById(idEntidad));
 
             Mensaje.saveMessageInfo(request, "S'ha eliminat l'entitat");
 
