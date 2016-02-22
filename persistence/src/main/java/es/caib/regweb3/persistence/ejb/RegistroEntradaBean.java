@@ -1145,5 +1145,16 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         return (Long) q.getSingleResult() > 0;
     }
 
+    public Boolean tieneEstado(Long idRegistroEntrada, Long idEstado) throws Exception {
+        Query q;
+
+        q = em.createQuery("Select count(re.id) from RegistroEntrada as re where re.id = :idRegistroEntrada and re.estado = :idEstado ");
+
+        q.setParameter("idRegistroEntrada", idRegistroEntrada);
+        q.setParameter("idEstado", idEstado);
+
+        return (Long) q.getSingleResult() > 0;
+    }
+
 
 }

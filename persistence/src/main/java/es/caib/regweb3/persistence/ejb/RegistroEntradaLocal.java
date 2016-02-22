@@ -423,4 +423,14 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      */
     public Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws Exception;
 
+    /**
+     * Comprueba si un RegistroEntrada tiene un Estado en concreto
+     *
+     * @param idRegistroEntrada
+     * @param idEstado
+     * @return
+     * @throws Exception
+     */
+    public Boolean tieneEstado(Long idRegistroEntrada, Long idEstado) throws Exception;
+
 }
