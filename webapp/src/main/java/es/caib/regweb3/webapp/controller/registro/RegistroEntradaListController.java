@@ -386,6 +386,15 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         return "redirect:/registroEntrada/list";
     }
 
+    /**
+     * Función que se encarga de obtener los destinatarios a los que se debe distribuir el registro de entrada.
+     * La obtención de esos destinatarios se realiza a través del plugin
+     *
+     * @param idRegistro identificador del registro
+     * @param request
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "/{idRegistro}/tramitar", method = RequestMethod.GET)
     public
     @ResponseBody
@@ -411,7 +420,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         // Plugin de distribución
         IDistribucionPlugin distribucionPlugin = RegwebDistribucionPluginManager.getInstance();
-        if (distribucionPlugin != null) {
+        if (distribucionPlugin != null) { // hay plugin definido
             Boolean conAnexos = registroEntrada.getRegistroDetalle().getAnexos().size() > 0;
 
             // TODO emplear el serializar de Toni Nadal(preguntarle a el)
@@ -427,7 +436,15 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         return destinatarios;
     }
 
-
+    /**
+     * Método que envia el registro de entrada a los destinatarios indicados y modifica el estado del registro
+     * a tramitado
+     * @param idRegistro identificador del registro de entrada
+     * @param wrapper contendrá los destinatarios seleccionados
+     * @param request
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "/{idRegistro}/enviardestinatarios", method = RequestMethod.POST)
     public
     @ResponseBody
@@ -442,7 +459,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         // Plugin de distribución
         IDistribucionPlugin distribucionPlugin = RegwebDistribucionPluginManager.getInstance();
 
-
+        // El plugin distribuye el registro de entrada hacia los destinatarios
         Boolean enviado = distribucionPlugin.enviarDestinatarios(wrapper.getDestinatarios(), wrapper.getObservaciones());
         registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, usuarioEntidad);
         if (enviado) {
