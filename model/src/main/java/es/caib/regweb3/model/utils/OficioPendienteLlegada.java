@@ -10,6 +10,13 @@ public class OficioPendienteLlegada {
     private Long idRegistroEntrada;
     private Long idLibro;
 
+    public OficioPendienteLlegada() {
+    }
+
+    public OficioPendienteLlegada(Long idRegistroEntrada) {
+        this.idRegistroEntrada = idRegistroEntrada;
+    }
+
     public Long getIdRegistroEntrada() {
         return idRegistroEntrada;
     }

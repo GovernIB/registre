@@ -239,11 +239,11 @@ public class OficioRemisionController extends BaseController {
             RegistroEntrada registroEntrada = registroEntradaListForm.getRegistros().get(i);
 
             if(registroEntrada.getId() != null){ //Si se ha seleccionado
-
-                registroEntrada = registroEntradaEjb.findById(registroEntrada.getId());
+                log.info("RE seleccionado: " + registroEntrada.getId());
+                //registroEntrada = registroEntradaEjb.findById(registroEntrada.getId());
 
                 // Comprobamos si el RegistroEntrada tiene el estado Válido
-                if(!registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_VALIDO)){
+                if (!registroEntradaEjb.tieneEstado(registroEntrada.getId(), RegwebConstantes.ESTADO_VALIDO)) {
 
                     Mensaje.saveMessageError(request, getMessage("registroEntrada.tramitar.error"));
                     return "redirect:/oficioRemision/oficiosPendientesRemision";
@@ -257,7 +257,11 @@ public class OficioRemisionController extends BaseController {
         // Comprobamos que al menos haya seleccionado algún RegistroEntrada
         if(registrosEntrada.size() == 0) {
             Mensaje.saveMessageError(request, getMessage("oficioRemision.seleccion"));
-            return "redirect:/oficioRemision/oficiosPendientesRemision";
+
+            if (registroEntradaListForm.getIdOrganismo() != null) {
+                return "redirect:/oficioRemision/oficiosPendientesRemisionInterna";
+            }
+            return "redirect:/oficioRemision/oficiosPendientesRemisionExterna";
         }
 
         // Creamos el OficioRemisión a partir de los registros de entrada seleccionados.
@@ -533,8 +537,8 @@ public class OficioRemisionController extends BaseController {
     public String procesarOficioRemision(@PathVariable Long idOficioRemision, Model model, HttpServletRequest request) throws Exception {
 
         OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
-        //List<RegistroEntrada> registrosEntrada = oficioRemisionEjb.getByOficioRemision(oficioRemision.getId());
-
+        List<RegistroEntrada> registrosEntrada = oficioRemisionEjb.getByOficioRemision(oficioRemision.getId());
+        log.info("Total RegistrosEntrada del oficio: " + registrosEntrada.size());
         model.addAttribute(oficioRemision);
 
         ModeloOficioRemision modeloOficioRemision = new ModeloOficioRemision();
@@ -545,13 +549,13 @@ public class OficioRemisionController extends BaseController {
 
         // Rellenamos el bean OficioPendienteLlegada con los RegistroEntrada del OficioRemision
         List<OficioPendienteLlegada> oficios = new ArrayList<OficioPendienteLlegada>();
-        for(RegistroEntrada registroEntrada:oficioRemision.getRegistrosEntrada()){
-            OficioPendienteLlegada oficio = new OficioPendienteLlegada();
-            oficio.setIdRegistroEntrada(registroEntrada.getId());
+        for (RegistroEntrada registroEntrada : registrosEntrada) {
+            log.info("RegistroEntrada del oficio: " + registroEntrada.getId());
+            OficioPendienteLlegada oficio = new OficioPendienteLlegada(registroEntrada.getId());
 
             oficios.add(oficio);
-
         }
+
         model.addAttribute("oficioPendienteLlegadaForm", new OficioPendienteLlegadaForm(oficios));
 
         return "oficioRemision/oficioRemisionProcesar";
