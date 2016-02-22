@@ -8,16 +8,23 @@
                 <h3><spring:message code="regweb.procesando"/></h3>
             </div>
             <div class="modal-body">
-                <div class="col-xs-4 centrat" id="cargadist">
-                    <img src="<c:url value="/img/712.GIF"/>" width="60" height="60"/>
+                <div class="row">
+                    <div class="col-xs-4 centrat" id="cargadist">
+                        <img src="<c:url value="/img/712.GIF"/>" width="60" height="60"/>
+                    </div>
                 </div>
-                <div class="col-xs-12" id="divlistdestinatarios">
-                    <spring:message code="regweb.distribuyendo"/>
-                    <ul id="listadestin">
-                    </ul>
+                <div class="row">
+                    <div class="col-xs-12" id="divlistdestinatarios">
+                        <spring:message code="regweb.distribuyendo"/>
+                        <ul id="listadestin">
+                        </ul>
+                    </div>
                 </div>
+            </div>
+            <div class="modal-footer">
             </div>
         </div>
     </div>
 </div>
 <!-- /.modal -->
+

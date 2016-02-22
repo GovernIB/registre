@@ -715,25 +715,10 @@ a.text-gris:focus {
 
 /* DUAL LIST BOX MARILEN */
 
-SELECT, INPUT[type="text"] {
-	/*width: 160px;*/
+.select-distribucion {
+	width: 270px;
 	box-sizing: border-box;
 }
-
-SECTION {
-	padding: 8px;
-	background-color: #f0f0f0;
-	overflow: auto;
-}
-
-SECTION > DIV {
-	float: left;
-	padding: 4px;
-}
-
-SECTION > DIV + DIV {
-	width: 40px;
-	text-align: center;
-}
-
 /* FIN DUAL LIST BOX MARILEN */
+
+

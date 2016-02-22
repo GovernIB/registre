@@ -268,6 +268,8 @@
      */
     function distribuir(url) {
         var html = '';
+        limpiarDistribuir();
+
         jQuery.ajax({
             async: true,
             url: url,
@@ -349,15 +351,16 @@
      */
     function enviarDestinatarios(url) {
 
-        $('#distribuirModal').modal('hide');
+
         var html = "";
         var destinatarios = [];
         var destinatariosarray = "";
 
-        //Seleccionamos todos por defecto y así el se enviaran todos, que es el comportamiento normal.
+        //Seleccionamos todos por defecto y así se enviaran todos, que es el comportamiento normal.
         $('#propuestos option').prop('selected', true);
         // Coegemos los destinatarios que han seleccionado en el combo "propuestos"
         if ($('#propuestos :selected').length > 0) {
+            $('#distribuirModal').modal('hide');
             //build an array of selected values
             destinatariosarray = "[";
             $('#propuestos :selected').each(function (i, selected) {
@@ -369,34 +372,54 @@
                 }
                 destinatariosarray += destinatarios[i];
             });
+            destinatariosarray += "]";
+            //Pintamos los destinatarios escogidos
+            $('#listadestin').html(html);
+            $('#modalDistribDestinatarios').modal('show');
+
+            // var destinatarios = [{"id":"a","name":"shail1"}, {"id":"b","name":"shail2"}];
+            //var destinatario = {"id":"a","name":"shail1"};
+
+            var observ = $('#observtramit').val();
+
+
+            /* HAY que montar el string manual(no se porque), pero funciona */
+            var json = '{"destinatarios":' + destinatariosarray + ',"observaciones":"' + observ + '"}';
+
+
+            jQuery.ajax({
+                url: url,
+                type: 'POST',
+                dataType: 'json',
+                data: json,
+                contentType: 'application/json',
+                success: function (result) {
+                    goTo('<c:url value="/registroEntrada/${registro.id}/detalle"/>');
+
+                }
+            });
+        } else {
+
+            var variable = "#propuestos";
+
+            variable = variable + "Error"; // #propuestosError
+            var traderror = "<spring:message code='registro.distribuir.propuesto.obligatorio' javaScriptEscape='true' />";
+
+            // Mostramos los errores de validación encontrados
+
+            var htmlError = "<span id=\"propuestosError\" class=\"help-block\"> " + traderror + "</span>";
+
+            $(variable).html(htmlError);
+            $(variable).parents(".form-group").addClass("has-error");
+
+
         }
-        destinatariosarray += "]";
 
-        //Pintamos los destinatarios escogidos
-        $('#listadestin').html(html);
-        $('#modalDistribDestinatarios').modal('show');
+    }
 
-        // var destinatarios = [{"id":"a","name":"shail1"}, {"id":"b","name":"shail2"}];
-        //var destinatario = {"id":"a","name":"shail1"};
-
-        var observ = $('#observtramit').val();
-
-
-        /* HAY que montar el string manual(no se porque), pero funciona */
-        var json = '{"destinatarios":' + destinatariosarray + ',"observaciones":"' + observ + '"}';
-
-
-        jQuery.ajax({
-            url: url,
-            type: 'POST',
-            dataType: 'json',
-            data: json,
-            contentType: 'application/json',
-            success: function (result) {
-                goTo('<c:url value="/registroEntrada/${registro.id}/detalle"/>');
-
-            }
-        });
+    function limpiarDistribuir() {
+        quitarError('propuestos');
+        $('#observtramit').val('');
     }
 
 </script>
