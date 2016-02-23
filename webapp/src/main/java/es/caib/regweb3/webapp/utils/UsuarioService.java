@@ -256,9 +256,10 @@ public class UsuarioService {
 
         Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
 
-        //Obtenemos los Libros, cuyo Organismo es Vigente y donde el UsuarioEntidad tenga algún permiso
+        //Obtenemos los Libros, cuyo Organismo es Vigente y donde el UsuarioEntidad
+        // tenga permisos de (Registro, Modificación o Administración)
         List<Libro> librosRegistro = permisoLibroUsuarioEjb.getLibrosRegistro(usuarioEntidad.getId());
-        log.info("Libros usuario: " + Arrays.toString(librosRegistro.toArray()));
+        log.info("Libros registro usuario: " + Arrays.toString(librosRegistro.toArray()));
 
         //Obtenemos los Libros donde que el UsuarioEntidad puede Administrar
         List<Libro> librosAdministrados = permisoLibroUsuarioEjb.getLibrosAdministrados(usuarioEntidad.getId());

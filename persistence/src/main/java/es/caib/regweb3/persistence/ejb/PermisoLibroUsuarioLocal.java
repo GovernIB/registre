@@ -63,7 +63,8 @@ public interface PermisoLibroUsuarioLocal extends BaseEjb<PermisoLibroUsuario, L
     public List<UsuarioEntidad> getUsuariosEntidadByLibro( Long idLibro) throws Exception;
 
     /**
-     * Retorna los {@link es.caib.regweb3.model.Libro} en los que un Usuario tiene algún tipo de permiso
+     * Retorna los {@link es.caib.regweb3.model.Libro} en los que un Usuario tiene permisos de
+     * Registro, Modificación o Administración
      * @param idUsuarioEntidad
      * @return
      * @throws Exception
