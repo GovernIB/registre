@@ -127,7 +127,7 @@
                                                                 </colgroup>
                                                                 <thead>
                                                                     <tr>
-                                                                        <th></th>
+                                                                        <th style="text-align:center;cursor: pointer;" onclick="seleccionarTodo('oficio${status.count}','${fn:length(oficiosRemisionOrganismo.oficiosRemision)}');"><i class="fa fa-check-square"></i></th>
                                                                         <th><spring:message code="registroEntrada.numeroRegistro"/></th>
                                                                         <th><spring:message code="registroEntrada.fecha"/></th>
                                                                         <th><spring:message code="registroEntrada.libro.corto"/></th>
@@ -141,7 +141,7 @@
                                                                 <tbody>
                                                                 <c:forEach var="registroEntrada" items="${oficiosRemisionOrganismo.oficiosRemision}" varStatus="indice">
                                                                         <tr>
-                                                                            <td><form:checkbox path="registros[${indice.index}].id" value="${registroEntrada.id}"/></td>
+                                                                            <td><form:checkbox id="oficio${status.count}_id${indice.index}" path="registros[${indice.index}].id" value="${registroEntrada.id}"/></td>
                                                                             <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="yyyy"/> / ${registroEntrada.numeroRegistro}</td>
                                                                             <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy"/></td>
                                                                             <td><label class="no-bold" rel="ayuda" data-content="${registroEntrada.libro.nombre}" data-toggle="popover">${registroEntrada.libro.codigo}</label></td>
@@ -212,7 +212,7 @@
                                                             </colgroup>
                                                             <thead>
                                                             <tr>
-                                                                <th></th>
+                                                                <th style="text-align:center;cursor: pointer;" onclick="seleccionarTodo('oficio${status.count}','${fn:length(oficiosRemisionOrganismo.oficiosRemision)}');"><i class="fa fa-check-square"></i></th>
                                                                 <th><spring:message code="registroEntrada.numeroRegistro"/></th>
                                                                 <th><spring:message code="registroEntrada.fecha"/></th>
                                                                 <th><spring:message code="registroEntrada.libro.corto"/></th>
@@ -226,7 +226,7 @@
                                                             <tbody>
                                                             <c:forEach var="registroEntrada" items="${oficiosRemisionOrganismo.oficiosRemision}" varStatus="indice">
                                                                 <tr>
-                                                                    <td><form:checkbox path="registros[${indice.index}].id" value="${registroEntrada.id}"/></td>
+                                                                    <td><form:checkbox id="oficio${status.count}_id${indice.index}" path="registros[${indice.index}].id" value="${registroEntrada.id}"/></td>
                                                                     <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="yyyy"/> / ${registroEntrada.numeroRegistro}</td>
                                                                     <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy"/></td>
                                                                     <td>${registroEntrada.libro.nombre}</td>
@@ -297,6 +297,28 @@
 </div> <!-- /container -->
 
 <c:import url="../modulos/pie.jsp"/>
+
+<script type="text/javascript">
+    //Selecciona todos los oficios de remision de un organismo
+    function seleccionarTodo(nomOficio,filas) {
+        var len = parseInt(filas);
+        var nombre = "#"+nomOficio+"_id0";
+        //Selecciona todos los checks o los deselecciona todos a la vez
+        if (len > 0) {
+            if ($(nombre).prop('checked')) {
+                for (var i = 0; i < len; i++) {
+                    nombre = "#"+nomOficio+"_id" +i;
+                    $(nombre).prop('checked', false);
+                }
+            } else {
+                for (var i = 0; i < len; i++) {
+                    nombre = "#"+nomOficio+"_id" +i;
+                    $(nombre).prop('checked', true);
+                }
+            }
+        }
+    }
+</script>
 
 </body>
 </html>
