@@ -142,6 +142,23 @@
                                 </div>
                             </div>
                             <div class="form-group col-xs-6">
+                                <div class="col-xs-4 "><spring:message code="interesado.apellido1"/></div>
+                                <div class="col-xs-8">
+                                    <form:input path="interessatLli1" cssClass="form-control" maxlength="255"/>
+                                    <form:errors path="interessatLli1" cssClass="help-block" element="span"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-xs-6">
+                                <div class="col-xs-4 "><spring:message code="interesado.apellido2"/></div>
+                                <div class="col-xs-8">
+                                    <form:input path="interessatLli2" cssClass="form-control" maxlength="255"/>
+                                    <form:errors path="interessatLli2" cssClass="help-block" element="span"/>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-6">
                                 <div class="col-xs-4 "><spring:message code="registroEntrada.docInteresado"/></div>
                                 <div class="col-xs-8">
                                     <form:input  path="interessatDoc" cssClass="form-control" maxlength="17"/>

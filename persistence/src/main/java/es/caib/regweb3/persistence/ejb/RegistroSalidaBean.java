@@ -1,9 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.model.Interesado;
-import es.caib.regweb3.model.Libro;
-import es.caib.regweb3.model.RegistroSalida;
-import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.RegistroBasico;
 import es.caib.regweb3.persistence.utils.*;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -24,17 +21,17 @@ import java.util.*;
  * Created by Fundació BIT.
  *
  * @author earrivi
- * Date: 16/01/14
+ *         Date: 16/01/14
  */
 
 @Stateless(name = "RegistroSalidaEJB")
 @SecurityDomain("seycon")
-public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean 
-    implements RegistroSalidaLocal{
+public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
+        implements RegistroSalidaLocal {
 
     protected final Logger log = Logger.getLogger(getClass());
 
-    @PersistenceContext(unitName="regweb3")
+    @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
     @EJB(mappedName = "regweb3/LibroEJB/local")
@@ -48,14 +45,16 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
     @EJB(mappedName = "regweb3/ContadorEJB/local")
     public ContadorLocal contadorEjb;
-    
-    
+
     @EJB(mappedName = "regweb3/AnexoEJB/local")
     public AnexoLocal anexoEjb;
 
+    @EJB(mappedName = "regweb3/OrganismoEJB/local")
+    public OrganismoLocal organismoEjb;
+
 
     @Override
-    public List<RegistroSalida> getByUsuario(Long idUsuarioEntidad) throws Exception{
+    public List<RegistroSalida> getByUsuario(Long idUsuarioEntidad) throws Exception {
 
         Query q = em.createQuery("Select registroSalida from RegistroSalida as registroSalida where registroSalida.usuario.id = :idUsuarioEntidad ");
 
@@ -65,141 +64,163 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     }
 
     @Override
-    public RegistroSalida registrarSalida(RegistroSalida registroSalida) 
-        throws Exception, I18NException, I18NValidationException{
-      return registrarSalida(registroSalida, null, null);
+    public RegistroSalida registrarSalida(RegistroSalida registroSalida)
+            throws Exception, I18NException, I18NValidationException {
+        return registrarSalida(registroSalida, null, null);
     }
-      
-      
-      
+
+
     @Override
-     public synchronized RegistroSalida registrarSalida(RegistroSalida registroSalida,
-          UsuarioEntidad usuarioEntidad, List<AnexoFull> anexos) 
-              throws Exception, I18NException, I18NValidationException {
+    public synchronized RegistroSalida registrarSalida(RegistroSalida registroSalida,
+                                                       UsuarioEntidad usuarioEntidad, List<AnexoFull> anexos)
+            throws Exception, I18NException, I18NValidationException {
 
         // Obtenemos el Número de registro
         Libro libro = libroEjb.findById(registroSalida.getLibro().getId());
         NumeroRegistro numeroRegistro = contadorEjb.incrementarContador(libro.getContadorSalida().getId());
         registroSalida.setNumeroRegistro(numeroRegistro.getNumero());
         registroSalida.setFecha(numeroRegistro.getFecha());
-        if(registroSalida.getLibro().getCodigo() != null && registroSalida.getOficina().getCodigo() != null){
+        if (registroSalida.getLibro().getCodigo() != null && registroSalida.getOficina().getCodigo() != null) {
             registroSalida.setNumeroRegistroFormateado(RegistroUtils.numeroRegistroFormateado(registroSalida, registroSalida.getLibro(), registroSalida.getOficina()));
         } else {
             registroSalida.setNumeroRegistroFormateado(RegistroUtils.numeroRegistroFormateado(registroSalida, libroEjb.findById(registroSalida.getLibro().getId()), oficinaEjb.findById(registroSalida.getOficina().getId())));
         }
 
         // Si no ha introducido ninguna fecha de Origen
-        if(registroSalida.getRegistroDetalle().getFechaOrigen() == null){
+        if (registroSalida.getRegistroDetalle().getFechaOrigen() == null) {
             registroSalida.getRegistroDetalle().setFechaOrigen(registroSalida.getFecha());
         }
-        
+
         List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
         if (interesados != null && interesados.size() != 0) {
-          for (Interesado interesado : interesados) {
-            interesado.setRegistroDetalle(registroSalida.getRegistroDetalle());
-          }
+            for (Interesado interesado : interesados) {
+                interesado.setRegistroDetalle(registroSalida.getRegistroDetalle());
+            }
         }
-        
+
 
         // Guardamos el RegistroSalida
         registroSalida = persist(registroSalida);
 
         //Si no se ha espeficicado un NumeroRegistroOrigen, le asignamos el propio
-        if(StringUtils.isEmpty(registroSalida.getRegistroDetalle().getNumeroRegistroOrigen())){
+        if (StringUtils.isEmpty(registroSalida.getRegistroDetalle().getNumeroRegistroOrigen())) {
 
             registroSalida.getRegistroDetalle().setNumeroRegistroOrigen(registroSalida.getNumeroRegistroFormateado());
 
             registroSalida = merge(registroSalida);
         }
-        
-        
+
+
         // TODO Controlar custodyID y si hay fallo borrar todos los Custody
         if (anexos != null && anexos.size() != 0) {
-          final Long registroID = registroSalida.getId();
-          for (AnexoFull anexoFull : anexos) {
-            anexoFull.getAnexo().setRegistroDetalle(registroSalida.getRegistroDetalle());
-            anexoFull = anexoEjb.crearAnexo(anexoFull, usuarioEntidad, registroID, "salida");
-          }
+            final Long registroID = registroSalida.getId();
+            for (AnexoFull anexoFull : anexos) {
+                anexoFull.getAnexo().setRegistroDetalle(registroSalida.getRegistroDetalle());
+                anexoFull = anexoEjb.crearAnexo(anexoFull, usuarioEntidad, registroID, "salida");
+            }
         }
-        
-        
+
 
         return registroSalida;
 
     }
 
     @Override
-    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, List<Libro> libros, String interesadoNom, String interesadoDoc, String organoOrig, Boolean anexos, String observaciones, String usuario) throws Exception{
+    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, String interesadoNom, String interesadoDoc, String interesadoLli1, String interesadoLli2, String organoOrigen, Boolean anexos, String observaciones, String usuario) throws Exception {
 
         Query q;
         Query q2;
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        StringBuffer query = new StringBuffer("Select DISTINCT registroSalida from RegistroSalida as registroSalida left join registroSalida.registroDetalle.interesados interessat ");
+        StringBuffer query = new StringBuffer("Select DISTINCT registroSalida from RegistroSalida as registroSalida, Interesado interessat ");
 
-        if(registroSalida.getNumeroRegistroFormateado()!= null && registroSalida.getNumeroRegistroFormateado().length() > 0){
-       	 where.add(" registroSalida.numeroRegistroFormateado LIKE :numeroRegistroFormateado");
-       	 parametros.put("numeroRegistroFormateado", "%"+registroSalida.getNumeroRegistroFormateado()+"%");
+        where.add(" registroSalida.registroDetalle.id = interessat.registroDetalle.id ");
+
+        // Numero registro
+        if (!StringUtils.isEmpty(registroSalida.getNumeroRegistroFormateado())) {
+            where.add(" registroSalida.numeroRegistroFormateado LIKE :numeroRegistroFormateado");
+            parametros.put("numeroRegistroFormateado", "%" + registroSalida.getNumeroRegistroFormateado() + "%");
         }
 
-        if(registroSalida.getRegistroDetalle().getExtracto() != null && registroSalida.getRegistroDetalle().getExtracto().length() > 0){
-        	where.add(DataBaseUtils.like("registroSalida.registroDetalle.extracto","extracto",parametros,registroSalida.getRegistroDetalle().getExtracto()));
+        // Extracto
+        if (!StringUtils.isEmpty(registroSalida.getRegistroDetalle().getExtracto())) {
+            where.add(DataBaseUtils.like("registroSalida.registroDetalle.extracto", "extracto", parametros, registroSalida.getRegistroDetalle().getExtracto()));
         }
 
         // Observaciones
-        if(observaciones != null && observaciones.length() > 0){
-            where.add(DataBaseUtils.like("registroSalida.registroDetalle.observaciones","observaciones",parametros,observaciones));
+        if (!StringUtils.isEmpty(observaciones)) {
+            where.add(DataBaseUtils.like("registroSalida.registroDetalle.observaciones", "observaciones", parametros, observaciones));
         }
 
         // Usuario
-        if(usuario != null && usuario.length() > 0){
-            where.add(DataBaseUtils.like("registroSalida.usuario.usuario.identificador","usuario",parametros,usuario));
+        if (!StringUtils.isEmpty(usuario)) {
+            where.add(DataBaseUtils.like("registroSalida.usuario.usuario.identificador", "usuario", parametros, usuario));
         }
-        
-        //Filtros para interesado y organo destinatario
-        boolean filtramosInteresado = false;
-        if (interesadoNom!=null && !"".equals(interesadoNom) && !"null".equalsIgnoreCase(interesadoNom)) {
-       	 where.add(" ((UPPER(interessat.nombre)||' '||UPPER(interessat.apellido1)||' '||UPPER(interessat.apellido2) LIKE UPPER(:interesadoNom)) or"
-       	 		+  " (UPPER(interessat.razonSocial) LIKE UPPER(:interesadoNom)) ) "); //or (UPPER(registroEntrada.destino.denominacion) LIKE UPPER(:interesadoNom))
-       	 parametros.put("interesadoNom", "%"+interesadoNom.trim()+"%");
-       	 filtramosInteresado=true;
+
+        // Nombre interesado
+        if (!StringUtils.isEmpty(interesadoNom)) {
+            where.add("((" + DataBaseUtils.like("interessat.nombre", "interesadoNom", parametros, interesadoNom) +
+                    ") or (" + DataBaseUtils.like("interessat.razonSocial", "interesadoNom", parametros, interesadoNom) +
+                    "))");
         }
-        boolean filtramosDoc = false;
-        if (interesadoDoc!=null && !"".equals(interesadoDoc) && !"null".equalsIgnoreCase(interesadoDoc)) {
-       	 where.add(" (UPPER(interessat.documento) LIKE UPPER(:interesadoDoc)) ");
-       	 parametros.put("interesadoDoc", "%"+interesadoDoc.trim()+"%");
-       	 filtramosDoc = true;
+
+        // Primer apellido interesado
+        if (!StringUtils.isEmpty(interesadoLli1)) {
+            where.add(DataBaseUtils.like("interessat.apellido1", "interesadoLli1", parametros, interesadoLli1));
+        }
+
+        // Segundo apellido interesado
+        if (!StringUtils.isEmpty(interesadoLli2)) {
+            where.add(DataBaseUtils.like("interessat.apellido2", "interesadoLli2", parametros, interesadoLli2));
+        }
+
+        // Documento interesado
+        if (!StringUtils.isEmpty(interesadoDoc)) {
+            where.add(" (UPPER(interessat.documento) LIKE UPPER(:interesadoDoc)) ");
+            parametros.put("interesadoDoc", "%" + interesadoDoc.trim() + "%");
+        }
+
+        // Organismo origen
+        if (!StringUtils.isEmpty((organoOrigen))) {
+            Organismo organismo = organismoEjb.findByCodigo(organoOrigen);
+            if (organismo == null) {
+                where.add(" registroSalida.origenExternoCodigo = :organoOrigen ");
+            } else {
+                where.add(" registroSalida.origen.codigo = :organoOrigen ");
+            }
+
+            parametros.put("organoOrigen", organoOrigen);
         }
 
         // Estado registro
-        if(registroSalida.getEstado() != null && registroSalida.getEstado() > 0) {
-           where.add(" registroSalida.estado = :idEstadoRegistro ");
-           parametros.put("idEstadoRegistro",registroSalida.getEstado());
+        if (registroSalida.getEstado() != null && registroSalida.getEstado() > 0) {
+            where.add(" registroSalida.estado = :idEstadoRegistro ");
+            parametros.put("idEstadoRegistro", registroSalida.getEstado());
         }
 
         // Oficina Registro
-        if(registroSalida.getOficina().getId() != null && registroSalida.getOficina().getId() > 0) {
+        if (registroSalida.getOficina().getId() != null && registroSalida.getOficina().getId() > 0) {
             where.add(" registroSalida.oficina.id = :idOficina ");
-            parametros.put("idOficina",registroSalida.getOficina().getId());
+            parametros.put("idOficina", registroSalida.getOficina().getId());
         }
 
-        where.add(" (registroSalida.fecha >= :fechaInicio  ");parametros.put("fechaInicio", fechaInicio);
-        where.add(" registroSalida.fecha <= :fechaFin) ");parametros.put("fechaFin", fechaFin);
+        // Intervalo fechas
+        where.add(" (registroSalida.fecha >= :fechaInicio  ");
+        parametros.put("fechaInicio", fechaInicio);
+        where.add(" registroSalida.fecha <= :fechaFin) ");
+        parametros.put("fechaFin", fechaFin);
 
-
-        // Comprobamos si la búsqueda es sobre un libro en concreto o sobre todos a los que tiene acceso el usuario.
-        if(registroSalida.getLibro().getId() != null && registroSalida.getLibro().getId() > 0){
-            where.add(" registroSalida.libro.id = :idLibro"); parametros.put("idLibro",registroSalida.getLibro().getId());
-        }else{
-            where.add(" registroSalida.libro in (:libros)"); parametros.put("libros",libros);
-        }
+        // Libro
+        where.add(" registroSalida.libro.id = :idLibro");
+        parametros.put("idLibro", registroSalida.getLibro().getId());
 
         // Buscamos registros de sañida con anexos
-        if(anexos){
+        if (anexos) {
             where.add(" registroSalida.registroDetalle.id in (select distinct(a.registroDetalle.id) from Anexo as a) ");
         }
 
+        // Añadimos los parámetros a la query
         if (parametros.size() != 0) {
             query.append("where ");
             int count = 0;
@@ -210,7 +231,8 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
                 query.append(w);
                 count++;
             }
-            q2 = em.createQuery(query.toString().replaceAll("Select registroSalida from RegistroSalida as registroSalida ", "Select count(registroSalida.id) from RegistroSalida as registroSalida "));
+            // Duplicamos la query solo para obtener los resultados totales
+            q2 = em.createQuery(query.toString().replaceAll("Select DISTINCT registroSalida from RegistroSalida as registroSalida, Interesado interessat ", "Select count(DISTINCT registroSalida.id) from RegistroSalida as registroSalida, Interesado interessat "));
             query.append(" order by registroSalida.id desc");
             q = em.createQuery(query.toString());
 
@@ -220,87 +242,33 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
                 q2.setParameter(param.getKey(), param.getValue());
             }
 
-        }else{
-            q2 = em.createQuery(query.toString().replaceAll("Select registroSalida from RegistroSalida as registroSalida ", "Select count(registroSalida.id) from RegistroSalida as registroSalida "));
+        } else {
+            // Duplicamos la query solo para obtener los resultados totales
+            q2 = em.createQuery(query.toString().replaceAll("Select DISTINCT registroSalida from RegistroSalida as registroSalida, Interesado interessat ", "Select count(DISTINCT registroSalida.id) from RegistroSalida as registroSalida, Interesado interessat "));
             query.append("order by registroSalida.id desc");
             q = em.createQuery(query.toString());
         }
 
 
         Paginacion paginacion = null;
-        List<Object> resultadosPrincipal = q.getResultList();
-        
-        if (filtramosInteresado && filtramosDoc) {
-       	 for (int r=resultadosPrincipal.size()-1; r>=0; r--) {
-       		 RegistroSalida re = (RegistroSalida)resultadosPrincipal.get(r);
-       		 if (!registreSortidaConteInteressat(re, interesadoNom, interesadoDoc)) {
-       			 resultadosPrincipal.remove(r);
-       		 }
-       	 }
-        }
-        
-        if (organoOrig!=null && !"".equals(organoOrig) && !"null".equalsIgnoreCase(organoOrig)) {
-       	 for (int r=resultadosPrincipal.size()-1; r>=0; r--) {
-       		RegistroSalida re = (RegistroSalida)resultadosPrincipal.get(r);
-       		 if (!registreSortidaEsDeOrganDesti(re, organoOrig)) {
-       			 resultadosPrincipal.remove(r);
-       		 }
-       	 }
-        }
 
-        if(pageNumber != null){ // Comprobamos si es una busqueda paginada o no
-            int total  = resultadosPrincipal.size();//(Long)q2.getSingleResult();
-            paginacion = new Paginacion(total, pageNumber);
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
+            paginacion = new Paginacion(total.intValue(), pageNumber);
             int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
-            //q.setFirstResult(inicio);
-            //q.setMaxResults(RESULTADOS_PAGINACION);
-            int finalRes = Math.min(inicio+RESULTADOS_PAGINACION, total);
-            resultadosPrincipal = resultadosPrincipal.subList(inicio, finalRes);
-        }else{
+            q.setFirstResult(inicio);
+            q.setMaxResults(RESULTADOS_PAGINACION);
+        } else {
             paginacion = new Paginacion(0, 0);
         }
 
-        paginacion.setListado(resultadosPrincipal);
+        paginacion.setListado(q.getResultList());
 
         return paginacion;
     }
 
-    private boolean registreSortidaConteInteressat(RegistroSalida ri, String int_nom, String int_doc) {
-  		 for (int i=0; i<ri.getRegistroDetalle().getInteresados().size(); i++) {
-			 Interesado interesat = ri.getRegistroDetalle().getInteresados().get(i);
-			 String nomComplet = "";
-			 
-			 if (interesat.getNombre()!=null && !"".equals(interesat.getNombre()) && !" ".equals(interesat.getNombre()) && !"null".equalsIgnoreCase(interesat.getNombre())) {
-				 nomComplet = interesat.getNombre() +" "+ interesat.getApellido1();
-				 if (interesat.getApellido2()!=null && !"".equals(interesat.getApellido2()) && !" ".equals(interesat.getApellido2()) && !"null".equalsIgnoreCase(interesat.getApellido2())) {
-					 nomComplet += " "+ interesat.getApellido2();
-				 }				 
-			 }else{
-				 nomComplet = interesat.getRazonSocial();
-			 }
-
-			 if (nomComplet.trim().toUpperCase().contains(int_nom.trim().toUpperCase()) && interesat.getDocumento().trim().toUpperCase().contains(int_doc.trim().toUpperCase())) {
-				 return true;
-			 }
-		 }
-  		 return false;
-    }
-    
-    private boolean registreSortidaEsDeOrganDesti(RegistroSalida ri, String org_cod) {
-    	
-    	if (org_cod.equals(ri.getOrigenExternoCodigo())) {
-    		return true;
-    	}
-    	
-    	if (ri.getOrigen()!=null && org_cod.equals(ri.getOrigen().getCodigo())) {
-    		return true;
-    	}
-    	
-    	return false;
-    }
-
     @Override
-    public List<RegistroSalida> buscaLibroRegistro(Date fechaInicio, Date fechaFin, List<Libro> libros) throws Exception{
+    public List<RegistroSalida> buscaLibroRegistro(Date fechaInicio, Date fechaFin, List<Libro> libros) throws Exception {
 
         Query q;
 
@@ -315,7 +283,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     }
 
     @Override
-    public Long buscaIndicadoresTotal(Date fechaInicio, Date fechaFin, Long idEntidad) throws Exception{
+    public Long buscaIndicadoresTotal(Date fechaInicio, Date fechaFin, Long idEntidad) throws Exception {
 
         Query q;
 
@@ -326,14 +294,14 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("idEntidad", idEntidad);
-        q.setParameter("anulado",RegwebConstantes.ESTADO_ANULADO);
-        q.setParameter("pendiente",RegwebConstantes.ESTADO_PENDIENTE);
+        q.setParameter("anulado", RegwebConstantes.ESTADO_ANULADO);
+        q.setParameter("pendiente", RegwebConstantes.ESTADO_PENDIENTE);
 
         return (Long) q.getSingleResult();
     }
 
     @Override
-    public Long buscaIndicadoresOficinaTotal(Date fechaInicio, Date fechaFin, Long idOficina) throws Exception{
+    public Long buscaIndicadoresOficinaTotal(Date fechaInicio, Date fechaFin, Long idOficina) throws Exception {
 
         Query q;
 
@@ -344,14 +312,14 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("idOficina", idOficina);
-        q.setParameter("anulado",RegwebConstantes.ESTADO_ANULADO);
-        q.setParameter("pendiente",RegwebConstantes.ESTADO_PENDIENTE);
+        q.setParameter("anulado", RegwebConstantes.ESTADO_ANULADO);
+        q.setParameter("pendiente", RegwebConstantes.ESTADO_PENDIENTE);
 
         return (Long) q.getSingleResult();
     }
 
     @Override
-    public Long buscaSalidaPorConselleria(Date fechaInicio, Date fechaFin, Long conselleria) throws Exception{
+    public Long buscaSalidaPorConselleria(Date fechaInicio, Date fechaFin, Long conselleria) throws Exception {
 
         Query q;
 
@@ -366,7 +334,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     }
 
     @Override
-    public Long buscaSalidaPorAsunto(Date fechaInicio, Date fechaFin, Long tipoAsunto, Long idEntidad) throws Exception{
+    public Long buscaSalidaPorAsunto(Date fechaInicio, Date fechaFin, Long tipoAsunto, Long idEntidad) throws Exception {
 
         Query q;
 
@@ -378,14 +346,14 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("tipoAsunto", tipoAsunto);
         q.setParameter("idEntidad", idEntidad);
-        q.setParameter("anulado",RegwebConstantes.ESTADO_ANULADO);
-        q.setParameter("pendiente",RegwebConstantes.ESTADO_PENDIENTE);
+        q.setParameter("anulado", RegwebConstantes.ESTADO_ANULADO);
+        q.setParameter("pendiente", RegwebConstantes.ESTADO_PENDIENTE);
 
         return (Long) q.getSingleResult();
     }
 
     @Override
-    public Long buscaSalidaPorIdioma(Date fechaInicio, Date fechaFin, Long idioma, Long idEntidad) throws Exception{
+    public Long buscaSalidaPorIdioma(Date fechaInicio, Date fechaFin, Long idioma, Long idEntidad) throws Exception {
 
         Query q;
 
@@ -397,14 +365,14 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("idioma", idioma);
         q.setParameter("idEntidad", idEntidad);
-        q.setParameter("anulado",RegwebConstantes.ESTADO_ANULADO);
-        q.setParameter("pendiente",RegwebConstantes.ESTADO_PENDIENTE);
+        q.setParameter("anulado", RegwebConstantes.ESTADO_ANULADO);
+        q.setParameter("pendiente", RegwebConstantes.ESTADO_PENDIENTE);
 
         return (Long) q.getSingleResult();
     }
 
     @Override
-    public Long buscaSalidaPorIdiomaOficina(Date fechaInicio, Date fechaFin, Long idioma, Long idOficina) throws Exception{
+    public Long buscaSalidaPorIdiomaOficina(Date fechaInicio, Date fechaFin, Long idioma, Long idOficina) throws Exception {
 
         Query q;
 
@@ -416,14 +384,14 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("idioma", idioma);
         q.setParameter("idOficina", idOficina);
-        q.setParameter("anulado",RegwebConstantes.ESTADO_ANULADO);
-        q.setParameter("pendiente",RegwebConstantes.ESTADO_PENDIENTE);
+        q.setParameter("anulado", RegwebConstantes.ESTADO_ANULADO);
+        q.setParameter("pendiente", RegwebConstantes.ESTADO_PENDIENTE);
 
         return (Long) q.getSingleResult();
     }
 
     @Override
-    public Long buscaSalidaPorLibro(Date fechaInicio, Date fechaFin, Long libro) throws Exception{
+    public Long buscaSalidaPorLibro(Date fechaInicio, Date fechaFin, Long libro) throws Exception {
 
         Query q;
 
@@ -438,7 +406,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     }
 
     @Override
-    public Long buscaSalidaPorOficina(Date fechaInicio, Date fechaFin, Long oficina) throws Exception{
+    public Long buscaSalidaPorOficina(Date fechaInicio, Date fechaFin, Long oficina) throws Exception {
 
         Query q;
 
@@ -448,14 +416,14 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("oficina", oficina);
-        q.setParameter("anulado",RegwebConstantes.ESTADO_ANULADO);
-        q.setParameter("pendiente",RegwebConstantes.ESTADO_PENDIENTE);
+        q.setParameter("anulado", RegwebConstantes.ESTADO_ANULADO);
+        q.setParameter("pendiente", RegwebConstantes.ESTADO_PENDIENTE);
 
         return (Long) q.getSingleResult();
     }
 
     @Override
-    public List<RegistroSalida> buscaSalidaPorUsuario(Date fechaInicio, Date fechaFin, Long usuario, List<Libro> libros) throws Exception{
+    public List<RegistroSalida> buscaSalidaPorUsuario(Date fechaInicio, Date fechaFin, Long usuario, List<Libro> libros) throws Exception {
 
         Query q;
 
@@ -471,7 +439,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     }
 
     @Override
-    public List<RegistroSalida> buscaSalidaPorUsuarioLibro(Date fechaInicio, Date fechaFin, Long idUsuario, Long idLibro) throws Exception{
+    public List<RegistroSalida> buscaSalidaPorUsuarioLibro(Date fechaInicio, Date fechaFin, Long idUsuario, Long idLibro) throws Exception {
 
         Query q;
 
@@ -482,26 +450,25 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("idUsuario", idUsuario);
         q.setParameter("idLibro", idLibro);
-        q.setParameter("pendiente",RegwebConstantes.ESTADO_PENDIENTE);
+        q.setParameter("pendiente", RegwebConstantes.ESTADO_PENDIENTE);
 
         return q.getResultList();
     }
-    
-    
-    
+
+
     @Override
     public RegistroSalida findByNumeroAnyoLibro(int numero, int anyo, String libro) throws Exception {
 
         Query q = em.createQuery("Select registroSalida "
-            + " from RegistroSalida as registroSalida"
-            + " where registroSalida.numeroRegistro = :numero "
-              + " AND  YEAR(registroSalida.fecha) = :anyo "
-              + " AND  registroSalida.libro.codigo = :libro ");
+                + " from RegistroSalida as registroSalida"
+                + " where registroSalida.numeroRegistro = :numero "
+                + " AND  YEAR(registroSalida.fecha) = :anyo "
+                + " AND  registroSalida.libro.codigo = :libro ");
 
         q.setParameter("numero", numero);
         q.setParameter("anyo", anyo);
         q.setParameter("libro", libro);
-        
+
         List<RegistroSalida> registro = q.getResultList();
 
         if (registro.size() == 1) {
@@ -510,11 +477,10 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
             return null;
         }
     }
-    
-    
+
 
     @Override
-    public List<RegistroSalida> buscaPorLibroTipoNumero(Date fechaInicio, Date fechaFin, Long idLibro, Integer numeroRegistro) throws Exception{
+    public List<RegistroSalida> buscaPorLibroTipoNumero(Date fechaInicio, Date fechaFin, Long idLibro, Integer numeroRegistro) throws Exception {
 
         Query q;
         Map<String, Object> parametros = new HashMap<String, Object>();
@@ -522,10 +488,22 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
         StringBuffer query = new StringBuffer("Select registroSalida from RegistroSalida as registroSalida ");
 
-        if(fechaInicio != null){where.add(" registroSalida.fecha >= :fechaInicio"); parametros.put("fechaInicio",fechaInicio);}
-        if(fechaFin != null){where.add(" registroSalida.fecha <= :fechaFin"); parametros.put("fechaFin",fechaFin);}
-        if(idLibro != null && idLibro > 0){where.add(" registroSalida.libro.id = :idLibro"); parametros.put("idLibro",idLibro);}
-        if(numeroRegistro != null && numeroRegistro > 0){where.add(" registroSalida.numeroRegistro = :numeroRegistro"); parametros.put("numeroRegistro",numeroRegistro);}
+        if (fechaInicio != null) {
+            where.add(" registroSalida.fecha >= :fechaInicio");
+            parametros.put("fechaInicio", fechaInicio);
+        }
+        if (fechaFin != null) {
+            where.add(" registroSalida.fecha <= :fechaFin");
+            parametros.put("fechaFin", fechaFin);
+        }
+        if (idLibro != null && idLibro > 0) {
+            where.add(" registroSalida.libro.id = :idLibro");
+            parametros.put("idLibro", idLibro);
+        }
+        if (numeroRegistro != null && numeroRegistro > 0) {
+            where.add(" registroSalida.numeroRegistro = :numeroRegistro");
+            parametros.put("numeroRegistro", numeroRegistro);
+        }
 
         query.append("where ");
         int count = 0;
@@ -548,7 +526,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
 
     @Override
-    public List<RegistroBasico> getUltimosRegistros(Long idOficina, Integer total) throws Exception{
+    public List<RegistroBasico> getUltimosRegistros(Long idOficina, Integer total) throws Exception {
 
         Query q;
 
@@ -561,7 +539,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         q.setParameter("idOficina", idOficina);
         q.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
 
-        return  getRegistroBasicoList(q.getResultList());
+        return getRegistroBasicoList(q.getResultList());
     }
 
     @Override
@@ -581,7 +559,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     }
 
     @Override
-    public void anularRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception{
+    public void anularRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception {
 
         RegistroSalida old = registroSalida;
 
@@ -592,12 +570,12 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         registroSalida = merge(registroSalida);
 
         // Creamos el HistoricoRegistroSalida para la modificación d estado
-        historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(old,usuarioEntidad,RegwebConstantes.TIPO_MODIF_ESTADO,false);
+        historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(old, usuarioEntidad, RegwebConstantes.TIPO_MODIF_ESTADO, false);
 
     }
 
     @Override
-    public void activarRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception{
+    public void activarRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception {
 
         RegistroSalida old = registroSalida;
 
@@ -614,7 +592,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
 
     @Override
-    public void visarRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception{
+    public void visarRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception {
 
         RegistroSalida old = registroSalida;
 
@@ -632,27 +610,28 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
     /**
      * Convierte los resultados de una query en una lista de {@link es.caib.regweb3.model.utils.RegistroBasico}
+     *
      * @param result
      * @return
      * @throws Exception
      */
-    private List<RegistroBasico> getRegistroBasicoList(List<Object[]> result) throws Exception{
+    private List<RegistroBasico> getRegistroBasicoList(List<Object[]> result) throws Exception {
 
         List<RegistroBasico> registros = new ArrayList<RegistroBasico>();
 
-        for (Object[] object : result){
-            RegistroBasico registroBasico = new RegistroBasico((Long)object[0],(String)object[1],(Date)object[2],(String)object[3],(String)object[4],(String)object[5]);
+        for (Object[] object : result) {
+            RegistroBasico registroBasico = new RegistroBasico((Long) object[0], (String) object[1], (Date) object[2], (String) object[3], (String) object[4], (String) object[5]);
 
             registros.add(registroBasico);
         }
 
-        return  registros;
+        return registros;
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
 
-        List registros =  em.createQuery("Select distinct(rs.id) from RegistroSalida as rs where rs.usuario.entidad.id = :idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        List registros = em.createQuery("Select distinct(rs.id) from RegistroSalida as rs where rs.usuario.entidad.id = :idEntidad").setParameter("idEntidad", idEntidad).getResultList();
 
         for (Object id : registros) {
             remove(findById((Long) id));
@@ -663,7 +642,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     }
 
     @Override
-    public Long getLibro(Long idRegistroSalida) throws Exception{
+    public Long getLibro(Long idRegistroSalida) throws Exception {
 
         Query q;
 
@@ -673,9 +652,9 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
         List<Long> libros = q.getResultList();
 
-        if(libros.size() > 0){
+        if (libros.size() > 0) {
             return libros.get(0);
-        }else{
+        } else {
             return null;
         }
     }

@@ -130,9 +130,10 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             Date fechaFin = RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin());
 
             // Quitamos acentos al string del Nombre Interesado
-            String nomInteressatNormalitzat = new String(busqueda.getInteressatNom().getBytes("ISO-8859-1"), "UTF-8");
-            String nombreInteresadoLimpio = remove1(nomInteressatNormalitzat);
-            Paginacion paginacion = registroEntradaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroEntrada, librosConsulta, nombreInteresadoLimpio, busqueda.getInteressatDoc(), busqueda.getOrganDestinatari(), busqueda.getAnexos(), busqueda.getObservaciones(), busqueda.getUsuario());
+            String nombreInteresado = limpiarCaracteresEspeciales(busqueda.getInteressatNom());
+            String apellido1Interesado = limpiarCaracteresEspeciales(busqueda.getInteressatLli1());
+            String apellido2Interesado = limpiarCaracteresEspeciales(busqueda.getInteressatLli2());
+            Paginacion paginacion = registroEntradaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroEntrada, nombreInteresado, apellido1Interesado, apellido2Interesado, busqueda.getInteressatDoc(), busqueda.getOrganDestinatari(), busqueda.getAnexos(), busqueda.getObservaciones(), busqueda.getUsuario());
 
             // Alta en tabla LOPD
             lopdEjb.insertarRegistrosEntrada(paginacion, usuarioEntidad.getId());
@@ -491,25 +492,6 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         return mav;
     }
-
-
-    /**
-     * Función que elimina acentos y caracteres especiales de una cadena de texto.
-     * @param input
-     * @return cadena de texto limpia de acentos y c, sustituidos por "_" para facilitar busquedas.
-     */
-    public static String remove1(String input) {
-        // Cadena de caracteres original a sustituir.
-        String original = "áàäéèëíìïóòöúùuñÁÀÄÉÈËÍÌÏÓÒÖÚÙÜÑçÇ";
-        // Cadena de caracteres ASCII que reemplazarán los originales.
-        String ascii = "__________________________________";
-        String output = input;
-        for (int i=0; i<original.length(); i++) {
-            // Reemplazamos los caracteres especiales.
-            output = output.replace(original.charAt(i), ascii.charAt(i));
-        }//for i
-        return output;
-    }//remove1
 
 
     @InitBinder("registroEntradaBusqueda")

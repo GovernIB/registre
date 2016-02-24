@@ -18,6 +18,8 @@ public class RegistroEntradaBusqueda implements Serializable {
     private Date fechaFin;
     private Boolean anexos;
     private String interessatNom;
+    private String interessatLli1;
+    private String interessatLli2;
     private String interessatDoc;
     private String organDestinatari;
     private String organDestinatariNom;
@@ -79,8 +81,24 @@ public class RegistroEntradaBusqueda implements Serializable {
 		this.interessatNom = interessatNom;
 	}
 
-	public String getInteressatDoc() {
-		return interessatDoc;
+    public String getInteressatLli1() {
+        return interessatLli1;
+    }
+
+    public void setInteressatLli1(String interessatLli1) {
+        this.interessatLli1 = interessatLli1;
+    }
+
+    public String getInteressatLli2() {
+        return interessatLli2;
+    }
+
+    public void setInteressatLli2(String interessatLli2) {
+        this.interessatLli2 = interessatLli2;
+    }
+
+    public String getInteressatDoc() {
+        return interessatDoc;
 	}
 
 	public void setInteressatDoc(String interessatDoc) {

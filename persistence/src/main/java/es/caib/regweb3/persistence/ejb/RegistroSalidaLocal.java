@@ -56,11 +56,10 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * Busca los Registros de Salida en función de los parametros
      * @param pageNumber
      * @param registroSalida
-     * @param libros
      * @return
      * @throws Exception
      */
-    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, List<Libro> libros, String interesadoNom, String interesadoDoc, String organoOrig, Boolean anexos, String observaciones, String usuario) throws Exception;
+    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, String interesadoNom, String interesadoDoc, String interesadoLli1, String interesadoLli2, String organoOrigen, Boolean anexos, String observaciones, String usuario) throws Exception;
 
     
     /**

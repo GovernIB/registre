@@ -124,7 +124,12 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         }else { // Si no hay errores realizamos la búsqueda
         	// Ponemos la hora 23:59 a la fecha fin
             Date fechaFin = RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin());
-            Paginacion paginacion = registroSalidaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroSalida, librosConsulta, busqueda.getInteressatNom(), busqueda.getInteressatDoc(), busqueda.getOrganOrigen(), busqueda.getAnexos(), busqueda.getObservaciones(), busqueda.getUsuario());
+
+            // Quitamos acentos al string del Nombre Interesado
+            String nombreInteresado = limpiarCaracteresEspeciales(busqueda.getInteressatNom());
+            String apellido1Interesado = limpiarCaracteresEspeciales(busqueda.getInteressatLli1());
+            String apellido2Interesado = limpiarCaracteresEspeciales(busqueda.getInteressatLli2());
+            Paginacion paginacion = registroSalidaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroSalida, nombreInteresado, apellido1Interesado, apellido2Interesado, busqueda.getInteressatDoc(), busqueda.getOrganOrigen(), busqueda.getAnexos(), busqueda.getObservaciones(), busqueda.getUsuario());
 
             // Alta en tabla LOPD
             lopdEjb.insertarRegistrosSalida(paginacion, usuarioEntidad.getId());
