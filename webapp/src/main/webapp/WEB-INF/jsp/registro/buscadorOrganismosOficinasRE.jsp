@@ -111,3 +111,13 @@ que se le indica -->
 <input id="organismo_raiz" type="hidden" value="${val}"/>
 <c:set var="valor"><spring:message code="organismo.superior"/></c:set>
 <input id="organismo_superior" type="hidden" value="${valor}"/>
+<script type="text/javascript">
+    <%-- traduccions para busquedaorganismo.js--%>
+    var tradorganismo = new Array();
+    tradorganismo['organismo.denominacion'] = "<spring:message code='organismo.denominacion' javaScriptEscape='true' />";
+    tradorganismo['regweb.acciones'] = "<spring:message code='regweb.acciones' javaScriptEscape='true' />";
+    tradorganismo['organismo.superior'] = "<spring:message code='organismo.superior' javaScriptEscape='true' />";
+    tradorganismo['organismo.superior.vacio'] = "<spring:message code='organismo.superior.vacio' javaScriptEscape='true' />";
+    tradorganismo['organismo.raiz'] = "<spring:message code='organismo.raiz' javaScriptEscape='true' />";
+    tradorganismo['organismo.localidad'] = "<spring:message code='organismo.localidad' javaScriptEscape='true' />";
+</script>
