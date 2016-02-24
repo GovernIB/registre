@@ -14,6 +14,10 @@
 </c:if>
 
 <c:if test="${rolAutenticado.nombre == 'RWE_USUARI'}">
+
+    <%--Importamos el menú de avisos--%>
+    <c:import url="/avisos"/>
+
     <c:if test="${fn:length(oficinas) >= 1}">
         <li><a href="<c:url value="/inici"/>"><i class="fa fa-globe"></i> ${oficinaActiva.denominacion}</a></li>
     </c:if>
@@ -22,6 +26,4 @@
         <li><i class="fa fa-home"></i> <spring:message code="error.oficina.ninguna"/></li>
     </c:if>
 
-    <%--Importamos el menú de avisos--%>
-    <c:import url="/avisos"/>
 </c:if>
