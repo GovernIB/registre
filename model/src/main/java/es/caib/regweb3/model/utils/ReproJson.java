@@ -15,6 +15,8 @@ import java.io.Serializable;
 public class ReproJson implements Serializable {
 
     @XmlElement
+    private String nombreRepro;
+    @XmlElement
     private String idLibro;
     @XmlElement
     private String extracto;
@@ -60,6 +62,14 @@ public class ReproJson implements Serializable {
     private String fechaOrigen;
 
     public ReproJson() {
+    }
+
+    public String getNombreRepro() {
+        return nombreRepro;
+    }
+
+    public void setNombreRepro(String nombreRepro) {
+        this.nombreRepro = nombreRepro;
     }
 
     public String getIdLibro() {

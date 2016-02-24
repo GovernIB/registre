@@ -29,11 +29,13 @@ function validaFormulario(form) {
 // Agafa tots els camps del Registre d'Entrada per guardar a la Repro
 function nuevaRepro(){
 
-    var nombreRepro = $('#nombreRepro').val();
-    var tipoRegistro = $('#tipoRegistro').val();
-    var url = $("#reproForm").attr("action").concat('/'+nombreRepro).concat('/'+tipoRegistro);
 
-    var json = { "idLibro": $('#libro\\.id').val(),
+    var tipoRegistro = $('#tipoRegistro').val();
+    var url = $("#reproForm").attr("action").concat('/' + tipoRegistro);
+
+    var json = {
+        "nombreRepro": $('#nombreRepro').val(),
+        "idLibro": $('#libro\\.id').val(),
         "extracto": $('#registroDetalle\\.extracto').val(),
         "idTipoDocumentacionFisica": $('#registroDetalle\\.tipoDocumentacionFisica').val(),
         "idTipoAsunto": $('#registroDetalle\\.tipoAsunto\\.id').val(),
@@ -68,7 +70,12 @@ function nuevaRepro(){
             xhr.setRequestHeader("Content-Type", "application/json");
         },
         success: function(result) {
-            mensajeSuccess("#mensajes", "S´ha creat la repro.");
+            if (result != null) {
+                mensajeSuccess("#mensajes", "S´ha creat la repro.");
+            } else {
+                mensajeError("#mensajes", "Ha ocorregut un error");
+            }
+
         }
 
     });

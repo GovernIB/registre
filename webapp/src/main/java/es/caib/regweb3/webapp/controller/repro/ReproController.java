@@ -81,14 +81,14 @@ public class ReproController extends BaseController {
      * @param request
      * @return
      */
-    @RequestMapping(value="/new/{nombre}/{tipoRegistro}", method= RequestMethod.POST)
+    @RequestMapping(value = "/new/{tipoRegistro}", method = RequestMethod.POST)
     @ResponseBody
-    public Long nuevaRepro(@PathVariable String nombre,@PathVariable Long tipoRegistro, @RequestBody ReproJson reproJson, HttpServletRequest request) throws Exception{
+    public Long nuevaRepro(@PathVariable Long tipoRegistro, @RequestBody ReproJson reproJson, HttpServletRequest request) throws Exception {
 
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
         Repro repro = new Repro();
-        repro.setNombre(nombre);
+        repro.setNombre(reproJson.getNombreRepro());
         repro.setTipoRegistro(tipoRegistro);
         repro.setUsuario(usuarioEntidad);
 

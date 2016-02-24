@@ -10,7 +10,8 @@
                 <h3 class="modal-title" id="myModalLabel"><spring:message code="repro.nuevo"/></h3>
             </div>
             <div class="modal-body">
-                <form id="reproForm" class="form-horizontal" action="${pageContext.request.contextPath}/repro/new" method="post" enctype="multipart/form-data">
+                <form id="reproForm" class="form-horizontal" action="${pageContext.request.contextPath}/repro/new"
+                      method="post">
                     <input type="hidden" name="tipoRegistro" id="tipoRegistro" value=""/>
                     <div class="form-group col-xs-12">
                         <div class="col-xs-4 pull-left etiqueta_regweb control-label">
