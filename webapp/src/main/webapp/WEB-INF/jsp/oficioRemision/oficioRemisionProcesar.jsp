@@ -132,8 +132,10 @@
                                             <form:form modelAttribute="oficioPendienteLlegadaForm" method="post" cssClass="form-horizontal">
 
                                                 <c:forEach var="registroEntrada" items="${oficioRemision.registrosEntrada}" varStatus="status">
-                                                    <form:hidden path="oficios[${status.index}].idRegistroEntrada"/>
-
+                                                    <%--<form:hidden path="oficios[${status.index}].idRegistroEntrada" value="${registroEntrada.id}"/>--%>
+                                                    <input type="hidden" id="oficios[${status.index}].idRegistroEntrada"
+                                                           name="oficios[${status.index}].idRegistroEntrada"
+                                                           value="${registroEntrada.id}"/>
                                                     <tr>
                                                         <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="yyyy"/> / ${registroEntrada.numeroRegistro}</td>
                                                         <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy"/></td>

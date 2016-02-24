@@ -537,26 +537,16 @@ public class OficioRemisionController extends BaseController {
     public String procesarOficioRemision(@PathVariable Long idOficioRemision, Model model, HttpServletRequest request) throws Exception {
 
         OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
-        List<RegistroEntrada> registrosEntrada = oficioRemisionEjb.getByOficioRemision(oficioRemision.getId());
-        log.info("Total RegistrosEntrada del oficio: " + registrosEntrada.size());
+        //List<RegistroEntrada> registrosEntrada = oficioRemisionEjb.getByOficioRemision(oficioRemision.getId());
+        log.info("Total RegistrosEntrada del oficio: " + oficioRemision.getRegistrosEntrada().size());
         model.addAttribute(oficioRemision);
-
-        ModeloOficioRemision modeloOficioRemision = new ModeloOficioRemision();
-        model.addAttribute("modeloOficioRemision", modeloOficioRemision);
 
         // Obtenemos los libros donde el UsuarioEntidad puede registrar
         model.addAttribute("libros", getLibrosRegistroEntrada(request));
 
-        // Rellenamos el bean OficioPendienteLlegada con los RegistroEntrada del OficioRemision
-        List<OficioPendienteLlegada> oficios = new ArrayList<OficioPendienteLlegada>();
-        for (RegistroEntrada registroEntrada : registrosEntrada) {
-            log.info("RegistroEntrada del oficio: " + registroEntrada.getId());
-            OficioPendienteLlegada oficio = new OficioPendienteLlegada(registroEntrada.getId());
 
-            oficios.add(oficio);
-        }
-
-        model.addAttribute("oficioPendienteLlegadaForm", new OficioPendienteLlegadaForm(oficios));
+        model.addAttribute("oficioPendienteLlegadaForm", new OficioPendienteLlegadaForm());
+        model.addAttribute("modeloOficioRemision", new ModeloOficioRemision());
 
         return "oficioRemision/oficioRemisionProcesar";
     }
