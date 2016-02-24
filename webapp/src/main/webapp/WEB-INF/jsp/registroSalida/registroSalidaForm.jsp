@@ -373,14 +373,6 @@
 </script>
 
 <script type="text/javascript">
-  <%-- traduccions para busquedaorganismo.js--%>
-  var tradorganismo = new Array();
-  tradorganismo['organismo.denominacion'] = "<spring:message code='organismo.denominacion' javaScriptEscape='true' />";
-  tradorganismo['regweb.acciones'] = "<spring:message code='regweb.acciones' javaScriptEscape='true' />";
-  tradorganismo['organismo.superior'] = "<spring:message code='organismo.superior' javaScriptEscape='true' />";
-  tradorganismo['organismo.superior.vacio'] = "<spring:message code='organismo.superior.vacio' javaScriptEscape='true' />";
-  tradorganismo['organismo.raiz'] = "<spring:message code='organismo.raiz' javaScriptEscape='true' />";
-  tradorganismo['organismo.localidad'] = "<spring:message code='organismo.localidad' javaScriptEscape='true' />";
   <%-- Traducciones para interesados.js --%>
   var tradsinteresado = new Array();
   tradsinteresado['interesado.representante.anadir'] = "<spring:message code='interesado.representante.anadir' javaScriptEscape='true' />";

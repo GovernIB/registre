@@ -1,4 +1,3 @@
-<%@ page import="es.caib.regweb3.utils.Configuracio" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 <un:useConstants var="RegwebConstantes" className="es.caib.regweb3.utils.RegwebConstantes"/>
@@ -173,22 +172,6 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
 <script type="text/javascript" src="<c:url value="/js/interesados.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/representantes.js"/>"></script>
 
-<script type="text/javascript">
-<!-- TODO BORRAR-->
-  /*  $(window).load(function() {
-        buscarOrganismosRaizComunidad('<%=Configuracio.getDir3CaibServer()%>','#organismoInteresado','',false,'${param.comunidad}');
-    });*/
-
-
-  <%-- traduccions para busquedaorganismo.js--%>
-  var tradorganismo = new Array();
-  tradorganismo['organismo.denominacion'] = "<spring:message code='organismo.denominacion' javaScriptEscape='true' />";
-  tradorganismo['regweb.acciones'] = "<spring:message code='regweb.acciones' javaScriptEscape='true' />";
-  tradorganismo['organismo.superior'] = "<spring:message code='organismo.superior' javaScriptEscape='true' />";
-tradorganismo['organismo.raiz'] = "<spring:message code='organismo.raiz' javaScriptEscape='true' />";
-tradorganismo['organismo.localidad'] = "<spring:message code='organismo.localidad' javaScriptEscape='true' />";
-
-</script>
 
 <script type="text/javascript">
     var urlAddOrganismoInteresado = '<c:url value="/interesado/${param.tipoRegistro}/addOrganismo"/>';

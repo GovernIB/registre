@@ -8,12 +8,6 @@
     <title><spring:message code="registroSalida.buscador"/></title>
     <c:import url="../modulos/imports.jsp"/>
     <script type="text/javascript" src="<c:url value="/js/busquedaorganismo.js"/>"></script>
-    <script type="text/javascript">
-  		var tradorganismo = new Array();
-  		tradorganismo['organismo.denominacion'] = "<spring:message code='organismo.denominacion' javaScriptEscape='true' />";
-  		tradorganismo['regweb.acciones'] = "<spring:message code='regweb.acciones' javaScriptEscape='true' />";
-        tradorganismo['organismo.superior'] = "<spring:message code='organismo.superior' javaScriptEscape='true' />";
-  	</script>
 </head>
 
 <body>
@@ -192,7 +186,9 @@
                                     <form:hidden path="organOrigenNom"/>
                                 </div>
                                 <div class="col-xs-2 boto-panel">
-                                    <a data-toggle="modal" role="button" href="#modalBuscadorlistaRegSalida" onclick="inicializarBuscador('#codNivelAdministracionlistaRegSalida','#codComunidadAutonomalistaRegSalida','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}', 'listaRegSalida');" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
+                                    <a data-toggle="modal" role="button" href="#modalBuscadorlistaRegSalida"
+                                       onclick="inicializarBuscador('#codNivelAdministracionlistaRegSalida','#codComunidadAutonomalistaRegSalida','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}', 'listaRegSalida');"
+                                       class="btn btn-info btn-sm"><spring:message code="regweb.buscar"/></a>
                                 </div>
                             </div>
                         </div>
