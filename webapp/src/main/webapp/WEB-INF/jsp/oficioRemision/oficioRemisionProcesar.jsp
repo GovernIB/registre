@@ -101,7 +101,7 @@
                         <div class="panel-heading">
 
                             <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong><spring:message
-                                    code="oficioRemision.registrosEntrada"/>:</strong> ${fn:length(oficioRemision.registrosEntrada)}
+                                    code="oficioRemision.registrosEntrada"/>:</strong> ${fn:length(registrosEntrada)}
                             </h3>
                         </div>
 
