@@ -3,6 +3,7 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.utils.ObjetoBasico;
+import es.caib.regweb3.persistence.utils.Paginacion;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
@@ -109,4 +110,15 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @throws Exception
      */
     public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+
+    /**
+     * Realiza una busqueda de {@link es.caib.regweb3.model.Oficina} según los parámetros
+     *
+     * @param pageNumber
+     * @param codigo
+     * @param denominacion
+     * @return
+     * @throws Exception
+     */
+    public Paginacion busqueda(Integer pageNumber, String codigo, String denominacion) throws Exception;
 }

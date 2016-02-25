@@ -4,7 +4,10 @@ import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.RelacionOrganizativaOfi;
 import es.caib.regweb3.model.utils.ObjetoBasico;
+import es.caib.regweb3.persistence.utils.DataBaseUtils;
+import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -14,10 +17,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Fundació BIT.
@@ -81,7 +81,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         Query q = em.createQuery("Select oficina from Oficina as oficina where " +
                 "oficina.codigo =:codigo");
 
-        q.setParameter("codigo",codigo);
+        q.setParameter("codigo", codigo);
 
         List<Oficina> oficina = q.getResultList();
         if(oficina.size() == 1){
@@ -310,6 +310,70 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         }
 
         return total;
+
+    }
+
+    @Override
+    public Paginacion busqueda(Integer pageNumber, String codigo, String denominacion) throws Exception {
+
+        Query q;
+        Query q2;
+        Map<String, Object> parametros = new HashMap<String, Object>();
+        List<String> where = new ArrayList<String>();
+
+        StringBuffer query = new StringBuffer("Select oficina from Oficina as oficina ");
+
+        if (!StringUtils.isEmpty(codigo)) {
+            where.add(DataBaseUtils.like("oficina.codigo", "codigo", parametros, codigo));
+        }
+        if (!StringUtils.isEmpty(denominacion)) {
+            where.add(DataBaseUtils.like("oficina.denominacion", "denominacion", parametros, denominacion));
+        }
+
+        where.add(" oficina.estado.codigoEstadoEntidad = :vigente ");
+        parametros.put("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+
+        if (parametros.size() != 0) {
+            query.append("where ");
+            int count = 0;
+            for (String w : where) {
+                if (count != 0) {
+                    query.append(" and ");
+                }
+                query.append(w);
+                count++;
+            }
+            q2 = em.createQuery(query.toString().replaceAll("Select oficina from Oficina as oficina ", "Select count(oficina.id) from Oficina as oficina "));
+            query.append("order by oficina.codigo");
+            q = em.createQuery(query.toString());
+
+            for (Map.Entry<String, Object> param : parametros.entrySet()) {
+                q.setParameter(param.getKey(), param.getValue());
+                q2.setParameter(param.getKey(), param.getValue());
+            }
+
+        } else {
+            q2 = em.createQuery(query.toString().replaceAll("Select oficina from Oficina as oficina ", "Select count(oficina.id) from Oficina as oficina "));
+            query.append("order by oficina.codigo");
+            q = em.createQuery(query.toString());
+        }
+        log.info("Query: " + query);
+
+        Paginacion paginacion = null;
+
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
+            paginacion = new Paginacion(total.intValue(), pageNumber);
+            int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            q.setFirstResult(inicio);
+            q.setMaxResults(RESULTADOS_PAGINACION);
+        } else {
+            paginacion = new Paginacion(0, 0);
+        }
+
+        paginacion.setListado(q.getResultList());
+
+        return paginacion;
 
     }
 }
