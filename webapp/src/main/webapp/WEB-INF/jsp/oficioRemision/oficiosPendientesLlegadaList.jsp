@@ -20,7 +20,8 @@
             <div class="col-xs-12">
                 <ol class="breadcrumb">
                     <li><a href="<c:url value="/inici"/>"><i class="fa fa-globe"></i> ${oficinaActiva.denominacion}</a></li>
-                    <li class="active"><i class="fa fa-list-ul"></i> <strong><spring:message code="oficioRemision.pendientesLlegada"/></strong></li>
+                    <li class="active"><i class="fa fa-list-ul"></i> <spring:message
+                            code="oficioRemision.pendientesLlegada"/></li>
                     <%--Importamos el menú de avisos--%>
                     <c:import url="/avisos"/>
                 </ol>
@@ -75,6 +76,7 @@
                                                     <col>
                                                     <col>
                                                     <col>
+                                                    <col>
                                                     <col width="51">
                                                 </colgroup>
                                                 <thead>
@@ -85,6 +87,7 @@
                                                         <th><spring:message code="oficioRemision.usuario"/></th>
                                                         <th><spring:message code="oficioRemision.oficina"/></th>
                                                         <th><spring:message code="oficioRemision.organismoDestino"/></th>
+                                                        <th><spring:message code="oficioRemision.numero.re"/></th>
                                                         <th class="center"><spring:message code="regweb.acciones"/></th>
                                                     </tr>
                                                 </thead>
@@ -98,6 +101,7 @@
                                                             <td>${oficioRemision.usuarioResponsable.usuario.nombreCompleto}</td>
                                                             <td><label class="no-bold" rel="ayuda" data-content="${oficioRemision.oficina.denominacion}" data-toggle="popover">${oficioRemision.oficina.codigo}</label></td>
                                                             <td>${(empty oficioRemision.organismoDestinatario)? oficioRemision.destinoExternoDenominacion : oficioRemision.organismoDestinatario.denominacion}</td>
+                                                            <td>${fn:length(oficioRemision.registrosEntrada)}</td>
 
                                                             <td class="center">
                                                                 <a class="btn btn-success btn-sm" href="<c:url value="/oficioRemision/${oficioRemision.id}/procesar"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-check"></span></a>

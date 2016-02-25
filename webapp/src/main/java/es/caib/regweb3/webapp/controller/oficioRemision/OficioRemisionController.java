@@ -537,9 +537,10 @@ public class OficioRemisionController extends BaseController {
     public String procesarOficioRemision(@PathVariable Long idOficioRemision, Model model, HttpServletRequest request) throws Exception {
 
         OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
-        //List<RegistroEntrada> registrosEntrada = oficioRemisionEjb.getByOficioRemision(oficioRemision.getId());
-        log.info("Total RegistrosEntrada del oficio: " + oficioRemision.getRegistrosEntrada().size());
-        model.addAttribute(oficioRemision);
+        List<RegistroEntrada> registrosEntrada = oficioRemisionEjb.getByOficioRemision(oficioRemision.getId());
+        log.info("Total RegistrosEntrada del oficio: " + registrosEntrada.size());
+        model.addAttribute("oficioRemision", oficioRemision);
+        model.addAttribute("registrosEntrada", registrosEntrada);
 
         // Obtenemos los libros donde el UsuarioEntidad puede registrar
         model.addAttribute("libros", getLibrosRegistroEntrada(request));

@@ -100,7 +100,9 @@
 
                         <div class="panel-heading">
 
-                            <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong><spring:message code="oficioRemision.registrosEntrada"/></strong></h3>
+                            <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong><spring:message
+                                    code="oficioRemision.registrosEntrada"/>:</strong> ${fn:length(oficioRemision.registrosEntrada)}
+                            </h3>
                         </div>
 
                         <div class="panel-body">
@@ -131,7 +133,8 @@
                                         <tbody>
                                             <form:form modelAttribute="oficioPendienteLlegadaForm" method="post" cssClass="form-horizontal">
 
-                                                <c:forEach var="registroEntrada" items="${oficioRemision.registrosEntrada}" varStatus="status">
+                                                <c:forEach var="registroEntrada" items="${registrosEntrada}"
+                                                           varStatus="status">
                                                     <%--<form:hidden path="oficios[${status.index}].idRegistroEntrada" value="${registroEntrada.id}"/>--%>
                                                     <input type="hidden" id="oficios[${status.index}].idRegistroEntrada"
                                                            name="oficios[${status.index}].idRegistroEntrada"
