@@ -121,7 +121,7 @@
                                                                     <col>
                                                                     <col>
                                                                     <col>
-                                                                    <col width="100">
+                                                                    <col width="50">
                                                                 </colgroup>
                                                                 <thead>
                                                                     <tr>
@@ -154,7 +154,7 @@
 
                                                                             <td class="center">
                                                                                 <a class="btn btn-info btn-sm" href="<c:url value="/registroEntrada/${registroEntrada.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
-                                                                                <a class="btn btn-warning btn-sm" href="<c:url value="/registroEntrada/${registroEntrada.id}/edit"/>" title="<spring:message code="regweb.editar"/>"><span class="fa fa-pencil"></span></a>
+                                                                                <!--<a class="btn btn-warning btn-sm" href="<c:url value="/registroEntrada/${registroEntrada.id}/edit"/>" title="<spring:message code="regweb.editar"/>"><span class="fa fa-pencil"></span></a>-->
                                                                             </td>
                                                                         </tr>
                                                                 </c:forEach>
