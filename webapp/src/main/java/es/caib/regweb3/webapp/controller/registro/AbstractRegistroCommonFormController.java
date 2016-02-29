@@ -5,13 +5,11 @@ import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
-import es.caib.regweb3.webapp.utils.CodigoValor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -183,7 +181,7 @@ public abstract class AbstractRegistroCommonFormController extends BaseControlle
     /**
      * Obtiene los {@link es.caib.regweb3.model.CatLocalidad} de de la Provincia seleccionada
      */
-    @RequestMapping(value = "/obtenerProvincias", method = RequestMethod.GET)
+   /* @RequestMapping(value = "/obtenerProvincias", method = RequestMethod.GET)
     public
     @ResponseBody
     List<CodigoValor> obtenerProvincias(@RequestParam Long id) throws Exception {
@@ -199,7 +197,7 @@ public abstract class AbstractRegistroCommonFormController extends BaseControlle
 
         return provinciascv;
 
-    }
+    }*/
 
     /*private IRegistro procesarRegistro(IRegistro registro, String tipoRegistro) throws Exception{
 
