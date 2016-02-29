@@ -15,13 +15,19 @@ import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.utils.Mensaje;
+import es.caib.regweb3.webapp.validator.ReproValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -41,6 +47,9 @@ public class ReproController extends BaseController {
 
     @EJB(mappedName = "regweb3/OrganismoEJB/local")
     public OrganismoLocal organismoEjb;
+
+    @Autowired
+    private ReproValidator reproValidator;
 
     /**
      * Listado de todas las Repros de un Usuario Entidad
@@ -155,6 +164,66 @@ public class ReproController extends BaseController {
         return repro.getId();
     }
 
+    /**
+     * Carga el formulario para modificar una {@link es.caib.regweb3.model.Repro}
+     */
+    @RequestMapping(value = "/{reproId}/edit", method = RequestMethod.GET)
+    public String editarRepro(@PathVariable("reproId") Long reproId, Model model, HttpServletRequest request) {
+
+        Repro repro = null;
+        try {
+            repro = reproEjb.findById(reproId);
+
+            // Comprueba que la Repro existe
+            if (repro == null) {
+                log.info("No existe esta repro");
+                Mensaje.saveMessageError(request, getMessage("aviso.repro.noExiste"));
+                return "redirect:/repro/list";
+            }
+
+            // Mira si la Repro pertenece al UsuarioEntidadActivo
+            if (!repro.getUsuario().equals(getUsuarioEntidadActivo(request))) {
+
+                Mensaje.saveMessageError(request, getMessage("aviso.repro.edit"));
+                return "redirect:/repro/list";
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        model.addAttribute(repro);
+
+        return "repro/reproForm";
+    }
+
+    /**
+     * Editar una {@link es.caib.regweb3.model.Repro}
+     */
+    @RequestMapping(value = "/{reproId}/edit", method = RequestMethod.POST)
+    public String editarRepro(@ModelAttribute @Valid Repro repro, BindingResult result,
+                              SessionStatus status, HttpServletRequest request) {
+
+        reproValidator.validate(repro, result);
+
+        if (result.hasErrors()) { // Si hay errores volvemos a la vista del formulario
+            return "repro/reproForm";
+        } else { // Si no hay errores actualizamos el registro
+
+            try {
+                reproEjb.merge(repro);
+                Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
+            }
+
+            status.setComplete();
+            return "redirect:/repro/list";
+        }
+    }
+
 
     /**
      * Cambia estado de una {@link es.caib.regweb3.model.Repro}
@@ -252,7 +321,8 @@ public class ReproController extends BaseController {
 
         try {
             Repro reproEnviada = reproEjb.findById(reproId);
-            UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+            UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findById(usuarioId);
+
             Repro repro = new Repro();
             repro.setNombre(reproEnviada.getNombre());
             repro.setUsuario(usuarioEntidad);
@@ -295,7 +365,7 @@ public class ReproController extends BaseController {
 
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
-        return reproEjb.getActivasbyUsuario(usuarioEntidad.getId(),tipoRegistro);
+        return reproEjb.getActivasbyUsuario(usuarioEntidad.getId(), tipoRegistro);
     }
 
     /**
@@ -407,6 +477,8 @@ public class ReproController extends BaseController {
     public void initBinder(WebDataBinder binder) {
 
         binder.setDisallowedFields("id");
+        binder.setValidator(this.reproValidator);
     }
+
 }
 

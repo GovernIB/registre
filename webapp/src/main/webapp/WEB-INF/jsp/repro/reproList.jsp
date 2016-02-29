@@ -89,7 +89,11 @@
                                                     <a class="label label-danger" href="<c:url value="/repro/${repro.id}/cambiarEstado"/>" title="<spring:message code="repro.cambiar.estado"/>"><spring:message code="regweb.no"/></a>
                                                 </c:if>
                                             </td>
-                                            <td class="center" width="180">
+                                            <td class="center" width="210">
+                                                <a class="btn btn-warning btn-sm"
+                                                   href="<c:url value="/repro/${repro.id}/edit"/>"
+                                                   title="<spring:message code="regweb.editar"/>"><span
+                                                        class="fa fa-pencil"></span></a>
                                               <c:if test="${repro.orden != 1}">
                                                 <a class="btn btn-success btn-sm" href="<c:url value="/repro/${repro.id}/subir"/>" title="<spring:message code="regweb.subir"/>"><span class="fa fa-arrow-up"></span></a>
                                               </c:if>
