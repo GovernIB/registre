@@ -5,13 +5,14 @@ import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
+import es.caib.regweb3.webapp.utils.CodigoValor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * 
@@ -50,10 +51,10 @@ public abstract class AbstractRegistroCommonFormController extends BaseControlle
     public EntidadLocal entidadEjb;
 
 
-    @ModelAttribute("organismosOficinaActiva")
+   /* @ModelAttribute("organismosOficinaActiva")
     public Set<Organismo> getOrganismosOficinaActiva(HttpServletRequest request) throws Exception {
         return organismoEjb.getByOficinaActiva(getOficinaActiva(request));
-    }
+    }*/
 
 
     @ModelAttribute("tiposAsunto")
@@ -175,8 +176,29 @@ public abstract class AbstractRegistroCommonFormController extends BaseControlle
     @RequestMapping(value = "/obtenerLocalidades", method = RequestMethod.GET)
     public @ResponseBody
     List<CatLocalidad> obtenerLocalidades(@RequestParam Long id) throws Exception {
-
+        log.info("obtenerLocalidades Abstract");
         return catLocalidadEjb.getByProvincia(id);
+    }
+
+    /**
+     * Obtiene los {@link es.caib.regweb3.model.CatLocalidad} de de la Provincia seleccionada
+     */
+    @RequestMapping(value = "/obtenerProvincias", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    List<CodigoValor> obtenerProvincias(@RequestParam Long id) throws Exception {
+        log.info("obtener^Provincias Abstract");
+        List<CatProvincia> provincias = catProvinciaEjb.getByComunidad(id);
+        List<CodigoValor> provinciascv = new ArrayList<CodigoValor>();
+        for (CatProvincia provincia : provincias) {
+            CodigoValor cv = new CodigoValor();
+            cv.setId(provincia.getCodigoProvincia().toString());
+            cv.setNombre(provincia.getDescripcionProvincia());
+            provinciascv.add(cv);
+        }
+
+        return provinciascv;
+
     }
 
     /*private IRegistro procesarRegistro(IRegistro registro, String tipoRegistro) throws Exception{
