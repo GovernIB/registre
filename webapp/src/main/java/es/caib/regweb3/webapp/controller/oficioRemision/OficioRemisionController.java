@@ -25,9 +25,7 @@ import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created 16/07/14 12:52
@@ -518,11 +516,11 @@ public class OficioRemisionController extends BaseController {
         Oficina oficinaActiva = getOficinaActiva(request);
 
         // Buscamos los Organismos en los que la OficinaActiva puede registrar
-        Set<Organismo> organismos = new HashSet<Organismo>();  // Utilizamos un Set porque no permite duplicados
+        /*Set<Organismo> organismos = new HashSet<Organismo>();
         organismos.add(oficinaActiva.getOrganismoResponsable());
-        organismos.addAll(relacionOrganizativaOfiLocalEjb.getOrganismosByOficina(oficinaActiva.getId()));
+        organismos.addAll(relacionOrganizativaOfiLocalEjb.getOrganismosByOficina(oficinaActiva.getId()));*/
 
-        List<OficioRemision> oficiosPendientesLlegada = oficioRemisionEjb.oficiosPendientesLlegada(organismos);
+        List<OficioRemision> oficiosPendientesLlegada = oficioRemisionEjb.oficiosPendientesLlegada(getOrganismosOficinaActiva(request));
 
         model.addAttribute("oficiosPendientesLlegada", oficiosPendientesLlegada);
 
