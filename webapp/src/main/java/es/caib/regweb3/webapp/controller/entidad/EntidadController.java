@@ -570,6 +570,7 @@ public class EntidadController extends BaseController {
         Entidad entidad = getEntidadActiva(request);
 
         UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findById(idUsuarioEntidad);
+        List<Libro> libros = libroEjb.getLibrosEntidad(entidad.getId());
 
         IUserInformationPlugin loginPlugin = RegwebLoginPluginManager.getInstance();
         RolesInfo rolesInfo = loginPlugin.getRolesByUsername(usuarioEntidad.getUsuario().getIdentificador());
@@ -577,10 +578,12 @@ public class EntidadController extends BaseController {
         List<String> roles = new ArrayList<String>();
         Collections.addAll(roles, rolesInfo.getRoles());
 
+        if (libros.size() == 0) {
+            Mensaje.saveMessageError(request, getMessage("permisos.libro.ninguno"));
+            return "redirect:/entidad/usuarios";
+        }
 
         if (roles.contains("RWE_USUARI") || !usuarioEntidad.getActivo()) {
-
-            List<Libro> libros = libroEjb.getLibrosEntidad(entidad.getId());
 
             PermisoLibroUsuarioForm permisoLibroUsuarioForm = new PermisoLibroUsuarioForm();
             permisoLibroUsuarioForm.setUsuarioEntidad(usuarioEntidad);
