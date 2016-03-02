@@ -135,7 +135,7 @@
             <div class="modal-dialog modal-medio">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="limpiarModal()">x</button>
                         <h3 class="modal-title" id="myModalLabel2"><spring:message code="repro.enviar"/></h3>
                     </div>
                     <div class="modal-body" >
@@ -150,7 +150,7 @@
                                     <select id="usuario" name="usuario" class="chosen-select">
                                         <option value="-1">...</option>
                                         <c:forEach items="${usuariosEntidadList}" var="usuarioEntidad">
-                                            <option value="${usuarioEntidad.usuario.id}">${usuarioEntidad.usuario.identificador}</option>
+                                            <option value="${usuarioEntidad.id}">${usuarioEntidad.usuario.identificador}</option>
                                         </c:forEach>
                                     </select>
                                     <span class="errors"></span>
@@ -237,8 +237,28 @@
         });
 
         // Ocultamos el modal de Enviar Repro
+        clearForm("#reproSelectForm");
         $('#modalEnviarRepro').modal('hide');
     }
+</script>
+
+<script>
+/**
+* Limpia el formulario del Modal y los posibles mensajes de error
+*/
+function limpiarModal(){
+    clearForm("#reproSelectForm");
+    quitarErroresModal();
+    $('#usuario').val(-1);
+}
+
+function quitarErroresModal(){
+    var variable = "#usuario span.errors";
+    var htmlNormal = "<span id='usuario.errors'></span>";
+    $(variable).html(htmlNormal);
+    $(variable).parents(".form-group").removeClass("has-error");
+}
+
 </script>
 
 </body>

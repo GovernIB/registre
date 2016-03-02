@@ -9,6 +9,7 @@ import es.caib.regweb3.model.utils.ReproJson;
 import es.caib.regweb3.persistence.ejb.BaseEjbJPA;
 import es.caib.regweb3.persistence.ejb.OrganismoLocal;
 import es.caib.regweb3.persistence.ejb.ReproLocal;
+import es.caib.regweb3.persistence.ejb.UsuarioLocal;
 import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
@@ -47,6 +48,9 @@ public class ReproController extends BaseController {
 
     @EJB(mappedName = "regweb3/OrganismoEJB/local")
     public OrganismoLocal organismoEjb;
+
+    @EJB(mappedName = "regweb3/UsuarioEJB/local")
+    public UsuarioLocal usuarioEjb;
 
     @Autowired
     private ReproValidator reproValidator;
@@ -316,12 +320,13 @@ public class ReproController extends BaseController {
     /**
      * Envia una {@link es.caib.regweb3.model.Repro} a un {@link es.caib.regweb3.model.UsuarioEntidad}
      */
-    @RequestMapping(value = "/enviar/{reproId}/{usuarioId}")
-    public String enviarRepro(@PathVariable Long reproId, @PathVariable Long usuarioId, HttpServletRequest request) {
+    @RequestMapping(value = "/enviar/{reproId}/{usuarioEntidadId}")
+    public String enviarRepro(@PathVariable Long reproId, @PathVariable Long usuarioEntidadId, HttpServletRequest request) {
 
         try {
             Repro reproEnviada = reproEjb.findById(reproId);
-            UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findById(usuarioId);
+            UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findById(usuarioEntidadId);
+            //UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByUsuarioEntidad(usuarioId,getEntidadActiva(request).getId());
 
             Repro repro = new Repro();
             repro.setNombre(reproEnviada.getNombre());
@@ -330,7 +335,7 @@ public class ReproController extends BaseController {
             repro.setRepro(reproEnviada.getRepro());
 
             int orden = 0;
-            List<Repro> repros = reproEjb.getAllbyUsuario(usuarioId);
+            List<Repro> repros = reproEjb.getAllbyUsuario(usuarioEntidad.getUsuario().getId());
             if(repros.size() > 0){
                 orden = reproEjb.maxOrdenRepro(usuarioEntidad.getId());
             }
@@ -338,6 +343,7 @@ public class ReproController extends BaseController {
             repro.setOrden(orden);
 
             reproEjb.persist(repro);
+            Mensaje.saveMessageInfo(request, getMessage("aviso.repro.enviada"));
 
 
         } catch (Exception e) {
