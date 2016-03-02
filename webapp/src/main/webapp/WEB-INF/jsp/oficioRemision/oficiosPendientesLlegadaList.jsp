@@ -83,7 +83,6 @@
                                                     <tr>
                                                         <th><spring:message code="oficioRemision.numeroOficio"/></th>
                                                         <th><spring:message code="oficioRemision.fecha"/></th>
-                                                        <th><spring:message code="oficioRemision.libro.corto"/></th>
                                                         <th><spring:message code="oficioRemision.usuario"/></th>
                                                         <th><spring:message code="oficioRemision.oficina"/></th>
                                                         <th><spring:message code="oficioRemision.organismoDestino"/></th>
@@ -97,9 +96,11 @@
                                                         <tr>
                                                             <td><fmt:formatDate value="${oficioRemision.fecha}" pattern="yyyy"/> / ${oficioRemision.numeroOficio}</td>
                                                             <td><fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy"/></td>
-                                                            <td><label class="no-bold" rel="ayuda" data-content="${oficioRemision.libro.nombre}" data-toggle="popover">${oficioRemision.libro.codigo}</label></td>
                                                             <td>${oficioRemision.usuarioResponsable.usuario.nombreCompleto}</td>
-                                                            <td><label class="no-bold" rel="ayuda" data-content="${oficioRemision.oficina.denominacion}" data-toggle="popover">${oficioRemision.oficina.codigo}</label></td>
+                                                            <td><label class="no-bold" rel="ayuda"
+                                                                       data-content="${oficioRemision.oficina.codigo}"
+                                                                       data-toggle="popover">${oficioRemision.oficina.denominacion}</label>
+                                                            </td>
                                                             <td>${(empty oficioRemision.organismoDestinatario)? oficioRemision.destinoExternoDenominacion : oficioRemision.organismoDestinatario.denominacion}</td>
                                                             <td>${fn:length(oficioRemision.registrosEntrada)}</td>
 

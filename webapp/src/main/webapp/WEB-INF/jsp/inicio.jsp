@@ -164,9 +164,9 @@
                                             </colgroup>
                                             <thead>
                                                 <tr>
-                                                    <th><spring:message code="oficioRemision.numeroOficio"/></th>
                                                     <th><spring:message code="oficioRemision.fecha"/></th>
                                                     <th><spring:message code="oficioRemision.oficina"/></th>
+                                                    <th><spring:message code="oficioRemision.organismoDestino"/></th>
                                                     <th class="center"><spring:message code="regweb.acciones"/></th>
                                                 </tr>
                                             </thead>
@@ -174,9 +174,9 @@
                                             <tbody>
                                             <c:forEach var="oficioRemision" items="${oficiosPendientesLlegada}" end="5">
                                                 <tr>
-                                                    <td><fmt:formatDate value="${oficioRemision.fecha}" pattern="yyyy"/> / ${oficioRemision.numeroOficio}</td>
                                                     <td><fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy"/></td>
                                                     <td>${oficioRemision.oficina.denominacion}</td>
+                                                    <td>${(empty oficioRemision.organismoDestinatario)? oficioRemision.destinoExternoDenominacion : oficioRemision.organismoDestinatario.denominacion}</td>
                                                     <td class="center">
                                                         <a class="btn btn-success btn-sm" href="<c:url value="/oficioRemision/${oficioRemision.id}/procesar"/>" title="<spring:message code="oficioRemision.procesar"/>"><span class="fa fa-check"></span></a>
                                                     </td>
