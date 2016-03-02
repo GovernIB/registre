@@ -331,12 +331,12 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
-    public List<OficiosRemisionOrganismo> oficiosPendientesRemisionInterna(Integer any, Libro libro) throws Exception {
+    public List<OficiosRemisionInternoOrganismo> oficiosPendientesRemisionInterna(Integer any, Libro libro) throws Exception {
 
         // Obtenemos los Organismos destinatarios PROPIOS que tiene Oficios de Remision pendientes de tramitar
 
         Query q1;
-        q1 = em.createQuery("Select distinct(re.destino.id) from RegistroEntrada as re where " +
+        q1 = em.createQuery("Select distinct(re.destino) from RegistroEntrada as re where " +
                 "re.estado = :idEstadoRegistro and year(re.fecha) = :any and re.libro.id = :idLibro and " +
                 "re.destino != null and re.oficina.organismoResponsable.nivelJerarquico != 1 and " +
                 "re.oficina.organismoResponsable.id != re.destino.id and " +
@@ -349,27 +349,27 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         q1.setParameter("any", any);
         q1.setParameter("idLibro", libro.getId());
 
-        List<Long> organismosPropios = q1.getResultList();
-
-        //log.info("organismosPropios: " + organismosPropios.size());
-
+        List<Organismo> organismosPropios = q1.getResultList();
 
         // Buscamos los RegistroEntrada pendientes de tramitar de cada uno de los Organismos encontrados
-        List<OficiosRemisionOrganismo> oficiosRemisionOrganismo = new ArrayList<OficiosRemisionOrganismo>();
+        List<OficiosRemisionInternoOrganismo> oficiosRemisionOrganismo = new ArrayList<OficiosRemisionInternoOrganismo>();
 
         // Por cada organismo Propio, buscamos sus RegistrosEntrada
-        for (Long organismo : organismosPropios) {
+        for (Organismo organismo : organismosPropios) {
 
-            OficiosRemisionOrganismo oficios = new OficiosRemisionOrganismo();
+            OficiosRemisionInternoOrganismo oficios = new OficiosRemisionInternoOrganismo();
+
+            oficios.setOrganismo(organismo);
+            oficios.setVigente(organismo.getEstado().getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+            oficios.setOficinas(oficinaEjb.tieneOficinasOrganismo(organismo.getId()));
 
             //Buscamos los Registros de Entrada, pendientes de tramitar mediante un Oficio de Remision
-            oficios.setOficiosRemision(oficiosRemisionByOrganismoPropio(organismo, any, libro.getId()));
+            oficios.setOficiosRemision(oficiosRemisionByOrganismoPropio(organismo.getId(), any, libro.getId()));
 
             //Los añadimos a la lista
             oficiosRemisionOrganismo.add(oficios);
 
         }
-
 
         return oficiosRemisionOrganismo;
 

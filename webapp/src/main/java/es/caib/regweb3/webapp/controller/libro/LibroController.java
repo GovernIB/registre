@@ -63,7 +63,6 @@ public class LibroController extends BaseController {
     @RequestMapping(value = "/{idOrganismo}/libros", method = RequestMethod.GET)
     public String libros(Model model, @PathVariable Long idOrganismo, HttpServletRequest request)throws Exception {
 
-//        ModelAndView mav = new ModelAndView("libro/librosList");
         HttpSession session = request.getSession();
         Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
 
@@ -92,15 +91,14 @@ public class LibroController extends BaseController {
 
         model.addAttribute("organismo", organismo);
 
-        Set<Oficina> oficinas = new HashSet<Oficina>();  // Utilizamos un Set porque no permite duplicados
-        oficinas.addAll(oficinaEjb.findByOrganismoResponsable(organismo.getId()));
-        oficinas.addAll(relacionOrganizativaOfiLocalEjb.getOficinasByOrganismo(organismo.getId()));
-        if(oficinas.size() == 0){
+        Boolean tieneOficinas = oficinaEjb.tieneOficinasOrganismo(organismo.getId());
+
+        if (!tieneOficinas) {
             log.info("El organismo no tiene Oficinas");
             Mensaje.saveMessageError(request, getMessage("aviso.organismo.oficinas"));
         }
 
-        model.addAttribute("oficinas", oficinas.size() > 0);
+        model.addAttribute("oficinas", tieneOficinas);
 
         return "libro/librosList";
     }
