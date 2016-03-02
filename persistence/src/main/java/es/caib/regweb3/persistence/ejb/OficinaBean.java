@@ -230,9 +230,9 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
-    public Set<ObjetoBasico> oficinasRegistro(List<Libro> libros) throws Exception{
+    public LinkedHashSet<ObjetoBasico> oficinasRegistro(List<Libro> libros) throws Exception {
 
-        Set<ObjetoBasico> oficinas = new HashSet<ObjetoBasico>();  // Utilizamos un Set porque no permite duplicados
+        LinkedHashSet<ObjetoBasico> oficinas = new LinkedHashSet<ObjetoBasico>();  // Utilizamos un Set porque no permite duplicados
 
         // Recorremos los Libros y a partir del Organismo al que pertenecen, obtenemos las Oficinas que pueden Registrar en el.
         for (Libro libro : libros) {

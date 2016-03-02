@@ -7,8 +7,8 @@ import es.caib.regweb3.persistence.utils.Paginacion;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Fundació BIT.
@@ -101,7 +101,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @return
      * @throws Exception
      */
-    public Set<ObjetoBasico> oficinasRegistro(List<Libro> libros) throws Exception;
+    public LinkedHashSet<ObjetoBasico> oficinasRegistro(List<Libro> libros) throws Exception;
 
     /**
      * Elimina las Oficinas de una Entidad
