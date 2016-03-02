@@ -1,10 +1,7 @@
 package es.caib.regweb3.webapp.interceptor;
 
 import es.caib.regweb3.model.*;
-import es.caib.regweb3.persistence.ejb.ModeloOficioRemisionLocal;
-import es.caib.regweb3.persistence.ejb.OficioRemisionLocal;
-import es.caib.regweb3.persistence.ejb.PermisoLibroUsuarioLocal;
-import es.caib.regweb3.persistence.ejb.UsuarioEntidadLocal;
+import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.apache.log4j.Logger;
@@ -41,6 +38,9 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
 
     @EJB(mappedName = "regweb3/UsuarioEntidadEJB/local")
     public UsuarioEntidadLocal usuarioEntidadEjb;
+
+    @EJB(mappedName = "regweb3/OrganismoEJB/local")
+    public OrganismoLocal organismoEjb;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -120,7 +120,7 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
 
             OficioRemision oficioRemision = oficioRemisionEjb.findById(Long.valueOf(idOficioRemision));
 
-            if(!oficinaActiva.getOrganismoResponsable().getId().equals(oficioRemision.getOrganismoDestinatario().getId())){
+            if (!organismoEjb.getByOficinaActiva(oficinaActiva).contains(oficioRemision.getOrganismoDestinatario())) {
                 log.info("Este RegistroEntrada no se puede procesar");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficioRemision.procesar"));
                 response.sendRedirect("/regweb3/aviso");
