@@ -142,13 +142,13 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
     public Paginacion busqueda(Integer pageNumber,Long idEntidad,String identificador,String nombre, String apellido1, String apellido2, String documento, Long tipoUsuario) throws Exception;
 
     /**
-     *
+     * Devuelve los usuarios de la Entidad activos que no son el usuario actual y según el tipo de usuario
      * @param idEntidad
      * @param idUsuario
      * @return
      * @throws Exception
      */
-    public List<UsuarioEntidad> findByEntidadSinActivo(Long idEntidad, Long idUsuario) throws Exception;
+    public List<UsuarioEntidad> findByEntidadSinActivo(Long idEntidad, Long idUsuario, Long tipoUsuario) throws Exception;
 
     /**
      * Modifica la última Oficina utilizada por el usuario

@@ -367,13 +367,15 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
     }
 
     @Override
-    public List<UsuarioEntidad> findByEntidadSinActivo(Long idEntidad, Long idUsuario) throws Exception {
+    public List<UsuarioEntidad> findByEntidadSinActivo(Long idEntidad, Long idUsuario, Long tipoUsuario) throws Exception {
 
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where " +
-                "usuarioEntidad.entidad.id= :idEntidad and usuarioEntidad.usuario.id!= :idUsuario order by usuarioEntidad.usuario.apellido1");
+                "usuarioEntidad.entidad.id= :idEntidad and usuarioEntidad.usuario.id!= :idUsuario and " +
+                "usuarioEntidad.activo = true and usuarioEntidad.usuario.tipoUsuario= :tipoUsuario order by usuarioEntidad.usuario.apellido1");
 
         q.setParameter("idEntidad",idEntidad);
         q.setParameter("idUsuario",idUsuario);
+        q.setParameter("tipoUsuario",tipoUsuario);
 
         return q.getResultList();
     }

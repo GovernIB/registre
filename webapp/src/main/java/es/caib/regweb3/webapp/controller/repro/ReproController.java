@@ -326,7 +326,6 @@ public class ReproController extends BaseController {
         try {
             Repro reproEnviada = reproEjb.findById(reproId);
             UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findById(usuarioEntidadId);
-            //UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByUsuarioEntidad(usuarioId,getEntidadActiva(request).getId());
 
             Repro repro = new Repro();
             repro.setNombre(reproEnviada.getNombre());
@@ -335,7 +334,7 @@ public class ReproController extends BaseController {
             repro.setRepro(reproEnviada.getRepro());
 
             int orden = 0;
-            List<Repro> repros = reproEjb.getAllbyUsuario(usuarioEntidad.getUsuario().getId());
+            List<Repro> repros = reproEjb.getAllbyUsuario(usuarioEntidad.getId());
             if(repros.size() > 0){
                 orden = reproEjb.maxOrdenRepro(usuarioEntidad.getId());
             }
@@ -357,7 +356,7 @@ public class ReproController extends BaseController {
     @ModelAttribute("usuariosEntidadList")
     public List<UsuarioEntidad> usuariosEntidadList(HttpServletRequest request) throws Exception {
 
-        return usuarioEntidadEjb.findByEntidadSinActivo(getEntidadActiva(request).getId(), getUsuarioAutenticado(request).getId());
+        return usuarioEntidadEjb.findByEntidadSinActivo(getEntidadActiva(request).getId(), getUsuarioAutenticado(request).getId(), RegwebConstantes.TIPO_USUARIO_PERSONA);
 
     }
 

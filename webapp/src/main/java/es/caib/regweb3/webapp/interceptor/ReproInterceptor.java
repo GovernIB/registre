@@ -85,7 +85,12 @@ public class ReproInterceptor extends HandlerInterceptorAdapter {
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.usuarioEntidad.noExiste"));
                     response.sendRedirect("/regweb3/aviso");
                     return false;
-                }
+                    } else if(!usuarioEntidad.getActivo() || usuarioEntidad.getUsuario().getTipoUsuario().equals(RegwebConstantes.TIPO_USUARIO_APLICACION)){
+                        log.info("Aviso: És usuari aplicació o no està actiu");
+                        Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.usuarioEntidad.noExiste"));
+                        response.sendRedirect("/regweb3/aviso");
+                        return false;
+                        }
 
             }
 
