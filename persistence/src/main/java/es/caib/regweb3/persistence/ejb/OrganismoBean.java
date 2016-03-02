@@ -317,14 +317,14 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
    * @throws Exception
    */
     @Override
-    public Set<Organismo> getByOficinaActiva(Oficina oficinaActiva) throws Exception{
+    public LinkedHashSet<Organismo> getByOficinaActiva(Oficina oficinaActiva) throws Exception {
 
         // Añadimos los organismos funcionales
-        Set<Organismo> organismos = oficinaActiva.getOrganismosFuncionales();
+        LinkedHashSet<Organismo> organismos = oficinaActiva.getOrganismosFuncionales();
 
         // variable que representa el arbol de los organismos de la oficina activa
 
-        Set<Organismo> hijosTotales = new HashSet<Organismo>();
+        LinkedHashSet<Organismo> hijosTotales = new LinkedHashSet<Organismo>();
         obtenerHijosOrganismos(organismos, hijosTotales);
         organismos.addAll(hijosTotales);
 
@@ -360,7 +360,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
      * @param totales organismos totales obtenidos despues del proceso recursivo.
      * @throws Exception
      */
-     private void obtenerHijosOrganismos(Set<Organismo> organismosPadres, Set<Organismo> totales) throws Exception {
+    private void obtenerHijosOrganismos(LinkedHashSet<Organismo> organismosPadres, LinkedHashSet<Organismo> totales) throws Exception {
 
          // recorremos para todos los organismos Padres
          for(Organismo org: organismosPadres){
@@ -369,7 +369,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
            q.setParameter("idOrganismoSuperior", org.getId());
            q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
 
-             Set<Organismo> hijos = new HashSet<Organismo>();
+             LinkedHashSet<Organismo> hijos = new LinkedHashSet<Organismo>();
 
 
              List<Object[]> result = q.getResultList();
@@ -379,8 +379,6 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
                  hijos.add(hijo);
              }
-
-
              totales.addAll(hijos);
 
            // Hijos de cada organismo
@@ -400,10 +398,10 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
        // Obtenemos el organismo responsable del libro.
        Query q2 = em.createQuery("Select libro.organismo from Libro as libro where libro.id=:idLibro");
        q2.setParameter("idLibro",idLibro);
-       Set<Organismo> organismosPadres = new HashSet<Organismo>(q2.getResultList());
+         LinkedHashSet<Organismo> organismosPadres = new LinkedHashSet<Organismo>(q2.getResultList());
 
        // aquí guardaremos todos los organismo, el padre y sus hijos.
-       Set<Organismo> totales = new HashSet<Organismo>();
+         LinkedHashSet<Organismo> totales = new LinkedHashSet<Organismo>();
        totales.addAll(organismosPadres);
        // recursivamente obtenemos los hijos de los organismos padre.
        obtenerHijosOrganismos(organismosPadres, totales);

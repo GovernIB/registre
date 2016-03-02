@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 
@@ -198,9 +199,9 @@ public class Oficina implements Serializable{
     }
 
     @Transient
-    public Set<Organismo> getOrganismosFuncionales(){
+    public LinkedHashSet<Organismo> getOrganismosFuncionales() {
 
-        Set<Organismo> organismos = new HashSet<Organismo>();
+        LinkedHashSet<Organismo> organismos = new LinkedHashSet<Organismo>();
 
         // Añadimos el Organismo responsable de la OficinaActiva
         organismos.add(this.getOrganismoResponsable());

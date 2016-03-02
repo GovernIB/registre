@@ -188,7 +188,7 @@
                                 <div class="col-xs-2 boto-panel">
                                     <a data-toggle="modal" role="button" href="#modalBuscadorlistaRegSalida"
                                        onclick="inicializarBuscador('#codNivelAdministracionlistaRegSalida','#codComunidadAutonomalistaRegSalida','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}', 'listaRegSalida');"
-                                       class="btn btn-info btn-sm"><spring:message code="regweb.buscar"/></a>
+                                       class="btn btn-danger btn-sm"><spring:message code="regweb.buscar"/></a>
                                 </div>
                             </div>
                         </div>
