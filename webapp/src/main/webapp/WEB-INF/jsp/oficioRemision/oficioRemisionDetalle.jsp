@@ -49,6 +49,15 @@
                             <dt><i class="fa fa-user"></i> <spring:message code="usuario.usuario"/>: </dt> <dd> ${oficioRemision.usuarioResponsable.usuario.nombreCompleto}</dd>
                             <dt><i class="fa fa-exchange"></i> <spring:message code="oficioRemision.organismoDestino"/>: </dt> 
                             <dd> ${(empty oficioRemision.organismoDestinatario)? oficioRemision.destinoExternoDenominacion : oficioRemision.organismoDestinatario.denominacion}</dd>
+                            <dt><i class="fa fa-exchange"></i> <spring:message code="oficioRemision.tipo"/>:</dt>
+                            <dd>
+                                <span class="label label-warning">
+                                    <c:if test="${not empty oficioRemision.organismoDestinatario}"> <spring:message
+                                            code="oficioRemision.interno"/> </c:if>
+                                    <c:if test="${empty oficioRemision.organismoDestinatario}"> <spring:message
+                                            code="oficioRemision.externo"/> </c:if>
+                                </span>
+                            </dd>
                             <dt><i class="fa fa-bookmark"></i> <spring:message code="oficioRemision.estado"/>: </dt>
                             <dd>
                                 <c:if test="${oficioRemision.estado == 0}"><span class="label label-danger"></c:if>

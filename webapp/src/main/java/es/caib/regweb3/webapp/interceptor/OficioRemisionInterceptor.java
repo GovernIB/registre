@@ -107,8 +107,8 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
             OficioRemision oficioRemision = oficioRemisionEjb.findById(Long.valueOf(idOficioRemision));
 
             if(!oficioRemision.getOficina().equals(oficinaActiva)){ // Si no es la Oficina Activa no se puede consultar
-                log.info("Este OficioRemision no se puede consultar");
-                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficioRemision.detalle"));
+                log.info("Este OficioRemision no se puede consultar: No se encuentra en la Oficina donde se genero");
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficioRemision.oficinaActiva"));
                 response.sendRedirect("/regweb3/aviso");
                 return false;
             }

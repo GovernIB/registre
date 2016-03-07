@@ -117,6 +117,7 @@
                                                         <col>
                                                         <col>
                                                         <col>
+                                                        <col>
                                                         <col width="51">
                                                     </colgroup>
                                                     <thead>
@@ -128,6 +129,7 @@
                                                             <th><spring:message code="oficioRemision.organismoDestino"/></th>
                                                             <th><spring:message code="oficioRemision.numero.re"/></th>
                                                             <th><spring:message code="oficioRemision.estado"/></th>
+                                                            <th><spring:message code="oficioRemision.tipo"/></th>
                                                             <th class="center"><spring:message code="regweb.acciones"/></th>
                                                         </tr>
                                                     </thead>
@@ -147,6 +149,18 @@
                                                                       <c:if test="${not empty oficioRemision.fechaEstado && oficioRemision.estado != 0}">
                                                                           - <fmt:formatDate value="${oficioRemision.fechaEstado}" pattern="dd/MM/yyyy HH:mm:ss"/>
                                                                       </c:if>
+                                                                    </span>
+                                                                </td>
+                                                                <td>
+                                                                    <span class="label label-warning">
+                                                                        <c:if test="${not empty oficioRemision.organismoDestinatario}">
+                                                                            <spring:message
+                                                                                    code="oficioRemision.interno"/>
+                                                                        </c:if>
+                                                                        <c:if test="${empty oficioRemision.organismoDestinatario}">
+                                                                            <spring:message
+                                                                                    code="oficioRemision.externo"/>
+                                                                        </c:if>
                                                                     </span>
                                                                 </td>
 
