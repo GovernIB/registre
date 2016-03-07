@@ -16,6 +16,9 @@
         <sec:intercept-url pattern="/img/**" access="permitAll"/>
         <sec:intercept-url pattern="/css/**" access="permitAll"/>
         <sec:intercept-url pattern="/error.jsp" access="permitAll"/>
+        <sec:intercept-url pattern="/anexo/guardarScan/**" access="permitAll"/>
+        <sec:intercept-url pattern="/anexo/scanwebresource/**" access="permitAll"/>
+        <sec:intercept-url pattern="/anexo/scanwebresource2/**" access="permitAll"/>
 
         <!--Entidad-->
         <sec:intercept-url pattern="/entidad/new" access="hasRole('RWE_SUPERADMIN')"/>

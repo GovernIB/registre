@@ -43,7 +43,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created 3/06/14 14:22
@@ -56,6 +60,97 @@ import java.util.Date;
 @SessionAttributes(types = {AnexoForm.class })
 public class AnexoController extends BaseController {
   
+  
+    public static class UploadedScanFile {
+      protected final File file;
+      protected final String name;
+      protected final String mime;
+      protected final long expiryDate;
+      /**
+       * @param file
+       * @param name
+       * @param mime
+       * @param uploadDate
+       */
+      public UploadedScanFile(File file, String name, String mime, long expiryDate) {
+        super();
+        this.file = file;
+        this.name = name;
+        this.mime = mime;
+        this.expiryDate = expiryDate;
+      }
+      public File getFile() {
+        return file;
+      }
+      public String getName() {
+        return name;
+      }
+      public String getMime() {
+        return mime;
+      }
+      public long getExpiryDate() {
+        return expiryDate;
+      }
+      
+    }
+  
+    //  Uploaded Scan Files
+    private static final Map<Long, UploadedScanFile> scanDocumentsByID = new HashMap<Long, AnexoController.UploadedScanFile>();
+    
+        
+    protected static final long FIVE_MINUTES = 1000 * 60 * 5;
+    
+    protected UploadedScanFile getScanFileByID(long docID) {
+
+      synchronized (scanDocumentsByID) {
+        clearExpiredScanDocuments();
+  
+        return scanDocumentsByID.get(docID);
+      }
+    }
+
+
+        
+  
+    protected void saveScanFile(long docID, UploadedScanFile usf) {
+    
+      synchronized (scanDocumentsByID) {
+        clearExpiredScanDocuments();
+        scanDocumentsByID.put(docID, usf);
+      }
+      
+    }
+    
+    protected void clearScanFile(long docID) {
+      
+      synchronized (scanDocumentsByID) {
+        clearExpiredScanDocuments();
+        scanDocumentsByID.remove(docID);
+      }
+      
+    }
+    
+
+    private void clearExpiredScanDocuments() {
+      // Clear Uploaded Scan Files
+      List<Long> deleteItems = new ArrayList<Long>();
+ 
+      final long now = System.currentTimeMillis();
+      
+      for (Long id : scanDocumentsByID.keySet()) {
+        UploadedScanFile usf = scanDocumentsByID.get(id);
+        
+        if (usf.getExpiryDate() < now) {
+          deleteItems.add(id);
+        }
+        
+      }
+ 
+      for (Long id : deleteItems) {
+        scanDocumentsByID.remove(id);
+      }
+    }
+    
   
     public static final int FILE_TAB_HEIGHT = 107;
   
@@ -369,10 +464,11 @@ public class AnexoController extends BaseController {
       
     //Cogemos el archivo
       HttpSession session = request.getSession(true);
-      Object scan = session.getAttribute("scan_" + registroID);
+      //Object scan = session.getAttribute("scan_" + registroID);
+      UploadedScanFile usf = getScanFileByID(registroID);
       
-      if (scan != null) {
-        File scanFile = (File)scan;
+      if (usf != null) {
+        File scanFile = usf.getFile();
         
 
         dc = new DocumentCustody();
@@ -386,7 +482,8 @@ public class AnexoController extends BaseController {
         }
         
         
-        String mime = (String)session.getAttribute("scan_" + registroID + ".mime");
+        //String mime = (String)session.getAttribute("scan_" + registroID + ".mime");
+        String mime = usf.getMime();
         if (es.caib.regweb3.utils.StringUtils.isEmpty(mime)) {
           // TODO Quin tipus li pos aqui // JPG, PNG, TIFF, PDF, ...
           // Mirar Mime manager de PortaFIB o de GenApp!!!!
@@ -395,7 +492,8 @@ public class AnexoController extends BaseController {
         }
         dc.setMime(mime);
         
-        String name = (String)session.getAttribute("scan_" + registroID + ".name");
+        //String name = (String)session.getAttribute("scan_" + registroID + ".name");
+        String name = usf.getName();
         if (name == null) {
           name = "FitxerEscanejat.bin";
         }
@@ -724,10 +822,15 @@ public class AnexoController extends BaseController {
     	   temp.deleteOnExit();
     	   
            //Obtain the session object, create a new session if doesn't exist
+    	     UploadedScanFile usf = new UploadedScanFile(temp, scan.getOriginalFilename(),
+    	         scan.getContentType(), System.currentTimeMillis() + FIVE_MINUTES);
+    	     saveScanFile(idRegistro, usf);
+    	     /*
            HttpSession session = request.getSession(true);
            session.setAttribute("scan_" + idRegistro, temp);
            session.setAttribute("scan_" + idRegistro +".name", scan.getOriginalFilename());
            session.setAttribute("scan_" + idRegistro +".mime", scan.getContentType());
+           */
 
        }catch (Exception e) {
          // TODO PROCESSSAR ERROR !!!!
@@ -737,11 +840,14 @@ public class AnexoController extends BaseController {
     
     
     protected void initScan(HttpServletRequest request, Long registroID) {
-      HttpSession session = request.getSession(true);
-
+      
+      
+      clearScanFile(registroID);
+/*    HttpSession session = request.getSession(true);
       session.removeAttribute("scan_" + registroID);
       session.removeAttribute("scan_" + registroID +".name");
       session.removeAttribute("scan_" + registroID +".mime");
+      */
     }
 
 }

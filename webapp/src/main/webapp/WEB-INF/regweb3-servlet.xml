@@ -32,6 +32,9 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
             <mvc:exclude-mapping path="/img/**"/>
             <mvc:exclude-mapping path="/js/**"/>
             <mvc:exclude-mapping path="/doc/**"/>
+            <mvc:exclude-mapping path="/anexo/guardarScan/**"/>
+            <mvc:exclude-mapping path="/anexo/scanwebresource/**"/>
+            <mvc:exclude-mapping path="/anexo/scanwebresource2/**"/>
             <bean class="es.caib.regweb3.webapp.interceptor.InicioInterceptor" />
         </mvc:interceptor>
 

@@ -217,6 +217,8 @@
             <artifactId>plugin-scanweb-api</artifactId>
             <version>1.0.0</version>
         </dependency>
+        
+        <!--   VEURE APARATAT DE PROFILES AL FINAL D'AQUEST POM -->
 
         <!--
         <dependency>
@@ -233,6 +235,9 @@
             <version>1.0.0</version>
         </dependency>
         -->
+        
+        
+
 
         <!-- ============================================ -->
         <!-- ======== PLUGINS DE DISTRIBUCION =========== -->
@@ -338,5 +343,27 @@
         </dependency>
 
     </dependencies>
+    
+    
+    <profiles>
+	
+        <!-- ============================================ -->
+        <!-- ============= PLUGINS DE SCANNER =========== -->
+        <!-- ============================================ -->
+        
+        <!-- ========== PLUGIN DE SCAN DE IECISA =========== -->
+		<profile>
+			<id>iecisascanweb</id>
+			<dependencies>
+
+				<dependency>
+                    <groupId>org.fundaciobit.plugins</groupId>
+                    <artifactId>plugin-scanweb-iecisascanweb-plugin</artifactId>
+                    <version>1.0.0</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+    
 
 </project>
