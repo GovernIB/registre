@@ -495,9 +495,11 @@ public class OficioRemisionController extends BaseController {
         ModelAndView mav = new ModelAndView("oficioRemision");
 
         OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
+        List<RegistroEntrada> registrosEntrada = oficioRemisionEjb.getByOficioRemision(oficioRemision.getId());
         ModeloOficioRemision modeloOficioRemision = modeloOficioRemisionEjb.findById(idModelo);
 
         mav.addObject("oficioRemision", oficioRemision);
+        mav.addObject("registrosEntrada", registrosEntrada);
         mav.addObject("modeloOficioRemision", modeloOficioRemision);
 
         return mav;

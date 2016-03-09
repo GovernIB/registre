@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -44,6 +45,7 @@ public class OficioRemisionRtfView extends AbstractView {
 
 
         OficioRemision oficioRemision = (OficioRemision) model.get("oficioRemision");
+        List<RegistroEntrada> registrosEntrada = (List<RegistroEntrada>) model.get("registrosEntrada");
         ModeloOficioRemision modeloOficioRemision = (ModeloOficioRemision) model.get("modeloOficioRemision");
 
         String idiomaActual = request.getLocale().getLanguage();
@@ -88,11 +90,11 @@ public class OficioRemisionRtfView extends AbstractView {
         }
 
         // Registros Entrada
-        String registrosEntrada = "";
+        String registros = "";
 
-        for(RegistroEntrada registroEntrada:oficioRemision.getRegistrosEntrada()){
+        for (RegistroEntrada registroEntrada : registrosEntrada) {
 
-            registrosEntrada = registrosEntrada.concat("- "+ registroEntrada.getNumeroRegistroFormateado() +"\\\r\n");
+            registros = registros.concat("- " + registroEntrada.getNumeroRegistroFormateado() + "\\\r\n");
 
         }
 
@@ -121,7 +123,7 @@ public class OficioRemisionRtfView extends AbstractView {
         ht.put("(numeroOficio)", ConvertirTexto.toCp1252(oficioRemision.getNumeroOficio().toString()));
         ht.put("(anoOficio)", ConvertirTexto.toCp1252(anoOficio));
         ht.put("(oficina)", ConvertirTexto.toCp1252(oficioRemision.getOficina().getDenominacion()));
-        ht.put("(registrosEntrada)", ConvertirTexto.toCp1252(registrosEntrada));
+        ht.put("(registrosEntrada)", ConvertirTexto.toCp1252(registros));
         ht.put("(data)", ConvertirTexto.toCp1252(fechaActual));
 
         // Reemplaza el texto completo
