@@ -95,25 +95,8 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
         Entidad entidad = entidadEjb.findById(entidadId);
 
-
-        // Obtenemos el Service de los WS de Unidades y Oficinas
+        // Obtenemos el Service de los WS de Unidades
         Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService();
-        Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
-
-       /* //Obtener fecha ultima actualizacion di3caib
-        Timestamp fechaUltDir3caibUnidades = unidadesService.obtenerFechaUltimaActualizacion();
-        Timestamp fechaUltDir3caibOficinas = oficinasService.obtenerFechaUltimaActualizacion();
-        log.info("fechaUltDir3caibUnidades:" + fechaUltDir3caibUnidades);
-        log.info("fechaUltDir3caibUnidades:" + fechaUltDir3caibOficinas);
-        if(fechaActualizacion != null) {
-            if (fechaUltDir3caibUnidades.before(fechaActualizacion) || fechaUltDir3caibOficinas.before(fechaActualizacion)) {
-                return -1;
-            }
-        }else{
-            if (fechaUltDir3caibUnidades.before(fechaSincronizacion) || fechaUltDir3caibOficinas.before(fechaSincronizacion)) {
-                return -1;
-            }
-        }*/
 
         // Obtenemos la Unidad Padre y las dependientes.
         es.caib.dir3caib.ws.api.unidad.UnidadTF unidadPadre = unidadesService.obtenerUnidad(entidad.getCodigoDir3(), fechaActualizacion, fechaSincronizacion);
@@ -159,14 +142,16 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         log.info("");
         log.info("Finalizada la importacion de Organismos");
         log.info("");
+
+        // Obtenemos el Service de los WS de Oficinas
+        Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
         int oficinasActualizadas = 0;
 
         Set<OficinaTF> todasOficinasEntidad = new HashSet<OficinaTF>(); // Guardará todas las oficinas de la entidad
-        // Obtenemos todas las oficinas de la entidad. Para ello obtenemos para cada Organismo las Oficinas dependientes de él
-        for (Organismo organismo : organismoEjb.findByEntidad(entidadId)) {
-            List<OficinaTF> oficinas = oficinasService.obtenerArbolOficinas(organismo.getCodigo(), fechaActualizacion, fechaSincronizacion);
-            todasOficinasEntidad.addAll(oficinas);
-        }
+        // Obtenemos todas las oficinas de la entidad.
+        List<OficinaTF> oficinasTF = oficinasService.obtenerArbolOficinas(entidad.getCodigoDir3(), fechaActualizacion, fechaSincronizacion);
+        todasOficinasEntidad.addAll(oficinasTF);
+
         // Procesamos todas las oficinas de la entidad
         crearActualizarOficinas(todasOficinasEntidad);
         // asignamos su oficina responsable a todas las oficinas de la entidad,
