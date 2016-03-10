@@ -54,16 +54,26 @@
                                 </div>
                             </div>
                             <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left align-right"><spring:message code="oficioRemision.anyRegistro"/></div>
+                                <div class="col-xs-4 pull-left align-right"><spring:message
+                                        code="oficioRemision.tipo"/></div>
+                                <div class="col-xs-8">
+                                    <form:select path="tipoOficioRemision.id" cssClass="chosen-select">
+                                        <form:option value="">...</form:option>
+                                        <c:forEach items="${tiposOficioRemision}" var="tipoOficioRemision">
+                                            <form:option
+                                                    value="${tipoOficioRemision.id}">${tipoOficioRemision.nombre}</form:option>
+                                        </c:forEach>
+                                    </form:select>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-6">
+                                <div class="col-xs-4 pull-left align-right"><spring:message
+                                        code="oficioRemision.anyRegistro"/></div>
                                 <div class="col-xs-8">
                                     <form:select path="anyo" cssClass="chosen-select">
                                         <form:option value="" label="..."/>
-
-                                        <c:set var="now" value="<%=new java.util.Date()%>" />
-                                        <fmt:formatDate value="${now}" pattern="yyyy" var="anyActual" />
-
-                                        <c:forEach begin="2002" end="${anyActual}" step="1" var="year" varStatus="status">
-                                            <option value="${year}" <c:if test="${status.last}">selected="selected"</c:if>>${year}</option>
+                                        <c:forEach items="${anys}" var="anyo">
+                                            <form:option value="${anyo}">${anyo}</form:option>
                                         </c:forEach>
                                     </form:select>
                                 </div>

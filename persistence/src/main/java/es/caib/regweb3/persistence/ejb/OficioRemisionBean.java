@@ -84,7 +84,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     }
 
     @Override
-    public Paginacion busqueda(Integer pageNumber, Integer any, OficioRemision oficioRemision, List<Libro> libros) throws Exception{
+    public Paginacion busqueda(Integer pageNumber, Integer any, OficioRemision oficioRemision, List<Libro> libros, Long tipoOficioRemision) throws Exception {
 
         Query q;
         Query q2;
@@ -103,6 +103,15 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
             where.add(" oficioRemision.libro.id = :idLibro"); parametros.put("idLibro",oficioRemision.getLibro().getId());
         }else{
             where.add(" oficioRemision.libro in (:libros)"); parametros.put("libros",libros);
+        }
+
+        // Tipo Oficio Remisión Interno o Externo
+        if (tipoOficioRemision != null) {
+            if (tipoOficioRemision.equals(RegwebConstantes.OFICIO_REMISION_INTERNO)) {
+                where.add(" oficioRemision.organismoDestinatario != null");
+            } else if (tipoOficioRemision.equals(RegwebConstantes.OFICIO_REMISION_EXTERNO)) {
+                where.add(" oficioRemision.organismoDestinatario is null");
+            }
         }
 
         if (parametros.size() != 0) {

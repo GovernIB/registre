@@ -12,6 +12,7 @@ import java.util.Map;
  * Date: 6/02/14
  */
 public interface RegwebConstantes {
+
     /** --------------- SISTEMA -------------- */
     public static final String REGWEB3_PROPERTY_BASE = "es.caib.regweb3.";
     public static final String SECURITY_DOMAIN = "seycon";
@@ -35,7 +36,6 @@ public interface RegwebConstantes {
     public static final String SESSION_INTERESADOS_SALIDA = "interesadosSalida";
 
     /** -------------- IDIOMA --------------*/
-
     public static final Long IDIOMA_CATALAN_ID = 1L;
     public static final String IDIOMA_CATALAN_CODIGO = "ca";
     
@@ -74,10 +74,9 @@ public interface RegwebConstantes {
       put(IDIOMA_EUSKERA_ID, IDIOMA_EUSKERA_CODIGO);
       put(IDIOMA_INGLES_ID, IDIOMA_INGLES_CODIGO);
     }};
-    
-    
-    public static final Map<String, Long> IDIOMA_ID_BY_CODIGO
-      = RegwebUtils.invert(CODIGO_BY_IDIOMA_ID); 
+
+
+    public static final Map<String, Long> IDIOMA_ID_BY_CODIGO = RegwebUtils.invert(CODIGO_BY_IDIOMA_ID);
 
     /* -------------- PROPERTIES DE APLICACIÓN --------------*/
     public static final String ARCHIVOS_LOCATION_PROPERTY = "es.caib.regweb3.archivos.path";
@@ -100,6 +99,7 @@ public interface RegwebConstantes {
     /* -------------- FORMATOS --------------*/
     public static final String FORMATO_FECHA = "dd/MM/yyyy";
     public static final String FORMATO_FECHA_HORA = "dd/MM/yyyy HH:mm";
+    public static final Integer ANY = 2015;
 
     /* -------------- PERMISOS LIBRO REGISTROS --------------*/
     public static final Long PERMISO_REGISTRO_ENTRADA =  1L;
@@ -309,17 +309,12 @@ public interface RegwebConstantes {
     
     
     /** --------------- TIPO FIRMA -------------- */
- 
-    
-    
     public static final Long TIPO_FIRMA_CSV=1L;
     public static final Long TIPO_FIRMA_XADES_DETACHED_SIGNATURE=2L;
     public static final Long TIPO_FIRMA_XADES_ENVELOPE_SIGNATURE=3L;
     public static final Long TIPO_FIRMA_CADES_DETACHED_EXPLICIT_SIGNATURE=4L;
     public static final Long TIPO_FIRMA_CADES_ATTACHED_IMPLICIT_SIGNAUTRE=5L;
     public static final Long TIPO_FIRMA_PADES=6L;
-   
-    
     
     public static final Long[] TIPOS_FIRMA = { TIPO_FIRMA_CSV,
       TIPO_FIRMA_XADES_DETACHED_SIGNATURE,
@@ -504,7 +499,11 @@ public interface RegwebConstantes {
       TIPO_DOCFISICA_NO_ACOMPANYA_DOC
     };
 
-    
+    /* -------- TIPO DE OFICIO DE REMISION ---------- */
+
+    public static final Long OFICIO_REMISION_INTERNO = 1L;
+
+    public static final Long OFICIO_REMISION_EXTERNO = 2L;
 
     /* -------- ESTADO DE UN OFICIO DE REMISION ---------- */
     

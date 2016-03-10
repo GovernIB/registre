@@ -56,12 +56,8 @@
                                 <div class="col-xs-8">
                                     <form:select path="anyo" cssClass="chosen-select">
                                         <form:option value="" label="..."/>
-
-                                        <c:set var="now" value="<%=new java.util.Date()%>" />
-                                        <fmt:formatDate value="${now}" pattern="yyyy" var="anyActual" />
-
-                                        <c:forEach begin="2002" end="${anyActual}" step="1" var="year" varStatus="status">
-                                            <option value="${year}" <c:if test="${status.last}">selected="selected"</c:if>>${year}</option>
+                                        <c:forEach items="${anys}" var="anyo">
+                                            <form:option value="${anyo}">${anyo}</form:option>
                                         </c:forEach>
                                     </form:select>
                                 </div>
@@ -102,6 +98,13 @@
                                                         <br> <br>
                                                         <strong><spring:message
                                                                 code="oficioRemision.organismoDestino.extinguido"/></strong>
+                                                    </div>
+                                                </c:if>
+
+                                                <c:if test="${oficiosRemisionOrganismo.oficinas == false}">
+                                                    <div class="alert alert-danger center">
+                                                        <strong><spring:message
+                                                                code="oficioRemision.organismoDestino.oficinaRegistral"/></strong>
                                                     </div>
                                                 </c:if>
 
@@ -163,7 +166,7 @@
                                                         </form:form>
 
                                                             <div class="btn-group">
-                                                                <c:if test="${oficiosRemisionOrganismo.vigente}">
+                                                                <c:if test="${oficiosRemisionOrganismo.vigente && oficiosRemisionOrganismo.oficinas}">
                                                                     <button type="button"
                                                                             onclick="doForm('#oficio${status.count}')"
                                                                             class="btn btn-sm btn-warning dropdown-toggle">
@@ -172,7 +175,7 @@
                                                                     </button>
                                                                 </c:if>
 
-                                                                <c:if test="${oficiosRemisionOrganismo.vigente == false}">
+                                                                <c:if test="${oficiosRemisionOrganismo.vigente == false || oficiosRemisionOrganismo.oficinas == false}">
                                                                     <button type="button"
                                                                             class="btn btn-sm btn-warning disabled">
                                                                         <spring:message

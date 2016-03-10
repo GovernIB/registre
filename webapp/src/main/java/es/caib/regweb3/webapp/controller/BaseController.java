@@ -11,6 +11,7 @@ import org.springframework.validation.FieldError;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -299,6 +300,25 @@ public class BaseController {
         Set<Oficina> oficinasOrigen = new HashSet<Oficina>();
         oficinasOrigen.addAll(oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
         return oficinasOrigen;
+    }
+
+    /**
+     * Retorna los años para un select de búsqueda
+     *
+     * @return
+     */
+    protected List<Integer> getAnys() {
+        List<Integer> anys = new ArrayList<Integer>();
+
+        Date hoy = new Date();
+        SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
+
+        for (int i = Integer.valueOf(formatYear.format(hoy)); i >= RegwebConstantes.ANY; i--) {
+            anys.add(i);
+        }
+
+        return anys;
+
     }
 
     /**

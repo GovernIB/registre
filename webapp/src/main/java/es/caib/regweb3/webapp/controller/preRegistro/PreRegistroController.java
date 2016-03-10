@@ -81,6 +81,7 @@ public class PreRegistroController extends BaseController {
         PreRegistroBusquedaForm preRegistroBusquedaForm = new PreRegistroBusquedaForm(new PreRegistro(),1);        
         model.addAttribute("estados", RegwebConstantes.ESTADOS_PREREGISTRO);
         model.addAttribute("preRegistroBusqueda", preRegistroBusquedaForm);
+        model.addAttribute("anys", getAnys());
 
         return mav;
     }
@@ -104,6 +105,7 @@ public class PreRegistroController extends BaseController {
         mav.addObject("estados", RegwebConstantes.ESTADOS_PREREGISTRO);
         mav.addObject("paginacion", paginacion);
         mav.addObject("preRegistroBusqueda", busqueda);
+        mav.addObject("anys", getAnys());
 
         return mav;
 

@@ -1,6 +1,7 @@
 package es.caib.regweb3.webapp.controller.oficioRemision;
 
 import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.utils.ObjetoBasico;
 import es.caib.regweb3.model.utils.OficioPendienteLlegada;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.OficiosRemisionInternoOrganismo;
@@ -82,10 +83,17 @@ public class OficioRemisionController extends BaseController {
 
         List<Libro> librosConsulta = permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_ENTRADA);
 
+        List<ObjetoBasico> tiposOficioRemision = new ArrayList<ObjetoBasico>();
+        tiposOficioRemision.add(new ObjetoBasico(RegwebConstantes.OFICIO_REMISION_INTERNO, getMessage("oficioRemision.interno")));
+        tiposOficioRemision.add(new ObjetoBasico(RegwebConstantes.OFICIO_REMISION_EXTERNO, getMessage("oficioRemision.externo")));
+
         OficioRemisionBusquedaForm oficioRemisionBusquedaForm = new OficioRemisionBusquedaForm(new OficioRemision(),1);
+
 
         model.addAttribute("librosConsulta", librosConsulta);
         model.addAttribute("oficioRemisionBusqueda", oficioRemisionBusquedaForm);
+        model.addAttribute("tiposOficioRemision", tiposOficioRemision);
+        model.addAttribute("anys", getAnys());
 
 
         return mav;
@@ -104,13 +112,18 @@ public class OficioRemisionController extends BaseController {
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         List<Libro> librosConsulta = permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_ENTRADA);
 
-        Paginacion paginacion = oficioRemisionEjb.busqueda(busqueda.getPageNumber(), busqueda.getAnyo(), oficioRemision, librosConsulta);
+        List<ObjetoBasico> tiposOficioRemision = new ArrayList<ObjetoBasico>();
+        tiposOficioRemision.add(new ObjetoBasico((long) 1, getMessage("oficioRemision.interno")));
+        tiposOficioRemision.add(new ObjetoBasico((long) 2, getMessage("oficioRemision.externo")));
 
+        Paginacion paginacion = oficioRemisionEjb.busqueda(busqueda.getPageNumber(), busqueda.getAnyo(), oficioRemision, librosConsulta, busqueda.getTipoOficioRemision().getId());
         
         busqueda.setPageNumber(1);
         mav.addObject("paginacion", paginacion);
         mav.addObject("librosConsulta", librosConsulta);
         mav.addObject("oficioRemisionBusqueda", busqueda);
+        mav.addObject("tiposOficioRemision", tiposOficioRemision);
+        mav.addObject("anys", getAnys());
 
         return mav;
 
@@ -131,6 +144,7 @@ public class OficioRemisionController extends BaseController {
         model.addAttribute("librosRegistro", getLibrosRegistroEntrada(request)); // Obtenemos los Libros donde el Usuario puede Registrar de la Oficina Activa
         model.addAttribute("registroEntradaBusqueda", oficioPendienteBusquedaForm);
         model.addAttribute("tipo", "Interna");
+        model.addAttribute("anys", getAnys());
 
 
         return mav;
@@ -155,6 +169,7 @@ public class OficioRemisionController extends BaseController {
         mav.addObject("librosRegistro", getLibrosRegistroEntrada(request)); // Obtenemos los Libros donde el Usuario puede Registrar de la Oficina Activa
         mav.addObject("registroEntradaBusqueda", busqueda);
         mav.addObject("registroEntradaListForm", new RegistroEntradaListForm());
+        mav.addObject("anys", getAnys());
 
         return mav;
 
@@ -175,6 +190,7 @@ public class OficioRemisionController extends BaseController {
 
         model.addAttribute("librosRegistro", getLibrosRegistroEntrada(request)); // Obtenemos los Libros donde el Usuario puede Registrar de la Oficina Activa
         model.addAttribute("registroEntradaBusqueda", oficioPendienteBusquedaForm);
+        model.addAttribute("anys", getAnys());
 
         return mav;
     }
@@ -207,6 +223,7 @@ public class OficioRemisionController extends BaseController {
         mav.addObject("tipo", "Externa");
         mav.addObject("registroEntradaListForm", new RegistroEntradaListForm());
         mav.addObject("sirForm", new SirForm());
+        mav.addObject("anys", getAnys());
 
         return mav;
 

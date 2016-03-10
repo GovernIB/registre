@@ -29,10 +29,11 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @param any
      * @param oficioRemision
      * @param libros
+     * @param tipoOficioRemision
      * @return
      * @throws Exception
      */
-    public Paginacion busqueda(Integer pageNumber, Integer any, OficioRemision oficioRemision, List<Libro> libros) throws Exception;
+    public Paginacion busqueda(Integer pageNumber, Integer any, OficioRemision oficioRemision, List<Libro> libros, Long tipoOficioRemision) throws Exception;
 
     /**
      * Registra un OficioRemision asignandole número

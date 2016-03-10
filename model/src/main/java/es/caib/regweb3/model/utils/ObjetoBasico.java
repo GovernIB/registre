@@ -11,6 +11,9 @@ public class ObjetoBasico implements Serializable{
     private Long id;
     private String nombre;
 
+    public ObjetoBasico() {
+    }
+
     public ObjetoBasico(Long id) {
         this.id = id;
     }

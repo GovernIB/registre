@@ -36,7 +36,7 @@ function organismoBusqueda(tipoOrganismo, urlServidor,idRegistroDetalle){
       var unidadRaiz=false;
       // indica que queremos obtener de la búsqueda de organismos aquellos que tienen oficinas
       //de registro
-      var conOficinas= true;
+    var conOficinas = false;
 
 
       // Variables configurables en función del tipo de organismo indicado.
