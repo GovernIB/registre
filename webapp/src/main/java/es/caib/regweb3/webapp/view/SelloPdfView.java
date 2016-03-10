@@ -113,7 +113,7 @@ public class SelloPdfView extends AbstractIText5PdfView {
         SimpleDateFormat formatHour = new SimpleDateFormat("HH");
         SimpleDateFormat formatMin = new SimpleDateFormat("mm");
         SimpleDateFormat formatSeg = new SimpleDateFormat("ss");
-        
+
         // Registre Entrada
         if(registro.getClass().getSimpleName().equals("RegistroEntrada")){
 
@@ -215,21 +215,21 @@ public class SelloPdfView extends AbstractIText5PdfView {
         if(sello != null){
 
         	java.util.List<ElementSello> linies = new ArrayList<ElementSello>();
-        	
+
         	String[] liniesSello = sello.split("\\r?\\n");
         	for(String liniaSello: liniesSello) {
         		linies.addAll(processaLinia(liniaSello));
         	}
 
         	if (!linies.isEmpty()) {
-        		
+
 	            // Cerca la línia més llarga per controlar que no surti del pdf
 	        	float max = ElementSello.maxPosx;
 	        	float may = ElementSello.maxPosy;
 	        	
 	        	float fx = calculaOrigenX(x, max, orientacion);
         		float fy = calculaOrigenY(y, may, orientacion);// - linies.get(0).getPosy();
-	        	
+
         		// LogoSello
         		if (logoSello != null && entidad.getLogoSello() != null) {
             		File file = FileSystemManager.getArchivo(entidad.getLogoSello().getId());
@@ -248,7 +248,7 @@ public class SelloPdfView extends AbstractIText5PdfView {
             		PdfContentByte canvas = writer.getDirectContent();
             		canvas.addImage(imatgeSello); 
             	}
-        	
+
         		// ElementsSello
 	            for(ElementSello element: linies) {
 	            	Font font = new Font(element.getBf(), element.getFontSize(), element.getFontStyle(), element.getColor());
@@ -313,7 +313,7 @@ public class SelloPdfView extends AbstractIText5PdfView {
 
 	private java.util.List<ElementSello> processaLinia(String liniaSello) throws Exception {
     	java.util.List<ElementSello> linies = new ArrayList<ElementSello>();
-    	
+
     	java.util.List<ElementSello> partLinia = new ArrayList<ElementSello>();
     	
     	if (liniaSello == null || "".equals(liniaSello)) {
@@ -346,10 +346,11 @@ public class SelloPdfView extends AbstractIText5PdfView {
 	    			liniaSello = liniaSello.substring(liniaSello.indexOf("}") + 1);
 	    		} else {
 	    			partLinia.add(new ElementSello(liniaSello, false));
+                    break;
 	    		}
     		}
     	}
-    	
+
     	actualitzaPos(partLinia);
     	linies.addAll(partLinia);
     	
