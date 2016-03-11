@@ -138,16 +138,19 @@ public class ReproController extends BaseController {
             break;
         }
 
-        Oficina oficina = oficinaEjb.findByCodigo(reproJson.getOficinaCodigo());
+        log.info("OficinaCodigo: " + reproJson.getOficinaCodigo());
+        if (!reproJson.getOficinaCodigo().equals("-1")) {
 
-        if(oficina != null){ // es interna
-            log.info("Oficina: " +reproJson.getOficinaDenominacion() + " Interno");
-            reproJson.setOficinaExterna(false);
-        }else{ // es externa
-            log.info("Oficina: " +reproJson.getOficinaDenominacion() + " Externa");
-            reproJson.setOficinaExterna(true);
+            Oficina oficina = oficinaEjb.findByCodigo(reproJson.getOficinaCodigo());
+
+            if (oficina != null) { // es interna
+                log.info("Oficina: " + reproJson.getOficinaDenominacion() + " Interno");
+                reproJson.setOficinaExterna(false);
+            } else { // es externa
+                log.info("Oficina: " + reproJson.getOficinaDenominacion() + " Externa");
+                reproJson.setOficinaExterna(true);
+            }
         }
-
 
         repro.setRepro(RegistroUtils.serilizarXml(reproJson));
 

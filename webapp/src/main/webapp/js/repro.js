@@ -125,9 +125,7 @@ function rellenarFormulario(idRepro,tipoRegistro){
             $('#registroDetalle\\.transporte').trigger("chosen:updated");
 
             //Oficina origen
-            if(repro.oficinaCodigo == null) {
-                mensajeError("#mensajes","L'oficina seleccionada ja no està vigent, i s'ha eliminat de la seva Repro.");
-            }else{
+            if (repro.oficinaCodigo != null) {
                 var oficina= '';
                 oficina += '<option value="' + repro.oficinaCodigo + '" selected="selected">'
                 + repro.oficinaDenominacion + '</option>';
