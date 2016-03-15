@@ -161,15 +161,15 @@ function rellenarFormulario(idRepro,tipoRegistro){
 
             }else  if(tipoRegistro == 2){ // Registro Salida
 
-                if(repro.origenCodigo == null){
-                    mensajeError("#mensajes","La unitat origen seleccionada ja no està vigent, i s'ha eliminat de la seva Repro");
-                }else{
+                if (repro.origenCodigo != null) {
+
                     var origen= '';
                     origen += '<option value="' + repro.origenCodigo + '" selected="selected">' + repro.origenDenominacion + '</option>';
 
-                    $('#origen\\.codigo').append(destino);
+                    $('#origen\\.codigo').append(origen);
                     $('#origen\\.codigo').trigger("chosen:updated");
                     $('#origen\\.denominacion').val(repro.origenDenominacion);
+
                 }
             }
 
