@@ -71,17 +71,28 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @throws Exception
      */
     public RegistroSalida findByNumeroAnyoLibro(int numero, int anyo, String libro) throws Exception;
-    
-    
+
+
     /**
-     * Busca los Registros de Salida en función de la una fecha inicio, una fecha fin y el libro
+     * Busca los Registros de Salida en función de varios parámetros
      * @param fechaInicio
      * @param fechaFin
+     * @param numRegistro
+     * @param interesadoNom
+     * @param interesadoLli1
+     * @param interesadoLli2
+     * @param interesadoDoc
+     * @param anexos
+     * @param observaciones
+     * @param usuario
+     * @param extracto
      * @param libros
+     * @param estado
+     * @param idOficina
      * @return
      * @throws Exception
      */
-    public List<RegistroSalida> buscaLibroRegistro(Date fechaInicio, Date fechaFin, List<Libro> libros) throws Exception;
+    public List<RegistroSalida> buscaLibroRegistro(Date fechaInicio, Date fechaFin, String numRegistro, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String usuario, String extracto, List<Libro> libros, Long estado, Long idOficina) throws Exception;
 
     /**
      * Busca los Registros de Salida que no estén anulados ni pendientes en función de la una fecha inicio, una fecha fin, de la Entidad Activa

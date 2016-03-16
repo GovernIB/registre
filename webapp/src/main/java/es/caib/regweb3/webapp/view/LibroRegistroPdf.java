@@ -41,6 +41,18 @@ public class LibroRegistroPdf extends AbstractIText5PdfView {
         Long tipo = (Long) model.get("tipo");
         String fechaInicio = (String) model.get("fechaInicio");
         String fechaFin = (String) model.get("fechaFin");
+        String numRegistro = (String) model.get("numRegistro");
+        String extracto = (String) model.get("extracto");
+        Long estado = (Long) model.get("estado");
+        String nombreInteresado = (String) model.get("nombreInteresado");
+        String apell1Interesado = (String) model.get("apell1Interesado");
+        String apell2Interesado = (String) model.get("apell2Interesado");
+        String docInteresado = (String) model.get("docInteresado");
+        String oficinaReg = (String) model.get("oficinaReg");
+        Boolean anexos = (Boolean) model.get("anexos");
+        String observaciones = (String) model.get("observaciones");
+        String usuario = (String) model.get("usuario");
+
         Set<String> campos = (Set<String>) model.get("campos");
         ArrayList<ArrayList<String>> registrosLibro = (ArrayList<ArrayList<String>>) model.get("registrosLibro");
 
@@ -59,11 +71,37 @@ public class LibroRegistroPdf extends AbstractIText5PdfView {
         Font font10 = FontFactory.getFont(FontFactory.HELVETICA, 10);
         Font font14Bold = FontFactory.getFont(FontFactory.HELVETICA, 14, Font.BOLD);
 
-        String tipoRegistro = null;
+        String tipoRegistro = "";
         if(tipo.equals(RegwebConstantes.INFORME_TIPO_REGISTRO_ENTRADA)){
             tipoRegistro = getMessage("informe.entrada");
         }else if(tipo.equals(RegwebConstantes.INFORME_TIPO_REGISTRO_SALIDA)){
             tipoRegistro = getMessage("informe.salida");
+        }
+        String estadoRegistro = "";
+        if(estado.equals((long) -1)){
+            estadoRegistro = getMessage("informe.tots");
+        }else if(estado.equals(RegwebConstantes.ESTADO_VALIDO)){
+            estadoRegistro = getMessage("registro.estado.1");
+        }else if(estado.equals(RegwebConstantes.ESTADO_PENDIENTE)){
+            estadoRegistro = getMessage("registro.estado.2");
+        }else if(estado.equals(RegwebConstantes.ESTADO_PENDIENTE_VISAR)){
+            estadoRegistro = getMessage("registro.estado.3");
+        }else if(estado.equals(RegwebConstantes.ESTADO_OFICIO_EXTERNO)){
+            estadoRegistro = getMessage("registro.estado.4");
+        }else if(estado.equals(RegwebConstantes.ESTADO_OFICIO_INTERNO)){
+            estadoRegistro = getMessage("registro.estado.5");
+        }else if(estado.equals(RegwebConstantes.ESTADO_ENVIADO)){
+            estadoRegistro = getMessage("registro.estado.6");
+        }else if(estado.equals(RegwebConstantes.ESTADO_TRAMITADO)){
+            estadoRegistro = getMessage("registro.estado.7");
+        }else if(estado.equals(RegwebConstantes.ESTADO_ANULADO)){
+            estadoRegistro = getMessage("registro.estado.8");
+        }
+        String tieneAnexos;
+        if(anexos){
+            tieneAnexos = getMessage("regweb.si");
+        }else{
+            tieneAnexos = getMessage("regweb.no");
         }
 
         // Título
@@ -74,11 +112,45 @@ public class LibroRegistroPdf extends AbstractIText5PdfView {
         titulo.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
         document.addTitle(getMessage("informe.llibreRegistres.informe"));
         titulo.addCell(new Paragraph(getMessage("informe.llibreRegistres"), font14Bold));
-        titulo.addCell(new Paragraph(getMessage("informe.tipo") + ": " + tipoRegistro));
-        titulo.addCell(new Paragraph(getMessage("informe.fechaInicio") + ": " + fechaInicio));
-        titulo.addCell(new Paragraph(getMessage("informe.fechaFin") + ": " + fechaFin));
+        titulo.addCell(new Paragraph(getMessage("informe.criteris")));
         document.add(titulo);
         document.add(new Paragraph(" "));
+
+        //Tabla criterios de busqueda
+        String [] nomCriteris = {"informe.tipo", "informe.fechaInicio", "informe.fechaFin", "informe.numRegistro", "informe.extracte",
+                "informe.estat", "informe.nombreInteresado", "informe.apell1Interesado", "informe.apell2Interesado", "informe.docInteresado",
+                "informe.oficinaReg", "informe.anexos", "informe.observacions", "informe.usuario"};
+        String [] valorCriteris = {tipoRegistro, fechaInicio, fechaFin, numRegistro, extracto, estadoRegistro, nombreInteresado, apell1Interesado,
+                apell2Interesado, docInteresado, oficinaReg, tieneAnexos, observaciones, usuario};
+
+        PdfPTable criterio = new PdfPTable(nomCriteris.length);
+        criterio.setWidthPercentage(100);
+        criterio.getDefaultCell().setBackgroundColor(BaseColor.LIGHT_GRAY);
+        criterio.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+        for (String nomCriteri : nomCriteris) {
+            criterio.addCell(new Paragraph(getMessage(nomCriteri), font10));
+        }
+        document.add(criterio);
+
+        PdfPTable criterio2 = new PdfPTable(nomCriteris.length);
+        criterio2.setWidthPercentage(100);
+        criterio2.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
+        criterio2.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+        for (String valorCriteri : valorCriteris) {
+            criterio2.addCell(new Paragraph(valorCriteri, font10));
+        }
+        document.add(criterio2);
+        document.add(new Paragraph(" "));
+
+        PdfPTable resultats = new PdfPTable(1);
+        resultats.setWidthPercentage(100);
+        resultats.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
+        resultats.getDefaultCell().setBorder(0);
+        resultats.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+        resultats.addCell(new Paragraph(getMessage("informe.resultats")));
+        document.add(resultats);
+        document.add(new Paragraph(" "));
+
 
         //Registros
         PdfPTable table = new PdfPTable(campos.size());

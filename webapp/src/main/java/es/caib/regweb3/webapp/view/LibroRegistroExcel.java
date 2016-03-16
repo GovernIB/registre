@@ -41,6 +41,18 @@ public class LibroRegistroExcel extends AbstractExcelView {
         Long tipo = (Long) model.get("tipo");
         String fechaInicio = (String) model.get("fechaInicio");
         String fechaFin = (String) model.get("fechaFin");
+        String numRegistro = (String) model.get("numRegistro");
+        String extracto = (String) model.get("extracto");
+        Long estado = (Long) model.get("estado");
+        String nombreInteresado = (String) model.get("nombreInteresado");
+        String apell1Interesado = (String) model.get("apell1Interesado");
+        String apell2Interesado = (String) model.get("apell2Interesado");
+        String docInteresado = (String) model.get("docInteresado");
+        String oficinaReg = (String) model.get("oficinaReg");
+        Boolean anexos = (Boolean) model.get("anexos");
+        String observaciones = (String) model.get("observaciones");
+        String usuario = (String) model.get("usuario");
+
         Set<String> campos = (Set<String>) model.get("campos");
         ArrayList<ArrayList<String>> registrosLibro = (ArrayList<ArrayList<String>>) model.get("registrosLibro");
 
@@ -97,21 +109,41 @@ public class LibroRegistroExcel extends AbstractExcelView {
         HSSFRow titleRow = sheet.createRow(0);
         titleRow.setHeightInPoints(25);
         HSSFCell tittleCell = titleRow.createCell(0);
-        HSSFRow tipusRow = sheet.createRow(2);
-        tipusRow.setHeightInPoints(15);
-        HSSFCell tipusCell = tipusRow.createCell(0);
-        HSSFRow fechaInicioRow = sheet.createRow(3);
-        fechaInicioRow.setHeightInPoints(15);
-        HSSFCell fechaInicioCell = fechaInicioRow.createCell(0);
-        HSSFRow fechaFinRow = sheet.createRow(4);
-        fechaFinRow.setHeightInPoints(15);
-        HSSFCell fechaFinCell = fechaFinRow.createCell(0);
+        HSSFRow criterioRow = sheet.createRow(2);
+        criterioRow.setHeightInPoints(15);
+        HSSFCell criterioCell = criterioRow.createCell(0);
 
-        String tipoRegistro = null;
+        String tipoRegistro = "";
         if(tipo.equals(RegwebConstantes.INFORME_TIPO_REGISTRO_ENTRADA)){
             tipoRegistro = getMessage("informe.entrada");
         }else if(tipo.equals(RegwebConstantes.INFORME_TIPO_REGISTRO_SALIDA)){
             tipoRegistro = getMessage("informe.salida");
+        }
+        String estadoRegistro = "";
+        if(estado.equals((long) -1)){
+            estadoRegistro = getMessage("informe.tots");
+        }else if(estado.equals(RegwebConstantes.ESTADO_VALIDO)){
+            estadoRegistro = getMessage("registro.estado.1");
+        }else if(estado.equals(RegwebConstantes.ESTADO_PENDIENTE)){
+            estadoRegistro = getMessage("registro.estado.2");
+        }else if(estado.equals(RegwebConstantes.ESTADO_PENDIENTE_VISAR)){
+            estadoRegistro = getMessage("registro.estado.3");
+        }else if(estado.equals(RegwebConstantes.ESTADO_OFICIO_EXTERNO)){
+            estadoRegistro = getMessage("registro.estado.4");
+        }else if(estado.equals(RegwebConstantes.ESTADO_OFICIO_INTERNO)){
+            estadoRegistro = getMessage("registro.estado.5");
+        }else if(estado.equals(RegwebConstantes.ESTADO_ENVIADO)){
+            estadoRegistro = getMessage("registro.estado.6");
+        }else if(estado.equals(RegwebConstantes.ESTADO_TRAMITADO)){
+            estadoRegistro = getMessage("registro.estado.7");
+        }else if(estado.equals(RegwebConstantes.ESTADO_ANULADO)){
+            estadoRegistro = getMessage("registro.estado.8");
+        }
+        String tieneAnexos;
+        if(anexos){
+            tieneAnexos = getMessage("regweb.si");
+        }else{
+            tieneAnexos = getMessage("regweb.no");
         }
 
         //Título
@@ -119,20 +151,47 @@ public class LibroRegistroExcel extends AbstractExcelView {
         tittleCell.setCellValue(getMessage("informe.llibreRegistres.informe"));
         tittleCell.setCellStyle(titulo);
         sheet.addMergedRegion(CellRangeAddress.valueOf("$A$2:$G$2"));
-        tipusCell.setCellValue(getMessage("informe.tipo") + ": " + tipoRegistro);
-        tipusCell.setCellStyle(paramCerca);
+        criterioCell.setCellValue(getMessage("informe.criteris"));
+        criterioCell.setCellStyle(titulo);
         sheet.addMergedRegion(CellRangeAddress.valueOf("$A$3:$G$3"));
-        fechaInicioCell.setCellValue(getMessage("informe.fechaInicio") + ": " + fechaInicio);
-        fechaInicioCell.setCellStyle(paramCerca);
-        sheet.addMergedRegion(CellRangeAddress.valueOf("$A$4:$G$4"));
-        fechaFinCell.setCellValue(getMessage("informe.fechaFin") + ": " + fechaFin);
-        fechaFinCell.setCellStyle(paramCerca);
-        sheet.addMergedRegion(CellRangeAddress.valueOf("$A$5:$G$5"));
 
+        //Tabla criterios de busqueda
+        String [] nomCriteris = {"informe.tipo", "informe.fechaInicio", "informe.fechaFin", "informe.numRegistro", "informe.extracte",
+                "informe.estat", "informe.nombreInteresado", "informe.apell1Interesado", "informe.apell2Interesado", "informe.docInteresado",
+                "informe.oficinaReg", "informe.anexos", "informe.observacions", "informe.usuario"};
+        String [] valorCriteris = {tipoRegistro, fechaInicio, fechaFin, numRegistro, extracto, estadoRegistro, nombreInteresado, apell1Interesado,
+                apell2Interesado, docInteresado, oficinaReg, tieneAnexos, observaciones, usuario};
+
+        int rowCriterio = 4;
+        HSSFRow headerCriterio = sheet.createRow(rowCriterio++);
+        headerCriterio.setHeightInPoints(15);
+        for (int i = 0; i < nomCriteris.length; i++){
+            HSSFCell columna = headerCriterio.createCell(i);
+            columna.setCellValue(getMessage(nomCriteris[i]));
+            columna.setCellStyle(cabecera);
+        }
+
+        HSSFRow valorCriterio = sheet.createRow(rowCriterio);
+        for (int g = 0; g < nomCriteris.length; g++) {
+            valorCriterio.createCell(g).setCellValue(valorCriteris[g]);
+        }
+        // Aplicamos el estilo a las celdas
+        for (int g = 0; g < nomCriteris.length; g++) {
+            valorCriterio.getCell(g).setCellStyle(fila);
+        }
+
+
+        HSSFRow resultatRow = sheet.createRow(7);
+        resultatRow.setHeightInPoints(15);
+        HSSFCell resultatCell = resultatRow.createCell(0);
+        sheet.addMergedRegion(CellRangeAddress.valueOf("$A$7:$G$7"));
+        resultatCell.setCellValue(getMessage("informe.resultats"));
+        resultatCell.setCellStyle(titulo);
+        sheet.addMergedRegion(CellRangeAddress.valueOf("$A$8:$G$8"));
 
         //////////////Registros////////////////
         // Creamos la fila para la cabecera
-        int rowNum = 6;
+        int rowNum = 9;
         HSSFRow header = sheet.createRow(rowNum++);
         header.setHeightInPoints(15);
 

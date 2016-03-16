@@ -75,6 +75,12 @@ public class InformeController extends BaseController {
         informeLibroBusquedaForm.setFechaFin(new Date());
         model.addAttribute("informeLibroBusquedaForm",informeLibroBusquedaForm);
         model.addAttribute("libros", libros(request));
+        model.addAttribute("oficinasRegistro",  oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(),RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+        model.addAttribute("organosDestino", getOrganismosOficinaActiva(request));
+        // Obtenemos los usuarios de la Entidad
+        List<UsuarioEntidad> usuariosEntidad = usuarioEntidadEjb.findByEntidad(getEntidadActiva(request).getId());
+        model.addAttribute("usuariosEntidad", usuariosEntidad);
+        model.addAttribute(getOficinaActiva(request));
 
         return "informe/libroRegistro";
     }
@@ -104,10 +110,20 @@ public class InformeController extends BaseController {
 
         Date dataFi = RegistroUtils.ajustarHoraBusqueda(informeLibroBusquedaForm.getFechaFin());
 
+        Long idOficina = (long) -1;
+        if(informeLibroBusquedaForm.getOficina().getId() != -1){
+            idOficina = informeLibroBusquedaForm.getOficina().getId();
+        }
+
         // REGISTROS DE ENTRADA
         if(informeLibroBusquedaForm.getTipo().equals(RegwebConstantes.REGISTRO_ENTRADA)){
 
-            List<RegistroEntrada> registrosEntrada = registroEntradaEjb.buscaLibroRegistro(informeLibroBusquedaForm.getFechaInicio(), dataFi, informeLibroBusquedaForm.getLibros());
+            List<RegistroEntrada> registrosEntrada = registroEntradaEjb.buscaLibroRegistro(informeLibroBusquedaForm.getFechaInicio(),
+                    dataFi, informeLibroBusquedaForm.getNumeroRegistroFormateado(), informeLibroBusquedaForm.getInteressatNom(),
+                    informeLibroBusquedaForm.getInteressatLli1(), informeLibroBusquedaForm.getInteressatLli2(), informeLibroBusquedaForm.getInteressatDoc(),
+                    informeLibroBusquedaForm.getAnexos(), informeLibroBusquedaForm.getObservaciones(),
+                    informeLibroBusquedaForm.getExtracto(), informeLibroBusquedaForm.getUsuario(), informeLibroBusquedaForm.getLibros(),
+                    informeLibroBusquedaForm.getEstado(), idOficina);
 
             for (int i = 0; i < registrosEntrada.size(); i++) {
                 registrosLibro.add(new ArrayList<String>());
@@ -281,7 +297,12 @@ public class InformeController extends BaseController {
         // REGISTROS DE SALIDA
         }else if(informeLibroBusquedaForm.getTipo().equals(RegwebConstantes.REGISTRO_SALIDA)){
 
-            List<RegistroSalida> registrosSalida = registroSalidaEjb.buscaLibroRegistro(informeLibroBusquedaForm.getFechaInicio(), dataFi, informeLibroBusquedaForm.getLibros());
+            List<RegistroSalida> registrosSalida = registroSalidaEjb.buscaLibroRegistro(informeLibroBusquedaForm.getFechaInicio(),
+                    dataFi, informeLibroBusquedaForm.getNumeroRegistroFormateado(), informeLibroBusquedaForm.getInteressatNom(),
+                    informeLibroBusquedaForm.getInteressatLli1(), informeLibroBusquedaForm.getInteressatLli2(), informeLibroBusquedaForm.getInteressatDoc(),
+                    informeLibroBusquedaForm.getAnexos(), informeLibroBusquedaForm.getObservaciones(),
+                    informeLibroBusquedaForm.getExtracto(), informeLibroBusquedaForm.getUsuario(), informeLibroBusquedaForm.getLibros(),
+                    informeLibroBusquedaForm.getEstado(), idOficina);
 
             for (int i = 0; i < registrosSalida.size(); i++) {
                 registrosLibro.add(new ArrayList<String>());
@@ -462,9 +483,24 @@ public class InformeController extends BaseController {
             mav.addObject("fechaFin", fechaFin);
         }
 
+        String nomOficina = "";
+        if(idOficina!=-1) {
+            nomOficina = oficinaEjb.findById(idOficina).getDenominacion();
+        }
+
         mav.addObject("campos", campos);
         mav.addObject("registrosLibro", registrosLibro);
-
+        mav.addObject("numRegistro", informeLibroBusquedaForm.getNumeroRegistroFormateado());
+        mav.addObject("extracto", informeLibroBusquedaForm.getExtracto());
+        mav.addObject("estado", informeLibroBusquedaForm.getEstado());
+        mav.addObject("nombreInteresado", informeLibroBusquedaForm.getInteressatNom());
+        mav.addObject("apell1Interesado", informeLibroBusquedaForm.getInteressatLli1());
+        mav.addObject("apell2Interesado", informeLibroBusquedaForm.getInteressatLli2());
+        mav.addObject("docInteresado", informeLibroBusquedaForm.getInteressatDoc());
+        mav.addObject("oficinaReg", nomOficina);
+        mav.addObject("anexos", informeLibroBusquedaForm.getAnexos());
+        mav.addObject("observaciones", informeLibroBusquedaForm.getObservaciones());
+        mav.addObject("usuario", informeLibroBusquedaForm.getUsuario());
 
         return mav;
     }

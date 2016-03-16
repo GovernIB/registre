@@ -268,16 +268,112 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     }
 
     @Override
-    public List<RegistroSalida> buscaLibroRegistro(Date fechaInicio, Date fechaFin, List<Libro> libros) throws Exception {
+    public List<RegistroSalida> buscaLibroRegistro(Date fechaInicio, Date fechaFin, String numRegistro, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String extracto, String usuario, List<Libro> libros, Long estado, Long idOficina) throws Exception {
 
         Query q;
+        Map<String, Object> parametros = new HashMap<String, Object>();
+        List<String> where = new ArrayList<String>();
 
-        q = em.createQuery("Select registroSalida from RegistroSalida as registroSalida where (registroSalida.fecha >= :fechaInicio " +
-                "and registroSalida.fecha <= :fechaFin) and registroSalida.libro in (:libros) order by registroSalida.fecha desc");
+        StringBuffer query = new StringBuffer("Select DISTINCT registroSalida from RegistroSalida as registroSalida, Interesado interessat ");
 
-        q.setParameter("fechaInicio", fechaInicio);
-        q.setParameter("fechaFin", fechaFin);
-        q.setParameter("libros", libros);
+        where.add(" registroSalida.registroDetalle.id = interessat.registroDetalle.id ");
+
+        // Numero registro
+        if (!StringUtils.isEmpty(numRegistro)) {
+            where.add(" registroSalida.numeroRegistroFormateado LIKE :numeroRegistroFormateado");
+            parametros.put("numeroRegistroFormateado", "%" + numRegistro + "%");
+        }
+
+        // Extracto
+        if (!StringUtils.isEmpty(extracto)) {
+            where.add(DataBaseUtils.like("registroSalida.registroDetalle.extracto", "extracto", parametros, extracto));
+        }
+
+        // Observaciones
+        if (!StringUtils.isEmpty(observaciones)) {
+            where.add(DataBaseUtils.like("registroSalida.registroDetalle.observaciones", "observaciones", parametros, observaciones));
+        }
+
+        // Usuario
+        if (!StringUtils.isEmpty(usuario)) {
+            where.add(DataBaseUtils.like("registroSalida.usuario.usuario.identificador", "usuario", parametros, usuario));
+        }
+
+        // Nombre interesado
+        if (!StringUtils.isEmpty(interesadoNom)) {
+            where.add("((" + DataBaseUtils.like("interessat.nombre", "interesadoNom", parametros, interesadoNom) +
+                    ") or (" + DataBaseUtils.like("interessat.razonSocial", "interesadoNom", parametros, interesadoNom) +
+                    "))");
+        }
+
+        // Primer apellido interesado
+        if (!StringUtils.isEmpty(interesadoLli1)) {
+            where.add(DataBaseUtils.like("interessat.apellido1", "interesadoLli1", parametros, interesadoLli1));
+        }
+
+        // Segundo apellido interesado
+        if (!StringUtils.isEmpty(interesadoLli2)) {
+            where.add(DataBaseUtils.like("interessat.apellido2", "interesadoLli2", parametros, interesadoLli2));
+        }
+
+        // Documento interesado
+        if (!StringUtils.isEmpty(interesadoDoc)) {
+            where.add(" (UPPER(interessat.documento) LIKE UPPER(:interesadoDoc)) ");
+            parametros.put("interesadoDoc", "%" + interesadoDoc.trim() + "%");
+        }
+
+        // Estado registro
+        if (estado != null && estado > 0) {
+            where.add(" registroSalida.estado = :idEstadoRegistro ");
+            parametros.put("idEstadoRegistro", estado);
+        }
+
+        // Oficina Registro
+        if (idOficina != -1) {
+            log.info("oficina: " + idOficina);
+            where.add(" registroSalida.oficina.id = :idOficina ");
+            parametros.put("idOficina", idOficina);
+        }
+
+        // Intervalo fechas
+        where.add(" (registroSalida.fecha >= :fechaInicio  ");
+        parametros.put("fechaInicio", fechaInicio);
+        where.add(" registroSalida.fecha <= :fechaFin) ");
+        parametros.put("fechaFin", fechaFin);
+
+        // Libro
+        where.add(" registroSalida.libro in (:libros)");
+        parametros.put("libros", libros);
+
+        // Buscamos registros de entrada con anexos
+        if (anexos) {
+            where.add(" registroSalida.registroDetalle.id in (select distinct(a.registroDetalle.id) from Anexo as a) ");
+        }
+
+        // Añadimos los parámetros a la query
+        if (parametros.size() != 0) {
+
+            query.append("where ");
+            int count = 0;
+            for (String w : where) {
+                if (count != 0) {
+                    query.append(" and ");
+                }
+                query.append(w);
+                count++;
+            }
+
+            query.append(" order by registroSalida.fecha desc");
+            q = em.createQuery(query.toString());
+
+            for (Map.Entry<String, Object> param : parametros.entrySet()) {
+                q.setParameter(param.getKey(), param.getValue());
+            }
+
+        } else {
+            query.append("order by registroSalida.fecha desc");
+            q = em.createQuery(query.toString());
+        }
 
         return q.getResultList();
     }

@@ -1,9 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.model.Entidad;
-import es.caib.regweb3.model.Libro;
-import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.RegistroBasico;
 import es.caib.regweb3.persistence.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.OficiosRemisionInternoOrganismo;
@@ -151,14 +148,25 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
     public List<RegistroEntrada> oficiosRemisionByOrganismoExterno(String codigoOrganismo, Integer any, Long idLibro) throws Exception;
 
     /**
-     * Busca los Registros de Entrada en función de la una fecha inicio, una fecha fin y el libro
+     * Busca los Registros de Entrada en función de varios parámetros
      * @param fechaInicio
      * @param fechaFin
+     * @param numRegistro
+     * @param interesadoNom
+     * @param interesadoLli1
+     * @param interesadoLli2
+     * @param interesadoDoc
+     * @param anexos
+     * @param observaciones
+     * @param usuario
+     * @param extracto
      * @param libros
+     * @param estado
+     * @param idOficina
      * @return
      * @throws Exception
      */
-    public List<RegistroEntrada> buscaLibroRegistro(Date fechaInicio, Date fechaFin, List<Libro> libros) throws Exception;
+    public List<RegistroEntrada> buscaLibroRegistro(Date fechaInicio, Date fechaFin, String numRegistro, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String usuario, String extracto, List<Libro> libros, Long estado, Long idOficina) throws Exception;
 
     /**
      * Busca los Registros de Entrada que no estén anulados ni pendientes en función de la una fecha inicio, una fecha fin, de la Entidad Activa

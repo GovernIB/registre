@@ -111,7 +111,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="form-group col-xs-6  pad-left">
+                                    <div class="form-group col-xs-6 pad-left">
                                         <div class="col-xs-3 pull-left etiqueta_regweb control-label">
                                             <form:label path="fechaInicio"><span class="text-danger">*</span> <spring:message code="informe.fechaInicio"/></form:label>
                                         </div>
@@ -136,6 +136,154 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <%--Comprueba si debe mostrar las opciones desplegadas o no--%>
+                                <c:if test="${empty informeLibroBusquedaForm.interessatDoc && empty informeLibroBusquedaForm.interessatNom && empty informeLibroBusquedaForm.organDestinatari && empty informeLibroBusquedaForm.observaciones && empty informeLibroBusquedaForm.usuario && !informeLibroBusquedaForm.anexos}">
+                                  <div id="demo" class="collapse">
+                                </c:if>
+                                <c:if test="${not empty informeLibroBusquedaForm.interessatDoc || not empty informeLibroBusquedaForm.interessatNom || not empty informeLibroBusquedaForm.organDestinatari || not empty informeLibroBusquedaForm.observaciones || not empty informeLibroBusquedaForm.usuario || informeLibroBusquedaForm.anexos}">
+                                  <div id="demo" class="collapse in">
+                                </c:if>
+
+                                    <div class="row">
+                                        <div class="form-group col-xs-6 pad-left">
+                                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                                                <spring:message code="registroEntrada.numeroRegistro"/>
+                                            </div>
+                                            <div class="col-xs-9 no-pad-right">
+                                                <form:input path="numeroRegistroFormateado" cssClass="form-control"/> <form:errors path="numeroRegistroFormateado" cssClass="help-block" element="span"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-xs-6 pad-left">
+                                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                                                <spring:message code="registroEntrada.extracto"/>
+                                            </div>
+                                            <div class="col-xs-9 no-pad-right">
+                                                <form:input path="extracto" cssClass="form-control" maxlength="200" /> <form:errors path="extracto" cssClass="help-block" element="span"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="form-group col-xs-6 pad-left">
+                                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                                                <spring:message code="registroEntrada.estado"/>
+                                            </div>
+                                            <div class="col-xs-9 no-pad-right">
+                                                <form:select path="estado" cssClass="chosen-select">
+                                                    <form:option value="-1" label="..."/>
+                                                    <c:forEach var="estado" items="${estados}">
+                                                        <form:option value="${estado}"><spring:message code="registro.estado.${estado}"/></form:option>
+                                                    </c:forEach>
+                                                </form:select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="form-group col-xs-6 pad-left">
+                                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                                                <spring:message code="registroEntrada.nombreInteresado"/>
+                                            </div>
+                                            <div class="col-xs-9 no-pad-right">
+                                                <form:input  path="interessatNom" cssClass="form-control" maxlength="255"/>
+                                                <form:errors path="interessatNom" cssClass="help-block" element="span"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-xs-6 pad-left">
+                                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                                                <spring:message code="interesado.apellido1"/>
+                                            </div>
+                                            <div class="col-xs-9 no-pad-right">
+                                                <form:input path="interessatLli1" cssClass="form-control" maxlength="255"/>
+                                                <form:errors path="interessatLli1" cssClass="help-block" element="span"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="form-group col-xs-6 pad-left">
+                                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                                                <spring:message code="interesado.apellido2"/>
+                                            </div>
+                                            <div class="col-xs-9 no-pad-right">
+                                                <form:input path="interessatLli2" cssClass="form-control" maxlength="255"/>
+                                                <form:errors path="interessatLli2" cssClass="help-block" element="span"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-xs-6 pad-left">
+                                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                                                <spring:message code="registroEntrada.docInteresado"/>
+                                            </div>
+                                            <div class="col-xs-9 no-pad-right">
+                                                <form:input  path="interessatDoc" cssClass="form-control" maxlength="17"/>
+                                                <form:errors path="interessatDoc" cssClass="help-block" element="span"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="form-group col-xs-6 pad-left">
+                                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                                                <spring:message code="registro.oficinaRegistro"/>
+                                            </div>
+                                            <div class="col-xs-9 no-pad-right">
+                                                <form:select path="oficina.id" cssClass="chosen-select">
+                                                    <form:option value="-1" label="..."/>
+                                                    <c:forEach var="oficinaRegistro" items="${oficinasRegistro}">
+                                                        <form:option value="${oficinaRegistro.id}">${oficinaRegistro.denominacion}</form:option>
+                                                    </c:forEach>
+                                                </form:select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-xs-6 pad-left">
+                                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                                                <spring:message code="registroEntrada.anexos"/>
+                                            </div>
+                                            <div class="col-xs-9 no-pad-right">
+                                                <form:checkbox path="anexos"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="form-group col-xs-6 pad-left">
+                                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                                                <spring:message code="registroEntrada.observaciones"/>
+                                            </div>
+                                            <div class="col-xs-9 no-pad-right">
+                                                <form:input path="observaciones" class="form-control" type="text" value=""/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-xs-6 pad-left">
+                                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                                                <spring:message code="usuario.usuario"/>
+                                            </div>
+                                            <div class="col-xs-9 no-pad-right">
+                                                <form:select path="usuario" class="chosen-select">
+                                                    <form:option value="">...</form:option>
+                                                    <c:forEach items="${usuariosEntidad}" var="usuarioEntidad">
+                                                        <option value="${usuarioEntidad.usuario.identificador}" <c:if test="${usuario == usuarioEntidad.usuario.identificador}">selected="selected"</c:if>>${usuarioEntidad.usuario.identificador}</option>
+                                                    </c:forEach>
+                                                </form:select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row pad-bottom15 pad-right-75">
+                                    <a class="btn btn-success btn-xs pull-right masOpciones-success" data-toggle="collapse" data-target="#demo">
+                                            <%--Comprueba si debe mostrar mas opciones o menos--%>
+                                        <c:if test="${empty registroEntradaBusqueda.registroEntrada.oficina.id && empty registroEntradaBusqueda.interessatDoc && empty registroEntradaBusqueda.interessatNom && empty registroEntradaBusqueda.organDestinatari && empty registroEntradaBusqueda.observaciones && empty registroEntradaBusqueda.usuario && !registroEntradaBusqueda.anexos}">
+                                            <span class="fa fa-plus"></span> <spring:message code="regweb.busquedaAvanzada"/>
+                                        </c:if>
+                                        <c:if test="${not empty registroEntradaBusqueda.registroEntrada.oficina.id || not empty registroEntradaBusqueda.interessatDoc || not empty registroEntradaBusqueda.interessatNom || not empty registroEntradaBusqueda.organDestinatari || not empty registroEntradaBusqueda.observaciones || not empty registroEntradaBusqueda.usuario || registroEntradaBusqueda.anexos}">
+                                            <span class="fa fa-minus"></span> <spring:message code="regweb.busquedaAvanzada"/>
+                                        </c:if>
+                                    </a>
+                                </div>
+
+
                                 <div class="form-group col-xs-12">
                                     <button type="submit" class="btn btn-warning"><spring:message code="regweb.buscar"/></button>
                                 </div>
@@ -148,14 +296,13 @@
                                 <input id="error3" type="hidden" value="${errorInicioFin}"/>
 
                             </form:form>
-                        </div>
                     </div>
                 </div>
             </div>
-        <!-- FIN BUSCADOR-->
+        </div>
+    <!-- FIN BUSCADOR-->
 
-
-    </div>
+</div>
 </div> <!-- /container -->
 
 <c:import url="../modulos/pie.jsp"/>
@@ -164,10 +311,10 @@
 <!-- Modifica los Libros según el tipo de Registro elegido -->
 <script type="text/javascript">
 
-    function actualizarLibros(){
-        <c:url var="obtenerLibros" value="/informe/obtenerLibros" />
-        actualizarLibrosTodos('${obtenerLibros}','#libros',$('#tipo option:selected').val(),$('#libros option:selected').val(),true);
-    }
+function actualizarLibros(){
+    <c:url var="obtenerLibros" value="/informe/obtenerLibros" />
+    actualizarLibrosTodos('${obtenerLibros}','#libros',$('#tipo option:selected').val(),$('#libros option:selected').val(),true);
+}
 
 </script>
 
@@ -176,140 +323,155 @@
 
 //Valida los libros seleccionados (libros, nombre del libro)
 function librosSeleccionados(select, camp) {
-    var variable = '';
-    var htmlBuit = '';
-    // Valor de los libros
-    var value = $(select).val();
-    var numLibros = 0;
-    if (value!=null && value!=""){
-        // Número de los libros en el select
-        numLibros = value.length;
-    }
-    // Si hay menos de un libro seleccionado, retorna error
-    if (numLibros<1){
-        variable = "#" + camp + " span#librosErrors";
-        htmlBuit = "<span id='librosErrors' class='help-block'>És obligatori elegir almanco 1 llibre</span>";
-        $(variable).html(htmlBuit);
-        $(variable).parents(".libros1").addClass("has-error");
-        $('ul.chosen-choices').css('border-color','#a94442');
-        return false;
-    }else{
-        variable = "#" + camp + " span:contains('elegir')";
-        $(variable).removeClass("help-block");
-        $(variable).parents(".libros1").removeClass("has-error");
-        htmlBuit = "<span id='librosErrors'></span>";
-        $(variable).html(htmlBuit);
-        $('ul.chosen-choices').css('border-color','#aaa');
-        return true;
-    }
+var variable = '';
+var htmlBuit = '';
+// Valor de los libros
+var value = $(select).val();
+var numLibros = 0;
+if (value!=null && value!=""){
+    // Número de los libros en el select
+    numLibros = value.length;
+}
+// Si hay menos de un libro seleccionado, retorna error
+if (numLibros<1){
+    variable = "#" + camp + " span#librosErrors";
+    htmlBuit = "<span id='librosErrors' class='help-block'>És obligatori elegir almanco 1 llibre</span>";
+    $(variable).html(htmlBuit);
+    $(variable).parents(".libros1").addClass("has-error");
+    $('ul.chosen-choices').css('border-color','#a94442');
+    return false;
+}else{
+    variable = "#" + camp + " span:contains('elegir')";
+    $(variable).removeClass("help-block");
+    $(variable).parents(".libros1").removeClass("has-error");
+    htmlBuit = "<span id='librosErrors'></span>";
+    $(variable).html(htmlBuit);
+    $('ul.chosen-choices').css('border-color','#aaa');
+    return true;
+}
 }
 
 //Valida los campos seleccionados (campos, nombre del campo)
 function camposSeleccionados(select, camp) {
-    var variable = '';
-    var htmlBuit = '';
-    // Valor de los campos
-    var value = $(select).val();
-    var numCampos = 0;
-    if (value!=null && value!=""){
-        // Número de los campos en el select
-        numCampos = value.length;
-    }
-    // Si hay menos de dos campos seleccionados, retorna error
-    if (numCampos<2){
-        variable = "#" + camp + " span#camposErrors";
-        htmlBuit = "<span id='camposErrors' class='help-block'>És obligatori elegir almanco 2 camps</span>";
-        $(variable).html(htmlBuit);
-        $(variable).parents(".campos1").addClass("has-error");
-        $('ul.chosen-choices').css('border-color','#a94442');
-        return false;
-    }else{
-        variable = "#" + camp + " span:contains('elegir')";
-        $(variable).removeClass("help-block");
-        $(variable).parents(".campos1").removeClass("has-error");
-        htmlBuit = "<span id='camposErrors'></span>";
-        $(variable).html(htmlBuit);
-        $('ul.chosen-choices').css('border-color','#aaa');
-        return true;
-    }
+var variable = '';
+var htmlBuit = '';
+// Valor de los campos
+var value = $(select).val();
+var numCampos = 0;
+if (value!=null && value!=""){
+    // Número de los campos en el select
+    numCampos = value.length;
+}
+// Si hay menos de dos campos seleccionados, retorna error
+if (numCampos<2){
+    variable = "#" + camp + " span#camposErrors";
+    htmlBuit = "<span id='camposErrors' class='help-block'>És obligatori elegir almanco 2 camps</span>";
+    $(variable).html(htmlBuit);
+    $(variable).parents(".campos1").addClass("has-error");
+    $('ul.chosen-choices').css('border-color','#a94442');
+    return false;
+}else{
+    variable = "#" + camp + " span:contains('elegir')";
+    $(variable).removeClass("help-block");
+    $(variable).parents(".campos1").removeClass("has-error");
+    htmlBuit = "<span id='camposErrors'></span>";
+    $(variable).html(htmlBuit);
+    $('ul.chosen-choices').css('border-color','#aaa');
+    return true;
+}
 }
 
 // Valida el formuario si las fechas Inicio y Fin son correctas, hay almenos 2 campos seleccionados, hay un Libro seleccionado
 function validaFormulario(form) {
-    var fechaInicio = true;
-    var fechaFin = true;
-    var libros = true;
-    var campos = true;
-    var fechas = true;
-    // Valida el formato de Fecha de Inicio
-    if (!validaFecha(form.fechaInicio, 'fechaInicio')) {
-        fechaInicio = false;
+var fechaInicio = true;
+var fechaFin = true;
+var libros = true;
+var campos = true;
+var fechas = true;
+// Valida el formato de Fecha de Inicio
+if (!validaFecha(form.fechaInicio, 'fechaInicio')) {
+    fechaInicio = false;
+}
+// Valida el formato de Fecha de Fin
+if (!validaFecha(form.fechaFin, 'fechaFin')) {
+    fechaFin = false;
+}
+// Si las Fechas son correctas, Valida el Fecha Inicio y Fecha Fin menor o igual que fecha actual, Fecha Inicio menor o igual que Fecha Fin
+if((fechaInicio)&&(fechaFin)){
+    if (!validaFechasConjuntas(form.fechaInicio, form.fechaFin, 'fechaInicio', 'fechaFin')) {
+        fechas = false;
     }
-    // Valida el formato de Fecha de Fin
-    if (!validaFecha(form.fechaFin, 'fechaFin')) {
-        fechaFin = false;
-    }
-    // Si las Fechas son correctas, Valida el Fecha Inicio y Fecha Fin menor o igual que fecha actual, Fecha Inicio menor o igual que Fecha Fin
-    if((fechaInicio)&&(fechaFin)){
-        if (!validaFechasConjuntas(form.fechaInicio, form.fechaFin, 'fechaInicio', 'fechaFin')) {
-            fechas = false;
-        }
-    }
-    // Valida los libros seleccionados
-    if (!librosSeleccionados(form.libros, 'libr')){
-        libros = false;
-    }
-    // Valida los campos seleccionados
-    if (!camposSeleccionados(form.campos, 'campos')){
-        campos = false;
-    }
-    // Si todos los campos son correctos, hace el submit
-    if((fechaInicio)&&(fechaFin)&&(libros)&&(campos)&&(fechas)){
-        return true;
-    } else{
-        return false;
-    }
+}
+// Valida los libros seleccionados
+if (!librosSeleccionados(form.libros, 'libr')){
+    libros = false;
+}
+// Valida los campos seleccionados
+if (!camposSeleccionados(form.campos, 'campos')){
+    campos = false;
+}
+// Si todos los campos son correctos, hace el submit
+if((fechaInicio)&&(fechaFin)&&(libros)&&(campos)&&(fechas)){
+    return true;
+} else{
+    return false;
+}
 }
 
 </script>
 
 <script type="text/javascript">
-    function actualizarLibrosTodos(url, idSelect, seleccion, valorSelected, todos){
-        var html = '';
-        if(seleccion != '-1'){
-            jQuery.ajax({
-                url: url,
-                type: 'GET',
-                dataType: 'json',
-                data: { id: seleccion },
-                contentType: 'application/json',
-                success: function(result) {
-                    if(todos){html = '';}
-                    var len = result.length;
-                    var selected='';
-                    for ( var i = 0; i < len; i++) {
-                        selected='';
-                        if(result.length == 1){
-                            selected = 'selected="selected"';
-                        }
-                        html += '<option '+selected+' value="' + result[i].id + '">'
-                        + result[i].libroOrganismo + '</option>';
+function actualizarLibrosTodos(url, idSelect, seleccion, valorSelected, todos){
+    var html = '';
+    if(seleccion != '-1'){
+        jQuery.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'json',
+            data: { id: seleccion },
+            contentType: 'application/json',
+            success: function(result) {
+                if(todos){html = '';}
+                var len = result.length;
+                var selected='';
+                for ( var i = 0; i < len; i++) {
+                    selected='';
+                    if(result.length == 1){
+                        selected = 'selected="selected"';
                     }
-                    html += '</option>';
-
-                    if(len != 0){
-                        $(idSelect).html(html);
-                        $(idSelect).attr("disabled",false).trigger("chosen:updated");
-                    }else if(len==0){
-                        var html='';
-                        $(idSelect).html(html);
-                        $(idSelect).attr("disabled",true).trigger("chosen:updated");
-                    }
+                    html += '<option '+selected+' value="' + result[i].id + '">'
+                    + result[i].libroOrganismo + '</option>';
                 }
-            });
+                html += '</option>';
 
-        }
+                if(len != 0){
+                    $(idSelect).html(html);
+                    $(idSelect).attr("disabled",false).trigger("chosen:updated");
+                }else if(len==0){
+                    var html='';
+                    $(idSelect).html(html);
+                    $(idSelect).attr("disabled",true).trigger("chosen:updated");
+                }
+            }
+        });
+
     }
+}
+</script>
+
+<!-- Cambia la imagen de la búsqueda avanzada-->
+<script>
+    var traduccion = new Array();
+    traduccion['regweb.busquedaAvanzada'] = "<spring:message code='regweb.busquedaAvanzada' javaScriptEscape='true' />";
+
+    $(function(){
+        $("#demo").on("hide.bs.collapse", function(){
+            $(".masOpciones-success").html('<span class="fa fa-plus"></span> ' + traduccion['regweb.busquedaAvanzada']);
+        });
+        $("#demo").on("show.bs.collapse", function(){
+            $(".masOpciones-success").html('<span class="fa fa-minus"></span> ' + traduccion['regweb.busquedaAvanzada']);
+        });
+    });
 </script>
 
 </body>
