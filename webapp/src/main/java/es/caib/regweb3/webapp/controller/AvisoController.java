@@ -92,7 +92,7 @@ public class AvisoController extends BaseController {
     @RequestMapping(value = "/pendientesVisar/{tipoRegistro}")
     public ModelAndView pendientesVisar(@PathVariable String tipoRegistro, HttpServletRequest request) throws Exception{
 
-        ModelAndView mav = new ModelAndView("avisos/avisosList");
+        ModelAndView mav = new ModelAndView("avisos/pendientesVisarList");
 
         Oficina oficinaActiva = getOficinaActiva(request);
         List<Libro> librosAdministrados = getLibrosAdministrados(request);
@@ -125,8 +125,7 @@ public class AvisoController extends BaseController {
     @RequestMapping(value = "/pendientes")
     public ModelAndView pendientes(HttpServletRequest request) throws Exception{
 
-        ModelAndView mav = new ModelAndView("avisos/avisosList");
-        mav.addObject("titulo",getMessage("registroEntrada.pendientes"));
+        ModelAndView mav = new ModelAndView("avisos/pendientesList");
 
         Oficina oficinaActiva = getOficinaActiva(request);
 

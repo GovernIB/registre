@@ -88,12 +88,8 @@
                                             <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO}">
                                                 <th><spring:message code="registroSalida.organismoOrigen"/></th>
                                             </c:if>
-                                            <c:if test="${registroEntrada.estado == RegwebConstantes.ESTADO_PENDIENTE}">
-                                                <th><spring:message code="registroEntrada.reserva"/></th>
-                                            </c:if>
-                                            <c:if test="${registroEntrada.estado != RegwebConstantes.ESTADO_PENDIENTE}">
-                                                <th><spring:message code="registroEntrada.extracto"/></th>
-                                            </c:if>
+                                            <th><spring:message code="registroEntrada.extracto"/></th>
+
                                             <th><spring:message code="registroEntrada.anexos"/></th>
 
                                             <th class="center"><spring:message code="regweb.acciones"/></th>
@@ -117,12 +113,8 @@
                                                     <td>${(empty registro.origen)? registro.origenExternoDenominacion : registro.origen.denominacion}</td>
                                                 </c:if>
 
-                                                <c:if test="${registro.estado == RegwebConstantes.ESTADO_PENDIENTE}">
-                                                    <td>${registro.registroDetalle.reserva}</td>
-                                                </c:if>
-                                                <c:if test="${registro.estado != RegwebConstantes.ESTADO_PENDIENTE}">
-                                                    <td>${registro.registroDetalle.extracto}</td>
-                                                </c:if>
+                                                <td>${registro.registroDetalle.extracto}</td>
+
                                                 <c:if test="${registro.registroDetalle.anexos != null}">
                                                     <td class="center">${fn:length(registro.registroDetalle.anexos)}</td>
                                                 </c:if>
@@ -131,10 +123,10 @@
                                                 </c:if>
 
                                                 <td class="center">
-                                                    <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO}">
+                                                    <c:if test="${registro.class.simpleName == 'RegistroEntrada'}">
                                                         <a class="btn btn-info btn-sm" href="<c:url value="/registroEntrada/${registro.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
                                                     </c:if>
-                                                    <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO}">
+                                                    <c:if test="${registro.class.simpleName == 'RegistroSalida'}">
                                                         <a class="btn btn-info btn-sm" href="<c:url value="/registroSalida/${registro.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
                                                     </c:if>
 

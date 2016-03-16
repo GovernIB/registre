@@ -133,9 +133,10 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        StringBuffer query = new StringBuffer("Select DISTINCT registroSalida from RegistroSalida as registroSalida, Interesado interessat ");
+        String queryBase = "Select DISTINCT registroSalida from RegistroSalida as registroSalida left outer join registroSalida.registroDetalle.interesados interessat ";
+        StringBuffer query = new StringBuffer(queryBase);
 
-        where.add(" registroSalida.registroDetalle.id = interessat.registroDetalle.id ");
+        //where.add(" registroSalida.registroDetalle.id = interessat.registroDetalle.id ");
 
         // Numero registro
         if (!StringUtils.isEmpty(registroSalida.getNumeroRegistroFormateado())) {
@@ -232,7 +233,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
                 count++;
             }
             // Duplicamos la query solo para obtener los resultados totales
-            q2 = em.createQuery(query.toString().replaceAll("Select DISTINCT registroSalida from RegistroSalida as registroSalida, Interesado interessat ", "Select count(DISTINCT registroSalida.id) from RegistroSalida as registroSalida, Interesado interessat "));
+            q2 = em.createQuery(query.toString().replaceAll(queryBase, "Select count(DISTINCT registroSalida.id) from RegistroSalida as registroSalida left outer join registroSalida.registroDetalle.interesados interessat "));
             query.append(" order by registroSalida.id desc");
             q = em.createQuery(query.toString());
 
@@ -244,7 +245,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
         } else {
             // Duplicamos la query solo para obtener los resultados totales
-            q2 = em.createQuery(query.toString().replaceAll("Select DISTINCT registroSalida from RegistroSalida as registroSalida, Interesado interessat ", "Select count(DISTINCT registroSalida.id) from RegistroSalida as registroSalida, Interesado interessat "));
+            q2 = em.createQuery(query.toString().replaceAll(queryBase, "Select count(DISTINCT registroSalida.id) from RegistroSalida as registroSalida left outer join registroSalida.registroDetalle.interesados interessat "));
             query.append("order by registroSalida.id desc");
             q = em.createQuery(query.toString());
         }
