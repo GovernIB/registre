@@ -301,6 +301,7 @@
                                                         </span>
                                                             <input type="text" class="form-control" readonly>
                                                         </div>
+                                                        <spring:message code="entidad.logoMenu.maxHeigh"/><br><spring:message code="entidad.logoMenu.maxWidth"/>
                                                         <form:errors path="logoMenu" cssClass="help-block" element="span"/>
                                                     </div>
                                                 </div>
