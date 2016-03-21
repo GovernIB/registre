@@ -71,23 +71,24 @@ public class OficioRemisionRtfView extends AbstractView {
         SimpleDateFormat sdf4 = new SimpleDateFormat("MMMMM", new Locale("ca"));
         SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy");
         String diaRecibo = sdf1.format(dataActual);
-        String mesRecibo = "";
+        String mesRecibo;
         String anoRecibo = sdf3.format(dataActual);
-        String fechaActual = "";
+        String fechaActualCa;
+        String fechaActualEs;
 
-        if(idiomaActual.equals("es")){
-            mesRecibo = sdf2.format(dataActual);
-            fechaActual = diaRecibo + " de " + mesRecibo + " de " + anoRecibo;
+        // Fecha en castellano
+        mesRecibo = sdf2.format(dataActual);
+        fechaActualEs = diaRecibo + " de " + mesRecibo + " de " + anoRecibo;
+
+        // Fecha en catalán
+        mesRecibo = sdf4.format(dataActual);
+        if(mesRecibo.startsWith("a") || mesRecibo.startsWith("o")){
+            mesRecibo= " d'" + mesRecibo;
+        }else{
+            mesRecibo= " de " + mesRecibo;
         }
-        if(idiomaActual.equals("ca")){
-            mesRecibo = sdf4.format(dataActual);
-            if(mesRecibo.startsWith("a") || mesRecibo.startsWith("o")){
-                mesRecibo= " d'" + mesRecibo;
-            }else{
-                mesRecibo= " de " + mesRecibo;
-            }
-            fechaActual = diaRecibo + mesRecibo + " de " + anoRecibo;
-        }
+        fechaActualCa = diaRecibo + mesRecibo + " de " + anoRecibo;
+
 
         // Registros Entrada
         String registros = "";
@@ -124,7 +125,8 @@ public class OficioRemisionRtfView extends AbstractView {
         ht.put("(anoOficio)", ConvertirTexto.toCp1252(anoOficio));
         ht.put("(oficina)", ConvertirTexto.toCp1252(oficioRemision.getOficina().getDenominacion()));
         ht.put("(registrosEntrada)", ConvertirTexto.toCp1252(registros));
-        ht.put("(data)", ConvertirTexto.toCp1252(fechaActual));
+        ht.put("(data)", ConvertirTexto.toCp1252(fechaActualCa));
+        ht.put("(fecha)", ConvertirTexto.toCp1252(fechaActualEs));
 
         // Reemplaza el texto completo
         ht.put("(read_only)", ConvertirTexto.getISOBytes("\\annotprot\\readprot\\enforceprot1\\protlevel3\\readonlyrecommended "));
