@@ -57,39 +57,21 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
     public ReproLocal reproEjb;
 
 
-    /**
-     * Carga el formulariopara un nuevo {@link es.caib.regweb3.model.RegistroEntrada}
-     * a partir de una {@link es.caib.regweb3.model.Repro}
-     */
-    @RequestMapping(value = "/new/{idRepro}", method = RequestMethod.GET)
-    public void nuevoRegistroEntradaRepro(Model model, HttpServletRequest request, @PathVariable("idRepro") Long idRepro) throws Exception {
-        nuevoRegistroEntrada(model, request, idRepro);
 
-    }
 
     /**
      * Carga el formulario para un nuevo {@link es.caib.regweb3.model.RegistroEntrada}
      */
     @RequestMapping(value = "/new", method = RequestMethod.GET)
-    public String nuevoRegistroEntrada(Model model, HttpServletRequest request, Long idRepro) throws Exception {
+    public String nuevoRegistroEntrada(Model model, HttpServletRequest request) throws Exception {
 
         Oficina oficina = getOficinaActiva(request);
 
         RegistroEntrada registroEntrada = new RegistroEntrada();
-        RegistroDetalle registroDetalle = new RegistroDetalle();
+        registroEntrada.setRegistroDetalle(new RegistroDetalle());
         registroEntrada.setOficina(oficina);
 
-        if (idRepro != null) {
-            Repro repro = reproEjb.findById(idRepro);
-
-            registroEntrada = RegistroUtils.cargarRepro(repro);
-
-        }
-        registroEntrada.setRegistroDetalle(registroDetalle);
-
-
         //Eliminamos los posibles interesados de la Sesion
-
         eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_ENTRADA);
 
         model.addAttribute(getEntidadActiva(request));

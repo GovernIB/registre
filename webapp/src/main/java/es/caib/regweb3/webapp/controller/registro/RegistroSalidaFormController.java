@@ -54,19 +54,17 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
     @RequestMapping(value = "/new", method = RequestMethod.GET)
     public String nuevoRegistroSalida(Model model, HttpServletRequest request) throws Exception {
 
+        Oficina oficina = getOficinaActiva(request);
+
+        RegistroSalida registroSalida = new RegistroSalida();
+        registroSalida.setRegistroDetalle(new RegistroDetalle());
+        registroSalida.setOficina(oficina);
+
         //Eliminamos los posibles interesados de la Sesion
         eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
-        Oficina oficina = getOficinaActiva(request);
-        Usuario usuario = getUsuarioAutenticado(request);
-
-        RegistroSalida registroSalida = new RegistroSalida();
-        registroSalida.setOficina(oficina);
-        RegistroDetalle registroDetalle = new RegistroDetalle();
-        registroSalida.setRegistroDetalle(registroDetalle);
-
         model.addAttribute(getEntidadActiva(request));
-        model.addAttribute(usuario);
+        model.addAttribute(getUsuarioAutenticado(request));
         model.addAttribute(oficina);
         model.addAttribute("registroSalida",registroSalida);
         model.addAttribute("libros", getLibrosRegistroSalida(request));
