@@ -421,12 +421,12 @@
 
     function actualizarCodigosAsunto(){
         <c:url var="codigosAsunto" value="/rest/obtenerCodigosAsunto" />
-        actualizarSelectTraduccion('${codigosAsunto}','#registroDetalle\\.codigoAsunto\\.id',$('#registroDetalle\\.tipoAsunto\\.id option:selected').val(),'${registroSalida.registroDetalle.codigoAsunto.id}',true);
+        actualizarSelectTraduccion('${codigosAsunto}', '#registroDetalle\\.codigoAsunto\\.id', $('#registroDetalle\\.tipoAsunto\\.id option:selected').val(), '${registroSalida.registroDetalle.codigoAsunto.id}', false);
     }
 
     function actualizarLocalidad(){
         <c:url var="obtenerLocalidades" value="/rest/obtenerLocalidades" />
-        actualizarSelect('${obtenerLocalidades}','#localidad\\.id',$('#provincia\\.id option:selected').val(),$('#localidad\\.id option:selected').val(),false,true);
+        actualizarSelect('${obtenerLocalidades}', '#localidad\\.id', $('#provincia\\.id option:selected').val(), $('#localidad\\.id option:selected').val(), false, false);
     }
 
     window.onbeforeunload = OnBeforeUnLoad;
