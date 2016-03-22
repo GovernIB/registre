@@ -1,6 +1,9 @@
 package es.caib.regweb3.webapp.controller.persona;
 
-import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.CatPais;
+import es.caib.regweb3.model.CatProvincia;
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.Persona;
 import es.caib.regweb3.persistence.ejb.CatLocalidadLocal;
 import es.caib.regweb3.persistence.ejb.CatPaisLocal;
 import es.caib.regweb3.persistence.ejb.CatProvinciaLocal;
@@ -61,7 +64,7 @@ public class PersonaController extends BaseController {
      public String listado(Model model) {
 
          PersonaBusquedaForm personaBusqueda =  new PersonaBusquedaForm(new Persona(),1);
-         model.addAttribute("personaBusqueda",personaBusqueda);
+         model.addAttribute("personaBusqueda", personaBusqueda);
 
          return "persona/personaList";
      }
@@ -140,29 +143,7 @@ public class PersonaController extends BaseController {
     }
   }
 
-  public void cleanEmptyValues(Persona persona) {
-    // Si no se ha escogido ningúna Canal, lo ponemos a null
-    if (persona.getCanal() == null) {
-      persona.setCanal(null);
-    }
 
-    // Si no se ha escogido ningúna Provincia, lo ponemos a null
-    if (persona.getProvincia() == null || persona.getProvincia().getId() == null) {
-      persona.setProvincia(null);
-      persona.setLocalidad(null);
-    } else {
-      if (persona.getLocalidad() == null || persona.getLocalidad().getId() == null) {
-        persona.setLocalidad(null);
-      }
-    }
-
-    if (persona.getPais() == null || persona.getPais().getId() == null) {
-      persona.setPais(null);
-        persona.setProvincia(null);
-        persona.setLocalidad(null);
-    }
-
-  }
 
      /**
       * Carga el formulario para modificar un {@link es.caib.regweb3.model.Persona}
@@ -263,6 +244,23 @@ public class PersonaController extends BaseController {
          return "redirect:/persona/list";
     }
 
+    /**
+     * Pone a null ciertos campos en función del valor de otros
+     *
+     * @param persona
+     */
+    public void cleanEmptyValues(Persona persona) {
+        // Si no se ha escogido ningúna Canal, lo ponemos a null
+        if (persona.getCanal() == null || persona.getCanal() != 1) {
+            persona.setCanal(null);
+            persona.setPais(null);
+            persona.setProvincia(null);
+            persona.setLocalidad(null);
+        }
+
+    }
+
+
     @ModelAttribute("tiposDocumento")
     public long[] tiposDocumento() throws Exception {
         return RegwebConstantes.TIPOS_DOCUMENTOID;
@@ -287,23 +285,6 @@ public class PersonaController extends BaseController {
     public List<CatPais> paises() throws Exception {
         return catPaisEjb.getAll();
     }
-
-
-    /**
-     * Obtiene los {@link es.caib.regweb3.model.CatLocalidad} de de la Provincia seleccionada
-     */
-    @RequestMapping(value = "/obtenerLocalidades", method = RequestMethod.GET)
-    public @ResponseBody
-    List<CatLocalidad> obtenerLocalidades(@RequestParam Long id) throws Exception {
-
-        return catLocalidadEjb.getByProvincia(id);
-    }
-
-
-    /*METODOS REST CON LAS OPERACIONES NECESARIAS CON EL REGISTRO DE ENTRADA*/
-
-
-
 
     @InitBinder("persona")
     public void initBinder(WebDataBinder binder) {

@@ -289,7 +289,7 @@
                                                    <div class="col-xs-8" id="tipoDocumentacionFisica_${status.count}_${reOriginal.registroDetalle.tipoDocumentacionFisica}">
                                                        <script type="text/javascript">
                                                            $(document).ready(function(){
-                                                               obtenerElementoTraducido('<c:url value="/obtenerTipoDocumentacionFisica"/>','${reOriginal.registroDetalle.tipoDocumentacionFisica}','tipoDocumentacionFisica_${status.count}_${reOriginal.registroDetalle.tipoDocumentacionFisica}');
+                                                               obtenerElementoTraducido('<c:url value="/rest/obtenerTipoDocumentacionFisica"/>', '${reOriginal.registroDetalle.tipoDocumentacionFisica}', 'tipoDocumentacionFisica_${status.count}_${reOriginal.registroDetalle.tipoDocumentacionFisica}');
                                                            });
                                                        </script>
 
@@ -320,7 +320,7 @@
                                                    <div class="col-xs-8" id="tipoAsunto_${status.count}_${reOriginal.registroDetalle.tipoAsunto.id}">
                                                        <script type="text/javascript">
                                                            $(document).ready(function(){
-                                                               obtenerElementoTraducido('<c:url value="/obtenerTipoAsunto"/>','${reOriginal.registroDetalle.tipoAsunto.id}','tipoAsunto_${status.count}_${reOriginal.registroDetalle.tipoAsunto.id}');
+                                                               obtenerElementoTraducido('<c:url value="/rest/obtenerTipoAsunto"/>', '${reOriginal.registroDetalle.tipoAsunto.id}', 'tipoAsunto_${status.count}_${reOriginal.registroDetalle.tipoAsunto.id}');
                                                            });
                                                        </script>
                                                    </div>
@@ -346,7 +346,7 @@
                                                    <div class="col-xs-8" id="codigoAsunto_${status.count}_${reOriginal.registroDetalle.codigoAsunto.id}">
                                                        <script type="text/javascript">
                                                            $(document).ready(function(){
-                                                               obtenerElementoTraducido('<c:url value="/obtenerCodigoAsunto"/>','${reOriginal.registroDetalle.codigoAsunto.id}','codigoAsunto_${status.count}_${reOriginal.registroDetalle.codigoAsunto.id}');
+                                                               obtenerElementoTraducido('<c:url value="/rest/obtenerCodigoAsunto"/>', '${reOriginal.registroDetalle.codigoAsunto.id}', 'codigoAsunto_${status.count}_${reOriginal.registroDetalle.codigoAsunto.id}');
                                                            });
                                                        </script>
 
@@ -382,7 +382,7 @@
                                                    <div class="col-xs-6" id="transporte_${status.count}_${reOriginal.registroDetalle.transporte}">
                                                        <script type="text/javascript">
                                                            $(document).ready(function(){
-                                                               obtenerElementoTraducido('<c:url value="/obtenerTransporte"/>','${reOriginal.registroDetalle.transporte}','transporte_${status.count}_${reOriginal.registroDetalle.transporte}');
+                                                               obtenerElementoTraducido('<c:url value="/rest/obtenerTransporte"/>', '${reOriginal.registroDetalle.transporte}', 'transporte_${status.count}_${reOriginal.registroDetalle.transporte}');
                                                            });
                                                        </script>
 

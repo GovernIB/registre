@@ -255,7 +255,7 @@
     }
 
     function actualizarLocalidad(){
-        <c:url var="obtenerLocalidades" value="/registroEntrada/obtenerLocalidades" />
+        <c:url var="obtenerLocalidades" value="/rest/obtenerLocalidades" />
         actualizarSelect('${obtenerLocalidades}','#localidad\\.id',$('#provincia\\.id option:selected').val(),$('#localidad\\.id option:selected').val(),false,false);
     }
 

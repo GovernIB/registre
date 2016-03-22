@@ -798,8 +798,8 @@ function actualizarPais(){
  */
 function resetPais(){
 
-    $('#pais\\.id').val("...");
-    $('#provincia\\.id').val("...");
+    $('#pais\\.id').val("-1");
+    $('#provincia\\.id').val("-1");
     $('#localidad\\.id').empty();
     $('#pais\\.id').attr("disabled","disabled").trigger("chosen:updated");
     $('#provincia\\.id').attr("disabled","disabled").trigger("chosen:updated");
@@ -823,7 +823,9 @@ function actualizarCanalNotificacion() {
 
     }else if($('#canal option:selected').val() == '1'){
         $('#direccion').removeAttr("disabled","disabled");
-        $('#pais\\.id').removeAttr("disabled","disabled").trigger("chosen:updated");
+        $('#pais\\.id').removeAttr("disabled", "disabled");
+        $('select[name="pais\\.id"]').find('option:contains("España")').attr("selected", true).trigger("chosen:updated");
+        actualizarPais();
         $('#cp').removeAttr("disabled","disabled");
         $('#direccionElectronica').attr("disabled","disabled");
 

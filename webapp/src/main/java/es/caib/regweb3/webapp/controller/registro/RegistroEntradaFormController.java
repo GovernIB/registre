@@ -4,6 +4,7 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.HistoricoRegistroEntradaLocal;
 import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
 import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
+import es.caib.regweb3.persistence.ejb.ReproLocal;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.Mensaje;
@@ -52,6 +53,19 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
     @EJB(mappedName = "regweb3/RegistroDetalleEJB/local")
     public RegistroDetalleLocal registroDetalleEjb;
 
+    @EJB(mappedName = "regweb3/ReproEJB/local")
+    public ReproLocal reproEjb;
+
+
+    /**
+     * Carga el formulariopara un nuevo {@link es.caib.regweb3.model.RegistroEntrada}
+     * a partir de una {@link es.caib.regweb3.model.Repro}
+     */
+    @RequestMapping(value = "/new/{idRepro}", method = RequestMethod.GET)
+    public void nuevoRegistroEntradaRepro(Model model, HttpServletRequest request, @PathVariable("idRepro") Long idRepro) throws Exception {
+        nuevoRegistroEntrada(model, request, idRepro);
+
+    }
 
     /**
      * Carga el formulario para un nuevo {@link es.caib.regweb3.model.RegistroEntrada}
@@ -59,25 +73,27 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
     @RequestMapping(value = "/new", method = RequestMethod.GET)
     public String nuevoRegistroEntrada(Model model, HttpServletRequest request, Long idRepro) throws Exception {
 
-        if(!isOperador(request)){
-            Mensaje.saveMessageError(request, getMessage("error.rol.operador"));
-            return "redirect:/inici";
-        }
-
-        //Eliminamos los posibles interesados de la Sesion
-        eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_ENTRADA);
-
         Oficina oficina = getOficinaActiva(request);
-        Usuario usuario = getUsuarioAutenticado(request);
 
         RegistroEntrada registroEntrada = new RegistroEntrada();
-        registroEntrada.setOficina(oficina);
         RegistroDetalle registroDetalle = new RegistroDetalle();
+        registroEntrada.setOficina(oficina);
+
+        if (idRepro != null) {
+            Repro repro = reproEjb.findById(idRepro);
+
+            registroEntrada = RegistroUtils.cargarRepro(repro);
+
+        }
         registroEntrada.setRegistroDetalle(registroDetalle);
 
 
+        //Eliminamos los posibles interesados de la Sesion
+
+        eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_ENTRADA);
+
         model.addAttribute(getEntidadActiva(request));
-        model.addAttribute(usuario);
+        model.addAttribute(getUsuarioAutenticado(request));
         model.addAttribute(oficina);
         model.addAttribute("registroEntrada",registroEntrada);
         model.addAttribute("libros", getLibrosRegistroEntrada(request));

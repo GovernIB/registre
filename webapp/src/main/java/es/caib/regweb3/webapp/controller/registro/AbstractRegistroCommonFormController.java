@@ -6,7 +6,7 @@ import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
@@ -155,27 +155,6 @@ public abstract class AbstractRegistroCommonFormController extends BaseControlle
             }
         }
         return new CatComunidadAutonoma();
-    }
-
-
-    /**
-     * Obtiene los {@link es.caib.regweb3.model.CodigoAsunto} del TipoAsunto seleccionado
-     */
-    @RequestMapping(value = "/obtenerCodigosAsunto", method = RequestMethod.GET)
-    public @ResponseBody
-    List<CodigoAsunto> obtenerCodigosAsunto(@RequestParam Long id) throws Exception {
-
-        return codigoAsuntoEjb.getByTipoAsunto(id);
-    }
-
-    /**
-     * Obtiene los {@link es.caib.regweb3.model.CatLocalidad} de de la Provincia seleccionada
-     */
-    @RequestMapping(value = "/obtenerLocalidades", method = RequestMethod.GET)
-    public @ResponseBody
-    List<CatLocalidad> obtenerLocalidades(@RequestParam Long id) throws Exception {
-        log.info("obtenerLocalidades Abstract");
-        return catLocalidadEjb.getByProvincia(id);
     }
 
     /**

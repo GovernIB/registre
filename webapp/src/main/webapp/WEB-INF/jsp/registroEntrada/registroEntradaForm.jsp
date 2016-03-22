@@ -421,12 +421,12 @@
     });
 
     function actualizarCodigosAsunto(){
-        <c:url var="codigosAsunto" value="/registroEntrada/obtenerCodigosAsunto" />
-        actualizarSelectTraduccion('${codigosAsunto}','#registroDetalle\\.codigoAsunto\\.id',$('#registroDetalle\\.tipoAsunto\\.id option:selected').val(),'${registroEntrada.registroDetalle.codigoAsunto.id}',true);
+        <c:url var="codigosAsunto" value="/rest/obtenerCodigosAsunto" />
+        actualizarSelectTraduccion('${codigosAsunto}', '#registroDetalle\\.codigoAsunto\\.id', $('#registroDetalle\\.tipoAsunto\\.id option:selected').val(), '${registroEntrada.registroDetalle.codigoAsunto.id}', false);
     }
 
     function actualizarLocalidad(){
-        <c:url var="obtenerLocalidades" value="/registroEntrada/obtenerLocalidades" />
+        <c:url var="obtenerLocalidades" value="/rest/obtenerLocalidades" />
         actualizarSelect('${obtenerLocalidades}','#localidad\\.id',$('#provincia\\.id option:selected').val(),$('#localidad\\.id option:selected').val(),false,false);
     }
 

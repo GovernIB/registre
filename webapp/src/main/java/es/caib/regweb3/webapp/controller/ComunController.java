@@ -11,10 +11,10 @@ import es.caib.regweb3.sir.ws.api.manager.impl.SicresXMLManagerImpl;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.utils.UsuarioService;
-import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
@@ -192,53 +192,6 @@ public class ComunController extends BaseController {
         return mav;
     }
 
-    /**
-     * Obtiene el nombre traducido de un Transporte.
-     */
-    @RequestMapping(value = "/obtenerTransporte", method = RequestMethod.GET, produces="text/plain;charset=UTF-8")
-    @ResponseBody
-    public String obtenerTransporte(@RequestParam Long id) throws Exception {
-      
-      if (id != null) {
-        return I18NUtils.tradueix("transporte." + id);
-      } else {
-        return null;
-      }
-      
-/*
-        Transporte transporte = transporteEjb.findById(id);
-
-        if(transporte != null){
-            Locale locale = LocaleContextHolder.getLocale();
-            TraduccionTransporte traduccionTransporte = (TraduccionTransporte) transporte.getTraduccion(locale.getLanguage());
-            return traduccionTransporte.getNombre();
-
-        }
-        */       
-    }
-
-    /**
-     * Obtiene el nombre traducido de un TipoDocumentacionFisica.
-     */
-    
-    @RequestMapping(value = "/obtenerTipoDocumentacionFisica", method = RequestMethod.GET, produces="text/plain;charset=UTF-8")
-    @ResponseBody
-    public String obtenerTipoDocumentacionFisica(@RequestParam Long id) throws Exception {
-
-      /*
-        TipoDocumentacionFisica tipoDocumentacionFisica = tipoDocumentacionFisicaEjb.findById(id);
-
-        if(tipoDocumentacionFisica != null){
-            Locale locale = LocaleContextHolder.getLocale();
-            TraduccionTipoDocumentacionFisica traduccion = (TraduccionTipoDocumentacionFisica) tipoDocumentacionFisica.getTraduccion(locale.getLanguage());
-            return traduccion.getNombre();
-
-        }
-        return null;
-        */
-      return I18NUtils.tradueix("tipoDocumentacionFisica." + id);
-      
-    }
 
     @RequestMapping(value = "/sir/{registroId}")
     public String pruebaSir(@PathVariable Long registroId, HttpServletRequest request, HttpServletResponse response) throws Exception{
@@ -254,22 +207,5 @@ public class ComunController extends BaseController {
     }
 
 
-    /*@RequestMapping(value = "/crearPermisos")
-    public String crearPermisos(HttpServletRequest request) throws Exception{
-
-        Rol rolActivo = getRolActivo(request);
-        if(rolActivo.getNombre().equals(RegwebConstantes.ROL_SUPERADMIN)){
-
-            log.info("Antes crearPermisosNoExistentes");
-            log.info("-------------------------------------------");
-            permisoLibroUsuarioEjb.crearPermisosNoExistentes();
-            log.info("-------------------------------------------");
-            log.info("despues crearPermisosNoExistentes");
-
-        }
-
-        return "redirect:/inici";
-
-    }*/
 
 }

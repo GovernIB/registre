@@ -238,23 +238,7 @@ public class CatalogoDatosController extends BaseController {
          return "redirect:/tipoAsunto/list";
      }
 
-    /**
-     * Obtiene el nombre traducido de un TipoAsunto.
-     */
-    @RequestMapping(value = "/obtenerTipoAsunto", method = RequestMethod.GET, produces="text/plain;charset=UTF-8")
-    @ResponseBody
-    public String obtenerTipoAsunto(@RequestParam Long id) throws Exception {
 
-        TipoAsunto tipoAsunto = tipoAsuntoEjb.findById(id);
-
-        if(tipoAsunto != null){
-            Locale locale = LocaleContextHolder.getLocale();
-            TraduccionTipoAsunto traduccionTipoAsunto = (TraduccionTipoAsunto) tipoAsunto.getTraduccion(locale.getLanguage());
-            return traduccionTipoAsunto.getNombre();
-
-        }
-        return null;
-    }
 
      /* GESTION CODIGO ASUNTO */
 

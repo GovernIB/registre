@@ -283,7 +283,7 @@
                                                    <div class="col-xs-8" id="tipoDocumentacionFisica_${status.count}_${reOriginal.registroDetalle.tipoDocumentacionFisica}">
                                                        <script type="text/javascript">
                                                            $(document).ready(function(){
-                                                               obtenerElementoTraducido('<c:url value="/obtenerTipoDocumentacionFisica"/>','${reOriginal.registroDetalle.tipoDocumentacionFisica}','tipoDocumentacionFisica_${status.count}_${reOriginal.registroDetalle.tipoDocumentacionFisica}');
+                                                               obtenerElementoTraducido('<c:url value="/rest/obtenerTipoDocumentacionFisica"/>', '${reOriginal.registroDetalle.tipoDocumentacionFisica}', 'tipoDocumentacionFisica_${status.count}_${reOriginal.registroDetalle.tipoDocumentacionFisica}');
                                                            });
                                                        </script>
 
