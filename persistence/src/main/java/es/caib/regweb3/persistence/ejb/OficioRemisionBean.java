@@ -213,7 +213,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
         Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision "
                 + "where oficioRemision.organismoDestinatario in (:organismos) "
-                + " and oficioRemision.estado = " + RegwebConstantes.OFICIO_REMISION_ESTADO_NO_PROCESADO
+                + " and oficioRemision.estado = " + RegwebConstantes.OFICIO_REMISION_INTERNO_ESTADO_ENVIADO
                 + " order by oficioRemision.id desc");
 
 
@@ -227,7 +227,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
         Query q = em.createQuery("Select count(oficioRemision.id) from OficioRemision as oficioRemision "
                 + "where oficioRemision.organismoDestinatario in (:organismos) "
-                + " and oficioRemision.estado = " + RegwebConstantes.OFICIO_REMISION_ESTADO_NO_PROCESADO);
+                + " and oficioRemision.estado = " + RegwebConstantes.OFICIO_REMISION_INTERNO_ESTADO_ENVIADO);
 
         q.setParameter("organismos",organismos);
 

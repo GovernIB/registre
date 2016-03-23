@@ -165,7 +165,8 @@
 
                                    <form:select path="registroDetalle.tipoAsunto.id"  cssClass="chosen-select" onchange="actualizarCodigosAsunto(this)">
                                        <form:option value="-1">...</form:option>
-                                       <form:options items="${tiposAsunto}" itemValue="id" itemLabel="traduccion.nombre"/>
+                                       <form:options items="${tiposAsunto}" itemValue="id"
+                                                     itemLabel="traducciones['${pageContext.response.locale}'].nombre"/>
                                    </form:select>
                                    <form:errors path="registroDetalle.tipoAsunto" cssClass="help-block" element="span"/>
                                    <form:errors path="registroDetalle.tipoAsunto.id" cssClass="help-block" element="span"/>
@@ -422,7 +423,7 @@
 
     function actualizarCodigosAsunto(){
         <c:url var="codigosAsunto" value="/rest/obtenerCodigosAsunto" />
-        actualizarSelectTraduccion('${codigosAsunto}', '#registroDetalle\\.codigoAsunto\\.id', $('#registroDetalle\\.tipoAsunto\\.id option:selected').val(), '${registroEntrada.registroDetalle.codigoAsunto.id}', false);
+        actualizarSelectTraduccion('${codigosAsunto}', '#registroDetalle\\.codigoAsunto\\.id', $('#registroDetalle\\.tipoAsunto\\.id option:selected').val(), '${registroEntrada.registroDetalle.codigoAsunto.id}', false, '${pageContext.response.locale}');
     }
 
     function actualizarLocalidad(){

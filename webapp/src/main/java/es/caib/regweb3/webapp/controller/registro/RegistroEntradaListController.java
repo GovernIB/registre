@@ -207,8 +207,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         model.addAttribute("historicos", historicoRegistroEntradaEjb.getByRegistroEntrada(idRegistro));
 
         // Trazabilidad
-        List<Trazabilidad> trazabilidades = trazabilidadEjb.getByRegistroEntrada(registro.getId());
-        model.addAttribute("trazabilidades", trazabilidades);
+        model.addAttribute("trazabilidades", trazabilidadEjb.getByRegistroEntrada(registro.getId()));
 
         // Posicion sello
         if (entidadActiva.getPosXsello() != null && entidadActiva.getPosYsello() != null) {

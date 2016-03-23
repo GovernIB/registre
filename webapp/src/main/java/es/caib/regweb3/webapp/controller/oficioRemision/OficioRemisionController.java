@@ -587,7 +587,7 @@ public class OficioRemisionController extends BaseController {
         List<RegistroEntrada> registrosEntrada = new ArrayList<RegistroEntrada>();
 
         // Comprobamos si ya ha sido procesado
-        if(oficioRemision.getEstado() != RegwebConstantes.OFICIO_REMISION_ESTADO_NO_PROCESADO) {
+        if (oficioRemision.getEstado() != RegwebConstantes.OFICIO_REMISION_INTERNO_ESTADO_ENVIADO) {
             Mensaje.saveMessageError(request, getMessage("oficioRemision.error.yaprocesado"));
             return "redirect:/oficioRemision/oficiosPendientesLlegada";
         }

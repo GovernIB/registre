@@ -66,9 +66,10 @@ public class OficioRemisionUtilsBean implements OficioRemisionUtilsLocal {
       Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, Long idOrganismo, Long idLibro)
           throws Exception, I18NException, I18NValidationException {
 
-      Organismo organismoDestino = organismoEjb.findById(idOrganismo);
+     Organismo organismoDestino = new Organismo(idOrganismo);
 
       OficioRemision oficioRemision = new OficioRemision();
+     oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_INTERNO_ESTADO_ENVIADO);
       oficioRemision.setOficina(oficinaActiva);
       oficioRemision.setFecha(new Date());
       oficioRemision.setRegistrosEntrada(registrosEntrada);

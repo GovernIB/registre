@@ -133,7 +133,7 @@ public class OficioRemision implements Serializable {
 
   /**
    * @return Indica el estado del oficio de remision:
-   *         -RegwebConstantes.OFICIO_REMISION_ESTADO_NO_PROCESADO(0): (Interno)
+   *         -RegwebConstantes.OFICIO_REMISION_INTERNO_ESTADO_ENVIADO(0): (Interno)
    *         -RegwebConstantes.OFICIO_REMISION_ESTADO_ENVIADO(1): (Solo externo)
    *         -RegwebConstantes.OFICIO_REMISION_ESTADO_ACEPTADO(2): (Interno y Externo)
    *         -RegwebConstantes.OFICIO_REMISION_ESTADO_RECHAZADO(3): (Solo Externo)

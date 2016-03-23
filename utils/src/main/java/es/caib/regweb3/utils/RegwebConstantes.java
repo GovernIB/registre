@@ -50,6 +50,9 @@ public interface RegwebConstantes {
     
     public static final Long IDIOMA_INGLES_ID = 5L;
     public static final String IDIOMA_INGLES_CODIGO = "en";
+
+    public static final Long IDIOMA_OTROS_ID = 6L;
+    public static final String IDIOMA_OTROS_CODIGO = "ot";
     
     public static final Long[] IDIOMAS_UI = {
       IDIOMA_CATALAN_ID, IDIOMA_CASTELLANO_ID
@@ -58,13 +61,13 @@ public interface RegwebConstantes {
     public static final Long[] IDIOMAS_REGISTRO = {
       IDIOMA_CATALAN_ID, IDIOMA_CASTELLANO_ID,
       IDIOMA_GALLEGO_ID, IDIOMA_EUSKERA_ID,
-      IDIOMA_INGLES_ID
+            IDIOMA_INGLES_ID, IDIOMA_OTROS_ID
     };
 
     public static final Long[] IDIOMAS_REGISTRO_ES = {
             IDIOMA_CASTELLANO_ID, IDIOMA_CATALAN_ID,
             IDIOMA_GALLEGO_ID, IDIOMA_EUSKERA_ID,
-            IDIOMA_INGLES_ID
+            IDIOMA_INGLES_ID, IDIOMA_OTROS_ID
     };
     
     public static final Map<Long, String> CODIGO_BY_IDIOMA_ID = new HashMap<Long, String>(){{
@@ -73,6 +76,7 @@ public interface RegwebConstantes {
       put(IDIOMA_GALLEGO_ID,IDIOMA_GALLEGO_CODIGO);
       put(IDIOMA_EUSKERA_ID, IDIOMA_EUSKERA_CODIGO);
       put(IDIOMA_INGLES_ID, IDIOMA_INGLES_CODIGO);
+        put(IDIOMA_OTROS_ID, IDIOMA_OTROS_CODIGO);
     }};
 
 
@@ -506,8 +510,8 @@ public interface RegwebConstantes {
     public static final Long OFICIO_REMISION_EXTERNO = 2L;
 
     /* -------- ESTADO DE UN OFICIO DE REMISION ---------- */
-    
-    public static final int OFICIO_REMISION_ESTADO_NO_PROCESADO = 0;
+
+    public static final int OFICIO_REMISION_INTERNO_ESTADO_ENVIADO = 0;
     
     public static final int OFICIO_REMISION_ESTADO_ENVIADO = 1;
     
