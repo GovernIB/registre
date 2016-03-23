@@ -441,7 +441,7 @@ public class InformeController extends BaseController {
                         }
                     } else if(valorCamp.equals("nomIn")){
                         if(registroSalida.getRegistroDetalle().getInteresados() != null){
-                            String interessats = null;
+                            String interessats = "";
 
                             for(int k=0;k<registroSalida.getRegistroDetalle().getInteresados().size();k++){
                                 Interesado interesado = registroSalida.getRegistroDetalle().getInteresados().get(k);
