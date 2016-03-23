@@ -27,16 +27,20 @@ public class ArchivoFormManager {
         this.ruta = ruta;
     }
 
-    public Archivo prePersist() throws Exception {
+    public Archivo prePersist(byte[] fichero) throws Exception {
+
+        if (fichero == null) {
+            fichero =  archivoSubido.getBytes();
+        }
 
         archivoActual = new Archivo();
         archivoActual.setMime(archivoSubido.getContentType());
         archivoActual.setNombre(archivoSubido.getOriginalFilename());
-        archivoActual.setTamano(Long.valueOf(archivoSubido.getBytes().length));
+        archivoActual.setTamano(Long.valueOf(fichero.length));
 
         archivoActual = archivoEjb.persist(archivoActual);
 
-        FileSystemManager.crearArchivo(archivoSubido.getBytes(), archivoActual.getId());
+        FileSystemManager.crearArchivo(fichero, archivoActual.getId());
 
         return archivoActual;
     }

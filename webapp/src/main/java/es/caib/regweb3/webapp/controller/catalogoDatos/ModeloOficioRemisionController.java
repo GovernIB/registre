@@ -122,7 +122,7 @@ public class ModeloOficioRemisionController extends BaseController {
                     afm = new ArchivoFormManager(archivoEjb,modeloOficioRemisionForm.getModelo(), RegwebConstantes.ARCHIVOS_LOCATION_PROPERTY);
 
                     // Asociamos el nuevo archivo
-                    modeloOficioRemision.setModelo(afm.prePersist());
+                    modeloOficioRemision.setModelo(afm.prePersist(null));
                 }
 
                 modeloOficioRemisionEjb.persist(modeloOficioRemision);
@@ -208,7 +208,7 @@ public class ModeloOficioRemisionController extends BaseController {
                         eliminarModelo = modeloOficioRemisionGuardado.getModelo();
 
                         // Asociamos el nuevo archivo
-                        modeloOficioRemision.setModelo(afm.prePersist());
+                        modeloOficioRemision.setModelo(afm.prePersist(null));
                     }
 
                     modeloOficioRemisionEjb.merge(modeloOficioRemision);

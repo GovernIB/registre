@@ -113,7 +113,7 @@ public class ConfiguracionController extends BaseController {
                     }
 
                     // Asociamos el nuevo archivo
-                    configuracion.setLogoMenu(afm.prePersist());
+                    configuracion.setLogoMenu(afm.prePersist(null));
                 }
 
                 if(configuracionForm.getLogoPie() != null && !configuracionForm.getLogoPie().isEmpty()){
@@ -126,7 +126,7 @@ public class ConfiguracionController extends BaseController {
                     }
 
                     // Asociamos el nuevo archivo
-                    configuracion.setLogoPie(afm.prePersist());
+                    configuracion.setLogoPie(afm.prePersist(null));
                 }
 
 

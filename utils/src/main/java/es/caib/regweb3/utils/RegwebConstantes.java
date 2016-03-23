@@ -542,4 +542,8 @@ public interface RegwebConstantes {
 
     public static final int NUMBER_EXPRESSIONS_IN = 1000;
 
+    /* -------------- LOGOMENU --------------*/
+    public int LOGOMENU_AMPLADA_MAX = 600;
+    public int LOGOMENU_ALSADA_MAX = 90;
+
 }

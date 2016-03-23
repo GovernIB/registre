@@ -27,11 +27,18 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.List;
 
 /**
  * Created by Fundació BIT.
@@ -316,11 +323,14 @@ public class EntidadController extends BaseController {
 
                         afm = new ArchivoFormManager(archivoEjb,entidadForm.getLogoMenu(), RegwebConstantes.ARCHIVOS_LOCATION_PROPERTY);
 
+                        // Redimensionamos el logoMenu, si es necesario (tamaño demasiado grande)
+                        byte[] logoRedimensionat = redimensionaLogoMenu(entidadForm.getLogoMenu().getBytes());
+
                         Entidad entidadGuardada = entidadEjb.findById(entidadForm.getEntidad().getId());
                         eliminarLogoMenu = entidadGuardada.getLogoMenu();
 
                         // Asociamos el nuevo archivo
-                        entidad.setLogoMenu(afm.prePersist());
+                        entidad.setLogoMenu(afm.prePersist(logoRedimensionat));
                     }
 
                     if(entidadForm.getLogoPie() != null && !entidadForm.getLogoPie().isEmpty()){
@@ -331,7 +341,7 @@ public class EntidadController extends BaseController {
                         eliminarLogoPie = entidadGuardada.getLogoPie();
 
                         // Asociamos el nuevo archivo
-                        entidad.setLogoPie(afm.prePersist());
+                        entidad.setLogoPie(afm.prePersist(null));
                     }
 
                     if( entidadForm.getLogoSello()!= null && !entidadForm.getLogoSello().isEmpty()){
@@ -340,7 +350,7 @@ public class EntidadController extends BaseController {
                     	eliminarImagenSello = entidadGuardada.getLogoSello();
                     	
                     	// Asociamos el nuevo archivo
-                        entidad.setLogoSello(afm.prePersist());
+                        entidad.setLogoSello(afm.prePersist(null));
                     }
                     
                     
@@ -1015,10 +1025,6 @@ public class EntidadController extends BaseController {
     }
 
 
-
-
-
-
     private void obtenerHistoricosFinales(Organismo organismo, Set<Organismo> historicosFinales) throws Exception{
         Set<Organismo> parciales=organismo.getHistoricoUO();
         log.info("PARCIALES DE " +organismo.getCodigo() +":"+ parciales.size());
@@ -1034,8 +1040,52 @@ public class EntidadController extends BaseController {
     }
 
 
+    public byte[] redimensionaLogoMenu(byte[] logoMenu) throws IOException {
 
+        // Obtenemos la imagen del Logo
+        ByteArrayInputStream in = new ByteArrayInputStream(logoMenu);
+        BufferedImage imatgeLogo = ImageIO.read(in);
 
+        int ampladaOriginal = imatgeLogo.getWidth();
+        int alsadaOriginal = imatgeLogo.getHeight();
+
+        // Si no passa cap dels paràmetres màxims, no fa res
+        if(ampladaOriginal > RegwebConstantes.LOGOMENU_AMPLADA_MAX || alsadaOriginal > RegwebConstantes.LOGOMENU_ALSADA_MAX) {
+
+            double scale;
+            double scaleHeight = 1.0;
+            double scaleWidth = 1.0;
+            // Si pasa alguno de los parámetros, calcula el valor de la escala
+            if (ampladaOriginal > RegwebConstantes.LOGOMENU_AMPLADA_MAX) {
+                scaleWidth = (double) RegwebConstantes.LOGOMENU_AMPLADA_MAX / ampladaOriginal;
+            }
+            if (alsadaOriginal > RegwebConstantes.LOGOMENU_ALSADA_MAX) {
+                scaleHeight = (double) RegwebConstantes.LOGOMENU_ALSADA_MAX / alsadaOriginal;
+            }
+            // Elige la escala que debe tomar, la más pequeña (el tamaño que más se pasa del límite)
+            if (scaleHeight <= scaleWidth) {
+                scale = scaleHeight;
+            } else {
+                scale = scaleWidth;
+            }
+            // Escala la anchura y el altura
+            int nuevoImageWidth = (int) (ampladaOriginal * scale);
+            int nuevoImageHeight = (int) (alsadaOriginal * scale);
+
+            Image logoMenuModificat = imatgeLogo.getScaledInstance(nuevoImageWidth, nuevoImageHeight, Image.SCALE_SMOOTH);
+            BufferedImage logoMenuModBuff = new BufferedImage(nuevoImageWidth, nuevoImageHeight, BufferedImage.TYPE_INT_RGB);
+            logoMenuModBuff.getGraphics().drawImage(logoMenuModificat, 0, 0, null, null);
+
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+            ImageIO.write(logoMenuModBuff, "jpg", buffer);
+
+            return buffer.toByteArray();
+
+        }else{ // Retorna la imagen original
+            return logoMenu;
+        }
+    }
 
 
 }

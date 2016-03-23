@@ -123,7 +123,7 @@ public class ModeloReciboController extends BaseController {
                  afm = new ArchivoFormManager(archivoEjb,modeloReciboForm.getModelo(), RegwebConstantes.ARCHIVOS_LOCATION_PROPERTY);
 
                  // Asociamos el nuevo archivo
-                 modeloRecibo.setModelo(afm.prePersist());
+                 modeloRecibo.setModelo(afm.prePersist(null));
              }
 
              modeloReciboEjb.persist(modeloRecibo);
@@ -209,7 +209,7 @@ public class ModeloReciboController extends BaseController {
                        eliminarModelo = modeloReciboGuardado.getModelo();
 
                        // Asociamos el nuevo archivo
-                       modeloRecibo.setModelo(afm.prePersist());
+                       modeloRecibo.setModelo(afm.prePersist(null));
                    }
 
                    modeloReciboEjb.merge(modeloRecibo);
