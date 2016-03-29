@@ -521,13 +521,13 @@ function buscarPersonas(tipoPersonas){
                     }
 
                     if(tipoPersonas == 'Fisicas'){
-
-                        var linea ="<tr><td style=\"text-align:left;\">"+result[i].nombrePersonaFisica+"</td><td style=\"text-align:left;\">"+documento+"</td><td style=\"text-align:left;\">"+tradsinteresado['persona.fisica']+"</td><td class=\"center\"><input type=\"button\" class=\"btn btn-sm\" value=\"Añadir\" onclick=\"addInteresado('"+result[i].id+"','"+result[i].nombrePersonaFisica+"','Persona Física','No','#modalBuscadorPersonasFisicas','"+idRegistroDetalle+"')\"/></td></tr>";
+                        var nombrePersonaFisica = normalizarTexto(result[i].nombrePersonaFisica);
+                        var linea = "<tr><td style=\"text-align:left;\">" + result[i].nombrePersonaFisica + "</td><td style=\"text-align:left;\">" + documento + "</td><td style=\"text-align:left;\">" + tradsinteresado['persona.fisica'] + "</td><td class=\"center\"><input type=\"button\" class=\"btn btn-sm\" value=\"Añadir\" onclick=\"addInteresado('" + result[i].id + "','" + nombrePersonaFisica + "','Persona Física','No','#modalBuscadorPersonasFisicas','" + idRegistroDetalle + "')\"/></td></tr>";
                         tabla.append(linea);
 
                     }else if(tipoPersonas == 'Juridicas'){
-
-                        var linea ="<tr><td style=\"text-align:left;\">"+result[i].nombrePersonaJuridica+"</td><td style=\"text-align:left;\">"+documento+"</td><td style=\"text-align:left;\">"+tradsinteresado['persona.juridica']+"</td><td class=\"center\"><input type=\"button\" class=\"btn btn-sm\" value=\"Añadir\" onclick=\"addInteresado('"+result[i].id+"','"+result[i].nombrePersonaJuridica+"','Persona Juridica','No','#modalBuscadorPersonasJuridicas','"+idRegistroDetalle+"')\"/></td></tr>";
+                        var nombrePersonaJuridica = normalizarTexto(result[i].nombrePersonaJuridica);
+                        var linea = "<tr><td style=\"text-align:left;\">" + result[i].nombrePersonaJuridica + "</td><td style=\"text-align:left;\">" + documento + "</td><td style=\"text-align:left;\">" + tradsinteresado['persona.juridica'] + "</td><td class=\"center\"><input type=\"button\" class=\"btn btn-sm\" value=\"Añadir\" onclick=\"addInteresado('" + result[i].id + "','" + nombrePersonaJuridica + "','Persona Juridica','No','#modalBuscadorPersonasJuridicas','" + idRegistroDetalle + "')\"/></td></tr>";
                         tabla.append(linea);
 
                     }else if(tipoPersonas == 'Todas'){

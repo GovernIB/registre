@@ -59,6 +59,20 @@
 
     $("[rel='ayuda']").popover({ trigger: "hover",placement: "bottom",container:"body", html:true});
 
+    /*$.sessionTimeout({
+     title: 'Sesion timeout',
+     ignoreUserActivity:true,
+     message: 'Tu sesión va a expirar en menos de un minuto.',
+     keepAliveButton:'Seguir conectado',
+     keepAliveUrl: '/regweb3/aumentarSesion',
+     keepAlive: false,
+     redirUrl: '/regweb3/logout',
+     logoutUrl: '/regweb3/logout',
+     warnAfter: 600000,
+     redirAfter: 800000,
+     countdownBar: true
+     });*/
+
 });
 
 
@@ -307,8 +321,9 @@ function actualizarSelect(url, idSelect, seleccion, valorSelected, todos, async)
  * @param seleccion valor seleccionado en el Select principal
  * @param valorSelected Valor seleccionado en el select dependiente, si es que lo hay. Sirve solo para las modificaciones.
  * @param todos Booleano para definir si incluir la opción de todos (...) en el Select
+ * @param idioma
  */
-function actualizarSelectTraduccion(url, idSelect, seleccion, valorSelected, todos){
+function actualizarSelectTraduccion(url, idSelect, seleccion, valorSelected, todos, idioma) {
     var html = '';
     $(idSelect).attr("disabled",true).trigger("chosen:updated");
     if(seleccion != '-1'){
@@ -329,7 +344,7 @@ function actualizarSelectTraduccion(url, idSelect, seleccion, valorSelected, tod
                         selected = 'selected="selected"';
                     }
                     html += '<option '+selected+' value="' + result[i].id + '">'
-                        + result[i].traduccion.nombre + '</option>';
+                        + result[i].traducciones[idioma].nombre + '</option>';
                 }
                 html += '</option>';
 
@@ -836,4 +851,15 @@ function validaSelect(valorCampo,campo){
         $(variable).parents(".form-group").addClass("has-error");
     }
     return valorCampo!='-1';
+}
+
+/**
+ * Sustituimos los apostrofes para evitar problemas con las comillas
+ * @param texto
+ */
+function normalizarTexto(texto) {
+    var normalizado = texto.replace(/\"/g, '&quot;');
+    normalizado = normalizado.replace(/'/g, "\\'");
+
+    return normalizado;
 }

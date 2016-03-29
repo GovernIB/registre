@@ -12,10 +12,20 @@
           addOrganismoInteresadoHtml('${interesado.codigoDir3}',nombre,'<spring:message code="interesado.administracion"/>','${registro.registroDetalle.id}');
         </c:when>
         <c:when test="${interesado.tipo == RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA}">
-          addInteresadoRepresentanteHtml('${interesado.id}','<c:out value="${interesado.nombrePersonaFisica}" escapeXml="true"/>','<spring:message code="persona.fisica"/>' ,'${interesado.representante.id}','${interesado.representante.nombreCompleto}','${registro.registroDetalle.id}');
+          var interesado = "${interesado.nombrePersonaFisica}";
+          interesado = interesado.replace(/\"/g,'&quot;');
+          var representante = "${interesado.representante.nombreCompleto}";
+          representante = representante.replace(/\"/g,'&quot;');
+          addInteresadoRepresentanteHtml('${interesado.id}',interesado,'<spring:message
+                code="persona.fisica"/>' ,'${interesado.representante.id}',representante,'${registro.registroDetalle.id}');
         </c:when>
         <c:when test="${interesado.tipo == RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA}">
-          addInteresadoRepresentanteHtml('${interesado.id}','<c:out value="${interesado.nombrePersonaJuridica}" escapeXml="true"/>','<spring:message code="persona.juridica"/>' ,'${interesado.representante.id}','${interesado.representante.nombreCompleto}','${registro.registroDetalle.id}');
+          var interesado = "${interesado.nombrePersonaJuridica}";
+          interesado = interesado.replace(/\"/g,'&quot;');
+          var representante = "${interesado.representante.nombreCompleto}";
+          representante = representante.replace(/\"/g,'&quot;');
+          addInteresadoRepresentanteHtml('${interesado.id}',interesado,'<spring:message
+                code="persona.juridica"/>' ,'${interesado.representante.id}',representante,'${registro.registroDetalle.id}');
         </c:when>
       </c:choose>
     </c:if>
