@@ -149,7 +149,7 @@
                                     <%--<c:import url="/reprosUsuario/1"/>--%>
                                         <li class="submenu-complet"><a
                                                 href="<c:url value="/registroEntrada/new"/>"><spring:message
-                                                code="registroEntrada.registroEntrada"/></a></li>
+                                                code="registroEntrada.nuevo"/></a></li>
                                 <li class="submenu-complet"><a href="<c:url value="/registroEntrada/reserva"/>"><spring:message code="registroEntrada.reserva"/></a></li>
                                 <li class="submenu-complet"><a href="<c:url value="/registroEntrada/list"/>"><spring:message code="registroEntrada.listado"/></a></li>
                                 <c:if test="${entidadActiva.sir && tienePreRegistros}">
@@ -165,11 +165,14 @@
                                 <li class="dropdown-submenu-left toggle-left">
                                     <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> <spring:message code="oficioRemision.oficiosRemision"/></a>
                                     <ul class="dropdown-menu">
-                                        <li><a href="<c:url value="/oficioRemision/oficiosPendientesLlegada"/>"><spring:message code="oficioRemision.pendientesLlegada"/></a></li>
+                                        <li><a href="<c:url value="/oficioRemision/list"/>"><spring:message
+                                                code="oficioRemision.listado"/></a></li>
                                         <li class="divider"></li>
+                                        <li>
+                                            <a href="<c:url value="/oficioRemision/oficiosPendientesLlegada"/>"><spring:message
+                                                    code="oficioRemision.pendientesLlegada"/></a></li>
                                         <li><a href="<c:url value="/oficioRemision/oficiosPendientesRemisionInterna"/>"><spring:message code="registroEntrada.oficiosRemisionInterna"/></a></li>
                                         <li><a href="<c:url value="/oficioRemision/oficiosPendientesRemisionExterna"/>"><spring:message code="registroEntrada.oficiosRemisionExterna"/></a></li>
-                                        <li><a href="<c:url value="/oficioRemision/list"/>"><spring:message code="oficioRemision.listado"/></a></li>
                                     </ul>
                                 </li>
                             </ul>
@@ -180,7 +183,9 @@
                                 <spring:message code="menu.salidas"/> <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
-                                <li class="submenu-complet"><a href="<c:url value="/registroSalida/new"/>"><spring:message code="registroSalida.registroSalida"/></a></li>
+                                <li class="submenu-complet"><a
+                                        href="<c:url value="/registroSalida/new"/>"><spring:message
+                                        code="registroSalida.nuevo"/></a></li>
                                 <li class="submenu-complet"><a href="<c:url value="/registroSalida/list"/>"><spring:message code="registroSalida.listado"/></a></li>
                             </ul>
                         </div>

@@ -67,7 +67,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
         Query q = em.createQuery("Select trazabilidad from Trazabilidad as trazabilidad " +
                 "where trazabilidad.registroSalida.id = :idRegistroSalida order by trazabilidad.fecha desc");
 
-        q.setParameter("idRegistroSalida",idRegistroSalida);
+        q.setParameter("idRegistroSalida", idRegistroSalida);
 
         return q.getResultList();
     }
@@ -79,7 +79,19 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
                 "where trazabilidad.registroEntradaOrigen.id = :idRegistroEntrada or trazabilidad.registroEntradaDestino.id = :idRegistroEntrada " +
                 "order by trazabilidad.fecha desc");
 
-        q.setParameter("idRegistroEntrada",idRegistroEntrada);
+        q.setParameter("idRegistroEntrada", idRegistroEntrada);
+
+        return q.getResultList();
+    }
+
+    @Override
+    public List<Trazabilidad> getByOficioRemision(Long idOficioRemision) throws Exception {
+
+        Query q = em.createQuery("Select trazabilidad from Trazabilidad as trazabilidad " +
+                "where trazabilidad.oficioRemision.id = :idOficioRemision " +
+                "order by trazabilidad.fecha desc");
+
+        q.setParameter("idOficioRemision", idOficioRemision);
 
         return q.getResultList();
     }

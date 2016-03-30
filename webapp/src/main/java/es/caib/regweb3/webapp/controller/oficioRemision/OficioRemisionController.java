@@ -58,6 +58,9 @@ public class OficioRemisionController extends BaseController {
     @EJB(mappedName = "regweb3/EntidadEJB/local")
     public EntidadLocal entidadEjb;
 
+    @EJB(mappedName = "regweb3/TrazabilidadEJB/local")
+    public TrazabilidadLocal trazabilidadEjb;
+
     FicheroIntercambioManager ficheroIntercambioManager = new FicheroIntercambioManagerImpl();
     SicresXMLManager sicresXMLManager = new SicresXMLManagerImpl();
 
@@ -492,10 +495,12 @@ public class OficioRemisionController extends BaseController {
     public String detalleOficioRemision(@PathVariable Long idOficioRemision, Model model, HttpServletRequest request) throws Exception {
 
         OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
-        List<RegistroEntrada> registrosEntrada = oficioRemisionEjb.getByOficioRemision(oficioRemision.getId());
+        //List<RegistroEntrada> registrosEntrada = oficioRemisionEjb.getByOficioRemision(oficioRemision.getId());
+        List<Trazabilidad> trazabilidades = trazabilidadEjb.getByOficioRemision(oficioRemision.getId());
 
         model.addAttribute(oficioRemision);
-        model.addAttribute("registrosEntrada",registrosEntrada);
+        //model.addAttribute("registrosEntrada",registrosEntrada);
+        model.addAttribute("trazabilidades", trazabilidades);
 
         ModeloOficioRemision modeloOficioRemision = new ModeloOficioRemision();
         model.addAttribute("modeloOficioRemision", modeloOficioRemision);

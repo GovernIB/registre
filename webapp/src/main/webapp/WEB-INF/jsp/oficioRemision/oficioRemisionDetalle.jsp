@@ -105,7 +105,7 @@
 
             <%--Registros de Entrada--%>
 
-            <c:if test="${not empty registrosEntrada}">
+            <c:if test="${not empty trazabilidades}">
                 <div class="col-xs-8 col-xs-offset">
 
                     <div class="panel panel-info">
@@ -116,54 +116,58 @@
                         </div>
 
                         <div class="panel-body">
-                            <div class="col-xs-12">
-                                <div class="table-responsive">
+                            <div class="table-responsive">
 
-                                    <table class="table table-bordered table-hover table-striped tablesorter">
-                                        <colgroup>
-                                            <col width="80">
-                                            <col>
-                                            <col width="100">
-                                            <%--<col>--%>
-                                            <%--<col>--%>
-                                            <col>
-                                            <col>
-                                            <col width="50">
-                                        </colgroup>
-                                        <thead>
+                                <table class="table table-bordered table-hover table-striped tablesorter">
+                                    <colgroup>
+                                        <col width="80">
+                                        <col>
+                                        <col>
+                                        <col>
+                                        <col>
+                                        <col width="100">
+                                    </colgroup>
+                                    <thead>
+                                    <tr>
+                                        <th><spring:message code="registroEntrada.numeroRegistro"/></th>
+                                        <th><spring:message code="registroEntrada.fecha"/></th>
+                                        <th><spring:message code="registroEntrada.oficina"/></th>
+                                        <th><spring:message code="registroEntrada.extracto"/></th>
+                                        <th><spring:message code="registroSalida.numero"/></th>
+                                        <th class="center"><spring:message code="regweb.acciones"/></th>
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    <c:forEach var="trazabilidad" items="${trazabilidades}" varStatus="status">
                                         <tr>
-                                            <th><spring:message code="registroEntrada.numeroRegistro"/></th>
-                                            <th><spring:message code="registroEntrada.fecha"/></th>
-                                            <th><spring:message code="registroEntrada.libro.corto"/></th>
-                                            <%--<th><spring:message code="registroEntrada.usuario"/></th>--%>
-                                            <%--<th><spring:message code="registroEntrada.oficina"/></th>--%>
-                                            <th><spring:message code="registroEntrada.organismoDestino"/></th>
-                                            <th><spring:message code="registroEntrada.extracto"/></th>
-                                            <th><spring:message code="regweb.acciones"/></th>
-
+                                            <td><fmt:formatDate value="${trazabilidad.registroEntradaOrigen.fecha}"
+                                                                pattern="yyyy"/>
+                                                / ${trazabilidad.registroEntradaOrigen.numeroRegistro}</td>
+                                            <td><fmt:formatDate value="${trazabilidad.registroEntradaOrigen.fecha}"
+                                                                pattern="dd/MM/yyyy"/></td>
+                                            <td>${trazabilidad.registroEntradaOrigen.oficina.denominacion}</td>
+                                            <td>${trazabilidad.registroEntradaOrigen.registroDetalle.extracto}</td>
+                                            <td><fmt:formatDate value="${trazabilidad.registroSalida.fecha}"
+                                                                pattern="yyyy"/>
+                                                / ${trazabilidad.registroSalida.numeroRegistro}</td>
+                                            <td class="center">
+                                                <a class="btn btn-info btn-sm"
+                                                   href="<c:url value="/registroEntrada/${trazabilidad.registroEntradaOrigen.id}/detalle"/>"
+                                                   title="<spring:message code="registroEntrada.detalle"/>"><span
+                                                        class="fa fa-eye"></span></a>
+                                                <a class="btn btn-danger btn-sm"
+                                                   href="<c:url value="/registroSalida/${trazabilidad.registroSalida.id}/detalle"/>"
+                                                   title="<spring:message code="registroSalida.detalle"/>"><span
+                                                        class="fa fa-eye"></span></a>
+                                            </td>
                                         </tr>
-                                        </thead>
+                                    </c:forEach>
+                                    </tbody>
+                                </table>
 
-                                        <tbody>
-                                        <c:forEach var="registroEntrada" items="${registrosEntrada}" varStatus="status">
-                                            <tr>
-                                                <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="yyyy"/> / ${registroEntrada.numeroRegistro}</td>
-                                                <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy"/></td>
-                                                <td><small>${registroEntrada.libro.nombreCompleto}</small></td>
-                                                <%-- <td>${registroEntrada.usuario.usuario.nombreCompleto}</td>--%>
-                                                <%--<td>${registroEntrada.oficina.denominacion}</td>--%>
-                                                <td><small>${(empty registroEntrada.destino)? registroEntrada.destinoExternoDenominacion : registroEntrada.destino.denominacion}</small></td>
-                                                <td>${registroEntrada.registroDetalle.extracto}</td>
-                                                <td class="center">
-                                                    <a class="btn btn-info btn-sm" href="<c:url value="/registroEntrada/${registroEntrada.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
-                                                </td>
-                                            </tr>
-                                        </c:forEach>
-                                        </tbody>
-                                    </table>
-
-                                </div>
                             </div>
+
                         </div>
                     </div>
 
