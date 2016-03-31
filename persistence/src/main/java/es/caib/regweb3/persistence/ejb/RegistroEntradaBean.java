@@ -699,7 +699,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         q = em.createQuery("Select count(registroEntrada.id) from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
                 "and registroEntrada.fecha <= :fechaFin and registroEntrada.estado != :anulado and registroEntrada.estado != :pendiente and " +
-                "registroEntrada.registroDetalle.oficinaOrigen.id = :idOficina ");
+                "registroEntrada.oficina.id = :idOficina ");
 
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
@@ -772,7 +772,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         q = em.createQuery("Select count(registroEntrada.id) from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
                 "and registroEntrada.fecha <= :fechaFin and registroEntrada.registroDetalle.idioma = :idioma and " +
-                "registroEntrada.estado != :anulado and registroEntrada.estado != :pendiente and registroEntrada.registroDetalle.oficinaOrigen.id = :idOficina");
+                "registroEntrada.estado != :anulado and registroEntrada.estado != :pendiente and registroEntrada.oficina.id = :idOficina");
 
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
