@@ -1,6 +1,8 @@
 <%@ page import="es.caib.regweb3.utils.Configuracio" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 
+<!-- TODO BORRAR NO SE EMPLEA se ha sustituido por buscadorOrganismosOficinasRE.jsp-->
+
 <!-- Formulario de busqueda compartido. Se usa tanto para buscar organismos como oficinas, en función del parámetro
 que se le indica -->
 

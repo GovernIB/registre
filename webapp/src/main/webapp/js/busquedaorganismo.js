@@ -304,7 +304,9 @@ function inicializarBuscador(selectNivelAdministracion, selectComunidadAutonoma,
     actualizarProvinciaDestinatarios(tipoOrganismo);
     $('#arbol' + tipoOrganismo).html("");
     $('#tab' + tipoOrganismo + ' a:first').tab('show');
-    $('#tab' + tipoOrganismo + ' a:last').hide();
+    if (tipoOrganismo != 'OficinaOrigen') {
+        $('#tab' + tipoOrganismo + ' a:last').hide();
+    }
 }
 
 /* Función que asigna el valor seleccionado de la búsqueda al select correspondiente
@@ -424,7 +426,7 @@ function mostrarArbol(organismo, urlServidor, tipoOrganismo, idRegistroDetalle) 
             var hijoslen = result.hijos.length;
 
             if (hijoslen > 0) {
-                html += pintarHijos(result.hijos);
+                html += pintarHijos(result.hijos, tipoOrganismo, idRegistroDetalle);
             }
             html += '</li>';
             html += '</ul>';
@@ -442,15 +444,20 @@ function mostrarArbol(organismo, urlServidor, tipoOrganismo, idRegistroDetalle) 
 }
 
 
-function pintarHijos(hijos) {
+function pintarHijos(hijos, tipoOrganismo, idRegistroDetalle) {
 
     var htmlp = '';
 
     htmlp += '<ul>';
     for (var i = 0; i < hijos.length; i++) {
-        htmlp += '<li><span class="badge-arbre btn-primary" style="display:closed;"><i class=""></i>' + hijos[i].id + ' - ' + hijos[i].nombre + '</span>';
+        var denominacion = normalizarTexto(hijos[i].nombre);
+        if (tipoOrganismo == 'OrganismoInteresado') {
+            htmlp += "<li> <span class=\"badge-arbre btn-primary\" onclick=\"addAdministracionInteresadosModal('" + hijos[i].id + "','" + denominacion + "','Administración','" + tipoOrganismo + "','" + idRegistroDetalle + "')\">" + hijos[i].nombre + " - " + hijos[i].id + "</span>";
+        } else {
+            htmlp += "<li> <span class=\"badge-arbre btn-primary\" onclick=\"asignarOrganismo('" + hijos[i].id + "','" + denominacion + "','" + tipoOrganismo + "')\">" + hijos[i].nombre + " - " + hijos[i].id + "</span>";
+        }
         if (hijos[i].hijos.length > 0) {
-            htmlp += pintarHijos(hijos[i].hijos, htmlp);
+            htmlp += pintarHijos(hijos[i].hijos, tipoOrganismo, idRegistroDetalle);
         }
     }
     htmlp += '</ul>';
