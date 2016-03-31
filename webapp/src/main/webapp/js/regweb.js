@@ -273,7 +273,7 @@ function cargarSelect(url,/*idEntidad,*/idSelect, valorSelected, todos){
  */
 function actualizarSelect(url, idSelect, seleccion, valorSelected, todos, async){
     var html = '';
-    if(seleccion != '-1'){
+    if (seleccion != '-1' && seleccion != null) {
         jQuery.ajax({
             async: async,
             url: url,
@@ -310,6 +310,72 @@ function actualizarSelect(url, idSelect, seleccion, valorSelected, todos, async)
         var html='';
         $(idSelect).html(html);
         $(idSelect).attr("disabled",true).trigger("chosen:updated");
+    }
+
+
+}
+
+/**
+ * Carga de valores un Select dependiente de otro
+ * @param url donde hacer la petición ajax
+ * @param idSelect id del campo select donde cargar los datos obtenidos
+ * @param seleccion valor seleccionado en el Select principal
+ * @param valorSelected Valor seleccionado en el select dependiente, si es que lo hay. Sirve solo para las modificaciones.
+ * @param todos Booleano para definir si incluir la opción de todos (...) en el Select
+ */
+function actualizarSelectLocalidad(url, idSelect, seleccion, valorSelected, todos, async) {
+    var inicio = new Date().getTime();
+    var html = '';
+    if (seleccion != '-1' && seleccion != null) {
+        jQuery.ajax({
+            async: async,
+            url: url,
+            type: 'GET',
+            dataType: 'json',
+            data: {id: seleccion},
+            contentType: 'application/json',
+            success: function (result) {
+                var finAjax = new Date().getTime();
+                console.log("finAjax");
+                console.log(finAjax - inicio);
+                if (todos) {
+                    html = '<option value="-1">...</option>';
+                }
+
+                var len = result.length;
+                var selected = '';
+                for (var i = 0; i < len; i++) {
+                    selected = '';
+                    if (valorSelected != null && result[i].id == valorSelected) {
+                        selected = 'selected="selected"';
+                    }
+                    html += '<option ' + selected + ' value="' + result[i].id + "-" + result[i].codigoEntidadGeografica + '">'
+                        + result[i].nombre + '</option>';
+                }
+                html += '</option>';
+                var finFor = new Date().getTime();
+                console.log("finFor");
+                console.log(finFor - inicio);
+
+
+                if (len != 0) {
+                    $(idSelect).html(html);
+                    $(idSelect).attr("disabled", false).trigger("chosen:updated");
+                } else if (len == 0) {
+                    var html = '';
+                    $(idSelect).html(html);
+                    $(idSelect).attr("disabled", true).trigger("chosen:updated");
+                }
+                var fin = new Date().getTime();
+                console.log("fin");
+                console.log(fin - inicio);
+            }
+        });
+
+    } else {
+        var html = '';
+        $(idSelect).html(html);
+        $(idSelect).attr("disabled", true).trigger("chosen:updated");
     }
 
 }

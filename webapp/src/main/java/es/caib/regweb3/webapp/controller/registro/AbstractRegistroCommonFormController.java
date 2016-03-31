@@ -49,12 +49,6 @@ public abstract class AbstractRegistroCommonFormController extends BaseControlle
     public EntidadLocal entidadEjb;
 
 
-   /* @ModelAttribute("organismosOficinaActiva")
-    public Set<Organismo> getOrganismosOficinaActiva(HttpServletRequest request) throws Exception {
-        return organismoEjb.getByOficinaActiva(getOficinaActiva(request));
-    }*/
-
-
     @ModelAttribute("tiposAsunto")
     public List<TipoAsunto> tiposAsunto(HttpServletRequest request) throws Exception {
 
@@ -156,27 +150,6 @@ public abstract class AbstractRegistroCommonFormController extends BaseControlle
         }
         return new CatComunidadAutonoma();
     }
-
-    /**
-     * Obtiene los {@link es.caib.regweb3.model.CatLocalidad} de de la Provincia seleccionada
-     */
-   /* @RequestMapping(value = "/obtenerProvincias", method = RequestMethod.GET)
-    public
-    @ResponseBody
-    List<CodigoValor> obtenerProvincias(@RequestParam Long id) throws Exception {
-        log.info("obtener^Provincias Abstract");
-        List<CatProvincia> provincias = catProvinciaEjb.getByComunidad(id);
-        List<CodigoValor> provinciascv = new ArrayList<CodigoValor>();
-        for (CatProvincia provincia : provincias) {
-            CodigoValor cv = new CodigoValor();
-            cv.setId(provincia.getCodigoProvincia().toString());
-            cv.setNombre(provincia.getDescripcionProvincia());
-            provinciascv.add(cv);
-        }
-
-        return provinciascv;
-
-    }*/
 
     /*private IRegistro procesarRegistro(IRegistro registro, String tipoRegistro) throws Exception{
 

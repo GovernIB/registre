@@ -106,7 +106,9 @@
                 </div>
                 <%--Botones búsqueda--%>
                 <div class="col-xs-2 boto-panel">
-                    <a id="buscarOrganismo" data-toggle="modal" href="#modalBuscadorOrganismoInteresado" onclick="inicializarBuscador('#codNivelAdministracionOrganismoInteresado','#codComunidadAutonomaOrganismoInteresado','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}', 'OrganismoInteresado' );" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
+                    <a id="buscarOrganismo" data-toggle="modal" href="#modalBuscadorOrganismoInteresado"
+                       onclick="inicializarBuscador('#codNivelAdministracionOrganismoInteresado','#codComunidadAutonomaOrganismoInteresado','#provinciaOrganismoInteresado','#localidadOrganismoInteresado','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}','${oficina.organismoResponsable.codAmbProvincia.codigoProvincia}','${oficina.organismoResponsable.localidad.codigoLocalidad}', 'OrganismoInteresado' );"
+                       class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                     <a id="buscarPersonaFisica" data-toggle="modal" href="#modalBuscadorPersonasFisicas" onclick="limpiarBusquedaPersona('Fisicas')" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                     <a id="buscarPersonaJuridica" data-toggle="modal" href="#modalBuscadorPersonasJuridicas" onclick="limpiarBusquedaPersona('Juridicas')" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                 </div>
@@ -158,7 +160,7 @@
 
 <!-- Importamos el codigo jsp del modal del formulario para realizar la busqueda de organismos Origen
 Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
-<c:import url="../registro/buscadorOrganismosOficinasRE.jsp">
+<c:import url="../registro/buscadorOrganismosOficinasREPestanas.jsp">
     <c:param name="tipo" value="OrganismoInteresado"/>
     <c:param name="idRegistroDetalle" value="${registro.registroDetalle.id}"/>
 </c:import>

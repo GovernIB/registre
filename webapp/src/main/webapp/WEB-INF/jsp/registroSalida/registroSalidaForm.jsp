@@ -284,7 +284,9 @@
                         </div>
 
                         <div class="col-xs-2 boto-panel">
-                            <a data-toggle="modal" role="button" href="#modalBuscadorOficinaOrigen" onclick="inicializarBuscador('#codNivelAdministracionOficinaOrigen','#codComunidadAutonomaOficinaOrigen','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}', 'OficinaOrigen' );" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
+                            <a data-toggle="modal" role="button" href="#modalBuscadorOficinaOrigen"
+                               onclick="inicializarBuscador('#codNivelAdministracionOficinaOrigen','#codComunidadAutonomaOficinaOrigen','#provinciaOficinaOrigen','#localidadOficinaOrigen','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}','${oficina.organismoResponsable.codAmbProvincia.codigoProvincia}','${oficina.organismoResponsable.localidad.codigoLocalidad}', 'OficinaOrigen' );"
+                               class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                         </div>
                         <c:if test="${empty registroSalida.registroDetalle.oficinaOrigenExternoCodigo}"><!-- Si es interno -->
                         <form:hidden path="registroDetalle.oficinaOrigen.denominacion"/>

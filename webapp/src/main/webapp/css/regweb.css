@@ -500,11 +500,11 @@ input[readonly] {
 /* ARBRE ORGANISMES */
 .tree {
     min-height:20px;
-    margin-bottom:20px;
+	margin-bottom: 10px;
     background-color:#fff;
     margin-left: 15px;
-    padding-left: 50px;
-    padding-top: 50px;
+	padding-left: 15px;
+	padding-top: 15px;
     -webkit-border-radius:4px;
     -moz-border-radius:4px;
     border-radius:4px;
@@ -572,6 +572,7 @@ input[readonly] {
     white-space: nowrap;
     vertical-align: baseline;
     border-radius: 10px;
+	cursor: pointer;
 }
 .btn-servei {
     color: #fff;

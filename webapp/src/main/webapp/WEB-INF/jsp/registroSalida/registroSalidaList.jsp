@@ -187,7 +187,7 @@
                                 </div>
                                 <div class="col-xs-2 boto-panel">
                                     <a data-toggle="modal" role="button" href="#modalBuscadorlistaRegSalida"
-                                       onclick="inicializarBuscador('#codNivelAdministracionlistaRegSalida','#codComunidadAutonomalistaRegSalida','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}', 'listaRegSalida');"
+                                       onclick="inicializarBuscador('#codNivelAdministracionlistaRegSalida','#codComunidadAutonomalistaRegSalida','#provincialistaRegSalida','#localidadlistaRegSalida','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}','${oficina.organismoResponsable.codAmbProvincia.codigoProvincia}','${oficina.organismoResponsable.localidad.codigoLocalidad}', 'listaRegSalida' );"
                                        class="btn btn-danger btn-sm"><spring:message code="regweb.buscar"/></a>
                                 </div>
                             </div>

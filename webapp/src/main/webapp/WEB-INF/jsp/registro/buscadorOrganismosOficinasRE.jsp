@@ -15,6 +15,7 @@ que se le indica -->
      <form id="organismoREBusquedaForm${param.tipo}" class="form-horizontal" action="" method="post">
            <input id="nivelAdministracion" type="hidden" value="${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}"/>
            <input id="comunidadAutonoma" type="hidden" value="${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}"/>
+         <input id="entidadGeografica" type="hidden" value=""/>
 
            <div class="form-group col-xs-6">
                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
@@ -120,4 +121,5 @@ que se le indica -->
     tradorganismo['organismo.superior.vacio'] = "<spring:message code='organismo.superior.vacio' javaScriptEscape='true' />";
     tradorganismo['organismo.raiz'] = "<spring:message code='organismo.raiz' javaScriptEscape='true' />";
     tradorganismo['organismo.localidad'] = "<spring:message code='organismo.localidad' javaScriptEscape='true' />";
+
 </script>

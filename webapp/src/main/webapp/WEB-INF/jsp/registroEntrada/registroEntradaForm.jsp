@@ -146,7 +146,9 @@
 
 
                                <div class="col-xs-2 boto-panel">
-                                  <a data-toggle="modal" role="button" href="#modalBuscadorOrganismoDestino" onclick="inicializarBuscador('#codNivelAdministracionOrganismoDestino','#codComunidadAutonomaOrganismoDestino','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}', 'OrganismoDestino');" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
+                                   <a data-toggle="modal" role="button" href="#modalBuscadorOrganismoDestino"
+                                      onclick="inicializarBuscador('#codNivelAdministracionOrganismoDestino','#codComunidadAutonomaOrganismoDestino','#provinciaOrganismoDestino','#localidadOrganismoDestino','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}','${oficina.organismoResponsable.codAmbProvincia.codigoProvincia}','${oficina.organismoResponsable.localidad.codigoLocalidad}', 'OrganismoDestino' );"
+                                      class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                                </div>
                                <c:if test="${empty registroEntrada.destinoExternoCodigo}"><!-- Si es interno -->
                                    <form:hidden path="destino.denominacion"/>
@@ -282,7 +284,9 @@
                                    </div>
 
                                <div class="col-xs-2 boto-panel">
-                                      <a data-toggle="modal" role="button" href="#modalBuscadorOficinaOrigen" onclick="inicializarBuscador('#codNivelAdministracionOficinaOrigen','#codComunidadAutonomaOficinaOrigen','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}','OficinaOrigen' );" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
+                                   <a data-toggle="modal" role="button" href="#modalBuscadorOficinaOrigen"
+                                      onclick="inicializarBuscador('#codNivelAdministracionOficinaOrigen','#codComunidadAutonomaOficinaOrigen','#provinciaOficinaOrigen','#localidadOficinaOrigen','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}','${oficina.organismoResponsable.codAmbProvincia.codigoProvincia}','${oficina.organismoResponsable.localidad.codigoLocalidad}', 'OficinaOrigen' );"
+                                      class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                                </div>
                                <c:if test="${empty registroEntrada.registroDetalle.oficinaOrigenExternoCodigo}"><!-- Si es interno -->
                                    <form:hidden path="registroDetalle.oficinaOrigen.denominacion"/>
@@ -348,13 +352,13 @@
 
             <!-- Importamos el codigo jsp del modal del formulario para realizar la búsqueda de organismos Destino
                  Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
-            <c:import url="../registro/buscadorOrganismosOficinasRE.jsp">
+        <c:import url="../registro/buscadorOrganismosOficinasREPestanas.jsp">
                 <c:param name="tipo" value="OrganismoDestino"/>
             </c:import>
 
             <!-- Importamos el codigo jsp del modal del formulario para realizar la busqueda de organismos Origen
                  Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
-            <c:import url="../registro/buscadorOrganismosOficinasRE.jsp">
+        <c:import url="../registro/buscadorOrganismosOficinasREPestanas.jsp">
                 <c:param name="tipo" value="OficinaOrigen"/>
             </c:import>
 

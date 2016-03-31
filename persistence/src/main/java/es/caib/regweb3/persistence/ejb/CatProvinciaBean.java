@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.CatProvincia;
+import es.caib.regweb3.model.utils.ObjetoBasico;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -8,6 +9,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -72,6 +74,32 @@ public class CatProvinciaBean extends BaseEjbJPA<CatProvincia, Long> implements 
              return  null;
          }
 
+    }
+
+    @Override
+    public List<CatProvincia> getByComunidad(Long codigoComunidad) throws Exception {
+
+        Query q = em.createQuery("Select catProvincia from CatProvincia as catProvincia where catProvincia.comunidadAutonoma.codigoComunidad = :codigoComunidad order by catProvincia.descripcionProvincia");
+
+        q.setParameter("codigoComunidad", codigoComunidad);
+
+        return q.getResultList();
+    }
+
+    @Override
+    public List<ObjetoBasico> getByComunidadObject(Long codigoComunidad) throws Exception {
+
+        Query q = em.createQuery("Select catProvincia.codigoProvincia, catProvincia.descripcionProvincia from CatProvincia as catProvincia where catProvincia.comunidadAutonoma.codigoComunidad = :codigoComunidad order by catProvincia.descripcionProvincia");
+
+        q.setParameter("codigoComunidad", codigoComunidad);
+        List<Object[]> provincias = q.getResultList();
+
+        List<ObjetoBasico> provinciasob = new ArrayList<ObjetoBasico>();
+        for (Object[] object : provincias) {
+
+            provinciasob.add(new ObjetoBasico((Long) object[0], (String) object[1]));
+        }
+        return provinciasob;
     }
 
 }

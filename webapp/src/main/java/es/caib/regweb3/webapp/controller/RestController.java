@@ -4,10 +4,12 @@ import es.caib.regweb3.model.CatLocalidad;
 import es.caib.regweb3.model.CodigoAsunto;
 import es.caib.regweb3.model.TipoAsunto;
 import es.caib.regweb3.model.TraduccionTipoAsunto;
+import es.caib.regweb3.model.utils.ObjetoBasico;
 import es.caib.regweb3.persistence.ejb.CatLocalidadLocal;
 import es.caib.regweb3.persistence.ejb.CatProvinciaLocal;
 import es.caib.regweb3.persistence.ejb.CodigoAsuntoLocal;
 import es.caib.regweb3.persistence.ejb.TipoAsuntoLocal;
+import es.caib.regweb3.webapp.utils.LocalidadJson;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.ejb.EJB;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -110,6 +113,37 @@ public class RestController {
 
         }
         return null;
+    }
+
+    /**
+     * Obtiene los {@link es.caib.regweb3.model.CatLocalidad} de de la Provincia seleccionada
+     */
+    @RequestMapping(value = "/obtenerLocalidadesProvincia", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    List<LocalidadJson> obtenerLocalidadesProvincia(@RequestParam Long id) throws Exception {
+
+        List<Object[]> localidades = catLocalidadEjb.getByCodigoProvinciaObject(id);
+        List<LocalidadJson> localidadescv = new ArrayList<LocalidadJson>();
+        for (Object[] object : localidades) {
+            localidadescv.add(new LocalidadJson(object[0].toString(), (String) object[1], (String) object[2]));
+        }
+
+        return localidadescv;
+
+    }
+
+    /**
+     * Obtiene los {@link es.caib.regweb3.model.CatLocalidad} de de la Provincia seleccionada
+     */
+    @RequestMapping(value = "/obtenerProvincias", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    List<ObjetoBasico> obtenerProvincias(@RequestParam Long id) throws Exception {
+        List<ObjetoBasico> provincias = catProvinciaEjb.getByComunidadObject(id);
+
+        return provincias;
+
     }
 
 
