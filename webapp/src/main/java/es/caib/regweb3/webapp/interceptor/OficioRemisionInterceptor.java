@@ -73,12 +73,13 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
             return false;
         }
 
+            // Comprobaciones previas al listado de OficioRemision y Oficios de Remisión Pendientes
+            if (url.equals("/oficioRemision/list") || url.contains("oficiosPendientes")) {
+
             Set<Long> organismos = oficinaActiva.getOrganismosFuncionalesId();
-        UsuarioEntidad usuarioEntidad = (UsuarioEntidad)session.getAttribute(RegwebConstantes.SESSION_USUARIO_ENTIDAD);
-        List<Libro> libros = permisoLibroUsuarioEjb.getLibrosOrganismoPermiso(organismos, usuarioEntidad.getId(), RegwebConstantes.PERMISO_REGISTRO_ENTRADA);
+                UsuarioEntidad usuarioEntidad = (UsuarioEntidad) session.getAttribute(RegwebConstantes.SESSION_USUARIO_ENTIDAD);
+                List<Libro> libros = permisoLibroUsuarioEjb.getLibrosOrganismoPermiso(organismos, usuarioEntidad.getId(), RegwebConstantes.PERMISO_REGISTRO_ENTRADA);
 
-        // Comprobaciones previas al listado de OficioRemision
-        if(url.equals("/oficioRemision/list")) {
             // Mira que el usuario tiene permisos de Registro de Entrada
             if (libros.size() == 0) {
                 log.info("Aviso: No tiene permisos para consultar Oficios de Remision");
@@ -88,18 +89,8 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
             }
         }
 
-        // Comprobaciones previas a los Oficios de Remisión Pendientes
-        if(url.contains("oficiosPendientes")){
-            // Mira que el usuario tiene permisos de Registro de Entrada
-            if (libros.size() == 0) {
-                log.info("Aviso: No tiene permisos para consultar Oficios de Remision");
-                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficioRemision.list"));
-                response.sendRedirect("/regweb3/aviso");
-                return false;
-            }
-        }
 
-        // Comprobaciones previas a la consulta de un OficioRemision
+            // Comprobaciones previas a la consulta de un OficioRemision
         if(url.contains("detalle")){
             String idOficioRemision =  url.replace("/oficioRemision/","").replace("/detalle", ""); //Obtenemos el id a partir de la url
 
