@@ -307,6 +307,7 @@ function inicializarBuscador(selectNivelAdministracion, selectComunidadAutonoma,
     if (tipoOrganismo != 'OficinaOrigen') {
         $('#tab' + tipoOrganismo + ' a:last').hide();
     }
+    $('#resultadosbusqueda' + tipoOrganismo).empty();
 }
 
 /* Función que asigna el valor seleccionado de la búsqueda al select correspondiente
