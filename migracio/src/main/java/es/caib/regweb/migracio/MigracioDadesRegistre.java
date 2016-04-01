@@ -1,10 +1,12 @@
 package es.caib.regweb3.migracio;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
+import es.caib.regweb.model.*;
+import es.caib.regweb3.logic.helper.*;
+import org.apache.log4j.Logger;
+import org.hibernate.*;
+
+import javax.persistence.*;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,32 +14,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
-
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.FlushModeType;
-import javax.persistence.Persistence;
-import javax.persistence.Query;
-
-import org.apache.log4j.Logger;
-import org.hibernate.Hibernate;
-import org.hibernate.SQLQuery;
-import org.hibernate.ScrollMode;
-import org.hibernate.ScrollableResults;
-import org.hibernate.Session;
-
-import es.caib.regweb3.logic.helper.Helper;
-import es.caib.regweb3.logic.helper.ParametrosListadoRegistrosEntrada;
-import es.caib.regweb3.logic.helper.ParametrosListadoRegistrosSalida;
-import es.caib.regweb3.logic.helper.ParametrosRegistroEntrada;
-import es.caib.regweb3.logic.helper.ParametrosRegistroSalida;
-import es.caib.regweb3.logic.helper.RegistroSeleccionado;
-import es.caib.regweb3.model.EntradaId;
-import es.caib.regweb3.model.LogEntradaLopdId;
-import es.caib.regweb3.model.LogModificacionLopdId;
-import es.caib.regweb3.model.LogSalidaLopdId;
-import es.caib.regweb3.model.SalidaId;
 
 /**
  * 
