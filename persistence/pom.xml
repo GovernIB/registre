@@ -6,7 +6,7 @@
     <parent>
         <artifactId>regweb3</artifactId>
         <groupId>es.caib.regweb3</groupId>
-        <version>3.0.4</version>
+        <version>3.0.5</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -132,7 +132,7 @@
         <dependency>
             <groupId>es.caib.dir3caib</groupId>
             <artifactId>dir3caib-ws-api</artifactId>
-            <version>1.0.2</version>
+            <version>1.0.3</version>
         </dependency>
 
         <!-- Axis -->
