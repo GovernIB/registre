@@ -147,7 +147,9 @@ function organismoBusqueda(tipoOrganismo, urlServidor, idRegistroDetalle) {
     $('#resultadosbusqueda' + tipoOrganismo).html('');
     $('#resultadosbusqueda' + tipoOrganismo).attr("display:none");
     $('#arbol' + tipoOrganismo).html("");
-    $('#tab' + tipoOrganismo + ' a:last').hide();
+    if (tipoOrganismo != 'OficinaOrigen') {
+        $('#tab' + tipoOrganismo + ' a:last').hide();
+    }
 
 
     // Definimos la tabla que contendrá los resultados.
