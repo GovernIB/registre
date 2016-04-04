@@ -147,7 +147,7 @@ function eliminarPersonaInteresado(idPersona,idRegistroDetalle){
 function addInteresadoHtml(idPersona, nombre,tipo,representante,idRegistroDetalle){
     var vacio = "";
     var representanteButton = "<div class=\"btn-group\">"+
-        "<button type=\"button\" class=\"btn btn-danger btn-sm dropdown-toggle\" data-toggle=\"dropdown\">"+representante+"<span class=\"caret\"></span></button>"+
+        "<button type=\"button\" class=\"btn btn-danger btn-xs dropdown-toggle\" data-toggle=\"dropdown\">"+representante+"<span class=\"caret\"></span></button>"+
         "<ul class=\"dropdown-menu\" role=\"menu\">"+
         "<li><a href=\"#modalInteresado\" onclick=\"gestionarRepresentante('"+vacio+"',"+idPersona+",'"+urlObtenerInteresado+"')\">"+tradsinteresado['interesado.representante.nuevo']+"</a></li>"+
         "<li><a data-toggle=\"modal\" href=\"#modalBuscadorPersonasTodas\" onclick=\"busquedaRepresentantes("+idPersona+")\">"+tradsinteresado['interesado.representante.buscar']+"</a></li></ul></div>";
@@ -174,13 +174,13 @@ function addInteresadoRepresentanteHtml(idInteresado,nombreInteresado,tipo,idRep
     if(idRepresentante != null && idRepresentante.length > 0){ // Si hay representate
         // Botonera de acciones de un representante
         var representanteButton = "<div class=\"btn-group\">"+
-            "<button type=\"button\" class=\"btn btn-success btn-sm dropdown-toggle\" data-toggle=\"dropdown\">"+nombreRepresentante+" <span class=\"caret\"></span></button>"+
+            "<button type=\"button\" class=\"btn btn-success btn-xs dropdown-toggle\" data-toggle=\"dropdown\">"+nombreRepresentante+" <span class=\"caret\"></span></button>"+
             "<ul class=\"dropdown-menu\" role=\"menu\">"+
             "<li><a href=\"#modalInteresado\" onclick=\"gestionarRepresentante("+idRepresentante+","+idInteresado+",'"+urlObtenerInteresado+"')\">"+tradsinteresado['interesado.representante.editar']+"</a></li>"+
             "<li><a href=\"javascript:void(0);\" onclick=\"eliminarRepresentante("+idRepresentante+","+idInteresado+",'"+idRegistroDetalle+"')\">"+tradsinteresado['interesado.representante.eliminar']+"</a></li></ul></div>";
     }else{
         var representanteButton = "<div class=\"btn-group\">"+
-            "<button type=\"button\" class=\"btn btn-danger btn-sm dropdown-toggle\" data-toggle=\"dropdown\">No<span class=\"caret\"></span></button>"+
+            "<button type=\"button\" class=\"btn btn-danger btn-xs dropdown-toggle\" data-toggle=\"dropdown\">No<span class=\"caret\"></span></button>"+
             "<ul class=\"dropdown-menu\" role=\"menu\">"+
             "<li><a href=\"#modalInteresado\" onclick=\"gestionarRepresentante('"+vacio+"',"+idInteresado+",'"+urlObtenerInteresado+"')\">"+tradsinteresado['interesado.representante.nuevo']+"</a></li>"+
             "<li><a data-toggle=\"modal\" href=\"#modalBuscadorPersonasTodas\" onclick=\"busquedaRepresentantes("+idInteresado+")\">"+tradsinteresado['interesado.representante.buscar']+"</a></li></ul></div>";
@@ -522,12 +522,12 @@ function buscarPersonas(tipoPersonas){
 
                     if(tipoPersonas == 'Fisicas'){
                         var nombrePersonaFisica = normalizarTexto(result[i].nombrePersonaFisica);
-                        var linea = "<tr><td style=\"text-align:left;\">" + result[i].nombrePersonaFisica + "</td><td style=\"text-align:left;\">" + documento + "</td><td style=\"text-align:left;\">" + tradsinteresado['persona.fisica'] + "</td><td class=\"center\"><input type=\"button\" class=\"btn btn-sm\" value=\"Añadir\" onclick=\"addInteresado('" + result[i].id + "','" + nombrePersonaFisica + "','Persona Física','No','#modalBuscadorPersonasFisicas','" + idRegistroDetalle + "')\"/></td></tr>";
+                        var linea = "<tr><td style=\"text-align:left;\">" + result[i].nombrePersonaFisica + "</td><td style=\"text-align:left;\">" + documento + "</td><td style=\"text-align:left;\">" + tradsinteresado['persona.fisica'] + "</td><td class=\"center\"><input type=\"button\" class=\"btn btn-warning btn-sm\" value="+tradsinteresado['regweb3.anadir']+" onclick=\"addInteresado('" + result[i].id + "','" + nombrePersonaFisica + "','Persona Física','No','#modalBuscadorPersonasFisicas','" + idRegistroDetalle + "')\"/></td></tr>";
                         tabla.append(linea);
 
                     }else if(tipoPersonas == 'Juridicas'){
                         var nombrePersonaJuridica = normalizarTexto(result[i].nombrePersonaJuridica);
-                        var linea = "<tr><td style=\"text-align:left;\">" + result[i].nombrePersonaJuridica + "</td><td style=\"text-align:left;\">" + documento + "</td><td style=\"text-align:left;\">" + tradsinteresado['persona.juridica'] + "</td><td class=\"center\"><input type=\"button\" class=\"btn btn-sm\" value=\"Añadir\" onclick=\"addInteresado('" + result[i].id + "','" + nombrePersonaJuridica + "','Persona Juridica','No','#modalBuscadorPersonasJuridicas','" + idRegistroDetalle + "')\"/></td></tr>";
+                        var linea = "<tr><td style=\"text-align:left;\">" + result[i].nombrePersonaJuridica + "</td><td style=\"text-align:left;\">" + documento + "</td><td style=\"text-align:left;\">" + tradsinteresado['persona.juridica'] + "</td><td class=\"center\"><input type=\"button\" class=\"btn btn-warning btn-sm\" value="+tradsinteresado['regweb3.anadir']+" onclick=\"addInteresado('" + result[i].id + "','" + nombrePersonaJuridica + "','Persona Juridica','No','#modalBuscadorPersonasJuridicas','" + idRegistroDetalle + "')\"/></td></tr>";
                         tabla.append(linea);
 
                     }else if(tipoPersonas == 'Todas'){
@@ -545,7 +545,7 @@ function buscarPersonas(tipoPersonas){
                         }
 
 
-                        var linea ="<tr><td style=\"text-align:left;\">"+nombre+"</td><td style=\"text-align:left;\">"+documento+"</td><td style=\"text-align:left;\">"+tipoPersona+"</td><td class=\"center\"><input type=\"button\" class=\"btn btn-sm\" value=\"Afegir\" onclick=\"addRepresentante('"+result[i].id+"','"+representado+"','"+idRegistroDetalle+"')\"/></td></tr>";
+                        var linea ="<tr><td style=\"text-align:left;\">"+nombre+"</td><td style=\"text-align:left;\">"+documento+"</td><td style=\"text-align:left;\">"+tipoPersona+"</td><td class=\"center\"><input type=\"button\" class=\"btn btn-warning btn-sm\" value=\"Afegir\" onclick=\"addRepresentante('"+result[i].id+"','"+representado+"','"+idRegistroDetalle+"')\"/></td></tr>";
                         tabla.append(linea);
                     }
                 }

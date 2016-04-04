@@ -109,7 +109,7 @@ function addRepresentanteHtml(idRepresentante, idRepresentado,nombreRepresentant
 
     // Botonera de acciones de un representante
     var representanteButton = "<div class=\"btn-group\">"+
-        "<button type=\"button\" class=\"btn btn-success btn-sm dropdown-toggle\" data-toggle=\"dropdown\">"+nombreRepresentante+" <span class=\"caret\"></span></button>"+
+        "<button type=\"button\" class=\"btn btn-success btn-xs dropdown-toggle\" data-toggle=\"dropdown\">"+nombreRepresentante+" <span class=\"caret\"></span></button>"+
         "<ul class=\"dropdown-menu\" role=\"menu\">"+
         "<li><a href=\"#modalInteresado\" onclick=\"gestionarRepresentante("+idRepresentante+","+idRepresentado+",'"+urlObtenerInteresado+"')\">"+tradsinteresado['interesado.representante.editar']+"</a></li>"+
         "<li><a href=\"javascript:void(0);\" onclick=\"eliminarRepresentante("+idRepresentante+","+idRepresentado+",'"+idRegistroDetalle+"')\">"+tradsinteresado['interesado.representante.eliminar']+"</a></li></ul></div>";
@@ -131,7 +131,7 @@ function eliminarRepresentanteHtml(idRepresentado){
     var vacio = "";
     // Botonera de acciones de un representante
     var representanteButton = "<div class=\"btn-group\">"+
-        "<button type=\"button\" class=\"btn btn-danger btn-sm dropdown-toggle\" data-toggle=\"dropdown\">No <span class=\"caret\"></span></button>"+
+        "<button type=\"button\" class=\"btn btn-danger btn-xs dropdown-toggle\" data-toggle=\"dropdown\">No <span class=\"caret\"></span></button>"+
         "<ul class=\"dropdown-menu\" role=\"menu\">"+
         "<li><a href=\"#modalInteresado\" onclick=\"gestionarRepresentante('"+vacio+"',"+idRepresentado+",'"+urlObtenerInteresado+"')\">"+tradsinteresado['interesado.representante.nuevo']+"</a></li>"+
         "<li><a data-toggle=\"modal\" href=\"#modalBuscadorPersonasTodas\" onclick=\"busquedaRepresentantes("+idRepresentado+")\">"+tradsinteresado['interesado.representante.buscar']+"</a></li></ul></div>";
