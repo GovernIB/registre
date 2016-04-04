@@ -75,4 +75,19 @@ public interface DescargaLocal extends BaseEjb<Descarga, Long> {
    * @throws Exception
    */
   public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+
+  /**
+   * @param inicio
+   * @param idEntidad
+   * @return
+   * @throws Exception
+   */
+  public List<Descarga> getPagination(int inicio, Long idEntidad) throws Exception;
+
+  /**
+   * @param idEntidad
+   * @return
+   * @throws Exception
+   */
+  public Long getTotalEntidad(Long idEntidad) throws Exception;
 }

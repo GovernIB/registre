@@ -90,7 +90,7 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
 
     public Long getTotalByEntidad(Long idEntidad) throws Exception {
 
-        Query q = em.createQuery("Select count(descarga.id) from Descarga as descarga where descarga.entidad.id=:idEntidad").setParameter("idEntidad",idEntidad);
+        Query q = em.createQuery("Select count(descarga.id) from Descarga as descarga where descarga.entidad.id=:idEntidad").setParameter("idEntidad", idEntidad);
 
         return (Long) q.getSingleResult();
     }
@@ -108,7 +108,7 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
 
     public List<Descarga> getPaginationByEntidad(int inicio,Long idEntidad) throws Exception {
 
-        Query q = em.createQuery("Select descarga from Descarga as descarga where descarga.entidad.id=:idEntidad order by descarga.id").setParameter("idEntidad",idEntidad);
+        Query q = em.createQuery("Select descarga from Descarga as descarga where descarga.entidad.id=:idEntidad order by descarga.id").setParameter("idEntidad", idEntidad);
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
 
@@ -116,8 +116,8 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
     }
     
     public void deleteByTipo(String tipo) throws Exception {
-        
-        Query query = em.createQuery( "delete from Descarga as descarga where descarga.tipo=?");
+
+        Query query = em.createQuery("delete from Descarga as descarga where descarga.tipo=?");
         query.setParameter(1, tipo);
         query.executeUpdate();
          
@@ -151,6 +151,28 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
         }
 
         return total;
+    }
+
+    @Override
+    public List<Descarga> getPagination(int inicio, Long idEntidad) throws Exception {
+
+        Query q = em.createQuery("Select descarga from Descarga as descarga where descarga.entidad.id = :idEntidad order by descarga.id desc");
+        q.setParameter("idEntidad", idEntidad);
+        q.setFirstResult(inicio);
+        q.setMaxResults(RESULTADOS_PAGINACION);
+
+        return q.getResultList();
+    }
+
+    @Override
+    public Long getTotalEntidad(Long idEntidad) throws Exception {
+
+        Query q = em.createQuery("Select count(descarga.id) from Descarga as descarga " +
+                "where descarga.entidad.id = :idEntidad");
+
+        q.setParameter("idEntidad", idEntidad);
+
+        return (Long) q.getSingleResult();
     }
     
 }
