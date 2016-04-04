@@ -96,13 +96,8 @@
 
                                                     <td class="center">
                                                         <a class="btn btn-danger btn-sm"
-                                                           onclick='javascript:confirm("<c:url
-                                                                   value="/descarga/${descarga.id}/delete"/>","
-                                                               <spring:message code="regweb.confirmar.eliminacion"
-                                                                               htmlEscape="true"/>")'
-                                                           href="javascript:void(0);"
-                                                           title="<spring:message code="regweb.eliminar"/>"><span
-                                                                class="fa fa-eraser"></span></a>
+                                                           onclick='javascript:confirm("<c:url value="/descarga/${descarga.id}/delete"/>","<spring:message code="regweb.confirmar.eliminacion" htmlEscape="true"/>")' href="javascript:void(0);"
+                                                           title="<spring:message code="regweb.eliminar"/>"><span class="fa fa-eraser"></span></a>
                                                     </td>
                                                 </tr>
                                             </c:forEach>
