@@ -191,8 +191,7 @@ function organismoBusqueda(tipoOrganismo, urlServidor, idRegistroDetalle) {
 
                 // Sustituimos comillas simples y dobles para evitar problemas en la llamada
                 // a la función posterior
-                denominacion = result[i].denominacion.replace(/\"/g, '&quot;');
-                denominacion = denominacion.replace(/'/g, "\\'");
+                denominacion = normalizarTexto(result[i].denominacion);
                 codigo = result[i].codigo;
 
 
