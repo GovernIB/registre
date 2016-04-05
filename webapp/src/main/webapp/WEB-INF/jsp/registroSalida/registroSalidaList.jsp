@@ -422,7 +422,7 @@
 
         <!-- Importamos el codigo jsp del modal del formulario para realizar la búsqueda de organismos Origen
              Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
-        <c:import url="../registro/buscadorOrganismosOficinasRE.jsp">
+            <c:import url="../registro/buscadorOrganismosOficinasREPestanas.jsp">
             <c:param name="tipo" value="listaRegSalida"/>
         </c:import>
 
