@@ -112,8 +112,8 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         if (busqueda.getOrganOrigen()!=null && !"".equals(busqueda.getOrganOrigen())) {
 		    Organismo org = new Organismo();
 		    org.setCodigo(busqueda.getOrganOrigen());
-		    org.setDenominacion(busqueda.getOrganOrigenNom());
-		    todosOrganismos.add(org);
+            org.setDenominacion(new String(busqueda.getOrganOrigenNom().getBytes("ISO-8859-1"), "UTF-8"));
+            todosOrganismos.add(org);
         }
 	    
         mav.addObject("organosOrigen", todosOrganismos);
@@ -147,7 +147,9 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         busqueda.getRegistroSalida().getRegistroDetalle().setExtracto(new String(busqueda.getRegistroSalida().getRegistroDetalle().getExtracto().getBytes("ISO-8859-1"), "UTF-8"));
         busqueda.setObservaciones(new String(busqueda.getObservaciones().getBytes("ISO-8859-1"), "UTF-8"));
         busqueda.setInteressatNom(new String(busqueda.getInteressatNom().getBytes("ISO-8859-1"), "UTF-8"));
-
+        busqueda.setInteressatLli1(new String(busqueda.getInteressatLli1().getBytes("ISO-8859-1"), "UTF-8"));
+        busqueda.setInteressatLli2(new String(busqueda.getInteressatLli2().getBytes("ISO-8859-1"), "UTF-8"));
+        busqueda.setOrganOrigenNom(new String(busqueda.getOrganOrigenNom().getBytes("ISO-8859-1"), "UTF-8"));
         return mav;
     }
 
