@@ -59,11 +59,13 @@ public interface LopdLocal extends BaseEjb<Lopd, Long> {
 
     /**
      * Inserta la consulta de un Registro de Entrada en las tablas de Lopd
-     * @param idRegistro
+     * @param numeroRegistro
+     * @param fecha
+     * @param idLibro
      * @param idUsuarioEntidad
      * @throws Exception
      */
-    public void insertarRegistroEntrada(Long idRegistro, Long idUsuarioEntidad) throws Exception;
+    public void insertarRegistroEntrada(Integer numeroRegistro, Date fecha, Long idLibro, Long idUsuarioEntidad) throws Exception;
 
     /**
      * Inserta la búsqueda de un Registros de Entrada en las tablas de Lopd
@@ -75,11 +77,13 @@ public interface LopdLocal extends BaseEjb<Lopd, Long> {
 
     /**
      * Inserta la consulta de un Registro de Salida en las tablas de Lopd
-     * @param idRegistro
+     * @param numeroRegistro
+     * @param fecha
+     * @param idLibro
      * @param idUsuarioEntidad
      * @throws Exception
      */
-    public void insertarRegistroSalida(Long idRegistro, Long idUsuarioEntidad) throws Exception;
+    public void insertarRegistroSalida(Integer numeroRegistro, Date fecha, Long idLibro, Long idUsuarioEntidad) throws Exception;
 
     /**
      * Inserta la búsqueda de un Registros de Salida en las tablas de Lopd

@@ -394,7 +394,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
       }
       
       // LOPD
-      lopdEjb.insertarRegistroEntrada(registro.getId(), usuarioEntidad.getId());
+        lopdEjb.insertarRegistroEntrada(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuarioEntidad.getId());
 
       IdentificadorWs id = new IdentificadorWs();
       id.setFecha(registro.getFecha());
@@ -428,22 +428,22 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         }
 
         // 3.- Obtenemos el RegistroEntrada
-        RegistroEntrada registroEntrada = registroEntradaEjb.findByNumeroRegistroFormateado(numeroRegistroFormateado);
+        RegistroEntrada registro = registroEntradaEjb.findByNumeroRegistroFormateado(numeroRegistroFormateado);
 
-        if(registroEntrada == null){
+        if (registro == null) {
             throw new I18NException("registroEntrada.noExiste", numeroRegistroFormateado);
         }
 
         // 4.- Comprobamos que el usuario tiene permisos de lectura para el RegistroEntrada
-        if(!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroEntrada.getLibro().getId(), PERMISO_CONSULTA_REGISTRO_ENTRADA)){
+        if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registro.getLibro().getId(), PERMISO_CONSULTA_REGISTRO_ENTRADA)) {
             throw new I18NException("registroEntrada.usuario.permisos", usuario);
         }
 
         // LOPD
-        lopdEjb.insertarRegistroEntrada(registroEntrada.getId(), usuarioEntidad.getId());
+        lopdEjb.insertarRegistroEntrada(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuarioEntidad.getId());
 
         // Retornamos el RegistroEntradaResponseWs
-        return RegistroEntradaConverter.getRegistroEntradaResponseWs(registroEntrada,
+        return RegistroEntradaConverter.getRegistroEntradaResponseWs(registro,
             UsuarioAplicacionCache.get().getIdioma(), anexoEjb);
 
 

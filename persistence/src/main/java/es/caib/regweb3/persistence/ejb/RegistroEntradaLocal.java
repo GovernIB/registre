@@ -1,6 +1,9 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.Libro;
+import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.RegistroBasico;
 import es.caib.regweb3.persistence.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.OficiosRemisionInternoOrganismo;
@@ -102,7 +105,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 
     /**
      * Obtenemos los Organismos destinatarios EXTERNOS que tiene Oficios de Remision pendientes de tramitar
-     * @param libro
+     * @param idLibro
      * @return
      * @throws Exception
      */

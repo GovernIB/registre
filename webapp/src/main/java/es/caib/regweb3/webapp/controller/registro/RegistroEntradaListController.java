@@ -216,7 +216,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         }
 
         // Alta en tabla LOPD
-        lopdEjb.insertarRegistroEntrada(idRegistro, usuarioEntidad.getId());
+        lopdEjb.insertarRegistroEntrada(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuarioEntidad.getId());
 
         return "registroEntrada/registroEntradaDetalle";
     }

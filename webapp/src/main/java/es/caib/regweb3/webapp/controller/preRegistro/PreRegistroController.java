@@ -162,18 +162,6 @@ public class PreRegistroController extends BaseController {
             RegistrarForm registrarForm = new RegistrarForm();
             model.addAttribute("registrarForm", registrarForm);
 
-            // Interesados
-            model.addAttribute("personasFisicas",personaEjb.getAllbyEntidadTipo(entidad.getId(), RegwebConstantes.TIPO_PERSONA_FISICA));
-            model.addAttribute("personasJuridicas",personaEjb.getAllbyEntidadTipo(entidad.getId(), RegwebConstantes.TIPO_PERSONA_JURIDICA));
-            model.addAttribute("tiposInteresado",RegwebConstantes.TIPOS_INTERESADO);
-            model.addAttribute("tiposPersona",RegwebConstantes.TIPOS_PERSONA);
-            model.addAttribute("paises",catPaisEjb.getAll());
-            model.addAttribute("provincias",catProvinciaEjb.getAll());
-            model.addAttribute("canalesNotificacion",RegwebConstantes.CANALES_NOTIFICACION);
-            model.addAttribute("tiposDocumento",RegwebConstantes.TIPOS_DOCUMENTOID);
-            model.addAttribute("nivelesAdministracion",catNivelAdministracionEjb.getAll());
-            model.addAttribute("comunidadesAutonomas",catComunidadAutonomaEjb.getAll());
-
             // Anexos
             model.addAttribute("anexos", anexoEjb.getByRegistroDetalle(preRegistro.getRegistroDetalle().getId()));
         }

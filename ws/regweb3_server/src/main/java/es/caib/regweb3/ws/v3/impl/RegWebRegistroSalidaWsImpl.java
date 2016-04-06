@@ -278,22 +278,22 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         }
 
         // 3.- Obtenemos el RegistroSalida
-        RegistroSalida registroSalida = registroSalidaEjb.findByNumeroRegistroFormateado(numeroRegistro);
+        RegistroSalida registro = registroSalidaEjb.findByNumeroRegistroFormateado(numeroRegistro);
 
-        if(registroSalida == null){
+        if (registro == null) {
             throw new I18NException("registroEntrada.noExiste", numeroRegistro);
         }
 
         // 4.- Comprobamos que el usuario tiene permisos de lectura para el RegistroSalida
-        if(!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroSalida.getLibro().getId(), PERMISO_CONSULTA_REGISTRO_SALIDA)){
+        if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registro.getLibro().getId(), PERMISO_CONSULTA_REGISTRO_SALIDA)) {
             throw new I18NException("registroEntrada.usuario.permisos", usuario);
         }
 
         // LOPD
-        lopdEjb.insertarRegistroSalida(registroSalida.getId(), usuarioEntidad.getId());
+        lopdEjb.insertarRegistroSalida(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuarioEntidad.getId());
 
         // Retornamos el RegistroSalidaWs
-        return RegistroSalidaConverter.getRegistroSalidaResponseWs(registroSalida,
+        return RegistroSalidaConverter.getRegistroSalidaResponseWs(registro,
             UsuarioAplicacionCache.get().getIdioma(), anexoEjb);
 
 
@@ -373,7 +373,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
       }
       
       // LOPD
-      lopdEjb.insertarRegistroSalida(registro.getId(), usuarioEntidad.getId());
+        lopdEjb.insertarRegistroSalida(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuarioEntidad.getId());
 
       IdentificadorWs id = new IdentificadorWs();
       id.setFecha(registro.getFecha());

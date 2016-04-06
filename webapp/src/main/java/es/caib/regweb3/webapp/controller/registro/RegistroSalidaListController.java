@@ -209,7 +209,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         }
 
         // Alta en tabla LOPD
-        lopdEjb.insertarRegistroSalida(idRegistro, usuarioEntidad.getId());
+        lopdEjb.insertarRegistroSalida(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuarioEntidad.getId());
        
         return "registroSalida/registroSalidaDetalle";
     }
