@@ -3,6 +3,7 @@ package es.caib.regweb3.webapp.controller.registro;
 import es.caib.regweb3.model.CatComunidadAutonoma;
 import es.caib.regweb3.model.CatNivelAdministracion;
 import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
@@ -82,10 +83,9 @@ public abstract class AbstractRegistroCommonListController extends BaseControlle
     @ModelAttribute("comunidad")
     public CatComunidadAutonoma comunidad(HttpServletRequest request) throws Exception {
         Entidad entidad = getEntidadActiva(request);
-        if ((entidad.getOrganismos() != null && entidad.getOrganismos().size() > 0)) {
-            if (entidad.getOrganismos().get(0).getCodAmbComunidad() != null){
-                return entidad.getOrganismos().get(0).getCodAmbComunidad();
-            }
+        Organismo organismoRaiz = organismoEjb.findByCodigo(entidad.getCodigoDir3());
+        if ((organismoRaiz != null) && organismoRaiz.getCodAmbComunidad() != null) {
+            return organismoRaiz.getCodAmbComunidad();
         }
         return new CatComunidadAutonoma();
     }
