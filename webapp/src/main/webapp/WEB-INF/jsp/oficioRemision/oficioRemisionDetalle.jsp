@@ -112,7 +112,8 @@
 
                         <div class="panel-heading">
 
-                            <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong><spring:message code="oficioRemision.registrosEntrada"/></strong></h3>
+                            <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong><spring:message
+                                    code="oficioRemision.registrosEntrada"/>: </strong>${fn:length(trazabilidades)}</h3>
                         </div>
 
                         <div class="panel-body">

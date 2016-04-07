@@ -1,60 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  
-  <parent>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
         <artifactId>regweb3</artifactId>
         <groupId>es.caib.regweb3</groupId>
-      <version>3.0.5</version>
-   </parent>
+        <version>3.0.5</version>
+    </parent>
 
     <modelVersion>4.0.0</modelVersion>
 
-  <groupId>es.caib.regweb3</groupId>
-  <artifactId>regweb3-model</artifactId>
+    <artifactId>regweb3-model</artifactId>
     <version>3.0.5</version>
-  <packaging>jar</packaging>
+    <packaging>jar</packaging>
 
-  <name>RegWeb3 - Model</name>
+    <name>RegWeb3 - Model</name>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
-	
-  <dependencies>
-      <!-- Internas -->
-	  
-	  <dependency>
-          <groupId>${project.groupId}</groupId>
-          <artifactId>regweb3-utils</artifactId>
-          <version>${project.version}</version>
-          <scope>provided</scope>
-      </dependency>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
-      <!-- Externas -->
-	  
-	  <dependency>
+    <dependencies>
+        <!-- Internas -->
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>regweb3-utils</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Externas -->
+
+        <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>3.3.2.GA</version>
-			<scope>provided</scope>
-      </dependency>
+            <scope>provided</scope>
+        </dependency>
 
-      <dependency>
-        <groupId>org.hibernate</groupId>
-        <artifactId>hibernate-annotations</artifactId>
-        <version>3.4.0.GA</version>
-        <scope>provided</scope>
-       </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-annotations</artifactId>
+            <version>3.4.0.GA</version>
+            <scope>provided</scope>
+        </dependency>
 
-      <dependency>
-          <groupId>javax</groupId>
-          <artifactId>javaee-api</artifactId>
-          <version>6.0</version>
-          <scope>provided</scope>
-      </dependency>
-	  
-	  <dependency>
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>6.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-asl</artifactId>
             <version>1.9.9</version>
@@ -67,6 +66,5 @@
         </dependency>
 
 
-
-  </dependencies>
+    </dependencies>
 </project>

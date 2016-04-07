@@ -63,7 +63,7 @@
                                            <c:if test="${not empty registro.origen}">
                                                 ${registro.origen.denominacion}
                                            </c:if>
-                                           <c:if test="${not empty registro.origen}">
+                                           <c:if test="${empty registro.origen}">
                                                 ${registro.origenExternoDenominacion}
                                            </c:if>
                                        </div>
