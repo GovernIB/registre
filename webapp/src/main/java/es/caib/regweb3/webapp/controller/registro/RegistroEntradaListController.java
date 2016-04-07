@@ -26,10 +26,7 @@ import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Fundació BIT.
@@ -112,14 +109,17 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         mav.addObject(oficina);
 
         Set<Organismo> todosOrganismos = getOrganismosOficinaActiva(request);
-        
+
         if (busqueda.getOrganDestinatari()!=null && !"".equals(busqueda.getOrganDestinatari())) {
-		    Organismo org = new Organismo();
-		    org.setCodigo(busqueda.getOrganDestinatari());
-		    org.setDenominacion(busqueda.getOrganDestinatariNom());
-		    todosOrganismos.add(org);
+		    Organismo org = organismoEjb.findByCodigo(busqueda.getOrganDestinatari());
+            if(org== null || !todosOrganismos.contains(org)){
+                org = new Organismo();
+                org.setCodigo(busqueda.getOrganDestinatari());
+                org.setDenominacion(new String(busqueda.getOrganDestinatariNom().getBytes("ISO-8859-1"), "UTF-8"));
+                todosOrganismos.add(org);
+            }
         }
-	    
+
         mav.addObject("organosDestino",  todosOrganismos);
         
         if (result.hasErrors()) { // Si hay errores volvemos a la vista del formulario
@@ -146,11 +146,15 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         mav.addObject("librosConsulta", librosConsulta);
         mav.addObject("oficinasRegistro", oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
         mav.addObject("registroEntradaBusqueda", busqueda);
+        mav.addObject("organDestinatari", busqueda.getOrganDestinatari());
 
         /* Solucion a los problemas de encoding del formulario GET */
         busqueda.getRegistroEntrada().getRegistroDetalle().setExtracto(new String(busqueda.getRegistroEntrada().getRegistroDetalle().getExtracto().getBytes("ISO-8859-1"), "UTF-8"));
         busqueda.setObservaciones(new String(busqueda.getObservaciones().getBytes("ISO-8859-1"), "UTF-8"));
         busqueda.setInteressatNom(new String(busqueda.getInteressatNom().getBytes("ISO-8859-1"), "UTF-8"));
+        busqueda.setInteressatLli1(new String(busqueda.getInteressatLli1().getBytes("ISO-8859-1"), "UTF-8"));
+        busqueda.setInteressatLli2(new String(busqueda.getInteressatLli2().getBytes("ISO-8859-1"), "UTF-8"));
+        busqueda.setOrganDestinatariNom(new String(busqueda.getOrganDestinatariNom().getBytes("ISO-8859-1"), "UTF-8"));
         return mav;
 
     }

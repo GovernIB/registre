@@ -108,14 +108,17 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         mav.addObject(oficina);
 
         Set<Organismo> todosOrganismos = getOrganismosOficinaActiva(request);
-        
+
         if (busqueda.getOrganOrigen()!=null && !"".equals(busqueda.getOrganOrigen())) {
-		    Organismo org = new Organismo();
-		    org.setCodigo(busqueda.getOrganOrigen());
-            org.setDenominacion(new String(busqueda.getOrganOrigenNom().getBytes("ISO-8859-1"), "UTF-8"));
-            todosOrganismos.add(org);
+            Organismo org = organismoEjb.findByCodigo(busqueda.getOrganOrigen());
+            if(org== null || !todosOrganismos.contains(org)){
+                org = new Organismo();
+                org.setCodigo(busqueda.getOrganOrigen());
+                org.setDenominacion(new String(busqueda.getOrganOrigenNom().getBytes("ISO-8859-1"), "UTF-8"));
+                todosOrganismos.add(org);
+            }
         }
-	    
+
         mav.addObject("organosOrigen", todosOrganismos);
         
         if (result.hasErrors()) { // Si hay errores volvemos a la vista del formulario
@@ -142,6 +145,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         mav.addObject("librosConsulta", librosConsulta);
         mav.addObject("registroSalidaBusqueda", busqueda);
         mav.addObject("oficinasRegistro", oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+        mav.addObject("organOrigen", busqueda.getOrganOrigen());
 
           /* Solucion a los problemas de encoding del formulario GET */
         busqueda.getRegistroSalida().getRegistroDetalle().setExtracto(new String(busqueda.getRegistroSalida().getRegistroDetalle().getExtracto().getBytes("ISO-8859-1"), "UTF-8"));

@@ -119,11 +119,18 @@
 
                     </div>
 
-
-                    <c:if test="${empty registroSalidaBusqueda.registroSalida.oficina.id && empty registroSalidaBusqueda.interessatDoc && empty registroSalidaBusqueda.interessatNom && empty registroSalidaBusqueda.organOrigen && empty registroSalidaBusqueda.observaciones && empty registroSalidaBusqueda.usuario && !registroSalidaBusqueda.anexos}">
+                    <c:if test="${empty registroSalidaBusqueda.registroSalida.oficina.id &&
+                    empty registroSalidaBusqueda.interessatDoc && empty registroSalidaBusqueda.interessatNom &&
+                    empty registroSalidaBusqueda.interessatLli1 && empty registroSalidaBusqueda.interessatLli2 &&
+                    empty registroSalidaBusqueda.organOrigen && empty registroSalidaBusqueda.observaciones &&
+                    empty registroSalidaBusqueda.usuario && !registroSalidaBusqueda.anexos}">
                         <div id="demo" class="collapse">
                     </c:if>
-                    <c:if test="${not empty registroSalidaBusqueda.registroSalida.oficina.id || not empty registroSalidaBusqueda.interessatDoc || not empty registroSalidaBusqueda.interessatNom || not empty registroSalidaBusqueda.organOrigen || not empty registroSalidaBusqueda.observaciones || not empty registroSalidaBusqueda.usuario || registroSalidaBusqueda.anexos}">
+                    <c:if test="${not empty registroSalidaBusqueda.registroSalida.oficina.id ||
+                    not empty registroSalidaBusqueda.interessatDoc || not empty registroSalidaBusqueda.interessatNom ||
+                    not empty registroSalidaBusqueda.interessatLli1 || not empty registroSalidaBusqueda.interessatLli2 ||
+                    not empty registroSalidaBusqueda.organOrigen || not empty registroSalidaBusqueda.observaciones ||
+                    not empty registroSalidaBusqueda.usuario || registroSalidaBusqueda.anexos}">
                         <div id="demo" class="collapse in">
                     </c:if>
 
