@@ -142,11 +142,9 @@ public abstract class AbstractRegistroCommonFormController extends BaseControlle
     @ModelAttribute("comunidad")
     public CatComunidadAutonoma comunidad(HttpServletRequest request) throws Exception {
         Entidad entidad = getEntidadActiva(request);
-        if ((entidad.getOrganismos() != null && entidad.getOrganismos().size() > 0)) {
-            if (entidad.getOrganismos().get(0).getCodAmbComunidad() != null){
-                return entidad.getOrganismos().get(0).getCodAmbComunidad();
-
-            }
+        Organismo organismoRaiz = organismoEjb.findByCodigo(entidad.getCodigoDir3());
+        if ((organismoRaiz != null) && organismoRaiz.getCodAmbComunidad() != null) {
+            return organismoRaiz.getCodAmbComunidad();
         }
         return new CatComunidadAutonoma();
     }

@@ -208,7 +208,7 @@ public class Entidad implements Serializable {
 
 
     @OneToMany(cascade= CascadeType.REMOVE,targetEntity=Organismo.class)
-    @LazyCollection(value= LazyCollectionOption.FALSE)
+    @LazyCollection(value = LazyCollectionOption.TRUE)
     @JoinColumn(name="ENTIDAD")
     @ForeignKey(name="RWE_ORGANISMO_ENTIDAD_FK")
     public List<Organismo> getOrganismos() {
