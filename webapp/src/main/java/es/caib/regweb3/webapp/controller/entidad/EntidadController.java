@@ -251,6 +251,7 @@ public class EntidadController extends BaseController {
 
             model.addAttribute("tipoScan", ScannerManager.getTipusScanejat(request.getLocale(), getMessage("scan.noScan")));
             model.addAttribute("administradoresEntidad", administradoresEntidadModificar(entidad.getPropietario(), entidad));
+            model.addAttribute("tieneOrganismos", entidadEjb.tieneOrganismos(entidadId));
 
         }catch (Exception e) {
             e.printStackTrace();
@@ -276,6 +277,7 @@ public class EntidadController extends BaseController {
            try {
                 model.addAttribute("administradoresEntidad", administradoresEntidadModificar(entidadForm.getEntidad().getPropietario(), entidadForm.getEntidad()));
                 model.addAttribute("tipoScan", ScannerManager.getTipusScanejat(request.getLocale(), getMessage("scan.noScan")));
+               model.addAttribute("tieneOrganismos", entidadEjb.tieneOrganismos(entidadId));
             } catch (Exception e) {
                 e.printStackTrace();
             }
