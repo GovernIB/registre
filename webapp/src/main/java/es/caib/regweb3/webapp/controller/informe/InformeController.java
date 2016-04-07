@@ -533,7 +533,7 @@ public class InformeController extends BaseController {
         Integer tipoLibro = informeIndicadoresBusquedaForm.getTipo().intValue();
         List<TipoAsunto> tiposAsunto = tipoAsuntoEjb.getAll();
         List<Oficina> oficinas = oficinaEjb.findByEntidad(entidadActiva.getId());
-        List<Organismo> organismos = entidadActiva.getOrganismos();
+        List<Organismo> organismos = organismoEjb.findByEntidadReduce(entidadActiva.getId());
 
         ModelAndView mav = null;
 
@@ -1735,7 +1735,7 @@ public class InformeController extends BaseController {
 
         for(int i=0; i<organismos.size(); i++){
             Organismo organismo = organismos.get(i);
-            List<Libro> libros = organismo.getLibros();
+            List<Libro> libros = libroEjb.getLibrosOrganismo(organismo.getId());
             for(int j=0; j<libros.size(); j++){
                 Libro libro = libros.get(j);
 
@@ -1766,7 +1766,7 @@ public class InformeController extends BaseController {
 
         for(int i=0; i<organismos.size(); i++){
             Organismo organismo = organismos.get(i);
-            List<Libro> libros = organismo.getLibros();
+            List<Libro> libros = libroEjb.getLibrosOrganismo(organismo.getId());
             for(int j=0; j<libros.size(); j++){
                 Libro libro = libros.get(j);
 
