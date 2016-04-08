@@ -120,13 +120,10 @@ public class OficioRemisionUtilsBean implements OficioRemisionUtilsLocal {
       oficioRemision.setRegistrosEntrada(registrosEntrada);
       oficioRemision.setUsuarioResponsable(usuarioEntidad);
       oficioRemision.setLibro(new Libro(idLibro));
-      Organismo organismoExt = organismoEjb.findByCodigo(organismoExterno);
-      if (organismoExt == null) {
-        oficioRemision.setDestinoExternoCodigo(organismoExterno);
-        oficioRemision.setDestinoExternoDenominacion(organismoExternoDenominacion);
-      } else {
-        oficioRemision.setOrganismoDestinatario(organismoExt);
-      }
+      oficioRemision.setDestinoExternoCodigo(organismoExterno);
+      oficioRemision.setDestinoExternoDenominacion(organismoExternoDenominacion);
+      oficioRemision.setOrganismoDestinatario(null);
+
       synchronized (this) {
           oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision,
                   RegwebConstantes.ESTADO_OFICIO_EXTERNO);

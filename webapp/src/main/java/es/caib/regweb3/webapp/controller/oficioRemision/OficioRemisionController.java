@@ -295,7 +295,6 @@ public class OficioRemisionController extends BaseController {
         } else {//Oficio externo todo: Acabar oficio remisión externo
 
           final String identificadorIntercambioSir = null;
-
           final String organismoExternoDenominacion = registroEntradaListForm.getOrganismoExternoDenominacion();
             oficioRemision = oficioRemisionUtils.crearOficioRemisionExterno(registrosEntrada,
                 getOficinaActiva(request), usuarioEntidad, 
