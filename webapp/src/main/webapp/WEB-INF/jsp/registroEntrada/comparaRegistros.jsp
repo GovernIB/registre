@@ -300,7 +300,7 @@
                                                    <c:if test="${not empty reOriginal.destino}">
                                                        ${reOriginal.destino.denominacion}
                                                    </c:if>
-                                                   <c:if test="${not empty reOriginal.destino}">
+                                                   <c:if test="${empty reOriginal.destino}">
                                                        ${reOriginal.destinoExternoDenominacion}
                                                    </c:if>
                                                </div>
@@ -411,7 +411,7 @@
                                                        <c:if test="${not empty reOriginal.registroDetalle.oficinaOrigen}">
                                                            ${reOriginal.registroDetalle.oficinaOrigen.denominacion}
                                                        </c:if>
-                                                       <c:if test="${not empty reOriginal.registroDetalle.oficinaOrigen}">
+                                                       <c:if test="${empty reOriginal.registroDetalle.oficinaOrigen}">
                                                            ${reOriginal.registroDetalle.oficinaOrigenExternoDenominacion}
                                                        </c:if>
                                                    </div>

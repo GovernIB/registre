@@ -161,7 +161,7 @@
                                                <c:if test="${not empty registro.registroDetalle.oficinaOrigen}">
                                                    ${registro.registroDetalle.oficinaOrigen.denominacion}
                                                </c:if>
-                                               <c:if test="${not empty registro.registroDetalle.oficinaOrigen}">
+                                               <c:if test="${empty registro.registroDetalle.oficinaOrigen}">
                                                    ${registro.registroDetalle.oficinaOrigenExternoDenominacion}
                                                </c:if>
                                            </div>
@@ -305,7 +305,7 @@
                                                    <c:if test="${not empty reOriginal.origen}">
                                                        ${reOriginal.origen.denominacion}
                                                    </c:if>
-                                                   <c:if test="${not empty reOriginal.origen}">
+                                                   <c:if test="${empty reOriginal.origen}">
                                                        ${reOriginal.origenExternoDenominacion}
                                                    </c:if>
                                                </div>
@@ -413,7 +413,7 @@
                                                        <c:if test="${not empty reOriginal.registroDetalle.oficinaOrigen}">
                                                            ${reOriginal.registroDetalle.oficinaOrigen.denominacion}
                                                        </c:if>
-                                                       <c:if test="${not empty reOriginal.registroDetalle.oficinaOrigen}">
+                                                       <c:if test="${empty reOriginal.registroDetalle.oficinaOrigen}">
                                                            ${reOriginal.registroDetalle.oficinaOrigenExternoDenominacion}
                                                        </c:if>
                                                    </div>

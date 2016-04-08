@@ -173,6 +173,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         Oficina oficinaActiva = getOficinaActiva(request);
 
         model.addAttribute("registro",registro);
+        model.addAttribute("oficina", getOficinaActiva(request));
 
         // Modelo Recibo
         model.addAttribute("modeloRecibo", new ModeloRecibo());
