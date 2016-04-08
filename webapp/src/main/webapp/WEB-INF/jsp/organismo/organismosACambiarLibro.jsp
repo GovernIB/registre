@@ -66,7 +66,14 @@ de un proceso de sincronización/actualización de una entidad desde dir3caib --
                                                         <div class="col-xs-12">
                                                             <div class="panel panel-warning" id="panel${organismoAProcesar.id}">
                                                                 <div class="panel-heading">
-                                                                    <h3 class="panel-title"><i class="fa fa-globe"></i><strong> <c:if test="${esPendiente}"><spring:message code="organismo.extinguido"/>:</c:if><c:if test="${!esPendiente}"><spring:message code="organismo.actual"/>:</c:if> ${organismoAProcesar.denominacion} (${organismoAProcesar.codigo})</strong></h3>
+                                                                    <h3 class="panel-title"><i
+                                                                            class="fa fa-globe"></i><strong> <c:if
+                                                                            test="${esPendiente}"><spring:message
+                                                                            code="organismo.extinguido"/>:</c:if><c:if
+                                                                            test="${!esPendiente}"><spring:message
+                                                                            code="organismo.actual"/>:</c:if> ${organismoAProcesar.denominacion}
+                                                                        (${organismoAProcesar.codigo}) ${organismoAProcesar.estado.descripcionEstadoEntidad}</strong>
+                                                                    </h3>
                                                                 </div>
 
                                                                 <div  class="panel-body">

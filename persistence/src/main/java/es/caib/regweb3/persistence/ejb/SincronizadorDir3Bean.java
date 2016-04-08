@@ -170,7 +170,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
         // Hay que revisar que organismos con libros que son vigentes han podido quedar sin oficinas y guardarlos como pendientes.
         //Pueden quedar sin oficinas al borrarselas o quitarles las únicas relaciones organizativas que tengan.
-        List<Organismo> vigentes = organismoEjb.findByEntidadByEstado(entidadId, RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        List<Organismo> vigentes = organismoEjb.findByEntidadEstadoLibros(entidadId, RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         for (Organismo organismo : vigentes) {
             if (organismo.getLibros() != null && organismo.getLibros().size() > 0) {
                 Set<Oficina> oficinas = new HashSet<Oficina>();  // Utilizamos un Set porque no permite duplicados

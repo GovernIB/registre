@@ -107,6 +107,14 @@ public class Organismo implements Serializable {
         this.organismoSuperior = new Organismo(organismoSuperior);
     }
 
+    public Organismo(Long id, String codigo, String denominacion, List<Libro> libros) {
+
+        this.id = id;
+        this.codigo = codigo;
+        this.denominacion = denominacion;
+        this.libros = libros;
+    }
+
     @Id
     @GeneratedValue(strategy= GenerationType.SEQUENCE,generator = "generator")
     @Column(name="ID")

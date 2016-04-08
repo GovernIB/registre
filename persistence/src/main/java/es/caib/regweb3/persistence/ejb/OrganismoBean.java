@@ -155,16 +155,34 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     }
 
     @Override
-     public List<Organismo> findByEntidad(Long entidad) throws Exception {
+    public List<Organismo> findByEntidadLibros(Long entidad) throws Exception {
 
-        Query q = em.createQuery("Select organismo from Organismo as organismo where " +
-                "organismo.entidad.id = :entidad");
+        Query q = em.createQuery("Select distinct(organismo) from Organismo as organismo" +
+                " inner join  organismo.libros as libros " +
+                " where organismo.entidad.id = :entidad ");
 
         q.setParameter("entidad",entidad);
 
-        return  q.getResultList();
+
+        return q.getResultList();
 
     }
+
+    @Override
+    public List<Organismo> findByEntidadEstadoLibros(Long entidad, String estado) throws Exception {
+
+        Query q = em.createQuery("Select distinct(organismo) from Organismo as organismo" +
+                " inner join  organismo.libros as libros " +
+                " where organismo.entidad.id = :entidad and organismo.estado.codigoEstadoEntidad= :estado");
+
+        q.setParameter("entidad", entidad);
+        q.setParameter("estado", estado);
+
+
+        return q.getResultList();
+
+    }
+
 
     @Override
     public List<Organismo> findByEntidadReduce(Long entidad) throws Exception {
@@ -188,25 +206,41 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     @Override
     public List<Organismo> findByEntidadByEstado(Long entidad, String estado) throws Exception {
 
-        Query q = em.createQuery("Select organismo from Organismo as organismo where " +
+        Query q = em.createQuery("Select organismo.id, organismo.codigo, organismo.denominacion from Organismo as organismo where " +
                 "organismo.entidad.id = :entidad and organismo.estado.codigoEstadoEntidad = :codigoEstado");
 
         q.setParameter("entidad",entidad);
         q.setParameter("codigoEstado",estado);
 
-        return  q.getResultList();
+        List<Object[]> result = q.getResultList();
+        List<Organismo> organismos = new ArrayList<Organismo>();
+        for (Object[] object : result) {
+            Organismo org = new Organismo((Long) object[0], (String) object[1], (String) object[2]);
+            organismos.add(org);
+        }
+
+        return organismos;
 
     }
 
     @Override
     public List<Organismo> findByEntidadEstadoConOficinas(Long entidad, String codigoEstado) throws Exception {
 
-        Query q = em.createQuery("Select organismo from Organismo as organismo where " +
+        Query q = em.createQuery("Select organismo.id, organismo.denominacion from Organismo as organismo where " +
                 "organismo.entidad.id = :entidad and organismo.estado.codigoEstadoEntidad =:codigoEstado");
 
         q.setParameter("entidad",entidad);
         q.setParameter("codigoEstado",codigoEstado);
-        List<Organismo> organismos = q.getResultList();
+
+
+        List<Object[]> result = q.getResultList();
+        List<Organismo> organismos = new ArrayList<Organismo>();
+        for (Object[] object : result) {
+            Organismo org = new Organismo((Long) object[0], (String) object[1]);
+            organismos.add(org);
+        }
+
+
         List<Organismo> organismosConOficinas = new ArrayList<Organismo>();
 
         for(Organismo organismo: organismos){
@@ -282,7 +316,6 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         Query q2;
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
-        //CatEstadoEntidad vigente = catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
 
         StringBuffer query = new StringBuffer("Select organismo from Organismo as organismo ");
 
@@ -294,9 +327,6 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
         // Añadimos la Entidad
         where.add("organismo.entidad.id = :idEntidad "); parametros.put("idEntidad",idEntidad);
-
-        // Añadimos el estado vigente, solo retornará los Organismos vigentes
-        //where.add("organismo.estado.id = :vigente "); parametros.put("vigente",vigente.getId());
 
 
          if (parametros.size() != 0) {
@@ -319,7 +349,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
              }
 
          }else{
-             q2 = em.createQuery(query.toString().replaceAll("Select persona from Persona as persona ", "Select count(organismo.id) from Organismo as organismo "));
+             q2 = em.createQuery(query.toString().replaceAll("Select organismo from Organismo as organismo ", "Select count(organismo.id) from Organismo as organismo "));
              query.append("order by organismo.denominacion");
              q = em.createQuery(query.toString());
          }
