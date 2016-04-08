@@ -287,7 +287,8 @@ public class EntidadController extends BaseController {
           ArchivoFormManager afm = null;
 
           try {
-                Entidad entidad = entidadForm.getEntidad();
+              Entidad entidad = entidadForm.getEntidad();
+              Entidad entidadGuardada = entidadEjb.findById(entidadForm.getEntidad().getId());
 
               // Gestionar el cambio de propietario
               if(!entidadEjb.findById(entidadId).getPropietario().getId().equals(entidad.getPropietario().getId())){
@@ -327,8 +328,6 @@ public class EntidadController extends BaseController {
 
                         // Redimensionamos el logoMenu, si es necesario (tamaño demasiado grande)
                         byte[] logoRedimensionat = redimensionaLogoMenu(entidadForm.getLogoMenu().getBytes());
-
-                        Entidad entidadGuardada = entidadEjb.findById(entidadForm.getEntidad().getId());
                         eliminarLogoMenu = entidadGuardada.getLogoMenu();
 
                         // Asociamos el nuevo archivo
@@ -338,8 +337,6 @@ public class EntidadController extends BaseController {
                     if(entidadForm.getLogoPie() != null && !entidadForm.getLogoPie().isEmpty()){
 
                         afm = new ArchivoFormManager(archivoEjb,entidadForm.getLogoPie(), RegwebConstantes.ARCHIVOS_LOCATION_PROPERTY);
-
-                        Entidad entidadGuardada = entidadEjb.findById(entidadForm.getEntidad().getId());
                         eliminarLogoPie = entidadGuardada.getLogoPie();
 
                         // Asociamos el nuevo archivo
@@ -348,7 +345,6 @@ public class EntidadController extends BaseController {
 
                     if( entidadForm.getLogoSello()!= null && !entidadForm.getLogoSello().isEmpty()){
                     	afm = new ArchivoFormManager(archivoEjb,entidadForm.getLogoSello(), RegwebConstantes.ARCHIVOS_LOCATION_PROPERTY);
-                    	Entidad entidadGuardada = entidadEjb.findById(entidadForm.getEntidad().getId());
                     	eliminarImagenSello = entidadGuardada.getLogoSello();
                     	
                     	// Asociamos el nuevo archivo
@@ -358,17 +354,14 @@ public class EntidadController extends BaseController {
                     
                     // Si se selecciona el check de borrar Logo Menu , Logo Pie y/o Imagen Sello, se pone a null
                     if(entidadForm.isBorrarLogoMenu()){
-                        Entidad entidadGuardada = entidadEjb.findById(entidadForm.getEntidad().getId());
                         eliminarLogoMenu = entidadGuardada.getLogoMenu();
                         entidad.setLogoMenu(null);
                     }
                     if(entidadForm.isBorrarLogoPie()){
-                        Entidad entidadGuardada = entidadEjb.findById(entidadForm.getEntidad().getId());
                         eliminarLogoPie = entidadGuardada.getLogoPie();
                         entidad.setLogoPie(null);
                     }
                     if(entidadForm.isBorrarLogoSello()){
-                    	Entidad entidadGuardada = entidadEjb.findById(entidadForm.getEntidad().getId());
                         eliminarImagenSello = entidadGuardada.getLogoSello();
                         entidad.setLogoSello(null);
                     }
@@ -399,7 +392,7 @@ public class EntidadController extends BaseController {
                     Archivo eliminarLogoMenu = null;
                     Archivo eliminarLogoPie = null;
                     Archivo eliminarImagenSello = null;
-                    Entidad entidadGuardada = entidadEjb.findById(entidadForm.getEntidad().getId());
+
                     // Si se selecciona el check de borrar Logo Menu y/o Logo Pie, se pone a null
                     if(entidadForm.isBorrarLogoMenu()){
                         eliminarLogoMenu = entidadGuardada.getLogoMenu();
