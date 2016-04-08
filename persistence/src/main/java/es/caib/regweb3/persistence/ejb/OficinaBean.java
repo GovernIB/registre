@@ -92,6 +92,24 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
     }
 
+    public Oficina findByCodigoEntidad(String codigo, Long idEntidad) throws Exception {
+
+        Query q = em.createQuery("Select oficina from Oficina as oficina where " +
+                "oficina.codigo =:codigo and oficina.organismoResponsable.entidad.id = :idEntidad  and " +
+                "oficina.estado.codigoEstadoEntidad =:vigente");
+
+        q.setParameter("codigo", codigo);
+        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+
+        List<Oficina> oficina = q.getResultList();
+        if (oficina.size() == 1) {
+            return oficina.get(0);
+        } else {
+            return null;
+        }
+    }
+
     @Override
     public Oficina findByCodigoVigente(String codigo) throws Exception {
 

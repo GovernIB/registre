@@ -210,7 +210,7 @@ que se le indica -->
 
 
     function actualizarLocalidadDestinatarios(paramTipo) {
-        console.log("inicio actualizarLocalidadDestinatarios: " + new Date().getTime());
+
         <c:url var="obtenerLocalidades" value="/rest/obtenerLocalidadesProvincia" />
         var provinciaString = '#provincia' + paramTipo + ' option:selected';
         $('#localidad' + paramTipo).empty();
@@ -218,13 +218,10 @@ que se le indica -->
 
         actualizarSelectLocalidad('${obtenerLocalidades}', '#localidad' + paramTipo, $(provinciaString).val(), null, true, true);
         //actualizarSelect('${obtenerLocalidades}','#localidadOrganismoDestino',$(provinciaString).val(),null,true,true);
-        console.log("fin actualizarLocalidadDestinatarios: " + new Date().getTime());
     }
 
     function actualizarProvinciaDestinatarios(paramTipo) {
-        console.log("inicio actualizarProvinciaDestinatarios: " + new Date().getTime());
         <c:url var="obtenerProvincias" value="/rest/obtenerProvincias" />
-
 
         var codautonomaString = '#codComunidadAutonoma' + paramTipo + ' option:selected';
 
@@ -233,7 +230,6 @@ que se le indica -->
         $('#localidad' + paramTipo).empty();
         $('#localidad' + paramTipo).attr("disabled", "disabled").trigger("chosen:updated");
         actualizarSelect('${obtenerProvincias}', '#provincia' + paramTipo, $(codautonomaString).val(), null, true, true);
-        console.log("fin actualizarProvinciaDestinatarios: " + new Date().getTime());
     }
 
 

@@ -199,16 +199,6 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
     }
 
-    @Override
-    public Long getComunidadAutonomaEntidad(Long idEntidad) throws Exception {
-        Entidad entidad = findById(idEntidad);
-        if(entidad.getOrganismos() != null ) {
-            Organismo organismo = entidad.getOrganismos().get(0);
-            return organismo.getCodAmbComunidad().getCodigoComunidad();
-        }else {
-            return new Long(-1);
-        }
-    }
 
     @Override
     public void eliminarRegistros(Long idEntidad) throws Exception{

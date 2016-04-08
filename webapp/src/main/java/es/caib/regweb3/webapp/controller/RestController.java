@@ -1,9 +1,6 @@
 package es.caib.regweb3.webapp.controller;
 
-import es.caib.regweb3.model.CatLocalidad;
-import es.caib.regweb3.model.CodigoAsunto;
-import es.caib.regweb3.model.TipoAsunto;
-import es.caib.regweb3.model.TraduccionTipoAsunto;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.ObjetoBasico;
 import es.caib.regweb3.persistence.ejb.CatLocalidadLocal;
 import es.caib.regweb3.persistence.ejb.CatProvinciaLocal;
@@ -110,6 +107,24 @@ public class RestController {
             Locale locale = LocaleContextHolder.getLocale();
             TraduccionTipoAsunto traduccionTipoAsunto = (TraduccionTipoAsunto) tipoAsunto.getTraduccion(locale.getLanguage());
             return traduccionTipoAsunto.getNombre();
+
+        }
+        return null;
+    }
+
+    /**
+     * Obtiene el nombre traducido de un CodigoAsunto.
+     */
+    @RequestMapping(value = "/obtenerCodigoAsunto", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+    @ResponseBody
+    public String obtenerCodigoAsunto(@RequestParam Long id) throws Exception {
+
+        CodigoAsunto codigoAsunto = codigoAsuntoEjb.findById(id);
+
+        if (codigoAsunto != null) {
+            Locale locale = LocaleContextHolder.getLocale();
+            TraduccionCodigoAsunto traduccionCodigoAsunto = (TraduccionCodigoAsunto) codigoAsunto.getTraduccion(locale.getLanguage());
+            return traduccionCodigoAsunto.getNombre();
 
         }
         return null;

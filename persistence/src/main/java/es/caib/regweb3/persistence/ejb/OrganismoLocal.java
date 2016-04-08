@@ -49,7 +49,7 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
     public List<Organismo> getPaginationByEntidad(int inicio, Long entidad) throws Exception;
 
    /**
-     *
+    * Obtiene un Organismo a partir de su código Dir3
      * @param codigo
      * @return
      * @throws Exception
@@ -57,12 +57,20 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
     public Organismo findByCodigo(String codigo) throws Exception;
 
     /**
+     * Obtiene un Organismo a partir de su código Dir3
+     * @param codigo
+     * @return
+     * @throws Exception
+     */
+    public Organismo findByCodigoBasico(String codigo) throws Exception;
+
+    /**
      *  Devuelve el organismo por codigo si esta vigente
      * @param codigo
      * @return
      * @throws Exception
      */
-    public Organismo findByCodigoVigente(String codigo, Long idEntidad) throws Exception;
+    public Organismo findByCodigoEntidad(String codigo, Long idEntidad) throws Exception;
 
     /**
      * Obtiene todos los organismos de una entidad

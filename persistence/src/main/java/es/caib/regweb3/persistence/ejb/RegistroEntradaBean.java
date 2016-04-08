@@ -96,11 +96,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             registroEntrada.getRegistroDetalle().setFechaOrigen(registroEntrada.getFecha());
         }
 
-        // Si no ha introducido ninguna Oficina de Origen
-        if (registroEntrada.getRegistroDetalle().getOficinaOrigen() == null) {
-            registroEntrada.getRegistroDetalle().setOficinaOrigen(registroEntrada.getOficina());
-        }
-
         List<Interesado> interesados = registroEntrada.getRegistroDetalle().getInteresados();
         if (interesados != null && interesados.size() != 0) {
             for (Interesado interesado : interesados) {

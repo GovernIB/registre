@@ -25,6 +25,7 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
      * @throws Exception
      */
     public Entidad findByCodigoDir3(String codigo) throws Exception;
+
     /**
      * Comprueba su una {@link es.caib.regweb3.model.Entidad} tiene algún {@link es.caib.regweb3.model.Organismo} asociado.
      * @param idEntidad
@@ -76,13 +77,6 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
    */
    public Boolean esAutorizado(Long idEntidad, Long idUsuario) throws Exception;
 
-    /**
-     * Obtiene el codigo de la comunidad autónoma de la entidad a través de sus organismos.
-     * @param idEntidad
-     * @return
-     * @throws Exception
-     */
-    public Long getComunidadAutonomaEntidad(Long idEntidad) throws Exception;
 
 
     /**

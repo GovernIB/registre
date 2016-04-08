@@ -109,7 +109,7 @@ public class ReproController extends BaseController {
 
             case 1: //RegistroEntrada
                 log.info("Repro entrada");
-                Organismo organismoDestino = organismoEjb.findByCodigoVigente(reproJson.getDestinoCodigo(),usuarioEntidad.getEntidad().getId());
+                Organismo organismoDestino = organismoEjb.findByCodigoEntidad(reproJson.getDestinoCodigo(), usuarioEntidad.getEntidad().getId());
 
                 if(organismoDestino != null) { // es interno
                     log.info("Destino: " +reproJson.getDestinoDenominacion() + " Interno");
@@ -124,7 +124,7 @@ public class ReproController extends BaseController {
 
             case 2: //RegistroSalida
                 log.info("Repro salida");
-                Organismo organismoOrigen = organismoEjb.findByCodigoVigente(reproJson.getOrigenCodigo(),usuarioEntidad.getEntidad().getId());
+                Organismo organismoOrigen = organismoEjb.findByCodigoEntidad(reproJson.getOrigenCodigo(), usuarioEntidad.getEntidad().getId());
 
                 if(organismoOrigen != null) { // es interno
                     log.info("Origen: " + reproJson.getOrigenDenominacion() + " Interno");
@@ -406,7 +406,7 @@ public class ReproController extends BaseController {
                     }
 
                 }else{ // Comprobamos en REGWEB3 si está vigente
-                    Organismo organismoDestino = organismoEjb.findByCodigoVigente(reproJson.getDestinoCodigo(),entidad.getId());
+                    Organismo organismoDestino = organismoEjb.findByCodigoEntidad(reproJson.getDestinoCodigo(), entidad.getId());
 
                     if(organismoDestino == null){ // Ya no es vigente
                         reproJson.setDestinoExterno(null);
@@ -435,7 +435,7 @@ public class ReproController extends BaseController {
                     }
 
                 }else{ // Comprobamos en REGWEB3 si está vigente
-                    Organismo organismoOrigen = organismoEjb.findByCodigoVigente(reproJson.getOrigenCodigo(),entidad.getId());
+                    Organismo organismoOrigen = organismoEjb.findByCodigoEntidad(reproJson.getOrigenCodigo(), entidad.getId());
                     if(organismoOrigen == null){ // Ya no es vigente
                         reproJson.setOrigenExterno(null);
                         reproJson.setOrigenCodigo(null);

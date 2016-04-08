@@ -146,16 +146,8 @@
                             <form:errors path="origen.codigo" cssClass="help-block" element="span"/>
                         </div>
 
-
-                        <%--<div class="col-xs-2 boto-panel">
-                            <a data-toggle="modal" role="button" href="#modalBuscadorOrganismoOrigen" onclick="inicializarBuscador('#codNivelAdministracionOrganismoOrigen','#codComunidadAutonomaOrganismoOrigen','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}', 'OrganismoOrigen');" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
-                        </div>--%>
-                        <c:if test="${empty registroSalida.origenExternoCodigo}"><!-- Si es interno -->
                         <form:hidden path="origen.denominacion"/>
-                        </c:if>
-                        <c:if test="${not empty registroSalida.origenExternoCodigo}"><!-- Si es externo -->
-                        <form:hidden path="origenExternoDenominacion"/>
-                        </c:if>
+
                         <!-- Fin de gestión de organismo origen -->
                     </div>
 
@@ -285,15 +277,13 @@
 
                         <div class="col-xs-2 boto-panel">
                             <a data-toggle="modal" role="button" href="#modalBuscadorOficinaOrigen"
-                               onclick="inicializarBuscador('#codNivelAdministracionOficinaOrigen','#codComunidadAutonomaOficinaOrigen','#provinciaOficinaOrigen','#localidadOficinaOrigen','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}','${oficina.organismoResponsable.codAmbProvincia.codigoProvincia}','${oficina.organismoResponsable.localidad.codigoLocalidad}', 'OficinaOrigen' );"
+                               onclick="inicializarBuscador('#codNivelAdministracionOficinaOrigen','#codComunidadAutonomaOficinaOrigen','#provinciaOficinaOrigen','#localidadOficinaOrigen','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}', 'OficinaOrigen' );"
                                class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                         </div>
-                        <c:if test="${empty registroSalida.registroDetalle.oficinaOrigenExternoCodigo}"><!-- Si es interno -->
+
                         <form:hidden path="registroDetalle.oficinaOrigen.denominacion"/>
-                        </c:if>
-                        <c:if test="${not empty registroSalida.registroDetalle.oficinaOrigenExternoCodigo}"><!-- Si es externo -->
                         <form:hidden path="registroDetalle.oficinaOrigenExternoDenominacion"/>
-                        </c:if>
+
                         <!-- Fin gestión de oficina origen(se prepara en función de si es interno o externo )-->
                     </div>
 

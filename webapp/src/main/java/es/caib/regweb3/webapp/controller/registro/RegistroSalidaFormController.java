@@ -94,7 +94,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
             errorInteresado = false;
         }
 
-        if (result.hasErrors()|| errorInteresado) { // Si hay errores volvemos a la vista del formulario
+        if (result.hasErrors() || errorInteresado) { // Si hay errores volvemos a la vista del formulario
 
             // Si no hay ningún interesado, generamos un error.
             if(errorInteresado){
@@ -107,43 +107,24 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
             model.addAttribute("oficinasOrigen",  getOficinasOrigen(request));
             model.addAttribute("libros", getLibrosRegistroSalida(request));
 
+            // Organismo origen: Select
+            log.info("Origen: " + registroSalida.getOrigen().getCodigo());
             Set<Organismo> organismosOficinaActiva = getOrganismosOficinaActiva(request);
-            
-            if (registroSalida.getOrigen() == null || registroSalida.getOrigen().getCodigo() == null
-                || "".equals(registroSalida.getOrigen().getCodigo().trim())) {
-                  // Falta oficina origen
-            } else {
-            
-              // Si el organismo que han seleccionado es externo, lo creaamos nuevo y lo añadimos a la lista del select
-              if(organismoEjb.findByCodigoVigente(registroSalida.getOrigen().getCodigo(),entidad.getId())== null){
-                  //log.info("externo : "+ registroSalida.getDestino().getDenominacion());
-                  Organismo organismoExterno = new Organismo();
-                  organismoExterno.setCodigo(registroSalida.getOrigen().getCodigo());
-                  organismoExterno.setDenominacion(registroSalida.getOrigen().getDenominacion());
-                  organismosOficinaActiva.add(organismoExterno);
-  
-                  // si es interno, miramos si ya esta en la lista, si no, lo añadimos
-              } else if(!organismosOficinaActiva.contains(registroSalida.getOrigen())){
-                  //log.info("es interno : "+registroSalida.getDestino().getCodigo());
-                  organismosOficinaActiva.add(organismoEjb.findByCodigo(registroSalida.getOrigen().getCodigo()));
-              }
-            }
+
             model.addAttribute("organismosOficinaActiva", organismosOficinaActiva);
 
             // Si la Oficina Origen es Externa, la añadimos al listado.
             Set<Oficina> oficinasOrigen = getOficinasOrigen(request);
-            if(registroSalida.getRegistroDetalle().getOficinaOrigen()!=null){
-                if(oficinaEjb.findByCodigoVigente(registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo())== null){
-                    //log.info("externa : "+ registroSalida.getRegistroDetalle().getOficinaOrigen().getDenominacion());
-                    Oficina oficinaExterna = new Oficina();
-                    oficinaExterna.setCodigo(registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo());
-                    oficinaExterna.setDenominacion(registroSalida.getRegistroDetalle().getOficinaOrigen().getDenominacion());
-                    oficinasOrigen.add(oficinaExterna);
+            if (!registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo().equals("-1")) {// Han indicado oficina de origen
 
-                    // si es interna, miramos si ya esta en la lista, si no, lo añadimos
-                }else if(!oficinasOrigen.contains(registroSalida.getRegistroDetalle().getOficinaOrigen())){
-                    //log.info("es interno : "+registroSalida.getRegistroDetalle().getOficinaOrigen().getDenominacion());
-                    oficinasOrigen.add(oficinaEjb.findByCodigo(registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo()));
+                Oficina oficinaOrigen = oficinaEjb.findByCodigoEntidad(registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo(), entidad.getId());
+
+                if (oficinaOrigen == null) { // Es externa
+
+                    oficinasOrigen.add(new Oficina(null, registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo(), registroSalida.getRegistroDetalle().getOficinaOrigen().getDenominacion()));
+
+                } else { // Es interna, la añadimos a la lista por si acaso no está
+                    oficinasOrigen.add(oficinaOrigen);
                 }
             }
             model.addAttribute("oficinasOrigen", oficinasOrigen);
@@ -208,7 +189,6 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         //Eliminamos los posibles interesados de la Sesion
         eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
-
         RegistroSalida registroSalida = null;
 
         Oficina oficina = getOficinaActiva(request);
@@ -218,36 +198,26 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         try {
             registroSalida = registroSalidaEjb.findById(idRegistro);
 
+            // Organismo origen: Select
             Set<Organismo> organismosOficinaActiva = getOrganismosOficinaActiva(request);
-
-            // Si el Organismo Destino es Externo, lo añadimos al listado.
-            if(registroSalida.getOrigen() == null){
-                Organismo organismoExterno = new Organismo();
-                organismoExterno.setCodigo(registroSalida.getOrigenExternoCodigo());
-                organismoExterno.setDenominacion(registroSalida.getOrigenExternoDenominacion());
-                organismosOficinaActiva.add(organismoExterno);
-
-                // Si es Interno, pero no esta relacionado con la Oficina Activa
-            }else if(!organismosOficinaActiva.contains(registroSalida.getOrigen())){
+            // Si el Organismo Origen no está en al lista lo añadimos
+            if (!organismosOficinaActiva.contains(registroSalida.getOrigen())) {
                 organismosOficinaActiva.add(registroSalida.getOrigen());
             }
 
+            // Oficina Origen: Select
             Set<Oficina> oficinasOrigen = getOficinasOrigen(request);
 
             // Si la Oficina Origen es Externa, la añadimos al listado.
             Oficina oficinaOrigen = registroSalida.getRegistroDetalle().getOficinaOrigen();
-            if(oficinaOrigen == null){
-                Oficina oficinaExterna = new Oficina();
-                oficinaExterna.setCodigo(registroSalida.getRegistroDetalle().getOficinaOrigenExternoCodigo());
-                oficinaExterna.setDenominacion(registroSalida.getRegistroDetalle().getOficinaOrigenExternoDenominacion());
-                oficinasOrigen.add(oficinaExterna);
+            if (oficinaOrigen == null) {// Si  Externa, la añadimos al listado.
 
-                // Si es Interna, pero no esta relacionado con la Oficina Activa
-            }else if(!oficinasOrigen.contains(oficinaOrigen)){
+                oficinasOrigen.add(new Oficina(null, registroSalida.getRegistroDetalle().getOficinaOrigenExternoCodigo(), registroSalida.getRegistroDetalle().getOficinaOrigenExternoDenominacion()));
+
+            } else if (!oficinasOrigen.contains(oficinaOrigen)) {// Si es Interna, pero no esta relacionado con la Oficina Activa
                 oficinasOrigen.add(oficinaOrigen);
             }
 
-            //model.addAttribute("libros", getLibrosRegistroSalida(request));
             model.addAttribute("organismosOficinaActiva", organismosOficinaActiva);
             model.addAttribute("oficinasOrigen", oficinasOrigen);
 
@@ -276,45 +246,38 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         Entidad entidad = getEntidadActiva(request);
 
         if (result.hasErrors()) { // Si hay errores volvemos a la vista del formulario
-            model.addAttribute(getOficinaActiva(request));
-            model.addAttribute(getUsuarioAutenticado(request));
+            model.addAttribute("usuario", getUsuarioAutenticado(request));
+            model.addAttribute("oficina", getOficinaActiva(request));
             model.addAttribute(entidad);
-            //model.addAttribute("libros", getLibrosRegistroSalida(request));
 
-            // Controlamos si el organismo destino es externo o interno
+            // Organismo origen: Select
             Set<Organismo> organismosOficinaActiva = getOrganismosOficinaActiva(request);
-            // Si el organismo que han seleccionado es externo, lo creamos nuevo y lo añadimos a la lista del select
-            if(organismoEjb.findByCodigoVigente(registroSalida.getOrigen().getCodigo(),entidad.getId())== null){
-                Organismo organismoExterno = new Organismo();
-                organismoExterno.setCodigo(registroSalida.getOrigen().getCodigo());
-                organismoExterno.setDenominacion(registroSalida.getOrigen().getDenominacion());
-                organismosOficinaActiva.add(organismoExterno);
-
-                // si es interno, miramos si ya esta en la lista, si no, lo añadimos
-            }else if(!organismosOficinaActiva.contains(registroSalida.getOrigen())){
-                organismosOficinaActiva.add(organismoEjb.findByCodigo(registroSalida.getOrigen().getCodigo()));
+            // Si el Organismo Origen no está en al lista lo añadimos
+            if (!organismosOficinaActiva.contains(registroSalida.getOrigen())) {
+                organismosOficinaActiva.add(registroSalida.getOrigen());
             }
+
             model.addAttribute("organismosOficinaActiva", organismosOficinaActiva);
 
-
-            // Si la Oficina Origen es Externa, la añadimos al listado.
+            // Oficina Origen: Select
             Set<Oficina> oficinasOrigen = getOficinasOrigen(request);
-            // Si han indicado OficinaOrigen
-            if(registroSalida.getRegistroDetalle().getOficinaOrigen()!=null){
-                if(oficinaEjb.findByCodigoVigente(registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo()) == null){
-                    Oficina oficinaExterna = new Oficina();
-                    oficinaExterna.setCodigo(registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo());
-                    oficinaExterna.setDenominacion(registroSalida.getRegistroDetalle().getOficinaOrigen().getDenominacion());
-                    oficinasOrigen.add(oficinaExterna);
 
-                    // si es interna, miramos si ya esta en la lista, si no, lo añadimos
-                }else if(!oficinasOrigen.contains(registroSalida.getRegistroDetalle().getOficinaOrigen())){
-                    oficinasOrigen.add(oficinaEjb.findByCodigo(registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo()));
+            if (!registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo().equals("-1")) { // Si han indicado OficinaOrigen
+                Oficina oficinaOrigen = oficinaEjb.findByCodigoEntidad(registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo(), entidad.getId());
+
+                if (oficinaOrigen == null) { // Es externa
+                    log.info("Es oficina externa: " + registroSalida.getRegistroDetalle().getOficinaOrigenExternoDenominacion());
+                    oficinasOrigen.add(new Oficina(null, registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo(), registroSalida.getRegistroDetalle().getOficinaOrigenExternoDenominacion()));
+
+                } else { // Es interna, la añadimos a la lista por si acaso no está
+                    log.info("Es oficina interna: " + oficinaOrigen.getDenominacion());
+                    oficinasOrigen.add(oficinaOrigen);
                 }
             }
             model.addAttribute("oficinasOrigen", oficinasOrigen);
 
             return "registroSalida/registroSalidaForm";
+
         }else { // Si no hay errores actualizamos el registroSalida
 
             try {
@@ -346,6 +309,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
                 e.printStackTrace();
                 Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
                 return "redirect:/inici";
+
             }finally {
                 status.setComplete();
             }
@@ -368,57 +332,44 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         Organismo organismoDestino = registroSalida.getOrigen();
 
         // Gestionamos el Organismo, determinando si es Interno o Externo
-        Organismo orgDestino = organismoEjb.findByCodigoVigente(organismoDestino.getCodigo(), entidad.getId());
+        Organismo orgDestino = organismoEjb.findByCodigoEntidad(organismoDestino.getCodigo(), entidad.getId());
         if(orgDestino != null){ // es interno
 
             registroSalida.setOrigen(orgDestino);
             registroSalida.setOrigenExternoCodigo(null);
             registroSalida.setOrigenExternoDenominacion(null);
-        } else { // es externo
-            registroSalida.setOrigenExternoCodigo(registroSalida.getOrigen().getCodigo());
-            if(registroSalida.getId()!= null){//es una modificación
-                registroSalida.setOrigenExternoDenominacion(registroSalida.getOrigenExternoDenominacion());
-            }else{
-                registroSalida.setOrigenExternoDenominacion(registroSalida.getOrigen().getDenominacion());
-            }
-
-            registroSalida.setOrigen(null);
         }
 
-        // Cogemos los dos posibles campos
+        // Oficina origen, determinando si es Interno o Externo
         Oficina oficinaOrigen = registroSalida.getRegistroDetalle().getOficinaOrigen();
-        
-        // Si no han indicado ni externa ni interna, se establece la oficina en la que se realiza el registroSalida.
-        if(oficinaOrigen == null){
+
+        if (oficinaOrigen.getCodigo().equals("-1")) { // No han indicado oficina de origen
+
+            // Asignamos la Oficina donde se realiza el registro
             registroSalida.getRegistroDetalle().setOficinaOrigen(registroSalida.getOficina());
-        } else {
-          if(!oficinaOrigen.getCodigo().equals("-1")){ // si han indicado oficina origen
-              Oficina ofiOrigen = oficinaEjb.findByCodigo(oficinaOrigen.getCodigo());
-              if(ofiOrigen != null){ // Es interna
-                  // log.info("oficina interna");
-                  registroSalida.getRegistroDetalle().setOficinaOrigen(ofiOrigen);
-                  registroSalida.getRegistroDetalle().setOficinaOrigenExternoCodigo(null);
-                  registroSalida.getRegistroDetalle().setOficinaOrigenExternoDenominacion(null);
-              } else {  // es externa
+            registroSalida.getRegistroDetalle().setOficinaOrigenExternoCodigo(null);
+            registroSalida.getRegistroDetalle().setOficinaOrigenExternoDenominacion(null);
 
-                  registroSalida.getRegistroDetalle().setOficinaOrigenExternoCodigo(registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo());
-                  if(registroSalida.getId()!= null){//es una modificación
-                      registroSalida.getRegistroDetalle().setOficinaOrigenExternoDenominacion(registroSalida.getRegistroDetalle().getOficinaOrigenExternoDenominacion());
-                  }else{
-                      registroSalida.getRegistroDetalle().setOficinaOrigenExternoDenominacion(registroSalida.getRegistroDetalle().getOficinaOrigen().getDenominacion());
-                  }
-                  registroSalida.getRegistroDetalle().setOficinaOrigen(null);
+        } else { // Han indicado oficina origen
 
-              }
-          }else { // No han indicado oficina de origen
-              registroSalida.getRegistroDetalle().setOficinaOrigen(null);
-              registroSalida.getRegistroDetalle().setOficinaOrigenExternoCodigo(null);
-              registroSalida.getRegistroDetalle().setOficinaOrigenExternoDenominacion(null);
-          }
+            Oficina ofiOrigen = oficinaEjb.findByCodigoEntidad(oficinaOrigen.getCodigo(), entidad.getId());
+            if (ofiOrigen != null) { // Es interna
+
+                registroSalida.getRegistroDetalle().setOficinaOrigen(ofiOrigen);
+                registroSalida.getRegistroDetalle().setOficinaOrigenExternoCodigo(null);
+                registroSalida.getRegistroDetalle().setOficinaOrigenExternoDenominacion(null);
+
+            } else {  // es externa
+                registroSalida.getRegistroDetalle().setOficinaOrigenExternoCodigo(registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo());
+                if (registroSalida.getId() != null) {//es una modificación
+                    registroSalida.getRegistroDetalle().setOficinaOrigenExternoDenominacion(registroSalida.getRegistroDetalle().getOficinaOrigenExternoDenominacion());
+                } else {
+                    registroSalida.getRegistroDetalle().setOficinaOrigenExternoDenominacion(registroSalida.getRegistroDetalle().getOficinaOrigen().getDenominacion());
+                }
+
+                registroSalida.getRegistroDetalle().setOficinaOrigen(null);
+            }
         }
-
-
-
 
 
         // Solo se comprueba si es una modificación de RegistroSalida
@@ -443,10 +394,6 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         if( registroSalida.getRegistroDetalle().getTransporte() == -1){
             registroSalida.getRegistroDetalle().setTransporte(null);
         }
-
-        // Organimo Interesado
-
-
 
         return registroSalida;
     }

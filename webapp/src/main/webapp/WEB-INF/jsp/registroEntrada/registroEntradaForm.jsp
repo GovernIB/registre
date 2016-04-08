@@ -144,18 +144,15 @@
                                    <form:errors path="destino.codigo" cssClass="help-block" element="span"/>
                                </div>
 
-
                                <div class="col-xs-2 boto-panel">
                                    <a data-toggle="modal" role="button" href="#modalBuscadorOrganismoDestino"
-                                      onclick="inicializarBuscador('#codNivelAdministracionOrganismoDestino','#codComunidadAutonomaOrganismoDestino','#provinciaOrganismoDestino','#localidadOrganismoDestino','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}','${oficina.organismoResponsable.codAmbProvincia.codigoProvincia}','${oficina.organismoResponsable.localidad.codigoLocalidad}', 'OrganismoDestino' );"
+                                      onclick="inicializarBuscador('#codNivelAdministracionOrganismoDestino','#codComunidadAutonomaOrganismoDestino','#provinciaOrganismoDestino','#localidadOrganismoDestino','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}', 'OrganismoDestino' );"
                                       class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                                </div>
-                               <c:if test="${empty registroEntrada.destinoExternoCodigo}"><!-- Si es interno -->
-                                   <form:hidden path="destino.denominacion"/>
-                               </c:if>
-                               <c:if test="${not empty registroEntrada.destinoExternoCodigo}"><!-- Si es externo -->
-                                   <form:hidden path="destinoExternoDenominacion"/>
-                               </c:if>
+
+                               <form:hidden path="destino.denominacion"/>
+                               <form:hidden path="destinoExternoDenominacion"/>
+
                                <!-- Fin de gestión de organismo destino -->
                            </div>
 
@@ -285,15 +282,13 @@
 
                                <div class="col-xs-2 boto-panel">
                                    <a data-toggle="modal" role="button" href="#modalBuscadorOficinaOrigen"
-                                      onclick="inicializarBuscador('#codNivelAdministracionOficinaOrigen','#codComunidadAutonomaOficinaOrigen','#provinciaOficinaOrigen','#localidadOficinaOrigen','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}','${oficina.organismoResponsable.codAmbProvincia.codigoProvincia}','${oficina.organismoResponsable.localidad.codigoLocalidad}', 'OficinaOrigen' );"
+                                      onclick="inicializarBuscador('#codNivelAdministracionOficinaOrigen','#codComunidadAutonomaOficinaOrigen','#provinciaOficinaOrigen','#localidadOficinaOrigen','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}', 'OficinaOrigen' );"
                                       class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                                </div>
-                               <c:if test="${empty registroEntrada.registroDetalle.oficinaOrigenExternoCodigo}"><!-- Si es interno -->
-                                   <form:hidden path="registroDetalle.oficinaOrigen.denominacion"/>
-                               </c:if>
-                                <c:if test="${not empty registroEntrada.registroDetalle.oficinaOrigenExternoCodigo}"><!-- Si es externo -->
-                                   <form:hidden path="registroDetalle.oficinaOrigenExternoDenominacion"/>
-                               </c:if>
+
+                               <form:hidden path="registroDetalle.oficinaOrigen.denominacion"/>
+                               <form:hidden path="registroDetalle.oficinaOrigenExternoDenominacion"/>
+
                                <!-- Fin gestión de oficina origen(se prepara en función de si es interno o externo )-->
                            </div>
 

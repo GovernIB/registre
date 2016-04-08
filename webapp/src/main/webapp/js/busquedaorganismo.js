@@ -47,7 +47,7 @@ function getUrlBusqueda(tipoOrganismo, urlServidor) {
  */
 function getIdSelect(tipoOrganismo) {
 
-    /* REGISTRO ENTRADA */
+    /* REGISTRO ENTRADA y REGISTRO SALIDA */
     // Caso de organismo Destino
     if (tipoOrganismo == 'OrganismoDestino') {
         return "#destino\\.codigo";
@@ -60,12 +60,12 @@ function getIdSelect(tipoOrganismo) {
     if (tipoOrganismo == 'OrganismoInteresado') {
         return "#registroDetalle\\.organismoInteresado\\.codigo";
     }
-    /* REGISTRO SALIDA */
     // Caso Organismo Origen de registro salida
     if (tipoOrganismo == 'OrganismoOrigen') {
         return "#origen\\.codigo";
     }
 
+    /*LISTADOS REGISTRO ENTRADA Y SALIDA*/
     if (tipoOrganismo == 'listaRegEntrada') {
         return "#organDestinatari";
     }
@@ -82,7 +82,7 @@ function getIdSelect(tipoOrganismo) {
  */
 function getIdDenominacion(tipoOrganismo) {
 
-    /* REGISTRO ENTRADA */
+    /* REGISTRO ENTRADA Y REGISTRO SALIDA */
     // Caso de organismo Destino
     if (tipoOrganismo == 'OrganismoDestino') {
         return "#destino\\.denominacion";
@@ -95,18 +95,30 @@ function getIdDenominacion(tipoOrganismo) {
     if (tipoOrganismo == 'OrganismoInteresado') {
         return "#registroDetalle\\.organismoInteresado\\.denominacion";
     }
-    /* REGISTRO SALIDA */
     // Caso Organismo Origen de registro salida
     if (tipoOrganismo == 'OrganismoOrigen') {
         return "#origen\\.denominacion";
     }
 
+    /* LISTADOS REGISTRO ENTRADA Y SALIDA */
     if (tipoOrganismo == 'listaRegEntrada') {
         return "#organDestinatariNom";
     }
 
     if (tipoOrganismo == 'listaRegSalida') {
         return "#organOrigenNom";
+    }
+}
+
+function getIdDenominacionExterna(tipoOrganismo) {
+    /* REGISTRO ENTRADA Y REGISTRO SALIDA */
+    // Caso de organismo Destino
+    if (tipoOrganismo == 'OrganismoDestino') {
+        return "#destinoExternoDenominacion";
+    }
+    // Caso de oficina origen
+    if (tipoOrganismo == 'OficinaOrigen') {
+        return "#registroDetalle\\.oficinaOrigenExternoDenominacion";
     }
 }
 
@@ -292,8 +304,19 @@ function limpiarFormularioBusqueda(tipoOrganismo) {
     $('#reloadorg' + tipoOrganismo).hide();
 }
 
-
-function inicializarBuscador(selectNivelAdministracion, selectComunidadAutonoma, selectProvincia, selectLocalidad, idNivelAdministracion, idComunidadAutonoma, idProvincia, idLocalidad, tipoOrganismo) {
+/**
+ *
+ * @param selectNivelAdministracion ID Select
+ * @param selectComunidadAutonoma ID Select
+ * @param selectProvincia ID Select
+ * @param selectLocalidad ID Select
+ * @param idNivelAdministracion Identificador
+ * @param idComunidadAutonoma
+ * @param idProvincia
+ * @param idLocalidad
+ * @param tipoOrganismo
+ */
+function inicializarBuscador(selectNivelAdministracion, selectComunidadAutonoma, selectProvincia, selectLocalidad, idNivelAdministracion, idComunidadAutonoma, tipoOrganismo) {
 
     $('#reloadorg' + tipoOrganismo).hide();
     $(selectNivelAdministracion).val(idNivelAdministracion);
@@ -317,6 +340,7 @@ function asignarOrganismo(codigo, denominacion, tipoOrganismo) {
 
     var idSelect = getIdSelect(tipoOrganismo);
     var idDenominacion = getIdDenominacion(tipoOrganismo);
+    var idDenominacionExterna = getIdDenominacionExterna(tipoOrganismo);
     var anadir = true;
     var idModal = "#modalBuscador" + tipoOrganismo;
     /* Miramos si el organismo ya existe en el select, si existe lo seleccionamos,
@@ -338,6 +362,9 @@ function asignarOrganismo(codigo, denominacion, tipoOrganismo) {
 
         $(idSelect).append(html);
         $(idDenominacion).val(denominacion);
+        if (idDenominacionExterna != null) {
+            $(idDenominacionExterna).val(denominacion);
+        }
     }
     $(idSelect).trigger("chosen:updated");
     $(idModal).modal('hide');
