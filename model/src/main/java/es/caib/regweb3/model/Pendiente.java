@@ -21,6 +21,15 @@ public class Pendiente implements Serializable {
   private String estado;
   private Date fecha;
 
+  public Pendiente() {
+  }
+
+  public Pendiente(Long idOrganismo, Boolean procesado, String estado) {
+    this.idOrganismo = idOrganismo;
+    this.procesado = procesado;
+    this.estado = estado;
+  }
+
   @Id
   @Column(name="ID")
   @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")

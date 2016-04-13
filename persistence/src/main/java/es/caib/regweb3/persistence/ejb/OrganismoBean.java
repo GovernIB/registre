@@ -26,11 +26,11 @@ import java.util.*;
 
 @Stateless(name = "OrganismoEJB")
 @SecurityDomain("seycon")
-public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements OrganismoLocal{
+public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements OrganismoLocal {
 
     protected final Logger log = Logger.getLogger(getClass());
 
-    @PersistenceContext(unitName="regweb3")
+    @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
     @EJB(mappedName = "regweb3/OficinaEJB/local")
@@ -46,7 +46,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     @SuppressWarnings(value = "unchecked")
     public List<Organismo> getAll() throws Exception {
 
-        return  em.createQuery("Select organismo from Organismo as organismo order by organismo.id").getResultList();
+        return em.createQuery("Select organismo from Organismo as organismo order by organismo.id").getResultList();
     }
 
     @Override
@@ -61,22 +61,22 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     public Long getTotalByEntidad(Long entidad) throws Exception {
 
         Query q = em.createQuery("Select count(organismo.id) from Organismo as organismo where " +
-                            "organismo.entidad.id = :entidad");
+                "organismo.entidad.id = :entidad");
 
-        q.setParameter("entidad",entidad);
+        q.setParameter("entidad", entidad);
 
         return (Long) q.getSingleResult();
     }
-    
+
     @Override
     public List<Organismo> getAllByEntidad(Long entidad) throws Exception {
 
-          Query q = em.createQuery("Select organismo from Organismo as organismo where " +
-                      "organismo.entidad.id = :entidad");
+        Query q = em.createQuery("Select organismo from Organismo as organismo where " +
+                "organismo.entidad.id = :entidad");
 
-          q.setParameter("entidad",entidad);
+        q.setParameter("entidad", entidad);
 
-          return q.getResultList();
+        return q.getResultList();
     }
 
 
@@ -93,14 +93,14 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     @Override
     public List<Organismo> getPaginationByEntidad(int inicio, Long entidad) throws Exception {
 
-          Query q = em.createQuery("Select organismo from Organismo as organismo where " +
-                      "organismo.entidad.id = :entidad");
+        Query q = em.createQuery("Select organismo from Organismo as organismo where " +
+                "organismo.entidad.id = :entidad");
 
-          q.setParameter("entidad",entidad);
-          q.setFirstResult(inicio);
-          q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setParameter("entidad", entidad);
+        q.setFirstResult(inicio);
+        q.setMaxResults(RESULTADOS_PAGINACION);
 
-          return q.getResultList();
+        return q.getResultList();
     }
 
     @Override
@@ -109,18 +109,18 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         Query q = em.createQuery("Select organismo from Organismo as organismo where " +
                 "organismo.codigo = :codigo");
 
-        q.setParameter("codigo",codigo);
+        q.setParameter("codigo", codigo);
 
         List<Organismo> organismo = q.getResultList();
-        if(organismo.size() == 1){
+        if (organismo.size() == 1) {
             return organismo.get(0);
-        }else{
-            return  null;
+        } else {
+            return null;
         }
 
     }
 
-    public Organismo findByCodigoBasico(String codigo) throws Exception {
+    public Organismo findByCodigoLigero(String codigo) throws Exception {
         Query q = em.createQuery("Select organismo.id, organismo.codigo, organismo.denominacion from Organismo as organismo where " +
                 "organismo.codigo = :codigo");
 
@@ -141,15 +141,15 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
                 "organismo.codigo = :codigo and organismo.entidad.id = :idEntidad and " +
                 "organismo.estado.codigoEstadoEntidad=:vigente");
 
-        q.setParameter("codigo",codigo);
-        q.setParameter("idEntidad",idEntidad);
-        q.setParameter("vigente",RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        q.setParameter("codigo", codigo);
+        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
 
         List<Object[]> result = q.getResultList();
         if (result.size() == 1) {
             return new Organismo((Long) result.get(0)[0], (String) result.get(0)[1], (String) result.get(0)[2]);
-        }else{
-            return  null;
+        } else {
+            return null;
         }
 
     }
@@ -161,7 +161,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
                 " inner join  organismo.libros as libros " +
                 " where organismo.entidad.id = :entidad ");
 
-        q.setParameter("entidad",entidad);
+        q.setParameter("entidad", entidad);
 
 
         return q.getResultList();
@@ -209,8 +209,8 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         Query q = em.createQuery("Select organismo.id, organismo.codigo, organismo.denominacion from Organismo as organismo where " +
                 "organismo.entidad.id = :entidad and organismo.estado.codigoEstadoEntidad = :codigoEstado");
 
-        q.setParameter("entidad",entidad);
-        q.setParameter("codigoEstado",estado);
+        q.setParameter("entidad", entidad);
+        q.setParameter("codigoEstado", estado);
 
         List<Object[]> result = q.getResultList();
         List<Organismo> organismos = new ArrayList<Organismo>();
@@ -229,8 +229,8 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         Query q = em.createQuery("Select organismo.id, organismo.denominacion from Organismo as organismo where " +
                 "organismo.entidad.id = :entidad and organismo.estado.codigoEstadoEntidad =:codigoEstado");
 
-        q.setParameter("entidad",entidad);
-        q.setParameter("codigoEstado",codigoEstado);
+        q.setParameter("entidad", entidad);
+        q.setParameter("codigoEstado", codigoEstado);
 
 
         List<Object[]> result = q.getResultList();
@@ -243,10 +243,10 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
         List<Organismo> organismosConOficinas = new ArrayList<Organismo>();
 
-        for(Organismo organismo: organismos){
-           if(oficinaEjb.tieneOficinasOrganismo(organismo.getId())){
-               organismosConOficinas.add(organismo);
-           }
+        for (Organismo organismo : organismos) {
+            if (oficinaEjb.tieneOficinasOrganismo(organismo.getId())) {
+                organismosConOficinas.add(organismo);
+            }
         }
         return organismosConOficinas;
     }
@@ -257,9 +257,9 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         Query q = em.createQuery("Select organismo from Organismo as organismo where " +
                 "organismo.estado.codigoEstadoEntidad = :codigoEstado");
 
-        q.setParameter("codigoEstado",codigoEstado);
+        q.setParameter("codigoEstado", codigoEstado);
 
-        return  q.getResultList();
+        return q.getResultList();
 
     }
 
@@ -269,32 +269,32 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         Query q = em.createQuery("Select organismo from Organismo as organismo where " +
                 "organismo.organismoSuperior = :idOrganismo");
 
-        q.setParameter("idOrganismo",idOrganismo);
+        q.setParameter("idOrganismo", idOrganismo);
 
-        return  q.getResultList();
+        return q.getResultList();
 
     }
 
     @Override
-    public List<Organismo> getOrganismosPrimerNivel(Long idOrganismoSuperior) throws Exception{
+    public List<Organismo> getOrganismosPrimerNivel(Long idOrganismoSuperior) throws Exception {
 
         Query q = em.createQuery("Select organismo from Organismo as organismo where " +
                 "organismo.organismoSuperior.id = :idOrganismoSuperior");
 
-        q.setParameter("idOrganismoSuperior",idOrganismoSuperior);
+        q.setParameter("idOrganismoSuperior", idOrganismoSuperior);
 
-        return  q.getResultList();
+        return q.getResultList();
     }
 
     @Override
-    public List<Organismo> getOrganismosByNivel(Long nivel, Long idEntidad, String estado) throws Exception{
+    public List<Organismo> getOrganismosByNivel(Long nivel, Long idEntidad, String estado) throws Exception {
 
         Query q = em.createQuery("Select organismo.id,organismo.codigo, organismo.denominacion, organismo.organismoSuperior.id from Organismo as organismo where " +
                 "organismo.nivelJerarquico = :nivel and organismo.entidad.id = :idEntidad and organismo.estado.codigoEstadoEntidad = :estado order by organismo.codigo");
 
-        q.setParameter("nivel",nivel);
-        q.setParameter("idEntidad",idEntidad);
-        q.setParameter("estado",estado);
+        q.setParameter("nivel", nivel);
+        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("estado", estado);
 
         List<Organismo> organismos = new ArrayList<Organismo>();
         List<Object[]> result = q.getResultList();
@@ -310,7 +310,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
 
     @Override
-    public Paginacion busqueda(Integer pageNumber, Long idEntidad, String denominacion,Long idCatEstadoEntidad) throws Exception {
+    public Paginacion busqueda(Integer pageNumber, Long idEntidad, String denominacion, Long idCatEstadoEntidad) throws Exception {
 
         Query q;
         Query q2;
@@ -319,66 +319,70 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
         StringBuffer query = new StringBuffer("Select organismo from Organismo as organismo ");
 
-        if(denominacion!= null && denominacion.length() > 0){where.add(DataBaseUtils.like("organismo.denominacion","denominacion",parametros,denominacion));}
-        if(idCatEstadoEntidad != null && idCatEstadoEntidad > 0) {
-          where.add(" organismo.estado.id = :idCatEstadoEntidad");
-          parametros.put("idCatEstadoEntidad",idCatEstadoEntidad);
+        if (denominacion != null && denominacion.length() > 0) {
+            where.add(DataBaseUtils.like("organismo.denominacion", "denominacion", parametros, denominacion));
+        }
+        if (idCatEstadoEntidad != null && idCatEstadoEntidad > 0) {
+            where.add(" organismo.estado.id = :idCatEstadoEntidad");
+            parametros.put("idCatEstadoEntidad", idCatEstadoEntidad);
         }
 
         // Añadimos la Entidad
-        where.add("organismo.entidad.id = :idEntidad "); parametros.put("idEntidad",idEntidad);
+        where.add("organismo.entidad.id = :idEntidad ");
+        parametros.put("idEntidad", idEntidad);
 
 
-         if (parametros.size() != 0) {
-             query.append("where ");
-             int count = 0;
-             for (String w : where) {
-                 if (count != 0) {
-                     query.append(" and ");
-                 }
-                 query.append(w);
-                 count++;
-             }
-             q2 = em.createQuery(query.toString().replaceAll("Select organismo from Organismo as organismo ", "Select count(organismo.id) from Organismo as organismo "));
-             query.append("order by organismo.denominacion");
-             q = em.createQuery(query.toString());
+        if (parametros.size() != 0) {
+            query.append("where ");
+            int count = 0;
+            for (String w : where) {
+                if (count != 0) {
+                    query.append(" and ");
+                }
+                query.append(w);
+                count++;
+            }
+            q2 = em.createQuery(query.toString().replaceAll("Select organismo from Organismo as organismo ", "Select count(organismo.id) from Organismo as organismo "));
+            query.append("order by organismo.denominacion");
+            q = em.createQuery(query.toString());
 
-             for (Map.Entry<String, Object> param : parametros.entrySet()) {
-                 q.setParameter(param.getKey(), param.getValue());
-                 q2.setParameter(param.getKey(), param.getValue());
-             }
+            for (Map.Entry<String, Object> param : parametros.entrySet()) {
+                q.setParameter(param.getKey(), param.getValue());
+                q2.setParameter(param.getKey(), param.getValue());
+            }
 
-         }else{
-             q2 = em.createQuery(query.toString().replaceAll("Select organismo from Organismo as organismo ", "Select count(organismo.id) from Organismo as organismo "));
-             query.append("order by organismo.denominacion");
-             q = em.createQuery(query.toString());
-         }
-         log.info("Query: " + query);
+        } else {
+            q2 = em.createQuery(query.toString().replaceAll("Select organismo from Organismo as organismo ", "Select count(organismo.id) from Organismo as organismo "));
+            query.append("order by organismo.denominacion");
+            q = em.createQuery(query.toString());
+        }
+        log.info("Query: " + query);
 
-         Paginacion paginacion = null;
+        Paginacion paginacion = null;
 
-         if(pageNumber != null){ // Comprobamos si es una busqueda paginada o no
-             Long total = (Long)q2.getSingleResult();
-             paginacion = new Paginacion(total.intValue(), pageNumber);
-             int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
-             q.setFirstResult(inicio);
-             q.setMaxResults(RESULTADOS_PAGINACION);
-         }else{
-             paginacion = new Paginacion(0, 0);
-         }
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
+            paginacion = new Paginacion(total.intValue(), pageNumber);
+            int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            q.setFirstResult(inicio);
+            q.setMaxResults(RESULTADOS_PAGINACION);
+        } else {
+            paginacion = new Paginacion(0, 0);
+        }
 
-         paginacion.setListado(q.getResultList());
+        paginacion.setListado(q.getResultList());
 
-         return paginacion;
+        return paginacion;
 
-     }
+    }
 
-  /**
-   * Método que obtiene los organismos vigentes y en los que puede registrar de la oficina activa
-   * @param oficinaActiva
-   * @return List
-   * @throws Exception
-   */
+    /**
+     * Método que obtiene los organismos vigentes y en los que puede registrar de la oficina activa
+     *
+     * @param oficinaActiva
+     * @return List
+     * @throws Exception
+     */
     @Override
     public LinkedHashSet<Organismo> getByOficinaActiva(Oficina oficinaActiva) throws Exception {
 
@@ -397,6 +401,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     /**
      * Método que nos devuelve los códigos DIR3 de las oficinas SIR de un organismo
+     *
      * @param idOrganismo identificador del organismo
      * @return
      * @throws Exception
@@ -407,11 +412,11 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         Query q = em.createQuery("Select relacionSirOfi from RelacionSirOfi as relacionSirOfi where " +
                 "relacionSirOfi.organismo.id = :idOrganismo ");
 
-        List<RelacionSirOfi> relSir= q.getResultList();
-        if(!relSir.isEmpty()){
-          for(RelacionSirOfi rel:relSir){
-            oficinasSir.add(rel.getOficina().getCodigo());
-          }
+        List<RelacionSirOfi> relSir = q.getResultList();
+        if (!relSir.isEmpty()) {
+            for (RelacionSirOfi rel : relSir) {
+                oficinasSir.add(rel.getOficina().getCodigo());
+            }
         }
         return oficinasSir;
     }
@@ -419,66 +424,68 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     /**
      * Metodo que recursivamente obtiene todos los hijos de una lista de organismos
+     *
      * @param organismosPadres organismos de los que obtener sus hijos
-     * @param totales organismos totales obtenidos despues del proceso recursivo.
+     * @param totales          organismos totales obtenidos despues del proceso recursivo.
      * @throws Exception
      */
     private void obtenerHijosOrganismos(LinkedHashSet<Organismo> organismosPadres, LinkedHashSet<Organismo> totales) throws Exception {
 
-         // recorremos para todos los organismos Padres
-         for(Organismo org: organismosPadres){
+        // recorremos para todos los organismos Padres
+        for (Organismo org : organismosPadres) {
 
-             Query q = em.createQuery("select organismo.id,organismo.codigo, organismo.denominacion from Organismo as organismo where organismo.organismoSuperior.id =:idOrganismoSuperior and organismo.estado.codigoEstadoEntidad =:vigente ");
-           q.setParameter("idOrganismoSuperior", org.getId());
-           q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+            Query q = em.createQuery("select organismo.id,organismo.codigo, organismo.denominacion from Organismo as organismo where organismo.organismoSuperior.id =:idOrganismoSuperior and organismo.estado.codigoEstadoEntidad =:vigente ");
+            q.setParameter("idOrganismoSuperior", org.getId());
+            q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
 
-             LinkedHashSet<Organismo> hijos = new LinkedHashSet<Organismo>();
+            LinkedHashSet<Organismo> hijos = new LinkedHashSet<Organismo>();
 
 
-             List<Object[]> result = q.getResultList();
+            List<Object[]> result = q.getResultList();
 
-             for (Object[] object : result) {
-                 Organismo hijo = new Organismo((Long) object[0], (String) object[1], (String) object[2]);
+            for (Object[] object : result) {
+                Organismo hijo = new Organismo((Long) object[0], (String) object[1], (String) object[2]);
 
-                 hijos.add(hijo);
-             }
-             totales.addAll(hijos);
+                hijos.add(hijo);
+            }
+            totales.addAll(hijos);
 
-           // Hijos de cada organismo
-           obtenerHijosOrganismos(hijos, totales);
+            // Hijos de cada organismo
+            obtenerHijosOrganismos(hijos, totales);
 
-         }
+        }
 
-     }
+    }
 
-  /**
-   * Obtiene todos los organismos(padres e hijos) a los que da servicio el libro
-   * @param idLibro identificador del libro
-   * @return
-   * @throws Exception
-   */
-     public List<Organismo> getByLibro(Long idLibro) throws Exception {
-       // Obtenemos el organismo responsable del libro.
-       Query q2 = em.createQuery("Select libro.organismo from Libro as libro where libro.id=:idLibro");
-       q2.setParameter("idLibro",idLibro);
-         LinkedHashSet<Organismo> organismosPadres = new LinkedHashSet<Organismo>(q2.getResultList());
+    /**
+     * Obtiene todos los organismos(padres e hijos) a los que da servicio el libro
+     *
+     * @param idLibro identificador del libro
+     * @return
+     * @throws Exception
+     */
+    public List<Organismo> getByLibro(Long idLibro) throws Exception {
+        // Obtenemos el organismo responsable del libro.
+        Query q2 = em.createQuery("Select libro.organismo from Libro as libro where libro.id=:idLibro");
+        q2.setParameter("idLibro", idLibro);
+        LinkedHashSet<Organismo> organismosPadres = new LinkedHashSet<Organismo>(q2.getResultList());
 
-       // aquí guardaremos todos los organismo, el padre y sus hijos.
-         LinkedHashSet<Organismo> totales = new LinkedHashSet<Organismo>();
-       totales.addAll(organismosPadres);
-       // recursivamente obtenemos los hijos de los organismos padre.
-       obtenerHijosOrganismos(organismosPadres, totales);
+        // aquí guardaremos todos los organismo, el padre y sus hijos.
+        LinkedHashSet<Organismo> totales = new LinkedHashSet<Organismo>();
+        totales.addAll(organismosPadres);
+        // recursivamente obtenemos los hijos de los organismos padre.
+        obtenerHijosOrganismos(organismosPadres, totales);
 
-       return  new ArrayList<Organismo>(totales);
-     }
+        return new ArrayList<Organismo>(totales);
+    }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
 
-        List<?> organismos = em.createQuery("Select distinct(id) from Organismo where entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        List<?> organismos = em.createQuery("Select distinct(id) from Organismo where entidad.id =:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
         Integer total = organismos.size();
 
-        if(organismos.size() > 0){
+        if (organismos.size() > 0) {
 
             // Si hay más de 1000 registros, dividimos las queries (ORA-01795).
             while (organismos.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
@@ -495,5 +502,20 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
         return total;
 
+    }
+
+    public Boolean tieneOficinasServicio(Long idOrganismo) throws Exception {
+
+        Boolean oficinas = oficinaEjb.tieneOficinasOrganismo(idOrganismo);
+        if (!oficinas) {
+            // Si no tiene Oficinas que cuelguen de el, buscamos en su padre
+            Organismo organismo = findById(idOrganismo);
+            if (organismo.getOrganismoSuperior() != null && (!organismo.getOrganismoSuperior().getId().equals(organismo.getOrganismoRaiz().getId()))) {
+
+                return tieneOficinasServicio(organismo.getOrganismoSuperior().getId());
+            }
+            return false;
+        }
+        return true;
     }
 }

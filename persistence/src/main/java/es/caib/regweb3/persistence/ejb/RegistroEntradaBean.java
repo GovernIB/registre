@@ -363,7 +363,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
             oficios.setOrganismo(organismo);
             oficios.setVigente(organismo.getEstado().getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
-            oficios.setOficinas(oficinaEjb.tieneOficinasOrganismo(organismo.getId()));
+            oficios.setOficinas(organismoEjb.tieneOficinasServicio(organismo.getId()));
 
             //Buscamos los Registros de Entrada, pendientes de tramitar mediante un Oficio de Remision
             oficios.setOficiosRemision(oficiosRemisionByOrganismoPropio(organismo.getId(), any, libro.getId()));

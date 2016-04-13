@@ -178,10 +178,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
                 oficinas.addAll(relacionOrganizativaOfiLocalEjb.getOficinasByOrganismo(organismo.getId()));
                 if (oficinas.size() == 0) {
                     //guardar pendiente
-                    Pendiente pendiente = new Pendiente();
-                    pendiente.setIdOrganismo(organismo.getId());
-                    pendiente.setProcesado(false);
-                    pendiente.setEstado(organismo.getEstado().getCodigoEstadoEntidad());
+                    Pendiente pendiente = new Pendiente(organismo.getId(), false, organismo.getEstado().getCodigoEstadoEntidad());
                     pendienteEjb.persist(pendiente);
                 }
             }
@@ -444,137 +441,6 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
     }
 
 
-    /**
-     *  Crea un {@link es.caib.regweb3.model.Oficina} a partir de una OficinaTF
-     *  Este método se emplea tanto en la sincronización como en la actualización
-     * @param oficinaTF
-     * @throws Exception
-     */
-    /** OJO ESTE MÉTODO YA NO SE USA. Ahora se ha descompuesto en partes.
-     * Los métodos que lo sustituyen son
-     *  crearActualizarOficinas(todasOficinasEntidad);
-        asignarOficinasResponsables(todasOficinasEntidad);
-        crearRelacionesOrganizativas(todasOficinasEntidad);
-        crearRelacionesSir(todasOficinasEntidad);*/
-    public void sincronizarOficina(OficinaTF oficinaTF) throws Exception {
-      // Comprobamos que la oficina que nos envian no sea null
-      // (ocurre en el caso de que actualicemos y no se haya actualizado en el origen)
-
-      Map<String, CatEstadoEntidad> cacheEstadoEntidad = montarCacheEstadoEntidad();
-        if(oficinaTF != null){
-            log.info("OFICINA ACTUALIZADA/SINCRONIZADA: " + oficinaTF.getDenominacion() );
-            // Comprobamos primero si existe la oficina
-            Oficina oficina = oficinaEjb.findByCodigo(oficinaTF.getCodigo());
-
-            if(oficina == null){
-                oficina = new Oficina();
-                oficina.setCodigo(oficinaTF.getCodigo());
-                // Se procesa la oficina para asignar sus valores
-                procesarOficina(oficina, oficinaTF,cacheEstadoEntidad);
-
-                // Guardamos la Oficina
-                oficina = oficinaEjb.persist(oficina);
-            } else {
-                // Se procesa la oficina para asignar sus valores
-                procesarOficina(oficina, oficinaTF, cacheEstadoEntidad);
-            }
-
-            // OficinaResponsable
-            if(oficinaTF.getCodOfiResponsable()!=null){
-                log.info("Oficina responsable: " + oficinaTF.getCodOfiResponsable());
-                Oficina oficinaResponsable = oficinaEjb.findByCodigo(oficinaTF.getCodOfiResponsable());
-                if(oficinaResponsable != null) {
-                    oficina.setOficinaResponsable(oficinaResponsable);
-                    log.info("Oficina: " + oficina);
-                    oficina = oficinaEjb.merge(oficina);
-                }else{
-                    log.info("TIENE OFICINA RESPONSABLE, PERO NO LA ENCUENTRA");
-                }
-            }
-
-
-            //RELACIONES
-
-            //Borramos las relaciones existentes para el caso de la actualizacion
-            log.info("Relaciones SIR eliminadas: " + relacionSirOfiEjb.deleteByOficina(oficina.getId()));
-
-
-            // RelacionSirOfi
-            if(oficinaTF.getSirOfi() != null){
-                List<RelacionSirOfiTF> relacionSirOfiTFList = oficinaTF.getSirOfi();
-                log.info("");
-                log.info("Relaciones SIR " +oficinaTF.getDenominacion() +": " + oficinaTF.getSirOfi().size());
-
-                for (RelacionSirOfiTF relacionSirOfiTF : relacionSirOfiTFList) {
-
-                    RelacionSirOfi relacionSirOfi = new RelacionSirOfi();
-
-                    CatEstadoEntidad catEstadoEntidad = catEstadoEntidadEjb.findByCodigo(relacionSirOfiTF.getEstado());
-                    relacionSirOfi.setEstado(catEstadoEntidad);
-
-                  /*  Oficina oficinaSir = oficinaEjb.findByCodigo(relacionSirOfiTF.getOficina());
-                    log.info("Oficina Org: " + oficinaSir.getCodigo());*/
-                    relacionSirOfi.setOficina(oficina);
-
-                    Organismo organismoSir = organismoEjb.findByCodigo(relacionSirOfiTF.getUnidad());
-                    log.info("Relacion SIR entre " + oficina.getDenominacion() + " - " + organismoSir.getDenominacion());
-                    relacionSirOfi.setOrganismo(organismoSir);
-
-                    //Guardarmos al relación
-
-                    relacionSirOfi = relacionSirOfiEjb.persist(relacionSirOfi);
-
-                }
-
-            }
-
-            log.info("");
-            log.info("");
-
-            //Borramos las relaciones existentes para el caso de la actualizacion
-            log.info("Relaciones ORG eliminadas: " + relacionOrganizativaOfiEjb.deleteByOficina(oficina.getId()));
-
-            if(oficinaTF.getOrganizativasOfi() != null){
-
-                List<RelacionOrganizativaOfiTF> relacionOrganizativaOfiTFList = oficinaTF.getOrganizativasOfi();
-                log.info("Relaciones organizativas " +oficinaTF.getDenominacion() + " - " + oficinaTF.getCodigo() +": "  + relacionOrganizativaOfiTFList.size());
-
-               // List<RelacionOrganizativaOfi> relacionOrganizativaOfiList = new ArrayList<RelacionOrganizativaOfi>();
-                for (RelacionOrganizativaOfiTF relacionOrganizativaOfiTF : relacionOrganizativaOfiTFList) {
-                    log.info("");
-                    log.info("Entramos en RelacionesOrganizativasOFI ");
-
-                    RelacionOrganizativaOfi relacionOrganizativaOfi = new RelacionOrganizativaOfi();
-
-                    CatEstadoEntidad catEstadoEntidad = catEstadoEntidadEjb.findByCodigo(relacionOrganizativaOfiTF.getEstado());
-                    relacionOrganizativaOfi.setEstado(catEstadoEntidad);
-
-                    /*Oficina oficinaOrg = oficinaEjb.findByCodigo(relacionOrganizativaOfiTF.getOficina());
-                    log.info("Oficina Org: " + oficinaOrg.getCodigo());*/
-                    relacionOrganizativaOfi.setOficina(oficina);
-
-
-                    Organismo organismoOrg = organismoEjb.findByCodigo(relacionOrganizativaOfiTF.getUnidad());
-
-                    relacionOrganizativaOfi.setOrganismo(organismoOrg);
-
-                    log.info("Relacion ORG entre " + oficina.getDenominacion() + " - " + organismoOrg.getDenominacion());
-                    relacionOrganizativaOfi = relacionOrganizativaOfiEjb.persist(relacionOrganizativaOfi);
-
-                   // relacionOrganizativaOfiList.add(relacionOrganizativaOfi);
-                }
-               // oficina.setOrganizativasOfi(relacionOrganizativaOfiList);
-            }
-
-            /* borramos cache */
-          cacheEstadoEntidad.clear();
-          //oficina = oficinaEjb.merge(oficina);
-
-        }
-
-    }
-
-
   /**
    * Método que sincroniza los históricos de un organismo. Se debe ejecutar después de sincronizarlos todos.
    * @param organismo organismo al que guardar los históricos
@@ -740,10 +606,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
                 || RegwebConstantes.ESTADO_ENTIDAD_TRANSITORIO.equals(org.getEstado().getCodigoEstadoEntidad())
                 || RegwebConstantes.ESTADO_ENTIDAD_ANULADO.equals(org.getEstado().getCodigoEstadoEntidad())){
                     if(org.getLibros()!=null && org.getLibros().size()>0){
-                        Pendiente pendiente = new Pendiente();
-                        pendiente.setIdOrganismo(org.getId());
-                        pendiente.setProcesado(false);
-                        pendiente.setEstado(org.getEstado().getCodigoEstadoEntidad());
+                        Pendiente pendiente = new Pendiente(org.getId(), false, org.getEstado().getCodigoEstadoEntidad());
                         pendienteEjb.persist(pendiente);
                     }
         }

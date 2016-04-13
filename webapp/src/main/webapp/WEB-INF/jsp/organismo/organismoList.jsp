@@ -42,7 +42,7 @@
 
                     <div class="panel-body">
                         <form:form modelAttribute="organismoBusqueda" method="post" cssClass="form-horizontal">
-                            <form:hidden path="pageNumber"/>
+                            <form:hidden path="pageNumber" value="1"/>
 
                             <div class="form-group col-xs-6">
                                 <div class="col-xs-4 pull-left align-right"><spring:message code="regweb.nombre"/></div>
