@@ -243,11 +243,18 @@ public class OficioRemisionController extends BaseController {
 
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
+        Boolean interno = registroEntradaListForm.getIdOrganismo() != null;
+
         // Comprobamos que el UsuarioActivo pueda crear un Oficio de Remisión
         if(!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),registroEntradaListForm.getIdLibro(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA)){
             log.info("Aviso: No dispone de los permisos necesarios para crear el oficio de remisión");
             Mensaje.saveMessageAviso(request, getMessage("aviso.registro.editar"));
-            return "redirect:/oficioRemision/oficiosPendientesRemision";
+            if (interno) {
+                return "redirect:/oficioRemision/oficiosPendientesRemisionInterna";
+            } else {
+                return "redirect:/oficioRemision/oficiosPendientesRemisionExterna";
+            }
+
         }
 
         List<RegistroEntrada> registrosEntrada = new ArrayList<RegistroEntrada>();
@@ -265,7 +272,11 @@ public class OficioRemisionController extends BaseController {
                 if (!registroEntradaEjb.tieneEstado(registroEntrada.getId(), RegwebConstantes.ESTADO_VALIDO)) {
 
                     Mensaje.saveMessageError(request, getMessage("registroEntrada.tramitar.error"));
-                    return "redirect:/oficioRemision/oficiosPendientesRemision";
+                    if (interno) {
+                        return "redirect:/oficioRemision/oficiosPendientesRemisionInterna";
+                    } else {
+                        return "redirect:/oficioRemision/oficiosPendientesRemisionExterna";
+                    }
 
                 } else { // Lo añadimos a la lista de registros que contendrá en Oficio de Remisión
                     registrosEntrada.add(registroEntrada);
@@ -277,17 +288,18 @@ public class OficioRemisionController extends BaseController {
         if(registrosEntrada.size() == 0) {
             Mensaje.saveMessageError(request, getMessage("oficioRemision.seleccion"));
 
-            if (registroEntradaListForm.getIdOrganismo() != null) {
+            if (interno) {
                 return "redirect:/oficioRemision/oficiosPendientesRemisionInterna";
+            } else {
+                return "redirect:/oficioRemision/oficiosPendientesRemisionExterna";
             }
-            return "redirect:/oficioRemision/oficiosPendientesRemisionExterna";
         }
 
         // Creamos el OficioRemisión a partir de los registros de entrada seleccionados.
 
         OficioRemision oficioRemision = null;
 
-        if(registroEntradaListForm.getIdOrganismo() != null) { //Oficio interno
+        if (interno) { //Oficio interno
             oficioRemision = oficioRemisionUtils.crearOficioRemisionInterno(registrosEntrada,
                 getOficinaActiva(request), usuarioEntidad, registroEntradaListForm.getIdOrganismo(),
                 registroEntradaListForm.getIdLibro());
@@ -329,7 +341,7 @@ public class OficioRemisionController extends BaseController {
           RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA)) {
         log.info("Aviso: No dispone de los permisos necesarios para crear el oficio de remisión");
         Mensaje.saveMessageAviso(request, getMessage("aviso.registro.editar"));
-        return new ModelAndView("redirect:/oficioRemision/oficiosPendientesRemision");
+          return new ModelAndView("redirect:/oficioRemision/oficiosPendientesRemisionExterna");
       }
 
       // Comprobamos que la Entidad que envía está en SIR
@@ -337,14 +349,14 @@ public class OficioRemisionController extends BaseController {
       if (!entidadActual.getSir()) {
         log.error("Aviso: La entidad no está en SIR");
         Mensaje.saveMessageAviso(request, getMessage("aviso.registro.editar"));
-        return new ModelAndView("redirect:/oficioRemision/oficiosPendientesRemision");
+          return new ModelAndView("redirect:/oficioRemision/oficiosPendientesRemisionExterna");
       }
 
       
       if (sirForm.getIdOrganismo() != null) {
         log.error("Aviso: sirForm.getIdOrganismo() != null (això significa que es un ofici extern a una entitat de nostra organitzacio");
         Mensaje.saveMessageAviso(request, getMessage("aviso.registro.editar"));
-        return new ModelAndView("redirect:/oficioRemision/oficiosPendientesRemision");
+          return new ModelAndView("redirect:/oficioRemision/oficiosPendientesRemisionExterna");
       }
 
 
@@ -367,7 +379,7 @@ public class OficioRemisionController extends BaseController {
             log.error("El registro de entrada " + registroEntrada.getNumeroRegistroFormateado()
                 + " se encuentar en un estado no valido. (" + registroEntrada.getEstado() + ")");
             Mensaje.saveMessageError(request, getMessage("registroEntrada.tramitar.error"));
-            return new ModelAndView("redirect:/oficioRemision/oficiosPendientesRemision");
+              return new ModelAndView("redirect:/oficioRemision/oficiosPendientesRemisionExterna");
 
           } else { // Lo añadimos a la lista de registros que contendrá en
                    // Oficio de Remisión
@@ -455,7 +467,7 @@ public class OficioRemisionController extends BaseController {
     log.debug("Final de oficioRemisionSir.");
     // TODO Missatge
     if (oficioRemisionList.size() == 0) {
-      return new ModelAndView("redirect:/oficioRemision/oficiosPendientesRemision");
+        return new ModelAndView("redirect:/oficioRemision/oficiosPendientesRemisionExterna");
     } else {
 
       if (oficioRemisionList.size() == 1) {
