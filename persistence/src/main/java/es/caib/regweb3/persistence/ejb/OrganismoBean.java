@@ -386,11 +386,10 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     @Override
     public LinkedHashSet<Organismo> getByOficinaActiva(Oficina oficinaActiva) throws Exception {
 
-        // Añadimos los organismos funcionales
+        // Añadimos los organismos a los que da servicio la Oficina (Directos y Funcionales)
         LinkedHashSet<Organismo> organismos = oficinaActiva.getOrganismosFuncionales();
 
-        // variable que representa el arbol de los organismos de la oficina activa
-
+        // Añadimos todos los hijos de los Organismos obtenidos anteriormetne
         LinkedHashSet<Organismo> hijosTotales = new LinkedHashSet<Organismo>();
         obtenerHijosOrganismos(organismos, hijosTotales);
         organismos.addAll(hijosTotales);
