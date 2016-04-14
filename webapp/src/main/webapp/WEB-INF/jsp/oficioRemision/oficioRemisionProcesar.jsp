@@ -56,6 +56,9 @@
                                 <c:if test="${not empty oficioRemision.fechaEstado && oficioRemision.estado != 0}">
                                     - <fmt:formatDate value="${oficioRemision.fechaEstado}" pattern="dd/MM/yyyy HH:mm:ss"/>
                                 </c:if>
+                                <c:if test="${oficioRemision.estado == 0}">
+                                    - <fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/>
+                                </c:if>
                                 </span>
                             </dd>
 

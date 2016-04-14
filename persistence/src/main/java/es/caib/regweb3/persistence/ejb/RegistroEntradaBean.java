@@ -272,54 +272,17 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         return paginacion;
     }
 
-    private boolean registreEntradaConteInteressat(RegistroEntrada ri, String int_nom, String int_doc) {
-        for (int i = 0; i < ri.getRegistroDetalle().getInteresados().size(); i++) {
-            Interesado interesat = ri.getRegistroDetalle().getInteresados().get(i);
-            String nomComplet = "";
-
-            if (interesat.getNombre() != null && !"".equals(interesat.getNombre()) && !" ".equals(interesat.getNombre()) && !"null".equalsIgnoreCase(interesat.getNombre())) {
-                nomComplet = interesat.getNombre() + " " + interesat.getApellido1();
-                if (interesat.getApellido2() != null && !"".equals(interesat.getApellido2()) && !" ".equals(interesat.getApellido2()) && !"null".equalsIgnoreCase(interesat.getApellido2())) {
-                    nomComplet += " " + interesat.getApellido2();
-                }
-            } else {
-                nomComplet = interesat.getRazonSocial();
-            }
-
-            if (nomComplet.trim().toUpperCase().contains(int_nom.trim().toUpperCase()) && interesat.getDocumento().trim().toUpperCase().contains(int_doc.trim().toUpperCase())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean registreEntradaEsDeOrganDesti(RegistroEntrada ri, String org_cod) {
-
-        if (org_cod.equals(ri.getDestinoExternoCodigo())) {
-            return true;
-        }
-
-        if (ri.getDestino() != null && org_cod.equals(ri.getDestino().getCodigo())) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public List<String> oficiosPendientesRemisionInterna(Long idLibro) throws Exception {
+    public List<String> oficiosPendientesRemisionInterna(Long idLibro, Set<Long> organismos) throws Exception {
         // Obtenemos los Organismos destinatarios PROPIOS que tiene Oficios de Remision pendientes de tramitar
 
         Query q1;
         q1 = em.createQuery("Select distinct(re.destino.denominacion) from RegistroEntrada as re where " +
                 "re.estado = :idEstadoRegistro and re.libro.id = :idLibro and " +
-                "re.destino != null and re.oficina.organismoResponsable.nivelJerarquico != 1 and " +
-                "re.oficina.organismoResponsable.id != re.destino.id and " +
-                "re.oficina.organismoResponsable.id != re.destino.organismoSuperior.id and " +
-                "re.destino.id not in (select rso.organismo.id from RelacionOrganizativaOfi as rso where rso.oficina.id = re.oficina.id and rso.estado.codigoEstadoEntidad='V') and " +
-                "re.destino.organismoSuperior.id not in (select rso.organismo.id from RelacionOrganizativaOfi as rso where rso.oficina.id = re.oficina.id and rso.estado.codigoEstadoEntidad='V') and " +
+                "re.destino != null and re.destino.id not in (:organismos) and " +
                 "re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
 
         q1.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
+        q1.setParameter("organismos", organismos);
         q1.setParameter("idLibro", idLibro);
 
         return q1.getResultList();
@@ -327,7 +290,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
-    public List<OficiosRemisionInternoOrganismo> oficiosPendientesRemisionInterna(Integer any, Libro libro) throws Exception {
+    public List<OficiosRemisionInternoOrganismo> oficiosPendientesRemisionInterna(Integer any, Libro libro, Set<Long> organismos) throws Exception {
 
         String anyWhere = "";
         if (any != null) {
@@ -338,14 +301,11 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         Query q1;
         q1 = em.createQuery("Select distinct(re.destino) from RegistroEntrada as re where " + anyWhere +
                 " re.estado = :idEstadoRegistro and re.libro.id = :idLibro and " +
-                "re.destino != null and re.oficina.organismoResponsable.nivelJerarquico != 1 and " +
-                "re.oficina.organismoResponsable.id != re.destino.id and " +
-                "re.oficina.organismoResponsable.id != re.destino.organismoSuperior.id and " +
-                "re.destino.id not in (select rso.organismo.id from RelacionOrganizativaOfi as rso where rso.oficina.id = re.oficina.id and rso.estado.codigoEstadoEntidad='V') and " +
-                "re.destino.organismoSuperior.id not in (select rso.organismo.id from RelacionOrganizativaOfi as rso where rso.oficina.id = re.oficina.id and rso.estado.codigoEstadoEntidad='V') and " +
+                "re.destino != null and re.destino.id not in (:organismos) and " +
                 "re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
 
         q1.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
+        q1.setParameter("organismos", organismos);
         q1.setParameter("idLibro", libro.getId());
         if (any != null) {
             q1.setParameter("any", any);
@@ -378,41 +338,33 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
-    public Long oficiosPendientesRemisionInternaCount(List<Libro> libros) throws Exception {
+    public Long oficiosPendientesRemisionInternaCount(List<Libro> libros, Set<Long> organismos) throws Exception {
 
 
         Query q;
         q = em.createQuery("Select count(re.id) from RegistroEntrada as re where " +
                 "re.estado = :idEstadoRegistro and re.libro in (:libros) and " +
-                "re.destino != null and re.oficina.organismoResponsable.nivelJerarquico != 1 and " +
-                "re.oficina.organismoResponsable.id != re.destino.id and " +
-                "re.oficina.organismoResponsable.id != re.destino.organismoSuperior.id and " +
-                "re.destino.id not in (select rso.organismo.id from RelacionOrganizativaOfi as rso where rso.oficina.id = re.oficina.id and rso.estado.codigoEstadoEntidad = :vigente) and " +
-                "re.destino.organismoSuperior.id not in (select rso.organismo.id from RelacionOrganizativaOfi as rso where rso.oficina.id = re.oficina.id and rso.estado.codigoEstadoEntidad = :vigente) and " +
+                "re.destino != null and re.destino.id not in (:organismos) and " +
                 "re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
 
         q.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
-        q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        q.setParameter("organismos", organismos);
         q.setParameter("libros", libros);
 
         return (Long) q.getSingleResult();
 
     }
 
-    public Boolean isOficioRemisionInterno(Long idRegistro) throws Exception {
+    public Boolean isOficioRemisionInterno(Long idRegistro, Set<Long> organismos) throws Exception {
         Query q;
         q = em.createQuery("Select re.id from RegistroEntrada as re where " +
                 "re.id = :idRegistro and re.estado = :idEstadoRegistro and " +
-                "re.destino != null and re.oficina.organismoResponsable.nivelJerarquico != 1 and " +
-                "re.oficina.organismoResponsable.id != re.destino.id and " +
-                "re.oficina.organismoResponsable.id != re.destino.organismoSuperior.id and " +
-                "re.destino.id not in (select rso.organismo.id from RelacionOrganizativaOfi as rso where rso.oficina.id = re.oficina.id and rso.estado.codigoEstadoEntidad = :vigente) and " +
-                "re.destino.organismoSuperior.id not in (select rso.organismo.id from RelacionOrganizativaOfi as rso where rso.oficina.id = re.oficina.id and rso.estado.codigoEstadoEntidad = :vigente) and " +
+                "re.destino != null and re.destino.id not in (:organismos) and " +
                 "re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
 
         q.setParameter("idRegistro", idRegistro);
         q.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
-        q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        q.setParameter("organismos", organismos);
 
         return q.getResultList().size() > 0;
     }

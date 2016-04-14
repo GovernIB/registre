@@ -280,13 +280,34 @@ public class BaseController {
     }
 
     /**
-     * Obtiene los Organismos de la OficinaActiva
+     * Obtiene los Organismos de la OficinaActiva a los que da servicio
      * @param request
      * @return
      * @throws Exception
      */
     public Set<Organismo> getOrganismosOficinaActiva(HttpServletRequest request) throws Exception {
         return organismoEjb.getByOficinaActiva(getOficinaActiva(request));
+    }
+
+    /**
+     * Obtiene los Id de los Organismos de la OficinaActiva a los que da servicio
+     *
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    public Set<Long> getOrganismosIdOficinaActiva(HttpServletRequest request) throws Exception {
+
+        // Obtenemos los Organismos
+        Set<Organismo> organismos = getOrganismosOficinaActiva(request);
+
+        // Creamos un Set solo con los identificadores
+        Set<Long> organismosId = new HashSet<Long>();
+
+        for (Organismo organismo : organismos) {
+            organismosId.add(organismo.getId());
+        }
+        return organismosId;
     }
 
 

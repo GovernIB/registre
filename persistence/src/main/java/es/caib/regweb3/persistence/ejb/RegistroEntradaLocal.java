@@ -16,6 +16,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Fundació BIT.
@@ -74,7 +75,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public List<String> oficiosPendientesRemisionInterna(Long idLibro) throws Exception;
+    public List<String> oficiosPendientesRemisionInterna(Long idLibro, Set<Long> organismos) throws Exception;
 
     /**
      * Busca los RegistroEntrada pendientes de tramitar mediante un OficioRemision INTERNI
@@ -84,7 +85,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public List<OficiosRemisionInternoOrganismo> oficiosPendientesRemisionInterna(Integer any, Libro libro) throws Exception;
+    public List<OficiosRemisionInternoOrganismo> oficiosPendientesRemisionInterna(Integer any, Libro libro, Set<Long> organismos) throws Exception;
 
     /**
      * Cuenta los Oficios pendientes de Remisión Interna de un conjunto de Libros
@@ -92,7 +93,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public Long oficiosPendientesRemisionInternaCount(List<Libro> libros) throws Exception;
+    public Long oficiosPendientesRemisionInternaCount(List<Libro> libros, Set<Long> organismos) throws Exception;
 
 
     /**
@@ -101,7 +102,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public Boolean isOficioRemisionInterno(Long idRegistro) throws Exception;
+    public Boolean isOficioRemisionInterno(Long idRegistro, Set<Long> organismos) throws Exception;
 
     /**
      * Obtenemos los Organismos destinatarios EXTERNOS que tiene Oficios de Remision pendientes de tramitar
