@@ -91,7 +91,7 @@ public class LibroController extends BaseController {
 
         model.addAttribute("organismo", organismo);
 
-        Boolean tieneOficinas = oficinaEjb.tieneOficinasOrganismo(organismo.getId());
+        Boolean tieneOficinas = organismoEjb.tieneOficinasServicio(organismo.getId());
 
         if (!tieneOficinas) {
             log.info("El organismo no tiene Oficinas");
@@ -124,11 +124,9 @@ public class LibroController extends BaseController {
 
         // Comprueba que el Usuario es Administrador de la Entidad
         if(organismo.getEntidad().equals(entidadActiva)) {
-            Set<Oficina> oficinas = new HashSet<Oficina>();  // Utilizamos un Set porque no permite duplicados
-            oficinas.addAll(oficinaEjb.findByOrganismoResponsable(organismo.getId()));
-            oficinas.addAll(relacionOrganizativaOfiLocalEjb.getOficinasByOrganismo(organismo.getId()));
+
             // Mira que tenga Oficinas
-            if (oficinas.size() == 0) {
+            if (!organismoEjb.tieneOficinasServicio(organismo.getId())) {
                 log.info("El organismo no tiene Oficinas");
                 Mensaje.saveMessageError(request, getMessage("aviso.organismo.oficinas"));
                 return "redirect:/organismo/list";

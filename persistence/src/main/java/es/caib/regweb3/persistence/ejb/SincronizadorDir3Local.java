@@ -19,8 +19,29 @@ import java.sql.Timestamp;
 @RolesAllowed({"RWE_ADMIN"})
 public interface SincronizadorDir3Local {
 
+  /**
+   * @param entidadId
+   * @param fechaActualizacion
+   * @param fechaSincronizacion
+   * @return
+   * @throws Exception
+   */
   public int sincronizarActualizar(Long entidadId, Timestamp fechaActualizacion, Timestamp fechaSincronizacion) throws Exception;
+
+  /**
+   *
+   * @param unidadTF
+   * @param idEntidad
+   * @return
+   * @throws Exception
+   */
   public Organismo sincronizarOrganismo(UnidadTF unidadTF, Long idEntidad) throws Exception;
-  public void sincronizarOficina(OficinaTF oficinaTF) throws Exception;
+
+  /**
+   *
+   * @param organismo
+   * @param unidadTF
+   * @throws Exception
+   */
   public void sincronizarHistoricosOrganismo(Organismo organismo, UnidadTF unidadTF) throws Exception;
 }

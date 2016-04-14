@@ -62,7 +62,7 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
      * @return
      * @throws Exception
      */
-    public Organismo findByCodigoBasico(String codigo) throws Exception;
+    public Organismo findByCodigoLigero(String codigo) throws Exception;
 
     /**
      *  Devuelve el organismo por codigo si esta vigente
@@ -192,4 +192,13 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
      * @throws Exception
      */
     public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+
+    /**
+     * Comprueba si el Organismo tiene alguna Oficina que le de Servicio
+     *
+     * @param idOrganismo
+     * @return
+     * @throws Exception
+     */
+    public Boolean tieneOficinasServicio(Long idOrganismo) throws Exception;
 }

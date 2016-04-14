@@ -67,12 +67,14 @@
                                         <col>
                                         <col>
                                         <col>
+                                        <col>
                                         <col width="200">
                                     </colgroup>
                                     <thead>
                                         <tr>
                                             <th><spring:message code="regweb.nombre"/></th>
                                             <th><spring:message code="entidad.propietario"/></th>
+                                            <th><spring:message code="entidad.codigoDir3"/></th>
                                             <th><spring:message code="regweb.activo"/></th>
                                             <th class="center"><spring:message code="regweb.acciones"/></th>
                                         </tr>
@@ -83,12 +85,12 @@
                                             <tr>
                                                 <td>${entidad.nombre}</td>
                                                 <td>${entidad.propietario.nombreCompleto}</td>
+                                                <td>${entidad.codigoDir3}</td>
                                                 <td>
                                                     <c:if test="${entidad.activo}"><span class="label label-success">Si</span></c:if>
                                                     <c:if test="${not entidad.activo}"><span class="label label-danger">No</span></c:if>
                                                 </td>
                                                 <td class="center">
-
                                                     <c:if test="${entidad.activo}">
                                                         <a class="btn btn-warning btn-sm" href="<c:url value="/entidad/${entidad.id}/edit"/>" title="<spring:message code="regweb.editar"/>"><span class="fa fa-pencil"></span></a>
                                                         <a class="btn btn-danger btn-sm" onclick='javascript:confirm("<c:url value="/entidad/${entidad.id}/anular"/>","<spring:message code="entidad.confirmar.anular" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="entidad.anular"/>"><span class="fa fa-thumbs-o-down"></span></a>

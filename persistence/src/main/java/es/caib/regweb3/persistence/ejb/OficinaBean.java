@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.model.Oficina;
+import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.RelacionOrganizativaOfi;
 import es.caib.regweb3.model.utils.ObjetoBasico;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
@@ -79,7 +80,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     public Oficina findByCodigo(String codigo) throws Exception {
 
         Query q = em.createQuery("Select oficina from Oficina as oficina where " +
-                "oficina.codigo =:codigo");
+                "oficina.codigo = :codigo");
 
         q.setParameter("codigo", codigo);
 
@@ -90,6 +91,22 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
             return  null;
         }
 
+    }
+
+    @Override
+    public Oficina findByCodigoLigero(String codigo) throws Exception {
+
+        Query q = em.createQuery("Select oficina.id, oficina.codigo, oficina.denominacion from Oficina as oficina where " +
+                "oficina.codigo = :codigo");
+
+        q.setParameter("codigo", codigo);
+
+        List<Object[]> result = q.getResultList();
+        if (result.size() > 0) {
+            return new Oficina((Long) result.get(0)[0], (String) result.get(0)[1], (String) result.get(0)[2]);
+        }
+
+        return null;
     }
 
     public Oficina findByCodigoEntidad(String codigo, Long idEntidad) throws Exception {
@@ -266,19 +283,25 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     public Boolean tieneOficinasOrganismo(Long idOrganismo) throws Exception{
         Query q = em.createQuery("Select oficina.id from Oficina as oficina where " +
                 "oficina.organismoResponsable.id =:idOrganismo and " +
-                "oficina.estado.codigoEstadoEntidad=:vigente");
+                "oficina.estado.codigoEstadoEntidad=:vigente and " +
+                ":oficinaVirtual not in elements(oficina.servicios)");
 
         q.setParameter("idOrganismo",idOrganismo);
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        q.setParameter("oficinaVirtual", catServicioLocalEjb.findByCodigo(RegwebConstantes.REGISTRO_VIRTUAL_NO_PRESENCIAL));
 
         List<Long> oficinas = q.getResultList();
 
         if(oficinas.size()>0){
             return true;
         }else{
-            q= em.createQuery("select relorg from RelacionOrganizativaOfi as relorg where relorg.organismo.id=:idOrganismo and relorg.estado.codigoEstadoEntidad=:vigente");
+            q = em.createQuery("select relorg from RelacionOrganizativaOfi as relorg where relorg.organismo.id=:idOrganismo and " +
+                    "relorg.estado.codigoEstadoEntidad=:vigente and " +
+                    ":oficinaVirtual not in elements(relorg.oficina.servicios)");
+
             q.setParameter("idOrganismo",idOrganismo);
             q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+            q.setParameter("oficinaVirtual", catServicioLocalEjb.findByCodigo(RegwebConstantes.REGISTRO_VIRTUAL_NO_PRESENCIAL));
 
             List<RelacionOrganizativaOfi> relorg= q.getResultList();
             return relorg.size() > 0;
