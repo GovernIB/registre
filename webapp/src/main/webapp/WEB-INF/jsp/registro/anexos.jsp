@@ -17,9 +17,9 @@
     <div class="panel panel-${color}">
 
       <div class="panel-heading">
-          <%-- ESTADO 8 -> Anulado
-               ESTADO 7 -> Tramitado
-               ESTADO 6 -> Enviado
+          <%-- ESTADO 1 -> Valido
+               ESTADO 2 -> Pendiente
+               ESTADO 3 -> Pendiente de visar
           --%>
               <c:if test="${(registro.estado == 1 || registro.estado == 2 || registro.estado == 3) && oficinaRegistral && puedeEditar}">
 
@@ -62,9 +62,10 @@
                                      <td>${anexo.titulo}</td>
                                      <td><spring:message code="tipoDocumento.${anexo.tipoDocumento}"/></td>
                                      <td class="center">
-                                         <!-- ESTADO 8 -> Anulado
-                                              ESTADO 7 -> Tramitado<a href="
-                                              ESTADO 6 -> Enviado
+                                         <!-- ESTADO 1 -> Valido
+                                              ESTADO 2 -> Pendiente
+                                              ESTADO 3 -> Pendiente de visar
+                                              ESTADO 7 -> Tramitado
                                           -->
                                          <a class="btn btn-success btn-default btn-sm"  href="<c:url value="/anexo/descargarDocumento/${anexo.id}"/>" target="_blank" title="<spring:message code="anexo.descargar"/>"><span class="fa fa-download"></span></a>
                                          <c:if test="${(registro.estado == 1 || registro.estado == 2 || registro.estado ==3) && oficinaRegistral && puedeEditar}">

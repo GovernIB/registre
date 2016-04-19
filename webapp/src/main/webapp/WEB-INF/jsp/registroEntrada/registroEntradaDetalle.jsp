@@ -184,7 +184,7 @@
 
             <!-- ANEXOS -->
             <%if(!Configuracio.isCAIB()){%>
-                <c:if test="${(registro.estado == 1 || registro.estado == 3) && registro.registroDetalle.tipoDocumentacionFisica != 4}">
+            <c:if test="${(registro.estado == 1 || registro.estado == 3 || registro.estado == 7) && registro.registroDetalle.tipoDocumentacionFisica != 4}">
                     <c:import url="../registro/anexos.jsp">
                         <c:param name="tipoRegistro" value="entrada"/>
                     </c:import>
