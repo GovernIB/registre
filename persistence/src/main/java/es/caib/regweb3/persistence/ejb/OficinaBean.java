@@ -2,7 +2,6 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.model.Oficina;
-import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.RelacionOrganizativaOfi;
 import es.caib.regweb3.model.utils.ObjetoBasico;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
@@ -298,7 +297,6 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
             q = em.createQuery("select relorg from RelacionOrganizativaOfi as relorg where relorg.organismo.id=:idOrganismo and " +
                     "relorg.estado.codigoEstadoEntidad=:vigente and " +
                     ":oficinaVirtual not in elements(relorg.oficina.servicios)");
-
             q.setParameter("idOrganismo",idOrganismo);
             q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
             q.setParameter("oficinaVirtual", catServicioLocalEjb.findByCodigo(RegwebConstantes.REGISTRO_VIRTUAL_NO_PRESENCIAL));
