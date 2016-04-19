@@ -151,10 +151,10 @@
 		</dependency>
 
         <dependency>
-            <groupId>org.fundaciobit.plugins</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>plugins-distribucionregweb-api</artifactId>
             <type>jar</type>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
 

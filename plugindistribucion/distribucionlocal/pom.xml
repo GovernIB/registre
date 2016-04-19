@@ -1,18 +1,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.fundaciobit.plugins</groupId>
+
     <artifactId>plugins-distribucionregweb-distribucionlocal</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.0</version>
-
-    <name>FundacioBit Plugins - Distribucion Regweb Plugins - DistribucionLocal</name>
+    <version>3.0.5</version>
 
     <parent>
-        <groupId>org.fundaciobit.plugins</groupId>
-        <version>1.0.0</version>
+        <groupId>es.caib.regweb3</groupId>
+        <version>3.0.5</version>
         <artifactId>plugins-distribucionregweb</artifactId>
     </parent>
+
+    <name>RegWeb3 - Distribucion Plugins - DistribucionLocal</name>
 
     <repositories>
         <repository>
@@ -42,11 +43,24 @@
         </dependency>
 
         <dependency>
-            <groupId>org.fundaciobit.plugins</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>plugins-distribucionregweb-api</artifactId>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>regweb3-model</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-annotations</artifactId>
+            <version>3.4.0.GA</version>
+            <scope>provided</scope>
+        </dependency>
 
     </dependencies>
 

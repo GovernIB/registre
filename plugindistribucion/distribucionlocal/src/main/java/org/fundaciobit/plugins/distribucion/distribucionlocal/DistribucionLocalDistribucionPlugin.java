@@ -1,6 +1,8 @@
 package org.fundaciobit.plugins.distribucion.distribucionlocal;
 
 
+import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.utils.AnexoFull;
 import org.apache.log4j.Logger;
 import org.fundaciobit.plugins.distribucion.Destinatario;
 import org.fundaciobit.plugins.distribucion.Destinatarios;
@@ -17,6 +19,7 @@ import java.util.Properties;
 public class DistribucionLocalDistribucionPlugin extends AbstractPluginProperties implements IDistribucionPlugin {
 
     protected final Logger log = Logger.getLogger(getClass());
+
 
     private static final String PROPERTY_BASE = DISTRIBUCION_BASE_PROPERTY + "distribucionlocal.";
 
@@ -53,7 +56,10 @@ public class DistribucionLocalDistribucionPlugin extends AbstractPluginPropertie
     }
 
     @Override
-    public Destinatarios distribuir(String registro, boolean anexos) throws Exception {
+    public Destinatarios distribuir(RegistroEntrada registro, boolean anexos) throws Exception {
+
+        // Este código es una prueba, aquí se deben determinar los destinatarios reales en función de la
+        // implementación particular de cada entidad
 
         Destinatarios destinatarios = new Destinatarios();
 
@@ -78,16 +84,20 @@ public class DistribucionLocalDistribucionPlugin extends AbstractPluginPropertie
         destinatarios.setPropuestos(destinatariosPropuestos);
         destinatarios.setPosibles(destinatariosPosibles);
         destinatarios.setModificable(true);
-        //TODO tratar el tema de los anexos
-        if (anexos) {
-            //TODO tratar anexos
-        }
+
         return destinatarios;
     }
 
     @Override
-    public Boolean enviarDestinatarios(List<Destinatario> destinatariosDefinitivos, String observaciones) throws Exception {
+    public Boolean enviarDestinatarios(RegistroEntrada registro, List<Destinatario> destinatariosDefinitivos, String observaciones, boolean anexos) throws Exception {
+        // Este código es una prueba, aquí se debe distribuir el registro al listado de destinatarios indicado.
         log.info("OBSERVACIONES EN PLUGIN " + observaciones);
+        log.info("NUMERO DE ANEXOS " + registro.getRegistroDetalle().getAnexosFull().size());
+        List<AnexoFull> anexosFull = registro.getRegistroDetalle().getAnexosFull();
+        for (AnexoFull anexoFull : anexosFull) {
+            log.info("TITULO " + anexoFull.getAnexo().getTitulo());
+            log.info(anexoFull.getDocumentoCustody().getName());
+        }
         for (Destinatario destinatario : destinatariosDefinitivos) {
             log.info("DESTINATARIO ID EN PLUGIN " + destinatario.getId());
             log.info("DESTINATARIO NOMBRE EN PLUGIN " + destinatario.getName());

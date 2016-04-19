@@ -1,8 +1,8 @@
 package es.caib.regweb3.ws.v3.impl;
 
 import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.*;
-import es.caib.regweb3.persistence.utils.AnexoFull;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.ws.converter.AnexoConverter;
 import es.caib.regweb3.ws.model.*;

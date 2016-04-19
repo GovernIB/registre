@@ -4,8 +4,8 @@ import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.RegistroBasico;
-import es.caib.regweb3.persistence.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.OficiosRemisionInternoOrganismo;
 import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
 import es.caib.regweb3.persistence.utils.Paginacion;
@@ -54,8 +54,8 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada, 
-        UsuarioEntidad usuarioEntidad, List<AnexoFull> anexosFull) 
+    public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
+                                            UsuarioEntidad usuarioEntidad, List<AnexoFull> anexosFull)
             throws Exception, I18NException, I18NValidationException;
 
    /**

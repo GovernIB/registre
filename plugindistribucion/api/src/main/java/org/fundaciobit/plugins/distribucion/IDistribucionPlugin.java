@@ -1,5 +1,6 @@
 package org.fundaciobit.plugins.distribucion;
 
+import es.caib.regweb3.model.RegistroEntrada;
 import org.fundaciobit.plugins.IPlugin;
 
 import java.util.List;
@@ -20,12 +21,12 @@ public interface IDistribucionPlugin extends IPlugin {
      * @return
      * @throws Exception
      */
-    Destinatarios distribuir(String registro, boolean anexos) throws Exception;
+    Destinatarios distribuir(RegistroEntrada registro, boolean anexos) throws Exception;
 
     /**
      * @param destinatariosDefinitivos
      * @return
      * @throws Exception
      */
-    Boolean enviarDestinatarios(List<Destinatario> destinatariosDefinitivos, String observaciones) throws Exception;
+    Boolean enviarDestinatarios(RegistroEntrada registro, List<Destinatario> destinatariosDefinitivos, String observaciones, boolean anexos) throws Exception;
 }

@@ -2,14 +2,13 @@ package es.caib.regweb3.webapp.controller.registro;
 
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.RegistroDetalle;
+import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.*;
-import es.caib.regweb3.persistence.utils.AnexoFull;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.scan.ScannerManager;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.AnexoWebValidator;
-
 import org.apache.axis.utils.StringUtils;
 import org.apache.commons.io.FileUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -38,16 +37,11 @@ import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created 3/06/14 14:22
@@ -661,12 +655,10 @@ public class AnexoController extends BaseController {
          try {
              if (custodiaID != null) {
                  if(!firma){
-                   //DocumentCustody dc = AnnexDocumentCustodyManager.getArchivo(custodiaID);
                    DocumentCustody dc = anexoEjb.getArchivo(custodiaID);
                    filename = dc.getName();
                    data = dc.getData();
                  }else{
-                   //SignatureCustody sc = AnnexDocumentCustodyManager.getFirma(custodiaID);
                    SignatureCustody sc = anexoEjb.getFirma(custodiaID);
                    filename = sc.getName();
                    data = sc.getData();

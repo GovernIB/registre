@@ -54,8 +54,8 @@ public class AnexoValidator<T> extends AbstractRegWebValidator<T> {
     
     Anexo anexo = (Anexo)__target__;
 
-    //todo: Verificar NTI catálogo estándares según el tipo mime
-    if(anexo.getTipoDocumento()== null || anexo.getTipoDocumento().equals((long) -1)){
+
+      if (anexo.getTipoDocumento() == null || anexo.getTipoDocumento().equals((long) -1)) {
        rejectValue(errors, "tipoDocumento", "error.valor.requerido"); // , "El camp és obligatori"
     }
 

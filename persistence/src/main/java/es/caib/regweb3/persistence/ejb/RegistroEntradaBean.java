@@ -3,6 +3,7 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.RegistroBasico;
 import es.caib.regweb3.persistence.utils.*;
 import es.caib.regweb3.utils.RegwebConstantes;

@@ -1,7 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.*;
-import es.caib.regweb3.persistence.utils.AnexoFull;
+import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.AnnexDocumentCustodyManager;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
@@ -142,7 +142,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         custody = AnnexDocumentCustodyManager.getInstance();
         
         IRegistro registro = getIRegistro(registroID, tipoRegistro, anexo, isNew);
-        
+
         final String custodyParameters = getCustodyParameters(registro, anexo);
         
         custodyID = custody.reserveCustodyID(custodyParameters);
@@ -243,8 +243,6 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
       }
       
     }
-
-
 
 
     protected IRegistro getIRegistro(Long registroID, String tipoRegistro, Anexo anexo, boolean isNou) throws Exception {
@@ -530,8 +528,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
           return new Expression(date, date.getClass(), "new", new Object[] {date.getTime()});
       }
   }
-    
-    
+
+
     protected String getCustodyParameters(IRegistro registro, Anexo anexo) throws Exception {
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
@@ -547,7 +545,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
       encoder.flush();
       encoder.close();
       
-      /*
+/*
+
       try {
         java.beans.XMLDecoder xmlDec = new java.beans.XMLDecoder(
             new java.io.ByteArrayInputStream(baos.toByteArray()));
@@ -580,7 +579,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
       } catch (Throwable e) {
         log.error(" FFFFFFFFFFFFFFFFF", e);
       }
-      */
+*/
+
 
       
 

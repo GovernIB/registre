@@ -244,15 +244,15 @@
         <!-- ============================================ -->
 
         <dependency>
-            <groupId>org.fundaciobit.plugins</groupId>
+            <groupId>es.caib.regweb3</groupId>
             <artifactId>plugins-distribucionregweb-api</artifactId>
-            <version>1.0.0</version>
+            <version>3.0.5</version>
         </dependency>
 
         <dependency>
-            <groupId>org.fundaciobit.plugins</groupId>
+            <groupId>es.caib.regweb3</groupId>
             <artifactId>plugins-distribucionregweb-distribucionlocal</artifactId>
-            <version>1.0.0</version>
+            <version>3.0.5</version>
         </dependency>
 
         <!-- ============================================ -->

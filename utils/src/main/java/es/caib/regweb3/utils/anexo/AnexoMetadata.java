@@ -48,7 +48,7 @@ public class AnexoMetadata {
         private Date fechaCaptura; // FORMAT AAAAMMDDTHH:MM:SS
         private boolean origenCiudadanoAdministracion; // 0 -> Ciudadano 1-> Administracion
         private String estadoElaboracion;  // TipoEstadoElaboracion ( se corresponde con validez_documento. Se ha de mapear).
-        private String nombreFormato; // El valor s'agafarà de l'extensió del fitxer.(OJO TENER EN CUENTA LOS VALORES ADMITIDOS POR LA NORMA.
+  private String nombreFormato; // El valor s'agafarà de l'extensió del fitxer.(OJO TENER EN CUENTA LOS VALORES ADMITIDOS POR LA NORMA.(catálogo de estandares)
 
         private Long tipoDocumental; // TD01 -TD99 (resolució, notificació, denuncia, etc)
 

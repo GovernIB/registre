@@ -1,18 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.fundaciobit.plugins</groupId>
+
     <artifactId>plugins-distribucionregweb</artifactId>
-    <version>1.0.0</version>
+    <version>3.0.5</version>
     <packaging>pom</packaging>
 
-    <name>FundacioBit Plugins - Distribucion Regweb Plugins</name>
-
-    <!--<parent>
-        <groupId>org.fundaciobit.plugins</groupId>
-        <version>1.0.0</version>
-        <artifactId>plugins</artifactId>
-    </parent>-->
+    <name>RegWeb3- Distribucion Plugins</name>
 
     <parent>
         <groupId>es.caib.regweb3</groupId>
@@ -24,6 +19,5 @@
         <module>api</module>
         <module>distribucionlocal</module>
     </modules>
-
 
 </project>

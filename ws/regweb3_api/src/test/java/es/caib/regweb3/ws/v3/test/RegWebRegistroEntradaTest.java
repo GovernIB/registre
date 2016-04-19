@@ -2,9 +2,14 @@ package es.caib.regweb3.ws.v3.test;
 
 import es.caib.regweb3.ws.api.v3.*;
 import es.caib.regweb3.ws.api.v3.utils.WsClientUtils;
+import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import javax.activation.MimetypesFileTypeMap;
+import java.io.File;
+import java.sql.Timestamp;
 
 
 /**
@@ -246,7 +251,8 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils  {
       registroEntradaWs.getInteresados().add(interesadoWs2);
 
       // Anexos
-      registroEntradaWs.getAnexos().addAll(getAnexos());
+
+      // registroEntradaWs.getAnexos().addAll(getAnexos());
 
       try {
         IdentificadorWs identificadorWs = registroEntradaApi
@@ -263,6 +269,216 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils  {
         throw e;
       }
 
+    }
+
+  }
+
+  //@Test
+  public void crearRegistroEntradaconAnexos() {
+    RegistroEntradaWs registroEntradaWs = new RegistroEntradaWs();
+
+    registroEntradaWs.setDestino(getTestDestinoCodigoDir3());
+    registroEntradaWs.setOficina(getTestDestinoOficinaCodigoDir3());
+    registroEntradaWs.setLibro(getTestDestinoLibro());
+
+    registroEntradaWs.setExtracto(System.currentTimeMillis() + " probando ws");
+    registroEntradaWs.setDocFisica((long) 1);
+    registroEntradaWs.setIdioma("es");
+    registroEntradaWs.setTipoAsunto(getTestTipoAsunto());
+
+    registroEntradaWs.setAplicacion("WsTest");
+    registroEntradaWs.setVersion("1");
+
+    registroEntradaWs.setCodigoUsuario(getTestUserName());
+    registroEntradaWs.setContactoUsuario("earrivi@fundaciobit.org");
+
+    registroEntradaWs.setNumExpediente("");
+    registroEntradaWs.setNumTransporte("");
+    registroEntradaWs.setObservaciones("");
+
+    registroEntradaWs.setRefExterna("");
+    registroEntradaWs.setCodigoAsunto(null);
+    registroEntradaWs.setTipoTransporte("");
+
+    registroEntradaWs.setExpone("expone");
+    registroEntradaWs.setSolicita("solicita");
+
+    // Interesados
+    InteresadoWs interesadoWs = new InteresadoWs();
+
+    DatosInteresadoWs interesado = new DatosInteresadoWs();
+    interesado.setTipoInteresado((long) 2);
+    interesado.setNombre("Lucas");
+    interesado.setApellido1("Martinez");
+    interesadoWs.setInteresado(interesado);
+
+    DatosInteresadoWs representante = new DatosInteresadoWs();
+    representante.setTipoInteresado((long) 3);
+    representante.setRazonSocial("Endesa");
+    interesadoWs.setRepresentante(representante);
+
+    registroEntradaWs.getInteresados().add(interesadoWs);
+
+    InteresadoWs interesadoWs2 = new InteresadoWs();
+    DatosInteresadoWs organismo = new DatosInteresadoWs();
+    organismo.setTipoInteresado((long) 1);
+    organismo.setNombre("Presidencia Govern de les Illes Balears");
+    interesadoWs2.setInteresado(organismo);
+
+    registroEntradaWs.getInteresados().add(interesadoWs2);
+
+
+    // Anexos
+    String fichero = "Extensionescompletas_Fundació_BIT.1.xlsx";
+    String sfirma = "queesticfent.txt";
+    // Anexo sin firma
+    AnexoWs anexoWs = new AnexoWs();
+
+    anexoWs.setTitulo("Anexo amb canvi AnexoFull");
+    anexoWs.setValidezDocumento("01");
+    anexoWs.setTipoDocumental(getTestAnexoTipoDocumental());
+    anexoWs.setTipoDocumento("01");
+    anexoWs.setOrigenCiudadanoAdmin(new Integer(0));
+    anexoWs.setObservaciones("Observaciones de Marilen");
+
+    anexoWs.setModoFirma(0);
+    // Fichero Anexado
+    MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
+    try {
+
+
+      File file = new File(getTestArchivosPath() + fichero);
+      System.out.println(file.exists());
+      System.out.println(file.getAbsolutePath());
+
+      anexoWs.setFicheroAnexado(FileUtils.readFileToByteArray(file));
+      anexoWs.setNombreFicheroAnexado(file.getName());
+      anexoWs.setTipoMIMEFicheroAnexado(mimeTypesMap.getContentType(file));
+      // anexoWs.setTamanoFicheroAnexado(file.length());
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    anexoWs.setFechaCaptura(new Timestamp(System.currentTimeMillis()));
+
+    registroEntradaWs.getAnexos().add(anexoWs);
+
+        /* ANEXO CON FIRMA ATACHED   */
+    AnexoWs anexoFirmaAtached = new AnexoWs();
+
+    anexoFirmaAtached.setTitulo("Anexo firma atached");
+    anexoFirmaAtached.setValidezDocumento("02");
+    anexoFirmaAtached.setTipoDocumental(getTestAnexoTipoDocumental());
+    anexoFirmaAtached.setTipoDocumento("02");
+    anexoFirmaAtached.setOrigenCiudadanoAdmin(new Integer(1));
+    anexoFirmaAtached.setObservaciones("Observaciones firma atached");
+    anexoFirmaAtached.setModoFirma(1);
+    // Fichero Anexado
+
+    try {
+      File file = new File(getTestArchivosPath() + fichero);
+
+      anexoFirmaAtached.setFicheroAnexado(FileUtils.readFileToByteArray(file));
+      anexoFirmaAtached.setNombreFicheroAnexado(file.getName());
+      anexoFirmaAtached.setTipoMIMEFicheroAnexado(mimeTypesMap.getContentType(file));
+      //anexoFirmaAtached.setsetTamanoFicheroAnexado(file.length());
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+
+    anexoFirmaAtached.setFechaCaptura(new Timestamp(System.currentTimeMillis()));
+
+    registroEntradaWs.getAnexos().add(anexoFirmaAtached);
+         /* FIN ANEXO CON FIRMA ATACHED   */
+
+    /** ANEXO CON FIRMA DETACHED */
+    AnexoWs anexoFirmaDetached = new AnexoWs();
+
+    anexoFirmaDetached.setTitulo("Anexo firma detached");
+    anexoFirmaDetached.setValidezDocumento("03");
+    anexoFirmaDetached.setTipoDocumental(getTestAnexoTipoDocumental());
+    anexoFirmaDetached.setTipoDocumento("03");
+    anexoFirmaDetached.setOrigenCiudadanoAdmin(new Integer(0));
+    anexoFirmaDetached.setObservaciones("Observaciones firma detached");
+    anexoFirmaDetached.setModoFirma(2);
+    // Fichero Anexado
+
+    try {
+      //archivo
+      File file = new File(getTestArchivosPath() + fichero);
+
+      anexoFirmaDetached.setFicheroAnexado(FileUtils.readFileToByteArray(file));
+      anexoFirmaDetached.setNombreFicheroAnexado(file.getName());
+      anexoFirmaDetached.setTipoMIMEFicheroAnexado(mimeTypesMap.getContentType(file));
+      // anexoFirmaDetached.setTamanoFicheroAnexado(file.length());
+
+      //firma
+      File firma = new File(getTestArchivosPath() + sfirma);
+
+      anexoFirmaDetached.setFirmaAnexada(FileUtils.readFileToByteArray(firma));
+      anexoFirmaDetached.setNombreFirmaAnexada(firma.getName());
+      anexoFirmaDetached.setTipoMIMEFirmaAnexada(mimeTypesMap.getContentType(firma));
+      // anexoFirmaDetached.setTamanoFirmaAnexada(firma.length());
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+
+    anexoFirmaDetached.setFechaCaptura(new Timestamp(System.currentTimeMillis()));
+    registroEntradaWs.getAnexos().add(anexoFirmaDetached);
+    /** FIN ANEXO CON FIRMA DETACHED */
+
+    /** ANEXO CON FIRMA DETACHED COPIA */
+    AnexoWs anexoFirmaDetachedCopia = new AnexoWs();
+
+    anexoFirmaDetachedCopia.setTitulo("Anexo firma detached copia");
+    anexoFirmaDetachedCopia.setValidezDocumento("01");
+    anexoFirmaDetachedCopia.setTipoDocumental(getTestAnexoTipoDocumental());
+    anexoFirmaDetachedCopia.setTipoDocumento("01");
+    anexoFirmaDetachedCopia.setOrigenCiudadanoAdmin(new Integer(0));
+    anexoFirmaDetachedCopia.setObservaciones("Observaciones firma detached copia");
+    anexoFirmaDetachedCopia.setModoFirma(2);
+    // Fichero Anexado
+
+    try {
+      //archivo
+      File file = new File(getTestArchivosPath() + fichero);
+
+      anexoFirmaDetachedCopia.setFicheroAnexado(FileUtils.readFileToByteArray(file));
+      anexoFirmaDetachedCopia.setNombreFicheroAnexado(file.getName());
+      anexoFirmaDetachedCopia.setTipoMIMEFicheroAnexado(mimeTypesMap.getContentType(file));
+      //anexoFirmaDetachedCopia.setTamanoFicheroAnexado(file.length());
+
+      //firma
+      File firma = new File(getTestArchivosPath() + sfirma);
+
+      anexoFirmaDetachedCopia.setFirmaAnexada(FileUtils.readFileToByteArray(firma));
+      anexoFirmaDetachedCopia.setNombreFirmaAnexada(firma.getName());
+      anexoFirmaDetachedCopia.setTipoMIMEFirmaAnexada(mimeTypesMap.getContentType(firma));
+      // anexoFirmaDetachedCopia.setTamanoFirmaAnexada(firma.length());
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+
+    anexoFirmaDetachedCopia.setFechaCaptura(new Timestamp(System.currentTimeMillis()));
+    registroEntradaWs.getAnexos().add(anexoFirmaDetachedCopia);
+    /** FIN ANEXO CON FIRMA DETACHED  COPIA*/
+
+
+    try {
+      IdentificadorWs identificadorWs = registroEntradaApi.altaRegistroEntrada(registroEntradaWs);
+      System.out.println("Numero: " + identificadorWs.getNumero());
+      System.out.println("Fecha: " + identificadorWs.getFecha());
+    } catch (WsI18NException e) {
+      e.printStackTrace();
+    } catch (WsValidationException e) {
+      e.printStackTrace();
     }
 
   }

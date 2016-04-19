@@ -2,8 +2,8 @@ package es.caib.regweb3.ws.converter;
 
 import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.TipoDocumental;
+import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.TipoDocumentalLocal;
-import es.caib.regweb3.persistence.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.AnnexDocumentCustodyManager;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
@@ -61,13 +61,9 @@ public class AnexoConverter extends CommonConverter {
             //anexoWs.setTamanoFirmaAnexada(null);
             anexoWs.setTipoMIMEFirmaAnexada(null);
         }
-        
-        
-        
-        
-        
-        // AnexoFull anexoFull = 
-        DocumentCustody doc = null;
+
+
+       DocumentCustody doc = null;
         if (anexoWs.getNombreFicheroAnexado() != null && anexoWs.getFicheroAnexado() != null ) {
           doc = new DocumentCustody();
           doc.setData(anexoWs.getFicheroAnexado());

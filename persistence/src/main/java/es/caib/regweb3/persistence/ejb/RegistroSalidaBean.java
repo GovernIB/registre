@@ -1,8 +1,12 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.RegistroBasico;
-import es.caib.regweb3.persistence.utils.*;
+import es.caib.regweb3.persistence.utils.DataBaseUtils;
+import es.caib.regweb3.persistence.utils.NumeroRegistro;
+import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;

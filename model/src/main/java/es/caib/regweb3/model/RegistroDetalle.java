@@ -1,5 +1,6 @@
 package es.caib.regweb3.model;
 
+import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.utils.Versio;
 import org.hibernate.annotations.ForeignKey;
 import org.hibernate.annotations.LazyCollection;
@@ -71,6 +72,9 @@ public class RegistroDetalle implements Serializable {
     private String aplicacion = "REGWEB3";
     @XmlTransient
     private String version = Versio.VERSIO;
+    @XmlTransient
+    @Transient
+    private List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
 
 
     public RegistroDetalle() {
@@ -330,6 +334,16 @@ public class RegistroDetalle implements Serializable {
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    @Transient
+    public List<AnexoFull> getAnexosFull() {
+        return anexosFull;
+    }
+
+    @Transient
+    public void setAnexosFull(List<AnexoFull> anexosFull) {
+        this.anexosFull = anexosFull;
     }
 
     @Transient

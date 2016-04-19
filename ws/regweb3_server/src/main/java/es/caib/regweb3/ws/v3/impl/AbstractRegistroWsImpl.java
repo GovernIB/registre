@@ -1,9 +1,9 @@
 package es.caib.regweb3.ws.v3.impl;
 
 import es.caib.regweb3.model.Anexo;
+import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.AnexoLocal;
 import es.caib.regweb3.persistence.ejb.TipoDocumentalLocal;
-import es.caib.regweb3.persistence.utils.AnexoFull;
 import es.caib.regweb3.persistence.validator.AnexoBeanValidator;
 import es.caib.regweb3.persistence.validator.AnexoValidator;
 import es.caib.regweb3.ws.converter.AnexoConverter;

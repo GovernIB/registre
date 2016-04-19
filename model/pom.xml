@@ -65,6 +65,14 @@
             <version>1.9.9</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.fundaciobit.plugins</groupId>
+            <artifactId>plugins-api</artifactId>
+            <version>1.0.0</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+
 
     </dependencies>
 </project>

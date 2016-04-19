@@ -356,7 +356,7 @@ public class Organismo implements Serializable {
 
     @Override
     public int hashCode() {
-        return codigo.hashCode();
+        return id.hashCode();
     }
 
     @Override
