@@ -109,12 +109,13 @@
                         </div>
 
                         <div class="panel-body">
-                            <div class="col-xs-12">
+
                                 <div class="table-responsive">
 
                                     <table class="table table-bordered table-hover table-striped tablesorter">
                                         <colgroup>
                                             <col width="80">
+                                            <col>
                                             <col>
                                             <col>
                                             <col>
@@ -128,8 +129,8 @@
                                             <th><spring:message code="registroEntrada.libro.corto"/></th>
                                             <th><spring:message code="registroEntrada.organismoDestino"/></th>
                                             <th><spring:message code="registroEntrada.extracto"/></th>
+                                            <th><spring:message code="registroEntrada.interesados"/></th>
                                             <th><spring:message code="regweb.acciones"/></th>
-
                                         </tr>
                                         </thead>
 
@@ -148,6 +149,10 @@
                                                         <td><form:select path="oficios[${status.index}].idLibro" items="${libros}" itemLabel="nombre" itemValue="id"/></td>
                                                         <td>${(empty registroEntrada.destino)? registroEntrada.destinoExternoDenominacion : registroEntrada.destino.denominacion}</td>
                                                         <td>${registroEntrada.registroDetalle.extracto}</td>
+                                                        <td class="center"><label class="no-bold representante" rel="ayuda"
+                                                                                  data-content="${registroEntrada.registroDetalle.nombreInteresadosHtml}"
+                                                                                  data-toggle="popover">${registroEntrada.registroDetalle.totalInteresados}</label>
+                                                        </td>
                                                         <td class="center">
                                                             <a class="btn btn-info btn-sm" href="<c:url value="/registroEntrada/${registroEntrada.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
                                                         </td>
@@ -158,7 +163,7 @@
                                     </table>
 
                                 </div>
-                            </div>
+
                         </div>
                     </div>
 

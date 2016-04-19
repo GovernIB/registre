@@ -127,6 +127,7 @@
                                                                     <col>
                                                                     <col>
                                                                     <col>
+                                                                    <col>
                                                                     <col width="50">
                                                                 </colgroup>
                                                                 <thead>
@@ -137,6 +138,7 @@
                                                                         <th><spring:message code="registroEntrada.oficina"/></th>
                                                                         <th><spring:message code="registroEntrada.organismoDestino"/></th>
                                                                         <th><spring:message code="registroEntrada.extracto"/></th>
+                                                                        <th><spring:message code="registroEntrada.interesados"/></th>
                                                                         <th class="center"><spring:message code="regweb.acciones"/></th>
                                                                     </tr>
                                                                 </thead>
@@ -153,10 +155,12 @@
                                                                             </td>
                                                                             <td>${registroEntrada.destino.denominacion}</td>
                                                                             <td>${registroEntrada.registroDetalle.extracto}</td>
-
+                                                                            <td class="center"><label class="no-bold representante" rel="ayuda"
+                                                                                    data-content="${registroEntrada.registroDetalle.nombreInteresadosHtml}"
+                                                                                    data-toggle="popover">${registroEntrada.registroDetalle.totalInteresados}</label>
+                                                                            </td>
                                                                             <td class="center">
                                                                                 <a class="btn btn-info btn-sm" href="<c:url value="/registroEntrada/${registroEntrada.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
-                                                                                    <%--<a class="btn btn-warning btn-sm" href="<c:url value="/registroEntrada/${registroEntrada.id}/edit"/>" title="<spring:message code="regweb.editar"/>"><span class="fa fa-pencil"></span></a>--%>
                                                                             </td>
                                                                         </tr>
                                                                 </c:forEach>
