@@ -380,10 +380,10 @@
          actualizarCodigosAsunto();
 
         // CARGA DE INTERESADOS REGISTRO ENTRADA DESDE LA SESION
-        <c:if test="${empty registroEntrada.id}">
-        <c:import url="../registro/addInteresadosSesion.jsp">
-        <c:param name="variable" value="${RegwebConstantes.SESSION_INTERESADOS_ENTRADA}"/>
-        </c:import>
+        <c:if test="${empty registroEntrada.id || registroEntrada.estado == 2}">
+            <c:import url="../registro/addInteresadosSesion.jsp">
+                <c:param name="variable" value="${RegwebConstantes.SESSION_INTERESADOS_ENTRADA}"/>
+            </c:import>
         </c:if>
 
 
