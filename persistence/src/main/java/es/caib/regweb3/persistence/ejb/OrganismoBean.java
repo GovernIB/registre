@@ -226,29 +226,43 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     @Override
     public List<Organismo> findByEntidadEstadoConOficinas(Long entidad, String codigoEstado) throws Exception {
 
-        Query q = em.createQuery("Select organismo.id, organismo.denominacion from Organismo as organismo where " +
-                "organismo.entidad.id = :entidad and organismo.estado.codigoEstadoEntidad =:codigoEstado");
+
+        Query q = em.createQuery("Select distinct(organismo.id) , organismo.denominacion from Organismo as organismo, Oficina as oficina " +
+                "inner join oficina.organismoResponsable as orgrespon " +
+                "where orgrespon.id=organismo.id and oficina.estado.codigoEstadoEntidad=:codigoEstado and " +
+                "organismo.entidad.id =:entidad and organismo.estado.codigoEstadoEntidad =:codigoEstado order by organismo.denominacion");
 
         q.setParameter("entidad", entidad);
         q.setParameter("codigoEstado", codigoEstado);
 
 
         List<Object[]> result = q.getResultList();
-        List<Organismo> organismos = new ArrayList<Organismo>();
+        Set<Organismo> organismosConOficinas = new HashSet<Organismo>();
         for (Object[] object : result) {
             Organismo org = new Organismo((Long) object[0], (String) object[1]);
-            organismos.add(org);
+            organismosConOficinas.add(org);
         }
 
 
-        List<Organismo> organismosConOficinas = new ArrayList<Organismo>();
+        Query q2 = em.createQuery("Select distinct(organismo.id) , organismo.denominacion from Organismo as organismo, RelacionOrganizativaOfi as relorgOfi " +
+                "inner join relorgOfi.organismo as orgfuncional " +
+                "where orgfuncional.id=organismo.id  and relorgOfi.estado.codigoEstadoEntidad=:codigoEstado and " +
+                "organismo.entidad.id =:entidad and organismo.estado.codigoEstadoEntidad =:codigoEstado order by organismo.denominacion");
 
-        for (Organismo organismo : organismos) {
-            if (oficinaEjb.tieneOficinasOrganismo(organismo.getId())) {
-                organismosConOficinas.add(organismo);
-            }
+        q2.setParameter("entidad", entidad);
+        q2.setParameter("codigoEstado", codigoEstado);
+
+
+        List<Object[]> result2 = q2.getResultList();
+        Set<Organismo> organismosConOficinasFuncionales = new HashSet<Organismo>();
+        for (Object[] object2 : result2) {
+            Organismo org = new Organismo((Long) object2[0], (String) object2[1]);
+            organismosConOficinasFuncionales.add(org);
         }
-        return organismosConOficinas;
+        organismosConOficinas.addAll(organismosConOficinasFuncionales);
+
+        return new ArrayList<Organismo>(organismosConOficinas);
+
     }
 
     @Override

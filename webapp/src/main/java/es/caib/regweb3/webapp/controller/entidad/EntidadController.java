@@ -911,11 +911,13 @@ public class EntidadController extends BaseController {
 
 
         Entidad entidad = getEntidadActiva(request);
+
         List<Organismo> organismosEntidad = organismoEjb.findByEntidadLibros(entidad.getId());
         log.info("Organismos Entidad " + organismosEntidad.size());
 
 
         List<Organismo> organismosEntidadVigentes = organismoEjb.findByEntidadEstadoConOficinas(entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        log.info("Organismos entidad con Oficinas " + organismosEntidadVigentes.size());
         if(organismosEntidad.size()>0) {
             model.addAttribute("organismosAProcesar", organismosEntidad);
             model.addAttribute("organismosSustituyentes", organismosEntidadVigentes);
