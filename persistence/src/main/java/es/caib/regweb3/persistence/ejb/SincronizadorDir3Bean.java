@@ -374,7 +374,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
                         relacionOrganizativaOfi.setOficina(oficina);
 
-                        Organismo organismoOrg = organismoEjb.findByCodigo(relacionOrganizativaOfiTF.getUnidad());
+                        Organismo organismoOrg = organismoEjb.findByCodigoLigero(relacionOrganizativaOfiTF.getUnidad());
 
                         relacionOrganizativaOfi.setOrganismo(organismoOrg);
 
@@ -424,7 +424,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
                         relacionSirOfi.setOficina(oficina);
 
-                        Organismo organismoOrg = organismoEjb.findByCodigo(relacionSirOfiTF.getUnidad());
+                        Organismo organismoOrg = organismoEjb.findByCodigoLigero(relacionSirOfiTF.getUnidad());
 
                         relacionSirOfi.setOrganismo(organismoOrg);
 
@@ -544,7 +544,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         CatEstadoEntidad estado = cacheEstadoEntidad.get(oficinaTF.getEstado());
         oficina.setEstado(estado);
 
-        Organismo organismoResponsable = organismoEjb.findByCodigo(oficinaTF.getCodUoResponsable());
+        Organismo organismoResponsable = organismoEjb.findByCodigoLigero(oficinaTF.getCodUoResponsable());
         oficina.setOrganismoResponsable(organismoResponsable);
 
         if(oficinaTF.getCodigoPais() != null){oficina.setCodPais(catPaisEjb.findByCodigo(oficinaTF.getCodigoPais()));}
