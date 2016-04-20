@@ -33,7 +33,11 @@ public class CatComunidadAutonoma implements Serializable {
 
 	}
 
-	public void finalize() throws Throwable {
+  public CatComunidadAutonoma(Long id) {
+    this.id = id;
+  }
+
+  public void finalize() throws Throwable {
 
 	}
 

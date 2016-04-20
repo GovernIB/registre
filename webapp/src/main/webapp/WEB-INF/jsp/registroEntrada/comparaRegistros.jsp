@@ -379,7 +379,7 @@
                                                    <div class="col-xs-6" id="transporte_${status.count}_${reOriginal.registroDetalle.transporte}">
                                                        <script type="text/javascript">
                                                            $(document).ready(function(){
-                                                               obtenerElementoTraducido('<c:url value="/obtenerTransporte"/>','${reOriginal.registroDetalle.transporte}','transporte_${status.count}_${reOriginal.registroDetalle.transporte}');
+                                                               obtenerElementoTraducido('<c:url value="/rest/obtenerTransporte"/>', '${reOriginal.registroDetalle.transporte}', 'transporte_${status.count}_${reOriginal.registroDetalle.transporte}');
                                                            });
                                                        </script>
 

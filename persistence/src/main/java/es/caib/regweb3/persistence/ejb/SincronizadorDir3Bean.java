@@ -11,6 +11,7 @@ import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
+import org.hibernate.Hibernate;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
@@ -448,6 +449,9 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
    * @throws Exception
    */
     public void sincronizarHistoricosOrganismo(Organismo organismo, UnidadTF unidadTF) throws Exception {
+
+        // Inicializamos sus Historicos, ya la relación está a FetchType.LAZY
+        Hibernate.initialize(organismo.getHistoricoUO());
       List<String> historicos =unidadTF.getHistoricosUO();
       Set<Organismo> historicosOrg = organismo.getHistoricoUO();
       if(!historicos.isEmpty()){

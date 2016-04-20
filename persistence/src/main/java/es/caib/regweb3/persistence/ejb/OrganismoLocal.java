@@ -117,30 +117,6 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
      */
     public List<Organismo> findByEntidadEstadoConOficinas(Long entidad, String codigoEstado) throws Exception;
 
-     /**
-     *
-     * @param codigoEstado
-     * @return
-     * @throws Exception
-     */
-    public List<Organismo> findByEstado(String codigoEstado) throws Exception;
-
-    /**
-     * Devuelve los Organismos hijos de un Organismos dado
-     * @param idOrganismo
-     * @return
-     * @throws Exception
-     */
-    public List<Organismo> getHijos(Long idOrganismo) throws Exception;
-
-    /**
-     *
-     * @param idOrganismoSuperior
-     * @return
-     * @throws Exception
-     */
-    public List<Organismo> getOrganismosPrimerNivel(Long idOrganismoSuperior) throws Exception;
-
     /**
      *
      * @param nivel

@@ -188,7 +188,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         // Organismo destinatario
         if (!StringUtils.isEmpty((organoDest))) {
-            Organismo organismo = organismoEjb.findByCodigo(organoDest);
+            Organismo organismo = organismoEjb.findByCodigoLigero(organoDest);
             if (organismo == null) {
                 where.add(" registroEntrada.destinoExternoCodigo = :organoDest ");
             } else {

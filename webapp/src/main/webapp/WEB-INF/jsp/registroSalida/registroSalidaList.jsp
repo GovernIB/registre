@@ -182,7 +182,7 @@
                             </div>
                             <div class="form-group col-xs-6">
                                 <div class="col-xs-4"><spring:message code="registroEntrada.organOrigen"/></div>
-                                <div class="col-xs-6">
+                                <div class="col-xs-8">
                                     <form:select path="organOrigen" cssClass="chosen-select">
                                         <form:option value="" label="..."/>
                                         <c:forEach items="${organosOrigen}" var="organismo">

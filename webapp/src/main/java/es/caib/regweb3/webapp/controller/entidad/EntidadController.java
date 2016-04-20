@@ -17,6 +17,7 @@ import es.caib.regweb3.webapp.utils.*;
 import es.caib.regweb3.webapp.validator.EntidadValidator;
 import org.fundaciobit.plugins.userinformation.IUserInformationPlugin;
 import org.fundaciobit.plugins.userinformation.RolesInfo;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -774,6 +775,7 @@ public class EntidadController extends BaseController {
                         if (libros.size() > 0) {
                             log.info("El organismo " + organismoExtinguido.getDenominacion() + " con 1 histórico tiene libros");
                             // Asignamos libros misma numeración
+                            Hibernate.initialize(organismoExtinguido.getHistoricoUO()); // Inicializamos sus Historicos, ya la relación está a FetchType.LAZY
                             Organismo orgSustituye = new ArrayList<Organismo>(organismoExtinguido.getHistoricoUO()).get(0);
 
                             //Asignamos el libro al organismo que lo sustituye
@@ -797,6 +799,7 @@ public class EntidadController extends BaseController {
                         log.info("Entramos en historicos +1 de extinguido(no se procesan automaticamente): " + organismoExtinguido.getDenominacion() + ":" + organismoExtinguido.getCodigo());
                         if (libros.size() > 0) {//Si tiene libros se añade para procesarlo
                             log.info("Tiene libros el organismo:" + organismoExtinguido.getDenominacion() + ":" + organismoExtinguido.getCodigo());
+                            Hibernate.initialize(organismoExtinguido.getHistoricoUO()); // Inicializamos sus Historicos, ya la relación está a FetchType.LAZY
                             organismosExtinguidos.add(organismoExtinguido);
                         } else {// no tiene libros, no se hace nada pero se actualiza el estado a procesado
                             pendiente.setProcesado(true);
@@ -919,6 +922,12 @@ public class EntidadController extends BaseController {
         List<Organismo> organismosEntidadVigentes = organismoEjb.findByEntidadEstadoConOficinas(entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         log.info("Organismos entidad con Oficinas " + organismosEntidadVigentes.size());
         if(organismosEntidad.size()>0) {
+
+            // Inicializamos sus Historicos, ya la relación está a FetchType.LAZY
+            for (Organismo organismo : organismosEntidad) {
+                Hibernate.initialize(organismo.getHistoricoUO());
+            }
+
             model.addAttribute("organismosAProcesar", organismosEntidad);
             model.addAttribute("organismosSustituyentes", organismosEntidadVigentes);
             model.addAttribute("esPendiente", false);
@@ -1025,6 +1034,7 @@ public class EntidadController extends BaseController {
 
 
     private void obtenerHistoricosFinales(Organismo organismo, Set<Organismo> historicosFinales) throws Exception{
+        Hibernate.initialize(organismo.getHistoricoUO()); // Inicializamos sus Historicos, ya la relación está a FetchType.LAZY
         Set<Organismo> parciales=organismo.getHistoricoUO();
         log.info("PARCIALES DE " +organismo.getCodigo() +":"+ parciales.size());
         log.info("HISTORICOS FINALES: "+ historicosFinales.size());

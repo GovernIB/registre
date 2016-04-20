@@ -69,7 +69,7 @@ public class PreRegistroUtilsBean implements PreRegistroUtilsLocal {
       nuevoRE.setEstado(RegwebConstantes.ESTADO_VALIDO);
 
       if(preRegistro.getCodigoUnidadTramitacionDestino() != null){
-          Organismo organismoDestino = organismoEjb.findByCodigo(preRegistro.getCodigoUnidadTramitacionDestino());
+          Organismo organismoDestino = organismoEjb.findByCodigoLigero(preRegistro.getCodigoUnidadTramitacionDestino());
           nuevoRE.setDestino(organismoDestino);
       }
 
@@ -139,7 +139,7 @@ public class PreRegistroUtilsBean implements PreRegistroUtilsLocal {
       nuevoRS.setEstado(RegwebConstantes.ESTADO_VALIDO);
 
       if(preRegistro.getCodigoUnidadTramitacionDestino() != null){
-          Organismo organismoOrigen = organismoEjb.findByCodigo(preRegistro.getCodigoUnidadTramitacionDestino());
+          Organismo organismoOrigen = organismoEjb.findByCodigoLigero(preRegistro.getCodigoUnidadTramitacionDestino());
           nuevoRS.setOrigen(organismoOrigen);
       }
 

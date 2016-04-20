@@ -110,7 +110,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         Set<Organismo> todosOrganismos = getOrganismosOficinaActiva(request);
 
         if (busqueda.getOrganOrigen()!=null && !"".equals(busqueda.getOrganOrigen())) {
-            Organismo org = organismoEjb.findByCodigo(busqueda.getOrganOrigen());
+            Organismo org = organismoEjb.findByCodigoLigero(busqueda.getOrganOrigen());
             if(org== null || !todosOrganismos.contains(org)){
                 org = new Organismo();
                 org.setCodigo(busqueda.getOrganOrigen());

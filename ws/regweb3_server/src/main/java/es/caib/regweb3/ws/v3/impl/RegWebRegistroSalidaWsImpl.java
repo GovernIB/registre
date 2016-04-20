@@ -123,7 +123,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         IdentificadorWs identificadorWs = null;
 
         // 1.- Comprobar que el Organismo destino está vigente
-        Organismo origen = organismoEjb.findByCodigo(registroSalidaWs.getOrigen());
+        Organismo origen = organismoEjb.findByCodigoLigero(registroSalidaWs.getOrigen());
 
         if(origen == null){ //Si no existe todo: Hay que agregar origenes externos?
             throw new I18NException("registro.organismo.noExiste", registroSalidaWs.getOrigen());

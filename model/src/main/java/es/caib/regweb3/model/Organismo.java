@@ -115,6 +115,28 @@ public class Organismo implements Serializable {
         this.libros = libros;
     }
 
+    public Organismo(Organismo organismo) {
+        this.id = organismo.getId();
+        this.codigo = organismo.getCodigo();
+        this.entidad = organismo.getEntidad();
+        this.libros = organismo.getLibros();
+        this.nivelJerarquico = organismo.getNivelJerarquico();
+        this.estado = organismo.getEstado();
+        this.organismoSuperior = organismo.getOrganismoSuperior();
+        this.organismoRaiz = organismo.getOrganismoRaiz();
+        this.denominacion = organismo.getDenominacion();
+        this.nivelAdministracion = organismo.getNivelAdministracion();
+        this.codAmbComunidad = organismo.getCodAmbComunidad();
+        this.codAmbProvincia = organismo.getCodAmbProvincia();
+        this.codPais = organismo.getCodPais();
+        this.localidad = organismo.getLocalidad();
+        this.tipoVia = organismo.getTipoVia();
+        this.nombreVia = organismo.getNombreVia();
+        this.numVia = organismo.getNumVia();
+        this.codPostal = organismo.getCodPostal();
+        this.historicoUO = organismo.getHistoricoUO();
+    }
+
     @Id
     @GeneratedValue(strategy= GenerationType.SEQUENCE,generator = "generator")
     @Column(name="ID")
@@ -320,7 +342,7 @@ public class Organismo implements Serializable {
         this.codPostal = codPostal;
     }
 
-    @ManyToMany(cascade=CascadeType.PERSIST, fetch= FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinTable(name="RWE_HISTORICOUO",
                joinColumns=@JoinColumn(name="CODANTERIOR"),
                inverseJoinColumns=@JoinColumn(name="CODULTIMA"))
@@ -349,14 +371,15 @@ public class Organismo implements Serializable {
         Organismo organismo = (Organismo) o;
 
         if (id != null ? !id.equals(organismo.id) : organismo.id != null) return false;
+        return codigo != null ? codigo.equals(organismo.codigo) : organismo.codigo == null;
 
-        return true;
     }
-    
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (codigo != null ? codigo.hashCode() : 0);
+        return result;
     }
 
     @Override

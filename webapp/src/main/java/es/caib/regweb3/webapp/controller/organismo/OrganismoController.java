@@ -329,18 +329,4 @@ public class OrganismoController extends BaseController {
         binder.setValidator(this.libroValidator);
     }
 
-
-    /**
-     * Obtiene los {@link es.caib.regweb3.model.Organismo} hijos de un Organismo
-     */
-    @RequestMapping(value = "/obtenerOrganismos", method = RequestMethod.GET)
-    public @ResponseBody
-    List<Organismo> obtenerOrganismos(@RequestParam Long id) throws Exception {
-
-        return organismoEjb.getHijos(id);
-    }
-
-
-
-
 }

@@ -1,5 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.regweb3.model.CatComunidadAutonoma;
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.RelacionSirOfi;
@@ -32,6 +33,9 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
+
+    @EJB(mappedName = "regweb3/CatEstadoEntidadEJB/local")
+    public CatEstadoEntidadLocal catEstadoEntidadEjb;
 
     @EJB(mappedName = "regweb3/OficinaEJB/local")
     public OficinaLocal oficinaEjb;
@@ -121,14 +125,17 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     }
 
     public Organismo findByCodigoLigero(String codigo) throws Exception {
-        Query q = em.createQuery("Select organismo.id, organismo.codigo, organismo.denominacion from Organismo as organismo where " +
+        Query q = em.createQuery("Select organismo.id, organismo.codigo, organismo.denominacion, organismo.codAmbComunidad.id, organismo.estado.id from Organismo as organismo where " +
                 "organismo.codigo = :codigo");
 
         q.setParameter("codigo", codigo);
 
         List<Object[]> result = q.getResultList();
         if (result.size() == 1) {
-            return new Organismo((Long) result.get(0)[0], (String) result.get(0)[1], (String) result.get(0)[2]);
+            Organismo organismo = new Organismo((Long) result.get(0)[0], (String) result.get(0)[1], (String) result.get(0)[2]);
+            organismo.setCodAmbComunidad(new CatComunidadAutonoma((Long) result.get(0)[3]));
+            organismo.setEstado(catEstadoEntidadEjb.findById((Long) result.get(0)[4]));
+            return organismo;
         } else {
             return null;
         }
@@ -263,41 +270,6 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
         return new ArrayList<Organismo>(organismosConOficinas);
 
-    }
-
-    @Override
-    public List<Organismo> findByEstado(String codigoEstado) throws Exception {
-
-        Query q = em.createQuery("Select organismo from Organismo as organismo where " +
-                "organismo.estado.codigoEstadoEntidad = :codigoEstado");
-
-        q.setParameter("codigoEstado", codigoEstado);
-
-        return q.getResultList();
-
-    }
-
-    @Override
-    public List<Organismo> getHijos(Long idOrganismo) throws Exception {
-
-        Query q = em.createQuery("Select organismo from Organismo as organismo where " +
-                "organismo.organismoSuperior = :idOrganismo");
-
-        q.setParameter("idOrganismo", idOrganismo);
-
-        return q.getResultList();
-
-    }
-
-    @Override
-    public List<Organismo> getOrganismosPrimerNivel(Long idOrganismoSuperior) throws Exception {
-
-        Query q = em.createQuery("Select organismo from Organismo as organismo where " +
-                "organismo.organismoSuperior.id = :idOrganismoSuperior");
-
-        q.setParameter("idOrganismoSuperior", idOrganismoSuperior);
-
-        return q.getResultList();
     }
 
     @Override

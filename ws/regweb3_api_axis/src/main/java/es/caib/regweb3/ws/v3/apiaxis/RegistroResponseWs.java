@@ -205,7 +205,7 @@ public class RegistroResponseWs  implements java.io.Serializable {
 
     /**
      * Gets the codigoAsuntoCodigo value for this RegistroResponseWs.
-     *
+     * 
      * @return codigoAsuntoCodigo
      */
     public java.lang.String getCodigoAsuntoCodigo() {
@@ -215,7 +215,7 @@ public class RegistroResponseWs  implements java.io.Serializable {
 
     /**
      * Sets the codigoAsuntoCodigo value for this RegistroResponseWs.
-     *
+     * 
      * @param codigoAsuntoCodigo
      */
     public void setCodigoAsuntoCodigo(java.lang.String codigoAsuntoCodigo) {
@@ -225,7 +225,7 @@ public class RegistroResponseWs  implements java.io.Serializable {
 
     /**
      * Gets the codigoAsuntoDescripcion value for this RegistroResponseWs.
-     *
+     * 
      * @return codigoAsuntoDescripcion
      */
     public java.lang.String getCodigoAsuntoDescripcion() {
@@ -235,7 +235,7 @@ public class RegistroResponseWs  implements java.io.Serializable {
 
     /**
      * Sets the codigoAsuntoDescripcion value for this RegistroResponseWs.
-     *
+     * 
      * @param codigoAsuntoDescripcion
      */
     public void setCodigoAsuntoDescripcion(java.lang.String codigoAsuntoDescripcion) {
@@ -285,7 +285,7 @@ public class RegistroResponseWs  implements java.io.Serializable {
 
     /**
      * Gets the docFisicaCodigo value for this RegistroResponseWs.
-     *
+     * 
      * @return docFisicaCodigo
      */
     public java.lang.String getDocFisicaCodigo() {
@@ -295,7 +295,7 @@ public class RegistroResponseWs  implements java.io.Serializable {
 
     /**
      * Sets the docFisicaCodigo value for this RegistroResponseWs.
-     *
+     * 
      * @param docFisicaCodigo
      */
     public void setDocFisicaCodigo(java.lang.String docFisicaCodigo) {
@@ -305,7 +305,7 @@ public class RegistroResponseWs  implements java.io.Serializable {
 
     /**
      * Gets the docFisicaDescripcion value for this RegistroResponseWs.
-     *
+     * 
      * @return docFisicaDescripcion
      */
     public java.lang.String getDocFisicaDescripcion() {
@@ -315,7 +315,7 @@ public class RegistroResponseWs  implements java.io.Serializable {
 
     /**
      * Sets the docFisicaDescripcion value for this RegistroResponseWs.
-     *
+     * 
      * @param docFisicaDescripcion
      */
     public void setDocFisicaDescripcion(java.lang.String docFisicaDescripcion) {
@@ -445,7 +445,7 @@ public class RegistroResponseWs  implements java.io.Serializable {
 
     /**
      * Gets the idiomaCodigo value for this RegistroResponseWs.
-     *
+     * 
      * @return idiomaCodigo
      */
     public java.lang.String getIdiomaCodigo() {
@@ -455,7 +455,7 @@ public class RegistroResponseWs  implements java.io.Serializable {
 
     /**
      * Sets the idiomaCodigo value for this RegistroResponseWs.
-     *
+     * 
      * @param idiomaCodigo
      */
     public void setIdiomaCodigo(java.lang.String idiomaCodigo) {
@@ -465,7 +465,7 @@ public class RegistroResponseWs  implements java.io.Serializable {
 
     /**
      * Gets the idiomaDescripcion value for this RegistroResponseWs.
-     *
+     * 
      * @return idiomaDescripcion
      */
     public java.lang.String getIdiomaDescripcion() {
@@ -475,7 +475,7 @@ public class RegistroResponseWs  implements java.io.Serializable {
 
     /**
      * Sets the idiomaDescripcion value for this RegistroResponseWs.
-     *
+     * 
      * @param idiomaDescripcion
      */
     public void setIdiomaDescripcion(java.lang.String idiomaDescripcion) {
@@ -513,7 +513,7 @@ public class RegistroResponseWs  implements java.io.Serializable {
 
     /**
      * Gets the libroCodigo value for this RegistroResponseWs.
-     *
+     * 
      * @return libroCodigo
      */
     public java.lang.String getLibroCodigo() {
@@ -523,7 +523,7 @@ public class RegistroResponseWs  implements java.io.Serializable {
 
     /**
      * Sets the libroCodigo value for this RegistroResponseWs.
-     *
+     * 
      * @param libroCodigo
      */
     public void setLibroCodigo(java.lang.String libroCodigo) {
@@ -533,7 +533,7 @@ public class RegistroResponseWs  implements java.io.Serializable {
 
     /**
      * Gets the libroDescripcion value for this RegistroResponseWs.
-     *
+     * 
      * @return libroDescripcion
      */
     public java.lang.String getLibroDescripcion() {
@@ -543,7 +543,7 @@ public class RegistroResponseWs  implements java.io.Serializable {
 
     /**
      * Sets the libroDescripcion value for this RegistroResponseWs.
-     *
+     * 
      * @param libroDescripcion
      */
     public void setLibroDescripcion(java.lang.String libroDescripcion) {
@@ -773,7 +773,7 @@ public class RegistroResponseWs  implements java.io.Serializable {
 
     /**
      * Gets the tipoAsuntoCodigo value for this RegistroResponseWs.
-     *
+     * 
      * @return tipoAsuntoCodigo
      */
     public java.lang.String getTipoAsuntoCodigo() {
@@ -783,7 +783,7 @@ public class RegistroResponseWs  implements java.io.Serializable {
 
     /**
      * Sets the tipoAsuntoCodigo value for this RegistroResponseWs.
-     *
+     * 
      * @param tipoAsuntoCodigo
      */
     public void setTipoAsuntoCodigo(java.lang.String tipoAsuntoCodigo) {
@@ -793,7 +793,7 @@ public class RegistroResponseWs  implements java.io.Serializable {
 
     /**
      * Gets the tipoAsuntoDescripcion value for this RegistroResponseWs.
-     *
+     * 
      * @return tipoAsuntoDescripcion
      */
     public java.lang.String getTipoAsuntoDescripcion() {
@@ -803,7 +803,7 @@ public class RegistroResponseWs  implements java.io.Serializable {
 
     /**
      * Sets the tipoAsuntoDescripcion value for this RegistroResponseWs.
-     *
+     * 
      * @param tipoAsuntoDescripcion
      */
     public void setTipoAsuntoDescripcion(java.lang.String tipoAsuntoDescripcion) {
@@ -813,7 +813,7 @@ public class RegistroResponseWs  implements java.io.Serializable {
 
     /**
      * Gets the tipoTransporteCodigo value for this RegistroResponseWs.
-     *
+     * 
      * @return tipoTransporteCodigo
      */
     public java.lang.String getTipoTransporteCodigo() {
@@ -823,7 +823,7 @@ public class RegistroResponseWs  implements java.io.Serializable {
 
     /**
      * Sets the tipoTransporteCodigo value for this RegistroResponseWs.
-     *
+     * 
      * @param tipoTransporteCodigo
      */
     public void setTipoTransporteCodigo(java.lang.String tipoTransporteCodigo) {
@@ -833,7 +833,7 @@ public class RegistroResponseWs  implements java.io.Serializable {
 
     /**
      * Gets the tipoTransporteDescripcion value for this RegistroResponseWs.
-     *
+     * 
      * @return tipoTransporteDescripcion
      */
     public java.lang.String getTipoTransporteDescripcion() {
@@ -843,7 +843,7 @@ public class RegistroResponseWs  implements java.io.Serializable {
 
     /**
      * Sets the tipoTransporteDescripcion value for this RegistroResponseWs.
-     *
+     * 
      * @param tipoTransporteDescripcion
      */
     public void setTipoTransporteDescripcion(java.lang.String tipoTransporteDescripcion) {
@@ -894,7 +894,7 @@ public class RegistroResponseWs  implements java.io.Serializable {
                 ((this.codigoAsuntoDescripcion == null && other.getCodigoAsuntoDescripcion() == null) ||
                         (this.codigoAsuntoDescripcion != null &&
                                 this.codigoAsuntoDescripcion.equals(other.getCodigoAsuntoDescripcion()))) &&
-                ((this.codigoUsuario==null && other.getCodigoUsuario()==null) ||
+                ((this.codigoUsuario == null && other.getCodigoUsuario() == null) ||
              (this.codigoUsuario!=null &&
               this.codigoUsuario.equals(other.getCodigoUsuario()))) &&
             ((this.contactoUsuario==null && other.getContactoUsuario()==null) || 
@@ -906,7 +906,7 @@ public class RegistroResponseWs  implements java.io.Serializable {
                 ((this.docFisicaDescripcion == null && other.getDocFisicaDescripcion() == null) ||
                         (this.docFisicaDescripcion != null &&
                                 this.docFisicaDescripcion.equals(other.getDocFisicaDescripcion()))) &&
-                ((this.entidadCodigo==null && other.getEntidadCodigo()==null) ||
+                ((this.entidadCodigo == null && other.getEntidadCodigo() == null) ||
              (this.entidadCodigo!=null &&
               this.entidadCodigo.equals(other.getEntidadCodigo()))) &&
             ((this.entidadDenominacion==null && other.getEntidadDenominacion()==null) || 
@@ -930,7 +930,7 @@ public class RegistroResponseWs  implements java.io.Serializable {
                 ((this.idiomaDescripcion == null && other.getIdiomaDescripcion() == null) ||
                         (this.idiomaDescripcion != null &&
                                 this.idiomaDescripcion.equals(other.getIdiomaDescripcion()))) &&
-                ((this.interesados==null && other.getInteresados()==null) ||
+                ((this.interesados == null && other.getInteresados() == null) ||
              (this.interesados!=null &&
               java.util.Arrays.equals(this.interesados, other.getInteresados()))) &&
                 ((this.libroCodigo == null && other.getLibroCodigo() == null) ||
@@ -939,7 +939,7 @@ public class RegistroResponseWs  implements java.io.Serializable {
                 ((this.libroDescripcion == null && other.getLibroDescripcion() == null) ||
                         (this.libroDescripcion != null &&
                                 this.libroDescripcion.equals(other.getLibroDescripcion()))) &&
-                ((this.nombreUsuario==null && other.getNombreUsuario()==null) ||
+                ((this.nombreUsuario == null && other.getNombreUsuario() == null) ||
              (this.nombreUsuario!=null &&
               this.nombreUsuario.equals(other.getNombreUsuario()))) &&
             ((this.numExpediente==null && other.getNumExpediente()==null) || 
@@ -982,7 +982,7 @@ public class RegistroResponseWs  implements java.io.Serializable {
                 ((this.tipoTransporteDescripcion == null && other.getTipoTransporteDescripcion() == null) ||
                         (this.tipoTransporteDescripcion != null &&
                                 this.tipoTransporteDescripcion.equals(other.getTipoTransporteDescripcion()))) &&
-                ((this.version==null && other.getVersion()==null) ||
+                ((this.version == null && other.getVersion() == null) ||
              (this.version!=null &&
               this.version.equals(other.getVersion())));
         __equalsCalc = null;
