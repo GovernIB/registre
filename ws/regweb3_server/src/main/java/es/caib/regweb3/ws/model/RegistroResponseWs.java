@@ -24,15 +24,21 @@ public class RegistroResponseWs implements Serializable {
 
     private String oficinaCodigo;
     private String oficinaDenominacion;
-    private String libro;
+    private String libroCodigo;
+    private String libroDescripcion;
     private String extracto;
-    private String docFisica;
-    private String tipoAsunto;
-    private String idioma;
-    private String codigoAsunto;
+    private String docFisicaCodigo;
+    private String docFisicaDescripcion;
+    private String tipoAsuntoCodigo;
+    private String tipoAsuntoDescripcion;
+    private String idiomaCodigo;
+    private String idiomaDescripcion;
+    private String codigoAsuntoCodigo;
+    private String codigoAsuntoDescripcion;
     private String refExterna;
     private String numExpediente;
-    private String tipoTransporte;
+    private String tipoTransporteCodigo;
+    private String tipoTransporteDescripcion;
     private String numTransporte;
     private String observaciones;
     private String numeroRegistroOrigen;
@@ -126,12 +132,20 @@ public class RegistroResponseWs implements Serializable {
         this.oficinaDenominacion = oficinaDenominacion;
     }
 
-    public String getLibro() {
-        return libro;
+    public String getLibroCodigo() {
+        return libroCodigo;
     }
 
-    public void setLibro(String libro) {
-        this.libro = libro;
+    public void setLibroCodigo(String libroCodigo) {
+        this.libroCodigo = libroCodigo;
+    }
+
+    public String getLibroDescripcion() {
+        return libroDescripcion;
+    }
+
+    public void setLibroDescripcion(String libroDescripcion) {
+        this.libroDescripcion = libroDescripcion;
     }
 
     public String getExtracto() {
@@ -142,36 +156,68 @@ public class RegistroResponseWs implements Serializable {
         this.extracto = extracto;
     }
 
-    public String getDocFisica() {
-        return docFisica;
+    public String getDocFisicaCodigo() {
+        return docFisicaCodigo;
     }
 
-    public void setDocFisica(String docFisica) {
-        this.docFisica = docFisica;
+    public void setDocFisicaCodigo(String docFisicaCodigo) {
+        this.docFisicaCodigo = docFisicaCodigo;
     }
 
-    public String getTipoAsunto() {
-        return tipoAsunto;
+    public String getDocFisicaDescripcion() {
+        return docFisicaDescripcion;
     }
 
-    public void setTipoAsunto(String tipoAsunto) {
-        this.tipoAsunto = tipoAsunto;
+    public void setDocFisicaDescripcion(String docFisicaDescripcion) {
+        this.docFisicaDescripcion = docFisicaDescripcion;
     }
 
-    public String getIdioma() {
-        return idioma;
+    public String getTipoAsuntoCodigo() {
+        return tipoAsuntoCodigo;
     }
 
-    public void setIdioma(String idioma) {
-        this.idioma = idioma;
+    public void setTipoAsuntoCodigo(String tipoAsuntoCodigo) {
+        this.tipoAsuntoCodigo = tipoAsuntoCodigo;
     }
 
-    public String getCodigoAsunto() {
-        return codigoAsunto;
+    public String getTipoAsuntoDescripcion() {
+        return tipoAsuntoDescripcion;
     }
 
-    public void setCodigoAsunto(String codigoAsunto) {
-        this.codigoAsunto = codigoAsunto;
+    public void setTipoAsuntoDescripcion(String tipoAsuntoDescripcion) {
+        this.tipoAsuntoDescripcion = tipoAsuntoDescripcion;
+    }
+
+    public String getIdiomaCodigo() {
+        return idiomaCodigo;
+    }
+
+    public void setIdiomaCodigo(String idiomaCodigo) {
+        this.idiomaCodigo = idiomaCodigo;
+    }
+
+    public String getIdiomaDescripcion() {
+        return idiomaDescripcion;
+    }
+
+    public void setIdiomaDescripcion(String idiomaDescripcion) {
+        this.idiomaDescripcion = idiomaDescripcion;
+    }
+
+    public String getCodigoAsuntoCodigo() {
+        return codigoAsuntoCodigo;
+    }
+
+    public void setCodigoAsuntoCodigo(String codigoAsuntoCodigo) {
+        this.codigoAsuntoCodigo = codigoAsuntoCodigo;
+    }
+
+    public String getCodigoAsuntoDescripcion() {
+        return codigoAsuntoDescripcion;
+    }
+
+    public void setCodigoAsuntoDescripcion(String codigoAsuntoDescripcion) {
+        this.codigoAsuntoDescripcion = codigoAsuntoDescripcion;
     }
 
     public String getRefExterna() {
@@ -190,12 +236,20 @@ public class RegistroResponseWs implements Serializable {
         this.numExpediente = numExpediente;
     }
 
-    public String getTipoTransporte() {
-        return tipoTransporte;
+    public String getTipoTransporteCodigo() {
+        return tipoTransporteCodigo;
     }
 
-    public void setTipoTransporte(String tipoTransporte) {
-        this.tipoTransporte = tipoTransporte;
+    public void setTipoTransporteCodigo(String tipoTransporteCodigo) {
+        this.tipoTransporteCodigo = tipoTransporteCodigo;
+    }
+
+    public String getTipoTransporteDescripcion() {
+        return tipoTransporteDescripcion;
+    }
+
+    public void setTipoTransporteDescripcion(String tipoTransporteDescripcion) {
+        this.tipoTransporteDescripcion = tipoTransporteDescripcion;
     }
 
     public String getNumTransporte() {
@@ -291,15 +345,21 @@ public class RegistroResponseWs implements Serializable {
                 ", contactoUsuario='" + contactoUsuario + '\'' +
                 ", oficinaCodigo='" + oficinaCodigo + '\'' +
                 ", oficinaDenominacion='" + oficinaDenominacion + '\'' +
-                ", libro='" + libro + '\'' +
+                ", libroCodigo='" + libroCodigo + '\'' +
+                ", libroDescripcion='" + libroDescripcion + '\'' +
                 ", extracto='" + extracto + '\'' +
-                ", docFisica='" + docFisica + '\'' +
-                ", tipoAsunto='" + tipoAsunto + '\'' +
-                ", idioma='" + idioma + '\'' +
-                ", codigoAsunto='" + codigoAsunto + '\'' +
+                ", docFisicaCodigo='" + docFisicaCodigo + '\'' +
+                ", docFisicaDescripcion='" + docFisicaDescripcion + '\'' +
+                ", tipoAsuntoCodigo='" + tipoAsuntoCodigo + '\'' +
+                ", tipoAsuntoDescripcion='" + tipoAsuntoDescripcion + '\'' +
+                ", idiomaCodigo='" + idiomaCodigo + '\'' +
+                ", idiomaDescripcion='" + idiomaDescripcion + '\'' +
+                ", codigoAsuntoCodigo='" + codigoAsuntoCodigo + '\'' +
+                ", codigoAsuntoDescripcion='" + codigoAsuntoDescripcion + '\'' +
                 ", refExterna='" + refExterna + '\'' +
                 ", numExpediente='" + numExpediente + '\'' +
-                ", tipoTransporte='" + tipoTransporte + '\'' +
+                ", tipoTransporteCodigo='" + tipoTransporteCodigo + '\'' +
+                ", tipoTransporteDescripcion='" + tipoTransporteDescripcion + '\'' +
                 ", numTransporte='" + numTransporte + '\'' +
                 ", observaciones='" + observaciones + '\'' +
                 ", numeroRegistroOrigen='" + numeroRegistroOrigen + '\'' +

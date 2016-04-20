@@ -178,30 +178,40 @@ public class RegistroSalidaConverter extends CommonConverter {
 
         registroWs.setOficinaCodigo(registroSalida.getOficina().getCodigo());
         registroWs.setOficinaDenominacion(registroSalida.getOficina().getDenominacion());
-        registroWs.setLibro(registroSalida.getLibro().getNombreCompleto());
+        registroWs.setLibroCodigo(registroSalida.getLibro().getCodigo());
+        registroWs.setLibroDescripcion(registroSalida.getLibro().getNombre());
 
         registroWs.setExtracto(registroDetalle.getExtracto());
-        registroWs.setDocFisica(I18NLogicUtils.tradueix(new Locale(idioma), "tipoDocumentacionFisica." + registroDetalle.getTipoDocumentacionFisica()));
+        registroWs.setDocFisicaCodigo(registroDetalle.getTipoDocumentacionFisica().toString());
+        registroWs.setDocFisicaDescripcion(I18NLogicUtils.tradueix(new Locale(idioma), "tipoDocumentacionFisica." + registroDetalle.getTipoDocumentacionFisica()));
 
         TraduccionTipoAsunto traduccionTipoAsunto = (TraduccionTipoAsunto) registroDetalle.getTipoAsunto().getTraduccion(idioma);
-        registroWs.setTipoAsunto(traduccionTipoAsunto.getNombre());
-        registroWs.setIdioma(I18NLogicUtils.tradueix(new Locale(idioma), "idioma." + registroDetalle.getIdioma()));
+        registroWs.setTipoAsuntoCodigo(registroDetalle.getTipoAsunto().getCodigo());
+        registroWs.setTipoAsuntoDescripcion(traduccionTipoAsunto.getNombre());
+
+        registroWs.setIdiomaCodigo(RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(registroDetalle.getIdioma()));
+        registroWs.setIdiomaDescripcion(I18NLogicUtils.tradueix(new Locale(idioma), "idioma." + registroDetalle.getIdioma()));
 
         if(registroDetalle.getCodigoAsunto() != null){
             TraduccionCodigoAsunto traduccionCodigoAsunto = (TraduccionCodigoAsunto) registroDetalle.getCodigoAsunto().getTraduccion(idioma);
-            registroWs.setCodigoAsunto(traduccionCodigoAsunto.getNombre());
+            registroWs.setCodigoAsuntoCodigo(registroDetalle.getCodigoAsunto().getCodigo());
+            registroWs.setCodigoAsuntoDescripcion(traduccionCodigoAsunto.getNombre());
         }else{
-            registroWs.setCodigoAsunto(null);
+            registroWs.setCodigoAsuntoCodigo(null);
+            registroWs.setCodigoAsuntoDescripcion(null);
         }
 
         registroWs.setRefExterna(registroDetalle.getReferenciaExterna());
         registroWs.setNumExpediente(registroDetalle.getExpediente());
 
         if(registroDetalle.getTransporte() != null){
-            registroWs.setTipoTransporte(I18NLogicUtils.tradueix(new Locale(idioma), "transporte." + registroDetalle.getTransporte()));
+            registroWs.setTipoTransporteCodigo(RegwebConstantes.CODIGO_SICRES_BY_TRANSPORTE.get(registroDetalle.getTransporte()));
+            registroWs.setTipoTransporteDescripcion(I18NLogicUtils.tradueix(new Locale(idioma), "transporte." + registroDetalle.getTransporte()));
         }else{
-            registroWs.setTipoTransporte(null);
+            registroWs.setTipoTransporteCodigo(null);
+            registroWs.setTipoTransporteDescripcion(null);
         }
+
         registroWs.setNumTransporte(registroDetalle.getNumeroTransporte());
         registroWs.setObservaciones(registroDetalle.getObservaciones());
         registroWs.setFechaOrigen(registroDetalle.getFechaOrigen());

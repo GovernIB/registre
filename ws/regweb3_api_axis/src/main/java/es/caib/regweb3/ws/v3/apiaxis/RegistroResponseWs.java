@@ -12,13 +12,17 @@ public class RegistroResponseWs  implements java.io.Serializable {
 
     private java.lang.String aplicacion;
 
-    private java.lang.String codigoAsunto;
+    private java.lang.String codigoAsuntoCodigo;
+
+    private java.lang.String codigoAsuntoDescripcion;
 
     private java.lang.String codigoUsuario;
 
     private java.lang.String contactoUsuario;
 
-    private java.lang.String docFisica;
+    private java.lang.String docFisicaCodigo;
+
+    private java.lang.String docFisicaDescripcion;
 
     private java.lang.String entidadCodigo;
 
@@ -32,11 +36,15 @@ public class RegistroResponseWs  implements java.io.Serializable {
 
     private java.util.Calendar fechaRegistro;
 
-    private java.lang.String idioma;
+    private java.lang.String idiomaCodigo;
+
+    private java.lang.String idiomaDescripcion;
 
     private es.caib.regweb3.ws.v3.apiaxis.InteresadoWs[] interesados;
 
-    private java.lang.String libro;
+    private java.lang.String libroCodigo;
+
+    private java.lang.String libroDescripcion;
 
     private java.lang.String nombreUsuario;
 
@@ -60,9 +68,13 @@ public class RegistroResponseWs  implements java.io.Serializable {
 
     private java.lang.String solicita;
 
-    private java.lang.String tipoAsunto;
+    private java.lang.String tipoAsuntoCodigo;
 
-    private java.lang.String tipoTransporte;
+    private java.lang.String tipoAsuntoDescripcion;
+
+    private java.lang.String tipoTransporteCodigo;
+
+    private java.lang.String tipoTransporteDescripcion;
 
     private java.lang.String version;
 
@@ -70,50 +82,60 @@ public class RegistroResponseWs  implements java.io.Serializable {
     }
 
     public RegistroResponseWs(
-           es.caib.regweb3.ws.v3.apiaxis.AnexoWs[] anexos,
-           java.lang.String aplicacion,
-           java.lang.String codigoAsunto,
-           java.lang.String codigoUsuario,
-           java.lang.String contactoUsuario,
-           java.lang.String docFisica,
-           java.lang.String entidadCodigo,
-           java.lang.String entidadDenominacion,
-           java.lang.String expone,
-           java.lang.String extracto,
-           java.util.Calendar fechaOrigen,
-           java.util.Calendar fechaRegistro,
-           java.lang.String idioma,
-           es.caib.regweb3.ws.v3.apiaxis.InteresadoWs[] interesados,
-           java.lang.String libro,
-           java.lang.String nombreUsuario,
-           java.lang.String numExpediente,
-           java.lang.String numTransporte,
-           int numeroRegistro,
-           java.lang.String numeroRegistroFormateado,
-           java.lang.String numeroRegistroOrigen,
-           java.lang.String observaciones,
-           java.lang.String oficinaCodigo,
-           java.lang.String oficinaDenominacion,
-           java.lang.String refExterna,
-           java.lang.String solicita,
-           java.lang.String tipoAsunto,
-           java.lang.String tipoTransporte,
-           java.lang.String version) {
+            es.caib.regweb3.ws.v3.apiaxis.AnexoWs[] anexos,
+            java.lang.String aplicacion,
+            java.lang.String codigoAsuntoCodigo,
+            java.lang.String codigoAsuntoDescripcion,
+            java.lang.String codigoUsuario,
+            java.lang.String contactoUsuario,
+            java.lang.String docFisicaCodigo,
+            java.lang.String docFisicaDescripcion,
+            java.lang.String entidadCodigo,
+            java.lang.String entidadDenominacion,
+            java.lang.String expone,
+            java.lang.String extracto,
+            java.util.Calendar fechaOrigen,
+            java.util.Calendar fechaRegistro,
+            java.lang.String idiomaCodigo,
+            java.lang.String idiomaDescripcion,
+            es.caib.regweb3.ws.v3.apiaxis.InteresadoWs[] interesados,
+            java.lang.String libroCodigo,
+            java.lang.String libroDescripcion,
+            java.lang.String nombreUsuario,
+            java.lang.String numExpediente,
+            java.lang.String numTransporte,
+            int numeroRegistro,
+            java.lang.String numeroRegistroFormateado,
+            java.lang.String numeroRegistroOrigen,
+            java.lang.String observaciones,
+            java.lang.String oficinaCodigo,
+            java.lang.String oficinaDenominacion,
+            java.lang.String refExterna,
+            java.lang.String solicita,
+            java.lang.String tipoAsuntoCodigo,
+            java.lang.String tipoAsuntoDescripcion,
+            java.lang.String tipoTransporteCodigo,
+            java.lang.String tipoTransporteDescripcion,
+            java.lang.String version) {
            this.anexos = anexos;
            this.aplicacion = aplicacion;
-           this.codigoAsunto = codigoAsunto;
+        this.codigoAsuntoCodigo = codigoAsuntoCodigo;
+        this.codigoAsuntoDescripcion = codigoAsuntoDescripcion;
            this.codigoUsuario = codigoUsuario;
            this.contactoUsuario = contactoUsuario;
-           this.docFisica = docFisica;
+        this.docFisicaCodigo = docFisicaCodigo;
+        this.docFisicaDescripcion = docFisicaDescripcion;
            this.entidadCodigo = entidadCodigo;
            this.entidadDenominacion = entidadDenominacion;
            this.expone = expone;
            this.extracto = extracto;
            this.fechaOrigen = fechaOrigen;
            this.fechaRegistro = fechaRegistro;
-           this.idioma = idioma;
+        this.idiomaCodigo = idiomaCodigo;
+        this.idiomaDescripcion = idiomaDescripcion;
            this.interesados = interesados;
-           this.libro = libro;
+        this.libroCodigo = libroCodigo;
+        this.libroDescripcion = libroDescripcion;
            this.nombreUsuario = nombreUsuario;
            this.numExpediente = numExpediente;
            this.numTransporte = numTransporte;
@@ -125,8 +147,10 @@ public class RegistroResponseWs  implements java.io.Serializable {
            this.oficinaDenominacion = oficinaDenominacion;
            this.refExterna = refExterna;
            this.solicita = solicita;
-           this.tipoAsunto = tipoAsunto;
-           this.tipoTransporte = tipoTransporte;
+        this.tipoAsuntoCodigo = tipoAsuntoCodigo;
+        this.tipoAsuntoDescripcion = tipoAsuntoDescripcion;
+        this.tipoTransporteCodigo = tipoTransporteCodigo;
+        this.tipoTransporteDescripcion = tipoTransporteDescripcion;
            this.version = version;
     }
 
@@ -180,22 +204,42 @@ public class RegistroResponseWs  implements java.io.Serializable {
 
 
     /**
-     * Gets the codigoAsunto value for this RegistroResponseWs.
-     * 
-     * @return codigoAsunto
+     * Gets the codigoAsuntoCodigo value for this RegistroResponseWs.
+     *
+     * @return codigoAsuntoCodigo
      */
-    public java.lang.String getCodigoAsunto() {
-        return codigoAsunto;
+    public java.lang.String getCodigoAsuntoCodigo() {
+        return codigoAsuntoCodigo;
     }
 
 
     /**
-     * Sets the codigoAsunto value for this RegistroResponseWs.
-     * 
-     * @param codigoAsunto
+     * Sets the codigoAsuntoCodigo value for this RegistroResponseWs.
+     *
+     * @param codigoAsuntoCodigo
      */
-    public void setCodigoAsunto(java.lang.String codigoAsunto) {
-        this.codigoAsunto = codigoAsunto;
+    public void setCodigoAsuntoCodigo(java.lang.String codigoAsuntoCodigo) {
+        this.codigoAsuntoCodigo = codigoAsuntoCodigo;
+    }
+
+
+    /**
+     * Gets the codigoAsuntoDescripcion value for this RegistroResponseWs.
+     *
+     * @return codigoAsuntoDescripcion
+     */
+    public java.lang.String getCodigoAsuntoDescripcion() {
+        return codigoAsuntoDescripcion;
+    }
+
+
+    /**
+     * Sets the codigoAsuntoDescripcion value for this RegistroResponseWs.
+     *
+     * @param codigoAsuntoDescripcion
+     */
+    public void setCodigoAsuntoDescripcion(java.lang.String codigoAsuntoDescripcion) {
+        this.codigoAsuntoDescripcion = codigoAsuntoDescripcion;
     }
 
 
@@ -240,22 +284,42 @@ public class RegistroResponseWs  implements java.io.Serializable {
 
 
     /**
-     * Gets the docFisica value for this RegistroResponseWs.
-     * 
-     * @return docFisica
+     * Gets the docFisicaCodigo value for this RegistroResponseWs.
+     *
+     * @return docFisicaCodigo
      */
-    public java.lang.String getDocFisica() {
-        return docFisica;
+    public java.lang.String getDocFisicaCodigo() {
+        return docFisicaCodigo;
     }
 
 
     /**
-     * Sets the docFisica value for this RegistroResponseWs.
-     * 
-     * @param docFisica
+     * Sets the docFisicaCodigo value for this RegistroResponseWs.
+     *
+     * @param docFisicaCodigo
      */
-    public void setDocFisica(java.lang.String docFisica) {
-        this.docFisica = docFisica;
+    public void setDocFisicaCodigo(java.lang.String docFisicaCodigo) {
+        this.docFisicaCodigo = docFisicaCodigo;
+    }
+
+
+    /**
+     * Gets the docFisicaDescripcion value for this RegistroResponseWs.
+     *
+     * @return docFisicaDescripcion
+     */
+    public java.lang.String getDocFisicaDescripcion() {
+        return docFisicaDescripcion;
+    }
+
+
+    /**
+     * Sets the docFisicaDescripcion value for this RegistroResponseWs.
+     *
+     * @param docFisicaDescripcion
+     */
+    public void setDocFisicaDescripcion(java.lang.String docFisicaDescripcion) {
+        this.docFisicaDescripcion = docFisicaDescripcion;
     }
 
 
@@ -380,22 +444,42 @@ public class RegistroResponseWs  implements java.io.Serializable {
 
 
     /**
-     * Gets the idioma value for this RegistroResponseWs.
-     * 
-     * @return idioma
+     * Gets the idiomaCodigo value for this RegistroResponseWs.
+     *
+     * @return idiomaCodigo
      */
-    public java.lang.String getIdioma() {
-        return idioma;
+    public java.lang.String getIdiomaCodigo() {
+        return idiomaCodigo;
     }
 
 
     /**
-     * Sets the idioma value for this RegistroResponseWs.
-     * 
-     * @param idioma
+     * Sets the idiomaCodigo value for this RegistroResponseWs.
+     *
+     * @param idiomaCodigo
      */
-    public void setIdioma(java.lang.String idioma) {
-        this.idioma = idioma;
+    public void setIdiomaCodigo(java.lang.String idiomaCodigo) {
+        this.idiomaCodigo = idiomaCodigo;
+    }
+
+
+    /**
+     * Gets the idiomaDescripcion value for this RegistroResponseWs.
+     *
+     * @return idiomaDescripcion
+     */
+    public java.lang.String getIdiomaDescripcion() {
+        return idiomaDescripcion;
+    }
+
+
+    /**
+     * Sets the idiomaDescripcion value for this RegistroResponseWs.
+     *
+     * @param idiomaDescripcion
+     */
+    public void setIdiomaDescripcion(java.lang.String idiomaDescripcion) {
+        this.idiomaDescripcion = idiomaDescripcion;
     }
 
 
@@ -428,22 +512,42 @@ public class RegistroResponseWs  implements java.io.Serializable {
 
 
     /**
-     * Gets the libro value for this RegistroResponseWs.
-     * 
-     * @return libro
+     * Gets the libroCodigo value for this RegistroResponseWs.
+     *
+     * @return libroCodigo
      */
-    public java.lang.String getLibro() {
-        return libro;
+    public java.lang.String getLibroCodigo() {
+        return libroCodigo;
     }
 
 
     /**
-     * Sets the libro value for this RegistroResponseWs.
-     * 
-     * @param libro
+     * Sets the libroCodigo value for this RegistroResponseWs.
+     *
+     * @param libroCodigo
      */
-    public void setLibro(java.lang.String libro) {
-        this.libro = libro;
+    public void setLibroCodigo(java.lang.String libroCodigo) {
+        this.libroCodigo = libroCodigo;
+    }
+
+
+    /**
+     * Gets the libroDescripcion value for this RegistroResponseWs.
+     *
+     * @return libroDescripcion
+     */
+    public java.lang.String getLibroDescripcion() {
+        return libroDescripcion;
+    }
+
+
+    /**
+     * Sets the libroDescripcion value for this RegistroResponseWs.
+     *
+     * @param libroDescripcion
+     */
+    public void setLibroDescripcion(java.lang.String libroDescripcion) {
+        this.libroDescripcion = libroDescripcion;
     }
 
 
@@ -668,42 +772,82 @@ public class RegistroResponseWs  implements java.io.Serializable {
 
 
     /**
-     * Gets the tipoAsunto value for this RegistroResponseWs.
-     * 
-     * @return tipoAsunto
+     * Gets the tipoAsuntoCodigo value for this RegistroResponseWs.
+     *
+     * @return tipoAsuntoCodigo
      */
-    public java.lang.String getTipoAsunto() {
-        return tipoAsunto;
+    public java.lang.String getTipoAsuntoCodigo() {
+        return tipoAsuntoCodigo;
     }
 
 
     /**
-     * Sets the tipoAsunto value for this RegistroResponseWs.
-     * 
-     * @param tipoAsunto
+     * Sets the tipoAsuntoCodigo value for this RegistroResponseWs.
+     *
+     * @param tipoAsuntoCodigo
      */
-    public void setTipoAsunto(java.lang.String tipoAsunto) {
-        this.tipoAsunto = tipoAsunto;
+    public void setTipoAsuntoCodigo(java.lang.String tipoAsuntoCodigo) {
+        this.tipoAsuntoCodigo = tipoAsuntoCodigo;
     }
 
 
     /**
-     * Gets the tipoTransporte value for this RegistroResponseWs.
-     * 
-     * @return tipoTransporte
+     * Gets the tipoAsuntoDescripcion value for this RegistroResponseWs.
+     *
+     * @return tipoAsuntoDescripcion
      */
-    public java.lang.String getTipoTransporte() {
-        return tipoTransporte;
+    public java.lang.String getTipoAsuntoDescripcion() {
+        return tipoAsuntoDescripcion;
     }
 
 
     /**
-     * Sets the tipoTransporte value for this RegistroResponseWs.
-     * 
-     * @param tipoTransporte
+     * Sets the tipoAsuntoDescripcion value for this RegistroResponseWs.
+     *
+     * @param tipoAsuntoDescripcion
      */
-    public void setTipoTransporte(java.lang.String tipoTransporte) {
-        this.tipoTransporte = tipoTransporte;
+    public void setTipoAsuntoDescripcion(java.lang.String tipoAsuntoDescripcion) {
+        this.tipoAsuntoDescripcion = tipoAsuntoDescripcion;
+    }
+
+
+    /**
+     * Gets the tipoTransporteCodigo value for this RegistroResponseWs.
+     *
+     * @return tipoTransporteCodigo
+     */
+    public java.lang.String getTipoTransporteCodigo() {
+        return tipoTransporteCodigo;
+    }
+
+
+    /**
+     * Sets the tipoTransporteCodigo value for this RegistroResponseWs.
+     *
+     * @param tipoTransporteCodigo
+     */
+    public void setTipoTransporteCodigo(java.lang.String tipoTransporteCodigo) {
+        this.tipoTransporteCodigo = tipoTransporteCodigo;
+    }
+
+
+    /**
+     * Gets the tipoTransporteDescripcion value for this RegistroResponseWs.
+     *
+     * @return tipoTransporteDescripcion
+     */
+    public java.lang.String getTipoTransporteDescripcion() {
+        return tipoTransporteDescripcion;
+    }
+
+
+    /**
+     * Sets the tipoTransporteDescripcion value for this RegistroResponseWs.
+     *
+     * @param tipoTransporteDescripcion
+     */
+    public void setTipoTransporteDescripcion(java.lang.String tipoTransporteDescripcion) {
+        this.tipoTransporteDescripcion = tipoTransporteDescripcion;
     }
 
 
@@ -744,19 +888,25 @@ public class RegistroResponseWs  implements java.io.Serializable {
             ((this.aplicacion==null && other.getAplicacion()==null) || 
              (this.aplicacion!=null &&
               this.aplicacion.equals(other.getAplicacion()))) &&
-            ((this.codigoAsunto==null && other.getCodigoAsunto()==null) || 
-             (this.codigoAsunto!=null &&
-              this.codigoAsunto.equals(other.getCodigoAsunto()))) &&
-            ((this.codigoUsuario==null && other.getCodigoUsuario()==null) || 
+                ((this.codigoAsuntoCodigo == null && other.getCodigoAsuntoCodigo() == null) ||
+                        (this.codigoAsuntoCodigo != null &&
+                                this.codigoAsuntoCodigo.equals(other.getCodigoAsuntoCodigo()))) &&
+                ((this.codigoAsuntoDescripcion == null && other.getCodigoAsuntoDescripcion() == null) ||
+                        (this.codigoAsuntoDescripcion != null &&
+                                this.codigoAsuntoDescripcion.equals(other.getCodigoAsuntoDescripcion()))) &&
+                ((this.codigoUsuario==null && other.getCodigoUsuario()==null) ||
              (this.codigoUsuario!=null &&
               this.codigoUsuario.equals(other.getCodigoUsuario()))) &&
             ((this.contactoUsuario==null && other.getContactoUsuario()==null) || 
              (this.contactoUsuario!=null &&
               this.contactoUsuario.equals(other.getContactoUsuario()))) &&
-            ((this.docFisica==null && other.getDocFisica()==null) || 
-             (this.docFisica!=null &&
-              this.docFisica.equals(other.getDocFisica()))) &&
-            ((this.entidadCodigo==null && other.getEntidadCodigo()==null) || 
+                ((this.docFisicaCodigo == null && other.getDocFisicaCodigo() == null) ||
+                        (this.docFisicaCodigo != null &&
+                                this.docFisicaCodigo.equals(other.getDocFisicaCodigo()))) &&
+                ((this.docFisicaDescripcion == null && other.getDocFisicaDescripcion() == null) ||
+                        (this.docFisicaDescripcion != null &&
+                                this.docFisicaDescripcion.equals(other.getDocFisicaDescripcion()))) &&
+                ((this.entidadCodigo==null && other.getEntidadCodigo()==null) ||
              (this.entidadCodigo!=null &&
               this.entidadCodigo.equals(other.getEntidadCodigo()))) &&
             ((this.entidadDenominacion==null && other.getEntidadDenominacion()==null) || 
@@ -774,16 +924,22 @@ public class RegistroResponseWs  implements java.io.Serializable {
             ((this.fechaRegistro==null && other.getFechaRegistro()==null) || 
              (this.fechaRegistro!=null &&
               this.fechaRegistro.equals(other.getFechaRegistro()))) &&
-            ((this.idioma==null && other.getIdioma()==null) || 
-             (this.idioma!=null &&
-              this.idioma.equals(other.getIdioma()))) &&
-            ((this.interesados==null && other.getInteresados()==null) || 
+                ((this.idiomaCodigo == null && other.getIdiomaCodigo() == null) ||
+                        (this.idiomaCodigo != null &&
+                                this.idiomaCodigo.equals(other.getIdiomaCodigo()))) &&
+                ((this.idiomaDescripcion == null && other.getIdiomaDescripcion() == null) ||
+                        (this.idiomaDescripcion != null &&
+                                this.idiomaDescripcion.equals(other.getIdiomaDescripcion()))) &&
+                ((this.interesados==null && other.getInteresados()==null) ||
              (this.interesados!=null &&
               java.util.Arrays.equals(this.interesados, other.getInteresados()))) &&
-            ((this.libro==null && other.getLibro()==null) || 
-             (this.libro!=null &&
-              this.libro.equals(other.getLibro()))) &&
-            ((this.nombreUsuario==null && other.getNombreUsuario()==null) || 
+                ((this.libroCodigo == null && other.getLibroCodigo() == null) ||
+                        (this.libroCodigo != null &&
+                                this.libroCodigo.equals(other.getLibroCodigo()))) &&
+                ((this.libroDescripcion == null && other.getLibroDescripcion() == null) ||
+                        (this.libroDescripcion != null &&
+                                this.libroDescripcion.equals(other.getLibroDescripcion()))) &&
+                ((this.nombreUsuario==null && other.getNombreUsuario()==null) ||
              (this.nombreUsuario!=null &&
               this.nombreUsuario.equals(other.getNombreUsuario()))) &&
             ((this.numExpediente==null && other.getNumExpediente()==null) || 
@@ -814,13 +970,19 @@ public class RegistroResponseWs  implements java.io.Serializable {
             ((this.solicita==null && other.getSolicita()==null) || 
              (this.solicita!=null &&
               this.solicita.equals(other.getSolicita()))) &&
-            ((this.tipoAsunto==null && other.getTipoAsunto()==null) || 
-             (this.tipoAsunto!=null &&
-              this.tipoAsunto.equals(other.getTipoAsunto()))) &&
-            ((this.tipoTransporte==null && other.getTipoTransporte()==null) || 
-             (this.tipoTransporte!=null &&
-              this.tipoTransporte.equals(other.getTipoTransporte()))) &&
-            ((this.version==null && other.getVersion()==null) || 
+                ((this.tipoAsuntoCodigo == null && other.getTipoAsuntoCodigo() == null) ||
+                        (this.tipoAsuntoCodigo != null &&
+                                this.tipoAsuntoCodigo.equals(other.getTipoAsuntoCodigo()))) &&
+                ((this.tipoAsuntoDescripcion == null && other.getTipoAsuntoDescripcion() == null) ||
+                        (this.tipoAsuntoDescripcion != null &&
+                                this.tipoAsuntoDescripcion.equals(other.getTipoAsuntoDescripcion()))) &&
+                ((this.tipoTransporteCodigo == null && other.getTipoTransporteCodigo() == null) ||
+                        (this.tipoTransporteCodigo != null &&
+                                this.tipoTransporteCodigo.equals(other.getTipoTransporteCodigo()))) &&
+                ((this.tipoTransporteDescripcion == null && other.getTipoTransporteDescripcion() == null) ||
+                        (this.tipoTransporteDescripcion != null &&
+                                this.tipoTransporteDescripcion.equals(other.getTipoTransporteDescripcion()))) &&
+                ((this.version==null && other.getVersion()==null) ||
              (this.version!=null &&
               this.version.equals(other.getVersion())));
         __equalsCalc = null;
@@ -848,8 +1010,11 @@ public class RegistroResponseWs  implements java.io.Serializable {
         if (getAplicacion() != null) {
             _hashCode += getAplicacion().hashCode();
         }
-        if (getCodigoAsunto() != null) {
-            _hashCode += getCodigoAsunto().hashCode();
+        if (getCodigoAsuntoCodigo() != null) {
+            _hashCode += getCodigoAsuntoCodigo().hashCode();
+        }
+        if (getCodigoAsuntoDescripcion() != null) {
+            _hashCode += getCodigoAsuntoDescripcion().hashCode();
         }
         if (getCodigoUsuario() != null) {
             _hashCode += getCodigoUsuario().hashCode();
@@ -857,8 +1022,11 @@ public class RegistroResponseWs  implements java.io.Serializable {
         if (getContactoUsuario() != null) {
             _hashCode += getContactoUsuario().hashCode();
         }
-        if (getDocFisica() != null) {
-            _hashCode += getDocFisica().hashCode();
+        if (getDocFisicaCodigo() != null) {
+            _hashCode += getDocFisicaCodigo().hashCode();
+        }
+        if (getDocFisicaDescripcion() != null) {
+            _hashCode += getDocFisicaDescripcion().hashCode();
         }
         if (getEntidadCodigo() != null) {
             _hashCode += getEntidadCodigo().hashCode();
@@ -878,8 +1046,11 @@ public class RegistroResponseWs  implements java.io.Serializable {
         if (getFechaRegistro() != null) {
             _hashCode += getFechaRegistro().hashCode();
         }
-        if (getIdioma() != null) {
-            _hashCode += getIdioma().hashCode();
+        if (getIdiomaCodigo() != null) {
+            _hashCode += getIdiomaCodigo().hashCode();
+        }
+        if (getIdiomaDescripcion() != null) {
+            _hashCode += getIdiomaDescripcion().hashCode();
         }
         if (getInteresados() != null) {
             for (int i=0;
@@ -892,8 +1063,11 @@ public class RegistroResponseWs  implements java.io.Serializable {
                 }
             }
         }
-        if (getLibro() != null) {
-            _hashCode += getLibro().hashCode();
+        if (getLibroCodigo() != null) {
+            _hashCode += getLibroCodigo().hashCode();
+        }
+        if (getLibroDescripcion() != null) {
+            _hashCode += getLibroDescripcion().hashCode();
         }
         if (getNombreUsuario() != null) {
             _hashCode += getNombreUsuario().hashCode();
@@ -926,11 +1100,17 @@ public class RegistroResponseWs  implements java.io.Serializable {
         if (getSolicita() != null) {
             _hashCode += getSolicita().hashCode();
         }
-        if (getTipoAsunto() != null) {
-            _hashCode += getTipoAsunto().hashCode();
+        if (getTipoAsuntoCodigo() != null) {
+            _hashCode += getTipoAsuntoCodigo().hashCode();
         }
-        if (getTipoTransporte() != null) {
-            _hashCode += getTipoTransporte().hashCode();
+        if (getTipoAsuntoDescripcion() != null) {
+            _hashCode += getTipoAsuntoDescripcion().hashCode();
+        }
+        if (getTipoTransporteCodigo() != null) {
+            _hashCode += getTipoTransporteCodigo().hashCode();
+        }
+        if (getTipoTransporteDescripcion() != null) {
+            _hashCode += getTipoTransporteDescripcion().hashCode();
         }
         if (getVersion() != null) {
             _hashCode += getVersion().hashCode();
@@ -961,8 +1141,15 @@ public class RegistroResponseWs  implements java.io.Serializable {
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("codigoAsunto");
-        elemField.setXmlName(new javax.xml.namespace.QName("", "codigoAsunto"));
+        elemField.setFieldName("codigoAsuntoCodigo");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "codigoAsuntoCodigo"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("codigoAsuntoDescripcion");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "codigoAsuntoDescripcion"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);
@@ -982,8 +1169,15 @@ public class RegistroResponseWs  implements java.io.Serializable {
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("docFisica");
-        elemField.setXmlName(new javax.xml.namespace.QName("", "docFisica"));
+        elemField.setFieldName("docFisicaCodigo");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "docFisicaCodigo"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("docFisicaDescripcion");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "docFisicaDescripcion"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);
@@ -1031,8 +1225,15 @@ public class RegistroResponseWs  implements java.io.Serializable {
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("idioma");
-        elemField.setXmlName(new javax.xml.namespace.QName("", "idioma"));
+        elemField.setFieldName("idiomaCodigo");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "idiomaCodigo"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("idiomaDescripcion");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "idiomaDescripcion"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);
@@ -1046,8 +1247,15 @@ public class RegistroResponseWs  implements java.io.Serializable {
         elemField.setMaxOccursUnbounded(true);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("libro");
-        elemField.setXmlName(new javax.xml.namespace.QName("", "libro"));
+        elemField.setFieldName("libroCodigo");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "libroCodigo"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("libroDescripcion");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "libroDescripcion"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);
@@ -1129,15 +1337,29 @@ public class RegistroResponseWs  implements java.io.Serializable {
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("tipoAsunto");
-        elemField.setXmlName(new javax.xml.namespace.QName("", "tipoAsunto"));
+        elemField.setFieldName("tipoAsuntoCodigo");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "tipoAsuntoCodigo"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("tipoTransporte");
-        elemField.setXmlName(new javax.xml.namespace.QName("", "tipoTransporte"));
+        elemField.setFieldName("tipoAsuntoDescripcion");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "tipoAsuntoDescripcion"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("tipoTransporteCodigo");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "tipoTransporteCodigo"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("tipoTransporteDescripcion");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "tipoTransporteDescripcion"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);

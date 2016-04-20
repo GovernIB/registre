@@ -52,19 +52,23 @@
     <xs:sequence>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="anexos" nillable="true" type="tns:anexoWs"/>
       <xs:element minOccurs="0" name="aplicacion" type="xs:string"/>
-      <xs:element minOccurs="0" name="codigoAsunto" type="xs:string"/>
+      <xs:element minOccurs="0" name="codigoAsuntoCodigo" type="xs:string"/>
+      <xs:element minOccurs="0" name="codigoAsuntoDescripcion" type="xs:string"/>
       <xs:element minOccurs="0" name="codigoUsuario" type="xs:string"/>
       <xs:element minOccurs="0" name="contactoUsuario" type="xs:string"/>
-      <xs:element minOccurs="0" name="docFisica" type="xs:string"/>
+      <xs:element minOccurs="0" name="docFisicaCodigo" type="xs:string"/>
+      <xs:element minOccurs="0" name="docFisicaDescripcion" type="xs:string"/>
       <xs:element minOccurs="0" name="entidadCodigo" type="xs:string"/>
       <xs:element minOccurs="0" name="entidadDenominacion" type="xs:string"/>
       <xs:element minOccurs="0" name="expone" type="xs:string"/>
       <xs:element minOccurs="0" name="extracto" type="xs:string"/>
       <xs:element minOccurs="0" name="fechaOrigen" type="xs:dateTime"/>
       <xs:element minOccurs="0" name="fechaRegistro" type="xs:dateTime"/>
-      <xs:element minOccurs="0" name="idioma" type="xs:string"/>
+      <xs:element minOccurs="0" name="idiomaCodigo" type="xs:string"/>
+      <xs:element minOccurs="0" name="idiomaDescripcion" type="xs:string"/>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="interesados" nillable="true" type="tns:interesadoWs"/>
-      <xs:element minOccurs="0" name="libro" type="xs:string"/>
+      <xs:element minOccurs="0" name="libroCodigo" type="xs:string"/>
+      <xs:element minOccurs="0" name="libroDescripcion" type="xs:string"/>
       <xs:element minOccurs="0" name="nombreUsuario" type="xs:string"/>
       <xs:element minOccurs="0" name="numExpediente" type="xs:string"/>
       <xs:element minOccurs="0" name="numTransporte" type="xs:string"/>
@@ -76,8 +80,10 @@
       <xs:element minOccurs="0" name="oficinaDenominacion" type="xs:string"/>
       <xs:element minOccurs="0" name="refExterna" type="xs:string"/>
       <xs:element minOccurs="0" name="solicita" type="xs:string"/>
-      <xs:element minOccurs="0" name="tipoAsunto" type="xs:string"/>
-      <xs:element minOccurs="0" name="tipoTransporte" type="xs:string"/>
+      <xs:element minOccurs="0" name="tipoAsuntoCodigo" type="xs:string"/>
+      <xs:element minOccurs="0" name="tipoAsuntoDescripcion" type="xs:string"/>
+      <xs:element minOccurs="0" name="tipoTransporteCodigo" type="xs:string"/>
+      <xs:element minOccurs="0" name="tipoTransporteDescripcion" type="xs:string"/>
       <xs:element minOccurs="0" name="version" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
