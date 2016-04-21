@@ -61,23 +61,19 @@ public class InteresadoController extends BaseController{
     @RequestMapping(value="/gestionar/{tipoRegistro}/nuevo/{idRegistroDetalle}", method= RequestMethod.POST)
     @ResponseBody
     public JsonResponse nuevoInteresado(@PathVariable String tipoRegistro,@PathVariable String idRegistroDetalle, @RequestBody Interesado interesado, HttpServletRequest request, BindingResult result) {
-        log.info("Tipo Registro: " + tipoRegistro);
+
         JsonResponse jsonResponse = new JsonResponse();
 
         String variable = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
-        log.info("Variable: " + variable);
 
-        Boolean isRepresentante = false;
+        Boolean isRepresentante = interesado.getIsRepresentante();
         String idRepresentado = null;
 
-        log.info("Dentro de nuevo interesado");
-        log.info("idRegistroDetalle: " + idRegistroDetalle);
-        log.info("Representante?: " + interesado.getIsRepresentante());
+        log.info("Nuevo interesado: " + interesado.getNombreCompleto());
 
         // Comprobamos si es se trata de un representante
-        if(interesado.getIsRepresentante()){
-            log.info("Representado: " + interesado.getRepresentado().getId());
-            isRepresentante = true;
+        if (isRepresentante) {
+            log.info("Es representante, su representado es: " + interesado.getRepresentado().getId());
             idRepresentado = interesado.getRepresentado().getId().toString();
         }
 
@@ -105,7 +101,7 @@ public class InteresadoController extends BaseController{
 
                 // Creamos la respuesta especifica
                 PersonaJson personaJson = new PersonaJson();
-                personaJson.setIsRepresentante(interesado.getIsRepresentante());
+                personaJson.setIsRepresentante(isRepresentante);
 
                 // Según la configuración de la Entidad, guardamos o no la Persona.
                 // Asignamos la Entidad a la que pertenece esta persona
@@ -116,7 +112,6 @@ public class InteresadoController extends BaseController{
 
                     case (int)RegwebConstantes.CONFIGURACION_PERSONA_SIN_GUARDAR: // No se guardan
                         persona.setId((long)(Math.random()*10000));
-                        //log.info("Id generado: " + persona.getId());
                         interesado.setId(persona.getId());
                     break;
 
@@ -160,15 +155,14 @@ public class InteresadoController extends BaseController{
                         interesado.setRepresentado(representado);
                         representado.setRepresentante(interesado);
 
-                        añadirInteresadoSesion(interesado,session, variable);
-                        actualizarInteresadoSesion(representado, session, variable);
+                        añadirRepresentanteSesion(representado, interesado, session, variable);
 
-                    }else{ // Si no lo es
-                        // Lo añadimos a la sesion
+                    } else {
                         añadirInteresadoSesion(interesado,session, variable);
                     }
 
                 }else{ // Edición de un registro, lo añadimos a la bbdd
+                    log.info("idRegistroDetalle: " + idRegistroDetalle);
 
                     if(isRepresentante) { // Si se trata de un representante lo indicamos
                         interesado.setRegistroDetalle(new RegistroDetalle(Long.valueOf(idRegistroDetalle)));
@@ -192,13 +186,7 @@ public class InteresadoController extends BaseController{
                 personaJson.setId(interesado.getId().toString());
 
                 // Generamos el nombre a mostrar según el tipo de persona
-                if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)){
-                    personaJson.setNombre(interesado.getNombrePersonaFisica());
-                    log.info("Nombre fisica asignado: " + personaJson.getNombre());
-                }else if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)){
-                    personaJson.setNombre(interesado.getNombrePersonaJuridica());
-                    log.info("Nombre Juridica asignado: " + personaJson.getNombre());
-                }
+                personaJson.setNombre(interesado.getNombreCompleto());
 
                 jsonResponse.setResult(personaJson);
 
@@ -224,25 +212,14 @@ public class InteresadoController extends BaseController{
     @ResponseBody
     public JsonResponse editarInteresado(@PathVariable String tipoRegistro,@PathVariable String idRegistroDetalle,
         @RequestBody Interesado interesado, HttpServletRequest request, BindingResult result) {
-        log.info("Tipo Registro: " + tipoRegistro);
 
         String variable = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
         // TODO
-        //Boolean isRepresentante = false;
+        Boolean isRepresentante = interesado.getIsRepresentante();
         //String idRepresentado = null;
 
-        log.info("idInteresado editar: " + interesado.getId());
-        log.info("idRegistroDetalle: " + idRegistroDetalle);
-        log.info("Representante?: " + interesado.getIsRepresentante());
-
-        // Comprobamos si es se trata de un representante
-        if(interesado.getIsRepresentante()){
-            log.info("Representado: " + interesado.getRepresentado().getId());
-            // TODO
-            //isRepresentante = true;
-            //idRepresentado = interesado.getRepresentado().getId().toString();
-        }
+        log.info("Editar interesado: " + interesado.getId());
 
         JsonResponse jsonResponse = new JsonResponse();
 
@@ -264,8 +241,6 @@ public class InteresadoController extends BaseController{
 
             HttpSession session = request.getSession();
 
-            //Entidad entidad = getEntidadActiva(request);
-
             try {
 
                 // Procesamos los datos de un interesado
@@ -273,29 +248,29 @@ public class InteresadoController extends BaseController{
 
                 // Creamos la respuesta
                 PersonaJson personaJson = new PersonaJson();
-                personaJson.setIsRepresentante(interesado.getIsRepresentante());
+                personaJson.setIsRepresentante(isRepresentante);
 
                 // Se trata de un nuevo Registro, utilizamos la sesion.
                 if(idRegistroDetalle.equals("null")) {
 
+                    // Comprobamos si es se trata de un representante
+                    if (isRepresentante) {
+                        log.info("Es representate, volvemos asignarle el representado");
+                        interesado.setRepresentado(obtenerInteresadoSesion(interesado.getRepresentado().getId(), session, variable));
+                    }
+
                     actualizarInteresadoSesion(interesado, session, variable);
                 }else{ // Edición de un registro, lo añadimos a la bbdd
-
+                    log.info("idRegistroDetalle: " + idRegistroDetalle);
                     interesado.setRegistroDetalle(new RegistroDetalle(Long.valueOf(idRegistroDetalle)));
-                    interesadoEjb.merge(interesado);
+                    interesado = interesadoEjb.merge(interesado);
                 }
 
                 // Almacenamos el Id de la nueva persona/representante creado
                 personaJson.setId(interesado.getId().toString());
 
                 // Generamos el nombre a mostrar según el tipo de persona
-                if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)){
-                    personaJson.setNombre(interesado.getNombrePersonaFisica());
-                    log.info("Nombre fisica asignado: " + personaJson.getNombre());
-                }else if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)){
-                    personaJson.setNombre(interesado.getNombrePersonaJuridica());
-                    log.info("Nombre Juridica asignado: " + personaJson.getNombre());
-                }
+                personaJson.setNombre(interesado.getNombreCompleto());
 
                 jsonResponse.setResult(personaJson);
 
@@ -351,11 +326,8 @@ public class InteresadoController extends BaseController{
     @ResponseBody
     public JsonResponse addRepresentante(@PathVariable String tipoRegistro,@RequestParam Long idRepresentante,@RequestParam Long idRepresentado,@RequestParam Long idRegistroDetalle, HttpServletRequest request) {
 
+        log.info("");
         String variable = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
-
-        log.info("Tipo Registro: " + tipoRegistro);
-        log.info("Dentro de añadir representante: " + idRepresentante + " - " + idRepresentado);
-        log.info("idRegistroDetalle: " + idRegistroDetalle);
 
         HttpSession session = request.getSession();
         JsonResponse jsonResponse = new JsonResponse();
@@ -364,7 +336,7 @@ public class InteresadoController extends BaseController{
 
             Interesado representante = new Interesado(personaEjb.findById(idRepresentante));
             representante.setIsRepresentante(true);
-            log.info("Representante seleccionado: " + representante.getNombreCompleto());
+            log.info("Dentro de añadir representante existente: " + representante.getNombreCompleto() + " a: " + idRepresentado);
 
             //Creamos la respuesta
 
@@ -387,6 +359,7 @@ public class InteresadoController extends BaseController{
 
 
             }else{ // bbdd
+                log.info("idRegistroDetalle: " + idRegistroDetalle);
                 Interesado representado = interesadoEjb.findById(idRepresentado);
                 // Creamos el Representante
                 representante.setRegistroDetalle(new RegistroDetalle(idRegistroDetalle));
@@ -420,9 +393,7 @@ public class InteresadoController extends BaseController{
 
         String variable = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
-        log.info("Tipo Registro: " + tipoRegistro);
         log.info("Dentro de eliminar representante: " + idRepresentante);
-        log.info("idRegistroDetalle: " + idRegistroDetalle);
 
         HttpSession session = request.getSession();
 
@@ -440,6 +411,7 @@ public class InteresadoController extends BaseController{
                 return true;
 
             }else{ //Trabajamos en la bbdd
+                log.info("idRegistroDetalle: " + idRegistroDetalle);
                 Interesado representado = interesadoEjb.findById(idRepresentado);
                 representado.setRepresentante(null);
                 interesadoEjb.merge(representado);
@@ -470,14 +442,12 @@ public class InteresadoController extends BaseController{
 
         String variable = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
-        log.info("Tipo Registro: " + tipoRegistro);
         HttpSession session = request.getSession();
 
         try {
             String converted = URLDecoder.decode(denominacion, "UTF-8");
 
-            log.info("Dentro de organismoInteresado: " + codigoDir3 + " " + denominacion);
-            log.info("RegistroDetalle: " + idRegistroDetalle);
+            log.info("Dentro de añadir organismoInteresado: " + codigoDir3 + " " + denominacion);
 
             Interesado organismo = new Interesado(codigoDir3,converted);
 
@@ -486,6 +456,7 @@ public class InteresadoController extends BaseController{
                 añadirInteresadoSesion(organismo, session, variable);
 
             }else{ // Edición de un registro, lo añadimos a la bbdd
+                log.info("RegistroDetalle: " + idRegistroDetalle);
                 organismo.setRegistroDetalle(new RegistroDetalle(Long.valueOf(idRegistroDetalle)));
                 interesadoEjb.persist(organismo);
             }
@@ -511,9 +482,7 @@ public class InteresadoController extends BaseController{
 
         String variable = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
-        log.info("Tipo Registro: " + tipoRegistro);
-        log.info("Dentro de personaInteresado: " + id);
-        log.info("RegistroDetalle: " + idRegistroDetalle);
+        log.info("Add interesado existente: " + id);
 
         HttpSession session = request.getSession();
         Interesado interesado = null;
@@ -532,6 +501,7 @@ public class InteresadoController extends BaseController{
                     }
 
                 }else{ // Edición de un registro, lo añadimos a la bbdd
+                    log.info("RegistroDetalle: " + idRegistroDetalle);
                     interesado.setRegistroDetalle(new RegistroDetalle(Long.valueOf(idRegistroDetalle)));
                     interesado = interesadoEjb.persist(interesado);
                     return interesado.getId().intValue();
@@ -558,9 +528,7 @@ public class InteresadoController extends BaseController{
 
         String variable = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
-        log.info("Tipo Registro: " + tipoRegistro);
         log.info("Dentro de eliminar personaInteresado: " + id);
-        log.info("RegistroDetalle: " + idRegistroDetalle);
 
         HttpSession session = request.getSession();
 
@@ -582,6 +550,7 @@ public class InteresadoController extends BaseController{
 
 
             }else{// Edición de un registro, lo eliminanos de la bbdd
+                log.info("RegistroDetalle: " + idRegistroDetalle);
                 RegistroDetalle registroDetalle = registroDetalleEjb.findById(Long.valueOf(idRegistroDetalle));
                 if(registroDetalle != null && registroDetalle.getInteresados().size()>1 ) { // Si solo hay un Interesado, no permitimos eliminarlo.
                     interesadoEjb.eliminarInteresadoRegistroDetalle(id,Long.valueOf(idRegistroDetalle));
@@ -609,9 +578,7 @@ public class InteresadoController extends BaseController{
 
         String variable = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
-        log.info("Tipo Registro: " + tipoRegistro);
         log.info("Dentro de eliminarOrganismo: " + codigoDir3);
-        log.info("RegistroDetalle: " + idRegistroDetalle);
 
         HttpSession session = request.getSession();
 
@@ -622,6 +589,7 @@ public class InteresadoController extends BaseController{
                return eliminarOrganimoSesion(codigoDir3, session, variable);
 
             }else{// Edición de un registro, lo eliminanos de la bbdd
+                log.info("RegistroDetalle: " + idRegistroDetalle);
                 RegistroDetalle registroDetalle = registroDetalleEjb.findById(Long.valueOf(idRegistroDetalle));
 
                 if(registroDetalle != null && registroDetalle.getInteresados().size()>1 ){ // Si solo hay un Interesado, no permitimos eliminarlo.
@@ -649,7 +617,7 @@ public class InteresadoController extends BaseController{
      * @return
      */
     public Interesado obtenerInteresadoSesion(Long idInteresado, HttpSession session, String variable){
-        log.info("Buscando en: " + variable);
+        log.info("Buscando en: " + variable + " - id: " + idInteresado);
         List<Interesado> interesados = (List<Interesado>) session.getAttribute(variable);
 
         Interesado interesado = new Interesado(idInteresado);
@@ -719,7 +687,12 @@ public class InteresadoController extends BaseController{
      * @param session
      */
     public void actualizarInteresadoSesion(Interesado interesado, HttpSession session, String variable){
-
+        log.info("");
+        log.info("actualizarInteresadoSesion");
+        log.info("");
+        if (interesado.getIsRepresentante()) {
+            log.info("Es representante, su representado es: " + interesado.getRepresentado().getId());
+        }
         List<Interesado> interesados = (List<Interesado>) session.getAttribute(variable);
 
         if(interesados.contains(interesado)){
@@ -751,6 +724,30 @@ public class InteresadoController extends BaseController{
         session.setAttribute(variable, interesados);
     }
 
+    /**
+     * Añade el nuevo Representante a la sesión y lo relaciona con su Representado
+     *
+     * @param representado
+     * @param interesado
+     * @param session
+     * @param variable
+     */
+    public void añadirRepresentanteSesion(Interesado representado, Interesado interesado, HttpSession session, String variable) {
+        List<Interesado> interesados = (List<Interesado>) session.getAttribute(variable);
+
+        // Añadimos el onuevo representante a la sesión
+        interesados.add(interesado);
+
+        // Actualizamos el representado de la sesión
+        if (interesados.contains(representado)) {
+            log.info("Añadimos el nuevo representante: " + interesado.getNombreCompleto() + ", y lo relacionamos con su representado: " + representado.getNombreCompleto());
+            interesados.remove(representado);
+            interesados.add(representado);
+
+        }
+        session.setAttribute(variable, interesados);
+    }
+
 
 
     /**
@@ -763,15 +760,15 @@ public class InteresadoController extends BaseController{
 
         String variable = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
-        log.info("Tipo Registro: " + tipoRegistro);
-        log.info("ObtenerInteresado: " + id);
+        log.info("Obtener datos Interesado: " + id);
 
         Interesado interesado = interesadoEjb.findById(id);
 
-        if(interesado == null){
-            log.info("Está en la sesion");
+        if(interesado == null) {
+            log.info("Esta en la sesion");
             HttpSession session = request.getSession();
             interesado = obtenerInteresadoSesion(id, session, variable);
+
         }
 
         return  interesado;
@@ -819,31 +816,21 @@ public class InteresadoController extends BaseController{
     }
 
     /**
-     * Procesa un interesado
-     * @param persona
+     * Generamos el nombre a mostrar según el tipo de persona
+     * @param interesado
      * @return
-     * @throws Exception
      */
-    public Persona procesarPersona(Persona persona) throws Exception{
+    String obtenerNombreInteresado(Interesado interesado) {
 
-        // Si no se ha escogido ningún TipoDocumento, lo ponemos a null
-        if(persona.getTipoDocumentoIdentificacion()!= null && persona.getTipoDocumentoIdentificacion() == -1) { 
-          persona.setTipoDocumentoIdentificacion(null);
+        if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)) {
+            return interesado.getNombrePersonaFisica();
+
+        } else if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)) {
+            return interesado.getNombrePersonaJuridica();
+
+        } else {
+            return  "";
         }
-
-        // Si no se ha escogido ningún Canal de Notificación, lo ponemos a null
-        if(persona.getCanal() != null && persona.getCanal() == -1){persona.setCanal(null);}
-
-        // Si no se ha escogido ningúna Provincia, lo ponemos a null
-        if(persona.getPais().getId() != null && persona.getPais().getId() == -1){persona.setPais(null);}
-
-        // Si no se ha escogido ningúna Provincia, lo ponemos a null
-        if(persona.getProvincia().getId() != null && persona.getProvincia().getId() == -1){
-            persona.setProvincia(null);
-            persona.setLocalidad(null);
-        }
-
-        return persona;
     }
 
 }

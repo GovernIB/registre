@@ -186,19 +186,6 @@ public class PersonaController extends BaseController {
          }else { // Si no hay errores actualizamos el registro
 
              try {
-/*
-                 // Si no se ha escogido ningún TipoDocumento, lo ponemos a null
-                 if(persona.getTipoDocumentoIdentificacion().getId() != null && persona.getTipoDocumentoIdentificacion().getId() == -1){persona.setTipoDocumentoIdentificacion(null);}
-
-                 // Si no se ha escogido ningúna Provincia, lo ponemos a null
-                 if(persona.getCanal().getId() != null && persona.getCanal().getId() == -1){persona.setCanal(null);}
-
-                 // Si no se ha escogido ningúna Provincia, lo ponemos a null
-                 if(persona.getProvincia().getId() != null && persona.getProvincia().getId() == -1){
-                     persona.setProvincia(null);
-                     persona.setLocalidad(null);
-                 }
-*/
                  
                  persona = personaEjb.merge(persona);
 
