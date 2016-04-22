@@ -6,11 +6,13 @@ import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.RegistroBasico;
+import es.caib.regweb3.persistence.utils.DestinatarioWrapper;
 import es.caib.regweb3.persistence.utils.OficiosRemisionInternoOrganismo;
 import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+import org.fundaciobit.plugins.distribucion.Destinatarios;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
@@ -445,5 +447,26 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @throws Exception
      */
     public Boolean tieneEstado(Long idRegistroEntrada, Long idEstado) throws Exception;
+
+    /**
+     * Método que obtiene los destinatarios a los que distribuir el registro
+     *
+     * @param re registro de entrada a distribuir
+     * @return lista de destinatarios a los que se debe distribuir el registro
+     * @throws Exception
+     * @throws I18NException
+     */
+    public Destinatarios distribuir(RegistroEntrada re) throws Exception, I18NException;
+
+    /**
+     * Método que envia un registro de entrada a un conjunto de destinatarios
+     *
+     * @param re      registro de entrada
+     * @param wrapper contiene los destinatarios a los que enviar el registro de entrada
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
+    public Boolean enviar(RegistroEntrada re, DestinatarioWrapper wrapper) throws Exception, I18NException;
 
 }

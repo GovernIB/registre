@@ -1,8 +1,6 @@
 package es.caib.regweb3.webapp.utils;
 
 
-import es.caib.regweb3.utils.RegwebConstantes;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -27,12 +25,4 @@ public class RegwebUtils {
         return df.parse(formattedDate);
       }
 
-    public static boolean getVariableAnexosPluginDistribucion() throws Exception {
-        //Cogemos la propiedad que nos indica si tenemos que enviar los anexos+archivos
-        final String propertyName = RegwebConstantes.REGWEB3_PROPERTY_BASE + "distribucion.plugin";
-        final String tipusStr = System.getProperty(propertyName);
-        String basePlugin = propertyName + "." + tipusStr;
-        String completePropertyName = basePlugin + ".conanexos";
-        return Boolean.getBoolean(completePropertyName);
-    }
 }

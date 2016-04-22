@@ -1,4 +1,4 @@
-package es.caib.regweb3.webapp.distribucion;
+package es.caib.regweb3.persistence.utils;
 
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;

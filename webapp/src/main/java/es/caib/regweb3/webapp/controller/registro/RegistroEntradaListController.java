@@ -1,22 +1,18 @@
 package es.caib.regweb3.webapp.controller.registro;
 
 import es.caib.regweb3.model.*;
-import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.AnexoLocal;
 import es.caib.regweb3.persistence.ejb.HistoricoRegistroEntradaLocal;
 import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
+import es.caib.regweb3.persistence.utils.DestinatarioWrapper;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.webapp.distribucion.DestinatarioWrapper;
-import es.caib.regweb3.webapp.distribucion.RegwebDistribucionPluginManager;
 import es.caib.regweb3.webapp.form.RegistroEntradaBusqueda;
 import es.caib.regweb3.webapp.utils.Mensaje;
-import es.caib.regweb3.webapp.utils.RegwebUtils;
 import es.caib.regweb3.webapp.validator.RegistroEntradaBusquedaValidator;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.plugins.distribucion.Destinatarios;
-import org.fundaciobit.plugins.distribucion.IDistribucionPlugin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -432,41 +428,14 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             return destinatarios;
         }
 
-
-        // Plugin de distribución
-        IDistribucionPlugin distribucionPlugin = RegwebDistribucionPluginManager.getInstance();
-        if (distribucionPlugin != null) { // hay plugin definido
-
-
-            //Obtenemos el valor de la variable anexos del plugin de distribucion
-            //Variable que indica si el registro se debe enviar con los anexos y los documentos de los anexos
-            // O solo con los anexos pero sin los documentos físicos
-            boolean conAnexos = RegwebUtils.getVariableAnexosPluginDistribucion();
-
-
-            if (conAnexos) { // Si se deben enviar los documentos asociados a los anexos
-                //Recuperar documentos de custodia
-                List<Anexo> anexos = registroEntrada.getRegistroDetalle().getAnexos();
-                List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
-                for (Anexo anexo : anexos) {
-                    AnexoFull anexoFull = anexoEjb.getAnexoFull(anexo.getId());
-                    if (anexoFull != null) {
-                        log.info(anexoFull.getDocumentoCustody().getName());
-                    }
-                    anexosFull.add(anexoFull);
-                }
-                //Asignamos los documentos recuperados de custodia al registro de entrada.
-                registroEntrada.getRegistroDetalle().setAnexosFull(anexosFull);
-            }
-            // Obtenemos los destinatarios a través del plugin de distribución.
-            destinatarios = distribucionPlugin.distribuir(registroEntrada, conAnexos);
-
-        } else { // no han definido ningun plugin de distribución, hace el comportamiento anterior.
+        //Obtenemos los destinatarios a través del plugin de distribución
+        destinatarios = registroEntradaEjb.distribuir(registroEntrada);
+        if (destinatarios == null) { // Si no se han encontrado destinatarios, marcamos el registro como tramitado.
             registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, usuarioEntidad);
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
         }
-
         return destinatarios;
+
     }
 
     /**
@@ -489,33 +458,11 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         log.info("Destinatarios obtenidos: " + wrapper.getDestinatarios().size());
         log.info(" Observaciones obtenidas:" + wrapper.getObservaciones());
 
-        // Plugin de distribución
-        IDistribucionPlugin distribucionPlugin = RegwebDistribucionPluginManager.getInstance();
-
-        //Obtenemos el valor de la variable anexos del plugin de distribucion
-        //Variable que indica si el registro se debe enviar con los anexos y los documentos de los anexos
-        // O solo con los anexos pero sin los documentos físicos
-        boolean conAnexos = RegwebUtils.getVariableAnexosPluginDistribucion();
-
-        if (conAnexos) {// Si se deben enviar los documentos asociados a los anexos
-            //Recuperar documentos de custodia
-            List<Anexo> anexos = registroEntrada.getRegistroDetalle().getAnexos();
-            List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
-            for (Anexo anexo : anexos) {
-                AnexoFull anexoFull = anexoEjb.getAnexoFull(anexo.getId());
-                if (anexoFull != null) {
-                    log.info(anexoFull.getDocumentoCustody().getName());
-                }
-                anexosFull.add(anexoFull);
-            }
-            //Asignamos los documentos recuperados de custodia al registro de entrada.
-            registroEntrada.getRegistroDetalle().setAnexosFull(anexosFull);
-        }
-
-        //Distribuimos el registro mediante el plugin
-        Boolean enviado = distribucionPlugin.enviarDestinatarios(registroEntrada, wrapper.getDestinatarios(), wrapper.getObservaciones(), conAnexos);
+        // Enviamos el registro de entrada a los destinatarios indicados en la variable wrapper
+        Boolean enviado = registroEntradaEjb.enviar(registroEntrada, wrapper);
+        // Marcamos el registro como tramitado
         registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, usuarioEntidad);
-        if (enviado) {
+        if (enviado) { //Mostramos mensaje en funcion de si se ha enviado o ha habido un error.
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
 
         } else {

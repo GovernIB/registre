@@ -2,6 +2,7 @@ package org.fundaciobit.plugins.distribucion;
 
 /**
  * Created by Fundació BIT.
+ * Representa un Destinatario al que se distribuirá el asiento registral.
  *
  * @author earrivi
  *         Date: 27/10/2015
