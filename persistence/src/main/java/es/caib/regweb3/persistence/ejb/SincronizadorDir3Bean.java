@@ -544,7 +544,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         CatEstadoEntidad estado = cacheEstadoEntidad.get(oficinaTF.getEstado());
         oficina.setEstado(estado);
 
-        Organismo organismoResponsable = organismoEjb.findByCodigoLigero(oficinaTF.getCodUoResponsable());
+        Organismo organismoResponsable = organismoEjb.findByCodigo(oficinaTF.getCodUoResponsable());
         oficina.setOrganismoResponsable(organismoResponsable);
 
         if(oficinaTF.getCodigoPais() != null){oficina.setCodPais(catPaisEjb.findByCodigo(oficinaTF.getCodigoPais()));}
