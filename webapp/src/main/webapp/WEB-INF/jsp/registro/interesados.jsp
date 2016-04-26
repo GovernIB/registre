@@ -211,6 +211,7 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
     tradsinteresado['interesado.añadido'] = "<spring:message code='interesado.añadido' javaScriptEscape='true' />";
     tradsinteresado['interesado.actualizado'] = "<spring:message code='interesado.actualizado' javaScriptEscape='true' />";
     tradsinteresado['interesado.eliminado'] = "<spring:message code='interesado.eliminado' javaScriptEscape='true' />";
+    tradsinteresado['interesado.eliminar.ultimo'] = "<spring:message code='interesado.eliminar.ultimo' javaScriptEscape='true' />";
 
 
 

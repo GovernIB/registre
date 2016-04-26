@@ -73,12 +73,15 @@ function eliminarOrganisnoInteresado(codigoDir3,idRegistroDetalle){
         success: function(result) {
             if(result==true){
                 $(elemento).remove();
+                // Mostramos mensaje de información
+                if (idRegistroDetalle.length > 0) {
+                    mensajeSuccess("#mensajes", tradsinteresado['interesado.eliminado']);
+                }
+            } else {
+                mensajeError("#mensajes", tradsinteresado['interesado.eliminar.ultimo']);
             }
 
-            // Mostramos mensaje de información
-            if (idRegistroDetalle.length > 0) {
-                mensajeSuccess("#mensajes", tradsinteresado['interesado.eliminado']);
-            }
+
 
         }
     });
@@ -141,12 +144,16 @@ function eliminarPersonaInteresado(idPersona,idRegistroDetalle){
         success: function(result) {
             if(result==true){
                 $(elemento).remove();
+
+                // Mostramos mensaje de información
+                if (idRegistroDetalle.length > 0) {
+                    mensajeSuccess("#mensajes", tradsinteresado['interesado.eliminado']);
+                }
+            } else {
+                mensajeError("#mensajes", tradsinteresado['interesado.eliminar.ultimo']);
             }
 
-            // Mostramos mensaje de información
-            if (idRegistroDetalle.length > 0) {
-                mensajeSuccess("#mensajes", tradsinteresado['interesado.eliminado']);
-            }
+
         }
     });
 
