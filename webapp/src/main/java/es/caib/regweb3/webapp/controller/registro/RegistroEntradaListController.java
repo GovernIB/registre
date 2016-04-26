@@ -362,7 +362,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
      * Tramitar un {@link es.caib.regweb3.model.RegistroEntrada}
      * OLD
      */
-    @RequestMapping(value = "/{idRegistro}/xxxxtramitarxxxxx")
+    @RequestMapping(value = "/{idRegistro}/tramitar")
     public String tramitarRegistroEntrada(@PathVariable Long idRegistro, HttpServletRequest request) {
 
         log.info("Llegamos a tramitar");
@@ -385,8 +385,8 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             }
 
 
-            //registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, usuarioEntidad);
-            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.tramitar.ok"));
+            registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, usuarioEntidad);
+            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.tramitar.ok.nodestinatarios"));
 
         } catch (Exception e) {
             Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
@@ -394,7 +394,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         }
 
 
-        return "redirect:/registroEntrada/list";
+        return "redirect:/registroEntrada/" + idRegistro + "/detalle";
     }
 
     /**
@@ -406,7 +406,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/{idRegistro}/tramitar", method = RequestMethod.GET)
+    @RequestMapping(value = "/{idRegistro}/distribuir", method = RequestMethod.GET)
     public
     @ResponseBody
     Destinatarios distribuirRegistroEntrada(@PathVariable Long idRegistro, HttpServletRequest request) throws Exception, I18NException {
@@ -429,12 +429,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         }
 
         //Obtenemos los destinatarios a través del plugin de distribución
-        destinatarios = registroEntradaEjb.distribuir(registroEntrada);
-        if (destinatarios == null) { // Si no se han encontrado destinatarios, marcamos el registro como tramitado.
-            registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, usuarioEntidad);
-            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
-        }
-        return destinatarios;
+        return registroEntradaEjb.distribuir(registroEntrada);
 
     }
 

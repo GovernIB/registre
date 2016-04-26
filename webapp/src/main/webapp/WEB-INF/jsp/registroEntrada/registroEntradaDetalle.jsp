@@ -134,7 +134,7 @@
                             <c:if test="${registro.estado == RegwebConstantes.ESTADO_VALIDO && puedeEditar && registro.destino != null && isOficioRemision == false}">
                                 <%-- <button type="button"  onclick='javascript:confirm("<c:url value="/registroEntrada/${registro.id}/tramitar"/>","<spring:message code="regweb.confirmar.tramitar" htmlEscape="true"/>")' class="btn btn-success btn-sm btn-block"><spring:message code="regweb.distribuir"/></button>--%>
                                 <button type="button" onclick='javascript:distribuir("<c:url
-                                        value="/registroEntrada/${registro.id}/tramitar"/>")'
+                                        value="/registroEntrada/${registro.id}/distribuir"/>")'
                                         class="btn btn-success btn-sm btn-block"><spring:message
                                         code="regweb.distribuir"/></button>
                                 <%--<button type="button" data-toggle="modal" data-target="#distribuirModal" class="btn btn-success btn-sm btn-block"><spring:message code="regweb.distribuir"/></button>--%>
@@ -279,7 +279,7 @@
             dataType: 'json',
             contentType: 'application/json',
             success: function (result) {
-                if (result.propuestos != null) { // Si hay destinatarios
+                if (result != null && result.propuestos != null) { // Si hay destinatarios
                     //Si no es modificable se distribuye directamente a la lista de propuestos
                     if (!result.modificable) {
                         //enviar destinatarios directamente sin popup
@@ -342,7 +342,7 @@
                 } else { // No hay destinatarios, se marca como tramitado
                     $('#divlistdestinatarios').hide()
                     $('#modalDistribDestinatarios').modal('show');
-                    goTo('<c:url value="/registroEntrada/${registro.id}/detalle"/>');
+                    goTo('<c:url value="/registroEntrada/${registro.id}/tramitar"/>');
                 }
             }
         });
