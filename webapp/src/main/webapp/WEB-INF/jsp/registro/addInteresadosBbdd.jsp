@@ -9,7 +9,8 @@
           var nombre = '<c:out value="${interesado.nombreOrganismo}" escapeXml="true"/>';
           nombre = nombre.replace(/\"/g,'&quot;');
           nombre = nombre.replace(/'/g, "\\'");
-          addOrganismoInteresadoHtml('${interesado.codigoDir3}',nombre,'<spring:message code="interesado.administracion"/>','${registro.registroDetalle.id}');
+          addOrganismoInteresadoHtml('${interesado.codigoDir3}',nombre,'<spring:message
+                code="interesado.administracion"/>','${registro.registroDetalle.id}',false);
         </c:when>
         <c:when test="${interesado.tipo == RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA}">
           var interesado = "${interesado.nombrePersonaFisica}";

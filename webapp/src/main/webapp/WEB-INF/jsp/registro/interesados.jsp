@@ -73,15 +73,6 @@
                             <option value="${organismoInteresado.codigo}">${organismoInteresado.denominacion}</option>
                         </c:forEach>
                     </select>
-                    <!-- TODO BORRAR cuando encontremos otra solucion-->
-
-                       <%-- <select id="organismoInteresado" name="organismoInteresado" class="chosen-select">
-                           <c:forEach items="${organismosInteresados}" var="organismoInteresado">
-                               <option value="${organismoInteresado.codigo}">${organismoInteresado.denominacion}</option>
-                           </c:forEach>
-                       </select>--%>
-
-
 
                        <select id="personaFisica" name="personaFisica" class="chosen-select">
                         <option value="-1">...</option>
@@ -150,12 +141,15 @@
 <!-- Importamos el codigo jsp del modal del formulario para realizar la búsqueda de Personas  -->
 <c:import url="../registro/buscadorPersonas.jsp">
     <c:param name="tipoPersona" value="Fisicas"/>
+    <c:param name="idRegistroDetalle" value="${param.idRegistroDetalle}"/>
 </c:import>
 <c:import url="../registro/buscadorPersonas.jsp">
     <c:param name="tipoPersona" value="Juridicas"/>
+    <c:param name="idRegistroDetalle" value="${param.idRegistroDetalle}"/>
 </c:import>
 <c:import url="../registro/buscadorPersonas.jsp">
     <c:param name="tipoPersona" value="Todas"/>
+    <c:param name="idRegistroDetalle" value="${param.idRegistroDetalle}"/>
 </c:import>
 
 <!-- Importamos el codigo jsp del modal del formulario para realizar la busqueda de organismos Origen
@@ -214,6 +208,9 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
     tradsinteresado['regweb3.anadir'] = "<spring:message code='regweb.añadir' javaScriptEscape='true' />";
     tradsinteresado['persona.fisica'] = "<spring:message code='persona.fisica' javaScriptEscape='true' />";
     tradsinteresado['persona.juridica'] = "<spring:message code='persona.juridica' javaScriptEscape='true' />";
+    tradsinteresado['interesado.añadido'] = "<spring:message code='interesado.añadido' javaScriptEscape='true' />";
+    tradsinteresado['interesado.actualizado'] = "<spring:message code='interesado.actualizado' javaScriptEscape='true' />";
+    tradsinteresado['interesado.eliminado'] = "<spring:message code='interesado.eliminado' javaScriptEscape='true' />";
 
 
 

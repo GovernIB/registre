@@ -25,7 +25,7 @@ function addOrganismoInteresado(tipo,idRegistroDetalle){
             data: { codigoDir3: codigoDir3, denominacion: denominacionCodificada, idRegistroDetalle: idRegistroDetalle },
 
             success: function(result) {
-                addOrganismoInteresadoHtml(codigoDir3,denominacion,tipo,idRegistroDetalle);
+                addOrganismoInteresadoHtml(codigoDir3, denominacion, tipo, idRegistroDetalle, true);
             }
         });
     }
@@ -38,14 +38,20 @@ function addOrganismoInteresado(tipo,idRegistroDetalle){
  * @param denominacion
  * @param tipo
  * @param idRegistroDetalle
+ * @param mensaje true o false para mostrar un mensaje aviso
  */
-function addOrganismoInteresadoHtml(codigoDir3, denominacion,tipo,idRegistroDetalle){
+function addOrganismoInteresadoHtml(codigoDir3, denominacion, tipo, idRegistroDetalle, mensaje) {
 
     var fila = "<tr id=\"organismo"+codigoDir3+"\"><td>"+denominacion+"</td><td>"+tipo+"</td><td><span class=\"label label-danger\">No</span></td>"+
         "<td class=\"center\">"+
         "<a class=\"btn btn-danger btn-default btn-sm\"  onclick=\"eliminarOrganisnoInteresado('"+codigoDir3+"','"+idRegistroDetalle+"')\" href=\"javascript:void(0);\" title=\"Eliminar\"><span class=\"fa fa-eraser\"></span></a></td></tr>";
 
     $('#interesados').append(fila);
+
+    // Mostramos mensaje de información
+    if (mensaje && idRegistroDetalle.length > 0) {
+        mensajeSuccess("#mensajes", tradsinteresado['interesado.añadido']);
+    }
 }
 
 /**
@@ -67,6 +73,11 @@ function eliminarOrganisnoInteresado(codigoDir3,idRegistroDetalle){
         success: function(result) {
             if(result==true){
                 $(elemento).remove();
+            }
+
+            // Mostramos mensaje de información
+            if (idRegistroDetalle.length > 0) {
+                mensajeSuccess("#mensajes", tradsinteresado['interesado.eliminado']);
             }
 
         }
@@ -95,9 +106,9 @@ function addInteresado(id, nombre,tipo,representante, modal,idRegistroDetalle){
             contentType: 'application/json',
 
             success: function(result) {
-                if(result == 0){
+                if (result == 0) {//Sesion
                     addInteresadoHtml(id,nombre,tipo,representante,idRegistroDetalle);
-                }else{
+                } else { //bbdd
                     addInteresadoHtml(result,nombre,tipo,representante,idRegistroDetalle);
                 }
 
@@ -131,6 +142,11 @@ function eliminarPersonaInteresado(idPersona,idRegistroDetalle){
             if(result==true){
                 $(elemento).remove();
             }
+
+            // Mostramos mensaje de información
+            if (idRegistroDetalle.length > 0) {
+                mensajeSuccess("#mensajes", tradsinteresado['interesado.eliminado']);
+            }
         }
     });
 
@@ -143,6 +159,7 @@ function eliminarPersonaInteresado(idPersona,idRegistroDetalle){
  * @param tipo
  * @param representante
  * @param idRegistroDetalle
+ * @param mensaje true o false para mostrar un mensaje aviso
  */
 function addInteresadoHtml(idPersona, nombre,tipo,representante,idRegistroDetalle){
     var vacio = "";
@@ -158,6 +175,11 @@ function addInteresadoHtml(idPersona, nombre,tipo,representante,idRegistroDetall
         "<a class=\"btn btn-danger btn-default btn-sm\" onclick=\"eliminarPersonaInteresado('"+idPersona+"','"+idRegistroDetalle+"')\" href=\"javascript:void(0);\" title=\"Eliminar\"><span class=\"fa fa-eraser\"></span></a></td></tr>";
 
     $('#interesados').append(fila);
+
+    if (idRegistroDetalle.length > 0) {
+        mensajeSuccess("#mensajes", tradsinteresado['interesado.añadido']);
+    }
+
 }
 
 /**
@@ -369,7 +391,7 @@ function procesarInteresado() {
                         addRepresentanteHtml(respuesta.result.id,respuesta.result.representado.id,respuesta.result.nombre,idRegistroDetalle);
 
                     }else if(accion == 'editar'){ // Si estamos editando un representante existente
-                        actualizarNombrePersonaInteresados(respuesta.result.id,respuesta.result.nombre);
+                        actualizarNombrePersonaInteresados(respuesta.result.id, respuesta.result.nombre, true);
                     }
 
                 }else{ // No es un representante
@@ -383,7 +405,7 @@ function procesarInteresado() {
                         }
 
                     }else if(accion == 'editar'){ // Si estamos editando una existente
-                        actualizarNombrePersonaInteresados(respuesta.result.id,respuesta.result.nombre);
+                        actualizarNombrePersonaInteresados(respuesta.result.id, respuesta.result.nombre, true);
                     }
 
                 }
@@ -446,20 +468,23 @@ function quitarErroresInteresado(){
  * Actualiza el nombre de la Persona pasada por parámetro, despues de realizar una edición.
  * @param idPersona
  * @param nombre
+ * @param mensaje true o false para mostrar un mensaje aviso
  */
-function actualizarNombrePersonaInteresados(idPersona, nombre){
+function actualizarNombrePersonaInteresados(idPersona, nombre, mensaje) {
     var elemento = "#persona"+idPersona;
 
     $(elemento + ' td:first').text(nombre);
+
+    if (mensaje && idRegistroDetalle.length > 0) {
+        mensajeSuccess("#mensajes", tradsinteresado['interesado.actualizado']);
+    }
 }
 
 
 /**
  * Realiza la búsqueda de personas y muestra los resultados en una tabla con paginación
  */
-function buscarPersonas(tipoPersonas){
-
-    var idRegistroDetalle = $('#idRegistroDetalle').val();
+function buscarPersonas(tipoPersonas, idRegistroDetalle) {
 
     var tabla = $('<table id="resultadosBusquedaPersona"></table>').addClass('paginated table table-bordered table-hover table-striped');
     tabla.append('<colgroup><col><col><col><col width="100"></colgroup>');

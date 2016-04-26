@@ -179,6 +179,7 @@
                     <c:param name="tipo" value="detalle"/>
                     <c:param name="tipoRegistro" value="salida"/>
                     <c:param name="comunidad" value="${comunidad.codigoComunidad}"/>
+                    <c:param name="idRegistroDetalle" value="${registro.registroDetalle.id}"/>
                 </c:import>
             </c:if>
 

@@ -69,7 +69,10 @@
                     <div class="clearfix"></div>
 
                 </form>
-                    <input type="button" id="buscarPersonaForm" onclick="buscarPersonas('${param.tipoPersona}')" class="btn btn-warning btn-sm" title="<spring:message code="regweb.buscar"/>" value="<spring:message code="regweb.buscar"/>" />
+                <input type="button" id="buscarPersonaForm"
+                       onclick="buscarPersonas('${param.tipoPersona}','${param.idRegistroDetalle}')"
+                       class="btn btn-warning btn-sm" title="<spring:message code="regweb.buscar"/>"
+                       value="<spring:message code="regweb.buscar"/>"/>
                     <button class="btn btn-sm" data-dismiss="modal" aria-hidden="true" onclick="limpiarBusquedaPersona('${param.tipoPersona}')"><spring:message code="regweb.cerrar"/></button>
 
             </div>

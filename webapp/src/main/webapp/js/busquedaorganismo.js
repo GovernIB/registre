@@ -392,7 +392,7 @@ function addAdministracionInteresadosModal(codigoDir3, denominacion, tipo, tipoO
         contentType: 'application/json',
 
         success: function (result) {
-            addOrganismoInteresadoHtml(codigoDir3, denominacion, tipo, idRegistroDetalle);
+            addOrganismoInteresadoHtml(codigoDir3, denominacion, tipo, idRegistroDetalle, false);
         }
     });
 

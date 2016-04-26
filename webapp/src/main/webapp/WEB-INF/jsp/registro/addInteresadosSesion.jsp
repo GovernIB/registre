@@ -20,7 +20,7 @@
                 var nombre = "${interesado.nombreOrganismo}";
                 nombre = nombre.replace(/\"/g,'&quot;');
                 addOrganismoInteresadoHtml('${interesado.codigoDir3}',nombre,'<spring:message
-                    code="interesado.administracion"/>','${registro.registroDetalle.id}');
+                    code="interesado.administracion"/>','${registro.registroDetalle.id}',false);
             </c:if>
             <c:if test="${interesado.tipo == RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA}">
                 var interesado = "${interesado.nombrePersonaFisica}";

@@ -30,6 +30,8 @@
              </div>
         </div><!-- Fin miga de pan -->
 
+        <div id="mensajes"></div>
+
         <div class="row">
 
             <div class="col-xs-4">
@@ -196,6 +198,7 @@
                     <c:param name="tipo" value="detalle"/>
                     <c:param name="tipoRegistro" value="entrada"/>
                     <c:param name="comunidad" value="${comunidad.codigoComunidad}"/>
+                    <c:param name="idRegistroDetalle" value="${registro.registroDetalle.id}"/>
                 </c:import>
             </c:if>
 
