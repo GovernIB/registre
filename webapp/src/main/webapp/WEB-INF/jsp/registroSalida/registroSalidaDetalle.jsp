@@ -29,6 +29,8 @@
                 </ol>
             </div>
         </div><!-- Fin miga de pan -->
+
+        <div id="mensajes"></div>
     
         <div class="row">
         
