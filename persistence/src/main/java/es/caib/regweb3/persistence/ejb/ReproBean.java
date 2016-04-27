@@ -165,62 +165,95 @@ public class ReproBean extends BaseEjbJPA<Repro, Long> implements ReproLocal{
 
 
     @Override
-    public void subirOrden(Long idRepro) throws Exception{
+    public Boolean subirOrden(Long idRepro) throws Exception{
 
-        Long idUsuario = obtenerUsuarioRepro(idRepro);
+        boolean result;
 
-        Repro repro = findById(idRepro);
+        try{
+            Long idUsuario = obtenerUsuarioRepro(idRepro);
 
-        int ordenActual = repro.getOrden();
+            Repro repro = findById(idRepro);
 
-        int ordenNuevo = 1;
-        if(ordenActual > 1){
-            ordenNuevo = ordenActual - 1;
+            int ordenActual = repro.getOrden();
+
+            int ordenNuevo = 1;
+            if(ordenActual > 1){
+                ordenNuevo = ordenActual - 1;
+            }
+
+            Repro reproAnterior = findByOrden(idUsuario, ordenNuevo);
+
+            modificarOrden(idRepro, ordenNuevo);
+
+            modificarOrden(reproAnterior.getId(), ordenActual);
+            result = true;
+
+        } catch(Exception e){
+            e.printStackTrace();
+            result = false;
         }
 
-        Repro reproAnterior = findByOrden(idUsuario, ordenNuevo);
-
-        modificarOrden(idRepro, ordenNuevo);
-
-        modificarOrden(reproAnterior.getId(), ordenActual);
+        return result;
 
     }
 
     @Override
-    public void bajarOrden(Long idRepro) throws Exception{
+    public Boolean bajarOrden(Long idRepro) throws Exception{
 
-        Long idUsuario = obtenerUsuarioRepro(idRepro);
-        List<Repro> repros = getAllbyUsuario(idUsuario);
+        boolean result;
 
-        Repro repro = findById(idRepro);
+        try{
+            Long idUsuario = obtenerUsuarioRepro(idRepro);
+            List<Repro> repros = getAllbyUsuario(idUsuario);
 
-        int ordenActual = repro.getOrden();
+            Repro repro = findById(idRepro);
 
-        int ordenNuevo = repros.size();
-        if(ordenActual < repros.size()){
-            ordenNuevo = ordenActual + 1;
+            int ordenActual = repro.getOrden();
+
+            int ordenNuevo = repros.size();
+            if(ordenActual < repros.size()){
+                ordenNuevo = ordenActual + 1;
+            }
+
+            Repro reproPosterior = findByOrden(idUsuario, ordenNuevo);
+
+            modificarOrden(idRepro, ordenNuevo);
+
+            modificarOrden(reproPosterior.getId(), ordenActual);
+            result = true;
+
+        } catch(Exception e){
+            e.printStackTrace();
+            result = false;
         }
 
-        Repro reproPosterior = findByOrden(idUsuario, ordenNuevo);
-
-        modificarOrden(idRepro, ordenNuevo);
-
-        modificarOrden(reproPosterior.getId(), ordenActual);
+        return result;
 
     }
 
     @Override
-    public void cambiarEstado(Long idRepro) throws Exception{
+    public Boolean cambiarEstado(Long idRepro) throws Exception{
 
-        Repro repro = findById(idRepro);
+        boolean result;
 
-        if(repro.getActivo()){
-            repro.setActivo(false);
-        }else{
-            repro.setActivo(true);
+        try{
+            Repro repro = findById(idRepro);
+
+            if(repro.getActivo()){
+                repro.setActivo(false);
+            }else{
+                repro.setActivo(true);
+            }
+
+            merge(repro);
+            result = true;
+
+        } catch(Exception e){
+            e.printStackTrace();
+            result = false;
         }
 
-        merge(repro);
+        return result;
     }
 
     @Override

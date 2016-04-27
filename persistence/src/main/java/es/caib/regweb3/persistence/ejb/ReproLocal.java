@@ -91,7 +91,7 @@ public interface ReproLocal extends BaseEjb<Repro, Long> {
      * @return
      * @throws Exception
      */
-    public void subirOrden(Long idRepro) throws Exception;
+    public Boolean subirOrden(Long idRepro) throws Exception;
 
     /**
      * Baja orden en una {@link es.caib.regweb3.model.Repro}
@@ -99,7 +99,7 @@ public interface ReproLocal extends BaseEjb<Repro, Long> {
      * @return
      * @throws Exception
      */
-    public void bajarOrden(Long idRepro) throws Exception;
+    public Boolean bajarOrden(Long idRepro) throws Exception;
 
     /**
      * Cambiar estado de una {@link es.caib.regweb3.model.Repro}
@@ -107,7 +107,7 @@ public interface ReproLocal extends BaseEjb<Repro, Long> {
      * @return
      * @throws Exception
      */
-    public void cambiarEstado(Long idRepro) throws Exception;
+    public Boolean cambiarEstado(Long idRepro) throws Exception;
 
     /**
      * Elimina las Repros de una Entidad

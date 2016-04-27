@@ -239,13 +239,12 @@ public class ReproController extends BaseController {
      * @throws Exception
      */
     @RequestMapping(value = "/{idRepro}/cambiarEstado", method = RequestMethod.GET)
-    public String cambiarEstadoRepro(@PathVariable Long idRepro, HttpServletRequest request)throws Exception {
+    public
+    @ResponseBody
+    Boolean cambiarEstadoRepro(@PathVariable Long idRepro)throws Exception {
 
-        String redirect = "redirect:/repro/list";
+        return reproEjb.cambiarEstado(idRepro);
 
-        reproEjb.cambiarEstado(idRepro);
-
-        return redirect;
     }
 
 
@@ -256,13 +255,12 @@ public class ReproController extends BaseController {
      * @throws Exception
      */
     @RequestMapping(value = "/{idRepro}/subir", method = RequestMethod.GET)
-    public String subirRepro(@PathVariable Long idRepro, HttpServletRequest request)throws Exception {
+    public
+    @ResponseBody
+    Boolean subirRepro(@PathVariable Long idRepro)throws Exception {
 
-        String redirect = "redirect:/repro/list";
+        return reproEjb.subirOrden(idRepro);
 
-        reproEjb.subirOrden(idRepro);
-
-        return redirect;
     }
 
 
@@ -273,13 +271,12 @@ public class ReproController extends BaseController {
      * @throws Exception
      */
     @RequestMapping(value = "/{idRepro}/bajar", method = RequestMethod.GET)
-    public String bajarRepro(@PathVariable Long idRepro, HttpServletRequest request)throws Exception {
+    public
+    @ResponseBody
+    Boolean bajarRepro(@PathVariable Long idRepro)throws Exception {
 
-        String redirect = "redirect:/repro/list";
+        return reproEjb.bajarOrden(idRepro);
 
-        reproEjb.bajarOrden(idRepro);
-
-        return redirect;
     }
 
 
