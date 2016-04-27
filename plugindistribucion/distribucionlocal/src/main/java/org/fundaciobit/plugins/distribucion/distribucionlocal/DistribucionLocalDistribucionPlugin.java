@@ -60,6 +60,7 @@ public class DistribucionLocalDistribucionPlugin extends AbstractPluginPropertie
 
         // Este código es una prueba, aquí se deben determinar los destinatarios reales en función de la
         // implementación particular de cada entidad
+        log.info("Distribuir plugin");
 
         Destinatarios destinatarios = new Destinatarios();
 
@@ -82,8 +83,8 @@ public class DistribucionLocalDistribucionPlugin extends AbstractPluginPropertie
 
 
         destinatarios.setPropuestos(destinatariosPropuestos);
-        //   destinatarios.setPosibles(destinatariosPosibles);
-        //destinatarios.setModificable(false);
+        destinatarios.setPosibles(destinatariosPosibles);
+        destinatarios.setModificable(true);
 
         return destinatarios;
     }

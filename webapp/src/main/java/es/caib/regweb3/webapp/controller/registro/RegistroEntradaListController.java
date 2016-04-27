@@ -411,6 +411,8 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     @ResponseBody
     Destinatarios distribuirRegistroEntrada(@PathVariable Long idRegistro, HttpServletRequest request) throws Exception, I18NException {
 
+        log.info("Entramos en distribuirRegistroEntrada");
+
         RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         Destinatarios destinatarios = new Destinatarios();
@@ -446,6 +448,8 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     public
     @ResponseBody
     Boolean enviarDestinatariosRegistroEntrada(@PathVariable Long idRegistro, @RequestBody DestinatarioWrapper wrapper, HttpServletRequest request) throws Exception, I18NException {
+
+        log.info("Entramos en enviarDestinatariosRegistroEntrada");
 
         RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);

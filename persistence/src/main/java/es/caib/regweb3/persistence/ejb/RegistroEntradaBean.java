@@ -1222,6 +1222,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     public Destinatarios distribuir(RegistroEntrada re) throws Exception, I18NException {
         // Plugin de distribución
+
+        log.info("Entramos en distribuir");
         IDistribucionPlugin distribucionPlugin = RegwebDistribucionPluginManager.getInstance();
         if (distribucionPlugin != null) { // hay plugin definido
 
@@ -1256,6 +1258,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     public Boolean enviar(RegistroEntrada re, DestinatarioWrapper wrapper) throws Exception, I18NException {
         // Plugin de distribución
+        log.info("Entramos en enviar");
         IDistribucionPlugin distribucionPlugin = RegwebDistribucionPluginManager.getInstance();
 
         //Obtenemos el valor de la variable anexos del plugin de distribucion
