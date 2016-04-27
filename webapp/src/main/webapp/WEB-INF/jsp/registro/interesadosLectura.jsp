@@ -14,7 +14,17 @@
     <div class="panel panel-${color}">
 
         <div class="panel-heading">
-            <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong><spring:message code="interesado.interesados"/></strong></h3>
+            <h3 class="panel-title">
+                <i class="fa fa-pencil-square-o"></i>
+                <strong>
+                    <c:if test="${param.tipoRegistro == 'entrada'}">
+                        <spring:message code="interesado.interesados"/>
+                    </c:if>
+                    <c:if test="${param.tipoRegistro == 'salida'}">
+                        <spring:message code="registroSalida.destinatarios"/>
+                    </c:if>
+                </strong>
+            </h3>
         </div>
 
         <div class="panel-body">
