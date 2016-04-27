@@ -54,18 +54,7 @@ public class RegistroSalida implements IRegistro {
     }
 
     /**
-     * @param id
-     * @param usuario
-     * @param oficina
-     * @param origen
-     * @param origenExternoCodigo
-     * @param origenExternoDenominacion
-     * @param fecha
-     * @param libro
-     * @param numeroRegistro
-     * @param numeroRegistroFormateado
-     * @param estado
-     * @param registroDetalle
+     * @param rs
      */
     public RegistroSalida(RegistroSalida rs) {
       super();

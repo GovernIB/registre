@@ -6,6 +6,7 @@
 <head>
     <title><spring:message code="regweb.titulo"/></title>
     <c:import url="../modulos/imports.jsp"/>
+    <script type="text/javascript" src="<c:url value="/js/busquedaorganismo.js"/>"></script>
 </head>
 
 <body>
@@ -43,7 +44,7 @@
                                             <form:label path="tipo"><span class="text-danger">*</span> <spring:message code="informe.tipoLibro"/></form:label>
                                         </div>
                                         <div class="col-xs-9 no-pad-right">
-                                            <form:select path="tipo" cssClass="chosen-select" onchange="actualizarLibros(this)">
+                                            <form:select path="tipo" cssClass="chosen-select" onchange="actualizarLibros(this.selectedIndex)">
                                                 <form:option value="1" default="default"><spring:message code="informe.entrada"/></form:option>
                                                 <form:option value="2"><spring:message code="informe.salida"/></form:option>
                                             </form:select>
@@ -70,10 +71,10 @@
                                             <c:if test="${fn:length(libros) eq 1}">
                                                 <form:select path="libros" items="${libros}" itemValue="id" itemLabel="libroOrganismo" cssClass="chosen-select" multiple="false"/>
                                             </c:if>
-                                                <c:if test="${fn:length(libros) gt 1}">
+                                            <c:if test="${fn:length(libros) gt 1}">
                                                 <spring:message code="informe.libros" var="varLibros"/>
                                                 <form:select data-placeholder="${varLibros}" path="libros" items="${libros}" itemValue="id" itemLabel="libroOrganismo" cssClass="chosen-select" multiple="true"/>
-                                                </c:if>
+                                            </c:if>
                                             <span id="librosErrors"></span>
                                         </div>
                                     </div>
@@ -167,22 +168,6 @@
                                     <div class="row">
                                         <div class="form-group col-xs-6 pad-left">
                                             <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                                <spring:message code="registroEntrada.estado"/>
-                                            </div>
-                                            <div class="col-xs-9 no-pad-right">
-                                                <form:select path="estado" cssClass="chosen-select">
-                                                    <form:option value="-1" label="..."/>
-                                                    <c:forEach var="estado" items="${estados}">
-                                                        <form:option value="${estado}"><spring:message code="registro.estado.${estado}"/></form:option>
-                                                    </c:forEach>
-                                                </form:select>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="form-group col-xs-6 pad-left">
-                                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
                                                 <spring:message code="registroEntrada.nombreInteresado"/>
                                             </div>
                                             <div class="col-xs-9 no-pad-right">
@@ -225,10 +210,35 @@
                                     <div class="row">
                                         <div class="form-group col-xs-6 pad-left">
                                             <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                                                <spring:message code="registroEntrada.estado"/>
+                                            </div>
+                                            <div class="col-xs-9 no-pad-right">
+                                                <form:select path="estado" cssClass="chosen-select">
+                                                    <form:option value="-1" label="..."/>
+                                                    <c:forEach var="estado" items="${estados}">
+                                                        <form:option value="${estado}"><spring:message code="registro.estado.${estado}"/></form:option>
+                                                    </c:forEach>
+                                                </form:select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-xs-6 pad-left">
+                                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                                                <spring:message code="registroEntrada.anexos"/>
+                                            </div>
+                                            <div class="col-xs-9 no-pad-right">
+                                                <form:checkbox path="anexos"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="form-group col-xs-6 pad-left">
+                                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
                                                 <spring:message code="registro.oficinaRegistro"/>
                                             </div>
                                             <div class="col-xs-9 no-pad-right">
-                                                <form:select path="oficina.id" cssClass="chosen-select">
+                                                <form:select path="idOficina" cssClass="chosen-select">
                                                     <form:option value="-1" label="..."/>
                                                     <c:forEach var="oficinaRegistro" items="${oficinasRegistro}">
                                                         <form:option value="${oficinaRegistro.id}">${oficinaRegistro.denominacion}</form:option>
@@ -236,12 +246,24 @@
                                                 </form:select>
                                             </div>
                                         </div>
+
                                         <div class="form-group col-xs-6 pad-left">
-                                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                                <spring:message code="registroEntrada.anexos"/>
+                                            <div class="col-xs-3 pull-left etiqueta_regweb control-label" id="orgDest"><spring:message code="registroEntrada.organDestinatari"/></div>
+                                            <div class="col-xs-3 pull-left etiqueta_regweb control-label hidden"  id="orgOrig"><spring:message code="registroEntrada.organismoOrigen"/></div>
+                                            <div class="col-xs-7 no-pad-right">
+                                                <form:select path="organDestinatari" cssClass="chosen-select" onchange="actualizarOrganDestinatariNom(${organismo.denominacion})">
+                                                    <form:option value="" label="..."/>
+                                                    <c:forEach items="${organosDestino}" var="organismo">
+                                                        <option value="${organismo.codigo}" <c:if test="${registroEntradaBusqueda.organDestinatari == organismo.codigo}">selected="selected"</c:if>>${organismo.denominacion}</option>
+                                                    </c:forEach>
+                                                </form:select>
+                                                <form:errors path="organDestinatari" cssClass="help-block" element="span"/>
+                                                <form:hidden path="organDestinatariNom"/>
                                             </div>
-                                            <div class="col-xs-9 no-pad-right">
-                                                <form:checkbox path="anexos"/>
+                                            <div class="col-xs-2 boto-panel">
+                                                <a data-toggle="modal" role="button" href="#modalBuscadorlistaRegEntrada"
+                                                   onclick="inicializarBuscador('#codNivelAdministracionlistaRegEntrada','#codComunidadAutonomalistaRegEntrada','#provincialistaRegEntrada','#localidadlistaRegEntrada','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}', 'listaRegEntrada' );"
+                                                   class="btn btn-success btn-sm"><spring:message code="regweb.buscar"/></a>
                                             </div>
                                         </div>
                                     </div>
@@ -265,6 +287,21 @@
                                                     <c:forEach items="${usuariosEntidad}" var="usuarioEntidad">
                                                         <option value="${usuarioEntidad.usuario.identificador}" <c:if test="${usuario == usuarioEntidad.usuario.identificador}">selected="selected"</c:if>>${usuarioEntidad.usuario.identificador}</option>
                                                     </c:forEach>
+                                                </form:select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="form-group col-xs-6 pad-left">
+                                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                                                <spring:message code="registroEntrada.tipoAsunto"/>
+                                            </div>
+                                            <div class="col-xs-9 no-pad-right">
+                                                <form:select path="idTipoAsunto" cssClass="chosen-select">
+                                                    <form:option value="-1" label="..."/>
+                                                    <form:options items="${tiposAsunto}" itemValue="id"
+                                                                  itemLabel="traducciones['${pageContext.response.locale}'].nombre"/>
                                                 </form:select>
                                             </div>
                                         </div>
@@ -302,6 +339,20 @@
         </div>
     <!-- FIN BUSCADOR-->
 
+    <!-- Importamos el codigo jsp del modal del formulario para realizar la búsqueda de organismos Destino o Origen
+        Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
+
+        <c:import url="../registro/buscadorOrganismosOficinasREPestanas.jsp">
+            <c:param name="tipo" value="listaRegEntrada"/>
+        </c:import>
+
+    <%--<c:if test="${tipo == 2}">--%>
+        <%--<c:import url="../registro/buscadorOrganismosOficinasREPestanas.jsp">--%>
+            <%--<c:param name="tipo" value="listaRegSalida"/>--%>
+        <%--</c:import>--%>
+    <%--</c:if>--%>
+
+
 </div>
 </div> <!-- /container -->
 
@@ -311,9 +362,18 @@
 <!-- Modifica los Libros según el tipo de Registro elegido -->
 <script type="text/javascript">
 
-function actualizarLibros(){
+function actualizarLibros(tipo){
     <c:url var="obtenerLibros" value="/informe/obtenerLibros" />
     actualizarLibrosTodos('${obtenerLibros}','#libros',$('#tipo option:selected').val(),$('#libros option:selected').val(),true);
+    // Mostram el camp segons el tipus de registre que cercam
+    if(tipo==0){
+        $("#orgDest").removeClass("hidden");
+        $("#orgOrig").addClass("hidden");
+    }
+    if(tipo==1){
+        $("#orgDest").addClass("hidden");
+        $("#orgOrig").removeClass("hidden");
+    }
 }
 
 </script>
@@ -472,6 +532,13 @@ function actualizarLibrosTodos(url, idSelect, seleccion, valorSelected, todos){
             $(".masOpciones-success").html('<span class="fa fa-minus"></span> ' + traduccion['regweb.busquedaAvanzada']);
         });
     });
+</script>
+
+<!-- Cambia el valor del Nombre del Organismo Destinatario-->
+<script>
+    function actualizarOrganDestinatariNom(denominacio){
+        $("#organDestinatariNom").html(denominacio);
+    }
 </script>
 
 </body>

@@ -1,7 +1,6 @@
 package es.caib.regweb3.webapp.form;
 
 import es.caib.regweb3.model.Libro;
-import es.caib.regweb3.model.Oficina;
 
 import java.util.Date;
 import java.util.List;
@@ -32,12 +31,13 @@ public class InformeLibroBusquedaForm {
     private String extracto;
     private String numeroRegistroFormateado;
     private Long estado;
-    private Oficina oficina;
+    private Long idOficina;
+    private Long idTipoAsunto;
 
     public InformeLibroBusquedaForm(Date fechaInicio, Date fechaFin, Long tipo, String formato, Set<String> campos, String usuario,
                                     List<Libro> libros, Boolean anexos, String interessatNom, String interessatLli1, String interessatLli2,
                                     String interessatDoc, String organDestinatari, String organDestinatariNom, String observaciones,
-                                    String extracto, String numeroRegistroFormateado, Long estado, Oficina oficina) {
+                                    String extracto, String numeroRegistroFormateado, Long estado, Long idOficina, Long idTipoAsunto) {
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
         this.tipo = tipo;
@@ -56,7 +56,8 @@ public class InformeLibroBusquedaForm {
         this.extracto = extracto;
         this.numeroRegistroFormateado = numeroRegistroFormateado;
         this.estado = estado;
-        this.oficina = oficina;
+        this.idOficina = idOficina;
+        this.idTipoAsunto = idTipoAsunto;
     }
 
     public InformeLibroBusquedaForm() {
@@ -159,7 +160,11 @@ public class InformeLibroBusquedaForm {
 
     public void setEstado(Long estado) { this.estado = estado; }
 
-    public Oficina getOficina() { return oficina; }
+    public Long getIdOficina() { return idOficina; }
 
-    public void setOficina(Oficina oficina) { this.oficina = oficina; }
+    public void setIdOficina(Long idOficina) { this.idOficina = idOficina; }
+
+    public Long getIdTipoAsunto() { return idTipoAsunto; }
+
+    public void setIdTipoAsunto(Long idTipoAsunto) { this.idTipoAsunto = idTipoAsunto; }
 }

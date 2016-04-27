@@ -6,7 +6,7 @@ import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.webapp.controller.BaseController;
+import es.caib.regweb3.webapp.controller.registro.AbstractRegistroCommonFormController;
 import es.caib.regweb3.webapp.editor.LibroEditor;
 import es.caib.regweb3.webapp.form.*;
 import es.caib.regweb3.webapp.utils.Mensaje;
@@ -33,7 +33,7 @@ import java.util.*;
 @Controller
 @RequestMapping(value = "/informe")
 
-public class InformeController extends BaseController {
+public class InformeController extends AbstractRegistroCommonFormController {
 
     //protected final Logger log = Logger.getLogger(getClass());
 
@@ -75,12 +75,19 @@ public class InformeController extends BaseController {
         informeLibroBusquedaForm.setFechaFin(new Date());
         model.addAttribute("informeLibroBusquedaForm",informeLibroBusquedaForm);
         model.addAttribute("libros", libros(request));
-        model.addAttribute("oficinasRegistro",  oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(),RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
-        model.addAttribute("organosDestino", getOrganismosOficinaActiva(request));
+        model.addAttribute("oficinasRegistro", oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(),RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+        if(getRolActivo(request).getId().equals(RegwebConstantes.ROL_USUARI_ID)) {
+            model.addAttribute("organosDestino", getOrganismosOficinaActiva(request));
+        }
+        if(getRolActivo(request).getId().equals(RegwebConstantes.ROL_ADMIN_ID)) {
+            model.addAttribute("organosDestino", organismoEjb.getAllByEntidad(getEntidadActiva(request).getId()));
+        }
+
         // Obtenemos los usuarios de la Entidad
         List<UsuarioEntidad> usuariosEntidad = usuarioEntidadEjb.findByEntidad(getEntidadActiva(request).getId());
         model.addAttribute("usuariosEntidad", usuariosEntidad);
-        model.addAttribute(getOficinaActiva(request));
+        model.addAttribute("tiposAsunto", tipoAsuntoEjb.getActivosEntidad(getEntidadActiva(request).getId()));
+//        model.addAttribute(getOficinaActiva(request));
 
         return "informe/libroRegistro";
     }
@@ -110,10 +117,41 @@ public class InformeController extends BaseController {
 
         Date dataFi = RegistroUtils.ajustarHoraBusqueda(informeLibroBusquedaForm.getFechaFin());
 
-        Long idOficina = (long) -1;
-        if(informeLibroBusquedaForm.getOficina().getId() != -1){
-            idOficina = informeLibroBusquedaForm.getOficina().getId();
+        Long idOficina = informeLibroBusquedaForm.getIdOficina();
+        String nomOficina = "";
+        if(idOficina != -1){
+            nomOficina = oficinaEjb.findById(idOficina).getDenominacion();
         }
+
+        String codigoOrganDest = "";
+        if(!informeLibroBusquedaForm.getOrganDestinatari().equals("")){
+            codigoOrganDest = informeLibroBusquedaForm.getOrganDestinatari();
+        }
+
+        String nomOrganismeDest = "";
+        if(!codigoOrganDest.equals("")) {
+            if(!informeLibroBusquedaForm.getOrganDestinatariNom().equals("")) {
+                nomOrganismeDest = informeLibroBusquedaForm.getOrganDestinatariNom();
+            } else{
+                nomOrganismeDest = organismoEjb.findByCodigoLigero(codigoOrganDest).getDenominacion();
+            }
+        }
+
+        //Guardamos las Traducciones del Tipo Asunto para que sea más rápido
+        List<TipoAsunto> tiposAsunto = tipoAsuntoEjb.getActivosEntidad(getEntidadActiva(request).getId());
+        Map<Long,String> traduccionTiposAsunto = new HashMap<Long,String>();
+        for (TipoAsunto i : tiposAsunto){
+            TraduccionTipoAsunto traduccionTipoAsunto = (TraduccionTipoAsunto) i.getTraduccion();
+            traduccionTiposAsunto.put(i.getId(),traduccionTipoAsunto.getNombre());
+        }
+
+        //Buscamos la traducción de la búsqueda de Tipo Asunto
+        Long idTipoAsunto = informeLibroBusquedaForm.getIdTipoAsunto();
+        String tipoAsunto = "";
+        if(idTipoAsunto != -1) {
+            tipoAsunto = traduccionTiposAsunto.get(idTipoAsunto);
+        }
+
 
         // REGISTROS DE ENTRADA
         if(informeLibroBusquedaForm.getTipo().equals(RegwebConstantes.REGISTRO_ENTRADA)){
@@ -123,162 +161,162 @@ public class InformeController extends BaseController {
                     informeLibroBusquedaForm.getInteressatLli1(), informeLibroBusquedaForm.getInteressatLli2(), informeLibroBusquedaForm.getInteressatDoc(),
                     informeLibroBusquedaForm.getAnexos(), informeLibroBusquedaForm.getObservaciones(),
                     informeLibroBusquedaForm.getExtracto(), informeLibroBusquedaForm.getUsuario(), informeLibroBusquedaForm.getLibros(),
-                    informeLibroBusquedaForm.getEstado(), idOficina);
+                    informeLibroBusquedaForm.getEstado(), idOficina, idTipoAsunto, codigoOrganDest);
+
 
             for (int i = 0; i < registrosEntrada.size(); i++) {
                 registrosLibro.add(new ArrayList<String>());
                 RegistroEntrada registroEntrada = registrosEntrada.get(i);
 
-                for( Iterator<String> it = campos.iterator(); it.hasNext();) {
-                    String valorCamp = it.next();
-                    if(valorCamp.equals("codAs")){
-                        if(registroEntrada.getRegistroDetalle().getCodigoAsunto() != null){
+                for (String valorCamp : campos) {
+                    if (valorCamp.equals("codAs")) {
+                        if (registroEntrada.getRegistroDetalle().getCodigoAsunto() != null) {
                             registrosLibro.get(i).add(registroEntrada.getRegistroDetalle().getCodigoAsunto().getCodigo());
-                        }else{
+                        } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("anyRe")){
-                        if(registroEntrada.getFecha() != null){
+                    } else if (valorCamp.equals("anyRe")) {
+                        if (registroEntrada.getFecha() != null) {
                             String anoRegistro = formatYear.format(registroEntrada.getFecha());
                             registrosLibro.get(i).add(anoRegistro);
-                        }else{
+                        } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("estat")){
-                        registrosLibro.get(i).add(I18NUtils.tradueix("registro.estado." +  registroEntrada.getEstado()));
-                    } else if(valorCamp.equals("exped")){
-                        if(registroEntrada.getRegistroDetalle().getExpediente() != null){
+                    } else if (valorCamp.equals("estat")) {
+                        registrosLibro.get(i).add(I18NUtils.tradueix("registro.estado." + registroEntrada.getEstado()));
+                    } else if (valorCamp.equals("exped")) {
+                        if (registroEntrada.getRegistroDetalle().getExpediente() != null) {
                             registrosLibro.get(i).add(registroEntrada.getRegistroDetalle().getExpediente());
-                        }else{
+                        } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("extra")){
-                        if(registroEntrada.getRegistroDetalle().getExtracto() != null){
+                    } else if (valorCamp.equals("extra")) {
+                        if (registroEntrada.getRegistroDetalle().getExtracto() != null) {
                             registrosLibro.get(i).add(registroEntrada.getRegistroDetalle().getExtracto());
-                        }else{
+                        } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("data")){
-                        if(registroEntrada.getFecha() != null){
+                    } else if (valorCamp.equals("data")) {
+                        if (registroEntrada.getFecha() != null) {
                             String fechaRegistro = formatDate.format(registroEntrada.getFecha());
                             registrosLibro.get(i).add(fechaRegistro);
-                        }else{
+                        } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("numRe")){
-                        if(registroEntrada.getNumeroRegistro() != null){
+                    } else if (valorCamp.equals("numRe")) {
+                        if (registroEntrada.getNumeroRegistro() != null) {
                             registrosLibro.get(i).add(registroEntrada.getNumeroRegistro().toString());
-                        }else{
+                        } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("ofici")){
-                        if(registroEntrada.getOficina().getDenominacion() != null){
+                    } else if (valorCamp.equals("ofici")) {
+                        if (registroEntrada.getOficina().getDenominacion() != null) {
                             registrosLibro.get(i).add(registroEntrada.getOficina().getDenominacion());
-                        }else{
+                        } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("tipAs")){
-                        if(registroEntrada.getRegistroDetalle().getTipoAsunto() != null){
-                            TraduccionTipoAsunto traduccionTipoAsunto = (TraduccionTipoAsunto) registroEntrada.getRegistroDetalle().getTipoAsunto().getTraduccion();
-                            registrosLibro.get(i).add(traduccionTipoAsunto.getNombre());
-                        }else{
+                    } else if (valorCamp.equals("tipAs")) {
+                        if (registroEntrada.getRegistroDetalle().getTipoAsunto() != null) {
+                            String nombre = traduccionTiposAsunto.get(registroEntrada.getRegistroDetalle().getTipoAsunto().getId());
+                            registrosLibro.get(i).add(nombre);
+                        } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("obser")){
-                        if(registroEntrada.getRegistroDetalle().getObservaciones() != null){
+                    } else if (valorCamp.equals("obser")) {
+                        if (registroEntrada.getRegistroDetalle().getObservaciones() != null) {
                             registrosLibro.get(i).add(registroEntrada.getRegistroDetalle().getObservaciones());
-                        }else{
+                        } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("llibr")){
-                        if(registroEntrada.getLibro().getNombre() != null){
+                    } else if (valorCamp.equals("llibr")) {
+                        if (registroEntrada.getLibro().getNombre() != null) {
                             registrosLibro.get(i).add(registroEntrada.getLibro().getNombre());
-                        }else{
+                        } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("docFi")){
-                        if (registroEntrada.getRegistroDetalle().getTipoDocumentacionFisica() != null){
+                    } else if (valorCamp.equals("docFi")) {
+                        if (registroEntrada.getRegistroDetalle().getTipoDocumentacionFisica() != null) {
                             registrosLibro.get(i).add(I18NUtils.tradueix("tipoDocumentacionFisica." + registroEntrada.getRegistroDetalle().getTipoDocumentacionFisica()));
                         } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("orgDe")){
-                        if(registroEntrada.getDestinoExternoCodigo() != null){
-                            registrosLibro.get(i).add(registroEntrada.getDestinoExternoCodigo());
-                        }else{
-                            if(registroEntrada.getDestino() != null){
+                    } else if (valorCamp.equals("orgDe")) {
+                        if (registroEntrada.getDestinoExternoCodigo() != null) {
+                            registrosLibro.get(i).add(registroEntrada.getDestinoExternoDenominacion());
+                        } else {
+                            if (registroEntrada.getDestino() != null) {
                                 registrosLibro.get(i).add(registroEntrada.getDestino().getDenominacion());
-                            }else{
+                            } else {
                                 registrosLibro.get(i).add("");
                             }
                         }
-                    } else if(valorCamp.equals("idiom")){
-                        if(registroEntrada.getRegistroDetalle().getIdioma() != null) {
+                    } else if (valorCamp.equals("idiom")) {
+                        if (registroEntrada.getRegistroDetalle().getIdioma() != null) {
                             final String nombre = I18NUtils.tradueix("idioma." + registroEntrada.getRegistroDetalle().getIdioma());
                             registrosLibro.get(i).add(nombre);
-                        }else{
+                        } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("refEx")){
-                        if(registroEntrada.getRegistroDetalle().getReferenciaExterna() != null){
+                    } else if (valorCamp.equals("refEx")) {
+                        if (registroEntrada.getRegistroDetalle().getReferenciaExterna() != null) {
                             registrosLibro.get(i).add(registroEntrada.getRegistroDetalle().getReferenciaExterna());
-                        }else{
+                        } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("trans")){
-                        if(registroEntrada.getRegistroDetalle().getTransporte() != null){
-                            registrosLibro.get(i).add( I18NUtils.tradueix("transporte." + registroEntrada.getRegistroDetalle().getTransporte()));
-                        }else{
+                    } else if (valorCamp.equals("trans")) {
+                        if (registroEntrada.getRegistroDetalle().getTransporte() != null) {
+                            registrosLibro.get(i).add(I18NUtils.tradueix("transporte." + registroEntrada.getRegistroDetalle().getTransporte()));
+                        } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("numTr")){
-                        if(registroEntrada.getRegistroDetalle().getNumeroTransporte() != null){
-                          final String nombre = I18NUtils.tradueix("idioma." +registroEntrada.getRegistroDetalle().getIdioma()); 
+                    } else if (valorCamp.equals("numTr")) {
+                        if (registroEntrada.getRegistroDetalle().getNumeroTransporte() != null) {
+                            final String nombre = I18NUtils.tradueix("idioma." + registroEntrada.getRegistroDetalle().getIdioma());
                             registrosLibro.get(i).add(nombre);
-                        }else{
+                        } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("orgOr")){
-                        if(registroEntrada.getRegistroDetalle().getOficinaOrigenExternoCodigo() != null){
+                    } else if (valorCamp.equals("orgOr")) {
+                        if (registroEntrada.getRegistroDetalle().getOficinaOrigenExternoCodigo() != null) {
                             registrosLibro.get(i).add(registroEntrada.getRegistroDetalle().getOficinaOrigenExternoCodigo());
-                        }else{
-                            if(registroEntrada.getRegistroDetalle().getOficinaOrigen() != null){
+                        } else {
+                            if (registroEntrada.getRegistroDetalle().getOficinaOrigen() != null) {
                                 registrosLibro.get(i).add(registroEntrada.getRegistroDetalle().getOficinaOrigen().getDenominacion());
-                            }else{
+                            } else {
                                 registrosLibro.get(i).add("");
                             }
                         }
-                    } else if(valorCamp.equals("numOr")){
-                        if(registroEntrada.getRegistroDetalle().getNumeroRegistroOrigen() != null){
+                    } else if (valorCamp.equals("numOr")) {
+                        if (registroEntrada.getRegistroDetalle().getNumeroRegistroOrigen() != null) {
                             registrosLibro.get(i).add(registroEntrada.getRegistroDetalle().getNumeroRegistroOrigen());
-                        }else{
+                        } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("datOr")){
-                        if(registroEntrada.getRegistroDetalle().getFechaOrigen() != null){
+                    } else if (valorCamp.equals("datOr")) {
+                        if (registroEntrada.getRegistroDetalle().getFechaOrigen() != null) {
                             registrosLibro.get(i).add(registroEntrada.getRegistroDetalle().getFechaOrigen().toString());
-                        }else{
+                        } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("nomIn")){
-                        if(registroEntrada.getRegistroDetalle().getInteresados() != null){
+                    } else if (valorCamp.equals("nomIn")) {
+                        if (registroEntrada.getRegistroDetalle().getInteresados() != null) {
                             String interessats = "";
 
-                            for(int k=0;k<registroEntrada.getRegistroDetalle().getInteresados().size();k++) {
+                            for (int k = 0; k < registroEntrada.getRegistroDetalle().getInteresados().size(); k++) {
                                 Interesado interesado = registroEntrada.getRegistroDetalle().getInteresados().get(k);
-                                if(interesado.getIsRepresentante()){
+                                if (interesado.getIsRepresentante()) {
                                     interessats = interessats + "(Rep.) ";
                                 }
 
                                 // Añadimos el nombre completo del interesado
                                 interessats = interessats + interesado.getNombreCompleto();
 
-                                if(k<registroEntrada.getRegistroDetalle().getInteresados().size()-1){
+                                if (k < registroEntrada.getRegistroDetalle().getInteresados().size() - 1) {
                                     interessats = interessats + ", ";
                                 }
                             }
                             registrosLibro.get(i).add(interessats);
-                        }else{
+                        } else {
                             registrosLibro.get(i).add("");
                         }
                     }
@@ -302,7 +340,8 @@ public class InformeController extends BaseController {
                     informeLibroBusquedaForm.getInteressatLli1(), informeLibroBusquedaForm.getInteressatLli2(), informeLibroBusquedaForm.getInteressatDoc(),
                     informeLibroBusquedaForm.getAnexos(), informeLibroBusquedaForm.getObservaciones(),
                     informeLibroBusquedaForm.getExtracto(), informeLibroBusquedaForm.getUsuario(), informeLibroBusquedaForm.getLibros(),
-                    informeLibroBusquedaForm.getEstado(), idOficina);
+                    informeLibroBusquedaForm.getEstado(), idOficina, idTipoAsunto, codigoOrganDest);
+
 
             for (int i = 0; i < registrosSalida.size(); i++) {
                 registrosLibro.add(new ArrayList<String>());
@@ -361,8 +400,8 @@ public class InformeController extends BaseController {
                         }
                     } else if(valorCamp.equals("tipAs")){
                         if(registroSalida.getRegistroDetalle().getTipoAsunto() != null){
-                            TraduccionTipoAsunto traduccionTipoAsunto = (TraduccionTipoAsunto) registroSalida.getRegistroDetalle().getTipoAsunto().getTraduccion();
-                            registrosLibro.get(i).add(traduccionTipoAsunto.getNombre());
+                            String nombre = traduccionTiposAsunto.get(registroSalida.getRegistroDetalle().getTipoAsunto().getId());
+                            registrosLibro.get(i).add(nombre);
                         }else{
                             registrosLibro.get(i).add("");
                         }
@@ -483,11 +522,6 @@ public class InformeController extends BaseController {
             mav.addObject("fechaFin", fechaFin);
         }
 
-        String nomOficina = "";
-        if(idOficina!=-1) {
-            nomOficina = oficinaEjb.findById(idOficina).getDenominacion();
-        }
-
         mav.addObject("campos", campos);
         mav.addObject("registrosLibro", registrosLibro);
         mav.addObject("numRegistro", informeLibroBusquedaForm.getNumeroRegistroFormateado());
@@ -501,6 +535,8 @@ public class InformeController extends BaseController {
         mav.addObject("anexos", informeLibroBusquedaForm.getAnexos());
         mav.addObject("observaciones", informeLibroBusquedaForm.getObservaciones());
         mav.addObject("usuario", informeLibroBusquedaForm.getUsuario());
+        mav.addObject("organDest", nomOrganismeDest);
+        mav.addObject("tipoAsunto", tipoAsunto);
 
         return mav;
     }

@@ -1,6 +1,7 @@
 package es.caib.regweb3.webapp.view;
 
 import es.caib.regweb3.utils.RegwebConstantes;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -52,6 +53,8 @@ public class LibroRegistroExcel extends AbstractExcelView {
         Boolean anexos = (Boolean) model.get("anexos");
         String observaciones = (String) model.get("observaciones");
         String usuario = (String) model.get("usuario");
+        String organDest = (String) model.get("organDest");
+        String tipoAsunto = (String) model.get("tipoAsunto");
 
         Set<String> campos = (Set<String>) model.get("campos");
         ArrayList<ArrayList<String>> registrosLibro = (ArrayList<ArrayList<String>>) model.get("registrosLibro");
@@ -143,7 +146,7 @@ public class LibroRegistroExcel extends AbstractExcelView {
         if(anexos){
             tieneAnexos = getMessage("regweb.si");
         }else{
-            tieneAnexos = getMessage("regweb.no");
+            tieneAnexos = getMessage("regweb.indiferent");
         }
 
         //Título
@@ -156,11 +159,16 @@ public class LibroRegistroExcel extends AbstractExcelView {
         sheet.addMergedRegion(CellRangeAddress.valueOf("$A$3:$G$3"));
 
         //Tabla criterios de busqueda
-        String [] nomCriteris = {"informe.tipo", "informe.fechaInicio", "informe.fechaFin", "informe.numRegistro", "informe.extracte",
+        String[] nomCriteris = {"informe.tipo", "informe.fechaInicio", "informe.fechaFin", "informe.numRegistro", "informe.extracte",
                 "informe.estat", "informe.nombreInteresado", "informe.apell1Interesado", "informe.apell2Interesado", "informe.docInteresado",
-                "informe.oficinaReg", "informe.anexos", "informe.observacions", "informe.usuario"};
-        String [] valorCriteris = {tipoRegistro, fechaInicio, fechaFin, numRegistro, extracto, estadoRegistro, nombreInteresado, apell1Interesado,
-                apell2Interesado, docInteresado, oficinaReg, tieneAnexos, observaciones, usuario};
+                "informe.oficinaReg", "informe.anexos", "informe.observacions", "informe.usuario", "informe.tipAsun", "informe.organDest"};
+        String[] valorCriteris = {tipoRegistro, fechaInicio, fechaFin, numRegistro, extracto, estadoRegistro, nombreInteresado, apell1Interesado,
+                apell2Interesado, docInteresado, oficinaReg, tieneAnexos, observaciones, usuario, tipoAsunto, organDest};
+
+        if(tipo.equals(RegwebConstantes.INFORME_TIPO_REGISTRO_SALIDA)) {
+            nomCriteris = (String[]) ArrayUtils.removeElement(nomCriteris, "informe.organDest");
+            nomCriteris = (String[]) ArrayUtils.add(nomCriteris, "informe.organOrig");
+        }
 
         int rowCriterio = 4;
         HSSFRow headerCriterio = sheet.createRow(rowCriterio++);

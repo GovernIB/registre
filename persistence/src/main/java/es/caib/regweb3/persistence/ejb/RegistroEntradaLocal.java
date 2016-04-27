@@ -169,10 +169,12 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @param libros
      * @param estado
      * @param idOficina
+     * @param idTipoAsunto
+     * @param organoDest
      * @return
      * @throws Exception
      */
-    public List<RegistroEntrada> buscaLibroRegistro(Date fechaInicio, Date fechaFin, String numRegistro, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String usuario, String extracto, List<Libro> libros, Long estado, Long idOficina) throws Exception;
+    public List<RegistroEntrada> buscaLibroRegistro(Date fechaInicio, Date fechaFin, String numRegistro, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String usuario, String extracto, List<Libro> libros, Long estado, Long idOficina, Long idTipoAsunto, String organoDest) throws Exception;
 
     /**
      * Busca los Registros de Entrada que no estén anulados ni pendientes en función de la una fecha inicio, una fecha fin, de la Entidad Activa

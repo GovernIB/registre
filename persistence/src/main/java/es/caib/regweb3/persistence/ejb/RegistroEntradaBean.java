@@ -515,15 +515,14 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
-    public List<RegistroEntrada> buscaLibroRegistro(Date fechaInicio, Date fechaFin, String numRegistro, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String extracto, String usuario, List<Libro> libros, Long estado, Long idOficina) throws Exception {
+    public List<RegistroEntrada> buscaLibroRegistro(Date fechaInicio, Date fechaFin, String numRegistro, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String extracto, String usuario, List<Libro> libros, Long estado, Long idOficina, Long idTipoAsunto, String organoDest) throws Exception {
 
         Query q;
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        StringBuffer query = new StringBuffer("Select DISTINCT registroEntrada from RegistroEntrada as registroEntrada, Interesado interessat ");
+        StringBuffer query = new StringBuffer("Select DISTINCT registroEntrada from RegistroEntrada as registroEntrada left outer join registroEntrada.registroDetalle.interesados interessat ");
 
-        where.add(" registroEntrada.registroDetalle.id = interessat.registroDetalle.id ");
 
         // Numero registro
         if (!StringUtils.isEmpty(numRegistro)) {
@@ -534,6 +533,16 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         // Extracto
         if (!StringUtils.isEmpty(extracto)) {
             where.add(DataBaseUtils.like("registroEntrada.registroDetalle.extracto", "extracto", parametros, extracto));
+        }
+
+        // Organismo destinatario
+        if (!StringUtils.isEmpty((organoDest))) {
+            if (organismoEjb.findByCodigoLigero(organoDest) == null) {
+                where.add(" registroEntrada.destinoExternoCodigo = :organoDest ");
+            } else {
+                where.add(" registroEntrada.destino.codigo = :organoDest ");
+            }
+            parametros.put("organoDest", organoDest);
         }
 
         // Observaciones
@@ -577,9 +586,14 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         // Oficina Registro
         if (idOficina != -1) {
-            log.info("oficina: " + idOficina);
             where.add(" registroEntrada.oficina.id = :idOficina ");
             parametros.put("idOficina", idOficina);
+        }
+
+        // Tipo Asunto
+        if (idTipoAsunto != -1) {
+            where.add(" registroEntrada.registroDetalle.tipoAsunto.id = :idTipoAsunto ");
+            parametros.put("idTipoAsunto", idTipoAsunto);
         }
 
         // Intervalo fechas

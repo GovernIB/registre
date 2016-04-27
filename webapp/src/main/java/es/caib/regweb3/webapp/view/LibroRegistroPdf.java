@@ -6,6 +6,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.AbstractIText5PdfView;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 
@@ -52,6 +53,8 @@ public class LibroRegistroPdf extends AbstractIText5PdfView {
         Boolean anexos = (Boolean) model.get("anexos");
         String observaciones = (String) model.get("observaciones");
         String usuario = (String) model.get("usuario");
+        String organDest = (String) model.get("organDest");
+        String tipoAsunto = (String) model.get("tipoAsunto");
 
         Set<String> campos = (Set<String>) model.get("campos");
         ArrayList<ArrayList<String>> registrosLibro = (ArrayList<ArrayList<String>>) model.get("registrosLibro");
@@ -101,7 +104,7 @@ public class LibroRegistroPdf extends AbstractIText5PdfView {
         if(anexos){
             tieneAnexos = getMessage("regweb.si");
         }else{
-            tieneAnexos = getMessage("regweb.no");
+            tieneAnexos = getMessage("regweb.indiferent");
         }
 
         // Título
@@ -117,11 +120,16 @@ public class LibroRegistroPdf extends AbstractIText5PdfView {
         document.add(new Paragraph(" "));
 
         //Tabla criterios de busqueda
-        String [] nomCriteris = {"informe.tipo", "informe.fechaInicio", "informe.fechaFin", "informe.numRegistro", "informe.extracte",
+        String[] nomCriteris = {"informe.tipo", "informe.fechaInicio", "informe.fechaFin", "informe.numRegistro", "informe.extracte",
                 "informe.estat", "informe.nombreInteresado", "informe.apell1Interesado", "informe.apell2Interesado", "informe.docInteresado",
-                "informe.oficinaReg", "informe.anexos", "informe.observacions", "informe.usuario"};
-        String [] valorCriteris = {tipoRegistro, fechaInicio, fechaFin, numRegistro, extracto, estadoRegistro, nombreInteresado, apell1Interesado,
-                apell2Interesado, docInteresado, oficinaReg, tieneAnexos, observaciones, usuario};
+                "informe.oficinaReg", "informe.anexos", "informe.observacions", "informe.usuario", "informe.tipAsun", "informe.organDest"};
+        String[] valorCriteris = {tipoRegistro, fechaInicio, fechaFin, numRegistro, extracto, estadoRegistro, nombreInteresado, apell1Interesado,
+                apell2Interesado, docInteresado, oficinaReg, tieneAnexos, observaciones, usuario, tipoAsunto, organDest};
+
+        if(tipo.equals(RegwebConstantes.INFORME_TIPO_REGISTRO_SALIDA)) {
+            nomCriteris = (String[]) ArrayUtils.removeElement(nomCriteris, "informe.organDest");
+            nomCriteris = (String[]) ArrayUtils.add(nomCriteris, "informe.organOrig");
+        }
 
         PdfPTable criterio = new PdfPTable(nomCriteris.length);
         criterio.setWidthPercentage(100);

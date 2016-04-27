@@ -273,15 +273,13 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     }
 
     @Override
-    public List<RegistroSalida> buscaLibroRegistro(Date fechaInicio, Date fechaFin, String numRegistro, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String extracto, String usuario, List<Libro> libros, Long estado, Long idOficina) throws Exception {
+    public List<RegistroSalida> buscaLibroRegistro(Date fechaInicio, Date fechaFin, String numRegistro, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String extracto, String usuario, List<Libro> libros, Long estado, Long idOficina, Long idTipoAsunto, String organoOrig) throws Exception {
 
         Query q;
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        StringBuffer query = new StringBuffer("Select DISTINCT registroSalida from RegistroSalida as registroSalida, Interesado interessat ");
-
-        where.add(" registroSalida.registroDetalle.id = interessat.registroDetalle.id ");
+        StringBuffer query = new StringBuffer("Select DISTINCT registroSalida from RegistroSalida as registroSalida left outer join registroSalida.registroDetalle.interesados interessat ");
 
         // Numero registro
         if (!StringUtils.isEmpty(numRegistro)) {
@@ -292,6 +290,18 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         // Extracto
         if (!StringUtils.isEmpty(extracto)) {
             where.add(DataBaseUtils.like("registroSalida.registroDetalle.extracto", "extracto", parametros, extracto));
+        }
+
+        // Organismo origen
+        if (!StringUtils.isEmpty((organoOrig))) {
+            Organismo organismo = organismoEjb.findByCodigoLigero(organoOrig);
+            if (organismo == null) {
+                where.add(" registroSalida.origenExternoCodigo = :organoOrig ");
+            } else {
+                where.add(" registroSalida.origen.codigo = :organoOrig ");
+            }
+
+            parametros.put("organoOrig", organoOrig);
         }
 
         // Observaciones
@@ -335,9 +345,14 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
         // Oficina Registro
         if (idOficina != -1) {
-            log.info("oficina: " + idOficina);
             where.add(" registroSalida.oficina.id = :idOficina ");
             parametros.put("idOficina", idOficina);
+        }
+
+        // Tipo Asunto
+        if (idTipoAsunto != -1) {
+            where.add(" registroSalida.registroDetalle.tipoAsunto.id = :idTipoAsunto ");
+            parametros.put("idTipoAsunto", idTipoAsunto);
         }
 
         // Intervalo fechas
