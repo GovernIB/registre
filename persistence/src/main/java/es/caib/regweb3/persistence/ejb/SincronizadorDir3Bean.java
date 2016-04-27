@@ -109,37 +109,41 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
         // Guardamos el Organismo-Entidad sincronizado
         Organismo padre = sincronizarOrganismo(unidadPadre, entidadId);
-        // Clasificamos el padre en función de su estado
-        if (padre != null) {
-            guardarPendiente(padre);
-        }
+        if (arbol.size() > 0) {
 
-        // Sincronizamos el arbol de organismos
-        for (UnidadTF unidadTF : arbol) {
-            Organismo hijo = sincronizarOrganismo(unidadTF, entidadId);
-            // Clasificamos el organismo hijo en función del estado
-            if (hijo != null) {
-                guardarPendiente(hijo);
+
+            // Clasificamos el padre en función de su estado
+            if (padre != null) {
+                guardarPendiente(padre);
             }
-        }
 
-        // Sincronizamos históricos
-        if (unidadPadre != null) {
-            sincronizarHistoricosOrganismo(padre, unidadPadre);// históricos del padre
-        }
-
-        for (UnidadTF unidadTF : arbol) { // Sincronizamos los históricos del arbol.
-            if (unidadTF != null) {
-                Organismo hijo = organismoEjb.findByCodigo(unidadTF.getCodigo());
-                sincronizarHistoricosOrganismo(hijo, unidadTF);
+            // Procesamos el arbol de organismos
+            for (UnidadTF unidadTF : arbol) {
+                Organismo organismo = sincronizarOrganismo(unidadTF, entidadId);
+                // Clasificamos el organismo hijo en función del estado
+                if (organismo != null) {
+                    guardarPendiente(organismo);
+                }
             }
+
+            // Sincronizamos históricos
+            if (unidadPadre != null) {
+                sincronizarHistoricosOrganismo(padre, unidadPadre);// históricos del padre
+            }
+
+            //Procesamos los históricos de los organismos
+            for (UnidadTF unidadTF : arbol) { // Sincronizamos los históricos del arbol.
+                if (unidadTF != null) {
+                    Organismo organismo = organismoEjb.findByCodigo(unidadTF.getCodigo());
+                    sincronizarHistoricosOrganismo(organismo, unidadTF);
+                }
+            }
+
+
+            // Guardamos los datos de la ultima descarga siempre, independiente de si no hay datos actualizados.
+
         }
-
-
-        // Guardamos los datos de la ultima descarga siempre, independiente de si no hay datos actualizados.
         nuevaDescarga(RegwebConstantes.UNIDAD, entidad);
-
-
         log.info("");
         log.info("Finalizada la importacion de Organismos");
         log.info("");
@@ -169,15 +173,20 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
         nuevaDescarga(RegwebConstantes.OFICINA, entidad);
 
-        // Hay que revisar que organismos con libros que son vigentes han podido quedar sin oficinas y guardarlos como pendientes.
+        // En el siguiente for se revisa que organismos con libros que son vigentes han podido quedar sin oficinas y guardarlos como pendientes.
         //Pueden quedar sin oficinas al borrarselas o quitarles las únicas relaciones organizativas que tengan.
+
+
+        // Obtenemos los organismos de la entidad que tienen libros
         List<Organismo> vigentes = organismoEjb.findByEntidadEstadoLibros(entidadId, RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         for (Organismo organismo : vigentes) {
             if (organismo.getLibros() != null && organismo.getLibros().size() > 0) {
                 Set<Oficina> oficinas = new HashSet<Oficina>();  // Utilizamos un Set porque no permite duplicados
-                oficinas.addAll(oficinaEjb.findByOrganismoResponsable(organismo.getId()));
-                oficinas.addAll(relacionOrganizativaOfiLocalEjb.getOficinasByOrganismo(organismo.getId()));
-                if (oficinas.size() == 0) {
+                //oficinas.addAll(oficinaEjb.findByOrganismoResponsable(organismo.getId()));
+                // oficinas.addAll(relacionOrganizativaOfiLocalEjb.getOficinasByOrganismo(organismo.getId()));
+                //Miramos si el organismo tiene oficinas,
+                Boolean tieneOficinas = oficinaEjb.tieneOficinasOrganismo(organismo.getId());
+                if (!tieneOficinas) {//si no tiene se debe guardar en la tabla de pendientes para que los procese el usuario manualmente
                     //guardar pendiente
                     Pendiente pendiente = new Pendiente(organismo.getId(), false, organismo.getEstado().getCodigoEstadoEntidad());
                     pendienteEjb.persist(pendiente);
@@ -243,6 +252,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
               //Guardamos el Organismo
               organismo = organismoEjb.persist(organismo);
           }else{ // Si existe hay que actualizarlo
+              Hibernate.initialize(organismo.getLibros());
               procesarOrganismo(organismo, unidadTF, entidad, cacheEstadoEntidad, cacheProvincia, cacheComunidadAutonoma, cacheNivelAdministracion);
           }
 
@@ -451,7 +461,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
     public void sincronizarHistoricosOrganismo(Organismo organismo, UnidadTF unidadTF) throws Exception {
 
         // Inicializamos sus Historicos, ya la relación está a FetchType.LAZY
-        Hibernate.initialize(organismo.getHistoricoUO());
+        // Hibernate.initialize(organismo.getHistoricoUO());
       List<String> historicos =unidadTF.getHistoricosUO();
       Set<Organismo> historicosOrg = organismo.getHistoricoUO();
       if(!historicos.isEmpty()){

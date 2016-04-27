@@ -1,13 +1,11 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.model.CatComunidadAutonoma;
-import es.caib.regweb3.model.Oficina;
-import es.caib.regweb3.model.Organismo;
-import es.caib.regweb3.model.RelacionSirOfi;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
+import org.hibernate.Hibernate;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
@@ -40,11 +38,19 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     @EJB(mappedName = "regweb3/OficinaEJB/local")
     public OficinaLocal oficinaEjb;
 
+    @EJB(name = "LibroEJB")
+    public LibroLocal libroEjb;
+
     @Override
     public Organismo findById(Long id) throws Exception {
 
-        return em.find(Organismo.class, id);
+        Organismo organismo = em.find(Organismo.class, id);
+        Hibernate.initialize(organismo.getLibros());
+        Hibernate.initialize(organismo.getHistoricoUO());
+
+        return organismo;
     }
+
 
     @Override
     @SuppressWarnings(value = "unchecked")
@@ -164,21 +170,37 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     @Override
     public List<Organismo> findByEntidadLibros(Long entidad) throws Exception {
 
-        Query q = em.createQuery("Select distinct(organismo) from Organismo as organismo" +
+        //Obtenemos aquellos organismos de la entidad que tienen libros. Esto devuelve los organismos sin los libros
+        Query q = em.createQuery("Select distinct(organismo.id), organismo.codigo, organismo.denominacion, organismo.estado.id from Organismo as organismo" +
                 " inner join  organismo.libros as libros " +
                 " where organismo.entidad.id = :entidad ");
 
+
         q.setParameter("entidad", entidad);
 
+        // Montamos los organismos con los campos obtenidos de la query anterior, pero faltan los libros.
+        List<Object[]> result = q.getResultList();
+        List<Organismo> organismos = new ArrayList<Organismo>();
+        for (Object[] object : result) {
+            Organismo org = new Organismo((Long) object[0], (String) object[1], (String) object[2]);
+            organismos.add(org);
+        }
 
-        return q.getResultList();
+        // Realizamos una segunda query para obtener los libros de los organismos, ya que en la query inicial ha sido
+        // imposible
+        for (Organismo org : organismos) {
+            List<Libro> libros = libroEjb.getLibrosOrganismoLigero(org.getId());
+            org.setLibros(libros);
+        }
+
+        return organismos;
 
     }
 
     @Override
     public List<Organismo> findByEntidadEstadoLibros(Long entidad, String estado) throws Exception {
 
-        Query q = em.createQuery("Select distinct(organismo) from Organismo as organismo" +
+        Query q = em.createQuery("Select distinct(organismo.id), organismo.estado from Organismo as organismo" +
                 " inner join  organismo.libros as libros " +
                 " where organismo.entidad.id = :entidad and organismo.estado.codigoEstadoEntidad= :estado");
 
@@ -186,7 +208,22 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         q.setParameter("estado", estado);
 
 
-        return q.getResultList();
+        List<Object[]> result = q.getResultList();
+        List<Organismo> organismos = new ArrayList<Organismo>();
+        for (Object[] object : result) {
+            Organismo org = new Organismo((Long) object[0]);
+            org.setEstado((CatEstadoEntidad) object[1]);
+            organismos.add(org);
+        }
+
+        // Realizamos una segunda query para obtener los libros de los organismos, ya que en la query inicial ha sido
+        // imposible
+        for (Organismo org : organismos) {
+            List<Libro> libros = libroEjb.getLibrosOrganismoLigero(org.getId());
+            org.setLibros(libros);
+        }
+
+        return organismos;
 
     }
 
@@ -355,8 +392,11 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         } else {
             paginacion = new Paginacion(0, 0);
         }
-
-        paginacion.setListado(q.getResultList());
+        List<Organismo> organismos = q.getResultList();
+        for (Organismo org : organismos) {
+            Hibernate.initialize(org.getLibros());
+        }
+        paginacion.setListado(organismos);
 
         return paginacion;
 
@@ -503,4 +543,24 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         }
         return true;
     }
+
+
+    public void obtenerHistoricosFinales(Long id, Set<Organismo> historicosFinales) throws Exception {
+        Organismo org = em.find(Organismo.class, id);
+        Hibernate.initialize(org.getHistoricoUO());
+        Set<Organismo> parciales = org.getHistoricoUO();
+        for (Organismo parcial : parciales) {
+            Organismo par = em.find(Organismo.class, parcial.getId());
+            Hibernate.initialize(par.getHistoricoUO());
+            if (par.getHistoricoUO().size() == 0) {
+                historicosFinales.add(par);
+            } else {
+                obtenerHistoricosFinales(par.getId(), historicosFinales);
+            }
+        }
+
+    }
+
+
+
 }

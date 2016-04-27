@@ -68,6 +68,14 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
     public List<Libro> getLibrosOrganismo(Long idOrganismo) throws Exception;
 
     /**
+     * Obtiene los libros de un organismo solo cargando el id, la denominación y el estado
+     * @param idOrganismo
+     * @return
+     * @throws Exception
+     */
+    public List<Libro> getLibrosOrganismoLigero(Long idOrganismo) throws Exception;
+
+    /**
      * Retorna todos los Libros de relacionados con algún Organismos de la Entidad, activo o no
      * @param idEntidad
      * @return

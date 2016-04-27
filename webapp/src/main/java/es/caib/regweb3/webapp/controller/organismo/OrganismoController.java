@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Fundació BIT.
@@ -137,6 +138,7 @@ public class OrganismoController extends BaseController {
      */
     @RequestMapping(value = "/arbolList", method = RequestMethod.GET)
     public ModelAndView arbolList(HttpServletRequest request) throws Exception {
+        Long start = System.currentTimeMillis();
 
         ModelAndView mav = new ModelAndView("organismo/arbolList");
 
@@ -293,6 +295,8 @@ public class OrganismoController extends BaseController {
         int librosTotal = librosOrganismoPrimerNivel.size() + librosOrganismoSegundoNivel.size() + librosOrganismoTercerNivel.size() +
                 librosOrganismoCuartoNivel.size() + librosOrganismoQuintoNivel.size() + librosOrganismoSextoNivel.size() +
                 librosOrganismoSeptimoNivel.size();
+        Long end = System.currentTimeMillis();
+        log.info("TIEMPO CARGA ARBOLarbol: " + formatElapsedTime(end - start));
 
         mav.addObject("organismosPrimerNivel", organismosPrimerNivel);
         mav.addObject("organismosSegundoNivel", organismosSegundoNivel);
@@ -327,6 +331,17 @@ public class OrganismoController extends BaseController {
 
         binder.registerCustomEditor(Usuario.class, "administradores",new UsuarioEditor());
         binder.setValidator(this.libroValidator);
+    }
+
+
+    public static String formatElapsedTime(final long l) {
+        final long hr = TimeUnit.MILLISECONDS.toHours(l);
+        final long min = TimeUnit.MILLISECONDS.toMinutes(l - TimeUnit.HOURS.toMillis(hr));
+        final long sec = TimeUnit.MILLISECONDS.toSeconds(l - TimeUnit.HOURS.toMillis(hr)
+                - TimeUnit.MINUTES.toMillis(min));
+        final long ms = TimeUnit.MILLISECONDS.toMillis(l - TimeUnit.HOURS.toMillis(hr)
+                - TimeUnit.MINUTES.toMillis(min) - TimeUnit.SECONDS.toMillis(sec));
+        return String.format("%02d:%02d:%02d.%03d", hr, min, sec, ms);
     }
 
 }

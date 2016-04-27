@@ -578,6 +578,10 @@ public class EntidadController extends BaseController {
         UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findById(idUsuarioEntidad);
         List<Libro> libros = libroEjb.getLibrosEntidad(entidad.getId());
 
+        for (Libro libro : libros) {
+            log.info(libro.getNombre());
+        }
+
         IUserInformationPlugin loginPlugin = RegwebLoginPluginManager.getInstance();
         RolesInfo rolesInfo = loginPlugin.getRolesByUsername(usuarioEntidad.getUsuario().getIdentificador());
         
@@ -595,6 +599,11 @@ public class EntidadController extends BaseController {
             permisoLibroUsuarioForm.setUsuarioEntidad(usuarioEntidad);
 
             permisoLibroUsuarioForm.setPermisoLibroUsuarios(permisoLibroUsuarioEjb.findByUsuarioLibros(usuarioEntidad.getId(), libros));
+
+            for (PermisoLibroUsuario plu : permisoLibroUsuarioForm.getPermisoLibroUsuarios()) {
+                log.info(plu.getActivo() + " - " + plu.getLibro() + "  - " + plu.getUsuario());
+
+            }
 
             model.addAttribute(permisoLibroUsuarioForm);
             model.addAttribute("entidad", entidad);
@@ -751,12 +760,12 @@ public class EntidadController extends BaseController {
                 List<Libro> libros = organismoExtinguido.getLibros();
                 //Si solo tiene un organismo que le sustituye se asignan los libros a ese organismo
 
-
                 Set<Organismo> historicosUOconOficinas= new HashSet<Organismo>();
                 //Obtenemos los historicos hasta el final para que el usuario decida donde poner el libro.
                 Set<Organismo> historicosFinales= new HashSet<Organismo>();
-                obtenerHistoricosFinales(organismoExtinguido,historicosFinales);
+                organismoEjb.obtenerHistoricosFinales(organismoExtinguido.getId(), historicosFinales);
                 log.info("HISTORICOS FINALES "+ historicosFinales.size());
+                //Además de estos históricos finales sólo interesan los que tienen oficinas, ya que para asignarle los libros debe tener oficinas
                 for(Organismo orgHistorico:historicosFinales){
                     if(oficinaEjb.tieneOficinasOrganismo(orgHistorico.getId())){
                         historicosUOconOficinas.add(orgHistorico);
@@ -764,18 +773,17 @@ public class EntidadController extends BaseController {
                 }
                 //Reasignamos los historicosConOficina pero no se guardan en BD
                 organismoExtinguido.setHistoricoUO(historicosUOconOficinas);
-                //Si no tiene historicos lo marcamos como error
+                //Si no tiene historicos  y tiene libros por ubicar, lo marcamos como error
                 if(historicosUOconOficinas.size()==0){
                     if(libros.size()>0) {
                         organismosConError.add(organismoExtinguido);
                     }
-                }else {
-                    if (historicosUOconOficinas.size() == 1/*organismoExtinguido.getHistoricoUO().size() == 1*/) {// Se procesa internamente
+                } else { //Si tiene históricos
+                    if (historicosUOconOficinas.size() == 1) {// Se procesa internamente de manera autómatica porque solo hay 1 histórico
                         log.info("Se procesa automaticamente porque solo tiene 1 historico" + organismoExtinguido.getDenominacion() + ":" + organismoExtinguido.getCodigo());
                         if (libros.size() > 0) {
                             log.info("El organismo " + organismoExtinguido.getDenominacion() + " con 1 histórico tiene libros");
                             // Asignamos libros misma numeración
-                            Hibernate.initialize(organismoExtinguido.getHistoricoUO()); // Inicializamos sus Historicos, ya la relación está a FetchType.LAZY
                             Organismo orgSustituye = new ArrayList<Organismo>(organismoExtinguido.getHistoricoUO()).get(0);
 
                             //Asignamos el libro al organismo que lo sustituye
@@ -799,7 +807,6 @@ public class EntidadController extends BaseController {
                         log.info("Entramos en historicos +1 de extinguido(no se procesan automaticamente): " + organismoExtinguido.getDenominacion() + ":" + organismoExtinguido.getCodigo());
                         if (libros.size() > 0) {//Si tiene libros se añade para procesarlo
                             log.info("Tiene libros el organismo:" + organismoExtinguido.getDenominacion() + ":" + organismoExtinguido.getCodigo());
-                            Hibernate.initialize(organismoExtinguido.getHistoricoUO()); // Inicializamos sus Historicos, ya la relación está a FetchType.LAZY
                             organismosExtinguidos.add(organismoExtinguido);
                         } else {// no tiene libros, no se hace nada pero se actualiza el estado a procesado
                             pendiente.setProcesado(true);
@@ -1032,21 +1039,6 @@ public class EntidadController extends BaseController {
         binder.setValidator(this.entidadValidator);
     }
 
-
-    private void obtenerHistoricosFinales(Organismo organismo, Set<Organismo> historicosFinales) throws Exception{
-        Hibernate.initialize(organismo.getHistoricoUO()); // Inicializamos sus Historicos, ya la relación está a FetchType.LAZY
-        Set<Organismo> parciales=organismo.getHistoricoUO();
-        log.info("PARCIALES DE " +organismo.getCodigo() +":"+ parciales.size());
-        log.info("HISTORICOS FINALES: "+ historicosFinales.size());
-        for(Organismo parcial:parciales){
-            if(parcial.getHistoricoUO().size()==0){
-                historicosFinales.add(parcial);
-            }else{
-               obtenerHistoricosFinales(parcial,historicosFinales);
-            }
-        }
-
-    }
 
 
     public byte[] redimensionaLogoMenu(byte[] logoMenu) throws IOException {

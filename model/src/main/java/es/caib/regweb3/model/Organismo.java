@@ -229,7 +229,7 @@ public class Organismo implements Serializable {
     }
 
 
-    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL, mappedBy="organismo")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "organismo")
      /*@LazyCollection(LazyCollectionOption.FALSE)*/
     @OrderColumn(name = "id")
     @OrderBy("id")

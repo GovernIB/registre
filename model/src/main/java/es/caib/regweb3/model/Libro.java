@@ -67,6 +67,13 @@ public class Libro implements Serializable {
         this.codigo = codigo;
     }
 
+    public Libro(Long id, String nombre, String codigo, Boolean activo) {
+        this.id = id;
+        this.nombre = nombre;
+        this.codigo = codigo;
+        this.activo = activo;
+    }
+
     public Libro(Long id, String nombre, String codigo, Long idOrganismo, String denominacionOrganismo) {
         this.id = id;
         this.codigo = codigo;
