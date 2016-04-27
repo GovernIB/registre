@@ -124,6 +124,7 @@ public class OficioRemisionRtfView extends AbstractView {
         ht.put("(numeroOficio)", ConvertirTexto.toCp1252(oficioRemision.getNumeroOficio().toString()));
         ht.put("(anoOficio)", ConvertirTexto.toCp1252(anoOficio));
         ht.put("(oficina)", ConvertirTexto.toCp1252(oficioRemision.getOficina().getDenominacion()));
+        ht.put("(localidadOficina)", ConvertirTexto.toCp1252(oficioRemision.getOficina().getLocalidad().getNombre()));
         ht.put("(registrosEntrada)", ConvertirTexto.toCp1252(registros));
         ht.put("(data)", ConvertirTexto.toCp1252(fechaActualCa));
         ht.put("(fecha)", ConvertirTexto.toCp1252(fechaActualEs));
