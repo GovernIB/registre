@@ -9,6 +9,7 @@ public class OficioPendienteLlegada {
 
     private Long idRegistroEntrada;
     private Long idLibro;
+    private Long idOrganismoDestinatario;
 
     public OficioPendienteLlegada() {
     }
@@ -31,5 +32,13 @@ public class OficioPendienteLlegada {
 
     public void setIdLibro(Long idLibro) {
         this.idLibro = idLibro;
+    }
+
+    public Long getIdOrganismoDestinatario() {
+        return idOrganismoDestinatario;
+    }
+
+    public void setIdOrganismoDestinatario(Long idOrganismoDestinatario) {
+        this.idOrganismoDestinatario = idOrganismoDestinatario;
     }
 }

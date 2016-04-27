@@ -155,20 +155,11 @@ public class OficioRemisionUtilsBean implements OficioRemisionUtilsLocal {
           Libro libro = libroEjb.findById(oficio.getIdLibro());
 
           RegistroEntrada nuevoRE = new RegistroEntrada();
-
           nuevoRE.setUsuario(usuario);
-
-          if(registroEntrada.getDestino() != null){
-              nuevoRE.setDestino(registroEntrada.getDestino());
-          }else{
-              nuevoRE.setDestinoExternoCodigo(registroEntrada.getDestinoExternoCodigo());
-              nuevoRE.setDestinoExternoDenominacion(registroEntrada.getDestinoExternoDenominacion());
-          }
-
+          nuevoRE.setDestino(new Organismo(oficio.getIdOrganismoDestinatario()));
           nuevoRE.setOficina(oficinaActiva);
           nuevoRE.setEstado(RegwebConstantes.ESTADO_VALIDO);
           nuevoRE.setLibro(libro);
-
           nuevoRE.setRegistroDetalle(registroEntrada.getRegistroDetalle());
 
           synchronized (this){

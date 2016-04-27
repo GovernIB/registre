@@ -116,7 +116,9 @@
                                         <colgroup>
                                             <col width="80">
                                             <col>
-                                            <col>
+                                            <c:if test="${fn:length(libros) > 1}">
+                                                <col>
+                                            </c:if>
                                             <col>
                                             <col>
                                             <col>
@@ -126,7 +128,9 @@
                                         <tr>
                                             <th><spring:message code="registroEntrada.numeroRegistro"/></th>
                                             <th><spring:message code="registroEntrada.fecha"/></th>
-                                            <th><spring:message code="registroEntrada.libro.corto"/></th>
+                                            <c:if test="${fn:length(libros) > 1}">
+                                                <th><spring:message code="registroEntrada.libro.corto"/></th>
+                                            </c:if>
                                             <th><spring:message code="registroEntrada.organismoDestino"/></th>
                                             <th><spring:message code="registroEntrada.extracto"/></th>
                                             <th><spring:message code="registroEntrada.interesados"/></th>
@@ -139,22 +143,60 @@
 
                                                 <c:forEach var="registroEntrada" items="${registrosEntrada}"
                                                            varStatus="status">
-                                                    <%--<form:hidden path="oficios[${status.index}].idRegistroEntrada" value="${registroEntrada.id}"/>--%>
+
                                                     <input type="hidden" id="oficios[${status.index}].idRegistroEntrada"
                                                            name="oficios[${status.index}].idRegistroEntrada"
                                                            value="${registroEntrada.id}"/>
                                                     <tr>
                                                         <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="yyyy"/> / ${registroEntrada.numeroRegistro}</td>
                                                         <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy"/></td>
-                                                        <td><form:select path="oficios[${status.index}].idLibro" items="${libros}" itemLabel="nombre" itemValue="id"/></td>
-                                                        <td>${(empty registroEntrada.destino)? registroEntrada.destinoExternoDenominacion : registroEntrada.destino.denominacion}</td>
+                                                        <c:if test="${fn:length(libros) > 1}">
+                                                            <td><form:select path="oficios[${status.index}].idLibro"
+                                                                             class="chosen-select" items="${libros}"
+                                                                             itemLabel="nombre" itemValue="id"/></td>
+                                                        </c:if>
+                                                        <c:if test="${fn:length(libros) == 1}">
+                                                            <input type="hidden" id="oficios[${status.index}].idLibro"
+                                                                   name="oficios[${status.index}].idLibro"
+                                                                   value="${libros[0].id}"/>
+                                                        </c:if>
+
+                                                        <td>
+                                                            <c:if test="${fn:length(organismosOficinaActiva) > 1}">
+
+                                                                <select id="oficios[${status.index}].idOrganismoDestinatario"
+                                                                        name="oficios[${status.index}].idOrganismoDestinatario"
+                                                                        class="chosen-select">
+                                                                    <c:forEach items="${organismosOficinaActiva}"
+                                                                               var="organismo">
+                                                                        <option value="${organismo.id}"
+                                                                                <c:if test="${registroEntrada.destino.id == organismo.id}">selected="selected"</c:if>>${organismo.denominacion}</option>
+                                                                    </c:forEach>
+                                                                </select>
+
+                                                                <%--<form:select path="oficios[${status.index}].idOrganismoDestinatario" class="chosen-select" items="${organismosOficinaActiva}" itemLabel="denominacion" itemValue="id"/>--%>
+                                                            </c:if>
+
+                                                            <c:if test="${fn:length(organismosOficinaActiva) == 1}">
+                                                                ${registroEntrada.destino.denominacion}
+                                                                <input type="hidden"
+                                                                       id="oficios[${status.index}].idOrganismoDestinatario"
+                                                                       name="oficios[${status.index}].idOrganismoDestinatario"
+                                                                       value="${registroEntrada.destino.id}"/>
+                                                            </c:if>
+                                                        </td>
+
                                                         <td>${registroEntrada.registroDetalle.extracto}</td>
                                                         <td class="center"><label class="no-bold representante" rel="ayuda"
                                                                                   data-content="${registroEntrada.registroDetalle.nombreInteresadosHtml}"
                                                                                   data-toggle="popover">${registroEntrada.registroDetalle.totalInteresados}</label>
                                                         </td>
                                                         <td class="center">
-                                                            <a class="btn btn-info btn-sm" href="<c:url value="/registroEntrada/${registroEntrada.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
+                                                            <a class="btn btn-info btn-sm"
+                                                               href="<c:url value="/registroEntrada/${registroEntrada.id}/detalle"/>"
+                                                               target="_blank"
+                                                               title="<spring:message code="registroEntrada.detalle"/>"><span
+                                                                    class="fa fa-eye"></span></a>
                                                         </td>
                                                     </tr>
                                                 </c:forEach>

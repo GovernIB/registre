@@ -549,13 +549,6 @@ public class OficioRemisionController extends BaseController {
 
         ModelAndView mav = new ModelAndView("oficioRemision/oficiosPendientesLlegadaList");
 
-        Oficina oficinaActiva = getOficinaActiva(request);
-
-        // Buscamos los Organismos en los que la OficinaActiva puede registrar
-        /*Set<Organismo> organismos = new HashSet<Organismo>();
-        organismos.add(oficinaActiva.getOrganismoResponsable());
-        organismos.addAll(relacionOrganizativaOfiLocalEjb.getOrganismosByOficina(oficinaActiva.getId()));*/
-
         List<OficioRemision> oficiosPendientesLlegada = oficioRemisionEjb.oficiosPendientesLlegada(getOrganismosOficinaActiva(request));
 
         model.addAttribute("oficiosPendientesLlegada", oficiosPendientesLlegada);
@@ -580,6 +573,8 @@ public class OficioRemisionController extends BaseController {
         // Obtenemos los libros donde el UsuarioEntidad puede registrar
         model.addAttribute("libros", getLibrosRegistroEntrada(request));
 
+        // Obtenemos los Organismos destinatários donde la Oficina puede registrar
+        model.addAttribute("organismosOficinaActiva", getOrganismosOficinaActiva(request));
 
         model.addAttribute("oficioPendienteLlegadaForm", new OficioPendienteLlegadaForm());
         model.addAttribute("modeloOficioRemision", new ModeloOficioRemision());
@@ -612,7 +607,7 @@ public class OficioRemisionController extends BaseController {
 
         for (OficioPendienteLlegada oficio : oficios) {
 
-            log.info("OficioPendiente: " + oficio.getIdRegistroEntrada() +" -- "+oficio.getIdLibro());
+            log.info("OficioPendiente: " + oficio.getIdRegistroEntrada() + " - libro: " + oficio.getIdLibro() + " - destinatario: " + oficio.getIdOrganismoDestinatario());
 
         }
 
