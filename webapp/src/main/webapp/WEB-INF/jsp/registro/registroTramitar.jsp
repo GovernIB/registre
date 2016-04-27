@@ -4,11 +4,13 @@
 <c:if test="${param.tipoRegistro == 'registroEntrada'}">
     <c:url value="/registroEntrada/${registro.id}/sello" var="urlSello"/>
     <c:url value="/registroEntrada/${registro.id}/enviardestinatarios" var="urlDistribuir"/>
+    <c:url value="/registroEntrada/${registro.id}/detalle" var="urlDetalle"/>
 </c:if>
 
 <c:if test="${param.tipoRegistro == 'registroSalida'}">
     <c:url value="/registroSalida/${registro.id}/sello" var="urlSello"/>
-    <c:url value="/registroSalida/${registro.id}/enviardestinatarios" var="urlDistribuir"/>
+    <%-- <c:url value="/registroSalida/${registro.id}/enviardestinatarios" var="urlDistribuir"/>
+     <c:url value="/registroSalida/${registro.id}/detalle" var="urlDetalle"/>--%>
 </c:if>
 
 <%--Modal tramitar--%>
@@ -81,7 +83,7 @@
                 </div>
                 <div class="form-actions">
                     <input type="submit" class="btn btn-warning btn-sm" value="<spring:message
-                        code="regweb.enviar"/>" onclick="enviarDestinatarios('${urlDistribuir}')">
+                        code="regweb.enviar"/>" onclick="enviarDestinatarios('${urlDistribuir}','${urlDetalle}')">
                     <input type="button" value="Cancelar" class="btn btn-default btn-sm" data-dismiss="modal">
                 </div>
 

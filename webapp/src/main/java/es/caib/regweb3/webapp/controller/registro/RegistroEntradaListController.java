@@ -386,7 +386,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
 
             registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, usuarioEntidad);
-            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.tramitar.ok.nodestinatarios"));
+            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.tramitar.ok"));
 
         } catch (Exception e) {
             Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));

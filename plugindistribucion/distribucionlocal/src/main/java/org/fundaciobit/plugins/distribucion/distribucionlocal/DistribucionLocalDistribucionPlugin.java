@@ -82,8 +82,8 @@ public class DistribucionLocalDistribucionPlugin extends AbstractPluginPropertie
 
 
         destinatarios.setPropuestos(destinatariosPropuestos);
-        destinatarios.setPosibles(destinatariosPosibles);
-        destinatarios.setModificable(false);
+        //   destinatarios.setPosibles(destinatariosPosibles);
+        //destinatarios.setModificable(false);
 
         return destinatarios;
     }
