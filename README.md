@@ -2,6 +2,7 @@
 
 
 **Descripció**
+
 Aplicació web de registre d'anotacions a llibres d'entrada i sortida
 
 **Característiques**
@@ -16,4 +17,19 @@ Aplicació web de registre d'anotacions a llibres d'entrada i sortida
 * Programming Language: Java
 * Translations: Catalan & Spanish
 * User Interface: Web-based
+
+**Captures de pantalla**
+
+![Administració](https://raw.githubusercontent.com/GovernIB/registre/binaris/projectinfo_Attachments/screenshots/314175.jpg)<br/>
+Administració
+
+![Consultar Sortides](https://raw.githubusercontent.com/GovernIB/registre/binaris/projectinfo_Attachments/screenshots/314173.jpg)<br/>
+Consultar Sortides
+
+![Menú Principal](https://raw.githubusercontent.com/GovernIB/registre/binaris/projectinfo_Attachments/screenshots/314169.jpg)<br/>
+Menú Principal
+
+![Registrar Entrada](https://raw.githubusercontent.com/GovernIB/registre/binaris/projectinfo_Attachments/screenshots/314171.jpg)<br/>
+Registrar Entrada
+
 
