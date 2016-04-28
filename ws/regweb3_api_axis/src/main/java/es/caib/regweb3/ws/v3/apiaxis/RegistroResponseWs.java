@@ -82,60 +82,60 @@ public class RegistroResponseWs  implements java.io.Serializable {
     }
 
     public RegistroResponseWs(
-            es.caib.regweb3.ws.v3.apiaxis.AnexoWs[] anexos,
-            java.lang.String aplicacion,
-            java.lang.String codigoAsuntoCodigo,
-            java.lang.String codigoAsuntoDescripcion,
-            java.lang.String codigoUsuario,
-            java.lang.String contactoUsuario,
-            java.lang.String docFisicaCodigo,
-            java.lang.String docFisicaDescripcion,
-            java.lang.String entidadCodigo,
-            java.lang.String entidadDenominacion,
-            java.lang.String expone,
-            java.lang.String extracto,
-            java.util.Calendar fechaOrigen,
-            java.util.Calendar fechaRegistro,
-            java.lang.String idiomaCodigo,
-            java.lang.String idiomaDescripcion,
-            es.caib.regweb3.ws.v3.apiaxis.InteresadoWs[] interesados,
-            java.lang.String libroCodigo,
-            java.lang.String libroDescripcion,
-            java.lang.String nombreUsuario,
-            java.lang.String numExpediente,
-            java.lang.String numTransporte,
-            int numeroRegistro,
-            java.lang.String numeroRegistroFormateado,
-            java.lang.String numeroRegistroOrigen,
-            java.lang.String observaciones,
-            java.lang.String oficinaCodigo,
-            java.lang.String oficinaDenominacion,
-            java.lang.String refExterna,
-            java.lang.String solicita,
-            java.lang.String tipoAsuntoCodigo,
-            java.lang.String tipoAsuntoDescripcion,
-            java.lang.String tipoTransporteCodigo,
-            java.lang.String tipoTransporteDescripcion,
-            java.lang.String version) {
+           es.caib.regweb3.ws.v3.apiaxis.AnexoWs[] anexos,
+           java.lang.String aplicacion,
+           java.lang.String codigoAsuntoCodigo,
+           java.lang.String codigoAsuntoDescripcion,
+           java.lang.String codigoUsuario,
+           java.lang.String contactoUsuario,
+           java.lang.String docFisicaCodigo,
+           java.lang.String docFisicaDescripcion,
+           java.lang.String entidadCodigo,
+           java.lang.String entidadDenominacion,
+           java.lang.String expone,
+           java.lang.String extracto,
+           java.util.Calendar fechaOrigen,
+           java.util.Calendar fechaRegistro,
+           java.lang.String idiomaCodigo,
+           java.lang.String idiomaDescripcion,
+           es.caib.regweb3.ws.v3.apiaxis.InteresadoWs[] interesados,
+           java.lang.String libroCodigo,
+           java.lang.String libroDescripcion,
+           java.lang.String nombreUsuario,
+           java.lang.String numExpediente,
+           java.lang.String numTransporte,
+           int numeroRegistro,
+           java.lang.String numeroRegistroFormateado,
+           java.lang.String numeroRegistroOrigen,
+           java.lang.String observaciones,
+           java.lang.String oficinaCodigo,
+           java.lang.String oficinaDenominacion,
+           java.lang.String refExterna,
+           java.lang.String solicita,
+           java.lang.String tipoAsuntoCodigo,
+           java.lang.String tipoAsuntoDescripcion,
+           java.lang.String tipoTransporteCodigo,
+           java.lang.String tipoTransporteDescripcion,
+           java.lang.String version) {
            this.anexos = anexos;
            this.aplicacion = aplicacion;
-        this.codigoAsuntoCodigo = codigoAsuntoCodigo;
-        this.codigoAsuntoDescripcion = codigoAsuntoDescripcion;
+           this.codigoAsuntoCodigo = codigoAsuntoCodigo;
+           this.codigoAsuntoDescripcion = codigoAsuntoDescripcion;
            this.codigoUsuario = codigoUsuario;
            this.contactoUsuario = contactoUsuario;
-        this.docFisicaCodigo = docFisicaCodigo;
-        this.docFisicaDescripcion = docFisicaDescripcion;
+           this.docFisicaCodigo = docFisicaCodigo;
+           this.docFisicaDescripcion = docFisicaDescripcion;
            this.entidadCodigo = entidadCodigo;
            this.entidadDenominacion = entidadDenominacion;
            this.expone = expone;
            this.extracto = extracto;
            this.fechaOrigen = fechaOrigen;
            this.fechaRegistro = fechaRegistro;
-        this.idiomaCodigo = idiomaCodigo;
-        this.idiomaDescripcion = idiomaDescripcion;
+           this.idiomaCodigo = idiomaCodigo;
+           this.idiomaDescripcion = idiomaDescripcion;
            this.interesados = interesados;
-        this.libroCodigo = libroCodigo;
-        this.libroDescripcion = libroDescripcion;
+           this.libroCodigo = libroCodigo;
+           this.libroDescripcion = libroDescripcion;
            this.nombreUsuario = nombreUsuario;
            this.numExpediente = numExpediente;
            this.numTransporte = numTransporte;
@@ -147,10 +147,10 @@ public class RegistroResponseWs  implements java.io.Serializable {
            this.oficinaDenominacion = oficinaDenominacion;
            this.refExterna = refExterna;
            this.solicita = solicita;
-        this.tipoAsuntoCodigo = tipoAsuntoCodigo;
-        this.tipoAsuntoDescripcion = tipoAsuntoDescripcion;
-        this.tipoTransporteCodigo = tipoTransporteCodigo;
-        this.tipoTransporteDescripcion = tipoTransporteDescripcion;
+           this.tipoAsuntoCodigo = tipoAsuntoCodigo;
+           this.tipoAsuntoDescripcion = tipoAsuntoDescripcion;
+           this.tipoTransporteCodigo = tipoTransporteCodigo;
+           this.tipoTransporteDescripcion = tipoTransporteDescripcion;
            this.version = version;
     }
 
@@ -888,25 +888,25 @@ public class RegistroResponseWs  implements java.io.Serializable {
             ((this.aplicacion==null && other.getAplicacion()==null) || 
              (this.aplicacion!=null &&
               this.aplicacion.equals(other.getAplicacion()))) &&
-                ((this.codigoAsuntoCodigo == null && other.getCodigoAsuntoCodigo() == null) ||
-                        (this.codigoAsuntoCodigo != null &&
-                                this.codigoAsuntoCodigo.equals(other.getCodigoAsuntoCodigo()))) &&
-                ((this.codigoAsuntoDescripcion == null && other.getCodigoAsuntoDescripcion() == null) ||
-                        (this.codigoAsuntoDescripcion != null &&
-                                this.codigoAsuntoDescripcion.equals(other.getCodigoAsuntoDescripcion()))) &&
-                ((this.codigoUsuario == null && other.getCodigoUsuario() == null) ||
+            ((this.codigoAsuntoCodigo==null && other.getCodigoAsuntoCodigo()==null) || 
+             (this.codigoAsuntoCodigo!=null &&
+              this.codigoAsuntoCodigo.equals(other.getCodigoAsuntoCodigo()))) &&
+            ((this.codigoAsuntoDescripcion==null && other.getCodigoAsuntoDescripcion()==null) || 
+             (this.codigoAsuntoDescripcion!=null &&
+              this.codigoAsuntoDescripcion.equals(other.getCodigoAsuntoDescripcion()))) &&
+            ((this.codigoUsuario==null && other.getCodigoUsuario()==null) || 
              (this.codigoUsuario!=null &&
               this.codigoUsuario.equals(other.getCodigoUsuario()))) &&
             ((this.contactoUsuario==null && other.getContactoUsuario()==null) || 
              (this.contactoUsuario!=null &&
               this.contactoUsuario.equals(other.getContactoUsuario()))) &&
-                ((this.docFisicaCodigo == null && other.getDocFisicaCodigo() == null) ||
-                        (this.docFisicaCodigo != null &&
-                                this.docFisicaCodigo.equals(other.getDocFisicaCodigo()))) &&
-                ((this.docFisicaDescripcion == null && other.getDocFisicaDescripcion() == null) ||
-                        (this.docFisicaDescripcion != null &&
-                                this.docFisicaDescripcion.equals(other.getDocFisicaDescripcion()))) &&
-                ((this.entidadCodigo == null && other.getEntidadCodigo() == null) ||
+            ((this.docFisicaCodigo==null && other.getDocFisicaCodigo()==null) || 
+             (this.docFisicaCodigo!=null &&
+              this.docFisicaCodigo.equals(other.getDocFisicaCodigo()))) &&
+            ((this.docFisicaDescripcion==null && other.getDocFisicaDescripcion()==null) || 
+             (this.docFisicaDescripcion!=null &&
+              this.docFisicaDescripcion.equals(other.getDocFisicaDescripcion()))) &&
+            ((this.entidadCodigo==null && other.getEntidadCodigo()==null) || 
              (this.entidadCodigo!=null &&
               this.entidadCodigo.equals(other.getEntidadCodigo()))) &&
             ((this.entidadDenominacion==null && other.getEntidadDenominacion()==null) || 
@@ -924,22 +924,22 @@ public class RegistroResponseWs  implements java.io.Serializable {
             ((this.fechaRegistro==null && other.getFechaRegistro()==null) || 
              (this.fechaRegistro!=null &&
               this.fechaRegistro.equals(other.getFechaRegistro()))) &&
-                ((this.idiomaCodigo == null && other.getIdiomaCodigo() == null) ||
-                        (this.idiomaCodigo != null &&
-                                this.idiomaCodigo.equals(other.getIdiomaCodigo()))) &&
-                ((this.idiomaDescripcion == null && other.getIdiomaDescripcion() == null) ||
-                        (this.idiomaDescripcion != null &&
-                                this.idiomaDescripcion.equals(other.getIdiomaDescripcion()))) &&
-                ((this.interesados == null && other.getInteresados() == null) ||
+            ((this.idiomaCodigo==null && other.getIdiomaCodigo()==null) || 
+             (this.idiomaCodigo!=null &&
+              this.idiomaCodigo.equals(other.getIdiomaCodigo()))) &&
+            ((this.idiomaDescripcion==null && other.getIdiomaDescripcion()==null) || 
+             (this.idiomaDescripcion!=null &&
+              this.idiomaDescripcion.equals(other.getIdiomaDescripcion()))) &&
+            ((this.interesados==null && other.getInteresados()==null) || 
              (this.interesados!=null &&
               java.util.Arrays.equals(this.interesados, other.getInteresados()))) &&
-                ((this.libroCodigo == null && other.getLibroCodigo() == null) ||
-                        (this.libroCodigo != null &&
-                                this.libroCodigo.equals(other.getLibroCodigo()))) &&
-                ((this.libroDescripcion == null && other.getLibroDescripcion() == null) ||
-                        (this.libroDescripcion != null &&
-                                this.libroDescripcion.equals(other.getLibroDescripcion()))) &&
-                ((this.nombreUsuario == null && other.getNombreUsuario() == null) ||
+            ((this.libroCodigo==null && other.getLibroCodigo()==null) || 
+             (this.libroCodigo!=null &&
+              this.libroCodigo.equals(other.getLibroCodigo()))) &&
+            ((this.libroDescripcion==null && other.getLibroDescripcion()==null) || 
+             (this.libroDescripcion!=null &&
+              this.libroDescripcion.equals(other.getLibroDescripcion()))) &&
+            ((this.nombreUsuario==null && other.getNombreUsuario()==null) || 
              (this.nombreUsuario!=null &&
               this.nombreUsuario.equals(other.getNombreUsuario()))) &&
             ((this.numExpediente==null && other.getNumExpediente()==null) || 
@@ -970,19 +970,19 @@ public class RegistroResponseWs  implements java.io.Serializable {
             ((this.solicita==null && other.getSolicita()==null) || 
              (this.solicita!=null &&
               this.solicita.equals(other.getSolicita()))) &&
-                ((this.tipoAsuntoCodigo == null && other.getTipoAsuntoCodigo() == null) ||
-                        (this.tipoAsuntoCodigo != null &&
-                                this.tipoAsuntoCodigo.equals(other.getTipoAsuntoCodigo()))) &&
-                ((this.tipoAsuntoDescripcion == null && other.getTipoAsuntoDescripcion() == null) ||
-                        (this.tipoAsuntoDescripcion != null &&
-                                this.tipoAsuntoDescripcion.equals(other.getTipoAsuntoDescripcion()))) &&
-                ((this.tipoTransporteCodigo == null && other.getTipoTransporteCodigo() == null) ||
-                        (this.tipoTransporteCodigo != null &&
-                                this.tipoTransporteCodigo.equals(other.getTipoTransporteCodigo()))) &&
-                ((this.tipoTransporteDescripcion == null && other.getTipoTransporteDescripcion() == null) ||
-                        (this.tipoTransporteDescripcion != null &&
-                                this.tipoTransporteDescripcion.equals(other.getTipoTransporteDescripcion()))) &&
-                ((this.version == null && other.getVersion() == null) ||
+            ((this.tipoAsuntoCodigo==null && other.getTipoAsuntoCodigo()==null) || 
+             (this.tipoAsuntoCodigo!=null &&
+              this.tipoAsuntoCodigo.equals(other.getTipoAsuntoCodigo()))) &&
+            ((this.tipoAsuntoDescripcion==null && other.getTipoAsuntoDescripcion()==null) || 
+             (this.tipoAsuntoDescripcion!=null &&
+              this.tipoAsuntoDescripcion.equals(other.getTipoAsuntoDescripcion()))) &&
+            ((this.tipoTransporteCodigo==null && other.getTipoTransporteCodigo()==null) || 
+             (this.tipoTransporteCodigo!=null &&
+              this.tipoTransporteCodigo.equals(other.getTipoTransporteCodigo()))) &&
+            ((this.tipoTransporteDescripcion==null && other.getTipoTransporteDescripcion()==null) || 
+             (this.tipoTransporteDescripcion!=null &&
+              this.tipoTransporteDescripcion.equals(other.getTipoTransporteDescripcion()))) &&
+            ((this.version==null && other.getVersion()==null) || 
              (this.version!=null &&
               this.version.equals(other.getVersion())));
         __equalsCalc = null;

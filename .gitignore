@@ -2,3 +2,6 @@ target
 .classpath
 .project
 .settings/ 
+/ws/regweb3_api/dependency-reduced-pom.xml
+/ws/regweb3_api_axis/dependency-reduced-pom.xml
+/utils/src/main/java/es/caib/regweb3/utils/TimeStamp.java

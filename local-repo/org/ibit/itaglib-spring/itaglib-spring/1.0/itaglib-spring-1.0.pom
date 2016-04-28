@@ -1,0 +1,106 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.ibit.itaglib-spring</groupId>
+  <artifactId>itaglib-spring</artifactId>
+  <packaging>jar</packaging>
+  <version>1.0</version>
+  <name>itaglib-spring</name>
+  <url>http://maven.apache.org</url>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+	
+	
+	
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-webmvc</artifactId>
+		<version>3.2.6.RELEASE</version>
+    </dependency>
+	
+	<dependency>
+		<groupId>javax</groupId>
+		<artifactId>javaee-api</artifactId>
+		<version>6.0</version>
+		<scope>provided</scope>
+	</dependency>
+
+	<dependency>
+		<groupId>javax.servlet</groupId>
+		<artifactId>jstl</artifactId>
+		<version>1.2</version>
+		<scope>provided</scope>
+	</dependency>
+	
+	<!-- Apache Commons BeanUtils -->
+	<dependency>
+		<groupId>commons-beanutils</groupId>
+		<artifactId>commons-beanutils</artifactId>
+		<version>1.9.1</version>
+		<scope>provided</scope>
+	</dependency>
+	
+	<dependency>
+		<groupId>commons-lang</groupId>
+		<artifactId>commons-lang</artifactId>
+		<version>1.0.1</version>
+		<scope>provided</scope>
+	</dependency>
+
+	
+  </dependencies>
+  
+  
+   <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <source>1.6</source>
+                        <target>1.6</target>
+                    </configuration>
+                </plugin>
+		    </plugins>
+        </pluginManagement>
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh</artifactId>
+                <version>2.4</version>
+            </extension>
+        </extensions>
+		
+    </build>
+	
+	<distributionManagement>
+        <site>
+            <id>es.caib.regweb</id>
+            <url>scp://shell.sourceforge.net/home/project-web/registre/htdocs/maven/itaglib-spring</url>
+        </site>
+        <repository>
+            <id>es.caib.regweb</id>
+            <name>ITagLib-Spring Maven Repository</name>
+            <url>scp://shell.sourceforge.net/home/project-web/registre/htdocs/maven/itaglib-spring</url>
+        </repository>
+        
+        <!--   COM UTILITZAR: AFEGIR AQUEST CODI AL pom.xml    -->
+        <!--
+        <repositories>
+           <repository>
+             <id>itagelib-spring-maven-repos</id>
+             <nameITagLib-Spring Maven Repository</name>
+             <url>http://registre.sourceforge.net/maven/itaglib-spring</url>
+           </repository>
+        <repositories>
+        -->
+
+    </distributionManagement>
+  
+  
+</project>
