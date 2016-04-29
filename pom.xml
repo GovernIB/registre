@@ -80,9 +80,9 @@
         </repository>
 		
 	    <repository>
-		    <id>dir3caib-maven-repos</id>
-		    <name>Dir3Caib Maven Repository</name>
-		    <url>http://dir3caib.sourceforge.net/maven/</url>
+            <id>dir3caib-maven-repos</id>
+            <name>Dir3CAIB Maven Repository</name>
+            <url>http://GovernIB.github.io/dir3caib/maven/</url>
 	    </repository>
 
         <repository>
