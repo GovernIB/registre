@@ -99,23 +99,14 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         // Obtenemos el Service de los WS de Unidades
         Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService();
 
-        // Obtenemos la Unidad Padre y las dependientes.
-        es.caib.dir3caib.ws.api.unidad.UnidadTF unidadPadre = unidadesService.obtenerUnidad(entidad.getCodigoDir3(), fechaActualizacion, fechaSincronizacion);
-
         List<UnidadTF> arbol = unidadesService.obtenerArbolUnidades(entidad.getCodigoDir3(), fechaActualizacion, fechaSincronizacion);
 
         log.info("Organimos obtenidos de " + entidad.getNombre() + ": " + arbol.size());
 
 
-        // Guardamos el Organismo-Entidad sincronizado
-        Organismo padre = sincronizarOrganismo(unidadPadre, entidadId);
+        // Guardamos el arbol sincronizado
         if (arbol.size() > 0) {
 
-
-            // Clasificamos el padre en función de su estado
-            if (padre != null) {
-                guardarPendiente(padre);
-            }
 
             // Procesamos el arbol de organismos
             for (UnidadTF unidadTF : arbol) {
@@ -126,11 +117,6 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
                 }
             }
 
-            // Sincronizamos históricos
-            if (unidadPadre != null) {
-                sincronizarHistoricosOrganismo(padre, unidadPadre);// históricos del padre
-            }
-
             //Procesamos los históricos de los organismos
             for (UnidadTF unidadTF : arbol) { // Sincronizamos los históricos del arbol.
                 if (unidadTF != null) {
@@ -139,8 +125,6 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
                 }
             }
 
-
-            // Guardamos los datos de la ultima descarga siempre, independiente de si no hay datos actualizados.
 
         }
         nuevaDescarga(RegwebConstantes.UNIDAD, entidad);
@@ -179,11 +163,10 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
         // Obtenemos los organismos de la entidad que tienen libros
         List<Organismo> vigentes = organismoEjb.findByEntidadEstadoLibros(entidadId, RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+
         for (Organismo organismo : vigentes) {
             if (organismo.getLibros() != null && organismo.getLibros().size() > 0) {
                 Set<Oficina> oficinas = new HashSet<Oficina>();  // Utilizamos un Set porque no permite duplicados
-                //oficinas.addAll(oficinaEjb.findByOrganismoResponsable(organismo.getId()));
-                // oficinas.addAll(relacionOrganizativaOfiLocalEjb.getOficinasByOrganismo(organismo.getId()));
                 //Miramos si el organismo tiene oficinas,
                 Boolean tieneOficinas = oficinaEjb.tieneOficinasOrganismo(organismo.getId());
                 if (!tieneOficinas) {//si no tiene se debe guardar en la tabla de pendientes para que los procese el usuario manualmente
@@ -459,9 +442,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
    * @throws Exception
    */
     public void sincronizarHistoricosOrganismo(Organismo organismo, UnidadTF unidadTF) throws Exception {
-
         // Inicializamos sus Historicos, ya la relación está a FetchType.LAZY
-        // Hibernate.initialize(organismo.getHistoricoUO());
       List<String> historicos =unidadTF.getHistoricosUO();
       Set<Organismo> historicosOrg = organismo.getHistoricoUO();
       if(!historicos.isEmpty()){
