@@ -123,8 +123,9 @@ public class SelloPdfView extends AbstractIText5PdfView {
             sello = entidad.getSello();
             formatNumRegistre = entidad.getNumRegistro();
 
-            if(	registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_VALIDO) ||
-            	registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE)){
+            //Si el registro no está Anulado ni Pendiente de Visar
+            if(!registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_ANULADO) &&
+                    !registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE_VISAR)){
             	
 	            codiOficina = registroEntrada.getOficina().getCodigo();
 	            nomOficina = registroEntrada.getOficina().getDenominacion();
@@ -151,22 +152,15 @@ public class SelloPdfView extends AbstractIText5PdfView {
 	            decodificacioEntitat = registroEntrada.getOficina().getOrganismoResponsable().getEntidad().getDescripcion();
 	            
 	            formatNumRegistre = registroEntrada.getNumeroRegistroFormateado();
-	            
-	            if(registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_VALIDO)){
-	
-	            	if(registroEntrada.getDestino() != null){
-	                    destinatari = registroEntrada.getDestino().getDenominacion();
-	                }else{
-	                    destinatari = registroEntrada.getDestinoExternoDenominacion();
-	                }
-	                extracte = registroEntrada.getRegistroDetalle().getExtracto();
-	                llibre = registroEntrada.getLibro().getNombre();
-	                
-	            }else if(registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE)){
-	
-	            	llibre = registroEntrada.getLibro().getNombre();
-	
-	            }
+                llibre = registroEntrada.getLibro().getNombre();
+                extracte = registroEntrada.getRegistroDetalle().getExtracto();
+
+                if(registroEntrada.getDestino() != null){
+                    destinatari = registroEntrada.getDestino().getDenominacion();
+                }else{
+                    destinatari = registroEntrada.getDestinoExternoDenominacion();
+                }
+
             }
         }
 
@@ -179,37 +173,50 @@ public class SelloPdfView extends AbstractIText5PdfView {
             sello = entidad.getSello();
             formatNumRegistre = entidad.getNumRegistro();
 
-            codiOficina = registroSalida.getOficina().getCodigo();
-            nomOficina = registroSalida.getOficina().getDenominacion();
-            numRegistre = String.valueOf(registroSalida.getNumeroRegistro());
-            // Data registre
-            dataRegistre = formatDate.format(registroSalida.getFecha());
-            dataDiaRegistre = formatDiaDate.format(registroSalida.getFecha());
-            dataHoraRegistre = formatHoraDate.format(registroSalida.getFecha());
-            anyRegistre = formatYear.format(registroSalida.getFecha());
-            mesRegistre = formatMonth.format(registroSalida.getFecha());
-            nomMesRegistre = formatMonthName.format(registroSalida.getFecha());
-            diaRegistre = formatDay.format(registroSalida.getFecha());
-            horaRegistre = formatHour.format(registroSalida.getFecha());
-            minutRegistre = formatMin.format(registroSalida.getFecha());
-            segonRegistre = formatSeg.format(registroSalida.getFecha());
-            
-            if(registroSalida.getOrigen() != null){
-                origen = registroSalida.getOrigen().getDenominacion();
-            }else{
-                origen = registroSalida.getOrigenExternoDenominacion();
-            }
-            tipusRegistre = "S";
-            tipusRegistreCompletCatala = getMessage("sello.tipoRegistroCompletoCatalan.salida");
-            tipusRegistreCompletCastella = getMessage("sello.tipoRegistroCompletoCastellano.salida");
-            extracte = registroSalida.getRegistroDetalle().getExtracto();
-            llibre = registroSalida.getLibro().getNombre();
-            nomUsuari = registroSalida.getUsuario().getUsuario().getNombre();
-            nomUsuariComplet = registroSalida.getUsuario().getNombreCompleto();
-            entitat = registroSalida.getOficina().getOrganismoResponsable().getEntidad().getNombre();
-            decodificacioEntitat = registroSalida.getOficina().getOrganismoResponsable().getEntidad().getDescripcion();
+            //Si el registro no está Anulado ni Pendiente de Visar
+            if(!registroSalida.getEstado().equals(RegwebConstantes.ESTADO_ANULADO) &&
+                    !registroSalida.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE_VISAR)) {
 
-            formatNumRegistre = registroSalida.getNumeroRegistroFormateado();
+                codiOficina = registroSalida.getOficina().getCodigo();
+                nomOficina = registroSalida.getOficina().getDenominacion();
+                numRegistre = String.valueOf(registroSalida.getNumeroRegistro());
+                // Data registre
+                dataRegistre = formatDate.format(registroSalida.getFecha());
+                dataDiaRegistre = formatDiaDate.format(registroSalida.getFecha());
+                dataHoraRegistre = formatHoraDate.format(registroSalida.getFecha());
+                anyRegistre = formatYear.format(registroSalida.getFecha());
+                mesRegistre = formatMonth.format(registroSalida.getFecha());
+                nomMesRegistre = formatMonthName.format(registroSalida.getFecha());
+                diaRegistre = formatDay.format(registroSalida.getFecha());
+                horaRegistre = formatHour.format(registroSalida.getFecha());
+                minutRegistre = formatMin.format(registroSalida.getFecha());
+                segonRegistre = formatSeg.format(registroSalida.getFecha());
+
+                if (registroSalida.getOrigen() != null) {
+                    origen = registroSalida.getOrigen().getDenominacion();
+                } else {
+                    origen = registroSalida.getOrigenExternoDenominacion();
+                }
+                tipusRegistre = "S";
+                tipusRegistreCompletCatala = getMessage("sello.tipoRegistroCompletoCatalan.salida");
+                tipusRegistreCompletCastella = getMessage("sello.tipoRegistroCompletoCastellano.salida");
+                extracte = registroSalida.getRegistroDetalle().getExtracto();
+                llibre = registroSalida.getLibro().getNombre();
+                nomUsuari = registroSalida.getUsuario().getUsuario().getNombre();
+                nomUsuariComplet = registroSalida.getUsuario().getNombreCompleto();
+                entitat = registroSalida.getOficina().getOrganismoResponsable().getEntidad().getNombre();
+                decodificacioEntitat = registroSalida.getOficina().getOrganismoResponsable().getEntidad().getDescripcion();
+
+                formatNumRegistre = registroSalida.getNumeroRegistroFormateado();
+                llibre = registroSalida.getLibro().getNombre();
+                extracte = registroSalida.getRegistroDetalle().getExtracto();
+
+                if(registroSalida.getOrigen() != null){
+                    origen = registroSalida.getOrigen().getDenominacion();
+                }else{
+                    origen = registroSalida.getOrigenExternoDenominacion();
+                }
+            }
         }
 
         if(sello != null){
