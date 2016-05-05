@@ -62,4 +62,13 @@ public interface PropiedadGlobalLocal extends BaseEjb<PropiedadGlobal, Long> {
      * @throws Exception
      */
     public List<PropiedadGlobal> getPaginationREGWEB3(int inicio) throws Exception;
+
+    /**
+     * Elimina los {@link es.caib.regweb3.model.PropiedadGlobal} de una Entidad
+     *
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
 }

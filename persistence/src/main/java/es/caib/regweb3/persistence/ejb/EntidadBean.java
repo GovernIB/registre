@@ -2,7 +2,6 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Libro;
-import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.UsuarioEntidad;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -58,6 +57,8 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @EJB public ModeloReciboLocal modeloReciboEjb;
     @EJB public RegistroLopdMigradoLocal registroMigradoLopdEjb;
     @EJB public RegistroMigradoLocal registroMigradoEjb;
+    @EJB
+    public PropiedadGlobalLocal propiedadGlobalEjb;
 
 
 
@@ -298,6 +299,9 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
         /********* DESCARGAS *********/
         log.info("Descargas: " + descargaEjb.eliminarByEntidad(idEntidad));
+
+        /********* PROPIEDADES GLOBALES *********/
+        log.info("Propiedades globales: " + propiedadGlobalEjb.eliminarByEntidad(idEntidad));
 
         /********* REGISTROS MIGRADOS *********/
         log.info("RegistrosMigradosLopd: " + registroMigradoLopdEjb.eliminarByEntidad(idEntidad));

@@ -144,4 +144,16 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
 
         return q.getResultList();
     }
+
+    @Override
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
+
+        List<?> propiedades = em.createQuery("Select distinct(id) from PropiedadGlobal where entidad =:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
+
+        for (Object id : propiedades) {
+            remove(findById((Long) id));
+        }
+
+        return propiedades.size();
+    }
 }
