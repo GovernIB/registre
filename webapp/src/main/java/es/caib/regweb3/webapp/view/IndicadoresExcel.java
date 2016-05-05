@@ -245,9 +245,10 @@ public class IndicadoresExcel extends AbstractExcelView {
                 HSSFCell anyValorCol = anyValor.createCell(entradaAnosValor.size());
                 anyValorCol.setCellValue(registrosEntrada.toString());
                 anyValorCol.setCellStyle(fila);
-            }
-            if(entradaAnosNombre.size() > tamanyMaxColum){
-                tamanyMaxColum = entradaAnosNombre.size();
+
+                if(entradaAnosNombre.size() > tamanyMaxColum){
+                    tamanyMaxColum = entradaAnosNombre.size();
+                }
             }
 
             //Espai buit
@@ -495,9 +496,10 @@ public class IndicadoresExcel extends AbstractExcelView {
                 HSSFCell anySalValorCol = anySalValor.createCell(salidaAnosValor.size());
                 anySalValorCol.setCellValue(registrosSalida.toString());
                 anySalValorCol.setCellStyle(fila);
-            }
-            if(salidaAnosNombre.size() > tamanyMaxColum){
-                tamanyMaxColum = salidaAnosNombre.size();
+
+                if(salidaAnosNombre.size() > tamanyMaxColum){
+                    tamanyMaxColum = salidaAnosNombre.size();
+                }
             }
 
             //Espai buit
