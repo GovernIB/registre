@@ -96,12 +96,7 @@
                                                    href="<c:url value="/propiedadGlobal/${propiedadGlobal.id}/edit"/>"
                                                    title="<spring:message code="regweb.editar"/>"><span
                                                         class="fa fa-pencil"></span></a>
-                                                <a class="btn btn-danger btn-sm" onclick='javascript:confirm("<c:url
-                                                        value="/propiedadGlobal/${propiedadGlobal.id}/delete"/>","
-                                                    <spring:message code="regweb.confirmar.eliminacion"
-                                                                    htmlEscape="true"/>")' href="javascript:void(0);"
-                                                   title="<spring:message code="regweb.eliminar"/>"><span
-                                                        class="fa fa fa-eraser"></span></a>
+                                                <a class="btn btn-danger btn-sm" onclick='javascript:confirm("<c:url value="/propiedadGlobal/${propiedadGlobal.id}/delete"/>","<spring:message code="regweb.confirmar.eliminacion" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.eliminar"/>"><span class="fa fa fa-eraser"></span></a>
                                             </td>
                                         </tr>
                                     </c:forEach>
