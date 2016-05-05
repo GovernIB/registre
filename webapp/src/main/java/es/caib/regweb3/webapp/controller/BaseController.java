@@ -76,6 +76,7 @@ public class BaseController {
      * @param request
      * @return
      */
+    @SuppressWarnings(value = "unchecked")
     protected List<Libro> getLibrosAdministrados(HttpServletRequest request) throws Exception{
 
         HttpSession session = request.getSession();
@@ -140,6 +141,7 @@ public class BaseController {
      * @param request
      * @return
      */
+    @SuppressWarnings(value = "unchecked")
     protected List<Rol> getRolesAutenticado(HttpServletRequest request){
 
         HttpSession session = request.getSession();
@@ -178,6 +180,7 @@ public class BaseController {
      * @param request
      * @return
      */
+    @SuppressWarnings(value = "unchecked")
     protected List<Entidad> getEntidadesAutenticado(HttpServletRequest request){
 
         HttpSession session = request.getSession();
@@ -202,6 +205,7 @@ public class BaseController {
      * @param request
      * @return
      */
+    @SuppressWarnings(value = "unchecked")
     protected Set<ObjetoBasico> getOficinasAutenticado(HttpServletRequest request){
 
         HttpSession session = request.getSession();
@@ -291,12 +295,16 @@ public class BaseController {
 
     /**
      * Obtiene los Id de los Organismos de la OficinaActiva a los que da servicio
+     * Eliminando los Organismos que están marcados como Entidad de Derecho Público,
+     * de esta manera siempre se generará un Oficio Remisión para este tipo de Organismos.
      *
      * @param request
      * @return
      * @throws Exception
      */
     public Set<Long> getOrganismosIdOficinaActiva(HttpServletRequest request) throws Exception {
+
+        Oficina oficinaActiva = getOficinaActiva(request);
 
         // Obtenemos los Organismos
         Set<Organismo> organismos = getOrganismosOficinaActiva(request);
@@ -305,7 +313,12 @@ public class BaseController {
         Set<Long> organismosId = new HashSet<Long>();
 
         for (Organismo organismo : organismos) {
-            organismosId.add(organismo.getId());
+
+            // Eliminamos el Organismo si está marcado como Entidad de Derecho Público.
+            // De esta manera siempre se generará un Oficio Remisión para este tipo de Organismos
+            if (!organismo.getEdp() || oficinaActiva.getOrganismoResponsable().equals(organismo)) {
+                organismosId.add(organismo.getId());
+            }
         }
         return organismosId;
     }

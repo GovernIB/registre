@@ -13,6 +13,7 @@ import java.io.Serializable;
 public class OrganismoBusquedaForm implements Serializable {
 
     private Organismo organismo;
+    private Long entidad;
     private Integer pageNumber;
 
     public OrganismoBusquedaForm() {
@@ -29,6 +30,14 @@ public class OrganismoBusquedaForm implements Serializable {
 
     public void setOrganismo(Organismo organismo) {
         this.organismo = organismo;
+    }
+
+    public Long getEntidad() {
+        return entidad;
+    }
+
+    public void setEntidad(Long entidad) {
+        this.entidad = entidad;
     }
 
     public Integer getPageNumber() {

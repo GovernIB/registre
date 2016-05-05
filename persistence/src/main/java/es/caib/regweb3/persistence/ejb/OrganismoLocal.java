@@ -27,6 +27,15 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
      * @throws Exception
      */
     public Long getTotalByEntidad(Long entidad) throws Exception;
+
+    /**
+     * Obtiene el Organismo completo
+     *
+     * @param id del Organismo
+     * @return
+     * @throws Exception
+     */
+    public Organismo findByIdCompleto(Long id) throws Exception;
     
     
     /**
@@ -134,8 +143,8 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
      * @param denominacion
      * @return Paginacion
      * @throws Exception
-     */
-    public Paginacion busqueda(Integer pageNumber, Long idEntidad, String denominacion, Long idCatEstadoEntidad) throws Exception;
+    */
+   public Paginacion busqueda(Integer pageNumber, Long idEntidad, String codigo, String denominacion, Long idCatEstadoEntidad) throws Exception;
 
    /**
      * Método que obtiene los organismos vigentes y en los que puede registrar la oficina activa.

@@ -74,6 +74,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
     /**
      * Obtenemos los Organismos destinatarios PROPIOS que tiene Oficios de Remision pendientes de tramitar
      * @param idLibro
+     * @param organismos Lista con los Destinatarios que no se consideran Oficio de Remisión
      * @return
      * @throws Exception
      */
@@ -84,6 +85,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * y los agrupa según su Organismo destinatario.
      * @param any
      * @param libro
+     * @param organismos Lista con los Destinatarios que no se consideran Oficio de Remisión
      * @return
      * @throws Exception
      */
@@ -92,6 +94,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
     /**
      * Cuenta los Oficios pendientes de Remisión Interna de un conjunto de Libros
      * @param libros
+     * @param organismos Lista con los Destinatarios que no se consideran Oficio de Remisión
      * @return
      * @throws Exception
      */
@@ -101,6 +104,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
     /**
      * Comprueba si un RegistroEntrada se considera un OficioRemision o no
      * @param idRegistro
+     * @param organismos Lista con los Destinatarios que no se consideran Oficio de Remisión
      * @return
      * @throws Exception
      */

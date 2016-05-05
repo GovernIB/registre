@@ -249,6 +249,12 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
           Organismo organismoSuperior = organismoEjb.findByCodigo(unidadTF.getCodUnidadSuperior());
           organismo.setOrganismoSuperior(organismoSuperior);
 
+          // Asignamos su EDP Principal
+          if (!StringUtils.isEmpty(unidadTF.getCodEdpPrincipal())) {
+              Organismo edpPrincipal = organismoEjb.findByCodigo(unidadTF.getCodEdpPrincipal());
+              organismo.setEdpPrincipal(edpPrincipal);
+          }
+
 
           // Actualizamos el Organismo
           organismo = organismoEjb.merge(organismo);
@@ -488,6 +494,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         organismo.setEntidad(entidad);
         organismo.setDenominacion(unidadTF.getDenominacion());
         organismo.setNivelJerarquico(unidadTF.getNivelJerarquico());
+        organismo.setEdp(unidadTF.isEsEdp());
 
 
 

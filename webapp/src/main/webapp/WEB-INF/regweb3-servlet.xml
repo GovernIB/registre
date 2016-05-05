@@ -140,6 +140,12 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
             <bean class="es.caib.regweb3.webapp.interceptor.ReproInterceptor"/>
         </mvc:interceptor>
 
+        <!--Interceptor para Dir3-->
+        <mvc:interceptor>
+            <mvc:mapping path="/admin/**"/>
+            <bean class="es.caib.regweb3.webapp.interceptor.AdminInterceptor"/>
+        </mvc:interceptor>
+
         <!-- Configuración de Idioma -->
         <bean id="localeChangeInterceptor" class="es.caib.regweb3.webapp.interceptor.RegWebLocaleChangeInterceptor">
             <property name="paramName" value="lang" />

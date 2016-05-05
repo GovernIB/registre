@@ -178,7 +178,7 @@
         ISREPRESENTANTE number(1,0),
         NOMBRE varchar2(255 char),
         OBSERVACIONES varchar2(160 char),
-        RAZONSOCIAL varchar2(80 char),
+        RAZONSOCIAL varchar2(2000 char),
         TELEFONO varchar2(20 char),
         TIPOINTERESADO number(19,0),
         TIPODOCIDENT number(19,0),
@@ -289,12 +289,14 @@
         CODPOSTAL varchar2(14 char),
         CODIGO varchar2(9 char) not null,
         DENOMINACION varchar2(300 char) not null,
+        EDP number(1,0),
         NIVELJERARQUICO number(19,0),
         NOMBREVIA varchar2(300 char),
         NUMVIA varchar2(20 char),
         CODAMBCOMUNIDAD number(19,0),
         CODAMBPROVINCIA number(19,0),
         PAIS number(19,0),
+        EDPRINCIPAL number(19,0),
         ENTIDAD number(19,0),
         ESTADO number(19,0),
         LOCALIDAD number(19,0),
@@ -366,6 +368,14 @@
         TIPOREGISTRO varchar2(1 char) not null,
         USUARIO varchar2(80 char),
         REGISTRO_DETALLE number(19,0)
+    );
+
+    create table RWE_PROPIEDADGLOBAL (
+        ID number(19,0) not null,
+        CLAVE varchar2(255 char) not null,
+        DESCRIPCION varchar2(255 char),
+        ENTIDAD number(19,0),
+        VALOR varchar2(255 char)
     );
 
     create table RWE_REGISTROLOPD_MIGRADO (
@@ -617,6 +627,7 @@
     create index RWE_ORGANI_SUPERI_FK_I on RWE_ORGANISMO (ORGANISMOSUPERIOR) TABLESPACE REGWEB_INDEX;
     create index RWE_ORGANI_TVIA_FK_I on RWE_ORGANISMO (TIPOVIA) TABLESPACE REGWEB_INDEX;
     create index RWE_ORGANI_LOCALI_FK_I on RWE_ORGANISMO (LOCALIDAD) TABLESPACE REGWEB_INDEX;
+    create index RWE_ORGANI_EDP_FK_I on RWE_ORGANISMO (EDPRINCIPAL) TABLESPACE REGWEB_INDEX;
     create index RWE_ORGANI_PROVIN_FK_I on RWE_ORGANISMO (CODAMBPROVINCIA) TABLESPACE REGWEB_INDEX;
     create index RWE_ORGANI_ESTADO_FK_I on RWE_ORGANISMO (ESTADO) TABLESPACE REGWEB_INDEX;
     create index RWE_ORGANI_ENTIDA_FK_I on RWE_ORGANISMO (ENTIDAD) TABLESPACE REGWEB_INDEX;
@@ -625,6 +636,7 @@
     create index RWE_ORGANI_PAIS_FK_I on RWE_ORGANISMO (PAIS) TABLESPACE REGWEB_INDEX;
     create index RWE_PELIUS_USUARI_FK_I on RWE_PERMLIBUSU (USUARIO) TABLESPACE REGWEB_INDEX;
     create index RWE_PELIUS_LIBRO_FK_I on RWE_PERMLIBUSU (LIBRO) TABLESPACE REGWEB_INDEX;
+    create index RWE_PROPIE_ENTIDA_FK_I on RWE_PROPIEDADGLOBAL (ENTIDAD) TABLESPACE REGWEB_INDEX;
     create index RWE_REGMIG_FECREG_I on RWE_REGISTRO_MIGRADO (FECHAREG) TABLESPACE REGWEB_INDEX;
     create index RWE_REGMIG_CODOF_I on RWE_REGISTRO_MIGRADO (CODOFICINA) TABLESPACE REGWEB_INDEX;
     create index RWE_REGMIG_EXTR_I on RWE_REGISTRO_MIGRADO (EXTRACTO) TABLESPACE REGWEB_INDEX;
@@ -702,6 +714,8 @@
     alter table RWE_PERSONA add constraint RWE_PERSONA_pk primary key (ID);
 
     alter table RWE_PRE_REGISTRO add constraint RWE_PRE_REGISTRO_pk primary key (ID);
+
+    alter table RWE_PROPIEDADGLOBAL add constraint RWE_PROPIEDADGLOBAL_pk primary key (ID);
 
     alter table RWE_REGISTROLOPD_MIGRADO add constraint RWE_REGISTROLOPD_MIGRADO_pk primary key (ID);
 
@@ -1052,6 +1066,11 @@
         references RWE_CATNIVELADMINISTRACION;
 
     alter table RWE_ORGANISMO
+        add constraint RWE_ORGANISMO_EDPRIN_FK
+        foreign key (EDPRINCIPAL)
+        references RWE_ORGANISMO;
+
+    alter table RWE_ORGANISMO
         add constraint RWE_ORGANISMO_ESTADO_FK
         foreign key (ESTADO)
         references RWE_CATESTADOENTIDAD;
@@ -1272,6 +1291,7 @@
     alter table RWE_CODIGOASUNTO add constraint RWE_CODASUN_CODIGO_TIPASUN_UK unique (CODIGO, TIPOASUNTO);
     alter table RWE_ENTIDAD add constraint RWE_ENTIDAD_CODIGODIR3_uk unique (CODIGODIR3);
     alter table RWE_OFICINA add constraint RWE_OFICINA_CODIGO_uk unique (CODIGO);
+    alter table RWE_PROPIEDADGLOBAL add constraint RWE_propiedad_clave_entidad_uk unique (CLAVE, ENTIDAD);
     alter table RWE_REGISTRO_MIGRADO add constraint RWE_REGMIGRADO_AN_NUM_OF_UK unique (ANO, NUMERO, CODOFICINA, TREGISTRO, IDENTIDAD);
     alter table RWE_ROL add constraint RWE_ROL_NOMBRE_uk unique (NOMBRE);
     alter table RWE_USUARIO add constraint RWE_USUARIO_IDENTIFICADOR_uk unique (IDENTIFICADOR);
@@ -1313,6 +1333,7 @@
     grant select,insert,delete,update on RWE_PERMLIBUSU to www_regweb3;
     grant select,insert,delete,update on RWE_PERSONA to www_regweb3;
     grant select,insert,delete,update on RWE_PRE_REGISTRO to www_regweb3;
+    grant select,insert,delete,update on RWE_PROPIEDADGLOBAL to www_regweb3;
     grant select,insert,delete,update on RWE_REGISTROLOPD_MIGRADO to www_regweb3;
     grant select,insert,delete,update on RWE_REGISTRO_DETALLE to www_regweb3;
     grant select,insert,delete,update on RWE_REGISTRO_ENTRADA to www_regweb3;

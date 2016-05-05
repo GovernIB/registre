@@ -26,6 +26,7 @@ import java.util.Set;
     @Index(name="RWE_ORGANI_ESTADO_FK_I", columnNames = {"ESTADO"}),
     @Index(name="RWE_ORGANI_SUPERI_FK_I", columnNames = {"ORGANISMOSUPERIOR"}),
     @Index(name="RWE_ORGANI_RAIZ_FK_I", columnNames = {"ORGANISMORAIZ"}),
+    @Index(name="RWE_ORGANI_EDP_FK_I", columnNames = {"EDPRINCIPAL"}),
     @Index(name="RWE_ORGANI_CAUTON_FK_I", columnNames = {"CODAMBCOMUNIDAD"}),
     @Index(name="RWE_ORGANI_PAIS_FK_I", columnNames = {"PAIS"}),
     @Index(name="RWE_ORGANI_LOCALI_FK_I", columnNames = {"LOCALIDAD"}),
@@ -41,6 +42,8 @@ public class Organismo implements Serializable {
     private Long id;
     @XmlElement
     private String codigo;
+    @XmlElement
+    private String denominacion;
     @XmlTransient
     private Entidad entidad;
     @XmlTransient
@@ -53,8 +56,10 @@ public class Organismo implements Serializable {
     private Organismo organismoSuperior;
     @XmlTransient
     private Organismo organismoRaiz;
-    @XmlElement
-    private String denominacion;
+    @XmlTransient
+    private Boolean edp = false; // Entidad Derecho Publico
+    @XmlTransient
+    private Organismo edpPrincipal;
 
     //Externos
     @XmlTransient
@@ -99,6 +104,14 @@ public class Organismo implements Serializable {
         this.denominacion = denominacion;
     }
 
+    public Organismo(Long id, String codigo, String denominacion, Boolean edp) {
+
+        this.id = id;
+        this.codigo = codigo;
+        this.denominacion = denominacion;
+        this.edp = edp;
+    }
+
     public Organismo(Long id, String codigo, String denominacion, Long organismoSuperior) {
 
         this.id = id;
@@ -124,6 +137,8 @@ public class Organismo implements Serializable {
         this.estado = organismo.getEstado();
         this.organismoSuperior = organismo.getOrganismoSuperior();
         this.organismoRaiz = organismo.getOrganismoRaiz();
+        this.edp = organismo.getEdp();
+        this.edpPrincipal = organismo.getEdpPrincipal();
         this.denominacion = organismo.getDenominacion();
         this.nivelAdministracion = organismo.getNivelAdministracion();
         this.codAmbComunidad = organismo.getCodAmbComunidad();
@@ -228,6 +243,26 @@ public class Organismo implements Serializable {
         this.organismoRaiz = organismoRaiz;
     }
 
+    @Column(name="EDP")
+    public Boolean getEdp() {
+        return edp;
+    }
+
+    public void setEdp(Boolean edp) {
+        this.edp = edp;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn(name="EDPRINCIPAL")
+    @ForeignKey(name="RWE_ORGANISMO_EDPRIN_FK")
+    @JsonIgnore
+    public Organismo getEdpPrincipal() {
+        return edpPrincipal;
+    }
+
+    public void setEdpPrincipal(Organismo edpPrincipal) {
+        this.edpPrincipal = edpPrincipal;
+    }
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "organismo")
      /*@LazyCollection(LazyCollectionOption.FALSE)*/

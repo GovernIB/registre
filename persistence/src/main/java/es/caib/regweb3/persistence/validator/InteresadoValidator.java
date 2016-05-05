@@ -308,7 +308,7 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
           break;
 
         case (int) RegwebConstantes.TIPODOCUMENTOID_PASSAPORT_ID: /* PASAPORTE */
-
+          formatoCorrecto = true;
           break;
         }
 

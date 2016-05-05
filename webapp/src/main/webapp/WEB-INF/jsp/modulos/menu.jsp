@@ -247,7 +247,9 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li class="submenu-complet"><a href="<c:url value="/entidad/${entidadActiva.id}/edit"/>"><spring:message code="menu.entidad.editar"/></a></li>
-                                    <%--<li class="submenu-complet"><a href="<c:url value="/organismo/list"/>"><spring:message code="menu.oficinas"/></a></li>--%>
+                                    <li class="submenu-complet"><a
+                                            href="<c:url value="/propiedadGlobal/list"/>"><spring:message
+                                            code="propiedadGlobal.propiedadesGlobales"/></a></li>
                                     <li class="divider"></li>
                                     <li class="dropdown-submenu-left toggle-left">
                                         <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> <spring:message code="organismo.organismos"/></a>
@@ -311,8 +313,21 @@
                             <spring:message code="menu.configuracion"/> <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
-                            <li class="submenu-complet"><a href="<c:url value="/entidad/list"/>"><spring:message code="entidad.entidades"/></a></li>
+                                <%--<li class="submenu-complet"><a href="<c:url value="/entidad/list"/>"><spring:message code="entidad.entidades"/></a></li>--%>
+                            <li class="dropdown-submenu-left toggle-left">
+                                <a href="<c:url value="/entidad/list"/>"><i class="fa fa-chevron-left"></i>
+                                    <spring:message code="entidad.entidades"/></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="<c:url value="/admin/organismo/list"/>"><spring:message
+                                            code="organismo.listado"/></a></li>
+                                    <li><a href="<c:url value="/admin/oficina/list"/>"><spring:message
+                                            code="oficina.listado"/></a></li>
+                                </ul>
+                            </li>
+
                             <li class="submenu-complet"><a href="<c:url value="/usuario/list"/>"><spring:message code="menu.usuarios"/></a></li>
+                            <li class="submenu-complet"><a href="<c:url value="/propiedadGlobal/list"/>"><spring:message
+                                    code="propiedadGlobal.propiedadesGlobales"/></a></li>
                             <li class="submenu-complet"><a href="<c:url value="/dir3/datosCatalogo"/>" tabindex="-1"><spring:message code="menu.dir3"/></a></li>
                             <li class="submenu-complet"><a href="<c:url value="/configuracion/editar"/>"><spring:message code="menu.configuracion"/></a></li>
                             <li class="divider"></li>

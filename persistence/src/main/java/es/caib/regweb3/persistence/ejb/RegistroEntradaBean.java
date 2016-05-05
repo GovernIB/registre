@@ -60,6 +60,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<RegistroEntrada> getByUsuario(Long idUsuarioEntidad) throws Exception {
 
         Query q = em.createQuery("Select registroEntrada from RegistroEntrada as registroEntrada where registroEntrada.usuario.id = :idUsuarioEntidad ");
@@ -133,6 +134,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroEntrada registroEntrada, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, String organoDest, Boolean anexos, String observaciones, String usuario) throws Exception {
 
         Query q;
@@ -276,24 +278,35 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         return paginacion;
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public List<String> oficiosPendientesRemisionInterna(Long idLibro, Set<Long> organismos) throws Exception {
+
+        // Si el array de organismos está vacío, no incluimos la condición.
+        String organismosWhere = "";
+        if (organismos.size() > 0) {
+            organismosWhere = "re.destino.id not in (:organismos) and ";
+        }
+
         // Obtenemos los Organismos destinatarios PROPIOS que tiene Oficios de Remision pendientes de tramitar
-
-        Query q1;
-        q1 = em.createQuery("Select distinct(re.destino.denominacion) from RegistroEntrada as re where " +
+        Query q;
+        q = em.createQuery("Select distinct(re.destino.denominacion) from RegistroEntrada as re where " +
                 "re.estado = :idEstadoRegistro and re.libro.id = :idLibro and " +
-                "re.destino != null and re.destino.id not in (:organismos) and " +
-                "re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
+                "re.destino != null and " + organismosWhere +
+                " re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
 
-        q1.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
-        q1.setParameter("organismos", organismos);
-        q1.setParameter("idLibro", idLibro);
+        q.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
+        q.setParameter("idLibro", idLibro);
+        if (organismos.size() > 0) {
+            q.setParameter("organismos", organismos);
+        }
 
-        return q1.getResultList();
+        return q.getResultList();
 
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<OficiosRemisionInternoOrganismo> oficiosPendientesRemisionInterna(Integer any, Libro libro, Set<Long> organismos) throws Exception {
 
         String anyWhere = "";
@@ -301,21 +314,29 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             anyWhere = "year(re.fecha) = :any and ";
         }
 
-        // Obtenemos los Organismos destinatarios PROPIOS que tiene Oficios de Remision pendientes de tramitar
-        Query q1;
-        q1 = em.createQuery("Select distinct(re.destino) from RegistroEntrada as re where " + anyWhere +
-                " re.estado = :idEstadoRegistro and re.libro.id = :idLibro and " +
-                "re.destino != null and re.destino.id not in (:organismos) and " +
-                "re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
-
-        q1.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
-        q1.setParameter("organismos", organismos);
-        q1.setParameter("idLibro", libro.getId());
-        if (any != null) {
-            q1.setParameter("any", any);
+        // Si el array de organismos está vacío, no incluimos la condición.
+        String organismosWhere = "";
+        if (organismos.size() > 0) {
+            organismosWhere = "re.destino.id not in (:organismos) and ";
         }
 
-        List<Organismo> organismosPropios = q1.getResultList();
+        // Obtenemos los Organismos destinatarios PROPIOS que tiene Oficios de Remision pendientes de tramitar
+        Query q;
+        q = em.createQuery("Select distinct(re.destino) from RegistroEntrada as re where " + anyWhere +
+                " re.estado = :idEstadoRegistro and re.libro.id = :idLibro and " +
+                "re.destino != null and " + organismosWhere +
+                "re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
+
+        q.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
+        q.setParameter("idLibro", libro.getId());
+        if (any != null) {
+            q.setParameter("any", any);
+        }
+        if (organismos.size() > 0) {
+            q.setParameter("organismos", organismos);
+        }
+
+        List<Organismo> organismosPropios = q.getResultList();
 
         // Buscamos los RegistroEntrada pendientes de tramitar de cada uno de los Organismos encontrados
         List<OficiosRemisionInternoOrganismo> oficiosRemisionOrganismo = new ArrayList<OficiosRemisionInternoOrganismo>();
@@ -344,35 +365,55 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     @Override
     public Long oficiosPendientesRemisionInternaCount(List<Libro> libros, Set<Long> organismos) throws Exception {
 
+        // Si el array de organismos está vacío, no incluimos la condición.
+        String organismosWhere = "";
+        if (organismos.size() > 0) {
+            organismosWhere = "re.destino.id not in (:organismos) and ";
+        }
 
         Query q;
         q = em.createQuery("Select count(re.id) from RegistroEntrada as re where " +
                 "re.estado = :idEstadoRegistro and re.libro in (:libros) and " +
-                "re.destino != null and re.destino.id not in (:organismos) and " +
-                "re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
+                "re.destino != null and " + organismosWhere +
+                " re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
 
         q.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
-        q.setParameter("organismos", organismos);
         q.setParameter("libros", libros);
+        if (organismos.size() > 0) {
+            q.setParameter("organismos", organismos);
+        }
 
         return (Long) q.getSingleResult();
 
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public Boolean isOficioRemisionInterno(Long idRegistro, Set<Long> organismos) throws Exception {
+
+        // Si el array de organismos está vacío, no incluimos la condición.
+        String organismosWhere = "";
+        if (organismos.size() > 0) {
+            organismosWhere = "re.destino.id not in (:organismos) and ";
+        }
+
         Query q;
         q = em.createQuery("Select re.id from RegistroEntrada as re where " +
                 "re.id = :idRegistro and re.estado = :idEstadoRegistro and " +
-                "re.destino != null and re.destino.id not in (:organismos) and " +
-                "re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
+                "re.destino != null and " + organismosWhere +
+                " re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
 
         q.setParameter("idRegistro", idRegistro);
         q.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
-        q.setParameter("organismos", organismos);
+        if (organismos.size() > 0) {
+            q.setParameter("organismos", organismos);
+        }
 
         return q.getResultList().size() > 0;
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public List<String> oficiosPendientesRemisionExterna(Long idLibro) throws Exception {
 
         // Obtenemos los Organismos destinatarios EXTERNOS que tiene Oficios de Remision pendientes de tramitar
@@ -389,6 +430,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         return q1.getResultList();
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public List<OficiosRemisionOrganismo> oficiosPendientesRemisionExterna(Integer any, Libro libro, Entidad entidadActiva) throws Exception {
 
         String anyWhere = "";
@@ -450,6 +493,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public Long oficiosPendientesRemisionExternaCount(List<Libro> libros) throws Exception {
 
 
@@ -466,6 +511,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public List<RegistroEntrada> oficiosRemisionByOrganismoPropio(Long idOrganismo, Integer any, Long idLibro) throws Exception {
 
         String anyWhere = "";
@@ -490,6 +537,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         return q.getResultList();
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public List<RegistroEntrada> oficiosRemisionByOrganismoExterno(String codigoOrganismo, Integer any, Long idLibro) throws Exception {
 
         String anyWhere = "";
@@ -515,6 +564,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<RegistroEntrada> buscaLibroRegistro(Date fechaInicio, Date fechaFin, String numRegistro, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String extracto, String usuario, List<Libro> libros, Long estado, Long idOficina, Long idTipoAsunto, String organoDest) throws Exception {
 
         Query q;
@@ -640,6 +690,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Long buscaIndicadoresTotal(Date fechaInicio, Date fechaFin, Long idEntidad) throws Exception {
 
         Query q;
@@ -658,6 +709,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Long buscaIndicadoresOficinaTotal(Date fechaInicio, Date fechaFin, Long idOficina) throws Exception {
 
         Query q;
@@ -676,6 +728,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Long buscaEntradaPorConselleria(Date fechaInicio, Date fechaFin, Long conselleria) throws Exception {
 
         Query q;
@@ -693,6 +746,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Long buscaEntradaPorAsunto(Date fechaInicio, Date fechaFin, Long tipoAsunto, Long idEntidad) throws Exception {
 
         Query q;
@@ -784,6 +838,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<RegistroBasico> getByOficinaEstado(Long idOficinaActiva, Long idEstado, Integer total) throws Exception {
 
         Query q;
@@ -807,6 +862,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<RegistroEntrada> getByOficinaEstado(Long idOficinaActiva, Long idEstado) throws Exception {
 
         Query q;
@@ -837,6 +893,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<RegistroEntrada> buscaEntradaPorUsuario(Date fechaInicio, Date fechaFin, Long idUsuario, List<Libro> libros) throws Exception {
 
         Query q;
@@ -853,6 +910,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<RegistroEntrada> buscaEntradaPorUsuarioLibro(Date fechaInicio, Date fechaFin, Long idUsuario, Long idLibro) throws Exception {
 
         Query q;
@@ -870,6 +928,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<RegistroEntrada> getByLibrosEstado(List<Libro> libros, Long idEstado) throws Exception {
 
         Query q;
@@ -885,6 +944,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Long getByLibrosEstadoCount(List<Libro> libros, Long idEstado) throws Exception {
 
         Query q;
@@ -899,6 +959,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<RegistroEntrada> buscaPorLibroTipoNumero(Date fechaInicio, Date fechaFin, Long idLibro, Integer numeroRegistro) throws Exception {
 
         Query q;
@@ -950,6 +1011,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         merge(registroEntrada);
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public List<RegistroBasico> getUltimosRegistros(Long idOficina, Integer total) throws Exception {
 
         Query q;
@@ -967,6 +1030,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public RegistroEntrada findByNumeroRegistroFormateado(String numeroRegistroFormateado) throws Exception {
 
         Query q = em.createQuery("Select registroEntrada from RegistroEntrada as registroEntrada where registroEntrada.numeroRegistroFormateado = :numeroRegistroFormateado ");
@@ -984,6 +1048,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public RegistroEntrada findByNumeroAnyoLibro(int numero, int anyo, String libro) throws Exception {
 
         Query q = em.createQuery("Select registroEntrada "
@@ -1080,6 +1145,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Long getLibro(Long idRegistroEntrada) throws Exception {
 
         Query q;
