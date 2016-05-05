@@ -3,6 +3,7 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.Persona;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -66,6 +67,51 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
         }
 
         return  q.getResultList();
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<Persona> getFisicasByEntidad(Long idEntidad) throws Exception {
+
+        Query q = em.createQuery("Select persona.id, persona.nombre, persona.apellido1,persona.apellido2, persona.documento, persona.tipo from Persona as persona  " +
+                "where persona.entidad.id = :idEntidad and persona.tipo = :tipoPersona  order by persona.razonSocial");
+
+        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("tipoPersona", RegwebConstantes.TIPO_PERSONA_FISICA);
+
+        List<Object[]> result = q.getResultList();
+        List<Persona> fisicas = new ArrayList<Persona>();
+
+        for (Object[] object : result) {
+            Persona persona = new Persona((Long) object[0], (String) object[1], (String) object[2],(String) object[3],(String) object[4], (Long) object[5]);
+
+            fisicas.add(persona);
+        }
+
+        return fisicas;
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<Persona> getJuridicasByEntidad(Long idEntidad) throws Exception {
+
+        Query q = em.createQuery("Select persona.id, persona.razonSocial, persona.documento, persona.tipo from Persona as persona  " +
+                "where persona.entidad.id = :idEntidad and persona.tipo = :tipoPersona  order by persona.razonSocial");
+
+        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("tipoPersona", RegwebConstantes.TIPO_PERSONA_JURIDICA);
+
+
+        List<Object[]> result = q.getResultList();
+        List<Persona> juridicas = new ArrayList<Persona>();
+
+        for (Object[] object : result) {
+            Persona persona = new Persona((Long) object[0], (String) object[1], (String) object[2], (Long) object[3]);
+
+            juridicas.add(persona);
+        }
+
+        return juridicas;
     }
 
     @Override

@@ -56,6 +56,23 @@ public class Persona implements Serializable {
         this.id= Long.valueOf(id);
     }
 
+    public Persona(Long id, String razonSocial, String documento, Long tipo) {
+        this.id = id;
+        this.razonSocial = razonSocial;
+        this.documento = documento;
+        this.tipo = tipo;
+    }
+
+    public Persona(Long id, String nombre, String apellido1, String apellido2, String documento, Long tipo) {
+        this.id = id;
+        this.nombre = nombre;
+        this.apellido1 = apellido1;
+        this.apellido2 = apellido2;
+        this.documento = documento;
+        this.tipo = tipo;
+    }
+
+
     public Persona(Interesado interesado) {
 
         if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)){
@@ -65,9 +82,6 @@ public class Persona implements Serializable {
             this.tipo = RegwebConstantes.TIPO_PERSONA_JURIDICA;
         }
 
-       /* this.representado = interesado.getRepresentado();
-        this.representante = interesado.getRepresentante();*/
-      //  this.isRepresentante = interesado.getIsRepresentante();
         this.razonSocial = interesado.getRazonSocial();
         this.nombre = interesado.getNombre();
         this.apellido1 = interesado.getApellido1();
@@ -276,33 +290,6 @@ public class Persona implements Serializable {
         this.entidad = entidad;
     }
 
-
-   /* @Transient
-    public Persona getRepresentado() {
-        return representado;
-    }
-
-    public void setRepresentado(Persona representado) {
-        this.representado = representado;
-    }
-
-    @Transient
-    public Persona getRepresentante() {
-        return representante;
-    }
-
-    public void setRepresentante(Persona representante) {
-        this.representante = representante;
-    }
-
-    @Transient
-    public Boolean getIsRepresentante() {
-        return isRepresentante;
-    }
-
-    public void setIsRepresentante(Boolean isRepresentante) {
-        this.isRepresentante = isRepresentante;
-    }  */
 
     @Transient
     public boolean isGuardarInteresado() {

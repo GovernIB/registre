@@ -18,12 +18,28 @@ import java.util.List;
 public interface PersonaLocal extends BaseEjb<Persona, Long> {
 
     /**
-     * Obtiene todas las {@link es.caib.regweb3.model.Persona} de una {@link es.caib.regweb3.model.Entidad} y un {@link es.caib.regweb3.model.TipoPersona}
+     * Obtiene todas las {@link es.caib.regweb3.model.Persona} de una {@link es.caib.regweb3.model.Entidad} y su TipoPersona
      * @param idEntidad
      * @return
      * @throws Exception
      */
     public List<Persona> getAllbyEntidadTipo(Long idEntidad, Long tipoPersona) throws Exception;
+
+    /**
+     * Obtiene todas las {@link es.caib.regweb3.model.Persona} Juridicas de una {@link es.caib.regweb3.model.Entidad}
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public List<Persona> getFisicasByEntidad(Long idEntidad) throws Exception;
+
+    /**
+     * Obtiene todas las {@link es.caib.regweb3.model.Persona} Fisicas de una {@link es.caib.regweb3.model.Entidad}
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public List<Persona> getJuridicasByEntidad(Long idEntidad) throws Exception;
 
     /**
      * * Comprueba la existencia de un Documento en el sistema

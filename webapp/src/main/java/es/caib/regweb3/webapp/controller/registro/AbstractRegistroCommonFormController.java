@@ -98,14 +98,14 @@ public abstract class AbstractRegistroCommonFormController extends BaseControlle
     public List<Persona> personasFisicas(HttpServletRequest request) throws Exception {
 
         Entidad entidad = getEntidadActiva(request);
-        return personaEjb.getAllbyEntidadTipo(entidad.getId(), RegwebConstantes.TIPO_PERSONA_FISICA);
+        return personaEjb.getFisicasByEntidad(entidad.getId());
     }
 
     @ModelAttribute("personasJuridicas")
     public List<Persona> personasJuridicas(HttpServletRequest request) throws Exception {
 
         Entidad entidad = getEntidadActiva(request);
-        return personaEjb.getAllbyEntidadTipo(entidad.getId(), RegwebConstantes.TIPO_PERSONA_JURIDICA);
+        return personaEjb.getJuridicasByEntidad(entidad.getId());
     }
 
     @ModelAttribute("provincias")
