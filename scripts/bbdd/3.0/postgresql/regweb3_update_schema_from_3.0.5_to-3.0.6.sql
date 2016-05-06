@@ -9,6 +9,7 @@ alter table RWE_ORGANISMO
         references RWE_ORGANISMO;
 
 create index RWE_ORGANI_EDP_FK_I on RWE_ORGANISMO (EDPRINCIPAL);
+update RWE_ORGANISMO set EDP=false;
 
 --Nueva tabla RWE_PROPIEDADGLOBAL
 
