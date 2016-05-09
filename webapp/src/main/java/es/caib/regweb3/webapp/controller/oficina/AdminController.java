@@ -127,7 +127,9 @@ public class AdminController extends BaseController {
         } else { // Si no hay errores actualizamos el registro
 
             try {
-
+                if (organismo.getEdpPrincipal().getId() == null) {
+                    organismo.setEdpPrincipal(null);
+                }
 
                 organismoEjb.merge(organismo);
 

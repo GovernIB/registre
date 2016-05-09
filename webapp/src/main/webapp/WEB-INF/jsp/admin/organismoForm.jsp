@@ -69,6 +69,28 @@
                                                  itemLabel="denominacion" cssClass="chosen-select"/>
                                 </div>
                             </div>
+                            <div class="form-group col-xs-6">
+                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                    <form:label path="edp"><spring:message code="organismo.edp"/></form:label>
+                                </div>
+                                <div class="col-xs-8">
+                                    <form:checkbox path="edp"/>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-6">
+                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                    <form:label path="edpPrincipal">
+                                        <spring:message code="organismo.edpPrincipal"/></form:label>
+                                </div>
+                                <div class="col-xs-8">
+                                    <form:select path="edpPrincipal.id" cssClass="chosen-select">
+                                        <form:option value="">...</form:option>
+                                        <c:forEach var="organismo" items="${organismos}">
+                                            <form:option value="${organismo.id}">${organismo.denominacion}</form:option>
+                                        </c:forEach>
+                                    </form:select>
+                                </div>
+                            </div>
 
                         </div>
 

@@ -58,6 +58,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         Hibernate.initialize(organismo.getHistoricoUO());
         Hibernate.initialize(organismo.getOrganismoRaiz());
         Hibernate.initialize(organismo.getOrganismoSuperior());
+        Hibernate.initialize(organismo.getEdpPrincipal());
 
         return organismo;
     }
