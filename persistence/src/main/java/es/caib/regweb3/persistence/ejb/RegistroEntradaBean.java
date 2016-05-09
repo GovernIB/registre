@@ -6,12 +6,12 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.RegistroBasico;
 import es.caib.regweb3.persistence.utils.*;
-import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+import org.fundaciobit.plugins.distribucion.ConfiguracionDistribucion;
 import org.fundaciobit.plugins.distribucion.Destinatarios;
 import org.fundaciobit.plugins.distribucion.IDistribucionPlugin;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -1006,9 +1006,13 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     @Override
     public void cambiarEstado(Long idRegistro, Long idEstado) throws Exception {
-        RegistroEntrada registroEntrada = findById(idRegistro);
+       /* RegistroEntrada registroEntrada = findById(idRegistro);
         registroEntrada.setEstado(idEstado);
-        merge(registroEntrada);
+        merge(registroEntrada);*/
+        Query q = em.createQuery("update RegistroEntrada set estado=:idEstado where id = :idRegistro");
+        q.setParameter("idEstado", idEstado);
+        q.setParameter("idRegistro", idRegistro);
+        q.executeUpdate();
     }
 
     @Override
@@ -1132,11 +1136,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         RegistroEntrada old = registroEntrada;
 
-        // Estado anulado
-        registroEntrada.setEstado(RegwebConstantes.ESTADO_TRAMITADO);
-
-        // Actualizamos el RegistroEntrada
-        registroEntrada = merge(registroEntrada);
+        cambiarEstado(registroEntrada.getId(), RegwebConstantes.ESTADO_TRAMITADO);
 
         // Creamos el HistoricoRegistroEntrada para la modificación d estado
         historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(old,
@@ -1287,67 +1287,90 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
 
     public Destinatarios distribuir(RegistroEntrada re) throws Exception, I18NException {
-        // Plugin de distribución
+        Destinatarios destinatarios = new Destinatarios();
 
-        log.info("Entramos en distribuir");
+        //Obtenemos plugin
         IDistribucionPlugin distribucionPlugin = RegwebDistribucionPluginManager.getInstance();
-        if (distribucionPlugin != null) { // hay plugin definido
+        //Si han especificado plug-in
+        if (distribucionPlugin != null) {
+            //Obtenemos la configuración de la distribución
+            ConfiguracionDistribucion configuracionDistribucion = distribucionPlugin.configurarDistribucion();
 
-
-            //Obtenemos el valor de la variable anexos del plugin de distribucion
-            //Variable que indica si el registro se debe enviar con los anexos y los documentos de los anexos
-            // O solo con los anexos pero sin los documentos físicos
-            boolean conAnexos = Configuracio.getVariableAnexosPluginDistribucion();
-
-
-            if (conAnexos) { // Si se deben enviar los documentos asociados a los anexos
-                //Recuperar documentos de custodia
-                List<Anexo> anexos = re.getRegistroDetalle().getAnexos();
-                List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
-                for (Anexo anexo : anexos) {
-                    AnexoFull anexoFull = anexoEjb.getAnexoFull(anexo.getId());
-                    if (anexoFull != null) {
-                        log.info(anexoFull.getDocumentoCustody().getName());
+            switch (configuracionDistribucion.configuracionAnexos) {
+                case 1: { //1.  Fitxer + firma + metadades + custodiaId
+                    List<Anexo> anexos = re.getRegistroDetalle().getAnexos();
+                    List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
+                    for (Anexo anexo : anexos) {
+                        AnexoFull anexoFull = anexoEjb.getAnexoFull(anexo.getId());
+                        if (anexoFull != null) {
+                            log.info(anexoFull.getDocumentoCustody().getName());
+                        }
+                        anexosFull.add(anexoFull);
                     }
-                    anexosFull.add(anexoFull);
+                    //Asignamos los documentos recuperados de custodia al registro de entrada.
+                    re.getRegistroDetalle().setAnexosFull(anexosFull);
                 }
-                //Asignamos los documentos recuperados de custodia al registro de entrada.
-                re.getRegistroDetalle().setAnexosFull(anexosFull);
+                case 2: { //2. custodiaId
+
+                    // Montamos una nueva lista de anexos solo con el custodiaID, sin metadatos ni nada
+                    List<Anexo> anexos = re.getRegistroDetalle().getAnexos();
+                    List<Anexo> nuevosAnexos = new ArrayList<Anexo>();
+                    for (Anexo anexo : anexos) {
+                        Anexo nuevoAnexo = new Anexo();
+                        nuevoAnexo.setCustodiaID(anexo.getCustodiaID());
+                        nuevosAnexos.add(nuevoAnexo);
+                    }
+                    re.getRegistroDetalle().setAnexos(nuevosAnexos);
+                }
+                // 3. custodiaId + metadades (No hace falta hacer nada es el caso por defecto)
             }
-            // Obtenemos los destinatarios a través del plugin de distribución.
-            return distribucionPlugin.distribuir(re, conAnexos);
-        } else { // Si no hay plugin definido, no hay destinatarios.
-            return null;
+            if (!configuracionDistribucion.isListado()) {
+                distribucionPlugin.enviarDestinatarios(re, null, "");
+                //Despues lo tramita en una segunda fase desde el metodo distribuir() en distribuir.js
+            } else {
+                destinatarios = distribucionPlugin.distribuir(re);
+            }
         }
+        return destinatarios;
     }
 
 
     public Boolean enviar(RegistroEntrada re, DestinatarioWrapper wrapper) throws Exception, I18NException {
-        // Plugin de distribución
-        log.info("Entramos en enviar");
+
         IDistribucionPlugin distribucionPlugin = RegwebDistribucionPluginManager.getInstance();
-
-        //Obtenemos el valor de la variable anexos del plugin de distribucion
-        //Variable que indica si el registro se debe enviar con los anexos y los documentos de los anexos
-        // O solo con los anexos pero sin los documentos físicos
-        boolean conAnexos = Configuracio.getVariableAnexosPluginDistribucion();
-
-        if (conAnexos) {// Si se deben enviar los documentos asociados a los anexos
-            //Recuperar documentos de custodia
-            List<Anexo> anexos = re.getRegistroDetalle().getAnexos();
-            List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
-            for (Anexo anexo : anexos) {
-                AnexoFull anexoFull = anexoEjb.getAnexoFull(anexo.getId());
-                if (anexoFull != null) {
-                    log.info(anexoFull.getDocumentoCustody().getName());
+        if (distribucionPlugin != null) {
+            ConfiguracionDistribucion configuracionDistribucion = distribucionPlugin.configurarDistribucion();
+            switch (configuracionDistribucion.configuracionAnexos) {
+                case 1: {//1.  Fitxer + firma + metadades + custodiaId
+                    List<Anexo> anexos = re.getRegistroDetalle().getAnexos();
+                    List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
+                    for (Anexo anexo : anexos) {
+                        AnexoFull anexoFull = anexoEjb.getAnexoFull(anexo.getId());
+                        if (anexoFull != null) {
+                            log.info(anexoFull.getDocumentoCustody().getName());
+                        }
+                        anexosFull.add(anexoFull);
+                    }
+                    //Asignamos los documentos recuperados de custodia al registro de entrada.
+                    re.getRegistroDetalle().setAnexosFull(anexosFull);
                 }
-                anexosFull.add(anexoFull);
-            }
-            //Asignamos los documentos recuperados de custodia al registro de entrada.
-            re.getRegistroDetalle().setAnexosFull(anexosFull);
-        }
+                case 2: {//2. custodiaId
 
-        //Distribuimos el registro mediante el plugin
-        return distribucionPlugin.enviarDestinatarios(re, wrapper.getDestinatarios(), wrapper.getObservaciones(), conAnexos);
+                    // Montamos una nueva lista de anexos solo con el custodiaID, sin metadatos ni nada
+                    List<Anexo> anexos = re.getRegistroDetalle().getAnexos();
+                    List<Anexo> nuevosAnexos = new ArrayList<Anexo>();
+                    for (Anexo anexo : anexos) {
+                        Anexo nuevoAnexo = new Anexo();
+                        nuevoAnexo.setCustodiaID(anexo.getCustodiaID());
+                        nuevosAnexos.add(nuevoAnexo);
+                    }
+                    re.getRegistroDetalle().setAnexos(nuevosAnexos);
+                }
+                // 3. custodiaId + metadades (No hace falta hacer nada es el caso por defecto)
+            }
+            return distribucionPlugin.enviarDestinatarios(re, wrapper.getDestinatarios(), wrapper.getObservaciones());
+        }
+        return false;
+
     }
 }

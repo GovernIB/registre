@@ -414,7 +414,6 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         log.info("Entramos en distribuirRegistroEntrada");
 
         RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
-        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         Destinatarios destinatarios = new Destinatarios();
 
         // Comprobamos si el RegistroEntrada tiene el estado Válido
@@ -431,8 +430,8 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         }
 
         //Obtenemos los destinatarios a través del plugin de distribución
-        return registroEntradaEjb.distribuir(registroEntrada);
-
+        destinatarios = registroEntradaEjb.distribuir(registroEntrada);
+        return destinatarios;
     }
 
     /**

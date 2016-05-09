@@ -22,70 +22,26 @@ function distribuir(url, urlEnviarDestinatarios, urlDetalle, urlTramitar) {
         dataType: 'json',
         contentType: 'application/json',
         success: function (result) {
-            if (result != null && result.propuestos != null) { // Si hay destinatarios
-                //Si no es modificable se distribuye directamente a la lista de propuestos
-                if (!result.modificable) {
-                    //enviar destinatarios directamente sin popup
-
-                    //Pintamos los destinatarios
-                    var htmlul = "";
-
-                    // $('#modalDistribDestinatarios').modal('show');
-                    var destinatarios = [];
-                    var destinatariosarray = "";
-                    var lenpropuestos = result.propuestos.length;
-                    for (var j = 0; j < lenpropuestos; j++) {
-                        destinatariosarray = "[";
-                        destinatarios[j] = '{"id":"' + result.propuestos[j].id + '","name":"' + result.propuestos[j].name + '"}';
-
-                        htmlul += "<li>" + result.propuestos[j].name + "</li>";
-                        // Colocamos la coma de separación
-                        if (j != 0 && j < lenpropuestos) {
-                            destinatariosarray += ",";
-                        }
-                        destinatariosarray += destinatarios[j];
-                    }
-                    $('#listadestin').html(htmlul);
-                    $('#modalDistribDestinatarios').modal('show');
-                    destinatariosarray += "]";
-                    var json = '{"destinatarios":' + destinatariosarray + ',"observaciones":""}';
-
-                    jQuery.ajax({
-                        url: urlEnviarDestinatarios,
-                        type: 'POST',
-                        dataType: 'json',
-                        data: json,
-                        contentType: 'application/json',
-                        success: function (resultado) {
-                            // $('#modalDistribDestinatarios').modal('hide');
-                            goTo(urlDetalle);
-
-                        }
-                    });
-                } else { // Si es modificable mostramos el pop up para que cambien la lista de propuestos
-
-                    //Rellenamos el select de posibles
-                    var lenposibles = result.posibles.length;
-                    for (var i = 0; i < lenposibles; i++)
-                        html += '<option value="' + result.posibles[i].id + '">'
-                            + result.posibles[i].name + '</option>';
-                    $('#posibles').trigger("chosen:updated");
-                    $('#posibles').html(html);
+            if (result != null && result.propuestos != null) { // Si hay destinatarios, mostramos pop-up
+                //Rellenamos el select de posibles
+                var lenposibles = result.posibles.length;
+                for (var i = 0; i < lenposibles; i++)
+                    html += '<option value="' + result.posibles[i].id + '">'
+                        + result.posibles[i].name + '</option>';
+                $('#posibles').trigger("chosen:updated");
+                $('#posibles').html(html);
 
 
-                    //Rellenamos el select de propuestos
-                    html = '';
-                    var lenpropuestos = result.propuestos.length;
-                    for (var j = 0; j < lenpropuestos; j++)
-                        html += '<option value="' + result.propuestos[j].id + '">'
-                            + result.propuestos[j].name + '</option>';
-                    $('#propuestos').html(html);
-                    $('#distribuirModal').modal('show');
-                }
+                //Rellenamos el select de propuestos
+                html = '';
+                var lenpropuestos = result.propuestos.length;
+                for (var j = 0; j < lenpropuestos; j++)
+                    html += '<option value="' + result.propuestos[j].id + '">'
+                        + result.propuestos[j].name + '</option>';
+                $('#propuestos').html(html);
+                $('#distribuirModal').modal('show');
+
             } else { // No hay destinatarios, se marca como tramitado
-                // $('#divlistdestinatarios').hide();
-                $('#listadestin').html(traddistribuir['nodestinatarios']);
-                $('#modalDistribDestinatarios').modal('show');
                 goTo(urlTramitar);
             }
         }
