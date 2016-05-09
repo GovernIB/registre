@@ -22,10 +22,9 @@ public class Test {
 
             DistribucionLocalDistribucionPlugin distribucionPlugin = new DistribucionLocalDistribucionPlugin();
 
-            Destinatarios destinatarios = distribucionPlugin.distribuir(null, false);
+            Destinatarios destinatarios = distribucionPlugin.distribuir(null);
             if (destinatarios != null) {
                 System.out.println(" ------- Destinatarios ------- ");
-                System.out.println(destinatarios.getModificable());
                 System.out.println("DESTINATARIOS POSIBLES: " + destinatarios.getPosibles().size());
                 System.out.println();
             }
