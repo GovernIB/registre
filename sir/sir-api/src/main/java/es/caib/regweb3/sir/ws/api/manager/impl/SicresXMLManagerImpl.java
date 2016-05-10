@@ -1,7 +1,7 @@
 package es.caib.regweb3.sir.ws.api.manager.impl;
 
-import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
-import es.caib.dir3caib.ws.api.unidad.UnidadTF;
+import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
+import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.RegistroDetalle;
@@ -1589,10 +1589,10 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
         }
 
         try {
-            Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService();
-            UnidadTF unidadTF = unidadesService.obtenerUnidad(codigoEntidadRegistral,null,null);
+            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
+            OficinaTF oficinaTF = oficinasService.obtenerOficina(codigoEntidadRegistral,null,null);
 
-            if(unidadTF == null) return false;
+            if(oficinaTF == null) return false;
 
         } catch (Exception e) {
             e.printStackTrace();
