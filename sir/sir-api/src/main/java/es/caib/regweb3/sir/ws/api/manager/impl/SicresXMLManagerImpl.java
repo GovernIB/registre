@@ -1,9 +1,12 @@
 package es.caib.regweb3.sir.ws.api.manager.impl;
 
+import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
+import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.RegistroDetalle;
 import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
 import es.caib.regweb3.sir.core.excepcion.SIRException;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.sir.core.model.*;
@@ -1572,8 +1575,12 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
         // No hay validaciones
     }
 
-    protected boolean validarCodigoEntidadRegistral(
-            String codigoEntidadRegistral) {
+    /**
+     * Comprueba con DIR3CAIB que el codigoEntidadRegistral pertenece a una Entidad Válida.
+     * @param codigoEntidadRegistral
+     * @return
+     */
+    protected boolean validarCodigoEntidadRegistral(String codigoEntidadRegistral) {
 
         boolean valido = true;
 
@@ -1581,15 +1588,16 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
             return false;
         }
 
-      /*  if (isValidacionDirectorioComun()) {
+        try {
+            Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService();
+            UnidadTF unidadTF = unidadesService.obtenerUnidad(codigoEntidadRegistral,null,null);
 
-            Criterios<CriterioOficinaEnum> criterios = new Criterios<CriterioOficinaEnum>();
-            criterios.addCriterio(new Criterio<CriterioOficinaEnum>(
-                    CriterioOficinaEnum.OFICINAID, codigoEntidadRegistral));
+            if(unidadTF == null) return false;
 
-            valido = (getServicioConsultaDirectorioComun().countOficinas(
-                    criterios) > 0);
-        }*/
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
 
         return valido;
     }
