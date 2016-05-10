@@ -77,7 +77,7 @@ public class InicioController extends BaseController{
             // Obtenemos los Organismos Internos que tienen Registros pendientes de tramitar por medio de un Oficio de Revisión,
             Set<String> organismosOficioRemisionInterna = new HashSet<String>();
             for (Libro libro : librosRegistroEntrada) {
-                organismosOficioRemisionInterna.addAll(registroEntradaEjb.oficiosPendientesRemisionInterna(libro.getId(), getOrganismosIdOficinaActiva(request)));
+                organismosOficioRemisionInterna.addAll(registroEntradaEjb.oficiosPendientesRemisionInterna(libro.getId(), getOrganismosOficioRemision(request)));
             }
             mav.addObject("organismosOficioRemisionInterna", organismosOficioRemisionInterna);
 

@@ -90,7 +90,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
      * Realiza la busqueda de {@link es.caib.regweb3.model.RegistroSalida} según los parametros del formulario
      */
     @RequestMapping(value = "/busqueda", method = RequestMethod.GET)
-    public ModelAndView list(@ModelAttribute RegistroSalidaBusqueda busqueda, BindingResult result,HttpServletRequest request)throws Exception {
+    public ModelAndView busqueda(@ModelAttribute RegistroSalidaBusqueda busqueda, BindingResult result,HttpServletRequest request)throws Exception {
 
         ModelAndView mav = new ModelAndView("registroSalida/registroSalidaList", result.getModel());
         RegistroSalida registroSalida = busqueda.getRegistroSalida();

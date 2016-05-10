@@ -418,7 +418,8 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     }
 
     /**
-     * Método que obtiene los organismos vigentes y en los que puede registrar de la oficina activa
+     * Método que obtiene los organismos vigentes y en los que puede registrar de la oficina activa,
+     * sin generar OficioRemisión.
      *
      * @param oficinaActiva
      * @return List

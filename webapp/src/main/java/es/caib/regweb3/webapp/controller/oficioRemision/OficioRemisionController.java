@@ -165,7 +165,7 @@ public class OficioRemisionController extends BaseController {
         registroEntrada.setEstado(RegwebConstantes.ESTADO_VALIDO); // Fijamos el Estado válido por defecto
 
         // Obtenemos los Registros de Entrada, pendientes de tramitar por medio de un Oficio de Revisión, agrupados según su Organismos destinatario.
-        List<OficiosRemisionInternoOrganismo> oficiosRemisionOrganismos = registroEntradaEjb.oficiosPendientesRemisionInterna(busqueda.getAnyo(), registroEntrada.getLibro(), getOrganismosIdOficinaActiva(request));
+        List<OficiosRemisionInternoOrganismo> oficiosRemisionOrganismos = registroEntradaEjb.oficiosPendientesRemisionInterna(busqueda.getAnyo(), registroEntrada.getLibro(), getOrganismosOficioRemision(request));
 
         busqueda.setPageNumber(1);
         mav.addObject("oficiosRemisionOrganismos", oficiosRemisionOrganismos);

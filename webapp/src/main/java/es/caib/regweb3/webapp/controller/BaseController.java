@@ -284,7 +284,8 @@ public class BaseController {
     }
 
     /**
-     * Obtiene los Organismos de la OficinaActiva a los que da servicio
+     * Obtiene los Organismos de la OficinaActiva en los que puede registrar,
+     * sin generar OficioRemisión
      * @param request
      * @return
      * @throws Exception
@@ -294,15 +295,15 @@ public class BaseController {
     }
 
     /**
-     * Obtiene los Id de los Organismos de la OficinaActiva a los que da servicio
-     * Eliminando los Organismos que están marcados como Entidad de Derecho Público,
-     * de esta manera siempre se generará un Oficio Remisión para este tipo de Organismos.
+     * Obtiene el Id de los Organismos de la OficinaActiva en los cuales no se generará OficioRemisión.
+     * Se eliminando los Organismos que están marcados como Entidad de Derecho Público o
+     * a los que la OficiaActiva da servicio.
      *
      * @param request
      * @return
      * @throws Exception
      */
-    public Set<Long> getOrganismosIdOficinaActiva(HttpServletRequest request) throws Exception {
+    public Set<Long> getOrganismosOficioRemision(HttpServletRequest request) throws Exception {
 
         Oficina oficinaActiva = getOficinaActiva(request);
 
@@ -314,9 +315,9 @@ public class BaseController {
 
         for (Organismo organismo : organismos) {
 
-            // Eliminamos el Organismo si está marcado como Entidad de Derecho Público.
-            // De esta manera siempre se generará un Oficio Remisión para este tipo de Organismos
-            if (!organismo.getEdp() || oficinaActiva.getOrganismoResponsable().equals(organismo)) {
+            // Eliminamos el Organismo si está marcado como Entidad de Derecho Público o si
+            // la OficinaActiva le da servicio.
+            if (!organismo.getEdp() || oficinaActiva.getOrganismosFuncionales().contains(organismo)) {
                 organismosId.add(organismo.getId());
             }
         }
