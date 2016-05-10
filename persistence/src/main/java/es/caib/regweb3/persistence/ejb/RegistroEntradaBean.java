@@ -1295,35 +1295,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         if (distribucionPlugin != null) {
             //Obtenemos la configuración de la distribución
             ConfiguracionDistribucion configuracionDistribucion = distribucionPlugin.configurarDistribucion();
-
-            switch (configuracionDistribucion.configuracionAnexos) {
-                case 1: { //1.  Fitxer + firma + metadades + custodiaId
-                    List<Anexo> anexos = re.getRegistroDetalle().getAnexos();
-                    List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
-                    for (Anexo anexo : anexos) {
-                        AnexoFull anexoFull = anexoEjb.getAnexoFull(anexo.getId());
-                        if (anexoFull != null) {
-                            log.info(anexoFull.getDocumentoCustody().getName());
-                        }
-                        anexosFull.add(anexoFull);
-                    }
-                    //Asignamos los documentos recuperados de custodia al registro de entrada.
-                    re.getRegistroDetalle().setAnexosFull(anexosFull);
-                }
-                case 2: { //2. custodiaId
-
-                    // Montamos una nueva lista de anexos solo con el custodiaID, sin metadatos ni nada
-                    List<Anexo> anexos = re.getRegistroDetalle().getAnexos();
-                    List<Anexo> nuevosAnexos = new ArrayList<Anexo>();
-                    for (Anexo anexo : anexos) {
-                        Anexo nuevoAnexo = new Anexo();
-                        nuevoAnexo.setCustodiaID(anexo.getCustodiaID());
-                        nuevosAnexos.add(nuevoAnexo);
-                    }
-                    re.getRegistroDetalle().setAnexos(nuevosAnexos);
-                }
-                // 3. custodiaId + metadades (No hace falta hacer nada es el caso por defecto)
-            }
+            re = configuracionAnexosDistribucion(re, configuracionDistribucion.configuracionAnexos);
             if (!configuracionDistribucion.isListado()) {
                 distribucionPlugin.enviarDestinatarios(re, null, "");
                 //Despues lo tramita en una segunda fase desde el metodo distribuir() en distribuir.js
@@ -1340,37 +1312,57 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         IDistribucionPlugin distribucionPlugin = RegwebDistribucionPluginManager.getInstance();
         if (distribucionPlugin != null) {
             ConfiguracionDistribucion configuracionDistribucion = distribucionPlugin.configurarDistribucion();
-            switch (configuracionDistribucion.configuracionAnexos) {
-                case 1: {//1.  Fitxer + firma + metadades + custodiaId
-                    List<Anexo> anexos = re.getRegistroDetalle().getAnexos();
-                    List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
-                    for (Anexo anexo : anexos) {
-                        AnexoFull anexoFull = anexoEjb.getAnexoFull(anexo.getId());
-                        if (anexoFull != null) {
-                            log.info(anexoFull.getDocumentoCustody().getName());
-                        }
-                        anexosFull.add(anexoFull);
-                    }
-                    //Asignamos los documentos recuperados de custodia al registro de entrada.
-                    re.getRegistroDetalle().setAnexosFull(anexosFull);
-                }
-                case 2: {//2. custodiaId
-
-                    // Montamos una nueva lista de anexos solo con el custodiaID, sin metadatos ni nada
-                    List<Anexo> anexos = re.getRegistroDetalle().getAnexos();
-                    List<Anexo> nuevosAnexos = new ArrayList<Anexo>();
-                    for (Anexo anexo : anexos) {
-                        Anexo nuevoAnexo = new Anexo();
-                        nuevoAnexo.setCustodiaID(anexo.getCustodiaID());
-                        nuevosAnexos.add(nuevoAnexo);
-                    }
-                    re.getRegistroDetalle().setAnexos(nuevosAnexos);
-                }
-                // 3. custodiaId + metadades (No hace falta hacer nada es el caso por defecto)
-            }
+            re = configuracionAnexosDistribucion(re, configuracionDistribucion.configuracionAnexos);
             return distribucionPlugin.enviarDestinatarios(re, wrapper.getDestinatarios(), wrapper.getObservaciones());
         }
         return false;
 
+    }
+
+    /**
+     * Método que prepara el registro de entrada para distribuirlo.
+     * La variable confAnexos indica que datos se envian en el segmento de anexo del registro de entrada.
+     * <p/>
+     * 1 = custodiaId + metadades + fitxer + firma. És a dir a dins el segment annexes de l'assentament s'enviaria tot el contingut de l'annexe.
+     * 2 =  custodiaId. A dins el segment annexes de l'assentament només s'enviaria l'Id del sistema que custodia l'arxiu.
+     * 3 = custodiaId + metadades. A dins el segment annexes de l'assentament s'enviaria l'Id del sistema que custodia l'arxiu i les metadades del document.
+     *
+     * @param original
+     * @param confAnexos
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
+    private RegistroEntrada configuracionAnexosDistribucion(RegistroEntrada original, int confAnexos) throws Exception, I18NException {
+        switch (confAnexos) {
+            case 1: {//1.  Fitxer + firma + metadades + custodiaId
+                List<Anexo> anexos = original.getRegistroDetalle().getAnexos();
+                List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
+                for (Anexo anexo : anexos) {
+                    AnexoFull anexoFull = anexoEjb.getAnexoFull(anexo.getId());
+                    if (anexoFull != null) {
+                        log.info(anexoFull.getDocumentoCustody().getName());
+                    }
+                    anexosFull.add(anexoFull);
+                }
+                //Asignamos los documentos recuperados de custodia al registro de entrada.
+                original.getRegistroDetalle().setAnexosFull(anexosFull);
+            }
+            case 2: {//2. custodiaId
+
+                // Montamos una nueva lista de anexos solo con el custodiaID, sin metadatos ni nada
+                List<Anexo> anexos = original.getRegistroDetalle().getAnexos();
+                List<Anexo> nuevosAnexos = new ArrayList<Anexo>();
+                for (Anexo anexo : anexos) {
+                    Anexo nuevoAnexo = new Anexo();
+                    nuevoAnexo.setCustodiaID(anexo.getCustodiaID());
+                    nuevosAnexos.add(nuevoAnexo);
+                }
+                original.getRegistroDetalle().setAnexos(nuevosAnexos);
+            }
+            // 3. custodiaId + metadades (No hace falta hacer nada es el caso por defecto)
+
+        }
+        return original;
     }
 }
