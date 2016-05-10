@@ -2,6 +2,8 @@ package es.caib.regweb3.sir.ws.api.manager.impl;
 
 import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
+import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
+import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.RegistroDetalle;
@@ -1610,19 +1612,17 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
             return false;
         }
 
-		/*
-		 * No validar contra el directorio común porque pueden ser códigos de
-		 * subdirecciones y éstas no se identifican en el DIR3.
-		 */
-//		if (isValidacionDirectorioComun()) {
-//
-//			Criterios<CriterioUnidadOrganicaEnum> criterios = new Criterios<CriterioUnidadOrganicaEnum>();
-//			criterios.addCriterio(new Criterio<CriterioUnidadOrganicaEnum>(
-//					CriterioUnidadOrganicaEnum.UOID, codigoUnidadTramitacion));
-//
-//			valido = (getServicioConsultaDirectorioComun()
-//					.countUnidadesOrganicas(criterios) > 0);
-//		}
+        try {
+            Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService();
+            UnidadTF unidadTF = unidadesService.obtenerUnidad(codigoUnidadTramitacion,null,null);
+
+            if(unidadTF == null) return false;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
 
         return valido;
     }
