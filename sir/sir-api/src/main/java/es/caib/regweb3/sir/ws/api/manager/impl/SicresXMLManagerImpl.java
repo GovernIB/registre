@@ -1442,6 +1442,23 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
     }
 
     /**
+     * Validar el segmento de formulario genérico
+     *
+     * @param ficheroIntercambio Información del fichero de intercambio.
+     */
+    protected void validarSegmentoFormularioGenerico(
+            FicheroIntercambio ficheroIntercambio) {
+
+        Assert.hasText(
+                ficheroIntercambio.getExpone(),
+                "'expone' no puede estar vacio");
+
+        Assert.hasText(
+                ficheroIntercambio.getSolicita(),
+                "'solicita' no puede estar vacio");
+    }
+
+    /**
      * Genera el Hash mediante MD5 del contenido del documento y lo codifica en base64
      *
      * @param documentoData
@@ -1565,16 +1582,6 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
         }
 
         return denominacionOficinaOrigen;
-    }
-
-    /**
-     * Validar el segmento de formulario genérico
-     *
-     * @param ficheroIntercambio Información del fichero de intercambio.
-     */
-    protected void validarSegmentoFormularioGenerico(
-            FicheroIntercambio ficheroIntercambio) {
-        // No hay validaciones
     }
 
     /**
