@@ -11,6 +11,7 @@ import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.sir.core.model.Errores;
 import es.caib.regweb3.sir.core.model.TipoAnotacion;
+import es.caib.regweb3.sir.core.model.TipoRegistro;
 import es.caib.regweb3.sir.core.model.TipoTransporte;
 import es.caib.regweb3.sir.core.schema.FicheroIntercambioSICRES3;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -355,6 +356,18 @@ public class FicheroIntercambio {
         return null;
     }
 
+    public TipoRegistro getTipoRegistro() {
+        if ((getFicheroIntercambio() != null)
+                && (getFicheroIntercambio().getDeInternosControl() != null)){
+
+            String tipoRegistro = getFicheroIntercambio().getDeInternosControl().getTipoRegistro();
+            if ((tipoRegistro != null) && StringUtils.isNotBlank(tipoRegistro)) {
+                return TipoRegistro.getTipoRegistro(tipoRegistro);
+            }
+        }
+
+        return null;
+    }
 
     public String getObservacionesApunte() {
         if ((getFicheroIntercambio() != null)
@@ -396,6 +409,8 @@ public class FicheroIntercambio {
         RegistroDetalle registroDetalle = new RegistroDetalle();
         List<Interesado> interesados = new ArrayList<Interesado>();
         List<Anexo> anexos = new ArrayList<Anexo>();
+
+        preRegistro.setEstado(RegwebConstantes.ESTADO_PREREGISTRO_PENDIENTE_PROCESAR);
 
         if (getFicheroIntercambio() != null) {
 

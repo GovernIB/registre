@@ -119,15 +119,15 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
         // Comprobar los datos de origen
         Assert.hasText(asiento.getCodigoEntidadRegistralOrigen(),
-                "'codigoEntidadRegistralOrigen' must not be empty");
+                "'codigoEntidadRegistralOrigen' no puede estar vacio");
         Assert.hasText(asiento.getNumeroRegistro(),
-                "'numeroRegistroEntrada' must not be empty");
+                "'numeroRegistroEntrada' no puede estar vacio");
         Assert.notNull(asiento.getFechaRegistro(),
                 "'fechaEntrada' must not be null");
 
         // Comprobar los datos de destino
         Assert.hasText(asiento.getCodigoEntidadRegistralDestino(),
-                "'codigoEntidadRegistralDestino' must not be empty");
+                "'codigoEntidadRegistralDestino' no puede estar vacio");
 
         // Comprobar los datos de los interesados
         if (!CollectionUtils.isEmpty(asiento.getInteresados())
@@ -142,16 +142,16 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                                 .getNombreInteresado()) && StringUtils
                                 .isNotBlank(interesado
                                         .getPrimerApellidoInteresado())),
-                        "'razonSocialInteresado' or ('nombreInteresado' and 'primerApellidoInteresado') must not be empty");
+                        "'razonSocialInteresado' or ('nombreInteresado' and 'primerApellidoInteresado') no puede estar vacio");
 
 
                 if (interesado.getCanalPreferenteComunicacionInteresado() != null) {
                     if (interesado.getCanalPreferenteComunicacionInteresado()
                             .equals(CanalNotificacion.DIRECCION_POSTAL)) {
                         Assert.hasText(interesado.getCodigoPaisInteresado(),
-                                "'codigoPaisInteresado' must not be empty");
+                                "'codigoPaisInteresado' no puede estar vacio");
                         Assert.hasText(interesado.getDireccionInteresado(),
-                                "'direccionInteresado' must not be empty");
+                                "'direccionInteresado' no puede estar vacio");
 
                         if (CODIGOPAISESPANA.equals(interesado
                                 .getCodigoPaisInteresado())) {
@@ -163,7 +163,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                                                     .getCodigoProvinciaInteresado()) && StringUtils
                                             .isNotBlank(interesado
                                                     .getCodigoMunicipioInteresado())),
-                                    "'codigoPostalInteresado' or ('codigoProvinciaInteresado' and 'codigoMunicipioInteresado') must not be empty");
+                                    "'codigoPostalInteresado' or ('codigoProvinciaInteresado' and 'codigoMunicipioInteresado') no puede estar vacio");
                         }
 
                     } else if (interesado
@@ -171,7 +171,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                             .equals(CanalNotificacion.DIRECCION_ELECTRONICA_HABILITADA)) {
                         Assert.hasText(interesado
                                         .getDireccionElectronicaHabilitadaInteresado(),
-                                "'direccionElectronicaHabilitadaInteresado' must not be empty");
+                                "'direccionElectronicaHabilitadaInteresado' no puede estar vacio");
                     }
                 }
 
@@ -181,9 +181,9 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                             .equals(CanalNotificacion.DIRECCION_POSTAL)) {
 
                         Assert.hasText(interesado.getCodigoPaisRepresentante(),
-                                "'codigoPaisRepresentante' must not be empty");
+                                "'codigoPaisRepresentante' no puede estar vacio");
                         Assert.hasText(interesado.getDireccionRepresentante(),
-                                "'direccionRepresentante' must not be empty");
+                                "'direccionRepresentante' no puede estar vacio");
 
                         if (CODIGOPAISESPANA.equals(interesado
                                 .getCodigoPaisRepresentante())) {
@@ -195,7 +195,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                                                     .getCodigoProvinciaRepresentante()) && StringUtils
                                             .isNotBlank(interesado
                                                     .getCodigoMunicipioRepresentante())),
-                                    "'codigoPostalRepresentante' or ('codigoProvinciaRepresentante' and 'codigoMunicipioRepresentante') must not be empty");
+                                    "'codigoPostalRepresentante' or ('codigoProvinciaRepresentante' and 'codigoMunicipioRepresentante') no puede estar vacio");
                         }
 
                     } else if (interesado
@@ -204,14 +204,14 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                         Assert.hasText(
                                 interesado
                                         .getDireccionElectronicaHabilitadaRepresentante(),
-                                "'direccionElectronicaHabilitadaRepresentante' must not be empty");
+                                "'direccionElectronicaHabilitadaRepresentante' no puede estar vacio");
                     }
                 }
             }
         }
 
         // Comprobar los datos de asunto
-        Assert.hasText(asiento.getResumen(), "'resumen' must not be empty");
+        Assert.hasText(asiento.getResumen(), "'resumen' no puede estar vacio");
 
         // Comprobar los datos de los anexos
         if (!CollectionUtils.isEmpty(asiento.getAnexos())) {
@@ -223,7 +223,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
             for (Anexo anexo : asiento.getAnexos()) {
 
                 Assert.hasText(anexo.getNombreFichero(),
-                        "'nombreFichero' must not be empty");
+                        "'nombreFichero' no puede estar vacio");
                 Assert.notNull(anexo.getTipoDocumento(),
                         "'tipoDocumento' must not be null");
                 Assert.notNull(anexo.getHash(), "'hash' must not be null");
@@ -255,7 +255,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
         // Comprobar los datos de internos o de control
         Assert.hasText(asiento.getIdentificadorIntercambio(),
-                "'identificadorIntercambio' must not be empty");
+                "'identificadorIntercambio' no puede estar vacio");
         Assert.notNull(asiento.getTipoRegistro(),
                 "'tipoRegistro' must not be null");
         Assert.notNull(asiento.getDocumentacionFisica(),
@@ -263,7 +263,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
         Assert.notNull(asiento.getIndicadorPrueba(),
                 "'indicadorPrueba' must not be null");
         Assert.hasText(asiento.getCodigoEntidadRegistralInicio(),
-                "'codigoEntidadRegistralInicio' must not be empty");
+                "'codigoEntidadRegistralInicio' no puede estar vacio");
 
         log.info("Asiento registral validado");
     }
@@ -278,11 +278,11 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
         Assert.notNull(mensaje, "'mensaje' must not be null");
 
         Assert.hasText(mensaje.getCodigoEntidadRegistralOrigen(),
-                "'codigoEntidadRegistralOrigen' must not be empty");
+                "'codigoEntidadRegistralOrigen' no puede estar vacio");
         Assert.hasText(mensaje.getCodigoEntidadRegistralDestino(),
-                "'codigoEntidadRegistralDestino' must not be empty");
+                "'codigoEntidadRegistralDestino' no puede estar vacio");
         Assert.hasText(mensaje.getIdentificadorIntercambio(),
-                "'identificadorIntercambio' must not be empty");
+                "'identificadorIntercambio' no puede estar vacio");
         Assert.notNull(mensaje.getTipoMensaje(),
                 "'tipoMensaje' must not be null");
 
@@ -1001,7 +1001,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
         // Validar que el código de entidad registral de origen esté informado
         Assert.hasText(ficheroIntercambio.getCodigoEntidadRegistralOrigen(),
-                "'CodigoEntidadRegistralOrigen' must not be empty");
+                "'CodigoEntidadRegistralOrigen' no puede estar vacio");
 
         // Validar el código de entidad registral de origen en DIR3
         Assert.isTrue(validarCodigoEntidadRegistral(ficheroIntercambio
@@ -1018,11 +1018,11 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
         // Validar que el número de registro de entrada en origen esté informado
         Assert.hasText(ficheroIntercambio.getNumeroRegistro(),
-                "'NumeroRegistroEntrada' must not be empty");
+                "'NumeroRegistroEntrada' no puede estar vacio");
 
         // Validar que la fecha y hora de entrada esté informada
         Assert.hasText(ficheroIntercambio.getFechaRegistroXML(),
-                "'FechaHoraEntrada' must not be empty");
+                "'FechaHoraEntrada' no puede estar vacio");
 
         // Validar el formato de la fecha de entrada
         Assert.isTrue(
@@ -1043,7 +1043,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
         // Validar que el código de entidad registral de destino esté informado
         Assert.hasText(ficheroIntercambio.getCodigoEntidadRegistralDestino(),
-                "'CodigoEntidadRegistralDestino' must not be empty");
+                "'CodigoEntidadRegistralDestino' no puede estar vacio");
 
         // Validar el código de entidad registral de destino en DIR3
         Assert.isTrue(validarCodigoEntidadRegistral(ficheroIntercambio
@@ -1071,16 +1071,6 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
      * @param ficheroIntercambio Información del fichero de intercambio.
      */
     protected void validarSegmentoInteresados(FicheroIntercambio ficheroIntercambio) {
-
-		/*
-         * TODO SIR-RC-PR-126
-		 *
-		 * Recepción de fichero de intercambio
-		 * correspondiente a un asiento registral con los campos mínimos
-		 * requeridos por la norma SICRES3, CON un interesado persona jurídica y
-		 * sin representante sin informar, con canal preferente de notificación
-		 * la dirección postal de España.
-		 */
 
         // Comprobar los datos de los interesados
         if ((ficheroIntercambio.getFicheroIntercambio() != null)
@@ -1123,7 +1113,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                                     || (StringUtils.isNotBlank(interesado
                                     .getNombreInteresado()) && StringUtils.isNotBlank(interesado
                                     .getPrimerApellidoInteresado()) || "O".equalsIgnoreCase(interesado.getTipoDocumentoIdentificacionInteresado())),
-                            "'razonSocialInteresado' or ('nombreInteresado' and 'primerApellidoInteresado') must not be empty");
+                            "'razonSocialInteresado' or ('nombreInteresado' and 'primerApellidoInteresado') no puede estar vacio");
 
 					/*
 					Assert.isTrue(
@@ -1151,10 +1141,10 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                                         .getCanalPreferenteComunicacionInteresado())) {
 
                             Assert.hasText(interesado.getPaisInteresado(),
-                                    "'paisInteresado' must not be empty");
+                                    "'paisInteresado' no puede estar vacio");
                             Assert.hasText(
                                     interesado.getDireccionInteresado(),
-                                    "'direccionInteresado' must not be empty");
+                                    "'direccionInteresado' no puede estar vacio");
 
                             if (CODIGOPAISESPANA.equals(interesado
                                     .getPaisInteresado())) {
@@ -1166,7 +1156,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                                                         .getProvinciaInteresado()) && StringUtils
                                                 .isNotBlank(interesado
                                                         .getMunicipioInteresado())),
-                                        "'codigoPostalInteresado' or ('provinciaInteresado' and 'municipioInteresado') must not be empty");
+                                        "'codigoPostalInteresado' or ('provinciaInteresado' and 'municipioInteresado') no puede estar vacio");
                             }
 
                         } else if (CanalNotificacion.DIRECCION_ELECTRONICA_HABILITADA
@@ -1176,7 +1166,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                             Assert.hasText(
                                     interesado
                                             .getDireccionElectronicaHabilitadaInteresado(),
-                                    "'direccionElectronicaHabilitadaInteresado' must not be empty");
+                                    "'direccionElectronicaHabilitadaInteresado' no puede estar vacio");
                         }
                     }
 
@@ -1188,10 +1178,10 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                                         .getCanalPreferenteComunicacionRepresentante())) {
 
                             Assert.hasText(interesado.getPaisRepresentante(),
-                                    "'paisRepresentante' must not be empty");
+                                    "'paisRepresentante' no puede estar vacio");
                             Assert.hasText(
                                     interesado.getDireccionRepresentante(),
-                                    "'direccionRepresentante' must not be empty");
+                                    "'direccionRepresentante' no puede estar vacio");
 
                             if (CODIGOPAISESPANA.equals(interesado
                                     .getPaisRepresentante())) {
@@ -1204,7 +1194,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                                                         .getProvinciaRepresentante()) && StringUtils
                                                 .isNotBlank(interesado
                                                         .getMunicipioRepresentante())),
-                                        "'codigoPostalRepresentante' or ('provinciaRepresentante' and 'municipioRepresentante') must not be empty");
+                                        "'codigoPostalRepresentante' or ('provinciaRepresentante' and 'municipioRepresentante') no puede estar vacio");
                             }
 
                         } else if (CanalNotificacion.DIRECCION_ELECTRONICA_HABILITADA
@@ -1214,7 +1204,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                             Assert.hasText(
                                     interesado
                                             .getDireccionElectronicaHabilitadaRepresentante(),
-                                    "'direccionElectronicaHabilitadaRepresentante' must not be empty");
+                                    "'direccionElectronicaHabilitadaRepresentante' no puede estar vacio");
                         }
                     }
                 }
@@ -1231,7 +1221,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
         // Validar que el resumen esté informado
         Assert.hasText(ficheroIntercambio.getResumen(),
-                "'Resumen' must not be empty");
+                "'Resumen' no puede estar vacio");
     }
 
     /**
@@ -1263,7 +1253,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
             // Validar el nombre del fichero anexado
             Assert.hasText(anexo.getNombreFicheroAnexado(),
-                    "'NombreFicheroAnexado' must not be empty");
+                    "'NombreFicheroAnexado' no puede estar vacio");
             Assert.isTrue(
                     !StringUtils.containsAny(anexo.getNombreFicheroAnexado(),
                             "\\/?*:|<>\";&"),
@@ -1285,7 +1275,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
             // Validar el campo tipo de documento
             Assert.hasText(anexo.getTipoDocumento(),
-                    "'TipoDocumento' must not be empty");
+                    "'TipoDocumento' no puede estar vacio");
             Assert.notNull(
                     TipoDocumento.getTipoDocumento(anexo
                             .getTipoDocumento()),
@@ -1296,7 +1286,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
             // Nota: no se comprueba el código hash de los documentos porque no
             // se especifica con qué algoritmo está generado.
             Assert.isTrue(!ArrayUtils.isEmpty(anexo.getHash()),
-                    "'Hash' must not be empty");
+                    "'Hash' no puede estar vacio");
 
             // Validar el tipo MIME
 			/*
@@ -1342,7 +1332,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
         // No vacío
         Assert.hasText(anexo.getIdentificadorFichero(),
-                "'IdentificadorFichero' must not be empty");
+                "'IdentificadorFichero' no puede estar vacio");
 
         // Validar el tamaño
         Assert.isTrue(StringUtils.length(anexo.getIdentificadorFichero()) <= LONGITUD_MAX_IDENTIFICADOR_FICHERO,
@@ -1388,7 +1378,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
         // Validar el tipo de anotación
         Assert.hasText(ficheroIntercambio.getTipoAnotacionXML(),
-                "'TipoAnotacion' must not be empty");
+                "'TipoAnotacion' no puede estar vacio");
         Assert.notNull(
                 ficheroIntercambio.getTipoAnotacion(),
                 "'TipoAnotacion' is invalid ["
@@ -1396,7 +1386,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
         // Validar que el código de entidad registral de inicio esté informado
         Assert.hasText(ficheroIntercambio.getCodigoEntidadRegistralInicio(),
-                "'CodigoEntidadRegistralInicio' must not be empty");
+                "'CodigoEntidadRegistralInicio' no puede estar vacio");
 
         // Validar el código de entidad registral de inicio en DIR3
         Assert.isTrue(validarCodigoEntidadRegistral(ficheroIntercambio
@@ -1416,7 +1406,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
         // Comprobar que no esté vacío
         Assert.hasText(ficheroIntercambio.getIdentificadorIntercambio(),
-                "'IdentificadorIntercambio' must not be empty");
+                "'IdentificadorIntercambio' no puede estar vacio");
 
         Assert.isTrue(ficheroIntercambio.getIdentificadorIntercambio().length() <= LONGITUD_IDENTIFICADOR_INTERCAMBIO,
                 "'IdentificadorIntercambio' is invalid");

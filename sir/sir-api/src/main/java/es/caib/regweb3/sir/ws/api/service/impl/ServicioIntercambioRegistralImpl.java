@@ -21,7 +21,7 @@ public class ServicioIntercambioRegistralImpl implements ServicioIntercambioRegi
     @Override
     public PreRegistro recibirFicheroIntercambio(String xmlFicheroIntercambio, WebServicesMethodsLocal webServicesMethodsEjb) {
 
-        Assert.hasText(xmlFicheroIntercambio, "'xmlFicheroIntercambio' must not be empty");
+        Assert.hasText(xmlFicheroIntercambio, "'xmlFicheroIntercambio' no puede estar vacio");
 
         return recepcionManager.recibirFicheroIntercambio(xmlFicheroIntercambio, webServicesMethodsEjb);
     }

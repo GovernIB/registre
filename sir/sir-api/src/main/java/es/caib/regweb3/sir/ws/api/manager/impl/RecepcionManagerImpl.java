@@ -1,11 +1,13 @@
 package es.caib.regweb3.sir.ws.api.manager.impl;
 
+import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.PreRegistro;
 import es.caib.regweb3.persistence.ejb.WebServicesMethodsLocal;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.sir.core.model.Errores;
 import es.caib.regweb3.sir.core.model.TipoAnotacion;
 import es.caib.regweb3.sir.core.model.TipoMensaje;
+import es.caib.regweb3.sir.core.model.TipoRegistro;
 import es.caib.regweb3.sir.core.schema.FicheroIntercambioSICRES3;
 import es.caib.regweb3.sir.core.schema.ObjectFactory;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
@@ -14,6 +16,7 @@ import es.caib.regweb3.sir.ws.api.manager.MensajeManager;
 import es.caib.regweb3.sir.ws.api.manager.RecepcionManager;
 import es.caib.regweb3.sir.ws.api.manager.SicresXMLManager;
 import org.apache.log4j.Logger;
+import org.springframework.util.Assert;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -49,10 +52,10 @@ public class RecepcionManagerImpl implements RecepcionManager {
 
         try {
 
+            Assert.hasText(xmlFicheroIntercambio, "'xmlFicheroIntercambio' no puede estar vacio");
+
             // Convertimos la información recibida del asiento registral sir
             ficheroIntercambio = sicresXMLManager.parseXMLFicheroIntercambio(xmlFicheroIntercambio);
-
-            //log.info("FicheroIntercambio : " + ficheroIntercambio);
 
             // Creamos el PreRegistro a partir del xml recibido
             preRegistro = recibirFicheroIntercambio(ficheroIntercambio, xmlFicheroIntercambio, webServicesMethodsEjb);
@@ -143,7 +146,17 @@ public class RecepcionManagerImpl implements RecepcionManager {
      */
     protected PreRegistro recibirFicheroIntercambioEnvio(FicheroIntercambio ficheroIntercambio, WebServicesMethodsLocal webServicesMethodsEjb) {
 
-        PreRegistro preRegistro = null;
+        PreRegistro preRegistro = ficheroIntercambio.getPreRegistro();
+
+        if(ficheroIntercambio.getTipoRegistro().equals(TipoRegistro.ENTRADA)){
+
+            for (Interesado interesado:preRegistro.getRegistroDetalle().getInteresados()) {
+
+            }
+
+        }else if(ficheroIntercambio.getTipoRegistro().equals(TipoRegistro.SALIDA)){
+
+        }
 
 
         try {
