@@ -68,8 +68,9 @@ public class PreRegistroUtilsBean implements PreRegistroUtilsLocal {
       
       nuevoRE.setEstado(RegwebConstantes.ESTADO_VALIDO);
 
+      Organismo organismoDestino;
       if(preRegistro.getCodigoUnidadTramitacionDestino() != null){
-          Organismo organismoDestino = organismoEjb.findByCodigoLigero(preRegistro.getCodigoUnidadTramitacionDestino());
+          organismoDestino = organismoEjb.findByCodigoLigero(preRegistro.getCodigoUnidadTramitacionDestino());
           nuevoRE.setDestino(organismoDestino);
       }
 
@@ -82,6 +83,8 @@ public class PreRegistroUtilsBean implements PreRegistroUtilsLocal {
       }
       if(preRegistro.getCodigoEntidadRegistralDestino() != null){
           Oficina oficina = oficinaEjb.findByCodigo(preRegistro.getCodigoEntidadRegistralDestino());
+          organismoDestino = organismoEjb.findByCodigoLigero(oficina.getOrganismoResponsable().getCodigo());
+          nuevoRE.setDestino(organismoDestino);
           // Comprobamos si esta Oficina Activa puede procesar este PreRegistro
           if(oficina.getCodigo().equals(oficinaActiva.getCodigo())){
               nuevoRE.setOficina(oficina);
@@ -138,8 +141,9 @@ public class PreRegistroUtilsBean implements PreRegistroUtilsLocal {
 
       nuevoRS.setEstado(RegwebConstantes.ESTADO_VALIDO);
 
+      Organismo organismoOrigen;
       if(preRegistro.getCodigoUnidadTramitacionDestino() != null){
-          Organismo organismoOrigen = organismoEjb.findByCodigoLigero(preRegistro.getCodigoUnidadTramitacionDestino());
+          organismoOrigen = organismoEjb.findByCodigoLigero(preRegistro.getCodigoUnidadTramitacionDestino());
           nuevoRS.setOrigen(organismoOrigen);
       }
 
@@ -152,6 +156,8 @@ public class PreRegistroUtilsBean implements PreRegistroUtilsLocal {
       }
       if(preRegistro.getCodigoEntidadRegistralDestino() != null){
           Oficina oficina = oficinaEjb.findByCodigo(preRegistro.getCodigoEntidadRegistralDestino());
+          organismoOrigen = organismoEjb.findByCodigoLigero(oficina.getOrganismoResponsable().getCodigo());
+          nuevoRS.setOrigen(organismoOrigen);
           // Comprobamos si esta Oficina Activa puede procesar este PreRegistro
           if(oficina.getCodigo().equals(oficinaActiva.getCodigo())){
               nuevoRS.setOficina(oficina);
