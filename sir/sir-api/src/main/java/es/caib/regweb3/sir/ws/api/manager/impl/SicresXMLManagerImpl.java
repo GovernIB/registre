@@ -1449,13 +1449,13 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
     protected void validarSegmentoFormularioGenerico(
             FicheroIntercambio ficheroIntercambio) {
 
-        Assert.hasText(
+        Assert.notNull(
                 ficheroIntercambio.getExpone(),
-                "'expone' no puede estar vacio");
+                "'expone' must not be null");
 
-        Assert.hasText(
+        Assert.notNull(
                 ficheroIntercambio.getSolicita(),
-                "'solicita' no puede estar vacio");
+                "'solicita' must not be null");
     }
 
     /**
