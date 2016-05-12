@@ -2,9 +2,7 @@ package es.caib.regweb3.webapp.controller.registro;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.HistoricoRegistroEntradaLocal;
-import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
 import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
-import es.caib.regweb3.persistence.ejb.ReproLocal;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.Mensaje;
@@ -16,8 +14,6 @@ import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
@@ -59,6 +55,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
     public String nuevoRegistroEntrada(Model model, HttpServletRequest request) throws Exception {
 
         Oficina oficina = getOficinaActiva(request);
+        Entidad entidadActiva = getEntidadActiva(request);
 
         RegistroEntrada registroEntrada = new RegistroEntrada();
         registroEntrada.setRegistroDetalle(new RegistroDetalle());
@@ -74,6 +71,8 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         model.addAttribute("libros", getLibrosRegistroEntrada(request));
         model.addAttribute("organismosOficinaActiva", getOrganismosOficinaActiva(request));
         model.addAttribute("oficinasOrigen",  getOficinasOrigen(request));
+        model.addAttribute("personasFisicas", personaEjb.getFisicasByEntidad(entidadActiva.getId()));
+        model.addAttribute("personasJuridicas", personaEjb.getJuridicasByEntidad(entidadActiva.getId()));
 
         return "registroEntrada/registroEntradaForm";
     }
@@ -111,6 +110,8 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             model.addAttribute(getOficinaActiva(request));
             model.addAttribute("oficinasOrigen",  getOficinasOrigen(request));
             model.addAttribute("libros", getLibrosRegistroEntrada(request));
+            model.addAttribute("personasFisicas", personaEjb.getFisicasByEntidad(entidad.getId()));
+            model.addAttribute("personasJuridicas", personaEjb.getJuridicasByEntidad(entidad.getId()));
 
             // Organismo destino: Select
             Set<Organismo> organismosOficinaActiva = getOrganismosOficinaActiva(request);

@@ -291,7 +291,10 @@ public class BaseController {
      * @throws Exception
      */
     public Set<Organismo> getOrganismosOficinaActiva(HttpServletRequest request) throws Exception {
-        return organismoEjb.getByOficinaActiva(getOficinaActiva(request));
+        //return organismoEjb.getByOficinaActiva(getOficinaActiva(request));
+        HttpSession session = request.getSession();
+
+        return (Set<Organismo>) session.getAttribute(RegwebConstantes.SESSION_ORGANISMOS_OFICINA);
     }
 
     /**

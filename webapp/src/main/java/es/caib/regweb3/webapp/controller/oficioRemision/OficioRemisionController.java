@@ -577,7 +577,6 @@ public class OficioRemisionController extends BaseController {
 
         OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
         List<RegistroEntrada> registrosEntrada = oficioRemisionEjb.getByOficioRemision(oficioRemision.getId());
-        log.info("Total RegistrosEntrada del oficio: " + registrosEntrada.size());
 
         model.addAttribute("oficioRemision", oficioRemision);
         model.addAttribute("registrosEntrada", registrosEntrada);

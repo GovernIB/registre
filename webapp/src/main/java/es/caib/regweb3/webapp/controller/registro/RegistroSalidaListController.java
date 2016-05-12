@@ -194,7 +194,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             model.addAttribute("tiposDocumento",RegwebConstantes.TIPOS_DOCUMENTOID);
             model.addAttribute("nivelesAdministracion",catNivelAdministracionEjb.getAll());
             model.addAttribute("comunidadesAutonomas",catComunidadAutonomaEjb.getAll());
-            model.addAttribute("organismosOficinaActiva",organismoEjb.getByOficinaActiva(getOficinaActiva(request)));
+            model.addAttribute("organismosOficinaActiva",getOrganismosOficinaActiva(request));
 
         }
         // Anexos

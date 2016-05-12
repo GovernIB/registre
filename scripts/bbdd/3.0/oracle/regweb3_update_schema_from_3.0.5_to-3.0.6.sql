@@ -24,3 +24,6 @@ create table RWE_PROPIEDADGLOBAL (
 alter table RWE_PROPIEDADGLOBAL add constraint RWE_PROPIEDADGLOBAL_pk primary key (ID);
 create index RWE_PROPIE_ENTIDA_FK_I on RWE_PROPIEDADGLOBAL (ENTIDAD);
 alter table RWE_PROPIEDADGLOBAL add constraint RWE_propiedad_clave_entidad_uk unique (CLAVE, ENTIDAD);
+
+--Nuevos Índices en RWE_PERSONA
+create index RWE_PERSONA_ENTIDAD_FK_I on RWE_PERSONA (ENTIDAD);

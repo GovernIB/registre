@@ -5,7 +5,6 @@ import es.caib.regweb3.model.utils.ObjetoBasico;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.sir.ws.api.manager.FicheroIntercambioManager;
 import es.caib.regweb3.sir.ws.api.manager.impl.FicheroIntercambioManagerImpl;
-import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.utils.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,16 +116,13 @@ public class ComunController extends BaseController {
     public String cambioOficina(@PathVariable Long oficinaId, HttpServletRequest request)throws Exception {
 
         HttpSession session = request.getSession();
-        UsuarioEntidad usuarioEntidad= getUsuarioEntidadActivo(request);
 
         Set<ObjetoBasico> oficinasAutenticado = getOficinasAutenticado(request);
 
         try {
             Oficina oficinaNueva = oficinaEjb.findById(oficinaId);
             if(oficinasAutenticado.contains(new ObjetoBasico(oficinaNueva.getId()))){
-                session.setAttribute(RegwebConstantes.SESSION_OFICINA, oficinaNueva);
-                usuarioService.tienePreRegistros(oficinaNueva, session);
-                usuarioEntidadEjb.actualizarOficinaUsuario(usuarioEntidad.getId(), oficinaNueva.getId());
+                usuarioService.cambiarOficinaActiva(oficinaNueva,session);
                 log.info("Cambio Oficina activa: " + oficinaNueva.getDenominacion() + " - " + oficinaNueva.getCodigo());
             }else{
                 Mensaje.saveMessageError(request, getMessage("error.oficina.autorizacion"));

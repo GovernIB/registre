@@ -57,6 +57,9 @@ public class UsuarioService {
     @EJB(mappedName = "regweb3/ConfiguracionEJB/local")
     public ConfiguracionLocal configuracionEjb;
 
+    @EJB(mappedName = "regweb3/OrganismoEJB/local")
+    public OrganismoLocal organismoEjb;
+
 
     /**
      * Dado un usuario autenticado, realiza todas las configuraciones necesarias para su funcionamiento en REGWEB3.
@@ -290,8 +293,26 @@ public class UsuarioService {
             tienePreRegistros(oficinaActiva,session);
         }
 
+        // Organismos OficiaActiva
+        session.setAttribute(RegwebConstantes.SESSION_ORGANISMOS_OFICINA,organismoEjb.getByOficinaActiva(oficinaActiva));
+
     }
 
+    public void cambiarOficinaActiva(Oficina oficinaNueva, HttpSession session) throws Exception{
+        // Actualizamos la nueva OficinaActiva en la sesión
+        session.setAttribute(RegwebConstantes.SESSION_OFICINA, oficinaNueva);
+
+        // Actualizamos los Organismos OficiaActiva
+        session.setAttribute(RegwebConstantes.SESSION_ORGANISMOS_OFICINA,organismoEjb.getByOficinaActiva(oficinaNueva));
+
+        // Comprobamos si tiene PreRegistros
+        tienePreRegistros(oficinaNueva,session);
+
+        // Actualizamos la última Oficina del Usuario
+        UsuarioEntidad usuarioEntidad = (UsuarioEntidad)session.getAttribute(RegwebConstantes.SESSION_USUARIO_ENTIDAD);
+        usuarioEntidadEjb.actualizarOficinaUsuario(usuarioEntidad.getId(), oficinaNueva.getId());
+
+    }
 
     /**
      * Actualiza la variable de sesion de Registros Migrados, según la entidad Activa
@@ -542,11 +563,9 @@ public class UsuarioService {
 
         session.removeAttribute(RegwebConstantes.SESSION_ENTIDADES);
         session.removeAttribute(RegwebConstantes.SESSION_ENTIDAD);
-        session.removeAttribute(RegwebConstantes.SESSION_OFICINAS);
-        session.removeAttribute(RegwebConstantes.SESSION_OFICINA);
-        session.removeAttribute(RegwebConstantes.SESSION_OFICINAS_ADMINISTRADAS);
         session.removeAttribute(RegwebConstantes.SESSION_MIGRADOS);
         session.removeAttribute(RegwebConstantes.SESSION_TIENEPREREGISTROS);
+        eliminarVariablesSesionOficina(session);
 
     }
 
@@ -561,6 +580,7 @@ public class UsuarioService {
         session.removeAttribute(RegwebConstantes.SESSION_OFICINA);
         session.removeAttribute(RegwebConstantes.SESSION_OFICINAS_ADMINISTRADAS);
         session.removeAttribute(RegwebConstantes.SESSION_LIBROSADMINISTRADOS);
+        session.removeAttribute(RegwebConstantes.SESSION_ORGANISMOS_OFICINA);
 
     }
 

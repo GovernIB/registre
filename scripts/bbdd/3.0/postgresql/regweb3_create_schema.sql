@@ -1046,6 +1046,9 @@
         foreign key (LIBRO)
         references RWE_LIBRO;
 
+    create index RWE_PERSONA_ENTIDAD_FK_I on RWE_PERSONA (ENTIDAD);
+
+
     alter table RWE_PERSONA
         add constraint RWE_PERSONA_ENTIDAD_FK
         foreign key (ENTIDAD)

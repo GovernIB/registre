@@ -177,6 +177,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         Entidad entidadActiva = getEntidadActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         Oficina oficinaActiva = getOficinaActiva(request);
+        Set<Organismo> organismosOficinaActiva = getOrganismosOficinaActiva(request);
 
         model.addAttribute("registro",registro);
         model.addAttribute("oficina", getOficinaActiva(request));
@@ -192,7 +193,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         model.addAttribute("puedeEditar", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registro.getLibro().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA));
 
         // OficioRemision
-        model.addAttribute("isOficioRemision", registroEntradaEjb.isOficioRemisionInterno(idRegistro, getOrganismosOficioRemision(request, getOrganismosOficinaActiva(request))));
+        model.addAttribute("isOficioRemision", registroEntradaEjb.isOficioRemisionInterno(idRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva)));
 
         // Interesados, solo si el Registro en Válido o Estamos en la Oficina donde se registró, o en su Oficina Responsable
         if(registro.getEstado().equals(RegwebConstantes.ESTADO_VALIDO) && oficinaRegistral){
@@ -207,7 +208,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             model.addAttribute("tiposDocumento", RegwebConstantes.TIPOS_DOCUMENTOID);
             model.addAttribute("nivelesAdministracion",catNivelAdministracionEjb.getAll());
             model.addAttribute("comunidadesAutonomas",catComunidadAutonomaEjb.getAll());
-            model.addAttribute("organismosOficinaActiva",organismoEjb.getByOficinaActiva(getOficinaActiva(request)));
+            model.addAttribute("organismosOficinaActiva",organismosOficinaActiva);
         }
 
         // Anexos

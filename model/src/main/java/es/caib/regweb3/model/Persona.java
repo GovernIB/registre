@@ -4,6 +4,7 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.ForeignKey;
+import org.hibernate.annotations.Index;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -16,6 +17,9 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "RWE_PERSONA")
+@org.hibernate.annotations.Table(appliesTo = "RWE_PERSONA", indexes = {
+        @Index(name="RWE_PERSONA_ENTIDAD_FK_I", columnNames = {"ENTIDAD"})
+})
 @SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 public class Persona implements Serializable {
 

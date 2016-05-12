@@ -94,7 +94,7 @@ public abstract class AbstractRegistroCommonFormController extends BaseControlle
         return catPaisEjb.getAll();
     }
 
-    @ModelAttribute("personasFisicas")
+    /*@ModelAttribute("personasFisicas")
     public List<Persona> personasFisicas(HttpServletRequest request) throws Exception {
 
         Entidad entidad = getEntidadActiva(request);
@@ -106,7 +106,7 @@ public abstract class AbstractRegistroCommonFormController extends BaseControlle
 
         Entidad entidad = getEntidadActiva(request);
         return personaEjb.getJuridicasByEntidad(entidad.getId());
-    }
+    }*/
 
     @ModelAttribute("provincias")
     public List<CatProvincia> provincias() throws Exception {
