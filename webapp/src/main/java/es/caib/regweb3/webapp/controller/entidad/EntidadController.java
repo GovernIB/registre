@@ -578,10 +578,6 @@ public class EntidadController extends BaseController {
         UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findById(idUsuarioEntidad);
         List<Libro> libros = libroEjb.getLibrosEntidad(entidad.getId());
 
-        for (Libro libro : libros) {
-            log.info(libro.getNombre());
-        }
-
         IUserInformationPlugin loginPlugin = RegwebLoginPluginManager.getInstance();
         RolesInfo rolesInfo = loginPlugin.getRolesByUsername(usuarioEntidad.getUsuario().getIdentificador());
         
@@ -599,11 +595,6 @@ public class EntidadController extends BaseController {
             permisoLibroUsuarioForm.setUsuarioEntidad(usuarioEntidad);
 
             permisoLibroUsuarioForm.setPermisoLibroUsuarios(permisoLibroUsuarioEjb.findByUsuarioLibros(usuarioEntidad.getId(), libros));
-
-            for (PermisoLibroUsuario plu : permisoLibroUsuarioForm.getPermisoLibroUsuarios()) {
-                log.info(plu.getActivo() + " - " + plu.getLibro() + "  - " + plu.getUsuario());
-
-            }
 
             model.addAttribute(permisoLibroUsuarioForm);
             model.addAttribute("entidad", entidad);

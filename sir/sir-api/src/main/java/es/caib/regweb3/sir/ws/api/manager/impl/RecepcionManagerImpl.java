@@ -3,24 +3,22 @@ package es.caib.regweb3.sir.ws.api.manager.impl;
 import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.PreRegistro;
 import es.caib.regweb3.persistence.ejb.WebServicesMethodsLocal;
+import es.caib.regweb3.sir.api.schema.Fichero_Intercambio_SICRES_3;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.sir.core.model.Errores;
 import es.caib.regweb3.sir.core.model.TipoAnotacion;
 import es.caib.regweb3.sir.core.model.TipoMensaje;
 import es.caib.regweb3.sir.core.model.TipoRegistro;
-import es.caib.regweb3.sir.core.schema.FicheroIntercambioSICRES3;
-import es.caib.regweb3.sir.core.schema.ObjectFactory;
-import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
-import es.caib.regweb3.sir.core.utils.Mensaje;
 import es.caib.regweb3.sir.ws.api.manager.MensajeManager;
 import es.caib.regweb3.sir.ws.api.manager.RecepcionManager;
 import es.caib.regweb3.sir.ws.api.manager.SicresXMLManager;
+import es.caib.regweb3.sir.ws.api.utils.FicheroIntercambio;
+import es.caib.regweb3.sir.ws.api.utils.Mensaje;
 import org.apache.log4j.Logger;
+import org.exolab.castor.xml.MarshalException;
+import org.exolab.castor.xml.ValidationException;
 import org.springframework.util.Assert;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 import java.io.StringReader;
 import java.util.List;
 
@@ -180,19 +178,21 @@ public class RecepcionManagerImpl implements RecepcionManager {
     private FicheroIntercambio parserForError(String xml) {
 
         FicheroIntercambio ficheroIntercambio = new FicheroIntercambio();
-        FicheroIntercambioSICRES3 fiSICRES3 = null;
+        Fichero_Intercambio_SICRES_3 fiSICRES3 = null;
+
+        org.exolab.castor.xml.Unmarshaller unmarshaller= new org.exolab.castor.xml.Unmarshaller(Fichero_Intercambio_SICRES_3.class);
+        //desactivamos la validacion
+        unmarshaller.setValidation(false);
 
         try {
 
-            JAXBContext jc = JAXBContext.newInstance(ObjectFactory.class);
-            Unmarshaller u = jc.createUnmarshaller();
+            fiSICRES3= (Fichero_Intercambio_SICRES_3) unmarshaller.unmarshal(new StringReader(xml));
 
-            StringReader reader = new StringReader(xml);
-            u.setSchema(null);
-            fiSICRES3 = (FicheroIntercambioSICRES3) u.unmarshal(reader);
-
-        } catch (JAXBException e) {
-            log.info("Imposible parsear el xml recibido: " + xml + " excepción " + e.getLocalizedMessage());
+        } catch (MarshalException e) {
+            log.error("Imposible parsear el xml recibido:"+xml+" excepción "+e.getLocalizedMessage());
+            throw new RuntimeException(e);
+        } catch (ValidationException e) {
+            log.error("Imposible parsear el xml recibido:"+xml+" excepción "+e.getLocalizedMessage());
             throw new RuntimeException(e);
         }
 

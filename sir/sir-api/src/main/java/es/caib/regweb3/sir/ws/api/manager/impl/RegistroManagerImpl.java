@@ -2,9 +2,9 @@ package es.caib.regweb3.sir.ws.api.manager.impl;
 
 import es.caib.regweb3.model.PreRegistro;
 import es.caib.regweb3.sir.core.model.TipoMensaje;
-import es.caib.regweb3.sir.core.utils.Mensaje;
 import es.caib.regweb3.sir.ws.api.manager.MensajeManager;
 import es.caib.regweb3.sir.ws.api.manager.RegistroManager;
+import es.caib.regweb3.sir.ws.api.utils.Mensaje;
 import org.apache.log4j.Logger;
 
 import java.util.Date;

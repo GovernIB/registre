@@ -23,7 +23,9 @@
                     <div class="col-xs-12">
 
                         <ol class="breadcrumb">
-                            <c:import url="modulos/migadepan.jsp"/>
+                            <c:import url="modulos/migadepan.jsp">
+                                <c:param name="avisos" value="false"/>
+                            </c:import>
                         </ol>
 
                         <c:if test="${rolAutenticado.nombre == 'RWE_SUPERADMIN' || rolAutenticado.nombre == 'RWE_ADMIN'}">

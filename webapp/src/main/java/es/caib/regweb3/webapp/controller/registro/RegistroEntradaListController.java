@@ -192,7 +192,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         model.addAttribute("puedeEditar", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registro.getLibro().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA));
 
         // OficioRemision
-        model.addAttribute("isOficioRemision", registroEntradaEjb.isOficioRemisionInterno(idRegistro, getOrganismosOficioRemision(request)));
+        model.addAttribute("isOficioRemision", registroEntradaEjb.isOficioRemisionInterno(idRegistro, getOrganismosOficioRemision(request, getOrganismosOficinaActiva(request))));
 
         // Interesados, solo si el Registro en Válido o Estamos en la Oficina donde se registró, o en su Oficina Responsable
         if(registro.getEstado().equals(RegwebConstantes.ESTADO_VALIDO) && oficinaRegistral){
@@ -379,7 +379,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             }
 
             // Comprobamos que el RegistroEntrada es un OficioRemision
-            if (registroEntradaEjb.isOficioRemisionInterno(idRegistro, getOrganismosOficioRemision(request))) {
+            if (registroEntradaEjb.isOficioRemisionInterno(idRegistro, getOrganismosOficioRemision(request,getOrganismosOficinaActiva(request)))) {
                 Mensaje.saveMessageError(request, getMessage("registroEntrada.tramitar.error"));
                 return "redirect:/registroEntrada/list";
             }
@@ -424,7 +424,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         }
 
         // Comprobamos que el RegistroEntrada es un OficioRemision
-        if (registroEntradaEjb.isOficioRemisionInterno(idRegistro, getOrganismosOficioRemision(request))) {
+        if (registroEntradaEjb.isOficioRemisionInterno(idRegistro, getOrganismosOficioRemision(request, getOrganismosOficinaActiva(request)))) {
             Mensaje.saveMessageError(request, getMessage("registroEntrada.distribuir.error"));
             return destinatarios;
         }

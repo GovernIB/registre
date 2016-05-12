@@ -303,12 +303,9 @@ public class BaseController {
      * @return
      * @throws Exception
      */
-    public Set<Long> getOrganismosOficioRemision(HttpServletRequest request) throws Exception {
+    public Set<Long> getOrganismosOficioRemision(HttpServletRequest request, Set<Organismo> organismos) throws Exception {
 
         Oficina oficinaActiva = getOficinaActiva(request);
-
-        // Obtenemos los Organismos
-        Set<Organismo> organismos = getOrganismosOficinaActiva(request);
 
         // Creamos un Set solo con los identificadores
         Set<Long> organismosId = new HashSet<Long>();

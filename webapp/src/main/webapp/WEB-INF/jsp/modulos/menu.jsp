@@ -169,7 +169,7 @@
                                                 code="oficioRemision.listado"/></a></li>
                                         <li class="divider"></li>
                                         <li>
-                                            <a href="<c:url value="/oficioRemision/oficiosPendientesLlegada"/>"><spring:message
+                                            <a href="<c:url value="/oficioRemision/oficiosPendientesLlegada/list"/>"><spring:message
                                                     code="oficioRemision.pendientesLlegada"/></a></li>
                                         <li><a href="<c:url value="/oficioRemision/oficiosPendientesRemisionInterna"/>"><spring:message code="registroEntrada.oficiosRemisionInterna"/></a></li>
                                         <li><a href="<c:url value="/oficioRemision/oficiosPendientesRemisionExterna"/>"><spring:message code="registroEntrada.oficiosRemisionExterna"/></a></li>

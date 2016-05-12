@@ -3,11 +3,8 @@ package es.caib.regweb3.webapp.controller;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.ObjetoBasico;
 import es.caib.regweb3.persistence.ejb.*;
-import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.ws.api.manager.FicheroIntercambioManager;
-import es.caib.regweb3.sir.ws.api.manager.SicresXMLManager;
 import es.caib.regweb3.sir.ws.api.manager.impl.FicheroIntercambioManagerImpl;
-import es.caib.regweb3.sir.ws.api.manager.impl.SicresXMLManagerImpl;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.utils.UsuarioService;
@@ -63,7 +60,6 @@ public class ComunController extends BaseController {
     public ReproLocal reproEjb;
 
     FicheroIntercambioManager ficheroIntercambioManager = new FicheroIntercambioManagerImpl();
-    SicresXMLManager sicresXMLManager = new SicresXMLManagerImpl();
     
 
     @RequestMapping(value = "/noAutorizado")
@@ -197,9 +193,8 @@ public class ComunController extends BaseController {
     public String pruebaSir(@PathVariable Long registroId, HttpServletRequest request, HttpServletResponse response) throws Exception{
 
         RegistroEntrada registroEntrada = registroEntradaEjb.findById(registroId);
-        FicheroIntercambio ficheroIntercambio = sicresXMLManager.crearFicheroIntercambioSICRES3(registroEntrada);
 
-        ficheroIntercambioManager.enviarFicheroIntercambio(ficheroIntercambio);
+        ficheroIntercambioManager.enviarFicheroIntercambio(registroEntrada);
 
 
         return "redirect:/inici";

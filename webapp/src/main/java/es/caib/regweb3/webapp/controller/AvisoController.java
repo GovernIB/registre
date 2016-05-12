@@ -52,6 +52,8 @@ public class AvisoController extends BaseController {
 
         if(isOperador(request) && oficinaActiva != null) {
 
+            //Set<Organismo> organismosOficiaActiva = getOrganismosOficinaActiva(request);
+
             List<Libro> librosAdministrados = getLibrosAdministrados(request);
             List<Libro> librosRegistro = getLibrosRegistroEntrada(request);
 
@@ -72,17 +74,18 @@ public class AvisoController extends BaseController {
             Long pendientes = registroEntradaEjb.getByOficinaEstadoCount(oficinaActiva.getId(), RegwebConstantes.ESTADO_PENDIENTE);
             mav.addObject("pendientes", pendientes);
 
-            /* OFICIOS PENDIENTES DE REMISIÓN */
+            /* -- COMENTADO PARA AGILIZAR LA APLICACIÓN CON ORGANIGRAMAS GRANDES  --*/
+            /*// OFICIOS PENDIENTES DE REMISIÓN
             if(librosRegistro!= null && librosRegistro.size() > 0){
-                oficiosRemisionInterna = registroEntradaEjb.oficiosPendientesRemisionInternaCount(librosRegistro, getOrganismosOficioRemision(request));
+                oficiosRemisionInterna = registroEntradaEjb.oficiosPendientesRemisionInternaCount(librosRegistro, getOrganismosOficioRemision(request, organismosOficiaActiva));
                 oficiosRemisionExterna = registroEntradaEjb.oficiosPendientesRemisionExternaCount(librosRegistro);
             }
             mav.addObject("oficiosRemisionInterna", oficiosRemisionInterna);
             mav.addObject("oficiosRemisionExterna", oficiosRemisionExterna);
 
-            /*OFICIOS PENDIENTES DE LLEGADA*/
-            Long oficiosPendientesLlegada = oficioRemisionEjb.oficiosPendientesLlegadaCount(getOrganismosOficinaActiva(request));
-            mav.addObject("oficiosPendientesLlegada", oficiosPendientesLlegada);
+            // OFICIOS PENDIENTES DE LLEGADA
+            Long oficiosPendientesLlegada = oficioRemisionEjb.oficiosPendientesLlegadaCount(organismosOficiaActiva);
+            mav.addObject("oficiosPendientesLlegada", oficiosPendientesLlegada);*/
 
         }
 
