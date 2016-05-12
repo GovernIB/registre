@@ -74,7 +74,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
     public List<Persona> getFisicasByEntidad(Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select persona.id, persona.nombre, persona.apellido1,persona.apellido2, persona.documento, persona.tipo from Persona as persona  " +
-                "where persona.entidad.id = :idEntidad and persona.tipo = :tipoPersona  order by persona.razonSocial");
+                "where persona.entidad.id = :idEntidad and persona.tipo = :tipoPersona  order by persona.apellido1");
 
         q.setParameter("idEntidad",idEntidad);
         q.setParameter("tipoPersona", RegwebConstantes.TIPO_PERSONA_FISICA);
