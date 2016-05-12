@@ -6,9 +6,9 @@ package es.caib.regweb3.sir.core.model;
  */
 public enum DocumentacionFisica {
 
-    DOCUMENTACION_FISICA_REQUERIDA("01", "Acompaña documentación física requerida"),
-    DOCUMENTACION_FISICA_COMPLEMENTARIA("02", "Acompaña documentación física complementaria"),
-    SIN_DOCUMENTACION_FISICA("03", "No acompaña documentación física");
+    DOCUMENTACION_FISICA_REQUERIDA("1", "Acompaña documentación física requerida"),
+    DOCUMENTACION_FISICA_COMPLEMENTARIA("2", "Acompaña documentación física complementaria"),
+    SIN_DOCUMENTACION_FISICA("3", "No acompaña documentación física");
 
     private final String value;
     private final String name;
