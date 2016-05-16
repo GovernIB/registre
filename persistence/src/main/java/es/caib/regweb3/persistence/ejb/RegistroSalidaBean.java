@@ -130,7 +130,8 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     }
 
     @Override
-    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, String interesadoNom, String interesadoDoc, String interesadoLli1, String interesadoLli2, String organoOrigen, Boolean anexos, String observaciones, String usuario) throws Exception {
+    @SuppressWarnings(value = "unchecked")
+    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, String organoOrigen, Boolean anexos, String observaciones, String usuario) throws Exception {
 
         Query q;
         Query q2;
@@ -139,8 +140,6 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
         String queryBase = "Select DISTINCT registroSalida from RegistroSalida as registroSalida left outer join registroSalida.registroDetalle.interesados interessat ";
         StringBuffer query = new StringBuffer(queryBase);
-
-        //where.add(" registroSalida.registroDetalle.id = interessat.registroDetalle.id ");
 
         // Numero registro
         if (!StringUtils.isEmpty(registroSalida.getNumeroRegistroFormateado())) {

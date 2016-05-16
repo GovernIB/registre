@@ -145,8 +145,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         String queryBase = "Select DISTINCT registroEntrada from RegistroEntrada as registroEntrada left outer join registroEntrada.registroDetalle.interesados interessat ";
         StringBuffer query = new StringBuffer(queryBase);
 
-        //where.add(" registroEntrada.registroDetalle.id = interessat.registroDetalle.id ");
-
         // Numero registro
         if (!StringUtils.isEmpty(registroEntrada.getNumeroRegistroFormateado())) {
             where.add(" registroEntrada.numeroRegistroFormateado LIKE :numeroRegistroFormateado");
