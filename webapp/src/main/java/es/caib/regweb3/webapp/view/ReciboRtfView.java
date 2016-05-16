@@ -99,7 +99,7 @@ public class ReciboRtfView extends AbstractView {
         // Extraemos año de la fecha del registro
         SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
         String anoRegistro = formatYear.format(datosRecibo.getFechaRegistro());
-        SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+        SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         String fechaRegistro = formatDate.format(datosRecibo.getFechaRegistro());
         String fechaReciboCatalan = "";
         String fechaReciboCastellano = "";
