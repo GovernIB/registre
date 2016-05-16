@@ -112,12 +112,13 @@ public class Organismo implements Serializable {
         this.edp = edp;
     }
 
-    public Organismo(Long id, String codigo, String denominacion, Long organismoSuperior) {
+    public Organismo(Long id, String codigo, String denominacion, Long organismoSuperior, Boolean edp) {
 
         this.id = id;
         this.codigo = codigo;
         this.denominacion = denominacion;
         this.organismoSuperior = new Organismo(organismoSuperior);
+        this.edp = edp;
     }
 
     public Organismo(Long id, String codigo, String denominacion, List<Libro> libros) {

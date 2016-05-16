@@ -654,6 +654,19 @@ input[readonly] {
     background-color: #E7C713;
     border-color: #CBB11B;
 }
+.btn-edp {
+    color: #999999;
+    background-color: #6FF6F5;
+    border-color: #55CECD;
+}
+.btn-edp:hover,
+.btn-edp:focus,
+.btn-edp:active,
+.btn-edp.active{
+    color: #999999;
+    background-color: #27F6F7;
+    border-color: #55CECD;
+}
 .btn-oficinafuncional {
     color: #fff;
     background-color: #83ef47;
