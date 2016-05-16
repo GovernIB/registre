@@ -4,10 +4,10 @@ import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
 import es.caib.dir3caib.ws.api.unidad.UnidadTF;
-import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.Anexo;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.Interesado;
-import es.caib.regweb3.model.RegistroDetalle;
-import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.persistence.ejb.AnexoLocal;
 import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
 import es.caib.regweb3.sir.api.schema.De_Anexo;
 import es.caib.regweb3.sir.api.schema.De_Interesado;
@@ -28,10 +28,13 @@ import org.apache.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.fundaciobit.plugins.documentcustody.AnnexCustody;
+import org.fundaciobit.plugins.documentcustody.SignatureCustody;
 import org.fundaciobit.plugins.utils.Base64;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
+import javax.ejb.EJB;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.security.MessageDigest;
@@ -61,6 +64,10 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
     private static final long DEFAULT_MAX_FILE_SIZE = 0; // Máximo tamaño por documento (3MB)
 
     private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMddHHmmss");
+
+    @EJB(mappedName = "regweb3/AnexoEJB/local")
+    public AnexoLocal anexoEjb;
+
 
     /**
      * Map con los valores de los campos del xml que deben estar en formato base64 junto con su expresión xpath de seleccion
@@ -223,7 +230,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
             // "02 - Documento Adjunto" que no son
             // firmas
 
-            for (Anexo anexo : asiento.getAnexos()) {
+            for (es.caib.regweb3.sir.core.model.Anexo anexo : asiento.getAnexos()) {
 
                 Assert.hasText(anexo.getNombreFichero(),
                         "'nombreFichero' no puede estar vacio");
@@ -433,6 +440,14 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
     }
 
+    protected static String getBase64String(byte[] dato) {
+        String result = null;
+
+        result = Base64.encode(dato);
+
+        return result;
+    }
+
     /**
      * Añade el Segmento deInteresado al Fichero de Intercambio
      *
@@ -638,16 +653,18 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
      */
     private void addDatosAnexos(Element rootNode, RegistroEntrada re, String identificadorIntercambio) {
 
-      /*  ObjectFactory objFactory = new ObjectFactory();
         int secuencia = 0;
 
         try {
 
-            List<Anexo> anexos = anexoEjb.getByRegistroEntrada(re.getId());
+            //ANTIGUO List<Anexo> anexos = anexoEjb.getByRegistroEntrada(re.getId());
+            List<Anexo> anexos = re.getRegistroDetalle().getAnexos(); // Deben pasarnos el re con los anexos cargados
 
-            for (Integer i = 0; i <anexos.size(); i++) {
-                FicheroIntercambioSICRES3.DeAnexo deAnexo = objFactory.createFicheroIntercambioSICRES3DeAnexo();
-                Anexo anexo = anexos.get(i);
+            for (Anexo anexo : anexos) {
+                //De_Anexo
+                Element rootElement = rootNode.addElement("De_Anexo");
+                Element elem = null;
+
 
                 final String custodyID = anexo.getCustodiaID();
 
@@ -655,6 +672,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
                 byte[] data = null;
                 AnnexCustody file = anexoEjb.getInstance().getDocumentInfoOnly(custodyID);
+
                 if (file == null) {
                     file = anexoEjb.getInstance().getSignatureInfoOnly(custodyID);
                     if (file != null) {
@@ -673,72 +691,114 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
                 // Nombre_Fichero_Anexado
                 if (StringUtils.isNotBlank(file.getName())) {
-                    deAnexo.setNombreFicheroAnexado(file.getName());
+                    elem = rootElement.addElement("Nombre_Fichero_Anexado");
+                    elem.addCDATA(file.getName());
                 }
 
                 // Identificador_Fichero
-                if(anexo.getModoFirma()==RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED) {
-                    deAnexo.setIdentificadorFichero(generateIdentificadorFichero(identificadorIntercambio, secuencia, file.getName()));
-                    secuencia++;
-                }
+                // if(anexo.getModoFirma()==RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED) {
+                elem = rootElement.addElement("Identificador_Fichero");
+                String identificador_fichero = generateIdentificadorFichero(identificadorIntercambio, secuencia, file.getName());
+                elem.addCDATA(identificador_fichero);
+                secuencia++;
+                // }
 
                 // Validez_Documento
                 if(anexo.getValidezDocumento() != null){
-                    deAnexo.setValidezDocumento(RegwebConstantes.CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento()));
+                    elem = rootElement.addElement("Validez_Documento");
+                    elem.addCDATA(RegwebConstantes.CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento()));
                 }
 
                 // Tipo_Documento
                 if(anexo.getTipoDocumento() != null){
-                    deAnexo.setTipoDocumento("02"); //todo: Modificar en el futuro según si el documento viene de Sistra
+                    elem = rootElement.addElement("Tipo_Documento");
+                    elem.addCDATA(RegwebConstantes.CODIGO_NTI_BY_TIPO_DOCUMENTO.get(anexo.getTipoDocumento()));
                 }
 
                 // Certificado
-                deAnexo.setCertificado(null);
+                //TODO
+                elem = rootElement.addElement("Certificado");
+                //elem.addCDATA(getBase64Sring(anexo.getCertificado()));
+                elem.addCDATA(null);
 
                 // Firma_Documento
-                deAnexo.setFirmaDocumento(null);
+                elem = rootElement.addElement("Firma_Documento");
+                if (anexo.getModoFirma() == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) {
+                    elem.addCDATA(null);
+                } else {
+                    if (anexo.getModoFirma() == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED) {
+                        //TODO preguntar a toni como extraer la firma del attached.
+                        elem.addCDATA(getBase64String((anexoEjb.getInstance().getSignature(custodyID))));
+                    } else {
+                        elem.addCDATA(getBase64String((anexoEjb.getInstance().getSignature(custodyID))));
+                    }
+                }
+
 
                 // TimeStamp
-                deAnexo.setTimeStamp(null);
+                elem = rootElement.addElement("TimeStamp");
+                elem.addCDATA(getBase64String(null));
+
+                // Validacion_OCSP_Certificado
+                elem = rootElement.addElement("Validacion_OCSP_Certificado");
+                elem.addCDATA(getBase64String(null));
+
 
                 // Hash
                 if(data != null){
-                    deAnexo.setHash(obtenerHash(data));
+                    elem = rootElement.addElement("Hash");
+                    elem.addCDATA(getBase64String(obtenerHash(data)));
                 }
 
                 // Tipo_MIME
+                elem = rootElement.addElement("Tipo_MIME");
                 if(StringUtils.isNotBlank(file.getMime())&& file.getMime().length() > 20){
-                    deAnexo.setTipoMIME(null);    // Parrafo 48 de la Guia de Aplicación SICRES3
+                    elem.addCDATA(null);
                 }else{
-                    deAnexo.setTipoMIME(file.getMime());
+                    elem.addCDATA(file.getMime());
                 }
 
                 // Anexo
                 if(data != null){
-                    deAnexo.setAnexo(Base64.encode(data).getBytes());
+                    elem = rootElement.addElement("Anexo");
+                    elem.addCDATA(getBase64String(data));
                 }
 
                 // Observaciones
                 if(StringUtils.isNotBlank(anexo.getObservaciones())){
-                    deAnexo.setObservaciones(anexo.getObservaciones());
+                    elem = rootElement.addElement("Observaciones");
+                    elem.addCDATA(anexo.getObservaciones());
                 }
+                //Identificador Fichero Firmado
+                //TODO Mirar los casos que hay
+                elem = rootElement.addElement("Identificador_Documento_Firmado");
+                elem.addCDATA(null);
 
-                ficheroIntercambio.getDeAnexo().add(deAnexo);
 
                 if(anexo.getModoFirma()==RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {   // Si tiene la firma en otro fichero
 
-                    FicheroIntercambioSICRES3.DeAnexo deAnexoFirma = objFactory.createFicheroIntercambioSICRES3DeAnexo();
+                    Element rootElementFirma = rootNode.addElement("De_Anexo");
+                    Element elemFirma = null;
 
                     SignatureCustody sc = anexoEjb.getFirma(custodyID);
                     String filename_firma = sc.getName();
-                    deAnexoFirma.setNombreFicheroAnexado(filename_firma);
+                    elemFirma = rootElementFirma.addElement("Nombre_Fichero_Anexado");
+                    elemFirma.addCDATA(filename_firma);
 
-                    deAnexoFirma.setIdentificadorFichero(generateIdentificadorFichero(identificadorIntercambio, secuencia, file.getName()));
-                    deAnexoFirma.setTipoDocumento(RegwebConstantes.CODIGO_NTI_BY_TIPO_DOCUMENTO.get(RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO)); //=03
-                    deAnexoFirma.setHash(obtenerHash(sc.getData()));
-                    deAnexoFirma.setIdentificadorDocumentoFirmado(deAnexo.getIdentificadorFichero());
+                    elemFirma = rootElementFirma.addElement("Identificador_Fichero");
+                    elemFirma.addCDATA(generateIdentificadorFichero(identificadorIntercambio, secuencia, filename_firma));
 
-                    ficheroIntercambio.getDeAnexo().add(deAnexoFirma);
+                    //TODO preguntar a felip, al ser la firma del anexo no se que poner.
+                    elemFirma = rootElementFirma.addElement("Tipo_Documento");
+                    elemFirma.addCDATA(RegwebConstantes.CODIGO_NTI_BY_TIPO_DOCUMENTO.get(RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO));//=03
+                    //Hash
+                    elemFirma = rootElementFirma.addElement("Hash");
+                    elemFirma.addCDATA(getBase64String(obtenerHash(data)));
+
+
+                    elemFirma = rootElementFirma.addElement("Identificador_Documento_Firmado");
+                    elemFirma.addCDATA(identificador_fichero);
+
                     secuencia++;
                 }
             }
@@ -746,7 +806,8 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
             log.info("Error addDatosAnexo");
             e.printStackTrace();
 
-        }*/
+        }
+
     }
 
     /**
