@@ -31,4 +31,14 @@ public interface RegistroDetalleLocal extends BaseEjb<RegistroDetalle, Long> {
      * @throws Exception
      */
     public Set<Long> getRegistrosDetalle(Long idEntidad) throws Exception;
+
+    /**
+     * Elimina un anexo de un registroDetalle. Puesto aqui por referencias cruzadas
+     *
+     * @param idAnexo
+     * @param idRegistroDetalle
+     * @return
+     * @throws Exception
+     */
+    public boolean eliminarAnexoRegistroDetalle(Long idAnexo, Long idRegistroDetalle) throws Exception;
 }

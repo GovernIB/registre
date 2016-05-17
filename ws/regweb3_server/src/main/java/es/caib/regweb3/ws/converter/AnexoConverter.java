@@ -3,8 +3,8 @@ package es.caib.regweb3.ws.converter;
 import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.TipoDocumental;
 import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.persistence.ejb.AnexoLocal;
 import es.caib.regweb3.persistence.ejb.TipoDocumentalLocal;
-import es.caib.regweb3.persistence.utils.AnnexDocumentCustodyManager;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.ws.model.AnexoWs;
@@ -97,13 +97,13 @@ public class AnexoConverter extends CommonConverter {
    * @throws Exception
    * @throws I18NException
    */
-   public static AnexoWs getAnexoWs(AnexoFull anexoFull)  throws Exception {
+   public static AnexoWs getAnexoWs(AnexoFull anexoFull, AnexoLocal anexoEjb) throws Exception {
 
         if (anexoFull == null || anexoFull.getAnexo() == null){
             return  null;
         }
 
-        AnexoWs anexoWs = procesarAnexoWs(anexoFull);
+       AnexoWs anexoWs = procesarAnexoWs(anexoFull, anexoEjb);
         return anexoWs;
     }
 
@@ -171,11 +171,12 @@ public class AnexoConverter extends CommonConverter {
 
   /**
    * Convierte un {@link es.caib.regweb3.model.Anexo} en un {@link es.caib.regweb3.ws.model.AnexoWs}
-   * @param anexo
+   * @param anexoFull
+   * @param anexoEjb
    * @return
    * @throws Exception
    */
-  private static AnexoWs procesarAnexoWs(AnexoFull anexoFull) throws Exception{
+  private static AnexoWs procesarAnexoWs(AnexoFull anexoFull, AnexoLocal anexoEjb) throws Exception {
 
        AnexoWs anexoWs = new AnexoWs();
 
@@ -216,7 +217,7 @@ public class AnexoConverter extends CommonConverter {
            SignatureCustody sign = anexoFull.getSignatureCustody();
            anexoWs.setNombreFirmaAnexada(sign.getName());
            anexoWs.setTipoMIMEFirmaAnexada(sign.getMime());
-           anexoWs.setFirmaAnexada(AnnexDocumentCustodyManager.getInstance().getSignature(custodyID));
+             anexoWs.setFirmaAnexada(anexoEjb.getInstance().getSignature(custodyID));
          }
          
          
@@ -226,7 +227,7 @@ public class AnexoConverter extends CommonConverter {
             DocumentCustody doc = anexoFull.getDocumentoCustody();
             anexoWs.setNombreFicheroAnexado(doc.getName());
             anexoWs.setTipoMIMEFicheroAnexado(doc.getMime());
-            anexoWs.setFicheroAnexado(AnnexDocumentCustodyManager.getInstance().getDocument(custodyID));
+             anexoWs.setFicheroAnexado(anexoEjb.getInstance().getDocument(custodyID));
          }
        }
        

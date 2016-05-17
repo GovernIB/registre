@@ -7,6 +7,7 @@ import es.caib.regweb3.model.utils.AnexoFull;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.plugins.documentcustody.DocumentCustody;
+import org.fundaciobit.plugins.documentcustody.IDocumentCustodyPlugin;
 import org.fundaciobit.plugins.documentcustody.SignatureCustody;
 
 import javax.annotation.security.RolesAllowed;
@@ -47,7 +48,7 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
    * @return
    * @throws Exception
    */
-     public boolean eliminarAnexoRegistroDetalle(Long idAnexo, Long idRegistroDetalle) throws Exception;
+    /* public boolean eliminarAnexoRegistroDetalle(Long idAnexo, Long idRegistroDetalle) throws Exception;*/
 
     /**
       *
@@ -103,9 +104,67 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      */
     public List<Anexo> getByRegistroDetalle(Long idRegistroDetalle) throws Exception;
 
-    /** TODO BORRAR PRUEBA MARILEN ERROR SION **/
+    public IDocumentCustodyPlugin getInstance() throws Exception;
+
+    /**
+     * Obtiene el fichero existente en el sistema de archivos
+     *
+     * @param custodiaID
+     * @return
+     */
+
     public DocumentCustody getArchivo(String custodiaID) throws Exception;
+
+    /**
+     * Obtiene la firma existente en el sistema de archivos
+     * @param custodiaID
+     * @return
+     */
+
     public SignatureCustody getFirma(String custodiaID) throws Exception;
+
+    /**
+     * Elimina completamente una custodia ( = elimicion completa de Anexo)
+     *
+     * @param custodiaID
+     * @return true si l'arxiu no existeix o s'ha borrat. false en els altres
+     * casos.
+     */
+    public boolean eliminarCustodia(String custodiaID) throws Exception;
+
+    /**
+     * Solo elimina el archivo asociado al documento.
+     *
+     * @param custodiaID
+     * @return
+     * @throws Exception
+     */
+    public boolean eliminarDocumento(String custodiaID) throws Exception;
+
+    /**
+     * Solo elimina la el archivo asociado a la firma
+     *
+     * @param custodiaID
+     * @return
+     * @throws Exception
+     */
+    public boolean eliminarFirma(String custodiaID) throws Exception;
+
+    /**
+     * Crea o actualiza un anexos en el sistema de custodia
+     *
+     * @param name
+     * @param file
+     * @param signatureName
+     * @param signature
+     * @param signatureMode
+     * @param custodyID         Si vale null significa que creamos el archivo. Otherwise actualizamos el fichero.
+     * @param custodyParameters JSON del registre
+     * @return Identificador de custodia
+     * @throws Exception
+     */
+    public String crearArchivo(String name, byte[] file, String signatureName,
+                               byte[] signature, int signatureMode, String custodyID, String custodyParameters) throws Exception;
 
 
 }
