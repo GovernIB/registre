@@ -7,7 +7,7 @@ import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.Interesado;
-import es.caib.regweb3.persistence.ejb.AnexoLocal;
+import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
 import es.caib.regweb3.sir.api.schema.De_Anexo;
 import es.caib.regweb3.sir.api.schema.De_Interesado;
@@ -28,13 +28,12 @@ import org.apache.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.fundaciobit.plugins.documentcustody.AnnexCustody;
+import org.fundaciobit.plugins.documentcustody.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.SignatureCustody;
 import org.fundaciobit.plugins.utils.Base64;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
-import javax.ejb.EJB;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.security.MessageDigest;
@@ -65,8 +64,6 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
     private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMddHHmmss");
 
-    @EJB(mappedName = "regweb3/AnexoEJB/local")
-    public AnexoLocal anexoEjb;
 
 
     /**
@@ -659,8 +656,11 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
             //ANTIGUO List<Anexo> anexos = anexoEjb.getByRegistroEntrada(re.getId());
             List<Anexo> anexos = re.getRegistroDetalle().getAnexos(); // Deben pasarnos el re con los anexos cargados
+            List<AnexoFull> anexosFull = re.getRegistroDetalle().getAnexosFull(); // Deben pasarnos el re con los anexos cargados
 
-            for (Anexo anexo : anexos) {
+
+            for (AnexoFull anexoFull : anexosFull) {
+                Anexo anexo = anexoFull.getAnexo();
                 //De_Anexo
                 Element rootElement = rootNode.addElement("De_Anexo");
                 Element elem = null;
@@ -670,19 +670,24 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
                 Assert.notNull(anexo.getCustodiaID(), "'custodiaID' must not be null");
 
-                byte[] data = null;
-                AnnexCustody file = anexoEjb.getInstance().getDocumentInfoOnly(custodyID);
 
-                if (file == null) {
-                    file = anexoEjb.getInstance().getSignatureInfoOnly(custodyID);
-                    if (file != null) {
-                        data = anexoEjb.getInstance().getSignature(custodyID);
+                //TODO Eliminar referencia a anexoEjb y mirar de traerlo ya cargado.
+                byte[] data = null;
+                DocumentCustody dc = anexoFull.getDocumentoCustody();
+                SignatureCustody sc = anexoFull.getSignatureCustody();
+                String filename = new String();
+                if (dc == null) {
+                    if (sc != null) {
+                        data = sc.getData();
+                        filename = sc.getName();
                     }
                 } else {
-                    data = anexoEjb.getInstance().getDocument(custodyID);
+                    data = dc.getData();
+                    filename = dc.getName();
                 }
 
-                if (file == null) {
+
+                if (dc == null && sc == null) {
                     log.error("El anexo con id " + anexo.getId() + " del registro de entrada "
                             + re.getId() + " no tiene ni documento ni firma definidos", new Exception());
                     continue;
@@ -690,15 +695,15 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
 
                 // Nombre_Fichero_Anexado
-                if (StringUtils.isNotBlank(file.getName())) {
+                if (StringUtils.isNotBlank(filename)) {
                     elem = rootElement.addElement("Nombre_Fichero_Anexado");
-                    elem.addCDATA(file.getName());
+                    elem.addCDATA(filename);
                 }
 
                 // Identificador_Fichero
                 // if(anexo.getModoFirma()==RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED) {
                 elem = rootElement.addElement("Identificador_Fichero");
-                String identificador_fichero = generateIdentificadorFichero(identificadorIntercambio, secuencia, file.getName());
+                String identificador_fichero = generateIdentificadorFichero(identificadorIntercambio, secuencia, filename);
                 elem.addCDATA(identificador_fichero);
                 secuencia++;
                 // }
@@ -728,9 +733,9 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                 } else {
                     if (anexo.getModoFirma() == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED) {
                         //TODO preguntar a toni como extraer la firma del attached.
-                        elem.addCDATA(getBase64String((anexoEjb.getInstance().getSignature(custodyID))));
+                        elem.addCDATA(getBase64String(sc.getData()));
                     } else {
-                        elem.addCDATA(getBase64String((anexoEjb.getInstance().getSignature(custodyID))));
+                        elem.addCDATA(getBase64String(sc.getData()));
                     }
                 }
 
@@ -752,10 +757,20 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
                 // Tipo_MIME
                 elem = rootElement.addElement("Tipo_MIME");
-                if(StringUtils.isNotBlank(file.getMime())&& file.getMime().length() > 20){
-                    elem.addCDATA(null);
-                }else{
-                    elem.addCDATA(file.getMime());
+                if (dc == null) {
+                    if (sc != null) {
+                        if (StringUtils.isNotBlank(sc.getMime()) && sc.getMime().length() > 20) {
+                            elem.addCDATA(null);
+                        } else {
+                            elem.addCDATA(sc.getMime());
+                        }
+                    }
+                } else {
+                    if (StringUtils.isNotBlank(dc.getMime()) && dc.getMime().length() > 20) {
+                        elem.addCDATA(null);
+                    } else {
+                        elem.addCDATA(dc.getMime());
+                    }
                 }
 
                 // Anexo
@@ -780,7 +795,6 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                     Element rootElementFirma = rootNode.addElement("De_Anexo");
                     Element elemFirma = null;
 
-                    SignatureCustody sc = anexoEjb.getFirma(custodyID);
                     String filename_firma = sc.getName();
                     elemFirma = rootElementFirma.addElement("Nombre_Fichero_Anexado");
                     elemFirma.addCDATA(filename_firma);
@@ -798,6 +812,12 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
                     elemFirma = rootElementFirma.addElement("Identificador_Documento_Firmado");
                     elemFirma.addCDATA(identificador_fichero);
+
+                    // Anexo
+                    if (data != null) {
+                        elem = rootElement.addElement("Anexo");
+                        elem.addCDATA(getBase64String(sc.getData()));
+                    }
 
                     secuencia++;
                 }
