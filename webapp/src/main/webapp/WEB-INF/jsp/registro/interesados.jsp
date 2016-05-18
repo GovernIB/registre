@@ -74,7 +74,7 @@
                         </c:forEach>
                     </select>
 
-                    <input id="personaFisica" name="personaFisica" type="text" class="form-control" placeholder="Buscar personas fisicas..." autocomplete="off"/>
+                    <input id="personaFisica" name="personaFisica" type="text" class="form-control" placeholder="<spring:message code="persona.buscar.fisicas"/>" autocomplete="off"/>
 
                     <%--<select id="personaFisica" name="personaFisica" class="chosen-select">
                         <option value="-1">...</option>
@@ -82,7 +82,7 @@
                             <option value="${fisica.id}">${fisica.nombrePersonaFisica}</option>
                         </c:forEach>
                     </select>--%>
-                    <input id="personaJuridica" name="personaJuridica" type="text" class="form-control" placeholder="Buscar personas juridicas..." autocomplete="off"/>
+                    <input id="personaJuridica" name="personaJuridica" type="text" class="form-control" placeholder="<spring:message code="persona.buscar.juridicas"/>" autocomplete="off"/>
 
                     <%--<select id="personaJuridica" name="personaJuridica" class="chosen-select">
                         <option value="-1">...</option>
