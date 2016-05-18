@@ -7,6 +7,7 @@ import es.caib.regweb3.sir.ws.api.manager.FicheroIntercambioManager;
 import es.caib.regweb3.sir.ws.api.manager.impl.FicheroIntercambioManagerImpl;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.utils.UsuarioService;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -186,9 +187,11 @@ public class ComunController extends BaseController {
 
 
     @RequestMapping(value = "/sir/{registroId}")
-    public String pruebaSir(@PathVariable Long registroId, HttpServletRequest request, HttpServletResponse response) throws Exception{
+    public String pruebaSir(@PathVariable Long registroId, HttpServletRequest request, HttpServletResponse response) throws Exception, I18NException {
 
-        RegistroEntrada registroEntrada = registroEntradaEjb.findById(registroId);
+        //RegistroEntrada registroEntrada = registroEntradaEjb.findById(registroId);
+        RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(registroId);
+
 
         ficheroIntercambioManager.enviarFicheroIntercambio(registroEntrada);
 

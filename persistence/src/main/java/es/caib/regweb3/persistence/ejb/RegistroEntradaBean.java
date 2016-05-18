@@ -1283,6 +1283,23 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         return (Long) q.getSingleResult() > 0;
     }
 
+    public RegistroEntrada getConAnexosFull(Long id) throws Exception, I18NException {
+
+        RegistroEntrada re = findById(id);
+        List<Anexo> anexos = re.getRegistroDetalle().getAnexos();
+        List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
+        for (Anexo anexo : anexos) {
+            AnexoFull anexoFull = anexoEjb.getAnexoFull(anexo.getId());
+            if (anexoFull != null) {
+                log.info(anexoFull.getDocumentoCustody().getName());
+            }
+            anexosFull.add(anexoFull);
+        }
+        //Asignamos los documentos recuperados de custodia al registro de entrada.
+        re.getRegistroDetalle().setAnexosFull(anexosFull);
+        return re;
+    }
+
 
     public Destinatarios distribuir(RegistroEntrada re) throws Exception, I18NException {
         Destinatarios destinatarios = new Destinatarios();
@@ -1363,4 +1380,5 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         }
         return original;
     }
+
 }
