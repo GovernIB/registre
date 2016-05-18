@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Persona;
+import es.caib.regweb3.model.utils.ObjetoBasico;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -364,5 +365,60 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
         Query query = em.createQuery("delete from Persona where entidad.id = :idEntidad");
         return query.setParameter("idEntidad", idEntidad).executeUpdate();
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<ObjetoBasico> busquedaPersonas(String text, Long tipoPersona, Long idEntidad) throws Exception {
+
+        Query q;
+        String queryBase = "";
+
+        List<String> where = new ArrayList<String>();
+        Map<String, Object> parametros = new HashMap<String, Object>();
+
+        if(tipoPersona.equals(RegwebConstantes.TIPO_PERSONA_FISICA)){
+            queryBase = "Select persona.id, CONCAT(persona.nombre,' ',persona.apellido1,' ', persona.apellido2,' - ', persona.documento) as completo from Persona as persona ";
+            where.add(DataBaseUtils.like("CONCAT(persona.nombre, persona.apellido1, persona.apellido2,' - ', persona.documento)", "text", parametros, text));
+
+        }else if(tipoPersona.equals(RegwebConstantes.TIPO_PERSONA_JURIDICA)){
+            queryBase = "Select persona.id, CONCAT(persona.razonSocial,' - ', persona.documento) as completo from Persona as persona ";
+            where.add(DataBaseUtils.like("CONCAT(persona.razonSocial,' - ', persona.documento)", "text", parametros, text));
+        }
+
+        where.add(" persona.entidad.id = :idEntidad ");parametros.put("idEntidad", idEntidad);
+        where.add(" persona.tipo = :tipoPersona ");parametros.put("tipoPersona", RegwebConstantes.TIPO_PERSONA_FISICA);
+
+
+        StringBuilder query = new StringBuilder(queryBase);
+        if (parametros.size() != 0) {
+            query.append("where ");
+            int count = 0;
+            for (String w : where) {
+                if (count != 0) {
+                    query.append(" and ");
+                }
+                query.append(w);
+                count++;
+            }
+            query.append(" order by persona.id desc");
+        }
+
+        q = em.createQuery(query.toString());
+
+        for (Map.Entry<String, Object> param : parametros.entrySet()) {
+
+            q.setParameter(param.getKey(), param.getValue());
+        }
+        List<Object[]> result = q.getResultList();
+        List<ObjetoBasico> personas = new ArrayList<ObjetoBasico>();
+
+        for (Object[] object : result) {
+            ObjetoBasico persona = new ObjetoBasico((Long) object[0], (String) object[1]);
+
+            personas.add(persona);
+        }
+
+        return personas;
     }
 }

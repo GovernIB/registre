@@ -71,8 +71,8 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         model.addAttribute("libros", getLibrosRegistroSalida(request));
         model.addAttribute("organismosOficinaActiva", getOrganismosOficinaActiva(request));
         model.addAttribute("oficinasOrigen",  getOficinasOrigen(request));
-        model.addAttribute("personasFisicas", personaEjb.getFisicasByEntidad(entidadActiva.getId()));
-        model.addAttribute("personasJuridicas", personaEjb.getJuridicasByEntidad(entidadActiva.getId()));
+        //model.addAttribute("personasFisicas", personaEjb.getFisicasByEntidad(entidadActiva.getId()));
+        //model.addAttribute("personasJuridicas", personaEjb.getJuridicasByEntidad(entidadActiva.getId()));
 
         return "registroSalida/registroSalidaForm";
     }
@@ -109,8 +109,8 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
             model.addAttribute(getOficinaActiva(request));
             model.addAttribute("oficinasOrigen",  getOficinasOrigen(request));
             model.addAttribute("libros", getLibrosRegistroSalida(request));
-            model.addAttribute("personasFisicas", personaEjb.getFisicasByEntidad(entidad.getId()));
-            model.addAttribute("personasJuridicas", personaEjb.getJuridicasByEntidad(entidad.getId()));
+            //model.addAttribute("personasFisicas", personaEjb.getFisicasByEntidad(entidad.getId()));
+            //model.addAttribute("personasJuridicas", personaEjb.getJuridicasByEntidad(entidad.getId()));
 
             // Organismo origen: Select
             log.info("Origen: " + registroSalida.getOrigen().getCodigo());

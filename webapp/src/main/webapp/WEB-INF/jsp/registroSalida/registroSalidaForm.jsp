@@ -386,7 +386,7 @@
 
     function actualizarCodigosAsunto(){
         <c:url var="codigosAsunto" value="/rest/obtenerCodigosAsunto" />
-        actualizarSelectTraduccion('${codigosAsunto}', '#registroDetalle\\.codigoAsunto\\.id', $('#registroDetalle\\.tipoAsunto\\.id option:selected').val(), '${registroSalida.registroDetalle.codigoAsunto.id}', false, '${pageContext.response.locale}');
+        actualizarSelectTraduccion('${codigosAsunto}', '#registroDetalle\\.codigoAsunto\\.id', $('#registroDetalle\\.tipoAsunto\\.id option:selected').val(), '${registroSalida.registroDetalle.codigoAsunto.id}', true, '${pageContext.response.locale}');
     }
 
     function actualizarLocalidad(){

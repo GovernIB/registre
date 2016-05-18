@@ -2,21 +2,18 @@ package es.caib.regweb3.webapp.controller;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.ObjetoBasico;
-import es.caib.regweb3.persistence.ejb.CatLocalidadLocal;
-import es.caib.regweb3.persistence.ejb.CatProvinciaLocal;
-import es.caib.regweb3.persistence.ejb.CodigoAsuntoLocal;
-import es.caib.regweb3.persistence.ejb.TipoAsuntoLocal;
+import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.LocalidadJson;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.ejb.EJB;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -45,6 +42,21 @@ public class RestController {
     @EJB(mappedName = "regweb3/TipoAsuntoEJB/local")
     public TipoAsuntoLocal tipoAsuntoEjb;
 
+    @EJB(mappedName = "regweb3/PersonaEJB/local")
+    public PersonaLocal personaEjb;
+
+
+    @RequestMapping(value = "/busquedaPersonas/{tipoPersona}", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    List<ObjetoBasico> busquedaPersonas(@PathVariable Long tipoPersona, @RequestParam String query, HttpServletRequest request) throws Exception {
+
+        HttpSession session = request.getSession();
+        log.info("q: " + query);
+        log.info("tipoPersona: " + tipoPersona);
+        Entidad entidad =  (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
+        return personaEjb.busquedaPersonas(query,tipoPersona,entidad.getId());
+    }
 
     /**
      * Obtiene los {@link es.caib.regweb3.model.CatLocalidad} de de la Provincia seleccionada

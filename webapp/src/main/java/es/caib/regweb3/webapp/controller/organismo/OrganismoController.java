@@ -296,7 +296,7 @@ public class OrganismoController extends BaseController {
                 librosOrganismoCuartoNivel.size() + librosOrganismoQuintoNivel.size() + librosOrganismoSextoNivel.size() +
                 librosOrganismoSeptimoNivel.size();
         Long end = System.currentTimeMillis();
-        log.info("TIEMPO CARGA ARBOLarbol: " + TimeUtils.formatElapsedTime(end - start));
+        log.debug("TIEMPO CARGA ARBOLarbol: " + TimeUtils.formatElapsedTime(end - start));
 
         mav.addObject("organismosPrimerNivel", organismosPrimerNivel);
         mav.addObject("organismosSegundoNivel", organismosSegundoNivel);

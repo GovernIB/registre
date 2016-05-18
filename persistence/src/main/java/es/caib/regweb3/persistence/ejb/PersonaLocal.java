@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Persona;
+import es.caib.regweb3.model.utils.ObjetoBasico;
 import es.caib.regweb3.persistence.utils.Paginacion;
 
 import javax.annotation.security.RolesAllowed;
@@ -106,4 +107,14 @@ public interface PersonaLocal extends BaseEjb<Persona, Long> {
      * @throws Exception
      */
     public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+
+    /**
+     *
+     * @param q
+     * @param tipoPersona
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public List<ObjetoBasico> busquedaPersonas(String q, Long tipoPersona, Long idEntidad) throws Exception;
 }
