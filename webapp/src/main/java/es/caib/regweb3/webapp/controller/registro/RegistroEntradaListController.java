@@ -410,7 +410,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     @RequestMapping(value = "/{idRegistro}/distribuir", method = RequestMethod.GET)
     public
     @ResponseBody
-    RespuestaDistribucion/*Destinatarios*/ distribuirRegistroEntrada(@PathVariable Long idRegistro, HttpServletRequest request) throws Exception, I18NException {
+    RespuestaDistribucion distribuirRegistroEntrada(@PathVariable Long idRegistro, HttpServletRequest request) throws Exception, I18NException {
 
         log.info("Entramos en distribuirRegistroEntrada");
 
@@ -432,11 +432,11 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         //Obtenemos los destinatarios a través del plugin de distribución
         respuestaDistribucion = registroEntradaEjb.distribuir(registroEntrada);
-        if (respuestaDistribucion.getEnviado() != null && !respuestaDistribucion.getEnviado()) {
-            Mensaje.saveMessageError(request, getMessage("registroEntrada.distribuir.noenviado"));
-        }/*else{
-            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
-        }*/
+        if (respuestaDistribucion != null) {
+            if (respuestaDistribucion.getEnviado() != null && !respuestaDistribucion.getEnviado()) {
+                Mensaje.saveMessageError(request, getMessage("registroEntrada.distribuir.noenviado"));
+            }
+        }
         return respuestaDistribucion;
     }
 

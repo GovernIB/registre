@@ -22,35 +22,47 @@ function distribuir(url, urlEnviarDestinatarios, urlDetalle, urlTramitar) {
         dataType: 'json',
         contentType: 'application/json',
         success: function (result) {
-            alert(result.destinatarios);
-            if (result.destinatarios != null && result.destinatarios.propuestos.length > 0) { // Si hay destinatarios, mostramos pop-up
-                //Rellenamos el select de posibles
-                var lenposibles = result.destinatarios.posibles.length;
-                for (var i = 0; i < lenposibles; i++)
-                    html += '<option value="' + result.destinatarios.posibles[i].id + '">'
-                        + result.destinatarios.posibles[i].name + '</option>';
-                $('#posibles').trigger("chosen:updated");
-                $('#posibles').html(html);
+
+            if (!result.hayPlugin) {
+                goTo(urlTramitar);
+            } else {
+                if (result.destinatarios != null && result.destinatarios.propuestos != null && result.destinatarios.propuestos.length > 0) { // Si hay destinatarios, mostramos pop-up
+
+                    //Rellenamos el select de posibles
+                    var lenposibles = result.destinatarios.posibles.length;
+                    for (var i = 0; i < lenposibles; i++)
+                        html += '<option value="' + result.destinatarios.posibles[i].id + '">'
+                            + result.destinatarios.posibles[i].name + '</option>';
+                    $('#posibles').trigger("chosen:updated");
+                    $('#posibles').html(html);
 
 
-                //Rellenamos el select de propuestos
-                html = '';
-                var lenpropuestos = result.destinatarios.propuestos.length;
-                for (var j = 0; j < lenpropuestos; j++)
-                    html += '<option value="' + result.destinatarios.propuestos[j].id + '">'
-                        + result.destinatarios.propuestos[j].name + '</option>';
-                $('#propuestos').html(html);
-                $('#distribuirModal').modal('show');
+                    //Rellenamos el select de propuestos
+                    html = '';
+                    var lenpropuestos = result.destinatarios.propuestos.length;
+                    for (var j = 0; j < lenpropuestos; j++)
+                        html += '<option value="' + result.destinatarios.propuestos[j].id + '">'
+                            + result.destinatarios.propuestos[j].name + '</option>';
+                    $('#propuestos').html(html);
+                    $('#distribuirModal').modal('show');
 
-            } else { // No hay destinatarios, se marca como tramitado
-                if (result.destinatarios != null) {
-                    if (result.enviado) {
-                        goTo(urlTramitar);
+                } else { // No hay destinatarios, se marca como tramitado
+                    //TODO NO SE DISTINGUIR CUANDO DESTINATARIOS ES NULL DE DONDE VIENE.
+
+                    if (result.destinatarios != null && result.destinatarios.propuestos != null && result.destinatarios.propuestos.length == 0) {
+                        mensajeError('#mensajes', traddistribuir['distribuir.nodestinatarios']);
+                    } else {
+                        //if (result.listado) {
+                        if (result.enviado) {
+                            goTo(urlTramitar);
+                        } else {
+                            goTo(urlDetalle);
+                        }
+                        /*}else{
+                         mensajeError('#mensajes', traddistribuir['distribuir.nodestinatarios']);
+                         }*/
                     }
-                } else {
-                    mensajeError('#mensajes', traddistribuir['distribuir.nodestinatarios']);
                 }
-
             }
         }
     });

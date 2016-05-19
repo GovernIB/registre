@@ -1299,17 +1299,19 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     public RespuestaDistribucion distribuir(RegistroEntrada re) throws Exception, I18NException {
         RespuestaDistribucion respuestaDistribucion = new RespuestaDistribucion();
-        // respuestaDistribucion.setDestinatarios();
+        respuestaDistribucion.setHayPlugin(false);
 
         //Obtenemos plugin
         IDistribucionPlugin distribucionPlugin = RegwebDistribucionPluginManager.getInstance();
         //Si han especificado plug-in
         if (distribucionPlugin != null) {
+            respuestaDistribucion.setHayPlugin(true);
             //Obtenemos la configuración de la distribución
             ConfiguracionDistribucion configuracionDistribucion = distribucionPlugin.configurarDistribucion();
             re = configuracionAnexosDistribucion(re, configuracionDistribucion.configuracionAnexos);
             if (!configuracionDistribucion.isListado()) { // isListado = false , envia a los destinatarios propuestos, sin poder modificar
                 respuestaDistribucion.setEnviado(distribucionPlugin.enviarDestinatarios(re, null, ""));
+                // respuestaDistribucion.setListado(configuracionDistribucion.isListado());
                 //Despues lo tramita en una segunda fase desde el metodo distribuir() en distribuir.js
             } else {
                 respuestaDistribucion.setDestinatarios(distribucionPlugin.distribuir(re)); // isListado = true , puede escoger a quien lo distribuye de la listas propuestas.
