@@ -314,12 +314,12 @@ public class BaseController {
         Set<Long> organismosId = new HashSet<Long>();
 
         for (Organismo organismo : organismos) {
-
-            // Eliminamos el Organismo si está marcado como Entidad de Derecho Público o si
+            organismosId.add(organismo.getId());
+            /*// Eliminamos el Organismo si está marcado como Entidad de Derecho Público o si
             // la OficinaActiva le da servicio.
             if (!organismo.getEdp() || oficinaActiva.getOrganismosFuncionales().contains(organismo)) {
                 organismosId.add(organismo.getId());
-            }
+            }*/
         }
         return organismosId;
     }

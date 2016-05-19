@@ -50,12 +50,12 @@
                             </h3>
                         </div>
                         <div class="panel-body">
-                            <div class="col-xs-12"><strong>${entidad.nombre}</strong></div>
-                            <div class="col-xs-12"><strong>${registroEntrada.oficina.denominacion}</strong></div>
+                            <div class="col-xs-12"><strong>${entidad.nombre} - ${registroEntrada.oficina.denominacion}</strong></div>
+
                             <div class="form-group col-xs-12">
                                 <strong>
                                     <c:if test="${not empty registroEntrada.id}"> <fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></c:if>
-                                    <c:if test="${empty registroEntrada.id}"><c:set var="now" value="<%=new java.util.Date()%>" /> <fmt:formatDate value="${now}" pattern="dd/MM/yyyy"/></c:if>
+                                    <c:if test="${empty registroEntrada.id}"><c:set var="now" value="<%=new java.util.Date()%>" /> <fmt:formatDate value="${now}" pattern="dd/MM/yyyy HH:mm:ss"/></c:if>
                                 </strong>
                             </div>
                             <div class="col-xs-12"><strong>${usuario.nombreCompleto} (${usuario.email})</strong></div>
@@ -406,6 +406,14 @@
     function OnBeforeUnLoad () {
         return "<spring:message code="regweb.cerrar.pagina"/>";
     }
+
+    // Posicionamos el ratón en el campo indicado al cargar el modal
+    $('#modalBuscadorOrganismoDestino').on('shown.bs.modal', function () {
+        $('#codigoOrganismoOrganismoDestino').focus();
+    });
+    $('#modalBuscadorOficinaOrigen').on('shown.bs.modal', function () {
+        $('#codigoOrganismoOficinaOrigen').focus();
+    });
 
 </script>
 

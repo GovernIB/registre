@@ -41,7 +41,7 @@
                             <label for="nombre" id="nom"><spring:message code="regweb.nombre"/></label>
                         </div>
                         <div class="col-xs-8">
-                            <input id="nombre" name="nombre" class="form-control" type="text" value="" maxlength="30"/>
+                            <input id="nombre" name="nombre" class="form-control" tabindex="1" type="text" value="" maxlength="30"/>
                             <span id="nombreError"></span>
                         </div>
                     </div>
@@ -50,7 +50,7 @@
                             <label for="apellido1" id="llinatge1"><spring:message code="usuario.apellido1"/></label>
                         </div>
                         <div class="col-xs-8">
-                            <input id="apellido1" name="apellido1" class="form-control" type="text" value="" maxlength="30"/>
+                            <input id="apellido1" name="apellido1" class="form-control" tabindex="2" type="text" value="" maxlength="30"/>
                             <span id="apellido1Error"></span>
                         </div>
                     </div>
@@ -60,7 +60,7 @@
                             <label for="apellido2"><spring:message code="usuario.apellido2"/></label>
                         </div>
                         <div class="col-xs-8">
-                            <input id="apellido2" name="apellido2" class="form-control" type="text" value="" maxlength="30"/>
+                            <input id="apellido2" name="apellido2" class="form-control" tabindex="3" type="text" value="" maxlength="30"/>
                         </div>
                     </div>
 
@@ -69,7 +69,7 @@
                             <label for="tipoDocumentoIdentificacion"><spring:message code="persona.tipoDocumentoIdentificacion"/></label>
                         </div>
                         <div class="col-xs-8">
-                            <select id="tipoDocumentoIdentificacion" name="tipoDocumentoIdentificacion" class="chosen-select">
+                            <select id="tipoDocumentoIdentificacion" name="tipoDocumentoIdentificacion" class="chosen-select" tabindex="4">
                                 <option value="">...</option>
                                 <c:forEach items="${tiposDocumento}" var="tipoDocumento">
                                     <option value="${tipoDocumento}"><spring:message code="tipoDocumentoIdentificacion.${tipoDocumento}"/></option>
@@ -84,7 +84,7 @@
                             <label for="documento"><spring:message code="usuario.documento"/></label>
                         </div>
                         <div class="col-xs-8">
-                            <input id="documento" name="documento" maxlength="17" class="form-control" type="text" value="" disabled="disabled" style="text-transform:uppercase"/>
+                            <input id="documento" name="documento" maxlength="17" class="form-control" tabindex="5" type="text" value="" disabled="disabled" style="text-transform:uppercase"/>
                             <span id="documentoError"></span>
                         </div>
                     </div>
@@ -94,7 +94,7 @@
                             <label for="email"><spring:message code="usuario.email"/></label>
                         </div>
                         <div class="col-xs-8">
-                            <input id="email" name="email" class="form-control" type="text" value="" maxlength="160"/>
+                            <input id="email" name="email" class="form-control" tabindex="6" type="text" value="" maxlength="160"/>
                             <span id="emailError"></span>
                         </div>
                     </div>
@@ -104,17 +104,16 @@
                             <label for="telefono"><spring:message code="persona.telefono"/></label>
                         </div>
                         <div class="col-xs-8">
-                            <input id="telefono" name="telefono" class="form-control" type="text" value="" maxlength="20"/>
+                            <input id="telefono" name="telefono" class="form-control" tabindex="7" type="text" value="" maxlength="20"/>
                         </div>
                     </div>
 
                     <div class="form-group col-xs-6">
                         <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                            <%--  TODO No està traduit !!!!! --%>
-                            <label for="canal">Canal not.</label>
+                            <label for="canal"><spring:message code="persona.canal"/></label>
                         </div>
                         <div class="col-xs-8">
-                            <select id="canal" name="canal" class="chosen-select">
+                            <select id="canal" name="canal" class="chosen-select" tabindex="8">
                                 <option value="-1">...</option>
                                 <c:forEach items="${canalesNotificacion}" var="canalNotificacion">
                                     <option value="${canalNotificacion}"><spring:message code="canalNotificacion.${canalNotificacion}"/></option>
@@ -129,7 +128,7 @@
                             <label for="pais.id"><spring:message code="interesado.pais"/></label>
                         </div>
                         <div class="col-xs-8">
-                            <select id="pais.id" name="pais.id" class="chosen-select" disabled="disabled">
+                            <select id="pais.id" name="pais.id" class="chosen-select" tabindex="9" disabled="disabled">
                                 <option value="-1">...</option>
                                 <c:forEach items="${paises}" var="pais">
                                     <option value="${pais.id}">${pais.descripcionPais}</option>
@@ -144,7 +143,7 @@
                             <label for="provincia.id"><spring:message code="interesado.provincia"/></label>
                         </div>
                         <div class="col-xs-8">
-                            <select id="provincia.id" name="provincia.id" class="chosen-select" onchange="actualizarLocalidad(this)" disabled="disabled">
+                            <select id="provincia.id" name="provincia.id" class="chosen-select" tabindex="10" onchange="actualizarLocalidad(this)" disabled="disabled">
                                 <option value="-1">...</option>
                                 <c:forEach items="${provincias}" var="provincia">
                                     <option value="${provincia.id}">${provincia.descripcionProvincia}</option>
@@ -159,7 +158,7 @@
                             <label for="localidad.id"><spring:message code="interesado.localidad"/></label>
                         </div>
                         <div class="col-xs-8">
-                            <select id="localidad.id" name="localidad.id" class="chosen-select" disabled="disabled"></select>
+                            <select id="localidad.id" name="localidad.id" class="chosen-select" tabindex="11" disabled="disabled"></select>
                             <span id="localidad.idError"></span>
                         </div>
                     </div>
@@ -169,7 +168,7 @@
                             <label for="direccion"><spring:message code="persona.direccion"/></label>
                         </div>
                         <div class="col-xs-8">
-                            <input id="direccion" name="direccion" class="form-control" type="text" value="" maxlength="160" disabled="disabled"/>
+                            <input id="direccion" name="direccion" class="form-control" tabindex="12" type="text" value="" maxlength="160" disabled="disabled"/>
                             <span id="direccionError"></span>
                         </div>
                     </div>
@@ -179,7 +178,7 @@
                             <label for="cp"><spring:message code="persona.cp"/></label>
                         </div>
                         <div class="col-xs-8">
-                            <input id="cp" name="cp" class="form-control" type="text" value="" maxlength="5" disabled="disabled"/>
+                            <input id="cp" name="cp" class="form-control" type="text" tabindex="13" value="" maxlength="5" disabled="disabled"/>
                             <span id="cpError"></span>
                         </div>
                     </div>
@@ -189,7 +188,7 @@
                             <label for="razonSocial" id="rao"><spring:message code="persona.razonSocial"/></label>
                         </div>
                         <div class="col-xs-8">
-                            <input id="razonSocial" name="razonSocial" class="form-control" type="text" value="" maxlength="80" disabled="disabled"/>
+                            <input id="razonSocial" name="razonSocial" class="form-control" tabindex="14" type="text" value="" maxlength="80" disabled="disabled"/>
                             <span id="razonSocialError"></span>
                         </div>
                     </div>
@@ -199,7 +198,7 @@
                             <label for="direccionElectronica"><spring:message code="persona.direccionElectronica"/></label>
                         </div>
                         <div class="col-xs-8">
-                            <input id="direccionElectronica" name="direccionElectronica" class="form-control" type="text" value="" maxlength="160" disabled="disabled"/>
+                            <input id="direccionElectronica" name="direccionElectronica" class="form-control" tabindex="15" type="text" value="" maxlength="160" disabled="disabled"/>
                             <span id="direccionElectronicaError"></span>
                         </div>
                     </div>
@@ -209,7 +208,7 @@
                             <label for="observaciones"><spring:message code="interesado.observaciones"/></label>
                         </div>
                         <div class="col-xs-8">
-                            <textarea id="observaciones" name="observaciones" class="form-control" rows="2" maxlength="160"></textarea>
+                            <textarea id="observaciones" name="observaciones" class="form-control" tabindex="16" rows="2" maxlength="160"></textarea>
                         </div>
                     </div>
 
@@ -229,9 +228,8 @@
 
             </div>
             <div class="modal-footer">
-                <input type="button" onclick="procesarInteresado()" title="<spring:message code="regweb.guardar"/>" value="<spring:message code="regweb.guardar"/>" class="btn btn-warning btn-sm" tabindex="1">
+                <input type="button" onclick="procesarInteresado()" title="<spring:message code="regweb.guardar"/>" tabindex="17" value="<spring:message code="regweb.guardar"/>" class="btn btn-warning btn-sm">
                 <button class="btn btn-sm" data-dismiss="modal" aria-hidden="true" onclick="limpiarInteresado()"><spring:message code="regweb.cerrar"/></button>
-                <%--<button id="eliminarRepresentante" class="btn btn-sm" data-dismiss="modal" aria-hidden="true" onclick="eliminarRepresentante($('#id').val(),$('#representado\\.id').val(),$('#idRegistroDetalle\\.id').val())"><spring:message code="regweb3.eliminar"/></button>--%>
             </div>
              </form>
         </div>

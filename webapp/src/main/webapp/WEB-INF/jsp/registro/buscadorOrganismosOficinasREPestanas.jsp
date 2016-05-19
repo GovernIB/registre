@@ -7,7 +7,7 @@ que se le indica -->
 <div id="modalBuscador${param.tipo}" class="modal fade bs-example-modal-lg">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <c:import url="../modulos/imports.jsp"/>
+
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
                     onclick="limpiarFormularioBusqueda('${param.tipo}')">x
             </button>
@@ -40,7 +40,7 @@ que se le indica -->
                                 </div>
                                 <div class="col-xs-8">
                                     <input id="codigoOrganismo${param.tipo}" name="codigoOrganismo" class="form-control"
-                                           type="text" value=""/>
+                                           type="text" value="" autofocus="autofocus"/>
                                 </div>
                             </div>
                             <div class="form-group col-xs-6">
