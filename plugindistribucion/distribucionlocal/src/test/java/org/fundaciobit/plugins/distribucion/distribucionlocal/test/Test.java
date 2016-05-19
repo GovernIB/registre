@@ -3,6 +3,7 @@ package org.fundaciobit.plugins.distribucion.distribucionlocal.test;
 import org.fundaciobit.plugins.distribucion.Destinatarios;
 import org.fundaciobit.plugins.distribucion.distribucionlocal.DistribucionLocalDistribucionPlugin;
 
+
 /**
  * @author anadal
  * @author mgonzalez

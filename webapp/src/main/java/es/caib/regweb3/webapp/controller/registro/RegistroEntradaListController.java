@@ -7,12 +7,12 @@ import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
 import es.caib.regweb3.persistence.utils.DestinatarioWrapper;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
+import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.form.RegistroEntradaBusqueda;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.RegistroEntradaBusquedaValidator;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.plugins.distribucion.Destinatarios;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -410,29 +410,34 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     @RequestMapping(value = "/{idRegistro}/distribuir", method = RequestMethod.GET)
     public
     @ResponseBody
-    Destinatarios distribuirRegistroEntrada(@PathVariable Long idRegistro, HttpServletRequest request) throws Exception, I18NException {
+    RespuestaDistribucion/*Destinatarios*/ distribuirRegistroEntrada(@PathVariable Long idRegistro, HttpServletRequest request) throws Exception, I18NException {
 
         log.info("Entramos en distribuirRegistroEntrada");
 
         RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
-        Destinatarios destinatarios = new Destinatarios();
+        RespuestaDistribucion respuestaDistribucion = new RespuestaDistribucion();
 
         // Comprobamos si el RegistroEntrada tiene el estado Válido
         if (!registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_VALIDO)) {
 
             Mensaje.saveMessageError(request, getMessage("registroEntrada.distribuir.error"));
-            return destinatarios;
+            return respuestaDistribucion;
         }
 
         // Comprobamos que el RegistroEntrada es un OficioRemision
         if (registroEntradaEjb.isOficioRemisionInterno(idRegistro, getOrganismosOficioRemision(request, getOrganismosOficinaActiva(request)))) {
             Mensaje.saveMessageError(request, getMessage("registroEntrada.distribuir.error"));
-            return destinatarios;
+            return respuestaDistribucion;
         }
 
         //Obtenemos los destinatarios a través del plugin de distribución
-        destinatarios = registroEntradaEjb.distribuir(registroEntrada);
-        return destinatarios;
+        respuestaDistribucion = registroEntradaEjb.distribuir(registroEntrada);
+        if (respuestaDistribucion.getEnviado() != null && !respuestaDistribucion.getEnviado()) {
+            Mensaje.saveMessageError(request, getMessage("registroEntrada.distribuir.noenviado"));
+        }/*else{
+            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
+        }*/
+        return respuestaDistribucion;
     }
 
     /**
@@ -465,7 +470,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
 
         } else {
-            Mensaje.saveMessageError(request, getMessage("registroEntrada.distribuir.error"));
+            Mensaje.saveMessageError(request, getMessage("registroEntrada.distribuir.noenviado"));
         }
         return enviado;
 

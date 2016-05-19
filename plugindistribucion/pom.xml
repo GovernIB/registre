@@ -18,6 +18,7 @@
     <modules>
         <module>api</module>
         <module>distribucionlocal</module>
+        <module>distribucionripea</module>
     </modules>
 
 </project>

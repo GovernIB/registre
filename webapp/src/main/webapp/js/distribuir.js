@@ -22,27 +22,35 @@ function distribuir(url, urlEnviarDestinatarios, urlDetalle, urlTramitar) {
         dataType: 'json',
         contentType: 'application/json',
         success: function (result) {
-            if (result != null && result.propuestos != null) { // Si hay destinatarios, mostramos pop-up
+            alert(result.destinatarios);
+            if (result.destinatarios != null && result.destinatarios.propuestos.length > 0) { // Si hay destinatarios, mostramos pop-up
                 //Rellenamos el select de posibles
-                var lenposibles = result.posibles.length;
+                var lenposibles = result.destinatarios.posibles.length;
                 for (var i = 0; i < lenposibles; i++)
-                    html += '<option value="' + result.posibles[i].id + '">'
-                        + result.posibles[i].name + '</option>';
+                    html += '<option value="' + result.destinatarios.posibles[i].id + '">'
+                        + result.destinatarios.posibles[i].name + '</option>';
                 $('#posibles').trigger("chosen:updated");
                 $('#posibles').html(html);
 
 
                 //Rellenamos el select de propuestos
                 html = '';
-                var lenpropuestos = result.propuestos.length;
+                var lenpropuestos = result.destinatarios.propuestos.length;
                 for (var j = 0; j < lenpropuestos; j++)
-                    html += '<option value="' + result.propuestos[j].id + '">'
-                        + result.propuestos[j].name + '</option>';
+                    html += '<option value="' + result.destinatarios.propuestos[j].id + '">'
+                        + result.destinatarios.propuestos[j].name + '</option>';
                 $('#propuestos').html(html);
                 $('#distribuirModal').modal('show');
 
             } else { // No hay destinatarios, se marca como tramitado
-                goTo(urlTramitar);
+                if (result.destinatarios != null) {
+                    if (result.enviado) {
+                        goTo(urlTramitar);
+                    }
+                } else {
+                    mensajeError('#mensajes', traddistribuir['distribuir.nodestinatarios']);
+                }
+
             }
         }
     });
