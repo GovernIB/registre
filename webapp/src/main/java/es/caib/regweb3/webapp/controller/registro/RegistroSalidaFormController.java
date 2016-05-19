@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -204,7 +205,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
             registroSalida = registroSalidaEjb.findById(idRegistro);
 
             // Organismo origen: Select
-            Set<Organismo> organismosOficinaActiva = getOrganismosOficinaActiva(request);
+            Set<Organismo> organismosOficinaActiva = new HashSet<Organismo>(getOrganismosOficinaActiva(request));
             // Si el Organismo Origen no está en al lista lo añadimos
             if (!organismosOficinaActiva.contains(registroSalida.getOrigen())) {
                 organismosOficinaActiva.add(registroSalida.getOrigen());
@@ -256,7 +257,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
             model.addAttribute(entidad);
 
             // Organismo origen: Select
-            Set<Organismo> organismosOficinaActiva = getOrganismosOficinaActiva(request);
+            Set<Organismo> organismosOficinaActiva = new HashSet<Organismo>(getOrganismosOficinaActiva(request));
             // Si el Organismo Origen no está en al lista lo añadimos
             if (!organismosOficinaActiva.contains(registroSalida.getOrigen())) {
                 organismosOficinaActiva.add(registroSalida.getOrigen());

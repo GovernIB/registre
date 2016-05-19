@@ -1,13 +1,11 @@
 package es.caib.regweb3.webapp.controller;
 
-import es.caib.regweb3.model.Libro;
-import es.caib.regweb3.model.Oficina;
-import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.model.RegistroSalida;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.OficioRemisionLocal;
 import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
 import es.caib.regweb3.persistence.ejb.RegistroSalidaLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.TimeUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Fundació BIT.
@@ -46,13 +45,13 @@ public class AvisoController extends BaseController {
      */
     @RequestMapping(value = "")
     public ModelAndView avisos(HttpServletRequest request) throws Exception{
-
+        Long start = System.currentTimeMillis();
         ModelAndView mav = new ModelAndView("modulos/avisos");
         Oficina oficinaActiva = getOficinaActiva(request);
 
         if(isOperador(request) && oficinaActiva != null) {
 
-            //Set<Organismo> organismosOficiaActiva = getOrganismosOficinaActiva(request);
+            Set<Organismo> organismosOficiaActiva = getOrganismosOficinaActiva(request);
 
             List<Libro> librosAdministrados = getLibrosAdministrados(request);
             List<Libro> librosRegistro = getLibrosRegistroEntrada(request);
@@ -75,7 +74,7 @@ public class AvisoController extends BaseController {
             mav.addObject("pendientes", pendientes);
 
             /* -- COMENTADO PARA AGILIZAR LA APLICACIÓN CON ORGANIGRAMAS GRANDES  --*/
-            /*// OFICIOS PENDIENTES DE REMISIÓN
+            // OFICIOS PENDIENTES DE REMISIÓN
             if(librosRegistro!= null && librosRegistro.size() > 0){
                 oficiosRemisionInterna = registroEntradaEjb.oficiosPendientesRemisionInternaCount(librosRegistro, getOrganismosOficioRemision(request, organismosOficiaActiva));
                 oficiosRemisionExterna = registroEntradaEjb.oficiosPendientesRemisionExternaCount(librosRegistro);
@@ -85,10 +84,11 @@ public class AvisoController extends BaseController {
 
             // OFICIOS PENDIENTES DE LLEGADA
             Long oficiosPendientesLlegada = oficioRemisionEjb.oficiosPendientesLlegadaCount(organismosOficiaActiva);
-            mav.addObject("oficiosPendientesLlegada", oficiosPendientesLlegada);*/
+            mav.addObject("oficiosPendientesLlegada", oficiosPendientesLlegada);
 
         }
-
+        Long end = System.currentTimeMillis();
+        log.debug("TIEMPO CARGA Avisos: " + TimeUtils.formatElapsedTime(end - start));
         return mav;
     }
 

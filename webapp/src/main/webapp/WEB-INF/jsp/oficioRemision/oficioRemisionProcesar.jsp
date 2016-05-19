@@ -119,7 +119,7 @@
                                             <c:if test="${fn:length(libros) > 1}">
                                                 <col>
                                             </c:if>
-                                            <col>
+                                            <col width="100">
                                             <col>
                                             <col>
                                             <col width="50">

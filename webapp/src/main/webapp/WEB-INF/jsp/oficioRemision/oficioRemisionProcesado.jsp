@@ -79,7 +79,7 @@
                                                 <tr>
                                                     <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="yyyy"/> / ${registroEntrada.numeroRegistro}</td>
                                                     <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy"/></td>
-                                                    <td>${registroEntrada.libro.nombreCompleto}</td>
+                                                    <td>${registroEntrada.libro.nombre}</td>
                                                     <td>${registroEntrada.usuario.usuario.identificador}</td>
                                                     <td>${registroEntrada.oficina.denominacion}</td>
                                                     <td>${(empty registroEntrada.destino)? registroEntrada.destinoExternoDenominacion : registroEntrada.destino.denominacion}</td>

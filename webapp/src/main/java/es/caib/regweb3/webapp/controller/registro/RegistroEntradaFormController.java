@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -114,7 +115,8 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             //model.addAttribute("personasJuridicas", personaEjb.getJuridicasByEntidad(entidad.getId()));
 
             // Organismo destino: Select
-            Set<Organismo> organismosOficinaActiva = getOrganismosOficinaActiva(request);
+            Set<Organismo> organismosOficinaActiva = new HashSet<Organismo>(getOrganismosOficinaActiva(request));
+
             if (registroEntrada.getDestino() != null) { // Si se ha escogido un Organismo destino
 
                 Organismo organismo = organismoEjb.findByCodigoEntidad(registroEntrada.getDestino().getCodigo(), entidad.getId());
@@ -221,7 +223,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         try {
             registroEntrada = registroEntradaEjb.findById(idRegistro);
 
-            Set<Organismo> organismosOficinaActiva = getOrganismosOficinaActiva(request);
+            Set<Organismo> organismosOficinaActiva = new HashSet<Organismo>(getOrganismosOficinaActiva(request));
             Set<Oficina> oficinasOrigen = getOficinasOrigen(request);
 
             if(!registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE)){ //Si no se trata de una reserva de número
@@ -299,7 +301,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             model.addAttribute("oficina", getOficinaActiva(request));
 
             // Organismo destino: Select
-            Set<Organismo> organismosOficinaActiva = getOrganismosOficinaActiva(request);
+            Set<Organismo> organismosOficinaActiva = new HashSet<Organismo>(getOrganismosOficinaActiva(request));
             if (registroEntrada.getDestino() != null) { // Si se ha escogido un Organismo destino
 
                 Organismo organismo = organismoEjb.findByCodigoEntidad(registroEntrada.getDestino().getCodigo(), entidad.getId());
