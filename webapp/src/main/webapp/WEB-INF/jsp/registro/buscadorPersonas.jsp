@@ -23,7 +23,7 @@
                                 <label for="nombre${param.tipoPersona}"><spring:message code="regweb.nombre"/></label>
                             </div>
                             <div class="col-xs-8">
-                                <input id="nombre${param.tipoPersona}" name="nombre${param.tipoPersona}" class="form-control" type="text" value=""/>
+                                <input id="nombre${param.tipoPersona}" name="nombre${param.tipoPersona}" autofocus="autofocus" class="form-control" type="text" value=""/>
                             </div>
                         </div>
                         <div class="form-group col-xs-6">
@@ -52,7 +52,7 @@
                                 <label for="razonSocial${param.tipoPersona}"><spring:message code="persona.razonSocial"/></label>
                             </div>
                             <div class="col-xs-8">
-                                <input id="razonSocial${param.tipoPersona}" name="razonSocial${param.tipoPersona}" class="form-control" type="text" value=""/>
+                                <input id="razonSocial${param.tipoPersona}" name="razonSocial${param.tipoPersona}" autofocus="autofocus" class="form-control" type="text" value=""/>
                             </div>
                         </div>
                     </c:if>

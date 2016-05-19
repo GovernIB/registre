@@ -1,8 +1,3 @@
-/*Acciones cuando se carga la página*/
-
-
-
-
 /**
  * Añade el Organismo seleccionada a la Sesion, y la muestra en la tabla de interesados.
  * @param tipo
@@ -80,9 +75,6 @@ function eliminarOrganisnoInteresado(codigoDir3,idRegistroDetalle){
             } else {
                 mensajeError("#mensajes", tradsinteresado['interesado.eliminar.ultimo']);
             }
-
-
-
         }
     });
 
@@ -240,8 +232,6 @@ function editarInteresado(id){
 
     // Marcamos la acción para Editar
     $('#accion').val('editar');
-
-
 
     //Obtenemos los datos de la Persona a editar
     $.ajax({
