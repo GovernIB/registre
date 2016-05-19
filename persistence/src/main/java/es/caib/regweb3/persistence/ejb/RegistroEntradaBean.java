@@ -12,7 +12,6 @@ import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.plugins.distribucion.ConfiguracionDistribucion;
-import org.fundaciobit.plugins.distribucion.Destinatarios;
 import org.fundaciobit.plugins.distribucion.IDistribucionPlugin;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -1289,10 +1288,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         List<Anexo> anexos = re.getRegistroDetalle().getAnexos();
         List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
         for (Anexo anexo : anexos) {
-            AnexoFull anexoFull = anexoEjb.getAnexoFull(anexo.getId());
-            if (anexoFull != null) {
-                log.info(anexoFull.getDocumentoCustody().getName());
-            }
+            AnexoFull anexoFull = anexoEjb.getAnexoFullCompleto(anexo.getId());
             anexosFull.add(anexoFull);
         }
         //Asignamos los documentos recuperados de custodia al registro de entrada.
@@ -1301,8 +1297,9 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
 
-    public Destinatarios distribuir(RegistroEntrada re) throws Exception, I18NException {
-        Destinatarios destinatarios = new Destinatarios();
+    public RespuestaDistribucion distribuir(RegistroEntrada re) throws Exception, I18NException {
+        RespuestaDistribucion respuestaDistribucion = new RespuestaDistribucion();
+        // respuestaDistribucion.setDestinatarios();
 
         //Obtenemos plugin
         IDistribucionPlugin distribucionPlugin = RegwebDistribucionPluginManager.getInstance();
@@ -1311,14 +1308,15 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             //Obtenemos la configuración de la distribución
             ConfiguracionDistribucion configuracionDistribucion = distribucionPlugin.configurarDistribucion();
             re = configuracionAnexosDistribucion(re, configuracionDistribucion.configuracionAnexos);
-            if (!configuracionDistribucion.isListado()) {
-                distribucionPlugin.enviarDestinatarios(re, null, "");
+            if (!configuracionDistribucion.isListado()) { // isListado = false , envia a los destinatarios propuestos, sin poder modificar
+                respuestaDistribucion.setEnviado(distribucionPlugin.enviarDestinatarios(re, null, ""));
                 //Despues lo tramita en una segunda fase desde el metodo distribuir() en distribuir.js
             } else {
-                destinatarios = distribucionPlugin.distribuir(re);
+                respuestaDistribucion.setDestinatarios(distribucionPlugin.distribuir(re)); // isListado = true , puede escoger a quien lo distribuye de la listas propuestas.
             }
         }
-        return destinatarios;
+
+        return respuestaDistribucion;
     }
 
 
@@ -1380,5 +1378,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         }
         return original;
     }
+
 
 }

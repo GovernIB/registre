@@ -89,7 +89,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
           IDocumentCustodyPlugin custody = getInstance();
 
         anexoFull.setDocumentoCustody(custody.getDocumentInfoOnly(custodyID));
-        
+
         anexoFull.setDocumentoFileDelete(false);
         
         anexoFull.setSignatureCustody(custody.getSignatureInfoOnly(custodyID));
@@ -105,6 +105,39 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             new I18NArgumentString(e.getMessage()));
         
       }
+    }
+
+
+    @Override
+    public AnexoFull getAnexoFullCompleto(Long anexoID) throws I18NException {
+
+        try {
+            Anexo anexo = em.find(Anexo.class, anexoID);
+
+            String custodyID = anexo.getCustodiaID();
+
+            AnexoFull anexoFull = new AnexoFull(anexo);
+
+            //IDocumentCustodyPlugin custody = AnnexDocumentCustodyManager.getInstance();
+            IDocumentCustodyPlugin custody = getInstance();
+
+            anexoFull.setDocumentoCustody(custody.getDocumentInfo(custodyID));
+
+            anexoFull.setDocumentoFileDelete(false);
+
+            anexoFull.setSignatureCustody(custody.getSignatureInfo(custodyID));
+
+            anexoFull.setSignatureFileDelete(false);
+
+            return anexoFull;
+
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new I18NException(e, "anexo.error.obteniendo",
+                    new I18NArgumentString(String.valueOf(anexoID)),
+                    new I18NArgumentString(e.getMessage()));
+
+        }
     }
     
     

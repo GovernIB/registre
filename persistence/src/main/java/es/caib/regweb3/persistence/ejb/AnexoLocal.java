@@ -32,6 +32,15 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
 
   
   public AnexoFull getAnexoFull(Long anexoID) throws I18NException;
+
+    /**
+     * Método que levanta todos los anexos completo con el archivo de custodia.
+     *
+     * @param anexoID
+     * @return
+     * @throws I18NException
+     */
+    public AnexoFull getAnexoFullCompleto(Long anexoID) throws I18NException;
   
   
   
