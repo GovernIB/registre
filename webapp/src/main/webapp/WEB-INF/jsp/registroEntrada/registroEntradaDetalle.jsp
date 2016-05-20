@@ -254,6 +254,7 @@
     var traddistribuir = new Array();
     traddistribuir['campo.obligatorio'] = "<spring:message code='registro.distribuir.propuesto.obligatorio' javaScriptEscape='true' />";
     traddistribuir['distribuir.nodestinatarios'] = "<spring:message code='registro.distribuir.nodestinatarios' javaScriptEscape='true' />";
+    traddistribuir['distribuir.noenviado'] = "<spring:message code='registroEntrada.distribuir.noenviado' javaScriptEscape='true' />";
 </script>
 
 

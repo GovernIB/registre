@@ -416,6 +416,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
         RespuestaDistribucion respuestaDistribucion = new RespuestaDistribucion();
+        respuestaDistribucion.setDestinatarios(null);
 
         // Comprobamos si el RegistroEntrada tiene el estado Válido
         if (!registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_VALIDO)) {
@@ -432,11 +433,6 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         //Obtenemos los destinatarios a través del plugin de distribución
         respuestaDistribucion = registroEntradaEjb.distribuir(registroEntrada);
-        if (respuestaDistribucion != null) {
-            if (respuestaDistribucion.getEnviado() != null && !respuestaDistribucion.getEnviado()) {
-                Mensaje.saveMessageError(request, getMessage("registroEntrada.distribuir.noenviado"));
-            }
-        }
         return respuestaDistribucion;
     }
 
@@ -464,9 +460,10 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         // Enviamos el registro de entrada a los destinatarios indicados en la variable wrapper
         Boolean enviado = registroEntradaEjb.enviar(registroEntrada, wrapper);
-        // Marcamos el registro como tramitado
-        registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, usuarioEntidad);
+
         if (enviado) { //Mostramos mensaje en funcion de si se ha enviado o ha habido un error.
+            // Marcamos el registro como tramitado, solo si se ha enviado bien
+            registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, usuarioEntidad);
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
 
         } else {

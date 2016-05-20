@@ -4,15 +4,16 @@ import org.fundaciobit.plugins.distribucion.Destinatarios;
 
 /**
  * Clase que representa la respuesta al distribuir un registro de entrada mediante el plugin de distribución
+ * Nos sirve para tener en cuenta todos los posibles casos que hay.
  * <p/>
  * Created by mgonzalez on 18/05/2016.
  */
 public class RespuestaDistribucion {
 
     Destinatarios destinatarios; //Lista de los destinatarios a los que se debe distribuir
-    Boolean enviado; //true si se ha distribuido(enviado) bien y false si no.
+    Boolean enviado; //true si se ha distribuido(enviado) bien
     Boolean hayPlugin; //true si se ha especificado plugin.
-    // Boolean listado; //true si se ha marcado la opcion listado en el plugin
+    Boolean listadoDestinatariosModificable; //True si se puede modificar la lista de destinatarios.
 
 
     public Destinatarios getDestinatarios() {
@@ -39,11 +40,11 @@ public class RespuestaDistribucion {
         this.hayPlugin = hayPlugin;
     }
 
-   /* public Boolean getListado() {
-        return listado;
+    public Boolean getListadoDestinatariosModificable() {
+        return listadoDestinatariosModificable;
     }
 
-    public void setListado(Boolean listado) {
-        this.listado = listado;
-    }*/
+    public void setListadoDestinatariosModificable(Boolean listadoDestinatariosModificable) {
+        this.listadoDestinatariosModificable = listadoDestinatariosModificable;
+    }
 }

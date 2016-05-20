@@ -23,9 +23,7 @@ function distribuir(url, urlEnviarDestinatarios, urlDetalle, urlTramitar) {
         contentType: 'application/json',
         success: function (result) {
 
-            if (!result.hayPlugin) {
-                goTo(urlTramitar);
-            } else {
+            // Si hay destinatarios mostramos pop-up, solo hay este caso.
                 if (result.destinatarios != null && result.destinatarios.propuestos != null && result.destinatarios.propuestos.length > 0) { // Si hay destinatarios, mostramos pop-up
 
                     //Rellenamos el select de posibles
@@ -46,25 +44,26 @@ function distribuir(url, urlEnviarDestinatarios, urlDetalle, urlTramitar) {
                     $('#propuestos').html(html);
                     $('#distribuirModal').modal('show');
 
-                } else { // No hay destinatarios, se marca como tramitado
-                    //TODO NO SE DISTINGUIR CUANDO DESTINATARIOS ES NULL DE DONDE VIENE.
 
-                    if (result.destinatarios != null && result.destinatarios.propuestos != null && result.destinatarios.propuestos.length == 0) {
-                        mensajeError('#mensajes', traddistribuir['distribuir.nodestinatarios']);
+                } else { // No hay destinatarios
+
+                    if (!result.hayPlugin) { //No hay destinatarios, no hay plugin --> se marca como tramitado
+                        goTo(urlTramitar);
                     } else {
-                        //if (result.listado) {
-                        if (result.enviado) {
-                            goTo(urlTramitar);
-                        } else {
-                            goTo(urlDetalle);
+                        if (result.listadoDestinatariosModificable) {//Error el plugin no devuelve ningun destinatario
+                            mensajeError('#mensajes', traddistribuir['distribuir.nodestinatarios']);
                         }
-                        /*}else{
-                         mensajeError('#mensajes', traddistribuir['distribuir.nodestinatarios']);
-                         }*/
+                        if (!result.listadoDestinatariosModificable) { // envio directo
+                            if (result.enviado) { // Envio ok.
+                                goTo(urlTramitar);
+                            } else {  // Error en el envio
+                                mensajeError('#mensajes', traddistribuir['distribuir.noenviado']);
+                            }
+                        }
                     }
                 }
-            }
         }
+
     });
 }
 

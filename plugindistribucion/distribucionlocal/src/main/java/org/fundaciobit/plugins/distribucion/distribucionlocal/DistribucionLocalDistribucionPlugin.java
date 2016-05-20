@@ -66,7 +66,7 @@ public class DistribucionLocalDistribucionPlugin extends AbstractPluginPropertie
 
         List<Destinatario> destinatariosPosibles = new ArrayList<Destinatario>();
         List<Destinatario> destinatariosPropuestos = new ArrayList<Destinatario>();
-       /* Destinatario destinatario = new Destinatario();
+        Destinatario destinatario = new Destinatario();
         destinatario.setId("1");
         destinatario.setName("BANDEJA 1");
         destinatariosPosibles.add(destinatario);
@@ -79,7 +79,7 @@ public class DistribucionLocalDistribucionPlugin extends AbstractPluginPropertie
         destinatario = new Destinatario();
         destinatario.setId("3");
         destinatario.setName("BANDEJA 3");
-        destinatariosPropuestos.add(destinatario);*/
+        destinatariosPropuestos.add(destinatario);
 
 
         destinatarios.setPropuestos(destinatariosPropuestos);
@@ -111,7 +111,7 @@ public class DistribucionLocalDistribucionPlugin extends AbstractPluginPropertie
 
 
     public ConfiguracionDistribucion configurarDistribucion() throws Exception {
-        ConfiguracionDistribucion cd = new ConfiguracionDistribucion(true, 3);
+        ConfiguracionDistribucion cd = new ConfiguracionDistribucion(false, 3);
         return cd;
 
     }

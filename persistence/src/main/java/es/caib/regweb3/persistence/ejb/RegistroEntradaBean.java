@@ -1300,6 +1300,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     public RespuestaDistribucion distribuir(RegistroEntrada re) throws Exception, I18NException {
         RespuestaDistribucion respuestaDistribucion = new RespuestaDistribucion();
         respuestaDistribucion.setHayPlugin(false);
+        respuestaDistribucion.setDestinatarios(null);
 
         //Obtenemos plugin
         IDistribucionPlugin distribucionPlugin = RegwebDistribucionPluginManager.getInstance();
@@ -1309,12 +1310,12 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             //Obtenemos la configuración de la distribución
             ConfiguracionDistribucion configuracionDistribucion = distribucionPlugin.configurarDistribucion();
             re = configuracionAnexosDistribucion(re, configuracionDistribucion.configuracionAnexos);
-            if (!configuracionDistribucion.isListado()) { // isListado = false , envia a los destinatarios propuestos, sin poder modificar
-                respuestaDistribucion.setEnviado(distribucionPlugin.enviarDestinatarios(re, null, ""));
-                // respuestaDistribucion.setListado(configuracionDistribucion.isListado());
-                //Despues lo tramita en una segunda fase desde el metodo distribuir() en distribuir.js
-            } else {
+            respuestaDistribucion.setListadoDestinatariosModificable(configuracionDistribucion.isListadoDestinatariosModificable());
+            if (configuracionDistribucion.listadoDestinatariosModificable) {// Si es modificable, mostraremos pop-up
                 respuestaDistribucion.setDestinatarios(distribucionPlugin.distribuir(re)); // isListado = true , puede escoger a quien lo distribuye de la listas propuestas.
+                //Despues lo tramita en una segunda fase desde el metodo distribuir() en distribuir.js
+            } else { // Si no es modificable, obtendra los destinatarios del propio registro y nos saltamos una llamada al plugin
+                respuestaDistribucion.setEnviado(distribucionPlugin.enviarDestinatarios(re, null, ""));
             }
         }
 

@@ -7,9 +7,9 @@ package org.fundaciobit.plugins.distribucion;
 public class ConfiguracionDistribucion {
 
     /**
-     * Configura si el usuario de registro debe poder escoger a quien envia el registro
+     * Configura si el usuario de registro  puede escoger o modificar el listado de destinatarios a quien enviar el registro
      */
-    public boolean listado;
+    public boolean listadoDestinatariosModificable;
 
     //especifica que información se enviará en el segemento de anexo del registro de entrada.
     /* 1 = custodiaId + metadades + fitxer + firma. És a dir a dins el segment annexes de l'assentament s'enviaria tot el contingut de l'annexe.
@@ -18,17 +18,19 @@ public class ConfiguracionDistribucion {
     * */
     public int configuracionAnexos;
 
-    public ConfiguracionDistribucion(boolean listado, int configuracionAnexos) {
-        this.listado = listado;
+
+    public ConfiguracionDistribucion(boolean listadoDestinatariosModificable, int configuracionAnexos) {
+        this.listadoDestinatariosModificable = listadoDestinatariosModificable;
         this.configuracionAnexos = configuracionAnexos;
+
     }
 
-    public boolean isListado() {
-        return listado;
+    public boolean isListadoDestinatariosModificable() {
+        return listadoDestinatariosModificable;
     }
 
-    public void setListado(boolean listado) {
-        this.listado = listado;
+    public void setListadoDestinatariosModificable(boolean listadoDestinatariosModificable) {
+        this.listadoDestinatariosModificable = listadoDestinatariosModificable;
     }
 
     public int getConfiguracionAnexos() {
@@ -38,4 +40,6 @@ public class ConfiguracionDistribucion {
     public void setConfiguracionAnexos(int configuracionAnexos) {
         this.configuracionAnexos = configuracionAnexos;
     }
+
+
 }
