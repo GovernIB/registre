@@ -111,7 +111,7 @@ public class DistribucionLocalDistribucionPlugin extends AbstractPluginPropertie
 
 
     public ConfiguracionDistribucion configurarDistribucion() throws Exception {
-        ConfiguracionDistribucion cd = new ConfiguracionDistribucion(false, 3);
+        ConfiguracionDistribucion cd = new ConfiguracionDistribucion(true, 3);
         return cd;
 
     }

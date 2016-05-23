@@ -187,7 +187,7 @@
 
             </div>
 
-            <div class="col-xs-8 pull-right" >
+            <div class="col-xs-8 pull-right" id="mensajesdetalle">
                 <c:import url="../modulos/mensajes.jsp"/>
             </div>
 

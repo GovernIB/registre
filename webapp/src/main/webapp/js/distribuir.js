@@ -51,13 +51,13 @@ function distribuir(url, urlEnviarDestinatarios, urlDetalle, urlTramitar) {
                         goTo(urlTramitar);
                     } else {
                         if (result.listadoDestinatariosModificable) {//Error el plugin no devuelve ningun destinatario
-                            mensajeError('#mensajes', traddistribuir['distribuir.nodestinatarios']);
+                            mensajeError('#mensajesdetalle', traddistribuir['distribuir.nodestinatarios']);
                         }
                         if (!result.listadoDestinatariosModificable) { // envio directo
                             if (result.enviado) { // Envio ok.
                                 goTo(urlTramitar);
                             } else {  // Error en el envio
-                                mensajeError('#mensajes', traddistribuir['distribuir.noenviado']);
+                                mensajeError('#mensajesdetalle', traddistribuir['distribuir.noenviado']);
                             }
                         }
                     }
