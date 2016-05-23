@@ -4,6 +4,43 @@
  *
  */
 
+/**
+ * Carga las Repros de un Usuario
+ * @param url
+ * @param idUsuario
+ * @param tipoRegistro
+ */
+function cargarRepros(url,idUsuario,tipoRegistro){
+
+    var html = '';
+    $("#reproList").html(html);
+
+    jQuery.ajax({
+        crossDomain: true,
+        url: url,
+        type: 'GET',
+        dataType: 'json',
+        data: { idUsuario: idUsuario, tipoRegistro:tipoRegistro},
+        success: function(result) {
+            var len = result.length;
+            html += '<ul>';
+            for ( var i = 0; i < len; i++) {
+                var idRepro = result[i].id;
+                html += '<li><a href="javascript:void(0);" onclick="rellenarFormulario('+ idRepro +','+ tipoRegistro +')">' + result[i].nombre + '</a></li>';
+            }
+            if(len==0){
+                html += '<li>No hi ha repros guardades</li>';
+            }
+            html += '</ul>';
+
+            $("#reproList").html(html);
+        }
+    });
+
+    // Ocultamos el modal de Select Repro
+    $('#modalSelectRepro').modal('hide');
+}
+
 // Valida el formuario Nuevo si ha introducido un nombre
 function validaFormulario(form) {
 
@@ -26,7 +63,9 @@ function validaFormulario(form) {
     }
 }
 
-// Agafa tots els camps del Registre d'Entrada per guardar a la Repro
+/**
+ * Crea una Repro obtenido los valores de los campos del Registro
+ */
 function nuevaRepro(){
 
 
@@ -84,7 +123,11 @@ function nuevaRepro(){
     $('#modalNewRepro').modal('hide');
 }
 
-// Obté tots els camps de la Repro per omplir el Registre d'Entrada
+/**
+ * Rellena los campos de un Registro a partir de los valores de una Repro
+ * @param idRepro
+ * @param tipoRegistro
+ */
 function rellenarFormulario(idRepro,tipoRegistro){
 
     //Obtenemos los datos de la Repro
@@ -207,41 +250,3 @@ function quitarErroresRepro(){
     $(variable).html(htmlNormal);
     $(variable).parents(".form-group").removeClass("has-error");
 }
-
-
-
-function cargarRepros(url,idUsuario,tipoRegistro){
-
-    var html = '';
-    $("#reproList").html(html);
-
-    jQuery.ajax({
-        crossDomain: true,
-        url: url,
-        type: 'GET',
-        dataType: 'json',
-        data: { idUsuario: idUsuario, tipoRegistro:tipoRegistro},
-        success: function(result) {
-            var len = result.length;
-            html += '<ul>';
-            for ( var i = 0; i < len; i++) {
-                var idRepro = result[i].id;
-                html += '<li><a href="javascript:void(0);" onclick="rellenarFormulario('+ idRepro +','+ tipoRegistro +')">' + result[i].nombre + '</a></li>';
-            }
-            if(len==0){
-                html += '<li>No hi ha repros guardades</li>';
-            }
-            html += '</ul>';
-
-
-
-            $("#reproList").html(html);
-        }
-    });
-
-    // Ocultamos el modal de Select Repro
-    $('#modalSelectRepro').modal('hide');
-}
-
-
-
