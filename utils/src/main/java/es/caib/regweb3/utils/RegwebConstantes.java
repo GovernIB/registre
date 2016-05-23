@@ -27,6 +27,7 @@ public interface RegwebConstantes {
     public static final String SESSION_ENTIDAD = "entidadActiva";
     public static final String SESSION_OFICINAS = "oficinas";
     public static final String SESSION_OFICINA = "oficinaActiva";
+    public static final String SESSION_ORGANISMOS_OFICINA = "organismosOficinaActiva";
     public static final String SESSION_OFICINAS_ADMINISTRADAS = "oficinasAdministradas";
     public static final String SESSION_LIBROSADMINISTRADOS = "librosAdministrados";
     public static final String SESSION_MIGRADOS = "registrosMigrados";

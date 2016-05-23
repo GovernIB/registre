@@ -13,13 +13,15 @@ import java.io.Serializable;
 public class OficinaBusquedaForm implements Serializable {
 
     private Oficina oficina;
+    private Long entidad;
     private Integer pageNumber;
 
     public OficinaBusquedaForm() {
     }
 
-    public OficinaBusquedaForm(Oficina oficina, Integer pageNumber) {
+    public OficinaBusquedaForm(Oficina oficina, Long entidad, Integer pageNumber) {
         this.oficina = oficina;
+        this.entidad = entidad;
         this.pageNumber = pageNumber;
     }
 
@@ -29,6 +31,14 @@ public class OficinaBusquedaForm implements Serializable {
 
     public void setOficina(Oficina oficina) {
         this.oficina = oficina;
+    }
+
+    public Long getEntidad() {
+        return entidad;
+    }
+
+    public void setEntidad(Long entidad) {
+        this.entidad = entidad;
     }
 
     public Integer getPageNumber() {

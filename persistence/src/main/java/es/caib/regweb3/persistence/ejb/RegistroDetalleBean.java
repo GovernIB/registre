@@ -2,10 +2,10 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.RegistroDetalle;
-import es.caib.regweb3.persistence.utils.AnnexDocumentCustodyManager;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -29,6 +29,9 @@ public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> imple
 
     @PersistenceContext(unitName="regweb3")
     private EntityManager em;
+
+    @EJB(mappedName = "regweb3/AnexoEJB/local")
+    public AnexoLocal anexoEjb;
 
 
     @Override
@@ -72,7 +75,7 @@ public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> imple
 
             //Elimina los anexos
             for(Anexo anexo: registroDetalle.getAnexos()){
-                AnnexDocumentCustodyManager.eliminarCustodia(anexo.getCustodiaID());
+                anexoEjb.eliminarCustodia(anexo.getCustodiaID());
             }
             remove(registroDetalle);
 
@@ -90,5 +93,20 @@ public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> imple
         registrosDetalle.addAll(em.createQuery("Select distinct(registroDetalle.id) from RegistroSalida where usuario.entidad.id = :idEntidad").setParameter("idEntidad",idEntidad).getResultList()) ;
 
         return registrosDetalle;
+    }
+
+
+    public boolean eliminarAnexoRegistroDetalle(Long idAnexo, Long idRegistroDetalle) throws Exception {
+
+        Anexo anexo = anexoEjb.findById(idAnexo);
+        RegistroDetalle registroDetalle = findById(idRegistroDetalle);
+
+
+        if (anexo != null && registroDetalle != null) {
+            log.info("Eliminar Anexo: " + registroDetalle.getAnexos().remove(anexo));
+            merge(registroDetalle);
+            anexoEjb.remove(anexo);
+        }
+        return anexoEjb.eliminarCustodia(anexo.getCustodiaID());
     }
 }

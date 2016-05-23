@@ -76,6 +76,7 @@ public class BaseController {
      * @param request
      * @return
      */
+    @SuppressWarnings(value = "unchecked")
     protected List<Libro> getLibrosAdministrados(HttpServletRequest request) throws Exception{
 
         HttpSession session = request.getSession();
@@ -140,6 +141,7 @@ public class BaseController {
      * @param request
      * @return
      */
+    @SuppressWarnings(value = "unchecked")
     protected List<Rol> getRolesAutenticado(HttpServletRequest request){
 
         HttpSession session = request.getSession();
@@ -178,6 +180,7 @@ public class BaseController {
      * @param request
      * @return
      */
+    @SuppressWarnings(value = "unchecked")
     protected List<Entidad> getEntidadesAutenticado(HttpServletRequest request){
 
         HttpSession session = request.getSession();
@@ -202,6 +205,7 @@ public class BaseController {
      * @param request
      * @return
      */
+    @SuppressWarnings(value = "unchecked")
     protected Set<ObjetoBasico> getOficinasAutenticado(HttpServletRequest request){
 
         HttpSession session = request.getSession();
@@ -280,32 +284,42 @@ public class BaseController {
     }
 
     /**
-     * Obtiene los Organismos de la OficinaActiva a los que da servicio
+     * Obtiene los Organismos de la OficinaActiva en los que puede registrar,
+     * sin generar OficioRemisión
      * @param request
      * @return
      * @throws Exception
      */
     public Set<Organismo> getOrganismosOficinaActiva(HttpServletRequest request) throws Exception {
-        return organismoEjb.getByOficinaActiva(getOficinaActiva(request));
+        //return organismoEjb.getByOficinaActiva(getOficinaActiva(request));
+        HttpSession session = request.getSession();
+
+        return (Set<Organismo>) session.getAttribute(RegwebConstantes.SESSION_ORGANISMOS_OFICINA);
     }
 
     /**
-     * Obtiene los Id de los Organismos de la OficinaActiva a los que da servicio
+     * Obtiene el Id de los Organismos de la OficinaActiva en los cuales no se generará OficioRemisión.
+     * Se eliminando los Organismos que están marcados como Entidad de Derecho Público o
+     * a los que la OficiaActiva da servicio.
      *
      * @param request
      * @return
      * @throws Exception
      */
-    public Set<Long> getOrganismosIdOficinaActiva(HttpServletRequest request) throws Exception {
+    public Set<Long> getOrganismosOficioRemision(HttpServletRequest request, Set<Organismo> organismos) throws Exception {
 
-        // Obtenemos los Organismos
-        Set<Organismo> organismos = getOrganismosOficinaActiva(request);
+        Oficina oficinaActiva = getOficinaActiva(request);
 
         // Creamos un Set solo con los identificadores
         Set<Long> organismosId = new HashSet<Long>();
 
         for (Organismo organismo : organismos) {
             organismosId.add(organismo.getId());
+            /*// Eliminamos el Organismo si está marcado como Entidad de Derecho Público o si
+            // la OficinaActiva le da servicio.
+            if (!organismo.getEdp() || oficinaActiva.getOrganismosFuncionales().contains(organismo)) {
+                organismosId.add(organismo.getId());
+            }*/
         }
         return organismosId;
     }

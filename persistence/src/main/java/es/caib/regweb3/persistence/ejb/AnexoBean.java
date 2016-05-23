@@ -2,7 +2,6 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
-import es.caib.regweb3.persistence.utils.AnnexDocumentCustodyManager;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.persistence.validator.AnexoBeanValidator;
@@ -18,6 +17,7 @@ import org.fundaciobit.plugins.documentcustody.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.IDocumentCustodyPlugin;
 import org.fundaciobit.plugins.documentcustody.SignatureCustody;
 import org.fundaciobit.plugins.utils.Metadata;
+import org.fundaciobit.plugins.utils.PluginsManager;
 import org.hibernate.Hibernate;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -66,8 +66,6 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     @EJB(mappedName = "regweb3/RegistroSalidaCambiarEstadoEJB/local")
     public RegistroSalidaCambiarEstadoLocal registroSalidaEjb;
 
-    @EJB(mappedName = "regweb3/RegistroDetalleEJB/local")
-    public RegistroDetalleLocal registroDetalleEjb;
     
     @EJB(mappedName = "regweb3/HistoricoRegistroEntradaEJB/local")
     public HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
@@ -87,10 +85,11 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         
         AnexoFull anexoFull = new AnexoFull(anexo);
 
-        IDocumentCustodyPlugin custody = AnnexDocumentCustodyManager.getInstance();
-        
+          //IDocumentCustodyPlugin custody = AnnexDocumentCustodyManager.getInstance();
+          IDocumentCustodyPlugin custody = getInstance();
+
         anexoFull.setDocumentoCustody(custody.getDocumentInfoOnly(custodyID));
-        
+
         anexoFull.setDocumentoFileDelete(false);
         
         anexoFull.setSignatureCustody(custody.getSignatureInfoOnly(custodyID));
@@ -106,6 +105,39 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             new I18NArgumentString(e.getMessage()));
         
       }
+    }
+
+
+    @Override
+    public AnexoFull getAnexoFullCompleto(Long anexoID) throws I18NException {
+
+        try {
+            Anexo anexo = em.find(Anexo.class, anexoID);
+
+            String custodyID = anexo.getCustodiaID();
+
+            AnexoFull anexoFull = new AnexoFull(anexo);
+
+            //IDocumentCustodyPlugin custody = AnnexDocumentCustodyManager.getInstance();
+            IDocumentCustodyPlugin custody = getInstance();
+
+            anexoFull.setDocumentoCustody(custody.getDocumentInfo(custodyID));
+
+            anexoFull.setDocumentoFileDelete(false);
+
+            anexoFull.setSignatureCustody(custody.getSignatureInfo(custodyID));
+
+            anexoFull.setSignatureFileDelete(false);
+
+            return anexoFull;
+
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new I18NException(e, "anexo.error.obteniendo",
+                    new I18NArgumentString(String.valueOf(anexoID)),
+                    new I18NArgumentString(e.getMessage()));
+
+        }
     }
     
     
@@ -139,8 +171,9 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
           anexo.setTipoDocumental(td);
         }
 
-        custody = AnnexDocumentCustodyManager.getInstance();
-        
+          //custody = AnnexDocumentCustodyManager.getInstance();
+          custody = getInstance();
+
         IRegistro registro = getIRegistro(registroID, tipoRegistro, anexo, isNew);
 
         final String custodyParameters = getCustodyParameters(registro, anexo);
@@ -209,9 +242,10 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         validateAnexo(anexo, isNew);
         
         anexo.setFechaCaptura(new Date());
-        
-        IDocumentCustodyPlugin custody = AnnexDocumentCustodyManager.getInstance();
-        
+
+          //IDocumentCustodyPlugin custody = AnnexDocumentCustodyManager.getInstance();
+          IDocumentCustodyPlugin custody = getInstance();
+
         
         IRegistro registro = getIRegistro(registroID, tipoRegistro, anexo, isNew);
         
@@ -627,8 +661,10 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     }
 
 
-    @Override
-    public boolean eliminarAnexoRegistroDetalle(Long idAnexo, Long idRegistroDetalle) throws Exception {
+
+   /*
+   @Override
+   public boolean eliminarAnexoRegistroDetalle(Long idAnexo, Long idRegistroDetalle) throws Exception {
 
         Anexo anexo = findById(idAnexo);
         RegistroDetalle registroDetalle = registroDetalleEjb.findById(idRegistroDetalle);
@@ -638,8 +674,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             registroDetalleEjb.merge(registroDetalle);
             remove(anexo);
         }
-        return AnnexDocumentCustodyManager.eliminarCustodia(anexo.getCustodiaID());
-    }
+        return eliminarCustodia(anexo.getCustodiaID());
+    }*/
 
     @Override
     public List<Anexo> getByRegistroEntrada(Long idRegistro) throws Exception{
@@ -667,11 +703,31 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     }
 
-     /* TODO BORRAR PRUEBA MARILEN ERROR SION */
+
+    /* METODOS DEL AnnexDocumentCustodyManager.java hecho por marilen del TODO DE TONI*/
+    public IDocumentCustodyPlugin getInstance() throws Exception {
+        IDocumentCustodyPlugin plugin;
+
+        // Valor de la Clau
+        final String propertyName = RegwebConstantes.REGWEB3_PROPERTY_BASE + "annex.documentcustodyplugin";
+        String className = System.getProperty(propertyName);
+        if (className == null || className.trim().length() <= 0) {
+            throw new Exception("No hi ha cap propietat " + propertyName
+                    + " definint la classe que gestiona el plugin de login");
+        }
+        // Carregant la classe
+        Object obj;
+        obj = PluginsManager.instancePluginByClassName(className, RegwebConstantes.REGWEB3_PROPERTY_BASE + "annex.");
+        plugin = (IDocumentCustodyPlugin) obj;
+
+
+        return plugin;
+    }
+
 
     /**
      * Obtiene el fichero existente en el sistema de archivos
-     * @param id
+     * @param custodiaID
      * @return
      */
     public  DocumentCustody getArchivo(String custodiaID) throws Exception {
@@ -681,13 +737,13 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             return null;
         }
 
-        return AnnexDocumentCustodyManager.getInstance().getDocumentInfo(custodiaID);
+        return getInstance().getDocumentInfo(custodiaID);
 
     }
 
     /**
      * Obtiene la firma existente en el sistema de archivos
-     * @param id
+     * @param custodiaID
      * @return
      */
     public  SignatureCustody getFirma(String custodiaID) throws Exception {
@@ -697,6 +753,106 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             return null;
         }
 
-        return AnnexDocumentCustodyManager.getInstance().getSignatureInfo(custodiaID);
+        return getInstance().getSignatureInfo(custodiaID);
+    }
+
+    /**
+     * Elimina completamente una custodia ( = elimicion completa de Anexo)
+     *
+     * @param custodiaID
+     * @return true si l'arxiu no existeix o s'ha borrat. false en els altres
+     * casos.
+     */
+    public boolean eliminarCustodia(String custodiaID) throws Exception {
+
+        if (custodiaID == null) {
+            log.warn("eliminarCustodia :: CustodiaID vale null !!!!!", new Exception());
+            return false;
+        } else {
+            getInstance().deleteCustody(custodiaID);
+            return true;
+        }
+
+    }
+
+
+    /**
+     * Solo elimina el archivo asociado al documento.
+     *
+     * @param custodiaID
+     * @return
+     * @throws Exception
+     */
+    public boolean eliminarDocumento(String custodiaID) throws Exception {
+
+        if (custodiaID == null) {
+            log.warn("eliminarDocumento :: CustodiaID vale null !!!!!", new Exception());
+            return false;
+        } else {
+            getInstance().deleteDocument(custodiaID);
+            getInstance().deleteSignature(custodiaID);
+            return true;
+        }
+
+    }
+
+
+    /**
+     * Solo elimina la el archivo asociado a la firma
+     *
+     * @param custodiaID
+     * @return
+     * @throws Exception
+     */
+    public boolean eliminarFirma(String custodiaID) throws Exception {
+
+        if (custodiaID == null) {
+            log.warn("eliminarFirma :: CustodiaID vale null !!!!!", new Exception());
+            return false;
+        } else {
+            getInstance().deleteDocument(custodiaID);
+            return true;
+        }
+
+    }
+
+
+    /**
+     * Crea o actualiza un anexos en el sistema de custodia
+     *
+     * @param name
+     * @param file
+     * @param signatureName
+     * @param signature
+     * @param signatureMode
+     * @param custodyID         Si vale null significa que creamos el archivo. Otherwise actualizamos el fichero.
+     * @param custodyParameters JSON del registre
+     * @return Identificador de custodia
+     * @throws Exception
+     */
+    public String crearArchivo(String name, byte[] file, String signatureName,
+                               byte[] signature, int signatureMode, String custodyID, String custodyParameters) throws Exception {
+
+        IDocumentCustodyPlugin instance = getInstance();
+
+        if (custodyID == null) {
+            custodyID = instance.reserveCustodyID(custodyParameters);
+        }
+
+        //Comprobamos el modo de Firma
+        String documentType = signatureMode == 1 ? DocumentCustody.OTHER_DOCUMENT_WITH_SIGNATURE : DocumentCustody.DOCUMENT_ONLY;
+
+        DocumentCustody document = new DocumentCustody(name, file, documentType);
+        instance.saveDocument(custodyID, custodyParameters, document);
+
+        //
+        if (signatureName != null && signature != null) {
+            SignatureCustody docSignature = new SignatureCustody(signatureName, signature, SignatureCustody.OTHER_SIGNATURE, false);
+            instance.saveSignature(custodyID, custodyParameters, docSignature);
+        }
+
+        //log.info("Creamos el file: " + getArchivosPath()+dstId.toString());
+
+        return custodyID;
     }
 }

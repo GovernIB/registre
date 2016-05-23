@@ -62,51 +62,51 @@
             <div class="form-group col-xs-12">
                 <div class="col-xs-2 pull-left etiqueta_regweb control-label">
                     <label id="organismoInteresadoLabel" for="organismoInteresado" rel="ayuda" data-content="<spring:message code="registro.ayuda.organoInteresado"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="interesado.organismo"/></label>
-                    <label id="personaFisicaLabel" for="personaFisica" rel="ayuda" data-content="<spring:message code="registro.ayuda.personaFisica"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="persona.fisica"/></label>
-                    <label id="personaJuridicaLabel" for="personaJuridica" rel="ayuda" data-content="<spring:message code="registro.ayuda.personaJuridica"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="persona.juridica"/></label>
+                    <label id="personaFisicaLabel" for="personaFisica" style="display: none;" rel="ayuda" data-content="<spring:message code="registro.ayuda.personaFisica"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="persona.fisica"/></label>
+                    <label id="personaJuridicaLabel" for="personaJuridica" style="display: none;" rel="ayuda" data-content="<spring:message code="registro.ayuda.personaJuridica"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="persona.juridica"/></label>
                 </div>
-                <div class="col-xs-4">
+                <div class="col-xs-6">
 
-                   <select id="organismoInteresado" name="organismoInteresado" class="chosen-select">
+                   <select id="organismoInteresado" name="organismoInteresado" class="chosen-select" style="width:100%;">
                        <option value="-1">...</option>
                         <c:forEach items="${organismosOficinaActiva}" var="organismoInteresado">
                             <option value="${organismoInteresado.codigo}">${organismoInteresado.denominacion}</option>
                         </c:forEach>
                     </select>
 
-                       <select id="personaFisica" name="personaFisica" class="chosen-select">
+                    <input id="personaFisica" name="personaFisica" type="text" class="form-control" style="display: none;" placeholder="<spring:message code="persona.buscar.fisicas"/>" autocomplete="off"/>
+
+                    <%--<select id="personaFisica" name="personaFisica" class="chosen-select">
                         <option value="-1">...</option>
                         <c:forEach items="${personasFisicas}" var="fisica">
                             <option value="${fisica.id}">${fisica.nombrePersonaFisica}</option>
                         </c:forEach>
-                    </select>
+                    </select>--%>
+                    <input id="personaJuridica" name="personaJuridica" type="text" class="form-control" style="display: none;" placeholder="<spring:message code="persona.buscar.juridicas"/>" autocomplete="off"/>
 
-                    <select id="personaJuridica" name="personaJuridica" class="chosen-select">
+                    <%--<select id="personaJuridica" name="personaJuridica" class="chosen-select">
                         <option value="-1">...</option>
                         <c:forEach items="${personasJuridicas}" var="juridica">
                             <option value="${juridica.id}">${juridica.nombrePersonaJuridica}</option>
                         </c:forEach>
-                    </select>
+                    </select>--%>
 
                 </div>
-                <%--Botones añadir interesado--%>
-                <div class="col-xs-2 boto-panel">
-                    <a id="addOrganismo" href="javascript:void(0);" onclick="addOrganismoInteresado('<spring:message code="interesado.administracion"/>','${registro.registroDetalle.id}')" class="btn btn-warning btn-sm"><spring:message code="regweb.añadir"/></a>
-                    <a id="addPersonaFisica" href="javascript:void(0);" onclick="addInteresado($('#personaFisica option:selected').val(),$('#personaFisica option:selected').text(),'<spring:message code="persona.fisica"/>','No',null,'${registro.registroDetalle.id}')" class="btn btn-warning btn-sm"><spring:message code="regweb.añadir"/></a>
-                    <a id="addPersonaJuridica" href="javascript:void(0);" onclick="addInteresado($('#personaJuridica option:selected').val(),$('#personaJuridica option:selected').text(),'<spring:message code="persona.juridica"/>','No',null,'${registro.registroDetalle.id}')" class="btn btn-warning btn-sm"><spring:message code="regweb.añadir"/></a>
-                </div>
                 <%--Botones búsqueda--%>
-                <div class="col-xs-2 boto-panel">
+                <div class="col-xs-2 pull-right boto-panel">
                     <a id="buscarOrganismo" data-toggle="modal" href="#modalBuscadorOrganismoInteresado"
                        onclick="inicializarBuscador('#codNivelAdministracionOrganismoInteresado','#codComunidadAutonomaOrganismoInteresado','#provinciaOrganismoInteresado','#localidadOrganismoInteresado','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}', 'OrganismoInteresado' );"
                        class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
-                    <a id="buscarPersonaFisica" data-toggle="modal" href="#modalBuscadorPersonasFisicas" onclick="limpiarBusquedaPersona('Fisicas')" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
-                    <a id="buscarPersonaJuridica" data-toggle="modal" href="#modalBuscadorPersonasJuridicas" onclick="limpiarBusquedaPersona('Juridicas')" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
+                    <a id="buscarPersonaFisica" data-toggle="modal" href="#modalBuscadorPersonasFisicas" onclick="limpiarBusquedaPersona('Fisicas')" style="display: none;" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
+                    <a id="buscarPersonaJuridica" data-toggle="modal" href="#modalBuscadorPersonasJuridicas" onclick="limpiarBusquedaPersona('Juridicas')" style="display: none;" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                 </div>
                 <%--Botones nueva persona--%>
-                <div class="col-xs-2 boto-panel">
-                    <a id="nuevaPersonaFisica" data-toggle="modal" role="button" href="#modalInteresado" class="btn btn-warning btn-sm" onclick="nuevoInteresado('<spring:message code="persona.fisica.nueva"/>')"><spring:message code="regweb.nueva"/></a>
-                    <a id="nuevaPersonaJuridica" data-toggle="modal" role="button" href="#modalInteresado" class="btn btn-warning btn-sm" onclick="nuevoInteresado('<spring:message code="persona.juridica.nueva"/>')"><spring:message code="regweb.nueva"/></a>
+                <div class="col-xs-2 pull-right boto-panel">
+                    <%--<a id="addOrganismo" href="javascript:void(0);" onclick="addOrganismoInteresado('<spring:message code="interesado.administracion"/>','${registro.registroDetalle.id}')" class="btn btn-warning btn-sm"><spring:message code="regweb.añadir"/></a>
+                    <a id="addPersonaFisica" href="javascript:void(0);" onclick="addInteresado($('#personaFisica option:selected').val(),$('#personaFisica option:selected').text(),'<spring:message code="persona.fisica"/>','No',null,'${registro.registroDetalle.id}')" class="btn btn-warning btn-sm"><spring:message code="regweb.añadir"/></a>
+                    <a id="addPersonaJuridica" href="javascript:void(0);" onclick="addInteresado($('#personaJuridica option:selected').val(),$('#personaJuridica option:selected').text(),'<spring:message code="persona.juridica"/>','No',null,'${registro.registroDetalle.id}')" class="btn btn-warning btn-sm"><spring:message code="regweb.añadir"/></a>--%>
+                    <a id="nuevaPersonaFisica" data-toggle="modal" role="button" href="#modalInteresado" style="display: none;" class="btn btn-warning btn-sm" onclick="nuevoInteresado('<spring:message code="persona.fisica.nueva"/>')"><spring:message code="regweb.nueva"/></a>
+                    <a id="nuevaPersonaJuridica" data-toggle="modal" role="button" href="#modalInteresado" style="display: none;" class="btn btn-warning btn-sm" onclick="nuevoInteresado('<spring:message code="persona.juridica.nueva"/>')"><spring:message code="regweb.nueva"/></a>
                 </div>
             </div>
 
@@ -167,6 +167,7 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
 <script type="text/javascript" src="<c:url value="/js/busquedaorganismo.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/interesados.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/representantes.js"/>"></script>
+<script src="<c:url value="/js/bootstrap-typeahead.min.js"/>" type="text/javascript"></script>
 
 
 <script type="text/javascript">
@@ -177,6 +178,8 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
     var urlAddRepresentante = '<c:url value="/interesado/${param.tipoRegistro}/addRepresentante"/>';
     var urlEliminarRepresentante = '<c:url value="/interesado/${param.tipoRegistro}/eliminarRepresentante"/>';
     var urlObtenerInteresado = '<c:url value="/interesado/${param.tipoRegistro}/obtenerInteresado"/>';
+    var urlBusquedaPersonasFisicas = '<c:url value="/rest/busquedaPersonas/2"/>';
+    var urlBusquedaPersonasJuridicas = '<c:url value="/rest/busquedaPersonas/3"/>';
 
     <%-- Traducciones para interesados.js --%>
     var tradsinteresado = new Array();
@@ -219,7 +222,7 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
 
     $(window).load(function() {
 
-        mostrarOrganismos();
+        //mostrarOrganismos();
         actualizarCanalNotificacion();
 
         // Muestra u Oculta en función del tipoInteresado seleccionado
@@ -253,6 +256,75 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
         $('#tipoDocumentoIdentificacion').change(
                 function() {actualizarTipoDocumentoIdentificacion();});
 
+    });
+
+
+    $(document).ready(function () {
+        $('#organismoInteresado').chosen().change(function () {
+            addOrganismoInteresado('<spring:message code="interesado.administracion"/>','${registro.registroDetalle.id}');
+        });
+    });
+
+    // Búsqueda de personas fisicas
+    $('#personaFisica').typeahead({
+        items:25,
+        scrollBar:true,
+        ajax: {
+            url: urlBusquedaPersonasFisicas,
+            data: 'query=' + $('#personaFisica').val(),
+            dataType: 'json',
+            timeout: 200,
+            displayField: "nombre",
+            valueField: "id",
+            triggerLength: 3,
+            method: "get",
+            loadingClass: "loading-circle"
+        },
+        onSelect: function(item) {
+            addInteresado(item.value,item.text,'<spring:message code="persona.fisica"/>','No',null,'${registro.registroDetalle.id}')
+        }
+    });
+
+    // Búsqueda de personas juridicas
+    $('#personaJuridica').typeahead({
+        items:25,
+        scrollBar:true,
+        ajax: {
+            url: urlBusquedaPersonasJuridicas,
+            data: 'query=' + $('#personaJuridica').val(),
+            dataType: 'json',
+            timeout: 200,
+            displayField: "nombre",
+            valueField: "id",
+            triggerLength: 3,
+            method: "get",
+            loadingClass: "loading-circle"
+        },
+        onSelect: function(item) {
+            addInteresado(item.value,item.text,'<spring:message code="persona.juridica"/>','No',null,'${registro.registroDetalle.id}')
+        }
+    });
+    // Posicionamos el ratón en el campo indicado al cargar el modal
+    $('#modalBuscadorPersonasFisicas').on('shown.bs.modal', function () {
+        $('#nombreFisicas').focus();
+    });
+    $('#modalBuscadorPersonasJuridicas').on('shown.bs.modal', function () {
+        $('#razonSocialJuridicas').focus();
+    });
+    $('#modalBuscadorPersonasTodas').on('shown.bs.modal', function () {
+        $('#nombreTodas').focus();
+    });
+    $('#modalBuscadorOrganismoInteresado').on('shown.bs.modal', function () {
+        $('#codigoOrganismoOrganismoInteresado').focus();
+    });
+
+    // Posicionamos el ratón en el campo indicado al cargar el modal
+    $('#modalInteresado').on('shown.bs.modal', function () {
+        if($('#tipo').val() == 2){
+            $('#nombre').focus();
+        }else if($('#tipo').val() == 3){
+            $('#razonSocial').focus();
+        }
     });
 
 </script>

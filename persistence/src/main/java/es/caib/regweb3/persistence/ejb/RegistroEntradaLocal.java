@@ -6,13 +6,9 @@ import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.RegistroBasico;
-import es.caib.regweb3.persistence.utils.DestinatarioWrapper;
-import es.caib.regweb3.persistence.utils.OficiosRemisionInternoOrganismo;
-import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
-import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.persistence.utils.*;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
-import org.fundaciobit.plugins.distribucion.Destinatarios;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
@@ -74,6 +70,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
     /**
      * Obtenemos los Organismos destinatarios PROPIOS que tiene Oficios de Remision pendientes de tramitar
      * @param idLibro
+     * @param organismos Lista con los Destinatarios que no se consideran Oficio de Remisión
      * @return
      * @throws Exception
      */
@@ -84,6 +81,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * y los agrupa según su Organismo destinatario.
      * @param any
      * @param libro
+     * @param organismos Lista con los Destinatarios que no se consideran Oficio de Remisión
      * @return
      * @throws Exception
      */
@@ -92,6 +90,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
     /**
      * Cuenta los Oficios pendientes de Remisión Interna de un conjunto de Libros
      * @param libros
+     * @param organismos Lista con los Destinatarios que no se consideran Oficio de Remisión
      * @return
      * @throws Exception
      */
@@ -101,6 +100,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
     /**
      * Comprueba si un RegistroEntrada se considera un OficioRemision o no
      * @param idRegistro
+     * @param organismos Lista con los Destinatarios que no se consideran Oficio de Remisión
      * @return
      * @throws Exception
      */
@@ -451,6 +451,16 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
     public Boolean tieneEstado(Long idRegistroEntrada, Long idEstado) throws Exception;
 
     /**
+     * Método que devuelve un registro de entrada completo, con los anexos completos
+     *
+     * @param id
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
+    public RegistroEntrada getConAnexosFull(Long id) throws Exception, I18NException;
+
+    /**
      * Método que obtiene los destinatarios a los que distribuir el registro
      *
      * @param re registro de entrada a distribuir
@@ -458,7 +468,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @throws Exception
      * @throws I18NException
      */
-    public Destinatarios distribuir(RegistroEntrada re) throws Exception, I18NException;
+    public RespuestaDistribucion distribuir(RegistroEntrada re) throws Exception, I18NException;
 
     /**
      * Método que envia un registro de entrada a un conjunto de destinatarios

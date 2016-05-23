@@ -423,7 +423,7 @@ public class AnexoController extends BaseController {
     
     
     /**
-     * Elimina un Anexo de la variable de sesion que almacena los interesados
+     * Elimina un Anexo del registroDetalle
      * @param idAnexo
      * @param idRegistroDetalle
      * @return
@@ -434,7 +434,7 @@ public class AnexoController extends BaseController {
           @PathVariable Long anexoID, HttpServletRequest request) {
 
           try {
-              anexoEjb.eliminarAnexoRegistroDetalle(anexoID, registroDetalleID);
+              registroDetalleEjb.eliminarAnexoRegistroDetalle(anexoID, registroDetalleID);
 
           } catch (Exception e) {
             log.error(e.getMessage(), e);

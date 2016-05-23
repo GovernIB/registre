@@ -3,14 +3,11 @@ package es.caib.regweb3.webapp.controller;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.ObjetoBasico;
 import es.caib.regweb3.persistence.ejb.*;
-import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.ws.api.manager.FicheroIntercambioManager;
-import es.caib.regweb3.sir.ws.api.manager.SicresXMLManager;
 import es.caib.regweb3.sir.ws.api.manager.impl.FicheroIntercambioManagerImpl;
-import es.caib.regweb3.sir.ws.api.manager.impl.SicresXMLManagerImpl;
-import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.utils.UsuarioService;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -63,7 +60,6 @@ public class ComunController extends BaseController {
     public ReproLocal reproEjb;
 
     FicheroIntercambioManager ficheroIntercambioManager = new FicheroIntercambioManagerImpl();
-    SicresXMLManager sicresXMLManager = new SicresXMLManagerImpl();
     
 
     @RequestMapping(value = "/noAutorizado")
@@ -121,16 +117,13 @@ public class ComunController extends BaseController {
     public String cambioOficina(@PathVariable Long oficinaId, HttpServletRequest request)throws Exception {
 
         HttpSession session = request.getSession();
-        UsuarioEntidad usuarioEntidad= getUsuarioEntidadActivo(request);
 
         Set<ObjetoBasico> oficinasAutenticado = getOficinasAutenticado(request);
 
         try {
             Oficina oficinaNueva = oficinaEjb.findById(oficinaId);
             if(oficinasAutenticado.contains(new ObjetoBasico(oficinaNueva.getId()))){
-                session.setAttribute(RegwebConstantes.SESSION_OFICINA, oficinaNueva);
-                usuarioService.tienePreRegistros(oficinaNueva, session);
-                usuarioEntidadEjb.actualizarOficinaUsuario(usuarioEntidad.getId(), oficinaNueva.getId());
+                usuarioService.cambiarOficinaActiva(oficinaNueva,session);
                 log.info("Cambio Oficina activa: " + oficinaNueva.getDenominacion() + " - " + oficinaNueva.getCodigo());
             }else{
                 Mensaje.saveMessageError(request, getMessage("error.oficina.autorizacion"));
@@ -194,12 +187,13 @@ public class ComunController extends BaseController {
 
 
     @RequestMapping(value = "/sir/{registroId}")
-    public String pruebaSir(@PathVariable Long registroId, HttpServletRequest request, HttpServletResponse response) throws Exception{
+    public String pruebaSir(@PathVariable Long registroId, HttpServletRequest request, HttpServletResponse response) throws Exception, I18NException {
 
-        RegistroEntrada registroEntrada = registroEntradaEjb.findById(registroId);
-        FicheroIntercambio ficheroIntercambio = sicresXMLManager.crearFicheroIntercambioSICRES3(registroEntrada);
+        //RegistroEntrada registroEntrada = registroEntradaEjb.findById(registroId);
+        RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(registroId);
 
-        ficheroIntercambioManager.enviarFicheroIntercambio(ficheroIntercambio);
+
+        ficheroIntercambioManager.enviarFicheroIntercambio(registroEntrada);
 
 
         return "redirect:/inici";

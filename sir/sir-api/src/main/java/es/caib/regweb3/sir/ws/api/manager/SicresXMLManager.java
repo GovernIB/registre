@@ -2,8 +2,8 @@ package es.caib.regweb3.sir.ws.api.manager;
 
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.sir.core.model.AsientoRegistral;
-import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
-import es.caib.regweb3.sir.core.utils.Mensaje;
+import es.caib.regweb3.sir.ws.api.utils.FicheroIntercambio;
+import es.caib.regweb3.sir.ws.api.utils.Mensaje;
 
 /**
  *
@@ -39,7 +39,7 @@ public interface SicresXMLManager {
      * @param registroEntrada Información del asiento registral.
      * @return XML de fichero de intercambio
      */
-    public FicheroIntercambio crearFicheroIntercambioSICRES3(RegistroEntrada registroEntrada);
+    public String crearXMLFicheroIntercambioSICRES3(RegistroEntrada registroEntrada);
 
     /**
      * Devuelve un XML con el mensaje de propósito general con el objetivo de

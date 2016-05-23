@@ -20,8 +20,7 @@ public class Destinatarios {
     public List<Destinatario> propuestos;
     @XmlAttribute
     public List<Destinatario> posibles;
-    @XmlAttribute
-    Boolean modificable;
+
 
     public Destinatarios() {
     }
@@ -29,12 +28,10 @@ public class Destinatarios {
     /**
      * @param propuestos
      * @param posibles
-     * @param modificable
      */
-    public Destinatarios(List<Destinatario> propuestos, List<Destinatario> posibles, Boolean modificable) {
+    public Destinatarios(List<Destinatario> propuestos, List<Destinatario> posibles) {
         this.propuestos = propuestos;
         this.posibles = posibles;
-        this.modificable = modificable;
     }
 
     public List<Destinatario> getPropuestos() {
@@ -53,11 +50,4 @@ public class Destinatarios {
         this.posibles = posibles;
     }
 
-    public Boolean getModificable() {
-        return modificable;
-    }
-
-    public void setModificable(Boolean modificable) {
-        this.modificable = modificable;
-    }
 }

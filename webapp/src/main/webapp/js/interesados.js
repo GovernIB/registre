@@ -1,8 +1,3 @@
-/*Acciones cuando se carga la página*/
-
-
-
-
 /**
  * Añade el Organismo seleccionada a la Sesion, y la muestra en la tabla de interesados.
  * @param tipo
@@ -80,9 +75,6 @@ function eliminarOrganisnoInteresado(codigoDir3,idRegistroDetalle){
             } else {
                 mensajeError("#mensajes", tradsinteresado['interesado.eliminar.ultimo']);
             }
-
-
-
         }
     });
 
@@ -240,8 +232,6 @@ function editarInteresado(id){
 
     // Marcamos la acción para Editar
     $('#accion').val('editar');
-
-
 
     //Obtenemos los datos de la Persona a editar
     $.ajax({
@@ -669,13 +659,14 @@ function ocultaPersonaFisica(){
 
     // Ocultamos PersonaFisica
     $('#nuevaPersonaFisica').hide();
+    $('#personaFisica').val("");
     $('#personaFisica').hide();
-    $('#personaFisica_chosen').hide();
+    //$('#personaFisica_chosen').hide();
     $('#personaFisicaLabel').hide();
-    $('#addPersonaFisica').hide();
+    //$('#addPersonaFisica').hide();
     $('#buscarPersonaFisica').hide();
-    $('#personaFisica').attr("disabled","disabled");
-    $('#personaFisica').trigger("chosen:updated");
+    //$('#personaFisica').attr("disabled","disabled");
+    //$('#personaFisica').trigger("chosen:updated");
 }
 
 /**
@@ -685,13 +676,14 @@ function ocultaPersonaJuridica(){
 
     // Ocultamos PersonaFisica
     $('#nuevaPersonaJuridica').hide();
+    $('#personaJuridica').val("");
     $('#personaJuridica').hide();
-    $('#personaJuridica_chosen').hide();
+    //$('#personaJuridica_chosen').hide();
     $('#personaJuridicaLabel').hide();
-    $('#addPersonaJuridica').hide();
+    //$('#addPersonaJuridica').hide();
     $('#buscarPersonaJuridica').hide();
-    $('#personaJuridica').attr("disabled","disabled");
-    $('#personaJuridica').trigger("chosen:updated");
+    //$('#personaJuridica').attr("disabled","disabled");
+    //$('#personaJuridica').trigger("chosen:updated");
 }
 
 /**
@@ -700,6 +692,7 @@ function ocultaPersonaJuridica(){
 function ocultaOrganismo(){
 
     // Ocultamos organismoInteresado
+    $('#organismoInteresado').val("-1");
     $('#organismoInteresado').hide();
     $('#organismoInteresado_chosen').hide();
     $('#organismoInteresadoLabel').hide();
@@ -723,13 +716,13 @@ function mostrarPersonaFisica(){
     ocultaPersonaJuridica();
 
     // Mostramos Persona Juridica
-    $('#personaFisica').removeAttr("disabled","disabled");
-    $('#personaFisica').hide();
-    $('#personaFisica_chosen').show();
+    //$('#personaFisica').removeAttr("disabled","disabled");
+    $('#personaFisica').show();
+    //$('#personaFisica_chosen').show();
     $('#personaFisicaLabel').show();
-    $('#addPersonaFisica').show();
+    //$('#addPersonaFisica').show();
     $('#buscarPersonaFisica').show();
-    $('#personaFisica').trigger("chosen:updated");
+    //$('#personaFisica').trigger("chosen:updated");
 
 }
 
@@ -747,13 +740,13 @@ function mostrarPersonaJuridica(){
     ocultaPersonaFisica();
 
     // Mostramos Persona Juridica
-    $('#personaJuridica').removeAttr("disabled","disabled");
-    $('#personaJuridica').hide();
-    $('#personaJuridica_chosen').show();
+    //$('#personaJuridica').removeAttr("disabled","disabled");
+    $('#personaJuridica').show();
+    //$('#personaJuridica_chosen').show();
     $('#personaJuridicaLabel').show();
-    $('#addPersonaJuridica').show();
+    //$('#addPersonaJuridica').show();
     $('#buscarPersonaJuridica').show();
-    $('#personaJuridica').trigger("chosen:updated");
+    //$('#personaJuridica').trigger("chosen:updated");
 
 }
 

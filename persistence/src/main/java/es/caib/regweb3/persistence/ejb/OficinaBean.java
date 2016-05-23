@@ -353,7 +353,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
-    public Paginacion busqueda(Integer pageNumber, String codigo, String denominacion) throws Exception {
+    public Paginacion busqueda(Integer pageNumber, Long idEntidad, String codigo, String denominacion, Long idCatEstadoEntidad) throws Exception {
 
         Query q;
         Query q2;
@@ -361,6 +361,15 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         List<String> where = new ArrayList<String>();
 
         StringBuffer query = new StringBuffer("Select oficina from Oficina as oficina ");
+
+        // Entidad a la que pertenece
+        where.add(" oficina.organismoResponsable.entidad.id = :idEntidad ");
+        parametros.put("idEntidad", idEntidad);
+
+        // Estado de la Oficina
+        where.add(" oficina.estado.id = :idCatEstadoEntidad");
+        parametros.put("idCatEstadoEntidad", idCatEstadoEntidad);
+
 
         if (!StringUtils.isEmpty(codigo)) {
             where.add(DataBaseUtils.like("oficina.codigo", "codigo", parametros, codigo));

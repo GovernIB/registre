@@ -307,7 +307,10 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
         if(apellido1!= null && apellido1.length() > 0){where.add(DataBaseUtils.like("usuarioEntidad.usuario.apellido1","apellido1",parametros,apellido1));}
         if(apellido2!= null && apellido2.length() > 0){where.add(DataBaseUtils.like("usuarioEntidad.usuario.apellido2","apellido2", parametros,apellido2));}
         if(documento!= null && documento.length() > 0){where.add(" upper(usuarioEntidad.usuario.documento) like upper(:documento) "); parametros.put("documento","%"+documento.toLowerCase()+"%");}
-        if(tipoUsuario != null && tipoUsuario > 0){where.add("usuarioEntidad.usuario.tipoUsuario.id = :tipoUsuario "); parametros.put("tipoUsuario",tipoUsuario);}
+        if (tipoUsuario != null && tipoUsuario > 0) {
+            where.add("usuarioEntidad.usuario.tipoUsuario = :tipoUsuario ");
+            parametros.put("tipoUsuario", tipoUsuario);
+        }
         where.add("usuarioEntidad.entidad.id = :idEntidad "); parametros.put("idEntidad",idEntidad);
         where.add("usuarioEntidad.activo = true ");
 
@@ -322,7 +325,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
                 count++;
             }
             q2 = em.createQuery(query.toString().replaceAll("Select usuarioEntidad.id, usuarioEntidad.usuario from UsuarioEntidad as usuarioEntidad ", "Select count(usuarioEntidad.usuario.id) from UsuarioEntidad as usuarioEntidad "));
-            query.append("order by usuarioEntidad.usuario.apellido1");
+            query.append("order by usuarioEntidad.usuario.nombre, usuarioEntidad.usuario.apellido1");
             q = em.createQuery(query.toString());
 
             for (Map.Entry<String, Object> param : parametros.entrySet()) {
@@ -332,7 +335,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
         }else{
             q2 = em.createQuery(query.toString().replaceAll("Select usuarioEntidad.id, usuarioEntidad.usuario from UsuarioEntidad as usuarioEntidad ", "Select count(usuarioEntidad.usuario.id) from UsuarioEntidad as usuarioEntidad "));
-            query.append("order by usuarioEntidad.usuario.apellido1");
+            query.append("order by usuarioEntidad.usuario.nombre, usuarioEntidad.usuario.apellido1");
             q = em.createQuery(query.toString());
         }
         log.info("Query: " + query);

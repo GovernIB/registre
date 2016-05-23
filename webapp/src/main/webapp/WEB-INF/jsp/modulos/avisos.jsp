@@ -76,7 +76,7 @@
 
                     <c:if test="${oficiosPendientesLlegada > 0}">
                         <li>
-                            <a href="<c:url value="/oficioRemision/oficiosPendientesLlegada"/>">
+                            <a href="<c:url value="/oficioRemision/oficiosPendientesLlegada/list"/>">
                                 <div>
                                     <i class="fa fa-comment fa-fw"></i> <spring:message code="oficioRemision.pendientesLlegada"/> (${oficiosPendientesLlegada})
                                     <%--<span class="pull-right text-muted small"><fmt:formatDate type="time" value="${ahora}" /></span>--%>

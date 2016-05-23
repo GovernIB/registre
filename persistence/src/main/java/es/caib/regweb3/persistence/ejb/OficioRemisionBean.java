@@ -185,7 +185,6 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
             // Registramos la Salida
             registroSalida = registroSalidaEjb.registrarSalida(registroSalida);
-            log.info("RegistroSalida numero: " + registroSalida.getNumeroRegistro());
 
             // CREAMOS LA TRAZABILIDAD
             Trazabilidad trazabilidad = new Trazabilidad();
@@ -209,15 +208,33 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     }
 
     @Override
-    public List<OficioRemision> oficiosPendientesLlegada(Set<Organismo> organismos) throws Exception {
+    public List<OficioRemision> oficiosPendientesLlegada(Set<Organismo> organismos, Integer total) throws Exception {
 
         Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision "
                 + "where oficioRemision.organismoDestinatario in (:organismos) "
                 + " and oficioRemision.estado = " + RegwebConstantes.OFICIO_REMISION_INTERNO_ESTADO_ENVIADO
                 + " order by oficioRemision.id desc");
 
+        q.setParameter("organismos",organismos);
+        if(total != null){
+            q.setMaxResults(total);
+        }
+
+        return q.getResultList();
+    }
+
+    @Override
+    public List<OficioRemision> oficiosPendientesLlegadaPaginado(Set<Organismo> organismos, int inicio) throws Exception {
+
+        Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision "
+                + "where oficioRemision.organismoDestinatario in (:organismos) "
+                + " and oficioRemision.estado = " + RegwebConstantes.OFICIO_REMISION_INTERNO_ESTADO_ENVIADO
+                + " order by oficioRemision.id desc");
 
         q.setParameter("organismos",organismos);
+        q.setFirstResult(inicio);
+        q.setMaxResults(RESULTADOS_PAGINACION);
+
 
         return q.getResultList();
     }

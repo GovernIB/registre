@@ -1,9 +1,11 @@
 package es.caib.regweb3.sir.ws.api.manager.impl;
 
+import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.sir.core.excepcion.SIRException;
 import es.caib.regweb3.sir.core.model.Errores;
-import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.ws.api.manager.FicheroIntercambioManager;
+import es.caib.regweb3.sir.ws.api.manager.SicresXMLManager;
+import es.caib.regweb3.sir.ws.api.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.ws.api.wssir6b.RespuestaWS;
 import es.caib.regweb3.sir.ws.api.wssir6b.WS_SIR6_BServiceLocator;
 import es.caib.regweb3.sir.ws.api.wssir6b.WS_SIR6_B_PortType;
@@ -19,11 +21,13 @@ public class FicheroIntercambioManagerImpl implements FicheroIntercambioManager 
 
     public final Logger log = Logger.getLogger(getClass());
 
+    SicresXMLManager sicresXMLManager = new SicresXMLManagerImpl();
+
 
     @Override
-    public void enviarFicheroIntercambio(FicheroIntercambio ficheroIntercambio) {
+    public void enviarFicheroIntercambio(RegistroEntrada registroEntrada) {
 
-        String xml = ficheroIntercambio.marshallObject();
+        String xml = sicresXMLManager.crearXMLFicheroIntercambioSICRES3(registroEntrada);
         log.info("Xml Fichero Intercambio: " + xml);
 
         try {

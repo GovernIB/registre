@@ -7,12 +7,12 @@ import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
 import es.caib.regweb3.persistence.utils.DestinatarioWrapper;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
+import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.form.RegistroEntradaBusqueda;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.RegistroEntradaBusquedaValidator;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.plugins.distribucion.Destinatarios;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -97,7 +97,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     * Realiza la busqueda de {@link es.caib.regweb3.model.RegistroEntrada} según los parametros del formulario
     */
     @RequestMapping(value = "/busqueda", method = RequestMethod.GET)
-    public ModelAndView list(@ModelAttribute RegistroEntradaBusqueda busqueda, BindingResult result, HttpServletRequest request, HttpServletResponse response)throws Exception {
+    public ModelAndView busqueda(@ModelAttribute RegistroEntradaBusqueda busqueda, BindingResult result, HttpServletRequest request, HttpServletResponse response)throws Exception {
 
         ModelAndView mav = new ModelAndView("registroEntrada/registroEntradaList", result.getModel());
         RegistroEntrada registroEntrada = busqueda.getRegistroEntrada();
@@ -177,6 +177,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         Entidad entidadActiva = getEntidadActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         Oficina oficinaActiva = getOficinaActiva(request);
+        Set<Organismo> organismosOficinaActiva = getOrganismosOficinaActiva(request);
 
         model.addAttribute("registro",registro);
         model.addAttribute("oficina", getOficinaActiva(request));
@@ -192,13 +193,13 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         model.addAttribute("puedeEditar", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registro.getLibro().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA));
 
         // OficioRemision
-        model.addAttribute("isOficioRemision", registroEntradaEjb.isOficioRemisionInterno(idRegistro, getOrganismosIdOficinaActiva(request)));
+        model.addAttribute("isOficioRemision", registroEntradaEjb.isOficioRemisionInterno(idRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva)));
 
         // Interesados, solo si el Registro en Válido o Estamos en la Oficina donde se registró, o en su Oficina Responsable
         if(registro.getEstado().equals(RegwebConstantes.ESTADO_VALIDO) && oficinaRegistral){
 
-            model.addAttribute("personasFisicas", personaEjb.getAllbyEntidadTipo(entidadActiva.getId(), RegwebConstantes.TIPO_PERSONA_FISICA));
-            model.addAttribute("personasJuridicas", personaEjb.getAllbyEntidadTipo(entidadActiva.getId(), RegwebConstantes.TIPO_PERSONA_JURIDICA));
+            //model.addAttribute("personasFisicas", personaEjb.getFisicasByEntidad(entidadActiva.getId()));
+            //model.addAttribute("personasJuridicas", personaEjb.getJuridicasByEntidad(entidadActiva.getId()));
             model.addAttribute("tiposInteresado", RegwebConstantes.TIPOS_INTERESADO);
             model.addAttribute("tiposPersona",RegwebConstantes.TIPOS_PERSONA);
             model.addAttribute("paises",catPaisEjb.getAll());
@@ -207,7 +208,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             model.addAttribute("tiposDocumento", RegwebConstantes.TIPOS_DOCUMENTOID);
             model.addAttribute("nivelesAdministracion",catNivelAdministracionEjb.getAll());
             model.addAttribute("comunidadesAutonomas",catComunidadAutonomaEjb.getAll());
-            model.addAttribute("organismosOficinaActiva",organismoEjb.getByOficinaActiva(getOficinaActiva(request)));
+            model.addAttribute("organismosOficinaActiva",organismosOficinaActiva);
         }
 
         // Anexos
@@ -379,7 +380,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             }
 
             // Comprobamos que el RegistroEntrada es un OficioRemision
-            if (registroEntradaEjb.isOficioRemisionInterno(idRegistro, getOrganismosIdOficinaActiva(request))) {
+            if (registroEntradaEjb.isOficioRemisionInterno(idRegistro, getOrganismosOficioRemision(request,getOrganismosOficinaActiva(request)))) {
                 Mensaje.saveMessageError(request, getMessage("registroEntrada.tramitar.error"));
                 return "redirect:/registroEntrada/list";
             }
@@ -409,30 +410,30 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     @RequestMapping(value = "/{idRegistro}/distribuir", method = RequestMethod.GET)
     public
     @ResponseBody
-    Destinatarios distribuirRegistroEntrada(@PathVariable Long idRegistro, HttpServletRequest request) throws Exception, I18NException {
+    RespuestaDistribucion distribuirRegistroEntrada(@PathVariable Long idRegistro, HttpServletRequest request) throws Exception, I18NException {
 
         log.info("Entramos en distribuirRegistroEntrada");
 
         RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
-        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-        Destinatarios destinatarios = new Destinatarios();
+        RespuestaDistribucion respuestaDistribucion = new RespuestaDistribucion();
+        respuestaDistribucion.setDestinatarios(null);
 
         // Comprobamos si el RegistroEntrada tiene el estado Válido
         if (!registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_VALIDO)) {
 
             Mensaje.saveMessageError(request, getMessage("registroEntrada.distribuir.error"));
-            return destinatarios;
+            return respuestaDistribucion;
         }
 
         // Comprobamos que el RegistroEntrada es un OficioRemision
-        if (registroEntradaEjb.isOficioRemisionInterno(idRegistro, getOrganismosIdOficinaActiva(request))) {
+        if (registroEntradaEjb.isOficioRemisionInterno(idRegistro, getOrganismosOficioRemision(request, getOrganismosOficinaActiva(request)))) {
             Mensaje.saveMessageError(request, getMessage("registroEntrada.distribuir.error"));
-            return destinatarios;
+            return respuestaDistribucion;
         }
 
         //Obtenemos los destinatarios a través del plugin de distribución
-        return registroEntradaEjb.distribuir(registroEntrada);
-
+        respuestaDistribucion = registroEntradaEjb.distribuir(registroEntrada);
+        return respuestaDistribucion;
     }
 
     /**
@@ -459,13 +460,14 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         // Enviamos el registro de entrada a los destinatarios indicados en la variable wrapper
         Boolean enviado = registroEntradaEjb.enviar(registroEntrada, wrapper);
-        // Marcamos el registro como tramitado
-        registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, usuarioEntidad);
+
         if (enviado) { //Mostramos mensaje en funcion de si se ha enviado o ha habido un error.
+            // Marcamos el registro como tramitado, solo si se ha enviado bien
+            registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, usuarioEntidad);
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
 
         } else {
-            Mensaje.saveMessageError(request, getMessage("registroEntrada.distribuir.error"));
+            Mensaje.saveMessageError(request, getMessage("registroEntrada.distribuir.noenviado"));
         }
         return enviado;
 

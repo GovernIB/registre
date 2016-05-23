@@ -43,26 +43,26 @@
 
                     <div class="panel-body">
 
-                        <c:if test="${oficiosPendientesLlegada != null}">
+                        <c:if test="${listado != null}">
 
                             <div class="row">
                                 <div class="col-xs-12">
 
-                                    <c:if test="${empty oficiosPendientesLlegada}">
+                                    <c:if test="${empty listado}">
                                         <div class="alert alert-warning alert-dismissable">
                                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                                             <spring:message code="regweb.busqueda.vacio"/> <strong><spring:message code="oficioRemision.oficioRemision"/></strong>
                                         </div>
                                     </c:if>
 
-                                    <c:if test="${not empty oficiosPendientesLlegada}">
+                                    <c:if test="${not empty listado}">
 
                                         <div class="alert-grey">
-                                            <c:if test="${fn:length(oficiosPendientesLlegada) == 1}">
-                                                <spring:message code="regweb.resultado"/> <strong>${fn:length(oficiosPendientesLlegada)}</strong> <spring:message code="oficioRemision.pendientesLlegada"/>
+                                            <c:if test="${fn:length(listado) == 1}">
+                                                <spring:message code="regweb.resultado"/> <strong>${fn:length(listado)}</strong> <spring:message code="oficioRemision.pendientesLlegada"/>
                                             </c:if>
-                                            <c:if test="${fn:length(oficiosPendientesLlegada) > 1}">
-                                                <spring:message code="regweb.resultados"/> <strong>${fn:length(oficiosPendientesLlegada)}</strong> <spring:message code="oficioRemision.pendientesLlegada"/>
+                                            <c:if test="${fn:length(listado) > 1}">
+                                                <spring:message code="regweb.resultados"/> <strong>${fn:length(listado)}</strong> <spring:message code="oficioRemision.pendientesLlegada"/>
                                             </c:if>
                                         </div>
 
@@ -73,7 +73,6 @@
                                                     <col width="80">
                                                     <col>
                                                     <col width="100">
-                                                    <col>
                                                     <col>
                                                     <col>
                                                     <col>
@@ -92,7 +91,7 @@
                                                 </thead>
 
                                                 <tbody>
-                                                    <c:forEach var="oficioRemision" items="${oficiosPendientesLlegada}">
+                                                    <c:forEach var="oficioRemision" items="${listado}">
                                                         <tr>
                                                             <td><fmt:formatDate value="${oficioRemision.fecha}" pattern="yyyy"/> / ${oficioRemision.numeroOficio}</td>
                                                             <td><fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy"/></td>
@@ -112,6 +111,11 @@
 
                                                 </tbody>
                                             </table>
+
+                                            <!-- Paginacion -->
+                                            <c:import url="../modulos/paginacion.jsp">
+                                                <c:param name="entidad" value="oficioRemision/oficiosPendientesLlegada"/>
+                                            </c:import>
 
                                         </div>
 

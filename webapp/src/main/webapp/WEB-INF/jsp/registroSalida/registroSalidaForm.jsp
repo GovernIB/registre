@@ -51,12 +51,11 @@
                         </h3>
                     </div>
                     <div class="panel-body">
-                        <div class="col-xs-12"><strong>${entidad.nombre}</strong></div>
-                        <div class="col-xs-12"><strong>${registroSalida.oficina.denominacion}</strong></div>
+                        <div class="col-xs-12"><strong>${entidad.nombre} - ${registroSalida.oficina.denominacion}</strong></div>
                         <div class="form-group col-xs-12">
                             <strong>
                                 <c:if test="${not empty registroSalida.id}"> <fmt:formatDate value="${registroSalida.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></c:if>
-                                <c:if test="${empty registroSalida.id}"><c:set var="now" value="<%=new java.util.Date()%>" /> <fmt:formatDate value="${now}" pattern="dd/MM/yyyy"/></c:if>
+                                <c:if test="${empty registroSalida.id}"><c:set var="now" value="<%=new java.util.Date()%>" /> <fmt:formatDate value="${now}" pattern="dd/MM/yyyy HH:mm:ss"/></c:if>
                             </strong>
                         </div>
                         <div class="col-xs-12"><strong>${usuario.nombreCompleto} (${usuario.email})</strong></div>
@@ -386,7 +385,7 @@
 
     function actualizarCodigosAsunto(){
         <c:url var="codigosAsunto" value="/rest/obtenerCodigosAsunto" />
-        actualizarSelectTraduccion('${codigosAsunto}', '#registroDetalle\\.codigoAsunto\\.id', $('#registroDetalle\\.tipoAsunto\\.id option:selected').val(), '${registroSalida.registroDetalle.codigoAsunto.id}', false, '${pageContext.response.locale}');
+        actualizarSelectTraduccion('${codigosAsunto}', '#registroDetalle\\.codigoAsunto\\.id', $('#registroDetalle\\.tipoAsunto\\.id option:selected').val(), '${registroSalida.registroDetalle.codigoAsunto.id}', true, '${pageContext.response.locale}');
     }
 
     function actualizarLocalidad(){
@@ -398,6 +397,15 @@
     function OnBeforeUnLoad () {
         return "<spring:message code="regweb.cerrar.pagina"/>";
     }
+
+    // Posicionamos el ratón en el campo indicado al cargar el modal
+    $('#modalBuscadorOrganismoDestino').on('shown.bs.modal', function () {
+        $('#codigoOrganismoOrganismoDestino').focus();
+    });
+    $('#modalBuscadorOficinaOrigen').on('shown.bs.modal', function () {
+        $('#codigoOrganismoOficinaOrigen').focus();
+    });
+
 </script>
 
 <script type="text/javascript" src="<c:url value="/js/repro.js"/>"></script>

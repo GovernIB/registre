@@ -16,7 +16,10 @@
 <c:if test="${rolAutenticado.nombre == 'RWE_USUARI'}">
 
     <%--Importamos el menú de avisos--%>
-    <c:import url="/avisos"/>
+    <c:if test="${param.avisos == true}">
+        <c:import url="/avisos"/>
+    </c:if>
+
 
     <c:if test="${fn:length(oficinas) >= 1}">
         <li><a href="<c:url value="/inici"/>"><i class="fa fa-globe"></i> ${oficinaActiva.denominacion}</a></li>

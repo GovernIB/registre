@@ -7,6 +7,7 @@ import es.caib.regweb3.persistence.ejb.LibroLocal;
 import es.caib.regweb3.persistence.ejb.RelacionOrganizativaOfiLocal;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.TimeUtils;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.editor.UsuarioEditor;
 import es.caib.regweb3.webapp.form.OrganismoBusquedaForm;
@@ -25,7 +26,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Fundació BIT.
@@ -68,7 +68,7 @@ public class OrganismoController extends BaseController {
 
        OrganismoBusquedaForm organismoBusqueda =  new OrganismoBusquedaForm(organismo,1);
 
-       Paginacion paginacion = organismoEjb.busqueda(1, entidad.getId(), null, vigente.getId());
+       Paginacion paginacion = organismoEjb.busqueda(1, entidad.getId(), null, null, vigente.getId());
 
        // Mirant si es una sincronitzacio o actualitzacio
        Descarga descarga = descargaEjb.findByTipoEntidad(RegwebConstantes.UNIDAD, entidad.getId());
@@ -97,7 +97,7 @@ public class OrganismoController extends BaseController {
       Organismo organismo = busqueda.getOrganismo();
       Entidad entidad = getEntidadActiva(request);
 
-      Paginacion paginacion = organismoEjb.busqueda(busqueda.getPageNumber(), entidad.getId(), organismo.getDenominacion(), organismo.getEstado().getId());
+       Paginacion paginacion = organismoEjb.busqueda(busqueda.getPageNumber(), entidad.getId(), null, organismo.getDenominacion(), organismo.getEstado().getId());
 
       // Mirant si es una sincronitzacio o actualitzacio per mostrar botó de sincro o actualizar
       Descarga descarga = descargaEjb.findByTipoEntidad(RegwebConstantes.UNIDAD, entidad.getId());
@@ -296,7 +296,7 @@ public class OrganismoController extends BaseController {
                 librosOrganismoCuartoNivel.size() + librosOrganismoQuintoNivel.size() + librosOrganismoSextoNivel.size() +
                 librosOrganismoSeptimoNivel.size();
         Long end = System.currentTimeMillis();
-        log.info("TIEMPO CARGA ARBOLarbol: " + formatElapsedTime(end - start));
+        log.debug("TIEMPO CARGA ARBOLarbol: " + TimeUtils.formatElapsedTime(end - start));
 
         mav.addObject("organismosPrimerNivel", organismosPrimerNivel);
         mav.addObject("organismosSegundoNivel", organismosSegundoNivel);
@@ -331,17 +331,6 @@ public class OrganismoController extends BaseController {
 
         binder.registerCustomEditor(Usuario.class, "administradores",new UsuarioEditor());
         binder.setValidator(this.libroValidator);
-    }
-
-
-    public static String formatElapsedTime(final long l) {
-        final long hr = TimeUnit.MILLISECONDS.toHours(l);
-        final long min = TimeUnit.MILLISECONDS.toMinutes(l - TimeUnit.HOURS.toMillis(hr));
-        final long sec = TimeUnit.MILLISECONDS.toSeconds(l - TimeUnit.HOURS.toMillis(hr)
-                - TimeUnit.MINUTES.toMillis(min));
-        final long ms = TimeUnit.MILLISECONDS.toMillis(l - TimeUnit.HOURS.toMillis(hr)
-                - TimeUnit.MINUTES.toMillis(min) - TimeUnit.SECONDS.toMillis(sec));
-        return String.format("%02d:%02d:%02d.%03d", hr, min, sec, ms);
     }
 
 }

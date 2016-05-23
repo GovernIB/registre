@@ -1,9 +1,9 @@
 package es.caib.regweb3.sir.ws.api.manager.impl;
 
 import es.caib.regweb3.sir.core.excepcion.SIRException;
-import es.caib.regweb3.sir.core.utils.Mensaje;
 import es.caib.regweb3.sir.ws.api.manager.MensajeManager;
 import es.caib.regweb3.sir.ws.api.manager.SicresXMLManager;
+import es.caib.regweb3.sir.ws.api.utils.Mensaje;
 import es.caib.regweb3.sir.ws.api.wssir7.RespuestaWS;
 import es.caib.regweb3.sir.ws.api.wssir7.WS_SIR7ServiceLocator;
 import es.caib.regweb3.sir.ws.api.wssir7.WS_SIR7_PortType;

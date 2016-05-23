@@ -150,7 +150,7 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
                 count++;
             }
             q2 = em.createQuery(query.toString().replaceAll("Select usuario from Usuario as usuario ", "Select count(usuario.id) from Usuario as usuario "));
-            query.append("order by usuario.apellido1, usuario.nombre");
+            query.append("order by usuario.nombre, usuario.apellido1");
             q = em.createQuery(query.toString());
 
             for (Map.Entry<String, Object> param : parametros.entrySet()) {
@@ -160,7 +160,7 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
 
         }else{
             q2 = em.createQuery(query.toString().replaceAll("Select usuario from Usuario as usuario ", "Select count(usuario.id) from Usuario as usuario "));
-            query.append("order by usuario.apellido1, usuario.nombre");
+            query.append("order by usuario.nombre, usuario.apellido1");
             q = em.createQuery(query.toString());
         }
         log.info("Query: " + query);

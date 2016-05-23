@@ -7,7 +7,6 @@ import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.OficiosRemisionInternoOrganismo;
 import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
 import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.ws.api.manager.FicheroIntercambioManager;
 import es.caib.regweb3.sir.ws.api.manager.SicresXMLManager;
 import es.caib.regweb3.sir.ws.api.manager.impl.FicheroIntercambioManagerImpl;
@@ -28,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created 16/07/14 12:52
@@ -165,7 +165,7 @@ public class OficioRemisionController extends BaseController {
         registroEntrada.setEstado(RegwebConstantes.ESTADO_VALIDO); // Fijamos el Estado válido por defecto
 
         // Obtenemos los Registros de Entrada, pendientes de tramitar por medio de un Oficio de Revisión, agrupados según su Organismos destinatario.
-        List<OficiosRemisionInternoOrganismo> oficiosRemisionOrganismos = registroEntradaEjb.oficiosPendientesRemisionInterna(busqueda.getAnyo(), registroEntrada.getLibro(), getOrganismosIdOficinaActiva(request));
+        List<OficiosRemisionInternoOrganismo> oficiosRemisionOrganismos = registroEntradaEjb.oficiosPendientesRemisionInterna(busqueda.getAnyo(), registroEntrada.getLibro(), getOrganismosOficioRemision(request, getOrganismosOficinaActiva(request)));
 
         busqueda.setPageNumber(1);
         mav.addObject("oficiosRemisionOrganismos", oficiosRemisionOrganismos);
@@ -265,7 +265,7 @@ public class OficioRemisionController extends BaseController {
             RegistroEntrada registroEntrada = registroEntradaListForm.getRegistros().get(i);
 
             if(registroEntrada.getId() != null){ //Si se ha seleccionado
-                log.info("RE seleccionado: " + registroEntrada.getId());
+
                 //registroEntrada = registroEntradaEjb.findById(registroEntrada.getId());
 
                 // Comprobamos si el RegistroEntrada tiene el estado Válido
@@ -419,8 +419,7 @@ public class OficioRemisionController extends BaseController {
           for (RegistroEntrada registroEntradaAEnviar : registrosEntrada) {
 
               // Enviamos el Fichero de datos de intercambio al nodo SIR
-              FicheroIntercambio ficheroIntercambio = sicresXMLManager.crearFicheroIntercambioSICRES3(registroEntradaAEnviar);
-              ficheroIntercambioManager.enviarFicheroIntercambio(ficheroIntercambio);
+              ficheroIntercambioManager.enviarFicheroIntercambio(registroEntradaAEnviar);
 
               // Ho afegirem si el codi és el correcte
               //registrosEntradaProcesados.add(registroEntradaAEnviar);
@@ -431,7 +430,7 @@ public class OficioRemisionController extends BaseController {
 
               registrosEntradaProcesados.add(registroEntradaAEnviar);
 
-              String identificadorIntercambioSir = ficheroIntercambio.getIdentificadorIntercambio();
+              String identificadorIntercambioSir = null;
               
               OficioRemision oficioRemision;
               oficioRemision = oficioRemisionUtils.crearOficioRemisionExterno(
@@ -541,17 +540,30 @@ public class OficioRemisionController extends BaseController {
 
     /**
      * Listado de oficios de remisión pendientes de Llegada
+     */
+    @RequestMapping(value = "/oficiosPendientesLlegada/list", method = RequestMethod.GET)
+    public String oficiosPendientesLlegada() {
+        return "redirect:/oficioRemision/oficiosPendientesLlegada/list/1";
+    }
+
+    /**
+     * Listado de oficios de remisión pendientes de Llegada
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/oficiosPendientesLlegada", method = RequestMethod.GET)
-    public ModelAndView oficiosPendientesLlegada(Model model, HttpServletRequest request)throws Exception {
+    @RequestMapping(value = "/oficiosPendientesLlegada/list/{pageNumber}", method = RequestMethod.GET)
+    public ModelAndView oficiosPendientesLlegada(@PathVariable Integer pageNumber, HttpServletRequest request)throws Exception {
 
         ModelAndView mav = new ModelAndView("oficioRemision/oficiosPendientesLlegadaList");
 
-        List<OficioRemision> oficiosPendientesLlegada = oficioRemisionEjb.oficiosPendientesLlegada(getOrganismosOficinaActiva(request));
+        Set<Organismo> organismos = getOrganismosOficinaActiva(request);
 
-        model.addAttribute("oficiosPendientesLlegada", oficiosPendientesLlegada);
+        List<OficioRemision> oficiosPendientesLlegada = oficioRemisionEjb.oficiosPendientesLlegadaPaginado(organismos,(pageNumber-1)* BaseEjbJPA.RESULTADOS_PAGINACION);
+
+        Paginacion paginacion = new Paginacion(oficioRemisionEjb.oficiosPendientesLlegadaCount(organismos).intValue(), pageNumber);
+
+        mav.addObject("paginacion", paginacion);
+        mav.addObject("listado", oficiosPendientesLlegada);
 
         return mav;
     }
@@ -565,7 +577,6 @@ public class OficioRemisionController extends BaseController {
 
         OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
         List<RegistroEntrada> registrosEntrada = oficioRemisionEjb.getByOficioRemision(oficioRemision.getId());
-        log.info("Total RegistrosEntrada del oficio: " + registrosEntrada.size());
 
         model.addAttribute("oficioRemision", oficioRemision);
         model.addAttribute("registrosEntrada", registrosEntrada);
@@ -600,7 +611,7 @@ public class OficioRemisionController extends BaseController {
         // Comprobamos si ya ha sido procesado
         if (oficioRemision.getEstado() != RegwebConstantes.OFICIO_REMISION_INTERNO_ESTADO_ENVIADO) {
             Mensaje.saveMessageError(request, getMessage("oficioRemision.error.yaprocesado"));
-            return "redirect:/oficioRemision/oficiosPendientesLlegada";
+            return "redirect:/oficioRemision/oficiosPendientesLlegada/list";
         }
 
         List<OficioPendienteLlegada> oficios = oficioPendienteLlegadaForm.getOficios();

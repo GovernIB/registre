@@ -6,13 +6,12 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.RegistroBasico;
 import es.caib.regweb3.persistence.utils.*;
-import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
-import org.fundaciobit.plugins.distribucion.Destinatarios;
+import org.fundaciobit.plugins.distribucion.ConfiguracionDistribucion;
 import org.fundaciobit.plugins.distribucion.IDistribucionPlugin;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -60,6 +59,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<RegistroEntrada> getByUsuario(Long idUsuarioEntidad) throws Exception {
 
         Query q = em.createQuery("Select registroEntrada from RegistroEntrada as registroEntrada where registroEntrada.usuario.id = :idUsuarioEntidad ");
@@ -133,6 +133,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroEntrada registroEntrada, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, String organoDest, Boolean anexos, String observaciones, String usuario) throws Exception {
 
         Query q;
@@ -142,8 +143,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         String queryBase = "Select DISTINCT registroEntrada from RegistroEntrada as registroEntrada left outer join registroEntrada.registroDetalle.interesados interessat ";
         StringBuffer query = new StringBuffer(queryBase);
-
-        //where.add(" registroEntrada.registroDetalle.id = interessat.registroDetalle.id ");
 
         // Numero registro
         if (!StringUtils.isEmpty(registroEntrada.getNumeroRegistroFormateado())) {
@@ -276,24 +275,35 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         return paginacion;
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public List<String> oficiosPendientesRemisionInterna(Long idLibro, Set<Long> organismos) throws Exception {
+
+        // Si el array de organismos está vacío, no incluimos la condición.
+        String organismosWhere = "";
+        if (organismos.size() > 0) {
+            organismosWhere = "re.destino.id not in (:organismos) and ";
+        }
+
         // Obtenemos los Organismos destinatarios PROPIOS que tiene Oficios de Remision pendientes de tramitar
-
-        Query q1;
-        q1 = em.createQuery("Select distinct(re.destino.denominacion) from RegistroEntrada as re where " +
+        Query q;
+        q = em.createQuery("Select distinct(re.destino.denominacion) from RegistroEntrada as re where " +
                 "re.estado = :idEstadoRegistro and re.libro.id = :idLibro and " +
-                "re.destino != null and re.destino.id not in (:organismos) and " +
-                "re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
+                "re.destino != null and " + organismosWhere +
+                " re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
 
-        q1.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
-        q1.setParameter("organismos", organismos);
-        q1.setParameter("idLibro", idLibro);
+        q.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
+        q.setParameter("idLibro", idLibro);
+        if (organismos.size() > 0) {
+            q.setParameter("organismos", organismos);
+        }
 
-        return q1.getResultList();
+        return q.getResultList();
 
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<OficiosRemisionInternoOrganismo> oficiosPendientesRemisionInterna(Integer any, Libro libro, Set<Long> organismos) throws Exception {
 
         String anyWhere = "";
@@ -301,21 +311,29 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             anyWhere = "year(re.fecha) = :any and ";
         }
 
-        // Obtenemos los Organismos destinatarios PROPIOS que tiene Oficios de Remision pendientes de tramitar
-        Query q1;
-        q1 = em.createQuery("Select distinct(re.destino) from RegistroEntrada as re where " + anyWhere +
-                " re.estado = :idEstadoRegistro and re.libro.id = :idLibro and " +
-                "re.destino != null and re.destino.id not in (:organismos) and " +
-                "re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
-
-        q1.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
-        q1.setParameter("organismos", organismos);
-        q1.setParameter("idLibro", libro.getId());
-        if (any != null) {
-            q1.setParameter("any", any);
+        // Si el array de organismos está vacío, no incluimos la condición.
+        String organismosWhere = "";
+        if (organismos.size() > 0) {
+            organismosWhere = "re.destino.id not in (:organismos) and ";
         }
 
-        List<Organismo> organismosPropios = q1.getResultList();
+        // Obtenemos los Organismos destinatarios PROPIOS que tiene Oficios de Remision pendientes de tramitar
+        Query q;
+        q = em.createQuery("Select distinct(re.destino) from RegistroEntrada as re where " + anyWhere +
+                " re.estado = :idEstadoRegistro and re.libro.id = :idLibro and " +
+                "re.destino != null and " + organismosWhere +
+                "re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
+
+        q.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
+        q.setParameter("idLibro", libro.getId());
+        if (any != null) {
+            q.setParameter("any", any);
+        }
+        if (organismos.size() > 0) {
+            q.setParameter("organismos", organismos);
+        }
+
+        List<Organismo> organismosPropios = q.getResultList();
 
         // Buscamos los RegistroEntrada pendientes de tramitar de cada uno de los Organismos encontrados
         List<OficiosRemisionInternoOrganismo> oficiosRemisionOrganismo = new ArrayList<OficiosRemisionInternoOrganismo>();
@@ -344,35 +362,55 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     @Override
     public Long oficiosPendientesRemisionInternaCount(List<Libro> libros, Set<Long> organismos) throws Exception {
 
+        // Si el array de organismos está vacío, no incluimos la condición.
+        String organismosWhere = "";
+        if (organismos.size() > 0) {
+            organismosWhere = "re.destino.id not in (:organismos) and ";
+        }
 
         Query q;
         q = em.createQuery("Select count(re.id) from RegistroEntrada as re where " +
                 "re.estado = :idEstadoRegistro and re.libro in (:libros) and " +
-                "re.destino != null and re.destino.id not in (:organismos) and " +
-                "re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
+                "re.destino != null and " + organismosWhere +
+                " re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
 
         q.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
-        q.setParameter("organismos", organismos);
         q.setParameter("libros", libros);
+        if (organismos.size() > 0) {
+            q.setParameter("organismos", organismos);
+        }
 
         return (Long) q.getSingleResult();
 
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public Boolean isOficioRemisionInterno(Long idRegistro, Set<Long> organismos) throws Exception {
+
+        // Si el array de organismos está vacío, no incluimos la condición.
+        String organismosWhere = "";
+        if (organismos.size() > 0) {
+            organismosWhere = "re.destino.id not in (:organismos) and ";
+        }
+
         Query q;
         q = em.createQuery("Select re.id from RegistroEntrada as re where " +
                 "re.id = :idRegistro and re.estado = :idEstadoRegistro and " +
-                "re.destino != null and re.destino.id not in (:organismos) and " +
-                "re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
+                "re.destino != null and " + organismosWhere +
+                " re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
 
         q.setParameter("idRegistro", idRegistro);
         q.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
-        q.setParameter("organismos", organismos);
+        if (organismos.size() > 0) {
+            q.setParameter("organismos", organismos);
+        }
 
         return q.getResultList().size() > 0;
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public List<String> oficiosPendientesRemisionExterna(Long idLibro) throws Exception {
 
         // Obtenemos los Organismos destinatarios EXTERNOS que tiene Oficios de Remision pendientes de tramitar
@@ -389,6 +427,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         return q1.getResultList();
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public List<OficiosRemisionOrganismo> oficiosPendientesRemisionExterna(Integer any, Libro libro, Entidad entidadActiva) throws Exception {
 
         String anyWhere = "";
@@ -450,6 +490,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public Long oficiosPendientesRemisionExternaCount(List<Libro> libros) throws Exception {
 
 
@@ -466,6 +508,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public List<RegistroEntrada> oficiosRemisionByOrganismoPropio(Long idOrganismo, Integer any, Long idLibro) throws Exception {
 
         String anyWhere = "";
@@ -490,6 +534,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         return q.getResultList();
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public List<RegistroEntrada> oficiosRemisionByOrganismoExterno(String codigoOrganismo, Integer any, Long idLibro) throws Exception {
 
         String anyWhere = "";
@@ -515,6 +561,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<RegistroEntrada> buscaLibroRegistro(Date fechaInicio, Date fechaFin, String numRegistro, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String extracto, String usuario, List<Libro> libros, Long estado, Long idOficina, Long idTipoAsunto, String organoDest) throws Exception {
 
         Query q;
@@ -640,6 +687,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Long buscaIndicadoresTotal(Date fechaInicio, Date fechaFin, Long idEntidad) throws Exception {
 
         Query q;
@@ -658,6 +706,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Long buscaIndicadoresOficinaTotal(Date fechaInicio, Date fechaFin, Long idOficina) throws Exception {
 
         Query q;
@@ -676,6 +725,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Long buscaEntradaPorConselleria(Date fechaInicio, Date fechaFin, Long conselleria) throws Exception {
 
         Query q;
@@ -693,6 +743,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Long buscaEntradaPorAsunto(Date fechaInicio, Date fechaFin, Long tipoAsunto, Long idEntidad) throws Exception {
 
         Query q;
@@ -784,6 +835,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<RegistroBasico> getByOficinaEstado(Long idOficinaActiva, Long idEstado, Integer total) throws Exception {
 
         Query q;
@@ -807,6 +859,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<RegistroEntrada> getByOficinaEstado(Long idOficinaActiva, Long idEstado) throws Exception {
 
         Query q;
@@ -837,6 +890,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<RegistroEntrada> buscaEntradaPorUsuario(Date fechaInicio, Date fechaFin, Long idUsuario, List<Libro> libros) throws Exception {
 
         Query q;
@@ -853,6 +907,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<RegistroEntrada> buscaEntradaPorUsuarioLibro(Date fechaInicio, Date fechaFin, Long idUsuario, Long idLibro) throws Exception {
 
         Query q;
@@ -870,6 +925,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<RegistroEntrada> getByLibrosEstado(List<Libro> libros, Long idEstado) throws Exception {
 
         Query q;
@@ -885,6 +941,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Long getByLibrosEstadoCount(List<Libro> libros, Long idEstado) throws Exception {
 
         Query q;
@@ -899,6 +956,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<RegistroEntrada> buscaPorLibroTipoNumero(Date fechaInicio, Date fechaFin, Long idLibro, Integer numeroRegistro) throws Exception {
 
         Query q;
@@ -945,11 +1003,17 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     @Override
     public void cambiarEstado(Long idRegistro, Long idEstado) throws Exception {
-        RegistroEntrada registroEntrada = findById(idRegistro);
+       /* RegistroEntrada registroEntrada = findById(idRegistro);
         registroEntrada.setEstado(idEstado);
-        merge(registroEntrada);
+        merge(registroEntrada);*/
+        Query q = em.createQuery("update RegistroEntrada set estado=:idEstado where id = :idRegistro");
+        q.setParameter("idEstado", idEstado);
+        q.setParameter("idRegistro", idRegistro);
+        q.executeUpdate();
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public List<RegistroBasico> getUltimosRegistros(Long idOficina, Integer total) throws Exception {
 
         Query q;
@@ -967,6 +1031,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public RegistroEntrada findByNumeroRegistroFormateado(String numeroRegistroFormateado) throws Exception {
 
         Query q = em.createQuery("Select registroEntrada from RegistroEntrada as registroEntrada where registroEntrada.numeroRegistroFormateado = :numeroRegistroFormateado ");
@@ -984,6 +1049,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public RegistroEntrada findByNumeroAnyoLibro(int numero, int anyo, String libro) throws Exception {
 
         Query q = em.createQuery("Select registroEntrada "
@@ -1067,11 +1133,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         RegistroEntrada old = registroEntrada;
 
-        // Estado anulado
-        registroEntrada.setEstado(RegwebConstantes.ESTADO_TRAMITADO);
-
-        // Actualizamos el RegistroEntrada
-        registroEntrada = merge(registroEntrada);
+        cambiarEstado(registroEntrada.getId(), RegwebConstantes.ESTADO_TRAMITADO);
 
         // Creamos el HistoricoRegistroEntrada para la modificación d estado
         historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(old,
@@ -1080,6 +1142,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Long getLibro(Long idRegistroEntrada) throws Exception {
 
         Query q;
@@ -1219,24 +1282,77 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         return (Long) q.getSingleResult() > 0;
     }
 
+    public RegistroEntrada getConAnexosFull(Long id) throws Exception, I18NException {
 
-    public Destinatarios distribuir(RegistroEntrada re) throws Exception, I18NException {
-        // Plugin de distribución
+        RegistroEntrada re = findById(id);
+        List<Anexo> anexos = re.getRegistroDetalle().getAnexos();
+        List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
+        for (Anexo anexo : anexos) {
+            AnexoFull anexoFull = anexoEjb.getAnexoFullCompleto(anexo.getId());
+            anexosFull.add(anexoFull);
+        }
+        //Asignamos los documentos recuperados de custodia al registro de entrada.
+        re.getRegistroDetalle().setAnexosFull(anexosFull);
+        return re;
+    }
 
-        log.info("Entramos en distribuir");
+
+    public RespuestaDistribucion distribuir(RegistroEntrada re) throws Exception, I18NException {
+        RespuestaDistribucion respuestaDistribucion = new RespuestaDistribucion();
+        respuestaDistribucion.setHayPlugin(false);
+        respuestaDistribucion.setDestinatarios(null);
+
+        //Obtenemos plugin
         IDistribucionPlugin distribucionPlugin = RegwebDistribucionPluginManager.getInstance();
-        if (distribucionPlugin != null) { // hay plugin definido
+        //Si han especificado plug-in
+        if (distribucionPlugin != null) {
+            respuestaDistribucion.setHayPlugin(true);
+            //Obtenemos la configuración de la distribución
+            ConfiguracionDistribucion configuracionDistribucion = distribucionPlugin.configurarDistribucion();
+            re = configuracionAnexosDistribucion(re, configuracionDistribucion.configuracionAnexos);
+            respuestaDistribucion.setListadoDestinatariosModificable(configuracionDistribucion.isListadoDestinatariosModificable());
+            if (configuracionDistribucion.listadoDestinatariosModificable) {// Si es modificable, mostraremos pop-up
+                respuestaDistribucion.setDestinatarios(distribucionPlugin.distribuir(re)); // isListado = true , puede escoger a quien lo distribuye de la listas propuestas.
+                //Despues lo tramita en una segunda fase desde el metodo distribuir() en distribuir.js
+            } else { // Si no es modificable, obtendra los destinatarios del propio registro y nos saltamos una llamada al plugin
+                respuestaDistribucion.setEnviado(distribucionPlugin.enviarDestinatarios(re, null, ""));
+            }
+        }
+
+        return respuestaDistribucion;
+    }
 
 
-            //Obtenemos el valor de la variable anexos del plugin de distribucion
-            //Variable que indica si el registro se debe enviar con los anexos y los documentos de los anexos
-            // O solo con los anexos pero sin los documentos físicos
-            boolean conAnexos = Configuracio.getVariableAnexosPluginDistribucion();
+    public Boolean enviar(RegistroEntrada re, DestinatarioWrapper wrapper) throws Exception, I18NException {
 
+        IDistribucionPlugin distribucionPlugin = RegwebDistribucionPluginManager.getInstance();
+        if (distribucionPlugin != null) {
+            ConfiguracionDistribucion configuracionDistribucion = distribucionPlugin.configurarDistribucion();
+            re = configuracionAnexosDistribucion(re, configuracionDistribucion.configuracionAnexos);
+            return distribucionPlugin.enviarDestinatarios(re, wrapper.getDestinatarios(), wrapper.getObservaciones());
+        }
+        return false;
 
-            if (conAnexos) { // Si se deben enviar los documentos asociados a los anexos
-                //Recuperar documentos de custodia
-                List<Anexo> anexos = re.getRegistroDetalle().getAnexos();
+    }
+
+    /**
+     * Método que prepara el registro de entrada para distribuirlo.
+     * La variable confAnexos indica que datos se envian en el segmento de anexo del registro de entrada.
+     * <p/>
+     * 1 = custodiaId + metadades + fitxer + firma. És a dir a dins el segment annexes de l'assentament s'enviaria tot el contingut de l'annexe.
+     * 2 =  custodiaId. A dins el segment annexes de l'assentament només s'enviaria l'Id del sistema que custodia l'arxiu.
+     * 3 = custodiaId + metadades. A dins el segment annexes de l'assentament s'enviaria l'Id del sistema que custodia l'arxiu i les metadades del document.
+     *
+     * @param original
+     * @param confAnexos
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
+    private RegistroEntrada configuracionAnexosDistribucion(RegistroEntrada original, int confAnexos) throws Exception, I18NException {
+        switch (confAnexos) {
+            case 1: {//1.  Fitxer + firma + metadades + custodiaId
+                List<Anexo> anexos = original.getRegistroDetalle().getAnexos();
                 List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
                 for (Anexo anexo : anexos) {
                     AnexoFull anexoFull = anexoEjb.getAnexoFull(anexo.getId());
@@ -1246,42 +1362,25 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                     anexosFull.add(anexoFull);
                 }
                 //Asignamos los documentos recuperados de custodia al registro de entrada.
-                re.getRegistroDetalle().setAnexosFull(anexosFull);
+                original.getRegistroDetalle().setAnexosFull(anexosFull);
             }
-            // Obtenemos los destinatarios a través del plugin de distribución.
-            return distribucionPlugin.distribuir(re, conAnexos);
-        } else { // Si no hay plugin definido, no hay destinatarios.
-            return null;
-        }
-    }
+            case 2: {//2. custodiaId
 
-
-    public Boolean enviar(RegistroEntrada re, DestinatarioWrapper wrapper) throws Exception, I18NException {
-        // Plugin de distribución
-        log.info("Entramos en enviar");
-        IDistribucionPlugin distribucionPlugin = RegwebDistribucionPluginManager.getInstance();
-
-        //Obtenemos el valor de la variable anexos del plugin de distribucion
-        //Variable que indica si el registro se debe enviar con los anexos y los documentos de los anexos
-        // O solo con los anexos pero sin los documentos físicos
-        boolean conAnexos = Configuracio.getVariableAnexosPluginDistribucion();
-
-        if (conAnexos) {// Si se deben enviar los documentos asociados a los anexos
-            //Recuperar documentos de custodia
-            List<Anexo> anexos = re.getRegistroDetalle().getAnexos();
-            List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
-            for (Anexo anexo : anexos) {
-                AnexoFull anexoFull = anexoEjb.getAnexoFull(anexo.getId());
-                if (anexoFull != null) {
-                    log.info(anexoFull.getDocumentoCustody().getName());
+                // Montamos una nueva lista de anexos solo con el custodiaID, sin metadatos ni nada
+                List<Anexo> anexos = original.getRegistroDetalle().getAnexos();
+                List<Anexo> nuevosAnexos = new ArrayList<Anexo>();
+                for (Anexo anexo : anexos) {
+                    Anexo nuevoAnexo = new Anexo();
+                    nuevoAnexo.setCustodiaID(anexo.getCustodiaID());
+                    nuevosAnexos.add(nuevoAnexo);
                 }
-                anexosFull.add(anexoFull);
+                original.getRegistroDetalle().setAnexos(nuevosAnexos);
             }
-            //Asignamos los documentos recuperados de custodia al registro de entrada.
-            re.getRegistroDetalle().setAnexosFull(anexosFull);
-        }
+            // 3. custodiaId + metadades (No hace falta hacer nada es el caso por defecto)
 
-        //Distribuimos el registro mediante el plugin
-        return distribucionPlugin.enviarDestinatarios(re, wrapper.getDestinatarios(), wrapper.getObservaciones(), conAnexos);
+        }
+        return original;
     }
+
+
 }

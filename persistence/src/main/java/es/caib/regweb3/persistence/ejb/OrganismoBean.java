@@ -51,6 +51,18 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         return organismo;
     }
 
+    public Organismo findByIdCompleto(Long id) throws Exception {
+
+        Organismo organismo = em.find(Organismo.class, id);
+        Hibernate.initialize(organismo.getLibros());
+        Hibernate.initialize(organismo.getHistoricoUO());
+        Hibernate.initialize(organismo.getOrganismoRaiz());
+        Hibernate.initialize(organismo.getOrganismoSuperior());
+        Hibernate.initialize(organismo.getEdpPrincipal());
+
+        return organismo;
+    }
+
 
     @Override
     @SuppressWarnings(value = "unchecked")
@@ -312,7 +324,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     @Override
     public List<Organismo> getOrganismosByNivel(Long nivel, Long idEntidad, String estado) throws Exception {
 
-        Query q = em.createQuery("Select organismo.id,organismo.codigo, organismo.denominacion, organismo.organismoSuperior.id from Organismo as organismo where " +
+        Query q = em.createQuery("Select organismo.id,organismo.codigo, organismo.denominacion, organismo.organismoSuperior.id, organismo.edp from Organismo as organismo where " +
                 "organismo.nivelJerarquico = :nivel and organismo.entidad.id = :idEntidad and organismo.estado.codigoEstadoEntidad = :estado order by organismo.codigo");
 
         q.setParameter("nivel", nivel);
@@ -323,7 +335,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result) {
-            Organismo organismo = new Organismo((Long) object[0], (String) object[1], (String) object[2], (Long) object[3]);
+            Organismo organismo = new Organismo((Long) object[0], (String) object[1], (String) object[2], (Long) object[3], (Boolean) object[4]);
 
             organismos.add(organismo);
         }
@@ -333,7 +345,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
 
     @Override
-    public Paginacion busqueda(Integer pageNumber, Long idEntidad, String denominacion, Long idCatEstadoEntidad) throws Exception {
+    public Paginacion busqueda(Integer pageNumber, Long idEntidad, String codigo, String denominacion, Long idCatEstadoEntidad) throws Exception {
 
         Query q;
         Query q2;
@@ -342,6 +354,9 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
         StringBuffer query = new StringBuffer("Select organismo from Organismo as organismo ");
 
+        if (codigo != null && codigo.length() > 0) {
+            where.add(DataBaseUtils.like("organismo.codigo", "codigo", parametros, codigo));
+        }
         if (denominacion != null && denominacion.length() > 0) {
             where.add(DataBaseUtils.like("organismo.denominacion", "denominacion", parametros, denominacion));
         }
@@ -403,7 +418,8 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     }
 
     /**
-     * Método que obtiene los organismos vigentes y en los que puede registrar de la oficina activa
+     * Método que obtiene los organismos vigentes y en los que puede registrar de la oficina activa,
+     * sin generar OficioRemisión.
      *
      * @param oficinaActiva
      * @return List
@@ -414,12 +430,12 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
         // Añadimos los organismos a los que da servicio la Oficina (Directos y Funcionales)
         LinkedHashSet<Organismo> organismos = oficinaActiva.getOrganismosFuncionales();
-
+log.info("inicio hijosTotales");
         // Añadimos todos los hijos de los Organismos obtenidos anteriormetne
         LinkedHashSet<Organismo> hijosTotales = new LinkedHashSet<Organismo>();
         obtenerHijosOrganismos(organismos, hijosTotales);
         organismos.addAll(hijosTotales);
-
+        log.info("Fin hijosTotales");
         return organismos;
 
     }
@@ -459,7 +475,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         // recorremos para todos los organismos Padres
         for (Organismo org : organismosPadres) {
 
-            Query q = em.createQuery("select organismo.id,organismo.codigo, organismo.denominacion from Organismo as organismo where organismo.organismoSuperior.id =:idOrganismoSuperior and organismo.estado.codigoEstadoEntidad =:vigente ");
+            Query q = em.createQuery("select organismo.id,organismo.codigo, organismo.denominacion, organismo.edp from Organismo as organismo where organismo.organismoSuperior.id =:idOrganismoSuperior and organismo.estado.codigoEstadoEntidad =:vigente ");
             q.setParameter("idOrganismoSuperior", org.getId());
             q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
 
@@ -469,7 +485,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
             List<Object[]> result = q.getResultList();
 
             for (Object[] object : result) {
-                Organismo hijo = new Organismo((Long) object[0], (String) object[1], (String) object[2]);
+                Organismo hijo = new Organismo((Long) object[0], (String) object[1], (String) object[2], (Boolean) object[3]);
 
                 hijos.add(hijo);
             }

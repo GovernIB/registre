@@ -90,7 +90,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
      * Realiza la busqueda de {@link es.caib.regweb3.model.RegistroSalida} según los parametros del formulario
      */
     @RequestMapping(value = "/busqueda", method = RequestMethod.GET)
-    public ModelAndView list(@ModelAttribute RegistroSalidaBusqueda busqueda, BindingResult result,HttpServletRequest request)throws Exception {
+    public ModelAndView busqueda(@ModelAttribute RegistroSalidaBusqueda busqueda, BindingResult result,HttpServletRequest request)throws Exception {
 
         ModelAndView mav = new ModelAndView("registroSalida/registroSalidaList", result.getModel());
         RegistroSalida registroSalida = busqueda.getRegistroSalida();
@@ -184,8 +184,8 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         // Interesados, solo si el Registro en Válio
         if(registro.getEstado().equals(RegwebConstantes.ESTADO_VALIDO) && oficinaRegistral){
 
-            model.addAttribute("personasFisicas", personaEjb.getAllbyEntidadTipo(entidadActiva.getId(), RegwebConstantes.TIPO_PERSONA_FISICA));
-            model.addAttribute("personasJuridicas", personaEjb.getAllbyEntidadTipo(entidadActiva.getId(), RegwebConstantes.TIPO_PERSONA_JURIDICA));
+            //model.addAttribute("personasFisicas", personaEjb.getFisicasByEntidad(entidadActiva.getId()));
+            //model.addAttribute("personasJuridicas", personaEjb.getJuridicasByEntidad(entidadActiva.getId()));
             model.addAttribute("tiposInteresado",RegwebConstantes.TIPOS_INTERESADO);
             model.addAttribute("tiposPersona", RegwebConstantes.TIPOS_PERSONA);
             model.addAttribute("paises",catPaisEjb.getAll());
@@ -194,7 +194,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             model.addAttribute("tiposDocumento",RegwebConstantes.TIPOS_DOCUMENTOID);
             model.addAttribute("nivelesAdministracion",catNivelAdministracionEjb.getAll());
             model.addAttribute("comunidadesAutonomas",catComunidadAutonomaEjb.getAll());
-            model.addAttribute("organismosOficinaActiva",organismoEjb.getByOficinaActiva(getOficinaActiva(request)));
+            model.addAttribute("organismosOficinaActiva",getOrganismosOficinaActiva(request));
 
         }
         // Anexos

@@ -311,12 +311,14 @@
         CODPOSTAL varchar(14),
         CODIGO varchar(9) not null,
         DENOMINACION varchar(300) not null,
+        EDP bool,
         NIVELJERARQUICO int8,
         NOMBREVIA varchar(300),
         NUMVIA varchar(20),
         CODAMBCOMUNIDAD int8,
         CODAMBPROVINCIA int8,
         PAIS int8,
+        EDPRINCIPAL int8,
         ENTIDAD int8,
         ESTADO int8,
         LOCALIDAD int8,
@@ -393,6 +395,16 @@
         USUARIO varchar(80),
         REGISTRO_DETALLE int8,
         primary key (ID)
+    );
+
+    create table RWE_PROPIEDADGLOBAL (
+        ID int8 not null,
+        CLAVE varchar(255) not null,
+        DESCRIPCION varchar(255),
+        ENTIDAD int8,
+        VALOR varchar(255),
+        primary key (ID),
+        unique (CLAVE, ENTIDAD)
     );
 
     create table RWE_REGISTROLOPD_MIGRADO (
@@ -951,6 +963,8 @@
 
     create index RWE_ORGANI_LOCALI_FK_I on RWE_ORGANISMO (LOCALIDAD);
 
+    create index RWE_ORGANI_EDP_FK_I on RWE_ORGANISMO (EDPRINCIPAL);
+
     create index RWE_ORGANI_PROVIN_FK_I on RWE_ORGANISMO (CODAMBPROVINCIA);
 
     create index RWE_ORGANI_ESTADO_FK_I on RWE_ORGANISMO (ESTADO);
@@ -1004,6 +1018,11 @@
         references RWE_CATNIVELADMINISTRACION;
 
     alter table RWE_ORGANISMO
+        add constraint RWE_ORGANISMO_EDPRIN_FK
+        foreign key (EDPRINCIPAL)
+        references RWE_ORGANISMO;
+
+    alter table RWE_ORGANISMO
         add constraint RWE_ORGANISMO_ESTADO_FK
         foreign key (ESTADO)
         references RWE_CATESTADOENTIDAD;
@@ -1026,6 +1045,9 @@
         add constraint RWE_PERMLIBUSU_LIBRO_FK
         foreign key (LIBRO)
         references RWE_LIBRO;
+
+    create index RWE_PERSONA_ENTIDAD_FK_I on RWE_PERSONA (ENTIDAD);
+
 
     alter table RWE_PERSONA
         add constraint RWE_PERSONA_ENTIDAD_FK
@@ -1051,6 +1073,8 @@
         add constraint RWE_PREREG_REGDET_FK
         foreign key (REGISTRO_DETALLE)
         references RWE_REGISTRO_DETALLE;
+
+    create index RWE_PROPIE_ENTIDA_FK_I on RWE_PROPIEDADGLOBAL (ENTIDAD);
 
     alter table RWE_REGISTROLOPD_MIGRADO
         add constraint RWE_REGLOPDMIG_REGMIG_FK

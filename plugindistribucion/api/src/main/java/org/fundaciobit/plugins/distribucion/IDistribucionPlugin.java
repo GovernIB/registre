@@ -18,11 +18,10 @@ public interface IDistribucionPlugin extends IPlugin {
     /**
      * Metodo que obtiene los destinatarios a los que se debe distribuir el registro de entrada.
      * @param registro registro de entrada que se distribuye
-     * @param anexos variable que indica si el registro lleva incluidos los anexos con los documentos.
      * @return
      * @throws Exception
      */
-    Destinatarios distribuir(RegistroEntrada registro, boolean anexos) throws Exception;
+    Destinatarios distribuir(RegistroEntrada registro) throws Exception;
 
 
     /**
@@ -30,9 +29,14 @@ public interface IDistribucionPlugin extends IPlugin {
      * @param registro registro de entrada que se distribuye
      * @param destinatariosDefinitivos destinatarios a los que enviar el registro de entrada
      * @param observaciones observaciones al envio
-     * @param anexos variable que indica si el registro lleva incluidos los anexos con los documentos.
      * @return
      * @throws Exception
      */
-    Boolean enviarDestinatarios(RegistroEntrada registro, List<Destinatario> destinatariosDefinitivos, String observaciones, boolean anexos) throws Exception;
+    Boolean enviarDestinatarios(RegistroEntrada registro, List<Destinatario> destinatariosDefinitivos, String observaciones) throws Exception;
+
+    /*
+      Método que devuelve la configuración de la distribución.
+     */
+    ConfiguracionDistribucion configurarDistribucion() throws Exception;
+
 }

@@ -1,6 +1,6 @@
 package es.caib.regweb3.sir.ws.api.manager;
 
-import es.caib.regweb3.sir.core.utils.Mensaje;
+import es.caib.regweb3.sir.ws.api.utils.Mensaje;
 
 /**
  *

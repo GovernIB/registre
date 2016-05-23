@@ -187,7 +187,7 @@
 
             </div>
 
-            <div class="col-xs-8 pull-right" >
+            <div class="col-xs-8 pull-right" id="mensajesdetalle">
                 <c:import url="../modulos/mensajes.jsp"/>
             </div>
 
@@ -253,7 +253,8 @@
     <%-- Traducciones para distribuir.js --%>
     var traddistribuir = new Array();
     traddistribuir['campo.obligatorio'] = "<spring:message code='registro.distribuir.propuesto.obligatorio' javaScriptEscape='true' />";
-    traddistribuir['nodestinatarios'] = "<spring:message code='registro.distribuir.nodestinatarios' javaScriptEscape='true' />";
+    traddistribuir['distribuir.nodestinatarios'] = "<spring:message code='registro.distribuir.nodestinatarios' javaScriptEscape='true' />";
+    traddistribuir['distribuir.noenviado'] = "<spring:message code='registroEntrada.distribuir.noenviado' javaScriptEscape='true' />";
 </script>
 
 

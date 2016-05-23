@@ -4,21 +4,6 @@
  */
 
 
-// Muestra la informacion de los Popover de la lista de Organismos
-$('a[rel=popover]').popover();
-
-mostraInformacio = function () {
-    var zIndices = new Array();
-    $('div.popover, div.modal').each(function () {
-        zIndices.push($(this).attr('class') + '; z-index: ' + $(this).css('z-index'));
-    });
-    var html = zIndices.join('<br>');
-    $('.show-z-index').html(html);
-};
-
-$('body').on('hover', 'a[rel=popover]', mostraInformacio);
-
-
 /*
  Función que pinta una tabla con los resultados obtenidos de la búsqueda.
  @param tipoOrganismo indica desde donde se realiza la búsqueda para poder asignar

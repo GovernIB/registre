@@ -67,7 +67,7 @@
                                     <form:label path="nombre"><span id="nombreLabel" class="text-danger">*</span> <spring:message code="regweb.nombre"/></form:label>
                                 </div>
                                 <div class="col-xs-8">
-                                    <form:input path="nombre" cssClass="form-control" disabled="true" maxlength="30"/> <form:errors path="nombre" cssClass="help-block" element="span"/>
+                                    <form:input path="nombre" cssClass="form-control" autofocus="autofocus" disabled="true" maxlength="30"/> <form:errors path="nombre" cssClass="help-block" element="span"/>
                                 </div>
                             </div>
 
