@@ -58,7 +58,7 @@ public class InicioController extends BaseController{
         // Solo obtenemos los datos para el dashboard si el Usuario es Operador
         if(isOperador(request) && oficinaActiva != null){
 
-            Set<Organismo> organismosOficiaActiva = getOrganismosOficinaActiva(request);
+            Set<Organismo> organismosOficiaActiva = new HashSet<Organismo>(getOrganismosOficinaActiva(request));
 
             List<Libro> librosAdministrados = getLibrosAdministrados(request);
             // Obtenemos los Libros donde el Usuario puede Registrar de la Oficina Activa

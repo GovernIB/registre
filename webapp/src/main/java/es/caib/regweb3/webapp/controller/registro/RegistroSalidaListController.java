@@ -22,6 +22,7 @@ import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -68,6 +69,8 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         // Obtenemos los Libros donde el usuario tiene permisos de Consulta
         List<Libro> librosConsulta = getLibrosConsultaSalidas(request);
 
+        Set<Organismo> organismosOficinaActiva = new HashSet<Organismo>(getOrganismosOficinaActiva(request));
+
         RegistroSalidaBusqueda registroSalidaBusqueda = new RegistroSalidaBusqueda(new RegistroSalida(),1);
         registroSalidaBusqueda.setFechaInicio(new Date());
         registroSalidaBusqueda.setFechaFin(new Date());
@@ -75,7 +78,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         model.addAttribute(getOficinaActiva(request));
         model.addAttribute("librosConsulta", librosConsulta);
         model.addAttribute("registroSalidaBusqueda", registroSalidaBusqueda);
-        model.addAttribute("organosOrigen", getOrganismosOficinaActiva(request));
+        model.addAttribute("organosOrigen", organismosOficinaActiva);
         model.addAttribute("oficinasRegistro",  oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(),RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
 
         // Obtenemos los usuarios de la Entidad
@@ -93,33 +96,12 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
     public ModelAndView busqueda(@ModelAttribute RegistroSalidaBusqueda busqueda, BindingResult result,HttpServletRequest request)throws Exception {
 
         ModelAndView mav = new ModelAndView("registroSalida/registroSalidaList", result.getModel());
-        RegistroSalida registroSalida = busqueda.getRegistroSalida();
-        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-
-        // Obtenemos los Libros donde el usuario tiene permisos de Consulta
-        List<Libro> librosConsulta = getLibrosConsultaSalidas(request);
-
-        List<UsuarioEntidad> usuariosEntidad = usuarioEntidadEjb.findByEntidad(getEntidadActiva(request).getId());
-        mav.addObject("usuariosEntidad",usuariosEntidad);
 
         registroSalidaBusquedaValidator.validate(busqueda, result);
 
-        Oficina oficina = getOficinaActiva(request);
-        mav.addObject(oficina);
+        RegistroSalida registroSalida = busqueda.getRegistroSalida();
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
-        Set<Organismo> todosOrganismos = getOrganismosOficinaActiva(request);
-
-        if (busqueda.getOrganOrigen()!=null && !"".equals(busqueda.getOrganOrigen())) {
-            Organismo org = organismoEjb.findByCodigoLigero(busqueda.getOrganOrigen());
-            if(org== null || !todosOrganismos.contains(org)){
-                org = new Organismo();
-                org.setCodigo(busqueda.getOrganOrigen());
-                org.setDenominacion(new String(busqueda.getOrganOrigenNom().getBytes("ISO-8859-1"), "UTF-8"));
-                todosOrganismos.add(org);
-            }
-        }
-
-        mav.addObject("organosOrigen", todosOrganismos);
         
         if (result.hasErrors()) { // Si hay errores volvemos a la vista del formulario
             mav.addObject("errors", result.getAllErrors());
@@ -134,15 +116,21 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             String apellido2Interesado = limpiarCaracteresEspeciales(busqueda.getInteressatLli2());
             Paginacion paginacion = registroSalidaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroSalida, nombreInteresado, apellido1Interesado, apellido2Interesado, busqueda.getInteressatDoc(), busqueda.getOrganOrigen(), busqueda.getAnexos(), busqueda.getObservaciones(), busqueda.getUsuario());
 
-            // Alta en tabla LOPD
-            lopdEjb.insertarRegistrosSalida(paginacion, usuarioEntidad.getId());
             busqueda.setPageNumber(1);
             mav.addObject("paginacion", paginacion);
             mav.addObject("isAdministradorLibro", permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(), registroSalida.getLibro().getId()));
             mav.addObject("puedeEditar", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroSalida.getLibro().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA));
+
+            // Alta en tabla LOPD
+            lopdEjb.insertarRegistrosSalida(paginacion, usuarioEntidad.getId());
         }
 
-        mav.addObject("librosConsulta", librosConsulta);
+        Set<Organismo> organismosOficinaActiva = new HashSet<Organismo>(getOrganismosOficinaActiva(request));
+
+        mav.addObject("organosOrigen", organismosOficinaActiva);
+        mav.addObject(getOficinaActiva(request));
+        mav.addObject("usuariosEntidad",usuarioEntidadEjb.findByEntidad(getEntidadActiva(request).getId()));
+        mav.addObject("librosConsulta", getLibrosConsultaSalidas(request));
         mav.addObject("registroSalidaBusqueda", busqueda);
         mav.addObject("oficinasRegistro", oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
         mav.addObject("organOrigen", busqueda.getOrganOrigen());
@@ -183,9 +171,8 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
         // Interesados, solo si el Registro en Válio
         if(registro.getEstado().equals(RegwebConstantes.ESTADO_VALIDO) && oficinaRegistral){
+            Set<Organismo> organismosOficinaActiva = new HashSet<Organismo>(getOrganismosOficinaActiva(request));
 
-            //model.addAttribute("personasFisicas", personaEjb.getFisicasByEntidad(entidadActiva.getId()));
-            //model.addAttribute("personasJuridicas", personaEjb.getJuridicasByEntidad(entidadActiva.getId()));
             model.addAttribute("tiposInteresado",RegwebConstantes.TIPOS_INTERESADO);
             model.addAttribute("tiposPersona", RegwebConstantes.TIPOS_PERSONA);
             model.addAttribute("paises",catPaisEjb.getAll());
@@ -194,7 +181,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             model.addAttribute("tiposDocumento",RegwebConstantes.TIPOS_DOCUMENTOID);
             model.addAttribute("nivelesAdministracion",catNivelAdministracionEjb.getAll());
             model.addAttribute("comunidadesAutonomas",catComunidadAutonomaEjb.getAll());
-            model.addAttribute("organismosOficinaActiva",getOrganismosOficinaActiva(request));
+            model.addAttribute("organismosOficinaActiva",organismosOficinaActiva);
 
         }
         // Anexos

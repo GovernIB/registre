@@ -8,6 +8,7 @@ import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+import es.caib.regweb3.utils.TimeUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -200,6 +201,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
     @Override
     public List<Oficina> findByEntidadByEstado(Long idEntidad, String estado) throws Exception{
+        Long start = System.currentTimeMillis();
         Query q = em.createQuery("Select oficina.id, oficina.codigo, oficina.denominacion from Oficina as oficina where " +
                 "oficina.organismoResponsable.entidad.id =:idEntidad and oficina.estado.codigoEstadoEntidad=:estado");
 
@@ -213,6 +215,8 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
             Oficina oficina = new Oficina((Long)object[0],(String)object[1],(String)object[2]);
             oficinas.add(oficina);
         }
+        Long end = System.currentTimeMillis();
+        log.info("TIEMPO CARGA oficinasRegistro: " + TimeUtils.formatElapsedTime(end - start));
         return oficinas;
     }
 

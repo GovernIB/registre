@@ -61,6 +61,8 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         registroSalida.setRegistroDetalle(new RegistroDetalle());
         registroSalida.setOficina(oficina);
 
+        Set<Organismo> organismosOficinaActiva = new HashSet<Organismo>(getOrganismosOficinaActiva(request));
+
         //Eliminamos los posibles interesados de la Sesion
         eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
@@ -69,7 +71,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         model.addAttribute(oficina);
         model.addAttribute("registroSalida",registroSalida);
         model.addAttribute("libros", getLibrosRegistroSalida(request));
-        model.addAttribute("organismosOficinaActiva", getOrganismosOficinaActiva(request));
+        model.addAttribute("organismosOficinaActiva", organismosOficinaActiva);
         model.addAttribute("oficinasOrigen",  getOficinasOrigen(request));
 
         return "registroSalida/registroSalidaForm";

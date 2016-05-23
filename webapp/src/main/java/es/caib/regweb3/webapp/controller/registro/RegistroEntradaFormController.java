@@ -64,12 +64,14 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         //Eliminamos los posibles interesados de la Sesion
         eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_ENTRADA);
 
+        Set<Organismo> organismosOficinaActiva = new HashSet<Organismo>(getOrganismosOficinaActiva(request));
+
         model.addAttribute(getEntidadActiva(request));
         model.addAttribute(getUsuarioAutenticado(request));
         model.addAttribute(oficina);
         model.addAttribute("registroEntrada",registroEntrada);
         model.addAttribute("libros", getLibrosRegistroEntrada(request));
-        model.addAttribute("organismosOficinaActiva", getOrganismosOficinaActiva(request));
+        model.addAttribute("organismosOficinaActiva", organismosOficinaActiva);
         model.addAttribute("oficinasOrigen",  getOficinasOrigen(request));
 
         return "registroEntrada/registroEntradaForm";

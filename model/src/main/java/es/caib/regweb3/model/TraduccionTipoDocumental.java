@@ -13,6 +13,12 @@ public class TraduccionTipoDocumental implements Traduccion {
 
     private String nombre;
 
+    public TraduccionTipoDocumental() {
+    }
+
+    public TraduccionTipoDocumental(String nombre) {
+        this.nombre = nombre;
+    }
 
     @Column(name = "NOMBRE", nullable = false)
     public String getNombre() {
