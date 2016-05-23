@@ -304,7 +304,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<OficiosRemisionInternoOrganismo> oficiosPendientesRemisionInterna(Integer any, Libro libro, Set<Long> organismos) throws Exception {
+    public List<OficiosRemisionInternoOrganismo> oficiosPendientesRemisionInterna(Integer any, Long idOficina, Long idLibro, Set<Long> organismos) throws Exception {
 
         String anyWhere = "";
         if (any != null) {
@@ -320,12 +320,14 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         // Obtenemos los Organismos destinatarios PROPIOS que tiene Oficios de Remision pendientes de tramitar
         Query q;
         q = em.createQuery("Select distinct(re.destino) from RegistroEntrada as re where " + anyWhere +
-                " re.estado = :idEstadoRegistro and re.libro.id = :idLibro and " +
+                " re.estado = :idEstadoRegistro and re.libro.id = :idLibro and re.oficina.id = :idOficina and " +
                 "re.destino != null and " + organismosWhere +
                 "re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
 
         q.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
-        q.setParameter("idLibro", libro.getId());
+        q.setParameter("idLibro", idLibro);
+        q.setParameter("idOficina", idOficina);
+
         if (any != null) {
             q.setParameter("any", any);
         }
@@ -348,7 +350,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             oficios.setOficinas(organismoEjb.tieneOficinasServicio(organismo.getId()));
 
             //Buscamos los Registros de Entrada, pendientes de tramitar mediante un Oficio de Remision
-            oficios.setOficiosRemision(oficiosRemisionByOrganismoPropio(organismo.getId(), any, libro.getId()));
+            oficios.setOficiosRemision(oficiosRemisionByOrganismoPropio(organismo.getId(), any, idOficina, idLibro));
 
             //Los añadimos a la lista
             oficiosRemisionOrganismo.add(oficios);
@@ -429,7 +431,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<OficiosRemisionOrganismo> oficiosPendientesRemisionExterna(Integer any, Libro libro, Entidad entidadActiva) throws Exception {
+    public List<OficiosRemisionOrganismo> oficiosPendientesRemisionExterna(Integer any, Long idOficina, Long idLibro, Entidad entidadActiva) throws Exception {
 
         String anyWhere = "";
         if (any != null) {
@@ -440,11 +442,12 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         Query q1;
         q1 = em.createQuery("Select distinct(registroEntrada.destinoExternoCodigo) from RegistroEntrada as registroEntrada where " + anyWhere +
                 " registroEntrada.estado = :idEstadoRegistro and registroEntrada.libro.id = :idLibro and " +
-                "registroEntrada.destino is null and " +
+                "registroEntrada.oficina.id = :idOficina and registroEntrada.destino is null and " +
                 "registroEntrada.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
 
         q1.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
-        q1.setParameter("idLibro", libro.getId());
+        q1.setParameter("idOficina", idOficina);
+        q1.setParameter("idLibro", idLibro);
         if (any != null) {
             q1.setParameter("any", any);
         }
@@ -479,7 +482,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                 }
             }
             //Buscamos los Registros de Entrada, pendientes de tramitar mediante un Oficio de Remision
-            oficios.setOficiosRemision(oficiosRemisionByOrganismoExterno(organismo, any, libro.getId()));
+            oficios.setOficiosRemision(oficiosRemisionByOrganismoExterno(organismo, any, idOficina, idLibro));
 
             //Los añadimos a la lista
             oficiosRemisionOrganismo.add(oficios);
@@ -510,7 +513,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroEntrada> oficiosRemisionByOrganismoPropio(Long idOrganismo, Integer any, Long idLibro) throws Exception {
+    public List<RegistroEntrada> oficiosRemisionByOrganismoPropio(Long idOrganismo, Integer any, Long idOficina, Long idLibro) throws Exception {
 
         String anyWhere = "";
         if (any != null) {
@@ -519,7 +522,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         Query q;
         q = em.createQuery("Select registroEntrada from RegistroEntrada as registroEntrada where " + anyWhere +
-                " registroEntrada.libro.id = :idLibro " +
+                " registroEntrada.libro.id = :idLibro and registroEntrada.oficina.id = :idOficina " +
                 "and registroEntrada.destino.id = :idOrganismo and registroEntrada.estado = :idEstadoRegistro " +
                 "order by registroEntrada.fecha desc");
 
@@ -527,6 +530,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         if (any != null) {
             q.setParameter("any", any);
         }
+        q.setParameter("idOficina", idOficina);
         q.setParameter("idLibro", idLibro);
         q.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
 
@@ -536,7 +540,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroEntrada> oficiosRemisionByOrganismoExterno(String codigoOrganismo, Integer any, Long idLibro) throws Exception {
+    public List<RegistroEntrada> oficiosRemisionByOrganismoExterno(String codigoOrganismo, Integer any, Long idOficina, Long idLibro) throws Exception {
 
         String anyWhere = "";
         if (any != null) {
@@ -545,7 +549,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         Query q;
         q = em.createQuery("Select registroEntrada from RegistroEntrada as registroEntrada where " + anyWhere +
-                " registroEntrada.libro.id = :idLibro " +
+                " registroEntrada.libro.id = :idLibro and registroEntrada.oficina.id = :idOficina " +
                 "and registroEntrada.destinoExternoCodigo = :codigoOrganismo and registroEntrada.estado = :idEstadoRegistro " +
                 "order by registroEntrada.fecha desc");
 
@@ -553,6 +557,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         if (any != null) {
             q.setParameter("any", any);
         }
+        q.setParameter("idOficina", idOficina);
         q.setParameter("idLibro", idLibro);
         q.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
 

@@ -46,6 +46,12 @@
 
                         <div class="panel-body">
                             <div class="form-group col-xs-6">
+                                <div class="col-xs-4 pull-left align-right"><span class="text-danger">*</span> <spring:message code="registroEntrada.oficina"/></div>
+                                <div class="col-xs-8">
+                                    <form:select path="registroEntrada.oficina.id" items="${oficinasRegistro}" itemValue="id" itemLabel="nombre" cssClass="chosen-select"/>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-6">
                                 <div class="col-xs-4 pull-left align-right"><span class="text-danger">*</span> <spring:message code="registroEntrada.libro"/></div>
                                 <div class="col-xs-8">
                                     <form:select path="registroEntrada.libro.id" items="${librosRegistro}" itemValue="id" itemLabel="nombreCompleto" cssClass="chosen-select"/>
@@ -113,9 +119,9 @@
                                                             <table class="table table-bordered table-hover table-striped tablesorter">
                                                                 <colgroup>
                                                                     <col>
-                                                                    <col width="80">
                                                                     <col>
-                                                                    <col width="100">
+                                                                    <col>
+                                                                    <col>
                                                                     <col>
                                                                     <col>
                                                                     <col>
@@ -126,10 +132,10 @@
                                                                         <th style="text-align:center;cursor: pointer;" onclick="seleccionarTodo('oficio${status.count}','${fn:length(oficiosRemisionOrganismo.oficiosRemision)}');"><i class="fa fa-check-square"></i></th>
                                                                         <th><spring:message code="registroEntrada.numeroRegistro"/></th>
                                                                         <th><spring:message code="registroEntrada.fecha"/></th>
-                                                                        <th><spring:message code="registroEntrada.libro.corto"/></th>
                                                                         <th><spring:message code="registroEntrada.oficina"/></th>
                                                                         <th><spring:message code="registroEntrada.organismoDestino"/></th>
                                                                         <th><spring:message code="registroEntrada.extracto"/></th>
+                                                                        <th><spring:message code="registroEntrada.interesados"/></th>
                                                                         <th class="center"><spring:message code="regweb.acciones"/></th>
                                                                     </tr>
                                                                 </thead>
@@ -138,21 +144,18 @@
                                                                 <c:forEach var="registroEntrada" items="${oficiosRemisionOrganismo.oficiosRemision}" varStatus="indice">
                                                                         <tr>
                                                                             <td><form:checkbox id="oficio${status.count}_id${indice.index}" path="registros[${indice.index}].id" value="${registroEntrada.id}"/></td>
-                                                                            <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="yyyy"/> / ${registroEntrada.numeroRegistro}</td>
+                                                                            <td>${registroEntrada.numeroRegistroFormateado}</td>
                                                                             <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy"/></td>
-                                                                            <td><label class="no-bold" rel="ayuda" data-content="${registroEntrada.libro.nombre}" data-toggle="popover">${registroEntrada.libro.codigo}</label></td>
-                                                                            <td><label class="no-bold" rel="ayuda" data-content="${registroEntrada.oficina.denominacion}" data-toggle="popover">${registroEntrada.oficina.codigo}</label></td>
-                                                                            <c:if test="${registroEntrada.destino != null}">
-                                                                                <td>${registroEntrada.destino.denominacion} (${registroEntrada.destino.estado.descripcionEstadoEntidad})</td>
-                                                                            </c:if>
-                                                                            <c:if test="${registroEntrada.destino == null}">
-                                                                                <td>${registroEntrada.destinoExternoDenominacion}</td>
-                                                                            </c:if>
+                                                                            <td><label class="no-bold" rel="ayuda" data-content="${registroEntrada.oficina.codigo}" data-toggle="popover">${registroEntrada.oficina.denominacion}</label></td>
+                                                                            <td>${registroEntrada.destinoExternoDenominacion}</td>
                                                                             <td>${registroEntrada.registroDetalle.extracto}</td>
+                                                                            <td class="center"><label class="no-bold representante" rel="ayuda"
+                                                                                                      data-content="${registroEntrada.registroDetalle.nombreInteresadosHtml}"
+                                                                                                      data-toggle="popover">${registroEntrada.registroDetalle.totalInteresados}</label>
+                                                                            </td>
 
                                                                             <td class="center">
                                                                                 <a class="btn btn-info btn-sm" href="<c:url value="/registroEntrada/${registroEntrada.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
-                                                                                    <%--<a class="btn btn-warning btn-sm" href="<c:url value="/registroEntrada/${registroEntrada.id}/edit"/>" title="<spring:message code="regweb.editar"/>"><span class="fa fa-pencil"></span></a>--%>
                                                                             </td>
                                                                         </tr>
                                                                 </c:forEach>
