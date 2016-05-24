@@ -106,10 +106,11 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
     /**
      * Dice si el organismo indicado tiene oficinas donde registrar
      * @param idOrganismo
+     * @param oficinaVirtual = false las oficinas virtuales se consideran oficinas validas para poder crear libros.
      * @return
      * @throws Exception
      */
-    public Boolean tieneOficinasOrganismo(Long idOrganismo) throws Exception;
+    public Boolean tieneOficinasOrganismo(Long idOrganismo, boolean oficinaVirtual) throws Exception;
 
     /**
      * Obtiene las Oficinas que dan servicio a los Libros seleccionados

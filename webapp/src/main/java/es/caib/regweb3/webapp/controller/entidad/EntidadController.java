@@ -755,7 +755,7 @@ public class EntidadController extends BaseController {
                 log.info("HISTORICOS FINALES "+ historicosFinales.size());
                 //Además de estos históricos finales sólo interesan los que tienen oficinas, ya que para asignarle los libros debe tener oficinas
                 for(Organismo orgHistorico:historicosFinales){
-                    if(oficinaEjb.tieneOficinasOrganismo(orgHistorico.getId())){
+                    if (oficinaEjb.tieneOficinasOrganismo(orgHistorico.getId(), false)) {
                         historicosUOconOficinas.add(orgHistorico);
                     }
                 }

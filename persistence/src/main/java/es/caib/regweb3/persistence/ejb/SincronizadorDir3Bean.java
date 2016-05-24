@@ -168,7 +168,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
             if (organismo.getLibros() != null && organismo.getLibros().size() > 0) {
                 Set<Oficina> oficinas = new HashSet<Oficina>();  // Utilizamos un Set porque no permite duplicados
                 //Miramos si el organismo tiene oficinas,
-                Boolean tieneOficinas = oficinaEjb.tieneOficinasOrganismo(organismo.getId());
+                Boolean tieneOficinas = oficinaEjb.tieneOficinasOrganismo(organismo.getId(), false);
                 if (!tieneOficinas) {//si no tiene se debe guardar en la tabla de pendientes para que los procese el usuario manualmente
                     //guardar pendiente
                     Pendiente pendiente = new Pendiente(organismo.getId(), false, organismo.getEstado().getCodigoEstadoEntidad());

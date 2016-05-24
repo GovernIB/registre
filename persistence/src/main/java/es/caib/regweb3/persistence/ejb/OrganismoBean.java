@@ -554,8 +554,8 @@ log.info("inicio hijosTotales");
     }
 
     public Boolean tieneOficinasServicio(Long idOrganismo) throws Exception {
-
-        Boolean oficinas = oficinaEjb.tieneOficinasOrganismo(idOrganismo);
+        //Incluimos las oficinas virtuales no presenciales
+        Boolean oficinas = oficinaEjb.tieneOficinasOrganismo(idOrganismo, true);
         if (!oficinas) {
             // Si no tiene Oficinas que cuelguen de el, buscamos en su padre
             Organismo organismo = findById(idOrganismo);

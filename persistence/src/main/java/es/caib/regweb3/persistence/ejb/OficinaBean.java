@@ -281,27 +281,43 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
-    public Boolean tieneOficinasOrganismo(Long idOrganismo) throws Exception{
+    public Boolean tieneOficinasOrganismo(Long idOrganismo, boolean oficinaVirtual) throws Exception {
+
+        String oficinaVirtualWhere = "";
+
+        // Si oficinaVirtual = false las oficinas virtuales se consideran oficinas validas para poder crear libros.
+        if (oficinaVirtual) {
+            oficinaVirtualWhere = " and :oficinaVirtual not in elements(oficina.servicios)";
+        }
         Query q = em.createQuery("Select oficina.id from Oficina as oficina where " +
                 "oficina.organismoResponsable.id =:idOrganismo and " +
-                "oficina.estado.codigoEstadoEntidad=:vigente and " +
-                ":oficinaVirtual not in elements(oficina.servicios)");
+                "oficina.estado.codigoEstadoEntidad=:vigente " +
+                oficinaVirtualWhere);
 
         q.setParameter("idOrganismo",idOrganismo);
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-        q.setParameter("oficinaVirtual", catServicioLocalEjb.findByCodigo(RegwebConstantes.REGISTRO_VIRTUAL_NO_PRESENCIAL));
+        if (oficinaVirtual) {
+            q.setParameter("oficinaVirtual", catServicioLocalEjb.findByCodigo(RegwebConstantes.REGISTRO_VIRTUAL_NO_PRESENCIAL));
+        }
+
 
         List<Long> oficinas = q.getResultList();
 
         if(oficinas.size()>0){
             return true;
         }else{
+            if (oficinaVirtual) {
+                oficinaVirtualWhere = " and :oficinaVirtual not in elements(relorg.oficina.servicios)";
+            }
+
             q = em.createQuery("select relorg from RelacionOrganizativaOfi as relorg where relorg.organismo.id=:idOrganismo and " +
-                    "relorg.estado.codigoEstadoEntidad=:vigente and " +
-                    ":oficinaVirtual not in elements(relorg.oficina.servicios)");
+                    "relorg.estado.codigoEstadoEntidad=:vigente " +
+                    oficinaVirtualWhere);
             q.setParameter("idOrganismo",idOrganismo);
             q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-            q.setParameter("oficinaVirtual", catServicioLocalEjb.findByCodigo(RegwebConstantes.REGISTRO_VIRTUAL_NO_PRESENCIAL));
+            if (oficinaVirtual) {
+                q.setParameter("oficinaVirtual", catServicioLocalEjb.findByCodigo(RegwebConstantes.REGISTRO_VIRTUAL_NO_PRESENCIAL));
+            }
 
             List<RelacionOrganizativaOfi> relorg= q.getResultList();
             return relorg.size() > 0;
