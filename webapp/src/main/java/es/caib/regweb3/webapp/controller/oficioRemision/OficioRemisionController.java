@@ -143,8 +143,13 @@ public class OficioRemisionController extends BaseController {
 
         ModelAndView mav = new ModelAndView("registroEntrada/oficiosPendientesRemisionInternaList");
 
-        OficioPendienteBusquedaForm oficioPendienteBusquedaForm = new OficioPendienteBusquedaForm(new RegistroEntrada(),1);
+        // Fijamos la oficina activa como la seleccionada por defecto
+        RegistroEntrada re = new RegistroEntrada();
+        re.setOficina(getOficinaActiva(request));
 
+        OficioPendienteBusquedaForm oficioPendienteBusquedaForm = new OficioPendienteBusquedaForm(re,1);
+
+        model.addAttribute("oficinasRegistro", oficinaEjb.oficinasRegistro(getLibrosRegistroEntrada(request)));
         model.addAttribute("librosRegistro", getLibrosRegistroEntrada(request)); // Obtenemos los Libros donde el Usuario puede Registrar de la Oficina Activa
         model.addAttribute("registroEntradaBusqueda", oficioPendienteBusquedaForm);
         model.addAttribute("tipo", "Interna");
@@ -167,10 +172,11 @@ public class OficioRemisionController extends BaseController {
         Set<Organismo> organismos = new HashSet<Organismo>(getOrganismosOficinaActiva(request));
 
         // Obtenemos los Registros de Entrada, pendientes de tramitar por medio de un Oficio de Revisión, agrupados según su Organismos destinatario.
-        List<OficiosRemisionInternoOrganismo> oficiosRemisionOrganismos = registroEntradaEjb.oficiosPendientesRemisionInterna(busqueda.getAnyo(), registroEntrada.getLibro(), getOrganismosOficioRemision(request, organismos));
+        List<OficiosRemisionInternoOrganismo> oficiosRemisionOrganismos = registroEntradaEjb.oficiosPendientesRemisionInterna(busqueda.getAnyo(),registroEntrada.getOficina().getId(), registroEntrada.getLibro().getId(), getOrganismosOficioRemision(request, organismos));
 
         busqueda.setPageNumber(1);
         mav.addObject("oficiosRemisionOrganismos", oficiosRemisionOrganismos);
+        mav.addObject("oficinasRegistro", oficinaEjb.oficinasRegistro(getLibrosRegistroEntrada(request)));
         mav.addObject("librosRegistro", getLibrosRegistroEntrada(request)); // Obtenemos los Libros donde el Usuario puede Registrar de la Oficina Activa
         mav.addObject("registroEntradaBusqueda", busqueda);
         mav.addObject("registroEntradaListForm", new RegistroEntradaListForm());
@@ -191,8 +197,13 @@ public class OficioRemisionController extends BaseController {
 
         ModelAndView mav = new ModelAndView("registroEntrada/oficiosPendientesRemisionExternaList");
 
-        OficioPendienteBusquedaForm oficioPendienteBusquedaForm = new OficioPendienteBusquedaForm(new RegistroEntrada(),1);
+        // Fijamos la oficina activa como la seleccionada por defecto
+        RegistroEntrada re = new RegistroEntrada();
+        re.setOficina(getOficinaActiva(request));
 
+        OficioPendienteBusquedaForm oficioPendienteBusquedaForm = new OficioPendienteBusquedaForm(re,1);
+
+        mav.addObject("oficinasRegistro", oficinaEjb.oficinasRegistro(getLibrosRegistroEntrada(request)));
         model.addAttribute("librosRegistro", getLibrosRegistroEntrada(request)); // Obtenemos los Libros donde el Usuario puede Registrar de la Oficina Activa
         model.addAttribute("registroEntradaBusqueda", oficioPendienteBusquedaForm);
         model.addAttribute("anys", getAnys());
@@ -219,10 +230,11 @@ public class OficioRemisionController extends BaseController {
         Entidad entidadActiva = getEntidadActiva(request);
 
         // Obtenemos los Registros de Entrada, pendientes de tramitar por medio de un Oficio de Revisión, agrupados según su Organismos destinatario.
-        List<OficiosRemisionOrganismo> oficiosRemisionOrganismos = registroEntradaEjb.oficiosPendientesRemisionExterna(busqueda.getAnyo(), registroEntrada.getLibro(), entidadActiva);
+        List<OficiosRemisionOrganismo> oficiosRemisionOrganismos = registroEntradaEjb.oficiosPendientesRemisionExterna(busqueda.getAnyo(), registroEntrada.getOficina().getId(), registroEntrada.getLibro().getId(), entidadActiva);
 
         busqueda.setPageNumber(1);
         mav.addObject("oficiosRemisionOrganismos", oficiosRemisionOrganismos);
+        mav.addObject("oficinasRegistro", oficinaEjb.oficinasRegistro(getLibrosRegistroEntrada(request)));
         mav.addObject("librosRegistro", librosRegistro);
         mav.addObject("registroEntradaBusqueda", busqueda);
         mav.addObject("tipo", "Externa");
