@@ -86,7 +86,7 @@ public class PropiedadGlobalController extends BaseController {
      * Carga el formulario para un nuevo {@link es.caib.regweb3.model.PropiedadGlobal}
      */
     @RequestMapping(value = "/new", method = RequestMethod.GET)
-    public String nuevoPersona(Model model, HttpServletRequest request) throws Exception {
+    public String nuevoPropiedad(Model model, HttpServletRequest request) throws Exception {
 
         Entidad entidad = getEntidadActiva(request);
         PropiedadGlobal propiedadGlobal = null;
@@ -107,7 +107,7 @@ public class PropiedadGlobalController extends BaseController {
      * Guardar una nueva {@link es.caib.regweb3.model.PropiedadGlobal}
      */
     @RequestMapping(value = "/new", method = RequestMethod.POST)
-    public String nuevoPersona(@ModelAttribute PropiedadGlobal propiedadGlobal, BindingResult result,
+    public String nuevoPropiedad(@ModelAttribute PropiedadGlobal propiedadGlobal, BindingResult result,
                                SessionStatus status, HttpServletRequest request) {
 
 
@@ -138,7 +138,7 @@ public class PropiedadGlobalController extends BaseController {
      * Carga el formulario para modificar una {@link es.caib.regweb3.model.PropiedadGlobal}
      */
     @RequestMapping(value = "/{propiedadGlobalId}/edit", method = RequestMethod.GET)
-    public String editarPersona(@PathVariable("propiedadGlobalId") Long propiedadGlobalId, Model model, HttpServletRequest request) {
+    public String editarPropiedad(@PathVariable("propiedadGlobalId") Long propiedadGlobalId, Model model, HttpServletRequest request) {
 
         PropiedadGlobal propiedadGlobal = null;
 
@@ -157,7 +157,7 @@ public class PropiedadGlobalController extends BaseController {
      * Editar una {@link es.caib.regweb3.model.PropiedadGlobal}
      */
     @RequestMapping(value = "/{propiedadGlobalId}/edit", method = RequestMethod.POST)
-    public String editarPersona(@ModelAttribute @Valid PropiedadGlobal propiedadGlobal, BindingResult result,
+    public String editarPropiedad(@ModelAttribute @Valid PropiedadGlobal propiedadGlobal, BindingResult result,
                                 SessionStatus status, HttpServletRequest request) {
 
         propiedadGlobalValidator.validate(propiedadGlobal, result);
@@ -187,7 +187,7 @@ public class PropiedadGlobalController extends BaseController {
      * Eliminar una {@link es.caib.regweb3.model.PropiedadGlobal}
      */
     @RequestMapping(value = "/{propiedadGlobalId}/delete")
-    public String eliminarPersona(@PathVariable Long propiedadGlobalId, HttpServletRequest request) {
+    public String eliminarPropiedad(@PathVariable Long propiedadGlobalId, HttpServletRequest request) {
 
         try {
 

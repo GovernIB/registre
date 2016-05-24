@@ -56,11 +56,12 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
     public String nuevoRegistroSalida(Model model, HttpServletRequest request) throws Exception {
 
         Oficina oficina = getOficinaActiva(request);
-        Entidad entidadActiva = getEntidadActiva(request);
 
         RegistroSalida registroSalida = new RegistroSalida();
         registroSalida.setRegistroDetalle(new RegistroDetalle());
         registroSalida.setOficina(oficina);
+
+        Set<Organismo> organismosOficinaActiva = new HashSet<Organismo>(getOrganismosOficinaActiva(request));
 
         //Eliminamos los posibles interesados de la Sesion
         eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_SALIDA);
@@ -70,10 +71,8 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         model.addAttribute(oficina);
         model.addAttribute("registroSalida",registroSalida);
         model.addAttribute("libros", getLibrosRegistroSalida(request));
-        model.addAttribute("organismosOficinaActiva", getOrganismosOficinaActiva(request));
+        model.addAttribute("organismosOficinaActiva", organismosOficinaActiva);
         model.addAttribute("oficinasOrigen",  getOficinasOrigen(request));
-        //model.addAttribute("personasFisicas", personaEjb.getFisicasByEntidad(entidadActiva.getId()));
-        //model.addAttribute("personasJuridicas", personaEjb.getJuridicasByEntidad(entidadActiva.getId()));
 
         return "registroSalida/registroSalidaForm";
     }
@@ -110,8 +109,6 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
             model.addAttribute(getOficinaActiva(request));
             model.addAttribute("oficinasOrigen",  getOficinasOrigen(request));
             model.addAttribute("libros", getLibrosRegistroSalida(request));
-            //model.addAttribute("personasFisicas", personaEjb.getFisicasByEntidad(entidad.getId()));
-            //model.addAttribute("personasJuridicas", personaEjb.getJuridicasByEntidad(entidad.getId()));
 
             // Organismo origen: Select
             log.info("Origen: " + registroSalida.getOrigen().getCodigo());

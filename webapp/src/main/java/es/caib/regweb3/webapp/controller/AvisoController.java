@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -51,7 +52,7 @@ public class AvisoController extends BaseController {
 
         if(isOperador(request) && oficinaActiva != null) {
 
-            Set<Organismo> organismosOficiaActiva = getOrganismosOficinaActiva(request);
+            Set<Organismo> organismosOficiaActiva = new HashSet<Organismo>(getOrganismosOficinaActiva(request));
 
             List<Libro> librosAdministrados = getLibrosAdministrados(request);
             List<Libro> librosRegistro = getLibrosRegistroEntrada(request);

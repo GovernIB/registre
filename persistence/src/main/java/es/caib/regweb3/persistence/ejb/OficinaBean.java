@@ -200,6 +200,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
     @Override
     public List<Oficina> findByEntidadByEstado(Long idEntidad, String estado) throws Exception{
+
         Query q = em.createQuery("Select oficina.id, oficina.codigo, oficina.denominacion from Oficina as oficina where " +
                 "oficina.organismoResponsable.entidad.id =:idEntidad and oficina.estado.codigoEstadoEntidad=:estado");
 
@@ -213,6 +214,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
             Oficina oficina = new Oficina((Long)object[0],(String)object[1],(String)object[2]);
             oficinas.add(oficina);
         }
+
         return oficinas;
     }
 

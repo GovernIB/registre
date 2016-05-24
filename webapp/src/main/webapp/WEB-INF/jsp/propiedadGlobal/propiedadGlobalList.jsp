@@ -76,11 +76,13 @@
                                     <colgroup>
                                         <col>
                                         <col>
+                                        <col>
                                         <col width="100">
                                     </colgroup>
                                     <thead>
                                     <tr>
                                         <th><spring:message code="propiedadGlobal.clave"/></th>
+                                        <th><spring:message code="propiedadGlobal.descripcion"/></th>
                                         <th><spring:message code="propiedadGlobal.valor"/></th>
                                         <th class="center"><spring:message code="regweb.acciones"/></th>
                                     </tr>
@@ -90,6 +92,7 @@
                                     <c:forEach var="propiedadGlobal" items="${listado}">
                                         <tr>
                                             <td>${propiedadGlobal.clave}</td>
+                                            <td>${propiedadGlobal.descripcion}</td>
                                             <td>${propiedadGlobal.valor}</td>
                                             <td class="center">
                                                 <a class="btn btn-warning btn-sm"

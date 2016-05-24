@@ -41,7 +41,7 @@ public class HistoricoRegistroEntrada implements Serializable {
         this.estado = estado;
         this.fecha = fecha;
         this.modificacion = modificacion;
-        this.usuario = new UsuarioEntidad(usuarioEntidad, usuario);
+        this.usuario = new UsuarioEntidad(usuarioEntidad, usuario,null);
     }
 
     @Id

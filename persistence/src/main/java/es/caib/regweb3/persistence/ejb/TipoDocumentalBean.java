@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.TipoDocumental;
+import es.caib.regweb3.model.TraduccionTipoDocumental;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -111,7 +112,7 @@ public class TipoDocumentalBean extends BaseEjbJPA<TipoDocumental, Long> impleme
 
     }
   
-     @Override
+    @Override
     public TipoDocumental findByCodigoNTI(String codigo) throws Exception {
 
         Query q = em.createQuery("Select tipoDocumental from TipoDocumental as tipoDocumental where tipoDocumental.codigoNTI = :codigo");
@@ -139,6 +140,19 @@ public class TipoDocumentalBean extends BaseEjbJPA<TipoDocumental, Long> impleme
         }
 
         return tipos.size();
+    }
+
+    @Override
+    public TipoDocumental nuevoTraduccion(String codigo, Long idEntidad, String nombreCa, String nombreES) throws Exception {
+
+        TipoDocumental tipoDocumental = new TipoDocumental(codigo, idEntidad);
+        TraduccionTipoDocumental tra1 = new TraduccionTipoDocumental(nombreCa);
+        TraduccionTipoDocumental tra2 = new TraduccionTipoDocumental(nombreES);
+        tipoDocumental.setTraduccion("ca", tra1);
+        tipoDocumental.setTraduccion("es", tra2);
+
+        return  persist(tipoDocumental);
+
     }
 
 }

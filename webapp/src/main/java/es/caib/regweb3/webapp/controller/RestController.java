@@ -45,6 +45,9 @@ public class RestController {
     @EJB(mappedName = "regweb3/PersonaEJB/local")
     public PersonaLocal personaEjb;
 
+    @EJB(mappedName = "regweb3/ReproEJB/local")
+    public ReproLocal reproEjb;
+
 
     @RequestMapping(value = "/busquedaPersonas/{tipoPersona}", method = RequestMethod.GET)
     public
@@ -170,6 +173,16 @@ public class RestController {
 
         return provincias;
 
+    }
+
+    /**
+     * Obtiene las {@link es.caib.regweb3.model.Repro} de un {@link es.caib.regweb3.model.UsuarioEntidad}
+     */
+    @RequestMapping(value = "/obtenerRepros", method = RequestMethod.GET)
+    public @ResponseBody
+    List<Repro> obtenerRepros(@RequestParam Long idUsuario, @RequestParam Long tipoRegistro) throws Exception {
+
+        return reproEjb.getActivasbyUsuario(idUsuario, tipoRegistro);
     }
 
 

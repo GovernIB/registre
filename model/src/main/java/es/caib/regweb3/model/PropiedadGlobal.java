@@ -28,14 +28,16 @@ public class PropiedadGlobal implements Serializable {
 
     }
 
-    public PropiedadGlobal(String id) {
-        this.id = Long.valueOf(id);
-    }
-
     public PropiedadGlobal(Long idEntidad) {
         this.entidad = idEntidad;
     }
 
+    public PropiedadGlobal(String clave, String valor, String descripcion, Long entidad) {
+        this.clave = clave;
+        this.valor = valor;
+        this.descripcion = descripcion;
+        this.entidad = entidad;
+    }
 
     @Column(name = "ID")
     @Id

@@ -80,12 +80,13 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * Busca los RegistroEntrada pendientes de tramitar mediante un OficioRemision INTERNI
      * y los agrupa según su Organismo destinatario.
      * @param any
-     * @param libro
+     * @param idOficina
+     * @param idLibro
      * @param organismos Lista con los Destinatarios que no se consideran Oficio de Remisión
      * @return
      * @throws Exception
      */
-    public List<OficiosRemisionInternoOrganismo> oficiosPendientesRemisionInterna(Integer any, Libro libro, Set<Long> organismos) throws Exception;
+    public List<OficiosRemisionInternoOrganismo> oficiosPendientesRemisionInterna(Integer any, Long idOficina, Long idLibro, Set<Long> organismos) throws Exception;
 
     /**
      * Cuenta los Oficios pendientes de Remisión Interna de un conjunto de Libros
@@ -118,12 +119,13 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * Busca los RegistroEntrada pendientes de tramitar mediante un OficioRemision EXTERNO, es decir, cuyo Organismo destino
      * no pertenece a la Entidad Activa y los agrupa según su Organismo destinatario.
      * @param any
-     * @param libro
+     * @param idOficina
+     * @param idLibro
      * @param entidadActiva
      * @return
      * @throws Exception
      */
-    public List<OficiosRemisionOrganismo> oficiosPendientesRemisionExterna(Integer any, Libro libro, Entidad entidadActiva) throws Exception;
+    public List<OficiosRemisionOrganismo> oficiosPendientesRemisionExterna(Integer any, Long idOficina, Long idLibro, Entidad entidadActiva) throws Exception;
 
     /**
      * Cuenta los Oficios pendientes de Remisión Externa de un conjunto de Libros
@@ -137,11 +139,12 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * Busca Oficios de Remisión de un Organismo propio, según los parámetros.
      * @param idOrganismo
      * @param any
+     * @param idOficina
      * @param idLibro
      * @return
      * @throws Exception
      */
-    public List<RegistroEntrada> oficiosRemisionByOrganismoPropio(Long idOrganismo, Integer any, Long idLibro) throws Exception;
+    public List<RegistroEntrada> oficiosRemisionByOrganismoPropio(Long idOrganismo, Integer any, Long idOficina, Long idLibro) throws Exception;
 
     /**
      * Busca Oficios de Remisión de un Organismo externo, según los parámetros.
@@ -151,7 +154,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public List<RegistroEntrada> oficiosRemisionByOrganismoExterno(String codigoOrganismo, Integer any, Long idLibro) throws Exception;
+    public List<RegistroEntrada> oficiosRemisionByOrganismoExterno(String codigoOrganismo, Integer any, Long idOficina, Long idLibro) throws Exception;
 
     /**
      * Busca los Registros de Entrada en función de varios parámetros

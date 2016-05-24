@@ -143,7 +143,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
         List<UsuarioEntidad> usuarios = new ArrayList<UsuarioEntidad>();
 
         for (Object[] object : result) {
-            UsuarioEntidad usuarioEntidad = new UsuarioEntidad((Long) object[0], (Usuario) object[1]);
+            UsuarioEntidad usuarioEntidad = new UsuarioEntidad((Long) object[0], (Usuario) object[1], null);
 
             usuarios.add(usuarioEntidad);
         }
@@ -324,7 +324,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
         List<UsuarioEntidad> usuarios = new ArrayList<UsuarioEntidad>();
 
         for (Object[] object : result) {
-            UsuarioEntidad usuarioEntidad = new UsuarioEntidad((Long) object[0], (Usuario) object[1]);
+            UsuarioEntidad usuarioEntidad = new UsuarioEntidad((Long) object[0], (Usuario) object[1], null);
 
             usuarios.add(usuarioEntidad);
         }

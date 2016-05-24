@@ -81,6 +81,9 @@ public class EntidadController extends BaseController {
     @EJB(mappedName = "regweb3/UsuarioEJB/local")
     public UsuarioLocal usuarioEjb;
 
+    @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
+    public TipoDocumentalLocal tipoDocumentalEjb;
+
     /**
      * Listado de todas las Entidades
      */
@@ -181,15 +184,9 @@ public class EntidadController extends BaseController {
 
             try {
                 Entidad entidad = entidadForm.getEntidad();
-                //Guardamos la nueva Entidad
-                entidad = entidadEjb.persist(entidad);
 
-                // Creamos el UsuarioEntidad del propietario
-                UsuarioEntidad usuarioEntidad = new UsuarioEntidad();
-                usuarioEntidad.setEntidad(entidad);
-                usuarioEntidad.setUsuario(entidad.getPropietario());
-
-                usuarioEntidadEjb.persist(usuarioEntidad);
+                //Guardamos la nueva Entidad y sus propiedades por defecto
+                entidad = entidadEjb.nuevaEntidad(entidad);
 
                 Mensaje.saveMessageInfo(request, getMessage("regweb.guardar.registro"));
             }catch (Exception e) {

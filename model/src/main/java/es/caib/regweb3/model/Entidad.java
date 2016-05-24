@@ -71,18 +71,15 @@ public class Entidad implements Serializable {
     @XmlTransient
     private Integer posYsello;
     
-    
 
-    /**
-     * 
-     */
     public Entidad() {
       super();
     }
-    
-    
-    
 
+
+    public Entidad(Long id) {
+        this.id = id;
+    }
 
 
     /**
