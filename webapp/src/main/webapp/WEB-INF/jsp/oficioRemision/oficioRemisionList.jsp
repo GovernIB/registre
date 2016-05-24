@@ -134,7 +134,6 @@
                                                         <tr>
                                                             <th><spring:message code="oficioRemision.numeroOficio"/></th>
                                                             <th><spring:message code="oficioRemision.fecha"/></th>
-                  <%--                                          <th><spring:message code="oficioRemision.libro.corto"/></th>--%>
                                                             <th><spring:message code="oficioRemision.oficina"/></th>
                                                             <th><spring:message code="oficioRemision.organismoDestino"/></th>
                                                             <th><spring:message code="oficioRemision.numero.re"/></th>
@@ -149,12 +148,14 @@
                                                             <tr>
                                                                 <td><fmt:formatDate value="${oficioRemision.fecha}" pattern="yyyy"/> / ${oficioRemision.numeroOficio}</td>
                                                                 <td><fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy"/></td>
-                                                                <%--<td>${oficioRemision.libro.nombreCompleto}</td>--%>
                                                                 <td><label class="no-bold" rel="ayuda" data-content="${oficioRemision.oficina.denominacion}" data-toggle="popover">${oficioRemision.oficina.codigo}</label></td>
                                                                 <td>${(empty oficioRemision.organismoDestinatario)? oficioRemision.destinoExternoDenominacion : oficioRemision.organismoDestinatario.denominacion}</td>
                                                                 <td>${fn:length(oficioRemision.registrosEntrada)}</td>
                                                                 <td>
-                                                                    <span class="label ${(oficioRemision.estado == 2)?'label-success':'label-danger'}">
+                                                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_INTERNO_ESTADO_ENVIADO}"><span class="label label-warning"></c:if>
+                                                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ESTADO_ENVIADO}"><span class="label label-warning"></c:if>
+                                                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ESTADO_ACEPTADO}"><span class="label label-success"></c:if>
+                                                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ESTADO_ANULADO}"><span class="label label-danger"></c:if>
                                                                       <spring:message code="oficioRemision.estado.${oficioRemision.estado}"/>
                                                                       <c:if test="${not empty oficioRemision.fechaEstado && oficioRemision.estado != 0}">
                                                                           - <fmt:formatDate value="${oficioRemision.fechaEstado}" pattern="dd/MM/yyyy HH:mm:ss"/>
@@ -162,7 +163,7 @@
                                                                     </span>
                                                                 </td>
                                                                 <td>
-                                                                    <span class="label label-warning">
+                                                                    <span class="label label-default">
                                                                         <c:if test="${not empty oficioRemision.organismoDestinatario}">
                                                                             <spring:message
                                                                                     code="oficioRemision.interno"/>

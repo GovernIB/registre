@@ -1,7 +1,6 @@
 package es.caib.regweb3.webapp.controller.informe;
 
 import es.caib.regweb3.model.*;
-import es.caib.regweb3.model.utils.ObjetoBasico;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
@@ -1247,10 +1246,9 @@ public class InformeController extends AbstractRegistroCommonFormController {
 
         // Es operador
         if(isOperador(request)){
-            Set<ObjetoBasico> llistaOficines = getOficinasAutenticado(request);
-            for(ObjetoBasico ofi:llistaOficines){
-                Oficina oficina = new Oficina(ofi.getId(),"",ofi.getNombre());
-                oficinas.add(oficina);
+            LinkedHashSet<Oficina> llistaOficines = getOficinasAutenticado(request);
+            for(Oficina ofi:llistaOficines){
+                oficinas.add(ofi);
             }
         }
 

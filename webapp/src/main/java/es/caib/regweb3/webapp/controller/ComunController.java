@@ -1,7 +1,6 @@
 package es.caib.regweb3.webapp.controller;
 
 import es.caib.regweb3.model.*;
-import es.caib.regweb3.model.utils.ObjetoBasico;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.sir.ws.api.manager.FicheroIntercambioManager;
 import es.caib.regweb3.sir.ws.api.manager.impl.FicheroIntercambioManagerImpl;
@@ -18,8 +17,8 @@ import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Fundació BIT.
@@ -118,11 +117,11 @@ public class ComunController extends BaseController {
 
         HttpSession session = request.getSession();
 
-        Set<ObjetoBasico> oficinasAutenticado = getOficinasAutenticado(request);
+        LinkedHashSet<Oficina> oficinasAutenticado = getOficinasAutenticado(request);
 
         try {
             Oficina oficinaNueva = oficinaEjb.findById(oficinaId);
-            if(oficinasAutenticado.contains(new ObjetoBasico(oficinaNueva.getId()))){
+            if(oficinasAutenticado.contains(new Oficina(oficinaNueva.getId()))){
                 usuarioService.cambiarOficinaActiva(oficinaNueva,session);
                 log.info("Cambio Oficina activa: " + oficinaNueva.getDenominacion() + " - " + oficinaNueva.getCodigo());
             }else{

@@ -2,7 +2,6 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.model.Oficina;
-import es.caib.regweb3.model.utils.ObjetoBasico;
 import es.caib.regweb3.persistence.utils.Paginacion;
 
 import javax.annotation.security.RolesAllowed;
@@ -66,7 +65,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @return
      * @throws Exception
      */
-    public List<ObjetoBasico> findByOrganismoResponsableVO(Long idOrganismo) throws Exception;
+    public List<Oficina> findByOrganismoResponsableVO(Long idOrganismo) throws Exception;
 
     /**
      * Obtiene las Oficinas cuya Entidad responsable es la indicada
@@ -118,7 +117,15 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @return
      * @throws Exception
      */
-    public LinkedHashSet<ObjetoBasico> oficinasRegistro(List<Libro> libros) throws Exception;
+    public LinkedHashSet<Oficina> oficinasRegistro(List<Libro> libros) throws Exception;
+
+    /**
+     * Obtiene las Oficinas que dan Servicio a un determinado Organismo
+     * @param idOrganismo
+     * @return
+     * @throws Exception
+     */
+    public LinkedHashSet<Oficina> oficinasRegistroOrganismo(Long idOrganismo) throws Exception;
 
     /**
      * Elimina las Oficinas de una Entidad

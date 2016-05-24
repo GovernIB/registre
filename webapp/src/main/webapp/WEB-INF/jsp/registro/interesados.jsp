@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
-<un:useConstants var="RegwebConstantes" className="es.caib.regweb3.utils.RegwebConstantes"/>
 
 <%--CONFIGURACIONES SEGÚN EL TIPO DE REGISTRO--%>
 <c:if test="${param.tipoRegistro == 'entrada'}">

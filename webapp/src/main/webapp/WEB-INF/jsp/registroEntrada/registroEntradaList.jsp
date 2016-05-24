@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
-<un:useConstants var="RegwebConstantes" className="es.caib.regweb3.utils.RegwebConstantes"/>
 
 <!DOCTYPE html>
 <html lang="ca">

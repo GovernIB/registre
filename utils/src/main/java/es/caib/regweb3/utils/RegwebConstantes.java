@@ -522,6 +522,8 @@ public interface RegwebConstantes {
     
     public static final int OFICIO_REMISION_ESTADO_REENVIADO = 4;
 
+    public static final int OFICIO_REMISION_ESTADO_ANULADO = 5;
+
 
     /* -------------- TIPO PREREGISTRO -------------*/
     public static final Long PREREGISTRO_ENTRADA = 0L;

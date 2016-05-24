@@ -8,6 +8,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -60,10 +61,18 @@ public class ModeloOficioRemisionBean extends BaseEjbJPA<ModeloOficioRemision, L
     @Override
     public List<ModeloOficioRemision> getByEntidad(Long idEntidad) throws Exception {
 
-        Query q = em.createQuery("Select modeloOficioRemision from ModeloOficioRemision as modeloOficioRemision where modeloOficioRemision.entidad.id = :idEntidad");
+        Query q = em.createQuery("Select modelo.id, modelo.nombre from ModeloOficioRemision as modelo where modelo.entidad.id = :idEntidad");
         q.setParameter("idEntidad",idEntidad);
 
-        return q.getResultList();
+        List<ModeloOficioRemision> modelos =  new ArrayList<ModeloOficioRemision>();
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result){
+            modelos.add(new ModeloOficioRemision((Long) object[0], (String) object[1]));
+        }
+
+        return modelos;
     }
 
 

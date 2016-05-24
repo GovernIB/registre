@@ -1,7 +1,6 @@
 package es.caib.regweb3.webapp.utils;
 
 import es.caib.regweb3.model.*;
-import es.caib.regweb3.model.utils.ObjetoBasico;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.login.RegwebLoginPluginManager;
@@ -270,13 +269,13 @@ public class UsuarioService {
         session.setAttribute(RegwebConstantes.SESSION_LIBROSADMINISTRADOS, librosAdministrados);
 
         // Obtenemos las Oficinas que pueden registrar en los Libros
-        Set<ObjetoBasico> oficinasRegistro = oficinaEjb.oficinasRegistro(librosRegistro);  // Utilizamos un Set porque no permite duplicados
+        LinkedHashSet<Oficina> oficinasRegistro = oficinaEjb.oficinasRegistro(librosRegistro);  // Utilizamos un Set porque no permite duplicados
 
         log.info("Oficinas registro usuario: " + Arrays.toString(oficinasRegistro.toArray()));
         session.setAttribute(RegwebConstantes.SESSION_OFICINAS,oficinasRegistro);
 
         // Comprobamos la última Oficina utilizada por el usuario
-        if(usuarioEntidad.getUltimaOficina()!= null && oficinasRegistro.contains(new ObjetoBasico(usuarioEntidad.getUltimaOficina().getId()))){
+        if(usuarioEntidad.getUltimaOficina()!= null && oficinasRegistro.contains(new Oficina(usuarioEntidad.getUltimaOficina().getId()))){
             session.setAttribute(RegwebConstantes.SESSION_OFICINA,oficinaEjb.findById(usuarioEntidad.getUltimaOficina().getId()));
 
         }else if(oficinasRegistro.size() > 0){

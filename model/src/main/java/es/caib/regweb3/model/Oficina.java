@@ -331,9 +331,8 @@ public class Oficina implements Serializable{
 
         Oficina oficina = (Oficina) o;
 
-        if (id != null ? !id.equals(oficina.id) : oficina.id != null) return false;
+        return id != null ? id.equals(oficina.id) : oficina.id == null;
 
-        return true;
     }
 
     @Override

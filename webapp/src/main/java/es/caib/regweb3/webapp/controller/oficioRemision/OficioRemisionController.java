@@ -525,11 +525,31 @@ public class OficioRemisionController extends BaseController {
         model.addAttribute(oficioRemision);
         //model.addAttribute("registrosEntrada",registrosEntrada);
         model.addAttribute("trazabilidades", trazabilidades);
-
+        model.addAttribute("isAdministradorLibro", permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(), oficioRemision.getLibro().getId()));
         ModeloOficioRemision modeloOficioRemision = new ModeloOficioRemision();
         model.addAttribute("modeloOficioRemision", modeloOficioRemision);
+        model.addAttribute("modelosOficioRemision", modeloOficioRemisionEjb.getByEntidad(getEntidadActiva(request).getId()));
 
         return "oficioRemision/oficioRemisionDetalle";
+    }
+
+    /**
+     * Anula un {@link es.caib.regweb3.model.OficioRemision}
+     */
+    @RequestMapping(value = "/{idOficioRemision}/anular", method = RequestMethod.GET)
+    public String anularOficioRemision(@PathVariable Long idOficioRemision, Model model, HttpServletRequest request) throws Exception {
+
+        OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
+
+        if(permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(), oficioRemision.getLibro().getId()) &&
+                oficioRemision.getEstado() == RegwebConstantes.OFICIO_REMISION_INTERNO_ESTADO_ENVIADO){
+            oficioRemisionEjb.anularOficioRemision(idOficioRemision);
+            Mensaje.saveMessageInfo(request, getMessage("aviso.oficioRemision.anulado"));
+        }else{
+            Mensaje.saveMessageError(request, getMessage("aviso.oficioRemision.anular"));
+        }
+
+        return "redirect:/oficioRemision/"+idOficioRemision+"/detalle";
     }
 
     /**
@@ -604,6 +624,7 @@ public class OficioRemisionController extends BaseController {
 
         model.addAttribute("oficioPendienteLlegadaForm", new OficioPendienteLlegadaForm());
         model.addAttribute("modeloOficioRemision", new ModeloOficioRemision());
+        model.addAttribute("modelosOficioRemision", modeloOficioRemisionEjb.getByEntidad(getEntidadActiva(request).getId()));
 
         return "oficioRemision/oficioRemisionProcesar";
     }
@@ -651,9 +672,5 @@ public class OficioRemisionController extends BaseController {
         return "oficioRemision/oficioRemisionProcesado";
     }
 
-    @ModelAttribute("modelosOficioRemision")
-    public List<ModeloOficioRemision> modelosOficioRemision(HttpServletRequest request) throws Exception {
-        return modeloOficioRemisionEjb.getByEntidad(getEntidadActiva(request).getId());
-    }
 }
 

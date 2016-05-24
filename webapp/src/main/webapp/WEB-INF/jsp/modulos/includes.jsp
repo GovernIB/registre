@@ -6,3 +6,4 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="i" uri="http://www.ibit.org/itaglib" %>
 <%@ taglib prefix="un" uri="http://jakarta.apache.org/taglibs/unstandard-1.0" %>
+<un:useConstants var="RegwebConstantes" className="es.caib.regweb3.utils.RegwebConstantes"/>

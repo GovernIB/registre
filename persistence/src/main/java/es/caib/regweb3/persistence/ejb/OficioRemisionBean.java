@@ -208,6 +208,18 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     }
 
     @Override
+    public void anularOficioRemision(Long idOficioRemision) throws Exception{
+
+        OficioRemision oficioRemision = findById(idOficioRemision);
+
+        oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_ESTADO_ANULADO);
+
+        merge(oficioRemision);
+        // Anular RS
+        // C
+    }
+
+    @Override
     public List<OficioRemision> oficiosPendientesLlegada(Set<Organismo> organismos, Integer total) throws Exception {
 
         Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision "

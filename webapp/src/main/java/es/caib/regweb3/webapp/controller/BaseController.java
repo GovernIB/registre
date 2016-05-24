@@ -1,7 +1,6 @@
 package es.caib.regweb3.webapp.controller;
 
 import es.caib.regweb3.model.*;
-import es.caib.regweb3.model.utils.ObjetoBasico;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
@@ -206,11 +205,11 @@ public class BaseController {
      * @return
      */
     @SuppressWarnings(value = "unchecked")
-    protected Set<ObjetoBasico> getOficinasAutenticado(HttpServletRequest request){
+    protected LinkedHashSet<Oficina> getOficinasAutenticado(HttpServletRequest request){
 
         HttpSession session = request.getSession();
 
-        return (Set<ObjetoBasico>) session.getAttribute(RegwebConstantes.SESSION_OFICINAS);
+        return (LinkedHashSet<Oficina>) session.getAttribute(RegwebConstantes.SESSION_OFICINAS);
 
     }
     
