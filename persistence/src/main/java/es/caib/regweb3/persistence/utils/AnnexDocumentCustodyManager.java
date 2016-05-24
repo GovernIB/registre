@@ -14,7 +14,8 @@ import org.fundaciobit.plugins.utils.PluginsManager;
  * User: anadal
  * Date: 31/07/13
  */
-// TODO  Moure a EJB i ficar-ho dins del bean AnexoBean !!! 
+// TODO  Borrar
+// Aquesta clase ja no s'emplea, es varen moure al AnexoBean les seves funcionalitats.
 public class AnnexDocumentCustodyManager {
 
 
