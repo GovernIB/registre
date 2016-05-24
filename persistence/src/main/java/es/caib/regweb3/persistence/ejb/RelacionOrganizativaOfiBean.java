@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -32,6 +33,9 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
 
     @PersistenceContext
     private EntityManager em;
+
+    @EJB
+    private CatServicioLocal catServicioLocalEjb;
 
     @Override
     public RelacionOrganizativaOfi findById(RelacionOrganizativaOfiPK id) throws Exception {
@@ -100,10 +104,12 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
     public List<ObjetoBasico> getOficinasByOrganismoVO(Long idOrganismo) throws Exception {
 
         Query q = em.createQuery("Select distinct roo.oficina.id,roo.oficina.denominacion as nombre  from RelacionOrganizativaOfi as roo " +
-                "where roo.organismo.id = :idOrganismo and roo.estado.codigoEstadoEntidad = :vigente");
+                "where roo.organismo.id = :idOrganismo and roo.estado.codigoEstadoEntidad = :vigente and " +
+                ":oficinaVirtual not in elements(roo.oficina.servicios)");
 
         q.setParameter("idOrganismo", idOrganismo);
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        q.setParameter("oficinaVirtual",catServicioLocalEjb.findByCodigo(RegwebConstantes.REGISTRO_VIRTUAL_NO_PRESENCIAL));
 
         List<ObjetoBasico> oficinas =  new ArrayList<ObjetoBasico>();
 
