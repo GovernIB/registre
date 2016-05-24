@@ -107,7 +107,6 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         }
 
         return organismos;
-
     }
 
 
