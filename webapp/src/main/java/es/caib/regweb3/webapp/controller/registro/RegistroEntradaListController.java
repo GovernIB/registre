@@ -27,7 +27,10 @@ import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.List;
 
 /**
  * Created by Fundació BIT.
@@ -74,9 +77,13 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         // Obtenemos los Libros donde el usuario tiene permisos de Consulta
         List<Libro> librosConsulta = getLibrosConsultaEntradas(request);
 
-        Set<Organismo> organismosOficinaActiva = new HashSet<Organismo>(getOrganismosOficinaActiva(request));
+        LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
-        RegistroEntradaBusqueda registroEntradaBusqueda = new RegistroEntradaBusqueda(new RegistroEntrada(),1);
+        // Fijamos un Libro por defecto
+        RegistroEntrada registroEntrada = new RegistroEntrada();
+        registroEntrada.setLibro(seleccionarLibroOficinaActiva(request,librosConsulta));
+
+        RegistroEntradaBusqueda registroEntradaBusqueda = new RegistroEntradaBusqueda(registroEntrada,1);
         registroEntradaBusqueda.setFechaInicio(new Date());
         registroEntradaBusqueda.setFechaFin(new Date());
 
@@ -129,7 +136,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             lopdEjb.insertarRegistrosEntrada(paginacion, usuarioEntidad.getId());
         }
 
-        Set<Organismo> organismosOficinaActiva = new HashSet<Organismo>(getOrganismosOficinaActiva(request));
+        LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
         // Comprobamos si el Organismo destinatario es externo, para añadirlo a la lista.
         if (!StringUtils.isEmpty(busqueda.getOrganDestinatari())) {
@@ -170,7 +177,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         Entidad entidadActiva = getEntidadActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         Oficina oficinaActiva = getOficinaActiva(request);
-        Set<Organismo> organismosOficinaActiva = new HashSet<Organismo>(getOrganismosOficinaActiva(request));
+        LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
         model.addAttribute("registro",registro);
         model.addAttribute("oficina", getOficinaActiva(request));
@@ -364,7 +371,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
             RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
             UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-            Set<Organismo> organismosOficinaActiva = new HashSet<Organismo>(getOrganismosOficinaActiva(request));
+            LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
 
             // Comprobamos si el RegistroEntrada tiene el estado Válido
@@ -413,7 +420,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         RespuestaDistribucion respuestaDistribucion = new RespuestaDistribucion();
         respuestaDistribucion.setDestinatarios(null);
 
-        Set<Organismo> organismosOficinaActiva = new HashSet<Organismo>(getOrganismosOficinaActiva(request));
+        LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
         // Comprobamos si el RegistroEntrada tiene el estado Válido
         if (!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)) {

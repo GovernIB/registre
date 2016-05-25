@@ -508,13 +508,25 @@ public interface RegwebConstantes {
     public static final Long TIPO_OFICIO_REMISION_INTERNO = 1L;
     public static final Long TIPO_OFICIO_REMISION_EXTERNO = 2L;
 
+    public static final Long[] TIPOS_OFICIO_REMISION = {
+            TIPO_OFICIO_REMISION_INTERNO,
+            TIPO_OFICIO_REMISION_EXTERNO
+    };
+
     /* -------- ESTADO DE UN OFICIO DE REMISION ---------- */
-    public static final int OFICIO_REMISION_INTERNO_ENVIADO = 0;
-    public static final int OFICIO_REMISION_ENVIADO = 1;
-    public static final int OFICIO_REMISION_ACEPTADO = 2;
-    public static final int OFICIO_REMISION_RECHAZADO = 3;
-    public static final int OFICIO_REMISION_REENVIADO = 4;
-    public static final int OFICIO_REMISION_ANULADO = 5;
+    public static final int OFICIO_REMISION_INTERNO_ENVIADO = 0; // Interno
+    public static final int OFICIO_REMISION_ENVIADO = 1; // Externo
+    public static final int OFICIO_REMISION_ACEPTADO = 2; // Interno y Externo
+    public static final int OFICIO_REMISION_RECHAZADO = 3; // Externo
+    public static final int OFICIO_REMISION_REENVIADO = 4; // Externo
+    public static final int OFICIO_REMISION_ANULADO = 5; // Interno y Externo
+
+    public static final Integer[] ESTADOS_OFICIO_REMISION = {
+            OFICIO_REMISION_INTERNO_ENVIADO,
+            OFICIO_REMISION_ENVIADO,
+            OFICIO_REMISION_ACEPTADO,
+            OFICIO_REMISION_ANULADO
+    };
 
 
     /* -------------- TIPO PREREGISTRO -------------*/

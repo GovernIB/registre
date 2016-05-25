@@ -160,7 +160,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
     @Override
     public List<Oficina> findByOrganismoResponsableVO(Long idOrganismo) throws Exception{
-        Query q = em.createQuery("Select oficina.id, oficina.codigo, oficina.denominacion as nombre from Oficina as oficina where " +
+        Query q = em.createQuery("Select oficina.id, oficina.codigo, oficina.denominacion as nombre, oficina.organismoResponsable.id from Oficina as oficina where " +
                 "oficina.organismoResponsable.id =:idOrganismo and " +
                 "oficina.estado.codigoEstadoEntidad=:vigente and " +
                 ":oficinaVirtual not in elements(oficina.servicios)");
@@ -174,7 +174,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result){
-            Oficina oficina = new Oficina((Long)object[0],(String)object[1],(String)object[2]);
+            Oficina oficina = new Oficina((Long)object[0],(String)object[1],(String)object[2],(Long)object[3]);
 
             oficinas.add(oficina);
         }

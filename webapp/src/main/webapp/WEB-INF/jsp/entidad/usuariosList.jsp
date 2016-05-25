@@ -31,7 +31,7 @@
         <div class="row">
             <div class="col-xs-12">
 
-                <div class="panel panel-success">
+                <div class="panel panel-warning">
 
                     <div class="panel-heading">
                         <a class="btn btn-success btn-xs pull-right" href="<c:url value="/usuario/existeUsuario"/>" role="button"><span class="fa fa-plus"></span> <spring:message code="usuario.nuevo"/></a>

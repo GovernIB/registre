@@ -438,12 +438,12 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
         // Añadimos los organismos a los que da servicio la Oficina (Directos y Funcionales)
         LinkedHashSet<Organismo> organismos = oficinaActiva.getOrganismosFuncionales();
-log.info("inicio hijosTotales");
+
         // Añadimos todos los hijos de los Organismos obtenidos anteriormetne
         LinkedHashSet<Organismo> hijosTotales = new LinkedHashSet<Organismo>();
         obtenerHijosOrganismos(organismos, hijosTotales);
         organismos.addAll(hijosTotales);
-        log.info("Fin hijosTotales");
+
         return organismos;
 
     }

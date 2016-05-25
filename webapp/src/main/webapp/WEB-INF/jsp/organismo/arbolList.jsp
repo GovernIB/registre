@@ -47,7 +47,7 @@
 
                     <!-- LEYENDA -->
                     <div class="col-xs-4 button-right">
-                        <div class="panel panel-danger">
+                        <div class="panel panel-warning">
                             <div class="panel-heading">
                                 <div class="row">
                                     <div class="col-xs-12">

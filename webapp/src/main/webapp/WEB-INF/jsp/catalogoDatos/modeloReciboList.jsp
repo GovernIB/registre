@@ -28,10 +28,10 @@
         <div class="row">
             <div class="col-xs-12">
 
-                <div class="panel panel-success">
+                <div class="panel panel-warning">
 
                     <div class="panel-heading">
-                        <a class="btn btn-success btn-xs pull-right margin-left10" href="<c:url value="/modeloRecibo/new"/>" role="button"><span class="fa fa-plus"></span> <spring:message code="modeloRecibo.nuevo"/></a>
+                        <a class="btn btn-warning btn-xs pull-right margin-left10" href="<c:url value="/modeloRecibo/new"/>" role="button"><span class="fa fa-plus"></span> <spring:message code="modeloRecibo.nuevo"/></a>
                         <a data-toggle="modal" href="#myModalModeloRecibo" class="btn btn-warning btn-xs pull-right"><spring:message code="regweb.ayuda"/></a>
                         <h3 class="panel-title"><i class="fa fa-list"></i> <strong><spring:message code="modeloRecibo.listado"/></strong></h3>
                     </div>

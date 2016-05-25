@@ -29,10 +29,10 @@
 
         <div class="row">
             <div class="col-xs-12">
-                <div class="panel panel-success">
+                <div class="panel panel-warning">
 
                     <div class="panel-heading">
-                        <a class="btn btn-success btn-xs pull-right" href="<c:url value="/persona/new"/>" role="button"><span class="fa fa-plus"></span> <spring:message code="persona.nuevo"/></a>
+                        <a class="btn btn-warning btn-xs pull-right" href="<c:url value="/persona/new"/>" role="button"><span class="fa fa-plus"></span> <spring:message code="persona.nuevo"/></a>
                         <h3 class="panel-title"><i class="fa fa-search"></i><strong><spring:message code="persona.buscador"/></strong> </h3>
                     </div>
 

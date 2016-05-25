@@ -6,6 +6,7 @@ import es.caib.regweb3.persistence.utils.Paginacion;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -152,7 +153,7 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
      * @return List
      * @throws Exception
      */
-    public Set<Organismo> getByOficinaActiva(Oficina oficinaActiva) throws Exception;
+    public LinkedHashSet<Organismo> getByOficinaActiva(Oficina oficinaActiva) throws Exception;
 
   /**
    * Método que nos devuelve los códigos DIR3 de las oficinas SIR de un organismo

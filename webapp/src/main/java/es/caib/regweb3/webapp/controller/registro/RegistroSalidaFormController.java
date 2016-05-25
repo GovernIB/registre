@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -61,7 +61,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         registroSalida.setRegistroDetalle(new RegistroDetalle());
         registroSalida.setOficina(oficina);
 
-        Set<Organismo> organismosOficinaActiva = new HashSet<Organismo>(getOrganismosOficinaActiva(request));
+        LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
         //Eliminamos los posibles interesados de la Sesion
         eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_SALIDA);
@@ -112,7 +112,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
 
             // Organismo origen: Select
             log.info("Origen: " + registroSalida.getOrigen().getCodigo());
-            Set<Organismo> organismosOficinaActiva = getOrganismosOficinaActiva(request);
+            LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
             model.addAttribute("organismosOficinaActiva", organismosOficinaActiva);
 
@@ -202,7 +202,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
             registroSalida = registroSalidaEjb.findById(idRegistro);
 
             // Organismo origen: Select
-            Set<Organismo> organismosOficinaActiva = new HashSet<Organismo>(getOrganismosOficinaActiva(request));
+            LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
             // Si el Organismo Origen no está en al lista lo añadimos
             if (!organismosOficinaActiva.contains(registroSalida.getOrigen())) {
                 organismosOficinaActiva.add(registroSalida.getOrigen());
@@ -254,7 +254,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
             model.addAttribute(entidad);
 
             // Organismo origen: Select
-            Set<Organismo> organismosOficinaActiva = new HashSet<Organismo>(getOrganismosOficinaActiva(request));
+            LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
             // Si el Organismo Origen no está en al lista lo añadimos
             if (!organismosOficinaActiva.contains(registroSalida.getOrigen())) {
                 organismosOficinaActiva.add(registroSalida.getOrigen());
