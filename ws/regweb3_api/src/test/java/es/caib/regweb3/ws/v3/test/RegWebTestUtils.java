@@ -230,7 +230,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         AnexoWs anexoSinFirma = new AnexoWs();
         final String fichero = "pdf_sin_firma.pdf";
         anexoSinFirma.setTitulo("Anexo Sin Firma");
-        String copia = CODIGO_NTI_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_COPIA);
+        String copia = CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_COPIA);
         anexoSinFirma.setValidezDocumento(copia);
         anexoSinFirma.setTipoDocumental(getTestAnexoTipoDocumental());
         String formulario = CODIGO_NTI_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FORMULARIO);
@@ -256,7 +256,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
 
         final String fichero = "pdf_con_firma.pdf";
         anexoConFirmaAttached.setTitulo("Anexo Con Firma Attached");
-        String copia = CODIGO_NTI_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_COPIA);
+        String copia = CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_COPIA);
         anexoConFirmaAttached.setValidezDocumento(copia);
         anexoConFirmaAttached.setTipoDocumental(getTestAnexoTipoDocumental());
         String formulario = CODIGO_NTI_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FORMULARIO);
@@ -281,7 +281,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         AnexoWs anexoConFirmaDetached = new AnexoWs();
 
         anexoConFirmaDetached.setTitulo("Anexo Con Firma Detached");
-        String copia = CODIGO_NTI_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_COPIA);
+        String copia = CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_COPIA);
         anexoConFirmaDetached.setValidezDocumento(copia);
         anexoConFirmaDetached.setTipoDocumental(getTestAnexoTipoDocumental());
         String formulario = CODIGO_NTI_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FORMULARIO);
