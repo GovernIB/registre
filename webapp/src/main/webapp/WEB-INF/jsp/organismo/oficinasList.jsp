@@ -32,7 +32,7 @@
                 <c:import url="../modulos/mensajes.jsp"/>
                 <div id="mensajes"></div>
 
-                <div class="panel panel-success">
+                <div class="panel panel-warning">
 
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-list"></i> <strong><spring:message code="organismo.oficinas"/> a: ${organismo.denominacion}</strong></h3>

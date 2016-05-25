@@ -289,11 +289,11 @@ public class BaseController {
      * @return
      * @throws Exception
      */
-    public Set<Organismo> getOrganismosOficinaActiva(HttpServletRequest request) throws Exception {
+    public LinkedHashSet<Organismo> getOrganismosOficinaActiva(HttpServletRequest request) throws Exception {
         //return organismoEjb.getByOficinaActiva(getOficinaActiva(request));
         HttpSession session = request.getSession();
 
-        return (Set<Organismo>) session.getAttribute(RegwebConstantes.SESSION_ORGANISMOS_OFICINA);
+        return (LinkedHashSet<Organismo>) session.getAttribute(RegwebConstantes.SESSION_ORGANISMOS_OFICINA);
     }
 
     /**
@@ -441,6 +441,24 @@ public class BaseController {
         HttpSession session = request.getSession();
 
         session.setAttribute(variable, null);
+    }
+
+    /**
+     * Retorna el libro de cuyo OrganismoRespnsable coincide con el de la OficinaActiva
+     * @param request
+     * @param libros
+     * @return
+     * @throws Exception
+     */
+    public Libro seleccionarLibroOficinaActiva(HttpServletRequest request,List<Libro> libros) throws Exception{
+
+        Oficina oficinaActiva = getOficinaActiva(request);
+        for (Libro libro:libros){
+            if(libro.getOrganismo().equals(oficinaActiva.getOrganismoResponsable())){
+                return  libro;
+            }
+        }
+        return null;
     }
     
     

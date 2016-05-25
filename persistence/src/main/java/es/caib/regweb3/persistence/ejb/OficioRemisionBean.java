@@ -84,7 +84,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     }
 
     @Override
-    public Paginacion busqueda(Integer pageNumber, Integer any, OficioRemision oficioRemision, List<Libro> libros, Long tipoOficioRemision) throws Exception {
+    public Paginacion busqueda(Integer pageNumber, Integer any, OficioRemision oficioRemision, List<Libro> libros, Long tipoOficioRemision, Integer estadoOficioRemision) throws Exception {
 
         Query q;
         Query q2;
@@ -112,6 +112,12 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
             } else if (tipoOficioRemision.equals(RegwebConstantes.TIPO_OFICIO_REMISION_EXTERNO)) {
                 where.add(" oficioRemision.organismoDestinatario is null");
             }
+        }
+
+        // Estado Oficio Remisión
+        if(estadoOficioRemision != null){
+            where.add(" oficioRemision.estado = :estadoOficioRemision");
+            parametros.put("estadoOficioRemision",estadoOficioRemision);
         }
 
         if (parametros.size() != 0) {

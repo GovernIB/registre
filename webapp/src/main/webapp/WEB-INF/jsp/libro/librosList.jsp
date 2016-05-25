@@ -28,9 +28,9 @@
 
         <div class="row">
            <div class="col-xs-12">
-               <div class="panel panel-success">
+               <div class="panel panel-warning">
                    <div class="panel-heading">
-                       <c:if test="${oficinas}"><a class="btn btn-success btn-xs pull-right" href="<c:url value="/libro/${organismo.id}/new"/>" role="button"><span class="fa fa-plus"></span> <spring:message code="organismo.libro.nuevo"/></a></c:if>
+                       <c:if test="${oficinas}"><a class="btn btn-warning btn-xs pull-right" href="<c:url value="/libro/${organismo.id}/new"/>" role="button"><span class="fa fa-plus"></span> <spring:message code="organismo.libro.nuevo"/></a></c:if>
                        <h3 class="panel-title"><i class="fa fa-list"></i> <strong><spring:message code="organismo.libros"/> de ${organismo.denominacion}</strong></h3>
                    </div>
                    <div class="panel-body">

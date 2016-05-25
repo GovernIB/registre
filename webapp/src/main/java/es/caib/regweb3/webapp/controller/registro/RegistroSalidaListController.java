@@ -22,9 +22,8 @@ import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Fundació BIT.
@@ -69,9 +68,13 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         // Obtenemos los Libros donde el usuario tiene permisos de Consulta
         List<Libro> librosConsulta = getLibrosConsultaSalidas(request);
 
-        Set<Organismo> organismosOficinaActiva = new HashSet<Organismo>(getOrganismosOficinaActiva(request));
+        LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
-        RegistroSalidaBusqueda registroSalidaBusqueda = new RegistroSalidaBusqueda(new RegistroSalida(),1);
+        // Fijamos un Libro por defecto
+        RegistroSalida registroSalida = new RegistroSalida();
+        registroSalida.setLibro(seleccionarLibroOficinaActiva(request,librosConsulta));
+
+        RegistroSalidaBusqueda registroSalidaBusqueda = new RegistroSalidaBusqueda(registroSalida,1);
         registroSalidaBusqueda.setFechaInicio(new Date());
         registroSalidaBusqueda.setFechaFin(new Date());
 
@@ -125,7 +128,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             lopdEjb.insertarRegistrosSalida(paginacion, usuarioEntidad.getId());
         }
 
-        Set<Organismo> organismosOficinaActiva = new HashSet<Organismo>(getOrganismosOficinaActiva(request));
+        LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
         mav.addObject("organosOrigen", organismosOficinaActiva);
         mav.addObject(getOficinaActiva(request));
@@ -167,11 +170,11 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         Boolean oficinaRegistral = registro.getOficina().getId().equals(oficinaActiva.getId()) || (registro.getOficina().getOficinaResponsable() != null && registro.getOficina().getOficinaResponsable().getId().equals(oficinaActiva.getId()));
         model.addAttribute("oficinaRegistral", oficinaRegistral);
         model.addAttribute("isAdministradorLibro", permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(),registro.getLibro().getId()));
-        model.addAttribute("puedeEditar", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),registro.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA));
+        model.addAttribute("puedeEditar", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),registro.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA));
 
         // Interesados, solo si el Registro en Válio
         if(registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) && oficinaRegistral){
-            Set<Organismo> organismosOficinaActiva = new HashSet<Organismo>(getOrganismosOficinaActiva(request));
+            LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
             model.addAttribute("tiposInteresado",RegwebConstantes.TIPOS_INTERESADO);
             model.addAttribute("tiposPersona", RegwebConstantes.TIPOS_PERSONA);
@@ -245,7 +248,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
     }
 
     /**
-     * Activar un {@link es.caib.regweb3.model.RegistroEntrada}
+     * Activar un {@link es.caib.regweb3.model.RegistroSalida}
      */
     @RequestMapping(value = "/{idRegistro}/activar")
     public String activarRegistroSalida(@PathVariable Long idRegistro, HttpServletRequest request) {
@@ -255,11 +258,11 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             RegistroSalida registroSalida = registroSalidaEjb.findById(idRegistro);
             UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
-            // Comprobamos si el RegistroEntrada tiene el estado anulado
+            // Comprobamos si el RegistroSalida tiene el estado anulado
             if(!registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)){
 
                 Mensaje.saveMessageError(request, getMessage("registro.activar.error"));
-                return "redirect:/registroEntrada/list";
+                return "redirect:/registroSalida/list";
             }
 
             // Comprobamos que el usuario dispone del permiso para Modificar el Registro
@@ -267,7 +270,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
                 log.info("Aviso: No dispone de los permisos necesarios para editar el registro");
                 Mensaje.saveMessageAviso(request, getMessage("aviso.registro.editar"));
 
-                return "redirect:/registroEntrada/list";
+                return "redirect:/registroSalida/list";
             }
 
             // Activamos el RegistroSalida
@@ -294,18 +297,18 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             RegistroSalida registroSalida = registroSalidaEjb.findById(idRegistro);
             UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
-            // Comprobamos si el RegistroEntrada tiene el estado Pendiente de Visar
+            // Comprobamos si el RegistroSalida tiene el estado Pendiente de Visar
             if(!registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR)){
 
                 Mensaje.saveMessageError(request, getMessage("registro.visar.error"));
-                return "redirect:/registroEntrada/list";
+                return "redirect:/registroSalida/list";
             }
 
             // Comprobamos si el UsuarioEntidad tiene permisos para visar el RegistroSalida
             if(!permisoLibroUsuarioEjb.isAdministradorLibro(usuarioEntidad.getId(), registroSalida.getLibro().getId())){
 
                 Mensaje.saveMessageError(request, getMessage("aviso.usuario.visar"));
-                return "redirect:/registroEntrada/list";
+                return "redirect:/registroSalida/list";
             }
 
             // Visamos el RegistroSalida

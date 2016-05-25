@@ -31,9 +31,9 @@
 
             <div class="col-xs-12">
 
-                <div class="panel panel-success">
+                <div class="panel panel-warning">
                     <div class="panel-heading">
-                        <h3 class="panel-title"><i class="fa fa-search"></i><spring:message code="informe.usuarioLopd"/> </h3>
+                        <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="informe.usuarioLopd"/></strong> </h3>
                     </div>
                     <div class="panel-body">
                         <form:form modelAttribute="usuarioLopdBusquedaForm" method="post" cssClass="form-horizontal" name="usuarioLopdBusquedaForm" onsubmit="return validaFormulario(this)">

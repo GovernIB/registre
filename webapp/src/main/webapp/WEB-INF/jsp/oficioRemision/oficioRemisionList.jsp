@@ -35,7 +35,7 @@
 
             <div class="col-xs-12">
 
-                <div class="panel panel-info">
+                <div class="panel panel-success">
                 
                 <c:if test="${(not empty librosConsulta) && (not empty oficioRemisionBusqueda)}">
 
@@ -55,13 +55,24 @@
                             </div>
                             <div class="form-group col-xs-6">
                                 <div class="col-xs-4 pull-left align-right"><spring:message
+                                        code="oficioRemision.estado"/></div>
+                                <div class="col-xs-8">
+                                    <form:select path="estadoOficioRemision" cssClass="chosen-select">
+                                        <form:option value="">...</form:option>
+                                        <c:forEach items="${estadosOficioRemision}" var="estado">
+                                            <form:option value="${estado}"><spring:message code="oficioRemision.estado.${estado}" /></form:option>
+                                        </c:forEach>
+                                    </form:select>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-6">
+                                <div class="col-xs-4 pull-left align-right"><spring:message
                                         code="oficioRemision.tipo"/></div>
                                 <div class="col-xs-8">
                                     <form:select path="tipoOficioRemision.id" cssClass="chosen-select">
                                         <form:option value="">...</form:option>
-                                        <c:forEach items="${tiposOficioRemision}" var="tipoOficioRemision">
-                                            <form:option
-                                                    value="${tipoOficioRemision.id}">${tipoOficioRemision.nombre}</form:option>
+                                        <c:forEach items="${tiposOficioRemision}" var="tipo">
+                                            <form:option value="${tipo}"><spring:message code="oficioRemision.tipo.${tipo}" /></form:option>
                                         </c:forEach>
                                     </form:select>
                                 </div>

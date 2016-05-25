@@ -66,6 +66,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<PermisoLibroUsuario> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select permisoLibroUsuario from PermisoLibroUsuario as permisoLibroUsuario order by permisoLibroUsuario.id");
@@ -77,6 +78,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<PermisoLibroUsuario> findByUsuario(Long idUsuarioEntidad) throws Exception {
 
         Query q = em.createQuery("Select plu from PermisoLibroUsuario as plu where " +
@@ -88,6 +90,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<PermisoLibroUsuario> findByUsuarioLibros(Long idUsuarioEntidad, List<Libro> libros) throws Exception {
 
         Query q = em.createQuery("Select plu from PermisoLibroUsuario as plu where " +
@@ -100,6 +103,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<PermisoLibroUsuario> findByUsuarioLibro(Long idUsuarioEntidad, Long idLibro) throws Exception{
 
         Query q = em.createQuery("Select plu from PermisoLibroUsuario as plu where " +
@@ -112,6 +116,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<PermisoLibroUsuario> findByLibro(Long idLibro) throws Exception {
 
         Query q = em.createQuery("Select plu.id, plu.activo, plu.usuario.id from PermisoLibroUsuario as plu where plu.libro.id = :idLibro order by plu.permiso");
@@ -132,6 +137,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<UsuarioEntidad> getUsuariosEntidadByLibro(Long idLibro) throws Exception {
 
         Query q = em.createQuery("Select distinct plu.usuario.id, plu.usuario.usuario from PermisoLibroUsuario as plu where " +
@@ -153,6 +159,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Libro> getLibrosRegistro(Long idUsuarioEntidad) throws Exception {
 
         CatEstadoEntidad vigente = catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
@@ -185,6 +192,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Libro> getLibrosAdministrados(Long idUsuarioEntidad) throws Exception {
 
         CatEstadoEntidad vigente = catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
@@ -211,6 +219,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Libro> getLibrosPermiso(Long idUsuarioEntidad, Long idPermiso) throws Exception{
 
         Query q = em.createQuery("Select distinct plu.libro from PermisoLibroUsuario as plu where " +
@@ -223,6 +232,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Libro> getLibrosRegistroOficina(Set<Organismo> organismos, UsuarioEntidad usuario) throws Exception{
 
         Query q = em.createQuery("Select distinct plu.libro from PermisoLibroUsuario as plu where " +
@@ -237,6 +247,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Libro> getLibrosOrganismoPermiso(Set<Long> organismos, Long idUsuarioEntidad, Long idPermiso) throws Exception {
 
         Query q = em.createQuery("Select distinct plu.libro.id, plu.libro.nombre, plu.libro.codigo, plu.libro.organismo.id, plu.libro.organismo.denominacion from PermisoLibroUsuario as plu where " +
@@ -262,6 +273,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Libro> getLibrosEntidadPermiso(Long idEntidad, Long idUsuarioEntidad, Long idPermiso) throws Exception {
 
         Query q = em.createQuery("Select distinct plu.libro from PermisoLibroUsuario as plu where " +
@@ -277,6 +289,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Boolean isAdministradorLibro(Long idUsuarioEntidad, Long idLibro) throws Exception {
 
         CatEstadoEntidad vigente = catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
@@ -296,6 +309,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Boolean tienePermiso(Long idUsuarioEntidad, Long idLibro, Long idPermiso) throws Exception {
 
         Query q = em.createQuery("Select plu.id from PermisoLibroUsuario as plu where " +
@@ -313,6 +327,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<UsuarioEntidad> getUsuariosEntidadEnLibros(List<Libro> libros) throws Exception{
 
         Query q = em.createQuery("Select distinct permisoLibroUsuario.usuario.id, permisoLibroUsuario.usuario.usuario from PermisoLibroUsuario as permisoLibroUsuario where " +

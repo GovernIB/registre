@@ -33,7 +33,7 @@
             <div class="col-xs-12">
                 <form:form modelAttribute="tipoDocumental" method="post" cssClass="form-horizontal">
 
-                <div class="panel panel-success">
+                <div class="panel panel-warning">
 
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i>

@@ -13,9 +13,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Fundació BIT.
@@ -52,7 +51,7 @@ public class AvisoController extends BaseController {
 
         if(isOperador(request) && oficinaActiva != null) {
 
-            Set<Organismo> organismosOficiaActiva = new HashSet<Organismo>(getOrganismosOficinaActiva(request));
+            LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
             List<Libro> librosAdministrados = getLibrosAdministrados(request);
             List<Libro> librosRegistro = getLibrosRegistroEntrada(request);
@@ -77,14 +76,14 @@ public class AvisoController extends BaseController {
             /* -- COMENTADO PARA AGILIZAR LA APLICACIÓN CON ORGANIGRAMAS GRANDES  --*/
             // OFICIOS PENDIENTES DE REMISIÓN
             if(librosRegistro!= null && librosRegistro.size() > 0){
-                oficiosRemisionInterna = registroEntradaEjb.oficiosPendientesRemisionInternaCount(librosRegistro, getOrganismosOficioRemision(request, organismosOficiaActiva));
+                oficiosRemisionInterna = registroEntradaEjb.oficiosPendientesRemisionInternaCount(librosRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva));
                 oficiosRemisionExterna = registroEntradaEjb.oficiosPendientesRemisionExternaCount(librosRegistro);
             }
             mav.addObject("oficiosRemisionInterna", oficiosRemisionInterna);
             mav.addObject("oficiosRemisionExterna", oficiosRemisionExterna);
 
             // OFICIOS PENDIENTES DE LLEGADA
-            Long oficiosPendientesLlegada = oficioRemisionEjb.oficiosPendientesLlegadaCount(organismosOficiaActiva);
+            Long oficiosPendientesLlegada = oficioRemisionEjb.oficiosPendientesLlegadaCount(organismosOficinaActiva);
             mav.addObject("oficiosPendientesLlegada", oficiosPendientesLlegada);
 
         }

@@ -33,7 +33,7 @@
 
             <div class="col-xs-4">
 
-                <div class="panel panel-info">
+                <div class="panel panel-success">
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-file-o"></i>
                             <strong> <spring:message code="oficioRemision.oficioRemision"/> <fmt:formatDate value="${oficioRemision.fecha}" pattern="yyyy"/> / ${oficioRemision.numeroOficio}</strong>
@@ -99,7 +99,7 @@
             <c:if test="${not empty oficioRemision.registrosEntrada}">
                 <div class="col-xs-8 col-xs-offset">
 
-                    <div class="panel panel-info">
+                    <div class="panel panel-success">
 
                         <div class="panel-heading">
 
