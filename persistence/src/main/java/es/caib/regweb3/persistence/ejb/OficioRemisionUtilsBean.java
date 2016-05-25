@@ -67,7 +67,7 @@ public class OficioRemisionUtilsBean implements OficioRemisionUtilsLocal {
           throws Exception, I18NException, I18NValidationException {
 
       OficioRemision oficioRemision = new OficioRemision();
-      oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_INTERNO_ESTADO_ENVIADO);
+      oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO);
       oficioRemision.setOficina(oficinaActiva);
       oficioRemision.setFecha(new Date());
       oficioRemision.setRegistrosEntrada(registrosEntrada);
@@ -77,7 +77,7 @@ public class OficioRemisionUtilsBean implements OficioRemisionUtilsLocal {
 
       synchronized (this){
           oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision,
-              RegwebConstantes.ESTADO_OFICIO_INTERNO);
+              RegwebConstantes.REGISTRO_OFICIO_INTERNO);
       }
 
       return oficioRemision;
@@ -106,10 +106,10 @@ public class OficioRemisionUtilsBean implements OficioRemisionUtilsLocal {
       oficioRemision.setIdentificadorIntercambioSir(identificadorIntercambioSir);
       
       if (identificadorIntercambioSir == null) { //todo: modificar el estado cuando se implemente SIR
-        oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_ESTADO_ENVIADO);
+        oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_ENVIADO);
         oficioRemision.setFechaEstado(new Date());
       } else {
-        oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_ESTADO_ENVIADO);
+        oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_ENVIADO);
         oficioRemision.setFechaEstado(new Date());
       }
       
@@ -124,7 +124,7 @@ public class OficioRemisionUtilsBean implements OficioRemisionUtilsLocal {
 
       synchronized (this) {
           oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision,
-                  RegwebConstantes.ESTADO_OFICIO_EXTERNO);
+                  RegwebConstantes.REGISTRO_OFICIO_EXTERNO);
       }
 
       return oficioRemision;
@@ -156,7 +156,7 @@ public class OficioRemisionUtilsBean implements OficioRemisionUtilsLocal {
           nuevoRE.setUsuario(usuario);
           nuevoRE.setDestino(new Organismo(oficio.getIdOrganismoDestinatario()));
           nuevoRE.setOficina(oficinaActiva);
-          nuevoRE.setEstado(RegwebConstantes.ESTADO_VALIDO);
+          nuevoRE.setEstado(RegwebConstantes.REGISTRO_VALIDO);
           nuevoRE.setLibro(libro);
           nuevoRE.setRegistroDetalle(registroEntrada.getRegistroDetalle());
 
@@ -176,7 +176,7 @@ public class OficioRemisionUtilsBean implements OficioRemisionUtilsLocal {
 
       }
 
-      oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_ESTADO_ACEPTADO);
+      oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_ACEPTADO);
       oficioRemision.setFechaEstado(new Date());
 
       // Actualizamos el oficio de remisión

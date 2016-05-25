@@ -56,7 +56,7 @@ public class RegistroEntradaConverter extends CommonConverter {
         registroEntrada.setOficina(oficina);
         registroEntrada.setFecha(new Date());
         registroEntrada.setUsuario(usuario);
-        registroEntrada.setEstado(RegwebConstantes.ESTADO_VALIDO);
+        registroEntrada.setEstado(RegwebConstantes.REGISTRO_VALIDO);
         registroEntrada.setLibro(libro);
 
         registroDetalle.setTipoAsunto(getTipoAsunto(registroEntradaWs.getTipoAsunto(),usuario.getEntidad().getId(), tipoAsuntoEjb));

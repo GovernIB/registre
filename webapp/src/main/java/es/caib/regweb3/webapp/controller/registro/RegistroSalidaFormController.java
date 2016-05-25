@@ -143,7 +143,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
                 registroSalida.setUsuario(usuarioEntidad);
 
                 // Estado RegistroSalida
-                registroSalida.setEstado(RegwebConstantes.ESTADO_VALIDO);
+                registroSalida.setEstado(RegwebConstantes.REGISTRO_VALIDO);
 
                 // Procesamos las opciones comunes del RegistroSalida
                 registroSalida = procesarRegistroSalida(registroSalida, entidad);
@@ -294,7 +294,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
                 Long dias = RegistroUtils.obtenerDiasRegistro(registroSalida.getFecha());
 
                 if(dias >= 1){ // Si ha pasado 1 día o mas
-                    registroSalida.setEstado(RegwebConstantes.ESTADO_PENDIENTE_VISAR);
+                    registroSalida.setEstado(RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
                 }
 
                 // Obtenemos el RS antes de guardarlos, para crear el histórico

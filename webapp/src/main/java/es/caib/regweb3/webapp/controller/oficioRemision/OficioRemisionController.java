@@ -88,8 +88,8 @@ public class OficioRemisionController extends BaseController {
         List<Libro> librosConsulta = permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_ENTRADA);
 
         List<ObjetoBasico> tiposOficioRemision = new ArrayList<ObjetoBasico>();
-        tiposOficioRemision.add(new ObjetoBasico(RegwebConstantes.OFICIO_REMISION_INTERNO, getMessage("oficioRemision.interno")));
-        tiposOficioRemision.add(new ObjetoBasico(RegwebConstantes.OFICIO_REMISION_EXTERNO, getMessage("oficioRemision.externo")));
+        tiposOficioRemision.add(new ObjetoBasico(RegwebConstantes.TIPO_OFICIO_REMISION_INTERNO, getMessage("oficioRemision.interno")));
+        tiposOficioRemision.add(new ObjetoBasico(RegwebConstantes.TIPO_OFICIO_REMISION_EXTERNO, getMessage("oficioRemision.externo")));
 
         OficioRemisionBusquedaForm oficioRemisionBusquedaForm = new OficioRemisionBusquedaForm(new OficioRemision(),1);
 
@@ -168,7 +168,7 @@ public class OficioRemisionController extends BaseController {
         ModelAndView mav = new ModelAndView("registroEntrada/oficiosPendientesRemisionInternaList");
 
         RegistroEntrada registroEntrada = busqueda.getRegistroEntrada();
-        registroEntrada.setEstado(RegwebConstantes.ESTADO_VALIDO); // Fijamos el Estado válido por defecto
+        registroEntrada.setEstado(RegwebConstantes.REGISTRO_VALIDO); // Fijamos el Estado válido por defecto
         Set<Organismo> organismos = new HashSet<Organismo>(getOrganismosOficinaActiva(request));
 
         // Obtenemos los Registros de Entrada, pendientes de tramitar por medio de un Oficio de Revisión, agrupados según su Organismos destinatario.
@@ -225,7 +225,7 @@ public class OficioRemisionController extends BaseController {
         List<Libro> librosRegistro = getLibrosRegistroEntrada(request);
 
         //Fijamos el Estado válido por defecto
-        registroEntrada.setEstado(RegwebConstantes.ESTADO_VALIDO);
+        registroEntrada.setEstado(RegwebConstantes.REGISTRO_VALIDO);
 
         Entidad entidadActiva = getEntidadActiva(request);
 
@@ -283,7 +283,7 @@ public class OficioRemisionController extends BaseController {
                 //registroEntrada = registroEntradaEjb.findById(registroEntrada.getId());
 
                 // Comprobamos si el RegistroEntrada tiene el estado Válido
-                if (!registroEntradaEjb.tieneEstado(registroEntrada.getId(), RegwebConstantes.ESTADO_VALIDO)) {
+                if (!registroEntradaEjb.tieneEstado(registroEntrada.getId(), RegwebConstantes.REGISTRO_VALIDO)) {
 
                     Mensaje.saveMessageError(request, getMessage("registroEntrada.tramitar.error"));
                     if (interno) {
@@ -388,7 +388,7 @@ public class OficioRemisionController extends BaseController {
           registroEntrada = registroEntradaEjb.findById(registroEntrada.getId());
 
           // Comprobamos si el RegistroEntrada tiene el estado Válido
-          if (!registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_VALIDO)) {
+          if (!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)) {
 
             log.error("El registro de entrada " + registroEntrada.getNumeroRegistroFormateado()
                 + " se encuentar en un estado no valido. (" + registroEntrada.getEstado() + ")");
@@ -542,7 +542,7 @@ public class OficioRemisionController extends BaseController {
         OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
 
         if(permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(), oficioRemision.getLibro().getId()) &&
-                oficioRemision.getEstado() == RegwebConstantes.OFICIO_REMISION_INTERNO_ESTADO_ENVIADO){
+                oficioRemision.getEstado() == RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO){
             oficioRemisionEjb.anularOficioRemision(idOficioRemision);
             Mensaje.saveMessageInfo(request, getMessage("aviso.oficioRemision.anulado"));
         }else{
@@ -645,7 +645,7 @@ public class OficioRemisionController extends BaseController {
         List<RegistroEntrada> registrosEntrada = new ArrayList<RegistroEntrada>();
 
         // Comprobamos si ya ha sido procesado
-        if (oficioRemision.getEstado() != RegwebConstantes.OFICIO_REMISION_INTERNO_ESTADO_ENVIADO) {
+        if (oficioRemision.getEstado() != RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO) {
             Mensaje.saveMessageError(request, getMessage("oficioRemision.error.yaprocesado"));
             return "redirect:/oficioRemision/oficiosPendientesLlegada/list";
         }

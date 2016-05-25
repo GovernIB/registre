@@ -170,7 +170,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         model.addAttribute("puedeEditar", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),registro.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA));
 
         // Interesados, solo si el Registro en Válio
-        if(registro.getEstado().equals(RegwebConstantes.ESTADO_VALIDO) && oficinaRegistral){
+        if(registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) && oficinaRegistral){
             Set<Organismo> organismosOficinaActiva = new HashSet<Organismo>(getOrganismosOficinaActiva(request));
 
             model.addAttribute("tiposInteresado",RegwebConstantes.TIPOS_INTERESADO);
@@ -218,7 +218,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
             // Comprobamos si el RegistroSalida se puede anular según su estado.
-            if(!registroSalida.getEstado().equals(RegwebConstantes.ESTADO_VALIDO)){
+            if(!registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)){
                 Mensaje.saveMessageError(request, getMessage("registroSalida.anulado"));
                 return "redirect:/registroSalida/list";
             }
@@ -256,7 +256,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
             // Comprobamos si el RegistroEntrada tiene el estado anulado
-            if(!registroSalida.getEstado().equals(RegwebConstantes.ESTADO_ANULADO)){
+            if(!registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)){
 
                 Mensaje.saveMessageError(request, getMessage("registro.activar.error"));
                 return "redirect:/registroEntrada/list";
@@ -295,7 +295,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
             // Comprobamos si el RegistroEntrada tiene el estado Pendiente de Visar
-            if(!registroSalida.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE_VISAR)){
+            if(!registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR)){
 
                 Mensaje.saveMessageError(request, getMessage("registro.visar.error"));
                 return "redirect:/registroEntrada/list";
@@ -318,7 +318,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             e.printStackTrace();
         }
 
-        return "redirect:/avisos/pendientesVisar/Salida";
+        return "redirect:/registroSalida/"+idRegistro+"/detalle";
     }
 
     /**

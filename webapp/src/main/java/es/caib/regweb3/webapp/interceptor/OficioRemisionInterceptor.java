@@ -113,7 +113,7 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
             Set<Organismo> organismosOficinaActiva = (Set<Organismo>) session.getAttribute(RegwebConstantes.SESSION_ORGANISMOS_OFICINA);
 
             if (!organismosOficinaActiva.contains(oficioRemision.getOrganismoDestinatario()) ||
-                    oficioRemision.getEstado() != RegwebConstantes.OFICIO_REMISION_INTERNO_ESTADO_ENVIADO) {
+                    oficioRemision.getEstado() != RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO) {
 
                 log.info("Este RegistroEntrada no se puede procesar");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficioRemision.procesar"));

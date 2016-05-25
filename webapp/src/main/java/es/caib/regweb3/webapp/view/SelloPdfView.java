@@ -124,8 +124,8 @@ public class SelloPdfView extends AbstractIText5PdfView {
             formatNumRegistre = entidad.getNumRegistro();
 
             //Si el registro no está Anulado ni Pendiente de Visar
-            if(!registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_ANULADO) &&
-                    !registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE_VISAR)){
+            if(!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO) &&
+                    !registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR)){
             	
 	            codiOficina = registroEntrada.getOficina().getCodigo();
 	            nomOficina = registroEntrada.getOficina().getDenominacion();
@@ -174,8 +174,8 @@ public class SelloPdfView extends AbstractIText5PdfView {
             formatNumRegistre = entidad.getNumRegistro();
 
             //Si el registro no está Anulado ni Pendiente de Visar
-            if(!registroSalida.getEstado().equals(RegwebConstantes.ESTADO_ANULADO) &&
-                    !registroSalida.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE_VISAR)) {
+            if(!registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO) &&
+                    !registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR)) {
 
                 codiOficina = registroSalida.getOficina().getCodigo();
                 nomOficina = registroSalida.getOficina().getDenominacion();

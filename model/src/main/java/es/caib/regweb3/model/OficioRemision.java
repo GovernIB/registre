@@ -133,11 +133,12 @@ public class OficioRemision implements Serializable {
 
   /**
    * @return Indica el estado del oficio de remision:
-   *         -RegwebConstantes.OFICIO_REMISION_INTERNO_ESTADO_ENVIADO(0): (Interno)
-   *         -RegwebConstantes.OFICIO_REMISION_ESTADO_ENVIADO(1): (Solo externo)
-   *         -RegwebConstantes.OFICIO_REMISION_ESTADO_ACEPTADO(2): (Interno y Externo)
-   *         -RegwebConstantes.OFICIO_REMISION_ESTADO_RECHAZADO(3): (Solo Externo)
-   *         -RegwebConstantes.OFICIO_REMISION_ESTADO_REENVIADO(4): (Solo Externo)
+   *         -RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO(0): (Interno)
+   *         -RegwebConstantes.OFICIO_REMISION_ENVIADO(1): (Solo externo)
+   *         -RegwebConstantes.OFICIO_REMISION_ACEPTADO(2): (Interno y Externo)
+   *         -RegwebConstantes.OFICIO_REMISION_RECHAZADO(3): (Solo Externo)
+   *         -RegwebConstantes.OFICIO_REMISION_REENVIADO(4): (Solo Externo)
+   *         -RegwebConstantes.OFICIO_REMISION_ANULADO(4): (Solo Interno)
    */
   @Column(name = "ESTADO", nullable = false)
   public int getEstado() {

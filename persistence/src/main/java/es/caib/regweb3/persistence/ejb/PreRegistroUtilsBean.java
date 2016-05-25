@@ -66,7 +66,7 @@ public class PreRegistroUtilsBean implements PreRegistroUtilsLocal {
       nuevoRE.setUsuario(usuario);
       nuevoRE.setFecha(new Date());
       
-      nuevoRE.setEstado(RegwebConstantes.ESTADO_VALIDO);
+      nuevoRE.setEstado(RegwebConstantes.REGISTRO_VALIDO);
 
       Organismo organismoDestino;
       if(preRegistro.getCodigoUnidadTramitacionDestino() != null){
@@ -139,7 +139,7 @@ public class PreRegistroUtilsBean implements PreRegistroUtilsLocal {
       nuevoRS.setUsuario(usuario);
       nuevoRS.setFecha(new Date());
 
-      nuevoRS.setEstado(RegwebConstantes.ESTADO_VALIDO);
+      nuevoRS.setEstado(RegwebConstantes.REGISTRO_VALIDO);
 
       Organismo organismoOrigen;
       if(preRegistro.getCodigoUnidadTramitacionDestino() != null){

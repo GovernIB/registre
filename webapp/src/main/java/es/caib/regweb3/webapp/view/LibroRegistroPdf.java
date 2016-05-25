@@ -83,21 +83,21 @@ public class LibroRegistroPdf extends AbstractIText5PdfView {
         String estadoRegistro = "";
         if(estado.equals((long) -1)){
             estadoRegistro = getMessage("informe.tots");
-        }else if(estado.equals(RegwebConstantes.ESTADO_VALIDO)){
+        }else if(estado.equals(RegwebConstantes.REGISTRO_VALIDO)){
             estadoRegistro = getMessage("registro.estado.1");
-        }else if(estado.equals(RegwebConstantes.ESTADO_PENDIENTE)){
+        }else if(estado.equals(RegwebConstantes.REGISTRO_PENDIENTE)){
             estadoRegistro = getMessage("registro.estado.2");
-        }else if(estado.equals(RegwebConstantes.ESTADO_PENDIENTE_VISAR)){
+        }else if(estado.equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR)){
             estadoRegistro = getMessage("registro.estado.3");
-        }else if(estado.equals(RegwebConstantes.ESTADO_OFICIO_EXTERNO)){
+        }else if(estado.equals(RegwebConstantes.REGISTRO_OFICIO_EXTERNO)){
             estadoRegistro = getMessage("registro.estado.4");
-        }else if(estado.equals(RegwebConstantes.ESTADO_OFICIO_INTERNO)){
+        }else if(estado.equals(RegwebConstantes.REGISTRO_OFICIO_INTERNO)){
             estadoRegistro = getMessage("registro.estado.5");
-        }else if(estado.equals(RegwebConstantes.ESTADO_ENVIADO)){
+        }else if(estado.equals(RegwebConstantes.REGISTRO_ENVIADO)){
             estadoRegistro = getMessage("registro.estado.6");
-        }else if(estado.equals(RegwebConstantes.ESTADO_TRAMITADO)){
+        }else if(estado.equals(RegwebConstantes.REGISTRO_TRAMITADO)){
             estadoRegistro = getMessage("registro.estado.7");
-        }else if(estado.equals(RegwebConstantes.ESTADO_ANULADO)){
+        }else if(estado.equals(RegwebConstantes.REGISTRO_ANULADO)){
             estadoRegistro = getMessage("registro.estado.8");
         }
         String tieneAnexos;

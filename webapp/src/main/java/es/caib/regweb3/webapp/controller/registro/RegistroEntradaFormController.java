@@ -158,7 +158,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                 registroEntrada.setUsuario(usuarioEntidad);
 
                 // Estado Registro entrada
-                registroEntrada.setEstado(RegwebConstantes.ESTADO_VALIDO);
+                registroEntrada.setEstado(RegwebConstantes.REGISTRO_VALIDO);
 
                 // Procesamos las opciones comunes del RegistroEntrada
                 registroEntrada = procesarRegistroEntrada(registroEntrada, entidad);
@@ -223,7 +223,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             Set<Organismo> organismosOficinaActiva = new HashSet<Organismo>(getOrganismosOficinaActiva(request));
             Set<Oficina> oficinasOrigen = getOficinasOrigen(request);
 
-            if(!registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE)){ //Si no se trata de una reserva de número
+            if(!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE)){ //Si no se trata de una reserva de número
 
                 // Organismo destino: Select
                 if (registroEntrada.getDestino() == null) {// Es  Externo, lo añadimos al listado.
@@ -276,7 +276,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         Boolean errorInteresado = false;
         List<Interesado> interesadosSesion = null;
 
-        if(registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE)){
+        if(registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE)){
             HttpSession session = request.getSession();
 
             interesadosSesion = (List<Interesado>) session.getAttribute(RegwebConstantes.SESSION_INTERESADOS_ENTRADA);
@@ -343,7 +343,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                 registroEntrada = procesarRegistroEntrada(registroEntrada, entidad);
 
                 // Si es PENDIENTE, Procesamos lo Interesados de la session
-                if(registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE)){
+                if(registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE)){
 
                     registroEntrada.getRegistroDetalle().setInteresados(procesarInteresados(interesadosSesion, registroEntrada.getRegistroDetalle().getId()));
                 }
@@ -353,12 +353,12 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
                 if(dias >= entidadActiva.getDiasVisado()){ // Si ha pasado los Dias de Visado establecidos por la entidad.
 
-                    registroEntrada.setEstado(RegwebConstantes.ESTADO_PENDIENTE_VISAR);
+                    registroEntrada.setEstado(RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
                 }else{ // Si aún no ha pasado los días definidos
 
                     // Si el Registro de Entrada tiene Estado Pendiente, al editarlo pasa a ser Válido.
-                    if(registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE)){
-                        registroEntrada.setEstado(RegwebConstantes.ESTADO_VALIDO);
+                    if(registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE)){
+                        registroEntrada.setEstado(RegwebConstantes.REGISTRO_VALIDO);
                     }
                 }
 

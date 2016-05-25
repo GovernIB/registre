@@ -66,12 +66,12 @@ public class InicioController extends BaseController{
 
             /*Registros Pendientes de Visar y con Reserva de Numero*/
             if(librosAdministrados!= null && librosAdministrados.size() > 0){
-                //List<RegistroBasico> pendientesVisar = registroEntradaEjb.getByLibrosEstado(librosAdministrados, RegwebConstantes.ESTADO_PENDIENTE_VISAR);
+                //List<RegistroBasico> pendientesVisar = registroEntradaEjb.getByLibrosEstado(librosAdministrados, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
                 //model.addAttribute("pendientesVisar", pendientesVisar);
             }
 
             /* RESERVA DE NÚMERO */
-            List<RegistroBasico> pendientes = registroEntradaEjb.getByOficinaEstado(oficinaActiva.getId(), RegwebConstantes.ESTADO_PENDIENTE, RegwebConstantes.REGISTROS_PANTALLA_INICIO);
+            List<RegistroBasico> pendientes = registroEntradaEjb.getByOficinaEstado(oficinaActiva.getId(), RegwebConstantes.REGISTRO_PENDIENTE, RegwebConstantes.REGISTROS_PANTALLA_INICIO);
             mav.addObject("pendientes", pendientes);
 
             /* OFICIOS PENDIENTES DE REMISIÓN */

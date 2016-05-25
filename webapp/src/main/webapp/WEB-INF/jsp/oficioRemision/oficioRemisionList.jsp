@@ -40,7 +40,7 @@
                 <c:if test="${(not empty librosConsulta) && (not empty oficioRemisionBusqueda)}">
 
                     <div class="panel-heading">
-                        <h3 class="panel-title"><i class="fa fa-search"></i><strong><spring:message code="oficioRemision.buscador"/></strong> </h3>
+                        <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="oficioRemision.buscador"/></strong> </h3>
                     </div>
 
                     <form:form modelAttribute="oficioRemisionBusqueda" method="post" cssClass="form-horizontal">
@@ -152,10 +152,10 @@
                                                                 <td>${(empty oficioRemision.organismoDestinatario)? oficioRemision.destinoExternoDenominacion : oficioRemision.organismoDestinatario.denominacion}</td>
                                                                 <td>${fn:length(oficioRemision.registrosEntrada)}</td>
                                                                 <td>
-                                                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_INTERNO_ESTADO_ENVIADO}"><span class="label label-warning"></c:if>
-                                                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ESTADO_ENVIADO}"><span class="label label-warning"></c:if>
-                                                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ESTADO_ACEPTADO}"><span class="label label-success"></c:if>
-                                                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ESTADO_ANULADO}"><span class="label label-danger"></c:if>
+                                                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO}"><span class="label label-warning"></c:if>
+                                                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ENVIADO}"><span class="label label-warning"></c:if>
+                                                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ACEPTADO}"><span class="label label-success"></c:if>
+                                                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ANULADO}"><span class="label label-danger"></c:if>
                                                                       <spring:message code="oficioRemision.estado.${oficioRemision.estado}"/>
                                                                       <c:if test="${not empty oficioRemision.fechaEstado && oficioRemision.estado != 0}">
                                                                           - <fmt:formatDate value="${oficioRemision.fechaEstado}" pattern="dd/MM/yyyy HH:mm:ss"/>

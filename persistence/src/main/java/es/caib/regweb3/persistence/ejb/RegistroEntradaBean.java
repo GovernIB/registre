@@ -292,7 +292,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                 "re.destino != null and " + organismosWhere +
                 " re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
 
-        q.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
+        q.setParameter("idEstadoRegistro", RegwebConstantes.REGISTRO_VALIDO);
         q.setParameter("idLibro", idLibro);
         if (organismos.size() > 0) {
             q.setParameter("organismos", organismos);
@@ -324,7 +324,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                 "re.destino != null and " + organismosWhere +
                 "re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
 
-        q.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
+        q.setParameter("idEstadoRegistro", RegwebConstantes.REGISTRO_VALIDO);
         q.setParameter("idLibro", idLibro);
         q.setParameter("idOficina", idOficina);
 
@@ -376,7 +376,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                 "re.destino != null and " + organismosWhere +
                 " re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
 
-        q.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
+        q.setParameter("idEstadoRegistro", RegwebConstantes.REGISTRO_VALIDO);
         q.setParameter("libros", libros);
         if (organismos.size() > 0) {
             q.setParameter("organismos", organismos);
@@ -403,7 +403,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                 " re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
 
         q.setParameter("idRegistro", idRegistro);
-        q.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
+        q.setParameter("idEstadoRegistro", RegwebConstantes.REGISTRO_VALIDO);
         if (organismos.size() > 0) {
             q.setParameter("organismos", organismos);
         }
@@ -423,7 +423,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                 "registroEntrada.destino is null and " +
                 "registroEntrada.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
 
-        q1.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
+        q1.setParameter("idEstadoRegistro", RegwebConstantes.REGISTRO_VALIDO);
         q1.setParameter("idLibro", idLibro);
 
         return q1.getResultList();
@@ -445,7 +445,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                 "registroEntrada.oficina.id = :idOficina and registroEntrada.destino is null and " +
                 "registroEntrada.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
 
-        q1.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
+        q1.setParameter("idEstadoRegistro", RegwebConstantes.REGISTRO_VALIDO);
         q1.setParameter("idOficina", idOficina);
         q1.setParameter("idLibro", idLibro);
         if (any != null) {
@@ -504,7 +504,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                 "registroEntrada.destino is null and " +
                 "registroEntrada.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
 
-        q.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
+        q.setParameter("idEstadoRegistro", RegwebConstantes.REGISTRO_VALIDO);
         q.setParameter("libros", libros);
 
         return (Long) q.getSingleResult();
@@ -532,7 +532,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         }
         q.setParameter("idOficina", idOficina);
         q.setParameter("idLibro", idLibro);
-        q.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
+        q.setParameter("idEstadoRegistro", RegwebConstantes.REGISTRO_VALIDO);
 
 
         return q.getResultList();
@@ -559,7 +559,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         }
         q.setParameter("idOficina", idOficina);
         q.setParameter("idLibro", idLibro);
-        q.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
+        q.setParameter("idEstadoRegistro", RegwebConstantes.REGISTRO_VALIDO);
 
 
         return q.getResultList();
@@ -704,8 +704,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("idEntidad", idEntidad);
-        q.setParameter("anulado", RegwebConstantes.ESTADO_ANULADO);
-        q.setParameter("pendiente", RegwebConstantes.ESTADO_PENDIENTE);
+        q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
+        q.setParameter("pendiente", RegwebConstantes.REGISTRO_PENDIENTE);
 
         return (Long) q.getSingleResult();
     }
@@ -723,8 +723,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("idOficina", idOficina);
-        q.setParameter("anulado", RegwebConstantes.ESTADO_ANULADO);
-        q.setParameter("pendiente", RegwebConstantes.ESTADO_PENDIENTE);
+        q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
+        q.setParameter("pendiente", RegwebConstantes.REGISTRO_PENDIENTE);
 
         return (Long) q.getSingleResult();
     }
@@ -741,8 +741,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("conselleria", conselleria);
-        q.setParameter("anulado", RegwebConstantes.ESTADO_ANULADO);
-        q.setParameter("pendiente", RegwebConstantes.ESTADO_PENDIENTE);
+        q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
+        q.setParameter("pendiente", RegwebConstantes.REGISTRO_PENDIENTE);
 
         return (Long) q.getSingleResult();
     }
@@ -761,8 +761,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("tipoAsunto", tipoAsunto);
         q.setParameter("idEntidad", idEntidad);
-        q.setParameter("anulado", RegwebConstantes.ESTADO_ANULADO);
-        q.setParameter("pendiente", RegwebConstantes.ESTADO_PENDIENTE);
+        q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
+        q.setParameter("pendiente", RegwebConstantes.REGISTRO_PENDIENTE);
 
         return (Long) q.getSingleResult();
     }
@@ -780,8 +780,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("idioma", idioma);
         q.setParameter("idEntidad", idEntidad);
-        q.setParameter("anulado", RegwebConstantes.ESTADO_ANULADO);
-        q.setParameter("pendiente", RegwebConstantes.ESTADO_PENDIENTE);
+        q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
+        q.setParameter("pendiente", RegwebConstantes.REGISTRO_PENDIENTE);
 
         return (Long) q.getSingleResult();
     }
@@ -799,8 +799,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("idioma", idioma);
         q.setParameter("idOficina", idOficina);
-        q.setParameter("anulado", RegwebConstantes.ESTADO_ANULADO);
-        q.setParameter("pendiente", RegwebConstantes.ESTADO_PENDIENTE);
+        q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
+        q.setParameter("pendiente", RegwebConstantes.REGISTRO_PENDIENTE);
 
         return (Long) q.getSingleResult();
     }
@@ -816,8 +816,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("libro", libro);
-        q.setParameter("anulado", RegwebConstantes.ESTADO_ANULADO);
-        q.setParameter("pendiente", RegwebConstantes.ESTADO_PENDIENTE);
+        q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
+        q.setParameter("pendiente", RegwebConstantes.REGISTRO_PENDIENTE);
 
         return (Long) q.getSingleResult();
     }
@@ -833,8 +833,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("oficina", oficina);
-        q.setParameter("anulado", RegwebConstantes.ESTADO_ANULADO);
-        q.setParameter("pendiente", RegwebConstantes.ESTADO_PENDIENTE);
+        q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
+        q.setParameter("pendiente", RegwebConstantes.REGISTRO_PENDIENTE);
 
         return (Long) q.getSingleResult();
     }
@@ -847,7 +847,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         String s = "re.registroDetalle.extracto ";
 
-        if (idEstado.equals(RegwebConstantes.ESTADO_PENDIENTE)) {
+        if (idEstado.equals(RegwebConstantes.REGISTRO_PENDIENTE)) {
             s = "re.registroDetalle.reserva ";
         }
 
@@ -924,7 +924,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("idUsuario", idUsuario);
         q.setParameter("idLibro", idLibro);
-        q.setParameter("pendiente", RegwebConstantes.ESTADO_PENDIENTE);
+        q.setParameter("pendiente", RegwebConstantes.REGISTRO_PENDIENTE);
 
         return q.getResultList();
     }
@@ -1030,7 +1030,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         q.setMaxResults(total);
         q.setParameter("idOficina", idOficina);
-        q.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
+        q.setParameter("idEstadoRegistro", RegwebConstantes.REGISTRO_VALIDO);
 
         return getRegistroBasicoList(q.getResultList());
     }
@@ -1084,7 +1084,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         RegistroEntrada old = registroEntrada;
 
         // Estado anulado
-        registroEntrada.setEstado(RegwebConstantes.ESTADO_ANULADO);
+        registroEntrada.setEstado(RegwebConstantes.REGISTRO_ANULADO);
 
         // Actualizamos el RegistroEntrada
         merge(registroEntrada);
@@ -1103,7 +1103,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         RegistroEntrada old = registroEntrada;
 
         // Estado anulado
-        registroEntrada.setEstado(RegwebConstantes.ESTADO_PENDIENTE_VISAR);
+        registroEntrada.setEstado(RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
 
         // Actualizamos el RegistroEntrada
         merge(registroEntrada);
@@ -1121,7 +1121,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         RegistroEntrada old = registroEntrada;
 
         // Estado anulado
-        registroEntrada.setEstado(RegwebConstantes.ESTADO_VALIDO);
+        registroEntrada.setEstado(RegwebConstantes.REGISTRO_VALIDO);
 
         // Actualizamos el RegistroEntrada
         merge(registroEntrada);
@@ -1138,7 +1138,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         RegistroEntrada old = registroEntrada;
 
-        cambiarEstado(registroEntrada.getId(), RegwebConstantes.ESTADO_TRAMITADO);
+        cambiarEstado(registroEntrada.getId(), RegwebConstantes.REGISTRO_TRAMITADO);
 
         // Creamos el HistoricoRegistroEntrada para la modificación d estado
         historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(old,

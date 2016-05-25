@@ -189,7 +189,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         model.addAttribute("isOficioRemision", registroEntradaEjb.isOficioRemisionInterno(idRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva)));
 
         // Interesados, solo si el Registro en Válido o Estamos en la Oficina donde se registró, o en su Oficina Responsable
-        if(registro.getEstado().equals(RegwebConstantes.ESTADO_VALIDO) && oficinaRegistral){
+        if(registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) && oficinaRegistral){
 
             //model.addAttribute("personasFisicas", personaEjb.getFisicasByEntidad(entidadActiva.getId()));
             //model.addAttribute("personasJuridicas", personaEjb.getJuridicasByEntidad(entidadActiva.getId()));
@@ -244,9 +244,9 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
             final List<Long> estados = new ArrayList<Long>();
-            estados.add(RegwebConstantes.ESTADO_PENDIENTE);
-            estados.add(RegwebConstantes.ESTADO_VALIDO);
-            estados.add(RegwebConstantes.ESTADO_PENDIENTE_VISAR);
+            estados.add(RegwebConstantes.REGISTRO_PENDIENTE);
+            estados.add(RegwebConstantes.REGISTRO_VALIDO);
+            estados.add(RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
 
             // Comprobamos si el RegistroEntrada se puede anular según su estado.
             if(!estados.contains(registroEntrada.getEstado())){
@@ -287,7 +287,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
             // Comprobamos si el RegistroEntrada tiene el estado anulado
-            if(!registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_ANULADO)){
+            if(!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)){
 
                 Mensaje.saveMessageError(request, getMessage("registro.activar.error"));
                 return "redirect:/registroEntrada/list";
@@ -326,7 +326,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
             // Comprobamos si el RegistroEntrada tiene el estado Pendiente de Visar
-            if(!registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE_VISAR)){
+            if(!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR)){
 
                 Mensaje.saveMessageError(request, getMessage("registro.visar.error"));
                 return "redirect:/registroEntrada/list";
@@ -349,7 +349,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             e.printStackTrace();
         }
 
-        return "redirect:/avisos/pendientesVisar/Entrada";
+        return "redirect:/registroEntrada/"+idRegistro+"/detalle";
     }
 
     /**
@@ -368,7 +368,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
 
             // Comprobamos si el RegistroEntrada tiene el estado Válido
-            if(!registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_VALIDO)){
+            if(!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)){
 
                 Mensaje.saveMessageError(request, getMessage("registroEntrada.tramitar.error"));
                 return "redirect:/registroEntrada/list";
@@ -416,7 +416,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         Set<Organismo> organismosOficinaActiva = new HashSet<Organismo>(getOrganismosOficinaActiva(request));
 
         // Comprobamos si el RegistroEntrada tiene el estado Válido
-        if (!registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_VALIDO)) {
+        if (!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)) {
 
             Mensaje.saveMessageError(request, getMessage("registroEntrada.distribuir.error"));
             return respuestaDistribucion;

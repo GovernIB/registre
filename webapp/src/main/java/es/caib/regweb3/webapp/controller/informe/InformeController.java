@@ -1066,21 +1066,21 @@ public class InformeController extends AbstractRegistroCommonFormController {
             valorRegistro.add(registro.getUsuario().getUsuario().getIdentificador());
             valorRegistro.add(registro.getOficina().getDenominacion());
 
-            if(registro.getEstado().equals(RegwebConstantes.ESTADO_VALIDO)) {
+            if(registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)) {
                 valorRegistro.add("VÀLID");
-            } else if(registro.getEstado().equals(RegwebConstantes.ESTADO_TRAMITADO)) {
+            } else if(registro.getEstado().equals(RegwebConstantes.REGISTRO_TRAMITADO)) {
                     valorRegistro.add("TRAMITAT");
-                } else if(registro.getEstado().equals(RegwebConstantes.ESTADO_ANULADO)) {
+                } else if(registro.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)) {
                         valorRegistro.add("ANUL·LAT");
-                    } else if(registro.getEstado().equals(RegwebConstantes.ESTADO_ENVIADO)) {
+                    } else if(registro.getEstado().equals(RegwebConstantes.REGISTRO_ENVIADO)) {
                             valorRegistro.add("ENVIAT");
-                        } else if(registro.getEstado().equals(RegwebConstantes.ESTADO_OFICIO_EXTERNO)) {
+                        } else if(registro.getEstado().equals(RegwebConstantes.REGISTRO_OFICIO_EXTERNO)) {
                                 valorRegistro.add("OFICI EXTERN");
-                            } else if(registro.getEstado().equals(RegwebConstantes.ESTADO_OFICIO_INTERNO)) {
+                            } else if(registro.getEstado().equals(RegwebConstantes.REGISTRO_OFICIO_INTERNO)) {
                                     valorRegistro.add("OFICI INTERN");
-                                } else if(registro.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE)) {
+                                } else if(registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE)) {
                                         valorRegistro.add("PENDENT");
-                                    } else if(registro.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE_VISAR)) {
+                                    } else if(registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR)) {
                                             valorRegistro.add("PENDENT VISAR");
                                         }
 
@@ -1102,21 +1102,21 @@ public class InformeController extends AbstractRegistroCommonFormController {
                 registros.get(i).add(historicoRegistroEntrada.getModificacion());
                 registros.get(i).add(historicoRegistroEntrada.getUsuario().getUsuario().getIdentificador());
 
-                if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.ESTADO_VALIDO)) {
+                if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)) {
                     registros.get(i).add("VÀLID");
-                } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.ESTADO_TRAMITADO)) {
+                } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_TRAMITADO)) {
                         registros.get(i).add("TRAMITAT");
-                    } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.ESTADO_ANULADO)) {
+                    } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)) {
                             registros.get(i).add("ANUL·LAT");
-                        } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.ESTADO_ENVIADO)) {
+                        } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_ENVIADO)) {
                                 registros.get(i).add("ENVIAT");
-                            } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.ESTADO_OFICIO_EXTERNO)) {
+                            } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_OFICIO_EXTERNO)) {
                                     registros.get(i).add("OFICI EXTERN");
-                                } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.ESTADO_OFICIO_INTERNO)) {
+                                } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_OFICIO_INTERNO)) {
                                         registros.get(i).add("OFICI INTERN");
-                                    } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE)) {
+                                    } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE)) {
                                             registros.get(i).add("PENDENT");
-                                        } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE_VISAR)) {
+                                        } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR)) {
                                                 registros.get(i).add("PENDENT VISAR");
                                             }
             }

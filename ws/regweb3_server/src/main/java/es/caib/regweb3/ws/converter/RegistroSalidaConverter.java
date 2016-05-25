@@ -48,7 +48,7 @@ public class RegistroSalidaConverter extends CommonConverter {
         registroSalida.setOficina(oficina);
         registroSalida.setFecha(new Date());
         registroSalida.setUsuario(usuario);
-        registroSalida.setEstado(RegwebConstantes.ESTADO_VALIDO);
+        registroSalida.setEstado(RegwebConstantes.REGISTRO_VALIDO);
         registroSalida.setLibro(libro);
 
         registroDetalle.setTipoAsunto(getTipoAsunto(registroSalidaWs.getTipoAsunto(),usuario.getEntidad().getId(), tipoAsuntoEjb));

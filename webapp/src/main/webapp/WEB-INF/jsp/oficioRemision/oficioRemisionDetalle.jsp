@@ -62,16 +62,16 @@
                             </dd>
                             <dt><i class="fa fa-bookmark"></i> <spring:message code="oficioRemision.estado"/>: </dt>
                             <dd>
-                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_INTERNO_ESTADO_ENVIADO}"><span class="label label-warning"></c:if>
-                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ESTADO_ENVIADO}"><span class="label label-warning"></c:if>
-                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ESTADO_ACEPTADO}"><span class="label label-success"></c:if>
-                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ESTADO_ANULADO}"><span class="label label-danger"></c:if>
+                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO}"><span class="label label-warning"></c:if>
+                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ENVIADO}"><span class="label label-warning"></c:if>
+                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ACEPTADO}"><span class="label label-success"></c:if>
+                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ANULADO}"><span class="label label-danger"></c:if>
 
                                 <spring:message code="oficioRemision.estado.${oficioRemision.estado}"/>
-                                <c:if test="${not empty oficioRemision.fechaEstado && oficioRemision.estado != RegwebConstantes.OFICIO_REMISION_INTERNO_ESTADO_ENVIADO}">
+                                <c:if test="${not empty oficioRemision.fechaEstado && oficioRemision.estado != RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO}">
                                     - <fmt:formatDate value="${oficioRemision.fechaEstado}" pattern="dd/MM/yyyy HH:mm:ss"/>
                                 </c:if>
-                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_INTERNO_ESTADO_ENVIADO}">
+                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO}">
                                     - <fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/>
                                 </c:if>
                                 </span>
@@ -98,7 +98,7 @@
                         </div>
                     </c:if>
 
-                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_INTERNO_ESTADO_ENVIADO && isAdministradorLibro}">
+                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO && isAdministradorLibro}">
                         <div class="panel-footer">
                             <button type="button" onclick='confirm("<c:url value="/oficioRemision/${oficioRemision.id}/anular"/>","<spring:message code="oficioRemision.anular.confirmar" htmlEscape="true"/>")' class="btn btn-danger btn-sm btn-block"><spring:message code="oficioRemision.anular"/></button>
                         </div>

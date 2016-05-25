@@ -320,7 +320,7 @@
                </form:form>
 
                <!-- INTERESADOS -->
-               <c:if test="${empty registroEntrada.id || registroEntrada.estado == RegwebConstantes.ESTADO_PENDIENTE}">
+               <c:if test="${empty registroEntrada.id || registroEntrada.estado == RegwebConstantes.REGISTRO_PENDIENTE}">
                    <c:set var="registro" value="${registroEntrada}"/>
                    <c:import url="../registro/interesados.jsp">
                        <c:param name="tipo" value="nuevo"/>

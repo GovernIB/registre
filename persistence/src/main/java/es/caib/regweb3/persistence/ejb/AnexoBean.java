@@ -324,7 +324,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             // Si han pasado más de los dias de visado de la entidad se crearan historicos de todos los
             // cambios y se cambia el estado del registroEntrada a pendiente visar
             if(dias >= entidadActiva.getDiasVisado()){
-               registroEntradaEjb.cambiarEstado(registroID, RegwebConstantes.ESTADO_PENDIENTE_VISAR);
+               registroEntradaEjb.cambiarEstado(registroID, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
 
                // Creamos el historico de registro de entrada
                historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada, usuarioEntidad, RegwebConstantes.TIPO_MODIF_ANEXOS,true);
@@ -334,7 +334,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         } else {// MODIFICACION DE ANEXO
 
             if(dias >= entidadActiva.getDiasVisado()){ // Si han pasado más de los dias de visado cambiamos estado registro
-                registroEntradaEjb.cambiarEstado(registroID, RegwebConstantes.ESTADO_PENDIENTE_VISAR);
+                registroEntradaEjb.cambiarEstado(registroID, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
             }
 
             // Creamos el historico de registro de entrada, siempre creamos histórico independiente de los dias.
@@ -352,7 +352,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             // Si han pasado más de los dias de visado de la entidad se crearan historicos de todos los
             // cambios y se cambia el estado del registroEntrada a pendiente visar
             if(dias >= entidadActiva.getDiasVisado()){
-               registroSalidaEjb.cambiarEstado(registroID, RegwebConstantes.ESTADO_PENDIENTE_VISAR);
+               registroSalidaEjb.cambiarEstado(registroID, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
 
                // Creamos el historico de registro de entrada
                historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(registroSalida, usuarioEntidad, RegwebConstantes.TIPO_MODIF_ANEXOS,true);
@@ -361,7 +361,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         } else {// MODIFICACION DE ANEXO
 
             if(dias >= entidadActiva.getDiasVisado()){ // Si han pasado más de los dias de visado cambiamos estado registro
-                registroSalidaEjb.cambiarEstado(registroID, RegwebConstantes.ESTADO_PENDIENTE_VISAR);
+                registroSalidaEjb.cambiarEstado(registroID, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
             }
             // Creamos el historico de registro de entrada, siempre creamos histórico independiente de los dias.
             historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(registroSalida, usuarioEntidad, RegwebConstantes.TIPO_MODIF_ANEXOS,true);

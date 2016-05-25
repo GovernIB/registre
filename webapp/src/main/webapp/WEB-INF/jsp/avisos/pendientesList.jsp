@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html lang="ca">
 <head>
-    <title>${titulo}</title>
+    <title><spring:message code="registroEntrada.pendientes"/></title>
     <c:import url="../modulos/imports.jsp"/>
 </head>
 
@@ -78,7 +78,7 @@
                                         <col>
                                         <col>
                                         <col>
-                                        <col width="60">
+                                        <col width="100">
                                     </colgroup>
                                     <thead>
                                     <tr>
@@ -107,18 +107,22 @@
                                             </td>
                                             <td>${registro.registroDetalle.reserva}</td>
                                             <td class="center">
-                                                <c:if test="${registro.class.simpleName == 'RegistroEntrada'}">
-                                                    <a class="btn btn-info btn-sm"
-                                                       href="<c:url value="/registroEntrada/${registro.id}/detalle"/>"
-                                                       title="<spring:message code="registroEntrada.detalle"/>"><span
-                                                            class="fa fa-eye"></span></a>
-                                                </c:if>
-                                                <c:if test="${registro.class.simpleName == 'RegistroSalida'}">
+
+                                                <a class="btn btn-info btn-sm"
+                                                   href="<c:url value="/registroEntrada/${registro.id}/detalle"/>"
+                                                   title="<spring:message code="registroEntrada.detalle"/>"><span
+                                                        class="fa fa-eye"></span></a>
+                                                <a class="btn btn-warning btn-sm"
+                                                   href="<c:url value="/registroEntrada/${registro.id}/edit"/>"
+                                                   title="<spring:message code="registroEntrada.editar"/>"><span
+                                                        class="fa fa-pencil"></span></a>
+
+                                                <%--<c:if test="${registro.class.simpleName == 'RegistroSalida'}">
                                                     <a class="btn btn-info btn-sm"
                                                        href="<c:url value="/registroSalida/${registro.id}/detalle"/>"
                                                        title="<spring:message code="registroEntrada.detalle"/>"><span
                                                             class="fa fa-eye"></span></a>
-                                                </c:if>
+                                                </c:if>--%>
                                             </td>
                                         </tr>
                                     </c:forEach>

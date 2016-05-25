@@ -149,8 +149,8 @@ public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
 
             // Comprobamos que el Registro de Entrada es válido para editarse
             final List<Long> estados = new ArrayList<Long>();
-            estados.add(RegwebConstantes.ESTADO_PENDIENTE);
-            estados.add(RegwebConstantes.ESTADO_VALIDO);
+            estados.add(RegwebConstantes.REGISTRO_PENDIENTE);
+            estados.add(RegwebConstantes.REGISTRO_VALIDO);
 
             if (!estados.contains(registroEntrada.getEstado())) {
                 log.info("Este RegistroEntrada no se puede modificar");
