@@ -21,7 +21,7 @@
             <div class="col-xs-12">
                 <ol class="breadcrumb">
                     <li><a href="<c:url value="/inici"/>"><i class="fa fa-globe"></i> ${oficinaActiva.denominacion}</a></li>
-                    <li><a href="<c:url value="/oficioRemision/oficiosPendientesLlegada/list"/>" ><i class="fa fa-list"></i> <spring:message code="oficioRemision.pendientesLlegada"/></a></li>
+                    <li><a href="<c:url value="/oficioRemision/pendientesLlegada/list"/>" ><i class="fa fa-list"></i> <spring:message code="oficioRemision.pendientesLlegada"/></a></li>
                     <li class="active"><i class="fa fa-pencil-square-o"></i> <spring:message code="oficioRemision.oficioRemision"/> <fmt:formatDate value="${oficioRemision.fecha}" pattern="yyyy"/> / ${oficioRemision.numeroOficio}</li>
                     <%--Importamos el menú de avisos--%>
                     <c:import url="/avisos"/>

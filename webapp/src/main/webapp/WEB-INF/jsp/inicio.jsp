@@ -226,7 +226,7 @@
                                                 <tr>
                                                     <td>${organismo}</td>
                                                     <td class="center">
-                                                        <a class="btn btn-success btn-sm" href="<c:url value="/oficioRemision/oficiosPendientesRemisionInterna"/>" title="<spring:message code="oficioRemision.buscador"/>"><span class="fa fa-search"></span></a>
+                                                        <a class="btn btn-success btn-sm" href="<c:url value="/oficioRemision/pendientesRemisionInterna"/>" title="<spring:message code="oficioRemision.buscador"/>"><span class="fa fa-search"></span></a>
                                                     </td>
                                                 </tr>
                                             </c:forEach>
@@ -272,7 +272,7 @@
                                                 <tr>
                                                     <td>${organismo}</td>
                                                     <td class="center">
-                                                        <a class="btn btn-success btn-sm" href="<c:url value="/oficioRemision/oficiosPendientesRemisionExterna"/>" title="<spring:message code="oficioRemision.buscador"/>"><span class="fa fa-search"></span></a>
+                                                        <a class="btn btn-success btn-sm" href="<c:url value="/oficioRemision/pendientesRemisionExterna"/>" title="<spring:message code="oficioRemision.buscador"/>"><span class="fa fa-search"></span></a>
                                                     </td>
                                                 </tr>
                                             </c:forEach>

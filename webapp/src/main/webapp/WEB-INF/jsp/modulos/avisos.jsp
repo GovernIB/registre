@@ -52,7 +52,7 @@
 
                     <c:if test="${oficiosRemisionInterna > 0}">
                         <li>
-                            <a href="<c:url value="/oficioRemision/oficiosPendientesRemisionInterna"/>">
+                            <a href="<c:url value="/oficioRemision/pendientesRemisionInterna"/>">
                                 <div>
                                     <i class="fa fa-comment fa-fw"></i> <spring:message code="oficioRemision.pendientesRemisionInterna"/> (${oficiosRemisionInterna})
                                     <%--<span class="pull-right text-muted small"><fmt:formatDate type="time" value="${ahora}" /></span>--%>
@@ -64,7 +64,7 @@
 
                     <c:if test="${oficiosRemisionExterna > 0}">
                         <li>
-                            <a href="<c:url value="/oficioRemision/oficiosPendientesRemisionExterna"/>">
+                            <a href="<c:url value="/oficioRemision/pendientesRemisionExterna"/>">
                                 <div>
                                     <i class="fa fa-comment fa-fw"></i> <spring:message code="oficioRemision.pendientesRemisionExterna"/> (${oficiosRemisionExterna})
                                     <%--<span class="pull-right text-muted small"><fmt:formatDate type="time" value="${ahora}" /></span>--%>
@@ -76,7 +76,7 @@
 
                     <c:if test="${oficiosPendientesLlegada > 0}">
                         <li>
-                            <a href="<c:url value="/oficioRemision/oficiosPendientesLlegada/list"/>">
+                            <a href="<c:url value="/oficioRemision/pendientesLlegada/list"/>">
                                 <div>
                                     <i class="fa fa-comment fa-fw"></i> <spring:message code="oficioRemision.pendientesLlegada"/> (${oficiosPendientesLlegada})
                                     <%--<span class="pull-right text-muted small"><fmt:formatDate type="time" value="${ahora}" /></span>--%>

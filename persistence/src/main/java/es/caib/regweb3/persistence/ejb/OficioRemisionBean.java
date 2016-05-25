@@ -242,19 +242,70 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     }
 
     @Override
-    public List<OficioRemision> oficiosPendientesLlegadaPaginado(Set<Organismo> organismos, int inicio) throws Exception {
+    public Paginacion oficiosPendientesLlegadaBusqueda(Set<Organismo> organismos, Integer pageNumber,OficioRemision oficioRemision, List<Libro> libros) throws Exception {
 
-        Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision "
-                + "where oficioRemision.organismoDestinatario in (:organismos) "
-                + " and oficioRemision.estado = " + RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO
-                + " order by oficioRemision.id desc");
+        Query q;
+        Query q2;
+        Map<String, Object> parametros = new HashMap<String, Object>();
+        List<String> where = new ArrayList<String>();
 
-        q.setParameter("organismos",organismos);
-        q.setFirstResult(inicio);
-        q.setMaxResults(RESULTADOS_PAGINACION);
+        StringBuffer query = new StringBuffer("Select oficioRemision from OficioRemision as oficioRemision ");
+
+        where.add(" oficioRemision.organismoDestinatario in (:organismos)"); parametros.put("organismos",organismos);
+        where.add(" oficioRemision.estado = :estado");parametros.put("estado",RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO);
+
+        if(oficioRemision.getNumeroOficio()!= null && oficioRemision.getNumeroOficio() > 0){where.add(" oficioRemision.numeroOficio = :numeroOficio"); parametros.put("numeroOficio",oficioRemision.getNumeroOficio());}
+
+        // Comprobamos si la búsqueda es sobre un libro en concreto o sobre todos a los que tiene acceso el usuario.
+        if(oficioRemision.getLibro().getId() != null && oficioRemision.getLibro().getId() > 0){
+            where.add(" oficioRemision.libro.id = :idLibro"); parametros.put("idLibro",oficioRemision.getLibro().getId());
+        }else{
+            where.add(" oficioRemision.libro in (:libros)"); parametros.put("libros",libros);
+        }
 
 
-        return q.getResultList();
+        if (parametros.size() != 0) {
+            query.append("where ");
+            int count = 0;
+            for (String w : where) {
+                if (count != 0) {
+                    query.append(" and ");
+                }
+                query.append(w);
+                count++;
+            }
+            q2 = em.createQuery(query.toString().replaceAll("Select oficioRemision from OficioRemision as oficioRemision ", "Select count(oficioRemision.id) from OficioRemision as oficioRemision "));
+            query.append(" order by oficioRemision.id desc");
+            q = em.createQuery(query.toString());
+
+            for (Map.Entry<String, Object> param : parametros.entrySet()) {
+
+                q.setParameter(param.getKey(), param.getValue());
+                q2.setParameter(param.getKey(), param.getValue());
+            }
+
+        }else{
+            q2 = em.createQuery(query.toString().replaceAll("Select oficioRemision from OficioRemision as oficioRemision ", "Select count(oficioRemision.id) from OficioRemision as oficioRemision "));
+            query.append("order by oficioRemision.id desc");
+            q = em.createQuery(query.toString());
+        }
+
+
+        Paginacion paginacion = null;
+
+        if(pageNumber != null){ // Comprobamos si es una busqueda paginada o no
+            Long total = (Long)q2.getSingleResult();
+            paginacion = new Paginacion(total.intValue(), pageNumber);
+            int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            q.setFirstResult(inicio);
+            q.setMaxResults(RESULTADOS_PAGINACION);
+        }else{
+            paginacion = new Paginacion(0, 0);
+        }
+
+        paginacion.setListado(q.getResultList());
+
+        return paginacion;
     }
 
     @Override

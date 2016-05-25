@@ -63,11 +63,12 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
     /**
      * Devuelve los Oficios de Remisión pendientes de procesar de los organismos seleccionados paginados
      * @param organismos
-     * @param inicio
+     * @param libros
+     * @param oficioRemision
      * @return
      * @throws Exception
      */
-    public List<OficioRemision> oficiosPendientesLlegadaPaginado(Set<Organismo> organismos, int inicio) throws Exception;
+    public Paginacion oficiosPendientesLlegadaBusqueda(Set<Organismo> organismos, Integer pageNumber,OficioRemision oficioRemision, List<Libro> libros) throws Exception;
 
     /**
      * Devuelve los Oficios de Remisión pendientes de procesar de los organismos seleccionados
