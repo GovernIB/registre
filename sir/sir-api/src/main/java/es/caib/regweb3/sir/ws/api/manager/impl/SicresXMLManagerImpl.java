@@ -1002,6 +1002,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
                 if (sc != null) {
                     filename_firma = sc.getName();
+
                     data_firma = sc.getData();
                 }
 
