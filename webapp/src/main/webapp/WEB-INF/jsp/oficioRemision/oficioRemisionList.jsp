@@ -35,12 +35,12 @@
 
             <div class="col-xs-12">
 
-                <div class="panel panel-info">
+                <div class="panel panel-success">
                 
                 <c:if test="${(not empty librosConsulta) && (not empty oficioRemisionBusqueda)}">
 
                     <div class="panel-heading">
-                        <h3 class="panel-title"><i class="fa fa-search"></i><strong><spring:message code="oficioRemision.buscador"/></strong> </h3>
+                        <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="oficioRemision.buscador"/></strong> </h3>
                     </div>
 
                     <form:form modelAttribute="oficioRemisionBusqueda" method="post" cssClass="form-horizontal">
@@ -55,13 +55,24 @@
                             </div>
                             <div class="form-group col-xs-6">
                                 <div class="col-xs-4 pull-left align-right"><spring:message
+                                        code="oficioRemision.estado"/></div>
+                                <div class="col-xs-8">
+                                    <form:select path="estadoOficioRemision" cssClass="chosen-select">
+                                        <form:option value="">...</form:option>
+                                        <c:forEach items="${estadosOficioRemision}" var="estado">
+                                            <form:option value="${estado}"><spring:message code="oficioRemision.estado.${estado}" /></form:option>
+                                        </c:forEach>
+                                    </form:select>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-6">
+                                <div class="col-xs-4 pull-left align-right"><spring:message
                                         code="oficioRemision.tipo"/></div>
                                 <div class="col-xs-8">
                                     <form:select path="tipoOficioRemision.id" cssClass="chosen-select">
                                         <form:option value="">...</form:option>
-                                        <c:forEach items="${tiposOficioRemision}" var="tipoOficioRemision">
-                                            <form:option
-                                                    value="${tipoOficioRemision.id}">${tipoOficioRemision.nombre}</form:option>
+                                        <c:forEach items="${tiposOficioRemision}" var="tipo">
+                                            <form:option value="${tipo}"><spring:message code="oficioRemision.tipo.${tipo}" /></form:option>
                                         </c:forEach>
                                     </form:select>
                                 </div>
@@ -134,7 +145,6 @@
                                                         <tr>
                                                             <th><spring:message code="oficioRemision.numeroOficio"/></th>
                                                             <th><spring:message code="oficioRemision.fecha"/></th>
-                  <%--                                          <th><spring:message code="oficioRemision.libro.corto"/></th>--%>
                                                             <th><spring:message code="oficioRemision.oficina"/></th>
                                                             <th><spring:message code="oficioRemision.organismoDestino"/></th>
                                                             <th><spring:message code="oficioRemision.numero.re"/></th>
@@ -149,12 +159,14 @@
                                                             <tr>
                                                                 <td><fmt:formatDate value="${oficioRemision.fecha}" pattern="yyyy"/> / ${oficioRemision.numeroOficio}</td>
                                                                 <td><fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy"/></td>
-                                                                <%--<td>${oficioRemision.libro.nombreCompleto}</td>--%>
                                                                 <td><label class="no-bold" rel="ayuda" data-content="${oficioRemision.oficina.denominacion}" data-toggle="popover">${oficioRemision.oficina.codigo}</label></td>
                                                                 <td>${(empty oficioRemision.organismoDestinatario)? oficioRemision.destinoExternoDenominacion : oficioRemision.organismoDestinatario.denominacion}</td>
                                                                 <td>${fn:length(oficioRemision.registrosEntrada)}</td>
                                                                 <td>
-                                                                    <span class="label ${(oficioRemision.estado == 2)?'label-success':'label-danger'}">
+                                                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO}"><span class="label label-warning"></c:if>
+                                                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ENVIADO}"><span class="label label-warning"></c:if>
+                                                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ACEPTADO}"><span class="label label-success"></c:if>
+                                                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ANULADO}"><span class="label label-danger"></c:if>
                                                                       <spring:message code="oficioRemision.estado.${oficioRemision.estado}"/>
                                                                       <c:if test="${not empty oficioRemision.fechaEstado && oficioRemision.estado != 0}">
                                                                           - <fmt:formatDate value="${oficioRemision.fechaEstado}" pattern="dd/MM/yyyy HH:mm:ss"/>
@@ -162,7 +174,7 @@
                                                                     </span>
                                                                 </td>
                                                                 <td>
-                                                                    <span class="label label-warning">
+                                                                    <span class="label label-default">
                                                                         <c:if test="${not empty oficioRemision.organismoDestinatario}">
                                                                             <spring:message
                                                                                     code="oficioRemision.interno"/>

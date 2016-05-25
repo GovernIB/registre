@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
-<un:useConstants var="RegwebConstantes" className="es.caib.regweb3.utils.RegwebConstantes"/>
+
 <!DOCTYPE html>
 <html lang="ca">
 <head>
@@ -33,7 +33,7 @@
             <div class="col-xs-12">
                 <form:form modelAttribute="tipoDocumental" method="post" cssClass="form-horizontal">
 
-                <div class="panel panel-success">
+                <div class="panel panel-warning">
 
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i>

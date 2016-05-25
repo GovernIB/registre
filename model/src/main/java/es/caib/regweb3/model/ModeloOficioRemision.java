@@ -24,6 +24,14 @@ public class ModeloOficioRemision extends Traducible{
     private Entidad entidad;
     private Archivo modelo;
 
+    public ModeloOficioRemision() {
+    }
+
+    public ModeloOficioRemision(Long id, String nombre) {
+        this.id = id;
+        this.nombre = nombre;
+    }
+
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
     @Column(name="ID")
@@ -66,5 +74,7 @@ public class ModeloOficioRemision extends Traducible{
     public void setModelo(Archivo modelo) {
         this.modelo = modelo;
     }
+
+
 
 }

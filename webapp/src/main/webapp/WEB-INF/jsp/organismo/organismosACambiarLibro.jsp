@@ -37,7 +37,7 @@ de un proceso de sincronización/actualización de una entidad desde dir3caib --
 
         <div class="row"> <!--row principal-->
             <div class="col-xs-12">
-                <div class="panel panel-success"> <!-- Panel principal-->
+                <div class="panel panel-warning"> <!-- Panel principal-->
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-file-o"></i> <strong>${tituloPagina}</strong></h3>
                     </div>

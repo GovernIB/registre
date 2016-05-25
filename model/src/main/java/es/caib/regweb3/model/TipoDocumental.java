@@ -38,6 +38,10 @@ public class TipoDocumental extends Traducible {
       this.id= Long.valueOf(id);
     }
 
+    public TipoDocumental(String codigoNTI, Long idEntidad) {
+        this.codigoNTI = codigoNTI;
+        this.entidad = new Entidad(idEntidad);
+    }
 
     /**
      *

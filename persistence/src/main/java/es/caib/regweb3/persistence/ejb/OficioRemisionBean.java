@@ -84,7 +84,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     }
 
     @Override
-    public Paginacion busqueda(Integer pageNumber, Integer any, OficioRemision oficioRemision, List<Libro> libros, Long tipoOficioRemision) throws Exception {
+    public Paginacion busqueda(Integer pageNumber, Integer any, OficioRemision oficioRemision, List<Libro> libros, Long tipoOficioRemision, Integer estadoOficioRemision) throws Exception {
 
         Query q;
         Query q2;
@@ -107,11 +107,17 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
         // Tipo Oficio Remisión Interno o Externo
         if (tipoOficioRemision != null) {
-            if (tipoOficioRemision.equals(RegwebConstantes.OFICIO_REMISION_INTERNO)) {
+            if (tipoOficioRemision.equals(RegwebConstantes.TIPO_OFICIO_REMISION_INTERNO)) {
                 where.add(" oficioRemision.organismoDestinatario != null");
-            } else if (tipoOficioRemision.equals(RegwebConstantes.OFICIO_REMISION_EXTERNO)) {
+            } else if (tipoOficioRemision.equals(RegwebConstantes.TIPO_OFICIO_REMISION_EXTERNO)) {
                 where.add(" oficioRemision.organismoDestinatario is null");
             }
+        }
+
+        // Estado Oficio Remisión
+        if(estadoOficioRemision != null){
+            where.add(" oficioRemision.estado = :estadoOficioRemision");
+            parametros.put("estadoOficioRemision",estadoOficioRemision);
         }
 
         if (parametros.size() != 0) {
@@ -181,7 +187,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
             registroSalida.setOrigen(oficioRemision.getLibro().getOrganismo());//todo: Esta asignación es correcta?
             registroSalida.setLibro(oficioRemision.getLibro());
             registroSalida.setRegistroDetalle(registroEntrada.getRegistroDetalle());
-            registroSalida.setEstado(RegwebConstantes.ESTADO_TRAMITADO);
+            registroSalida.setEstado(RegwebConstantes.REGISTRO_TRAMITADO);
 
             // Registramos la Salida
             registroSalida = registroSalidaEjb.registrarSalida(registroSalida);
@@ -208,11 +214,23 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     }
 
     @Override
+    public void anularOficioRemision(Long idOficioRemision) throws Exception{
+
+        OficioRemision oficioRemision = findById(idOficioRemision);
+
+        oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_ANULADO);
+
+        merge(oficioRemision);
+        // Anular RS
+        // C
+    }
+
+    @Override
     public List<OficioRemision> oficiosPendientesLlegada(Set<Organismo> organismos, Integer total) throws Exception {
 
         Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision "
                 + "where oficioRemision.organismoDestinatario in (:organismos) "
-                + " and oficioRemision.estado = " + RegwebConstantes.OFICIO_REMISION_INTERNO_ESTADO_ENVIADO
+                + " and oficioRemision.estado = " + RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO
                 + " order by oficioRemision.id desc");
 
         q.setParameter("organismos",organismos);
@@ -228,7 +246,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
         Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision "
                 + "where oficioRemision.organismoDestinatario in (:organismos) "
-                + " and oficioRemision.estado = " + RegwebConstantes.OFICIO_REMISION_INTERNO_ESTADO_ENVIADO
+                + " and oficioRemision.estado = " + RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO
                 + " order by oficioRemision.id desc");
 
         q.setParameter("organismos",organismos);
@@ -244,7 +262,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
         Query q = em.createQuery("Select count(oficioRemision.id) from OficioRemision as oficioRemision "
                 + "where oficioRemision.organismoDestinatario in (:organismos) "
-                + " and oficioRemision.estado = " + RegwebConstantes.OFICIO_REMISION_INTERNO_ESTADO_ENVIADO);
+                + " and oficioRemision.estado = " + RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO);
 
         q.setParameter("organismos",organismos);
 

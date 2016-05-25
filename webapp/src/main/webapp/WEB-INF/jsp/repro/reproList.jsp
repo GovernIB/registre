@@ -30,7 +30,7 @@
         <div class="row">
             <div class="col-xs-12">
 
-                <div class="panel panel-success">
+                <div class="panel panel-warning">
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-list"></i> <strong><spring:message code="repro.listado"/></strong></h3>
                     </div>

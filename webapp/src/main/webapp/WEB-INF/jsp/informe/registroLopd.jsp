@@ -33,7 +33,7 @@
 
             <div class="col-xs-12">
 
-                <div class="panel panel-success">
+                <div class="panel panel-warning">
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-search"></i><spring:message code="informe.registroLopd"/> </h3>
                     </div>

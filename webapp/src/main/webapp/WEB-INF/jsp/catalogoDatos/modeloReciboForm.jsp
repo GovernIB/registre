@@ -32,7 +32,7 @@
         <div class="row">
             <div class="col-xs-12">
 
-                <div class="panel panel-success">
+                <div class="panel panel-warning">
 
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i>
@@ -66,7 +66,7 @@
                                     <div class="col-xs-8">
                                         <div class="input-group">
                                                     <span class="input-group-btn">
-                                                        <span class="btn btn-success btn-sm btn-file">
+                                                        <span class="btn btn-warning btn-sm btn-file">
                                                             Explorar&hellip; <input id="modelo" name="modelo" type="file" multiple>
                                                         </span>
                                                     </span>

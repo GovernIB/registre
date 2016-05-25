@@ -93,12 +93,20 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     @Override
     public List<Organismo> getAllByEntidad(Long entidad) throws Exception {
 
-        Query q = em.createQuery("Select organismo from Organismo as organismo where " +
+        Query q = em.createQuery("Select organismo.id, organismo.codigo, organismo.denominacion from Organismo as organismo where " +
                 "organismo.entidad.id = :entidad");
 
         q.setParameter("entidad", entidad);
 
-        return q.getResultList();
+        List<Organismo> organismos =  new ArrayList<Organismo>();
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result){
+            Organismo organismo = new Organismo((Long)object[0],(String)object[1],(String)object[2]);
+            organismos.add(organismo);
+        }
+
+        return organismos;
     }
 
 
@@ -430,12 +438,12 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
         // Añadimos los organismos a los que da servicio la Oficina (Directos y Funcionales)
         LinkedHashSet<Organismo> organismos = oficinaActiva.getOrganismosFuncionales();
-log.info("inicio hijosTotales");
+
         // Añadimos todos los hijos de los Organismos obtenidos anteriormetne
         LinkedHashSet<Organismo> hijosTotales = new LinkedHashSet<Organismo>();
         obtenerHijosOrganismos(organismos, hijosTotales);
         organismos.addAll(hijosTotales);
-        log.info("Fin hijosTotales");
+
         return organismos;
 
     }
@@ -546,8 +554,8 @@ log.info("inicio hijosTotales");
     }
 
     public Boolean tieneOficinasServicio(Long idOrganismo) throws Exception {
-
-        Boolean oficinas = oficinaEjb.tieneOficinasOrganismo(idOrganismo);
+        //Incluimos las oficinas virtuales no presenciales
+        Boolean oficinas = oficinaEjb.tieneOficinasOrganismo(idOrganismo, true);
         if (!oficinas) {
             // Si no tiene Oficinas que cuelguen de el, buscamos en su padre
             Organismo organismo = findById(idOrganismo);

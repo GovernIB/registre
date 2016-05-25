@@ -33,7 +33,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @return
      * @throws Exception
      */
-    public Paginacion busqueda(Integer pageNumber, Integer any, OficioRemision oficioRemision, List<Libro> libros, Long tipoOficioRemision) throws Exception;
+    public Paginacion busqueda(Integer pageNumber, Integer any, OficioRemision oficioRemision, List<Libro> libros, Long tipoOficioRemision, Integer estadoOficioRemision) throws Exception;
 
     /**
      * Registra un OficioRemision asignandole número
@@ -44,6 +44,13 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      */
     public OficioRemision registrarOficioRemision(OficioRemision oficioRemision, Long estado)
         throws Exception, I18NException, I18NValidationException;
+
+    /**
+     * Anula un Oficio de Remisión
+     * @param idOficioRemision
+     * @throws Exception
+     */
+    public void anularOficioRemision(Long idOficioRemision) throws Exception;
 
     /**
      * Devuelve los Oficios de Remisión pendientes de procesar de los organismos seleccionados

@@ -31,10 +31,10 @@
         <div class="row">
             <div class="col-xs-12">
 
-                <div class="panel panel-success">
+                <div class="panel panel-warning">
 
                     <div class="panel-heading">
-                        <a class="btn btn-success btn-xs pull-right" href="<c:url value="/propiedadGlobal/new"/>"
+                        <a class="btn btn-warning btn-xs pull-right" href="<c:url value="/propiedadGlobal/new"/>"
                            role="button"><span class="fa fa-plus"></span> <spring:message code="propiedadGlobal.nuevo"/></a>
                         <h3 class="panel-title"><i class="fa fa-list"></i> <strong><spring:message
                                 code="propiedadGlobal.listado"/></strong></h3>
@@ -76,11 +76,13 @@
                                     <colgroup>
                                         <col>
                                         <col>
+                                        <col>
                                         <col width="100">
                                     </colgroup>
                                     <thead>
                                     <tr>
                                         <th><spring:message code="propiedadGlobal.clave"/></th>
+                                        <th><spring:message code="propiedadGlobal.descripcion"/></th>
                                         <th><spring:message code="propiedadGlobal.valor"/></th>
                                         <th class="center"><spring:message code="regweb.acciones"/></th>
                                     </tr>
@@ -90,6 +92,7 @@
                                     <c:forEach var="propiedadGlobal" items="${listado}">
                                         <tr>
                                             <td>${propiedadGlobal.clave}</td>
+                                            <td>${propiedadGlobal.descripcion}</td>
                                             <td>${propiedadGlobal.valor}</td>
                                             <td class="center">
                                                 <a class="btn btn-warning btn-sm"

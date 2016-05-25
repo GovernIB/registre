@@ -148,7 +148,7 @@
                     <c:if test="${not empty oficiosPendientesLlegada}">
                         <div class="col-xs-6">
 
-                            <div class="panel panel-info">
+                            <div class="panel panel-success">
                                 <div class="panel-heading">
                                     <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="oficioRemision.pendientesLlegada.ultimos"/></strong> </h3>
                                 </div>
@@ -200,7 +200,7 @@
                     <c:if test="${not empty organismosOficioRemisionInterna}">
                         <div class="col-xs-6">
 
-                            <div class="panel panel-info">
+                            <div class="panel panel-success">
                                 <div class="panel-heading">
                                     <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="oficioRemision.organimosInterno.inicio"/></strong> </h3>
                                 </div>
@@ -246,7 +246,7 @@
                     <c:if test="${not empty organismosOficioRemisionExterna}">
                         <div class="col-xs-6">
 
-                            <div class="panel panel-info">
+                            <div class="panel panel-success">
                                 <div class="panel-heading">
                                     <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="oficioRemision.organimosExterna.inicio"/></strong> </h3>
                                 </div>

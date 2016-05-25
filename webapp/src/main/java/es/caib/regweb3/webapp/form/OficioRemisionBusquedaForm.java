@@ -14,6 +14,7 @@ public class OficioRemisionBusquedaForm {
   private Integer pageNumber;
   private Integer anyo;
   private ObjetoBasico tipoOficioRemision;
+  private Integer estadoOficioRemision;
 
 
   public OficioRemisionBusquedaForm() {}
@@ -53,5 +54,13 @@ public class OficioRemisionBusquedaForm {
 
   public void setTipoOficioRemision(ObjetoBasico tipoOficioRemision) {
     this.tipoOficioRemision = tipoOficioRemision;
+  }
+
+  public Integer getEstadoOficioRemision() {
+    return estadoOficioRemision;
+  }
+
+  public void setEstadoOficioRemision(Integer estadoOficioRemision) {
+    this.estadoOficioRemision = estadoOficioRemision;
   }
 }

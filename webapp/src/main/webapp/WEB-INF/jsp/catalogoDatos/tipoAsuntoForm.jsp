@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
-<un:useConstants var="RegwebConstantes" className="es.caib.regweb3.utils.RegwebConstantes"/>
 
 <!DOCTYPE html>
 <html lang="ca">
@@ -31,7 +30,7 @@
             <div class="row">
                 <div class="col-xs-12">
                     <form:form modelAttribute="tipoAsunto" method="post" cssClass="form-horizontal">
-                    <div class="panel panel-success">
+                    <div class="panel panel-warning">
                         <div class="panel-heading">
                            <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i>
                               <strong>
@@ -109,9 +108,9 @@
              <c:if test="${not empty tipoAsunto.id}">
              <div class="row">
                <div class="col-xs-12">
-                   <div class="panel panel-success">
+                   <div class="panel panel-warning">
                        <div class="panel-heading">
-                            <a href="#myModal" class="btn btn-success btn-xs pull-right" role="button" data-toggle="modal"><i class="fa fa-plus"></i> <spring:message code="codigoAsunto.nuevo"/></a>
+                            <a href="#myModal" class="btn btn-warning btn-xs pull-right" role="button" data-toggle="modal"><i class="fa fa-plus"></i> <spring:message code="codigoAsunto.nuevo"/></a>
                             <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong><spring:message code="tipoAsunto.codigosAsunto"/>: ${tipoAsunto.traduccion.nombre}</strong></h3>
                        </div>
                        <div class="panel-body">
@@ -255,7 +254,7 @@
                             <form:form id="modal-form" modelAttribute="codigoAsunto" method="post" action="${formAction}" cssClass="form-horizontal" >
                                 <form:hidden path="id"/>
 
-                                <div class="panel panel-success">
+                                <div class="panel panel-warning">
 
                                    <div class="panel-heading">
                                        <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong>Dades codi Assumpte</strong></h3>

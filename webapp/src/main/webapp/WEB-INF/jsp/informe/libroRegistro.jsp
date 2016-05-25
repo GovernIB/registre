@@ -32,9 +32,9 @@
 
                 <div class="col-xs-12">
 
-                    <div class="panel panel-success">
+                    <div class="panel panel-warning">
                         <div class="panel-heading">
-                            <h3 class="panel-title"><i class="fa fa-search"></i><spring:message code="informe.libroRegistro"/> </h3>
+                            <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="informe.libroRegistro"/></strong> </h3>
                         </div>
                         <div class="panel-body">
                             <form:form modelAttribute="informeLibroBusquedaForm" method="post" cssClass="form-horizontal" name="informeLibroBusquedaForm" onsubmit="return validaFormulario(this)">
@@ -263,7 +263,7 @@
                                             <div class="col-xs-2 boto-panel">
                                                 <a data-toggle="modal" role="button" href="#modalBuscadorlistaRegEntrada"
                                                    onclick="inicializarBuscador('#codNivelAdministracionlistaRegEntrada','#codComunidadAutonomalistaRegEntrada','#provincialistaRegEntrada','#localidadlistaRegEntrada','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}', 'listaRegEntrada' );"
-                                                   class="btn btn-success btn-sm"><spring:message code="regweb.buscar"/></a>
+                                                   class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                                             </div>
                                         </div>
                                     </div>
@@ -309,7 +309,7 @@
 
                                 </div>
                                 <div class="row pad-bottom15 pad-right-75">
-                                    <a class="btn btn-success btn-xs pull-right masOpciones-success" data-toggle="collapse" data-target="#demo">
+                                    <a class="btn btn-warning btn-xs pull-right masOpciones-success" data-toggle="collapse" data-target="#demo">
                                             <%--Comprueba si debe mostrar mas opciones o menos--%>
                                         <c:if test="${empty registroEntradaBusqueda.registroEntrada.oficina.id && empty registroEntradaBusqueda.interessatDoc && empty registroEntradaBusqueda.interessatNom && empty registroEntradaBusqueda.organDestinatari && empty registroEntradaBusqueda.observaciones && empty registroEntradaBusqueda.usuario && !registroEntradaBusqueda.anexos}">
                                             <span class="fa fa-plus"></span> <spring:message code="regweb.busquedaAvanzada"/>

@@ -264,9 +264,9 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
 
         // 4.- Comprobamos si el RegistroEntrada se puede anular según su estado.
         final List<Long> estados = new ArrayList<Long>();
-        estados.add(RegwebConstantes.ESTADO_PENDIENTE);
-        estados.add(RegwebConstantes.ESTADO_VALIDO);
-        estados.add(RegwebConstantes.ESTADO_PENDIENTE_VISAR);
+        estados.add(RegwebConstantes.REGISTRO_PENDIENTE);
+        estados.add(RegwebConstantes.REGISTRO_VALIDO);
+        estados.add(RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
 
         if(!estados.contains(registroEntrada.getEstado())){
             throw new I18NException("registroEntrada.anulado");
@@ -306,7 +306,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         }
 
         // 4.- Comprobamos si el RegistroEntrada tiene el estado Válido
-        if(!registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_VALIDO)){
+        if(!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)){
             throw new I18NException("registroEntrada.tramitar.error");
         }
 

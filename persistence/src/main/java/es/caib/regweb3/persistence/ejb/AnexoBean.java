@@ -171,7 +171,6 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
           anexo.setTipoDocumental(td);
         }
 
-          //custody = AnnexDocumentCustodyManager.getInstance();
           custody = getInstance();
 
         IRegistro registro = getIRegistro(registroID, tipoRegistro, anexo, isNew);
@@ -243,7 +242,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         
         anexo.setFechaCaptura(new Date());
 
-          //IDocumentCustodyPlugin custody = AnnexDocumentCustodyManager.getInstance();
+
           IDocumentCustodyPlugin custody = getInstance();
 
         
@@ -324,7 +323,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             // Si han pasado más de los dias de visado de la entidad se crearan historicos de todos los
             // cambios y se cambia el estado del registroEntrada a pendiente visar
             if(dias >= entidadActiva.getDiasVisado()){
-               registroEntradaEjb.cambiarEstado(registroID, RegwebConstantes.ESTADO_PENDIENTE_VISAR);
+               registroEntradaEjb.cambiarEstado(registroID, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
 
                // Creamos el historico de registro de entrada
                historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada, usuarioEntidad, RegwebConstantes.TIPO_MODIF_ANEXOS,true);
@@ -334,7 +333,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         } else {// MODIFICACION DE ANEXO
 
             if(dias >= entidadActiva.getDiasVisado()){ // Si han pasado más de los dias de visado cambiamos estado registro
-                registroEntradaEjb.cambiarEstado(registroID, RegwebConstantes.ESTADO_PENDIENTE_VISAR);
+                registroEntradaEjb.cambiarEstado(registroID, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
             }
 
             // Creamos el historico de registro de entrada, siempre creamos histórico independiente de los dias.
@@ -352,7 +351,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             // Si han pasado más de los dias de visado de la entidad se crearan historicos de todos los
             // cambios y se cambia el estado del registroEntrada a pendiente visar
             if(dias >= entidadActiva.getDiasVisado()){
-               registroSalidaEjb.cambiarEstado(registroID, RegwebConstantes.ESTADO_PENDIENTE_VISAR);
+               registroSalidaEjb.cambiarEstado(registroID, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
 
                // Creamos el historico de registro de entrada
                historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(registroSalida, usuarioEntidad, RegwebConstantes.TIPO_MODIF_ANEXOS,true);
@@ -361,7 +360,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         } else {// MODIFICACION DE ANEXO
 
             if(dias >= entidadActiva.getDiasVisado()){ // Si han pasado más de los dias de visado cambiamos estado registro
-                registroSalidaEjb.cambiarEstado(registroID, RegwebConstantes.ESTADO_PENDIENTE_VISAR);
+                registroSalidaEjb.cambiarEstado(registroID, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
             }
             // Creamos el historico de registro de entrada, siempre creamos histórico independiente de los dias.
             historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(registroSalida, usuarioEntidad, RegwebConstantes.TIPO_MODIF_ANEXOS,true);
@@ -661,22 +660,6 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     }
 
 
-
-   /*
-   @Override
-   public boolean eliminarAnexoRegistroDetalle(Long idAnexo, Long idRegistroDetalle) throws Exception {
-
-        Anexo anexo = findById(idAnexo);
-        RegistroDetalle registroDetalle = registroDetalleEjb.findById(idRegistroDetalle);
-
-        if(anexo != null && registroDetalle != null){
-            log.info("Eliminar Anexo: " + registroDetalle.getAnexos().remove(anexo));
-            registroDetalleEjb.merge(registroDetalle);
-            remove(anexo);
-        }
-        return eliminarCustodia(anexo.getCustodiaID());
-    }*/
-
     @Override
     public List<Anexo> getByRegistroEntrada(Long idRegistro) throws Exception{
         RegistroEntrada re = registroEntradaEjb.findById(idRegistro);
@@ -705,6 +688,13 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
 
     /* METODOS DEL AnnexDocumentCustodyManager.java hecho por marilen del TODO DE TONI*/
+
+    /**
+     * Obtiene una instancia del plugin de custodia
+     *
+     * @return
+     * @throws Exception
+     */
     public IDocumentCustodyPlugin getInstance() throws Exception {
         IDocumentCustodyPlugin plugin;
 
@@ -726,7 +716,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
 
     /**
-     * Obtiene el fichero existente en el sistema de archivos
+     * Obtiene la info del fichero existente en el sistema de archivos
+     * (No obtiene el array de bytes)
      * @param custodiaID
      * @return
      */
@@ -742,7 +733,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     }
 
     /**
-     * Obtiene la firma existente en el sistema de archivos
+     * Obtiene la info de la firma existente en el sistema de archivos
+     * (No obtiene el array de bytes)
      * @param custodiaID
      * @return
      */
@@ -779,6 +771,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     /**
      * Solo elimina el archivo asociado al documento.
      *
+     * //TODO Revisar: parece que no se emplea
+     *
      * @param custodiaID
      * @return
      * @throws Exception
@@ -800,6 +794,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     /**
      * Solo elimina la el archivo asociado a la firma
      *
+     * //TODO Revisar: parece que no se emplea
+     *
      * @param custodiaID
      * @return
      * @throws Exception
@@ -819,6 +815,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     /**
      * Crea o actualiza un anexos en el sistema de custodia
+     *
+     * //TODO Revisar: se puede eliminar porque no se emplea.
      *
      * @param name
      * @param file
@@ -855,4 +853,6 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
         return custodyID;
     }
+
+    /* FIN METODOS DEL AnnexDocumentCustodyManager.java hecho por marilen del TODO DE TONI*/
 }

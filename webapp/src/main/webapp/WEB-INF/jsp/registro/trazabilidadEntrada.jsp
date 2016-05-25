@@ -48,7 +48,11 @@
 
                                     <p>
                                         <small><i class="fa fa-bookmark"></i> <strong><spring:message code="oficioRemision.estado"/>:</strong>
-                                            <span class="label ${(trazabilidad.oficioRemision.estado == 2)?'label-success':'label-danger'}">
+                                            <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO}"><span class="label label-warning"></c:if>
+                                            <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ENVIADO}"><span class="label label-warning"></c:if>
+                                            <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ACEPTADO}"><span class="label label-success"></c:if>
+                                            <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ANULADO}"><span class="label label-danger"></c:if>
+
                                                 <spring:message code="oficioRemision.estado.${trazabilidad.oficioRemision.estado}"/>
                                                 <c:if test="${not empty trazabilidad.oficioRemision.fechaEstado && trazabilidad.oficioRemision.estado != 0}">
                                                     - <fmt:formatDate value="${trazabilidad.oficioRemision.fechaEstado}" pattern="dd/MM/yyyy HH:mm:ss"/>

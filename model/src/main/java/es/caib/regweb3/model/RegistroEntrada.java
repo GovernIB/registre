@@ -55,18 +55,7 @@ public class RegistroEntrada implements IRegistro {
     }
 
     /**
-     * @param id
-     * @param usuario
-     * @param oficina
-     * @param destino
-     * @param destinoExternoCodigo
-     * @param destinoExternoDenominacion
-     * @param fecha
-     * @param libro
-     * @param numeroRegistro
-     * @param numeroRegistroFormateado
-     * @param estado
-     * @param registroDetalle
+     * @param re
      */
     public RegistroEntrada(RegistroEntrada re) {
       

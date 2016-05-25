@@ -409,8 +409,8 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("idEntidad", idEntidad);
-        q.setParameter("anulado", RegwebConstantes.ESTADO_ANULADO);
-        q.setParameter("pendiente", RegwebConstantes.ESTADO_PENDIENTE);
+        q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
+        q.setParameter("pendiente", RegwebConstantes.REGISTRO_PENDIENTE);
 
         return (Long) q.getSingleResult();
     }
@@ -427,8 +427,8 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("idOficina", idOficina);
-        q.setParameter("anulado", RegwebConstantes.ESTADO_ANULADO);
-        q.setParameter("pendiente", RegwebConstantes.ESTADO_PENDIENTE);
+        q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
+        q.setParameter("pendiente", RegwebConstantes.REGISTRO_PENDIENTE);
 
         return (Long) q.getSingleResult();
     }
@@ -461,8 +461,8 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("tipoAsunto", tipoAsunto);
         q.setParameter("idEntidad", idEntidad);
-        q.setParameter("anulado", RegwebConstantes.ESTADO_ANULADO);
-        q.setParameter("pendiente", RegwebConstantes.ESTADO_PENDIENTE);
+        q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
+        q.setParameter("pendiente", RegwebConstantes.REGISTRO_PENDIENTE);
 
         return (Long) q.getSingleResult();
     }
@@ -480,8 +480,8 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("idioma", idioma);
         q.setParameter("idEntidad", idEntidad);
-        q.setParameter("anulado", RegwebConstantes.ESTADO_ANULADO);
-        q.setParameter("pendiente", RegwebConstantes.ESTADO_PENDIENTE);
+        q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
+        q.setParameter("pendiente", RegwebConstantes.REGISTRO_PENDIENTE);
 
         return (Long) q.getSingleResult();
     }
@@ -499,8 +499,8 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("idioma", idioma);
         q.setParameter("idOficina", idOficina);
-        q.setParameter("anulado", RegwebConstantes.ESTADO_ANULADO);
-        q.setParameter("pendiente", RegwebConstantes.ESTADO_PENDIENTE);
+        q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
+        q.setParameter("pendiente", RegwebConstantes.REGISTRO_PENDIENTE);
 
         return (Long) q.getSingleResult();
     }
@@ -531,8 +531,8 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("oficina", oficina);
-        q.setParameter("anulado", RegwebConstantes.ESTADO_ANULADO);
-        q.setParameter("pendiente", RegwebConstantes.ESTADO_PENDIENTE);
+        q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
+        q.setParameter("pendiente", RegwebConstantes.REGISTRO_PENDIENTE);
 
         return (Long) q.getSingleResult();
     }
@@ -565,7 +565,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("idUsuario", idUsuario);
         q.setParameter("idLibro", idLibro);
-        q.setParameter("pendiente", RegwebConstantes.ESTADO_PENDIENTE);
+        q.setParameter("pendiente", RegwebConstantes.REGISTRO_PENDIENTE);
 
         return q.getResultList();
     }
@@ -652,7 +652,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
         q.setMaxResults(total);
         q.setParameter("idOficina", idOficina);
-        q.setParameter("idEstadoRegistro", RegwebConstantes.ESTADO_VALIDO);
+        q.setParameter("idEstadoRegistro", RegwebConstantes.REGISTRO_VALIDO);
 
         return getRegistroBasicoList(q.getResultList());
     }
@@ -679,7 +679,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         RegistroSalida old = registroSalida;
 
         // Estado anulado
-        registroSalida.setEstado(RegwebConstantes.ESTADO_ANULADO);
+        registroSalida.setEstado(RegwebConstantes.REGISTRO_ANULADO);
 
         // Actualizamos el RegistroSalida
         registroSalida = merge(registroSalida);
@@ -695,7 +695,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         RegistroSalida old = registroSalida;
 
         // Estado anulado
-        registroSalida.setEstado(RegwebConstantes.ESTADO_PENDIENTE_VISAR);
+        registroSalida.setEstado(RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
 
         // Actualizamos el RegistroSalida
         merge(registroSalida);
@@ -712,7 +712,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         RegistroSalida old = registroSalida;
 
         // Estado anulado
-        registroSalida.setEstado(RegwebConstantes.ESTADO_VALIDO);
+        registroSalida.setEstado(RegwebConstantes.REGISTRO_VALIDO);
 
         // Actualizamos el RegistroSalida
         merge(registroSalida);

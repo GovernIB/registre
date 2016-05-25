@@ -32,11 +32,11 @@
                 <c:import url="../modulos/mensajes.jsp"/>
                 <div id="mensajes"></div>
 
-                <div class="panel panel-success">
+                <div class="panel panel-warning">
 
                     <div class="panel-heading">
-                        <a class="btn btn-success btn-xs pull-right margin-left10" href="<c:url value="/organismo/arbolList"/>" role="button"><span class="fa fa-sitemap"></span> <spring:message code="organismo.organigrama"/></a>
-                        <a class="btn btn-success btn-xs pull-right" href="<c:url value="/entidad/librosCambiar"/>" role="button"><span class="fa fa-book"></span> <spring:message code="entidad.cambiarlibros"/></a>
+                        <a class="btn btn-warning btn-xs pull-right margin-left10" href="<c:url value="/organismo/arbolList"/>" role="button"><span class="fa fa-sitemap"></span> <spring:message code="organismo.organigrama"/></a>
+                        <a class="btn btn-warning btn-xs pull-right" href="<c:url value="/entidad/librosCambiar"/>" role="button"><span class="fa fa-book"></span> <spring:message code="entidad.cambiarlibros"/></a>
                         <h3 class="panel-title"><i class="fa fa-list"></i> <strong><spring:message
                                 code="organismo.buscador.entidad"/> ${entidad.nombre}</strong></h3>
                     </div>
@@ -102,9 +102,9 @@
                                                 <tr>
                                                     <th><spring:message code="organismo.organismo"/></th>
                                                     <th><spring:message code="entidad.codigoDir3"/></th>
-                                                    <th><spring:message code="organismo.estado"/></th>
-                                                    <th><spring:message code="organismo.libros"/></th>
-                                                    <th width="50"><spring:message code="regweb.acciones"/></th>
+                                                    <th class="center"><spring:message code="organismo.estado"/></th>
+                                                    <th class="center"><spring:message code="organismo.libros"/></th>
+                                                    <th width="100" class="center"><spring:message code="regweb.acciones"/></th>
                                                 </tr>
                                                 </thead>
 
@@ -115,13 +115,14 @@
                                                         <td>${organismo.codigo}</td>
                                                         <td>${organismo.estado.descripcionEstadoEntidad}</td>
                                                         <td class="center">${fn:length(organismo.libros)}</td>
-                                                        <td>
+                                                        <td class="center">
                                                             <c:if test="${organismo.estado.codigoEstadoEntidad == 'V'}">
                                                                 <a class="btn btn-warning btn-sm" href="<c:url value="/libro/${organismo.id}/libros"/>" title="<spring:message code="organismo.libros"/>"><span class="fa fa-book"></span></a>
                                                             </c:if>
                                                             <c:if test="${organismo.estado.codigoEstadoEntidad != 'V'}">
                                                                 <a class="btn btn-warning btn-sm disabled" title="<spring:message code="organismo.libros.no"/>"><span class="fa fa-book"></span></a>
                                                             </c:if>
+                                                            <a class="btn btn-warning btn-sm" href="<c:url value="/organismo/${organismo.id}/oficinas"/>" title="<spring:message code="organismo.oficinas"/>"><span class="fa fa-home"></span></a>
                                                         </td>
                                                     </tr>
                                                 </c:forEach>

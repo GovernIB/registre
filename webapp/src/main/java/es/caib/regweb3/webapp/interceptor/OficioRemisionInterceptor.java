@@ -73,8 +73,8 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
             return false;
         }
 
-            // Comprobaciones previas al listado de OficioRemision y Oficios de Remisión Pendientes
-            if (url.equals("/oficioRemision/list") || url.contains("oficiosPendientes")) {
+        // Comprobaciones previas al listado de OficioRemision y Oficios de Remisión Pendientes
+        if (url.equals("/oficioRemision/list") || url.contains("oficiosPendientes")) {
 
             Set<Long> organismos = oficinaActiva.getOrganismosFuncionalesId();
                 UsuarioEntidad usuarioEntidad = (UsuarioEntidad) session.getAttribute(RegwebConstantes.SESSION_USUARIO_ENTIDAD);
@@ -94,7 +94,6 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
         if(url.contains("detalle")){
             String idOficioRemision =  url.replace("/oficioRemision/","").replace("/detalle", ""); //Obtenemos el id a partir de la url
 
-            log.info("idOficioRemision: " + idOficioRemision);
             OficioRemision oficioRemision = oficioRemisionEjb.findById(Long.valueOf(idOficioRemision));
 
             if(!oficioRemision.getOficina().equals(oficinaActiva)){ // Si no es la Oficina Activa no se puede consultar
@@ -113,7 +112,9 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
 
             Set<Organismo> organismosOficinaActiva = (Set<Organismo>) session.getAttribute(RegwebConstantes.SESSION_ORGANISMOS_OFICINA);
 
-            if (!organismosOficinaActiva.contains(oficioRemision.getOrganismoDestinatario())) {
+            if (!organismosOficinaActiva.contains(oficioRemision.getOrganismoDestinatario()) ||
+                    oficioRemision.getEstado() != RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO) {
+
                 log.info("Este RegistroEntrada no se puede procesar");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficioRemision.procesar"));
                 response.sendRedirect("/regweb3/aviso");

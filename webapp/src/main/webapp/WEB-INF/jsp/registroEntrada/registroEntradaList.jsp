@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
-<un:useConstants var="RegwebConstantes" className="es.caib.regweb3.utils.RegwebConstantes"/>
 
 <!DOCTYPE html>
 <html lang="ca">
@@ -334,33 +333,33 @@
                                                                 <td>${registroEntrada.usuario.usuario.identificador}</td>
                                                                 <td class="center"><label class="no-bold" rel="ayuda" data-content="${registroEntrada.oficina.denominacion}" data-toggle="popover">${registroEntrada.oficina.codigo}</label></td>
                                                                 <td>${(empty registroEntrada.destino)? registroEntrada.destinoExternoDenominacion : registroEntrada.destino.denominacion}</td>
-                                                                <c:if test="${registroEntrada.estado == RegwebConstantes.ESTADO_PENDIENTE}">
+                                                                <c:if test="${registroEntrada.estado == RegwebConstantes.REGISTRO_PENDIENTE}">
                                                                     <td>${registroEntrada.registroDetalle.reserva}</td>
                                                                 </c:if>
-                                                                <c:if test="${registroEntrada.estado != RegwebConstantes.ESTADO_PENDIENTE}">
+                                                                <c:if test="${registroEntrada.estado != RegwebConstantes.REGISTRO_PENDIENTE}">
                                                                     <td>${registroEntrada.registroDetalle.extracto}</td>
                                                                 </c:if>
                                                                 <td class="center">
                                                                     <c:choose>
-                                                                        <c:when test="${registroEntrada.estado == RegwebConstantes.ESTADO_VALIDO}">
+                                                                        <c:when test="${registroEntrada.estado == RegwebConstantes.REGISTRO_VALIDO}">
                                                                             <span class="label label-success"><spring:message code="registro.estado.${registroEntrada.estado}" /></span>
                                                                         </c:when>
-                                                                        <c:when test="${registroEntrada.estado == RegwebConstantes.ESTADO_PENDIENTE}">
+                                                                        <c:when test="${registroEntrada.estado == RegwebConstantes.REGISTRO_PENDIENTE}">
                                                                             <span class="label label-warning"><spring:message code="registro.estado.${registroEntrada.estado}" /></span>
                                                                         </c:when>
-                                                                        <c:when test="${registroEntrada.estado == RegwebConstantes.ESTADO_PENDIENTE_VISAR}">
+                                                                        <c:when test="${registroEntrada.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR}">
                                                                             <span class="label label-info"><spring:message code="registro.estado.${registroEntrada.estado}" /></span>
                                                                         </c:when>
-                                                                        <c:when test="${registroEntrada.estado == RegwebConstantes.ESTADO_OFICIO_EXTERNO || registroEntrada.estado == RegwebConstantes.ESTADO_OFICIO_INTERNO}">
+                                                                        <c:when test="${registroEntrada.estado == RegwebConstantes.REGISTRO_OFICIO_EXTERNO || registroEntrada.estado == RegwebConstantes.REGISTRO_OFICIO_INTERNO}">
                                                                             <span class="label label-default"><spring:message code="registro.estado.${registroEntrada.estado}" /></span>
                                                                         </c:when>
-                                                                        <c:when test="${registroEntrada.estado == RegwebConstantes.ESTADO_ENVIADO}">
+                                                                        <c:when test="${registroEntrada.estado == RegwebConstantes.REGISTRO_ENVIADO}">
                                                                             <span class="label label-primary"><spring:message code="registro.estado.${registroEntrada.estado}" /></span>
                                                                         </c:when>
-                                                                        <c:when test="${registroEntrada.estado == RegwebConstantes.ESTADO_TRAMITADO}">
+                                                                        <c:when test="${registroEntrada.estado == RegwebConstantes.REGISTRO_TRAMITADO}">
                                                                             <span class="label label-primary"><spring:message code="registro.estado.${registroEntrada.estado}" /></span>
                                                                         </c:when>
-                                                                        <c:when test="${registroEntrada.estado == RegwebConstantes.ESTADO_ANULADO}">
+                                                                        <c:when test="${registroEntrada.estado == RegwebConstantes.REGISTRO_ANULADO}">
                                                                             <span class="label label-danger"><spring:message code="registro.estado.${registroEntrada.estado}" /></span>
                                                                         </c:when>
 
@@ -389,19 +388,19 @@
                                                                         <%--Si no nos encontramos en la misma Oficia en la que se creó el Registro o en su Oficina Responsable, no podemos hacer nada con el--%>
                                                                     <c:if test="${registroEntrada.oficina.id == oficinaActiva.id || registroEntrada.oficina.oficinaResponsable.id == oficinaActiva.id}">
                                                                         <c:choose>
-                                                                            <c:when test="${(registroEntrada.estado == RegwebConstantes.ESTADO_VALIDO || registroEntrada.estado == RegwebConstantes.ESTADO_PENDIENTE) && puedeEditar}">  <%--Válido--%>
+                                                                            <c:when test="${(registroEntrada.estado == RegwebConstantes.REGISTRO_VALIDO || registroEntrada.estado == RegwebConstantes.REGISTRO_PENDIENTE) && puedeEditar}">  <%--Válido--%>
                                                                                 <a class="btn btn-warning btn-sm" href="<c:url value="/registroEntrada/${registroEntrada.id}/edit"/>" title="<spring:message code="regweb.editar"/>"><span class="fa fa-pencil"></span></a>
                                                                                 <a class="btn btn-danger btn-sm" href="javascript:void(0);" onclick='javascript:confirm("<c:url value="/registroEntrada/${registroEntrada.id}/anular"/>","<spring:message code="regweb.confirmar.anular" htmlEscape="true"/>")' title="<spring:message code="regweb.anular"/>"><span class="fa fa-thumbs-o-down"></span></a>
                                                                             </c:when>
 
-                                                                            <c:when test="${registroEntrada.estado == RegwebConstantes.ESTADO_PENDIENTE_VISAR && isAdministradorLibro}">  <%--Pendiente de Visar--%>
+                                                                            <c:when test="${registroEntrada.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR && isAdministradorLibro}">  <%--Pendiente de Visar--%>
                                                                                 <a class="btn btn-danger btn-sm" href="javascript:void(0);" onclick='javascript:confirm("<c:url value="/registroEntrada/${registroEntrada.id}/anular"/>","<spring:message code="regweb.confirmar.anular" htmlEscape="true"/>")' title="<spring:message code="regweb.anular"/>"><span class="fa fa-thumbs-o-down"></span></a>
                                                                             </c:when>
-                                                                            <c:when test="${registroEntrada.estado == RegwebConstantes.ESTADO_OFICIO_EXTERNO || registroEntrada.estado == RegwebConstantes.ESTADO_OFICIO_INTERNO}">  <%--Oficio externo e interno--%>
+                                                                            <c:when test="${registroEntrada.estado == RegwebConstantes.REGISTRO_OFICIO_EXTERNO || registroEntrada.estado == RegwebConstantes.REGISTRO_OFICIO_INTERNO}">  <%--Oficio externo e interno--%>
 
                                                                             </c:when>
 
-                                                                            <c:when test="${registroEntrada.estado == RegwebConstantes.ESTADO_ANULADO && puedeEditar}">  <%--Anulado--%>
+                                                                            <c:when test="${registroEntrada.estado == RegwebConstantes.REGISTRO_ANULADO && puedeEditar}">  <%--Anulado--%>
                                                                                 <a class="btn btn-primary btn-sm" onclick='javascript:confirm("<c:url value="/registroEntrada/${registroEntrada.id}/activar"/>","<spring:message code="regweb.confirmar.activar" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.activar"/>"><span class="fa fa-thumbs-o-up"></span></a>
                                                                             </c:when>
 

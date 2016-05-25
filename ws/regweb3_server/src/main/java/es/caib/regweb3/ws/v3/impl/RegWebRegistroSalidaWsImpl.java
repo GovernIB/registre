@@ -240,9 +240,9 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
 
         // 4.- Comprobamos si el RegistroSalida se puede anular según su estado.
         final List<Long> estados = new ArrayList<Long>();
-        estados.add(RegwebConstantes.ESTADO_PENDIENTE);
-        estados.add(RegwebConstantes.ESTADO_VALIDO);
-        estados.add(RegwebConstantes.ESTADO_PENDIENTE_VISAR);
+        estados.add(RegwebConstantes.REGISTRO_PENDIENTE);
+        estados.add(RegwebConstantes.REGISTRO_VALIDO);
+        estados.add(RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
 
         if(!estados.contains(registroSalida.getEstado())){
             throw new I18NException("registroEntrada.anulado");

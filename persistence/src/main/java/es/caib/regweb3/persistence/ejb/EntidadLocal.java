@@ -19,6 +19,14 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
 
 
     /**
+     * Creamos una nueva Entidad y sus propiedades por defecto
+     * @param entidad
+     * @return
+     * @throws Exception
+     */
+    public Entidad nuevaEntidad(Entidad entidad) throws Exception;
+
+    /**
      * Retorna la Entidad cuyo CódigoDir3 es el indicado por parámetro
      * @param codigo
      * @return

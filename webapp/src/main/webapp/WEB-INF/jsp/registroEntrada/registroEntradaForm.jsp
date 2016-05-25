@@ -1,7 +1,7 @@
 <%@ page import="es.caib.regweb3.utils.RegwebConstantes" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
-<un:useConstants var="RegwebConstantes" className="es.caib.regweb3.utils.RegwebConstantes"/>
+
 <!DOCTYPE html>
 <html lang="ca">
 <head>
@@ -40,7 +40,7 @@
 
                     <div class="panel panel-info">
                         <div class="panel-heading">
-                            <c:if test="${empty registroEntrada.id}"><a data-toggle="modal" role="button" href="#modalSelectRepro" class="btn btn-info btn-xs pull-right margin-left10" onclick="cargarRepros('<c:url value="/repro/obtenerRepros"/>','${usuario.id}','<%=RegwebConstantes.REGISTRO_ENTRADA%>')"><span class="fa fa-refresh"></span> <spring:message code="repro.select"/></a></c:if>
+                            <c:if test="${empty registroEntrada.id}"><a data-toggle="modal" role="button" href="#modalSelectRepro" class="btn btn-info btn-xs pull-right margin-left10" onclick="cargarRepros('<c:url value="/rest/obtenerRepros"/>','${usuarioEntidadActivo.id}','<%=RegwebConstantes.REGISTRO_ENTRADA%>')"><span class="fa fa-refresh"></span> <spring:message code="repro.select"/></a></c:if>
                             <a data-toggle="modal" role="button" href="#modalNewRepro" class="btn btn-info btn-xs pull-right" onclick="preparaFormularioRepro('<%=RegwebConstantes.REGISTRO_ENTRADA%>')"><span class="fa fa-plus"></span> <spring:message code="repro.nuevo"/></a>
                             <h3 class="panel-title"><i class="fa fa-file-o"></i>
                                 <strong>
@@ -320,7 +320,7 @@
                </form:form>
 
                <!-- INTERESADOS -->
-               <c:if test="${empty registroEntrada.id || registroEntrada.estado == RegwebConstantes.ESTADO_PENDIENTE}">
+               <c:if test="${empty registroEntrada.id || registroEntrada.estado == RegwebConstantes.REGISTRO_PENDIENTE}">
                    <c:set var="registro" value="${registroEntrada}"/>
                    <c:import url="../registro/interesados.jsp">
                        <c:param name="tipo" value="nuevo"/>

@@ -5,12 +5,12 @@ import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.RelacionOrganizativaOfi;
 import es.caib.regweb3.model.RelacionOrganizativaOfiPK;
-import es.caib.regweb3.model.utils.ObjetoBasico;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -32,6 +32,9 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
 
     @PersistenceContext
     private EntityManager em;
+
+    @EJB
+    private CatServicioLocal catServicioLocalEjb;
 
     @Override
     public RelacionOrganizativaOfi findById(RelacionOrganizativaOfiPK id) throws Exception {
@@ -97,22 +100,24 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
     }
 
     @Override
-    public List<ObjetoBasico> getOficinasByOrganismoVO(Long idOrganismo) throws Exception {
+    public List<Oficina> getOficinasByOrganismoVO(Long idOrganismo) throws Exception {
 
-        Query q = em.createQuery("Select distinct roo.oficina.id,roo.oficina.denominacion as nombre  from RelacionOrganizativaOfi as roo " +
-                "where roo.organismo.id = :idOrganismo and roo.estado.codigoEstadoEntidad = :vigente");
+        Query q = em.createQuery("Select distinct roo.oficina.id,roo.oficina.codigo, roo.oficina.denominacion, oficina.organismoResponsable.id  from RelacionOrganizativaOfi as roo " +
+                "where roo.organismo.id = :idOrganismo and roo.estado.codigoEstadoEntidad = :vigente and " +
+                ":oficinaVirtual not in elements(roo.oficina.servicios)");
 
         q.setParameter("idOrganismo", idOrganismo);
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        q.setParameter("oficinaVirtual",catServicioLocalEjb.findByCodigo(RegwebConstantes.REGISTRO_VIRTUAL_NO_PRESENCIAL));
 
-        List<ObjetoBasico> oficinas =  new ArrayList<ObjetoBasico>();
+        List<Oficina> oficinas =  new ArrayList<Oficina>();
 
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result){
-            ObjetoBasico objetoBasico = new ObjetoBasico((Long)object[0],(String)object[1]);
+            Oficina oficina = new Oficina((Long)object[0],(String)object[1],(String)object[2],(Long)object[3]);
 
-            oficinas.add(objetoBasico);
+            oficinas.add(oficina);
         }
 
         return oficinas;

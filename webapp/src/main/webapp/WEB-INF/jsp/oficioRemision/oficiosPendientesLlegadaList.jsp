@@ -35,7 +35,7 @@
 
             <div class="col-xs-12">
 
-                <div class="panel panel-info">
+                <div class="panel panel-success">
 
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="oficioRemision.pendientesLlegada"/></strong> </h3>
@@ -104,7 +104,7 @@
                                                             <td>${fn:length(oficioRemision.registrosEntrada)}</td>
 
                                                             <td class="center">
-                                                                <a class="btn btn-success btn-sm" href="<c:url value="/oficioRemision/${oficioRemision.id}/procesar"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-check"></span></a>
+                                                                <a class="btn btn-success btn-sm" href="<c:url value="/oficioRemision/${oficioRemision.id}/procesar"/>" title="<spring:message code="oficioRemision.procesar"/>"><span class="fa fa-check"></span></a>
                                                             </td>
                                                         </tr>
                                                     </c:forEach>

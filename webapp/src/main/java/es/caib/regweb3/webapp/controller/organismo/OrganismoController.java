@@ -22,10 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Fundació BIT.
@@ -111,6 +108,26 @@ public class OrganismoController extends BaseController {
 
       return mav;
   }
+
+    /**
+     * Listado de oficinas que dan servicio a un un Organismo
+     * @param idOrganismo
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/{idOrganismo}/oficinas", method = RequestMethod.GET)
+    public ModelAndView oficinas(@PathVariable Long idOrganismo)throws Exception {
+
+        ModelAndView mav = new ModelAndView("organismo/oficinasList");
+
+        Organismo organismo = organismoEjb.findById(idOrganismo);
+        LinkedHashSet<Oficina> oficinas = oficinaEjb.oficinasRegistroOrganismo(idOrganismo);
+
+        mav.addObject("organismo", organismo);
+        mav.addObject("oficinas", oficinas);
+
+        return mav;
+    }
 
 
     /**

@@ -20,7 +20,7 @@
             <div class="col-xs-12">
                 <ol class="breadcrumb">
                     <c:import url="../modulos/migadepan.jsp"/>
-                    <li class="active"><i class="fa fa-list-ul"></i> <spring:message code="informe.indicadoresOficina"/></li>
+                    <li class="active"><i class="fa fa-list-ul"></i> <strong><spring:message code="informe.indicadoresOficina"/></strong></li>
                 </ol>
             </div>
         </div><!-- /.row -->
@@ -31,9 +31,9 @@
 
             <div class="col-xs-12">
 
-                <div class="panel panel-success">
+                <div class="panel panel-warning">
                     <div class="panel-heading">
-                        <h3 class="panel-title"><i class="fa fa-search"></i><spring:message code="informe.indicadoresOficina"/> </h3>
+                        <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="informe.indicadoresOficina"/></strong> </h3>
                     </div>
                     <div class="panel-body">
                         <form:form modelAttribute="informeIndicadoresOficinaBusquedaForm" method="post" cssClass="form-horizontal" name="informeIndicadoresOficinaBusquedaForm" onsubmit="return validaFormulario(this)">

@@ -203,7 +203,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
         List<UsuarioEntidad> usuarios = new ArrayList<UsuarioEntidad>();
 
         for (Object[] object : result) {
-            UsuarioEntidad usuarioEntidad = new UsuarioEntidad((Long) object[0], (Usuario) object[1]);
+            UsuarioEntidad usuarioEntidad = new UsuarioEntidad((Long) object[0], (Usuario) object[1], null);
 
             usuarios.add(usuarioEntidad);
         }
@@ -358,7 +358,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result) {
-            UsuarioEntidad usuario = new UsuarioEntidad((Long) object[0], (Usuario) object[1]);
+            UsuarioEntidad usuario = new UsuarioEntidad((Long) object[0], (Usuario) object[1], null);
 
             usuarios.add(usuario);
         }

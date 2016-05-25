@@ -192,58 +192,58 @@ public interface RegwebConstantes {
       TIPOVALIDEZDOCUMENTO_COPIA_ORIGINAL,
       TIPOVALIDEZDOCUMENTO_ORIGINAL
     };
-    
-    
-    public static final Map<Long, String> CODIGO_NTI_BY_TIPOVALIDEZDOCUMENTO = new HashMap<Long, String>(){{
+
+
+    public static final Map<Long, String> CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO = new HashMap<Long, String>() {{
       put(TIPOVALIDEZDOCUMENTO_COPIA, "0" + TIPOVALIDEZDOCUMENTO_COPIA);
       put(TIPOVALIDEZDOCUMENTO_COPIA_COMPULSADA, "0" + TIPOVALIDEZDOCUMENTO_COPIA_COMPULSADA);
       put(TIPOVALIDEZDOCUMENTO_COPIA_ORIGINAL, "0" + TIPOVALIDEZDOCUMENTO_COPIA_ORIGINAL);
       put(TIPOVALIDEZDOCUMENTO_ORIGINAL, "0" + TIPOVALIDEZDOCUMENTO_ORIGINAL);
     }};
-    
-    public static final Map<String, Long> TIPOVALIDEZDOCUMENTO_BY_CODIGO_NTI
-         = RegwebUtils.invert(CODIGO_NTI_BY_TIPOVALIDEZDOCUMENTO); 
-  
-    
-    public static final Map<Long, String> CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO = new HashMap<Long, String>(){{
+
+    public static final Map<String, Long> TIPOVALIDEZDOCUMENTO_BY_CODIGO_SICRES
+            = RegwebUtils.invert(CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO);
+
+
+    public static final Map<Long, String> CODIGO_NTI_BY_TIPOVALIDEZDOCUMENTO = new HashMap<Long, String>() {{
       put(TIPOVALIDEZDOCUMENTO_COPIA, "EE0" + TIPOVALIDEZDOCUMENTO_COPIA);
       put(TIPOVALIDEZDOCUMENTO_COPIA_COMPULSADA, "EE0" + TIPOVALIDEZDOCUMENTO_COPIA_COMPULSADA);
       put(TIPOVALIDEZDOCUMENTO_COPIA_ORIGINAL, "EE0" + TIPOVALIDEZDOCUMENTO_COPIA_ORIGINAL);
       put(TIPOVALIDEZDOCUMENTO_ORIGINAL, "EE0" + TIPOVALIDEZDOCUMENTO_ORIGINAL);
     }};
-    
-    public static final Map<String, Long> TIPOVALIDEZDOCUMENTO_BY_CODIGO_SICRES
-      = RegwebUtils.invert(CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO); 
+
+    public static final Map<String, Long> TIPOVALIDEZDOCUMENTO_BY_CODIGO_NTI
+            = RegwebUtils.invert(CODIGO_NTI_BY_TIPOVALIDEZDOCUMENTO);
 
     /* -------------- ESTADO REGISTRO --------------*/
-    public static final Long ESTADO_VALIDO =  1L;
-    public static final Long ESTADO_PENDIENTE =  2L;
-    public static final Long ESTADO_PENDIENTE_VISAR =  3L;
-    public static final Long ESTADO_OFICIO_EXTERNO =  4L;
-    public static final Long ESTADO_OFICIO_INTERNO =  5L;
-    public static final Long ESTADO_ENVIADO =  6L;
-    public static final Long ESTADO_TRAMITADO =  7L;
-    public static final Long ESTADO_ANULADO =  8L;
+    public static final Long REGISTRO_VALIDO =  1L;
+    public static final Long REGISTRO_PENDIENTE =  2L;
+    public static final Long REGISTRO_PENDIENTE_VISAR =  3L;
+    public static final Long REGISTRO_OFICIO_EXTERNO =  4L;
+    public static final Long REGISTRO_OFICIO_INTERNO =  5L;
+    public static final Long REGISTRO_ENVIADO =  6L;
+    public static final Long REGISTRO_TRAMITADO =  7L;
+    public static final Long REGISTRO_ANULADO =  8L;
     
     
     public static final Long[] ESTADOS_REGISTRO_SIR = {
-        ESTADO_VALIDO,
-        ESTADO_PENDIENTE,
-        ESTADO_PENDIENTE_VISAR, 
-        ESTADO_OFICIO_EXTERNO,
-        ESTADO_OFICIO_INTERNO,
-        ESTADO_ENVIADO,
-        ESTADO_TRAMITADO,
-        ESTADO_ANULADO };
+            REGISTRO_VALIDO,
+            REGISTRO_PENDIENTE,
+            REGISTRO_PENDIENTE_VISAR,
+            REGISTRO_OFICIO_EXTERNO,
+            REGISTRO_OFICIO_INTERNO,
+            REGISTRO_ENVIADO,
+            REGISTRO_TRAMITADO,
+            REGISTRO_ANULADO};
 
     public static final Long[] ESTADOS_REGISTRO = {
-        ESTADO_VALIDO,
-        ESTADO_PENDIENTE,
-        ESTADO_PENDIENTE_VISAR,
-        ESTADO_OFICIO_EXTERNO,
-        ESTADO_OFICIO_INTERNO,
-        ESTADO_TRAMITADO,
-        ESTADO_ANULADO };
+            REGISTRO_VALIDO,
+            REGISTRO_PENDIENTE,
+            REGISTRO_PENDIENTE_VISAR,
+            REGISTRO_OFICIO_EXTERNO,
+            REGISTRO_OFICIO_INTERNO,
+            REGISTRO_TRAMITADO,
+            REGISTRO_ANULADO};
     
     
     /* ------------- TRANSPORTE ---------------*/
@@ -505,22 +505,28 @@ public interface RegwebConstantes {
     };
 
     /* -------- TIPO DE OFICIO DE REMISION ---------- */
+    public static final Long TIPO_OFICIO_REMISION_INTERNO = 1L;
+    public static final Long TIPO_OFICIO_REMISION_EXTERNO = 2L;
 
-    public static final Long OFICIO_REMISION_INTERNO = 1L;
-
-    public static final Long OFICIO_REMISION_EXTERNO = 2L;
+    public static final Long[] TIPOS_OFICIO_REMISION = {
+            TIPO_OFICIO_REMISION_INTERNO,
+            TIPO_OFICIO_REMISION_EXTERNO
+    };
 
     /* -------- ESTADO DE UN OFICIO DE REMISION ---------- */
+    public static final int OFICIO_REMISION_INTERNO_ENVIADO = 0; // Interno
+    public static final int OFICIO_REMISION_ENVIADO = 1; // Externo
+    public static final int OFICIO_REMISION_ACEPTADO = 2; // Interno y Externo
+    public static final int OFICIO_REMISION_RECHAZADO = 3; // Externo
+    public static final int OFICIO_REMISION_REENVIADO = 4; // Externo
+    public static final int OFICIO_REMISION_ANULADO = 5; // Interno y Externo
 
-    public static final int OFICIO_REMISION_INTERNO_ESTADO_ENVIADO = 0;
-    
-    public static final int OFICIO_REMISION_ESTADO_ENVIADO = 1;
-    
-    public static final int OFICIO_REMISION_ESTADO_ACEPTADO = 2;
-    
-    public static final int OFICIO_REMISION_ESTADO_RECHAZADO = 3;
-    
-    public static final int OFICIO_REMISION_ESTADO_REENVIADO = 4;
+    public static final Integer[] ESTADOS_OFICIO_REMISION = {
+            OFICIO_REMISION_INTERNO_ENVIADO,
+            OFICIO_REMISION_ENVIADO,
+            OFICIO_REMISION_ACEPTADO,
+            OFICIO_REMISION_ANULADO
+    };
 
 
     /* -------------- TIPO PREREGISTRO -------------*/

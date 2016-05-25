@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -58,7 +59,7 @@ public class InicioController extends BaseController{
         // Solo obtenemos los datos para el dashboard si el Usuario es Operador
         if(isOperador(request) && oficinaActiva != null){
 
-            Set<Organismo> organismosOficiaActiva = getOrganismosOficinaActiva(request);
+            LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
             List<Libro> librosAdministrados = getLibrosAdministrados(request);
             // Obtenemos los Libros donde el Usuario puede Registrar de la Oficina Activa
@@ -66,12 +67,12 @@ public class InicioController extends BaseController{
 
             /*Registros Pendientes de Visar y con Reserva de Numero*/
             if(librosAdministrados!= null && librosAdministrados.size() > 0){
-                //List<RegistroBasico> pendientesVisar = registroEntradaEjb.getByLibrosEstado(librosAdministrados, RegwebConstantes.ESTADO_PENDIENTE_VISAR);
+                //List<RegistroBasico> pendientesVisar = registroEntradaEjb.getByLibrosEstado(librosAdministrados, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
                 //model.addAttribute("pendientesVisar", pendientesVisar);
             }
 
             /* RESERVA DE NÚMERO */
-            List<RegistroBasico> pendientes = registroEntradaEjb.getByOficinaEstado(oficinaActiva.getId(), RegwebConstantes.ESTADO_PENDIENTE, RegwebConstantes.REGISTROS_PANTALLA_INICIO);
+            List<RegistroBasico> pendientes = registroEntradaEjb.getByOficinaEstado(oficinaActiva.getId(), RegwebConstantes.REGISTRO_PENDIENTE, RegwebConstantes.REGISTROS_PANTALLA_INICIO);
             mav.addObject("pendientes", pendientes);
 
             /* OFICIOS PENDIENTES DE REMISIÓN */
@@ -79,7 +80,7 @@ public class InicioController extends BaseController{
             // Obtenemos los Organismos Internos que tienen Registros pendientes de tramitar por medio de un Oficio de Revisión,
             Set<String> organismosOficioRemisionInterna = new HashSet<String>();
             for (Libro libro : librosRegistroEntrada) {
-                organismosOficioRemisionInterna.addAll(registroEntradaEjb.oficiosPendientesRemisionInterna(libro.getId(), getOrganismosOficioRemision(request, organismosOficiaActiva)));
+                organismosOficioRemisionInterna.addAll(registroEntradaEjb.oficiosPendientesRemisionInterna(libro.getId(), getOrganismosOficioRemision(request, organismosOficinaActiva)));
             }
             mav.addObject("organismosOficioRemisionInterna", organismosOficioRemisionInterna);
 
@@ -92,7 +93,7 @@ public class InicioController extends BaseController{
 
 
             /* OFICIOS PENDIENTES DE LLEGADA */
-            List<OficioRemision> oficiosPendientesLlegada = oficioRemisionEjb.oficiosPendientesLlegada(organismosOficiaActiva, RegwebConstantes.REGISTROS_PANTALLA_INICIO);
+            List<OficioRemision> oficiosPendientesLlegada = oficioRemisionEjb.oficiosPendientesLlegada(organismosOficinaActiva, RegwebConstantes.REGISTROS_PANTALLA_INICIO);
 
             mav.addObject("oficiosPendientesLlegada", oficiosPendientesLlegada);
 

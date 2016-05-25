@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -56,7 +56,6 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
     public String nuevoRegistroEntrada(Model model, HttpServletRequest request) throws Exception {
 
         Oficina oficina = getOficinaActiva(request);
-        Entidad entidadActiva = getEntidadActiva(request);
 
         RegistroEntrada registroEntrada = new RegistroEntrada();
         registroEntrada.setRegistroDetalle(new RegistroDetalle());
@@ -65,15 +64,15 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         //Eliminamos los posibles interesados de la Sesion
         eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_ENTRADA);
 
+        LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
+
         model.addAttribute(getEntidadActiva(request));
         model.addAttribute(getUsuarioAutenticado(request));
         model.addAttribute(oficina);
         model.addAttribute("registroEntrada",registroEntrada);
         model.addAttribute("libros", getLibrosRegistroEntrada(request));
-        model.addAttribute("organismosOficinaActiva", getOrganismosOficinaActiva(request));
+        model.addAttribute("organismosOficinaActiva", organismosOficinaActiva);
         model.addAttribute("oficinasOrigen",  getOficinasOrigen(request));
-        //model.addAttribute("personasFisicas", personaEjb.getFisicasByEntidad(entidadActiva.getId()));
-        //model.addAttribute("personasJuridicas", personaEjb.getJuridicasByEntidad(entidadActiva.getId()));
 
         return "registroEntrada/registroEntradaForm";
     }
@@ -111,11 +110,9 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             model.addAttribute(getOficinaActiva(request));
             model.addAttribute("oficinasOrigen",  getOficinasOrigen(request));
             model.addAttribute("libros", getLibrosRegistroEntrada(request));
-            //model.addAttribute("personasFisicas", personaEjb.getFisicasByEntidad(entidad.getId()));
-            //model.addAttribute("personasJuridicas", personaEjb.getJuridicasByEntidad(entidad.getId()));
 
             // Organismo destino: Select
-            Set<Organismo> organismosOficinaActiva = new HashSet<Organismo>(getOrganismosOficinaActiva(request));
+            LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
             if (registroEntrada.getDestino() != null) { // Si se ha escogido un Organismo destino
 
@@ -161,7 +158,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                 registroEntrada.setUsuario(usuarioEntidad);
 
                 // Estado Registro entrada
-                registroEntrada.setEstado(RegwebConstantes.ESTADO_VALIDO);
+                registroEntrada.setEstado(RegwebConstantes.REGISTRO_VALIDO);
 
                 // Procesamos las opciones comunes del RegistroEntrada
                 registroEntrada = procesarRegistroEntrada(registroEntrada, entidad);
@@ -223,10 +220,10 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         try {
             registroEntrada = registroEntradaEjb.findById(idRegistro);
 
-            Set<Organismo> organismosOficinaActiva = new HashSet<Organismo>(getOrganismosOficinaActiva(request));
+            LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
             Set<Oficina> oficinasOrigen = getOficinasOrigen(request);
 
-            if(!registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE)){ //Si no se trata de una reserva de número
+            if(!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE)){ //Si no se trata de una reserva de número
 
                 // Organismo destino: Select
                 if (registroEntrada.getDestino() == null) {// Es  Externo, lo añadimos al listado.
@@ -279,7 +276,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         Boolean errorInteresado = false;
         List<Interesado> interesadosSesion = null;
 
-        if(registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE)){
+        if(registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE)){
             HttpSession session = request.getSession();
 
             interesadosSesion = (List<Interesado>) session.getAttribute(RegwebConstantes.SESSION_INTERESADOS_ENTRADA);
@@ -301,7 +298,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             model.addAttribute("oficina", getOficinaActiva(request));
 
             // Organismo destino: Select
-            Set<Organismo> organismosOficinaActiva = new HashSet<Organismo>(getOrganismosOficinaActiva(request));
+            LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
             if (registroEntrada.getDestino() != null) { // Si se ha escogido un Organismo destino
 
                 Organismo organismo = organismoEjb.findByCodigoEntidad(registroEntrada.getDestino().getCodigo(), entidad.getId());
@@ -346,7 +343,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                 registroEntrada = procesarRegistroEntrada(registroEntrada, entidad);
 
                 // Si es PENDIENTE, Procesamos lo Interesados de la session
-                if(registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE)){
+                if(registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE)){
 
                     registroEntrada.getRegistroDetalle().setInteresados(procesarInteresados(interesadosSesion, registroEntrada.getRegistroDetalle().getId()));
                 }
@@ -356,12 +353,12 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
                 if(dias >= entidadActiva.getDiasVisado()){ // Si ha pasado los Dias de Visado establecidos por la entidad.
 
-                    registroEntrada.setEstado(RegwebConstantes.ESTADO_PENDIENTE_VISAR);
+                    registroEntrada.setEstado(RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
                 }else{ // Si aún no ha pasado los días definidos
 
                     // Si el Registro de Entrada tiene Estado Pendiente, al editarlo pasa a ser Válido.
-                    if(registroEntrada.getEstado().equals(RegwebConstantes.ESTADO_PENDIENTE)){
-                        registroEntrada.setEstado(RegwebConstantes.ESTADO_VALIDO);
+                    if(registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE)){
+                        registroEntrada.setEstado(RegwebConstantes.REGISTRO_VALIDO);
                     }
                 }
 

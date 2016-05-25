@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
-<un:useConstants var="RegwebConstantes" className="es.caib.regweb3.utils.RegwebConstantes"/>
+
 
   <c:forEach var="interesado" items="${registro.registroDetalle.interesados}">
     <c:if test="${!interesado.isRepresentante}">

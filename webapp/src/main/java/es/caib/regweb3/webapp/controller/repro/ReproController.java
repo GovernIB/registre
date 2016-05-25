@@ -360,19 +360,6 @@ public class ReproController extends BaseController {
 
     }
 
-
-    /**
-     * Obtiene las {@link es.caib.regweb3.model.Repro} de un {@link es.caib.regweb3.model.UsuarioEntidad}
-     */
-    @RequestMapping(value = "/obtenerRepros", method = RequestMethod.GET)
-    public @ResponseBody
-    List<Repro> obtenerRepros(@RequestParam Long idUsuario, @RequestParam Long tipoRegistro, HttpServletRequest request) throws Exception {
-
-        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-
-        return reproEjb.getActivasbyUsuario(usuarioEntidad.getId(), tipoRegistro);
-    }
-
     /**
      * Obtiene la {@link es.caib.regweb3.model.Repro} según su identificador.
      *

@@ -3,7 +3,6 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.RelacionOrganizativaOfi;
-import es.caib.regweb3.model.utils.ObjetoBasico;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -160,8 +159,8 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
-    public List<ObjetoBasico> findByOrganismoResponsableVO(Long idOrganismo) throws Exception{
-        Query q = em.createQuery("Select oficina.id, oficina.denominacion as nombre from Oficina as oficina where " +
+    public List<Oficina> findByOrganismoResponsableVO(Long idOrganismo) throws Exception{
+        Query q = em.createQuery("Select oficina.id, oficina.codigo, oficina.denominacion as nombre, oficina.organismoResponsable.id from Oficina as oficina where " +
                 "oficina.organismoResponsable.id =:idOrganismo and " +
                 "oficina.estado.codigoEstadoEntidad=:vigente and " +
                 ":oficinaVirtual not in elements(oficina.servicios)");
@@ -170,17 +169,15 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         q.setParameter("idOrganismo",idOrganismo);
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
 
-        List<ObjetoBasico> oficinas =  new ArrayList<ObjetoBasico>();
+        List<Oficina> oficinas =  new ArrayList<Oficina>();
 
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result){
-            ObjetoBasico objetoBasico = new ObjetoBasico((Long)object[0],(String)object[1]);
+            Oficina oficina = new Oficina((Long)object[0],(String)object[1],(String)object[2],(Long)object[3]);
 
-            oficinas.add(objetoBasico);
+            oficinas.add(oficina);
         }
-
-
 
         return oficinas;
     }
@@ -200,6 +197,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
     @Override
     public List<Oficina> findByEntidadByEstado(Long idEntidad, String estado) throws Exception{
+
         Query q = em.createQuery("Select oficina.id, oficina.codigo, oficina.denominacion from Oficina as oficina where " +
                 "oficina.organismoResponsable.entidad.id =:idEntidad and oficina.estado.codigoEstadoEntidad=:estado");
 
@@ -213,6 +211,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
             Oficina oficina = new Oficina((Long)object[0],(String)object[1],(String)object[2]);
             oficinas.add(oficina);
         }
+
         return oficinas;
     }
 
@@ -264,9 +263,9 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
-    public LinkedHashSet<ObjetoBasico> oficinasRegistro(List<Libro> libros) throws Exception {
+    public LinkedHashSet<Oficina> oficinasRegistro(List<Libro> libros) throws Exception {
 
-        LinkedHashSet<ObjetoBasico> oficinas = new LinkedHashSet<ObjetoBasico>();  // Utilizamos un Set porque no permite duplicados
+        LinkedHashSet<Oficina> oficinas = new LinkedHashSet<Oficina>();  // Utilizamos un Set porque no permite duplicados
 
         // Recorremos los Libros y a partir del Organismo al que pertenecen, obtenemos las Oficinas que pueden Registrar en el.
         for (Libro libro : libros) {
@@ -279,27 +278,54 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
-    public Boolean tieneOficinasOrganismo(Long idOrganismo) throws Exception{
+    public LinkedHashSet<Oficina> oficinasRegistroOrganismo(Long idOrganismo) throws Exception {
+
+        LinkedHashSet<Oficina> oficinas = new LinkedHashSet<Oficina>();  // Utilizamos un Set porque no permite duplicados
+
+        oficinas.addAll(findByOrganismoResponsableVO(idOrganismo));
+        oficinas.addAll(relacionOrganizativaOfiLocalEjb.getOficinasByOrganismoVO(idOrganismo));
+
+        return oficinas;
+    }
+
+    @Override
+    public Boolean tieneOficinasOrganismo(Long idOrganismo, boolean oficinaVirtual) throws Exception {
+
+        String oficinaVirtualWhere = "";
+
+        // Si oficinaVirtual = false las oficinas virtuales se consideran oficinas validas para poder crear libros.
+        if (oficinaVirtual) {
+            oficinaVirtualWhere = " and :oficinaVirtual not in elements(oficina.servicios)";
+        }
         Query q = em.createQuery("Select oficina.id from Oficina as oficina where " +
                 "oficina.organismoResponsable.id =:idOrganismo and " +
-                "oficina.estado.codigoEstadoEntidad=:vigente and " +
-                ":oficinaVirtual not in elements(oficina.servicios)");
+                "oficina.estado.codigoEstadoEntidad=:vigente " +
+                oficinaVirtualWhere);
 
         q.setParameter("idOrganismo",idOrganismo);
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-        q.setParameter("oficinaVirtual", catServicioLocalEjb.findByCodigo(RegwebConstantes.REGISTRO_VIRTUAL_NO_PRESENCIAL));
+        if (oficinaVirtual) {
+            q.setParameter("oficinaVirtual", catServicioLocalEjb.findByCodigo(RegwebConstantes.REGISTRO_VIRTUAL_NO_PRESENCIAL));
+        }
+
 
         List<Long> oficinas = q.getResultList();
 
         if(oficinas.size()>0){
             return true;
         }else{
+            if (oficinaVirtual) {
+                oficinaVirtualWhere = " and :oficinaVirtual not in elements(relorg.oficina.servicios)";
+            }
+
             q = em.createQuery("select relorg from RelacionOrganizativaOfi as relorg where relorg.organismo.id=:idOrganismo and " +
-                    "relorg.estado.codigoEstadoEntidad=:vigente and " +
-                    ":oficinaVirtual not in elements(relorg.oficina.servicios)");
+                    "relorg.estado.codigoEstadoEntidad=:vigente " +
+                    oficinaVirtualWhere);
             q.setParameter("idOrganismo",idOrganismo);
             q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-            q.setParameter("oficinaVirtual", catServicioLocalEjb.findByCodigo(RegwebConstantes.REGISTRO_VIRTUAL_NO_PRESENCIAL));
+            if (oficinaVirtual) {
+                q.setParameter("oficinaVirtual", catServicioLocalEjb.findByCodigo(RegwebConstantes.REGISTRO_VIRTUAL_NO_PRESENCIAL));
+            }
 
             List<RelacionOrganizativaOfi> relorg= q.getResultList();
             return relorg.size() > 0;

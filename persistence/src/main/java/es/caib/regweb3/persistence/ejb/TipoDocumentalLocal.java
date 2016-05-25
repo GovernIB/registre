@@ -76,5 +76,16 @@ public interface TipoDocumentalLocal extends BaseEjb<TipoDocumental, Long> {
      */
     public Integer eliminarByEntidad(Long idEntidad) throws Exception;
 
+    /**
+     * Crea un TipoDocumental con sus traducciones en Catalán y Castellano
+     * @param codigo
+     * @param idEntidad
+     * @param nombreCa
+     * @param nombreES
+     * @return
+     * @throws Exception
+     */
+    public TipoDocumental nuevoTraduccion(String codigo, Long idEntidad, String nombreCa, String nombreES) throws Exception;
+
 
 }

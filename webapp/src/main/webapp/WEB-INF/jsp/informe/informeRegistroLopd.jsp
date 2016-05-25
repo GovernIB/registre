@@ -30,7 +30,7 @@
             <div class="col-xs-12">
 
                 <!-- PARÁMETROS DE BÚSQUEDA -->
-                <div class="panel panel-success">
+                <div class="panel panel-warning">
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-file-o"></i>
                             <strong>

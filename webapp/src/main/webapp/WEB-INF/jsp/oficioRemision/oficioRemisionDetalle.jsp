@@ -29,11 +29,13 @@
             </div>
        </div><!-- Fin miga de pan -->
 
+        <c:import url="../modulos/mensajes.jsp"/>
+
         <div class="row">
 
             <div class="col-xs-4">
 
-                <div class="panel panel-info">
+                <div class="panel panel-success">
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-file-o"></i>
                             <strong> <spring:message code="oficioRemision.oficioRemision"/> <fmt:formatDate value="${oficioRemision.fecha}" pattern="yyyy"/> / ${oficioRemision.numeroOficio}</strong>
@@ -51,7 +53,7 @@
                             <dd> ${(empty oficioRemision.organismoDestinatario)? oficioRemision.destinoExternoDenominacion : oficioRemision.organismoDestinatario.denominacion}</dd>
                             <dt><i class="fa fa-exchange"></i> <spring:message code="oficioRemision.tipo"/>:</dt>
                             <dd>
-                                <span class="label label-warning">
+                                <span class="label label-default">
                                     <c:if test="${not empty oficioRemision.organismoDestinatario}"> <spring:message
                                             code="oficioRemision.interno"/> </c:if>
                                     <c:if test="${empty oficioRemision.organismoDestinatario}"> <spring:message
@@ -60,15 +62,16 @@
                             </dd>
                             <dt><i class="fa fa-bookmark"></i> <spring:message code="oficioRemision.estado"/>: </dt>
                             <dd>
-                                <c:if test="${oficioRemision.estado == 0}"><span class="label label-danger"></c:if>
-                                <c:if test="${oficioRemision.estado == 1}"><span class="label label-warning"></c:if>
-                                <c:if test="${oficioRemision.estado == 2}"><span class="label label-success"></c:if>
+                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO}"><span class="label label-warning"></c:if>
+                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ENVIADO}"><span class="label label-warning"></c:if>
+                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ACEPTADO}"><span class="label label-success"></c:if>
+                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ANULADO}"><span class="label label-danger"></c:if>
 
                                 <spring:message code="oficioRemision.estado.${oficioRemision.estado}"/>
-                                <c:if test="${not empty oficioRemision.fechaEstado && oficioRemision.estado != 0}">
+                                <c:if test="${not empty oficioRemision.fechaEstado && oficioRemision.estado != RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO}">
                                     - <fmt:formatDate value="${oficioRemision.fechaEstado}" pattern="dd/MM/yyyy HH:mm:ss"/>
                                 </c:if>
-                                <c:if test="${oficioRemision.estado == 0}">
+                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO}">
                                     - <fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/>
                                 </c:if>
                                 </span>
@@ -95,6 +98,12 @@
                         </div>
                     </c:if>
 
+                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO && isAdministradorLibro}">
+                        <div class="panel-footer">
+                            <button type="button" onclick='confirm("<c:url value="/oficioRemision/${oficioRemision.id}/anular"/>","<spring:message code="oficioRemision.anular.confirmar" htmlEscape="true"/>")' class="btn btn-danger btn-sm btn-block"><spring:message code="oficioRemision.anular"/></button>
+                        </div>
+                    </c:if>
+
                 </div>
 
             </div>
@@ -108,7 +117,7 @@
             <c:if test="${not empty trazabilidades}">
                 <div class="col-xs-8 col-xs-offset">
 
-                    <div class="panel panel-info">
+                    <div class="panel panel-success">
 
                         <div class="panel-heading">
 

@@ -1,7 +1,7 @@
 <%@ page import="es.caib.regweb3.utils.Configuracio" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
-<un:useConstants var="RegwebConstantes" className="es.caib.regweb3.utils.RegwebConstantes"/>
+
 <!DOCTYPE html>
 <html lang="ca">
 <head>
@@ -52,25 +52,25 @@
                             <dt><i class="fa fa-bookmark"></i> <spring:message code="registroSalida.estado"/>: </dt>
                             <dd>
                                 <c:choose>
-                                    <c:when test="${registro.estado == RegwebConstantes.ESTADO_VALIDO}">
+                                    <c:when test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO}">
                                         <span class="label label-success"><spring:message code="registro.estado.${registro.estado}" /></span>
                                     </c:when>
-                                    <c:when test="${registro.estado == RegwebConstantes.ESTADO_PENDIENTE}">
+                                    <c:when test="${registro.estado == RegwebConstantes.REGISTRO_PENDIENTE}">
                                         <span class="label label-warning"><spring:message code="registro.estado.${registro.estado}" /></span>
                                     </c:when>
-                                    <c:when test="${registro.estado == RegwebConstantes.ESTADO_PENDIENTE_VISAR}">
+                                    <c:when test="${registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR}">
                                         <span class="label label-info"><spring:message code="registro.estado.${registro.estado}" /></span>
                                     </c:when>
-                                    <c:when test="${registro.estado == RegwebConstantes.ESTADO_OFICIO_EXTERNO || registro.estado == RegwebConstantes.ESTADO_OFICIO_INTERNO}">
+                                    <c:when test="${registro.estado == RegwebConstantes.REGISTRO_OFICIO_EXTERNO || registro.estado == RegwebConstantes.REGISTRO_OFICIO_INTERNO}">
                                         <span class="label label-default"><spring:message code="registro.estado.${registro.estado}" /></span>
                                     </c:when>
-                                    <c:when test="${registro.estado == RegwebConstantes.ESTADO_ENVIADO}">
+                                    <c:when test="${registro.estado == RegwebConstantes.REGISTRO_ENVIADO}">
                                         <span class="label label-primary"><spring:message code="registro.estado.${registro.estado}" /></span>
                                     </c:when>
-                                    <c:when test="${registro.estado == RegwebConstantes.ESTADO_TRAMITADO}">
+                                    <c:when test="${registro.estado == RegwebConstantes.REGISTRO_TRAMITADO}">
                                         <span class="label label-primary"><spring:message code="registro.estado.${registro.estado}" /></span>
                                     </c:when>
-                                    <c:when test="${registro.estado == RegwebConstantes.ESTADO_ANULADO}">
+                                    <c:when test="${registro.estado == RegwebConstantes.REGISTRO_ANULADO}">
                                         <span class="label label-danger"><spring:message code="registro.estado.${registro.estado}" /></span>
                                     </c:when>
             
@@ -132,23 +132,23 @@
                             </c:if>
 
                             <%--Si el registro está anulado--%>
-                            <c:if test="${registro.estado == RegwebConstantes.ESTADO_ANULADO && puedeEditar}">
+                            <c:if test="${registro.estado == RegwebConstantes.REGISTRO_ANULADO && puedeEditar}">
                                 <button type="button" onclick='javascript:confirm("<c:url value="/registroSalida/${registro.id}/activar"/>","<spring:message code="regweb.confirmar.activar" htmlEscape="true"/>")' class="btn btn-primary btn-sm btn-block"><spring:message code="regweb.activar"/></button>
                             </c:if>
 
                             <%--Si el registro está pendiente de visar--%>
-                            <c:if test="${registro.estado == RegwebConstantes.ESTADO_PENDIENTE_VISAR && isAdministradorLibro}">
+                            <c:if test="${registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR && isAdministradorLibro}">
                                 <button type="button" onclick='javascript:confirm("<c:url value="/registroSalida/${registro.id}/visar"/>","<spring:message code="regweb.confirmar.visar" htmlEscape="true"/>")' class="btn btn-success btn-sm btn-block"><spring:message code="regweb.visar"/></button>
                             </c:if>
 
                             <%--Si el registro está pendiente--%>
-                            <c:if test="${(registro.estado == RegwebConstantes.ESTADO_VALIDO || registro.estado == RegwebConstantes.ESTADO_PENDIENTE || registro.estado == RegwebConstantes.ESTADO_PENDIENTE_VISAR) && puedeEditar}">
+                            <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && puedeEditar}">
                                 <button type="button" onclick='javascript:confirm("<c:url value="/registroSalida/${registro.id}/anular"/>","<spring:message code="regweb.confirmar.anular" htmlEscape="true"/>")' class="btn btn-danger btn-sm btn-block"><spring:message code="regweb.anular"/></button>
                             </c:if>
 
 
                             <%--Si el resgistro no está pendiente de visar o anulado o tramitado--%>
-                            <c:if test="${(registro.estado == RegwebConstantes.ESTADO_VALIDO || registro.estado == RegwebConstantes.ESTADO_PENDIENTE) && puedeEditar}">
+                            <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE) && puedeEditar}">
                                 <button type="button" onclick="goTo('<c:url value="/registroSalida/${registro.id}/edit"/>')" class="btn btn-warning btn-sm btn-block"><spring:message code="registroSalida.editar"/></button>
                             </c:if>
                         </div>

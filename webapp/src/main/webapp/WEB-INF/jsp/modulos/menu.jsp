@@ -98,7 +98,7 @@
                                 <ul class="dropdown-menu">
                                     <c:forEach var="oficina" items="${oficinas}">
                                         <c:if test="${oficina.id != oficinaActiva.id}">
-                                            <li><a href="<c:url value="/cambioOficina/${oficina.id}"/>"><i class="fa fa-home"></i> ${oficina.nombre}</a></li>
+                                            <li><a href="<c:url value="/cambioOficina/${oficina.id}"/>"><i class="fa fa-home"></i> ${oficina.denominacion}</a></li>
                                         </c:if>
                                     </c:forEach>
                                 </ul>
@@ -161,7 +161,7 @@
                                     <li class="submenu-complet"><a href="<%=Configuracio.getUrlPreregistre()%>" target="_blank"><spring:message code="regweb.preregistro.caib"/></a></li>
                                 <%}%>
 
-                                <li class="divider"></li>
+                               <%-- <li class="divider"></li>
                                 <li class="dropdown-submenu-left toggle-left">
                                     <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> <spring:message code="oficioRemision.oficiosRemision"/></a>
                                     <ul class="dropdown-menu">
@@ -174,7 +174,7 @@
                                         <li><a href="<c:url value="/oficioRemision/oficiosPendientesRemisionInterna"/>"><spring:message code="registroEntrada.oficiosRemisionInterna"/></a></li>
                                         <li><a href="<c:url value="/oficioRemision/oficiosPendientesRemisionExterna"/>"><spring:message code="registroEntrada.oficiosRemisionExterna"/></a></li>
                                     </ul>
-                                </li>
+                                </li>--%>
                             </ul>
                         </div><!-- /btn-group -->
 
@@ -190,9 +190,24 @@
                             </ul>
                         </div>
 
-
                         <div class="btn-group">
                             <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown">
+                                <spring:message code="menu.oficiosRemision"/> <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a href="<c:url value="/oficioRemision/list"/>"><spring:message
+                                        code="oficioRemision.listado"/></a></li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="<c:url value="/oficioRemision/oficiosPendientesLlegada/list"/>"><spring:message
+                                            code="oficioRemision.pendientesLlegada"/></a></li>
+                                <li><a href="<c:url value="/oficioRemision/oficiosPendientesRemisionInterna"/>"><spring:message code="registroEntrada.oficiosRemisionInterna"/></a></li>
+                                <li><a href="<c:url value="/oficioRemision/oficiosPendientesRemisionExterna"/>"><spring:message code="registroEntrada.oficiosRemisionExterna"/></a></li>
+                            </ul>
+                        </div>
+
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown">
                                <spring:message code="menu.administracion"/> <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
@@ -309,7 +324,7 @@
                 <%--MENÚ ADMINISTRACIÓN--%>
                 <c:if test="${rolAutenticado.nombre == 'RWE_SUPERADMIN'}">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown">
+                        <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown">
                             <spring:message code="menu.configuracion"/> <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
