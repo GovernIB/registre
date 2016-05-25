@@ -985,7 +985,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
             Anexo anexo = anexoFull.getAnexo();
             Element elem = null;
 
-            Element rootElementFirma = rootNode.addElement("De_Anexo");
+            Element rootElementFirma = null;
             Element elemFirma = null;
             String filename_firma = new String();
             byte[] data_firma = null;
@@ -1014,7 +1014,6 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
             if (StringUtils.isNotBlank(filename)) {
                 elem = rootElement.addElement("Nombre_Fichero_Anexado");
                 elem.addCDATA(filename);
-
             }
             if (anexo.getModoFirma() == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
                 elemFirma = rootElementFirma.addElement("Nombre_Fichero_Anexado");
