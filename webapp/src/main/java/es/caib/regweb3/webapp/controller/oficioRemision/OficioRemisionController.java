@@ -378,7 +378,7 @@ public class OficioRemisionController extends BaseController {
 
         if (registroEntrada.getId() != null) { // Si se ha seleccionado
 
-          registroEntrada = registroEntradaEjb.findById(registroEntrada.getId());
+          registroEntrada = registroEntradaEjb.getConAnexosFull(registroEntrada.getId());
 
           // Comprobamos si el RegistroEntrada tiene el estado Válido
           if (!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)) {
