@@ -171,8 +171,8 @@
                                         <li>
                                             <a href="<c:url value="/oficioRemision/oficiosPendientesLlegada/list"/>"><spring:message
                                                     code="oficioRemision.pendientesLlegada"/></a></li>
-                                        <li><a href="<c:url value="/oficioRemision/oficiosPendientesRemisionInterna"/>"><spring:message code="registroEntrada.oficiosRemisionInterna"/></a></li>
-                                        <li><a href="<c:url value="/oficioRemision/oficiosPendientesRemisionExterna"/>"><spring:message code="registroEntrada.oficiosRemisionExterna"/></a></li>
+                                        <li><a href="<c:url value="/oficioRemision/pendientesRemisionInterna"/>"><spring:message code="registroEntrada.oficiosRemisionInterna"/></a></li>
+                                        <li><a href="<c:url value="/oficioRemision/pendientesRemisionExterna"/>"><spring:message code="registroEntrada.oficiosRemisionExterna"/></a></li>
                                     </ul>
                                 </li>--%>
                             </ul>
@@ -199,10 +199,10 @@
                                         code="oficioRemision.listado"/></a></li>
                                 <li class="divider"></li>
                                 <li>
-                                    <a href="<c:url value="/oficioRemision/oficiosPendientesLlegada/list"/>"><spring:message
+                                    <a href="<c:url value="/oficioRemision/pendientesLlegada/list"/>"><spring:message
                                             code="oficioRemision.pendientesLlegada"/></a></li>
-                                <li><a href="<c:url value="/oficioRemision/oficiosPendientesRemisionInterna"/>"><spring:message code="registroEntrada.oficiosRemisionInterna"/></a></li>
-                                <li><a href="<c:url value="/oficioRemision/oficiosPendientesRemisionExterna"/>"><spring:message code="registroEntrada.oficiosRemisionExterna"/></a></li>
+                                <li><a href="<c:url value="/oficioRemision/pendientesRemisionInterna"/>"><spring:message code="registroEntrada.oficiosRemisionInterna"/></a></li>
+                                <li><a href="<c:url value="/oficioRemision/pendientesRemisionExterna"/>"><spring:message code="registroEntrada.oficiosRemisionExterna"/></a></li>
                             </ul>
                         </div>
 

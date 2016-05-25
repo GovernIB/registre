@@ -41,28 +41,52 @@
                         <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="oficioRemision.pendientesLlegada"/></strong> </h3>
                     </div>
 
-                    <div class="panel-body">
+                        <form:form modelAttribute="oficioRemisionBusqueda" method="post" cssClass="form-horizontal">
+                            <form:hidden path="pageNumber"/>
 
-                        <c:if test="${listado != null}">
+                            <div class="panel-body">
+                                <div class="form-group col-xs-6">
+                                    <div class="col-xs-4 pull-left align-right"><span class="text-danger">*</span> <spring:message code="oficioRemision.libro"/></div>
+                                    <div class="col-xs-8">
+                                        <form:select path="oficioRemision.libro.id" cssClass="chosen-select">
+                                            <form:option value="">...</form:option>
+                                            <form:options items="${librosConsulta}" itemValue="id" itemLabel="nombreCompleto"/>
+                                        </form:select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-xs-6">
+                                    <div class="col-xs-4 pull-left align-right"><spring:message code="oficioRemision.numeroOficio"/></div>
+                                    <div class="col-xs-8">
+                                        <form:input path="oficioRemision.numeroOficio" cssClass="form-control" maxlength="10"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-xs-12">
+                                    <button type="submit" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></button>
+                                </div>
+                            </form:form>
+
+                        <c:if test="${paginacion != null}">
 
                             <div class="row">
                                 <div class="col-xs-12">
 
-                                    <c:if test="${empty listado}">
+                                    <c:if test="${empty paginacion.listado}">
                                         <div class="alert alert-warning alert-dismissable">
                                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                                             <spring:message code="regweb.busqueda.vacio"/> <strong><spring:message code="oficioRemision.oficioRemision"/></strong>
                                         </div>
                                     </c:if>
 
-                                    <c:if test="${not empty listado}">
+                                    <c:if test="${not empty paginacion.listado}">
 
                                         <div class="alert-grey">
-                                            <c:if test="${fn:length(listado) == 1}">
-                                                <spring:message code="regweb.resultado"/> <strong>${fn:length(listado)}</strong> <spring:message code="oficioRemision.pendientesLlegada"/>
+                                            <c:if test="${paginacion.totalResults == 1}">
+                                                <spring:message code="regweb.resultado"/> <strong>${paginacion.totalResults}</strong> <spring:message code="oficioRemision.pendientesLlegada"/>
                                             </c:if>
-                                            <c:if test="${fn:length(listado) > 1}">
-                                                <spring:message code="regweb.resultados"/> <strong>${fn:length(listado)}</strong> <spring:message code="oficioRemision.pendientesLlegada"/>
+                                            <c:if test="${paginacion.totalResults > 1}">
+                                                <spring:message code="regweb.resultados"/> <strong>${paginacion.totalResults}</strong> <spring:message code="oficioRemision.pendientesLlegada"/>
                                             </c:if>
                                         </div>
 
@@ -91,7 +115,7 @@
                                                 </thead>
 
                                                 <tbody>
-                                                    <c:forEach var="oficioRemision" items="${listado}">
+                                                    <c:forEach var="oficioRemision" items="${paginacion.listado}">
                                                         <tr>
                                                             <td><fmt:formatDate value="${oficioRemision.fecha}" pattern="yyyy"/> / ${oficioRemision.numeroOficio}</td>
                                                             <td><fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy"/></td>
@@ -114,7 +138,7 @@
 
                                             <!-- Paginacion -->
                                             <c:import url="../modulos/paginacion.jsp">
-                                                <c:param name="entidad" value="oficioRemision/oficiosPendientesLlegada"/>
+                                                <c:param name="entidad" value="oficioRemision/pendientesLlegada"/>
                                             </c:import>
 
                                         </div>
