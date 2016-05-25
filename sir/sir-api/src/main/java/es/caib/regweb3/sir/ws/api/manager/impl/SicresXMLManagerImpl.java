@@ -1380,15 +1380,16 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
      * @param ficheroIntercambio Información del fichero de intercambio.
      */
     protected void validarSegmentoAnexos(FicheroIntercambio ficheroIntercambio) {
-/*
+
+
         // Validar los documentos
         if ((ficheroIntercambio.getFicheroIntercambio() != null)
-                && ArrayUtils.isNotEmpty(ficheroIntercambio.getFicheroIntercambio().getDeAnexo())) {
-            for (FicheroIntercambioSICRES3.DeAnexo anexo : ficheroIntercambio.getFicheroIntercambio()
-                    .getDeAnexo()) {
+                && ArrayUtils.isNotEmpty(ficheroIntercambio.getFicheroIntercambio().getDe_Anexo())) {
+            for (De_Anexo anexo : ficheroIntercambio.getFicheroIntercambio()
+                    .getDe_Anexo()) {
                 validarAnexo(anexo, ficheroIntercambio.getIdentificadorIntercambio());
             }
-        }*/
+        }
     }
 
     /**
@@ -1439,14 +1440,14 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                     "'Hash' no puede estar vacio");
 
             // Validar el tipo MIME
-			/*
-			if (StringUtils.isNotBlank(anexo.getTipoMIME())) {
-				Assert.isTrue(StringUtils.equalsIgnoreCase(
-						anexo.getTipoMIME(), MimeTypeUtils.getMimeType(anexo
-								.getIdentificadorFichero())),
+            // TODO: estaba comentado.
+            /*if (StringUtils.isNotBlank(anexo.getTipo_MIME())) {
+                Assert.isTrue(StringUtils.equalsIgnoreCase(
+						anexo.getTipo_MIME(), MimeTypeUtils.getMimeType(anexo
+								.getIdentificador_Fichero())),
 						"'TipoMIME' does not match 'IdentificadorFichero'");
-			}
-			*/
+			}*/
+
 
 			/*
 			 * TODO SIR-RC-PR-096
