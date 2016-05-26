@@ -149,6 +149,7 @@ public class CommonConverter {
             if(oficinaExterna != null && oficinaExterna.getEstado().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)){
                 registroDetalle.setOficinaOrigenExternoCodigo(oficinaExterna.getCodigo());
                 registroDetalle.setOficinaOrigenExternoDenominacion(oficinaExterna.getDenominacion());
+                registroDetalle.setOficinaOrigen(null);
             }
         }else if(oficinaInterna.getEstado().getId().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)){
             registroDetalle.setOficinaOrigen(oficinaInterna);
