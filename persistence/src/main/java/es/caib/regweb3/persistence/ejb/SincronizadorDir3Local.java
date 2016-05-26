@@ -1,7 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
 
-import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.Organismo;
 

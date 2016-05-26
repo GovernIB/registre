@@ -4,14 +4,15 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
+
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
-import org.fundaciobit.plugins.documentcustody.DocumentCustody;
-import org.fundaciobit.plugins.documentcustody.IDocumentCustodyPlugin;
-import org.fundaciobit.plugins.documentcustody.SignatureCustody;
+import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
+import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
+
 import java.util.List;
 
 /**
@@ -113,7 +114,12 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      */
     public List<Anexo> getByRegistroDetalle(Long idRegistroDetalle) throws Exception;
 
-    public IDocumentCustodyPlugin getInstance() throws Exception;
+    
+    public byte[] getArchivoContent(String custodiaID) throws Exception;
+    
+
+    public byte[] getFirmaContent(String custodiaID) throws Exception;
+    
 
     /**
      * Obtiene el fichero existente en el sistema de archivos

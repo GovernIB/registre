@@ -28,8 +28,8 @@ import org.apache.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.fundaciobit.plugins.documentcustody.DocumentCustody;
-import org.fundaciobit.plugins.documentcustody.SignatureCustody;
+import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
+import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.fundaciobit.plugins.utils.Base64;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -300,7 +300,8 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
      * @param registroEntrada
      * @return
      */
-    public String crearXMLFicheroIntercambioSICRES3(RegistroEntrada registroEntrada) {
+    @Override
+    public String crearXMLFicheroIntercambioSICRES3(RegistroEntrada registroEntrada) throws Exception   {
 
         Assert.notNull(registroEntrada, "'registroEntrada' must not be null");
         FicheroIntercambio ficheroIntercambio = new FicheroIntercambio();
@@ -642,531 +643,293 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
     }
 
-    /**
-     * Añade el Segmento deAnexo al Fichero de Intercambio
-     *
-     * @param rootNode
-     * @param re
-     */
-    private void addDatosAnexos_old(Element rootNode, RegistroEntrada re, String identificadorIntercambio) {
-
+    private void addDatosAnexos(Element rootNode, RegistroEntrada re, String identificadorIntercambio) throws Exception  {
         int secuencia = 0;
 
-        try {
+        
 
-            //ANTIGUO List<Anexo> anexos = anexoEjb.getByRegistroEntrada(re.getId());
-            List<Anexo> anexos = re.getRegistroDetalle().getAnexos(); // Deben pasarnos el re con los anexos cargados
-            List<AnexoFull> anexosFull = re.getRegistroDetalle().getAnexosFull(); // Deben pasarnos el re con los anexos cargados
+        //ANTIGUO List<Anexo> anexos = anexoEjb.getByRegistroEntrada(re.getId());
+        List<Anexo> anexos = re.getRegistroDetalle().getAnexos(); // Deben pasarnos el re con los anexos cargados
+        List<AnexoFull> anexosFull = re.getRegistroDetalle().getAnexosFull(); // Deben pasarnos el re con los anexos cargados
 
 
-            for (AnexoFull anexoFull : anexosFull) {
-                Anexo anexo = anexoFull.getAnexo();
-                //Inicio del segmento "De_Anexo" para el mensaje de intercambio.
-                //De_Anexo
-                Element rootElement = rootNode.addElement("De_Anexo");
-                Element elem = null;
-
-                //El custodiaID no puede ser null
-                final String custodyID = anexo.getCustodiaID();
-                Assert.notNull(anexo.getCustodiaID(), "'custodiaID' must not be null");
-
-
-                //Obtenemos los documentos físicos del sistema de custodia
-                byte[] data = null;
-                DocumentCustody dc = null; //Documento asociado
-                SignatureCustody sc = null;// Firma del documento Asociado
-                String filename = new String();
-                String identificador_fichero = new String();
-                if (anexo.getModoFirma() == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED) { //CASO 5: DOC AMB FIRMA ATTACHED
-                    //en esta API el documento con la firma se encuentra en DocumentoCustody
-                    dc = anexoFull.getDocumentoCustody();
-                    if (dc != null) {
-                        filename = dc.getName();
-                        data = dc.getData();
-                    }
-
-                    //Especificamos el resto de propiedades del segmento anexo
-                    // Nombre_Fichero_Anexado
-                    if (StringUtils.isNotBlank(filename)) {
-                        elem = rootElement.addElement("Nombre_Fichero_Anexado");
-                        elem.addCDATA(filename);
-                    }
-
-                    // Identificador_Fichero
-                    elem = rootElement.addElement("Identificador_Fichero");
-                    identificador_fichero = generateIdentificadorFichero(identificadorIntercambio, secuencia, filename);
-                    elem.addCDATA(identificador_fichero);
-                    secuencia++;
-
-                    // Validez_Documento
-                    if (anexo.getValidezDocumento() != null) {
-                        elem = rootElement.addElement("Validez_Documento");
-                        elem.addCDATA(RegwebConstantes.CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento()));
-                    }
-
-                    // Tipo_Documento
-                    if (anexo.getTipoDocumento() != null) {
-                        elem = rootElement.addElement("Tipo_Documento");
-                        elem.addCDATA(RegwebConstantes.CODIGO_NTI_BY_TIPO_DOCUMENTO.get(anexo.getTipoDocumento()));
-                    }
-
-                    // Certificado
-                    //TODO
-                    elem = rootElement.addElement("Certificado");
-                    //elem.addCDATA(getBase64Sring(anexo.getCertificado()));
-                    elem.addCDATA(null);
-
-
-                    //Firma documento (propiedad Firma Documento del segmento)
-                    elem = rootElement.addElement("Firma_Documento");
-                    //TODO preguntar a toni como extraer la firma del attached.(De momento ponemos el documento completo)
-                    elem.addCDATA(getBase64String(dc.getData()));
-
-
-                    // TimeStamp
-                    elem = rootElement.addElement("TimeStamp");
-                    elem.addCDATA(null);
-
-                    // Validacion_OCSP_Certificado
-                    elem = rootElement.addElement("Validacion_OCSP_Certificado");
-                    elem.addCDATA(null);
-
-
-                    // Hash
-                    if (data != null) {
-                        elem = rootElement.addElement("Hash");
-                        elem.addCDATA(getBase64String(obtenerHash(data)));
-                    }
-
-
-                    // Tipo_MIME
-                    elem = rootElement.addElement("Tipo_MIME");
-                    elem.addCDATA(dc.getMime());
-
-
-
-                    //Anexo (propiedad Anexo del segmento)
-                    if (data != null) {
-                        elem = rootElement.addElement("Anexo");
-                        elem.addCDATA(getBase64String(data));
-                    }
-
-                    //Identificador Fichero Firmado
-                    elem = rootElement.addElement("Identificador_Documento_Firmado");
-                    elem.addCDATA(identificador_fichero);
-
-
-                    // Observaciones
-                    if (StringUtils.isNotBlank(anexo.getObservaciones())) {
-                        elem = rootElement.addElement("Observaciones");
-                        elem.addCDATA(anexo.getObservaciones());
-                    }
-
-
-                }
-                if (anexo.getModoFirma() == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {//CAS 4: FIRMA AMB DOC ORIG. DETACHED
-                    //Obtenemos el documento que se encuentra en DocumentoCustody
-                    dc = anexoFull.getDocumentoCustody();
-                    if (dc != null) {
-                        filename = dc.getName();
-                        data = dc.getData();
-                    }
-
-                    //Especificamos el resto de propiedades del segmento anexo
-                    // Nombre_Fichero_Anexado
-                    if (StringUtils.isNotBlank(filename)) {
-                        elem = rootElement.addElement("Nombre_Fichero_Anexado");
-                        elem.addCDATA(filename);
-                    }
-
-                    // Identificador_Fichero
-                    elem = rootElement.addElement("Identificador_Fichero");
-                    identificador_fichero = generateIdentificadorFichero(identificadorIntercambio, secuencia, filename);
-                    elem.addCDATA(identificador_fichero);
-                    secuencia++;
-
-                    // Validez_Documento
-                    if (anexo.getValidezDocumento() != null) {
-                        elem = rootElement.addElement("Validez_Documento");
-                        elem.addCDATA(RegwebConstantes.CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento()));
-                    }
-
-                    // Tipo_Documento
-                    if (anexo.getTipoDocumento() != null) {
-                        elem = rootElement.addElement("Tipo_Documento");
-                        elem.addCDATA(RegwebConstantes.CODIGO_NTI_BY_TIPO_DOCUMENTO.get(anexo.getTipoDocumento()));
-                    }
-
-                    // Certificado
-                    //TODO
-                    elem = rootElement.addElement("Certificado");
-                    //elem.addCDATA(getBase64Sring(anexo.getCertificado()));
-                    elem.addCDATA(null);
-
-
-                    //Firma documento (propiedad Firma Documento del segmento)
-                    //En este caso la firma de documento va en otro segmento anexo separado
-                    elem = rootElement.addElement("Firma_Documento");
-                    elem.addCDATA(null);
-
-                    // TimeStamp
-                    elem = rootElement.addElement("TimeStamp");
-                    elem.addCDATA(null);
-
-                    // Validacion_OCSP_Certificado
-                    elem = rootElement.addElement("Validacion_OCSP_Certificado");
-                    elem.addCDATA(null);
-
-
-                    // Hash
-                    if (data != null) {
-                        elem = rootElement.addElement("Hash");
-                        elem.addCDATA(getBase64String(obtenerHash(data)));
-                    }
-
-
-                    // Tipo_MIME
-                    if (dc != null) {
-                        elem = rootElement.addElement("Tipo_MIME");
-                        elem.addCDATA(dc.getMime());
-                    }
-
-
-                    //Anexo (propiedad Anexo del segmento)
-                    if (data != null) {
-                        elem = rootElement.addElement("Anexo");
-                        elem.addCDATA(getBase64String(data));
-                    }
-
-                    //Identificador Fichero Firmado
-                    elem = rootElement.addElement("Identificador_Documento_Firmado");
-                    elem.addCDATA(null);
-
-                    // Observaciones
-                    if (StringUtils.isNotBlank(anexo.getObservaciones())) {
-                        elem = rootElement.addElement("Observaciones");
-                        elem.addCDATA(anexo.getObservaciones());
-                    }
-
-
-                }
-
-                if(anexo.getModoFirma()==RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {   // Si tiene la firma en otro fichero
-
-                    Element rootElementFirma = rootNode.addElement("De_Anexo");
-                    Element elemFirma = null;
-
-                    sc = anexoFull.getSignatureCustody();
-                    String filename_firma = new String();
-                    byte[] data_firma = null;
-                    if (sc != null) {
-                        filename_firma = sc.getName();
-                        data_firma = sc.getData();
-
-                        elemFirma = rootElementFirma.addElement("Nombre_Fichero_Anexado");
-                        elemFirma.addCDATA(filename_firma);
-
-                        elemFirma = rootElementFirma.addElement("Identificador_Fichero");
-                        elemFirma.addCDATA(generateIdentificadorFichero(identificadorIntercambio, secuencia, filename_firma));
-                        secuencia++;
-
-
-                        // Validez_Documento
-                        //TODO prueba lo ponemos a vacio. Pendiente probar sin ponerlo
-                        elemFirma = rootElementFirma.addElement("Validez_Documento");
-                        elemFirma.addCDATA(null);
-
-                        //TODO preguntar a felip, al ser la firma del anexo no se que poner.
-                        elemFirma = rootElementFirma.addElement("Tipo_Documento");
-                        elemFirma.addCDATA(RegwebConstantes.CODIGO_NTI_BY_TIPO_DOCUMENTO.get(RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO));//=03
-
-
-                        // Certificado
-                        //TODO
-                        elemFirma = rootElementFirma.addElement("Certificado");
-                        //elem.addCDATA(getBase64Sring(anexo.getCertificado()));
-                        elemFirma.addCDATA(null);
-
-
-                        //Firma documento (propiedad Firma Documento del segmento)
-                        //En este caso la firma de documento va en otro segmento anexo separado
-                        elemFirma = rootElementFirma.addElement("Firma_Documento");
-                        elemFirma.addCDATA(null);
-
-                        // TimeStamp
-                        elemFirma = rootElementFirma.addElement("TimeStamp");
-                        elemFirma.addCDATA(null);
-
-                        // Validacion_OCSP_Certificado
-                        elemFirma = rootElementFirma.addElement("Validacion_OCSP_Certificado");
-                        elemFirma.addCDATA(null);
-
-
-                        // Hash
-                        if (data != null) {
-                            elemFirma = rootElementFirma.addElement("Hash");
-                            elemFirma.addCDATA(getBase64String(obtenerHash(data_firma)));
-                        }
-
-
-                        // Tipo_MIME
-                        if (sc != null) {
-                            elemFirma = rootElementFirma.addElement("Tipo_MIME");
-                            elemFirma.addCDATA(sc.getMime());
-                        }
-
-
-                        //Anexo (segmento)
-                        if (data_firma != null) {
-                            elemFirma = rootElementFirma.addElement("Anexo");
-                            elemFirma.addCDATA(getBase64String(data_firma));
-                        }
-
-
-                        //Identificador del Documento Firmado
-                        //En este caso apunta al documento del que es firma.
-                        elemFirma = rootElementFirma.addElement("Identificador_Documento_Firmado");
-                        elemFirma.addCDATA(identificador_fichero);
-
-
-                    }
-
-
-                    //secuencia++;
-                }
-            }
-        }catch (Exception e){
-            log.info("Error addDatosAnexo");
-            e.printStackTrace();
-
-        }
-
-    }
-
-    private void addDatosAnexos(Element rootNode, RegistroEntrada re, String identificadorIntercambio) {
-        int secuencia = 0;
-
-        try {
-
-            //ANTIGUO List<Anexo> anexos = anexoEjb.getByRegistroEntrada(re.getId());
-            List<Anexo> anexos = re.getRegistroDetalle().getAnexos(); // Deben pasarnos el re con los anexos cargados
-            List<AnexoFull> anexosFull = re.getRegistroDetalle().getAnexosFull(); // Deben pasarnos el re con los anexos cargados
-
-
-            for (AnexoFull anexoFull : anexosFull) {
-                Anexo anexo = anexoFull.getAnexo();
-                //Inicio del segmento "De_Anexo" para el mensaje de intercambio.
-                //De_Anexo
-                Element rootElement = rootNode.addElement("De_Anexo");
-                Element elem = null;
-
-                //El custodiaID no puede ser null
-                final String custodyID = anexo.getCustodiaID();
-                Assert.notNull(anexo.getCustodiaID(), "'custodiaID' must not be null");
-
-                montarDeAnexo(rootNode, rootElement, identificadorIntercambio, anexoFull, secuencia);
-            }
-        } catch (Exception e) {
-            log.info("Error addDatosAnexo");
-            e.printStackTrace();
-
-        }
-    }
-
-
-    private void montarDeAnexo(Element rootNode, Element rootElement, String identificadorIntercambio, AnexoFull anexoFull, int secuencia) {
-
-        try {
-            byte[] data = null;
-            DocumentCustody dc = null; //Documento asociado
-            SignatureCustody sc = null;// Firma del documento Asociado
-            String filename = new String();
-            String identificador_fichero = new String();
+        for (AnexoFull anexoFull : anexosFull) {
             Anexo anexo = anexoFull.getAnexo();
-            Element elem = null;
+            //Inicio del segmento "De_Anexo" para el mensaje de intercambio.
 
-            Element rootElementFirma = null;
-            Element elemFirma = null;
-            String filename_firma = new String();
-            byte[] data_firma = null;
+            //El custodiaID no puede ser null
+            final String custodyID = anexo.getCustodiaID();
+            Assert.notNull(anexo.getCustodiaID(), "'custodiaID' must not be null");
 
-            //en esta API el documento con la firma se encuentra en DocumentoCustody
-            dc = anexoFull.getDocumentoCustody();
-            if (dc != null) {
-                filename = dc.getName();
-                data = dc.getData();
-            }
-
-            if (anexo.getModoFirma() == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) { //Recuperamos la firma
-                sc = anexoFull.getSignatureCustody();
-
-                if (sc != null) {
-                    filename_firma = sc.getName();
-
-                    data_firma = sc.getData();
-                }
-
-                rootElementFirma = rootNode.addElement("De_Anexo");
-            }
-
-
-            //Especificamos el resto de propiedades del segmento anexo
-            // Nombre_Fichero_Anexado
-            if (StringUtils.isNotBlank(filename)) {
-                elem = rootElement.addElement("Nombre_Fichero_Anexado");
-                elem.addCDATA(filename);
-            }
-            if (anexo.getModoFirma() == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
-                elemFirma = rootElementFirma.addElement("Nombre_Fichero_Anexado");
-                elemFirma.addCDATA(filename_firma);
-            }
-
-
-            // Identificador_Fichero
-            elem = rootElement.addElement("Identificador_Fichero");
-            identificador_fichero = generateIdentificadorFichero(identificadorIntercambio, secuencia, filename);
-            elem.addCDATA(identificador_fichero);
-            secuencia++;
-            if (anexo.getModoFirma() == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
-                // Identificador_Fichero
-                elemFirma = rootElementFirma.addElement("Identificador_Fichero");
-                elemFirma.addCDATA(generateIdentificadorFichero(identificadorIntercambio, secuencia, filename_firma));
-                secuencia++;
-            }
-
-            // Validez_Documento
-            if (anexo.getValidezDocumento() != null) {
-                elem = rootElement.addElement("Validez_Documento");
-                elem.addCDATA(RegwebConstantes.CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento()));
-            }
-            if (anexo.getModoFirma() == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
-                elemFirma = rootElementFirma.addElement("Validez_Documento");
-                elemFirma.addCDATA(null);
-            }
-
-
-            // Tipo_Documento
-            if (anexo.getTipoDocumento() != null) {
-                elem = rootElement.addElement("Tipo_Documento");
-                elem.addCDATA(RegwebConstantes.CODIGO_NTI_BY_TIPO_DOCUMENTO.get(anexo.getTipoDocumento()));
-            }
-            if (anexo.getModoFirma() == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
-                //TODO preguntar a felip, al ser la firma del anexo no se que poner.
-                elemFirma = rootElementFirma.addElement("Tipo_Documento");
-                elemFirma.addCDATA(RegwebConstantes.CODIGO_NTI_BY_TIPO_DOCUMENTO.get(RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO));//=03
-            }
-
-            // Certificado
-            //TODO
-            elem = rootElement.addElement("Certificado");
-            //elem.addCDATA(getBase64Sring(anexo.getCertificado()));
-            elem.addCDATA(null);
-            if (anexo.getModoFirma() == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
-                elemFirma = rootElementFirma.addElement("Certificado");
-                elemFirma.addCDATA(null);
-            }
-
-
-            //Firma documento (propiedad Firma Documento del segmento)
-            if (anexo.getModoFirma() == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED) {
-                elem = rootElement.addElement("Firma_Documento");
-                //TODO preguntar a toni como extraer la firma del attached.(De momento ponemos el documento completo)
-                elem.addCDATA(getBase64String(dc.getData()));
-            } else {//DETACHED
-                elem = rootElement.addElement("Firma_Documento");
-                elem.addCDATA(null);
-
-                //En este caso la firma de documento va en otro segmento anexo separado
-                elemFirma = rootElementFirma.addElement("Firma_Documento");
-                elemFirma.addCDATA(null);
-            }
-
-
-            // TimeStamp
-            elem = rootElement.addElement("TimeStamp");
-            elem.addCDATA(null);
-            if (anexo.getModoFirma() == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
-                elemFirma = rootElementFirma.addElement("TimeStamp");
-                elemFirma.addCDATA(null);
-            }
-
-            // Validacion_OCSP_Certificado
-            elem = rootElement.addElement("Validacion_OCSP_Certificado");
-            elem.addCDATA(null);
-            if (anexo.getModoFirma() == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
-                elemFirma = rootElementFirma.addElement("Validacion_OCSP_Certificado");
-                elemFirma.addCDATA(null);
-            }
-
-
-            // Hash
-            if (data != null) {
-                elem = rootElement.addElement("Hash");
-                elem.addCDATA(getBase64String(obtenerHash(data)));
-            }
-            if (anexo.getModoFirma() == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
-                if (data != null) {
-                    elemFirma = rootElementFirma.addElement("Hash");
-                    elemFirma.addCDATA(getBase64String(obtenerHash(data_firma)));
-                }
-            }
-
-
-            // Tipo_MIME
-            elem = rootElement.addElement("Tipo_MIME");
-            elem.addCDATA(dc.getMime());
-            if (anexo.getModoFirma() == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
-                if (sc != null) {
-                    elemFirma = rootElementFirma.addElement("Tipo_MIME");
-                    elemFirma.addCDATA(sc.getMime());
-                }
-            }
-
-
-            //Anexo (propiedad Anexo del segmento)
-            if (data != null) {
-                elem = rootElement.addElement("Anexo");
-                elem.addCDATA(getBase64String(data));
-            }
-            if (anexo.getModoFirma() == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
-                if (data_firma != null) {
-                    elemFirma = rootElementFirma.addElement("Anexo");
-                    elemFirma.addCDATA(getBase64String(data_firma));
-                }
-            }
-
-
-            //Identificador Fichero Firmado
-            if (anexo.getModoFirma() == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
-                elem = rootElement.addElement("Identificador_Documento_Firmado");
-                elem.addCDATA(identificador_fichero);
-            } else {
-                elem = rootElement.addElement("Identificador_Documento_Firmado");
-                elem.addCDATA(null);
-
-                //En este caso apunta al documento del que es firma.
-                elemFirma = rootElementFirma.addElement("Identificador_Documento_Firmado");
-                elemFirma.addCDATA(identificador_fichero);
-            }
-
-
-            // Observaciones
-            if (StringUtils.isNotBlank(anexo.getObservaciones())) {
-                elem = rootElement.addElement("Observaciones");
-                elem.addCDATA(anexo.getObservaciones());
-            }
-            if (anexo.getModoFirma() == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
-                elemFirma = rootElementFirma.addElement("Observaciones");
-                elemFirma.addCDATA(null);
-            }
-        } catch (Exception e) {
-            log.info("Error montarDeAnexo");
-            e.printStackTrace();
+            secuencia = montarDeAnexo(rootNode, identificadorIntercambio, anexoFull, secuencia);
         }
+       
+    }
+
+
+    private int montarDeAnexo(Element rootNode, /* Element rootElement, */ String identificadorIntercambio,
+        AnexoFull anexoFull, int secuencia) throws Exception {
+
+
+          
+      final int modoFirma = anexoFull.getAnexo().getModoFirma();
+      Anexo anexo = anexoFull.getAnexo();
+      
+      switch(modoFirma) {
+      
+        // ------------------------------------------------------
+        // ------------ MODO_FIRMA_ANEXO_SINFIRMA ---------------
+        // ------------------------------------------------------
+        default:
+        case RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA:
+           log.warn("Ignorant fitxer " +  anexo.getCustodiaID() + " ja que no és ni conté firma.");
+           return secuencia;
+
+        
+        // ------------------------------------------------------
+        // ------------ MODO_FIRMA_ANEXO_ATTACHED ---------------
+        // ------------------------------------------------------
+        // Document amb firma adjunta (Pades, ...)
+        case RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED:
+        {
+          SignatureCustody sc = anexoFull.getSignatureCustody();
+
+          String filename = sc.getName();
+          byte[] data = sc.getData();
+          
+          String identificador_fichero = generateIdentificadorFichero(identificadorIntercambio, secuencia, filename);
+          secuencia++;
+          
+          Long validezDocumento = anexo.getValidezDocumento();
+          
+          // TODO preguntar a felip, al ser la firma del anexo no se que poner
+          Long tipoDocumento = RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO;
+          
+          // TODO com extreure ????
+          String certificado = null;
+          // TODO com extreure ????
+          String firmaDocumento = null;
+          // TODO com extreure ????
+          String selloTiempo = null;
+          // TOOD d'on s'obté?
+          String validacionOCSP = null;
+          String tipoMime = sc.getMime();
+          // La firma és ell mateix
+          String identificadorDocumentoFirmado = identificador_fichero;
+          String observaciones = anexo.getObservaciones();
+         
+          
+          crearSegmentoAnexo(rootNode, filename, data, identificador_fichero,
+               validezDocumento,  identificadorIntercambio,  tipoDocumento,
+               certificado,  firmaDocumento,  selloTiempo,  validacionOCSP,
+               tipoMime,  identificadorDocumentoFirmado,  observaciones);
+          
+          
+        }
+        break;
+        
+        // ------------------------------------------------------
+        // ------------ MODO_FIRMA_ANEXO_DETACHED ---------------
+        // ------------------------------------------------------
+        // Firma en document separat
+        case RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED:
+       
+          // ================= SEGMENTO 1: DOCUMENT ==================
+          String identificador_fichero;
+          {
+            DocumentCustody dc = anexoFull.getDocumentoCustody();
+
+            String filename = dc.getName();
+            byte[] data = dc.getData();
+            
+            identificador_fichero = generateIdentificadorFichero(identificadorIntercambio, secuencia, filename);
+            secuencia++;
+            
+            Long validezDocumento = anexo.getValidezDocumento();
+            
+            // TODO preguntar a felip, al ser la firma del anexo no se que poner
+            Long tipoDocumento = anexo.getTipoDocumento();
+            
+            
+            String certificado = null;
+            String firmaDocumento = null;
+            String selloTiempo = null;
+            String validacionOCSP = null;
+            String tipoMime = dc.getMime();
+            // La firma és ell mateix
+            String identificadorDocumentoFirmado = null;
+            String observaciones = anexo.getObservaciones();
+           
+            
+            crearSegmentoAnexo(rootNode, filename, data, identificador_fichero,
+                 validezDocumento,  identificadorIntercambio,  tipoDocumento,
+                 certificado,  firmaDocumento,  selloTiempo,  validacionOCSP,
+                 tipoMime,  identificadorDocumentoFirmado,  observaciones);
+          }
+          
+          
+          // ================= SEGMENTO 2: FIRMA ==================
+          {
+            SignatureCustody sc = anexoFull.getSignatureCustody();
+
+            String filename = sc.getName();
+            byte[] data = sc.getData();
+            
+            String identificador_fichero_FIRMA = generateIdentificadorFichero(identificadorIntercambio, secuencia, filename);
+            secuencia++;
+            
+            // TODO Que posam
+            Long validezDocumento = null;
+            
+            // TODO preguntar a felip, al ser la firma del anexo no se que poner
+            Long tipoDocumento = RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO;
+            
+            // TODO com extreure ????
+            String certificado = null;
+            // TODO com extreure ????
+            String firmaDocumento = null;
+            // TODO com extreure ????
+            String selloTiempo = null;
+            // TOOD d'on s'obté?
+            String validacionOCSP = null;
+            String tipoMime = sc.getMime();
+            // La firma és ell mateix
+            String identificadorDocumentoFirmado = identificador_fichero;
+            String observaciones = anexo.getObservaciones();
+           
+            
+            crearSegmentoAnexo(rootNode, filename, data, identificador_fichero_FIRMA,
+                 validezDocumento,  identificadorIntercambio,  tipoDocumento,
+                 certificado,  firmaDocumento,  selloTiempo,  validacionOCSP,
+                 tipoMime,  identificadorDocumentoFirmado,  observaciones);
+            
+          }
+
+       break;
+
+      }
+  
+      return secuencia;
 
     }
 
 
+    
+    private void crearSegmentoAnexo(Element rootNode, String filename, byte[] data, 
+        String identificador_fichero ,
+        Long validezDocumento, String identificadorIntercambio, Long tipoDocumento,
+        String certificado, String firmaDocumento, String selloTiempo, String validacionOCSP,
+        String tipoMime, String identificadorDocumentoFirmado, String observaciones) throws Exception {
+
+      
+      //Anexo anexo = anexoFull.getAnexo();
+      Element elem;
+      Element rootElement = rootNode.addElement("De_Anexo");
+
+
+      //Especificamos el resto de propiedades del segmento anexo
+      // Nombre_Fichero_Anexado
+      if (StringUtils.isNotBlank(filename)) {
+          elem = rootElement.addElement("Nombre_Fichero_Anexado");
+          elem.addCDATA(filename);
+      }
+     
+
+
+      // Identificador_Fichero
+      elem = rootElement.addElement("Identificador_Fichero");
+      elem.addCDATA(identificador_fichero);
+      
+
+      // Validez_Documento
+      elem = rootElement.addElement("Validez_Documento");
+      if (validezDocumento == null) {
+        elem.addCDATA(null);
+      } else {
+        elem.addCDATA(RegwebConstantes.CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(validezDocumento));
+      }
+      
+
+      // Tipo_Documento
+      elem = rootElement.addElement("Tipo_Documento");
+      if (tipoDocumento == null) {
+        elem.addCDATA(null);
+      } else {
+        elem.addCDATA(RegwebConstantes.CODIGO_NTI_BY_TIPO_DOCUMENTO.get(tipoDocumento));
+      }
+
+
+      // Certificado
+      //TODO
+      if (certificado != null) {
+        elem = rootElement.addElement("Certificado");
+        //elem.addCDATA(getBase64Sring(anexo.getCertificado()));
+        elem.addCDATA(certificado);
+      }
+
+
+      //Firma documento (propiedad Firma Documento del segmento)
+      if (firmaDocumento != null) {
+          elem = rootElement.addElement("Firma_Documento");
+          elem.addCDATA(firmaDocumento);
+      }
+
+      // TimeStamp
+      if (selloTiempo != null) {
+        elem = rootElement.addElement("TimeStamp");
+        elem.addCDATA(selloTiempo);
+      }
+
+
+      // Validacion_OCSP_Certificado
+      if (validacionOCSP != null) {
+        elem = rootElement.addElement("Validacion_OCSP_Certificado");
+        elem.addCDATA(validacionOCSP);
+      }
+      
+
+
+      if (data != null) {
+        
+        // Hash
+        elem = rootElement.addElement("Hash");
+        elem.addCDATA(getBase64String(obtenerHash(data)));
+      }
+
+      
+
+
+      // Tipo_MIME
+      if (tipoMime !=null) {
+        elem = rootElement.addElement("Tipo_MIME");
+        elem.addCDATA(tipoMime);
+      }
+
+
+      //Anexo (propiedad Anexo del segmento)
+      if (data != null) {
+        
+          elem = rootElement.addElement("Anexo");
+          elem.addCDATA(getBase64String(data));
+      }
+      
+
+
+      //Identificador Fichero Firmado
+      if (identificadorDocumentoFirmado != null) {
+          elem = rootElement.addElement("Identificador_Documento_Firmado");
+          elem.addCDATA(identificadorDocumentoFirmado);
+      }
+
+
+      // Observaciones
+      if (StringUtils.isNotBlank(observaciones)) {
+          elem = rootElement.addElement("Observaciones");
+          elem.addCDATA(observaciones);
+      }
+
+    }
+    
 
 
     /**
@@ -2072,7 +1835,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
             if(oficinaTF == null) return false;
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error en validarCodigoEntidadRegistral: " + e.getMessage(), e);
             return false;
         }
 
@@ -2094,7 +1857,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
             if(unidadTF == null) return false;
 
         } catch (Exception e) {
-            e.printStackTrace();
+          log.error("Error en validarCodigoUnidadTramitacion: " + e.getMessage(), e);
             return false;
         }
 

@@ -11,8 +11,8 @@ import es.caib.regweb3.ws.model.AnexoWs;
 import es.caib.regweb3.ws.v3.impl.CommonConverter;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.plugins.documentcustody.DocumentCustody;
-import org.fundaciobit.plugins.documentcustody.SignatureCustody;
+import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
+import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 
 import java.util.Calendar;
 
@@ -55,19 +55,20 @@ public class AnexoConverter extends CommonConverter {
         
         
         // Si validez Documento --> Copia no se admite firma
-        if(RegwebConstantes.ANEXO_TIPOVALIDEZDOCUMENTO_COPIA.equals(anexoWs.getValidezDocumento())){ 
+        if(RegwebConstantes.ANEXO_TIPOVALIDEZDOCUMENTO_COPIA.equals(anexoWs.getValidezDocumento())) {
             anexoWs.setNombreFirmaAnexada("");
             anexoWs.setFirmaAnexada(null);
             //anexoWs.setTamanoFirmaAnexada(null);
             anexoWs.setTipoMIMEFirmaAnexada(null);
         }
+        
+        
+        
 
-
-       DocumentCustody doc = null;
+        DocumentCustody doc = null;
         if (anexoWs.getNombreFicheroAnexado() != null && anexoWs.getFicheroAnexado() != null ) {
           doc = new DocumentCustody();
           doc.setData(anexoWs.getFicheroAnexado());
-          doc.setDocumentType(DocumentCustody.DOCUMENT_ONLY);
           doc.setMime(anexoWs.getTipoMIMEFicheroAnexado());
           doc.setName(anexoWs.getNombreFicheroAnexado());
         }
@@ -78,11 +79,41 @@ public class AnexoConverter extends CommonConverter {
         SignatureCustody  sign = null;
         if (anexoWs.getNombreFirmaAnexada() != null && anexoWs.getFirmaAnexada() != null) {
           sign = new SignatureCustody();
-          sign.setAttachedDocument(null);
+          
           sign.setData(anexoWs.getFirmaAnexada());
           sign.setMime(anexoWs.getTipoMIMEFirmaAnexada());
           sign.setName(anexoWs.getNombreFirmaAnexada());
-          sign.setSignatureType(SignatureCustody.OTHER_SIGNATURE);
+          
+          
+
+          final int modoFirma = anexoWs.getModoFirma();
+          
+          
+          switch(modoFirma) {
+             // Document amb firma adjunta
+             case RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED:
+               // TODO Emprar mètode per descobrir tipus de signatura
+               // TODO  Intentar obtenir tipus firma a partir de mime, nom o contingut
+               sign.setSignatureType(SignatureCustody.OTHER_DOCUMENT_WITH_ATTACHED_SIGNATURE);
+               sign.setAttachedDocument(null);
+             break;
+              
+             // Firma en document separat
+             case RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED:
+               // TODO Emprar mètode per descobrir tipus de signatura
+               // TODO  Intentar obtenir tipus firma a partir de mime, nom o contingut
+               sign.setSignatureType(SignatureCustody.OTHER_SIGNATURE_WITH_DETACHED_DOCUMENT);
+               sign.setAttachedDocument(false);
+               // TODO Check que doc NO estigui
+             break;
+           
+             default:
+             case RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA:
+                // TODO Traduir
+                throw new Exception("S'envia informació de Firma però el modo de firma"
+                    + " és 'Document Simple'");
+          }
+
         }
         anexoFull.setSignatureCustody(sign);
         anexoFull.setSignatureFileDelete(false);
@@ -217,7 +248,7 @@ public class AnexoConverter extends CommonConverter {
            SignatureCustody sign = anexoFull.getSignatureCustody();
            anexoWs.setNombreFirmaAnexada(sign.getName());
            anexoWs.setTipoMIMEFirmaAnexada(sign.getMime());
-             anexoWs.setFirmaAnexada(anexoEjb.getInstance().getSignature(custodyID));
+           anexoWs.setFirmaAnexada(anexoEjb.getFirmaContent(custodyID));
          }
          
          
@@ -227,7 +258,7 @@ public class AnexoConverter extends CommonConverter {
             DocumentCustody doc = anexoFull.getDocumentoCustody();
             anexoWs.setNombreFicheroAnexado(doc.getName());
             anexoWs.setTipoMIMEFicheroAnexado(doc.getMime());
-             anexoWs.setFicheroAnexado(anexoEjb.getInstance().getDocument(custodyID));
+            anexoWs.setFicheroAnexado(anexoEjb.getArchivoContent(custodyID));
          }
        }
        

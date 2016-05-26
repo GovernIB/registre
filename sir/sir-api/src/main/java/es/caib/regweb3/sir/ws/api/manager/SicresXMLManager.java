@@ -39,7 +39,7 @@ public interface SicresXMLManager {
      * @param registroEntrada Información del asiento registral.
      * @return XML de fichero de intercambio
      */
-    public String crearXMLFicheroIntercambioSICRES3(RegistroEntrada registroEntrada);
+    public String crearXMLFicheroIntercambioSICRES3(RegistroEntrada registroEntrada) throws Exception;
 
     /**
      * Devuelve un XML con el mensaje de propósito general con el objetivo de

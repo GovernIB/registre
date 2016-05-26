@@ -12,7 +12,6 @@ import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.TipoAsuntoValidator;
 import es.caib.regweb3.webapp.validator.TipoDocumentalValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,7 +25,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created 19/03/14

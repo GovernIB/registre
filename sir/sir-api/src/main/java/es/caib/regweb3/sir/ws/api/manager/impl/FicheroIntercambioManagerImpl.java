@@ -27,10 +27,11 @@ public class FicheroIntercambioManagerImpl implements FicheroIntercambioManager 
     @Override
     public void enviarFicheroIntercambio(RegistroEntrada registroEntrada) {
 
+      try {
         String xml = sicresXMLManager.crearXMLFicheroIntercambioSICRES3(registroEntrada);
         log.info("Xml Fichero Intercambio: " + xml);
 
-        try {
+        
             RespuestaWS respuesta = ws_sir6_b_recepcionFicheroDeAplicacion(xml);
 
             if (respuesta != null) {

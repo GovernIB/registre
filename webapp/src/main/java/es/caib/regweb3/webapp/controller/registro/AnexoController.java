@@ -16,7 +16,7 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.fundaciobit.plugins.documentcustody.api.AnnexCustody;
-// XYZ
+
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.fundaciobit.plugins.scanweb.ScanWebResource;
@@ -460,7 +460,7 @@ public class AnexoController extends BaseController {
       SignatureCustody sc;
       
       
-    //Cogemos el archivo
+      //Cogemos el archivo
       UploadedScanFile usf = getScanFileByID(registroID);
       
       if (usf != null) {
@@ -469,7 +469,6 @@ public class AnexoController extends BaseController {
         AnnexCustody file;
 
         // TODO Això s'ha de solucionar amb el nou sistema de digitalització
-        // XYZ
         final int modoFirma= anexoForm.getAnexo().getModoFirma();
         switch(modoFirma) {
           case RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA:
@@ -477,17 +476,17 @@ public class AnexoController extends BaseController {
             file = dc;
             sc = null;
           break;
-          
+          // Document amb firma adjunta
           case RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED:
              dc = null;
              sc = new SignatureCustody();
-             // XYZ TODO Vull suposar que és un PDF firmat
+             // TODO Vull suposar que és un PDF firmat. Amb scan web 2.0.0 s'hauria de solucionar
              sc.setSignatureType(SignatureCustody.OTHER_DOCUMENT_WITH_ATTACHED_SIGNATURE);
              file =sc;
           break;
-          
+          // Firma en document separat
           case RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED:
-            // Aquest Cas només tindrà sentit amb el plugin scan 2.0.0
+            // TODO Aquest Cas només tindrà sentit amb el plugin scan web 2.0.0
             throw new Exception("El modo de firma MODO_FIRMA_ANEXO_DETACHED en "
                 + "fitxers escanejats ara no te sentit. Estirà disponible en API SCAN WEB 2.0.0");
 
@@ -512,7 +511,8 @@ public class AnexoController extends BaseController {
             // Single document
             mime = "application/octet-stream";
           } else {
-            mime = "application/pdf"; // TODO Presuposam que es un PDF firmat
+         // TODO Presuposam que es un PDF firmat. Ho hauria de solucionar scan web 2.0.0
+            mime = "application/pdf"; 
           }
         }
         file.setMime(mime);
@@ -533,8 +533,12 @@ public class AnexoController extends BaseController {
       } else {
 
         // Formulari Fitxer de Sistema
+        int modoFirma= anexoForm.getAnexo().getModoFirma();
+        // TODO 1 Fer switch del valor modoFirma
+        // TODO 2 Comprovar que els fitxers enviat s'ajusten al modoFirma
+        
         dc = getDocumentCustody(anexoForm);
-        sc = getSignatureCustody(anexoForm, dc);
+        sc = getSignatureCustody(anexoForm, dc, modoFirma);
         
       }
       
@@ -591,7 +595,8 @@ public class AnexoController extends BaseController {
 
 
 
-    protected SignatureCustody getSignatureCustody(AnexoForm anexoForm, DocumentCustody dc) {
+    protected SignatureCustody getSignatureCustody(AnexoForm anexoForm, DocumentCustody dc,
+        int modoFirma) throws Exception {
       if (log.isDebugEnabled()) {
         log.debug("  ------------------------------");
         log.debug(" anexoForm.getFirmaFile() = " + anexoForm.getFirmaFile());
@@ -599,15 +604,52 @@ public class AnexoController extends BaseController {
         log.debug(" anexoForm.isFirmaFileDelete() = " + anexoForm.isSignatureFileDelete());
       }
       SignatureCustody sc = null;
-      if (!anexoForm.getFirmaFile().isEmpty()) {
+      if (anexoForm.getFirmaFile().isEmpty()) {
+        
+        if (modoFirma ==  RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED
+          || modoFirma ==  RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
+          String msg = "L'usuari ens indica que hi ha una firma hi no ve (modoFirma = " + modoFirma + ")";
+          log.error(msg, new Exception());
+          throw new Exception(msg);
+        }
+        
+      } else {
+        
+        if (modoFirma !=  RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED
+            && modoFirma !=  RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
+            String msg = "L'usuari ens indica que NO hi ha una firma pero n'envia una"
+                + " (modoFirma = " + modoFirma + ")";
+            log.error(msg, new Exception());
+            throw new Exception(msg);
+        }
+        
+        
         CommonsMultipartFile multipart = anexoForm.getFirmaFile();
         sc = new SignatureCustody();
-        sc.setAttachedDocument(dc == null? true : false);
+        
         sc.setData(multipart.getBytes());
         sc.setMime(multipart.getContentType());
         sc.setName(multipart.getOriginalFilename());
-        // XYZ TODO Emprar mètode per descobrir tipus de signatura
-        sc.setSignatureType(dc == null? SignatureCustody.OTHER_SIGNATURE_WITH_ATTACHED_DOCUMENT : SignatureCustody.OTHER_SIGNATURE_WITH_DETACHED_DOCUMENT);
+        
+        
+        if (modoFirma ==  RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED) {
+          // Document amb firma adjunta
+          sc.setAttachedDocument(null);
+          
+          // TODO Emprar mètode per descobrir tipus de signatura
+          sc.setSignatureType(SignatureCustody.OTHER_DOCUMENT_WITH_ATTACHED_SIGNATURE);
+         
+        } else if (modoFirma ==  RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
+          // Firma en document separat CAS 4
+          if (dc == null) {
+            throw new Exception("Aquesta firma requereix el document original"
+                + " i no s'ha enviat");
+          }
+
+          sc.setAttachedDocument(false);
+          // TODO Emprar mètode per descobrir tipus de signatura
+          sc.setSignatureType(SignatureCustody.OTHER_SIGNATURE_WITH_DETACHED_DOCUMENT);
+        }
       }
       return sc;
     }
@@ -627,22 +669,6 @@ public class AnexoController extends BaseController {
         dc = new DocumentCustody();
         CommonsMultipartFile multipart = anexoForm.getDocumentoFile();
         dc.setData(multipart.getBytes());
-        //int modoFirma= anexoForm.getAnexo().getModoFirma();
-        // XYZ 
-        // me da igual el tipus de modoFirma
-        // RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA => Només l'original
-        // RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED => original separat de firma
-        // XYZ Aquest cas és possible???
-        // RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED => Firma-attache i també l'original (redundant però ...)
-
-        /*  XYZ 
-        if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) {
-          dc.setDocumentType(DocumentCustody.DOCUMENT_ONLY);
-        } else {
-          // TODO es podria especificar el tipus PDF, DOCX, ODT, ... a partir del tipus MIME
-          dc.setDocumentType(DocumentCustody.OTHER_DOCUMENT_WITH_SIGNATURE);
-        }
-        */
         dc.setMime(multipart.getContentType());
         dc.setName(multipart.getOriginalFilename());
       }

@@ -9,13 +9,14 @@ import es.caib.regweb3.persistence.validator.AnexoValidator;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
-import org.fundaciobit.plugins.documentcustody.DocumentCustody;
-import org.fundaciobit.plugins.documentcustody.IDocumentCustodyPlugin;
-import org.fundaciobit.plugins.documentcustody.SignatureCustody;
+import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
+import org.fundaciobit.plugins.documentcustody.api.IDocumentCustodyPlugin;
+import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.fundaciobit.plugins.utils.Metadata;
 import org.fundaciobit.plugins.utils.PluginsManager;
 import org.hibernate.Hibernate;
@@ -27,6 +28,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
 import java.beans.Encoder;
 import java.beans.Expression;
 import java.beans.PersistenceDelegate;
@@ -425,7 +427,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
       Anexo anexo = anexoFull.getAnexo();
       
       boolean updateDate = false;
-      String mime = null;
+      
+      String mimeFinal = null;
 
       DocumentCustody doc = null;
       if (anexoFull.isDocumentoFileDelete()) {
@@ -437,10 +440,11 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
         if (doc != null && doc.getData() != null) {
 
+
           if(doc.getMime() == null) {
             doc.setMime("application/octet-stream");
           }
-          mime = doc.getMime();
+          mimeFinal = doc.getMime(); 
 
           doc.setName(checkFileName(doc.getName() , "file.bin"));
 
@@ -458,17 +462,27 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
       } else {
         SignatureCustody signature = anexoFull.getSignatureCustody();
         if (signature != null && signature.getData() != null) {
+          
+          String signType = (doc == null) ? SignatureCustody.OTHER_SIGNATURE_WITH_ATTACHED_DOCUMENT : SignatureCustody.OTHER_SIGNATURE_WITH_DETACHED_DOCUMENT;
 
           signature.setName(checkFileName(signature.getName(), "signature.bin"));
 
-          if (signature.getMime() == null) {
-            signature.setMime("application/octet-stream");
-          }
+          final String mime = signature.getMime();
           if (mime == null) {
-            mime = signature.getMime();
+            signature.setMime("application/octet-stream");
+          } else {
+            
+            if ("application/pdf".equals(mime)) {
+              signType = SignatureCustody.PADES_SIGNATURE;              
+            } else if ("application/xml".equals(mime) || 
+                "text/xml".equals(mime)) {
+              signType = SignatureCustody.XADES_SIGNATURE;              
+            }
           }
           
-          signature.setSignatureType(SignatureCustody.OTHER_SIGNATURE);
+          mimeFinal = signature.getMime(); // Sobreescriu Mime de doc 
+          
+          signature.setSignatureType(signType);
           // TODO Fallarà en update
           signature.setAttachedDocument(doc == null? true : false);
           
@@ -521,8 +535,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             I18NLogicUtils.tradueix(loc, "tipoValidezDocumento." + anexo.getValidezDocumento())));
       }
 
-      if (mime != null) {
-        metadades.add(new Metadata("anexo.formato", mime));
+      if (mimeFinal != null) {
+        metadades.add(new Metadata("anexo.formato", mimeFinal));
       }
 
       if (anexo.getTipoDocumental() != null && 
@@ -689,6 +703,10 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     /* METODOS DEL AnnexDocumentCustodyManager.java hecho por marilen del TODO DE TONI*/
 
+ 
+    private static  IDocumentCustodyPlugin cacheDocumentCustodyPlugin = null;
+    
+    
     /**
      * Obtiene una instancia del plugin de custodia
      *
@@ -696,22 +714,24 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @throws Exception
      */
     public IDocumentCustodyPlugin getInstance() throws Exception {
-        IDocumentCustodyPlugin plugin;
 
-        // Valor de la Clau
-        final String propertyName = RegwebConstantes.REGWEB3_PROPERTY_BASE + "annex.documentcustodyplugin";
-        String className = System.getProperty(propertyName);
-        if (className == null || className.trim().length() <= 0) {
-            throw new Exception("No hi ha cap propietat " + propertyName
-                    + " definint la classe que gestiona el plugin de login");
+        if (cacheDocumentCustodyPlugin == null) {
+          // Valor de la Clau
+          final String propertyName = RegwebConstantes.REGWEB3_PROPERTY_BASE + "annex.documentcustodyplugin";
+          String className = System.getProperty(propertyName);
+          if (className == null || className.trim().length() <= 0) {
+              throw new Exception("No hi ha cap propietat " + propertyName
+                      + " definint la classe que gestiona el plugin de login");
+          }
+          // Carregant la classe
+          Object obj;
+          obj = PluginsManager.instancePluginByClassName(className, RegwebConstantes.REGWEB3_PROPERTY_BASE + "annex.");
+          // TODO Falta mirar si retorna un null !!!!!
+          
+          cacheDocumentCustodyPlugin = (IDocumentCustodyPlugin) obj;
         }
-        // Carregant la classe
-        Object obj;
-        obj = PluginsManager.instancePluginByClassName(className, RegwebConstantes.REGWEB3_PROPERTY_BASE + "annex.");
-        plugin = (IDocumentCustodyPlugin) obj;
 
-
-        return plugin;
+        return cacheDocumentCustodyPlugin;
     }
 
 
@@ -731,6 +751,27 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         return getInstance().getDocumentInfo(custodiaID);
 
     }
+    
+    
+    
+    /**
+     * Obtiene la info del fichero existente en el sistema de archivos
+     * (No obtiene el array de bytes)
+     * @param custodiaID
+     * @return
+     */
+    @Override
+    public byte[] getArchivoContent(String custodiaID) throws Exception {
+
+        if (custodiaID == null) {
+            log.warn("getArchivo :: CustodiaID vale null !!!!!", new Exception());
+            return null;
+        }
+
+        return getInstance().getDocument(custodiaID);
+
+    }
+    
 
     /**
      * Obtiene la info de la firma existente en el sistema de archivos
@@ -747,6 +788,21 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
         return getInstance().getSignatureInfo(custodiaID);
     }
+    
+    
+    @Override
+    public byte[] getFirmaContent(String custodiaID) throws Exception {
+
+        if (custodiaID == null) {
+            log.warn("getFirma :: CustodiaID vale null !!!!!", new Exception());
+            return null;
+        }
+
+        return getInstance().getSignature(custodiaID);
+    }
+    
+    
+    
 
     /**
      * Elimina completamente una custodia ( = elimicion completa de Anexo)
@@ -813,46 +869,91 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     }
 
 
+
+
     /**
      * Crea o actualiza un anexos en el sistema de custodia
-     *
-     * //TODO Revisar: se puede eliminar porque no se emplea.
-     *
      * @param name
      * @param file
      * @param signatureName
      * @param signature
      * @param signatureMode
-     * @param custodyID         Si vale null significa que creamos el archivo. Otherwise actualizamos el fichero.
+     * @param custodyID Si vale null significa que creamos el archivo. Otherwise actualizamos el fichero.
      * @param custodyParameters JSON del registre
      * @return Identificador de custodia
      * @throws Exception
      */
-    public String crearArchivo(String name, byte[] file, String signatureName,
-                               byte[] signature, int signatureMode, String custodyID, String custodyParameters) throws Exception {
+    // TODO mime de doc i firma
+    public String crearArchivo(String name, byte[] file, String signatureName, 
+        byte[] signature,  int signatureMode, String custodyID, String custodyParameters) throws Exception {
 
         IDocumentCustodyPlugin instance = getInstance();
 
         if (custodyID == null) {
-            custodyID = instance.reserveCustodyID(custodyParameters);
+          custodyID = instance.reserveCustodyID(custodyParameters);
         }
 
-        //Comprobamos el modo de Firma
-        String documentType = signatureMode == 1 ? DocumentCustody.OTHER_DOCUMENT_WITH_SIGNATURE : DocumentCustody.DOCUMENT_ONLY;
 
-        DocumentCustody document = new DocumentCustody(name, file, documentType);
-        instance.saveDocument(custodyID, custodyParameters, document);
-
-        //
-        if (signatureName != null && signature != null) {
-            SignatureCustody docSignature = new SignatureCustody(signatureName, signature, SignatureCustody.OTHER_SIGNATURE, false);
-            instance.saveSignature(custodyID, custodyParameters, docSignature);
+        if (signatureMode == RegwebConstantes.TIPO_FIRMA_CSV) {
+          // CSV == Referencia a DocumentCustody
+          throw new Exception("Modo de firma(signatureMode) RegwebConstantes.TIPO_FIRMA_CSV "
+             + " no suportat. Es suportarà a partir de la posada en marxa de l'Arxiu Electrònic");
+        }
+        
+        
+        if (name != null && file != null) {
+          DocumentCustody document = new DocumentCustody(name, file);
+          instance.saveDocument(custodyID, custodyParameters, document);
         }
 
+
+
+        if(signatureName != null && signature != null) {
+          
+          SignatureCustody docSignature = new SignatureCustody();
+          docSignature.setName(signatureName);
+          docSignature.setData(signature);
+          
+          final long signType = (long)signatureMode;
+          
+          // Cases en doc. doc/AnalisiGestioDocumentsSIRDocumentCustodyAPI2Regweb.odt
+          
+          if (signType == RegwebConstantes.TIPO_FIRMA_XADES_DETACHED_SIGNATURE) {
+            // Cas 4
+            docSignature.setSignatureType(SignatureCustody.XADES_SIGNATURE);
+            docSignature.setAttachedDocument(false);
+          } else if(signType == RegwebConstantes.TIPO_FIRMA_XADES_ENVELOPE_SIGNATURE) {
+            // CAS 3
+            docSignature.setSignatureType(SignatureCustody.XADES_SIGNATURE);
+            docSignature.setAttachedDocument(true);
+          } else if(signType == RegwebConstantes.TIPO_FIRMA_CADES_DETACHED_EXPLICIT_SIGNATURE) {
+            // CAS 4
+            docSignature.setSignatureType(SignatureCustody.CADES_SIGNATURE);
+            docSignature.setAttachedDocument(false);
+          } else if(signType == RegwebConstantes.TIPO_FIRMA_CADES_ATTACHED_IMPLICIT_SIGNAUTRE) {
+            // CAS 3
+            docSignature.setSignatureType(SignatureCustody.CADES_SIGNATURE);
+            docSignature.setAttachedDocument(true);
+          } else if(signType == RegwebConstantes.TIPO_FIRMA_PADES) {
+            // CAS 5
+            docSignature.setSignatureType(SignatureCustody.PADES_SIGNATURE);
+            docSignature.setAttachedDocument(null);
+          } else { //    default:
+            String msg = "No es suporta signatureMode amb valor  " + signatureMode;
+            log.error(msg, new Exception());
+            throw new Exception(msg);
+          }
+
+
+          instance.saveSignature(custodyID, custodyParameters, docSignature);
+        }
+        
         //log.info("Creamos el file: " + getArchivosPath()+dstId.toString());
 
         return custodyID;
-    }
+      }
+
+    
 
     /* FIN METODOS DEL AnnexDocumentCustodyManager.java hecho por marilen del TODO DE TONI*/
 }

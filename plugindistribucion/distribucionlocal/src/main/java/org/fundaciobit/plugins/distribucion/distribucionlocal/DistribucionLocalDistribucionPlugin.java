@@ -20,11 +20,11 @@ public class DistribucionLocalDistribucionPlugin extends AbstractPluginPropertie
 
     protected final Logger log = Logger.getLogger(getClass());
 
-
+/*
     private static final String PROPERTY_BASE = DISTRIBUCION_BASE_PROPERTY + "distribucionlocal.";
 
 
-	/*private static final String PROPERTY_EXEMPLE = PROPERTY_BASE +"exemple";
+	private static final String PROPERTY_EXEMPLE = PROPERTY_BASE +"exemple";
 
 	public String getExample() throws Exception {
 		//return getProperty(PROPERTY_EXEMPLE);
