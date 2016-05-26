@@ -542,7 +542,9 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
         Query q;
 
-        q = em.createQuery("Select registroSalida from RegistroSalida as registroSalida where registroSalida.fecha >= :fechaInicio " +
+        q = em.createQuery("Select registroSalida.numeroRegistro, registroSalida.fecha, registroSalida.libro.nombre, " +
+                "registroSalida.oficina.denominacion, registroSalida.libro.organismo.denominacion " +
+                "from RegistroSalida as registroSalida where registroSalida.fecha >= :fechaInicio " +
                 "and registroSalida.fecha <= :fechaFin and registroSalida.usuario.id = :usuario and registroSalida.libro in (:libros) order by registroSalida.fecha desc");
 
         q.setParameter("fechaInicio", fechaInicio);
@@ -550,7 +552,17 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         q.setParameter("usuario", usuario);
         q.setParameter("libros", libros);
 
-        return q.getResultList();
+        List<RegistroSalida> registrosSalida = new ArrayList<RegistroSalida>();
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+            RegistroSalida registroSalida = new RegistroSalida((Integer) object[0], (Date) object[1], (String) object[2], (String) object[3], (String) object[4]);
+
+            registrosSalida.add(registroSalida);
+        }
+
+        return registrosSalida;
     }
 
     @Override
@@ -558,8 +570,11 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
         Query q;
 
-        q = em.createQuery("Select registroSalida from RegistroSalida as registroSalida where registroSalida.fecha >= :fechaInicio " +
-                "and registroSalida.fecha <= :fechaFin and registroSalida.usuario.id = :idUsuario and registroSalida.libro.id = :idLibro and registroSalida.estado != :pendiente order by registroSalida.fecha desc");
+        q = em.createQuery("Select registroSalida.numeroRegistro, registroSalida.fecha, registroSalida.libro.nombre, " +
+                "registroSalida.oficina.denominacion, registroSalida.libro.organismo.denominacion " +
+                "from RegistroSalida as registroSalida where registroSalida.fecha >= :fechaInicio " +
+                "and registroSalida.fecha <= :fechaFin and registroSalida.usuario.id = :idUsuario and " +
+                "registroSalida.libro.id = :idLibro and registroSalida.estado != :pendiente order by registroSalida.fecha desc");
 
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
@@ -567,7 +582,17 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         q.setParameter("idLibro", idLibro);
         q.setParameter("pendiente", RegwebConstantes.REGISTRO_PENDIENTE);
 
-        return q.getResultList();
+        List<RegistroSalida> registrosSalida = new ArrayList<RegistroSalida>();
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+            RegistroSalida registroSalida = new RegistroSalida((Integer) object[0], (Date) object[1], (String) object[2], (String) object[3], (String) object[4]);
+
+            registrosSalida.add(registroSalida);
+        }
+
+        return registrosSalida;
     }
 
 

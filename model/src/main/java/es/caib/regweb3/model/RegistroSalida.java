@@ -72,6 +72,13 @@ public class RegistroSalida implements IRegistro {
       this.registroDetalle =  rs.registroDetalle == null? null : new RegistroDetalle(rs.registroDetalle);
     }
 
+    public RegistroSalida(Integer numeroRegistro, Date fecha, String nombreLibro, String denominacionOficina, String denominacionOrganismo) {
+        this.numeroRegistro = numeroRegistro;
+        this.fecha = fecha;
+        this.libro = new Libro(null, nombreLibro, null, null, denominacionOrganismo);
+        this.oficina = new Oficina(null, null, denominacionOficina);
+    }
+
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
     @Column(name="ID")

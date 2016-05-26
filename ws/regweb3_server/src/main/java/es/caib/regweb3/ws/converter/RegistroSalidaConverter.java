@@ -3,9 +3,11 @@ package es.caib.regweb3.ws.converter;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.AnexoLocal;
 import es.caib.regweb3.persistence.ejb.CodigoAsuntoLocal;
+import es.caib.regweb3.persistence.ejb.OficinaLocal;
 import es.caib.regweb3.persistence.ejb.TipoAsuntoLocal;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.ws.model.AnexoWs;
 import es.caib.regweb3.ws.model.InteresadoWs;
 import es.caib.regweb3.ws.model.RegistroSalidaResponseWs;
@@ -35,7 +37,7 @@ public class RegistroSalidaConverter extends CommonConverter {
     public static RegistroSalida getRegistroSalida(RegistroSalidaWs registroSalidaWs,
         UsuarioEntidad usuario,Libro libro, Oficina oficina,
         Organismo organismo,  CodigoAsuntoLocal codigoAsuntoEjb,
-        TipoAsuntoLocal tipoAsuntoEjb) throws Exception, I18NException {
+        TipoAsuntoLocal tipoAsuntoEjb, OficinaLocal oficinaEjb) throws Exception, I18NException {
 
         if (registroSalidaWs == null){
             return  null;
@@ -50,21 +52,46 @@ public class RegistroSalidaConverter extends CommonConverter {
         registroSalida.setUsuario(usuario);
         registroSalida.setEstado(RegwebConstantes.REGISTRO_VALIDO);
         registroSalida.setLibro(libro);
-
-        registroDetalle.setTipoAsunto(getTipoAsunto(registroSalidaWs.getTipoAsunto(),usuario.getEntidad().getId(), tipoAsuntoEjb));
-        registroDetalle.setCodigoAsunto(getCodigoAsunto(registroSalidaWs.getCodigoAsunto(), codigoAsuntoEjb));
-        registroDetalle.setTipoDocumentacionFisica(registroSalidaWs.getDocFisica());
-        registroDetalle.setTransporte(RegwebConstantes.TRANSPORTE_BY_CODIGO_SICRES.get(registroSalidaWs.getTipoTransporte()));
-        registroDetalle.setIdioma(getIdiomaRegistro(registroSalidaWs.getIdioma()));
         registroDetalle.setExtracto(registroSalidaWs.getExtracto());
-        registroDetalle.setAplicacion(registroSalidaWs.getAplicacion());
-        registroDetalle.setVersion(registroSalidaWs.getVersion());
-        registroDetalle.setReferenciaExterna(registroSalidaWs.getRefExterna());
-        registroDetalle.setExpediente(registroSalidaWs.getNumExpediente());
-        registroDetalle.setNumeroTransporte(registroSalidaWs.getNumTransporte());
-        registroDetalle.setObservaciones(registroSalidaWs.getObservaciones());
-        registroDetalle.setExpone(registroSalidaWs.getExpone());
-        registroDetalle.setSolicita(registroSalidaWs.getSolicita());
+        registroDetalle.setTipoDocumentacionFisica(registroSalidaWs.getDocFisica());
+        registroDetalle.setTipoAsunto(getTipoAsunto(registroSalidaWs.getTipoAsunto(), usuario.getEntidad().getId(), tipoAsuntoEjb));
+        registroDetalle.setIdioma(getIdiomaRegistro(registroSalidaWs.getIdioma()));
+
+        if (!StringUtils.isEmpty(registroSalidaWs.getCodigoAsunto())) {
+            registroDetalle.setCodigoAsunto(getCodigoAsunto(registroSalidaWs.getCodigoAsunto(), codigoAsuntoEjb));
+        }
+        if (!StringUtils.isEmpty(registroSalidaWs.getRefExterna())) {
+            registroDetalle.setReferenciaExterna(registroSalidaWs.getRefExterna());
+        }
+        if (!StringUtils.isEmpty(registroSalidaWs.getNumExpediente())) {
+            registroDetalle.setExpediente(registroSalidaWs.getNumExpediente());
+        }
+        if (!StringUtils.isEmpty(registroSalidaWs.getTipoTransporte())) {
+            registroDetalle.setTransporte(RegwebConstantes.TRANSPORTE_BY_CODIGO_SICRES.get(registroSalidaWs.getTipoTransporte()));
+        }
+        if (!StringUtils.isEmpty(registroSalidaWs.getNumTransporte())) {
+            registroDetalle.setNumeroTransporte(registroSalidaWs.getNumTransporte());
+        }
+        if (!StringUtils.isEmpty(registroSalidaWs.getObservaciones())) {
+            registroDetalle.setObservaciones(registroSalidaWs.getObservaciones());
+        }
+        //registroDetalle = getOficinaOrigen(registroSalidaWs.getOficina(),oficinaEjb, registroDetalle); todo Crear propiedad OficinaOrigen en es.caib.regweb3.ws.model.RegistroWs
+        registroDetalle.setNumeroRegistroOrigen(String.valueOf(registroSalidaWs.getNumero()));
+        if (registroSalidaWs.getFecha() != null) {
+            registroDetalle.setFechaOrigen(registroSalidaWs.getFecha());
+        }
+        if (!StringUtils.isEmpty(registroSalidaWs.getExpone())) {
+            registroDetalle.setExpone(registroSalidaWs.getExpone());
+        }
+        if (!StringUtils.isEmpty(registroSalidaWs.getSolicita())) {
+            registroDetalle.setSolicita(registroSalidaWs.getSolicita());
+        }
+        if (!StringUtils.isEmpty(registroSalidaWs.getAplicacion())) {
+            registroDetalle.setAplicacion(registroSalidaWs.getAplicacion());
+        }
+        if (!StringUtils.isEmpty(registroSalidaWs.getVersion())) {
+            registroDetalle.setVersion(registroSalidaWs.getVersion());
+        }
 
         registroSalida.setRegistroDetalle(registroDetalle);
 

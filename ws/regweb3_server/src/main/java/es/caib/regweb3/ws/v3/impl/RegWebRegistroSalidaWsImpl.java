@@ -166,7 +166,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         // 5.- Convertir RegistroEntradaWs a RegistroEntrada
         RegistroSalida registroSalida = RegistroSalidaConverter.getRegistroSalida(
             registroSalidaWs, usuario, libro, oficina, origen,
-            codigoAsuntoEjb, tipoAsuntoEjb);
+                codigoAsuntoEjb, tipoAsuntoEjb, oficinaEjb);
 
         // 6.- Validar el RegistroEntrada
         validateRegistroSalida(registroSalida);
