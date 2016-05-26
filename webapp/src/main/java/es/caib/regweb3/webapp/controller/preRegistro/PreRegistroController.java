@@ -147,8 +147,6 @@ public class PreRegistroController extends BaseController {
         if(preRegistro.getCodigoEntidadRegistralDestino().equals(getOficinaActiva(request).getCodigo())){
             model.addAttribute("preRegistro",preRegistro);
 
-            Entidad entidad = getEntidadActiva(request);
-
             //Obtenemos los libros de Registro según si el PreRegistro es de Entrada o de Salida
             List<Libro> libros = null;
             if(preRegistro.getTipoRegistro().equals(RegwebConstantes.PREREGISTRO_ENTRADA.toString())){

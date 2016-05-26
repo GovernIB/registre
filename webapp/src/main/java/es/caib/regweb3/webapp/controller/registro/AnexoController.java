@@ -461,8 +461,6 @@ public class AnexoController extends BaseController {
       
       
     //Cogemos el archivo
-      HttpSession session = request.getSession(true);
-      //Object scan = session.getAttribute("scan_" + registroID);
       UploadedScanFile usf = getScanFileByID(registroID);
       
       if (usf != null) {

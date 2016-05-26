@@ -4,9 +4,11 @@ import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.AnexoLocal;
 import es.caib.regweb3.persistence.ejb.CodigoAsuntoLocal;
+import es.caib.regweb3.persistence.ejb.OficinaLocal;
 import es.caib.regweb3.persistence.ejb.TipoAsuntoLocal;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.ws.model.AnexoWs;
 import es.caib.regweb3.ws.model.InteresadoWs;
 import es.caib.regweb3.ws.model.RegistroEntradaResponseWs;
@@ -35,7 +37,7 @@ public class RegistroEntradaConverter extends CommonConverter {
      */
     public static RegistroEntrada getRegistroEntrada(RegistroEntradaWs registroEntradaWs,
                                                      UsuarioEntidad usuario, Libro libro, Oficina oficina, Organismo destinoInterno, UnidadTF destinoExterno,
-        CodigoAsuntoLocal codigoAsuntoEjb, TipoAsuntoLocal tipoAsuntoEjb)
+        CodigoAsuntoLocal codigoAsuntoEjb, TipoAsuntoLocal tipoAsuntoEjb, OficinaLocal oficinaEjb)
             throws Exception, I18NException {
 
         if (registroEntradaWs == null){
@@ -58,21 +60,24 @@ public class RegistroEntradaConverter extends CommonConverter {
         registroEntrada.setUsuario(usuario);
         registroEntrada.setEstado(RegwebConstantes.REGISTRO_VALIDO);
         registroEntrada.setLibro(libro);
-
-        registroDetalle.setTipoAsunto(getTipoAsunto(registroEntradaWs.getTipoAsunto(),usuario.getEntidad().getId(), tipoAsuntoEjb));
-        registroDetalle.setCodigoAsunto(getCodigoAsunto(registroEntradaWs.getCodigoAsunto(), codigoAsuntoEjb));
-        registroDetalle.setTipoDocumentacionFisica(registroEntradaWs.getDocFisica());
-        registroDetalle.setTransporte(RegwebConstantes.TRANSPORTE_BY_CODIGO_SICRES.get(registroEntradaWs.getTipoTransporte()));
-        registroDetalle.setIdioma(getIdiomaRegistro(registroEntradaWs.getIdioma()));
         registroDetalle.setExtracto(registroEntradaWs.getExtracto());
-        registroDetalle.setAplicacion(registroEntradaWs.getAplicacion());
-        registroDetalle.setVersion(registroEntradaWs.getVersion());
-        registroDetalle.setReferenciaExterna(registroEntradaWs.getRefExterna());
-        registroDetalle.setExpediente(registroEntradaWs.getNumExpediente());
-        registroDetalle.setNumeroTransporte(registroEntradaWs.getNumTransporte());
-        registroDetalle.setObservaciones(registroEntradaWs.getObservaciones());
-        registroDetalle.setExpone(registroEntradaWs.getExpone());
-        registroDetalle.setSolicita(registroEntradaWs.getSolicita());
+        registroDetalle.setTipoDocumentacionFisica(registroEntradaWs.getDocFisica());
+        registroDetalle.setTipoAsunto(getTipoAsunto(registroEntradaWs.getTipoAsunto(),usuario.getEntidad().getId(), tipoAsuntoEjb));
+        registroDetalle.setIdioma(getIdiomaRegistro(registroEntradaWs.getIdioma()));
+
+        if(!StringUtils.isEmpty(registroEntradaWs.getCodigoAsunto())){registroDetalle.setCodigoAsunto(getCodigoAsunto(registroEntradaWs.getCodigoAsunto(), codigoAsuntoEjb));}
+        if(!StringUtils.isEmpty(registroEntradaWs.getRefExterna())){registroDetalle.setReferenciaExterna(registroEntradaWs.getRefExterna());}
+        if(!StringUtils.isEmpty(registroEntradaWs.getNumExpediente())){registroDetalle.setExpediente(registroEntradaWs.getNumExpediente());}
+        if(!StringUtils.isEmpty(registroEntradaWs.getTipoTransporte())){registroDetalle.setTransporte(RegwebConstantes.TRANSPORTE_BY_CODIGO_SICRES.get(registroEntradaWs.getTipoTransporte()));}
+        if(!StringUtils.isEmpty(registroEntradaWs.getNumTransporte())){registroDetalle.setNumeroTransporte(registroEntradaWs.getNumTransporte());}
+        if(!StringUtils.isEmpty(registroEntradaWs.getObservaciones())){registroDetalle.setObservaciones(registroEntradaWs.getObservaciones());}
+        //registroDetalle = getOficinaOrigen(registroEntradaWs.getOficina(),oficinaEjb, registroDetalle);
+        registroDetalle.setNumeroRegistroOrigen(String.valueOf(registroEntradaWs.getNumero()));
+        if(registroEntradaWs.getFecha() != null){registroDetalle.setFechaOrigen(registroEntradaWs.getFecha());}
+        if(!StringUtils.isEmpty(registroEntradaWs.getExpone())){registroDetalle.setExpone(registroEntradaWs.getExpone());}
+        if(!StringUtils.isEmpty(registroEntradaWs.getSolicita())){registroDetalle.setSolicita(registroEntradaWs.getSolicita());}
+        if(!StringUtils.isEmpty(registroEntradaWs.getAplicacion())){registroDetalle.setAplicacion(registroEntradaWs.getAplicacion());}
+        if(!StringUtils.isEmpty(registroEntradaWs.getVersion())){registroDetalle.setVersion(registroEntradaWs.getVersion());}
 
         registroEntrada.setRegistroDetalle(registroDetalle);
 

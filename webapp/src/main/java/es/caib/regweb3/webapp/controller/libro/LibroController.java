@@ -250,13 +250,6 @@ public class LibroController extends BaseController {
 
         try {
 
-            Libro libro = libroEjb.findById(idLibro);
-
-            // Obtiene el valor de los contadores del libro
-//            Integer contadorEntrada = libro.getContadorEntrada().getNumero();
-//            Integer contadorSalida = libro.getContadorSalida().getNumero();
-//            Integer contadorOficio = libro.getContadorOficioRemision().getNumero();
-
             Long registrosEntrada = registroEntradaEjb.getTotalByLibro(idLibro);
             Long registrosSalida = registroSalidaEjb.getTotalByLibro(idLibro);
 
