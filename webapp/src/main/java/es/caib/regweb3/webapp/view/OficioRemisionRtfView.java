@@ -48,7 +48,7 @@ public class OficioRemisionRtfView extends AbstractView {
         List<RegistroEntrada> registrosEntrada = (List<RegistroEntrada>) model.get("registrosEntrada");
         ModeloOficioRemision modeloOficioRemision = (ModeloOficioRemision) model.get("modeloOficioRemision");
 
-        String idiomaActual = request.getLocale().getLanguage();
+        //String idiomaActual = request.getLocale().getLanguage();
 
         File archivo = es.caib.regweb3.persistence.utils.FileSystemManager.getArchivo(modeloOficioRemision.getModelo().getId());
 

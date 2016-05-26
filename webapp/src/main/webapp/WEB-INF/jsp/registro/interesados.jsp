@@ -110,7 +110,7 @@
             </div>
 
             <div class="row table-responsive">
-                <table id="interesados" class="table table-bordered table-hover table-striped">
+                <table id="interesados" class="table table-bordered table-hover table-striped" style="display: none;">
                     <colgroup>
                         <col>
                         <col>

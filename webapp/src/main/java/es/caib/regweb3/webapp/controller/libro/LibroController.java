@@ -19,9 +19,7 @@ import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Fundació BIT.
@@ -251,13 +249,6 @@ public class LibroController extends BaseController {
     public String eliminarLibro(@PathVariable("idLibro") Long idLibro, @PathVariable("idOrganismo") Long idOrganismo, HttpServletRequest request) {
 
         try {
-
-            Libro libro = libroEjb.findById(idLibro);
-
-            // Obtiene el valor de los contadores del libro
-//            Integer contadorEntrada = libro.getContadorEntrada().getNumero();
-//            Integer contadorSalida = libro.getContadorSalida().getNumero();
-//            Integer contadorOficio = libro.getContadorOficioRemision().getNumero();
 
             Long registrosEntrada = registroEntradaEjb.getTotalByLibro(idLibro);
             Long registrosSalida = registroSalidaEjb.getTotalByLibro(idLibro);

@@ -1,5 +1,5 @@
 /**
- * Añade el Organismo seleccionada a la Sesion, y la muestra en la tabla de interesados.
+ * Añade el Organismo seleccionada a la Sesion, y lo pinta en la tabla de interesados.
  * @param tipo
  * @param representante
  * @param idRegistroDetalle
@@ -47,6 +47,8 @@ function addOrganismoInteresadoHtml(codigoDir3, denominacion, tipo, idRegistroDe
     if (mensaje && idRegistroDetalle.length > 0) {
         mensajeSuccess("#mensajes", tradsinteresado['interesado.añadido']);
     }
+
+    mostrarOcultarTabla();
 }
 
 /**
@@ -68,6 +70,7 @@ function eliminarOrganisnoInteresado(codigoDir3,idRegistroDetalle){
         success: function(result) {
             if(result==true){
                 $(elemento).remove();
+                mostrarOcultarTabla();
                 // Mostramos mensaje de información
                 if (idRegistroDetalle.length > 0) {
                     mensajeSuccess("#mensajes", tradsinteresado['interesado.eliminado']);
@@ -136,7 +139,7 @@ function eliminarPersonaInteresado(idPersona,idRegistroDetalle){
         success: function(result) {
             if(result==true){
                 $(elemento).remove();
-
+                mostrarOcultarTabla();
                 // Mostramos mensaje de información
                 if (idRegistroDetalle.length > 0) {
                     mensajeSuccess("#mensajes", tradsinteresado['interesado.eliminado']);
@@ -179,6 +182,20 @@ function addInteresadoHtml(idPersona, nombre,tipo,representante,idRegistroDetall
         mensajeSuccess("#mensajes", tradsinteresado['interesado.añadido']);
     }
 
+    mostrarOcultarTabla();
+}
+
+/**
+ * Muestra u oculta la Tabla Interesados en función de si tiene contenido o no
+ */
+function mostrarOcultarTabla(){
+    var total = $("#interesados > tbody > tr").length;
+
+    if(total == 0){
+        $('#interesados').hide();
+    }else{
+        $('#interesados').show();
+    }
 }
 
 /**
@@ -216,6 +233,8 @@ function addInteresadoRepresentanteHtml(idInteresado,nombreInteresado,tipo,idRep
 
     // Añadimos a la celda la nueva información
     $('#interesados').append(fila);
+
+    mostrarOcultarTabla();
 
 }
 
