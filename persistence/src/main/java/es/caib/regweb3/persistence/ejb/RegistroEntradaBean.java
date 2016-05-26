@@ -900,7 +900,9 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         Query q;
 
-        q = em.createQuery("Select registroEntrada from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
+        q = em.createQuery("Select registroEntrada.numeroRegistro, registroEntrada.fecha, registroEntrada.libro.nombre, " +
+                "registroEntrada.oficina.denominacion, registroEntrada.libro.organismo.denominacion " +
+                "from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
                 "and registroEntrada.fecha <= :fechaFin and registroEntrada.usuario.id = :idUsuario and registroEntrada.libro in (:libros) order by registroEntrada.fecha desc");
 
         q.setParameter("fechaInicio", fechaInicio);
@@ -908,7 +910,17 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         q.setParameter("idUsuario", idUsuario);
         q.setParameter("libros", libros);
 
-        return q.getResultList();
+        List<RegistroEntrada> registrosEntrada = new ArrayList<RegistroEntrada>();
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+            RegistroEntrada registroEntrada = new RegistroEntrada((Integer) object[0], (Date) object[1], (String) object[2], (String) object[3], (String) object[4]);
+
+            registrosEntrada.add(registroEntrada);
+        }
+
+        return registrosEntrada;
     }
 
     @Override
@@ -917,8 +929,11 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         Query q;
 
-        q = em.createQuery("Select registroEntrada from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
-                "and registroEntrada.fecha <= :fechaFin and registroEntrada.usuario.id = :idUsuario and registroEntrada.libro.id = :idLibro and registroEntrada.estado != :pendiente order by registroEntrada.fecha desc");
+        q = em.createQuery("Select registroEntrada.numeroRegistro, registroEntrada.fecha, registroEntrada.libro.nombre, " +
+                "registroEntrada.oficina.denominacion, registroEntrada.libro.organismo.denominacion " +
+                "from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
+                "and registroEntrada.fecha <= :fechaFin and registroEntrada.usuario.id = :idUsuario and " +
+                "registroEntrada.libro.id = :idLibro and registroEntrada.estado != :pendiente order by registroEntrada.fecha desc");
 
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
@@ -926,7 +941,17 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         q.setParameter("idLibro", idLibro);
         q.setParameter("pendiente", RegwebConstantes.REGISTRO_PENDIENTE);
 
-        return q.getResultList();
+        List<RegistroEntrada> registrosEntrada = new ArrayList<RegistroEntrada>();
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+            RegistroEntrada registroEntrada = new RegistroEntrada((Integer) object[0], (Date) object[1], (String) object[2], (String) object[3], (String) object[4]);
+
+            registrosEntrada.add(registroEntrada);
+        }
+
+        return registrosEntrada;
     }
 
     @Override

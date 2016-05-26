@@ -89,7 +89,10 @@ public class HistoricoRegistroEntradaBean extends BaseEjbJPA<HistoricoRegistroEn
 
         Query q;
 
-        q = em.createQuery("Select historicoRegistroEntrada from HistoricoRegistroEntrada as historicoRegistroEntrada where historicoRegistroEntrada.fecha >= :fechaInicio " +
+        q = em.createQuery("Select historicoRegistroEntrada.registroEntrada.numeroRegistro, historicoRegistroEntrada.registroEntrada.libro.nombre, " +
+                "historicoRegistroEntrada.registroEntrada.oficina.denominacion, historicoRegistroEntrada.registroEntrada.libro.organismo.denominacion, " +
+                "historicoRegistroEntrada.registroEntrada.fecha, historicoRegistroEntrada.fecha, historicoRegistroEntrada.modificacion " +
+                "from HistoricoRegistroEntrada as historicoRegistroEntrada where historicoRegistroEntrada.fecha >= :fechaInicio " +
                 "and historicoRegistroEntrada.fecha <= :fechaFin and historicoRegistroEntrada.usuario.id = :idUsuario and historicoRegistroEntrada.modificacion != 'Creación' and historicoRegistroEntrada.registroEntrada.libro in (:libros) order by historicoRegistroEntrada.fecha desc");
 
         q.setParameter("fechaInicio", fechaInicio);
@@ -97,7 +100,17 @@ public class HistoricoRegistroEntradaBean extends BaseEjbJPA<HistoricoRegistroEn
         q.setParameter("idUsuario", idUsuario);
         q.setParameter("libros", libros);
 
-        return q.getResultList();
+        List<HistoricoRegistroEntrada> historicosRegistroEntrada = new ArrayList<HistoricoRegistroEntrada>();
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+            HistoricoRegistroEntrada historicoRegistroEntrada = new HistoricoRegistroEntrada((Integer) object[0], (String) object[1], (String) object[2], (String) object[3], (Date) object[4], (Date) object[5], (String) object[6]);
+
+            historicosRegistroEntrada.add(historicoRegistroEntrada);
+        }
+
+        return historicosRegistroEntrada;
     }
 
     @Override
@@ -105,7 +118,10 @@ public class HistoricoRegistroEntradaBean extends BaseEjbJPA<HistoricoRegistroEn
 
         Query q;
 
-        q = em.createQuery("Select historicoRegistroEntrada from HistoricoRegistroEntrada as historicoRegistroEntrada where historicoRegistroEntrada.fecha >= :fechaInicio " +
+        q = em.createQuery("Select historicoRegistroEntrada.registroEntrada.numeroRegistro, historicoRegistroEntrada.registroEntrada.libro.nombre, " +
+                "historicoRegistroEntrada.registroEntrada.oficina.denominacion, historicoRegistroEntrada.registroEntrada.libro.organismo.denominacion, " +
+                "historicoRegistroEntrada.registroEntrada.fecha, historicoRegistroEntrada.fecha, historicoRegistroEntrada.modificacion " +
+                "from HistoricoRegistroEntrada as historicoRegistroEntrada where historicoRegistroEntrada.fecha >= :fechaInicio " +
                 "and historicoRegistroEntrada.fecha <= :fechaFin and historicoRegistroEntrada.usuario.id = :idUsuario and historicoRegistroEntrada.registroEntrada.libro.id = :idLibro and historicoRegistroEntrada.modificacion != 'Creación' order by historicoRegistroEntrada.fecha desc");
 
         q.setParameter("fechaInicio", fechaInicio);
@@ -113,7 +129,17 @@ public class HistoricoRegistroEntradaBean extends BaseEjbJPA<HistoricoRegistroEn
         q.setParameter("idUsuario", idUsuario);
         q.setParameter("idLibro", idLibro);
 
-        return q.getResultList();
+        List<HistoricoRegistroEntrada> historicosRegistroEntrada = new ArrayList<HistoricoRegistroEntrada>();
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+            HistoricoRegistroEntrada historicoRegistroEntrada = new HistoricoRegistroEntrada((Integer) object[0], (String) object[1], (String) object[2], (String) object[3], (Date) object[4], (Date) object[5], (String) object[6]);
+
+            historicosRegistroEntrada.add(historicoRegistroEntrada);
+        }
+
+        return historicosRegistroEntrada;
     }
 
     @Override
