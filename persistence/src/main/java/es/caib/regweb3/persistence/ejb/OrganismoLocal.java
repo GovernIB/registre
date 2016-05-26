@@ -163,14 +163,6 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
    */
     public List<String> organismoSir(Long idOrganismo) throws Exception;
 
-   /**
-   * Método que obtiene los organismos relacionados con un libro
-   * @param idLibro identificador del libro
-   * @return
-   * @throws Exception
-   */
-    public List<Organismo> getByLibro(Long idLibro) throws Exception;
-
     /**
      * Elimina los Organismos de una Entidad
      * @param idEntidad

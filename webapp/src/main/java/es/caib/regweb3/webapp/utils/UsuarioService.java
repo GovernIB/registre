@@ -292,7 +292,7 @@ public class UsuarioService {
             tienePreRegistros(oficinaActiva,session);
         }
 
-        // Organismos OficiaActiva
+        // Obtenemos los Organismos a los que la OficiaActiva da servicio y que no son EDP
         session.setAttribute(RegwebConstantes.SESSION_ORGANISMOS_OFICINA,organismoEjb.getByOficinaActiva(oficinaActiva));
 
     }

@@ -111,6 +111,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Organismo> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select organismo from Organismo as organismo order by organismo.id");
@@ -121,6 +122,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Organismo> getPaginationByEntidad(int inicio, Long entidad) throws Exception {
 
         Query q = em.createQuery("Select organismo from Organismo as organismo where " +
@@ -134,6 +136,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Organismo findByCodigo(String codigo) throws Exception {
 
         Query q = em.createQuery("Select organismo from Organismo as organismo where " +
@@ -150,6 +153,8 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public Organismo findByCodigoLigero(String codigo) throws Exception {
         Query q = em.createQuery("Select organismo.id, organismo.codigo, organismo.denominacion, organismo.codAmbComunidad.id, organismo.estado.id from Organismo as organismo where " +
                 "organismo.codigo = :codigo");
@@ -168,6 +173,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Organismo findByCodigoEntidad(String codigo, Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select organismo.id,organismo.codigo, organismo.denominacion from Organismo as organismo where " +
@@ -188,6 +194,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Organismo> findByEntidadLibros(Long entidad) throws Exception {
 
         //Obtenemos aquellos organismos de la entidad que tienen libros. Esto devuelve los organismos sin los libros
@@ -218,6 +225,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Organismo> findByEntidadEstadoLibros(Long entidad, String estado) throws Exception {
 
         Query q = em.createQuery("Select distinct(organismo.id), organismo.estado from Organismo as organismo" +
@@ -249,6 +257,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Organismo> findByEntidadReduce(Long entidad) throws Exception {
 
         Query q = em.createQuery("Select organismo.id, organismo.denominacion from Organismo as organismo where " +
@@ -268,6 +277,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Organismo> findByEntidadByEstado(Long entidad, String estado) throws Exception {
 
         Query q = em.createQuery("Select organismo.id, organismo.codigo, organismo.denominacion from Organismo as organismo where " +
@@ -288,6 +298,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Organismo> findByEntidadEstadoConOficinas(Long entidad, String codigoEstado) throws Exception {
 
 
@@ -330,6 +341,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Organismo> getOrganismosByNivel(Long nivel, Long idEntidad, String estado) throws Exception {
 
         Query q = em.createQuery("Select organismo.id,organismo.codigo, organismo.denominacion, organismo.organismoSuperior.id, organismo.edp from Organismo as organismo where " +
@@ -353,6 +365,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Paginacion busqueda(Integer pageNumber, Long idEntidad, String codigo, String denominacion, Long idCatEstadoEntidad) throws Exception {
 
         Query q;
@@ -478,57 +491,39 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
      * @param totales          organismos totales obtenidos despues del proceso recursivo.
      * @throws Exception
      */
+    @SuppressWarnings(value = "unchecked")
     private void obtenerHijosOrganismos(LinkedHashSet<Organismo> organismosPadres, LinkedHashSet<Organismo> totales) throws Exception {
 
         // recorremos para todos los organismos Padres
         for (Organismo org : organismosPadres) {
 
-            Query q = em.createQuery("select organismo.id,organismo.codigo, organismo.denominacion, organismo.edp from Organismo as organismo where organismo.organismoSuperior.id =:idOrganismoSuperior and organismo.estado.codigoEstadoEntidad =:vigente ");
-            q.setParameter("idOrganismoSuperior", org.getId());
-            q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+            if(!org.getEdp()){ // Solo queremos los Organismos que no son EDP
+                Query q = em.createQuery("select organismo.id,organismo.codigo, organismo.denominacion, organismo.edp from Organismo as organismo where organismo.organismoSuperior.id =:idOrganismoSuperior " +
+                        "and organismo.estado.codigoEstadoEntidad =:vigente and organismo.edp = false");
+                q.setParameter("idOrganismoSuperior", org.getId());
+                q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
 
-            LinkedHashSet<Organismo> hijos = new LinkedHashSet<Organismo>();
+                LinkedHashSet<Organismo> hijos = new LinkedHashSet<Organismo>();
 
+                List<Object[]> result = q.getResultList();
 
-            List<Object[]> result = q.getResultList();
+                for (Object[] object : result) {
+                    Organismo hijo = new Organismo((Long) object[0], (String) object[1], (String) object[2], (Boolean) object[3]);
 
-            for (Object[] object : result) {
-                Organismo hijo = new Organismo((Long) object[0], (String) object[1], (String) object[2], (Boolean) object[3]);
+                    hijos.add(hijo);
+                }
+                totales.addAll(hijos);
 
-                hijos.add(hijo);
+                // Hijos de cada organismo
+                obtenerHijosOrganismos(hijos, totales);
             }
-            totales.addAll(hijos);
-
-            // Hijos de cada organismo
-            obtenerHijosOrganismos(hijos, totales);
 
         }
 
     }
 
-    /**
-     * Obtiene todos los organismos(padres e hijos) a los que da servicio el libro
-     *
-     * @param idLibro identificador del libro
-     * @return
-     * @throws Exception
-     */
-    public List<Organismo> getByLibro(Long idLibro) throws Exception {
-        // Obtenemos el organismo responsable del libro.
-        Query q2 = em.createQuery("Select libro.organismo from Libro as libro where libro.id=:idLibro");
-        q2.setParameter("idLibro", idLibro);
-        LinkedHashSet<Organismo> organismosPadres = new LinkedHashSet<Organismo>(q2.getResultList());
-
-        // aquí guardaremos todos los organismo, el padre y sus hijos.
-        LinkedHashSet<Organismo> totales = new LinkedHashSet<Organismo>();
-        totales.addAll(organismosPadres);
-        // recursivamente obtenemos los hijos de los organismos padre.
-        obtenerHijosOrganismos(organismosPadres, totales);
-
-        return new ArrayList<Organismo>(totales);
-    }
-
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Integer eliminarByEntidad(Long idEntidad) throws Exception {
 
         List<?> organismos = em.createQuery("Select distinct(id) from Organismo where entidad.id =:idEntidad").setParameter("idEntidad", idEntidad).getResultList();

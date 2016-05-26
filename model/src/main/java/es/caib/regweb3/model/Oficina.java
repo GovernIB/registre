@@ -199,7 +199,7 @@ public class Oficina implements Serializable{
     }
 
     /**
-     * Retorna todos los Organismos a los que la Oficina da servicio
+     * Retorna todos los Organismos a los que la Oficina da servicio que nos ean EDP
      */
     @Transient
     public LinkedHashSet<Organismo> getOrganismosFuncionales() {
@@ -212,7 +212,8 @@ public class Oficina implements Serializable{
         // Añadimos solo los Organismos que estan Vigentes
         Set<RelacionOrganizativaOfi> organismosFuncionales = this.getOrganizativasOfi();
         for(RelacionOrganizativaOfi relacionOrganizativaOfi:organismosFuncionales){
-            if(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE.equals(relacionOrganizativaOfi.getEstado().getCodigoEstadoEntidad())) {
+            if(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE.equals(relacionOrganizativaOfi.getEstado().getCodigoEstadoEntidad()) &&
+                    !relacionOrganizativaOfi.getOrganismo().getEdp()) {
                 organismos.add(relacionOrganizativaOfi.getOrganismo());
             }
         }

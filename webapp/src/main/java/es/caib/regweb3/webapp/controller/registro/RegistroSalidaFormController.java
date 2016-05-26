@@ -401,16 +401,6 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         return registroSalida;
     }
 
-    /**
-     * Obtiene los {@link es.caib.regweb3.model.Organismo} a partir del llibre seleccionat
-     */
-   /* @RequestMapping(value = "/obtenerOrganismoLibro", method = RequestMethod.GET)
-    public @ResponseBody
-    List<Organismo> obtenerOrganismoLibro(@RequestParam Long id) throws Exception {
-
-        return organismoEjb.getByLibro(id);
-    }*/
-
 
     @InitBinder("registroSalida")
     public void initBinder(WebDataBinder binder) {
