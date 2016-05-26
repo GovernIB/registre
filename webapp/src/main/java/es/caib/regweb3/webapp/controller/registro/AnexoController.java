@@ -9,13 +9,16 @@ import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.scan.ScannerManager;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.AnexoWebValidator;
+
 import org.apache.axis.utils.StringUtils;
 import org.apache.commons.io.FileUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
-import org.fundaciobit.plugins.documentcustody.DocumentCustody;
-import org.fundaciobit.plugins.documentcustody.SignatureCustody;
+import org.fundaciobit.plugins.documentcustody.api.AnnexCustody;
+// XYZ
+import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
+import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.fundaciobit.plugins.scanweb.ScanWebResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -37,6 +40,7 @@ import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -463,17 +467,42 @@ public class AnexoController extends BaseController {
       
       if (usf != null) {
         File scanFile = usf.getFile();
-        
 
-        dc = new DocumentCustody();
-        dc.setData(FileUtils.readFileToByteArray(scanFile));
-        int modoFirma= anexoForm.getAnexo().getModoFirma();
-        if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) {
-          dc.setDocumentType(DocumentCustody.DOCUMENT_ONLY);
-        } else {
-          // TODO es podria especificar el tipus PDF, DOCX, ODT, ... a partir del tipus MIME
-          dc.setDocumentType(DocumentCustody.OTHER_DOCUMENT_WITH_SIGNATURE);
+        AnnexCustody file;
+
+        // TODO Això s'ha de solucionar amb el nou sistema de digitalització
+        // XYZ
+        final int modoFirma= anexoForm.getAnexo().getModoFirma();
+        switch(modoFirma) {
+          case RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA:
+            dc = new DocumentCustody();
+            file = dc;
+            sc = null;
+          break;
+          
+          case RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED:
+             dc = null;
+             sc = new SignatureCustody();
+             // XYZ TODO Vull suposar que és un PDF firmat
+             sc.setSignatureType(SignatureCustody.OTHER_DOCUMENT_WITH_ATTACHED_SIGNATURE);
+             file =sc;
+          break;
+          
+          case RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED:
+            // Aquest Cas només tindrà sentit amb el plugin scan 2.0.0
+            throw new Exception("El modo de firma MODO_FIRMA_ANEXO_DETACHED en "
+                + "fitxers escanejats ara no te sentit. Estirà disponible en API SCAN WEB 2.0.0");
+
+          
+          default:
+            String msg = "El modo de firma " + modoFirma + " es desconegut.";
+            log.error(msg, new Exception());
+            throw new Exception(msg);
+
         }
+       
+        
+        file.setData(FileUtils.readFileToByteArray(scanFile));
         
         
         //String mime = (String)session.getAttribute("scan_" + registroID + ".mime");
@@ -481,24 +510,26 @@ public class AnexoController extends BaseController {
         if (es.caib.regweb3.utils.StringUtils.isEmpty(mime)) {
           // TODO Quin tipus li pos aqui // JPG, PNG, TIFF, PDF, ...
           // Mirar Mime manager de PortaFIB o de GenApp!!!!
-          mime = "application/pdf";
-          
+          if (sc == null) { 
+            // Single document
+            mime = "application/octet-stream";
+          } else {
+            mime = "application/pdf"; // TODO Presuposam que es un PDF firmat
+          }
         }
-        dc.setMime(mime);
+        file.setMime(mime);
         
         //String name = (String)session.getAttribute("scan_" + registroID + ".name");
         String name = usf.getName();
         if (name == null) {
           name = "FitxerEscanejat.bin";
         }
-        dc.setName(name);
+        file.setName(name);
 
         if (!scanFile.delete()) {
           scanFile.deleteOnExit();
         };
-        
-        sc = null;
-        
+
         initScan(request, registroID);
         
       } else {
@@ -577,7 +608,8 @@ public class AnexoController extends BaseController {
         sc.setData(multipart.getBytes());
         sc.setMime(multipart.getContentType());
         sc.setName(multipart.getOriginalFilename());
-        sc.setSignatureType(SignatureCustody.OTHER_SIGNATURE);
+        // XYZ TODO Emprar mètode per descobrir tipus de signatura
+        sc.setSignatureType(dc == null? SignatureCustody.OTHER_SIGNATURE_WITH_ATTACHED_DOCUMENT : SignatureCustody.OTHER_SIGNATURE_WITH_DETACHED_DOCUMENT);
       }
       return sc;
     }
@@ -597,13 +629,22 @@ public class AnexoController extends BaseController {
         dc = new DocumentCustody();
         CommonsMultipartFile multipart = anexoForm.getDocumentoFile();
         dc.setData(multipart.getBytes());
-        int modoFirma= anexoForm.getAnexo().getModoFirma();
+        //int modoFirma= anexoForm.getAnexo().getModoFirma();
+        // XYZ 
+        // me da igual el tipus de modoFirma
+        // RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA => Només l'original
+        // RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED => original separat de firma
+        // XYZ Aquest cas és possible???
+        // RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED => Firma-attache i també l'original (redundant però ...)
+
+        /*  XYZ 
         if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) {
           dc.setDocumentType(DocumentCustody.DOCUMENT_ONLY);
         } else {
           // TODO es podria especificar el tipus PDF, DOCX, ODT, ... a partir del tipus MIME
           dc.setDocumentType(DocumentCustody.OTHER_DOCUMENT_WITH_SIGNATURE);
         }
+        */
         dc.setMime(multipart.getContentType());
         dc.setName(multipart.getOriginalFilename());
       }
