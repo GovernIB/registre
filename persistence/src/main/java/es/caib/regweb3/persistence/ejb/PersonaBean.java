@@ -232,7 +232,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        StringBuffer query = new StringBuffer("Select persona from Persona as persona ");
+        StringBuffer query = new StringBuffer("Select persona.id, persona.nombre, persona.apellido1, persona.apellido2, persona.documento, persona.tipo from Persona as persona ");
 
         if(nombre!= null && nombre.length() > 0){where.add( DataBaseUtils.like("persona.nombre","nombre",parametros,nombre));}
         if(apellido1!= null && apellido1.length() > 0){where.add(DataBaseUtils.like("persona.apellido1","apellido1",parametros,apellido1));}
@@ -268,7 +268,16 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
         }
 
 
-        return q.getResultList();
+        List<Object[]> result = q.getResultList();
+        List<Persona> fisicas = new ArrayList<Persona>();
+
+        for (Object[] object : result) {
+            Persona persona = new Persona((Long) object[0], (String) object[1], (String) object[2],(String) object[3],(String) object[4], (Long) object[5]);
+
+            fisicas.add(persona);
+        }
+
+        return fisicas;
 
     }
 
@@ -277,7 +286,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        StringBuffer query = new StringBuffer("Select persona from Persona as persona ");
+        StringBuffer query = new StringBuffer("Select persona.id, persona.razonSocial, persona.documento, persona.tipo from Persona as persona ");
 
         if(razonSocial!= null && razonSocial.length() > 0){where.add( DataBaseUtils.like("persona.razonSocial","razonSocial",parametros,razonSocial));}
         if(documento!= null && documento.length() > 0){where.add(" upper(persona.documento) like upper(:documento) "); parametros.put("documento","%"+documento.toLowerCase()+"%");}
@@ -311,7 +320,16 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
         }
 
 
-        return q.getResultList();
+        List<Object[]> result = q.getResultList();
+        List<Persona> juridicas = new ArrayList<Persona>();
+
+        for (Object[] object : result) {
+            Persona persona = new Persona((Long) object[0], (String) object[1], (String) object[2], (Long) object[3]);
+
+            juridicas.add(persona);
+        }
+
+        return juridicas;
     }
 
     public List<Persona> busquedaPersonas(Long idEntidad, String nombre, String apellido1, String apellido2, String documento, String razonSocial) throws Exception{
