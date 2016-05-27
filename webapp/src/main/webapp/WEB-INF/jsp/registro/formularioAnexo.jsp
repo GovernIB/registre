@@ -165,7 +165,7 @@
                        
 	                    <!--ANEXO-->
                         <div class="form-group col-xs-12" style="margin-bottom: 0px;">
-    	                    <div class="form-group col-xs-6">
+                            <div class="form-group col-xs-6" id="divInputArchivo">
     	                       <div class="col-xs-4 pull-left etiqueta_regweb control-label">
     	                            <form:label path="documentoFile"><spring:message code="anexo.archivo"/></form:label>&nbsp;
     	                       </div>
@@ -183,8 +183,8 @@
     	                        </div>
     	                    </div>
                             <c:if test="${not empty anexoForm.documentoCustody}">
-    
-    	                    <div class="form-group col-xs-6">
+
+                                <div id="divArchivoActual" class="form-group col-xs-6">
     	                        <div class="col-xs-2 pull-left etiqueta_regweb control-label">
     	                            <label for="documentoFile"><spring:message code="anexo.archivo.existente"/></label>
     	                        </div>
@@ -207,7 +207,8 @@
                         <div class="form-group col-xs-12" style="margin-bottom: 0px;">
     	                    <div class="form-group col-xs-6" id="divInputFirma">
     	                       <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-    	                            <form:label path="firmaFile"><spring:message code="anexo.firma"/></form:label>
+                                   <form:label path="firmaFile" id="labelFirma"><spring:message
+                                           code="anexo.firma"/></form:label>
     	                       </div>
     	                       <div class="col-xs-8">
     	                           <div class="input-group">
@@ -226,7 +227,8 @@
                             <c:if test="${not empty anexoForm.signatureCustody}">
     	                    <div id="divFirmaActual" class="form-group col-xs-6">
     	                        <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-    	                            <label for="firmaFile"><spring:message code="anexo.firma.existente"/></label>
+                                    <label for="firmaFile" id="labelFirmaActual"><spring:message
+                                            code="anexo.firma.existente"/></label>
     	                        </div>
     	                        <div class="col-xs-8 arxiu_actual">
     	                            <a href="<c:url value="/anexo/descargarFirma/${anexoForm.anexo.id}" />" target="_blank">
@@ -287,20 +289,11 @@
          if ($('#anexo\\.validezDocumento').val() == 1) {
            
            $('#divmodofirma').hide();
-             
-           $('#divFirmaActual').hide();
-           $('#divInputFirma').hide();
-    
            $('#sinfirma').prop("checked", "checked");
          } else {
            $('#divmodofirma').show();
-    
-           $('#divFirmaActual').hide();
-           $('#divInputFirma').hide();
-    
-           cambioTipoFirma();
          }
-        
+        cambioTipoFirma();
     }
     
     
@@ -311,15 +304,36 @@
         console.log("-----  Entra dins cambioTipoFirma   -----");
         var autofirma = $('input[name=anexo\\.modoFirma]:radio:checked').val();
         console.log("Entra dins cambioTipoFirma: Valor = " + autofirma);
-        if (autofirma == 1 || autofirma == 0) {
-            $('#divInputFirma').hide();
-            $('#divFirmaActual').hide();
-        } else if(autofirma == 2){
-            $('#divInputFirma').show();
-            $('#divFirmaActual').show();
+        if (!autofirma) {
+            autofirma = 0;
         }
-    
-       
+
+        switch (autofirma) {
+            case '0': <%--doc sense firma --%>
+                $('#divInputArchivo').show();
+                $('#divArchivoActual').show();
+                $('#divInputFirma').hide();
+                $('#divFirmaActual').hide();
+                break;
+            case '1':<%--doc amb firma adjunta (PADES)--%>
+                $("#labelFirma").html("<spring:message code="anexo.tipofirma.attached"/>");
+                $("#labelFirmaActual").html("<spring:message code="anexo.tipofirma.attached.actual"/>");
+                $('#divInputArchivo').hide();
+                $('#divArchivoActual').hide();
+                $('#divInputFirma').show();
+                $('#divFirmaActual').show();
+                break;
+            case '2':<%--firma amb doc separat --%>
+                $("#labelFirma").html("<spring:message code="anexo.firma"/>");
+                $('#divInputArchivo').show();
+                $('#divArchivoActual').show();
+                $('#divInputFirma').show();
+                $('#divFirmaActual').show();
+                break;
+            default:
+                alert("Modo de firma no suportat(" + autofirma + ")");
+        }
+
     };
 
 

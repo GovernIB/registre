@@ -252,9 +252,8 @@ public class CommonConverter {
 
   public static Long getTipoValidezDocumento(String tValDocCodigoSicres
     ) throws Exception {
-    
-    //return (tValDocCodigoSicres == null )?null : RegwebConstantes.TIPOVALIDEZDOCUMENTO_BY_CODIGO_SICRES.get(tValDocCodigoSicres);
-      return (tValDocCodigoSicres == null )?null : RegwebConstantes.TIPOVALIDEZDOCUMENTO_BY_CODIGO_NTI.get(tValDocCodigoSicres);
+
+      return (tValDocCodigoSicres == null) ? null : RegwebConstantes.TIPOVALIDEZDOCUMENTO_BY_CODIGO_SICRES.get(tValDocCodigoSicres);
 
   }
 

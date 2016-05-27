@@ -61,60 +61,62 @@ public class AnexoConverter extends CommonConverter {
             //anexoWs.setTamanoFirmaAnexada(null);
             anexoWs.setTipoMIMEFirmaAnexada(null);
         }
-        
-        
-        
 
-        DocumentCustody doc = null;
-        if (anexoWs.getNombreFicheroAnexado() != null && anexoWs.getFicheroAnexado() != null ) {
-          doc = new DocumentCustody();
-          doc.setData(anexoWs.getFicheroAnexado());
-          doc.setMime(anexoWs.getTipoMIMEFicheroAnexado());
-          doc.setName(anexoWs.getNombreFicheroAnexado());
-        }
-        anexoFull.setDocumentoCustody(doc);
-        anexoFull.setDocumentoFileDelete(false);
-        
-        
-        SignatureCustody  sign = null;
-        if (anexoWs.getNombreFirmaAnexada() != null && anexoWs.getFirmaAnexada() != null) {
-          sign = new SignatureCustody();
-          
-          sign.setData(anexoWs.getFirmaAnexada());
-          sign.setMime(anexoWs.getTipoMIMEFirmaAnexada());
-          sign.setName(anexoWs.getNombreFirmaAnexada());
-          
-          
 
-          final int modoFirma = anexoWs.getModoFirma();
-          
-          
-          switch(modoFirma) {
-             // Document amb firma adjunta
-             case RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED:
+       final int modoFirma = anexoWs.getModoFirma();
+       DocumentCustody doc = null;
+       if (anexoWs.getNombreFicheroAnexado() != null && anexoWs.getFicheroAnexado() != null) {
+           doc = new DocumentCustody();
+           doc.setData(anexoWs.getFicheroAnexado());
+           doc.setMime(anexoWs.getTipoMIMEFicheroAnexado());
+           doc.setName(anexoWs.getNombreFicheroAnexado());
+       }
+       anexoFull.setDocumentoCustody(doc);
+       anexoFull.setDocumentoFileDelete(false);
+
+
+       SignatureCustody sign = null;
+       if (anexoWs.getNombreFirmaAnexada() != null && anexoWs.getFirmaAnexada() != null) {
+           sign = new SignatureCustody();
+
+           sign.setData(anexoWs.getFirmaAnexada());
+           sign.setMime(anexoWs.getTipoMIMEFirmaAnexada());
+           sign.setName(anexoWs.getNombreFirmaAnexada());
+       }
+
+       switch (modoFirma) {
+           // Document amb firma adjunta
+           case RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED:
                // TODO Emprar mètode per descobrir tipus de signatura
                // TODO  Intentar obtenir tipus firma a partir de mime, nom o contingut
+               sign = new SignatureCustody();
                sign.setSignatureType(SignatureCustody.OTHER_DOCUMENT_WITH_ATTACHED_SIGNATURE);
                sign.setAttachedDocument(null);
-             break;
-              
-             // Firma en document separat
-             case RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED:
+               //El documento con la firma viene en la parte de documento y hay que pasarla a firma
+               anexoFull.setDocumentoCustody(null);
+               if (anexoWs.getNombreFicheroAnexado() != null && anexoWs.getFicheroAnexado() != null) {
+                   sign.setData(anexoWs.getFicheroAnexado());
+                   sign.setMime(anexoWs.getTipoMIMEFicheroAnexado());
+                   sign.setName(anexoWs.getNombreFicheroAnexado());
+               }
+
+               break;
+
+           // Firma en document separat
+           case RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED:
                // TODO Emprar mètode per descobrir tipus de signatura
                // TODO  Intentar obtenir tipus firma a partir de mime, nom o contingut
                sign.setSignatureType(SignatureCustody.OTHER_SIGNATURE_WITH_DETACHED_DOCUMENT);
                sign.setAttachedDocument(false);
-               // TODO Check que doc NO estigui
-             break;
-           
-             default:
-             case RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA:
-                // TODO Traduir
-                throw new Exception("S'envia informació de Firma però el modo de firma"
-                    + " és 'Document Simple'");
-          }
+               if (doc == null) {
+                   throw new Exception("El documente no s'envia i el modo de firma "
+                           + " és 'Firma en document separat'");
+               }
+               break;
 
-        }
+       }
+
+
         anexoFull.setSignatureCustody(sign);
         anexoFull.setSignatureFileDelete(false);
 

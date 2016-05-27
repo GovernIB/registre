@@ -46,7 +46,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils  {
     Assert.assertEquals(3, registroEntradaApi.getVersionWs());
   }
 
-  @Test
+  //@Test
   public void obtenerRegistroEntrada() {
 
     try {
@@ -291,7 +291,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils  {
 
   }
 
-  //@Test
+  @Test
   public void crearRegistroEntradaconAnexos() {
     RegistroEntradaWs registroEntradaWs = new RegistroEntradaWs();
 
@@ -353,13 +353,14 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils  {
     AnexoWs anexoWs = new AnexoWs();
 
     anexoWs.setTitulo("Anexo amb canvi AnexoFull");
-    anexoWs.setValidezDocumento("01");
+
+    anexoWs.setValidezDocumento(CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_COPIA));
     anexoWs.setTipoDocumental(getTestAnexoTipoDocumental());
-    anexoWs.setTipoDocumento("01");
-    anexoWs.setOrigenCiudadanoAdmin(new Integer(0));
+    anexoWs.setTipoDocumento(CODIGO_NTI_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FORMULARIO));
+    anexoWs.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO.intValue());
     anexoWs.setObservaciones("Observaciones de Marilen");
 
-    anexoWs.setModoFirma(0);
+    anexoWs.setModoFirma(MODO_FIRMA_ANEXO_SINFIRMA);
     // Fichero Anexado
     MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
     try {
@@ -386,17 +387,16 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils  {
     AnexoWs anexoFirmaAtached = new AnexoWs();
 
     anexoFirmaAtached.setTitulo("Anexo firma atached");
-    anexoFirmaAtached.setValidezDocumento("02");
+    anexoFirmaAtached.setValidezDocumento(CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_COPIA_COMPULSADA));
     anexoFirmaAtached.setTipoDocumental(getTestAnexoTipoDocumental());
-    anexoFirmaAtached.setTipoDocumento("02");
-    anexoFirmaAtached.setOrigenCiudadanoAdmin(new Integer(1));
+    anexoFirmaAtached.setTipoDocumento(CODIGO_NTI_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_DOC_ADJUNTO));
+    anexoFirmaAtached.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_ADMINISTRACION.intValue());
     anexoFirmaAtached.setObservaciones("Observaciones firma atached");
-    anexoFirmaAtached.setModoFirma(1);
+    anexoFirmaAtached.setModoFirma(MODO_FIRMA_ANEXO_ATTACHED);
     // Fichero Anexado
 
     try {
       File file = new File(getTestArchivosPath() + fichero);
-
       anexoFirmaAtached.setFicheroAnexado(FileUtils.readFileToByteArray(file));
       anexoFirmaAtached.setNombreFicheroAnexado(file.getName());
       anexoFirmaAtached.setTipoMIMEFicheroAnexado(mimeTypesMap.getContentType(file));
@@ -416,12 +416,12 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils  {
     AnexoWs anexoFirmaDetached = new AnexoWs();
 
     anexoFirmaDetached.setTitulo("Anexo firma detached");
-    anexoFirmaDetached.setValidezDocumento("03");
+    anexoFirmaDetached.setValidezDocumento(CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_COPIA_ORIGINAL));
     anexoFirmaDetached.setTipoDocumental(getTestAnexoTipoDocumental());
-    anexoFirmaDetached.setTipoDocumento("03");
-    anexoFirmaDetached.setOrigenCiudadanoAdmin(new Integer(0));
+    anexoFirmaDetached.setTipoDocumento(CODIGO_NTI_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FICHERO_TECNICO));
+    anexoFirmaDetached.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO.intValue());
     anexoFirmaDetached.setObservaciones("Observaciones firma detached");
-    anexoFirmaDetached.setModoFirma(2);
+    anexoFirmaDetached.setModoFirma(MODO_FIRMA_ANEXO_DETACHED);
     // Fichero Anexado
 
     try {
@@ -454,12 +454,12 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils  {
     AnexoWs anexoFirmaDetachedCopia = new AnexoWs();
 
     anexoFirmaDetachedCopia.setTitulo("Anexo firma detached copia");
-    anexoFirmaDetachedCopia.setValidezDocumento("01");
+    anexoFirmaDetachedCopia.setValidezDocumento(CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_COPIA_COMPULSADA));
     anexoFirmaDetachedCopia.setTipoDocumental(getTestAnexoTipoDocumental());
-    anexoFirmaDetachedCopia.setTipoDocumento("01");
-    anexoFirmaDetachedCopia.setOrigenCiudadanoAdmin(new Integer(0));
+    anexoFirmaDetachedCopia.setTipoDocumento(CODIGO_NTI_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FORMULARIO));
+    anexoFirmaDetachedCopia.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO.intValue());
     anexoFirmaDetachedCopia.setObservaciones("Observaciones firma detached copia");
-    anexoFirmaDetachedCopia.setModoFirma(2);
+    anexoFirmaDetachedCopia.setModoFirma(MODO_FIRMA_ANEXO_DETACHED);
     // Fichero Anexado
 
     try {
