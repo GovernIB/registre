@@ -105,7 +105,7 @@ public class HistoricoRegistroEntradaBean extends BaseEjbJPA<HistoricoRegistroEn
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result) {
-            HistoricoRegistroEntrada historicoRegistroEntrada = new HistoricoRegistroEntrada((Integer) object[0], (String) object[1], (String) object[2], (String) object[3], (Date) object[4], (Date) object[5], (String) object[6]);
+            HistoricoRegistroEntrada historicoRegistroEntrada = new HistoricoRegistroEntrada(null, (Integer) object[0], (String) object[1], (String) object[2], (String) object[3], (Date) object[4], (Date) object[5], (String) object[6]);
 
             historicosRegistroEntrada.add(historicoRegistroEntrada);
         }
@@ -134,7 +134,7 @@ public class HistoricoRegistroEntradaBean extends BaseEjbJPA<HistoricoRegistroEn
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result) {
-            HistoricoRegistroEntrada historicoRegistroEntrada = new HistoricoRegistroEntrada((Integer) object[0], (String) object[1], (String) object[2], (String) object[3], (Date) object[4], (Date) object[5], (String) object[6]);
+            HistoricoRegistroEntrada historicoRegistroEntrada = new HistoricoRegistroEntrada(null, (Integer) object[0], (String) object[1], (String) object[2], (String) object[3], (Date) object[4], (Date) object[5], (String) object[6]);
 
             historicosRegistroEntrada.add(historicoRegistroEntrada);
         }

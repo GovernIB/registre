@@ -928,7 +928,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result) {
-            RegistroEntrada registroEntrada = new RegistroEntrada((Integer) object[0], (Date) object[1], (String) object[2], (String) object[3], (String) object[4]);
+            RegistroEntrada registroEntrada = new RegistroEntrada(null, (Integer) object[0], (Date) object[1], null, (String) object[2], (String) object[3], (String) object[4]);
 
             registrosEntrada.add(registroEntrada);
         }
@@ -959,7 +959,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result) {
-            RegistroEntrada registroEntrada = new RegistroEntrada((Integer) object[0], (Date) object[1], (String) object[2], (String) object[3], (String) object[4]);
+            RegistroEntrada registroEntrada = new RegistroEntrada(null, (Integer) object[0], (Date) object[1], null, (String) object[2], (String) object[3], (String) object[4]);
 
             registrosEntrada.add(registroEntrada);
         }
@@ -1006,7 +1006,9 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        StringBuffer query = new StringBuffer("Select registroEntrada from RegistroEntrada as registroEntrada ");
+        StringBuffer query = new StringBuffer("Select registroEntrada.id, registroEntrada.numeroRegistro, registroEntrada.fecha, " +
+                "registroEntrada.libro.id, registroEntrada.libro.nombre, registroEntrada.oficina.denominacion, registroEntrada.libro.organismo.denominacion " +
+                "from RegistroEntrada as registroEntrada ");
 
         if (fechaInicio != null) {
             where.add(" registroEntrada.fecha >= :fechaInicio");
@@ -1041,7 +1043,17 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             q.setParameter(param.getKey(), param.getValue());
         }
 
-        return q.getResultList();
+        List<RegistroEntrada> registrosEntrada = new ArrayList<RegistroEntrada>();
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+            RegistroEntrada registroEntrada = new RegistroEntrada((Long) object[0], (Integer) object[1], (Date) object[2], (Long) object[3], (String) object[4], (String) object[5], (String) object[6]);
+
+            registrosEntrada.add(registroEntrada);
+        }
+
+        return registrosEntrada;
     }
 
     @Override
@@ -1054,7 +1066,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         // Creamos el HistoricoRegistroEntrada para la modificación d estado
         historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada,
-                usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()),"registro.modificacion.estado" ), false);
+                usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.estado"), false);
     }
 
     @Override
@@ -1124,7 +1136,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         RegistroEntrada old = registroEntrada;
 
         // Estado anulado
-        cambiarEstado(registroEntrada,RegwebConstantes.REGISTRO_ANULADO, usuarioEntidad);
+        cambiarEstado(registroEntrada, RegwebConstantes.REGISTRO_ANULADO, usuarioEntidad);
 
     }
 
@@ -1135,7 +1147,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         RegistroEntrada old = registroEntrada;
 
         // Actualizamos el estado del RegistroEntrada
-        cambiarEstado(registroEntrada,RegwebConstantes.REGISTRO_PENDIENTE_VISAR, usuarioEntidad);
+        cambiarEstado(registroEntrada, RegwebConstantes.REGISTRO_PENDIENTE_VISAR, usuarioEntidad);
 
     }
 
@@ -1146,7 +1158,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         RegistroEntrada old = registroEntrada;
 
         // Modificamos el estado del RegistroEntrada
-        cambiarEstado(registroEntrada,RegwebConstantes.REGISTRO_VALIDO, usuarioEntidad);
+        cambiarEstado(registroEntrada, RegwebConstantes.REGISTRO_VALIDO, usuarioEntidad);
 
     }
 

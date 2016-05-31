@@ -556,7 +556,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result) {
-            RegistroSalida registroSalida = new RegistroSalida((Integer) object[0], (Date) object[1], (String) object[2], (String) object[3], (String) object[4]);
+            RegistroSalida registroSalida = new RegistroSalida(null, (Integer) object[0], (Date) object[1], null, (String) object[2], (String) object[3], (String) object[4]);
 
             registrosSalida.add(registroSalida);
         }
@@ -586,7 +586,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result) {
-            RegistroSalida registroSalida = new RegistroSalida((Integer) object[0], (Date) object[1], (String) object[2], (String) object[3], (String) object[4]);
+            RegistroSalida registroSalida = new RegistroSalida(null, (Integer) object[0], (Date) object[1], null, (String) object[2], (String) object[3], (String) object[4]);
 
             registrosSalida.add(registroSalida);
         }
@@ -625,7 +625,9 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        StringBuffer query = new StringBuffer("Select registroSalida from RegistroSalida as registroSalida ");
+        StringBuffer query = new StringBuffer("Select registroSalida.id, registroSalida.numeroRegistro, registroSalida.fecha, " +
+                "registroSalida.libro.id, registroSalida.libro.nombre, registroSalida.oficina.denominacion, registroSalida.libro.organismo.denominacion " +
+                "from RegistroSalida as registroSalida ");
 
         if (fechaInicio != null) {
             where.add(" registroSalida.fecha >= :fechaInicio");
@@ -660,7 +662,17 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
             q.setParameter(param.getKey(), param.getValue());
         }
 
-        return q.getResultList();
+        List<RegistroSalida> registrosSalida = new ArrayList<RegistroSalida>();
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+            RegistroSalida registroSalida = new RegistroSalida((Long) object[0], (Integer) object[1], (Date) object[2], (Long) object[3], (String) object[4], (String) object[5], (String) object[6]);
+
+            registrosSalida.add(registroSalida);
+        }
+
+        return registrosSalida;
     }
 
 
@@ -703,7 +715,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         RegistroSalida old = registroSalida;
 
         // Modificamos el estado del RegistroSalida
-        cambiarEstado(registroSalida,RegwebConstantes.REGISTRO_ANULADO, usuarioEntidad);
+        cambiarEstado(registroSalida, RegwebConstantes.REGISTRO_ANULADO, usuarioEntidad);
     }
 
     @Override
@@ -712,7 +724,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         RegistroSalida old = registroSalida;
 
         // Modificamos el estado del RegistroSalida
-        cambiarEstado(registroSalida,RegwebConstantes.REGISTRO_PENDIENTE_VISAR, usuarioEntidad);
+        cambiarEstado(registroSalida, RegwebConstantes.REGISTRO_PENDIENTE_VISAR, usuarioEntidad);
 
     }
 
@@ -723,7 +735,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         RegistroSalida old = registroSalida;
 
         // Modificamos el estado del RegistroSalida
-        cambiarEstado(registroSalida,RegwebConstantes.REGISTRO_VALIDO, usuarioEntidad);
+        cambiarEstado(registroSalida, RegwebConstantes.REGISTRO_VALIDO, usuarioEntidad);
 
     }
 

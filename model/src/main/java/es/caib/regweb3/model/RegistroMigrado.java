@@ -60,6 +60,19 @@ public class RegistroMigrado implements Serializable {
     private Set<ModificacionLopdMigrado> modificacionLopdMigrados;
     private String infoAdicional;
 
+    /**
+     *
+     */
+    public RegistroMigrado() {
+    }
+
+    public RegistroMigrado(int numero, int ano, String denominacionOficina, boolean tipoRegistro) {
+        this.numero = numero;
+        this.ano = ano;
+        this.denominacionOficina = denominacionOficina;
+        this.tipoRegistro = tipoRegistro;
+    }
+
 
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")

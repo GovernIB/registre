@@ -76,10 +76,11 @@ public class RegistroSalida implements IRegistro {
       this.registroDetalle =  rs.registroDetalle == null? null : new RegistroDetalle(rs.registroDetalle);
     }
 
-    public RegistroSalida(Integer numeroRegistro, Date fecha, String nombreLibro, String denominacionOficina, String denominacionOrganismo) {
+    public RegistroSalida(Long id, Integer numeroRegistro, Date fecha, Long idLibro, String nombreLibro, String denominacionOficina, String denominacionOrganismo) {
+        this.id = id;
         this.numeroRegistro = numeroRegistro;
         this.fecha = fecha;
-        this.libro = new Libro(null, nombreLibro, null, null, denominacionOrganismo);
+        this.libro = new Libro(idLibro, nombreLibro, null, null, denominacionOrganismo);
         this.oficina = new Oficina(null, null, denominacionOficina);
     }
 

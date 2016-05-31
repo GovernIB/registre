@@ -20,6 +20,17 @@ public class RegistroLopdMigrado implements Serializable {
     private String tipoAcceso;
     private String usuario;
 
+    /**
+     *
+     */
+    public RegistroLopdMigrado() {
+    }
+
+    public RegistroLopdMigrado(RegistroMigrado registroMigrado, Date fecha) {
+        this.registroMigrado = registroMigrado;
+        this.fecha = fecha;
+    }
+
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
     //@Index(name="RWE_REGLOPD_MIGRADO_PK_I")

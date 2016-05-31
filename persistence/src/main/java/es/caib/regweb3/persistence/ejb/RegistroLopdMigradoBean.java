@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.RegistroLopdMigrado;
+import es.caib.regweb3.model.RegistroMigrado;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -8,6 +9,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -97,7 +99,9 @@ public class RegistroLopdMigradoBean extends BaseEjbJPA<RegistroLopdMigrado, Lon
     @Override
     public List<RegistroLopdMigrado> getByUsuario(Date dataInici, Date dataFi, String usuario, String accion) throws Exception {
 
-        Query q = em.createQuery("Select registroLopdMigrado from RegistroLopdMigrado as registroLopdMigrado where " +
+        Query q = em.createQuery("Select registroLopdMigrado.registroMigrado.numero, registroLopdMigrado.registroMigrado.ano," +
+                "registroLopdMigrado.registroMigrado.denominacionOficina, registroLopdMigrado.registroMigrado.tipoRegistro," +
+                "registroLopdMigrado.fecha from RegistroLopdMigrado as registroLopdMigrado where " +
                 "registroLopdMigrado.fecha >= :dataInici and registroLopdMigrado.fecha <= :dataFi and " +
                 "registroLopdMigrado.usuario like :usuario and " +
                 "registroLopdMigrado.tipoAcceso like :accion order by registroLopdMigrado.fecha desc");
@@ -107,7 +111,18 @@ public class RegistroLopdMigradoBean extends BaseEjbJPA<RegistroLopdMigrado, Lon
         q.setParameter("usuario", usuario);
         q.setParameter("accion", accion);
 
-        return q.getResultList();
+        List<RegistroLopdMigrado> registrosLopdMigrado = new ArrayList<RegistroLopdMigrado>();
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+            RegistroMigrado registroMigrado = new RegistroMigrado((Integer) object[0], (Integer) object[1], (String) object[2], (Boolean) object[3]);
+            RegistroLopdMigrado registroLopdMigrado = new RegistroLopdMigrado(registroMigrado, (Date) object[4]);
+
+            registrosLopdMigrado.add(registroLopdMigrado);
+        }
+
+        return registrosLopdMigrado;
     }
 
     @Override
