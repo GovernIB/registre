@@ -1,5 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.Trazabilidad;
 
 import javax.annotation.security.RolesAllowed;
@@ -56,5 +57,12 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
      * @throws Exception
      */
     public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+
+    /**
+     * Obtiene los RegistroSalida generados en un OficioRemision
+     * @param idOficioRemision
+     * @return
+     */
+    public List<RegistroSalida> obtenerRegistrosSalida(Long idOficioRemision) throws Exception;
 
 }

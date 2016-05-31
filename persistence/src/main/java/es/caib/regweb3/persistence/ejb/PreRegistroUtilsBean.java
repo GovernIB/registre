@@ -105,13 +105,8 @@ public class PreRegistroUtilsBean implements PreRegistroUtilsLocal {
 
       // Procesamos el Registro Entrada
       synchronized (this){
-          nuevoRE = registroEntradaEjb.registrarEntrada(nuevoRE);
+          nuevoRE = registroEntradaEjb.registrarEntrada(nuevoRE, usuario);
       }
-
-
-      //Guardamos el HistorioRegistroEntrada
-      historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(nuevoRE, usuario, RegwebConstantes.TIPO_MODIF_ALTA,false);
-
 
       // Cambiamos el estado del PreRegistro
       preRegistro.setEstado(RegwebConstantes.ESTADO_PREREGISTRO_PROCESADO);
@@ -178,13 +173,8 @@ public class PreRegistroUtilsBean implements PreRegistroUtilsLocal {
 
       // Procesamos el Registro Entrada
       synchronized (this){
-          nuevoRS = registroSalidaEjb.registrarSalida(nuevoRS);
+          nuevoRS = registroSalidaEjb.registrarSalida(nuevoRS, usuario);
       }
-
-
-      //Guardamos el HistorioRegistroEntrada
-      historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(nuevoRS, usuario, RegwebConstantes.TIPO_MODIF_ALTA, false);
-
 
       // Cambiamos el estado del PreRegistro
       preRegistro.setEstado(RegwebConstantes.ESTADO_PREREGISTRO_PROCESADO);

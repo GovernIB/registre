@@ -38,7 +38,8 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @return
      * @throws Exception
      */
-    public RegistroSalida registrarSalida(RegistroSalida registroSalida) 
+    public RegistroSalida registrarSalida(RegistroSalida registroSalida,
+                                          UsuarioEntidad usuarioEntidad)
         throws Exception, I18NException, I18NValidationException;
     
     /**
@@ -306,5 +307,14 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @throws Exception
      */
     public Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws Exception;
+
+    /**
+     * Cambia el estado de un RegistroSalida
+     * @param registroSalida
+     * @param idEstado
+     * @param usuarioEntidad
+     * @throws Exception
+     */
+    public void cambiarEstado(RegistroSalida registroSalida, Long idEstado, UsuarioEntidad usuarioEntidad) throws Exception;
 
 }

@@ -3,10 +3,8 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.RegistroBasico;
-import es.caib.regweb3.persistence.utils.DataBaseUtils;
-import es.caib.regweb3.persistence.utils.NumeroRegistro;
-import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.persistence.utils.RegistroUtils;
+import es.caib.regweb3.persistence.utils.*;
+import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
@@ -68,9 +66,9 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     }
 
     @Override
-    public RegistroSalida registrarSalida(RegistroSalida registroSalida)
+    public RegistroSalida registrarSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad)
             throws Exception, I18NException, I18NValidationException {
-        return registrarSalida(registroSalida, null, null);
+        return registrarSalida(registroSalida, usuarioEntidad, null);
     }
 
 
@@ -95,6 +93,13 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
             registroSalida.getRegistroDetalle().setFechaOrigen(registroSalida.getFecha());
         }
 
+        //Si no se ha espeficicado un NumeroRegistroOrigen, le asignamos el propio
+        if (StringUtils.isEmpty(registroSalida.getRegistroDetalle().getNumeroRegistroOrigen())) {
+
+            registroSalida.getRegistroDetalle().setNumeroRegistroOrigen(registroSalida.getNumeroRegistroFormateado());
+            //registroSalida = merge(registroSalida);
+        }
+
         List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
         if (interesados != null && interesados.size() != 0) {
             for (Interesado interesado : interesados) {
@@ -106,14 +111,8 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         // Guardamos el RegistroSalida
         registroSalida = persist(registroSalida);
 
-        //Si no se ha espeficicado un NumeroRegistroOrigen, le asignamos el propio
-        if (StringUtils.isEmpty(registroSalida.getRegistroDetalle().getNumeroRegistroOrigen())) {
-
-            registroSalida.getRegistroDetalle().setNumeroRegistroOrigen(registroSalida.getNumeroRegistroFormateado());
-
-            registroSalida = merge(registroSalida);
-        }
-
+        //Guardamos el HistorioRegistroSalida
+        historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(registroSalida, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()),"registro.modificacion.creacion" ),false);
 
         // TODO Controlar custodyID y si hay fallo borrar todos los Custody
         if (anexos != null && anexos.size() != 0) {
@@ -703,15 +702,8 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
         RegistroSalida old = registroSalida;
 
-        // Estado anulado
-        registroSalida.setEstado(RegwebConstantes.REGISTRO_ANULADO);
-
-        // Actualizamos el RegistroSalida
-        registroSalida = merge(registroSalida);
-
-        // Creamos el HistoricoRegistroSalida para la modificación d estado
-        historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(old, usuarioEntidad, RegwebConstantes.TIPO_MODIF_ESTADO, false);
-
+        // Modificamos el estado del RegistroSalida
+        cambiarEstado(registroSalida,RegwebConstantes.REGISTRO_ANULADO, usuarioEntidad);
     }
 
     @Override
@@ -719,14 +711,8 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
         RegistroSalida old = registroSalida;
 
-        // Estado anulado
-        registroSalida.setEstado(RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
-
-        // Actualizamos el RegistroSalida
-        merge(registroSalida);
-
-        // Creamos el HistoricoRegistroSalida para la modificación d estado
-        historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(old, usuarioEntidad, RegwebConstantes.TIPO_MODIF_ESTADO, false);
+        // Modificamos el estado del RegistroSalida
+        cambiarEstado(registroSalida,RegwebConstantes.REGISTRO_PENDIENTE_VISAR, usuarioEntidad);
 
     }
 
@@ -736,14 +722,8 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
         RegistroSalida old = registroSalida;
 
-        // Estado anulado
-        registroSalida.setEstado(RegwebConstantes.REGISTRO_VALIDO);
-
-        // Actualizamos el RegistroSalida
-        merge(registroSalida);
-
-        // Creamos el HistoricoRegistroSalida para la modificación d estado
-        historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(old, usuarioEntidad, RegwebConstantes.TIPO_MODIF_ESTADO, false);
+        // Modificamos el estado del RegistroSalida
+        cambiarEstado(registroSalida,RegwebConstantes.REGISTRO_VALIDO, usuarioEntidad);
 
     }
 
@@ -850,6 +830,18 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
 
         return (Long) q.getSingleResult() > 0;
+    }
+
+    @Override
+    public void cambiarEstado(RegistroSalida registroSalida, Long idEstado, UsuarioEntidad usuarioEntidad) throws Exception {
+        Query q = em.createQuery("update RegistroSalida set estado=:idEstado where id = :idRegistro");
+        q.setParameter("idEstado", idEstado);
+        q.setParameter("idRegistro", registroSalida.getId());
+        q.executeUpdate();
+
+        // Creamos el HistoricoRegistroSalida para la modificación de estado
+        historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(registroSalida,
+                usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()),"registro.modificacion.estado" ), false);
     }
 
 }

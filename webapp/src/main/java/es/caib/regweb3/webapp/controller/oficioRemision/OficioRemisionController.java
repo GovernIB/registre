@@ -580,10 +580,12 @@ public class OficioRemisionController extends BaseController {
     public String anularOficioRemision(@PathVariable Long idOficioRemision, Model model, HttpServletRequest request) throws Exception {
 
         OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
         if(permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(), oficioRemision.getLibro().getId()) &&
                 oficioRemision.getEstado() == RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO){
-            oficioRemisionEjb.anularOficioRemision(idOficioRemision);
+
+            oficioRemisionEjb.anularOficioRemisionInterno(idOficioRemision, usuarioEntidad);
             Mensaje.saveMessageInfo(request, getMessage("aviso.oficioRemision.anulado"));
         }else{
             Mensaje.saveMessageError(request, getMessage("aviso.oficioRemision.anular"));

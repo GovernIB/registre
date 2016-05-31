@@ -53,6 +53,10 @@ public class RegistroSalida implements IRegistro {
       super();
     }
 
+    public RegistroSalida(Long id) {
+        this.id = id;
+    }
+
     /**
      * @param rs
      */

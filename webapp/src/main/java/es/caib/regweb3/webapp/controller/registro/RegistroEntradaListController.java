@@ -279,7 +279,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             e.printStackTrace();
         }
 
-        return "redirect:/registroEntrada/list";
+        return "redirect:/registroEntrada/"+idRegistro+"/detalle";
     }
 
     /**
@@ -318,7 +318,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             e.printStackTrace();
         }
 
-        return "redirect:/registroEntrada/list";
+        return "redirect:/registroEntrada/"+idRegistro+"/detalle";
     }
 
     /**

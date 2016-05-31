@@ -53,7 +53,7 @@
                                     <c:when test="${historico.estado == 3}">
                                         <span class="label label-info"><spring:message code="registro.estado.${historico.estado}" /></span>
                                     </c:when>
-                                    <c:when test="${historico.estado == 4 || registro.estado == 5}">
+                                    <c:when test="${historico.estado == 4 || historico.estado == 5}">
                                         <span class="label label-default"><spring:message code="registro.estado.${historico.estado}" /></span>
                                     </c:when>
                                     <c:when test="${historico.estado == 6}">

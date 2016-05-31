@@ -1,5 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.Trazabilidad;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
@@ -9,6 +10,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -51,6 +53,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Trazabilidad> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select trazabilidad from Trazabilidad as trazabilidad order by trazabilidad.id");
@@ -62,6 +65,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Trazabilidad> getByRegistroSalida(Long idRegistroSalida) throws Exception {
 
         Query q = em.createQuery("Select trazabilidad from Trazabilidad as trazabilidad " +
@@ -73,11 +77,12 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Trazabilidad> getByRegistroEntrada(Long idRegistroEntrada) throws Exception {
 
         Query q = em.createQuery("Select trazabilidad from Trazabilidad as trazabilidad " +
                 "where trazabilidad.registroEntradaOrigen.id = :idRegistroEntrada or trazabilidad.registroEntradaDestino.id = :idRegistroEntrada " +
-                "order by trazabilidad.fecha desc");
+                "order by trazabilidad.fecha");
 
         q.setParameter("idRegistroEntrada", idRegistroEntrada);
 
@@ -85,6 +90,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Trazabilidad> getByOficioRemision(Long idOficioRemision) throws Exception {
 
         Query q = em.createQuery("Select trazabilidad from Trazabilidad as trazabilidad " +
@@ -130,5 +136,28 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
         return total;
 
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<RegistroSalida> obtenerRegistrosSalida(Long idOficioRemision) throws Exception{
+
+        Query q = em.createQuery("Select t.registroSalida.id, t.registroSalida.estado from Trazabilidad as t " +
+                "where t.oficioRemision.id = :idOficioRemision");
+
+        q.setParameter("idOficioRemision",idOficioRemision);
+
+        List<RegistroSalida> registros =  new ArrayList<RegistroSalida>();
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result){
+            RegistroSalida registroSalida = new RegistroSalida();
+            registroSalida.setId((Long) object[0]);
+            registroSalida.setEstado((Long) object[1]);
+
+            registros.add(registroSalida);
+        }
+
+        return registros;
     }
 }

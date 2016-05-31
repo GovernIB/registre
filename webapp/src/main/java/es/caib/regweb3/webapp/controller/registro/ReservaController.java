@@ -98,9 +98,10 @@ public class ReservaController  extends BaseController {
                 // Guardar el nuevo registro
                 // Incrementar el contador del Libro
                 // Generar número de registro
+                UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
                 registro.setOficina(getOficinaActiva(request));
-                registro.setUsuario(getUsuarioEntidadActivo(request));
+                registro.setUsuario(usuarioEntidad);
 
                 // Estado Registro entrada
                 registro.setEstado(RegwebConstantes.REGISTRO_PENDIENTE);
@@ -112,7 +113,7 @@ public class ReservaController  extends BaseController {
 
                 //Guardamos el RegistroEntrada
                 synchronized (this){
-                    registro = registroEntradaEjb.registrarEntrada(registro);
+                    registro = registroEntradaEjb.registrarEntrada(registro, usuarioEntidad);
                 }
 
             }catch (Exception e) {

@@ -199,9 +199,6 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         registroSalida = registroSalidaEjb.registrarSalida(registroSalida, usuario, anexosFull);
 
         if(registroSalida.getId() != null){
-            // 8.- Creamos el Historico RegistroEntrada
-            historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(registroSalida, usuario, RegwebConstantes.TIPO_MODIF_ALTA, false);
-
             // Componemos la respuesta
             identificadorWs = new IdentificadorWs();
             identificadorWs.setFecha(registroSalida.getFecha());

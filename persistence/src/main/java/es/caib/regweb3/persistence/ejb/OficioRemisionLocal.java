@@ -1,9 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.model.Libro;
-import es.caib.regweb3.model.OficioRemision;
-import es.caib.regweb3.model.Organismo;
-import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -48,9 +45,10 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
     /**
      * Anula un Oficio de Remisión
      * @param idOficioRemision
+     * @param usuarioEntidad
      * @throws Exception
      */
-    public void anularOficioRemision(Long idOficioRemision) throws Exception;
+    public void anularOficioRemisionInterno(Long idOficioRemision, UsuarioEntidad usuarioEntidad) throws Exception;
 
     /**
      * Devuelve los Oficios de Remisión pendientes de procesar de los organismos seleccionados

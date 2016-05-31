@@ -161,11 +161,9 @@ public class OficioRemisionUtilsBean implements OficioRemisionUtilsLocal {
           nuevoRE.setRegistroDetalle(registroEntrada.getRegistroDetalle());
 
           synchronized (this){
-              nuevoRE = registroEntradaEjb.registrarEntrada(nuevoRE);
+              nuevoRE = registroEntradaEjb.registrarEntrada(nuevoRE, usuario);
           }
 
-          //Guardamos el HistorioRegistroEntrada
-          historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(nuevoRE, usuario, RegwebConstantes.TIPO_MODIF_ALTA,false);
           registros.add(nuevoRE);
 
           // ACTUALIZAMOS LA TRAZABILIDAD

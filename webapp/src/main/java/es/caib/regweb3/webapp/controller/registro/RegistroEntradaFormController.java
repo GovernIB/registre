@@ -3,6 +3,7 @@ package es.caib.regweb3.webapp.controller.registro;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.HistoricoRegistroEntradaLocal;
 import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
+import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.Mensaje;
@@ -11,6 +12,7 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -170,12 +172,8 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
                 //Guardamos el RegistroEntrada
                 synchronized (this){
-                    registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada);
+                    registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuarioEntidad);
                 }
-
-                //Guardamos el HistorioRegistroEntrada
-                historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada, usuarioEntidad, RegwebConstantes.TIPO_MODIF_ALTA,false);
-
 
             }catch (Exception e) {
                 Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
@@ -369,7 +367,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                 registroEntrada = registroEntradaEjb.merge(registroEntrada);
 
                 // Creamos el Historico RegistroEntrada
-                historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntradaAntiguo, usuarioEntidad, RegwebConstantes.TIPO_MODIF_DATOS,true);
+                historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntradaAntiguo, usuarioEntidad, I18NLogicUtils.tradueix(LocaleContextHolder.getLocale(),"registro.modificacion.datos" ),true);
 
                 Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
 

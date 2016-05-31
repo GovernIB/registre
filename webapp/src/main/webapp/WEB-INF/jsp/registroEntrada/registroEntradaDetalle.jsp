@@ -217,7 +217,7 @@
             </c:if>
 
             <!-- MODIFICACIONES REGISTRO -->
-            <c:if test="${not empty historicos}">
+            <c:if test="${not empty historicos && registro.estado != RegwebConstantes.REGISTRO_PENDIENTE}">
                 <c:import url="../registro/modificaciones.jsp">
                     <c:param name="tipoRegistro" value="entrada"/>
                 </c:import>

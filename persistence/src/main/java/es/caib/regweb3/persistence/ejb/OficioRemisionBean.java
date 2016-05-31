@@ -44,6 +44,9 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     @EJB(mappedName = "regweb3/HistoricoRegistroEntradaEJB/local")
     public HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
 
+    @EJB(mappedName = "regweb3/HistoricoRegistroSalidaEJB/local")
+    public HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
+
     @EJB(mappedName = "regweb3/TrazabilidadEJB/local")
     public TrazabilidadLocal trazabilidadEjb;
 
@@ -74,6 +77,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<OficioRemision> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision order by oficioRemision.id");
@@ -190,7 +194,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
             registroSalida.setEstado(RegwebConstantes.REGISTRO_TRAMITADO);
 
             // Registramos la Salida
-            registroSalida = registroSalidaEjb.registrarSalida(registroSalida);
+            registroSalida = registroSalidaEjb.registrarSalida(registroSalida, oficioRemision.getUsuarioResponsable());
 
             // CREAMOS LA TRAZABILIDAD
             Trazabilidad trazabilidad = new Trazabilidad();
@@ -201,12 +205,8 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
             trazabilidadEjb.persist(trazabilidad);
 
-            // CREAMOS EL HISTORICO REGISTRO ENTRADA
-            historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada, oficioRemision.getUsuarioResponsable(), RegwebConstantes.TIPO_MODIF_ESTADO,false);
-
             // Modificamos el estado del Registro de Entrada
-            registroEntrada.setEstado(estado);
-            registroEntradaEjb.merge(registroEntrada);
+            registroEntradaEjb.cambiarEstado(registroEntrada,estado, oficioRemision.getUsuarioResponsable());
         }
 
 
@@ -214,18 +214,28 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     }
 
     @Override
-    public void anularOficioRemision(Long idOficioRemision) throws Exception{
+    public void anularOficioRemisionInterno(Long idOficioRemision, UsuarioEntidad usuarioEntidad) throws Exception{
 
         OficioRemision oficioRemision = findById(idOficioRemision);
 
-        oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_ANULADO);
+        // Modificamos el estado de cada RE a Válido
+        for(RegistroEntrada registroEntrada:oficioRemision.getRegistrosEntrada()){
+            registroEntradaEjb.cambiarEstado(registroEntrada,RegwebConstantes.REGISTRO_VALIDO, usuarioEntidad);
+        }
 
+        // Anulamos los Registros de Salida generado por el Oficio
+        for(RegistroSalida registroSalida:trazabilidadEjb.obtenerRegistrosSalida(idOficioRemision)){
+            registroSalidaEjb.cambiarEstado(registroSalida,RegwebConstantes.REGISTRO_ANULADO, usuarioEntidad);
+        }
+
+        // Anulamos el Oficio de Remisión
+        oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_ANULADO);
         merge(oficioRemision);
-        // Anular RS
-        // C
+
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<OficioRemision> oficiosPendientesLlegada(Set<Organismo> organismos, Integer total) throws Exception {
 
         Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision "
@@ -321,6 +331,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<RegistroEntrada> getByOficioRemision(Long idOficioRemision) throws Exception{
 
         Query q = em.createQuery("Select oficioRemision.registrosEntrada from OficioRemision as oficioRemision where oficioRemision.id = :idOficioRemision ");
@@ -331,6 +342,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Integer eliminarByEntidad(Long idEntidad) throws Exception{
 
         Query or = em.createQuery("select distinct(id) from OficioRemision where usuarioResponsable.entidad.id = :idEntidad");

@@ -42,7 +42,8 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada)
+    public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
+                                            UsuarioEntidad usuarioEntidad)
         throws Exception, I18NException, I18NValidationException;
     
 
@@ -309,12 +310,12 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
  public Long getByLibrosEstadoCount(List<Libro> libros, Long idEstado) throws Exception;
 
     /**
-     * Cambia el estado de un RegistroEntrada
-     * @param idRegistro
+     * Cambia el estado de un RegistroEntrada y el HistoricoModificación correspondiente
+     * @param registroEntrada
      * @param idEstado
      * @throws Exception
      */
-    public void cambiarEstado(Long idRegistro, Long idEstado) throws Exception;
+    public void cambiarEstado(RegistroEntrada registroEntrada, Long idEstado, UsuarioEntidad usuarioEntidad) throws Exception;
 
     /**
      * Busca los Registros de Entrada en función de la una fecha inicio, una fecha fin, por Usuario en los Libros gestionados

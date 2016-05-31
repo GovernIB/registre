@@ -244,7 +244,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             e.printStackTrace();
         }
 
-        return "redirect:/registroSalida/list";
+        return "redirect:/registroSalida/"+idRegistro+"/detalle";
     }
 
     /**
@@ -283,7 +283,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             e.printStackTrace();
         }
 
-        return "redirect:/registroSalida/list";
+        return "redirect:/registroSalida/"+idRegistro+"/detalle";
     }
 
     /**

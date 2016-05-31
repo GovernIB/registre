@@ -222,8 +222,6 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuario, anexosFull);
 
         if(registroEntrada.getId() != null){
-            // 8.- Creamos el Historico RegistroEntrada
-            historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada, usuario, RegwebConstantes.TIPO_MODIF_ALTA,false);
 
             // Componemos la respuesta
             identificadorWs = new IdentificadorWs();

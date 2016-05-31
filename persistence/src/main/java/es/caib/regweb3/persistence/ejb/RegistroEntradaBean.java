@@ -6,6 +6,7 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.RegistroBasico;
 import es.caib.regweb3.persistence.utils.*;
+import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
@@ -71,9 +72,9 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
 
     @Override
-    public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada)
+    public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad)
             throws Exception, I18NException, I18NValidationException {
-        return registrarEntrada(registroEntrada, null, null);
+        return registrarEntrada(registroEntrada, usuarioEntidad, null);
     }
 
 
@@ -100,6 +101,13 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             registroEntrada.getRegistroDetalle().setFechaOrigen(registroEntrada.getFecha());
         }
 
+        //Si no se ha espeficicado un NumeroRegistroOrigen, le asignamos el propio
+        if (StringUtils.isEmpty(registroEntrada.getRegistroDetalle().getNumeroRegistroOrigen())) {
+
+            registroEntrada.getRegistroDetalle().setNumeroRegistroOrigen(registroEntrada.getNumeroRegistroFormateado());
+            //registroEntrada = merge(registroEntrada);
+        }
+
         List<Interesado> interesados = registroEntrada.getRegistroDetalle().getInteresados();
         if (interesados != null && interesados.size() != 0) {
             for (Interesado interesado : interesados) {
@@ -109,13 +117,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         registroEntrada = persist(registroEntrada);
 
-        //Si no se ha espeficicado un NumeroRegistroOrigen, le asignamos el propio
-        if (StringUtils.isEmpty(registroEntrada.getRegistroDetalle().getNumeroRegistroOrigen())) {
-
-            registroEntrada.getRegistroDetalle().setNumeroRegistroOrigen(registroEntrada.getNumeroRegistroFormateado());
-
-            registroEntrada = merge(registroEntrada);
-        }
+        historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()),"registro.modificacion.creacion" ),false);
 
         // TODO Controlar custodyID y si hay fallo borrar todos los Custody
         if (anexosFull != null && anexosFull.size() != 0) {
@@ -288,12 +290,14 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         // Obtenemos los Organismos destinatarios PROPIOS que tiene Oficios de Remision pendientes de tramitar
         Query q;
         q = em.createQuery("Select distinct(re.destino.denominacion) from RegistroEntrada as re where " +
-                "re.estado = :idEstadoRegistro and re.libro.id = :idLibro and " +
+                "re.estado = :valido and re.libro.id = :idLibro and " +
                 "re.destino != null and " + organismosWhere +
-                " re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
+                " re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra where tra.oficioRemision.estado != :anulado)");
 
-        q.setParameter("idEstadoRegistro", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q.setParameter("idLibro", idLibro);
+        q.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
+
         if (organismos.size() > 0) {
             q.setParameter("organismos", organismos);
         }
@@ -320,13 +324,14 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         // Obtenemos los Organismos destinatarios PROPIOS que tiene Oficios de Remision pendientes de tramitar
         Query q;
         q = em.createQuery("Select distinct(re.destino) from RegistroEntrada as re where " + anyWhere +
-                " re.estado = :idEstadoRegistro and re.libro.id = :idLibro and re.oficina.id = :idOficina and " +
+                " re.estado = :valido and re.libro.id = :idLibro and re.oficina.id = :idOficina and " +
                 "re.destino != null and " + organismosWhere +
-                "re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
+                "re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra where tra.oficioRemision.estado != :anulado)");
 
-        q.setParameter("idEstadoRegistro", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q.setParameter("idLibro", idLibro);
         q.setParameter("idOficina", idOficina);
+        q.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
 
         if (any != null) {
             q.setParameter("any", any);
@@ -372,12 +377,14 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         Query q;
         q = em.createQuery("Select count(re.id) from RegistroEntrada as re where " +
-                "re.estado = :idEstadoRegistro and re.libro in (:libros) and " +
+                "re.estado = :valido and re.libro in (:libros) and " +
                 "re.destino != null and " + organismosWhere +
-                " re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
+                " re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra where tra.oficioRemision.estado != :anulado)");
 
-        q.setParameter("idEstadoRegistro", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q.setParameter("libros", libros);
+        q.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
+
         if (organismos.size() > 0) {
             q.setParameter("organismos", organismos);
         }
@@ -398,12 +405,14 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         Query q;
         q = em.createQuery("Select re.id from RegistroEntrada as re where " +
-                "re.id = :idRegistro and re.estado = :idEstadoRegistro and " +
+                "re.id = :idRegistro and re.estado = :valido and " +
                 "re.destino != null and " + organismosWhere +
-                " re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
+                " re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra where tra.oficioRemision.estado != :anulado)");
 
         q.setParameter("idRegistro", idRegistro);
-        q.setParameter("idEstadoRegistro", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
+
         if (organismos.size() > 0) {
             q.setParameter("organismos", organismos);
         }
@@ -417,16 +426,17 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         // Obtenemos los Organismos destinatarios EXTERNOS que tiene Oficios de Remision pendientes de tramitar
 
-        Query q1;
-        q1 = em.createQuery("Select distinct(registroEntrada.destinoExternoDenominacion) from RegistroEntrada as registroEntrada where " +
-                "registroEntrada.estado = :idEstadoRegistro and registroEntrada.libro.id = :idLibro and " +
+        Query q;
+        q = em.createQuery("Select distinct(registroEntrada.destinoExternoDenominacion) from RegistroEntrada as registroEntrada where " +
+                "registroEntrada.estado = :valido and registroEntrada.libro.id = :idLibro and " +
                 "registroEntrada.destino is null and " +
-                "registroEntrada.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
+                "registroEntrada.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra where tra.oficioRemision.estado != :anulado)");
 
-        q1.setParameter("idEstadoRegistro", RegwebConstantes.REGISTRO_VALIDO);
-        q1.setParameter("idLibro", idLibro);
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("idLibro", idLibro);
+        q.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
 
-        return q1.getResultList();
+        return q.getResultList();
     }
 
     @Override
@@ -439,20 +449,22 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         }
 
         // Obtenemos los Organismos destinatarios EXTERNOS que tiene Oficios de Remision pendientes de tramitar
-        Query q1;
-        q1 = em.createQuery("Select distinct(registroEntrada.destinoExternoCodigo) from RegistroEntrada as registroEntrada where " + anyWhere +
-                " registroEntrada.estado = :idEstadoRegistro and registroEntrada.libro.id = :idLibro and " +
+        Query q;
+        q = em.createQuery("Select distinct(registroEntrada.destinoExternoCodigo) from RegistroEntrada as registroEntrada where " + anyWhere +
+                " registroEntrada.estado = :valido and registroEntrada.libro.id = :idLibro and " +
                 "registroEntrada.oficina.id = :idOficina and registroEntrada.destino is null and " +
-                "registroEntrada.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
+                "registroEntrada.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra where tra.oficioRemision.estado != :anulado)");
 
-        q1.setParameter("idEstadoRegistro", RegwebConstantes.REGISTRO_VALIDO);
-        q1.setParameter("idOficina", idOficina);
-        q1.setParameter("idLibro", idLibro);
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("idOficina", idOficina);
+        q.setParameter("idLibro", idLibro);
+        q.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
+
         if (any != null) {
-            q1.setParameter("any", any);
+            q.setParameter("any", any);
         }
 
-        List<String> organismosExternos = q1.getResultList();
+        List<String> organismosExternos = q.getResultList();
 
         // Buscamos los RegistroEntrada pendientes de tramitar de cada uno de los Organismos encontrados
         List<OficiosRemisionOrganismo> oficiosRemisionOrganismo = new ArrayList<OficiosRemisionOrganismo>();
@@ -500,12 +512,13 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         Query q;
         q = em.createQuery("Select count(registroEntrada.id) from RegistroEntrada as registroEntrada where " +
-                "registroEntrada.estado = :idEstadoRegistro  and registroEntrada.libro in (:libros) and " +
+                "registroEntrada.estado = :valido  and registroEntrada.libro in (:libros) and " +
                 "registroEntrada.destino is null and " +
-                "registroEntrada.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra)");
+                "registroEntrada.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra where tra.oficioRemision.estado != :anulado)");
 
-        q.setParameter("idEstadoRegistro", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q.setParameter("libros", libros);
+        q.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
 
         return (Long) q.getSingleResult();
 
@@ -523,7 +536,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         Query q;
         q = em.createQuery("Select registroEntrada from RegistroEntrada as registroEntrada where " + anyWhere +
                 " registroEntrada.libro.id = :idLibro and registroEntrada.oficina.id = :idOficina " +
-                "and registroEntrada.destino.id = :idOrganismo and registroEntrada.estado = :idEstadoRegistro " +
+                "and registroEntrada.destino.id = :idOrganismo and registroEntrada.estado = :valido " +
                 "order by registroEntrada.fecha desc");
 
         q.setParameter("idOrganismo", idOrganismo);
@@ -532,7 +545,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         }
         q.setParameter("idOficina", idOficina);
         q.setParameter("idLibro", idLibro);
-        q.setParameter("idEstadoRegistro", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
 
 
         return q.getResultList();
@@ -550,7 +563,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         Query q;
         q = em.createQuery("Select registroEntrada from RegistroEntrada as registroEntrada where " + anyWhere +
                 " registroEntrada.libro.id = :idLibro and registroEntrada.oficina.id = :idOficina " +
-                "and registroEntrada.destinoExternoCodigo = :codigoOrganismo and registroEntrada.estado = :idEstadoRegistro " +
+                "and registroEntrada.destinoExternoCodigo = :codigoOrganismo and registroEntrada.estado = :valido " +
                 "order by registroEntrada.fecha desc");
 
         q.setParameter("codigoOrganismo", codigoOrganismo);
@@ -559,7 +572,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         }
         q.setParameter("idOficina", idOficina);
         q.setParameter("idLibro", idLibro);
-        q.setParameter("idEstadoRegistro", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
 
 
         return q.getResultList();
@@ -1032,14 +1045,16 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
-    public void cambiarEstado(Long idRegistro, Long idEstado) throws Exception {
-       /* RegistroEntrada registroEntrada = findById(idRegistro);
-        registroEntrada.setEstado(idEstado);
-        merge(registroEntrada);*/
+    public void cambiarEstado(RegistroEntrada registroEntrada, Long idEstado, UsuarioEntidad usuarioEntidad) throws Exception {
+
         Query q = em.createQuery("update RegistroEntrada set estado=:idEstado where id = :idRegistro");
         q.setParameter("idEstado", idEstado);
-        q.setParameter("idRegistro", idRegistro);
+        q.setParameter("idRegistro", registroEntrada.getId());
         q.executeUpdate();
+
+        // Creamos el HistoricoRegistroEntrada para la modificación d estado
+        historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada,
+                usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()),"registro.modificacion.estado" ), false);
     }
 
     @Override
@@ -1050,12 +1065,12 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         q = em.createQuery("Select re.id, re.numeroRegistroFormateado, re.fecha, re.libro.nombre, re.usuario.usuario.identificador, re.registroDetalle.extracto " +
                 "from RegistroEntrada as re where re.oficina.id = :idOficina " +
-                "and re.estado = :idEstadoRegistro " +
+                "and re.estado = :valido " +
                 "order by re.fecha desc");
 
         q.setMaxResults(total);
         q.setParameter("idOficina", idOficina);
-        q.setParameter("idEstadoRegistro", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
 
         return getRegistroBasicoList(q.getResultList());
     }
@@ -1109,15 +1124,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         RegistroEntrada old = registroEntrada;
 
         // Estado anulado
-        registroEntrada.setEstado(RegwebConstantes.REGISTRO_ANULADO);
-
-        // Actualizamos el RegistroEntrada
-        merge(registroEntrada);
-
-        // Creamos el HistoricoRegistroEntrada para la modificación d estado
-        historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(old,
-                usuarioEntidad, RegwebConstantes.TIPO_MODIF_ESTADO, false);
-
+        cambiarEstado(registroEntrada,RegwebConstantes.REGISTRO_ANULADO, usuarioEntidad);
 
     }
 
@@ -1127,15 +1134,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         RegistroEntrada old = registroEntrada;
 
-        // Estado anulado
-        registroEntrada.setEstado(RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
-
-        // Actualizamos el RegistroEntrada
-        merge(registroEntrada);
-
-        // Creamos el HistoricoRegistroEntrada para la modificación d estado
-        historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(old,
-                usuarioEntidad, RegwebConstantes.TIPO_MODIF_ESTADO, false);
+        // Actualizamos el estado del RegistroEntrada
+        cambiarEstado(registroEntrada,RegwebConstantes.REGISTRO_PENDIENTE_VISAR, usuarioEntidad);
 
     }
 
@@ -1145,15 +1145,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         RegistroEntrada old = registroEntrada;
 
-        // Estado anulado
-        registroEntrada.setEstado(RegwebConstantes.REGISTRO_VALIDO);
-
-        // Actualizamos el RegistroEntrada
-        merge(registroEntrada);
-
-        // Creamos el HistoricoRegistroEntrada para la modificación d estado
-        historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(old,
-                usuarioEntidad, RegwebConstantes.TIPO_MODIF_ESTADO, false);
+        // Modificamos el estado del RegistroEntrada
+        cambiarEstado(registroEntrada,RegwebConstantes.REGISTRO_VALIDO, usuarioEntidad);
 
     }
 
@@ -1163,11 +1156,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         RegistroEntrada old = registroEntrada;
 
-        cambiarEstado(registroEntrada.getId(), RegwebConstantes.REGISTRO_TRAMITADO);
-
-        // Creamos el HistoricoRegistroEntrada para la modificación d estado
-        historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(old,
-                usuarioEntidad, RegwebConstantes.TIPO_MODIF_ESTADO, false);
+        cambiarEstado(registroEntrada, RegwebConstantes.REGISTRO_TRAMITADO, usuarioEntidad);
 
     }
 
