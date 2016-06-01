@@ -217,9 +217,10 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     public void anularOficioRemisionInterno(Long idOficioRemision, UsuarioEntidad usuarioEntidad) throws Exception{
 
         OficioRemision oficioRemision = findById(idOficioRemision);
+        List<RegistroEntrada> registrosEntrada = getByOficioRemision(oficioRemision.getId());
 
         // Modificamos el estado de cada RE a Válido
-        for(RegistroEntrada registroEntrada:oficioRemision.getRegistrosEntrada()){
+        for(RegistroEntrada registroEntrada:registrosEntrada){
             registroEntradaEjb.cambiarEstado(registroEntrada,RegwebConstantes.REGISTRO_VALIDO, usuarioEntidad);
         }
 
