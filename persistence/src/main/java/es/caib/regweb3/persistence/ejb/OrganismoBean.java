@@ -497,7 +497,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         // recorremos para todos los organismos Padres
         for (Organismo org : organismosPadres) {
 
-            if(!org.getEdp()){ // Solo queremos los Organismos que no son EDP
+            //if(!org.getEdp()){ // Solo queremos los Organismos que no son EDP
                 Query q = em.createQuery("select organismo.id,organismo.codigo, organismo.denominacion, organismo.edp from Organismo as organismo where organismo.organismoSuperior.id =:idOrganismoSuperior " +
                         "and organismo.estado.codigoEstadoEntidad =:vigente and organismo.edp = false");
                 q.setParameter("idOrganismoSuperior", org.getId());
@@ -516,7 +516,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
                 // Hijos de cada organismo
                 obtenerHijosOrganismos(hijos, totales);
-            }
+            //}
 
         }
 
