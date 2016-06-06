@@ -415,7 +415,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
             query.append("order by organismo.denominacion");
             q = em.createQuery(query.toString());
         }
-        log.info("Query: " + query);
+        //log.info("Query: " + query);
 
         Paginacion paginacion = null;
 

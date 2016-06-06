@@ -253,7 +253,7 @@ public class Organismo implements Serializable {
         this.edp = edp;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, optional = true)
     @JoinColumn(name="EDPRINCIPAL")
     @ForeignKey(name="RWE_ORGANISMO_EDPRIN_FK")
     @JsonIgnore

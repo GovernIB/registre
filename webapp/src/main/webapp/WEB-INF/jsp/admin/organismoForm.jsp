@@ -36,7 +36,7 @@
         <div class="row">
             <div class="col-xs-12">
                 <form:form modelAttribute="organismo" method="post" cssClass="form-horizontal">
-
+                    <form:hidden path="id"/>
                     <div class="panel panel-warning">
 
                         <div class="panel-heading">
@@ -61,7 +61,7 @@
 
                             <div class="form-group col-xs-6">
                                 <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <form:label path="organismoRaiz">
+                                    <form:label path="organismoRaiz.id">
                                         <spring:message code="organismo.organismoRaiz"/></form:label>
                                 </div>
                                 <div class="col-xs-8">
@@ -79,15 +79,13 @@
                             </div>
                             <div class="form-group col-xs-6">
                                 <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <form:label path="edpPrincipal">
+                                    <form:label path="edpPrincipal.id">
                                         <spring:message code="organismo.edpPrincipal"/></form:label>
                                 </div>
                                 <div class="col-xs-8">
                                     <form:select path="edpPrincipal.id" cssClass="chosen-select">
                                         <form:option value="">...</form:option>
-                                        <c:forEach var="organismo" items="${organismos}">
-                                            <form:option value="${organismo.id}">${organismo.denominacion}</form:option>
-                                        </c:forEach>
+                                        <form:options items="${organismos}" itemValue="id" itemLabel="denominacion"/>
                                     </form:select>
                                 </div>
                             </div>
