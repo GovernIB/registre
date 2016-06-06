@@ -5,14 +5,14 @@
   <groupId>es.caib.regweb3</groupId>
   <artifactId>regweb3-sqlgenerator</artifactId>
   <packaging>jar</packaging>
-    <version>3.0.5</version>
+    <version>3.0.6</version>
 
   <name>RegWeb3 - Scripts - SQL Generator</name>
   
   <parent>
 		<groupId>es.caib.regweb3</groupId>
 		<artifactId>regweb3-scripts</artifactId>
-      <version>3.0.5</version>
+      <version>3.0.6</version>
   </parent>
   
 
@@ -25,13 +25,13 @@
   		<dependency>
 			 <groupId>es.caib.regweb3</groupId>
 			 <artifactId>regweb3-model</artifactId>
-            <version>3.0.5</version>
+            <version>3.0.6</version>
 		</dependency>
   
 		<dependency>
 			 <groupId>es.caib.regweb3</groupId>
 			 <artifactId>regweb3-persistence</artifactId>
-            <version>3.0.5</version>
+            <version>3.0.6</version>
 		</dependency>
 
         <dependency>
