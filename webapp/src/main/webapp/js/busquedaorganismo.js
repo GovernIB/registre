@@ -115,6 +115,7 @@ function getIdDenominacionExterna(tipoOrganismo) {
  */
 function organismoBusqueda(tipoOrganismo, urlServidor, idRegistroDetalle) {
 
+
     // obtenemos los valores del formulario para realizar la búsqueda.
     var denominacion = $('#denominacion' + tipoOrganismo).val();
     var codigoOrganismo = $('#codigoOrganismo' + tipoOrganismo).val();
@@ -303,6 +304,7 @@ function limpiarFormularioBusqueda(tipoOrganismo) {
  */
 function inicializarBuscador(selectNivelAdministracion, selectComunidadAutonoma, selectProvincia, selectLocalidad, idNivelAdministracion, idComunidadAutonoma, tipoOrganismo) {
 
+    limpiarFormularioBusqueda(tipoOrganismo);
     $('#reloadorg' + tipoOrganismo).hide();
     $(selectNivelAdministracion).val(idNivelAdministracion);
     $(selectNivelAdministracion).trigger("chosen:updated");
