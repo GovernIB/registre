@@ -146,7 +146,7 @@
         <dependency>
             <groupId>es.caib.dir3caib</groupId>
             <artifactId>dir3caib-ws-api</artifactId>
-            <version>1.0.3</version>
+            <version>1.0.4</version>
         </dependency>
 
         <!-- Axis -->
