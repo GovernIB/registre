@@ -405,13 +405,13 @@ function mostrarArbol(organismo, urlServidor, tipoOrganismo, idRegistroDetalle) 
         dataType: 'json',
         data: {codigo: organismo},
         success: function (result) {
-            var denominacion = normalizarTexto(result.nombre);
-            var nodoactual = result.id + ' - ' + result.nombre;
+            var denominacion = normalizarTexto(result.denominacion);
+            var nodoactual = result.codigo + ' - ' + result.denominacion;
             var raizCodigo = result.raiz.split(" - ")[0];
             var raizDenominacion = normalizarTexto(result.raiz.split(" - ")[1]);
             var superiorCodigo = result.superior.split(" - ")[0];
             var superiorDenominacion = normalizarTexto(result.superior.split(" - ")[1]);
-            if (raizCodigo != result.id) {
+            if (raizCodigo != result.codigo) {
                 html += '<ul>';
                 if (tipoOrganismo == 'OrganismoInteresado') {
                     html += "<li> <span class=\"badge-arbre btn-primary\" onclick=\"addAdministracionInteresadosModal('" + raizCodigo + "','" + raizDenominacion + "','Administración','" + tipoOrganismo + "','" + idRegistroDetalle + "')\">" + raizDenominacion + " - " + raizCodigo + "</span>";
@@ -431,9 +431,9 @@ function mostrarArbol(organismo, urlServidor, tipoOrganismo, idRegistroDetalle) 
             html += '<ul>';
             html += '<li>';
             if (tipoOrganismo == 'OrganismoInteresado') {
-                html += "<span class=\"badge-arbre btn-primary\" id=\"entidad\" onclick=\"addAdministracionInteresadosModal('" + result.id + "','" + denominacion + "','Administración','" + tipoOrganismo + "','" + idRegistroDetalle + "')\">" + result.nombre + " - " + result.id + "</span>";
+                html += "<span class=\"badge-arbre btn-primary\" id=\"entidad\" onclick=\"addAdministracionInteresadosModal('" + result.codigo + "','" + denominacion + "','Administración','" + tipoOrganismo + "','" + idRegistroDetalle + "')\">" + result.denominacion + " - " + result.codigo + "</span>";
             } else {
-                html += "<span class=\"badge-arbre btn-primary\" id=\"entidad\" onclick=\"asignarOrganismo('" + result.id + "','" + denominacion + "','" + tipoOrganismo + "')\">" + result.nombre + " - " + result.id + "</span>";
+                html += "<span class=\"badge-arbre btn-primary\" id=\"entidad\" onclick=\"asignarOrganismo('" + result.codigo + "','" + denominacion + "','" + tipoOrganismo + "')\">" + result.denominacion + " - " + result.codigo + "</span>";
             }
 
             //imprimir los hijos
@@ -464,11 +464,11 @@ function pintarHijos(hijos, tipoOrganismo, idRegistroDetalle) {
 
     htmlp += '<ul>';
     for (var i = 0; i < hijos.length; i++) {
-        var denominacion = normalizarTexto(hijos[i].nombre);
+        var denominacion = normalizarTexto(hijos[i].denominacion);
         if (tipoOrganismo == 'OrganismoInteresado') {
-            htmlp += "<li> <span class=\"badge-arbre btn-primary\" onclick=\"addAdministracionInteresadosModal('" + hijos[i].id + "','" + denominacion + "','Administración','" + tipoOrganismo + "','" + idRegistroDetalle + "')\">" + hijos[i].nombre + " - " + hijos[i].id + "</span>";
+            htmlp += "<li> <span class=\"badge-arbre btn-primary\" onclick=\"addAdministracionInteresadosModal('" + hijos[i].codigo + "','" + denominacion + "','Administración','" + tipoOrganismo + "','" + idRegistroDetalle + "')\">" + hijos[i].denominacion + " - " + hijos[i].codigo + "</span>";
         } else {
-            htmlp += "<li> <span class=\"badge-arbre btn-primary\" onclick=\"asignarOrganismo('" + hijos[i].id + "','" + denominacion + "','" + tipoOrganismo + "')\">" + hijos[i].nombre + " - " + hijos[i].id + "</span>";
+            htmlp += "<li> <span class=\"badge-arbre btn-primary\" onclick=\"asignarOrganismo('" + hijos[i].codigo + "','" + denominacion + "','" + tipoOrganismo + "')\">" + hijos[i].denominacion + " - " + hijos[i].codigo + "</span>";
         }
         if (hijos[i].hijos.length > 0) {
             htmlp += pintarHijos(hijos[i].hijos, tipoOrganismo, idRegistroDetalle);
