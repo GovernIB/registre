@@ -232,6 +232,16 @@ que se le indica -->
         actualizarSelect('${obtenerProvincias}', '#provincia' + paramTipo, $(codautonomaString).val(), null, true, true);
     }
 
+    // Realizamos la búsqueda al presionar la tecla enter
+    $("#modalBuscador${param.tipo}").keypress(function(e) {
+        if ((e.keyCode == 13)) {
+            e.preventDefault();
+            organismoBusqueda('${param.tipo}','<%=Configuracio.getDir3CaibServer()%>','${param.idRegistroDetalle}');
+        }
+    });
+
+
+
 
 </script>
 

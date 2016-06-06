@@ -85,3 +85,14 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    // Realizamos la búsqueda al presionar la techa enter
+    $("#modalBuscadorPersonas${param.tipoPersona}").keypress(function(e) {
+        if ((e.keyCode == 13)) {
+            e.preventDefault();
+            buscarPersonas('${param.tipoPersona}','${param.idRegistroDetalle}');
+        }
+    });
+
+</script>
