@@ -117,7 +117,7 @@ public class AdminController extends BaseController {
      * Editar un {@link Organismo}
      */
     @RequestMapping(value = "/organismo/{organismoId}/edit", method = RequestMethod.POST)
-    public String editarOrganismo(@ModelAttribute @Valid Organismo organismo, Model model, BindingResult result, SessionStatus status, HttpServletRequest request) throws Exception {
+    public String editarOrganismo(@ModelAttribute @Valid Organismo organismo, Model model, @PathVariable("organismoId") Long organismoId, BindingResult result, SessionStatus status, HttpServletRequest request) throws Exception {
 
 
         if (result.hasErrors()) { // Si hay errores volvemos a la vista del formulario
@@ -125,7 +125,7 @@ public class AdminController extends BaseController {
 
             return "admin/organismoForm";
         } else { // Si no hay errores actualizamos el registro
-
+            organismo.setId(organismoId);
             try {
                 if (organismo.getEdpPrincipal().getId() == null) {
                     organismo.setEdpPrincipal(null);
