@@ -166,7 +166,7 @@
 
                                                         <td>
                                                             <c:if test="${fn:length(organismosOficinaActiva) > 1}">
-
+                                                                <div class="row select-destinatari">
                                                                 <select id="oficios[${status.index}].idOrganismoDestinatario"
                                                                         name="oficios[${status.index}].idOrganismoDestinatario"
                                                                         class="chosen-select">
@@ -176,7 +176,7 @@
                                                                                 <c:if test="${registroEntrada.destino.id == organismo.id}">selected="selected"</c:if>>${organismo.denominacion}</option>
                                                                     </c:forEach>
                                                                 </select>
-
+                                                                </div>
                                                                 <%--<form:select path="oficios[${status.index}].idOrganismoDestinatario" class="chosen-select" items="${organismosOficinaActiva}" itemLabel="denominacion" itemValue="id"/>--%>
                                                             </c:if>
 
