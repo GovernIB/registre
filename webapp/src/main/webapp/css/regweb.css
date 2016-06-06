@@ -735,4 +735,9 @@ a.text-gris:focus {
 }
 /* FIN DUAL LIST BOX MARILEN */
 
+.select-destinatari {
+    width: 180px;
+    margin-left: 0px;
+    margin-right: 5px;
+}
 
