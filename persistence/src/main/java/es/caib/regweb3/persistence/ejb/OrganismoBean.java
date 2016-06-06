@@ -462,6 +462,50 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     }
 
     /**
+     * Metodo que recursivamente obtiene todos los hijos de una lista de organismos
+     *
+     * @param organismosPadres organismos de los que obtener sus hijos
+     * @param totales          organismos totales obtenidos despues del proceso recursivo.
+     * @throws Exception
+     */
+    @SuppressWarnings(value = "unchecked")
+    private void obtenerHijosOrganismos(LinkedHashSet<Organismo> organismosPadres, LinkedHashSet<Organismo> totales) throws Exception {
+
+        // recorremos para todos los organismos Padres
+        for (Organismo org : organismosPadres) {
+
+            Query q = em.createQuery("select organismo.id,organismo.codigo, organismo.denominacion, organismo.edp from Organismo as organismo where organismo.organismoSuperior.id =:idOrganismoSuperior " +
+                    "and organismo.estado.codigoEstadoEntidad =:vigente and organismo.edp =:edp");
+            q.setParameter("idOrganismoSuperior", org.getId());
+            q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+
+            // Si el organismo padre es EDP, buscamos sus hijos EDP
+            if(org.getEdp()){
+                q.setParameter("edp", true);
+            }else{
+                q.setParameter("edp", false);
+            }
+
+            LinkedHashSet<Organismo> hijos = new LinkedHashSet<Organismo>();
+
+            List<Object[]> result = q.getResultList();
+
+            for (Object[] object : result) {
+                Organismo hijo = new Organismo((Long) object[0], (String) object[1], (String) object[2], (Boolean) object[3]);
+
+                hijos.add(hijo);
+            }
+            totales.addAll(hijos);
+
+            // Hijos de cada organismo
+            obtenerHijosOrganismos(hijos, totales);
+
+
+        }
+
+    }
+
+    /**
      * Método que nos devuelve los códigos DIR3 de las oficinas SIR de un organismo
      *
      * @param idOrganismo identificador del organismo
@@ -483,44 +527,6 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         return oficinasSir;
     }
 
-
-    /**
-     * Metodo que recursivamente obtiene todos los hijos de una lista de organismos
-     *
-     * @param organismosPadres organismos de los que obtener sus hijos
-     * @param totales          organismos totales obtenidos despues del proceso recursivo.
-     * @throws Exception
-     */
-    @SuppressWarnings(value = "unchecked")
-    private void obtenerHijosOrganismos(LinkedHashSet<Organismo> organismosPadres, LinkedHashSet<Organismo> totales) throws Exception {
-
-        // recorremos para todos los organismos Padres
-        for (Organismo org : organismosPadres) {
-
-            //if(!org.getEdp()){ // Solo queremos los Organismos que no son EDP
-                Query q = em.createQuery("select organismo.id,organismo.codigo, organismo.denominacion, organismo.edp from Organismo as organismo where organismo.organismoSuperior.id =:idOrganismoSuperior " +
-                        "and organismo.estado.codigoEstadoEntidad =:vigente and organismo.edp = false");
-                q.setParameter("idOrganismoSuperior", org.getId());
-                q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-
-                LinkedHashSet<Organismo> hijos = new LinkedHashSet<Organismo>();
-
-                List<Object[]> result = q.getResultList();
-
-                for (Object[] object : result) {
-                    Organismo hijo = new Organismo((Long) object[0], (String) object[1], (String) object[2], (Boolean) object[3]);
-
-                    hijos.add(hijo);
-                }
-                totales.addAll(hijos);
-
-                // Hijos de cada organismo
-                obtenerHijosOrganismos(hijos, totales);
-            //}
-
-        }
-
-    }
 
     @Override
     @SuppressWarnings(value = "unchecked")
