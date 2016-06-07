@@ -109,7 +109,7 @@ public class DistribucionLocalDistribucionPlugin extends AbstractPluginPropertie
 
     }
 
-
+    @Override
     public ConfiguracionDistribucion configurarDistribucion() throws Exception {
         ConfiguracionDistribucion cd = new ConfiguracionDistribucion(true, 3);
         return cd;
