@@ -213,8 +213,9 @@
                                                 <c:if test="${not empty entidadForm.entidad.logoSello}">
                                                     <div class="form-group col-xs-6">
                                                         <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                                            <form:label path="logoMenu"><spring:message code="entidad.logoSello.existente"/></form:label>
-                                                            <form:hidden path="entidad.logoMenu.id"/>
+                                                            <form:label path="logoSello"><spring:message
+                                                                    code="entidad.logoSello.existente"/></form:label>
+                                                            <form:hidden path="entidad.logoSello.id"/>
                                                         </div>
                                                         <div class="col-xs-8 arxiu_actual">
                                                             <a href="<c:url value="/archivo/${entidadForm.entidad.logoSello.id}"/>" target="_blank">${entidadForm.entidad.logoSello.nombre}</a>  <br>
