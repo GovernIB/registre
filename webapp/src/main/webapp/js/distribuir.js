@@ -24,7 +24,7 @@ function distribuir(url, urlEnviarDestinatarios, urlDetalle, urlTramitar) {
         success: function (result) {
 
             // Si hay destinatarios mostramos pop-up, solo hay este caso.
-            if (result.destinatarios != null && result.destinatarios.posibles != null && result.destinatarios.posibles.length > 0) { // Si hay destinatarios, mostramos pop-up
+            if (result.destinatarios != null && (result.destinatarios.posibles != null && result.destinatarios.posibles.length > 0) || (result.destinatarios.propuestos != null && result.destinatarios.propuestos.length > 0)) { // Si hay destinatarios, mostramos pop-up
 
                     //Rellenamos el select de posibles
                     var lenposibles = result.destinatarios.posibles.length;
