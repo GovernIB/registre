@@ -38,10 +38,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class SicresXMLManagerImpl implements SicresXMLManager {
@@ -1265,6 +1262,11 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                 StringUtils.equals(ficheroIntercambio.getFechaRegistroXML(),
                         SDF.format(ficheroIntercambio.getFechaRegistro())),
                 "'FechaHoraEntrada' is invalid ["
+                        + ficheroIntercambio.getFechaRegistroXML() + "]");
+
+        // Validar que la Fecha de entrada no sea superior a la actual
+        Assert.isTrue(ficheroIntercambio.getFechaRegistro().after(new Date()),
+                "'FechaHoraEntrada' es mayor ["
                         + ficheroIntercambio.getFechaRegistroXML() + "]");
 
     }
