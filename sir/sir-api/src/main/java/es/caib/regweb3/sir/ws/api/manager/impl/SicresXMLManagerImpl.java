@@ -304,7 +304,6 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
     public String crearXMLFicheroIntercambioSICRES3(RegistroEntrada registroEntrada) throws Exception   {
 
         Assert.notNull(registroEntrada, "'registroEntrada' must not be null");
-        FicheroIntercambio ficheroIntercambio = new FicheroIntercambio();
 
         Document doc = DocumentHelper.createDocument();
         doc.setXMLEncoding("UTF-8");
@@ -1444,6 +1443,8 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                     }
                 }
             }
+        }else if(ficheroIntercambio.getTipoRegistro().equals(TipoRegistro.ENTRADA)){
+            throw new IllegalArgumentException("'DeInteresado no puede estar vacio'");
         }
     }
 
