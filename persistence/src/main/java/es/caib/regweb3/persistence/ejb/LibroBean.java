@@ -1,7 +1,10 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.regweb3.model.CatEstadoEntidad;
 import es.caib.regweb3.model.Contador;
 import es.caib.regweb3.model.Libro;
+import es.caib.regweb3.model.Organismo;
+import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -213,6 +216,29 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
         contadorEjb.reiniciarContador(libro.getContadorSalida().getId());
         contadorEjb.reiniciarContador(libro.getContadorOficioRemision().getId());
 
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<Organismo> organismosConLibro(Long idEntidad) throws Exception{
+
+        Query q = em.createQuery("Select distinct(libro.organismo.id), libro.organismo.estado from Libro as libro" +
+                " where libro.organismo.entidad.id = :idEntidad and libro.organismo.estado.codigoEstadoEntidad= :estado" +
+                " and libro.activo = true");
+
+        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("estado", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+
+        List<Object[]> result = q.getResultList();
+
+        List<Organismo> organismos = new ArrayList<Organismo>();
+        for (Object[] object : result) {
+            Organismo org = new Organismo((Long) object[0]);
+            org.setEstado((CatEstadoEntidad) object[1]);
+            organismos.add(org);
+        }
+
+        return  organismos;
     }
 
     public Libro crearLibro(Libro libro) throws Exception{

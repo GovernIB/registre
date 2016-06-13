@@ -60,12 +60,22 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
     public List<Oficina> findByOrganismoResponsable(Long idOrganismo) throws Exception;
 
     /**
-     * Obtiene las Oficinas cuyo Organismo responsable es el indicado
+     * Obtiene las Oficinas funcionales de un Organismo
      * @param idOrganismo
+     * @param oficinaVirtual
      * @return
      * @throws Exception
      */
-    public List<Oficina> findByOrganismoResponsableVO(Long idOrganismo) throws Exception;
+    public List<Oficina> oficinasFuncionales(Long idOrganismo, Boolean oficinaVirtual) throws Exception;
+
+    /**
+     * Obtiene las Oficinas organizativas de un Organismo
+     * @param idOrganismo
+     * @param oficinaVirtual
+     * @return
+     * @throws Exception
+     */
+    public List<Oficina> oficinasOrganizativas(Long idOrganismo, Boolean oficinaVirtual) throws Exception;
 
     /**
      * Obtiene las Oficinas cuya Entidad responsable es la indicada
@@ -103,13 +113,25 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
     public List<Oficina> dependienteByEntidadEstado(Long idEntidad, String estado) throws Exception;
 
     /**
-     * Dice si el organismo indicado tiene oficinas donde registrar
+     * Retorna las Oficinas(Funcionales y Organizativas) que dan servicio a un Organismo,
+     * teniendo en cuenta las oficinas que dan servicio a sus Organismos superiores en el Organigrama.
      * @param idOrganismo
-     * @param oficinaVirtual = false las oficinas virtuales se consideran oficinas validas para poder crear libros.
+     * @param oficinaVirtual
      * @return
      * @throws Exception
      */
-    public Boolean tieneOficinasOrganismo(Long idOrganismo, boolean oficinaVirtual) throws Exception;
+    public LinkedHashSet<Oficina> oficinasServicio(Long idOrganismo, Boolean oficinaVirtual) throws Exception;
+
+    /**
+     * Booleano si tiene Oficinas(Funcionales y Organizativas) que dan servicio a un Organismo,
+     * teniendo en cuenta las oficinas que dan servicio a sus Organismos superiores en el Organigrama.
+     * @param idOrganismo
+     * @param oficinaVirtual
+     * @return
+     * @throws Exception
+     */
+    public Boolean tieneOficinasServicio(Long idOrganismo, Boolean oficinaVirtual) throws Exception;
+
 
     /**
      * Obtiene las Oficinas que dan servicio a los Libros seleccionados
@@ -118,14 +140,6 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @throws Exception
      */
     public LinkedHashSet<Oficina> oficinasRegistro(List<Libro> libros) throws Exception;
-
-    /**
-     * Obtiene las Oficinas que dan Servicio a un determinado Organismo
-     * @param idOrganismo
-     * @return
-     * @throws Exception
-     */
-    public LinkedHashSet<Oficina> oficinasRegistroOrganismo(Long idOrganismo) throws Exception;
 
     /**
      * Elimina las Oficinas de una Entidad

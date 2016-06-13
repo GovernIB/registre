@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Libro;
+import es.caib.regweb3.model.Organismo;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
@@ -97,6 +98,14 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
      * @throws Exception
      */
     public void reiniciarContadores(Long idLibro) throws Exception;
+
+    /**
+     * Obtiene los Organismos vigentes que tienen Libro activo de una Entidad
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public List<Organismo> organismosConLibro(Long idEntidad) throws Exception;
 
     /**
      * Crea un libro y le asocia sus contadores

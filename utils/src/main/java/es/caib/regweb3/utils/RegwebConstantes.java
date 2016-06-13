@@ -559,4 +559,8 @@ public interface RegwebConstantes {
     public int LOGOMENU_AMPLADA_MAX = 600;
     public int LOGOMENU_ALSADA_MAX = 90;
 
+    /* -------------- OFICINA VIRTUAL --------------*/
+    public Boolean OFICINA_VIRTUAL_SI = true; // Las incluimos en los resultados obtenidos
+    public Boolean OFICINA_VIRTUAL_NO = false; // No las incluimos en los resultados obtenidos
+
 }

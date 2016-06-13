@@ -755,7 +755,7 @@ public class EntidadController extends BaseController {
                 log.info("HISTORICOS FINALES "+ historicosFinales.size());
                 //Además de estos históricos finales sólo interesan los que tienen oficinas, ya que para asignarle los libros debe tener oficinas
                 for(Organismo orgHistorico:historicosFinales){
-                    if (oficinaEjb.tieneOficinasOrganismo(orgHistorico.getId(), false)) {
+                    if (oficinaEjb.tieneOficinasServicio(orgHistorico.getId(), RegwebConstantes.OFICINA_VIRTUAL_SI)) {
                         historicosUOconOficinas.add(orgHistorico);
                     }
                 }
@@ -817,7 +817,7 @@ public class EntidadController extends BaseController {
               model.addAttribute("organismosConError", organismosConError);
               if(organismosConError.size()>0){
                   Entidad entidad=getEntidadActiva(request);
-                  List<Organismo> organismosEntidadVigentes = organismoEjb.findByEntidadEstadoConOficinas(entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+                  List<Organismo> organismosEntidadVigentes = organismoEjb.organismosConOficinas(entidad.getId());
                   model.addAttribute("organismosSustituyentes", organismosEntidadVigentes);
               }
           }else{
@@ -914,7 +914,7 @@ public class EntidadController extends BaseController {
         log.info("Organismos Entidad " + organismosEntidad.size());
 
 
-        List<Organismo> organismosEntidadVigentes = organismoEjb.findByEntidadEstadoConOficinas(entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        List<Organismo> organismosEntidadVigentes = organismoEjb.organismosConOficinas(entidad.getId());
         log.info("Organismos entidad con Oficinas " + organismosEntidadVigentes.size());
         if(organismosEntidad.size()>0) {
 

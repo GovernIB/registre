@@ -37,7 +37,7 @@ public interface RelacionOrganizativaOfiLocal extends BaseEjb<RelacionOrganizati
      * @return
      * @throws Exception
      */
-    public List<Oficina> getOficinasByOrganismoVO(Long idOrganismo) throws Exception;
+    public List<Oficina> oficinasOrganizativas(Long idOrganismo, Boolean oficinaVirtual) throws Exception;
 
     /**
      * Obtiene los Organismosr elacionados con la Oficina seleccionada

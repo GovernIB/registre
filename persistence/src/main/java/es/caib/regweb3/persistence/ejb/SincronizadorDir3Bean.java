@@ -80,6 +80,9 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
     @EJB(mappedName = "regweb3/RelacionOrganizativaOfiEJB/local")
     public RelacionOrganizativaOfiLocal relacionOrganizativaOfiLocalEjb;
 
+    @EJB(mappedName = "regweb3/LibroEJB/local")
+    public LibroLocal libroEjb;
+
 
     /**
      * Método que sincroniza o actualiza una entidad de regweb3 desde dir3caib. Lo hace en función de si se indica la
@@ -162,19 +165,17 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
 
         // Obtenemos los organismos de la entidad que tienen libros
-        List<Organismo> vigentes = organismoEjb.findByEntidadEstadoLibros(entidadId, RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        List<Organismo> vigentes = libroEjb.organismosConLibro(entidadId);
 
         for (Organismo organismo : vigentes) {
-            if (organismo.getLibros() != null && organismo.getLibros().size() > 0) {
 
-                //Miramos si el organismo tiene oficinas,
-                Boolean tieneOficinas = oficinaEjb.tieneOficinasOrganismo(organismo.getId(), false);
-                if (!tieneOficinas) {//si no tiene se debe guardar en la tabla de pendientes para que los procese el usuario manualmente
-                    //guardar pendiente
-                    Pendiente pendiente = new Pendiente(organismo.getId(), false, organismo.getEstado().getCodigoEstadoEntidad());
-                    pendienteEjb.persist(pendiente);
-                }
+            //Miramos si el organismo tiene oficinas,
+            Boolean tieneOficinas = oficinaEjb.tieneOficinasServicio(organismo.getId(), RegwebConstantes.OFICINA_VIRTUAL_SI);
+            if (!tieneOficinas) {//si no tiene se debe guardar en la tabla de pendientes para que los procese el usuario manualmente
+                //guardar pendiente
+                pendienteEjb.persist(new Pendiente(organismo.getId(), false, organismo.getEstado().getCodigoEstadoEntidad()));
             }
+
         }
 
         log.info(" REGWEB3 ORGANISMOS ACTUALIZADOS:  " + arbol.size());

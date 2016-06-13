@@ -89,7 +89,7 @@ public class LibroController extends BaseController {
 
         model.addAttribute("organismo", organismo);
 
-        Boolean tieneOficinas = organismoEjb.tieneOficinasServicio(organismo.getId());
+        Boolean tieneOficinas = oficinaEjb.tieneOficinasServicio(organismo.getId(), RegwebConstantes.OFICINA_VIRTUAL_SI);
 
         if (!tieneOficinas) {
             log.info("El organismo no tiene Oficinas");
@@ -124,7 +124,7 @@ public class LibroController extends BaseController {
         if(organismo.getEntidad().equals(entidadActiva)) {
 
             // Mira que tenga Oficinas
-            if (!organismoEjb.tieneOficinasServicio(organismo.getId())) {
+            if (!oficinaEjb.tieneOficinasServicio(organismo.getId(),  RegwebConstantes.OFICINA_VIRTUAL_SI)) {
                 log.info("El organismo no tiene Oficinas");
                 Mensaje.saveMessageError(request, getMessage("aviso.organismo.oficinas"));
                 return "redirect:/organismo/list";

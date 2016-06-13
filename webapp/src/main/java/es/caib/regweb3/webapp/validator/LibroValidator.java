@@ -3,6 +3,7 @@ package es.caib.regweb3.webapp.validator;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.persistence.ejb.LibroLocal;
+import es.caib.regweb3.persistence.ejb.OficinaLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,9 @@ public class LibroValidator implements Validator {
 
     @EJB(mappedName = "regweb3/LibroEJB/local")
     public LibroLocal libroEjb;
+
+    @EJB(mappedName = "regweb3/OficinaEJB/local")
+    public OficinaLocal oficinaEjb;
 
 
     @Override
@@ -65,6 +69,13 @@ public class LibroValidator implements Validator {
                     if(libroEjb.findByCodigoEntidad(libro.getCodigo(),entidadActiva.getId()) != null){
                         errors.rejectValue("codigo", "error.codigo.existe","El codi ja existeix");
                     }
+                }
+            }
+
+            if(libro.getActivo()){
+                if(!oficinaEjb.tieneOficinasServicio(libro.getOrganismo().getId(),  RegwebConstantes.OFICINA_VIRTUAL_SI)){
+                    log.info("No se puede activar el libro, porque el Organismo al que pertenece el Libro no tiene Oficinas que le den servicio");
+                    errors.rejectValue("codigo", "libro.organismo.oficinas","No se puede activar el libro, porque el Organismo al que pertenece el Libro no tiene Oficinas que le den servicio");
                 }
             }
 

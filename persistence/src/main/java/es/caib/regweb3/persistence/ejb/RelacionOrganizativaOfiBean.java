@@ -100,15 +100,23 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
     }
 
     @Override
-    public List<Oficina> getOficinasByOrganismoVO(Long idOrganismo) throws Exception {
+    public List<Oficina> oficinasOrganizativas(Long idOrganismo, Boolean oficinaVirtual) throws Exception {
+
+        String oficinaVirtualWhere = "";
+
+        if (!oficinaVirtual) {
+            oficinaVirtualWhere = " and :oficinaVirtual not in elements(roo.oficina.servicios)";
+        }
 
         Query q = em.createQuery("Select distinct roo.oficina.id,roo.oficina.codigo, roo.oficina.denominacion, oficina.organismoResponsable.id  from RelacionOrganizativaOfi as roo " +
-                "where roo.organismo.id = :idOrganismo and roo.estado.codigoEstadoEntidad = :vigente and " +
-                ":oficinaVirtual not in elements(roo.oficina.servicios)");
+                "where roo.organismo.id = :idOrganismo and roo.estado.codigoEstadoEntidad = :vigente " +
+                oficinaVirtualWhere);
 
         q.setParameter("idOrganismo", idOrganismo);
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-        q.setParameter("oficinaVirtual",catServicioLocalEjb.findByCodigo(RegwebConstantes.REGISTRO_VIRTUAL_NO_PRESENCIAL));
+        if (!oficinaVirtual) {
+            q.setParameter("oficinaVirtual", catServicioLocalEjb.findByCodigo(RegwebConstantes.REGISTRO_VIRTUAL_NO_PRESENCIAL));
+        }
 
         List<Oficina> oficinas =  new ArrayList<Oficina>();
 

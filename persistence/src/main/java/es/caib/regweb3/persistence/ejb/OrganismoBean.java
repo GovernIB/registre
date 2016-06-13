@@ -35,9 +35,6 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     @EJB(mappedName = "regweb3/CatEstadoEntidadEJB/local")
     public CatEstadoEntidadLocal catEstadoEntidadEjb;
 
-    @EJB(mappedName = "regweb3/OficinaEJB/local")
-    public OficinaLocal oficinaEjb;
-
     @EJB(name = "LibroEJB")
     public LibroLocal libroEjb;
 
@@ -224,37 +221,6 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     }
 
-    @Override
-    @SuppressWarnings(value = "unchecked")
-    public List<Organismo> findByEntidadEstadoLibros(Long entidad, String estado) throws Exception {
-
-        Query q = em.createQuery("Select distinct(organismo.id), organismo.estado from Organismo as organismo" +
-                " inner join  organismo.libros as libros " +
-                " where organismo.entidad.id = :entidad and organismo.estado.codigoEstadoEntidad= :estado");
-
-        q.setParameter("entidad", entidad);
-        q.setParameter("estado", estado);
-
-
-        List<Object[]> result = q.getResultList();
-        List<Organismo> organismos = new ArrayList<Organismo>();
-        for (Object[] object : result) {
-            Organismo org = new Organismo((Long) object[0]);
-            org.setEstado((CatEstadoEntidad) object[1]);
-            organismos.add(org);
-        }
-
-        // Realizamos una segunda query para obtener los libros de los organismos, ya que en la query inicial ha sido
-        // imposible
-        for (Organismo org : organismos) {
-            List<Libro> libros = libroEjb.getLibrosOrganismoLigero(org.getId());
-            org.setLibros(libros);
-        }
-
-        return organismos;
-
-    }
-
 
     @Override
     @SuppressWarnings(value = "unchecked")
@@ -299,7 +265,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> findByEntidadEstadoConOficinas(Long entidad, String codigoEstado) throws Exception {
+    public List<Organismo> organismosConOficinas(Long entidad) throws Exception {
 
 
         Query q = em.createQuery("Select distinct(organismo.id) , organismo.denominacion from Organismo as organismo, Oficina as oficina " +
@@ -308,7 +274,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
                 "organismo.entidad.id =:entidad and organismo.estado.codigoEstadoEntidad =:codigoEstado order by organismo.denominacion");
 
         q.setParameter("entidad", entidad);
-        q.setParameter("codigoEstado", codigoEstado);
+        q.setParameter("codigoEstado", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
 
 
         List<Object[]> result = q.getResultList();
@@ -320,12 +286,12 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
 
         Query q2 = em.createQuery("Select distinct(organismo.id) , organismo.denominacion from Organismo as organismo, RelacionOrganizativaOfi as relorgOfi " +
-                "inner join relorgOfi.organismo as orgfuncional " +
-                "where orgfuncional.id=organismo.id  and relorgOfi.estado.codigoEstadoEntidad=:codigoEstado and " +
+                "inner join relorgOfi.organismo as organizativa " +
+                "where organizativa.id=organismo.id  and relorgOfi.estado.codigoEstadoEntidad=:codigoEstado and " +
                 "organismo.entidad.id =:entidad and organismo.estado.codigoEstadoEntidad =:codigoEstado order by organismo.denominacion");
 
         q2.setParameter("entidad", entidad);
-        q2.setParameter("codigoEstado", codigoEstado);
+        q2.setParameter("codigoEstado", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
 
 
         List<Object[]> result2 = q2.getResultList();
@@ -552,21 +518,6 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
         return total;
 
-    }
-
-    public Boolean tieneOficinasServicio(Long idOrganismo) throws Exception {
-        //Incluimos las oficinas virtuales no presenciales
-        Boolean oficinas = oficinaEjb.tieneOficinasOrganismo(idOrganismo, true);
-        if (!oficinas) {
-            // Si no tiene Oficinas que cuelguen de el, buscamos en su padre
-            Organismo organismo = findById(idOrganismo);
-            if (organismo.getOrganismoSuperior() != null && (!organismo.getOrganismoSuperior().getId().equals(organismo.getOrganismoRaiz().getId()))) {
-
-                return tieneOficinasServicio(organismo.getOrganismoSuperior().getId());
-            }
-            return false;
-        }
-        return true;
     }
 
 

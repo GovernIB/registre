@@ -62,7 +62,7 @@
                                     <form:label path="activo"><spring:message code="regweb.activo"/></form:label>
                                 </div>
                                 <div class="col-xs-8">
-                                    <form:checkbox path="activo"/>
+                                    <form:checkbox path="activo"/> <form:errors path="activo" cssClass="help-block" element="span"/>
                                 </div>
                             </div>
                     </div>

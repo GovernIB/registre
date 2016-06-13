@@ -187,7 +187,9 @@ public class Libro implements Serializable {
 
     @Override
     public String toString() {
-        if(id != null){
+        if(nombre != null){
+            return  nombre;
+        } else if(id != null){
             return id.toString();
         }else{
             return null;

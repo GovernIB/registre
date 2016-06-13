@@ -57,8 +57,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @EJB public ModeloReciboLocal modeloReciboEjb;
     @EJB public RegistroLopdMigradoLocal registroMigradoLopdEjb;
     @EJB public RegistroMigradoLocal registroMigradoEjb;
-    @EJB
-    public PropiedadGlobalLocal propiedadGlobalEjb;
+    @EJB public PropiedadGlobalLocal propiedadGlobalEjb;
 
 
 

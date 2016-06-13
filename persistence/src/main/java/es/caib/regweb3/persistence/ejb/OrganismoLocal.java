@@ -83,15 +83,6 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
     public Organismo findByCodigoEntidad(String codigo, Long idEntidad) throws Exception;
 
     /**
-     * Obtiene todos los organismos de una entidad con libros y del estado indicado
-     * @param entidad
-     * @param estado
-     * @return
-     * @throws Exception
-     */
-    public List<Organismo> findByEntidadEstadoLibros(Long entidad, String estado) throws Exception;
-
-    /**
      * Obtiene los organismos de una entidad que tienen libros
      *
      * @param entidad
@@ -119,13 +110,12 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
     public List<Organismo> findByEntidadByEstado(Long entidad, String estado) throws Exception;
 
     /**
-     * Obtiene los organismo de una entidad y un estado determinado
+     * Obtiene los organismo vigentes de una entidad que tienen Ofcinas
      * @param entidad
-     * @param codigoEstado
      * @return
      * @throws Exception
      */
-    public List<Organismo> findByEntidadEstadoConOficinas(Long entidad, String codigoEstado) throws Exception;
+    public List<Organismo> organismosConOficinas(Long entidad) throws Exception;
 
     /**
      *
@@ -170,15 +160,6 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
      * @throws Exception
      */
     public Integer eliminarByEntidad(Long idEntidad) throws Exception;
-
-    /**
-     * Comprueba si el Organismo tiene alguna Oficina que le de Servicio
-     *
-     * @param idOrganismo
-     * @return
-     * @throws Exception
-     */
-    public Boolean tieneOficinasServicio(Long idOrganismo) throws Exception;
 
     /**
      * Obtiene los organismos finales que sustituyen a un organismo extinguido, por ello recorremos todos sus históricos

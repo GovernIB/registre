@@ -121,7 +121,7 @@ public class OrganismoController extends BaseController {
         ModelAndView mav = new ModelAndView("organismo/oficinasList");
 
         Organismo organismo = organismoEjb.findById(idOrganismo);
-        LinkedHashSet<Oficina> oficinas = oficinaEjb.oficinasRegistroOrganismo(idOrganismo);
+        LinkedHashSet<Oficina> oficinas = oficinaEjb.oficinasServicio(idOrganismo, RegwebConstantes.OFICINA_VIRTUAL_SI);
 
         mav.addObject("organismo", organismo);
         mav.addObject("oficinas", oficinas);
