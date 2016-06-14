@@ -30,7 +30,7 @@ public class MensajeManagerImpl implements MensajeManager {
         // Crear el XML del mensaje en formato SICRES 3.0
         String xml = sicresXMLManager.createXMLMensaje(mensaje);
 
-        log.info("Mensaje: " + xml);
+        log.info("Mensaje a ws_sir7: " + xml);
 
         WS_SIR7ServiceLocator locator = new WS_SIR7ServiceLocator();
         WS_SIR7_PortType ws_sir7 = null;

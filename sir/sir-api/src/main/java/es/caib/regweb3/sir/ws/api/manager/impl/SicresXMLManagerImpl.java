@@ -49,7 +49,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
     private static final String MAXTAMANOANEXOSPARAMNAME = "max.tamaño.anexos";
     private static final String MAXNUMANEXOSPARAMNAME = "max.num.anexos";
 
-    private static final String CODIGOPAISESPANA = "0724";
+    private static final String CODIGO_PAIS_ESPANA = "0724";
     private static final int LONGITUD_CODIGO_ENTIDAD_REGISTRAL = 21;
     private static final int LONGITUD_CODIGO_UNIDAD_TRAMITACION = 21;
     private static final int LONGITUD_IDENTIFICADOR_INTERCAMBIO = 33;
@@ -93,7 +93,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
     public void validarFicheroIntercambio(FicheroIntercambio ficheroIntercambio) {
 
-        log.info("Llamada a validarFicheroIntercambio");
+        log.info("Validando FicheroIntercambio...");
 
         Assert.notNull(ficheroIntercambio, "'ficheroIntercambio' must not be null");
 
@@ -107,7 +107,6 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
         validarSegmentoInteresados(ficheroIntercambio);
         validarSegmentoAsunto(ficheroIntercambio);
         validarSegmentoAnexos(ficheroIntercambio);
-
         validarSegmentoFormularioGenerico(ficheroIntercambio);
 
         log.info("Fichero de intercambio validado");
@@ -157,7 +156,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                         Assert.hasText(interesado.getDireccionInteresado(),
                                 "'direccionInteresado' no puede estar vacio");
 
-                        if (CODIGOPAISESPANA.equals(interesado
+                        if (CODIGO_PAIS_ESPANA.equals(interesado
                                 .getCodigoPaisInteresado())) {
                             Assert.isTrue(
                                     StringUtils.isNotBlank(interesado
@@ -189,7 +188,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                         Assert.hasText(interesado.getDireccionRepresentante(),
                                 "'direccionRepresentante' no puede estar vacio");
 
-                        if (CODIGOPAISESPANA.equals(interesado
+                        if (CODIGO_PAIS_ESPANA.equals(interesado
                                 .getCodigoPaisRepresentante())) {
                             Assert.isTrue(
                                     StringUtils.isNotBlank(interesado
@@ -1231,7 +1230,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
      * @param ficheroIntercambio Información del fichero de intercambio.
      */
     protected void validarSegmentoOrigen(FicheroIntercambio ficheroIntercambio) {
-
+        log.info("validar SegmentoOrigen...");
         // Validar que el código de entidad registral de origen esté informado
         Assert.hasText(ficheroIntercambio.getCodigoEntidadRegistralOrigen(),
                 "'CodigoEntidadRegistralOrigen' no puede estar vacio");
@@ -1268,7 +1267,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
         Assert.isTrue(ficheroIntercambio.getFechaRegistro().before(new Date()),
                 "'FechaHoraEntrada' es mayor ["
                         + ficheroIntercambio.getFechaRegistroXML() + "]");
-
+        log.info("SegmentoOrigen validado!");
     }
 
     /**
@@ -1276,9 +1275,8 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
      *
      * @param ficheroIntercambio Información del fichero de intercambio.
      */
-    protected void validarSegmentoDestino(
-            FicheroIntercambio ficheroIntercambio) {
-
+    protected void validarSegmentoDestino(FicheroIntercambio ficheroIntercambio) {
+        log.info("validar SegmentoDestino...");
         // Validar que el código de entidad registral de destino esté informado
         Assert.hasText(ficheroIntercambio.getCodigoEntidadRegistralDestino(),
                 "'CodigoEntidadRegistralDestino' no puede estar vacio");
@@ -1301,6 +1299,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
         String entidadDestinoConfigurada=getConfiguracionManager().getValorConfiguracion(ficheroIntercambio.getCodigoEntidadRegistralDestino()+".entidad.configurada");
         Assert.isTrue(StringUtils.isNotBlank(entidadDestinoConfigurada),
                 "'CodigoEntidadRegistralDestino' is not configurated");*/
+        log.info("SegmentoDestino validado!");
     }
 
     /**
@@ -1309,12 +1308,25 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
      * @param ficheroIntercambio Información del fichero de intercambio.
      */
     protected void validarSegmentoInteresados(FicheroIntercambio ficheroIntercambio) {
+        log.info("validar SegmentoInteresados...");
 
         // Comprobar los datos de los interesados
         if ((ficheroIntercambio.getFicheroIntercambio() != null)
                 && (ficheroIntercambio.getFicheroIntercambio().getDe_InteresadoCount() > 0)) {
 
             for (De_Interesado interesado : ficheroIntercambio.getFicheroIntercambio().getDe_Interesado()) {
+
+                // Si es un Registro de Entrada, ha de existir al menos un Interesado
+                if(ficheroIntercambio.getTipoRegistro().equals(TipoRegistro.ENTRADA)){
+                    Assert.isTrue(
+                            StringUtils.isNotBlank(interesado
+                                    .getRazon_Social_Interesado())
+                                    || (StringUtils.isNotBlank(interesado
+                                    .getNombre_Interesado()) && StringUtils.isNotBlank(interesado
+                                    .getPrimer_Apellido_Interesado())),
+                            "'razonSocialInteresado' or ('nombreInteresado' and 'primerApellidoInteresado') must not be empty");
+                }
+
 
                 // Validar el canal preferente de comunicación del interesado
                 if (StringUtils.isNotBlank(interesado
@@ -1326,6 +1338,35 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                                     + interesado
                                     .getCanal_Preferente_Comunicacion_Interesado()
                                     + "]");
+
+                    if (CanalNotificacion.DIRECCION_POSTAL.getValue().equals(interesado.getCanal_Preferente_Comunicacion_Interesado())) {
+
+                        Assert.hasText(interesado.getPais_Interesado(),
+                                "'paisInteresado' no puede estar vacio");
+                        Assert.hasText(
+                                interesado.getDireccion_Interesado(),
+                                "'direccionInteresado' no puede estar vacio");
+
+                        if (CODIGO_PAIS_ESPANA.equals(interesado.getPais_Interesado())) {
+                            Assert.isTrue(
+                                    StringUtils.isNotBlank(interesado
+                                            .getCodigo_Postal_Interesado())
+                                            || (StringUtils
+                                            .isNotBlank(interesado
+                                                    .getProvincia_Interesado()) && StringUtils
+                                            .isNotBlank(interesado
+                                                    .getMunicipio_Interesado())),
+                                    "'codigoPostalInteresado' or ('provinciaInteresado' and 'municipioInteresado') no puede estar vacio");
+                        }
+
+                    } else if (CanalNotificacion.DIRECCION_ELECTRONICA_HABILITADA
+                            .getValue().equals(interesado.getCanal_Preferente_Comunicacion_Interesado())) {
+                        Assert.hasText(
+                                interesado
+                                        .getDireccion_Electronica_Habilitada_Interesado(),
+                                "'direccionElectronicaHabilitadaInteresado' no puede estar vacio");
+                    }
+
                 }
 
                 // Validar el canal preferente de comunicación del representante
@@ -1338,6 +1379,38 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                                     + interesado
                                     .getCanal_Preferente_Comunicacion_Representante()
                                     + "]");
+
+                    if (CanalNotificacion.DIRECCION_POSTAL.getValue().equals(interesado
+                                    .getCanal_Preferente_Comunicacion_Representante())) {
+
+                        Assert.hasText(interesado.getPais_Representante(),
+                                "'paisRepresentante' no puede estar vacio");
+                        Assert.hasText(
+                                interesado.getDireccion_Representante(),
+                                "'direccionRepresentante' no puede estar vacio");
+
+                        if (CODIGO_PAIS_ESPANA.equals(interesado
+                                .getPais_Representante())) {
+                            Assert.isTrue(
+                                    StringUtils
+                                            .isNotBlank(interesado
+                                                    .getCodigo_Postal_Representante())
+                                            || (StringUtils
+                                            .isNotBlank(interesado
+                                                    .getProvincia_Representante()) && StringUtils
+                                            .isNotBlank(interesado
+                                                    .getMunicipio_Representante())),
+                                    "'codigoPostalRepresentante' or ('provinciaRepresentante' and 'municipioRepresentante') no puede estar vacio");
+                        }
+
+                    } else if (CanalNotificacion.DIRECCION_ELECTRONICA_HABILITADA
+                            .getValue().equals(interesado
+                                    .getCanal_Preferente_Comunicacion_Representante())) {
+                        Assert.hasText(
+                                interesado
+                                        .getDireccion_Electronica_Habilitada_Representante(),
+                                "'direccionElectronicaHabilitadaRepresentante' no puede estar vacio");
+                    }
                 }
 
                 if (StringUtils.isBlank(ficheroIntercambio
@@ -1351,17 +1424,6 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                                     .getPrimer_Apellido_Interesado())),
                             "'razonSocialInteresado' or ('nombreInteresado' and 'primerApellidoInteresado') must not be empty");
 
-					/*
-					Assert.isTrue(
-							StringUtils
-									.isNotBlank(interesado
-											.getCanalPreferenteComunicacionInteresado())
-									|| StringUtils
-											.isNotBlank(interesado
-													.getCanalPreferenteComunicacionRepresentante()),
-							"'canalPreferenteComunicacionInteresado' or 'canalPreferenteComunicacionRepresentante' must not be null");
-					 */
-
                     if (StringUtils.isNotEmpty(interesado.getTipo_Documento_Identificacion_Interesado())) {
                         Assert.notNull(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacion(interesado.getTipo_Documento_Identificacion_Interesado()), "'invalid tipoDocumentoIdentificacionInteresado'");
                     }
@@ -1370,11 +1432,10 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                         Assert.notNull(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacion(interesado.getTipo_Documento_Identificacion_Representante()), "invalid 'tipoDocumentoIdentificacionRepresentante'");
                     }
 
-                    if (StringUtils.isNotBlank(interesado
-                            .getCanal_Preferente_Comunicacion_Interesado())) {
+                    if (StringUtils.isNotBlank(interesado.getCanal_Preferente_Comunicacion_Interesado())) {
+
                         if (CanalNotificacion.DIRECCION_POSTAL.getValue()
-                                .equals(interesado
-                                        .getCanal_Preferente_Comunicacion_Interesado())) {
+                                .equals(interesado.getCanal_Preferente_Comunicacion_Interesado())) {
 
                             Assert.hasText(interesado.getPais_Interesado(),
                                     "'paisInteresado' no puede estar vacio");
@@ -1382,8 +1443,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                                     interesado.getDireccion_Interesado(),
                                     "'direccionInteresado' no puede estar vacio");
 
-                            if (CODIGOPAISESPANA.equals(interesado
-                                    .getPais_Interesado())) {
+                            if (CODIGO_PAIS_ESPANA.equals(interesado.getPais_Interesado())) {
                                 Assert.isTrue(
                                         StringUtils.isNotBlank(interesado
                                                 .getCodigo_Postal_Interesado())
@@ -1396,9 +1456,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                             }
 
                         } else if (CanalNotificacion.DIRECCION_ELECTRONICA_HABILITADA
-                                .getValue()
-                                .equals(interesado
-                                        .getCanal_Preferente_Comunicacion_Interesado())) {
+                                .getValue().equals(interesado.getCanal_Preferente_Comunicacion_Interesado())) {
                             Assert.hasText(
                                     interesado
                                             .getDireccion_Electronica_Habilitada_Interesado(),
@@ -1406,11 +1464,10 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                         }
                     }
 
-                    if (StringUtils.isNotBlank(interesado
-                            .getCanal_Preferente_Comunicacion_Representante())) {
+                    if (StringUtils.isNotBlank(interesado.getCanal_Preferente_Comunicacion_Representante())) {
+
                         if (CanalNotificacion.DIRECCION_POSTAL
-                                .getValue()
-                                .equals(interesado
+                                .getValue().equals(interesado
                                         .getCanal_Preferente_Comunicacion_Representante())) {
 
                             Assert.hasText(interesado.getPais_Representante(),
@@ -1419,7 +1476,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                                     interesado.getDireccion_Representante(),
                                     "'direccionRepresentante' no puede estar vacio");
 
-                            if (CODIGOPAISESPANA.equals(interesado
+                            if (CODIGO_PAIS_ESPANA.equals(interesado
                                     .getPais_Representante())) {
                                 Assert.isTrue(
                                         StringUtils
@@ -1445,9 +1502,8 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                     }
                 }
             }
-        }else if(ficheroIntercambio.getTipoRegistro().equals(TipoRegistro.ENTRADA)){
-            throw new IllegalArgumentException("'DeInteresado no puede estar vacio'");
         }
+        log.info("SegmentoInteresados validado!");
     }
 
     /**
@@ -1456,10 +1512,13 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
      * @param ficheroIntercambio Información del fichero de intercambio.
      */
     protected void validarSegmentoAsunto(FicheroIntercambio ficheroIntercambio) {
+        log.info("validar SegmentoAsunto...");
 
         // Validar que el resumen esté informado
         Assert.hasText(ficheroIntercambio.getResumen(),
                 "'Resumen' no puede estar vacio");
+
+        log.info("SegmentoAsunto validado!");
     }
 
     /**
@@ -1468,7 +1527,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
      * @param ficheroIntercambio Información del fichero de intercambio.
      */
     protected void validarSegmentoAnexos(FicheroIntercambio ficheroIntercambio) {
-
+        log.info("validar SegmentoAnexos...");
 
         // Validar los documentos
         if ((ficheroIntercambio.getFicheroIntercambio() != null)
@@ -1478,6 +1537,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                 validarAnexo(anexo, ficheroIntercambio.getIdentificadorIntercambio());
             }
         }
+        log.info("SegmentoAnexos validado!");
     }
 
     /**
@@ -1602,8 +1662,8 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
      *
      * @param ficheroIntercambio Información del fichero de intercambio.
      */
-    protected void validarSegmentoControl(
-            FicheroIntercambio ficheroIntercambio) {
+    protected void validarSegmentoControl(FicheroIntercambio ficheroIntercambio) {
+        log.info("validarSegmentoControl...");
 
         // Validar el tipo de transporte
         if (StringUtils.isNotBlank(ficheroIntercambio.getTipoTransporteXML())) {
@@ -1634,6 +1694,8 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
         // Validar el identificador de intercambio, tiene que realizarse despues de la validacion del código de entidad registral de inicio
         validarIdentificadorIntercambio(ficheroIntercambio);
+
+        log.info("SegmentoControl validado!");
     }
 
     /**
@@ -1642,7 +1704,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
      * @param ficheroIntercambio Información del fichero de intercambio.
      */
     protected void validarIdentificadorIntercambio(FicheroIntercambio ficheroIntercambio) {
-
+        log.info("validar IdentificadorIntercambio...");
         // Comprobar que no esté vacío
         Assert.hasText(ficheroIntercambio.getIdentificadorIntercambio(),
                 "'IdentificadorIntercambio' no puede estar vacio");
@@ -1673,6 +1735,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                 StringUtils.length(tokens[2]) == 8,
                 "'IdentificadorIntercambio' is invalid"); // Número secuencia de 8 dígitos
 
+        log.info("IdentificadorIntercambio validado!");
     }
 
     /**
@@ -1680,9 +1743,8 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
      *
      * @param ficheroIntercambio Información del fichero de intercambio.
      */
-    protected void validarSegmentoFormularioGenerico(
-            FicheroIntercambio ficheroIntercambio) {
-
+    protected void validarSegmentoFormularioGenerico(FicheroIntercambio ficheroIntercambio) {
+        log.info("validar SegmentoFormularioGenerico...");
         Assert.notNull(
                 ficheroIntercambio.getExpone(),
                 "'expone' must not be null");
@@ -1690,6 +1752,8 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
         Assert.notNull(
                 ficheroIntercambio.getSolicita(),
                 "'solicita' must not be null");
+
+        log.info("SegmentoFormularioGenerico validado!");
     }
 
     /**

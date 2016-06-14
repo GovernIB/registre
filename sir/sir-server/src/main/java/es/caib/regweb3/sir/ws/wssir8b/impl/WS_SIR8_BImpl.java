@@ -91,8 +91,8 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
         }
 
         log.info("WS_SIR8_BImpl: recibiendo fichero intercambio");
-        log.info("Mensaje: " + registro);
-        log.info("Firma: " + firmaRegistro);
+        log.info("Registro: " + registro);
+        //log.info("Firma: " + firmaRegistro);
 
         RespuestaWS respuestaWS = null;
 
@@ -107,7 +107,6 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
         } catch (ServiceException e) {
             log.info("Error en el envío del fichero de intercambio a la aplicación", e);
             respuestaWS = crearRespuestaWS(e.getError());
-            e.printStackTrace();
         }catch (Throwable e) {
             log.info("Error en el envío del fichero de intercambio a la aplicación", e);
             respuestaWS = crearRespuestaWS(Errores.ERROR_INESPERADO);
