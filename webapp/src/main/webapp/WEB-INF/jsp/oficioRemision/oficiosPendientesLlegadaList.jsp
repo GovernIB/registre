@@ -137,8 +137,8 @@
                                             </table>
 
                                             <!-- Paginacion -->
-                                            <c:import url="../modulos/paginacion.jsp">
-                                                <c:param name="entidad" value="oficioRemision/pendientesLlegada"/>
+                                            <c:import url="../modulos/paginacionBusqueda.jsp">
+                                                <c:param name="entidad" value="oficioRemision"/>
                                             </c:import>
 
                                         </div>
