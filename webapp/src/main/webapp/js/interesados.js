@@ -920,7 +920,7 @@ function tiposDocumentoPersonaFisica(){
 function tiposDocumentoPersonaJuridica(){
 
     //$('#tipoDocumentoIdentificacion').val("0");
-    $('#tipoDocumentoIdentificacion option[value="1"]').removeAttr("disabled");
+    $('#tipoDocumentoIdentificacion option[value="1"]').attr("disabled", "disabled");
     $('#tipoDocumentoIdentificacion option[value="2"]').removeAttr("disabled");
     $('#tipoDocumentoIdentificacion option[value="3"]').attr("disabled", "disabled");
     $('#tipoDocumentoIdentificacion option[value="4"]').attr("disabled", "disabled");
