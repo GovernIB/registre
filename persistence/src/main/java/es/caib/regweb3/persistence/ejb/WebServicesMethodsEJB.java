@@ -1,5 +1,8 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.regweb3.model.CatLocalidad;
+import es.caib.regweb3.model.CatPais;
+import es.caib.regweb3.model.CatProvincia;
 import es.caib.regweb3.model.PreRegistro;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -20,9 +23,33 @@ public class WebServicesMethodsEJB implements WebServicesMethodsLocal {
     @EJB(mappedName = "regweb3/PreRegistroEJB/local")
     public PreRegistroLocal preRegistroEjb;
 
+    @EJB(mappedName = "regweb3/CatLocalidadEJB/local")
+    public CatLocalidadLocal catLocalidadEjb;
+
+    @EJB(mappedName = "regweb3/CatProvinciaEJB/local")
+    public CatProvinciaLocal catProvinciaEjb;
+
+    @EJB(mappedName = "regweb3/CatPaisEJB/local")
+    public CatPaisLocal catPaisEjb;
+
 
     @Override
     public PreRegistro crearPreRegistro(PreRegistro preRegistro) throws Exception {
         return preRegistroEjb.preRegistrar(preRegistro);
+    }
+
+    @Override
+    public CatPais findByCodigoPais(Long codigo) throws Exception{
+        return catPaisEjb.findByCodigo(codigo);
+    }
+
+    @Override
+    public CatProvincia findByCodigoProvincia(Long codigo) throws Exception {
+        return catProvinciaEjb.findByCodigo(codigo);
+    }
+
+    @Override
+    public CatLocalidad findByLocalidadProvincia(Long codigoLocalidad, Long codigoProvincia) throws Exception {
+        return catLocalidadEjb.findByLocalidadProvincia(codigoLocalidad, codigoProvincia);
     }
 }

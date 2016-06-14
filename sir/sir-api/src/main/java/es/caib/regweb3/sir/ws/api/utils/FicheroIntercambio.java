@@ -4,9 +4,7 @@ import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.PreRegistro;
 import es.caib.regweb3.model.RegistroDetalle;
-import es.caib.regweb3.persistence.ejb.CatLocalidadLocal;
-import es.caib.regweb3.persistence.ejb.CatPaisLocal;
-import es.caib.regweb3.persistence.ejb.CatProvinciaLocal;
+import es.caib.regweb3.persistence.ejb.WebServicesMethodsLocal;
 import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
 import es.caib.regweb3.sir.api.schema.*;
 import es.caib.regweb3.sir.api.schema.types.Documentacion_FisicaType;
@@ -34,14 +32,8 @@ public class FicheroIntercambio {
 
     public final Logger log = Logger.getLogger(getClass());
 
-    @EJB(mappedName = "regweb3/CatLocalidadEJB/local")
-    public CatLocalidadLocal catLocalidadEjb;
-
-    @EJB(mappedName = "regweb3/CatProvinciaEJB/local")
-    public CatProvinciaLocal catProvinciaEjb;
-
-    @EJB(mappedName = "regweb3/CatPaisEJB/local")
-    public CatPaisLocal catPaisEjb;
+    @EJB(mappedName = "regweb3/WebServicesMethodsEJB/local")
+    public WebServicesMethodsLocal webServicesMethodsEjb;
 
 
     private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -697,21 +689,21 @@ public class FicheroIntercambio {
 
         if (StringUtils.isNotBlank(de_Interesado.getPais_Interesado())) {
             try {
-                interesado.setPais(catPaisEjb.findByCodigo(Long.valueOf(de_Interesado.getPais_Interesado())));
+                interesado.setPais(webServicesMethodsEjb.findByCodigoPais(Long.valueOf(de_Interesado.getPais_Interesado())));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         if (StringUtils.isNotBlank(de_Interesado.getProvincia_Interesado())) {
             try {
-                interesado.setProvincia(catProvinciaEjb.findByCodigo(Long.valueOf(de_Interesado.getProvincia_Interesado())));
+                interesado.setProvincia(webServicesMethodsEjb.findByCodigoProvincia(Long.valueOf(de_Interesado.getProvincia_Interesado())));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         if (StringUtils.isNotBlank(de_Interesado.getMunicipio_Interesado())) {
             try {
-                interesado.setLocalidad(catLocalidadEjb.findByLocalidadProvincia(Long.valueOf(de_Interesado.getMunicipio_Interesado()), Long.valueOf(de_Interesado.getProvincia_Interesado())));
+                interesado.setLocalidad(webServicesMethodsEjb.findByLocalidadProvincia(Long.valueOf(de_Interesado.getMunicipio_Interesado()), Long.valueOf(de_Interesado.getProvincia_Interesado())));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -786,21 +778,21 @@ public class FicheroIntercambio {
         }
         if (StringUtils.isNotBlank(deRepresentante.getPais_Representante())) {
             try {
-                representante.setPais(catPaisEjb.findByCodigo(Long.valueOf(deRepresentante.getPais_Representante())));
+                representante.setPais(webServicesMethodsEjb.findByCodigoPais(Long.valueOf(deRepresentante.getPais_Representante())));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         if (StringUtils.isNotBlank(deRepresentante.getProvincia_Representante())) {
             try {
-                representante.setProvincia(catProvinciaEjb.findByCodigo(Long.valueOf(deRepresentante.getProvincia_Representante())));
+                representante.setProvincia(webServicesMethodsEjb.findByCodigoProvincia(Long.valueOf(deRepresentante.getProvincia_Representante())));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         if (StringUtils.isNotBlank(deRepresentante.getMunicipio_Representante())) {
             try {
-                representante.setLocalidad(catLocalidadEjb.findByLocalidadProvincia(Long.valueOf(deRepresentante.getMunicipio_Representante()), Long.valueOf(deRepresentante.getProvincia_Interesado())));
+                representante.setLocalidad(webServicesMethodsEjb.findByLocalidadProvincia(Long.valueOf(deRepresentante.getMunicipio_Representante()), Long.valueOf(deRepresentante.getProvincia_Interesado())));
             } catch (Exception e) {
                 e.printStackTrace();
             }
