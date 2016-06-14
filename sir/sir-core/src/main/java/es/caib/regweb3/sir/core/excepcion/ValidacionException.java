@@ -27,6 +27,7 @@ public class ValidacionException extends SIRException {
 
     public ValidacionException(Errores error) {
         super(error.getValue());
+        setErrorValidacion(error);
     }
 
     public Errores getErrorValidacion() {
