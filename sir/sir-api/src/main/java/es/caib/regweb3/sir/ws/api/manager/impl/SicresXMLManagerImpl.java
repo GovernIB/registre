@@ -457,134 +457,163 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
                     Element rootElement = rootNode.addElement("De_Interesado");
                     Element elem = null;
+                    Interesado representante = interesado.getRepresentante();
 
+                    // Tipo_Documento_Identificacion_Interesado
                     if (interesado.getTipoDocumentoIdentificacion() != null) {
                         elem = rootElement.addElement("Tipo_Documento_Identificacion_Interesado");
                         elem.addCDATA(String.valueOf(RegwebConstantes.CODIGO_NTI_BY_TIPODOCUMENTOID.get(interesado.getTipoDocumentoIdentificacion())));
                     }
+                    // Documento_Identificacion_Interesado
                     if (!StringUtils.isEmpty(interesado.getDocumento())) {
                         elem = rootElement.addElement("Documento_Identificacion_Interesado");
                         elem.addCDATA(interesado.getDocumento());
                     }
+                    // Razon_Social_Interesado
                     if (!StringUtils.isEmpty(interesado.getRazonSocial())) {
                         elem = rootElement.addElement("Razon_Social_Interesado");
                         elem.addCDATA(interesado.getRazonSocial());
                     }
+                    // Nombre_Interesado
                     if (!StringUtils.isEmpty(interesado.getNombre())) {
                         elem = rootElement.addElement("Nombre_Interesado");
                         elem.addCDATA(interesado.getNombre());
                     }
+                    // Primer_Apellido_Interesado
                     if (!StringUtils.isEmpty(interesado.getApellido1())) {
                         elem = rootElement.addElement("Primer_Apellido_Interesado");
                         elem.addCDATA(interesado.getApellido1());
                     }
+                    // Segundo_Apellido_Interesado
                     if (!StringUtils.isEmpty(interesado.getApellido2())) {
                         elem = rootElement.addElement("Segundo_Apellido_Interesado");
                         elem.addCDATA(interesado.getApellido2());
                     }
+
+                    // Tipo_Documento_Identificacion_Representante
+                    if (representante != null && representante.getTipoDocumentoIdentificacion() != null) {
+                        elem = rootElement.addElement("Tipo_Documento_Identificacion_Representante");
+                        elem.addCDATA(String.valueOf(RegwebConstantes.CODIGO_NTI_BY_TIPODOCUMENTOID.get(interesado.getRepresentante().getTipoDocumentoIdentificacion())));
+                    }
+                    // Documento_Identificacion_Representante
+                    if (representante != null && representante.getDocumento() != null) {
+                        elem = rootElement.addElement("Documento_Identificacion_Representante");
+                        elem.addCDATA(representante.getDocumento());
+                    }
+                    // Razon_Social_Representante
+                    if (representante != null && representante.getRazonSocial() != null) {
+                        elem = rootElement.addElement("Razon_Social_Representante");
+                        elem.addCDATA(representante.getRazonSocial());
+                    }
+                    // Nombre_Representante
+                    if (representante != null && representante.getNombre() != null) {
+                        elem = rootElement.addElement("Nombre_Representante");
+                        elem.addCDATA(representante.getNombre());
+                    }
+                    // Primer_Apellido_Representante
+                    if (representante != null && representante.getApellido1() != null) {
+                        elem = rootElement.addElement("Primer_Apellido_Representante");
+                        elem.addCDATA(representante.getApellido1());
+                    }
+                    // Segundo_Apellido_Representante
+                    if (representante != null && representante.getApellido2() != null) {
+                        elem = rootElement.addElement("Segundo_Apellido_Representante");
+                        elem.addCDATA(representante.getApellido2());
+                    }
+
+                    // Pais_Interesado
                     if (interesado.getPais() != null) {
                         elem = rootElement.addElement("Pais_Interesado");
                         elem.addCDATA(interesado.getPais().getCodigoPais().toString());
                     }
+                    // Provincia_Interesado
                     if (interesado.getProvincia() != null) {
                         elem = rootElement.addElement("Provincia_Interesado");
                         elem.addCDATA(interesado.getProvincia().getCodigoProvincia().toString());
                     }
+                    // Municipio_Interesado
                     if (interesado.getLocalidad() != null) {
                         elem = rootElement.addElement("Municipio_Interesado");
                         elem.addCDATA(interesado.getLocalidad().getCodigoLocalidad().toString());
                     }
+                    // Direccion_Interesado
                     if (!StringUtils.isEmpty(interesado.getDireccion())) {
                         elem = rootElement.addElement("Direccion_Interesado");
                         elem.addCDATA(interesado.getDireccion());
                     }
+                    // Codigo_Postal_Interesado
                     if (!StringUtils.isEmpty(interesado.getCp())) {
                         elem = rootElement.addElement("Codigo_Postal_Interesado");
                         elem.addCDATA(interesado.getCp());
                     }
+                    // Correo_Electronico_Interesado
                     if (!StringUtils.isEmpty(interesado.getEmail())) {
                         elem = rootElement.addElement("Correo_Electronico_Interesado");
                         elem.addCDATA(interesado.getEmail());
                     }
+                    // Telefono_Contacto_Interesado
                     if (!StringUtils.isEmpty(interesado.getTelefono())) {
                         elem = rootElement.addElement("Telefono_Contacto_Interesado");
                         elem.addCDATA(interesado.getTelefono());
                     }
+                    // Direccion_Electronica_Habilitada_Interesado
                     if (!StringUtils.isEmpty(interesado.getDireccionElectronica())) {
                         elem = rootElement.addElement("Direccion_Electronica_Habilitada_Interesado");
                         elem.addCDATA(interesado.getDireccionElectronica());
                     }
+                    // Canal_Preferente_Comunicacion_Interesado
                     if (interesado.getCanal() != null) {
                         elem = rootElement.addElement("Canal_Preferente_Comunicacion_Interesado");
                         elem.addCDATA(RegwebConstantes.CODIGO_BY_CANALNOTIFICACION.get(interesado.getCanal()));
                     }
 
-                    // Representante
-                    if (interesado.getRepresentante() != null) {
-                        Interesado representante = interesado.getRepresentante();
-
-                        if (representante.getTipoDocumentoIdentificacion() != null) {
-                            elem = rootElement.addElement("Tipo_Documento_Identificacion_Representante");
-                            elem.addCDATA(String.valueOf(RegwebConstantes.CODIGO_NTI_BY_TIPODOCUMENTOID.get(representante.getTipoDocumentoIdentificacion())));
-                        }
-                        if (!StringUtils.isEmpty(representante.getDocumento())) {
-                            elem = rootElement.addElement("Documento_Identificacion_Representante");
-                            elem.addCDATA(representante.getDocumento());
-                        }
-                        if (!StringUtils.isEmpty(representante.getRazonSocial())) {
-                            elem = rootElement.addElement("Razon_Social_Representante");
-                            elem.addCDATA(representante.getRazonSocial());
-                        }
-                        if (!StringUtils.isEmpty(representante.getNombre())) {
-                            elem = rootElement.addElement("Nombre_Representante");
-                            elem.addCDATA(representante.getNombre());
-                        }
-                        if (!StringUtils.isEmpty(representante.getApellido1())) {
-                            elem = rootElement.addElement("Primer_Apellido_Representante");
-                            elem.addCDATA(representante.getApellido1());
-                        }
-                        if (!StringUtils.isEmpty(representante.getApellido2())) {
-                            elem = rootElement.addElement("Segundo_Apellido_Representante");
-                            elem.addCDATA(representante.getApellido2());
-                        }
-                        if (representante.getPais() != null) {
-                            elem = rootElement.addElement("Pais_Representante");
-                            elem.addCDATA(representante.getPais().getCodigoPais().toString());
-                        }
-                        if (representante.getProvincia() != null) {
-                            elem = rootElement.addElement("Provincia_Representante");
-                            elem.addCDATA(representante.getProvincia().getCodigoProvincia().toString());
-                        }
-                        if (representante.getLocalidad() != null) {
-                            elem = rootElement.addElement("Municipio_Representante");
-                            elem.addCDATA(representante.getLocalidad().getCodigoLocalidad().toString());
-                        }
-                        if (!StringUtils.isEmpty(representante.getDireccion())) {
-                            elem = rootElement.addElement("Direccion_Representante");
-                            elem.addCDATA(representante.getDireccion());
-                        }
-                        if (!StringUtils.isEmpty(representante.getCp())) {
-                            elem = rootElement.addElement("Codigo_Postal_Representante");
-                            elem.addCDATA(representante.getCp());
-                        }
-                        if (!StringUtils.isEmpty(representante.getEmail())) {
-                            elem = rootElement.addElement("Correo_Electronico_Representante");
-                            elem.addCDATA(representante.getEmail());
-                        }
-                        if (!StringUtils.isEmpty(representante.getTelefono())) {
-                            elem = rootElement.addElement("Telefono_Contacto_Representante");
-                            elem.addCDATA(representante.getTelefono());
-                        }
-                        if (!StringUtils.isEmpty(representante.getDireccionElectronica())) {
-                            elem = rootElement.addElement("Direccion_Electronica_Habilitada_Representante");
-                            elem.addCDATA(representante.getDireccionElectronica());
-                        }
-                        if (representante.getCanal() != null) {
-                            elem = rootElement.addElement("Canal_Preferente_Comunicacion_Representante");
-                            elem.addCDATA(RegwebConstantes.CODIGO_BY_CANALNOTIFICACION.get(representante.getCanal()));
-                        }
+                    // Pais_Representante
+                    if (representante != null && representante.getPais() != null) {
+                        elem = rootElement.addElement("Pais_Representante");
+                        elem.addCDATA(representante.getPais().getCodigoPais().toString());
+                    }
+                    // Provincia_Representante
+                    if (representante != null && representante.getProvincia() != null) {
+                        elem = rootElement.addElement("Provincia_Representante");
+                        elem.addCDATA(representante.getProvincia().getCodigoProvincia().toString());
+                    }
+                    // Municipio_Representante
+                    if (representante != null && representante.getLocalidad() != null) {
+                        elem = rootElement.addElement("Municipio_Representante");
+                        elem.addCDATA(representante.getLocalidad().getCodigoLocalidad().toString());
+                    }
+                    // Direccion_Representante
+                    if (representante != null && !StringUtils.isEmpty(representante.getDireccion())) {
+                        elem = rootElement.addElement("Direccion_Representante");
+                        elem.addCDATA(representante.getDireccion());
+                    }
+                    // Codigo_Postal_Representante
+                    if (representante != null && !StringUtils.isEmpty(representante.getCp())) {
+                        elem = rootElement.addElement("Codigo_Postal_Representante");
+                        elem.addCDATA(representante.getCp());
+                    }
+                    // Correo_Electronico_Representante
+                    if (representante != null && !StringUtils.isEmpty(representante.getEmail())) {
+                        elem = rootElement.addElement("Correo_Electronico_Representante");
+                        elem.addCDATA(representante.getEmail());
+                    }
+                    // Telefono_Contacto_Representante
+                    if (representante != null && !StringUtils.isEmpty(representante.getTelefono())) {
+                        elem = rootElement.addElement("Telefono_Contacto_Representante");
+                        elem.addCDATA(representante.getTelefono());
+                    }
+                    // Direccion_Electronica_Habilitada_Representante
+                    if (representante != null && !StringUtils.isEmpty(representante.getDireccionElectronica())) {
+                        elem = rootElement.addElement("Direccion_Electronica_Habilitada_Representante");
+                        elem.addCDATA(representante.getDireccionElectronica());
+                    }
+                    // Canal_Preferente_Comunicacion_Representante
+                    if (representante != null && representante.getCanal() != null) {
+                        elem = rootElement.addElement("Canal_Preferente_Comunicacion_Representante");
+                        elem.addCDATA(RegwebConstantes.CODIGO_BY_CANALNOTIFICACION.get(representante.getCanal()));
                     }
 
+                    // Observaciones
                     if (!StringUtils.isEmpty(interesado.getObservaciones())) {
                         elem = rootElement.addElement("Observaciones");
                         elem.addCDATA(interesado.getObservaciones());
