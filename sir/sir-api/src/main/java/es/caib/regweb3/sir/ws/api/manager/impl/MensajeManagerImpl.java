@@ -50,8 +50,7 @@ public class MensajeManagerImpl implements MensajeManager {
 
         if (respuesta != null) {
 
-            log.info("Respuesta codigo: " + respuesta.getCodigo());
-            log.info("Respuesta descripcion: " + respuesta.getDescripcion());
+            log.info("Respuesta ws_sir7: " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
 
         }
     }

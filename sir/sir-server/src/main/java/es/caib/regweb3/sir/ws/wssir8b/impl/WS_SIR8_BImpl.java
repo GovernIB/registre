@@ -2,6 +2,8 @@ package es.caib.regweb3.sir.ws.wssir8b.impl;
 
 
 import es.caib.regweb3.persistence.ejb.WebServicesMethodsLocal;
+import es.caib.regweb3.sir.core.excepcion.ServiceException;
+import es.caib.regweb3.sir.core.model.Errores;
 import es.caib.regweb3.sir.ws.manager.EnvioManager;
 import es.caib.regweb3.sir.ws.manager.impl.EnvioManagerImpl;
 import es.caib.regweb3.sir.ws.utils.PassiveCallbackHandler;
@@ -65,8 +67,10 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
     @WebMethod
     public RespuestaWS envioFicherosAAplicacion(@WebParam(name = "registro") String registro, @WebParam(name = "firmaRegistro") String firmaRegistro) {
 
+        // Realizamos el login con un usuario existente en Seycon.
+        // Esto se hace porque este ws está sin autenticar
         LoginContext lc = null;
-        // Realizamos el login con un usuario existente en Seycon. Esto se hace porque los ws están sin autenticar
+
         try {
             lc = new LoginContext(RegwebConstantes.SECURITY_DOMAIN, new PassiveCallbackHandler("mgonzalez", "mgonzalez"));
             lc.login();
@@ -86,27 +90,30 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
             log.error("CAIB3 Login ERROR" + le.getMessage());
         }
 
-        log.info("Dentro de WS_SIR8_BImpl: envioFicherosAplicacion");
+        log.info("WS_SIR8_BImpl: recibiendo fichero intercambio");
         log.info("Mensaje: " + registro);
         log.info("Firma: " + firmaRegistro);
 
         RespuestaWS respuestaWS = null;
-
 
         try {
 
             // Envia el fichero de intercambio a REGWEB3
             envioManager.envioFichero(registro, webServicesMethodsEjb);
 
-            respuestaWS = crearRespuestaWS("00", "Exito");
+            // Creamos la respuesta exitosa
+            respuestaWS = crearRespuestaWS(Errores.OK);
 
-
-        } catch (Exception e) {
-            respuestaWS = crearRespuestaWS("01", "Error");
+        } catch (ServiceException e) {
+            log.info("Error en el envío del fichero de intercambio a la aplicación", e);
+            respuestaWS = crearRespuestaWS(e.getError());
             e.printStackTrace();
+        }catch (Throwable e) {
+            log.info("Error en el envío del fichero de intercambio a la aplicación", e);
+            respuestaWS = crearRespuestaWS(Errores.ERROR_INESPERADO);
         }
 
-        log.info("Respuesta: " + respuestaWS.getDescripcion());
+        log.info("Respuesta envioFichero: " + respuestaWS.getCodigo() +" - "+ respuestaWS.getDescripcion());
 
         return respuestaWS;
     }
@@ -114,14 +121,13 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
     /**
      * Crea la respuesta de retorno del servicio.
      *
-     * @param codigo
-     * @param valor
+     * @param error
      * @return Información de respuesta.
      */
-    private RespuestaWS crearRespuestaWS(String codigo, String valor) {
+    private RespuestaWS crearRespuestaWS(Errores error) {
         RespuestaWS respuesta = new RespuestaWS();
-        respuesta.setCodigo(codigo);
-        respuesta.setDescripcion(valor);
+        respuesta.setCodigo(error.getValue());
+        respuesta.setDescripcion(error.getName());
         return respuesta;
     }
 }

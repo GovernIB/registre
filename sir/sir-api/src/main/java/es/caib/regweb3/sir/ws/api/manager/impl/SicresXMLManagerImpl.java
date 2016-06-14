@@ -1265,7 +1265,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                         + ficheroIntercambio.getFechaRegistroXML() + "]");
 
         // Validar que la Fecha de entrada no sea superior a la actual
-        Assert.isTrue(ficheroIntercambio.getFechaRegistro().after(new Date()),
+        Assert.isTrue(ficheroIntercambio.getFechaRegistro().before(new Date()),
                 "'FechaHoraEntrada' es mayor ["
                         + ficheroIntercambio.getFechaRegistroXML() + "]");
 
