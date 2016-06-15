@@ -476,9 +476,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             OficiosRemisionOrganismo oficios = new OficiosRemisionOrganismo();
 
             // Consulta en base de datos si la Entidad Actual está en SIR
-            //Entidad entidadActual = entidadEjb.findById(entidadActiva.getId());
-            Entidad entidadActual = (Entidad) em.createQuery("select e from Entidad as e where e.id = :id").setParameter("id", entidadActiva.getId()).getSingleResult();
-            if (entidadActual.getSir()) {
+            Boolean isSir = (Boolean) em.createQuery("select e.sir from Entidad as e where e.id = :id").setParameter("id", entidadActiva.getId()).getSingleResult();
+            if (isSir) {
 
                 // Averiguamos si el Organismos Externo está en Sir o no
                 Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
