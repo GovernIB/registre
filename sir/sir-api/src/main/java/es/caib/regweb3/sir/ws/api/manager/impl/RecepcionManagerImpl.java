@@ -61,7 +61,6 @@ public class RecepcionManagerImpl implements RecepcionManager {
             enviarACK(ficheroIntercambio);
 
         } catch (RuntimeException e) {
-            log.info("Error al recibir el fichero de intercambio", e);
 
             String codigoError = Errores.ERROR_0063.getValue();
 
@@ -70,7 +69,9 @@ public class RecepcionManagerImpl implements RecepcionManager {
                 if (errorValidacion != null) {
                     codigoError = errorValidacion.getValue();
                 }
-                log.info("Codigo de error: " + codigoError);
+                log.info("Error en la Valicacion: " + codigoError);
+            }else{
+                log.info("Error al recibir el fichero de intercambio", e);
             }
 
             // Enviamos el mensaje de error
@@ -144,7 +145,13 @@ public class RecepcionManagerImpl implements RecepcionManager {
      */
     protected PreRegistro recibirFicheroIntercambioEnvio(FicheroIntercambio ficheroIntercambio, WebServicesMethodsLocal webServicesMethodsEjb) {
 
-        PreRegistro preRegistro = ficheroIntercambio.getPreRegistro();
+        PreRegistro preRegistro = null;
+        try {
+            preRegistro = ficheroIntercambio.getPreRegistro(webServicesMethodsEjb);
+        } catch (Exception e) {
+            log.info("Error al obtener el PreRegistro", e);
+            e.printStackTrace();
+        }
 
         if(ficheroIntercambio.getTipoRegistro().equals(TipoRegistro.ENTRADA)){
 
@@ -159,7 +166,7 @@ public class RecepcionManagerImpl implements RecepcionManager {
 
         try {
             synchronized (this) {
-                preRegistro = webServicesMethodsEjb.crearPreRegistro(ficheroIntercambio.getPreRegistro());
+                preRegistro = webServicesMethodsEjb.crearPreRegistro(preRegistro);
             }
         } catch (Exception e) {
             e.printStackTrace();

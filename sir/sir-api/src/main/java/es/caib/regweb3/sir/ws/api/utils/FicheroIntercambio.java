@@ -16,7 +16,6 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import javax.ejb.EJB;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -31,10 +30,6 @@ import java.util.List;
 public class FicheroIntercambio {
 
     public final Logger log = Logger.getLogger(getClass());
-
-    @EJB(mappedName = "regweb3/WebServicesMethodsEJB/local")
-    public WebServicesMethodsLocal webServicesMethodsEjb;
-
 
     private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMddHHmmss");
 
@@ -394,7 +389,7 @@ public class FicheroIntercambio {
      *
      * @return Información del asiento registral.
      */
-    public PreRegistro getPreRegistro() {
+    public PreRegistro getPreRegistro(WebServicesMethodsLocal webServicesMethodsEjb) throws Exception{
 
         PreRegistro preRegistro = new PreRegistro();
         preRegistro.setEstado(RegwebConstantes.ESTADO_PREREGISTRO_PENDIENTE_PROCESAR);
@@ -535,7 +530,7 @@ public class FicheroIntercambio {
             if (ArrayUtils.isNotEmpty(de_Interesados)) {
                 for (De_Interesado de_Interesado : de_Interesados) {
                     if (de_Interesado != null) {
-                        Interesado interesado = transformarInteresado(de_Interesado);
+                        Interesado interesado = transformarInteresado(de_Interesado, webServicesMethodsEjb);
                         interesados.add(interesado);
 
 
@@ -655,7 +650,7 @@ public class FicheroIntercambio {
      * @param de_Interesado
      * @return
      */
-    private Interesado transformarInteresado(De_Interesado de_Interesado ) {
+    private Interesado transformarInteresado(De_Interesado de_Interesado, WebServicesMethodsLocal webServicesMethodsEjb ) {
 
         Interesado interesado = new Interesado();
         interesado.setIsRepresentante(false);
@@ -732,7 +727,7 @@ public class FicheroIntercambio {
 
         // Si el interesado tiene representante, lo generamos
         if (StringUtils.isNotBlank(de_Interesado.getNombre_Representante()) || StringUtils.isNotBlank(de_Interesado.getRazon_Social_Representante())) {
-            interesado.setRepresentante(transformarRepresentante(de_Interesado, interesado));
+            interesado.setRepresentante(transformarRepresentante(de_Interesado, interesado, webServicesMethodsEjb));
         }
 
         return interesado;
@@ -744,7 +739,7 @@ public class FicheroIntercambio {
      * @param deRepresentante
      * @return
      */
-    private Interesado transformarRepresentante(De_Interesado deRepresentante, Interesado interesado) {
+    private Interesado transformarRepresentante(De_Interesado deRepresentante, Interesado interesado, WebServicesMethodsLocal webServicesMethodsEjb) {
 
         Interesado representante = new Interesado();
         representante.setIsRepresentante(true);

@@ -31,7 +31,7 @@ public class EnvioManagerImpl implements EnvioManager {
             log.error("Error en la recepción del fichero de datos de intercambio", e);
             throw new ServiceException(Errores.ERROR_0065, e);
         } catch (ValidacionException e) {
-            log.error("Error en la recepción del fichero de datos de intercambio", e);
+            log.error("Error validacion en la recepción del fichero de datos de intercambio");
             throw new ServiceException(e.getErrorValidacion(), e.getErrorException());
         }
 
