@@ -1781,15 +1781,13 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
      */
     protected void validarSegmentoFormularioGenerico(FicheroIntercambio ficheroIntercambio) {
 
-        if(ficheroIntercambio.getExpone() != null){
-            Assert.isTrue(StringUtils.isNotBlank(ficheroIntercambio.getExpone()),
-                    "'expone' must not be blank");
-        }
+        Assert.notNull(
+                ficheroIntercambio.getExpone(),
+                "'expone' must not be null");
 
-        if(ficheroIntercambio.getSolicita() != null){
-            Assert.isTrue(StringUtils.isNotBlank(ficheroIntercambio.getSolicita()),
-                    "'solicita' must not be blank");
-        }
+        Assert.notNull(
+                ficheroIntercambio.getSolicita(),
+                "'solicita' must not be null");
 
 
         log.info("SegmentoFormularioGenerico validado!");
