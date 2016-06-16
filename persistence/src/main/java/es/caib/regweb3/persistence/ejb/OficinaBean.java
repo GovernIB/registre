@@ -436,4 +436,19 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         return paginacion;
 
     }
+
+    /**
+     * Obtiene el id de la Entidad a la que pertenece la Oficina
+     * @param codigo
+     * @return
+     * @throws Exception
+     */
+    public Long obtenerEntidad(String codigo) throws Exception{
+        Query q = em.createQuery("Select oficina.organismoResponsable.entidad.id from Oficina as oficina where " +
+                "oficina.codigo =:codigo");
+
+        q.setParameter("codigo",codigo);
+
+        return (Long) q.getSingleResult();
+    }
 }

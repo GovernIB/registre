@@ -501,7 +501,7 @@ public class OficioRemisionController extends BaseController {
 
 
               // TODO millorar error indicant quin registre falla
-              Mensaje.saveMessageError(request, getMessage("sir.error.envio6b"));
+              //Mensaje.saveMessageError(request, getMessage("sir.error.envio6b"));
 
 
           }

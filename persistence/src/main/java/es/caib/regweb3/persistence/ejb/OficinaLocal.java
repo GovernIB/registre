@@ -159,4 +159,12 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @throws Exception
      */
     public Paginacion busqueda(Integer pageNumber, Long idEntidad, String codigo, String denominacion, Long idCatEstadoEntidad) throws Exception;
+
+    /**
+     * Obtiene el id de la Entidad a la que pertenece la Oficina
+     * @param codigo
+     * @return
+     * @throws Exception
+     */
+    public Long obtenerEntidad(String codigo) throws Exception;
 }

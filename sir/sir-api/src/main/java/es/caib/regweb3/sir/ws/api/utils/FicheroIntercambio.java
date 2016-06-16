@@ -1,13 +1,9 @@
 package es.caib.regweb3.sir.ws.api.utils;
 
-import es.caib.regweb3.model.Anexo;
-import es.caib.regweb3.model.Interesado;
-import es.caib.regweb3.model.PreRegistro;
-import es.caib.regweb3.model.RegistroDetalle;
-import es.caib.regweb3.persistence.ejb.WebServicesMethodsLocal;
 import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
 import es.caib.regweb3.sir.api.schema.*;
 import es.caib.regweb3.sir.api.schema.types.Documentacion_FisicaType;
+import es.caib.regweb3.sir.api.schema.types.Indicador_PruebaType;
 import es.caib.regweb3.sir.api.schema.types.Tipo_RegistroType;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.sir.core.model.*;
@@ -22,9 +18,7 @@ import javax.xml.bind.Marshaller;
 import java.io.StringWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 
 public class FicheroIntercambio {
@@ -385,10 +379,238 @@ public class FicheroIntercambio {
     }
 
     /**
+     * Obtiene la información del asientoRegistralSirRegistral.
+     *
+     * @return Información del asientoRegistralSir registral.
+     */
+    public AsientoRegistralSir getAsientoRegistralSir() {
+
+        AsientoRegistralSir asientoRegistralSir = null;
+
+        if (getFicheroIntercambio() != null) {
+
+            asientoRegistralSir = new AsientoRegistralSir();
+
+            De_Origen_o_Remitente de_Origen_o_Remitente = getFicheroIntercambio().getDe_Origen_o_Remitente();
+            if (de_Origen_o_Remitente != null) {
+
+                asientoRegistralSir.setCodigoEntidadRegistralOrigen(de_Origen_o_Remitente.getCodigo_Entidad_Registral_Origen());
+
+                if (!StringUtils.isEmpty(de_Origen_o_Remitente.getDecodificacion_Entidad_Registral_Origen())) {
+                    asientoRegistralSir.setDecodificacionEntidadRegistralOrigen(de_Origen_o_Remitente.getDecodificacion_Entidad_Registral_Origen());
+                } else {
+                    asientoRegistralSir.setDecodificacionEntidadRegistralOrigen(Dir3CaibUtils.denominacion(de_Origen_o_Remitente.getCodigo_Entidad_Registral_Origen(), "oficina"));
+                }
+
+                asientoRegistralSir.setCodigoUnidadTramitacionOrigen(de_Origen_o_Remitente.getCodigo_Unidad_Tramitacion_Origen());
+
+                if (!StringUtils.isEmpty(de_Origen_o_Remitente.getDecodificacion_Unidad_Tramitacion_Origen())) {
+                    asientoRegistralSir.setDecodificacionUnidadTramitacionOrigen(de_Origen_o_Remitente.getDecodificacion_Unidad_Tramitacion_Origen());
+                } else {
+                    asientoRegistralSir.setDecodificacionUnidadTramitacionOrigen(Dir3CaibUtils.denominacion(de_Origen_o_Remitente.getCodigo_Unidad_Tramitacion_Origen(), "unidad"));
+                }
+
+
+                asientoRegistralSir.setNumeroRegistro(de_Origen_o_Remitente.getNumero_Registro_Entrada());
+                asientoRegistralSir.setTimestampRegistro(de_Origen_o_Remitente.getTimestamp_Entrada());
+
+                String fechaRegistro = de_Origen_o_Remitente.getFecha_Hora_Entrada();
+                if (StringUtils.isNotBlank(fechaRegistro)) {
+                    try {
+                        asientoRegistralSir.setFechaRegistro(SDF.parse(fechaRegistro));
+                    } catch (ParseException e) {
+                        log.error("Error al parsear la fecha de registro: [" + fechaRegistro + "]", e);
+                        throw new ValidacionException(Errores.ERROR_0037, e);
+                    }
+                }
+            }
+
+            De_Destino de_Destino = getFicheroIntercambio().getDe_Destino();
+            if (de_Destino != null) {
+
+                asientoRegistralSir.setCodigoEntidadRegistralDestino(de_Destino.getCodigo_Entidad_Registral_Destino());
+                if (!StringUtils.isEmpty(de_Destino.getDecodificacion_Entidad_Registral_Destino())) {
+                    asientoRegistralSir.setDecodificacionEntidadRegistralDestino(de_Destino.getDecodificacion_Entidad_Registral_Destino());
+                } else {
+                    asientoRegistralSir.setDecodificacionEntidadRegistralDestino(Dir3CaibUtils.denominacion(de_Destino.getCodigo_Entidad_Registral_Destino(), "oficina"));
+                }
+
+                if (!StringUtils.isEmpty(de_Destino.getCodigo_Unidad_Tramitacion_Destino())) {
+                    asientoRegistralSir.setCodigoUnidadTramitacionDestino(de_Destino.getCodigo_Unidad_Tramitacion_Destino());
+                    if (!StringUtils.isEmpty(de_Destino.getDecodificacion_Unidad_Tramitacion_Destino())) {
+                        asientoRegistralSir.setDecodificacionUnidadTramitacionDestino(de_Destino.getDecodificacion_Unidad_Tramitacion_Destino());
+                    } else {
+                        asientoRegistralSir.setDecodificacionUnidadTramitacionDestino(Dir3CaibUtils.denominacion(de_Destino.getCodigo_Unidad_Tramitacion_Destino(), "unidad"));
+                    }
+                }
+
+            }
+
+            De_Asunto de_Asunto = getFicheroIntercambio().getDe_Asunto();
+            if (de_Asunto != null) {
+                asientoRegistralSir.setResumen(de_Asunto.getResumen());
+                asientoRegistralSir.setCodigoAsunto(de_Asunto.getCodigo_Asunto_Segun_Destino());
+                asientoRegistralSir.setReferenciaExterna(de_Asunto.getReferencia_Externa());
+                asientoRegistralSir.setNumeroExpediente(de_Asunto.getNumero_Expediente());
+            }
+
+            De_Internos_Control de_Internos_Control = getFicheroIntercambio().getDe_Internos_Control();
+            if (de_Internos_Control != null) {
+
+                asientoRegistralSir.setIdentificadorIntercambio(de_Internos_Control.getIdentificador_Intercambio());
+                asientoRegistralSir.setAplicacion(de_Internos_Control.getAplicacion_Version_Emisora());
+                asientoRegistralSir.setTipoAnotacion(getTipoAnotacion());
+                asientoRegistralSir.setDecodificacionTipoAnotacion(de_Internos_Control.getDescripcion_Tipo_Anotacion());
+                asientoRegistralSir.setNumeroTransporte(de_Internos_Control.getNumero_Transporte_Entrada());
+                asientoRegistralSir.setNombreUsuario(de_Internos_Control.getNombre_Usuario());
+                asientoRegistralSir.setContactoUsuario(de_Internos_Control.getContacto_Usuario());
+                asientoRegistralSir.setObservacionesApunte(de_Internos_Control.getObservaciones_Apunte());
+
+                asientoRegistralSir.setCodigoEntidadRegistralInicio(de_Internos_Control.getCodigo_Entidad_Registral_Inicio());
+                if (!StringUtils.isEmpty(de_Internos_Control.getDecodificacion_Entidad_Registral_Inicio())) {
+                    asientoRegistralSir.setDecodificacionEntidadRegistralInicio(de_Internos_Control.getDecodificacion_Entidad_Registral_Inicio());
+                } else {
+                    asientoRegistralSir.setDecodificacionEntidadRegistralInicio(Dir3CaibUtils.denominacion(de_Internos_Control.getCodigo_Entidad_Registral_Inicio(), "oficina"));
+                }
+
+
+                // Tipo de transporte
+                String tipoTransporte = de_Internos_Control.getTipo_Transporte_Entrada();
+                if (StringUtils.isNotBlank(tipoTransporte)) {
+                    asientoRegistralSir.setTipoTransporte(TipoTransporte.getTipoTransporte(tipoTransporte));
+                }
+
+                // Tipo de registro
+                Tipo_RegistroType tipo_Registro = de_Internos_Control.getTipo_Registro();
+                if ((tipo_Registro != null) && StringUtils.isNotBlank(tipo_Registro.value())) {
+                    asientoRegistralSir.setTipoRegistro(TipoRegistro.getTipoRegistro(tipo_Registro.value()));
+                }
+
+                // Documentación física
+                Documentacion_FisicaType documentacion_Fisica = de_Internos_Control.getDocumentacion_Fisica();
+                if ((documentacion_Fisica != null) && StringUtils.isNotBlank(documentacion_Fisica.value())) {
+                    asientoRegistralSir.setDocumentacionFisica(DocumentacionFisica.getDocumentacionFisica(documentacion_Fisica.value()));
+                }
+
+                // Indicador de prueba
+                Indicador_PruebaType indicadorPrueba = de_Internos_Control.getIndicador_Prueba();
+                if ((indicadorPrueba != null) && StringUtils.isNotBlank(indicadorPrueba.value())){
+                    asientoRegistralSir.setIndicadorPrueba(IndicadorPrueba.getIndicadorPrueba(indicadorPrueba.value()));
+                }
+
+            }
+
+            De_Formulario_Generico de_Formulario_Generico = getFicheroIntercambio().getDe_Formulario_Generico();
+            if (de_Formulario_Generico != null) {
+                asientoRegistralSir.setExpone(de_Formulario_Generico.getExpone());
+                asientoRegistralSir.setSolicita(de_Formulario_Generico.getSolicita());
+            }
+
+            De_Interesado[] de_Interesados = getFicheroIntercambio().getDe_Interesado();
+            if (ArrayUtils.isNotEmpty(de_Interesados)) {
+                for (De_Interesado de_Interesado : de_Interesados) {
+                    if (de_Interesado != null) {
+                        InteresadoSir interesado = new InteresadoSir();
+
+                        // Información del interesado
+                        interesado.setDocumentoIdentificacionInteresado(de_Interesado.getDocumento_Identificacion_Interesado());
+                        interesado.setRazonSocialInteresado(de_Interesado.getRazon_Social_Interesado());
+                        interesado.setNombreInteresado(de_Interesado.getNombre_Interesado());
+                        interesado.setPrimerApellidoInteresado(de_Interesado.getPrimer_Apellido_Interesado());
+                        interesado.setSegundoApellidoInteresado(de_Interesado.getSegundo_Apellido_Interesado());
+                        interesado.setCodigoPaisInteresado(de_Interesado.getPais_Interesado());
+                        interesado.setCodigoProvinciaInteresado(de_Interesado.getProvincia_Interesado());
+                        interesado.setCodigoMunicipioInteresado(de_Interesado.getMunicipio_Interesado());
+                        interesado.setDireccionInteresado(de_Interesado.getDireccion_Interesado());
+                        interesado.setCodigoPostalInteresado(de_Interesado.getCodigo_Postal_Interesado());
+                        interesado.setCorreoElectronicoInteresado(de_Interesado.getCorreo_Electronico_Interesado());
+                        interesado.setTelefonoInteresado(de_Interesado.getTelefono_Contacto_Interesado());
+                        interesado.setDireccionElectronicaHabilitadaInteresado(de_Interesado.getDireccion_Electronica_Habilitada_Interesado());
+
+                        String tipoDocumento = de_Interesado.getTipo_Documento_Identificacion_Interesado();
+                        if (StringUtils.isNotBlank(tipoDocumento)) {
+                            interesado.setTipoDocumentoIdentificacionInteresado(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacion(tipoDocumento));
+                        }
+
+                        String canalPreferente = de_Interesado.getCanal_Preferente_Comunicacion_Interesado();
+                        if (StringUtils.isNotBlank(canalPreferente)) {
+                            interesado.setCanalPreferenteComunicacionInteresado(CanalNotificacion.getCanalNotificacion(canalPreferente));
+                        }
+
+                        // Información del representante
+                        interesado.setDocumentoIdentificacionRepresentante(de_Interesado.getDocumento_Identificacion_Representante());
+                        interesado.setRazonSocialRepresentante(de_Interesado.getRazon_Social_Representante());
+                        interesado.setNombreRepresentante(de_Interesado.getNombre_Representante());
+                        interesado.setPrimerApellidoRepresentante(de_Interesado.getPrimer_Apellido_Representante());
+                        interesado.setSegundoApellidoRepresentante(de_Interesado.getSegundo_Apellido_Representante());
+                        interesado.setCodigoPaisRepresentante(de_Interesado.getPais_Representante());
+                        interesado.setCodigoProvinciaRepresentante(de_Interesado.getProvincia_Representante());
+                        interesado.setCodigoMunicipioRepresentante(de_Interesado.getMunicipio_Representante());
+                        interesado.setDireccionRepresentante(de_Interesado.getDireccion_Representante());
+                        interesado.setCodigoPostalRepresentante(de_Interesado.getCodigo_Postal_Representante());
+                        interesado.setCorreoElectronicoRepresentante(de_Interesado.getCorreo_Electronico_Representante());
+                        interesado.setTelefonoRepresentante(de_Interesado.getTelefono_Contacto_Representante());
+                        interesado.setDireccionElectronicaHabilitadaRepresentante(de_Interesado.getDireccion_Electronica_Habilitada_Representante());
+
+                        tipoDocumento = de_Interesado.getTipo_Documento_Identificacion_Representante();
+                        if (StringUtils.isNotBlank(tipoDocumento)) {
+                            interesado.setTipoDocumentoIdentificacionRepresentante(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacion(tipoDocumento));
+                        }
+
+                        canalPreferente = de_Interesado.getCanal_Preferente_Comunicacion_Representante();
+                        if (StringUtils.isNotBlank(canalPreferente)) {
+                            interesado.setCanalPreferenteComunicacionRepresentante(CanalNotificacion.getCanalNotificacion(canalPreferente));
+                        }
+
+                        interesado.setObservaciones(de_Interesado.getObservaciones());
+
+                        asientoRegistralSir.getInteresados().add(interesado);
+                    }
+                }
+            }
+
+            De_Anexo[] de_Anexos = getFicheroIntercambio().getDe_Anexo();
+            if (ArrayUtils.isNotEmpty(de_Anexos)) {
+                for (De_Anexo de_Anexo : de_Anexos) {
+                    if (de_Anexo != null) {
+                        AnexoSir anexo = new AnexoSir();
+
+                        anexo.setNombreFichero(de_Anexo.getNombre_Fichero_Anexado());
+                        anexo.setIdentificadorFichero(de_Anexo.getIdentificador_Fichero());
+                        anexo.setIdentificadorDocumentoFirmado(de_Anexo.getIdentificador_Documento_Firmado());
+                        anexo.setCertificado(de_Anexo.getCertificado());
+                        anexo.setFirma(de_Anexo.getFirma_Documento());
+                        anexo.setTimestamp(de_Anexo.getTimeStamp());
+                        anexo.setValidacionOCSPCertificado(de_Anexo.getValidacion_OCSP_Certificado());
+                        anexo.setHash(de_Anexo.getHash());
+                        anexo.setTipoMIME(de_Anexo.getTipo_MIME());
+                        anexo.setAnexo(de_Anexo.getAnexo());
+                        anexo.setObservaciones(de_Anexo.getObservaciones());
+
+                        String validezDocumento = de_Anexo.getValidez_Documento();
+                        if (StringUtils.isNotBlank(validezDocumento)) {
+                            anexo.setValidezDocumento(ValidezDocumento.getValidezDocumento(validezDocumento));
+                        }
+
+                        String tipoDocumento = de_Anexo.getTipo_Documento();
+                        if (StringUtils.isNotBlank(tipoDocumento)) {
+                            anexo.setTipoDocumento(TipoDocumento.getTipoDocumento(tipoDocumento));
+                        }
+
+                        asientoRegistralSir.getAnexos().add(anexo);
+                    }
+                }
+            }
+        }
+
+        return asientoRegistralSir;
+    }
+
+    /**
      * Obtiene la información del asientoRegistral.
      *
      * @return Información del asiento registral.
-     */
+     *//*
     public PreRegistro getPreRegistro(WebServicesMethodsLocal webServicesMethodsEjb) throws Exception{
 
         PreRegistro preRegistro = new PreRegistro();
@@ -546,7 +768,7 @@ public class FicheroIntercambio {
                     if (de_Anexo != null) {
                         Anexo anexo = new Anexo();
                         //todo: Implementar función por Marilén
-                        /*anexo.setNombreFichero(deAnexo.getNombreFicheroAnexado());
+                        *//*anexo.setNombreFichero(deAnexo.getNombreFicheroAnexado());
                         anexo.setIdentificadorFichero(deAnexo.getIdentificadorFichero());
                         anexo.setIdentificadorDocumentoFirmado(deAnexo.getIdentificadorDocumentoFirmado());
                         anexo.setCertificado(deAnexo.getCertificado());
@@ -567,7 +789,7 @@ public class FicheroIntercambio {
                             anexo.setTipoDocumento(TipoDocumentoEnum.getTipoDocumento(tipoDocumento));
                         }
 
-                        preRegistro.getAnexos().add(anexo);*/
+                        preRegistro.getAnexos().add(anexo);*//*
                     }
                 }
                 registroDetalle.setAnexos(anexos);
@@ -578,7 +800,7 @@ public class FicheroIntercambio {
         preRegistro.setRegistroDetalle(registroDetalle);
 
         return preRegistro;
-    }
+    }*/
 
 
     public String marshallObject() {
@@ -649,7 +871,7 @@ public class FicheroIntercambio {
      *
      * @param de_Interesado
      * @return
-     */
+     *//*
     private Interesado transformarInteresado(De_Interesado de_Interesado, WebServicesMethodsLocal webServicesMethodsEjb ) {
 
         Interesado interesado = new Interesado();
@@ -733,12 +955,12 @@ public class FicheroIntercambio {
         return interesado;
     }
 
-    /**
-     * Transforma un {@link De_Interesado} en un {@link Interesado}
+    *//**
+     * Transforma un {@link De_Interesado} en un {@link }
      *
-     * @param deRepresentante
+     * @param
      * @return
-     */
+     *//*
     private Interesado transformarRepresentante(De_Interesado deRepresentante, Interesado interesado, WebServicesMethodsLocal webServicesMethodsEjb) {
 
         Interesado representante = new Interesado();
@@ -816,7 +1038,7 @@ public class FicheroIntercambio {
 
         return representante;
 
-    }
+    }*/
 
     @Override
     public String toString() {

@@ -203,7 +203,7 @@ public class PreRegistroController extends BaseController {
             }
 
             //todo: Crear función genérica para enviar mensajes DeMensaje
-            registroManager.enviarMensajeConfirmacion(preRegistro);
+            //registroManager.enviarMensajeConfirmacion(preRegistro);
 
         }catch (Exception e){
             Mensaje.saveMessageError(request, getMessage("preRegistro.error.confirmacion"));

@@ -1,7 +1,7 @@
 package es.caib.regweb3.sir.ws.api.manager;
 
 import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.sir.core.model.AsientoRegistral;
+import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
 import es.caib.regweb3.sir.ws.api.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.ws.api.utils.Mensaje;
 
@@ -24,7 +24,7 @@ public interface SicresXMLManager {
      *
      * @param asiento Información del asiento registral.
      */
-    public void validarAsientoRegistral(AsientoRegistral asiento);
+    public void validarAsientoRegistral(AsientoRegistralSir asiento);
 
     /**
      * Valida la información del fichero de datos de control.

@@ -118,8 +118,8 @@ public class Dir3CaibUtils {
    * @throws Exception
    */
   public static String denominacion(String codigoDir3, String tipo) {
-    log.info("tipo: " + tipo);
-    log.info("codigoDir3: " + codigoDir3);
+    log.debug("tipo: " + tipo);
+    log.debug("codigoDir3: " + codigoDir3);
 
     DefaultHttpClient httpClient = new DefaultHttpClient();
     String url = null;
@@ -156,8 +156,8 @@ public class Dir3CaibUtils {
     }
 
 
-    log.info("denominacion: " + denominacion);
-    log.info("");
+    log.debug("denominacion: " + denominacion);
+    log.debug("");
 
     return denominacion;
 

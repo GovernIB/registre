@@ -1,6 +1,6 @@
 package es.caib.regweb3.sir.ws.api.manager.impl;
 
-import es.caib.regweb3.model.PreRegistro;
+import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
 import es.caib.regweb3.sir.core.model.TipoMensaje;
 import es.caib.regweb3.sir.ws.api.manager.MensajeManager;
 import es.caib.regweb3.sir.ws.api.manager.RegistroManager;
@@ -22,14 +22,14 @@ public class RegistroManagerImpl implements RegistroManager {
     /**
      * Envía un mensaje de control de confirmación.
      *
-     * @param preRegistro Información del asiento registral.
+     * @param asientoRegistralSir Información del asiento registral.
      */
-    public void enviarMensajeConfirmacion(PreRegistro preRegistro) {
+    public void enviarMensajeConfirmacion(AsientoRegistralSir asientoRegistralSir) {
 
         Mensaje confirmacion = new Mensaje();
-        confirmacion.setCodigoEntidadRegistralOrigen(preRegistro.getCodigoEntidadRegistralDestino());
-        confirmacion.setCodigoEntidadRegistralDestino(preRegistro.getCodigoEntidadRegistralInicio());
-        confirmacion.setIdentificadorIntercambio(preRegistro.getIdIntercambio());
+        confirmacion.setCodigoEntidadRegistralOrigen(asientoRegistralSir.getCodigoEntidadRegistralDestino());
+        confirmacion.setCodigoEntidadRegistralDestino(asientoRegistralSir.getCodigoEntidadRegistralInicio());
+        confirmacion.setIdentificadorIntercambio(asientoRegistralSir.getIdentificadorIntercambio());
         confirmacion.setTipoMensaje(TipoMensaje.CONFIRMACION);
         confirmacion.setDescripcionMensaje(TipoMensaje.CONFIRMACION.getName());
 

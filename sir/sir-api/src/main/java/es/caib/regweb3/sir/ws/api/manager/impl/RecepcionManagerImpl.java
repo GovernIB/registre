@@ -1,14 +1,13 @@
 package es.caib.regweb3.sir.ws.api.manager.impl;
 
-import es.caib.regweb3.model.Interesado;
-import es.caib.regweb3.model.PreRegistro;
 import es.caib.regweb3.persistence.ejb.WebServicesMethodsLocal;
 import es.caib.regweb3.sir.api.schema.Fichero_Intercambio_SICRES_3;
+import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
+import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
 import es.caib.regweb3.sir.core.model.Errores;
 import es.caib.regweb3.sir.core.model.TipoAnotacion;
 import es.caib.regweb3.sir.core.model.TipoMensaje;
-import es.caib.regweb3.sir.core.model.TipoRegistro;
 import es.caib.regweb3.sir.ws.api.manager.MensajeManager;
 import es.caib.regweb3.sir.ws.api.manager.RecepcionManager;
 import es.caib.regweb3.sir.ws.api.manager.SicresXMLManager;
@@ -43,10 +42,10 @@ public class RecepcionManagerImpl implements RecepcionManager {
      * @param xmlFicheroIntercambio
      * @return PreRegistro creado
      */
-    public PreRegistro recibirFicheroIntercambio(String xmlFicheroIntercambio, WebServicesMethodsLocal webServicesMethodsEjb) {
+    public void recibirFicheroIntercambio(String xmlFicheroIntercambio, WebServicesMethodsLocal webServicesMethodsEjb) {
 
         FicheroIntercambio ficheroIntercambio = null;
-        PreRegistro preRegistro = null;
+        AsientoRegistralSir asientoRegistralSir = null;
 
         try {
 
@@ -55,8 +54,8 @@ public class RecepcionManagerImpl implements RecepcionManager {
             // Convertimos la información recibida del asiento registral sir
             ficheroIntercambio = sicresXMLManager.parseXMLFicheroIntercambio(xmlFicheroIntercambio);
 
-            // Creamos el PreRegistro a partir del xml recibido
-            preRegistro = recibirFicheroIntercambio(ficheroIntercambio, xmlFicheroIntercambio, webServicesMethodsEjb);
+            // Creamos el AsientoRegistralSir a partir del xml recibido
+            asientoRegistralSir = recibirFicheroIntercambio(ficheroIntercambio, xmlFicheroIntercambio, webServicesMethodsEjb);
 
             enviarACK(ficheroIntercambio);
 
@@ -97,7 +96,7 @@ public class RecepcionManagerImpl implements RecepcionManager {
             throw e;
         }
 
-        return preRegistro;
+        //return asientoRegistralSir;
 
     }
 
@@ -106,10 +105,11 @@ public class RecepcionManagerImpl implements RecepcionManager {
      * @param xmlFicheroIntercambio
      * @return
      */
-    protected PreRegistro recibirFicheroIntercambio(FicheroIntercambio ficheroIntercambio, String xmlFicheroIntercambio, WebServicesMethodsLocal webServicesMethodsEjb) {
+    protected AsientoRegistralSir recibirFicheroIntercambio(FicheroIntercambio ficheroIntercambio, String xmlFicheroIntercambio, WebServicesMethodsLocal webServicesMethodsEjb) {
 
-        PreRegistro preRegistro = null;
+        AsientoRegistralSir asientoRegistralSir = null;
 
+        // Validamos el Fichero de Intercambio creado a partir del xml recibido
         try {
             sicresXMLManager.validarFicheroIntercambio(ficheroIntercambio);
         } catch (IllegalArgumentException e) {
@@ -120,7 +120,12 @@ public class RecepcionManagerImpl implements RecepcionManager {
         // tipo anotacion envio
         if (TipoAnotacion.ENVIO.equals(ficheroIntercambio.getTipoAnotacion())) {
 
-            preRegistro = recibirFicheroIntercambioEnvio(ficheroIntercambio, webServicesMethodsEjb);
+            try {
+                asientoRegistralSir = webServicesMethodsEjb.crearAsientoRegistralSir(ficheroIntercambio.getAsientoRegistralSir());
+            } catch (Exception e) {
+                log.info("Error al crear el AsientoRegistralSir", e);
+                throw new ServiceException(Errores.ERROR_INESPERADO,e);
+            }
         }
 
 
@@ -136,44 +141,7 @@ public class RecepcionManagerImpl implements RecepcionManager {
             //preRegistro = recibirFicheroIntercambioRechazo(ficheroIntercambio,webServicesMethodsEjb);
         }
 
-        return preRegistro;
-    }
-
-    /**
-     * @param ficheroIntercambio
-     * @return
-     */
-    protected PreRegistro recibirFicheroIntercambioEnvio(FicheroIntercambio ficheroIntercambio, WebServicesMethodsLocal webServicesMethodsEjb) {
-
-        PreRegistro preRegistro = null;
-        try {
-            preRegistro = ficheroIntercambio.getPreRegistro(webServicesMethodsEjb);
-        } catch (Exception e) {
-            log.info("Error al obtener el PreRegistro", e);
-            e.printStackTrace();
-        }
-
-        if(ficheroIntercambio.getTipoRegistro().equals(TipoRegistro.ENTRADA)){
-
-            for (Interesado interesado:preRegistro.getRegistroDetalle().getInteresados()) {
-
-            }
-
-        }else if(ficheroIntercambio.getTipoRegistro().equals(TipoRegistro.SALIDA)){
-
-        }
-
-
-        try {
-            synchronized (this) {
-                preRegistro = webServicesMethodsEjb.crearPreRegistro(preRegistro);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-        return preRegistro;
+        return asientoRegistralSir;
     }
 
     /**

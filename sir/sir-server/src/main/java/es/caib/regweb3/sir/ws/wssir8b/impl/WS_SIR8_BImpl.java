@@ -67,8 +67,7 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
     @WebMethod
     public RespuestaWS envioFicherosAAplicacion(@WebParam(name = "registro") String registro, @WebParam(name = "firmaRegistro") String firmaRegistro) {
 
-        // Realizamos el login con un usuario existente en Seycon.
-        // Esto se hace porque este ws está sin autenticar
+        // Realizamos el login con un usuario existente en Seycon, porque este WS está sin autenticar
         LoginContext lc = null;
 
         try {

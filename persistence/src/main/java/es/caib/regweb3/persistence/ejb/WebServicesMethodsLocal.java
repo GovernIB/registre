@@ -3,7 +3,7 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.CatLocalidad;
 import es.caib.regweb3.model.CatPais;
 import es.caib.regweb3.model.CatProvincia;
-import es.caib.regweb3.model.PreRegistro;
+import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
 
 import javax.ejb.Local;
 
@@ -15,7 +15,7 @@ import javax.ejb.Local;
 @Local
 public interface WebServicesMethodsLocal {
 
-    public PreRegistro crearPreRegistro(PreRegistro preRegistro) throws Exception;
+    public AsientoRegistralSir crearAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir) throws Exception;
 
     public CatPais findByCodigoPais(Long codigo) throws Exception;
 

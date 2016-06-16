@@ -3,7 +3,7 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.CatLocalidad;
 import es.caib.regweb3.model.CatPais;
 import es.caib.regweb3.model.CatProvincia;
-import es.caib.regweb3.model.PreRegistro;
+import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.annotation.security.RunAs;
@@ -20,8 +20,8 @@ import javax.ejb.Stateless;
 @RunAs("RWE_USUARI") //todo Revisar si se puede eliminar
 public class WebServicesMethodsEJB implements WebServicesMethodsLocal {
 
-    @EJB(mappedName = "regweb3/PreRegistroEJB/local")
-    public PreRegistroLocal preRegistroEjb;
+    @EJB(mappedName = "regweb3/AsientoRegistralSirEJB/local")
+    public AsientoRegistralSirLocal asientoRegistralSirEjb;
 
     @EJB(mappedName = "regweb3/CatLocalidadEJB/local")
     public CatLocalidadLocal catLocalidadEjb;
@@ -34,8 +34,8 @@ public class WebServicesMethodsEJB implements WebServicesMethodsLocal {
 
 
     @Override
-    public PreRegistro crearPreRegistro(PreRegistro preRegistro) throws Exception {
-        return preRegistroEjb.preRegistrar(preRegistro);
+    public AsientoRegistralSir crearAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir) throws Exception {
+        return asientoRegistralSirEjb.crearAsientoRegistralSir(asientoRegistralSir);
     }
 
     @Override

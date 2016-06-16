@@ -4,7 +4,7 @@ import es.caib.regweb3.persistence.ejb.WebServicesMethodsLocal;
 import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.sir.core.model.Errores;
-import es.caib.regweb3.sir.core.service.ServicioIntercambioRegistral;
+import es.caib.regweb3.sir.ws.api.service.ServicioIntercambioRegistral;
 import es.caib.regweb3.sir.ws.api.service.impl.ServicioIntercambioRegistralImpl;
 import es.caib.regweb3.sir.ws.manager.EnvioManager;
 import org.apache.log4j.Logger;

@@ -4,9 +4,7 @@ import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
 import es.caib.dir3caib.ws.api.unidad.UnidadTF;
-import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.*;
-import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
 import es.caib.regweb3.sir.api.schema.De_Anexo;
@@ -126,7 +124,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
     }
 
 
-    public void validarAsientoRegistral(AsientoRegistral asiento) {
+    public void validarAsientoRegistral(AsientoRegistralSir asiento) {
 
         log.info("Llamada a validarAsientoRegistral");
 
@@ -149,7 +147,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
         if (!CollectionUtils.isEmpty(asiento.getInteresados())
                 && StringUtils.isBlank(asiento
                 .getCodigoUnidadTramitacionOrigen())) {
-            for (es.caib.regweb3.sir.core.model.Interesado interesado : asiento.getInteresados()) {
+            for (es.caib.regweb3.sir.core.model.InteresadoSir interesado : asiento.getInteresados()) {
 
                 Assert.isTrue(
                         StringUtils.isNotBlank(interesado
@@ -236,7 +234,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
             // "02 - Documento Adjunto" que no son
             // firmas
 
-            for (es.caib.regweb3.sir.core.model.Anexo anexo : asiento.getAnexos()) {
+            for (es.caib.regweb3.sir.core.model.AnexoSir anexo : asiento.getAnexos()) {
 
                 Assert.hasText(anexo.getNombreFichero(),
                         "'nombreFichero' no puede estar vacio");
@@ -1677,19 +1675,18 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
         Assert.isTrue(StringUtils.startsWith(identificadorFichero, identificadorIntercambio),
                 "'IdentificadorFichero' does not match 'IdentificadorIntercambio'");
 
-        identificadorFichero = StringUtils.substringAfter(identificadorFichero, identificadorIntercambio + "");
-        String[] tokens = StringUtils.split(identificadorFichero, ".");
-        Assert.isTrue(ArrayUtils.getLength(tokens) == 3,
-                "'IdentificadorFichero' is invalid");
+        identificadorFichero = StringUtils.substringAfter(identificadorFichero, identificadorIntercambio + "_");
+        String[] tokens = StringUtils.split(identificadorFichero, "_.");
+        Assert.isTrue(ArrayUtils.getLength(tokens) == 3, "'IdentificadorFichero' is invalid");
 
         Assert.isTrue(StringUtils.equals(tokens[0], "01"),
-                "'IdentificadorFichero' is invalid"); // Código de tipo de archivo de 2 dígitos
+                "'IdentificadorFichero' is invalid 'tipo de archivo'"); // Código de tipo de archivo de 2 dígitos
         Assert.isTrue(StringUtils.length(tokens[1]) <= 4,
-                "'IdentificadorFichero' is invalid"); // Número secuencial de hasta 4 dígitos
+                "'IdentificadorFichero' is invalid 'num secuencial 4 digitos'"); // Número secuencial de hasta 4 dígitos
         Assert.isTrue(StringUtils.isNumeric(tokens[1]),
-                "'IdentificadorFichero' is invalid"); // Número secuencial compuesto por solo dígitos
+                "'IdentificadorFichero' is invalid 'num secuencial numerico'"); // Número secuencial compuesto por solo dígitos
         Assert.hasText(tokens[2],
-                "'IdentificadorFichero' is invalid"); // Extensión del fichero
+                "'IdentificadorFichero' is invalid 'extension'"); // Extensión del fichero
     }
 
     /**
