@@ -1,5 +1,7 @@
 package es.caib.regweb3.sir.core.model;
 
+import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import org.hibernate.annotations.ForeignKey;
 
 import javax.persistence.*;
@@ -486,6 +488,139 @@ public class InteresadoSir implements Serializable {
 
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
+    }
+
+    @Transient
+    public Long getTipoInteresado(){
+
+        if(!StringUtils.isEmpty(getNombreInteresado()) && !StringUtils.isEmpty(getPrimerApellidoInteresado())){
+            return RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA;
+
+        }else if(!StringUtils.isEmpty(getRazonSocialInteresado())){
+            return RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA;
+        }
+
+        return null;
+    }
+
+    @Transient
+    public Long getTipoRepresentante(){
+
+        if(!StringUtils.isEmpty(getNombreRepresentante()) && !StringUtils.isEmpty(getPrimerApellidoRepresentante())){
+            return RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA;
+
+        }else if(!StringUtils.isEmpty(getRazonSocialRepresentante())){
+            return RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA;
+        }
+
+        return null;
+    }
+
+
+    @Transient
+    public Boolean getRepresentante(){
+
+        return !StringUtils.isEmpty(getNombreRepresentante()) || !StringUtils.isEmpty(getRazonSocialRepresentante());
+    }
+
+    @Transient
+    public String getNombreCompleto(){
+
+        if(getTipoInteresado().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)){
+            return getNombrePersonaFisica();
+        }else if(getTipoInteresado().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)){
+            return getNombrePersonaJuridica();
+        }
+
+        return "";
+    }
+
+    @Transient
+    public String getNombreCompletoRepresentante(){
+
+        if(getTipoRepresentante().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)){
+            return getNombrePersonaFisicaRepresentante();
+        }else if(getTipoRepresentante().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)){
+            return getNombrePersonaJuridicaRepresentante();
+        }
+
+        return "";
+    }
+
+    @Transient
+    public String getNombrePersonaFisica(){
+
+        String personaFisica = "" ;
+
+        if(!StringUtils.isEmpty(getNombreInteresado())){
+
+            personaFisica = getNombreInteresado()+ " " + getPrimerApellidoInteresado();
+
+            if(!StringUtils.isEmpty(getSegundoApellidoInteresado())){
+                personaFisica = personaFisica.concat(" " + getSegundoApellidoInteresado());
+            }
+
+            if(!StringUtils.isEmpty(getDocumentoIdentificacionInteresado())){
+                personaFisica = personaFisica.concat(" - " + getDocumentoIdentificacionInteresado());
+            }
+        }
+
+        return personaFisica;
+    }
+
+    @Transient
+    public String getNombrePersonaJuridica(){
+
+        String personaJuridica = "";
+
+        if(!StringUtils.isEmpty(getRazonSocialInteresado())){
+
+            personaJuridica = getRazonSocialInteresado();
+
+            if(!StringUtils.isEmpty(getDocumentoIdentificacionInteresado())){
+                personaJuridica = personaJuridica.concat(" - " + getDocumentoIdentificacionInteresado());
+            }
+        }
+
+        return  personaJuridica;
+    }
+
+    @Transient
+    public String getNombrePersonaFisicaRepresentante(){
+
+        String personaFisica = "" ;
+
+        if(!StringUtils.isEmpty(getNombreRepresentante())){
+
+            personaFisica = getNombreRepresentante()+ " " + getPrimerApellidoRepresentante();
+
+            if(!StringUtils.isEmpty(getSegundoApellidoRepresentante())){
+                personaFisica = personaFisica.concat(" " + getSegundoApellidoRepresentante());
+            }
+
+            if(!StringUtils.isEmpty(getDocumentoIdentificacionRepresentante())){
+                personaFisica = personaFisica.concat(" - " + getDocumentoIdentificacionRepresentante());
+            }
+        }
+
+        return personaFisica;
+    }
+
+    @Transient
+    public String getNombrePersonaJuridicaRepresentante(){
+
+        String personaJuridica = "";
+
+        if(!StringUtils.isEmpty(getRazonSocialRepresentante())){
+
+            personaJuridica = getRazonSocialRepresentante();
+
+            if(!StringUtils.isEmpty(getDocumentoIdentificacionRepresentante())){
+                personaJuridica = personaJuridica.concat(" - " + getDocumentoIdentificacionRepresentante());
+            }
+        }
+
+        return  personaJuridica;
     }
 
     @Override

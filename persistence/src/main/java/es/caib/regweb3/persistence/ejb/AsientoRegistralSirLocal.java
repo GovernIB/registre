@@ -5,6 +5,7 @@ import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
+import java.util.List;
 
 /**
  * Created by Fundació BIT.
@@ -41,6 +42,15 @@ public interface AsientoRegistralSirLocal extends BaseEjb<AsientoRegistralSir, L
      * @throws Exception
      */
     public Paginacion busqueda(Integer pageNumber, Integer any, AsientoRegistralSir asientoRegistralSir, String codigoOficinaActiva, Long estado) throws Exception;
+
+    /**
+     *
+     * @param codigoOficinaActiva
+     * @param total
+     * @return
+     * @throws Exception
+     */
+    public List<AsientoRegistralSir> getUltimosARSPendientesProcesar(String codigoOficinaActiva, Integer total) throws Exception;
 
 
 }

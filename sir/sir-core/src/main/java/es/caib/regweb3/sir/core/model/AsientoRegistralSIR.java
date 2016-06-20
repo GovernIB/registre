@@ -158,7 +158,7 @@ public class AsientoRegistralSir implements Serializable {
     /**
      * Estado del asiento registral.
      */
-    private EstadoAsientoRegistral estado;
+    private EstadoAsientoRegistralSir estado;
 
     /**
      * Aplicación y versión emisora.
@@ -629,15 +629,16 @@ public class AsientoRegistralSir implements Serializable {
         this.interesados = interesados;
     }
 
-    /*public EstadoAsientoRegistral getEstado() {
+    @Column(name = "ESTADO", length = 2, nullable = false)
+    public EstadoAsientoRegistralSir getEstado() {
         return estado;
     }
 
-    public void setEstado(EstadoAsientoRegistral estado) {
+    public void setEstado(EstadoAsientoRegistralSir estado) {
         this.estado = estado;
     }
 
-    public Date getFechaEstado() {
+    /*public Date getFechaEstado() {
         return fechaEstado;
     }
 

@@ -3,6 +3,7 @@ package es.caib.regweb3.webapp.controller;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.RegistroBasico;
 import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,8 +40,8 @@ public class InicioController extends BaseController{
     @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
     public RegistroEntradaLocal registroEntradaEjb;
 
-    @EJB(mappedName = "regweb3/PreRegistroEJB/local")
-    public PreRegistroLocal preRegistroEjb;
+    @EJB(mappedName = "regweb3/AsientoRegistralSirEJB/local")
+    public AsientoRegistralSirLocal asientosRegistralSirEjb;
 
     @EJB(mappedName = "regweb3/LopdEJB/local")
     public LopdLocal lopdEjb;
@@ -98,11 +99,11 @@ public class InicioController extends BaseController{
             mav.addObject("oficiosPendientesLlegada", oficiosPendientesLlegada);
 
 
-            /* PREREGISTROS PENDIENTES DE PROCESAR */
-            /* Buscamos los Últimos PreRegistros que están pendientes de procesar */
-            if(librosRegistroEntrada.size() > 0) { // Sólo muestra los PreRegistros si tiene permisos de RegistroEntrada
-                List<PreRegistro> preRegistros = preRegistroEjb.getUltimosPreRegistrosPendientesProcesar(oficinaActiva.getCodigo(), RegwebConstantes.REGISTROS_PANTALLA_INICIO);
-                mav.addObject("preRegistros", preRegistros);
+            /* ASIENTOS REGISTRALES SIR PENDIENTES DE PROCESAR */
+            /* Buscamos los Últimos AsientoRegistralSir que están pendientes de procesar */
+            if(librosRegistroEntrada.size() > 0) { // Sólo muestra los AsientoRegistralSir si tiene permisos de RegistroEntrada
+                List<AsientoRegistralSir> asientosRegistralesSir = asientosRegistralSirEjb.getUltimosARSPendientesProcesar(oficinaActiva.getCodigo(), RegwebConstantes.REGISTROS_PANTALLA_INICIO);
+                mav.addObject("asientosRegistralesSir", asientosRegistralesSir);
             }
 
         }

@@ -121,7 +121,7 @@ public class RecepcionManagerImpl implements RecepcionManager {
         if (TipoAnotacion.ENVIO.equals(ficheroIntercambio.getTipoAnotacion())) {
 
             try {
-                asientoRegistralSir = webServicesMethodsEjb.crearAsientoRegistralSir(ficheroIntercambio.getAsientoRegistralSir());
+                asientoRegistralSir = webServicesMethodsEjb.crearAsientoRegistralSir(ficheroIntercambio.getAsientoRegistralSir(webServicesMethodsEjb));
             } catch (Exception e) {
                 log.info("Error al crear el AsientoRegistralSir", e);
                 throw new ServiceException(Errores.ERROR_INESPERADO,e);

@@ -52,8 +52,6 @@ public class ComunController extends BaseController {
     @EJB(mappedName = "regweb3/RegistroMigradoEJB/local")
     public RegistroMigradoLocal registroMigradoEjb;
 
-    @EJB(mappedName = "regweb3/PreRegistroEJB/local")
-    public PreRegistroLocal preRegistroEjb;
 
     @EJB(mappedName = "regweb3/ReproEJB/local")
     public ReproLocal reproEjb;

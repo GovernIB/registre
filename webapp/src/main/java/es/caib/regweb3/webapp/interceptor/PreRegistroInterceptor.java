@@ -47,7 +47,7 @@ public class PreRegistroInterceptor extends HandlerInterceptorAdapter {
             HttpSession session = request.getSession();
             Rol rolActivo = (Rol) session.getAttribute(RegwebConstantes.SESSION_ROL);
             Oficina oficinaActiva = (Oficina) session.getAttribute(RegwebConstantes.SESSION_OFICINA);
-            Boolean tienePreRegistros = (Boolean) session.getAttribute(RegwebConstantes.SESSION_TIENEPREREGISTROS);
+            Boolean asientoRegistralSir = (Boolean) session.getAttribute(RegwebConstantes.SESSION_TIENE_ASR);
 
             // Comprobamos que el usuario dispone del Rol RWE_USUARI
             if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_USUARI)){
@@ -61,7 +61,7 @@ public class PreRegistroInterceptor extends HandlerInterceptorAdapter {
             if(url.equals("/preRegistro/list")){
 
                 // Comprobamos que la Oficina tiene PreRegistros
-                if(!tienePreRegistros){
+                if(!asientoRegistralSir){
                     log.info("Aviso: No hi ha PreRegistres");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.preregistro.list"));
                     response.sendRedirect("/regweb3/aviso");

@@ -1,9 +1,12 @@
 package es.caib.regweb3.webapp.controller.asientoRegistralSir;
 
 import es.caib.regweb3.model.*;
-import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.persistence.ejb.ArchivoLocal;
+import es.caib.regweb3.persistence.ejb.AsientoRegistralSirLocal;
+import es.caib.regweb3.persistence.ejb.TipoAsuntoLocal;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
+import es.caib.regweb3.sir.core.model.EstadoAsientoRegistralSir;
 import es.caib.regweb3.sir.ws.api.manager.RegistroManager;
 import es.caib.regweb3.sir.ws.api.manager.impl.RegistroManagerImpl;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -37,23 +40,8 @@ public class AsientoRegistralSirController extends BaseController {
     @EJB(mappedName = "regweb3/AsientoRegistralSirEJB/local")
     public AsientoRegistralSirLocal asientoRegistralSirEjb;
 
-    @EJB(mappedName = "regweb3/PersonaEJB/local")
-    public PersonaLocal personaEjb;
-
-    @EJB(mappedName = "regweb3/CatPaisEJB/local")
-    public CatPaisLocal catPaisEjb;
-
-    @EJB(mappedName = "regweb3/CatProvinciaEJB/local")
-    public CatProvinciaLocal catProvinciaEjb;
-
-    @EJB(mappedName = "regweb3/CatComunidadAutonomaEJB/local")
-    public CatComunidadAutonomaLocal catComunidadAutonomaEjb;
-
-    @EJB(mappedName = "regweb3/CatNivelAdministracionEJB/local")
-    public CatNivelAdministracionLocal catNivelAdministracionEjb;
-
-    @EJB(mappedName = "regweb3/AnexoEJB/local")
-    public AnexoLocal anexoEjb;
+    @EJB(mappedName = "regweb3/ArchivoEJB/local")
+    public ArchivoLocal archivoEjb;
 
     @EJB(mappedName = "regweb3/TipoAsuntoEJB/local")
     public TipoAsuntoLocal tipoAsuntoEjb;
@@ -79,7 +67,7 @@ public class AsientoRegistralSirController extends BaseController {
         ModelAndView mav = new ModelAndView("asientoRegistralSir/asientoRegistralSirList");
 
         AsientoRegistralSirBusquedaForm asientoRegistralSirBusquedaForm = new AsientoRegistralSirBusquedaForm(new AsientoRegistralSir(),1);
-        model.addAttribute("estados", RegwebConstantes.ESTADOS_PREREGISTRO);
+        model.addAttribute("estados", EstadoAsientoRegistralSir.values());
         model.addAttribute("asientoRegistralSirBusqueda", asientoRegistralSirBusquedaForm);
         model.addAttribute("anys", getAnys());
 
@@ -102,7 +90,7 @@ public class AsientoRegistralSirController extends BaseController {
 
         busqueda.setPageNumber(1);
 
-        mav.addObject("estados", RegwebConstantes.ESTADOS_PREREGISTRO);
+        mav.addObject("estados", EstadoAsientoRegistralSir.values());
         mav.addObject("paginacion", paginacion);
         mav.addObject("asientoRegistralSirBusqueda", busqueda);
         mav.addObject("anys", getAnys());

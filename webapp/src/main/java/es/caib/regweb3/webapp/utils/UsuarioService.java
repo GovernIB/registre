@@ -50,8 +50,8 @@ public class UsuarioService {
     @EJB(mappedName = "regweb3/RegistroMigradoEJB/local")
     public RegistroMigradoLocal registroMigradoEjb;
 
-    @EJB(mappedName = "regweb3/PreRegistroEJB/local")
-    public PreRegistroLocal preRegistroEjb;
+    @EJB(mappedName = "regweb3/AsientoRegistralSirEJB/local")
+    public AsientoRegistralSirLocal asientoRegistralSirEjb;
 
     @EJB(mappedName = "regweb3/ConfiguracionEJB/local")
     public ConfiguracionLocal configuracionEjb;
@@ -286,10 +286,10 @@ public class UsuarioService {
         //RegistrosMigrados
         tieneMigrados(entidadActiva,session);
 
-        //PreRegistros
+        // AsientoRegistralSir
         Oficina oficinaActiva = (Oficina) session.getAttribute(RegwebConstantes.SESSION_OFICINA);
         if(oficinaActiva != null) {
-            tienePreRegistros(oficinaActiva,session);
+            tieneAsientoRegistralSir(oficinaActiva,session);
         }
 
         // Obtenemos los Organismos a los que la OficiaActiva da servicio y que no son EDP
@@ -306,8 +306,8 @@ public class UsuarioService {
         // Actualizamos los Organismos OficiaActiva
         session.setAttribute(RegwebConstantes.SESSION_ORGANISMOS_OFICINA,organismoEjb.getByOficinaActiva(oficinaNueva));
 
-        // Comprobamos si tiene PreRegistros
-        tienePreRegistros(oficinaNueva,session);
+        // Comprobamos si tiene AsientoRegistralSir
+        tieneAsientoRegistralSir(oficinaNueva,session);
 
         // Actualizamos la última Oficina del Usuario
         UsuarioEntidad usuarioEntidad = (UsuarioEntidad)session.getAttribute(RegwebConstantes.SESSION_USUARIO_ENTIDAD);
@@ -326,13 +326,13 @@ public class UsuarioService {
     }
 
     /**
-     * Actualiza la variable de sesion de PreRegistros, según la oficina Activa
+     * Actualiza la variable de sesion de AsientoRegistralSir, según la oficina Activa
      * @param oficinaActiva
      * @param session
      * @throws Exception
      */
-    public void tienePreRegistros(Oficina oficinaActiva, HttpSession session) throws Exception{
-        session.setAttribute(RegwebConstantes.SESSION_TIENEPREREGISTROS, preRegistroEjb.tienePreRegistros(oficinaActiva.getCodigo()));
+    public void tieneAsientoRegistralSir(Oficina oficinaActiva, HttpSession session) throws Exception{
+        session.setAttribute(RegwebConstantes.SESSION_TIENE_ASR, asientoRegistralSirEjb.tieneAsientoRegistralSir(oficinaActiva.getCodigo()));
     }
 
     public void cambioEntidad(Entidad entidadNueva, HttpServletRequest request) throws Exception{
@@ -565,7 +565,7 @@ public class UsuarioService {
         session.removeAttribute(RegwebConstantes.SESSION_ENTIDADES);
         session.removeAttribute(RegwebConstantes.SESSION_ENTIDAD);
         session.removeAttribute(RegwebConstantes.SESSION_MIGRADOS);
-        session.removeAttribute(RegwebConstantes.SESSION_TIENEPREREGISTROS);
+        session.removeAttribute(RegwebConstantes.SESSION_TIENE_ASR);
         eliminarVariablesSesionOficina(session);
 
     }

@@ -289,12 +289,12 @@
                     </c:if>
 
                     <%--PREREGISTROS PENDIENTES DE PROCESAR--%>
-                    <c:if test="${not empty preRegistros}">
+                    <c:if test="${not empty asientosRegistralesSir}">
                         <div class="col-xs-6">
 
                             <div class="panel panel-warning">
                                 <div class="panel-heading">
-                                    <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="preRegistro.preRegistro.inicio"/></strong> </h3>
+                                    <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="asientoRegistralSir.pendientesProcesar"/></strong> </h3>
                                 </div>
 
                                 <div class="panel-body">
@@ -311,23 +311,23 @@
                                             </colgroup>
                                             <thead>
                                             <tr>
-                                                <th><spring:message code="preRegistro.numero"/></th>
-                                                <th><spring:message code="preRegistro.fecha"/></th>
-                                                <th><spring:message code="preRegistro.oficinaDestino"/></th>
-                                                <th><spring:message code="preRegistro.extracto"/></th>
+                                                <th><spring:message code="asientoRegistralSir.numero"/></th>
+                                                <th><spring:message code="asientoRegistralSir.fecha"/></th>
+                                                <th><spring:message code="asientoRegistralSir.oficinaDestino"/></th>
+                                                <th><spring:message code="asientoRegistralSir.extracto"/></th>
                                                 <th class="center"><spring:message code="regweb.acciones"/></th>
                                             </tr>
                                             </thead>
 
                                             <tbody>
-                                            <c:forEach var="preRegistro" items="${preRegistros}">
+                                            <c:forEach var="asientoRegistralSir" items="${asientosRegistralesSir}">
                                                 <tr>
-                                                    <td><fmt:formatDate value="${preRegistro.fecha}" pattern="yyyy"/> / ${preRegistro.numeroPreregistro}</td>
-                                                    <td><fmt:formatDate value="${preRegistro.fecha}" pattern="dd/MM/yyyy"/></td>
-                                                    <td>${preRegistro.decodificacionEntidadRegistralDestino}</td>
-                                                    <td>${preRegistro.registroDetalle.extracto}</td>
+                                                    <td>${asientoRegistralSir.numeroRegistro}</td>
+                                                    <td><fmt:formatDate value="${asientoRegistralSir.fechaRegistro}" pattern="dd/MM/yyyy"/></td>
+                                                    <td>${asientoRegistralSir.decodificacionEntidadRegistralDestino}</td>
+                                                    <td>${asientoRegistralSir.resumen}</td>
                                                     <td class="center">
-                                                        <a class="btn btn-info btn-sm" href="<c:url value="/preRegistro/${preRegistro.id}/detalle"/>" title="<spring:message code="preRegistro.detalle"/>"><span class="fa fa-eye"></span></a>
+                                                        <a class="btn btn-info btn-sm" href="<c:url value="/asientoRegistralSir/${asientoRegistralSir.id}/detalle"/>" title="<spring:message code="asientoRegistralSir.detalle"/>"><span class="fa fa-eye"></span></a>
                                                     </td>
                                                 </tr>
                                             </c:forEach>

@@ -1,10 +1,13 @@
 package es.caib.regweb3.sir.ws.api.utils;
 
+import es.caib.regweb3.persistence.ejb.WebServicesMethodsLocal;
+import es.caib.regweb3.persistence.utils.ArchivoManager;
 import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
 import es.caib.regweb3.sir.api.schema.*;
 import es.caib.regweb3.sir.api.schema.types.Documentacion_FisicaType;
 import es.caib.regweb3.sir.api.schema.types.Indicador_PruebaType;
 import es.caib.regweb3.sir.api.schema.types.Tipo_RegistroType;
+import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.sir.core.model.*;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -383,7 +386,7 @@ public class FicheroIntercambio {
      *
      * @return Información del asientoRegistralSir registral.
      */
-    public AsientoRegistralSir getAsientoRegistralSir() {
+    public AsientoRegistralSir getAsientoRegistralSir(WebServicesMethodsLocal webServicesMethodsEjb) {
 
         AsientoRegistralSir asientoRegistralSir = null;
 
@@ -391,6 +394,7 @@ public class FicheroIntercambio {
 
             asientoRegistralSir = new AsientoRegistralSir();
 
+            // Segmento De_Origen_o_Remitente
             De_Origen_o_Remitente de_Origen_o_Remitente = getFicheroIntercambio().getDe_Origen_o_Remitente();
             if (de_Origen_o_Remitente != null) {
 
@@ -425,6 +429,7 @@ public class FicheroIntercambio {
                 }
             }
 
+            // Segmento De_Destino
             De_Destino de_Destino = getFicheroIntercambio().getDe_Destino();
             if (de_Destino != null) {
 
@@ -446,6 +451,7 @@ public class FicheroIntercambio {
 
             }
 
+            // Segmento De_Asunto de_Asunto
             De_Asunto de_Asunto = getFicheroIntercambio().getDe_Asunto();
             if (de_Asunto != null) {
                 asientoRegistralSir.setResumen(de_Asunto.getResumen());
@@ -454,6 +460,7 @@ public class FicheroIntercambio {
                 asientoRegistralSir.setNumeroExpediente(de_Asunto.getNumero_Expediente());
             }
 
+            // Segmento De_Internos_Control
             De_Internos_Control de_Internos_Control = getFicheroIntercambio().getDe_Internos_Control();
             if (de_Internos_Control != null) {
 
@@ -500,12 +507,14 @@ public class FicheroIntercambio {
 
             }
 
+            // Segmento De_Formulario_Generico
             De_Formulario_Generico de_Formulario_Generico = getFicheroIntercambio().getDe_Formulario_Generico();
             if (de_Formulario_Generico != null) {
                 asientoRegistralSir.setExpone(de_Formulario_Generico.getExpone());
                 asientoRegistralSir.setSolicita(de_Formulario_Generico.getSolicita());
             }
 
+            // Segmento De_Interesado
             De_Interesado[] de_Interesados = getFicheroIntercambio().getDe_Interesado();
             if (ArrayUtils.isNotEmpty(de_Interesados)) {
                 for (De_Interesado de_Interesado : de_Interesados) {
@@ -569,6 +578,7 @@ public class FicheroIntercambio {
                 }
             }
 
+            // Segmento De_Anexos
             De_Anexo[] de_Anexos = getFicheroIntercambio().getDe_Anexo();
             if (ArrayUtils.isNotEmpty(de_Anexos)) {
                 for (De_Anexo de_Anexo : de_Anexos) {
@@ -584,7 +594,15 @@ public class FicheroIntercambio {
                         anexo.setValidacionOCSPCertificado(de_Anexo.getValidacion_OCSP_Certificado());
                         anexo.setHash(de_Anexo.getHash());
                         anexo.setTipoMIME(de_Anexo.getTipo_MIME());
-                        anexo.setAnexo(de_Anexo.getAnexo());
+
+                        try {
+                            ArchivoManager am =  new ArchivoManager(webServicesMethodsEjb, de_Anexo.getNombre_Fichero_Anexado(),de_Anexo.getTipo_MIME(), de_Anexo.getAnexo());
+                            anexo.setAnexo(am.prePersist());
+                        } catch (Exception e) {
+                            log.info("Error al crear el Anexo en el sistema de archivos", e);
+                            throw new ServiceException(Errores.ERROR_0045,e);
+                        }
+
                         anexo.setObservaciones(de_Anexo.getObservaciones());
 
                         String validezDocumento = de_Anexo.getValidez_Documento();

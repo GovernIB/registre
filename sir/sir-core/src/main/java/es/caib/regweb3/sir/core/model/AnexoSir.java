@@ -1,5 +1,6 @@
 package es.caib.regweb3.sir.core.model;
 
+import es.caib.regweb3.model.Archivo;
 import org.hibernate.annotations.ForeignKey;
 
 import javax.persistence.*;
@@ -76,7 +77,7 @@ public class AnexoSir implements Serializable {
     /**
      * Fichero Anexo codificado en Base64
      */
-    private byte[] anexo;
+    private Archivo anexo;
 
     /**
      * Identificador (identificadorFichero) del documento firmado. Si el anexo es firma de otro
@@ -208,13 +209,14 @@ public class AnexoSir implements Serializable {
         this.tipoMIME = tipoMIME;
     }
 
-    @Column(name = "ANEXO", nullable = true)
-    @Lob
-    public byte[] getAnexo() {
+    @ManyToOne(cascade=CascadeType.ALL)
+    @JoinColumn (name="ANEXO")
+    @ForeignKey(name="RWE_ANEXOSIR_ANEXO_FK")
+    public Archivo getAnexo() {
         return anexo;
     }
 
-    public void setAnexo(byte[] anexo) {
+    public void setAnexo(Archivo anexo) {
         this.anexo = anexo;
     }
 
