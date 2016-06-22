@@ -212,7 +212,7 @@ public class OficioRemisionController extends BaseController {
         LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
         // Obtenemos los Registros de Entrada, pendientes de tramitar por medio de un Oficio de Revisión, agrupados según su Organismos destinatario.
-        List<OficiosRemisionInternoOrganismo> oficiosRemisionOrganismos = registroEntradaEjb.oficiosPendientesRemisionInterna(busqueda.getAnyo(),registroEntrada.getOficina().getId(), registroEntrada.getLibro().getId(), getOrganismosOficioRemision(request, organismosOficinaActiva));
+        List<OficiosRemisionInternoOrganismo> oficiosRemisionOrganismos = oficioRemisionUtils.oficiosPendientesRemisionInterna(busqueda.getAnyo(),registroEntrada.getOficina().getId(), registroEntrada.getLibro().getId(), getOrganismosOficioRemision(request, organismosOficinaActiva));
 
         busqueda.setPageNumber(1);
         mav.addObject("oficiosRemisionOrganismos", oficiosRemisionOrganismos);
@@ -270,7 +270,7 @@ public class OficioRemisionController extends BaseController {
         Entidad entidadActiva = getEntidadActiva(request);
 
         // Obtenemos los Registros de Entrada, pendientes de tramitar por medio de un Oficio de Revisión, agrupados según su Organismos destinatario.
-        List<OficiosRemisionOrganismo> oficiosRemisionOrganismos = registroEntradaEjb.oficiosPendientesRemisionExterna(busqueda.getAnyo(), registroEntrada.getOficina().getId(), registroEntrada.getLibro().getId(), entidadActiva);
+        List<OficiosRemisionOrganismo> oficiosRemisionOrganismos = oficioRemisionUtils.oficiosPendientesRemisionExterna(busqueda.getAnyo(), registroEntrada.getOficina().getId(), registroEntrada.getLibro().getId(), entidadActiva);
 
         busqueda.setPageNumber(1);
         mav.addObject("oficiosRemisionOrganismos", oficiosRemisionOrganismos);

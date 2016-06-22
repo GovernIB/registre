@@ -49,6 +49,9 @@ public class InicioController extends BaseController{
     @EJB(mappedName = "regweb3/DescargaEJB/local")
     public DescargaLocal descargaEjb;
 
+    @EJB(mappedName = "regweb3/OficioRemisionUtilsEJB/local")
+    public OficioRemisionUtilsLocal oficioRemisionUtilsEjb;
+
 
     @RequestMapping(value = "/inici")
     public ModelAndView principal(HttpServletRequest request, Model model) throws Exception{
@@ -81,14 +84,14 @@ public class InicioController extends BaseController{
             // Obtenemos los Organismos Internos que tienen Registros pendientes de tramitar por medio de un Oficio de Revisión,
             Set<String> organismosOficioRemisionInterna = new HashSet<String>();
             for (Libro libro : librosRegistroEntrada) {
-                organismosOficioRemisionInterna.addAll(registroEntradaEjb.oficiosPendientesRemisionInterna(libro.getId(), getOrganismosOficioRemision(request, organismosOficinaActiva)));
+                organismosOficioRemisionInterna.addAll(oficioRemisionUtilsEjb.oficiosPendientesRemisionInterna(libro.getId(), getOrganismosOficioRemision(request, organismosOficinaActiva)));
             }
             mav.addObject("organismosOficioRemisionInterna", organismosOficioRemisionInterna);
 
             // Obtenemos los Organismos Externos que tienen Registros pendientes de tramitar por medio de un Oficio de Revisión,
             Set<String> organismosOficioRemisionExterna = new HashSet<String>();
             for (Libro libro : librosRegistroEntrada) {
-                organismosOficioRemisionExterna.addAll(registroEntradaEjb.oficiosPendientesRemisionExterna(libro.getId()));
+                organismosOficioRemisionExterna.addAll(oficioRemisionUtilsEjb.oficiosPendientesRemisionExterna(libro.getId()));
             }
             mav.addObject("organismosOficioRemisionExterna", organismosOficioRemisionExterna);
 
