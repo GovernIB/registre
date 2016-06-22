@@ -22,7 +22,7 @@
                 <ol class="breadcrumb">
                     <li><a href="<c:url value="/inici"/>"><i class="fa fa-globe"></i> ${oficinaActiva.denominacion}</a></li>
                     <li><a href="<c:url value="/asientoRegistralSir/list"/>" ><i class="fa fa-list"></i> <spring:message code="asientoRegistralSir.listado"/></a></li>
-                    <li class="active"><i class="fa fa-pencil-square-o"></i> <spring:message code="asientoRegistralSir.asientoRegistralSir"/> <fmt:formatDate value="${asientoRegistralSir.fechaRegistro}" pattern="dd/MM/yyyy"/> / ${asientoRegistralSir.numeroRegistro}</li>
+                    <li class="active"><i class="fa fa-pencil-square-o"></i> <spring:message code="asientoRegistralSir.asientoRegistralSir"/> ${asientoRegistralSir.numeroRegistro}</li>
                 </ol>
             </div>
         </div><!-- Fin miga de pan -->
@@ -31,10 +31,10 @@
 
             <div class="col-xs-4">
 
-                <div class="panel panel-warning">
+                <div class="panel panel-success">
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-file-o"></i>
-                            <strong> <spring:message code="asientoRegistralSir.asientosRegistralesSir"/> <fmt:formatDate value="${asientoRegistralSir.fechaRegistro}" pattern="dd/MM/yyyy"/> / ${asientoRegistralSir.numeroRegistro}</strong>
+                            <strong> <spring:message code="asientoRegistralSir.asientoRegistralSir"/> ${asientoRegistralSir.numeroRegistro}</strong>
                         </h3>
                     </div>
                     <div class="panel-body">
@@ -194,7 +194,7 @@
 
                                 <div class="row">
                                     <div class="col-xs-12 list-group-item-heading">
-                                        <button type="button" class="btn btn-success btn-sm btn-block" onclick="registrarAsientoRegistralSir('<c:url value="/asientoRegistralSir/${asientoRegistralSir.id}/registrar/"/>')"><spring:message code="asientoRegistralSir.estado.registrar"/></button>
+                                        <button type="button" class="btn btn-success btn-sm btn-block" onclick="registrarAsientoRegistralSir('<c:url value="/asientoRegistralSir/${asientoRegistralSir.id}/aceptar/"/>')"><spring:message code="asientoRegistralSir.aceptar"/></button>
                                     </div>
                                 </div>
                                 <c:set var="errorObligatori"><spring:message code="error.valor.requerido"/></c:set>
@@ -216,71 +216,9 @@
                 <c:import url="../modulos/mensajes.jsp"/>
             </div>
 
-
-            <%--<div class="col-xs-8 col-xs-offset">
-
-                <div class="panel panel-warning">
-
-                    <div class="panel-heading">
-
-                        <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong><spring:message
-                                code="asientoRegistralSir.asientoRegistralSirOrigen"/></strong></h3>
-                    </div>
-
-                    <div class="panel-body">
-                        <div class="col-xs-12">
-                            <div class="table-responsive">
-
-                                <table class="table table-bordered table-hover table-striped tablesorter">
-                                    <colgroup>
-                                        <col>
-                                        <col>
-                                        <c:if test="${asientoRegistralSir.tipoAnotacion == 'REENVIO'}">
-                                            <col>
-                                        </c:if>
-                                        <col>
-                                        <col>
-                                    </colgroup>
-                                    <thead>
-                                    <tr>
-                                        <th><spring:message code="asientoRegistralSir.numeroOrigen"/></th>
-                                        <th><spring:message code="asientoRegistralSir.fechaOrigen"/></th>
-                                        <c:if test="${asientoRegistralSir.tipoAnotacion == 'REENVIO'}">
-                                            <th><spring:message code="asientoRegistralSir.oficinaInicio"/></th>
-                                        </c:if>
-                                        <th><spring:message code="asientoRegistralSir.unidadOrigen"/></th>
-                                        <th><spring:message code="asientoRegistralSir.oficinaOrigen"/></th>
-
-                                    </tr>
-                                    </thead>
-
-                                    <tbody>
-                                        <tr>
-                                            <td>${asientoRegistralSir.numeroRegistroOrigen}</td>
-                                            <td><fmt:formatDate value="${asientoRegistralSir.fechaOrigen}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
-                                            <c:if test="${asientoRegistralSir.tipoAnotacion == 'REENVIO'}">
-                                                <td>${asientoRegistralSir.codigoEntidadRegistralInicio}</td>
-                                            </c:if>
-                                            <td>${asientoRegistralSir.codigoUnidadTramitacionOrigen}
-                                                - ${asientoRegistralSir.decodificacionUnidadTramitacionOrigen}</td>
-                                            <td>
-                                                <c:if test="${not empty asientoRegistralSir.oficinaOrigen}">${asientoRegistralSir.oficinaOrigen.nombreCompleto}</c:if>
-                                                <c:if test="${not empty asientoRegistralSir.oficinaOrigenExternoCodigo}">${asientoRegistralSir.oficinaOrigenExternoCodigo} - ${asientoRegistralSir.oficinaOrigenExternoDenominacion}</c:if>
-                                            </td>
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>--%>
-
             <%--INTERESADOS--%>
             <div class="col-xs-8 pull-right">
-                <div class="panel panel-warning">
+                <div class="panel panel-success">
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong><spring:message code="interesado.interesados"/></strong></h3>
                     </div>
@@ -340,7 +278,7 @@
             <!-- ANEXOS -->
             <div class="col-xs-8 pull-right">
 
-                <div class="panel panel-warning">
+                <div class="panel panel-success">
 
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong><spring:message
@@ -399,6 +337,42 @@
 </div> <!-- /container -->
 
 <c:import url="../modulos/pie.jsp"/>
+
+<script type="application/javascript">
+    // Realiza el Registro de un AsientoRegistralSir
+    function registrarAsientoRegistralSir(url) {
+        var libro = true;
+        var idioma  = true;
+        var tipoAsunto  = true;
+        var idLibro = $('#idLibro').val();
+        var idIdioma = $('#idIdioma').val();
+        var idTipoAsunto = $('#idTipoAsunto').val();
+
+        // Valida que haya un libro elegido
+        if(!validaCampo(idLibro, 'libro')){
+            libro = false;
+        }
+        // Valida que haya un idioma elegido
+        if(!validaCampo(idIdioma, 'idioma')){
+            idioma = false;
+        }
+        // Valida que haya un tipoAsunto elegido
+        if(!validaSelect(idTipoAsunto, 'tipoAsunto')){
+            tipoAsunto = false;
+        }
+        // Mira si todos los campos son correctos
+        if((libro)&&(idioma)&&(tipoAsunto)){
+            var url2=url.concat(idLibro+"/");
+            var url3=url2.concat(idIdioma+"/");
+            var url4=url3.concat(idTipoAsunto);
+            document.location.href=url4;
+            return true;
+        } else{
+            return false;
+        }
+    }
+
+</script>
 
 </body>
 </html>

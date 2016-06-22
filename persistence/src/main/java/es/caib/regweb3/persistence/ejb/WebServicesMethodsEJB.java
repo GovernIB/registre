@@ -1,9 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Archivo;
-import es.caib.regweb3.model.CatLocalidad;
-import es.caib.regweb3.model.CatPais;
-import es.caib.regweb3.model.CatProvincia;
 import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -40,21 +37,6 @@ public class WebServicesMethodsEJB implements WebServicesMethodsLocal {
     @Override
     public AsientoRegistralSir crearAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir) throws Exception {
         return asientoRegistralSirEjb.crearAsientoRegistralSir(asientoRegistralSir);
-    }
-
-    @Override
-    public CatPais findByCodigoPais(Long codigo) throws Exception{
-        return catPaisEjb.findByCodigo(codigo);
-    }
-
-    @Override
-    public CatProvincia findByCodigoProvincia(Long codigo) throws Exception {
-        return catProvinciaEjb.findByCodigo(codigo);
-    }
-
-    @Override
-    public CatLocalidad findByLocalidadProvincia(Long codigoLocalidad, Long codigoProvincia) throws Exception {
-        return catLocalidadEjb.findByLocalidadProvincia(codigoLocalidad, codigoProvincia);
     }
 
     @Override

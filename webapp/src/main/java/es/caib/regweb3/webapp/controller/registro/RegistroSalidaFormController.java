@@ -150,13 +150,11 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
                 // Procesamos las opciones comunes del RegistroSalida
                 registroSalida = procesarRegistroSalida(registroSalida, entidad);
 
-                // Procesamos lo Interesados de la session
-                List<Interesado> interesados = procesarInteresados(interesadosSesion, null);
+                // Guardamos el RegistroSalida
+                synchronized (this){
+                    registroSalida = registroSalidaEjb.registrarSalida(registroSalida, usuarioEntidad, interesadosSesion);
+                }
 
-                registroSalida.getRegistroDetalle().setInteresados(interesados);
-
-                //Guardamos el RegistroSalida
-                registroSalida = registroSalidaEjb.registrarSalida(registroSalida, usuarioEntidad);
 
             }catch (Exception e) {
                 Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));

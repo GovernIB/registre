@@ -286,11 +286,7 @@ public class UsuarioService {
         //RegistrosMigrados
         tieneMigrados(entidadActiva,session);
 
-        // AsientoRegistralSir
         Oficina oficinaActiva = (Oficina) session.getAttribute(RegwebConstantes.SESSION_OFICINA);
-        if(oficinaActiva != null) {
-            tieneAsientoRegistralSir(oficinaActiva,session);
-        }
 
         // Obtenemos los Organismos a los que la OficiaActiva da servicio y que no son EDP
         if(oficinaActiva != null) {
@@ -305,9 +301,6 @@ public class UsuarioService {
 
         // Actualizamos los Organismos OficiaActiva
         session.setAttribute(RegwebConstantes.SESSION_ORGANISMOS_OFICINA,organismoEjb.getByOficinaActiva(oficinaNueva));
-
-        // Comprobamos si tiene AsientoRegistralSir
-        tieneAsientoRegistralSir(oficinaNueva,session);
 
         // Actualizamos la última Oficina del Usuario
         UsuarioEntidad usuarioEntidad = (UsuarioEntidad)session.getAttribute(RegwebConstantes.SESSION_USUARIO_ENTIDAD);
@@ -565,7 +558,7 @@ public class UsuarioService {
         session.removeAttribute(RegwebConstantes.SESSION_ENTIDADES);
         session.removeAttribute(RegwebConstantes.SESSION_ENTIDAD);
         session.removeAttribute(RegwebConstantes.SESSION_MIGRADOS);
-        session.removeAttribute(RegwebConstantes.SESSION_TIENE_ASR);
+        //session.removeAttribute(RegwebConstantes.SESSION_TIENE_ASR);
         eliminarVariablesSesionOficina(session);
 
     }

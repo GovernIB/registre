@@ -191,7 +191,7 @@
            <repository>
              <id>registre-maven-repos</id>
              <name>Registre Maven Repository</name>
-             <url>http://GovernIB.github.io/genapp/maven/</url>
+             <url>http://GovernIB.github.io/registre/maven/</url>
            </repository>
         <repositories>
         -->

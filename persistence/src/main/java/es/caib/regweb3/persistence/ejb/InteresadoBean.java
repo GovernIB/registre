@@ -10,6 +10,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -114,5 +115,51 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
         q.setParameter("idInteresado",idInteresado);
 
         return q.getResultList().size() > 0;
+    }
+
+    @Override
+    public List<Interesado> guardarInteresados(List<Interesado> interesadosSesion, RegistroDetalle registroDetalle) throws Exception{
+
+        List<Interesado> interesados  = new ArrayList<Interesado>();
+
+        for(Interesado interesado:interesadosSesion){
+
+            if(!interesado.getIsRepresentante()){ // Solo los Interesados
+
+                // Guardamos el nuevo Interesado
+                interesado.setId(null); // ponemos su id a null
+                interesado.setRegistroDetalle(registroDetalle);
+                interesado.setRepresentante(null);
+                interesado = persist(interesado);
+
+                // Lo añadimos al Array
+                interesados.add(interesado);
+
+                if(interesado.getRepresentante() != null){ // Tiene Representante
+
+                    log.info(interesado.getNombre() + " tiene representante");
+
+                    Interesado representante = interesadosSesion.get(interesadosSesion.indexOf(interesado.getRepresentante()));
+
+                    // Guardamos el Representante
+                    representante.setId(null);
+                    representante.setRegistroDetalle(registroDetalle);
+                    representante.setRepresentado(interesado);
+                    representante = persist(representante);
+
+                    // Lo asigamos al interesado y actualizamos
+                    interesado.setRepresentante(representante);
+                    log.info("id representante : " + representante.getId());
+                    interesado = merge(interesado);
+
+                    // Lo añadimos al Array
+                    interesados.add(representante);
+
+                }
+
+            }
+        }
+
+        return interesados;
     }
 }

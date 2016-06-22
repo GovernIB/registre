@@ -165,14 +165,9 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                 // Procesamos las opciones comunes del RegistroEntrada
                 registroEntrada = procesarRegistroEntrada(registroEntrada, entidad);
 
-                // Procesamos lo Interesados de la session
-                List<Interesado> interesados = procesarInteresados(interesadosSesion, null);
-
-                registroEntrada.getRegistroDetalle().setInteresados(interesados);
-
                 //Guardamos el RegistroEntrada
                 synchronized (this){
-                    registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuarioEntidad);
+                    registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuarioEntidad, interesadosSesion);
                 }
 
             }catch (Exception e) {
@@ -343,7 +338,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                 // Si es PENDIENTE, Procesamos lo Interesados de la session
                 if(registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE)){
 
-                    registroEntrada.getRegistroDetalle().setInteresados(procesarInteresados(interesadosSesion, registroEntrada.getRegistroDetalle().getId()));
+                    registroEntrada.getRegistroDetalle().setInteresados(interesadoEjb.guardarInteresados(interesadosSesion, registroEntrada.getRegistroDetalle()));
                 }
 
                 // Calculamos los días transcurridos desde que se Registró para asignarle un Estado

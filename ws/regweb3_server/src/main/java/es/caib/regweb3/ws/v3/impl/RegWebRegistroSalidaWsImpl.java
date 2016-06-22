@@ -172,10 +172,11 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         validateRegistroSalida(registroSalida);
 
         // 7.- Validar los Interesados
+        List<Interesado> interesados = null;
         if(registroSalidaWs.getInteresados() != null && registroSalidaWs.getInteresados().size() > 0){
 
             // Procesamos los interesados
-            List<Interesado> interesados  = procesarInteresados(registroSalidaWs.getInteresados());
+            interesados  = procesarInteresados(registroSalidaWs.getInteresados());
 
             // Asociamos los Interesados al Registro de Entrada
             registroSalida.getRegistroDetalle().setInteresados(interesados);
@@ -196,7 +197,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         }
 
         // 7.- Creamos el Registro de Entrada
-        registroSalida = registroSalidaEjb.registrarSalida(registroSalida, usuario, anexosFull);
+        registroSalida = registroSalidaEjb.registrarSalida(registroSalida, usuario, interesados,anexosFull);
 
         if(registroSalida.getId() != null){
             // Componemos la respuesta

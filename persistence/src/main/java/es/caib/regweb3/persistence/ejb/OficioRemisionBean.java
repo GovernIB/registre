@@ -194,7 +194,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
             registroSalida.setEstado(RegwebConstantes.REGISTRO_TRAMITADO);
 
             // Registramos la Salida
-            registroSalida = registroSalidaEjb.registrarSalida(registroSalida, oficioRemision.getUsuarioResponsable());
+            registroSalida = registroSalidaEjb.registrarSalida(registroSalida, oficioRemision.getUsuarioResponsable(), null);
 
             // CREAMOS LA TRAZABILIDAD
             Trazabilidad trazabilidad = new Trazabilidad();

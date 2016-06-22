@@ -1,5 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.UsuarioEntidad;
@@ -39,7 +40,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @throws Exception
      */
     public RegistroSalida registrarSalida(RegistroSalida registroSalida,
-                                          UsuarioEntidad usuarioEntidad)
+                                          UsuarioEntidad usuarioEntidad, List<Interesado> interesados)
         throws Exception, I18NException, I18NValidationException;
     
     /**
@@ -49,7 +50,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @throws Exception
      */
     public RegistroSalida registrarSalida(RegistroSalida registroSalida,
-                                          UsuarioEntidad usuarioEntidad, List<AnexoFull> anexos)
+                                          UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos)
             throws Exception, I18NException, I18NValidationException;
     
 

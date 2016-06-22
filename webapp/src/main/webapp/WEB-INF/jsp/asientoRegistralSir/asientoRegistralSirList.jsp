@@ -33,7 +33,7 @@
 
             <div class="col-xs-12">
 
-                <div class="panel panel-info">
+                <div class="panel panel-success">
 
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-search"></i><strong><spring:message code="asientoRegistralSir.buscador"/></strong> </h3>

@@ -1,7 +1,12 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.regweb3.model.Oficina;
+import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
+import es.caib.regweb3.sir.core.model.EstadoAsientoRegistralSir;
+import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
@@ -51,6 +56,30 @@ public interface AsientoRegistralSirLocal extends BaseEjb<AsientoRegistralSir, L
      * @throws Exception
      */
     public List<AsientoRegistralSir> getUltimosARSPendientesProcesar(String codigoOficinaActiva, Integer total) throws Exception;
+
+    /**
+     * Modifica el Estado de un {@link es.caib.regweb3.sir.core.model.AsientoRegistralSir}
+     * @param idAsientoRegistralSir
+     * @param estado
+     * @throws Exception
+     */
+    public void modificarEstado(Long idAsientoRegistralSir, EstadoAsientoRegistralSir estado) throws Exception;
+
+    /**
+     *
+     * @param asientoRegistralSir
+     * @param usuario
+     * @param oficinaActiva
+     * @param idLibro
+     * @param idIdioma
+     * @param idTipoAsunto
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     * @throws I18NValidationException
+     */
+    public Long aceptarAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto)
+            throws Exception, I18NException, I18NValidationException;
 
 
 }

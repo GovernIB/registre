@@ -105,7 +105,7 @@ public class PreRegistroUtilsBean implements PreRegistroUtilsLocal {
 
       // Procesamos el Registro Entrada
       synchronized (this){
-          nuevoRE = registroEntradaEjb.registrarEntrada(nuevoRE, usuario);
+          nuevoRE = registroEntradaEjb.registrarEntrada(nuevoRE, usuario,null);
       }
 
       // Cambiamos el estado del PreRegistro
@@ -173,7 +173,7 @@ public class PreRegistroUtilsBean implements PreRegistroUtilsLocal {
 
       // Procesamos el Registro Entrada
       synchronized (this){
-          nuevoRS = registroSalidaEjb.registrarSalida(nuevoRS, usuario);
+          nuevoRS = registroSalidaEjb.registrarSalida(nuevoRS, usuario,null);
       }
 
       // Cambiamos el estado del PreRegistro

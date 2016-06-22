@@ -152,7 +152,7 @@
                                                 code="registroEntrada.nuevo"/></a></li>
                                 <li class="submenu-complet"><a href="<c:url value="/registroEntrada/reserva"/>"><spring:message code="registroEntrada.reserva"/></a></li>
                                 <li class="submenu-complet"><a href="<c:url value="/registroEntrada/list"/>"><spring:message code="registroEntrada.listado"/></a></li>
-                                <c:if test="${entidadActiva.sir && tieneASR}">
+                                <c:if test="${entidadActiva.sir}">
                                     <li class="divider"></li>
                                     <li class="submenu-complet"><a href="<c:url value="/asientoRegistralSir/list"/>"><spring:message code="asientoRegistralSir.listado"/></a></li>
                                 </c:if>

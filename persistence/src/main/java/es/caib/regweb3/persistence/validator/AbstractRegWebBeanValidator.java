@@ -35,8 +35,10 @@ public abstract  class AbstractRegWebBeanValidator <T> extends AbstractBeanValid
           List<I18NFieldError> fieldErrors = new ArrayList<I18NFieldError>(); 
           
           for(I18NFieldError error : fieldErrorList) {
-            
-            
+              System.out.println("Error: " + error.getField().getCodeLabel());
+              System.out.println("Error: " + error.getTranslation().getCode());
+
+
             /*
             System.out.println(" ============== INICI  =====================");
 

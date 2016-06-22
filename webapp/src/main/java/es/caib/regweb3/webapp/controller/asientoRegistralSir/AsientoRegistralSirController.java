@@ -7,6 +7,7 @@ import es.caib.regweb3.persistence.ejb.TipoAsuntoLocal;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
 import es.caib.regweb3.sir.core.model.EstadoAsientoRegistralSir;
+import es.caib.regweb3.sir.core.model.TipoRegistro;
 import es.caib.regweb3.sir.ws.api.manager.RegistroManager;
 import es.caib.regweb3.sir.ws.api.manager.impl.RegistroManagerImpl;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -137,10 +138,10 @@ public class AsientoRegistralSirController extends BaseController {
 
             //Obtenemos los libros de Registro según si el AsientoRegistralSir es de Entrada o de Salida
             List<Libro> libros = null;
-            if(asientoRegistralSir.getTipoRegistro().equals(RegwebConstantes.PREREGISTRO_ENTRADA.toString())){
+            if(asientoRegistralSir.getTipoRegistro().equals(TipoRegistro.ENTRADA)){
                  libros = getLibrosRegistroEntrada(request);
             }
-            if(asientoRegistralSir.getTipoRegistro().equals(RegwebConstantes.PREREGISTRO_SALIDA.toString())){
+            if(asientoRegistralSir.getTipoRegistro().equals(TipoRegistro.SALIDA)){
                 libros = getLibrosRegistroSalida(request);
             }
             model.addAttribute("libros",libros);
@@ -159,7 +160,7 @@ public class AsientoRegistralSirController extends BaseController {
     /**
      * Procesa {@link AsientoRegistralSir}, creando un RegistroEntrada
      */
-    @RequestMapping(value = "/{idAsientoRegistralSir}/registrar/{idLibro}/{idIdioma}/{idTipoAsunto}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{idAsientoRegistralSir}/aceptar/{idLibro}/{idIdioma}/{idTipoAsunto}", method = RequestMethod.GET)
     public String confirmarAsientoRegistralSir(@PathVariable Long idAsientoRegistralSir,
         @PathVariable Long idLibro, @PathVariable Long idIdioma, @PathVariable Long idTipoAsunto, Model model, HttpServletRequest request)
             throws Exception, I18NException, I18NValidationException {
@@ -167,27 +168,24 @@ public class AsientoRegistralSirController extends BaseController {
         AsientoRegistralSir asientoRegistralSir = asientoRegistralSirEjb.findById(idAsientoRegistralSir);
         Oficina oficinaActiva = getOficinaActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-        RegistroEntrada registroEntrada = new RegistroEntrada();
-        RegistroSalida registroSalida = new RegistroSalida();
+        Long idRegistro;
 
         // Comprobamos si ya ha sido confirmado
-        /*if(asientoRegistralSir.getEstado().equals(RegwebConstantes.ESTADO_PREREGISTRO_PROCESADO)){
+        if(asientoRegistralSir.getEstado().equals(EstadoAsientoRegistralSir.ACEPTADO)){
             Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.procesado.error"));
             return "redirect:/asientoRegistralSir/asientoRegistralSirProcesar";
-        }*/
+        }
 
         // Procesa el AsientoRegistralSir
         String variableReturn = "redirect:/asientoRegistralSir/"+idAsientoRegistralSir+"/detalle";
         try{
-            if(asientoRegistralSir.getTipoRegistro().equals(RegwebConstantes.PREREGISTRO_ENTRADA.toString())) {
-                //registroEntrada = asientoRegistralSirUtils.procesarAsientoRegistralSirEntrada(asientoRegistralSir, usuarioEntidad, oficinaActiva, idLibro, idIdioma, idTipoAsunto);
-                model.addAttribute("registroEntrada",registroEntrada);
-                variableReturn = "redirect:/registroEntrada/" + registroEntrada.getId() + "/detalle";
+            idRegistro = asientoRegistralSirEjb.aceptarAsientoRegistralSir(asientoRegistralSir, usuarioEntidad, oficinaActiva, idLibro, idIdioma, idTipoAsunto);
+
+            if(asientoRegistralSir.getTipoRegistro().equals(TipoRegistro.ENTRADA)) {
+                variableReturn = "redirect:/registroEntrada/" + idRegistro + "/detalle";
             }
-            if(asientoRegistralSir.getTipoRegistro().equals(RegwebConstantes.PREREGISTRO_SALIDA.toString())) {
-                //registroSalida = asientoRegistralSirUtils.procesarAsientoRegistralSirSalida(asientoRegistralSir, usuarioEntidad, oficinaActiva, idLibro, idIdioma, idTipoAsunto);
-                model.addAttribute("registroSalida",registroSalida);
-                variableReturn = "redirect:/registroSalida/" + registroSalida.getId() + "/detalle";
+            if(asientoRegistralSir.getTipoRegistro().equals(TipoRegistro.SALIDA)) {
+                variableReturn = "redirect:/registroSalida/" + idRegistro + "/detalle";
             }
 
             //todo: Crear función genérica para enviar mensajes DeMensaje

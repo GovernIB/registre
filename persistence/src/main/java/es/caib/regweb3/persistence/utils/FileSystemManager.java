@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.utils;
 
 import es.caib.regweb3.utils.RegwebConstantes;
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -24,6 +25,31 @@ public class FileSystemManager {
     public static File getArchivo(Long id) {
         File newFile = new File(getArchivosPath(), String.valueOf(id));
         return newFile;
+    }
+
+    /**
+     * Obtiene el fichero existente en el sistema de archivos
+     * @param id
+     * @return
+     */
+    public static byte[] getBytesArchivo(Long id) {
+        File file = new File(getArchivosPath(), String.valueOf(id));
+        FileInputStream input = null;
+        byte[] content = null;
+
+        try {
+            input = new FileInputStream(file);
+            content = IOUtils.toByteArray(input);
+        } catch (FileNotFoundException e) {
+            log.info("El archivo no se encuentro en el path indicado");
+            e.printStackTrace();
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return content;
     }
 
 

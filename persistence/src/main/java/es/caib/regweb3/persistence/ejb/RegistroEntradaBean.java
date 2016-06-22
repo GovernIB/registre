@@ -58,6 +58,9 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     @EJB(mappedName = "regweb3/OrganismoEJB/local")
     public OrganismoLocal organismoEjb;
 
+    @EJB(mappedName = "regweb3/InteresadoEJB/local")
+    public InteresadoLocal interesadoEjb;
+
 
     @Override
     @SuppressWarnings(value = "unchecked")
@@ -72,15 +75,15 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
 
     @Override
-    public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad)
+    public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad, List<Interesado> interesados)
             throws Exception, I18NException, I18NValidationException {
-        return registrarEntrada(registroEntrada, usuarioEntidad, null);
+        return registrarEntrada(registroEntrada, usuarioEntidad,interesados, null);
     }
 
 
     @Override
     public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
-                                            UsuarioEntidad usuarioEntidad, List<AnexoFull> anexosFull)
+                                            UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexosFull)
             throws Exception, I18NException, I18NValidationException {
 
 
@@ -105,19 +108,18 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         if (StringUtils.isEmpty(registroEntrada.getRegistroDetalle().getNumeroRegistroOrigen())) {
 
             registroEntrada.getRegistroDetalle().setNumeroRegistroOrigen(registroEntrada.getNumeroRegistroFormateado());
-            //registroEntrada = merge(registroEntrada);
         }
 
-        List<Interesado> interesados = registroEntrada.getRegistroDetalle().getInteresados();
-        if (interesados != null && interesados.size() != 0) {
-            for (Interesado interesado : interesados) {
-                interesado.setRegistroDetalle(registroEntrada.getRegistroDetalle());
-            }
-        }
-
+        // Guardar RegistroEntrada
         registroEntrada = persist(registroEntrada);
 
+        // Guardar el HistorioRegistroEntrada
         historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()),"registro.modificacion.creacion" ),false);
+
+        // Procesamos los Interesados
+        if(interesados != null && interesados.size() > 0){
+            interesadoEjb.guardarInteresados(interesados, registroEntrada.getRegistroDetalle());
+        }
 
         // TODO Controlar custodyID y si hay fallo borrar todos los Custody
         if (anexosFull != null && anexosFull.size() != 0) {

@@ -54,6 +54,9 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     @EJB(mappedName = "regweb3/OrganismoEJB/local")
     public OrganismoLocal organismoEjb;
 
+    @EJB(mappedName = "regweb3/InteresadoEJB/local")
+    public InteresadoLocal interesadoEjb;
+
 
     @Override
     public List<RegistroSalida> getByUsuario(Long idUsuarioEntidad) throws Exception {
@@ -66,15 +69,15 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     }
 
     @Override
-    public RegistroSalida registrarSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad)
+    public RegistroSalida registrarSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad, List<Interesado> interesados)
             throws Exception, I18NException, I18NValidationException {
-        return registrarSalida(registroSalida, usuarioEntidad, null);
+        return registrarSalida(registroSalida, usuarioEntidad,interesados, null);
     }
 
 
     @Override
     public synchronized RegistroSalida registrarSalida(RegistroSalida registroSalida,
-                                                       UsuarioEntidad usuarioEntidad, List<AnexoFull> anexos)
+                                                       UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos)
             throws Exception, I18NException, I18NValidationException {
 
         // Obtenemos el Número de registro
@@ -97,14 +100,6 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         if (StringUtils.isEmpty(registroSalida.getRegistroDetalle().getNumeroRegistroOrigen())) {
 
             registroSalida.getRegistroDetalle().setNumeroRegistroOrigen(registroSalida.getNumeroRegistroFormateado());
-            //registroSalida = merge(registroSalida);
-        }
-
-        List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
-        if (interesados != null && interesados.size() != 0) {
-            for (Interesado interesado : interesados) {
-                interesado.setRegistroDetalle(registroSalida.getRegistroDetalle());
-            }
         }
 
 
@@ -113,6 +108,11 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
         //Guardamos el HistorioRegistroSalida
         historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(registroSalida, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()),"registro.modificacion.creacion" ),false);
+
+        // Procesamos los Interesados
+        if(interesados != null && interesados.size() > 0){
+            interesadoEjb.guardarInteresados(interesados, registroSalida.getRegistroDetalle());
+        }
 
         // TODO Controlar custodyID y si hay fallo borrar todos los Custody
         if (anexos != null && anexos.size() != 0) {

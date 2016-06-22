@@ -1,9 +1,11 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Interesado;
+import es.caib.regweb3.model.RegistroDetalle;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
+import java.util.List;
 
 /**
  * Created by Fundació BIT.
@@ -49,4 +51,13 @@ public interface InteresadoLocal extends BaseEjb<Interesado, Long> {
      * @throws Exception
      */
     public Boolean existeDocumentoEdit(String documento, Long idInteresado) throws Exception;
+
+    /**
+     * Guardamos todos los Interesados de un Registro de Entrada o Salida
+     * @param interesadosSesion
+     * @param registroDetalle
+     * @return
+     * @throws Exception
+     */
+    public List<Interesado> guardarInteresados(List<Interesado> interesadosSesion, RegistroDetalle registroDetalle) throws Exception;
 }
