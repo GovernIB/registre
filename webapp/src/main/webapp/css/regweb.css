@@ -605,6 +605,7 @@ input[readonly] {
     background-color: #b374d1;
     border-color: #B267D5;
     cursor: default;
+    width: 100%;
 }
 .btn-llibre-llegenda:hover,
 .btn-llibre-llegenda:focus,
@@ -619,6 +620,7 @@ input[readonly] {
     background-color: #d9534f;
     border-color: #d43f3a;
     cursor: default;
+    width: 100%;
 }
 .btn-danger-llegenda:hover,
 .btn-danger-llegenda:focus,
@@ -739,5 +741,12 @@ a.text-gris:focus {
     width: 180px;
     margin-left: 0px;
     margin-right: 5px;
+}
+
+.vuitanta-percent {
+    max-width: 80%;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 1;
 }
 
