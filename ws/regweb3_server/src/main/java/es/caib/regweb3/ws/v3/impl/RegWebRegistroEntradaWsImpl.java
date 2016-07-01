@@ -201,7 +201,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
             interesados  = procesarInteresados(registroEntradaWs.getInteresados());
 
             // Asociamos los Interesados al Registro de Entrada
-            registroEntrada.getRegistroDetalle().setInteresados(interesados);
+            registroEntrada.getRegistroDetalle().setInteresados(null);
 
         }else{
             throw new I18NException("interesado.registro.obligatorio");
@@ -489,35 +489,36 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
                 interesadoWs.getInteresado(), 
                 catPaisEjb, catProvinciaEjb, catLocalidadEjb);
 
+            // Validar Interesado
             validateInteresado(interesado);
 
-            if (interesadoWs.getRepresentante() == null){ // Interesado sin Representante
+            // Id aleatorio
+            interesado.setId((long)(Math.random()*10000));
 
-                // Guardamos el Interesado
-                interesado = interesadoEjb.persist(interesado);
+            if (interesadoWs.getRepresentante() == null){ // Interesado sin Representante
 
                 // Lo añadimos al listado
                 interesados.add(interesado);
 
             }else{// Interesado con Representante
+                log.info("interesadoWs tiene represenante");
 
                 Interesado representante = DatosInteresadoConverter.getInteresado(
                     interesadoWs.getRepresentante(), 
                     catPaisEjb,catProvinciaEjb,catLocalidadEjb);
+
+                // Validar Interesado
                 validateInteresado(representante);
 
+                // Id aleatorio
+                representante.setId((long)(Math.random()*10000));
                 representante.setIsRepresentante(true);
 
-                // Guardamos el Interesado
-                interesado = interesadoEjb.persist(interesado);
-
-                // Guardamos el Representante
+                // Lo asociamos con su Representado
                 representante.setRepresentado(interesado);
-                representante = interesadoEjb.persist(representante);
 
-                // Asignamos el Representante al Interesado y lo actualizamos
+                // Asignamos el Representante al Interesado
                 interesado.setRepresentante(representante);
-                interesado = interesadoEjb.merge(interesado);
 
                 // Los añadimos al listado
                 interesados.add(interesado);

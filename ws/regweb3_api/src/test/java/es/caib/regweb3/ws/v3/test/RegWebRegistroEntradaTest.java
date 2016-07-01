@@ -122,11 +122,11 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils  {
     }
   }
 
-  //@Test
+  @Test
   public void crearRegistroEntrada() throws Exception {
 
 
-    for (int i = 0; i < 12; i++) {
+    for (int i = 0; i < 1; i++) {
 
 
       RegistroEntradaWs registroEntradaWs = new RegistroEntradaWs();
@@ -165,7 +165,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils  {
       interesado.setTipoInteresado(TIPO_INTERESADO_PERSONA_FISICA);
       interesado.setTipoDocumentoIdentificacion("N");
       interesado.setDocumento("00000001R");
-      interesado.setEmail("earrigi@gmail.com");
+      interesado.setEmail("pgarcia@gmail.com");
       interesado.setNombre("Pepito");
       interesado.setApellido1("Garcia");
       interesado.setPais((long) 724);
@@ -176,7 +176,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils  {
       representante.setTipoInteresado(TIPO_INTERESADO_PERSONA_FISICA); // == 3
       representante.setTipoDocumentoIdentificacion("N");
       representante.setDocumento("33456299Q");
-      representante.setEmail("earrigi@gmail.com");
+      representante.setEmail("jdelatorre@gmail.com");
       representante.setNombre("Juanito");
       representante.setApellido1("De la torre");
       representante.setPais((long) 724);
@@ -291,7 +291,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils  {
 
   }
 
-  @Test
+  //@Test
   public void crearRegistroEntradaconAnexos() {
     RegistroEntradaWs registroEntradaWs = new RegistroEntradaWs();
 
