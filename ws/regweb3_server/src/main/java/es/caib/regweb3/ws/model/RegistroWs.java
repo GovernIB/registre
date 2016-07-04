@@ -14,7 +14,7 @@ import java.util.List;
 @XmlRootElement
 public class RegistroWs implements Serializable {
 
-    private int numero;
+    private Integer numero;
     private Date fecha;
     private String numeroRegistroFormateado;
 
@@ -47,11 +47,11 @@ public class RegistroWs implements Serializable {
    * this.identificador = identificador; }
    */
 
-    public int getNumero() {
+    public Integer getNumero() {
         return numero;
     }
 
-    public void setNumero(int numero) {
+    public void setNumero(Integer numero) {
         this.numero = numero;
     }
 

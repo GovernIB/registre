@@ -65,23 +65,23 @@ import java.util.List;
 @XmlType(name = "registroResponseWs", propOrder = {
     "anexos",
     "aplicacion",
-        "codigoAsuntoCodigo",
-        "codigoAsuntoDescripcion",
+    "codigoAsuntoCodigo",
+    "codigoAsuntoDescripcion",
     "codigoUsuario",
     "contactoUsuario",
-        "docFisicaCodigo",
-        "docFisicaDescripcion",
+    "docFisicaCodigo",
+    "docFisicaDescripcion",
     "entidadCodigo",
     "entidadDenominacion",
     "expone",
     "extracto",
     "fechaOrigen",
     "fechaRegistro",
-        "idiomaCodigo",
-        "idiomaDescripcion",
+    "idiomaCodigo",
+    "idiomaDescripcion",
     "interesados",
-        "libroCodigo",
-        "libroDescripcion",
+    "libroCodigo",
+    "libroDescripcion",
     "nombreUsuario",
     "numExpediente",
     "numTransporte",
@@ -93,10 +93,10 @@ import java.util.List;
     "oficinaDenominacion",
     "refExterna",
     "solicita",
-        "tipoAsuntoCodigo",
-        "tipoAsuntoDescripcion",
-        "tipoTransporteCodigo",
-        "tipoTransporteDescripcion",
+    "tipoAsuntoCodigo",
+    "tipoAsuntoDescripcion",
+    "tipoTransporteCodigo",
+    "tipoTransporteDescripcion",
     "version"
 })
 @XmlSeeAlso({
@@ -227,11 +227,11 @@ public class RegistroResponseWs {
 
     /**
      * Gets the value of the codigoAsuntoDescripcion property.
-     *
+     * 
      * @return
      *     possible object is
      *     {@link String }
-     *
+     *     
      */
     public String getCodigoAsuntoDescripcion() {
         return codigoAsuntoDescripcion;
@@ -239,9 +239,11 @@ public class RegistroResponseWs {
 
     /**
      * Sets the value of the codigoAsuntoDescripcion property.
-     *
-     * @param value allowed object is
-     *              {@link String }
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
      */
     public void setCodigoAsuntoDescripcion(String value) {
         this.codigoAsuntoDescripcion = value;
@@ -297,7 +299,7 @@ public class RegistroResponseWs {
 
     /**
      * Gets the value of the docFisicaCodigo property.
-     *
+     * 
      * @return
      *     possible object is
      *     {@link String }
@@ -309,7 +311,7 @@ public class RegistroResponseWs {
 
     /**
      * Sets the value of the docFisicaCodigo property.
-     *
+     * 
      * @param value
      *     allowed object is
      *     {@link String }
@@ -321,11 +323,11 @@ public class RegistroResponseWs {
 
     /**
      * Gets the value of the docFisicaDescripcion property.
-     *
+     * 
      * @return
      *     possible object is
      *     {@link String }
-     *
+     *     
      */
     public String getDocFisicaDescripcion() {
         return docFisicaDescripcion;
@@ -333,9 +335,11 @@ public class RegistroResponseWs {
 
     /**
      * Sets the value of the docFisicaDescripcion property.
-     *
-     * @param value allowed object is
-     *              {@link String }
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
      */
     public void setDocFisicaDescripcion(String value) {
         this.docFisicaDescripcion = value;
@@ -487,7 +491,7 @@ public class RegistroResponseWs {
 
     /**
      * Gets the value of the idiomaCodigo property.
-     *
+     * 
      * @return
      *     possible object is
      *     {@link String }
@@ -499,7 +503,7 @@ public class RegistroResponseWs {
 
     /**
      * Sets the value of the idiomaCodigo property.
-     *
+     * 
      * @param value
      *     allowed object is
      *     {@link String }
@@ -511,11 +515,11 @@ public class RegistroResponseWs {
 
     /**
      * Gets the value of the idiomaDescripcion property.
-     *
+     * 
      * @return
      *     possible object is
      *     {@link String }
-     *
+     *     
      */
     public String getIdiomaDescripcion() {
         return idiomaDescripcion;
@@ -523,9 +527,11 @@ public class RegistroResponseWs {
 
     /**
      * Sets the value of the idiomaDescripcion property.
-     *
-     * @param value allowed object is
-     *              {@link String }
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
      */
     public void setIdiomaDescripcion(String value) {
         this.idiomaDescripcion = value;
@@ -562,7 +568,7 @@ public class RegistroResponseWs {
 
     /**
      * Gets the value of the libroCodigo property.
-     *
+     * 
      * @return
      *     possible object is
      *     {@link String }
@@ -574,7 +580,7 @@ public class RegistroResponseWs {
 
     /**
      * Sets the value of the libroCodigo property.
-     *
+     * 
      * @param value
      *     allowed object is
      *     {@link String }
@@ -586,11 +592,11 @@ public class RegistroResponseWs {
 
     /**
      * Gets the value of the libroDescripcion property.
-     *
+     * 
      * @return
      *     possible object is
      *     {@link String }
-     *
+     *     
      */
     public String getLibroDescripcion() {
         return libroDescripcion;
@@ -598,9 +604,11 @@ public class RegistroResponseWs {
 
     /**
      * Sets the value of the libroDescripcion property.
-     *
-     * @param value allowed object is
-     *              {@link String }
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
      */
     public void setLibroDescripcion(String value) {
         this.libroDescripcion = value;
@@ -864,7 +872,7 @@ public class RegistroResponseWs {
 
     /**
      * Gets the value of the tipoAsuntoCodigo property.
-     *
+     * 
      * @return
      *     possible object is
      *     {@link String }
@@ -876,7 +884,7 @@ public class RegistroResponseWs {
 
     /**
      * Sets the value of the tipoAsuntoCodigo property.
-     *
+     * 
      * @param value
      *     allowed object is
      *     {@link String }
@@ -888,7 +896,7 @@ public class RegistroResponseWs {
 
     /**
      * Gets the value of the tipoAsuntoDescripcion property.
-     *
+     * 
      * @return
      *     possible object is
      *     {@link String }
@@ -900,7 +908,7 @@ public class RegistroResponseWs {
 
     /**
      * Sets the value of the tipoAsuntoDescripcion property.
-     *
+     * 
      * @param value
      *     allowed object is
      *     {@link String }
@@ -912,9 +920,11 @@ public class RegistroResponseWs {
 
     /**
      * Gets the value of the tipoTransporteCodigo property.
-     *
-     * @return possible object is
-     * {@link String }
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
      */
     public String getTipoTransporteCodigo() {
         return tipoTransporteCodigo;
@@ -922,9 +932,11 @@ public class RegistroResponseWs {
 
     /**
      * Sets the value of the tipoTransporteCodigo property.
-     *
-     * @param value allowed object is
-     *              {@link String }
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
      */
     public void setTipoTransporteCodigo(String value) {
         this.tipoTransporteCodigo = value;
@@ -932,9 +944,11 @@ public class RegistroResponseWs {
 
     /**
      * Gets the value of the tipoTransporteDescripcion property.
-     *
-     * @return possible object is
-     * {@link String }
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
      */
     public String getTipoTransporteDescripcion() {
         return tipoTransporteDescripcion;
@@ -942,9 +956,11 @@ public class RegistroResponseWs {
 
     /**
      * Sets the value of the tipoTransporteDescripcion property.
-     *
-     * @param value allowed object is
-     *              {@link String }
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
      */
     public void setTipoTransporteDescripcion(String value) {
         this.tipoTransporteDescripcion = value;

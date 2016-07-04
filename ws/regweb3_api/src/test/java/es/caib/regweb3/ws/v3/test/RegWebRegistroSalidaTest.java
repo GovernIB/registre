@@ -1,6 +1,7 @@
 package es.caib.regweb3.ws.v3.test;
 
 import es.caib.regweb3.ws.api.v3.*;
+import es.caib.regweb3.ws.api.v3.utils.WsClientUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -85,7 +86,7 @@ public class RegWebRegistroSalidaTest extends RegWebTestUtils{
     }
 
     @Test
-    public void crearRegistroSalida() {
+    public void crearRegistroSalida() throws Exception{
 
         for(int i=0;i<1;i++){
 
@@ -105,7 +106,7 @@ public class RegWebRegistroSalidaTest extends RegWebTestUtils{
         registroSalidaWs.setVersion("1");
 
         registroSalidaWs.setCodigoUsuario(getTestUserName());
-        registroSalidaWs.setContactoUsuario("earrivi@gmail.com");
+        registroSalidaWs.setContactoUsuario("earrivi@fundaciobit.org");
 
         registroSalidaWs.setNumExpediente("");
         registroSalidaWs.setNumTransporte("");
@@ -123,14 +124,24 @@ public class RegWebRegistroSalidaTest extends RegWebTestUtils{
 
         DatosInteresadoWs interesado = new DatosInteresadoWs();
         interesado.setTipoInteresado(TIPO_INTERESADO_PERSONA_FISICA);
+        interesado.setTipoDocumentoIdentificacion("N");
+        interesado.setDocumento("00000001R");
+        interesado.setEmail("pgarcia@gmail.com");
         interesado.setNombre("Pepito");
         interesado.setApellido1("Garcia");
+        interesado.setPais((long) 724);
+        interesado.setProvincia((long) 46);
         interesadoWs.setInteresado(interesado);
 
         DatosInteresadoWs representante = new DatosInteresadoWs();
         representante.setTipoInteresado(TIPO_INTERESADO_PERSONA_FISICA); // == 3
+        representante.setTipoDocumentoIdentificacion("N");
+        representante.setDocumento("33456299Q");
+        representante.setEmail("jdelatorre@gmail.com");
         representante.setNombre("Juanito");
         representante.setApellido1("De la torre");
+        representante.setPais((long) 724);
+        representante.setProvincia((long) 46);
         interesadoWs.setRepresentante(representante);
 
         registroSalidaWs.getInteresados().add(interesadoWs);
@@ -150,11 +161,14 @@ public class RegWebRegistroSalidaTest extends RegWebTestUtils{
             System.out.println("NumeroSalida: " + identificadorWs.getNumero());
             System.out.println("Fecha: " + identificadorWs.getFecha());
         } catch (WsI18NException e) {
-            e.printStackTrace();
+            String msg = WsClientUtils.toString(e);
+            System.out.println("Error WsI18NException: " + msg);
+            throw e;
         } catch (WsValidationException e) {
-            e.printStackTrace();
-        }
+            String msg = WsClientUtils.toString(e);
+            System.out.println("Error WsValidationException: " + msg);
+            throw e;
         }
 
-    }
+    }}
 }

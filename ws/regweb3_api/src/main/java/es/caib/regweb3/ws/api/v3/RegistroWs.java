@@ -32,7 +32,7 @@ import java.util.List;
  *         &lt;element name="libro" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="numExpediente" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="numTransporte" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="numero" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         &lt;element name="numero" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
  *         &lt;element name="numeroRegistroFormateado" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="observaciones" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="oficina" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
@@ -99,7 +99,7 @@ public class RegistroWs {
     protected String libro;
     protected String numExpediente;
     protected String numTransporte;
-    protected int numero;
+    protected Integer numero;
     protected String numeroRegistroFormateado;
     protected String observaciones;
     protected String oficina;
@@ -458,16 +458,24 @@ public class RegistroWs {
     /**
      * Gets the value of the numero property.
      * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
      */
-    public int getNumero() {
+    public Integer getNumero() {
         return numero;
     }
 
     /**
      * Sets the value of the numero property.
      * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
      */
-    public void setNumero(int value) {
+    public void setNumero(Integer value) {
         this.numero = value;
     }
 

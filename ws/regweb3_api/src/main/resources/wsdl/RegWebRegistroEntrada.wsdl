@@ -223,7 +223,7 @@
       <xs:element minOccurs="0" name="libro" type="xs:string"/>
       <xs:element minOccurs="0" name="numExpediente" type="xs:string"/>
       <xs:element minOccurs="0" name="numTransporte" type="xs:string"/>
-      <xs:element name="numero" type="xs:int"/>
+      <xs:element minOccurs="0" name="numero" type="xs:int"/>
       <xs:element minOccurs="0" name="numeroRegistroFormateado" type="xs:string"/>
       <xs:element minOccurs="0" name="observaciones" type="xs:string"/>
       <xs:element minOccurs="0" name="oficina" type="xs:string"/>

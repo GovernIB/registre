@@ -82,14 +82,13 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
         // Obtenemos el Número de registro
         Libro libro = libroEjb.findById(registroSalida.getLibro().getId());
+        Oficina oficina = oficinaEjb.findById(registroSalida.getOficina().getId());
         NumeroRegistro numeroRegistro = contadorEjb.incrementarContador(libro.getContadorSalida().getId());
         registroSalida.setNumeroRegistro(numeroRegistro.getNumero());
         registroSalida.setFecha(numeroRegistro.getFecha());
-        if (registroSalida.getLibro().getCodigo() != null && registroSalida.getOficina().getCodigo() != null) {
-            registroSalida.setNumeroRegistroFormateado(RegistroUtils.numeroRegistroFormateado(registroSalida, registroSalida.getLibro(), registroSalida.getOficina()));
-        } else {
-            registroSalida.setNumeroRegistroFormateado(RegistroUtils.numeroRegistroFormateado(registroSalida, libroEjb.findById(registroSalida.getLibro().getId()), oficinaEjb.findById(registroSalida.getOficina().getId())));
-        }
+
+        // Generamos el Número de registro formateado
+        registroSalida.setNumeroRegistroFormateado(RegistroUtils.numeroRegistroFormateado(registroSalida, libro, oficina));
 
         // Si no ha introducido ninguna fecha de Origen
         if (registroSalida.getRegistroDetalle().getFechaOrigen() == null) {
@@ -101,7 +100,6 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
             registroSalida.getRegistroDetalle().setNumeroRegistroOrigen(registroSalida.getNumeroRegistroFormateado());
         }
-
 
         // Guardamos el RegistroSalida
         registroSalida = persist(registroSalida);

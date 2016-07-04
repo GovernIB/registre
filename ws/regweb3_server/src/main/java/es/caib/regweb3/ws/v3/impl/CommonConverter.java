@@ -8,6 +8,7 @@ import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.ws.converter.AnexoConverter;
+import es.caib.regweb3.ws.converter.DatosInteresadoConverter;
 import es.caib.regweb3.ws.model.*;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 
@@ -278,6 +279,26 @@ public class CommonConverter {
 
       return anexosWs;
    }
+
+    /**
+     *
+     * @param interesados
+     * @return
+     * @throws Exception
+     */
+    public static List<InteresadoWs> procesarInteresadosWs(List<Interesado> interesados) throws Exception{
+
+        List<InteresadoWs> interesadosWs = new ArrayList<InteresadoWs>();
+
+        for (Interesado interesado : interesados) {
+
+            InteresadoWs interesadoWs =  DatosInteresadoConverter.getInteresadoWs(interesado);
+
+            interesadosWs.add(interesadoWs);
+        }
+
+        return interesadosWs;
+    }
 
 
 }

@@ -18,6 +18,15 @@ public class IdentificadorWs implements Serializable {
     private Integer numero;
     private Date fecha;
 
+    public IdentificadorWs() {
+    }
+
+    public IdentificadorWs(String numeroRegistroFormateado, Integer numero, Date fecha) {
+        this.numeroRegistroFormateado = numeroRegistroFormateado;
+        this.numero = numero;
+        this.fecha = fecha;
+    }
+
     public Integer getNumero() {
         return numero;
     }
