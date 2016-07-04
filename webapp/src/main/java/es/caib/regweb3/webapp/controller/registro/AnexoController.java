@@ -9,14 +9,12 @@ import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.scan.ScannerManager;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.AnexoWebValidator;
-
 import org.apache.axis.utils.StringUtils;
 import org.apache.commons.io.FileUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.fundaciobit.plugins.documentcustody.api.AnnexCustody;
-
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.fundaciobit.plugins.scanweb.ScanWebResource;
@@ -40,7 +38,6 @@ import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -288,6 +285,7 @@ public class AnexoController extends BaseController {
       log.info(" Passa per crearAnexoPost");
 
       anexoValidator.validate(anexoForm.getAnexo(),result);
+
       
       if (!result.hasErrors()) { // Si no hay errores
 
@@ -696,17 +694,28 @@ public class AnexoController extends BaseController {
     public void  firma(@PathVariable("anexoId") Long anexoId, HttpServletRequest request, 
         HttpServletResponse response)  throws Exception, I18NException {
          AnexoFull anexo = anexoEjb.getAnexoFull(anexoId);
-         
-         fullDownload(anexo.getAnexo().getCustodiaID(), anexo.getSignatureCustody().getName(),
-             anexo.getSignatureCustody().getMime(), true,response);
+        //Parche para la api de custodia antigua que se guardan los documentos firmados en DocumentCustody.
+        if (anexo.getSignatureCustody() == null) {//Api antigua, hay que descargar el document custody
+            fullDownload(anexo.getAnexo().getCustodiaID(), anexo.getDocumentoCustody().getName(),
+                    anexo.getDocumentoCustody().getMime(), false, response);
+        } else {
+            fullDownload(anexo.getAnexo().getCustodiaID(), anexo.getSignatureCustody().getName(),
+                    anexo.getSignatureCustody().getMime(), true, response);
+        }
+
     }
 
     /**
     *  Función que obtiene los datos de un archivo para mostrarlo
+     *
     * @param archivoId  identificador del archivo
     * @param filename   nombre del archivo
     * @param contentType
     * @param response
+     * @return Descarga el archivo y además devuelve true o false en funcion de si ha encontrado el archivo indicado.
+     * En la api de custodia antigua, los documentos firmados se guardaban en DocumentCustody y en la nueva en SignatureCustody.
+     * Por tanto cuando vaya a recuperar un documento con firma antiguo, mirarà en SignatureCustody y no lo encontrará, por tanto controlamos ese caso y devolvemos false.
+     * para poder ir a buscarlo a DocumentCustody, que es donde estará. (todo esto se hace en el método firma)
     */
     public void fullDownload(String custodiaID, String filename, String contentType, boolean firma,
         HttpServletResponse response)  {
@@ -762,7 +771,6 @@ public class AnexoController extends BaseController {
          }  catch (Exception e) {
              e.printStackTrace();
          }
-
     }
 
     

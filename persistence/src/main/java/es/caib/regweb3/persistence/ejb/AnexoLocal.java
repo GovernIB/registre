@@ -4,7 +4,6 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
-
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
@@ -12,7 +11,6 @@ import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
-
 import java.util.List;
 
 /**
@@ -48,46 +46,6 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
   public AnexoFull actualizarAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
       Long registroID, String tipoRegistro) throws I18NException, I18NValidationException;
     
-  
-  
-  
-  /**
-   *  Eliminar un anexo
-   * @param idAnexo
-   * @param idRegistroDetalle
-   * @return
-   * @throws Exception
-   */
-    /* public boolean eliminarAnexoRegistroDetalle(Long idAnexo, Long idRegistroDetalle) throws Exception;*/
-
-    /**
-      *
-      * @param anexo
-      * @return
-      * @throws Exception
-      */
-    //public boolean actualizarAnexo(Anexo anexo) throws Exception;
-
-  /**
-   * Actualiza un anexo y guarda sus archivos asociados
-   * @param idAnexo
-   * @param ficheroAnexado
-   * @param nombreFicheroAnexado
-   * @param tipoMIMEFicheroAnexado
-   * @param tamanoFicheroAnexado
-   * @param firmaAnexada
-   * @param nombreFirmaAnexada
-   * @param tipoMIMEFirmaAnexada
-   * @param tamanoFirmaAnexada
-   * @param modoFirma
-   * @param fechaCaptura
-   * @return
-   * @throws Exception
-   */
-   /* public Anexo actualizarAnexoConArchivos(Long idAnexo, byte[] ficheroAnexado,String nombreFicheroAnexado, String tipoMIMEFicheroAnexado, Long tamanoFicheroAnexado,
-                               byte[] firmaAnexada, String nombreFirmaAnexada, String tipoMIMEFirmaAnexada, Long tamanoFirmaAnexada,
-                               Integer modoFirma, Date fechaCaptura ) throws Exception;
-                               */
 
 
     /**
@@ -147,26 +105,10 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      */
     public boolean eliminarCustodia(String custodiaID) throws Exception;
 
-    /**
-     * Solo elimina el archivo asociado al documento.
-     *
-     * @param custodiaID
-     * @return
-     * @throws Exception
-     */
-    public boolean eliminarDocumento(String custodiaID) throws Exception;
-
-    /**
-     * Solo elimina la el archivo asociado a la firma
-     *
-     * @param custodiaID
-     * @return
-     * @throws Exception
-     */
-    public boolean eliminarFirma(String custodiaID) throws Exception;
 
     /**
      * Crea o actualiza un anexos en el sistema de custodia
+     * TODO borrar no se emplea
      *
      * @param name
      * @param file

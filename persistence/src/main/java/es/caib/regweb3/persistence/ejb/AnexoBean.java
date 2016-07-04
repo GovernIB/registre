@@ -822,55 +822,10 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     }
 
 
-    /**
-     * Solo elimina el archivo asociado al documento.
-     *
-     * //TODO Revisar: parece que no se emplea
-     *
-     * @param custodiaID
-     * @return
-     * @throws Exception
-     */
-    public boolean eliminarDocumento(String custodiaID) throws Exception {
-
-        if (custodiaID == null) {
-            log.warn("eliminarDocumento :: CustodiaID vale null !!!!!", new Exception());
-            return false;
-        } else {
-            getInstance().deleteDocument(custodiaID);
-            getInstance().deleteSignature(custodiaID);
-            return true;
-        }
-
-    }
-
-
-    /**
-     * Solo elimina la el archivo asociado a la firma
-     *
-     * //TODO Revisar: parece que no se emplea
-     *
-     * @param custodiaID
-     * @return
-     * @throws Exception
-     */
-    public boolean eliminarFirma(String custodiaID) throws Exception {
-
-        if (custodiaID == null) {
-            log.warn("eliminarFirma :: CustodiaID vale null !!!!!", new Exception());
-            return false;
-        } else {
-            getInstance().deleteDocument(custodiaID);
-            return true;
-        }
-
-    }
-
-
-
 
     /**
      * Crea o actualiza un anexos en el sistema de custodia
+     *  TODO PENDENT D'EMPLEAR PER LES PROVES RECEPCIO SIR, pero hauria de retornar
      * @param name
      * @param file
      * @param signatureName

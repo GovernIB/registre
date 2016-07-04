@@ -67,7 +67,18 @@
                                               ESTADO 3 -> Pendiente de visar
                                               ESTADO 7 -> Tramitado
                                           -->
-                                         <a class="btn btn-success btn-default btn-sm"  href="<c:url value="/anexo/descargarDocumento/${anexo.id}"/>" target="_blank" title="<spring:message code="anexo.descargar"/>"><span class="fa fa-download"></span></a>
+                                         <c:if test="${anexo.modoFirma != RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
+                                             <a class="btn btn-success btn-default btn-sm"
+                                                href="<c:url value="/anexo/descargarDocumento/${anexo.id}"/>"
+                                                target="_blank" title="<spring:message code="anexo.descargar"/>"><span
+                                                     class="fa fa-download"></span></a>
+                                         </c:if>
+                                         <c:if test="${anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
+                                             <a class="btn btn-success btn-default btn-sm"
+                                                href="<c:url value="/anexo/descargarFirma/${anexo.id}"/>"
+                                                target="_blank" title="<spring:message code="anexo.descargar"/>"><span
+                                                     class="fa fa-download"></span></a>
+                                         </c:if>
                                          <c:if test="${(registro.estado == 1 || registro.estado == 2 || registro.estado ==3) && oficinaRegistral && puedeEditar}">
                                              <a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#myModal"  onclick="editarAnexoFull('${anexo.id}','${registro.id}','${registro.registroDetalle.id}','${param.tipoRegistro}')" title="Editar"><span class="fa fa-pencil"></span></a>
                                              <a class="btn btn-danger btn-default btn-sm"  onclick="eliminarAnexo('${anexo.id}','${registro.id}','${registro.registroDetalle.id}','${param.tipoRegistro}', '<spring:message code="anexo.confirmar.eliminar" javaScriptEscape='true'/>')" href="#" title="Eliminar"><span class="fa fa-eraser"></span></a>
