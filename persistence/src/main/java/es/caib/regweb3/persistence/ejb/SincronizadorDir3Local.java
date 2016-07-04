@@ -42,5 +42,5 @@ public interface SincronizadorDir3Local {
    * @param unidadTF
    * @throws Exception
    */
-  public void sincronizarHistoricosOrganismo(Organismo organismo, UnidadTF unidadTF) throws Exception;
+  public void sincronizarHistoricosOrganismo(Organismo organismo, UnidadTF unidadTF, Long idEntidad) throws Exception;
 }

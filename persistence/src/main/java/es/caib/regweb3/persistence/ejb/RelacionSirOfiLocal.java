@@ -17,7 +17,8 @@ import javax.ejb.Local;
 public interface RelacionSirOfiLocal extends BaseEjb<RelacionSirOfi, RelacionSirOfiPK> {
   
   public void deleteAll() throws Exception;
-  public int deleteByOficina(Long idOficina) throws Exception;
+
+  public int deleteByOficinaEntidad(Long idOficina) throws Exception;
 
     /**
      * Busca una RelacionSirOfi a partir de la Oficina y el Organismo que la componen

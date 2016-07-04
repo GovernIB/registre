@@ -67,11 +67,12 @@ public class RelacionSirOfiBean extends BaseEjbJPA<RelacionSirOfi, RelacionSirOf
      }
 
      @Override
-     public int deleteByOficina(Long idOficina) throws Exception {
+     public int deleteByOficinaEntidad(Long idOficina) throws Exception {
 
-        Query q= em.createQuery("delete from RelacionSirOfi as rso where rso.oficina.id = :idOficina");
+         Query q = em.createQuery("delete from RelacionSirOfi as rso where rso.oficina.id = :idOficina ");
         q.setParameter("idOficina", idOficina);
-        return q.executeUpdate();
+
+         return q.executeUpdate();
      }
 
     @Override

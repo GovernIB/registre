@@ -152,6 +152,26 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
+    public Organismo findByCodigoEntidadSinEstado(String codigo, Long idEntidad) throws Exception {
+
+        Query q = em.createQuery("Select organismo from Organismo as organismo where " +
+                "organismo.codigo = :codigo and organismo.entidad.id=:idEntidad");
+
+        q.setParameter("codigo", codigo);
+        q.setParameter("idEntidad", idEntidad);
+
+        List<Organismo> organismo = q.getResultList();
+        if (organismo.size() == 1) {
+            return organismo.get(0);
+        } else {
+            return null;
+        }
+
+    }
+
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public Organismo findByCodigoLigero(String codigo) throws Exception {
         Query q = em.createQuery("Select organismo.id, organismo.codigo, organismo.denominacion, organismo.codAmbComunidad.id, organismo.estado.id from Organismo as organismo where " +
                 "organismo.codigo = :codigo");

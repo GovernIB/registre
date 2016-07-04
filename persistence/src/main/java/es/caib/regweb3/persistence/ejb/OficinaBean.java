@@ -93,6 +93,24 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
+    public Oficina findByCodigoEntidadSinEstado(String codigo, Long idEntidad) throws Exception {
+
+        Query q = em.createQuery("Select oficina from Oficina as oficina where " +
+                "oficina.codigo = :codigo and oficina.organismoResponsable.entidad.id=:idEntidad ");
+
+        q.setParameter("codigo", codigo);
+        q.setParameter("idEntidad", idEntidad);
+
+        List<Oficina> oficina = q.getResultList();
+        if (oficina.size() == 1) {
+            return oficina.get(0);
+        } else {
+            return null;
+        }
+
+    }
+
+    @Override
     public Oficina findByCodigoLigero(String codigo) throws Exception {
 
         Query q = em.createQuery("Select oficina.id, oficina.codigo, oficina.denominacion from Oficina as oficina where " +

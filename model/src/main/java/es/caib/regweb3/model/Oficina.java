@@ -120,7 +120,7 @@ public class Oficina implements Serializable{
     }
 
 
-    @Column(name = "CODIGO", nullable = false, length = 9, unique = true)
+    @Column(name = "CODIGO", nullable = false, length = 9)
     public String getCodigo() {
       return codigo;
     }

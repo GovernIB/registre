@@ -35,7 +35,7 @@ public class PendienteBean extends BaseEjbJPA<Pendiente, Long> implements Pendie
 
     public Pendiente findByIdOrganismo(Long idOrganismo) throws Exception {
 
-        Query q = em.createQuery("Select pendiente from Pendiente as pendiente where pendiente.idOrganismo=:idOrganismo");
+        Query q = em.createQuery("Select pendiente from Pendiente as pendiente where pendiente.idOrganismo=:idOrganismo and pendiente.procesado = false ");
         q.setParameter("idOrganismo", idOrganismo);
         return (Pendiente)q.getSingleResult();
 

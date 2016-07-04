@@ -28,6 +28,15 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
     public Oficina findByCodigo(String codigo) throws Exception;
 
     /**
+     * Obtiene la oficina del codigo indicado, la entidad indicada independientemente del estado.
+     * @param codigo
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public Oficina findByCodigoEntidadSinEstado(String codigo, Long idEntidad) throws Exception;
+
+    /**
      * Busca una Oficina a partir de su código
      * @param codigo
      * @return Solo el id de la Oficina
