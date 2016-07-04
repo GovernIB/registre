@@ -125,7 +125,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             for (AnexoFull anexoFull : anexosFull) {
 
                 anexoFull.getAnexo().setRegistroDetalle(registroEntrada.getRegistroDetalle());
-                anexoFull = anexoEjb.crearAnexo(anexoFull, usuarioEntidad, registroID, "entrada");
+                anexoEjb.crearAnexo(anexoFull, usuarioEntidad, registroID, "entrada");
 
             }
         }
@@ -1033,6 +1033,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         respuestaDistribucion.setDestinatarios(null);
 
         //Obtenemos plugin
+
         IDistribucionPlugin distribucionPlugin = RegwebDistribucionPluginManager.getInstance();
         //Si han especificado plug-in
         if (distribucionPlugin != null) {

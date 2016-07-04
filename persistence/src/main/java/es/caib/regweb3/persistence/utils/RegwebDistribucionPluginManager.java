@@ -35,11 +35,11 @@ public class RegwebDistribucionPluginManager {
                 return null;
             }
             // Carregant la classe
+
             Object obj;
             obj = PluginsManager.instancePluginByClassName(className, basePlugin);
-
-
             plugin = (IDistribucionPlugin) obj;
+
 
         }
 

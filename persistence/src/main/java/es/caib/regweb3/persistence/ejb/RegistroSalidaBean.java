@@ -119,7 +119,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
             final Long registroID = registroSalida.getId();
             for (AnexoFull anexoFull : anexos) {
                 anexoFull.getAnexo().setRegistroDetalle(registroSalida.getRegistroDetalle());
-                anexoFull = anexoEjb.crearAnexo(anexoFull, usuarioEntidad, registroID, "salida");
+                anexoEjb.crearAnexo(anexoFull, usuarioEntidad, registroID, "salida");
             }
         }
 
