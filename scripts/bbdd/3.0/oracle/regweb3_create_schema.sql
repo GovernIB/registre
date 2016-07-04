@@ -15,11 +15,70 @@
         TDOCUMENTAL number(19,0)
     );
 
+    create table RWE_ANEXO_SIR (
+        ID number(19,0) not null,
+        CERTIFICADO raw(255),
+        FIRMA raw(255),
+        HASH raw(255) not null,
+        ID_DOCUMENTO_FIRMADO varchar2(50 char),
+        IDENTIFICADOR_FICHERO varchar2(50 char) not null,
+        NOMBRE_FICHERO varchar2(80 char) not null,
+        OBSERVACIONES varchar2(50 char),
+        TIMESTAMP raw(255),
+        TIPO_DOCUMENTO number(10,0) not null,
+        TIPO_MIME varchar2(20 char),
+        VAL_OCSP_CERTIFICADO raw(255),
+        VALIDEZ_DOCUMENTO number(10,0),
+        ANEXO number(19,0),
+        ASIENTO_REGISTRAL number(19,0)
+    );
+
     create table RWE_ARCHIVO (
         ID number(19,0) not null,
         MIME varchar2(255 char) not null,
         NOMBRE varchar2(255 char) not null,
         TAMANO number(19,0) not null
+    );
+
+    create table RWE_ASIENTO_REGISTRAL_SIR (
+        ID number(19,0) not null,
+        APLICACION varchar2(4 char),
+        COD_ASUNTO varchar2(16 char),
+        COD_ENT_REG varchar2(21 char),
+        COD_ENT_REG_DEST varchar2(21 char) not null,
+        COD_ENT_REG_INI varchar2(21 char) not null,
+        COD_ENT_REG_ORI varchar2(21 char) not null,
+        COD_UNI_TRA_DEST varchar2(21 char),
+        COD_UNI_TRA_ORI varchar2(21 char),
+        CONTACTO_USUARIO varchar2(160 char),
+        DEC_ENT_REG_DEST varchar2(80 char),
+        DEC_ENT_REG_INI varchar2(80 char),
+        DEC_ENT_REG_ORI varchar2(80 char),
+        DEC_T_ANOTACION varchar2(80 char),
+        DEC_UNI_TRA_DEST varchar2(80 char),
+        DEC_UNI_TRA_ORI varchar2(80 char),
+        DOC_FISICA number(10,0) not null,
+        ESTADO number(10,0) not null,
+        EXPONE varchar2(4000 char),
+        FECHAR_EGISTRO timestamp not null,
+        fechaRegistroInicial timestamp,
+        ID_INTERCAMBIO varchar2(33 char) not null,
+        INDICADOR_PRUEBA number(10,0) not null,
+        NOMBRE_USUARIO varchar2(80 char),
+        NUM_EXPEDIENTE varchar2(80 char),
+        NUMERO_REGISTRO varchar2(20 char) not null,
+        numeroRegistroInicial varchar2(255 char),
+        NUM_TRANSPORTE varchar2(20 char),
+        OBSERVACIONES varchar2(50 char),
+        REF_EXTERNA varchar2(16 char),
+        RESUMEN varchar2(240 char) not null,
+        SOLICITA varchar2(4000 char),
+        TIMESTAMP_REGISTRO raw(255),
+        timestampRegistroInicial raw(255),
+        TIPO_ANOTACION number(10,0) not null,
+        TIPO_REGISTRO number(10,0) not null,
+        TIPO_TRANSPORTE number(10,0),
+        ENTIDAD number(19,0) not null
     );
 
     create table RWE_CATCOMUNIDADAUTONOMA (
@@ -188,6 +247,42 @@
         REGISTRODETALLE number(19,0),
         REPRESENTADO number(19,0),
         REPRESENTANTE number(19,0)
+    );
+
+    create table RWE_INTERESADO_SIR (
+        ID number(19,0) not null,
+        CANAL_NOTIF_INTERESADO number(10,0),
+        CANAL_NOTIF_REPRESENTANTE number(10,0),
+        COD_MUNICIPIO_INTERESADO varchar2(5 char),
+        COD_MUNICIPIO_REPRESENTANTE varchar2(5 char),
+        COD_PAIS_INTERESADO varchar2(4 char),
+        COD_PAIS_REPRESENTANTE varchar2(4 char),
+        CP_INTERESADO varchar2(5 char),
+        CP_REPRESENTANTE varchar2(5 char),
+        COD_PROVINCIA_INTERESADO varchar2(2 char),
+        COD_PROVINCIA_REPRESENTANTE varchar2(2 char),
+        EMAIL_INTERESADO varchar2(160 char),
+        EMAIL_REPRESENTANTE varchar2(160 char),
+        DIR_ELECTRONICA_INTERESADO varchar2(160 char),
+        DIR_ELECTRONICA_REPRESENTANTE varchar2(160 char),
+        DIRECCION_INTERESADO varchar2(160 char),
+        DIRECCION_REPRESENTANTE varchar2(160 char),
+        DOCUMENTO_INTERESADO varchar2(17 char),
+        DOCUMENTO_REPRESENTANTE varchar2(17 char),
+        NOMBRE_INTERESADO varchar2(30 char),
+        NOMBRE_REPRESENTANTE varchar2(30 char),
+        OBSERVACIONES varchar2(160 char),
+        APELLIDO1_INTERESADO varchar2(30 char),
+        APELLIDO1_REPRESENTANTE varchar2(30 char),
+        RAZON_SOCIAL_INTERESADO varchar2(80 char),
+        RAZON_SOCIAL_REPRESENTANTE varchar2(80 char),
+        APELLIDO2_INTERESADO varchar2(30 char),
+        APELLIDO2_REPRESENTANTE varchar2(30 char),
+        TELEFONO_INTERESADO varchar2(20 char),
+        TELEFONO_REPRESENTANTE varchar2(20 char),
+        T_DOCUMENTO_INTERESADO number(10,0),
+        T_DOCUMENTO_REPRESENTANTE number(10,0),
+        ASIENTO_REGISTRAL number(19,0)
     );
 
     create table RWE_LIBRO (
@@ -612,6 +707,7 @@
     create index RWE_ORGANI_PAIS_FK_I on RWE_ORGANISMO (PAIS);
     create index RWE_PELIUS_USUARI_FK_I on RWE_PERMLIBUSU (USUARIO);
     create index RWE_PELIUS_LIBRO_FK_I on RWE_PERMLIBUSU (LIBRO);
+    create index RWE_PERSONA_ENTIDAD_FK_I on RWE_PERSONA (ENTIDAD);
     create index RWE_PROPIE_ENTIDA_FK_I on RWE_PROPIEDADGLOBAL (ENTIDAD);
     create index RWE_REGMIG_FECREG_I on RWE_REGISTRO_MIGRADO (FECHAREG);
     create index RWE_REGMIG_CODOF_I on RWE_REGISTRO_MIGRADO (CODOFICINA);
@@ -620,13 +716,16 @@
     create index RWE_REGMIG_REMDES_I on RWE_REGISTRO_MIGRADO (DESREMDES);
     create index RWE_REGMIG_ANO_I on RWE_REGISTRO_MIGRADO (ANO);
     create index RWE_REGMIG_TREG_I on RWE_REGISTRO_MIGRADO (TREGISTRO);
-    create index RWE_PERSONA_ENTIDAD_FK_I on RWE_PERSONA (ENTIDAD);
  -- FINAL Indexes
 
  -- INICI PK's
     alter table RWE_ANEXO add constraint RWE_ANEXO_pk primary key (ID);
 
+    alter table RWE_ANEXO_SIR add constraint RWE_ANEXO_SIR_pk primary key (ID);
+
     alter table RWE_ARCHIVO add constraint RWE_ARCHIVO_pk primary key (ID);
+
+    alter table RWE_ASIENTO_REGISTRAL_SIR add constraint RWE_ASIENTO_REGISTRAL_SIR_pk primary key (ID);
 
     alter table RWE_CATCOMUNIDADAUTONOMA add constraint RWE_CATCOMUNIDADAUTONOMA_pk primary key (ID);
 
@@ -665,6 +764,8 @@
     alter table RWE_HISTORICO_REGISTRO_SALIDA add constraint RWE_HIST_REGISTRO_SALIDA_PK primary key (ID);
 
     alter table RWE_INTERESADO add constraint RWE_INTERESADO_pk primary key (ID);
+
+    alter table RWE_INTERESADO_SIR add constraint RWE_INTERESADO_SIR_pk primary key (ID);
 
     alter table RWE_LIBRO add constraint RWE_LIBRO_pk primary key (ID);
 
@@ -741,6 +842,21 @@
         add constraint RWE_ANEXO_TDOCAL_FK
         foreign key (TDOCUMENTAL)
         references RWE_TIPODOCUMENTAL;
+
+    alter table RWE_ANEXO_SIR
+        add constraint RWE_ANEXOSIR_ASIREG_FK
+        foreign key (ASIENTO_REGISTRAL)
+        references RWE_ASIENTO_REGISTRAL_SIR;
+
+    alter table RWE_ANEXO_SIR
+        add constraint RWE_ANEXOSIR_ANEXO_FK
+        foreign key (ANEXO)
+        references RWE_ARCHIVO;
+
+    alter table RWE_ASIENTO_REGISTRAL_SIR
+        add constraint RWE_ARS_ENTIDAD_FK
+        foreign key (ENTIDAD)
+        references RWE_ENTIDAD;
 
     alter table RWE_CATCOMUNIDADAUTONOMA
         add constraint RWE_CATCOMUNAUT_CATPAIS_FK
@@ -871,6 +987,11 @@
         add constraint RWE_INTERESADO_LOCALIDAD_FK
         foreign key (LOCALIDAD)
         references RWE_CATLOCALIDAD;
+
+    alter table RWE_INTERESADO_SIR
+        add constraint RWE_INTERESADOSIR_ASIREG_FK
+        foreign key (ASIENTO_REGISTRAL)
+        references RWE_ASIENTO_REGISTRAL_SIR;
 
     alter table RWE_LIBRO
         add constraint RWE_LIBRO_CONT_SAL_FK
