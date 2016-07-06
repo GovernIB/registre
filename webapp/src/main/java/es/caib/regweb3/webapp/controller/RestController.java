@@ -3,6 +3,7 @@ package es.caib.regweb3.webapp.controller;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.ObjetoBasico;
 import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.sir.core.model.InteresadoSir;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.LocalidadJson;
 import org.apache.log4j.Logger;
@@ -47,6 +48,12 @@ public class RestController {
 
     @EJB(mappedName = "regweb3/ReproEJB/local")
     public ReproLocal reproEjb;
+
+    @EJB(mappedName = "regweb3/InteresadoSirEJB/local")
+    public InteresadoSirLocal interesadoSirEjb;
+
+    @EJB(mappedName = "regweb3/InteresadoEJB/local")
+    public InteresadoLocal interesadoEjb;
 
 
     @RequestMapping(value = "/busquedaPersonas/{tipoPersona}", method = RequestMethod.GET)
@@ -183,6 +190,26 @@ public class RestController {
     List<Repro> obtenerRepros(@RequestParam Long idUsuario, @RequestParam Long tipoRegistro) throws Exception {
 
         return reproEjb.getActivasbyUsuario(idUsuario, tipoRegistro);
+    }
+
+    /**
+     * Obtiene un {@link es.caib.regweb3.sir.core.model.InteresadoSir}
+     */
+    @RequestMapping(value = "/obtenerInteresadoSir", method = RequestMethod.GET)
+    public @ResponseBody
+    InteresadoSir obtenerInteresadoSir(@RequestParam Long idInteresadoSir) throws Exception {
+
+        return interesadoSirEjb.findById(idInteresadoSir);
+    }
+
+    /**
+     * Obtiene un {@link es.caib.regweb3.model.Interesado}
+     */
+    @RequestMapping(value = "/obtenerInteresado", method = RequestMethod.GET)
+    public @ResponseBody
+    Interesado obtenerInteresado(@RequestParam Long idInteresado) throws Exception {
+
+        return interesadoEjb.findById(idInteresado);
     }
 
 

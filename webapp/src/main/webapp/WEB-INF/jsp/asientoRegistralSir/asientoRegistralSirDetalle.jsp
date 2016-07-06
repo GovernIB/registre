@@ -248,8 +248,7 @@
                                         <c:forEach var="interesado" items="${asientoRegistralSir.interesados}">
                                             <tr>
                                                 <td>
-                                                    <c:if test="${interesado.tipoInteresado == RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA}">${interesado.nombrePersonaFisica} </c:if>
-                                                    <c:if test="${interesado.tipoInteresado == RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA}">${interesado.nombrePersonaJuridica} </c:if>
+                                                    <a data-toggle="modal" href="#detalleInteresadoSir" onclick="obtenerInteresadoSir(${interesado.id})">${interesado.nombreCompleto}</a>
                                                 </td>
                                                 <td>
                                                     <c:if test="${interesado.tipoInteresado == RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA}"><spring:message code="persona.fisica"/></c:if>
@@ -257,7 +256,7 @@
                                                 </td>
                                                 <td>
                                                     <c:if test="${interesado.representante}">
-                                                        <span class="label label-success">${interesado.nombreCompletoRepresentante}</span>
+                                                        <span data-toggle="modal" href="#detalleInteresadoSir" onclick="obtenerInteresadoSir(${interesado.id})" class="label label-success">${interesado.nombreCompletoRepresentante}</span>
                                                     </c:if>
 
                                                     <c:if test="${!interesado.representante}">
@@ -337,6 +336,7 @@
 </div> <!-- /container -->
 
 <c:import url="../modulos/pie.jsp"/>
+<c:import url="detalleInteresadoSir.jsp"/>
 
 <script type="application/javascript">
     // Realiza el Registro de un AsientoRegistralSir

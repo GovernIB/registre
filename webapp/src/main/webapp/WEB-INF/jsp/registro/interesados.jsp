@@ -75,20 +75,7 @@
 
                     <input id="personaFisica" name="personaFisica" type="text" class="form-control" style="display: none;" placeholder="<spring:message code="persona.buscar.fisicas"/>" autocomplete="off"/>
 
-                    <%--<select id="personaFisica" name="personaFisica" class="chosen-select">
-                        <option value="-1">...</option>
-                        <c:forEach items="${personasFisicas}" var="fisica">
-                            <option value="${fisica.id}">${fisica.nombrePersonaFisica}</option>
-                        </c:forEach>
-                    </select>--%>
                     <input id="personaJuridica" name="personaJuridica" type="text" class="form-control" style="display: none;" placeholder="<spring:message code="persona.buscar.juridicas"/>" autocomplete="off"/>
-
-                    <%--<select id="personaJuridica" name="personaJuridica" class="chosen-select">
-                        <option value="-1">...</option>
-                        <c:forEach items="${personasJuridicas}" var="juridica">
-                            <option value="${juridica.id}">${juridica.nombrePersonaJuridica}</option>
-                        </c:forEach>
-                    </select>--%>
 
                 </div>
                 <%--Botones búsqueda--%>
@@ -101,9 +88,6 @@
                 </div>
                 <%--Botones nueva persona--%>
                 <div class="col-xs-2 pull-right boto-panel">
-                    <%--<a id="addOrganismo" href="javascript:void(0);" onclick="addOrganismoInteresado('<spring:message code="interesado.administracion"/>','${registro.registroDetalle.id}')" class="btn btn-warning btn-sm"><spring:message code="regweb.añadir"/></a>
-                    <a id="addPersonaFisica" href="javascript:void(0);" onclick="addInteresado($('#personaFisica option:selected').val(),$('#personaFisica option:selected').text(),'<spring:message code="persona.fisica"/>','No',null,'${registro.registroDetalle.id}')" class="btn btn-warning btn-sm"><spring:message code="regweb.añadir"/></a>
-                    <a id="addPersonaJuridica" href="javascript:void(0);" onclick="addInteresado($('#personaJuridica option:selected').val(),$('#personaJuridica option:selected').text(),'<spring:message code="persona.juridica"/>','No',null,'${registro.registroDetalle.id}')" class="btn btn-warning btn-sm"><spring:message code="regweb.añadir"/></a>--%>
                     <a id="nuevaPersonaFisica" data-toggle="modal" role="button" href="#modalInteresado" style="display: none;" class="btn btn-warning btn-sm" onclick="nuevoInteresado('<spring:message code="persona.fisica.nueva"/>')"><spring:message code="regweb.nueva"/></a>
                     <a id="nuevaPersonaJuridica" data-toggle="modal" role="button" href="#modalInteresado" style="display: none;" class="btn btn-warning btn-sm" onclick="nuevoInteresado('<spring:message code="persona.juridica.nueva"/>')"><spring:message code="regweb.nueva"/></a>
                 </div>

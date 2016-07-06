@@ -2,6 +2,7 @@ package es.caib.regweb3.sir.core.model;
 
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.ForeignKey;
 
 import javax.persistence.*;
@@ -15,173 +16,39 @@ import java.io.Serializable;
 @SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 public class InteresadoSir implements Serializable {
 
-    /**
-     * Id del asiento registral
-     */
     private Long id;
-
-    /**
-     * Id del Asiento Registral al que pertenece
-     */
+    @JsonIgnore
     private AsientoRegistralSir idAsientoRegistralSir;
-
-    /**
-     * Tipo de documento de identificacion del interesado.
-     */
     private TipoDocumentoIdentificacion tipoDocumentoIdentificacionInteresado;
-
-    /**
-     * Documento de identificación del interesado.
-     */
     private String documentoIdentificacionInteresado;
-
-    /**
-     * Razón social del interesado (si es persona jurídica).
-     */
     private String razonSocialInteresado;
-
-    /**
-     * Nombre del interesado.
-     */
     private String nombreInteresado;
-
-    /**
-     * Primer apellido del interesado.
-     */
     private String primerApellidoInteresado;
-
-    /**
-     * Segundo apellido del interesado.
-     */
     private String segundoApellidoInteresado;
-
-    /**
-     * Código del país del interesado. Codificado según el directorio común.
-     */
     private String codigoPaisInteresado;
-
-    /**
-     * Código de la provincia del interesado. Codificado según el directorio
-     * común.
-     */
     private String codigoProvinciaInteresado;
-
-    /**
-     * Código del municipio del interesado. Codificado según el directorio
-     * común.
-     */
     private String codigoMunicipioInteresado;
-
-    /**
-     * Direccion postal del interesado.
-     */
     private String direccionInteresado;
-
-    /**
-     * Codigo postal del interesado.
-     */
     private String codigoPostalInteresado;
-
-    /**
-     * Correo electrónico del interesado.
-     */
     private String correoElectronicoInteresado;
-
-    /**
-     * Teléfono de contacto del interesado.
-     */
     private String telefonoInteresado;
-
-    /**
-     * Direccion electrónica habilitada del interesado.
-     */
     private String direccionElectronicaHabilitadaInteresado;
-
-    /**
-     * Canal preferente de notificación del interesado.
-     */
     private CanalNotificacion canalPreferenteComunicacionInteresado;
-
-    /**
-     * Tipo de documento de identificacion del representante.
-     */
     private TipoDocumentoIdentificacion tipoDocumentoIdentificacionRepresentante;
-
-    /**
-     * Documento de identificación del representante.
-     */
     private String documentoIdentificacionRepresentante;
-
-    /**
-     * Razón social del representante (si es persona jurídica).
-     */
     private String razonSocialRepresentante;
-
-    /**
-     * Nombre del representante.
-     */
     private String nombreRepresentante;
-
-    /**
-     * Primer apellido del representante.
-     */
     private String primerApellidoRepresentante;
-
-    /**
-     * Segundo apellido del representante.
-     */
     private String segundoApellidoRepresentante;
-
-    /**
-     * Código del país del representante. Codificado según el directorio común.
-     */
     private String codigoPaisRepresentante;
-
-    /**
-     * Código de la provincia del representante. Codificado según el directorio
-     * común.
-     */
     private String codigoProvinciaRepresentante;
-
-    /**
-     * Código del municipio del representante. Codificado según el directorio
-     * común.
-     */
     private String codigoMunicipioRepresentante;
-
-    /**
-     * Direccion postal del representante.
-     */
     private String direccionRepresentante;
-
-    /**
-     * Codigo postal del representante.
-     */
     private String codigoPostalRepresentante;
-
-    /**
-     * Correo electrónico del representante.
-     */
     private String correoElectronicoRepresentante;
-
-    /**
-     * Teléfono de contacto del representante.
-     */
     private String telefonoRepresentante;
-
-    /**
-     * Direccion electrónica habilitada del representante.
-     */
     private String direccionElectronicaHabilitadaRepresentante;
-
-    /**
-     * Canal preferente de notificación del representante.
-     */
     private CanalNotificacion canalPreferenteComunicacionRepresentante;
-
-    /**
-     * Observaciones del interesado y/o del representante.
-     */
     private String observaciones;
 
 
@@ -538,10 +405,12 @@ public class InteresadoSir implements Serializable {
     @Transient
     public String getNombreCompletoRepresentante(){
 
-        if(getTipoRepresentante().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)){
-            return getNombrePersonaFisicaRepresentante();
-        }else if(getTipoRepresentante().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)){
-            return getNombrePersonaJuridicaRepresentante();
+        if(getRepresentante()){
+            if(getTipoRepresentante().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)){
+                return getNombrePersonaFisicaRepresentante();
+            }else if(getTipoRepresentante().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)){
+                return getNombrePersonaJuridicaRepresentante();
+            }
         }
 
         return "";

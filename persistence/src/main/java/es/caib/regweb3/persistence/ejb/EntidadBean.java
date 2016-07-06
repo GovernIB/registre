@@ -169,7 +169,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     public List<Entidad> getEntidadesAdministrador(Long idUsuario) throws Exception{
 
         Query q = em.createQuery("Select entidad.id, entidad.nombre from Entidad as entidad, UsuarioEntidad as usuarioEntidad where usuarioEntidad in elements(entidad.administradores) " +
-                "and usuarioEntidad.usuario.id = :idUsuario and entidad.activo = true");
+                "and usuarioEntidad.usuario.id = :idUsuario and entidad.activo = true order by entidad.id");
 
         q.setParameter("idUsuario",idUsuario);
 
@@ -190,7 +190,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     public List<Entidad> getEntidadesPropietario(Long idUsuario) throws Exception {
 
         Query q = em.createQuery("Select entidad.id, entidad.nombre from Entidad as entidad where entidad.propietario.id = :idUsuario " +
-                "and entidad.activo = true");
+                "and entidad.activo = true order by entidad.id");
 
         q.setParameter("idUsuario",idUsuario);
 

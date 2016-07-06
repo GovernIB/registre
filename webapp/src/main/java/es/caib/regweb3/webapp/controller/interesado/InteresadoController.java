@@ -796,16 +796,6 @@ public class InteresadoController extends BaseController{
             interesado.setLocalidad(null);
         }
 
-        /*// Si no se ha escogido ningúna Provincia, lo ponemos a null
-        if (interesado.getPais() == null || interesado.getPais().getId() == null || interesado.getPais().getId() == -1) {
-            interesado.setPais(null);
-        }
-
-        // Si no se ha escogido ningúna Provincia, lo ponemos a null
-        if(interesado.getProvincia() == null || interesado.getProvincia().getId() == null || interesado.getProvincia().getId() == -1){
-            interesado.setProvincia(null);
-            interesado.setLocalidad(null);
-        }*/
 
         // Si tiene documento ponemos las letras en mayúsculas
         if(interesado.getDocumento() != null){
@@ -815,22 +805,5 @@ public class InteresadoController extends BaseController{
         return interesado;
     }
 
-    /**
-     * Generamos el nombre a mostrar según el tipo de persona
-     * @param interesado
-     * @return
-     */
-    String obtenerNombreInteresado(Interesado interesado) {
-
-        if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)) {
-            return interesado.getNombrePersonaFisica();
-
-        } else if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)) {
-            return interesado.getNombrePersonaJuridica();
-
-        } else {
-            return  "";
-        }
-    }
 
 }
