@@ -563,4 +563,9 @@ public interface RegwebConstantes {
     public Boolean OFICINA_VIRTUAL_SI = true; // Las incluimos en los resultados obtenidos
     public Boolean OFICINA_VIRTUAL_NO = false; // No las incluimos en los resultados obtenidos
 
+    /* -------------- ANEXO MIME --------------*/
+    public int ANEXO_TIPOMIME_MAXLENGTH_SIR = 20;
+    public int ANEXO_NOMBREFICHERO_MAXLENGTH_SIR = 80;
+    public int ANEXO_OBSERVACIONES_MAXLENGTH_SIR = 50;
+    public int ANEXO_IDENTIFICADOR_MAXLENGTH_SIR = 50;
 }
