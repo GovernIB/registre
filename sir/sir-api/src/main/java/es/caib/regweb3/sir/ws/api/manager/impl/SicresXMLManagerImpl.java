@@ -1629,6 +1629,9 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 						"'TipoMIME' does not match 'IdentificadorFichero'");
 			}*/
 
+            // Validar el contenido del anexo
+            Assert.isTrue(anexo.getAnexo().length > 0,
+                    "'Anexo' no puede estar vacio");
 
 			/*
 			 * TODO SIR-RC-PR-096
@@ -1926,6 +1929,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
         boolean valido = true;
 
         if (StringUtils.length(codigoEntidadRegistral) > LONGITUD_CODIGO_ENTIDAD_REGISTRAL) {
+            log.info("Tamaño CODIGO_ENTIDAD_REGISTRAL demasiado largo");
             return false;
         }
 
@@ -1933,7 +1937,10 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
             Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
             OficinaTF oficinaTF = oficinasService.obtenerOficina(codigoEntidadRegistral,null,null);
 
-            if(oficinaTF == null) return false;
+            if(oficinaTF == null){
+                log.info("Oficina "+codigoEntidadRegistral+" no encontrada en Dir3");
+                return false;
+            }
 
         } catch (Exception e) {
             log.error("Error en validarCodigoEntidadRegistral: " + e.getMessage(), e);
