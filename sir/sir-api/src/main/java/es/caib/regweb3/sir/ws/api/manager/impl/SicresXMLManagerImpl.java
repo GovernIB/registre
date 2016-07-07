@@ -734,9 +734,9 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
           secuencia++;
           
           Long validezDocumento = anexo.getValidezDocumento();
-          
-          // TODO preguntar a felip, al ser la firma del anexo no se que poner
-          Long tipoDocumento = RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO;
+
+
+            Long tipoDocumento = anexo.getTipoDocumento();
           
           // TODO com extreure ????
           String certificado = null;
@@ -812,7 +812,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
             secuencia++;
             
             // TODO Que posam
-            Long validezDocumento = null;
+              Long validezDocumento = anexo.getValidezDocumento();
             
             // TODO preguntar a felip, al ser la firma del anexo no se que poner
             Long tipoDocumento = RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO;
@@ -933,7 +933,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
 
       // Tipo_MIME
-      if (tipoMime !=null) {
+        if (tipoMime != null || tipoMime.length() <= RegwebConstantes.ANEXO_TIPOMIME_MAXLENGTH_SIR) {
         elem = rootElement.addElement("Tipo_MIME");
         elem.addCDATA(tipoMime);
       }
@@ -949,13 +949,12 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
 
       //Identificador Fichero Firmado
-      if (identificadorDocumentoFirmado != null) {
-          elem = rootElement.addElement("Identificador_Documento_Firmado");
+
+        elem = rootElement.addElement("Identificador_Documento_Firmado");
           elem.addCDATA(identificadorDocumentoFirmado);
-      }
 
 
-      // Observaciones
+        // Observaciones
       if (StringUtils.isNotBlank(observaciones)) {
           elem = rootElement.addElement("Observaciones");
           elem.addCDATA(observaciones);
