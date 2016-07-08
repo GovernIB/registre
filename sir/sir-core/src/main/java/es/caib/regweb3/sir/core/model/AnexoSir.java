@@ -9,8 +9,8 @@ import java.io.Serializable;
 /**
  * Created by earrivi on 26/11/2015.
  */
-@Entity
-@Table(name = "RWE_ANEXO_SIR")
+//@Entity
+//@Table(name = "RWE_ANEXO_SIR")
 @SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 public class AnexoSir implements Serializable {
 

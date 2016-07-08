@@ -11,8 +11,8 @@ import java.io.Serializable;
 /**
  * Created by earrivi on 26/11/2015.
  */
-@Entity
-@Table(name = "RWE_INTERESADO_SIR")
+//@Entity
+//@Table(name = "RWE_INTERESADO_SIR")
 @SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 public class InteresadoSir implements Serializable {
 
