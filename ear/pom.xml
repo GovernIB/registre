@@ -262,6 +262,12 @@
             <version>3.0.7</version>
         </dependency>
 
+        <dependency>
+            <groupId>es.caib.regweb3</groupId>
+            <artifactId>plugins-distribucionregweb-distribucionripea</artifactId>
+            <version>3.0.5</version>
+        </dependency>
+
         <!-- ============================================ -->
         <!-- =============    FINAL PLUGINS   =========== -->
         <!-- ============================================ -->

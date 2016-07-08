@@ -119,6 +119,14 @@
 			# es.caib.regweb3.distribucion.plugin.0.plugins.distribucion.distribucionlocal.exemple=Un valor
 			es.caib.regweb3.distribucion.plugin.0.conanexos=true
 
+			<!-- Plugin Distribucion Ripea -->
+			#
+			es.caib.regweb3.distribucion.plugin.1=org.fundaciobit.plugins.distribucion.distribucionripea.DistribucionRipeaPlugin
+			#
+			es.caib.regweb3.distribucion.plugin.1.plugins.distribucion.distribucionripea.endpoint=https://proves.caib.es/ripea/ws/v1/bustia
+			# es.caib.regweb3.distribucion.plugin.1.plugins.distribucion.distribucionripea.usuario=$regweb_ripea
+			# es.caib.regweb3.distribucion.plugin.1.plugins.distribucion.distribucionripea.password=regweb_ripea
+
         </attribute>
     </mbean>
 </server>
