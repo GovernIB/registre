@@ -90,6 +90,12 @@
 			<id>es.caib.regweb3.localrepo1</id>
 			<url>file://${basedir}/../local-repo</url>
 		</repository>
+
+        <repository>
+            <id>ripea-maven-repos</id>
+            <name>RIPEA Maven Repository</name>
+            <url>http://GovernIB.github.io/ripea/maven/</url>
+        </repository>
 		
     </repositories>
 
