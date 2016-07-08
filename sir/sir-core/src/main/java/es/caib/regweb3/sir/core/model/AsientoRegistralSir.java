@@ -14,8 +14,8 @@ import java.util.List;
 /**
  * Implementación de un Asiento Registral de intercambio
  */
-@Entity
-@Table(name = "RWE_ASIENTO_REGISTRAL_SIR")
+//@Entity
+//@Table(name = "RWE_ASIENTO_REGISTRAL_SIR")
 @SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 public class AsientoRegistralSir implements Serializable {
 
