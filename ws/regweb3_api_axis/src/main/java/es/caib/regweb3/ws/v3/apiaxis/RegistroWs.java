@@ -36,7 +36,7 @@ public class RegistroWs  implements java.io.Serializable {
 
     private java.lang.String numTransporte;
 
-    private java.lang.Integer numero;
+    private int numero;
 
     private java.lang.String numeroRegistroFormateado;
 
@@ -72,7 +72,7 @@ public class RegistroWs  implements java.io.Serializable {
            java.lang.String libro,
            java.lang.String numExpediente,
            java.lang.String numTransporte,
-           java.lang.Integer numero,
+           int numero,
            java.lang.String numeroRegistroFormateado,
            java.lang.String observaciones,
            java.lang.String oficina,
@@ -408,7 +408,7 @@ public class RegistroWs  implements java.io.Serializable {
      * 
      * @return numero
      */
-    public java.lang.Integer getNumero() {
+    public int getNumero() {
         return numero;
     }
 
@@ -418,7 +418,7 @@ public class RegistroWs  implements java.io.Serializable {
      * 
      * @param numero
      */
-    public void setNumero(java.lang.Integer numero) {
+    public void setNumero(int numero) {
         this.numero = numero;
     }
 
@@ -636,9 +636,7 @@ public class RegistroWs  implements java.io.Serializable {
             ((this.numTransporte==null && other.getNumTransporte()==null) || 
              (this.numTransporte!=null &&
               this.numTransporte.equals(other.getNumTransporte()))) &&
-            ((this.numero==null && other.getNumero()==null) || 
-             (this.numero!=null &&
-              this.numero.equals(other.getNumero()))) &&
+            this.numero == other.getNumero() &&
             ((this.numeroRegistroFormateado==null && other.getNumeroRegistroFormateado()==null) || 
              (this.numeroRegistroFormateado!=null &&
               this.numeroRegistroFormateado.equals(other.getNumeroRegistroFormateado()))) &&
@@ -732,9 +730,7 @@ public class RegistroWs  implements java.io.Serializable {
         if (getNumTransporte() != null) {
             _hashCode += getNumTransporte().hashCode();
         }
-        if (getNumero() != null) {
-            _hashCode += getNumero().hashCode();
-        }
+        _hashCode += getNumero();
         if (getNumeroRegistroFormateado() != null) {
             _hashCode += getNumeroRegistroFormateado().hashCode();
         }
@@ -873,7 +869,6 @@ public class RegistroWs  implements java.io.Serializable {
         elemField.setFieldName("numero");
         elemField.setXmlName(new javax.xml.namespace.QName("", "numero"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"));
-        elemField.setMinOccurs(0);
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();

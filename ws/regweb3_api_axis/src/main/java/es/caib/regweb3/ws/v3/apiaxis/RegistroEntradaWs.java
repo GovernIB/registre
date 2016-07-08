@@ -28,7 +28,7 @@ public class RegistroEntradaWs  extends es.caib.regweb3.ws.v3.apiaxis.RegistroWs
            java.lang.String libro,
            java.lang.String numExpediente,
            java.lang.String numTransporte,
-           java.lang.Integer numero,
+           int numero,
            java.lang.String numeroRegistroFormateado,
            java.lang.String observaciones,
            java.lang.String oficina,
