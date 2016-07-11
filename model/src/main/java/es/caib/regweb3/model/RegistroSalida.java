@@ -5,6 +5,7 @@ import org.hibernate.annotations.ForeignKey;
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Fundació BIT.
@@ -82,6 +83,30 @@ public class RegistroSalida implements IRegistro {
         this.fecha = fecha;
         this.libro = new Libro(idLibro, nombreLibro, null, null, denominacionOrganismo);
         this.oficina = new Oficina(null, null, denominacionOficina);
+    }
+
+    /**
+     * Constructor para Informe LibroRegistro
+     */
+    public RegistroSalida(Long idRegistro, Long idLibro, String nombreLibro, Long idOficina, String denominacionOficina, Date fecha,
+                          Integer numeroRegistro, String extracto, Long idTipoAsunto, Long idOficinaOrigen, String denominacionOficinaOrigen,
+                          String numeroRegistroOrigen, Date fechaOrigen, String origenExternoDenominacion, Long idOrigen,
+                          String denominacionOrigen, Long tipoDocumentacionFisica, Long idioma, String observaciones, Long estado,
+                          String expediente, Long idCodigoAsunto, String referenciaExterna, Long transporte, String numeroTransporte,
+                          Long idRegistroDetalle, String origenExternoCodigo, List<Interesado> interesados) {
+
+        this.id = idRegistro;
+        this.numeroRegistro = numeroRegistro;
+        this.fecha = fecha;
+        this.estado = estado;
+        this.origenExternoCodigo = origenExternoCodigo;
+        this.origenExternoDenominacion = origenExternoDenominacion;
+        this.origen = new Organismo(idOrigen, denominacionOrigen);
+        this.registroDetalle = new RegistroDetalle(idRegistroDetalle, extracto, idTipoAsunto, idOficinaOrigen, denominacionOficinaOrigen,
+                numeroRegistroOrigen, fechaOrigen, tipoDocumentacionFisica, idioma, observaciones, expediente, idCodigoAsunto,
+                referenciaExterna, transporte, numeroTransporte, interesados);
+        this.libro = new Libro(idLibro, nombreLibro, null, null, null);
+        this.oficina = new Oficina(idOficina, null, denominacionOficina);
     }
 
     @Id
