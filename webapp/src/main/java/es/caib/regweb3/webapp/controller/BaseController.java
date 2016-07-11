@@ -38,6 +38,9 @@ public class BaseController {
     @EJB(mappedName = "regweb3/InteresadoEJB/local")
     public InteresadoLocal interesadoEjb;
 
+    @EJB(mappedName = "regweb3/EntidadEJB/local")
+    public EntidadLocal entidadEjb;
+
     /**
      * Retorna el mensaje traducido según el idioma del usuario
      * @param key
@@ -172,6 +175,17 @@ public class BaseController {
         HttpSession session = request.getSession();
         session.setAttribute(RegwebConstantes.SESSION_ENTIDAD,entidad);
 
+    }
+
+    /**
+     * Comprueba si una Entidad está marcada como Sir
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    protected Boolean isSir(HttpServletRequest request) throws Exception{
+
+        return entidadEjb.isSir(getEntidadActiva(request).getId());
     }
 
     /**

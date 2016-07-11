@@ -103,7 +103,7 @@ public class InicioController extends BaseController{
 
             /* ASIENTOS REGISTRALES SIR PENDIENTES DE PROCESAR */
             /* Buscamos los Últimos AsientoRegistralSir que están pendientes de procesar
-            if(librosRegistroEntrada.size() > 0) { // Sólo muestra los AsientoRegistralSir si tiene permisos de RegistroEntrada
+            if(isSir(request) && librosRegistroEntrada.size() > 0) { // Sólo muestra los AsientoRegistralSir si tiene permisos de RegistroEntrada
                 List<AsientoRegistralSir> asientosRegistralesSir = asientosRegistralSirEjb.getUltimosARSPendientesProcesar(oficinaActiva.getCodigo(), RegwebConstantes.REGISTROS_PANTALLA_INICIO);
                 mav.addObject("asientosRegistralesSir", asientosRegistralesSir);
             }*/

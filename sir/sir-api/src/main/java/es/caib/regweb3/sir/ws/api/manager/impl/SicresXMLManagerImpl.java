@@ -19,6 +19,7 @@ import es.caib.regweb3.sir.ws.api.manager.SicresXMLManager;
 import es.caib.regweb3.sir.ws.api.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.ws.api.utils.Mensaje;
 import es.caib.regweb3.sir.ws.api.utils.XPathReaderUtil;
+import es.caib.regweb3.utils.MimeTypeUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.Versio;
 import org.apache.commons.codec.binary.Base64;
@@ -1651,7 +1652,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 			 * requeridos por la norma SICRES3 y con el campo "Anexo" (no
 			 * válido).
 			 */
-
+            log.info("Anexo '"+anexo.getNombre_Fichero_Anexado()+"' validado!");
         }
     }
 
@@ -1689,6 +1690,14 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                 "'IdentificadorFichero' is invalid 'num secuencial numerico'"); // Número secuencial compuesto por solo dígitos
         Assert.hasText(tokens[2],
                 "'IdentificadorFichero' is invalid 'extension'"); // Extensión del fichero
+
+        // Validar el tipo MIME
+        if (StringUtils.isNotBlank(anexo.getTipo_MIME())) {
+            Assert.isTrue(StringUtils.equalsIgnoreCase(
+                    anexo.getTipo_MIME(), MimeTypeUtils.getMimeTypeExtension(tokens[2])),
+                    "'TipoMIME' no coincide con el indicado en 'IdentificadorFichero'");
+
+        }
     }
 
     /**
