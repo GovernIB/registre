@@ -37,10 +37,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathConstants;
-import java.io.ByteArrayInputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -1160,9 +1157,10 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
         log.info("Parseando el XML del fichero de intercambio...");
 
         try {
+            InputStream is = new ByteArrayInputStream(xml.getBytes("UTF-8"));
+            InputStreamReader isw = new InputStreamReader(is, "UTF-8");
+            Fichero_Intercambio_SICRES_3 ficheroIntercambioSICRES3 = Fichero_Intercambio_SICRES_3.unmarshal(isw);
 
-            Fichero_Intercambio_SICRES_3 ficheroIntercambioSICRES3 = Fichero_Intercambio_SICRES_3
-                    .unmarshal(new StringReader(xml));
             if (ficheroIntercambioSICRES3 != null) {
                 ficheroIntercambio = new FicheroIntercambio();
                 ficheroIntercambio.setFicheroIntercambio(ficheroIntercambioSICRES3);
@@ -1796,6 +1794,11 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
         Assert.notNull(
                 ficheroIntercambio.getSolicita(),
                 "'solicita' must not be null");
+
+        if(StringUtils.isNotEmpty(ficheroIntercambio.getExpone())){
+            Assert.hasText(ficheroIntercambio.getSolicita(),
+                    "'solicita' must not be empty");
+        }
 
 
         log.info("SegmentoFormularioGenerico validado!");
