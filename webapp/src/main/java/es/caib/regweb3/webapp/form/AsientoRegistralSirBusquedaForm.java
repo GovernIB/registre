@@ -13,7 +13,7 @@ public class AsientoRegistralSirBusquedaForm {
     private AsientoRegistralSir asientoRegistralSir;
     private Integer pageNumber;
     private Integer anyo;
-    private Long estado;
+    private String estado;
 
 
     public AsientoRegistralSirBusquedaForm() {}
@@ -47,7 +47,7 @@ public class AsientoRegistralSirBusquedaForm {
         this.anyo = anyo;
     }
 
-    public Long getEstado() { return estado; }
+    public String getEstado() { return estado; }
 
-    public void setEstado(Long estado) { this.estado = estado; }
+    public void setEstado(String estado) { this.estado = estado; }
 }

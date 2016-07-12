@@ -52,14 +52,6 @@ public interface TipoDocumentalLocal extends BaseEjb<TipoDocumental, Long> {
      */
     public Boolean existeCodigoEdit(String codigoNTI, Long idTipoDocumental, Long idEntidad) throws Exception;
 
-    /**
-     *  Obtiene el tipoDocumental asociado al codigo NTI indicado
-     * @param codigo
-     * @return
-     * @throws Exception
-     */
-    public TipoDocumental findByCodigoNTI(String codigo) throws Exception;
-
   /**
    * Obtiene los tipos documentales de una entidad
    * @param idEntidad

@@ -145,12 +145,7 @@ public class AsientoRegistralSirController extends BaseController {
                 libros = getLibrosRegistroSalida(request);
             }
             model.addAttribute("libros",libros);
-
-            RegistrarForm registrarForm = new RegistrarForm();
-            model.addAttribute("registrarForm", registrarForm);
-
-            // Anexos
-           // model.addAttribute("anexos", anexoEjb.getByRegistroDetalle(asientoRegistralSir.getRegistroDetalle().getId()));
+            model.addAttribute("registrarForm", new RegistrarForm());
         }
 
         return "asientoRegistralSir/asientoRegistralSirDetalle";
@@ -160,10 +155,13 @@ public class AsientoRegistralSirController extends BaseController {
     /**
      * Procesa {@link AsientoRegistralSir}, creando un RegistroEntrada
      */
-    @RequestMapping(value = "/{idAsientoRegistralSir}/aceptar/{idLibro}/{idIdioma}/{idTipoAsunto}", method = RequestMethod.GET)
-    public String confirmarAsientoRegistralSir(@PathVariable Long idAsientoRegistralSir,
-        @PathVariable Long idLibro, @PathVariable Long idIdioma, @PathVariable Long idTipoAsunto, Model model, HttpServletRequest request)
+    @RequestMapping(value = "/aceptar/{idAsientoRegistralSir}", method = RequestMethod.POST)
+    public String confirmarAsientoRegistralSir(@PathVariable Long idAsientoRegistralSir, @ModelAttribute RegistrarForm registrarForm , HttpServletRequest request)
             throws Exception, I18NException, I18NValidationException {
+
+        log.info("Libro: " + registrarForm.getIdLibro());
+        log.info("Idioma: " + registrarForm.getIdIdioma());
+        log.info("TipoAsunto: " + registrarForm.getIdTipoAsunto());
 
         AsientoRegistralSir asientoRegistralSir = asientoRegistralSirEjb.findById(idAsientoRegistralSir);
         Oficina oficinaActiva = getOficinaActiva(request);
@@ -179,7 +177,7 @@ public class AsientoRegistralSirController extends BaseController {
         // Procesa el AsientoRegistralSir
         String variableReturn = "redirect:/asientoRegistralSir/"+idAsientoRegistralSir+"/detalle";
         try{
-            idRegistro = asientoRegistralSirEjb.aceptarAsientoRegistralSir(asientoRegistralSir, usuarioEntidad, oficinaActiva, idLibro, idIdioma, idTipoAsunto);
+            idRegistro = asientoRegistralSirEjb.aceptarAsientoRegistralSir(asientoRegistralSir, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getIdTipoAsunto());
 
             if(asientoRegistralSir.getTipoRegistro().equals(TipoRegistro.ENTRADA)) {
                 variableReturn = "redirect:/registroEntrada/" + idRegistro + "/detalle";

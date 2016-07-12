@@ -48,6 +48,7 @@ public class SirBean implements SirLocal{
     @EJB public CatPaisLocal catPaisEjb;
     @EJB public CatProvinciaLocal catProvinciaEjb;
     @EJB public CatLocalidadLocal catLocalidadEjb;
+    @EJB public TipoDocumentalLocal tipoDocumentalEjb;
 
     /**
      *
@@ -221,7 +222,21 @@ public class SirBean implements SirLocal{
         List<Interesado> interesados = new ArrayList<Interesado>();
         for (InteresadoSir interesadoSir : interesadosSir) {
             Interesado interesado = transformarInteresado(interesadoSir);
-            interesados.add(interesado);
+
+            if (interesadoSir.getRepresentante()) {
+                log.info("Tiene representante");
+                Interesado representante = transformarRepresentante(interesadoSir);
+                representante.setIsRepresentante(true);
+                representante.setRepresentado(interesado);
+                interesado.setRepresentante(representante);
+
+                interesados.add(interesado);
+                interesados.add(representante);
+            }else{
+                interesados.add(interesado);
+            }
+
+
         }
         return interesados;
     }
@@ -235,13 +250,16 @@ public class SirBean implements SirLocal{
     private Interesado transformarInteresado(InteresadoSir interesadoSir) throws Exception{
 
         Interesado interesado = new Interesado();
+        interesado.setId((long) (Math.random() * 10000));
         interesado.setIsRepresentante(false);
 
         // Averiguamos que tipo es el Interesado
         if (StringUtils.isEmpty(interesadoSir.getRazonSocialInteresado())) {
+            log.info("Persona Fisica: " + interesadoSir.getNombreInteresado());
             interesado.setTipo(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA);
 
         } else {
+            log.info("Persona Juridica: " + interesadoSir.getRazonSocialInteresado());
             interesado.setTipo(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA);
         }
 
@@ -307,11 +325,6 @@ public class SirBean implements SirLocal{
             interesado.setObservaciones(interesadoSir.getObservaciones());
         }
 
-        // Si el interesado tiene representante, lo generamos
-        if (!StringUtils.isEmpty(interesadoSir.getNombreRepresentante()) || StringUtils.isEmpty(interesadoSir.getRazonSocialRepresentante())) {
-            interesado.setRepresentante(transformarRepresentante(interesadoSir, interesado));
-        }
-
         return interesado;
 
     }
@@ -320,14 +333,13 @@ public class SirBean implements SirLocal{
     /** Transforma un {@link InteresadoSir} en un {@link Interesado}
     *
     * @param representanteSir
-    * @param interesado
     * @return Interesado de tipo {@link Interesado}
      */      
-    private Interesado transformarRepresentante(InteresadoSir representanteSir, Interesado interesado) {
+    private Interesado transformarRepresentante(InteresadoSir representanteSir) {
 
         Interesado representante = new Interesado();
+        representante.setId((long) (Math.random() * 10000));
         representante.setIsRepresentante(true);
-        representante.setRepresentado(interesado);
 
         // Averiguamos que tipo es el Representante
         if (es.caib.regweb3.utils.StringUtils.isEmpty(representanteSir.getRazonSocialRepresentante())) {
@@ -414,7 +426,7 @@ public class SirBean implements SirLocal{
         HashMap<String,AnexoFull> mapAnexosFull = new HashMap<String, AnexoFull>();
         for (AnexoSir anexoSir : asientoRegistralSir.getAnexos()) {
 
-            AnexoFull anexoFull = transformarAnexo(anexoSir, mapAnexosFull);
+            AnexoFull anexoFull = transformarAnexo(anexoSir, asientoRegistralSir.getEntidad().getId(), mapAnexosFull);
             mapAnexosFull.put(anexoSir.getIdentificadorFichero(), anexoFull);
             anexos.add(anexoFull);
         }
@@ -428,7 +440,7 @@ public class SirBean implements SirLocal{
      * @param anexoSir
      * @return Anexo tipo {@link Anexo}
      */
-    private AnexoFull transformarAnexo(AnexoSir anexoSir, Map<String,AnexoFull> anexosProcesados )throws Exception {
+    private AnexoFull transformarAnexo(AnexoSir anexoSir, Long idEntidad, Map<String, AnexoFull> anexosProcesados)throws Exception {
 
         AnexoFull anexoFull = new AnexoFull();
         Anexo anexo = new Anexo();
@@ -446,7 +458,7 @@ public class SirBean implements SirLocal{
 
         //Campos NTI TODO PENDIENTE
         anexo.setOrigenCiudadanoAdmin(RegwebConstantes.ANEXO_ORIGEN_ADMINISTRACION.intValue()); // TODO Comprobar esta asignación
-        anexo.setTipoDocumental(null);
+        anexo.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad("TD99",idEntidad));
 
         /* TODO estos campos no estan deficinidos en el anexo
         if(anexoSir.getCertificado()!= null) {
