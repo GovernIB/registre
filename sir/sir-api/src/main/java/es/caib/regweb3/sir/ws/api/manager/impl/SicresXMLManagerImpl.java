@@ -1362,6 +1362,17 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                             "'razonSocialInteresado' or ('nombreInteresado' and 'primerApellidoInteresado') must not be empty");
                 }
 
+                /* INTERESADO */
+
+                // Tipo Documento Identificación Interesado
+                if (StringUtils.isNotEmpty(interesado.getTipo_Documento_Identificacion_Interesado())) {
+                    Assert.notNull(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacion(interesado.getTipo_Documento_Identificacion_Interesado()), "'invalid tipoDocumentoIdentificacionInteresado'");
+
+                    // Validar que el Documento concuerda con su tipo documento identificación
+                    //Assert.isTrue(comprobarDocumento(interesado.getDocumento_Identificacion_Interesado(), interesado.getTipo_Documento_Identificacion_Interesado()));
+                }
+
+
 
                 // Validar el canal preferente de comunicación del interesado
                 if (StringUtils.isNotBlank(interesado.getCanal_Preferente_Comunicacion_Interesado())) {
@@ -1401,6 +1412,16 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                                 "'direccionElectronicaHabilitadaInteresado' no puede estar vacio");
                     }
 
+                }
+
+                /*REPRESENTANTE*/
+
+                // Tipo Documento Identificación Interesado
+                if (StringUtils.isNotEmpty(interesado.getTipo_Documento_Identificacion_Representante())) {
+                    Assert.notNull(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacion(interesado.getTipo_Documento_Identificacion_Representante()), "invalid 'tipoDocumentoIdentificacionRepresentante'");
+
+                    // Validar que el Documento concuerda con su tipo documento identificación
+                    //Assert.isTrue(comprobarDocumento(interesado.getDocumento_Identificacion_Representante(), interesado.getTipo_Documento_Identificacion_Representante()));
                 }
 
                 // Validar el canal preferente de comunicación del representante
@@ -1446,94 +1467,6 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                     }
                 }
 
-                if (StringUtils.isBlank(ficheroIntercambio.getCodigoUnidadTramitacionOrigen())) {
-
-                    Assert.isTrue(
-                            StringUtils.isNotBlank(interesado
-                                    .getRazon_Social_Interesado())
-                                    || (StringUtils.isNotBlank(interesado
-                                    .getNombre_Interesado()) && StringUtils.isNotBlank(interesado
-                                    .getPrimer_Apellido_Interesado())),
-                            "'razonSocialInteresado' or ('nombreInteresado' and 'primerApellidoInteresado') must not be empty");
-
-                    if (StringUtils.isNotEmpty(interesado.getTipo_Documento_Identificacion_Interesado())) {
-                        Assert.notNull(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacion(interesado.getTipo_Documento_Identificacion_Interesado()), "'invalid tipoDocumentoIdentificacionInteresado'");
-                    }
-
-                    if (StringUtils.isNotEmpty(interesado.getTipo_Documento_Identificacion_Representante())) {
-                        Assert.notNull(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacion(interesado.getTipo_Documento_Identificacion_Representante()), "invalid 'tipoDocumentoIdentificacionRepresentante'");
-                    }
-
-                    if (StringUtils.isNotBlank(interesado.getCanal_Preferente_Comunicacion_Interesado())) {
-
-                        if (CanalNotificacion.DIRECCION_POSTAL.getValue()
-                                .equals(interesado.getCanal_Preferente_Comunicacion_Interesado())) {
-
-                            Assert.hasText(interesado.getPais_Interesado(),
-                                    "'paisInteresado' no puede estar vacio");
-                            Assert.hasText(
-                                    interesado.getDireccion_Interesado(),
-                                    "'direccionInteresado' no puede estar vacio");
-
-                            if (CODIGO_PAIS_ESPANA.equals(interesado.getPais_Interesado())) {
-                                Assert.isTrue(
-                                        StringUtils.isNotBlank(interesado
-                                                .getCodigo_Postal_Interesado())
-                                                || (StringUtils
-                                                .isNotBlank(interesado
-                                                        .getProvincia_Interesado()) && StringUtils
-                                                .isNotBlank(interesado
-                                                        .getMunicipio_Interesado())),
-                                        "'codigoPostalInteresado' or ('provinciaInteresado' and 'municipioInteresado') no puede estar vacio");
-                            }
-
-                        } else if (CanalNotificacion.DIRECCION_ELECTRONICA_HABILITADA
-                                .getValue().equals(interesado.getCanal_Preferente_Comunicacion_Interesado())) {
-                            Assert.hasText(
-                                    interesado
-                                            .getDireccion_Electronica_Habilitada_Interesado(),
-                                    "'direccionElectronicaHabilitadaInteresado' no puede estar vacio");
-                        }
-                    }
-
-                    if (StringUtils.isNotBlank(interesado.getCanal_Preferente_Comunicacion_Representante())) {
-
-                        if (CanalNotificacion.DIRECCION_POSTAL
-                                .getValue().equals(interesado.getCanal_Preferente_Comunicacion_Representante())) {
-
-                            Assert.hasText(interesado.getPais_Representante(),
-                                    "'paisRepresentante' no puede estar vacio");
-                            Assert.hasText(
-                                    interesado.getDireccion_Representante(),
-                                    "'direccionRepresentante' no puede estar vacio");
-
-                            if (CODIGO_PAIS_ESPANA.equals(interesado.getPais_Representante())) {
-                                Assert.isTrue(
-                                        StringUtils.isNotBlank(interesado.getCodigo_Postal_Representante())
-                                                || (StringUtils.isNotBlank(interesado
-                                                        .getProvincia_Representante()) && StringUtils
-                                                .isNotBlank(interesado.getMunicipio_Representante())),
-                                        "'codigoPostalRepresentante' or ('provinciaRepresentante' and 'municipioRepresentante') no puede estar vacio");
-                            }
-
-                        } else if (CanalNotificacion.DIRECCION_ELECTRONICA_HABILITADA
-                                .getValue()
-                                .equals(interesado.getCanal_Preferente_Comunicacion_Representante())) {
-                            Assert.hasText(
-                                    interesado
-                                            .getDireccion_Electronica_Habilitada_Representante(),
-                                    "'direccionElectronicaHabilitadaRepresentante' no puede estar vacio");
-                        }
-
-                        Assert.isTrue(
-                                StringUtils.isNotBlank(interesado
-                                        .getRazon_Social_Representante())
-                                        || (StringUtils.isNotBlank(interesado
-                                        .getNombre_Representante()) && StringUtils.isNotBlank(interesado
-                                        .getPrimer_Apellido_Representante())),
-                                "'razonSocialRepresentante' or ('nombreRepresentante' and 'primerApellidoRepresentante') must not be empty");
-                    }
-                }
             }
         }
         log.info("SegmentoInteresados validado!");
