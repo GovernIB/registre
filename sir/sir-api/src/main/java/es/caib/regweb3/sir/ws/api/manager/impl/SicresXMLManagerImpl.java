@@ -1866,7 +1866,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
         String denominacionOficinaOrigen = null;
 
         if ((re.getRegistroDetalle().getOficinaOrigenExternoCodigo() == null) && (re.getRegistroDetalle().getOficinaOrigen() == null)) {
-            denominacionOficinaOrigen = re.getOficina().getCodigo();
+            denominacionOficinaOrigen = re.getOficina().getDenominacion();
         } else if (re.getRegistroDetalle().getOficinaOrigenExternoCodigo() != null) {
             denominacionOficinaOrigen = re.getRegistroDetalle().getOficinaOrigenExternoDenominacion();
         } else {
