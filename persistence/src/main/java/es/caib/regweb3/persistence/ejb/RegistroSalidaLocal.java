@@ -26,6 +26,14 @@ import java.util.List;
 public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
 
     /**
+     * Obtiene el Numero RegistroSalida Formateado
+     * @param idRegistroSalida
+     * @return
+     * @throws Exception
+     */
+    public String getNumeroRegistroSalida(Long idRegistroSalida) throws Exception;
+
+    /**
      * Obtiene los Registros de Salida de un Usuario.
      * @param idUsuarioEntidad
      * @return

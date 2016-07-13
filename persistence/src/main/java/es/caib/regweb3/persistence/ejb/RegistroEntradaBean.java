@@ -61,6 +61,20 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
 
     @Override
+    public String getNumeroRegistroEntrada(Long idRegistroEntrada) throws Exception {
+
+        Query q;
+
+        q = em.createQuery("Select re.numeroRegistroFormateado from RegistroEntrada as re where re.id = :idRegistroEntrada ");
+
+        q.setParameter("idRegistroEntrada", idRegistroEntrada);
+
+        return (String) q.getSingleResult();
+
+    }
+
+
+    @Override
     @SuppressWarnings(value = "unchecked")
     public List<RegistroEntrada> getByUsuario(Long idUsuarioEntidad) throws Exception {
 

@@ -45,13 +45,44 @@
 
                         <dl class="detalle_registro">
 
-                            <dt><i class="fa fa-briefcase"></i> <spring:message code="asientoRegistralSir.oficinaDestino"/>:
+                            <c:if test="${not empty asientoRegistralSir.codigoUnidadTramitacionOrigen}">
+                                <dt><i class="fa fa-exchange"></i> <spring:message code="asientoRegistralSir.unidadOrigen"/>:
+                                </dt>
+                                <dd> ${asientoRegistralSir.codigoUnidadTramitacionOrigen}
+                                    <c:if test="${not empty asientoRegistralSir.decodificacionUnidadTramitacionOrigen}">
+                                        - ${asientoRegistralSir.decodificacionUnidadTramitacionOrigen}
+                                    </c:if>
+                                </dd>
+                            </c:if>
+
+                            <dt><i class="fa fa-briefcase"></i> <spring:message code="asientoRegistralSir.oficinaOrigen"/>:
                             </dt>
-                            <dd> ${asientoRegistralSir.codigoEntidadRegistralDestino}
-                                <c:if test="${not empty asientoRegistralSir.decodificacionEntidadRegistralDestino}">
-                                    - ${asientoRegistralSir.decodificacionEntidadRegistralDestino}
+                            <dd> ${asientoRegistralSir.codigoEntidadRegistralOrigen}
+                                <c:if test="${not empty asientoRegistralSir.decodificacionEntidadRegistralOrigen}">
+                                    - ${asientoRegistralSir.decodificacionEntidadRegistralOrigen}
                                 </c:if>
                             </dd>
+
+                            <c:if test="${not empty asientoRegistralSir.codigoUnidadTramitacionDestino}">
+                                <dt><i class="fa fa-exchange"></i> <spring:message code="asientoRegistralSir.unidadDestino"/>:
+                                </dt>
+                                <dd> ${asientoRegistralSir.codigoUnidadTramitacionDestino}
+                                    <c:if test="${not empty asientoRegistralSir.decodificacionUnidadTramitacionDestino}">
+                                        - ${asientoRegistralSir.decodificacionUnidadTramitacionDestino}
+                                    </c:if>
+                                </dd>
+                            </c:if>
+
+                            <c:if test="${not empty asientoRegistralSir.codigoUnidadTramitacionDestino}">
+                                <dt><i class="fa fa-briefcase"></i> <spring:message code="asientoRegistralSir.oficinaDestino"/>:
+                                </dt>
+                                <dd> ${asientoRegistralSir.codigoEntidadRegistralDestino}
+                                    <c:if test="${not empty asientoRegistralSir.decodificacionEntidadRegistralDestino}">
+                                        - ${asientoRegistralSir.decodificacionEntidadRegistralDestino}
+                                    </c:if>
+                                </dd>
+                            </c:if>
+
                             <c:if test="${not empty asientoRegistralSir.fechaRegistro}">
                                 <dt><i class="fa fa-clock-o"></i> <spring:message code="regweb.fecha"/>:</dt>
                                 <dd><fmt:formatDate value="${asientoRegistralSir.fechaRegistro}" pattern="dd/MM/yyyy HH:mm:ss"/></dd>
@@ -267,14 +298,34 @@
                         </div>
 
                         <div class="panel-footer">  <%--Botonera--%>
-                            <button type="button"
-                                    onclick="goTo('/asientoRegistralSir/${asientoRegistralSir.id}/rechazar')"
-                                    class="btn btn-danger btn-sm btn-block"><spring:message
-                                    code="asientoRegistralSir.estado.rechazar"/></button>
-                            <button type="button"
-                                    onclick="goTo('/asientoRegistralSir/${asientoRegistralSir.id}/reenviar')"
-                                    class="btn btn-info btn-sm btn-block"><spring:message
-                                    code="asientoRegistralSir.estado.reenviar"/></button>
+
+                            <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <spring:message code="asientoRegistralSir.estado.reenviar"/> <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a data-toggle="modal" href="#modalBuscadorOficinaSir" onclick="inicializarBuscador('#codNivelAdministracionOficinaSir','#codComunidadAutonomaOficinaSir','#provinciaOficinaSir','#localidadOficinaSir','${oficinaActiva.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficinaActiva.organismoResponsable.codAmbComunidad.codigoComunidad}','OficinaSir' );">Buscar oficina destino</a></li>
+
+                                    </ul>
+                                </div>
+
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <spring:message code="asientoRegistralSir.estado.rechazar"/> <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a data-toggle="modal" href="#rechazoModal" onclick="limpiarModalRechazo()">Origen</a></li>
+                                        <li><a data-toggle="modal" href="#rechazoModal" onclick="limpiarModalRechazo()">Inicio</a></li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                            <c:url value="/asientoRegistralSir/reenviar/${asientoRegistralSir.id}" var="urlReenviar" scope="request"/>
+                            <form:form modelAttribute="reenviarForm" method="post" action="${urlReenviar}" cssClass="form-horizontal">
+                                <form:hidden path="oficinaReenvio" value=""/>
+                            </form:form>
+
                         </div>
                     </c:if>
 
@@ -287,128 +338,10 @@
             </div>
 
             <%--INTERESADOS--%>
-            <div class="col-xs-8 pull-right">
-                <div class="panel panel-success">
-                    <div class="panel-heading">
-                        <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong><spring:message
-                                code="interesado.interesados"/></strong></h3>
-                    </div>
-                    <div class="panel-body">
-                        <div class="col-xs-12">
-                            <div class="table-responsive">
-                                <c:if test="${empty asientoRegistralSir.interesados}">
-                                    <div class="alert alert-warning ">
-                                        <spring:message code="regweb.listado.vacio"/> <strong><spring:message
-                                            code="registroEntrada.interesado"/></strong>
-                                    </div>
-                                </c:if>
-                                <c:if test="${not empty asientoRegistralSir.interesados}">
-                                    <table id="interesados" class="table table-bordered table-hover table-striped">
-                                        <colgroup>
-                                            <col>
-                                            <col>
-                                            <col>
-                                        </colgroup>
-                                        <thead>
-                                        <tr>
-                                            <th><spring:message code="registroEntrada.interesado"/></th>
-                                            <th><spring:message code="interesado.tipoInteresado"/></th>
-                                            <th><spring:message code="representante.representante"/></th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <c:forEach var="interesado" items="${asientoRegistralSir.interesados}">
-                                            <tr>
-                                                <td>
-                                                    <a data-toggle="modal" href="#detalleInteresadoSir"
-                                                       onclick="obtenerInteresadoSir(${interesado.id})">${interesado.nombreCompleto}</a>
-                                                </td>
-                                                <td>
-                                                    <c:if test="${interesado.tipoInteresado == RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA}"><spring:message
-                                                            code="persona.fisica"/></c:if>
-                                                    <c:if test="${interesado.tipoInteresado == RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA}"><spring:message
-                                                            code="persona.juridica"/></c:if>
-                                                </td>
-                                                <td>
-                                                    <c:if test="${interesado.representante}">
-                                                        <span data-toggle="modal" href="#detalleInteresadoSir"
-                                                              onclick="obtenerInteresadoSir(${interesado.id})"
-                                                              class="label label-success">${interesado.nombreCompletoRepresentante}</span>
-                                                    </c:if>
-
-                                                    <c:if test="${!interesado.representante}">
-                                                        <span class="label label-danger">No</span>
-                                                    </c:if>
-                                                </td>
-                                            </tr>
-                                        </c:forEach>
-                                        </tbody>
-                                    </table>
-                                </c:if>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <c:import url="interesadosSir.jsp"/>
 
             <!-- ANEXOS -->
-            <div class="col-xs-8 pull-right">
-
-                <div class="panel panel-success">
-
-                    <div class="panel-heading">
-                        <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong><spring:message
-                                code="anexo.anexos"/></strong>: <spring:message
-                                code="tipoDocumentacionFisica.${asientoRegistralSir.documentacionFisica}"/>
-                        </h3>
-                    </div>
-
-                    <div class="panel-body">
-                        <div class="col-xs-12">
-                            <div id="anexosdiv" class="table-responsive">
-
-                                <c:if test="${empty asientoRegistralSir.anexos}">
-                                    <div class="alert alert-warning alert-dismissable">
-                                        <strong><spring:message code="regweb.listado.vacio"/> <spring:message code="anexo.anexo"/></strong>
-                                    </div>
-                                </c:if>
-
-                                <c:if test="${not empty asientoRegistralSir.anexos}">
-                                    <table id="anexos" class="table table-bordered table-hover table-striped">
-                                        <colgroup>
-                                            <col>
-                                            <col>
-                                            <col width="50">
-                                        </colgroup>
-                                        <thead>
-                                        <tr>
-                                            <th><spring:message code="anexo.titulo"/></th>
-                                            <th><spring:message code="anexo.tipoDocumento"/></th>
-                                            <th><spring:message code="regweb.acciones"/></th>
-                                        </tr>
-                                        </thead>
-
-                                        <tbody>
-                                        <c:forEach var="anexo" items="${asientoRegistralSir.anexos}">
-                                            <tr id="anexo${anexo.id}">
-                                                <td>${anexo.nombreFichero}</td>
-                                                <td><spring:message code="tipoDocumento.${anexo.tipoDocumento}"/></td>
-                                                <td class="center"><a class="btn btn-success btn-default btn-sm"
-                                                                      href="<c:url value="/archivo/${anexo.anexo.id}"/>"
-                                                                      target="_blank"
-                                                                      title="<spring:message code="anexo.descargar"/>"><span
-                                                        class="fa fa-download"></span></a></td>
-                                            </tr>
-                                        </c:forEach>
-                                        </tbody>
-                                    </table>
-                                </c:if>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+            <c:import url="anexosSir.jsp"/>
 
 
         </div><!-- /div.row-->
@@ -416,8 +349,62 @@
     </div>
 </div> <!-- /container -->
 
+<div id="rechazoModal" class="modal fade bs-example-modal-lg">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                <h3>Rechazar Asiento Registral Sir ${asientoRegistralSir.numeroRegistro}</h3>
+            </div>
+
+            <div class="modal-body">
+                <c:url value="/asientoRegistralSir/rechazar/${asientoRegistralSir.id}" var="urlRechazar" scope="request"/>
+                <form:form modelAttribute="rechazarForm" method="post" action="${urlRechazar}" cssClass="form-horizontal">
+                    <div class="panel panel-success">
+
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i>
+                                <strong>Introduzca el motivo del rechazo</strong></h3>
+                        </div>
+
+                        <div class="panel-body">
+
+                            <div class="form-group col-xs-12">
+                                <div class="col-xs-4 pull-left etiqueta_regweb_left control-label">
+                                    <form:label for="observacionesRechazo" path="observacionesRechazo"> Observaciones</form:label>
+                                </div>
+                                <div class="col-xs-8" id="observacionesRechazoSir">
+                                    <form:textarea path="observacionesRechazo" rows="5" cssClass="form-control"/> <span class="errors"></span>
+                                </div>
+                            </div>
+
+                        </div> <!-- /.panel body -->
+                    </div>
+                    <!-- /.panel panel-info -->
+                    <div class="form-actions">
+                        <input type="submit" value="<spring:message code="asientoRegistralSir.estado.rechazar"/>"
+                               class="btn btn-danger btn-sm"
+                               onclick="return rechazarAsientoRegistralSir()">
+                    </div>
+                </form:form>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" aria-hidden="true"><spring:message
+                        code="regweb.cerrar"/></button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <c:import url="../modulos/pie.jsp"/>
-<c:import url="detalleInteresadoSir.jsp"/>
+
+<!-- Importamos el codigo jsp del modal del formulario para realizar la busqueda de organismos Origen
+                 Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
+<c:import url="../registro/buscadorOrganismosOficinasREPestanas.jsp">
+    <c:param name="tipo" value="OficinaSir"/>
+</c:import>
+<script type="text/javascript" src="<c:url value="/js/busquedaorganismo.js"/>"></script>
 
 <script type="application/javascript">
     // Realiza el Registro de un AsientoRegistralSir
@@ -450,6 +437,28 @@
         } else {
             return false;
         }
+    }
+
+    function rechazarAsientoRegistralSir() {
+        var observaciones = $('#observacionesRechazo').val();
+
+        if(observaciones == ""){
+            var variable = "#observacionesRechazoSir span.errors";
+            var formatoHtml = "<span id='observaciones.errors' class='help-block'>El campo es obligatorio</span>";
+            $(variable).html(formatoHtml);
+            $(variable).parents(".form-group").addClass("has-error");
+            return false;
+        }else{
+            doForm('#rechazarForm');
+        }
+    }
+
+    function limpiarModalRechazo(){
+        $('#observaciones').val("");
+        var variable = "#observacionesRechazoSir span.errors";
+        var formatoHtml = "<span id='observaciones.errors' class='help-block'></span>";
+        $(variable).html(formatoHtml);
+        $(variable).parents(".form-group").removeClass("has-error");
     }
 
 </script>

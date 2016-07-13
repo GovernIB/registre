@@ -59,6 +59,19 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
 
     @Override
+    public String getNumeroRegistroSalida(Long idRegistroSalida) throws Exception {
+
+        Query q;
+
+        q = em.createQuery("Select re.numeroRegistroFormateado from RegistroSalida as re where re.id = :idRegistroSalida ");
+
+        q.setParameter("idRegistroSalida", idRegistroSalida);
+
+        return (String) q.getSingleResult();
+
+    }
+
+    @Override
     public List<RegistroSalida> getByUsuario(Long idUsuarioEntidad) throws Exception {
 
         Query q = em.createQuery("Select registroSalida from RegistroSalida as registroSalida where registroSalida.usuario.id = :idUsuarioEntidad ");

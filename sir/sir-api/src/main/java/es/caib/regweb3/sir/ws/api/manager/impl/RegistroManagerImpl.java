@@ -24,7 +24,7 @@ public class RegistroManagerImpl implements RegistroManager {
      *
      * @param asientoRegistralSir Información del asiento registral.
      */
-    public void enviarMensajeConfirmacion(AsientoRegistralSir asientoRegistralSir) {
+    public void enviarMensajeConfirmacion(AsientoRegistralSir asientoRegistralSir, String numeroRegistro) {
 
         Mensaje confirmacion = new Mensaje();
         confirmacion.setCodigoEntidadRegistralOrigen(asientoRegistralSir.getCodigoEntidadRegistralDestino());
@@ -32,9 +32,7 @@ public class RegistroManagerImpl implements RegistroManager {
         confirmacion.setIdentificadorIntercambio(asientoRegistralSir.getIdentificadorIntercambio());
         confirmacion.setTipoMensaje(TipoMensaje.CONFIRMACION);
         confirmacion.setDescripcionMensaje(TipoMensaje.CONFIRMACION.getName());
-
-        //todo Añadir NumeroRegistro confirmacion.setNumeroRegistroEntradaDestino(preRegistro.getNumeroRegistro());
-        //confirmacion.setNumeroRegistroEntradaDestino("0000001");
+        confirmacion.setNumeroRegistroEntradaDestino(numeroRegistro);
         confirmacion.setFechaEntradaDestino(new Date());
 
         mensajeManager.enviarMensaje(confirmacion);

@@ -27,6 +27,14 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal {
 
+    /**
+     * Obtiene el Numero RegistroEntrada Formateado
+     * @param idRegistroEntrada
+     * @return
+     * @throws Exception
+     */
+    public String getNumeroRegistroEntrada(Long idRegistroEntrada) throws Exception;
+
 
     /**
      * Obtiene los Registros de Entrada de un Usuario.
