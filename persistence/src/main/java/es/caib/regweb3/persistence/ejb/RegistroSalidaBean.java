@@ -339,16 +339,12 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     @Override
     public void anularRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception {
 
-        RegistroSalida old = registroSalida;
-
         // Modificamos el estado del RegistroSalida
         cambiarEstado(registroSalida, RegwebConstantes.REGISTRO_ANULADO, usuarioEntidad);
     }
 
     @Override
     public void activarRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception {
-
-        RegistroSalida old = registroSalida;
 
         // Modificamos el estado del RegistroSalida
         cambiarEstado(registroSalida, RegwebConstantes.REGISTRO_PENDIENTE_VISAR, usuarioEntidad);
@@ -358,8 +354,6 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
     @Override
     public void visarRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception {
-
-        RegistroSalida old = registroSalida;
 
         // Modificamos el estado del RegistroSalida
         cambiarEstado(registroSalida, RegwebConstantes.REGISTRO_VALIDO, usuarioEntidad);

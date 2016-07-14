@@ -452,8 +452,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     public void anularRegistroEntrada(RegistroEntrada registroEntrada,
                                       UsuarioEntidad usuarioEntidad) throws Exception {
 
-        RegistroEntrada old = registroEntrada;
-
         // Estado anulado
         cambiarEstado(registroEntrada, RegwebConstantes.REGISTRO_ANULADO, usuarioEntidad);
 
@@ -462,8 +460,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     @Override
     public void activarRegistroEntrada(RegistroEntrada registroEntrada,
                                        UsuarioEntidad usuarioEntidad) throws Exception {
-
-        RegistroEntrada old = registroEntrada;
 
         // Actualizamos el estado del RegistroEntrada
         cambiarEstado(registroEntrada, RegwebConstantes.REGISTRO_PENDIENTE_VISAR, usuarioEntidad);
@@ -474,8 +470,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     public void visarRegistroEntrada(RegistroEntrada registroEntrada,
                                      UsuarioEntidad usuarioEntidad) throws Exception {
 
-        RegistroEntrada old = registroEntrada;
-
         // Modificamos el estado del RegistroEntrada
         cambiarEstado(registroEntrada, RegwebConstantes.REGISTRO_VALIDO, usuarioEntidad);
 
@@ -484,8 +478,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     @Override
     public void tramitarRegistroEntrada(RegistroEntrada registroEntrada,
                                         UsuarioEntidad usuarioEntidad) throws Exception {
-
-        RegistroEntrada old = registroEntrada;
 
         cambiarEstado(registroEntrada, RegwebConstantes.REGISTRO_TRAMITADO, usuarioEntidad);
 

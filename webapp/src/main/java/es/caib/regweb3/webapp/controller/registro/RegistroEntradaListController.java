@@ -307,8 +307,13 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
                 return "redirect:/registroEntrada/list";
             }
 
-            // Activamos el RegistroEntrada
-            registroEntradaEjb.activarRegistroEntrada(registroEntrada, usuarioEntidad);
+            // Si era una reserva de número no lo activamos, lo volvemos a poner Pendiente
+            if(registroEntrada.getDestino() == null && registroEntrada.getDestinoExternoCodigo() == null){
+                registroEntradaEjb.cambiarEstado(registroEntrada,RegwebConstantes.REGISTRO_PENDIENTE,usuarioEntidad);
+            }else{
+                // Activamos el RegistroEntrada
+                registroEntradaEjb.activarRegistroEntrada(registroEntrada, usuarioEntidad);
+            }
 
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.activar"));
 
