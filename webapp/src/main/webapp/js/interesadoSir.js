@@ -25,7 +25,7 @@ function obtenerInteresadoSir(idInteresadoSir){
             $('#segundoApellidoInteresado').html(result.segundoApellidoInteresado);
             if(result.tipoDocumentoIdentificacionInteresado != null && result.tipoDocumentoIdentificacionInteresado != '-1'){
                 $('#tipoDocumentoIdentificacionInteresado').html(result.tipoDocumentoIdentificacionInteresado);
-                $('#documentoIdentificacionInteresado').html(result.documentoIdentificacionInteresado);
+                $("#tipoDocumentoIdentificacionInteresado").html(tradsinteresado['tipoDocumentoIdentificacion.'+result.tipoDocumentoIdentificacionInteresado]);
             }
 
             if(result.codigoPaisInteresado != null){$("#codigoPaisInteresado").html(result.codigoPaisInteresado);}
@@ -45,7 +45,8 @@ function obtenerInteresadoSir(idInteresadoSir){
             $('#codigoPostalInteresado').html(result.codigoPostalInteresado);
             $('#telefonoInteresado').html(result.telefonoInteresado);
             if(result.canalPreferenteComunicacionInteresado != null){
-                $("#canalPreferenteComunicacionInteresado").html(result.canalPreferenteComunicacionInteresado);
+                $("#canalPreferenteComunicacionInteresado").html(tradsinteresado['canalNotificacion.'+result.canalPreferenteComunicacionInteresado]);
+
             }
             $('#observaciones').html(result.observaciones);
 
@@ -55,7 +56,7 @@ function obtenerInteresadoSir(idInteresadoSir){
                 $('#primerApellidoRepresentante').html(result.primerApellidoRepresentante);
                 $('#segundoApellidoRepresentante').html(result.segundoApellidoRepresentante);
                 if(result.tipoDocumentoIdentificacionRepresentante != null && result.tipoDocumentoIdentificacionRepresentante != '-1'){
-                    $('#tipoDocumentoIdentificacionRepresentante').html(result.tipoDocumentoIdentificacionRepresentante);
+                    $("#tipoDocumentoIdentificacionRepresentante").html(tradsinteresado['tipoDocumentoIdentificacion.'+result.tipoDocumentoIdentificacionRepresentante]);
                     $('#documentoIdentificacionRepresentante').html(result.documentoIdentificacionRepresentante);
                 }
 
@@ -76,7 +77,7 @@ function obtenerInteresadoSir(idInteresadoSir){
                 $('#codigoPostalRepresentante').html(result.codigoPostalRepresentante);
                 $('#telefonoRepresentante').html(result.telefonoRepresentante);
                 if(result.canalPreferenteComunicacionRepresentante != null){
-                    $("#canalPreferenteComunicacionRepresentante").html(result.canalPreferenteComunicacionRepresentante);
+                    $("#canalPreferenteComunicacionRepresentante").html(tradsinteresado['canalNotificacion.'+result.canalPreferenteComunicacionRepresentante]);
                 }
 
                 $('#representante').show();

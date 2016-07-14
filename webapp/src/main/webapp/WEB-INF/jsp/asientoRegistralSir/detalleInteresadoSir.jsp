@@ -257,13 +257,13 @@
     var urlCargarInteresadoSir = '<c:url value="/rest/obtenerInteresadoSir"/>';
 
     var tradsinteresado = new Array();
-    tradsinteresado['tipoDocumentoIdentificacion.1'] = "<spring:message code='tipoDocumentoIdentificacion.1' javaScriptEscape='true' />";
-    tradsinteresado['tipoDocumentoIdentificacion.2'] = "<spring:message code='tipoDocumentoIdentificacion.2' javaScriptEscape='true' />";
-    tradsinteresado['tipoDocumentoIdentificacion.3'] = "<spring:message code='tipoDocumentoIdentificacion.3' javaScriptEscape='true' />";
-    tradsinteresado['tipoDocumentoIdentificacion.4'] = "<spring:message code='tipoDocumentoIdentificacion.4' javaScriptEscape='true' />";
-    tradsinteresado['tipoDocumentoIdentificacion.5'] = "<spring:message code='tipoDocumentoIdentificacion.5' javaScriptEscape='true' />";
-    tradsinteresado['tipoDocumentoIdentificacion.6'] = "<spring:message code='tipoDocumentoIdentificacion.6' javaScriptEscape='true' />";
-    tradsinteresado['canalNotificacion.1'] = "<spring:message code='canalNotificacion.1' javaScriptEscape='true' />";
-    tradsinteresado['canalNotificacion.2'] = "<spring:message code='canalNotificacion.2' javaScriptEscape='true' />";
-    tradsinteresado['canalNotificacion.3'] = "<spring:message code='canalNotificacion.3' javaScriptEscape='true' />";
+    tradsinteresado['tipoDocumentoIdentificacion.NIF'] = "<spring:message code='tipoDocumentoIdentificacion.NIF' javaScriptEscape='true' />";
+    tradsinteresado['tipoDocumentoIdentificacion.CIF'] = "<spring:message code='tipoDocumentoIdentificacion.CIF' javaScriptEscape='true' />";
+    tradsinteresado['tipoDocumentoIdentificacion.PASAPORTE'] = "<spring:message code='tipoDocumentoIdentificacion.PASAPORTE' javaScriptEscape='true' />";
+    tradsinteresado['tipoDocumentoIdentificacion.NIE'] = "<spring:message code='tipoDocumentoIdentificacion.NIE' javaScriptEscape='true' />";
+    tradsinteresado['tipoDocumentoIdentificacion.OTROS_PERSONA_FISICA'] = "<spring:message code='tipoDocumentoIdentificacion.OTROS_PERSONA_FISICA' javaScriptEscape='true' />";
+    tradsinteresado['tipoDocumentoIdentificacion.CODIGO_ORIGEN_VALUE'] = "<spring:message code='tipoDocumentoIdentificacion.CODIGO_ORIGEN_VALUE' javaScriptEscape='true' />";
+    tradsinteresado['canalNotificacion.DIRECCION_POSTAL'] = "<spring:message code='canalNotificacion.DIRECCION_POSTAL' javaScriptEscape='true' />";
+    tradsinteresado['canalNotificacion.DIRECCION_ELECTRONICA_HABILITADA'] = "<spring:message code='canalNotificacion.DIRECCION_ELECTRONICA_HABILITADA' javaScriptEscape='true' />";
+    tradsinteresado['canalNotificacion.COMPARECENCIA_ELECTRONICA'] = "<spring:message code='canalNotificacion.COMPARECENCIA_ELECTRONICA' javaScriptEscape='true' />";
 </script>
