@@ -1,9 +1,13 @@
 
 Parametres Opcionals:
 
- clean            Neteja el projecte abans de recompilar
+ clean           Neteja el projecte abans de recompilar
  
- -Piecisascanweb  Inclou el plugin de escaneig de IECISA
+ -Piecisascanweb Inclou el plugin de escaneig de IECISA
                    (requerix configuracio dins regweb3-properties-service.xml)
 
-
+ -Pcaibscanweb   Inclou el plugin de escaneig de la CAIB (Digitalització-Compulsa)
+                   (requerix configuracio dins regweb3-properties-service.xml)
+                  
+ -Pdwtscanweb    Inclou el plugin de escaneig Dynamic Web Twain
+                   (requerix configuracio dins regweb3-properties-service.xml)

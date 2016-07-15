@@ -1,19 +1,19 @@
 package es.caib.regweb3.webapp.scan;
 
 public class TipoScan {
-	private Integer codigo;
+	private long codigo;
 	private String nombre;
 	
-	public TipoScan(Integer codigo, String nombre) {
+	public TipoScan(long codigo, String nombre) {
 		super();
 		this.codigo = codigo;
 		this.nombre = nombre;
 	}
 	
-	public Integer getCodigo() {
+	public long getCodigo() {
 		return codigo;
 	}
-	public void setCodigo(Integer codigo) {
+	public void setCodigo(long codigo) {
 		this.codigo = codigo;
 	}
 	public String getNombre() {

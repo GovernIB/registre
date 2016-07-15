@@ -198,185 +198,183 @@
         </dependency>
         -->
 
-        <!-- ====================================== -->
-        <!-- ===== PLUGINS DE USERINFORMATION ===== -->
-        <!-- ====================================== -->
+    <!-- ====================================== -->
+    <!-- ===== PLUGINS DE USERINFORMATION ===== -->
+    <!-- ====================================== -->
 
+    <dependency>
+      <groupId>org.fundaciobit.plugins</groupId>
+      <artifactId>plugin-userinformation-database</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.fundaciobit.plugins</groupId>
+      <artifactId>plugin-userinformation-ldap</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+
+
+    <!-- ============================================ -->
+    <!-- ============= PLUGINS DE SCANNER =========== -->
+    <!-- ============================================ -->
+
+    <dependency>
+      <groupId>org.fundaciobit.plugins</groupId>
+      <artifactId>plugin-scanweb-api</artifactId>
+      <version>2.0.0</version>
+    </dependency>
+
+    <!--   VEURE APARTAT DE PROFILES AL FINAL D'AQUEST POM -->
+
+    <!-- ============================================ -->
+    <!-- ======== PLUGINS DE DISTRIBUCION =========== -->
+    <!-- ============================================ -->
+
+    <dependency>
+      <groupId>es.caib.regweb3</groupId>
+      <artifactId>plugins-distribucionregweb-api</artifactId>
+      <version>3.0.6</version>
+    </dependency>
+
+    <dependency>
+      <groupId>es.caib.regweb3</groupId>
+      <artifactId>plugins-distribucionregweb-distribucionlocal</artifactId>
+      <version>3.0.6</version>
+    </dependency>
+
+    <!-- ============================================ -->
+    <!-- =============    FINAL PLUGINS   =========== -->
+    <!-- ============================================ -->
+
+    <!-- Externas -->
+    <dependency>
+      <groupId>org.fundaciobit.genapp</groupId>
+      <artifactId>genapp-core</artifactId>
+      <version>1.0</version>
+    </dependency>
+
+
+    <dependency>
+      <groupId>org.codehaus.jackson</groupId>
+      <artifactId>jackson-mapper-asl</artifactId>
+      <version>1.9.9</version>
+      <type>jar</type>
+    </dependency>
+
+    <dependency>
+      <groupId>org.codehaus.jackson</groupId>
+      <artifactId>jackson-core-asl</artifactId>
+      <version>1.9.9</version>
+      <type>jar</type>
+    </dependency>
+
+
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.0</version>
+    </dependency>
+
+    <!-- Apache Commons -->
+    <dependency>
+      <groupId>commons-fileupload</groupId>
+      <artifactId>commons-fileupload</artifactId>
+      <version>1.2.2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-beanutils</groupId>
+      <artifactId>commons-beanutils</artifactId>
+      <version>1.9.1</version>
+    </dependency>
+
+    <!-- Apache Discovery IO -->
+    <dependency>
+      <groupId>commons-discovery</groupId>
+      <artifactId>commons-discovery</artifactId>
+      <version>0.5</version>
+    </dependency>
+
+
+    <dependency>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bctsp-jdk15</artifactId>
+      <version>1.46</version>
+    </dependency>
+    <dependency>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcprov-jdk15</artifactId>
+      <version>1.46</version>
+    </dependency>
+    <dependency>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcmail-jdk15</artifactId>
+      <version>1.46</version>
+    </dependency>
+
+    <!-- apache POI -->
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi</artifactId>
+      <version>3.6</version>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+  </dependencies>
+
+
+  <profiles>
+
+    <!-- ============================================ -->
+    <!-- ============= PLUGINS DE SCANNER =========== -->
+    <!-- ============================================ -->
+
+    <!-- ========== PLUGIN DE SCAN DE IECISA =========== -->
+    <profile>
+      <id>iecisascanweb</id>
+      <dependencies>
         <dependency>
-            <groupId>org.fundaciobit.plugins</groupId>
-            <artifactId>plugin-userinformation-database</artifactId>
-            <version>1.0.0</version>
+          <groupId>org.fundaciobit.plugins</groupId>
+          <artifactId>plugin-scanweb-iecisascanweb-plugin</artifactId>
+          <version>2.0.0</version>
         </dependency>
-
+      </dependencies>
+    </profile>
+    
+    <!-- ========== PLUGIN DE SCAN DE CAIB =========== -->
+    <profile>
+      <id>caibscanweb</id>
+      <dependencies>
         <dependency>
-            <groupId>org.fundaciobit.plugins</groupId>
-            <artifactId>plugin-userinformation-ldap</artifactId>
-            <version>1.0.0</version>
+          <groupId>org.fundaciobit.plugins</groupId>
+          <artifactId>plugin-scanweb-caib</artifactId>
+          <version>1.0.0</version>
         </dependency>
+      </dependencies>
+    </profile>
 
-
-        <!-- ============================================ -->
-        <!-- ============= PLUGINS DE SCANNER =========== -->
-        <!-- ============================================ -->
-
-        <dependency>
-            <groupId>org.fundaciobit.plugins</groupId>
-            <artifactId>plugin-scanweb-api</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        
-        <!--   VEURE APARATAT DE PROFILES AL FINAL D'AQUEST POM -->
-
-        <!--
+    <!-- ====== PLUGIN DE SCAN DE DynamicWebTwain (DWT) ====== -->
+    <profile>
+      <id>dwtscanweb</id>
+      <dependencies>
         <dependency>
             <groupId>org.fundaciobit.plugins</groupId>
             <artifactId>plugin-scanweb-dynamicwebtwain</artifactId>
-            <version>1.0.0</version>
+            <version>2.0.0</version>
         </dependency>
-         -->
+      </dependencies>
+    </profile>
 
-        <!--
-        <dependency>
-            <groupId>org.fundaciobit.plugins</groupId>
-            <artifactId>scanmmscomputing-plugin</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        -->
-        
-        
-
-
-        <!-- ============================================ -->
-        <!-- ======== PLUGINS DE DISTRIBUCION =========== -->
-        <!-- ============================================ -->
-
-        <dependency>
-            <groupId>es.caib.regweb3</groupId>
-            <artifactId>plugins-distribucionregweb-api</artifactId>
-            <version>3.0.7</version>
-        </dependency>
-
-        <dependency>
-            <groupId>es.caib.regweb3</groupId>
-            <artifactId>plugins-distribucionregweb-distribucionlocal</artifactId>
-            <version>3.0.7</version>
-        </dependency>
-
-        <dependency>
-            <groupId>es.caib.regweb3</groupId>
-            <artifactId>plugins-distribucionregweb-distribucionripea</artifactId>
-            <version>3.0.7</version>
-        </dependency>
-
-        <!-- ============================================ -->
-        <!-- =============    FINAL PLUGINS   =========== -->
-        <!-- ============================================ -->
-
-        <!-- Externas -->
-        <dependency>
-            <groupId>org.fundaciobit.genapp</groupId>
-            <artifactId>genapp-core</artifactId>
-            <version>1.0</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-            <version>1.9.9</version>
-            <type>jar</type>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-core-asl</artifactId>
-            <version>1.9.9</version>
-            <type>jar</type>
-        </dependency>
-
-
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.0</version>
-        </dependency>
-
-        <!-- Apache Commons -->
-        <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-            <version>1.2.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>1.9.1</version>
-        </dependency>
-
-        <!-- Apache Discovery IO -->
-        <dependency>
-            <groupId>commons-discovery</groupId>
-            <artifactId>commons-discovery</artifactId>
-            <version>0.5</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bctsp-jdk15</artifactId>
-            <version>1.46</version>
-        </dependency>
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk15</artifactId>
-            <version>1.46</version>
-        </dependency>
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcmail-jdk15</artifactId>
-            <version>1.46</version>
-        </dependency>
-
-        <!-- apache POI -->
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi</artifactId>
-            <version>3.6</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>log4j</groupId>
-                    <artifactId>log4j</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-    </dependencies>
-    
-    
-    <profiles>
-	
-        <!-- ============================================ -->
-        <!-- ============= PLUGINS DE SCANNER =========== -->
-        <!-- ============================================ -->
-        
-        <!-- ========== PLUGIN DE SCAN DE IECISA =========== -->
-		<profile>
-			<id>iecisascanweb</id>
-			<dependencies>
-
-				<dependency>
-                    <groupId>org.fundaciobit.plugins</groupId>
-                    <artifactId>plugin-scanweb-iecisascanweb-plugin</artifactId>
-                    <version>1.0.0</version>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
-    
+  </profiles>
 
 </project>

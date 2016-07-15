@@ -1,17 +1,21 @@
 package es.caib.regweb3.model.utils;
 
+import java.util.List;
+
 import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.TipoDocumental;
 import es.caib.regweb3.utils.RegwebConstantes;
+
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
+import org.fundaciobit.plugins.utils.Metadata;
 
 /**
  * @author anadal
  */
 public class AnexoFull {
 
-    Anexo anexo;
+    private Anexo anexo;
 
     private boolean documentoFileDelete;
 
@@ -20,6 +24,8 @@ public class AnexoFull {
     private DocumentCustody documentoCustody;
 
     private SignatureCustody signatureCustody;
+    
+    private List<Metadata> metadatas;
 
 
     /**
@@ -92,6 +98,16 @@ public class AnexoFull {
 
     public void setSignatureFileDelete(boolean signatureFileDelete) {
         this.signatureFileDelete = signatureFileDelete;
+    }
+
+
+    public List<Metadata> getMetadatas() {
+      return metadatas;
+    }
+
+
+    public void setMetadatas(List<Metadata> metadatas) {
+      this.metadatas = metadatas;
     }
 
 
