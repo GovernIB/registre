@@ -145,7 +145,7 @@
 Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
 <c:import url="../registro/buscadorOrganismosOficinasREPestanas.jsp">
     <c:param name="tipo" value="OrganismoInteresado"/>
-    <c:param name="idRegistroDetalle" value="${registro.registroDetalle.id}"/>
+    <c:param name="idRegistroDetalle" value="${param.idRegistroDetalle}"/>
 </c:import>
 
 <%--Nuevo Interesado--%>
@@ -250,7 +250,7 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
 
     $(document).ready(function () {
         $('#organismoInteresado').chosen().change(function () {
-            addOrganismoInteresado('<spring:message code="interesado.administracion"/>','${registro.registroDetalle.id}');
+            addOrganismoInteresado('<spring:message code="interesado.administracion"/>','${param.idRegistroDetalle}');
         });
     });
 
@@ -270,7 +270,7 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
             loadingClass: "loading-circle"
         },
         onSelect: function(item) {
-            addInteresado(item.value,item.text,'<spring:message code="persona.fisica"/>','No',null,'${registro.registroDetalle.id}')
+            addInteresado(item.value,item.text,'<spring:message code="persona.fisica"/>','No',null,'${param.idRegistroDetalle}')
         }
     });
 
@@ -290,7 +290,7 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
             loadingClass: "loading-circle"
         },
         onSelect: function(item) {
-            addInteresado(item.value,item.text,'<spring:message code="persona.juridica"/>','No',null,'${registro.registroDetalle.id}')
+            addInteresado(item.value,item.text,'<spring:message code="persona.juridica"/>','No',null,'${param.idRegistroDetalle}')
         }
     });
     // Posicionamos el ratón en el campo indicado al cargar el modal

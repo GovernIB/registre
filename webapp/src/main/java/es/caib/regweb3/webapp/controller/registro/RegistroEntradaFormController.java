@@ -372,6 +372,12 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                 return "redirect:/inici";
             }finally {
                 status.setComplete();
+                //Eliminamos los posibles interesados de la Sesion
+                try {
+                    eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_ENTRADA);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             return "redirect:/registroEntrada/"+registroEntrada.getId()+"/detalle";
