@@ -11,15 +11,16 @@ import java.util.List;
  * Created by Fundació BIT.
  *
  * @author earrivi
- * Date: 16/01/14
+ *         Date: 16/01/14
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public interface EntidadLocal extends BaseEjb<Entidad, Long> {
 
 
     /**
      * Creamos una nueva Entidad y sus propiedades por defecto
+     *
      * @param entidad
      * @return
      * @throws Exception
@@ -28,6 +29,7 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
 
     /**
      * Retorna la Entidad cuyo CódigoDir3 es el indicado por parámetro
+     *
      * @param codigo
      * @return
      * @throws Exception
@@ -36,6 +38,7 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
 
     /**
      * Comprueba su una {@link es.caib.regweb3.model.Entidad} tiene algún {@link es.caib.regweb3.model.Organismo} asociado.
+     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -44,6 +47,7 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
 
     /**
      * Obtiene las entidades de un Usuario
+     *
      * @param idUsuario
      * @return
      * @throws Exception
@@ -52,6 +56,7 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
 
     /**
      * Obtiene las entidades de un Usuario de las que es Propietario
+     *
      * @param idUsuario
      * @return
      * @throws Exception
@@ -60,6 +65,7 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
 
     /**
      * Comprueba si el codigoDir3 dado existe en alguna entidad excepto la selccionado.
+     *
      * @param codigo
      * @param idEntidad
      * @return
@@ -69,6 +75,7 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
 
     /**
      * Comprueba si un Usuario es Administrador de la Entidad
+     *
      * @param idEntidad
      * @param usuarioEntidad
      * @return
@@ -77,18 +84,27 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
     public Boolean esAdministrador(Long idEntidad, UsuarioEntidad usuarioEntidad) throws Exception;
 
     /**
-   * Determina si un usuario es propietario o administrador de esa entidad
-   * @param idEntidad
-   * @param idUsuario
-   * @return
-   * @throws Exception
-   */
-   public Boolean esAutorizado(Long idEntidad, Long idUsuario) throws Exception;
+     * Determina si un usuario es propietario o administrador de esa entidad
+     *
+     * @param idEntidad
+     * @param idUsuario
+     * @return
+     * @throws Exception
+     */
+    public Boolean esAutorizado(Long idEntidad, Long idUsuario) throws Exception;
 
-
+    /**
+     * Comprueba si una Entidad está marcada como Sir
+     *
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public Boolean isSir(Long idEntidad) throws Exception;
 
     /**
      * Elimina todos los Registros y relaciones de una Entidad.
+     *
      * @param idEntidad
      * @throws Exception
      */
@@ -97,8 +113,9 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
 
     /**
      * Elimina una Entidad y todos sus datos dependientes
+     *
      * @param idEntidad
      * @throws Exception
      */
-    public void eliminarEntidad(Long idEntidad)throws Exception;
+    public void eliminarEntidad(Long idEntidad) throws Exception;
 }

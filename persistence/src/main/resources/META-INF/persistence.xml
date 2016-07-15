@@ -57,11 +57,11 @@ http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
         <class>es.caib.regweb3.model.Trazabilidad</class>
         <class>es.caib.regweb3.model.Usuario</class>
         <class>es.caib.regweb3.model.UsuarioEntidad</class>
-        <class>es.caib.regweb3.sir.core.model.AsientoRegistralSir</class>
 
         <!--SIR-->
+        <!--<class>es.caib.regweb3.sir.core.model.AsientoRegistralSir</class>
         <class>es.caib.regweb3.sir.core.model.InteresadoSir</class>
-        <class>es.caib.regweb3.sir.core.model.AnexoSir</class>
+        <class>es.caib.regweb3.sir.core.model.AnexoSir</class>-->
 
 
         <properties>

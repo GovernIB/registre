@@ -680,12 +680,8 @@ function ocultaPersonaFisica(){
     $('#nuevaPersonaFisica').hide();
     $('#personaFisica').val("");
     $('#personaFisica').hide();
-    //$('#personaFisica_chosen').hide();
     $('#personaFisicaLabel').hide();
-    //$('#addPersonaFisica').hide();
     $('#buscarPersonaFisica').hide();
-    //$('#personaFisica').attr("disabled","disabled");
-    //$('#personaFisica').trigger("chosen:updated");
 }
 
 /**
@@ -697,12 +693,8 @@ function ocultaPersonaJuridica(){
     $('#nuevaPersonaJuridica').hide();
     $('#personaJuridica').val("");
     $('#personaJuridica').hide();
-    //$('#personaJuridica_chosen').hide();
     $('#personaJuridicaLabel').hide();
-    //$('#addPersonaJuridica').hide();
     $('#buscarPersonaJuridica').hide();
-    //$('#personaJuridica').attr("disabled","disabled");
-    //$('#personaJuridica').trigger("chosen:updated");
 }
 
 /**
@@ -931,4 +923,81 @@ function tiposDocumentoPersonaJuridica(){
     }
     $('#tipoDocumentoIdentificacion').trigger("chosen:updated");
 
+}
+
+/**
+ * Carga los datos de un Interesado para mostrarlos en un modal
+ * @param idInteresado
+ */
+function obtenerInteresado(idInteresado){
+
+    // Eliminamos el contenido del formulario y los mensajes de error
+    limpiarInteresadoDetalle();
+
+    //Obtenemos los datos de la Persona a editar
+    $.ajax({
+        url: urlCargarInteresado,
+        data: { idInteresado: idInteresado},
+        type: "GET",
+        dataType: 'json',
+        contentType: 'application/json',
+
+        success: function(result) {
+
+            $('#interesadoTitulo').html(result.nombreCompleto);
+
+            $('#nombre').html(result.nombre);
+            $('#apellido1').html(result.apellido1);
+            $('#apellido2').html(result.apellido2);
+            if(result.tipoDocumentoIdentificacion != null && result.tipoDocumentoIdentificacion != '-1'){
+                $('#tipoDocumento').html(tradsinteresado['tipoDocumentoIdentificacion.'+result.tipoDocumentoIdentificacion]);
+                $('#documento').html(result.documento);
+            }
+
+            if(result.pais != null){$("#pais").html(result.pais.descripcionPais);}
+            if(result.provincia != null){
+                $("#provincia").html(result.provincia.descripcionProvincia);
+
+                if(result.localidad != null){
+                    $("#localidad").html(result.localidad.nombre);
+                }
+            }
+
+            $('#direccion').html(result.direccion);
+            $('#razonSocial').html(result.razonSocial);
+            $('#direccionElectronica').html(result.direccionElectronica);
+            $('#email').html(result.email);
+            $('#cp').html(result.cp);
+            $('#telefono').html(result.telefono);
+            if(result.canal != null){
+                $("#canal").html(tradsinteresado['canalNotificacion.'+result.canal]);
+            }
+            $('#observaciones').html(result.observaciones);
+
+        }
+    });
+}
+
+/**
+ * Limpia el formulario de interesado y los posibles mensajes de error
+ */
+function limpiarInteresadoDetalle(){
+
+    $('#interesadoTitulo').html('');
+    $('#nombre').html('');
+    $('#apellido1').html('');
+    $('#apellido2').html('');
+    $('#tipoDocumento').html('');
+    $('#documento').html('');
+    $('#email').html('');
+    $('#telefono').html('');
+    $('#canal').html('');
+    $('#pais').html('');
+    $('#provincia').html('');
+    $('#localidad').html('');
+    $('#direccion').html('');
+    $('#cp').html('');
+    $('#razonSocial').html('');
+    $('#direccionElectronica').html('');
+    $('#observaciones').html('');
 }

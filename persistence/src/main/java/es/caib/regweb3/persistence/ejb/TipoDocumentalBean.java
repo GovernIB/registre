@@ -111,15 +111,7 @@ public class TipoDocumentalBean extends BaseEjbJPA<TipoDocumental, Long> impleme
         return q.getResultList().size() > 0;
 
     }
-  
-    @Override
-    public TipoDocumental findByCodigoNTI(String codigo) throws Exception {
 
-        Query q = em.createQuery("Select tipoDocumental from TipoDocumental as tipoDocumental where tipoDocumental.codigoNTI = :codigo");
-        q.setParameter("codigo",codigo);
-
-        return (TipoDocumental) q.getSingleResult();
-    }
 
     @Override
     public List<TipoDocumental> getByEntidad(Long idEntidad) throws Exception {

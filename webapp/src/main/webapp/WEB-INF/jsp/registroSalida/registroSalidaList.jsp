@@ -313,7 +313,7 @@
                                             <th><spring:message code="registroSalida.extracto"/></th>
                                         </c:if>
                                         <th><spring:message code="registroSalida.estado"/></th>
-                                        <th><spring:message code="registroEntrada.interesados"/></th>
+                                        <th><spring:message code="registroSalida.destinatarios"/></th>
                                         <th><spring:message code="registroEntrada.anexos"/></th>
 
                                         <th class="center"><spring:message code="regweb.acciones"/></th>

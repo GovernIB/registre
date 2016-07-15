@@ -114,8 +114,9 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
             // Procesamos el arbol de organismos
             for (UnidadTF unidadTF : arbol) {
                 Organismo organismo = sincronizarOrganismo(unidadTF, entidadId);
-                // Clasificamos el organismo hijo en función del estado
-                if (organismo != null) {
+
+                if (organismo != null) { // Si se ha sincronizado organismo, miramos si puede ser pendiente de procesar
+                    //Miramos si es un candidato a pendiente y si lo es se guarda en la tabla de pendientes.
                     guardarPendiente(organismo);
                 }
             }
@@ -166,7 +167,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
             //Pueden quedar sin oficinas al borrarselas o quitarles las únicas relaciones organizativas que tengan.
 
 
-            // Obtenemos los organismos de la entidad que tienen libros
+            // Obtenemos los organismos vigentes de la entidad que tienen libros
             List<Organismo> vigentes = libroEjb.organismosConLibro(entidadId);
 
             for (Organismo organismo : vigentes) {
@@ -361,7 +362,6 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
             if (oficinaTF != null) {
 
                 if(oficinaTF.getOrganizativasOfi() != null){
-                    log.info("Entro en Organizativas antes del find...");
 
                     List<RelacionOrganizativaOfiTF> relacionOrganizativaOfiTFList = oficinaTF.getOrganizativasOfi();
                     Oficina oficina = oficinaEjb.findByCodigoEntidadSinEstado(oficinaTF.getCodigo(), idEntidad);
@@ -412,8 +412,6 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
             if (oficinaTF != null) {
 
                 if(oficinaTF.getSirOfi() != null){
-
-                    log.info("Entro en SIR antes del find...");
 
                     List<RelacionSirOfiTF> relacionSirOfiTFList = oficinaTF.getSirOfi();
                     Oficina oficina = oficinaEjb.findByCodigoEntidadSinEstado(oficinaTF.getCodigo(), idEntidad);

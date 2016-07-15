@@ -5,6 +5,7 @@ import org.hibernate.annotations.ForeignKey;
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Fundació BIT.
@@ -80,6 +81,31 @@ public class RegistroEntrada implements IRegistro {
         this.libro = new Libro(idLibro, nombreLibro, null, null, denominacionOrganismo);
         this.oficina = new Oficina(null, null, denominacionOficina);
     }
+
+    /**
+     * Constructor para Informe LibroRegistro
+     */
+    public RegistroEntrada(Long idRegistro, Long idLibro, String nombreLibro, Long idOficina, String denominacionOficina, Date fecha,
+                           Integer numeroRegistro, String extracto, Long idTipoAsunto, Long idOficinaOrigen, String denominacionOficinaOrigen,
+                           String numeroRegistroOrigen, Date fechaOrigen, String destinoExternoDenominacion, Long idDestino,
+                           String denominacionDestino, Long tipoDocumentacionFisica, Long idioma, String observaciones, Long estado,
+                           String expediente, Long idCodigoAsunto, String referenciaExterna, Long transporte, String numeroTransporte,
+                           Long idRegistroDetalle, String destinoExternoCodigo, List<Interesado> interesados) {
+
+        this.id = idRegistro;
+        this.numeroRegistro = numeroRegistro;
+        this.fecha = fecha;
+        this.estado = estado;
+        this.destinoExternoCodigo = destinoExternoCodigo;
+        this.destinoExternoDenominacion = destinoExternoDenominacion;
+        this.destino = new Organismo(idDestino, denominacionDestino);
+        this.registroDetalle = new RegistroDetalle(idRegistroDetalle, extracto, idTipoAsunto, idOficinaOrigen, denominacionOficinaOrigen,
+                numeroRegistroOrigen, fechaOrigen, tipoDocumentacionFisica, idioma, observaciones, expediente, idCodigoAsunto,
+                referenciaExterna, transporte, numeroTransporte, interesados);
+        this.libro = new Libro(idLibro, nombreLibro, null, null, null);
+        this.oficina = new Oficina(idOficina, null, denominacionOficina);
+    }
+
 
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")

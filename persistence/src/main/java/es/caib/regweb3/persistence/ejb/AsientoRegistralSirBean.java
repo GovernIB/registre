@@ -4,6 +4,7 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.sir.core.model.*;
+import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -120,7 +121,7 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
         return (Long) q.getSingleResult() > 0;
     }
 
-    public Paginacion busqueda(Integer pageNumber, Integer any, AsientoRegistralSir asientoRegistralSir, String codigoOficinaActiva, Long estado) throws Exception{
+    public Paginacion busqueda(Integer pageNumber, Integer any, AsientoRegistralSir asientoRegistralSir, String codigoOficinaActiva, String estado) throws Exception{
 
         Query q;
         Query q2;
@@ -143,8 +144,8 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
             where.add(DataBaseUtils.like("asr.numeroRegistro", "numeroRegistro", parametros, asientoRegistralSir.getNumeroRegistro()));
         }
 
-        if (estado != null) {
-            where.add(" asr.estado = :estado "); parametros.put("estado",estado);
+        if (!StringUtils.isEmpty(estado)) {
+            where.add(" asr.estado = :estado "); parametros.put("estado",EstadoAsientoRegistralSir.valueOf(estado));
         }
 
         if(any!= null){where.add(" year(asr.fechaRegistro) = :any "); parametros.put("any",any);}

@@ -292,7 +292,7 @@
                     <c:if test="${not empty asientosRegistralesSir}">
                         <div class="col-xs-6">
 
-                            <div class="panel panel-warning">
+                            <div class="panel panel-success">
                                 <div class="panel-heading">
                                     <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="asientoRegistralSir.pendientesProcesar"/></strong> </h3>
                                 </div>

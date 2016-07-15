@@ -61,6 +61,20 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
 
     @Override
+    public String getNumeroRegistroEntrada(Long idRegistroEntrada) throws Exception {
+
+        Query q;
+
+        q = em.createQuery("Select re.numeroRegistroFormateado from RegistroEntrada as re where re.id = :idRegistroEntrada ");
+
+        q.setParameter("idRegistroEntrada", idRegistroEntrada);
+
+        return (String) q.getSingleResult();
+
+    }
+
+
+    @Override
     @SuppressWarnings(value = "unchecked")
     public List<RegistroEntrada> getByUsuario(Long idUsuarioEntidad) throws Exception {
 
@@ -277,280 +291,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroEntrada> buscaLibroRegistro(Date fechaInicio, Date fechaFin, String numRegistro, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String extracto, String usuario, List<Libro> libros, Long estado, Long idOficina, Long idTipoAsunto, String organoDest) throws Exception {
-
-        Query q;
-        Map<String, Object> parametros = new HashMap<String, Object>();
-        List<String> where = new ArrayList<String>();
-
-        StringBuffer query = new StringBuffer("Select DISTINCT registroEntrada from RegistroEntrada as registroEntrada left outer join registroEntrada.registroDetalle.interesados interessat ");
-
-
-        // Numero registro
-        if (!StringUtils.isEmpty(numRegistro)) {
-            where.add(" registroEntrada.numeroRegistroFormateado LIKE :numeroRegistroFormateado");
-            parametros.put("numeroRegistroFormateado", "%" + numRegistro + "%");
-        }
-
-        // Extracto
-        if (!StringUtils.isEmpty(extracto)) {
-            where.add(DataBaseUtils.like("registroEntrada.registroDetalle.extracto", "extracto", parametros, extracto));
-        }
-
-        // Organismo destinatario
-        if (!StringUtils.isEmpty((organoDest))) {
-            if (organismoEjb.findByCodigoLigero(organoDest) == null) {
-                where.add(" registroEntrada.destinoExternoCodigo = :organoDest ");
-            } else {
-                where.add(" registroEntrada.destino.codigo = :organoDest ");
-            }
-            parametros.put("organoDest", organoDest);
-        }
-
-        // Observaciones
-        if (!StringUtils.isEmpty(observaciones)) {
-            where.add(DataBaseUtils.like("registroEntrada.registroDetalle.observaciones", "observaciones", parametros, observaciones));
-        }
-
-        // Usuario
-        if (!StringUtils.isEmpty(usuario)) {
-            where.add(DataBaseUtils.like("registroEntrada.usuario.usuario.identificador", "usuario", parametros, usuario));
-        }
-
-        // Nombre interesado
-        if (!StringUtils.isEmpty(interesadoNom)) {
-            where.add("((" + DataBaseUtils.like("interessat.nombre", "interesadoNom", parametros, interesadoNom) +
-                    ") or (" + DataBaseUtils.like("interessat.razonSocial", "interesadoNom", parametros, interesadoNom) +
-                    "))");
-        }
-
-        // Primer apellido interesado
-        if (!StringUtils.isEmpty(interesadoLli1)) {
-            where.add(DataBaseUtils.like("interessat.apellido1", "interesadoLli1", parametros, interesadoLli1));
-        }
-
-        // Segundo apellido interesado
-        if (!StringUtils.isEmpty(interesadoLli2)) {
-            where.add(DataBaseUtils.like("interessat.apellido2", "interesadoLli2", parametros, interesadoLli2));
-        }
-
-        // Documento interesado
-        if (!StringUtils.isEmpty(interesadoDoc)) {
-            where.add(" (UPPER(interessat.documento) LIKE UPPER(:interesadoDoc)) ");
-            parametros.put("interesadoDoc", "%" + interesadoDoc.trim() + "%");
-        }
-
-        // Estado registro
-        if (estado != null && estado > 0) {
-            where.add(" registroEntrada.estado = :idEstadoRegistro ");
-            parametros.put("idEstadoRegistro", estado);
-        }
-
-        // Oficina Registro
-        if (idOficina != -1) {
-            where.add(" registroEntrada.oficina.id = :idOficina ");
-            parametros.put("idOficina", idOficina);
-        }
-
-        // Tipo Asunto
-        if (idTipoAsunto != -1) {
-            where.add(" registroEntrada.registroDetalle.tipoAsunto.id = :idTipoAsunto ");
-            parametros.put("idTipoAsunto", idTipoAsunto);
-        }
-
-        // Intervalo fechas
-        where.add(" (registroEntrada.fecha >= :fechaInicio  ");
-        parametros.put("fechaInicio", fechaInicio);
-        where.add(" registroEntrada.fecha <= :fechaFin) ");
-        parametros.put("fechaFin", fechaFin);
-
-        // Libro
-        where.add(" registroEntrada.libro in (:libros)");
-        parametros.put("libros", libros);
-
-        // Buscamos registros de entrada con anexos
-        if (anexos) {
-            where.add(" registroEntrada.registroDetalle.id in (select distinct(a.registroDetalle.id) from Anexo as a) ");
-        }
-
-        // Añadimos los parámetros a la query
-        if (parametros.size() != 0) {
-
-            query.append("where ");
-            int count = 0;
-            for (String w : where) {
-                if (count != 0) {
-                    query.append(" and ");
-                }
-                query.append(w);
-                count++;
-            }
-
-            query.append(" order by registroEntrada.fecha desc");
-            q = em.createQuery(query.toString());
-
-            for (Map.Entry<String, Object> param : parametros.entrySet()) {
-                q.setParameter(param.getKey(), param.getValue());
-            }
-
-        } else {
-            query.append("order by registroEntrada.fecha desc");
-            q = em.createQuery(query.toString());
-        }
-
-        return q.getResultList();
-    }
-
-    @Override
-    @SuppressWarnings(value = "unchecked")
-    public Long buscaIndicadoresTotal(Date fechaInicio, Date fechaFin, Long idEntidad) throws Exception {
-
-        Query q;
-
-        q = em.createQuery("Select count(registroEntrada.id) from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
-                "and registroEntrada.fecha <= :fechaFin and registroEntrada.estado != :anulado and registroEntrada.estado != :pendiente and " +
-                "registroEntrada.libro.organismo.entidad.id = :idEntidad ");
-
-        q.setParameter("fechaInicio", fechaInicio);
-        q.setParameter("fechaFin", fechaFin);
-        q.setParameter("idEntidad", idEntidad);
-        q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
-        q.setParameter("pendiente", RegwebConstantes.REGISTRO_PENDIENTE);
-
-        return (Long) q.getSingleResult();
-    }
-
-    @Override
-    @SuppressWarnings(value = "unchecked")
-    public Long buscaIndicadoresOficinaTotal(Date fechaInicio, Date fechaFin, Long idOficina) throws Exception {
-
-        Query q;
-
-        q = em.createQuery("Select count(registroEntrada.id) from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
-                "and registroEntrada.fecha <= :fechaFin and registroEntrada.estado != :anulado and registroEntrada.estado != :pendiente and " +
-                "registroEntrada.oficina.id = :idOficina ");
-
-        q.setParameter("fechaInicio", fechaInicio);
-        q.setParameter("fechaFin", fechaFin);
-        q.setParameter("idOficina", idOficina);
-        q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
-        q.setParameter("pendiente", RegwebConstantes.REGISTRO_PENDIENTE);
-
-        return (Long) q.getSingleResult();
-    }
-
-    @Override
-    @SuppressWarnings(value = "unchecked")
-    public Long buscaEntradaPorConselleria(Date fechaInicio, Date fechaFin, Long conselleria) throws Exception {
-
-        Query q;
-
-        q = em.createQuery("Select count(registroEntrada.id) from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
-                "and registroEntrada.fecha <= :fechaFin and registroEntrada.oficina.organismoResponsable.id = :conselleria and registroEntrada.estado != :anulado and registroEntrada.estado != :pendiente");
-
-        q.setParameter("fechaInicio", fechaInicio);
-        q.setParameter("fechaFin", fechaFin);
-        q.setParameter("conselleria", conselleria);
-        q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
-        q.setParameter("pendiente", RegwebConstantes.REGISTRO_PENDIENTE);
-
-        return (Long) q.getSingleResult();
-    }
-
-    @Override
-    @SuppressWarnings(value = "unchecked")
-    public Long buscaEntradaPorAsunto(Date fechaInicio, Date fechaFin, Long tipoAsunto, Long idEntidad) throws Exception {
-
-        Query q;
-
-        q = em.createQuery("Select count(registroEntrada.id) from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
-                "and registroEntrada.fecha <= :fechaFin and registroEntrada.registroDetalle.tipoAsunto.id = :tipoAsunto and " +
-                "registroEntrada.estado != :anulado and registroEntrada.estado != :pendiente and registroEntrada.libro.organismo.entidad.id = :idEntidad");
-
-        q.setParameter("fechaInicio", fechaInicio);
-        q.setParameter("fechaFin", fechaFin);
-        q.setParameter("tipoAsunto", tipoAsunto);
-        q.setParameter("idEntidad", idEntidad);
-        q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
-        q.setParameter("pendiente", RegwebConstantes.REGISTRO_PENDIENTE);
-
-        return (Long) q.getSingleResult();
-    }
-
-    @Override
-    public Long buscaEntradaPorIdioma(Date fechaInicio, Date fechaFin, Long idioma, Long idEntidad) throws Exception {
-
-        Query q;
-
-        q = em.createQuery("Select count(registroEntrada.id) from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
-                "and registroEntrada.fecha <= :fechaFin and registroEntrada.registroDetalle.idioma = :idioma and " +
-                "registroEntrada.estado != :anulado and registroEntrada.estado != :pendiente and registroEntrada.libro.organismo.entidad.id = :idEntidad");
-
-        q.setParameter("fechaInicio", fechaInicio);
-        q.setParameter("fechaFin", fechaFin);
-        q.setParameter("idioma", idioma);
-        q.setParameter("idEntidad", idEntidad);
-        q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
-        q.setParameter("pendiente", RegwebConstantes.REGISTRO_PENDIENTE);
-
-        return (Long) q.getSingleResult();
-    }
-
-    @Override
-    public Long buscaEntradaPorIdiomaOficina(Date fechaInicio, Date fechaFin, Long idioma, Long idOficina) throws Exception {
-
-        Query q;
-
-        q = em.createQuery("Select count(registroEntrada.id) from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
-                "and registroEntrada.fecha <= :fechaFin and registroEntrada.registroDetalle.idioma = :idioma and " +
-                "registroEntrada.estado != :anulado and registroEntrada.estado != :pendiente and registroEntrada.oficina.id = :idOficina");
-
-        q.setParameter("fechaInicio", fechaInicio);
-        q.setParameter("fechaFin", fechaFin);
-        q.setParameter("idioma", idioma);
-        q.setParameter("idOficina", idOficina);
-        q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
-        q.setParameter("pendiente", RegwebConstantes.REGISTRO_PENDIENTE);
-
-        return (Long) q.getSingleResult();
-    }
-
-    @Override
-    public Long buscaEntradaPorLibro(Date fechaInicio, Date fechaFin, Long libro) throws Exception {
-
-        Query q;
-
-        q = em.createQuery("Select count(registroEntrada.id) from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
-                "and registroEntrada.fecha <= :fechaFin and registroEntrada.libro.id = :libro and registroEntrada.estado != :anulado  and registroEntrada.estado != :pendiente");
-
-        q.setParameter("fechaInicio", fechaInicio);
-        q.setParameter("fechaFin", fechaFin);
-        q.setParameter("libro", libro);
-        q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
-        q.setParameter("pendiente", RegwebConstantes.REGISTRO_PENDIENTE);
-
-        return (Long) q.getSingleResult();
-    }
-
-    @Override
-    public Long buscaEntradaPorOficina(Date fechaInicio, Date fechaFin, Long oficina) throws Exception {
-
-        Query q;
-
-        q = em.createQuery("Select count(registroEntrada.id) from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
-                "and registroEntrada.fecha <= :fechaFin and registroEntrada.oficina.id = :oficina and registroEntrada.estado != :anulado and registroEntrada.estado != :pendiente");
-
-        q.setParameter("fechaInicio", fechaInicio);
-        q.setParameter("fechaFin", fechaFin);
-        q.setParameter("oficina", oficina);
-        q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
-        q.setParameter("pendiente", RegwebConstantes.REGISTRO_PENDIENTE);
-
-        return (Long) q.getSingleResult();
-    }
-
-    @Override
-    @SuppressWarnings(value = "unchecked")
     public List<RegistroBasico> getByOficinaEstado(Long idOficinaActiva, Long idEstado, Integer total) throws Exception {
 
         Query q;
@@ -606,66 +346,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroEntrada> buscaEntradaPorUsuario(Date fechaInicio, Date fechaFin, Long idUsuario, List<Libro> libros) throws Exception {
-
-        Query q;
-
-        q = em.createQuery("Select registroEntrada.numeroRegistro, registroEntrada.fecha, registroEntrada.libro.nombre, " +
-                "registroEntrada.oficina.denominacion, registroEntrada.libro.organismo.denominacion " +
-                "from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
-                "and registroEntrada.fecha <= :fechaFin and registroEntrada.usuario.id = :idUsuario and registroEntrada.libro in (:libros) order by registroEntrada.fecha desc");
-
-        q.setParameter("fechaInicio", fechaInicio);
-        q.setParameter("fechaFin", fechaFin);
-        q.setParameter("idUsuario", idUsuario);
-        q.setParameter("libros", libros);
-
-        List<RegistroEntrada> registrosEntrada = new ArrayList<RegistroEntrada>();
-
-        List<Object[]> result = q.getResultList();
-
-        for (Object[] object : result) {
-            RegistroEntrada registroEntrada = new RegistroEntrada(null, (Integer) object[0], (Date) object[1], null, (String) object[2], (String) object[3], (String) object[4]);
-
-            registrosEntrada.add(registroEntrada);
-        }
-
-        return registrosEntrada;
-    }
-
-    @Override
-    @SuppressWarnings(value = "unchecked")
-    public List<RegistroEntrada> buscaEntradaPorUsuarioLibro(Date fechaInicio, Date fechaFin, Long idUsuario, Long idLibro) throws Exception {
-
-        Query q;
-
-        q = em.createQuery("Select registroEntrada.numeroRegistro, registroEntrada.fecha, registroEntrada.libro.nombre, " +
-                "registroEntrada.oficina.denominacion, registroEntrada.libro.organismo.denominacion " +
-                "from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
-                "and registroEntrada.fecha <= :fechaFin and registroEntrada.usuario.id = :idUsuario and " +
-                "registroEntrada.libro.id = :idLibro and registroEntrada.estado != :pendiente order by registroEntrada.fecha desc");
-
-        q.setParameter("fechaInicio", fechaInicio);
-        q.setParameter("fechaFin", fechaFin);
-        q.setParameter("idUsuario", idUsuario);
-        q.setParameter("idLibro", idLibro);
-        q.setParameter("pendiente", RegwebConstantes.REGISTRO_PENDIENTE);
-
-        List<RegistroEntrada> registrosEntrada = new ArrayList<RegistroEntrada>();
-
-        List<Object[]> result = q.getResultList();
-
-        for (Object[] object : result) {
-            RegistroEntrada registroEntrada = new RegistroEntrada(null, (Integer) object[0], (Date) object[1], null, (String) object[2], (String) object[3], (String) object[4]);
-
-            registrosEntrada.add(registroEntrada);
-        }
-
-        return registrosEntrada;
-    }
-
-    @Override
-    @SuppressWarnings(value = "unchecked")
     public List<RegistroEntrada> getByLibrosEstado(List<Libro> libros, Long idEstado) throws Exception {
 
         Query q;
@@ -693,64 +373,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         q.setParameter("idEstado", idEstado);
 
         return (Long) q.getSingleResult();
-    }
-
-    @Override
-    @SuppressWarnings(value = "unchecked")
-    public List<RegistroEntrada> buscaPorLibroTipoNumero(Date fechaInicio, Date fechaFin, Long idLibro, Integer numeroRegistro) throws Exception {
-
-        Query q;
-        Map<String, Object> parametros = new HashMap<String, Object>();
-        List<String> where = new ArrayList<String>();
-
-        StringBuffer query = new StringBuffer("Select registroEntrada.id, registroEntrada.numeroRegistro, registroEntrada.fecha, " +
-                "registroEntrada.libro.id, registroEntrada.libro.nombre, registroEntrada.oficina.denominacion, registroEntrada.libro.organismo.denominacion " +
-                "from RegistroEntrada as registroEntrada ");
-
-        if (fechaInicio != null) {
-            where.add(" registroEntrada.fecha >= :fechaInicio");
-            parametros.put("fechaInicio", fechaInicio);
-        }
-        if (fechaFin != null) {
-            where.add(" registroEntrada.fecha <= :fechaFin");
-            parametros.put("fechaFin", fechaFin);
-        }
-        if (idLibro != null && idLibro > 0) {
-            where.add(" registroEntrada.libro.id = :idLibro");
-            parametros.put("idLibro", idLibro);
-        }
-        if (numeroRegistro != null && numeroRegistro > 0) {
-            where.add(" registroEntrada.numeroRegistro = :numeroRegistro");
-            parametros.put("numeroRegistro", numeroRegistro);
-        }
-
-        query.append("where ");
-        int count = 0;
-        for (String w : where) {
-            if (count != 0) {
-                query.append(" and ");
-            }
-            query.append(w);
-            count++;
-        }
-        query.append(" order by registroEntrada.id desc");
-        q = em.createQuery(query.toString());
-
-        for (Map.Entry<String, Object> param : parametros.entrySet()) {
-            q.setParameter(param.getKey(), param.getValue());
-        }
-
-        List<RegistroEntrada> registrosEntrada = new ArrayList<RegistroEntrada>();
-
-        List<Object[]> result = q.getResultList();
-
-        for (Object[] object : result) {
-            RegistroEntrada registroEntrada = new RegistroEntrada((Long) object[0], (Integer) object[1], (Date) object[2], (Long) object[3], (String) object[4], (String) object[5], (String) object[6]);
-
-            registrosEntrada.add(registroEntrada);
-        }
-
-        return registrosEntrada;
     }
 
     @Override
@@ -830,8 +452,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     public void anularRegistroEntrada(RegistroEntrada registroEntrada,
                                       UsuarioEntidad usuarioEntidad) throws Exception {
 
-        RegistroEntrada old = registroEntrada;
-
         // Estado anulado
         cambiarEstado(registroEntrada, RegwebConstantes.REGISTRO_ANULADO, usuarioEntidad);
 
@@ -840,8 +460,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     @Override
     public void activarRegistroEntrada(RegistroEntrada registroEntrada,
                                        UsuarioEntidad usuarioEntidad) throws Exception {
-
-        RegistroEntrada old = registroEntrada;
 
         // Actualizamos el estado del RegistroEntrada
         cambiarEstado(registroEntrada, RegwebConstantes.REGISTRO_PENDIENTE_VISAR, usuarioEntidad);
@@ -852,8 +470,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     public void visarRegistroEntrada(RegistroEntrada registroEntrada,
                                      UsuarioEntidad usuarioEntidad) throws Exception {
 
-        RegistroEntrada old = registroEntrada;
-
         // Modificamos el estado del RegistroEntrada
         cambiarEstado(registroEntrada, RegwebConstantes.REGISTRO_VALIDO, usuarioEntidad);
 
@@ -862,8 +478,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     @Override
     public void tramitarRegistroEntrada(RegistroEntrada registroEntrada,
                                         UsuarioEntidad usuarioEntidad) throws Exception {
-
-        RegistroEntrada old = registroEntrada;
 
         cambiarEstado(registroEntrada, RegwebConstantes.REGISTRO_TRAMITADO, usuarioEntidad);
 

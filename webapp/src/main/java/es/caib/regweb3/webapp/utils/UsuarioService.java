@@ -148,10 +148,9 @@ public class UsuarioService {
         }else if(rolActivo.getNombre().equals(RegwebConstantes.ROL_USUARI)){
 
             asignarEntidadesOperador(usuarioAutenticado, entidadActiva, session);
-        }
 
         // Asigna la Configuración del SuperAdministrador
-        if(rolActivo.getNombre().equals(RegwebConstantes.ROL_SUPERADMIN)){
+        }else if(rolActivo.getNombre().equals(RegwebConstantes.ROL_SUPERADMIN)){
             List<Configuracion> configuraciones = configuracionEjb.getAll();
             if(configuraciones.size()>0) {
                 Configuracion configuracion = configuraciones.get(0);
