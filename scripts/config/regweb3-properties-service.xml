@@ -2,122 +2,125 @@
 <server>
     <mbean code="org.jboss.varia.property.SystemPropertiesService" name="jboss:type=Service,name=RegwebSystemProperties">
         <attribute name="Properties">
-		
-			<!-- General -->
-			es.caib.regweb3.defaultlanguage=ca
-		    es.caib.regweb3.iscaib=false
-			es.caib.regweb3.showtimestamp=false
-			es.caib.regweb3.preregistre=http://www.caib.es
-			<!-- Tamany màxim de pujada de fitxer. Si no es defineix no hi ha límit. -->
-            #es.caib.regweb3.maxuploadsizeinbytes=10485760
 
-			<!-- Dialecte de la BBDD -->
-		    # es.caib.regweb3.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
-		    # es.caib.regweb3.hibernate.dialect=org.hibernate.dialect.MySQLDialect
-		    # es.caib.regweb3.hibernate.dialect=org.hibernate.dialect.DB2Dialect
-		    # es.caib.regweb3.hibernate.dialect=org.hibernate.dialect.SQLServerDialect
-		    # es.caib.regweb3.hibernate.dialect=net.sf.hibernate.dialect.Oracle9Dialect
-		    es.caib.regweb3.hibernate.dialect=org.hibernate.dialect.Oracle10gDialect
-		    es.caib.regweb3.hibernate.query.substitutions=true 1, false 0
-			
+      <!-- General -->
+      es.caib.regweb3.defaultlanguage=ca
+      es.caib.regweb3.iscaib=false
+      es.caib.regweb3.showtimestamp=false
+      es.caib.regweb3.preregistre=http://www.caib.es
+      <!-- Tamany màxim de pujada de fitxer. Si no es defineix no hi ha límit. -->
+      #es.caib.regweb3.maxuploadsizeinbytes=10485760
 
-		
-            <!-- Directorio de oficinas, unidades y catálogos -->
-            es.caib.regweb3.dir3caib.server=http://195.57.128.134:8080/dir3caib
-			es.caib.regweb3.dir3caib.username=caibapp
-			es.caib.regweb3.dir3caib.password=caibapp
-			
-			<!-- SIR -->
-			es.caib.regweb3.sir.serverbase=http://localhost:8380/services
-			es.caib.regweb3.sir.usedirectapi=false
+      <!-- Dialecte de la BBDD -->
+      # es.caib.regweb3.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+      # es.caib.regweb3.hibernate.dialect=org.hibernate.dialect.MySQLDialect
+      # es.caib.regweb3.hibernate.dialect=org.hibernate.dialect.DB2Dialect
+      # es.caib.regweb3.hibernate.dialect=org.hibernate.dialect.SQLServerDialect
+      # es.caib.regweb3.hibernate.dialect=net.sf.hibernate.dialect.Oracle9Dialect
+      es.caib.regweb3.hibernate.dialect=org.hibernate.dialect.Oracle10gDialect
+      es.caib.regweb3.hibernate.query.substitutions=true 1, false 0
 
-            <!-- Directorio base para los archivos generales -->
-            es.caib.regweb3.archivos.path=D:/dades/dades/Proyectos/REGWEB/Archivos/
-			
-			<!-- Directorio base para los annexos -->
-			<!-- ======== PLUGIN DE CUSTODIA - FILESYSTEM ============== -->
-		    es.caib.regweb3.annex.documentcustodyplugin=org.fundaciobit.plugins.documentcustody.filesystem.FileSystemDocumentCustodyPlugin
-		    es.caib.regweb3.annex.plugins.documentcustody.filesystem.prefix=ANNEX_
-		    es.caib.regweb3.annex.plugins.documentcustody.filesystem.basedir=D:/dades/dades/Proyectos/REGWEB/Archivos/
-			# {0} = custodyID  i {1} = URL.Encoded(custodyID)
-            es.caib.regweb3.annex.plugins.documentcustody.filesystem.baseurl=http://localhost:8080/annexos/index.jsp?custodyID={1}
+      <!-- Directorio de oficinas, unidades y catálogos -->
+      es.caib.regweb3.dir3caib.server=http://195.57.128.134:8080/dir3caib
+      es.caib.regweb3.dir3caib.username=caibapp
+      es.caib.regweb3.dir3caib.password=caibapp
       
+      <!-- SIR -->
+      es.caib.regweb3.sir.serverbase=http://localhost:8380/services
+      es.caib.regweb3.sir.usedirectapi=false
 
-            <!-- Configuració del plugin de Información de usuarios -->
+      <!-- Directorio base para los archivos generales -->
+      es.caib.regweb3.archivos.path=D:/dades/dades/Proyectos/REGWEB/Archivos/
+      
+      <!-- Directorio base para los annexos -->
+      <!-- ======== PLUGIN DE CUSTODIA - FILESYSTEM ============== -->
+      es.caib.regweb3.annex.documentcustodyplugin=org.fundaciobit.plugins.documentcustody.filesystem.FileSystemDocumentCustodyPlugin
+      es.caib.regweb3.annex.plugins.documentcustody.filesystem.prefix=ANNEX_
+      es.caib.regweb3.annex.plugins.documentcustody.filesystem.basedir=D:/dades/dades/Proyectos/REGWEB/Archivos/
+      # {0} = custodyID  i {1} = URL.Encoded(custodyID)
+      es.caib.regweb3.annex.plugins.documentcustody.filesystem.baseurl=http://localhost:8080/annexos/index.jsp?custodyID={1}
 
-			<!-- ======== PLUGIN USER-INFORMATION - DATABASE ======= -->
-			es.caib.regweb3.userinformationplugin=org.fundaciobit.plugins.userinformation.database.DataBaseUserInformationPlugin
-			es.caib.regweb3.plugins.userinformation.database.jndi=java:/es.caib.seycon.db.wl
-			es.caib.regweb3.plugins.userinformation.database.users_table=SC_WL_USUARI
-			es.caib.regweb3.plugins.userinformation.database.username_column=USU_CODI
-			es.caib.regweb3.plugins.userinformation.database.administrationid_column=USU_NIF
-			es.caib.regweb3.plugins.userinformation.database.name_column=USU_NOM
-			#es.caib.regweb3.plugins.userinformation.database.surname_1_column
-			#es.caib.regweb3.plugins.userinformation.database.surname_2_column
-			#es.caib.regweb3.plugins.userinformation.database.language_column
-			#es.caib.regweb3.plugins.userinformation.database.telephone_column
-			#es.caib.regweb3.plugins.userinformation.database.email_column
-			#es.caib.regweb3.plugins.userinformation.database.gender_column
-			#es.caib.regweb3.plugins.userinformation.database.password_column
-			es.caib.regweb3.plugins.userinformation.database.userroles_table=SC_WL_USUGRU
-			es.caib.regweb3.plugins.userinformation.database.userroles_rolename_column=UGR_CODGRU
-			es.caib.regweb3.plugins.userinformation.database.userroles_username_column=UGR_CODUSU
-			
-			
-			<!-- ======== PLUGIN USER-INFORMATION - LDAP ======= -->
-			<!--
-			es.caib.regweb3.userinformationplugin=org.fundaciobit.plugins.userinformation.ldap.LdapUserInformationPlugin
-			
-			es.caib.regweb3.plugins.userinformation.ldap.host_url=ldap://ldap.ibit.org:389
-			es.caib.regweb3.plugins.userinformation.ldap.security_principal=[LDAPUSERNAME]
-			es.caib.regweb3.plugins.userinformation.ldap.security_authentication=simple
-			es.caib.regweb3.plugins.userinformation.ldap.security_credentials=[PASSWORD of LDAPUSERNAME]
-			es.caib.regweb3.plugins.userinformation.ldap.users_context_dn=cn=Users,dc=ibitnet,dc=lan
-			es.caib.regweb3.plugins.userinformation.ldap.search_scope=onelevel
-			es.caib.regweb3.plugins.userinformation.ldap.search_filter=(|(memberOf=CN=@PFI_ADMIN,CN=Users,DC=ibitnet,DC=lan)(memberOf=CN=@PFI_USER,CN=Users,DC=ibitnet,DC=lan))
-			es.caib.regweb3.plugins.userinformation.ldap.attribute.username=sAMAccountName
-			es.caib.regweb3.plugins.userinformation.ldap.attribute.mail=mail
-			es.caib.regweb3.plugins.userinformation.ldap.attribute.administration_id=postOfficeBox
-			es.caib.regweb3.plugins.userinformation.ldap.attribute.name=givenName
-			es.caib.regweb3.plugins.userinformation.ldap.attribute.surname=sn
-			es.caib.regweb3.plugins.userinformation.ldap.attribute.telephone=telephoneNumber
-			es.caib.regweb3.plugins.userinformation.ldap.attribute.memberof=memberOf
-			es.caib.regweb3.plugins.userinformation.ldap.prefix_role_match_memberof=CN=@
-			es.caib.regweb3.plugins.userinformation.ldap.suffix_role_match_memberof=,CN=Users,DC=ibitnet,DC=lan
-			-->
-			
-		   <!-- ======== PLUGIN SCANNER ======= -->
-		   <!-- Possibles valors: [0:NO, 1:MMS, 2:DWT, 3:CAIB]-->
-		   es.caib.regweb3.scan.plugins=0
+
+      <!-- Configuració del plugin de Información de usuarios -->
+
+      <!-- ======== PLUGIN USER-INFORMATION - DATABASE ======= -->
+      es.caib.regweb3.userinformationplugin=org.fundaciobit.plugins.userinformation.database.DataBaseUserInformationPlugin
+      es.caib.regweb3.plugins.userinformation.database.jndi=java:/es.caib.seycon.db.wl
+      es.caib.regweb3.plugins.userinformation.database.users_table=SC_WL_USUARI
+      es.caib.regweb3.plugins.userinformation.database.username_column=USU_CODI
+      es.caib.regweb3.plugins.userinformation.database.administrationid_column=USU_NIF
+      es.caib.regweb3.plugins.userinformation.database.name_column=USU_NOM
+      #es.caib.regweb3.plugins.userinformation.database.surname_1_column
+      #es.caib.regweb3.plugins.userinformation.database.surname_2_column
+      #es.caib.regweb3.plugins.userinformation.database.language_column
+      #es.caib.regweb3.plugins.userinformation.database.telephone_column
+      #es.caib.regweb3.plugins.userinformation.database.email_column
+      #es.caib.regweb3.plugins.userinformation.database.gender_column
+      #es.caib.regweb3.plugins.userinformation.database.password_column
+      es.caib.regweb3.plugins.userinformation.database.userroles_table=SC_WL_USUGRU
+      es.caib.regweb3.plugins.userinformation.database.userroles_rolename_column=UGR_CODGRU
+      es.caib.regweb3.plugins.userinformation.database.userroles_username_column=UGR_CODUSU
+      
+      
+      <!-- ======== PLUGIN USER-INFORMATION - LDAP ======= -->
+      <!--
+      es.caib.regweb3.userinformationplugin=org.fundaciobit.plugins.userinformation.ldap.LdapUserInformationPlugin
+      
+      es.caib.regweb3.plugins.userinformation.ldap.host_url=ldap://ldap.ibit.org:389
+      es.caib.regweb3.plugins.userinformation.ldap.security_principal=[LDAPUSERNAME]
+      es.caib.regweb3.plugins.userinformation.ldap.security_authentication=simple
+      es.caib.regweb3.plugins.userinformation.ldap.security_credentials=[PASSWORD of LDAPUSERNAME]
+      es.caib.regweb3.plugins.userinformation.ldap.users_context_dn=cn=Users,dc=ibitnet,dc=lan
+      es.caib.regweb3.plugins.userinformation.ldap.search_scope=onelevel
+      es.caib.regweb3.plugins.userinformation.ldap.search_filter=(|(memberOf=CN=@PFI_ADMIN,CN=Users,DC=ibitnet,DC=lan)(memberOf=CN=@PFI_USER,CN=Users,DC=ibitnet,DC=lan))
+      es.caib.regweb3.plugins.userinformation.ldap.attribute.username=sAMAccountName
+      es.caib.regweb3.plugins.userinformation.ldap.attribute.mail=mail
+      es.caib.regweb3.plugins.userinformation.ldap.attribute.administration_id=postOfficeBox
+      es.caib.regweb3.plugins.userinformation.ldap.attribute.name=givenName
+      es.caib.regweb3.plugins.userinformation.ldap.attribute.surname=sn
+      es.caib.regweb3.plugins.userinformation.ldap.attribute.telephone=telephoneNumber
+      es.caib.regweb3.plugins.userinformation.ldap.attribute.memberof=memberOf
+      es.caib.regweb3.plugins.userinformation.ldap.prefix_role_match_memberof=CN=@
+      es.caib.regweb3.plugins.userinformation.ldap.suffix_role_match_memberof=,CN=Users,DC=ibitnet,DC=lan
+      -->
+      
+       <!-- ======== PLUGIN SCANNER ======= -->
+		   <!-- Possibles valors: [0:NO, 1: CAIB, 2:DWT, 3:APPLET_IECISA] -->
+		   es.caib.regweb3.scan.plugins=1,2,3
+	   
+
+       <!-- ============== 1 - CAIB PLUGIN  ================ -->
+		   es.caib.regweb3.scan.plugin.1=org.fundaciobit.plugins.scanweb.caib.CAIBScanWebPlugin
+       <!-- PROPERTIES -->
+       es.caib.regweb3.scan.plugin.1.plugins.scanweb.caib.hostport=http://localhost:8080
+       es.caib.regweb3.scan.plugin.1.plugins.scanweb.caib.debug=false
+       es.caib.regweb3.scan.plugin.1.plugins.scanweb.caib.ws_username=anadal
+       es.caib.regweb3.scan.plugin.1.plugins.scanweb.caib.ws_password=anadal
+       <!-- valor per defecte de l'identificador del document -->
+       es.caib.regweb3.scan.plugin.1.plugins.scanweb.caib.identificadorDocumentOrigen=Ident XXX 666
+       es.caib.regweb3.scan.plugin.1.plugins.scanweb.caib.tipusDocumental.es=TD01\:Resolución\nTD02\:Acuerdo\nTD03\:Contrato
+       es.caib.regweb3.scan.plugin.1.plugins.scanweb.caib.tipusDocumental.ca=TD01\:Resolució\nTD02\:Acord\nTD03\:Contracte
+       es.caib.regweb3.scan.plugin.1.plugins.scanweb.caib.origen.es=1\:Administración\n0\:Ciudadano
+       es.caib.regweb3.scan.plugin.1.plugins.scanweb.caib.origen.ca=1\:Administració\n0\:Ciutadà
+       es.caib.regweb3.scan.plugin.1.plugins.scanweb.caib.organ.es=A04013518\:DG. Personal Docente\nA04013600\:DG Participación y Transparencia\nA04013511\:DG de Desarrollo Tecnológico\nA04003746\:DG Turismo
+       es.caib.regweb3.scan.plugin.1.plugins.scanweb.caib.organ.ca=A04013518\:DG. Personal Docent\nA04013600\:DG Participació i Transparència\nA04013511\:DG de Desenvolupament Tecnològic\nA04003746\:DG Turisme
 		   
-		   <!-- Sense escaneig -->
-		   es.caib.regweb3.scan.plugin.0=
-		   
-           <!-- MMS Scan -->
-           es.caib.regweb3.scan.plugin.1=es.fundaciobit.plugins.scanweb.scan_mmscomputing.MmsComputingScanWebPlugin
-           es.caib.regweb3.scan.plugin.1.plugins.scanweb.mmscomputing.resourcePath=/anexo/scanwebresource2/1/{0}/
-           es.caib.regweb3.scan.plugin.1.plugins.scanweb.mmscomputing.uploadPath=/anexo/guardarScan/{0}
-           es.caib.regweb3.scan.plugin.1.plugins.scanweb.mmscomputing.fileFieldName=RemoteFile
-           es.caib.regweb3.scan.plugin.1.plugins.scanweb.mmscomputing.submitButton=desaAnnex
-		   
-		   <!-- Dynamic Web Twain -->
+       <!-- ============== 2 - Dynamic Web Twain  ================ -->
 		   es.caib.regweb3.scan.plugin.2=es.limit.plugins.scanweb.dynamicwebtwain.DynamicWebTwainScanWebPlugin
-		   es.caib.regweb3.scan.plugin.2.plugins.scanweb.dynamicwebtwain.applicationPath=regweb3
+
 		   
-		   <!-- Applet CAIB -->
-		   es.caib.regweb3.scan.plugin.3=es.fundaciobit.plugins.scanweb.iecisa.IECISAScanWebPlugin
-		   es.caib.regweb3.scan.plugin.3.plugins.scanweb.iecisa.resourcePath=/anexo/scanwebresource2/3/{0}/
-		   es.caib.regweb3.scan.plugin.3.plugins.scanweb.iecisa.uploadPath=/anexo/guardarScan/{0}
-		   es.caib.regweb3.scan.plugin.3.plugins.scanweb.iecisa.fileFieldName=RemoteFile
-		   es.caib.regweb3.scan.plugin.3.plugins.scanweb.iecisa.submitButton=desaAnnex
+       <!-- ============== 3 - Applet IECISA ================ -->
+		   es.caib.regweb3.scan.plugin.3=org.fundaciobit.plugins.scanweb.iecisa.IECISAScanWebPlugin
+       es.caib.regweb3.scan.plugin.3.plugins.scanweb.iecisa.showInModal=true
+       es.caib.regweb3.scan.plugin.3.plugins.scanweb.iecisa.debug=false
 
-			<!-- ======== PLUGIN DISTRIBUCION ======= -->
-			<!--Plugin Distribución -->
-			es.caib.regweb3.distribucion.plugin=0
+      <!-- ======== PLUGIN DISTRIBUCION ======= -->
+      <!--Plugin Distribución -->
+      es.caib.regweb3.distribucion.plugin=0
 
-			es.caib.regweb3.distribucion.plugin.0=org.fundaciobit.plugins.distribucion.distribucionlocal.DistribucionLocalDistribucionPlugin
-			# es.caib.regweb3.distribucion.plugin.0.plugins.distribucion.distribucionlocal.exemple=Un valor
-			es.caib.regweb3.distribucion.plugin.0.conanexos=true
+      es.caib.regweb3.distribucion.plugin.0=org.fundaciobit.plugins.distribucion.distribucionlocal.DistribucionLocalDistribucionPlugin
+      # es.caib.regweb3.distribucion.plugin.0.plugins.distribucion.distribucionlocal.exemple=Un valor
+      es.caib.regweb3.distribucion.plugin.0.conanexos=true
 
         </attribute>
     </mbean>

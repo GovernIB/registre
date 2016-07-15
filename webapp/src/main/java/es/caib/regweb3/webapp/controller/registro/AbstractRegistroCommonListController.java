@@ -7,13 +7,14 @@ import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
-import es.caib.regweb3.webapp.scan.ScannerManager;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
+
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
@@ -52,6 +53,9 @@ public abstract class AbstractRegistroCommonListController extends BaseControlle
 
     @EJB(mappedName = "regweb3/CatPaisEJB/local")
     public CatPaisLocal catPaisEjb;
+    
+    @EJB(mappedName = "regweb3/ScanWebModuleEJB/local")
+    public ScanWebModuleLocal scanWebModuleEjb;
 
   
     @ModelAttribute("comunidadesAutonomas")
@@ -91,21 +95,22 @@ public abstract class AbstractRegistroCommonListController extends BaseControlle
     }
 
     public void initAnexos(Entidad entidad, Model model, HttpServletRequest request, Long registroID) throws Exception {
-    Integer tipusScan = 0;
-    if (entidad.getTipoScan() != null && !"".equals(entidad.getTipoScan())) {
-      tipusScan = Integer.parseInt(entidad.getTipoScan());
-    }
-    //      Integer tipusScan = 2;
-    boolean teScan = ScannerManager.teScan(tipusScan);
-    model.addAttribute("teScan", teScan);
-    if (teScan) {
-
-      model.addAttribute("iframe_anexos_height",
-          AnexoController.BASE_IFRAME_HEIGHT + ScannerManager.getMinHeight(request, tipusScan, registroID));
-    } else {
-      model.addAttribute("iframe_anexos_height",
-          AnexoController.BASE_IFRAME_HEIGHT + AnexoController.FILE_TAB_HEIGHT);
-    }
+      long tipusScan = 0;
+      if (entidad.getTipoScan() != null && !"".equals(entidad.getTipoScan())) {
+        tipusScan = Long.parseLong(entidad.getTipoScan());
+      }
+      //      Integer tipusScan = 2;
+      boolean teScan = scanWebModuleEjb.teScan(tipusScan);
+      model.addAttribute("teScan", teScan);
+      if (teScan) {
+  
+        model.addAttribute("iframe_anexos_height", AnexoController.BASE_IFRAME_HEIGHT + 350);
+            // XYZ  TODO
+            // AnexoController.BASE_IFRAME_HEIGHT + scanWebModuleEjb.getMinHeight(request, tipusScan, registroID));
+      } else {
+        model.addAttribute("iframe_anexos_height",
+            AnexoController.BASE_IFRAME_HEIGHT + AnexoController.FILE_TAB_HEIGHT);
+      }
     }
 
     /**

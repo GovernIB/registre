@@ -4,32 +4,30 @@ import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.RegistroDetalle;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.persistence.utils.ScanWebConfigRegWeb;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
-import es.caib.regweb3.webapp.scan.ScannerManager;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.AnexoWebValidator;
+
 import org.apache.axis.utils.StringUtils;
-import org.apache.commons.io.FileUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
-import org.fundaciobit.plugins.documentcustody.api.AnnexCustody;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
-import org.fundaciobit.plugins.scanweb.ScanWebResource;
+import org.fundaciobit.plugins.scanweb.api.IScanWebPlugin;
+import org.fundaciobit.plugins.scanweb.api.ScanWebMode;
+import org.fundaciobit.plugins.scanweb.api.ScannedDocument;
+import org.fundaciobit.plugins.utils.Metadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.AntPathMatcher;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
-import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -38,6 +36,7 @@ import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -49,108 +48,17 @@ import java.util.*;
  *
  * @author mgonzalez
  * @author anadal (plugin de custodia, errors i refactoring no ajax)
+ * @author anadal migracio a ScanWebApi 2.0.0 (06/07/2016)
  */
 @Controller
 @RequestMapping(value = "/anexo")
 @SessionAttributes(types = {AnexoForm.class })
 public class AnexoController extends BaseController {
-  
-  
-    public static class UploadedScanFile {
-      protected final File file;
-      protected final String name;
-      protected final String mime;
-      protected final long expiryDate;
-      /**
-       * @param file
-       * @param name
-       * @param mime
-       * @param uploadDate
-       */
-      public UploadedScanFile(File file, String name, String mime, long expiryDate) {
-        super();
-        this.file = file;
-        this.name = name;
-        this.mime = mime;
-        this.expiryDate = expiryDate;
-      }
-      public File getFile() {
-        return file;
-      }
-      public String getName() {
-        return name;
-      }
-      public String getMime() {
-        return mime;
-      }
-      public long getExpiryDate() {
-        return expiryDate;
-      }
-      
-    }
-  
-    //  Uploaded Scan Files
-    private static final Map<Long, UploadedScanFile> scanDocumentsByID = new HashMap<Long, AnexoController.UploadedScanFile>();
-    
-        
-    protected static final long FIVE_MINUTES = 1000 * 60 * 5;
-    
-    protected UploadedScanFile getScanFileByID(long docID) {
 
-      synchronized (scanDocumentsByID) {
-        clearExpiredScanDocuments();
-  
-        return scanDocumentsByID.get(docID);
-      }
-    }
-
-
-        
-  
-    protected void saveScanFile(long docID, UploadedScanFile usf) {
-    
-      synchronized (scanDocumentsByID) {
-        clearExpiredScanDocuments();
-        scanDocumentsByID.put(docID, usf);
-      }
-      
-    }
-    
-    protected void clearScanFile(long docID) {
-      
-      synchronized (scanDocumentsByID) {
-        clearExpiredScanDocuments();
-        scanDocumentsByID.remove(docID);
-      }
-      
-    }
-    
-
-    private void clearExpiredScanDocuments() {
-      // Clear Uploaded Scan Files
-      List<Long> deleteItems = new ArrayList<Long>();
- 
-      final long now = System.currentTimeMillis();
-      
-      for (Long id : scanDocumentsByID.keySet()) {
-        UploadedScanFile usf = scanDocumentsByID.get(id);
-        
-        if (usf.getExpiryDate() < now) {
-          deleteItems.add(id);
-        }
-        
-      }
- 
-      for (Long id : deleteItems) {
-        scanDocumentsByID.remove(id);
-      }
-    }
-    
-  
     public static final int FILE_TAB_HEIGHT = 107;
   
     public static final int BASE_IFRAME_HEIGHT = 495 - FILE_TAB_HEIGHT;
-  
+   
 
     @Autowired
     private AnexoWebValidator anexoValidator;
@@ -176,6 +84,8 @@ public class AnexoController extends BaseController {
     @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
     public TipoDocumentalLocal tipoDocumentalEjb;
     
+    @EJB(mappedName = "regweb3/ScanWebModuleEJB/local")
+    public ScanWebModuleLocal scanWebModuleEjb;
     
     /**
      *  Si arriba aqui és que hi ha un error de  Tamany de Fitxer Superat   
@@ -246,7 +156,8 @@ public class AnexoController extends BaseController {
 
 
 
-    protected void loadCommonAttributes(HttpServletRequest request, Model model, Long registroID) throws Exception {
+    protected void loadCommonAttributes(HttpServletRequest request, Model model,
+        Long registroID) throws Exception {
       model.addAttribute("tiposDocumental", tipoDocumentalEjb.getByEntidad(getEntidadActiva(request).getId()));
       model.addAttribute("tiposDocumentoAnexo", RegwebConstantes.TIPOS_DOCUMENTO);
       model.addAttribute("tiposFirma", RegwebConstantes.TIPOS_FIRMA);
@@ -255,28 +166,91 @@ public class AnexoController extends BaseController {
       
       // Scan
       Entidad entidad = getEntidadActiva(request);
-      Integer tipusScan = 0;
+      Long pluginID = null;
       if (entidad.getTipoScan() != null && !"".equals(entidad.getTipoScan())) {
-        tipusScan = Integer.parseInt(entidad.getTipoScan());
+        pluginID = Long.parseLong(entidad.getTipoScan());
       }
       //      Integer tipusScan = 2;
-      boolean teScan = ScannerManager.teScan(tipusScan);
+      boolean teScan = scanWebModuleEjb.teScan(pluginID);
       model.addAttribute("teScan", teScan);
+      
       if (teScan) {
-        if (request.getParameter("lang") == null) {
-          request.setAttribute("lang", I18NUtils.getLocale().getLanguage());
+        
+        String languageUI = request.getParameter("lang");
+        
+        if (languageUI == null) {
+          languageUI = I18NUtils.getLocale().getLanguage();
+          
         }
-        model.addAttribute("headerScan", ScannerManager.getHeaderJSP(request, tipusScan, registroID));
-        model.addAttribute("coreScan", ScannerManager.getCoreJSP(request, tipusScan, registroID));
-        
-        initScan(request, registroID);
-        
+        request.setAttribute("lang", languageUI);
+
+        // Utilitzam l'ID del registre per escanejar  
+        final long scanWebID = registroID;
+
+        String urlToPluginWebPage = initializeScan(request, pluginID, scanWebID, languageUI);
+
+        model.addAttribute("urlToPluginWebPage", urlToPluginWebPage);
       }
       
     }
+
     
     
+
+    private String initializeScan(HttpServletRequest request, long pluginID, final long scanWebID,
+        String languageUI) throws Exception {
+
+
+      final String scanType = IScanWebPlugin.SCANTYPE_PDF;
+
+      // 'null' significa obtenir la configuració per defecte del plugin
+      final Set<String> flags = null;
+
+      // TODO per ara l'entrada de metadades està buida
+      final List<Metadata> metadades = new ArrayList<Metadata>();
+
+      final ScanWebMode mode = ScanWebMode.ASYNCHRONOUS;
+
+      // Si és asincron no hi ha necessitat de urlFinal
+      final String urlFinal = null;
+
+      // Vull suposar que abans de 3 minuts haurà escanejat
+      Calendar caducitat = Calendar.getInstance();
+      caducitat.add(Calendar.MINUTE, 3);
+
+      long expiryTransaction = caducitat.getTimeInMillis();
+
+      ScanWebConfigRegWeb ss = new ScanWebConfigRegWeb(scanWebID, scanType, flags,
+          metadades, mode, languageUI, urlFinal, expiryTransaction);
+      ss.setPluginID(pluginID);
+
+      if (ss.getFlags() == null || ss.getFlags().size() == 0) {
+        // Seleccionam el primer suportat
+        Set<String> defaultFlags = scanWebModuleEjb.getDefaultFlags(ss);
+        ss.setFlags(defaultFlags);
+      }
+
+      String relativeRequestPluginBasePath = ScanRequestServlet.getRelativeRequestPluginBasePath(request,
+          ScanRequestServlet.CONTEXTWEB, scanWebID);
+
+      String absoluteRequestPluginBasePath = ScanRequestServlet.getAbsoluteRequestPluginBasePath(request, 
+          ScanRequestServlet.CONTEXTWEB, scanWebID);
+
+      scanWebModuleEjb.registerScanWebProcess(request, ss);
+
+      if (log.isDebugEnabled()) {
+        log.info("absoluteRequestPluginBasePath = " + absoluteRequestPluginBasePath);
+        log.info("relativeRequestPluginBasePath = " + relativeRequestPluginBasePath);
+      }
+
+      String urlToPluginWebPage;
+      urlToPluginWebPage = scanWebModuleEjb.scanDocument(request,
+          absoluteRequestPluginBasePath, relativeRequestPluginBasePath, scanWebID);
+      return urlToPluginWebPage;
+    }
     
+
+
     @RequestMapping(value = "/nou", method = RequestMethod.POST)
     public String crearAnexoPost(@ModelAttribute AnexoForm anexoForm,
         BindingResult result, HttpServletRequest request,
@@ -286,10 +260,8 @@ public class AnexoController extends BaseController {
 
       anexoValidator.validate(anexoForm.getAnexo(),result);
 
-      
       if (!result.hasErrors()) { // Si no hay errores
 
-        
         try {
            manageDocumentCustodySignatureCustody(request, anexoForm);
 
@@ -368,14 +340,14 @@ public class AnexoController extends BaseController {
           log.info("     - anexoFull.getSignatureCustody().getName(): " + anexoForm.getSignatureCustody().getName());
         }
       }
-      
-      
-      
-      initScan(request, registroID);
+
+      final long scanWebID = registroID;
+
+      scanWebModuleEjb.closeScanWebProcess(request, scanWebID);
 
       model.addAttribute("anexoForm", anexoForm);
 
-      loadCommonAttributes(request, model, registroID);
+      loadCommonAttributes(request, model, scanWebID);
 
       return "registro/formularioAnexo";
     
@@ -449,7 +421,7 @@ public class AnexoController extends BaseController {
 
     
     protected void manageDocumentCustodySignatureCustody( 
-        HttpServletRequest request,  AnexoForm anexoForm) throws Exception {
+        HttpServletRequest request,  AnexoForm anexoForm) throws Exception, I18NException {
       
       final Long registroID = anexoForm.getRegistroID();
       
@@ -458,75 +430,51 @@ public class AnexoController extends BaseController {
       SignatureCustody sc;
       
       
-      //Cogemos el archivo
-      UploadedScanFile usf = getScanFileByID(registroID);
+      final Long scanWebID = registroID;
+
+      ScanWebConfigRegWeb config = scanWebModuleEjb.getScanWebConfig(request, scanWebID);
+
       
-      if (usf != null) {
-        File scanFile = usf.getFile();
-
-        AnnexCustody file;
-
-        // TODO Això s'ha de solucionar amb el nou sistema de digitalització
-        final int modoFirma= anexoForm.getAnexo().getModoFirma();
-        switch(modoFirma) {
-          case RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA:
-            dc = new DocumentCustody();
-            file = dc;
-            sc = null;
-          break;
+      if (config != null &&  config.getScannedFiles().size() != 0) {
+        
+        List<ScannedDocument> listDocs = config.getScannedFiles();
+        
+        // Només processam el primer fitxer enviat
+        ScannedDocument sd = listDocs.get(0);
+        
+        // Hem de modificar el Modo de Firma segons el que ens hagin enviat des de SCAN
+        dc = sd.getScannedPlainFile();
+        sc = sd.getScannedSignedFile();
+        final int modoFirma;
+        
+        final boolean validezCopia;
+        validezCopia = (anexoForm.getAnexo().getValidezDocumento() == RegwebConstantes.TIPOVALIDEZDOCUMENTO_COPIA);
+        
+        
+        if (dc == null) {
+          // Firma: PAdES, CAdES, XAdES
           // Document amb firma adjunta
-          case RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED:
-             dc = null;
-             sc = new SignatureCustody();
-             // TODO Vull suposar que és un PDF firmat. Amb scan web 2.0.0 s'hauria de solucionar
-             sc.setSignatureType(SignatureCustody.OTHER_DOCUMENT_WITH_ATTACHED_SIGNATURE);
-             file =sc;
-          break;
-          // Firma en document separat
-          case RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED:
-            // TODO Aquest Cas només tindrà sentit amb el plugin scan web 2.0.0
-            throw new Exception("El modo de firma MODO_FIRMA_ANEXO_DETACHED en "
-                + "fitxers escanejats ara no te sentit. Estirà disponible en API SCAN WEB 2.0.0");
-
-          
-          default:
-            String msg = "El modo de firma " + modoFirma + " es desconegut.";
-            log.error(msg, new Exception());
-            throw new Exception(msg);
-
+          modoFirma = RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED;
+        } else if (sc == null) {
+          // Simple document
+          modoFirma = RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA;
+        } else {
+          // Firma i document separat
+          modoFirma = RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED;
         }
-       
-        
-        file.setData(FileUtils.readFileToByteArray(scanFile));
-        
-        
-        //String mime = (String)session.getAttribute("scan_" + registroID + ".mime");
-        String mime = usf.getMime();
-        if (es.caib.regweb3.utils.StringUtils.isEmpty(mime)) {
-          // TODO Quin tipus li pos aqui // JPG, PNG, TIFF, PDF, ...
-          // Mirar Mime manager de PortaFIB o de GenApp!!!!
-          if (sc == null) { 
-            // Single document
-            mime = "application/octet-stream";
-          } else {
-         // TODO Presuposam que es un PDF firmat. Ho hauria de solucionar scan web 2.0.0
-            mime = "application/pdf"; 
-          }
+                
+        if (log.isDebugEnabled()) {
+          log.debug("NOU MODE DE FIRMA: " + modoFirma);        
         }
-        file.setMime(mime);
+        anexoForm.getAnexo().setModoFirma(modoFirma);
         
-        //String name = (String)session.getAttribute("scan_" + registroID + ".name");
-        String name = usf.getName();
-        if (name == null) {
-          name = "FitxerEscanejat.bin";
+        if ((modoFirma != RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) && validezCopia) {
+          throw new I18NException("anexo.error.tipovalidezmodofirma");
         }
-        file.setName(name);
 
-        if (!scanFile.delete()) {
-          scanFile.deleteOnExit();
-        };
-
-        initScan(request, registroID);
+        
+        anexoForm.setMetadatas(sd.getMetadatas());
+        
         
       } else {
 
@@ -540,10 +488,14 @@ public class AnexoController extends BaseController {
         
       }
       
+      if (config != null) {
+        // tancam tant si hem emprat com si no SCAN
+        scanWebModuleEjb.closeScanWebProcess(request, scanWebID);
+      }
       
       anexoForm.setDocumentoCustody(dc);
       anexoForm.setSignatureCustody(sc);
-      
+
       
     }
     
@@ -782,137 +734,5 @@ public class AnexoController extends BaseController {
                              new CustomDateEditor(new SimpleDateFormat("dd/MM/yyyy"), true, 10));   
     }
     
-    
-    
-    @RequestMapping(value = "/scanwebresource2/{tipusScan}/{registroID}/**", method = RequestMethod.GET)
-    public Object obtenerRecursoPath(
-        @PathVariable Integer tipusScan,
-        @PathVariable Long registroID,        
-        HttpServletRequest request,
-        HttpServletResponse response) throws Exception {
-      
-      
-      
-   // Don't repeat a pattern
-      String pattern = (String)
-          request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);  
-
-      String resourcePath  = new AntPathMatcher().extractPathWithinPattern(pattern, 
-          request.getServletPath());
-
-      log.info("Downloading Scan Resource:");
-      log.info("   + tipusScan = ]" + tipusScan+ "[");
-      log.info("   + registroID = ]" + registroID+ "[");
-      log.info("   + resourcePath = ]" + resourcePath + "[");
-      
-
-        ScanWebResource recurs = ScannerManager.getResource(request, tipusScan, resourcePath, registroID);
-
-        response.setHeader("Pragma", "");
-        response.setHeader("Expires", "");
-        response.setHeader("Cache-Control", "");
-        response.setHeader("Content-Disposition", "inline; filename=\"" + recurs.getName() + "\"");
-        response.setContentType(recurs.getMime());
-        response.getOutputStream().write(recurs.getContent());
-        
-        return null;
-    }
-
-    
-
-    /**
-     * Obtiene el {@link es.caib.regweb3.model.Anexo} según su identificador.
-     *
-     */
-    // TODO Borrar
-    @RequestMapping(value = "/scanwebresource/{path1}/{path2}/{resourcename:.+}", method = RequestMethod.GET)
-    public Object obtenerRecursoPath2(
-    		@PathVariable String path1,
-    		@PathVariable String path2,
-    		@PathVariable String resourcename, 
-    		HttpServletRequest request,
-    		HttpServletResponse response) throws Exception {
-
-    	Integer tipusScan = 2;
-    	long registroID = 0; // TODO ???
-    	String resource = (path1 != null ? path1 + "/" : "") + (path2 != null ? path2 + "/" : "") + resourcename;
-        ScanWebResource recurs = ScannerManager.getResource(request, tipusScan, resource, registroID);
-
-        response.setHeader("Pragma", "");
-		response.setHeader("Expires", "");
-		response.setHeader("Cache-Control", "");
-		response.setHeader("Content-Disposition", "inline; filename=\"" + recurs.getName() + "\"");
-		response.setContentType(recurs.getMime());
-		response.getOutputStream().write(recurs.getContent());
-        
-        return null;
-    }
-    
-    @RequestMapping(value = "/scanwebresource/{path}/{resourcename:.+}", method = RequestMethod.GET)
-    // TODO Borrar
-    public Object obtenerRecursoPath1(
-    		@PathVariable String path,
-    		@PathVariable String resourcename, 
-    		HttpServletRequest request,
-    		HttpServletResponse response) throws Exception {
-
-        return obtenerRecursoPath2(path, null, resourcename, request, response);
-    }
-    
-    @RequestMapping(value = "/scanwebresource/{resourcename:.+}", method = RequestMethod.GET)
-    // TODO Borrar
-    public Object obtenerRecurso(
-    		@PathVariable String resourcename, 
-    		HttpServletRequest request,
-    		HttpServletResponse response) throws Exception {
-    	return obtenerRecursoPath2(null, null, resourcename, request, response);
-    }
-
-    @RequestMapping(value = "/guardarScan/{idRegistro}", method = RequestMethod.POST)
-    public void scan(
-    		@PathVariable Long idRegistro, 
-    		MultipartHttpServletRequest request, 
-    		HttpServletResponse response)  {
-
-       MultipartFile scan = null;
-
-       try {
-           //Cogemos el archivo
-    	   scan = request.getFile("RemoteFile");
-    	   
-    	   File temp = File.createTempFile("scan", ".pdf");
-    	   FileOutputStream fos = new FileOutputStream(temp);
-    	   fos.write(scan.getBytes());
-    	   fos.close();
-    	   temp.deleteOnExit();
-    	   
-           //Obtain the session object, create a new session if doesn't exist
-    	     UploadedScanFile usf = new UploadedScanFile(temp, scan.getOriginalFilename(),
-    	         scan.getContentType(), System.currentTimeMillis() + FIVE_MINUTES);
-    	     saveScanFile(idRegistro, usf);
-    	     /*
-           HttpSession session = request.getSession(true);
-           session.setAttribute("scan_" + idRegistro, temp);
-           session.setAttribute("scan_" + idRegistro +".name", scan.getOriginalFilename());
-           session.setAttribute("scan_" + idRegistro +".mime", scan.getContentType());
-           */
-
-       }catch (Exception e) {
-         // TODO PROCESSSAR ERROR !!!!
-          e.printStackTrace();
-       }
-    }
-    
-    
-    protected void initScan(HttpServletRequest request, Long registroID) {
-      
-      
-      clearScanFile(registroID);
-/*    HttpSession session = request.getSession(true);
-      session.removeAttribute("scan_" + registroID);
-      session.removeAttribute("scan_" + registroID +".name");
-      session.removeAttribute("scan_" + registroID +".mime");
-      */
-    }
 
 }

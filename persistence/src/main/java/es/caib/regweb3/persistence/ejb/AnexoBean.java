@@ -495,6 +495,23 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
       final Locale loc = new Locale(lang);
       List<Metadata> metadades = new ArrayList<Metadata>();
       
+      // Metadades que venen de Scan
+      List<Metadata> metasScan = anexoFull.getMetadatas();
+      
+      log.info("XYZ MESTAS SCAN = " + metasScan);
+      
+      if (metasScan != null && metasScan.size() != 0) {
+        
+        log.info("XYZ MESTAS SCAN SIZE = " + metasScan.size());
+        
+        log.info("XYZ MESTAS ORIG SIZE PRE = " + metadades.size());
+        
+        metadades.addAll(metasScan);
+
+        log.info("XYZ MESTAS ORIG SIZE POST = " + metadades.size());
+
+      }
+
       // fechaDeEntradaEnElSistema 
       if (updateDate) {
         metadades.add(new Metadata("anexo.fechaCaptura", anexo.getFechaCaptura()));

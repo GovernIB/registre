@@ -6,15 +6,16 @@ import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
+import es.caib.regweb3.webapp.controller.registro.ScanRequestServlet;
 import es.caib.regweb3.webapp.editor.UsuarioEntidadEditor;
 import es.caib.regweb3.webapp.form.EntidadForm;
 import es.caib.regweb3.webapp.form.LibroOrganismo;
 import es.caib.regweb3.webapp.form.PermisoLibroUsuarioForm;
 import es.caib.regweb3.webapp.form.UsuarioEntidadBusquedaForm;
 import es.caib.regweb3.webapp.login.RegwebLoginPluginManager;
-import es.caib.regweb3.webapp.scan.ScannerManager;
 import es.caib.regweb3.webapp.utils.*;
 import es.caib.regweb3.webapp.validator.EntidadValidator;
+
 import org.fundaciobit.plugins.userinformation.IUserInformationPlugin;
 import org.fundaciobit.plugins.userinformation.RolesInfo;
 import org.hibernate.Hibernate;
@@ -32,6 +33,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -83,6 +85,9 @@ public class EntidadController extends BaseController {
 
     @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
     public TipoDocumentalLocal tipoDocumentalEjb;
+    
+    @EJB(mappedName = "regweb3/ScanWebModuleEJB/local")
+    public ScanWebModuleLocal scanWebModuleEjb;
 
     /**
      * Listado de todas las Entidades
@@ -247,7 +252,7 @@ public class EntidadController extends BaseController {
                 }
             }
 
-            model.addAttribute("tipoScan", ScannerManager.getTipusScanejat(request.getLocale(), getMessage("scan.noScan")));
+            model.addAttribute("tipoScan",  ScanRequestServlet.getTipusScanejat(scanWebModuleEjb, request.getLocale(), getMessage("scan.noScan")));
             model.addAttribute("administradoresEntidad", administradoresEntidadModificar(entidad.getPropietario(), entidad));
             model.addAttribute("tieneOrganismos", entidadEjb.tieneOrganismos(entidadId));
 
@@ -274,7 +279,7 @@ public class EntidadController extends BaseController {
 
            try {
                 model.addAttribute("administradoresEntidad", administradoresEntidadModificar(entidadForm.getEntidad().getPropietario(), entidadForm.getEntidad()));
-                model.addAttribute("tipoScan", ScannerManager.getTipusScanejat(request.getLocale(), getMessage("scan.noScan")));
+                model.addAttribute("tipoScan", ScanRequestServlet.getTipusScanejat(scanWebModuleEjb, request.getLocale(), getMessage("scan.noScan")));
                model.addAttribute("tieneOrganismos", entidadEjb.tieneOrganismos(entidadId));
             } catch (Exception e) {
                 e.printStackTrace();
