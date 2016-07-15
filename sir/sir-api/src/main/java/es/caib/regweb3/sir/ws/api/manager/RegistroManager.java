@@ -7,5 +7,5 @@ import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
  */
 public interface RegistroManager {
 
-    public void enviarMensajeConfirmacion(AsientoRegistralSir asientoRegistralSir);
+    public void enviarMensajeConfirmacion(AsientoRegistralSir asientoRegistralSir, String numeroRegistro);
 }

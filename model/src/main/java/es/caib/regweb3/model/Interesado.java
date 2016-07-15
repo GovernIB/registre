@@ -99,6 +99,23 @@ public class Interesado implements Serializable {
     }
 
     /**
+     * Constructor para Informe LibroRegistro
+     */
+    public Interesado(Long id, String nombre, String apellido1, String apellido2, Boolean isRepresentante, String razonSocial,
+                      String documento, Long tipo) {
+
+        this.id = id;
+        this.nombre = nombre;
+        this.apellido1 = apellido1;
+        this.apellido2 = apellido2;
+        this.isRepresentante = isRepresentante;
+        this.documento = documento;
+        this.tipo = tipo;
+        this.razonSocial = razonSocial;
+    }
+
+
+    /**
      * Constructor para un Interesado de Tipo Persona
      * @param persona
      */
@@ -472,6 +489,21 @@ public class Interesado implements Serializable {
             return getNombreOrganismo();
         }else if(tipo.equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)){
             return getNombrePersonaFisicaCorto();
+        } else if (tipo.equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)) {
+            return getNombrePersonaJuridica();
+        }
+
+        return "";
+
+    }
+
+    @Transient
+    public String getNombreCompletoInforme() {
+
+        if (tipo.equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)) {
+            return getNombreOrganismo();
+        } else if (tipo.equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)) {
+            return getNombrePersonaFisica();
         }else if(tipo.equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)){
             return getNombrePersonaJuridica();
         }

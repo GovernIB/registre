@@ -243,6 +243,16 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
     }
 
+    @Override
+    public Boolean isSir(Long idEntidad) throws Exception{
+
+        Query q = em.createQuery("Select entidad.sir from Entidad as entidad where entidad.id = :idEntidad");
+
+        q.setParameter("idEntidad",idEntidad);
+
+        return (Boolean) q.getSingleResult();
+    }
+
 
     @Override
     public void eliminarRegistros(Long idEntidad) throws Exception{

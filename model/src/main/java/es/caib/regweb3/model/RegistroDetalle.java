@@ -115,6 +115,30 @@ public class RegistroDetalle implements Serializable {
       this.version = rd.version;
     }
 
+    /**
+     * Constructro para Informe LibroRegistro
+     */
+    public RegistroDetalle(Long idRegistroDetalle, String extracto, Long idTipoAsunto, Long idOficinaOrigen, String denominacionOficinaOrigen,
+                           String numeroRegistroOrigen, Date fechaOrigen, Long tipoDocumentacionFisica, Long idioma, String observaciones, String expediente,
+                           Long idCodigoAsunto, String referenciaExterna, Long transporte, String numeroTransporte, List<Interesado> interesados) {
+
+        this.id = idRegistroDetalle;
+        this.extracto = extracto;
+        this.tipoDocumentacionFisica = tipoDocumentacionFisica;
+        this.numeroRegistroOrigen = numeroRegistroOrigen;
+        this.fechaOrigen = fechaOrigen;
+        this.idioma = idioma;
+        this.observaciones = observaciones;
+        this.expediente = expediente;
+        this.tipoAsunto = new TipoAsunto(idTipoAsunto);
+        this.oficinaOrigen = new Oficina(idOficinaOrigen, null, denominacionOficinaOrigen);
+        this.codigoAsunto = new CodigoAsunto(idCodigoAsunto);
+        this.referenciaExterna = referenciaExterna;
+        this.transporte = transporte;
+        this.numeroTransporte = numeroTransporte;
+        this.interesados = interesados;
+    }
+
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
     @Column(name="ID")

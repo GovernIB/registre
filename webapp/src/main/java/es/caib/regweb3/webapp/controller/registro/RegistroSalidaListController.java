@@ -160,7 +160,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         Oficina oficinaActiva = getOficinaActiva(request);
 
         model.addAttribute("registro",registro);
-        model.addAttribute("oficina", getOficinaActiva(request));
+        model.addAttribute("oficina", oficinaActiva);
 
         // Modelo Recibo
         model.addAttribute("modeloRecibo", new ModeloRecibo());
@@ -182,8 +182,6 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             model.addAttribute("provincias",catProvinciaEjb.getAll());
             model.addAttribute("canalesNotificacion", RegwebConstantes.CANALES_NOTIFICACION);
             model.addAttribute("tiposDocumento",RegwebConstantes.TIPOS_DOCUMENTOID);
-            model.addAttribute("nivelesAdministracion",catNivelAdministracionEjb.getAll());
-            model.addAttribute("comunidadesAutonomas",catComunidadAutonomaEjb.getAll());
             model.addAttribute("organismosOficinaActiva",organismosOficinaActiva);
 
         }

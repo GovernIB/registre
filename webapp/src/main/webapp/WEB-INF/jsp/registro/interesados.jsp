@@ -103,7 +103,13 @@
                     </colgroup>
                     <thead>
                     <tr>
-                        <th><spring:message code="registroEntrada.interesado"/></th>
+                        <c:if test="${param.tipoRegistro == 'entrada'}">
+                            <th><spring:message code="registroEntrada.interesado"/></th>
+                        </c:if>
+                        <c:if test="${param.tipoRegistro == 'salida'}">
+                            <th><spring:message code="registroSalida.destinatario"/></th>
+                        </c:if>
+
                         <th><spring:message code="interesado.tipoInteresado"/></th>
                         <th><spring:message code="representante.representante"/></th>
                         <th class="center"><spring:message code="regweb.acciones"/></th>

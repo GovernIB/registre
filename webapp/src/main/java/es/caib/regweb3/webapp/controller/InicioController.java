@@ -3,7 +3,6 @@ package es.caib.regweb3.webapp.controller;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.RegistroBasico;
 import es.caib.regweb3.persistence.ejb.*;
-import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -103,11 +102,11 @@ public class InicioController extends BaseController{
 
 
             /* ASIENTOS REGISTRALES SIR PENDIENTES DE PROCESAR */
-            /* Buscamos los Últimos AsientoRegistralSir que están pendientes de procesar */
-            if(librosRegistroEntrada.size() > 0) { // Sólo muestra los AsientoRegistralSir si tiene permisos de RegistroEntrada
+            /* Buscamos los Últimos AsientoRegistralSir que están pendientes de procesar
+            if(isSir(request) && librosRegistroEntrada.size() > 0) { // Sólo muestra los AsientoRegistralSir si tiene permisos de RegistroEntrada
                 List<AsientoRegistralSir> asientosRegistralesSir = asientosRegistralSirEjb.getUltimosARSPendientesProcesar(oficinaActiva.getCodigo(), RegwebConstantes.REGISTROS_PANTALLA_INICIO);
                 mav.addObject("asientosRegistralesSir", asientosRegistralesSir);
-            }
+            }*/
 
         }
 

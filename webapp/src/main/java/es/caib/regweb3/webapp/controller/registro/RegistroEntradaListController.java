@@ -183,7 +183,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
         model.addAttribute("registro",registro);
-        model.addAttribute("oficina", getOficinaActiva(request));
+        model.addAttribute("oficina", oficinaActiva);
 
         // Modelo Recibo
         model.addAttribute("modeloRecibo", new ModeloRecibo());
@@ -201,16 +201,12 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         // Interesados, solo si el Registro en Válido o Estamos en la Oficina donde se registró, o en su Oficina Responsable
         if(registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) && oficinaRegistral){
 
-            //model.addAttribute("personasFisicas", personaEjb.getFisicasByEntidad(entidadActiva.getId()));
-            //model.addAttribute("personasJuridicas", personaEjb.getJuridicasByEntidad(entidadActiva.getId()));
             model.addAttribute("tiposInteresado", RegwebConstantes.TIPOS_INTERESADO);
             model.addAttribute("tiposPersona",RegwebConstantes.TIPOS_PERSONA);
             model.addAttribute("paises",catPaisEjb.getAll());
             model.addAttribute("provincias",catProvinciaEjb.getAll());
             model.addAttribute("canalesNotificacion",RegwebConstantes.CANALES_NOTIFICACION);
             model.addAttribute("tiposDocumento", RegwebConstantes.TIPOS_DOCUMENTOID);
-            model.addAttribute("nivelesAdministracion",catNivelAdministracionEjb.getAll());
-            model.addAttribute("comunidadesAutonomas",catComunidadAutonomaEjb.getAll());
             model.addAttribute("organismosOficinaActiva",organismosOficinaActiva);
         }
 
@@ -311,8 +307,13 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
                 return "redirect:/registroEntrada/list";
             }
 
-            // Activamos el RegistroEntrada
-            registroEntradaEjb.activarRegistroEntrada(registroEntrada, usuarioEntidad);
+            // Si era una reserva de número no lo activamos, lo volvemos a poner Pendiente
+            if(registroEntrada.getDestino() == null && registroEntrada.getDestinoExternoCodigo() == null){
+                registroEntradaEjb.cambiarEstado(registroEntrada,RegwebConstantes.REGISTRO_PENDIENTE,usuarioEntidad);
+            }else{
+                // Activamos el RegistroEntrada
+                registroEntradaEjb.activarRegistroEntrada(registroEntrada, usuarioEntidad);
+            }
 
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.activar"));
 

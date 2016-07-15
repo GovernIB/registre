@@ -463,7 +463,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
      */
     public Long obtenerEntidad(String codigo) throws Exception{
         Query q = em.createQuery("Select oficina.organismoResponsable.entidad.id from Oficina as oficina where " +
-                "oficina.codigo =:codigo");
+                "oficina.codigo =:codigo and oficina.organismoResponsable.entidad.sir = true");
 
         q.setParameter("codigo",codigo);
 

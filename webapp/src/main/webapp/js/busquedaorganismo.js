@@ -20,7 +20,10 @@ function getUrlBusqueda(tipoOrganismo, urlServidor) {
 
     if (tipoOrganismo == 'OficinaOrigen') {
         return urlServidor + "/rest/busqueda/oficinas";
-    } else {
+    } else if (tipoOrganismo == 'OficinaSir'){
+        return urlServidor + "/rest/busqueda/oficinas";
+    }
+    else {
         return urlServidor + "/rest/busqueda/organismos";
     }
 }
@@ -210,6 +213,8 @@ function organismoBusqueda(tipoOrganismo, urlServidor, idRegistroDetalle) {
                     var linea = "<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\"" + superior + "\">" + result[i].denominacion + " - " + result[i].codigo + "</label></td><td style=\"text-align:left;\"> " + title + "</td><td style=\"text-align:left;\"> " + result[i].localidad + "</td><td class=\"center\"><a class=\"btn btn-warning btn-sm\" title=\"Seleccionar\" onclick=\"asignarOrganismo('" + codigo + "','" + denominacion + "','" + tipoOrganismo + "')\"><span class=\"fa fa-hand-o-right\"></span></a><a class=\"btn btn-success btn-sm\" title=\"Arbol\" onclick=\"mostrarArbol('" + codigo + "','" + urlServidor + "','" + tipoOrganismo + "','" + idRegistroDetalle + "')\"><span class=\"fa fa-sitemap\"></span></a></td></tr>";
                 } else if (tipoOrganismo == 'OficinaOrigen') {
                     var linea = "<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\"" + superior + "\">" + result[i].codigo + " - " + result[i].denominacion + "</label></td><td style=\"text-align:left;\"> " + title + "</td><td style=\"text-align:left;\"> " + result[i].localidad + "</td><td class=\"center\"><a class=\"btn btn-warning btn-sm\" title=\"Seleccionar\" onclick=\"asignarOrganismo('" + codigo + "','" + denominacion + "','" + tipoOrganismo + "')\"><span class=\"fa fa-hand-o-right\"></span></a></td></tr>";
+                }else if (tipoOrganismo == 'OficinaSir') {
+                    var linea = "<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\"" + superior + "\">" + result[i].codigo + " - " + result[i].denominacion + "</label></td><td style=\"text-align:left;\"> " + title + "</td><td style=\"text-align:left;\"> " + result[i].localidad + "</td><td class=\"center\"><a class=\"btn btn-warning btn-sm\" title=\"Seleccionar\" onclick=\"asignarOrganismo('" + codigo + "','" + denominacion + "','" + tipoOrganismo + "')\"><span class=\"fa fa-hand-o-right\"></span></a></td></tr>";
                 }
 
                 table.append(linea);
@@ -390,6 +395,11 @@ function asignarOrganismo(codigo, denominacion, tipoOrganismo) {
     var idDenominacionExterna = getIdDenominacionExterna(tipoOrganismo);
     var anadir = true;
     var idModal = "#modalBuscador" + tipoOrganismo;
+
+    if(tipoOrganismo == 'OficinaSir'){
+        $('#oficinaReenvio').val(codigo);
+        doForm('#reenviarForm');
+    }
     /* Miramos si el organismo ya existe en el select, si existe lo seleccionamos,
      si no lo indicamos con la variable anadir para añadirlo posteriormente */
     $(idSelect + " option").each(function () {

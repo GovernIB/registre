@@ -19,6 +19,7 @@ import es.caib.regweb3.sir.ws.api.manager.SicresXMLManager;
 import es.caib.regweb3.sir.ws.api.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.ws.api.utils.Mensaje;
 import es.caib.regweb3.sir.ws.api.utils.XPathReaderUtil;
+import es.caib.regweb3.utils.MimeTypeUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.Versio;
 import org.apache.commons.codec.binary.Base64;
@@ -36,10 +37,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathConstants;
-import java.io.ByteArrayInputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -1159,9 +1157,10 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
         log.info("Parseando el XML del fichero de intercambio...");
 
         try {
+            InputStream is = new ByteArrayInputStream(xml.getBytes("UTF-8"));
+            InputStreamReader isw = new InputStreamReader(is, "UTF-8");
+            Fichero_Intercambio_SICRES_3 ficheroIntercambioSICRES3 = Fichero_Intercambio_SICRES_3.unmarshal(isw);
 
-            Fichero_Intercambio_SICRES_3 ficheroIntercambioSICRES3 = Fichero_Intercambio_SICRES_3
-                    .unmarshal(new StringReader(xml));
             if (ficheroIntercambioSICRES3 != null) {
                 ficheroIntercambio = new FicheroIntercambio();
                 ficheroIntercambio.setFicheroIntercambio(ficheroIntercambioSICRES3);
@@ -1363,6 +1362,17 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                             "'razonSocialInteresado' or ('nombreInteresado' and 'primerApellidoInteresado') must not be empty");
                 }
 
+                /* INTERESADO */
+
+                // Tipo Documento Identificación Interesado
+                if (StringUtils.isNotEmpty(interesado.getTipo_Documento_Identificacion_Interesado())) {
+                    Assert.notNull(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacion(interesado.getTipo_Documento_Identificacion_Interesado()), "'invalid tipoDocumentoIdentificacionInteresado'");
+
+                    // Validar que el Documento concuerda con su tipo documento identificación
+                    //Assert.isTrue(comprobarDocumento(interesado.getDocumento_Identificacion_Interesado(), interesado.getTipo_Documento_Identificacion_Interesado()));
+                }
+
+
 
                 // Validar el canal preferente de comunicación del interesado
                 if (StringUtils.isNotBlank(interesado.getCanal_Preferente_Comunicacion_Interesado())) {
@@ -1402,6 +1412,16 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                                 "'direccionElectronicaHabilitadaInteresado' no puede estar vacio");
                     }
 
+                }
+
+                /*REPRESENTANTE*/
+
+                // Tipo Documento Identificación Interesado
+                if (StringUtils.isNotEmpty(interesado.getTipo_Documento_Identificacion_Representante())) {
+                    Assert.notNull(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacion(interesado.getTipo_Documento_Identificacion_Representante()), "invalid 'tipoDocumentoIdentificacionRepresentante'");
+
+                    // Validar que el Documento concuerda con su tipo documento identificación
+                    //Assert.isTrue(comprobarDocumento(interesado.getDocumento_Identificacion_Representante(), interesado.getTipo_Documento_Identificacion_Representante()));
                 }
 
                 // Validar el canal preferente de comunicación del representante
@@ -1447,94 +1467,6 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                     }
                 }
 
-                if (StringUtils.isBlank(ficheroIntercambio.getCodigoUnidadTramitacionOrigen())) {
-
-                    Assert.isTrue(
-                            StringUtils.isNotBlank(interesado
-                                    .getRazon_Social_Interesado())
-                                    || (StringUtils.isNotBlank(interesado
-                                    .getNombre_Interesado()) && StringUtils.isNotBlank(interesado
-                                    .getPrimer_Apellido_Interesado())),
-                            "'razonSocialInteresado' or ('nombreInteresado' and 'primerApellidoInteresado') must not be empty");
-
-                    if (StringUtils.isNotEmpty(interesado.getTipo_Documento_Identificacion_Interesado())) {
-                        Assert.notNull(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacion(interesado.getTipo_Documento_Identificacion_Interesado()), "'invalid tipoDocumentoIdentificacionInteresado'");
-                    }
-
-                    if (StringUtils.isNotEmpty(interesado.getTipo_Documento_Identificacion_Representante())) {
-                        Assert.notNull(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacion(interesado.getTipo_Documento_Identificacion_Representante()), "invalid 'tipoDocumentoIdentificacionRepresentante'");
-                    }
-
-                    if (StringUtils.isNotBlank(interesado.getCanal_Preferente_Comunicacion_Interesado())) {
-
-                        if (CanalNotificacion.DIRECCION_POSTAL.getValue()
-                                .equals(interesado.getCanal_Preferente_Comunicacion_Interesado())) {
-
-                            Assert.hasText(interesado.getPais_Interesado(),
-                                    "'paisInteresado' no puede estar vacio");
-                            Assert.hasText(
-                                    interesado.getDireccion_Interesado(),
-                                    "'direccionInteresado' no puede estar vacio");
-
-                            if (CODIGO_PAIS_ESPANA.equals(interesado.getPais_Interesado())) {
-                                Assert.isTrue(
-                                        StringUtils.isNotBlank(interesado
-                                                .getCodigo_Postal_Interesado())
-                                                || (StringUtils
-                                                .isNotBlank(interesado
-                                                        .getProvincia_Interesado()) && StringUtils
-                                                .isNotBlank(interesado
-                                                        .getMunicipio_Interesado())),
-                                        "'codigoPostalInteresado' or ('provinciaInteresado' and 'municipioInteresado') no puede estar vacio");
-                            }
-
-                        } else if (CanalNotificacion.DIRECCION_ELECTRONICA_HABILITADA
-                                .getValue().equals(interesado.getCanal_Preferente_Comunicacion_Interesado())) {
-                            Assert.hasText(
-                                    interesado
-                                            .getDireccion_Electronica_Habilitada_Interesado(),
-                                    "'direccionElectronicaHabilitadaInteresado' no puede estar vacio");
-                        }
-                    }
-
-                    if (StringUtils.isNotBlank(interesado.getCanal_Preferente_Comunicacion_Representante())) {
-
-                        if (CanalNotificacion.DIRECCION_POSTAL
-                                .getValue().equals(interesado.getCanal_Preferente_Comunicacion_Representante())) {
-
-                            Assert.hasText(interesado.getPais_Representante(),
-                                    "'paisRepresentante' no puede estar vacio");
-                            Assert.hasText(
-                                    interesado.getDireccion_Representante(),
-                                    "'direccionRepresentante' no puede estar vacio");
-
-                            if (CODIGO_PAIS_ESPANA.equals(interesado.getPais_Representante())) {
-                                Assert.isTrue(
-                                        StringUtils.isNotBlank(interesado.getCodigo_Postal_Representante())
-                                                || (StringUtils.isNotBlank(interesado
-                                                        .getProvincia_Representante()) && StringUtils
-                                                .isNotBlank(interesado.getMunicipio_Representante())),
-                                        "'codigoPostalRepresentante' or ('provinciaRepresentante' and 'municipioRepresentante') no puede estar vacio");
-                            }
-
-                        } else if (CanalNotificacion.DIRECCION_ELECTRONICA_HABILITADA
-                                .getValue()
-                                .equals(interesado.getCanal_Preferente_Comunicacion_Representante())) {
-                            Assert.hasText(
-                                    interesado
-                                            .getDireccion_Electronica_Habilitada_Representante(),
-                                    "'direccionElectronicaHabilitadaRepresentante' no puede estar vacio");
-                        }
-
-                        Assert.isTrue(
-                                StringUtils.isNotBlank(interesado
-                                        .getRazon_Social_Representante())
-                                        || (StringUtils.isNotBlank(interesado
-                                        .getNombre_Representante()) && StringUtils.isNotBlank(interesado
-                                        .getPrimer_Apellido_Representante())),
-                                "'razonSocialRepresentante' or ('nombreRepresentante' and 'primerApellidoRepresentante') must not be empty");
-                    }
-                }
             }
         }
         log.info("SegmentoInteresados validado!");
@@ -1564,9 +1496,22 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
         // Validar los documentos
         if ((ficheroIntercambio.getFicheroIntercambio() != null)
                 && ArrayUtils.isNotEmpty(ficheroIntercambio.getFicheroIntercambio().getDe_Anexo())) {
-            for (De_Anexo anexo : ficheroIntercambio.getFicheroIntercambio()
-                    .getDe_Anexo()) {
+            De_Anexo[] anexos = ficheroIntercambio.getFicheroIntercambio().getDe_Anexo();
+            for (De_Anexo anexo : anexos) {
                 validarAnexo(anexo, ficheroIntercambio.getIdentificadorIntercambio());
+
+                //Si el anexo tiene identificador de documento firmado significa que es firma de otro anexo, se debe comprobar que es así.
+                if (!StringUtils.isEmpty(anexo.getIdentificador_Documento_Firmado())) {
+                    log.info("IDF " + anexo.getIdentificador_Documento_Firmado());
+                    Boolean firmaDeOtroAnexo = false;
+                    for (De_Anexo anexo2 : anexos) {
+                        if (anexo2.getIdentificador_Fichero().equals(anexo.getIdentificador_Documento_Firmado())) {
+                            firmaDeOtroAnexo = true;
+                        }
+                    }
+                    Assert.isTrue(firmaDeOtroAnexo, "El anexo no es firma de ningun otro anexo");
+                }
+
             }
         }
         log.info("SegmentoAnexos validado!");
@@ -1651,7 +1596,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 			 * requeridos por la norma SICRES3 y con el campo "Anexo" (no
 			 * válido).
 			 */
-
+            log.info("Anexo '"+anexo.getNombre_Fichero_Anexado()+"' validado!");
         }
     }
 
@@ -1689,6 +1634,14 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                 "'IdentificadorFichero' is invalid 'num secuencial numerico'"); // Número secuencial compuesto por solo dígitos
         Assert.hasText(tokens[2],
                 "'IdentificadorFichero' is invalid 'extension'"); // Extensión del fichero
+
+        // Validar el tipo MIME
+        if (StringUtils.isNotBlank(anexo.getTipo_MIME())) {
+            Assert.isTrue(StringUtils.equalsIgnoreCase(
+                    anexo.getTipo_MIME(), MimeTypeUtils.getMimeTypeExtension(tokens[2])),
+                    "'TipoMIME' no coincide con el indicado en 'IdentificadorFichero'");
+
+        }
     }
 
     /**
@@ -1787,6 +1740,11 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
         Assert.notNull(
                 ficheroIntercambio.getSolicita(),
                 "'solicita' must not be null");
+
+        if(StringUtils.isNotEmpty(ficheroIntercambio.getExpone())){
+            Assert.hasText(ficheroIntercambio.getSolicita(),
+                    "'solicita' must not be empty");
+        }
 
 
         log.info("SegmentoFormularioGenerico validado!");
@@ -1908,7 +1866,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
         String denominacionOficinaOrigen = null;
 
         if ((re.getRegistroDetalle().getOficinaOrigenExternoCodigo() == null) && (re.getRegistroDetalle().getOficinaOrigen() == null)) {
-            denominacionOficinaOrigen = re.getOficina().getCodigo();
+            denominacionOficinaOrigen = re.getOficina().getDenominacion();
         } else if (re.getRegistroDetalle().getOficinaOrigenExternoCodigo() != null) {
             denominacionOficinaOrigen = re.getRegistroDetalle().getOficinaOrigenExternoDenominacion();
         } else {
