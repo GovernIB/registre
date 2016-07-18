@@ -435,12 +435,16 @@ public class SirBean implements SirLocal{
     }
 
     /**
-     * Transforma un {@link AnexoSir} en un {@link Anexo}
+     * Transforma un {@link AnexoSir} en un {@link AnexoFull}
+     * A partir de la clase AnexoSir transformamos a un AnexoFull para poder guardarlo en regweb3.
+     * La particularidad de este método, es que se necesita pasar una lista de los anexos que se han procesado anteriormente
+     * del AnexoSir que nos envian, ya que puede haber anexos que son firma de uno anteriormente procesado y lo necesitamos
+     * para acabar de montar el anexo ya que para regweb3 el anexo y su firma van en el mismo AnexoFull.
      *
      * @param anexoSir
      * @param idEntidad
      * @param anexosProcesados Lista de anexos procesados anteriores.
-     * @return Anexo tipo {@link Anexo}
+     * @return AnexoFull tipo {@link AnexoFull}
      */
     private AnexoFull transformarAnexo(AnexoSir anexoSir, Long idEntidad, Map<String, AnexoFull> anexosProcesados)throws Exception {
 
@@ -513,8 +517,6 @@ public class SirBean implements SirLocal{
 
             }else{
                 //Caso Firma Detached, caso 4, se guarda 1 anexo, con el doc original en documentCustody y la firma en SignatureCustody
-                //anexoFull.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED);
-
                 anexoFull = anexosProcesados.get(identificadorDocumentoFirmado);//obtenemos el documento original previamente procesado
                 anexoFull.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED); // asignamos el modo de firma
                 sc = getSignatureCustody(anexoSir, anexoFull.getDocumentoCustody(), anexoFull.getAnexo().getModoFirma());
@@ -544,7 +546,6 @@ public class SirBean implements SirLocal{
         }
 
 
-        //anexoFull.setAnexo(anexo);
         return anexoFull;
 
     }
