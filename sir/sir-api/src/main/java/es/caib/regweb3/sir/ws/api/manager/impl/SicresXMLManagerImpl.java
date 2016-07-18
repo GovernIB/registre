@@ -19,7 +19,6 @@ import es.caib.regweb3.sir.ws.api.manager.SicresXMLManager;
 import es.caib.regweb3.sir.ws.api.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.ws.api.utils.Mensaje;
 import es.caib.regweb3.sir.ws.api.utils.XPathReaderUtil;
-import es.caib.regweb3.utils.MimeTypeUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.Versio;
 import org.apache.commons.codec.binary.Base64;
@@ -1501,6 +1500,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                 validarAnexo(anexo, ficheroIntercambio.getIdentificadorIntercambio());
 
                 //Si el anexo tiene identificador de documento firmado significa que es firma de otro anexo, se debe comprobar que es así.
+                log.info("IDF " + anexo.getIdentificador_Documento_Firmado());
                 if (!StringUtils.isEmpty(anexo.getIdentificador_Documento_Firmado())) {
                     log.info("IDF " + anexo.getIdentificador_Documento_Firmado());
                     Boolean firmaDeOtroAnexo = false;
@@ -1636,12 +1636,13 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                 "'IdentificadorFichero' is invalid 'extension'"); // Extensión del fichero
 
         // Validar el tipo MIME
-        if (StringUtils.isNotBlank(anexo.getTipo_MIME())) {
+        // TODO XXX Descomentar de marilen cuando funciones los anexos al aceptar un asiento sir.
+      /*  if (StringUtils.isNotBlank(anexo.getTipo_MIME())) {
             Assert.isTrue(StringUtils.equalsIgnoreCase(
                     anexo.getTipo_MIME(), MimeTypeUtils.getMimeTypeExtension(tokens[2])),
                     "'TipoMIME' no coincide con el indicado en 'IdentificadorFichero'");
 
-        }
+        }*/
     }
 
     /**
