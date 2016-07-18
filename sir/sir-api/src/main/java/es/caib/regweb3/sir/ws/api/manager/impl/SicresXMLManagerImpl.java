@@ -1637,6 +1637,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
         // Validar el tipo MIME
 
         if (StringUtils.isNotBlank(anexo.getTipo_MIME())) {
+            log.info("TIPO MIME ENCONTRADO " + MimeTypeUtils.getMimeTypeExtension(tokens[2]));
             Assert.isTrue(StringUtils.equalsIgnoreCase(
                     anexo.getTipo_MIME(), MimeTypeUtils.getMimeTypeExtension(tokens[2])),
                     "'TipoMIME' no coincide con el indicado en 'IdentificadorFichero'");
