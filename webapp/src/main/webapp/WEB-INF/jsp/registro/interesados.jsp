@@ -260,13 +260,13 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
         scrollBar:true,
         ajax: {
             url: urlBusquedaPersonasFisicas,
-            data: 'query=' + $('#personaFisica').val(),
+            data: 'query=' + JSON.stringify($('#personaFisica').val()),
             dataType: 'json',
             timeout: 200,
             displayField: "nombre",
             valueField: "id",
             triggerLength: 3,
-            method: "get",
+            method: "post",
             loadingClass: "loading-circle"
         },
         onSelect: function(item) {
@@ -280,13 +280,13 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
         scrollBar:true,
         ajax: {
             url: urlBusquedaPersonasJuridicas,
-            data: 'query=' + $('#personaJuridica').val(),
+            data: 'query=' + JSON.stringify($('#personaJuridica').val()),
             dataType: 'json',
             timeout: 200,
             displayField: "nombre",
             valueField: "id",
             triggerLength: 3,
-            method: "get",
+            method: "post",
             loadingClass: "loading-circle"
         },
         onSelect: function(item) {

@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 
 <c:if test="${paginacion.totalPages > 1}">
@@ -16,7 +17,8 @@
                     <c:when test="${paginacion.currentIndex == 1}">
                     </c:when>
                     <c:otherwise>
-                        <li><a title="Anterior" href="${prevUrl}">&laquo;</a></li>
+                        <li><a title="<spring:message code="regweb.primero"/>" href="${firstUrl}">&laquo;</a></li>
+                        <li><a title="<spring:message code="regweb.anterior"/>" href="${prevUrl}">&lsaquo;</a></li>
                     </c:otherwise>
                 </c:choose>
 
@@ -36,8 +38,8 @@
                     <c:when test="${paginacion.currentIndex == paginacion.totalPages}">
                     </c:when>
                     <c:otherwise>
-                        <li><a href="${nextUrl}">&raquo;</a></li>
-                        <%--<li><a href="${lastUrl}">&gt;&gt;</a></li>--%>
+                        <li><a title="<spring:message code="regweb.siguiente"/>" href="${nextUrl}">&rsaquo;</a></li>
+                        <li><a title="<spring:message code="regweb.ultimo"/>" href="${lastUrl}">&raquo;</a></li>
                     </c:otherwise>
                 </c:choose>
             </ul>
