@@ -1502,7 +1502,6 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
                 //Si el anexo tiene identificador de documento firmado significa que es firma de otro anexo, se debe comprobar que es así.
                 if (!StringUtils.isEmpty(anexo.getIdentificador_Documento_Firmado())) {
-                    log.info("IDF " + anexo.getIdentificador_Documento_Firmado());
                     Boolean firmaDeOtroAnexo = false;
                     for (De_Anexo anexo2 : anexos) {
                         if (anexo2.getIdentificador_Fichero().equals(anexo.getIdentificador_Documento_Firmado())) {
@@ -1636,7 +1635,9 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                 "'IdentificadorFichero' is invalid 'extension'"); // Extensión del fichero
 
         // Validar el tipo MIME
+
         if (StringUtils.isNotBlank(anexo.getTipo_MIME())) {
+            log.info("TIPO MIME ENCONTRADO " + MimeTypeUtils.getMimeTypeExtension(tokens[2]));
             Assert.isTrue(StringUtils.equalsIgnoreCase(
                     anexo.getTipo_MIME(), MimeTypeUtils.getMimeTypeExtension(tokens[2])),
                     "'TipoMIME' no coincide con el indicado en 'IdentificadorFichero'");

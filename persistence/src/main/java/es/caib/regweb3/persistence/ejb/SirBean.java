@@ -428,17 +428,23 @@ public class SirBean implements SirLocal{
 
             AnexoFull anexoFull = transformarAnexo(anexoSir, asientoRegistralSir.getEntidad().getId(), mapAnexosFull);
             mapAnexosFull.put(anexoSir.getIdentificadorFichero(), anexoFull);
-            anexos.add(anexoFull);
+            anexos = new ArrayList<AnexoFull>(mapAnexosFull.values());
         }
-
+        // log.info(anexos.size());
         return anexos;
     }
 
     /**
-     * Transforma un {@link AnexoSir} en un {@link Anexo}
+     * Transforma un {@link AnexoSir} en un {@link AnexoFull}
+     * A partir de la clase AnexoSir transformamos a un AnexoFull para poder guardarlo en regweb3.
+     * La particularidad de este método, es que se necesita pasar una lista de los anexos que se han procesado anteriormente
+     * del AnexoSir que nos envian, ya que puede haber anexos que son firma de uno anteriormente procesado y lo necesitamos
+     * para acabar de montar el anexo ya que para regweb3 el anexo y su firma van en el mismo AnexoFull.
      *
      * @param anexoSir
-     * @return Anexo tipo {@link Anexo}
+     * @param idEntidad
+     * @param anexosProcesados Lista de anexos procesados anteriores.
+     * @return AnexoFull tipo {@link AnexoFull}
      */
     private AnexoFull transformarAnexo(AnexoSir anexoSir, Long idEntidad, Map<String, AnexoFull> anexosProcesados)throws Exception {
 
@@ -449,6 +455,8 @@ public class SirBean implements SirLocal{
 
         if (anexoSir.getValidezDocumento() != null) {
             anexo.setValidezDocumento(Long.valueOf(anexoSir.getValidezDocumento().getValue()));
+        } else {// Si sicres no especifica validez del documento la fijamos a copia por defecto
+            anexo.setValidezDocumento(RegwebConstantes.TIPOVALIDEZDOCUMENTO_COPIA);
         }
 
         if (anexoSir.getTipoDocumento() != null) {
@@ -496,12 +504,11 @@ public class SirBean implements SirLocal{
 
         DocumentCustody dc= new DocumentCustody();
         SignatureCustody sc= new SignatureCustody();
-
-
-        if(anexoSir.getIdentificadorDocumentoFirmado()!= null ){
+        // Si el anexo tiene identificador_documento_firmado, es que es la firma de un anexo anterior.
+        if (!StringUtils.isEmpty(anexoSir.getIdentificadorDocumentoFirmado()) && anexoSir.getIdentificadorDocumentoFirmado() != null) {
             String identificadorDocumentoFirmado = anexoSir.getIdentificadorDocumentoFirmado();
             if(identificadorDocumentoFirmado.equals(anexoSir.getIdentificadorFichero())){
-                //Caso Firma Attached caso 5
+                //Caso Firma Attached caso 5, se guarda el documento en signatureCustody, como lo especifica el API DE CUSTODIA(II)
                 anexo.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED);
                 sc = getSignatureCustody(anexoSir, null, anexo.getModoFirma());
                 anexoFull.setDocumentoCustody(null);
@@ -509,16 +516,25 @@ public class SirBean implements SirLocal{
                 anexoFull.setAnexo(anexo);
 
             }else{
-                anexoFull.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED);
-                anexoFull = anexosProcesados.get(identificadorDocumentoFirmado);
+                //Caso Firma Detached, caso 4, se guarda 1 anexo, con el doc original en documentCustody y la firma en SignatureCustody
+                anexoFull = anexosProcesados.get(identificadorDocumentoFirmado);//obtenemos el documento original previamente procesado
+                anexoFull.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED); // asignamos el modo de firma
                 sc = getSignatureCustody(anexoSir, anexoFull.getDocumentoCustody(), anexoFull.getAnexo().getModoFirma());
                 anexoFull.setSignatureCustody(sc);
+                //eliminamos de los procesados el documento cuya firma es este anexo que estamos tratando ahora.
+                //si no guardariamos 2 anexos, el documento original y el documento original con la firma.
+                anexosProcesados.remove(identificadorDocumentoFirmado);
 
             }
-        }else{
-            if(anexoSir.getFirma() == null){
+            // Al ser un anexo con firma, si sicres no habia especificado la validez, regweb la fija a copia y aqui
+            // la modifica a copia compulsada porque ya sabe que hay firma.
+            if (anexoFull.getAnexo().getValidezDocumento() == RegwebConstantes.TIPOVALIDEZDOCUMENTO_COPIA) {
+                anexoFull.getAnexo().setValidezDocumento(RegwebConstantes.TIPOVALIDEZDOCUMENTO_COPIA_COMPULSADA);
+            }
+        } else { // El anexo no es firma de nadie
+            if (anexoSir.getFirma() == null) { //Anexo normal
                 anexo.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA);
-            }else{
+            } else { //La firma es un CSV.
                 anexo.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA);
                 //anexo.setCsv(anexoSir.getFirma_Documento());
                 //TODO Metadada a custodia pel csv.
@@ -530,7 +546,6 @@ public class SirBean implements SirLocal{
         }
 
 
-        //anexoFull.setAnexo(anexo);
         return anexoFull;
 
     }
