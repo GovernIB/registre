@@ -132,8 +132,11 @@ public class ReciboRtfView extends AbstractView {
         if (datosRecibo.getInteresados()!=null){
 
             for(int i=0;i<datosRecibo.getInteresados().size();i++){
+                if (datosRecibo.getInteresados().get(i).getIsRepresentante()) {
+                    interessats = interessats + "(Repres.) ";
+                }
                 if(datosRecibo.getInteresados().get(i).getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
-                        interessats = interessats + datosRecibo.getInteresados().get(i).getNombre();
+                    interessats = interessats + datosRecibo.getInteresados().get(i).getNombrePersonaJuridica();
                     }else if(datosRecibo.getInteresados().get(i).getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)){
                             interessats = interessats + datosRecibo.getInteresados().get(i).getNombrePersonaFisica();
                         }else if(datosRecibo.getInteresados().get(i).getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)){
