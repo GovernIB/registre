@@ -368,6 +368,9 @@
 
 <script type="text/javascript" >
 
+    // Posicionamos el ratón en el campo indicado al cargar el modal
+    $('#registroDetalle\\.extracto').focus();
+
     $(window).load(function() {
 
         actualizarCodigosAsunto();

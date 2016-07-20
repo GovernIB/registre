@@ -375,6 +375,9 @@
 
 <script type="text/javascript" >
 
+    // Posicionamos el ratón en el campo indicado al cargar el modal
+    $('#registroDetalle\\.extracto').focus();
+
     $(window).load(function() {
 
          actualizarCodigosAsunto();
@@ -390,13 +393,13 @@
     });
 
     function actualizarCodigosAsunto(){
-        <c:url var="codigosAsunto" value="/rest/obtenerCodigosAsunto" />
-        actualizarSelectTraduccion('${codigosAsunto}', '#registroDetalle\\.codigoAsunto\\.id', $('#registroDetalle\\.tipoAsunto\\.id option:selected').val(), '${registroEntrada.registroDetalle.codigoAsunto.id}', true, '${pageContext.response.locale}');
+        <c:url var="urlCodigosAsunto" value="/rest/obtenerCodigosAsunto" />
+        actualizarSelectTraduccion('${urlCodigosAsunto}', '#registroDetalle\\.codigoAsunto\\.id', $('#registroDetalle\\.tipoAsunto\\.id option:selected').val(), '${registroEntrada.registroDetalle.codigoAsunto.id}', true, '${pageContext.response.locale}');
     }
 
     function actualizarLocalidad(){
-        <c:url var="obtenerLocalidades" value="/rest/obtenerLocalidades" />
-        actualizarSelect('${obtenerLocalidades}','#localidad\\.id',$('#provincia\\.id option:selected').val(),$('#localidad\\.id option:selected').val(),false,false);
+        <c:url var="urlObtenerLocalidades" value="/rest/obtenerLocalidades" />
+        actualizarSelect('${urlObtenerLocalidades}','#localidad\\.id',$('#provincia\\.id option:selected').val(),$('#localidad\\.id option:selected').val(),false,false);
     }
 
 
