@@ -43,6 +43,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
+import static es.caib.regweb3.utils.RegwebConstantes.*;
+
 public class SicresXMLManagerImpl implements SicresXMLManager {
 
     public final Logger log = Logger.getLogger(getClass());
@@ -469,7 +471,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                     // Tipo_Documento_Identificacion_Interesado
                     if (interesado.getTipoDocumentoIdentificacion() != null) {
                         elem = rootElement.addElement("Tipo_Documento_Identificacion_Interesado");
-                        elem.addCDATA(String.valueOf(RegwebConstantes.CODIGO_NTI_BY_TIPODOCUMENTOID.get(interesado.getTipoDocumentoIdentificacion())));
+                        elem.addCDATA(String.valueOf(CODIGO_NTI_BY_TIPODOCUMENTOID.get(interesado.getTipoDocumentoIdentificacion())));
                     }
                     // Documento_Identificacion_Interesado
                     if (!StringUtils.isEmpty(interesado.getDocumento())) {
@@ -500,7 +502,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                     // Tipo_Documento_Identificacion_Representante
                     if (representante != null && representante.getTipoDocumentoIdentificacion() != null) {
                         elem = rootElement.addElement("Tipo_Documento_Identificacion_Representante");
-                        elem.addCDATA(String.valueOf(RegwebConstantes.CODIGO_NTI_BY_TIPODOCUMENTOID.get(interesado.getRepresentante().getTipoDocumentoIdentificacion())));
+                        elem.addCDATA(String.valueOf(CODIGO_NTI_BY_TIPODOCUMENTOID.get(interesado.getRepresentante().getTipoDocumentoIdentificacion())));
                     }
                     // Documento_Identificacion_Representante
                     if (representante != null && representante.getDocumento() != null) {
@@ -571,7 +573,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                     // Canal_Preferente_Comunicacion_Interesado
                     if (interesado.getCanal() != null) {
                         elem = rootElement.addElement("Canal_Preferente_Comunicacion_Interesado");
-                        elem.addCDATA(RegwebConstantes.CODIGO_BY_CANALNOTIFICACION.get(interesado.getCanal()));
+                        elem.addCDATA(CODIGO_BY_CANALNOTIFICACION.get(interesado.getCanal()));
                     }
 
                     // Pais_Representante
@@ -617,7 +619,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                     // Canal_Preferente_Comunicacion_Representante
                     if (representante != null && representante.getCanal() != null) {
                         elem = rootElement.addElement("Canal_Preferente_Comunicacion_Representante");
-                        elem.addCDATA(RegwebConstantes.CODIGO_BY_CANALNOTIFICACION.get(representante.getCanal()));
+                        elem.addCDATA(CODIGO_BY_CANALNOTIFICACION.get(representante.getCanal()));
                     }
 
                     // Observaciones
@@ -712,7 +714,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
         // ------------ MODO_FIRMA_ANEXO_SINFIRMA ---------------
         // ------------------------------------------------------
         default:
-        case RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA:
+          case MODO_FIRMA_ANEXO_SINFIRMA:
            log.warn("Ignorant fitxer " +  anexo.getCustodiaID() + " ja que no és ni conté firma.");
            return secuencia;
 
@@ -721,7 +723,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
         // ------------ MODO_FIRMA_ANEXO_ATTACHED ---------------
         // ------------------------------------------------------
         // Document amb firma adjunta (Pades, ...)
-        case RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED:
+          case MODO_FIRMA_ANEXO_ATTACHED:
         {
           SignatureCustody sc = anexoFull.getSignatureCustody();
 
@@ -763,7 +765,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
         // ------------ MODO_FIRMA_ANEXO_DETACHED ---------------
         // ------------------------------------------------------
         // Firma en document separat
-        case RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED:
+          case MODO_FIRMA_ANEXO_DETACHED:
        
           // ================= SEGMENTO 1: DOCUMENT ==================
           String identificador_fichero;
@@ -813,7 +815,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
               Long validezDocumento = anexo.getValidezDocumento();
             
             // TODO preguntar a felip, al ser la firma del anexo no se que poner
-            Long tipoDocumento = RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO;
+              Long tipoDocumento = TIPO_DOCUMENTO_FICHERO_TECNICO;
             
             // TODO com extreure ????
             String certificado = null;
@@ -877,7 +879,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
       if (validezDocumento == null) {
         elem.addCDATA(null);
       } else {
-        elem.addCDATA(RegwebConstantes.CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(validezDocumento));
+          elem.addCDATA(CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(validezDocumento));
       }
       
 
@@ -886,7 +888,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
       if (tipoDocumento == null) {
         elem.addCDATA(null);
       } else {
-        elem.addCDATA(RegwebConstantes.CODIGO_NTI_BY_TIPO_DOCUMENTO.get(tipoDocumento));
+          elem.addCDATA(CODIGO_NTI_BY_TIPO_DOCUMENTO.get(tipoDocumento));
       }
 
 
@@ -931,7 +933,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
 
       // Tipo_MIME
-        if (tipoMime != null || tipoMime.length() <= RegwebConstantes.ANEXO_TIPOMIME_MAXLENGTH_SIR) {
+        if (tipoMime != null || tipoMime.length() <= ANEXO_TIPOMIME_MAXLENGTH_SIR) {
         elem = rootElement.addElement("Tipo_MIME");
         elem.addCDATA(tipoMime);
       }
@@ -979,7 +981,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
         // Tipo_Transporte_Entrada
         if (registroDetalle.getTransporte() != null) {
             elem = rootElement.addElement("Tipo_Transporte_Entrada");
-            elem.addCDATA(RegwebConstantes.CODIGO_SICRES_BY_TRANSPORTE.get(registroDetalle.getTransporte()));
+            elem.addCDATA(CODIGO_SICRES_BY_TRANSPORTE.get(registroDetalle.getTransporte()));
         }
 
         // Numero_Transporte_Entrada
@@ -1369,7 +1371,18 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                     Assert.notNull(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacion(interesado.getTipo_Documento_Identificacion_Interesado()), "'invalid tipoDocumentoIdentificacionInteresado'");
 
                     // Validar que el Documento concuerda con su tipo documento identificación
-                    //Assert.isTrue(comprobarDocumento(interesado.getDocumento_Identificacion_Interesado(), interesado.getTipo_Documento_Identificacion_Interesado()));
+                    Assert.isTrue(comprobarDocumento(interesado.getDocumento_Identificacion_Interesado(), interesado.getTipo_Documento_Identificacion_Interesado()), "invalid 'documento'");
+
+                    // Validar que el Tipo Documento concuerda con Nombre o Razon Social
+                    if (interesado.getTipo_Documento_Identificacion_Interesado().equals(String.valueOf(TIPODOCUMENTOID_CIF)) ||
+                            interesado.getTipo_Documento_Identificacion_Interesado().equals(String.valueOf(TIPODOCUMENTOID_CODIGO_ORIGEN))) {
+                        Assert.isTrue(StringUtils.isNotBlank(interesado.getRazon_Social_Interesado()),
+                                "'razonSocialInteresado' must not be empty");
+                    } else {
+                        Assert.isTrue(StringUtils.isNotBlank(interesado.getNombre_Interesado()) &&
+                                        StringUtils.isNotBlank(interesado.getPrimer_Apellido_Interesado()),
+                                "'nombreInteresado' and 'primerApellidoInteresado' must not be empty");
+                    }
                 }
 
 
@@ -1421,7 +1434,18 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                     Assert.notNull(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacion(interesado.getTipo_Documento_Identificacion_Representante()), "invalid 'tipoDocumentoIdentificacionRepresentante'");
 
                     // Validar que el Documento concuerda con su tipo documento identificación
-                    //Assert.isTrue(comprobarDocumento(interesado.getDocumento_Identificacion_Representante(), interesado.getTipo_Documento_Identificacion_Representante()));
+                    Assert.isTrue(comprobarDocumento(interesado.getDocumento_Identificacion_Representante(), interesado.getTipo_Documento_Identificacion_Representante()), "invalid 'documento'");
+
+                    // Validar que el Tipo Documento concuerda con Nombre o Razon Social
+                    if (interesado.getTipo_Documento_Identificacion_Representante().equals(String.valueOf(TIPODOCUMENTOID_CIF)) ||
+                            interesado.getTipo_Documento_Identificacion_Representante().equals(String.valueOf(TIPODOCUMENTOID_CODIGO_ORIGEN))) {
+                        Assert.isTrue(StringUtils.isNotBlank(interesado.getRazon_Social_Representante()),
+                                "'razonSocialRepresentante' must not be empty");
+                    } else {
+                        Assert.isTrue(StringUtils.isNotBlank(interesado.getNombre_Representante()) &&
+                                        StringUtils.isNotBlank(interesado.getPrimer_Apellido_Representante()),
+                                "'nombreRepresentante' and 'primerApellidoRepresentante' must not be empty");
+                    }
                 }
 
                 // Validar el canal preferente de comunicación del representante
@@ -1920,7 +1944,12 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
             Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService();
             UnidadTF unidadTF = unidadesService.obtenerUnidad(codigoUnidadTramitacion,null,null);
 
-            if(unidadTF == null) return false;
+            if (unidadTF == null) {
+                return false;
+            } else {
+                log.info("Codigo: " + unidadTF.getCodigo());
+                log.info("denominacion: " + unidadTF.getDenominacion());
+            }
 
         } catch (Exception e) {
           log.error("Error en validarCodigoUnidadTramitacion: " + e.getMessage(), e);
@@ -2001,5 +2030,176 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                 }
             }
         }
+    }
+
+
+    /**
+     * Realizamos una validación del Documento con el TipoDocumento recibido
+     *
+     * @param documento
+     * @param tipoDocumento
+     */
+    protected Boolean comprobarDocumento(String documento, String tipoDocumento) {
+
+        Boolean documentoCorrecto = false;
+
+        if (!StringUtils.isEmpty(documento)) {
+
+            String letras = "TRWAGMYFPDXBNJZSQVHLCKE";
+            int valor = 0;
+
+            Boolean formatoCorrecto = false;
+
+            if (tipoDocumento.equals(String.valueOf(TIPODOCUMENTOID_NIF))) {  /* NIF (DNI) */
+                if (documento.length() == 9) {
+                    String numeroNif = documento.substring(0, documento.length() - 1);
+                    Boolean nifcorrecte = true;
+                    for (int i = 0; i < numeroNif.length(); i++) {
+                        if (!Character.isDigit(numeroNif.charAt(i))) {
+                            nifcorrecte = false;
+                            break;
+                        }
+                    }
+                    if (nifcorrecte) {
+                        valor = Integer.parseInt(documento.substring(0, documento.length() - 1));
+                        formatoCorrecto = true;
+                    }
+                }
+
+                if (formatoCorrecto) {
+                    if (documento.endsWith("" + letras.charAt(valor % 23)) == false) {
+                        documentoCorrecto = false;
+                    } else {
+                        documentoCorrecto = true;
+                    }
+                }
+            }
+
+            if (tipoDocumento.equals(String.valueOf(TIPODOCUMENTOID_CIF))) {   /* CIF */
+
+                String letras_validas = "ABCDEFGHJPQRSUV";
+                String caracteres_de_control = "JABCDEFGHI";
+                String tipo_de_letra = "PQS";
+                String tipo_de_nombre = "ABEH";
+                int digito_de_control;
+
+                try {
+                        /* Un CIF tiene que tener nueve dígitos */
+                    if (documento.length() == 9) {
+
+				        /* Toma la primera letra del CIF */
+                        char letra_CIF = documento.charAt(0);
+
+				            /* Comprueba si la primera letra del CIF es válida */
+                        if (letras_validas.indexOf(letra_CIF) >= 0) {
+
+                            if (Character.isDigit(documento.charAt(8))) {
+                                digito_de_control = Character.getNumericValue(documento.charAt(8));
+                                if (tipo_de_letra.indexOf(letra_CIF) >= 0)
+                                    digito_de_control = 100;
+                            } else {
+                                digito_de_control = caracteres_de_control.indexOf(documento.charAt(8));
+                                if (tipo_de_nombre.indexOf(letra_CIF) >= 0)
+                                    digito_de_control = 100;
+                            }
+
+                            int a = 0, b = 0, c = 0;
+                            byte[] impares = {0, 2, 4, 6, 8, 1, 3, 5, 7, 9};
+
+					            /* Calcula A y B. */
+                            for (int t = 1; t <= 6; t = t + 2) {
+
+						            /* Suma los pares */
+                                a = a + Character.getNumericValue(documento.charAt(t + 1));
+                                b = b
+                                        + impares[Character.getNumericValue(documento.charAt(t))];
+                            }
+
+                            b = b + impares[Character.getNumericValue(documento.charAt(7))];
+					            /* Calcula C */
+                            c = 10 - ((a + b) % 10);
+					            /* Compara C con los dígitos de control */
+                            documentoCorrecto = (c == digito_de_control);
+                        }
+                    }
+                } catch (Exception e) {
+                    documentoCorrecto = false;
+                }
+                return documentoCorrecto;
+            }
+
+            if (tipoDocumento.equals(String.valueOf(TIPODOCUMENTOID_NIE))) { /* NIE */
+                if (documento.length() == 9) {
+
+                    if (documento.startsWith("X") || documento.startsWith("x")) {
+                        // Es un NIE
+                        String numeroNie1 = documento.substring(1, documento.length() - 1);
+                        Boolean nie1correcte = true;
+                        for (int i = 0; i < numeroNie1.length(); i++) {
+                            if (!Character.isDigit(numeroNie1.charAt(i))) {
+                                nie1correcte = false;
+                                break;
+                            }
+                        }
+                        if (nie1correcte) {
+                            valor = Integer.parseInt(documento.substring(1, documento.length() - 1));
+                            formatoCorrecto = true;
+                        }
+
+                    } else if (documento.startsWith("Y") || documento.startsWith("y")) {
+                        // Es un NIE
+                        String numeroNie2 = documento.substring(1, documento.length() - 1);
+                        Boolean nie2correcte = true;
+                        for (int i = 0; i < numeroNie2.length(); i++) {
+                            if (!Character.isDigit(numeroNie2.charAt(i))) {
+                                nie2correcte = false;
+                                break;
+                            }
+                        }
+                        if (nie2correcte) {
+                            valor = 10000000 + Integer.parseInt(documento.substring(1,
+                                    documento.length() - 1));
+                            formatoCorrecto = true;
+                        }
+
+                    } else if (documento.startsWith("Z") || documento.startsWith("z")) {
+                        // Es un NIE
+                        String numeroNie3 = documento.substring(1, documento.length() - 1);
+                        Boolean nie3correcte = true;
+                        for (int i = 0; i < numeroNie3.length(); i++) {
+                            if (!Character.isDigit(numeroNie3.charAt(i))) {
+                                nie3correcte = false;
+                                break;
+                            }
+                        }
+                        if (nie3correcte) {
+                            valor = 20000000 + Integer.parseInt(documento.substring(1,
+                                    documento.length() - 1));
+                            formatoCorrecto = true;
+                        }
+                    } else {
+                        formatoCorrecto = false;
+                    }
+
+                } else {
+                    formatoCorrecto = false;
+                }
+
+                if (formatoCorrecto) {
+                    if (documento.endsWith("" + letras.charAt(valor % 23)) == false) {
+                        documentoCorrecto = false;
+                    } else {
+                        documentoCorrecto = true;
+                    }
+                }
+            }
+
+            if (tipoDocumento.equals(String.valueOf(TIPODOCUMENTOID_PASSAPORT))) { /* PASAPORTE */
+                documentoCorrecto = true;
+            }
+
+        }
+
+        return documentoCorrecto;
     }
 }
