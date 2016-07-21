@@ -83,7 +83,7 @@
                            <div class="col-xs-8">
                                <form:select path="anexo.tipoDocumento" class="chosen-select">
                                    <c:forEach items="${tiposDocumentoAnexo}" var="tipoDocumento">
-                                       <form:option value="${tipoDocumento}"><spring:message code="tipoDocumento.${tipoDocumento}"/></form:option>
+                                       <form:option value="${tipoDocumento}"><spring:message code="tipoDocumento.0${tipoDocumento}"/></form:option>
                                    </c:forEach>
                                </form:select>
                                <form:errors path="anexo.tipoDocumento" cssClass="label label-danger"/>

@@ -60,7 +60,7 @@
                                  <tr id="anexo${anexo.id}">
 
                                      <td>${anexo.titulo}</td>
-                                     <td><spring:message code="tipoDocumento.${anexo.tipoDocumento}"/></td>
+                                     <td><spring:message code="tipoDocumento.0${anexo.tipoDocumento}"/></td>
                                      <td class="center">
                                          <!-- ESTADO 1 -> Valido
                                               ESTADO 2 -> Pendiente
