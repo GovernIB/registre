@@ -26,10 +26,10 @@
         NOMBRE_FICHERO varchar(80) not null,
         OBSERVACIONES varchar(50),
         TIMESTAMP bytea,
-        TIPO_DOCUMENTO int4 not null,
+        TIPO_DOCUMENTO varchar(2) not null,
         TIPO_MIME varchar(20),
         VAL_OCSP_CERTIFICADO bytea,
-        VALIDEZ_DOCUMENTO int4,
+        VALIDEZ_DOCUMENTO varchar(2),
         ANEXO int8,
         ASIENTO_REGISTRAL int8,
         primary key (ID)
@@ -60,7 +60,7 @@
         DEC_T_ANOTACION varchar(80),
         DEC_UNI_TRA_DEST varchar(80),
         DEC_UNI_TRA_ORI varchar(80),
-        DOC_FISICA int4 not null,
+        DOC_FISICA varchar(1) not null,
         ESTADO int4 not null,
         EXPONE varchar(4000),
         FECHAR_EGISTRO timestamp not null,
@@ -78,9 +78,9 @@
         SOLICITA varchar(4000),
         TIMESTAMP_REGISTRO bytea,
         timestampRegistroInicial bytea,
-        TIPO_ANOTACION int4 not null,
+        TIPO_ANOTACION varchar(2) not null,
         TIPO_REGISTRO int4 not null,
-        TIPO_TRANSPORTE int4,
+        TIPO_TRANSPORTE varchar(2),
         ENTIDAD int8 not null,
         primary key (ID)
     );
@@ -275,8 +275,8 @@
 
     create table RWE_INTERESADO_SIR (
         ID int8 not null,
-        CANAL_NOTIF_INTERESADO int4,
-        CANAL_NOTIF_REPRESENTANTE int4,
+        CANAL_NOTIF_INTERESADO varchar(2),
+        CANAL_NOTIF_REPRESENTANTE varchar(2),
         COD_MUNICIPIO_INTERESADO varchar(5),
         COD_MUNICIPIO_REPRESENTANTE varchar(5),
         COD_PAIS_INTERESADO varchar(4),
@@ -304,8 +304,8 @@
         APELLIDO2_REPRESENTANTE varchar(30),
         TELEFONO_INTERESADO varchar(20),
         TELEFONO_REPRESENTANTE varchar(20),
-        T_DOCUMENTO_INTERESADO int4,
-        T_DOCUMENTO_REPRESENTANTE int4,
+        T_DOCUMENTO_INTERESADO varchar(1),
+        T_DOCUMENTO_REPRESENTANTE varchar(1),
         ASIENTO_REGISTRAL int8,
         primary key (ID)
     );
@@ -363,7 +363,7 @@
     create table RWE_OFICINA (
         ID int8 not null,
         CODPOSTAL varchar(14),
-        CODIGO varchar(9) not null unique,
+        CODIGO varchar(9) not null,
         DENOMINACION varchar(300) not null,
         NOMBREVIA varchar(300),
         NUMVIA varchar(20),

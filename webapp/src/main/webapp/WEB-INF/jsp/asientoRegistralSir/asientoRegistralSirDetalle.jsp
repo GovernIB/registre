@@ -112,19 +112,19 @@
                             <c:if test="${not empty asientoRegistralSir.tipoAnotacion}">
                                 <dt><i class="fa fa-map-marker"></i> <spring:message code="asientoRegistralSir.tipoAnotacion"/>:</dt>
                                 <dd>
-                                    <c:if test="${asientoRegistralSir.tipoAnotacion == 'PENDIENTE'}">
+                                    <c:if test="${asientoRegistralSir.tipoAnotacion == '01'}">
                                         <span class="label label-warning"><spring:message
                                                 code="asientoRegistralSir.tipoAnotacion.${asientoRegistralSir.tipoAnotacion}"/></span>
                                     </c:if>
-                                    <c:if test="${asientoRegistralSir.tipoAnotacion == 'ENVIO'}">
+                                    <c:if test="${asientoRegistralSir.tipoAnotacion == '02'}">
                                         <span class="label label-success"><spring:message
                                                 code="asientoRegistralSir.tipoAnotacion.${asientoRegistralSir.tipoAnotacion}"/></span>
                                     </c:if>
-                                    <c:if test="${asientoRegistralSir.tipoAnotacion == 'REENVIO'}">
+                                    <c:if test="${asientoRegistralSir.tipoAnotacion == '03'}">
                                         <span class="label label-info"><spring:message
                                                 code="asientoRegistralSir.tipoAnotacion.${asientoRegistralSir.tipoAnotacion}"/></span>
                                     </c:if>
-                                    <c:if test="${asientoRegistralSir.tipoAnotacion == 'RECHAZO'}">
+                                    <c:if test="${asientoRegistralSir.tipoAnotacion == '04'}">
                                         <span class="label label-danger"><spring:message
                                                 code="asientoRegistralSir.tipoAnotacion.${asientoRegistralSir.tipoAnotacion}"/></span>
                                     </c:if>

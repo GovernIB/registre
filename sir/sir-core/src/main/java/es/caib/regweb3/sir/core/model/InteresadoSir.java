@@ -11,15 +11,15 @@ import java.io.Serializable;
 /**
  * Created by earrivi on 26/11/2015.
  */
-//@Entity
-//@Table(name = "RWE_INTERESADO_SIR")
+@Entity
+@Table(name = "RWE_INTERESADO_SIR")
 @SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 public class InteresadoSir implements Serializable {
 
     private Long id;
     @JsonIgnore
     private AsientoRegistralSir idAsientoRegistralSir;
-    private TipoDocumentoIdentificacion tipoDocumentoIdentificacionInteresado;
+    private String tipoDocumentoIdentificacionInteresado;
     private String documentoIdentificacionInteresado;
     private String razonSocialInteresado;
     private String nombreInteresado;
@@ -33,8 +33,8 @@ public class InteresadoSir implements Serializable {
     private String correoElectronicoInteresado;
     private String telefonoInteresado;
     private String direccionElectronicaHabilitadaInteresado;
-    private CanalNotificacion canalPreferenteComunicacionInteresado;
-    private TipoDocumentoIdentificacion tipoDocumentoIdentificacionRepresentante;
+    private String canalPreferenteComunicacionInteresado;
+    private String tipoDocumentoIdentificacionRepresentante;
     private String documentoIdentificacionRepresentante;
     private String razonSocialRepresentante;
     private String nombreRepresentante;
@@ -48,7 +48,7 @@ public class InteresadoSir implements Serializable {
     private String correoElectronicoRepresentante;
     private String telefonoRepresentante;
     private String direccionElectronicaHabilitadaRepresentante;
-    private CanalNotificacion canalPreferenteComunicacionRepresentante;
+    private String canalPreferenteComunicacionRepresentante;
     private String observaciones;
 
 
@@ -79,11 +79,11 @@ public class InteresadoSir implements Serializable {
     }
 
     @Column(name = "T_DOCUMENTO_INTERESADO", length = 1, nullable = true)
-    public TipoDocumentoIdentificacion getTipoDocumentoIdentificacionInteresado() {
+    public String getTipoDocumentoIdentificacionInteresado() {
         return tipoDocumentoIdentificacionInteresado;
     }
 
-    public void setTipoDocumentoIdentificacionInteresado(TipoDocumentoIdentificacion tipoDocumentoIdentificacionInteresado) {
+    public void setTipoDocumentoIdentificacionInteresado(String tipoDocumentoIdentificacionInteresado) {
         this.tipoDocumentoIdentificacionInteresado = tipoDocumentoIdentificacionInteresado;
     }
 
@@ -205,20 +205,20 @@ public class InteresadoSir implements Serializable {
     }
 
     @Column(name = "CANAL_NOTIF_INTERESADO", length = 2, nullable = true)
-    public CanalNotificacion getCanalPreferenteComunicacionInteresado() {
+    public String getCanalPreferenteComunicacionInteresado() {
         return canalPreferenteComunicacionInteresado;
     }
 
-    public void setCanalPreferenteComunicacionInteresado(CanalNotificacion canalPreferenteComunicacionInteresado) {
+    public void setCanalPreferenteComunicacionInteresado(String canalPreferenteComunicacionInteresado) {
         this.canalPreferenteComunicacionInteresado = canalPreferenteComunicacionInteresado;
     }
 
     @Column(name = "T_DOCUMENTO_REPRESENTANTE", length = 1, nullable = true)
-    public TipoDocumentoIdentificacion getTipoDocumentoIdentificacionRepresentante() {
+    public String getTipoDocumentoIdentificacionRepresentante() {
         return tipoDocumentoIdentificacionRepresentante;
     }
 
-    public void setTipoDocumentoIdentificacionRepresentante(TipoDocumentoIdentificacion tipoDocumentoIdentificacionRepresentante) {
+    public void setTipoDocumentoIdentificacionRepresentante(String tipoDocumentoIdentificacionRepresentante) {
         this.tipoDocumentoIdentificacionRepresentante = tipoDocumentoIdentificacionRepresentante;
     }
 
@@ -340,11 +340,11 @@ public class InteresadoSir implements Serializable {
     }
 
     @Column(name = "CANAL_NOTIF_REPRESENTANTE", length = 2, nullable = true)
-    public CanalNotificacion getCanalPreferenteComunicacionRepresentante() {
+    public String getCanalPreferenteComunicacionRepresentante() {
         return canalPreferenteComunicacionRepresentante;
     }
 
-    public void setCanalPreferenteComunicacionRepresentante(CanalNotificacion canalPreferenteComunicacionRepresentante) {
+    public void setCanalPreferenteComunicacionRepresentante(String canalPreferenteComunicacionRepresentante) {
         this.canalPreferenteComunicacionRepresentante = canalPreferenteComunicacionRepresentante;
     }
 

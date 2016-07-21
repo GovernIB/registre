@@ -15,6 +15,7 @@ import es.caib.regweb3.sir.ws.api.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.ws.api.utils.Mensaje;
 import org.apache.log4j.Logger;
 import org.exolab.castor.xml.MarshalException;
+import org.exolab.castor.xml.Unmarshaller;
 import org.exolab.castor.xml.ValidationException;
 import org.springframework.util.Assert;
 
@@ -118,7 +119,7 @@ public class RecepcionManagerImpl implements RecepcionManager {
         }
 
         // tipo anotacion envio
-        if (TipoAnotacion.ENVIO.equals(ficheroIntercambio.getTipoAnotacion())) {
+        if (TipoAnotacion.ENVIO.getValue().equals(ficheroIntercambio.getTipoAnotacion())) {
 
             try {
                 asientoRegistralSir = webServicesMethodsEjb.crearAsientoRegistralSir(ficheroIntercambio.getAsientoRegistralSir(webServicesMethodsEjb));
@@ -130,13 +131,13 @@ public class RecepcionManagerImpl implements RecepcionManager {
 
 
         // tipo anotacion reenvio
-        if (TipoAnotacion.REENVIO.equals(ficheroIntercambio.getTipoAnotacion())) {
+        if (TipoAnotacion.REENVIO.getValue().equals(ficheroIntercambio.getTipoAnotacion())) {
 
             //preRegistro = recibirFicheroIntercambioReenvio(ficheroIntercambio,webServicesMethodsEjb);
         }
 
         // tipo anotacion rechazo
-        if (TipoAnotacion.RECHAZO.equals(ficheroIntercambio.getTipoAnotacion())) {
+        if (TipoAnotacion.RECHAZO.getValue().equals(ficheroIntercambio.getTipoAnotacion())) {
 
             //preRegistro = recibirFicheroIntercambioRechazo(ficheroIntercambio,webServicesMethodsEjb);
         }
@@ -155,13 +156,13 @@ public class RecepcionManagerImpl implements RecepcionManager {
         FicheroIntercambio ficheroIntercambio = new FicheroIntercambio();
         Fichero_Intercambio_SICRES_3 fiSICRES3 = null;
 
-        org.exolab.castor.xml.Unmarshaller unmarshaller= new org.exolab.castor.xml.Unmarshaller(Fichero_Intercambio_SICRES_3.class);
+        Unmarshaller unmarshaller = new Unmarshaller(Fichero_Intercambio_SICRES_3.class);
         //desactivamos la validacion
         unmarshaller.setValidation(false);
 
         try {
 
-            fiSICRES3= (Fichero_Intercambio_SICRES_3) unmarshaller.unmarshal(new StringReader(xml));
+            fiSICRES3 = (Fichero_Intercambio_SICRES_3) unmarshaller.unmarshal(new StringReader(xml));
 
         } catch (MarshalException e) {
             log.error("Imposible parsear el xml recibido:"+xml+" excepción "+e.getLocalizedMessage());

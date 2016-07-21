@@ -133,7 +133,7 @@
                                            </div>
                                            <div class="col-xs-6">
                                                <c:if test="${not empty registro.registroDetalle.transporte}">
-                                                   <spring:message code="transporte.${registro.registroDetalle.transporte}"/>
+                                                   <spring:message code="transporte.0${registro.registroDetalle.transporte}"/>
                                                </c:if>
                                            </div>
                                            <div class="col-xs-4">

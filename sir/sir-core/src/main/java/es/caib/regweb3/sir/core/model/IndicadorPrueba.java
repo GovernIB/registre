@@ -7,7 +7,7 @@ package es.caib.regweb3.sir.core.model;
 public enum IndicadorPrueba {
 
     NORMAL("0", "NORMAL"),
-    PRUEBA("01", "PRUEBA");
+    PRUEBA("1", "PRUEBA");
 
     private final String value;
     private final String name;

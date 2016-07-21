@@ -257,13 +257,13 @@
     var urlCargarInteresadoSir = '<c:url value="/rest/obtenerInteresadoSir"/>';
 
     var tradsinteresado = new Array();
-    tradsinteresado['tipoDocumentoIdentificacion.NIF'] = "<spring:message code='tipoDocumentoIdentificacion.NIF' javaScriptEscape='true' />";
-    tradsinteresado['tipoDocumentoIdentificacion.CIF'] = "<spring:message code='tipoDocumentoIdentificacion.CIF' javaScriptEscape='true' />";
-    tradsinteresado['tipoDocumentoIdentificacion.PASAPORTE'] = "<spring:message code='tipoDocumentoIdentificacion.PASAPORTE' javaScriptEscape='true' />";
-    tradsinteresado['tipoDocumentoIdentificacion.NIE'] = "<spring:message code='tipoDocumentoIdentificacion.NIE' javaScriptEscape='true' />";
-    tradsinteresado['tipoDocumentoIdentificacion.OTROS_PERSONA_FISICA'] = "<spring:message code='tipoDocumentoIdentificacion.OTROS_PERSONA_FISICA' javaScriptEscape='true' />";
-    tradsinteresado['tipoDocumentoIdentificacion.CODIGO_ORIGEN_VALUE'] = "<spring:message code='tipoDocumentoIdentificacion.CODIGO_ORIGEN_VALUE' javaScriptEscape='true' />";
-    tradsinteresado['canalNotificacion.DIRECCION_POSTAL'] = "<spring:message code='canalNotificacion.DIRECCION_POSTAL' javaScriptEscape='true' />";
-    tradsinteresado['canalNotificacion.DIRECCION_ELECTRONICA_HABILITADA'] = "<spring:message code='canalNotificacion.DIRECCION_ELECTRONICA_HABILITADA' javaScriptEscape='true' />";
-    tradsinteresado['canalNotificacion.COMPARECENCIA_ELECTRONICA'] = "<spring:message code='canalNotificacion.COMPARECENCIA_ELECTRONICA' javaScriptEscape='true' />";
+    tradsinteresado['tipoDocumentoIdentificacion.N'] = "<spring:message code='tipoDocumentoIdentificacion.NIF' javaScriptEscape='true' />";
+    tradsinteresado['tipoDocumentoIdentificacion.C'] = "<spring:message code='tipoDocumentoIdentificacion.CIF' javaScriptEscape='true' />";
+    tradsinteresado['tipoDocumentoIdentificacion.P'] = "<spring:message code='tipoDocumentoIdentificacion.PASAPORTE' javaScriptEscape='true' />";
+    tradsinteresado['tipoDocumentoIdentificacion.E'] = "<spring:message code='tipoDocumentoIdentificacion.NIE' javaScriptEscape='true' />";
+    tradsinteresado['tipoDocumentoIdentificacion.X'] = "<spring:message code='tipoDocumentoIdentificacion.OTROS_PERSONA_FISICA' javaScriptEscape='true' />";
+    tradsinteresado['tipoDocumentoIdentificacion.O'] = "<spring:message code='tipoDocumentoIdentificacion.CODIGO_ORIGEN_VALUE' javaScriptEscape='true' />";
+    tradsinteresado['canalNotificacion.01'] = "<spring:message code='canalNotificacion.DIRECCION_POSTAL' javaScriptEscape='true' />";
+    tradsinteresado['canalNotificacion.02'] = "<spring:message code='canalNotificacion.DIRECCION_ELECTRONICA_HABILITADA' javaScriptEscape='true' />";
+    tradsinteresado['canalNotificacion.03'] = "<spring:message code='canalNotificacion.COMPARECENCIA_ELECTRONICA' javaScriptEscape='true' />";
 </script>

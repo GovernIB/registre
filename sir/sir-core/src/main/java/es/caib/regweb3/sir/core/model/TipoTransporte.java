@@ -44,4 +44,15 @@ public enum TipoTransporte {
         return null;
     }
 
+    public static String getTipoTransporteValue(String value) {
+
+        TipoTransporte tipoTransporte = getTipoTransporte(value);
+
+        if (tipoTransporte != null) {
+            return  tipoTransporte.getValue();
+        }
+
+        return null;
+    }
+
 }

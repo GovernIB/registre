@@ -14,8 +14,8 @@ import java.util.List;
 /**
  * Implementación de un Asiento Registral de intercambio
  */
-//@Entity
-//@Table(name = "RWE_ASIENTO_REGISTRAL_SIR")
+@Entity
+@Table(name = "RWE_ASIENTO_REGISTRAL_SIR")
 @SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 public class AsientoRegistralSir implements Serializable {
 
@@ -132,7 +132,7 @@ public class AsientoRegistralSir implements Serializable {
     /**
      * Tipo de transporte de entrada.
      */
-    private TipoTransporte tipoTransporte;
+    private String tipoTransporte;
 
     /**
      * Número de transporte de entrada.
@@ -168,7 +168,7 @@ public class AsientoRegistralSir implements Serializable {
     /**
      * Tipo de anotación.
      */
-    private TipoAnotacion tipoAnotacion;
+    private String tipoAnotacion;
 
     /**
      * Descripción del tipo de anotación.
@@ -183,7 +183,7 @@ public class AsientoRegistralSir implements Serializable {
     /**
      * Documentación física que acompaña al fichero.
      */
-    private DocumentacionFisica documentacionFisica;
+    private String documentacionFisica;
 
     /**
      * Observaciones del registro de datos de intercambio recogidos por el
@@ -457,11 +457,11 @@ public class AsientoRegistralSir implements Serializable {
     }
 
     @Column(name = "TIPO_TRANSPORTE", length = 2, nullable = true)
-    public TipoTransporte getTipoTransporte() {
+    public String getTipoTransporte() {
         return tipoTransporte;
     }
 
-    public void setTipoTransporte(TipoTransporte tipoTransporte) {
+    public void setTipoTransporte(String tipoTransporte) {
         this.tipoTransporte = tipoTransporte;
     }
 
@@ -511,11 +511,11 @@ public class AsientoRegistralSir implements Serializable {
     }
 
     @Column(name = "TIPO_ANOTACION", length = 2, nullable = false)
-    public TipoAnotacion getTipoAnotacion() {
+    public String getTipoAnotacion() {
         return tipoAnotacion;
     }
 
-    public void setTipoAnotacion(TipoAnotacion tipoAnotacion) {
+    public void setTipoAnotacion(String tipoAnotacion) {
         this.tipoAnotacion = tipoAnotacion;
     }
 
@@ -538,11 +538,11 @@ public class AsientoRegistralSir implements Serializable {
     }
 
     @Column(name = "DOC_FISICA", length = 1, nullable = false)
-    public DocumentacionFisica getDocumentacionFisica() {
-        return documentacionFisica;
+    public String getDocumentacionFisica() {
+        return DocumentacionFisica.getDocumentacionFisicaValue(documentacionFisica);
     }
 
-    public void setDocumentacionFisica(DocumentacionFisica documentacionFisica) {
+    public void setDocumentacionFisica(String documentacionFisica) {
         this.documentacionFisica = documentacionFisica;
     }
 
@@ -556,6 +556,7 @@ public class AsientoRegistralSir implements Serializable {
     }
 
     @Column(name = "INDICADOR_PRUEBA", length = 1, nullable = false)
+    @Enumerated(EnumType.ORDINAL)
     public IndicadorPrueba getIndicadorPrueba() {
         return indicadorPrueba;
     }
@@ -630,6 +631,7 @@ public class AsientoRegistralSir implements Serializable {
     }
 
     @Column(name = "ESTADO", length = 2, nullable = false)
+    @Enumerated(EnumType.ORDINAL)
     public EstadoAsientoRegistralSir getEstado() {
         return estado;
     }

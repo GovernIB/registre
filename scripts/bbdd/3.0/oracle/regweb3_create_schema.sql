@@ -25,10 +25,10 @@
         NOMBRE_FICHERO varchar2(80 char) not null,
         OBSERVACIONES varchar2(50 char),
         TIMESTAMP raw(255),
-        TIPO_DOCUMENTO number(10,0) not null,
+        TIPO_DOCUMENTO varchar2(2 char) not null,
         TIPO_MIME varchar2(20 char),
         VAL_OCSP_CERTIFICADO raw(255),
-        VALIDEZ_DOCUMENTO number(10,0),
+        VALIDEZ_DOCUMENTO varchar2(2 char),
         ANEXO number(19,0),
         ASIENTO_REGISTRAL number(19,0)
     );
@@ -57,7 +57,7 @@
         DEC_T_ANOTACION varchar2(80 char),
         DEC_UNI_TRA_DEST varchar2(80 char),
         DEC_UNI_TRA_ORI varchar2(80 char),
-        DOC_FISICA number(10,0) not null,
+        DOC_FISICA varchar2(1 char) not null,
         ESTADO number(10,0) not null,
         EXPONE varchar2(4000 char),
         FECHAR_EGISTRO timestamp not null,
@@ -75,9 +75,9 @@
         SOLICITA varchar2(4000 char),
         TIMESTAMP_REGISTRO raw(255),
         timestampRegistroInicial raw(255),
-        TIPO_ANOTACION number(10,0) not null,
+        TIPO_ANOTACION varchar2(2 char) not null,
         TIPO_REGISTRO number(10,0) not null,
-        TIPO_TRANSPORTE number(10,0),
+        TIPO_TRANSPORTE varchar2(2 char),
         ENTIDAD number(19,0) not null
     );
 
@@ -251,8 +251,8 @@
 
     create table RWE_INTERESADO_SIR (
         ID number(19,0) not null,
-        CANAL_NOTIF_INTERESADO number(10,0),
-        CANAL_NOTIF_REPRESENTANTE number(10,0),
+        CANAL_NOTIF_INTERESADO varchar2(2 char),
+        CANAL_NOTIF_REPRESENTANTE varchar2(2 char),
         COD_MUNICIPIO_INTERESADO varchar2(5 char),
         COD_MUNICIPIO_REPRESENTANTE varchar2(5 char),
         COD_PAIS_INTERESADO varchar2(4 char),
@@ -280,8 +280,8 @@
         APELLIDO2_REPRESENTANTE varchar2(30 char),
         TELEFONO_INTERESADO varchar2(20 char),
         TELEFONO_REPRESENTANTE varchar2(20 char),
-        T_DOCUMENTO_INTERESADO number(10,0),
-        T_DOCUMENTO_REPRESENTANTE number(10,0),
+        T_DOCUMENTO_INTERESADO varchar2(1 char),
+        T_DOCUMENTO_REPRESENTANTE varchar2(1 char),
         ASIENTO_REGISTRAL number(19,0)
     );
 
@@ -1388,7 +1388,6 @@
     alter table RWE_CATESTADOENTIDAD add constraint RWE_CATESTENT_CODESTENT_UK unique (CODIGOESTADOENTIDAD);
     alter table RWE_CODIGOASUNTO add constraint RWE_CODASUN_CODIGO_TIPASUN_UK unique (CODIGO, TIPOASUNTO);
     alter table RWE_ENTIDAD add constraint RWE_ENTIDAD_CODIGODIR3_uk unique (CODIGODIR3);
-    alter table RWE_OFICINA add constraint RWE_OFICINA_CODIGO_uk unique (CODIGO);
     alter table RWE_PROPIEDADGLOBAL add constraint RWE_propiedad_clave_entidad_uk unique (CLAVE, ENTIDAD);
     alter table RWE_REGISTRO_MIGRADO add constraint RWE_REGMIGRADO_AN_NUM_OF_UK unique (ANO, NUMERO, CODOFICINA, TREGISTRO, IDENTIDAD);
     alter table RWE_ROL add constraint RWE_ROL_NOMBRE_uk unique (NOMBRE);

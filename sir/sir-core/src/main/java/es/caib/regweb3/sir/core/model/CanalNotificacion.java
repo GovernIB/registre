@@ -31,10 +31,22 @@ public enum CanalNotificacion {
 
         if (value != null) {
 
-            for (CanalNotificacion e : CanalNotificacion.values()) {
-                if (value.equals(e.getValue())) return e;
+            for (CanalNotificacion canalNotificacion : CanalNotificacion.values()) {
+                if (value.equals(canalNotificacion.getValue())) return canalNotificacion;
             }
 
+        }
+
+        return null;
+    }
+
+    public static String getCanalNotificacionValue(String value) {
+
+        CanalNotificacion canalNotificacion = getCanalNotificacion(value);
+
+        if (canalNotificacion != null) {
+
+            return canalNotificacion.getValue();
         }
 
         return null;

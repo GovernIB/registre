@@ -32,10 +32,21 @@ public enum TipoAnotacion {
 
         if (value != null) {
 
-            for (TipoAnotacion e : TipoAnotacion.values()) {
-                if (value.equals(e.getValue())) return e;
+            for (TipoAnotacion tipoAnotacion : TipoAnotacion.values()) {
+                if (value.equals(tipoAnotacion.getValue())) return tipoAnotacion;
             }
 
+        }
+
+        return null;
+    }
+
+    public static String getTipoAnotacionValue(String value) {
+
+        TipoAnotacion tipoAnotacion = getTipoAnotacion(value);
+
+        if(tipoAnotacion != null){
+            return  tipoAnotacion.getValue();
         }
 
         return null;

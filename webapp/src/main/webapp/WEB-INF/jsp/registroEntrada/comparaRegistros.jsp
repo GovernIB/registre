@@ -129,7 +129,7 @@
                                                <label path="transporte"><spring:message code="registroEntrada.transporte"/></label>
                                            </div>
                                            <div class="col-xs-6">
-                                               <spring:message code="transporte.${registro.registroDetalle.transporte}" />
+                                               <spring:message code="transporte.0${registro.registroDetalle.transporte}" />
                                            </div>
                                            <div class="col-xs-4">
                                                ${registro.registroDetalle.numeroTransporte}

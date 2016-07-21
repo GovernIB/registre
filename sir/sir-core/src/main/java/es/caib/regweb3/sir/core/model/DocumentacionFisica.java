@@ -31,8 +31,21 @@ public enum DocumentacionFisica {
 
         if (value != null) {
 
-            for (DocumentacionFisica e : DocumentacionFisica.values()) {
-                if (value.equals(e.getValue())) return e;
+            for (DocumentacionFisica documentacionFisica : DocumentacionFisica.values()) {
+                if (value.equals(documentacionFisica.getValue())) return documentacionFisica;
+            }
+
+        }
+
+        return null;
+    }
+
+    public static String getDocumentacionFisicaValue(String value) {
+
+        if (value != null) {
+
+            for (DocumentacionFisica documentacionFisica : DocumentacionFisica.values()) {
+                if (value.equals(documentacionFisica.getValue())) return documentacionFisica.getValue();
             }
 
         }

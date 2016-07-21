@@ -236,7 +236,7 @@
                                     <form:select path="registroDetalle.transporte" cssClass="chosen-select"> 
                                       <form:option value="-1">...</form:option>
                                       <c:forEach items="${transportes}" var="transporte">
-                                         <form:option value="${transporte}"><spring:message code="transporte.${transporte}" /></form:option>
+                                         <form:option value="${transporte}"><spring:message code="transporte.0${transporte}" /></form:option>
                                       </c:forEach>
                                    </form:select>
                                    <form:errors path="registroDetalle.transporte" cssClass="help-block" element="span"/>

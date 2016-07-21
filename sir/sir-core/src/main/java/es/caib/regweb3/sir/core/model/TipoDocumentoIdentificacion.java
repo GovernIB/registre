@@ -34,10 +34,21 @@ public enum TipoDocumentoIdentificacion {
 
         if (value != null) {
 
-            for (TipoDocumentoIdentificacion e : TipoDocumentoIdentificacion.values()) {
-                if (value.equals(e.getValue())) return e;
+            for (TipoDocumentoIdentificacion tipoDocumentoIdentificacion : TipoDocumentoIdentificacion.values()) {
+                if (value.equals(tipoDocumentoIdentificacion.getValue())) return tipoDocumentoIdentificacion;
             }
 
+        }
+
+        return null;
+    }
+
+    public static String getTipoDocumentoIdentificacionValue(String value) {
+
+        TipoDocumentoIdentificacion tipoDocumentoIdentificacion = getTipoDocumentoIdentificacion(value);
+
+        if(tipoDocumentoIdentificacion != null){
+            return tipoDocumentoIdentificacion.getValue();
         }
 
         return null;

@@ -169,13 +169,13 @@ public class SirBean implements SirLocal{
         RegistroDetalle registroDetalle = new RegistroDetalle();
 
         registroDetalle.setExtracto(asientoRegistralSir.getResumen());
-        registroDetalle.setTipoDocumentacionFisica(Long.valueOf(asientoRegistralSir.getDocumentacionFisica().getValue()));
+        registroDetalle.setTipoDocumentacionFisica(Long.valueOf(asientoRegistralSir.getDocumentacionFisica()));
         registroDetalle.setIdioma(idIdioma);
         registroDetalle.setTipoAsunto(new TipoAsunto(idTipoAsunto));
         registroDetalle.setCodigoAsunto(null);
 
         if(asientoRegistralSir.getTipoTransporte() != null){
-            registroDetalle.setTransporte(Long.valueOf(asientoRegistralSir.getTipoTransporte().getValue()));
+            registroDetalle.setTransporte(Long.valueOf(asientoRegistralSir.getTipoTransporte()));
         }
         if(!StringUtils.isEmpty(asientoRegistralSir.getNumeroTransporte())){
             registroDetalle.setNumeroTransporte(asientoRegistralSir.getNumeroTransporte());
@@ -276,7 +276,7 @@ public class SirBean implements SirLocal{
             interesado.setApellido2(interesadoSir.getSegundoApellidoInteresado());
         }
         if (interesadoSir.getTipoDocumentoIdentificacionInteresado() != null) {
-            interesado.setTipoDocumentoIdentificacion(RegwebConstantes.TIPODOCUMENTOID_BY_CODIGO_NTI.get(interesadoSir.getTipoDocumentoIdentificacionInteresado().getValue().charAt(0)));
+            interesado.setTipoDocumentoIdentificacion(RegwebConstantes.TIPODOCUMENTOID_BY_CODIGO_NTI.get(interesadoSir.getTipoDocumentoIdentificacionInteresado().charAt(0)));
         }
         if (!StringUtils.isEmpty(interesadoSir.getDocumentoIdentificacionInteresado())) {
             interesado.setDocumento(interesadoSir.getDocumentoIdentificacionInteresado());
@@ -319,7 +319,7 @@ public class SirBean implements SirLocal{
             interesado.setDireccionElectronica(interesadoSir.getDireccionElectronicaHabilitadaInteresado());
         }
         if (interesadoSir.getCanalPreferenteComunicacionInteresado() != null) {
-            interesado.setCanal(RegwebConstantes.CANALNOTIFICACION_BY_CODIGO.get(interesadoSir.getCanalPreferenteComunicacionInteresado().getValue()));
+            interesado.setCanal(RegwebConstantes.CANALNOTIFICACION_BY_CODIGO.get(interesadoSir.getCanalPreferenteComunicacionInteresado()));
         }
         if (!StringUtils.isEmpty(interesadoSir.getObservaciones())) {
             interesado.setObservaciones(interesadoSir.getObservaciones());
@@ -362,7 +362,7 @@ public class SirBean implements SirLocal{
             representante.setApellido2(representanteSir.getSegundoApellidoRepresentante());
         }
         if (representanteSir.getTipoDocumentoIdentificacionRepresentante() != null) {
-            representante.setTipoDocumentoIdentificacion(RegwebConstantes.TIPODOCUMENTOID_BY_CODIGO_NTI.get(representanteSir.getTipoDocumentoIdentificacionRepresentante().getValue().charAt(0)));
+            representante.setTipoDocumentoIdentificacion(RegwebConstantes.TIPODOCUMENTOID_BY_CODIGO_NTI.get(representanteSir.getTipoDocumentoIdentificacionRepresentante().charAt(0)));
         }
         if (!StringUtils.isEmpty(representanteSir.getDocumentoIdentificacionRepresentante())) {
             representante.setDocumento(representanteSir.getDocumentoIdentificacionRepresentante());
@@ -404,7 +404,7 @@ public class SirBean implements SirLocal{
             representante.setDireccionElectronica(representanteSir.getDireccionElectronicaHabilitadaRepresentante());
         }
         if (representanteSir.getCanalPreferenteComunicacionRepresentante() != null) {
-            representante.setCanal(RegwebConstantes.CANALNOTIFICACION_BY_CODIGO.get(representanteSir.getCanalPreferenteComunicacionRepresentante().getValue()));
+            representante.setCanal(RegwebConstantes.CANALNOTIFICACION_BY_CODIGO.get(representanteSir.getCanalPreferenteComunicacionRepresentante()));
         }
         if (!StringUtils.isEmpty(representanteSir.getObservaciones())) {
             representante.setObservaciones(representanteSir.getObservaciones());
@@ -454,13 +454,13 @@ public class SirBean implements SirLocal{
         anexo.setTitulo(anexoSir.getNombreFichero());
 
         if (anexoSir.getValidezDocumento() != null) {
-            anexo.setValidezDocumento(Long.valueOf(anexoSir.getValidezDocumento().getValue()));
+            anexo.setValidezDocumento(Long.valueOf(anexoSir.getValidezDocumento()));
         } else {// Si sicres no especifica validez del documento la fijamos a copia por defecto
             anexo.setValidezDocumento(RegwebConstantes.TIPOVALIDEZDOCUMENTO_COPIA);
         }
 
         if (anexoSir.getTipoDocumento() != null) {
-            anexo.setTipoDocumento(Long.valueOf(anexoSir.getTipoDocumento().getValue()));
+            anexo.setTipoDocumento(Long.valueOf(anexoSir.getTipoDocumento()));
         }
         anexo.setObservaciones(anexoSir.getObservaciones());
 

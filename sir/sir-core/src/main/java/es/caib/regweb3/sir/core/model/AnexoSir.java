@@ -9,8 +9,8 @@ import java.io.Serializable;
 /**
  * Created by earrivi on 26/11/2015.
  */
-//@Entity
-//@Table(name = "RWE_ANEXO_SIR")
+@Entity
+@Table(name = "RWE_ANEXO_SIR")
 @SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 public class AnexoSir implements Serializable {
 
@@ -37,12 +37,12 @@ public class AnexoSir implements Serializable {
     /**
      * Validez del documento.
      */
-    private ValidezDocumento validezDocumento;
+    private String validezDocumento;
 
     /**
      * Tipo de documento.
      */
-    private TipoDocumento tipoDocumento;
+    private String tipoDocumento;
 
     /**
      * Certificado público del fichero anexo.
@@ -137,21 +137,20 @@ public class AnexoSir implements Serializable {
     }
 
     @Column(name = "VALIDEZ_DOCUMENTO", length = 2, nullable = true)
-    public ValidezDocumento getValidezDocumento() {
+    public String getValidezDocumento() {
         return validezDocumento;
     }
 
-    public void setValidezDocumento(ValidezDocumento validezDocumento) {
+    public void setValidezDocumento(String validezDocumento) {
         this.validezDocumento = validezDocumento;
     }
 
-    @Enumerated(EnumType.ORDINAL)
     @Column(name = "TIPO_DOCUMENTO", length = 2, nullable = false)
-    public TipoDocumento getTipoDocumento() {
+    public String getTipoDocumento() {
         return tipoDocumento;
     }
 
-    public void setTipoDocumento(TipoDocumento tipoDocumento) {
+    public void setTipoDocumento(String tipoDocumento) {
         this.tipoDocumento = tipoDocumento;
     }
 

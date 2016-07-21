@@ -318,11 +318,11 @@ public class FicheroIntercambio {
      *
      * @return Tipo de anotación.
      */
-    public TipoAnotacion getTipoAnotacion() {
+    public String getTipoAnotacion() {
 
         String tipoAnotacion = getTipoAnotacionXML();
         if (StringUtils.isNotBlank(tipoAnotacion)) {
-            return TipoAnotacion.getTipoAnotacion(tipoAnotacion);
+            return TipoAnotacion.getTipoAnotacionValue(tipoAnotacion);
         }
 
         return null;
@@ -484,7 +484,7 @@ public class FicheroIntercambio {
                 // Tipo de transporte
                 String tipoTransporte = de_Internos_Control.getTipo_Transporte_Entrada();
                 if (StringUtils.isNotBlank(tipoTransporte)) {
-                    asientoRegistralSir.setTipoTransporte(TipoTransporte.getTipoTransporte(tipoTransporte));
+                    asientoRegistralSir.setTipoTransporte(TipoTransporte.getTipoTransporteValue(tipoTransporte));
                 }
 
                 // Tipo de registro
@@ -496,7 +496,7 @@ public class FicheroIntercambio {
                 // Documentación física
                 Documentacion_FisicaType documentacion_Fisica = de_Internos_Control.getDocumentacion_Fisica();
                 if ((documentacion_Fisica != null) && StringUtils.isNotBlank(documentacion_Fisica.value())) {
-                    asientoRegistralSir.setDocumentacionFisica(DocumentacionFisica.getDocumentacionFisica(documentacion_Fisica.value()));
+                    asientoRegistralSir.setDocumentacionFisica(DocumentacionFisica.getDocumentacionFisicaValue(documentacion_Fisica.value()));
                 }
 
                 // Indicador de prueba
@@ -538,12 +538,12 @@ public class FicheroIntercambio {
 
                         String tipoDocumento = de_Interesado.getTipo_Documento_Identificacion_Interesado();
                         if (StringUtils.isNotBlank(tipoDocumento)) {
-                            interesado.setTipoDocumentoIdentificacionInteresado(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacion(tipoDocumento));
+                            interesado.setTipoDocumentoIdentificacionInteresado(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacionValue(tipoDocumento));
                         }
 
                         String canalPreferente = de_Interesado.getCanal_Preferente_Comunicacion_Interesado();
                         if (StringUtils.isNotBlank(canalPreferente)) {
-                            interesado.setCanalPreferenteComunicacionInteresado(CanalNotificacion.getCanalNotificacion(canalPreferente));
+                            interesado.setCanalPreferenteComunicacionInteresado(CanalNotificacion.getCanalNotificacionValue(canalPreferente));
                         }
 
                         // Información del representante
@@ -563,12 +563,12 @@ public class FicheroIntercambio {
 
                         tipoDocumento = de_Interesado.getTipo_Documento_Identificacion_Representante();
                         if (StringUtils.isNotBlank(tipoDocumento)) {
-                            interesado.setTipoDocumentoIdentificacionRepresentante(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacion(tipoDocumento));
+                            interesado.setTipoDocumentoIdentificacionRepresentante(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacionValue(tipoDocumento));
                         }
 
                         canalPreferente = de_Interesado.getCanal_Preferente_Comunicacion_Representante();
                         if (StringUtils.isNotBlank(canalPreferente)) {
-                            interesado.setCanalPreferenteComunicacionRepresentante(CanalNotificacion.getCanalNotificacion(canalPreferente));
+                            interesado.setCanalPreferenteComunicacionRepresentante(CanalNotificacion.getCanalNotificacionValue(canalPreferente));
                         }
 
                         interesado.setObservaciones(de_Interesado.getObservaciones());
@@ -607,12 +607,12 @@ public class FicheroIntercambio {
 
                         String validezDocumento = de_Anexo.getValidez_Documento();
                         if (StringUtils.isNotBlank(validezDocumento)) {
-                            anexo.setValidezDocumento(ValidezDocumento.getValidezDocumento(validezDocumento));
+                            anexo.setValidezDocumento(ValidezDocumento.getValidezDocumentoValue(validezDocumento));
                         }
 
                         String tipoDocumento = de_Anexo.getTipo_Documento();
                         if (StringUtils.isNotBlank(tipoDocumento)) {
-                            anexo.setTipoDocumento(TipoDocumento.getTipoDocumento(tipoDocumento));
+                            anexo.setTipoDocumento(TipoDocumento.getTipoDocumentoValue(tipoDocumento));
                         }
 
                         asientoRegistralSir.getAnexos().add(anexo);

@@ -32,9 +32,21 @@ public enum ValidezDocumento {
 
         if (value != null) {
 
-            for (ValidezDocumento e : ValidezDocumento.values()) {
-                if (value.equals(e.getValue())) return e;
+            for (ValidezDocumento validezDocumento : ValidezDocumento.values()) {
+                if (value.equals(validezDocumento.getValue())) return validezDocumento;
             }
+
+        }
+
+        return null;
+    }
+
+    public static String getValidezDocumentoValue(String value) {
+
+        ValidezDocumento validezDocumento = getValidezDocumento(value);
+
+        if (validezDocumento != null) {
+            validezDocumento.getValue();
 
         }
 
