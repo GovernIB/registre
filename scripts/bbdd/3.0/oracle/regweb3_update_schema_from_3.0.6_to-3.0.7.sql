@@ -127,3 +127,4 @@ alter table RWE_ANEXO_SIR
         references RWE_ARCHIVO;
 
 
+ALTER TABLE RWE_OFICINA DROP CONSTRAINT rwe_oficina_codigo_uk;

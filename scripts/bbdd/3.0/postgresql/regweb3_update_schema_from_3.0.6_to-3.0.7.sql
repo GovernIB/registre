@@ -121,3 +121,6 @@ alter table RWE_INTERESADO_SIR
         add constraint RWE_INTERESADOSIR_ASIREG_FK
         foreign key (ASIENTO_REGISTRAL)
         references RWE_ASIENTO_REGISTRAL_SIR;
+
+ALTER TABLE RWE_OFICINA DROP CONSTRAINT rwe_oficina_codigo_key
+
