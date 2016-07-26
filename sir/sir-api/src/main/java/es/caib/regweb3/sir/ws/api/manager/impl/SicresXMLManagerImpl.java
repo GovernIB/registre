@@ -20,7 +20,6 @@ import es.caib.regweb3.sir.ws.api.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.ws.api.utils.Mensaje;
 import es.caib.regweb3.sir.ws.api.utils.XPathReaderUtil;
 import es.caib.regweb3.utils.MimeTypeUtils;
-import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.Versio;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.ArrayUtils;
@@ -1662,10 +1661,11 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
         if (StringUtils.isNotBlank(anexo.getTipo_MIME())) {
             log.info("TIPO MIME ENCONTRADO " + MimeTypeUtils.getMimeTypeExtension(tokens[2]));
-            Assert.isTrue(StringUtils.equalsIgnoreCase(
-                    anexo.getTipo_MIME(), MimeTypeUtils.getMimeTypeExtension(tokens[2])),
-                    "'TipoMIME' no coincide con el indicado en 'IdentificadorFichero'");
-
+            if (!anexo.getTipo_Documento().equals(TipoDocumento.FICHERO_TECNICO_INTERNO.getValue())) {
+                Assert.isTrue(StringUtils.equalsIgnoreCase(
+                        anexo.getTipo_MIME(), MimeTypeUtils.getMimeTypeExtension(tokens[2])),
+                        "'TipoMIME' no coincide con el indicado en 'IdentificadorFichero'");
+            }
         }
     }
 
