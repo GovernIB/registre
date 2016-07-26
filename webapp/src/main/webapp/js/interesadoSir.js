@@ -24,8 +24,8 @@ function obtenerInteresadoSir(idInteresadoSir){
             $('#primerApellidoInteresado').html(result.primerApellidoInteresado);
             $('#segundoApellidoInteresado').html(result.segundoApellidoInteresado);
             if(result.tipoDocumentoIdentificacionInteresado != null && result.tipoDocumentoIdentificacionInteresado != '-1'){
-                $('#tipoDocumentoIdentificacionInteresado').html(result.tipoDocumentoIdentificacionInteresado);
                 $("#tipoDocumentoIdentificacionInteresado").html(tradsinteresado['tipoDocumentoIdentificacion.'+result.tipoDocumentoIdentificacionInteresado]);
+                $('#documentoIdentificacionInteresado').html(result.documentoIdentificacionInteresado);
             }
 
             if(result.codigoPaisInteresado != null){$("#codigoPaisInteresado").html(result.codigoPaisInteresado);}
