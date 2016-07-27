@@ -1273,9 +1273,13 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                 "'CodigoEntidadRegistralOrigen' no puede estar vacio");
 
         // Validar el código de entidad registral de origen en DIR3
-        Assert.isTrue(validarCodigoEntidadRegistral(ficheroIntercambio
+        if (!validarCodigoEntidadRegistral(ficheroIntercambio.getCodigoEntidadRegistralOrigen())) {
+            throw new ValidacionException(Errores.ERROR_COD_ENTIDAD_INVALIDO);
+        }
+
+       /* Assert.isTrue(validarCodigoEntidadRegistral(ficheroIntercambio
                         .getCodigoEntidadRegistralOrigen()),
-                "'CodigoEntidadRegistralOrigen' is invalid");
+                "'CodigoEntidadRegistralOrigen' is invalid");*/
 
         // Validar el código de unidad de tramitación de origen en DIR3
         if (StringUtils.isNotBlank(ficheroIntercambio
@@ -1319,9 +1323,13 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                 "'CodigoEntidadRegistralDestino' no puede estar vacio");
 
         // Validar el código de entidad registral de destino en DIR3
-        Assert.isTrue(validarCodigoEntidadRegistral(ficheroIntercambio
+        if (!validarCodigoEntidadRegistral(ficheroIntercambio.getCodigoEntidadRegistralDestino())) {
+            throw new ValidacionException(Errores.ERROR_COD_ENTIDAD_INVALIDO);
+        }
+
+       /* Assert.isTrue(validarCodigoEntidadRegistral(ficheroIntercambio
                         .getCodigoEntidadRegistralDestino()),
-                "'CodigoEntidadRegistralDestino' is invalid");
+                "'CodigoEntidadRegistralDestino' is invalid");*/
 
         // Validar el código de unidad de tramitación de destino en DIR3
         if (StringUtils.isNotBlank(ficheroIntercambio
@@ -2195,6 +2203,10 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
             }
 
             if (tipoDocumento.equals(String.valueOf(TIPODOCUMENTOID_PASSAPORT))) { /* PASAPORTE */
+                documentoCorrecto = true;
+            }
+
+            if (tipoDocumento.equals(String.valueOf(TIPODOCUMENTOID_CODIGO_ORIGEN))) { /* CODIGO ORIGEN */
                 documentoCorrecto = true;
             }
 

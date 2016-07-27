@@ -84,7 +84,7 @@ public class RecepcionManagerImpl implements RecepcionManager {
                 // Enviar ACK
                 if (Errores.ERROR_0205.getValue().equals(codigoError)) {
                     enviarACK(ficheroIntercambio);
-                } else {
+                } else if (!Errores.ERROR_COD_ENTIDAD_INVALIDO.getValue().equals(codigoError)) {
                     // Enviar mensaje de error
                     enviarMensajeError(ficheroIntercambio, codigoError, e.getMessage(), null);
                 }
