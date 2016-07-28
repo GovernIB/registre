@@ -28,6 +28,8 @@ import org.apache.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.exolab.castor.xml.MarshalException;
+import org.exolab.castor.xml.ValidationException;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.springframework.util.Assert;
@@ -1159,8 +1161,8 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
         try {
             InputStream is = new ByteArrayInputStream(xml.getBytes("UTF-8"));
-            InputStreamReader isw = new InputStreamReader(is, "UTF-8");
-            Fichero_Intercambio_SICRES_3 ficheroIntercambioSICRES3 = Fichero_Intercambio_SICRES_3.unmarshal(isw);
+            InputStreamReader isr = new InputStreamReader(is, "UTF-8");
+            Fichero_Intercambio_SICRES_3 ficheroIntercambioSICRES3 = Fichero_Intercambio_SICRES_3.unmarshal(isr);
 
             if (ficheroIntercambioSICRES3 != null) {
                 ficheroIntercambio = new FicheroIntercambio();
@@ -1171,10 +1173,24 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
             }
 
         } catch (Throwable e) {
+
+            // Comprobamos si el error al realizar la conversión es en alguno de los campos de Código Entidad
+            if(e instanceof MarshalException){
+
+                ValidationException exception = (ValidationException) e.getCause();
+                CharSequence cs1 = "_codigo_Entidad_Registral_Origen";
+                CharSequence cs2 = "_codigo_Entidad_Registral_Destino";
+
+                if (exception.getLocalizedMessage().contains(cs1) || exception.getLocalizedMessage().contains(cs2)){
+
+                    log.info("Error al parsear el xml en campos _codigo_Entidad_Registral, no se enviará mensaje de error.", e);
+                    throw new ValidacionException(Errores.ERROR_COD_ENTIDAD_INVALIDO);
+                }
+            }
+
             log.info("Error al parsear el XML del fichero de intercambio: [" + xml + "]", e);
             throw new ValidacionException(Errores.ERROR_0037);
         }
-
 
         return ficheroIntercambio;
     }
@@ -1193,16 +1209,11 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
             if (de_mensaje != null) {
 
                 mensaje = new Mensaje();
-                mensaje.setCodigoEntidadRegistralOrigen(de_mensaje
-                        .getCodigo_Entidad_Registral_Origen());
-                mensaje.setCodigoEntidadRegistralDestino(de_mensaje
-                        .getCodigo_Entidad_Registral_Destino());
-                mensaje.setIdentificadorIntercambio(de_mensaje
-                        .getIdentificador_Intercambio());
-                mensaje.setDescripcionMensaje(de_mensaje
-                        .getDescripcion_Mensaje());
-                mensaje.setNumeroRegistroEntradaDestino(de_mensaje
-                        .getNumero_Registro_Entrada_Destino());
+                mensaje.setCodigoEntidadRegistralOrigen(de_mensaje.getCodigo_Entidad_Registral_Origen());
+                mensaje.setCodigoEntidadRegistralDestino(de_mensaje.getCodigo_Entidad_Registral_Destino());
+                mensaje.setIdentificadorIntercambio(de_mensaje.getIdentificador_Intercambio());
+                mensaje.setDescripcionMensaje(de_mensaje.getDescripcion_Mensaje());
+                mensaje.setNumeroRegistroEntradaDestino(de_mensaje.getNumero_Registro_Entrada_Destino());
                 mensaje.setCodigoError(de_mensaje.getCodigo_Error());
 
                 /*
@@ -1212,18 +1223,15 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                 }*/
 
                 // Fecha y hora de entrada en destino
-                String fechaEntradaDestino = de_mensaje
-                        .getFecha_Hora_Entrada_Destino();
+                String fechaEntradaDestino = de_mensaje.getFecha_Hora_Entrada_Destino();
                 if (StringUtils.isNotBlank(fechaEntradaDestino)) {
-                    mensaje.setFechaEntradaDestino(SDF
-                            .parse(fechaEntradaDestino));
+                    mensaje.setFechaEntradaDestino(SDF.parse(fechaEntradaDestino));
                 }
 
                 // Tipo de mensaje
                 String tipoMensaje = de_mensaje.getTipo_Mensaje();
                 if (StringUtils.isNotBlank(tipoMensaje)) {
-                    mensaje.setTipoMensaje(TipoMensaje
-                            .getTipoMensaje(tipoMensaje));
+                    mensaje.setTipoMensaje(TipoMensaje.getTipoMensaje(tipoMensaje));
                 }
 
                 // Indicador de prueba
@@ -1235,11 +1243,9 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
             }
 
         } catch (Throwable e) {
-            log.error("Error al parsear el XML del mensaje: [" + xml + "]",
-                    e);
+            log.error("Error al parsear el XML del mensaje: [" + xml + "]", e);
             throw new ValidacionException(Errores.ERROR_0037, e);
         }
-
 
         return mensaje;
     }

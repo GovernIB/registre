@@ -46,18 +46,18 @@ public class RecepcionManagerImpl implements RecepcionManager {
     public void recibirFicheroIntercambio(String xmlFicheroIntercambio, WebServicesMethodsLocal webServicesMethodsEjb) {
 
         FicheroIntercambio ficheroIntercambio = null;
-        AsientoRegistralSir asientoRegistralSir = null;
 
         try {
 
             Assert.hasText(xmlFicheroIntercambio, "'xmlFicheroIntercambio' no puede estar vacio");
 
-            // Convertimos la información recibida del asiento registral sir
+            // Convertimos y validamos el xml recibido en un FicheroIntercambio mediate xsd FicheroIntercambio.xsd
             ficheroIntercambio = sicresXMLManager.parseXMLFicheroIntercambio(xmlFicheroIntercambio);
 
-            // Creamos el AsientoRegistralSir a partir del xml recibido
-            asientoRegistralSir = recibirFicheroIntercambio(ficheroIntercambio, xmlFicheroIntercambio, webServicesMethodsEjb);
+            // Creamos el AsientoRegistralSir a partir del xml recibido y validado
+            recibirFicheroIntercambio(ficheroIntercambio, xmlFicheroIntercambio, webServicesMethodsEjb);
 
+            // Si ha ido bien, enviamos el ACK
             enviarACK(ficheroIntercambio);
 
         } catch (RuntimeException e) {
