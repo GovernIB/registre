@@ -1675,6 +1675,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
         if (StringUtils.isNotBlank(anexo.getTipo_MIME())) {
             log.info("TIPO MIME ENCONTRADO " + MimeTypeUtils.getMimeTypeExtension(tokens[2]));
+            //Si el anexo es de tipo FICHERO TECNICO INTERNO, no se debe comprobar el MIME.
             if (!anexo.getTipo_Documento().equals(TipoDocumento.FICHERO_TECNICO_INTERNO.getValue())) {
                 Assert.isTrue(StringUtils.equalsIgnoreCase(
                         anexo.getTipo_MIME(), MimeTypeUtils.getMimeTypeExtension(tokens[2])),
