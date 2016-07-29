@@ -78,7 +78,7 @@ public class AnexoWs {
     protected String nombreFirmaAnexada;
     protected byte[] firmaAnexada;
     protected String tipoMIMEFirmaAnexada;
-    protected String csv;
+    protected String csv; // TODO este campo parece que sobra, verificar que no se emplee en NTI
     protected String firmacsv;
 
     /**

@@ -53,13 +53,18 @@ public class Anexo implements Serializable {
     @XmlElement
     private int modoFirma;
 
+    /*   private byte[] certificado;
+       private byte[] validacionOCSPCertificado;
+       private byte[] timestamp;
+       private byte[] hash;
+   */
     @XmlTransient
     private String custodiaID;
     @XmlTransient
-    private String csv; // código seguro verificación
+    private String csv; // TODO este campo parece que sobra, verificar que no se emplee en NTI
     @XmlTransient
-    private String firmacsv;
-    
+    private String firmacsv; //debe guardar el campo firmaDocumento de SICRES(viene como byte[]) y corresponde al código CSV, //TODO transforma a byte[]
+
     
     public Anexo() {
     }
@@ -225,37 +230,46 @@ public class Anexo implements Serializable {
       this.modoFirma = modoFirma;
     }
 
-    /*
-    private String certificado;
-    private String timestamp;
-    private String validacionOCSP;
-    
-    @Column(name = "CERTIFICADO")
-    public String getCertificado() {
-      return certificado;
+
+
+   /* @Column(name = "CERTIFICADO", nullable = true)
+    public byte[] getCertificado() {
+        return certificado;
     }
 
-    public void setCertificado(String certificado) {
-      this.certificado = certificado;
-    }  
-
-    @Column(name = "TIMESTAMP")
-    public String getTimestamp() {
-      return timestamp;
+    public void setCertificado(byte[] certificado) {
+        this.certificado = certificado;
     }
 
-    public void setTimestamp(String timestamp) {
-      this.timestamp = timestamp;
-    }
-    @Column(name = "VALIDACIONOCSP")
-    public String getValidacionOCSP() {
-      return validacionOCSP;
+
+    @Column(name = "TIMESTAMP", nullable = true)
+    public byte[] getTimestamp() {
+        return timestamp;
     }
 
-    public void setValidacionOCSP(String validacionOCSP) {
-      this.validacionOCSP = validacionOCSP;
+    public void setTimestamp(byte[] timestamp) {
+        this.timestamp = timestamp;
     }
-    */
+
+    @Column(name = "VAL_OCSP_CERTIFICADO", nullable = true)
+    public byte[] getValidacionOCSPCertificado() {
+        return validacionOCSPCertificado;
+    }
+
+    public void setValidacionOCSPCertificado(byte[] validacionOCSPCertificado) {
+        this.validacionOCSPCertificado = validacionOCSPCertificado;
+    }
+
+    @Column(name = "HASH", nullable = false)
+    public byte[] getHash() {
+        return hash;
+    }
+
+    public void setHash(byte[] hash) {
+        this.hash = hash;
+    }*/
+
+
 
 
     @Column(name = "CSV")
