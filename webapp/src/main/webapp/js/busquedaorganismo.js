@@ -483,7 +483,7 @@ function mostrarArbol(organismo, urlServidor, tipoOrganismo, idRegistroDetalle) 
             var raizDenominacion = normalizarTexto(result.raiz.split(" - ")[1]);
             var superiorCodigo = result.superior.split(" - ")[0];
             var superiorDenominacion = normalizarTexto(result.superior.split(" - ")[1]);
-            if (raizCodigo != result.codigo) {
+            /*  if (raizCodigo != result.codigo) {
                 html += '<ul>';
                 if (tipoOrganismo == 'OrganismoInteresado') {
                     html += "<li> <span class=\"badge-arbre btn-primary\" onclick=\"addAdministracionInteresadosModal('" + raizCodigo + "','" + raizDenominacion + "','Administración','" + tipoOrganismo + "','" + idRegistroDetalle + "')\">" + raizDenominacion + " - " + raizCodigo + "</span>";
@@ -499,7 +499,7 @@ function mostrarArbol(organismo, urlServidor, tipoOrganismo, idRegistroDetalle) 
                     html += "<li> <span class=\"badge-arbre btn-primary\" onclick=\"asignarOrganismo('" + superiorCodigo + "','" + superiorDenominacion + "','" + tipoOrganismo + "')\">" + superiorDenominacion + " - " + superiorCodigo + "</span>";
                 }
 
-            }
+             }*/
             html += '<ul>';
             html += '<li>';
             if (tipoOrganismo == 'OrganismoInteresado') {
