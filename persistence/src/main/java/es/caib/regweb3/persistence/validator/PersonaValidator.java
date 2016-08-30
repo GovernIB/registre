@@ -191,9 +191,12 @@ public class PersonaValidator<T> extends AbstractRegWebValidator<T> {
                 break;
               }
             }
+              log.info("CIF CORRECTO");
+              formatoCorrecto = true;
           } else {
             rejectValue(errors, "documento", "error.document.largo",
                 "Llargària de document incorrecta");
+              log.info("CIF INCORRECTO");
           }
           break;
 
@@ -272,6 +275,7 @@ public class PersonaValidator<T> extends AbstractRegWebValidator<T> {
         }
 
         if (formatoCorrecto) {
+            log.info("El formato es correcto");
           if (documento.endsWith("" + letras.charAt(valor % 23)) == false) {
             rejectValue(errors, "documento", "error.documento.formato",
                 "Lletra de document incorrecta");
@@ -280,9 +284,11 @@ public class PersonaValidator<T> extends AbstractRegWebValidator<T> {
             try {
               if (persona.getId() == null) {
                 existe = personaEjb.existeDocumentoNew(persona.getDocumento(), persona.getEntidad().getId());
+                log.info("ExisteDocumento New: " + existe);
               } else {
                 existe = personaEjb.existeDocumentoEdit(persona.getDocumento(),
                     persona.getId(),persona.getEntidad().getId());
+                log.info("ExisteDocumento Edit: " + existe);
               }
 
             } catch (Exception e) {
@@ -295,6 +301,8 @@ public class PersonaValidator<T> extends AbstractRegWebValidator<T> {
                   "El document ja existeix");
             }
           }
+        }else{
+            log.info("El formato NO es correcto");
         }
 
     }
