@@ -19,8 +19,7 @@ import es.caib.regweb3.sir.ws.api.manager.SicresXMLManager;
 import es.caib.regweb3.sir.ws.api.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.ws.api.utils.Mensaje;
 import es.caib.regweb3.sir.ws.api.utils.XPathReaderUtil;
-import es.caib.regweb3.utils.MimeTypeUtils;
-import es.caib.regweb3.utils.Versio;
+import es.caib.regweb3.utils.*;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -1384,7 +1383,15 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                     Assert.notNull(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacion(interesado.getTipo_Documento_Identificacion_Interesado()), "'invalid tipoDocumentoIdentificacionInteresado'");
 
                     // Validar que el Documento concuerda con su tipo documento identificación
-                    Assert.isTrue(comprobarDocumento(interesado.getDocumento_Identificacion_Interesado(), interesado.getTipo_Documento_Identificacion_Interesado()), "invalid 'documento'");
+                    Validacion validacionDocumento = null;
+                    try {
+                        validacionDocumento = DocumentoUtils.comprobarDocumento(interesado.getDocumento_Identificacion_Interesado(), RegwebConstantes.TIPODOCUMENTOID_BY_CODIGO_NTI.get(interesado.getTipo_Documento_Identificacion_Interesado().charAt(0)));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        validacionDocumento = new Validacion(Boolean.FALSE, "", "");
+                    }
+
+                    Assert.isTrue(validacionDocumento.getValido(), "invalid 'documento'");
 
                     // Validar que el Tipo Documento concuerda con Nombre o Razon Social
                     if (interesado.getTipo_Documento_Identificacion_Interesado().equals(String.valueOf(TIPODOCUMENTOID_CIF)) ||
@@ -1447,7 +1454,14 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                     Assert.notNull(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacion(interesado.getTipo_Documento_Identificacion_Representante()), "invalid 'tipoDocumentoIdentificacionRepresentante'");
 
                     // Validar que el Documento concuerda con su tipo documento identificación
-                    Assert.isTrue(comprobarDocumento(interesado.getDocumento_Identificacion_Representante(), interesado.getTipo_Documento_Identificacion_Representante()), "invalid 'documento'");
+                    Validacion validacionDocumento = null;
+                    try {
+                        validacionDocumento = DocumentoUtils.comprobarDocumento(interesado.getDocumento_Identificacion_Representante(), RegwebConstantes.TIPODOCUMENTOID_BY_CODIGO_NTI.get(interesado.getTipo_Documento_Identificacion_Representante().charAt(0)));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        validacionDocumento = new Validacion(Boolean.FALSE, "", "");
+                    }
+                    Assert.isTrue(validacionDocumento.getValido(), "invalid 'documento'");
 
                     // Validar que el Tipo Documento concuerda con Nombre o Razon Social
                     if (interesado.getTipo_Documento_Identificacion_Representante().equals(String.valueOf(TIPODOCUMENTOID_CIF)) ||
@@ -2045,194 +2059,5 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                 }
             }
         }
-    }
-
-
-    /**
-     * Realizamos una validación del Documento con el TipoDocumento recibido
-     *
-     * @param documento
-     * @param tipoDocumento
-     */
-    protected Boolean comprobarDocumento(String documento, String tipoDocumento) {
-
-        Boolean documentoCorrecto = false;
-
-        if (!StringUtils.isEmpty(documento)) {
-
-            String letras = "TRWAGMYFPDXBNJZSQVHLCKE";
-            int valor = 0;
-
-            Boolean formatoCorrecto = false;
-
-            if (tipoDocumento.equals(String.valueOf(TIPODOCUMENTOID_NIF))) {  /* NIF (DNI) */
-                if (documento.length() == 9) {
-                    String numeroNif = documento.substring(0, documento.length() - 1);
-                    Boolean nifcorrecte = true;
-                    for (int i = 0; i < numeroNif.length(); i++) {
-                        if (!Character.isDigit(numeroNif.charAt(i))) {
-                            nifcorrecte = false;
-                            break;
-                        }
-                    }
-                    if (nifcorrecte) {
-                        valor = Integer.parseInt(documento.substring(0, documento.length() - 1));
-                        formatoCorrecto = true;
-                    }
-                }
-
-                if (formatoCorrecto) {
-                    if (documento.endsWith("" + letras.charAt(valor % 23)) == false) {
-                        documentoCorrecto = false;
-                    } else {
-                        documentoCorrecto = true;
-                    }
-                }
-            }
-
-            if (tipoDocumento.equals(String.valueOf(TIPODOCUMENTOID_CIF))) {   /* CIF */
-
-                String letras_validas = "ABCDEFGHJNPQRSUVW";
-                String caracteres_de_control = "JABCDEFGHI";
-                String tipo_de_letra = "PQSW";
-                String tipo_de_nombre = "ABEH";
-                int digito_de_control;
-
-                try {
-                    /* Un CIF tiene que tener nueve dígitos */
-                    if (documento.length() == 9) {
-
-				        /* Toma la primera letra del CIF */
-                        char letra_CIF = documento.charAt(0);
-
-                        /* Comprueba si la primera letra del CIF es válida */
-                        if (letras_validas.indexOf(letra_CIF) >= 0) {
-
-                            //Comprueba que los siguientes 7 caracteres son enteros
-                            String cif = documento.substring(1, documento.length() - 1);
-                            Boolean digitosCorrecto = true;
-                            for (int i = 0; i < cif.length(); i++) {
-                                if (!Character.isDigit(cif.charAt(i))) {
-                                    digitosCorrecto = false;
-                                }
-                            }
-                            if (digitosCorrecto) {
-
-                                if (Character.isDigit(documento.charAt(8))) {
-                                    digito_de_control = Character.getNumericValue(documento.charAt(8));
-                                    if (tipo_de_letra.indexOf(letra_CIF) >= 0)
-                                        digito_de_control = 100;
-                                } else {
-                                    digito_de_control = caracteres_de_control.indexOf(documento.charAt(8));
-                                    if (tipo_de_nombre.indexOf(letra_CIF) >= 0)
-                                        digito_de_control = 100;
-                                }
-
-                                int a = 0, b = 0, c = 0;
-                                byte[] impares = {0, 2, 4, 6, 8, 1, 3, 5, 7, 9};
-
-                                /* Calcula A y B. */
-                                for (int t = 1; t <= 6; t = t + 2) {
-
-                                    /* Suma los pares */
-                                    a = a + Character.getNumericValue(documento.charAt(t + 1));
-                                    b = b + impares[Character.getNumericValue(documento.charAt(t))];
-                                }
-
-                                b = b + impares[Character.getNumericValue(documento.charAt(7))];
-                                /* Calcula C */
-                                c = 10 - ((a + b) % 10);
-                                /* Compara C con los dígitos de control */
-                                documentoCorrecto = (c == digito_de_control);
-                            }
-                        }
-                    }
-                } catch (Exception e) {
-                    documentoCorrecto = false;
-                }
-                return documentoCorrecto;
-            }
-
-            if (tipoDocumento.equals(String.valueOf(TIPODOCUMENTOID_NIE))) { /* NIE */
-                if (documento.length() == 9) {
-
-                    if (documento.startsWith("X") || documento.startsWith("x")) {
-                        // Es un NIE
-                        String numeroNie1 = documento.substring(1, documento.length() - 1);
-                        Boolean nie1correcte = true;
-                        for (int i = 0; i < numeroNie1.length(); i++) {
-                            if (!Character.isDigit(numeroNie1.charAt(i))) {
-                                nie1correcte = false;
-                                break;
-                            }
-                        }
-                        if (nie1correcte) {
-                            valor = Integer.parseInt(documento.substring(1, documento.length() - 1));
-                            formatoCorrecto = true;
-                        }
-
-                    } else if (documento.startsWith("Y") || documento.startsWith("y")) {
-                        // Es un NIE
-                        String numeroNie2 = documento.substring(1, documento.length() - 1);
-                        Boolean nie2correcte = true;
-                        for (int i = 0; i < numeroNie2.length(); i++) {
-                            if (!Character.isDigit(numeroNie2.charAt(i))) {
-                                nie2correcte = false;
-                                break;
-                            }
-                        }
-                        if (nie2correcte) {
-                            valor = 10000000 + Integer.parseInt(documento.substring(1,
-                                    documento.length() - 1));
-                            formatoCorrecto = true;
-                        }
-
-                    } else if (documento.startsWith("Z") || documento.startsWith("z")) {
-                        // Es un NIE
-                        String numeroNie3 = documento.substring(1, documento.length() - 1);
-                        Boolean nie3correcte = true;
-                        for (int i = 0; i < numeroNie3.length(); i++) {
-                            if (!Character.isDigit(numeroNie3.charAt(i))) {
-                                nie3correcte = false;
-                                break;
-                            }
-                        }
-                        if (nie3correcte) {
-                            valor = 20000000 + Integer.parseInt(documento.substring(1,
-                                    documento.length() - 1));
-                            formatoCorrecto = true;
-                        }
-                    } else {
-                        formatoCorrecto = false;
-                    }
-
-                } else {
-                    formatoCorrecto = false;
-                }
-
-                if (formatoCorrecto) {
-                    if (documento.endsWith("" + letras.charAt(valor % 23)) == false) {
-                        documentoCorrecto = false;
-                    } else {
-                        documentoCorrecto = true;
-                    }
-                }
-            }
-
-            if (tipoDocumento.equals(String.valueOf(TIPODOCUMENTOID_PASSAPORT))) { /* PASAPORTE */
-                documentoCorrecto = true;
-            }
-
-            if (tipoDocumento.equals(String.valueOf(TIPODOCUMENTOID_CODIGO_ORIGEN))) { /* CODIGO ORIGEN */
-                documentoCorrecto = true;
-            }
-
-            if (tipoDocumento.equals(String.valueOf(TIPODOCUMENTOID_PERSONA_FISICA))) { /* OTRO DE PERSONA FISICA */
-                documentoCorrecto = true;
-            }
-
-        }
-
-        return documentoCorrecto;
     }
 }

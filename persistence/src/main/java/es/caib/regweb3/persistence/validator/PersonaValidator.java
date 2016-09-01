@@ -4,7 +4,9 @@ import es.caib.regweb3.model.CatPais;
 import es.caib.regweb3.model.Persona;
 import es.caib.regweb3.persistence.ejb.CatPaisLocal;
 import es.caib.regweb3.persistence.ejb.PersonaLocal;
+import es.caib.regweb3.utils.DocumentoUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.Validacion;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.validation.IValidatorResult;
 
@@ -143,222 +145,21 @@ public class PersonaValidator<T> extends AbstractRegWebValidator<T> {
 
     
     // DOCUMENTO (DNI, NIE, PASAPORTE)
+      String documento = persona.getDocumento().toUpperCase();
     Long tipoDocumento = persona.getTipoDocumentoIdentificacion();
 
-    if (tipoDocumento != null) {
-        //ValidationUtils.rejectIfEmptyOrWhitespace(errors, "documento", "error.valor.requerido", "El camp és obligatori");
+      Validacion validacionDocumento = null;
+      try {
+          validacionDocumento = DocumentoUtils.comprobarDocumento(documento, tipoDocumento);
+      } catch (Exception e) {
+          e.printStackTrace();
+          rejectValue(errors, "documento", "error.documento", "El document es erroni");
+          validacionDocumento = new Validacion(Boolean.FALSE, "", "");
+      }
 
-      String documento = persona.getDocumento().toUpperCase();
-
-        Boolean formatoCorrecto = false;
-
-        String letras = "TRWAGMYFPDXBNJZSQVHLCKE";
-        int valor = 0;
-
-        switch (tipoDocumento.intValue()) {
-
-        case (int) RegwebConstantes.TIPODOCUMENTOID_NIF_ID: /* NIF (DNI) */
-          //Comprueba largaria del dni/nif
-          if (documento.length() == 9) {
-            String numeroNif = documento.substring(0, documento.length() - 1);
-            Boolean nifcorrecte = true;
-            for (int i = 0; i < numeroNif.length(); i++) {
-              if (!Character.isDigit(numeroNif.charAt(i))) {
-                rejectValue(errors, "documento", "error.dni.incorrecto",
-                    "El dni no té format correcte (8 DIGITS + LLETRA)");
-                nifcorrecte = false;
-                break;
-              }
-            }
-            if (nifcorrecte) {
-              valor = Integer.parseInt(documento.substring(0, documento.length() - 1));
-              if (!documento.endsWith("" + letras.charAt(valor % 23))) {
-                rejectValue(errors, "documento", "error.documento.formato",
-                        "Lletra de document incorrecta");
-              } else {
-                formatoCorrecto = true;
-              }
-            }
-          } else { //Largo incorrecto
-            rejectValue(errors, "documento", "error.document.largo",
-                "Llargària de document incorrecta");
-          }
-          break;
-
-        case (int) RegwebConstantes.TIPODOCUMENTOID_CIF_ID: /* CIF */
-          String letras_validas = "ABCDEFGHJNPQRSUVW";
-          String caracteres_de_control = "JABCDEFGHI";
-          String tipo_de_letra = "PQSW";
-          String tipo_de_nombre = "ABEH";
-          int digito_de_control;
-
-          try {
-            /* Un CIF tiene que tener nueve dígitos */
-            if (documento.length() == 9) {
-
-			  /* Toma la primera letra del CIF */
-              char letra_CIF = documento.charAt(0);
-
-              /* Comprueba si la primera letra del CIF es válida */
-              if (letras_validas.indexOf(letra_CIF) >= 0) {
-
-                //Comprueba que los siguientes 7 caracteres son enteros
-                String cif = documento.substring(1, documento.length() - 1);
-                for (int i = 0; i < cif.length(); i++) {
-                  if (!Character.isDigit(cif.charAt(i))) {
-                    rejectValue(errors, "documento", "error.cif.incorrecto",
-                            "El cif no té format correcte (LLETRA + 7 DIGITS + LLETRA/DIGIT)");
-                    break;
-                  }
-                }
-
-                if (Character.isDigit(documento.charAt(8))) {
-                  digito_de_control = Character.getNumericValue(documento.charAt(8));
-                  if (tipo_de_letra.indexOf(letra_CIF) >= 0)
-                    digito_de_control = 100;
-                } else {
-                  digito_de_control = caracteres_de_control.indexOf(documento.charAt(8));
-                  if (tipo_de_nombre.indexOf(letra_CIF) >= 0)
-                    digito_de_control = 100;
-                }
-
-                int a = 0, b = 0, c = 0;
-                byte[] impares = {0, 2, 4, 6, 8, 1, 3, 5, 7, 9};
-
-                /* Calcula A y B. */
-                for (int t = 1; t <= 6; t = t + 2) {
-                  /* Suma los pares */
-                  a = a + Character.getNumericValue(documento.charAt(t + 1));
-                  b = b + impares[Character.getNumericValue(documento.charAt(t))];
-                }
-
-                b = b + impares[Character.getNumericValue(documento.charAt(7))];
-                /* Calcula C */
-                c = 10 - ((a + b) % 10);
-                /* Compara C con los dígitos de control */
-                formatoCorrecto = (c == digito_de_control);
-
-                if (!formatoCorrecto) {
-                  rejectValue(errors, "documento", "error.cif.numeroIncorrecto",
-                          "El número de cif és incorrecte");
-                  break;
-                }
-
-              } else {
-                rejectValue(errors, "documento", "error.cif.incorrecto",
-                        "El cif no té format correcte (LLETRA + 8 DIGITS)");
-                break;
-              }
-
-            } else {
-              rejectValue(errors, "documento", "error.document.largo",
-                      "Llargària de document incorrecta");
-            }
-          } catch (Exception e) {
-            formatoCorrecto = false;
-          }
-          break;
-
-        case (int) RegwebConstantes.TIPODOCUMENTOID_NIE_ID: /* NIE */
-          //Comprueba la longitud del documento
-          if (documento.length() == 9) {
-            //Si el documento no termina con Caracter
-            if (Character.isDigit(documento.charAt(documento.length() - 1))) {
-              rejectValue(errors, "documento", "error.nie.incorrecto",
-                      "El nie no té format correcte (LLETRA(X,Y,Z) + 7 DIGITS + LLETRA)");
-              break;
-            }
-            //Si el documento empieza con X
-            if (documento.startsWith("X") || documento.startsWith("x")) {
-              // Es un NIE
-              String numeroNie1 = documento.substring(1, documento.length() - 1);
-              Boolean nie1correcte = true;
-              for (int i = 0; i < numeroNie1.length(); i++) {
-                if (!Character.isDigit(numeroNie1.charAt(i))) {
-                  rejectValue(errors, "documento", "error.nie.incorrecto",
-                          "El nie no té format correcte (LLETRA(X,Y,Z) + 7 DIGITS + LLETRA)");
-                  nie1correcte = false;
-                  break;
-                }
-              }
-              if (nie1correcte) {
-                valor = Integer.parseInt(documento.substring(1, documento.length() - 1));
-                formatoCorrecto = true;
-              }
-
-              //Si el documento empieza con Y
-            } else if (documento.startsWith("Y") || documento.startsWith("y")) {
-              // Es un NIE
-              String numeroNie2 = documento.substring(1, documento.length() - 1);
-              Boolean nie2correcte = true;
-              for (int i = 0; i < numeroNie2.length(); i++) {
-                if (!Character.isDigit(numeroNie2.charAt(i))) {
-                  rejectValue(errors, "documento", "error.nie.incorrecto",
-                          "El nie no té format correcte (LLETRA(X,Y,Z) + 7 DIGITS + LLETRA)");
-                  nie2correcte = false;
-                  break;
-                }
-              }
-              if (nie2correcte) {
-                valor = 10000000 + Integer.parseInt(documento.substring(1,
-                    documento.length() - 1));
-                formatoCorrecto = true;
-              }
-
-              //Si el documento empieza con Z
-            } else if (documento.startsWith("Z") || documento.startsWith("z")) {
-              // Es un NIE
-              String numeroNie3 = documento.substring(1, documento.length() - 1);
-              Boolean nie3correcte = true;
-              for (int i = 0; i < numeroNie3.length(); i++) {
-                if (!Character.isDigit(numeroNie3.charAt(i))) {
-                  rejectValue(errors, "documento", "error.nie.incorrecto",
-                          "El nie no té format correcte (LLETRA(X,Y,Z) + 7 DIGITS + LLETRA)");
-                  nie3correcte = false;
-                  break;
-                }
-              }
-              if (nie3correcte) {
-                valor = 20000000 + Integer.parseInt(documento.substring(1, documento.length() - 1));
-                formatoCorrecto = true;
-              }
-            } else {
-              rejectValue(errors, "documento", "error.nie.incorrecto",
-                      "El nie no té format correcte (LLETR(X,Y,Z) + 7 DIGITS + LLETRA)");
-            }
-
-          } else {
-            rejectValue(errors, "documento", "error.document.largo",
-                "Llargària de document incorrecta");
-          }
-
-          //Comprueba que la letra sea correcta
-          if (formatoCorrecto) {
-            if (documento.endsWith("" + letras.charAt(valor % 23)) == false) {
-              formatoCorrecto = false;
-              rejectValue(errors, "documento", "error.nie.numeroIncorrecto",
-                      "El número de nie és incorrecte");
-            }
-          }
-
-          break;
-
-          case (int) RegwebConstantes.TIPODOCUMENTOID_PASSAPORT_ID: /* PASAPORTE */
-            formatoCorrecto = true;
-            break;
-
-          case (int) RegwebConstantes.TIPODOCUMENTOID_PERSONA_FISICA_ID: /* OTRO DE PERSONA FISICA */
-            formatoCorrecto = true;
-            break;
-
-          case (int) RegwebConstantes.TIPODOCUMENTOID_CODIGO_ORIGEN_ID: /* CODIGO ORIGEN */
-            formatoCorrecto = true;
-            break;
-
-        }
 
       //Si el formato es correcto busca que no exista ya en el sistema
-        if (formatoCorrecto) {
+        if (validacionDocumento.getValido()) {
             boolean existe;
             try {
               if (persona.getId() == null) {
@@ -379,8 +180,6 @@ public class PersonaValidator<T> extends AbstractRegWebValidator<T> {
         }else{
           log.info("El formato del documento NO es correcto");
         }
-
-    }
     
     
     //DIRECCIÓN
