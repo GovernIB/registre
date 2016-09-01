@@ -2092,49 +2092,59 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
             if (tipoDocumento.equals(String.valueOf(TIPODOCUMENTOID_CIF))) {   /* CIF */
 
-                String letras_validas = "ABCDEFGHJPQRSUV";
+                String letras_validas = "ABCDEFGHJNPQRSUVW";
                 String caracteres_de_control = "JABCDEFGHI";
-                String tipo_de_letra = "PQS";
+                String tipo_de_letra = "PQSW";
                 String tipo_de_nombre = "ABEH";
                 int digito_de_control;
 
                 try {
-                        /* Un CIF tiene que tener nueve dígitos */
+                    /* Un CIF tiene que tener nueve dígitos */
                     if (documento.length() == 9) {
 
 				        /* Toma la primera letra del CIF */
                         char letra_CIF = documento.charAt(0);
 
-				            /* Comprueba si la primera letra del CIF es válida */
+                        /* Comprueba si la primera letra del CIF es válida */
                         if (letras_validas.indexOf(letra_CIF) >= 0) {
 
-                            if (Character.isDigit(documento.charAt(8))) {
-                                digito_de_control = Character.getNumericValue(documento.charAt(8));
-                                if (tipo_de_letra.indexOf(letra_CIF) >= 0)
-                                    digito_de_control = 100;
-                            } else {
-                                digito_de_control = caracteres_de_control.indexOf(documento.charAt(8));
-                                if (tipo_de_nombre.indexOf(letra_CIF) >= 0)
-                                    digito_de_control = 100;
+                            //Comprueba que los siguientes 7 caracteres son enteros
+                            String cif = documento.substring(1, documento.length() - 1);
+                            Boolean digitosCorrecto = true;
+                            for (int i = 0; i < cif.length(); i++) {
+                                if (!Character.isDigit(cif.charAt(i))) {
+                                    digitosCorrecto = false;
+                                }
                             }
+                            if (digitosCorrecto) {
 
-                            int a = 0, b = 0, c = 0;
-                            byte[] impares = {0, 2, 4, 6, 8, 1, 3, 5, 7, 9};
+                                if (Character.isDigit(documento.charAt(8))) {
+                                    digito_de_control = Character.getNumericValue(documento.charAt(8));
+                                    if (tipo_de_letra.indexOf(letra_CIF) >= 0)
+                                        digito_de_control = 100;
+                                } else {
+                                    digito_de_control = caracteres_de_control.indexOf(documento.charAt(8));
+                                    if (tipo_de_nombre.indexOf(letra_CIF) >= 0)
+                                        digito_de_control = 100;
+                                }
 
-					            /* Calcula A y B. */
-                            for (int t = 1; t <= 6; t = t + 2) {
+                                int a = 0, b = 0, c = 0;
+                                byte[] impares = {0, 2, 4, 6, 8, 1, 3, 5, 7, 9};
 
-						            /* Suma los pares */
-                                a = a + Character.getNumericValue(documento.charAt(t + 1));
-                                b = b
-                                        + impares[Character.getNumericValue(documento.charAt(t))];
+                                /* Calcula A y B. */
+                                for (int t = 1; t <= 6; t = t + 2) {
+
+                                    /* Suma los pares */
+                                    a = a + Character.getNumericValue(documento.charAt(t + 1));
+                                    b = b + impares[Character.getNumericValue(documento.charAt(t))];
+                                }
+
+                                b = b + impares[Character.getNumericValue(documento.charAt(7))];
+                                /* Calcula C */
+                                c = 10 - ((a + b) % 10);
+                                /* Compara C con los dígitos de control */
+                                documentoCorrecto = (c == digito_de_control);
                             }
-
-                            b = b + impares[Character.getNumericValue(documento.charAt(7))];
-					            /* Calcula C */
-                            c = 10 - ((a + b) % 10);
-					            /* Compara C con los dígitos de control */
-                            documentoCorrecto = (c == digito_de_control);
                         }
                     }
                 } catch (Exception e) {
@@ -2214,6 +2224,10 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
             }
 
             if (tipoDocumento.equals(String.valueOf(TIPODOCUMENTOID_CODIGO_ORIGEN))) { /* CODIGO ORIGEN */
+                documentoCorrecto = true;
+            }
+
+            if (tipoDocumento.equals(String.valueOf(TIPODOCUMENTOID_PERSONA_FISICA))) { /* OTRO DE PERSONA FISICA */
                 documentoCorrecto = true;
             }
 
