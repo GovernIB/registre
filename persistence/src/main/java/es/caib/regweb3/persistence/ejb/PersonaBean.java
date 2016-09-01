@@ -30,7 +30,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
     protected final Logger log = Logger.getLogger(getClass());
 
-    @PersistenceContext(unitName="regweb3")
+    @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
 
@@ -44,7 +44,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
     @SuppressWarnings(value = "unchecked")
     public List<Persona> getAll() throws Exception {
 
-        return  em.createQuery("Select persona from Persona as persona order by persona.id").getResultList();
+        return em.createQuery("Select persona from Persona as persona order by persona.id").getResultList();
     }
 
     @Override
@@ -53,21 +53,21 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
         StringBuffer query = new StringBuffer("Select persona from Persona as persona  " +
                 "where persona.entidad.id = :idEntidad ");
-        
+
         if (tipoPersona != null) {
-          query.append("and persona.tipo = :tipoPersona ");
+            query.append("and persona.tipo = :tipoPersona ");
         }
-      
+
         query.append("order by persona.apellido1");
-        
+
         Query q = em.createQuery(query.toString());
 
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idEntidad", idEntidad);
         if (tipoPersona != null) {
-          q.setParameter("tipoPersona",tipoPersona);
+            q.setParameter("tipoPersona", tipoPersona);
         }
 
-        return  q.getResultList();
+        return q.getResultList();
     }
 
     @Override
@@ -77,14 +77,14 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
         Query q = em.createQuery("Select persona.id, persona.nombre, persona.apellido1,persona.apellido2, persona.documento, persona.tipo from Persona as persona  " +
                 "where persona.entidad.id = :idEntidad and persona.tipo = :tipoPersona  order by persona.apellido1");
 
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idEntidad", idEntidad);
         q.setParameter("tipoPersona", RegwebConstantes.TIPO_PERSONA_FISICA);
 
         List<Object[]> result = q.getResultList();
         List<Persona> fisicas = new ArrayList<Persona>();
 
         for (Object[] object : result) {
-            Persona persona = new Persona((Long) object[0], (String) object[1], (String) object[2],(String) object[3],(String) object[4], (Long) object[5]);
+            Persona persona = new Persona((Long) object[0], (String) object[1], (String) object[2], (String) object[3], (String) object[4], (Long) object[5]);
 
             fisicas.add(persona);
         }
@@ -99,9 +99,8 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
         Query q = em.createQuery("Select persona.id, persona.razonSocial, persona.documento, persona.tipo from Persona as persona  " +
                 "where persona.entidad.id = :idEntidad and persona.tipo = :tipoPersona  order by persona.razonSocial");
 
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idEntidad", idEntidad);
         q.setParameter("tipoPersona", RegwebConstantes.TIPO_PERSONA_JURIDICA);
-
 
         List<Object[]> result = q.getResultList();
         List<Persona> juridicas = new ArrayList<Persona>();
@@ -125,6 +124,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Persona> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select persona from Persona as persona order by persona.id");
@@ -135,25 +135,25 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
     }
 
     @Override
-    public Boolean existeDocumentoNew(String documento, Long idEntidad) throws Exception{
+    public Boolean existeDocumentoNew(String documento, Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select persona.id from Persona as persona where " +
                 "persona.documento = :documento and persona.entidad.id = :idEntidad");
 
-        q.setParameter("documento",documento);
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("documento", documento);
+        q.setParameter("idEntidad", idEntidad);
 
         return q.getResultList().size() > 0;
     }
 
     @Override
-    public Boolean existeDocumentoEdit(String documento, Long idPersona, Long idEntidad) throws Exception{
+    public Boolean existeDocumentoEdit(String documento, Long idPersona, Long idEntidad) throws Exception {
         Query q = em.createQuery("Select persona.id from Persona as persona where " +
                 "persona.id != :idPersona and persona.documento = :documento and persona.entidad.id = :idEntidad");
 
-        q.setParameter("documento",documento);
-        q.setParameter("idPersona",idPersona);
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("documento", documento);
+        q.setParameter("idPersona", idPersona);
+        q.setParameter("idEntidad", idEntidad);
 
         return q.getResultList().size() > 0;
     }
@@ -168,17 +168,25 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
         StringBuffer query = new StringBuffer("Select persona from Persona as persona ");
 
-        if(nombre!= null && nombre.length() > 0){
+        if (nombre != null && nombre.length() > 0) {
             where.add(
-               "( (" + DataBaseUtils.like("persona.nombre","nombre",parametros,nombre)
-               + " ) OR ( "  
-               + DataBaseUtils.like("persona.razonSocial","nombre",parametros,nombre)
-               + " ) ) ");
+                    "( (" + DataBaseUtils.like("persona.nombre", "nombre", parametros, nombre)
+                            + " ) OR ( "
+                            + DataBaseUtils.like("persona.razonSocial", "nombre", parametros, nombre)
+                            + " ) ) ");
         }
-        if(apellido1!= null && apellido1.length() > 0){where.add(DataBaseUtils.like("persona.apellido1","apellido1",parametros,apellido1));}
-        if(apellido2!= null && apellido2.length() > 0){where.add(DataBaseUtils.like("persona.apellido2","apellido2",parametros,apellido2));}
-        if(documento!= null && documento.length() > 0){where.add(" upper(persona.documento) like upper(:documento) "); parametros.put("documento","%"+documento.toLowerCase()+"%");}
-        where.add("persona.entidad.id = :idEntidad "); parametros.put("idEntidad",idEntidad);
+        if (apellido1 != null && apellido1.length() > 0) {
+            where.add(DataBaseUtils.like("persona.apellido1", "apellido1", parametros, apellido1));
+        }
+        if (apellido2 != null && apellido2.length() > 0) {
+            where.add(DataBaseUtils.like("persona.apellido2", "apellido2", parametros, apellido2));
+        }
+        if (documento != null && documento.length() > 0) {
+            where.add(" upper(persona.documento) like upper(:documento) ");
+            parametros.put("documento", "%" + documento.toLowerCase() + "%");
+        }
+        where.add("persona.entidad.id = :idEntidad ");
+        parametros.put("idEntidad", idEntidad);
 
 
         if (parametros.size() != 0) {
@@ -200,7 +208,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
                 q2.setParameter(param.getKey(), param.getValue());
             }
 
-        }else{
+        } else {
             q2 = em.createQuery(query.toString().replaceAll("Select persona from Persona as persona ", "Select count(persona.id) from Persona as persona "));
             query.append("order by persona.id");
             q = em.createQuery(query.toString());
@@ -209,23 +217,24 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
         Paginacion paginacion = null;
 
-        if(pageNumber != null){ // Comprobamos si es una busqueda paginada o no
-            Long total = (Long)q2.getSingleResult();
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber);
             int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
             q.setFirstResult(inicio);
             q.setMaxResults(RESULTADOS_PAGINACION);
-        }else{
+        } else {
             paginacion = new Paginacion(0, 0);
         }
 
         paginacion.setListado(q.getResultList());
 
         return paginacion;
-        
+
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Persona> busquedaFisicas(Long idEntidad, String nombre, String apellido1, String apellido2, String documento, Long idTipoPersona) throws Exception {
 
         Query q;
@@ -234,12 +243,23 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
         StringBuffer query = new StringBuffer("Select persona.id, persona.nombre, persona.apellido1, persona.apellido2, persona.documento, persona.tipo from Persona as persona ");
 
-        if(nombre!= null && nombre.length() > 0){where.add( DataBaseUtils.like("persona.nombre","nombre",parametros,nombre));}
-        if(apellido1!= null && apellido1.length() > 0){where.add(DataBaseUtils.like("persona.apellido1","apellido1",parametros,apellido1));}
-        if(apellido2!= null && apellido2.length() > 0){where.add(DataBaseUtils.like("persona.apellido2","apellido2",parametros,apellido2));}
-        if(documento!= null && documento.length() > 0){where.add(" upper(persona.documento) like upper(:documento) "); parametros.put("documento","%"+documento.toLowerCase()+"%");}
-        where.add("persona.entidad.id = :idEntidad "); parametros.put("idEntidad",idEntidad);
-        where.add("persona.tipo = :idTipoPersona "); parametros.put("idTipoPersona",idTipoPersona);
+        if (nombre != null && nombre.length() > 0) {
+            where.add(DataBaseUtils.like("persona.nombre", "nombre", parametros, nombre));
+        }
+        if (apellido1 != null && apellido1.length() > 0) {
+            where.add(DataBaseUtils.like("persona.apellido1", "apellido1", parametros, apellido1));
+        }
+        if (apellido2 != null && apellido2.length() > 0) {
+            where.add(DataBaseUtils.like("persona.apellido2", "apellido2", parametros, apellido2));
+        }
+        if (documento != null && documento.length() > 0) {
+            where.add(" upper(persona.documento) like upper(:documento) ");
+            parametros.put("documento", "%" + documento.toLowerCase() + "%");
+        }
+        where.add("persona.entidad.id = :idEntidad ");
+        parametros.put("idEntidad", idEntidad);
+        where.add("persona.tipo = :idTipoPersona ");
+        parametros.put("idTipoPersona", idTipoPersona);
 
         // Añadimos los parametros de búsqueda
         if (parametros.size() != 0) {
@@ -261,7 +281,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
             }
 
-        }else{
+        } else {
 
             query.append("order by persona.apellido1");
             q = em.createQuery(query.toString());
@@ -272,7 +292,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
         List<Persona> fisicas = new ArrayList<Persona>();
 
         for (Object[] object : result) {
-            Persona persona = new Persona((Long) object[0], (String) object[1], (String) object[2],(String) object[3],(String) object[4], (Long) object[5]);
+            Persona persona = new Persona((Long) object[0], (String) object[1], (String) object[2], (String) object[3], (String) object[4], (Long) object[5]);
 
             fisicas.add(persona);
         }
@@ -281,17 +301,26 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
     }
 
-    public List<Persona> busquedaJuridicas(Long idEntidad, String razonSocial, String documento, Long idTipoPersona) throws Exception{
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<Persona> busquedaJuridicas(Long idEntidad, String razonSocial, String documento, Long idTipoPersona) throws Exception {
         Query q;
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
         StringBuffer query = new StringBuffer("Select persona.id, persona.razonSocial, persona.documento, persona.tipo from Persona as persona ");
 
-        if(razonSocial!= null && razonSocial.length() > 0){where.add( DataBaseUtils.like("persona.razonSocial","razonSocial",parametros,razonSocial));}
-        if(documento!= null && documento.length() > 0){where.add(" upper(persona.documento) like upper(:documento) "); parametros.put("documento","%"+documento.toLowerCase()+"%");}
-        where.add("persona.entidad.id = :idEntidad "); parametros.put("idEntidad",idEntidad);
-        where.add("persona.tipo = :idTipoPersona "); parametros.put("idTipoPersona",idTipoPersona);
+        if (razonSocial != null && razonSocial.length() > 0) {
+            where.add(DataBaseUtils.like("persona.razonSocial", "razonSocial", parametros, razonSocial));
+        }
+        if (documento != null && documento.length() > 0) {
+            where.add(" upper(persona.documento) like upper(:documento) ");
+            parametros.put("documento", "%" + documento.toLowerCase() + "%");
+        }
+        where.add("persona.entidad.id = :idEntidad ");
+        parametros.put("idEntidad", idEntidad);
+        where.add("persona.tipo = :idTipoPersona ");
+        parametros.put("idTipoPersona", idTipoPersona);
 
         // Añadimos los parametros de búsqueda
         if (parametros.size() != 0) {
@@ -313,7 +342,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
             }
 
-        }else{
+        } else {
 
             query.append("order by persona.razonSocial");
             q = em.createQuery(query.toString());
@@ -332,7 +361,9 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
         return juridicas;
     }
 
-    public List<Persona> busquedaPersonas(Long idEntidad, String nombre, String apellido1, String apellido2, String documento, String razonSocial) throws Exception{
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<Persona> busquedaPersonas(Long idEntidad, String nombre, String apellido1, String apellido2, String documento, String razonSocial) throws Exception {
 
         Query q;
         Map<String, Object> parametros = new HashMap<String, Object>();
@@ -340,13 +371,26 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
         StringBuffer query = new StringBuffer("Select persona from Persona as persona ");
 
-        
-        if(nombre!= null && nombre.length() > 0){where.add( DataBaseUtils.like("persona.nombre","nombre",parametros,nombre));}
-        if(apellido1!= null && apellido1.length() > 0){where.add( DataBaseUtils.like("persona.apellido1","apellido1",parametros,apellido1));}
-        if(apellido2!= null && apellido2.length() > 0){where.add( DataBaseUtils.like("persona.apellido2","apellido2",parametros,apellido2));}
-        if(documento!= null && documento.length() > 0){where.add(" upper(persona.documento) like upper(:documento) "); parametros.put("documento","%"+documento.toLowerCase()+"%");}
-        if(razonSocial!= null && razonSocial.length() > 0){where.add(" upper(persona.razonSocial) like upper(:razonSocial) "); parametros.put("razonSocial","%"+razonSocial.toLowerCase()+"%");}
-        where.add("persona.entidad.id = :idEntidad "); parametros.put("idEntidad",idEntidad);
+
+        if (nombre != null && nombre.length() > 0) {
+            where.add(DataBaseUtils.like("persona.nombre", "nombre", parametros, nombre));
+        }
+        if (apellido1 != null && apellido1.length() > 0) {
+            where.add(DataBaseUtils.like("persona.apellido1", "apellido1", parametros, apellido1));
+        }
+        if (apellido2 != null && apellido2.length() > 0) {
+            where.add(DataBaseUtils.like("persona.apellido2", "apellido2", parametros, apellido2));
+        }
+        if (documento != null && documento.length() > 0) {
+            where.add(" upper(persona.documento) like upper(:documento) ");
+            parametros.put("documento", "%" + documento.toLowerCase() + "%");
+        }
+        if (razonSocial != null && razonSocial.length() > 0) {
+            where.add(" upper(persona.razonSocial) like upper(:razonSocial) ");
+            parametros.put("razonSocial", "%" + razonSocial.toLowerCase() + "%");
+        }
+        where.add("persona.entidad.id = :idEntidad ");
+        parametros.put("idEntidad", idEntidad);
 
         // Añadimos los parametros de búsqueda
         if (parametros.size() != 0) {
@@ -368,7 +412,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
             }
 
-        }else{
+        } else {
 
             query.append("order by persona.apellido1");
             q = em.createQuery(query.toString());
@@ -379,7 +423,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
 
         Query query = em.createQuery("delete from Persona where entidad.id = :idEntidad");
         return query.setParameter("idEntidad", idEntidad).executeUpdate();
@@ -395,18 +439,21 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
         List<String> where = new ArrayList<String>();
         Map<String, Object> parametros = new HashMap<String, Object>();
 
-        if(tipoPersona.equals(RegwebConstantes.TIPO_PERSONA_FISICA)){
+        if (tipoPersona.equals(RegwebConstantes.TIPO_PERSONA_FISICA)) {
             queryBase = "Select persona.id, CONCAT(persona.nombre,' ',persona.apellido1,' ', persona.apellido2,' - ', persona.documento) as completo from Persona as persona ";
             where.add(DataBaseUtils.like("CONCAT(persona.nombre,' ',persona.apellido1,' ',persona.apellido2,' - ', persona.documento)", "text", parametros, text));
-            where.add(" persona.tipo = :tipoPersona ");parametros.put("tipoPersona", RegwebConstantes.TIPO_PERSONA_FISICA);
+            where.add(" persona.tipo = :tipoPersona ");
+            parametros.put("tipoPersona", RegwebConstantes.TIPO_PERSONA_FISICA);
 
-        }else if(tipoPersona.equals(RegwebConstantes.TIPO_PERSONA_JURIDICA)){
+        } else if (tipoPersona.equals(RegwebConstantes.TIPO_PERSONA_JURIDICA)) {
             queryBase = "Select persona.id, CONCAT(persona.razonSocial,' - ', persona.documento) as completo from Persona as persona ";
             where.add(DataBaseUtils.like("CONCAT(persona.razonSocial,' - ', persona.documento)", "text", parametros, text));
-            where.add(" persona.tipo = :tipoPersona ");parametros.put("tipoPersona", RegwebConstantes.TIPO_PERSONA_JURIDICA);
+            where.add(" persona.tipo = :tipoPersona ");
+            parametros.put("tipoPersona", RegwebConstantes.TIPO_PERSONA_JURIDICA);
         }
 
-        where.add(" persona.entidad.id = :idEntidad ");parametros.put("idEntidad", idEntidad);
+        where.add(" persona.entidad.id = :idEntidad ");
+        parametros.put("idEntidad", idEntidad);
 
         StringBuilder query = new StringBuilder(queryBase);
         if (parametros.size() != 0) {
@@ -438,5 +485,40 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
         }
 
         return personas;
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<Persona> findByDocumento(String documento, Long idEntidad) throws Exception {
+
+        Query q = em.createQuery("Select persona from Persona as persona where " +
+                "persona.documento = :documento and persona.entidad.id = :idEntidad");
+
+        q.setParameter("documento", documento);
+        q.setParameter("idEntidad", idEntidad);
+
+        return q.getResultList();
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<Persona> buscarDuplicados(Long idEntidad) throws Exception {
+
+        Query q = em.createQuery("Select documento from Persona as persona " +
+                "where persona.entidad.id = :idEntidad " +
+                "group by persona.documento having(count(persona.documento) > 1 )");
+
+        q.setParameter("idEntidad", idEntidad);
+        List<String> duplicados = q.getResultList();
+
+        log.info("Personas duplicadas: " + duplicados.size());
+
+        List<Persona> personasDuplicadas = new ArrayList<Persona>();
+
+        for (String duplicado : duplicados) {
+            personasDuplicadas.addAll(findByDocumento(duplicado, idEntidad));
+        }
+
+        return personasDuplicadas;
     }
 }

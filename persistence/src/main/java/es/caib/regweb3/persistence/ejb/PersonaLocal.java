@@ -117,4 +117,21 @@ public interface PersonaLocal extends BaseEjb<Persona, Long> {
      * @throws Exception
      */
     public List<ObjetoBasico> busquedaPersonas(String q, Long tipoPersona, Long idEntidad) throws Exception;
+
+    /**
+     * Busca las Personas con un mismo Documento de una Entidad determinada
+     * @param documento
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public List<Persona> findByDocumento(String documento, Long idEntidad) throws Exception;
+
+    /**
+     * Busca Personas duplicadas según su Documento
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public List<Persona> buscarDuplicados(Long idEntidad) throws Exception;
 }

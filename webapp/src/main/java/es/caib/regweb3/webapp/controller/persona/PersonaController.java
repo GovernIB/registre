@@ -32,6 +32,7 @@ import java.util.List;
 /**
  * Created 14/02/14 12:52
  * Controller que gestiona todas las operaciones con {@link es.caib.regweb3.model.Persona}
+ *
  * @author mgonzalez
  */
 @Controller
@@ -43,44 +44,44 @@ public class PersonaController extends BaseController {
 
     @Autowired
     private PersonaWebValidator personaValidator;
-    
+
     @EJB(mappedName = "regweb3/PersonaEJB/local")
     public PersonaLocal personaEjb;
-    
+
     @EJB(mappedName = "regweb3/CatLocalidadEJB/local")
     public CatLocalidadLocal catLocalidadEjb;
-    
+
     @EJB(mappedName = "regweb3/CatProvinciaEJB/local")
     public CatProvinciaLocal catProvinciaEjb;
-    
+
     @EJB(mappedName = "regweb3/CatPaisEJB/local")
     public CatPaisLocal catPaisEjb;
 
 
-     /**
-      * Listado de todos los Personas
-      */
-     @RequestMapping(value = "/list", method = RequestMethod.GET)
-     public String listado(Model model) {
+    /**
+     * Listado de todos los Personas
+     */
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    public String listado(Model model) {
 
-         PersonaBusquedaForm personaBusqueda =  new PersonaBusquedaForm(new Persona(),1);
-         model.addAttribute("personaBusqueda", personaBusqueda);
+        PersonaBusquedaForm personaBusqueda = new PersonaBusquedaForm(new Persona(), 1);
+        model.addAttribute("personaBusqueda", personaBusqueda);
 
-         return "persona/personaList";
-     }
+        return "persona/personaList";
+    }
 
     /**
      * Realiza la busqueda de {@link es.caib.regweb3.model.Persona} según los parametros del formulario
      */
     @RequestMapping(value = "/list", method = RequestMethod.POST)
-    public ModelAndView list(@ModelAttribute PersonaBusquedaForm busqueda, HttpServletRequest request)throws Exception {
+    public ModelAndView list(@ModelAttribute PersonaBusquedaForm busqueda, HttpServletRequest request) throws Exception {
 
         ModelAndView mav = new ModelAndView("persona/personaList");
 
         Entidad entidad = getEntidadActiva(request);
         Persona persona = busqueda.getPersona();
 
-        Paginacion paginacion = personaEjb.busqueda(busqueda.getPageNumber(),entidad.getId(), persona.getNombre(), persona.getApellido1(), persona.getApellido2(), persona.getDocumento());
+        Paginacion paginacion = personaEjb.busqueda(busqueda.getPageNumber(), entidad.getId(), persona.getNombre(), persona.getApellido1(), persona.getApellido2(), persona.getDocumento());
 
         busqueda.setPageNumber(1);
         mav.addObject("paginacion", paginacion);
@@ -91,117 +92,116 @@ public class PersonaController extends BaseController {
 
     }
 
-     /**
-      * Carga el formulario para un nuevo {@link es.caib.regweb3.model.Persona}
-      */
-     @RequestMapping(value = "/new", method = RequestMethod.GET)
-     public String nuevoPersona(Model model, HttpServletRequest request) throws Exception {
+    /**
+     * Carga el formulario para un nuevo {@link es.caib.regweb3.model.Persona}
+     */
+    @RequestMapping(value = "/new", method = RequestMethod.GET)
+    public String nuevoPersona(Model model, HttpServletRequest request) throws Exception {
 
-         Entidad entidad = getEntidadActiva(request);
+        Entidad entidad = getEntidadActiva(request);
 
-         Persona persona = new Persona();
-         persona.setEntidad(entidad);
+        Persona persona = new Persona();
+        persona.setEntidad(entidad);
 
-         model.addAttribute(persona);
+        model.addAttribute(persona);
 
-         return "persona/personaForm";
-     }
-
-  /**
-   * Guardar un nuevo {@link es.caib.regweb3.model.Persona}
-   */
-  @RequestMapping(value = "/new", method = RequestMethod.POST)
-  public String nuevoPersona(@ModelAttribute Persona persona, BindingResult result,
-      SessionStatus status, HttpServletRequest request) {
-
-    cleanEmptyValues(persona);
-
-    personaValidator.validate(persona, result);
-
-    if (result.hasErrors()) {
-
-      return "persona/personaForm";
-    } else { // Si no hay errores guardamos el registro
-
-      try {
-
-       if(!StringUtils.isEmpty(persona.getDocumento())){
-           persona.setDocumento(persona.getDocumento().toUpperCase());
-       }
-
-        personaEjb.persist(persona);
-
-        Mensaje.saveMessageInfo(request, getMessage("regweb.guardar.registro"));
-
-      } catch (Exception e) {
-        Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
-        e.printStackTrace();
-      }
-
-        status.setComplete();
-      return "redirect:/persona/list";
+        return "persona/personaForm";
     }
-  }
+
+    /**
+     * Guardar un nuevo {@link es.caib.regweb3.model.Persona}
+     */
+    @RequestMapping(value = "/new", method = RequestMethod.POST)
+    public String nuevoPersona(@ModelAttribute Persona persona, BindingResult result,
+                               SessionStatus status, HttpServletRequest request) {
+
+        cleanEmptyValues(persona);
+
+        personaValidator.validate(persona, result);
+
+        if (result.hasErrors()) {
+
+            return "persona/personaForm";
+        } else { // Si no hay errores guardamos el registro
+
+            try {
+
+                if (!StringUtils.isEmpty(persona.getDocumento())) {
+                    persona.setDocumento(persona.getDocumento().toUpperCase());
+                }
+
+                personaEjb.persist(persona);
+
+                Mensaje.saveMessageInfo(request, getMessage("regweb.guardar.registro"));
+
+            } catch (Exception e) {
+                Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
+                e.printStackTrace();
+            }
+
+            status.setComplete();
+            return "redirect:/persona/list";
+        }
+    }
 
 
+    /**
+     * Carga el formulario para modificar un {@link es.caib.regweb3.model.Persona}
+     */
+    @RequestMapping(value = "/{personaId}/edit", method = RequestMethod.GET)
+    public String editarPersona(@PathVariable("personaId") Long personaId, Model model, HttpServletRequest request) {
 
-     /**
-      * Carga el formulario para modificar un {@link es.caib.regweb3.model.Persona}
-      */
-     @RequestMapping(value = "/{personaId}/edit", method = RequestMethod.GET)
-     public String editarPersona(@PathVariable("personaId") Long personaId, Model model,HttpServletRequest request) {
+        Persona persona = null;
+        Entidad entidad = getEntidadActiva(request);
 
-         Persona persona = null;
-         Entidad entidad = getEntidadActiva(request);
+        try {
+            persona = personaEjb.findById(personaId);
 
-         try {
-             persona = personaEjb.findById(personaId);
+            if (!persona.getEntidad().getId().equals(entidad.getId())) {
+                Mensaje.saveMessageError(request, getMessage("error.autorizacion"));
+                return "redirect:/persona/list";
+            }
 
-             if(!persona.getEntidad().getId().equals(entidad.getId())){
-                 Mensaje.saveMessageError(request, getMessage("error.autorizacion"));
-                 return "redirect:/persona/list";
-             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        model.addAttribute(persona);
+        return "persona/personaForm";
+    }
 
-         }catch (Exception e) {
-             e.printStackTrace();
-         }
-         model.addAttribute(persona);
-         return "persona/personaForm";
-     }
+    /**
+     * Editar un {@link es.caib.regweb3.model.Persona}
+     */
+    @RequestMapping(value = "/{personaId}/edit", method = RequestMethod.POST)
+    public String editarPersona(@ModelAttribute @Valid Persona persona, BindingResult result,
+                                SessionStatus status, HttpServletRequest request) {
 
-     /**
-      * Editar un {@link es.caib.regweb3.model.Persona}
-      */
-     @RequestMapping(value = "/{personaId}/edit", method = RequestMethod.POST)
-     public String editarPersona(@ModelAttribute @Valid Persona persona,BindingResult result,
-                                 SessionStatus status, HttpServletRequest request) {
-       
-       cleanEmptyValues(persona);
-       
-
-         personaValidator.validate(persona, result);
-
-         if (result.hasErrors()) { // Si hay errores volvemos a la vista del formulario
-             return "persona/personaForm";
-         }else { // Si no hay errores actualizamos el registro
-
-             try {
-                 
-                 persona = personaEjb.merge(persona);
+        cleanEmptyValues(persona);
 
 
-                 Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
+        personaValidator.validate(persona, result);
 
-             } catch (Exception e) {
-                 e.printStackTrace();
-                 Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
-             }
+        if (result.hasErrors()) { // Si hay errores volvemos a la vista del formulario
+            return "persona/personaForm";
+        } else { // Si no hay errores actualizamos el registro
 
-             status.setComplete();
-             return "redirect:/persona/list";
+            try {
 
-         }
-     }
+                persona = personaEjb.merge(persona);
+
+
+                Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
+            }
+
+            status.setComplete();
+            return "redirect:/persona/list";
+
+        }
+    }
 
     /**
      * Eliminar un {@link es.caib.regweb3.model.Persona}
@@ -209,26 +209,59 @@ public class PersonaController extends BaseController {
     @RequestMapping(value = "/{personaId}/delete")
     public String eliminarPersona(@PathVariable Long personaId, HttpServletRequest request) {
 
-         try {
+        try {
 
-             Persona persona = personaEjb.findById(personaId);
-             Entidad entidad = getEntidadActiva(request);
+            Persona persona = personaEjb.findById(personaId);
+            Entidad entidad = getEntidadActiva(request);
 
-             if(!persona.getEntidad().getId().equals(entidad.getId())){
-                 Mensaje.saveMessageError(request, getMessage("error.autorizacion"));
-                 return "redirect:/persona/list";
-             }
+            if (!persona.getEntidad().getId().equals(entidad.getId())) {
+                Mensaje.saveMessageError(request, getMessage("error.autorizacion"));
+                return "redirect:/persona/list";
+            }
 
-             personaEjb.remove(persona);
+            personaEjb.remove(persona);
 
-             Mensaje.saveMessageInfo(request, getMessage("regweb.eliminar.registro"));
+            Mensaje.saveMessageInfo(request, getMessage("regweb.eliminar.registro"));
 
-         } catch (Exception e) {
-             Mensaje.saveMessageError(request, getMessage("regweb.relaciones.registro"));
-             e.printStackTrace();
-         }
+        } catch (Exception e) {
+            Mensaje.saveMessageError(request, getMessage("regweb.relaciones.registro"));
+            e.printStackTrace();
+        }
 
-         return "redirect:/persona/list";
+        return "redirect:/persona/list";
+    }
+
+    /**
+     * Listado de todas las Personas duplicadas
+     */
+    @RequestMapping(value = "/personasDuplicadas", method = RequestMethod.GET)
+    public String duplicadas() {
+        return "redirect:/persona/personasDuplicadas/1";
+    }
+
+    /**
+     * Listado de todas las Personas duplicadas
+     *
+     * @param pageNumber
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/personasDuplicadas/{pageNumber}", method = RequestMethod.GET)
+    public ModelAndView duplicadas(@PathVariable Integer pageNumber, HttpServletRequest request) throws Exception {
+
+        ModelAndView mav = new ModelAndView("persona/personasDuplicadas");
+
+        Entidad entidad = getEntidadActiva(request);
+
+        List<Persona> listado = personaEjb.buscarDuplicados(entidad.getId());
+        //Long total = tipoAsuntoEjb.getTotalEntidad(entidad.getId());
+
+        Paginacion paginacion = new Paginacion(listado.size(), pageNumber);
+
+        mav.addObject("paginacion", paginacion);
+        mav.addObject("listado", listado);
+
+        return mav;
     }
 
     /**
@@ -257,7 +290,7 @@ public class PersonaController extends BaseController {
     public Long[] tiposPersona() throws Exception {
         return RegwebConstantes.TIPOS_PERSONA;
     }
-    
+
     @ModelAttribute("canales")
     public long[] canales() throws Exception {
         return RegwebConstantes.CANALES_NOTIFICACION;
