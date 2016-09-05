@@ -234,13 +234,13 @@
     <dependency>
       <groupId>es.caib.regweb3</groupId>
       <artifactId>plugins-distribucionregweb-api</artifactId>
-      <version>3.0.6</version>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>es.caib.regweb3</groupId>
       <artifactId>plugins-distribucionregweb-distribucionlocal</artifactId>
-      <version>3.0.6</version>
+      <version>${project.version}</version>
     </dependency>
 
     <!-- ============================================ -->
