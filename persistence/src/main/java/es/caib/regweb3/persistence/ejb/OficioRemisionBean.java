@@ -214,7 +214,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     }
 
     @Override
-    public void anularOficioRemisionInterno(Long idOficioRemision, UsuarioEntidad usuarioEntidad) throws Exception{
+    public void anularOficioRemision(Long idOficioRemision, UsuarioEntidad usuarioEntidad) throws Exception{
 
         OficioRemision oficioRemision = findById(idOficioRemision);
         List<RegistroEntrada> registrosEntrada = getByOficioRemision(oficioRemision.getId());

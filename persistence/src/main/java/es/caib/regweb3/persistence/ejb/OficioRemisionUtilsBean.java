@@ -422,10 +422,10 @@ public class OficioRemisionUtilsBean implements OficioRemisionUtilsLocal {
         oficioRemision.setIdentificadorIntercambioSir(identificadorIntercambioSir);
 
         if (identificadorIntercambioSir == null) { //todo: modificar el estado cuando se implemente SIR
-            oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_ENVIADO);
+            oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_EXTERNO_ENVIADO);
             oficioRemision.setFechaEstado(new Date());
         } else {
-            oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_ENVIADO);
+            oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_EXTERNO_ENVIADO);
             oficioRemision.setFechaEstado(new Date());
         }
 

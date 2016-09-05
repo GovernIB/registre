@@ -583,10 +583,11 @@ public class OficioRemisionController extends BaseController {
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
         if(permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(), oficioRemision.getLibro().getId()) &&
-                oficioRemision.getEstado() == RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO){
+                oficioRemision.getEstado() == RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO || oficioRemision.getEstado() == RegwebConstantes.OFICIO_REMISION_EXTERNO_ENVIADO){
 
-            oficioRemisionEjb.anularOficioRemisionInterno(idOficioRemision, usuarioEntidad);
+            oficioRemisionEjb.anularOficioRemision(idOficioRemision, usuarioEntidad);
             Mensaje.saveMessageInfo(request, getMessage("aviso.oficioRemision.anulado"));
+
         }else{
             Mensaje.saveMessageError(request, getMessage("aviso.oficioRemision.anular"));
         }

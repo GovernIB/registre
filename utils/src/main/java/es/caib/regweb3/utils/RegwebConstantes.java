@@ -517,7 +517,7 @@ public interface RegwebConstantes {
 
     /* -------- ESTADO DE UN OFICIO DE REMISION ---------- */
     public static final int OFICIO_REMISION_INTERNO_ENVIADO = 0; // Interno
-    public static final int OFICIO_REMISION_ENVIADO = 1; // Externo
+    public static final int OFICIO_REMISION_EXTERNO_ENVIADO = 1; // Externo
     public static final int OFICIO_REMISION_ACEPTADO = 2; // Interno y Externo
     public static final int OFICIO_REMISION_RECHAZADO = 3; // Externo
     public static final int OFICIO_REMISION_REENVIADO = 4; // Externo
@@ -525,7 +525,7 @@ public interface RegwebConstantes {
 
     public static final Integer[] ESTADOS_OFICIO_REMISION = {
             OFICIO_REMISION_INTERNO_ENVIADO,
-            OFICIO_REMISION_ENVIADO,
+            OFICIO_REMISION_EXTERNO_ENVIADO,
             OFICIO_REMISION_ACEPTADO,
             OFICIO_REMISION_ANULADO
     };
