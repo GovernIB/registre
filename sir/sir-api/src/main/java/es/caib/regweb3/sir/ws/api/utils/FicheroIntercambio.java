@@ -12,6 +12,7 @@ import es.caib.regweb3.sir.api.schema.types.Tipo_RegistroType;
 import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.sir.core.model.*;
+import es.caib.regweb3.utils.MimeTypeUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -611,10 +612,15 @@ public class FicheroIntercambio {
                         anexo.setTimestamp(de_Anexo.getTimeStamp());
                         anexo.setValidacionOCSPCertificado(de_Anexo.getValidacion_OCSP_Certificado());
                         anexo.setHash(de_Anexo.getHash());
-                        anexo.setTipoMIME(de_Anexo.getTipo_MIME());
+                        //Si el tipo mime es null, se obtiene del nombre del fichero
+                        if (de_Anexo.getTipo_MIME() == null || de_Anexo.getTipo_MIME().isEmpty()) {
+                            anexo.setTipoMIME(MimeTypeUtils.getMimeTypeFileName(de_Anexo.getNombre_Fichero_Anexado()));
+                        } else {
+                            anexo.setTipoMIME(de_Anexo.getTipo_MIME());
+                        }
 
                         try {
-                            ArchivoManager am =  new ArchivoManager(webServicesMethodsEjb, de_Anexo.getNombre_Fichero_Anexado(),de_Anexo.getTipo_MIME(), de_Anexo.getAnexo());
+                            ArchivoManager am = new ArchivoManager(webServicesMethodsEjb, de_Anexo.getNombre_Fichero_Anexado(), anexo.getTipoMIME(), de_Anexo.getAnexo());
                             anexo.setAnexo(am.prePersist());
                         } catch (Exception e) {
                             log.info("Error al crear el Anexo en el sistema de archivos", e);
