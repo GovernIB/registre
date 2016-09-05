@@ -172,8 +172,7 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
       validacionDocumento = DocumentoUtils.comprobarDocumento(documento, tipoDocumento);
     } catch (Exception e) {
       e.printStackTrace();
-      rejectValue(errors, "documento", "error.documento", "El document es erroni");
-      validacionDocumento = new Validacion(Boolean.FALSE, "", "");
+      validacionDocumento = new Validacion(Boolean.FALSE, "error.documento", "El document es erroni");
     }
 
 
@@ -195,6 +194,7 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
                   "El document ja existeix");
         }
       } else {
+        rejectValue(errors, "documento", validacionDocumento.getCodigoError(), validacionDocumento.getTextoError());
         log.info("El formato del documento NO es correcto");
       }
 
