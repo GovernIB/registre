@@ -16,242 +16,231 @@ import org.fundaciobit.genapp.common.validation.IValidatorResult;
 /**
  * Created by Fundació BIT. Gestiona las Validaciones del formulario para crear
  * o editar una {@link es.caib.regweb3.model.Interesado}
- * 
+ *
  * @author earrivi
- * @author anadal 
+ * @author anadal
  * Date: 11/02/14
  */
 
 public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
 
-  protected final Logger log = Logger.getLogger(getClass());
-
-   
-  public void validate(IValidatorResult<T> errors, T __target__, boolean __isNou__,
-      InteresadoLocal interesadoEjb, PersonaLocal personaEjb, CatPaisLocal catPaisEjb) {
-
-    Interesado interesado = (Interesado) __target__;
-
-    // TODO Verificar que existeix
-    // interesado.getTipoDocumentoIdentificacion().getId()
-
-    // Validaciones si es Interesado Física
-
-    if (interesado.getTipo() == null) {
-      rejectIfEmptyOrWhitespace(errors, __target__,  "tipo",
-          "error.valor.requerido", "El camp és obligatori");
-    } else {
-      if (interesado.getTipo() != null) {
-        if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)) {
-
-        
-          rejectIfEmptyOrWhitespace(errors, __target__, "apellido1",
-              "error.valor.requerido", "El camp és obligatori");
-        
-          if (!hasFieldErrors(errors,"apellido1")) {
-            if(interesado.getApellido1().length() > 30){
-              rejectValue(errors, "apellido1","error.valor.maxlenght","Tamaño demasiado largo");
-            }
-          }
-
-        
-          rejectIfEmptyOrWhitespace(errors, __target__, "nombre", "error.valor.requerido",
-              "El camp és obligatori");
-         
-          if (!hasFieldErrors(errors, "nombre")) {
-            if(interesado.getNombre().length() > 30) {
-              rejectValue(errors, "nombre","error.valor.maxlenght","Tamaño demasiado largo");
-            }
-          }
-          
-          if(!isNullOrEmpty(interesado.getApellido2())){
-                if(interesado.getApellido2().length() > 30){
-                  rejectValue(errors, "apellido2","error.valor.maxlenght","Tamaño demasiado largo");
-              }
-          }
-
-      }
-
-      // Validaciones si es Interesado Jurídica
-      if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)) {
-        rejectIfEmptyOrWhitespace(errors, __target__, "razonSocial",
-            "error.valor.requerido", "El camp és obligatori");
-      }
-      }
-    }
-
-    // Gestionamos las validaciones según el Canal escogido
-    if (interesado.getCanal() == null) {
-      //rejectIfEmptyOrWhitespace(errors, __target__, "canal", "error.valor.requerido","El camp és obligatori");
-    } else {
-      {
-
-        if (interesado.getCanal().equals(RegwebConstantes.CANAL_DIRECCION_POSTAL)) {
-
-          
-          rejectIfEmptyOrWhitespace(errors, __target__, "direccion", "error.valor.requerido", "El camp és obligatori");
-          
-
-          if (interesado.getPais() == null || interesado.getPais().getId() == null || interesado.getPais().getId() == -1) {
-            rejectValue(errors, "pais.id", "error.valor.requerido", "El camp és obligatori");
-          } else {
-
-            try {
-              CatPais pais = catPaisEjb.findById(interesado.getPais().getId());
-
-              // Validaciones si el país seleccionado es ESPAÑA
-              if (pais.getCodigoPais().equals(RegwebConstantes.PAIS_ESPAÑA)) {
+    protected final Logger log = Logger.getLogger(getClass());
 
 
-                // Si hay Provincia, es obligatoria la Localidad
-                if (interesado.getProvincia() != null && interesado.getProvincia().getId() != -1) {
+    public void validate(IValidatorResult<T> errors, T __target__, boolean __isNou__,
+                         InteresadoLocal interesadoEjb, PersonaLocal personaEjb, CatPaisLocal catPaisEjb) {
 
-                  if (interesado.getLocalidad() == null || interesado.getProvincia().getId() == -1) {
-                    rejectValue(errors, "localidad.id", "error.valor.requerido", "El camp és obligatori");
-                  }
+        Interesado interesado = (Interesado) __target__;
 
-                }else{
-                  rejectIfEmptyOrWhitespace(errors, __target__, "cp", "error.valor.requerido", "El camp és obligatori");
-                }
+        // TODO Verificar que existeix
+        // interesado.getTipoDocumentoIdentificacion().getId()
 
-                // Si no hay CP, es obligatoria la Provincia y Municipio
-                if(StringUtils.isEmpty(interesado.getCp())){
+        // Validaciones si es Interesado Física
 
-                  if (interesado.getProvincia() == null || interesado.getProvincia().getId() == -1) {
-                    rejectValue(errors, "provincia.id", "error.valor.requerido", "El camp és obligatori");
+        if (interesado.getTipo() == null) {
+            rejectIfEmptyOrWhitespace(errors, __target__, "tipo",
+                    "error.valor.requerido", "El camp és obligatori");
+        } else {
+            if (interesado.getTipo() != null) {
+                if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)) {
 
-                  }else{ // Comprobamos la Localidad
 
-                    if (interesado.getLocalidad() == null || interesado.getProvincia().getId() == -1) {
-                      rejectValue(errors, "localidad.id", "error.valor.requerido", "El camp és obligatori");
+                    rejectIfEmptyOrWhitespace(errors, __target__, "apellido1",
+                            "error.valor.requerido", "El camp és obligatori");
+
+                    if (!hasFieldErrors(errors, "apellido1")) {
+                        if (interesado.getApellido1().length() > 30) {
+                            rejectValue(errors, "apellido1", "error.valor.maxlenght", "Tamaño demasiado largo");
+                        }
                     }
 
-                  }
+
+                    rejectIfEmptyOrWhitespace(errors, __target__, "nombre", "error.valor.requerido",
+                            "El camp és obligatori");
+
+                    if (!hasFieldErrors(errors, "nombre")) {
+                        if (interesado.getNombre().length() > 30) {
+                            rejectValue(errors, "nombre", "error.valor.maxlenght", "Tamaño demasiado largo");
+                        }
+                    }
+
+                    if (!isNullOrEmpty(interesado.getApellido2())) {
+                        if (interesado.getApellido2().length() > 30) {
+                            rejectValue(errors, "apellido2", "error.valor.maxlenght", "Tamaño demasiado largo");
+                        }
+                    }
 
                 }
 
-              }
+                // Validaciones si es Interesado Jurídica
+                if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)) {
+                    rejectIfEmptyOrWhitespace(errors, __target__, "razonSocial",
+                            "error.valor.requerido", "El camp és obligatori");
+                }
+            }
+        }
+
+        // Gestionamos las validaciones según el Canal escogido
+        if (interesado.getCanal() == null) {
+            //rejectIfEmptyOrWhitespace(errors, __target__, "canal", "error.valor.requerido","El camp és obligatori");
+        } else {
+
+
+            if (interesado.getCanal().equals(RegwebConstantes.CANAL_DIRECCION_POSTAL)) {
+
+                rejectIfEmptyOrWhitespace(errors, __target__, "direccion", "error.valor.requerido", "El camp és obligatori");
+
+                if (interesado.getPais() == null || interesado.getPais().getId() == null || interesado.getPais().getId() == -1) {
+                    rejectValue(errors, "pais.id", "error.valor.requerido", "El camp és obligatori");
+                } else {
+
+                    try {
+                        CatPais pais = catPaisEjb.findById(interesado.getPais().getId());
+
+                        // Validaciones si el país seleccionado es ESPAÑA
+                        if (pais.getCodigoPais().equals(RegwebConstantes.PAIS_ESPAÑA)) {
+
+                            // Si hay Provincia, es obligatoria la Localidad
+                            if (interesado.getProvincia() != null && interesado.getProvincia().getId() != -1) {
+
+                                if (interesado.getLocalidad() == null || interesado.getProvincia().getId() == -1) {
+                                    rejectValue(errors, "localidad.id", "error.valor.requerido", "El camp és obligatori");
+                                }
+
+                            } else {
+                                rejectIfEmptyOrWhitespace(errors, __target__, "cp", "error.valor.requerido", "El camp és obligatori");
+                            }
+
+                            // Si no hay CP, es obligatoria la Provincia y Municipio
+                            if (StringUtils.isEmpty(interesado.getCp())) {
+
+                                if (interesado.getProvincia() == null || interesado.getProvincia().getId() == -1) {
+                                    rejectValue(errors, "provincia.id", "error.valor.requerido", "El camp és obligatori");
+
+                                } else { // Comprobamos la Localidad
+
+                                    if (interesado.getLocalidad() == null || interesado.getProvincia().getId() == -1) {
+                                        rejectValue(errors, "localidad.id", "error.valor.requerido", "El camp és obligatori");
+                                    }
+                                }
+                            }
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            } else if (interesado.getCanal().equals(RegwebConstantes.CANAL_DIRECCION_ELECTRONICA)) {
+
+                rejectIfEmptyOrWhitespace(errors, __target__, "direccionElectronica", "error.valor.requerido", "El camp és obligatori");
+
+            } else if (interesado.getCanal().equals(RegwebConstantes.CANAL_COMPARECENCIA_ELECTRONICA)) {
+
+            }
+        }
+
+        // CÓDIGO POSTAL
+        if (interesado.getCp() != null && interesado.getCp().length() > 0) {
+            if (interesado.getCp().length() == 5) {
+                for (int i = 0; i < interesado.getCp().length(); i++) {
+                    if (!Character.isDigit(interesado.getCp().charAt(i))) {
+                        rejectValue(errors, "cp", "error.cp.formato", "El codi postal ha de ser numèric");
+                        break;
+                    }
+                }
+            } else {
+                rejectValue(errors, "cp", "error.cp.largo", "El codi postal no té 5 dígits");
+            }
+        }
+
+
+        // DOCUMENTO (DNI, NIE, PASAPORTE)
+        String documento = interesado.getDocumento().toUpperCase();
+        Long tipoDocumento = interesado.getTipoDocumentoIdentificacion();
+
+        Validacion validacionDocumento = null;
+        try {
+            validacionDocumento = DocumentoUtils.comprobarDocumento(documento, tipoDocumento);
+        } catch (Exception e) {
+            e.printStackTrace();
+            validacionDocumento = new Validacion(Boolean.FALSE, "error.documento", "El document es erroni");
+        }
+
+
+        //Si el formato es correcto busca que no exista ya en el sistema
+        if (validacionDocumento.getValido()) {
+            boolean existe;
+            try {
+                //Comprueba que el documento no exista en la bbdd
+                existe = personaEjb.existeDocumentoNew(interesado.getDocumento().toUpperCase(), interesado.getEntidad());
 
             } catch (Exception e) {
-              e.printStackTrace();
+                log.error("Error comprobando si persona ya existe: ", e);
+                existe = true;
             }
 
-          }
-
-        } else if (interesado.getCanal().equals(RegwebConstantes.CANAL_DIRECCION_ELECTRONICA)) {
-
-          rejectIfEmptyOrWhitespace(errors, __target__, "direccionElectronica", "error.valor.requerido", "El camp és obligatori");
-
-        } else if (interesado.getCanal().equals(RegwebConstantes.CANAL_COMPARECENCIA_ELECTRONICA)) {
-
-        }
-      }
-    }
-
-    // CÓDIGO POSTAL
-    if (interesado.getCp() != null && interesado.getCp().length() > 0) {
-      if (interesado.getCp().length() == 5) {
-        for (int i = 0; i < interesado.getCp().length(); i++) {
-          if (!Character.isDigit(interesado.getCp().charAt(i))) {
-            rejectValue(errors, "cp", "error.cp.formato", "El codi postal ha de ser numèric");
-            break;
-          }
-        }
-      } else {
-        rejectValue(errors, "cp", "error.cp.largo", "El codi postal no té 5 dígits");
-      }
-    }
-
-
-    // DOCUMENTO (DNI, NIE, PASAPORTE)
-    String documento = interesado.getDocumento().toUpperCase();
-    Long tipoDocumento = interesado.getTipoDocumentoIdentificacion();
-
-    Validacion validacionDocumento = null;
-    try {
-      validacionDocumento = DocumentoUtils.comprobarDocumento(documento, tipoDocumento);
-    } catch (Exception e) {
-      e.printStackTrace();
-      validacionDocumento = new Validacion(Boolean.FALSE, "error.documento", "El document es erroni");
-    }
-
-
-
-      //Si el formato es correcto busca que no exista ya en el sistema
-      if (validacionDocumento.getValido()) {
-        boolean existe;
-        try {
-          //Comprueba que el documento no exista en la bbdd
-          existe = personaEjb.existeDocumentoNew(interesado.getDocumento().toUpperCase(), interesado.getEntidad());
-
-        } catch (Exception e) {
-          log.error("Error comprobando si persona ya existe: ", e);
-          existe = true;
+            if (existe) {
+                rejectValue(errors, "documento", "error.document.existe",
+                        "El document ja existeix");
+            }
+        } else {
+            rejectValue(errors, "documento", validacionDocumento.getCodigoError(), validacionDocumento.getTextoError());
+            log.info("El formato del documento NO es correcto");
         }
 
-        if (existe) {
-          rejectValue(errors, "documento", "error.document.existe",
-                  "El document ja existeix");
+
+        //DIRECCIÓN
+        if (!isNullOrEmpty(interesado.getDireccion())) {
+            if (interesado.getDireccion().length() > 160) {
+                rejectValue(errors, "direccion", "error.valor.maxlenght", "Tamaño demasiado largo");
+            }
         }
-      } else {
-        rejectValue(errors, "documento", validacionDocumento.getCodigoError(), validacionDocumento.getTextoError());
-        log.info("El formato del documento NO es correcto");
-      }
 
-
-    
-    
-    //DIRECCIÓN
-    if(!isNullOrEmpty(interesado.getDireccion())){
-        if(interesado.getDireccion().length() > 160){
-            rejectValue(errors, "direccion","error.valor.maxlenght","Tamaño demasiado largo");
+        //EMAIL
+        if (!isNullOrEmpty(interesado.getEmail()) && interesado.getEmail().length() > 160) {
+            rejectValue(errors, "email", "error.valor.maxlenght", "Tamaño demasiado largo");
         }
-    }
 
-    //EMAIL
-    if(!isNullOrEmpty(interesado.getEmail()) && interesado.getEmail().length() > 160){
-      rejectValue(errors, "email","error.valor.maxlenght","Tamaño demasiado largo");
-    }
+        //TELÉFONO
+        if (!isNullOrEmpty(interesado.getTelefono()) && interesado.getTelefono().length() > 20) {
+            rejectValue(errors, "telefono", "error.valor.maxlenght", "Tamaño demasiado largo");
+        }
 
-    //TELÉFONO
-    if(!isNullOrEmpty(interesado.getTelefono()) && interesado.getTelefono().length() > 20) {
-      rejectValue(errors, "telefono","error.valor.maxlenght","Tamaño demasiado largo");
-    }
+        //DireccionElectronica
+        if (!isNullOrEmpty(interesado.getDireccionElectronica()) && interesado.getDireccionElectronica().length() > 160) {
+            rejectValue(errors, "direccionElectronica", "error.valor.maxlenght", "Tamaño demasiado largo");
+        }
 
-    //DireccionElectronica
-    if(!isNullOrEmpty(interesado.getDireccionElectronica()) && interesado.getDireccionElectronica().length() > 160) {
-        rejectValue(errors, "direccionElectronica","error.valor.maxlenght","Tamaño demasiado largo");
-    }
+        //RAZÓN SOCIAL
+        if (!isNullOrEmpty(interesado.getRazonSocial()) && interesado.getRazonSocial().length() > 80) {
+            rejectValue(errors, "razonSocial", "error.valor.maxlenght", "Tamaño demasiado largo");
+        }
 
-    //RAZÓN SOCIAL
-    if(!isNullOrEmpty(interesado.getRazonSocial()) && interesado.getRazonSocial().length() > 80) {
-       rejectValue(errors, "razonSocial","error.valor.maxlenght","Tamaño demasiado largo");
-    }
+        //OBSERVACIONES
+        if (!isNullOrEmpty(interesado.getObservaciones()) && interesado.getObservaciones().length() > 80) {
+            rejectValue(errors, "observaciones", "error.valor.maxlenght", "Tamaño demasiado largo");
+        }
 
-    //OBSERVACIONES
-    if(!isNullOrEmpty(interesado.getObservaciones()) && interesado.getObservaciones().length() > 80) {
-      rejectValue(errors, "observaciones","error.valor.maxlenght","Tamaño demasiado largo");
+
     }
 
 
-  }
-
-
-  @Override
-  public String prefixFieldName() {
-    return "interesado.";
-  }
-
-  @Override
-  public String adjustFieldName(String fieldName) {
-    if (fieldName == null ) {
-      return null;
-    } else {
-      if (fieldName.endsWith(".id")) {
-        return fieldName.substring(0, fieldName.lastIndexOf('.'));
-      }
+    @Override
+    public String prefixFieldName() {
+        return "interesado.";
     }
-    return fieldName;
-  }
+
+    @Override
+    public String adjustFieldName(String fieldName) {
+        if (fieldName == null) {
+            return null;
+        } else {
+            if (fieldName.endsWith(".id")) {
+                return fieldName.substring(0, fieldName.lastIndexOf('.'));
+            }
+        }
+        return fieldName;
+    }
 
 }
