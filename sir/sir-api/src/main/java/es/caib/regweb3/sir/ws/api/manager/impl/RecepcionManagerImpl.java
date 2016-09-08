@@ -1,7 +1,6 @@
 package es.caib.regweb3.sir.ws.api.manager.impl;
 
 import es.caib.regweb3.persistence.ejb.WebServicesMethodsLocal;
-import es.caib.regweb3.sir.api.schema.Fichero_Intercambio_SICRES_3;
 import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
@@ -13,13 +12,14 @@ import es.caib.regweb3.sir.ws.api.manager.RecepcionManager;
 import es.caib.regweb3.sir.ws.api.manager.SicresXMLManager;
 import es.caib.regweb3.sir.ws.api.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.ws.api.utils.Mensaje;
+import es.caib.regweb3.sir.ws.api.utils.XPathReaderUtil;
 import org.apache.log4j.Logger;
-import org.exolab.castor.xml.MarshalException;
-import org.exolab.castor.xml.Unmarshaller;
-import org.exolab.castor.xml.ValidationException;
 import org.springframework.util.Assert;
+import org.w3c.dom.Node;
 
-import java.io.StringReader;
+import javax.xml.xpath.XPathConstants;
+import java.io.ByteArrayInputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 /**
@@ -31,6 +31,11 @@ public class RecepcionManagerImpl implements RecepcionManager {
 
     public SicresXMLManager sicresXMLManager = new SicresXMLManagerImpl();
     public MensajeManager mensajeManager = new MensajeManagerImpl();
+
+    private String errorGenerico = Errores.ERROR_0063.getValue(); // ERROR GENÉRICO: ERROR_AL_RECIBIR_ASIENTO
+    private final String Codigo_Entidad_Registral_Destino_Xpath = "//Codigo_Entidad_Registral_Destino/text()";
+    private final String Codigo_Entidad_Registral_Origen_Xpath = "//Codigo_Entidad_Registral_Origen/text()";
+    private final String Identificador_Intercambio_Xpath = "//Identificador_Intercambio/text()";
 
 
     public RecepcionManagerImpl() {
@@ -62,37 +67,36 @@ public class RecepcionManagerImpl implements RecepcionManager {
 
         } catch (RuntimeException e) {
 
-            String codigoError = Errores.ERROR_0063.getValue();
 
+
+            // Si el error es de Validación, obtenemos su código de error
             if (e instanceof ValidacionException) {
                 Errores errorValidacion = ((ValidacionException) e).getErrorValidacion();
                 if (errorValidacion != null) {
-                    codigoError = errorValidacion.getValue();
+                    errorGenerico = errorValidacion.getValue();
                 }
-                log.info("Error en la Valicacion: " + codigoError);
+                log.info("Error en la Valicacion: " + errorGenerico);
             }else{
                 log.info("Error al recibir el fichero de intercambio", e);
             }
 
             // Enviamos el mensaje de error
             try {
-                // intentamos parsear el xml los campos necesarios para mensaje de error
-                if (ficheroIntercambio == null) {
-                    ficheroIntercambio = parserForError(xmlFicheroIntercambio);
-                }
-                //si el código de error es el de duplicado, se vuelve a enviar un ACK
-                // Enviar ACK
-                if (Errores.ERROR_0205.getValue().equals(codigoError)) {
-                    enviarACK(ficheroIntercambio);
-                } else if (!Errores.ERROR_COD_ENTIDAD_INVALIDO.getValue().equals(codigoError)) {
-                    // Enviar mensaje de error
-                    enviarMensajeError(ficheroIntercambio, codigoError, e.getMessage(), null);
+                // Intentamos parsear el xml los 3 campos necesarios para mensaje de error
+                Mensaje mensaje = parserForError(xmlFicheroIntercambio);
+
+                // Si el código de error es el de duplicado, se vuelve a enviar un ACK
+                if (Errores.ERROR_0205.getValue().equals(errorGenerico)) {
+                    enviarACK(mensaje);
+
+                // Enviar mensaje de error, sino tiene nada que ver con los campos CodigoEntidad
+                } else if (!Errores.ERROR_COD_ENTIDAD_INVALIDO.getValue().equals(errorGenerico)) {
+                    enviarMensajeError(mensaje, errorGenerico, e.getMessage(), null);
                 }
 
             } catch (RuntimeException ex) {
-                // puede darse el caso de que se genere una excepcion al no
-                // poder tener todos lo datos necesarios para generar el mensaje de error
-                log.error("No se ha podido enviar el mensaje de error debido a una excepción producida, podría ser debido a la falta de campos requeridos para el envío del mismo:", ex);
+                // Comprobamos una posible excepción al no disponer de los datos necesarios para enviar los mensajes
+                log.info("No se ha podido enviar el mensaje de error debido a una excepción producida, podría ser debido a la falta de campos requeridos para el envío del mismo:", ex);
             }
             throw e;
         }
@@ -118,8 +122,12 @@ public class RecepcionManagerImpl implements RecepcionManager {
             throw new ValidacionException(Errores.ERROR_0037);
         }
 
+        //todo: Crear una auditoría interna de los AsientosRegistralesSir recibidos
+
         // tipo anotacion envio
         if (TipoAnotacion.ENVIO.getValue().equals(ficheroIntercambio.getTipoAnotacion())) {
+
+            //todo: Comprobar si el asiento ya existe en el sistema
 
             try {
                 asientoRegistralSir = webServicesMethodsEjb.crearAsientoRegistralSir(ficheroIntercambio.getAsientoRegistralSir(webServicesMethodsEjb));
@@ -133,47 +141,49 @@ public class RecepcionManagerImpl implements RecepcionManager {
         // tipo anotacion reenvio
         if (TipoAnotacion.REENVIO.getValue().equals(ficheroIntercambio.getTipoAnotacion())) {
 
-            //preRegistro = recibirFicheroIntercambioReenvio(ficheroIntercambio,webServicesMethodsEjb);
         }
 
         // tipo anotacion rechazo
         if (TipoAnotacion.RECHAZO.getValue().equals(ficheroIntercambio.getTipoAnotacion())) {
 
-            //preRegistro = recibirFicheroIntercambioRechazo(ficheroIntercambio,webServicesMethodsEjb);
         }
 
         return asientoRegistralSir;
     }
 
     /**
-     * Método que parsea el xml sin validaciones de schema para poder generar mensajes de error en algun momento
-     *
+     * Obtiene del xml de intercambios los campos necesarios para crear un mensaje de error
      * @param xml
      * @return
      */
-    private FicheroIntercambio parserForError(String xml) {
+    private Mensaje parserForError(String xml) {
 
-        FicheroIntercambio ficheroIntercambio = new FicheroIntercambio();
-        Fichero_Intercambio_SICRES_3 fiSICRES3 = null;
+        log.info("Intentamos parsear el xml recibido para enviar el mensaje de Error");
 
-        Unmarshaller unmarshaller = new Unmarshaller(Fichero_Intercambio_SICRES_3.class);
-        //desactivamos la validacion
-        unmarshaller.setValidation(false);
+        Mensaje mensaje = new Mensaje();
 
+        XPathReaderUtil reader = null;
+        // procesamos el xml para procesar las peticiones xpath
         try {
-
-            fiSICRES3 = (Fichero_Intercambio_SICRES_3) unmarshaller.unmarshal(new StringReader(xml));
-
-        } catch (MarshalException e) {
-            log.error("Imposible parsear el xml recibido:"+xml+" excepción "+e.getLocalizedMessage());
-            throw new RuntimeException(e);
-        } catch (ValidationException e) {
+            reader = new XPathReaderUtil(new ByteArrayInputStream(xml.getBytes("UTF-8")));
+        } catch (UnsupportedEncodingException e) {
             log.error("Imposible parsear el xml recibido:"+xml+" excepción "+e.getLocalizedMessage());
             throw new RuntimeException(e);
         }
 
-        ficheroIntercambio.setFicheroIntercambio(fiSICRES3);
-        return ficheroIntercambio;
+        Node codigoEntidadRegistralDestino = (Node)reader.read(Codigo_Entidad_Registral_Destino_Xpath, XPathConstants.NODE);
+        Node codigoEntidadRegistralOrigen = (Node)reader.read(Codigo_Entidad_Registral_Origen_Xpath, XPathConstants.NODE);
+        Node identificadorIntercambio = (Node)reader.read(Identificador_Intercambio_Xpath, XPathConstants.NODE);
+
+        log.info("CodigoEntidadRegistralDestino: " + codigoEntidadRegistralDestino.getNodeValue());
+        log.info("CodigoEntidadRegistralOrigen: " + codigoEntidadRegistralOrigen.getNodeValue());
+        log.info("IdentificadorIntercambio: " + identificadorIntercambio.getNodeValue());
+
+        mensaje.setCodigoEntidadRegistralDestino(codigoEntidadRegistralDestino.getNodeValue());
+        mensaje.setCodigoEntidadRegistralOrigen(codigoEntidadRegistralOrigen.getNodeValue());
+        mensaje.setIdentificadorIntercambio(identificadorIntercambio.getNodeValue());
+
+        return mensaje;
     }
 
     /**
@@ -197,28 +207,37 @@ public class RecepcionManagerImpl implements RecepcionManager {
     }
 
     /**
+     * Envía un mensaje de control ACK.
+     *
+     * @param mensaje Campos del mensaje obtenidos del FicheroIntercambio recibido
+     */
+    protected void enviarACK(Mensaje mensaje) {
+
+        mensaje.setTipoMensaje(TipoMensaje.ACK);
+        mensaje.setDescripcionMensaje(TipoMensaje.ACK.getName());
+
+        mensajeManager.enviarMensaje(mensaje);
+
+        log.info("Mensaje de control (ACK) enviado");
+    }
+
+    /**
      * Envía un mensaje de control de tipo ERROR.
      *
-     * @param ficheroIntercambio
+     * @param mensaje Campos del mensaje obtenidos del FicheroIntercambio recibido
      * @param codigoError
      * @param descError
      * @param identificadoresFicheros
      */
-    protected void enviarMensajeError(FicheroIntercambio ficheroIntercambio, String codigoError, String descError, List<String> identificadoresFicheros) {
+    protected void enviarMensajeError(Mensaje mensaje, String codigoError, String descError, List<String> identificadoresFicheros) {
+        mensaje.setTipoMensaje(TipoMensaje.ERROR);
+        mensaje.setCodigoError(codigoError);
+        mensaje.setDescripcionMensaje(descError);
+        mensaje.setIdentificadoresFicheros(identificadoresFicheros);
 
-        if (ficheroIntercambio != null) {
-            Mensaje mensaje = new Mensaje();
-            mensaje.setCodigoEntidadRegistralOrigen(ficheroIntercambio.getCodigoEntidadRegistralDestino());
-            mensaje.setCodigoEntidadRegistralDestino(ficheroIntercambio.getCodigoEntidadRegistralOrigen());
-            mensaje.setIdentificadorIntercambio(ficheroIntercambio.getIdentificadorIntercambio());
-            mensaje.setTipoMensaje(TipoMensaje.ERROR);
-            mensaje.setCodigoError(codigoError);
-            mensaje.setDescripcionMensaje(descError);
-            mensaje.setIdentificadoresFicheros(identificadoresFicheros);
+        mensajeManager.enviarMensaje(mensaje);
 
-            mensajeManager.enviarMensaje(mensaje);
+        log.info("Mensaje de control (ERROR) enviado");
 
-            log.info("Mensaje de control (ERROR) enviado");
-        }
     }
 }

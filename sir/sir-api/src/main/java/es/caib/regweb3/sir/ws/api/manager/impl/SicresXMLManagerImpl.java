@@ -28,7 +28,6 @@ import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.exolab.castor.xml.MarshalException;
-import org.exolab.castor.xml.ValidationException;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.springframework.util.Assert;
@@ -1173,14 +1172,13 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
         } catch (Throwable e) {
 
-            // Comprobamos si el error al realizar la conversión es en alguno de los campos de Código Entidad
+            // Comprobamos si el error es en alguno de los campos de Código Entidad, si es así no podemos componer el mensaje de error
             if(e instanceof MarshalException){
 
-                ValidationException exception = (ValidationException) e.getCause();
                 CharSequence cs1 = "_codigo_Entidad_Registral_Origen";
                 CharSequence cs2 = "_codigo_Entidad_Registral_Destino";
 
-                if (exception.getLocalizedMessage().contains(cs1) || exception.getLocalizedMessage().contains(cs2)){
+                if (e.getLocalizedMessage().contains(cs1) || e.getLocalizedMessage().contains(cs2)){
 
                     log.info("Error al parsear el xml en campos _codigo_Entidad_Registral, no se enviará mensaje de error.", e);
                     throw new ValidacionException(Errores.ERROR_COD_ENTIDAD_INVALIDO);
@@ -1188,7 +1186,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
             }
 
             log.info("Error al parsear el XML del fichero de intercambio: [" + xml + "]", e);
-            throw new ValidacionException(Errores.ERROR_0037);
+            throw new ValidacionException(Errores.ERROR_0037, e);
         }
 
         return ficheroIntercambio;
@@ -2033,8 +2031,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
         Map<String, String> fieldsBase64 = getBase64Fields();
         Set fieldsNameBase64 = fieldsBase64.keySet();
 
-        for (Iterator iterator = fieldsNameBase64.iterator(); iterator
-                .hasNext();) {
+        for (Iterator iterator = fieldsNameBase64.iterator(); iterator.hasNext();) {
 
             // obtenemos la expresion xpath de los campos que deben estar en
             // base64
