@@ -678,10 +678,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
     private void addDatosAnexos(Element rootNode, RegistroEntrada re, String identificadorIntercambio) throws Exception  {
         int secuencia = 0;
 
-        
 
-        //ANTIGUO List<Anexo> anexos = anexoEjb.getByRegistroEntrada(re.getId());
-        List<Anexo> anexos = re.getRegistroDetalle().getAnexos(); // Deben pasarnos el re con los anexos cargados
         List<AnexoFull> anexosFull = re.getRegistroDetalle().getAnexosFull(); // Deben pasarnos el re con los anexos cargados
 
 
@@ -690,7 +687,6 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
             //Inicio del segmento "De_Anexo" para el mensaje de intercambio.
 
             //El custodiaID no puede ser null
-            final String custodyID = anexo.getCustodiaID();
             Assert.notNull(anexo.getCustodiaID(), "'custodiaID' must not be null");
 
             secuencia = montarDeAnexo(rootNode, identificadorIntercambio, anexoFull, secuencia);
@@ -736,15 +732,11 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
 
             Long tipoDocumento = anexo.getTipoDocumento();
-          
-          // TODO com extreure ????
-          String certificado = null;
-          // TODO com extreure ????
-          String firmaDocumento = null;
-          // TODO com extreure ????
-          String selloTiempo = null;
-          // TOOD d'on s'obté?
-          String validacionOCSP = null;
+
+            byte[] certificado = anexo.getCertificado();
+            byte[] firmaDocumento = anexo.getFirma(); //CAS 5
+            byte[] selloTiempo = anexo.getTimestamp();
+            byte[] validacionOCSP = anexo.getValidacionOCSPCertificado();
           String tipoMime = sc.getMime();
           // La firma és ell mateix
           String identificadorDocumentoFirmado = identificador_fichero;
@@ -781,12 +773,12 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
             
             // TODO preguntar a felip, al ser la firma del anexo no se que poner
             Long tipoDocumento = anexo.getTipoDocumento();
-            
-            
-            String certificado = null;
-            String firmaDocumento = null;
-            String selloTiempo = null;
-            String validacionOCSP = null;
+
+
+              byte[] certificado = anexo.getCertificado();
+              byte[] firmaDocumento = anexo.getFirma();
+              byte[] selloTiempo = anexo.getTimestamp();
+              byte[] validacionOCSP = anexo.getValidacionOCSPCertificado();
             String tipoMime = dc.getMime();
             // La firma és ell mateix
             String identificadorDocumentoFirmado = null;
@@ -815,15 +807,12 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
             
             // TODO preguntar a felip, al ser la firma del anexo no se que poner
               Long tipoDocumento = TIPO_DOCUMENTO_FICHERO_TECNICO;
-            
-            // TODO com extreure ????
-            String certificado = null;
-            // TODO com extreure ????
-            String firmaDocumento = null;
-            // TODO com extreure ????
-            String selloTiempo = null;
-            // TOOD d'on s'obté?
-            String validacionOCSP = null;
+
+
+              byte[] certificado = null;
+              byte[] firmaDocumento = null;
+              byte[] selloTiempo = anexo.getTimestamp();
+              byte[] validacionOCSP = null;
             String tipoMime = sc.getMime();
             // La firma és ell mateix
             String identificadorDocumentoFirmado = identificador_fichero;
@@ -847,14 +836,13 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
 
     
-    private void crearSegmentoAnexo(Element rootNode, String filename, byte[] data, 
-        String identificador_fichero ,
-        Long validezDocumento, String identificadorIntercambio, Long tipoDocumento,
-        String certificado, String firmaDocumento, String selloTiempo, String validacionOCSP,
-        String tipoMime, String identificadorDocumentoFirmado, String observaciones) throws Exception {
+    private void crearSegmentoAnexo(Element rootNode, String filename, byte[] data,
+                                    String identificador_fichero ,
+                                    Long validezDocumento, String identificadorIntercambio, Long tipoDocumento,
+                                    byte[] certificado, byte[] firmaDocumento, byte[] selloTiempo, byte[] validacionOCSP,
+                                    String tipoMime, String identificadorDocumentoFirmado, String observaciones) throws Exception {
 
-      
-      //Anexo anexo = anexoFull.getAnexo();
+
       Element elem;
       Element rootElement = rootNode.addElement("De_Anexo");
 
@@ -895,34 +883,32 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
       //TODO
       if (certificado != null) {
         elem = rootElement.addElement("Certificado");
-        //elem.addCDATA(getBase64Sring(anexo.getCertificado()));
-        elem.addCDATA(certificado);
+          elem.addCDATA(getBase64String(certificado));
       }
 
 
       //Firma documento (propiedad Firma Documento del segmento)
       if (firmaDocumento != null) {
           elem = rootElement.addElement("Firma_Documento");
-          elem.addCDATA(firmaDocumento);
+          elem.addCDATA(getBase64String(firmaDocumento));
       }
 
       // TimeStamp
       if (selloTiempo != null) {
         elem = rootElement.addElement("TimeStamp");
-        elem.addCDATA(selloTiempo);
+          elem.addCDATA(getBase64String(selloTiempo));
       }
 
 
       // Validacion_OCSP_Certificado
       if (validacionOCSP != null) {
         elem = rootElement.addElement("Validacion_OCSP_Certificado");
-        elem.addCDATA(validacionOCSP);
+          elem.addCDATA(getBase64String(validacionOCSP));
       }
       
 
 
       if (data != null) {
-        
         // Hash
         elem = rootElement.addElement("Hash");
         elem.addCDATA(getBase64String(obtenerHash(data)));

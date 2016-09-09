@@ -130,8 +130,10 @@ alter table RWE_ANEXO_SIR
 ALTER TABLE RWE_OFICINA DROP CONSTRAINT rwe_oficina_codigo_uk;
 
 --Nuevos campos en RWE_ANEXO
---alter table RWE_ANEXO add CERTIFICADO raw(255);
---alter table RWE_ANEXO add FIRMA raw(255);
---alter table RWE_ANEXO add TIMESTAMP raw(255);
---alter table RWE_ANEXO add VAL_OCSP_CERTIFICADO raw(255);
---alter table RWE_ANEXO add HASH raw(255) not null;
+ALTER TABLE RWE_ANEXO DROP COLUMN FIRMACSV;
+alter table RWE_ANEXO add CERTIFICADO raw(255);
+alter table RWE_ANEXO add FIRMA raw(255);
+alter table RWE_ANEXO add TIMESTAMP raw(255);
+alter table RWE_ANEXO add VAL_OCSP_CERTIFICADO raw(255);
+alter table RWE_ANEXO add HASH raw(255);
+

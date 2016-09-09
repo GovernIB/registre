@@ -53,17 +53,21 @@ public class Anexo implements Serializable {
     @XmlElement
     private int modoFirma;
 
-    /*   private byte[] certificado;
-       private byte[] validacionOCSPCertificado;
-       private byte[] timestamp;
-       private byte[] hash;
-   */
+    @XmlElement
+    private byte[] certificado;
+    @XmlElement
+    private byte[] firma;
+    @XmlElement
+    private byte[] validacionOCSPCertificado;
+    @XmlElement
+    private byte[] timestamp;
+    @XmlElement
+    private byte[] hash;
+
     @XmlTransient
     private String custodiaID;
     @XmlTransient
     private String csv; // TODO este campo parece que sobra, verificar que no se emplee en NTI
-    @XmlTransient
-    private String firmacsv; //debe guardar el campo firmaDocumento de SICRES(viene como byte[]) y corresponde al código CSV, //TODO transforma a byte[]
 
     
     public Anexo() {
@@ -85,7 +89,6 @@ public class Anexo implements Serializable {
      * @param modoFirma
      * @param custodiaID
      * @param csv
-     * @param firmacsv
      */
     public Anexo(Anexo a) {
       super();
@@ -101,7 +104,6 @@ public class Anexo implements Serializable {
       this.modoFirma = a.modoFirma;
       this.custodiaID = a.custodiaID;
       this.csv = a.csv;
-      this.firmacsv = a.firmacsv;
     }
 
     public static List<Anexo> clone(List<Anexo> list) {
@@ -231,8 +233,7 @@ public class Anexo implements Serializable {
     }
 
 
-
-   /* @Column(name = "CERTIFICADO", nullable = true)
+    @Column(name = "CERTIFICADO", nullable = true)
     public byte[] getCertificado() {
         return certificado;
     }
@@ -241,6 +242,14 @@ public class Anexo implements Serializable {
         this.certificado = certificado;
     }
 
+    @Column(name = "FIRMA", nullable = true)
+    public byte[] getFirma() {
+        return firma;
+    }
+
+    public void setFirma(byte[] firmaDocumento) {
+        this.firma = firmaDocumento;
+    }
 
     @Column(name = "TIMESTAMP", nullable = true)
     public byte[] getTimestamp() {
@@ -267,9 +276,7 @@ public class Anexo implements Serializable {
 
     public void setHash(byte[] hash) {
         this.hash = hash;
-    }*/
-
-
+    }
 
 
     @Column(name = "CSV")
@@ -280,16 +287,7 @@ public class Anexo implements Serializable {
     public void setCsv(String csv) {
         this.csv = csv;
     }
-    
-    
-    @Column(name = "FIRMACSV")
-    public String getFirmacsv() {
-      return firmacsv;
-    }
 
-    public void setFirmacsv(String firmacsv) {
-      this.firmacsv = firmacsv;
-    }
     
     
     

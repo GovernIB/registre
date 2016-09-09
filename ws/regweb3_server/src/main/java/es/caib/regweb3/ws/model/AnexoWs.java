@@ -58,15 +58,7 @@ public class AnexoWs {
     private String tipoMIMEFirmaAnexada;
 
 
-    private String csv; // TODO este campo parece que sobra, verificar que no se emplee en NTI
-    private String firmacsv;
-    
-    /*
-    private String timestamp;
-    private String validacionOCSP;
-    private String certificado;
-    */
-
+    private String csv; // TODO este campo se creo para el plugin de digitalización de IECISA, verificar que no se emplee en NTI,SICRES.
 
     public String getTitulo() {
       return titulo;
@@ -180,45 +172,13 @@ public class AnexoWs {
     public void setTipoMIMEFirmaAnexada(String tipoMIMEFirmaAnexada) {
       this.tipoMIMEFirmaAnexada = tipoMIMEFirmaAnexada;
     }
-/*
-    public String getCertificado() {
-      return certificado;
-    }
 
-    public void setCertificado(String certificado) {
-      this.certificado = certificado;
-    }
-
-    public String getTimestamp() {
-      return timestamp;
-    }
-
-    public void setTimestamp(String timestamp) {
-      this.timestamp = timestamp;
-    }
-
-    public String getValidacionOCSP() {
-      return validacionOCSP;
-    }
-
-    public void setValidacionOCSP(String validacionOCSP) {
-      this.validacionOCSP = validacionOCSP;
-    }
-*/
     public String getCsv() {
       return csv;
     }
 
     public void setCsv(String csv) {
       this.csv = csv;
-    }
-
-    public String getFirmacsv() {
-      return firmacsv;
-    }
-
-    public void setFirmacsv(String firmacsv) {
-      this.firmacsv = firmacsv;
     }
 
 }

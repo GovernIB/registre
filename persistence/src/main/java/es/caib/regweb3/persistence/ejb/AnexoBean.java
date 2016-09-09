@@ -9,6 +9,7 @@ import es.caib.regweb3.persistence.validator.AnexoValidator;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -32,6 +33,7 @@ import java.beans.Expression;
 import java.beans.PersistenceDelegate;
 import java.beans.XMLEncoder;
 import java.io.ByteArrayOutputStream;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -447,6 +449,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
           doc.setName(checkFileName(doc.getName() , "file.bin"));
 
           anexo.setFechaCaptura(new Date());
+            anexo.setHash(obtenerHash(doc.getData()));
 
           custody.saveDocument(custodyID, custodyParameters, doc);
           
@@ -923,7 +926,22 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         return custodyID;
       }
 
-    
 
     /* FIN METODOS DEL AnnexDocumentCustodyManager.java hecho por marilen del TODO DE TONI*/
+
+    /**
+     * Genera el Hash mediante MD5 del contenido del documento y lo codifica en base64
+     *
+     * @param documentoData
+     * @return
+     * @throws Exception
+     */
+    protected byte[] obtenerHash(byte[] documentoData) throws Exception {
+
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        byte[] digest = md.digest(documentoData);
+
+        return Base64.encodeBase64(digest);
+
+    }
 }

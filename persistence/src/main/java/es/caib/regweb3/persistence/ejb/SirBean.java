@@ -430,7 +430,6 @@ public class SirBean implements SirLocal{
             mapAnexosFull.put(anexoSir.getIdentificadorFichero(), anexoFull);
             anexos = new ArrayList<AnexoFull>(mapAnexosFull.values());
         }
-        // log.info(anexos.size());
         return anexos;
     }
 
@@ -464,43 +463,32 @@ public class SirBean implements SirLocal{
         }
         anexo.setObservaciones(anexoSir.getObservaciones());
 
-        //Campos NTI TODO PENDIENTE
+        //Campos NTI TODO PENDIENTE(VER QUE HACER SI DEJARLOS ASÍ O QUITAR RESTRICCION OBLIGATORIA Y PONERLOS NULL, pendiente tambien de hablar con xisco gelabert
         anexo.setOrigenCiudadanoAdmin(RegwebConstantes.ANEXO_ORIGEN_ADMINISTRACION.intValue()); // TODO Comprobar esta asignación
         anexo.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad("TD99",idEntidad));
 
-        /* TODO estos campos no estan deficinidos en el anexo
+
         if(anexoSir.getCertificado()!= null) {
-            //anexo.setCertificado(anexoSir.getCertificado());
+            anexo.setCertificado(anexoSir.getCertificado());
         };
-        // TODO
-        if(anexoSir.getFirma_Documento()!=null){
-            //anexoSir.getFirma_Documento();
+
+        if (anexoSir.getFirma() != null) {
+            anexo.setFirma(anexoSir.getFirma());
 
         };
-        if(anexoSir.getTimeStamp()!= null){
-            //anexoSir.getTimeStamp();
+        if (anexoSir.getTimestamp() != null) {
+            anexo.setTimestamp(anexoSir.getTimestamp());
         }
 
-        if(anexoSir.getValidacion_OCSP_Certificado()!= null) {
-            //anexoSir.getValidacion_OCSP_Certificado();
+        if (anexoSir.getValidacionOCSPCertificado() != null) {
+            anexo.setValidacionOCSPCertificado(anexoSir.getValidacionOCSPCertificado());
         }
 
         if(anexoSir.getHash()!= null){
-            //anexoSir.getHash());
+            anexo.setHash(anexoSir.getHash());
         }
-        if(anexoSir.getTipo_MIME()!= null){
-            anexoSir.getTipo_MIME();
-        }
-        if(anexoSir.getAnexo()!= null){
-            anexoSir.getAnexo();
-        }*/
 
 
-        /*anexo.setNombreFichero(deAnexo.getNombreFicheroAnexado()); TODO
-        anexo.setIdentificadorFichero(deAnexo.getIdentificadorFichero()); TODO
-        anexo.setIdentificadorDocumentoFirmado(deAnexo.getIdentificadorDocumentoFirmado()); //TODO
-
-        */
 
         DocumentCustody dc= new DocumentCustody();
         SignatureCustody sc= new SignatureCustody();

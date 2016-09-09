@@ -175,27 +175,11 @@ public class AnexoConverter extends CommonConverter {
        if(anexoWs.getOrigenCiudadanoAdmin()!=null){anexo.setOrigenCiudadanoAdmin(anexoWs.getOrigenCiudadanoAdmin());}
        
        if(anexoWs.getCsv() != null){anexo.setCsv(anexoWs.getCsv());}
-       if(anexoWs.getFirmacsv() != null){anexo.setFirmacsv(anexoWs.getFirmacsv());}
-       
-       /*
-       if(anexoWs.getCertificado() != null){anexo.setCertificado(anexoWs.getCertificado());}
-       if(anexoWs.getTimestamp() != null){anexo.setTimestamp(anexoWs.getTimestamp());}
-       if(anexoWs.getValidacionOCSP() != null){anexo.setValidacionOCSP(anexoWs.getValidacionOCSP());}
-       */
 
-
-       // Part de fichero Anexado
-       /*
-       if(!StringUtils.isEmpty(anexoWs.getNombreFicheroAnexado())){anexo.setNombreFicheroAnexado(StringUtils.recortarNombre(anexoWs.getNombreFicheroAnexado(), RegwebConstantes.ANEXO_NOMBREARCHIVO_MAXLENGTH));}
-       if(!StringUtils.isEmpty(anexoWs.getTipoMIMEFicheroAnexado())){anexo.setTipoMIME(anexoWs.getTipoMIMEFicheroAnexado());}
-       anexo.setTamano(anexoWs.getTamanoFicheroAnexado());
-       */
        if(anexoWs.getFechaCaptura()!= null){anexo.setFechaCaptura(anexoWs.getFechaCaptura().getTime());}
 
        // Part de firma Anexada
        if(anexoWs.getModoFirma()!=null){anexo.setModoFirma(anexoWs.getModoFirma());}
-       //if(!StringUtils.isEmpty(anexoWs.getNombreFirmaAnexada())){anexo.setNombreFirmaAnexada(StringUtils.recortarNombre(anexoWs.getNombreFirmaAnexada(), RegwebConstantes.ANEXO_NOMBREARCHIVO_MAXLENGTH));}
-      // anexo.setTamano(anexoWs.getTamanoFirmaAnexada());
 
         return anexo;
 
@@ -228,12 +212,6 @@ public class AnexoConverter extends CommonConverter {
        if(anexo.getOrigenCiudadanoAdmin()!=null){anexoWs.setOrigenCiudadanoAdmin(anexo.getOrigenCiudadanoAdmin());}
        
        if(anexo.getCsv() != null){anexoWs.setCsv(anexo.getCsv());}
-       if(anexo.getFirmacsv() != null){anexoWs.setFirmacsv(anexo.getFirmacsv());}
-       /*
-       if(anexo.getCertificado() != null){anexoWs.setCertificado(anexo.getCertificado());}
-       if(anexo.getTimestamp() != null){anexoWs.setTimestamp(anexo.getTimestamp());}
-       if(anexo.getValidacionOCSP() != null){anexoWs.setValidacionOCSP(anexo.getValidacionOCSP());}
-       */
 
        
        String custodyID = anexo.getCustodiaID();
@@ -272,10 +250,9 @@ public class AnexoConverter extends CommonConverter {
 
        // Part de firma Anexada
        if(anexo.getModoFirma()!= 0){anexoWs.setModoFirma(anexo.getModoFirma());}
-       
-       // anexoWs.setTamanoFirmaAnexada(anexo.getTamano());
 
-       return anexoWs;
+
+      return anexoWs;
 
   }
 

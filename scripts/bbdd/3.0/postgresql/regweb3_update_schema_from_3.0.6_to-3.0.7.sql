@@ -125,8 +125,10 @@ alter table RWE_INTERESADO_SIR
 ALTER TABLE RWE_OFICINA DROP CONSTRAINT rwe_oficina_codigo_key
 
 --Nuevos campos en RWE_ANEXO
---alter table RWE_ANEXO add CERTIFICADO bytea;
---alter table RWE_ANEXO add FIRMA bytea;
---alter table RWE_ANEXO add TIMESTAMP bytea;
---alter table RWE_ANEXO add VAL_OCSP_CERTIFICADO bytea;
---alter table RWE_ANEXO add HASH bytea not null;
+ALTER TABLE RWE_ANEXO DROP COLUMN FIRMACSV;
+alter table RWE_ANEXO add CERTIFICADO bytea;
+alter table RWE_ANEXO add FIRMA bytea;
+alter table RWE_ANEXO add TIMESTAMP bytea;
+alter table RWE_ANEXO add VAL_OCSP_CERTIFICADO bytea;
+alter table RWE_ANEXO add HASH bytea;
+
