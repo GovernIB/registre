@@ -270,6 +270,7 @@
                                     <li class="submenu-complet"><a href="<c:url value="/entidad/usuarios"/>"><spring:message code="menu.usuarios"/></a></li>
                                     <c:if test="${entidadActiva.configuracionPersona != 1}">
                                         <li class="submenu-complet"><a href="<c:url value="/persona/list"/>"><spring:message code="menu.personas"/></a></li>
+                                        <li class="submenu-complet"><a href="<c:url value="/persona/personasDuplicadas/"/>"><spring:message code="persona.buscador.duplicadas"/></a></li>
                                     </c:if>
 
                                     <%--<li class="submenu-complet"><a href="<c:url value="/dir3/datosCatalogo"/>" tabindex="-1"><spring:message code="menu.dir3"/></a></li>--%>
