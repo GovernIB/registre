@@ -491,9 +491,14 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
           
           updateDate = true;
         }
+          //calculamos el hash de signature, ya que si doc es null, es porque el modo de firma es attached.
+          if (doc == null) {
+              anexo.setHash(obtenerHash(signature.getData()));
+          }
       }
 
-      // Actualitzar Metadades
+
+        // Actualitzar Metadades
       final String lang = Configuracio.getDefaultLanguage(); 
       final Locale loc = new Locale(lang);
       List<Metadata> metadades = new ArrayList<Metadata>();

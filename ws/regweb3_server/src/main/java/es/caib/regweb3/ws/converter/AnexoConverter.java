@@ -55,11 +55,13 @@ public class AnexoConverter extends CommonConverter {
         
         
         // Si validez Documento --> Copia no se admite firma
-        if(RegwebConstantes.ANEXO_TIPOVALIDEZDOCUMENTO_COPIA.equals(anexoWs.getValidezDocumento())) {
-            anexoWs.setNombreFirmaAnexada("");
-            anexoWs.setFirmaAnexada(null);
+       if (RegwebConstantes.ANEXO_TIPOVALIDEZDOCUMENTO_COPIA.equals(anexoWs.getValidezDocumento()) && anexoWs.getNombreFirmaAnexada() != null && anexoWs.getFirmaAnexada() != null) {
+           //anexoWs.setNombreFirmaAnexada("");
+           //anexoWs.setFirmaAnexada(null);
             //anexoWs.setTamanoFirmaAnexada(null);
-            anexoWs.setTipoMIMEFirmaAnexada(null);
+           //anexoWs.setTipoMIMEFirmaAnexada(null);
+           throw new Exception("Si la validessa del Document es  còpia = 01"
+                   + " no s'admet firma");
         }
 
 
@@ -98,6 +100,8 @@ public class AnexoConverter extends CommonConverter {
                    sign.setData(anexoWs.getFicheroAnexado());
                    sign.setMime(anexoWs.getTipoMIMEFicheroAnexado());
                    sign.setName(anexoWs.getNombreFicheroAnexado());
+               } else {
+                   throw new Exception("Els camps NombreFicheroAnexado i FicheroAnexado no poden ser null");
                }
 
                break;
@@ -106,10 +110,13 @@ public class AnexoConverter extends CommonConverter {
            case RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED:
                // TODO Emprar mètode per descobrir tipus de signatura
                // TODO  Intentar obtenir tipus firma a partir de mime, nom o contingut
+               if (anexoWs.getNombreFirmaAnexada() == null || anexoWs.getFirmaAnexada() == null) {
+                   throw new Exception("Els camps NombreFirmaAnexada i FirmaAnexada no poden ser null");
+               }
                sign.setSignatureType(SignatureCustody.OTHER_SIGNATURE_WITH_DETACHED_DOCUMENT);
                sign.setAttachedDocument(false);
                if (doc == null) {
-                   throw new Exception("El documente no s'envia i el modo de firma "
+                   throw new Exception("El document no s'envia i el modo de firma "
                            + " és 'Firma en document separat'");
                }
                break;

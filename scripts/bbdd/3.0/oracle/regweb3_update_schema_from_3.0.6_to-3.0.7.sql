@@ -126,11 +126,15 @@ alter table RWE_ANEXO_SIR
         foreign key (ANEXO)
         references RWE_ARCHIVO;
 
-
+-- Restricción eliminada para poder tener sub-entidades como entidades raiz.
 ALTER TABLE RWE_OFICINA DROP CONSTRAINT rwe_oficina_codigo_uk;
 
 --Nuevos campos en RWE_ANEXO
 ALTER TABLE RWE_ANEXO DROP COLUMN FIRMACSV;
+ALTER TABLE RWE_ANEXO DROP COLUMN CERTIFICADO;
+ALTER TABLE RWE_ANEXO DROP COLUMN TIMESTAMP;
+ALTER TABLE RWE_ANEXO DROP COLUMN VALIDACIONOCSP;
+
 alter table RWE_ANEXO add CERTIFICADO raw(255);
 alter table RWE_ANEXO add FIRMA raw(255);
 alter table RWE_ANEXO add TIMESTAMP raw(255);
