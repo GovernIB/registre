@@ -133,6 +133,7 @@ public class CatLocalidad implements Serializable {
    */
   @ManyToOne
   @JoinColumn (name="ENTIDADGEOGRAFICA")
+  @ForeignKey(name = "RWE_CATLOCAL_CATENT_FK")
   @JsonIgnore
   public CatEntidadGeografica getEntidadGeografica() {
     return entidadGeografica;

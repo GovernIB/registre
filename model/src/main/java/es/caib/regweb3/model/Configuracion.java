@@ -1,5 +1,7 @@
 package es.caib.regweb3.model;
 
+import org.hibernate.annotations.ForeignKey;
+
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlTransient;
@@ -82,6 +84,7 @@ public class Configuracion implements Serializable {
 
     @ManyToOne(cascade=CascadeType.ALL)
     @JoinColumn (name="LOGOMENU")
+    @ForeignKey(name = "RWE_CONFIGURACION_LOGOMENU_FK")
     public Archivo getLogoMenu() {
         return logoMenu;
     }
@@ -92,6 +95,7 @@ public class Configuracion implements Serializable {
 
     @ManyToOne(cascade=CascadeType.ALL)
     @JoinColumn (name="LOGOPIE")
+    @ForeignKey(name = "RWE_CONFIGURACION_LOGOPIE_FK")
     public Archivo getLogoPie() {
         return logoPie;
     }
