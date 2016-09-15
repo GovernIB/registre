@@ -188,10 +188,11 @@ public class OficioRemisionController extends BaseController {
         List<Libro> librosRegistroEntrada= getLibrosRegistroEntrada(request); // Obtenemos los Libros donde el Usuario puede Registrar de la Oficina Activa
 
         // Fijamos la oficina activa como la seleccionada por defecto
-        RegistroEntrada re = new RegistroEntrada();
-        re.setOficina(getOficinaActiva(request));
+        RegistroEntrada registroEntrada = new RegistroEntrada();
+        registroEntrada.setLibro(seleccionarLibroOficinaActiva(request,librosRegistroEntrada));
+        registroEntrada.setOficina(getOficinaActiva(request));
 
-        OficioPendienteBusquedaForm oficioPendienteBusquedaForm = new OficioPendienteBusquedaForm(re,1);
+        OficioPendienteBusquedaForm oficioPendienteBusquedaForm = new OficioPendienteBusquedaForm(registroEntrada,1);
 
         model.addAttribute("oficinasRegistro", oficinaEjb.oficinasRegistro(librosRegistroEntrada));
         model.addAttribute("librosRegistro", librosRegistroEntrada);
@@ -247,10 +248,11 @@ public class OficioRemisionController extends BaseController {
         List<Libro> librosRegistroEntrada = getLibrosRegistroEntrada(request);
 
         // Fijamos la oficina activa como la seleccionada por defecto
-        RegistroEntrada re = new RegistroEntrada();
-        re.setOficina(getOficinaActiva(request));
+        RegistroEntrada registroEntrada = new RegistroEntrada();
+        registroEntrada.setLibro(seleccionarLibroOficinaActiva(request,librosRegistroEntrada));
+        registroEntrada.setOficina(getOficinaActiva(request));
 
-        OficioPendienteBusquedaForm oficioPendienteBusquedaForm = new OficioPendienteBusquedaForm(re,1);
+        OficioPendienteBusquedaForm oficioPendienteBusquedaForm = new OficioPendienteBusquedaForm(registroEntrada,1);
 
         mav.addObject("oficinasRegistro", oficinaEjb.oficinasRegistro(librosRegistroEntrada));
         model.addAttribute("librosRegistro", getLibrosRegistroEntrada(request)); // Obtenemos los Libros donde el Usuario puede Registrar de la Oficina Activa
