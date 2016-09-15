@@ -37,7 +37,14 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
      * @throws Exception
      */
     public Organismo findByIdCompleto(Long id) throws Exception;
-    
+
+    /**
+     * Obtiene el Organismo ligero
+     * @param idOrganismo
+     * @return
+     * @throws Exception
+     */
+    public Organismo findByIdLigero(Long idOrganismo) throws Exception;
     
     /**
      * Obtiene los organismos de una entidad

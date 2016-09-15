@@ -168,9 +168,12 @@
                                                                     <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ACEPTADO}"><span class="label label-success"></c:if>
                                                                     <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ANULADO}"><span class="label label-danger"></c:if>
                                                                       <spring:message code="oficioRemision.estado.${oficioRemision.estado}"/>
-                                                                      <c:if test="${not empty oficioRemision.fechaEstado && oficioRemision.estado != 0}">
+                                                                      <c:if test="${not empty oficioRemision.fechaEstado && oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ACEPTADO || oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ANULADO}">
                                                                           - <fmt:formatDate value="${oficioRemision.fechaEstado}" pattern="dd/MM/yyyy HH:mm:ss"/>
                                                                       </c:if>
+                                                                        <c:if test="${oficioRemision.estado != RegwebConstantes.OFICIO_REMISION_ACEPTADO && oficioRemision.estado != RegwebConstantes.OFICIO_REMISION_ANULADO}">
+                                                                            - <fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/>
+                                                                        </c:if>
                                                                     </span>
                                                                 </td>
                                                                 <td>

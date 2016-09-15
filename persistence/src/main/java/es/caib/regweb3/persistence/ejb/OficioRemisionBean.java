@@ -231,6 +231,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
         // Anulamos el Oficio de Remisión
         oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_ANULADO);
+        oficioRemision.setFechaEstado(new Date());
         merge(oficioRemision);
 
     }

@@ -224,7 +224,7 @@
                                             <tbody>
                                             <c:forEach var="organismo" items="${organismosOficioRemisionInterna}">
                                                 <tr>
-                                                    <td>${organismo}</td>
+                                                    <td>${organismo.denominacion}</td>
                                                     <td class="center">
                                                         <a class="btn btn-success btn-sm" href="<c:url value="/oficioRemision/pendientesRemisionInterna"/>" title="<spring:message code="oficioRemision.buscador"/>"><span class="fa fa-search"></span></a>
                                                     </td>
@@ -270,7 +270,7 @@
                                             <tbody>
                                             <c:forEach var="organismo" items="${organismosOficioRemisionExterna}">
                                                 <tr>
-                                                    <td>${organismo}</td>
+                                                    <td>${organismo.denominacion}</td>
                                                     <td class="center">
                                                         <a class="btn btn-success btn-sm" href="<c:url value="/oficioRemision/pendientesRemisionExterna"/>" title="<spring:message code="oficioRemision.buscador"/>"><span class="fa fa-search"></span></a>
                                                     </td>

@@ -1,9 +1,6 @@
 package es.caib.regweb3.persistence.utils;
 
 import es.caib.regweb3.model.Organismo;
-import es.caib.regweb3.model.RegistroEntrada;
-
-import java.util.List;
 
 /**
  * Bean para almacenar RegistroEntrada, de un mismo Organismo,
@@ -13,19 +10,19 @@ import java.util.List;
 public class OficiosRemisionInternoOrganismo {
 
     Organismo organismo;
-    List<RegistroEntrada> oficiosRemision;
+    Paginacion paginacion;
     Boolean oficinas = false;
     Boolean vigente = false;
 
     public OficiosRemisionInternoOrganismo() {
     }
 
-    public List<RegistroEntrada> getOficiosRemision() {
-        return oficiosRemision;
+    public Paginacion getPaginacion() {
+        return paginacion;
     }
 
-    public void setOficiosRemision(List<RegistroEntrada> oficiosRemision) {
-        this.oficiosRemision = oficiosRemision;
+    public void setPaginacion(Paginacion paginacion) {
+        this.paginacion = paginacion;
     }
 
     public Organismo getOrganismo() {

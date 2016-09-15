@@ -12,10 +12,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Fundació BIT.
@@ -82,18 +80,10 @@ public class InicioController extends BaseController{
             /* OFICIOS PENDIENTES DE REMISIÓN */
 
             // Obtenemos los Organismos Internos que tienen Registros pendientes de tramitar por medio de un Oficio de Revisión,
-            Set<String> organismosOficioRemisionInterna = new HashSet<String>();
-            for (Libro libro : librosRegistroEntrada) {
-                organismosOficioRemisionInterna.addAll(oficioRemisionUtilsEjb.oficiosPendientesRemisionInterna(libro.getId(), getOrganismosOficioRemision(request, organismosOficinaActiva)));
-            }
-            mav.addObject("organismosOficioRemisionInterna", organismosOficioRemisionInterna);
+            mav.addObject("organismosOficioRemisionInterna", oficioRemisionUtilsEjb.organismosPendientesRemisionInterna(librosRegistroEntrada, getOrganismosOficioRemision(request, organismosOficinaActiva)));
 
             // Obtenemos los Organismos Externos que tienen Registros pendientes de tramitar por medio de un Oficio de Revisión,
-            Set<String> organismosOficioRemisionExterna = new HashSet<String>();
-            for (Libro libro : librosRegistroEntrada) {
-                organismosOficioRemisionExterna.addAll(oficioRemisionUtilsEjb.oficiosPendientesRemisionExterna(libro.getId()));
-            }
-            mav.addObject("organismosOficioRemisionExterna", organismosOficioRemisionExterna);
+            mav.addObject("organismosOficioRemisionExterna", oficioRemisionUtilsEjb.organismosPendientesRemisionExterna(librosRegistroEntrada));
 
 
             /* OFICIOS PENDIENTES DE LLEGADA */
