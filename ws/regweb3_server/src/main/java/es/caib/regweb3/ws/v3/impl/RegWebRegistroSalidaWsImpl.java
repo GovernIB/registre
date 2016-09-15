@@ -108,9 +108,18 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
     public IdentificadorWs altaRegistroSalida(@WebParam(name = "registroSalidaWs") RegistroSalidaWs registroSalidaWs) throws Throwable, WsI18NException, WsValidationException {
 
         IdentificadorWs identificadorWs = null;
+        Entidad entidad = null;
+
+        // Obtenemos la Entidad a la que se realiza el RegistroEntrada
+        if(UsuarioAplicacionCache.get().getEntidades().size() > 1){
+            //todo: Resolver este caso en el que haya más de una Entidad asociada al usuario que realiza el registro
+            log.info("Usuario asociado a varias Entidades");
+        }else{
+            entidad = UsuarioAplicacionCache.get().getEntidades().get(0);
+        }
 
         // 1.- Comprobar que el Organismo destino está vigente
-        Organismo origen = organismoEjb.findByCodigoLigero(registroSalidaWs.getOrigen());
+        Organismo origen = organismoEjb.findByCodigoEntidad(registroSalidaWs.getOrigen(), entidad.getId());
 
         if (origen == null) { //Si no existe todo: Hay que agregar origenes externos?
             throw new I18NException("registro.organismo.noExiste", registroSalidaWs.getOrigen());
@@ -120,7 +129,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         }
 
         // 2.- Comprobar que la Oficina está vigente
-        Oficina oficina = oficinaEjb.findByCodigo(registroSalidaWs.getOficina());
+        Oficina oficina = oficinaEjb.findByCodigoEntidad(registroSalidaWs.getOficina(), entidad.getId());
 
         if (oficina == null) { //No existe
             throw new I18NException("registro.oficina.noExiste", registroSalidaWs.getOrigen());
@@ -130,7 +139,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         }
 
         // 3.- Comprobar que el Libro está vigente
-        Libro libro = libroEjb.findByCodigoEntidad(registroSalidaWs.getLibro(), oficina.getOrganismoResponsable().getEntidad().getId());
+        Libro libro = libroEjb.findByCodigoEntidad(registroSalidaWs.getLibro(), entidad.getId());
 
         if (libro == null) { //No existe
             throw new I18NException("registro.libro.noExiste", registroSalidaWs.getLibro());
@@ -140,10 +149,10 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         }
 
         // 4.- Comprobar que el usuario tiene permisos para realizar el registro de entrada
-        UsuarioEntidad usuario = usuarioEntidadEjb.findByIdentificadorEntidad(registroSalidaWs.getCodigoUsuario(), oficina.getOrganismoResponsable().getEntidad().getId());
+        UsuarioEntidad usuario = usuarioEntidadEjb.findByIdentificadorEntidad(registroSalidaWs.getCodigoUsuario(), entidad.getId());
 
         if (usuario == null) {//No existe
-            throw new I18NException("registro.usuario.noExiste", registroSalidaWs.getCodigoUsuario(), oficina.getOrganismoResponsable().getEntidad().getNombre());
+            throw new I18NException("registro.usuario.noExiste", registroSalidaWs.getCodigoUsuario(), entidad.getNombre());
 
         } else if (!permisoLibroUsuarioEjb.tienePermiso(usuario.getId(), libro.getId(), PERMISO_REGISTRO_SALIDA)) {
             throw new I18NException("registro.usuario.permisos", registroSalidaWs.getCodigoUsuario(), libro.getCodigo());
@@ -179,7 +188,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         if (registroSalidaWs.getAnexos() != null && registroSalidaWs.getAnexos().size() > 0) {
 
             //Procesamos los anexos
-            anexosFull = procesarAnexos(registroSalidaWs.getAnexos(), usuario.getEntidad().getId());
+            anexosFull = procesarAnexos(registroSalidaWs.getAnexos(), entidad.getId());
 
             registroSalida.getRegistroDetalle().setAnexos(null);
         }
