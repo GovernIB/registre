@@ -333,7 +333,7 @@
                                                 </form:form>
 
                                                 <div class="btn-group">
-                                                    <c:if test="${oficiosRemisionOrganismo.vigente && oficiosRemisionOrganismo.oficinasSIR}">
+                                                    <c:if test="${oficiosRemisionOrganismo.vigente && fn:length(oficiosRemisionOrganismo.oficinasSIR) > 0}">
                                                         <button type="button"
                                                                 onclick="doForm('#oficio')"
                                                                 class="btn btn-sm btn-warning dropdown-toggle">
@@ -341,7 +341,7 @@
                                                         </button>
                                                     </c:if>
 
-                                                    <c:if test="${oficiosRemisionOrganismo.vigente == false || oficiosRemisionOrganismo.oficinasSIR == false}">
+                                                    <c:if test="${oficiosRemisionOrganismo.vigente == false || fn:length(oficiosRemisionOrganismo.oficinasSIR) == 0}">
                                                         <button type="button"
                                                                 class="btn btn-sm btn-warning disabled">
                                                             <spring:message code="oficioRemision.boton.crear"/>

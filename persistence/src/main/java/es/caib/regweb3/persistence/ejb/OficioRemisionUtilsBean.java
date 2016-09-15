@@ -137,11 +137,12 @@ public class OficioRemisionUtilsBean implements OficioRemisionUtilsLocal {
 
         StringBuilder query = new StringBuilder("Select re from RegistroEntrada as re where " + anyWhere +
                 " re.libro.id = :idLibro and re.oficina.id = :idOficina " +
-                "and re.destino.id = :idOrganismo and re.estado = :valido " +
-                "order by re.fecha desc");
+                "and re.destino.id = :idOrganismo and re.estado = :valido ");
 
-        q = em.createQuery(query.toString());
         q2 = em.createQuery(query.toString().replaceAll("Select re", "Select count(re.id)"));
+        query.append(" order by re.fecha desc ");
+        q = em.createQuery(query.toString());
+
 
         // Parámetros
         if (any != null) {
@@ -309,14 +310,14 @@ public class OficioRemisionUtilsBean implements OficioRemisionUtilsLocal {
 
         StringBuilder query = new StringBuilder("Select re from RegistroEntrada as re where " + anyWhere +
                 " re.libro.id = :idLibro and re.oficina.id = :idOficina " +
-                " and re.destino is null and re.destinoExternoCodigo = :codigoOrganismo and re.estado = :valido " +
-                " order by re.fecha desc");
+                " and re.destino is null and re.destinoExternoCodigo = :codigoOrganismo and re.estado = :valido ");
 
         Query q;
         Query q2;
 
-        q = em.createQuery(query.toString());
         q2 = em.createQuery(query.toString().replaceAll("Select re", "Select count(re.id)"));
+        query.append(" order by re.fecha desc ");
+        q = em.createQuery(query.toString());
 
         // Parámetros
         if (any != null) {
