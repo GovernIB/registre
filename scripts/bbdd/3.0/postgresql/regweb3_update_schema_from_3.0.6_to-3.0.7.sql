@@ -126,7 +126,7 @@ alter table RWE_INTERESADO_SIR
         references RWE_ASIENTO_REGISTRAL_SIR;
 
 -- Restricción eliminada para poder tener sub-entidades como entidades raiz.
-ALTER TABLE RWE_OFICINA DROP CONSTRAINT rwe_oficina_codigo_key
+ALTER TABLE RWE_OFICINA DROP CONSTRAINT rwe_oficina_codigo_key;
 
 --Nuevos campos en RWE_ANEXO
 ALTER TABLE RWE_ANEXO DROP COLUMN FIRMACSV;
