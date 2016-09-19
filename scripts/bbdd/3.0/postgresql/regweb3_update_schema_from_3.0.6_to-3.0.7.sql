@@ -1,3 +1,6 @@
+-- Eliminamos la Table Pre-Registro
+DROP TABLE RWE_PRE_REGISTRO CASCADE;
+
 --Nueva tabla RWE_ASIENTO_REGISTRAL_SIR
 
 create table RWE_ASIENTO_REGISTRAL_SIR (
