@@ -128,22 +128,28 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
             <bean class="es.caib.regweb3.webapp.interceptor.ModeloReciboInterceptor"/>
         </mvc:interceptor>
 
-        <!--Interceptor para Dir3-->
+        <!--Interceptor para ModeloOficioRemision-->
         <mvc:interceptor>
             <mvc:mapping path="/modeloOficioRemision/**"/>
             <bean class="es.caib.regweb3.webapp.interceptor.ModeloOficioRemisionInterceptor"/>
         </mvc:interceptor>
 
-        <!--Interceptor para Dir3-->
+        <!--Interceptor para Repro-->
         <mvc:interceptor>
             <mvc:mapping path="/repro/**"/>
             <bean class="es.caib.regweb3.webapp.interceptor.ReproInterceptor"/>
         </mvc:interceptor>
 
-        <!--Interceptor para Dir3-->
+        <!--Interceptor para Admin-->
         <mvc:interceptor>
             <mvc:mapping path="/admin/**"/>
             <bean class="es.caib.regweb3.webapp.interceptor.AdminInterceptor"/>
+        </mvc:interceptor>
+
+        <!--Interceptor para el AsientoRegistralSir-->
+        <mvc:interceptor>
+            <mvc:mapping path="/asientoRegistralSir/**"/>
+            <bean class="es.caib.regweb3.webapp.interceptor.AsientoRegistralSirInterceptor"/>
         </mvc:interceptor>
 
         <!-- Configuración de Idioma -->

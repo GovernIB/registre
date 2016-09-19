@@ -317,16 +317,6 @@ public class UsuarioService {
         session.setAttribute(RegwebConstantes.SESSION_MIGRADOS, registroMigradoEjb.tieneRegistrosMigrados(entidadActiva.getId()));
     }
 
-    /**
-     * Actualiza la variable de sesion de AsientoRegistralSir, según la oficina Activa
-     * @param oficinaActiva
-     * @param session
-     * @throws Exception
-     */
-    public void tieneAsientoRegistralSir(Oficina oficinaActiva, HttpSession session) throws Exception{
-        session.setAttribute(RegwebConstantes.SESSION_TIENE_ASR, asientoRegistralSirEjb.tieneAsientoRegistralSir(oficinaActiva.getCodigo()));
-    }
-
     public void cambioEntidad(Entidad entidadNueva, HttpServletRequest request) throws Exception{
         log.info("Cambiando Entidad activa a: " + entidadNueva.getNombre());
 
