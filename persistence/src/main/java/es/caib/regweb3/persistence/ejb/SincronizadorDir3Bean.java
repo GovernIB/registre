@@ -233,7 +233,6 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
           //TODO Rvisar Pruebas para hacer la sincro de organismos no raiz que pertenecen a otra entidad(FUNDACIO BIT; TIC MALLORCA)
           organismo = organismoEjb.findByCodigoEntidadSinEstado(unidadTF.getCodigo(), idEntidad);
-          //organismo = organismoEjb.findByCodigo(unidadTF.getCodigo());
 
           if(organismo == null){
               log.info("Nuevo organismo: " + unidadTF.getDenominacion());

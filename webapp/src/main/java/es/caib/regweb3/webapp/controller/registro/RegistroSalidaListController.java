@@ -117,7 +117,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             String nombreInteresado = limpiarCaracteresEspeciales(busqueda.getInteressatNom());
             String apellido1Interesado = limpiarCaracteresEspeciales(busqueda.getInteressatLli1());
             String apellido2Interesado = limpiarCaracteresEspeciales(busqueda.getInteressatLli2());
-            Paginacion paginacion = registroSalidaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroSalida, nombreInteresado, apellido1Interesado, apellido2Interesado, busqueda.getInteressatDoc(), busqueda.getOrganOrigen(), busqueda.getAnexos(), busqueda.getObservaciones(), busqueda.getUsuario());
+            Paginacion paginacion = registroSalidaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroSalida, nombreInteresado, apellido1Interesado, apellido2Interesado, busqueda.getInteressatDoc(), busqueda.getOrganOrigen(), busqueda.getAnexos(), busqueda.getObservaciones(), busqueda.getUsuario(), usuarioEntidad.getEntidad().getId());
 
             busqueda.setPageNumber(1);
             mav.addObject("paginacion", paginacion);

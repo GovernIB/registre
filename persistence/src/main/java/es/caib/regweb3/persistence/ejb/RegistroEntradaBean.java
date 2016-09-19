@@ -148,7 +148,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroEntrada registroEntrada, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, String organoDest, Boolean anexos, String observaciones, String usuario) throws Exception {
+    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroEntrada registroEntrada, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, String organoDest, Boolean anexos, String observaciones, String usuario, Long idEntidad) throws Exception {
 
         Query q;
         Query q2;
@@ -204,7 +204,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         // Organismo destinatario
         if (!StringUtils.isEmpty((organoDest))) {
-            Organismo organismo = organismoEjb.findByCodigoLigero(organoDest);
+            Organismo organismo = organismoEjb.findByCodigoEntidad(organoDest, idEntidad);
             if (organismo == null) {
                 where.add(" registroEntrada.destinoExternoCodigo = :organoDest ");
             } else {

@@ -128,7 +128,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             String nombreInteresado = limpiarCaracteresEspeciales(busqueda.getInteressatNom());
             String apellido1Interesado = limpiarCaracteresEspeciales(busqueda.getInteressatLli1());
             String apellido2Interesado = limpiarCaracteresEspeciales(busqueda.getInteressatLli2());
-            Paginacion paginacion = registroEntradaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroEntrada, nombreInteresado, apellido1Interesado, apellido2Interesado, busqueda.getInteressatDoc(), busqueda.getOrganDestinatari(), busqueda.getAnexos(), busqueda.getObservaciones(), busqueda.getUsuario());
+            Paginacion paginacion = registroEntradaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroEntrada, nombreInteresado, apellido1Interesado, apellido2Interesado, busqueda.getInteressatDoc(), busqueda.getOrganDestinatari(), busqueda.getAnexos(), busqueda.getObservaciones(), busqueda.getUsuario(), usuarioEntidad.getEntidad().getId());
 
             busqueda.setPageNumber(1);
             mav.addObject("paginacion", paginacion);
@@ -143,7 +143,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         // Comprobamos si el Organismo destinatario es externo, para añadirlo a la lista.
         if (!StringUtils.isEmpty(busqueda.getOrganDestinatari())) {
-            Organismo org = organismoEjb.findByCodigoLigero(busqueda.getOrganDestinatari());
+            Organismo org = organismoEjb.findByCodigoEntidad(busqueda.getOrganDestinatari(), usuarioEntidad.getEntidad().getId());
             if(org== null || !organismosOficinaActiva.contains(org)){ //Es organismo externo, lo añadimos a la lista
                 organismosOficinaActiva.add(new Organismo(null,busqueda.getOrganDestinatari(),new String(busqueda.getOrganDestinatariNom().getBytes("ISO-8859-1"), "UTF-8") ));
             }

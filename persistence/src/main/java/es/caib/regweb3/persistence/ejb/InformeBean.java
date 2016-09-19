@@ -40,7 +40,7 @@ public class InformeBean implements InformeLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroEntrada> buscaLibroRegistroEntradas(Date fechaInicio, Date fechaFin, String numRegistro, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String extracto, String usuario, List<Libro> libros, Long estado, Long idOficina, Long idTipoAsunto, String organoDest) throws Exception {
+    public List<RegistroEntrada> buscaLibroRegistroEntradas(Date fechaInicio, Date fechaFin, String numRegistro, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String extracto, String usuario, List<Libro> libros, Long estado, Long idOficina, Long idTipoAsunto, String organoDest, Long idEntidad) throws Exception {
 
         Query q;
         Map<String, Object> parametros = new HashMap<String, Object>();
@@ -95,7 +95,7 @@ public class InformeBean implements InformeLocal {
 
         // Organismo destinatario
         if (!StringUtils.isEmpty((organoDest))) {
-            if (organismoEjb.findByCodigoLigero(organoDest) == null) {
+            if (/*organismoEjb.findByCodigoLigero(organoDest) == null*/organismoEjb.findByCodigoEntidad(organoDest, idEntidad) == null) {
                 where.add(" registroEntrada.destinoExternoCodigo = :organoDest ");
             } else {
                 where.add(" registroEntrada.destino.codigo = :organoDest ");
@@ -276,7 +276,7 @@ public class InformeBean implements InformeLocal {
     }
 
     @Override
-    public List<RegistroSalida> buscaLibroRegistroSalidas(Date fechaInicio, Date fechaFin, String numRegistro, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String extracto, String usuario, List<Libro> libros, Long estado, Long idOficina, Long idTipoAsunto, String organoOrig) throws Exception {
+    public List<RegistroSalida> buscaLibroRegistroSalidas(Date fechaInicio, Date fechaFin, String numRegistro, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String extracto, String usuario, List<Libro> libros, Long estado, Long idOficina, Long idTipoAsunto, String organoOrig, Long idEntidad) throws Exception {
 
         Query q;
         Map<String, Object> parametros = new HashMap<String, Object>();
@@ -331,7 +331,7 @@ public class InformeBean implements InformeLocal {
 
         // Organismo origen
         if (!StringUtils.isEmpty((organoOrig))) {
-            Organismo organismo = organismoEjb.findByCodigoLigero(organoOrig);
+            Organismo organismo = organismoEjb.findByCodigoEntidad(organoOrig, idEntidad);
             if (organismo == null) {
                 where.add(" registroSalida.origenExternoCodigo = :organoOrig ");
             } else {

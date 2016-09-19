@@ -15,7 +15,6 @@ import es.caib.regweb3.webapp.form.UsuarioEntidadBusquedaForm;
 import es.caib.regweb3.webapp.login.RegwebLoginPluginManager;
 import es.caib.regweb3.webapp.utils.*;
 import es.caib.regweb3.webapp.validator.EntidadValidator;
-
 import org.fundaciobit.plugins.userinformation.IUserInformationPlugin;
 import org.fundaciobit.plugins.userinformation.RolesInfo;
 import org.hibernate.Hibernate;
@@ -33,7 +32,6 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -535,11 +533,12 @@ public class EntidadController extends BaseController {
                jsonResponse.setStatus("NOTALLOWED");
                return jsonResponse;
            }
-          // via ajax s'en va a "entidad/pendientesprocesar"
+            // actualizamos nombre y codigo de la entidad, si la unidad raiz a la que representa se ha extinguido.
+            actualizarEntidadExtincionUnidadRaiz(entidadId, request);
+            // via ajax s'en va a "entidad/pendientesprocesar"
        }catch(Exception e){
            log.error("Error actualizacion", e);
            Mensaje.saveMessageError(request, getMessage("regweb.actualizacion.nook"));
-
            jsonResponse.setStatus("FAIL");
             return jsonResponse;
        }
@@ -1078,6 +1077,31 @@ public class EntidadController extends BaseController {
 
         }else{ // Retorna la imagen original
             return logoMenu;
+        }
+    }
+
+    /**
+     * Método que actualiza el nombre y el código dir3 de la entidad, debido a que la unidad raiz a la que representa se ha extinguido en dir3caib.
+     *
+     * @param entidadId
+     * @param request
+     * @throws Exception
+     */
+    public void actualizarEntidadExtincionUnidadRaiz(Long entidadId, HttpServletRequest request) throws Exception {
+        Entidad entidad = entidadEjb.findById(entidadId);
+        Organismo organismoRaizEntidad = organismoEjb.findByCodigoEntidadSinEstado(entidad.getCodigoDir3(), entidadId);
+        Set<Organismo> historicosFinales = new HashSet<Organismo>();
+        organismoEjb.obtenerHistoricosFinales(organismoRaizEntidad.getId(), historicosFinales);
+        if (historicosFinales.size() > 0) {
+            if (historicosFinales.size() == 1) {
+                entidad.setCodigoDir3((historicosFinales.iterator().next()).getCodigo());
+                entidad.setNombre((historicosFinales.iterator().next()).getDenominacion());
+                entidadEjb.merge(entidad);
+                usuarioService.cambioEntidad(entidad, request);
+            } else {
+                throw new Exception("La raiz se ha dividido en más de un organismo, houston tenemos un problema");
+            }
+
         }
     }
 

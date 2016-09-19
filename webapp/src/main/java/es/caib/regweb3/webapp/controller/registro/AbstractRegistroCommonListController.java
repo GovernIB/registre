@@ -7,14 +7,12 @@ import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
-
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
@@ -87,7 +85,7 @@ public abstract class AbstractRegistroCommonListController extends BaseControlle
     @ModelAttribute("comunidad")
     public CatComunidadAutonoma comunidad(HttpServletRequest request) throws Exception {
         Entidad entidad = getEntidadActiva(request);
-        Organismo organismoRaiz = organismoEjb.findByCodigoLigero(entidad.getCodigoDir3());
+        Organismo organismoRaiz = organismoEjb.findByCodigoEntidad(entidad.getCodigoDir3(), entidad.getId());
         if ((organismoRaiz != null) && organismoRaiz.getCodAmbComunidad() != null) {
             return organismoRaiz.getCodAmbComunidad();
         }

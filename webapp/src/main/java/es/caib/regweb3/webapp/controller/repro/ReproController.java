@@ -141,7 +141,7 @@ public class ReproController extends BaseController {
         log.info("OficinaCodigo: " + reproJson.getOficinaCodigo());
         if (!reproJson.getOficinaCodigo().equals("-1")) {
 
-            Oficina oficina = oficinaEjb.findByCodigo(reproJson.getOficinaCodigo());
+            Oficina oficina = oficinaEjb.findByCodigoEntidad(reproJson.getOficinaCodigo(), usuarioEntidad.getEntidad().getId());
 
             if (oficina != null) { // es interna
                 log.info("Oficina: " + reproJson.getOficinaDenominacion() + " Interno");

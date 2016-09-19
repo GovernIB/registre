@@ -135,7 +135,8 @@ public class InformeController extends AbstractRegistroCommonFormController {
             if(!informeLibroBusquedaForm.getOrganDestinatariNom().equals("")) {
                 nomOrganismeDest = informeLibroBusquedaForm.getOrganDestinatariNom();
             } else{
-                nomOrganismeDest = organismoEjb.findByCodigoLigero(codigoOrganDest).getDenominacion();
+                //nomOrganismeDest = organismoEjb.findByCodigoLigero(codigoOrganDest).getDenominacion();
+                nomOrganismeDest = organismoEjb.findByCodigoEntidad(codigoOrganDest, usuarioEntidad.getEntidad().getId()).getDenominacion();
             }
         }
 
@@ -163,7 +164,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
                     informeLibroBusquedaForm.getInteressatLli1(), informeLibroBusquedaForm.getInteressatLli2(), informeLibroBusquedaForm.getInteressatDoc(),
                     informeLibroBusquedaForm.getAnexos(), informeLibroBusquedaForm.getObservaciones(),
                     informeLibroBusquedaForm.getExtracto(), informeLibroBusquedaForm.getUsuario(), informeLibroBusquedaForm.getLibros(),
-                    informeLibroBusquedaForm.getEstado(), idOficina, idTipoAsunto, codigoOrganDest);
+                    informeLibroBusquedaForm.getEstado(), idOficina, idTipoAsunto, codigoOrganDest, usuarioEntidad.getEntidad().getId());
 
 
             for (int i = 0; i < registrosEntrada.size(); i++) {
@@ -342,7 +343,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
                     informeLibroBusquedaForm.getInteressatLli1(), informeLibroBusquedaForm.getInteressatLli2(), informeLibroBusquedaForm.getInteressatDoc(),
                     informeLibroBusquedaForm.getAnexos(), informeLibroBusquedaForm.getObservaciones(),
                     informeLibroBusquedaForm.getExtracto(), informeLibroBusquedaForm.getUsuario(), informeLibroBusquedaForm.getLibros(),
-                    informeLibroBusquedaForm.getEstado(), idOficina, idTipoAsunto, codigoOrganDest);
+                    informeLibroBusquedaForm.getEstado(), idOficina, idTipoAsunto, codigoOrganDest, usuarioEntidad.getEntidad().getId());
 
 
             for (int i = 0; i < registrosSalida.size(); i++) {

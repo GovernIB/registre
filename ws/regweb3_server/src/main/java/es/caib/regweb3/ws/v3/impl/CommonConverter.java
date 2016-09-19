@@ -132,6 +132,7 @@ public class CommonConverter {
         if (oficinaCodigoDir3 == null) {
             return null;
         }
+        //TODO REVISAR CON EDU
         return oficinaEjb.findByCodigo(oficinaCodigoDir3);
     }
 
