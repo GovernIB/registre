@@ -32,6 +32,14 @@
       <!-- Directorio base para los archivos generales -->
       es.caib.regweb3.archivos.path=D:/dades/dades/Proyectos/REGWEB/Archivos/
       
+      <!-- Nou a la versió 3.0.7. Opcional. Indica quan s'afegeix un annexe amb origen escàner, el valor del camp Validesa Documental quan aquest no correspon amb el Mode de Firma. Si no es defineix llavors s'assigna el valor COPIA_COMPULSADA. El valors possibles són:
+            -1: Indica que volem llançar una excepció i que ha de ser l'usuari que ha de posar el valor correcte
+            2: Assigna el valor COPIA_COMPULSADA.
+            3: Assigna el valor COPIA_ORIGINAL.
+            4: Assigna el valor DOCUMENTO_ORIGINAL
+      -->
+      es.caib.regweb3.scan_default_validez_documento=2
+      
       <!-- Directorio base para los annexos -->
       <!-- ======== PLUGIN DE CUSTODIA - FILESYSTEM ============== -->
       es.caib.regweb3.annex.documentcustodyplugin=org.fundaciobit.plugins.documentcustody.filesystem.FileSystemDocumentCustodyPlugin
@@ -96,19 +104,14 @@
        es.caib.regweb3.scan.plugin.1.plugins.scanweb.caib.debug=false
        es.caib.regweb3.scan.plugin.1.plugins.scanweb.caib.ws_username=anadal
        es.caib.regweb3.scan.plugin.1.plugins.scanweb.caib.ws_password=anadal
-       <!-- valor per defecte de l'identificador del document -->
-       es.caib.regweb3.scan.plugin.1.plugins.scanweb.caib.identificadorDocumentOrigen=Ident XXX 666
-       es.caib.regweb3.scan.plugin.1.plugins.scanweb.caib.tipusDocumental.es=TD01\:Resolución\nTD02\:Acuerdo\nTD03\:Contrato
-       es.caib.regweb3.scan.plugin.1.plugins.scanweb.caib.tipusDocumental.ca=TD01\:Resolució\nTD02\:Acord\nTD03\:Contracte
-       es.caib.regweb3.scan.plugin.1.plugins.scanweb.caib.origen.es=1\:Administración\n0\:Ciudadano
-       es.caib.regweb3.scan.plugin.1.plugins.scanweb.caib.origen.ca=1\:Administració\n0\:Ciutadà
-       es.caib.regweb3.scan.plugin.1.plugins.scanweb.caib.organ.es=A04013518\:DG. Personal Docente\nA04013600\:DG Participación y Transparencia\nA04013511\:DG de Desarrollo Tecnológico\nA04003746\:DG Turismo
-       es.caib.regweb3.scan.plugin.1.plugins.scanweb.caib.organ.ca=A04013518\:DG. Personal Docent\nA04013600\:DG Participació i Transparència\nA04013511\:DG de Desenvolupament Tecnològic\nA04003746\:DG Turisme
-		   
+       # Opcional. Si no es defineix s'utilitza la integració per defecte
+       es.caib.regweb3.scan.plugin.1.plugins.scanweb.caib.codi_integracio=EXEMPLEAPP
+
+
        <!-- ============== 2 - Dynamic Web Twain  ================ -->
 		   es.caib.regweb3.scan.plugin.2=es.limit.plugins.scanweb.dynamicwebtwain.DynamicWebTwainScanWebPlugin
 
-		   
+
        <!-- ============== 3 - Applet IECISA ================ -->
 		   es.caib.regweb3.scan.plugin.3=org.fundaciobit.plugins.scanweb.iecisa.IECISAScanWebPlugin
        es.caib.regweb3.scan.plugin.3.plugins.scanweb.iecisa.showInModal=true

@@ -5,3 +5,9 @@ target
 /ws/regweb3_api/dependency-reduced-pom.xml
 /ws/regweb3_api_axis/dependency-reduced-pom.xml
 /utils/src/main/java/es/caib/regweb3/utils/TimeStamp.java
+/ws/regweb3_api/src/main/resources/logicmissatges_ca.properties
+/ws/regweb3_api/src/main/resources/logicmissatges_es.properties
+/ws/regweb3_api_axis/src/main/resources/logicmissatges_ca.properties
+/ws/regweb3_api_axis/src/main/resources/logicmissatges_es.properties
+/webapp/src/main/resources/logicmissatges_ca.properties
+/webapp/src/main/resources/logicmissatges_es.properties

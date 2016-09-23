@@ -445,12 +445,11 @@ public class AnexoController extends BaseController {
         // Hem de modificar el Modo de Firma segons el que ens hagin enviat des de SCAN
         dc = sd.getScannedPlainFile();
         sc = sd.getScannedSignedFile();
-        final int modoFirma;
-        
+
         final boolean validezCopia;
         validezCopia = (anexoForm.getAnexo().getValidezDocumento() == RegwebConstantes.TIPOVALIDEZDOCUMENTO_COPIA);
         
-        
+        final int modoFirma;
         if (dc == null) {
           // Firma: PAdES, CAdES, XAdES
           // Document amb firma adjunta
@@ -469,13 +468,55 @@ public class AnexoController extends BaseController {
         anexoForm.getAnexo().setModoFirma(modoFirma);
         
         if ((modoFirma != RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) && validezCopia) {
-          throw new I18NException("anexo.error.tipovalidezmodofirma");
+          // El mode de firma i la validesa del document no es corresponen
+          
+          // Si hi ha definida aquesta propietat, li posam el valor 
+          // Si el valor de la propietat és -1, lavors llançarem una excepció
+          // per indicar a l'usuari que ha de posar a ma el tipo validez correcte
+          
+          String defValDoc = System.getProperty(
+              RegwebConstantes.REGWEB3_PROPERTY_BASE + "scan_default_validez_documento");
+          if (defValDoc == null || defValDoc.trim().length() == 0) {
+            // Forçam a Còpia Compulsada 
+            anexoForm.getAnexo().setValidezDocumento(
+                RegwebConstantes.TIPOVALIDEZDOCUMENTO_COPIA_COMPULSADA);
+          } else {
+            long defVal; 
+            try {
+              defVal = Long.parseLong(defValDoc);
+            } catch (Exception e) {
+              log.error("La propietat '" + RegwebConstantes.REGWEB3_PROPERTY_BASE 
+                  + "scan_default_validez_documento' no conté un valor numeric ");
+              defVal = -1;              
+            }
+            
+            
+              
+            if ((defVal == RegwebConstantes.TIPOVALIDEZDOCUMENTO_COPIA_COMPULSADA)
+                || (defVal == RegwebConstantes.TIPOVALIDEZDOCUMENTO_COPIA_ORIGINAL) 
+                || (defVal == RegwebConstantes.TIPOVALIDEZDOCUMENTO_ORIGINAL) ) {
+              // OK
+            } else {
+              if (defVal != -1) {
+                log.error("La propietat '" + RegwebConstantes.REGWEB3_PROPERTY_BASE 
+                  + "scan_default_validez_documento' no conté un valor no permés("
+                  + defVal + "). Els valors vàlids són 2,3 i 4");
+                defVal = -1;
+              }
+            }
+
+            if (defVal == -1) {
+              throw new I18NException("anexo.error.tipovalidezmodofirma");
+            }
+
+            anexoForm.getAnexo().setValidezDocumento(defVal);
+          }
+
+          
         }
 
-        
         anexoForm.setMetadatas(sd.getMetadatas());
-        
-        
+
       } else {
 
         // Formulari Fitxer de Sistema
