@@ -6,7 +6,10 @@ Parametres Opcionals:
  -Piecisascanweb Inclou el plugin de escaneig de IECISA
                    (requerix configuracio dins regweb3-properties-service.xml)
 
- -Pcaibscanweb   Inclou el plugin de escaneig de la CAIB (Digitalització-Compulsa)
+ -Pcaibscanweb313 Inclou el plugin de escaneig de la CAIB (Digitalització-Compulsa v3.1.3)
+                   (requerix configuracio dins regweb3-properties-service.xml)
+
+ -Pcaibscanweb   Inclou el plugin de escaneig de la CAIB (Digitalització-Compulsa v4.0)
                    (requerix configuracio dins regweb3-properties-service.xml)
                   
  -Pdwtscanweb    Inclou el plugin de escaneig Dynamic Web Twain

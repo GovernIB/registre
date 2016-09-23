@@ -106,7 +106,17 @@
        es.caib.regweb3.scan.plugin.1.plugins.scanweb.caib.ws_password=anadal
        # Opcional. Si no es defineix s'utilitza la integració per defecte
        es.caib.regweb3.scan.plugin.1.plugins.scanweb.caib.codi_integracio=EXEMPLEAPP
-
+       
+       <!-- NOMES PER CAIB SCAN WEB PLUGIN PER DIGITAL 3.1.3 -->
+       <!--
+       es.caib.regweb3.scan.plugin.1.plugins.scanweb.caib.identificadorDocumentOrigen=Ident XXX 666
+       es.caib.regweb3.scan.plugin.1.plugins.scanweb.caib.tipusDocumental.es=TD01\:Resolución\nTD02\:Acuerdo\nTD03\:Contrato
+       es.caib.regweb3.scan.plugin.1.plugins.scanweb.caib.tipusDocumental.ca=TD01\:Resolució\nTD02\:Acord\nTD03\:Contracte
+       es.caib.regweb3.scan.plugin.1.plugins.scanweb.caib.origen.es=1\:Administración\n0\:Ciudadano
+       es.caib.regweb3.scan.plugin.1.plugins.scanweb.caib.origen.ca=1\:Administració\n0\:Ciutadà
+       es.caib.regweb3.scan.plugin.1.plugins.scanweb.caib.organ.es=A04013518\:DG. Personal Docente\nA04013600\:DG Participación y Transparencia\nA04013511\:DG de Desarrollo Tecnológico\nA04003746\:DG Turismo
+       es.caib.regweb3.scan.plugin.1.plugins.scanweb.caib.organ.ca=A04013518\:DG. Personal Docent\nA04013600\:DG Participació i Transparència\nA04013511\:DG de Desenvolupament Tecnològic\nA04003746\:DG Turisme
+       -->
 
        <!-- ============== 2 - Dynamic Web Twain  ================ -->
 		   es.caib.regweb3.scan.plugin.2=es.limit.plugins.scanweb.dynamicwebtwain.DynamicWebTwainScanWebPlugin
