@@ -67,36 +67,21 @@
             </snapshots>
         </repository>
 		
-		<repository>
-            <id>pluginsib-maven-repos</id>
-            <name>PluginsIB Maven Repository</name>
-            <url>http://GovernIB.github.io/pluginsib/maven/</url>
-        </repository>
+    <!-- Requerim RIPEA, PluginsIB(ScanWeb) i Dir3CAIB -->
+    <repository>
+       <id>maven-repos</id>
+       <name>GitHub GovernIB Maven Repository</name>
+       <url>http://GovernIB.github.io/maven/maven/</url>
+    </repository>
 		
-        <repository>
-            <id>genapp-maven-repos</id>
-            <name>GenApp Maven Repository</name>
-            <url>http://GovernIB.github.io/genapp/maven/</url>
-        </repository>
-		
-	    <repository>
-            <id>dir3caib-maven-repos</id>
-            <name>Dir3CAIB Maven Repository</name>
-            <url>http://GovernIB.github.io/dir3caib/maven/</url>
-	    </repository>
 
-        <repository>
+    <repository>
 			<name>Local Maven Repository 1</name>
 			<id>es.caib.regweb3.localrepo1</id>
 			<url>file://${basedir}/../local-repo</url>
 		</repository>
 
-        <repository>
-            <id>ripea-maven-repos</id>
-            <name>RIPEA Maven Repository</name>
-            <url>http://GovernIB.github.io/ripea/maven/</url>
-        </repository>
-		
+	
     </repositories>
 
 
@@ -163,10 +148,10 @@
                     </includes>
                     <path>maven</path>
                     <!-- github repo name -->
-                    <repositoryName>registre</repositoryName>      
+                    <repositoryName>maven</repositoryName>      
                     <!-- github username or organization  -->
                     <repositoryOwner>GovernIB</repositoryOwner>    
-                    <server>github_governib_registre</server>
+                    <server>github_governib_maven</server>
                     <merge>true</merge>
                     <dryRun>false</dryRun>
                 </configuration>
@@ -184,24 +169,23 @@
 
     </build>
 	
-	<distributionManagement>
-    
-        <repository>
-            <id>github_governib_registre</id>
-            <name>GitHub GovernIB Registre Maven Repository</name>
-            <url>file://${project.build.directory}/mvn-repo</url>
-        </repository>
-        <!--   COM UTILITZAR: AFEGIR AQUEST CODI AL pom.xml    -->
-        <!--
+  <distributionManagement>
+    <repository>
+      <id>github_governib_maven</id>
+      <name>GitHub GovernIB Maven Repository</name>
+      <url>file://${project.build.directory}/mvn-repo</url>
+    </repository>
+  </distributionManagement>
+  
+  <!--   COM UTILITZAR: AFEGIR AQUEST CODI AL pom.xml    -->
+  <!--
         <repositories>
            <repository>
-             <id>registre-maven-repos</id>
-             <name>Registre Maven Repository</name>
-             <url>http://GovernIB.github.io/registre/maven/</url>
+             <id>github-governib-maven-repos</id>
+             <name>GitHub GovernIB Maven Repository</name>
+             <url>http://GovernIB.github.io/maven/maven/</url>
            </repository>
-        <repositories>
-        -->
-
-    </distributionManagement>
+        </repositories>
+  -->
     
 </project>
