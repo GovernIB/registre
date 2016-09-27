@@ -1,13 +1,16 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.sir.core.model.AnexoSir;
 import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
 import es.caib.regweb3.sir.core.model.InteresadoSir;
+import es.caib.regweb3.sir.core.model.TipoRegistro;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -19,10 +22,12 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.security.MessageDigest;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
+
+import static es.caib.regweb3.utils.RegwebConstantes.*;
 
 /**
  * Created by Fundació BIT.
@@ -51,6 +56,66 @@ public class SirBean implements SirLocal{
     @EJB public TipoDocumentalLocal tipoDocumentalEjb;
 
     /**
+     * Transforma un {@link es.caib.regweb3.model.RegistroEntrada} en un {@link es.caib.regweb3.sir.core.model.AsientoRegistralSir}
+     * @param registroEntrada
+     * @param oficinaSir
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     * @throws I18NValidationException
+     */
+    public AsientoRegistralSir transformarRegistroEntrada(RegistroEntrada registroEntrada, OficinaTF oficinaSir)
+            throws Exception, I18NException, I18NValidationException {
+
+        RegistroDetalle registroDetalle = registroEntrada.getRegistroDetalle();
+
+        AsientoRegistralSir asientoRegistralSir = new AsientoRegistralSir();
+        asientoRegistralSir.setEntidad(registroEntrada.getOficina().getOrganismoResponsable().getEntidad());
+        asientoRegistralSir.setCodigoEntidadRegistral(registroEntrada.getOficina().getCodigo());
+        asientoRegistralSir.setCodigoEntidadRegistralOrigen(registroEntrada.getOficina().getCodigo());
+        asientoRegistralSir.setDecodificacionEntidadRegistralOrigen(registroEntrada.getOficina().getDenominacion());
+        asientoRegistralSir.setNumeroRegistro(registroEntrada.getNumeroRegistroFormateado());
+        asientoRegistralSir.setFechaRegistro(registroEntrada.getFecha());
+        asientoRegistralSir.setCodigoUnidadTramitacionOrigen(registroEntrada.getOficina().getOrganismoResponsable().getCodigo());
+        asientoRegistralSir.setDecodificacionUnidadTramitacionOrigen(registroEntrada.getOficina().getOrganismoResponsable().getDenominacion());
+        asientoRegistralSir.setCodigoEntidadRegistralDestino(oficinaSir.getCodigo());
+        asientoRegistralSir.setDecodificacionEntidadRegistralDestino(oficinaSir.getDenominacion());
+        asientoRegistralSir.setCodigoUnidadTramitacionDestino(oficinaSir.getCodUoResponsable());
+        asientoRegistralSir.setDecodificacionUnidadTramitacionDestino(null);
+        asientoRegistralSir.setResumen(registroDetalle.getExtracto());
+
+        if(registroEntrada.getDestino() != null){
+            TraduccionCodigoAsunto tra = (TraduccionCodigoAsunto) registroDetalle.getCodigoAsunto().getTraduccion(RegwebConstantes.IDIOMA_CASTELLANO_CODIGO);
+            asientoRegistralSir.setCodigoAsunto(tra.getNombre());
+        }
+
+        asientoRegistralSir.setReferenciaExterna(registroDetalle.getReferenciaExterna());
+        asientoRegistralSir.setNumeroExpediente(registroDetalle.getExpediente());
+        asientoRegistralSir.setTipoTransporte(CODIGO_SICRES_BY_TRANSPORTE.get(registroDetalle.getTransporte()));
+        asientoRegistralSir.setNumeroTransporte(registroDetalle.getNumeroTransporte());
+        asientoRegistralSir.setNombreUsuario(registroEntrada.getUsuario().getNombreCompleto());
+        asientoRegistralSir.setContactoUsuario(registroEntrada.getUsuario().getUsuario().getEmail());
+
+        asientoRegistralSir.setIdentificadorIntercambio(generarIdentificadorIntercambio(asientoRegistralSir.getCodigoEntidadRegistralOrigen()));
+
+        asientoRegistralSir.setEstado(null);
+        asientoRegistralSir.setAplicacion(registroDetalle.getAplicacion());
+        asientoRegistralSir.setTipoRegistro(TipoRegistro.ENTRADA);
+        asientoRegistralSir.setDocumentacionFisica(String.valueOf(registroDetalle.getTipoDocumentacionFisica()));
+        asientoRegistralSir.setObservacionesApunte(registroDetalle.getObservaciones());
+        asientoRegistralSir.setCodigoEntidadRegistralInicio(obtenerCodigoOficinaOrigen(registroEntrada));
+        asientoRegistralSir.setDecodificacionEntidadRegistralInicio(obtenerDenominacionOficinaOrigen(registroEntrada));
+        asientoRegistralSir.setExpone(registroDetalle.getExpone());
+        asientoRegistralSir.setSolicita(registroDetalle.getSolicita());
+
+        asientoRegistralSir.setInteresados(procesarInteresadosSir(registroDetalle.getInteresados()));
+        asientoRegistralSir.setAnexos(procesarAnexosSir(registroDetalle.getAnexosFull(), asientoRegistralSir.getIdentificadorIntercambio()));
+
+        return asientoRegistralSir;
+
+    }
+
+    /**
      *
      * @param asientoRegistralSir
      * @param usuario
@@ -77,11 +142,11 @@ public class SirBean implements SirLocal{
         // Organismo destino
         Organismo organismoDestino;
         if(asientoRegistralSir.getCodigoUnidadTramitacionDestino() != null){
-            organismoDestino = organismoEjb.findByCodigoLigero(asientoRegistralSir.getCodigoUnidadTramitacionDestino());
+            organismoDestino = organismoEjb.findByCodigoEntidad(asientoRegistralSir.getCodigoUnidadTramitacionDestino(),usuario.getEntidad().getId());
             registroEntrada.setDestino(organismoDestino);
         }else{
-            Oficina oficina = oficinaEjb.findByCodigo(asientoRegistralSir.getCodigoEntidadRegistralDestino());
-            organismoDestino = organismoEjb.findByCodigoLigero(oficina.getOrganismoResponsable().getCodigo());
+            Oficina oficina = oficinaEjb.findByCodigoEntidad(asientoRegistralSir.getCodigoEntidadRegistralDestino(),usuario.getEntidad().getId());
+            organismoDestino = organismoEjb.findByCodigoEntidad(oficina.getOrganismoResponsable().getCodigo(),usuario.getEntidad().getId());
         }
 
         registroEntrada.setDestino(organismoDestino);
@@ -211,6 +276,28 @@ public class SirBean implements SirLocal{
         return registroDetalle;
     }
 
+
+    /**
+     * Transforma una Lista de {@link InteresadoSir} en una Lista de {@link Interesado}
+     * @param interesados
+     * @return
+     * @throws Exception
+     */
+    private List<InteresadoSir> procesarInteresadosSir(List<Interesado> interesados) throws Exception{
+        List<InteresadoSir> interesadosSir = new ArrayList<InteresadoSir>();
+
+        for (Interesado interesado : interesados) {
+            InteresadoSir interesadoSir = null;
+
+            if (!interesado.getIsRepresentante()){
+                interesadoSir = transformarInteresadoSir(interesado, interesado.getRepresentante());
+                interesadosSir.add(interesadoSir);
+            }
+
+
+        }
+        return interesadosSir;
+    }
 
     /**
      * Transforma una Lista de {@link InteresadoSir} en una Lista de {@link Interesado}
@@ -415,6 +502,295 @@ public class SirBean implements SirLocal{
     }
 
     /**
+     * Transforma un {@link InteresadoSir} en un {@link Interesado}
+     * @param interesado
+     * @param representante
+     * @return Interesado de tipo {@link Interesado}
+     * @throws Exception
+     */
+    private InteresadoSir transformarInteresadoSir(Interesado interesado, Interesado representante) throws Exception{
+
+        InteresadoSir interesadoSir = new InteresadoSir();
+
+        if (interesado.getTipoDocumentoIdentificacion() != null) {
+            interesadoSir.setTipoDocumentoIdentificacionInteresado(String.valueOf(CODIGO_NTI_BY_TIPODOCUMENTOID.get(interesado.getTipoDocumentoIdentificacion())));
+        }
+
+        if (!StringUtils.isEmpty(interesado.getDocumento())) {
+            interesadoSir.setDocumentoIdentificacionInteresado(interesado.getDocumento());
+        }
+
+        if (!StringUtils.isEmpty(interesado.getRazonSocial())) {
+            interesadoSir.setRazonSocialInteresado(interesado.getRazonSocial());
+        }
+
+        if (!StringUtils.isEmpty(interesado.getNombre())) {
+            interesadoSir.setNombreInteresado(interesado.getNombre());
+        }
+
+        if (!StringUtils.isEmpty(interesado.getApellido1())) {
+            interesadoSir.setPrimerApellidoInteresado(interesado.getApellido1());
+        }
+
+        if (!StringUtils.isEmpty(interesado.getApellido2())) {
+            interesadoSir.setSegundoApellidoInteresado(interesado.getApellido2());
+        }
+
+        if(interesado.getPais() != null){
+            interesadoSir.setCodigoPaisInteresado(interesado.getPais().getCodigoPais().toString());
+        }
+
+        if(interesado.getProvincia() != null){
+            interesadoSir.setCodigoProvinciaInteresado(interesado.getProvincia().getCodigoProvincia().toString());
+        }
+
+        if(interesado.getLocalidad() != null){
+            interesadoSir.setCodigoMunicipioInteresado(interesado.getLocalidad().getCodigoLocalidad().toString());
+        }
+
+        if (!StringUtils.isEmpty(interesado.getDireccion())) {
+            interesadoSir.setDireccionInteresado(interesado.getDireccion());
+        }
+
+        if (!StringUtils.isEmpty(interesado.getCp())) {
+            interesadoSir.setCodigoPostalInteresado(interesado.getCp());
+        }
+
+        if (!StringUtils.isEmpty(interesado.getEmail())) {
+            interesadoSir.setCorreoElectronicoInteresado(interesado.getEmail());
+        }
+
+        if (!StringUtils.isEmpty(interesado.getTelefono())) {
+            interesadoSir.setTelefonoInteresado(interesado.getTelefono());
+        }
+
+        if (!StringUtils.isEmpty(interesado.getDireccionElectronica())) {
+            interesadoSir.setDireccionElectronicaHabilitadaInteresado(interesado.getDireccionElectronica());
+        }
+
+        if (interesado.getCanal() != null) {
+            interesadoSir.setCanalPreferenteComunicacionInteresado(CODIGO_BY_CANALNOTIFICACION.get(interesado.getCanal()));
+        }
+
+        if (!StringUtils.isEmpty(interesado.getObservaciones())) {
+            interesadoSir.setObservaciones(interesado.getObservaciones());
+        }
+
+        // Si tiene representante, también lo transformamos
+        if(representante != null){
+
+            if (representante.getTipoDocumentoIdentificacion() != null) {
+                interesadoSir.setTipoDocumentoIdentificacionRepresentante(String.valueOf(CODIGO_NTI_BY_TIPODOCUMENTOID.get(representante.getTipoDocumentoIdentificacion())));
+            }
+
+            if (!StringUtils.isEmpty(representante.getDocumento())) {
+                interesadoSir.setDocumentoIdentificacionRepresentante(representante.getDocumento());
+            }
+
+            if (!StringUtils.isEmpty(representante.getRazonSocial())) {
+                interesadoSir.setRazonSocialRepresentante(representante.getRazonSocial());
+            }
+
+            if (!StringUtils.isEmpty(representante.getNombre())) {
+                interesadoSir.setNombreRepresentante(representante.getNombre());
+            }
+
+            if (!StringUtils.isEmpty(representante.getApellido1())) {
+                interesadoSir.setPrimerApellidoRepresentante(representante.getApellido1());
+            }
+
+            if (!StringUtils.isEmpty(representante.getApellido2())) {
+                interesadoSir.setSegundoApellidoRepresentante(representante.getApellido2());
+            }
+
+            if(representante.getPais() != null){
+                interesadoSir.setCodigoPaisRepresentante(representante.getPais().getCodigoPais().toString());
+            }
+
+            if(representante.getProvincia() != null){
+                interesadoSir.setCodigoProvinciaRepresentante(representante.getProvincia().getCodigoProvincia().toString());
+            }
+
+            if(representante.getLocalidad() != null){
+                interesadoSir.setCodigoMunicipioRepresentante(representante.getLocalidad().getCodigoLocalidad().toString());
+            }
+
+            if (!StringUtils.isEmpty(representante.getDireccion())) {
+                interesadoSir.setDireccionRepresentante(representante.getDireccion());
+            }
+
+            if (!StringUtils.isEmpty(representante.getCp())) {
+                interesadoSir.setCodigoPostalRepresentante(representante.getCp());
+            }
+
+            if (!StringUtils.isEmpty(representante.getEmail())) {
+                interesadoSir.setCorreoElectronicoRepresentante(representante.getEmail());
+            }
+
+            if (!StringUtils.isEmpty(representante.getTelefono())) {
+                interesadoSir.setTelefonoRepresentante(representante.getTelefono());
+            }
+
+            if (!StringUtils.isEmpty(representante.getDireccionElectronica())) {
+                interesadoSir.setDireccionElectronicaHabilitadaRepresentante(representante.getDireccionElectronica());
+            }
+
+            if (representante.getCanal() != null) {
+                interesadoSir.setCanalPreferenteComunicacionRepresentante(CODIGO_BY_CANALNOTIFICACION.get(representante.getCanal()));
+            }
+
+        }
+
+        return interesadoSir;
+
+    }
+
+    /**
+     *
+     * @param anexosFull
+     * @param identificadorIntercambio
+     * @return
+     */
+    private List<AnexoSir> procesarAnexosSir(List<AnexoFull> anexosFull, String identificadorIntercambio) throws Exception{
+
+        List<AnexoSir> anexosSir = new ArrayList<AnexoSir>();
+        int secuencia = 0;
+
+        for(AnexoFull anexoFull:anexosFull){
+
+
+            final int modoFirma = anexoFull.getAnexo().getModoFirma();
+            Anexo anexo = anexoFull.getAnexo();
+
+            switch (modoFirma){
+
+                case MODO_FIRMA_ANEXO_SINFIRMA:
+                    log.info("No se puede enviar un Anexo en Sir si no dispone de algún tipo de Firma");
+                break;
+
+                case MODO_FIRMA_ANEXO_ATTACHED:
+
+                    AnexoSir anexoSir = new AnexoSir();
+
+                    SignatureCustody sc = anexoFull.getSignatureCustody();
+
+                    String identificador_fichero = generateIdentificadorFichero(identificadorIntercambio, secuencia, sc.getName());
+                    secuencia++;
+
+                    anexoSir = crearAnexoSir(sc.getName(),identificador_fichero,
+                            CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento()),
+                            CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(anexo.getTipoDocumento()),anexo.getCertificado(),
+                            anexo.getFirma(),anexo.getTimestamp(), anexo.getValidacionOCSPCertificado(),
+                            obtenerHash(sc.getData()),sc.getMime(),sc.getData(),identificador_fichero,
+                            anexo.getObservaciones());
+
+                    anexosSir.add(anexoSir);
+
+                break;
+
+                case MODO_FIRMA_ANEXO_DETACHED:
+
+                    // ================= SEGMENTO 1: DOCUMENT ==================
+                    anexoSir = new AnexoSir();
+
+                    DocumentCustody dc = anexoFull.getDocumentoCustody();
+
+                    identificador_fichero = generateIdentificadorFichero(identificadorIntercambio, secuencia, dc.getName());
+                    secuencia++;
+
+                    anexoSir = crearAnexoSir(dc.getName(),identificador_fichero,
+                            CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento()),
+                            CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(anexo.getTipoDocumento()),anexo.getCertificado(),
+                            anexo.getFirma(),anexo.getTimestamp(), anexo.getValidacionOCSPCertificado(),
+                            obtenerHash(dc.getData()),dc.getMime(),dc.getData(),null,
+                            anexo.getObservaciones());
+
+                    anexosSir.add(anexoSir);
+
+                    // ================= SEGMENTO 2: FIRMA ==================
+                    anexoSir = new AnexoSir();
+
+                    sc = anexoFull.getSignatureCustody();
+
+                    String identificador_fichero_FIRMA = generateIdentificadorFichero(identificadorIntercambio, secuencia, sc.getName());
+                    secuencia++;
+
+                    anexoSir = crearAnexoSir(sc.getName(),identificador_fichero_FIRMA,
+                            CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento()),
+                            CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(anexo.getTipoDocumento()),null,
+                            null,anexo.getTimestamp(), null,
+                            obtenerHash(sc.getData()),sc.getMime(),sc.getData(),identificador_fichero,
+                            anexo.getObservaciones());
+
+                    anexosSir.add(anexoSir);
+
+                break;
+            }
+
+
+        }
+
+        return anexosSir;
+    }
+
+    /**
+     *
+     * @param nombreFichero
+     * @param identificadorFichero
+     * @param validezDocumento
+     * @param tipoDocumento
+     * @param certificado
+     * @param firma
+     * @param timeStamp
+     * @param validacionOCSPCertificado
+     * @param hash
+     * @param tipoMime
+     * @param anexoData
+     * @param identificadorDocumentoFirmado
+     * @param observaciones
+     * @return
+     */
+    private AnexoSir crearAnexoSir(String nombreFichero, String identificadorFichero, String validezDocumento, String tipoDocumento, byte[] certificado,
+                                   byte[] firma, byte[] timeStamp, byte[] validacionOCSPCertificado, byte[] hash, String tipoMime,
+                                   byte[] anexoData, String identificadorDocumentoFirmado, String observaciones){
+        AnexoSir anexoSir = new AnexoSir();
+
+        anexoSir.setNombreFichero(nombreFichero);
+        anexoSir.setIdentificadorFichero(identificadorFichero);
+        if(validezDocumento != null){
+            anexoSir.setValidezDocumento(validezDocumento);
+        }
+        anexoSir.setTipoDocumento(tipoDocumento);
+        if(certificado != null){
+            anexoSir.setCertificado(certificado);
+        }
+        if(firma != null){
+            anexoSir.setFirma(firma);
+        }
+        if(timeStamp != null){
+            anexoSir.setTimestamp(timeStamp);
+        }
+        if(validacionOCSPCertificado != null){
+            anexoSir.setValidacionOCSPCertificado(validacionOCSPCertificado);
+        }
+
+        anexoSir.setHash(hash);
+        if(tipoMime != null){
+            anexoSir.setTipoMIME(tipoMime);
+        }
+        if(anexoData != null){
+            anexoSir.setAnexoData(anexoData);
+        }
+        if(identificadorDocumentoFirmado != null){
+            anexoSir.setIdentificadorDocumentoFirmado(identificadorDocumentoFirmado);
+        }
+
+        anexoSir.setObservaciones(observaciones);
+
+        return anexoSir;
+    }
+
+    /**
      * Transforma una lista de {@link AnexoSir} en una lista de  {@link AnexoFull}
      * @param asientoRegistralSir
      * @return Listado de {@link AnexoFull}
@@ -612,6 +988,148 @@ public class SirBean implements SirLocal{
             }
         }
         return sc;
+    }
+
+    /**
+     * Obtiene el código Oficina de Origen dependiendo de si es interna o externa
+     *
+     * @param re
+     * @return
+     * @throws Exception
+     */
+    protected String obtenerCodigoOficinaOrigen(RegistroEntrada re) {
+        String codOficinaOrigen = null;
+
+        if ((re.getRegistroDetalle().getOficinaOrigenExternoCodigo() == null) && (re.getRegistroDetalle().getOficinaOrigen() == null)) {
+            codOficinaOrigen = re.getOficina().getCodigo();
+        } else if (re.getRegistroDetalle().getOficinaOrigenExternoCodigo() != null) {
+            codOficinaOrigen = re.getRegistroDetalle().getOficinaOrigenExternoCodigo();
+        } else {
+            codOficinaOrigen = re.getRegistroDetalle().getOficinaOrigen().getCodigo();
+        }
+
+        return codOficinaOrigen;
+    }
+
+    /**
+     * Obtiene el denominación Oficina de Origen dependiendo de si es interna o externa
+     *
+     * @param re
+     * @return
+     * @throws Exception
+     */
+    protected String obtenerDenominacionOficinaOrigen(RegistroEntrada re) {
+        String denominacionOficinaOrigen = null;
+
+        if ((re.getRegistroDetalle().getOficinaOrigenExternoCodigo() == null) && (re.getRegistroDetalle().getOficinaOrigen() == null)) {
+            denominacionOficinaOrigen = re.getOficina().getDenominacion();
+        } else if (re.getRegistroDetalle().getOficinaOrigenExternoCodigo() != null) {
+            denominacionOficinaOrigen = re.getRegistroDetalle().getOficinaOrigenExternoDenominacion();
+        } else {
+            denominacionOficinaOrigen = re.getRegistroDetalle().getOficinaOrigen().getDenominacion();
+        }
+
+        return denominacionOficinaOrigen;
+    }
+
+    /**
+     * Genera el identificador de intercambio a partir del código de la oficina de origen
+     *
+     * @param codOficinaOrigen
+     * @return
+     * @throws Exception
+     */
+    protected String generarIdentificadorIntercambio(String codOficinaOrigen) {
+
+        String identificador = "";
+        SimpleDateFormat anyo = new SimpleDateFormat("yy"); // Just the year, with 2 digits
+
+        identificador = codOficinaOrigen + "_" + anyo.format(Calendar.getInstance().getTime()) + "_" + getIdToken(); //todo: Añadir secuencia real
+
+
+        return identificador;
+    }
+
+    /**
+     * Calcula una cadena de ocho dígitos a partir del instante de tiempo actual.
+     *
+     * @return la cadena (String) de ocho digitos
+     */
+    private static final AtomicLong TIME_STAMP = new AtomicLong();
+
+    private String getIdToken() {
+        long now = System.currentTimeMillis();
+        while (true) {
+            long last = TIME_STAMP.get();
+            if (now <= last)
+                now = last + 1;
+            if (TIME_STAMP.compareAndSet(last, now))
+                break;
+        }
+        long unsignedValue = Long.toString(now).hashCode() & 0xffffffffl;
+        String result = Long.toString(unsignedValue);
+        if (result.length() > 8) {
+            result = result.substring(result.length() - 8, result.length());
+        } else {
+            result = String.format("%08d", unsignedValue);
+        }
+        return result;
+    }
+
+    /**
+     * Metodo que genera identificador de anxso según el patron
+     * identificadorIntercambio_01_secuencia.extension
+     * donde secuencia es cadena que repesenta secuencia en formato 0001 (leftpading con 0 y máximo de 4 caracteres)
+     * donde extesion es la extension del anexo
+     *
+     * @param identificadorIntercambio
+     * @param secuencia
+     * @param fileName
+     * @return
+     */
+    protected String generateIdentificadorFichero(String identificadorIntercambio, int secuencia, String fileName) {
+
+        String result = new StringBuffer()
+                .append(identificadorIntercambio)
+                .append("_01_")
+                .append(org.apache.commons.lang.StringUtils.leftPad(
+                        String.valueOf(secuencia), 4, "0"))
+                .append(".").append(getExtension(fileName)).toString();
+
+        return result;
+    }
+
+    /**
+     * Obtiene la Extensión de un Fichero a partir de su nombre
+     *
+     * @param nombreFichero
+     * @return extensión del fichero
+     */
+    protected String getExtension(String nombreFichero) {
+        String extension = "";
+
+        int i = nombreFichero.lastIndexOf('.');
+        if (i > 0) {
+            extension = nombreFichero.substring(i + 1);
+        }
+
+        return extension;
+    }
+
+    /**
+     * Genera el Hash mediante MD5 del contenido del documento y lo codifica en base64
+     *
+     * @param documentoData
+     * @return
+     * @throws Exception
+     */
+    protected byte[] obtenerHash(byte[] documentoData) throws Exception {
+
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        byte[] digest = md.digest(documentoData);
+
+        return Base64.encodeBase64(digest);
+
     }
 
 }

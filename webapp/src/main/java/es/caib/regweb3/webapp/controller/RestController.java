@@ -60,8 +60,6 @@ public class RestController {
     public @ResponseBody List<ObjetoBasico> busquedaPersonas(@PathVariable Long tipoPersona, @RequestParam String query, HttpServletRequest request) throws Exception {
 
         HttpSession session = request.getSession();
-        log.info("Persona: " + query);
-        log.info("Persona utf8: " + new String(query.getBytes("ISO-8859-1"), "UTF-8"));
         Entidad entidad =  (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
         return personaEjb.busquedaPersonas(query,tipoPersona,entidad.getId());
     }

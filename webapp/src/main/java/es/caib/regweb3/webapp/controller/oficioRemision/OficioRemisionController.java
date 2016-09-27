@@ -1,15 +1,17 @@
 package es.caib.regweb3.webapp.controller.oficioRemision;
 
+import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
+import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.OficioPendienteLlegada;
 import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
 import es.caib.regweb3.persistence.utils.OficiosRemisionExternoOrganismo;
 import es.caib.regweb3.persistence.utils.OficiosRemisionInternoOrganismo;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
 import es.caib.regweb3.sir.ws.api.manager.FicheroIntercambioManager;
-import es.caib.regweb3.sir.ws.api.manager.SicresXMLManager;
 import es.caib.regweb3.sir.ws.api.manager.impl.FicheroIntercambioManagerImpl;
-import es.caib.regweb3.sir.ws.api.manager.impl.SicresXMLManagerImpl;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.*;
@@ -63,8 +65,10 @@ public class OficioRemisionController extends BaseController {
     @EJB(mappedName = "regweb3/OficioRemisionUtilsEJB/local")
     public OficioRemisionUtilsLocal oficioRemisionUtilsEjb;
 
+    @EJB(mappedName = "regweb3/SirEJB/local")
+    public SirLocal sirEjb;
+
     FicheroIntercambioManager ficheroIntercambioManager = new FicheroIntercambioManagerImpl();
-    SicresXMLManager sicresXMLManager = new SicresXMLManagerImpl();
 
     /**
      * Listado de todos los Oficios de Remision
@@ -327,28 +331,14 @@ public class OficioRemisionController extends BaseController {
 
         List<RegistroEntrada> registrosEntrada = new ArrayList<RegistroEntrada>();
 
-        // Recorremos todos los registros de entrada seleccionados para crear un Oficio de Remisión
+        // Buscamos los registros de entrada seleccionados para crear un Oficio de Remisión
         for (int i = 0; i < registroEntradaListForm.getRegistros().size(); i++) {
 
             RegistroEntrada registroEntrada = registroEntradaListForm.getRegistros().get(i);
 
             if(registroEntrada.getId() != null){ //Si se ha seleccionado
 
-                //registroEntrada = registroEntradaEjb.findById(registroEntrada.getId());
-
-                // Comprobamos si el RegistroEntrada tiene el estado Válido
-                if (!registroEntradaEjb.tieneEstado(registroEntrada.getId(), RegwebConstantes.REGISTRO_VALIDO)) {
-
-                    Mensaje.saveMessageError(request, getMessage("registroEntrada.tramitar.error"));
-                    if (interno) {
-                        return "redirect:/oficioRemision/pendientesRemisionInterna";
-                    } else {
-                        return "redirect:/oficioRemision/pendientesRemisionExterna";
-                    }
-
-                } else { // Lo añadimos a la lista de registros que contendrá en Oficio de Remisión
-                    registrosEntrada.add(registroEntrada);
-                }
+                registrosEntrada.add(registroEntrada);
             }
         }
 
@@ -374,13 +364,11 @@ public class OficioRemisionController extends BaseController {
 
         } else {//Oficio externo todo: Acabar oficio remisión externo
 
-          final String identificadorIntercambioSir = null;
           final String organismoExternoDenominacion = registroEntradaListForm.getOrganismoExternoDenominacion();
             oficioRemision = oficioRemisionUtils.crearOficioRemisionExterno(registrosEntrada,
                 getOficinaActiva(request), usuarioEntidad, 
                 registroEntradaListForm.getOrganismoExternoCodigo(),
-                organismoExternoDenominacion, registroEntradaListForm.getIdLibro(),
-                identificadorIntercambioSir);
+                organismoExternoDenominacion, registroEntradaListForm.getIdLibro());
         }
 
         return "redirect:/oficioRemision/"+oficioRemision.getId()+"/detalle";
@@ -431,28 +419,15 @@ public class OficioRemisionController extends BaseController {
 
       List<RegistroEntrada> registrosEntrada = new ArrayList<RegistroEntrada>();
 
-      // Recorremos todos los registros de entrada seleccionados para crear un
-      // Oficio de Remisión
+      // Buscamos todos los registros de entrada seleccionados para crear un Oficio de Remisión
       for (int i = 0; i < sirForm.getRegistros().size(); i++) {
 
         RegistroEntrada registroEntrada = sirForm.getRegistros().get(i);
 
         if (registroEntrada.getId() != null) { // Si se ha seleccionado
 
-          registroEntrada = registroEntradaEjb.getConAnexosFull(registroEntrada.getId());
-
-          // Comprobamos si el RegistroEntrada tiene el estado Válido
-          if (!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)) {
-
-            log.error("El registro de entrada " + registroEntrada.getNumeroRegistroFormateado()
-                + " se encuentar en un estado no valido. (" + registroEntrada.getEstado() + ")");
-            Mensaje.saveMessageError(request, getMessage("registroEntrada.tramitar.error"));
-              return new ModelAndView("redirect:/oficioRemision/pendientesRemisionExterna");
-
-          } else { // Lo añadimos a la lista de registros que contendrá en
-                   // Oficio de Remisión
             registrosEntrada.add(registroEntrada);
-          }
+
         }
       }
 
@@ -460,22 +435,17 @@ public class OficioRemisionController extends BaseController {
       if (registrosEntrada.size() == 0) {
         Mensaje.saveMessageError(request, getMessage("oficioRemision.seleccion"));
 
-      } else {
+      } else { // Creamos el OficioRemisión a partir de los registros de entrada seleccionados.
 
-        // Creamos el OficioRemisión a partir de los registros de entrada
-        // seleccionados.
-        {
           // Oficio externo
+          log.debug("Oficio externo Sir");
 
-          log.debug("Oficio externo");
+           Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
+           OficinaTF oficinaSir = oficinasService.obtenerOficina(sirForm.getOficinaSIRCodigo(),null,null);
 
-          //
-          
-          
-          // TODO Aqui falta el nom enlloc del codi dir3
-          final String organismoExterno = sirForm.getOrganismoExterno();
+          final String organismoExternoCodigo = sirForm.getOrganismoExternoCodigo();
           final String organismoExternoDenominacion = sirForm.getOrganismoExternoDenominacion();
-          log.info("organismoExterno = " + organismoExterno);
+          log.info("organismoExternoCodigo = " + organismoExternoCodigo);
           log.info("organismoExternoDenominacion = " + organismoExternoDenominacion);
 
 
@@ -486,25 +456,18 @@ public class OficioRemisionController extends BaseController {
           // o reenviar en bloque.
           for (RegistroEntrada registroEntradaAEnviar : registrosEntrada) {
 
-              // Enviamos el Fichero de datos de intercambio al nodo SIR
-              ficheroIntercambioManager.enviarFicheroIntercambio(registroEntradaAEnviar);
+              registroEntradaAEnviar = registroEntradaEjb.getConAnexosFull(registroEntradaAEnviar.getId());
 
-              // Ho afegirem si el codi és el correcte
-              //registrosEntradaProcesados.add(registroEntradaAEnviar);
+              AsientoRegistralSir asientoRegistralSir = sirEjb.transformarRegistroEntrada(registroEntradaAEnviar, oficinaSir);
+
+              // Enviamos el Fichero de datos de intercambio al nodo SIR
+              String identificadorIntercambio = ficheroIntercambioManager.enviarFicheroIntercambio(asientoRegistralSir);
 
               // Cream oficio remision
               // Aquest mètode ja crida a oficioRemisionEjb.registrarOficioRemision
-              List<RegistroEntrada> registrosEntradaProcesados = new ArrayList<RegistroEntrada>();
-
-              registrosEntradaProcesados.add(registroEntradaAEnviar);
-
-              String identificadorIntercambioSir = null;
-              
-              OficioRemision oficioRemision;
-              oficioRemision = oficioRemisionUtils.crearOficioRemisionExterno(
-                  registrosEntradaProcesados, getOficinaActiva(request), usuarioEntidad,
-                  organismoExterno, organismoExternoDenominacion,   sirForm.getIdLibro(),
-                  identificadorIntercambioSir);
+              OficioRemision oficioRemision = oficioRemisionUtils.crearOficioRemisionSir(
+                  registroEntradaAEnviar, getOficinaActiva(request), usuarioEntidad,
+                      organismoExternoCodigo, organismoExternoDenominacion, sirForm.getIdLibro(), identificadorIntercambio);
 
               oficioRemisionList.add(oficioRemision);
 
@@ -520,13 +483,13 @@ public class OficioRemisionController extends BaseController {
 
           }
 
-        }
+
       }
 
     } catch (Throwable e) {
       // TODO que fer en aquest cas
       log.error(" Error enviant a SIR: " + e.getMessage(), e);
-
+        Mensaje.saveMessageError(request, getMessage("sir.error.envio6b"));
       // TODO Borrar Oficio Remision
 
     }

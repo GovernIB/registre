@@ -1,5 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
@@ -21,6 +22,17 @@ import javax.ejb.Local;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public interface SirLocal {
 
+  /**
+   * Transforma un {@link es.caib.regweb3.model.RegistroEntrada} en un {@link es.caib.regweb3.sir.core.model.AsientoRegistralSir}
+   * @param registroEntrada
+   * @param oficinaSir
+   * @return
+   * @throws Exception
+   * @throws I18NException
+   * @throws I18NValidationException
+     */
+  public AsientoRegistralSir transformarRegistroEntrada(RegistroEntrada registroEntrada, OficinaTF oficinaSir)
+          throws Exception, I18NException, I18NValidationException;
   /**
    *
    * @param asientoRegistralSir

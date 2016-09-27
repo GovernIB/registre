@@ -1,8 +1,10 @@
 package es.caib.regweb3.sir.ws.api.manager.impl;
 
-import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.sir.core.excepcion.SIRException;
+import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
 import es.caib.regweb3.sir.core.model.Errores;
+import es.caib.regweb3.sir.core.model.IndicadorPrueba;
+import es.caib.regweb3.sir.core.model.TipoAnotacion;
 import es.caib.regweb3.sir.ws.api.manager.FicheroIntercambioManager;
 import es.caib.regweb3.sir.ws.api.manager.SicresXMLManager;
 import es.caib.regweb3.sir.ws.api.utils.FicheroIntercambio;
@@ -10,9 +12,13 @@ import es.caib.regweb3.sir.ws.api.wssir6b.RespuestaWS;
 import es.caib.regweb3.sir.ws.api.wssir6b.WS_SIR6_BServiceLocator;
 import es.caib.regweb3.sir.ws.api.wssir6b.WS_SIR6_B_PortType;
 import es.caib.regweb3.utils.Configuracio;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by earrivi on 19/01/2016.
@@ -25,13 +31,25 @@ public class FicheroIntercambioManagerImpl implements FicheroIntercambioManager 
 
 
     @Override
-    public void enviarFicheroIntercambio(RegistroEntrada registroEntrada) {
+    public String enviarFicheroIntercambio(AsientoRegistralSir asientoRegistralSir){
 
-      try {
-        String xml = sicresXMLManager.crearXMLFicheroIntercambioSICRES3(registroEntrada);
-        log.info("Xml Fichero Intercambio: " + xml);
+        try {
 
-        
+            // todo Modificar cuando entremos en Producción
+            asientoRegistralSir.setIndicadorPrueba(IndicadorPrueba.NORMAL);
+
+            // Comprobar el identificador de intercambio
+            if (StringUtils.isBlank(asientoRegistralSir.getIdentificadorIntercambio())) {
+                asientoRegistralSir.setIdentificadorIntercambio(generarIdentificadorIntercambio(asientoRegistralSir.getCodigoEntidadRegistralOrigen()));
+            }
+
+            // Establecer el tipo de anotación
+            asientoRegistralSir.setTipoAnotacion(TipoAnotacion.ENVIO.getValue());
+            asientoRegistralSir.setDecodificacionTipoAnotacion(TipoAnotacion.ENVIO.getName());
+
+            String xml = sicresXMLManager.crearXMLFicheroIntercambioSICRES3(asientoRegistralSir);
+            log.info("Xml Fichero Intercambio generado: " + xml);
+
             RespuestaWS respuesta = ws_sir6_b_recepcionFicheroDeAplicacion(xml);
 
             if (respuesta != null) {
@@ -43,11 +61,12 @@ public class FicheroIntercambioManagerImpl implements FicheroIntercambioManager 
                 }
             }
 
+            return asientoRegistralSir.getIdentificadorIntercambio();
+
         } catch (Exception e) {
             log.error("Error al enviar el fichero de intercambio: " + e);
             throw new SIRException("Error en la llamada al servicio de recepción de ficheros de datos de intercambio (WS_SIR6_B)");
         }
-
     }
 
     @Override
@@ -81,5 +100,49 @@ public class FicheroIntercambioManagerImpl implements FicheroIntercambioManager 
             WS_SIR6_B_PortType ws_sir6_b = getWS_SIR6_B();
             return ws_sir6_b.recepcionFicheroDeAplicacion(xml);
         //}
+    }
+
+    /**
+     * Genera el identificador de intercambio a partir del código de la oficina de origen
+     *
+     * @param codOficinaOrigen
+     * @return
+     * @throws Exception
+     */
+    protected String generarIdentificadorIntercambio(String codOficinaOrigen) {
+
+        String identificador = "";
+        SimpleDateFormat anyo = new SimpleDateFormat("yy"); // Just the year, with 2 digits
+
+        identificador = codOficinaOrigen + "_" + anyo.format(Calendar.getInstance().getTime()) + "_" + getIdToken(); //todo: Añadir secuencia real
+
+
+        return identificador;
+    }
+
+    /**
+     * Calcula una cadena de ocho dígitos a partir del instante de tiempo actual.
+     *
+     * @return la cadena (String) de ocho digitos
+     */
+    private static final AtomicLong TIME_STAMP = new AtomicLong();
+
+    private String getIdToken() {
+        long now = System.currentTimeMillis();
+        while (true) {
+            long last = TIME_STAMP.get();
+            if (now <= last)
+                now = last + 1;
+            if (TIME_STAMP.compareAndSet(last, now))
+                break;
+        }
+        long unsignedValue = Long.toString(now).hashCode() & 0xffffffffl;
+        String result = Long.toString(unsignedValue);
+        if (result.length() > 8) {
+            result = result.substring(result.length() - 8, result.length());
+        } else {
+            result = String.format("%08d", unsignedValue);
+        }
+        return result;
     }
 }

@@ -4,7 +4,7 @@ import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
 import es.caib.dir3caib.ws.api.unidad.UnidadTF;
-import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
 import es.caib.regweb3.sir.api.schema.De_Anexo;
@@ -40,7 +40,6 @@ import java.io.*;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
 
 import static es.caib.regweb3.utils.RegwebConstantes.*;
 
@@ -301,13 +300,13 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
     }
 
     /**
-     * @param registroEntrada
+     * @param asientoRegistralSir
      * @return
      */
     @Override
-    public String crearXMLFicheroIntercambioSICRES3(RegistroEntrada registroEntrada) throws Exception   {
+    public String crearXMLFicheroIntercambioSICRES3(AsientoRegistralSir asientoRegistralSir) throws Exception   {
 
-        Assert.notNull(registroEntrada, "'registroEntrada' must not be null");
+        Assert.notNull(asientoRegistralSir, "'asientoRegistralSir' must not be null");
 
         Document doc = DocumentHelper.createDocument();
         doc.setXMLEncoding("UTF-8");
@@ -315,29 +314,26 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
         // Fichero_Intercambio_SICRES_3
         Element rootNode = doc.addElement("Fichero_Intercambio_SICRES_3");
 
-        String codOficinaOrigen = obtenerCodigoOficinaOrigen(registroEntrada);
-        String identificadorIntercambio = generarIdentificadorIntercambio(codOficinaOrigen);
-
         /* Segmento DeOrigenORemitente */
-        addDatosOrigenORemitente(rootNode, registroEntrada);
+        addDatosOrigenORemitente(rootNode, asientoRegistralSir);
 
         /* Segmento DeDestino */
-        addDatosDestino(rootNode, registroEntrada);
+        addDatosDestino(rootNode, asientoRegistralSir);
 
         /* Segmento DeInteresados */
-        addDatosInteresados(rootNode, registroEntrada.getRegistroDetalle().getInteresados());
+        addDatosInteresados(rootNode, asientoRegistralSir.getInteresados());
 
         /* Segmento DeAsunto */
-        addDatosAsunto(rootNode, registroEntrada);
+        addDatosAsunto(rootNode, asientoRegistralSir);
 
         /* Segmento DeAnexo */
-        addDatosAnexos(rootNode, registroEntrada, identificadorIntercambio);
+        addDatosAnexos(rootNode, asientoRegistralSir);
 
         /* Segmento DeInternosControl */
-        addDatosInternosControl(rootNode, registroEntrada, identificadorIntercambio);
+        addDatosInternosControl(rootNode, asientoRegistralSir);
 
         /* Segmento DeFormularioGenerico */
-        addDatosformularioGenerico(rootNode, registroEntrada);
+        addDatosformularioGenerico(rootNode, asientoRegistralSir);
 
         //ficheroIntercambio.setFicheroIntercambio(rootNode);
 
@@ -349,55 +345,53 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
      * Añade el Segmento deOrigenORemitente al Fichero de Intercambio
      *
      * @param rootNode
-     * @param re
+     * @param asiento
      */
-    private void addDatosOrigenORemitente(Element rootNode, RegistroEntrada re) {
+    private void addDatosOrigenORemitente(Element rootNode, AsientoRegistralSir asiento) {
 
         // De_Origen_o_Remitente
         Element rootElement = rootNode.addElement("De_Origen_o_Remitente");
         Element elem = null;
 
         // Codigo_Entidad_Registral_Origen
-        if (StringUtils.isNotBlank(re.getOficina().getCodigo())) {
+        if (StringUtils.isNotBlank(asiento.getCodigoEntidadRegistralOrigen())) {
             elem = rootElement.addElement("Codigo_Entidad_Registral_Origen");
-            elem.addCDATA(re.getOficina().getCodigo());
+            elem.addCDATA(asiento.getCodigoEntidadRegistralOrigen());
         }
 
         // Decodificacion_Entidad_Registral_Origen
-        if (StringUtils.isNotBlank(re.getOficina().getDenominacion())) {
+        if (StringUtils.isNotBlank(asiento.getDecodificacionEntidadRegistralOrigen())) {
             elem = rootElement.addElement("Decodificacion_Entidad_Registral_Origen");
-            elem.addCDATA(re.getOficina().getDenominacion());
+            elem.addCDATA(asiento.getDecodificacionEntidadRegistralOrigen());
         }
 
         // Numero_Registro_Entrada
-        if (StringUtils.isNotBlank(re.getNumeroRegistroFormateado())) {
+        if (StringUtils.isNotBlank(asiento.getNumeroRegistro())) {
             elem = rootElement.addElement("Numero_Registro_Entrada");
-            elem.addCDATA(re.getNumeroRegistroFormateado());
+            elem.addCDATA(asiento.getNumeroRegistro());
         }
 
 
         // Fecha_Hora_Entrada
-        if (re.getFecha() != null) {
+        if (asiento.getFechaRegistro() != null) {
             elem = rootElement.addElement("Fecha_Hora_Entrada");
-            elem.addCDATA(SDF.format(re.getFecha()));
+            elem.addCDATA(SDF.format(asiento.getFechaRegistro()));
         }
 
 
         // Timestamp_Entrada
         //deOrigenORemitente.setTimestampEntrada(); // No es necesario
 
-        Entidad entidad = re.getOficina().getOrganismoResponsable().getEntidad();
-
         // Codigo_Unidad_Tramitacion_Origen
-        if (StringUtils.isNotBlank(entidad.getCodigoDir3())) {
+        if (StringUtils.isNotBlank(asiento.getCodigoUnidadTramitacionOrigen())) {
             elem = rootElement.addElement("Codigo_Unidad_Tramitacion_Origen");
-            elem.addCDATA(entidad.getCodigoDir3());
+            elem.addCDATA(asiento.getCodigoUnidadTramitacionOrigen());
         }
 
         // Decodificacion_Unidad_Tramitacion_Origen
-        if (StringUtils.isNotBlank(entidad.getNombre())) {
+        if (StringUtils.isNotBlank(asiento.getDecodificacionUnidadTramitacionOrigen())) {
             elem = rootElement.addElement("Decodificacion_Unidad_Tramitacion_Origen");
-            elem.addCDATA(entidad.getNombre());
+            elem.addCDATA(asiento.getDecodificacionUnidadTramitacionOrigen());
         }
 
     }
@@ -406,37 +400,36 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
      * Añade el Segmento deDestino al Fichero de Intercambio
      *
      * @param rootNode
-     * @param re
+     * @param asiento
      */
-    private void addDatosDestino(Element rootNode, RegistroEntrada re) {
+    private void addDatosDestino(Element rootNode, AsientoRegistralSir asiento) {
 
         // De_Destino
         Element rootElement = rootNode.addElement("De_Destino");
         Element elem = null;
 
         // Codigo_Entidad_Registral_Destino
-
-        //deDestino.setCodigoEntidadRegistralDestino();  todo: Pendiente averiguar Oficina SIR
-        //De momento la ponemos a mano  todo: Eliminar cuando se averigüe Oficina SIR
-        elem = rootElement.addElement("Codigo_Entidad_Registral_Destino");
-        elem.addCDATA("A04006749");
-
+        if (StringUtils.isNotBlank(asiento.getCodigoEntidadRegistralDestino())) {
+            elem = rootElement.addElement("Codigo_Entidad_Registral_Destino");
+            elem.addCDATA(asiento.getCodigoEntidadRegistralDestino());
+        }
 
         // Decodificacion_Entidad_Registral_Destino
-        //deDestino.setDecodificacionEntidadRegistralDestino(); todo: Pendiente averiguar Oficina SIR
-        //elem = rootElement.addElement("Decodificacion_Entidad_Registral_Destino");
-        //elem.addCDATA("");
+        if (StringUtils.isNotBlank(asiento.getDecodificacionEntidadRegistralDestino())) {
+            elem = rootElement.addElement("Decodificacion_Entidad_Registral_Destino");
+            elem.addCDATA(asiento.getDecodificacionEntidadRegistralDestino());
+        }
 
         // Codigo_Unidad_Tramitacion_Destino
-        if (StringUtils.isNotBlank(re.getDestinoExternoCodigo())) {
+        if (StringUtils.isNotBlank(asiento.getCodigoUnidadTramitacionDestino())) {
             elem = rootElement.addElement("Codigo_Unidad_Tramitacion_Destino");
-            elem.addCDATA(re.getDestinoExternoCodigo());
+            elem.addCDATA(asiento.getCodigoUnidadTramitacionDestino());
         }
 
         // Decodificacion_Unidad_Tramitacion_Destino
-        if (StringUtils.isNotBlank(re.getDestinoExternoDenominacion())) {
+        if (StringUtils.isNotBlank(asiento.getDecodificacionUnidadTramitacionDestino())) {
             elem = rootElement.addElement("Decodificacion_Unidad_Tramitacion_Destino");
-            elem.addCDATA(re.getDestinoExternoDenominacion());
+            elem.addCDATA(asiento.getDecodificacionUnidadTramitacionDestino());
         }
 
     }
@@ -453,180 +446,175 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
      * Añade el Segmento deInteresado al Fichero de Intercambio
      *
      * @param rootNode
-     * @param interesados
+     * @param interesadosSir
      */
-    private void addDatosInteresados(Element rootNode, List<Interesado> interesados) {
+    private void addDatosInteresados(Element rootNode, List<InteresadoSir> interesadosSir) {
 
-        if (!CollectionUtils.isEmpty(interesados)) {
+        if (!CollectionUtils.isEmpty(interesadosSir)) {
 
-            for (Interesado interesado : interesados) {
+            for (InteresadoSir interesadoSir : interesadosSir) {
 
-                if (!interesado.getIsRepresentante()) { // Interesado
+                Element rootElement = rootNode.addElement("De_Interesado");
+                Element elem = null;
 
-                    Element rootElement = rootNode.addElement("De_Interesado");
-                    Element elem = null;
-                    Interesado representante = interesado.getRepresentante();
+                // Tipo_Documento_Identificacion_Interesado
+                if (interesadoSir.getTipoDocumentoIdentificacionInteresado() != null) {
+                    elem = rootElement.addElement("Tipo_Documento_Identificacion_Interesado");
+                    elem.addCDATA(interesadoSir.getTipoDocumentoIdentificacionInteresado());
+                }
+                // Documento_Identificacion_Interesado
+                if (!StringUtils.isEmpty(interesadoSir.getDocumentoIdentificacionInteresado())) {
+                    elem = rootElement.addElement("Documento_Identificacion_Interesado");
+                    elem.addCDATA(interesadoSir.getDocumentoIdentificacionInteresado());
+                }
+                // Razon_Social_Interesado
+                if (!StringUtils.isEmpty(interesadoSir.getRazonSocialInteresado())) {
+                    elem = rootElement.addElement("Razon_Social_Interesado");
+                    elem.addCDATA(interesadoSir.getRazonSocialInteresado());
+                }
+                // Nombre_Interesado
+                if (!StringUtils.isEmpty(interesadoSir.getNombreInteresado())) {
+                    elem = rootElement.addElement("Nombre_Interesado");
+                    elem.addCDATA(interesadoSir.getNombreInteresado());
+                }
+                // Primer_Apellido_Interesado
+                if (!StringUtils.isEmpty(interesadoSir.getPrimerApellidoInteresado())) {
+                    elem = rootElement.addElement("Primer_Apellido_Interesado");
+                    elem.addCDATA(interesadoSir.getPrimerApellidoInteresado());
+                }
+                // Segundo_Apellido_Interesado
+                if (!StringUtils.isEmpty(interesadoSir.getSegundoApellidoInteresado())) {
+                    elem = rootElement.addElement("Segundo_Apellido_Interesado");
+                    elem.addCDATA(interesadoSir.getSegundoApellidoInteresado());
+                }
 
-                    // Tipo_Documento_Identificacion_Interesado
-                    if (interesado.getTipoDocumentoIdentificacion() != null) {
-                        elem = rootElement.addElement("Tipo_Documento_Identificacion_Interesado");
-                        elem.addCDATA(String.valueOf(CODIGO_NTI_BY_TIPODOCUMENTOID.get(interesado.getTipoDocumentoIdentificacion())));
-                    }
-                    // Documento_Identificacion_Interesado
-                    if (!StringUtils.isEmpty(interesado.getDocumento())) {
-                        elem = rootElement.addElement("Documento_Identificacion_Interesado");
-                        elem.addCDATA(interesado.getDocumento());
-                    }
-                    // Razon_Social_Interesado
-                    if (!StringUtils.isEmpty(interesado.getRazonSocial())) {
-                        elem = rootElement.addElement("Razon_Social_Interesado");
-                        elem.addCDATA(interesado.getRazonSocial());
-                    }
-                    // Nombre_Interesado
-                    if (!StringUtils.isEmpty(interesado.getNombre())) {
-                        elem = rootElement.addElement("Nombre_Interesado");
-                        elem.addCDATA(interesado.getNombre());
-                    }
-                    // Primer_Apellido_Interesado
-                    if (!StringUtils.isEmpty(interesado.getApellido1())) {
-                        elem = rootElement.addElement("Primer_Apellido_Interesado");
-                        elem.addCDATA(interesado.getApellido1());
-                    }
-                    // Segundo_Apellido_Interesado
-                    if (!StringUtils.isEmpty(interesado.getApellido2())) {
-                        elem = rootElement.addElement("Segundo_Apellido_Interesado");
-                        elem.addCDATA(interesado.getApellido2());
-                    }
+                // Tipo_Documento_Identificacion_Representante
+                if (interesadoSir.getTipoDocumentoIdentificacionRepresentante() != null) {
+                    elem = rootElement.addElement("Tipo_Documento_Identificacion_Representante");
+                    elem.addCDATA(interesadoSir.getTipoDocumentoIdentificacionRepresentante());
+                }
+                // Documento_Identificacion_Representante
+                if (interesadoSir.getDocumentoIdentificacionRepresentante() != null) {
+                    elem = rootElement.addElement("Documento_Identificacion_Representante");
+                    elem.addCDATA(interesadoSir.getDocumentoIdentificacionRepresentante());
+                }
+                // Razon_Social_Representante
+                if (interesadoSir.getRazonSocialRepresentante() != null) {
+                    elem = rootElement.addElement("Razon_Social_Representante");
+                    elem.addCDATA(interesadoSir.getRazonSocialRepresentante());
+                }
+                // Nombre_Representante
+                if (interesadoSir.getNombreRepresentante() != null) {
+                    elem = rootElement.addElement("Nombre_Representante");
+                    elem.addCDATA(interesadoSir.getNombreRepresentante());
+                }
+                // Primer_Apellido_Representante
+                if (interesadoSir.getPrimerApellidoRepresentante() != null) {
+                    elem = rootElement.addElement("Primer_Apellido_Representante");
+                    elem.addCDATA(interesadoSir.getPrimerApellidoRepresentante());
+                }
+                // Segundo_Apellido_Representante
+                if (interesadoSir.getSegundoApellidoRepresentante() != null) {
+                    elem = rootElement.addElement("Segundo_Apellido_Representante");
+                    elem.addCDATA(interesadoSir.getSegundoApellidoRepresentante());
+                }
 
-                    // Tipo_Documento_Identificacion_Representante
-                    if (representante != null && representante.getTipoDocumentoIdentificacion() != null) {
-                        elem = rootElement.addElement("Tipo_Documento_Identificacion_Representante");
-                        elem.addCDATA(String.valueOf(CODIGO_NTI_BY_TIPODOCUMENTOID.get(interesado.getRepresentante().getTipoDocumentoIdentificacion())));
-                    }
-                    // Documento_Identificacion_Representante
-                    if (representante != null && representante.getDocumento() != null) {
-                        elem = rootElement.addElement("Documento_Identificacion_Representante");
-                        elem.addCDATA(representante.getDocumento());
-                    }
-                    // Razon_Social_Representante
-                    if (representante != null && representante.getRazonSocial() != null) {
-                        elem = rootElement.addElement("Razon_Social_Representante");
-                        elem.addCDATA(representante.getRazonSocial());
-                    }
-                    // Nombre_Representante
-                    if (representante != null && representante.getNombre() != null) {
-                        elem = rootElement.addElement("Nombre_Representante");
-                        elem.addCDATA(representante.getNombre());
-                    }
-                    // Primer_Apellido_Representante
-                    if (representante != null && representante.getApellido1() != null) {
-                        elem = rootElement.addElement("Primer_Apellido_Representante");
-                        elem.addCDATA(representante.getApellido1());
-                    }
-                    // Segundo_Apellido_Representante
-                    if (representante != null && representante.getApellido2() != null) {
-                        elem = rootElement.addElement("Segundo_Apellido_Representante");
-                        elem.addCDATA(representante.getApellido2());
-                    }
+                // Pais_Interesado
+                if (interesadoSir.getCodigoPaisInteresado() != null) {
+                    elem = rootElement.addElement("Pais_Interesado");
+                    elem.addCDATA(interesadoSir.getCodigoPaisInteresado());
+                }
+                // Provincia_Interesado
+                if (interesadoSir.getCodigoProvinciaInteresado() != null) {
+                    elem = rootElement.addElement("Provincia_Interesado");
+                    elem.addCDATA(interesadoSir.getCodigoProvinciaInteresado());
+                }
+                // Municipio_Interesado
+                if (interesadoSir.getCodigoMunicipioInteresado() != null) {
+                    elem = rootElement.addElement("Municipio_Interesado");
+                    elem.addCDATA(interesadoSir.getCodigoMunicipioInteresado());
+                }
+                // Direccion_Interesado
+                if (!StringUtils.isEmpty(interesadoSir.getDireccionInteresado())) {
+                    elem = rootElement.addElement("Direccion_Interesado");
+                    elem.addCDATA(interesadoSir.getDireccionInteresado());
+                }
+                // Codigo_Postal_Interesado
+                if (!StringUtils.isEmpty(interesadoSir.getCodigoPostalInteresado())) {
+                    elem = rootElement.addElement("Codigo_Postal_Interesado");
+                    elem.addCDATA(interesadoSir.getCodigoPostalInteresado());
+                }
+                // Correo_Electronico_Interesado
+                if (!StringUtils.isEmpty(interesadoSir.getCorreoElectronicoInteresado())) {
+                    elem = rootElement.addElement("Correo_Electronico_Interesado");
+                    elem.addCDATA(interesadoSir.getCorreoElectronicoInteresado());
+                }
+                // Telefono_Contacto_Interesado
+                if (!StringUtils.isEmpty(interesadoSir.getTelefonoInteresado())) {
+                    elem = rootElement.addElement("Telefono_Contacto_Interesado");
+                    elem.addCDATA(interesadoSir.getTelefonoInteresado());
+                }
+                // Direccion_Electronica_Habilitada_Interesado
+                if (!StringUtils.isEmpty(interesadoSir.getDireccionElectronicaHabilitadaInteresado())) {
+                    elem = rootElement.addElement("Direccion_Electronica_Habilitada_Interesado");
+                    elem.addCDATA(interesadoSir.getDireccionElectronicaHabilitadaInteresado());
+                }
+                // Canal_Preferente_Comunicacion_Interesado
+                if (interesadoSir.getCanalPreferenteComunicacionInteresado() != null) {
+                    elem = rootElement.addElement("Canal_Preferente_Comunicacion_Interesado");
+                    elem.addCDATA(interesadoSir.getCanalPreferenteComunicacionInteresado());
+                }
 
-                    // Pais_Interesado
-                    if (interesado.getPais() != null) {
-                        elem = rootElement.addElement("Pais_Interesado");
-                        elem.addCDATA(interesado.getPais().getCodigoPais().toString());
-                    }
-                    // Provincia_Interesado
-                    if (interesado.getProvincia() != null) {
-                        elem = rootElement.addElement("Provincia_Interesado");
-                        elem.addCDATA(interesado.getProvincia().getCodigoProvincia().toString());
-                    }
-                    // Municipio_Interesado
-                    if (interesado.getLocalidad() != null) {
-                        elem = rootElement.addElement("Municipio_Interesado");
-                        elem.addCDATA(interesado.getLocalidad().getCodigoLocalidad().toString());
-                    }
-                    // Direccion_Interesado
-                    if (!StringUtils.isEmpty(interesado.getDireccion())) {
-                        elem = rootElement.addElement("Direccion_Interesado");
-                        elem.addCDATA(interesado.getDireccion());
-                    }
-                    // Codigo_Postal_Interesado
-                    if (!StringUtils.isEmpty(interesado.getCp())) {
-                        elem = rootElement.addElement("Codigo_Postal_Interesado");
-                        elem.addCDATA(interesado.getCp());
-                    }
-                    // Correo_Electronico_Interesado
-                    if (!StringUtils.isEmpty(interesado.getEmail())) {
-                        elem = rootElement.addElement("Correo_Electronico_Interesado");
-                        elem.addCDATA(interesado.getEmail());
-                    }
-                    // Telefono_Contacto_Interesado
-                    if (!StringUtils.isEmpty(interesado.getTelefono())) {
-                        elem = rootElement.addElement("Telefono_Contacto_Interesado");
-                        elem.addCDATA(interesado.getTelefono());
-                    }
-                    // Direccion_Electronica_Habilitada_Interesado
-                    if (!StringUtils.isEmpty(interesado.getDireccionElectronica())) {
-                        elem = rootElement.addElement("Direccion_Electronica_Habilitada_Interesado");
-                        elem.addCDATA(interesado.getDireccionElectronica());
-                    }
-                    // Canal_Preferente_Comunicacion_Interesado
-                    if (interesado.getCanal() != null) {
-                        elem = rootElement.addElement("Canal_Preferente_Comunicacion_Interesado");
-                        elem.addCDATA(CODIGO_BY_CANALNOTIFICACION.get(interesado.getCanal()));
-                    }
+                // Pais_Representante
+                if (interesadoSir.getCodigoPaisRepresentante() != null) {
+                    elem = rootElement.addElement("Pais_Representante");
+                    elem.addCDATA(interesadoSir.getCodigoPaisRepresentante());
+                }
+                // Provincia_Representante
+                if (interesadoSir.getCodigoProvinciaRepresentante() != null) {
+                    elem = rootElement.addElement("Provincia_Representante");
+                    elem.addCDATA(interesadoSir.getCodigoProvinciaRepresentante());
+                }
+                // Municipio_Representante
+                if (interesadoSir.getCodigoMunicipioInteresado() != null) {
+                    elem = rootElement.addElement("Municipio_Representante");
+                    elem.addCDATA(interesadoSir.getCodigoMunicipioRepresentante());
+                }
+                // Direccion_Representante
+                if (!StringUtils.isEmpty(interesadoSir.getDireccionRepresentante())) {
+                    elem = rootElement.addElement("Direccion_Representante");
+                    elem.addCDATA(interesadoSir.getDireccionRepresentante());
+                }
+                // Codigo_Postal_Representante
+                if (!StringUtils.isEmpty(interesadoSir.getCodigoPostalRepresentante())) {
+                    elem = rootElement.addElement("Codigo_Postal_Representante");
+                    elem.addCDATA(interesadoSir.getCodigoPostalRepresentante());
+                }
+                // Correo_Electronico_Representante
+                if (!StringUtils.isEmpty(interesadoSir.getCorreoElectronicoRepresentante())) {
+                    elem = rootElement.addElement("Correo_Electronico_Representante");
+                    elem.addCDATA(interesadoSir.getCorreoElectronicoRepresentante());
+                }
+                // Telefono_Contacto_Representante
+                if (!StringUtils.isEmpty(interesadoSir.getTelefonoRepresentante())) {
+                    elem = rootElement.addElement("Telefono_Contacto_Representante");
+                    elem.addCDATA(interesadoSir.getTelefonoRepresentante());
+                }
+                // Direccion_Electronica_Habilitada_Representante
+                if (!StringUtils.isEmpty(interesadoSir.getDireccionElectronicaHabilitadaRepresentante())) {
+                    elem = rootElement.addElement("Direccion_Electronica_Habilitada_Representante");
+                    elem.addCDATA(interesadoSir.getDireccionElectronicaHabilitadaRepresentante());
+                }
+                // Canal_Preferente_Comunicacion_Representante
+                if (interesadoSir.getCanalPreferenteComunicacionRepresentante() != null) {
+                    elem = rootElement.addElement("Canal_Preferente_Comunicacion_Representante");
+                    elem.addCDATA(interesadoSir.getCanalPreferenteComunicacionRepresentante());
+                }
 
-                    // Pais_Representante
-                    if (representante != null && representante.getPais() != null) {
-                        elem = rootElement.addElement("Pais_Representante");
-                        elem.addCDATA(representante.getPais().getCodigoPais().toString());
-                    }
-                    // Provincia_Representante
-                    if (representante != null && representante.getProvincia() != null) {
-                        elem = rootElement.addElement("Provincia_Representante");
-                        elem.addCDATA(representante.getProvincia().getCodigoProvincia().toString());
-                    }
-                    // Municipio_Representante
-                    if (representante != null && representante.getLocalidad() != null) {
-                        elem = rootElement.addElement("Municipio_Representante");
-                        elem.addCDATA(representante.getLocalidad().getCodigoLocalidad().toString());
-                    }
-                    // Direccion_Representante
-                    if (representante != null && !StringUtils.isEmpty(representante.getDireccion())) {
-                        elem = rootElement.addElement("Direccion_Representante");
-                        elem.addCDATA(representante.getDireccion());
-                    }
-                    // Codigo_Postal_Representante
-                    if (representante != null && !StringUtils.isEmpty(representante.getCp())) {
-                        elem = rootElement.addElement("Codigo_Postal_Representante");
-                        elem.addCDATA(representante.getCp());
-                    }
-                    // Correo_Electronico_Representante
-                    if (representante != null && !StringUtils.isEmpty(representante.getEmail())) {
-                        elem = rootElement.addElement("Correo_Electronico_Representante");
-                        elem.addCDATA(representante.getEmail());
-                    }
-                    // Telefono_Contacto_Representante
-                    if (representante != null && !StringUtils.isEmpty(representante.getTelefono())) {
-                        elem = rootElement.addElement("Telefono_Contacto_Representante");
-                        elem.addCDATA(representante.getTelefono());
-                    }
-                    // Direccion_Electronica_Habilitada_Representante
-                    if (representante != null && !StringUtils.isEmpty(representante.getDireccionElectronica())) {
-                        elem = rootElement.addElement("Direccion_Electronica_Habilitada_Representante");
-                        elem.addCDATA(representante.getDireccionElectronica());
-                    }
-                    // Canal_Preferente_Comunicacion_Representante
-                    if (representante != null && representante.getCanal() != null) {
-                        elem = rootElement.addElement("Canal_Preferente_Comunicacion_Representante");
-                        elem.addCDATA(CODIGO_BY_CANALNOTIFICACION.get(representante.getCanal()));
-                    }
-
-                    // Observaciones
-                    if (!StringUtils.isEmpty(interesado.getObservaciones())) {
-                        elem = rootElement.addElement("Observaciones");
-                        elem.addCDATA(interesado.getObservaciones());
-                    }
-
+                // Observaciones
+                if (!StringUtils.isEmpty(interesadoSir.getObservaciones())) {
+                    elem = rootElement.addElement("Observaciones");
+                    elem.addCDATA(interesadoSir.getObservaciones());
                 }
 
             }
@@ -640,56 +628,124 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
      * Añade el Segmento deAsunto al Fichero de Intercambio
      *
      * @param rootNode
-     * @param re
+     * @param asiento
      */
-    private void addDatosAsunto(Element rootNode, RegistroEntrada re) {
+    private void addDatosAsunto(Element rootNode, AsientoRegistralSir asiento) {
 
         // De_Asunto
         Element rootElement = rootNode.addElement("De_Asunto");
         Element elem = null;
 
-        RegistroDetalle registroDetalle = re.getRegistroDetalle();
-
         // Resumen
         elem = rootElement.addElement("Resumen");
-        if (StringUtils.isNotBlank(registroDetalle.getExtracto())) {
-            elem.addCDATA(registroDetalle.getExtracto());
+        if (StringUtils.isNotBlank(asiento.getResumen())) {
+            elem.addCDATA(asiento.getResumen());
         }
         // Codigo_Asunto_Segun_Destino
-        if (registroDetalle.getCodigoAsunto() != null) {
+        if (asiento.getCodigoAsunto() != null) {
             elem = rootElement.addElement("Codigo_Asunto_Segun_Destino");
-            elem.addCDATA(registroDetalle.getCodigoAsunto().getCodigo());
+            elem.addCDATA(asiento.getCodigoAsunto());
         }
 
         // Referencia_Externa
-        if (StringUtils.isNotBlank(registroDetalle.getReferenciaExterna())) {
+        if (StringUtils.isNotBlank(asiento.getReferenciaExterna())) {
             elem = rootElement.addElement("Referencia_Externa");
-            elem.addCDATA(registroDetalle.getReferenciaExterna());
+            elem.addCDATA(asiento.getReferenciaExterna());
         }
 
         // Numero_Expediente
-        if (StringUtils.isNotBlank(registroDetalle.getExpediente())) {
+        if (StringUtils.isNotBlank(asiento.getNumeroExpediente())) {
             elem = rootElement.addElement("Numero_Expediente");
-            elem.addCDATA(registroDetalle.getExpediente());
+            elem.addCDATA(asiento.getNumeroExpediente());
         }
 
     }
 
-    private void addDatosAnexos(Element rootNode, RegistroEntrada re, String identificadorIntercambio) throws Exception  {
-        int secuencia = 0;
+    private void addDatosAnexos(Element rootNode, AsientoRegistralSir asiento) throws Exception  {
+
+        for (AnexoSir anexoSir : asiento.getAnexos()) {
+
+            Element elem;
+            Element rootElement = rootNode.addElement("De_Anexo");
+
+            // Nombre_Fichero_Anexado
+            if (StringUtils.isNotBlank(anexoSir.getNombreFichero())) {
+                elem = rootElement.addElement("Nombre_Fichero_Anexado");
+                elem.addCDATA(anexoSir.getNombreFichero());
+            }
+
+            // Identificador_Fichero
+            elem = rootElement.addElement("Identificador_Fichero");
+            elem.addCDATA(anexoSir.getIdentificadorFichero());
 
 
-        List<AnexoFull> anexosFull = re.getRegistroDetalle().getAnexosFull(); // Deben pasarnos el re con los anexos cargados
+            // Validez_Documento
+            elem = rootElement.addElement("Validez_Documento");
+            if (anexoSir.getValidezDocumento() == null) {
+                elem.addCDATA(null);
+            } else {
+                elem.addCDATA(anexoSir.getValidezDocumento());
+            }
 
+            // Tipo_Documento
+            elem = rootElement.addElement("Tipo_Documento");
+            if (anexoSir.getTipoDocumento() == null) {
+                elem.addCDATA(null);
+            } else {
+                elem.addCDATA(anexoSir.getTipoDocumento());
+            }
 
-        for (AnexoFull anexoFull : anexosFull) {
-            Anexo anexo = anexoFull.getAnexo();
-            //Inicio del segmento "De_Anexo" para el mensaje de intercambio.
+            // Certificado
+            if (anexoSir.getCertificado() != null) {
+                elem = rootElement.addElement("Certificado");
+                elem.addCDATA(getBase64String(anexoSir.getCertificado()));
+            }
 
-            //El custodiaID no puede ser null
-            Assert.notNull(anexo.getCustodiaID(), "'custodiaID' must not be null");
+            //Firma documento (propiedad Firma Documento del segmento)
+            if (anexoSir.getFirma() != null) {
+                elem = rootElement.addElement("Firma_Documento");
+                elem.addCDATA(getBase64String(anexoSir.getFirma()));
+            }
 
-            secuencia = montarDeAnexo(rootNode, identificadorIntercambio, anexoFull, secuencia);
+            // TimeStamp
+            if (anexoSir.getTimestamp() != null) {
+                elem = rootElement.addElement("TimeStamp");
+                elem.addCDATA(getBase64String(anexoSir.getTimestamp()));
+            }
+
+            // Validacion_OCSP_Certificado
+            if (anexoSir.getValidacionOCSPCertificado() != null) {
+                elem = rootElement.addElement("Validacion_OCSP_Certificado");
+                elem.addCDATA(getBase64String(anexoSir.getValidacionOCSPCertificado()));
+            }
+
+            // Hash
+            if (anexoSir.getAnexoData() != null) {
+                elem = rootElement.addElement("Hash");
+                elem.addCDATA(getBase64String(anexoSir.getAnexoData()));
+            }
+
+            // Tipo_MIME
+            if (anexoSir.getTipoMIME() != null || anexoSir.getTipoMIME().length() <= ANEXO_TIPOMIME_MAXLENGTH_SIR) {
+                elem = rootElement.addElement("Tipo_MIME");
+                elem.addCDATA(anexoSir.getTipoMIME());
+            }
+
+            //Anexo (propiedad Anexo del segmento)
+            if (anexoSir.getAnexoData() != null) {
+                elem = rootElement.addElement("Anexo");
+                elem.addCDATA(getBase64String(anexoSir.getAnexoData()));
+            }
+
+            //Identificador Fichero Firmado
+            elem = rootElement.addElement("Identificador_Documento_Firmado");
+            elem.addCDATA(anexoSir.getIdentificadorDocumentoFirmado());
+
+            // Observaciones
+            if (StringUtils.isNotBlank(anexoSir.getObservaciones())) {
+                elem = rootElement.addElement("Observaciones");
+                elem.addCDATA(anexoSir.getObservaciones());
+            }
         }
        
     }
@@ -765,13 +821,13 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
             String filename = dc.getName();
             byte[] data = dc.getData();
-            
+
             identificador_fichero = generateIdentificadorFichero(identificadorIntercambio, secuencia, filename);
             secuencia++;
             
             Long validezDocumento = anexo.getValidezDocumento();
             
-            // TODO preguntar a felip, al ser la firma del anexo no se que poner
+
             Long tipoDocumento = anexo.getTipoDocumento();
 
 
@@ -805,7 +861,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
             // TODO Que posam
               Long validezDocumento = anexo.getValidezDocumento();
             
-            // TODO preguntar a felip, al ser la firma del anexo no se que poner
+
               Long tipoDocumento = TIPO_DOCUMENTO_FICHERO_TECNICO;
 
 
@@ -875,7 +931,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
       if (tipoDocumento == null) {
         elem.addCDATA(null);
       } else {
-          elem.addCDATA(CODIGO_NTI_BY_TIPO_DOCUMENTO.get(tipoDocumento));
+          elem.addCDATA(CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(tipoDocumento));
       }
 
 
@@ -953,92 +1009,85 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
      * Añade el Segmento deInternosControl al Fichero de Intercambio
      *
      * @param rootNode
-     * @param re
+     * @param asiento
      */
-    private void addDatosInternosControl(Element rootNode, RegistroEntrada re, String identificadorIntercambio) {
+    private void addDatosInternosControl(Element rootNode, AsientoRegistralSir asiento) {
 
         // De_Internos_Control
         Element rootElement = rootNode.addElement("De_Internos_Control");
         Element elem = null;
 
-        RegistroDetalle registroDetalle = re.getRegistroDetalle();
-
         // Tipo_Transporte_Entrada
-        if (registroDetalle.getTransporte() != null) {
+        if (asiento.getTipoTransporte() != null) {
             elem = rootElement.addElement("Tipo_Transporte_Entrada");
-            elem.addCDATA(CODIGO_SICRES_BY_TRANSPORTE.get(registroDetalle.getTransporte()));
+            elem.addCDATA(asiento.getTipoTransporte());
         }
 
         // Numero_Transporte_Entrada
-        if (StringUtils.isNotBlank(registroDetalle.getNumeroTransporte())) {
+        if (StringUtils.isNotBlank(asiento.getNumeroTransporte())) {
             elem = rootElement.addElement("Numero_Transporte_Entrada");
-            elem.addCDATA(registroDetalle.getNumeroTransporte());
+            elem.addCDATA(asiento.getNumeroTransporte());
         }
 
         // Nombre_Usuario
-        if (StringUtils.isNotBlank(re.getUsuario().getNombreCompleto())) {
+        if (StringUtils.isNotBlank(asiento.getNombreUsuario())) {
             elem = rootElement.addElement("Nombre_Usuario");
-            elem.addCDATA(re.getUsuario().getNombreCompleto());
+            elem.addCDATA(asiento.getNombreUsuario());
         }
 
         // Contacto_Usuario
-        if (StringUtils.isNotBlank(re.getUsuario().getUsuario().getEmail())) {
+        if (StringUtils.isNotBlank(asiento.getContactoUsuario())) {
             elem = rootElement.addElement("Contacto_Usuario");
-            elem.addCDATA(re.getUsuario().getUsuario().getEmail());
+            elem.addCDATA(asiento.getContactoUsuario());
         }
 
         // Identificador_Intercambio
-        if (StringUtils.isNotBlank(identificadorIntercambio)) {
+        if (StringUtils.isNotBlank(asiento.getIdentificadorIntercambio())) {
             elem = rootElement.addElement("Identificador_Intercambio");
-            elem.addCDATA(identificadorIntercambio);
+            elem.addCDATA(asiento.getIdentificadorIntercambio());
         }
-
 
         // Aplicacion_Version_Emisora
         elem = rootElement.addElement("Aplicacion_Version_Emisora");
         elem.addCDATA(Versio.VERSIO_SIR);
 
-
         // Tipo_Anotacion
         elem = rootElement.addElement("Tipo_Anotacion");
-        elem.addCDATA("02"); // todo: Pendiente de asignar correctamente
+        elem.addCDATA(asiento.getTipoAnotacion());
 
         elem = rootElement.addElement("Descripcion_Tipo_Anotacion");
-        elem.addCDATA("Envío"); // todo: Pendiente de asignar correctamente
+        elem.addCDATA(asiento.getDecodificacionTipoAnotacion());
 
         // Tipo_Registro
         elem = rootElement.addElement("Tipo_Registro");
-        elem.addCDATA("0"); // todo: Pendiente definir el tipo de registro
+        elem.addCDATA(asiento.getTipoRegistro().getValue());
 
         // Documentacion_Fisica
-        if (registroDetalle.getTipoDocumentacionFisica() != null) {
+        if (StringUtils.isNotBlank(asiento.getDocumentacionFisica())) {
             elem = rootElement.addElement("Documentacion_Fisica");
-            elem.addCDATA(String.valueOf(registroDetalle.getTipoDocumentacionFisica()));
+            elem.addCDATA(asiento.getDocumentacionFisica());
         }
 
         // Observaciones_Apunte
-        if (StringUtils.isNotBlank(registroDetalle.getObservaciones())) {
+        if (StringUtils.isNotBlank(asiento.getObservacionesApunte())) {
             elem = rootElement.addElement("Observaciones_Apunte");
-            elem.addCDATA(registroDetalle.getObservaciones());
+            elem.addCDATA(asiento.getObservacionesApunte());
         }
 
         // Indicador_Prueba
         elem = rootElement.addElement("Indicador_Prueba");
-        elem.addCDATA("0"); //todo: añadir propiedad que indique si es pruebas o producción
+        elem.addCDATA(asiento.getIndicadorPrueba().getValue());
 
         // Codigo_Entidad_Registral_Inicio
-        String Codigo_Entidad_Registral_Inicio = obtenerCodigoOficinaOrigen(re);
-        if (StringUtils.isNotBlank(Codigo_Entidad_Registral_Inicio)) {
+        if (StringUtils.isNotBlank(asiento.getCodigoEntidadRegistralInicio())) {
             elem = rootElement.addElement("Codigo_Entidad_Registral_Inicio");
-            elem.addCDATA(Codigo_Entidad_Registral_Inicio);
+            elem.addCDATA(asiento.getCodigoEntidadRegistralInicio());
         }
 
-
         // Decodificacion_Entidad_Registral_Inicio
-        String Decodificacion_Entidad_Registral_Inicio = obtenerDenominacionOficinaOrigen(re);
-        if (StringUtils.isNotBlank(Decodificacion_Entidad_Registral_Inicio)) {
+        if (StringUtils.isNotBlank(asiento.getDecodificacionEntidadRegistralInicio())) {
             elem = rootElement.addElement("Decodificacion_Entidad_Registral_Inicio");
-            elem.addCDATA(Decodificacion_Entidad_Registral_Inicio);
+            elem.addCDATA(asiento.getDecodificacionEntidadRegistralInicio());
         }
 
 
@@ -1048,26 +1097,24 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
      * Añade el Segmento deInternosControl al Fichero de Intercambio
      *
      * @param rootNode
-     * @param re
+     * @param asiento
      */
-    private void addDatosformularioGenerico(Element rootNode, RegistroEntrada re) {
+    private void addDatosformularioGenerico(Element rootNode, AsientoRegistralSir asiento) {
 
         // De_Formulario_Generico
         Element rootElement = rootNode.addElement("De_Formulario_Generico");
         Element elem = null;
 
-        RegistroDetalle registroDetalle = re.getRegistroDetalle();
-
         // Expone
         elem = rootElement.addElement("Expone");
-        if (StringUtils.isNotBlank(registroDetalle.getExpone())) {
-            elem.addCDATA(registroDetalle.getExpone());
+        if (StringUtils.isNotBlank(asiento.getExpone())) {
+            elem.addCDATA(asiento.getExpone());
         }
 
         // Solicita
         elem = rootElement.addElement("Solicita");
-        if (StringUtils.isNotBlank(registroDetalle.getSolicita())) {
-            elem.addCDATA(registroDetalle.getSolicita());
+        if (StringUtils.isNotBlank(asiento.getSolicita())) {
+            elem.addCDATA(asiento.getSolicita());
         }
 
     }
@@ -1805,50 +1852,6 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
     }
 
     /**
-     * Genera el identificador de intercambio a partir del código de la oficina de origen
-     *
-     * @param codOficinaOrigen
-     * @return
-     * @throws Exception
-     */
-    protected String generarIdentificadorIntercambio(String codOficinaOrigen) {
-
-        String identificador = "";
-        SimpleDateFormat anyo = new SimpleDateFormat("yy"); // Just the year, with 2 digits
-
-        identificador = codOficinaOrigen + "_" + anyo.format(Calendar.getInstance().getTime()) + "_" + getIdToken(); //todo: Añadir secuencia real
-
-
-        return identificador;
-    }
-
-    /**
-     * Calcula una cadena de ocho dígitos a partir del instante de tiempo actual.
-     *
-     * @return la cadena (String) de ocho digitos
-     */
-    private static final AtomicLong TIME_STAMP = new AtomicLong();
-
-    private String getIdToken() {
-        long now = System.currentTimeMillis();
-        while (true) {
-            long last = TIME_STAMP.get();
-            if (now <= last)
-                now = last + 1;
-            if (TIME_STAMP.compareAndSet(last, now))
-                break;
-        }
-        long unsignedValue = Long.toString(now).hashCode() & 0xffffffffl;
-        String result = Long.toString(unsignedValue);
-        if (result.length() > 8) {
-            result = result.substring(result.length() - 8, result.length());
-        } else {
-            result = String.format("%08d", unsignedValue);
-        }
-        return result;
-    }
-
-    /**
      * Metodo que genera identificador de anxso según el patron
      * identificadorIntercambio_01_secuencia.extension
      * donde secuencia es cadena que repesenta secuencia en formato 0001 (leftpading con 0 y máximo de 4 caracteres)
@@ -1869,49 +1872,6 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                 .append(".").append(getExtension(fileName)).toString();
 
         return result;
-    }
-
-
-    /**
-     * Obtiene el código Oficina de Origen dependiendo de si es interna o externa
-     *
-     * @param re
-     * @return
-     * @throws Exception
-     */
-    protected String obtenerCodigoOficinaOrigen(RegistroEntrada re) {
-        String codOficinaOrigen = null;
-
-        if ((re.getRegistroDetalle().getOficinaOrigenExternoCodigo() == null) && (re.getRegistroDetalle().getOficinaOrigen() == null)) {
-            codOficinaOrigen = re.getOficina().getCodigo();
-        } else if (re.getRegistroDetalle().getOficinaOrigenExternoCodigo() != null) {
-            codOficinaOrigen = re.getRegistroDetalle().getOficinaOrigenExternoCodigo();
-        } else {
-            codOficinaOrigen = re.getRegistroDetalle().getOficinaOrigen().getCodigo();
-        }
-
-        return codOficinaOrigen;
-    }
-
-    /**
-     * Obtiene el denominación Oficina de Origen dependiendo de si es interna o externa
-     *
-     * @param re
-     * @return
-     * @throws Exception
-     */
-    protected String obtenerDenominacionOficinaOrigen(RegistroEntrada re) {
-        String denominacionOficinaOrigen = null;
-
-        if ((re.getRegistroDetalle().getOficinaOrigenExternoCodigo() == null) && (re.getRegistroDetalle().getOficinaOrigen() == null)) {
-            denominacionOficinaOrigen = re.getOficina().getDenominacion();
-        } else if (re.getRegistroDetalle().getOficinaOrigenExternoCodigo() != null) {
-            denominacionOficinaOrigen = re.getRegistroDetalle().getOficinaOrigenExternoDenominacion();
-        } else {
-            denominacionOficinaOrigen = re.getRegistroDetalle().getOficinaOrigen().getDenominacion();
-        }
-
-        return denominacionOficinaOrigen;
     }
 
     /**

@@ -26,7 +26,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
+/**
+ * Agrupa funcionalidades comunes para interactuar con {@link Fichero_Intercambio_SICRES_3}, la clase que representa
+ * el FicheroIntercambio.xsd
+ */
 public class FicheroIntercambio {
 
     public final Logger log = Logger.getLogger(getClass());

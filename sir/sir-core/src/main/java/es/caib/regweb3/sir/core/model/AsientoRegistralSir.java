@@ -64,17 +64,17 @@ public class AsientoRegistralSir implements Serializable {
     /**
      * Número del registro inicial.
      */
-    private String numeroRegistroInicial;
+    private String numeroRegistroInicial; //Todo averiguar si es útil este campo
 
     /**
      * Fecha y hora del registro inicial.
      */
-    private Date fechaRegistroInicial;
+    private Date fechaRegistroInicial; //Todo averiguar si es útil este campo
 
     /**
      * Sello de tiempo del registro inicial.
      */
-    private byte[] timestampRegistroInicial;
+    private byte[] timestampRegistroInicial; //Todo averiguar si es útil este campo
 
     /**
      * Código único de la unidad de tramitación de origen obtenido del

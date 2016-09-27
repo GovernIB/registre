@@ -13,10 +13,10 @@ public class SirForm {
 
     private List<RegistroEntrada> registros;
     private Long idOrganismo;
-    private String organismoExterno;
+    private String organismoExternoCodigo;
     private String organismoExternoDenominacion;
     private Long idLibro;
-    private String oficinaSIR;
+    private String oficinaSIRCodigo;
 
     public SirForm() {
     }
@@ -45,20 +45,20 @@ public class SirForm {
         this.idLibro = idLibro;
     }
 
-    public String getOrganismoExterno() {
-        return organismoExterno;
+    public String getOrganismoExternoCodigo() {
+        return organismoExternoCodigo;
     }
 
-    public void setOrganismoExterno(String organismoExterno) {
-        this.organismoExterno = organismoExterno;
+    public void setOrganismoExternoCodigo(String organismoExternoCodigo) {
+        this.organismoExternoCodigo = organismoExternoCodigo;
     }
 
-    public String getOficinaSIR() {
-        return oficinaSIR;
+    public String getOficinaSIRCodigo() {
+        return oficinaSIRCodigo;
     }
 
-    public void setOficinaSIR(String oficinaSIR) {
-        this.oficinaSIR = oficinaSIR;
+    public void setOficinaSIRCodigo(String oficinaSIRCodigo) {
+        this.oficinaSIRCodigo = oficinaSIRCodigo;
     }
 
     public String getOrganismoExternoDenominacion() {

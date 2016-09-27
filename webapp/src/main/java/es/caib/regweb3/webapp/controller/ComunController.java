@@ -190,7 +190,7 @@ public class ComunController extends BaseController {
         RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(registroId);
 
 
-        ficheroIntercambioManager.enviarFicheroIntercambio(registroEntrada);
+        //ficheroIntercambioManager.enviarFicheroIntercambio(registroEntrada);
 
 
         return "redirect:/inici";

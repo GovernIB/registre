@@ -75,7 +75,7 @@ public class AnexoSir implements Serializable {
     private String tipoMIME;
 
     /**
-     * Fichero Anexo codificado en Base64
+     * Archivo Anexo para almacenar en el directorio local
      */
     private Archivo anexo;
 
@@ -91,6 +91,11 @@ public class AnexoSir implements Serializable {
      * Observaciones del fichero adjunto.
      */
     private String observaciones;
+
+    /**
+     * Fichero Anexo codificado en Base64
+     */
+    private byte[] anexoData;
 
 
     public AnexoSir() {
@@ -236,6 +241,15 @@ public class AnexoSir implements Serializable {
 
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
+    }
+
+    @Transient
+    public byte[] getAnexoData() {
+        return anexoData;
+    }
+
+    public void setAnexoData(byte[] anexoData) {
+        this.anexoData = anexoData;
     }
 
     @Override

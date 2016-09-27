@@ -483,7 +483,7 @@ public interface RegwebConstantes {
       TIPO_DOCUMENTO_FICHERO_TECNICO
     };
 
-    public static final Map<Long, String> CODIGO_NTI_BY_TIPO_DOCUMENTO = new HashMap<Long, String>(){{
+    public static final Map<Long, String> CODIGO_SICRES_BY_TIPO_DOCUMENTO = new HashMap<Long, String>(){{
       put(TIPO_DOCUMENTO_FORMULARIO, "0" + TIPO_DOCUMENTO_FORMULARIO);
       put(TIPO_DOCUMENTO_DOC_ADJUNTO, "0" + TIPO_DOCUMENTO_DOC_ADJUNTO);
       put(TIPO_DOCUMENTO_FICHERO_TECNICO, "0" + TIPO_DOCUMENTO_FICHERO_TECNICO);
@@ -491,7 +491,7 @@ public interface RegwebConstantes {
     
     
     public static final Map<String, Long> TIPO_DOCUMENTO_BY_CODIGO_NTI
-      = RegwebUtils.invert(CODIGO_NTI_BY_TIPO_DOCUMENTO ); 
+      = RegwebUtils.invert(CODIGO_SICRES_BY_TIPO_DOCUMENTO );
 
     /* -------- TIPO DOCUMENTACION FISICA ---------- */
 

@@ -233,7 +233,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         String copia = CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_COPIA);
         anexoSinFirma.setValidezDocumento(copia);
         anexoSinFirma.setTipoDocumental(getTestAnexoTipoDocumental());
-        String formulario = CODIGO_NTI_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FORMULARIO);
+        String formulario = CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FORMULARIO);
         anexoSinFirma.setTipoDocumento(formulario);
         anexoSinFirma.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO.intValue());
         anexoSinFirma.setObservaciones("Observaciones de Marilen");
@@ -259,7 +259,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         String copia = CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_COPIA);
         anexoConFirmaAttached.setValidezDocumento(copia);
         anexoConFirmaAttached.setTipoDocumental(getTestAnexoTipoDocumental());
-        String formulario = CODIGO_NTI_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FORMULARIO);
+        String formulario = CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FORMULARIO);
         anexoConFirmaAttached.setTipoDocumento(formulario);
         anexoConFirmaAttached.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO.intValue());
         anexoConFirmaAttached.setObservaciones("Observaciones de Marilen");
@@ -284,7 +284,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         String copia = CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_COPIA);
         anexoConFirmaDetached.setValidezDocumento(copia);
         anexoConFirmaDetached.setTipoDocumental(getTestAnexoTipoDocumental());
-        String formulario = CODIGO_NTI_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FORMULARIO);
+        String formulario = CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FORMULARIO);
         anexoConFirmaDetached.setTipoDocumento(formulario);
         anexoConFirmaDetached.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO.intValue());
         anexoConFirmaDetached.setObservaciones("Observaciones de Marilen");

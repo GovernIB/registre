@@ -11,8 +11,10 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 
 /**
- * Created by Fundació BIT.
+ * Implementación del servicio (WS_SIR9) que recibe en REGWEB3 los ficheros de mensaje de datos de control
+ * en formato SICRES3, desde un nodo distribuido.
  *
+ * Created by Fundació BIT.
  * @author earrivi
  */
 @Stateless(name = WS_SIR9Impl.NAME + "Ejb")

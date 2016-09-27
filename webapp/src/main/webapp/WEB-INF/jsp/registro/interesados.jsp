@@ -34,9 +34,15 @@
         </div>
 
         <div class="panel-body">
-            <c:if test="${errorInteresado}">
+            <c:if test="${errorInteresado && param.tipoRegistro == 'entrada'}">
                 <div class="alert alert-danger alert-dismissable">
                     <strong><spring:message code="interesado.interesado"/>.</strong> <spring:message code="interesado.registro.obligatorio"/>
+                </div>
+            </c:if>
+
+            <c:if test="${errorInteresado && param.tipoRegistro == 'salida'}">
+                <div class="alert alert-danger alert-dismissable">
+                    <strong><spring:message code="registroSalida.destinatario"/>.</strong> <spring:message code="destinatario.registro.obligatorio"/>
                 </div>
             </c:if>
 

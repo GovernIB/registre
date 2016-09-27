@@ -132,7 +132,8 @@ public class AnexoConverter extends CommonConverter {
 
    /**
    * Convierte un {@link es.caib.regweb3.model.Anexo} en un {@link es.caib.regweb3.ws.model.AnexoWs}
-   * @param anexo
+   * @param anexoEjb
+   * @param anexoFull
    * @return
    * @throws Exception
    * @throws I18NException
@@ -213,7 +214,7 @@ public class AnexoConverter extends CommonConverter {
          anexoWs.setValidezDocumento(anexo.getValidezDocumento().toString());
        }
        if(anexo.getTipoDocumento()!= null) {
-         anexoWs.setTipoDocumento(RegwebConstantes.CODIGO_NTI_BY_TIPO_DOCUMENTO.get(anexo.getTipoDocumento()));
+         anexoWs.setTipoDocumento(RegwebConstantes.CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(anexo.getTipoDocumento()));
        }
        if(!StringUtils.isEmpty(anexo.getObservaciones())){anexoWs.setObservaciones(anexo.getObservaciones());}
        if(anexo.getOrigenCiudadanoAdmin()!=null){anexoWs.setOrigenCiudadanoAdmin(anexo.getOrigenCiudadanoAdmin());}

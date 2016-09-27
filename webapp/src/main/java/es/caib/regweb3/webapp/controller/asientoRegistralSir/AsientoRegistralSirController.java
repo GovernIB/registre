@@ -171,7 +171,7 @@ public class AsientoRegistralSirController extends BaseController {
             model.addAttribute("comunidad", catNivelAdministracionEjb.getAll());
 
             Entidad entidad = getEntidadActiva(request);
-            Organismo organismoRaiz = organismoEjb.findByCodigoLigero(entidad.getCodigoDir3());
+            Organismo organismoRaiz = organismoEjb.findByCodigoEntidad(entidad.getCodigoDir3(), entidad.getId());
             if ((organismoRaiz != null) && organismoRaiz.getCodAmbComunidad() != null) {
                 model.addAttribute("comunidad", organismoRaiz.getCodAmbComunidad());
             }else{

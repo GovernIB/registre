@@ -65,6 +65,7 @@ public class OficioRemisionUtilsBean implements OficioRemisionUtilsLocal {
     @EJB(name = "CatEstadoEntidadEJB")
     public CatEstadoEntidadLocal catEstadoEntidadEjb;
 
+
     @Override
     @SuppressWarnings(value = "unchecked")
     public List<Organismo> organismosPendientesRemisionInterna(List<Libro> libros, Set<Long> organismos) throws Exception {
@@ -420,22 +421,15 @@ public class OficioRemisionUtilsBean implements OficioRemisionUtilsLocal {
 
     public OficioRemision crearOficioRemisionExterno(List<RegistroEntrada> registrosEntrada,
                                                      Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, String organismoExterno,
-                                                     String organismoExternoDenominacion, Long idLibro, String identificadorIntercambioSir)
+                                                     String organismoExternoDenominacion, Long idLibro)
             throws Exception, I18NException, I18NValidationException {
 
         //Organismo organismoDestino = organismoEjb.findById(idOrganismo);
 
         OficioRemision oficioRemision = new OficioRemision();
-        oficioRemision.setIdentificadorIntercambioSir(identificadorIntercambioSir);
-
-        if (identificadorIntercambioSir == null) { //todo: modificar el estado cuando se implemente SIR
-            oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_EXTERNO_ENVIADO);
-            oficioRemision.setFechaEstado(new Date());
-        } else {
-            oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_EXTERNO_ENVIADO);
-            oficioRemision.setFechaEstado(new Date());
-        }
-
+        oficioRemision.setIdentificadorIntercambioSir(null);
+        oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_EXTERNO_ENVIADO);
+        oficioRemision.setFechaEstado(new Date());
         oficioRemision.setOficina(oficinaActiva);
         oficioRemision.setFecha(new Date());
         oficioRemision.setRegistrosEntrada(registrosEntrada);
@@ -453,6 +447,36 @@ public class OficioRemisionUtilsBean implements OficioRemisionUtilsLocal {
         return oficioRemision;
 
     }
+
+    @Override
+    public OficioRemision crearOficioRemisionSir(RegistroEntrada registroEntrada, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, String organismoExterno, String organismoExternoDenominacion, Long idLibro, String identificadorIntercambio) throws Exception, I18NException, I18NValidationException {
+
+
+        List<RegistroEntrada> registros = new ArrayList<RegistroEntrada>();
+        registros.add(registroEntrada);
+
+        OficioRemision oficioRemision = new OficioRemision();
+        oficioRemision.setIdentificadorIntercambioSir(identificadorIntercambio);
+        oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_EXTERNO_ENVIADO);
+        oficioRemision.setFechaEstado(new Date());
+        oficioRemision.setOficina(oficinaActiva);
+        oficioRemision.setFecha(new Date());
+        oficioRemision.setRegistrosEntrada(registros);
+        oficioRemision.setUsuarioResponsable(usuarioEntidad);
+        oficioRemision.setLibro(new Libro(idLibro));
+        oficioRemision.setDestinoExternoCodigo(organismoExterno);
+        oficioRemision.setDestinoExternoDenominacion(organismoExternoDenominacion);
+        oficioRemision.setOrganismoDestinatario(null);
+
+        synchronized (this) {
+            oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision,
+                    RegwebConstantes.REGISTRO_OFICIO_EXTERNO);
+        }
+
+        return oficioRemision;
+
+    }
+
 
     /**
      * Procesa un OficioRemision pendiente de llegada, creando tantos Registros de Entrada,
