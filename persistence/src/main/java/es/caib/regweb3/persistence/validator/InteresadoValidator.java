@@ -156,37 +156,40 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
 
 
         // DOCUMENTO (DNI, NIE, PASAPORTE)
-        String documento = interesado.getDocumento().toUpperCase();
         Long tipoDocumento = interesado.getTipoDocumentoIdentificacion();
+        if(tipoDocumento != null) {
 
-        Validacion validacionDocumento = null;
-        try {
-            validacionDocumento = DocumentoUtils.comprobarDocumento(documento, tipoDocumento);
-        } catch (Exception e) {
-            e.printStackTrace();
-            validacionDocumento = new Validacion(Boolean.FALSE, "error.documento", "El document es erroni");
-        }
+            String documento = interesado.getDocumento().toUpperCase();
 
-
-        //Si el formato es correcto busca que no exista ya en el sistema
-        if (validacionDocumento.getValido()) {
-            boolean existe;
+            Validacion validacionDocumento = null;
             try {
-                //Comprueba que el documento no exista en la bbdd
-                existe = personaEjb.existeDocumentoNew(interesado.getDocumento().toUpperCase(), interesado.getEntidad());
-
+                validacionDocumento = DocumentoUtils.comprobarDocumento(documento, tipoDocumento);
             } catch (Exception e) {
-                log.error("Error comprobando si persona ya existe: ", e);
-                existe = true;
+                e.printStackTrace();
+                validacionDocumento = new Validacion(Boolean.FALSE, "error.documento", "El document es erroni");
             }
 
-            if (existe) {
-                rejectValue(errors, "documento", "error.document.existe",
-                        "El document ja existeix");
+
+            //Si el formato es correcto busca que no exista ya en el sistema
+            if (validacionDocumento.getValido()) {
+                boolean existe;
+                try {
+                    //Comprueba que el documento no exista en la bbdd
+                    existe = personaEjb.existeDocumentoNew(interesado.getDocumento().toUpperCase(), interesado.getEntidad());
+
+                } catch (Exception e) {
+                    log.error("Error comprobando si persona ya existe: ", e);
+                    existe = true;
+                }
+
+                if (existe) {
+                    rejectValue(errors, "documento", "error.document.existe",
+                            "El document ja existeix");
+                }
+            } else {
+                rejectValue(errors, "documento", validacionDocumento.getCodigoError(), validacionDocumento.getTextoError());
+                log.info("El formato del documento NO es correcto");
             }
-        } else {
-            rejectValue(errors, "documento", validacionDocumento.getCodigoError(), validacionDocumento.getTextoError());
-            log.info("El formato del documento NO es correcto");
         }
 
 

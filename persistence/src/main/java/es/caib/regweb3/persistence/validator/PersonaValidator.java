@@ -141,44 +141,47 @@ public class PersonaValidator<T> extends AbstractRegWebValidator<T> {
 
 
         // DOCUMENTO (DNI, NIE, PASAPORTE)
-        String documento = persona.getDocumento().toUpperCase();
         Long tipoDocumento = persona.getTipoDocumentoIdentificacion();
+        if(tipoDocumento != null) {
 
-        Validacion validacionDocumento = null;
-        try {
-            validacionDocumento = DocumentoUtils.comprobarDocumento(documento, tipoDocumento);
-        } catch (Exception e) {
-            e.printStackTrace();
-            validacionDocumento = new Validacion(Boolean.FALSE, "error.documento", "El document es erroni");
-        }
+            String documento = persona.getDocumento().toUpperCase();
 
-
-        //Si el formato es correcto busca que no exista ya en el sistema
-        if (validacionDocumento.getValido()) {
-            boolean existe;
+            Validacion validacionDocumento = null;
             try {
-                if (persona.getId() == null) {
-                    existe = personaEjb.existeDocumentoNew(persona.getDocumento().toUpperCase(), persona.getEntidad().getId());
-                } else {
-                    existe = personaEjb.existeDocumentoEdit(persona.getDocumento().toUpperCase(), persona.getId(), persona.getEntidad().getId());
+                validacionDocumento = DocumentoUtils.comprobarDocumento(documento, tipoDocumento);
+            } catch (Exception e) {
+                e.printStackTrace();
+                validacionDocumento = new Validacion(Boolean.FALSE, "error.documento", "El document es erroni");
+            }
+
+
+            //Si el formato es correcto busca que no exista ya en el sistema
+            if (validacionDocumento.getValido()) {
+                boolean existe;
+                try {
+                    if (persona.getId() == null) {
+                        existe = personaEjb.existeDocumentoNew(persona.getDocumento().toUpperCase(), persona.getEntidad().getId());
+                    } else {
+                        existe = personaEjb.existeDocumentoEdit(persona.getDocumento().toUpperCase(), persona.getId(), persona.getEntidad().getId());
+                    }
+
+                } catch (Exception e) {
+                    log.error("Error comprobando si persona ya existe: ", e);
+                    existe = true;
                 }
 
-            } catch (Exception e) {
-                log.error("Error comprobando si persona ya existe: ", e);
-                existe = true;
+                if (existe) {
+                    rejectValue(errors, "documento", "error.document.existe",
+                            "El document ja existeix");
+                }
+            } else {
+                rejectValue(errors, "documento", validacionDocumento.getCodigoError(), validacionDocumento.getTextoError());
+                log.info("El formato del documento NO es correcto");
             }
-
-            if (existe) {
-                rejectValue(errors, "documento", "error.document.existe",
-                        "El document ja existeix");
-            }
-        } else {
-            rejectValue(errors, "documento", validacionDocumento.getCodigoError(), validacionDocumento.getTextoError());
-            log.info("El formato del documento NO es correcto");
         }
 
 
-        //DIRECCIÓN
+            //DIRECCIÓN
         if (!isNullOrEmpty(persona.getDireccion())) {
             if (persona.getDireccion().length() > 160) {
                 rejectValue(errors, "direccion", "error.valor.maxlenght", "Tamaño demasiado largo");
