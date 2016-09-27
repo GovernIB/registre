@@ -126,7 +126,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils  {
   public void crearRegistroEntrada() throws Exception {
 
 
-    for (int i = 0; i < 1; i++) {
+    for (int i = 0; i < 2; i++) {
 
 
       RegistroEntradaWs registroEntradaWs = new RegistroEntradaWs();
@@ -172,7 +172,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils  {
       interesado.setProvincia((long) 46);
       interesadoWs.setInteresado(interesado);
 
-      DatosInteresadoWs representante = new DatosInteresadoWs();
+      /*DatosInteresadoWs representante = new DatosInteresadoWs();
       representante.setTipoInteresado(TIPO_INTERESADO_PERSONA_FISICA); // == 3
       representante.setTipoDocumentoIdentificacion("N");
       representante.setDocumento("33456299Q");
@@ -181,7 +181,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils  {
       representante.setApellido1("De la torre");
       representante.setPais((long) 724);
       representante.setProvincia((long) 46);
-      interesadoWs.setRepresentante(representante);
+      interesadoWs.setRepresentante(representante);*/
 
       registroEntradaWs.getInteresados().add(interesadoWs);
 
@@ -356,7 +356,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils  {
 
     anexoWs.setValidezDocumento(CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_COPIA));
     anexoWs.setTipoDocumental(getTestAnexoTipoDocumental());
-    anexoWs.setTipoDocumento(CODIGO_NTI_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FORMULARIO));
+    anexoWs.setTipoDocumento(CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FORMULARIO));
     anexoWs.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO.intValue());
     anexoWs.setObservaciones("Observaciones de Marilen");
 
@@ -389,7 +389,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils  {
     anexoFirmaAtached.setTitulo("Anexo firma atached");
     anexoFirmaAtached.setValidezDocumento(CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_COPIA_COMPULSADA));
     anexoFirmaAtached.setTipoDocumental(getTestAnexoTipoDocumental());
-    anexoFirmaAtached.setTipoDocumento(CODIGO_NTI_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_DOC_ADJUNTO));
+    anexoFirmaAtached.setTipoDocumento(CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_DOC_ADJUNTO));
     anexoFirmaAtached.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_ADMINISTRACION.intValue());
     anexoFirmaAtached.setObservaciones("Observaciones firma atached");
     anexoFirmaAtached.setModoFirma(MODO_FIRMA_ANEXO_ATTACHED);
@@ -418,7 +418,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils  {
     anexoFirmaDetached.setTitulo("Anexo firma detached");
     anexoFirmaDetached.setValidezDocumento(CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_COPIA_ORIGINAL));
     anexoFirmaDetached.setTipoDocumental(getTestAnexoTipoDocumental());
-    anexoFirmaDetached.setTipoDocumento(CODIGO_NTI_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FICHERO_TECNICO));
+    anexoFirmaDetached.setTipoDocumento(CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FICHERO_TECNICO));
     anexoFirmaDetached.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO.intValue());
     anexoFirmaDetached.setObservaciones("Observaciones firma detached");
     anexoFirmaDetached.setModoFirma(MODO_FIRMA_ANEXO_DETACHED);
@@ -456,7 +456,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils  {
     anexoFirmaDetachedCopia.setTitulo("Anexo firma detached copia");
     anexoFirmaDetachedCopia.setValidezDocumento(CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_COPIA_COMPULSADA));
     anexoFirmaDetachedCopia.setTipoDocumental(getTestAnexoTipoDocumental());
-    anexoFirmaDetachedCopia.setTipoDocumento(CODIGO_NTI_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FORMULARIO));
+    anexoFirmaDetachedCopia.setTipoDocumento(CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FORMULARIO));
     anexoFirmaDetachedCopia.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO.intValue());
     anexoFirmaDetachedCopia.setObservaciones("Observaciones firma detached copia");
     anexoFirmaDetachedCopia.setModoFirma(MODO_FIRMA_ANEXO_DETACHED);
