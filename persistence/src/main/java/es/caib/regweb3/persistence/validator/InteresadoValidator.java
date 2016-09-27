@@ -157,7 +157,12 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
 
         // DOCUMENTO (DNI, NIE, PASAPORTE)
         Long tipoDocumento = interesado.getTipoDocumentoIdentificacion();
-        if(tipoDocumento != null) {
+
+        if(tipoDocumento != null){
+            rejectIfEmptyOrWhitespace(errors, __target__, "documento", "error.valor.requerido", "El camp és obligatori");
+        }
+
+        if(tipoDocumento != null && !StringUtils.isEmpty(interesado.getDocumento())) {
 
             String documento = interesado.getDocumento().toUpperCase();
 
@@ -168,7 +173,6 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
                 e.printStackTrace();
                 validacionDocumento = new Validacion(Boolean.FALSE, "error.documento", "El document es erroni");
             }
-
 
             //Si el formato es correcto busca que no exista ya en el sistema
             if (validacionDocumento.getValido()) {
@@ -190,6 +194,8 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
                 rejectValue(errors, "documento", validacionDocumento.getCodigoError(), validacionDocumento.getTextoError());
                 log.info("El formato del documento NO es correcto");
             }
+        }else if(!StringUtils.isEmpty(interesado.getDocumento())){
+            rejectValue(errors, "tipoDocumentoIdentificacion", "error.valor.requerido", "El camp és obligatori");
         }
 
 

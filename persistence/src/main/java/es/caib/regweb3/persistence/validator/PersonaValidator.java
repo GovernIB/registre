@@ -6,6 +6,7 @@ import es.caib.regweb3.persistence.ejb.CatPaisLocal;
 import es.caib.regweb3.persistence.ejb.PersonaLocal;
 import es.caib.regweb3.utils.DocumentoUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.utils.Validacion;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.validation.IValidatorResult;
@@ -142,6 +143,11 @@ public class PersonaValidator<T> extends AbstractRegWebValidator<T> {
 
         // DOCUMENTO (DNI, NIE, PASAPORTE)
         Long tipoDocumento = persona.getTipoDocumentoIdentificacion();
+
+        if(tipoDocumento != null){
+            rejectIfEmptyOrWhitespace(errors, __target__, "documento", "error.valor.requerido", "El camp és obligatori");
+        }
+
         if(tipoDocumento != null) {
 
             String documento = persona.getDocumento().toUpperCase();
@@ -153,7 +159,6 @@ public class PersonaValidator<T> extends AbstractRegWebValidator<T> {
                 e.printStackTrace();
                 validacionDocumento = new Validacion(Boolean.FALSE, "error.documento", "El document es erroni");
             }
-
 
             //Si el formato es correcto busca que no exista ya en el sistema
             if (validacionDocumento.getValido()) {
@@ -178,6 +183,8 @@ public class PersonaValidator<T> extends AbstractRegWebValidator<T> {
                 rejectValue(errors, "documento", validacionDocumento.getCodigoError(), validacionDocumento.getTextoError());
                 log.info("El formato del documento NO es correcto");
             }
+        }else if(!StringUtils.isEmpty(persona.getDocumento())){
+            rejectValue(errors, "tipoDocumentoIdentificacion", "error.valor.requerido", "El camp és obligatori");
         }
 
 
