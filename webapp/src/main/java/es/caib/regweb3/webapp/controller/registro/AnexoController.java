@@ -214,9 +214,9 @@ public class AnexoController extends BaseController {
       // Si és asincron no hi ha necessitat de urlFinal
       final String urlFinal = null;
 
-      // Vull suposar que abans de 3 minuts haurà escanejat
+      // Vull suposar que abans de 10 minuts haurà escanejat
       Calendar caducitat = Calendar.getInstance();
-      caducitat.add(Calendar.MINUTE, 3);
+      caducitat.add(Calendar.MINUTE, 10);
 
       long expiryTransaction = caducitat.getTimeInMillis();
 
@@ -436,6 +436,11 @@ public class AnexoController extends BaseController {
 
       
       if (config != null &&  config.getScannedFiles().size() != 0) {
+        
+        if (config.getScannedFiles().size() != 1) {
+          throw new I18NException("anexo.error.scanmultiplefiles",
+              String.valueOf(config.getScannedFiles().size()));
+        }
         
         List<ScannedDocument> listDocs = config.getScannedFiles();
         

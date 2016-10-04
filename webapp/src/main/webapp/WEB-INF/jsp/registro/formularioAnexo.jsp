@@ -151,7 +151,11 @@
 
                         <div class="clearfix"></div>
                
-			
+			 <c:if test="${teScan}">
+                <div class="pull-right" style="margin-top: 0px; ">
+                    <button id="desaAnnex" type="submit" class="btn btn-warning btn-sm" onclick="$('#reload').show();"><spring:message code="regweb.guardar"/></button>
+                </div>
+            </c:if>
 			<ul class="nav nav-tabs" id="pestanyes">
 				<li class="active"><a href="#fitxer" data-toggle="tab">Fitxer</a></li>
                 <c:if test="${teScan}">
