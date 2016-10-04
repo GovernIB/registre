@@ -57,8 +57,6 @@
                                             <c:if test="${paginacion.totalResults > 1}">
                                                 <spring:message code="regweb.resultados"/> <strong>${paginacion.totalResults}</strong> <spring:message code="persona.personas"/>
                                             </c:if>
-
-                                            <p class="pull-right"><spring:message code="regweb.pagina"/> <strong>${paginacion.currentIndex}</strong> de ${paginacion.totalPages}</p>
                                         </div>
 
                                         <div class="table-responsive">
@@ -103,11 +101,6 @@
 
                                                 </tbody>
                                             </table>
-
-                                            <!-- Paginacion -->
-                                            <c:import url="../modulos/paginacionBusqueda.jsp">
-                                                <c:param name="entidad" value="persona"/>
-                                            </c:import>
 
 
                                         </div>
