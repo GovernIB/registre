@@ -5,7 +5,9 @@ import es.caib.regweb3.model.PropiedadGlobal;
 import es.caib.regweb3.persistence.ejb.BaseEjbJPA;
 import es.caib.regweb3.persistence.ejb.PropiedadGlobalLocal;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
+import es.caib.regweb3.webapp.form.PropiedadGlobalForm;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.PropiedadGlobalValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,37 +48,63 @@ public class PropiedadGlobalController extends BaseController {
      * Listado de todas las {@link es.caib.regweb3.model.PropiedadGlobal}
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public String listado() {
-        return "redirect:/propiedadGlobal/list/1";
+    public String listado(Model model, HttpServletRequest request) throws Exception{
+
+        PropiedadGlobalForm propiedadGlobalBusqueda = new PropiedadGlobalForm(null,1);
+
+        List<PropiedadGlobal> listado = new ArrayList<PropiedadGlobal>();
+        Paginacion paginacion = null;
+
+        if (isSuperAdmin(request)) { // Si es SuperAdministrador, cargamos las propiedades de REGWEB3
+            listado = propiedadGlobalEjb.getPaginationREGWEB3(0, null);
+            Long total = propiedadGlobalEjb.getTotalREGWEB3(null);
+
+            paginacion = new Paginacion(total.intValue(), 1);
+
+        } else if (isAdminEntidad(request)) { // Si es AdminEntidad, cargamos las propiedades de la Entidad
+            Entidad entidadActiva = getEntidadActiva(request);
+
+            listado = propiedadGlobalEjb.getPaginationByEntidad(0, entidadActiva.getId(), null);
+            Long total = propiedadGlobalEjb.getTotalByEntidad(entidadActiva.getId(), null);
+
+            paginacion = new Paginacion(total.intValue(), 1);
+        }
+
+        model.addAttribute("paginacion", paginacion);
+        model.addAttribute("listado", listado);
+        model.addAttribute("propiedadGlobalBusqueda", propiedadGlobalBusqueda);
+
+        return "propiedadGlobal/propiedadGlobalList";
     }
 
     /**
      * Listado de todos las {@link es.caib.regweb3.model.PropiedadGlobal}
      */
-    @RequestMapping(value = "/list/{pageNumber}", method = RequestMethod.GET)
-    public ModelAndView listado(@PathVariable Integer pageNumber, HttpServletRequest request) throws Exception {
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
+    public ModelAndView listado(@ModelAttribute PropiedadGlobalForm busqueda, HttpServletRequest request) throws Exception {
 
         ModelAndView mav = new ModelAndView("propiedadGlobal/propiedadGlobalList");
         List<PropiedadGlobal> listado = new ArrayList<PropiedadGlobal>();
         Paginacion paginacion = null;
 
         if (isSuperAdmin(request)) { // Si es SuperAdministrador, cargamos las propiedades de REGWEB3
-            listado = propiedadGlobalEjb.getPaginationREGWEB3((pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION);
-            Long total = propiedadGlobalEjb.getTotalREGWEB3();
+            listado = propiedadGlobalEjb.getPaginationREGWEB3((busqueda.getPageNumber() - 1) * BaseEjbJPA.RESULTADOS_PAGINACION, busqueda.getTipo());
+            Long total = propiedadGlobalEjb.getTotalREGWEB3(busqueda.getTipo());
 
-            paginacion = new Paginacion(total.intValue(), pageNumber);
+            paginacion = new Paginacion(total.intValue(), busqueda.getPageNumber());
 
         } else if (isAdminEntidad(request)) { // Si es AdminEntidad, cargamos las propiedades de la Entidad
             Entidad entidadActiva = getEntidadActiva(request);
 
-            listado = propiedadGlobalEjb.getPaginationByEntidad((pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION, entidadActiva.getId());
-            Long total = propiedadGlobalEjb.getTotalByEntidad(entidadActiva.getId());
+            listado = propiedadGlobalEjb.getPaginationByEntidad((busqueda.getPageNumber() - 1) * BaseEjbJPA.RESULTADOS_PAGINACION, entidadActiva.getId(), busqueda.getTipo());
+            Long total = propiedadGlobalEjb.getTotalByEntidad(entidadActiva.getId(), busqueda.getTipo());
 
-            paginacion = new Paginacion(total.intValue(), pageNumber);
+            paginacion = new Paginacion(total.intValue(), busqueda.getPageNumber());
         }
 
         mav.addObject("paginacion", paginacion);
         mav.addObject("listado", listado);
+        mav.addObject("propiedadGlobalBusqueda", busqueda);
 
         return mav;
     }
@@ -203,6 +231,11 @@ public class PropiedadGlobalController extends BaseController {
         }
 
         return "redirect:/propiedadGlobal/list";
+    }
+
+    @ModelAttribute("tipos")
+    public long[] configuraciones() throws Exception {
+        return RegwebConstantes.TIPOS_PROPIEDAD_GLOBAL;
     }
 
 

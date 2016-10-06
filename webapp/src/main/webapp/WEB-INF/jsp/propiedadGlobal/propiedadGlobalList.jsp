@@ -36,13 +36,33 @@
                     <div class="panel-heading">
                         <a class="btn btn-warning btn-xs pull-right" href="<c:url value="/propiedadGlobal/new"/>"
                            role="button"><span class="fa fa-plus"></span> <spring:message code="propiedadGlobal.nuevo"/></a>
-                        <h3 class="panel-title"><i class="fa fa-list"></i> <strong><spring:message
-                                code="propiedadGlobal.listado"/></strong></h3>
+                        <h3 class="panel-title"><i class="fa fa-list"></i> <strong><spring:message code="propiedadGlobal.listado"/></strong></h3>
                     </div>
 
                     <div class="panel-body">
 
                         <c:import url="../modulos/mensajes.jsp"/>
+
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="form-group col-xs-12">
+                                    <form:form modelAttribute="propiedadGlobalBusqueda" method="post" cssClass="form-horizontal">
+                                        <form:hidden path="pageNumber"/>
+                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                            <form:label path="tipo"><spring:message code="propiedadGlobal.tipo"/></form:label>
+                                        </div>
+                                        <div class="col-xs-8">
+                                            <form:select path="tipo" cssClass="chosen-select" onchange="doForm('#propiedadGlobalBusqueda')">
+                                                <form:option value="">...</form:option>
+                                                <c:forEach items="${tipos}" var="tipo">
+                                                    <form:option value="${tipo}"><spring:message code="propiedadGlobal.tipo.${tipo}" /></form:option>
+                                                </c:forEach>
+                                            </form:select>
+                                        </div>
+                                    </form:form>
+                                </div>
+                            </div>
+                        </div>
 
                         <c:if test="${empty listado}">
                             <div class="alert alert-warning alert-dismissable">
@@ -77,12 +97,14 @@
                                         <col>
                                         <col>
                                         <col>
+                                        <col>
                                         <col width="100">
                                     </colgroup>
                                     <thead>
                                     <tr>
-                                        <th><spring:message code="propiedadGlobal.clave"/></th>
+                                        <th><spring:message code="propiedadGlobal.tipo"/></th>
                                         <th><spring:message code="propiedadGlobal.descripcion"/></th>
+                                        <th><spring:message code="propiedadGlobal.clave"/></th>
                                         <th><spring:message code="propiedadGlobal.valor"/></th>
                                         <th class="center"><spring:message code="regweb.acciones"/></th>
                                     </tr>
@@ -91,8 +113,9 @@
                                     <tbody>
                                     <c:forEach var="propiedadGlobal" items="${listado}">
                                         <tr>
-                                            <td>${propiedadGlobal.clave}</td>
+                                            <td><spring:message code="propiedadGlobal.tipo.${propiedadGlobal.tipo}"/></td>
                                             <td>${propiedadGlobal.descripcion}</td>
+                                            <td>${propiedadGlobal.clave}</td>
                                             <td>${propiedadGlobal.valor}</td>
                                             <td class="center">
                                                 <a class="btn btn-warning btn-sm"
@@ -107,7 +130,7 @@
                                 </table>
 
                                 <!-- Paginacion -->
-                                <c:import url="../modulos/paginacion.jsp">
+                                <c:import url="../modulos/paginacionBusqueda.jsp">
                                     <c:param name="entidad" value="propiedadGlobal"/>
                                 </c:import>
 

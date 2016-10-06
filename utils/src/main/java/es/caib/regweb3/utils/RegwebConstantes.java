@@ -306,11 +306,24 @@ public interface RegwebConstantes {
     public static final Long CANAL_DIRECCION_ELECTRONICA =  2L;
     public static final Long CANAL_COMPARECENCIA_ELECTRONICA =  3L;
 
-    /* -------------- CONFIGURACION ENTIDAD PERSONAS --------------*/
-    public static final Long PERSONA_SIN_GUARDAR =  1L;
-    public static final Long PERSONA_GUARDAR_TODAS =  2L;
-    public static final Long PERSONA_CONFIRMAR =  3L;
-    public static final Long PERSONA_EXTERNO =  4L;
+    /* --------------------TIPO PROPIEDAD GLOBAL ------------------------*/
+    public static final long TIPO_PROPIEDAD_GENERAL=1L;
+    public static final long TIPO_PROPIEDAD_DIR3CAIB=2L;
+    public static final long TIPO_PROPIEDAD_CUSTODIA=3L;
+    public static final long TIPO_PROPIEDAD_USERINFORMATION=4L;
+    public static final long TIPO_PROPIEDAD_SCANNER=5L;
+    public static final long TIPO_PROPIEDAD_DISTRIBUCION=6L;
+    public static final long TIPO_PROPIEDAD_SIR=7L;
+
+    public static final long[] TIPOS_PROPIEDAD_GLOBAL = {
+            TIPO_PROPIEDAD_GENERAL,
+            TIPO_PROPIEDAD_DIR3CAIB,
+            TIPO_PROPIEDAD_CUSTODIA,
+            TIPO_PROPIEDAD_USERINFORMATION,
+            TIPO_PROPIEDAD_SCANNER,
+            TIPO_PROPIEDAD_DISTRIBUCION,
+            TIPO_PROPIEDAD_SIR
+    };
     
     
     /** --------------- TIPO FIRMA -------------- */

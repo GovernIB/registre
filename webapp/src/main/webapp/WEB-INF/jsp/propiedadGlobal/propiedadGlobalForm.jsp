@@ -55,6 +55,19 @@
 
                             <div class="form-group col-xs-12">
                                 <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                    <form:label path="tipo"><spring:message code="propiedadGlobal.tipo"/></form:label>
+                                </div>
+                                <div class="col-xs-8">
+                                    <form:select path="tipo" cssClass="chosen-select">
+                                        <c:forEach items="${tipos}" var="tipo">
+                                            <form:option value="${tipo}"><spring:message code="propiedadGlobal.tipo.${tipo}" /></form:option>
+                                        </c:forEach>
+                                    </form:select>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-xs-12">
+                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                                     <form:label path="clave"><span class="text-danger">*</span> <spring:message
                                             code="propiedadGlobal.clave"/></form:label>
                                 </div>

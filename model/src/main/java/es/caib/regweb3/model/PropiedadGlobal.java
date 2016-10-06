@@ -9,8 +9,8 @@ import java.io.Serializable;
 /**
  * Created by Fundació Bit on 05/05/16
  *
- * @author earrivi
  * @author anadal
+ * @author earrivi
  */
 @Entity
 @Table(name = "RWE_PROPIEDADGLOBAL", uniqueConstraints = {
@@ -23,6 +23,7 @@ public class PropiedadGlobal implements Serializable {
     private String valor;
     private String descripcion;
     private Long entidad;
+    private Long tipo;
 
     public PropiedadGlobal() {
 
@@ -32,11 +33,12 @@ public class PropiedadGlobal implements Serializable {
         this.entidad = idEntidad;
     }
 
-    public PropiedadGlobal(String clave, String valor, String descripcion, Long entidad) {
+    public PropiedadGlobal(String clave, String valor, String descripcion, Long entidad, Long tipo) {
         this.clave = clave;
         this.valor = valor;
         this.descripcion = descripcion;
         this.entidad = entidad;
+        this.tipo = tipo;
     }
 
     @Column(name = "ID")
@@ -85,6 +87,15 @@ public class PropiedadGlobal implements Serializable {
 
     public void setEntidad(Long entidad) {
         this.entidad = entidad;
+    }
+
+    @Column(name = "TIPO", length = 50)
+    public Long getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(Long tipo) {
+        this.tipo = tipo;
     }
 
     @Transient
