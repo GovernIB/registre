@@ -62,10 +62,19 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<PropiedadGlobal> findByEntidad(Long idEntidad) throws Exception {
+    public List<PropiedadGlobal> findByEntidad(Long idEntidad, Long tipo) throws Exception {
 
-        Query q = em.createQuery("Select propiedadGlobal from PropiedadGlobal as propiedadGlobal where propiedadGlobal.entidad = :idEntidad order by propiedadGlobal.id");
+        String tipoWhere = "";
+        if(tipo != null){
+            tipoWhere = "and p.tipo = :tipo ";
+        }
+
+        Query q = em.createQuery("Select p from PropiedadGlobal as p where p.entidad = :idEntidad "+tipoWhere+" order by p.id");
         q.setParameter("idEntidad", idEntidad);
+
+        if(tipo != null){
+            q.setParameter("tipo", tipo);
+        }
 
         return q.getResultList();
 
@@ -87,7 +96,6 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
             propiedadQuery = " and propiedadGlobal.id != :idPropiedadGlobal ";
         }
 
-
         Query q = em.createQuery("Select propiedadGlobal from PropiedadGlobal as propiedadGlobal where propiedadGlobal.clave = :clave " +
                 entidadQuery + propiedadQuery + " order by propiedadGlobal.id");
 
@@ -106,41 +114,77 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
     }
 
     @Override
-    public Long getTotalByEntidad(Long idEntidad) throws Exception {
+    public Long getTotalByEntidad(Long idEntidad, Long tipo) throws Exception {
 
-        Query q = em.createQuery("Select count(propiedadGlobal.id) from PropiedadGlobal as propiedadGlobal where propiedadGlobal.entidad = :idEntidad");
+        String tipoWhere = "";
+        if(tipo != null){
+            tipoWhere = "and p.tipo = :tipo ";
+        }
+
+        Query q = em.createQuery("Select count(p.id) from PropiedadGlobal as p where p.entidad = :idEntidad "+tipoWhere);
         q.setParameter("idEntidad", idEntidad);
+
+        if(tipo != null){
+            q.setParameter("tipo", tipo);
+        }
 
         return (Long) q.getSingleResult();
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<PropiedadGlobal> getPaginationByEntidad(int inicio, Long idEntidad) throws Exception {
+    public List<PropiedadGlobal> getPaginationByEntidad(int inicio, Long idEntidad, Long tipo) throws Exception {
 
-        Query q = em.createQuery("Select propiedadGlobal from PropiedadGlobal as propiedadGlobal where propiedadGlobal.entidad = :idEntidad order by propiedadGlobal.id");
+        String tipoWhere = "";
+        if(tipo != null){
+            tipoWhere = "and p.tipo = :tipo ";
+        }
+
+        Query q = em.createQuery("Select p from PropiedadGlobal as p where p.entidad = :idEntidad "+tipoWhere+" order by p.id");
         q.setParameter("idEntidad", idEntidad);
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+
+        if(tipo != null){
+            q.setParameter("tipo", tipo);
+        }
 
         return q.getResultList();
     }
 
     @Override
-    public Long getTotalREGWEB3() throws Exception {
+    public Long getTotalREGWEB3(Long tipo) throws Exception {
 
-        Query q = em.createQuery("Select count(propiedadGlobal.id) from PropiedadGlobal as propiedadGlobal where propiedadGlobal.entidad is null");
+        String tipoWhere = "";
+        if(tipo != null){
+            tipoWhere = "and p.tipo = :tipo ";
+        }
+
+        Query q = em.createQuery("Select count(p.id) from PropiedadGlobal as p where p.entidad is null "+tipoWhere);
+
+        if(tipo != null){
+            q.setParameter("tipo", tipo);
+        }
 
         return (Long) q.getSingleResult();
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<PropiedadGlobal> getPaginationREGWEB3(int inicio) throws Exception {
+    public List<PropiedadGlobal> getPaginationREGWEB3(int inicio, Long tipo) throws Exception {
 
-        Query q = em.createQuery("Select propiedadGlobal from PropiedadGlobal as propiedadGlobal where propiedadGlobal.entidad is null order by propiedadGlobal.id");
+        String tipoWhere = "";
+        if(tipo != null){
+            tipoWhere = "and p.tipo = :tipo ";
+        }
+
+        Query q = em.createQuery("Select p from PropiedadGlobal as p where p.entidad is null "+tipoWhere+" order by p.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+
+        if(tipo != null){
+            q.setParameter("tipo", tipo);
+        }
 
         return q.getResultList();
     }
@@ -155,5 +199,44 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
         }
 
         return propiedades.size();
+    }
+
+    @Override
+    public String getPropiedadByEntidad(Long idEntidad, String clave) throws Exception{
+
+        Query q = em.createQuery("Select pg.valor from PropiedadGlobal as pg where pg.entidad = :idEntidad and pg.clave = :clave");
+        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("clave", clave);
+
+        List list = q.getResultList();
+
+        return list != null && list.size() != 0? (String) list.get(0):null;
+
+    }
+
+    @Override
+    public Boolean getBooleanPropiedadByEntidad(Long idEntidad, String clave) throws Exception {
+        String value = getPropiedadByEntidad(idEntidad, clave);
+        if (value == null) {
+            return null;
+        } else {
+            return "true".equals(value);
+        }
+    }
+
+    @Override
+    public Long getLongPropertyByEntitat(Long idEntidad, String clave) throws Exception {
+        String value = getPropiedadByEntidad(idEntidad, clave);
+        if (value == null) {
+            return null;
+        } else {
+            try {
+                return Long.parseLong(value);
+            } catch(NumberFormatException e) {
+                log.error("Error conviertiendo a long el valor (" + value + ")  de la propiedad "
+                        + clave + ": " + e.getMessage(), e);
+                return null;
+            }
+        }
     }
 }

@@ -5,11 +5,11 @@
 
     <artifactId>plugins-distribucionregweb-distribucionripea</artifactId>
     <packaging>jar</packaging>
-    <version>3.0.7</version>
+    <version>3.0.8</version>
 
     <parent>
         <groupId>es.caib.regweb3</groupId>
-        <version>3.0.7</version>
+        <version>3.0.8</version>
         <artifactId>plugins-distribucionregweb</artifactId>
     </parent>
 
