@@ -48,6 +48,18 @@
       # {0} = custodyID  i {1} = URL.Encoded(custodyID)
       es.caib.regweb3.annex.plugins.documentcustody.filesystem.baseurl=http://localhost:8080/annexos/index.jsp?custodyID={1}
 
+      <!-- ======== PLUGIN DE CUSTODIA - ALFRESCO ============== -->
+      #es.caib.regweb3.annex.documentcustodyplugin=org.fundaciobit.plugins.documentcustody.alfresco.base.AlfrescoBaseDocumentCustodyPlugin
+      es.caib.regweb3.annex.plugins.documentcustody.alfresco.access.method=ATOM
+      # Depends of Method and Alfresco version (alfresco 5)
+      es.caib.regweb3.annex.plugins.documentcustody.alfresco.url=http://localhost:9080/alfresco/api/-default-/public/cmis/versions/1.0/atom
+      es.caib.regweb3.annex.plugins.documentcustody.alfresco.access.user=anadal
+      es.caib.regweb3.annex.plugins.documentcustody.alfresco.access.pass=anadal
+      es.caib.regweb3.annex.plugins.documentcustody.alfresco.basepath=/test
+      # Only for WS
+      # es.caib.regweb3.annex.plugins.documentcustody.alfresco.repository", "b886bad2-998d-4674-a120-1fcc2f1f533c"); //"USER_HOMES/anadal/test/");
+      # Only for ATOM 
+      es.caib.regweb3.annex.plugins.documentcustody.alfresco.site=ODES
 
       <!-- Configuració del plugin de Información de usuarios -->
 
