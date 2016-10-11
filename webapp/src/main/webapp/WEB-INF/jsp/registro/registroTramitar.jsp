@@ -31,46 +31,21 @@
                     </div>
 
                     <div class="panel-body">
-
-
-                        <div class="row pad-bottom15">
-                            <div class="form-group col-xs-5">
-                                <div class="col-xs-12 pull-left etiqueta_regweb control-label">
-                                    <label><spring:message code="registro.destinos.posibles"/></label>
+                        <div class="row">
+                            <div class="form-group col-xs-6 pad-left">
+                                <div class="col-xs-6 pull-left etiqueta_regweb control-label">
+                                    <label><span class="text-danger">*</span> <spring:message code="registro.destinos"/></label>
                                 </div>
-                                <div class="col-xs-11 no-pad-lateral">
-                                    <select class="col-xs-12 no-pad-lateral select-distribucion" id="posibles"
-                                            name="posibles" size="4"
-                                            multiple>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group col-xs-2">
-                                <div class="col-xs-12 pad-bottom15">
-                                    <label></label>
-                                </div>
-                                <div class="col-xs-12">
-                                    <input type="button" id="btnLeft" value="&lt;&lt;"/>
-                                    <input type="button" id="btnRight" value="&gt;&gt;"/>
-                                </div>
-                            </div>
-                            <div class="form-group col-xs-5">
-                                <div class="col-xs-12 pull-left etiqueta_regweb control-label">
-                                    <label><spring:message code="registro.destinos.propuestos"/></label>
-                                </div>
-                                <div class="col-xs-11 no-pad-lateral">
-                                    <select class="col-xs-12 no-pad-lateral select-distribucion" id="propuestos"
-                                            name="propuestos" size="4"
-                                            multiple>
-                                    </select>
-                                    <span id="propuestosError"></span>
+                                <!-- Div donde se pinta el select multiple de los destinatarios posibles y propuestos (distribuir.js) - funcion distribuir() -->
+                                <div class="col-xs-6 no-pad-right" id="divdestinatarios">
+                                    <span id="destinatariosErrors"></span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="form-group col-xs-10">
-                                <div class="col-xs-2 pull-left etiqueta_regweb control-label">
+                            <div class="form-group col-xs-8">
+                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                                     <label><spring:message code="registroEntrada.observaciones"/></label>
                                 </div>
                                 <div class="col-xs-8">
@@ -95,24 +70,3 @@
         </div>
     </div>
 </div>
-
-<script type="text/javascript">
-    $("#btnLeft").click(function () {
-        var selectedItem = $("#propuestos option:selected");
-        $("#posibles").append(selectedItem);
-        $("#posibles option:selected").prop("selected", false);
-    });
-
-    $("#btnRight").click(function () {
-        var selectedItem = $("#posibles option:selected");
-        $("#propuestos").append(selectedItem);
-        $("#propuestos option:selected").prop("selected", false);
-    });
-
-    $("#propuestos").change(function () {
-        var selectedItem = $("#propuestos option:selected");
-        // $("#txtRight").val(selectedItem.text());
-    });
-
-
-</script>

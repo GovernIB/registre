@@ -15,6 +15,8 @@ public class RespuestaDistribucion {
     Boolean hayPlugin; //true si se ha especificado plugin.
     Boolean listadoDestinatariosModificable; //True si se puede modificar la lista de destinatarios.
 
+    public RespuestaDistribucion() {
+    }
 
     public Destinatarios getDestinatarios() {
         return destinatarios;

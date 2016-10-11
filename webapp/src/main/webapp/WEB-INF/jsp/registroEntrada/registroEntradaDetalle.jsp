@@ -138,11 +138,10 @@
                                            value="/registroEntrada/${registro.id}/distribuir"/>")'
                                            class="btn btn-success btn-sm btn-block"><spring:message
                                            code="regweb.distribuir"/></button>--%>
-                                <button type="button" onclick='javascript:distribuir(
-                                        "<c:url value="/registroEntrada/${registro.id}/distribuir"/>",
-                                        "<c:url value="/registroEntrada/${registro.id}/enviardestinatarios"/>",
-                                        "<c:url value="/registroEntrada/${registro.id}/detalle"/>",
-                                        "<c:url value="/registroEntrada/${registro.id}/tramitar"/>")'
+                                <button type="button" onclick='javascript:confirmDistribuir("<c:url
+                                        value="/registroEntrada/${registro.id}/distribuir"/>",
+                                        "<c:url value="/registroEntrada/${registro.id}/tramitar"/>",
+                                        "<spring:message code="regweb.confirmar.tramitar" htmlEscape="true"/>")'
                                         class="btn btn-success btn-sm btn-block"><spring:message
                                         code="regweb.distribuir"/></button>
                                 <%--<button type="button" data-toggle="modal" data-target="#distribuirModal" class="btn btn-success btn-sm btn-block"><spring:message code="regweb.distribuir"/></button>--%>

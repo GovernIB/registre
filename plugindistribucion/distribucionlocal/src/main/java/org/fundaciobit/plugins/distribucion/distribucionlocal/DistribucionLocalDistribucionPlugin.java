@@ -2,6 +2,7 @@ package org.fundaciobit.plugins.distribucion.distribucionlocal;
 
 
 import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.utils.AnexoFull;
 import org.apache.log4j.Logger;
 import org.fundaciobit.plugins.distribucion.ConfiguracionDistribucion;
 import org.fundaciobit.plugins.distribucion.Destinatario;
@@ -76,10 +77,18 @@ public class DistribucionLocalDistribucionPlugin extends AbstractPluginPropertie
         destinatario.setName("BANDEJA 2");
         destinatariosPosibles.add(destinatario);
 
+        for (int i = 4; i <= 30; i++) {
+            destinatario = new Destinatario();
+            destinatario.setId(i + "");
+            destinatario.setName("BANDEJA " + i);
+            destinatariosPropuestos.add(destinatario);
+        }
+
         destinatario = new Destinatario();
         destinatario.setId("3");
         destinatario.setName("BANDEJA 3");
         destinatariosPropuestos.add(destinatario);
+
 
 
         destinatarios.setPropuestos(destinatariosPropuestos);
@@ -92,7 +101,7 @@ public class DistribucionLocalDistribucionPlugin extends AbstractPluginPropertie
     @Override
     public Boolean enviarDestinatarios(RegistroEntrada registro, List<Destinatario> destinatariosDefinitivos, String observaciones) throws Exception {
         // Este código es una prueba, aquí se debe distribuir el registro al listado de destinatarios indicado.
-       /* log.info("OBSERVACIONES EN PLUGIN " + observaciones);
+        log.info("OBSERVACIONES EN PLUGIN " + observaciones);
         log.info("NUMERO DE ANEXOS " + registro.getRegistroDetalle().getAnexosFull().size());
         List<AnexoFull> anexosFull = registro.getRegistroDetalle().getAnexosFull();
         for (AnexoFull anexoFull : anexosFull) {
@@ -104,7 +113,7 @@ public class DistribucionLocalDistribucionPlugin extends AbstractPluginPropertie
                 log.info("DESTINATARIO ID EN PLUGIN " + destinatario.getId());
                 log.info("DESTINATARIO NOMBRE EN PLUGIN " + destinatario.getName());
             }
-        }*/
+        }
         return false;
 
     }

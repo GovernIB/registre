@@ -11,7 +11,7 @@
  * si no lo son redirecciona directamente a los destinatarios devueltos.
  * si no hay destinatarios se marca el registro como tramitado y listo.
  */
-function distribuir(url, urlEnviarDestinatarios, urlDetalle, urlTramitar) {
+function distribuir(url, urlTramitar) {
     var html = '';
     limpiarDistribuir();
 
@@ -27,22 +27,23 @@ function distribuir(url, urlEnviarDestinatarios, urlDetalle, urlTramitar) {
             if (result.destinatarios != null) {
                 if (result.destinatarios != null && (result.destinatarios.posibles != null && result.destinatarios.posibles.length > 0) || (result.destinatarios.propuestos != null && result.destinatarios.propuestos.length > 0)) { // Si hay destinatarios, mostramos pop-up
 
-                    //Rellenamos el select de posibles
+                    // Pintamos el select con las opciones propuestas seleccionadas y las posibles sin seleccionar
+                    html += '<select data-placeholder="" id="destinatarios"  name="destinatarios"  class="chosen-select" multiple="true">';
                     var lenposibles = result.destinatarios.posibles.length;
                     for (var i = 0; i < lenposibles; i++)
                         html += '<option value="' + result.destinatarios.posibles[i].id + '">'
                             + result.destinatarios.posibles[i].name + '</option>';
-                    $('#posibles').trigger("chosen:updated");
-                    $('#posibles').html(html);
-
-
-                    //Rellenamos el select de propuestos
-                    html = '';
                     var lenpropuestos = result.destinatarios.propuestos.length;
                     for (var j = 0; j < lenpropuestos; j++)
-                        html += '<option value="' + result.destinatarios.propuestos[j].id + '">'
+                        html += '<option value="' + result.destinatarios.propuestos[j].id + '" selected="selected">'
                             + result.destinatarios.propuestos[j].name + '</option>';
-                    $('#propuestos').html(html);
+
+                    html += '</select>';
+                    $('#divdestinatarios').html(html);
+
+                    $('#destinatarios').chosen({width: "200%"});
+                    $('#destinatarios').trigger("chosen:update");
+
                     $('#distribuirModal').modal('show');
 
 
@@ -95,18 +96,16 @@ function enviarDestinatarios(url, urlDetalle) {
     var destinatarios = [];
     var destinatariosarray = "";
 
-    //Seleccionamos todos por defecto y así se enviaran todos, que es el comportamiento normal.
-    $('#propuestos option').prop('selected', true);
-    // Coegemos los destinatarios que han seleccionado en el combo "propuestos"
-    if ($('#propuestos :selected').length > 0) {
+    // Coegemos los destinatarios que han seleccionado en el select "destinatarios"
+    if ($('#destinatarios :selected').length > 0) {
         $('#distribuirModal').modal('hide');
         //build an array of selected values
         destinatariosarray = "[";
-        $('#propuestos :selected').each(function (i, selected) {
+        $('#destinatarios :selected').each(function (i, selected) {
             html += "<li>" + $(selected).text() + "</li>";
             destinatarios[i] = '{"id":"' + $(selected).val() + '","name":"' + $(selected).text() + '"}';
             // Colocamos la coma de separación
-            if (i != 0 && i < $('#propuestos :selected').length) {
+            if (i != 0 && i < $('#destinatarios :selected').length) {
                 destinatariosarray += ",";
             }
             destinatariosarray += destinatarios[i];
@@ -138,12 +137,12 @@ function enviarDestinatarios(url, urlDetalle) {
             }
         });
     } else {
-        var variable = "#propuestos";
-        variable = variable + "Error"; // #propuestosError
+        var variable = "#destinatarios";
+        variable = variable + "Error"; // #destinatariosError
 
         // Mostramos los errores de validación encontrados
 
-        var htmlError = "<span id=\"propuestosError\" class=\"help-block\"> " + traddistribuir['campo.obligatorio'] + "</span>";
+        var htmlError = "<span id=\"destinatariosError\" class=\"help-block\"> " + traddistribuir['campo.obligatorio'] + "</span>";
 
         $(variable).html(htmlError);
         $(variable).parents(".form-group").addClass("has-error");
@@ -153,6 +152,6 @@ function enviarDestinatarios(url, urlDetalle) {
 }
 
 function limpiarDistribuir() {
-    quitarError('propuestos');
+    quitarError('destinatarios');
     $('#observtramit').val('');
 }
