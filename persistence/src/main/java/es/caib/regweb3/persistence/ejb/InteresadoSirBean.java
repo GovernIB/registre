@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.sir.core.model.InteresadoSir;
+import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -59,5 +60,26 @@ public class InteresadoSirBean extends BaseEjbJPA<InteresadoSir, Long> implement
         return q.getResultList();
     }
 
+    @Override
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
 
+        List<?> result = em.createQuery("Select distinct(i.id) from InteresadoSir as i where i.idAsientoRegistralSir.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        Integer total = result.size();
+
+        if(result.size() > 0){
+
+            // Si hay más de 1000 registros, dividimos las queries (ORA-01795).
+            while (result.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
+
+                List<?> subList = result.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN);
+                em.createQuery("delete from InteresadoSir where id in (:result) ").setParameter("result", subList).executeUpdate();
+                result.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN).clear();
+            }
+
+            em.createQuery("delete from InteresadoSir where id in (:result) ").setParameter("result", result).executeUpdate();
+        }
+
+        return total;
+
+    }
 }
