@@ -120,6 +120,11 @@
                                         <div class="col-xs-12"><i class="fa fa-at"></i> <strong><spring:message code="registroMigrado.emailRemitente"/>:</strong> ${registroMigrado.emailRemitente}</div>
                                     </div>
                                 </c:if>
+                                <c:if test="${not empty registroMigrado.infoAdicional}">
+                                    <div class="form-group col-xs-12">
+                                        <div class="col-xs-12"><i class="fa fa-info-circle"></i> <strong><spring:message code="registroMigrado.infoAdicional"/>:</strong> ${registroMigrado.infoAdicional}</div>
+                                    </div>
+                                </c:if>
                             </div>
 
                     </div>
@@ -209,6 +214,11 @@
                                 <c:if test="${not empty registroMigrado.emailRemitente}">
                                     <div class="form-group col-xs-12">
                                         <div class="col-xs-12"><i class="fa fa-at"></i> <strong><spring:message code="registroMigrado.emailRemitente"/>:</strong> ${registroMigrado.emailRemitente}</div>
+                                    </div>
+                                </c:if>
+                                <c:if test="${not empty registroMigrado.infoAdicional}">
+                                    <div class="form-group col-xs-12">
+                                        <div class="col-xs-12"><i class="fa fa-info-circle"></i> <strong><spring:message code="registroMigrado.infoAdicional"/>:</strong> ${registroMigrado.infoAdicional}</div>
                                     </div>
                                 </c:if>
                             </div>
