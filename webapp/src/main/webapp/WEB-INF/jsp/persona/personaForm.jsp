@@ -106,9 +106,9 @@
 
                             <div class="form-group col-xs-6">
                                 <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <form:label path="documento"><spring:message code="persona.documento"/></form:label>
+                                    <label for="documento"><spring:message code="persona.documento"/></label>
                                 </div>
-                                <div class="col-xs-8">
+                                <div class="col-xs-8" id="doc">
                                     <form:input path="documento" cssClass="form-control" disabled="true" maxlength="17" cssStyle="text-transform:uppercase"/> <form:errors path="documento" cssClass="help-block" element="span"/>
                                 </div>
                             </div>
@@ -252,6 +252,7 @@
 
     $(document).ready(function() {
 
+//        actualizarDocumento();
         actualizarLocalidad();
         actualizartipoPersona();
         actualizarPais();
@@ -267,7 +268,22 @@
 
         //Gestión de los cambios de tipo documento
         $('#tipoDocumentoIdentificacion').change(
-                function() {actualizarTipoDocumentoIdentificacion();});
+                function() {
+                    var tipoDocumento = $('#tipoDocumentoIdentificacion option:selected').val();
+                    if(tipoDocumento != ''){
+                        $('#documento').removeAttr("disabled","disabled");
+                        $('#documento').removeAttr("readonlyGris", true);
+                        $('#documento').attr('style', 'background-color: #fff');
+                    }else{
+                        $('#documento').val('');
+                        $('#documento').attr('readonly', true);
+                        $('#documento').attr('readonlyGris', true);
+                    }
+                    // Quita posibles mensajes de error
+                    var htmlNormal = "<span id='documento.errors'></span>";
+                    $('#documento').closest('.has-error').removeClass("has-error");
+                    $("#doc").find("span").html(htmlNormal);
+                });
 
         // Gestión de tipo Persona
         $('#tipo').change(
@@ -318,6 +334,13 @@
 
         }
     }
+
+//    function actualizarDocumento(){
+//        var tipoDocumento = $('#tipoDocumentoIdentificacion option:selected').val();
+//        if(tipoDocumento == ''){
+//            $('#documento').attr("disabled","disabled");
+//        }
+//    }
 
 </script>
 

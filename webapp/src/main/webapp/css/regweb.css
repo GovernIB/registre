@@ -463,6 +463,10 @@ input[readonly] {
 .arxiu_actual {
     margin: 6px 0px 0px;
 }
+input[readonlyGris] {
+    background-color: #eee !important;
+    cursor: text !important;
+}
 /* FI ARXIU */
 
 /* ColorPicker */

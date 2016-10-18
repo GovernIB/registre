@@ -249,7 +249,9 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
 
         //Gestión de los cambios de tipo documento
         $('#tipoDocumentoIdentificacion').change(
-                function() {actualizarTipoDocumentoIdentificacion();});
+                function() {actualizarTipoDocumentoIdentificacion();
+                    quitarError('documento');
+                });
 
     });
 
