@@ -65,10 +65,11 @@ public interface PersonaLocal extends BaseEjb<Persona, Long> {
      * @param apellido1
      * @param apellido2
      * @param documento
+     * @param tipo
      * @return
      * @throws Exception
      */
-    public Paginacion busqueda(Integer inicio,Long idEntidad, String nombre, String apellido1, String apellido2, String documento) throws Exception;
+    public Paginacion busqueda(Integer inicio,Long idEntidad, String nombre, String apellido1, String apellido2, String documento, Long tipo) throws Exception;
 
     /**
      * Realiza una busqueda de {@link es.caib.regweb3.model.Persona} según los parámetros
@@ -134,4 +135,17 @@ public interface PersonaLocal extends BaseEjb<Persona, Long> {
      * @throws Exception
      */
     public List<Persona> buscarDuplicados(Long idEntidad) throws Exception;
+
+    /**
+     * Lista las {@link es.caib.regweb3.model.Persona} para Exportar a Excel
+     * @param idEntidad
+     * @param nombre
+     * @param apellido1
+     * @param apellido2
+     * @param documento
+     * @param tipo
+     * @return
+     * @throws Exception
+     */
+    public List<Persona> getExportarExcel(Long idEntidad, String nombre, String apellido1, String apellido2, String documento, Long tipo) throws Exception;
 }
