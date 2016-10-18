@@ -159,7 +159,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
     }
 
     @Override
-    public Paginacion busqueda(Integer pageNumber, Long idEntidad, String nombre, String apellido1, String apellido2, String documento) throws Exception {
+    public Paginacion busqueda(Integer pageNumber, Long idEntidad, String nombre, String apellido1, String apellido2, String documento, Long tipo) throws Exception {
 
         Query q;
         Query q2;
@@ -184,6 +184,10 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
         if (documento != null && documento.length() > 0) {
             where.add(" upper(persona.documento) like upper(:documento) ");
             parametros.put("documento", "%" + documento.toLowerCase() + "%");
+        }
+        if (tipo != -1) {
+            where.add("persona.tipo = :tipo ");
+            parametros.put("tipo", tipo);
         }
         where.add("persona.entidad.id = :idEntidad ");
         parametros.put("idEntidad", idEntidad);
@@ -520,5 +524,76 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
         }
 
         return personasDuplicadas;
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<Persona> getExportarExcel(Long idEntidad, String nombre, String apellido1, String apellido2, String documento, Long tipo) throws Exception {
+
+        log.info("entram a exportar BEAN");
+        Query q;
+        Map<String, Object> parametros = new HashMap<String, Object>();
+        List<String> where = new ArrayList<String>();
+
+        StringBuffer query = new StringBuffer("Select persona.id, persona.nombre, persona.apellido1, persona.apellido2, persona.razonSocial, persona.documento, persona.tipo, persona.email, persona.telefono from Persona as persona ");
+
+        if (nombre != null && nombre.length() > 0) {
+            where.add(
+                    "( (" + DataBaseUtils.like("persona.nombre", "nombre", parametros, nombre)
+                            + " ) OR ( "
+                            + DataBaseUtils.like("persona.razonSocial", "nombre", parametros, nombre)
+                            + " ) ) ");
+        }
+        if (apellido1 != null && apellido1.length() > 0) {
+            where.add(DataBaseUtils.like("persona.apellido1", "apellido1", parametros, apellido1));
+        }
+        if (apellido2 != null && apellido2.length() > 0) {
+            where.add(DataBaseUtils.like("persona.apellido2", "apellido2", parametros, apellido2));
+        }
+        if (documento != null && documento.length() > 0) {
+            where.add(" upper(persona.documento) like upper(:documento) ");
+            parametros.put("documento", "%" + documento.toLowerCase() + "%");
+        }
+        if (tipo != -1) {
+            where.add("persona.tipo = :tipo ");
+            parametros.put("tipo", tipo);
+        }
+        where.add("persona.entidad.id = :idEntidad ");
+        parametros.put("idEntidad", idEntidad);
+
+        if (parametros.size() != 0) {
+            query.append("where ");
+            int count = 0;
+            for (String w : where) {
+                if (count != 0) {
+                    query.append(" and ");
+                }
+                query.append(w);
+                count++;
+            }
+            query.append("order by persona.id");
+            q = em.createQuery(query.toString());
+
+            for (Map.Entry<String, Object> param : parametros.entrySet()) {
+                q.setParameter(param.getKey(), param.getValue());
+            }
+
+        } else {
+            query.append("order by persona.id");
+            q = em.createQuery(query.toString());
+        }
+        log.info("Query: " + query);
+
+        List<Object[]> result = q.getResultList();
+        List<Persona> personas = new ArrayList<Persona>();
+
+        for (Object[] object : result) {
+            Persona persona = new Persona((Long) object[0], (String) object[1], (String) object[2], (String) object[3],
+                    (String) object[4], (String) object[5], (Long) object[6], (String) object[7], (String) object[8]);
+
+            personas.add(persona);
+        }
+
+        return personas;
     }
 }

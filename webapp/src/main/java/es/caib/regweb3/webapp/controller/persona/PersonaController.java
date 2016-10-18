@@ -81,7 +81,7 @@ public class PersonaController extends BaseController {
         Entidad entidad = getEntidadActiva(request);
         Persona persona = busqueda.getPersona();
 
-        Paginacion paginacion = personaEjb.busqueda(busqueda.getPageNumber(), entidad.getId(), persona.getNombre(), persona.getApellido1(), persona.getApellido2(), persona.getDocumento());
+        Paginacion paginacion = personaEjb.busqueda(busqueda.getPageNumber(), entidad.getId(), persona.getNombre(), persona.getApellido1(), persona.getApellido2(), persona.getDocumento(), persona.getTipo());
 
         busqueda.setPageNumber(1);
         mav.addObject("paginacion", paginacion);
@@ -260,6 +260,31 @@ public class PersonaController extends BaseController {
 
         mav.addObject("paginacion", paginacion);
         mav.addObject("listado", listado);
+
+        return mav;
+    }
+
+
+    /**
+     * Export de {@link es.caib.regweb3.model.Persona} a Excel
+     */
+    @RequestMapping(value = "/exportarPersonas", method = RequestMethod.GET)
+    public ModelAndView exportar(HttpServletRequest request) throws Exception {
+
+        String nombre = request.getParameter("nombre");
+
+        ModelAndView mav = new ModelAndView("exportarPersonasExcel");
+
+        Entidad entidad = getEntidadActiva(request);
+
+        String apellido1 = request.getParameter("apellido1");
+        String apellido2 = request.getParameter("apellido2");
+        String documento = request.getParameter("documento");
+        Long tipo = Long.valueOf(request.getParameter("tipo"));
+
+        List<Persona> personas = personaEjb.getExportarExcel(entidad.getId(),nombre,apellido1,apellido2, documento,tipo);
+
+        mav.addObject("personas", personas);
 
         return mav;
     }

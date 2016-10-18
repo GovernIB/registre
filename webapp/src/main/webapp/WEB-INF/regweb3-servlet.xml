@@ -219,6 +219,9 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
     <!-- Bean generar el Informe de Indicadores en EXCEL-->
     <bean id="indicadoresOficinaExcel" class="es.caib.regweb3.webapp.view.IndicadoresOficinaExcel"/>
 
+    <!-- Bean exportar Personas en EXCEL-->
+    <bean id="exportarPersonasExcel" class="es.caib.regweb3.webapp.view.ExportarPersonasExcel"/>
+
     <!--Recursos estáticos-->
     <mvc:resources mapping="/css/**" location="/css/" />
     <mvc:resources mapping="/font-awesome/**" location="/font-awesome/" />

@@ -65,9 +65,24 @@
                                 </div>
                             </div>
 
+                            <div class="form-group col-xs-6">
+                                <div class="col-xs-4 pull-left align-right"><spring:message code="persona.tipoPersona"/></div>
+                                <div class="col-xs-8">
+                                    <form:select path="persona.tipo" cssClass="chosen-select">
+                                        <form:option value="-1" default="default">...</form:option>
+                                        <c:forEach items="${tiposPersona}" var="tmp">
+                                            <form:option value="${tmp}" > <spring:message code="persona.tipo.${tmp}"/></form:option>
+                                        </c:forEach>
+                                    </form:select>
+                                </div>
+                            </div>
+
                             <div class="form-group col-xs-12">
                                 <input type="submit" value="<spring:message code="regweb.buscar"/>" class="btn btn-warning btn-sm"/>
                                 <input type="reset" value="<spring:message code="regweb.restablecer"/>" class="btn btn-sm"/>
+                                <c:if test="${not empty paginacion.listado}">
+                                    <a class="btn btn-success btn-sm pull-right" onclick="exportar('<c:url value="/persona/exportarPersonas"/>','${personaBusquedaForm.persona.tipo}','${personaBusquedaForm.persona.nombre}','${personaBusquedaForm.persona.apellido1}','${personaBusquedaForm.persona.apellido2}','${personaBusquedaForm.persona.documento}')" title="<spring:message code="persona.exportar"/>"><spring:message code="regweb.formato.excel"/></a>
+                                </c:if>
                             </div>
                         </form:form>
 
@@ -163,6 +178,37 @@
 </div> <!-- /container -->
 
 <c:import url="../modulos/pie.jsp"/>
+
+
+<script type="text/javascript">
+    /**
+     * Script per exportar les persones consultades a l'Excel
+     * @param url
+     * @param tipo
+     * @param nombre
+     * @param apellido1
+     * @param apellido2
+     * @param documento
+     */
+    function exportar(url,tipo,nombre,apellido1,apellido2,documento){
+        if(tipo != ''){
+            url = url + "?tipo="+tipo;
+        }
+        if(nombre != ''){
+            url = url + "&nombre="+nombre;
+        }
+        if(apellido1 != ''){
+            url = url + "&apellido1="+apellido1;
+        }
+        if(apellido2 != ''){
+            url = url + "&apellido2="+apellido2;
+        }
+        if(documento != ''){
+            url = url + "&documento="+documento;
+        }
+        goTo(url);
+    }
+</script>
 
 
 </body>
