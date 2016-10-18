@@ -78,8 +78,8 @@
                                            <tr>
                                                <td><i:trad value="${tipoAsunto}" property="nombre"/></td>
                                                <td>${tipoAsunto.codigo}</td>
-                                               <c:if test="${tipoAsunto.activo}"><td><span class="label label-success">si</span></td></c:if>
-                                               <c:if test="${not tipoAsunto.activo}"><td><span class="label label-danger">no</span></td></c:if>
+                                               <c:if test="${tipoAsunto.activo}"><td><span class="label label-success"><spring:message code="regweb.si"/></span></td></c:if>
+                                               <c:if test="${not tipoAsunto.activo}"><td><span class="label label-danger"><spring:message code="regweb.no"/></span></td></c:if>
                                                <td class="center">
                                                    <a class="btn btn-warning btn-sm" href="<c:url value="/tipoAsunto/${tipoAsunto.id}/edit"/>" title="<spring:message code="regweb.editar"/>"><span class="fa fa-pencil"></span></a>
                                                    <a class="btn btn-danger btn-sm" onclick='javascript:confirm("<c:url value="/tipoAsunto/${tipoAsunto.id}/delete"/>","<spring:message code="regweb.confirmar.eliminacion" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.eliminar"/>"><span class="fa fa-eraser"></span></a>

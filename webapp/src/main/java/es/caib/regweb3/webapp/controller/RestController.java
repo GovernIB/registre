@@ -87,6 +87,17 @@ public class RestController {
     }
 
     /**
+     * Obtiene los {@link es.caib.regweb3.model.CodigoAsunto} Activos del TipoAsunto seleccionado
+     */
+    @RequestMapping(value = "/obtenerCodigosAsuntoActivos", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    List<CodigoAsunto> obtenerCodigosAsuntoActivos(@RequestParam Long id) throws Exception {
+
+        return codigoAsuntoEjb.getActivosByTipoAsunto(id);
+    }
+
+    /**
      * Obtiene el nombre traducido de un TipoDocumentacionFisica.
      */
     @RequestMapping(value = "/obtenerTipoDocumentacionFisica", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")

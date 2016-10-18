@@ -71,7 +71,7 @@ public class TipoAsuntoBean extends BaseEjbJPA<TipoAsunto, Long> implements Tipo
     @Override
     public List<TipoAsunto> getPagination(int inicio, Long idEntidad) throws Exception {
 
-        Query q = em.createQuery("Select tipoAsunto from TipoAsunto as tipoAsunto where tipoAsunto.entidad.id = :idEntidad order by tipoAsunto.id");
+        Query q = em.createQuery("Select tipoAsunto from TipoAsunto as tipoAsunto where tipoAsunto.entidad.id = :idEntidad order by tipoAsunto.activo desc, tipoAsunto.codigo");
         q.setParameter("idEntidad",idEntidad);
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);

@@ -101,7 +101,7 @@ public class TipoAsunto extends Traducible {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tipoAsunto")
     @LazyCollection(LazyCollectionOption.FALSE)
     @OrderColumn(name = "id")
-    @OrderBy("id")
+    @OrderBy("activo desc,codigo")
     public List<CodigoAsunto> getCodigosAsunto() {
         return codigosAsunto;
     }

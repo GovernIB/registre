@@ -60,7 +60,7 @@
                                  <form:label path="activo"><spring:message code="regweb.activo"/></form:label>
                                 </div>
                                 <div class="col-xs-10">
-                                 <form:checkbox path="activo" value="true"/>
+                                 <form:checkbox path="activo"/>
                                 </div>
                             </div>
 
@@ -129,12 +129,16 @@
                                 <table class="table table-bordered table-hover table-striped tablesorter">
                                     <colgroup>
                                         <col>
-                                        <col width="101">
+                                        <col>
+                                        <col>
+                                        <col width="100">
                                     </colgroup>
                                     <thead>
                                     <tr>
-                                        <th><fmt:message key="regweb.nombre"/></th>
-                                        <th><fmt:message key="regweb.acciones"/></th>
+                                        <th><spring:message code="regweb.nombre"/></th>
+                                        <th><spring:message code="codigoAsunto.codigo"/></th>
+                                        <th><spring:message code="regweb.activo"/></th>
+                                        <th class="center"><spring:message code="regweb.acciones"/></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -142,11 +146,14 @@
                                     <c:forEach var="codigoAsunto" items="${tipoAsunto.codigosAsunto}">
                                         <tr>
                                             <td><i:trad value="${codigoAsunto}" property="nombre"/></td>
+                                            <td>${codigoAsunto.codigo}</td>
+                                            <c:if test="${codigoAsunto.activo}"><td><span class="label label-success"><spring:message code="regweb.si"/></span></td></c:if>
+                                            <c:if test="${not codigoAsunto.activo}"><td><span class="label label-danger"><spring:message code="regweb.no"/></span></td></c:if>
                                             <td class="center">
                                                <!-- Definimos la variable scope request para que sea visible en el javascript-->
                                                <c:set var="codAsunto" value="${codigoAsunto}" scope="request"/>
-                                               <a class="btn btn-warning" href="javascript:void(0);" onclick="showModalEditar('${codigoAsunto.id}')" title="Editar"><span class="fa fa-pencil"></span></a>
-                                               <a class="btn btn-danger" title="Eliminar" onclick="confirm('<c:url value="/codigoAsunto/${codigoAsunto.id}/delete"/>', '<spring:message code="regweb.confirmar.eliminacion" htmlEscape="true"/>')" href="javascript:void(0);"><span class="fa fa-eraser"></span></a>
+                                               <a class="btn btn-warning btn-sm" href="javascript:void(0);" onclick="showModalEditar('${codigoAsunto.id}')" title="Editar"><span class="fa fa-pencil"></span></a>
+                                               <a class="btn btn-danger btn-sm" title="Eliminar" onclick="confirm('<c:url value="/codigoAsunto/${codigoAsunto.id}/delete"/>', '<spring:message code="regweb.confirmar.eliminacion" htmlEscape="true"/>')" href="javascript:void(0);"><span class="fa fa-eraser"></span></a>
                                             </td>
                                         </tr>
 
@@ -167,11 +174,8 @@
                                                             <div class="panel panel-success">
 
                                                                 <div class="panel-heading">
-                                                                    <h3 class="panel-title"><i
-                                                                            class="fa fa-pencil-square-o"></i>
-                                                                        <strong><spring:message
-                                                                                code="codigoAsunto.datos"/>Dades codi
-                                                                            Assumpte</strong></h3>
+                                                                    <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i>
+                                                                        <strong><spring:message code="codigoAsunto.datos"/></strong></h3>
                                                                 </div>
 
                                                                 <div class="panel-body">
@@ -184,6 +188,16 @@
                                                                             <form:input path="codigo" cssClass="form-control" maxlength="16" value="${codAsunto.codigo}"/><span class="errors"></span>
                                                                         </div>
                                                                     </div>
+
+                                                                    <div class="form-group col-xs-6">
+                                                                        <div class="col-xs-2 pull-left etiqueta_regweb_left control-label">
+                                                                            <form:label path="activo"><spring:message code="regweb.activo"/></form:label>
+                                                                        </div>
+                                                                        <div class="col-xs-10">
+                                                                            <form:checkbox path="activo" id="check_${codigoAsunto.id}_${codigoAsunto.activo}"/>
+                                                                        </div>
+                                                                    </div>
+
                                                                     <div class="form-group col-xs-12" id="myTab2_${codigoAsunto.id}">
                                                                         <ul class="nav nav-tabs">
                                                                             <c:forEach items="${idiomas}" var="idioma" varStatus="index">
@@ -270,6 +284,14 @@
                                                <form:input path="codigo" cssClass="form-control" maxlength="16"/><span class="errors"></span>
                                            </div>
                                         </div>
+                                       <div class="form-group col-xs-6">
+                                           <div class="col-xs-2 pull-left etiqueta_regweb_left control-label">
+                                               <form:label path="activo"><spring:message code="regweb.activo"/></form:label>
+                                           </div>
+                                           <div class="col-xs-10">
+                                               <form:checkbox path="activo" value="true"/>
+                                           </div>
+                                       </div>
                                         <div class="form-group col-xs-12">
                                         <ul class="nav nav-tabs" id="myTab2">
                                             <c:forEach items="${idiomas}" var="idioma" varStatus="index">
@@ -329,6 +351,16 @@
 function showModalEditar(codi){
     $('#a_'+codi).addClass("active");
     $('#ca_modal_'+codi).addClass("active");
+    // Rutina per modificar el checkbox si el codAsunto esta desactivat (no funciona be al form)
+    var input = "input[id*='check_"+codi+"']";
+    var identificador = $(input).attr('id');
+    var llevarString = "check_"+codi+"_";
+    var activo = identificador.replace(llevarString,"");
+    // Si no es activo posa el check a false
+    if(activo=="false"){
+        $('#check_'+codi+'_false').prop('checked',false);
+    }
+    // Mostra el modal
 	$('#myModal_'+codi).modal('show');
 }
 
@@ -458,7 +490,7 @@ function unescapeHtml(safe) {
 function limpiarModal(){
     clearForm("#modal-form");
     quitarErroresModal();
-    $('#codigo').val(null);
+    $('#cod').find("input").val(null);
     <c:forEach items="${idiomas}" var="idioma" varStatus="index">
         <c:set var="idioma_lang" value="${RegwebConstantes.CODIGO_BY_IDIOMA_ID[idioma]}" />
         $("#modal-form input#traducciones\\'${idioma_lang}\\'\\.nombre").val(null);

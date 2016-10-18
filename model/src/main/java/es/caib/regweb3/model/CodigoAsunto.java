@@ -36,6 +36,8 @@ public class CodigoAsunto extends Traducible {
     private TipoAsunto tipoAsunto;
     @XmlElement
     private String codigo;
+    @XmlElement
+    private Boolean activo = true;
 
     public CodigoAsunto() {
     }
@@ -54,12 +56,14 @@ public class CodigoAsunto extends Traducible {
      * @param id
      * @param tipoAsunto
      * @param codigo
+     * @param activo
      */
     public CodigoAsunto(CodigoAsunto ta) {
 
       this.id = ta.id;
       this.tipoAsunto = (ta.tipoAsunto == null) ? null : new TipoAsunto(ta.tipoAsunto);
       this.codigo = ta.codigo;
+      this.activo = ta.activo;
       this.traducciones = new HashMap<String, Traduccion>(ta.getTraducciones());
     }
 
@@ -95,6 +99,16 @@ public class CodigoAsunto extends Traducible {
 
     public void setCodigo(String codigo) {
       this.codigo = codigo;
+    }
+
+    @Column(name = "ACTIVO", nullable = false)
+    @JsonIgnore
+    public Boolean getActivo() {
+        return activo;
+    }
+
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
     }
 
     @CollectionOfElements(fetch=FetchType.LAZY,targetElement = TraduccionCodigoAsunto.class)

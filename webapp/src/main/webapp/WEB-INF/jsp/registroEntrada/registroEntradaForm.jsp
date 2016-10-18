@@ -393,7 +393,7 @@
     });
 
     function actualizarCodigosAsunto(){
-        <c:url var="urlCodigosAsunto" value="/rest/obtenerCodigosAsunto" />
+        <c:url var="urlCodigosAsunto" value="/rest/obtenerCodigosAsuntoActivos" />
         actualizarSelectTraduccion('${urlCodigosAsunto}', '#registroDetalle\\.codigoAsunto\\.id', $('#registroDetalle\\.tipoAsunto\\.id option:selected').val(), '${registroEntrada.registroDetalle.codigoAsunto.id}', true, '${pageContext.response.locale}');
     }
 

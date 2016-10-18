@@ -42,6 +42,14 @@ public interface CodigoAsuntoLocal extends BaseEjb<CodigoAsunto, Long> {
     public List<CodigoAsunto> getByTipoAsunto(Long idTipoAsunto) throws Exception;
 
     /**
+     * Obtiene los CodigoAsunto Activos pertenecientes a un TipoAsunto
+     * @param idTipoAsunto
+     * @return
+     * @throws Exception
+     */
+    public List<CodigoAsunto> getActivosByTipoAsunto(Long idTipoAsunto) throws Exception;
+
+    /**
      * Retorna el {@link es.caib.regweb3.model.CodigoAsunto} asociado a un codigo.
      * @param codigo
      * @return

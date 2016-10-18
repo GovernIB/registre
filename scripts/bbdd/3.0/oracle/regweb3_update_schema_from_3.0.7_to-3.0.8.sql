@@ -1,2 +1,6 @@
 --Nueva campo en la tabla RWE_PROPIEDADGLOBAL
 alter table RWE_PROPIEDADGLOBAL add TIPO number(19,0);
+
+--Nou camp ACTIU a la taula RWE_CODIGOASUNTO
+alter table RWE_CODIGOASUNTO add (ACTIVO NUMBER(1) DEFAULT 1 NOT NULL);
+update RWE_CODIGOASUNTO set ACTIVO=1;
