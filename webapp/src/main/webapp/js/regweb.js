@@ -452,9 +452,10 @@ function actualizarSelectTraduccion(url, idSelect, seleccion, valorSelected, tod
                     $(idSelect).html(html);
                     $(idSelect).attr("disabled",false).trigger("chosen:updated");
                 }else if(len==0){
-                    html='';
+                    html='<option value="-1">...</option>';
                     $(idSelect).html(html);
-                    $(idSelect).attr("disabled",true).trigger("chosen:updated");
+                    $(idSelect).attr("disabled",false).trigger("chosen:updated");
+                    //$(idSelect).attr("disabled",true).trigger("chosen:updated");
                 }
             }
         });
