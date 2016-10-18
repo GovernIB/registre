@@ -16,6 +16,13 @@ import javax.ejb.Local;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public interface InteresadoSirLocal extends BaseEjb<InteresadoSir, Long> {
 
+    /**
+     * Elimina los AsientoRegistralSir de una Entidad
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
 
 }
 

@@ -58,6 +58,9 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @EJB public RegistroLopdMigradoLocal registroMigradoLopdEjb;
     @EJB public RegistroMigradoLocal registroMigradoEjb;
     @EJB public PropiedadGlobalLocal propiedadGlobalEjb;
+    @EJB public AsientoRegistralSirLocal asientoRegistralSirEjb;
+    @EJB public InteresadoSirLocal interesadoSirEjb;
+    @EJB public AnexoSirLocal anexoSirEjb;
 
 
 
@@ -304,6 +307,12 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
            libroEjb.reiniciarContadores(libro.getId());
         }
         log.info("Libros reiniciados: " +libros.size());
+
+        /********* ASIENTO REGISTRAL SIR *********/
+        log.info("InteresadoSir eliminados: " + interesadoSirEjb.eliminarByEntidad(idEntidad));
+        log.info("AnexoSir eliminados: " + anexoSirEjb.eliminarByEntidad(idEntidad));
+        log.info("AsientoRegistralSir eliminados: " + asientoRegistralSirEjb.eliminarByEntidad(idEntidad));
+
         em.flush();
 
     }

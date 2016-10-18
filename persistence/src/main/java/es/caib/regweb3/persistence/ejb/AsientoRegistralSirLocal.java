@@ -81,5 +81,11 @@ public interface AsientoRegistralSirLocal extends BaseEjb<AsientoRegistralSir, L
     public Long aceptarAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto)
             throws Exception, I18NException, I18NValidationException;
 
-
+    /**
+     * Elimina los AsientoRegistralSir de una Entidad
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
 }
