@@ -117,7 +117,7 @@ public class ExportarPersonasExcel extends AbstractExcelView {
 
         //Título
         sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$F$1"));
-        tittleCell.setCellValue(getMessage("persona.exportar"));
+        tittleCell.setCellValue(getMessage("persona.exportar.lista"));
         tittleCell.setCellStyle(titulo);
         sheet.addMergedRegion(CellRangeAddress.valueOf("$A$2:$F$2"));
 
