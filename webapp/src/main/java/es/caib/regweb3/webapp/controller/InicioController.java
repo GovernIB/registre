@@ -47,8 +47,8 @@ public class InicioController extends BaseController{
     @EJB(mappedName = "regweb3/DescargaEJB/local")
     public DescargaLocal descargaEjb;
 
-    @EJB(mappedName = "regweb3/OficioRemisionUtilsEJB/local")
-    public OficioRemisionUtilsLocal oficioRemisionUtilsEjb;
+    @EJB(mappedName = "regweb3/OficioRemisionEntradaUtilsEJB/local")
+    public OficioRemisionEntradaUtilsLocal oficioRemisionEntradaUtilsEjb;
 
 
     @RequestMapping(value = "/inici")
@@ -80,10 +80,10 @@ public class InicioController extends BaseController{
             /* OFICIOS PENDIENTES DE REMISIÓN */
 
             // Obtenemos los Organismos Internos que tienen Registros pendientes de tramitar por medio de un Oficio de Revisión,
-            mav.addObject("organismosOficioRemisionInterna", oficioRemisionUtilsEjb.organismosPendientesRemisionInterna(librosRegistroEntrada, getOrganismosOficioRemision(request, organismosOficinaActiva)));
+            mav.addObject("organismosOficioRemisionInterna", oficioRemisionEntradaUtilsEjb.organismosPendientesRemisionInterna(oficinaActiva.getId(), librosRegistroEntrada, getOrganismosOficioRemision(request, organismosOficinaActiva)));
 
             // Obtenemos los Organismos Externos que tienen Registros pendientes de tramitar por medio de un Oficio de Revisión,
-            mav.addObject("organismosOficioRemisionExterna", oficioRemisionUtilsEjb.organismosPendientesRemisionExterna(librosRegistroEntrada));
+            mav.addObject("organismosOficioRemisionExterna", oficioRemisionEntradaUtilsEjb.organismosPendientesRemisionExterna(oficinaActiva.getId(), librosRegistroEntrada));
 
 
             /* OFICIOS PENDIENTES DE LLEGADA */

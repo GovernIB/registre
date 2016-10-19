@@ -1,8 +1,8 @@
 package es.caib.regweb3.webapp.controller;
 
 import es.caib.regweb3.model.*;
+import es.caib.regweb3.persistence.ejb.OficioRemisionEntradaUtilsLocal;
 import es.caib.regweb3.persistence.ejb.OficioRemisionLocal;
-import es.caib.regweb3.persistence.ejb.OficioRemisionUtilsLocal;
 import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
 import es.caib.regweb3.persistence.ejb.RegistroSalidaLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -37,8 +37,8 @@ public class AvisoController extends BaseController {
     @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
     public RegistroSalidaLocal registroSalidaEjb;
 
-    @EJB(mappedName = "regweb3/OficioRemisionUtilsEJB/local")
-    public OficioRemisionUtilsLocal oficioRemisionUtilsEjb;
+    @EJB(mappedName = "regweb3/OficioRemisionEntradaUtilsEJB/local")
+    public OficioRemisionEntradaUtilsLocal oficioRemisionEntradaUtilsEjb;
 
 
     /**
@@ -79,8 +79,8 @@ public class AvisoController extends BaseController {
 
             // OFICIOS PENDIENTES DE REMISIÓN
             if(librosRegistro!= null && librosRegistro.size() > 0){
-                oficiosRemisionInterna = oficioRemisionUtilsEjb.oficiosPendientesRemisionInternaCount(librosRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva));
-                oficiosRemisionExterna = oficioRemisionUtilsEjb.oficiosPendientesRemisionExternaCount(librosRegistro);
+                oficiosRemisionInterna = oficioRemisionEntradaUtilsEjb.oficiosPendientesRemisionInternaCount(oficinaActiva.getId(),librosRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva));
+                oficiosRemisionExterna = oficioRemisionEntradaUtilsEjb.oficiosPendientesRemisionExternaCount(oficinaActiva.getId(),librosRegistro);
             }
             mav.addObject("oficiosRemisionInterna", oficiosRemisionInterna);
             mav.addObject("oficiosRemisionExterna", oficiosRemisionExterna);

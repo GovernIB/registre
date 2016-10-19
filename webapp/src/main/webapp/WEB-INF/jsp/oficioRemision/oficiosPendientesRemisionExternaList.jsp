@@ -60,27 +60,18 @@
                             <form:form modelAttribute="registroEntradaBusqueda" method="post" cssClass="form-horizontal">
                                 <form:hidden path="pageNumber"/>
 
-                                <div class="form-group col-xs-6">
+                                <%--<div class="form-group col-xs-6">
                                     <div class="col-xs-4 pull-left align-right"><spring:message code="registroEntrada.oficina"/></div>
                                     <div class="col-xs-8">
                                         <form:select path="registroEntrada.oficina.id" items="${oficinasRegistro}"
                                                      itemValue="id" itemLabel="denominacion" cssClass="chosen-select"/>
                                     </div>
-                                </div>
+                                </div>--%>
                                 <div class="form-group col-xs-6">
                                     <div class="col-xs-4 pull-left align-right"><spring:message code="registroEntrada.libro"/></div>
                                     <div class="col-xs-8">
                                         <form:select path="registroEntrada.libro.id" items="${librosRegistro}"
                                                      itemValue="id" itemLabel="nombreCompleto"
-                                                     cssClass="chosen-select"/>
-                                    </div>
-                                </div>
-                                <div class="form-group col-xs-6">
-                                    <div class="col-xs-4 pull-left align-right"><spring:message code="registroEntrada.organDestinatari"/></div>
-                                    <div class="col-xs-8">
-                                        <form:select path="registroEntrada.destinoExternoCodigo"
-                                                     items="${organismosDestino}"
-                                                     itemValue="codigo" itemLabel="denominacion"
                                                      cssClass="chosen-select"/>
                                     </div>
                                 </div>
@@ -93,6 +84,15 @@
                                                 <form:option value="${anyo}">${anyo}</form:option>
                                             </c:forEach>
                                         </form:select>
+                                    </div>
+                                </div>
+                                <div class="form-group col-xs-6">
+                                    <div class="col-xs-4 pull-left align-right"><spring:message code="registroEntrada.organDestinatari"/></div>
+                                    <div class="col-xs-8">
+                                        <form:select path="registroEntrada.destinoExternoCodigo"
+                                                     items="${organismosDestino}"
+                                                     itemValue="codigo" itemLabel="denominacion"
+                                                     cssClass="chosen-select"/>
                                     </div>
                                 </div>
 

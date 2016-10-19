@@ -3,7 +3,7 @@ package es.caib.regweb3.webapp.controller.registro;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.AnexoLocal;
 import es.caib.regweb3.persistence.ejb.HistoricoRegistroEntradaLocal;
-import es.caib.regweb3.persistence.ejb.OficioRemisionUtilsLocal;
+import es.caib.regweb3.persistence.ejb.OficioRemisionEntradaUtilsLocal;
 import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
 import es.caib.regweb3.persistence.utils.DestinatarioWrapper;
 import es.caib.regweb3.persistence.utils.Paginacion;
@@ -56,8 +56,8 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     @EJB(mappedName = "regweb3/AnexoEJB/local")
     public AnexoLocal anexoEjb;
 
-    @EJB(mappedName = "regweb3/OficioRemisionUtilsEJB/local")
-    public OficioRemisionUtilsLocal oficioRemisionUtilsEjb;
+    @EJB(mappedName = "regweb3/OficioRemisionEntradaUtilsEJB/local")
+    public OficioRemisionEntradaUtilsLocal oficioRemisionEntradaUtilsEjb;
     
 
     /**
@@ -196,7 +196,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         model.addAttribute("puedeEditar", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registro.getLibro().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA));
 
         // OficioRemision
-        model.addAttribute("isOficioRemision", oficioRemisionUtilsEjb.isOficioRemisionInterno(idRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva)));
+        model.addAttribute("isOficioRemision", oficioRemisionEntradaUtilsEjb.isOficioRemisionInterno(idRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva)));
 
         // Interesados, solo si el Registro en Válido o Estamos en la Oficina donde se registró, o en su Oficina Responsable
         if(registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) && oficinaRegistral){
@@ -386,7 +386,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             }
 
             // Comprobamos que el RegistroEntrada es un OficioRemision
-            if (oficioRemisionUtilsEjb.isOficioRemisionInterno(idRegistro, getOrganismosOficioRemision(request,organismosOficinaActiva))) {
+            if (oficioRemisionEntradaUtilsEjb.isOficioRemisionInterno(idRegistro, getOrganismosOficioRemision(request,organismosOficinaActiva))) {
                 Mensaje.saveMessageError(request, getMessage("registroEntrada.tramitar.error"));
                 return "redirect:/registroEntrada/list";
             }
@@ -434,7 +434,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         }
 
         // Comprobamos que el RegistroEntrada es un OficioRemision
-        if (oficioRemisionUtilsEjb.isOficioRemisionInterno(idRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva))) {
+        if (oficioRemisionEntradaUtilsEjb.isOficioRemisionInterno(idRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva))) {
             Mensaje.saveMessageError(request, getMessage("registroEntrada.distribuir.error"));
             return respuestaDistribucion;
         }
