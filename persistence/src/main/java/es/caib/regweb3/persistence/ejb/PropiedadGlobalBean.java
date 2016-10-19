@@ -202,7 +202,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
     }
 
     @Override
-    public String getPropiedadByEntidad(Long idEntidad, String clave) throws Exception{
+    public String getPropertyByEntidad(Long idEntidad, String clave) throws Exception{
 
         Query q = em.createQuery("Select pg.valor from PropiedadGlobal as pg where pg.entidad = :idEntidad and pg.clave = :clave");
         q.setParameter("idEntidad", idEntidad);
@@ -215,8 +215,29 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
     }
 
     @Override
-    public Boolean getBooleanPropiedadByEntidad(Long idEntidad, String clave) throws Exception {
-        String value = getPropiedadByEntidad(idEntidad, clave);
+    public String getProperty(String clave) throws Exception{
+
+        Query q = em.createQuery("Select pg.valor from PropiedadGlobal as pg where pg.entidad is null and pg.clave = :clave");
+        q.setParameter("clave", clave);
+
+        List list = q.getResultList();
+
+        return list != null && list.size() != 0? (String) list.get(0):null;
+
+    }
+
+    @Override
+    public Boolean getBooleanPropertyByEntidad(Long idEntidad, String clave) throws Exception {
+        String value = getPropertyByEntidad(idEntidad, clave);
+        if (value == null) {
+            return null;
+        } else {
+            return "true".equals(value);
+        }
+    }
+
+    public Boolean getBooleanProperty(String clave) throws Exception{
+        String value = getProperty(clave);
         if (value == null) {
             return null;
         } else {
@@ -226,15 +247,29 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
 
     @Override
     public Long getLongPropertyByEntitat(Long idEntidad, String clave) throws Exception {
-        String value = getPropiedadByEntidad(idEntidad, clave);
+        String value = getPropertyByEntidad(idEntidad, clave);
         if (value == null) {
             return null;
         } else {
             try {
                 return Long.parseLong(value);
             } catch(NumberFormatException e) {
-                log.error("Error conviertiendo a long el valor (" + value + ")  de la propiedad "
-                        + clave + ": " + e.getMessage(), e);
+                log.error("Error conviertiendo a long el valor (" + value + ")  de la propiedad " + clave + ": " + e.getMessage(), e);
+                return null;
+            }
+        }
+    }
+
+    @Override
+    public Long getLongProperty(String clave) throws Exception {
+        String value = getProperty(clave);
+        if (value == null) {
+            return null;
+        } else {
+            try {
+                return Long.parseLong(value);
+            } catch(NumberFormatException e) {
+                log.error("Error conviertiendo a long el valor (" + value + ")  de la propiedad " + clave + ": " + e.getMessage(), e);
                 return null;
             }
         }

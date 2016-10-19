@@ -479,10 +479,8 @@ public interface RegwebConstantes {
     
     /* ----------------MODO FIRMA ANEXOS --------------------------*/
     public static final int MODO_FIRMA_ANEXO_SINFIRMA =  0;
-    // Document amb firma adjunta
-    public static final int MODO_FIRMA_ANEXO_ATTACHED =  1;
-    // Firma en document separat
-    public static final int MODO_FIRMA_ANEXO_DETACHED =  2;
+    public static final int MODO_FIRMA_ANEXO_ATTACHED =  1; // Document amb firma adjunta
+    public static final int MODO_FIRMA_ANEXO_DETACHED =  2; // Firma en document separat
 
     
     /* -------- TIPO DOCUMENTO ---------- */
