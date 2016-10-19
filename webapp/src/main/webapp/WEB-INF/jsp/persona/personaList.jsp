@@ -81,7 +81,7 @@
                                 <input type="submit" value="<spring:message code="regweb.buscar"/>" class="btn btn-warning btn-sm"/>
                                 <input type="reset" value="<spring:message code="regweb.restablecer"/>" class="btn btn-sm"/>
                                 <c:if test="${not empty paginacion.listado}">
-                                    <a class="btn btn-success btn-sm pull-right" onclick="exportar('<c:url value="/persona/exportarPersonas"/>','${personaBusquedaForm.persona.tipo}','${personaBusquedaForm.persona.nombre}','${personaBusquedaForm.persona.apellido1}','${personaBusquedaForm.persona.apellido2}','${personaBusquedaForm.persona.documento}')" title="<spring:message code="persona.exportar"/>"><spring:message code="regweb.formato.excel"/></a>
+                                    <a class="btn btn-success btn-sm pull-right" onclick="exportar('<c:url value="/persona/exportarPersonas"/>','${personaBusquedaForm.persona.tipo}','${personaBusquedaForm.persona.nombre}','${personaBusquedaForm.persona.apellido1}','${personaBusquedaForm.persona.apellido2}','${personaBusquedaForm.persona.documento}')" title="<spring:message code="persona.exportar.busqueda"/>"><spring:message code="persona.exportar"/></a>
                                 </c:if>
                             </div>
                         </form:form>
