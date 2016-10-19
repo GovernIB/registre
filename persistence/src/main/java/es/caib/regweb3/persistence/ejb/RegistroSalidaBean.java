@@ -159,7 +159,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
         // Extracto
         if (!StringUtils.isEmpty(registroSalida.getRegistroDetalle().getExtracto())) {
-            where.add(DataBaseUtils.like("registroSalida.registroDetalle.extracto", "extracto", parametros, registroSalida.getRegistroDetalle().getExtracto()));
+            where.add(DataBaseUtils.like("registroSalida.registroDetalle.extracto", "extracto", parametros, new String(registroSalida.getRegistroDetalle().getExtracto().getBytes("ISO-8859-1"), "UTF-8")));
         }
 
         // Observaciones
