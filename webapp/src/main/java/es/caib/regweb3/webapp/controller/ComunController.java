@@ -1,7 +1,9 @@
 package es.caib.regweb3.webapp.controller;
 
 import es.caib.regweb3.model.*;
-import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
+import es.caib.regweb3.persistence.ejb.ReproLocal;
+import es.caib.regweb3.persistence.ejb.RolLocal;
 import es.caib.regweb3.sir.ws.api.manager.FicheroIntercambioManager;
 import es.caib.regweb3.sir.ws.api.manager.impl.FicheroIntercambioManagerImpl;
 import es.caib.regweb3.webapp.utils.Mensaje;
@@ -34,24 +36,11 @@ public class ComunController extends BaseController {
     @Autowired
     private UsuarioService usuarioService;
     
-    @EJB(mappedName = "regweb3/RelacionOrganizativaOfiEJB/local")
-    public RelacionOrganizativaOfiLocal relacionOrganizativaOfiLocalEjb;
-    
     @EJB(mappedName = "regweb3/RolEJB/local")
     public RolLocal rolEjb;
     
-    @EJB(mappedName = "regweb3/OficioRemisionEJB/local")
-    public OficioRemisionLocal oficioRemisionEjb;
-    
     @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
     public RegistroEntradaLocal registroEntradaEjb;
-    
-    @EJB(mappedName = "regweb3/EntidadEJB/local")
-    public EntidadLocal entidadEjb;
-
-    @EJB(mappedName = "regweb3/RegistroMigradoEJB/local")
-    public RegistroMigradoLocal registroMigradoEjb;
-
 
     @EJB(mappedName = "regweb3/ReproEJB/local")
     public ReproLocal reproEjb;
