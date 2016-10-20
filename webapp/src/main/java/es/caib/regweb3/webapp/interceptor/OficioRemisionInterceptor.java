@@ -74,7 +74,7 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
         }
 
         // Comprobaciones previas al listado de OficioRemision y Oficios de Remisión Pendientes
-        if (url.equals("/oficioRemision/list") || url.contains("oficiosPendientes")) {
+        if (url.equals("/oficioRemision/list") || url.contains("pendientes")) {
 
             Set<Long> organismos = oficinaActiva.getOrganismosFuncionalesId();
                 UsuarioEntidad usuarioEntidad = (UsuarioEntidad) session.getAttribute(RegwebConstantes.SESSION_USUARIO_ENTIDAD);

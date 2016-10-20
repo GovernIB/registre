@@ -79,18 +79,21 @@ public class InicioController extends BaseController{
 
             /* OFICIOS PENDIENTES DE REMISIÓN */
 
-            // Obtenemos los Organismos Internos que tienen Registros pendientes de tramitar por medio de un Oficio de Revisión,
-            mav.addObject("organismosOficioRemisionInterna", oficioRemisionEntradaUtilsEjb.organismosPendientesRemisionInterna(oficinaActiva.getId(), librosRegistroEntrada, getOrganismosOficioRemision(request, organismosOficinaActiva)));
+            // Comprueba si hay libros de Registro
+            if(librosRegistroEntrada.size() > 0) {
 
-            // Obtenemos los Organismos Externos que tienen Registros pendientes de tramitar por medio de un Oficio de Revisión,
-            mav.addObject("organismosOficioRemisionExterna", oficioRemisionEntradaUtilsEjb.organismosPendientesRemisionExterna(oficinaActiva.getId(), librosRegistroEntrada));
+                // Obtenemos los Organismos Internos que tienen Registros pendientes de tramitar por medio de un Oficio de Revisión,
+                mav.addObject("organismosOficioRemisionInterna", oficioRemisionEntradaUtilsEjb.organismosPendientesRemisionInterna(oficinaActiva.getId(), librosRegistroEntrada, getOrganismosOficioRemision(request, organismosOficinaActiva)));
+
+                // Obtenemos los Organismos Externos que tienen Registros pendientes de tramitar por medio de un Oficio de Revisión,
+                mav.addObject("organismosOficioRemisionExterna", oficioRemisionEntradaUtilsEjb.organismosPendientesRemisionExterna(oficinaActiva.getId(), librosRegistroEntrada));
 
 
-            /* OFICIOS PENDIENTES DE LLEGADA */
-            List<OficioRemision> oficiosPendientesLlegada = oficioRemisionEjb.oficiosPendientesLlegada(organismosOficinaActiva, RegwebConstantes.REGISTROS_PANTALLA_INICIO);
+                /* OFICIOS PENDIENTES DE LLEGADA */
+                List<OficioRemision> oficiosPendientesLlegada = oficioRemisionEjb.oficiosPendientesLlegada(organismosOficinaActiva, RegwebConstantes.REGISTROS_PANTALLA_INICIO);
 
-            mav.addObject("oficiosPendientesLlegada", oficiosPendientesLlegada);
-
+                mav.addObject("oficiosPendientesLlegada", oficiosPendientesLlegada);
+            }
 
             /* ASIENTOS REGISTRALES SIR PENDIENTES DE PROCESAR */
             /* Buscamos los Últimos AsientoRegistralSir que están pendientes de procesar*/
