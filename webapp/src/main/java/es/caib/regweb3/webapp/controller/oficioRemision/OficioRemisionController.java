@@ -42,7 +42,7 @@ import java.util.List;
 public class OficioRemisionController extends BaseController {
 
     @EJB(mappedName = "regweb3/OficioRemisionEntradaUtilsEJB/local")
-    private OficioRemisionEntradaUtilsLocal oficioRemisionUtils;
+    private OficioRemisionEntradaUtilsLocal oficioRemisionEntradaUtilsEjb;
     
     @EJB(mappedName = "regweb3/RelacionOrganizativaOfiEJB/local")
     public RelacionOrganizativaOfiLocal relacionOrganizativaOfiLocalEjb;
@@ -61,9 +61,6 @@ public class OficioRemisionController extends BaseController {
 
     @EJB(mappedName = "regweb3/TrazabilidadEJB/local")
     public TrazabilidadLocal trazabilidadEjb;
-
-    @EJB(mappedName = "regweb3/OficioRemisionEntradaUtilsEJB/local")
-    public OficioRemisionEntradaUtilsLocal oficioRemisionEntradaUtilsEjb;
 
     @EJB(mappedName = "regweb3/SirEJB/local")
     public SirLocal sirEjb;
@@ -225,7 +222,7 @@ public class OficioRemisionController extends BaseController {
         LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
         // Obtenemos los Registros de Entrada, pendientes de tramitar por medio de un Oficio de Revisión, agrupados según su Organismos destinatario.
-        OficiosRemisionInternoOrganismo oficiosRemisionOrganismo = oficioRemisionUtils.oficiosPendientesRemisionInterna(busqueda.getPageNumber(), busqueda.getAnyo(),oficinaActiva.getId(), registroEntrada.getLibro().getId(), registroEntrada.getDestino().getId(),getOrganismosOficioRemision(request, organismosOficinaActiva));
+        OficiosRemisionInternoOrganismo oficiosRemisionOrganismo = oficioRemisionEntradaUtilsEjb.oficiosPendientesRemisionInterna(busqueda.getPageNumber(), busqueda.getAnyo(),oficinaActiva.getId(), registroEntrada.getLibro().getId(), registroEntrada.getDestino().getId(),getOrganismosOficioRemision(request, organismosOficinaActiva));
 
         busqueda.setPageNumber(1);
         mav.addObject("oficiosRemisionOrganismo", oficiosRemisionOrganismo);
@@ -291,7 +288,7 @@ public class OficioRemisionController extends BaseController {
         Entidad entidadActiva = getEntidadActiva(request);
 
         // Obtenemos los Registros de Entrada, pendientes de tramitar por medio de un Oficio de Revisión, agrupados según su Organismos destinatario.
-        OficiosRemisionExternoOrganismo oficiosRemisionOrganismo = oficioRemisionUtils.oficiosPendientesRemisionExterna(busqueda.getPageNumber(),busqueda.getAnyo(), oficinaActiva.getId(), registroEntrada.getLibro().getId(),registroEntrada.getDestinoExternoCodigo(), entidadActiva);
+        OficiosRemisionExternoOrganismo oficiosRemisionOrganismo = oficioRemisionEntradaUtilsEjb.oficiosPendientesRemisionExterna(busqueda.getPageNumber(),busqueda.getAnyo(), oficinaActiva.getId(), registroEntrada.getLibro().getId(),registroEntrada.getDestinoExternoCodigo(), entidadActiva);
 
         busqueda.setPageNumber(1);
         mav.addObject("oficiosRemisionOrganismo", oficiosRemisionOrganismo);
@@ -362,14 +359,14 @@ public class OficioRemisionController extends BaseController {
         OficioRemision oficioRemision = null;
 
         if (interno) { //Oficio interno
-            oficioRemision = oficioRemisionUtils.crearOficioRemisionInterno(registrosEntrada,
+            oficioRemision = oficioRemisionEntradaUtilsEjb.crearOficioRemisionInterno(registrosEntrada,
                 getOficinaActiva(request), usuarioEntidad, registroEntradaListForm.getIdOrganismo(),
                 registroEntradaListForm.getIdLibro());
 
         } else {//Oficio externo todo: Acabar oficio remisión externo
 
           final String organismoExternoDenominacion = registroEntradaListForm.getOrganismoExternoDenominacion();
-            oficioRemision = oficioRemisionUtils.crearOficioRemisionExterno(registrosEntrada,
+            oficioRemision = oficioRemisionEntradaUtilsEjb.crearOficioRemisionExterno(registrosEntrada,
                 getOficinaActiva(request), usuarioEntidad, 
                 registroEntradaListForm.getOrganismoExternoCodigo(),
                 organismoExternoDenominacion, registroEntradaListForm.getIdLibro());
@@ -469,7 +466,7 @@ public class OficioRemisionController extends BaseController {
 
               // Cream oficio remision
               // Aquest mètode ja crida a oficioRemisionEjb.registrarOficioRemision
-              OficioRemision oficioRemision = oficioRemisionUtils.crearOficioRemisionSir(
+              OficioRemision oficioRemision = oficioRemisionEntradaUtilsEjb.crearOficioRemisionSir(
                   registroEntradaAEnviar, getOficinaActiva(request), usuarioEntidad,
                       organismoExternoCodigo, organismoExternoDenominacion, sirForm.getIdLibro(), identificadorIntercambio);
 
@@ -654,7 +651,7 @@ public class OficioRemisionController extends BaseController {
 
         // Procesa el Oficio de Remisión
         try{
-            registrosEntrada = oficioRemisionUtils.procesarOficioRemision(oficioRemision,
+            registrosEntrada = oficioRemisionEntradaUtilsEjb.procesarOficioRemision(oficioRemision,
                 usuarioEntidad, oficinaActiva, oficios);
         }catch (Exception e){
             e.printStackTrace();
