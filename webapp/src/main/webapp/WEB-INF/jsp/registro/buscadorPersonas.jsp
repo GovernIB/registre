@@ -77,6 +77,10 @@
 
             </div>
             <div class="modal-footer">
+                <!-- Imatge de reload -->
+                <div class="col-xs-12 text-center centrat" id="reload${param.tipoPersona}">
+                    <img src="<c:url value="/img/712.GIF"/>" width="20" height="20"/>
+                </div>
                 <!-- Mostrar llistat de la busqueda-->
                 <div class="form-group col-xs-12">
                     <div id="resultadosBusquedaPersonas${param.tipoPersona}"></div>
@@ -85,6 +89,12 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $(function() {
+        $('#reload${param.tipoPersona}').hide();
+    })
+</script>
 
 <script type="text/javascript">
     // Realizamos la búsqueda al presionar la techa enter

@@ -527,7 +527,9 @@ function buscarPersonas(tipoPersonas, idRegistroDetalle) {
         tabla.append('<thead><tr><th>'+tradsinteresado['persona.persona']+'</th><th>'+tradsinteresado['persona.documento']+'</th><th>'+tradsinteresado['persona.tipoPersona']+'</th><th>'+tradsinteresado['regweb.acciones']+'</th></tr></thead><tbody></tbody>');
     }
 
-
+    //Mostram la imatge de reload
+    $('#reload' + tipoPersonas).show();
+    // realizamos la busqueda en dir3 mediante REST.
     $.ajax({
         url: $("#buscadorPersonasForm"+tipoPersonas).attr( "action"),
         data: JSON.stringify(json),
@@ -543,6 +545,9 @@ function buscarPersonas(tipoPersonas, idRegistroDetalle) {
             $('#resultadosBusquedaPersonas'+tipoPersonas).html('');
             $('#paginacionPersonas').remove();
             var total = result.length;
+
+            // Ocultamos imagen reload
+            $('#reload' + tipoPersonas).hide();
 
             if(total == 0){ // Si no hay resultados
 
@@ -596,41 +601,88 @@ function buscarPersonas(tipoPersonas, idRegistroDetalle) {
                 $('#resultadosBusquedaPersonas'+tipoPersonas).append('<div class="alert-grey" style="text-align:left;">'+tradsinteresado['interesado.hay']+' <strong>'+total+'</strong> '+tradsinteresado['interesado.resultados']+'</div>');
                 $('#resultadosBusquedaPersonas'+tipoPersonas).append(tabla);
 
+
                 // Paginamos el listado
-                $('#resultadosBusquedaPersonas'+tipoPersonas,'td').each(function(i) {
-                    $(this).text(i+1);
-                });
 
-                if(total > 10){
+                if(total > 10) {
 
-                    $('#resultadosBusquedaPersonas'+tipoPersonas).each(function() {
 
-                        var currentPage = 0;
+                    $('#resultadosBusquedaPersonas' + tipoPersonas).each(function () {
+
+                        var currentPage = 1;
                         var numPerPage = 10;
-                        var $table =  $(this);
-                        $table.bind('repaginate', function() {
-                            $table.find('tbody tr').hide().slice(currentPage * numPerPage, (currentPage + 1) * numPerPage).show();
-                        });
-                        $table.trigger('repaginate');
-                        var numRows = $table.find('tbody tr').length;
-                        var numPages = Math.ceil(numRows / numPerPage);
-                        //  var $pager = $('<div class="pager"></div>');
-                        var $pager = $('<ul id="paginacionPersonas" class="pagination pagination-sm"></ul>');
-                        for (var page = 0; page < numPages; page++) {
-                            var numero = page + 1;
-                            $('<li><a href="javascript:void(0);">'+numero+'</a></li>').bind('click', {
-                                newPage: page
-                            }, function(event) {
+
+                        var totalResults = total;
+                        var totalPages = Math.floor(totalResults / numPerPage);
+                        if (totalResults % numPerPage != 0) {
+                            totalPages = totalPages + 1;
+                        }
+
+                        var beginIndex = Math.max(1, currentPage - numPerPage);
+                        var endIndex = Math.min(beginIndex + 10, totalPages);
+                        var $pager = $('<ul class="pagination pagination-sm"></ul>');
+
+                        var $table = $(this);
+                        $table.bind('repaginate', function () {
+
+                            $table.find('tbody tr').hide().slice((currentPage - 1) * numPerPage, currentPage * numPerPage).show();
+                            beginIndex = Math.max(1, currentPage - numPerPage);
+                            endIndex = Math.min(beginIndex + 10, totalPages);
+
+                            $pager.empty();
+                            $pager = $('<ul class="pagination pagination-sm"></ul>');
+
+                            $('<li id="first"><a href="javascript:void(0);"><i class="fa fa-angle-double-left"></i></a></li>').bind('click', {
+                                newPage: 1
+                            }, function (event) {
                                 currentPage = event.data['newPage'];
                                 $table.trigger('repaginate');
-                                $(this).addClass('active').siblings().removeClass('active');
                             }).appendTo($pager);
-                        }
-                        $pager.insertBefore($table).find('li:first').addClass('active');
+
+                            if (currentPage != 1 && currentPage >= endIndex) {
+                                $('<li id="previous"><a href="javascript:void(0);"><i class="fa fa-angle-left"></i></a></li>').bind('click', {
+                                    newPage: currentPage - 1
+                                }, function (event) {
+                                    currentPage = event.data['newPage'];
+                                    $table.trigger('repaginate');
+                                }).appendTo($pager);
+
+                            }
+
+                            for (var page = beginIndex; page <= endIndex; page++) {
+                                $('<li id=li' + page + '><a href ="javascript:void(0);">' + page + '</a></li>').bind('click', {
+                                    newPage: page
+                                }, function (event) {
+                                    currentPage = event.data['newPage'];
+                                    $table.trigger('repaginate');
+                                }).appendTo($pager);
+
+                            }
+
+                            if (currentPage != totalPages) {
+                                $('<li id="next"><a href="javascript:void(0);"><i class="fa fa-angle-right"></i></a></li>').bind('click', {
+                                    newPage: currentPage + 1
+                                }, function (event) {
+                                    currentPage = event.data['newPage'];
+                                    $table.trigger('repaginate');
+                                }).appendTo($pager);
+
+                            }
+
+                            $('<li id="last"><a href="javascript:void(0);"><i class="fa fa-angle-double-right"></i></a></li>').bind('click', {
+                                newPage: totalPages
+                            }, function (event) {
+                                currentPage = event.data['newPage'];
+                                $table.trigger('repaginate');
+                            }).appendTo($pager);
+
+                            $pager.insertAfter($table).find('#li' + currentPage).addClass('active');
+
+                        });
+                        $table.trigger('repaginate');
 
                     });
                 }
-
 
             }
 
@@ -648,6 +700,7 @@ function limpiarBusquedaPersona(tipoPersonas){
     $('#resultadosBusquedaPersonas'+tipoPersonas).empty();
     $('#resultadosBusquedaPersonas'+tipoPersonas).html('');
     $('#resultadosBusquedaPersonas'+tipoPersonas).attr("display:none");
+    $('#reload' + tipoPersonas).hide();
 }
 
 
