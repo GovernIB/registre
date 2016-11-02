@@ -179,7 +179,11 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
                 boolean existe;
                 try {
                     //Comprueba que el documento no exista en la bbdd
-                    existe = personaEjb.existeDocumentoNew(interesado.getDocumento().toUpperCase(), interesado.getEntidad());
+                    if (interesado.getId() == null) {
+                        existe = personaEjb.existeDocumentoNew(interesado.getDocumento().toUpperCase(), interesado.getEntidad());
+                    } else {
+                        existe = personaEjb.existeDocumentoEdit(interesado.getDocumento().toUpperCase(), interesado.getId(), interesado.getEntidad());
+                    }
 
                 } catch (Exception e) {
                     log.error("Error comprobando si persona ya existe: ", e);
