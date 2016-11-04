@@ -38,7 +38,10 @@
                         <h3 class="panel-title"><i class="fa fa-search"></i><spring:message code="informe.registroLopd"/> </h3>
                     </div>
                     <div class="panel-body">
-                        <form:form modelAttribute="registroLopdBusquedaForm" method="post" cssClass="form-horizontal" name="registroLopdBusquedaForm" onsubmit="return validaFormulario(this)">
+                        <form:form modelAttribute="registroLopdBusqueda" method="post" cssClass="form-horizontal" name="registroLopdBusqueda" onsubmit="return validaFormulario(this)">
+
+                            <form:hidden path="pageNumber"/>
+
                             <div class="row">
                                 <div class="form-group col-xs-6  pad-left">
                                     <div class="col-xs-3 pull-left etiqueta_regweb control-label">
@@ -71,7 +74,7 @@
                                         <form:label path="libro"><span class="text-danger">*</span> <spring:message code="libro.libro"/></form:label>
                                     </div>
                                     <div class="col-xs-9 no-pad-right" id="libro">
-                                        <form:select path="libro" items="${libros}" itemValue="id" itemLabel="nombre" cssClass="chosen-select"/>
+                                        <form:select path="libro" items="${libros}" itemValue="id" itemLabel="libroOrganismo" cssClass="chosen-select"/>
                                         <span class="errors"></span>
                                     </div>
                                 </div>
@@ -121,15 +124,15 @@
                     </div>
                 </div>
 
-                <c:if test="${registroLopdBusquedaForm.fechaInicio != null}">
+                <c:if test="${registroLopdBusqueda.fechaInicio != null}">
 
-                    <c:if test="${(not empty entradas) || (not empty salidas)}">
+                    <c:if test="${not empty paginacion.listado}">
 
                         <div class="row">
                             <div class="col-xs-12">
 
                                 <!-- REGISTROS DE ENTRADA -->
-                                <c:if test="${entradas != null}">
+                                <c:if test="${entradas}">
 
                                     <!-- PARÁMETROS DE BÚSQUEDA -->
                                     <div class="panel panel-success">
@@ -142,11 +145,11 @@
                                         </div>
                                         <div class="panel-body">
                                             <div class="col-xs-12"><strong><spring:message code="libro.libro"/>: ${libro.nombreCompleto}</strong></div>
-                                            <div class="col-xs-12"><strong><spring:message code="informe.fechaInicio"/>: <fmt:formatDate value="${registroLopdBusquedaForm.fechaInicio}" pattern="dd/MM/yyyy"/></strong></div>
-                                            <div class="col-xs-12"><strong><spring:message code="informe.fechaFin"/>: <fmt:formatDate value="${registroLopdBusquedaForm.fechaFin}" pattern="dd/MM/yyyy"/></strong></div>
+                                            <div class="col-xs-12"><strong><spring:message code="informe.fechaInicio"/>: <fmt:formatDate value="${registroLopdBusqueda.fechaInicio}" pattern="dd/MM/yyyy"/></strong></div>
+                                            <div class="col-xs-12"><strong><spring:message code="informe.fechaFin"/>: <fmt:formatDate value="${registroLopdBusqueda.fechaFin}" pattern="dd/MM/yyyy"/></strong></div>
                                             <div class="col-xs-12"><strong><spring:message code="regweb.tipoRegistro"/>: <spring:message code="registroEntrada.registroEntrada"/></strong></div>
-                                            <c:if test="${registroLopdBusquedaForm.numeroRegistro != null}">
-                                                <div class="col-xs-12"><strong><spring:message code="registroEntrada.numeroRegistro"/>: ${registroLopdBusquedaForm.numeroRegistro}</strong></div>
+                                            <c:if test="${registroLopdBusqueda.numeroRegistro != null}">
+                                                <div class="col-xs-12"><strong><spring:message code="registroEntrada.numeroRegistro"/>: ${registroLopdBusqueda.numeroRegistro}</strong></div>
                                             </c:if>
                                         </div>
                                     </div>
@@ -161,8 +164,20 @@
                                         </div>
                                         <div class="panel-body">
 
-                                            <div class="table-responsive">
+                                            <div class="col-xs-12">
+                                                <div class="alert-grey">
+                                                    <c:if test="${paginacion.totalResults == 1}">
+                                                        <spring:message code="regweb.resultado"/> <strong>${paginacion.totalResults}</strong> <spring:message code="registroEntrada.registroEntrada"/>
+                                                    </c:if>
+                                                    <c:if test="${paginacion.totalResults > 1}">
+                                                        <spring:message code="regweb.resultados"/> <strong>${paginacion.totalResults}</strong> <spring:message code="registroEntrada.registroEntradas"/>
+                                                    </c:if>
 
+                                                    <p class="pull-right"><spring:message code="regweb.pagina"/> <strong>${paginacion.currentIndex}</strong> de ${paginacion.totalPages}</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="table-responsive">
                                                 <table class="table table-bordered table-hover table-striped tablesorter">
                                                     <colgroup>
                                                         <col>
@@ -184,7 +199,7 @@
                                                     </thead>
 
                                                     <tbody>
-                                                    <c:forEach var="entrada" items="${entradas}" varStatus="status">
+                                                    <c:forEach var="entrada" items="${paginacion.listado}" varStatus="status">
                                                         <tr>
                                                             <td>${entrada.numeroRegistro}</td>
                                                             <td><fmt:formatDate value="${entrada.fecha}" pattern="yyyy"/></td>
@@ -197,6 +212,11 @@
                                                     </tbody>
                                                 </table>
 
+                                                <!-- Paginacion -->
+                                                <c:import url="../modulos/paginacionBusqueda.jsp">
+                                                    <c:param name="entidad" value="registroLopd"/>
+                                                </c:import>
+
                                             </div>
 
                                         </div>
@@ -204,7 +224,7 @@
                                 </c:if>
 
                                 <!-- REGISTROS DE SALIDA -->
-                                <c:if test="${salidas != null}">
+                                <c:if test="${salidas}">
 
                                     <!-- PARÁMETROS DE BÚSQUEDA -->
                                     <div class="panel panel-success">
@@ -217,11 +237,11 @@
                                         </div>
                                         <div class="panel-body">
                                             <div class="col-xs-12"><strong><spring:message code="libro.libro"/>: ${libro.nombreCompleto}</strong></div>
-                                            <div class="col-xs-12"><strong><spring:message code="informe.fechaInicio"/>: <fmt:formatDate value="${registroLopdBusquedaForm.fechaInicio}" pattern="dd/MM/yyyy"/></strong></div>
-                                            <div class="col-xs-12"><strong><spring:message code="informe.fechaFin"/>: <fmt:formatDate value="${registroLopdBusquedaForm.fechaFin}" pattern="dd/MM/yyyy"/></strong></div>
+                                            <div class="col-xs-12"><strong><spring:message code="informe.fechaInicio"/>: <fmt:formatDate value="${registroLopdBusqueda.fechaInicio}" pattern="dd/MM/yyyy"/></strong></div>
+                                            <div class="col-xs-12"><strong><spring:message code="informe.fechaFin"/>: <fmt:formatDate value="${registroLopdBusqueda.fechaFin}" pattern="dd/MM/yyyy"/></strong></div>
                                             <div class="col-xs-12"><strong><spring:message code="regweb.tipoRegistro"/>: <spring:message code="registroSalida.registroSalida"/></strong></div>
-                                            <c:if test="${registroLopdBusquedaForm.numeroRegistro != null}">
-                                                <div class="col-xs-12"><strong><spring:message code="registroEntrada.numeroRegistro"/>: ${registroLopdBusquedaForm.numeroRegistro}</strong></div>
+                                            <c:if test="${registroLopdBusqueda.numeroRegistro != null}">
+                                                <div class="col-xs-12"><strong><spring:message code="registroEntrada.numeroRegistro"/>: ${registroLopdBusqueda.numeroRegistro}</strong></div>
                                             </c:if>
                                         </div>
                                     </div>
@@ -236,8 +256,20 @@
                                         </div>
                                         <div class="panel-body">
 
-                                            <div class="table-responsive">
+                                            <div class="col-xs-12">
+                                                <div class="alert-grey">
+                                                    <c:if test="${paginacion.totalResults == 1}">
+                                                        <spring:message code="regweb.resultado"/> <strong>${paginacion.totalResults}</strong> <spring:message code="registroSalida.registroSalida"/>
+                                                    </c:if>
+                                                    <c:if test="${paginacion.totalResults > 1}">
+                                                        <spring:message code="regweb.resultados"/> <strong>${paginacion.totalResults}</strong> <spring:message code="registroSalida.registroSalidas"/>
+                                                    </c:if>
 
+                                                    <p class="pull-right"><spring:message code="regweb.pagina"/> <strong>${paginacion.currentIndex}</strong> de ${paginacion.totalPages}</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="table-responsive">
                                                 <table class="table table-bordered table-hover table-striped tablesorter">
                                                     <colgroup>
                                                         <col>
@@ -259,7 +291,7 @@
                                                     </thead>
 
                                                     <tbody>
-                                                    <c:forEach var="salida" items="${salidas}" varStatus="status">
+                                                    <c:forEach var="salida" items="${paginacion.listado}" varStatus="status">
                                                         <tr>
                                                             <td>${salida.numeroRegistro}</td>
                                                             <td><fmt:formatDate value="${salida.fecha}" pattern="yyyy"/></td>
@@ -272,6 +304,11 @@
                                                     </tbody>
                                                 </table>
 
+                                                <!-- Paginacion -->
+                                                <c:import url="../modulos/paginacionBusqueda.jsp">
+                                                    <c:param name="entidad" value="registroLopd"/>
+                                                </c:import>
+
                                             </div>
 
                                         </div>
@@ -283,14 +320,14 @@
 
                     </c:if>
 
-                    <c:if test="${(empty entradas) && (empty salidas)}">
+                    <c:if test="${empty paginacion.listado}">
                         <div class="alert alert-warning alert-dismissable">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                             <spring:message code="regweb.busqueda.vacio"/> <strong>
-                            <c:if test="${registroLopdBusquedaForm.tipoRegistro == 1}">
+                            <c:if test="${registroLopdBusqueda.tipoRegistro == 1}">
                                 <spring:message code="registroEntrada.registroEntrada"/>
                             </c:if>
-                            <c:if test="${registroLopdBusquedaForm.tipoRegistro == 2}">
+                            <c:if test="${registroLopdBusqueda.tipoRegistro == 2}">
                                 <spring:message code="registroSalida.registroSalida"/>
                             </c:if>
                             </strong>

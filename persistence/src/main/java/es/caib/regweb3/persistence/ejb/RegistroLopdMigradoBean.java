@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.RegistroLopdMigrado;
 import es.caib.regweb3.model.RegistroMigrado;
+import es.caib.regweb3.persistence.utils.Paginacion;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -97,9 +98,12 @@ public class RegistroLopdMigradoBean extends BaseEjbJPA<RegistroLopdMigrado, Lon
 
 
     @Override
-    public List<RegistroLopdMigrado> getByUsuario(Date dataInici, Date dataFi, String usuario, String accion) throws Exception {
+    public Paginacion getByUsuario(Integer pageNumber, Date dataInici, Date dataFi, String usuario, String accion) throws Exception {
 
-        Query q = em.createQuery("Select registroLopdMigrado.registroMigrado.numero, registroLopdMigrado.registroMigrado.ano," +
+        Query q;
+        Query q2;
+
+        q = em.createQuery("Select registroLopdMigrado.registroMigrado.numero, registroLopdMigrado.registroMigrado.ano," +
                 "registroLopdMigrado.registroMigrado.denominacionOficina, registroLopdMigrado.registroMigrado.tipoRegistro," +
                 "registroLopdMigrado.fecha from RegistroLopdMigrado as registroLopdMigrado where " +
                 "registroLopdMigrado.fecha >= :dataInici and registroLopdMigrado.fecha <= :dataFi and " +
@@ -113,6 +117,28 @@ public class RegistroLopdMigradoBean extends BaseEjbJPA<RegistroLopdMigrado, Lon
 
         List<RegistroLopdMigrado> registrosLopdMigrado = new ArrayList<RegistroLopdMigrado>();
 
+        // Duplicamos la query solo para obtener los resultados totales
+        q2 = em.createQuery("Select count(registroLopdMigrado.id) from RegistroLopdMigrado as registroLopdMigrado where " +
+                "registroLopdMigrado.fecha >= :dataInici and registroLopdMigrado.fecha <= :dataFi and " +
+                "registroLopdMigrado.usuario like :usuario and registroLopdMigrado.tipoAcceso like :accion");
+
+        q2.setParameter("dataInici", dataInici);
+        q2.setParameter("dataFi", dataFi);
+        q2.setParameter("usuario", usuario);
+        q2.setParameter("accion", accion);
+
+        Paginacion paginacion = null;
+
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
+            paginacion = new Paginacion(total.intValue(), pageNumber);
+            int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            q.setFirstResult(inicio);
+            q.setMaxResults(BaseEjbJPA.RESULTADOS_PAGINACION);
+        } else {
+            paginacion = new Paginacion(0, 0);
+        }
+
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result) {
@@ -122,7 +148,9 @@ public class RegistroLopdMigradoBean extends BaseEjbJPA<RegistroLopdMigrado, Lon
             registrosLopdMigrado.add(registroLopdMigrado);
         }
 
-        return registrosLopdMigrado;
+        paginacion.setListado(registrosLopdMigrado);
+
+        return paginacion;
     }
 
     @Override

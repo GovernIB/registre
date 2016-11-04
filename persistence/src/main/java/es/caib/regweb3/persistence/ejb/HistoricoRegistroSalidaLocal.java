@@ -4,6 +4,7 @@ import es.caib.regweb3.model.HistoricoRegistroSalida;
 import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.persistence.utils.Paginacion;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
@@ -24,6 +25,8 @@ public interface HistoricoRegistroSalidaLocal extends BaseEjb<HistoricoRegistroS
 
     /**
      * Busca los Registros de Salida Modificada en función de la una fecha inicio, una fecha fin, por Usuario y Libros gestionados
+     *
+     * @param pageNumber
      * @param fechaInicio
      * @param fechaFin
      * @param idUsuario
@@ -31,10 +34,12 @@ public interface HistoricoRegistroSalidaLocal extends BaseEjb<HistoricoRegistroS
      * @return
      * @throws Exception
      */
-    public List<HistoricoRegistroSalida> salidaModificadaPorUsuario(Date fechaInicio, Date fechaFin, Long idUsuario, List<Libro> libros) throws Exception;
+    public Paginacion salidaModificadaPorUsuario(Integer pageNumber, Date fechaInicio, Date fechaFin, Long idUsuario, List<Libro> libros) throws Exception;
 
     /**
      * Busca los Registros de Salida Modificada que no sean de 'Creación' en función de la una fecha inicio, una fecha fin, por Usuario y Libro
+     *
+     * @param pageNumber
      * @param fechaInicio
      * @param fechaFin
      * @param idUsuario
@@ -42,7 +47,7 @@ public interface HistoricoRegistroSalidaLocal extends BaseEjb<HistoricoRegistroS
      * @return
      * @throws Exception
      */
-    public List<HistoricoRegistroSalida> salidaModificadaPorUsuarioLibro(Date fechaInicio, Date fechaFin, Long idUsuario, Long idLibro) throws Exception;
+    public Paginacion salidaModificadaPorUsuarioLibro(Integer pageNumber, Date fechaInicio, Date fechaFin, Long idUsuario, Long idLibro) throws Exception;
 
 
     /**

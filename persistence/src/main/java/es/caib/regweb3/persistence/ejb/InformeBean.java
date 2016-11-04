@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
+import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
@@ -549,9 +550,10 @@ public class InformeBean implements InformeLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroEntrada> buscaEntradaPorUsuarioLibro(Date fechaInicio, Date fechaFin, Long idUsuario, Long idLibro) throws Exception {
+    public Paginacion buscaEntradaPorUsuarioLibro(Integer pageNumber, Date fechaInicio, Date fechaFin, Long idUsuario, Long idLibro) throws Exception {
 
         Query q;
+        Query q2;
 
         q = em.createQuery("Select registroEntrada.numeroRegistro, registroEntrada.fecha, registroEntrada.libro.nombre, " +
                 "registroEntrada.oficina.denominacion, registroEntrada.libro.organismo.denominacion " +
@@ -567,6 +569,29 @@ public class InformeBean implements InformeLocal {
 
         List<RegistroEntrada> registrosEntrada = new ArrayList<RegistroEntrada>();
 
+        // Duplicamos la query solo para obtener los resultados totales
+        q2 = em.createQuery("Select count(registroEntrada.id) from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
+                " and registroEntrada.fecha <= :fechaFin and registroEntrada.usuario.id = :idUsuario and " +
+                " registroEntrada.libro.id = :idLibro and registroEntrada.estado != :pendiente");
+
+        q2.setParameter("fechaInicio", fechaInicio);
+        q2.setParameter("fechaFin", fechaFin);
+        q2.setParameter("idUsuario", idUsuario);
+        q2.setParameter("idLibro", idLibro);
+        q2.setParameter("pendiente", RegwebConstantes.REGISTRO_PENDIENTE);
+
+        Paginacion paginacion = null;
+
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
+            paginacion = new Paginacion(total.intValue(), pageNumber);
+            int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            q.setFirstResult(inicio);
+            q.setMaxResults(BaseEjbJPA.RESULTADOS_PAGINACION);
+        } else {
+            paginacion = new Paginacion(0, 0);
+        }
+
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result) {
@@ -575,13 +600,17 @@ public class InformeBean implements InformeLocal {
             registrosEntrada.add(registroEntrada);
         }
 
-        return registrosEntrada;
+        paginacion.setListado(registrosEntrada);
+
+        return paginacion;
     }
 
     @Override
-    public List<RegistroSalida> buscaSalidaPorUsuarioLibro(Date fechaInicio, Date fechaFin, Long idUsuario, Long idLibro) throws Exception {
+    @SuppressWarnings(value = "unchecked")
+    public Paginacion buscaSalidaPorUsuarioLibro(Integer pageNumber, Date fechaInicio, Date fechaFin, Long idUsuario, Long idLibro) throws Exception {
 
         Query q;
+        Query q2;
 
         q = em.createQuery("Select registroSalida.numeroRegistro, registroSalida.fecha, registroSalida.libro.nombre, " +
                 "registroSalida.oficina.denominacion, registroSalida.libro.organismo.denominacion " +
@@ -597,6 +626,30 @@ public class InformeBean implements InformeLocal {
 
         List<RegistroSalida> registrosSalida = new ArrayList<RegistroSalida>();
 
+        // Duplicamos la query solo para obtener los resultados totales
+        q2 = em.createQuery("Select count(registroSalida.id) from RegistroSalida as registroSalida where " +
+                "registroSalida.fecha >= :fechaInicio and registroSalida.fecha <= :fechaFin and " +
+                "registroSalida.usuario.id = :idUsuario and registroSalida.libro.id = :idLibro and " +
+                "registroSalida.estado != :pendiente");
+
+        q2.setParameter("fechaInicio", fechaInicio);
+        q2.setParameter("fechaFin", fechaFin);
+        q2.setParameter("idUsuario", idUsuario);
+        q2.setParameter("idLibro", idLibro);
+        q2.setParameter("pendiente", RegwebConstantes.REGISTRO_PENDIENTE);
+
+        Paginacion paginacion = null;
+
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
+            paginacion = new Paginacion(total.intValue(), pageNumber);
+            int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            q.setFirstResult(inicio);
+            q.setMaxResults(BaseEjbJPA.RESULTADOS_PAGINACION);
+        } else {
+            paginacion = new Paginacion(0, 0);
+        }
+
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result) {
@@ -605,14 +658,17 @@ public class InformeBean implements InformeLocal {
             registrosSalida.add(registroSalida);
         }
 
-        return registrosSalida;
+        paginacion.setListado(registrosSalida);
+
+        return paginacion;
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroEntrada> buscaEntradaPorUsuario(Date fechaInicio, Date fechaFin, Long idUsuario, List<Libro> libros) throws Exception {
+    public Paginacion buscaEntradaPorUsuario(Integer pageNumber, Date fechaInicio, Date fechaFin, Long idUsuario, List<Libro> libros) throws Exception {
 
         Query q;
+        Query q2;
 
         q = em.createQuery("Select registroEntrada.numeroRegistro, registroEntrada.fecha, registroEntrada.libro.nombre, " +
                 "registroEntrada.oficina.denominacion, registroEntrada.libro.organismo.denominacion " +
@@ -626,6 +682,28 @@ public class InformeBean implements InformeLocal {
 
         List<RegistroEntrada> registrosEntrada = new ArrayList<RegistroEntrada>();
 
+        // Duplicamos la query solo para obtener los resultados totales
+        q2 = em.createQuery("Select count(registroEntrada.id) from RegistroEntrada as registroEntrada where " +
+                "registroEntrada.fecha >= :fechaInicio and registroEntrada.fecha <= :fechaFin and " +
+                "registroEntrada.usuario.id = :idUsuario and registroEntrada.libro in (:libros)");
+
+        q2.setParameter("fechaInicio", fechaInicio);
+        q2.setParameter("fechaFin", fechaFin);
+        q2.setParameter("idUsuario", idUsuario);
+        q2.setParameter("libros", libros);
+
+        Paginacion paginacion = null;
+
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
+            paginacion = new Paginacion(total.intValue(), pageNumber);
+            int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            q.setFirstResult(inicio);
+            q.setMaxResults(BaseEjbJPA.RESULTADOS_PAGINACION);
+        } else {
+            paginacion = new Paginacion(0, 0);
+        }
+
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result) {
@@ -634,13 +712,16 @@ public class InformeBean implements InformeLocal {
             registrosEntrada.add(registroEntrada);
         }
 
-        return registrosEntrada;
+        paginacion.setListado(registrosEntrada);
+
+        return paginacion;
     }
 
     @Override
-    public List<RegistroSalida> buscaSalidaPorUsuario(Date fechaInicio, Date fechaFin, Long usuario, List<Libro> libros) throws Exception {
+    public Paginacion buscaSalidaPorUsuario(Integer pageNumber, Date fechaInicio, Date fechaFin, Long usuario, List<Libro> libros) throws Exception {
 
         Query q;
+        Query q2;
 
         q = em.createQuery("Select registroSalida.numeroRegistro, registroSalida.fecha, registroSalida.libro.nombre, " +
                 "registroSalida.oficina.denominacion, registroSalida.libro.organismo.denominacion " +
@@ -654,6 +735,29 @@ public class InformeBean implements InformeLocal {
 
         List<RegistroSalida> registrosSalida = new ArrayList<RegistroSalida>();
 
+        // Duplicamos la query solo para obtener los resultados totales
+        q2 = em.createQuery("Select count(registroSalida.id) " +
+                "from RegistroSalida as registroSalida where registroSalida.fecha >= :fechaInicio " +
+                "and registroSalida.fecha <= :fechaFin and registroSalida.usuario.id = :usuario and " +
+                "registroSalida.libro in (:libros)");
+
+        q2.setParameter("fechaInicio", fechaInicio);
+        q2.setParameter("fechaFin", fechaFin);
+        q2.setParameter("usuario", usuario);
+        q2.setParameter("libros", libros);
+
+        Paginacion paginacion = null;
+
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
+            paginacion = new Paginacion(total.intValue(), pageNumber);
+            int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            q.setFirstResult(inicio);
+            q.setMaxResults(BaseEjbJPA.RESULTADOS_PAGINACION);
+        } else {
+            paginacion = new Paginacion(0, 0);
+        }
+
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result) {
@@ -662,20 +766,25 @@ public class InformeBean implements InformeLocal {
             registrosSalida.add(registroSalida);
         }
 
-        return registrosSalida;
+        paginacion.setListado(registrosSalida);
+
+        return paginacion;
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroEntrada> buscaEntradasPorLibroTipoNumero(Date fechaInicio, Date fechaFin, Long idLibro, Integer numeroRegistro) throws Exception {
+    public Paginacion buscaEntradasPorLibroTipoNumero(Integer pageNumber, Date fechaInicio, Date fechaFin, Long idLibro, Integer numeroRegistro) throws Exception {
 
         Query q;
+        Query q2;
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
         StringBuffer query = new StringBuffer("Select registroEntrada.id, registroEntrada.numeroRegistro, registroEntrada.fecha, " +
                 "registroEntrada.libro.id, registroEntrada.libro.nombre, registroEntrada.oficina.denominacion, registroEntrada.libro.organismo.denominacion " +
                 "from RegistroEntrada as registroEntrada ");
+
+        StringBuffer query2 = new StringBuffer("Select count(registroEntrada.id)from RegistroEntrada as registroEntrada ");
 
         if (fechaInicio != null) {
             where.add(" registroEntrada.fecha >= :fechaInicio");
@@ -695,22 +804,41 @@ public class InformeBean implements InformeLocal {
         }
 
         query.append("where ");
+        query2.append("where ");
+
         int count = 0;
         for (String w : where) {
             if (count != 0) {
                 query.append(" and ");
+                query2.append(" and ");
             }
             query.append(w);
+            query2.append(w);
             count++;
         }
         query.append(" order by registroEntrada.id desc");
+
         q = em.createQuery(query.toString());
+        q2 = em.createQuery(query2.toString());
 
         for (Map.Entry<String, Object> param : parametros.entrySet()) {
             q.setParameter(param.getKey(), param.getValue());
+            q2.setParameter(param.getKey(), param.getValue());
         }
 
         List<RegistroEntrada> registrosEntrada = new ArrayList<RegistroEntrada>();
+
+        Paginacion paginacion = null;
+
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
+            paginacion = new Paginacion(total.intValue(), pageNumber);
+            int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            q.setFirstResult(inicio);
+            q.setMaxResults(BaseEjbJPA.RESULTADOS_PAGINACION);
+        } else {
+            paginacion = new Paginacion(0, 0);
+        }
 
         List<Object[]> result = q.getResultList();
 
@@ -720,19 +848,25 @@ public class InformeBean implements InformeLocal {
             registrosEntrada.add(registroEntrada);
         }
 
-        return registrosEntrada;
+        paginacion.setListado(registrosEntrada);
+
+        return paginacion;
     }
 
     @Override
-    public List<RegistroSalida> buscaSalidasPorLibroTipoNumero(Date fechaInicio, Date fechaFin, Long idLibro, Integer numeroRegistro) throws Exception {
+    public Paginacion buscaSalidasPorLibroTipoNumero(Integer pageNumber, Date fechaInicio, Date fechaFin, Long idLibro, Integer numeroRegistro) throws Exception {
 
         Query q;
+        Query q2;
+
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
         StringBuffer query = new StringBuffer("Select registroSalida.id, registroSalida.numeroRegistro, registroSalida.fecha, " +
                 "registroSalida.libro.id, registroSalida.libro.nombre, registroSalida.oficina.denominacion, registroSalida.libro.organismo.denominacion " +
                 "from RegistroSalida as registroSalida ");
+
+        StringBuffer query2 = new StringBuffer("Select count(registroSalida.id) from RegistroSalida as registroSalida ");
 
         if (fechaInicio != null) {
             where.add(" registroSalida.fecha >= :fechaInicio");
@@ -752,22 +886,40 @@ public class InformeBean implements InformeLocal {
         }
 
         query.append("where ");
+        query2.append("where ");
+
         int count = 0;
         for (String w : where) {
             if (count != 0) {
                 query.append(" and ");
+                query2.append(" and ");
             }
             query.append(w);
+            query2.append(w);
             count++;
         }
         query.append(" order by registroSalida.id desc");
         q = em.createQuery(query.toString());
+        q2 = em.createQuery(query2.toString());
 
         for (Map.Entry<String, Object> param : parametros.entrySet()) {
             q.setParameter(param.getKey(), param.getValue());
+            q2.setParameter(param.getKey(), param.getValue());
         }
 
         List<RegistroSalida> registrosSalida = new ArrayList<RegistroSalida>();
+
+        Paginacion paginacion = null;
+
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
+            paginacion = new Paginacion(total.intValue(), pageNumber);
+            int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            q.setFirstResult(inicio);
+            q.setMaxResults(BaseEjbJPA.RESULTADOS_PAGINACION);
+        } else {
+            paginacion = new Paginacion(0, 0);
+        }
 
         List<Object[]> result = q.getResultList();
 
@@ -777,7 +929,9 @@ public class InformeBean implements InformeLocal {
             registrosSalida.add(registroSalida);
         }
 
-        return registrosSalida;
+        paginacion.setListado(registrosSalida);
+
+        return paginacion;
     }
 
     @Override

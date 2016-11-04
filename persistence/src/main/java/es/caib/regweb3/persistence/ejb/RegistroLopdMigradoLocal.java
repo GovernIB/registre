@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.RegistroLopdMigrado;
+import es.caib.regweb3.persistence.utils.Paginacion;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
@@ -38,6 +39,8 @@ public interface RegistroLopdMigradoLocal extends BaseEjb<RegistroLopdMigrado, L
 
     /**
      * Devuelve los registros Lopd de un Registro Migrado que ha realizado un Usuario entre dos fechas, pasando la Accion
+     *
+     * @param pageNumber
      * @param dataInici
      * @param dataFi
      * @param usuario
@@ -45,7 +48,7 @@ public interface RegistroLopdMigradoLocal extends BaseEjb<RegistroLopdMigrado, L
      * @return
      * @throws Exception
      */
-    public List<RegistroLopdMigrado> getByUsuario(Date dataInici, Date dataFi, String usuario, String accion) throws Exception;
+    public Paginacion getByUsuario(Integer pageNumber, Date dataInici, Date dataFi, String usuario, String accion) throws Exception;
 
     /**
      * Elimina todos los Registros LOPD de una entidad

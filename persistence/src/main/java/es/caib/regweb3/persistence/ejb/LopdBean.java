@@ -62,9 +62,12 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
 
 
     @Override
-    public List<Lopd> getByFechasUsuario(Date fechaInicio, Date fechaFin, Long idUsuarioEntidad, List<Libro> libros, Long accion, Long tipoRegistro) throws Exception {
+    public Paginacion getByFechasUsuario(Integer pageNumber, Date fechaInicio, Date fechaFin, Long idUsuarioEntidad, List<Libro> libros, Long accion, Long tipoRegistro) throws Exception {
 
-        Query q = em.createQuery("Select lopd from Lopd as lopd where lopd.usuario.id = :idUsuarioEntidad and " +
+        Query q;
+        Query q2;
+
+        q = em.createQuery("Select lopd from Lopd as lopd where lopd.usuario.id = :idUsuarioEntidad and " +
                 "lopd.fecha >= :fechaInicio and lopd.fecha <= :fechaFin and lopd.accion = :accion and " +
                 "lopd.tipoRegistro = :tipoRegistro and lopd.libro in (:libros) order by lopd.fecha desc");
 
@@ -75,13 +78,42 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         q.setParameter("accion", accion);
         q.setParameter("tipoRegistro", tipoRegistro);
 
-        return q.getResultList();
+        // Duplicamos la query solo para obtener los resultados totales
+        q2 = em.createQuery("Select count(lopd.id) from Lopd as lopd where lopd.usuario.id = :idUsuarioEntidad and " +
+                "lopd.fecha >= :fechaInicio and lopd.fecha <= :fechaFin and lopd.accion = :accion and " +
+                "lopd.tipoRegistro = :tipoRegistro and lopd.libro in (:libros)");
+
+        q2.setParameter("idUsuarioEntidad",idUsuarioEntidad);
+        q2.setParameter("fechaInicio", fechaInicio);
+        q2.setParameter("fechaFin", fechaFin);
+        q2.setParameter("libros", libros);
+        q2.setParameter("accion", accion);
+        q2.setParameter("tipoRegistro", tipoRegistro);
+
+        Paginacion paginacion = null;
+
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
+            paginacion = new Paginacion(total.intValue(), pageNumber);
+            int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            q.setFirstResult(inicio);
+            q.setMaxResults(BaseEjbJPA.RESULTADOS_PAGINACION);
+        } else {
+            paginacion = new Paginacion(0, 0);
+        }
+
+        paginacion.setListado(q.getResultList());
+
+        return paginacion;
     }
 
     @Override
-    public List<Lopd> getByFechasUsuarioLibro(Date fechaInicio, Date fechaFin, Long idUsuarioEntidad, Long idLibro, Long accion, Long tipoRegistro) throws Exception {
+    public Paginacion getByFechasUsuarioLibro(Integer pageNumber, Date fechaInicio, Date fechaFin, Long idUsuarioEntidad, Long idLibro, Long accion, Long tipoRegistro) throws Exception {
 
-        Query q = em.createQuery("Select lopd from Lopd as lopd where lopd.usuario.id = :idUsuarioEntidad and " +
+        Query q;
+        Query q2;
+
+        q = em.createQuery("Select lopd from Lopd as lopd where lopd.usuario.id = :idUsuarioEntidad and " +
                 "lopd.fecha >= :fechaInicio and lopd.fecha <= :fechaFin and lopd.accion = :accion and " +
                 "lopd.tipoRegistro = :tipoRegistro and lopd.libro.id = :idLibro order by lopd.fecha desc");
 
@@ -92,7 +124,33 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         q.setParameter("accion", accion);
         q.setParameter("tipoRegistro", tipoRegistro);
 
-        return q.getResultList();
+        // Duplicamos la query solo para obtener los resultados totales
+        q2 = em.createQuery("Select count(lopd.id) from Lopd as lopd where lopd.usuario.id = :idUsuarioEntidad and " +
+                "lopd.fecha >= :fechaInicio and lopd.fecha <= :fechaFin and lopd.accion = :accion and " +
+                "lopd.tipoRegistro = :tipoRegistro and lopd.libro.id = :idLibro");
+
+        q2.setParameter("idUsuarioEntidad",idUsuarioEntidad);
+        q2.setParameter("fechaInicio", fechaInicio);
+        q2.setParameter("fechaFin", fechaFin);
+        q2.setParameter("idLibro", idLibro);
+        q2.setParameter("accion", accion);
+        q2.setParameter("tipoRegistro", tipoRegistro);
+
+        Paginacion paginacion = null;
+
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
+            paginacion = new Paginacion(total.intValue(), pageNumber);
+            int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            q.setFirstResult(inicio);
+            q.setMaxResults(BaseEjbJPA.RESULTADOS_PAGINACION);
+        } else {
+            paginacion = new Paginacion(0, 0);
+        }
+
+        paginacion.setListado(q.getResultList());
+
+        return paginacion;
     }
 
     @Override

@@ -1,7 +1,10 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.*;
+import es.caib.regweb3.persistence.utils.I18NLogicUtils;
+import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
+import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -13,6 +16,7 @@ import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Fundació BIT.
@@ -84,22 +88,52 @@ public class HistoricoRegistroSalidaBean extends BaseEjbJPA<HistoricoRegistroSal
     }
 
     @Override
-    public List<HistoricoRegistroSalida> salidaModificadaPorUsuario(Date fechaInicio, Date fechaFin, Long idUsuario, List<Libro> libros) throws Exception{
+    public Paginacion salidaModificadaPorUsuario(Integer pageNumber, Date fechaInicio, Date fechaFin, Long idUsuario, List<Libro> libros) throws Exception{
 
         Query q;
+        Query q2;
+
+        String accio = I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()),"registro.modificacion.creacion" );
 
         q = em.createQuery("Select historicoRegistroSalida.registroSalida.numeroRegistro, historicoRegistroSalida.registroSalida.libro.nombre, " +
                 "historicoRegistroSalida.registroSalida.oficina.denominacion, historicoRegistroSalida.registroSalida.libro.organismo.denominacion, " +
                 "historicoRegistroSalida.registroSalida.fecha, historicoRegistroSalida.fecha, historicoRegistroSalida.modificacion " +
                 "from HistoricoRegistroSalida as historicoRegistroSalida where historicoRegistroSalida.fecha >= :fechaInicio " +
-                "and historicoRegistroSalida.fecha <= :fechaFin and historicoRegistroSalida.usuario.id = :idUsuario and historicoRegistroSalida.modificacion != 'Creación' and historicoRegistroSalida.registroSalida.libro in (:libros) order by historicoRegistroSalida.fecha desc");
+                "and historicoRegistroSalida.fecha <= :fechaFin and historicoRegistroSalida.usuario.id = :idUsuario " +
+                "and historicoRegistroSalida.modificacion != :accio " +
+                "and historicoRegistroSalida.registroSalida.libro in (:libros) order by historicoRegistroSalida.fecha desc");
 
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("idUsuario", idUsuario);
         q.setParameter("libros", libros);
+        q.setParameter("accio", accio);
 
         List<HistoricoRegistroSalida> historicosRegistroSalida = new ArrayList<HistoricoRegistroSalida>();
+
+        // Duplicamos la query solo para obtener los resultados totales
+        q2 = em.createQuery("Select count(historicoRegistroSalida.id) from HistoricoRegistroSalida as historicoRegistroSalida " +
+                "where historicoRegistroSalida.fecha >= :fechaInicio and historicoRegistroSalida.fecha <= :fechaFin and " +
+                "historicoRegistroSalida.usuario.id = :idUsuario and historicoRegistroSalida.modificacion != :accio and " +
+                "historicoRegistroSalida.registroSalida.libro in (:libros)");
+
+        q2.setParameter("fechaInicio", fechaInicio);
+        q2.setParameter("fechaFin", fechaFin);
+        q2.setParameter("idUsuario", idUsuario);
+        q2.setParameter("libros", libros);
+        q2.setParameter("accio", accio);
+
+        Paginacion paginacion = null;
+
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
+            paginacion = new Paginacion(total.intValue(), pageNumber);
+            int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            q.setFirstResult(inicio);
+            q.setMaxResults(BaseEjbJPA.RESULTADOS_PAGINACION);
+        } else {
+            paginacion = new Paginacion(0, 0);
+        }
 
         List<Object[]> result = q.getResultList();
 
@@ -109,26 +143,58 @@ public class HistoricoRegistroSalidaBean extends BaseEjbJPA<HistoricoRegistroSal
             historicosRegistroSalida.add(historicoRegistroSalida);
         }
 
-        return historicosRegistroSalida;
+        paginacion.setListado(historicosRegistroSalida);
+
+        return paginacion;
     }
 
     @Override
-    public List<HistoricoRegistroSalida> salidaModificadaPorUsuarioLibro(Date fechaInicio, Date fechaFin, Long idUsuario, Long idLibro) throws Exception{
+    public Paginacion salidaModificadaPorUsuarioLibro(Integer pageNumber, Date fechaInicio, Date fechaFin, Long idUsuario, Long idLibro) throws Exception{
 
         Query q;
+        Query q2;
+
+        String accio = I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()),"registro.modificacion.creacion" );
 
         q = em.createQuery("Select historicoRegistroSalida.registroSalida.numeroRegistro, historicoRegistroSalida.registroSalida.libro.nombre, " +
                 "historicoRegistroSalida.registroSalida.oficina.denominacion, historicoRegistroSalida.registroSalida.libro.organismo.denominacion, " +
                 "historicoRegistroSalida.registroSalida.fecha, historicoRegistroSalida.fecha, historicoRegistroSalida.modificacion " +
                 "from HistoricoRegistroSalida as historicoRegistroSalida where historicoRegistroSalida.fecha >= :fechaInicio " +
-                "and historicoRegistroSalida.fecha <= :fechaFin and historicoRegistroSalida.usuario.id = :idUsuario and historicoRegistroSalida.registroSalida.libro.id = :idLibro and historicoRegistroSalida.modificacion != 'Creación' order by historicoRegistroSalida.fecha desc");
+                "and historicoRegistroSalida.fecha <= :fechaFin and historicoRegistroSalida.usuario.id = :idUsuario " +
+                "and historicoRegistroSalida.registroSalida.libro.id = :idLibro " +
+                "and historicoRegistroSalida.modificacion != :accio order by historicoRegistroSalida.fecha desc");
 
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("idUsuario", idUsuario);
         q.setParameter("idLibro", idLibro);
+        q.setParameter("accio", accio);
 
         List<HistoricoRegistroSalida> historicosRegistroSalida = new ArrayList<HistoricoRegistroSalida>();
+
+        // Duplicamos la query solo para obtener los resultados totales
+        q2 = em.createQuery("Select count(historicoRegistroSalida.id) from HistoricoRegistroSalida as historicoRegistroSalida " +
+                "where historicoRegistroSalida.fecha >= :fechaInicio and historicoRegistroSalida.fecha <= :fechaFin and " +
+                "historicoRegistroSalida.usuario.id = :idUsuario and historicoRegistroSalida.registroSalida.libro.id = :idLibro " +
+                "and historicoRegistroSalida.modificacion != :accio");
+
+        q2.setParameter("fechaInicio", fechaInicio);
+        q2.setParameter("fechaFin", fechaFin);
+        q2.setParameter("idUsuario", idUsuario);
+        q2.setParameter("idLibro", idLibro);
+        q2.setParameter("accio", accio);
+
+        Paginacion paginacion = null;
+
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
+            paginacion = new Paginacion(total.intValue(), pageNumber);
+            int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            q.setFirstResult(inicio);
+            q.setMaxResults(BaseEjbJPA.RESULTADOS_PAGINACION);
+        } else {
+            paginacion = new Paginacion(0, 0);
+        }
 
         List<Object[]> result = q.getResultList();
 
@@ -138,7 +204,9 @@ public class HistoricoRegistroSalidaBean extends BaseEjbJPA<HistoricoRegistroSal
             historicosRegistroSalida.add(historicoRegistroSalida);
         }
 
-        return historicosRegistroSalida;
+        paginacion.setListado(historicosRegistroSalida);
+
+        return paginacion;
     }
 
     @Override

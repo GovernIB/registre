@@ -21,6 +21,8 @@ public interface LopdLocal extends BaseEjb<Lopd, Long> {
 
     /**
      * Devuelve los registros Lopd entre dos fechas para un Usuario en concreto y una lista de Libros, con la Accion (listado/consulta) y el TipoRegistro (entrada/salida)
+     *
+     * @param pageNumber
      * @param fechaInicio
      * @param fechaFin
      * @param idUsuarioEntidad
@@ -30,7 +32,7 @@ public interface LopdLocal extends BaseEjb<Lopd, Long> {
      * @return
      * @throws Exception
      */
-    public List<Lopd> getByFechasUsuario(Date fechaInicio, Date fechaFin, Long idUsuarioEntidad, List<Libro> libros, Long accion, Long tipoRegistro) throws Exception;
+    public Paginacion getByFechasUsuario(Integer pageNumber, Date fechaInicio, Date fechaFin, Long idUsuarioEntidad, List<Libro> libros, Long accion, Long tipoRegistro) throws Exception;
 
     /**
      * Devuelve los registros Lopd entre dos fechas para un Usuario en concreto y un Libro en concreto, con la Accion (listado/consulta) y el TipoRegistro (entrada/salida)
@@ -40,10 +42,11 @@ public interface LopdLocal extends BaseEjb<Lopd, Long> {
      * @param idLibro
      * @param accion
      * @param tipoRegistro
+     * @param pageNumber
      * @return
      * @throws Exception
      */
-    public List<Lopd> getByFechasUsuarioLibro(Date fechaInicio, Date fechaFin, Long idUsuarioEntidad, Long idLibro, Long accion, Long tipoRegistro) throws Exception;
+    public Paginacion getByFechasUsuarioLibro(Integer pageNumber, Date fechaInicio, Date fechaFin, Long idUsuarioEntidad, Long idLibro, Long accion, Long tipoRegistro) throws Exception;
 
     /**
      * Devuelve los registros Lopd de un Registro concreto, pasando el Tipo de Registro y la Accion

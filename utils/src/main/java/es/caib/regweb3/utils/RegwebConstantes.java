@@ -385,10 +385,13 @@ public interface RegwebConstantes {
     /* -------------- ACCION LOPD --------------*/
     public static final Long LOPD_LISTADO = 1L;
     public static final Long LOPD_CONSULTA = 2L;
+    public static final Long LOPD_CREACION = 3L;
+    public static final Long LOPD_MODIFICACION = 4L;
     public static final String LOPDMIGRADO_LISTADO = "LIST";
     public static final String LOPDMIGRADO_CONSULTA = "SELECT";
     public static final String LOPDMIGRADO_CREACION = "INSERT";
     public static final String LOPDMIGRADO_MODIFICACION = "UPDATE";
+    public static final Long LOPD_TIPO_MIGRADO = 3L;
 
     /* -------------- TIPO REGISTRO -------------*/
     public static final Long REGISTRO_ENTRADA = 1L;
