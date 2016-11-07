@@ -41,7 +41,7 @@ function distribuir(url, urlTramitar) {
                     html += '</select>';
                     $('#divdestinatarios').html(html);
 
-                    $('#destinatarios').chosen({width: "200%"});
+                    $('#destinatarios').chosen({width: "100%"});
                     $('#destinatarios').trigger("chosen:update");
 
                     $('#distribuirModal').modal('show');

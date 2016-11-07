@@ -32,24 +32,24 @@
 
                     <div class="panel-body">
                         <div class="row">
-                            <div class="form-group col-xs-6 pad-left">
-                                <div class="col-xs-6 pull-left etiqueta_regweb control-label">
+                            <div class="form-group col-xs-12 pad-left">
+                                <div class="col-xs-3 pull-left etiqueta_regweb control-label text-right">
                                     <label><span class="text-danger">*</span> <spring:message code="registro.destinos"/></label>
                                 </div>
                                 <!-- Div donde se pinta el select multiple de los destinatarios posibles y propuestos (distribuir.js) - funcion distribuir() -->
-                                <div class="col-xs-6 no-pad-right" id="divdestinatarios">
+                                <div class="col-xs-9" id="divdestinatarios">
                                     <span id="destinatariosErrors"></span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="form-group col-xs-8">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                            <div class="form-group col-xs-12 pad-left">
+                                <div class="col-xs-3 pull-left etiqueta_regweb control-label text-right">
                                     <label><spring:message code="registroEntrada.observaciones"/></label>
                                 </div>
-                                <div class="col-xs-8">
-                                    <textarea id="observtramit" name="observtramit"></textarea>
+                                <div class="col-xs-9">
+                                    <textarea id="observtramit" name="observtramit" class="form-control"></textarea>
                                 </div>
                             </div>
                         </div>
