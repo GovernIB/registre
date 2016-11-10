@@ -89,14 +89,15 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
           //IDocumentCustodyPlugin custody = AnnexDocumentCustodyManager.getInstance();
           IDocumentCustodyPlugin custody = getInstance();
-
-        anexoFull.setDocumentoCustody(custody.getDocumentInfoOnly(custodyID));
-
-        anexoFull.setDocumentoFileDelete(false);
-        
-        anexoFull.setSignatureCustody(custody.getSignatureInfoOnly(custodyID));
-        
-        anexoFull.setSignatureFileDelete(false);
+	
+	int modoFirma = anexo.getModoFirma();
+	if(modoFirma == Regweb.MODO_FIRMA_ANEXO_SINFIRMA){
+	        anexoFull.setDocumentoCustody(custody.getDocumentInfoOnly(custodyID));
+	        anexoFull.setDocumentoFileDelete(false);
+	}else{
+	        anexoFull.setSignatureCustody(custody.getSignatureInfoOnly(custodyID));
+	        anexoFull.setSignatureFileDelete(false);
+	}
         
         return anexoFull;
         
