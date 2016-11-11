@@ -171,7 +171,8 @@
                         <div class="form-group col-xs-12" style="margin-bottom: 0px;">
                             <div class="form-group col-xs-6" id="divInputArchivo">
     	                       <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-    	                            <form:label path="documentoFile"><spring:message code="anexo.archivo"/></form:label>&nbsp;
+                                   <form:label path="documentoFile" id="labelDocumento"><spring:message
+                                           code="anexo.archivo"/></form:label>&nbsp;
     	                       </div>
     	                       <div class="col-xs-8">
     	                           <div class="input-group">
@@ -187,18 +188,18 @@
     	                        </div>
     	                    </div>
                             <c:if test="${not empty anexoForm.documentoCustody}">
-
                                 <div id="divArchivoActual" class="form-group col-xs-6">
     	                        <div class="col-xs-2 pull-left etiqueta_regweb control-label">
-    	                            <label for="documentoFile"><spring:message code="anexo.archivo.existente"/></label>
+                                    <label for="documentoFile" id="labelDocumentoActual"><spring:message
+                                            code="anexo.archivo.existente"/></label>
     	                        </div>
                                 
     	                        <div class="col-xs-10 arxiu_actual">
     	                            <a href="<c:url value="/anexo/descargarDocumento/${anexoForm.anexo.id}" />" target="_blank">
                                     ${anexoForm.documentoCustody.name}
                                     </a>
-                                    <form:checkbox id="documentoFileDelete" path="documentoFileDelete" />
-                                    <spring:message code="anexo.archivo.borrar"/>
+                                        <%-- <form:checkbox id="documentoFileDelete" path="documentoFileDelete" />
+                                         <spring:message code="anexo.archivo.borrar"/>--%>
     	                        </div>
                                 
     	                    </div>
@@ -237,9 +238,9 @@
     	                        <div class="col-xs-8 arxiu_actual">
     	                            <a href="<c:url value="/anexo/descargarFirma/${anexoForm.anexo.id}" />" target="_blank">
                                     ${anexoForm.signatureCustody.name}
-                                    </a>                            
-                                    <form:checkbox id="signatureFileDelete" path="signatureFileDelete" />
-                                    <spring:message code="anexo.archivo.borrar"/>
+                                    </a>
+                                        <%-- <form:checkbox id="signatureFileDelete" path="signatureFileDelete" />
+                                         <spring:message code="anexo.archivo.borrar"/>--%>
     	                        </div>
     	                    </div>
                             </c:if>
@@ -357,6 +358,7 @@
     
         console.log("-----  Entra dins cambioTipoFirma   -----");
         var autofirma = $('input[name=anexo\\.modoFirma]:radio:checked').val();
+
         console.log("Entra dins cambioTipoFirma: Valor = " + autofirma);
         if (!autofirma) {
             autofirma = 0;
@@ -370,12 +372,23 @@
                 $('#divFirmaActual').hide();
                 break;
             case '1':<%--doc amb firma adjunta (PADES)--%>
-                $("#labelFirma").html("<spring:message code="anexo.tipofirma.attached"/>");
-                $("#labelFirmaActual").html("<spring:message code="anexo.tipofirma.attached.actual"/>");
-                $('#divInputArchivo').hide();
-                $('#divArchivoActual').hide();
-                $('#divInputFirma').show();
-                $('#divFirmaActual').show();
+
+                if (${anexoForm.documentoCustody != null}) {
+                    $("#labelDocumento").html("<spring:message code="anexo.tipofirma.attached"/>");
+                    $("#labelDocumentoActual").html("<spring:message code="anexo.tipofirma.attached.actual"/>");
+                    $('#divInputArchivo').show();
+                    $('#divArchivoActual').show();
+                    $('#divInputFirma').hide();
+                    $('#divFirmaActual').hide();
+                } else {
+                    $("#labelFirma").html("<spring:message code="anexo.tipofirma.attached"/>");
+                    $("#labelFirmaActual").html("<spring:message code="anexo.tipofirma.attached.actual"/>");
+                    $('#divInputArchivo').hide();
+                    $('#divArchivoActual').hide();
+                    $('#divInputFirma').show();
+                    $('#divFirmaActual').show();
+                }
+
                 break;
             case '2':<%--firma amb doc separat --%>
                 $("#labelFirma").html("<spring:message code="anexo.firma"/>");

@@ -90,13 +90,41 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
           //IDocumentCustodyPlugin custody = AnnexDocumentCustodyManager.getInstance();
           IDocumentCustodyPlugin custody = getInstance();
 
-        anexoFull.setDocumentoCustody(custody.getDocumentInfoOnly(custodyID));
+          anexoFull.setDocumentoCustody(custody.getDocumentInfoOnly(custodyID));
+          anexoFull.setDocumentoFileDelete(false);
+          anexoFull.setSignatureCustody(custody.getSignatureInfoOnly(custodyID));
+          anexoFull.setSignatureFileDelete(false);
 
-        anexoFull.setDocumentoFileDelete(false);
-        
-        anexoFull.setSignatureCustody(custody.getSignatureInfoOnly(custodyID));
-        
-        anexoFull.setSignatureFileDelete(false);
+          log.info("XYZ SIGNATURE " + custody.getSignatureInfoOnly(custodyID));
+          log.info("XYZ DOCUMENT " + custody.getDocumentInfoOnly(custodyID));
+
+          int modoFirma = anexo.getModoFirma();
+
+          log.info(" XYZ modoFirma " + modoFirma);
+       /* if(modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA){
+                anexoFull.setDocumentoCustody(custody.getDocumentInfoOnly(custodyID));
+                anexoFull.setDocumentoFileDelete(false);
+        }
+        if(modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED){
+            //Controlamos los anexos de la api antigua que con modo firma attached se guardaban en documentCustody.
+
+            SignatureCustody sc = custody.getSignatureInfoOnly(custodyID);
+
+            if(sc != null) {
+                anexoFull.setSignatureCustody(sc);
+                anexoFull.setSignatureFileDelete(false);
+            }else{
+                anexoFull.setDocumentoCustody(custody.getDocumentInfoOnly(custodyID));
+                anexoFull.setDocumentoFileDelete(false);
+            }
+        }
+        if(modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED){
+            anexoFull.setDocumentoCustody(custody.getDocumentInfoOnly(custodyID));
+            anexoFull.setDocumentoFileDelete(false);
+            anexoFull.setSignatureCustody(custody.getSignatureInfoOnly(custodyID));
+            anexoFull.setSignatureFileDelete(false);
+        }*/
+
         
         return anexoFull;
         
@@ -141,10 +169,19 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
         }
     }
-    
-    
-    
 
+
+    /**
+     * Método que crea un anexo
+     *
+     * @param anexoFull
+     * @param usuarioEntidad
+     * @param registroID
+     * @param tipoRegistro
+     * @return
+     * @throws I18NException
+     * @throws I18NValidationException
+     */
     @Override
     public AnexoFull crearAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
         Long registroID, String tipoRegistro) throws I18NException, I18NValidationException {
@@ -175,20 +212,23 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
           custody = getInstance();
 
+          //Obtenemos el registro con sus anexos, interesados y tipo Asunto
         IRegistro registro = getIRegistro(registroID, tipoRegistro, anexo, isNew);
 
         final String custodyParameters = getCustodyParameters(registro, anexo);
-        
+
+          //Reservamos el custodyID
         custodyID = custody.reserveCustodyID(custodyParameters);
         anexo.setCustodiaID(custodyID);
-  
-        
+
+          //Guardamos los documentos asociados al anexo en custodia
         updateCustodyInfoOfAnexo(anexoFull, custody, custodyParameters, custodyID,
              registro, isNew);
 
+          //Guardamos el anexo
         anexo = this.persist(anexo);
-        
-        
+
+          //Creamos el histórico de las modificaciones del registro debido a los anexos
         crearHistorico(anexoFull, usuarioEntidad, registroID, tipoRegistro, isNew);
         
         anexoFull.setAnexo(anexo);
@@ -229,7 +269,16 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
       pfbv.throwValidationExceptionIfErrors(anexo, isNou);
     }
 
-    
+    /**
+     * Método que actualiza un anexo
+     * @param anexoFull
+     * @param usuarioEntidad
+     * @param registroID
+     * @param tipoRegistro
+     * @return
+     * @throws I18NException
+     * @throws I18NValidationException
+     */
     @Override
     public AnexoFull actualizarAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
         Long registroID, String tipoRegistro) throws I18NException, I18NValidationException {
@@ -247,7 +296,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
           IDocumentCustodyPlugin custody = getInstance();
 
-        
+          //Obtenemos el registro con sus anexos, interesados y tipo Asunto
         IRegistro registro = getIRegistro(registroID, tipoRegistro, anexo, isNew);
         
         
@@ -255,14 +304,15 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         
         
         final String custodyID = anexo.getCustodiaID();
-    
-        
+
+          //Actualizamos los datos de anexo
         anexo = this.merge(anexo);
         anexoFull.setAnexo(anexo);
 
         // Crea historico y lo enlaza con el RegistroDetalle
         crearHistorico(anexoFull, usuarioEntidad, registroID, tipoRegistro, isNew);
-  
+
+          //Guardamos los cambios en custodia
         updateCustodyInfoOfAnexo(anexoFull, custody, custodyParameters, custodyID,
             registro, isNew);
 
@@ -370,56 +420,111 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         anexoFull.getAnexo().setRegistroDetalle(registroSalida.getRegistroDetalle());
       }
     }
-    
 
 
-
+    /**
+     * Método que crea/actualiza un anexo en función de lo que recibe en anexoFull
+     * @param anexoFull
+     * @param custody
+     * @param custodyParameters
+     * @param custodyID
+     * @param registro
+     * @param isNou
+     * @throws Exception
+     * @throws I18NException
+     */
     protected void updateCustodyInfoOfAnexo(AnexoFull anexoFull, IDocumentCustodyPlugin custody,
         final String custodyParameters, final String custodyID, 
         IRegistro registro, boolean isNou) throws Exception, I18NException {
       
       // Validador: Sempre amb algun arxiu
-      if (isNou) {
+        int modoFirma = anexoFull.getAnexo().getModoFirma();
+        if (isNou) { //Creación
         if (anexoFull.getDocumentoCustody() == null && anexoFull.getSignatureCustody() == null) {
           //"No ha definit cap fitxer en aquest annex"
           throw new I18NException("anexo.error.sinfichero");
         }
-      } else {
-        
+            if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED && anexoFull.getSignatureCustody() == null) {
+                throw new I18NException("anexo.error.sinfichero");
+            }
+            if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED && (anexoFull.getDocumentoCustody() == null || anexoFull.getSignatureCustody() == null)) {
+                throw new I18NException("anexo.error.faltadocumento");
+            }
+        } else {//Actualización
+            //Controlamos que el anexo no quede sin archivo, hay que controlar con modofirma
         int total = 0;
-        
-        if (custody.getDocumentInfoOnly(custodyID) == null) {
-          // Afegim un
-          if (anexoFull.getDocumentoCustody() != null) {
-            total += 1;
+            //Si no tenia documento, pero ahora envian uno nuevo, sumamos 1
+            if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) {
+                if (custody.getDocumentInfoOnly(custodyID) == null) {
+                    // Afegim un
+                    if (anexoFull.getDocumentoCustody() != null) {
+                        total += 1;
+                    }
+                } else { // ya tenia, sumamos 1
+                    total += 1;
+                }
+                log.info("TOTAL " + total);
+                if (total <= 0) {
+                    //La combinació elegida deixa aquest annex sense cap fitxer
+                    throw new I18NException("anexo.error.quedarsesinfichero");
+                }
+            }
+            if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED) {
+                //Si no tenia firma, pero envian 1 nueva, sumamos 1
+                if (custody.getSignatureInfoOnly(custodyID) == null) {
+                    // Afegim un
+                    if (anexoFull.getSignatureCustody() != null) {
+                        total += 1;
+                    }
+                } else { // si ya tenia, sumamos 1
+                    total += 1;
+                }
+                log.info("TOTAL " + total);
+             /* if (total <= 0) {
+                  //La combinació elegida deixa aquest annex sense cap fitxer
+                  throw new I18NException("anexo.error.quedarsesinfichero");
+              }*/
+                //PARCHE API ANTIGUA
+                if (custody.getDocumentInfoOnly(custodyID) == null) {
+                    // Afegim un
+                    if (anexoFull.getDocumentoCustody() != null) {
+                        total += 1;
+                    }
+                } else { // ya tenia, sumamos 1
+                    total += 1;
+                }
+                log.info("TOTAL " + total);
+                if (total <= 0) {
+                    //La combinació elegida deixa aquest annex sense cap fitxer
+                    throw new I18NException("anexo.error.quedarsesinfichero");
+                }
+            }
+            if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
+                if (custody.getDocumentInfoOnly(custodyID) == null) {
+                    // Afegim un
+                    if (anexoFull.getDocumentoCustody() != null) {
+                        total += 1;
+                    }
+                } else { // ya tenia, sumamos 1
+                    total += 1;
+                }
+
+                //Si no tenia firma, pero envian 1 nueva, sumamos 1
+                if (custody.getSignatureInfoOnly(custodyID) == null) {
+                    // Afegim un
+                    if (anexoFull.getSignatureCustody() != null) {
+                        total += 1;
+                    }
+                } else { // si ya tenia, sumamos 1
+                    total += 1;
+                }
+                log.info("TOTAL " + total);
+                if (total <= 1) {
+                    //La combinació elegida deixa aquest annex sense cap fitxer
+                    throw new I18NException("anexo.error.faltadocumento");
+                }
           }
-        } else {
-          total += 1;
-          if (anexoFull.isDocumentoFileDelete()) {
-            total -=1;
-          }
-        }
-        
-        
-        if (custody.getSignatureInfoOnly(custodyID) == null) {
-          // Afegim un
-          if (anexoFull.getSignatureCustody() != null) {
-            total += 1;
-          }
-        } else {
-          total += 1;
-          if (anexoFull.isSignatureFileDelete()) {
-            total -=1;
-          }
-        }
-        
-        if (total <= 0) {
-          //La combinació elegida deixa aquest annex sense cap fitxer
-          throw new I18NException("anexo.error.quedarsesinfichero");
-        }
-        
-        
-        
+
       }
       
 
@@ -429,73 +534,44 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
       boolean updateDate = false;
       
       String mimeFinal = null;
+        //Actualización o creación de los documentos de los anexos en función del modo de firma
+        //Si el anexo es nuevo o el modo de firma es detached, el comportamiento es el mismo
+        if (isNou || modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
 
-      DocumentCustody doc = null;
-      if (anexoFull.isDocumentoFileDelete()) {
-        custody.deleteDocument(custodyID);
-        updateDate = true;
-      } else {
+            //Guardamos el documentCustody
+            DocumentCustody doc = guardarDocumentCustody(anexoFull.getDocumentoCustody(), custody, custodyID, custodyParameters, anexo, updateDate, mimeFinal);
+            //Guardamos la signatureCustody
+            guardarSignatureCustody(anexoFull.getSignatureCustody(), doc, custody, custodyID, custodyParameters, anexo, updateDate, mimeFinal);
 
-        doc = anexoFull.getDocumentoCustody();
+        } else { //es modificación Tratamos todos los modos firma como corresponda
+            if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) {
 
-        if (doc != null && doc.getData() != null) {
+                //Guardamos el documentCustody
+                guardarDocumentCustody(anexoFull.getDocumentoCustody(), custody, custodyID, custodyParameters, anexo, updateDate, mimeFinal);
 
-
-          if(doc.getMime() == null) {
-            doc.setMime("application/octet-stream");
-          }
-          mimeFinal = doc.getMime(); 
-
-          doc.setName(checkFileName(doc.getName() , "file.bin"));
-
-          anexo.setFechaCaptura(new Date());
-            anexo.setHash(obtenerHash(doc.getData()));
-
-          custody.saveDocument(custodyID, custodyParameters, doc);
-          
-          updateDate = true;
-        }
-      }
-
-      if (anexoFull.isSignatureFileDelete()) {
-        custody.deleteSignature(custodyID);
-        updateDate = true;
-      } else {
-        SignatureCustody signature = anexoFull.getSignatureCustody();
-        if (signature != null && signature.getData() != null) {
-          
-          String signType = (doc == null) ? SignatureCustody.OTHER_SIGNATURE_WITH_ATTACHED_DOCUMENT : SignatureCustody.OTHER_SIGNATURE_WITH_DETACHED_DOCUMENT;
-
-          signature.setName(checkFileName(signature.getName(), "signature.bin"));
-
-          final String mime = signature.getMime();
-          if (mime == null) {
-            signature.setMime("application/octet-stream");
-          } else {
-            
-            if ("application/pdf".equals(mime)) {
-              signType = SignatureCustody.PADES_SIGNATURE;              
-            } else if ("application/xml".equals(mime) || 
-                "text/xml".equals(mime)) {
-              signType = SignatureCustody.XADES_SIGNATURE;              
+                //Borrar lo que haya en signature custody
+                custody.deleteSignature(custodyID);
+                updateDate = true;
             }
-          }
-          
-          mimeFinal = signature.getMime(); // Sobreescriu Mime de doc 
-          
-          signature.setSignatureType(signType);
-          // TODO Fallarà en update
-          signature.setAttachedDocument(doc == null? true : false);
-          
-          custody.saveSignature(custodyID, custodyParameters, signature);
-          
-          updateDate = true;
+            if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED) {
+                //obtenemos el document custody para crear bien el documento
+                DocumentCustody doc = anexoFull.getDocumentoCustody();
+                if (doc == null) {//CASO API NUEVA
+                    //Guardamos la signatureCustody. Los documentos con firma attached se guardan en SignatureCustody.
+                    guardarSignatureCustody(anexoFull.getSignatureCustody(), doc, custody, custodyID, custodyParameters, anexo, updateDate, mimeFinal);
+
+                    //Borramos el documentcustody que habia por si venimos de otro modo de firma
+                    custody.deleteDocument(custodyID);
+                    updateDate = true;
+                } else { //PARCHE PARA API ANTIGUA
+                    log.info("PARCHE DC " + anexoFull.getDocumentoCustody());
+                    guardarDocumentCustody(anexoFull.getDocumentoCustody(), custody, custodyID, custodyParameters, anexo, updateDate, mimeFinal);
+                    updateDate = true;
+                }
+            }
+            //el caso de modoFirma detached es igual que si fuese nuevo.
         }
-          //calculamos el hash de signature, ya que si doc es null, es porque el modo de firma es attached.
-          if (doc == null) {
-              anexo.setHash(obtenerHash(signature.getData()));
-          }
-      }
+
 
 
         // Actualitzar Metadades
@@ -577,6 +653,107 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
       }
 
       custody.updateMetadata(custodyID, metadades.toArray(new Metadata[metadades.size()]));
+
+    }
+
+
+    /**
+     * Método que guarda el DocumentCustody de un anexo en custodia.
+     *
+     * @param dc                DocumentCustody que nos pasan
+     * @param custody           custodia donde guardarlo
+     * @param custodyID         identificador de custodia
+     * @param custodyParameters parametros de custodia
+     * @param anexo             anexo a actualizar
+     * @param updateDate
+     * @param mimeFinal
+     * @return
+     * @throws Exception
+     */
+    public DocumentCustody guardarDocumentCustody(DocumentCustody dc, IDocumentCustodyPlugin custody, String custodyID, final String custodyParameters, Anexo anexo, boolean updateDate, String mimeFinal) throws Exception {
+        DocumentCustody doc = null;
+
+        doc = dc;
+        if (doc != null && doc.getData() != null) {// si nos envian documento
+
+            //Borramos el anterior (pruebas marilen, quitado checkbox de esborrar)
+            custody.deleteDocument(custodyID);
+            updateDate = true;
+
+            //Asignamos los datos nuevos recibidos
+            if (doc.getMime() == null) {
+                doc.setMime("application/octet-stream");
+            }
+            mimeFinal = doc.getMime();
+
+            doc.setName(checkFileName(doc.getName(), "file.bin"));
+
+            anexo.setFechaCaptura(new Date());
+            anexo.setHash(obtenerHash(doc.getData()));
+
+            //guardamos documento en custodia
+            custody.saveDocument(custodyID, custodyParameters, doc);
+
+            updateDate = true;
+        }
+        return doc;
+    }
+
+    /**
+     * Método que guarda la SignatureCustody de un anexo en custodia
+     *
+     * @param sc                SignatureCustody que nos pasan
+     * @param doc               DocumentCustody relacionado con la SignatureCustody
+     * @param custody           custodia donde guardarlo
+     * @param custodyID         identificador de custodia
+     * @param custodyParameters parametros de custodia
+     * @param anexo             anexo a actualizar
+     * @param updateDate
+     * @param mimeFinal
+     * @return
+     * @throws Exception
+     */
+    public SignatureCustody guardarSignatureCustody(SignatureCustody sc, DocumentCustody doc, IDocumentCustodyPlugin custody, String custodyID, final String custodyParameters, Anexo anexo, boolean updateDate, String mimeFinal) throws Exception {
+        //Obtenemos la firma que nos envian
+        SignatureCustody signature = sc;
+        if (signature != null && signature.getData() != null) {//Si nos envian firma
+
+            //Borramos la anterior (pruebas marilen, quitado checkbox de esborrar)
+            custody.deleteSignature(custodyID);
+            updateDate = true;
+
+            //Preparamos todos los datos para guardar la firma en custodia.
+            String signType = (doc == null) ? SignatureCustody.OTHER_SIGNATURE_WITH_ATTACHED_DOCUMENT : SignatureCustody.OTHER_SIGNATURE_WITH_DETACHED_DOCUMENT;
+
+            signature.setName(checkFileName(signature.getName(), "signature.bin"));
+
+            final String mime = signature.getMime();
+            if (mime == null) {
+                signature.setMime("application/octet-stream");
+            } else {
+
+                if ("application/pdf".equals(mime)) {
+                    signType = SignatureCustody.PADES_SIGNATURE;
+                } else if ("application/xml".equals(mime) ||
+                        "text/xml".equals(mime)) {
+                    signType = SignatureCustody.XADES_SIGNATURE;
+                }
+            }
+
+            mimeFinal = signature.getMime(); // Sobreescriu Mime de doc
+
+            signature.setSignatureType(signType);
+            // TODO Fallarà en update
+            signature.setAttachedDocument(doc == null ? true : false);
+
+            if (doc == null) {
+                anexo.setHash(obtenerHash(signature.getData()));
+            }
+            custody.saveSignature(custodyID, custodyParameters, signature);
+
+            updateDate = true;
+        }
+        return sc;
 
     }
 

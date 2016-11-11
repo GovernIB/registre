@@ -60,7 +60,7 @@ public class AnexoConverter extends CommonConverter {
            //anexoWs.setFirmaAnexada(null);
             //anexoWs.setTamanoFirmaAnexada(null);
            //anexoWs.setTipoMIMEFirmaAnexada(null);
-           throw new Exception("Si la validessa del Document es  còpia = 01"
+           throw new Exception("Si la validesa del Document és  còpia = 01"
                    + " no s'admet firma");
         }
 

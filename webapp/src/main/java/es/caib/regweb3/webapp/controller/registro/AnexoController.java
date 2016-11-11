@@ -9,7 +9,6 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.AnexoWebValidator;
-
 import org.apache.axis.utils.StringUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -36,7 +35,6 @@ import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -417,9 +415,17 @@ public class AnexoController extends BaseController {
 
           return  getRedirectURL2(request, tipoRegistro, registroID);
       }
-      
 
-    
+
+    /**
+     * Método que prepara el DocumentCustody y el Signature Custody de un anexo teniendo en cuenta si ha sido escaneado o
+     * si los han introducido via web.
+     *
+     * @param request
+     * @param anexoForm
+     * @throws Exception
+     * @throws I18NException
+     */
     protected void manageDocumentCustodySignatureCustody( 
         HttpServletRequest request,  AnexoForm anexoForm) throws Exception, I18NException {
       
@@ -434,7 +440,7 @@ public class AnexoController extends BaseController {
 
       ScanWebConfigRegWeb config = scanWebModuleEjb.getScanWebConfig(request, scanWebID);
 
-      
+        //Tratamiento de los documentos obtenidos del scanner
       if (config != null &&  config.getScannedFiles().size() != 0) {
         
         if (config.getScannedFiles().size() != 1) {
@@ -522,15 +528,33 @@ public class AnexoController extends BaseController {
 
         anexoForm.setMetadatas(sd.getMetadatas());
 
-      } else {
+      } else { // tratamiento de los documentos obtenidos via web.
 
         // Formulari Fitxer de Sistema
         int modoFirma= anexoForm.getAnexo().getModoFirma();
-        // TODO 1 Fer switch del valor modoFirma
-        // TODO 2 Comprovar que els fitxers enviat s'ajusten al modoFirma
-        
+
+          // Comprobamos en función del modo de firma que los documentos vengan bien
         dc = getDocumentCustody(anexoForm);
         sc = getSignatureCustody(anexoForm, dc, modoFirma);
+          if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA && dc == null) {
+              throw new I18NException("anexo.error.sinfichero");
+          }
+          if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED && sc == null) {
+              if (dc == null) { //Controlamos que no sea api antigua
+                  throw new I18NException("anexo.error.sinfichero");
+              }
+
+          }
+          if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED && (dc == null || sc == null)) {
+              throw new I18NException("anexo.error.faltadocumento");
+          }
+
+
+          log.info(" XYZ DOCUMENTFILE " + dc);
+          log.info(" XYZ SIGNATUREFILE " + sc);
+          log.info(" XYZ modoFirma " + modoFirma);
+
+
         
       }
       
@@ -538,7 +562,8 @@ public class AnexoController extends BaseController {
         // tancam tant si hem emprat com si no SCAN
         scanWebModuleEjb.closeScanWebProcess(request, scanWebID);
       }
-      
+
+        //Asignamos los valores de documentCustody y SignatureCustody en función de lo obtenido anteriormente.
       anexoForm.setDocumentoCustody(dc);
       anexoForm.setSignatureCustody(sc);
 
@@ -590,7 +615,15 @@ public class AnexoController extends BaseController {
     }
 
 
-
+    /**
+     * Método que obtiene el signature custody del anexoForm.
+     * Devuelve el actual o el indicado en el formulario del anexo con los valores de custodia ajustados
+     * @param anexoForm
+     * @param dc
+     * @param modoFirma
+     * @return
+     * @throws Exception
+     */
     protected SignatureCustody getSignatureCustody(AnexoForm anexoForm, DocumentCustody dc,
         int modoFirma) throws Exception {
       if (log.isDebugEnabled()) {
@@ -599,18 +632,21 @@ public class AnexoController extends BaseController {
         log.debug(" anexoForm.getFirmaFile().isEmpty() = " + anexoForm.getFirmaFile().isEmpty());
         log.debug(" anexoForm.isFirmaFileDelete() = " + anexoForm.isSignatureFileDelete());
       }
-      SignatureCustody sc = null;
-      if (anexoForm.getFirmaFile().isEmpty()) {
+        //Cargamos el signature custody con el actual
+        SignatureCustody sc = anexoForm.getSignatureCustody();
+        // SignatureCustody sc = null;
+      /*if (anexoForm.getFirmaFile().isEmpty()) {
         
-        if (modoFirma ==  RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED
-          || modoFirma ==  RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
-          String msg = "L'usuari ens indica que hi ha una firma hi no ve (modoFirma = " + modoFirma + ")";
+        if (*//*modoFirma ==  RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED ||*//*
+            modoFirma ==  RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
+        //  String msg = "L'usuari ens indica que hi ha una firma i no ve (modoFirma = " + modoFirma + ")";
+          String msg = "Falta el document de firma";
           log.error(msg, new Exception());
           throw new Exception(msg);
         }
         
-      } else {
-        
+      } else {*/
+        if (!anexoForm.getFirmaFile().isEmpty()) {
         if (modoFirma !=  RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED
             && modoFirma !=  RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
             String msg = "L'usuari ens indica que NO hi ha una firma pero n'envia una"
@@ -618,16 +654,16 @@ public class AnexoController extends BaseController {
             log.error(msg, new Exception());
             throw new Exception(msg);
         }
-        
-        
+
+            //Cogemos el archivo que nos han indicado en el campo firma del formulario
         CommonsMultipartFile multipart = anexoForm.getFirmaFile();
         sc = new SignatureCustody();
         
         sc.setData(multipart.getBytes());
         sc.setMime(multipart.getContentType());
         sc.setName(multipart.getOriginalFilename());
-        
-        
+
+            // Ajustamos los valores de custodia con los que se guardará el signaturecustody.
         if (modoFirma ==  RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED) {
           // Document amb firma adjunta
           sc.setAttachedDocument(null);
@@ -651,7 +687,12 @@ public class AnexoController extends BaseController {
     }
 
 
-
+    /**
+     * Método que obtiene el documentCustody del anexo.
+     * Devuelve el actual o el indicado en el campo del formulario del anexo.
+     * @param anexoForm
+     * @return
+     */
     protected DocumentCustody getDocumentCustody(AnexoForm anexoForm) {
       if (log.isDebugEnabled()) {
         log.debug("  ------------------------------");
@@ -660,7 +701,10 @@ public class AnexoController extends BaseController {
         log.debug(" anexoForm.getDocumentoFile().isEmpty() = " + anexoForm.getDocumentoFile().isEmpty());
         log.debug(" anexoForm.isDocumentoFileDelete() = " + anexoForm.isDocumentoFileDelete());
       }
-      DocumentCustody dc = null;
+
+
+        DocumentCustody dc = anexoForm.getDocumentoCustody();
+        //DocumentCustody dc = null;
       if (!anexoForm.getDocumentoFile().isEmpty()) {
         dc = new DocumentCustody();
         CommonsMultipartFile multipart = anexoForm.getDocumentoFile();
@@ -692,7 +736,7 @@ public class AnexoController extends BaseController {
     public void  firma(@PathVariable("anexoId") Long anexoId, HttpServletRequest request, 
         HttpServletResponse response)  throws Exception, I18NException {
          AnexoFull anexo = anexoEjb.getAnexoFull(anexoId);
-        //Parche para la api de custodia antigua que se guardan los documentos firmados en DocumentCustody.
+        //Parche para la api de custodia antigua que se guardan los documentos firmados (modofirma == 1 Attached) en DocumentCustody.
         if (anexo.getSignatureCustody() == null) {//Api antigua, hay que descargar el document custody
             fullDownload(anexo.getAnexo().getCustodiaID(), anexo.getDocumentoCustody().getName(),
                     anexo.getDocumentoCustody().getMime(), false, response);

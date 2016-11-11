@@ -269,7 +269,7 @@ public class Anexo implements Serializable {
         this.validacionOCSPCertificado = validacionOCSPCertificado;
     }
 
-    @Column(name = "HASH", nullable = false)
+    @Column(name = "HASH")
     public byte[] getHash() {
         return hash;
     }

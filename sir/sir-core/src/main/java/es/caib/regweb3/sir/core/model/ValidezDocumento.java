@@ -46,7 +46,7 @@ public enum ValidezDocumento {
         ValidezDocumento validezDocumento = getValidezDocumento(value);
 
         if (validezDocumento != null) {
-            validezDocumento.getValue();
+            return validezDocumento.getValue();
 
         }
 
