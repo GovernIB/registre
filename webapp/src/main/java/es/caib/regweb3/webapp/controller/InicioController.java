@@ -1,6 +1,9 @@
 package es.caib.regweb3.webapp.controller;
 
-import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.Descarga;
+import es.caib.regweb3.model.Libro;
+import es.caib.regweb3.model.Oficina;
+import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.utils.RegistroBasico;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
@@ -50,6 +53,9 @@ public class InicioController extends BaseController{
     @EJB(mappedName = "regweb3/OficioRemisionEntradaUtilsEJB/local")
     public OficioRemisionEntradaUtilsLocal oficioRemisionEntradaUtilsEjb;
 
+    @EJB(mappedName = "regweb3/OficioRemisionSalidaUtilsEJB/local")
+    public OficioRemisionSalidaUtilsLocal oficioRemisionSalidaUtilsEjb;
+
 
     @RequestMapping(value = "/inici")
     public ModelAndView principal(HttpServletRequest request, Model model) throws Exception{
@@ -57,15 +63,14 @@ public class InicioController extends BaseController{
         ModelAndView mav = new ModelAndView("inicio");
         Oficina oficinaActiva = getOficinaActiva(request);
 
-
         // Solo obtenemos los datos para el dashboard si el Usuario es Operador
         if(isOperador(request) && oficinaActiva != null){
 
             LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
             List<Libro> librosAdministrados = getLibrosAdministrados(request);
-            // Obtenemos los Libros donde el Usuario puede Registrar de la Oficina Activa
             List<Libro> librosRegistroEntrada = getLibrosRegistroEntrada(request);
+            List<Libro> librosRegistroSalida = getLibrosRegistroSalida(request);
 
             /*Registros Pendientes de Visar y con Reserva de Numero*/
             if(librosAdministrados!= null && librosAdministrados.size() > 0){
@@ -82,17 +87,17 @@ public class InicioController extends BaseController{
             // Comprueba si hay libros de Registro
             if(librosRegistroEntrada.size() > 0) {
 
-                // Obtenemos los Organismos Internos que tienen Registros pendientes de tramitar por medio de un Oficio de Revisión,
-                mav.addObject("organismosOficioRemisionInterna", oficioRemisionEntradaUtilsEjb.organismosPendientesRemisionInterna(oficinaActiva.getId(), librosRegistroEntrada, getOrganismosOficioRemision(request, organismosOficinaActiva)));
+                // Obtenemos los Organismos que tienen Registros pendientes de tramitar por medio de un Oficio de Revisión
+                mav.addObject("organismosOficioRemisionEntrada", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemision(oficinaActiva.getId(), librosRegistroEntrada,getOrganismosOficioRemision(request, organismosOficinaActiva)));
 
-                // Obtenemos los Organismos Externos que tienen Registros pendientes de tramitar por medio de un Oficio de Revisión,
-                mav.addObject("organismosOficioRemisionExterna", oficioRemisionEntradaUtilsEjb.organismosPendientesRemisionExterna(oficinaActiva.getId(), librosRegistroEntrada));
+                // Obtenemos los Oficios pendientes de Llegada
+                mav.addObject("oficiosPendientesLlegada", oficioRemisionEjb.oficiosPendientesLlegada(organismosOficinaActiva, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
+            }
 
+            if(librosRegistroSalida.size() > 0) {
 
-                /* OFICIOS PENDIENTES DE LLEGADA */
-                List<OficioRemision> oficiosPendientesLlegada = oficioRemisionEjb.oficiosPendientesLlegada(organismosOficinaActiva, RegwebConstantes.REGISTROS_PANTALLA_INICIO);
-
-                mav.addObject("oficiosPendientesLlegada", oficiosPendientesLlegada);
+                // Obtenemos los Organismos que tienen Registros de salida pendientes de tramitar por medio de un Oficio de Revisión,
+                mav.addObject("organismosOficioRemisionSalida", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemision(oficinaActiva.getId(), librosRegistroSalida, getOrganismosOficioRemision(request, organismosOficinaActiva)));
             }
 
             /* ASIENTOS REGISTRALES SIR PENDIENTES DE PROCESAR */

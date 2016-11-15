@@ -116,6 +116,17 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
     }
 
     @Override
+    public Trazabilidad getByOficioRegistroSalida(Long idOficioRemision, Long idRegistroSalida) throws Exception{
+        Query q = em.createQuery("Select trazabilidad from Trazabilidad as trazabilidad " +
+                "where trazabilidad.oficioRemision.id = :idOficioRemision and trazabilidad.registroSalida.id = :idRegistroSalida");
+
+        q.setParameter("idOficioRemision",idOficioRemision);
+        q.setParameter("idRegistroSalida",idRegistroSalida);
+
+        return (Trazabilidad) q.getSingleResult();
+    }
+
+    @Override
     public Integer eliminarByEntidad(Long idEntidad) throws Exception{
 
         List<?> trazabilidades =  em.createQuery("Select id from Trazabilidad where oficioRemision.usuarioResponsable.entidad.id=:idEntidad").setParameter("idEntidad",idEntidad).getResultList();

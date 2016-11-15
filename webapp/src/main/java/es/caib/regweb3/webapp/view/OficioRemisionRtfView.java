@@ -3,6 +3,8 @@ package es.caib.regweb3.webapp.view;
 import es.caib.regweb3.model.ModeloOficioRemision;
 import es.caib.regweb3.model.OficioRemision;
 import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.RegistroSalida;
+import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.CombineStream;
 import es.caib.regweb3.webapp.utils.ConvertirTexto;
 import org.apache.commons.io.FileUtils;
@@ -45,10 +47,7 @@ public class OficioRemisionRtfView extends AbstractView {
 
 
         OficioRemision oficioRemision = (OficioRemision) model.get("oficioRemision");
-        List<RegistroEntrada> registrosEntrada = (List<RegistroEntrada>) model.get("registrosEntrada");
         ModeloOficioRemision modeloOficioRemision = (ModeloOficioRemision) model.get("modeloOficioRemision");
-
-        //String idiomaActual = request.getLocale().getLanguage();
 
         File archivo = es.caib.regweb3.persistence.utils.FileSystemManager.getArchivo(modeloOficioRemision.getModelo().getId());
 
@@ -60,8 +59,6 @@ public class OficioRemisionRtfView extends AbstractView {
         // Extraemos año de la fecha del registro
         SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
         String anoOficio = formatYear.format(oficioRemision.getFecha());
-        //SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy");
-        //String fechaOficio = formatDate.format(oficioRemision.getFecha());
 
 
         // Fecha según el idioma y mes
@@ -89,14 +86,22 @@ public class OficioRemisionRtfView extends AbstractView {
         }
         fechaActualCa = diaRecibo + mesRecibo + " de " + anoRecibo;
 
-
-        // Registros Entrada
+        // Registros
         String registros = "";
 
-        for (RegistroEntrada registroEntrada : registrosEntrada) {
+        if(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA.equals(oficioRemision.getTipoOficioRemision())){
 
-            registros = registros.concat("- " + registroEntrada.getNumeroRegistroFormateado() + "\\\r\n");
+            List<RegistroEntrada> registrosEntrada = (List<RegistroEntrada>) model.get("registrosEntrada");
+            for (RegistroEntrada registroEntrada : registrosEntrada) {
+                registros = registros.concat("- " + registroEntrada.getNumeroRegistroFormateado() + "\\\r\n");
+            }
 
+        }else if(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA.equals(oficioRemision.getTipoOficioRemision())){
+
+            List<RegistroSalida> registrosSalida = (List<RegistroSalida>) model.get("registrosSalida");
+            for (RegistroSalida registroSalida : registrosSalida) {
+                registros = registros.concat("- " + registroSalida.getNumeroRegistroFormateado() + "\\\r\n");
+            }
         }
 
 

@@ -221,9 +221,9 @@
                 </c:import>
             </c:if>
 
-            <%--Trazabilidad--%>
+            <%--TRAZABILIDAD--%>
             <c:if test="${not empty trazabilidades}">
-                <c:import url="../registro/trazabilidadEntrada.jsp"/>
+                <c:import url="../trazabilidad/trazabilidadEntrada.jsp"/>
             </c:if>
 
         </div>

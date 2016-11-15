@@ -44,21 +44,28 @@
                     <div class="panel-body">
 
                         <dl class="detalle_registro">
-                            <dt><i class="fa fa-globe"></i> <spring:message code="entidad.entidad"/>: </dt> <dd> ${oficioRemision.oficina.organismoResponsable.entidad.nombre}</dd>
                             <dt><i class="fa fa-briefcase"></i> <spring:message code="registroEntrada.oficina"/>: </dt> <dd> ${oficioRemision.oficina.denominacion}</dd>
                             <dt><i class="fa fa-clock-o"></i> <spring:message code="registroEntrada.fecha"/>: </dt> <dd> <fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></dd>
                             <dt><i class="fa fa-book"></i> <spring:message code="registroEntrada.libro.corto"/>: </dt> <dd> ${oficioRemision.libro.nombre}</dd>
                             <dt><i class="fa fa-user"></i> <spring:message code="usuario.usuario"/>: </dt> <dd> ${oficioRemision.usuarioResponsable.usuario.nombreCompleto}</dd>
                             <dt><i class="fa fa-exchange"></i> <spring:message code="oficioRemision.organismoDestino"/>: </dt> 
                             <dd> ${(empty oficioRemision.organismoDestinatario)? oficioRemision.destinoExternoDenominacion : oficioRemision.organismoDestinatario.denominacion}</dd>
-                            <dt><i class="fa fa-exchange"></i> <spring:message code="oficioRemision.tipo"/>:</dt>
+                            <dt><i class="fa fa-exchange"></i> <spring:message code="oficioRemision.destino"/>:</dt>
                             <dd>
                                 <span class="label label-default">
-                                    <c:if test="${not empty oficioRemision.organismoDestinatario}"> <spring:message
-                                            code="oficioRemision.interno"/> </c:if>
-                                    <c:if test="${empty oficioRemision.organismoDestinatario}"> <spring:message
-                                            code="oficioRemision.externo"/> </c:if>
+                                    <c:if test="${not empty oficioRemision.organismoDestinatario}"> <spring:message code="oficioRemision.interno"/> </c:if>
+                                    <c:if test="${empty oficioRemision.organismoDestinatario}"> <spring:message code="oficioRemision.externo"/> </c:if>
                                 </span>
+                            </dd>
+                            <dt><i class="fa fa-file-text-o"></i> <spring:message code="oficioRemision.tipo"/>:</dt>
+                            <dd>
+                                <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA}">
+                                    <span class="label label-success"><spring:message code="oficioRemision.tipo.1"/></span>
+                                </c:if>
+
+                                <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA}">
+                                    <span class="label label-danger"><spring:message code="oficioRemision.tipo.2"/></span>
+                                </c:if>
                             </dd>
                             <dt><i class="fa fa-bookmark"></i> <spring:message code="oficioRemision.estado"/>: </dt>
                             <dd>
@@ -121,60 +128,107 @@
 
                         <div class="panel-heading">
 
-                            <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong><spring:message
-                                    code="oficioRemision.registrosEntrada"/>: </strong>${fn:length(trazabilidades)}</h3>
+                            <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i>
+                                <strong>
+                                    <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA}">
+                                        <spring:message code="oficioRemision.registrosEntrada"/>:
+                                    </c:if>
+                                    <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA}">
+                                        <spring:message code="oficioRemision.registrosSalida"/>:
+                                    </c:if>
+
+                                </strong>
+                                ${fn:length(trazabilidades)}
+                            </h3>
                         </div>
 
                         <div class="panel-body">
                             <div class="table-responsive">
 
-                                <table class="table table-bordered table-hover table-striped tablesorter">
-                                    <colgroup>
-                                        <col width="80">
-                                        <col>
-                                        <col>
-                                        <col>
-                                        <col>
-                                        <col width="100">
-                                    </colgroup>
-                                    <thead>
-                                    <tr>
-                                        <th><spring:message code="registroEntrada.numeroRegistro"/></th>
-                                        <th><spring:message code="registroEntrada.fecha"/></th>
-                                        <th><spring:message code="registroEntrada.oficina"/></th>
-                                        <th><spring:message code="registroEntrada.extracto"/></th>
-                                        <th><spring:message code="registroSalida.numero"/></th>
-                                        <th class="center"><spring:message code="regweb.acciones"/></th>
-                                    </tr>
-                                    </thead>
-
-                                    <tbody>
-                                    <c:forEach var="trazabilidad" items="${trazabilidades}" varStatus="status">
+                                <%--OFICIO DE REMISION ENTRADA--%>
+                                <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA}">
+                                    <table class="table table-bordered table-hover table-striped tablesorter">
+                                        <colgroup>
+                                            <col width="80">
+                                            <col>
+                                            <col>
+                                            <col>
+                                            <col>
+                                            <col width="100">
+                                        </colgroup>
+                                        <thead>
                                         <tr>
-                                            <td><fmt:formatDate value="${trazabilidad.registroEntradaOrigen.fecha}"
-                                                                pattern="yyyy"/>
-                                                / ${trazabilidad.registroEntradaOrigen.numeroRegistro}</td>
-                                            <td><fmt:formatDate value="${trazabilidad.registroEntradaOrigen.fecha}"
-                                                                pattern="dd/MM/yyyy"/></td>
-                                            <td>${trazabilidad.registroEntradaOrigen.oficina.denominacion}</td>
-                                            <td>${trazabilidad.registroEntradaOrigen.registroDetalle.extracto}</td>
-                                            <td><fmt:formatDate value="${trazabilidad.registroSalida.fecha}"
-                                                                pattern="yyyy"/>
-                                                / ${trazabilidad.registroSalida.numeroRegistro}</td>
-                                            <td class="center">
-                                                <a class="btn btn-info btn-sm"
-                                                   href="<c:url value="/registroEntrada/${trazabilidad.registroEntradaOrigen.id}/detalle"/>"
-                                                   title="<spring:message code="registroEntrada.detalle"/>"><span
-                                                        class="fa fa-eye"></span></a>
-                                                <a class="btn btn-danger btn-sm"
-                                                   href="<c:url value="/registroSalida/${trazabilidad.registroSalida.id}/detalle"/>"
-                                                   title="<spring:message code="registroSalida.detalle"/>"><span
-                                                        class="fa fa-eye"></span></a>
-                                            </td>
+                                            <th><spring:message code="registroEntrada.numeroRegistro"/></th>
+                                            <th><spring:message code="registroEntrada.fecha"/></th>
+                                            <th><spring:message code="registroEntrada.oficina"/></th>
+                                            <th><spring:message code="registroEntrada.extracto"/></th>
+                                            <th><spring:message code="registroSalida.numero"/></th>
+                                            <th class="center"><spring:message code="regweb.acciones"/></th>
                                         </tr>
-                                    </c:forEach>
-                                    </tbody>
-                                </table>
+                                        </thead>
+
+                                        <tbody>
+                                        <c:forEach var="trazabilidad" items="${trazabilidades}" varStatus="status">
+                                            <tr>
+                                                <td><fmt:formatDate value="${trazabilidad.registroEntradaOrigen.fecha}" pattern="yyyy"/>/ ${trazabilidad.registroEntradaOrigen.numeroRegistro}</td>
+                                                <td><fmt:formatDate value="${trazabilidad.registroEntradaOrigen.fecha}" pattern="dd/MM/yyyy"/></td>
+                                                <td>${trazabilidad.registroEntradaOrigen.oficina.denominacion}</td>
+                                                <td>${trazabilidad.registroEntradaOrigen.registroDetalle.extracto}</td>
+                                                <td><fmt:formatDate value="${trazabilidad.registroSalida.fecha}" pattern="yyyy"/>/ ${trazabilidad.registroSalida.numeroRegistro}</td>
+                                                <td class="center">
+                                                    <a class="btn btn-info btn-sm"
+                                                       href="<c:url value="/registroEntrada/${trazabilidad.registroEntradaOrigen.id}/detalle"/>"
+                                                       title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
+                                                    <a class="btn btn-danger btn-sm"
+                                                       href="<c:url value="/registroSalida/${trazabilidad.registroSalida.id}/detalle"/>"
+                                                       title="<spring:message code="registroSalida.detalle"/>"><span class="fa fa-eye"></span></a>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                        </tbody>
+                                    </table>
+                                </c:if>
+
+                                <%--OFICIO DE REMISION SALIDA--%>
+                                <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA}">
+                                    <table class="table table-bordered table-hover table-striped tablesorter">
+                                        <colgroup>
+                                            <col width="80">
+                                            <col>
+                                            <col>
+                                            <col>
+                                            <%--<col>--%>
+                                            <col width="50">
+                                        </colgroup>
+                                        <thead>
+                                        <tr>
+                                            <th><spring:message code="registroSalida.numeroRegistro"/></th>
+                                            <th><spring:message code="registroSalida.fecha"/></th>
+                                            <th><spring:message code="registroSalida.oficina"/></th>
+                                            <th><spring:message code="registroSalida.extracto"/></th>
+                                            <%--<th><spring:message code="registroEntrada.numero"/></th>--%>
+                                            <th class="center"><spring:message code="regweb.acciones"/></th>
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+                                        <c:forEach var="registroSalida" items="${oficioRemision.registrosSalida}" varStatus="status">
+                                            <tr>
+                                                <td><fmt:formatDate value="${registroSalida.fecha}" pattern="yyyy"/>/ ${registroSalida.numeroRegistro}</td>
+                                                <td><fmt:formatDate value="${registroSalida.fecha}" pattern="dd/MM/yyyy"/></td>
+                                                <td>${registroSalida.oficina.denominacion}</td>
+                                                <td>${registroSalida.registroDetalle.extracto}</td>
+                                                <%--<td><fmt:formatDate value="${trazabilidad.registroSalida.fecha}" pattern="yyyy"/>/ ${trazabilidad.registroSalida.numeroRegistro}</td>--%>
+                                                <td class="center">
+                                                    <a class="btn btn-danger btn-sm"
+                                                       href="<c:url value="/registroSalida/${registroSalida.id}/detalle"/>"
+                                                       title="<spring:message code="registroSalida.detalle"/>"><span class="fa fa-eye"></span></a>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                        </tbody>
+                                    </table>
+                                </c:if>
 
                             </div>
 

@@ -520,13 +520,22 @@ public interface RegwebConstantes {
       TIPO_DOCFISICA_NO_ACOMPANYA_DOC
     };
 
-    /* -------- TIPO DE OFICIO DE REMISION ---------- */
-    public static final Long TIPO_OFICIO_REMISION_INTERNO = 1L;
-    public static final Long TIPO_OFICIO_REMISION_EXTERNO = 2L;
+    /* -------- DESTINOS DE OFICIO DE REMISION ---------- */
+    public static final Long DESTINO_OFICIO_REMISION_INTERNO = 1L;
+    public static final Long DESTINO_OFICIO_REMISION_EXTERNO = 2L;
+
+    public static final Long[] DESTINOS_OFICIO_REMISION = {
+            DESTINO_OFICIO_REMISION_INTERNO,
+            DESTINO_OFICIO_REMISION_EXTERNO
+    };
+
+    /* -------- TIPOS DE OFICIO DE REMISION ---------- */
+    public static final Long TIPO_OFICIO_REMISION_ENTRADA = 1L;
+    public static final Long TIPO_OFICIO_REMISION_SALIDA = 2L;
 
     public static final Long[] TIPOS_OFICIO_REMISION = {
-            TIPO_OFICIO_REMISION_INTERNO,
-            TIPO_OFICIO_REMISION_EXTERNO
+            TIPO_OFICIO_REMISION_ENTRADA,
+            TIPO_OFICIO_REMISION_SALIDA
     };
 
     /* -------- ESTADO DE UN OFICIO DE REMISION ---------- */
@@ -543,11 +552,6 @@ public interface RegwebConstantes {
             OFICIO_REMISION_ACEPTADO,
             OFICIO_REMISION_ANULADO
     };
-
-
-    /* -------------- TIPO PREREGISTRO -------------*/
-    public static final Long PREREGISTRO_ENTRADA = 0L;
-    public static final Long PREREGISTRO_SALIDA = 1L;
 
     public static final int REGISTROS_PANTALLA_INICIO = 5;
 

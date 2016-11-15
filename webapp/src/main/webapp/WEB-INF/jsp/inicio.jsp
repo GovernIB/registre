@@ -144,7 +144,7 @@
                         </div>
                     </c:if>--%>
 
-                    <%--OFICIONS PENDIENTES DE LLEGADA--%>
+                    <%--OFICIOS PENDIENTES DE LLEGADA--%>
                     <c:if test="${not empty oficiosPendientesLlegada}">
                         <div class="col-xs-6">
 
@@ -196,13 +196,13 @@
                         </div>
                     </c:if>
 
-                    <%--OFICIONS PENDIENTES DE REMISIÓN INTERNA--%>
-                    <c:if test="${not empty organismosOficioRemisionInterna}">
+                    <%--OFICIOS DE ENTRADA PENDIENTES DE REMISIÓN--%>
+                    <c:if test="${not empty organismosOficioRemisionEntrada}">
                         <div class="col-xs-6">
 
                             <div class="panel panel-success">
                                 <div class="panel-heading">
-                                    <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="oficioRemision.organimosInterno.inicio"/></strong> </h3>
+                                    <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="registroEntrada.oficiosRemision"/></strong> </h3>
                                 </div>
 
                                 <div class="panel-body">
@@ -222,11 +222,11 @@
                                             </thead>
 
                                             <tbody>
-                                            <c:forEach var="organismo" items="${organismosOficioRemisionInterna}">
+                                            <c:forEach var="organismo" items="${organismosOficioRemisionEntrada}">
                                                 <tr>
                                                     <td>${organismo.denominacion}</td>
                                                     <td class="center">
-                                                        <a class="btn btn-success btn-sm" href="<c:url value="/oficioRemision/pendientesRemisionInterna"/>" title="<spring:message code="oficioRemision.buscador"/>"><span class="fa fa-search"></span></a>
+                                                        <a class="btn btn-info btn-sm" href="<c:url value="/oficioRemision/entradasPendientesRemision"/>" title="<spring:message code="oficioRemision.buscador"/>"><span class="fa fa-search"></span></a>
                                                     </td>
                                                 </tr>
                                             </c:forEach>
@@ -242,13 +242,13 @@
                         </div>
                     </c:if>
 
-                    <%--OFICIONS PENDIENTES DE REMISIÓN EXTERNA--%>
-                    <c:if test="${not empty organismosOficioRemisionExterna}">
+                    <%--OFICIOS DE SALIDA PENDIENTES DE REMISIÓN--%>
+                    <c:if test="${not empty organismosOficioRemisionSalida}">
                         <div class="col-xs-6">
 
                             <div class="panel panel-success">
                                 <div class="panel-heading">
-                                    <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="oficioRemision.organimosExterna.inicio"/></strong> </h3>
+                                    <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="registroSalida.oficiosRemision"/></strong> </h3>
                                 </div>
 
                                 <div class="panel-body">
@@ -268,11 +268,11 @@
                                             </thead>
 
                                             <tbody>
-                                            <c:forEach var="organismo" items="${organismosOficioRemisionExterna}">
+                                            <c:forEach var="organismo" items="${organismosOficioRemisionSalida}">
                                                 <tr>
                                                     <td>${organismo.denominacion}</td>
                                                     <td class="center">
-                                                        <a class="btn btn-success btn-sm" href="<c:url value="/oficioRemision/pendientesRemisionExterna"/>" title="<spring:message code="oficioRemision.buscador"/>"><span class="fa fa-search"></span></a>
+                                                        <a class="btn btn-danger btn-sm" href="<c:url value="/oficioRemision/salidasPendientesRemision"/>" title="<spring:message code="oficioRemision.buscador"/>"><span class="fa fa-search"></span></a>
                                                     </td>
                                                 </tr>
                                             </c:forEach>
@@ -288,7 +288,7 @@
                         </div>
                     </c:if>
 
-                    <%--PREREGISTROS PENDIENTES DE PROCESAR--%>
+                    <%--ASIENTOS REGISTRALES SIR PENDIENTES DE PROCESAR--%>
                     <c:if test="${not empty asientosRegistralesSir}">
                         <div class="col-xs-6">
 
@@ -342,8 +342,6 @@
 
                         </div>
                     </c:if>
-
-
 
 
                 </div><!-- /.row -->

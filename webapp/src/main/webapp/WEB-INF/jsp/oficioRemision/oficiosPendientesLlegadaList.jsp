@@ -46,6 +46,17 @@
 
                             <div class="panel-body">
                                 <div class="form-group col-xs-6">
+                                    <div class="col-xs-4 pull-left align-right"><spring:message code="oficioRemision.tipo"/></div>
+                                    <div class="col-xs-8">
+                                        <form:select path="tipoOficioRemision" cssClass="chosen-select">
+                                            <c:forEach items="${tiposOficioRemision}" var="tipo">
+                                                <form:option value="${tipo}"><spring:message code="oficioRemision.tipo.${tipo}" /></form:option>
+                                            </c:forEach>
+                                        </form:select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-xs-6">
                                     <div class="col-xs-4 pull-left align-right"><span class="text-danger">*</span> <spring:message code="oficioRemision.libro"/></div>
                                     <div class="col-xs-8">
                                         <form:select path="oficioRemision.libro.id" cssClass="chosen-select">
@@ -125,7 +136,14 @@
                                                                        data-toggle="popover">${oficioRemision.oficina.denominacion}</label>
                                                             </td>
                                                             <td>${(empty oficioRemision.organismoDestinatario)? oficioRemision.destinoExternoDenominacion : oficioRemision.organismoDestinatario.denominacion}</td>
-                                                            <td>${fn:length(oficioRemision.registrosEntrada)}</td>
+                                                            <td>
+                                                                <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA}">
+                                                                    ${fn:length(oficioRemision.registrosEntrada)}
+                                                                </c:if>
+                                                                <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA}">
+                                                                    ${fn:length(oficioRemision.registrosSalida)}
+                                                                </c:if>
+                                                            </td>
 
                                                             <td class="center">
                                                                 <a class="btn btn-success btn-sm" href="<c:url value="/oficioRemision/${oficioRemision.id}/procesar"/>" title="<spring:message code="oficioRemision.procesar"/>"><span class="fa fa-check"></span></a>

@@ -48,6 +48,27 @@
 
                         <div class="panel-body">
                             <div class="form-group col-xs-6">
+                                <div class="col-xs-4 pull-left align-right"><spring:message code="oficioRemision.tipo"/></div>
+                                <div class="col-xs-8">
+                                    <form:select path="tipoOficioRemision" cssClass="chosen-select">
+                                        <c:forEach items="${tiposOficioRemision}" var="tipo">
+                                            <form:option value="${tipo}"><spring:message code="oficioRemision.tipo.${tipo}" /></form:option>
+                                        </c:forEach>
+                                    </form:select>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-6">
+                                <div class="col-xs-4 pull-left align-right"><spring:message code="oficioRemision.destino"/></div>
+                                <div class="col-xs-8">
+                                    <form:select path="destinoOficioRemision" cssClass="chosen-select">
+                                        <form:option value="">...</form:option>
+                                        <c:forEach items="${destinosOficioRemision}" var="destino">
+                                            <form:option value="${destino}"><spring:message code="oficioRemision.destino.${destino}" /></form:option>
+                                        </c:forEach>
+                                    </form:select>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-6">
                                 <div class="col-xs-4 pull-left align-right"> <spring:message code="oficioRemision.libro"/></div>
                                 <div class="col-xs-8">
                                     <form:select path="oficioRemision.libro.id" items="${librosConsulta}" itemValue="id" itemLabel="nombreCompleto" cssClass="chosen-select"/>
@@ -66,15 +87,9 @@
                                 </div>
                             </div>
                             <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left align-right"><spring:message
-                                        code="oficioRemision.tipo"/></div>
+                                <div class="col-xs-4 pull-left align-right"><spring:message code="oficioRemision.numeroOficio"/></div>
                                 <div class="col-xs-8">
-                                    <form:select path="tipoOficioRemision.id" cssClass="chosen-select">
-                                        <form:option value="">...</form:option>
-                                        <c:forEach items="${tiposOficioRemision}" var="tipo">
-                                            <form:option value="${tipo}"><spring:message code="oficioRemision.tipo.${tipo}" /></form:option>
-                                        </c:forEach>
-                                    </form:select>
+                                    <form:input path="oficioRemision.numeroOficio" cssClass="form-control" maxlength="10"/>
                                 </div>
                             </div>
                             <div class="form-group col-xs-6">
@@ -87,12 +102,6 @@
                                             <form:option value="${anyo}">${anyo}</form:option>
                                         </c:forEach>
                                     </form:select>
-                                </div>
-                            </div>
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left align-right"><spring:message code="oficioRemision.numeroOficio"/></div>
-                                <div class="col-xs-8">
-                                    <form:input path="oficioRemision.numeroOficio" cssClass="form-control" maxlength="10"/>
                                 </div>
                             </div>
 
@@ -149,7 +158,7 @@
                                                             <th><spring:message code="oficioRemision.organismoDestino"/></th>
                                                             <th><spring:message code="oficioRemision.numero.re"/></th>
                                                             <th><spring:message code="oficioRemision.estado"/></th>
-                                                            <th><spring:message code="oficioRemision.tipo"/></th>
+                                                            <th><spring:message code="oficioRemision.destino"/></th>
                                                             <th class="center"><spring:message code="regweb.acciones"/></th>
                                                         </tr>
                                                     </thead>
@@ -161,7 +170,14 @@
                                                                 <td><fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy"/></td>
                                                                 <td><label class="no-bold" rel="ayuda" data-content="${oficioRemision.oficina.denominacion}" data-toggle="popover">${oficioRemision.oficina.codigo}</label></td>
                                                                 <td>${(empty oficioRemision.organismoDestinatario)? oficioRemision.destinoExternoDenominacion : oficioRemision.organismoDestinatario.denominacion}</td>
-                                                                <td>${fn:length(oficioRemision.registrosEntrada)}</td>
+                                                                <td>
+                                                                    <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA}">
+                                                                        ${fn:length(oficioRemision.registrosEntrada)}
+                                                                    </c:if>
+                                                                    <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA}">
+                                                                        ${fn:length(oficioRemision.registrosSalida)}
+                                                                    </c:if>
+                                                                </td>
                                                                 <td>
                                                                     <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO}"><span class="label label-warning"></c:if>
                                                                     <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_EXTERNO_ENVIADO}"><span class="label label-warning"></c:if>
@@ -179,12 +195,10 @@
                                                                 <td>
                                                                     <span class="label label-default">
                                                                         <c:if test="${not empty oficioRemision.organismoDestinatario}">
-                                                                            <spring:message
-                                                                                    code="oficioRemision.interno"/>
+                                                                            <spring:message code="oficioRemision.interno"/>
                                                                         </c:if>
                                                                         <c:if test="${empty oficioRemision.organismoDestinatario}">
-                                                                            <spring:message
-                                                                                    code="oficioRemision.externo"/>
+                                                                            <spring:message code="oficioRemision.externo"/>
                                                                         </c:if>
                                                                     </span>
                                                                 </td>

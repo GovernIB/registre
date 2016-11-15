@@ -1,10 +1,7 @@
 package es.caib.regweb3.webapp.controller;
 
 import es.caib.regweb3.model.*;
-import es.caib.regweb3.persistence.ejb.OficioRemisionEntradaUtilsLocal;
-import es.caib.regweb3.persistence.ejb.OficioRemisionLocal;
-import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
-import es.caib.regweb3.persistence.ejb.RegistroSalidaLocal;
+import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.TimeUtils;
 import org.springframework.stereotype.Controller;
@@ -40,6 +37,9 @@ public class AvisoController extends BaseController {
     @EJB(mappedName = "regweb3/OficioRemisionEntradaUtilsEJB/local")
     public OficioRemisionEntradaUtilsLocal oficioRemisionEntradaUtilsEjb;
 
+    @EJB(mappedName = "regweb3/OficioRemisionSalidaUtilsEJB/local")
+    public OficioRemisionSalidaUtilsLocal oficioRemisionSalidaUtilsEjb;
+
 
     /**
      * Controller para gestionar los diferentes avisos de registros pendientes para el usuario
@@ -62,8 +62,8 @@ public class AvisoController extends BaseController {
 
             Long pendientesVisarEntrada = (long) 0;
             Long pendientesVisarSalida = (long) 0;
-            Long oficiosRemisionInterna = (long) 0;
-            Long oficiosRemisionExterna = (long) 0;
+            Long oficiosEntradaPendientesRemision = (long) 0;
+            Long oficiosSalidaPendientesRemision = (long) 0;
 
             /*Registros Pendientes de Visar*/
             if(librosAdministrados!= null && librosAdministrados.size() > 0){
@@ -74,16 +74,18 @@ public class AvisoController extends BaseController {
             mav.addObject("pendientesVisarSalida", pendientesVisarSalida);
 
             /*Reserva de número*/
-            Long pendientes = registroEntradaEjb.getByOficinaEstadoCount(oficinaActiva.getId(), RegwebConstantes.REGISTRO_PENDIENTE);
-            mav.addObject("pendientes", pendientes);
+            Long reservas = registroEntradaEjb.getByOficinaEstadoCount(oficinaActiva.getId(), RegwebConstantes.REGISTRO_PENDIENTE);
+            mav.addObject("reservas", reservas);
 
             // OFICIOS PENDIENTES DE REMISIÓN
             if(librosRegistro!= null && librosRegistro.size() > 0){
-                oficiosRemisionInterna = oficioRemisionEntradaUtilsEjb.oficiosPendientesRemisionInternaCount(oficinaActiva.getId(),librosRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva));
-                oficiosRemisionExterna = oficioRemisionEntradaUtilsEjb.oficiosPendientesRemisionExternaCount(oficinaActiva.getId(),librosRegistro);
+
+                oficiosEntradaPendientesRemision = oficioRemisionEntradaUtilsEjb.oficiosEntradaPendientesRemisionCount(oficinaActiva.getId(),librosRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva));
+                oficiosSalidaPendientesRemision = oficioRemisionSalidaUtilsEjb.oficiosSalidaPendientesRemisionCount(oficinaActiva.getId(),librosRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva));
             }
-            mav.addObject("oficiosRemisionInterna", oficiosRemisionInterna);
-            mav.addObject("oficiosRemisionExterna", oficiosRemisionExterna);
+
+            mav.addObject("oficiosEntradaPendientesRemision", oficiosEntradaPendientesRemision);
+            mav.addObject("oficiosSalidaPendientesRemision", oficiosSalidaPendientesRemision);
 
             // OFICIOS PENDIENTES DE LLEGADA
             Long oficiosPendientesLlegada = oficioRemisionEjb.oficiosPendientesLlegadaCount(organismosOficinaActiva);

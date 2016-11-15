@@ -5,6 +5,7 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.OficioPendienteLlegada;
 import es.caib.regweb3.persistence.utils.OficiosRemisionExternoOrganismo;
 import es.caib.regweb3.persistence.utils.OficiosRemisionInternoOrganismo;
+import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -25,6 +26,40 @@ import java.util.Set;
 @Local
 @RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public interface OficioRemisionEntradaUtilsLocal {
+
+    /**
+     *
+     * @param idOficina
+     * @param libros
+     * @param organismos
+     * @return
+     * @throws Exception
+     */
+    public List<Organismo> organismosEntradaPendientesRemision(Long idOficina, List<Libro> libros, Set<Long> organismos) throws Exception;
+
+    /**
+     *
+     * @param idOficina
+     * @param libros
+     * @param organismos
+     * @return
+     * @throws Exception
+     */
+    public Long oficiosEntradaPendientesRemisionCount(Long idOficina, List<Libro> libros, Set<Long> organismos) throws Exception;
+
+    /**
+     *
+     * @param pageNumber
+     * @param any
+     * @param idOficina
+     * @param idLibro
+     * @param codigoOrganismo
+     * @param organismos
+     * @param idEntidadActiva
+     * @return
+     * @throws Exception
+     */
+    public OficiosRemisionOrganismo oficiosEntradaPendientesRemision(Integer pageNumber, Integer any, Long idOficina, Long idLibro, String codigoOrganismo, Set<Long> organismos, Long idEntidadActiva) throws Exception;
 
     /**
      * Obtenemos los Organismos destinatarios PROPIOS que tiene Oficios de Remision pendientes de tramitar

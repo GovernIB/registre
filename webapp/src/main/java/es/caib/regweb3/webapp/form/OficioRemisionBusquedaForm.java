@@ -1,7 +1,6 @@
 package es.caib.regweb3.webapp.form;
 
 import es.caib.regweb3.model.OficioRemision;
-import es.caib.regweb3.model.utils.ObjetoBasico;
 
 /**
  * Created 4/04/14 16:09
@@ -13,7 +12,8 @@ public class OficioRemisionBusquedaForm {
   private OficioRemision oficioRemision;
   private Integer pageNumber;
   private Integer anyo;
-  private ObjetoBasico tipoOficioRemision;
+  private Long destinoOficioRemision;
+  private Long tipoOficioRemision;
   private Integer estadoOficioRemision;
 
 
@@ -48,11 +48,19 @@ public class OficioRemisionBusquedaForm {
     this.anyo = anyo;
   }
 
-  public ObjetoBasico getTipoOficioRemision() {
+  public Long getDestinoOficioRemision() {
+    return destinoOficioRemision;
+  }
+
+  public void setDestinoOficioRemision(Long destinoOficioRemision) {
+    this.destinoOficioRemision = destinoOficioRemision;
+  }
+
+  public Long getTipoOficioRemision() {
     return tipoOficioRemision;
   }
 
-  public void setTipoOficioRemision(ObjetoBasico tipoOficioRemision) {
+  public void setTipoOficioRemision(Long tipoOficioRemision) {
     this.tipoOficioRemision = tipoOficioRemision;
   }
 

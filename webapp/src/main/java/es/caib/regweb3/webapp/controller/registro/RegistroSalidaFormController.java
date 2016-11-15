@@ -332,12 +332,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
 
         // Gestionamos el Organismo, determinando si es Interno o Externo
         Organismo orgDestino = organismoEjb.findByCodigoEntidad(organismoDestino.getCodigo(), entidad.getId());
-        if(orgDestino != null){ // es interno
-
-            registroSalida.setOrigen(orgDestino);
-            registroSalida.setOrigenExternoCodigo(null);
-            registroSalida.setOrigenExternoDenominacion(null);
-        }
+        registroSalida.setOrigen(orgDestino);
 
         // Oficina origen, determinando si es Interno o Externo
         Oficina oficinaOrigen = registroSalida.getRegistroDetalle().getOficinaOrigen();

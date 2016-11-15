@@ -7,23 +7,23 @@ package es.caib.regweb3.model.utils;
  */
 public class OficioPendienteLlegada {
 
-    private Long idRegistroEntrada;
+    private Long idRegistro;
     private Long idLibro;
     private Long idOrganismoDestinatario;
 
     public OficioPendienteLlegada() {
     }
 
-    public OficioPendienteLlegada(Long idRegistroEntrada) {
-        this.idRegistroEntrada = idRegistroEntrada;
+    public OficioPendienteLlegada(Long idRegistro) {
+        this.idRegistro = idRegistro;
     }
 
-    public Long getIdRegistroEntrada() {
-        return idRegistroEntrada;
+    public Long getIdRegistro() {
+        return idRegistro;
     }
 
-    public void setIdRegistroEntrada(Long idRegistroEntrada) {
-        this.idRegistroEntrada = idRegistroEntrada;
+    public void setIdRegistro(Long idRegistro) {
+        this.idRegistro = idRegistro;
     }
 
     public Long getIdLibro() {

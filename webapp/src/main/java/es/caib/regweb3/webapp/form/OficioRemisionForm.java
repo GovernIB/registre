@@ -1,0 +1,83 @@
+package es.caib.regweb3.webapp.form;
+
+import es.caib.regweb3.model.utils.RegistroBasico;
+
+import java.util.List;
+
+/**
+ * Created by Fundació Bit
+ * @author earrivi
+ */
+public class OficioRemisionForm {
+
+    private Long tipoOficioRemision;
+    private List<RegistroBasico> registros;
+    private Long idOrganismo;
+    private String organismoExternoCodigo;
+    private String organismoExternoDenominacion;
+    private Long idLibro;
+    private String oficinaSIRCodigo;
+
+    public OficioRemisionForm() {
+    }
+
+    public OficioRemisionForm(Long tipoOficioRemision) {
+        this.tipoOficioRemision = tipoOficioRemision;
+    }
+
+    public Long getTipoOficioRemision() {
+        return tipoOficioRemision;
+    }
+
+    public void setTipoOficioRemision(Long tipoOficioRemision) {
+        this.tipoOficioRemision = tipoOficioRemision;
+    }
+
+    public List<RegistroBasico> getRegistros() {
+        return registros;
+    }
+
+    public void setRegistros(List<RegistroBasico> registros) {
+        this.registros = registros;
+    }
+
+    public Long getIdOrganismo() {
+        return idOrganismo;
+    }
+
+    public void setIdOrganismo(Long idOrganismo) {
+        this.idOrganismo = idOrganismo;
+    }
+
+    public Long getIdLibro() {
+        return idLibro;
+    }
+
+    public void setIdLibro(Long idLibro) {
+        this.idLibro = idLibro;
+    }
+
+    public String getOrganismoExternoCodigo() {
+        return organismoExternoCodigo;
+    }
+
+    public void setOrganismoExternoCodigo(String organismoExternoCodigo) {
+        this.organismoExternoCodigo = organismoExternoCodigo;
+    }
+
+    public String getOrganismoExternoDenominacion() {
+        return organismoExternoDenominacion;
+    }
+
+    public void setOrganismoExternoDenominacion(String organismoExternoDenominacion) {
+        this.organismoExternoDenominacion = organismoExternoDenominacion;
+    }
+
+    public String getOficinaSIRCodigo() {
+        return oficinaSIRCodigo;
+    }
+
+    public void setOficinaSIRCodigo(String oficinaSIRCodigo) {
+        this.oficinaSIRCodigo = oficinaSIRCodigo;
+    }
+}

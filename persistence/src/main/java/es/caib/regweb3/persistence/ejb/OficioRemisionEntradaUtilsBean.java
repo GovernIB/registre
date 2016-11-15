@@ -7,10 +7,7 @@ import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
 import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.OficioPendienteLlegada;
-import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
-import es.caib.regweb3.persistence.utils.OficiosRemisionExternoOrganismo;
-import es.caib.regweb3.persistence.utils.OficiosRemisionInternoOrganismo;
-import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.persistence.utils.*;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -64,6 +61,177 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
     @EJB(name = "CatEstadoEntidadEJB")
     public CatEstadoEntidadLocal catEstadoEntidadEjb;
+
+
+
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<Organismo> organismosEntradaPendientesRemision(Long idOficina, List<Libro> libros, Set<Long> organismos) throws Exception {
+
+        List<Organismo> organismosDestino =  new ArrayList<Organismo>();
+
+        // Si el array de organismos está vacío, no incluimos la condición.
+        String organismosWhere = "";
+        if (organismos.size() > 0) {
+            organismosWhere = "re.destino.id not in (:organismos) and ";
+        }
+
+        // Obtenemos los Organismos destinatarios PROPIOS que tiene Oficios de Remision pendientes de tramitar
+        Query q;
+        q = em.createQuery("Select distinct re.destino.codigo, re.destino.denominacion from RegistroEntrada as re where " +
+                "re.estado = :valido and re.oficina.id = :idOficina and re.libro in (:libros) and " +
+                "re.destino != null and " + organismosWhere +
+                " re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra where tra.oficioRemision.estado != :anulado)");
+
+        // Parámetros
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("idOficina", idOficina);
+        q.setParameter("libros", libros);
+        q.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
+
+        if (organismos.size() > 0) {
+            q.setParameter("organismos", organismos);
+        }
+
+
+        List<Object[]> internos = q.getResultList();
+
+        for (Object[] object : internos){
+            Organismo organismo = new Organismo(null,(String) object[0], (String) object[1]);
+
+            organismosDestino.add(organismo);
+        }
+
+
+        // Obtenemos los Organismos destinatarios EXTERNOS que tiene Oficios de Remision pendientes de tramitar
+        Query q1;
+        q1 = em.createQuery("Select distinct re.destinoExternoCodigo, re.destinoExternoDenominacion from RegistroEntrada as re where " +
+                "re.estado = :valido and re.oficina.id = :idOficina and re.libro in (:libros) and " +
+                "re.destino is null and " +
+                "re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra where tra.oficioRemision.estado != :anulado)");
+
+        // Parámetros
+        q1.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+        q1.setParameter("idOficina", idOficina);
+        q1.setParameter("libros", libros);
+        q1.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
+
+        List<Object[]> externos = q1.getResultList();
+
+        for (Object[] object : externos){
+            Organismo organismo = new Organismo(null,(String) object[0], (String) object[1]);
+
+            organismosDestino.add(organismo);
+        }
+
+        return organismosDestino;
+
+    }
+
+    @Override
+    public Long oficiosEntradaPendientesRemisionCount(Long idOficina, List<Libro> libros, Set<Long> organismos) throws Exception {
+
+        Long total = null;
+
+        // Si el array de organismos está vacío, no incluimos la condición.
+        String organismosWhere = "";
+        if (organismos.size() > 0) {
+            organismosWhere = "re.destino.id not in (:organismos) and ";
+        }
+
+        Query q;
+        q = em.createQuery("Select count(re.id) from RegistroEntrada as re where " +
+                "re.estado = :valido and re.oficina.id = :idOficina and re.libro in (:libros) and " +
+                "re.destino != null and " + organismosWhere +
+                " re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra where tra.oficioRemision.estado != :anulado)");
+
+        // Parámetros
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("idOficina", idOficina);
+        q.setParameter("libros", libros);
+        q.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
+
+        if (organismos.size() > 0) {
+            q.setParameter("organismos", organismos);
+        }
+
+        total = (Long) q.getSingleResult();
+
+        Query q1;
+        q1 = em.createQuery("Select count(re.id) from RegistroEntrada as re where " +
+                "re.estado = :valido and re.oficina.id = :idOficina and re.libro in (:libros) and " +
+                "re.destino is null and " +
+                "re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra where tra.oficioRemision.estado != :anulado)");
+
+        q1.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+        q1.setParameter("idOficina", idOficina);
+        q1.setParameter("libros", libros);
+        q1.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
+
+        total = total +  (Long) q1.getSingleResult();
+
+        return total;
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public OficiosRemisionOrganismo oficiosEntradaPendientesRemision(Integer pageNumber, Integer any, Long idOficina, Long idLibro, String codigoOrganismo, Set<Long> organismos, Long idEntidadActiva) throws Exception {
+
+        OficiosRemisionOrganismo oficios = new OficiosRemisionOrganismo();
+
+        Organismo organismo = organismoEjb.findByCodigoEntidad(codigoOrganismo, idEntidadActiva);
+
+        if(organismo != null) { // Destinatario organismo interno
+            oficios.setOrganismo(organismo);
+            oficios.setVigente(organismo.getEstado().getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+            oficios.setOficinas(oficinaEjb.tieneOficinasServicio(organismo.getId(), RegwebConstantes.OFICINA_VIRTUAL_NO));
+
+            //Buscamos los Registros de Entrada, pendientes de tramitar mediante un Oficio de Remision
+            oficios.setPaginacion(oficiosRemisionByOrganismoInterno(pageNumber,organismo.getId(), any, idOficina, idLibro));
+
+        }else { // Destinatario organismo externo
+
+            oficios.setExterno(true);
+
+            // Obtenemos el Organismo externo de Dir3Caib
+            Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService();
+            UnidadTF unidadTF = unidadesService.obtenerUnidad(codigoOrganismo,null,null);
+
+            if(unidadTF != null){
+                Organismo organismoExterno = new Organismo(null,codigoOrganismo,unidadTF.getDenominacion());
+                organismoExterno.setEstado(catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+                oficios.setVigente(true);
+                oficios.setOrganismo(organismoExterno);
+
+                // Comprueba si la Entidad Actual está en SIR
+                Boolean isSir = (Boolean) em.createQuery("select e.sir from Entidad as e where e.id = :id").setParameter("id", idEntidadActiva).getSingleResult();
+                if (isSir) {
+                    // Averiguamos si el Organismo Externo está en Sir o no
+                    Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
+                    List<OficinaTF> oficinasSIR = oficinasService.obtenerOficinasSIRUnidad(organismoExterno.getCodigo()); //TODO: Revisar que la cerca d'Oficines SIR la fa correctament
+                    if (oficinasSIR.size() > 0) {
+                        oficios.setSir(true);
+                        oficios.setOficinasSIR(oficinasSIR);
+                        log.info("El organismo externo " + organismoExterno + " TIENE oficinas Sir: " + oficinasSIR.size());
+                    } else {
+                        oficios.setOficinasSIR(null);
+                        log.info("El organismo externo " + organismoExterno + " no tiene oficinas Sir");
+                    }
+
+                }else {
+                    oficios.setSir(false);
+                    oficios.setOficinasSIR(null);
+                    log.info("Nuestra entidad no esta en SIR, se creara un oficio de remision tradicional");
+                }
+
+                //Buscamos los Registros de Entrada, pendientes de tramitar mediante un Oficio de Remision
+                oficios.setPaginacion(oficiosRemisionByOrganismoExterno(pageNumber, organismoExterno.getCodigo(), any, idOficina, idLibro));
+            }
+        }
+
+        return oficios;
+    }
 
 
     @Override
@@ -394,6 +562,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             throws Exception, I18NException, I18NValidationException {
 
         OficioRemision oficioRemision = new OficioRemision();
+        oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
         oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO);
         oficioRemision.setOficina(oficinaActiva);
         oficioRemision.setFecha(new Date());
@@ -404,7 +573,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
         synchronized (this) {
             oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision,
-                    RegwebConstantes.REGISTRO_OFICIO_INTERNO);
+                    RegwebConstantes.REGISTRO_OFICIO_INTERNO, RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
         }
 
         return oficioRemision;
@@ -431,6 +600,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         //Organismo organismoDestino = organismoEjb.findById(idOrganismo);
 
         OficioRemision oficioRemision = new OficioRemision();
+        oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
         oficioRemision.setIdentificadorIntercambioSir(null);
         oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_EXTERNO_ENVIADO);
         oficioRemision.setFechaEstado(new Date());
@@ -445,7 +615,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
         synchronized (this) {
             oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision,
-                    RegwebConstantes.REGISTRO_OFICIO_EXTERNO);
+                    RegwebConstantes.REGISTRO_OFICIO_EXTERNO, RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
         }
 
         return oficioRemision;
@@ -460,6 +630,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         registros.add(registroEntrada);
 
         OficioRemision oficioRemision = new OficioRemision();
+        oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
         oficioRemision.setIdentificadorIntercambioSir(identificadorIntercambio);
         oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_EXTERNO_ENVIADO);
         oficioRemision.setFechaEstado(new Date());
@@ -474,7 +645,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
         synchronized (this) {
             oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision,
-                    RegwebConstantes.REGISTRO_OFICIO_EXTERNO);
+                    RegwebConstantes.REGISTRO_OFICIO_EXTERNO, RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
         }
 
         return oficioRemision;
@@ -501,7 +672,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
             OficioPendienteLlegada oficio = oficios.get(i);
 
-            RegistroEntrada registroEntrada = registroEntradaEjb.findById(oficio.getIdRegistroEntrada());
+            RegistroEntrada registroEntrada = registroEntradaEjb.findById(oficio.getIdRegistro());
             Libro libro = libroEjb.findById(oficio.getIdLibro());
 
             RegistroEntrada nuevoRE = new RegistroEntrada();
@@ -530,7 +701,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         oficioRemision.setFechaEstado(new Date());
 
         // Actualizamos el oficio de remisión
-        oficioRemision = oficioRemisionEjb.merge(oficioRemision);
+        oficioRemisionEjb.merge(oficioRemision);
 
         return registros;
 

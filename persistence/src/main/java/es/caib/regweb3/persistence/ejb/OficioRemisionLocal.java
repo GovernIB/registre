@@ -30,7 +30,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @return
      * @throws Exception
      */
-    public Paginacion busqueda(Integer pageNumber, Integer any, OficioRemision oficioRemision, List<Libro> libros, Long tipoOficioRemision, Integer estadoOficioRemision) throws Exception;
+    public Paginacion busqueda(Integer pageNumber, Integer any, OficioRemision oficioRemision, List<Libro> libros, Long tipoOficioRemision, Integer estadoOficioRemision, Long tipoRegistro) throws Exception;
 
     /**
      * Registra un OficioRemision asignandole número
@@ -39,7 +39,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @return
      * @throws Exception
      */
-    public OficioRemision registrarOficioRemision(OficioRemision oficioRemision, Long estado)
+    public OficioRemision registrarOficioRemision(OficioRemision oficioRemision, Long estado, Long tipoOficioRemision)
         throws Exception, I18NException, I18NValidationException;
 
     /**
@@ -66,7 +66,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @return
      * @throws Exception
      */
-    public Paginacion oficiosPendientesLlegadaBusqueda(Set<Organismo> organismos, Integer pageNumber,OficioRemision oficioRemision, List<Libro> libros) throws Exception;
+    public Paginacion oficiosPendientesLlegadaBusqueda(Set<Organismo> organismos, Integer pageNumber,OficioRemision oficioRemision, List<Libro> libros, Long tipoOficioRemision) throws Exception;
 
     /**
      * Devuelve los Oficios de Remisión pendientes de procesar de los organismos seleccionados
@@ -82,7 +82,15 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @return
      * @throws Exception
      */
-    public List<RegistroEntrada> getByOficioRemision(Long idOficioRemision) throws Exception;
+    public List<RegistroEntrada> getEntradasByOficioRemision(Long idOficioRemision) throws Exception;
+
+    /**
+     * Busca Registros de Salida que pertenecen a un OficioRemision
+     * @param idOficioRemision
+     * @return
+     * @throws Exception
+     */
+    public List<RegistroSalida> getSalidasByOficioRemision(Long idOficioRemision) throws Exception;
 
     /**
      * Elimina los Oficios de remisión de una Entidad

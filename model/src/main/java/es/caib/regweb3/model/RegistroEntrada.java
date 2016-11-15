@@ -55,6 +55,10 @@ public class RegistroEntrada implements IRegistro {
       super();
     }
 
+    public RegistroEntrada(Long id) {
+        this.id=id;
+    }
+
     /**
      * @param re
      */

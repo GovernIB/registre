@@ -37,7 +37,7 @@ public class Trazabilidad implements Serializable {
     }
 
 
-    @ManyToOne(cascade= CascadeType.PERSIST, optional = false)
+    @ManyToOne(cascade= CascadeType.PERSIST, optional = true)
     @JoinColumn(name="REGENT_ORIGEN")
     @ForeignKey(name="RWE_TRAZAB_REGENTO_FK")
     public RegistroEntrada getRegistroEntradaOrigen() {

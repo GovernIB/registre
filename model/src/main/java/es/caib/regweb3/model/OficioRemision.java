@@ -26,20 +26,19 @@ import java.util.List;
 public class OficioRemision implements Serializable {
 
   private Long id;
-
   private Organismo organismoDestinatario;
-
   @XmlElement
   private String destinoExternoCodigo;
   @XmlElement
   private String destinoExternoDenominacion;
-
+  private Long tipoOficioRemision;
   private UsuarioEntidad usuarioResponsable;
   private Integer numeroOficio;
   private Oficina oficina;
   private Libro libro;
   private Date fecha;
   private List<RegistroEntrada> registrosEntrada;
+  private List<RegistroSalida> registrosSalida;
 
   private int estado;
   private Date fechaEstado;
@@ -99,7 +98,7 @@ public class OficioRemision implements Serializable {
     this.oficina = oficina;
   }
 
-  @ManyToMany(cascade = { CascadeType.PERSIST }, targetEntity = RegistroEntrada.class, fetch = FetchType.EAGER)
+  @ManyToMany(cascade = { CascadeType.PERSIST }, targetEntity = RegistroEntrada.class, fetch = FetchType.LAZY)
   @JoinTable(name = "RWE_OFIREM_REGENT", joinColumns = { @JoinColumn(name = "IDOFIREM") }, inverseJoinColumns = { @JoinColumn(name = "IDREGENT") })
   @ForeignKey(name = "RWE_REGENT_OFIREM_FK", inverseName = "RWE_OFIREM_REGENT_FK")
   @OrderBy("id")
@@ -111,6 +110,18 @@ public class OficioRemision implements Serializable {
     this.registrosEntrada = registrosEntrada;
   }
 
+  @ManyToMany(cascade = { CascadeType.PERSIST }, targetEntity = RegistroSalida.class, fetch = FetchType.LAZY)
+  @JoinTable(name = "RWE_OFIREM_REGSAL", joinColumns = { @JoinColumn(name = "IDOFIREM") }, inverseJoinColumns = { @JoinColumn(name = "IDREGSAL") })
+  @ForeignKey(name = "RWE_REGSAL_OFIREM_FK", inverseName = "RWE_OFIREM_REGSAL_FK")
+  @OrderBy("id")
+  public List<RegistroSalida> getRegistrosSalida() {
+    return registrosSalida;
+  }
+
+  public void setRegistrosSalida(List<RegistroSalida> registrosSalida) {
+    this.registrosSalida = registrosSalida;
+  }
+
   @Column(name = "FECHA", nullable = false)
   public Date getFecha() {
     return fecha;
@@ -119,6 +130,16 @@ public class OficioRemision implements Serializable {
   public void setFecha(Date fecha) {
     this.fecha = fecha;
   }
+
+  @Column(name = "TIPO_OFICIO", nullable = false)
+  public Long getTipoOficioRemision() {
+    return tipoOficioRemision;
+  }
+
+  public void setTipoOficioRemision(Long tipoOficioRemision) {
+    this.tipoOficioRemision = tipoOficioRemision;
+  }
+
 
   @ManyToOne(cascade = CascadeType.PERSIST, optional = false)
   @JoinColumn(name = "USUARIO")
