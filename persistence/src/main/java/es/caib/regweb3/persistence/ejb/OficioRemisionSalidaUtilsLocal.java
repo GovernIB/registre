@@ -32,7 +32,7 @@ public interface OficioRemisionSalidaUtilsLocal {
      * @return
      * @throws Exception
      */
-    public Long oficiosSalidaPendientesRemisionCount(Long idOficina, List<Libro> libros, Set<Long> organismos) throws Exception;
+    public Long oficiosSalidaPendientesRemisionCount(Long idOficina, List<Libro> libros, Set<String> organismos) throws Exception;
 
     /**
      * @param idOficina
@@ -41,7 +41,7 @@ public interface OficioRemisionSalidaUtilsLocal {
      * @return
      * @throws Exception
      */
-    public List<Organismo> organismosSalidaPendientesRemision(Long idOficina, List<Libro> libros, Set<Long> organismos) throws Exception;
+    public List<Organismo> organismosSalidaPendientesRemision(Long idOficina, List<Libro> libros, Set<String> organismos) throws Exception;
 
     /**
      * @param pageNumber

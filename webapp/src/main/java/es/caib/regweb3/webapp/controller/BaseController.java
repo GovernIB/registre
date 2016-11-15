@@ -337,6 +337,27 @@ public class BaseController {
         return organismosId;
     }
 
+    /**
+     * Obtiene el Id de los Organismos de la OficinaActiva en los cuales no se generará OficioRemisión.
+     * Se eliminando los Organismos que están marcados como Entidad de Derecho Público o
+     * a los que la OficiaActiva da servicio.
+     *
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    public Set<String> getOrganismosOficioRemisionSalida(HttpServletRequest request, Set<Organismo> organismos) throws Exception {
+
+        // Creamos un Set solo con los codigos
+        Set<String> organismosCodigo = new HashSet<String>();
+
+        for (Organismo organismo : organismos) {
+            organismosCodigo.add(organismo.getCodigo());
+
+        }
+        return organismosCodigo;
+    }
+
 
     /**
      *  Obtiene todas las oficinas de la entidad activa vigentes

@@ -68,13 +68,12 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
     public CatEstadoEntidadLocal catEstadoEntidadEjb;
 
     @Override
-    public Long oficiosSalidaPendientesRemisionCount(Long idOficina, List<Libro> libros, Set<Long> organismos) throws Exception {
+    public Long oficiosSalidaPendientesRemisionCount(Long idOficina, List<Libro> libros, Set<String> organismos) throws Exception {
 
         Query q;
         q = em.createQuery("Select count(rs.id) from RegistroSalida as rs where " +
                 "rs.estado = :valido and rs.oficina.id = :idOficina and rs.libro in (:libros) and " +
-                "rs.origen.id in (:organismos) and "+
-                "rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo = :administracion) and " +
+                "rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo = :administracion and codigoDir3 not in (:organismos)) and " +
                 " rs.id not in (select tra.registroSalida.id from Trazabilidad as tra where tra.oficioRemision.estado != :anulado)");
 
         // Parámetros
@@ -92,14 +91,13 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> organismosSalidaPendientesRemision(Long idOficina, List<Libro> libros, Set<Long> organismos) throws Exception {
+    public List<Organismo> organismosSalidaPendientesRemision(Long idOficina, List<Libro> libros, Set<String> organismos) throws Exception {
 
         // Obtenemos los Registros de Salida que son Oficio de remisión
         Query q1;
         q1 = em.createQuery("Select rs.registroDetalle.id from RegistroSalida as rs where " +
                 "rs.estado = :valido and rs.oficina.id = :idOficina and rs.libro in (:libros) and " +
-                "rs.origen.id in (:organismos) and "+
-                "rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo = :administracion) and " +
+                "rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo = :administracion and codigoDir3 not in (:organismos)) and " +
                 " rs.id not in (select tra.registroSalida.id from Trazabilidad as tra where tra.oficioRemision.estado != :anulado)");
 
         // Parámetros
