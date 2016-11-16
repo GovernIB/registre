@@ -156,9 +156,9 @@ que se le indica -->
                         <button class="btn btn-sm" data-dismiss="modal" aria-hidden="true"
                                 onclick="limpiarFormularioBusqueda('${param.tipo}')"><spring:message
                                 code="regweb.cerrar"/></button>
-                        </br>
-                        </br>
-                        </br>
+                        <br/>
+                        <br/>
+                        <br/>
                         <!-- Mostrar llistat de la busqueda-->
                         <div class="form-group col-xs-12">
                             <div id="resultadosbusqueda${param.tipo}">

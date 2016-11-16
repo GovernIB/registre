@@ -128,6 +128,11 @@ public class RegWebInInterceptor extends AbstractPhaseInterceptor<Message> {
       throw WsUtils.mountException(e.getMessage());
     }
 
+    if (entitats.size() == 0) {
+      throw WsUtils.mountException("L´usuari autenticat " + userapp
+              + " no està relacionat amb cap entitat.");
+    }
+
     UsuarioAplicacionCache.put(new UsuarioInfo(usuariAplicacio, entitats));
 
   }

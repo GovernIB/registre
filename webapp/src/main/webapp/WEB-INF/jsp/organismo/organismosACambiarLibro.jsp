@@ -80,12 +80,15 @@ de un proceso de sincronización/actualización de una entidad desde dir3caib --
                                                                     <form id="organismoAProcesarForm${organismoAProcesar.id}" action="${pageContext.request.contextPath}/entidad/procesarlibroorganismo/${organismoAProcesar.id}/${esPendiente}" method="post" class="form-horizontal">
                                                                         <input type="hidden" id="total${organismoAProcesar.id}" value="${fn:length(organismoAProcesar.libros)}"/>
                                                                         <c:if test="${esPendiente}">
-                                                                            <strong><spring:message code="organismo.cambiar.ayuda"/></strong></br></br>
-                                                                            <spring:message code="organismo.historicos"/></br>
+                                                                            <strong><spring:message
+                                                                                    code="organismo.cambiar.ayuda"/></strong><br/><br/>
+                                                                            <spring:message
+                                                                                    code="organismo.historicos"/><br/>
                                                                             <c:forEach items="${organismoAProcesar.historicoUO}" var="organismoSustituye" >
-                                                                                ${organismoSustituye.codigo}: ${organismoSustituye.denominacion}</br>
+                                                                                ${organismoSustituye.codigo}: ${organismoSustituye.denominacion}
+                                                                                <br/>
                                                                             </c:forEach>
-                                                                            </br>
+                                                                            <br/>
                                                                         </c:if>
                                                                         <c:forEach var="libroorganismoAProcesar" items="${organismoAProcesar.libros}" varStatus="contador">
 
@@ -198,7 +201,7 @@ de un proceso de sincronización/actualización de una entidad desde dir3caib --
                             <c:if test="${not empty organismosConError}">
                                 <div id="organismosconerror">
                                     <strong><spring:message code="organismo.conerror"/></strong>
-                                    </br>
+                                    <br/>
                                     <spring:message code="organismo.conerror.ayuda"/>
                                 </div>
                                 <c:forEach var="organismoConError" items="${organismosConError}">
