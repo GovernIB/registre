@@ -49,12 +49,11 @@ public interface OficioRemisionSalidaUtilsLocal {
      * @param idOficina
      * @param idLibro
      * @param codigoOrganismo
-     * @param organismos
      * @param entidadActiva
      * @return
      * @throws Exception
      */
-    public OficiosRemisionOrganismo oficiosSalidaPendientesRemisionInterna(Integer pageNumber, Integer any, Long idOficina, Long idLibro, String codigoOrganismo, Set<Long> organismos, Entidad entidadActiva) throws Exception;
+    public OficiosRemisionOrganismo oficiosSalidaPendientesRemision(Integer pageNumber, Integer any, Long idOficina, Long idLibro, String codigoOrganismo, Entidad entidadActiva) throws Exception;
 
     /**
      * @param pageNumber
@@ -62,11 +61,10 @@ public interface OficioRemisionSalidaUtilsLocal {
      * @param any
      * @param idOficina
      * @param idLibro
-     * @param organismos
      * @return
      * @throws Exception
      */
-    public Paginacion oficiosSalidaByOrganismo(Integer pageNumber, String codigoOrganismo, Integer any, Long idOficina, Long idLibro, Set<Long> organismos) throws Exception;
+    public Paginacion oficiosSalidaByOrganismo(Integer pageNumber, String codigoOrganismo, Integer any, Long idOficina, Long idLibro) throws Exception;
 
     /**
      * @param registrosSalida

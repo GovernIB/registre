@@ -222,7 +222,7 @@ public class OficioRemisionController extends BaseController {
     }
 
     /**
-     * Realiza la busqueda de Listado de Registro de Salida para realizar un Oficio de Remisión Interno según los parametros del formulario
+     * Realiza la busqueda de Listado de Registro de Salida para realizar un Oficio de Remisión según los parametros del formulario
      */
     @RequestMapping(value = "/salidasPendientesRemision", method = RequestMethod.POST)
     public ModelAndView oficiosSalidaPendientesRemision(@ModelAttribute OficioSalidaPendienteBusquedaForm busqueda, HttpServletRequest request)throws Exception {
@@ -237,7 +237,7 @@ public class OficioRemisionController extends BaseController {
         LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
         // Obtenemos los Registros de Salida, pendientes de tramitar por medio de un Oficio de Revisión, agrupados según su Organismos destinatario.
-        OficiosRemisionOrganismo oficiosRemisionOrganismo = oficioRemisionSalidaUtilsEjb.oficiosSalidaPendientesRemisionInterna(busqueda.getPageNumber(), busqueda.getAnyo(),oficinaActiva.getId(), busqueda.getRegistroSalida().getLibro().getId(),busqueda.getDestinatario().getCodigo() ,getOrganismosOficioRemision(request, organismosOficinaActiva),entidadActiva);
+        OficiosRemisionOrganismo oficiosRemisionOrganismo = oficioRemisionSalidaUtilsEjb.oficiosSalidaPendientesRemision(busqueda.getPageNumber(), busqueda.getAnyo(),oficinaActiva.getId(), busqueda.getRegistroSalida().getLibro().getId(),busqueda.getDestinatario().getCodigo() ,entidadActiva);
 
         busqueda.setPageNumber(1);
         mav.addObject("oficiosRemisionOrganismo", oficiosRemisionOrganismo);

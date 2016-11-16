@@ -135,7 +135,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public OficiosRemisionOrganismo oficiosSalidaPendientesRemisionInterna(Integer pageNumber, Integer any, Long idOficina, Long idLibro, String codigoOrganismo, Set<Long> organismos, Entidad entidadActiva) throws Exception {
+    public OficiosRemisionOrganismo oficiosSalidaPendientesRemision(Integer pageNumber, Integer any, Long idOficina, Long idLibro, String codigoOrganismo, Entidad entidadActiva) throws Exception {
 
         OficiosRemisionOrganismo oficios = new OficiosRemisionOrganismo();
         Organismo organismo = organismoEjb.findByCodigoEntidad(codigoOrganismo, entidadActiva.getId());
@@ -186,7 +186,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         }
 
         //Buscamos los Registros de Salida, pendientes de tramitar mediante un Oficio de Remision
-        oficios.setPaginacion(oficiosSalidaByOrganismo(pageNumber, codigoOrganismo, any, idOficina, idLibro, organismos));
+        oficios.setPaginacion(oficiosSalidaByOrganismo(pageNumber, codigoOrganismo, any, idOficina, idLibro));
 
         return oficios;
 
@@ -194,7 +194,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion oficiosSalidaByOrganismo(Integer pageNumber, String codigoOrganismo, Integer any, Long idOficina, Long idLibro, Set<Long> organismos) throws Exception {
+    public Paginacion oficiosSalidaByOrganismo(Integer pageNumber, String codigoOrganismo, Integer any, Long idOficina, Long idLibro) throws Exception {
 
         String anyWhere = "";
         if (any != null) {
@@ -205,7 +205,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         Query q2;
 
         StringBuilder query = new StringBuilder("Select rs from RegistroSalida as rs where " + anyWhere +
-                "rs.libro.id = :idLibro and rs.oficina.id = :idOficina and rs.estado = :valido and rs.origen.id in (:organismos) and " +
+                "rs.libro.id = :idLibro and rs.oficina.id = :idOficina and rs.estado = :valido and " +
                 "rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo = :administracion and i.codigoDir3 = :codigoOrganismo) and " +
                 "rs.id not in (select tra.registroSalida.id from Trazabilidad as tra where tra.oficioRemision.estado != :anulado)");
 
@@ -222,7 +222,6 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         q.setParameter("idLibro", idLibro);
         q.setParameter("idOficina", idOficina);
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
-        q.setParameter("organismos", organismos);
         q.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
         q.setParameter("codigoOrganismo", codigoOrganismo);
         q.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
@@ -230,7 +229,6 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         q2.setParameter("idLibro", idLibro);
         q2.setParameter("idOficina", idOficina);
         q2.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
-        q2.setParameter("organismos", organismos);
         q2.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
         q2.setParameter("codigoOrganismo", codigoOrganismo);
         q2.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
