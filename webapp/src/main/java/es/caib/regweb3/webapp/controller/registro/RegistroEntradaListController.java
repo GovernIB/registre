@@ -196,7 +196,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         model.addAttribute("puedeEditar", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registro.getLibro().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA));
 
         // OficioRemision
-        model.addAttribute("isOficioRemision", oficioRemisionEntradaUtilsEjb.isOficioRemisionInterno(idRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva)));
+        model.addAttribute("isOficioRemision", oficioRemisionEntradaUtilsEjb.isOficioRemision(idRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva)));
 
         // Interesados, solo si el Registro en Válido o Estamos en la Oficina donde se registró, o en su Oficina Responsable
         if(registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) && oficinaRegistral){
@@ -386,7 +386,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             }
 
             // Comprobamos que el RegistroEntrada es un OficioRemision
-            if (oficioRemisionEntradaUtilsEjb.isOficioRemisionInterno(idRegistro, getOrganismosOficioRemision(request,organismosOficinaActiva))) {
+            if (oficioRemisionEntradaUtilsEjb.isOficioRemision(idRegistro, getOrganismosOficioRemision(request,organismosOficinaActiva))) {
                 Mensaje.saveMessageError(request, getMessage("registroEntrada.tramitar.error"));
                 return "redirect:/registroEntrada/list";
             }
@@ -434,7 +434,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         }
 
         // Comprobamos que el RegistroEntrada es un OficioRemision
-        if (oficioRemisionEntradaUtilsEjb.isOficioRemisionInterno(idRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva))) {
+        if (oficioRemisionEntradaUtilsEjb.isOficioRemision(idRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva))) {
             Mensaje.saveMessageError(request, getMessage("registroEntrada.distribuir.error"));
             return respuestaDistribucion;
         }

@@ -4,7 +4,6 @@ import es.caib.regweb3.model.Descarga;
 import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.Organismo;
-import es.caib.regweb3.model.utils.RegistroBasico;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -79,8 +78,7 @@ public class InicioController extends BaseController{
             }
 
             /* RESERVA DE NÚMERO */
-            List<RegistroBasico> pendientes = registroEntradaEjb.getByOficinaEstado(oficinaActiva.getId(), RegwebConstantes.REGISTRO_PENDIENTE, RegwebConstantes.REGISTROS_PANTALLA_INICIO);
-            mav.addObject("pendientes", pendientes);
+            mav.addObject("pendientes", registroEntradaEjb.getByOficinaEstado(oficinaActiva.getId(), RegwebConstantes.REGISTRO_PENDIENTE, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
 
             /* OFICIOS PENDIENTES DE REMISIÓN */
 

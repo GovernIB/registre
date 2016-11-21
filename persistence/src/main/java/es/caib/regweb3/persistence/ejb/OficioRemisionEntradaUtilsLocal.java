@@ -3,8 +3,6 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.OficioPendienteLlegada;
-import es.caib.regweb3.persistence.utils.OficiosRemisionExternoOrganismo;
-import es.caib.regweb3.persistence.utils.OficiosRemisionInternoOrganismo;
 import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -61,39 +59,6 @@ public interface OficioRemisionEntradaUtilsLocal {
      */
     public OficiosRemisionOrganismo oficiosEntradaPendientesRemision(Integer pageNumber, Integer any, Long idOficina, Long idLibro, String codigoOrganismo, Set<Long> organismos, Long idEntidadActiva) throws Exception;
 
-    /**
-     * Obtenemos los Organismos destinatarios PROPIOS que tiene Oficios de Remision pendientes de tramitar
-     *
-     * @param libros
-     * @param organismos Lista con los Destinatarios que no se consideran Oficio de Remisión
-     * @return
-     * @throws Exception
-     */
-    public List<Organismo> organismosPendientesRemisionInterna(Long idOficina, List<Libro> libros, Set<Long> organismos) throws Exception;
-
-    /**
-     * Busca los RegistroEntrada pendientes de tramitar mediante un OficioRemision INTERNI
-     * y los agrupa según su Organismo destinatario.
-     *
-     * @param any
-     * @param idOficina
-     * @param idLibro
-     * @param organismos Lista con los Destinatarios que no se consideran Oficio de Remisión
-     * @return
-     * @throws Exception
-     */
-    public OficiosRemisionInternoOrganismo oficiosPendientesRemisionInterna(Integer pageNumber,Integer any, Long idOficina, Long idLibro, Long idOrganismo, Set<Long> organismos) throws Exception;
-
-    /**
-     * Cuenta los Oficios pendientes de Remisión Interna de un conjunto de Libros
-     *
-     * @param libros
-     * @param organismos Lista con los Destinatarios que no se consideran Oficio de Remisión
-     * @return
-     * @throws Exception
-     */
-    public Long oficiosPendientesRemisionInternaCount(Long idOficina, List<Libro> libros, Set<Long> organismos) throws Exception;
-
 
     /**
      * Comprueba si un RegistroEntrada se considera un OficioRemision o no
@@ -103,38 +68,8 @@ public interface OficioRemisionEntradaUtilsLocal {
      * @return
      * @throws Exception
      */
-    public Boolean isOficioRemisionInterno(Long idRegistro, Set<Long> organismos) throws Exception;
+    public Boolean isOficioRemision(Long idRegistro, Set<Long> organismos) throws Exception;
 
-    /**
-     * Obtenemos los Organismos destinatarios EXTERNOS que tiene Oficios de Remision pendientes de tramitar
-     *
-     * @param libros
-     * @return
-     * @throws Exception
-     */
-    public List<Organismo> organismosPendientesRemisionExterna(Long idOficina, List<Libro> libros) throws Exception;
-
-    /**
-     * Busca los RegistroEntrada pendientes de tramitar mediante un OficioRemision EXTERNO, es decir, cuyo Organismo destino
-     * no pertenece a la Entidad Activa y los agrupa según su Organismo destinatario.
-     *
-     * @param any
-     * @param idOficina
-     * @param idLibro
-     * @param entidadActiva
-     * @return
-     * @throws Exception
-     */
-    public OficiosRemisionExternoOrganismo oficiosPendientesRemisionExterna(Integer pageNumber, Integer any, Long idOficina, Long idLibro, String codigoOrganismo, Entidad entidadActiva) throws Exception;
-
-    /**
-     * Cuenta los Oficios pendientes de Remisión Externa de un conjunto de Libros
-     *
-     * @param libros
-     * @return
-     * @throws Exception
-     */
-    public Long oficiosPendientesRemisionExternaCount(Long idOficina, List<Libro> libros) throws Exception;
 
     /**
      * Busca Oficios de Remisión de un Organismo propio, según los parámetros.

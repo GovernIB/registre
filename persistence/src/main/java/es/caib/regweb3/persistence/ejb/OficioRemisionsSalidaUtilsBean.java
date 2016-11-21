@@ -98,12 +98,13 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         q1 = em.createQuery("Select rs.registroDetalle.id from RegistroSalida as rs where " +
                 "rs.estado = :valido and rs.oficina.id = :idOficina and rs.libro in (:libros) and " +
                 "rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo = :administracion and codigoDir3 not in (:organismos)) and " +
-                " rs.id not in (select tra.registroSalida.id from Trazabilidad as tra where tra.oficioRemision.estado != :anulado)");
+                " rs.id not in (select tra.registroSalida.id from Trazabilidad as tra where tra.oficioRemision.tipoOficioRemision = :tipoOficioRemision and tra.oficioRemision.estado != :anulado)");
 
         // Parámetros
         q1.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q1.setParameter("idOficina", idOficina);
         q1.setParameter("libros", libros);
+        q1.setParameter("tipoOficioRemision", RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA);
         q1.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
         q1.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
         q1.setParameter("organismos", organismos);
@@ -207,7 +208,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         StringBuilder query = new StringBuilder("Select rs from RegistroSalida as rs where " + anyWhere +
                 "rs.libro.id = :idLibro and rs.oficina.id = :idOficina and rs.estado = :valido and " +
                 "rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo = :administracion and i.codigoDir3 = :codigoOrganismo) and " +
-                "rs.id not in (select tra.registroSalida.id from Trazabilidad as tra where tra.oficioRemision.estado != :anulado)");
+                "rs.id not in (select tra.registroSalida.id from Trazabilidad as tra where tra.oficioRemision.tipoOficioRemision = :tipoOficioRemision and tra.oficioRemision.estado != :anulado)");
 
         q2 = em.createQuery(query.toString().replaceAll("Select rs", "Select count(rs.id)"));
         query.append(" order by rs.fecha desc ");
@@ -222,6 +223,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         q.setParameter("idLibro", idLibro);
         q.setParameter("idOficina", idOficina);
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("tipoOficioRemision", RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA);
         q.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
         q.setParameter("codigoOrganismo", codigoOrganismo);
         q.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
@@ -229,6 +231,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         q2.setParameter("idLibro", idLibro);
         q2.setParameter("idOficina", idOficina);
         q2.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+        q2.setParameter("tipoOficioRemision", RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA);
         q2.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
         q2.setParameter("codigoOrganismo", codigoOrganismo);
         q2.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
@@ -379,6 +382,29 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
         return registros;
 
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Boolean isOficioRemision(Long idRegistro, Set<Long> organismos) throws Exception {
+
+
+
+        Query q;
+
+        q = em.createQuery("Select rs.registroDetalle.id from RegistroSalida as rs where " +
+                "rs.estado = :valido and rs.id = :idRegistro and " +
+                "rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo = :administracion and codigoDir3 not in (:organismos)) and " +
+                " rs.id not in (select tra.registroSalida.id from Trazabilidad as tra where tra.oficioRemision.tipoOficioRemision = :tipoOficioRemision and tra.oficioRemision.estado != :anulado)");
+
+        // Parámetros
+        q.setParameter("idRegistro", idRegistro);
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("organismos", organismos);
+        q.setParameter("tipoOficioRemision", RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
+        q.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
+
+        return q.getResultList().size() > 0;
     }
 
 }

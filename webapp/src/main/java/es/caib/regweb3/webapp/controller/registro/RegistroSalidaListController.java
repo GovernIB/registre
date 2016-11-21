@@ -2,6 +2,7 @@ package es.caib.regweb3.webapp.controller.registro;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.HistoricoRegistroSalidaLocal;
+import es.caib.regweb3.persistence.ejb.OficioRemisionSalidaUtilsLocal;
 import es.caib.regweb3.persistence.ejb.RegistroSalidaLocal;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
@@ -45,6 +46,9 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
     @EJB(mappedName = "regweb3/HistoricoRegistroSalidaEJB/local")
     public HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
+
+    @EJB(mappedName = "regweb3/OficioRemisionSalidaUtilsEJB/local")
+    private OficioRemisionSalidaUtilsLocal oficioRemisionSalidaUtilsEjb;
 
 
 
@@ -158,6 +162,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         Entidad entidadActiva = getEntidadActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         Oficina oficinaActiva = getOficinaActiva(request);
+        LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
         model.addAttribute("registro",registro);
         model.addAttribute("oficina", oficinaActiva);
@@ -172,9 +177,11 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         model.addAttribute("isAdministradorLibro", permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(),registro.getLibro().getId()));
         model.addAttribute("puedeEditar", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),registro.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA));
 
+        // OficioRemision
+        model.addAttribute("isOficioRemision", oficioRemisionSalidaUtilsEjb.isOficioRemision(idRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva)));
+
         // Interesados, solo si el Registro en Válio
         if(registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) && oficinaRegistral){
-            LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
             model.addAttribute("tiposInteresado",RegwebConstantes.TIPOS_INTERESADO);
             model.addAttribute("tiposPersona", RegwebConstantes.TIPOS_PERSONA);

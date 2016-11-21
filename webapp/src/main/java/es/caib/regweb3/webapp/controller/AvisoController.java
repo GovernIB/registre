@@ -58,7 +58,8 @@ public class AvisoController extends BaseController {
             LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
             List<Libro> librosAdministrados = getLibrosAdministrados(request);
-            List<Libro> librosRegistro = getLibrosRegistroEntrada(request);
+            List<Libro> librosRegistroEntrada = getLibrosRegistroEntrada(request);
+            List<Libro> librosRegistroSalida = getLibrosRegistroSalida(request);
 
             Long pendientesVisarEntrada = (long) 0;
             Long pendientesVisarSalida = (long) 0;
@@ -77,11 +78,15 @@ public class AvisoController extends BaseController {
             Long reservas = registroEntradaEjb.getByOficinaEstadoCount(oficinaActiva.getId(), RegwebConstantes.REGISTRO_PENDIENTE);
             mav.addObject("reservas", reservas);
 
-            // OFICIOS PENDIENTES DE REMISIÓN
-            if(librosRegistro!= null && librosRegistro.size() > 0){
+            // OFICIOS PENDIENTES DE REMISIÓN ENTRADA
+            if(librosRegistroEntrada!= null && librosRegistroEntrada.size() > 0){
+                oficiosEntradaPendientesRemision = oficioRemisionEntradaUtilsEjb.oficiosEntradaPendientesRemisionCount(oficinaActiva.getId(),librosRegistroEntrada, getOrganismosOficioRemision(request, organismosOficinaActiva));
+            }
 
-                oficiosEntradaPendientesRemision = oficioRemisionEntradaUtilsEjb.oficiosEntradaPendientesRemisionCount(oficinaActiva.getId(),librosRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva));
-                oficiosSalidaPendientesRemision = oficioRemisionSalidaUtilsEjb.oficiosSalidaPendientesRemisionCount(oficinaActiva.getId(),librosRegistro, getOrganismosOficioRemisionSalida(request, organismosOficinaActiva));
+            // OFICIOS PENDIENTES DE REMISIÓN SALIDA
+            if(librosRegistroEntrada!= null && librosRegistroEntrada.size() > 0){
+
+                oficiosSalidaPendientesRemision = oficioRemisionSalidaUtilsEjb.oficiosSalidaPendientesRemisionCount(oficinaActiva.getId(),librosRegistroSalida, getOrganismosOficioRemisionSalida(request, organismosOficinaActiva));
             }
 
             mav.addObject("oficiosEntradaPendientesRemision", oficiosEntradaPendientesRemision);

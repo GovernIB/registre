@@ -156,7 +156,6 @@ public class OficioRemisionController extends BaseController {
         model.addAttribute("librosRegistro", librosRegistroEntrada);
         model.addAttribute("organismosDestino", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemision(oficinaActiva.getId(), librosRegistroEntrada, getOrganismosOficioRemision(request, getOrganismosOficinaActiva(request))));
         model.addAttribute("registroEntradaBusqueda", oficioPendienteBusquedaForm);
-        model.addAttribute("tipo", "Interna");
         model.addAttribute("anys", getAnys());
 
 
@@ -214,7 +213,6 @@ public class OficioRemisionController extends BaseController {
         model.addAttribute("librosRegistro", librosRegistroSalida);
         model.addAttribute("organismosDestino", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemision(oficinaActiva.getId(), librosRegistroSalida, getOrganismosOficioRemisionSalida(request, getOrganismosOficinaActiva(request))));
         model.addAttribute("registroSalidaBusqueda", new OficioSalidaPendienteBusquedaForm(registroSalida,1));
-        model.addAttribute("tipo", "Interna");
         model.addAttribute("anys", getAnys());
 
 

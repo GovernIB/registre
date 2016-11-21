@@ -100,4 +100,14 @@ public interface OficioRemisionSalidaUtilsLocal {
     public List<RegistroEntrada> procesarOficioRemision(OficioRemision oficioRemision,
                                                         UsuarioEntidad usuario, Oficina oficinaActiva,
                                                         List<OficioPendienteLlegada> oficios) throws Exception, I18NException, I18NValidationException;
+
+    /**
+     * Comprueba si un RegistroSalida se considera un OficioRemision o no
+     *
+     * @param idRegistro
+     * @param organismos Lista con los Destinatarios que no se consideran Oficio de Remisión
+     * @return
+     * @throws Exception
+     */
+    public Boolean isOficioRemision(Long idRegistro, Set<Long> organismos) throws Exception;
 }
