@@ -99,7 +99,6 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
 
         List<Object[]> internos = q.getResultList();
-        log.info("Internos: " + internos.size());
         for (Object[] object : internos){
             Organismo organismo = new Organismo(null,(String) object[0], (String) object[1]);
 
@@ -122,14 +121,13 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         q1.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
 
         List<Object[]> externos = q1.getResultList();
-        log.info("Externos: " + externos.size());
 
         for (Object[] object : externos){
             Organismo organismo = new Organismo(null,(String) object[0], (String) object[1]);
 
             organismosDestino.add(organismo);
         }
-        log.info("Total organismosDestino: " + organismosDestino.size());
+
         return organismosDestino;
 
     }

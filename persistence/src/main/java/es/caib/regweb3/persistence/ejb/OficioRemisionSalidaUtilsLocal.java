@@ -109,5 +109,5 @@ public interface OficioRemisionSalidaUtilsLocal {
      * @return
      * @throws Exception
      */
-    public Boolean isOficioRemision(Long idRegistro, Set<Long> organismos) throws Exception;
+    public Boolean isOficioRemision(Long idRegistro, Set<String> organismos) throws Exception;
 }
