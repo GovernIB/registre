@@ -85,7 +85,14 @@ public class DatosInteresadoConverter extends CommonConverter {
             interesado.setTipoDocumentoIdentificacion(RegwebConstantes.TIPODOCUMENTOID_BY_CODIGO_NTI.get(datosInteresadoWs.getTipoDocumentoIdentificacion().charAt(0)));
         }
         
-        if(!StringUtils.isEmpty(datosInteresadoWs.getDocumento())){interesado.setDocumento(datosInteresadoWs.getDocumento());}
+        if(!StringUtils.isEmpty(datosInteresadoWs.getDocumento())){
+            interesado.setDocumento(datosInteresadoWs.getDocumento());
+            // Si es un Interesado tipo Administración, copiamos el Documento al campo CodigoDir3
+            if(datosInteresadoWs.getTipoInteresado().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
+                interesado.setCodigoDir3(datosInteresadoWs.getDocumento());
+            }
+        }
+
         if(!StringUtils.isEmpty(datosInteresadoWs.getRazonSocial())){interesado.setRazonSocial(datosInteresadoWs.getRazonSocial());}
         if(datosInteresadoWs.getPais() != null){interesado.setPais(getPais(datosInteresadoWs.getPais(), catPaisEjb));}
         if(datosInteresadoWs.getProvincia() != null){interesado.setProvincia(getProvincia(datosInteresadoWs.getProvincia(), catProvinciaEjb));}
