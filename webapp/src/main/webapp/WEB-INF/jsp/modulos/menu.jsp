@@ -141,6 +141,7 @@
                 <c:if test="${rolAutenticado.nombre == 'RWE_USUARI'}">
                     <sec:authorize access="hasRole('RWE_USUARI')">
 
+                        <%--Menú REGISTRO ENTRADA--%>
                         <div class="btn-group">
                             <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
                                 <spring:message code="menu.entradas"/> <span class="caret"></span>
@@ -157,8 +158,9 @@
                                 <%}%>
 
                             </ul>
-                        </div><!-- /btn-group -->
+                        </div>
 
+                        <%--Menú REGISTRO SALIDA--%>
                         <div class="btn-group">
                             <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">
                                 <spring:message code="menu.salidas"/> <span class="caret"></span>
@@ -171,27 +173,30 @@
                             </ul>
                         </div>
 
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown">
-                                <spring:message code="menu.oficiosRemision"/> <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a href="<c:url value="/oficioRemision/list"/>"><spring:message code="oficioRemision.listado"/></a></li>
-                                <li><a href="<c:url value="/oficioRemision/pendientesLlegada/list"/>"><spring:message code="oficioRemision.pendientesLlegada"/></a></li>
-                                <li class="divider"></li>
-                                <li><a href="<c:url value="/oficioRemision/entradasPendientesRemision"/>"><spring:message code="registroEntrada.oficiosRemision"/></a></li>
-                                <li><a href="<c:url value="/oficioRemision/salidasPendientesRemision"/>"><spring:message code="registroSalida.oficiosRemision"/></a></li>
-                                <c:if test="${entidadActiva.sir}">
+                        <%--Menú OFICIO REMISIÓN--%>
+                        <c:if test="${entidadActiva.oficioRemision}">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown">
+                                    <spring:message code="menu.oficiosRemision"/> <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="<c:url value="/oficioRemision/list"/>"><spring:message code="oficioRemision.listado"/></a></li>
+                                    <li><a href="<c:url value="/oficioRemision/pendientesLlegada/list"/>"><spring:message code="oficioRemision.pendientesLlegada"/></a></li>
                                     <li class="divider"></li>
-                                    <li class="dropdown-submenu-left toggle-left">
-                                        <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> <spring:message code="regweb.sir"/></a>
-                                        <ul class="dropdown-menu">
-                                            <li class="submenu-complet"><a href="<c:url value="/asientoRegistralSir/list"/>"><spring:message code="asientoRegistralSir.listado"/></a></li>
-                                        </ul>
-                                    </li>
-                                </c:if>
-                            </ul>
-                        </div>
+                                    <li><a href="<c:url value="/oficioRemision/entradasPendientesRemision"/>"><spring:message code="registroEntrada.oficiosRemision"/></a></li>
+                                    <li><a href="<c:url value="/oficioRemision/salidasPendientesRemision"/>"><spring:message code="registroSalida.oficiosRemision"/></a></li>
+                                    <c:if test="${entidadActiva.sir}">
+                                        <li class="divider"></li>
+                                        <li class="dropdown-submenu-left toggle-left">
+                                            <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> <spring:message code="regweb.sir"/></a>
+                                            <ul class="dropdown-menu">
+                                                <li class="submenu-complet"><a href="<c:url value="/asientoRegistralSir/list"/>"><spring:message code="asientoRegistralSir.listado"/></a></li>
+                                            </ul>
+                                        </li>
+                                    </c:if>
+                                </ul>
+                            </div>
+                        </c:if>
 
                         <div class="btn-group">
                             <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown">

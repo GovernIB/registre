@@ -171,7 +171,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @Override
     public List<Entidad> getEntidadesAdministrador(Long idUsuario) throws Exception{
 
-        Query q = em.createQuery("Select entidad.id, entidad.nombre from Entidad as entidad, UsuarioEntidad as usuarioEntidad where usuarioEntidad in elements(entidad.administradores) " +
+        Query q = em.createQuery("Select entidad.id, entidad.nombre, entidad.oficioRemision from Entidad as entidad, UsuarioEntidad as usuarioEntidad where usuarioEntidad in elements(entidad.administradores) " +
                 "and usuarioEntidad.usuario.id = :idUsuario and entidad.activo = true order by entidad.id");
 
         q.setParameter("idUsuario",idUsuario);
@@ -181,7 +181,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result){
-            Entidad entidad = new Entidad((Long)object[0],(String)object[1]);
+            Entidad entidad = new Entidad((Long)object[0],(String)object[1], (Boolean) object[2]);
 
             entidades.add(entidad);
         }
@@ -192,7 +192,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @Override
     public List<Entidad> getEntidadesPropietario(Long idUsuario) throws Exception {
 
-        Query q = em.createQuery("Select entidad.id, entidad.nombre from Entidad as entidad where entidad.propietario.id = :idUsuario " +
+        Query q = em.createQuery("Select entidad.id, entidad.nombre, entidad.oficioRemision from Entidad as entidad where entidad.propietario.id = :idUsuario " +
                 "and entidad.activo = true order by entidad.id");
 
         q.setParameter("idUsuario",idUsuario);
@@ -202,7 +202,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result){
-            Entidad entidad = new Entidad((Long)object[0],(String)object[1]);
+            Entidad entidad = new Entidad((Long)object[0],(String)object[1], (Boolean) object[2]);
 
             entidades.add(entidad);
         }

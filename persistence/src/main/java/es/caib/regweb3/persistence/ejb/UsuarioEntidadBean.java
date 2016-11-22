@@ -273,7 +273,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
     @Override
     public List<Entidad> getEntidadesByUsuario(Long idUsuario) throws Exception {
 
-        Query q = em.createQuery("Select usuarioEntidad.entidad.id, usuarioEntidad.entidad.nombre from UsuarioEntidad as usuarioEntidad where " +
+        Query q = em.createQuery("Select usuarioEntidad.entidad.id, usuarioEntidad.entidad.nombre, usuarioEntidad.entidad.oficioRemision from UsuarioEntidad as usuarioEntidad where " +
                 "usuarioEntidad.usuario.id = :idUsuario and usuarioEntidad.entidad.activo = true and usuarioEntidad.activo = true order by usuarioEntidad.entidad.id");
 
         q.setParameter("idUsuario",idUsuario);
@@ -283,7 +283,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result){
-            Entidad entidad = new Entidad((Long)object[0],(String)object[1]);
+            Entidad entidad = new Entidad((Long)object[0],(String)object[1], (Boolean) object[2]);
 
             entidades.add(entidad);
         }

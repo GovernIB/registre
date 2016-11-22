@@ -4,7 +4,6 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.OficioPendienteLlegada;
 import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
-import es.caib.regweb3.persistence.utils.Paginacion;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
@@ -26,15 +25,7 @@ import java.util.Set;
 public interface OficioRemisionSalidaUtilsLocal {
 
     /**
-     * @param idOficina
-     * @param libros
-     * @param organismos
-     * @return
-     * @throws Exception
-     */
-    public Long oficiosSalidaPendientesRemisionCount(Long idOficina, List<Libro> libros, Set<String> organismos) throws Exception;
-
-    /**
+     * Obtiene los Organimos destino de los Registros de Salida que están considerados Oficios de Remisión
      * @param idOficina
      * @param libros
      * @param organismos
@@ -44,27 +35,27 @@ public interface OficioRemisionSalidaUtilsLocal {
     public List<Organismo> organismosSalidaPendientesRemision(Long idOficina, List<Libro> libros, Set<String> organismos) throws Exception;
 
     /**
+     * Obtiene el total de Registros de Salida que están considerados Oficios de Remisión
+     * @param idOficina
+     * @param libros
+     * @param organismos
+     * @return
+     * @throws Exception
+     */
+    public Long oficiosSalidaPendientesRemisionCount(Long idOficina, List<Libro> libros, Set<String> organismos) throws Exception;
+
+    /**
+     * Obtiene todos los Registros de Salida que están considerados Oficios de Remisión de un Organismo destinatario en concreto
      * @param pageNumber
      * @param any
-     * @param idOficina
-     * @param idLibro
-     * @param codigoOrganismo
+     * @param idOficina Oficina activa
+     * @param idLibro Libro seleccionado
+     * @param codigoOrganismo Organismo destinatario seleccionado
      * @param entidadActiva
      * @return
      * @throws Exception
      */
     public OficiosRemisionOrganismo oficiosSalidaPendientesRemision(Integer pageNumber, Integer any, Long idOficina, Long idLibro, String codigoOrganismo, Entidad entidadActiva) throws Exception;
-
-    /**
-     * @param pageNumber
-     * @param codigoOrganismo
-     * @param any
-     * @param idOficina
-     * @param idLibro
-     * @return
-     * @throws Exception
-     */
-    public Paginacion oficiosSalidaByOrganismo(Integer pageNumber, String codigoOrganismo, Integer any, Long idOficina, Long idLibro) throws Exception;
 
     /**
      * @param registrosSalida

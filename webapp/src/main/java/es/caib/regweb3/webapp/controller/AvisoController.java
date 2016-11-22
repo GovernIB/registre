@@ -52,6 +52,7 @@ public class AvisoController extends BaseController {
         Long start = System.currentTimeMillis();
         ModelAndView mav = new ModelAndView("modulos/avisos");
         Oficina oficinaActiva = getOficinaActiva(request);
+        Entidad entidadActiva = getEntidadActiva(request);
 
         if(isOperador(request) && oficinaActiva != null) {
 
@@ -78,23 +79,28 @@ public class AvisoController extends BaseController {
             Long reservas = registroEntradaEjb.getByOficinaEstadoCount(oficinaActiva.getId(), RegwebConstantes.REGISTRO_PENDIENTE);
             mav.addObject("reservas", reservas);
 
-            // OFICIOS PENDIENTES DE REMISIÓN ENTRADA
-            if(librosRegistroEntrada!= null && librosRegistroEntrada.size() > 0){
-                oficiosEntradaPendientesRemision = oficioRemisionEntradaUtilsEjb.oficiosEntradaPendientesRemisionCount(oficinaActiva.getId(),librosRegistroEntrada, getOrganismosOficioRemision(request, organismosOficinaActiva));
+            /* OFICIOS DE REMISIÓN */
+            if(entidadActiva.getOficioRemision()){
+
+                // OFICIOS PENDIENTES DE REMISIÓN ENTRADA
+                if(librosRegistroEntrada!= null && librosRegistroEntrada.size() > 0){
+
+                    oficiosEntradaPendientesRemision = oficioRemisionEntradaUtilsEjb.oficiosEntradaPendientesRemisionCount(oficinaActiva.getId(),librosRegistroEntrada, getOrganismosOficioRemision(request, organismosOficinaActiva));
+                }
+
+                // OFICIOS PENDIENTES DE REMISIÓN SALIDA
+                if(librosRegistroEntrada!= null && librosRegistroEntrada.size() > 0){
+
+                    oficiosSalidaPendientesRemision = oficioRemisionSalidaUtilsEjb.oficiosSalidaPendientesRemisionCount(oficinaActiva.getId(),librosRegistroSalida, getOrganismosOficioRemisionSalida(request, organismosOficinaActiva));
+                }
+
+                mav.addObject("oficiosEntradaPendientesRemision", oficiosEntradaPendientesRemision);
+                mav.addObject("oficiosSalidaPendientesRemision", oficiosSalidaPendientesRemision);
+
+                // OFICIOS PENDIENTES DE LLEGADA
+                mav.addObject("oficiosPendientesLlegada", oficioRemisionEjb.oficiosPendientesLlegadaCount(organismosOficinaActiva));
             }
 
-            // OFICIOS PENDIENTES DE REMISIÓN SALIDA
-            if(librosRegistroEntrada!= null && librosRegistroEntrada.size() > 0){
-
-                oficiosSalidaPendientesRemision = oficioRemisionSalidaUtilsEjb.oficiosSalidaPendientesRemisionCount(oficinaActiva.getId(),librosRegistroSalida, getOrganismosOficioRemisionSalida(request, organismosOficinaActiva));
-            }
-
-            mav.addObject("oficiosEntradaPendientesRemision", oficiosEntradaPendientesRemision);
-            mav.addObject("oficiosSalidaPendientesRemision", oficiosSalidaPendientesRemision);
-
-            // OFICIOS PENDIENTES DE LLEGADA
-            Long oficiosPendientesLlegada = oficioRemisionEjb.oficiosPendientesLlegadaCount(organismosOficinaActiva);
-            mav.addObject("oficiosPendientesLlegada", oficiosPendientesLlegada);
 
         }
         Long end = System.currentTimeMillis();

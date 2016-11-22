@@ -1,9 +1,6 @@
 package es.caib.regweb3.webapp.controller;
 
-import es.caib.regweb3.model.Descarga;
-import es.caib.regweb3.model.Libro;
-import es.caib.regweb3.model.Oficina;
-import es.caib.regweb3.model.Organismo;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -61,48 +58,45 @@ public class InicioController extends BaseController{
 
         ModelAndView mav = new ModelAndView("inicio");
         Oficina oficinaActiva = getOficinaActiva(request);
+        Entidad entidadActiva = getEntidadActiva(request);
 
         // Solo obtenemos los datos para el dashboard si el Usuario es Operador
         if(isOperador(request) && oficinaActiva != null){
 
             LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
-            List<Libro> librosAdministrados = getLibrosAdministrados(request);
             List<Libro> librosRegistroEntrada = getLibrosRegistroEntrada(request);
             List<Libro> librosRegistroSalida = getLibrosRegistroSalida(request);
 
-            /*Registros Pendientes de Visar y con Reserva de Numero*/
-            if(librosAdministrados!= null && librosAdministrados.size() > 0){
-                //List<RegistroBasico> pendientesVisar = registroEntradaEjb.getByLibrosEstado(librosAdministrados, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
-                //model.addAttribute("pendientesVisar", pendientesVisar);
-            }
 
             /* RESERVA DE NÚMERO */
             mav.addObject("pendientes", registroEntradaEjb.getByOficinaEstado(oficinaActiva.getId(), RegwebConstantes.REGISTRO_PENDIENTE, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
 
             /* OFICIOS PENDIENTES DE REMISIÓN */
+            if(entidadActiva.getOficioRemision()){
 
-            // Comprueba si hay libros de Registro
-            if(librosRegistroEntrada.size() > 0) {
+                // Comprueba si hay libros de Registro de entrada
+                if(librosRegistroEntrada.size() > 0) {
 
-                // Obtenemos los Organismos que tienen Registros pendientes de tramitar por medio de un Oficio de Revisión
-                mav.addObject("organismosOficioRemisionEntrada", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemision(oficinaActiva.getId(), librosRegistroEntrada,getOrganismosOficioRemision(request, organismosOficinaActiva)));
+                    // Obtenemos los Organismos que tienen Registros pendientes de tramitar por medio de un Oficio de Revisión
+                    mav.addObject("organismosOficioRemisionEntrada", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemision(oficinaActiva.getId(), librosRegistroEntrada,getOrganismosOficioRemision(request, organismosOficinaActiva)));
+
+                    /* Obtenemos los Asientos Registrales Sir pendientes de procesar */
+                    if(entidadActiva.getSir()) {
+                        List<AsientoRegistralSir> asientosRegistralesSir = asientosRegistralSirEjb.getUltimosARSPendientesProcesar(oficinaActiva.getCodigo(), RegwebConstantes.REGISTROS_PANTALLA_INICIO);
+                        mav.addObject("asientosRegistralesSir", asientosRegistralesSir);
+                    }
+                }
+
+                if(librosRegistroSalida.size() > 0) {
+
+                    // Obtenemos los Organismos que tienen Registros de salida pendientes de tramitar por medio de un Oficio de Revisión,
+                    mav.addObject("organismosOficioRemisionSalida", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemision(oficinaActiva.getId(), librosRegistroSalida, getOrganismosOficioRemisionSalida(request, organismosOficinaActiva)));
+                }
 
                 // Obtenemos los Oficios pendientes de Llegada
                 mav.addObject("oficiosPendientesLlegada", oficioRemisionEjb.oficiosPendientesLlegada(organismosOficinaActiva, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
-            }
 
-            if(librosRegistroSalida.size() > 0) {
-
-                // Obtenemos los Organismos que tienen Registros de salida pendientes de tramitar por medio de un Oficio de Revisión,
-                mav.addObject("organismosOficioRemisionSalida", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemision(oficinaActiva.getId(), librosRegistroSalida, getOrganismosOficioRemisionSalida(request, organismosOficinaActiva)));
-            }
-
-            /* ASIENTOS REGISTRALES SIR PENDIENTES DE PROCESAR */
-            /* Buscamos los Últimos AsientoRegistralSir que están pendientes de procesar*/
-            if(isSir(request) && librosRegistroEntrada.size() > 0) { // Sólo muestra los AsientoRegistralSir si tiene permisos de RegistroEntrada
-                List<AsientoRegistralSir> asientosRegistralesSir = asientosRegistralSirEjb.getUltimosARSPendientesProcesar(oficinaActiva.getCodigo(), RegwebConstantes.REGISTROS_PANTALLA_INICIO);
-                mav.addObject("asientosRegistralesSir", asientosRegistralesSir);
             }
 
         }

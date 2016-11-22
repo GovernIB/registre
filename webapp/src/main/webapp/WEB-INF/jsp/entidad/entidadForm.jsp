@@ -144,6 +144,14 @@
                                             </div>
                                             <div class="form-group col-xs-6">
                                                 <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                                    <form:label path="entidad.oficioRemision"><spring:message code="oficioRemision.oficioRemision"/></form:label>
+                                                </div>
+                                                <div class="col-xs-8">
+                                                    <form:checkbox path="entidad.oficioRemision"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-xs-6">
+                                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                                                     <form:label path="entidad.sir"><spring:message code="regweb.sir"/></form:label>
                                                 </div>
                                                 <div class="col-xs-8">

@@ -63,6 +63,8 @@ public class Entidad implements Serializable {
     @XmlTransient
     private Boolean sir = false;
     @XmlTransient
+    private Boolean oficioRemision = false;
+    @XmlTransient
     private Boolean activo = true;
     @XmlTransient
     private String tipoScan;
@@ -110,9 +112,10 @@ public class Entidad implements Serializable {
       this.posYsello = e.posYsello;
     }
 
-    public Entidad(Long id, String nombre) {
+    public Entidad(Long id, String nombre, Boolean oficioRemision) {
         this.id = id;
         this.nombre = nombre;
+        this.oficioRemision = oficioRemision;
     }
 
     @Id
@@ -300,6 +303,15 @@ public class Entidad implements Serializable {
     @Column(name="SIR",nullable= false)
     public Boolean getSir() {
         return sir;
+    }
+
+    @Column(name="OFICIOREMISION",nullable= false)
+    public Boolean getOficioRemision() {
+        return oficioRemision;
+    }
+
+    public void setOficioRemision(Boolean oficioRemision) {
+        this.oficioRemision = oficioRemision;
     }
 
     public void setSir(Boolean sir) {

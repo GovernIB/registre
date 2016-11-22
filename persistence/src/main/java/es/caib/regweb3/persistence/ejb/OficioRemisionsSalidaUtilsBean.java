@@ -193,7 +193,6 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
     }
 
-    @Override
     @SuppressWarnings(value = "unchecked")
     public Paginacion oficiosSalidaByOrganismo(Integer pageNumber, String codigoOrganismo, Integer any, Long idOficina, Long idLibro) throws Exception {
 
@@ -417,8 +416,6 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
     @Override
     @SuppressWarnings(value = "unchecked")
     public Boolean isOficioRemision(Long idRegistro, Set<String> organismos) throws Exception {
-
-
 
         Query q;
 
