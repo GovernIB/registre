@@ -576,7 +576,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                     elem.addCDATA(interesadoSir.getCodigoProvinciaRepresentante());
                 }
                 // Municipio_Representante
-                if (interesadoSir.getCodigoMunicipioInteresado() != null) {
+                if (interesadoSir.getCodigoMunicipioRepresentante() != null) {
                     elem = rootElement.addElement("Municipio_Representante");
                     elem.addCDATA(interesadoSir.getCodigoMunicipioRepresentante());
                 }
