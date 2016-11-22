@@ -159,7 +159,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
                 if (interesado.getCanalPreferenteComunicacionInteresado() != null) {
                     if (interesado.getCanalPreferenteComunicacionInteresado()
-                            .equals(CanalNotificacion.DIRECCION_POSTAL)) {
+                            .equals(CanalNotificacion.DIRECCION_POSTAL.getValue())) {
                         Assert.hasText(interesado.getCodigoPaisInteresado(),
                                 "'codigoPaisInteresado' no puede estar vacio");
                         Assert.hasText(interesado.getDireccionInteresado(),
@@ -180,7 +180,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
                     } else if (interesado
                             .getCanalPreferenteComunicacionInteresado()
-                            .equals(CanalNotificacion.DIRECCION_ELECTRONICA_HABILITADA)) {
+                            .equals(CanalNotificacion.DIRECCION_ELECTRONICA_HABILITADA.getValue())) {
                         Assert.hasText(interesado
                                         .getDireccionElectronicaHabilitadaInteresado(),
                                 "'direccionElectronicaHabilitadaInteresado' no puede estar vacio");
@@ -190,7 +190,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                 if (interesado.getCanalPreferenteComunicacionRepresentante() != null) {
                     if (interesado
                             .getCanalPreferenteComunicacionRepresentante()
-                            .equals(CanalNotificacion.DIRECCION_POSTAL)) {
+                            .equals(CanalNotificacion.DIRECCION_POSTAL.getValue())) {
 
                         Assert.hasText(interesado.getCodigoPaisRepresentante(),
                                 "'codigoPaisRepresentante' no puede estar vacio");
@@ -212,7 +212,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
 
                     } else if (interesado
                             .getCanalPreferenteComunicacionRepresentante()
-                            .equals(CanalNotificacion.DIRECCION_ELECTRONICA_HABILITADA)) {
+                            .equals(CanalNotificacion.DIRECCION_ELECTRONICA_HABILITADA.getValue())) {
                         Assert.hasText(
                                 interesado
                                         .getDireccionElectronicaHabilitadaRepresentante(),
@@ -241,7 +241,7 @@ public class SicresXMLManagerImpl implements SicresXMLManager {
                 Assert.notNull(anexo.getHash(), "'hash' must not be null");
 
                 // Si en documento es de tipo "02 - Documento Adjunto"
-                if (TipoDocumento.DOCUMENTO_ADJUNTO.equals(anexo.getTipoDocumento())) {
+                if (TipoDocumento.DOCUMENTO_ADJUNTO.getValue().equals(anexo.getTipoDocumento())) {
                     numAdjuntos++;
                 }
 
