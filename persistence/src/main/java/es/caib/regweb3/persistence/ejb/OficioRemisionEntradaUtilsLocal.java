@@ -57,7 +57,7 @@ public interface OficioRemisionEntradaUtilsLocal {
      * @return
      * @throws Exception
      */
-    public OficiosRemisionOrganismo oficiosEntradaPendientesRemision(Integer pageNumber, Integer any, Long idOficina, Long idLibro, String codigoOrganismo, Set<Long> organismos, Long idEntidadActiva) throws Exception;
+    public OficiosRemisionOrganismo oficiosEntradaPendientesRemision(Integer pageNumber, Integer any, Long idOficina, Long idLibro, String codigoOrganismo, Set<Long> organismos, Entidad entidadActiva) throws Exception;
 
 
     /**

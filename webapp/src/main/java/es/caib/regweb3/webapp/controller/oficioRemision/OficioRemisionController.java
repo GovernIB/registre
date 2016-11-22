@@ -184,7 +184,7 @@ public class OficioRemisionController extends BaseController {
         LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
         // Obtenemos los Registros de Entrada, pendientes de tramitar por medio de un Oficio de Revisión, agrupados según su Organismos destinatario.
-        OficiosRemisionOrganismo oficiosRemisionOrganismo = oficioRemisionEntradaUtilsEjb.oficiosEntradaPendientesRemision(busqueda.getPageNumber(), busqueda.getAnyo(), oficinaActiva.getId(), registroEntrada.getLibro().getId(), registroEntrada.getDestino().getCodigo(), getOrganismosOficioRemision(request, organismosOficinaActiva), entidadActiva.getId());
+        OficiosRemisionOrganismo oficiosRemisionOrganismo = oficioRemisionEntradaUtilsEjb.oficiosEntradaPendientesRemision(busqueda.getPageNumber(), busqueda.getAnyo(), oficinaActiva.getId(), registroEntrada.getLibro().getId(), registroEntrada.getDestino().getCodigo(), getOrganismosOficioRemision(request, organismosOficinaActiva), entidadActiva);
 
         busqueda.setPageNumber(1);
         mav.addObject("oficiosRemisionOrganismo", oficiosRemisionOrganismo);
