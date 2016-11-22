@@ -189,6 +189,11 @@
                 </c:import>
             </c:if>
 
+            <%--TRAZABILIDAD--%>
+            <c:if test="${not empty trazabilidades}">
+                <c:import url="../trazabilidad/trazabilidadSalida.jsp"/>
+            </c:if>
+
             <!-- MODIFICACIONES REGISTRO -->
             <c:if test="${not empty historicos && registro.estado != RegwebConstantes.REGISTRO_PENDIENTE}">
                 <c:import url="../registro/modificaciones.jsp">
@@ -196,10 +201,6 @@
                 </c:import>
             </c:if>
 
-            <%--TRAZABILIDAD--%>
-            <c:if test="${not empty trazabilidades}">
-                <c:import url="../trazabilidad/trazabilidadSalida.jsp"/>
-            </c:if>
         </div>
     
     </div>
