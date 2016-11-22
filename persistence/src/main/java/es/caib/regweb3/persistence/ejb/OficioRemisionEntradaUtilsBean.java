@@ -181,11 +181,11 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public OficiosRemisionOrganismo oficiosEntradaPendientesRemision(Integer pageNumber, Integer any, Long idOficina, Long idLibro, String codigoOrganismo, Set<Long> organismos, Long idEntidadActiva) throws Exception {
+    public OficiosRemisionOrganismo oficiosEntradaPendientesRemision(Integer pageNumber, Integer any, Long idOficina, Long idLibro, String codigoOrganismo, Set<Long> organismos, Entidad entidadActiva) throws Exception {
 
         OficiosRemisionOrganismo oficios = new OficiosRemisionOrganismo();
 
-        Organismo organismo = organismoEjb.findByCodigoEntidad(codigoOrganismo, idEntidadActiva);
+        Organismo organismo = organismoEjb.findByCodigoEntidad(codigoOrganismo, entidadActiva.getId());
 
         if(organismo != null) { // Destinatario organismo interno
             oficios.setOrganismo(organismo);
@@ -210,8 +210,8 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
                 oficios.setOrganismo(organismoExterno);
 
                 // Comprueba si la Entidad Actual está en SIR
-                Boolean isSir = (Boolean) em.createQuery("select e.sir from Entidad as e where e.id = :id").setParameter("id", idEntidadActiva).getSingleResult();
-                if (isSir) {
+                //Boolean isSir = (Boolean) em.createQuery("select e.sir from Entidad as e where e.id = :id").setParameter("id", idEntidadActiva).getSingleResult();
+                if (entidadActiva.getSir()) {
                     // Averiguamos si el Organismo Externo está en Sir o no
                     Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
                     List<OficinaTF> oficinasSIR = oficinasService.obtenerOficinasSIRUnidad(organismoExterno.getCodigo()); //TODO: Revisar que la cerca d'Oficines SIR la fa correctament
