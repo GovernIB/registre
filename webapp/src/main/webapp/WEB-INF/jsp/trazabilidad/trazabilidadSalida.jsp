@@ -11,7 +11,7 @@
         <div class="panel-body">
             <ul class="timeline">
 
-                <c:forEach var="trazabilidad" items="${trazabilidades}" varStatus="loopStatus" >
+                <c:forEach var="trazabilidad" items="${trazabilidades}" varStatus="status" >
 
                     <%--OFICIO REMISION ENTRADA--%>
                     <c:if test="${trazabilidad.oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA}">
@@ -42,12 +42,15 @@
                     <c:if test="${trazabilidad.oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA}">
 
                         <%--REGISTRO SALIDA--%>
-                        <li>
-                            <c:set var="registroSalida" value="${trazabilidad.registroSalida}" scope="request"/>
-                            <c:import url="../trazabilidad/registroSalida.jsp">
-                                <c:param name="activo" value="true"/>
-                            </c:import>
-                        </li>
+                        <c:if test="${status.first}">
+                            <li>
+                                <c:set var="registroSalida" value="${trazabilidad.registroSalida}" scope="request"/>
+                                <c:import url="../trazabilidad/registroSalida.jsp">
+                                    <c:param name="activo" value="true"/>
+                                </c:import>
+                            </li>
+
+                        </c:if>
 
                         <%--OFICIO REMISION--%>
                         <li>

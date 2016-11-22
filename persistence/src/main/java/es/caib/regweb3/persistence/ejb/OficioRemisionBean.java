@@ -275,7 +275,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
                 registroSalidaEjb.cambiarEstado(registroSalida,RegwebConstantes.REGISTRO_ANULADO, usuarioEntidad);
             }
 
-        }else if(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA.equals(oficioRemision.getTipoOficioRemision())){
+        }else if(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA.equals(oficioRemision.getTipoOficioRemision())){
 
             List<RegistroSalida> registrosSalida = getSalidasByOficioRemision(oficioRemision.getId());
             // Modificamos el estado de cada RS a Válido
