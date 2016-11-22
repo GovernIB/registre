@@ -161,8 +161,8 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
                 oficios.setOrganismo(organismoExterno);
 
                 // Comprueba si la Entidad Actual está en SIR
-                Boolean isSir = (Boolean) em.createQuery("select e.sir from Entidad as e where e.id = :id").setParameter("id", entidadActiva.getId()).getSingleResult();
-                if (isSir) {
+                //Boolean isSir = (Boolean) em.createQuery("select e.sir from Entidad as e where e.id = :id").setParameter("id", entidadActiva.getId()).getSingleResult();
+                if (entidadActiva.getSir()) {
                     // Averiguamos si el Organismo Externo está en Sir o no
                     Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
                     List<OficinaTF> oficinasSIR = oficinasService.obtenerOficinasSIRUnidad(organismoExterno.getCodigo()); //TODO: Revisar que la cerca d'Oficines SIR la fa correctament
@@ -315,6 +315,36 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         oficioRemision.setOficina(oficinaActiva);
         oficioRemision.setFecha(new Date());
         oficioRemision.setRegistrosSalida(registrosSalida);
+        oficioRemision.setUsuarioResponsable(usuarioEntidad);
+        oficioRemision.setLibro(new Libro(idLibro));
+        oficioRemision.setDestinoExternoCodigo(organismoExterno);
+        oficioRemision.setDestinoExternoDenominacion(organismoExternoDenominacion);
+        oficioRemision.setOrganismoDestinatario(null);
+
+        synchronized (this) {
+            oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision,
+                    RegwebConstantes.REGISTRO_OFICIO_EXTERNO, RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA);
+        }
+
+        return oficioRemision;
+
+    }
+
+    @Override
+    public OficioRemision crearOficioRemisionSir(RegistroSalida registroSalida, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, String organismoExterno, String organismoExternoDenominacion, Long idLibro, String identificadorIntercambio) throws Exception, I18NException, I18NValidationException {
+
+
+        List<RegistroSalida> registros = new ArrayList<RegistroSalida>();
+        registros.add(registroSalida);
+
+        OficioRemision oficioRemision = new OficioRemision();
+        oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA);
+        oficioRemision.setIdentificadorIntercambioSir(identificadorIntercambio);
+        oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_EXTERNO_ENVIADO);
+        oficioRemision.setFechaEstado(new Date());
+        oficioRemision.setOficina(oficinaActiva);
+        oficioRemision.setFecha(new Date());
+        oficioRemision.setRegistrosSalida(registros);
         oficioRemision.setUsuarioResponsable(usuarioEntidad);
         oficioRemision.setLibro(new Libro(idLibro));
         oficioRemision.setDestinoExternoCodigo(organismoExterno);

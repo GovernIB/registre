@@ -103,8 +103,8 @@ public class SirBean implements SirLocal{
         asientoRegistralSir.setTipoRegistro(TipoRegistro.ENTRADA);
         asientoRegistralSir.setDocumentacionFisica(String.valueOf(registroDetalle.getTipoDocumentacionFisica()));
         asientoRegistralSir.setObservacionesApunte(registroDetalle.getObservaciones());
-        asientoRegistralSir.setCodigoEntidadRegistralInicio(obtenerCodigoOficinaOrigen(registroEntrada));
-        asientoRegistralSir.setDecodificacionEntidadRegistralInicio(obtenerDenominacionOficinaOrigen(registroEntrada));
+        asientoRegistralSir.setCodigoEntidadRegistralInicio(obtenerCodigoOficinaOrigen(registroDetalle,registroEntrada.getOficina().getCodigo()));
+        asientoRegistralSir.setDecodificacionEntidadRegistralInicio(obtenerDenominacionOficinaOrigen(registroDetalle, registroEntrada.getOficina().getDenominacion()));
         asientoRegistralSir.setExpone(registroDetalle.getExpone());
         asientoRegistralSir.setSolicita(registroDetalle.getSolicita());
 
@@ -168,6 +168,57 @@ public class SirBean implements SirLocal{
         }
 
         return registroEntrada;
+    }
+
+    public AsientoRegistralSir transformarRegistroSalida(RegistroSalida registroSalida, OficinaTF oficinaSir)
+            throws Exception, I18NException, I18NValidationException{
+
+        RegistroDetalle registroDetalle = registroSalida.getRegistroDetalle();
+
+        AsientoRegistralSir asientoRegistralSir = new AsientoRegistralSir();
+        asientoRegistralSir.setEntidad(registroSalida.getOficina().getOrganismoResponsable().getEntidad());
+        asientoRegistralSir.setCodigoEntidadRegistral(registroSalida.getOficina().getCodigo());
+        asientoRegistralSir.setCodigoEntidadRegistralOrigen(registroSalida.getOficina().getCodigo());
+        asientoRegistralSir.setDecodificacionEntidadRegistralOrigen(registroSalida.getOficina().getDenominacion());
+        asientoRegistralSir.setNumeroRegistro(registroSalida.getNumeroRegistroFormateado());
+        asientoRegistralSir.setFechaRegistro(registroSalida.getFecha());
+        asientoRegistralSir.setCodigoUnidadTramitacionOrigen(registroSalida.getOficina().getOrganismoResponsable().getCodigo());
+        asientoRegistralSir.setDecodificacionUnidadTramitacionOrigen(registroSalida.getOficina().getOrganismoResponsable().getDenominacion());
+        asientoRegistralSir.setCodigoEntidadRegistralDestino(oficinaSir.getCodigo());
+        asientoRegistralSir.setDecodificacionEntidadRegistralDestino(oficinaSir.getDenominacion());
+        asientoRegistralSir.setCodigoUnidadTramitacionDestino(oficinaSir.getCodUoResponsable());
+        asientoRegistralSir.setDecodificacionUnidadTramitacionDestino(null);
+        asientoRegistralSir.setResumen(registroDetalle.getExtracto());
+
+        /*if(registroSalida.getDestino() != null){ //todo Revisar
+            TraduccionCodigoAsunto tra = (TraduccionCodigoAsunto) registroDetalle.getCodigoAsunto().getTraduccion(RegwebConstantes.IDIOMA_CASTELLANO_CODIGO);
+            asientoRegistralSir.setCodigoAsunto(tra.getNombre());
+        }*/
+
+        asientoRegistralSir.setReferenciaExterna(registroDetalle.getReferenciaExterna());
+        asientoRegistralSir.setNumeroExpediente(registroDetalle.getExpediente());
+        asientoRegistralSir.setTipoTransporte(CODIGO_SICRES_BY_TRANSPORTE.get(registroDetalle.getTransporte()));
+        asientoRegistralSir.setNumeroTransporte(registroDetalle.getNumeroTransporte());
+        asientoRegistralSir.setNombreUsuario(registroSalida.getUsuario().getNombreCompleto());
+        asientoRegistralSir.setContactoUsuario(registroSalida.getUsuario().getUsuario().getEmail());
+
+        asientoRegistralSir.setIdentificadorIntercambio(generarIdentificadorIntercambio(asientoRegistralSir.getCodigoEntidadRegistralOrigen()));
+
+        asientoRegistralSir.setEstado(null);
+        asientoRegistralSir.setAplicacion(registroDetalle.getAplicacion());
+        asientoRegistralSir.setTipoRegistro(TipoRegistro.SALIDA);
+        asientoRegistralSir.setDocumentacionFisica(String.valueOf(registroDetalle.getTipoDocumentacionFisica()));
+        asientoRegistralSir.setObservacionesApunte(registroDetalle.getObservaciones());
+        asientoRegistralSir.setCodigoEntidadRegistralInicio(obtenerCodigoOficinaOrigen(registroDetalle, registroSalida.getOficina().getCodigo()));
+        asientoRegistralSir.setDecodificacionEntidadRegistralInicio(obtenerDenominacionOficinaOrigen(registroDetalle, registroSalida.getOficina().getDenominacion()));
+        asientoRegistralSir.setExpone(registroDetalle.getExpone());
+        asientoRegistralSir.setSolicita(registroDetalle.getSolicita());
+
+        asientoRegistralSir.setInteresados(procesarInteresadosSir(registroDetalle.getInteresados()));
+        asientoRegistralSir.setAnexos(procesarAnexosSir(registroDetalle.getAnexosFull(), asientoRegistralSir.getIdentificadorIntercambio()));
+
+        return asientoRegistralSir;
+
     }
 
     /**
@@ -993,19 +1044,20 @@ public class SirBean implements SirLocal{
     /**
      * Obtiene el código Oficina de Origen dependiendo de si es interna o externa
      *
-     * @param re
+     * @param registroDetalle
+     * @param codigoOficia
      * @return
      * @throws Exception
      */
-    protected String obtenerCodigoOficinaOrigen(RegistroEntrada re) {
+    protected String obtenerCodigoOficinaOrigen(RegistroDetalle registroDetalle, String codigoOficia) {
         String codOficinaOrigen = null;
 
-        if ((re.getRegistroDetalle().getOficinaOrigenExternoCodigo() == null) && (re.getRegistroDetalle().getOficinaOrigen() == null)) {
-            codOficinaOrigen = re.getOficina().getCodigo();
-        } else if (re.getRegistroDetalle().getOficinaOrigenExternoCodigo() != null) {
-            codOficinaOrigen = re.getRegistroDetalle().getOficinaOrigenExternoCodigo();
+        if ((registroDetalle.getOficinaOrigenExternoCodigo() == null) && (registroDetalle.getOficinaOrigen() == null)) {
+            codOficinaOrigen = codigoOficia;
+        } else if (registroDetalle.getOficinaOrigenExternoCodigo() != null) {
+            codOficinaOrigen = registroDetalle.getOficinaOrigenExternoCodigo();
         } else {
-            codOficinaOrigen = re.getRegistroDetalle().getOficinaOrigen().getCodigo();
+            codOficinaOrigen = registroDetalle.getOficinaOrigen().getCodigo();
         }
 
         return codOficinaOrigen;
@@ -1014,19 +1066,20 @@ public class SirBean implements SirLocal{
     /**
      * Obtiene el denominación Oficina de Origen dependiendo de si es interna o externa
      *
-     * @param re
+     * @param registroDetalle
+     * @param denominacionOficia
      * @return
      * @throws Exception
      */
-    protected String obtenerDenominacionOficinaOrigen(RegistroEntrada re) {
+    protected String obtenerDenominacionOficinaOrigen(RegistroDetalle registroDetalle, String denominacionOficia) {
         String denominacionOficinaOrigen = null;
 
-        if ((re.getRegistroDetalle().getOficinaOrigenExternoCodigo() == null) && (re.getRegistroDetalle().getOficinaOrigen() == null)) {
-            denominacionOficinaOrigen = re.getOficina().getDenominacion();
-        } else if (re.getRegistroDetalle().getOficinaOrigenExternoCodigo() != null) {
-            denominacionOficinaOrigen = re.getRegistroDetalle().getOficinaOrigenExternoDenominacion();
+        if ((registroDetalle.getOficinaOrigenExternoCodigo() == null) && (registroDetalle.getOficinaOrigen() == null)) {
+            denominacionOficinaOrigen = denominacionOficia;
+        } else if (registroDetalle.getOficinaOrigenExternoCodigo() != null) {
+            denominacionOficinaOrigen = registroDetalle.getOficinaOrigenExternoDenominacion();
         } else {
-            denominacionOficinaOrigen = re.getRegistroDetalle().getOficinaOrigen().getDenominacion();
+            denominacionOficinaOrigen = registroDetalle.getOficinaOrigen().getDenominacion();
         }
 
         return denominacionOficinaOrigen;

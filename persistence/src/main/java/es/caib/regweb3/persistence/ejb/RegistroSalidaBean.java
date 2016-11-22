@@ -477,4 +477,19 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
                 usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()),"registro.modificacion.estado" ), false);
     }
 
+    @Override
+    public RegistroSalida getConAnexosFull(Long id) throws Exception, I18NException {
+
+        RegistroSalida re = findById(id);
+        List<Anexo> anexos = re.getRegistroDetalle().getAnexos();
+        List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
+        for (Anexo anexo : anexos) {
+            AnexoFull anexoFull = anexoEjb.getAnexoFullCompleto(anexo.getId());
+            anexosFull.add(anexoFull);
+        }
+        //Asignamos los documentos recuperados de custodia al registro de entrada.
+        re.getRegistroDetalle().setAnexosFull(anexosFull);
+        return re;
+    }
+
 }

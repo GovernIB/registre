@@ -47,6 +47,18 @@ public interface SirLocal {
   public RegistroEntrada transformarRegistroEntrada(AsientoRegistralSir asientoRegistralSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto) throws Exception, I18NException, I18NValidationException;
 
   /**
+   * Transforma un {@link es.caib.regweb3.model.RegistroEntrada} en un {@link es.caib.regweb3.sir.core.model.AsientoRegistralSir}
+   * @param registroSalida
+   * @param oficinaSir
+   * @return
+   * @throws Exception
+   * @throws I18NException
+   * @throws I18NValidationException
+   */
+  public AsientoRegistralSir transformarRegistroSalida(RegistroSalida registroSalida, OficinaTF oficinaSir)
+          throws Exception, I18NException, I18NValidationException;
+
+  /**
    *
    * @param asientoRegistralSir
    * @param usuario
