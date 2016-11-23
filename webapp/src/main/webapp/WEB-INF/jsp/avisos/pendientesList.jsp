@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html lang="ca">
 <head>
-    <title><spring:message code="registroEntrada.pendientes"/></title>
+    <title><spring:message code="registroEntrada.reservas"/></title>
     <c:import url="../modulos/imports.jsp"/>
 </head>
 
@@ -22,7 +22,7 @@
                     <li><a href="<c:url value="/inici"/>"><i class="fa fa-globe"></i> ${oficinaActiva.denominacion}</a>
                     </li>
                     <li class="active"><i class="fa fa-list-ul"></i> <strong><spring:message
-                            code="registroEntrada.pendientes"/></strong></li>
+                            code="registroEntrada.reservas"/></strong></li>
                     <%--Importamos el menú de avisos--%>
                     <c:import url="/avisos"/>
                 </ol>
@@ -40,7 +40,7 @@
                     <div class="panel-heading">
                         <h3 class="panel-title">
                             <i class="fa fa-search"></i><strong> <spring:message
-                                code="registroEntrada.pendientes"/></strong>
+                                code="registroEntrada.reservas"/></strong>
                         </h3>
                     </div>
 
