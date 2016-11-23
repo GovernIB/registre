@@ -250,7 +250,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
             final List<Long> estados = new ArrayList<Long>();
-            estados.add(RegwebConstantes.REGISTRO_PENDIENTE);
+            estados.add(RegwebConstantes.REGISTRO_RESERVA);
             estados.add(RegwebConstantes.REGISTRO_VALIDO);
             estados.add(RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
 
@@ -309,7 +309,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
             // Si era una reserva de número no lo activamos, lo volvemos a poner Pendiente
             if(registroEntrada.getDestino() == null && registroEntrada.getDestinoExternoCodigo() == null){
-                registroEntradaEjb.cambiarEstado(registroEntrada,RegwebConstantes.REGISTRO_PENDIENTE,usuarioEntidad);
+                registroEntradaEjb.cambiarEstado(registroEntrada,RegwebConstantes.REGISTRO_RESERVA,usuarioEntidad);
             }else{
                 // Activamos el RegistroEntrada
                 registroEntradaEjb.activarRegistroEntrada(registroEntrada, usuarioEntidad);

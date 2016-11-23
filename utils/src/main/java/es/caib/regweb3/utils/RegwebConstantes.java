@@ -217,7 +217,7 @@ public interface RegwebConstantes {
 
     /* -------------- ESTADO REGISTRO --------------*/
     public static final Long REGISTRO_VALIDO =  1L;
-    public static final Long REGISTRO_PENDIENTE =  2L;
+    public static final Long REGISTRO_RESERVA =  2L;
     public static final Long REGISTRO_PENDIENTE_VISAR =  3L;
     public static final Long REGISTRO_OFICIO_EXTERNO =  4L;
     public static final Long REGISTRO_OFICIO_INTERNO =  5L;
@@ -228,7 +228,7 @@ public interface RegwebConstantes {
     
     public static final Long[] ESTADOS_REGISTRO_SIR = {
             REGISTRO_VALIDO,
-            REGISTRO_PENDIENTE,
+            REGISTRO_RESERVA,
             REGISTRO_PENDIENTE_VISAR,
             REGISTRO_OFICIO_EXTERNO,
             REGISTRO_OFICIO_INTERNO,
@@ -238,7 +238,7 @@ public interface RegwebConstantes {
 
     public static final Long[] ESTADOS_REGISTRO = {
             REGISTRO_VALIDO,
-            REGISTRO_PENDIENTE,
+            REGISTRO_RESERVA,
             REGISTRO_PENDIENTE_VISAR,
             REGISTRO_OFICIO_EXTERNO,
             REGISTRO_OFICIO_INTERNO,

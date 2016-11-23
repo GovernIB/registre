@@ -159,7 +159,7 @@ public class RegistroSalidaInterceptor extends HandlerInterceptorAdapter {
 
             // Comprobamos que el Registro de Salida es válido para editarse
             final List<Long> estados = new ArrayList<Long>();
-            estados.add(RegwebConstantes.REGISTRO_PENDIENTE);
+            estados.add(RegwebConstantes.REGISTRO_RESERVA);
             estados.add(RegwebConstantes.REGISTRO_VALIDO);
 
             if (!estados.contains(registroSalida.getEstado())) {

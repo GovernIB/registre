@@ -254,7 +254,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
 
         // 4.- Comprobamos si el RegistroEntrada se puede anular según su estado.
         final List<Long> estados = new ArrayList<Long>();
-        estados.add(RegwebConstantes.REGISTRO_PENDIENTE);
+        estados.add(RegwebConstantes.REGISTRO_RESERVA);
         estados.add(RegwebConstantes.REGISTRO_VALIDO);
         estados.add(RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
 

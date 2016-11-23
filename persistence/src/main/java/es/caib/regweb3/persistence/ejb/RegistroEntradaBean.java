@@ -297,7 +297,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         String s = "re.registroDetalle.extracto ";
 
-        if (idEstado.equals(RegwebConstantes.REGISTRO_PENDIENTE)) {
+        if (idEstado.equals(RegwebConstantes.REGISTRO_RESERVA)) {
             s = "re.registroDetalle.reserva ";
         }
 

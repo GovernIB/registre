@@ -77,7 +77,7 @@
                                     <c:when test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO}">
                                         <span class="label label-success"><spring:message code="registro.estado.${registro.estado}" /></span>
                                     </c:when>
-                                    <c:when test="${registro.estado == RegwebConstantes.REGISTRO_PENDIENTE}">
+                                    <c:when test="${registro.estado == RegwebConstantes.REGISTRO_RESERVA}">
                                         <span class="label label-warning"><spring:message code="registro.estado.${registro.estado}" /></span>
                                     </c:when>
                                     <c:when test="${registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR}">
@@ -159,12 +159,12 @@
                             </c:if>
 
                             <%--Si el registro está pendiente--%>
-                            <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && puedeEditar}">
+                            <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_RESERVA || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && puedeEditar}">
                                 <button type="button" onclick='javascript:confirm("<c:url value="/registroEntrada/${registro.id}/anular"/>","<spring:message code="regweb.confirmar.anular" htmlEscape="true"/>")' class="btn btn-danger btn-sm btn-block"><spring:message code="regweb.anular"/></button>
                             </c:if>
 
 
-                            <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE) && puedeEditar}">
+                            <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_RESERVA) && puedeEditar}">
                                 <button type="button" onclick="goTo('<c:url value="/registroEntrada/${registro.id}/edit"/>')" class="btn btn-warning btn-sm btn-block"><spring:message code="registroEntrada.editar"/></button>
                             </c:if>
                         </div>
@@ -172,11 +172,11 @@
 
 
                     <div class="panel-footer">
-                        <c:if test="${registro.estado != RegwebConstantes.REGISTRO_PENDIENTE}">
+                        <c:if test="${registro.estado != RegwebConstantes.REGISTRO_RESERVA}">
                             <button type="button" onclick="goTo('/regweb3/registroEntrada/new')" class="btn btn-info btn-sm btn-block"><spring:message code="registroEntrada.nuevo"/></button>
                         </c:if>
 
-                        <c:if test="${registro.estado == RegwebConstantes.REGISTRO_PENDIENTE}">
+                        <c:if test="${registro.estado == RegwebConstantes.REGISTRO_RESERVA}">
                             <button type="button" onclick="goTo('/regweb3/registroEntrada/reserva')" class="btn btn-info btn-sm btn-block"><spring:message code="registroEntrada.reserva.nuevo"/></button>
                         </c:if>
                     </div>
@@ -208,7 +208,7 @@
             </c:if>
 
             <%--INTERESADOS SOLO LECTURA--%>
-            <c:if test="${(registro.estado != RegwebConstantes.REGISTRO_VALIDO && registro.estado != RegwebConstantes.REGISTRO_PENDIENTE) || !oficinaRegistral || !puedeEditar}">
+            <c:if test="${(registro.estado != RegwebConstantes.REGISTRO_VALIDO && registro.estado != RegwebConstantes.REGISTRO_RESERVA) || !oficinaRegistral || !puedeEditar}">
                 <c:import url="../registro/interesadosLectura.jsp">
                     <c:param name="tipoRegistro" value="entrada"/>
                 </c:import>
@@ -220,7 +220,7 @@
             </c:if>
 
             <!-- MODIFICACIONES REGISTRO -->
-            <c:if test="${not empty historicos && registro.estado != RegwebConstantes.REGISTRO_PENDIENTE}">
+            <c:if test="${not empty historicos && registro.estado != RegwebConstantes.REGISTRO_RESERVA}">
                 <c:import url="../registro/modificaciones.jsp">
                     <c:param name="tipoRegistro" value="entrada"/>
                 </c:import>

@@ -340,9 +340,6 @@
                                                     <c:when test="${registroSalida.estado == RegwebConstantes.REGISTRO_VALIDO}">
                                                         <span class="label label-success"><spring:message code="registro.estado.${registroSalida.estado}" /></span>
                                                     </c:when>
-                                                    <c:when test="${registroSalida.estado == RegwebConstantes.REGISTRO_PENDIENTE}">
-                                                        <span class="label label-warning"><spring:message code="registro.estado.${registroSalida.estado}" /></span>
-                                                    </c:when>
                                                     <c:when test="${registroSalida.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR}">
                                                         <span class="label label-info"><spring:message code="registro.estado.${registroSalida.estado}" /></span>
                                                     </c:when>

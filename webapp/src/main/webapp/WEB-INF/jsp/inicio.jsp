@@ -39,11 +39,11 @@
                     </div>
 
                     <%--REGISTROS DE ENTRADA PENDIENTES (RESERVA)--%>
-                    <c:if test="${not empty pendientes}">
+                    <c:if test="${not empty reservas}">
                         <div class="col-xs-6">
                             <div class="panel panel-warning">
                                 <div class="panel-heading">
-                                    <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="registroEntrada.pendientes"/></strong> </h3>
+                                    <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="registroEntrada.reservas"/></strong> </h3>
                                 </div>
 
                                 <div class="panel-body">
@@ -71,7 +71,7 @@
                                             </thead>
 
                                             <tbody>
-                                            <c:forEach var="registroEntrada" items="${pendientes}" varStatus="status">
+                                            <c:forEach var="registroEntrada" items="${reservas}" varStatus="status">
                                                 <tr>
                                                     <td>${registroEntrada.numeroRegistroFormateado}</td>
                                                     <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy"/></td>

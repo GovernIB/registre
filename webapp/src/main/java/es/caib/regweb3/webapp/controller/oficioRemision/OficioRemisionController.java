@@ -619,8 +619,7 @@ public class OficioRemisionController extends BaseController {
         //model.addAttribute("registrosEntrada",registrosEntrada);
         model.addAttribute("trazabilidades", trazabilidades);
         model.addAttribute("isAdministradorLibro", permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(), oficioRemision.getLibro().getId()));
-        ModeloOficioRemision modeloOficioRemision = new ModeloOficioRemision();
-        model.addAttribute("modeloOficioRemision", modeloOficioRemision);
+        model.addAttribute("modeloOficioRemision", new ModeloOficioRemision());
         model.addAttribute("modelosOficioRemision", modeloOficioRemisionEjb.getByEntidad(getEntidadActiva(request).getId()));
 
         return "oficioRemision/oficioRemisionDetalle";

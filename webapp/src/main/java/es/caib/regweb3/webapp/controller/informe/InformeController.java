@@ -1155,7 +1155,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
                                 valorRegistro.add("OFICI EXTERN");
                             } else if(registro.getEstado().equals(RegwebConstantes.REGISTRO_OFICIO_INTERNO)) {
                                     valorRegistro.add("OFICI INTERN");
-                                } else if(registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE)) {
+                                } else if(registro.getEstado().equals(RegwebConstantes.REGISTRO_RESERVA)) {
                                         valorRegistro.add("PENDENT");
                                     } else if(registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR)) {
                                             valorRegistro.add("PENDENT VISAR");
@@ -1191,7 +1191,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
                                     registros.get(i).add("OFICI EXTERN");
                                 } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_OFICIO_INTERNO)) {
                                         registros.get(i).add("OFICI INTERN");
-                                    } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE)) {
+                                    } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_RESERVA)) {
                                             registros.get(i).add("PENDENT");
                                         } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR)) {
                                                 registros.get(i).add("PENDENT VISAR");

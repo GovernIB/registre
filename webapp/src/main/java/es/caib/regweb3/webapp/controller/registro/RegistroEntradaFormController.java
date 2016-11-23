@@ -216,7 +216,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
             Set<Oficina> oficinasOrigen = getOficinasOrigen(request);
 
-            if(!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE)){ //Si no se trata de una reserva de número
+            if(!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_RESERVA)){ //Si no se trata de una reserva de número
 
                 // Organismo destino: Select
                 if (registroEntrada.getDestino() == null) {// Es  Externo, lo añadimos al listado.
@@ -269,7 +269,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         Boolean errorInteresado = false;
         List<Interesado> interesadosSesion = null;
 
-        if(registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE)){
+        if(registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_RESERVA)){
             HttpSession session = request.getSession();
 
             interesadosSesion = (List<Interesado>) session.getAttribute(RegwebConstantes.SESSION_INTERESADOS_ENTRADA);
@@ -336,7 +336,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                 registroEntrada = procesarRegistroEntrada(registroEntrada, entidad);
 
                 // Si es PENDIENTE, Procesamos lo Interesados de la session
-                if(registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE)){
+                if(registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_RESERVA)){
 
                     registroEntrada.getRegistroDetalle().setInteresados(interesadoEjb.guardarInteresados(interesadosSesion, registroEntrada.getRegistroDetalle()));
                 }
@@ -350,7 +350,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                 }else{ // Si aún no ha pasado los días definidos
 
                     // Si el Registro de Entrada tiene Estado Pendiente, al editarlo pasa a ser Válido.
-                    if(registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE)){
+                    if(registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_RESERVA)){
                         registroEntrada.setEstado(RegwebConstantes.REGISTRO_VALIDO);
                     }
                 }

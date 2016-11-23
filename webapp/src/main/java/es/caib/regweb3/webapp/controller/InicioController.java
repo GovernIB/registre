@@ -70,7 +70,7 @@ public class InicioController extends BaseController{
 
 
             /* RESERVA DE NÚMERO */
-            mav.addObject("pendientes", registroEntradaEjb.getByOficinaEstado(oficinaActiva.getId(), RegwebConstantes.REGISTRO_PENDIENTE, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
+            mav.addObject("reservas", registroEntradaEjb.getByOficinaEstado(oficinaActiva.getId(), RegwebConstantes.REGISTRO_RESERVA, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
 
             /* OFICIOS PENDIENTES DE REMISIÓN */
             if(entidadActiva.getOficioRemision()){

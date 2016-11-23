@@ -104,7 +104,7 @@ public class ReservaController  extends BaseController {
                 registro.setUsuario(usuarioEntidad);
 
                 // Estado Registro entrada
-                registro.setEstado(RegwebConstantes.REGISTRO_PENDIENTE);
+                registro.setEstado(RegwebConstantes.REGISTRO_RESERVA);
 
                 //Opcionales
                 registro.getRegistroDetalle().setCodigoAsunto(null);

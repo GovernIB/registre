@@ -76,7 +76,7 @@ public class AvisoController extends BaseController {
             mav.addObject("pendientesVisarSalida", pendientesVisarSalida);
 
             /*Reserva de número*/
-            Long reservas = registroEntradaEjb.getByOficinaEstadoCount(oficinaActiva.getId(), RegwebConstantes.REGISTRO_PENDIENTE);
+            Long reservas = registroEntradaEjb.getByOficinaEstadoCount(oficinaActiva.getId(), RegwebConstantes.REGISTRO_RESERVA);
             mav.addObject("reservas", reservas);
 
             /* OFICIOS DE REMISIÓN */
@@ -150,7 +150,7 @@ public class AvisoController extends BaseController {
 
         if(isOperador(request) && oficinaActiva != null) {
 
-            List<RegistroEntrada> registros = registroEntradaEjb.getByOficinaEstado(oficinaActiva.getId(),RegwebConstantes.REGISTRO_PENDIENTE);
+            List<RegistroEntrada> registros = registroEntradaEjb.getByOficinaEstado(oficinaActiva.getId(),RegwebConstantes.REGISTRO_RESERVA);
             mav.addObject("registros", registros);
 
         }
