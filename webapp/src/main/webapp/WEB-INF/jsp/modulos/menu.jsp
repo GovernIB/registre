@@ -324,12 +324,12 @@
                             <li class="dropdown-submenu-left toggle-left">
                                 <a href="<c:url value="/entidad/list"/>"><i class="fa fa-chevron-left"></i>
                                     <spring:message code="entidad.entidades"/></a>
-                                <ul class="dropdown-menu">
+                                <%--<ul class="dropdown-menu">
                                     <li><a href="<c:url value="/admin/organismo/list"/>"><spring:message
                                             code="organismo.listado"/></a></li>
                                     <li><a href="<c:url value="/admin/oficina/list"/>"><spring:message
                                             code="oficina.listado"/></a></li>
-                                </ul>
+                                </ul>--%>
                             </li>
 
                             <li class="submenu-complet"><a href="<c:url value="/usuario/list"/>"><spring:message code="menu.usuarios"/></a></li>
