@@ -5,12 +5,14 @@ import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.utils.CamposNTI;
 import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
+import java.util.List;
 
 /**
  * Created by Fundació BIT.
@@ -33,6 +35,7 @@ public interface SirLocal {
      */
   public AsientoRegistralSir transformarRegistroEntrada(RegistroEntrada registroEntrada, OficinaTF oficinaSir, String codigoUnidadTramitacionDestino, String decodificacionUnidadTramitacionDestino)
           throws Exception, I18NException, I18NValidationException;
+
   /**
    *
    * @param asientoRegistralSir
@@ -41,10 +44,13 @@ public interface SirLocal {
    * @param idLibro
    * @param idIdioma
    * @param idTipoAsunto
+   * @param camposNTIs
    * @return
-     * @throws Exception
+   * @throws Exception
+   * @throws I18NException
+   * @throws I18NValidationException
      */
-  public RegistroEntrada transformarAsientoRegistralEntrada(AsientoRegistralSir asientoRegistralSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto) throws Exception, I18NException, I18NValidationException;
+  public RegistroEntrada transformarAsientoRegistralEntrada(AsientoRegistralSir asientoRegistralSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs) throws Exception, I18NException, I18NValidationException;
 
   /**
    * Transforma un {@link es.caib.regweb3.model.RegistroEntrada} en un {@link es.caib.regweb3.sir.core.model.AsientoRegistralSir}
@@ -66,10 +72,13 @@ public interface SirLocal {
    * @param idLibro
    * @param idIdioma
    * @param idTipoAsunto
+   * @param camposNTIs
    * @return
    * @throws Exception
+   * @throws I18NException
+   * @throws I18NValidationException
    */
-  public RegistroSalida transformarAsientoRegistralSalida(AsientoRegistralSir asientoRegistralSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto) throws Exception, I18NException, I18NValidationException;
+  public RegistroSalida transformarAsientoRegistralSalida(AsientoRegistralSir asientoRegistralSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs) throws Exception, I18NException, I18NValidationException;
 
 }
 

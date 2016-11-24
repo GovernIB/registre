@@ -17,11 +17,8 @@
     <div class="panel panel-${color}">
 
       <div class="panel-heading">
-          <%-- ESTADO 1 -> Valido
-               ESTADO 2 -> Pendiente
-               ESTADO 3 -> Pendiente de visar
-          --%>
-              <c:if test="${(registro.estado == 1 || registro.estado == 2 || registro.estado == 3) && oficinaRegistral && puedeEditar}">
+
+          <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_RESERVA || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && oficinaRegistral && puedeEditar}">
 
                 <a onClick="nouAnnexFull()" data-toggle="modal" data-target="#myModal" class="btn btn-${color} btn-xs pull-right" role="button"><i class="fa fa-plus"></i> <spring:message code="anexo.nuevo"/></a>
                 
@@ -62,11 +59,7 @@
                                      <td>${anexo.titulo}</td>
                                      <td><spring:message code="tipoDocumento.0${anexo.tipoDocumento}"/></td>
                                      <td class="center">
-                                         <!-- ESTADO 1 -> Valido
-                                              ESTADO 2 -> Pendiente
-                                              ESTADO 3 -> Pendiente de visar
-                                              ESTADO 7 -> Tramitado
-                                          -->
+
                                          <c:if test="${anexo.modoFirma != RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
                                              <a class="btn btn-success btn-default btn-sm"
                                                 href="<c:url value="/anexo/descargarDocumento/${anexo.id}"/>"
@@ -79,11 +72,11 @@
                                                 target="_blank" title="<spring:message code="anexo.descargar"/>"><span
                                                      class="fa fa-download"></span></a>
                                          </c:if>
-                                         <c:if test="${(registro.estado == 1 || registro.estado == 2 || registro.estado ==3) && oficinaRegistral && puedeEditar}">
+                                         <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_RESERVA || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && oficinaRegistral && puedeEditar}">
                                              <a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#myModal"  onclick="editarAnexoFull('${anexo.id}','${registro.id}','${registro.registroDetalle.id}','${param.tipoRegistro}')" title="Editar"><span class="fa fa-pencil"></span></a>
                                              <a class="btn btn-danger btn-default btn-sm"  onclick="eliminarAnexo('${anexo.id}','${registro.id}','${registro.registroDetalle.id}','${param.tipoRegistro}', '<spring:message code="anexo.confirmar.eliminar" javaScriptEscape='true'/>')" href="#" title="Eliminar"><span class="fa fa-eraser"></span></a>
                                          </c:if>
-                                         <c:if test="${(registro.estado != 1 && registro.estado != 2 && registro.estado != 3) || !oficinaRegistral && puedeEditar}">
+                                         <c:if test="${(registro.estado != RegwebConstantes.REGISTRO_VALIDO && registro.estado != RegwebConstantes.REGISTRO_RESERVA && registro.estado != RegwebConstantes.REGISTRO_PENDIENTE_VISAR) || !oficinaRegistral || !puedeEditar}">
                                              <a class="btn btn-warning disabled btn-sm" href="javascript:void(0);" title="Editar"><span class="fa fa-pencil"></span></a>
                                              <a class="btn btn-danger disabled btn-sm" href="javascript:void(0);" title="<spring:message code="regweb.eliminar"/>"><span class="fa fa-eraser"></span></a>
                                          </c:if>

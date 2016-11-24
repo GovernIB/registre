@@ -191,7 +191,7 @@
 
             <!-- ANEXOS -->
             <%if(!Configuracio.isCAIB()){%>
-            <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR || registro.estado == RegwebConstantes.REGISTRO_TRAMITADO) && registro.registroDetalle.tipoDocumentacionFisica != 4}">
+            <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR || registro.estado == RegwebConstantes.REGISTRO_TRAMITADO) }">
                     <c:import url="../registro/anexos.jsp">
                         <c:param name="tipoRegistro" value="entrada"/>
                     </c:import>
