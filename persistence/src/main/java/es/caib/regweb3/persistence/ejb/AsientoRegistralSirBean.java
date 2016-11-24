@@ -223,7 +223,7 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
             // Creamos el RegistroEntrada a partir del AsientoRegistral aceptado
             RegistroEntrada registroEntrada = null;
             try {
-                registroEntrada = sirEjb.transformarRegistroEntrada(asientoRegistralSir,usuario,oficinaActiva,idLibro,idIdioma,idTipoAsunto);
+                registroEntrada = sirEjb.transformarAsientoRegistralEntrada(asientoRegistralSir,usuario,oficinaActiva,idLibro,idIdioma,idTipoAsunto);
             } catch (I18NException e) {
                 e.printStackTrace();
             } catch (I18NValidationException e) {
@@ -240,7 +240,7 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
             // Creamos el RegistroEntrada a partir del AsientoRegistral aceptado
             RegistroSalida registroSalida = null;
             try {
-                registroSalida = sirEjb.transformarRegistroSalida(asientoRegistralSir,usuario,oficinaActiva,idLibro,idIdioma,idTipoAsunto);
+                registroSalida = sirEjb.transformarAsientoRegistralSalida(asientoRegistralSir,usuario,oficinaActiva,idLibro,idIdioma,idTipoAsunto);
             } catch (I18NException e) {
                 e.printStackTrace();
             } catch (I18NValidationException e) {

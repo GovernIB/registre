@@ -466,7 +466,7 @@ public class OficioRemisionController extends BaseController {
 
                         registroEntradaAEnviar = registroEntradaEjb.getConAnexosFull(registroEntradaAEnviar.getId());
 
-                        AsientoRegistralSir asientoRegistralSir = sirEjb.transformarRegistroEntrada(registroEntradaAEnviar, oficinaSir);
+                        AsientoRegistralSir asientoRegistralSir = sirEjb.transformarRegistroEntrada(registroEntradaAEnviar, oficinaSir, organismoExternoCodigo, organismoExternoDenominacion);
 
                         // Enviamos el Fichero de datos de intercambio al nodo SIR
                         String identificadorIntercambio = ficheroIntercambioManager.enviarFicheroIntercambio(asientoRegistralSir);
@@ -541,7 +541,7 @@ public class OficioRemisionController extends BaseController {
 
                         registroSalidaAEnviar = registroSalidaEjb.getConAnexosFull(registroSalidaAEnviar.getId());
 
-                        AsientoRegistralSir asientoRegistralSir = sirEjb.transformarRegistroSalida(registroSalidaAEnviar, oficinaSir);
+                        AsientoRegistralSir asientoRegistralSir = sirEjb.transformarRegistroSalida(registroSalidaAEnviar, oficinaSir, organismoExternoCodigo, organismoExternoDenominacion);
 
                         // Enviamos el Fichero de datos de intercambio al nodo SIR
                         String identificadorIntercambio = ficheroIntercambioManager.enviarFicheroIntercambio(asientoRegistralSir);
