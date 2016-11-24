@@ -285,6 +285,106 @@ public class InteresadoController extends BaseController{
         return jsonResponse;
     }
 
+    /**
+     * Añade un Organismo existente a la variable de sesion que almacena los interesados.
+     * @param codigoDir3
+     * @param denominacion
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/{tipoRegistro}/addOrganismo", method = RequestMethod.GET)
+    @ResponseBody
+    public Boolean addOrganismoInteresado(@PathVariable String tipoRegistro, @RequestParam String codigoDir3, @RequestParam String denominacion, @RequestParam String idRegistroDetalle, HttpServletRequest request) {
+
+        String variable = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
+
+        HttpSession session = request.getSession();
+
+        try {
+            String converted = URLDecoder.decode(denominacion, "UTF-8");
+
+            log.info("Dentro de añadir organismoInteresado: " + codigoDir3 + " " + denominacion);
+
+            Interesado organismo = new Interesado(codigoDir3,converted);
+
+            if(StringUtils.isEmpty(idRegistroDetalle)){ // Se trata de un nuevo Registro, utilizamos la sesion.
+
+                // Si es una Salida solo puede haber un Interesado Administración
+                if(tipoRegistro.equals("salida") && hayOrganismoInteresado(session)){
+                    log.info("Ya hay un Destinatario Organismo asociado en la sesion");
+                    return false;
+                }
+
+                añadirInteresadoSesion(organismo, session, variable);
+
+            }else{ // Edición de un registro, lo añadimos a la bbdd
+
+                // Si es una Salida solo puede haber un Interesado Administración
+                if(tipoRegistro.equals("salida") && interesadoEjb.existeInteresadoAdministracion(Long.valueOf(idRegistroDetalle))){
+                    log.info("Ya hay un Destinatario Organismo asociado en la bbdd");
+                    return false;
+                }
+
+                organismo.setRegistroDetalle(new RegistroDetalle(Long.valueOf(idRegistroDetalle)));
+                interesadoEjb.persist(organismo);
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+
+    /**
+     *  Añade una Persona existente a la variable de sesion que almacena los interesados que son de tipo Persona
+     * @param id
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/{tipoRegistro}/addPersona", method = RequestMethod.GET)
+    @ResponseBody
+    public Integer addPersonaInteresado(@PathVariable String tipoRegistro,@RequestParam Long id,@RequestParam String idRegistroDetalle, HttpServletRequest request) {
+
+        String variable = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
+
+        log.info("Add interesado existente: " + id);
+
+        HttpSession session = request.getSession();
+        Interesado interesado = null;
+
+        try {
+            Persona persona = personaEjb.findById(id);
+
+            if(persona != null) { // Si existe la persona en la bbdd
+                interesado = new Interesado(persona);
+
+                if(StringUtils.isEmpty(idRegistroDetalle)) { // Se trata de un nuevo Registro, utilizamos la sesion.
+
+                    if(persona != null){ // Si existe la persona en la bbdd
+
+                        añadirInteresadoSesion(interesado,session, variable);
+                    }
+
+                }else{ // Edición de un registro, lo añadimos a la bbdd
+                    log.info("RegistroDetalle: " + idRegistroDetalle);
+                    interesado.setRegistroDetalle(new RegistroDetalle(Long.valueOf(idRegistroDetalle)));
+                    interesado = interesadoEjb.persist(interesado);
+                    return interesado.getId().intValue();
+                }
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+
 
     /**
      * Busca Persona según los parámetros recibidos
@@ -427,93 +527,6 @@ public class InteresadoController extends BaseController{
         }
 
         return false;
-    }
-
-    /**
-     * Añade un Organismo existente a la variable de sesion que almacena los interesados.
-     * @param codigoDir3
-     * @param denominacion
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "/{tipoRegistro}/addOrganismo", method = RequestMethod.GET)
-    @ResponseBody
-    public Boolean addOrganismoInteresado(@PathVariable String tipoRegistro, @RequestParam String codigoDir3, @RequestParam String denominacion, @RequestParam String idRegistroDetalle, HttpServletRequest request) {
-
-        String variable = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
-
-        HttpSession session = request.getSession();
-
-        try {
-            String converted = URLDecoder.decode(denominacion, "UTF-8");
-
-            log.info("Dentro de añadir organismoInteresado: " + codigoDir3 + " " + denominacion);
-
-            Interesado organismo = new Interesado(codigoDir3,converted);
-
-            if(StringUtils.isEmpty(idRegistroDetalle)){ // Se trata de un nuevo Registro, utilizamos la sesion.
-
-                añadirInteresadoSesion(organismo, session, variable);
-
-            }else{ // Edición de un registro, lo añadimos a la bbdd
-                log.info("RegistroDetalle: " + idRegistroDetalle);
-                organismo.setRegistroDetalle(new RegistroDetalle(Long.valueOf(idRegistroDetalle)));
-                interesadoEjb.persist(organismo);
-            }
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return true;
-    }
-
-
-    /**
-     *  Añade una Persona existente a la variable de sesion que almacena los interesados que son de tipo Persona
-     * @param id
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "/{tipoRegistro}/addPersona", method = RequestMethod.GET)
-    @ResponseBody
-    public Integer addPersonaInteresado(@PathVariable String tipoRegistro,@RequestParam Long id,@RequestParam String idRegistroDetalle, HttpServletRequest request) {
-
-        String variable = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
-
-        log.info("Add interesado existente: " + id);
-
-        HttpSession session = request.getSession();
-        Interesado interesado = null;
-
-        try {
-            Persona persona = personaEjb.findById(id);
-
-            if(persona != null) { // Si existe la persona en la bbdd
-                interesado = new Interesado(persona);
-
-                if(StringUtils.isEmpty(idRegistroDetalle)) { // Se trata de un nuevo Registro, utilizamos la sesion.
-
-                    if(persona != null){ // Si existe la persona en la bbdd
-
-                        añadirInteresadoSesion(interesado,session, variable);
-                    }
-
-                }else{ // Edición de un registro, lo añadimos a la bbdd
-                    log.info("RegistroDetalle: " + idRegistroDetalle);
-                    interesado.setRegistroDetalle(new RegistroDetalle(Long.valueOf(idRegistroDetalle)));
-                    interesado = interesadoEjb.persist(interesado);
-                    return interesado.getId().intValue();
-                }
-
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return 0;
     }
 
     /**
@@ -803,6 +816,26 @@ public class InteresadoController extends BaseController{
         }
 
         return interesado;
+    }
+
+    /**
+     * Comprueba si hay algún OrganismoInteresado ya añadido
+     * @param session
+     */
+    public Boolean hayOrganismoInteresado(HttpSession session){
+
+        List<Interesado> interesados = (List<Interesado>) session.getAttribute(RegwebConstantes.SESSION_INTERESADOS_SALIDA);
+
+        if (interesados != null) {
+
+            for(Interesado interesado:interesados){
+                if(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION.equals(interesado.getTipo())){
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
 

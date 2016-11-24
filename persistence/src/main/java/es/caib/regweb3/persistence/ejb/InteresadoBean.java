@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.RegistroDetalle;
+import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -113,6 +114,18 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
 
         q.setParameter("documento",documento);
         q.setParameter("idInteresado",idInteresado);
+
+        return q.getResultList().size() > 0;
+    }
+
+    @Override
+    public Boolean existeInteresadoAdministracion(Long idRegistroDetalle) throws Exception{
+        Query q = em.createQuery("Select interesado.id from Interesado as interesado where " +
+                "interesado.registroDetalle.id = :idRegistroDetalle and interesado.tipo = :administracion");
+
+        q.setParameter("idRegistroDetalle",idRegistroDetalle);
+        q.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
+
 
         return q.getResultList().size() > 0;
     }

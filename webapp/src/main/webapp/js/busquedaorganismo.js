@@ -449,7 +449,12 @@ function addAdministracionInteresadosModal(codigoDir3, denominacion, tipo, tipoO
         contentType: 'application/json',
 
         success: function (result) {
-            addOrganismoInteresadoHtml(codigoDir3, denominacion, tipo, idRegistroDetalle, false);
+            if(result==true){
+                addOrganismoInteresadoHtml(codigoDir3, denominacion, tipo, idRegistroDetalle, false);
+            }else{
+                mensajeError("#mensajes", tradsinteresado['interesado.añadir.organismo']);
+            }
+
         }
     });
 

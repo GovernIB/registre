@@ -53,6 +53,14 @@ public interface InteresadoLocal extends BaseEjb<Interesado, Long> {
     public Boolean existeDocumentoEdit(String documento, Long idInteresado) throws Exception;
 
     /**
+     * Comprueba si un RegistroDetalle tiene algún Interesado de Tipo Administración
+     * @param idRegistroDetalle
+     * @return
+     * @throws Exception
+     */
+    public Boolean existeInteresadoAdministracion(Long idRegistroDetalle) throws Exception;
+
+    /**
      * Guardamos todos los Interesados de un Registro de Entrada o Salida
      * @param interesadosSesion
      * @param registroDetalle

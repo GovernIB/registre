@@ -20,7 +20,12 @@ function addOrganismoInteresado(tipo,idRegistroDetalle){
             data: { codigoDir3: codigoDir3, denominacion: denominacionCodificada, idRegistroDetalle: idRegistroDetalle },
 
             success: function(result) {
-                addOrganismoInteresadoHtml(codigoDir3, denominacion, tipo, idRegistroDetalle, true);
+                if(result==true){
+                    addOrganismoInteresadoHtml(codigoDir3, denominacion, tipo, idRegistroDetalle, true);
+                }else{
+                    mensajeError("#mensajes", tradsinteresado['interesado.añadir.organismo']);
+                }
+
             }
         });
     }
