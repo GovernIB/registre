@@ -29,6 +29,8 @@
                 </ol>
             </div>
         </div><!-- Fin miga de pan -->
+        <c:url value="/asientoRegistralSir/aceptar/${asientoRegistralSir.id}" var="urlAceptar" scope="request"/>
+        <form:form modelAttribute="registrarForm" action="${urlAceptar}" method="post" cssClass="form-horizontal">
 
         <div class="row">
 
@@ -210,6 +212,7 @@
 
                     </div>
 
+
                     <%-- Se muestra la Botonera si el AsientoRegistralSir está pendiente de procesar--%>
                     <c:if test="${asientoRegistralSir.estado == 'RECIBIDO'}">
 
@@ -222,8 +225,8 @@
                                     </h3>
                                 </div>
                             </c:if>
-                            <c:url value="/asientoRegistralSir/aceptar/${asientoRegistralSir.id}" var="urlAceptar" scope="request"/>
-                            <form:form modelAttribute="registrarForm" action="${urlAceptar}" method="post" cssClass="form-horizontal">
+                                <%--<c:url value="/asientoRegistralSir/aceptar/${asientoRegistralSir.id}" var="urlAceptar" scope="request"/>--%>
+                                <%--<form:form modelAttribute="registrarForm" action="${urlAceptar}" method="post" cssClass="form-horizontal">--%>
                                 <%--Si s'ha de triar llibre--%>
                                 <c:if test="${fn:length(libros) > 1}">
                                     <div class="form-group col-xs-12">
@@ -294,7 +297,7 @@
                                 </div>
                                 <c:set var="errorObligatori"><spring:message code="error.valor.requerido"/></c:set>
                                 <input id="error" type="hidden" value="${errorObligatori}"/>
-                            </form:form>
+                                <%--  </form:form>--%>
                         </div>
 
                         <div class="panel-footer">  <%--Botonera--%>
@@ -345,6 +348,7 @@
 
 
         </div><!-- /div.row-->
+        </form:form>
 
     </div>
 </div> <!-- /container -->

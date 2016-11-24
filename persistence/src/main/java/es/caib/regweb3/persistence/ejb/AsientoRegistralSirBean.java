@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.utils.CamposNTI;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.sir.core.model.*;
@@ -214,16 +215,19 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
      * @throws Exception
      */
     @Override
-    public Long aceptarAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto)
+    public Long aceptarAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs)
             throws Exception {
 
+        for (CamposNTI cnti : camposNTIs) {
+            log.info("CamposNTI " + cnti.getId() + ": " + cnti.getIdValidezDocumento());
+        }
 
         if(asientoRegistralSir.getTipoRegistro().equals(TipoRegistro.ENTRADA)) {
 
             // Creamos el RegistroEntrada a partir del AsientoRegistral aceptado
             RegistroEntrada registroEntrada = null;
             try {
-                registroEntrada = sirEjb.transformarAsientoRegistralEntrada(asientoRegistralSir,usuario,oficinaActiva,idLibro,idIdioma,idTipoAsunto);
+                registroEntrada = sirEjb.transformarAsientoRegistralEntrada(asientoRegistralSir, usuario, oficinaActiva, idLibro, idIdioma, idTipoAsunto, camposNTIs);
             } catch (I18NException e) {
                 e.printStackTrace();
             } catch (I18NValidationException e) {
@@ -240,7 +244,7 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
             // Creamos el RegistroEntrada a partir del AsientoRegistral aceptado
             RegistroSalida registroSalida = null;
             try {
-                registroSalida = sirEjb.transformarAsientoRegistralSalida(asientoRegistralSir,usuario,oficinaActiva,idLibro,idIdioma,idTipoAsunto);
+                registroSalida = sirEjb.transformarAsientoRegistralSalida(asientoRegistralSir, usuario, oficinaActiva, idLibro, idIdioma, idTipoAsunto, camposNTIs);
             } catch (I18NException e) {
                 e.printStackTrace();
             } catch (I18NValidationException e) {

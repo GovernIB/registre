@@ -3,6 +3,7 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.model.utils.CamposNTI;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.sir.core.model.AnexoSir;
 import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
@@ -136,7 +137,7 @@ public class SirBean implements SirLocal{
      * @throws I18NException
      * @throws I18NValidationException
      */
-    public RegistroEntrada transformarAsientoRegistralEntrada(AsientoRegistralSir asientoRegistralSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto)
+    public RegistroEntrada transformarAsientoRegistralEntrada(AsientoRegistralSir asientoRegistralSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs)
             throws Exception, I18NException, I18NValidationException {
 
         Libro libro = libroEjb.findById(idLibro);
@@ -168,7 +169,7 @@ public class SirBean implements SirLocal{
         List<Interesado> interesados = procesarInteresados(asientoRegistralSir.getInteresados());
 
         // Anexos
-        List<AnexoFull> anexosFull = procesarAnexos(asientoRegistralSir);
+        List<AnexoFull> anexosFull = procesarAnexos(asientoRegistralSir, camposNTIs);
 
         // Registramos el Registro Entrada
         synchronized (this){
@@ -259,7 +260,7 @@ public class SirBean implements SirLocal{
      * @throws I18NException
      * @throws I18NValidationException
      */
-    public RegistroSalida transformarAsientoRegistralSalida(AsientoRegistralSir asientoRegistralSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto) throws Exception, I18NException, I18NValidationException{
+    public RegistroSalida transformarAsientoRegistralSalida(AsientoRegistralSir asientoRegistralSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs) throws Exception, I18NException, I18NValidationException {
 
         Libro libro = libroEjb.findById(idLibro);
 
@@ -287,7 +288,7 @@ public class SirBean implements SirLocal{
         List<Interesado> interesados = procesarInteresados(asientoRegistralSir.getInteresados());
 
         // Anexos
-        List<AnexoFull> anexosFull = procesarAnexos(asientoRegistralSir);
+        List<AnexoFull> anexosFull = procesarAnexos(asientoRegistralSir, camposNTIs);
 
         // Registramos el Registro Entrada
         synchronized (this){
@@ -793,7 +794,7 @@ public class SirBean implements SirLocal{
 
                     anexoSir = crearAnexoSir(sc.getName(),identificador_fichero_FIRMA,
                             CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento()),
-                            CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(anexo.getTipoDocumento()),null,
+                            CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FICHERO_TECNICO), null,
                             null,anexo.getTimestamp(), null,
                             obtenerHash(sc.getData()),sc.getMime(),sc.getData(),identificador_fichero,
                             anexo.getObservaciones());
@@ -867,21 +868,29 @@ public class SirBean implements SirLocal{
     }
 
     /**
-     * Transforma una lista de {@link AnexoSir} en una lista de  {@link AnexoFull}
+     *
      * @param asientoRegistralSir
-     * @return Listado de {@link AnexoFull}
+     * @param camposNTIs representa la lista de anexos del asiento registral en los que el usuario ha especificado
+     *                          los valores de los campos NTI no informados por SICRES (validez Documento, origen, Tipo Documental)
+     * @return
      * @throws Exception
      */
-    private List<AnexoFull> procesarAnexos(AsientoRegistralSir asientoRegistralSir) throws Exception{
+    private List<AnexoFull> procesarAnexos(AsientoRegistralSir asientoRegistralSir, List<CamposNTI> camposNTIs) throws Exception {
+
 
         List<AnexoFull> anexos = new ArrayList<AnexoFull>();
         HashMap<String,AnexoFull> mapAnexosFull = new HashMap<String, AnexoFull>();
-        for (AnexoSir anexoSir : asientoRegistralSir.getAnexos()) {
 
-            AnexoFull anexoFull = transformarAnexo(anexoSir, asientoRegistralSir.getEntidad().getId(), mapAnexosFull);
-            mapAnexosFull.put(anexoSir.getIdentificadorFichero(), anexoFull);
-            anexos = new ArrayList<AnexoFull>(mapAnexosFull.values());
+        //Aqui buscamos los camposNTI del anexoSir con el que se corresponde para pasarlo al método transformarAnexo
+        for (AnexoSir anexoSir : asientoRegistralSir.getAnexos()) {
+            for (CamposNTI cnti : camposNTIs) {
+                if (anexoSir.getId().equals(cnti.getId())) {
+                    AnexoFull anexoFull = transformarAnexo(anexoSir, asientoRegistralSir.getEntidad().getId(), mapAnexosFull, cnti);
+                    mapAnexosFull.put(anexoSir.getIdentificadorFichero(), anexoFull);
+                }
+            }
         }
+        anexos = new ArrayList<AnexoFull>(mapAnexosFull.values());
         return anexos;
     }
 
@@ -891,13 +900,15 @@ public class SirBean implements SirLocal{
      * La particularidad de este método, es que se necesita pasar una lista de los anexos que se han procesado anteriormente
      * del AnexoSir que nos envian, ya que puede haber anexos que son firma de uno anteriormente procesado y lo necesitamos
      * para acabar de montar el anexo ya que para regweb3 el anexo y su firma van en el mismo AnexoFull.
-     *
+     * Además ahora se pasa una lista de anexosSirRecibidos ya que para cada anexo el usuario debe escoger 3 campos que
+     * pueden no venir informados en SICRES y son obligatorios en NTI.
+     * Los campos en concreto son (validezDocumento, origen, tipo Documental)
      * @param anexoSir
      * @param idEntidad
      * @param anexosProcesados Lista de anexos procesados anteriores.
      * @return AnexoFull tipo {@link AnexoFull}
      */
-    private AnexoFull transformarAnexo(AnexoSir anexoSir, Long idEntidad, Map<String, AnexoFull> anexosProcesados)throws Exception {
+    private AnexoFull transformarAnexo(AnexoSir anexoSir, Long idEntidad, Map<String, AnexoFull> anexosProcesados, CamposNTI camposNTI) throws Exception {
 
         AnexoFull anexoFull = new AnexoFull();
         Anexo anexo = new Anexo();
@@ -906,8 +917,10 @@ public class SirBean implements SirLocal{
 
         if (anexoSir.getValidezDocumento() != null) {
             anexo.setValidezDocumento(Long.valueOf(anexoSir.getValidezDocumento()));
-        } else {// Si sicres no especifica validez del documento la fijamos a copia por defecto
-            anexo.setValidezDocumento(RegwebConstantes.TIPOVALIDEZDOCUMENTO_COPIA);
+        } else {//Campo NTI Cogemos la validez de documento indicada por el usuario
+            if (camposNTI.getIdValidezDocumento() != null) {
+                anexo.setValidezDocumento(Long.valueOf(camposNTI.getIdValidezDocumento()));
+            }
         }
 
         if (anexoSir.getTipoDocumento() != null) {
@@ -915,10 +928,13 @@ public class SirBean implements SirLocal{
         }
         anexo.setObservaciones(anexoSir.getObservaciones());
 
-        //Campos NTI TODO PENDIENTE(VER QUE HACER SI DEJARLOS ASÍ O QUITAR RESTRICCION OBLIGATORIA Y PONERLOS NULL, pendiente tambien de hablar con xisco gelabert
-        anexo.setOrigenCiudadanoAdmin(RegwebConstantes.ANEXO_ORIGEN_ADMINISTRACION.intValue()); // TODO Comprobar esta asignación
-        anexo.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad("TD99",idEntidad));
-
+        //Campo NTI no informados, asignamos lo que indica el usuario
+        if (camposNTI.getIdOrigen() != null) {
+            anexo.setOrigenCiudadanoAdmin(camposNTI.getIdOrigen().intValue());
+        }
+        if (camposNTI.getIdTipoDocumental() != null) {
+            anexo.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad(camposNTI.getIdTipoDocumental(), idEntidad));
+        }
 
         if(anexoSir.getCertificado()!= null) {
             anexo.setCertificado(anexoSir.getCertificado());

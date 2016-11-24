@@ -1,5 +1,9 @@
 package es.caib.regweb3.webapp.form;
 
+import es.caib.regweb3.model.utils.CamposNTI;
+
+import java.util.List;
+
 /**
  * Created 5/06/14 16:09
  * @author jpernia
@@ -9,6 +13,8 @@ public class RegistrarForm {
     private Long idLibro;
     private Long idIdioma;
     private Long idTipoAsunto;
+
+    private List<CamposNTI> camposNTIs;
 
     public RegistrarForm(Long idLibro, Long idIdioma, Long idTipoAsunto) {
         this.idLibro = idLibro;
@@ -43,4 +49,13 @@ public class RegistrarForm {
     public void setIdTipoAsunto(Long idTipoAsunto) {
         this.idTipoAsunto = idTipoAsunto;
     }
+
+    public List<CamposNTI> getCamposNTIs() {
+        return camposNTIs;
+    }
+
+    public void setCamposNTIs(List<CamposNTI> camposNTIs) {
+        this.camposNTIs = camposNTIs;
+    }
+
 }

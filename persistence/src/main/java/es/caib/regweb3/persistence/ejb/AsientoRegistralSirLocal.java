@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.utils.CamposNTI;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
 import es.caib.regweb3.sir.core.model.EstadoAsientoRegistralSir;
@@ -78,7 +79,7 @@ public interface AsientoRegistralSirLocal extends BaseEjb<AsientoRegistralSir, L
      * @throws I18NException
      * @throws I18NValidationException
      */
-    public Long aceptarAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto)
+    public Long aceptarAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> anexosSirRecibidos)
             throws Exception, I18NException, I18NValidationException;
 
     /**

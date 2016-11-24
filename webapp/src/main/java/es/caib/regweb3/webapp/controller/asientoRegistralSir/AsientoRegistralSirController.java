@@ -62,6 +62,10 @@ public class AsientoRegistralSirController extends BaseController {
     @EJB(mappedName = "regweb3/CatProvinciaEJB/local")
     public CatProvinciaLocal catProvinciaEjb;
 
+    @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
+    public TipoDocumentalLocal tipoDocumentalEjb;
+
+
     RegistroManager registroManager = new RegistroManagerImpl();
 
     /**
@@ -215,7 +219,7 @@ public class AsientoRegistralSirController extends BaseController {
         // Procesa el AsientoRegistralSir
         String numeroRegistro = null;
         try{
-            idRegistro = asientoRegistralSirEjb.aceptarAsientoRegistralSir(asientoRegistralSir, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getIdTipoAsunto());
+            idRegistro = asientoRegistralSirEjb.aceptarAsientoRegistralSir(asientoRegistralSir, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getIdTipoAsunto(), registrarForm.getCamposNTIs());
 
             if(asientoRegistralSir.getTipoRegistro().equals(TipoRegistro.ENTRADA)) {
                 variableReturn = "redirect:/registroEntrada/" + idRegistro + "/detalle";
@@ -317,6 +321,18 @@ public class AsientoRegistralSirController extends BaseController {
 
         Entidad entidadActiva = getEntidadActiva(request);
         return tipoAsuntoEjb.getActivosEntidad(entidadActiva.getId());
+    }
+
+    @ModelAttribute("tiposValidezDocumento")
+    public Long[] validezDocumento() throws Exception {
+
+        return RegwebConstantes.TIPOS_VALIDEZDOCUMENTO;
+    }
+
+    @ModelAttribute("tiposDocumentales")
+    public List<TipoDocumental> tiposDocumentales(HttpServletRequest request) throws Exception {
+        Entidad entidadActiva = getEntidadActiva(request);
+        return tipoDocumentalEjb.getByEntidad(getEntidadActiva(request).getId());
     }
 
 }
