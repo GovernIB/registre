@@ -225,13 +225,15 @@ function busquedaRepresentantes(idRepresentado){
  */
 function tipoInteresadoRepresentante(){
     var tipoInteresado = $('#tipo option:selected').val();
-
+alert("tipoInteresado: " + tipoInteresado);
     if (tipoInteresado == 2) { //Persona fisica
         $('#razonSocial').val('');
         $('#razonSocial').attr("disabled", "disabled");
         $('#nombre').removeAttr("disabled", "disabled");
         $('#apellido1').removeAttr("disabled", "disabled");
         $('#apellido2').removeAttr("disabled", "disabled");
+
+        tiposDocumentoPersonaFisica();
     }
 
     if (tipoInteresado == 3) { //Persona juridica
@@ -242,6 +244,8 @@ function tipoInteresadoRepresentante(){
         $('#nombre').attr("disabled", "disabled");
         $('#apellido1').attr("disabled", "disabled");
         $('#apellido2').attr("disabled", "disabled");
+
+        tiposDocumentoPersonaJuridica();
     }
 
     quitarErroresInteresado();

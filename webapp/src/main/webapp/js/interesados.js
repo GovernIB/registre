@@ -823,7 +823,7 @@ function mostrarPersonaJuridica(){
  * Según el tipo persona seleccionado, habilita o deshabilita una serie de campos
  */
 function camposTipoPersona(tipoInteresado){
-
+alert("tipoInteresadoooooo: " + tipoInteresado);
     if(tipoInteresado == 2){ //Persona fisica
 
         $('#razonSocial').attr("disabled", "disabled");
@@ -849,7 +849,7 @@ function camposTipoPersona(tipoInteresado){
         $('#nom').html(tradsinteresado['regweb3.nombre']);
         $('#llinatge1').html(tradsinteresado['usuario.apellido1']);
 
-        tiposDocumentoPersonaJuridica()
+        tiposDocumentoPersonaJuridica();
     }
 
 }
