@@ -823,7 +823,7 @@ function mostrarPersonaJuridica(){
  * Según el tipo persona seleccionado, habilita o deshabilita una serie de campos
  */
 function camposTipoPersona(tipoInteresado){
-alert("tipoInteresadoooooo: " + tipoInteresado);
+
     if(tipoInteresado == 2){ //Persona fisica
 
         $('#razonSocial').attr("disabled", "disabled");

@@ -225,7 +225,7 @@ function busquedaRepresentantes(idRepresentado){
  */
 function tipoInteresadoRepresentante(){
     var tipoInteresado = $('#tipo option:selected').val();
-alert("tipoInteresado: " + tipoInteresado);
+
     if (tipoInteresado == 2) { //Persona fisica
         $('#razonSocial').val('');
         $('#razonSocial').attr("disabled", "disabled");
