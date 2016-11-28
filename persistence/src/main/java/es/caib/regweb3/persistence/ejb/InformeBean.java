@@ -550,7 +550,7 @@ public class InformeBean implements InformeLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion buscaEntradaPorUsuarioLibro(Integer pageNumber, Date fechaInicio, Date fechaFin, Long idUsuario, Long idLibro) throws Exception {
+    public Paginacion buscaEntradaPorUsuarioLibro(Integer pageNumber,final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idUsuario, Long idLibro) throws Exception {
 
         Query q;
         Query q2;
@@ -584,12 +584,12 @@ public class InformeBean implements InformeLocal {
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
             Long total = (Long) q2.getSingleResult();
-            paginacion = new Paginacion(total.intValue(), pageNumber);
-            int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            paginacion = new Paginacion(total.intValue(), pageNumber, resultsPerPage);
+            int inicio = (pageNumber - 1) * resultsPerPage;
             q.setFirstResult(inicio);
-            q.setMaxResults(BaseEjbJPA.RESULTADOS_PAGINACION);
+            q.setMaxResults(resultsPerPage);
         } else {
-            paginacion = new Paginacion(0, 0);
+            paginacion = new Paginacion(0, 0, resultsPerPage);
         }
 
         List<Object[]> result = q.getResultList();

@@ -181,7 +181,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public OficiosRemisionOrganismo oficiosEntradaPendientesRemision(Integer pageNumber, Integer any, Long idOficina, Long idLibro, String codigoOrganismo, Set<Long> organismos, Entidad entidadActiva) throws Exception {
+    public OficiosRemisionOrganismo oficiosEntradaPendientesRemision(Integer pageNumber, final Integer resultsPerPage, Integer any, Long idOficina, Long idLibro, String codigoOrganismo, Set<Long> organismos, Entidad entidadActiva) throws Exception {
 
         OficiosRemisionOrganismo oficios = new OficiosRemisionOrganismo();
 
@@ -193,7 +193,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             oficios.setOficinas(oficinaEjb.tieneOficinasServicio(organismo.getId(), RegwebConstantes.OFICINA_VIRTUAL_NO));
 
             //Buscamos los Registros de Entrada, pendientes de tramitar mediante un Oficio de Remision
-            oficios.setPaginacion(oficiosRemisionByOrganismoInterno(pageNumber,organismo.getId(), any, idOficina, idLibro));
+            oficios.setPaginacion(oficiosRemisionByOrganismoInterno(pageNumber,resultsPerPage,organismo.getId(), any, idOficina, idLibro));
 
         }else { // Destinatario organismo externo
 
@@ -231,7 +231,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
                 }
 
                 //Buscamos los Registros de Entrada, pendientes de tramitar mediante un Oficio de Remision
-                oficios.setPaginacion(oficiosRemisionByOrganismoExterno(pageNumber, organismoExterno.getCodigo(), any, idOficina, idLibro));
+                oficios.setPaginacion(oficiosRemisionByOrganismoExterno(pageNumber, resultsPerPage, organismoExterno.getCodigo(), any, idOficina, idLibro));
             }
         }
 
@@ -240,7 +240,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
 
     @SuppressWarnings(value = "unchecked")
-    public Paginacion oficiosRemisionByOrganismoInterno(Integer pageNumber, Long idOrganismo, Integer any, Long idOficina, Long idLibro) throws Exception {
+    public Paginacion oficiosRemisionByOrganismoInterno(Integer pageNumber,final Integer resultsPerPage, Long idOrganismo, Integer any, Long idOficina, Long idLibro) throws Exception {
 
         String anyWhere = "";
         if (any != null) {
@@ -277,12 +277,12 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
             Long total = (Long) q2.getSingleResult();
-            paginacion = new Paginacion(total.intValue(), pageNumber);
-            int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            paginacion = new Paginacion(total.intValue(), pageNumber, resultsPerPage);
+            int inicio = (pageNumber - 1) * resultsPerPage;
             q.setFirstResult(inicio);
-            q.setMaxResults(10);
+            q.setMaxResults(resultsPerPage);
         } else {
-            paginacion = new Paginacion(0, 0);
+            paginacion = new Paginacion(0, 0, resultsPerPage);
         }
 
         paginacion.setListado(q.getResultList());
@@ -322,7 +322,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
 
     @SuppressWarnings(value = "unchecked")
-    public Paginacion oficiosRemisionByOrganismoExterno(Integer pageNumber, String codigoOrganismo, Integer any, Long idOficina, Long idLibro) throws Exception {
+    public Paginacion oficiosRemisionByOrganismoExterno(Integer pageNumber, final Integer resultsPerPage, String codigoOrganismo, Integer any, Long idOficina, Long idLibro) throws Exception {
 
         String anyWhere = "";
         if (any != null) {
@@ -358,12 +358,12 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
             Long total = (Long) q2.getSingleResult();
-            paginacion = new Paginacion(total.intValue(), pageNumber);
-            int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            paginacion = new Paginacion(total.intValue(), pageNumber, resultsPerPage);
+            int inicio = (pageNumber - 1) * resultsPerPage;
             q.setFirstResult(inicio);
-            q.setMaxResults(10);
+            q.setMaxResults(resultsPerPage);
         } else {
-            paginacion = new Paginacion(0, 0);
+            paginacion = new Paginacion(0, 0, resultsPerPage);
         }
 
         paginacion.setListado(q.getResultList());

@@ -17,6 +17,51 @@ public class PropiedadGlobalUtil {
 
 
     /**
+     * Retorna el valor de la propiedad Results per page de la entidad indicada.
+     * @return
+     */
+    public static Integer getResultsPerPage(Long idEntidad) {
+        final String partialPropertyName = "resultsperpage";
+        Integer valor = getIntegerByEntidad(idEntidad, partialPropertyName);
+
+        // Valor global si no existeix el de per entitat
+        if (valor == null) {
+            valor = 10;
+        }
+        return valor;
+    }
+
+    /**
+     * Retorna el valor de la propiedad Results per page Oficios de la entidad indicada.
+     * @return
+     */
+    public static Integer getResultsPerPageOficios(Long idEntidad) {
+        final String partialPropertyName = "resultsperpage.oficios";
+        Integer valor = getIntegerByEntidad(idEntidad, partialPropertyName);
+
+        // Valor global si no existeix el de per entitat
+        if (valor == null) {
+            valor = 10;
+        }
+        return valor;
+    }
+
+    /**
+     * Retorna el valor de la propiedad Results per page Lopd de la entidad indicada.
+     * @return
+     */
+    public static Integer getResultsPerPageLopd(Long idEntidad) {
+        final String partialPropertyName = "resultsperpage.lopd";
+        Integer valor = getIntegerByEntidad(idEntidad, partialPropertyName);
+
+        // Valor global si no existeix el de per entitat
+        if (valor == null) {
+            valor = 10;
+        }
+        return valor;
+    }
+
+    /**
      * Retorna el valor de la propiedad DefaultLanguage de la entidad indicada.
      * @return
      */
@@ -268,6 +313,37 @@ public class PropiedadGlobalUtil {
         }
     }
 
+    /**
+     *
+     * @param idEntidad
+     * @param partialPropertyName
+     * @return
+     */
+    protected static Integer getIntegerByEntidad(Long idEntidad, final String partialPropertyName) {
+        try {
+            PropiedadGlobalLocal propiedadGlobalEjb = getPropiedadGlobalEJB();
+            return propiedadGlobalEjb.getIntegerPropertyByEntitat(idEntidad,RegwebConstantes.REGWEB3_PROPERTY_BASE + partialPropertyName);
+        } catch (Exception e) {
+            log.error("Error obteniendo la propiedad ]" + RegwebConstantes.REGWEB3_PROPERTY_BASE + partialPropertyName, e);
+            return null;
+        }
+    }
+
+    /**
+     *
+     * @param partialPropertyName
+     * @return
+     */
+    protected static Integer getInteger(final String partialPropertyName) {
+        try {
+            PropiedadGlobalLocal propiedadGlobalEjb = getPropiedadGlobalEJB();
+            return propiedadGlobalEjb.getIntegerProperty(RegwebConstantes.REGWEB3_PROPERTY_BASE + partialPropertyName);
+        } catch (Exception e) {
+            log.error("Error obteniendo la propiedad ]" + RegwebConstantes.REGWEB3_PROPERTY_BASE + partialPropertyName, e);
+            return null;
+        }
+    }
+
 
     /**
      * Obtiene la referencia al ejb de PropiedadGlobalLocal
@@ -278,7 +354,7 @@ public class PropiedadGlobalUtil {
 
         if (propiedadGlobalEjb == null) {
             try {
-                propiedadGlobalEjb = (PropiedadGlobalLocal) new InitialContext().lookup("PropiedadGlobalEJB");
+                propiedadGlobalEjb = (PropiedadGlobalLocal) new InitialContext().lookup("regweb3/PropiedadGlobalEJB/local");
             } catch (Throwable e) {
                 log.error("No se ha podido instanciar PropiedadGlobalEJB");
                 throw new Exception(e);

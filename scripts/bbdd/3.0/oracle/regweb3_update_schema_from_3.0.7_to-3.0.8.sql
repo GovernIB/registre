@@ -21,3 +21,8 @@ ALTER TABLE RWE_TRAZABILIDAD MODIFY REGENT_ORIGEN NULL;
 
 --Nuevo campo en la tabla RWE_ENTIDAD
 alter table RWE_ENTIDAD add (OFICIOREMISION NUMBER(1) DEFAULT 1 NOT NULL);
+
+--Contenido para cada Entidad de la tabla RWE_PROPIEDADGLOBAL (Es necesario especificar el id de la Entidad a la que pertenecen)
+INSERT INTO RWE_PROPIEDADGLOBAL (id,clave,valor,tipo,descripcion,entidad) VALUES (RWE_ALL_SEQ.nextVal,'es.caib.regweb3.resultsperpage','10',1,'Resultados por página en los listados paginados',12264);
+INSERT INTO RWE_PROPIEDADGLOBAL (id,clave,valor,tipo,descripcion,entidad) VALUES (RWE_ALL_SEQ.nextVal,'es.caib.regweb3.resultsperpage.oficios','20',1,'Resultados por página en los Oficios pendientes de remisión',12264);
+INSERT INTO RWE_PROPIEDADGLOBAL (id,clave,valor,tipo,descripcion,entidad) VALUES (RWE_ALL_SEQ.nextVal,'es.caib.regweb3.resultsperpage.lopd','20',1,'Resultados por página en los informes LOPD',12264);

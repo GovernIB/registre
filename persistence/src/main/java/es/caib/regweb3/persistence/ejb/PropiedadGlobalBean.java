@@ -274,4 +274,34 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
             }
         }
     }
+
+    @Override
+    public Integer getIntegerPropertyByEntitat(Long idEntidad, String clave) throws Exception {
+        String value = getPropertyByEntidad(idEntidad, clave);
+        if (value == null) {
+            return null;
+        } else {
+            try {
+                return Integer.parseInt(value);
+            } catch(NumberFormatException e) {
+                log.error("Error conviertiendo a int el valor (" + value + ")  de la propiedad " + clave + ": " + e.getMessage(), e);
+                return null;
+            }
+        }
+    }
+
+    @Override
+    public Integer getIntegerProperty(String clave) throws Exception {
+        String value = getProperty(clave);
+        if (value == null) {
+            return null;
+        } else {
+            try {
+                return Integer.parseInt(value);
+            } catch(NumberFormatException e) {
+                log.error("Error conviertiendo a int el valor (" + value + ")  de la propiedad " + clave + ": " + e.getMessage(), e);
+                return null;
+            }
+        }
+    }
 }

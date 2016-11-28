@@ -22,7 +22,7 @@ public class Paginacion {
 
     public Paginacion(int total, int pageNumber) {
         totalResults = total;
-        totalPages = (int) (totalResults / BaseEjbJPA.RESULTADOS_PAGINACION);
+        totalPages = (totalResults / BaseEjbJPA.RESULTADOS_PAGINACION);
         if(totalResults % BaseEjbJPA.RESULTADOS_PAGINACION != 0){
             totalPages = totalPages +1;
         }
@@ -30,7 +30,18 @@ public class Paginacion {
         currentIndex = pageNumber;
         beginIndex = Math.max(1, currentIndex - BaseEjbJPA.RESULTADOS_PAGINACION);
         endIndex = Math.min(beginIndex + 10, totalPages);
+    }
 
+    public Paginacion(int total, int pageNumber, int totalPaginacion) {
+        totalResults = total;
+        totalPages = (totalResults / totalPaginacion);
+        if(totalResults % totalPaginacion != 0){
+            totalPages = totalPages +1;
+        }
+
+        currentIndex = pageNumber;
+        beginIndex = Math.max(1, currentIndex - totalPaginacion);
+        endIndex = Math.min(beginIndex + 10, totalPages);
     }
 
     public int getTotalPages() {

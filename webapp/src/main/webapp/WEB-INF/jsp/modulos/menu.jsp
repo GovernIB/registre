@@ -4,37 +4,38 @@
 
 <div class="container-fluid">
 
-      <div class="navbar-header">
+    <div class="navbar-header">
         <%--Si el usuario es SuperAdministrador--%>
         <c:if test="${rolAutenticado.nombre == 'RWE_SUPERADMIN'}">
             <c:if test="${configuracion.logoMenu != null}">
                 <div class="govern-logo pull-left">
-                    <img src="<c:url value="/archivo/${configuracion.logoMenu.id}"/>" alt="${configuracion.logoMenu.nombre}" />
+                    <img src="<c:url value="/archivo/${configuracion.logoMenu.id}"/>" alt="${configuracion.logoMenu.nombre}"/>
                 </div>
             </c:if>
         </c:if>
         <%--Si el usuario no es SuperAdministrador--%>
         <c:if test="${rolAutenticado.nombre != 'RWE_SUPERADMIN'}">
             <c:if test="${entidadActiva == null}">
-                <div class="govern-logo pull-left"><img src="<c:url value="/img/govern-logo.png"/>" width="159" height="36" alt="Govern de les Illes Balears" /></div>
+                <div class="govern-logo pull-left"><img src="<c:url value="/img/govern-logo.png"/>" width="159"
+                                                        height="36" alt="Govern de les Illes Balears"/></div>
             </c:if>
             <c:if test="${entidadActiva != null}">
                 <div class="govern-logo pull-left">
                     <c:if test="${entidadActiva.logoMenu != null}">
-                        <img src="<c:url value="/archivo/${entidadActiva.logoMenu.id}"/>" alt="${entidadActiva.nombre}" />
+                        <img src="<c:url value="/archivo/${entidadActiva.logoMenu.id}"/>" alt="${entidadActiva.nombre}"/>
                     </c:if>
                     <c:if test="${entidadActiva.logoMenu == null}">
-                        <img src="<c:url value="/img/govern-logo.png"/>" width="159" height="36" alt="Govern de les Illes Balears" />
+                        <img src="<c:url value="/img/govern-logo.png"/>" width="159" height="36" alt="Govern de les Illes Balears"/>
                     </c:if>
                 </div>
             </c:if>
         </c:if>
         <div class="aplication-logo pull-left">
-          <a href="<c:url value="/"/>">
-            <img src="<c:url value="/img/logo-regweb3.png"/>" width="180" height="48" alt="Regweb3"/>
-          </a>
+            <a href="<c:url value="/"/>">
+                <img src="<c:url value="/img/logo-regweb3.png"/>" width="180" height="48" alt="Regweb3"/>
+            </a>
         </div>
-        
+
 
         <div class="pull-right main-menu">
 
@@ -43,10 +44,10 @@
                 <%--MENÚ USUARIO--%>
                 <li class="dropdown">
                     <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
-                       <i class="fa fa-user"></i>
-                       ${usuarioAutenticado.nombreCompleto}
-                       <%-- ${loginInfo.usuarioAutenticado.nombreCompleto} --%> 
-                       <i class="fa fa-caret-down"></i>
+                        <i class="fa fa-user"></i>
+                        ${usuarioAutenticado.nombreCompleto}
+                        <%-- ${loginInfo.usuarioAutenticado.nombreCompleto} --%>
+                        <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu">
                         <c:if test="${pageContext.response.locale == 'ca'}">
@@ -56,10 +57,10 @@
                             <li><a href="<c:url value="${requestScope.requestURI}?lang=ca"/>"><i class="fa fa-bullhorn"></i> <spring:message code="menu.idioma.catalan"/></a></li>
                         </c:if>
                         <li>
-                        <%--    <a href="<c:url value="/usuario/${loginInfo.usuarioAutenticado.id}/edit"/>"> --%>
+                            <%--    <a href="<c:url value="/usuario/${loginInfo.usuarioAutenticado.id}/edit"/>"> --%>
                             <a href="<c:url value="/usuario/${usuarioAutenticado.id}/edit"/>">
-                              <i class="fa fa-gear"></i>
-                               <spring:message code="menu.configuracion"/>
+                                <i class="fa fa-gear"></i>
+                                <spring:message code="menu.configuracion"/>
                             </a>
                         </li>
 
@@ -116,7 +117,8 @@
                 <c:if test="${fn:length(rolesAutenticado) > 1}">
 
                     <li class="dropdown">
-                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-lock"></i> ${rolAutenticado.descripcion} <i class="fa fa-caret-down"></i></a>
+                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i
+                                class="fa fa-lock"></i> ${rolAutenticado.descripcion} <i class="fa fa-caret-down"></i></a>
                         <ul class="dropdown-menu">
 
                             <c:forEach var="rol" items="${rolesAutenticado}">
@@ -148,13 +150,15 @@
                             </button>
                             <ul class="dropdown-menu">
                                     <%--<c:import url="/reprosUsuario/1"/>--%>
-                                        <li class="submenu-complet"><a
-                                                href="<c:url value="/registroEntrada/new"/>"><spring:message
-                                                code="registroEntrada.nuevo"/></a></li>
-                                <li class="submenu-complet"><a href="<c:url value="/registroEntrada/reserva"/>"><spring:message code="registroEntrada.reserva"/></a></li>
-                                <li class="submenu-complet"><a href="<c:url value="/registroEntrada/list"/>"><spring:message code="registroEntrada.listado"/></a></li>
-                                <%if(Configuracio.isCAIB()){%>
-                                    <li class="submenu-complet"><a href="<%=Configuracio.getUrlPreregistre()%>" target="_blank"><spring:message code="regweb.preregistro.caib"/></a></li>
+                                <li class="submenu-complet"><a href="<c:url value="/registroEntrada/new"/>"><spring:message
+                                        code="registroEntrada.nuevo"/></a></li>
+                                <li class="submenu-complet"><a href="<c:url value="/registroEntrada/reserva"/>"><spring:message
+                                        code="registroEntrada.reserva"/></a></li>
+                                <li class="submenu-complet"><a href="<c:url value="/registroEntrada/list"/>"><spring:message
+                                        code="registroEntrada.listado"/></a></li>
+                                <%if (Configuracio.isCAIB()) {%>
+                                <li class="submenu-complet"><a href="<%=Configuracio.getUrlPreregistre()%>"
+                                                               target="_blank"><spring:message code="regweb.preregistro.caib"/></a></li>
                                 <%}%>
 
                             </ul>
@@ -166,10 +170,10 @@
                                 <spring:message code="menu.salidas"/> <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
-                                <li class="submenu-complet"><a
-                                        href="<c:url value="/registroSalida/new"/>"><spring:message
+                                <li class="submenu-complet"><a href="<c:url value="/registroSalida/new"/>"><spring:message
                                         code="registroSalida.nuevo"/></a></li>
-                                <li class="submenu-complet"><a href="<c:url value="/registroSalida/list"/>"><spring:message code="registroSalida.listado"/></a></li>
+                                <li class="submenu-complet"><a href="<c:url value="/registroSalida/list"/>"><spring:message
+                                        code="registroSalida.listado"/></a></li>
                             </ul>
                         </div>
 
@@ -181,16 +185,21 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a href="<c:url value="/oficioRemision/list"/>"><spring:message code="oficioRemision.listado"/></a></li>
-                                    <li><a href="<c:url value="/oficioRemision/pendientesLlegada/list"/>"><spring:message code="oficioRemision.pendientesLlegada"/></a></li>
+                                    <li>
+                                        <a href="<c:url value="/oficioRemision/pendientesLlegada/list"/>"><spring:message code="oficioRemision.pendientesLlegada"/></a></li>
                                     <li class="divider"></li>
-                                    <li><a href="<c:url value="/oficioRemision/entradasPendientesRemision"/>"><spring:message code="registroEntrada.oficiosRemision"/></a></li>
-                                    <li><a href="<c:url value="/oficioRemision/salidasPendientesRemision"/>"><spring:message code="registroSalida.oficiosRemision"/></a></li>
+                                    <li>
+                                        <a href="<c:url value="/oficioRemision/entradasPendientesRemision"/>"><spring:message code="registroEntrada.oficiosRemision"/></a></li>
+                                    <li>
+                                        <a href="<c:url value="/oficioRemision/salidasPendientesRemision"/>"><spring:message code="registroSalida.oficiosRemision"/></a></li>
                                     <c:if test="${entidadActiva.sir}">
                                         <li class="divider"></li>
                                         <li class="dropdown-submenu-left toggle-left">
-                                            <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> <spring:message code="regweb.sir"/></a>
+                                            <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i>
+                                                <spring:message code="regweb.sir"/></a>
                                             <ul class="dropdown-menu">
-                                                <li class="submenu-complet"><a href="<c:url value="/asientoRegistralSir/list"/>"><spring:message code="asientoRegistralSir.listado"/></a></li>
+                                                <li class="submenu-complet"><a href="<c:url value="/asientoRegistralSir/list"/>"><spring:message
+                                                        code="asientoRegistralSir.listado"/></a></li>
                                             </ul>
                                         </li>
                                     </c:if>
@@ -200,7 +209,7 @@
 
                         <div class="btn-group">
                             <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown">
-                               <spring:message code="menu.administracion"/> <span class="caret"></span>
+                                <spring:message code="menu.administracion"/> <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
                                 <c:if test="${entidadActiva != null}">
@@ -211,11 +220,13 @@
                                 <c:if test="${oficinaActiva != null}">
                                     <li class="divider"></li>
                                     <li class="dropdown-submenu-left toggle-left">
-                                        <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> <spring:message code="menu.estadisticas"/></a>
+                                        <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> <spring:message
+                                                code="menu.estadisticas"/></a>
                                         <ul class="dropdown-menu">
                                             <c:if test="${fn:length(librosAdministrados) > 0}">
                                                 <li><a href="<c:url value="/informe/indicadores"/>"><spring:message code="informe.indicadores"/></a></li>
-                                                <li><a href="<c:url value="/informe/indicadoresOficina"/>"><spring:message code="informe.indicadoresOficina"/></a></li>
+                                                <li>
+                                                    <a href="<c:url value="/informe/indicadoresOficina"/>"><spring:message code="informe.indicadoresOficina"/></a></li>
                                             </c:if>
                                             <li><a href="<c:url value="/informe/libroRegistro"/>"><spring:message code="menu.libro"/></a></li>
                                         </ul>
@@ -224,20 +235,25 @@
 
                                 <c:if test="${fn:length(librosAdministrados) > 0}">
                                     <li class="divider"></li>
-                                    <li class="submenu-complet"><a href="<c:url value="/informe/usuarioLopd"/>"><spring:message code="informe.usuarioLopd"/></a></li>
-                                    <li class="submenu-complet"><a href="<c:url value="/informe/registroLopd"/>"><spring:message code="informe.registroLopd"/></a></li>
+                                    <li class="submenu-complet"><a href="<c:url value="/informe/usuarioLopd"/>"><spring:message
+                                            code="informe.usuarioLopd"/></a></li>
+                                    <li class="submenu-complet"><a href="<c:url value="/informe/registroLopd"/>"><spring:message
+                                            code="informe.registroLopd"/></a></li>
                                 </c:if>
 
                                 <c:if test="${registrosMigrados}">
                                     <li class="divider"></li>
-                                    <li class="submenu-complet"><a href="<c:url value="/registroMigrado/list"/>"><spring:message code="registroMigrado.consultaRegistro"/></a></li>
+                                    <li class="submenu-complet"><a href="<c:url value="/registroMigrado/list"/>"><spring:message
+                                            code="registroMigrado.consultaRegistro"/></a></li>
                                 </c:if>
-                                 
+
                                 <li class="divider"></li>
-                                <li class="submenu-complet"><a href="<c:url value="/doc/Manual_de_Usuari_Operador_de_RegWeb3.pdf"/>" target="_blank" ><spring:message code="menu.manual.oper"/></a></li>
+                                <li class="submenu-complet"><a href="<c:url value="/doc/Manual_de_Usuari_Operador_de_RegWeb3.pdf"/>"
+                                        target="_blank"><spring:message code="menu.manual.oper"/></a></li>
 
                             </ul>
-                        </div><!-- /btn-group -->
+                        </div>
+                        <!-- /btn-group -->
 
 
                     </sec:authorize>
@@ -249,13 +265,14 @@
                         <c:if test="${entidadActiva != null}">
 
                             <div class="btn-group">
-                                <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown">
+                                <button type="button" class="btn btn-warning btn-sm dropdown-toggle"
+                                        data-toggle="dropdown">
                                         ${entidadActiva.nombre} <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li class="submenu-complet"><a href="<c:url value="/entidad/${entidadActiva.id}/edit"/>"><spring:message code="menu.entidad.editar"/></a></li>
-                                    <li class="submenu-complet"><a
-                                            href="<c:url value="/propiedadGlobal/list"/>"><spring:message
+                                    <li class="submenu-complet"><a href="<c:url value="/entidad/${entidadActiva.id}/edit"/>"><spring:message
+                                            code="menu.entidad.editar"/></a></li>
+                                    <li class="submenu-complet"><a href="<c:url value="/propiedadGlobal/list"/>"><spring:message
                                             code="propiedadGlobal.propiedadesGlobales"/></a></li>
                                     <li class="divider"></li>
                                     <li class="dropdown-submenu-left toggle-left">
@@ -269,13 +286,16 @@
                                     </li>
                                     <li class="divider"></li>
 
-                                    <li class="submenu-complet"><a href="<c:url value="/entidad/usuarios"/>"><spring:message code="menu.usuarios"/></a></li>
+                                    <li class="submenu-complet"><a href="<c:url value="/entidad/usuarios"/>"><spring:message
+                                            code="menu.usuarios"/></a></li>
                                     <c:if test="${entidadActiva.configuracionPersona != 1}">
-                                        <li class="submenu-complet"><a href="<c:url value="/persona/list"/>"><spring:message code="menu.personas"/></a></li>
-                                        <li class="submenu-complet"><a href="<c:url value="/persona/personasDuplicadas/"/>"><spring:message code="persona.buscador.duplicadas"/></a></li>
+                                        <li class="submenu-complet"><a href="<c:url value="/persona/list"/>"><spring:message
+                                                code="menu.personas"/></a></li>
+                                        <li class="submenu-complet"><a href="<c:url value="/persona/personasDuplicadas/"/>"><spring:message
+                                                code="persona.buscador.duplicadas"/></a></li>
                                     </c:if>
 
-                                    <%--<li class="submenu-complet"><a href="<c:url value="/dir3/datosCatalogo"/>" tabindex="-1"><spring:message code="menu.dir3"/></a></li>--%>
+                                        <%--<li class="submenu-complet"><a href="<c:url value="/dir3/datosCatalogo"/>" tabindex="-1"><spring:message code="menu.dir3"/></a></li>--%>
                                     <li class="divider"></li>
                                     <li class="dropdown-submenu-left toggle-left">
                                         <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> <spring:message code="menu.estadisticas"/></a>
@@ -299,16 +319,19 @@
                                         <ul class="dropdown-menu">
                                             <li><a href="<c:url value="/tipoDocumental/list/"/>"><spring:message code="menu.tipoDocumental"/></a></li>
                                             <li><a href="<c:url value="/tipoAsunto/list/"/>"><spring:message code="menu.tipoAsunto"/></a></li>
-                                            <li><a href="<c:url value="/modeloRecibo/list/"/>" ><spring:message code="menu.modeloRecibo"/></a></li>
-                                            <li><a href="<c:url value="/modeloOficioRemision/list/"/>" ><spring:message code="menu.modeloOficioRemision"/></a></li>
+                                            <li><a href="<c:url value="/modeloRecibo/list/"/>"><spring:message code="menu.modeloRecibo"/></a></li>
+                                            <li><a href="<c:url value="/modeloOficioRemision/list/"/>"><spring:message code="menu.modeloOficioRemision"/></a></li>
                                         </ul>
                                     </li>
-                                    
+
                                     <li class="divider"></li>
-                                    <li class="submenu-complet"><a href="<c:url value="/doc/Manual_de_Usuari_Administrador_Entitat_de_RegWeb3.pdf"/>" target="_blank" ><spring:message code="menu.manual.aden"/></a></li>
+                                    <li class="submenu-complet"><a
+                                            href="<c:url value="/doc/Manual_de_Usuari_Administrador_Entitat_de_RegWeb3.pdf"/>"
+                                            target="_blank"><spring:message code="menu.manual.aden"/></a></li>
 
                                 </ul>
-                            </div><!-- /btn-group -->
+                            </div>
+                            <!-- /btn-group -->
 
                         </c:if>
                     </c:if>
@@ -321,26 +344,25 @@
                             <spring:message code="menu.configuracion"/> <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
-                            <li class="dropdown-submenu-left toggle-left">
-                                <a href="<c:url value="/entidad/list"/>"><i class="fa fa-chevron-left"></i>
-                                    <spring:message code="entidad.entidades"/></a>
-                                <%--<ul class="dropdown-menu">
-                                    <li><a href="<c:url value="/admin/organismo/list"/>"><spring:message
-                                            code="organismo.listado"/></a></li>
-                                    <li><a href="<c:url value="/admin/oficina/list"/>"><spring:message
-                                            code="oficina.listado"/></a></li>
-                                </ul>--%>
+                            <li class="submenu-complet"><a href="<c:url value="/entidad/list"/>"><spring:message
+                                    code="entidad.entidades"/></a>
+                                    <%--<ul class="dropdown-menu">
+                                        <li><a href="<c:url value="/admin/organismo/list"/>"><spring:message
+                                                code="organismo.listado"/></a></li>
+                                        <li><a href="<c:url value="/admin/oficina/list"/>"><spring:message
+                                                code="oficina.listado"/></a></li>
+                                    </ul>--%>
                             </li>
 
                             <li class="submenu-complet"><a href="<c:url value="/usuario/list"/>"><spring:message code="menu.usuarios"/></a></li>
-                            <li class="submenu-complet"><a href="<c:url value="/propiedadGlobal/list"/>"><spring:message
-                                    code="propiedadGlobal.propiedadesGlobales"/></a></li>
+                            <li class="submenu-complet"><a href="<c:url value="/propiedadGlobal/list"/>"><spring:message code="propiedadGlobal.propiedadesGlobales"/></a></li>
                             <li class="submenu-complet"><a href="<c:url value="/dir3/datosCatalogo"/>" tabindex="-1"><spring:message code="menu.dir3"/></a></li>
                             <li class="submenu-complet"><a href="<c:url value="/configuracion/editar"/>"><spring:message code="menu.configuracion"/></a></li>
                             <li class="divider"></li>
-                            <li class="submenu-complet"><a href="<c:url value="/doc/Manual_de_Usuari_Administrador_de_RegWeb3.pdf"/>" target="_blank" ><spring:message code="menu.manual.admin"/></a></li>
+                            <li class="submenu-complet"><a href="<c:url value="/doc/Manual_de_Usuari_Administrador_de_RegWeb3.pdf"/>" target="_blank"><spring:message code="menu.manual.admin"/></a></li>
                         </ul>
-                    </div><!-- /btn-group -->
+                    </div>
+                    <!-- /btn-group -->
                 </c:if>
 
             </div>
