@@ -32,7 +32,7 @@ public class RecepcionManagerImpl implements RecepcionManager {
     public SicresXMLManager sicresXMLManager = new SicresXMLManagerImpl();
     public MensajeManager mensajeManager = new MensajeManagerImpl();
 
-    private String errorGenerico = Errores.ERROR_0063.getValue(); // ERROR GENÉRICO: ERROR_AL_RECIBIR_ASIENTO
+    private String errorGenerico = Errores.ERROR_0065.getValue(); // ERROR GENÉRICO: ERROR_EN_EL_ASIENTO
     private final String Codigo_Entidad_Registral_Destino_Xpath = "//Codigo_Entidad_Registral_Destino/text()";
     private final String Codigo_Entidad_Registral_Origen_Xpath = "//Codigo_Entidad_Registral_Origen/text()";
     private final String Identificador_Intercambio_Xpath = "//Identificador_Intercambio/text()";
@@ -51,6 +51,7 @@ public class RecepcionManagerImpl implements RecepcionManager {
     public void recibirFicheroIntercambio(String xmlFicheroIntercambio, WebServicesMethodsLocal webServicesMethodsEjb) {
 
         FicheroIntercambio ficheroIntercambio = null;
+        String descripcionError = null;
 
         try {
 
@@ -67,17 +68,17 @@ public class RecepcionManagerImpl implements RecepcionManager {
 
         } catch (RuntimeException e) {
 
-
-
             // Si el error es de Validación, obtenemos su código de error
             if (e instanceof ValidacionException) {
                 Errores errorValidacion = ((ValidacionException) e).getErrorValidacion();
+                descripcionError = ((ValidacionException) e).getErrorException().getMessage();
                 if (errorValidacion != null) {
                     errorGenerico = errorValidacion.getValue();
                 }
-                log.info("Error en la Valicacion: " + errorGenerico);
+                log.info("Error de Valicacion: " + ((ValidacionException) e).getErrorException().getMessage());
             }else{
                 log.info("Error al recibir el fichero de intercambio", e);
+                descripcionError = e.getMessage();
             }
 
             // Enviamos el mensaje de error
@@ -91,7 +92,7 @@ public class RecepcionManagerImpl implements RecepcionManager {
 
                 // Enviar mensaje de error, sino tiene nada que ver con los campos CodigoEntidad
                 } else if (!Errores.ERROR_COD_ENTIDAD_INVALIDO.getValue().equals(errorGenerico)) {
-                    enviarMensajeError(mensaje, errorGenerico, e.getMessage(), null);
+                    enviarMensajeError(mensaje, errorGenerico, descripcionError, null);
                 }
 
             } catch (RuntimeException ex) {
@@ -119,7 +120,7 @@ public class RecepcionManagerImpl implements RecepcionManager {
             sicresXMLManager.validarFicheroIntercambio(ficheroIntercambio);
         } catch (IllegalArgumentException e) {
             log.error("Se produjo un error de validacion del xml recibido: " + e.getMessage());
-            throw new ValidacionException(Errores.ERROR_0037);
+            throw new ValidacionException(Errores.ERROR_0037, e);
         }
 
         //todo: Crear una auditoría interna de los AsientosRegistralesSir recibidos
@@ -175,9 +176,9 @@ public class RecepcionManagerImpl implements RecepcionManager {
         Node codigoEntidadRegistralOrigen = (Node)reader.read(Codigo_Entidad_Registral_Origen_Xpath, XPathConstants.NODE);
         Node identificadorIntercambio = (Node)reader.read(Identificador_Intercambio_Xpath, XPathConstants.NODE);
 
-        log.info("CodigoEntidadRegistralDestino: " + codigoEntidadRegistralDestino.getNodeValue());
-        log.info("CodigoEntidadRegistralOrigen: " + codigoEntidadRegistralOrigen.getNodeValue());
-        log.info("IdentificadorIntercambio: " + identificadorIntercambio.getNodeValue());
+        //log.info("CodigoEntidadRegistralDestino: " + codigoEntidadRegistralDestino.getNodeValue());
+        //log.info("CodigoEntidadRegistralOrigen: " + codigoEntidadRegistralOrigen.getNodeValue());
+        //log.info("IdentificadorIntercambio: " + identificadorIntercambio.getNodeValue());
 
         mensaje.setCodigoEntidadRegistralDestino(codigoEntidadRegistralDestino.getNodeValue());
         mensaje.setCodigoEntidadRegistralOrigen(codigoEntidadRegistralOrigen.getNodeValue());
