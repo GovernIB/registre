@@ -32,7 +32,7 @@ public interface LopdLocal extends BaseEjb<Lopd, Long> {
      * @return
      * @throws Exception
      */
-    public Paginacion getByFechasUsuario(Integer pageNumber, Date fechaInicio, Date fechaFin, Long idUsuarioEntidad, List<Libro> libros, Long accion, Long tipoRegistro) throws Exception;
+    public Paginacion getByFechasUsuario(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idUsuarioEntidad, List<Libro> libros, Long accion, Long tipoRegistro) throws Exception;
 
     /**
      * Devuelve los registros Lopd entre dos fechas para un Usuario en concreto y un Libro en concreto, con la Accion (listado/consulta) y el TipoRegistro (entrada/salida)
@@ -46,7 +46,7 @@ public interface LopdLocal extends BaseEjb<Lopd, Long> {
      * @return
      * @throws Exception
      */
-    public Paginacion getByFechasUsuarioLibro(Integer pageNumber, Date fechaInicio, Date fechaFin, Long idUsuarioEntidad, Long idLibro, Long accion, Long tipoRegistro) throws Exception;
+    public Paginacion getByFechasUsuarioLibro(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idUsuarioEntidad, Long idLibro, Long accion, Long tipoRegistro) throws Exception;
 
     /**
      * Devuelve los registros Lopd de un Registro concreto, pasando el Tipo de Registro y la Accion
@@ -112,4 +112,150 @@ public interface LopdLocal extends BaseEjb<Lopd, Long> {
      * @throws Exception
      */
     public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+
+    /**
+     * Busca los Registros de Entrada que no estén pendientes en función de la una fecha inicio, una fecha fin, por Usuario y Libro
+     *
+     * @param pageNumber
+     * @param fechaInicio
+     * @param fechaFin
+     * @param idUsuario
+     * @param idLibro
+     * @return
+     * @throws Exception
+     */
+    public Paginacion buscaEntradaPorUsuarioLibro(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idUsuario, Long idLibro) throws Exception;
+
+    /**
+     * Busca los Registros de Entrada Modificada que no sean de 'Creación' en función de la una fecha inicio, una fecha fin, por Usuario y Libro
+     *
+     * @param pageNumber
+     * @param fechaInicio
+     * @param fechaFin
+     * @param idUsuario
+     * @param idLibro
+     * @return
+     * @throws Exception
+     */
+    public Paginacion entradaModificadaPorUsuarioLibro(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idUsuario, Long idLibro) throws Exception;
+
+    /**
+     * Busca los Registros de Salida que no estén pendientes en función de la una fecha inicio, una fecha fin, por Usuario y Libro
+     *
+     * @param pageNumber
+     * @param fechaInicio
+     * @param fechaFin
+     * @param idUsuario
+     * @param idLibro
+
+     * @return
+     * @throws Exception
+     */
+    public Paginacion buscaSalidaPorUsuarioLibro(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idUsuario, Long idLibro) throws Exception;
+
+    /**
+     * Busca los Registros de Salida Modificada que no sean de 'Creación' en función de la una fecha inicio, una fecha fin, por Usuario y Libro
+     *
+     * @param pageNumber
+     * @param fechaInicio
+     * @param fechaFin
+     * @param idUsuario
+     * @param idLibro
+     * @return
+     * @throws Exception
+     */
+    public Paginacion salidaModificadaPorUsuarioLibro(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idUsuario, Long idLibro) throws Exception;
+
+    /**
+     * Busca los Registros de Entrada en función de la una fecha inicio, una fecha fin, por Usuario en los Libros gestionados
+     *
+     * @param pageNumber
+     * @param fechaInicio
+     * @param fechaFin
+     * @param idUsuario
+     * @param libros
+     * @return
+     * @throws Exception
+     */
+    public Paginacion buscaEntradaPorUsuario(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idUsuario, List<Libro> libros) throws Exception;
+
+    /**
+     * Busca los Registros de Entrada Modificada en función de la una fecha inicio, una fecha fin, por Usuario y Libros gestionados
+     *
+     * @param pageNumber
+     * @param fechaInicio
+     * @param fechaFin
+     * @param idUsuario
+     * @param libros
+     * @return
+     * @throws Exception
+     */
+    public Paginacion entradaModificadaPorUsuario(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idUsuario, List<Libro> libros) throws Exception;
+
+    /**
+     * Busca los Registros de Salida en función de la una fecha inicio, una fecha fin, por Usuario y Libros gestionados
+     *
+     * @param pageNumber
+     * @param fechaInicio
+     * @param fechaFin
+     * @param idUsuario
+     * @param libros
+     * @return
+     * @throws Exception
+     */
+    public Paginacion buscaSalidaPorUsuario(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idUsuario, List<Libro> libros) throws Exception;
+
+    /**
+     * Busca los Registros de Salida Modificada en función de la una fecha inicio, una fecha fin, por Usuario y Libros gestionados
+     *
+     * @param pageNumber
+     * @param fechaInicio
+     * @param fechaFin
+     * @param idUsuario
+     * @param libros
+     * @return
+     * @throws Exception
+     */
+    public Paginacion salidaModificadaPorUsuario(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idUsuario, List<Libro> libros) throws Exception;
+
+    /**
+     * Devuelve los registros Lopd de un Registro Migrado que ha realizado un Usuario entre dos fechas, pasando la Accion
+     *
+     * @param pageNumber
+     * @param dataInici
+     * @param dataFi
+     * @param usuario
+     * @param accion
+     * @return
+     * @throws Exception
+     */
+    public Paginacion getByUsuario(Integer pageNumber, final Integer resultsPerPage, Date dataInici, Date dataFi, String usuario, String accion) throws Exception;
+
+    /**
+     * Busca los Registros de Entrada en función de la una fecha inicio, una fecha fin, Libro y Número de registro
+     *
+     * @param pageNumber
+     * @param fechaInicio
+     * @param fechaFin
+     * @param idLibro
+     * @param numeroRegistro
+     * @return
+     * @throws Exception
+     */
+    public Paginacion buscaEntradasPorLibroTipoNumero(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idLibro, Integer numeroRegistro) throws Exception;
+
+    /**
+     * Busca los Registros de Salida en función de la una fecha inicio, una fecha fin, Libro y Número de registro
+     *
+     * @param pageNumber
+     * @param fechaInicio
+     * @param fechaFin
+     * @param idLibro
+     * @param numeroRegistro
+     * @return
+     * @throws Exception
+     */
+    public Paginacion buscaSalidasPorLibroTipoNumero(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idLibro, Integer numeroRegistro) throws Exception;
+
+
 }

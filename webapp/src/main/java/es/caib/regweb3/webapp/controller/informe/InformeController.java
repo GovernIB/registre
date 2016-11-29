@@ -58,9 +58,6 @@ public class InformeController extends AbstractRegistroCommonFormController {
     @EJB(mappedName = "regweb3/HistoricoRegistroSalidaEJB/local")
     public HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
 
-    @EJB(mappedName = "regweb3/RegistroLopdMigradoEJB/local")
-    public RegistroLopdMigradoLocal registroLopdMigradoEjb;
-
     @EJB(mappedName = "regweb3/InformeEJB/local")
     public InformeLocal informeEjb;
 
@@ -136,7 +133,6 @@ public class InformeController extends AbstractRegistroCommonFormController {
             if(!informeLibroBusquedaForm.getOrganDestinatariNom().equals("")) {
                 nomOrganismeDest = informeLibroBusquedaForm.getOrganDestinatariNom();
             } else{
-                //nomOrganismeDest = organismoEjb.findByCodigoLigero(codigoOrganDest).getDenominacion();
                 nomOrganismeDest = organismoEjb.findByCodigoEntidad(codigoOrganDest, usuarioEntidad.getEntidad().getId()).getDenominacion();
             }
         }
@@ -777,38 +773,38 @@ public class InformeController extends AbstractRegistroCommonFormController {
             if(tipo.equals(RegwebConstantes.REGISTRO_ENTRADA)){
                 // Busca los registros Creados por Usuario de Registro de Entrada entre las fechas
                 if(accion.equals(RegwebConstantes.LOPD_CREACION)) {
-                   paginacion = informeEjb.buscaEntradaPorUsuarioLibro(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageLopd(entidadActiva.getId()), dataInici, dataFi, busqueda.getUsuario(), busqueda.getLibro());
+                   paginacion = lopdEjb.buscaEntradaPorUsuarioLibro(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageLopd(entidadActiva.getId()), dataInici, dataFi, busqueda.getUsuario(), busqueda.getLibro());
                 }
                 // Busca los registros Modificados por Usuario de Registro de Entrada entre las fechas
                 if(accion.equals(RegwebConstantes.LOPD_MODIFICACION)) {
-                    paginacion = historicoRegistroEntradaEjb.entradaModificadaPorUsuarioLibro(busqueda.getPageNumber(), dataInici, dataFi, busqueda.getUsuario(), busqueda.getLibro());
+                    paginacion = lopdEjb.entradaModificadaPorUsuarioLibro(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageLopd(entidadActiva.getId()), dataInici, dataFi, busqueda.getUsuario(), busqueda.getLibro());
                 }
                 // Registros Listados
                 if(accion.equals(RegwebConstantes.LOPD_LISTADO)) {
-                    paginacion = lopdEjb.getByFechasUsuarioLibro(busqueda.getPageNumber(), dataInici, dataFi, busqueda.getUsuario(), libro.getId(), RegwebConstantes.LOPD_LISTADO, RegwebConstantes.REGISTRO_ENTRADA);
+                    paginacion = lopdEjb.getByFechasUsuarioLibro(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageLopd(entidadActiva.getId()), dataInici, dataFi, busqueda.getUsuario(), libro.getId(), RegwebConstantes.LOPD_LISTADO, RegwebConstantes.REGISTRO_ENTRADA);
                 }
                 // Registros Consultados
                 if(accion.equals(RegwebConstantes.LOPD_CONSULTA)) {
-                    paginacion = lopdEjb.getByFechasUsuarioLibro(busqueda.getPageNumber(), dataInici, dataFi, busqueda.getUsuario(), libro.getId(), RegwebConstantes.LOPD_CONSULTA, RegwebConstantes.REGISTRO_ENTRADA);
+                    paginacion = lopdEjb.getByFechasUsuarioLibro(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageLopd(entidadActiva.getId()), dataInici, dataFi, busqueda.getUsuario(), libro.getId(), RegwebConstantes.LOPD_CONSULTA, RegwebConstantes.REGISTRO_ENTRADA);
                 }
             }
 
             if(tipo.equals(RegwebConstantes.REGISTRO_SALIDA)){
                 // Busca los registros Creados por Usuario de Registro de Salida entre las fechas
                 if(accion.equals(RegwebConstantes.LOPD_CREACION)) {
-                    paginacion = informeEjb.buscaSalidaPorUsuarioLibro(busqueda.getPageNumber(), dataInici, dataFi, busqueda.getUsuario(), busqueda.getLibro());
+                    paginacion = lopdEjb.buscaSalidaPorUsuarioLibro(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageLopd(entidadActiva.getId()), dataInici, dataFi, busqueda.getUsuario(), busqueda.getLibro());
                 }
                 // Busca los registros Modificados por Usuario de Registro de Salida entre las fechas
                 if(accion.equals(RegwebConstantes.LOPD_MODIFICACION)) {
-                    paginacion = historicoRegistroSalidaEjb.salidaModificadaPorUsuarioLibro(busqueda.getPageNumber(), dataInici, dataFi, busqueda.getUsuario(), busqueda.getLibro());
+                    paginacion = lopdEjb.salidaModificadaPorUsuarioLibro(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageLopd(entidadActiva.getId()), dataInici, dataFi, busqueda.getUsuario(), busqueda.getLibro());
                 }
                 // Registros Listados
                 if(accion.equals(RegwebConstantes.LOPD_LISTADO)) {
-                    paginacion = lopdEjb.getByFechasUsuarioLibro(busqueda.getPageNumber(), dataInici, dataFi, busqueda.getUsuario(), libro.getId(), RegwebConstantes.LOPD_LISTADO, RegwebConstantes.REGISTRO_SALIDA);
+                    paginacion = lopdEjb.getByFechasUsuarioLibro(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageLopd(entidadActiva.getId()), dataInici, dataFi, busqueda.getUsuario(), libro.getId(), RegwebConstantes.LOPD_LISTADO, RegwebConstantes.REGISTRO_SALIDA);
                 }
                 // Registros Consultados
                 if(accion.equals(RegwebConstantes.LOPD_CONSULTA)) {
-                    paginacion = lopdEjb.getByFechasUsuarioLibro(busqueda.getPageNumber(), dataInici, dataFi, busqueda.getUsuario(), libro.getId(), RegwebConstantes.LOPD_CONSULTA, RegwebConstantes.REGISTRO_SALIDA);
+                    paginacion = lopdEjb.getByFechasUsuarioLibro(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageLopd(entidadActiva.getId()), dataInici, dataFi, busqueda.getUsuario(), libro.getId(), RegwebConstantes.LOPD_CONSULTA, RegwebConstantes.REGISTRO_SALIDA);
                 }
             }
 
@@ -835,38 +831,38 @@ public class InformeController extends AbstractRegistroCommonFormController {
             if(tipo.equals(RegwebConstantes.REGISTRO_ENTRADA)){
                 // Busca los registros Creados por Usuario de Registro de Entrada entre las fechas
                 if(accion.equals(RegwebConstantes.LOPD_CREACION)) {
-                    paginacion = informeEjb.buscaEntradaPorUsuario(busqueda.getPageNumber(), dataInici, dataFi, busqueda.getUsuario(), libros);
+                    paginacion = lopdEjb.buscaEntradaPorUsuario(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageLopd(entidadActiva.getId()), dataInici, dataFi, busqueda.getUsuario(), libros);
                 }
                 // Busca los registros Modificador por Usuario de Registro de Entrada y Salida entre las fechas
                 if(accion.equals(RegwebConstantes.LOPD_MODIFICACION)) {
-                    paginacion = historicoRegistroEntradaEjb.entradaModificadaPorUsuario(busqueda.getPageNumber(), dataInici, dataFi, busqueda.getUsuario(), libros);
+                    paginacion = lopdEjb.entradaModificadaPorUsuario(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageLopd(entidadActiva.getId()), dataInici, dataFi, busqueda.getUsuario(), libros);
                 }
                 // Registros Listados
                 if(accion.equals(RegwebConstantes.LOPD_LISTADO)) {
-                    paginacion = lopdEjb.getByFechasUsuario(busqueda.getPageNumber(), dataInici, dataFi, busqueda.getUsuario(), libros, RegwebConstantes.LOPD_LISTADO, RegwebConstantes.REGISTRO_ENTRADA);
+                    paginacion = lopdEjb.getByFechasUsuario(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageLopd(entidadActiva.getId()), dataInici, dataFi, busqueda.getUsuario(), libros, RegwebConstantes.LOPD_LISTADO, RegwebConstantes.REGISTRO_ENTRADA);
                 }
                 // Registros Consultados
                 if(accion.equals(RegwebConstantes.LOPD_CONSULTA)) {
-                    paginacion = lopdEjb.getByFechasUsuario(busqueda.getPageNumber(), dataInici, dataFi, busqueda.getUsuario(), libros, RegwebConstantes.LOPD_CONSULTA, RegwebConstantes.REGISTRO_ENTRADA);
+                    paginacion = lopdEjb.getByFechasUsuario(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageLopd(entidadActiva.getId()), dataInici, dataFi, busqueda.getUsuario(), libros, RegwebConstantes.LOPD_CONSULTA, RegwebConstantes.REGISTRO_ENTRADA);
                 }
             }
 
             if(tipo.equals(RegwebConstantes.REGISTRO_SALIDA)){
                 // Busca los registros Creados por Usuario de Registro de Salida entre las fechas
                 if(accion.equals(RegwebConstantes.LOPD_CREACION)) {
-                    paginacion = informeEjb.buscaSalidaPorUsuario(busqueda.getPageNumber(), dataInici, dataFi, busqueda.getUsuario(), libros);
+                    paginacion = lopdEjb.buscaSalidaPorUsuario(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageLopd(entidadActiva.getId()), dataInici, dataFi, busqueda.getUsuario(), libros);
                 }
                 // Busca los registros Modificador por Usuario de Registro de Salida entre las fechas
                 if(accion.equals(RegwebConstantes.LOPD_MODIFICACION)) {
-                    paginacion = historicoRegistroSalidaEjb.salidaModificadaPorUsuario(busqueda.getPageNumber(), dataInici, dataFi, busqueda.getUsuario(), libros);
+                    paginacion = lopdEjb.salidaModificadaPorUsuario(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageLopd(entidadActiva.getId()), dataInici, dataFi, busqueda.getUsuario(), libros);
                 }
                 // Registros Listados
                 if(accion.equals(RegwebConstantes.LOPD_LISTADO)) {
-                    paginacion = lopdEjb.getByFechasUsuario(busqueda.getPageNumber(), dataInici, dataFi, busqueda.getUsuario(), libros, RegwebConstantes.LOPD_LISTADO, RegwebConstantes.REGISTRO_SALIDA);
+                    paginacion = lopdEjb.getByFechasUsuario(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageLopd(entidadActiva.getId()), dataInici, dataFi, busqueda.getUsuario(), libros, RegwebConstantes.LOPD_LISTADO, RegwebConstantes.REGISTRO_SALIDA);
                 }
                 // Registros Consultados
                 if(accion.equals(RegwebConstantes.LOPD_CONSULTA)) {
-                    paginacion = lopdEjb.getByFechasUsuario(busqueda.getPageNumber(), dataInici, dataFi, busqueda.getUsuario(), libros, RegwebConstantes.LOPD_CONSULTA, RegwebConstantes.REGISTRO_SALIDA);
+                    paginacion = lopdEjb.getByFechasUsuario(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageLopd(entidadActiva.getId()), dataInici, dataFi, busqueda.getUsuario(), libros, RegwebConstantes.LOPD_CONSULTA, RegwebConstantes.REGISTRO_SALIDA);
                 }
             }
 
@@ -876,16 +872,17 @@ public class InformeController extends AbstractRegistroCommonFormController {
                 Usuario usuarioBusqueda = usuarioEntidad.getUsuario();
                 // Registros Consultados
                 if(accion.equals(RegwebConstantes.LOPD_CONSULTA)) {
-                    paginacion = registroLopdMigradoEjb.getByUsuario(busqueda.getPageNumber(), dataInici, dataFi, usuarioBusqueda.getIdentificador(), RegwebConstantes.LOPDMIGRADO_CONSULTA);
+                    paginacion = lopdEjb.getByUsuario(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageLopd(entidadActiva.getId()), dataInici, dataFi, usuarioBusqueda.getIdentificador(), RegwebConstantes.LOPDMIGRADO_CONSULTA);
                 }
                 // Registros Listados
                 if(accion.equals(RegwebConstantes.LOPD_LISTADO)) {
-                    paginacion = registroLopdMigradoEjb.getByUsuario(busqueda.getPageNumber(), dataInici, dataFi, usuarioBusqueda.getIdentificador(), RegwebConstantes.LOPDMIGRADO_LISTADO);
+                    paginacion = lopdEjb.getByUsuario(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageLopd(entidadActiva.getId()), dataInici, dataFi, usuarioBusqueda.getIdentificador(), RegwebConstantes.LOPDMIGRADO_LISTADO);
                 }
             }
 
         }
-
+        busqueda.setPageNumber(1);
+        mav.addObject("usuarioLopdBusqueda",busqueda);
         mav.addObject("paginacion", paginacion);
         mav.addObject("usuarios", usuarios(request));
         mav.addObject("libros", libros(request));
@@ -919,6 +916,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
     public ModelAndView registroLopd(@ModelAttribute RegistroLopdBusqueda busqueda, HttpServletRequest request)throws Exception {
 
         ModelAndView mav = new ModelAndView("informe/registroLopd");
+        Entidad entidadActiva = getEntidadActiva(request);
 
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
@@ -932,31 +930,22 @@ public class InformeController extends AbstractRegistroCommonFormController {
         Libro libro = libroEjb.findById(busqueda.getLibro());
         mav.addObject("libro", libro);
 
-//        List<RegistroEntrada> entradas = null;
-//        List<RegistroSalida> salidas = null;
-
         // Busca los registros según pasámetros de búsqueda
         if((dataInici != null) && (dataFi != null)) {
             if (busqueda.getTipoRegistro().equals(RegwebConstantes.REGISTRO_ENTRADA)) {
-                Paginacion paginacion = informeEjb.buscaEntradasPorLibroTipoNumero(busqueda.getPageNumber(),dataInici, dataFi, busqueda.getLibro(), busqueda.getNumeroRegistro());
+                Paginacion paginacion = lopdEjb.buscaEntradasPorLibroTipoNumero(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageLopd(entidadActiva.getId()), dataInici, dataFi, busqueda.getLibro(), busqueda.getNumeroRegistro());
                 busqueda.setPageNumber(1);
                 mav.addObject("paginacion", paginacion);
                 // Alta en tabla LOPD de las entradas del listado
-//                Paginacion paginacionEntrada = new Paginacion(0, 0);
-//                List<Object> entradasList = new ArrayList<Object>(paginacion);
-//                paginacionEntrada.setListado(entradasList);
                 lopdEjb.insertarRegistrosEntrada(paginacion, usuarioEntidad.getId());
                 mav.addObject("entradas", true);
                 mav.addObject("salidas", false);
             }
             if (busqueda.getTipoRegistro().equals(RegwebConstantes.REGISTRO_SALIDA)) {
-                Paginacion paginacion = informeEjb.buscaSalidasPorLibroTipoNumero(busqueda.getPageNumber(), dataInici, dataFi, busqueda.getLibro(), busqueda.getNumeroRegistro());
+                Paginacion paginacion = lopdEjb.buscaSalidasPorLibroTipoNumero(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageLopd(entidadActiva.getId()), dataInici, dataFi, busqueda.getLibro(), busqueda.getNumeroRegistro());
                 busqueda.setPageNumber(1);
                 mav.addObject("paginacion", paginacion);
                 // Alta en tabla LOPD de las salidas del listado
-//                Paginacion paginacionSalida = new Paginacion(0, 0);
-//                List<Object> salidasList = new ArrayList<Object>(salidas);
-//                paginacionSalida.setListado(salidasList);
                 lopdEjb.insertarRegistrosSalida(paginacion, usuarioEntidad.getId());
                 mav.addObject("entradas", false);
                 mav.addObject("salidas", true);

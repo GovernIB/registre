@@ -1,7 +1,9 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.*;
+import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -12,9 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -62,7 +62,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
 
 
     @Override
-    public Paginacion getByFechasUsuario(Integer pageNumber, Date fechaInicio, Date fechaFin, Long idUsuarioEntidad, List<Libro> libros, Long accion, Long tipoRegistro) throws Exception {
+    public Paginacion getByFechasUsuario(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idUsuarioEntidad, List<Libro> libros, Long accion, Long tipoRegistro) throws Exception {
 
         Query q;
         Query q2;
@@ -94,12 +94,12 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
             Long total = (Long) q2.getSingleResult();
-            paginacion = new Paginacion(total.intValue(), pageNumber);
-            int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            paginacion = new Paginacion(total.intValue(), pageNumber, resultsPerPage);
+            int inicio = (pageNumber - 1) * resultsPerPage;
             q.setFirstResult(inicio);
-            q.setMaxResults(BaseEjbJPA.RESULTADOS_PAGINACION);
+            q.setMaxResults(resultsPerPage);
         } else {
-            paginacion = new Paginacion(0, 0);
+            paginacion = new Paginacion(0, 0, resultsPerPage);
         }
 
         paginacion.setListado(q.getResultList());
@@ -108,7 +108,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
     }
 
     @Override
-    public Paginacion getByFechasUsuarioLibro(Integer pageNumber, Date fechaInicio, Date fechaFin, Long idUsuarioEntidad, Long idLibro, Long accion, Long tipoRegistro) throws Exception {
+    public Paginacion getByFechasUsuarioLibro(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idUsuarioEntidad, Long idLibro, Long accion, Long tipoRegistro) throws Exception {
 
         Query q;
         Query q2;
@@ -140,12 +140,12 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
             Long total = (Long) q2.getSingleResult();
-            paginacion = new Paginacion(total.intValue(), pageNumber);
-            int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            paginacion = new Paginacion(total.intValue(), pageNumber, resultsPerPage);
+            int inicio = (pageNumber - 1) * resultsPerPage;
             q.setFirstResult(inicio);
-            q.setMaxResults(BaseEjbJPA.RESULTADOS_PAGINACION);
+            q.setMaxResults(resultsPerPage);
         } else {
-            paginacion = new Paginacion(0, 0);
+            paginacion = new Paginacion(0, 0, resultsPerPage);
         }
 
         paginacion.setListado(q.getResultList());
@@ -283,6 +283,702 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         }
         return total;
 
+    }
+
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Paginacion buscaEntradaPorUsuarioLibro(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idUsuario, Long idLibro) throws Exception {
+
+        Query q;
+        Query q2;
+
+        q = em.createQuery("Select registroEntrada.numeroRegistro, registroEntrada.fecha, registroEntrada.libro.nombre, " +
+                "registroEntrada.oficina.denominacion, registroEntrada.libro.organismo.denominacion " +
+                "from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
+                "and registroEntrada.fecha <= :fechaFin and registroEntrada.usuario.id = :idUsuario and " +
+                "registroEntrada.libro.id = :idLibro and registroEntrada.estado != :reserva order by registroEntrada.fecha desc");
+
+        q.setParameter("fechaInicio", fechaInicio);
+        q.setParameter("fechaFin", fechaFin);
+        q.setParameter("idUsuario", idUsuario);
+        q.setParameter("idLibro", idLibro);
+        q.setParameter("reserva", RegwebConstantes.REGISTRO_RESERVA);
+
+        List<RegistroEntrada> registrosEntrada = new ArrayList<RegistroEntrada>();
+
+        // Duplicamos la query solo para obtener los resultados totales
+        q2 = em.createQuery("Select count(registroEntrada.id) from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
+                " and registroEntrada.fecha <= :fechaFin and registroEntrada.usuario.id = :idUsuario and " +
+                " registroEntrada.libro.id = :idLibro and registroEntrada.estado != :reserva");
+
+        q2.setParameter("fechaInicio", fechaInicio);
+        q2.setParameter("fechaFin", fechaFin);
+        q2.setParameter("idUsuario", idUsuario);
+        q2.setParameter("idLibro", idLibro);
+        q2.setParameter("reserva", RegwebConstantes.REGISTRO_RESERVA);
+
+        Paginacion paginacion = null;
+
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
+            paginacion = new Paginacion(total.intValue(), pageNumber, resultsPerPage);
+            int inicio = (pageNumber - 1) * resultsPerPage;
+            q.setFirstResult(inicio);
+            q.setMaxResults(resultsPerPage);
+        } else {
+            paginacion = new Paginacion(0, 0, resultsPerPage);
+        }
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+            RegistroEntrada registroEntrada = new RegistroEntrada(null, (Integer) object[0], (Date) object[1], null, (String) object[2], (String) object[3], (String) object[4]);
+
+            registrosEntrada.add(registroEntrada);
+        }
+
+        paginacion.setListado(registrosEntrada);
+
+        return paginacion;
+    }
+
+
+    @Override
+    public Paginacion entradaModificadaPorUsuarioLibro(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idUsuario, Long idLibro) throws Exception{
+
+        Query q;
+        Query q2;
+
+        String accio = I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()),"registro.modificacion.creacion" );
+
+        q = em.createQuery("Select historicoRegistroEntrada.registroEntrada.numeroRegistro, historicoRegistroEntrada.registroEntrada.libro.nombre, " +
+                "historicoRegistroEntrada.registroEntrada.oficina.denominacion, historicoRegistroEntrada.registroEntrada.libro.organismo.denominacion, " +
+                "historicoRegistroEntrada.registroEntrada.fecha, historicoRegistroEntrada.fecha, historicoRegistroEntrada.modificacion " +
+                "from HistoricoRegistroEntrada as historicoRegistroEntrada where historicoRegistroEntrada.fecha >= :fechaInicio " +
+                "and historicoRegistroEntrada.fecha <= :fechaFin and historicoRegistroEntrada.usuario.id = :idUsuario and " +
+                "historicoRegistroEntrada.registroEntrada.libro.id = :idLibro and historicoRegistroEntrada.modificacion != :accio " +
+                "order by historicoRegistroEntrada.fecha desc");
+
+        q.setParameter("fechaInicio", fechaInicio);
+        q.setParameter("fechaFin", fechaFin);
+        q.setParameter("idUsuario", idUsuario);
+        q.setParameter("idLibro", idLibro);
+        q.setParameter("accio", accio);
+
+        List<HistoricoRegistroEntrada> historicosRegistroEntrada = new ArrayList<HistoricoRegistroEntrada>();
+
+        // Duplicamos la query solo para obtener los resultados totales
+        q2 = em.createQuery("Select count(historicoRegistroEntrada.id) from HistoricoRegistroEntrada as historicoRegistroEntrada " +
+                "where historicoRegistroEntrada.fecha >= :fechaInicio and historicoRegistroEntrada.fecha <= :fechaFin and " +
+                "historicoRegistroEntrada.usuario.id = :idUsuario and historicoRegistroEntrada.registroEntrada.libro.id = :idLibro and " +
+                "historicoRegistroEntrada.modificacion != :accio");
+
+        q2.setParameter("fechaInicio", fechaInicio);
+        q2.setParameter("fechaFin", fechaFin);
+        q2.setParameter("idUsuario", idUsuario);
+        q2.setParameter("idLibro", idLibro);
+        q2.setParameter("accio", accio);
+
+        Paginacion paginacion = null;
+
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
+            paginacion = new Paginacion(total.intValue(), pageNumber, resultsPerPage);
+            int inicio = (pageNumber - 1) * resultsPerPage;
+            q.setFirstResult(inicio);
+            q.setMaxResults(resultsPerPage);
+        } else {
+            paginacion = new Paginacion(0, 0, resultsPerPage);
+        }
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+            HistoricoRegistroEntrada historicoRegistroEntrada = new HistoricoRegistroEntrada(null, (Integer) object[0], (String) object[1], (String) object[2], (String) object[3], (Date) object[4], (Date) object[5], (String) object[6]);
+
+            historicosRegistroEntrada.add(historicoRegistroEntrada);
+        }
+
+        paginacion.setListado(historicosRegistroEntrada);
+
+        return paginacion;
+    }
+
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Paginacion buscaSalidaPorUsuarioLibro(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idUsuario, Long idLibro) throws Exception {
+
+        Query q;
+        Query q2;
+
+        q = em.createQuery("Select registroSalida.numeroRegistro, registroSalida.fecha, registroSalida.libro.nombre, " +
+                "registroSalida.oficina.denominacion, registroSalida.libro.organismo.denominacion " +
+                "from RegistroSalida as registroSalida where registroSalida.fecha >= :fechaInicio " +
+                "and registroSalida.fecha <= :fechaFin and registroSalida.usuario.id = :idUsuario and " +
+                "registroSalida.libro.id = :idLibro and registroSalida.estado != :reserva order by registroSalida.fecha desc");
+
+        q.setParameter("fechaInicio", fechaInicio);
+        q.setParameter("fechaFin", fechaFin);
+        q.setParameter("idUsuario", idUsuario);
+        q.setParameter("idLibro", idLibro);
+        q.setParameter("reserva", RegwebConstantes.REGISTRO_RESERVA);
+
+        List<RegistroSalida> registrosSalida = new ArrayList<RegistroSalida>();
+
+        // Duplicamos la query solo para obtener los resultados totales
+        q2 = em.createQuery("Select count(registroSalida.id) from RegistroSalida as registroSalida where " +
+                "registroSalida.fecha >= :fechaInicio and registroSalida.fecha <= :fechaFin and " +
+                "registroSalida.usuario.id = :idUsuario and registroSalida.libro.id = :idLibro and " +
+                "registroSalida.estado != :reserva");
+
+        q2.setParameter("fechaInicio", fechaInicio);
+        q2.setParameter("fechaFin", fechaFin);
+        q2.setParameter("idUsuario", idUsuario);
+        q2.setParameter("idLibro", idLibro);
+        q2.setParameter("reserva", RegwebConstantes.REGISTRO_RESERVA);
+
+        Paginacion paginacion = null;
+
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
+            paginacion = new Paginacion(total.intValue(), pageNumber, resultsPerPage);
+            int inicio = (pageNumber - 1) * resultsPerPage;
+            q.setFirstResult(inicio);
+            q.setMaxResults(resultsPerPage);
+        } else {
+            paginacion = new Paginacion(0, 0, resultsPerPage);
+        }
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+            RegistroSalida registroSalida = new RegistroSalida(null, (Integer) object[0], (Date) object[1], null, (String) object[2], (String) object[3], (String) object[4]);
+
+            registrosSalida.add(registroSalida);
+        }
+
+        paginacion.setListado(registrosSalida);
+
+        return paginacion;
+    }
+
+    @Override
+    public Paginacion salidaModificadaPorUsuarioLibro(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idUsuario, Long idLibro) throws Exception{
+
+        Query q;
+        Query q2;
+
+        String accio = I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()),"registro.modificacion.creacion" );
+
+        q = em.createQuery("Select historicoRegistroSalida.registroSalida.numeroRegistro, historicoRegistroSalida.registroSalida.libro.nombre, " +
+                "historicoRegistroSalida.registroSalida.oficina.denominacion, historicoRegistroSalida.registroSalida.libro.organismo.denominacion, " +
+                "historicoRegistroSalida.registroSalida.fecha, historicoRegistroSalida.fecha, historicoRegistroSalida.modificacion " +
+                "from HistoricoRegistroSalida as historicoRegistroSalida where historicoRegistroSalida.fecha >= :fechaInicio " +
+                "and historicoRegistroSalida.fecha <= :fechaFin and historicoRegistroSalida.usuario.id = :idUsuario " +
+                "and historicoRegistroSalida.registroSalida.libro.id = :idLibro " +
+                "and historicoRegistroSalida.modificacion != :accio order by historicoRegistroSalida.fecha desc");
+
+        q.setParameter("fechaInicio", fechaInicio);
+        q.setParameter("fechaFin", fechaFin);
+        q.setParameter("idUsuario", idUsuario);
+        q.setParameter("idLibro", idLibro);
+        q.setParameter("accio", accio);
+
+        List<HistoricoRegistroSalida> historicosRegistroSalida = new ArrayList<HistoricoRegistroSalida>();
+
+        // Duplicamos la query solo para obtener los resultados totales
+        q2 = em.createQuery("Select count(historicoRegistroSalida.id) from HistoricoRegistroSalida as historicoRegistroSalida " +
+                "where historicoRegistroSalida.fecha >= :fechaInicio and historicoRegistroSalida.fecha <= :fechaFin and " +
+                "historicoRegistroSalida.usuario.id = :idUsuario and historicoRegistroSalida.registroSalida.libro.id = :idLibro " +
+                "and historicoRegistroSalida.modificacion != :accio");
+
+        q2.setParameter("fechaInicio", fechaInicio);
+        q2.setParameter("fechaFin", fechaFin);
+        q2.setParameter("idUsuario", idUsuario);
+        q2.setParameter("idLibro", idLibro);
+        q2.setParameter("accio", accio);
+
+        Paginacion paginacion = null;
+
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
+            paginacion = new Paginacion(total.intValue(), pageNumber, resultsPerPage);
+            int inicio = (pageNumber - 1) * resultsPerPage;
+            q.setFirstResult(inicio);
+            q.setMaxResults(resultsPerPage);
+        } else {
+            paginacion = new Paginacion(0, 0, resultsPerPage);
+        }
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+            HistoricoRegistroSalida historicoRegistroSalida = new HistoricoRegistroSalida(null, (Integer) object[0], (String) object[1], (String) object[2], (String) object[3], (Date) object[4], (Date) object[5], (String) object[6]);
+
+            historicosRegistroSalida.add(historicoRegistroSalida);
+        }
+
+        paginacion.setListado(historicosRegistroSalida);
+
+        return paginacion;
+    }
+
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Paginacion buscaEntradaPorUsuario(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idUsuario, List<Libro> libros) throws Exception {
+
+        Query q;
+        Query q2;
+
+        q = em.createQuery("Select registroEntrada.numeroRegistro, registroEntrada.fecha, registroEntrada.libro.nombre, " +
+                "registroEntrada.oficina.denominacion, registroEntrada.libro.organismo.denominacion " +
+                "from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
+                "and registroEntrada.fecha <= :fechaFin and registroEntrada.usuario.id = :idUsuario and registroEntrada.libro in (:libros) order by registroEntrada.fecha desc");
+
+        q.setParameter("fechaInicio", fechaInicio);
+        q.setParameter("fechaFin", fechaFin);
+        q.setParameter("idUsuario", idUsuario);
+        q.setParameter("libros", libros);
+
+        List<RegistroEntrada> registrosEntrada = new ArrayList<RegistroEntrada>();
+
+        // Duplicamos la query solo para obtener los resultados totales
+        q2 = em.createQuery("Select count(registroEntrada.id) from RegistroEntrada as registroEntrada where " +
+                "registroEntrada.fecha >= :fechaInicio and registroEntrada.fecha <= :fechaFin and " +
+                "registroEntrada.usuario.id = :idUsuario and registroEntrada.libro in (:libros)");
+
+        q2.setParameter("fechaInicio", fechaInicio);
+        q2.setParameter("fechaFin", fechaFin);
+        q2.setParameter("idUsuario", idUsuario);
+        q2.setParameter("libros", libros);
+
+        Paginacion paginacion = null;
+
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
+            paginacion = new Paginacion(total.intValue(), pageNumber, resultsPerPage);
+            int inicio = (pageNumber - 1) * resultsPerPage;
+            q.setFirstResult(inicio);
+            q.setMaxResults(resultsPerPage);
+        } else {
+            paginacion = new Paginacion(0, 0, resultsPerPage);
+        }
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+            RegistroEntrada registroEntrada = new RegistroEntrada(null, (Integer) object[0], (Date) object[1], null, (String) object[2], (String) object[3], (String) object[4]);
+
+            registrosEntrada.add(registroEntrada);
+        }
+
+        paginacion.setListado(registrosEntrada);
+
+        return paginacion;
+    }
+
+
+    @Override
+    public Paginacion entradaModificadaPorUsuario(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idUsuario, List<Libro> libros) throws Exception{
+
+        Query q;
+        Query q2;
+
+        String accio = I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()),"registro.modificacion.creacion" );
+
+        q = em.createQuery("Select historicoRegistroEntrada.registroEntrada.numeroRegistro, historicoRegistroEntrada.registroEntrada.libro.nombre, " +
+                "historicoRegistroEntrada.registroEntrada.oficina.denominacion, historicoRegistroEntrada.registroEntrada.libro.organismo.denominacion, " +
+                "historicoRegistroEntrada.registroEntrada.fecha, historicoRegistroEntrada.fecha, historicoRegistroEntrada.modificacion " +
+                "from HistoricoRegistroEntrada as historicoRegistroEntrada where historicoRegistroEntrada.fecha >= :fechaInicio " +
+                "and historicoRegistroEntrada.fecha <= :fechaFin and historicoRegistroEntrada.usuario.id = :idUsuario " +
+                "and historicoRegistroEntrada.modificacion != :accio " +
+                "and historicoRegistroEntrada.registroEntrada.libro in (:libros) order by historicoRegistroEntrada.fecha desc");
+
+        q.setParameter("fechaInicio", fechaInicio);
+        q.setParameter("fechaFin", fechaFin);
+        q.setParameter("idUsuario", idUsuario);
+        q.setParameter("libros", libros);
+        q.setParameter("accio", accio);
+
+        List<HistoricoRegistroEntrada> historicosRegistroEntrada = new ArrayList<HistoricoRegistroEntrada>();
+
+        // Duplicamos la query solo para obtener los resultados totales
+        q2 = em.createQuery("Select count(historicoRegistroEntrada.id) from HistoricoRegistroEntrada as historicoRegistroEntrada " +
+                "where historicoRegistroEntrada.fecha >= :fechaInicio and historicoRegistroEntrada.fecha <= :fechaFin and " +
+                "historicoRegistroEntrada.usuario.id = :idUsuario and historicoRegistroEntrada.modificacion != :accio " +
+                "and historicoRegistroEntrada.registroEntrada.libro in (:libros)");
+
+        q2.setParameter("fechaInicio", fechaInicio);
+        q2.setParameter("fechaFin", fechaFin);
+        q2.setParameter("idUsuario", idUsuario);
+        q2.setParameter("libros", libros);
+        q2.setParameter("accio", accio);
+
+        Paginacion paginacion = null;
+
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
+            paginacion = new Paginacion(total.intValue(), pageNumber, resultsPerPage);
+            int inicio = (pageNumber - 1) * resultsPerPage;
+            q.setFirstResult(inicio);
+            q.setMaxResults(resultsPerPage);
+        } else {
+            paginacion = new Paginacion(0, 0, resultsPerPage);
+        }
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+            HistoricoRegistroEntrada historicoRegistroEntrada = new HistoricoRegistroEntrada(null, (Integer) object[0], (String) object[1], (String) object[2], (String) object[3], (Date) object[4], (Date) object[5], (String) object[6]);
+
+            historicosRegistroEntrada.add(historicoRegistroEntrada);
+        }
+
+        paginacion.setListado(historicosRegistroEntrada);
+
+        return paginacion;
+    }
+
+
+    @Override
+    public Paginacion buscaSalidaPorUsuario(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long usuario, List<Libro> libros) throws Exception {
+
+        Query q;
+        Query q2;
+
+        q = em.createQuery("Select registroSalida.numeroRegistro, registroSalida.fecha, registroSalida.libro.nombre, " +
+                "registroSalida.oficina.denominacion, registroSalida.libro.organismo.denominacion " +
+                "from RegistroSalida as registroSalida where registroSalida.fecha >= :fechaInicio " +
+                "and registroSalida.fecha <= :fechaFin and registroSalida.usuario.id = :usuario and registroSalida.libro in (:libros) order by registroSalida.fecha desc");
+
+        q.setParameter("fechaInicio", fechaInicio);
+        q.setParameter("fechaFin", fechaFin);
+        q.setParameter("usuario", usuario);
+        q.setParameter("libros", libros);
+
+        List<RegistroSalida> registrosSalida = new ArrayList<RegistroSalida>();
+
+        // Duplicamos la query solo para obtener los resultados totales
+        q2 = em.createQuery("Select count(registroSalida.id) " +
+                "from RegistroSalida as registroSalida where registroSalida.fecha >= :fechaInicio " +
+                "and registroSalida.fecha <= :fechaFin and registroSalida.usuario.id = :usuario and " +
+                "registroSalida.libro in (:libros)");
+
+        q2.setParameter("fechaInicio", fechaInicio);
+        q2.setParameter("fechaFin", fechaFin);
+        q2.setParameter("usuario", usuario);
+        q2.setParameter("libros", libros);
+
+        Paginacion paginacion = null;
+
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
+            paginacion = new Paginacion(total.intValue(), pageNumber, resultsPerPage);
+            int inicio = (pageNumber - 1) * resultsPerPage;
+            q.setFirstResult(inicio);
+            q.setMaxResults(resultsPerPage);
+        } else {
+            paginacion = new Paginacion(0, 0, resultsPerPage);
+        }
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+            RegistroSalida registroSalida = new RegistroSalida(null, (Integer) object[0], (Date) object[1], null, (String) object[2], (String) object[3], (String) object[4]);
+
+            registrosSalida.add(registroSalida);
+        }
+
+        paginacion.setListado(registrosSalida);
+
+        return paginacion;
+    }
+
+
+    @Override
+    public Paginacion salidaModificadaPorUsuario(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idUsuario, List<Libro> libros) throws Exception{
+
+        Query q;
+        Query q2;
+
+        String accio = I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()),"registro.modificacion.creacion" );
+
+        q = em.createQuery("Select historicoRegistroSalida.registroSalida.numeroRegistro, historicoRegistroSalida.registroSalida.libro.nombre, " +
+                "historicoRegistroSalida.registroSalida.oficina.denominacion, historicoRegistroSalida.registroSalida.libro.organismo.denominacion, " +
+                "historicoRegistroSalida.registroSalida.fecha, historicoRegistroSalida.fecha, historicoRegistroSalida.modificacion " +
+                "from HistoricoRegistroSalida as historicoRegistroSalida where historicoRegistroSalida.fecha >= :fechaInicio " +
+                "and historicoRegistroSalida.fecha <= :fechaFin and historicoRegistroSalida.usuario.id = :idUsuario " +
+                "and historicoRegistroSalida.modificacion != :accio " +
+                "and historicoRegistroSalida.registroSalida.libro in (:libros) order by historicoRegistroSalida.fecha desc");
+
+        q.setParameter("fechaInicio", fechaInicio);
+        q.setParameter("fechaFin", fechaFin);
+        q.setParameter("idUsuario", idUsuario);
+        q.setParameter("libros", libros);
+        q.setParameter("accio", accio);
+
+        List<HistoricoRegistroSalida> historicosRegistroSalida = new ArrayList<HistoricoRegistroSalida>();
+
+        // Duplicamos la query solo para obtener los resultados totales
+        q2 = em.createQuery("Select count(historicoRegistroSalida.id) from HistoricoRegistroSalida as historicoRegistroSalida " +
+                "where historicoRegistroSalida.fecha >= :fechaInicio and historicoRegistroSalida.fecha <= :fechaFin and " +
+                "historicoRegistroSalida.usuario.id = :idUsuario and historicoRegistroSalida.modificacion != :accio and " +
+                "historicoRegistroSalida.registroSalida.libro in (:libros)");
+
+        q2.setParameter("fechaInicio", fechaInicio);
+        q2.setParameter("fechaFin", fechaFin);
+        q2.setParameter("idUsuario", idUsuario);
+        q2.setParameter("libros", libros);
+        q2.setParameter("accio", accio);
+
+        Paginacion paginacion = null;
+
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
+            paginacion = new Paginacion(total.intValue(), pageNumber, resultsPerPage);
+            int inicio = (pageNumber - 1) * resultsPerPage;
+            q.setFirstResult(inicio);
+            q.setMaxResults(resultsPerPage);
+        } else {
+            paginacion = new Paginacion(0, 0, resultsPerPage);
+        }
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+            HistoricoRegistroSalida historicoRegistroSalida = new HistoricoRegistroSalida(null, (Integer) object[0], (String) object[1], (String) object[2], (String) object[3], (Date) object[4], (Date) object[5], (String) object[6]);
+
+            historicosRegistroSalida.add(historicoRegistroSalida);
+        }
+
+        paginacion.setListado(historicosRegistroSalida);
+
+        return paginacion;
+    }
+
+
+    @Override
+    public Paginacion getByUsuario(Integer pageNumber, final Integer resultsPerPage, Date dataInici, Date dataFi, String usuario, String accion) throws Exception {
+
+        Query q;
+        Query q2;
+
+        q = em.createQuery("Select registroLopdMigrado.registroMigrado.numero, registroLopdMigrado.registroMigrado.ano," +
+                "registroLopdMigrado.registroMigrado.denominacionOficina, registroLopdMigrado.registroMigrado.tipoRegistro," +
+                "registroLopdMigrado.fecha from RegistroLopdMigrado as registroLopdMigrado where " +
+                "registroLopdMigrado.fecha >= :dataInici and registroLopdMigrado.fecha <= :dataFi and " +
+                "registroLopdMigrado.usuario like :usuario and " +
+                "registroLopdMigrado.tipoAcceso like :accion order by registroLopdMigrado.fecha desc");
+
+        q.setParameter("dataInici", dataInici);
+        q.setParameter("dataFi", dataFi);
+        q.setParameter("usuario", usuario);
+        q.setParameter("accion", accion);
+
+        List<RegistroLopdMigrado> registrosLopdMigrado = new ArrayList<RegistroLopdMigrado>();
+
+        // Duplicamos la query solo para obtener los resultados totales
+        q2 = em.createQuery("Select count(registroLopdMigrado.id) from RegistroLopdMigrado as registroLopdMigrado where " +
+                "registroLopdMigrado.fecha >= :dataInici and registroLopdMigrado.fecha <= :dataFi and " +
+                "registroLopdMigrado.usuario like :usuario and registroLopdMigrado.tipoAcceso like :accion");
+
+        q2.setParameter("dataInici", dataInici);
+        q2.setParameter("dataFi", dataFi);
+        q2.setParameter("usuario", usuario);
+        q2.setParameter("accion", accion);
+
+        Paginacion paginacion = null;
+
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
+            paginacion = new Paginacion(total.intValue(), pageNumber, resultsPerPage);
+            int inicio = (pageNumber - 1) * resultsPerPage;
+            q.setFirstResult(inicio);
+            q.setMaxResults(resultsPerPage);
+        } else {
+            paginacion = new Paginacion(0, 0, resultsPerPage);
+        }
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+            RegistroMigrado registroMigrado = new RegistroMigrado((Integer) object[0], (Integer) object[1], (String) object[2], (Boolean) object[3]);
+            RegistroLopdMigrado registroLopdMigrado = new RegistroLopdMigrado(registroMigrado, (Date) object[4]);
+
+            registrosLopdMigrado.add(registroLopdMigrado);
+        }
+
+        paginacion.setListado(registrosLopdMigrado);
+
+        return paginacion;
+    }
+
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Paginacion buscaEntradasPorLibroTipoNumero(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idLibro, Integer numeroRegistro) throws Exception {
+
+        Query q;
+        Query q2;
+        Map<String, Object> parametros = new HashMap<String, Object>();
+        List<String> where = new ArrayList<String>();
+
+        StringBuffer query = new StringBuffer("Select registroEntrada.id, registroEntrada.numeroRegistro, registroEntrada.fecha, " +
+                "registroEntrada.libro.id, registroEntrada.libro.nombre, registroEntrada.oficina.denominacion, registroEntrada.libro.organismo.denominacion " +
+                "from RegistroEntrada as registroEntrada ");
+
+        StringBuffer query2 = new StringBuffer("Select count(registroEntrada.id)from RegistroEntrada as registroEntrada ");
+
+        if (fechaInicio != null) {
+            where.add(" registroEntrada.fecha >= :fechaInicio");
+            parametros.put("fechaInicio", fechaInicio);
+        }
+        if (fechaFin != null) {
+            where.add(" registroEntrada.fecha <= :fechaFin");
+            parametros.put("fechaFin", fechaFin);
+        }
+        if (idLibro != null && idLibro > 0) {
+            where.add(" registroEntrada.libro.id = :idLibro");
+            parametros.put("idLibro", idLibro);
+        }
+        if (numeroRegistro != null && numeroRegistro > 0) {
+            where.add(" registroEntrada.numeroRegistro = :numeroRegistro");
+            parametros.put("numeroRegistro", numeroRegistro);
+        }
+
+        query.append("where ");
+        query2.append("where ");
+
+        int count = 0;
+        for (String w : where) {
+            if (count != 0) {
+                query.append(" and ");
+                query2.append(" and ");
+            }
+            query.append(w);
+            query2.append(w);
+            count++;
+        }
+        query.append(" order by registroEntrada.id desc");
+
+        q = em.createQuery(query.toString());
+        q2 = em.createQuery(query2.toString());
+
+        for (Map.Entry<String, Object> param : parametros.entrySet()) {
+            q.setParameter(param.getKey(), param.getValue());
+            q2.setParameter(param.getKey(), param.getValue());
+        }
+
+        List<RegistroEntrada> registrosEntrada = new ArrayList<RegistroEntrada>();
+
+        Paginacion paginacion = null;
+
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
+            paginacion = new Paginacion(total.intValue(), pageNumber, resultsPerPage);
+            int inicio = (pageNumber - 1) * resultsPerPage;
+            q.setFirstResult(inicio);
+            q.setMaxResults(resultsPerPage);
+        } else {
+            paginacion = new Paginacion(0, 0, resultsPerPage);
+        }
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+            RegistroEntrada registroEntrada = new RegistroEntrada((Long) object[0], (Integer) object[1], (Date) object[2], (Long) object[3], (String) object[4], (String) object[5], (String) object[6]);
+
+            registrosEntrada.add(registroEntrada);
+        }
+
+        paginacion.setListado(registrosEntrada);
+
+        return paginacion;
+    }
+
+
+    @Override
+    public Paginacion buscaSalidasPorLibroTipoNumero(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idLibro, Integer numeroRegistro) throws Exception {
+
+        Query q;
+        Query q2;
+
+        Map<String, Object> parametros = new HashMap<String, Object>();
+        List<String> where = new ArrayList<String>();
+
+        StringBuffer query = new StringBuffer("Select registroSalida.id, registroSalida.numeroRegistro, registroSalida.fecha, " +
+                "registroSalida.libro.id, registroSalida.libro.nombre, registroSalida.oficina.denominacion, registroSalida.libro.organismo.denominacion " +
+                "from RegistroSalida as registroSalida ");
+
+        StringBuffer query2 = new StringBuffer("Select count(registroSalida.id) from RegistroSalida as registroSalida ");
+
+        if (fechaInicio != null) {
+            where.add(" registroSalida.fecha >= :fechaInicio");
+            parametros.put("fechaInicio", fechaInicio);
+        }
+        if (fechaFin != null) {
+            where.add(" registroSalida.fecha <= :fechaFin");
+            parametros.put("fechaFin", fechaFin);
+        }
+        if (idLibro != null && idLibro > 0) {
+            where.add(" registroSalida.libro.id = :idLibro");
+            parametros.put("idLibro", idLibro);
+        }
+        if (numeroRegistro != null && numeroRegistro > 0) {
+            where.add(" registroSalida.numeroRegistro = :numeroRegistro");
+            parametros.put("numeroRegistro", numeroRegistro);
+        }
+
+        query.append("where ");
+        query2.append("where ");
+
+        int count = 0;
+        for (String w : where) {
+            if (count != 0) {
+                query.append(" and ");
+                query2.append(" and ");
+            }
+            query.append(w);
+            query2.append(w);
+            count++;
+        }
+        query.append(" order by registroSalida.id desc");
+        q = em.createQuery(query.toString());
+        q2 = em.createQuery(query2.toString());
+
+        for (Map.Entry<String, Object> param : parametros.entrySet()) {
+            q.setParameter(param.getKey(), param.getValue());
+            q2.setParameter(param.getKey(), param.getValue());
+        }
+
+        List<RegistroSalida> registrosSalida = new ArrayList<RegistroSalida>();
+
+        Paginacion paginacion = null;
+
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
+            paginacion = new Paginacion(total.intValue(), pageNumber, resultsPerPage);
+            int inicio = (pageNumber - 1) * resultsPerPage;
+            q.setFirstResult(inicio);
+            q.setMaxResults(resultsPerPage);
+        } else {
+            paginacion = new Paginacion(0, 0, resultsPerPage);
+        }
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+            RegistroSalida registroSalida = new RegistroSalida((Long) object[0], (Integer) object[1], (Date) object[2], (Long) object[3], (String) object[4], (String) object[5], (String) object[6]);
+
+            registrosSalida.add(registroSalida);
+        }
+
+        paginacion.setListado(registrosSalida);
+
+        return paginacion;
     }
 
 }

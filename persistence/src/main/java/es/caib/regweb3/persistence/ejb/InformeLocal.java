@@ -3,7 +3,6 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
-import es.caib.regweb3.persistence.utils.Paginacion;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
@@ -89,85 +88,6 @@ public interface InformeLocal {
      * @throws Exception
      */
     public Long buscaIndicadoresSalidaTotal(Date fechaInicio, Date fechaFin, Long idEntidad) throws Exception;
-
-    /**
-     * Busca los Registros de Entrada que no estén pendientes en función de la una fecha inicio, una fecha fin, por Usuario y Libro
-     *
-     * @param pageNumber
-     * @param fechaInicio
-     * @param fechaFin
-     * @param idUsuario
-     * @param idLibro
-     * @return
-     * @throws Exception
-     */
-    public Paginacion buscaEntradaPorUsuarioLibro(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idUsuario, Long idLibro) throws Exception;
-
-    /**
-     * Busca los Registros de Salida que no estén pendientes en función de la una fecha inicio, una fecha fin, por Usuario y Libro
-     *
-     * @param pageNumber
-     * @param fechaInicio
-     * @param fechaFin
-     * @param idUsuario
-     * @param idLibro
-
-     * @return
-     * @throws Exception
-     */
-    public Paginacion buscaSalidaPorUsuarioLibro(Integer pageNumber, Date fechaInicio, Date fechaFin, Long idUsuario, Long idLibro) throws Exception;
-
-    /**
-     * Busca los Registros de Entrada en función de la una fecha inicio, una fecha fin, por Usuario en los Libros gestionados
-     *
-     * @param pageNumber
-     * @param fechaInicio
-     * @param fechaFin
-     * @param idUsuario
-     * @param libros
-     * @return
-     * @throws Exception
-     */
-    public Paginacion buscaEntradaPorUsuario(Integer pageNumber, Date fechaInicio, Date fechaFin, Long idUsuario, List<Libro> libros) throws Exception;
-
-    /**
-     * Busca los Registros de Salida en función de la una fecha inicio, una fecha fin, por Usuario y Libros gestionados
-     *
-     * @param pageNumber
-     * @param fechaInicio
-     * @param fechaFin
-     * @param idUsuario
-     * @param libros
-     * @return
-     * @throws Exception
-     */
-    public Paginacion buscaSalidaPorUsuario(Integer pageNumber, Date fechaInicio, Date fechaFin, Long idUsuario, List<Libro> libros) throws Exception;
-
-    /**
-     * Busca los Registros de Entrada en función de la una fecha inicio, una fecha fin, Libro y Número de registro
-     *
-     * @param pageNumber
-     * @param fechaInicio
-     * @param fechaFin
-     * @param idLibro
-     * @param numeroRegistro
-     * @return
-     * @throws Exception
-     */
-    public Paginacion buscaEntradasPorLibroTipoNumero(Integer pageNumber, Date fechaInicio, Date fechaFin, Long idLibro, Integer numeroRegistro) throws Exception;
-
-    /**
-     * Busca los Registros de Salida en función de la una fecha inicio, una fecha fin, Libro y Número de registro
-     *
-     * @param pageNumber
-     * @param fechaInicio
-     * @param fechaFin
-     * @param idLibro
-     * @param numeroRegistro
-     * @return
-     * @throws Exception
-     */
-    public Paginacion buscaSalidasPorLibroTipoNumero(Integer pageNumber, Date fechaInicio, Date fechaFin, Long idLibro, Integer numeroRegistro) throws Exception;
 
     /**
      * Busca los Registros de Entrada que no estén anulados ni pendientes en función de la una fecha inicio, una fecha fin, de una Oficina
