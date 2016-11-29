@@ -128,7 +128,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-warning"><spring:message code="regweb.cerrar"/></a>
+                <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-warning  btn-sm"><spring:message code="regweb.cerrar"/></a>
             </div>
         </div>
     </div>

@@ -103,7 +103,7 @@
                                 </div>
                             </div>
                             <div class="form-group col-xs-12">
-                                <button type="submit" class="btn btn-warning"><spring:message code="regweb.buscar"/></button>
+                                <button type="submit" class="btn btn-warning  btn-sm"><spring:message code="regweb.buscar"/></button>
                             </div>
 
                             <c:set var="errorInicio"><spring:message code="error.fechaInicio.posterior"/></c:set>

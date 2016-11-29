@@ -48,7 +48,7 @@
                                     <p>Excepcion:  ${exception}</p>
                                     <p>URL: ${url}</p>
                                     <p>
-                                        <a class="btn btn-danger" href="#myModal" role="button" class="btn" data-toggle="modal">Ver error</a>
+                                        <a class="btn btn-danger  btn-sm" href="#myModal" role="button" class="btn" data-toggle="modal">Ver error</a>
                                     </p>
 
                                 </div>

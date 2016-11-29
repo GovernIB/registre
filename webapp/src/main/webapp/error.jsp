@@ -160,7 +160,7 @@ try {
         
        
         <c:if test="${not empty stacktrace}">
-            <button class="btn btn-danger" onclick="showError()"><%=veureDetall%></button>
+            <button class="btn btn-danger  btn-sm" onclick="showError()"><%=veureDetall%></button>
         </c:if>
          
 
