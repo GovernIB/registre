@@ -6,7 +6,7 @@ import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
 import es.caib.regweb3.sir.core.model.EstadoAsientoRegistralSir;
 import es.caib.regweb3.sir.core.model.TipoRegistro;
-import es.caib.regweb3.sir.ws.api.manager.RegistroManager;
+import es.caib.regweb3.sir.ws.api.manager.MensajeManager;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.AsientoRegistralSirBusquedaForm;
@@ -64,8 +64,6 @@ public class AsientoRegistralSirController extends BaseController {
     @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
     public TipoDocumentalLocal tipoDocumentalEjb;
 
-
-    RegistroManager registroManager = new RegistroManager();
 
     /**
      * Listado de todos los AsientoRegistralSirs
@@ -199,9 +197,7 @@ public class AsientoRegistralSirController extends BaseController {
     public String confirmarAsientoRegistralSir(@PathVariable Long idAsientoRegistralSir, @ModelAttribute RegistrarForm registrarForm , HttpServletRequest request)
             throws Exception, I18NException, I18NValidationException {
 
-        log.info("Libro: " + registrarForm.getIdLibro());
-        log.info("Idioma: " + registrarForm.getIdIdioma());
-        log.info("TipoAsunto: " + registrarForm.getIdTipoAsunto());
+        MensajeManager mensajeManager = new MensajeManager();
 
         AsientoRegistralSir asientoRegistralSir = asientoRegistralSirEjb.findById(idAsientoRegistralSir);
         Oficina oficinaActiva = getOficinaActiva(request);
@@ -229,8 +225,8 @@ public class AsientoRegistralSirController extends BaseController {
                 numeroRegistro = registroSalidaEjb.getNumeroRegistroSalida(idRegistro);
             }
 
-            //todo: Crear función genérica para enviar mensajes DeMensaje
-            registroManager.enviarMensajeConfirmacion(asientoRegistralSir, numeroRegistro);
+            // Enviamos el mensaje de confirmación
+            mensajeManager.enviarMensajeConfirmacion(asientoRegistralSir, numeroRegistro);
             Mensaje.saveMessageInfo(request, getMessage("asientoRegistralSir.aceptar.ok"));
 
 

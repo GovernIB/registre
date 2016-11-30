@@ -1,6 +1,8 @@
 package es.caib.regweb3.sir.ws.api.manager;
 
 import es.caib.regweb3.sir.core.excepcion.SIRException;
+import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
+import es.caib.regweb3.sir.core.model.TipoMensaje;
 import es.caib.regweb3.sir.ws.api.utils.Mensaje;
 import es.caib.regweb3.sir.ws.api.wssir7.RespuestaWS;
 import es.caib.regweb3.sir.ws.api.wssir7.WS_SIR7ServiceLocator;
@@ -8,6 +10,7 @@ import es.caib.regweb3.sir.ws.api.wssir7.WS_SIR7_PortType;
 import org.apache.log4j.Logger;
 
 import javax.xml.rpc.ServiceException;
+import java.util.Date;
 
 /**
  *
@@ -18,6 +21,27 @@ public class MensajeManager {
 
     public SicresXMLManager sicresXMLManager = new SicresXMLManager();
 
+
+    /**
+     * Envía un mensaje de control de confirmación.
+     *
+     * @param asientoRegistralSir Información del asiento registral.
+     */
+    public void enviarMensajeConfirmacion(AsientoRegistralSir asientoRegistralSir, String numeroRegistro) {
+
+        Mensaje confirmacion = new Mensaje();
+        confirmacion.setCodigoEntidadRegistralOrigen(asientoRegistralSir.getCodigoEntidadRegistralDestino());
+        confirmacion.setCodigoEntidadRegistralDestino(asientoRegistralSir.getCodigoEntidadRegistralInicio());
+        confirmacion.setIdentificadorIntercambio(asientoRegistralSir.getIdentificadorIntercambio());
+        confirmacion.setTipoMensaje(TipoMensaje.CONFIRMACION);
+        confirmacion.setDescripcionMensaje(TipoMensaje.CONFIRMACION.getName());
+        confirmacion.setNumeroRegistroEntradaDestino(numeroRegistro);
+        confirmacion.setFechaEntradaDestino(new Date());
+
+        enviarMensaje(confirmacion);
+
+        log.info("Mensaje de confirmación  enviado");
+    }
 
     public void enviarMensaje(Mensaje mensaje) {
 
