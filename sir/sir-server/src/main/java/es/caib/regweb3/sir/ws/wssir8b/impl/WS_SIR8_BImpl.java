@@ -5,7 +5,6 @@ import es.caib.regweb3.persistence.ejb.WebServicesMethodsLocal;
 import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.core.model.Errores;
 import es.caib.regweb3.sir.ws.manager.EnvioManager;
-import es.caib.regweb3.sir.ws.manager.impl.EnvioManagerImpl;
 import es.caib.regweb3.sir.ws.utils.PassiveCallbackHandler;
 import es.caib.regweb3.sir.ws.wssir8b.RespuestaWS;
 import es.caib.regweb3.sir.ws.wssir8b.WS_SIR8_B_PortType;
@@ -56,7 +55,7 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
     public WebServicesMethodsLocal webServicesMethodsEjb;
 
 
-    private EnvioManager envioManager = new EnvioManagerImpl();
+    private EnvioManager envioManager = new EnvioManager();
 
     public static final String NAME = "WS_SIR8_B";
 
