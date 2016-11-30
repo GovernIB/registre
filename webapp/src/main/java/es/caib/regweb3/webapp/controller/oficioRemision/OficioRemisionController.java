@@ -11,7 +11,6 @@ import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
 import es.caib.regweb3.sir.ws.api.manager.FicheroIntercambioManager;
-import es.caib.regweb3.sir.ws.api.manager.impl.FicheroIntercambioManagerImpl;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.*;
@@ -72,7 +71,7 @@ public class OficioRemisionController extends BaseController {
     @EJB(mappedName = "regweb3/SirEJB/local")
     public SirLocal sirEjb;
 
-    FicheroIntercambioManager ficheroIntercambioManager = new FicheroIntercambioManagerImpl();
+    FicheroIntercambioManager ficheroIntercambioManager = new FicheroIntercambioManager();
 
     /**
      * Listado de todos los Oficios de Remision

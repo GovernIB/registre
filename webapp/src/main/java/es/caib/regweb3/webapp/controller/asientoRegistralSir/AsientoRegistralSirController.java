@@ -7,7 +7,6 @@ import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
 import es.caib.regweb3.sir.core.model.EstadoAsientoRegistralSir;
 import es.caib.regweb3.sir.core.model.TipoRegistro;
 import es.caib.regweb3.sir.ws.api.manager.RegistroManager;
-import es.caib.regweb3.sir.ws.api.manager.impl.RegistroManagerImpl;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.AsientoRegistralSirBusquedaForm;
@@ -66,7 +65,7 @@ public class AsientoRegistralSirController extends BaseController {
     public TipoDocumentalLocal tipoDocumentalEjb;
 
 
-    RegistroManager registroManager = new RegistroManagerImpl();
+    RegistroManager registroManager = new RegistroManager();
 
     /**
      * Listado de todos los AsientoRegistralSirs

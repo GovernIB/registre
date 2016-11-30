@@ -5,7 +5,6 @@ import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
 import es.caib.regweb3.persistence.ejb.ReproLocal;
 import es.caib.regweb3.persistence.ejb.RolLocal;
 import es.caib.regweb3.sir.ws.api.manager.FicheroIntercambioManager;
-import es.caib.regweb3.sir.ws.api.manager.impl.FicheroIntercambioManagerImpl;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.utils.UsuarioService;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -45,7 +44,7 @@ public class ComunController extends BaseController {
     @EJB(mappedName = "regweb3/ReproEJB/local")
     public ReproLocal reproEjb;
 
-    FicheroIntercambioManager ficheroIntercambioManager = new FicheroIntercambioManagerImpl();
+    FicheroIntercambioManager ficheroIntercambioManager = new FicheroIntercambioManager();
     
 
     @RequestMapping(value = "/noAutorizado")
