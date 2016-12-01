@@ -421,16 +421,13 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
         q = em.createQuery("Select rs.id from RegistroSalida as rs where " +
                 "rs.estado = :valido and rs.id = :idRegistro and " +
-                "rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo = :administracion and codigoDir3 not in (:organismos)) and " +
-                " rs.id not in (select tra.registroSalida.id from Trazabilidad as tra where tra.oficioRemision.tipoOficioRemision = :tipoOficioRemision and tra.oficioRemision.estado != :anulado)");
+                "rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo = :administracion and codigoDir3 not in (:organismos)) ");
 
         // Parámetros
         q.setParameter("idRegistro", idRegistro);
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q.setParameter("organismos", organismos);
         q.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
-        q.setParameter("tipoOficioRemision", RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA);
-        q.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
 
         return q.getResultList().size() > 0;
     }

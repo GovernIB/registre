@@ -104,16 +104,32 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
         ModelAndView mav = new ModelAndView("registroSalida/registroSalidaList", result.getModel());
 
+        // Obtenemos los Libros donde el usuario tiene permisos de Consulta
+        List<Libro> librosConsulta = getLibrosConsultaSalidas(request);
+        LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
+        List<Oficina> oficinasRegistro = oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(),RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        List<UsuarioEntidad> usuariosEntidad = usuarioEntidadEjb.findByEntidad(getEntidadActiva(request).getId());
+        Oficina oficinaActiva = getOficinaActiva(request);
+
         registroSalidaBusquedaValidator.validate(busqueda, result);
 
-        RegistroSalida registroSalida = busqueda.getRegistroSalida();
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
-        
-        if (result.hasErrors()) { // Si hay errores volvemos a la vista del formulario
+        // Si hay errores volvemos a la vista del formulario
+        if (result.hasErrors()) {
             mav.addObject("errors", result.getAllErrors());
+            mav.addObject("organosOrigen", organismosOficinaActiva);
+            mav.addObject("oficinaActiva",oficinaActiva);
+            mav.addObject("usuariosEntidad",usuariosEntidad);
+            mav.addObject("librosConsulta", librosConsulta);
+            mav.addObject("registroSalidaBusqueda", busqueda);
+            mav.addObject("oficinasRegistro",  oficinasRegistro);
+            mav.addObject("organOrigen", busqueda.getOrganOrigen());
+
             return mav;
         }else { // Si no hay errores realizamos la búsqueda
+            RegistroSalida registroSalida = busqueda.getRegistroSalida();
+
         	// Ponemos la hora 23:59 a la fecha fin
             Date fechaFin = RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin());
 
@@ -132,12 +148,11 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             lopdEjb.insertarRegistrosSalida(paginacion, usuarioEntidad.getId());
         }
 
-        LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
         mav.addObject("organosOrigen", organismosOficinaActiva);
-        mav.addObject(getOficinaActiva(request));
+        mav.addObject("oficinaActiva",oficinaActiva);
         mav.addObject("usuariosEntidad",usuarioEntidadEjb.findByEntidad(getEntidadActiva(request).getId()));
-        mav.addObject("librosConsulta", getLibrosConsultaSalidas(request));
+        mav.addObject("librosConsulta", librosConsulta);
         mav.addObject("registroSalidaBusqueda", busqueda);
         mav.addObject("oficinasRegistro", oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
         mav.addObject("organOrigen", busqueda.getOrganOrigen());
@@ -178,7 +193,10 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         model.addAttribute("puedeEditar", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),registro.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA));
 
         // OficioRemision
-        model.addAttribute("isOficioRemision", oficioRemisionSalidaUtilsEjb.isOficioRemision(idRegistro, getOrganismosOficioRemisionSalida(request, organismosOficinaActiva)));
+        if(entidadActiva.getOficioRemision()){
+            model.addAttribute("isOficioRemision", oficioRemisionSalidaUtilsEjb.isOficioRemision(idRegistro, getOrganismosOficioRemisionSalida(request, organismosOficinaActiva)));
+        }
+
 
         // Interesados, solo si el Registro en Válio
         if(registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) && oficinaRegistral){

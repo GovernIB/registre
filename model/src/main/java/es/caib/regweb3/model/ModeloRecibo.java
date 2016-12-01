@@ -25,6 +25,14 @@ public class ModeloRecibo extends Traducible{
   private Entidad entidad;
   private Archivo modelo;
 
+  public ModeloRecibo() {
+  }
+
+  public ModeloRecibo(Long id, String nombre) {
+    this.id = id;
+    this.nombre = nombre;
+  }
+
   @Id
   @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
   @Column(name="ID")

@@ -16,6 +16,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Fundació BIT.
@@ -198,6 +199,15 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @throws Exception
      */
     public Long getLibro(Long idRegistroEntrada) throws Exception;
+
+    /**
+     * Comprueba si un Registro de Entrada se puede tramitar o no
+     * @param idRegistro
+     * @param organismos
+     * @return
+     * @throws Exception
+     */
+    public Boolean isTramitar(Long idRegistro, Set<Long> organismos) throws Exception;
 
     /**
      * Elimina los RegistroEntrada de una Entidad

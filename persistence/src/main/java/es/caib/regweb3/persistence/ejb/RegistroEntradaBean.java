@@ -502,6 +502,31 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         }
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Boolean isTramitar(Long idRegistro, Set<Long> organismos) throws Exception {
+
+        // Si el array de organismos está vacío, no incluimos la condición.
+        String organismosWhere = "";
+        if (organismos.size() > 0) {
+            organismosWhere = " and re.destino.id in (:organismos) ";
+        }
+
+        Query q;
+        q = em.createQuery("Select re.id from RegistroEntrada as re where " +
+                "re.id = :idRegistro and re.estado = :valido and re.destino != null " + organismosWhere );
+
+        // Parámetros
+        q.setParameter("idRegistro", idRegistro);
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+
+        if (organismos.size() > 0) {
+            q.setParameter("organismos", organismos);
+        }
+
+        return q.getResultList().size() > 0;
+    }
+
     /**
      * Convierte los resultados de una query en una lista de {@link es.caib.regweb3.model.utils.RegistroBasico}
      *

@@ -293,29 +293,41 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Boolean isOficioRemision(Long idRegistro, Set<Long> organismos) throws Exception {
+    public Boolean isOficioRemisionInterno(Long idRegistro, Set<Long> organismos) throws Exception {
 
         // Si el array de organismos está vacío, no incluimos la condición.
         String organismosWhere = "";
         if (organismos.size() > 0) {
-            organismosWhere = "re.destino.id not in (:organismos) and ";
+            organismosWhere = "re.destino.id not in (:organismos)";
         }
 
         Query q;
         q = em.createQuery("Select re.id from RegistroEntrada as re where " +
                 "re.id = :idRegistro and re.estado = :valido and " +
-                "re.destino != null and " + organismosWhere +
-                " re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra where tra.oficioRemision.tipoOficioRemision = :tipoOficioRemision and tra.oficioRemision.estado != :anulado)");
+                "re.destino != null and " + organismosWhere);
 
         // Parámetros
         q.setParameter("idRegistro", idRegistro);
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
-        q.setParameter("tipoOficioRemision", RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
-        q.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
 
         if (organismos.size() > 0) {
             q.setParameter("organismos", organismos);
         }
+
+        return q.getResultList().size() > 0;
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Boolean isOficioRemisionExterno(Long idRegistro) throws Exception {
+
+        Query q;
+        q = em.createQuery("Select re.id from RegistroEntrada as re where " +
+                "re.id = :idRegistro and re.estado = :valido and re.destino is null");
+
+        // Parámetros
+        q.setParameter("idRegistro", idRegistro);
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
 
         return q.getResultList().size() > 0;
     }

@@ -60,14 +60,22 @@ public interface OficioRemisionEntradaUtilsLocal {
 
 
     /**
-     * Comprueba si un RegistroEntrada se considera un OficioRemision o no
+     * Comprueba si un RegistroEntrada se considera un OficioRemision interno o no
      *
      * @param idRegistro
      * @param organismos Lista con los Destinatarios que no se consideran Oficio de Remisión
      * @return
      * @throws Exception
      */
-    public Boolean isOficioRemision(Long idRegistro, Set<Long> organismos) throws Exception;
+    public Boolean isOficioRemisionInterno(Long idRegistro, Set<Long> organismos) throws Exception;
+
+    /**
+     * Comprueba si un RegistroEntrada se considera un OficioRemision externo o no
+     * @param idRegistro
+     * @return
+     * @throws Exception
+     */
+    public Boolean isOficioRemisionExterno(Long idRegistro) throws Exception;
 
     /**
      * @param registrosEntrada

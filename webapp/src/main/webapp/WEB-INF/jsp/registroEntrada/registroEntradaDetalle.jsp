@@ -107,9 +107,10 @@
                     <%--Si no nos encontramos en la misma Oficia en la que se creó el Registro o en su Oficina Responsable, no podemos hacer nada con el--%>
                     <c:if test="${oficinaRegistral}">
 
-                        <div class="panel-footer">  <%--Botonera--%>
-                            <%--Si el resgistro no está pendiente de visar o anulado--%>
-                            <c:if test="${registro.estado != 3 && registro.estado != 8}">
+                        <%--Botones imprimir Recibo y Sello--%>
+                        <c:if test="${registro.estado != RegwebConstantes.REGISTRO_PENDIENTE_VISAR && registro.estado != RegwebConstantes.REGISTRO_ANULADO}">
+                            <div class="panel-footer center">
+
                                 <c:if test="${fn:length(modelosRecibo) > 1}">
                                     <form:form modelAttribute="modeloRecibo" method="post" cssClass="form-horizontal">
                                         <div class="col-xs-12 btn-block">
@@ -123,62 +124,82 @@
                                             </div>
                                         </div>
                                     </form:form>
+
+                                    <button type="button" data-toggle="modal" data-target="#selloModal" class="btn btn-warning btn-sm btn-block"><spring:message code="sello.imprimir"/></button>
                                 </c:if>
+
                                 <c:if test="${fn:length(modelosRecibo) == 1}">
-                                    <button type="button" class="btn btn-warning btn-sm btn-block" onclick="goTo('<c:url value="/modeloRecibo/${registro.id}/RE/imprimir/${modelosRecibo[0].id}"/>')"><spring:message code="modeloRecibo.imprimir"/></button>
+                                    <div class="btn-group"><button type="button" class="btn btn-warning btn-sm" onclick="goTo('<c:url value="/modeloRecibo/${registro.id}/RE/imprimir/${modelosRecibo[0].id}"/>')"><spring:message code="modeloRecibo.imprimir"/></button></div>
+                                    <div class="btn-group"><button type="button" data-toggle="modal" data-target="#selloModal" class="btn btn-warning btn-sm"><spring:message code="sello.imprimir"/></button></div>
                                 </c:if>
 
-                                <button type="button" data-toggle="modal" data-target="#selloModal" class="btn btn-warning btn-sm btn-block"><spring:message code="sello.imprimir"/></button>
-                            </c:if>
+                            </div>
+                        </c:if>
 
-                            <%--Si el registro es válido--%>
-                            <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO && puedeEditar && registro.destino != null && isOficioRemision == false}">
-                                <%-- <button type="button"  onclick='javascript:confirm("<c:url value="/registroEntrada/${registro.id}/tramitar"/>","<spring:message code="regweb.confirmar.tramitar" htmlEscape="true"/>")' class="btn btn-success btn-sm btn-block"><spring:message code="regweb.distribuir"/></button>--%>
-                                <%--   <button type="button" onclick='javascript:distribuir("<c:url
-                                           value="/registroEntrada/${registro.id}/distribuir"/>")'
-                                           class="btn btn-success btn-sm btn-block"><spring:message
-                                           code="regweb.distribuir"/></button>--%>
-                                <button type="button" onclick='javascript:confirmDistribuir("<c:url
-                                        value="/registroEntrada/${registro.id}/distribuir"/>",
-                                        "<c:url value="/registroEntrada/${registro.id}/tramitar"/>",
-                                        "<spring:message code="regweb.confirmar.tramitar" htmlEscape="true"/>")'
-                                        class="btn btn-success btn-sm btn-block"><spring:message
-                                        code="regweb.distribuir"/></button>
-                                <%--<button type="button" data-toggle="modal" data-target="#distribuirModal" class="btn btn-success btn-sm btn-block"><spring:message code="regweb.distribuir"/></button>--%>
+                        <%--Botón Distribuir y Oficio Remision--%>
+                        <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO}">
+                            <div class="panel-footer center">
+                                <c:if test="${isTramitar && puedeEditar}">
 
-                            </c:if>
+                                    <button type="button" onclick='javascript:confirmDistribuir("<c:url
+                                            value="/registroEntrada/${registro.id}/distribuir"/>",
+                                            "<c:url value="/registroEntrada/${registro.id}/tramitar"/>",
+                                            "<spring:message code="regweb.confirmar.tramitar" htmlEscape="true"/>")'
+                                            class="btn btn-success btn-sm btn-block"><spring:message
+                                            code="regweb.distribuir"/></button>
 
-                            <%--Si el registro está anulado--%>
-                            <c:if test="${registro.estado == RegwebConstantes.REGISTRO_ANULADO && puedeEditar}">
-                                <button type="button" onclick='javascript:confirm("<c:url value="/registroEntrada/${registro.id}/activar"/>","<spring:message code="regweb.confirmar.activar" htmlEscape="true"/>")' class="btn btn-primary btn-sm btn-block"><spring:message code="regweb.activar"/></button>
-                            </c:if>
+                                </c:if>
 
-                            <%--Si el registro está pendiente de visar--%>
-                            <c:if test="${registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR && isAdministradorLibro}">
-                                <button type="button" onclick='javascript:confirm("<c:url value="/registroEntrada/${registro.id}/visar"/>","<spring:message code="regweb.confirmar.visar" htmlEscape="true"/>")' class="btn btn-success btn-sm btn-block"><spring:message code="regweb.visar"/></button>
-                            </c:if>
+                                <c:if test="${isOficioRemisionInterno || isOficioRemisionExterno}">
+                                    <button type="button" onclick="goTo('/regweb3/oficioRemision/entradasPendientesRemision')"
+                                            class="btn btn-success btn-sm btn-block">
+                                        <c:if test="${isOficioRemisionInterno}">
+                                            <spring:message code="oficioRemision.boton.crear.interno"/>
+                                        </c:if>
+                                        <c:if test="${isOficioRemisionExterno}">
+                                            <spring:message code="oficioRemision.boton.crear.externo"/>
+                                        </c:if>
 
-                            <%--Si el registro está pendiente--%>
-                            <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_RESERVA || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && puedeEditar}">
-                                <button type="button" onclick='javascript:confirm("<c:url value="/registroEntrada/${registro.id}/anular"/>","<spring:message code="regweb.confirmar.anular" htmlEscape="true"/>")' class="btn btn-danger btn-sm btn-block"><spring:message code="regweb.anular"/></button>
-                            </c:if>
+                                    </button>
+                                </c:if>
 
+                            </div>
+                        </c:if>
 
-                            <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_RESERVA) && puedeEditar}">
-                                <button type="button" onclick="goTo('<c:url value="/registroEntrada/${registro.id}/edit"/>')" class="btn btn-warning btn-sm btn-block"><spring:message code="registroEntrada.editar"/></button>
-                            </c:if>
-                        </div>
                     </c:if>
 
+                    <div class="panel-footer center">
 
-                    <div class="panel-footer">
+                        <%--Botón nuevo registro--%>
                         <c:if test="${registro.estado != RegwebConstantes.REGISTRO_RESERVA}">
-                            <button type="button" onclick="goTo('/regweb3/registroEntrada/new')" class="btn btn-info btn-sm btn-block"><spring:message code="registroEntrada.nuevo"/></button>
+                            <div class="btn-group"><button type="button" onclick="goTo('/regweb3/registroEntrada/new')" class="btn btn-info btn-sm"><spring:message code="registro.boton.nuevo"/></button></div>
                         </c:if>
 
+                        <%--Botón nueva reserva--%>
                         <c:if test="${registro.estado == RegwebConstantes.REGISTRO_RESERVA}">
-                            <button type="button" onclick="goTo('/regweb3/registroEntrada/reserva')" class="btn btn-info btn-sm btn-block"><spring:message code="registroEntrada.reserva.nuevo"/></button>
+                            <div class="btn-group"><button type="button" onclick="goTo('/regweb3/registroEntrada/reserva')" class="btn btn-info btn-sm"><spring:message code="registro.boton.nuevo.reserva"/></button></div>
                         </c:if>
+
+                        <%--Botón Editar Registro--%>
+                        <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_RESERVA) && puedeEditar}">
+                            <div class="btn-group"><button type="button" onclick="goTo('<c:url value="/registroEntrada/${registro.id}/edit"/>')" class="btn btn-warning btn-sm"><spring:message code="registro.boton.editar"/></button></div>
+                        </c:if>
+
+                        <%--Botón Activar--%>
+                        <c:if test="${registro.estado == RegwebConstantes.REGISTRO_ANULADO && puedeEditar}">
+                            <div class="btn-group"><button type="button" onclick='javascript:confirm("<c:url value="/registroEntrada/${registro.id}/activar"/>","<spring:message code="regweb.confirmar.activar" htmlEscape="true"/>")' class="btn btn-primary btn-sm"><spring:message code="regweb.activar"/></button></div>
+                        </c:if>
+
+                        <%--Botón Visar--%>
+                        <c:if test="${registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR && isAdministradorLibro}">
+                            <div class="btn-group"><button type="button" onclick='javascript:confirm("<c:url value="/registroEntrada/${registro.id}/visar"/>","<spring:message code="regweb.confirmar.visar" htmlEscape="true"/>")' class="btn btn-success btn-sm"><spring:message code="regweb.visar"/></button></div>
+                        </c:if>
+
+                        <%--Botón Anular--%>
+                        <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_RESERVA || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && puedeEditar}">
+                            <div class="btn-group"><button type="button" onclick='javascript:confirm("<c:url value="/registroEntrada/${registro.id}/anular"/>","<spring:message code="regweb.confirmar.anular" htmlEscape="true"/>")' class="btn btn-danger btn-sm"><spring:message code="regweb.anular"/></button></div>
+                        </c:if>
+
                     </div>
 
                 </div>
