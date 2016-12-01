@@ -137,7 +137,7 @@
                         </c:if>
 
                         <%--Botón Distribuir y Oficio Remision--%>
-                        <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO}">
+                        <c:if test="${isTramitar || isOficioRemisionInterno || isOficioRemisionExterno}">
                             <div class="panel-footer center">
                                 <c:if test="${isTramitar && puedeEditar}">
 
