@@ -218,47 +218,45 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
     public Long aceptarAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs)
             throws Exception {
 
-        for (CamposNTI cnti : camposNTIs) {
-            log.info("CamposNTI " + cnti.getId() + ": " + cnti.getIdValidezDocumento());
-        }
-
         if(asientoRegistralSir.getTipoRegistro().equals(TipoRegistro.ENTRADA)) {
 
             // Creamos el RegistroEntrada a partir del AsientoRegistral aceptado
             RegistroEntrada registroEntrada = null;
             try {
                 registroEntrada = sirEjb.transformarAsientoRegistralEntrada(asientoRegistralSir, usuario, oficinaActiva, idLibro, idIdioma, idTipoAsunto, camposNTIs);
+
+                // Modificamos el estado del AsientoRegistralSir
+                modificarEstado(asientoRegistralSir.getId(), EstadoAsientoRegistralSir.ACEPTADO);
+
+                return registroEntrada.getId();
+
             } catch (I18NException e) {
                 e.printStackTrace();
             } catch (I18NValidationException e) {
                 e.printStackTrace();
             }
 
-            // Modificamos el estado del AsientoRegistralSir
-            modificarEstado(asientoRegistralSir.getId(), EstadoAsientoRegistralSir.ACEPTADO);
-
-            return registroEntrada.getId();
-
-        }else{
+        }else if(asientoRegistralSir.getTipoRegistro().equals(TipoRegistro.SALIDA)){
 
             // Creamos el RegistroEntrada a partir del AsientoRegistral aceptado
             RegistroSalida registroSalida = null;
             try {
                 registroSalida = sirEjb.transformarAsientoRegistralSalida(asientoRegistralSir, usuario, oficinaActiva, idLibro, idIdioma, idTipoAsunto, camposNTIs);
+
+                // Modificamos el estado del AsientoRegistralSir
+                modificarEstado(asientoRegistralSir.getId(), EstadoAsientoRegistralSir.ACEPTADO);
+
+                return registroSalida.getId();
+
             } catch (I18NException e) {
                 e.printStackTrace();
             } catch (I18NValidationException e) {
                 e.printStackTrace();
             }
 
-            // Modificamos el estado del AsientoRegistralSir
-            modificarEstado(asientoRegistralSir.getId(), EstadoAsientoRegistralSir.ACEPTADO);
-
-
-            return registroSalida.getId();
         }
 
-
+        return null;
 
     }
 

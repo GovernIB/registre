@@ -225,9 +225,11 @@ public class AsientoRegistralSirController extends BaseController {
                 numeroRegistro = registroSalidaEjb.getNumeroRegistroSalida(idRegistro);
             }
 
-            // Enviamos el mensaje de confirmación
-            mensajeManager.enviarMensajeConfirmacion(asientoRegistralSir, numeroRegistro);
-            Mensaje.saveMessageInfo(request, getMessage("asientoRegistralSir.aceptar.ok"));
+            if(numeroRegistro != null){
+                // Enviamos el mensaje de confirmación
+                mensajeManager.enviarMensajeConfirmacion(asientoRegistralSir, numeroRegistro);
+                Mensaje.saveMessageInfo(request, getMessage("asientoRegistralSir.aceptar.ok"));
+            }
 
 
         }catch (Exception e){
