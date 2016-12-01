@@ -17,7 +17,7 @@ public class ServicioIntercambioRegistral {
 
     public void recibirFicheroIntercambio(String xmlFicheroIntercambio, WebServicesMethodsLocal webServicesMethodsEjb) {
 
-        Assert.hasText(xmlFicheroIntercambio, "'xmlFicheroIntercambio' no puede estar vacio");
+        Assert.hasText(xmlFicheroIntercambio, "El xml del ficheroIntercambio no puede estar vacio");
 
         recepcionManager.recibirFicheroIntercambio(xmlFicheroIntercambio, webServicesMethodsEjb);
     }
