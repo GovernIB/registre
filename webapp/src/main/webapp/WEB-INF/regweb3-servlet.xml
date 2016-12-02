@@ -11,7 +11,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 
     <tx:annotation-driven transaction-manager="transactionManager"/>
     <mvc:default-servlet-handler/>
-    <mvc:annotation-driven/>
+    <mvc:annotation-driven ignoreDefaultModelOnRedirect="true" />
 
     <!--Configuración para mejorar el uso de @SessionAttributes, evitando problemas al utilizar varias pestañas en la misma sesión -->
     <bean id="conversationalSessionAttributeStore" class="es.caib.regweb3.webapp.utils.ConversationalSessionAttributeStore">
