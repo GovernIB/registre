@@ -33,7 +33,10 @@ import org.w3c.dom.NodeList;
 import javax.xml.xpath.XPathConstants;
 import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import static es.caib.regweb3.utils.RegwebConstantes.*;
 
@@ -1629,40 +1632,33 @@ public class SicresXMLManager {
     protected void validateBase64Fields(String xml) {
         XPathReaderUtil reader = null;
 
-        // procesamos el xml para procesar las peticiones xpath
+        // Procesamos el xml para procesar las peticiones xpath
         try {
             reader = new XPathReaderUtil(new ByteArrayInputStream(xml.getBytes("UTF-8")));
         } catch (UnsupportedEncodingException e) {
-            log.error("Error al parsear el XML del fichero de intercambio en la validación campos en Base64"
-                            + "[" + xml + "]");
+            log.error("Error al parsear el XML del fichero de intercambio en la validación campos en Base64");
             throw new ValidacionException(Errores.ERROR_0037);
         }
 
-        // obtenemos el nombre de los campos en base64 junto con su expresion
-        // xpath
+        // Obtenemos el nombre de los campos en base64 junto con su expresion xpath
         Map<String, String> fieldsBase64 = getBase64Fields();
-        Set fieldsNameBase64 = fieldsBase64.keySet();
 
-        for (Iterator iterator = fieldsNameBase64.iterator(); iterator.hasNext();) {
+        for (String fieldName : fieldsBase64.keySet()) {
 
-            // obtenemos la expresion xpath de los campos que deben estar en
-            // base64
-            String fieldBase64Name = (String) iterator.next();
-            String expression = (String) fieldsBase64.get(fieldBase64Name);
+            // Obtenemos la expresion xpath de los campos que deben estar en base64
+            String expression = fieldsBase64.get(fieldName);
 
-            //realizams la consulta en xpath
-            NodeList results = (NodeList) reader.read(expression,
-                    XPathConstants.NODESET);
+            // Realizams la consulta en xpath
+            NodeList results = (NodeList) reader.read(expression, XPathConstants.NODESET);
 
-            // verificamos que si los resultados obtenidos son distinto de vacio están en base64
+            // Verificamos que si los resultados obtenidos son distinto de vacio están en base64
             if (results != null) {
                 for (int i = 0; i < results.getLength(); i++) {
                     Node item = results.item(i);
                     String value = item.getNodeValue();
-                    if (StringUtils.isNotBlank(value)
-                            && !Base64.isBase64(value)) {
+                    if (StringUtils.isNotBlank(value) && !Base64.isBase64(value)) {
                         log.error("Error al parsear el XML del fichero de intercambio: Campo no codificado en Base64 "
-                                        + fieldBase64Name + "[" + xml + "]");
+                                + fieldName);
                         throw new ValidacionException(Errores.ERROR_0037);
                     }
                 }

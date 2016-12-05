@@ -156,7 +156,7 @@ public class RecepcionManager {
      */
     private Mensaje parserForError(String xml) {
 
-        log.info("Intentamos parsear el xml recibido para enviar el mensaje de Error");
+        log.debug("Intentamos parsear el xml recibido para enviar el mensaje de Error");
 
         Mensaje mensaje = new Mensaje();
 

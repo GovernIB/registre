@@ -19,14 +19,14 @@ public class ValidacionException extends SIRException {
 
 
     public ValidacionException(Errores errorValidacion, Throwable errorException) {
-        super(errorValidacion.getValue());
+        super(errorValidacion.getName());
         setErrorValidacion(errorValidacion);
         setErrorException(errorException);
     }
 
 
     public ValidacionException(Errores error) {
-        super(error.getValue());
+        super(error.getName());
         setErrorValidacion(error);
     }
 
