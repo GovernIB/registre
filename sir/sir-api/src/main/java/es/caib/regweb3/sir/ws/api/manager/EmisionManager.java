@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * Created by earrivi on 19/01/2016.
  */
-public class FicheroIntercambioManager  {
+public class EmisionManager {
 
     public final Logger log = Logger.getLogger(getClass());
 

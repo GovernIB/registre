@@ -1,13 +1,14 @@
 package es.caib.regweb3.webapp.controller;
 
-import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.Oficina;
+import es.caib.regweb3.model.Repro;
+import es.caib.regweb3.model.Rol;
 import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
 import es.caib.regweb3.persistence.ejb.ReproLocal;
 import es.caib.regweb3.persistence.ejb.RolLocal;
-import es.caib.regweb3.sir.ws.api.manager.FicheroIntercambioManager;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.utils.UsuarioService;
-import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,8 +44,6 @@ public class ComunController extends BaseController {
 
     @EJB(mappedName = "regweb3/ReproEJB/local")
     public ReproLocal reproEjb;
-
-    FicheroIntercambioManager ficheroIntercambioManager = new FicheroIntercambioManager();
     
 
     @RequestMapping(value = "/noAutorizado")
@@ -169,22 +168,5 @@ public class ComunController extends BaseController {
 
         return mav;
     }
-
-
-    @RequestMapping(value = "/sir/{registroId}")
-    public String pruebaSir(@PathVariable Long registroId, HttpServletRequest request, HttpServletResponse response) throws Exception, I18NException {
-
-        //RegistroEntrada registroEntrada = registroEntradaEjb.findById(registroId);
-        RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(registroId);
-
-
-        //ficheroIntercambioManager.enviarFicheroIntercambio(registroEntrada);
-
-
-        return "redirect:/inici";
-
-    }
-
-
 
 }

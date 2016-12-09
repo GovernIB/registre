@@ -10,7 +10,7 @@ import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
-import es.caib.regweb3.sir.ws.api.manager.FicheroIntercambioManager;
+import es.caib.regweb3.sir.ws.api.manager.EmisionManager;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.*;
@@ -71,7 +71,7 @@ public class OficioRemisionController extends BaseController {
     @EJB(mappedName = "regweb3/SirEJB/local")
     public SirLocal sirEjb;
 
-    FicheroIntercambioManager ficheroIntercambioManager = new FicheroIntercambioManager();
+    EmisionManager emisionManager = new EmisionManager();
 
     /**
      * Listado de todos los Oficios de Remision
@@ -469,7 +469,7 @@ public class OficioRemisionController extends BaseController {
                         AsientoRegistralSir asientoRegistralSir = sirEjb.transformarRegistroEntrada(registroEntradaAEnviar, oficinaSir, organismoExternoCodigo, organismoExternoDenominacion);
 
                         // Enviamos el Fichero de datos de intercambio al nodo SIR
-                        String identificadorIntercambio = ficheroIntercambioManager.enviarFicheroIntercambio(asientoRegistralSir);
+                        String identificadorIntercambio = emisionManager.enviarFicheroIntercambio(asientoRegistralSir);
 
                         // Cream oficio remision
                         OficioRemision oficioRemision = oficioRemisionEntradaUtilsEjb.crearOficioRemisionSir(
@@ -544,7 +544,7 @@ public class OficioRemisionController extends BaseController {
                         AsientoRegistralSir asientoRegistralSir = sirEjb.transformarRegistroSalida(registroSalidaAEnviar, oficinaSir, organismoExternoCodigo, organismoExternoDenominacion);
 
                         // Enviamos el Fichero de datos de intercambio al nodo SIR
-                        String identificadorIntercambio = ficheroIntercambioManager.enviarFicheroIntercambio(asientoRegistralSir);
+                        String identificadorIntercambio = emisionManager.enviarFicheroIntercambio(asientoRegistralSir);
 
                         // Cream oficio remision
                         OficioRemision oficioRemision = oficioRemisionSalidaUtilsEjb.crearOficioRemisionSir(
