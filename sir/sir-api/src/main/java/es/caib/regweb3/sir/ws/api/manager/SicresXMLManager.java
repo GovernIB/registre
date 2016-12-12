@@ -101,7 +101,7 @@ public class SicresXMLManager {
 
         log.info("Validando FicheroIntercambio...");
 
-        Assert.notNull(fichero, "'ficheroIntercambio' no puede estar vacio");
+        Assert.notNull(fichero, "La variable 'ficheroIntercambio' no puede ser null");
 
 		/*
          * Validar los segmentos del fichero de intercambio
@@ -124,15 +124,15 @@ public class SicresXMLManager {
         log.info("Llamada a validarAsientoRegistral");
 
 
-        Assert.notNull(asiento, "'asiento' must not be null");
+        Assert.notNull(asiento, "La variable 'asiento' no puede ser null");
 
         // Comprobar los datos de origen
-        Assert.hasText(asiento.getCodigoEntidadRegistralOrigen(), "'codigoEntidadRegistralOrigen' no puede estar vacio");
-        Assert.hasText(asiento.getNumeroRegistro(), "'numeroRegistroEntrada' no puede estar vacio");
-        Assert.notNull(asiento.getFechaRegistro(), "'fechaEntrada' must not be null");
+        Assert.hasText(asiento.getCodigoEntidadRegistralOrigen(), "El campo 'codigoEntidadRegistralOrigen' no puede estar vacio");
+        Assert.hasText(asiento.getNumeroRegistro(), "El campo 'numeroRegistroEntrada' no puede estar vacio");
+        Assert.notNull(asiento.getFechaRegistro(), "El campo 'fechaEntrada' no puede ser null");
 
         // Comprobar los datos de destino
-        Assert.hasText(asiento.getCodigoEntidadRegistralDestino(), "'codigoEntidadRegistralDestino' no puede estar vacio");
+        Assert.hasText(asiento.getCodigoEntidadRegistralDestino(), "El campo 'codigoEntidadRegistralDestino' no puede estar vacio");
 
         // Comprobar los datos de los interesados
         if (!CollectionUtils.isEmpty(asiento.getInteresados()) && StringUtils.isBlank(asiento
@@ -210,8 +210,8 @@ public class SicresXMLManager {
             for (es.caib.regweb3.sir.core.model.AnexoSir anexo : asiento.getAnexos()) {
 
                 Assert.hasText(anexo.getNombreFichero(), "El campo 'nombreFichero' no puede estar vacio");
-                Assert.notNull(anexo.getTipoDocumento(), "El campo 'tipoDocumento' no puede estar vacio");
-                Assert.notNull(anexo.getHash(), "El campo 'hash' no puede estar vacio");
+                Assert.notNull(anexo.getTipoDocumento(), "El campo 'tipoDocumento' no puede ser null");
+                Assert.notNull(anexo.getHash(), "El campo 'hash' no puede ser null");
 
                 // Si en documento es de tipo "02 - Documento Adjunto"
                 if (TipoDocumento.DOCUMENTO_ADJUNTO.getValue().equals(anexo.getTipoDocumento())) {
@@ -240,9 +240,9 @@ public class SicresXMLManager {
 
         // Comprobar los datos de internos o de control
         Assert.hasText(asiento.getIdentificadorIntercambio(), "El campo 'identificadorIntercambio' no puede estar vacio");
-        Assert.notNull(asiento.getTipoRegistro(), "El campo 'tipoRegistro' no puede estar vacio");
-        Assert.notNull(asiento.getDocumentacionFisica(), "El campo 'documentacionFisica' no puede estar vacio");
-        Assert.notNull(asiento.getIndicadorPrueba(), "El campo 'indicadorPrueba' no puede estar vacio");
+        Assert.notNull(asiento.getTipoRegistro(), "El campo 'tipoRegistro' no puede ser null");
+        Assert.notNull(asiento.getDocumentacionFisica(), "El campo 'documentacionFisica' no puede ser null");
+        Assert.notNull(asiento.getIndicadorPrueba(), "El campo 'indicadorPrueba' no puede ser null");
         Assert.hasText(asiento.getCodigoEntidadRegistralInicio(), "El campo 'codigoEntidadRegistralInicio' no puede estar vacio");
 
         log.info("Asiento registral validado");
@@ -253,12 +253,12 @@ public class SicresXMLManager {
      */
     public void validarMensaje(Mensaje mensaje) {
 
-        Assert.notNull(mensaje, "El campo 'mensaje' no puede estar vacio");
+        Assert.notNull(mensaje, "El campo 'mensaje' no puede ser null");
 
         Assert.hasText(mensaje.getCodigoEntidadRegistralOrigen(), "El campo 'codigoEntidadRegistralOrigen' no puede estar vacio");
         Assert.hasText(mensaje.getCodigoEntidadRegistralDestino(), "El campo 'codigoEntidadRegistralDestino' no puede estar vacio");
         Assert.hasText(mensaje.getIdentificadorIntercambio(), "El campo 'identificadorIntercambio' no puede estar vacio");
-        Assert.notNull(mensaje.getTipoMensaje(), "El campo 'tipoMensaje'no puede estar vacio");
+        Assert.notNull(mensaje.getTipoMensaje(), "El campo 'tipoMensaje' no puede ser null");
 
         log.info("Mensaje (" + mensaje.getTipoMensaje().getName()+") validado");
     }
@@ -269,7 +269,7 @@ public class SicresXMLManager {
      */
     public String crearXMLFicheroIntercambioSICRES3(AsientoRegistralSir asientoRegistralSir) throws Exception   {
 
-        Assert.notNull(asientoRegistralSir, "'asientoRegistralSir' no puede estar vacio");
+        Assert.notNull(asientoRegistralSir, "La variable 'asientoRegistralSir' no puede ser null");
 
         Document doc = DocumentHelper.createDocument();
         doc.setXMLEncoding("UTF-8");
@@ -840,7 +840,7 @@ public class SicresXMLManager {
      */
     public String createXMLMensaje(Mensaje mensaje) {
 
-        Assert.notNull(mensaje, "'mensaje' must not be null");
+        Assert.notNull(mensaje, "La variable 'mensaje' no puede ser null");
 
         StringWriter stringWriter = new StringWriter();
 
@@ -1111,7 +1111,7 @@ public class SicresXMLManager {
 
                 // Tipo Documento Identificación Interesado
                 if (StringUtils.isNotEmpty(interesado.getTipo_Documento_Identificacion_Interesado())) {
-                    Assert.notNull(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacion(interesado.getTipo_Documento_Identificacion_Interesado()), "'El campo tipoDocumentoIdentificacionInteresado' no es válido");
+                    Assert.notNull(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacion(interesado.getTipo_Documento_Identificacion_Interesado()), "'El campo tipoDocumentoIdentificacionInteresado' no puede ser null");
 
                     // Validar que el Documento concuerda con su tipo documento identificación
                     Validacion validacionDocumento = null;
@@ -1141,15 +1141,13 @@ public class SicresXMLManager {
                 if (StringUtils.isNotBlank(interesado.getCanal_Preferente_Comunicacion_Interesado())) {
                     Assert.notNull(
                             CanalNotificacion.getCanalNotificacion(interesado.getCanal_Preferente_Comunicacion_Interesado()),
-                            "El campo 'CanalPreferenteComunicacionInteresado' no es válido ["
+                            "El campo 'CanalPreferenteComunicacionInteresado' no puede ser null ["
                                     + interesado.getCanal_Preferente_Comunicacion_Interesado() + "]");
 
                     if (CanalNotificacion.DIRECCION_POSTAL.getValue().equals(interesado.getCanal_Preferente_Comunicacion_Interesado())) {
 
-                        Assert.hasText(interesado.getPais_Interesado(),
-                                "El campo  'paisInteresado' no puede estar vacio");
-                        Assert.hasText(interesado.getDireccion_Interesado(),
-                                "El campo  'direccionInteresado' no puede estar vacio");
+                        Assert.hasText(interesado.getPais_Interesado(), "El campo  'paisInteresado' no puede estar vacio");
+                        Assert.hasText(interesado.getDireccion_Interesado(), "El campo  'direccionInteresado' no puede estar vacio");
 
                         if (CODIGO_PAIS_ESPANA.equals(interesado.getPais_Interesado())) {
                             Assert.isTrue(StringUtils.isNotBlank(interesado
@@ -1172,7 +1170,7 @@ public class SicresXMLManager {
 
                 // Tipo Documento Identificación Interesado
                 if (StringUtils.isNotEmpty(interesado.getTipo_Documento_Identificacion_Representante())) {
-                    Assert.notNull(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacion(interesado.getTipo_Documento_Identificacion_Representante()), "El campo 'tipoDocumentoIdentificacionRepresentante' no es válido");
+                    Assert.notNull(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacion(interesado.getTipo_Documento_Identificacion_Representante()), "El campo 'tipoDocumentoIdentificacionRepresentante' no puede ser null");
 
                     // Validar que el Documento concuerda con su tipo documento identificación
                     Validacion validacionDocumento = null;
@@ -1201,7 +1199,7 @@ public class SicresXMLManager {
                     Assert.notNull(
                             CanalNotificacion.getCanalNotificacion(interesado
                                     .getCanal_Preferente_Comunicacion_Representante()),
-                            "El campo 'CanalPreferenteComunicacionRepresentante' no es válido ["
+                            "El campo 'CanalPreferenteComunicacionRepresentante' no puede ser null ["
                                     + interesado.getCanal_Preferente_Comunicacion_Representante() + "]");
 
                     if (CanalNotificacion.DIRECCION_POSTAL.getValue().equals(interesado
@@ -1312,9 +1310,8 @@ public class SicresXMLManager {
 
             // Validar el campo tipo de documento
             Assert.hasText(anexo.getTipo_Documento(), "El campo  'TipoDocumento' no puede estar vacio");
-            Assert.notNull(TipoDocumento.getTipoDocumento(anexo
-                            .getTipo_Documento()),
-                    "El campo  'TipoDocumento' no es válido [" + anexo.getTipo_Documento() + "]");
+            Assert.notNull(TipoDocumento.getTipoDocumento(anexo.getTipo_Documento()),
+                    "El campo  'TipoDocumento' no puede ser null [" + anexo.getTipo_Documento() + "]");
 
             // Validar el hash del documento
             // Nota: no se comprueba el código hash de los documentos porque no
@@ -1411,12 +1408,12 @@ public class SicresXMLManager {
         // Validar el tipo de transporte
         if (StringUtils.isNotBlank(fichero.getTipoTransporteXML())) {
             Assert.notNull(fichero.getTipoTransporte(),
-                    "El campo 'TipoTransporteEntrada' no es válido [" + fichero.getTipoTransporteXML() + "]");
+                    "El campo 'TipoTransporteEntrada' no puede ser null [" + fichero.getTipoTransporteXML() + "]");
         }
 
         // Validar el tipo de anotación
         Assert.hasText(fichero.getTipoAnotacionXML(), "El campo 'TipoAnotacion' no puede estar vacio");
-        Assert.notNull(fichero.getTipoAnotacion(), "El campo 'TipoAnotacion' no se válido [" + fichero.getTipoAnotacionXML() + "]");
+        Assert.notNull(fichero.getTipoAnotacion(), "El campo 'TipoAnotacion' no puede ser null [" + fichero.getTipoAnotacionXML() + "]");
 
         // Validar que el código de entidad registral de inicio esté informado
         Assert.hasText(fichero.getCodigoEntidadRegistralInicio(), "El campo 'CodigoEntidadRegistralInicio' no puede estar vacio");
@@ -1473,9 +1470,9 @@ public class SicresXMLManager {
      */
     protected void validarSegmentoFormularioGenerico(FicheroIntercambio fichero) {
 
-        Assert.notNull(fichero.getExpone(), "El campo 'expone' no puede estar vacio");
+        Assert.notNull(fichero.getExpone(), "El campo 'expone' no puede ser null");
 
-        Assert.notNull(fichero.getSolicita(), "El campo 'solicita' no puede estar vacio");
+        Assert.notNull(fichero.getSolicita(), "El campo 'solicita' no puede ser null");
 
         if(StringUtils.isNotEmpty(fichero.getExpone())){
             Assert.hasText(fichero.getSolicita(), "El campo 'solicita' no puedo estar vacio");
