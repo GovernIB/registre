@@ -2,6 +2,7 @@ package es.caib.regweb3.webapp.utils;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.login.RegwebLoginPluginManager;
 import org.apache.log4j.Logger;
@@ -448,6 +449,10 @@ public class UsuarioService {
 
             Usuario usuario = new Usuario();
             usuario.setNombre(regwebUserInfo.getName());
+
+            //Idioma por defecto
+            Long idioma  = RegwebConstantes.IDIOMA_ID_BY_CODIGO.get(Configuracio.getDefaultLanguage());
+            usuario.setIdioma(idioma);
 
             if(regwebUserInfo.getSurname1() != null){
                 usuario.setApellido1(regwebUserInfo.getSurname1());
