@@ -1,9 +1,11 @@
 package es.caib.regweb3.sir.ws.api.service;
 
 import es.caib.regweb3.persistence.ejb.WebServicesMethodsLocal;
+import es.caib.regweb3.sir.core.excepcion.ServiceException;
+import es.caib.regweb3.sir.core.excepcion.ValidacionException;
+import es.caib.regweb3.sir.core.model.Errores;
 import es.caib.regweb3.sir.ws.api.manager.RecepcionManager;
 import org.apache.log4j.Logger;
-import org.springframework.util.Assert;
 
 
 /**
@@ -17,9 +19,17 @@ public class ServicioIntercambioRegistral {
 
     public void recibirFicheroIntercambio(String xmlFicheroIntercambio, WebServicesMethodsLocal webServicesMethodsEjb) {
 
-        Assert.hasText(xmlFicheroIntercambio, "El xml del ficheroIntercambio no puede estar vacio");
+        try {
 
         recepcionManager.recibirFicheroIntercambio(xmlFicheroIntercambio, webServicesMethodsEjb);
+
+        } catch (IllegalArgumentException e) {
+            log.error("Error en la recepción del fichero de datos de intercambio", e);
+            throw new ServiceException(Errores.ERROR_0065, e);
+        } catch (ValidacionException e) {
+            log.error("Error validacion en la recepción del fichero de datos de intercambio");
+            throw new ServiceException(e.getErrorValidacion(), e.getErrorException());
+        }
     }
 
 }

@@ -1063,11 +1063,10 @@ public class SicresXMLManager {
                 "'CodigoEntidadRegistralOrigen' is invalid");*/
 
         // Validar el código de unidad de tramitación de origen en DIR3
-        if (StringUtils.isNotBlank(ficheroIntercambio
-                .getCodigoUnidadTramitacionOrigen())) {
+        if (StringUtils.isNotBlank(ficheroIntercambio.getCodigoUnidadTramitacionOrigen())) {
             Assert.isTrue(validarCodigoUnidadTramitacion(ficheroIntercambio
                             .getCodigoUnidadTramitacionOrigen()),
-                    "El campo 'CodigoUnidadTramitacionOrigen' is invalid");
+                    "El campo 'CodigoUnidadTramitacionOrigen' no es válido");
         }
 
         // Validar que el número de registro de entrada en origen esté informado
@@ -1079,15 +1078,15 @@ public class SicresXMLManager {
                 "El campo 'FechaHoraEntrada' no puede estar vacio");
 
         // Validar el formato de la fecha de entrada
-        Assert.isTrue(
-                StringUtils.equals(ficheroIntercambio.getFechaRegistroXML(),
+        Assert.isTrue(StringUtils.equals(ficheroIntercambio.getFechaRegistroXML(),
                         SDF.format(ficheroIntercambio.getFechaRegistro())),
-                "El campo 'FechaHoraEntrada' is invalid ["
+                "El campo 'FechaHoraEntrada' no es válido ["
                         + ficheroIntercambio.getFechaRegistroXML() + "]");
 
         // Validar que la Fecha de entrada no sea superior a la actual
         Assert.isTrue(ficheroIntercambio.getFechaRegistro().before(new Date()),
                 "El campo 'FechaHoraEntrada' es mayor que now()");
+
         log.info("SegmentoOrigen validado!");
     }
 
@@ -1145,13 +1144,28 @@ public class SicresXMLManager {
                                     || (StringUtils.isNotBlank(interesado
                                     .getNombre_Interesado()) && StringUtils.isNotBlank(interesado.getPrimer_Apellido_Interesado())),
                             "No existe ningún Interesado, es necesario que haya al menos uno");
+
+                }else if(ficheroIntercambio.getTipoRegistro().equals(TipoRegistro.SALIDA)){
+
+                    // Si no hay ningún Interesado
+                    if(StringUtils.isBlank(interesado.getRazon_Social_Interesado()) || (StringUtils.isBlank(interesado
+                            .getNombre_Interesado()) && StringUtils.isBlank(interesado.getPrimer_Apellido_Interesado()))){
+
+                        // Comprobar que el campo CodigoUnidadTramitacionOrigen está informado y es válido
+                        Assert.hasText(ficheroIntercambio.getCodigoUnidadTramitacionOrigen(), "El campo 'CodigoUnidadTramitacionOrigen' no puede estar vacio");
+
+                        // Validar el código de unidad de tramitación de origen en DIR3
+                        Assert.isTrue(validarCodigoUnidadTramitacion(ficheroIntercambio.getCodigoUnidadTramitacionOrigen()),
+                                    "El campo 'CodigoUnidadTramitacionOrigen' no es válido ");
+
+                    }
                 }
 
                 /* INTERESADO */
 
                 // Tipo Documento Identificación Interesado
                 if (StringUtils.isNotEmpty(interesado.getTipo_Documento_Identificacion_Interesado())) {
-                    Assert.notNull(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacion(interesado.getTipo_Documento_Identificacion_Interesado()), "'invalid tipoDocumentoIdentificacionInteresado'");
+                    Assert.notNull(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacion(interesado.getTipo_Documento_Identificacion_Interesado()), "'El campo tipoDocumentoIdentificacionInteresado' no es válido");
 
                     // Validar que el Documento concuerda con su tipo documento identificación
                     Validacion validacionDocumento = null;
@@ -1175,7 +1189,6 @@ public class SicresXMLManager {
                                 "Los campos 'nombreInteresado' y 'primerApellidoInteresado' no pueden estar vacios");
                     }
                 }
-
 
 
                 // Validar el canal preferente de comunicación del interesado
@@ -1213,7 +1226,7 @@ public class SicresXMLManager {
 
                 // Tipo Documento Identificación Interesado
                 if (StringUtils.isNotEmpty(interesado.getTipo_Documento_Identificacion_Representante())) {
-                    Assert.notNull(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacion(interesado.getTipo_Documento_Identificacion_Representante()), "invalid 'tipoDocumentoIdentificacionRepresentante'");
+                    Assert.notNull(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacion(interesado.getTipo_Documento_Identificacion_Representante()), "El campo 'tipoDocumentoIdentificacionRepresentante' no es válido");
 
                     // Validar que el Documento concuerda con su tipo documento identificación
                     Validacion validacionDocumento = null;
@@ -1274,8 +1287,11 @@ public class SicresXMLManager {
                     }
                 }
 
+                log.info("Interesado validado!");
+
             }
         }
+
         log.info("SegmentoInteresados validado!");
     }
 

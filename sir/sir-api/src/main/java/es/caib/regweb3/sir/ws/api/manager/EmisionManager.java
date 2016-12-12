@@ -28,6 +28,11 @@ public class EmisionManager {
     SicresXMLManager sicresXMLManager = new SicresXMLManager();
 
 
+    /**
+     *
+     * @param asientoRegistralSir
+     * @return
+     */
     public String enviarFicheroIntercambio(AsientoRegistralSir asientoRegistralSir){
 
         try {
@@ -66,10 +71,18 @@ public class EmisionManager {
         }
     }
 
+    /**
+     *
+     * @param ficheroIntercambio
+     */
     public void reenviarFicheroIntercambio(FicheroIntercambio ficheroIntercambio) {
 
     }
 
+    /**
+     *
+     * @param ficheroIntercambio
+     */
     public void rechazarFicheroIntercambio(FicheroIntercambio ficheroIntercambio) {
 
     }
@@ -86,6 +99,12 @@ public class EmisionManager {
     }
 
 
+    /**
+     *
+     * @param xml
+     * @return
+     * @throws Exception
+     */
     public static RespuestaWS ws_sir6_b_recepcionFicheroDeAplicacion(String xml) throws Exception {
 
         /*if (Configuracio.useDirectApiSir()) {
