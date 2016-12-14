@@ -38,6 +38,13 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     @EJB(name = "LibroEJB")
     public LibroLocal libroEjb;
 
+
+    @Override
+    public Organismo getReference(Long id) throws Exception {
+
+        return em.getReference(Organismo.class, id);
+    }
+
     @Override
     public Organismo findById(Long id) throws Exception {
 

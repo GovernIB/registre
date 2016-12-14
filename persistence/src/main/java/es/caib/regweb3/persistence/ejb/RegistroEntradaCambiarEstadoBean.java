@@ -37,7 +37,11 @@ public class RegistroEntradaCambiarEstadoBean extends BaseEjbJPA<RegistroEntrada
         merge(registroEntrada);
     }
 
+    @Override
+    public RegistroEntrada getReference(Long id) throws Exception {
 
+        return em.getReference(RegistroEntrada.class, id);
+    }
 
     @Override
     public RegistroEntrada findById(Long id) throws Exception {

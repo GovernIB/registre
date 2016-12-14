@@ -28,6 +28,12 @@ public class RolBean extends BaseEjbJPA<Rol, Long> implements RolLocal{
 
 
     @Override
+    public Rol getReference(Long id) throws Exception {
+
+        return em.getReference(Rol.class, id);
+    }
+
+    @Override
     public Rol findById(Long id) throws Exception {
 
         return em.find(Rol.class, id);

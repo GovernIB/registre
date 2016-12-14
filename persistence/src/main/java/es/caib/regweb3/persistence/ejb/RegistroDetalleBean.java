@@ -35,6 +35,12 @@ public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> imple
 
 
     @Override
+    public RegistroDetalle getReference(Long id) throws Exception {
+
+        return em.getReference(RegistroDetalle.class, id);
+    }
+
+    @Override
     public RegistroDetalle findById(Long id) throws Exception {
 
         return em.find(RegistroDetalle.class, id);

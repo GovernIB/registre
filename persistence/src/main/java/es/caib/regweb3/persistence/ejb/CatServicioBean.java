@@ -28,6 +28,12 @@ public class CatServicioBean extends BaseEjbJPA<CatServicio, Long> implements Ca
 
 
     @Override
+    public CatServicio getReference(Long id) throws Exception {
+
+        return em.getReference(CatServicio.class, id);
+    }
+
+    @Override
     public CatServicio findById(Long id) throws Exception {
 
         return em.find(CatServicio.class, id);

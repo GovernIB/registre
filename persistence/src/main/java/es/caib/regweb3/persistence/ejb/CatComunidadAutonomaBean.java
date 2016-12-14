@@ -28,6 +28,12 @@ public class CatComunidadAutonomaBean extends BaseEjbJPA<CatComunidadAutonoma, L
 
 
     @Override
+    public CatComunidadAutonoma getReference(Long id) throws Exception {
+
+        return em.getReference(CatComunidadAutonoma.class, id);
+    }
+
+    @Override
     public CatComunidadAutonoma findById(Long id) throws Exception {
 
         return em.find(CatComunidadAutonoma.class, id);

@@ -29,7 +29,14 @@ public class RelacionSirOfiBean extends BaseEjbJPA<RelacionSirOfi, RelacionSirOf
      @PersistenceContext
      private EntityManager em;
 
-     @Override
+
+    @Override
+    public RelacionSirOfi getReference(RelacionSirOfiPK id) throws Exception {
+
+        return em.getReference(RelacionSirOfi.class, id);
+    }
+
+    @Override
      public RelacionSirOfi findById(RelacionSirOfiPK id) throws Exception {
 
          return em.find(RelacionSirOfi.class, id);

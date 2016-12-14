@@ -35,6 +35,12 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
 
     @Override
+    public Persona getReference(Long id) throws Exception {
+
+        return em.getReference(Persona.class, id);
+    }
+
+    @Override
     public Persona findById(Long id) throws Exception {
 
         return em.find(Persona.class, id);

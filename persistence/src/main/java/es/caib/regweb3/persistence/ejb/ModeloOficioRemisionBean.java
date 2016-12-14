@@ -29,6 +29,12 @@ public class ModeloOficioRemisionBean extends BaseEjbJPA<ModeloOficioRemision, L
 
 
     @Override
+    public ModeloOficioRemision getReference(Long id) throws Exception {
+
+        return em.getReference(ModeloOficioRemision.class, id);
+    }
+
+    @Override
     public ModeloOficioRemision findById(Long id) throws Exception {
 
         return em.find(ModeloOficioRemision.class, id);

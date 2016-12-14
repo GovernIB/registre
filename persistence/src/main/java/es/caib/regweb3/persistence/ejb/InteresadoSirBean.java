@@ -29,6 +29,12 @@ public class InteresadoSirBean extends BaseEjbJPA<InteresadoSir, Long> implement
 
 
     @Override
+    public InteresadoSir getReference(Long id) throws Exception {
+
+        return em.getReference(InteresadoSir.class, id);
+    }
+
+    @Override
     public InteresadoSir findById(Long id) throws Exception {
 
         return em.find(InteresadoSir.class, id);

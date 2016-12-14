@@ -31,6 +31,12 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
 
     @Override
+    public Trazabilidad getReference(Long id) throws Exception {
+
+        return em.getReference(Trazabilidad.class, id);
+    }
+
+    @Override
     public Trazabilidad findById(Long id) throws Exception {
 
         return em.find(Trazabilidad.class, id);

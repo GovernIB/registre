@@ -29,6 +29,12 @@ public class AnexoSirBean extends BaseEjbJPA<AnexoSir, Long> implements AnexoSir
 
 
     @Override
+    public AnexoSir getReference(Long id) throws Exception {
+
+        return em.getReference(AnexoSir.class, id);
+    }
+
+    @Override
     public AnexoSir findById(Long id) throws Exception {
 
         return em.find(AnexoSir.class, id);

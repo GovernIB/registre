@@ -39,6 +39,13 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
     @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
     public RegistroSalidaLocal registroSalidaEjb;
 
+
+    @Override
+    public Lopd getReference(Long id) throws Exception {
+
+        return em.getReference(Lopd.class, id);
+    }
+
     @Override
     public Lopd findById(Long id) throws Exception {
 

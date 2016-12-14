@@ -33,6 +33,12 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
 
 
     @Override
+    public Usuario getReference(Long id) throws Exception {
+
+        return em.getReference(Usuario.class, id);
+    }
+
+    @Override
     public Usuario findById(Long id) throws Exception {
 
         return em.find(Usuario.class, id);

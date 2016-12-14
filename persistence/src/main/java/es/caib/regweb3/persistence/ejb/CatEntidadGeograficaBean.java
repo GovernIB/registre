@@ -28,6 +28,12 @@ public class CatEntidadGeograficaBean extends BaseEjbJPA<CatEntidadGeografica, L
 
 
     @Override
+    public CatEntidadGeografica getReference(Long id) throws Exception {
+
+        return em.getReference(CatEntidadGeografica.class, id);
+    }
+
+    @Override
     public CatEntidadGeografica findById(Long id) throws Exception {
 
         return em.find(CatEntidadGeografica.class, id);

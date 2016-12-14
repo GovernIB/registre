@@ -65,6 +65,12 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
 
     @Override
+    public Entidad getReference(Long id) throws Exception {
+
+        return em.getReference(Entidad.class, id);
+    }
+
+    @Override
     public Entidad findById(Long id) throws Exception {
 
         return em.find(Entidad.class, id);

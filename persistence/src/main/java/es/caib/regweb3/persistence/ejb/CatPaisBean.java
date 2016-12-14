@@ -28,6 +28,12 @@ public class CatPaisBean extends BaseEjbJPA<CatPais, Long> implements CatPaisLoc
 
 
     @Override
+    public CatPais getReference(Long id) throws Exception {
+
+        return em.getReference(CatPais.class, id);
+    }
+
+    @Override
     public CatPais findById(Long id) throws Exception {
 
         return em.find(CatPais.class, id);

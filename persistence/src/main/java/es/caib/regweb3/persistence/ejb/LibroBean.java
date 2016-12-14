@@ -37,6 +37,12 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
 
 
     @Override
+    public Libro getReference(Long id) throws Exception {
+
+        return em.getReference(Libro.class, id);
+    }
+
+    @Override
     public Libro findById(Long id) throws Exception {
 
         return em.find(Libro.class, id);

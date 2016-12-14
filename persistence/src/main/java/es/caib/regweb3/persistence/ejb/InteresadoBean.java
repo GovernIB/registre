@@ -35,6 +35,12 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
 
 
     @Override
+    public Interesado getReference(Long id) throws Exception {
+
+        return em.getReference(Interesado.class, id);
+    }
+
+    @Override
     public Interesado findById(Long id) throws Exception {
 
         return em.find(Interesado.class, id);

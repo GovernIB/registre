@@ -31,6 +31,12 @@ public class RegistroSalidaCambiarEstadoBean extends BaseEjbJPA<RegistroSalida, 
 
 
     @Override
+    public RegistroSalida getReference(Long id) throws Exception {
+
+        return em.getReference(RegistroSalida.class, id);
+    }
+
+    @Override
     public RegistroSalida findById(Long id) throws Exception {
 
         return em.find(RegistroSalida.class, id);

@@ -28,6 +28,12 @@ public class CatNivelAdministracionBean extends BaseEjbJPA<CatNivelAdministracio
 
 
     @Override
+    public CatNivelAdministracion getReference(Long id) throws Exception {
+
+        return em.getReference(CatNivelAdministracion.class, id);
+    }
+
+    @Override
     public CatNivelAdministracion findById(Long id) throws Exception {
 
         return em.find(CatNivelAdministracion.class, id);

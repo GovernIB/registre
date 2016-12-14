@@ -28,6 +28,12 @@ public class RegistroLopdMigradoBean extends BaseEjbJPA<RegistroLopdMigrado, Lon
 
 
     @Override
+    public RegistroLopdMigrado getReference(Long id) throws Exception {
+
+        return em.getReference(RegistroLopdMigrado.class, id);
+    }
+
+    @Override
     public RegistroLopdMigrado findById(Long id) throws Exception {
 
         return em.find(RegistroLopdMigrado.class, id);

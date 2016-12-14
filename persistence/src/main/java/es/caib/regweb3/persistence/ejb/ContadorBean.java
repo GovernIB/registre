@@ -30,6 +30,12 @@ public class ContadorBean extends BaseEjbJPA<Contador, Long> implements Contador
 
 
     @Override
+    public Contador getReference(Long id) throws Exception {
+
+        return em.getReference(Contador.class, id);
+    }
+
+    @Override
     public Contador findById(Long id) throws Exception {
 
         return em.find(Contador.class, id);

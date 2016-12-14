@@ -30,6 +30,12 @@ public class CatProvinciaBean extends BaseEjbJPA<CatProvincia, Long> implements 
 
 
     @Override
+    public CatProvincia getReference(Long id) throws Exception {
+
+        return em.getReference(CatProvincia.class, id);
+    }
+
+    @Override
     public CatProvincia findById(Long id) throws Exception {
 
         return em.find(CatProvincia.class, id);

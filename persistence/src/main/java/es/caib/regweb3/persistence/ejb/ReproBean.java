@@ -31,6 +31,12 @@ public class ReproBean extends BaseEjbJPA<Repro, Long> implements ReproLocal{
 
 
     @Override
+    public Repro getReference(Long id) throws Exception {
+
+        return em.getReference(Repro.class, id);
+    }
+
+    @Override
     public Repro findById(Long id) throws Exception {
 
         return em.find(Repro.class, id);

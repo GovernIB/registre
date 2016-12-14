@@ -26,6 +26,11 @@ public class PreRegistroBean extends BaseEjbJPA<PreRegistro, Long> implements Pr
     private EntityManager em;
 
 
+    @Override
+    public PreRegistro getReference(Long id) throws Exception {
+
+        return em.getReference(PreRegistro.class, id);
+    }
 
     @Override
     public PreRegistro findById(Long id) throws Exception {

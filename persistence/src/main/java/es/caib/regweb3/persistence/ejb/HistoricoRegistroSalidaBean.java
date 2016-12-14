@@ -35,6 +35,12 @@ public class HistoricoRegistroSalidaBean extends BaseEjbJPA<HistoricoRegistroSal
 
 
     @Override
+    public HistoricoRegistroSalida getReference(Long id) throws Exception {
+
+        return em.getReference(HistoricoRegistroSalida.class, id);
+    }
+
+    @Override
     public HistoricoRegistroSalida findById(Long id) throws Exception {
 
         return em.find(HistoricoRegistroSalida.class, id);

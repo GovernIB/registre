@@ -43,6 +43,13 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     @EJB(mappedName = "regweb3/PermisoLibroUsuarioEJB/local")
     public PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
 
+
+    @Override
+    public PermisoLibroUsuario getReference(Long id) throws Exception {
+
+        return em.getReference(PermisoLibroUsuario.class, id);
+    }
+
     @Override
     public PermisoLibroUsuario findById(Long id) throws Exception {
 

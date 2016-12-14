@@ -28,6 +28,12 @@ public class TipoAsuntoBean extends BaseEjbJPA<TipoAsunto, Long> implements Tipo
 
 
     @Override
+    public TipoAsunto getReference(Long id) throws Exception {
+
+        return em.getReference(TipoAsunto.class, id);
+    }
+
+    @Override
     public TipoAsunto findById(Long id) throws Exception {
 
         return em.find(TipoAsunto.class, id);

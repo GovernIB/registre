@@ -29,6 +29,12 @@ public class TipoDocumentalBean extends BaseEjbJPA<TipoDocumental, Long> impleme
 
 
     @Override
+    public TipoDocumental getReference(Long id) throws Exception {
+
+        return em.getReference(TipoDocumental.class, id);
+    }
+
+    @Override
     public TipoDocumental findById(Long id) throws Exception {
 
         return em.find(TipoDocumental.class, id);

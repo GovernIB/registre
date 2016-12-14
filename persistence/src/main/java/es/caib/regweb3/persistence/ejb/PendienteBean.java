@@ -27,6 +27,12 @@ public class PendienteBean extends BaseEjbJPA<Pendiente, Long> implements Pendie
 
 
     @Override
+    public Pendiente getReference(Long id) throws Exception {
+
+        return em.getReference(Pendiente.class, id);
+    }
+
+    @Override
     public Pendiente findById(Long id) throws Exception {
 
         return em.find(Pendiente.class, id);

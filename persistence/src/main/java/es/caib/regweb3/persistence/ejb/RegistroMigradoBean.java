@@ -41,6 +41,12 @@ public class RegistroMigradoBean extends BaseEjbJPA<RegistroMigrado, Long> imple
 
 
     @Override
+    public RegistroMigrado getReference(Long id) throws Exception {
+
+        return em.getReference(RegistroMigrado.class, id);
+    }
+
+    @Override
     public RegistroMigrado findById(Long id) throws Exception {
 
         RegistroMigrado registroMigrado = em.find(RegistroMigrado.class, id);

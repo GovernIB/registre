@@ -35,24 +35,19 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
     @PersistenceContext(unitName="regweb3")
     private EntityManager em;
 
-    @EJB
-    public RegistroEntradaLocal registroEntradaEjb;
+    @EJB public RegistroEntradaLocal registroEntradaEjb;
+    @EJB public HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
+    @EJB public RegistroSalidaLocal registroSalidaEjb;
+    @EJB public HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
+    @EJB public ReproLocal reproEjb;
+    @EJB public LopdLocal lopdEjb;
 
-    @EJB
-    public HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
 
-    @EJB
-    public RegistroSalidaLocal registroSalidaEjb;
+    @Override
+    public UsuarioEntidad getReference(Long id) throws Exception {
 
-    @EJB
-    public HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
-
-    @EJB
-    public ReproLocal reproEjb;
-
-    @EJB
-    public LopdLocal lopdEjb;
-
+        return em.getReference(UsuarioEntidad.class, id);
+    }
 
     @Override
     public UsuarioEntidad findById(Long id) throws Exception {

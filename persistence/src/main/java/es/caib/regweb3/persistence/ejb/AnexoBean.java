@@ -74,9 +74,15 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     @EJB(mappedName = "regweb3/HistoricoRegistroSalidaEJB/local")
     public HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
-    
-    
-    
+
+
+
+    @Override
+    public Anexo getReference(Long id) throws Exception {
+
+        return em.getReference(Anexo.class, id);
+    }
+
     @Override
     public AnexoFull getAnexoFull(Long anexoID) throws I18NException {
       

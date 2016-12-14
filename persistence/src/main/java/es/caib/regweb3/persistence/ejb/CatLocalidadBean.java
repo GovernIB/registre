@@ -28,6 +28,12 @@ public class CatLocalidadBean extends BaseEjbJPA<CatLocalidad, Long> implements 
 
 
     @Override
+    public CatLocalidad getReference(Long id) throws Exception {
+
+        return em.getReference(CatLocalidad.class, id);
+    }
+
+    @Override
     public CatLocalidad findById(Long id) throws Exception {
 
         return em.find(CatLocalidad.class, id);

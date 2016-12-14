@@ -40,6 +40,12 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
 
     @Override
+    public Oficina getReference(Long id) throws Exception {
+
+        return em.getReference(Oficina.class, id);
+    }
+
+    @Override
     public Oficina findById(Long id) throws Exception {
 
         Oficina oficina = em.find(Oficina.class, id);

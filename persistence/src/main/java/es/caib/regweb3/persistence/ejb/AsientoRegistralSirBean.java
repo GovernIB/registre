@@ -47,6 +47,12 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
 
 
     @Override
+    public AsientoRegistralSir getReference(Long id) throws Exception {
+
+        return em.getReference(AsientoRegistralSir.class, id);
+    }
+
+    @Override
     public AsientoRegistralSir findById(Long id) throws Exception {
 
         return em.find(AsientoRegistralSir.class, id);

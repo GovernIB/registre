@@ -28,6 +28,12 @@ public class CatEstadoEntidadBean extends BaseEjbJPA<CatEstadoEntidad, Long> imp
 
 
     @Override
+    public CatEstadoEntidad getReference(Long id) throws Exception {
+
+        return em.getReference(CatEstadoEntidad.class, id);
+    }
+
+    @Override
     public CatEstadoEntidad findById(Long id) throws Exception {
 
         return em.find(CatEstadoEntidad.class, id);

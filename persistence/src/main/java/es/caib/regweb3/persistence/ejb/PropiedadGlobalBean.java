@@ -28,6 +28,12 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
 
 
     @Override
+    public PropiedadGlobal getReference(Long id) throws Exception {
+
+        return em.getReference(PropiedadGlobal.class, id);
+    }
+
+    @Override
     public PropiedadGlobal findById(Long id) throws Exception {
 
         return em.find(PropiedadGlobal.class, id);

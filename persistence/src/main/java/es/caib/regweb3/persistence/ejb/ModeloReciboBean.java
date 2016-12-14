@@ -29,6 +29,12 @@ public class ModeloReciboBean extends BaseEjbJPA<ModeloRecibo, Long> implements 
 
 
     @Override
+    public ModeloRecibo getReference(Long id) throws Exception {
+
+        return em.getReference(ModeloRecibo.class, id);
+    }
+
+    @Override
     public ModeloRecibo findById(Long id) throws Exception {
 
         return em.find(ModeloRecibo.class, id);

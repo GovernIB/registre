@@ -28,6 +28,12 @@ public class ArchivoBean extends BaseEjbJPA<Archivo, Long> implements ArchivoLoc
     private EntityManager em;
 
     @Override
+    public Archivo getReference(Long id) throws Exception {
+
+        return em.getReference(Archivo.class, id);
+    }
+
+    @Override
     public Archivo findById(Long id) throws Exception {
 
         return em.find(Archivo.class, id);

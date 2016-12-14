@@ -27,6 +27,13 @@ public class ConfiguracionBean extends BaseEjbJPA<Configuracion, Long> implement
     @PersistenceContext(unitName="regweb3")
     private EntityManager em;
 
+
+    @Override
+    public Configuracion getReference(Long id) throws Exception {
+
+        return em.getReference(Configuracion.class, id);
+    }
+
     @Override
     public Configuracion findById(Long id) throws Exception {
 

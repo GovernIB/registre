@@ -26,6 +26,13 @@ public class ModificacionLopdMigradoBean extends BaseEjbJPA<ModificacionLopdMigr
     @PersistenceContext(unitName="regweb3")
     private EntityManager em;
 
+
+    @Override
+    public ModificacionLopdMigrado getReference(Long id) throws Exception {
+
+        return em.getReference(ModificacionLopdMigrado.class, id);
+    }
+
     @Override
     public ModificacionLopdMigrado findById(Long id) throws Exception {
 

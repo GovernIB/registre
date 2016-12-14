@@ -28,6 +28,12 @@ public class CatTipoViaBean extends BaseEjbJPA<CatTipoVia, Long> implements CatT
 
 
     @Override
+    public CatTipoVia getReference(Long id) throws Exception {
+
+        return em.getReference(CatTipoVia.class, id);
+    }
+
+    @Override
     public CatTipoVia findById(Long id) throws Exception {
 
         return em.find(CatTipoVia.class, id);
