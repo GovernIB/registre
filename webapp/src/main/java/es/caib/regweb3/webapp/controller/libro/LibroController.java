@@ -301,15 +301,7 @@ public class LibroController extends BaseController {
             return "redirect:/organismo/list";
         }
 
-        Contador contadorEntrada = contadorEjb.persist(new Contador());
-        Contador contadorSalida = contadorEjb.persist(new Contador());
-        Contador contadorOficioRemision = contadorEjb.persist(new Contador());
-
-        libro.setContadorEntrada(contadorEntrada);
-        libro.setContadorSalida(contadorSalida);
-        libro.setContadorOficioRemision(contadorOficioRemision);
-
-        libroEjb.merge(libro);
+        libroEjb.reiniciarContadores(libro.getId());
 
         Mensaje.saveMessageInfo(request, getMessage("libro.inicializar.ok"));
 
