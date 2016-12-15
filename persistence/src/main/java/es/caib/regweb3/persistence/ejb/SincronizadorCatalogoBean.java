@@ -422,6 +422,12 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
 
         log.info("Fin actualizacion catalogo DIR3");
 
+        // Clear cache
+        cachePais.clear();
+        cacheComunidadAutonoma.clear();
+        cacheEntidadGeografica.clear();
+        cacheProvincia.clear();
+
         // Guardamos los datos de la ultima descarga
         Descarga descarga = new Descarga();
         descarga.setTipo(RegwebConstantes.CATALOGO);

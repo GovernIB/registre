@@ -10,6 +10,7 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+import es.caib.regweb3.utils.TimeUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -83,19 +84,27 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
     @EJB(mappedName = "regweb3/LibroEJB/local")
     public LibroLocal libroEjb;
 
+    //Caches
+    Map<Long, CatProvincia> cacheProvincia = new TreeMap<Long, CatProvincia>();
+    Map<Long, CatComunidadAutonoma> cacheComunidadAutonoma = new TreeMap<Long, CatComunidadAutonoma>();
+    Map<Long, CatNivelAdministracion> cacheNivelAdministracion = new TreeMap<Long, CatNivelAdministracion>();
+    Map<Long, CatPais> cachePais = new TreeMap<Long, CatPais>();
+    Map<String, CatEstadoEntidad> cacheEstadoEntidad = new TreeMap<String, CatEstadoEntidad>();
+    Map<Long, CatTipoVia> cacheTipoVia = new TreeMap<Long, CatTipoVia>();
+    Map<Long, CatServicio> cacheServicio = new TreeMap<Long, CatServicio>();
 
     /**
      * Método que sincroniza o actualiza una entidad de regweb3 desde dir3caib. Lo hace en función de si se indica la
      * fecha de actualización o no. Si no se indica se sincroniza y si se indica se actualiza
-     * @param entidadId entidad a tratar
-     * @param fechaActualizacion fecha de la ultima actualización con dir3caib
+     *
+     * @param entidadId           entidad a tratar
+     * @param fechaActualizacion  fecha de la ultima actualización con dir3caib
      * @param fechaSincronizacion fecha de la primera sincronización con dir3caib.
      * @return
      * @throws Exception
      */
     @Override
     public int sincronizarActualizar(Long entidadId, Timestamp fechaActualizacion, Timestamp fechaSincronizacion) throws Exception {
-
 
         Entidad entidad = entidadEjb.findById(entidadId);
 
@@ -106,10 +115,11 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
         log.info("Organimos obtenidos de " + entidad.getNombre() + ": " + arbol.size());
 
+        /*  CACHES */
+        inicializarCaches();
 
         // Guardamos el arbol sincronizado
         if (arbol.size() > 0) {
-
 
             // Procesamos el arbol de organismos
             for (UnidadTF unidadTF : arbol) {
@@ -185,6 +195,16 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         log.info(" REGWEB3 ORGANISMOS ACTUALIZADOS:  " + arbol.size());
         log.info(" REGWEB3 OFICINAS ACTUALIZADAS:  " + oficinasActualizadas);
 
+
+        /* borramos cache */
+        cacheEstadoEntidad.clear();
+        cacheProvincia.clear();
+        cacheComunidadAutonoma.clear();
+        cacheNivelAdministracion.clear();
+        cachePais.clear();
+        cacheTipoVia.clear();
+        cacheServicio.clear();
+
         return arbol.size();
 
 
@@ -193,119 +213,91 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
     /**
      * Crea un {@link es.caib.regweb3.model.Organismo} a partir de una UnidadTF y lo relaciona con su {@link es.caib.regweb3.model.Entidad}
      * Este método se emplea tanto en el proceso de sincronización como en el de actualización
+     *
      * @param unidadTF
      * @param idEntidad
      * @throws Exception
      */
-    public Organismo sincronizarOrganismo(UnidadTF unidadTF, Long idEntidad) throws Exception {
-
-      /*  CACHES */
-      
-      Map<String, CatEstadoEntidad> cacheEstadoEntidad = montarCacheEstadoEntidad();
+    private Organismo sincronizarOrganismo(UnidadTF unidadTF, Long idEntidad) throws Exception {
 
 
-      Map<Long,CatProvincia> cacheProvincia = new TreeMap<Long,CatProvincia>();
-      for (CatProvincia ca : catProvinciaEjb.getAll()) {
-        cacheProvincia.put(ca.getCodigoProvincia(), ca);
-      }
+        Entidad entidad = entidadEjb.findById(idEntidad);
 
-      Map<Long,CatComunidadAutonoma> cacheComunidadAutonoma = new TreeMap<Long,CatComunidadAutonoma>();
-      for (CatComunidadAutonoma ca : catComunidadAutonomaEjb.getAll()) {
-        cacheComunidadAutonoma.put(ca.getCodigoComunidad(), ca);
-      }
+        Organismo organismo = null;
 
-      Map<Long, CatNivelAdministracion> cacheNivelAdministracion  = new TreeMap<Long, CatNivelAdministracion>();
-      for (CatNivelAdministracion na : catNivelAdministracionEjb.getAll()) {
-        cacheNivelAdministracion.put(na.getCodigoNivelAdministracion(), na);
-      }
+        // Comprobamos que la unidad que nos envian no sea null
+        // (ocurre en el caso de que actualicemos y no se haya actualizado en el origen)
+        if (unidadTF != null) {
+            log.info("ORGANISMO ACTUALIZADO/SINCRONIZADO: " + unidadTF.getCodigo() + " - " + unidadTF.getDenominacion());
+            // Comprobamos primero si ya existe el organismo
 
-      Entidad entidad = entidadEjb.findById(idEntidad);
+            //TODO Rvisar Pruebas para hacer la sincro de organismos no raiz que pertenecen a otra entidad(FUNDACIO BIT; TIC MALLORCA)
+            organismo = organismoEjb.findByCodigoEntidadSinEstado(unidadTF.getCodigo(), idEntidad);
 
-      Organismo organismo = null;
-      if(unidadTF != null){
-        log.info("UnidadTF " + unidadTF.getCodigo());
-      }
-      // Comprobamos que la unidad que nos envian no sea null
-      // (ocurre en el caso de que actualicemos y no se haya actualizado en el origen)
-      if(unidadTF != null){
-          log.info("ORGANISMO ACTUALIZADO/SINCRONIZADO: " + unidadTF.getDenominacion() );
-          // Comprobamos primero si ya existe el organismo
+            if (organismo == null) {
+                log.info("Nuevo organismo: " + unidadTF.getDenominacion());
+                organismo = new Organismo();
+                procesarOrganismo(organismo, unidadTF, entidad);
 
-          //TODO Rvisar Pruebas para hacer la sincro de organismos no raiz que pertenecen a otra entidad(FUNDACIO BIT; TIC MALLORCA)
-          organismo = organismoEjb.findByCodigoEntidadSinEstado(unidadTF.getCodigo(), idEntidad);
+                //Guardamos el Organismo
+                organismo = organismoEjb.persist(organismo);
+            } else { // Si existe hay que actualizarlo
+                Hibernate.initialize(organismo.getLibros());
+                procesarOrganismo(organismo, unidadTF, entidad);
+            }
 
-          if(organismo == null){
-              log.info("Nuevo organismo: " + unidadTF.getDenominacion());
-              organismo = new Organismo();
-              procesarOrganismo(organismo, unidadTF, entidad, cacheEstadoEntidad, cacheProvincia, cacheComunidadAutonoma, cacheNivelAdministracion);
-
-              //Guardamos el Organismo
-              organismo = organismoEjb.persist(organismo);
-          }else{ // Si existe hay que actualizarlo
-              Hibernate.initialize(organismo.getLibros());
-              procesarOrganismo(organismo, unidadTF, entidad, cacheEstadoEntidad, cacheProvincia, cacheComunidadAutonoma, cacheNivelAdministracion);
-          }
-
-          // Es necesario que el organismo esté creado previamente.
-          // Asignamos su Organismo Raíz
-          Organismo organismoRaiz = organismoEjb.findByCodigoEntidadSinEstado(unidadTF.getCodUnidadRaiz(), idEntidad);
-          organismo.setOrganismoRaiz(organismoRaiz);
+            // Es necesario que el organismo esté creado previamente.
+            // Asignamos su Organismo Raíz
+            Organismo organismoRaiz = organismoEjb.findByCodigoEntidadSinEstado(unidadTF.getCodUnidadRaiz(), idEntidad);
+            organismo.setOrganismoRaiz(organismoRaiz);
 
 
-          // Asignamos su Organismo Superior
-          Organismo organismoSuperior = organismoEjb.findByCodigoEntidadSinEstado(unidadTF.getCodUnidadSuperior(), idEntidad);
-          organismo.setOrganismoSuperior(organismoSuperior);
+            // Asignamos su Organismo Superior
+            Organismo organismoSuperior = organismoEjb.findByCodigoEntidadSinEstado(unidadTF.getCodUnidadSuperior(), idEntidad);
+            organismo.setOrganismoSuperior(organismoSuperior);
 
-          // Asignamos su EDP Principal
-          if (!StringUtils.isEmpty(unidadTF.getCodEdpPrincipal())) {
-              Organismo edpPrincipal = organismoEjb.findByCodigoEntidadSinEstado(unidadTF.getCodEdpPrincipal(), idEntidad);
-              organismo.setEdpPrincipal(edpPrincipal);
-          }
+            // Asignamos su EDP Principal
+            if (!StringUtils.isEmpty(unidadTF.getCodEdpPrincipal())) {
+                Organismo edpPrincipal = organismoEjb.findByCodigoEntidadSinEstado(unidadTF.getCodEdpPrincipal(), idEntidad);
+                organismo.setEdpPrincipal(edpPrincipal);
+            }
 
 
-          // Actualizamos el Organismo
-          organismo = organismoEjb.merge(organismo);
-          log.info("Fin sincronizar organismo: " + organismo.getDenominacion());
-          log.info("  ");
+            // Actualizamos el Organismo
+            organismo = organismoEjb.merge(organismo);
+            log.info("Fin sincronizar organismo: " + organismo.getDenominacion());
+            log.info("  ");
+        }
 
-           /* borramos cache */
-          cacheEstadoEntidad.clear();
-          cacheProvincia.clear();
-          cacheComunidadAutonoma.clear();
-          cacheNivelAdministracion.clear();
-
-      }
-
-       return organismo;
+        return organismo;
     }
 
     /**
      * Este método crea todas las oficinas recibidas. Se guardan denominación, estado y organismo responsable
+     *
      * @param oficinas conjunto de oficinas recibidas de una entidad
      * @throws Exception
      */
-    public void crearActualizarOficinas(Set<OficinaTF> oficinas, Long idEntidad) throws Exception {
-
-        Map<String, CatEstadoEntidad> cacheEstadoEntidad = montarCacheEstadoEntidad();
+    private void crearActualizarOficinas(Set<OficinaTF> oficinas, Long idEntidad) throws Exception {
 
         for (OficinaTF oficinaTF : oficinas) {
 
-            if(oficinaTF != null){
+            if (oficinaTF != null) {
 
                 Oficina oficina = oficinaEjb.findByCodigoEntidadSinEstado(oficinaTF.getCodigo(), idEntidad);
 
-                if(oficina == null){
+                if (oficina == null) {
                     oficina = new Oficina();
                     oficina.setCodigo(oficinaTF.getCodigo());
                     // Se procesa la oficina para asignar sus valores
-                    procesarOficina(oficina, oficinaTF, cacheEstadoEntidad, idEntidad);
+                    procesarOficina(oficina, oficinaTF, idEntidad);
 
                     // Guardamos la Oficina
-                    oficina = oficinaEjb.persist(oficina);
+                    oficinaEjb.persist(oficina);
                 } else {
                     // Se procesa la oficina para asignar sus valores
-                    procesarOficina(oficina, oficinaTF, cacheEstadoEntidad, idEntidad);
-                    oficina = oficinaEjb.merge(oficina);
+                    procesarOficina(oficina, oficinaTF, idEntidad);
+                    oficinaEjb.merge(oficina);
                 }
 
             }
@@ -319,24 +311,25 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
     /**
      * En este método se asigna la oficina responsable a la lista de oficinas recibidas.
+     *
      * @param oficinas
      * @throws Exception
      */
-    public void asignarOficinasResponsables(Set<OficinaTF> oficinas, Long idEntidad) throws Exception {
+    private void asignarOficinasResponsables(Set<OficinaTF> oficinas, Long idEntidad) throws Exception {
 
         for (OficinaTF oficinaTF : oficinas) {
 
-            if(oficinaTF != null){
+            if (oficinaTF != null) {
 
                 // OficinaResponsable
-                if(oficinaTF.getCodOfiResponsable() != null){
+                if (oficinaTF.getCodOfiResponsable() != null) {
 
                     Oficina oficina = oficinaEjb.findByCodigoEntidadSinEstado(oficinaTF.getCodigo(), idEntidad);
                     Oficina oficinaResponsable = oficinaEjb.findByCodigoEntidadSinEstado(oficinaTF.getCodOfiResponsable(), idEntidad);
-                    if(oficinaResponsable != null) {
-                       oficina.setOficinaResponsable(oficinaResponsable);
-                       oficinaEjb.merge(oficina);
-                    }else{
+                    if (oficinaResponsable != null) {
+                        oficina.setOficinaResponsable(oficinaResponsable);
+                        oficinaEjb.merge(oficina);
+                    } else {
                         log.info("TIENE OFICINA RESPONSABLE, PERO NO LA ENCUENTRA: " + oficinaTF.getCodOfiResponsable());
                     }
                 }
@@ -348,10 +341,11 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
     /**
      * Método que crea todas las relaciones organizativas de las oficinas recibidas
+     *
      * @param oficinas oficinas de la entidad
      * @throws Exception
      */
-    public void crearRelacionesOrganizativas(Set<OficinaTF> oficinas, Long idEntidad) throws Exception {
+    private void crearRelacionesOrganizativas(Set<OficinaTF> oficinas, Long idEntidad) throws Exception {
 
         log.info("RELACIONES ORGANIZATIVAS");
         log.info("");
@@ -360,12 +354,12 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
             if (oficinaTF != null) {
 
-                if(oficinaTF.getOrganizativasOfi() != null){
+                if (oficinaTF.getOrganizativasOfi() != null) {
 
                     List<RelacionOrganizativaOfiTF> relacionOrganizativaOfiTFList = oficinaTF.getOrganizativasOfi();
                     Oficina oficina = oficinaEjb.findByCodigoEntidadSinEstado(oficinaTF.getCodigo(), idEntidad);
 
-                    log.info("Relaciones organizativas " +oficinaTF.getDenominacion() + " - " + oficinaTF.getCodigo() +": "  + relacionOrganizativaOfiTFList.size());
+                    log.info("Relaciones organizativas " + oficinaTF.getDenominacion() + " - " + oficinaTF.getCodigo() + ": " + relacionOrganizativaOfiTFList.size());
 
                     //Borramos las relaciones existentes para el caso de la actualizacion
                     log.info("Relaciones ORG eliminadas: " + relacionOrganizativaOfiEjb.deleteByOficinaEntidad(oficina.getId()));
@@ -398,10 +392,11 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
     /**
      * Método que crea todas las relaciones SIR de las oficinas recibidas
+     *
      * @param oficinas oficinas de la entidad
      * @throws Exception
      */
-    public void crearRelacionesSir(Set<OficinaTF> oficinas, Long idEntidad) throws Exception {
+    private void crearRelacionesSir(Set<OficinaTF> oficinas, Long idEntidad) throws Exception {
 
         log.info("RELACIONES SIR");
         log.info("");
@@ -410,12 +405,12 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
             if (oficinaTF != null) {
 
-                if(oficinaTF.getSirOfi() != null){
+                if (oficinaTF.getSirOfi() != null) {
 
                     List<RelacionSirOfiTF> relacionSirOfiTFList = oficinaTF.getSirOfi();
                     Oficina oficina = oficinaEjb.findByCodigoEntidadSinEstado(oficinaTF.getCodigo(), idEntidad);
 
-                    log.info("Relaciones SIR " +oficinaTF.getDenominacion() + " - " + oficinaTF.getCodigo() +": "  + relacionSirOfiTFList.size());
+                    log.info("Relaciones SIR " + oficinaTF.getDenominacion() + " - " + oficinaTF.getCodigo() + ": " + relacionSirOfiTFList.size());
 
                     //Borramos las relaciones existentes para el caso de la actualizacion
                     log.info("Relaciones SIR eliminadas: " + relacionSirOfiEjb.deleteByOficinaEntidad(oficina.getId()));
@@ -448,54 +443,48 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
     }
 
 
-  /**
-   * Método que sincroniza los históricos de un organismo. Se debe ejecutar después de sincronizarlos todos.
-   * @param organismo organismo al que guardar los históricos
-   * @param unidadTF  unidad transferida equivalente al organismo que nos proporciona los historicos.
-   * @throws Exception
-   */
-  public void sincronizarHistoricosOrganismo(Organismo organismo, UnidadTF unidadTF, Long idEntidad) throws Exception {
+    /**
+     * Método que sincroniza los históricos de un organismo. Se debe ejecutar después de sincronizarlos todos.
+     *
+     * @param organismo organismo al que guardar los históricos
+     * @param unidadTF  unidad transferida equivalente al organismo que nos proporciona los historicos.
+     * @throws Exception
+     */
+    private void sincronizarHistoricosOrganismo(Organismo organismo, UnidadTF unidadTF, Long idEntidad) throws Exception {
         // Inicializamos sus Historicos, ya la relación está a FetchType.LAZY
-      List<String> historicos =unidadTF.getHistoricosUO();
-      Set<Organismo> historicosOrg = organismo.getHistoricoUO();
-      if(!historicos.isEmpty()){
-        log.info("UnidadTF : " + unidadTF.getCodigo() +" Historicos: "+ historicos.size());
+        List<String> historicos = unidadTF.getHistoricosUO();
+        Set<Organismo> historicosOrg = organismo.getHistoricoUO();
+        if (!historicos.isEmpty()) {
+            log.info("UnidadTF : " + unidadTF.getCodigo() + " Historicos: " + historicos.size());
 
-      }
-      // Si l'organisme no te històrics, inicialitzam la variable.
-      if(historicosOrg == null){
-        historicosOrg = new HashSet<Organismo>();
-      }
+        }
+        // Si l'organisme no te històrics, inicialitzam la variable.
+        if (historicosOrg == null) {
+            historicosOrg = new HashSet<Organismo>();
+        }
 
-      for(String historico : historicos){
-          log.info("HISTORICO  :" + historico);
-          //TODO Añadir entidadId
-          Organismo orgUltima = organismoEjb.findByCodigoEntidadSinEstado(historico, idEntidad);
-          log.info("orgUltima  :" + orgUltima);
-          historicosOrg.add(orgUltima);
-      }
-       organismo.setHistoricoUO(historicosOrg);
-       organismoEjb.merge(organismo);
+        for (String historico : historicos) {
+            log.info("HISTORICO  :" + historico);
+
+            Organismo orgUltima = organismoEjb.findByCodigoEntidadSinEstado(historico, idEntidad);
+            log.info("orgUltima  :" + orgUltima);
+            historicosOrg.add(orgUltima);
+        }
+        organismo.setHistoricoUO(historicosOrg);
+        organismoEjb.merge(organismo);
 
     }
 
 
-
     /**
      * Función que actualiza un conjunto de datos del organismo
+     *
      * @param organismo organismo a actualizar
      * @param unidadTF  datos de la unidad transferida desde dir3caib
-     * @param entidad entidad que se está actualizando
-     * @param cacheEstadoEntidad
-     * @param cacheProvincia
-     * @param cacheComunidadAutonoma
-     * @param cacheNivelAdministracion
+     * @param entidad   entidad que se está actualizando
      * @throws Exception
      */
-    private void procesarOrganismo(Organismo organismo, UnidadTF unidadTF, Entidad entidad,
-        Map<String, CatEstadoEntidad> cacheEstadoEntidad, Map<Long,CatProvincia> cacheProvincia,
-        Map<Long,CatComunidadAutonoma> cacheComunidadAutonoma,
-        Map<Long, CatNivelAdministracion> cacheNivelAdministracion) throws Exception{
+    private void procesarOrganismo(Organismo organismo, UnidadTF unidadTF, Entidad entidad) throws Exception {
 
 
         CatEstadoEntidad estado = cacheEstadoEntidad.get(unidadTF.getCodigoEstadoEntidad());
@@ -508,71 +497,93 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         organismo.setEdp(unidadTF.isEsEdp());
 
 
-
         //Nivel Administracion
         CatNivelAdministracion nivelAdministracion = cacheNivelAdministracion.get(unidadTF.getNivelAdministracion());
         organismo.setNivelAdministracion(nivelAdministracion);
 
-        if(unidadTF.getCodAmbProvincia() != null){
+        if (unidadTF.getCodAmbProvincia() != null) {
+            CatProvincia provincia = cacheProvincia.get(unidadTF.getCodAmbProvincia());
+            organismo.setCodAmbProvincia(provincia);
 
-          CatProvincia provincia = cacheProvincia.get(unidadTF.getCodAmbProvincia());
-          organismo.setCodAmbProvincia(provincia);
-        }else {
+        } else {
             organismo.setCodAmbProvincia(null);
         }
 
-        if(unidadTF.getCodAmbComunidad() != null){
+        if (unidadTF.getCodAmbComunidad() != null) {
+            CatComunidadAutonoma comunidadAutonoma = cacheComunidadAutonoma.get(unidadTF.getCodAmbComunidad());
+            organismo.setCodAmbComunidad(comunidadAutonoma);
 
-          CatComunidadAutonoma comunidadAutonoma = cacheComunidadAutonoma.get(unidadTF.getCodAmbComunidad());
-          organismo.setCodAmbComunidad(comunidadAutonoma);
-        }else {
+        } else {
             organismo.setCodAmbComunidad(null);
         }
 
-        if(unidadTF.getCodigoAmbPais() != null){organismo.setCodPais(catPaisEjb.findByCodigo(unidadTF.getCodigoAmbPais()));}
-        if(!StringUtils.isEmpty(unidadTF.getDescripcionLocalidad())){organismo.setLocalidad(catLocalidadEjb.findByNombre(unidadTF.getDescripcionLocalidad()));}
-        if(unidadTF.getCodigoTipoVia() != null){organismo.setTipoVia(catTipoViaEjb.findByCodigo(unidadTF.getCodigoTipoVia()));}
-        if(!StringUtils.isEmpty(unidadTF.getNombreVia())){organismo.setNombreVia(unidadTF.getNombreVia());}
-        if(!StringUtils.isEmpty(unidadTF.getNumVia())){organismo.setNumVia(unidadTF.getNumVia());}
-        if(!StringUtils.isEmpty(unidadTF.getCodPostal())){organismo.setCodPostal(unidadTF.getCodPostal());}
+        if (unidadTF.getCodigoAmbPais() != null) {
+            organismo.setCodPais(cachePais.get(unidadTF.getCodigoAmbPais()));
+        }
+        if (!StringUtils.isEmpty(unidadTF.getDescripcionLocalidad())) {
+            organismo.setLocalidad(catLocalidadEjb.findByNombre(unidadTF.getDescripcionLocalidad()));
+        }
+        if (unidadTF.getCodigoTipoVia() != null) {
+            organismo.setTipoVia(cacheTipoVia.get(unidadTF.getCodigoTipoVia()));
+        }
+        if (!StringUtils.isEmpty(unidadTF.getNombreVia())) {
+            organismo.setNombreVia(unidadTF.getNombreVia());
+        }
+        if (!StringUtils.isEmpty(unidadTF.getNumVia())) {
+            organismo.setNumVia(unidadTF.getNumVia());
+        }
+        if (!StringUtils.isEmpty(unidadTF.getCodPostal())) {
+            organismo.setCodPostal(unidadTF.getCodPostal());
+        }
 
     }
 
     /**
      * Función que actualiza el estado y el organismo responsable de una oficina
-     * @param oficina oficina a tratar
+     *
+     * @param oficina   oficina a tratar
      * @param oficinaTF oficina transferida desde dir3caib
-     * @param cacheEstadoEntidad caché de EstadoEntidad
      * @throws Exception
      */
-    private void procesarOficina(Oficina oficina, OficinaTF oficinaTF, Map<String, CatEstadoEntidad> cacheEstadoEntidad, Long idEntidad) throws Exception {
+    private void procesarOficina(Oficina oficina, OficinaTF oficinaTF, Long idEntidad) throws Exception {
 
         oficina.setDenominacion(oficinaTF.getDenominacion());
+        oficina.setEstado(cacheEstadoEntidad.get(oficinaTF.getEstado()));
 
 
-        CatEstadoEntidad estado = cacheEstadoEntidad.get(oficinaTF.getEstado());
-        oficina.setEstado(estado);
-
-        //TODO añadir entidad.
         Organismo organismoResponsable = organismoEjb.findByCodigoEntidadSinEstado(oficinaTF.getCodUoResponsable(), idEntidad);
         oficina.setOrganismoResponsable(organismoResponsable);
 
-        if(oficinaTF.getCodigoPais() != null){oficina.setCodPais(catPaisEjb.findByCodigo(oficinaTF.getCodigoPais()));}
-        if(oficinaTF.getCodigoComunidad() != null){oficina.setCodComunidad(catComunidadAutonomaEjb.findByCodigo(oficinaTF.getCodigoComunidad()));}
+        if (oficinaTF.getCodigoPais() != null) {
+            oficina.setCodPais(cachePais.get(oficinaTF.getCodigoPais()));
+        }
+        if (oficinaTF.getCodigoComunidad() != null) {
+            oficina.setCodComunidad(cacheComunidadAutonoma.get(oficinaTF.getCodigoComunidad()));
+        }
 
-        if(!StringUtils.isEmpty(oficinaTF.getDescripcionLocalidad())){oficina.setLocalidad(catLocalidadEjb.findByNombre(oficinaTF.getDescripcionLocalidad()));}
+        if (!StringUtils.isEmpty(oficinaTF.getDescripcionLocalidad())) {
+            oficina.setLocalidad(catLocalidadEjb.findByNombre(oficinaTF.getDescripcionLocalidad()));
+        }
 
-        if(oficinaTF.getCodigoTipoVia() != null){oficina.setTipoVia(catTipoViaEjb.findByCodigo(oficinaTF.getCodigoTipoVia()));}
-        if(!StringUtils.isEmpty(oficinaTF.getNombreVia())){oficina.setNombreVia(oficinaTF.getNombreVia());}
-        if(!StringUtils.isEmpty(oficinaTF.getNumVia())){oficina.setNumVia(oficinaTF.getNumVia());}
-        if(!StringUtils.isEmpty(oficinaTF.getCodPostal())){oficina.setCodPostal(oficinaTF.getCodPostal());}
+        if (oficinaTF.getCodigoTipoVia() != null) {
+            oficina.setTipoVia(cacheTipoVia.get(oficinaTF.getCodigoTipoVia()));
+        }
+        if (!StringUtils.isEmpty(oficinaTF.getNombreVia())) {
+            oficina.setNombreVia(oficinaTF.getNombreVia());
+        }
+        if (!StringUtils.isEmpty(oficinaTF.getNumVia())) {
+            oficina.setNumVia(oficinaTF.getNumVia());
+        }
+        if (!StringUtils.isEmpty(oficinaTF.getCodPostal())) {
+            oficina.setCodPostal(oficinaTF.getCodPostal());
+        }
 
-        if(oficinaTF.getServicios() != null && oficinaTF.getServicios().size() > 0){
+        if (oficinaTF.getServicios() != null && oficinaTF.getServicios().size() > 0) {
 
             Set<CatServicio> servicios = new HashSet<CatServicio>();
 
             for (Long servicio : oficinaTF.getServicios()) {
-                servicios.add(catServicioEjb.findByCodigo(servicio));
+                servicios.add(cacheServicio.get(servicio));
             }
 
             oficina.setServicios(servicios);
@@ -580,21 +591,12 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
     }
 
-    private Map<String, CatEstadoEntidad>  montarCacheEstadoEntidad() throws Exception{
-
-         Map<String, CatEstadoEntidad> cacheEstadoEntidad = new TreeMap<String,CatEstadoEntidad>();
-          for (CatEstadoEntidad ca : catEstadoEntidadEjb.getAll()) {
-            cacheEstadoEntidad.put(ca.getCodigoEstadoEntidad(), ca);
-          }
-
-          return cacheEstadoEntidad;
-
-    }
 
     /**
      * Función que crea una nueva entrada en la tabla RWE_DESCARGA que indica que se ha producido una nueva descarga
      * (sincronización o actualización) de la entidad indicada.
-     * @param tipo indica organismo o oficina.
+     *
+     * @param tipo    indica organismo o oficina.
      * @param entidad entidad descargada
      * @throws Exception
      */
@@ -605,24 +607,64 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         Date hoy = new Date();
         descarga.setFechaImportacion(hoy);
 
-        descarga = descargaEjb.persist(descarga);
+        descargaEjb.persist(descarga);
     }
 
     /**
      * Función que crea una entrada en la tabla de RWE_PENDIENTE que indica que es un organismo que está pendiente
      * de procesar(reasignar sus libros a los organismos que lo sustituyen). Se crea según el estado del organismo
      * recibido y si tiene libros.
+     *
      * @param org organismo a tratar
      * @throws Exception
      */
     private void guardarPendiente(Organismo org) throws Exception {
-        if(RegwebConstantes.ESTADO_ENTIDAD_EXTINGUIDO.equals(org.getEstado().getCodigoEstadoEntidad())
+        if (RegwebConstantes.ESTADO_ENTIDAD_EXTINGUIDO.equals(org.getEstado().getCodigoEstadoEntidad())
                 || RegwebConstantes.ESTADO_ENTIDAD_TRANSITORIO.equals(org.getEstado().getCodigoEstadoEntidad())
-                || RegwebConstantes.ESTADO_ENTIDAD_ANULADO.equals(org.getEstado().getCodigoEstadoEntidad())){
-                    if(org.getLibros()!=null && org.getLibros().size()>0){
-                        Pendiente pendiente = new Pendiente(org.getId(), false, org.getEstado().getCodigoEstadoEntidad());
-                        pendienteEjb.persist(pendiente);
-                    }
+                || RegwebConstantes.ESTADO_ENTIDAD_ANULADO.equals(org.getEstado().getCodigoEstadoEntidad())) {
+            if (org.getLibros() != null && org.getLibros().size() > 0) {
+                Pendiente pendiente = new Pendiente(org.getId(), false, org.getEstado().getCodigoEstadoEntidad());
+                pendienteEjb.persist(pendiente);
+            }
         }
+    }
+
+    /**
+     * Inicializa los caches que se utilizarán en el método
+     * @throws Exception
+     */
+    private void inicializarCaches() throws Exception {
+
+        long start = System.currentTimeMillis();
+        for (CatEstadoEntidad ca : catEstadoEntidadEjb.getAll()) {
+            cacheEstadoEntidad.put(ca.getCodigoEstadoEntidad(), ca);
+        }
+
+        for (CatProvincia ca : catProvinciaEjb.getAll()) {
+            cacheProvincia.put(ca.getCodigoProvincia(), ca);
+        }
+
+        for (CatComunidadAutonoma ca : catComunidadAutonomaEjb.getAll()) {
+            cacheComunidadAutonoma.put(ca.getCodigoComunidad(), ca);
+        }
+
+        for (CatNivelAdministracion na : catNivelAdministracionEjb.getAll()) {
+            cacheNivelAdministracion.put(na.getCodigoNivelAdministracion(), na);
+        }
+
+        for (CatPais pa : catPaisEjb.getAll()) {
+            cachePais.put(pa.getCodigoPais(), pa);
+        }
+
+        for (CatTipoVia tv : catTipoViaEjb.getAll()) {
+            cacheTipoVia.put(tv.getCodigoTipoVia(), tv);
+        }
+
+        for (CatServicio se : catServicioEjb.getAll()) {
+            cacheServicio.put(se.getCodServicio(), se);
+        }
+        long end = System.currentTimeMillis();
+        log.info("Inicializadas Caches sincronizador Dir3 en " + TimeUtils.formatElapsedTime(end - start));
+        log.info("");
     }
 }
