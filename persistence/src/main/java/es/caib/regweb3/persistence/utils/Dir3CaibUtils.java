@@ -56,8 +56,8 @@ public class Dir3CaibUtils {
 
     Dir3CaibObtenerUnidadesWs api = service.getDir3CaibObtenerUnidadesWs();
 
-    configAddressUserPassword(Configuracio.getDir3CaibUsername(),
-        Configuracio.getDir3CaibPassword(), endpoint, api);
+    configAddressUserPasswordTimeout(Configuracio.getDir3CaibUsername(),
+        Configuracio.getDir3CaibPassword(), endpoint, 500000L, api);
 
     return api;
   }
@@ -80,8 +80,8 @@ public class Dir3CaibUtils {
 
     Dir3CaibObtenerCatalogosWs api = service.getDir3CaibObtenerCatalogosWs();
 
-    configAddressUserPassword(Configuracio.getDir3CaibUsername(),
-        Configuracio.getDir3CaibPassword(), endpoint, api);
+    configAddressUserPasswordTimeout(Configuracio.getDir3CaibUsername(),
+        Configuracio.getDir3CaibPassword(), endpoint, 500000L, api);
 
     return api;
   }
@@ -104,8 +104,8 @@ public class Dir3CaibUtils {
 
     Dir3CaibObtenerOficinasWs api = service.getDir3CaibObtenerOficinasWs();
 
-    configAddressUserPassword(Configuracio.getDir3CaibUsername(),
-        Configuracio.getDir3CaibPassword(), endpoint, api);
+    configAddressUserPasswordTimeout(Configuracio.getDir3CaibUsername(),
+        Configuracio.getDir3CaibPassword(), endpoint, 500000L, api);
 
     return api;
   }
@@ -165,13 +165,18 @@ public class Dir3CaibUtils {
 
 
 
-  private static void configAddressUserPassword(String usr, String pwd, String endpoint,
+  private static void configAddressUserPasswordTimeout(String usr, String pwd, String endpoint, Long timeout,
       Object api) {
 
     Map<String, Object> reqContext = ((BindingProvider) api).getRequestContext();
     reqContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpoint);
     reqContext.put(BindingProvider.USERNAME_PROPERTY, usr);
     reqContext.put(BindingProvider.PASSWORD_PROPERTY, pwd);
+
+    reqContext.put("javax.xml.ws.client.connectionTimeout", timeout);
+    reqContext.put("javax.xml.ws.client.receiveTimeout", timeout);
+
+
   }
 
 }
