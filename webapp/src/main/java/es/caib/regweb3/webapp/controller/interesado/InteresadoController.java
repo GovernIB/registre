@@ -89,7 +89,7 @@ public class InteresadoController extends BaseController{
                     return false;
                 }
 
-                organismo.setRegistroDetalle(new RegistroDetalle(Long.valueOf(idRegistroDetalle)));
+                organismo.setRegistroDetalle(registroDetalleEjb.findById(Long.valueOf(idRegistroDetalle)));
                 interesadoEjb.persist(organismo);
             }
 
@@ -129,8 +129,8 @@ public class InteresadoController extends BaseController{
                     añadirInteresadoSesion(interesado,session, variable);
 
                 }else{ // Edición de un registro, lo añadimos a la bbdd
-
-                    interesado.setRegistroDetalle(new RegistroDetalle(Long.valueOf(idRegistroDetalle)));
+                    interesado.setId(null);
+                    interesado.setRegistroDetalle(registroDetalleEjb.getReference(Long.valueOf(idRegistroDetalle)));
                     interesado = interesadoEjb.persist(interesado);
                     return interesado.getId().intValue();
                 }
@@ -138,6 +138,7 @@ public class InteresadoController extends BaseController{
 
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
 
         return 0;
@@ -257,18 +258,20 @@ public class InteresadoController extends BaseController{
                     log.info("idRegistroDetalle: " + idRegistroDetalle);
 
                     if(isRepresentante) { // Si se trata de un representante lo indicamos
-                        interesado.setRegistroDetalle(new RegistroDetalle(Long.valueOf(idRegistroDetalle)));
+                        interesado.setId(null);
+                        interesado.setRegistroDetalle(registroDetalleEjb.getReference(Long.valueOf(idRegistroDetalle)));
                         personaJson.setRepresentado(new PersonaJson(idRepresentado));
 
                         // Guardamos el Nuevo representante
                         interesado = interesadoEjb.persist(interesado);
 
                         // Lo asociamos al represenatado
-                        Interesado representado = interesadoEjb.findById(Long.valueOf(idRepresentado));
+                        Interesado representado = interesadoEjb.getReference(Long.valueOf(idRepresentado));
                         representado.setRepresentante(interesado);
                         interesadoEjb.merge(representado);
                     }else{
-                        interesado.setRegistroDetalle(new RegistroDetalle(Long.valueOf(idRegistroDetalle)));
+                        interesado.setId(null);
+                        interesado.setRegistroDetalle(registroDetalleEjb.getReference(Long.valueOf(idRegistroDetalle)));
                         interesado = interesadoEjb.persist(interesado);
                     }
 
@@ -354,7 +357,7 @@ public class InteresadoController extends BaseController{
                     actualizarInteresadoSesion(interesado, session, variable);
                 }else{ // Edición de un registro, lo añadimos a la bbdd
                     log.info("idRegistroDetalle: " + idRegistroDetalle);
-                    interesado.setRegistroDetalle(new RegistroDetalle(Long.valueOf(idRegistroDetalle)));
+                    interesado.setRegistroDetalle(registroDetalleEjb.getReference(Long.valueOf(idRegistroDetalle)));
                     interesado = interesadoEjb.merge(interesado);
                 }
 
@@ -454,7 +457,8 @@ public class InteresadoController extends BaseController{
                 log.info("idRegistroDetalle: " + idRegistroDetalle);
                 Interesado representado = interesadoEjb.findById(idRepresentado);
                 // Creamos el Representante
-                representante.setRegistroDetalle(new RegistroDetalle(idRegistroDetalle));
+                representante.setId(null);
+                representante.setRegistroDetalle(registroDetalleEjb.getReference(idRegistroDetalle));
                 representante.setRepresentado(representado);
                 representante = interesadoEjb.persist(representante);
 

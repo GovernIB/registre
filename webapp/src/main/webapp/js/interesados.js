@@ -109,11 +109,17 @@ function addInteresado(id, nombre,tipo,representante, modal,idRegistroDetalle){
             contentType: 'application/json',
 
             success: function(result) {
-                if (result == 0) {//Sesion
-                    addInteresadoHtml(id,nombre,tipo,representante,idRegistroDetalle);
-                } else { //bbdd
-                    addInteresadoHtml(result,nombre,tipo,representante,idRegistroDetalle);
+                if(result != null){
+
+                    if (result == 0) {//Sesion
+                        addInteresadoHtml(id,nombre,tipo,representante,idRegistroDetalle);
+                    } else { //bbdd
+                        addInteresadoHtml(result,nombre,tipo,representante,idRegistroDetalle);
+                    }
+                }else{
+                    mensajeError("#mensajes", tradsinteresado['interesado.añadir.error']);
                 }
+
 
             }
         });

@@ -207,6 +207,7 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
     tradsinteresado['persona.fisica'] = "<spring:message code='persona.fisica' javaScriptEscape='true' />";
     tradsinteresado['persona.juridica'] = "<spring:message code='persona.juridica' javaScriptEscape='true' />";
     tradsinteresado['interesado.añadido'] = "<spring:message code='interesado.añadido' javaScriptEscape='true' />";
+    tradsinteresado['interesado.añadir.error'] = "<spring:message code='interesado.añadir.error' javaScriptEscape='true' />";
     tradsinteresado['interesado.actualizado'] = "<spring:message code='interesado.actualizado' javaScriptEscape='true' />";
     tradsinteresado['interesado.eliminado'] = "<spring:message code='interesado.eliminado' javaScriptEscape='true' />";
     tradsinteresado['interesado.eliminar.ultimo'] = "<spring:message code='interesado.eliminar.ultimo' javaScriptEscape='true' />";
