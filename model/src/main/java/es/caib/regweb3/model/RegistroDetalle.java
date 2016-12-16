@@ -171,7 +171,7 @@ public class RegistroDetalle implements Serializable {
         this.tipoDocumentacionFisica = tipoDocumentacionFisica;
     }
 
-    @ManyToOne(cascade= CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name="TIPOASUNTO")
     @ForeignKey(name="RWE_REGDET_TIPOASUNTO_FK")
     public TipoAsunto getTipoAsunto() {
@@ -192,7 +192,7 @@ public class RegistroDetalle implements Serializable {
         this.idioma = idioma;
     }
 
-    @ManyToOne(cascade= CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name="CODASUNTO")
     @ForeignKey(name="RWE_REGDET_CODASUNTO_FK")
     public CodigoAsunto getCodigoAsunto() {
@@ -248,7 +248,7 @@ public class RegistroDetalle implements Serializable {
         this.observaciones = observaciones;
     }
 
-    @ManyToOne(cascade= CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name="OFICINAORIG")
     @ForeignKey(name="RWE_REGDET_OFICINAORIG_FK")
     public Oficina getOficinaOrigen() {

@@ -3,7 +3,6 @@ package es.caib.regweb3.model;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.*;
 
-import javax.persistence.CascadeType;
 import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -75,7 +74,7 @@ public class TipoDocumental extends Traducible {
       this.codigoNTI = codigoNTI;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "ENTIDAD")
     @ForeignKey(name = "RWE_TIPODOCUMENTAL_ENTIDAD_FK")
     @JsonIgnore

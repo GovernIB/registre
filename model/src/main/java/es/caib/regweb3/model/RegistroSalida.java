@@ -120,7 +120,7 @@ public class RegistroSalida implements IRegistro {
         this.id = id;
     }
 
-    @ManyToOne(cascade= CascadeType.PERSIST, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name="USUARIO")
     @ForeignKey(name="RWE_REGSAL_USUSAL_FK")
     public UsuarioEntidad getUsuario() {
@@ -131,7 +131,7 @@ public class RegistroSalida implements IRegistro {
         this.usuario = usuario;
     }
 
-    @ManyToOne(cascade= CascadeType.PERSIST, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name="OFICINA")
     @ForeignKey(name="RWE_REGSAL_OFICINA_FK")
     public Oficina getOficina() {
@@ -142,7 +142,7 @@ public class RegistroSalida implements IRegistro {
         this.oficina = oficina;
     }
 
-    @ManyToOne(cascade= CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name="ORIGEN")
     @ForeignKey(name="RWE_REGSAL_ORIGEN_FK")
     public Organismo getOrigen() {
@@ -180,7 +180,7 @@ public class RegistroSalida implements IRegistro {
         this.fecha = fecha;
     }
 
-    @ManyToOne(cascade= CascadeType.PERSIST, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name="LIBRO")
     @ForeignKey(name="RWE_REGSAL_LIBRO_FK")
     public Libro getLibro() {

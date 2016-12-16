@@ -42,6 +42,9 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
     public RegistroEntradaLocal registroEntradaEjb;
 
+    @EJB(mappedName = "regweb3/RegistroDetalleEJB/local")
+    public RegistroDetalleLocal registroDetalleEjb;
+
     @EJB(mappedName = "regweb3/HistoricoRegistroEntradaEJB/local")
     public HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
 
@@ -216,11 +219,12 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
             for (RegistroEntrada registroEntrada : oficioRemision.getRegistrosEntrada()) {
                 RegistroSalida registroSalida = new RegistroSalida();
 
+                registroSalida.setRegistroDetalle(registroDetalleEjb.findByRegistroEntrada(registroEntrada.getId()));
                 registroSalida.setUsuario(oficioRemision.getUsuarioResponsable());
                 registroSalida.setOficina(oficioRemision.getOficina());
-                registroSalida.setOrigen(oficioRemision.getLibro().getOrganismo());//todo: Esta asignación es correcta?
+                registroSalida.setOrigen(libro.getOrganismo());//todo: Esta asignación es correcta?
                 registroSalida.setLibro(oficioRemision.getLibro());
-                registroSalida.setRegistroDetalle(registroEntrada.getRegistroDetalle());
+
                 registroSalida.setEstado(RegwebConstantes.REGISTRO_TRAMITADO);
 
                 // Registramos la Salida

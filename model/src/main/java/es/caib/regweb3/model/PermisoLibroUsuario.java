@@ -60,7 +60,7 @@ public class PermisoLibroUsuario implements Serializable {
       this.permiso = permiso;
     }
 
-    @ManyToOne(cascade= CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name="LIBRO")
     @ForeignKey(name="RWE_PERMLIBUSU_LIBRO_FK")
     public Libro getLibro() {
@@ -71,7 +71,7 @@ public class PermisoLibroUsuario implements Serializable {
       this.libro = libro;
     }
 
-    @ManyToOne(cascade= CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name="USUARIO")
     @ForeignKey(name="RWE_PERMLIBUSU_USUENT_FK")
     public UsuarioEntidad getUsuario() {

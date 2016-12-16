@@ -40,7 +40,8 @@ public abstract class BaseEjbJPA<T extends Serializable, E> implements BaseEjb<T
     public T persist(T transientInstance) throws Exception{
 
         try{
-            return em.merge(transientInstance);
+            em.persist(transientInstance);
+            return transientInstance;
         }catch (Exception e){
             log.error(e);
             throw e;

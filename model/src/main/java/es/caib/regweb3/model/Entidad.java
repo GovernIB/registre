@@ -183,7 +183,7 @@ public class Entidad implements Serializable {
         this.sello = sello;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "PROPIETARIO")
     @ForeignKey(name = "RWE_ENTIDAD_USU_PROP_FK")
     public Usuario getPropietario() {
@@ -194,7 +194,7 @@ public class Entidad implements Serializable {
         this.propietario = propietario;
     }
 
-    @ManyToMany(cascade = { CascadeType.PERSIST }, targetEntity = UsuarioEntidad.class, fetch = FetchType.EAGER)
+    @ManyToMany(targetEntity = UsuarioEntidad.class, fetch = FetchType.EAGER)
     @JoinTable(name = "RWE_ENTIDAD_USUENT", joinColumns = { @JoinColumn(name = "IDENTIDAD") }, inverseJoinColumns = { @JoinColumn(name = "IDUSUENT") })
     @ForeignKey(name = "RWE_USU_ADM_ENTIDAD_FK", inverseName = "RWE_ENTIDAD_USU_ADM_FK")
     @OrderBy("id")

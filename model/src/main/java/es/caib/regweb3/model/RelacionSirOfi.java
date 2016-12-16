@@ -24,7 +24,7 @@ public class RelacionSirOfi implements Serializable {
 
 
     @Id
-    @ManyToOne(cascade=CascadeType.PERSIST, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn (name="IDOFICINA")
     @ForeignKey(name="RWE_RELSIROFI_OFICINA_FK")
     public Oficina getOficina() {
@@ -38,7 +38,7 @@ public class RelacionSirOfi implements Serializable {
 
 
     @Id
-    @ManyToOne(cascade=CascadeType.PERSIST, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn (name="IDORGANISMO")
     @ForeignKey(name="RWE_RELSIROFI_ORGANISMO_FK")
     public Organismo getOrganismo() {
@@ -51,7 +51,7 @@ public class RelacionSirOfi implements Serializable {
     }
 
 
-    @ManyToOne(cascade=CascadeType.PERSIST, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name="ESTADO")
     @ForeignKey(name="RWE_RELSIROFI_CATESTENTI_FK")
     public CatEstadoEntidad getEstado() {

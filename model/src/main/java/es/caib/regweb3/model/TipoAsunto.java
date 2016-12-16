@@ -78,7 +78,7 @@ public class TipoAsunto extends Traducible {
         this.id = id;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "ENTIDAD")
     @ForeignKey(name = "RWE_TIPOASUNTO_ENTIDAD_FK")
     public Entidad getEntidad() {

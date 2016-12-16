@@ -243,7 +243,7 @@ public class Persona implements Serializable {
     
     
 
-    @ManyToOne(cascade = CascadeType.PERSIST, optional = true)
+    @ManyToOne(optional = true)
     @JoinColumn(name = "PAIS")
     @ForeignKey(name = "RWE_PERSONA_PAIS_FK")
     public CatPais getPais() {
@@ -254,7 +254,7 @@ public class Persona implements Serializable {
         this.pais = pais;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST, optional = true)
+    @ManyToOne(optional = true)
     @JoinColumn(name = "PROVINCIA")
     @ForeignKey(name = "RWE_PERSONA_PROVINCIA_FK")
     public CatProvincia getProvincia() {
@@ -265,7 +265,7 @@ public class Persona implements Serializable {
         this.provincia = provincia;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "LOCALIDAD")
     @ForeignKey(name = "RWE_PERSONA_LOCALIDAD_FK")
     public CatLocalidad getLocalidad() {
@@ -295,7 +295,7 @@ public class Persona implements Serializable {
         this.observaciones = observaciones;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "ENTIDAD")
     @ForeignKey(name = "RWE_PERSONA_ENTIDAD_FK")
     @JsonIgnore

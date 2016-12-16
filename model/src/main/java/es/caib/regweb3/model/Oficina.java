@@ -131,7 +131,7 @@ public class Oficina implements Serializable{
     }
 
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "ESTADO")
     @ForeignKey(name = "RWE_OFICINA_ESTADO_FK")
     public CatEstadoEntidad getEstado() {
@@ -154,7 +154,7 @@ public class Oficina implements Serializable{
     }
 
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name="ORGANISMORESPONSABLE")
     @ForeignKey(name="RWE_OFICINA_ORGANISMO_FK")
     public Organismo getOrganismoResponsable() {
@@ -165,7 +165,7 @@ public class Oficina implements Serializable{
         this.organismoResponsable = organismoResponsable;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name="OFICINARESPONSABLE")
     @ForeignKey(name="RWE_OFICINA_OFICINA_FK")
     public Oficina getOficinaResponsable() {
@@ -234,7 +234,7 @@ public class Oficina implements Serializable{
 
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "PAIS")
     @ForeignKey(name = "RWE_OFICINA_PAIS_FK")
     public CatPais getCodPais() {
@@ -245,7 +245,7 @@ public class Oficina implements Serializable{
         this.codPais = codPais;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "COMUNIDAD")
     @ForeignKey(name = "RWE_OFICINA_COMUNIDAD_FK")
     public CatComunidadAutonoma getCodComunidad() {
@@ -256,7 +256,7 @@ public class Oficina implements Serializable{
         this.codComunidad = codComunidad;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "LOCALIDAD")
     @ForeignKey(name = "RWE_OFICINA_LOCALIDAD_FK")
     public CatLocalidad getLocalidad() {
@@ -267,7 +267,7 @@ public class Oficina implements Serializable{
         this.localidad = localidad;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "TIPOVIA")
     @ForeignKey(name = "RWE_OFICINA_TIPOVIA_FK")
     public CatTipoVia getTipoVia() {
@@ -305,7 +305,7 @@ public class Oficina implements Serializable{
         this.codPostal = codPostal;
     }
 
-    @ManyToMany(cascade = { CascadeType.PERSIST }, targetEntity = CatServicio.class, fetch = FetchType.EAGER)
+    @ManyToMany(targetEntity = CatServicio.class, fetch = FetchType.EAGER)
     @JoinTable(name = "RWE_OFICINA_SERVICIO", joinColumns = { @JoinColumn(name = "IDOFICINA") }, inverseJoinColumns = { @JoinColumn(name = "IDSERVICIO") })
     @ForeignKey(name = "RWE_SERVICIO_OFICINA_FK", inverseName = "RWE_OFICINA_SERVICIO_FK")
     @OrderBy("id")

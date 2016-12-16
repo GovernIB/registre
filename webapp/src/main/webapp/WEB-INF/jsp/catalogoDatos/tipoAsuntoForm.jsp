@@ -271,7 +271,7 @@
                                 <div class="panel panel-warning">
 
                                    <div class="panel-heading">
-                                       <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong>Dades codi Assumpte</strong></h3>
+                                       <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong><spring:message code="codigoAsunto.datos"/></strong></h3>
                                    </div>
 
                                    <div class="panel-body">

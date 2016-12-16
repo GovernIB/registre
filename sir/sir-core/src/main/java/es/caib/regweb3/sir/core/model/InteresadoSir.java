@@ -67,7 +67,7 @@ public class InteresadoSir implements Serializable {
         this.id = id;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "ASIENTO_REGISTRAL")
     @ForeignKey(name = "RWE_INTERESADOSIR_ASIREG_FK")
     public AsientoRegistralSir getIdAsientoRegistralSir() {

@@ -56,7 +56,7 @@ public class HistoricoRegistroSalida implements Serializable {
     }
 
 
-    @ManyToOne(cascade = {CascadeType.PERSIST})
+    @ManyToOne()
     @JoinColumn(name = "REGISTRO_SALIDA")
     @ForeignKey(name = "RWE_HITORICO_RS_FK")
     public RegistroSalida getRegistroSalida() {
@@ -106,7 +106,7 @@ public class HistoricoRegistroSalida implements Serializable {
         this.modificacion = modificacion;
     }
 
-    @ManyToOne(cascade = {CascadeType.PERSIST})
+    @ManyToOne()
     @JoinColumn(name = "USUARIO")
     @ForeignKey(name = "RWE_HISTORICO_USUARIO_RS_FK")
     public UsuarioEntidad getUsuario() {

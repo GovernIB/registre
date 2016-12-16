@@ -57,7 +57,7 @@ public class UsuarioEntidad implements Serializable{
         this.id = id;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "USUARIO")
     @ForeignKey(name = "RWE_USUENT_USUARIO_FK")
     public Usuario getUsuario() {
@@ -68,7 +68,7 @@ public class UsuarioEntidad implements Serializable{
         this.usuario = usuario;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "ENTIDAD")
     @ForeignKey(name = "RWE_USUENT_ENTIDAD_FK")
     @JsonIgnore
@@ -89,7 +89,7 @@ public class UsuarioEntidad implements Serializable{
         this.activo = activo;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "ULTIMAOFICINA")
     @ForeignKey(name = "RWE_USUENT_OFICINA_FK")
     @JsonIgnore

@@ -37,7 +37,7 @@ public class Trazabilidad implements Serializable {
     }
 
 
-    @ManyToOne(cascade= CascadeType.PERSIST, optional = true)
+    @ManyToOne(optional = true)
     @JoinColumn(name="REGENT_ORIGEN")
     @ForeignKey(name="RWE_TRAZAB_REGENTO_FK")
     public RegistroEntrada getRegistroEntradaOrigen() {
@@ -48,7 +48,7 @@ public class Trazabilidad implements Serializable {
         this.registroEntradaOrigen = registroEntradaOrigen;
     }
 
-    @ManyToOne(cascade= CascadeType.PERSIST, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name="REGISTRO_SALIDA")
     @ForeignKey(name="RWE_TRAZAB_REGSAL_FK")
     public RegistroSalida getRegistroSalida() {
@@ -59,7 +59,7 @@ public class Trazabilidad implements Serializable {
         this.registroSalida = registroSalida;
     }
 
-    @ManyToOne(cascade= CascadeType.PERSIST, optional = true)
+    @ManyToOne(optional = true)
     @JoinColumn(name="REGENT_DESTINO")
     @ForeignKey(name="RWE_TRAZAB_REGENTD_FK")
     public RegistroEntrada getRegistroEntradaDestino() {
@@ -70,7 +70,7 @@ public class Trazabilidad implements Serializable {
         this.registroEntradaDestino = registroEntradaDestino;
     }
 
-    @ManyToOne(cascade= CascadeType.PERSIST, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name="OFICIO_REMISION")
     @ForeignKey(name="RWE_TRAZAB_OFIREM_FK")
     public OficioRemision getOficioRemision() {

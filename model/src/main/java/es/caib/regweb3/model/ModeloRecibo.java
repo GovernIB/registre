@@ -53,7 +53,7 @@ public class ModeloRecibo extends Traducible{
         this.nombre = nombre;
   }
 
-  @ManyToOne(cascade = CascadeType.PERSIST)
+  @ManyToOne()
   @JoinColumn(name = "ENTIDAD")
   @ForeignKey(name = "RWE_MODELRECIBO_ENTIDAD_FK")
   public Entidad getEntidad() {
@@ -64,7 +64,7 @@ public class ModeloRecibo extends Traducible{
     this.entidad = entidad;
   }
 
-  @ManyToOne(cascade=CascadeType.ALL)
+  @ManyToOne(cascade={CascadeType.MERGE, CascadeType.REMOVE})
   @JoinColumn (name="MODELO")
   @ForeignKey(name="RWE_MODELRECIBO_ARCHIVO_FK")
   public Archivo getModelo() {

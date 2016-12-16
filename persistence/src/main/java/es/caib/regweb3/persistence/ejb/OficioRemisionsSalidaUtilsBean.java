@@ -383,7 +383,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
             RegistroEntrada nuevoRE = new RegistroEntrada();
             nuevoRE.setUsuario(usuario);
-            nuevoRE.setDestino(new Organismo(oficio.getIdOrganismoDestinatario()));
+            nuevoRE.setDestino(organismoEjb.getReference(oficio.getIdOrganismoDestinatario()));
             nuevoRE.setOficina(oficinaActiva);
             nuevoRE.setEstado(RegwebConstantes.REGISTRO_VALIDO);
             nuevoRE.setLibro(libro);

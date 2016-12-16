@@ -50,7 +50,7 @@ public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> imple
     @SuppressWarnings(value = "unchecked")
     public List<RegistroDetalle> getAll() throws Exception {
 
-        return  em.createQuery("Select registroDetalle from RegistroDetalle as registroDetalle order by registroDetalle.orden").getResultList();
+        return  em.createQuery("Select registroDetalle from RegistroDetalle as registroDetalle order by registroDetalle.id").getResultList();
     }
 
     @Override
@@ -70,6 +70,15 @@ public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> imple
         q.setMaxResults(RESULTADOS_PAGINACION);
 
         return q.getResultList();
+    }
+
+    @Override
+    public RegistroDetalle findByRegistroEntrada(Long idRegistroEntrada) throws Exception {
+
+        Query q = em.createQuery("Select re.registroDetalle from RegistroEntrada as re where re.id = :idRegistroEntrada");
+        q.setParameter("idRegistroEntrada",idRegistroEntrada);
+
+        return (RegistroDetalle) q.getSingleResult();
     }
 
     @Override

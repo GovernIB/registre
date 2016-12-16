@@ -152,7 +152,7 @@ public class Libro implements Serializable {
         this.contadorOficioRemision = contadorOficioRemision;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "ORGANISMO")
     @ForeignKey(name = "RWE_LIBRO_ORGANISMO_FK")
     public Organismo getOrganismo() {

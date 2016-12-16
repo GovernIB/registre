@@ -3,7 +3,6 @@ package es.caib.regweb3.model;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.*;
 
-import javax.persistence.CascadeType;
 import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -80,7 +79,7 @@ public class CodigoAsunto extends Traducible {
         this.id = id;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "TIPOASUNTO")
     @ForeignKey(name = "RWE_CODASUNTO_TIPOASUNTO_FK")
     @JsonIgnore

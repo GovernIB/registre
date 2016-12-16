@@ -152,7 +152,7 @@ public class Anexo implements Serializable {
     }
 
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "TDOCUMENTAL")
     @ForeignKey(name = "RWE_ANEXO_TDOCAL_FK")
     public TipoDocumental getTipoDocumental() {
@@ -182,7 +182,7 @@ public class Anexo implements Serializable {
       this.tipoDocumento = tipoDocumento;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "REGISTRODETALLE")
     @ForeignKey(name = "RWE_ANEXO_REGDET_FK")
     @JsonIgnore

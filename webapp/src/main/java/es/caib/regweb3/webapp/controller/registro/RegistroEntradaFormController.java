@@ -3,6 +3,7 @@ package es.caib.regweb3.webapp.controller.registro;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.HistoricoRegistroEntradaLocal;
 import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
+import es.caib.regweb3.persistence.ejb.ReproLocal;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -49,6 +50,44 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
     
     @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
     public RegistroEntradaLocal registroEntradaEjb;
+
+    @EJB(mappedName = "regweb3/ReproEJB/local")
+    public ReproLocal reproEjb;
+
+
+    /**
+     * Carga el formulario para un nuevo {@link es.caib.regweb3.model.RegistroEntrada}
+     */
+    @RequestMapping(value = "/new/{idRepro}", method = RequestMethod.GET)
+    public String nuevoRegistroEntradaRepro(@PathVariable("idRepro") Long idRepro, Model model, HttpServletRequest request) throws Exception {
+
+        Repro repro = reproEjb.findById(idRepro);
+
+
+        Oficina oficina = getOficinaActiva(request);
+
+        RegistroEntrada registroEntrada = RegistroUtils.desSerilizarREXml(repro.getRepro());
+        registroEntrada = registroEntradaEjb.findById(registroEntrada.getId());
+        registroEntrada.setId(null);
+        //registroEntrada.setRegistroDetalle(new RegistroDetalle());
+        registroEntrada.setOficina(oficina);
+
+        //Eliminamos los posibles interesados de la Sesion
+        eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_ENTRADA);
+
+        LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
+
+        model.addAttribute(getEntidadActiva(request));
+        model.addAttribute(getUsuarioAutenticado(request));
+        model.addAttribute(oficina);
+        model.addAttribute("registroEntrada",registroEntrada);
+        model.addAttribute("libros", getLibrosRegistroEntrada(request));
+        model.addAttribute("organismosOficinaActiva", organismosOficinaActiva);
+        model.addAttribute("oficinasOrigen",  getOficinasOrigen(request));
+
+        return "registroEntrada/registroEntradaForm";
+    }
+
 
 
     /**

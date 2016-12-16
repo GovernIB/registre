@@ -350,7 +350,7 @@ public class Interesado implements Serializable {
         this.documento = documento;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "PAIS")
     @ForeignKey(name = "RWE_INTERESADO_PAIS_FK")
     public CatPais getPais() {
@@ -361,7 +361,7 @@ public class Interesado implements Serializable {
         this.pais = pais;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "PROVINCIA")
     @ForeignKey(name = "RWE_INTERESADO_PROVINCIA_FK")
     public CatProvincia getProvincia() {
@@ -372,7 +372,7 @@ public class Interesado implements Serializable {
         this.provincia = provincia;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "LOCALIDAD")
     @ForeignKey(name = "RWE_INTERESADO_LOCALIDAD_FK")
     public CatLocalidad getLocalidad() {
@@ -402,7 +402,7 @@ public class Interesado implements Serializable {
         this.observaciones = observaciones;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "REPRESENTADO")
     @ForeignKey(name = "RWE_INTERESADO_REPRESENT_FK")
 /*    @JsonIgnore*/
@@ -414,7 +414,7 @@ public class Interesado implements Serializable {
         this.representado = representado;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "REPRESENTANTE")
     @ForeignKey(name = "RWE_INTERESADO_REPREANTE_FK")
     @JsonIgnore
@@ -435,7 +435,7 @@ public class Interesado implements Serializable {
         this.isRepresentante = isRepresentante;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "REGISTRODETALLE")
     @ForeignKey(name = "RWE_INTERESADO_REGDET_FK")
     @JsonIgnore

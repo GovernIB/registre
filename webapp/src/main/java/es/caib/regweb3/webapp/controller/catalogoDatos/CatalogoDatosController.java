@@ -257,7 +257,7 @@ public class CatalogoDatosController extends BaseController {
                 CodigoAsunto codAsunto = codigoAsuntoEjb.findByCodigoEntidad(codigoAsunto.getCodigo(), idEntidad);
 
                 // Mira si el código del CodigoAsunto ya existe. Si existe no se puede crear
-                if((codAsunto != null) && (codAsunto.getId() != codigoAsunto.getId())){
+                if((codAsunto != null) && (!codAsunto.getId().equals(codigoAsunto.getId()))){
                     Mensaje.saveMessageError(request, getMessage("error.codidoAsunto.existe"));
                 }else {
 

@@ -52,6 +52,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @EJB public RelacionSirOfiLocal relacionSirOfiEjb;
     @EJB public OficinaLocal oficinaEjb;
     @EJB public UsuarioEntidadLocal usuarioEntidadEjb;
+    @EJB public UsuarioLocal usuarioEjb;
     @EJB public DescargaLocal descargaEjb;
     @EJB public ModeloOficioRemisionLocal modeloOficioRemisionEjb;
     @EJB public ModeloReciboLocal modeloReciboEjb;
@@ -61,7 +62,6 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @EJB public AsientoRegistralSirLocal asientoRegistralSirEjb;
     @EJB public InteresadoSirLocal interesadoSirEjb;
     @EJB public AnexoSirLocal anexoSirEjb;
-
 
 
     @Override
@@ -104,6 +104,9 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
     @Override
     public Entidad nuevaEntidad(Entidad entidad) throws Exception{
+
+        //Usuario propietario = usuarioEjb.getReference(entidad.getPropietario().getId());
+        //entidad.setPropietario(propietario);
         entidad = persist(entidad);
 
         // Creamos el UsuarioEntidad del propietario

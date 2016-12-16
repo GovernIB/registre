@@ -74,7 +74,7 @@ public class Lopd implements Serializable{
     }
 
 
-    @ManyToOne(cascade= CascadeType.PERSIST, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name="LIBRO")
     @ForeignKey(name="RWE_LOPD_LIBRO_FK")
     public Libro getLibro() {
@@ -96,7 +96,7 @@ public class Lopd implements Serializable{
     }
 
 
-    @ManyToOne(cascade= CascadeType.PERSIST, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name="USUARIO")
     @ForeignKey(name="RWE_LOPD_USUENT_FK")
     public UsuarioEntidad getUsuario() {

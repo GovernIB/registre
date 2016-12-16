@@ -34,7 +34,13 @@ public class Descarga implements Serializable {
 
   public Descarga() {
   }
-  
+
+  public Descarga(Date fechaImportacion, String tipo, Entidad entidad) {
+    this.fechaImportacion = fechaImportacion;
+    this.tipo = tipo;
+    this.entidad = entidad;
+  }
+
   @Column(name = "ID", nullable = false, length = 3)
   @Id
   @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
@@ -83,7 +89,7 @@ public class Descarga implements Serializable {
     this.tipo = tipo;
   }
 
-  @ManyToOne(cascade = CascadeType.PERSIST)
+  @ManyToOne()
   @JoinColumn(name="ENTIDAD")
   @ForeignKey(name="RWE_DESCARGA_ENTIDAD_FK")
   public Entidad getEntidad() {

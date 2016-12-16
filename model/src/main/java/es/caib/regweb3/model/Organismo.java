@@ -184,7 +184,7 @@ public class Organismo implements Serializable {
     }
 
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "ENTIDAD")
     @ForeignKey(name = "RWE_ORGANISMO_ENTIDAD_FK")
     @JsonIgnore
@@ -196,7 +196,7 @@ public class Organismo implements Serializable {
         this.entidad = entidad;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "ESTADO")
     @ForeignKey(name = "RWE_ORGANISMO_ESTADO_FK")
     @JsonIgnore
@@ -220,7 +220,7 @@ public class Organismo implements Serializable {
     }
 
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="ORGANISMOSUPERIOR")
     @ForeignKey(name="RWE_ORGANISMO_ORG_SUPERIOR_FK")
     @JsonIgnore
@@ -232,7 +232,7 @@ public class Organismo implements Serializable {
         this.organismoSuperior = organismoSuperior;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="ORGANISMORAIZ")
     @ForeignKey(name="RWE_ORGANISMO_ORGRAIZ_FK")
     @JsonIgnore
@@ -253,7 +253,7 @@ public class Organismo implements Serializable {
         this.edp = edp;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, optional = true)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name="EDPRINCIPAL")
     @ForeignKey(name="RWE_ORGANISMO_EDPRIN_FK")
     @JsonIgnore
@@ -280,7 +280,7 @@ public class Organismo implements Serializable {
         this.libros = libros;
     }
 
-    @ManyToOne(cascade=CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name="NIVELADMINISTRACION")
     @ForeignKey(name="RWE_ORGANISMO_CATNIVELADMIN_FK")
     @JsonIgnore
@@ -293,7 +293,7 @@ public class Organismo implements Serializable {
         this.nivelAdministracion = nivelAdministracion;
     }
 
-    @ManyToOne(cascade=CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name="CODAMBCOMUNIDAD")
     @ForeignKey(name="RWE_ORGANISMO_CATAMBCOMAUTO_FK")
     @JsonIgnore
@@ -305,7 +305,7 @@ public class Organismo implements Serializable {
         this.codAmbComunidad = codAmbComunidad;
     }
 
-    @ManyToOne(cascade=CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name="CODAMBPROVINCIA")
     @ForeignKey(name="RWE_ORGANISMO_CATPROVINCIA_FK")
     @JsonIgnore
@@ -318,7 +318,7 @@ public class Organismo implements Serializable {
     }
 
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "PAIS")
     @ForeignKey(name = "RWE_ORGANISMO_PAIS_FK")
     public CatPais getCodPais() {
@@ -329,7 +329,7 @@ public class Organismo implements Serializable {
         this.codPais = codPais;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "LOCALIDAD")
     @ForeignKey(name = "RWE_ORGANISMO_LOCALIDAD_FK")
     public CatLocalidad getLocalidad() {
@@ -340,7 +340,7 @@ public class Organismo implements Serializable {
         this.localidad = localidad;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "TIPOVIA")
     @ForeignKey(name = "RWE_ORGANISMO_TIPOVIA_FK")
     public CatTipoVia getTipoVia() {

@@ -56,7 +56,7 @@ public class OficioRemision implements Serializable {
     this.id = id;
   }
 
-  @ManyToOne(cascade = CascadeType.PERSIST)
+  @ManyToOne()
   @JoinColumn(name = "ORGANISMODEST")
   @ForeignKey(name = "RWE_OFIREM_ORGANISMODEST_FK")
   public Organismo getOrganismoDestinatario() {
@@ -67,7 +67,7 @@ public class OficioRemision implements Serializable {
     this.organismoDestinatario = organismoDestinatario;
   }
 
-  @ManyToOne(cascade = CascadeType.PERSIST, optional = false)
+  @ManyToOne(optional = false)
   @JoinColumn(name = "LIBRO")
   @ForeignKey(name = "RWE_OFIREM_LIBRO_FK")
   public Libro getLibro() {
@@ -87,7 +87,7 @@ public class OficioRemision implements Serializable {
     this.numeroOficio = numeroOficio;
   }
 
-  @ManyToOne(cascade = CascadeType.PERSIST, optional = false)
+  @ManyToOne(optional = false)
   @JoinColumn(name = "OFICINA")
   @ForeignKey(name = "RWE_OFIREM_OFICINA_FK")
   public Oficina getOficina() {
@@ -98,7 +98,7 @@ public class OficioRemision implements Serializable {
     this.oficina = oficina;
   }
 
-  @ManyToMany(cascade = { CascadeType.PERSIST }, targetEntity = RegistroEntrada.class, fetch = FetchType.LAZY)
+  @ManyToMany(targetEntity = RegistroEntrada.class, fetch = FetchType.LAZY)
   @JoinTable(name = "RWE_OFIREM_REGENT", joinColumns = { @JoinColumn(name = "IDOFIREM") }, inverseJoinColumns = { @JoinColumn(name = "IDREGENT") })
   @ForeignKey(name = "RWE_REGENT_OFIREM_FK", inverseName = "RWE_OFIREM_REGENT_FK")
   @OrderBy("id")
@@ -110,7 +110,7 @@ public class OficioRemision implements Serializable {
     this.registrosEntrada = registrosEntrada;
   }
 
-  @ManyToMany(cascade = { CascadeType.PERSIST }, targetEntity = RegistroSalida.class, fetch = FetchType.LAZY)
+  @ManyToMany(targetEntity = RegistroSalida.class, fetch = FetchType.LAZY)
   @JoinTable(name = "RWE_OFIREM_REGSAL", joinColumns = { @JoinColumn(name = "IDOFIREM") }, inverseJoinColumns = { @JoinColumn(name = "IDREGSAL") })
   @ForeignKey(name = "RWE_REGSAL_OFIREM_FK", inverseName = "RWE_OFIREM_REGSAL_FK")
   @OrderBy("id")
@@ -141,7 +141,7 @@ public class OficioRemision implements Serializable {
   }
 
 
-  @ManyToOne(cascade = CascadeType.PERSIST, optional = false)
+  @ManyToOne(optional = false)
   @JoinColumn(name = "USUARIO")
   @ForeignKey(name = "RWE_OFIREM_USUORM_FK")
   public UsuarioEntidad getUsuarioResponsable() {

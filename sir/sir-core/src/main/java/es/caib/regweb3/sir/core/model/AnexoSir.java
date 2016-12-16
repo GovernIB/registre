@@ -112,7 +112,7 @@ public class AnexoSir implements Serializable {
         this.id = id;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "ASIENTO_REGISTRAL")
     @ForeignKey(name = "RWE_ANEXOSIR_ASIREG_FK")
     public AsientoRegistralSir getIdAsientoRegistralSir() {

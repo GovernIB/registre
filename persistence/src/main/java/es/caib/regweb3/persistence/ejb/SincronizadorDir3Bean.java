@@ -111,6 +111,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         // Obtenemos el Service de los WS de Unidades
         Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService();
 
+        // Obtenemos el arbol de Unidades
         List<UnidadTF> arbol = unidadesService.obtenerArbolUnidades(entidad.getCodigoDir3(), fechaActualizacion, fechaSincronizacion);
 
         log.info("Organimos obtenidos de " + entidad.getNombre() + ": " + arbol.size());
@@ -118,11 +119,11 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         /*  CACHES */
         inicializarCaches();
 
-        // Guardamos el arbol sincronizado
+        // Procesamos el arbol de organismos obtenido
         if (arbol.size() > 0) {
 
-            // Procesamos el arbol de organismos
             for (UnidadTF unidadTF : arbol) {
+
                 Organismo organismo = sincronizarOrganismo(unidadTF, entidadId);
 
                 if (organismo != null) { // Si se ha sincronizado organismo, miramos si puede ser pendiente de procesar
@@ -131,28 +132,31 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
                 }
             }
 
-            //Procesamos los históricos de los organismos
-            for (UnidadTF unidadTF : arbol) { // Sincronizamos los históricos del arbol.
+            // Sincronizamos los históricos del arbol de organismos obtenido
+            for (UnidadTF unidadTF : arbol) {
                 if (unidadTF != null) {
                     Organismo organismo = organismoEjb.findByCodigoEntidadSinEstado(unidadTF.getCodigo(), entidadId);
                     sincronizarHistoricosOrganismo(organismo, unidadTF, entidadId);
                 }
             }
 
-
         }
+
+        // Creamos la descarga de Unidades
         nuevaDescarga(RegwebConstantes.UNIDAD, entidad);
+
         log.info("");
         log.info("Finalizada la importacion de Organismos");
         log.info("");
 
+        Set<OficinaTF> todasOficinasEntidad = new HashSet<OficinaTF>();
         int oficinasActualizadas = 0;
-        // Obtenemos el Service de los WS de Oficinas
+
         if (arbol.size() > 0 || fechaActualizacion != null) {// obtenemos las oficinas en caso de actualizacion o en caso de sincro sin han venido organismos.
+
+            // Obtenemos el Service de los WS de Oficinas
             Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
 
-
-            Set<OficinaTF> todasOficinasEntidad = new HashSet<OficinaTF>(); // Guardará todas las oficinas de la entidad
             // Obtenemos todas las oficinas de la entidad.
             List<OficinaTF> oficinasTF = oficinasService.obtenerArbolOficinas(entidad.getCodigoDir3(), fechaActualizacion, fechaSincronizacion);
             todasOficinasEntidad.addAll(oficinasTF);
@@ -286,17 +290,18 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
                 Oficina oficina = oficinaEjb.findByCodigoEntidadSinEstado(oficinaTF.getCodigo(), idEntidad);
 
-                if (oficina == null) {
-                    oficina = new Oficina();
-                    oficina.setCodigo(oficinaTF.getCodigo());
-                    // Se procesa la oficina para asignar sus valores
-                    procesarOficina(oficina, oficinaTF, idEntidad);
+                if (oficina == null) { // Nueva oficina
+
+                    oficina = new Oficina(null, oficinaTF.getCodigo(), null);
+
+                    procesarOficina(oficina, oficinaTF, idEntidad); // Se procesa la oficina para asignar sus valores
 
                     // Guardamos la Oficina
                     oficinaEjb.persist(oficina);
-                } else {
-                    // Se procesa la oficina para asignar sus valores
-                    procesarOficina(oficina, oficinaTF, idEntidad);
+
+                } else { // Actualización oficina
+
+                    procesarOficina(oficina, oficinaTF, idEntidad); // Se procesa la oficina para asignar sus valores
                     oficinaEjb.merge(oficina);
                 }
 
@@ -601,11 +606,8 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
      * @throws Exception
      */
     private void nuevaDescarga(String tipo, Entidad entidad) throws Exception {
-        Descarga descarga = new Descarga();
-        descarga.setTipo(tipo);
-        descarga.setEntidad(entidad);
-        Date hoy = new Date();
-        descarga.setFechaImportacion(hoy);
+
+        Descarga descarga = new Descarga(new Date(), tipo, entidad);
 
         descargaEjb.persist(descarga);
     }

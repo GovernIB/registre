@@ -116,7 +116,7 @@ public class RestController {
     public String obtenerTransporte(@RequestParam Long id) throws Exception {
 
         if (id != null) {
-            return I18NUtils.tradueix("transporte." + id);
+            return I18NUtils.tradueix("transporte.0" + id);
         } else {
             return null;
         }
