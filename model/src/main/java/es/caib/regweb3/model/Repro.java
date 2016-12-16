@@ -73,7 +73,7 @@ public class Repro implements Serializable {
         this.repro = repro;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "USUARIOENTIDAD")
     @ForeignKey(name = "RWE_REPRO_USUARIO_FK")
     @JsonIgnore
