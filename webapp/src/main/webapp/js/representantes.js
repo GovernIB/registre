@@ -118,6 +118,10 @@ function addRepresentanteHtml(idRepresentante, idRepresentado,nombreRepresentant
     $(elemento + ' td:nth-child(3)').html(representanteButton);
 
     $('#modalBuscadorPersonasTodas').modal('hide');
+
+    if (idRegistroDetalle.length > 0) {
+        mensajeSuccess("#mensajes", tradsinteresado['representante.añadido']);
+    }
 }
 
 
@@ -138,6 +142,8 @@ function eliminarRepresentanteHtml(idRepresentado){
 
     // Añadimos a la celda la nueva información
     $(elemento + ' td:nth-child(3)').html(representanteButton);
+
+    mensajeSuccess("#mensajes", tradsinteresado['representante.eliminado']);
 }
 
 /**
@@ -153,7 +159,14 @@ function addRepresentante(idRepresentante,idRepresentado,idRegistroDetalle){
         contentType: 'application/json',
 
         success: function(respuesta) {
-            addRepresentanteHtml(respuesta.result.id,idRepresentado,respuesta.result.nombre,idRegistroDetalle);
+
+            if(respuesta != null){
+                addRepresentanteHtml(respuesta.result.id,idRepresentado,respuesta.result.nombre,idRegistroDetalle);
+            }else{
+                mensajeError("#mensajes", tradsinteresado['interesado.añadir.error']);
+            }
+
+
         }
     });
 }
