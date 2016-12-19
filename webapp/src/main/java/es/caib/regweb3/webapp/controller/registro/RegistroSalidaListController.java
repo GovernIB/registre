@@ -7,6 +7,7 @@ import es.caib.regweb3.persistence.ejb.RegistroSalidaLocal;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.webapp.form.ModeloForm;
 import es.caib.regweb3.webapp.form.RegistroSalidaBusqueda;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.RegistroSalidaBusquedaValidator;
@@ -183,7 +184,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         model.addAttribute("oficina", oficinaActiva);
 
         // Modelo Recibo
-        model.addAttribute("modeloRecibo", new ModeloRecibo());
+        model.addAttribute("modeloRecibo", new ModeloForm());
         model.addAttribute("modelosRecibo", modeloReciboEjb.getByEntidad(entidadActiva.getId()));
 
         // Permisos
