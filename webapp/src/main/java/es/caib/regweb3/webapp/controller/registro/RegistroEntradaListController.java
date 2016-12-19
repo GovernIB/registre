@@ -11,6 +11,7 @@ import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+import es.caib.regweb3.webapp.form.ModeloForm;
 import es.caib.regweb3.webapp.form.RegistroEntradaBusqueda;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.RegistroEntradaBusquedaValidator;
@@ -201,7 +202,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         model.addAttribute("oficina", oficinaActiva);
 
         // Modelo Recibo
-        model.addAttribute("modeloRecibo", new ModeloRecibo());
+        model.addAttribute("modeloRecibo", new ModeloForm());
         model.addAttribute("modelosRecibo", modeloReciboEjb.getByEntidad(entidadActiva.getId()));
 
         // Permisos
