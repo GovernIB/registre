@@ -29,27 +29,8 @@ public class DataBaseUtils {
     public String like(String columnName, String variable, Map<String, Object> parametros,
         String value) {
 
-      // Convertir caracters < 128 a _ (qualsevol caràcter)
-      StringBuffer newValue = new StringBuffer(value.length());
-
-      for (int i = 0; i < value.length(); i++) {
-
-        char charVal = value.charAt(i);
-        if (((int) charVal) >= 128) {
-          newValue.append('_');
-        } else {
-          if (charVal == 'a' || charVal == 'e' || charVal == 'i' || charVal == 'o'
-              || charVal == 'u') {
-            newValue.append('_');
-          } else {
-            newValue.append((char) charVal);
-          }
-        }
-      }
-
-      parametros.put(variable, "%" + newValue.toString().toLowerCase() + "%");
-
-      return " upper(" + columnName + ") like upper(:" + variable + ")";
+      parametros.put(variable, "%" + value + "%");
+      return "upper(translate(" + columnName + ",'ÁÉÍÓÚáéíóúÀÈÌÒÙàèìòù','AEIOUaeiouAEIOUaeiou')) like upper(translate(:" + variable + ",'ÁÉÍÓÚáéíóúÀÈÌÒÙàèìòù','AEIOUaeiouAEIOUaeiou'))";
     }
   }
 
