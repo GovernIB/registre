@@ -260,13 +260,14 @@ public class InteresadoController extends BaseController{
                     if(isRepresentante) { // Si se trata de un representante lo indicamos
                         interesado.setId(null);
                         interesado.setRegistroDetalle(registroDetalleEjb.getReference(Long.valueOf(idRegistroDetalle)));
+                        interesado.setRepresentado(interesadoEjb.getReference(Long.valueOf(idRepresentado)));
                         personaJson.setRepresentado(new PersonaJson(idRepresentado));
 
                         // Guardamos el Nuevo representante
                         interesado = interesadoEjb.persist(interesado);
 
                         // Lo asociamos al represenatado
-                        Interesado representado = interesadoEjb.getReference(Long.valueOf(idRepresentado));
+                        Interesado representado = interesadoEjb.findById(Long.valueOf(idRepresentado));
                         representado.setRepresentante(interesado);
                         interesadoEjb.merge(representado);
                     }else{
