@@ -225,6 +225,21 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
     }
 
     @Override
+    public void reiniciarContadoresEntidad(Long idEntidad) throws Exception{
+
+        List<Libro> libros = getTodosLibrosEntidad(idEntidad);
+
+        // Reiniciamos los Contadores de cada libro
+        for (Libro libro : libros) {
+
+            contadorEjb.reiniciarContador(libro.getContadorEntrada().getId());
+            contadorEjb.reiniciarContador(libro.getContadorSalida().getId());
+            contadorEjb.reiniciarContador(libro.getContadorOficioRemision().getId());
+        }
+
+    }
+
+    @Override
     @SuppressWarnings(value = "unchecked")
     public List<Organismo> organismosConLibro(Long idEntidad) throws Exception{
 

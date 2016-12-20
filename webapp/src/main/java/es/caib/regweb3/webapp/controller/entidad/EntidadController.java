@@ -646,7 +646,7 @@ public class EntidadController extends BaseController {
     /**
      * Eliminar la asignación de un Usuario a una Entidad
      */
-    @RequestMapping(value = "/permisos/{idUsuarioEntidad}/delete")
+    @RequestMapping(value = "/permisos/{idUsuarioEntidad}/delete", method = RequestMethod.GET)
     public String eliminarAsignacion(@PathVariable Long idUsuarioEntidad, HttpServletRequest request) {
 
         try {
@@ -683,9 +683,29 @@ public class EntidadController extends BaseController {
     }
 
     /**
+     * Eliminar todos los Registros de una Entidad
+     */
+    @RequestMapping(value = "/{idEntidad}/reiniciarContadores")
+    public String reiniciarContadoresEntidad(@PathVariable Long idEntidad, HttpServletRequest request) {
+
+        try {
+
+            libroEjb.reiniciarContadoresEntidad(idEntidad);
+
+            Mensaje.saveMessageInfo(request, "Se han reiniciado todos los contadores de la Entidad");
+
+        } catch (Exception e) {
+            Mensaje.saveMessageError(request, "Error: No se han podido reiniciar los contadores de los Libros de la entidad");
+            e.printStackTrace();
+        }
+
+        return "redirect:/entidad/list";
+    }
+
+    /**
      * Eliminar la Entidad
      */
-    @RequestMapping(value = "/{idEntidad}/eliminar")
+    @RequestMapping(value = "/{idEntidad}/eliminar", method = RequestMethod.GET)
     public String eliminarEntidad(@PathVariable Long idEntidad, HttpServletRequest request) {
 
         try {
