@@ -137,12 +137,11 @@
                         </c:if>
 
                         <%--Botón Distribuir y Oficio Remision--%>
-                        <c:if test="${isTramitar || isOficioRemisionInterno || isOficioRemisionExterno}">
+                        <c:if test="${(isDistribuir && puedeDistribuir) || isOficioRemisionInterno || isOficioRemisionExterno}">
                             <div class="panel-footer center">
-                                <c:if test="${isTramitar && puedeEditar}">
+                                <c:if test="${isDistribuir && puedeDistribuir}">
 
-                                    <button type="button" onclick='javascript:confirmDistribuir("<c:url
-                                            value="/registroEntrada/${registro.id}/distribuir"/>",
+                                    <button type="button" onclick='confirmDistribuir("<c:url value="/registroEntrada/${registro.id}/distribuir"/>",
                                             "<c:url value="/registroEntrada/${registro.id}/tramitar"/>",
                                             "<spring:message code="regweb.confirmar.tramitar" htmlEscape="true"/>")'
                                             class="btn btn-success btn-sm btn-block"><spring:message

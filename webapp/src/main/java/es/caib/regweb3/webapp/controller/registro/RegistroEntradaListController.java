@@ -210,7 +210,8 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         model.addAttribute("oficinaRegistral", oficinaRegistral);
         model.addAttribute("isAdministradorLibro", permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(), registro.getLibro().getId()));
         model.addAttribute("puedeEditar", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registro.getLibro().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA));
-        model.addAttribute("isTramitar", registroEntradaEjb.isTramitar(idRegistro, getOrganismosOficioRemision(request,organismosOficinaActiva)));
+        model.addAttribute("puedeDistribuir", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registro.getLibro().getId(), RegwebConstantes.PERMISO_DISTRIBUCION_REGISTRO));
+        model.addAttribute("isDistribuir", registroEntradaEjb.isDistribuir(idRegistro, getOrganismosOficioRemision(request,organismosOficinaActiva)));
 
         // OficioRemision
         if(entidadActiva.getOficioRemision()){
@@ -397,13 +398,19 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             if(!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)){
 
                 Mensaje.saveMessageError(request, getMessage("registroEntrada.tramitar.error"));
-                return "redirect:/registroEntrada/list";
+                return "redirect:/registroEntrada/" + idRegistro + "/detalle";
+            }
+
+            // Comprobamos que el usuario tiene permisos para Distribuir el registro
+            if(!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroEntrada.getLibro().getId(), RegwebConstantes.PERMISO_DISTRIBUCION_REGISTRO)){
+                Mensaje.saveMessageError(request, getMessage("registroEntrada.tramitar.error"));
+                return "redirect:/registroEntrada/" + idRegistro + "/detalle";
             }
 
             // Comprobamos que el RegistroEntrada se puede Tramitar
-            if (!registroEntradaEjb.isTramitar(idRegistro, getOrganismosOficioRemision(request,organismosOficinaActiva))) {
+            if (!registroEntradaEjb.isDistribuir(idRegistro, getOrganismosOficioRemision(request,organismosOficinaActiva))) {
                 Mensaje.saveMessageError(request, getMessage("registroEntrada.tramitar.error"));
-                return "redirect:/registroEntrada/list";
+                return "redirect:/registroEntrada/" + idRegistro + "/detalle";
             }
 
 
@@ -436,6 +443,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         log.info("Entramos en distribuirRegistroEntrada");
 
         RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         RespuestaDistribucion respuestaDistribucion = new RespuestaDistribucion();
         respuestaDistribucion.setDestinatarios(null);
 
@@ -448,8 +456,14 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             return respuestaDistribucion;
         }
 
+        // Comprobamos que el usuario tiene permisos para Distribuir el registro
+        if(!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroEntrada.getLibro().getId(), RegwebConstantes.PERMISO_DISTRIBUCION_REGISTRO)){
+            Mensaje.saveMessageError(request, getMessage("registroEntrada.distribuir.error"));
+            return respuestaDistribucion;
+        }
+
         // Comprobamos que el RegistroEntrada se puede Tramitar
-        if (!registroEntradaEjb.isTramitar(idRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva))) {
+        if (!registroEntradaEjb.isDistribuir(idRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva))) {
             Mensaje.saveMessageError(request, getMessage("registroEntrada.distribuir.error"));
             return respuestaDistribucion;
         }

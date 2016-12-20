@@ -504,7 +504,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Boolean isTramitar(Long idRegistro, Set<Long> organismos) throws Exception {
+    public Boolean isDistribuir(Long idRegistro, Set<Long> organismos) throws Exception {
 
         // Si el array de organismos está vacío, no incluimos la condición.
         String organismosWhere = "";

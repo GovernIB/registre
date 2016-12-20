@@ -207,7 +207,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public Boolean isTramitar(Long idRegistro, Set<Long> organismos) throws Exception;
+    public Boolean isDistribuir(Long idRegistro, Set<Long> organismos) throws Exception;
 
     /**
      * Elimina los RegistroEntrada de una Entidad
