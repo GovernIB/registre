@@ -881,20 +881,15 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
 
     @Override
-    public List<Anexo> getByRegistroEntrada(Long idRegistro) throws Exception{
-        RegistroEntrada re = registroEntradaEjb.findById(idRegistro);
-        Hibernate.initialize(re.getRegistroDetalle().getAnexos());
-        List<Anexo> anexos = re.getRegistroDetalle().getAnexos();
-        return anexos;
-
+    public List<Anexo> getByRegistroEntrada(RegistroEntrada registroEntrada) throws Exception{
+        Hibernate.initialize(registroEntrada.getRegistroDetalle().getAnexos());
+        return registroEntrada.getRegistroDetalle().getAnexos();
     }
 
     @Override
-    public List<Anexo> getByRegistroSalida(Long idRegistro) throws Exception{
-        RegistroSalida re = registroSalidaEjb.findById(idRegistro);
-        Hibernate.initialize(re.getRegistroDetalle().getAnexos());
-        List<Anexo> anexos = re.getRegistroDetalle().getAnexos();
-        return anexos;
+    public List<Anexo> getByRegistroSalida(RegistroSalida registroSalida) throws Exception{
+        Hibernate.initialize(registroSalida.getRegistroDetalle().getAnexos());
+        return registroSalida.getRegistroDetalle().getAnexos();
 
     }
 

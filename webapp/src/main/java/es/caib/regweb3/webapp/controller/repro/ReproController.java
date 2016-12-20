@@ -6,15 +6,13 @@ import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
 import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.ReproJson;
-import es.caib.regweb3.persistence.ejb.BaseEjbJPA;
-import es.caib.regweb3.persistence.ejb.OrganismoLocal;
-import es.caib.regweb3.persistence.ejb.ReproLocal;
-import es.caib.regweb3.persistence.ejb.UsuarioLocal;
+import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
+import es.caib.regweb3.webapp.form.ReproForm;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.ReproValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +39,7 @@ import java.util.List;
 @SessionAttributes(types = Repro.class)
 public class ReproController extends BaseController {
 
-    //protected final Logger log = Logger.getLogger(getClass());
-    
+
     @EJB(mappedName = "regweb3/ReproEJB/local")
     public ReproLocal reproEjb;
 
@@ -51,6 +48,12 @@ public class ReproController extends BaseController {
 
     @EJB(mappedName = "regweb3/UsuarioEJB/local")
     public UsuarioLocal usuarioEjb;
+
+    @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
+    public RegistroEntradaLocal registroEntradaEjb;
+
+    @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
+    public RegistroSalidaLocal registroSalidaEjb;
 
     @Autowired
     private ReproValidator reproValidator;
@@ -85,6 +88,67 @@ public class ReproController extends BaseController {
         mav.addObject("listado", listado);
 
         return mav;
+    }
+
+    //todo Pendiente terminar Nuevas Repro con Interesados
+    /**
+     * Crea una Repro
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/nuevo", method = RequestMethod.POST)
+    @ResponseBody
+    public Long nuevaRepro(@RequestBody ReproForm reproForm, HttpServletRequest request) throws Exception {
+
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+
+        Repro repro = new Repro();
+        repro.setNombre(reproForm.getNombreRepro());
+        repro.setTipoRegistro(Long.valueOf(reproForm.getTipoRegistro()));
+        repro.setUsuario(usuarioEntidad);
+
+        switch (reproForm.getTipoRegistro()){
+
+            case 1: //RegistroEntrada
+                log.info("Repro entrada");
+                RegistroEntrada registroEntrada = registroEntradaEjb.findById(reproForm.getIdRegistro());
+                registroEntrada.setFecha(null);
+                registroEntrada.setNumeroRegistroFormateado(null);
+                registroEntrada.setNumeroRegistro(null);
+                registroEntrada.setEstado(null);
+                registroEntrada.getRegistroDetalle().setId(null);
+
+                repro.setRepro(RegistroUtils.serilizarXml(registroEntrada));
+            break;
+
+            case 2: //RegistroSalida
+                log.info("Repro salida");
+                RegistroSalida registroSalida = registroSalidaEjb.findById(reproForm.getIdRegistro());
+                registroSalida.setFecha(null);
+                registroSalida.setNumeroRegistroFormateado(null);
+                registroSalida.setNumeroRegistro(null);
+                registroSalida.setEstado(null);
+                registroSalida.getRegistroDetalle().setId(null);
+
+                repro.setRepro(RegistroUtils.serilizarXml(registroSalida));
+            break;
+        }
+
+        int orden = 0;
+        List<Repro> repros = reproEjb.getAllbyUsuario(usuarioEntidad.getId());
+        if(repros.size() > 0){
+            orden = reproEjb.maxOrdenRepro(usuarioEntidad.getId());
+        }
+
+        repro.setOrden(orden+1);
+
+        try {
+            repro = reproEjb.persist(repro);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return repro.getId();
     }
 
 

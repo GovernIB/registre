@@ -5,6 +5,43 @@
  */
 
 /**
+ * Crea una Repro obtenido los valores de los campos del Registro
+ */
+function guardarRepro(){
+
+
+    var url = $("#reproForm").attr("action");
+
+    var json = {
+        "idRegistro": $('#idRegistro').val(),
+        "tipoRegistro": $('#tipoRegistro').val(),
+        "nombreRepro": $('#nombreRepro').val()};
+
+    $.ajax({
+        url: url,
+        data:  JSON.stringify(json) ,
+        type: "POST",
+
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader("Accept", "application/json");
+            xhr.setRequestHeader("Content-Type", "application/json");
+        },
+        success: function(result) {
+            if (result != null) {
+                mensajeSuccess("#mensajes", "S´ha creat la repro.");
+            } else {
+                mensajeError("#mensajes", "Ha ocorregut un error");
+            }
+
+        }
+
+    });
+
+    // Ocultamos el modal de Repro
+    $('#modalNewRepro').modal('hide');
+}
+
+/**
  * Carga las Repros de un Usuario
  * @param url
  * @param idUsuario
@@ -53,7 +90,7 @@ function validaFormulario(form) {
         $(variable).parents(".form-group").removeClass("has-error");
 
         // Si pasa todas las validaciones, creamos la nueva Repro.
-        nuevaRepro();
+        guardarRepro();
 
     } else{
         var formatoHtml = "<span id='nomRepro.errors' class='help-block'>El camp és obligatori</span>";
@@ -232,6 +269,19 @@ function preparaFormularioRepro(tipoRegistro){
 
     //Introducimos el tipo de Repro
     $('#tipoRegistro').val(tipoRegistro);
+}
+
+//todo Nuevas Repro con Interesados
+/**
+ * Prepara el formulario de Repros para dar de alta una nueva.
+ */
+function preparaFormularioReproNuevo(tipoRegistro,idRegistro){
+    // Eliminamos el contenido del formulario y los mensajes de error
+    limpiarRepro();
+
+    //Introducimos valores iniciales
+    $('#tipoRegistro').val(tipoRegistro);
+    $('#idRegistro').val(idRegistro);
 }
 
 /**

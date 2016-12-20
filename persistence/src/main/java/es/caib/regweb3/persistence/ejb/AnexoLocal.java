@@ -2,6 +2,8 @@ package es.caib.regweb3.persistence.ejb;
 
 
 import es.caib.regweb3.model.Anexo;
+import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -50,19 +52,19 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
 
     /**
      *
-     * @param idRegistro
+     * @param registroEntrada
      * @return
      * @throws Exception
      */
-    public List<Anexo> getByRegistroEntrada(Long idRegistro) throws Exception;
+    public List<Anexo> getByRegistroEntrada(RegistroEntrada registroEntrada) throws Exception;
 
     /**
      *
-     * @param idRegistro
+     * @param registroSalida
      * @return
      * @throws Exception
      */
-    public List<Anexo> getByRegistroSalida(Long idRegistro) throws Exception;
+    public List<Anexo> getByRegistroSalida(RegistroSalida registroSalida) throws Exception;
 
     /**
      *  Obtiene los anexos de un registroDetalle

@@ -231,7 +231,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         }
 
         // Anexos
-        model.addAttribute("anexos", anexoEjb.getByRegistroEntrada(idRegistro));
+        model.addAttribute("anexos", anexoEjb.getByRegistroEntrada(registro));
         initAnexos(entidadActiva, model, request, registro.getId());
 
         // Historicos
