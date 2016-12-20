@@ -59,7 +59,7 @@
                                             <tr>
                                                 <th style="text-align:center;cursor: pointer;"><spring:message code="libro.libros"/></th>
                                                 <c:forEach var="permiso" items="${permisos}" varStatus="status">
-                                                    <th style="text-align:center;cursor: pointer;" onclick="seleccionarTodo('${status.index}','${fn:length(permisoLibroUsuarioForm.permisoLibroUsuarios)}');"><spring:message code="permiso.nombre.${permiso}" /></th>
+                                                    <th style="text-align:center;cursor: pointer;" onclick="seleccionarColumna('${status.index}','${fn:length(permisoLibroUsuarioForm.permisoLibroUsuarios)}');"><spring:message code="permiso.nombre.${permiso}" /></th>
                                                 </c:forEach>
                                             </tr>
                                         </thead>
@@ -77,7 +77,7 @@
                                                     <c:set var="inicio" value="${contador.index * sizePermisos}"/>
                                                     <c:set var="fin" value="${inicio+sizePermisos-1}"/>
                                                     <tr>
-                                                        <td style="cursor: pointer;" onclick="seleccionarFila('${contador.index}','<%=RegwebConstantes.PERMISOS.length%>');">${libro.nombreCompleto}</td>
+                                                        <td style="cursor: pointer;" onclick="seleccionarFila('${contador.index}');">${libro.nombreCompleto}</td>
                                                         <c:forEach var="plus" items="${permisoLibroUsuarioForm.permisoLibroUsuarios}" varStatus="status" begin="${inicio}" end="${fin}">
                                                                 <form:hidden path="permisoLibroUsuarios[${status.index}].id"/>
                                                                 <%--<form:hidden path="permisoLibroUsuarios[${status.index}].libro.id"/>
@@ -117,9 +117,11 @@
 <script type="text/javascript">
 
     //Selecciona todos los permisos de una columna (el mismo permiso de todos los libros)
-    function seleccionarTodo(columna, filas){
+    function seleccionarColumna(columna, filas){
+
+        var totalPermisos = parseInt(<%=RegwebConstantes.PERMISOS.length%>);
         columna = parseInt(columna);
-        filas = filas / 7;
+        filas = filas / totalPermisos;
         var len = parseInt(filas);
         var nombre = "#permisoLibroUsuarios"+columna+"\\.activo1";
 
@@ -129,48 +131,36 @@
                 for ( var i = 0; i < len; i++){
                     nombre = "#permisoLibroUsuarios"+columna+"\\.activo1";
                     $(nombre).prop('checked', false);
-                    columna = columna + 7;
+                    columna = columna + totalPermisos;
                 }
             }else{
                 for ( var i = 0; i < len; i++){
                     nombre = "#permisoLibroUsuarios"+columna+"\\.activo1";
                     $(nombre).prop('checked', true);
-                    columna = columna + 7;
+                    columna = columna + totalPermisos;
                 }
             }
         }
-//        //Invierte los valroes de los checks
-//        for ( var i = 0; i < len; i++) {
-//            var nombre = "#permisoLibroUsuarios"+columna+"\\.activo1";
-//
-//            if($(nombre).prop('checked')){
-//
-//                $(nombre).prop('checked', false);
-//            }else {
-//                $(nombre).prop('checked', true);
-//            }
-//            columna = columna + 7;
-//        }
     }
 
 
     // Selecciona todos los permisos de una fila (todos los permisos de un libro)
-    function seleccionarFila(fila, permisos){
+    function seleccionarFila(fila){
         fila = parseInt(fila);
-        var len = parseInt(permisos);
-        var permiso = fila*len;
+        var totalPermisos = parseInt(<%=RegwebConstantes.PERMISOS.length%>);
+        var permiso = fila*totalPermisos;
         var nombre = "#permisoLibroUsuarios"+permiso+"\\.activo1";
 
         //Selecciona todos los checks o los deselecciona todos a la vez
-        if(len>0) {
+        if(totalPermisos>0) {
             if($(nombre).prop('checked')){
-                for ( var i = 0; i < len; i++){
+                for ( var i = 0; i < totalPermisos; i++){
                     nombre = "#permisoLibroUsuarios"+permiso+"\\.activo1";
                     $(nombre).prop('checked', false);
                     permiso = permiso + 1;
                 }
             }else{
-                for ( var i = 0; i < len; i++){
+                for ( var i = 0; i < totalPermisos; i++){
                     nombre = "#permisoLibroUsuarios"+permiso+"\\.activo1";
                     $(nombre).prop('checked', true);
                     permiso = permiso + 1;
