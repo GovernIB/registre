@@ -5,10 +5,7 @@ import es.caib.regweb3.persistence.ejb.AnexoLocal;
 import es.caib.regweb3.persistence.ejb.HistoricoRegistroEntradaLocal;
 import es.caib.regweb3.persistence.ejb.OficioRemisionEntradaUtilsLocal;
 import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
-import es.caib.regweb3.persistence.utils.DestinatarioWrapper;
-import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.persistence.utils.RegistroUtils;
-import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
+import es.caib.regweb3.persistence.utils.*;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.webapp.form.ModeloForm;
@@ -141,10 +138,10 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             // Ponemos la hora 23:59 a la fecha fin
             Date fechaFin = RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin());
 
-            // Quitamos acentos al string del Nombre Interesado
-            String nombreInteresado = limpiarCaracteresEspeciales(busqueda.getInteressatNom());
-            String apellido1Interesado = limpiarCaracteresEspeciales(busqueda.getInteressatLli1());
-            String apellido2Interesado = limpiarCaracteresEspeciales(busqueda.getInteressatLli2());
+             /* Solución a los problemas de encoding del formulario GET */
+            String nombreInteresado = new String(busqueda.getInteressatNom().getBytes("ISO-8859-1"), "UTF-8");
+            String apellido1Interesado = new String(busqueda.getInteressatLli1().getBytes("ISO-8859-1"), "UTF-8");
+            String apellido2Interesado = new String(busqueda.getInteressatLli2().getBytes("ISO-8859-1"), "UTF-8");
             Paginacion paginacion = registroEntradaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroEntrada, nombreInteresado, apellido1Interesado, apellido2Interesado, busqueda.getInteressatDoc(), busqueda.getOrganDestinatari(), busqueda.getAnexos(), busqueda.getObservaciones(), busqueda.getUsuario(), usuarioEntidad.getEntidad().getId());
 
             busqueda.setPageNumber(1);
@@ -234,6 +231,9 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         // Anexos
         model.addAttribute("anexos", anexoEjb.getByRegistroEntrada(registro));
         initAnexos(entidadActiva, model, request, registro.getId());
+        //Inicializamos el mensaje de las limitaciones de anexos.
+        initMensajeNotaInformativaAnexos(entidadActiva,model);
+        model.addAttribute("maxanexospermitidos",PropiedadGlobalUtil.getMaxAnexosPermitidos(entidadActiva.getId()));
 
         // Historicos
         model.addAttribute("historicos", historicoRegistroEntradaEjb.getByRegistroEntrada(idRegistro));

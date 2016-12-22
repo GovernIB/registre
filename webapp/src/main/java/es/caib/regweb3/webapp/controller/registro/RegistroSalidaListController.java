@@ -5,6 +5,7 @@ import es.caib.regweb3.persistence.ejb.HistoricoRegistroSalidaLocal;
 import es.caib.regweb3.persistence.ejb.OficioRemisionSalidaUtilsLocal;
 import es.caib.regweb3.persistence.ejb.RegistroSalidaLocal;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.form.ModeloForm;
@@ -134,10 +135,10 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         	// Ponemos la hora 23:59 a la fecha fin
             Date fechaFin = RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin());
 
-            // Quitamos acentos al string del Nombre Interesado
-            String nombreInteresado = limpiarCaracteresEspeciales(busqueda.getInteressatNom());
-            String apellido1Interesado = limpiarCaracteresEspeciales(busqueda.getInteressatLli1());
-            String apellido2Interesado = limpiarCaracteresEspeciales(busqueda.getInteressatLli2());
+             /* Solución a los problemas de encoding del formulario GET */
+            String nombreInteresado = new String(busqueda.getInteressatNom().getBytes("ISO-8859-1"), "UTF-8");
+            String apellido1Interesado = new String(busqueda.getInteressatLli1().getBytes("ISO-8859-1"), "UTF-8");
+            String apellido2Interesado = new String(busqueda.getInteressatLli2().getBytes("ISO-8859-1"), "UTF-8");
             Paginacion paginacion = registroSalidaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroSalida, nombreInteresado, apellido1Interesado, apellido2Interesado, busqueda.getInteressatDoc(), busqueda.getOrganOrigen(), busqueda.getAnexos(), busqueda.getObservaciones(), busqueda.getUsuario(), usuarioEntidad.getEntidad().getId());
 
             busqueda.setPageNumber(1);
@@ -214,6 +215,9 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         // Anexos
         model.addAttribute("anexos", anexoEjb.getByRegistroSalida(registro));
         initAnexos(entidadActiva, model, request, registro.getId());
+        //Inicializamos el mensaje de las limitaciones de anexos.
+        initMensajeNotaInformativaAnexos(entidadActiva,model);
+        model.addAttribute("maxanexospermitidos", PropiedadGlobalUtil.getMaxAnexosPermitidos(entidadActiva.getId()));
 
         // Historicos
         model.addAttribute("historicos", historicoRegistroSalidaEjb.getByRegistroSalida(idRegistro));
