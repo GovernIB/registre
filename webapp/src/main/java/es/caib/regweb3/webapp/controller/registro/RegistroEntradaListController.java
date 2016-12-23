@@ -5,7 +5,10 @@ import es.caib.regweb3.persistence.ejb.AnexoLocal;
 import es.caib.regweb3.persistence.ejb.HistoricoRegistroEntradaLocal;
 import es.caib.regweb3.persistence.ejb.OficioRemisionEntradaUtilsLocal;
 import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
-import es.caib.regweb3.persistence.utils.*;
+import es.caib.regweb3.persistence.utils.DestinatarioWrapper;
+import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.persistence.utils.RegistroUtils;
+import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.webapp.form.ModeloForm;
@@ -231,9 +234,6 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         // Anexos
         model.addAttribute("anexos", anexoEjb.getByRegistroEntrada(registro));
         initAnexos(entidadActiva, model, request, registro.getId());
-        //Inicializamos el mensaje de las limitaciones de anexos.
-        initMensajeNotaInformativaAnexos(entidadActiva,model);
-        model.addAttribute("maxanexospermitidos",PropiedadGlobalUtil.getMaxAnexosPermitidos(entidadActiva.getId()));
 
         // Historicos
         model.addAttribute("historicos", historicoRegistroEntradaEjb.getByRegistroEntrada(idRegistro));

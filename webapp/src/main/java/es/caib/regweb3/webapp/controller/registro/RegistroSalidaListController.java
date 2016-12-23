@@ -5,7 +5,6 @@ import es.caib.regweb3.persistence.ejb.HistoricoRegistroSalidaLocal;
 import es.caib.regweb3.persistence.ejb.OficioRemisionSalidaUtilsLocal;
 import es.caib.regweb3.persistence.ejb.RegistroSalidaLocal;
 import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.form.ModeloForm;
@@ -215,9 +214,6 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         // Anexos
         model.addAttribute("anexos", anexoEjb.getByRegistroSalida(registro));
         initAnexos(entidadActiva, model, request, registro.getId());
-        //Inicializamos el mensaje de las limitaciones de anexos.
-        initMensajeNotaInformativaAnexos(entidadActiva,model);
-        model.addAttribute("maxanexospermitidos", PropiedadGlobalUtil.getMaxAnexosPermitidos(entidadActiva.getId()));
 
         // Historicos
         model.addAttribute("historicos", historicoRegistroSalidaEjb.getByRegistroSalida(idRegistro));
