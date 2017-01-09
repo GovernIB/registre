@@ -141,9 +141,7 @@
                             <div class="panel-footer center">
                                 <c:if test="${isDistribuir && puedeDistribuir}">
 
-                                    <button type="button" onclick='confirmDistribuir("<c:url value="/registroEntrada/${registro.id}/distribuir"/>",
-                                            "<c:url value="/registroEntrada/${registro.id}/tramitar"/>",
-                                            "<spring:message code="regweb.confirmar.tramitar" htmlEscape="true"/>")'
+                                    <button type="button" onclick='confirmDistribuir("<spring:message code="regweb.confirmar.distribuir" htmlEscape="true"/>")'
                                             class="btn btn-success btn-sm btn-block"><spring:message
                                             code="regweb.distribuir"/></button>
 
@@ -254,13 +252,10 @@
         <c:param name="tipoRegistro" value="registroEntrada"/>
     </c:import>
 
-    <%-- MODAL TRAMITAR--%>
+    <%-- MODAL Distribuir--%>
     <c:import url="../registro/registroTramitar.jsp">
         <c:param name="tipoRegistro" value="registroEntrada"/>
     </c:import>
-
-    <%-- MODAL DISTRIBUIR--%>
-    <c:import url="../modalDistribuir.jsp"/>
 
 </div>
 
@@ -268,6 +263,10 @@
 <c:import url="../modulos/pie.jsp"/>
 
 <script type="text/javascript">
+    var urlDistribuir = '<c:url value="/registroEntrada/${registro.id}/distribuir"/>';
+    var urlEnviarDestinatarios = '<c:url value="/registroEntrada/${registro.id}/enviarDestinatarios"/>';
+    var urlDetalle = '<c:url value="/registroEntrada/${registro.id}/detalle" />';
+
     <%-- Traducciones para distribuir.js --%>
     var traddistribuir = new Array();
     traddistribuir['campo.obligatorio'] = "<spring:message code='registro.distribuir.propuesto.obligatorio' javaScriptEscape='true' />";

@@ -2,18 +2,11 @@
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 
 <c:if test="${param.tipoRegistro == 'registroEntrada'}">
-    <c:url value="/registroEntrada/${registro.id}/sello" var="urlSello"/>
-    <c:url value="/registroEntrada/${registro.id}/enviardestinatarios" var="urlDistribuir"/>
+    <c:url value="/registroEntrada/${registro.id}/enviarDestinatarios" var="urlDistribuir"/>
     <c:url value="/registroEntrada/${registro.id}/detalle" var="urlDetalle"/>
 </c:if>
 
-<c:if test="${param.tipoRegistro == 'registroSalida'}">
-    <c:url value="/registroSalida/${registro.id}/sello" var="urlSello"/>
-    <%-- <c:url value="/registroSalida/${registro.id}/enviardestinatarios" var="urlDistribuir"/>
-     <c:url value="/registroSalida/${registro.id}/detalle" var="urlDetalle"/>--%>
-</c:if>
-
-<%--Modal tramitar--%>
+<%--Modal distribuir--%>
 <div id="distribuirModal" class="modal fade bs-example-modal-lg">
     <spring:message code="registro.destinatarios.vacio"/>
     <div class="modal-dialog modal-lg">
@@ -58,7 +51,7 @@
                 </div>
                 <div class="form-actions">
                     <input type="submit" class="btn btn-warning btn-sm" value="<spring:message
-                        code="regweb.enviar"/>" onclick="enviarDestinatarios('${urlDistribuir}','${urlDetalle}')">
+                        code="regweb.enviar"/>" onclick="enviarDestinatarios()">
                     <input type="button" value="Cancelar" class="btn btn-default btn-sm" data-dismiss="modal">
                 </div>
 
@@ -66,6 +59,34 @@
             <div class="modal-footer">
                 <button class="btn" data-dismiss="modal" aria-hidden="true"><spring:message
                         code="regweb.cerrar"/></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="modalDistribDestinatarios" class="modal fade bs-example-modal-lg">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><spring:message code="regweb.procesando"/></h3>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-4 centrat" id="cargadist">
+                        <img src="<c:url value="/img/712.GIF"/>" width="60" height="60"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12" id="divlistdestinatarios">
+                        <spring:message code="regweb.distribuyendo"/>
+                        <ul id="listadestin">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
             </div>
         </div>
     </div>

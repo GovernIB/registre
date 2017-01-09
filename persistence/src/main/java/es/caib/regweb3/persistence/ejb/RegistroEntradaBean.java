@@ -664,7 +664,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
 
-    public RespuestaDistribucion distribuir(RegistroEntrada re) throws Exception, I18NException {
+    public RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception, I18NException {
         RespuestaDistribucion respuestaDistribucion = new RespuestaDistribucion();
         respuestaDistribucion.setHayPlugin(false);
         respuestaDistribucion.setDestinatarios(null);
@@ -675,16 +675,28 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         //Si han especificado plug-in
         if (distribucionPlugin != null) {
             respuestaDistribucion.setHayPlugin(true);
+
             //Obtenemos la configuración de la distribución
             ConfiguracionDistribucion configuracionDistribucion = distribucionPlugin.configurarDistribucion();
-            re = configuracionAnexosDistribucion(re, configuracionDistribucion.configuracionAnexos);
             respuestaDistribucion.setListadoDestinatariosModificable(configuracionDistribucion.isListadoDestinatariosModificable());
+
+            re = obtenerAnexosDistribucion(re, configuracionDistribucion.configuracionAnexos);
+
             if (configuracionDistribucion.listadoDestinatariosModificable) {// Si es modificable, mostraremos pop-up
                 respuestaDistribucion.setDestinatarios(distribucionPlugin.distribuir(re)); // isListado = true , puede escoger a quien lo distribuye de la listas propuestas.
                 //Despues lo tramita en una segunda fase desde el metodo distribuir() en distribuir.js
+
             } else { // Si no es modificable, obtendra los destinatarios del propio registro y nos saltamos una llamada al plugin
                 respuestaDistribucion.setEnviado(distribucionPlugin.enviarDestinatarios(re, null, ""));
+
+                // Si ya ha sido enviado, lo marcamos como tramitado.
+                if(respuestaDistribucion.getEnviado()){
+                    tramitarRegistroEntrada(re,usuarioEntidad);
+                }
             }
+
+        }else{ //No hay plugin, marcamos el Registro como Tramitado
+            tramitarRegistroEntrada(re,usuarioEntidad);
         }
 
         return respuestaDistribucion;
@@ -693,10 +705,11 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     public Boolean enviar(RegistroEntrada re, DestinatarioWrapper wrapper) throws Exception, I18NException {
 
+        //Obtenemos plugin
         IDistribucionPlugin distribucionPlugin = RegwebDistribucionPluginManager.getInstance();
         if (distribucionPlugin != null) {
             ConfiguracionDistribucion configuracionDistribucion = distribucionPlugin.configurarDistribucion();
-            re = configuracionAnexosDistribucion(re, configuracionDistribucion.configuracionAnexos);
+            re = obtenerAnexosDistribucion(re, configuracionDistribucion.configuracionAnexos);
             return distribucionPlugin.enviarDestinatarios(re, wrapper.getDestinatarios(), wrapper.getObservaciones());
         }
         return false;
@@ -717,7 +730,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
      * @throws Exception
      * @throws I18NException
      */
-    private RegistroEntrada configuracionAnexosDistribucion(RegistroEntrada original, int confAnexos) throws Exception, I18NException {
+    private RegistroEntrada obtenerAnexosDistribucion(RegistroEntrada original, int confAnexos) throws Exception, I18NException {
         switch (confAnexos) {
             case 1: {//1.  Fitxer + firma + metadades + custodiaId
                 List<Anexo> anexos = original.getRegistroDetalle().getAnexos();

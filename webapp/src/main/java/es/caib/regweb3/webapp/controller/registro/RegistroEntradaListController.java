@@ -380,53 +380,6 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     }
 
     /**
-     * Tramitar un {@link es.caib.regweb3.model.RegistroEntrada}
-     * OLD
-     */
-    @RequestMapping(value = "/{idRegistro}/tramitar")
-    public String tramitarRegistroEntrada(@PathVariable Long idRegistro, HttpServletRequest request) {
-
-        log.info("Llegamos a tramitar");
-        try {
-
-            RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
-            UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-            LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
-
-
-            // Comprobamos si el RegistroEntrada tiene el estado Válido
-            if(!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)){
-
-                Mensaje.saveMessageError(request, getMessage("registroEntrada.tramitar.error"));
-                return "redirect:/registroEntrada/" + idRegistro + "/detalle";
-            }
-
-            // Comprobamos que el usuario tiene permisos para Distribuir el registro
-            if(!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroEntrada.getLibro().getId(), RegwebConstantes.PERMISO_DISTRIBUCION_REGISTRO)){
-                Mensaje.saveMessageError(request, getMessage("registroEntrada.tramitar.error"));
-                return "redirect:/registroEntrada/" + idRegistro + "/detalle";
-            }
-
-            // Comprobamos que el RegistroEntrada se puede Tramitar
-            if (!registroEntradaEjb.isDistribuir(idRegistro, getOrganismosOficioRemision(request,organismosOficinaActiva))) {
-                Mensaje.saveMessageError(request, getMessage("registroEntrada.tramitar.error"));
-                return "redirect:/registroEntrada/" + idRegistro + "/detalle";
-            }
-
-
-            registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, usuarioEntidad);
-            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.tramitar.ok"));
-
-        } catch (Exception e) {
-            Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
-            e.printStackTrace();
-        }
-
-
-        return "redirect:/registroEntrada/" + idRegistro + "/detalle";
-    }
-
-    /**
      * Función que se encarga de obtener los destinatarios a los que se debe distribuir el registro de entrada.
      * La obtención de esos destinatarios se realiza a través del plugin
      *
@@ -462,14 +415,19 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             return respuestaDistribucion;
         }
 
-        // Comprobamos que el RegistroEntrada se puede Tramitar
+        // Comprobamos que el RegistroEntrada se puede Distribuir
         if (!registroEntradaEjb.isDistribuir(idRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva))) {
             Mensaje.saveMessageError(request, getMessage("registroEntrada.distribuir.error"));
             return respuestaDistribucion;
         }
 
         //Obtenemos los destinatarios a través del plugin de distribución
-        respuestaDistribucion = registroEntradaEjb.distribuir(registroEntrada);
+        respuestaDistribucion = registroEntradaEjb.distribuir(registroEntrada, usuarioEntidad);
+
+        if(!respuestaDistribucion.getHayPlugin() || respuestaDistribucion.getEnviado()){
+            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.tramitar.ok"));
+        }
+
         return respuestaDistribucion;
     }
 
@@ -482,7 +440,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/{idRegistro}/enviardestinatarios", method = RequestMethod.POST)
+    @RequestMapping(value = "/{idRegistro}/enviarDestinatarios", method = RequestMethod.POST)
     public
     @ResponseBody
     Boolean enviarDestinatariosRegistroEntrada(@PathVariable Long idRegistro, @RequestBody DestinatarioWrapper wrapper, HttpServletRequest request) throws Exception, I18NException {

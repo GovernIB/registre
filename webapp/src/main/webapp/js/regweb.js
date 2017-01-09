@@ -77,7 +77,7 @@
 
 
 // Muestra el cuadro de confirmación para distribuir un registro
-function confirmDistribuir(url, urlTramitar, mensaje) {
+function confirmDistribuir(mensaje) {
 
     var confirmModal =
         $("<div class=\"modal fade\">" +
@@ -101,7 +101,7 @@ function confirmDistribuir(url, urlTramitar, mensaje) {
             "</div>");
 
     confirmModal.find("#okButton").click(function (event) {
-        distribuir(url, urlTramitar);
+        distribuir();
         confirmModal.modal("hide");
     });
 

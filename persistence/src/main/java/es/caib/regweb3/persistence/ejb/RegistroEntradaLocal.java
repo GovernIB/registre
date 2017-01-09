@@ -258,11 +258,12 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * Método que obtiene los destinatarios a los que distribuir el registro
      *
      * @param re registro de entrada a distribuir
+     * @param usuarioEntidad
      * @return lista de destinatarios a los que se debe distribuir el registro
      * @throws Exception
      * @throws I18NException
      */
-    public RespuestaDistribucion distribuir(RegistroEntrada re) throws Exception, I18NException;
+    public RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception, I18NException;
 
     /**
      * Método que envia un registro de entrada a un conjunto de destinatarios

@@ -11,21 +11,34 @@
  * si no lo son redirecciona directamente a los destinatarios devueltos.
  * si no hay destinatarios se marca el registro como tramitado y listo.
  */
-function distribuir(url, urlTramitar) {
+function distribuir() {
+
     var html = '';
     limpiarDistribuir();
 
     jQuery.ajax({
         async: true,
-        url: url,
+        url: urlDistribuir,
         type: 'GET',
         dataType: 'json',
         contentType: 'application/json',
         success: function (result) {
 
+            // Si no hay plugin definido, o el plugin ya envió directamente el registro,
+            // se marca como Tramitado y recargamos página.
+            if (!result.hayPlugin || result.enviado){
+                goTo(urlDetalle);
+            }
+
+            // Si se debia enviar directamente sin seleccionar destinatarios y falló el envío directo
+            if (!result.listadoDestinatariosModificable && !result.enviado) {
+                // Error en el envio
+                mensajeError('#mensajesdetalle', traddistribuir['distribuir.noenviado']);
+            }
+
             // Si hay destinatarios mostramos pop-up, solo hay este caso.
             if (result.destinatarios != null) {
-                if (result.destinatarios != null && (result.destinatarios.posibles != null && result.destinatarios.posibles.length > 0) || (result.destinatarios.propuestos != null && result.destinatarios.propuestos.length > 0)) { // Si hay destinatarios, mostramos pop-up
+                if ((result.destinatarios.posibles != null && result.destinatarios.posibles.length > 0) || (result.destinatarios.propuestos != null && result.destinatarios.propuestos.length > 0)) { // Si hay destinatarios, mostramos pop-up
 
                     // Pintamos el select con las opciones propuestas seleccionadas y las posibles sin seleccionar
                     html += '<select data-placeholder="" id="destinatarios"  name="destinatarios"  class="chosen-select" multiple="true">';
@@ -48,15 +61,11 @@ function distribuir(url, urlTramitar) {
 
 
                 } else { // No hay destinatarios
-                    //Si no hay destinatarios, mostramos los diferentes mensajes de error en función de result, o
-                    // redireccionamos a urlTramitar para marcar como tramitado el registro.
-                    gestionNoDestinatariosDistribucion(result,urlTramitar);
+                    mensajeError('#mensajesdetalle', traddistribuir['distribuir.nodestinatarios']);
 
                 }
-            } else {
-                    //Si no hay destinatarios, mostramos los diferentes mensajes de error en función de result, o
-                    // redireccionamos a urlTramitar para marcar como tramitado el registro.
-                    gestionNoDestinatariosDistribucion(result,urlTramitar);
+            } else { // No hay destinatarios
+                mensajeError('#mensajesdetalle', traddistribuir['distribuir.nodestinatarios']);
 
             }
         }
@@ -64,31 +73,11 @@ function distribuir(url, urlTramitar) {
     });
 }
 
-/*
-Esta función gestiona los mensajes a mostrar cuando no hay destinatarios
-o redirecciona para marcar como tramitado el registro
- */
-function gestionNoDestinatariosDistribucion(result,urlTramitar){
-    if (!result.hayPlugin) { //No hay destinatarios, no hay plugin --> se marca como tramitado
-        goTo(urlTramitar);
-    } else {
-        if (result.listadoDestinatariosModificable) {//Error el plugin no devuelve ningun destinatario
-            mensajeError('#mensajesdetalle', traddistribuir['distribuir.nodestinatarios']);
-        }
-        if (!result.listadoDestinatariosModificable) { // envio directo
-            if (result.enviado) { // Envio ok.
-                goTo(urlTramitar);
-            } else {  // Error en el envio
-                mensajeError('#mensajesdetalle', traddistribuir['distribuir.noenviado']);
-            }
-        }
-    }
-}
 
 /**
  * Función que recoge la lista de destinatarios propuestos y modificados por el usuario y los distribuye.
  */
-function enviarDestinatarios(url, urlDetalle) {
+function enviarDestinatarios() {
 
 
     var html = "";
@@ -125,13 +114,18 @@ function enviarDestinatarios(url, urlDetalle) {
 
 
         jQuery.ajax({
-            url: url,
+            url: urlEnviarDestinatarios,
             type: 'POST',
             dataType: 'json',
             data: json,
             contentType: 'application/json',
             success: function (result) {
-                goTo(urlDetalle);
+
+                if(result.enviado){
+                    goTo(urlDetalle);
+                }else{
+                    mensajeError('#mensajesdetalle', traddistribuir['distribuir.noenviado']);
+                }
 
             }
         });
