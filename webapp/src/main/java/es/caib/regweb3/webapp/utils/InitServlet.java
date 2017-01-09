@@ -52,6 +52,7 @@ public class InitServlet extends HttpServlet {
     }
     
     // Inicialitzar Like de BBDD
+    //TODO pendiente de refactorizar al mes si nadie se queja de comportamiento raro entre dialectos.
     try {
       String dialect = Configuracio.getHibernateDialect();
       if (dialect.indexOf("Oracle") != -1) {

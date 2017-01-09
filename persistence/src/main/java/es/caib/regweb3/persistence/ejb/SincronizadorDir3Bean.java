@@ -235,7 +235,6 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
             log.info("ORGANISMO ACTUALIZADO/SINCRONIZADO: " + unidadTF.getCodigo() + " - " + unidadTF.getDenominacion());
             // Comprobamos primero si ya existe el organismo
 
-            //TODO Rvisar Pruebas para hacer la sincro de organismos no raiz que pertenecen a otra entidad(FUNDACIO BIT; TIC MALLORCA)
             organismo = organismoEjb.findByCodigoEntidadSinEstado(unidadTF.getCodigo(), idEntidad);
 
             if (organismo == null) {

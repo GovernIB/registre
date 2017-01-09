@@ -214,7 +214,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
                 if (entidadActiva.getSir()) {
                     // Averiguamos si el Organismo Externo está en Sir o no
                     Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
-                    List<OficinaTF> oficinasSIR = oficinasService.obtenerOficinasSIRUnidad(organismoExterno.getCodigo()); //TODO: Revisar que la cerca d'Oficines SIR la fa correctament
+                    List<OficinaTF> oficinasSIR = oficinasService.obtenerOficinasSIRUnidad(organismoExterno.getCodigo());
                     if (oficinasSIR.size() > 0) {
                         oficios.setSir(true);
                         oficios.setOficinasSIR(oficinasSIR);

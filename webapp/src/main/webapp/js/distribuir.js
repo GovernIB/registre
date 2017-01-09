@@ -48,42 +48,41 @@ function distribuir(url, urlTramitar) {
 
 
                 } else { // No hay destinatarios
-
-                    if (!result.hayPlugin) { //No hay destinatarios, no hay plugin --> se marca como tramitado
-                        goTo(urlTramitar);
-                    } else {
-                        if (result.listadoDestinatariosModificable) {//Error el plugin no devuelve ningun destinatario
-                            mensajeError('#mensajesdetalle', traddistribuir['distribuir.nodestinatarios']);
-                        }
-                        if (!result.listadoDestinatariosModificable) { // envio directo
-                            if (result.enviado) { // Envio ok.
-                                goTo(urlTramitar);
-                            } else {  // Error en el envio
-                                mensajeError('#mensajesdetalle', traddistribuir['distribuir.noenviado']);
-                            }
-                        }
-                    }
+                    //Si no hay destinatarios, mostramos los diferentes mensajes de error en función de result, o
+                    // redireccionamos a urlTramitar para marcar como tramitado el registro.
+                    gestionNoDestinatariosDistribucion(result,urlTramitar);
 
                 }
             } else {
-                    if (!result.hayPlugin) { //No hay destinatarios, no hay plugin --> se marca como tramitado
-                        goTo(urlTramitar);
-                    } else {
-                        if (result.listadoDestinatariosModificable) {//Error el plugin no devuelve ningun destinatario
-                            mensajeError('#mensajesdetalle', traddistribuir['distribuir.nodestinatarios']);
-                        }
-                        if (!result.listadoDestinatariosModificable) { // envio directo
-                            if (result.enviado) { // Envio ok.
-                                goTo(urlTramitar);
-                            } else {  // Error en el envio
-                                mensajeError('#mensajesdetalle', traddistribuir['distribuir.noenviado']);
-                            }
-                        }
-                    }
+                    //Si no hay destinatarios, mostramos los diferentes mensajes de error en función de result, o
+                    // redireccionamos a urlTramitar para marcar como tramitado el registro.
+                    gestionNoDestinatariosDistribucion(result,urlTramitar);
+
             }
         }
 
     });
+}
+
+/*
+Esta función gestiona los mensajes a mostrar cuando no hay destinatarios
+o redirecciona para marcar como tramitado el registro
+ */
+function gestionNoDestinatariosDistribucion(result,urlTramitar){
+    if (!result.hayPlugin) { //No hay destinatarios, no hay plugin --> se marca como tramitado
+        goTo(urlTramitar);
+    } else {
+        if (result.listadoDestinatariosModificable) {//Error el plugin no devuelve ningun destinatario
+            mensajeError('#mensajesdetalle', traddistribuir['distribuir.nodestinatarios']);
+        }
+        if (!result.listadoDestinatariosModificable) { // envio directo
+            if (result.enviado) { // Envio ok.
+                goTo(urlTramitar);
+            } else {  // Error en el envio
+                mensajeError('#mensajesdetalle', traddistribuir['distribuir.noenviado']);
+            }
+        }
+    }
 }
 
 /**
