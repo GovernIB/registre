@@ -425,7 +425,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         respuestaDistribucion = registroEntradaEjb.distribuir(registroEntrada, usuarioEntidad);
 
         if(!respuestaDistribucion.getHayPlugin() || respuestaDistribucion.getEnviado()){
-            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.tramitar.ok"));
+            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
         }
 
         return respuestaDistribucion;
