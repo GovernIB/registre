@@ -62,17 +62,6 @@ public class PropiedadGlobalUtil {
     }
 
     /**
-     * Retorna el valor de la propiedad DefaultLanguage de la entidad indicada.
-     * @return
-     */
-    public static String getDefaultLanguage() {
-        final String partialPropertyName = "defaultlanguage";
-        String valor = getString( partialPropertyName);
-
-        return valor != null ? valor : null;
-    }
-
-    /**
      * Retorna el valor de la propiedad IsCaib de la entidad indicada.
      * @return
      */

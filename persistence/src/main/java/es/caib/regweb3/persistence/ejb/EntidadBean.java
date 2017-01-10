@@ -2,7 +2,9 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Libro;
+import es.caib.regweb3.model.PropiedadGlobal;
 import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -136,6 +138,10 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         tipoDocumentalEjb.nuevoTraduccion("TD99", entidad.getId(), "Altres", "Otros");
 
         // Creamos las propiedades globales por defecto
+
+        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"resultsperpage.oficios","20","Resultados por página en los Oficios pendientes de remisión", entidad.getId(), 1L));
+        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"resultsperpage.lopd","20","Resultados por página en los informes LOPD", entidad.getId(), 1L));
+
         /*propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"distribucion.plugin","","Implementación del plugin de distribución", entidad.getId()));
         propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"scan.plugin","","Plugin de Scanner", entidad.getId()));
 
