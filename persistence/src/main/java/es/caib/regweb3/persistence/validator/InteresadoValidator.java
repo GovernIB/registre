@@ -179,29 +179,7 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
                 rejectValue(errors, "documento", validacionDocumento.getCodigoError(), validacionDocumento.getTextoError());
                 log.info("El formato del documento NO es correcto");
             }
-//            if (validacionDocumento.getValido()) {
-//                boolean existe;
-//                try {
-//                    //Comprueba que el documento no exista en la bbdd
-//                    if (interesado.getId() == null) {
-//                        existe = personaEjb.existeDocumentoNew(interesado.getDocumento().toUpperCase(), interesado.getEntidad());
-//                    } else {
-//                        existe = personaEjb.existeDocumentoEdit(interesado.getDocumento().toUpperCase(), interesado.getId(), interesado.getEntidad());
-//                    }
-//
-//                } catch (Exception e) {
-//                    log.error("Error comprobando si persona ya existe: ", e);
-//                    existe = true;
-//                }
-//
-//                if (existe) {
-//                    rejectValue(errors, "documento", "error.document.existe",
-//                            "El document ja existeix");
-//                }
-//            } else {
-//                rejectValue(errors, "documento", validacionDocumento.getCodigoError(), validacionDocumento.getTextoError());
-//                log.info("El formato del documento NO es correcto");
-//            }
+
         }else if(!StringUtils.isEmpty(interesado.getDocumento())){
             rejectValue(errors, "tipoDocumentoIdentificacion", "error.valor.requerido", "El camp és obligatori");
         }
