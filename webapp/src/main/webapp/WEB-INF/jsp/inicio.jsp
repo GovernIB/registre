@@ -168,7 +168,7 @@
                                                 <tr>
                                                     <th><spring:message code="oficioRemision.fecha"/></th>
                                                     <th><spring:message code="oficioRemision.oficina"/></th>
-                                                    <th><spring:message code="oficioRemision.organismoDestino"/></th>
+                                                    <th><spring:message code="organismo.destino"/></th>
                                                     <th class="center"><spring:message code="regweb.acciones"/></th>
                                                 </tr>
                                             </thead>
@@ -216,7 +216,7 @@
                                             </colgroup>
                                             <thead>
                                             <tr>
-                                                <th><spring:message code="organismo.organismo"/></th>
+                                                <th><spring:message code="organismo.destino"/></th>
                                                 <th class="center"><spring:message code="regweb.acciones"/></th>
                                             </tr>
                                             </thead>
@@ -262,7 +262,7 @@
                                             </colgroup>
                                             <thead>
                                             <tr>
-                                                <th><spring:message code="organismo.organismo"/></th>
+                                                <th><spring:message code="organismo.destino"/></th>
                                                 <th class="center"><spring:message code="regweb.acciones"/></th>
                                             </tr>
                                             </thead>
