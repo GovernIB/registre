@@ -1,6 +1,5 @@
 package es.caib.regweb3.webapp.utils;
 
-import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.Versio;
@@ -53,7 +52,7 @@ public class InitServlet extends HttpServlet {
     
     // Inicialitzar Like de BBDD
     //TODO pendiente de refactorizar al mes si nadie se queja de comportamiento raro entre dialectos.
-    try {
+    /*try {
       String dialect = Configuracio.getHibernateDialect();
       if (dialect.indexOf("Oracle") != -1) {
         log.info("Setting Oracle Like Manager.");
@@ -70,7 +69,7 @@ public class InitServlet extends HttpServlet {
       }
     } catch(Throwable th) {
       log.error("Error desconegut establint LikeManager " + th.getMessage(), th);
-    }
+    }*/
 
     // Mostrar Versió
     String ver = Versio.VERSIO + (Configuracio.isCAIB()?"-caib" : "");
