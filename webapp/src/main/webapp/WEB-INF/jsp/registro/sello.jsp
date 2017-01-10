@@ -18,13 +18,6 @@
                 <h4 class="modal-title" id="myModalLabel"><spring:message code="sello.imprimir"/></h4>
             </div>
             <div class="modal-body">
-                <div id="varios">
-                    <span id="paginaX"></span><br>
-                    <span id="paginaY"></span><br>
-                    <span id="cliente"></span><br>
-                    <span id="pdfX"></span><br>
-                    <span id="pdfY"></span><br>
-                </div>
                 <div id="sello" style="width: 210px;height: 297px;background: #FF9523;border: 1px groove;cursor:crosshair;margin-right: 0px;"></div>
                 <div id="marca" style="position: absolute;text-align:center; background-color:#000000; color:#FFFFFF;  font-family: arial; font-size: 9px; height:23px; width:45px;"></div>
                 <div class="row margin-top20">

@@ -7,11 +7,8 @@ $(document).ready(function() {
     var pageX;
     var pageY;
     var pageCoords;
-    var w;
-    var h;
     var orientacion;
 
-    //posicionaSegellXY(155,14,"( 155, 14)");
     if (posXsello!='' && posYsello!='') {
         posicionaSegell('V0');
     } else {
@@ -25,11 +22,6 @@ $(document).ready(function() {
         pageX=(event.pageX - offset.left);
         pageY=(event.pageY - offset.top);
         pageCoords = "( " + pageX+ ", " + pageY + " )";
-
-        //$( "#paginaX" ).text( "( event.pageX ) : " + pageX );
-        //$( "#paginaY" ).text( "( event.pageY ) : " + pageY );
-        //$( "#offsetTop" ).text( "offsetTop: " + offset.top );
-        //$( "#offsetLeft" ).text( "offsetLeft: " + offset.left );
     });
 
     $("#sello").click(function( event ) {
@@ -69,14 +61,12 @@ function posicionaSegellXY(x ,y, texto) {
         }
     }
 
-    //$( "#pdfX" ).text(pdfX);
-    //$( "#pdfY" ).text(pdfY);
 
     $( '#x' ).val(pdfX);
     $( '#y' ).val(pdfY);
 
     $("#marca").css("left",x+altSegell-2);
-    $("#marca").css("top",y+ampleSegell+85);
+    $("#marca").css("top",y+altSegell-2);
     $("#marca").html("("+x.toFixed() +","+y.toFixed() +")");
 }
 
