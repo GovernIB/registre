@@ -11,15 +11,6 @@
             <!-- Tamany màxim de pujada de fitxer. Si no es defineix no hi ha límit. -->
             #es.caib.regweb3.maxuploadsizeinbytes=10485760
 
-            <!-- Dialecte de la BBDD -->
-            # es.caib.regweb3.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
-            # es.caib.regweb3.hibernate.dialect=org.hibernate.dialect.MySQLDialect
-            # es.caib.regweb3.hibernate.dialect=org.hibernate.dialect.DB2Dialect
-            # es.caib.regweb3.hibernate.dialect=org.hibernate.dialect.SQLServerDialect
-            # es.caib.regweb3.hibernate.dialect=net.sf.hibernate.dialect.Oracle9Dialect
-            es.caib.regweb3.hibernate.dialect=org.hibernate.dialect.Oracle10gDialect
-            es.caib.regweb3.hibernate.query.substitutions=true 1, false 0
-
             <!-- Directorio de oficinas, unidades y catálogos -->
             es.caib.regweb3.dir3caib.server=http://195.57.128.134:8080/dir3caib
             es.caib.regweb3.dir3caib.username=caibapp
