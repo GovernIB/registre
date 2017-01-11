@@ -107,29 +107,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
           int modoFirma = anexo.getModoFirma();
 
           log.info(" XYZ modoFirma " + modoFirma);
-       /* if(modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA){
-                anexoFull.setDocumentoCustody(custody.getDocumentInfoOnly(custodyID));
-                anexoFull.setDocumentoFileDelete(false);
-        }
-        if(modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED){
-            //Controlamos los anexos de la api antigua que con modo firma attached se guardaban en documentCustody.
 
-            SignatureCustody sc = custody.getSignatureInfoOnly(custodyID);
-
-            if(sc != null) {
-                anexoFull.setSignatureCustody(sc);
-                anexoFull.setSignatureFileDelete(false);
-            }else{
-                anexoFull.setDocumentoCustody(custody.getDocumentInfoOnly(custodyID));
-                anexoFull.setDocumentoFileDelete(false);
-            }
-        }
-        if(modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED){
-            anexoFull.setDocumentoCustody(custody.getDocumentInfoOnly(custodyID));
-            anexoFull.setDocumentoFileDelete(false);
-            anexoFull.setSignatureCustody(custody.getSignatureInfoOnly(custodyID));
-            anexoFull.setSignatureFileDelete(false);
-        }*/
 
         
         return anexoFull;
@@ -145,6 +123,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
 
     @Override
+    //TODO CAMBIAR NOMBRE A ESTE METODO POR OTRO MAS ADECUADO, ES REDUNDANTE
     public AnexoFull getAnexoFullCompleto(Long anexoID) throws I18NException {
 
         try {
@@ -1113,7 +1092,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     /* FIN METODOS DEL AnnexDocumentCustodyManager.java hecho por marilen del TODO DE TONI*/
 
     /**
-     * Genera el Hash mediante MD5 del contenido del documento y lo codifica en base64
+     * Genera el Hash mediante SHA-256 del contenido del documento y lo codifica en base64
      *
      * @param documentoData
      * @return
@@ -1121,7 +1100,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      */
     protected byte[] obtenerHash(byte[] documentoData) throws Exception {
 
-        MessageDigest md = MessageDigest.getInstance("MD5");
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
         byte[] digest = md.digest(documentoData);
 
         return Base64.encodeBase64(digest);

@@ -1,6 +1,7 @@
 package org.fundaciobit.plugins.distribucion.distribucionlocal;
 
 
+import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.utils.AnexoFull;
 import org.apache.log4j.Logger;
@@ -102,11 +103,19 @@ public class DistribucionLocalDistribucionPlugin extends AbstractPluginPropertie
     public Boolean enviarDestinatarios(RegistroEntrada registro, List<Destinatario> destinatariosDefinitivos, String observaciones) throws Exception {
         // Este código es una prueba, aquí se debe distribuir el registro al listado de destinatarios indicado.
         log.info("OBSERVACIONES EN PLUGIN " + observaciones);
-        log.info("NUMERO DE ANEXOS " + registro.getRegistroDetalle().getAnexosFull().size());
+        log.info("NUMERO DE ANEXOS FULL" + registro.getRegistroDetalle().getAnexosFull().size());
+        log.info("NUMERO DE ANEXOS " + registro.getRegistroDetalle().getAnexos().size());
+
         List<AnexoFull> anexosFull = registro.getRegistroDetalle().getAnexosFull();
         for (AnexoFull anexoFull : anexosFull) {
             log.info("TITULO " + anexoFull.getAnexo().getTitulo());
-            log.info(anexoFull.getDocumentoCustody().getName());
+            log.info("DC " + anexoFull.getDocumentoCustody());
+            log.info("SC " + anexoFull.getSignatureCustody());
+        }
+
+        List<Anexo> anexos = registro.getRegistroDetalle().getAnexos();
+        for (Anexo anexo : anexos) {
+            log.info("TITULO " + anexo.getTitulo());
         }
         if (destinatariosDefinitivos != null) {
             for (Destinatario destinatario : destinatariosDefinitivos) {
@@ -114,13 +123,13 @@ public class DistribucionLocalDistribucionPlugin extends AbstractPluginPropertie
                 log.info("DESTINATARIO NOMBRE EN PLUGIN " + destinatario.getName());
             }
         }
-        return false;
+        return true;
 
     }
 
     @Override
     public ConfiguracionDistribucion configurarDistribucion() throws Exception {
-        ConfiguracionDistribucion cd = new ConfiguracionDistribucion(true, 3);
+        ConfiguracionDistribucion cd = new ConfiguracionDistribucion(false, 3);
         return cd;
 
     }

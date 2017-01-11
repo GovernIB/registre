@@ -26,49 +26,57 @@ function distribuir() {
 
             // Si no hay plugin definido, o el plugin ya envió directamente el registro,
             // se marca como Tramitado y recargamos página.
+
             if (!result.hayPlugin || result.enviado){
                 goTo(urlDetalle);
-            }
+            }else{
 
-            // Si se debia enviar directamente sin seleccionar destinatarios y falló el envío directo
-            if (!result.listadoDestinatariosModificable && !result.enviado) {
-                // Error en el envio
-                mensajeError('#mensajesdetalle', traddistribuir['distribuir.noenviado']);
-            }
-
-            // Si hay destinatarios mostramos pop-up, solo hay este caso.
-            if (result.destinatarios != null) {
-                if ((result.destinatarios.posibles != null && result.destinatarios.posibles.length > 0) || (result.destinatarios.propuestos != null && result.destinatarios.propuestos.length > 0)) { // Si hay destinatarios, mostramos pop-up
-
-                    // Pintamos el select con las opciones propuestas seleccionadas y las posibles sin seleccionar
-                    html += '<select data-placeholder="" id="destinatarios"  name="destinatarios"  class="chosen-select" multiple="true">';
-                    var lenposibles = result.destinatarios.posibles.length;
-                    for (var i = 0; i < lenposibles; i++)
-                        html += '<option value="' + result.destinatarios.posibles[i].id + '">'
-                            + result.destinatarios.posibles[i].name + '</option>';
-                    var lenpropuestos = result.destinatarios.propuestos.length;
-                    for (var j = 0; j < lenpropuestos; j++)
-                        html += '<option value="' + result.destinatarios.propuestos[j].id + '" selected="selected">'
-                            + result.destinatarios.propuestos[j].name + '</option>';
-
-                    html += '</select>';
-                    $('#divdestinatarios').html(html);
-
-                    $('#destinatarios').chosen({width: "100%"});
-                    $('#destinatarios').trigger("chosen:update");
-
-                    $('#distribuirModal').modal('show');
+                // Si se debia enviar directamente sin seleccionar destinatarios y falló el envío directo
+                if (!result.listadoDestinatariosModificable && !result.enviado) {
+                    // Error en el envio
+                    mensajeError('#mensajesdetalle', traddistribuir['distribuir.noenviado']);
+                }
 
 
+                // Si hay destinatarios mostramos pop-up, solo hay este caso.
+                if (result.destinatarios != null) {
+                    if ((result.destinatarios.posibles != null && result.destinatarios.posibles.length > 0) || (result.destinatarios.propuestos != null && result.destinatarios.propuestos.length > 0)) { // Si hay destinatarios, mostramos pop-up
+
+                        // Pintamos el select con las opciones propuestas seleccionadas y las posibles sin seleccionar
+                        html += '<select data-placeholder="" id="destinatarios"  name="destinatarios"  class="chosen-select" multiple="true">';
+                        var lenposibles = result.destinatarios.posibles.length;
+                        for (var i = 0; i < lenposibles; i++)
+                            html += '<option value="' + result.destinatarios.posibles[i].id + '">'
+                                + result.destinatarios.posibles[i].name + '</option>';
+                        var lenpropuestos = result.destinatarios.propuestos.length;
+                        for (var j = 0; j < lenpropuestos; j++)
+                            html += '<option value="' + result.destinatarios.propuestos[j].id + '" selected="selected">'
+                                + result.destinatarios.propuestos[j].name + '</option>';
+
+                        html += '</select>';
+                        html += '<span id="destinatariosError"></span>';
+                        $('#divdestinatarios').html(html);
+
+                        $('#destinatarios').chosen({width: "100%"});
+                        $('#destinatarios').trigger("chosen:update");
+
+                        $('#distribuirModal').modal('show');
+
+
+                    } else { // No hay destinatarios
+                        mensajeError('#mensajesdetalle', traddistribuir['distribuir.nodestinatarios']);
+
+                    }
                 } else { // No hay destinatarios
                     mensajeError('#mensajesdetalle', traddistribuir['distribuir.nodestinatarios']);
 
                 }
-            } else { // No hay destinatarios
-                mensajeError('#mensajesdetalle', traddistribuir['distribuir.nodestinatarios']);
 
             }
+
+
         }
+
 
     });
 }
@@ -121,9 +129,10 @@ function enviarDestinatarios() {
             contentType: 'application/json',
             success: function (result) {
 
-                if(result.enviado){
+                if(result){
                     goTo(urlDetalle);
                 }else{
+                    $('#modalDistribDestinatarios').modal('hide');
                     mensajeError('#mensajesdetalle', traddistribuir['distribuir.noenviado']);
                 }
 

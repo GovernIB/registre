@@ -31,7 +31,6 @@
                                 </div>
                                 <!-- Div donde se pinta el select multiple de los destinatarios posibles y propuestos (distribuir.js) - funcion distribuir() -->
                                 <div class="col-xs-9" id="divdestinatarios">
-                                    <span id="destinatariosErrors"></span>
                                 </div>
                             </div>
                         </div>

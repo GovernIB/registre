@@ -29,19 +29,25 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
   
   public AnexoFull crearAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
       Long registroID, String tipoRegistro) throws I18NException, I18NValidationException;
-    
 
-  
-  public AnexoFull getAnexoFull(Long anexoID) throws I18NException;
 
     /**
-     * Método que levanta todos los anexos completo con el archivo de custodia.
-     *
+     * Método que levanta la información de los anexos menos los archivos físicos.
      * @param anexoID
      * @return
      * @throws I18NException
      */
-    public AnexoFull getAnexoFullCompleto(Long anexoID) throws I18NException;
+  public AnexoFull getAnexoFull(Long anexoID) throws I18NException;
+
+  /**
+   * Método que levanta los archivos
+   *
+   * @param anexoID
+   * @return
+   * @throws I18NException
+   */
+  public AnexoFull getAnexoFullCompleto(Long anexoID) throws I18NException;
+
   
   
   
