@@ -162,7 +162,7 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
 <script type="text/javascript" src="<c:url value="/js/busquedaorganismo.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/interesados.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/representantes.js"/>"></script>
-<script src="<c:url value="/js/bootstrap-typeahead.min.js"/>" type="text/javascript"></script>
+<script src="<c:url value="/js/bootstrap-typeahead.js"/>" type="text/javascript"></script>
 
 
 <script type="text/javascript">
