@@ -34,7 +34,7 @@
                 <div class="panel panel-warning">
 
                     <div class="panel-heading">
-                        <a class="btn btn-success btn-xs pull-right" href="<c:url value="/usuario/existeUsuario"/>" role="button"><span class="fa fa-plus"></span> <spring:message code="usuario.nuevo"/></a>
+                        <a class="btn btn-warning btn-xs pull-right" href="<c:url value="/usuario/existeUsuario"/>" role="button"><span class="fa fa-plus"></span> <spring:message code="usuario.nuevo"/></a>
                         <h3 class="panel-title"><i class="fa fa-list"></i> <strong><spring:message code="usuario.buscador"/> de ${entidad.nombre}</strong></h3>
                     </div>
 
