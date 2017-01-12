@@ -35,12 +35,7 @@
         <div class="col-xs-12">
 
             <!-- REGISTRO MIGRADO -->
-            <c:if test="${registroMigrado.tipoRegistro}">
-              <div class="panel panel-info">
-            </c:if>
-            <c:if test="${!registroMigrado.tipoRegistro}">
-              <div class="panel panel-danger">
-            </c:if>
+            <div class="panel panel-warning">
                 <div class="panel-heading">
                     <h3 class="panel-title"><i class="fa fa-file-o"></i>
                         <strong>

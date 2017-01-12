@@ -144,25 +144,6 @@
                     <div class="row">
                         <div class="col-xs-12">
 
-                        <!-- PARÁMETROS DE BÚSQUEDA -->
-                        <div class="panel panel-success">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-file-o"></i>
-                                    <strong>
-                                        <spring:message code="informe.usuarioLopd"/>
-                                    </strong>
-                                </h3>
-                            </div>
-                            <div class="panel-body">
-                                <div class="col-xs-12"><strong><spring:message code="usuario.usuario"/>: ${usuario.identificador}</strong></div>
-                                <div class="col-xs-12"><strong><spring:message code="informe.fechaInicio"/>: <fmt:formatDate value="${usuarioLopdBusqueda.fechaInicio}" pattern="dd/MM/yyyy"/></strong></div>
-                                <div class="col-xs-12"><strong><spring:message code="informe.fechaFin"/>: <fmt:formatDate value="${usuarioLopdBusqueda.fechaFin}" pattern="dd/MM/yyyy"/></strong></div>
-                                <c:if test="${usuarioLopdBusqueda.libro > 0}">
-                                    <div class="col-xs-12"><strong><spring:message code="libro.libro"/>: ${libro.nombreCompleto}</strong></div>
-                                </c:if>
-                            </div>
-                        </div>
-
                         <c:if test="${tipo == 1}">
                             <!-- REGISTROS DE ENTRADA -->
                             <div class="panel panel-info">

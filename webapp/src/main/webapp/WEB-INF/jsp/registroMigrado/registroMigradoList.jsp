@@ -33,7 +33,7 @@
 
 <div class="col-xs-12">
 
-    <div class="panel panel-success">
+    <div class="panel panel-warning">
 
         <div class="panel-heading">
             <h3 class="panel-title"><i class="fa fa-search"></i><strong><spring:message code="registroMigrado.buscador"/></strong> </h3>
@@ -203,7 +203,7 @@
                                                 <a class="btn btn-info btn-sm" href="<c:url value="/registroMigrado/${registroMigrado.id}/detalle"/>" title="<spring:message code="registroMigrado.detalle"/>"><span class="fa fa-eye"></span></a>
                                             </c:if>
                                             <c:if test="${rolAutenticado.nombre == 'RWE_ADMIN'}">
-                                                <a class="btn btn-success btn-sm" href="<c:url value="/registroMigrado/${registroMigrado.id}/lopd"/>" title="<spring:message code="registroMigrado.lopd"/>"><span class="fa fa-lock"></span></a>
+                                                <a class="btn btn-warning btn-sm" href="<c:url value="/registroMigrado/${registroMigrado.id}/lopd"/>" title="<spring:message code="registroMigrado.lopd"/>"><span class="fa fa-lock"></span></a>
                                             </c:if>
                                         </td>
                                     </tr>
