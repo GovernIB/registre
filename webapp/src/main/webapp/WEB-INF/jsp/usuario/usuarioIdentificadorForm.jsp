@@ -41,7 +41,6 @@
                     <!-- Formulario -->
                     <div class="panel-body">
 
-                        
 
                             <div class="form-group col-xs-6">
                                 <div class="col-xs-4 pull-left etiqueta_regweb control-label">
