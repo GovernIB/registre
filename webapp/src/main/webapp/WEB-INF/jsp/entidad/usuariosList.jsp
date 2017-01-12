@@ -26,7 +26,6 @@
             </div>
         </div><!-- /.row -->
 
-
         <c:import url="../modulos/mensajes.jsp"/>
 
         <div class="row">
