@@ -134,26 +134,6 @@
                                 <!-- REGISTROS DE ENTRADA -->
                                 <c:if test="${entradas}">
 
-                                    <!-- PARÁMETROS DE BÚSQUEDA -->
-                                    <div class="panel panel-success">
-                                        <div class="panel-heading">
-                                            <h3 class="panel-title"><i class="fa fa-file-o"></i>
-                                                <strong>
-                                                    <spring:message code="informe.registroLopd"/>
-                                                </strong>
-                                            </h3>
-                                        </div>
-                                        <div class="panel-body">
-                                            <div class="col-xs-12"><strong><spring:message code="libro.libro"/>: ${libro.nombreCompleto}</strong></div>
-                                            <div class="col-xs-12"><strong><spring:message code="informe.fechaInicio"/>: <fmt:formatDate value="${registroLopdBusqueda.fechaInicio}" pattern="dd/MM/yyyy"/></strong></div>
-                                            <div class="col-xs-12"><strong><spring:message code="informe.fechaFin"/>: <fmt:formatDate value="${registroLopdBusqueda.fechaFin}" pattern="dd/MM/yyyy"/></strong></div>
-                                            <div class="col-xs-12"><strong><spring:message code="regweb.tipoRegistro"/>: <spring:message code="registroEntrada.registroEntrada"/></strong></div>
-                                            <c:if test="${registroLopdBusqueda.numeroRegistro != null}">
-                                                <div class="col-xs-12"><strong><spring:message code="registroEntrada.numeroRegistro"/>: ${registroLopdBusqueda.numeroRegistro}</strong></div>
-                                            </c:if>
-                                        </div>
-                                    </div>
-
                                     <div class="panel panel-info">
                                         <div class="panel-heading">
                                             <h3 class="panel-title"><i class="fa fa-file-o"></i>
@@ -226,26 +206,6 @@
                                 <!-- REGISTROS DE SALIDA -->
                                 <c:if test="${salidas}">
 
-                                    <!-- PARÁMETROS DE BÚSQUEDA -->
-                                    <div class="panel panel-success">
-                                        <div class="panel-heading">
-                                            <h3 class="panel-title"><i class="fa fa-file-o"></i>
-                                                <strong>
-                                                    <spring:message code="informe.registroLopd"/>
-                                                </strong>
-                                            </h3>
-                                        </div>
-                                        <div class="panel-body">
-                                            <div class="col-xs-12"><strong><spring:message code="libro.libro"/>: ${libro.nombreCompleto}</strong></div>
-                                            <div class="col-xs-12"><strong><spring:message code="informe.fechaInicio"/>: <fmt:formatDate value="${registroLopdBusqueda.fechaInicio}" pattern="dd/MM/yyyy"/></strong></div>
-                                            <div class="col-xs-12"><strong><spring:message code="informe.fechaFin"/>: <fmt:formatDate value="${registroLopdBusqueda.fechaFin}" pattern="dd/MM/yyyy"/></strong></div>
-                                            <div class="col-xs-12"><strong><spring:message code="regweb.tipoRegistro"/>: <spring:message code="registroSalida.registroSalida"/></strong></div>
-                                            <c:if test="${registroLopdBusqueda.numeroRegistro != null}">
-                                                <div class="col-xs-12"><strong><spring:message code="registroEntrada.numeroRegistro"/>: ${registroLopdBusqueda.numeroRegistro}</strong></div>
-                                            </c:if>
-                                        </div>
-                                    </div>
-
                                     <div class="panel panel-danger">
                                         <div class="panel-heading">
                                             <h3 class="panel-title"><i class="fa fa-file-o"></i>
@@ -261,8 +221,7 @@
                                                     <c:if test="${paginacion.totalResults == 1}">
                                                         <spring:message code="regweb.resultado"/> <strong>${paginacion.totalResults}</strong> <spring:message code="registroSalida.registroSalida"/>
                                                     </c:if>
-                                                    <c:if test="${paginacion.totalResults > 1}">
-                                                        <spring:message code="regweb.resultados"/> <strong>${paginacion.totalResults}</strong> <spring:message code="registroSalida.registroSalidas"/>
+                                                    <c:if test="${paginacion.totalResults > 1}"><spring:message code="regweb.resultados"/> <strong>${paginacion.totalResults}</strong> <spring:message code="registroSalida.registroSalidas"/>
                                                     </c:if>
 
                                                     <p class="pull-right"><spring:message code="regweb.pagina"/> <strong>${paginacion.currentIndex}</strong> de ${paginacion.totalPages}</p>

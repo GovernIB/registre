@@ -32,7 +32,7 @@
             
                <form:form modelAttribute="usuario" method="post" cssClass="form-horizontal">
 
-                <div class="panel panel-success">
+                <div class="panel panel-warning">
 
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong><spring:message code="usuarioEntidad.existeUsuario"/></strong></h3>
@@ -41,7 +41,6 @@
                     <!-- Formulario -->
                     <div class="panel-body">
 
-                        
 
                             <div class="form-group col-xs-6">
                                 <div class="col-xs-4 pull-left etiqueta_regweb control-label">
