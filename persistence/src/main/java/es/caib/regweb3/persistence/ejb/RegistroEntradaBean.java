@@ -668,6 +668,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         RespuestaDistribucion respuestaDistribucion = new RespuestaDistribucion();
         respuestaDistribucion.setHayPlugin(false);
         respuestaDistribucion.setDestinatarios(null);
+        respuestaDistribucion.setEnviado(false);
 
         //Obtenemos plugin
 
@@ -684,7 +685,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
             if (configuracionDistribucion.listadoDestinatariosModificable) {// Si es modificable, mostraremos pop-up
                 respuestaDistribucion.setDestinatarios(distribucionPlugin.distribuir(re)); // isListado = true , puede escoger a quien lo distribuye de la listas propuestas.
-                //Despues lo tramita en una segunda fase desde el metodo distribuir() en distribuir.js
 
             } else { // Si no es modificable, obtendra los destinatarios del propio registro y nos saltamos una llamada al plugin
                 respuestaDistribucion.setEnviado(distribucionPlugin.enviarDestinatarios(re, null, ""));
@@ -736,14 +736,12 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                 List<Anexo> anexos = original.getRegistroDetalle().getAnexos();
                 List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
                 for (Anexo anexo : anexos) {
-                    AnexoFull anexoFull = anexoEjb.getAnexoFull(anexo.getId());
-                    if (anexoFull != null) {
-                        log.info(anexoFull.getDocumentoCustody().getName());
-                    }
+                    AnexoFull anexoFull = anexoEjb.getAnexoFullCompleto(anexo.getId());
                     anexosFull.add(anexoFull);
                 }
                 //Asignamos los documentos recuperados de custodia al registro de entrada.
                 original.getRegistroDetalle().setAnexosFull(anexosFull);
+                break;
             }
             case 2: {//2. custodiaId
 
@@ -756,8 +754,10 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                     nuevosAnexos.add(nuevoAnexo);
                 }
                 original.getRegistroDetalle().setAnexos(nuevosAnexos);
+                break;
             }
-            // 3. custodiaId + metadades (No hace falta hacer nada es el caso por defecto)
+            // 3. custodiaId + metadades (no se hace nada, es el caso por defecto)
+
 
         }
         return original;
