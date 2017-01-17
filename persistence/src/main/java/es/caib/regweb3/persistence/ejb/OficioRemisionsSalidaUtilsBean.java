@@ -477,12 +477,9 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
                 if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
 
                     if(!organismos.contains(interesado.getCodigoDir3())){
-                        String codigoDir3 =  interesado.getCodigoDir3();
-                        log.info("codigoDir3 : " + codigoDir3);
-                        return codigoDir3;
 
+                        return interesado.getCodigoDir3();
                     }
-
                 }
             }
         }
