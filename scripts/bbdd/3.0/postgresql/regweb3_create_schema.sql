@@ -204,6 +204,7 @@
         DIASVISADO int4,
         NOMBRE varchar(255) not null,
         NUMREGISTRO varchar(4000),
+        OFICIOREMISION bool not null,
         POSXSELLO int4,
         POSYSELLO int4,
         SELLO varchar(4000),
