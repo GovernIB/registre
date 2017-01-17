@@ -53,7 +53,7 @@
                             <li class="timeline-inverted">
                                 <c:set var="registroEntradaOrigen" value="${trazabilidad.registroEntradaOrigen}" scope="request"/>
                                 <c:import url="../trazabilidad/registroEntradaOrigen.jsp">
-                                    <c:param name="activo" value="true"/>
+                                    <c:param name="activo" value="false"/>
                                 </c:import>
                             </li>
                         </c:if>
