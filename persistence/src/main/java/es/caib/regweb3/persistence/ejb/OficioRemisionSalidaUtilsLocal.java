@@ -117,4 +117,22 @@ public interface OficioRemisionSalidaUtilsLocal {
      * @throws Exception
      */
     public Boolean isOficioRemision(Long idRegistro, Set<String> organismos) throws Exception;
+
+    /**
+     * Comprueba si un RegistroSalida se considera un OficioRemision interno o no
+     * @param registroSalida
+     * @param organismos
+     * @return
+     * @throws Exception
+     */
+    public Boolean isOficioRemisionInterno(RegistroSalida registroSalida, Set<String> organismos) throws Exception;
+
+    /**
+     * Comprueba si un RegistroSalida se considera un OficioRemision externo o no
+     * @param registroSalida
+     * @param organismos
+     * @return
+     * @throws Exception
+     */
+    public Boolean isOficioRemisionExterno(RegistroSalida registroSalida, Set<String> organismos) throws Exception;
 }
