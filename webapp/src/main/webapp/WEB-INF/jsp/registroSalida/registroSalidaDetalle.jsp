@@ -183,8 +183,15 @@
 
             <!-- ANEXOS -->
             <%if(!Configuracio.isCAIB()){%>
-            <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR || registro.estado == RegwebConstantes.REGISTRO_TRAMITADO)}">
+                <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR)&& oficinaRegistral && puedeEditar}">
                     <c:import url="../registro/anexos.jsp">
+                        <c:param name="tipoRegistro" value="salida"/>
+                    </c:import>
+                </c:if>
+
+                <%--ANEXOS SOLO LECTURA--%>
+            <c:if test="${(registro.estado != RegwebConstantes.REGISTRO_VALIDO && registro.estado != RegwebConstantes.REGISTRO_RESERVA && registro.estado != RegwebConstantes.REGISTRO_PENDIENTE_VISAR) || !oficinaRegistral || !puedeEditar}">
+                    <c:import url="../registro/anexosLectura.jsp">
                         <c:param name="tipoRegistro" value="salida"/>
                     </c:import>
                 </c:if>
