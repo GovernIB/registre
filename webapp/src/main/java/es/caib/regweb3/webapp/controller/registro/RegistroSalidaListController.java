@@ -194,7 +194,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         model.addAttribute("puedeEditar", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),registro.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA));
 
         // OficioRemision
-        if(entidadActiva.getOficioRemision()){ //todo Añadir Oficio remision interno y externo
+        if(entidadActiva.getOficioRemision()){
             model.addAttribute("isOficioRemisionInterno", oficioRemisionSalidaUtilsEjb.isOficioRemisionInterno(registro, getOrganismosOficioRemisionSalida(request, organismosOficinaActiva)));
             model.addAttribute("isOficioRemisionExterno", oficioRemisionSalidaUtilsEjb.isOficioRemisionExterno(registro, getOrganismosOficioRemisionSalida(request, organismosOficinaActiva)));
         }
