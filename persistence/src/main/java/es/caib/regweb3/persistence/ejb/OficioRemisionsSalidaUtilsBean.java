@@ -11,6 +11,7 @@ import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
 import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -421,7 +422,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
         q = em.createQuery("Select rs.id from RegistroSalida as rs where " +
                 "rs.estado = :valido and rs.id = :idRegistro and " +
-                "rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo = :administracion and codigoDir3 not in (:organismos)) ");
+                "rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo = :administracion and i.codigoDir3 not in (:organismos)) ");
 
         // Parámetros
         q.setParameter("idRegistro", idRegistro);
@@ -430,6 +431,63 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         q.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
 
         return q.getResultList().size() > 0;
+    }
+
+    @Override
+    public Boolean isOficioRemisionInterno(RegistroSalida registroSalida, Set<String> organismos) throws Exception {
+
+        String codigoDir3 = isOficioRemision(registroSalida, organismos);
+
+        if(!StringUtils.isEmpty(codigoDir3)){
+            Long idEntidad = registroSalida.getOficina().getOrganismoResponsable().getEntidad().getId();
+            return organismoEjb.findByCodigoEntidad(codigoDir3, idEntidad) != null;
+        }
+
+        return false;
+    }
+
+    @Override
+    public Boolean isOficioRemisionExterno(RegistroSalida registroSalida, Set<String> organismos) throws Exception {
+
+        String codigoDir3 = isOficioRemision(registroSalida, organismos);
+
+        if(!StringUtils.isEmpty(codigoDir3)){
+            Long idEntidad = registroSalida.getOficina().getOrganismoResponsable().getEntidad().getId();
+            return organismoEjb.findByCodigoEntidad(codigoDir3, idEntidad) == null;
+        }
+
+        return false;
+    }
+
+    /**
+     * Comprueba si el RegistroSalida es un Oficio de Remisión y obtiene el códigoDir3 del
+     * Interesado tipo administración asociado al registro.
+     * @param registroSalida
+     * @param organismos
+     * @return
+     * @throws Exception
+     */
+    private String isOficioRemision(RegistroSalida registroSalida, Set<String> organismos) throws Exception{
+
+        if(registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)){
+
+            List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
+
+            for (Interesado interesado : interesados) {
+                if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
+
+                    if(!organismos.contains(interesado.getCodigoDir3())){
+                        String codigoDir3 =  interesado.getCodigoDir3();
+                        log.info("codigoDir3 : " + codigoDir3);
+                        return codigoDir3;
+
+                    }
+
+                }
+            }
+        }
+
+        return null;
     }
 
 }

@@ -130,17 +130,19 @@
                             </div>
                         </c:if>
 
-                        <%--Botón Distribuir y Oficio Remision--%>
-                        <c:if test="${isOficioRemision}">
+                        <%--Botón Oficio Remision--%>
+                        <c:if test="${isOficioRemisionInterno || isOficioRemisionExterno}">
                             <div class="panel-footer center">
+                                <button type="button" onclick="goTo('/regweb3/oficioRemision/salidasPendientesRemision')"
+                                        class="btn btn-success btn-sm btn-block">
+                                    <c:if test="${isOficioRemisionInterno}">
+                                        <spring:message code="oficioRemision.boton.crear.interno"/>
+                                    </c:if>
+                                    <c:if test="${isOficioRemisionExterno}">
+                                        <spring:message code="oficioRemision.boton.crear.externo"/>
+                                    </c:if>
 
-                                <c:if test="${isOficioRemision}">
-                                    <button type="button" onclick="goTo('/regweb3/oficioRemision/salidasPendientesRemision')"
-                                            class="btn btn-success btn-sm btn-block">
-                                            <spring:message code="oficioRemision.oficioRemision"/>
-                                    </button>
-                                </c:if>
-
+                                </button>
                             </div>
                         </c:if>
 

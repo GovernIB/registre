@@ -54,18 +54,18 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
         Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
         Oficina oficinaActiva = (Oficina) session.getAttribute(RegwebConstantes.SESSION_OFICINA);
 
-        // Comprobamos que la Entidad esté configurada para tramitar de Oficios de Remisión
-        if(!entidadActiva.getOficioRemision()){
-            log.info("La Entidad no esta configurada para tramitar Oficios de Remisión");
-            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficioRemision.entidad"));
-            response.sendRedirect("/regweb3/aviso");
-            return false;
-        }
-
         // Comprobamos que el usuario dispone del Rol RWE_USUARI
         if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_USUARI)){
             log.info("Error de rol");
             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
+            response.sendRedirect("/regweb3/aviso");
+            return false;
+        }
+
+        // Comprobamos que la Entidad esté configurada para tramitar de Oficios de Remisión
+        if(!entidadActiva.getOficioRemision()){
+            log.info("La Entidad no esta configurada para tramitar Oficios de Remisión");
+            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficioRemision.entidad"));
             response.sendRedirect("/regweb3/aviso");
             return false;
         }
