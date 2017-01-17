@@ -55,6 +55,12 @@ public class RestController {
     @EJB(mappedName = "regweb3/InteresadoEJB/local")
     public InteresadoLocal interesadoEjb;
 
+    @EJB(mappedName = "regweb3/AnexoEJB/local")
+    public AnexoLocal anexoEjb;
+
+    @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
+    public TipoDocumentalLocal tipoDocumentalEjb;
+
 
     @RequestMapping(value = "/busquedaPersonas/{tipoPersona}", method = RequestMethod.POST)
     public @ResponseBody List<ObjetoBasico> busquedaPersonas(@PathVariable Long tipoPersona, @RequestParam String query, HttpServletRequest request) throws Exception {
@@ -220,5 +226,32 @@ public class RestController {
         return interesadoEjb.findById(idInteresado);
     }
 
+    /**
+     * Obtiene un {@link es.caib.regweb3.model.Anexo}
+     */
+    @RequestMapping(value = "/obtenerAnexo", method = RequestMethod.GET)
+    public @ResponseBody
+    Anexo obtenerAnexo(@RequestParam Long idAnexo) throws Exception {
 
+        return anexoEjb.findById(idAnexo);
+    }
+
+    /**
+     * Obtiene el nombre traducido de un TipoDocumental
+     */
+    @RequestMapping(value = "/obtenerTipoDocumental", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+    @ResponseBody
+    public String obtenerTipoDocumental(@RequestParam Long id) throws Exception {
+
+        TipoDocumental tipoDocumental = tipoDocumentalEjb.findById(id);
+
+        if (tipoDocumental != null) {
+            Locale locale = LocaleContextHolder.getLocale();
+            TraduccionTipoDocumental traduccionTipoDocumental = (TraduccionTipoDocumental) tipoDocumental.getTraduccion(locale.getLanguage());
+            return traduccionTipoDocumental.getNombre();
+
+        }
+        return null;
+
+    }
 }
