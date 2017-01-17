@@ -242,7 +242,7 @@
                         </div>
                     </c:if>
 
-                    <%--OFICIOS DE SALIDA PENDIENTES DE REMISIÓN--%>
+                    <%--OFICIOS DE SALIDA PENDIENTES DE REMISIÓN
                     <c:if test="${not empty organismosOficioRemisionSalida}">
                         <div class="col-xs-6">
 
@@ -286,7 +286,7 @@
                             </div>
 
                         </div>
-                    </c:if>
+                    </c:if>--%>
 
                     <%--ASIENTOS REGISTRALES SIR PENDIENTES DE PROCESAR--%>
                     <c:if test="${not empty asientosRegistralesSir}">

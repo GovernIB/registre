@@ -58,7 +58,7 @@
                         <li class="divider"></li>
                     </c:if>
 
-                    <c:if test="${oficiosSalidaPendientesRemision > 0}">
+                    <%--<c:if test="${oficiosSalidaPendientesRemision > 0}">
                         <li>
                             <a href="<c:url value="/oficioRemision/salidasPendientesRemision"/>">
                                 <div>
@@ -67,7 +67,7 @@
                             </a>
                         </li>
                         <li class="divider"></li>
-                    </c:if>
+                    </c:if>--%>
 
 
                     <c:if test="${oficiosPendientesLlegada > 0}">

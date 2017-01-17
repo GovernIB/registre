@@ -398,13 +398,13 @@ public class InteresadoController extends BaseController{
 
         if(persona.getTipo().equals(RegwebConstantes.TIPO_PERSONA_FISICA)){ // Personas Físicas
             personas = personaEjb.busquedaFisicas(entidad.getId(), persona.getNombre(), persona.getApellido1(), persona.getApellido2(), persona.getDocumento(), persona.getTipo());
-            //log.info("Buscar Persona fisica Total: " + personas.size());
+
         }else if(persona.getTipo().equals(RegwebConstantes.TIPO_PERSONA_JURIDICA)){ // Personas Jurídicas
             personas = personaEjb.busquedaJuridicas(entidad.getId(), persona.getRazonSocial(), persona.getDocumento(), persona.getTipo());
-            //log.info("Buscar Persona juridica Total: " + personas.size());
+
         }else if(persona.getTipo().equals(0L)) { // Todas las Personas
             personas = personaEjb.busquedaPersonas(entidad.getId(), persona.getNombre(), persona.getApellido1(),persona.getApellido2(), persona.getDocumento(), persona.getRazonSocial());
-            //log.info("Buscar Personas Total: " + personas.size());
+
         }
 
         return personas;
