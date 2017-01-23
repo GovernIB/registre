@@ -51,6 +51,7 @@ public class RegistroSalidaInterceptor extends HandlerInterceptorAdapter {
         Rol rolActivo = (Rol) session.getAttribute(RegwebConstantes.SESSION_ROL);
         Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
         Oficina oficinaActiva = (Oficina) session.getAttribute(RegwebConstantes.SESSION_OFICINA);
+        UsuarioEntidad usuarioEntidad = (UsuarioEntidad)session.getAttribute(RegwebConstantes.SESSION_USUARIO_ENTIDAD);
         String url = request.getServletPath();
 
         // Comprobamos que el usuario dispone del Rol RWE_USUARI
@@ -76,18 +77,6 @@ public class RegistroSalidaInterceptor extends HandlerInterceptorAdapter {
             response.sendRedirect("/regweb3/aviso");
             return false;
         }
-
-
-        //todo Añadir comprobación de que todas las configuraciones de la entidad están realizadas.
-        //Comprobamos que se haya definido un formato para el número de registro en la Entidad
-        if(entidadActiva.getNumRegistro() == null || entidadActiva.getNumRegistro().length()==0){
-            log.info("No hay configurado el formato del numero de registro para la Entidad activa");
-            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.entidad.formatoRegistro"));
-            response.sendRedirect("/regweb3/aviso");
-            return false;
-        }
-
-        UsuarioEntidad usuarioEntidad = (UsuarioEntidad)session.getAttribute(RegwebConstantes.SESSION_USUARIO_ENTIDAD);
 
         // Comprobaciones previas al listado de RegistroSalida
         if(url.equals("/registroSalida/list")){
@@ -152,7 +141,7 @@ public class RegistroSalidaInterceptor extends HandlerInterceptorAdapter {
         }
 
         // Comprobaciones previas a la edición de un RegistroSalida
-        if(url.contains("edit")){
+        if(url.contains("edit") && request.getMethod().equals("GET")){
             String idRegistroSalida =  url.replace("/registroSalida/","").replace("/edit", ""); //Obtenemos el id a partir de la url
 
             RegistroSalida registroSalida = registroSalidaEjb.findById(Long.valueOf(idRegistroSalida));

@@ -50,7 +50,8 @@ public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
         Rol rolActivo = (Rol) session.getAttribute(RegwebConstantes.SESSION_ROL);
         Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
         Oficina oficinaActiva = (Oficina) session.getAttribute(RegwebConstantes.SESSION_OFICINA);
-
+        UsuarioEntidad usuarioEntidad = (UsuarioEntidad)session.getAttribute(RegwebConstantes.SESSION_USUARIO_ENTIDAD);
+        String url = request.getServletPath();
 
         // Comprobamos que el usuario dispone del Rol RWE_USUARI
         if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_USUARI)){
@@ -76,8 +77,6 @@ public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
             return false;
         }
 
-        String url = request.getServletPath();
-        UsuarioEntidad usuarioEntidad = (UsuarioEntidad)session.getAttribute(RegwebConstantes.SESSION_USUARIO_ENTIDAD);
 
         // Comprobaciones previas al listado de RegistroEntrada
         if(url.equals("/registroEntrada/list")){
@@ -142,7 +141,8 @@ public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
         }
 
         // Comprobaciones previas a la edición de un RegistroEntrada
-        if(url.contains("edit")){
+        if(url.contains("edit") && request.getMethod().equals("GET")){
+       
             String idRegistroEntrada =  url.replace("/registroEntrada/","").replace("/edit", ""); //Obtenemos el id a partir de la url
 
             RegistroEntrada registroEntrada = registroEntradaEjb.findById(Long.valueOf(idRegistroEntrada));
