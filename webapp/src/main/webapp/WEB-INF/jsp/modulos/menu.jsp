@@ -96,7 +96,7 @@
 
                             <li class="dropdown">
                                 <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-globe"></i> <spring:message code="regweb.oficinas"/> <i class="fa fa-caret-down"></i></a>
-                                <ul class="dropdown-menu">
+                                <ul class="dropdown-menu scrollable-menu">
                                     <c:forEach var="oficina" items="${oficinas}">
                                         <c:if test="${oficina.id != oficinaActiva.id}">
                                             <li><a href="<c:url value="/cambioOficina/${oficina.id}"/>"><i class="fa fa-home"></i> ${oficina.denominacion}</a></li>

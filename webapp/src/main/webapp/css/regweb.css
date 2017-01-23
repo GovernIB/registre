@@ -754,3 +754,19 @@ a.text-gris:focus {
     line-height: 1;
 }
 
+/* SCROLL DE MENU */
+.scrollable-menu {
+    height: auto;
+    max-height: 800%;
+    overflow-x: hidden;
+}
+
+.scrollable-menu::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 15px;
+}
+.scrollable-menu::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background-color: grey;
+    -webkit-box-shadow: 0 0 1px rgba(255,255,255,.75);
+}
