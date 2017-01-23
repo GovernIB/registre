@@ -51,8 +51,10 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
         String url = request.getServletPath();
         HttpSession session = request.getSession();
         Rol rolActivo = (Rol) session.getAttribute(RegwebConstantes.SESSION_ROL);
+        UsuarioEntidad usuarioEntidad = (UsuarioEntidad) session.getAttribute(RegwebConstantes.SESSION_USUARIO_ENTIDAD);
         Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
         Oficina oficinaActiva = (Oficina) session.getAttribute(RegwebConstantes.SESSION_OFICINA);
+        Set<Long> organismos = oficinaActiva.getOrganismosFuncionalesId();
 
         // Comprobamos que el usuario dispone del Rol RWE_USUARI
         if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_USUARI)){
@@ -80,14 +82,12 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
             return false;
         }
 
-        // Comprobaciones previas al listado de OficioRemision y Oficios de Remisión Pendientes
-        if (url.equals("/oficioRemision/list") || url.contains("pendientes")) {
+        // Comprobaciones previas al listado de OficioRemision
+        if (url.equals("/oficioRemision/list") || url.contains("pendientesLlegada")) {
 
-            Set<Long> organismos = oficinaActiva.getOrganismosFuncionalesId();
-                UsuarioEntidad usuarioEntidad = (UsuarioEntidad) session.getAttribute(RegwebConstantes.SESSION_USUARIO_ENTIDAD);
-                List<Libro> libros = permisoLibroUsuarioEjb.getLibrosOrganismoPermiso(organismos, usuarioEntidad.getId(), RegwebConstantes.PERMISO_REGISTRO_ENTRADA);
+            List<Libro> libros = permisoLibroUsuarioEjb.getLibrosOrganismoPermiso(organismos, usuarioEntidad.getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_ENTRADA);
 
-            // Mira que el usuario tiene permisos de Registro de Entrada
+            // Mira que el usuario tiene permisos consulta de entrada en los Libros
             if (libros.size() == 0) {
                 log.info("Aviso: No tiene permisos para consultar Oficios de Remision");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficioRemision.list"));
@@ -96,33 +96,14 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
             }
         }
 
+        // Comprobaciones previas al listado de Oficios de Remisión Pendientes
+        if (url.contains("PendientesRemision") || url.contains("procesar")) {
 
-            // Comprobaciones previas a la consulta de un OficioRemision
-        if(url.contains("detalle")){
-            String idOficioRemision =  url.replace("/oficioRemision/","").replace("/detalle", ""); //Obtenemos el id a partir de la url
+            List<Libro> libros = permisoLibroUsuarioEjb.getLibrosOrganismoPermiso(organismos, usuarioEntidad.getId(), RegwebConstantes.PERMISO_REGISTRO_ENTRADA);
 
-            OficioRemision oficioRemision = oficioRemisionEjb.findById(Long.valueOf(idOficioRemision));
-
-            if(!oficioRemision.getOficina().equals(oficinaActiva)){ // Si no es la Oficina Activa no se puede consultar
-                log.info("Este OficioRemision no se puede consultar: No se encuentra en la Oficina donde se genero");
-                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficioRemision.oficinaActiva"));
-                response.sendRedirect("/regweb3/aviso");
-                return false;
-            }
-        }
-
-        // Comprobaciones previas a procesar un Oficio de Remisión
-        if(url.contains("procesar")){
-            String idOficioRemision =  url.replace("/oficioRemision/","").replace("/procesar", ""); //Obtenemos el id a partir de la url
-
-            OficioRemision oficioRemision = oficioRemisionEjb.findById(Long.valueOf(idOficioRemision));
-
-            Set<Organismo> organismosOficinaActiva = (Set<Organismo>) session.getAttribute(RegwebConstantes.SESSION_ORGANISMOS_OFICINA);
-
-            if (!organismosOficinaActiva.contains(oficioRemision.getOrganismoDestinatario()) ||
-                    oficioRemision.getEstado() != RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO) {
-
-                log.info("Este RegistroEntrada no se puede procesar");
+            // Mira que el usuario tiene permisos consulta de entrada en los Libros
+            if (libros.size() == 0) {
+                log.info("Aviso: No tiene permisos para procesar Oficios de Remision");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficioRemision.procesar"));
                 response.sendRedirect("/regweb3/aviso");
                 return false;

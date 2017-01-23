@@ -106,15 +106,6 @@ public interface PermisoLibroUsuarioLocal extends BaseEjb<PermisoLibroUsuario, L
     public List<Libro> getLibrosOrganismoPermiso(Set<Long> organismos, Long idUsuarioEntidad, Long idPermiso) throws Exception;
 
     /**
-     * Retorna los {@link es.caib.regweb3.model.Libro} de una Entidad donde un UsuarioEntidad puede hacer alguna acción
-     * según el permiso que se le pasa por parámetro.
-     * @param usuario
-     * @return
-     * @throws Exception
-     */
-    public List<Libro> getLibrosEntidadPermiso(Long idEntidad, Long idUsuarioEntidad, Long idPermiso) throws Exception;
-
-    /**
      * Comprueba si un Usuario es Administrador de un determinado Libro.
      * @param idUsuarioEntidad
      * @param idLibro

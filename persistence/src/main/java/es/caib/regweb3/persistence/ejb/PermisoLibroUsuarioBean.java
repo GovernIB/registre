@@ -284,22 +284,6 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Libro> getLibrosEntidadPermiso(Long idEntidad, Long idUsuarioEntidad, Long idPermiso) throws Exception {
-
-        Query q = em.createQuery("Select distinct plu.libro from PermisoLibroUsuario as plu where " +
-                "plu.libro.organismo.entidad.id = :idEntidad and plu.usuario.id = :idUsuarioEntidad and " +
-                "plu.libro.activo = true and " +
-                "(plu.permiso = :idPermiso and plu.activo = true)");
-
-        q.setParameter("idEntidad",idEntidad);
-        q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
-        q.setParameter("idPermiso",idPermiso);
-
-        return q.getResultList();
-    }
-
-    @Override
-    @SuppressWarnings(value = "unchecked")
     public Boolean isAdministradorLibro(Long idUsuarioEntidad, Long idLibro) throws Exception {
 
         CatEstadoEntidad vigente = catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);

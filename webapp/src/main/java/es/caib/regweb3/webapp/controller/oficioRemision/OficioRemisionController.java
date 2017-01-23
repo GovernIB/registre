@@ -17,6 +17,7 @@ import es.caib.regweb3.webapp.form.*;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,9 +26,11 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created 16/07/14 12:52
@@ -92,9 +95,8 @@ public class OficioRemisionController extends BaseController {
 
         ModelAndView mav = new ModelAndView("oficioRemision/oficioRemisionList");
 
-        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-
-        List<Libro> librosConsulta = permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_ENTRADA);
+        // Obtenemos los Libros donde el usuario tiene permisos de Consulta
+        List<Libro> librosConsulta = getLibrosConsultaEntradas(request);
 
         // Fijamos un libro por defecto
         OficioRemision oficioRemision = new OficioRemision();
@@ -121,8 +123,8 @@ public class OficioRemisionController extends BaseController {
 
         OficioRemision oficioRemision = busqueda.getOficioRemision();
 
-        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-        List<Libro> librosConsulta = permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_ENTRADA);
+        // Obtenemos los Libros donde el usuario tiene permisos de Consulta
+        List<Libro> librosConsulta = getLibrosConsultaEntradas(request);
 
         Paginacion paginacion = oficioRemisionEjb.busqueda(busqueda.getPageNumber(), busqueda.getAnyo(), oficioRemision, librosConsulta, busqueda.getDestinoOficioRemision(), busqueda.getEstadoOficioRemision(), busqueda.getTipoOficioRemision());
 
@@ -257,6 +259,60 @@ public class OficioRemisionController extends BaseController {
 
     }
 
+    /**
+     * Carga el formulario para ver el detalle de un {@link es.caib.regweb3.model.OficioRemision}
+     */
+    @RequestMapping(value = "/{idOficioRemision}/detalle", method = RequestMethod.GET)
+    public String detalleOficioRemision(@PathVariable Long idOficioRemision, Model model, HttpServletRequest request) throws Exception {
+
+        HttpSession session = request.getSession();
+        Oficina oficinaActiva = (Oficina) session.getAttribute(RegwebConstantes.SESSION_OFICINA);
+
+        OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
+
+        // Si no es la Oficina Activa no se puede consultar
+        if(!oficioRemision.getOficina().equals(oficinaActiva)){
+            log.info("Este OficioRemision no se puede consultar: No se encuentra en la Oficina donde se genero");
+            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficioRemision.oficinaActiva"));
+            return "redirect:/oficioRemision/list";
+        }
+
+
+        //List<RegistroEntrada> registrosEntrada = oficioRemisionEjb.getByOficioRemision(oficioRemision.getId());
+        List<Trazabilidad> trazabilidades = trazabilidadEjb.getByOficioRemision(oficioRemision.getId());
+
+        model.addAttribute(oficioRemision);
+        //model.addAttribute("registrosEntrada",registrosEntrada);
+        model.addAttribute("trazabilidades", trazabilidades);
+        model.addAttribute("isAdministradorLibro", permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(), oficioRemision.getLibro().getId()));
+        model.addAttribute("modeloOficioRemision", new ModeloOficioRemision());
+        model.addAttribute("modelosOficioRemision", modeloOficioRemisionEjb.getByEntidad(getEntidadActiva(request).getId()));
+
+        return "oficioRemision/oficioRemisionDetalle";
+    }
+
+    /**
+     * Anula un {@link es.caib.regweb3.model.OficioRemision}
+     */
+    @RequestMapping(value = "/{idOficioRemision}/anular", method = RequestMethod.GET)
+    public String anularOficioRemision(@PathVariable Long idOficioRemision, Model model, HttpServletRequest request) throws Exception {
+
+        OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+
+        if (permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(), oficioRemision.getLibro().getId()) &&
+                oficioRemision.getEstado() == RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO || oficioRemision.getEstado() == RegwebConstantes.OFICIO_REMISION_EXTERNO_ENVIADO) {
+
+            oficioRemisionEjb.anularOficioRemision(idOficioRemision, usuarioEntidad);
+            Mensaje.saveMessageInfo(request, getMessage("aviso.oficioRemision.anulado"));
+
+        } else {
+            Mensaje.saveMessageError(request, getMessage("aviso.oficioRemision.anular"));
+        }
+
+        return "redirect:/oficioRemision/" + idOficioRemision + "/detalle";
+    }
+
 
     /**
      * Listado de oficios de remisión pendientes de Llegada
@@ -266,8 +322,8 @@ public class OficioRemisionController extends BaseController {
 
         ModelAndView mav = new ModelAndView("oficioRemision/oficiosPendientesLlegadaList");
 
-        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-        List<Libro> librosConsulta = permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_ENTRADA);
+        // Obtenemos los Libros donde el usuario tiene permisos de Consulta
+        List<Libro> librosConsulta = getLibrosConsultaEntradas(request);
 
         OficioRemisionBusquedaForm oficioRemisionBusquedaForm = new OficioRemisionBusquedaForm(new OficioRemision(), 1);
 
@@ -292,8 +348,8 @@ public class OficioRemisionController extends BaseController {
 
         OficioRemision oficioRemision = busqueda.getOficioRemision();
 
-        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-        List<Libro> librosConsulta = permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_ENTRADA);
+        // Obtenemos los Libros donde el usuario tiene permisos de Consulta
+        List<Libro> librosConsulta = getLibrosConsultaEntradas(request);
 
         LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
@@ -606,48 +662,6 @@ public class OficioRemisionController extends BaseController {
 
 
     /**
-     * Carga el formulario para ver el detalle de un {@link es.caib.regweb3.model.OficioRemision}
-     */
-    @RequestMapping(value = "/{idOficioRemision}/detalle", method = RequestMethod.GET)
-    public String detalleOficioRemision(@PathVariable Long idOficioRemision, Model model, HttpServletRequest request) throws Exception {
-
-        OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
-        //List<RegistroEntrada> registrosEntrada = oficioRemisionEjb.getByOficioRemision(oficioRemision.getId());
-        List<Trazabilidad> trazabilidades = trazabilidadEjb.getByOficioRemision(oficioRemision.getId());
-
-        model.addAttribute(oficioRemision);
-        //model.addAttribute("registrosEntrada",registrosEntrada);
-        model.addAttribute("trazabilidades", trazabilidades);
-        model.addAttribute("isAdministradorLibro", permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(), oficioRemision.getLibro().getId()));
-        model.addAttribute("modeloOficioRemision", new ModeloOficioRemision());
-        model.addAttribute("modelosOficioRemision", modeloOficioRemisionEjb.getByEntidad(getEntidadActiva(request).getId()));
-
-        return "oficioRemision/oficioRemisionDetalle";
-    }
-
-    /**
-     * Anula un {@link es.caib.regweb3.model.OficioRemision}
-     */
-    @RequestMapping(value = "/{idOficioRemision}/anular", method = RequestMethod.GET)
-    public String anularOficioRemision(@PathVariable Long idOficioRemision, Model model, HttpServletRequest request) throws Exception {
-
-        OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
-        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-
-        if (permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(), oficioRemision.getLibro().getId()) &&
-                oficioRemision.getEstado() == RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO || oficioRemision.getEstado() == RegwebConstantes.OFICIO_REMISION_EXTERNO_ENVIADO) {
-
-            oficioRemisionEjb.anularOficioRemision(idOficioRemision, usuarioEntidad);
-            Mensaje.saveMessageInfo(request, getMessage("aviso.oficioRemision.anulado"));
-
-        } else {
-            Mensaje.saveMessageError(request, getMessage("aviso.oficioRemision.anular"));
-        }
-
-        return "redirect:/oficioRemision/" + idOficioRemision + "/detalle";
-    }
-
-    /**
      * Seleccionar un {@link es.caib.regweb3.model.ModeloOficioRemision}
      */
     @RequestMapping(value = "/{idOficioRemision}/imprimir/{idModelo}", method = RequestMethod.GET)
@@ -722,8 +736,11 @@ public class OficioRemisionController extends BaseController {
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         List<RegistroEntrada> registrosEntrada = new ArrayList<RegistroEntrada>();
 
+        Set<Organismo> organismosOficinaActiva = getOrganismosOficinaActiva(request);
+
         // Comprobamos si ya ha sido procesado
-        if (oficioRemision.getEstado() != RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO) {
+        if (!organismosOficinaActiva.contains(oficioRemision.getOrganismoDestinatario()) ||
+                oficioRemision.getEstado() != RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO) {
             Mensaje.saveMessageError(request, getMessage("oficioRemision.error.yaprocesado"));
             return "redirect:/oficioRemision/pendientesLlegada/list";
         }
@@ -741,12 +758,13 @@ public class OficioRemisionController extends BaseController {
                         usuarioEntidad, oficinaActiva, oficioPendienteLlegadaForm.getOficios());
             }
 
+            model.addAttribute("registrosEntrada", registrosEntrada);
+
         } catch (Exception e) {
             e.printStackTrace();
+            Mensaje.saveMessageError(request, getMessage("oficioRemision.error.procesando"));
+            return "redirect:/oficioRemision/pendientesLlegada/list";
         }
-
-        model.addAttribute("registrosEntrada", registrosEntrada);
-
 
         return "oficioRemision/oficioRemisionProcesado";
     }
