@@ -37,9 +37,11 @@
                         </c:if>
 
                     </div>
+                    <c:set var="avisos" value="0"/>
 
                     <%--REGISTROS DE ENTRADA PENDIENTES (RESERVA)--%>
                     <c:if test="${not empty reservas}">
+                        <c:set var="avisos" value="${avisos+1}"/>
                         <div class="col-xs-6">
                             <div class="panel panel-warning">
                                 <div class="panel-heading">
@@ -90,9 +92,14 @@
                             </div>
                         </div>
                     </c:if>
+                    <c:if test="${avisos==2}">
+                        <div class="clearfix visible-xs-block"></div>
+                        <c:set var="avisos" value="0"/>
+                    </c:if>
 
                     <%--REGISTROS DE ENTRADA PENDIENTES DE VISAR--%>
                     <%--<c:if test="${not empty pendientesVisar}">
+                    <c:set var="avisos" value="${avisos+1}"/>
                         <div class="col-xs-6">
                             <div class="panel panel-primary">
                                 <div class="panel-heading">
@@ -142,10 +149,15 @@
                                 </div>
                             </div>
                         </div>
+                    </c:if>
+                    <c:if test="${avisos==2}">
+                        <div class="clearfix visible-xs-block"></div>
+                        <c:set var="avisos" value="0"/>
                     </c:if>--%>
 
                     <%--OFICIOS PENDIENTES DE LLEGADA--%>
                     <c:if test="${not empty oficiosPendientesLlegada}">
+                        <c:set var="avisos" value="${avisos+1}"/>
                         <div class="col-xs-6">
 
                             <div class="panel panel-success">
@@ -192,12 +204,16 @@
 
                                 </div>
                             </div>
-
                         </div>
+                    </c:if>
+                    <c:if test="${avisos==2}">
+                        <div class="clearfix visible-xs-block"></div>
+                        <c:set var="avisos" value="0"/>
                     </c:if>
 
                     <%--OFICIOS DE ENTRADA PENDIENTES DE REMISIÓN--%>
                     <c:if test="${not empty organismosOficioRemisionEntrada}">
+                        <c:set var="avisos" value="${avisos+1}"/>
                         <div class="col-xs-6">
 
                             <div class="panel panel-success">
@@ -241,9 +257,14 @@
 
                         </div>
                     </c:if>
+                    <c:if test="${avisos==2}">
+                        <div class="clearfix visible-xs-block"></div>
+                        <c:set var="avisos" value="0"/>
+                    </c:if>
 
                     <%--OFICIOS DE SALIDA PENDIENTES DE REMISIÓN
                     <c:if test="${not empty organismosOficioRemisionSalida}">
+                    <c:set var="avisos" value="${avisos+1}"/>
                         <div class="col-xs-6">
 
                             <div class="panel panel-success">
@@ -286,10 +307,15 @@
                             </div>
 
                         </div>
+                    </c:if>
+                    <c:if test="${avisos==2}">
+                        <div class="clearfix visible-xs-block"></div>
+                        <c:set var="avisos" value="0"/>
                     </c:if>--%>
 
                     <%--ASIENTOS REGISTRALES SIR PENDIENTES DE PROCESAR--%>
                     <c:if test="${not empty asientosRegistralesSir}">
+                        <c:set var="avisos" value="${avisos+1}"/>
                         <div class="col-xs-6">
 
                             <div class="panel panel-success">
@@ -342,10 +368,13 @@
 
                         </div>
                     </c:if>
+                    <c:if test="${avisos==2}">
+                        <div class="clearfix visible-xs-block"></div>
+                        <c:set var="avisos" value="0"/>
+                    </c:if>
 
 
                 </div><!-- /.row -->
-
 
 
             </div><!-- /.well-white -->
