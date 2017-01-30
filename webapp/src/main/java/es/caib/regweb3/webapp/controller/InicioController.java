@@ -81,6 +81,9 @@ public class InicioController extends BaseController{
                     // Obtenemos los Organismos que tienen Registros pendientes de tramitar por medio de un Oficio de Revisión
                     mav.addObject("organismosOficioRemisionEntrada", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemision(oficinaActiva.getId(), librosRegistroEntrada,getOrganismosOficioRemision(request, organismosOficinaActiva)));
 
+                    // Obtenemos los Oficios pendientes de Llegada
+                    mav.addObject("oficiosPendientesLlegada", oficioRemisionEjb.oficiosPendientesLlegada(organismosOficinaActiva, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
+
                     /* Obtenemos los Asientos Registrales Sir pendientes de procesar */
                     if(entidadActiva.getSir()) {
                         List<AsientoRegistralSir> asientosRegistralesSir = asientosRegistralSirEjb.getUltimosARSPendientesProcesar(oficinaActiva.getCodigo(), RegwebConstantes.REGISTROS_PANTALLA_INICIO);
@@ -93,9 +96,6 @@ public class InicioController extends BaseController{
                     // Obtenemos los Organismos que tienen Registros de salida pendientes de tramitar por medio de un Oficio de Revisión,
                     //mav.addObject("organismosOficioRemisionSalida", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemision(oficinaActiva.getId(), librosRegistroSalida, getOrganismosOficioRemisionSalida(request, organismosOficinaActiva)));
                 }
-
-                // Obtenemos los Oficios pendientes de Llegada
-                mav.addObject("oficiosPendientesLlegada", oficioRemisionEjb.oficiosPendientesLlegada(organismosOficinaActiva, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
 
             }
 
