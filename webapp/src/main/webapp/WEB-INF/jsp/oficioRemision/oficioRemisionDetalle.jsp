@@ -93,7 +93,7 @@
                             <form:form modelAttribute="modeloOficioRemision" method="post" cssClass="form-horizontal row pad-lateral-10">
                                 <div class="col-xs-12 btn-block">
                                     <div class="col-xs-6 no-pad-lateral list-group-item-heading">
-                                        <form:select path="id" cssClass="chosen-select">
+                                        <form:select path="idModelo" cssClass="chosen-select">
                                             <form:options items="${modelosOficioRemision}" itemValue="id" itemLabel="nombre"/>
                                         </form:select>
                                     </div>

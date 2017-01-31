@@ -183,7 +183,7 @@ function goTo(url) {
 
 function imprimirRecibo(url) {
 
-    var idModelo = $('#id').val();
+    var idModelo = $('#idModelo').val();
     var url2=url.concat(idModelo);
 
     document.location.href=url2;
