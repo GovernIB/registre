@@ -152,18 +152,26 @@ public class InformeController extends AbstractRegistroCommonFormController {
             tipoAsunto = traduccionTiposAsunto.get(idTipoAsunto);
         }
 
+        Boolean mostraInteressats = false;
+        for (String valorCamp : campos) {
+            if (valorCamp.equals("nomIn")) {
+                mostraInteressats = true;
+                break;
+            }
+        }
 
         // REGISTROS DE ENTRADA
         if(informeLibroBusquedaForm.getTipo().equals(RegwebConstantes.REGISTRO_ENTRADA)){
-
+            log.info("Entram a la Cerca");
             List<RegistroEntrada> registrosEntrada = informeEjb.buscaLibroRegistroEntradas(informeLibroBusquedaForm.getFechaInicio(),
                     dataFi, informeLibroBusquedaForm.getNumeroRegistroFormateado(), informeLibroBusquedaForm.getInteressatNom(),
                     informeLibroBusquedaForm.getInteressatLli1(), informeLibroBusquedaForm.getInteressatLli2(), informeLibroBusquedaForm.getInteressatDoc(),
                     informeLibroBusquedaForm.getAnexos(), informeLibroBusquedaForm.getObservaciones(),
                     informeLibroBusquedaForm.getExtracto(), informeLibroBusquedaForm.getUsuario(), informeLibroBusquedaForm.getLibros(),
-                    informeLibroBusquedaForm.getEstado(), idOficina, idTipoAsunto, codigoOrganDest, usuarioEntidad.getEntidad().getId());
+                    informeLibroBusquedaForm.getEstado(), idOficina, idTipoAsunto, codigoOrganDest, usuarioEntidad.getEntidad().getId(), mostraInteressats);
 
-
+            log.info("Sortim de la Cerca");
+            log.info("Entram a montar els camps de l'informe");
             for (int i = 0; i < registrosEntrada.size(); i++) {
                 registrosLibro.add(new ArrayList<String>());
                 RegistroEntrada registroEntrada = registrosEntrada.get(i);
@@ -322,7 +330,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
                     }
                 }
             }
-
+            log.info("Sortim de montar els camps de l'informe");
             // Alta en tabla LOPD de los registros del Informe
             Paginacion paginacionEntrada = new Paginacion(0, 0);
             List<Object> entradasList = new ArrayList<Object>(registrosEntrada);

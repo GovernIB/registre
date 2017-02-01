@@ -38,6 +38,7 @@ public class LibroRegistroExcel extends AbstractExcelView {
     @Override
     protected void buildExcelDocument(Map<String, Object> model, HSSFWorkbook workbook, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+        log.info("Entram a montar l'excel");
         //Obtenemos mapas y arrays de valores
         Long tipo = (Long) model.get("tipo");
         String fechaInicio = (String) model.get("fechaInicio");
@@ -314,7 +315,7 @@ public class LibroRegistroExcel extends AbstractExcelView {
         }
 
         String nombreFichero = getMessage("informe.nombreFichero.libroRegistro") + tipoRegistro +".xls";
-
+        log.info("Sortim de montar l'excel");
         // Cabeceras Response
         response.setHeader("Content-Disposition","attachment; filename="+nombreFichero);
         response.setHeader("Content-Type", "application/vnd.ms-excel;charset=UTF-8");
