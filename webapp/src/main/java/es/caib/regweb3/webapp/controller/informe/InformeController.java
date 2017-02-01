@@ -6,6 +6,7 @@ import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.TimeUtils;
 import es.caib.regweb3.webapp.controller.registro.AbstractRegistroCommonFormController;
 import es.caib.regweb3.webapp.editor.LibroEditor;
 import es.caib.regweb3.webapp.form.*;
@@ -162,16 +163,17 @@ public class InformeController extends AbstractRegistroCommonFormController {
 
         // REGISTROS DE ENTRADA
         if(informeLibroBusquedaForm.getTipo().equals(RegwebConstantes.REGISTRO_ENTRADA)){
-            log.info("Entram a la Cerca");
+            Long start = System.currentTimeMillis();
             List<RegistroEntrada> registrosEntrada = informeEjb.buscaLibroRegistroEntradas(informeLibroBusquedaForm.getFechaInicio(),
                     dataFi, informeLibroBusquedaForm.getNumeroRegistroFormateado(), informeLibroBusquedaForm.getInteressatNom(),
                     informeLibroBusquedaForm.getInteressatLli1(), informeLibroBusquedaForm.getInteressatLli2(), informeLibroBusquedaForm.getInteressatDoc(),
                     informeLibroBusquedaForm.getAnexos(), informeLibroBusquedaForm.getObservaciones(),
                     informeLibroBusquedaForm.getExtracto(), informeLibroBusquedaForm.getUsuario(), informeLibroBusquedaForm.getLibros(),
                     informeLibroBusquedaForm.getEstado(), idOficina, idTipoAsunto, codigoOrganDest, usuarioEntidad.getEntidad().getId(), mostraInteressats);
+            Long end = System.currentTimeMillis();
+            log.info("Tiempo informeEjb.buscaLibroRegistroEntradas: " + TimeUtils.formatElapsedTime(end - start));
 
-            log.info("Sortim de la Cerca");
-            log.info("Entram a montar els camps de l'informe");
+            start = System.currentTimeMillis();
             for (int i = 0; i < registrosEntrada.size(); i++) {
                 registrosLibro.add(new ArrayList<String>());
                 RegistroEntrada registroEntrada = registrosEntrada.get(i);
@@ -330,12 +332,15 @@ public class InformeController extends AbstractRegistroCommonFormController {
                     }
                 }
             }
-            log.info("Sortim de montar els camps de l'informe");
+            end = System.currentTimeMillis();
+            log.info("Tiempo campos informe: " + TimeUtils.formatElapsedTime(end - start));
             // Alta en tabla LOPD de los registros del Informe
             Paginacion paginacionEntrada = new Paginacion(0, 0);
-            List<Object> entradasList = new ArrayList<Object>(registrosEntrada);
-            paginacionEntrada.setListado(entradasList);
+            paginacionEntrada.setListado(new ArrayList<Object>(registrosEntrada));
+            start = System.currentTimeMillis();
             lopdEjb.insertarRegistrosEntrada(paginacionEntrada, usuarioEntidad.getId());
+            end = System.currentTimeMillis();
+            log.info("Tiempo lopdEjb.insertarRegistrosEntrada: " + TimeUtils.formatElapsedTime(end - start));
 
             mav.addObject("tipo", RegwebConstantes.INFORME_TIPO_REGISTRO_ENTRADA);
 
