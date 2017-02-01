@@ -353,7 +353,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
                     informeLibroBusquedaForm.getInteressatLli1(), informeLibroBusquedaForm.getInteressatLli2(), informeLibroBusquedaForm.getInteressatDoc(),
                     informeLibroBusquedaForm.getAnexos(), informeLibroBusquedaForm.getObservaciones(),
                     informeLibroBusquedaForm.getExtracto(), informeLibroBusquedaForm.getUsuario(), informeLibroBusquedaForm.getLibros(),
-                    informeLibroBusquedaForm.getEstado(), idOficina, idTipoAsunto, codigoOrganDest, usuarioEntidad.getEntidad().getId());
+                    informeLibroBusquedaForm.getEstado(), idOficina, idTipoAsunto, codigoOrganDest, usuarioEntidad.getEntidad().getId(), mostraInteressats);
 
 
             for (int i = 0; i < registrosSalida.size(); i++) {

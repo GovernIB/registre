@@ -171,13 +171,11 @@ public class InformeBean implements InformeLocal {
             q = em.createQuery(query.toString());
         }
 
-        log.info("Entram executar Query");
         // Executa la query
         List<RegistroEntrada> registrosEntrada = new ArrayList<RegistroEntrada>();
         List<Object[]> result = q.getResultList();
         log.info("Resultats obtinguts: " + result.size());
-        log.info("Sortim executar Query");
-        log.info("Entram al for per montar Resultats i Interessats");
+
         // Recorr tots els resultats trobats
         for (Object[] object : result) {
 
@@ -230,7 +228,6 @@ public class InformeBean implements InformeLocal {
                     parametros2.put("interesadoDoc", "%" + interesadoDoc.trim() + "%");
                 }
 
-
                 query2.append("where ");
                 int count = 0;
                 for (String w : where2) {
@@ -240,7 +237,6 @@ public class InformeBean implements InformeLocal {
                     query2.append(w);
                     count++;
                 }
-
 
                 // Executa la query
                 q2 = em.createQuery(query2.toString());
@@ -274,13 +270,12 @@ public class InformeBean implements InformeLocal {
 
 
         }
-        log.info("Sortim del montatge d'Interessats i Interessats");
 
         return registrosEntrada;
     }
 
     @Override
-    public List<RegistroSalida> buscaLibroRegistroSalidas(Date fechaInicio, Date fechaFin, String numRegistro, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String extracto, String usuario, List<Libro> libros, Long estado, Long idOficina, Long idTipoAsunto, String organoOrig, Long idEntidad) throws Exception {
+    public List<RegistroSalida> buscaLibroRegistroSalidas(Date fechaInicio, Date fechaFin, String numRegistro, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String extracto, String usuario, List<Libro> libros, Long estado, Long idOficina, Long idTipoAsunto, String organoOrig, Long idEntidad, Boolean mostraInteressats) throws Exception {
 
         Query q;
         Map<String, Object> parametros = new HashMap<String, Object>();
@@ -415,8 +410,8 @@ public class InformeBean implements InformeLocal {
 
         // Executa la query
         List<RegistroSalida> registrosSalida = new ArrayList<RegistroSalida>();
-        log.info("Resultats: " + q.getResultList().size());
         List<Object[]> result = q.getResultList();
+        log.info("Resultats: " + result.size());
 
         // Recorr tots els resultats trobats
         for (Object[] object : result) {
@@ -425,89 +420,91 @@ public class InformeBean implements InformeLocal {
             long idRS = (Long) object[0];
             long idDetalle = (Long) object[25];
 
-            // Crea query per trobar els Interessats del registre actual
-            Query q2;
-            Map<String, Object> parametros2 = new HashMap<String, Object>();
-            List<String> where2 = new ArrayList<String>();
-
-            StringBuffer query2 = new StringBuffer("Select interessat.id, " +
-                    "interessat.nombre, " +
-                    "interessat.apellido1, " +
-                    "interessat.apellido2, " +
-                    "interessat.isRepresentante, " +
-                    "interessat.razonSocial, " +
-                    "interessat.documento," +
-                    "interessat.tipo " +
-                    "from Interesado as interessat ");
-
-            // Afegim condició necessària per la query
-            where2.add(" interessat.registroDetalle.id = :idDetalle ");
-            parametros2.put("idDetalle", idDetalle);
-
-            // Nombre interesado
-            if (!StringUtils.isEmpty(interesadoNom)) {
-                where2.add("((" + DataBaseUtils.like("interessat.nombre", "interesadoNom", parametros2, interesadoNom) +
-                        ") or (" + DataBaseUtils.like("interessat.razonSocial", "interesadoNom", parametros2, interesadoNom) +
-                        "))");
-            }
-
-            // Primer apellido interesado
-            if (!StringUtils.isEmpty(interesadoLli1)) {
-                where2.add(DataBaseUtils.like("interessat.apellido1", "interesadoLli1", parametros2, interesadoLli1));
-            }
-
-            // Segundo apellido interesado
-            if (!StringUtils.isEmpty(interesadoLli2)) {
-                where2.add(DataBaseUtils.like("interessat.apellido2", "interesadoLli2", parametros2, interesadoLli2));
-            }
-
-            // Documento interesado
-            if (!StringUtils.isEmpty(interesadoDoc)) {
-                where2.add(" (UPPER(interessat.documento) LIKE UPPER(:interesadoDoc)) ");
-                parametros2.put("interesadoDoc", "%" + interesadoDoc.trim() + "%");
-            }
-
-            query2.append("where ");
-            int count = 0;
-            for (String w : where2) {
-                if (count != 0) {
-                    query2.append(" and ");
-                }
-                query2.append(w);
-                count++;
-            }
-
-            // Executa la query
-            q2 = em.createQuery(query2.toString());
-
-            for (Map.Entry<String, Object> param : parametros2.entrySet()) {
-                q2.setParameter(param.getKey(), param.getValue());
-            }
-
             List<Interesado> interesados = new ArrayList<Interesado>();
-            List<Object[]> result2 = q2.getResultList();
 
-            // Composa els interessats del registre
-            for (Object[] object2 : result2) {
+            if (mostraInteressats) {
+                // Crea query per trobar els Interessats del registre actual
+                Query q2;
+                Map<String, Object> parametros2 = new HashMap<String, Object>();
+                List<String> where2 = new ArrayList<String>();
 
-                Interesado interesado = new Interesado((Long) object2[0], (String) object2[1], (String) object2[2],
-                        (String) object2[3], (Boolean) object2[4], (String) object2[5], (String) object2[6], (Long) object2[7]);
+                StringBuffer query2 = new StringBuffer("Select interessat.id, " +
+                        "interessat.nombre, " +
+                        "interessat.apellido1, " +
+                        "interessat.apellido2, " +
+                        "interessat.isRepresentante, " +
+                        "interessat.razonSocial, " +
+                        "interessat.documento," +
+                        "interessat.tipo " +
+                        "from Interesado as interessat ");
 
-                interesados.add(interesado);
+                // Afegim condició necessària per la query
+                where2.add(" interessat.registroDetalle.id = :idDetalle ");
+                parametros2.put("idDetalle", idDetalle);
+
+                // Nombre interesado
+                if (!StringUtils.isEmpty(interesadoNom)) {
+                    where2.add("((" + DataBaseUtils.like("interessat.nombre", "interesadoNom", parametros2, interesadoNom) +
+                            ") or (" + DataBaseUtils.like("interessat.razonSocial", "interesadoNom", parametros2, interesadoNom) +
+                            "))");
+                }
+
+                // Primer apellido interesado
+                if (!StringUtils.isEmpty(interesadoLli1)) {
+                    where2.add(DataBaseUtils.like("interessat.apellido1", "interesadoLli1", parametros2, interesadoLli1));
+                }
+
+                // Segundo apellido interesado
+                if (!StringUtils.isEmpty(interesadoLli2)) {
+                    where2.add(DataBaseUtils.like("interessat.apellido2", "interesadoLli2", parametros2, interesadoLli2));
+                }
+
+                // Documento interesado
+                if (!StringUtils.isEmpty(interesadoDoc)) {
+                    where2.add(" (UPPER(interessat.documento) LIKE UPPER(:interesadoDoc)) ");
+                    parametros2.put("interesadoDoc", "%" + interesadoDoc.trim() + "%");
+                }
+
+                query2.append("where ");
+                int count = 0;
+                for (String w : where2) {
+                    if (count != 0) {
+                        query2.append(" and ");
+                    }
+                    query2.append(w);
+                    count++;
+                }
+
+
+                // Executa la query
+                q2 = em.createQuery(query2.toString());
+
+                for (Map.Entry<String, Object> param : parametros2.entrySet()) {
+                    q2.setParameter(param.getKey(), param.getValue());
+                }
+
+                List<Object[]> result2 = q2.getResultList();
+
+                // Composa els interessats del registre
+                for (Object[] object2 : result2) {
+
+                    Interesado interesado = new Interesado((Long) object2[0], (String) object2[1], (String) object2[2],
+                            (String) object2[3], (Boolean) object2[4], (String) object2[5], (String) object2[6], (Long) object2[7]);
+
+                    interesados.add(interesado);
+                }
+
+            } else{
+                interesados = null;
             }
 
-            // Si el registre d'entrada te qualque interessat, ho afegeix a la llista
-            if (interesados.size() > 0) {
+            RegistroSalida registroSalida = new RegistroSalida(idRS, (Long) object[1], (String) object[2],
+                    (Long) object[3], (String) object[4], (Date) object[5], (Integer) object[6], (String) object[7], (Long) object[8],
+                    (Long) object[9], (String) object[10], (String) object[11], (Date) object[12], (String) object[13], (Long) object[14],
+                    (String) object[15], (Long) object[16], (Long) object[17], (String) object[18], (Long) object[19], (String) object[20],
+                    (Long) object[21], (String) object[22], (Long) object[23], (String) object[24], (Long) object[25], (String) object[26], interesados);
 
-                RegistroSalida registroSalida = new RegistroSalida(idRS, (Long) object[1], (String) object[2],
-                        (Long) object[3], (String) object[4], (Date) object[5], (Integer) object[6], (String) object[7], (Long) object[8],
-                        (Long) object[9], (String) object[10], (String) object[11], (Date) object[12], (String) object[13], (Long) object[14],
-                        (String) object[15], (Long) object[16], (Long) object[17], (String) object[18], (Long) object[19], (String) object[20],
-                        (Long) object[21], (String) object[22], (Long) object[23], (String) object[24], (Long) object[25], (String) object[26], interesados);
-
-                registrosSalida.add(registroSalida);
-
-            }
+            registrosSalida.add(registroSalida);
 
         }
 
