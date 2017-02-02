@@ -35,22 +35,24 @@ que se le indica -->
 
                             <div class="form-group col-xs-6">
                                 <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <label for="codigoOrganismo${param.tipo}"><spring:message
-                                            code="organismo.buscador.codigo"/></label>
-                                </div>
-                                <div class="col-xs-8">
-                                    <input id="codigoOrganismo${param.tipo}" name="codigoOrganismo" class="form-control"
-                                           type="text" value="" autofocus="autofocus"/>
-                                </div>
-                            </div>
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                                     <label for="denominacion${param.tipo}"><spring:message
                                             code="organismo.buscador.denominacion"/></label>
                                 </div>
                                 <div class="col-xs-8">
                                     <input id="denominacion${param.tipo}" name="denominacion" class="form-control"
                                            type="text" value=""/>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group col-xs-6">
+                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                    <label for="codigoOrganismo${param.tipo}"><spring:message
+                                            code="organismo.buscador.codigo"/></label>
+                                </div>
+                                <div class="col-xs-8">
+                                    <input id="codigoOrganismo${param.tipo}" name="codigoOrganismo" class="form-control"
+                                           type="text" value="" autofocus="autofocus"/>
                                 </div>
                             </div>
 
