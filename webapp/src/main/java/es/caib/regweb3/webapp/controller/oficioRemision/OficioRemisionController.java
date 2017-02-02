@@ -285,7 +285,7 @@ public class OficioRemisionController extends BaseController {
         //model.addAttribute("registrosEntrada",registrosEntrada);
         model.addAttribute("trazabilidades", trazabilidades);
         model.addAttribute("isAdministradorLibro", permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(), oficioRemision.getLibro().getId()));
-        model.addAttribute("modeloOficioRemision", new ModeloOficioRemision());
+        model.addAttribute("modeloOficioRemision", new ModeloForm());
         model.addAttribute("modelosOficioRemision", modeloOficioRemisionEjb.getByEntidad(getEntidadActiva(request).getId()));
 
         return "oficioRemision/oficioRemisionDetalle";
@@ -715,7 +715,7 @@ public class OficioRemisionController extends BaseController {
         model.addAttribute("organismosOficinaActiva", organismosOficinaActiva);
 
         model.addAttribute("oficioPendienteLlegadaForm", new OficioPendienteLlegadaForm());
-        model.addAttribute("modeloOficioRemision", new ModeloOficioRemision());
+        model.addAttribute("modeloOficioRemision", new ModeloForm());
         model.addAttribute("modelosOficioRemision", modeloOficioRemisionEjb.getByEntidad(getEntidadActiva(request).getId()));
 
         return "oficioRemision/oficioRemisionProcesar";
