@@ -444,7 +444,13 @@
 <c:import url="../modulos/pie.jsp"/>
 
 <!-- Cambia la imagen de la búsqueda avanzada-->
-<script>
+<script type="text/javascript">
+
+    // Posicionamos el ratón en el campo indicado al cargar el modal
+    $('#modalBuscadorlistaRegEntrada').on('shown.bs.modal', function () {
+        $('#denominacionlistaRegEntrada').focus();
+    });
+
     var traduccion = new Array();
     traduccion['regweb.busquedaAvanzada'] = "<spring:message code='regweb.busquedaAvanzada' javaScriptEscape='true' />";
 

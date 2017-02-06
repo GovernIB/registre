@@ -402,10 +402,10 @@
 
     // Posicionamos el ratón en el campo indicado al cargar el modal
     $('#modalBuscadorOrganismoDestino').on('shown.bs.modal', function () {
-        $('#codigoOrganismoOrganismoDestino').focus();
+        $('#denominacionOrganismoDestino').focus();
     });
     $('#modalBuscadorOficinaOrigen').on('shown.bs.modal', function () {
-        $('#codigoOrganismoOficinaOrigen').focus();
+        $('#denominacionOficinaOrigen').focus();
     });
 
 </script>

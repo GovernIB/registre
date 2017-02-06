@@ -67,7 +67,7 @@
 
                                             <c:if test="${empty libros}">
                                                 <tr>
-                                                    <td colspan="8"><spring:message code="permisos.libro.ninguno"/></td>
+                                                    <td colspan="9"><spring:message code="permisos.libro.ninguno"/></td>
                                                 </tr>
                                             </c:if>
                                             <c:if test="${not empty libros}">

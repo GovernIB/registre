@@ -31,7 +31,6 @@ que se le indica -->
                                    value="${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}"/>
                             <input id="comunidadAutonoma" type="hidden"
                                    value="${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}"/>
-                            <%-- <input id="entidadGeografica" type="hidden" value=""/>--%>
 
                             <div class="form-group col-xs-6">
                                 <div class="col-xs-4 pull-left etiqueta_regweb control-label">
@@ -44,7 +43,6 @@ que se le indica -->
                                 </div>
                             </div>
 
-
                             <div class="form-group col-xs-6">
                                 <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                                     <label for="codigoOrganismo${param.tipo}"><spring:message
@@ -52,12 +50,11 @@ que se le indica -->
                                 </div>
                                 <div class="col-xs-8">
                                     <input id="codigoOrganismo${param.tipo}" name="codigoOrganismo" class="form-control"
-                                           type="text" value="" autofocus="autofocus"/>
+                                           type="text" value="" />
                                 </div>
                             </div>
 
                             <!-- Nivel Administracion -->
-
                             <div class="form-group col-xs-6">
                                 <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                                     <label for="codNivelAdministracion${param.tipo}"><spring:message
@@ -74,7 +71,6 @@ que se le indica -->
                                     </select>
                                 </div>
                             </div>
-
 
                             <!-- Comunidad Autonoma -->
                             <div class="form-group col-xs-6">
@@ -94,7 +90,6 @@ que se le indica -->
                                     </select>
                                 </div>
                             </div>
-
 
                             <!-- Provincias -->
                             <div class="form-group col-xs-6">
