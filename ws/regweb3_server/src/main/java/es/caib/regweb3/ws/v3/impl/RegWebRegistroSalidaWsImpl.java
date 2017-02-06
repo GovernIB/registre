@@ -112,8 +112,13 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
 
         // Obtenemos la Entidad a la que se realiza el RegistroEntrada
         if(UsuarioAplicacionCache.get().getEntidades().size() > 1){
-            //todo: Resolver este caso en el que haya más de una Entidad asociada al usuario que realiza el registro
             log.info("Usuario asociado a varias Entidades");
+
+            Libro libro = libroEjb.findByCodigo(registroSalidaWs.getLibro());
+            // todo: Podría darse el hipotético caso que un mismo código de Libro esté presente en dos Entidades
+            if(libro != null){
+                entidad = libro.getOrganismo().getEntidad();
+            }
         }else{
             entidad = UsuarioAplicacionCache.get().getEntidades().get(0);
         }
