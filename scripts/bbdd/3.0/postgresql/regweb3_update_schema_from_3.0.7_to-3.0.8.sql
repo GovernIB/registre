@@ -23,7 +23,7 @@ ALTER TABLE RWE_TRAZABILIDAD ALTER COLUMN REGENT_ORIGEN DROP NOT NULL;
 alter table RWE_ENTIDAD add OFICIOREMISION bool NOT NULL DEFAULT TRUE;
 
 --Nuevo permiso (Distribuir registros) en la tabla RWE_PERMLIBUSU
-INSERT INTO RWE_PERMLIBUSU (id,libro,usuario,activo,permiso) SELECT nextval('RWE_ALL_SEQ'),libro,usuario,false,8 FROM RWE_PERMLIBUSU where permiso=1;
+INSERT INTO RWE_PERMLIBUSU (id,libro,usuario,activo,permiso) SELECT nextval('RWE_ALL_SEQ'),libro,usuario,true,8 FROM RWE_PERMLIBUSU where permiso=1;
 
 --Contenido para cada Entidad de la tabla RWE_PROPIEDADGLOBAL (Es necesario especificar el id de la Entidad a la que pertenecen)
 INSERT INTO RWE_PROPIEDADGLOBAL (id,clave,valor,tipo,descripcion,entidad) VALUES (nextval('RWE_ALL_SEQ'),'es.caib.regweb3.resultsperpage.oficios','20',1,'Resultados por página en los Oficios pendientes de remisión',?);
