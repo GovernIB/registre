@@ -93,6 +93,22 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
     public List<RegistroSalida> getSalidasByOficioRemision(Long idOficioRemision) throws Exception;
 
     /**
+     * Busca los Números de Registro Formateados de los Registros de Entrada que pertenecen a un OficioRemision
+     * @param idOficioRemision
+     * @return
+     * @throws Exception
+     */
+    public List<String> getNumerosRegistroEntradaFormateadoByOficioRemision(Long idOficioRemision) throws Exception;
+
+    /**
+     * Busca los Números de Registro Formateados de los Registros de Salida que pertenecen a un OficioRemision
+     * @param idOficioRemision
+     * @return
+     * @throws Exception
+     */
+    public List<String> getNumerosRegistroSalidaFormateadoByOficioRemision(Long idOficioRemision) throws Exception;
+
+    /**
      * Elimina los Oficios de remisión de una Entidad
      * @param idEntidad
      * @return

@@ -2,8 +2,6 @@ package es.caib.regweb3.webapp.view;
 
 import es.caib.regweb3.model.ModeloOficioRemision;
 import es.caib.regweb3.model.OficioRemision;
-import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.CombineStream;
 import es.caib.regweb3.webapp.utils.ConvertirTexto;
@@ -91,16 +89,16 @@ public class OficioRemisionRtfView extends AbstractView {
 
         if(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA.equals(oficioRemision.getTipoOficioRemision())){
 
-            List<RegistroEntrada> registrosEntrada = (List<RegistroEntrada>) model.get("registrosEntrada");
-            for (RegistroEntrada registroEntrada : registrosEntrada) {
-                registros = registros.concat("- " + registroEntrada.getNumeroRegistroFormateado() + "\\\r\n");
+            List<String> registrosEntrada = (List<String>) model.get("registrosEntrada");
+            for (String registroEntrada : registrosEntrada) {
+                registros = registros.concat("- " + registroEntrada + "\\\r\n");
             }
 
         }else if(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA.equals(oficioRemision.getTipoOficioRemision())){
 
-            List<RegistroSalida> registrosSalida = (List<RegistroSalida>) model.get("registrosSalida");
-            for (RegistroSalida registroSalida : registrosSalida) {
-                registros = registros.concat("- " + registroSalida.getNumeroRegistroFormateado() + "\\\r\n");
+            List<String> registrosSalida = (List<String>) model.get("registrosSalida");
+            for (String registroSalida : registrosSalida) {
+                registros = registros.concat("- " + registroSalida + "\\\r\n");
             }
         }
 

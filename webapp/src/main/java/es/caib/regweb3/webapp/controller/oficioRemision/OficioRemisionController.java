@@ -672,10 +672,10 @@ public class OficioRemisionController extends BaseController {
         OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
 
         if (RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA.equals(oficioRemision.getTipoOficioRemision())) {
-            List<RegistroEntrada> registrosEntrada = oficioRemisionEjb.getEntradasByOficioRemision(oficioRemision.getId());
+            List<String> registrosEntrada = oficioRemisionEjb.getNumerosRegistroEntradaFormateadoByOficioRemision(oficioRemision.getId());
             mav.addObject("registrosEntrada", registrosEntrada);
         } else if (RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA.equals(oficioRemision.getTipoOficioRemision())) {
-            List<RegistroSalida> registrosSalida = oficioRemisionEjb.getSalidasByOficioRemision(oficioRemision.getId());
+            List<String> registrosSalida = oficioRemisionEjb.getNumerosRegistroSalidaFormateadoByOficioRemision(oficioRemision.getId());
             mav.addObject("registrosSalida", registrosSalida);
         }
 

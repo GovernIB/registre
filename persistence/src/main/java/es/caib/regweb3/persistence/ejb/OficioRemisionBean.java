@@ -439,6 +439,30 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
+    public List<String> getNumerosRegistroEntradaFormateadoByOficioRemision(Long idOficioRemision) throws Exception{
+
+        Query q= em.createQuery("select registroEntrada.numeroRegistroFormateado from RegistroEntrada registroEntrada, OficioRemision ofiRem " +
+                " where registroEntrada in elements(ofiRem.registrosEntrada) and ofiRem.id = :idOficioRemision");
+
+        q.setParameter("idOficioRemision", idOficioRemision);
+
+        return q.getResultList();
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<String> getNumerosRegistroSalidaFormateadoByOficioRemision(Long idOficioRemision) throws Exception{
+
+        Query q= em.createQuery("select registroSalida.numeroRegistroFormateado from RegistroSalida registroSalida, OficioRemision ofiRem " +
+                " where registroSalida in elements(ofiRem.registrosSalida) and ofiRem.id = :idOficioRemision");
+
+        q.setParameter("idOficioRemision", idOficioRemision);
+
+        return q.getResultList();
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public Integer eliminarByEntidad(Long idEntidad) throws Exception{
 
         Query or = em.createQuery("select distinct(id) from OficioRemision where usuarioResponsable.entidad.id = :idEntidad");
