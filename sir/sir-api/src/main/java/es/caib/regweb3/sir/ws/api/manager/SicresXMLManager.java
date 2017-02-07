@@ -16,7 +16,8 @@ import es.caib.regweb3.sir.core.model.*;
 import es.caib.regweb3.sir.ws.api.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.ws.api.utils.Mensaje;
 import es.caib.regweb3.sir.ws.api.utils.XPathReaderUtil;
-import es.caib.regweb3.utils.*;
+import es.caib.regweb3.utils.MimeTypeUtils;
+import es.caib.regweb3.utils.Versio;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -1114,7 +1115,8 @@ public class SicresXMLManager {
                     Assert.notNull(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacion(interesado.getTipo_Documento_Identificacion_Interesado()), "'El campo tipoDocumentoIdentificacionInteresado' no puede ser null");
 
                     // Validar que el Documento concuerda con su tipo documento identificación
-                    Validacion validacionDocumento = null;
+                    // Eliminat segons requeriment de Certificació SIR
+                    /* Validacion validacionDocumento = null;
                     try {
                         validacionDocumento = DocumentoUtils.comprobarDocumento(interesado.getDocumento_Identificacion_Interesado(), RegwebConstantes.TIPODOCUMENTOID_BY_CODIGO_NTI.get(interesado.getTipo_Documento_Identificacion_Interesado().charAt(0)));
                     } catch (Exception e) {
@@ -1122,7 +1124,7 @@ public class SicresXMLManager {
                         validacionDocumento = new Validacion(Boolean.FALSE, "", "");
                     }
 
-                    Assert.isTrue(validacionDocumento.getValido(), "El campo 'documento' no es correcto");
+                    Assert.isTrue(validacionDocumento.getValido(), "El campo 'documento' no es correcto"); */
 
                     // Validar que el Tipo Documento concuerda con Nombre o Razon Social
                     if (interesado.getTipo_Documento_Identificacion_Interesado().equals(String.valueOf(TIPODOCUMENTOID_CIF)) ||
@@ -1173,14 +1175,15 @@ public class SicresXMLManager {
                     Assert.notNull(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacion(interesado.getTipo_Documento_Identificacion_Representante()), "El campo 'tipoDocumentoIdentificacionRepresentante' no puede ser null");
 
                     // Validar que el Documento concuerda con su tipo documento identificación
-                    Validacion validacionDocumento = null;
+                    // Eliminat segons requeriment de Certificació SIR
+                    /* Validacion validacionDocumento = null;
                     try {
                         validacionDocumento = DocumentoUtils.comprobarDocumento(interesado.getDocumento_Identificacion_Representante(), RegwebConstantes.TIPODOCUMENTOID_BY_CODIGO_NTI.get(interesado.getTipo_Documento_Identificacion_Representante().charAt(0)));
                     } catch (Exception e) {
                         e.printStackTrace();
                         validacionDocumento = new Validacion(Boolean.FALSE, "", "");
                     }
-                    Assert.isTrue(validacionDocumento.getValido(), "El campo  'documento' no es válido");
+                    Assert.isTrue(validacionDocumento.getValido(), "El campo  'documento' no es válido"); */
 
                     // Validar que el Tipo Documento concuerda con Nombre o Razon Social
                     if (interesado.getTipo_Documento_Identificacion_Representante().equals(String.valueOf(TIPODOCUMENTOID_CIF)) ||
