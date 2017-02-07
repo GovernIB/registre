@@ -200,6 +200,32 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
         return libros;
     }
 
+    public List<Libro> getLibrosConsulta(Long idUsuarioEntidad) throws Exception{
+        CatEstadoEntidad vigente = catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+
+        Query q = em.createQuery("Select distinct plu.libro.id, plu.libro.nombre, plu.libro.organismo.id from PermisoLibroUsuario as plu where " +
+                "plu.usuario.id = :idUsuarioEntidad and plu.libro.organismo.estado.id = :vigente and " +
+                "plu.libro.activo = true and plu.activo = true and (plu.permiso=:consultaEntrada or plu.permiso=:consultaSalida)" +
+                " order by plu.libro.organismo.id");
+
+        q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
+        q.setParameter("vigente",vigente.getId());
+        q.setParameter("consultaEntrada", RegwebConstantes.PERMISO_CONSULTA_REGISTRO_ENTRADA);
+        q.setParameter("consultaSalida", RegwebConstantes.PERMISO_CONSULTA_REGISTRO_SALIDA);
+
+        List<Libro> libros =  new ArrayList<Libro>();
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result){
+            Libro libro = new Libro((Long)object[0],(String)object[1],(Long)object[2]);
+
+            libros.add(libro);
+        }
+
+        return libros;
+    }
+
     @Override
     @SuppressWarnings(value = "unchecked")
     public List<Libro> getLibrosAdministrados(Long idUsuarioEntidad) throws Exception {

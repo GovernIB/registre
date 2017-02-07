@@ -263,6 +263,12 @@ public class UsuarioService {
         List<Libro> librosRegistro = permisoLibroUsuarioEjb.getLibrosRegistro(usuarioEntidad.getId());
         log.info("Libros registro usuario: " + Arrays.toString(librosRegistro.toArray()));
 
+        // Si no hay libros en los que podamos registrar, buscamos en los que podamos consultar.
+        if(librosRegistro.isEmpty()){
+            librosRegistro = permisoLibroUsuarioEjb.getLibrosConsulta(usuarioEntidad.getId());
+            log.info("Libros registro consulta: " + Arrays.toString(librosRegistro.toArray()));
+        }
+
         //Obtenemos los Libros donde que el UsuarioEntidad puede Administrar
         List<Libro> librosAdministrados = permisoLibroUsuarioEjb.getLibrosAdministrados(usuarioEntidad.getId());
         log.info("Libros administrados usuario: " + Arrays.toString(librosAdministrados.toArray()));
