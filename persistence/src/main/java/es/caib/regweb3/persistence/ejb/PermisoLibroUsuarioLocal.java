@@ -64,7 +64,7 @@ public interface PermisoLibroUsuarioLocal extends BaseEjb<PermisoLibroUsuario, L
 
     /**
      * Retorna los {@link es.caib.regweb3.model.Libro} en los que un Usuario tiene permisos de
-     * Consulta, Registro, Modificación o Administración
+     * Registro, Modificación o Administración
      * @param idUsuarioEntidad
      * @return
      * @throws Exception
