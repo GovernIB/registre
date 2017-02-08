@@ -54,12 +54,19 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
         UsuarioEntidad usuarioEntidad = (UsuarioEntidad) session.getAttribute(RegwebConstantes.SESSION_USUARIO_ENTIDAD);
         Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
         Oficina oficinaActiva = (Oficina) session.getAttribute(RegwebConstantes.SESSION_OFICINA);
-        Set<Long> organismos = oficinaActiva.getOrganismosFuncionalesId();
 
         // Comprobamos que el usuario dispone del Rol RWE_USUARI
         if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_USUARI)){
             log.info("Error de rol");
             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
+            response.sendRedirect("/regweb3/aviso");
+            return false;
+        }
+
+        // Comprobamos que el usuario dispone de una OficinaActiva
+        if(oficinaActiva == null){
+            log.info("No existe una OficinaActiva");
+            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficinaActiva"));
             response.sendRedirect("/regweb3/aviso");
             return false;
         }
@@ -85,6 +92,8 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
         // Comprobaciones previas al listado de OficioRemision
         if (url.equals("/oficioRemision/list") || url.contains("pendientesLlegada")) {
 
+            Set<Long> organismos = oficinaActiva.getOrganismosFuncionalesId();
+
             List<Libro> libros = permisoLibroUsuarioEjb.getLibrosOrganismoPermiso(organismos, usuarioEntidad.getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_ENTRADA);
 
             // Mira que el usuario tiene permisos consulta de entrada en los Libros
@@ -98,6 +107,8 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
 
         // Comprobaciones previas al listado de Oficios de Remisión Pendientes
         if (url.contains("PendientesRemision") || url.contains("procesar")) {
+
+            Set<Long> organismos = oficinaActiva.getOrganismosFuncionalesId();
 
             List<Libro> libros = permisoLibroUsuarioEjb.getLibrosOrganismoPermiso(organismos, usuarioEntidad.getId(), RegwebConstantes.PERMISO_REGISTRO_ENTRADA);
 

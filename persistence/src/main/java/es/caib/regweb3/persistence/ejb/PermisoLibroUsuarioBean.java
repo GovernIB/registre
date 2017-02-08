@@ -174,7 +174,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
         Query q = em.createQuery("Select distinct plu.libro.id, plu.libro.nombre, plu.libro.organismo.id from PermisoLibroUsuario as plu where " +
                 "plu.usuario.id = :idUsuarioEntidad and plu.libro.organismo.estado.id = :vigente and " +
                 "plu.libro.activo = true and plu.activo = true and (plu.permiso=:registroEntrada or plu.permiso=:registroSalida or " +
-                "plu.permiso=:modificacionEntrada or plu.permiso=:modificacionSalida or plu.permiso=:administradorLibro) " +
+                "plu.permiso=:modificacionEntrada or plu.permiso=:modificacionSalida) " +
                 " order by plu.libro.organismo.id");
 
         q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
@@ -185,7 +185,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
         q.setParameter("modificacionSalida", RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA);
         //q.setParameter("consultaEntrada", RegwebConstantes.PERMISO_CONSULTA_REGISTRO_ENTRADA);
         //q.setParameter("consultaSalida", RegwebConstantes.PERMISO_CONSULTA_REGISTRO_SALIDA);
-        q.setParameter("administradorLibro", RegwebConstantes.PERMISO_ADMINISTRACION_LIBRO);
+        //q.setParameter("administradorLibro", RegwebConstantes.PERMISO_ADMINISTRACION_LIBRO);
 
         List<Libro> libros =  new ArrayList<Libro>();
 
