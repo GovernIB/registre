@@ -87,13 +87,30 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
     }
 
     @Override
+    public AsientoRegistralSir getAsientoRegistral(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws Exception {
+
+        Query q = em.createQuery("Select asientoRegistralSir from AsientoRegistralSir as asientoRegistralSir where " +
+                "asientoRegistralSir.identificadorIntercambio = :identificadorIntercambio and asientoRegistralSir.codigoEntidadRegistralDestino = :codigoEntidadRegistralDestino");
+
+        q.setParameter("identificadorIntercambio",identificadorIntercambio);
+        q.setParameter("codigoEntidadRegistralDestino",codigoEntidadRegistralDestino);
+
+        List<AsientoRegistralSir> asientoRegistralSir = q.getResultList();
+        if(asientoRegistralSir.size() == 1){
+            return asientoRegistralSir.get(0);
+        }else{
+            return  null;
+        }
+    }
+
+    @Override
     public AsientoRegistralSir crearAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir) throws Exception{
 
         // Obtenemos la Entidad a la que pertenece la Oficina a la que va dirigida este AsientoRegistralSir
         Entidad entidad = new Entidad(oficinaEjb.obtenerEntidad(asientoRegistralSir.getCodigoEntidadRegistralDestino()));
+
         asientoRegistralSir.setEntidad(entidad);
         asientoRegistralSir.setEstado(EstadoAsientoRegistralSir.RECIBIDO);
-
 
         asientoRegistralSir = persist(asientoRegistralSir);
 

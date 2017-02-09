@@ -33,6 +33,10 @@ public class WebServicesMethodsEJB implements WebServicesMethodsLocal {
     @EJB(mappedName = "regweb3/ArchivoEJB/local")
     public ArchivoLocal archivoEjb;
 
+    @Override
+    public AsientoRegistralSir getAsientoRegistral(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws Exception{
+        return  asientoRegistralSirEjb.getAsientoRegistral(identificadorIntercambio, codigoEntidadRegistralDestino);
+    }
 
     @Override
     public AsientoRegistralSir crearAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir) throws Exception {

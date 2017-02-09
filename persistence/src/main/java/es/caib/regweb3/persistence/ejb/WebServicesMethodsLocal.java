@@ -13,6 +13,8 @@ import javax.ejb.Local;
 @Local
 public interface WebServicesMethodsLocal {
 
+    public AsientoRegistralSir getAsientoRegistral(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws Exception;
+
     public AsientoRegistralSir crearAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir) throws Exception;
 
     public Archivo persistArchivo(Archivo archivo) throws Exception;

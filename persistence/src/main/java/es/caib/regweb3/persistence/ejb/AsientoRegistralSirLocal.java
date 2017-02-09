@@ -23,6 +23,16 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public interface AsientoRegistralSirLocal extends BaseEjb<AsientoRegistralSir, Long> {
 
+
+    /**
+     * Obtiene un AsientoRegistral a partir de los parámetros
+     * @param identificadorIntercambio
+     * @param codigoEntidadRegistralDestino
+     * @return
+     * @throws Exception
+     */
+    public AsientoRegistralSir getAsientoRegistral(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws Exception;
+
     /**
      * Crea un AsientoRegistralSir
      * @throws Exception

@@ -3,10 +3,7 @@ package es.caib.regweb3.sir.ws.api.manager;
 import es.caib.regweb3.persistence.ejb.WebServicesMethodsLocal;
 import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
-import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
-import es.caib.regweb3.sir.core.model.Errores;
-import es.caib.regweb3.sir.core.model.TipoAnotacion;
-import es.caib.regweb3.sir.core.model.TipoMensaje;
+import es.caib.regweb3.sir.core.model.*;
 import es.caib.regweb3.sir.ws.api.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.ws.api.utils.Mensaje;
 import es.caib.regweb3.sir.ws.api.utils.XPathReaderUtil;
@@ -120,19 +117,47 @@ public class RecepcionManager {
             throw new ValidacionException(Errores.ERROR_0037, e);
         }
 
-        //todo: Crear una auditoría interna de los AsientosRegistralesSir recibidos
-
         // tipo anotacion envio
         if (TipoAnotacion.ENVIO.getValue().equals(ficheroIntercambio.getTipoAnotacion())) {
 
-            //todo: Comprobar si el asiento ya existe en el sistema
-
             try {
-                asientoRegistralSir = webServicesMethodsEjb.crearAsientoRegistralSir(ficheroIntercambio.getAsientoRegistralSir(webServicesMethodsEjb));
+                asientoRegistralSir = webServicesMethodsEjb.getAsientoRegistral(ficheroIntercambio.getIdentificadorIntercambio(),ficheroIntercambio.getCodigoEntidadRegistralDestino());
             } catch (Exception e) {
-                log.info("Error al crear el AsientoRegistralSir", e);
+                e.printStackTrace();
                 throw new ServiceException(Errores.ERROR_INESPERADO,e);
             }
+
+            if(asientoRegistralSir != null) { // Ya existe en el sistema
+
+                if(EstadoAsientoRegistralSir.RECIBIDO.equals(asientoRegistralSir.getEstado())){
+
+                    log.info("El AsientoRegistral" + asientoRegistralSir.getIdentificadorIntercambio() +" ya se ha recibido.");
+                    throw new ValidacionException(Errores.ERROR_0205);
+
+                }else if(EstadoAsientoRegistralSir.RECHAZADO.equals(asientoRegistralSir.getEstado()) ||
+                            EstadoAsientoRegistralSir.RECHAZADO_Y_ACK.equals(asientoRegistralSir.getEstado()) ||
+                            EstadoAsientoRegistralSir.RECHAZADO_Y_ERROR.equals(asientoRegistralSir.getEstado()) ||
+                            EstadoAsientoRegistralSir.REENVIADO.equals(asientoRegistralSir.getEstado())){
+
+
+                }
+
+
+            }else{ // No existe en el sistema, lo creamos.
+
+                try {
+                    // Convertimos el Fichero de Intercambio SICRES3 en {@link es.caib.regweb3.model.AsientoRegistralSir}
+                    asientoRegistralSir = ficheroIntercambio.getAsientoRegistralSir(webServicesMethodsEjb);
+
+                    // Guardamos el nuevo AsientoRegistrarSir
+                    asientoRegistralSir = webServicesMethodsEjb.crearAsientoRegistralSir(asientoRegistralSir);
+                } catch (Exception e) {
+                    log.info("Error al crear el AsientoRegistralSir", e);
+                    throw new ServiceException(Errores.ERROR_INESPERADO,e);
+                }
+            }
+
+
         }
 
 

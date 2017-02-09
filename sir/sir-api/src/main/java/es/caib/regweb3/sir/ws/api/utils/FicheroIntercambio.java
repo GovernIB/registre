@@ -388,7 +388,7 @@ public class FicheroIntercambio {
     }
 
     /**
-     * Obtiene la información del asientoRegistralSirRegistral.
+     * Crea un AsientoRegistralSir, a partir del FicheroIntercambio.
      *
      * @return Información del asientoRegistralSir registral.
      */
