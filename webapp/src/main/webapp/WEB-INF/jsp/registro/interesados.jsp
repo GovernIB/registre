@@ -317,7 +317,7 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
         $('#nombreTodas').focus();
     });
     $('#modalBuscadorOrganismoInteresado').on('shown.bs.modal', function () {
-        $('#codigoOrganismoOrganismoInteresado').focus();
+        $('#denominacionOrganismoInteresado').focus();
     });
 
     // Posicionamos el ratón en el campo indicado al cargar el modal
