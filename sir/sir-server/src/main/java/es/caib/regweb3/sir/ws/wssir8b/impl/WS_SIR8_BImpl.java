@@ -4,7 +4,7 @@ package es.caib.regweb3.sir.ws.wssir8b.impl;
 import es.caib.regweb3.persistence.ejb.WebServicesMethodsLocal;
 import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.core.model.Errores;
-import es.caib.regweb3.sir.ws.api.service.ServicioIntercambioRegistral;
+import es.caib.regweb3.sir.ws.api.service.ServicioIntercambioRegistralImpl;
 import es.caib.regweb3.sir.ws.utils.PassiveCallbackHandler;
 import es.caib.regweb3.sir.ws.wssir8b.RespuestaWS;
 import es.caib.regweb3.sir.ws.wssir8b.WS_SIR8_B_PortType;
@@ -54,7 +54,7 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
     @EJB(mappedName = "regweb3/WebServicesMethodsEJB/local")
     public WebServicesMethodsLocal webServicesMethodsEjb;
 
-    ServicioIntercambioRegistral servicioIntercambioRegistral = new ServicioIntercambioRegistral();
+    ServicioIntercambioRegistralImpl servicioIntercambioRegistral = new ServicioIntercambioRegistralImpl();
 
     public static final String NAME = "WS_SIR8_B";
 

@@ -254,6 +254,10 @@ public interface RegwebConstantes {
             REGISTRO_ANULADO};
     
     
+    /* ------------- TIPO INTERCAMBIO SIR ---------------*/
+    public static final Long INTERCAMBIO_ENVIO = 1L;
+    public static final Long INTERCAMBIO_RECEPCION = 2L;
+
     /* ------------- TRANSPORTE ---------------*/
 
     public static final Long TRANSPORTE_SERVICIO_MENSAJEROS = 1L;

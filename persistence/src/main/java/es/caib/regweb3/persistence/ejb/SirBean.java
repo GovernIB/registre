@@ -5,10 +5,7 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.CamposNTI;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
-import es.caib.regweb3.sir.core.model.AnexoSir;
-import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
-import es.caib.regweb3.sir.core.model.InteresadoSir;
-import es.caib.regweb3.sir.core.model.TipoRegistro;
+import es.caib.regweb3.sir.core.model.*;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.apache.commons.codec.binary.Base64;
@@ -71,7 +68,10 @@ public class SirBean implements SirLocal{
         RegistroDetalle registroDetalle = registroEntrada.getRegistroDetalle();
 
         AsientoRegistralSir asientoRegistralSir = new AsientoRegistralSir();
-        asientoRegistralSir.setEstado(null);
+
+
+        asientoRegistralSir.setIndicadorPrueba(IndicadorPrueba.NORMAL); // todo Modificar cuando entremos en Producción
+        asientoRegistralSir.setEstado(EstadoAsientoRegistralSir.PENDIENTE_ENVIO);
         asientoRegistralSir.setEntidad(registroEntrada.getOficina().getOrganismoResponsable().getEntidad());
         asientoRegistralSir.setCodigoEntidadRegistral(registroEntrada.getOficina().getCodigo());
 

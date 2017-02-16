@@ -3,7 +3,6 @@ package es.caib.regweb3.sir.ws.api.manager;
 import es.caib.regweb3.sir.core.excepcion.SIRException;
 import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
 import es.caib.regweb3.sir.core.model.Errores;
-import es.caib.regweb3.sir.core.model.IndicadorPrueba;
 import es.caib.regweb3.sir.core.model.TipoAnotacion;
 import es.caib.regweb3.sir.ws.api.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.ws.api.wssir6b.RespuestaWS;
@@ -36,9 +35,6 @@ public class EmisionManager {
     public String enviarFicheroIntercambio(AsientoRegistralSir asientoRegistralSir){
 
         try {
-
-            // todo Modificar cuando entremos en Producción
-            asientoRegistralSir.setIndicadorPrueba(IndicadorPrueba.NORMAL);
 
             // Comprobar el identificador de intercambio
             if (StringUtils.isBlank(asientoRegistralSir.getIdentificadorIntercambio())) {

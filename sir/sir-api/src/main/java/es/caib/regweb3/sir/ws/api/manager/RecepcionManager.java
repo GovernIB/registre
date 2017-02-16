@@ -210,6 +210,32 @@ public class RecepcionManager {
     }
 
     /**
+     * Recibe un fichero de datos de control del nodo distribuido asociado.
+     *
+     * @param xmlMensaje XML con la información del mensaje en formato SICRES 3.0.
+     */
+    public void recibirMensaje(String xmlMensaje){
+
+        // Parseamos el mensaje xml
+        Mensaje mensaje = sicresXMLManager.parseXMLMensaje(xmlMensaje);
+
+        // Validamos el mensaje recibido
+        sicresXMLManager.validarMensaje(mensaje);
+
+        // Acciones en función del tipo de mensaje
+        if(mensaje.getTipoMensaje().equals(TipoMensaje.ACK)){
+
+        }else if(mensaje.getTipoMensaje().equals(TipoMensaje.CONFIRMACION)){
+
+        }else if(mensaje.getTipoMensaje().equals(TipoMensaje.ERROR)){
+
+        }
+
+        log.info("Mensaje recibido y procesado correctamente: " + mensaje.getIdentificadorIntercambio());
+
+    }
+
+    /**
      * Envía un mensaje de control ACK.
      *
      * @param ficheroIntercambio Información del asiento registral.

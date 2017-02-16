@@ -1,5 +1,8 @@
 package es.caib.regweb3.sir.ws.wssir9.impl;
 
+import es.caib.regweb3.sir.core.excepcion.ServiceException;
+import es.caib.regweb3.sir.core.model.Errores;
+import es.caib.regweb3.sir.ws.api.service.ServicioIntercambioRegistralImpl;
 import es.caib.regweb3.sir.ws.wssir9.RespuestaWS;
 import es.caib.regweb3.sir.ws.wssir9.WS_SIR9_PortType;
 import org.apache.log4j.Logger;
@@ -38,18 +41,44 @@ public class WS_SIR9Impl implements WS_SIR9_PortType {
 
     public static final String NAME_WS = NAME + "Ws";
 
+    ServicioIntercambioRegistralImpl servicioIntercambioRegistral = new ServicioIntercambioRegistralImpl();
+
     @Override
     public RespuestaWS envioMensajeDatosControlAAplicacion(String mensaje, String firma) {
 
         log.info("Dentro de WS_SIR9Impl: envioMensajeDatosControlAAplicacion");
         log.info("Mensaje: " + mensaje);
-        log.info("Firma: " + firma);
 
+        RespuestaWS respuestaWS = null;
+
+        try{
+            // Envia el fichero de intercambio a REGWEB3
+            servicioIntercambioRegistral.recibirMensaje(mensaje);
+
+            // Creamos la respuesta exitosa
+            respuestaWS = crearRespuestaWS(Errores.OK);
+
+        } catch (ServiceException e) {
+            log.info("Error en el envío del mensaje de datos de control a la aplicación", e);
+            respuestaWS = crearRespuestaWS(e.getError());
+        } catch (Throwable e) {
+            log.info("Error en el envío del mensaje de datos de control a la aplicación", e);
+            respuestaWS = crearRespuestaWS(Errores.ERROR_INESPERADO);
+        }
+
+        return respuestaWS;
+    }
+
+    /**
+     * Crea la respuesta de retorno del servicio.
+     *
+     * @param error
+     * @return Información de respuesta.
+     */
+    private RespuestaWS crearRespuestaWS(Errores error) {
         RespuestaWS respuesta = new RespuestaWS();
-        respuesta.setCodigo("00");
-        respuesta.setDescripcion("Exito");
-
-
+        respuesta.setCodigo(error.getValue());
+        respuesta.setDescripcion(error.getName());
         return respuesta;
     }
 }

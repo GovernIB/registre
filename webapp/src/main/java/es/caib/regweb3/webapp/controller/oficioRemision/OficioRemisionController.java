@@ -75,6 +75,8 @@ public class OficioRemisionController extends BaseController {
     public SirLocal sirEjb;
 
     EmisionManager emisionManager = new EmisionManager();
+    /*@Autowired
+    public ServicioIntercambioRegistral servicioIntercambioRegistral;*/
 
     /**
      * Listado de todos los Oficios de Remision

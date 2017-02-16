@@ -97,7 +97,7 @@ public interface OficioRemisionEntradaUtilsLocal {
      * @param registrosEntrada
      * @param oficinaActiva
      * @param usuarioEntidad
-     * @param organismoExterno
+     * @param organismoExternoCodigo
      * @param organismoExternoDenominacion
      * @param idLibro
      * @return
@@ -106,7 +106,7 @@ public interface OficioRemisionEntradaUtilsLocal {
      * @throws I18NValidationException
      */
     public OficioRemision crearOficioRemisionExterno(List<RegistroEntrada> registrosEntrada,
-                                                     Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, String organismoExterno,
+                                                     Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, String organismoExternoCodigo,
                                                      String organismoExternoDenominacion, Long idLibro) throws Exception, I18NException, I18NValidationException;
 
     /**

@@ -217,7 +217,6 @@ public class AsientoRegistralSir implements Serializable {
      */
     private String solicita;
 
-
     /**
      * Lista de anexos del asiento registral.
      */
@@ -227,36 +226,6 @@ public class AsientoRegistralSir implements Serializable {
      * Lista de interesados del asiento registral.
      */
     private List<InteresadoSir> interesados = null;
-
-    /**
-     * Fecha de estado del asiento registral.
-     */
-    private Date fechaEstado;
-
-    /**
-     * Fecha de envío del asiento registral.
-     */
-    private Date fechaEnvio;
-
-    /**
-     * Fecha de recepción del asiento registral.
-     */
-    private Date fechaRecepcion;
-
-    /**
-     * Número de reintentos de envío.
-     */
-    private int numeroReintentos;
-
-    /**
-     * Código del error producido.
-     */
-    private String codigoError;
-
-    /**
-     * Descripción del error producido.
-     */
-    private String decodificacionError;
 
 
     public AsientoRegistralSir() {

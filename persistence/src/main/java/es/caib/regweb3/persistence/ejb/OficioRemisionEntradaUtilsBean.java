@@ -427,18 +427,16 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
      * @param registrosEntrada Listado de RegistrosEntrada que forman parte del Oficio de remisión
      * @param oficinaActiva    Oficia en la cual se realiza el OficioRemision
      * @param usuarioEntidad   Usuario que realiza el OficioRemision
-     * @param organismoExterno
+     * @param organismoExternoCodigo
      * @param idLibro
      * @return
      * @throws Exception
      */
 
     public OficioRemision crearOficioRemisionExterno(List<RegistroEntrada> registrosEntrada,
-                                                     Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, String organismoExterno,
+                                                     Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, String organismoExternoCodigo,
                                                      String organismoExternoDenominacion, Long idLibro)
             throws Exception, I18NException, I18NValidationException {
-
-        //Organismo organismoDestino = organismoEjb.findById(idOrganismo);
 
         OficioRemision oficioRemision = new OficioRemision();
         oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
@@ -450,7 +448,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         oficioRemision.setRegistrosEntrada(registrosEntrada);
         oficioRemision.setUsuarioResponsable(usuarioEntidad);
         oficioRemision.setLibro(new Libro(idLibro));
-        oficioRemision.setDestinoExternoCodigo(organismoExterno);
+        oficioRemision.setDestinoExternoCodigo(organismoExternoCodigo);
         oficioRemision.setDestinoExternoDenominacion(organismoExternoDenominacion);
         oficioRemision.setOrganismoDestinatario(null);
 
