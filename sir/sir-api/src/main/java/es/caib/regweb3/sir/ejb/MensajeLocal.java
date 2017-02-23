@@ -1,6 +1,7 @@
 package es.caib.regweb3.sir.ejb;
 
 import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
+import es.caib.regweb3.sir.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.utils.Mensaje;
 
 import javax.ejb.Local;
@@ -12,7 +13,30 @@ import javax.ejb.Local;
 /*@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})*/
 public interface MensajeLocal {
 
-    public void enviarMensaje(Mensaje mensaje);
-
+    /**
+     *
+     * @param asientoRegistralSir
+     * @param numeroRegistro
+     */
     public void enviarMensajeConfirmacion(AsientoRegistralSir asientoRegistralSir, String numeroRegistro);
+
+    /**
+     *
+     * @param ficheroIntercambio
+     */
+    public void enviarACK(FicheroIntercambio ficheroIntercambio);
+
+    /**
+     *
+     * @param mensaje
+     */
+    public void enviarACK(Mensaje mensaje);
+
+    /**
+     *
+     * @param mensaje
+     * @param codigoError
+     * @param descError
+     */
+    public void enviarMensajeError(Mensaje mensaje, String codigoError, String descError);
 }

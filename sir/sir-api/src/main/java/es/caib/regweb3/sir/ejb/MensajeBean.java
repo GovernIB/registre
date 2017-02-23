@@ -3,6 +3,7 @@ package es.caib.regweb3.sir.ejb;
 import es.caib.regweb3.sir.core.excepcion.SIRException;
 import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
 import es.caib.regweb3.sir.core.model.TipoMensaje;
+import es.caib.regweb3.sir.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.utils.Mensaje;
 import es.caib.regweb3.sir.utils.SicresXML;
 import es.caib.regweb3.sir.ws.api.wssir7.RespuestaWS;
@@ -15,7 +16,7 @@ import javax.xml.rpc.ServiceException;
 import java.util.Date;
 
 /**
- *
+ * Ejb para la gestión de la emisión de Mensajes de Datos de Control SICRES3 a un nodo distribuido
  */
 @Stateless(name = "MensajeEJB")
 public class MensajeBean implements MensajeLocal {
@@ -46,7 +47,60 @@ public class MensajeBean implements MensajeLocal {
         log.info("Mensaje de confirmación  enviado");
     }
 
-    public void enviarMensaje(Mensaje mensaje) {
+    /**
+     * Envía un mensaje de control ACK.
+     *
+     * @param ficheroIntercambio Información del asiento registral.
+     */
+    public void enviarACK(FicheroIntercambio ficheroIntercambio) {
+
+        Mensaje mensaje = new Mensaje();
+        mensaje.setCodigoEntidadRegistralOrigen(ficheroIntercambio.getCodigoEntidadRegistralDestino());
+        mensaje.setCodigoEntidadRegistralDestino(ficheroIntercambio.getCodigoEntidadRegistralOrigen());
+        mensaje.setIdentificadorIntercambio(ficheroIntercambio.getIdentificadorIntercambio());
+        mensaje.setTipoMensaje(TipoMensaje.ACK);
+        mensaje.setDescripcionMensaje(TipoMensaje.ACK.getName());
+
+
+        enviarMensaje(mensaje);
+
+        log.info("Mensaje de control (ACK) enviado");
+    }
+
+    /**
+     * Envía un mensaje de control ACK.
+     *
+     * @param mensaje Campos del mensaje obtenidos del FicheroIntercambio recibido
+     */
+    public void enviarACK(Mensaje mensaje) {
+
+        mensaje.setTipoMensaje(TipoMensaje.ACK);
+        mensaje.setDescripcionMensaje(TipoMensaje.ACK.getName());
+
+        enviarMensaje(mensaje);
+
+        log.info("Mensaje de control (ACK) enviado");
+    }
+
+    /**
+     * Envía un mensaje de control de tipo ERROR.
+     *
+     * @param mensaje Campos del mensaje obtenidos del FicheroIntercambio recibido
+     * @param codigoError
+     * @param descError
+     */
+    public void enviarMensajeError(Mensaje mensaje, String codigoError, String descError) {
+        mensaje.setTipoMensaje(TipoMensaje.ERROR);
+        mensaje.setCodigoError(codigoError);
+        mensaje.setDescripcionMensaje(descError);
+
+        enviarMensaje(mensaje);
+
+        log.info("Mensaje de control (ERROR) enviado");
+
+    }
+
+    protected void enviarMensaje(Mensaje mensaje) {
 
         sicresXML.validarMensaje(mensaje);
 

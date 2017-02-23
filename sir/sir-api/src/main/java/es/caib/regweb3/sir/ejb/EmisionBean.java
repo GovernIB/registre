@@ -18,13 +18,11 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
+ * Ejb para la gestión de la Emisión de Ficheros de Intercambios SICRES3 hacia un nodo distribuido
  *
- * Created by earrivi on 19/01/2016.
  */
 @Stateless(name = "EmisionEJB")
 public class EmisionBean implements EmisionLocal{
@@ -38,8 +36,13 @@ public class EmisionBean implements EmisionLocal{
 
 
     /**
-     *
-     * @param
+     * Envío de un AsientoRegistral en formato SICRES3 a un nodo distribuido
+     * @param idRegistroEntrada
+     * @param codigoEntidadRegistralDestino
+     * @param denominacionEntidadRegistralDestino
+     * @param oficinaActiva
+     * @param usuario
+     * @param idLibro
      * @return
      */
     public AsientoRegistralSir enviarFicheroIntercambio(Long idRegistroEntrada, String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino, Oficina oficinaActiva, UsuarioEntidad usuario, Long idLibro){
@@ -47,14 +50,6 @@ public class EmisionBean implements EmisionLocal{
         AsientoRegistralSir asientoRegistralSir = null;
 
         try {
-
-            /*try {
-                sirEjb = (SirLocal) new InitialContext().lookup("regweb3/SirEJB/local");
-            } catch (Throwable e) {
-                log.error("No se ha podido instanciar SirEJB");
-                throw new Exception(e);
-
-            }*/
 
             asientoRegistralSir = sirEjb.enviarFicheroIntercambio(idRegistroEntrada, codigoEntidadRegistralDestino, denominacionEntidadRegistralDestino, oficinaActiva, usuario,idLibro);
 
@@ -88,7 +83,7 @@ public class EmisionBean implements EmisionLocal{
     }
 
     /**
-     *
+     * Reenvío de un AsientoRegistral en formato SICRES3 a un nodo distribuido
      * @param ficheroIntercambio
      */
     public void reenviarFicheroIntercambio(FicheroIntercambio ficheroIntercambio) {
@@ -96,7 +91,7 @@ public class EmisionBean implements EmisionLocal{
     }
 
     /**
-     *
+     * Rechazo de un AsientoRegistral en formato SICRES3 a un nodo distribuido
      * @param ficheroIntercambio
      */
     public void rechazarFicheroIntercambio(FicheroIntercambio ficheroIntercambio) {
@@ -130,24 +125,6 @@ public class EmisionBean implements EmisionLocal{
         WS_SIR6_B_PortType ws_sir6_b = getWS_SIR6_B();
         return ws_sir6_b.recepcionFicheroDeAplicacion(xml);
         //}
-    }
-
-    /**
-     * Genera el identificador de intercambio a partir del código de la oficina de origen
-     *
-     * @param codOficinaOrigen
-     * @return
-     * @throws Exception
-     */
-    protected String generarIdentificadorIntercambio(String codOficinaOrigen) {
-
-        String identificador = "";
-        SimpleDateFormat anyo = new SimpleDateFormat("yy"); // Just the year, with 2 digits
-
-        identificador = codOficinaOrigen + "_" + anyo.format(Calendar.getInstance().getTime()) + "_" + getIdToken(); //todo: Añadir secuencia real
-
-
-        return identificador;
     }
 
     /**

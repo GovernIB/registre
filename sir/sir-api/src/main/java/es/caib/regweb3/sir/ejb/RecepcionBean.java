@@ -17,10 +17,10 @@ import javax.ejb.Stateless;
 import javax.xml.xpath.XPathConstants;
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 
 /**
- *
+ * Ejb para la gestión de la Recepción de Ficheros de Intercambios y Mensajes de Dtos de Control
+ * en formato SICRES3 desde un nodo distribuido
  */
 @Stateless(name = "RecepcionEJB")
 public class RecepcionBean implements RecepcionLocal{
@@ -40,7 +40,7 @@ public class RecepcionBean implements RecepcionLocal{
 
 
     /**
-     * Recibe un fichero de intercambio
+     * Recibe un fichero de intercambio en formato SICRES3 desde un nodo distribuido
      *
      * @param xmlFicheroIntercambio
      * @return PreRegistro creado
@@ -61,7 +61,7 @@ public class RecepcionBean implements RecepcionLocal{
             recibirFicheroIntercambio(ficheroIntercambio, xmlFicheroIntercambio, webServicesMethodsEjb);
 
             // Si ha ido bien, enviamos el ACK
-            enviarACK(ficheroIntercambio);
+            mensajeEjb.enviarACK(ficheroIntercambio);
 
         } catch (RuntimeException e) {
 
@@ -85,11 +85,11 @@ public class RecepcionBean implements RecepcionLocal{
 
                 // Si el código de error es el de duplicado, se vuelve a enviar un ACK
                 if (Errores.ERROR_0205.getValue().equals(errorGenerico)) {
-                    enviarACK(mensaje);
+                    mensajeEjb.enviarACK(mensaje);
 
                     // Enviar mensaje de error, sino tiene nada que ver con los campos CodigoEntidad
                 } else if (!Errores.ERROR_COD_ENTIDAD_INVALIDO.getValue().equals(errorGenerico)) {
-                    enviarMensajeError(mensaje, errorGenerico, descripcionError, null);
+                    mensajeEjb.enviarMensajeError(mensaje, errorGenerico, descripcionError);
                 }
 
             } catch (RuntimeException ex) {
@@ -178,7 +178,7 @@ public class RecepcionBean implements RecepcionLocal{
     }
 
     /**
-     * Obtiene del xml de intercambios los campos necesarios para crear un mensaje de error
+     * Obtiene del xml de intercambio los campos necesarios para crear un mensaje de error
      * @param xml
      * @return
      */
@@ -235,61 +235,6 @@ public class RecepcionBean implements RecepcionLocal{
         }
 
         log.info("Mensaje recibido y procesado correctamente: " + mensaje.getIdentificadorIntercambio());
-
-    }
-
-    /**
-     * Envía un mensaje de control ACK.
-     *
-     * @param ficheroIntercambio Información del asiento registral.
-     */
-    protected void enviarACK(FicheroIntercambio ficheroIntercambio) {
-
-        Mensaje mensaje = new Mensaje();
-        mensaje.setCodigoEntidadRegistralOrigen(ficheroIntercambio.getCodigoEntidadRegistralDestino());
-        mensaje.setCodigoEntidadRegistralDestino(ficheroIntercambio.getCodigoEntidadRegistralOrigen());
-        mensaje.setIdentificadorIntercambio(ficheroIntercambio.getIdentificadorIntercambio());
-        mensaje.setTipoMensaje(TipoMensaje.ACK);
-        mensaje.setDescripcionMensaje(TipoMensaje.ACK.getName());
-
-
-        mensajeEjb.enviarMensaje(mensaje);
-
-        log.info("Mensaje de control (ACK) enviado");
-    }
-
-    /**
-     * Envía un mensaje de control ACK.
-     *
-     * @param mensaje Campos del mensaje obtenidos del FicheroIntercambio recibido
-     */
-    protected void enviarACK(Mensaje mensaje) {
-
-        mensaje.setTipoMensaje(TipoMensaje.ACK);
-        mensaje.setDescripcionMensaje(TipoMensaje.ACK.getName());
-
-        mensajeEjb.enviarMensaje(mensaje);
-
-        log.info("Mensaje de control (ACK) enviado");
-    }
-
-    /**
-     * Envía un mensaje de control de tipo ERROR.
-     *
-     * @param mensaje Campos del mensaje obtenidos del FicheroIntercambio recibido
-     * @param codigoError
-     * @param descError
-     * @param identificadoresFicheros
-     */
-    protected void enviarMensajeError(Mensaje mensaje, String codigoError, String descError, List<String> identificadoresFicheros) {
-        mensaje.setTipoMensaje(TipoMensaje.ERROR);
-        mensaje.setCodigoError(codigoError);
-        mensaje.setDescripcionMensaje(descError);
-        mensaje.setIdentificadoresFicheros(identificadoresFicheros);
-
-        mensajeEjb.enviarMensaje(mensaje);
-
-        log.info("Mensaje de control (ERROR) enviado");
 
     }
 }
