@@ -1,15 +1,15 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.model.*;
-import es.caib.regweb3.model.utils.CamposNTI;
+import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.sir.core.model.*;
+import es.caib.regweb3.sir.core.model.AnexoSir;
+import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
+import es.caib.regweb3.sir.core.model.EstadoAsientoRegistralSir;
+import es.caib.regweb3.sir.core.model.InteresadoSir;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
-import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
@@ -43,7 +43,6 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
     @EJB public RegistroEntradaLocal registroEntradaEjb;
     @EJB public RegistroSalidaLocal registroSalidaEjb;
     @EJB public OficinaLocal oficinaEjb;
-    @EJB public SirLocal sirEjb;
 
 
     @Override
@@ -230,57 +229,6 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
         q.setParameter("idEstadoPreRegistro", EstadoAsientoRegistralSir.RECIBIDO);
 
         return  q.getResultList();
-    }
-
-    /**
-     * Acepta un AsientoRegistralSir, creando un Registro de Entrada o un Registro de Salida
-     * @param asientoRegistralSir
-     * @throws Exception
-     */
-    @Override
-    public Long aceptarAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs)
-            throws Exception {
-
-        if(asientoRegistralSir.getTipoRegistro().equals(TipoRegistro.ENTRADA)) {
-
-            // Creamos el RegistroEntrada a partir del AsientoRegistral aceptado
-            RegistroEntrada registroEntrada = null;
-            try {
-                registroEntrada = sirEjb.transformarAsientoRegistralEntrada(asientoRegistralSir, usuario, oficinaActiva, idLibro, idIdioma, idTipoAsunto, camposNTIs);
-
-                // Modificamos el estado del AsientoRegistralSir
-                modificarEstado(asientoRegistralSir.getId(), EstadoAsientoRegistralSir.ACEPTADO);
-
-                return registroEntrada.getId();
-
-            } catch (I18NException e) {
-                e.printStackTrace();
-            } catch (I18NValidationException e) {
-                e.printStackTrace();
-            }
-
-        }else if(asientoRegistralSir.getTipoRegistro().equals(TipoRegistro.SALIDA)){
-
-            // Creamos el RegistroEntrada a partir del AsientoRegistral aceptado
-            RegistroSalida registroSalida = null;
-            try {
-                registroSalida = sirEjb.transformarAsientoRegistralSalida(asientoRegistralSir, usuario, oficinaActiva, idLibro, idIdioma, idTipoAsunto, camposNTIs);
-
-                // Modificamos el estado del AsientoRegistralSir
-                modificarEstado(asientoRegistralSir.getId(), EstadoAsientoRegistralSir.ACEPTADO);
-
-                return registroSalida.getId();
-
-            } catch (I18NException e) {
-                e.printStackTrace();
-            } catch (I18NValidationException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        return null;
-
     }
 
     @Override

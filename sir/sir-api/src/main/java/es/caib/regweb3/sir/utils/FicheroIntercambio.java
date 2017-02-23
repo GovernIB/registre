@@ -1,4 +1,4 @@
-package es.caib.regweb3.sir.ws.api.utils;
+package es.caib.regweb3.sir.utils;
 
 import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;

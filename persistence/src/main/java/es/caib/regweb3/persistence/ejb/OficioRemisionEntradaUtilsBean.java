@@ -10,6 +10,7 @@ import es.caib.regweb3.model.utils.OficioPendienteLlegada;
 import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
 import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.sir.core.excepcion.SIRException;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -462,11 +463,11 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
     }
 
     @Override
-    public OficioRemision crearOficioRemisionSir(RegistroEntrada registroEntrada, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, String organismoExterno, String organismoExternoDenominacion, Long idLibro, String identificadorIntercambio) throws Exception, I18NException, I18NValidationException {
+    public OficioRemision crearOficioRemisionSir(Long idRegistroEntrada, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, String organismoExterno, String organismoExternoDenominacion, Long idLibro, String identificadorIntercambio) throws Exception{
 
 
         List<RegistroEntrada> registros = new ArrayList<RegistroEntrada>();
-        registros.add(registroEntrada);
+        registros.add(registroEntradaEjb.getReference(idRegistroEntrada));
 
         OficioRemision oficioRemision = new OficioRemision();
         oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
@@ -483,8 +484,16 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         oficioRemision.setOrganismoDestinatario(null);
 
         synchronized (this) {
-            oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision,
-                    RegwebConstantes.REGISTRO_OFICIO_EXTERNO, RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
+            try {
+                oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision,
+                        RegwebConstantes.REGISTRO_OFICIO_EXTERNO, RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
+            } catch (I18NException e) {
+                e.printStackTrace();
+                throw new SIRException("Error al crear el OficioRemision");
+            } catch (I18NValidationException e) {
+                e.printStackTrace();
+                throw new SIRException("Error al crear el OficioRemision");
+            }
         }
 
         return oficioRemision;

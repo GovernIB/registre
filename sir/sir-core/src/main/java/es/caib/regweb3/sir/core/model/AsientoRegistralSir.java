@@ -30,12 +30,6 @@ public class AsientoRegistralSir implements Serializable {
     private Entidad entidad;
 
     /**
-     * Código único de la entidad registral propietaria del asiento registral
-     * obtenido del directorio común.
-     */
-    private String codigoEntidadRegistral;
-
-    /**
      * Código único de la entidad registral origen obtenido del directorio
      * común.
      */
@@ -255,15 +249,6 @@ public class AsientoRegistralSir implements Serializable {
 
     public void setEntidad(Entidad entidad) {
         this.entidad = entidad;
-    }
-
-    @Column(name = "COD_ENT_REG", length = 21)
-    public String getCodigoEntidadRegistral() {
-        return codigoEntidadRegistral;
-    }
-
-    public void setCodigoEntidadRegistral(String codigoEntidadRegistral) {
-        this.codigoEntidadRegistral = codigoEntidadRegistral;
     }
 
     @Column(name = "COD_ENT_REG_ORI", length = 21, nullable = false)

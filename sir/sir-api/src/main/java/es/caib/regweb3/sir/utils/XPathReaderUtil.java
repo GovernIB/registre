@@ -1,4 +1,4 @@
-package es.caib.regweb3.sir.ws.api.utils;
+package es.caib.regweb3.sir.utils;
 
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;

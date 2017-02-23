@@ -2,13 +2,14 @@ package es.caib.regweb3.sir.ws.wssir9.impl;
 
 import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.core.model.Errores;
-import es.caib.regweb3.sir.ws.api.service.ServicioIntercambioRegistralImpl;
+import es.caib.regweb3.sir.ejb.RecepcionLocal;
 import es.caib.regweb3.sir.ws.wssir9.RespuestaWS;
 import es.caib.regweb3.sir.ws.wssir9.WS_SIR9_PortType;
 import org.apache.log4j.Logger;
 import org.jboss.wsf.spi.annotation.TransportGuarantee;
 import org.jboss.wsf.spi.annotation.WebContext;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
@@ -41,7 +42,9 @@ public class WS_SIR9Impl implements WS_SIR9_PortType {
 
     public static final String NAME_WS = NAME + "Ws";
 
-    ServicioIntercambioRegistralImpl servicioIntercambioRegistral = new ServicioIntercambioRegistralImpl();
+    @EJB(name = "RecepcionEJB")
+    public RecepcionLocal recepcionEjb;
+
 
     @Override
     public RespuestaWS envioMensajeDatosControlAAplicacion(String mensaje, String firma) {
@@ -53,7 +56,7 @@ public class WS_SIR9Impl implements WS_SIR9_PortType {
 
         try{
             // Envia el fichero de intercambio a REGWEB3
-            servicioIntercambioRegistral.recibirMensaje(mensaje);
+            recepcionEjb.recibirMensajeDatosControl(mensaje);
 
             // Creamos la respuesta exitosa
             respuestaWS = crearRespuestaWS(Errores.OK);

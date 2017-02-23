@@ -9,8 +9,9 @@ import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
 import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.sir.core.excepcion.SIRException;
 import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
-import es.caib.regweb3.sir.ws.api.manager.EmisionManager;
+import es.caib.regweb3.sir.ejb.EmisionLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.*;
@@ -74,9 +75,9 @@ public class OficioRemisionController extends BaseController {
     @EJB(mappedName = "regweb3/SirEJB/local")
     public SirLocal sirEjb;
 
-    EmisionManager emisionManager = new EmisionManager();
-    /*@Autowired
-    public ServicioIntercambioRegistral servicioIntercambioRegistral;*/
+    @EJB(mappedName = "regweb3/EmisionEJB/local")
+    public EmisionLocal emisionEjb;
+
 
     /**
      * Listado de todos los Oficios de Remision
@@ -466,7 +467,7 @@ public class OficioRemisionController extends BaseController {
     @RequestMapping(value = "/sir", method = RequestMethod.POST)
     public ModelAndView oficioRemisionSir(@ModelAttribute OficioRemisionForm oficioRemisionForm, HttpServletRequest request, Model model) throws Exception {
 
-        List<OficioRemision> oficioRemisionList = new ArrayList<OficioRemision>();
+        List<AsientoRegistralSir> asientoRegistralSirList = new ArrayList<AsientoRegistralSir>();
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
         // Comprobamos que la Entidad que envía está en SIR
@@ -476,6 +477,10 @@ public class OficioRemisionController extends BaseController {
             Mensaje.saveMessageAviso(request, getMessage("aviso.registro.editar"));
             return new ModelAndView("redirect:/oficioRemision/entradasPendientesRemision");
         }
+
+        // OficinaSir destino
+        Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
+        OficinaTF oficinaSir = oficinasService.obtenerOficina(oficioRemisionForm.getOficinaSIRCodigo(), null, null);
 
         // OFICIO DE REMISION ENTRADA
         if (RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA.equals(oficioRemisionForm.getTipoOficioRemision())) {
@@ -509,44 +514,24 @@ public class OficioRemisionController extends BaseController {
 
                 } else { // Creamos el OficioRemisión a partir de los registros de entrada seleccionados.
 
-                    // Oficio externo
-                    Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
-                    OficinaTF oficinaSir = oficinasService.obtenerOficina(oficioRemisionForm.getOficinaSIRCodigo(), null, null);
-
                     final String organismoExternoCodigo = oficioRemisionForm.getOrganismoExternoCodigo();
                     final String organismoExternoDenominacion = oficioRemisionForm.getOrganismoExternoDenominacion();
-                    log.info("organismoExternoCodigo = " + organismoExternoCodigo);
-                    log.info("organismoExternoDenominacion = " + organismoExternoDenominacion);
-
 
                     // Para cada Registro de Entrada generamos un oficio de remision SIR.
                     for (RegistroEntrada registroEntradaAEnviar : registrosEntrada) {
 
-                        registroEntradaAEnviar = registroEntradaEjb.getConAnexosFull(registroEntradaAEnviar.getId());
-
-                        AsientoRegistralSir asientoRegistralSir = sirEjb.transformarRegistroEntrada(registroEntradaAEnviar, oficinaSir, organismoExternoCodigo, organismoExternoDenominacion);
-
                         // Enviamos el Fichero de datos de intercambio al nodo SIR
-                        String identificadorIntercambio = emisionManager.enviarFicheroIntercambio(asientoRegistralSir);
+                        AsientoRegistralSir asientoRegistralSir = emisionEjb.enviarFicheroIntercambio(registroEntradaAEnviar.getId(), oficinaSir.getCodigo(),oficinaSir.getDenominacion(), getOficinaActiva(request), usuarioEntidad, oficioRemisionForm.getIdLibro());
 
-                        // Cream oficio remision
-                        OficioRemision oficioRemision = oficioRemisionEntradaUtilsEjb.crearOficioRemisionSir(
-                                registroEntradaAEnviar, getOficinaActiva(request), usuarioEntidad,
-                                organismoExternoCodigo, organismoExternoDenominacion, oficioRemisionForm.getIdLibro(), identificadorIntercambio);
+                        asientoRegistralSirList.add(asientoRegistralSir);
 
-                        oficioRemisionList.add(oficioRemision);
-
-                        // Crear
-                        log.info("Creado oficio remisión SIR " + oficioRemision.getId()
-                                + " para el registro de entrada "
-                                + registroEntradaAEnviar.getNumeroRegistroFormateado());
                     }
 
                 }
 
-            } catch (Throwable e) {
+            } catch (SIRException s) {
                 // TODO que fer en aquest cas
-                log.error(" Error enviant a SIR: " + e.getMessage(), e);
+                log.error(" Error enviant a SIR: " + s.getMessage(), s);
                 Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.error.envio"));
                 // TODO Borrar Oficio Remision
 
@@ -584,14 +569,8 @@ public class OficioRemisionController extends BaseController {
 
                 } else { // Creamos el OficioRemisión a partir de los registros de salida seleccionados.
 
-                    // Oficio externo
-                    Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
-                    OficinaTF oficinaSir = oficinasService.obtenerOficina(oficioRemisionForm.getOficinaSIRCodigo(), null, null);
-
                     final String organismoExternoCodigo = oficioRemisionForm.getOrganismoExternoCodigo();
                     final String organismoExternoDenominacion = oficioRemisionForm.getOrganismoExternoDenominacion();
-                    log.info("organismoExternoCodigo = " + organismoExternoCodigo);
-                    log.info("organismoExternoDenominacion = " + organismoExternoDenominacion);
 
 
                     // Para cada Registro de Salida generamos un oficio de remision SIR.
@@ -602,14 +581,14 @@ public class OficioRemisionController extends BaseController {
                         AsientoRegistralSir asientoRegistralSir = sirEjb.transformarRegistroSalida(registroSalidaAEnviar, oficinaSir, organismoExternoCodigo, organismoExternoDenominacion);
 
                         // Enviamos el Fichero de datos de intercambio al nodo SIR
-                        String identificadorIntercambio = emisionManager.enviarFicheroIntercambio(asientoRegistralSir);
+                        //String identificadorIntercambio = emisionManager.enviarFicheroIntercambio(asientoRegistralSir);
 
                         // Cream oficio remision
                         OficioRemision oficioRemision = oficioRemisionSalidaUtilsEjb.crearOficioRemisionSir(
                                 registroSalidaAEnviar, getOficinaActiva(request), usuarioEntidad,
-                                organismoExternoCodigo, organismoExternoDenominacion, oficioRemisionForm.getIdLibro(), identificadorIntercambio);
+                                organismoExternoCodigo, organismoExternoDenominacion, oficioRemisionForm.getIdLibro(), "");
 
-                        oficioRemisionList.add(oficioRemision);
+                        //oficioRemisionList.add(oficioRemision);
 
                         // Crear
                         log.info("Creado oficio remisión SIR " + oficioRemision.getId()
@@ -632,12 +611,12 @@ public class OficioRemisionController extends BaseController {
 
         log.debug("Final de oficioRemisionSir.");
         // TODO Missatge
-        if (oficioRemisionList.size() == 0) {
+        if (asientoRegistralSirList.size() == 0) {
             return new ModelAndView("redirect:/oficioRemision/entradasPendientesRemision");
         } else {
 
-            if (oficioRemisionList.size() == 1) {
-                String redirect = "redirect:/oficioRemision/" + oficioRemisionList.get(0).getId() + "/detalle";
+            if (asientoRegistralSirList.size() == 1) {
+                String redirect = "redirect:/oficioRemision/" + asientoRegistralSirList.get(0).getId() + "/detalle";
                 log.info("Redirecting to: " + redirect);
                 return new ModelAndView(redirect);
             } else {
@@ -645,9 +624,9 @@ public class OficioRemisionController extends BaseController {
 
                 ModelAndView mav = new ModelAndView("oficioRemision/oficioRemisionListSir");
 
-                Paginacion paginacion = new Paginacion(oficioRemisionList.size(), 1);
+                Paginacion paginacion = new Paginacion(asientoRegistralSirList.size(), 1);
 
-                paginacion.setListado(new ArrayList<Object>(oficioRemisionList));
+                paginacion.setListado(new ArrayList<Object>(asientoRegistralSirList));
 
                 mav.addObject("paginacion", paginacion);
                 model.addAttribute("paginacion", paginacion);

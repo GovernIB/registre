@@ -60,6 +60,11 @@
                             <artifactId>regweb3-sir-ws-server</artifactId>
                         </ejbModule>
 
+                        <ejbModule>
+                            <groupId>es.caib.regweb3</groupId>
+                            <artifactId>regweb3-sir-api</artifactId>
+                        </ejbModule>
+
                         <jarModule>
                             <groupId>es.caib.regweb3</groupId>
                             <artifactId>regweb3-model</artifactId>
@@ -69,12 +74,6 @@
                         <jarModule>
                             <groupId>es.caib.regweb3</groupId>
                             <artifactId>regweb3-utils</artifactId>
-                            <includeInApplicationXml>true</includeInApplicationXml>
-                        </jarModule>
-
-                        <jarModule>
-                            <groupId>es.caib.regweb3</groupId>
-                            <artifactId>regweb3-sir-api</artifactId>
                             <includeInApplicationXml>true</includeInApplicationXml>
                         </jarModule>
 
@@ -153,7 +152,7 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>regweb3-sir-api</artifactId>
             <version>${project.version}</version>
-            <type>jar</type>
+            <type>ejb</type>
         </dependency>
 
         <dependency>

@@ -25,16 +25,43 @@ import java.util.List;
 public interface SirLocal {
 
   /**
+   *
+   * @param idRegistroEntrada
+   * @param codigoEntidadRegistralDestino
+   * @param denominacionEntidadRegistralDestino
+   * @param oficinaActiva
+   * @param usuario
+   * @param idLibro
+   * @throws Exception
+     * @throws I18NException
+     */
+  public AsientoRegistralSir enviarFicheroIntercambio(Long idRegistroEntrada, String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino, Oficina oficinaActiva, UsuarioEntidad usuario, Long idLibro) throws Exception, I18NException;
+
+  /**
+   *
+   * @param asientoRegistralSir
+   * @param usuario
+   * @param oficinaActiva
+   * @param idLibro
+   * @param idIdioma
+   * @param idTipoAsunto
+   * @param camposNTIs
+     * @return
+     */
+  public Long aceptarAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs) throws Exception;
+
+  /**
    * Transforma un {@link es.caib.regweb3.model.RegistroEntrada} en un {@link es.caib.regweb3.sir.core.model.AsientoRegistralSir}
-   * @param registroEntrada
-   * @param oficinaSir
+   * @param idRegistroEntrada
+   * @param codigoEntidadRegistralDestino
+   * @param denominacionEntidadRegistralDestino
    * @return
    * @throws Exception
    * @throws I18NException
    * @throws I18NValidationException
      */
-  public AsientoRegistralSir transformarRegistroEntrada(RegistroEntrada registroEntrada, OficinaTF oficinaSir, String codigoUnidadTramitacionDestino, String decodificacionUnidadTramitacionDestino)
-          throws Exception, I18NException, I18NValidationException;
+  public AsientoRegistralSir transformarRegistroEntrada(Long idRegistroEntrada, String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino)
+          throws Exception, I18NException;
 
   /**
    *

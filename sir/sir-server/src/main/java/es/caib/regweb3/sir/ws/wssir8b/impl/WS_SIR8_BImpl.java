@@ -4,7 +4,7 @@ package es.caib.regweb3.sir.ws.wssir8b.impl;
 import es.caib.regweb3.persistence.ejb.WebServicesMethodsLocal;
 import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.core.model.Errores;
-import es.caib.regweb3.sir.ws.api.service.ServicioIntercambioRegistralImpl;
+import es.caib.regweb3.sir.ejb.RecepcionLocal;
 import es.caib.regweb3.sir.ws.utils.PassiveCallbackHandler;
 import es.caib.regweb3.sir.ws.wssir8b.RespuestaWS;
 import es.caib.regweb3.sir.ws.wssir8b.WS_SIR8_B_PortType;
@@ -51,10 +51,11 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
 
     protected final Logger log = Logger.getLogger(getClass());
 
+    @EJB(name = "RecepcionEJB")
+    public RecepcionLocal recepcionEjb;
+
     @EJB(mappedName = "regweb3/WebServicesMethodsEJB/local")
     public WebServicesMethodsLocal webServicesMethodsEjb;
-
-    ServicioIntercambioRegistralImpl servicioIntercambioRegistral = new ServicioIntercambioRegistralImpl();
 
     public static final String NAME = "WS_SIR8_B";
 
@@ -96,7 +97,7 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
         try {
 
             // Envia el fichero de intercambio a REGWEB3
-            servicioIntercambioRegistral.recibirFicheroIntercambio(registro, webServicesMethodsEjb);
+            recepcionEjb.recibirFicheroIntercambio(registro, webServicesMethodsEjb);
 
             // Creamos la respuesta exitosa
             respuestaWS = crearRespuestaWS(Errores.OK);

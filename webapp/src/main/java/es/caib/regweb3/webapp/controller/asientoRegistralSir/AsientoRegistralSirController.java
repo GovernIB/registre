@@ -6,7 +6,7 @@ import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
 import es.caib.regweb3.sir.core.model.EstadoAsientoRegistralSir;
 import es.caib.regweb3.sir.core.model.TipoRegistro;
-import es.caib.regweb3.sir.ws.api.manager.MensajeManager;
+import es.caib.regweb3.sir.ejb.MensajeLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.AsientoRegistralSirBusquedaForm;
@@ -63,6 +63,12 @@ public class AsientoRegistralSirController extends BaseController {
 
     @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
     public TipoDocumentalLocal tipoDocumentalEjb;
+
+    @EJB(mappedName = "regweb3/SirEJB/local")
+    public SirLocal sirEjb;
+
+    @EJB(mappedName = "regweb3/MensajeEJB/local")
+    public MensajeLocal mensajeEjb;
 
 
     /**
@@ -197,8 +203,6 @@ public class AsientoRegistralSirController extends BaseController {
     public String confirmarAsientoRegistralSir(@PathVariable Long idAsientoRegistralSir, @ModelAttribute RegistrarForm registrarForm , HttpServletRequest request)
             throws Exception, I18NException, I18NValidationException {
 
-        MensajeManager mensajeManager = new MensajeManager();
-
         AsientoRegistralSir asientoRegistralSir = asientoRegistralSirEjb.findById(idAsientoRegistralSir);
         Oficina oficinaActiva = getOficinaActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
@@ -214,7 +218,7 @@ public class AsientoRegistralSirController extends BaseController {
         // Procesa el AsientoRegistralSir
         String numeroRegistro = null;
         try{
-            idRegistro = asientoRegistralSirEjb.aceptarAsientoRegistralSir(asientoRegistralSir, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getIdTipoAsunto(), registrarForm.getCamposNTIs());
+            idRegistro = sirEjb.aceptarAsientoRegistralSir(asientoRegistralSir, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getIdTipoAsunto(), registrarForm.getCamposNTIs());
 
             if(asientoRegistralSir.getTipoRegistro().equals(TipoRegistro.ENTRADA)) {
                 variableReturn = "redirect:/registroEntrada/" + idRegistro + "/detalle";
@@ -227,7 +231,7 @@ public class AsientoRegistralSirController extends BaseController {
 
             if(numeroRegistro != null){
                 // Enviamos el mensaje de confirmación
-                mensajeManager.enviarMensajeConfirmacion(asientoRegistralSir, numeroRegistro);
+                mensajeEjb.enviarMensajeConfirmacion(asientoRegistralSir, numeroRegistro);
                 Mensaje.saveMessageInfo(request, getMessage("asientoRegistralSir.aceptar.ok"));
             }
 
