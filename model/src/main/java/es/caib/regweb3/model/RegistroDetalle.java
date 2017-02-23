@@ -69,7 +69,7 @@ public class RegistroDetalle implements Serializable {
     @XmlElementWrapper( name="anexos" )
     private List<Anexo> anexos = new ArrayList<Anexo>();
     @XmlTransient
-    private String aplicacion = "REGWEB3";
+    private String aplicacion = "RWE3";
     @XmlTransient
     private String version = Versio.VERSIO;
     @XmlTransient
