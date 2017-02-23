@@ -5,7 +5,7 @@ import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
 import es.caib.regweb3.sir.core.model.TipoMensaje;
 import es.caib.regweb3.sir.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.utils.Mensaje;
-import es.caib.regweb3.sir.utils.SicresXML;
+import es.caib.regweb3.sir.utils.Sicres3XML;
 import es.caib.regweb3.sir.ws.api.wssir7.RespuestaWS;
 import es.caib.regweb3.sir.ws.api.wssir7.WS_SIR7ServiceLocator;
 import es.caib.regweb3.sir.ws.api.wssir7.WS_SIR7_PortType;
@@ -23,7 +23,7 @@ public class MensajeBean implements MensajeLocal {
 
     public final Logger log = Logger.getLogger(getClass());
 
-    public SicresXML sicresXML = new SicresXML();
+    public Sicres3XML sicres3XML = new Sicres3XML();
 
 
     /**
@@ -102,12 +102,12 @@ public class MensajeBean implements MensajeLocal {
 
     protected void enviarMensaje(Mensaje mensaje) {
 
-        sicresXML.validarMensaje(mensaje);
+        sicres3XML.validarMensaje(mensaje);
 
         RespuestaWS respuesta = null;
 
         // Crear el XML del mensaje en formato SICRES 3.0
-        String xml = sicresXML.createXMLMensaje(mensaje);
+        String xml = sicres3XML.createXMLMensaje(mensaje);
 
         log.info("Mensaje a ws_sir7: " + xml);
 

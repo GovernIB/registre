@@ -39,7 +39,7 @@ import java.util.Map;
 import static es.caib.regweb3.utils.RegwebConstantes.*;
 
 
-public class SicresXML {
+public class Sicres3XML {
 
     public final Logger log = Logger.getLogger(getClass());
 
@@ -69,7 +69,7 @@ public class SicresXML {
     /**
      * Constructor.
      */
-    public SicresXML() {
+    public Sicres3XML() {
         super();
         setupBase64Field();
     }

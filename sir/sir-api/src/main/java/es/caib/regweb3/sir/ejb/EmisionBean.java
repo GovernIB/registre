@@ -7,7 +7,7 @@ import es.caib.regweb3.sir.core.excepcion.SIRException;
 import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
 import es.caib.regweb3.sir.core.model.Errores;
 import es.caib.regweb3.sir.utils.FicheroIntercambio;
-import es.caib.regweb3.sir.utils.SicresXML;
+import es.caib.regweb3.sir.utils.Sicres3XML;
 import es.caib.regweb3.sir.ws.api.wssir6b.RespuestaWS;
 import es.caib.regweb3.sir.ws.api.wssir6b.WS_SIR6_BServiceLocator;
 import es.caib.regweb3.sir.ws.api.wssir6b.WS_SIR6_B_PortType;
@@ -32,7 +32,7 @@ public class EmisionBean implements EmisionLocal{
     @EJB(mappedName = "regweb3/SirEJB/local")
     public SirLocal sirEjb;
 
-    SicresXML sicresXML = new SicresXML();
+    Sicres3XML sicres3XML = new Sicres3XML();
 
 
     /**
@@ -55,7 +55,7 @@ public class EmisionBean implements EmisionLocal{
 
 
             // Creamos el xml de intercambio
-            String xml = sicresXML.crearXMLFicheroIntercambioSICRES3(asientoRegistralSir);
+            String xml = sicres3XML.crearXMLFicheroIntercambioSICRES3(asientoRegistralSir);
             log.info("Xml Fichero Intercambio generado: " + xml);
 
             RespuestaWS respuesta = ws_sir6_b_recepcionFicheroDeAplicacion(xml);

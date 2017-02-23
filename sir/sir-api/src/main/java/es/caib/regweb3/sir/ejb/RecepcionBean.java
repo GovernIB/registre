@@ -6,7 +6,7 @@ import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.sir.core.model.*;
 import es.caib.regweb3.sir.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.utils.Mensaje;
-import es.caib.regweb3.sir.utils.SicresXML;
+import es.caib.regweb3.sir.utils.Sicres3XML;
 import es.caib.regweb3.sir.utils.XPathReaderUtil;
 import org.apache.log4j.Logger;
 import org.springframework.util.Assert;
@@ -30,7 +30,7 @@ public class RecepcionBean implements RecepcionLocal{
     @EJB(name = "MensajeEJB")
     public MensajeLocal mensajeEjb;
 
-    public SicresXML sicresXML = new SicresXML();
+    public Sicres3XML sicres3XML = new Sicres3XML();
 
 
     private String errorGenerico = Errores.ERROR_0065.getValue(); // ERROR GENÉRICO: ERROR_EN_EL_ASIENTO
@@ -55,7 +55,7 @@ public class RecepcionBean implements RecepcionLocal{
             Assert.hasText(xmlFicheroIntercambio, "'xmlFicheroIntercambio' no puede estar vacio");
 
             // Convertimos y validamos el xml recibido en un FicheroIntercambio mediate xsd FicheroIntercambio.xsd
-            ficheroIntercambio = sicresXML.parseXMLFicheroIntercambio(xmlFicheroIntercambio);
+            ficheroIntercambio = sicres3XML.parseXMLFicheroIntercambio(xmlFicheroIntercambio);
 
             // Creamos el AsientoRegistralSir a partir del xml recibido y validado
             recibirFicheroIntercambio(ficheroIntercambio, xmlFicheroIntercambio, webServicesMethodsEjb);
@@ -114,7 +114,7 @@ public class RecepcionBean implements RecepcionLocal{
 
         // Validamos el Fichero de Intercambio creado a partir del xml recibido
         try {
-            sicresXML.validarFicheroIntercambio(ficheroIntercambio);
+            sicres3XML.validarFicheroIntercambio(ficheroIntercambio);
         } catch (IllegalArgumentException e) {
             log.error("Se produjo un error de validacion del xml recibido: " + e.getMessage());
             throw new ValidacionException(Errores.ERROR_0037, e);
@@ -220,10 +220,10 @@ public class RecepcionBean implements RecepcionLocal{
     public void recibirMensajeDatosControl(String xmlMensaje){
 
         // Parseamos el mensaje xml
-        Mensaje mensaje = sicresXML.parseXMLMensaje(xmlMensaje);
+        Mensaje mensaje = sicres3XML.parseXMLMensaje(xmlMensaje);
 
         // Validamos el mensaje recibido
-        sicresXML.validarMensaje(mensaje);
+        sicres3XML.validarMensaje(mensaje);
 
         // Acciones en función del tipo de mensaje
         if(mensaje.getTipoMensaje().equals(TipoMensaje.ACK)){
