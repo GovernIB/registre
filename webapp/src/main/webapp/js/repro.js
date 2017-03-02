@@ -90,7 +90,7 @@ function validaFormulario(form) {
         $(variable).parents(".form-group").removeClass("has-error");
 
         // Si pasa todas las validaciones, creamos la nueva Repro.
-        guardarRepro();
+        nuevaRepro();
 
     } else{
         var formatoHtml = "<span id='nomRepro.errors' class='help-block'>El camp és obligatori</span>";
