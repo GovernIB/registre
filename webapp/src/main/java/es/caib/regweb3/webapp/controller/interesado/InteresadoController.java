@@ -74,20 +74,20 @@ public class InteresadoController extends BaseController{
             if(StringUtils.isEmpty(idRegistroDetalle)){ // Se trata de un nuevo Registro, utilizamos la sesion.
 
                 // Si es una Salida solo puede haber un Interesado Administración
-                if(tipoRegistro.equals("salida") && hayOrganismoInteresado(session)){
+                /*if(tipoRegistro.equals("salida") && hayOrganismoInteresado(session)){
                     log.info("Ya hay un Destinatario Organismo asociado en la sesion");
                     return false;
-                }
+                }*/
 
                 añadirInteresadoSesion(organismo, session, variable);
 
             }else{ // Edición de un registro, lo añadimos a la bbdd
 
                 // Si es una Salida solo puede haber un Interesado Administración
-                if(tipoRegistro.equals("salida") && interesadoEjb.existeInteresadoAdministracion(Long.valueOf(idRegistroDetalle))){
+                /*if(tipoRegistro.equals("salida") && interesadoEjb.existeInteresadoAdministracion(Long.valueOf(idRegistroDetalle))){
                     log.info("Ya hay un Destinatario Organismo asociado en la bbdd");
                     return false;
-                }
+                }*/
 
                 organismo.setRegistroDetalle(registroDetalleEjb.findById(Long.valueOf(idRegistroDetalle)));
                 interesadoEjb.persist(organismo);
