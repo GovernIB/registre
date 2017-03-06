@@ -5,11 +5,11 @@
 
     <artifactId>plugins-distribucionregweb-distribucionlocal</artifactId>
     <packaging>jar</packaging>
-    <version>3.0.8</version>
+    <version>3.0.9</version>
 
     <parent>
         <groupId>es.caib.regweb3</groupId>
-        <version>3.0.8</version>
+        <version>3.0.9</version>
         <artifactId>plugins-distribucionregweb</artifactId>
     </parent>
 
