@@ -87,6 +87,15 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
     public List<Oficina> oficinasOrganizativas(Long idOrganismo, Boolean oficinaVirtual) throws Exception;
 
     /**
+     * Obtiene las Oficinas SIR de un Organismo
+     * @param idOrganismo
+     * @param oficinaVirtual
+     * @return
+     * @throws Exception
+     */
+    public List<Oficina> oficinasSIR(Long idOrganismo, Boolean oficinaVirtual) throws Exception;
+
+    /**
      * Obtiene las Oficinas cuya Entidad responsable es la indicada
      * @param idEntidad
      * @return

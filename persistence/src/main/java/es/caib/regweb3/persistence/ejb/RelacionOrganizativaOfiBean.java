@@ -171,7 +171,7 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
     }
 
     @Override
-    public List<RelacionOrganizativaOfi> funcionalByEntidadEstado(Long idEntidad, String estado) throws Exception{
+    public List<RelacionOrganizativaOfi> organizativaByEntidadEstado(Long idEntidad, String estado) throws Exception{
         Query q = em.createQuery("Select relacionOrganizativaOfi from RelacionOrganizativaOfi as relacionOrganizativaOfi where " +
                 "relacionOrganizativaOfi.organismo.entidad.id =:idEntidad and relacionOrganizativaOfi.estado.codigoEstadoEntidad =:estado order by relacionOrganizativaOfi.oficina.codigo");
 

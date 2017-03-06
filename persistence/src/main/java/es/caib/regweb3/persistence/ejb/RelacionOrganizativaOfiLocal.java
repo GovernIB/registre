@@ -57,13 +57,13 @@ public interface RelacionOrganizativaOfiLocal extends BaseEjb<RelacionOrganizati
     public RelacionOrganizativaOfi getRelacionOrganizativa(Long idOficina, Long idOrganismo) throws Exception;
 
     /**
-     * Obtiene las Relaciones funcinales de las Oficinas cuya Entidad responsable es la indicada
+     * Obtiene las Relaciones organizativas de las Oficinas cuya Entidad responsable es la indicada
      * @param idEntidad
      * @param estado
      * @return
      * @throws Exception
      */
-    public List<RelacionOrganizativaOfi> funcionalByEntidadEstado(Long idEntidad, String estado) throws Exception;
+    public List<RelacionOrganizativaOfi> organizativaByEntidadEstado(Long idEntidad, String estado) throws Exception;
 
     /**
      * Elimina las RelacionOrganizativaOfi de una Entidad

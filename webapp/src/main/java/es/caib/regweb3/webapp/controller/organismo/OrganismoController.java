@@ -227,14 +227,14 @@ public class OrganismoController extends BaseController {
         // Lista las Oficinas según si son Responsables, Dependientes o Funcionales
         List<Oficina> oficinasResponsables = oficinaEjb.responsableByEntidadEstado(entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         List<Oficina> oficinasDependientes = oficinaEjb.dependienteByEntidadEstado(entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-        List<RelacionOrganizativaOfi> relacionOrganizativaOfi = relacionOrganizativaOfiEjb.funcionalByEntidadEstado(entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-        List<CodigoValor> oficinasFuncionales = new ArrayList<CodigoValor>();
+        List<RelacionOrganizativaOfi> relacionOrganizativaOfi = relacionOrganizativaOfiEjb.organizativaByEntidadEstado(entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        List<CodigoValor> oficinasOrganizativas = new ArrayList<CodigoValor>();
         if(!relacionOrganizativaOfi.isEmpty()) {
             for (int i = 0; i < relacionOrganizativaOfi.size(); i++) {
                 CodigoValor codigoValor = new CodigoValor();
                 codigoValor.setId(relacionOrganizativaOfi.get(i).getOrganismo().getId().toString());
                 codigoValor.setNombre(relacionOrganizativaOfi.get(i).getOficina().getCodigo() + " - " + relacionOrganizativaOfi.get(i).getOficina().getDenominacion());
-                oficinasFuncionales.add(codigoValor);
+                oficinasOrganizativas.add(codigoValor);
             }
         }
 
@@ -324,7 +324,7 @@ public class OrganismoController extends BaseController {
         mav.addObject("organismosSeptimoNivel", organismosSeptimoNivel);
         mav.addObject("oficinasResponsables", oficinasResponsables);
         mav.addObject("oficinasDependientes", oficinasDependientes);
-        mav.addObject("oficinasFuncionales", oficinasFuncionales);
+        mav.addObject("oficinasOrganizativas", oficinasOrganizativas);
         mav.addObject("librosOrganismoPrimerNivel", librosOrganismoPrimerNivel);
         mav.addObject("librosOrganismoSegundoNivel", librosOrganismoSegundoNivel);
         mav.addObject("librosOrganismoTercerNivel", librosOrganismoTercerNivel);

@@ -83,9 +83,9 @@
                                         </button>
                                     </div>
                                 </c:if>
-                                <c:if test="${not empty oficinasFuncionales}">
+                                <c:if test="${not empty oficinasOrganizativas}">
                                     <div class="col-xs-12 pad-bottom5">
-                                        <button type="button" class="btn-success btn-xs"><i class="fa fa-institution"></i> <spring:message code="regweb.oficina.funcional"/></button>
+                                        <button type="button" class="btn-success btn-xs"><i class="fa fa-institution"></i> <spring:message code="regweb.oficina.organizativa"/></button>
                                     </div>
                                 </c:if>
                                 </div>
@@ -169,13 +169,13 @@
                                                     </c:if>
                                                 </c:forEach>
                                                 <!-- **** Oficinas Funcionales ***-->
-                                                <c:forEach var="oficinaFuncional" items="${oficinasFuncionales}">
-                                                    <c:if test="${oficinaFuncional.id == organismo1.id}">
+                                                <c:forEach var="oficinaOrganizativa" items="${oficinasOrganizativas}">
+                                                    <c:if test="${oficinaOrganizativa.id == organismo1.id}">
                                                         <li>
                                                             <a href="javascript:void(0);"><span
                                                                     class="panel-heading btn-success vuitanta-percent"
                                                                     style="display:closed;"><i
-                                                                    class="fa fa-institution"></i> ${oficinaFuncional.nombre}</span></a>
+                                                                    class="fa fa-institution"></i> ${oficinaOrganizativa.nombre}</span></a>
                                                         </li>
                                                     </c:if>
                                                 </c:forEach>
@@ -248,13 +248,13 @@
                                                                     </c:if>
                                                                 </c:forEach>
                                                                 <!-- **** Oficinas Funcionales ***-->
-                                                                <c:forEach var="oficinaFuncional" items="${oficinasFuncionales}">
-                                                                    <c:if test="${oficinaFuncional.id == organismo2.id}">
+                                                                <c:forEach var="oficinaOrganizativa" items="${oficinasOrganizativas}">
+                                                                    <c:if test="${oficinaOrganizativa.id == organismo2.id}">
                                                                         <li>
                                                                             <a href="javascript:void(0);"><span
                                                                                     class="panel-heading btn-success vuitanta-percent"
                                                                                     style="display:closed;"><i
-                                                                                    class="fa fa-institution"></i> ${oficinaFuncional.nombre}</span></a>
+                                                                                    class="fa fa-institution"></i> ${oficinaOrganizativa.nombre}</span></a>
                                                                         </li>
                                                                     </c:if>
                                                                 </c:forEach>
@@ -327,13 +327,13 @@
                                                                                     </c:if>
                                                                                 </c:forEach>
                                                                                 <!-- **** Oficinas Funcionales ***-->
-                                                                                <c:forEach var="oficinaFuncional" items="${oficinasFuncionales}">
-                                                                                    <c:if test="${oficinaFuncional.id == organismo3.id}">
+                                                                                <c:forEach var="oficinaOrganizativa" items="${oficinasOrganizativas}">
+                                                                                    <c:if test="${oficinaOrganizativa.id == organismo3.id}">
                                                                                         <li>
                                                                                             <a href="javascript:void(0);"><span
                                                                                                     class="panel-heading btn-success vuitanta-percent"
                                                                                                     style="display:closed;"><i
-                                                                                                    class="fa fa-institution"></i> ${oficinaFuncional.nombre}</span></a>
+                                                                                                    class="fa fa-institution"></i> ${oficinaOrganizativa.nombre}</span></a>
                                                                                         </li>
                                                                                     </c:if>
                                                                                 </c:forEach>
@@ -406,13 +406,13 @@
                                                                                                     </c:if>
                                                                                                 </c:forEach>
                                                                                                 <!-- **** Oficinas Funcionales ***-->
-                                                                                                <c:forEach var="oficinaFuncional" items="${oficinasFuncionales}">
-                                                                                                    <c:if test="${oficinaFuncional.id == organismo4.id}">
+                                                                                                <c:forEach var="oficinaOrganizativa" items="${oficinasOrganizativas}">
+                                                                                                    <c:if test="${oficinaOrganizativa.id == organismo4.id}">
                                                                                                         <li>
                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                     class="panel-heading btn-success vuitanta-percent"
                                                                                                                     style="display:closed;"><i
-                                                                                                                    class="fa fa-institution"></i> ${oficinaFuncional.nombre}</span></a>
+                                                                                                                    class="fa fa-institution"></i> ${oficinaOrganizativa.nombre}</span></a>
                                                                                                         </li>
                                                                                                     </c:if>
                                                                                                 </c:forEach>
@@ -485,13 +485,13 @@
                                                                                                                     </c:if>
                                                                                                                 </c:forEach>
                                                                                                                 <!-- **** Oficinas Funcionales ***-->
-                                                                                                                <c:forEach var="oficinaFuncional" items="${oficinasFuncionales}">
-                                                                                                                    <c:if test="${oficinaFuncional.id == organismo5.id}">
+                                                                                                                <c:forEach var="oficinaOrganizativa" items="${oficinasOrganizativas}">
+                                                                                                                    <c:if test="${oficinaOrganizativa.id == organismo5.id}">
                                                                                                                         <li>
                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                     class="panel-heading btn-success vuitanta-percent"
                                                                                                                                     style="display:closed;"><i
-                                                                                                                                    class="fa fa-institution"></i> ${oficinaFuncional.nombre}</span></a>
+                                                                                                                                    class="fa fa-institution"></i> ${oficinaOrganizativa.nombre}</span></a>
                                                                                                                         </li>
                                                                                                                     </c:if>
                                                                                                                 </c:forEach>
@@ -564,13 +564,13 @@
                                                                                                                                     </c:if>
                                                                                                                                 </c:forEach>
                                                                                                                                 <!-- **** Oficinas Funcionales ***-->
-                                                                                                                                <c:forEach var="oficinaFuncional" items="${oficinasFuncionales}">
-                                                                                                                                    <c:if test="${oficinaFuncional.id == organismo6.id}">
+                                                                                                                                <c:forEach var="oficinaOrganizativa" items="${oficinasOrganizativas}">
+                                                                                                                                    <c:if test="${oficinaOrganizativa.id == organismo6.id}">
                                                                                                                                         <li>
                                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                                     class="panel-heading btn-success vuitanta-percent"
                                                                                                                                                     style="display:closed;"><i
-                                                                                                                                                    class="fa fa-institution"></i> ${oficinaFuncional.nombre}</span></a>
+                                                                                                                                                    class="fa fa-institution"></i> ${oficinaOrganizativa.nombre}</span></a>
                                                                                                                                         </li>
                                                                                                                                     </c:if>
                                                                                                                                 </c:forEach>
@@ -643,13 +643,13 @@
                                                                                                                                                     </c:if>
                                                                                                                                                 </c:forEach>
                                                                                                                                                 <!-- **** Oficinas Funcionales ***-->
-                                                                                                                                                <c:forEach var="oficinaFuncional" items="${oficinasFuncionales}">
-                                                                                                                                                    <c:if test="${oficinaFuncional.id == organismo7.id}">
+                                                                                                                                                <c:forEach var="oficinaOrganizativa" items="${oficinasOrganizativas}">
+                                                                                                                                                    <c:if test="${oficinaOrganizativa.id == organismo7.id}">
                                                                                                                                                         <li>
                                                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                                                     class="panel-heading btn-success vuitanta-percent"
                                                                                                                                                                     style="display:closed;"><i
-                                                                                                                                                                    class="fa fa-institution"></i> ${oficinaFuncional.nombre}</span></a>
+                                                                                                                                                                    class="fa fa-institution"></i> ${oficinaOrganizativa.nombre}</span></a>
                                                                                                                                                         </li>
                                                                                                                                                     </c:if>
                                                                                                                                                 </c:forEach>

@@ -34,8 +34,9 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     @PersistenceContext(unitName="regweb3")
     private EntityManager em;
 
-    @EJB private RelacionOrganizativaOfiLocal relacionOrganizativaOfiLocalEjb;
-    @EJB private CatServicioLocal catServicioLocalEjb;
+    @EJB private RelacionOrganizativaOfiLocal relacionOrganizativaOfiEjb;
+    @EJB private RelacionSirOfiLocal relacionSirOfiEjb;
+    @EJB private CatServicioLocal catServicioEjb;
     @EJB private OrganismoLocal organismoEjb;
 
 
@@ -200,7 +201,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         q.setParameter("idOrganismo",idOrganismo);
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         if (!oficinaVirtual) {
-            q.setParameter("oficinaVirtual", catServicioLocalEjb.findByCodigo(RegwebConstantes.REGISTRO_VIRTUAL_NO_PRESENCIAL));
+            q.setParameter("oficinaVirtual", catServicioEjb.findByCodigo(RegwebConstantes.REGISTRO_VIRTUAL_NO_PRESENCIAL));
         }
 
         List<Oficina> oficinas =  new ArrayList<Oficina>();
@@ -218,7 +219,12 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
     @Override
     public List<Oficina> oficinasOrganizativas(Long idOrganismo, Boolean oficinaVirtual) throws Exception{
-        return  relacionOrganizativaOfiLocalEjb.oficinasOrganizativas(idOrganismo, oficinaVirtual);
+        return  relacionOrganizativaOfiEjb.oficinasOrganizativas(idOrganismo, oficinaVirtual);
+    }
+
+    @Override
+    public List<Oficina> oficinasSIR(Long idOrganismo, Boolean oficinaVirtual) throws Exception{
+        return  relacionSirOfiEjb.oficinasSIR(idOrganismo, oficinaVirtual);
     }
 
     @Override
