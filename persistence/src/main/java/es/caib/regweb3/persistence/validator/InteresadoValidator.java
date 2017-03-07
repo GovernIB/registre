@@ -175,23 +175,26 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
             }
 
             //Si el formato es correcto busca que no exista ya en el sistema
-            if(validacionDocumento.getValido() && __isNou__){
-                boolean existe;
-                try {
-                    //Comprueba que el documento no exista en la bbdd
-                    if (interesado.getId() == null) {
-                        existe = personaEjb.existeDocumentoNew(interesado.getDocumento().toUpperCase(), interesado.getEntidad());
-                    } else {
-                        existe = personaEjb.existeDocumentoEdit(interesado.getDocumento().toUpperCase(), interesado.getId(), interesado.getEntidad());
+            if(validacionDocumento.getValido()){
+
+                if(__isNou__){ // Si viene de la capa Web, Comprueba que el documento no exista en la bbdd
+                    boolean existe;
+                    try {
+
+                        if (interesado.getId() == null) {
+                            existe = personaEjb.existeDocumentoNew(interesado.getDocumento().toUpperCase(), interesado.getEntidad());
+                        } else {
+                            existe = personaEjb.existeDocumentoEdit(interesado.getDocumento().toUpperCase(), interesado.getId(), interesado.getEntidad());
+                        }
+
+                    } catch (Exception e) {
+                        log.error("Error comprobando si persona ya existe: ", e);
+                        existe = true;
                     }
 
-                } catch (Exception e) {
-                    log.error("Error comprobando si persona ya existe: ", e);
-                    existe = true;
-                }
-
-                if (existe) {
-                    rejectValue(errors, "documento", "error.document.existe", "El document ja existeix");
+                    if (existe) {
+                        rejectValue(errors, "documento", "error.document.existe", "El document ja existeix");
+                    }
                 }
 
             } else {
