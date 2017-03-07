@@ -161,7 +161,7 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
      */
     private void validateInteresado(Interesado interesado, CatPaisLocal catPaisEjb, InteresadoLocal interesadoEjb, PersonaLocal personaEjb) throws I18NValidationException, I18NException {
         InteresadoBeanValidator ibv = new InteresadoBeanValidator(interesadoValidator, interesadoEjb, personaEjb, catPaisEjb);
-        ibv.throwValidationExceptionIfErrors(interesado, true);
+        ibv.throwValidationExceptionIfErrors(interesado, false);
     }
 
     /**

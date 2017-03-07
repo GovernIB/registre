@@ -175,7 +175,7 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
             }
 
             //Si el formato es correcto busca que no exista ya en el sistema
-            if(validacionDocumento.getValido()){
+            if(validacionDocumento.getValido() && __isNou__){
                 boolean existe;
                 try {
                     //Comprueba que el documento no exista en la bbdd
