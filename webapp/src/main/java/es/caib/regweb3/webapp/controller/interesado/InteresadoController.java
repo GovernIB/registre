@@ -319,7 +319,7 @@ public class InteresadoController extends BaseController{
 
         JsonResponse jsonResponse = new JsonResponse();
 
-        // Validamos la nueva Persona
+        // Validamos el interesado
         interesado.setEntidad(getEntidadActiva(request).getId());
         interesadoValidator.validate(interesado,result);
 
@@ -331,7 +331,7 @@ public class InteresadoController extends BaseController{
             jsonResponse.setErrores(errores);
             
             
-        } else { // Si no hay errores, guardamos la Persona
+        } else { // Si no hay errores, actualizamos el Interesado
 
             jsonResponse.setStatus("SUCCESS");
 
