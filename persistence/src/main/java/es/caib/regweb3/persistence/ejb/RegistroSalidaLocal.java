@@ -150,12 +150,13 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
 
     /**
      * Busca los Registros de Salida de un listado de Libros en función de su estado.
+     * @param inicio
      * @param libros
      * @param idEstado
      * @return
      * @throws Exception
      */
-    public List<RegistroSalida> getByLibrosEstado(List<Libro> libros, Long idEstado) throws Exception;
+    public List<RegistroSalida> getByLibrosEstado(int inicio, List<Libro> libros, Long idEstado) throws Exception;
 
     /**
      * Busca los Registros de Salida de un Libro.

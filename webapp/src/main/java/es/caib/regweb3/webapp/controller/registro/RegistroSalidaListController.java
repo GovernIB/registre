@@ -1,6 +1,7 @@
 package es.caib.regweb3.webapp.controller.registro;
 
 import es.caib.regweb3.model.*;
+import es.caib.regweb3.persistence.ejb.BaseEjbJPA;
 import es.caib.regweb3.persistence.ejb.HistoricoRegistroSalidaLocal;
 import es.caib.regweb3.persistence.ejb.OficioRemisionSalidaUtilsLocal;
 import es.caib.regweb3.persistence.ejb.RegistroSalidaLocal;
@@ -232,6 +233,29 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
        
         return "registroSalida/registroSalidaDetalle";
     }
+
+    @RequestMapping(value = "/pendientesVisar/list/{pageNumber}", method = RequestMethod.GET)
+    public ModelAndView pendientesVisar(@PathVariable Integer pageNumber, HttpServletRequest request) throws Exception{
+
+        ModelAndView mav = new ModelAndView("registro/pendientesVisarList");
+
+        List<Libro> librosAdministrados = getLibrosAdministrados(request);
+
+        if((librosAdministrados!= null && librosAdministrados.size() > 0)) {
+
+            List<RegistroSalida> registrosSalida = registroSalidaEjb.getByLibrosEstado((pageNumber-1)* BaseEjbJPA.RESULTADOS_PAGINACION, librosAdministrados, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
+            Long totalVisarSalida = registroSalidaEjb.getByLibrosEstadoCount(librosAdministrados, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
+            Paginacion paginacion = new Paginacion(totalVisarSalida.intValue(), pageNumber);
+
+            mav.addObject("titulo",getMessage("registroSalida.pendientesVisar"));
+            mav.addObject("paginacion", paginacion);
+            mav.addObject("listado", registrosSalida);
+            mav.addObject("tipoRegistro", RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO);
+        }
+
+        return mav;
+    }
+
 
     /**
      * Anular un {@link es.caib.regweb3.model.RegistroSalida}

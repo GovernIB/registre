@@ -427,7 +427,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     }
 
     @Override
-    public List<RegistroSalida> getByLibrosEstado(List<Libro> libros, Long idEstado) throws Exception {
+    public List<RegistroSalida> getByLibrosEstado(int inicio, List<Libro> libros, Long idEstado) throws Exception {
 
         Query q;
 
@@ -436,6 +436,9 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
         q.setParameter("libros", libros);
         q.setParameter("idEstado", idEstado);
+
+        q.setFirstResult(inicio);
+        q.setMaxResults(RESULTADOS_PAGINACION);
 
         return q.getResultList();
 

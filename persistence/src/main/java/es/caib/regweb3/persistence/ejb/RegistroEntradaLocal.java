@@ -107,12 +107,13 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 
     /**
      * Busca los Registros de Entrada de un listado de Libros en función de su estado.
+     * @param inicio
      * @param libros
      * @param idEstado
      * @return
      * @throws Exception
      */
-    public List<RegistroEntrada> getByLibrosEstado(List<Libro> libros, Long idEstado) throws Exception;
+    public List<RegistroEntrada> getByLibrosEstado(int inicio, List<Libro> libros, Long idEstado) throws Exception;
 
  /**
   * Busca los Registros de Entrada de un listado de Libros en función de su estado.

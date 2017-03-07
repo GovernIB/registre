@@ -5,7 +5,6 @@ import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.TimeUtils;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -105,39 +104,6 @@ public class AvisoController extends BaseController {
         }
         Long end = System.currentTimeMillis();
         log.debug("TIEMPO CARGA Avisos: " + TimeUtils.formatElapsedTime(end - start));
-        return mav;
-    }
-
-    @RequestMapping(value = "/pendientesVisar/{tipoRegistro}")
-    public ModelAndView pendientesVisar(@PathVariable String tipoRegistro, HttpServletRequest request) throws Exception{
-
-        ModelAndView mav = new ModelAndView("avisos/pendientesVisarList");
-
-        Oficina oficinaActiva = getOficinaActiva(request);
-        List<Libro> librosAdministrados = getLibrosAdministrados(request);
-
-        if(isOperador(request) && oficinaActiva != null && (librosAdministrados!= null && librosAdministrados.size() > 0)) {
-
-            if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO)){
-
-                mav.addObject("titulo",getMessage("registroEntrada.pendientesVisar"));
-                List<RegistroEntrada> registrosEntrada = registroEntradaEjb.getByLibrosEstado(librosAdministrados, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
-                mav.addObject("registros", registrosEntrada);
-                mav.addObject("tipoRegistro", RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO);
-
-            }else if(tipoRegistro.equals(RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO)){
-
-                mav.addObject("titulo", getMessage("registroSalida.pendientesVisar"));
-                List<RegistroSalida> registrosSalida = registroSalidaEjb.getByLibrosEstado(librosAdministrados, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
-                mav.addObject("registros", registrosSalida);
-                mav.addObject("tipoRegistro", RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO);
-
-            }else{
-                mav.addObject("registros", null);
-            }
-
-        }
-
         return mav;
     }
 

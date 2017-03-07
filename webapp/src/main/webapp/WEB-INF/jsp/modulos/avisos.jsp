@@ -16,7 +16,7 @@
                 <ul class="dropdown-menu pull-right">
                     <c:if test="${pendientesVisarEntrada > 0}">
                         <li>
-                            <a href="<c:url value="/avisos/pendientesVisar/Entrada"/>">
+                            <a href="<c:url value="/registroEntrada/pendientesVisar/list/1"/>">
                                 <div>
                                     <i class="fa fa-comment fa-fw"></i> <spring:message code="registroEntrada.pendientesVisar"/> (${pendientesVisarEntrada})
                                 </div>
@@ -27,7 +27,7 @@
 
                     <c:if test="${pendientesVisarSalida > 0}">
                         <li>
-                            <a href="<c:url value="/avisos/pendientesVisar/Salida"/>">
+                            <a href="<c:url value="/registroSalida/pendientesVisar/list/1"/>">
                                 <div>
                                     <i class="fa fa-comment fa-fw"></i> <spring:message code="registroSalida.pendientesVisar"/> (${pendientesVisarSalida})
                                 </div>

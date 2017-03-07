@@ -1,10 +1,7 @@
 package es.caib.regweb3.webapp.controller.registro;
 
 import es.caib.regweb3.model.*;
-import es.caib.regweb3.persistence.ejb.AnexoLocal;
-import es.caib.regweb3.persistence.ejb.HistoricoRegistroEntradaLocal;
-import es.caib.regweb3.persistence.ejb.OficioRemisionEntradaUtilsLocal;
-import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
+import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.DestinatarioWrapper;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
@@ -251,6 +248,28 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         lopdEjb.insertarRegistroEntrada(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuarioEntidad.getId());
 
         return "registroEntrada/registroEntradaDetalle";
+    }
+
+    @RequestMapping(value = "/pendientesVisar/list/{pageNumber}", method = RequestMethod.GET)
+    public ModelAndView pendientesVisar(@PathVariable Integer pageNumber, HttpServletRequest request) throws Exception{
+
+        ModelAndView mav = new ModelAndView("registro/pendientesVisarList");
+
+        List<Libro> librosAdministrados = getLibrosAdministrados(request);
+
+        if((librosAdministrados!= null && librosAdministrados.size() > 0)) {
+
+            List<RegistroEntrada> registrosEntrada = registroEntradaEjb.getByLibrosEstado((pageNumber-1)* BaseEjbJPA.RESULTADOS_PAGINACION, librosAdministrados, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
+            Long totalVisarEntrada = registroEntradaEjb.getByLibrosEstadoCount(librosAdministrados, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
+            Paginacion paginacion = new Paginacion(totalVisarEntrada.intValue(), pageNumber);
+
+            mav.addObject("titulo",getMessage("registroEntrada.pendientesVisar"));
+            mav.addObject("paginacion", paginacion);
+            mav.addObject("listado", registrosEntrada);
+            mav.addObject("tipoRegistro", RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO);
+        }
+
+        return mav;
     }
 
 

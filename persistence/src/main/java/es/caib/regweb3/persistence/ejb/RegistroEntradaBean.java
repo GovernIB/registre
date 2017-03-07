@@ -346,7 +346,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroEntrada> getByLibrosEstado(List<Libro> libros, Long idEstado) throws Exception {
+    public List<RegistroEntrada> getByLibrosEstado(int inicio, List<Libro> libros, Long idEstado) throws Exception {
 
         Query q;
 
@@ -355,6 +355,9 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         q.setParameter("libros", libros);
         q.setParameter("idEstado", idEstado);
+
+        q.setFirstResult(inicio);
+        q.setMaxResults(RESULTADOS_PAGINACION);
 
         return q.getResultList();
 
