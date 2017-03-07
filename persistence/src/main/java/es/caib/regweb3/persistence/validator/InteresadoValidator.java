@@ -178,13 +178,11 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
             if(validacionDocumento.getValido()){
 
                 if(__isNou__){ // Si viene de la capa Web, Comprueba que el documento no exista en la bbdd
-                    boolean existe;
+                    boolean existe = false;
                     try {
 
                         if (interesado.getId() == null) {
                             existe = personaEjb.existeDocumentoNew(interesado.getDocumento().toUpperCase(), interesado.getEntidad());
-                        } else {
-                            existe = personaEjb.existeDocumentoEdit(interesado.getDocumento().toUpperCase(), interesado.getId(), interesado.getEntidad());
                         }
 
                     } catch (Exception e) {
