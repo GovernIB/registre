@@ -7,7 +7,7 @@ import es.caib.regweb3.sir.core.model.Errores;
 import es.caib.regweb3.sir.ejb.RecepcionLocal;
 import es.caib.regweb3.sir.ws.utils.PassiveCallbackHandler;
 import es.caib.regweb3.sir.ws.wssir8b.RespuestaWS;
-import es.caib.regweb3.sir.ws.wssir8b.WS_SIR8_B_PortType;
+import es.caib.regweb3.sir.ws.wssir8b.WS_SIR8_BSoap_PortType;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.wsf.spi.annotation.TransportGuarantee;
@@ -47,7 +47,7 @@ import java.util.Set;
         transportGuarantee = TransportGuarantee.NONE,
         secureWSDLAccess = false
 )
-public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
+public class WS_SIR8_BImpl implements WS_SIR8_BSoap_PortType {
 
     protected final Logger log = Logger.getLogger(getClass());
 
@@ -64,7 +64,7 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
 
     @Override
     @WebMethod
-    public RespuestaWS envioFicherosAAplicacion(@WebParam(name = "registro") String registro, @WebParam(name = "firmaRegistro") String firmaRegistro) {
+    public RespuestaWS envioFicherosAAplicacion(@WebParam(name = "value0") String value0, @WebParam(name = "value1") String value1) {
 
         // Realizamos el login con un usuario existente en Seycon, porque este WS está sin autenticar
         LoginContext lc = null;
@@ -89,7 +89,7 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
         }
 
         log.info("WS_SIR8_BImpl: recibiendo fichero intercambio");
-        log.info("Registro: " + registro);
+        log.info("Registro: " + value0);
         //log.info("Firma: " + firmaRegistro);
 
         RespuestaWS respuestaWS = null;
@@ -97,7 +97,7 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
         try {
 
             // Envia el fichero de intercambio a REGWEB3
-            recepcionEjb.recibirFicheroIntercambio(registro, webServicesMethodsEjb);
+            recepcionEjb.recibirFicheroIntercambio(value0, webServicesMethodsEjb);
 
             // Creamos la respuesta exitosa
             respuestaWS = crearRespuestaWS(Errores.OK);
