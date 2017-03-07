@@ -44,6 +44,11 @@ public class UsuarioEntidad implements Serializable{
         this.entidad = new Entidad(idEntidad);
     }
 
+    public UsuarioEntidad(Long id, Long idUsuario, String identificadorUsuario) {
+        this.id = id;
+        this.usuario = new Usuario(idUsuario, identificadorUsuario);
+    }
+
 
 
     @Id

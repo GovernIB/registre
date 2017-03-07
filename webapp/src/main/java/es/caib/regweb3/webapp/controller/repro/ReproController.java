@@ -420,7 +420,7 @@ public class ReproController extends BaseController {
     @ModelAttribute("usuariosEntidadList")
     public List<UsuarioEntidad> usuariosEntidadList(HttpServletRequest request) throws Exception {
 
-        return usuarioEntidadEjb.findByEntidadSinActivo(getEntidadActiva(request).getId(), getUsuarioAutenticado(request).getId(), RegwebConstantes.TIPO_USUARIO_PERSONA);
+        return usuarioEntidadEjb.findUsuariosRepro(getEntidadActiva(request).getId(), getUsuarioAutenticado(request).getId(), RegwebConstantes.TIPO_USUARIO_PERSONA);
 
     }
 

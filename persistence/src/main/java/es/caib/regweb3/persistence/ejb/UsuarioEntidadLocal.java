@@ -148,7 +148,7 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @return
      * @throws Exception
      */
-    public List<UsuarioEntidad> findByEntidadSinActivo(Long idEntidad, Long idUsuario, Long tipoUsuario) throws Exception;
+    public List<UsuarioEntidad> findUsuariosRepro(Long idEntidad, Long idUsuario, Long tipoUsuario) throws Exception;
 
     /**
      * Modifica la última Oficina utilizada por el usuario

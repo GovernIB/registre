@@ -365,17 +365,28 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
     }
 
     @Override
-    public List<UsuarioEntidad> findByEntidadSinActivo(Long idEntidad, Long idUsuario, Long tipoUsuario) throws Exception {
+    public List<UsuarioEntidad> findUsuariosRepro(Long idEntidad, Long idUsuario, Long tipoUsuario) throws Exception {
 
-        Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where " +
-                "usuarioEntidad.entidad.id= :idEntidad and usuarioEntidad.usuario.id!= :idUsuario and " +
-                "usuarioEntidad.activo = true and usuarioEntidad.usuario.tipoUsuario= :tipoUsuario order by usuarioEntidad.usuario.apellido1");
+        Query q = em.createQuery("Select usuarioEntidad.id, usuarioEntidad.usuario.id, usuarioEntidad.usuario.identificador " +
+                "from UsuarioEntidad as usuarioEntidad where usuarioEntidad.entidad.id= :idEntidad and " +
+                "usuarioEntidad.usuario.id!= :idUsuario and usuarioEntidad.activo = true and " +
+                "usuarioEntidad.usuario.tipoUsuario= :tipoUsuario order by usuarioEntidad.usuario.apellido1");
 
         q.setParameter("idEntidad",idEntidad);
         q.setParameter("idUsuario",idUsuario);
         q.setParameter("tipoUsuario",tipoUsuario);
 
-        return q.getResultList();
+        List<UsuarioEntidad> usuarios = new ArrayList<UsuarioEntidad>();
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+            UsuarioEntidad usuario = new UsuarioEntidad((Long) object[0], (Long) object[1], (String) object[2]);
+
+            usuarios.add(usuario);
+        }
+
+        return usuarios;
     }
 
     @Override

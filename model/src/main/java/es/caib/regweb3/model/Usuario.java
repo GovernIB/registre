@@ -47,6 +47,25 @@ public class Usuario implements Serializable {
     @XmlTransient
     private Long idioma;
 
+    /**
+     *
+     */
+    public Usuario() {
+        super();
+    }
+
+    public Usuario(Long id) {
+        this.id=id;
+    }
+
+    /**
+     * @param id
+     * @param identificador
+     */
+    public Usuario(Long id, String identificador) {
+        this.id = id;
+        this.identificador = identificador;
+    }
 
 
     @Id
