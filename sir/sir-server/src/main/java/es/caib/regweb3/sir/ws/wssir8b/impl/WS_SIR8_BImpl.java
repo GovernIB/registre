@@ -39,8 +39,9 @@ import java.util.Set;
 @WebService(
         name = WS_SIR8_BImpl.NAME_WS,
         portName = WS_SIR8_BImpl.NAME_WS,
-        serviceName = WS_SIR8_BImpl.NAME_WS,
-        targetNamespace = "http://impl.manager.cct.map.es"
+        serviceName = WS_SIR8_BImpl.NAME_WS + "Service",
+        targetNamespace = "http://impl.manager.cct.map.es",
+        wsdlLocation = "/wsdl/axis/WS_SIR8_B.wsdl"
 )
 @WebContext(
         contextRoot = "/regweb3/ws/sir",
