@@ -7,7 +7,7 @@ import es.caib.regweb3.sir.core.model.Errores;
 import es.caib.regweb3.sir.ejb.RecepcionLocal;
 import es.caib.regweb3.sir.ws.utils.PassiveCallbackHandler;
 import es.caib.regweb3.sir.ws.wssir8b.RespuestaWS;
-import es.caib.regweb3.sir.ws.wssir8b.WS_SIR8_BSoap_PortType;
+import es.caib.regweb3.sir.ws.wssir8b.WS_SIR8_B_PortType;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.wsf.spi.annotation.TransportGuarantee;
@@ -33,6 +33,7 @@ import java.util.Set;
  */
 /*@DeclareRoles({ "RWE_USUARI" })
 @RunAs("RWE_USUARI")*/
+
 @Stateless(name = WS_SIR8_BImpl.NAME + "Ejb")
 @SOAPBinding(style = SOAPBinding.Style.DOCUMENT)
 @WebService(
@@ -47,7 +48,7 @@ import java.util.Set;
         transportGuarantee = TransportGuarantee.NONE,
         secureWSDLAccess = false
 )
-public class WS_SIR8_BImpl implements WS_SIR8_BSoap_PortType {
+public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
 
     protected final Logger log = Logger.getLogger(getClass());
 
@@ -63,8 +64,8 @@ public class WS_SIR8_BImpl implements WS_SIR8_BSoap_PortType {
 
 
     @Override
-    @WebMethod
-    public RespuestaWS envioFicherosAAplicacion(@WebParam(name = "value0") String value0, @WebParam(name = "value1") String value1) {
+    @WebMethod(operationName = "envioFicherosAAplicacion")
+    public RespuestaWS envioFicherosAAplicacion(@WebParam(name = "registro") String value0, @WebParam(name = "firmaRegistro") String value1) {
 
         // Realizamos el login con un usuario existente en Seycon, porque este WS está sin autenticar
         LoginContext lc = null;
