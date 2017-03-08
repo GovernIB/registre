@@ -35,11 +35,11 @@ import java.util.Set;
 @RunAs("RWE_USUARI")*/
 
 @Stateless(name = WS_SIR8_BImpl.NAME + "Ejb")
-@SOAPBinding(style = SOAPBinding.Style.DOCUMENT)
+@SOAPBinding(style = SOAPBinding.Style.RPC)
 @WebService(
         name = WS_SIR8_BImpl.NAME_WS,
         portName = WS_SIR8_BImpl.NAME_WS,
-        serviceName = WS_SIR8_BImpl.NAME_WS + "Service",
+        serviceName = WS_SIR8_BImpl.NAME_WS,
         targetNamespace = "http://impl.manager.cct.map.es"
 )
 @WebContext(
@@ -60,12 +60,12 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
 
     public static final String NAME = "WS_SIR8_B";
 
-    public static final String NAME_WS = NAME + "Ws";
+    public static final String NAME_WS = NAME;
 
 
     @Override
     @WebMethod(operationName = "envioFicherosAAplicacion")
-    public RespuestaWS envioFicherosAAplicacion(@WebParam(name = "registro") String value0, @WebParam(name = "firmaRegistro") String value1) {
+    public RespuestaWS envioFicherosAAplicacion(@WebParam(name = "registro") String registro, @WebParam(name = "firmaRegistro") String firmaRegistro) {
 
         // Realizamos el login con un usuario existente en Seycon, porque este WS está sin autenticar
         LoginContext lc = null;
@@ -90,7 +90,7 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
         }
 
         log.info("WS_SIR8_BImpl: recibiendo fichero intercambio");
-        log.info("Registro: " + value0);
+        log.info("Registro: " + registro);
         //log.info("Firma: " + firmaRegistro);
 
         RespuestaWS respuestaWS = null;
@@ -98,7 +98,7 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
         try {
 
             // Envia el fichero de intercambio a REGWEB3
-            recepcionEjb.recibirFicheroIntercambio(value0, webServicesMethodsEjb);
+            recepcionEjb.recibirFicheroIntercambio(registro, webServicesMethodsEjb);
 
             // Creamos la respuesta exitosa
             respuestaWS = crearRespuestaWS(Errores.OK);
