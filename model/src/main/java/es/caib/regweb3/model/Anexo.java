@@ -56,7 +56,7 @@ public class Anexo implements Serializable {
     @XmlElement
     private byte[] certificado;
     @XmlElement
-    private byte[] firma;
+    private byte[] firma;  //Corresponde al campo Firma del Documento del segmento "De_Anexo"( solo viene informado cuando la firma es CSV)
     @XmlElement
     private byte[] validacionOCSPCertificado;
     @XmlElement
@@ -68,6 +68,10 @@ public class Anexo implements Serializable {
     private String custodiaID;
     @XmlTransient
     private String csv; // TODO este campo parece que sobra, verificar que no se emplee en NTI
+
+    //SIR
+    private Boolean firmaValida; // Indicará si la firma es vàlida o no
+    private Boolean justificante; // Indica si el anexo es justificante.
 
     
     public Anexo() {
@@ -288,9 +292,24 @@ public class Anexo implements Serializable {
         this.csv = csv;
     }
 
-    
-    
-    
+    @Column(name ="FIRMAVALIDA")
+    public Boolean isFirmaValida() {
+        return firmaValida;
+    }
+
+    public void setFirmaValida(Boolean firmaValida) {
+        this.firmaValida = firmaValida;
+    }
+
+    @Column(name = "JUSTIFICANTE")
+    public Boolean isJustificante() {
+        return justificante;
+    }
+
+    public void setJustificante(Boolean justificante) {
+        this.justificante = justificante;
+    }
+
     @Override
     public boolean equals(Object o) {
       if (this == o) return true;
