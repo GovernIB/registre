@@ -9,10 +9,11 @@ import es.caib.regweb3.sir.utils.Sicres3XML;
 import es.caib.regweb3.sir.ws.api.wssir7.RespuestaWS;
 import es.caib.regweb3.sir.ws.api.wssir7.WS_SIR7ServiceLocator;
 import es.caib.regweb3.sir.ws.api.wssir7.WS_SIR7_PortType;
+import es.caib.regweb3.utils.Configuracio;
 import org.apache.log4j.Logger;
 
 import javax.ejb.Stateless;
-import javax.xml.rpc.ServiceException;
+import java.net.URL;
 import java.util.Date;
 
 /**
@@ -111,15 +112,9 @@ public class MensajeBean implements MensajeLocal {
 
         log.info("Mensaje a ws_sir7: " + xml);
 
-        WS_SIR7ServiceLocator locator = new WS_SIR7ServiceLocator();
-        WS_SIR7_PortType ws_sir7 = null;
         try {
-            ws_sir7 = locator.getWS_SIR7();
-        } catch (ServiceException e) {
-            e.printStackTrace();
-        }
+            WS_SIR7_PortType ws_sir7 = getWS_SIR7();
 
-        try {
             respuesta = ws_sir7.recepcionMensajeDatosControlDeAplicacion(xml);
         } catch (Exception e) {
             log.info("Error al enviar el mensaje");
@@ -132,5 +127,16 @@ public class MensajeBean implements MensajeLocal {
             log.info("Respuesta ws_sir7: " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
 
         }
+    }
+
+    /**
+     * @return
+     * @throws Exception
+     */
+    public WS_SIR7_PortType getWS_SIR7() throws Exception {
+        WS_SIR7ServiceLocator locator = new WS_SIR7ServiceLocator();
+        URL url = new URL(Configuracio.getSirServerBase() + "/WS_SIR7");
+
+        return  locator.getWS_SIR7(url);
     }
 }

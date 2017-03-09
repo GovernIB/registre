@@ -33,13 +33,17 @@ import java.util.Set;
  */
 /*@DeclareRoles({ "RWE_USUARI" })
 @RunAs("RWE_USUARI")*/
+
 @Stateless(name = WS_SIR8_BImpl.NAME + "Ejb")
-@SOAPBinding(style = SOAPBinding.Style.DOCUMENT)
+@SOAPBinding(style = SOAPBinding.Style.RPC)
+@org.apache.cxf.interceptor.InInterceptors(interceptors = {"org.apache.cxf.interceptor.LoggingInInterceptor"})
+@org.apache.cxf.interceptor.InFaultInterceptors(interceptors = {"org.apache.cxf.interceptor.LoggingInInterceptor"})
 @WebService(
         name = WS_SIR8_BImpl.NAME_WS,
         portName = WS_SIR8_BImpl.NAME_WS,
         serviceName = WS_SIR8_BImpl.NAME_WS + "Service",
-        targetNamespace = "http://impl.manager.cct.map.es"
+        targetNamespace = "http://impl.manager.cct.map.es",
+        wsdlLocation = "/wsdl/axis/WS_SIR8_B.wsdl"
 )
 @WebContext(
         contextRoot = "/regweb3/ws/sir",
@@ -59,11 +63,11 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
 
     public static final String NAME = "WS_SIR8_B";
 
-    public static final String NAME_WS = NAME + "Ws";
+    public static final String NAME_WS = NAME;
 
 
     @Override
-    @WebMethod
+    @WebMethod(operationName = "envioFicherosAAplicacion")
     public RespuestaWS envioFicherosAAplicacion(@WebParam(name = "registro") String registro, @WebParam(name = "firmaRegistro") String firmaRegistro) {
 
         // Realizamos el login con un usuario existente en Seycon, porque este WS está sin autenticar

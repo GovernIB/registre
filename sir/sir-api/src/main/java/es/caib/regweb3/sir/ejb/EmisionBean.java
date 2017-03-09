@@ -105,8 +105,7 @@ public class EmisionBean implements EmisionLocal{
     public WS_SIR6_B_PortType getWS_SIR6_B() throws Exception {
         WS_SIR6_BServiceLocator locator = new WS_SIR6_BServiceLocator();
         URL url = new URL(Configuracio.getSirServerBase() + "/WS_SIR6_B");
-        WS_SIR6_B_PortType ws_sir6_b = locator.getWS_SIR6_B(url);
-        return ws_sir6_b;
+        return  locator.getWS_SIR6_B(url);
     }
 
 
@@ -118,13 +117,10 @@ public class EmisionBean implements EmisionLocal{
      */
     public RespuestaWS ws_sir6_b_recepcionFicheroDeAplicacion(String xml) throws Exception {
 
-        /*if (Configuracio.useDirectApiSir()) {
-            String url = Configuracio.getSirServerBase() + "/WS_SIR6_B";
-            return WS_SIR6_B_DirectApi.recepcionFicheroDeAplicacion(xml, url);
-        } else {*/
         WS_SIR6_B_PortType ws_sir6_b = getWS_SIR6_B();
+
         return ws_sir6_b.recepcionFicheroDeAplicacion(xml);
-        //}
+
     }
 
     /**

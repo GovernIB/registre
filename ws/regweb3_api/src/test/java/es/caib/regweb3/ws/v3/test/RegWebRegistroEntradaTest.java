@@ -165,12 +165,15 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils {
             DatosInteresadoWs interesado = new DatosInteresadoWs();
             interesado.setTipoInteresado(TIPO_INTERESADO_PERSONA_FISICA);
             interesado.setTipoDocumentoIdentificacion("N");
-            interesado.setDocumento("00000001R");
+            interesado.setDocumento("43146650F");
             interesado.setEmail("pgarcia@gmail.com");
-            interesado.setNombre("Pepito");
-            interesado.setApellido1("Garcia");
+            interesado.setNombre("Julian");
+            interesado.setApellido1("González");
+            interesado.setCanal((long) 1);
+            interesado.setDireccion("Avenida picasso");
+            interesado.setLocalidad((long) 407);
             interesado.setPais((long) 724);
-            interesado.setProvincia((long) 46);
+            interesado.setProvincia((long) 7);
             interesadoWs.setInteresado(interesado);
 
             /*DatosInteresadoWs representante = new DatosInteresadoWs();
