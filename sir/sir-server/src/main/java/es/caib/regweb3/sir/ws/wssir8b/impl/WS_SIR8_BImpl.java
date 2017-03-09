@@ -36,6 +36,8 @@ import java.util.Set;
 
 @Stateless(name = WS_SIR8_BImpl.NAME + "Ejb")
 @SOAPBinding(style = SOAPBinding.Style.RPC)
+@org.apache.cxf.interceptor.InInterceptors(interceptors = {"org.apache.cxf.interceptor.LoggingInInterceptor"})
+@org.apache.cxf.interceptor.InFaultInterceptors(interceptors = {"org.apache.cxf.interceptor.LoggingInInterceptor"})
 @WebService(
         name = WS_SIR8_BImpl.NAME_WS,
         portName = WS_SIR8_BImpl.NAME_WS,
