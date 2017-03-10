@@ -66,6 +66,9 @@ public class Oficina implements Serializable{
     @XmlTransient
     private Set<CatServicio> servicios;
 
+    @Transient
+    private Boolean sir;
+
     public Oficina() {
       super();
     }
@@ -315,6 +318,16 @@ public class Oficina implements Serializable{
 
     public void setServicios(Set<CatServicio> servicios) {
         this.servicios = servicios;
+    }
+
+    @Transient
+    public Boolean getSir() {
+        return sir;
+    }
+
+    @Transient
+    public void setSir(Boolean sir) {
+        this.sir = sir;
     }
 
     @Override

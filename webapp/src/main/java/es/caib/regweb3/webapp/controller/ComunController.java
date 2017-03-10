@@ -107,7 +107,7 @@ public class ComunController extends BaseController {
         try {
             Oficina oficinaNueva = oficinaEjb.findById(oficinaId);
             if(oficinasAutenticado.contains(new Oficina(oficinaNueva.getId()))){
-                usuarioService.cambiarOficinaActiva(oficinaNueva,session);
+                usuarioService.asignarOficinaActiva(oficinaNueva,session);
                 log.info("Cambio Oficina activa: " + oficinaNueva.getDenominacion() + " - " + oficinaNueva.getCodigo());
             }else{
                 Mensaje.saveMessageError(request, getMessage("error.oficina.autorizacion"));

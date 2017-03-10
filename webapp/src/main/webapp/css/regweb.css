@@ -783,3 +783,11 @@ a.text-gris:focus {
     background-color: grey;
     -webkit-box-shadow: 0 0 1px rgba(255,255,255,.75);
 }
+
+.azul{
+    color: #428bca;
+}
+.azul:hover,
+.azul:focus {
+    color: #4173B1;
+}

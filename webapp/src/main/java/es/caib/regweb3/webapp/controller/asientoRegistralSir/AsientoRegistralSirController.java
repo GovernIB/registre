@@ -154,8 +154,9 @@ public class AsientoRegistralSirController extends BaseController {
 
         AsientoRegistralSir asientoRegistralSir = asientoRegistralSirEjb.findById(idAsientoRegistralSir);
 
-        // Comprobamos que el AsientoRegistralSir tiene como destino nuestra Oficina Activa
-        if(asientoRegistralSir.getCodigoEntidadRegistralDestino().equals(getOficinaActiva(request).getCodigo())){
+        // Comprobamos la Oficina Activa puede gestionar el AsientoRegistralSir
+
+        if(getOrganismosSIRCodigo(request).contains(asientoRegistralSir.getCodigoUnidadTramitacionDestino())){
 
             model.addAttribute("asientoRegistralSir",asientoRegistralSir);
 

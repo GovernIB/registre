@@ -19,3 +19,6 @@ alter table RWE_PROPIEDADGLOBAL alter VALOR type varchar(1024);
 -- SIR Anexos
 alter table RWE_ANEXO add FIRMAVALIDA bool DEFAULT FALSE;
 alter table RWE_ANEXO add JUSTIFICANTE bool DEFAULT FALSE;
+
+--Nuevo permiso (SIR) en la tabla RWE_PERMLIBUSU
+INSERT INTO RWE_PERMLIBUSU (id,libro,usuario,activo,permiso) SELECT nextval('RWE_ALL_SEQ'),libro,usuario,false,9 FROM RWE_PERMLIBUSU where permiso=1;

@@ -17,10 +17,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Fundació BIT.
@@ -226,6 +223,19 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
 
         q.setMaxResults(total);
         q.setParameter("codigoOficinaActiva", codigoOficinaActiva);
+        q.setParameter("idEstadoPreRegistro", EstadoAsientoRegistralSir.RECIBIDO);
+
+        return  q.getResultList();
+    }
+
+    public List<AsientoRegistralSir> getUltimosPendientesProcesar(Set<String> organismos, Integer total) throws Exception{
+
+        Query q = em.createQuery("Select ars from AsientoRegistralSir as ars " +
+                "where ars.codigoUnidadTramitacionDestino in (:organismos) and ars.estado = :idEstadoPreRegistro " +
+                "order by ars.id desc");
+
+        q.setMaxResults(total);
+        q.setParameter("organismos", organismos);
         q.setParameter("idEstadoPreRegistro", EstadoAsientoRegistralSir.RECIBIDO);
 
         return  q.getResultList();

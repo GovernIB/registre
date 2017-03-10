@@ -32,6 +32,7 @@ public interface RegwebConstantes {
     public static final String SESSION_OFICINAS = "oficinas";
     public static final String SESSION_OFICINA = "oficinaActiva";
     public static final String SESSION_ORGANISMOS_OFICINA = "organismosOficinaActiva";
+    public static final String SESSION_ORGANISMOS_SIR = "organismosSIR";
     public static final String SESSION_OFICINAS_ADMINISTRADAS = "oficinasAdministradas";
     public static final String SESSION_LIBROSADMINISTRADOS = "librosAdministrados";
     public static final String SESSION_MIGRADOS = "registrosMigrados";
@@ -121,6 +122,7 @@ public interface RegwebConstantes {
     public static final Long PERMISO_MODIFICACION_REGISTRO_SALIDA = 6L;
     public static final Long PERMISO_ADMINISTRACION_LIBRO = 7L;
     public static final Long PERMISO_DISTRIBUCION_REGISTRO = 8L;
+    public static final Long PERMISO_SIR = 9L;
 
 
     public static final Long[] PERMISOS = {
@@ -131,7 +133,8 @@ public interface RegwebConstantes {
             PERMISO_MODIFICACION_REGISTRO_ENTRADA,
             PERMISO_MODIFICACION_REGISTRO_SALIDA,
             PERMISO_ADMINISTRACION_LIBRO,
-            PERMISO_DISTRIBUCION_REGISTRO
+            PERMISO_DISTRIBUCION_REGISTRO,
+            PERMISO_SIR
     };
 
 
@@ -472,18 +475,6 @@ public interface RegwebConstantes {
     public static final int ANEXO_NOMBREARCHIVO_MAXLENGTH = 76;
     public static final String ANEXO_TIPOVALIDEZDOCUMENTO_COPIA = "01";
 
-    /* -------------- ESTADO PREREGISTRO --------------*/
-    public static final Long ESTADO_PREREGISTRO_PENDIENTE_PROCESAR = 1L;
-    public static final Long ESTADO_PREREGISTRO_PROCESADO = 2L;
-    public static final Long ESTADO_PREREGISTRO_RECHAZADO = 3L;
-
-
-    public static final Long[] ESTADOS_PREREGISTRO = {
-            ESTADO_PREREGISTRO_PENDIENTE_PROCESAR,
-            ESTADO_PREREGISTRO_PROCESADO,
-            ESTADO_PREREGISTRO_RECHAZADO
-    };
-
 
     /* ----------------MODO FIRMA ANEXOS --------------------------*/
     public static final int MODO_FIRMA_ANEXO_SINFIRMA = 0;
@@ -572,7 +563,18 @@ public interface RegwebConstantes {
     public static final Long ANEXO_ORIGEN_ADMINISTRACION = 1L;
 
     /* -------------- CAT SERVICIOS -------------------------- */
+    public static final Long OFICINA_REGISTRO = 1L;
+    public static final Long OFICINA_INFORMACION = 2L;
+    public static final Long OFICINA_TRAMITACION = 3L;
     public static final Long REGISTRO_VIRTUAL_NO_PRESENCIAL = 4L;
+    public static final Long OFICINA_INTEGRADA_SIR = 5L;
+    public static final Long OFICINA_INTEGRADA_SIR_ENVIO = 6L;
+    public static final Long OFICINA_INTEGRADA_SIR_RECEPCION = 7L;
+    public static final Long OFICINA_INTEGRADA_060 = 8L;
+    public static final Long OFICINA_CORREOS = 9L;
+    public static final Long OFICINA_EXTRANJERIA = 10L;
+    public static final Long OFICINA_VIOLENCIA_GENERO = 11L;
+    public static final Long OFICINA_ACCESIBLE = 12L;
 
     /* -------- Límite expresiones en ORACLE in (:elements) (ORA-01795) ---------- */
     public static final int NUMBER_EXPRESSIONS_IN = 1000;

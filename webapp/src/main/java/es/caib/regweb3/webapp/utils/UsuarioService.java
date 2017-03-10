@@ -148,7 +148,11 @@ public class UsuarioService {
         // Si RolActivo del usuario autenticado es Operador
         }else if(rolActivo.getNombre().equals(RegwebConstantes.ROL_USUARI)){
 
-            asignarEntidadesOperador(usuarioAutenticado, entidadActiva, session);
+            //Asignamos las Entidades donde tiene acceso el usuario operador
+            UsuarioEntidad usuarioEntidadActivo = asignarEntidadesOperador(usuarioAutenticado, entidadActiva, session);
+
+            //Asignamos las oficinas donde tiene acceso el usuario operador
+            asignarOficinasRegistro(usuarioEntidadActivo, session);
 
         // Asigna la Configuración del SuperAdministrador
         }else if(rolActivo.getNombre().equals(RegwebConstantes.ROL_SUPERADMIN)){
@@ -214,7 +218,7 @@ public class UsuarioService {
      * @param session
      * @throws Exception
      */
-    public void asignarEntidadesOperador(Usuario usuarioAutenticado,Entidad entidadActiva, HttpSession session) throws Exception{
+    public UsuarioEntidad asignarEntidadesOperador(Usuario usuarioAutenticado,Entidad entidadActiva, HttpSession session) throws Exception{
 
         // Obtenemos las entidades a las que el Usuario está asociado
         List<Entidad> entidades = usuarioEntidadEjb.getEntidadesByUsuario(usuarioAutenticado.getId());
@@ -236,12 +240,10 @@ public class UsuarioService {
             log.info("Entidades asociadas operador: " + entidades.size());
 
             //UsuarioEntidadActivo
-            UsuarioEntidad usuarioEntidadActivo = setUsuarioEntidadActivo(usuarioAutenticado, entidadActiva, session);
-
-            //Asignamos las oficinas donde tiene acceso
-            asignarOficinasRegistro(usuarioEntidadActivo, session);
+            return setUsuarioEntidadActivo(usuarioAutenticado, entidadActiva, session);
         }
 
+        return null;
 
     }
 
@@ -258,8 +260,7 @@ public class UsuarioService {
 
         Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
 
-        //Obtenemos los Libros, cuyo Organismo es Vigente y donde el UsuarioEntidad
-        // tenga permisos de (Registro, Modificación o Administración)
+        //Obtenemos los Libros donde el UsuarioEntidad tenga permisos de (Registro, Modificación o Administración)
         List<Libro> librosRegistro = permisoLibroUsuarioEjb.getLibrosRegistro(usuarioEntidad.getId());
         log.info("Libros registro usuario: " + Arrays.toString(librosRegistro.toArray()));
 
@@ -269,48 +270,76 @@ public class UsuarioService {
             log.info("Libros registro consulta: " + Arrays.toString(librosRegistro.toArray()));
         }
 
-        //Obtenemos los Libros donde que el UsuarioEntidad puede Administrar
+        //Obtenemos los Libros donde el UsuarioEntidad puede Administrar
         List<Libro> librosAdministrados = permisoLibroUsuarioEjb.getLibrosAdministrados(usuarioEntidad.getId());
-        log.info("Libros administrados usuario: " + Arrays.toString(librosAdministrados.toArray()));
         session.setAttribute(RegwebConstantes.SESSION_LIBROSADMINISTRADOS, librosAdministrados);
+        log.info("Libros administrados usuario: " + Arrays.toString(librosAdministrados.toArray()));
 
         // Obtenemos las Oficinas que pueden registrar en los Libros
         LinkedHashSet<Oficina> oficinasRegistro = oficinaEjb.oficinasRegistro(librosRegistro);  // Utilizamos un Set porque no permite duplicados
-
         log.info("Oficinas registro usuario: " + Arrays.toString(oficinasRegistro.toArray()));
+
+        // Si la Entidad está en SIR, obtenemos las Oficinas SIR a las que tiene acceso
+        if(entidadActiva.getSir()){
+
+            //Obtenemos los Libros donde el UsuarioEntidad tenga permiso SIR
+            List<Libro> librosSIR = permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), RegwebConstantes.PERMISO_SIR);
+            log.info("Libros SIR usuario: " + Arrays.toString(librosSIR.toArray()));
+
+            //Obtenemos las Oficinas que pueden operar con los Libros anteriores
+            LinkedHashSet<Oficina> oficinasSIR = oficinaEjb.oficinasSIR(librosRegistro);  // Utilizamos un Set porque no permite duplicados
+            log.info("Oficinas SIR usuario: " + Arrays.toString(oficinasSIR.toArray()));
+
+            // Las añadimos al listado general de oficinas
+            oficinasRegistro.addAll(oficinasSIR);
+        }
+
+        // Creamos la variable de sesión con las Oficinas a las que tiene acceso el usuario
         session.setAttribute(RegwebConstantes.SESSION_OFICINAS,oficinasRegistro);
 
-        // Comprobamos la última Oficina utilizada por el usuario
+        // Comprobamos si el usuario tiene última Oficina utilizada.
         if(usuarioEntidad.getUltimaOficina()!= null && oficinasRegistro.contains(new Oficina(usuarioEntidad.getUltimaOficina().getId()))){
-            session.setAttribute(RegwebConstantes.SESSION_OFICINA,oficinaEjb.findById(usuarioEntidad.getUltimaOficina().getId()));
+
+            asignarOficinaActiva(oficinaEjb.findById(usuarioEntidad.getUltimaOficina().getId()) ,session);
 
         }else if(oficinasRegistro.size() > 0){
-            session.setAttribute(RegwebConstantes.SESSION_OFICINA,oficinaEjb.findById(oficinasRegistro.iterator().next().getId()));
-            usuarioEntidadEjb.actualizarOficinaUsuario(usuarioEntidad.getId(), oficinasRegistro.iterator().next().getId());
+
+            asignarOficinaActiva(oficinaEjb.findById(oficinasRegistro.iterator().next().getId()) ,session);
         }
 
         //RegistrosMigrados
         tieneMigrados(entidadActiva,session);
 
-        Oficina oficinaActiva = (Oficina) session.getAttribute(RegwebConstantes.SESSION_OFICINA);
-
-        // Obtenemos los Organismos a los que la OficiaActiva da servicio y que no son EDP
-        if(oficinaActiva != null) {
-            session.setAttribute(RegwebConstantes.SESSION_ORGANISMOS_OFICINA,organismoEjb.getByOficinaActiva(oficinaActiva));
-        }
-
     }
 
-    public void cambiarOficinaActiva(Oficina oficinaNueva, HttpSession session) throws Exception{
-        // Actualizamos la nueva OficinaActiva en la sesión
-        session.setAttribute(RegwebConstantes.SESSION_OFICINA, oficinaNueva);
+    public void asignarOficinaActiva(Oficina oficinaNueva, HttpSession session) throws Exception{
 
-        // Actualizamos los Organismos OficiaActiva
-        session.setAttribute(RegwebConstantes.SESSION_ORGANISMOS_OFICINA,organismoEjb.getByOficinaActiva(oficinaNueva));
+        if(oficinaNueva != null){
 
-        // Actualizamos la última Oficina del Usuario
-        UsuarioEntidad usuarioEntidad = (UsuarioEntidad)session.getAttribute(RegwebConstantes.SESSION_USUARIO_ENTIDAD);
-        usuarioEntidadEjb.actualizarOficinaUsuario(usuarioEntidad.getId(), oficinaNueva.getId());
+            UsuarioEntidad usuarioEntidad = (UsuarioEntidad)session.getAttribute(RegwebConstantes.SESSION_USUARIO_ENTIDAD);
+            Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
+
+            // Guardamos en la sesión la nueva OficinaActiva
+            session.setAttribute(RegwebConstantes.SESSION_OFICINA, oficinaNueva);
+
+            // Guardamos en la sesión los Organismos OficiaActiva
+            session.setAttribute(RegwebConstantes.SESSION_ORGANISMOS_OFICINA,organismoEjb.getByOficinaActiva(oficinaNueva));
+
+            // Comprobamos si la Oficina está integrada en SIR
+            oficinaNueva.setSir(oficinaEjb.isOficinaSIR(oficinaNueva.getId()));
+
+            // Si la Entidad está en SIR y la OficiaActiva es SIR, obtenemos los organismos que gestiona
+            if(oficinaNueva.getSir() && entidadActiva.getSir()){
+                List<Organismo> organismosSir = permisoLibroUsuarioEjb.getOrganismoLibroPermiso(usuarioEntidad.getId(), RegwebConstantes.PERMISO_SIR);
+                session.setAttribute(RegwebConstantes.SESSION_ORGANISMOS_SIR, organismosSir);
+            }
+
+            // Actualizamos la última Oficina del Usuario
+            usuarioEntidadEjb.actualizarOficinaUsuario(usuarioEntidad.getId(), oficinaNueva.getId());
+        }else{
+            // Guardamos en la sesión la nueva OficinaActiva
+            session.setAttribute(RegwebConstantes.SESSION_OFICINA, null);
+        }
 
     }
 
@@ -324,6 +353,12 @@ public class UsuarioService {
         session.setAttribute(RegwebConstantes.SESSION_MIGRADOS, registroMigradoEjb.tieneRegistrosMigrados(entidadActiva.getId()));
     }
 
+    /**
+     *
+     * @param entidadNueva
+     * @param request
+     * @throws Exception
+     */
     public void cambioEntidad(Entidad entidadNueva, HttpServletRequest request) throws Exception{
         log.info("Cambiando Entidad activa a: " + entidadNueva.getNombre());
 
@@ -558,7 +593,7 @@ public class UsuarioService {
         session.removeAttribute(RegwebConstantes.SESSION_ENTIDADES);
         session.removeAttribute(RegwebConstantes.SESSION_ENTIDAD);
         session.removeAttribute(RegwebConstantes.SESSION_MIGRADOS);
-        //session.removeAttribute(RegwebConstantes.SESSION_TIENE_ASR);
+
         eliminarVariablesSesionOficina(session);
 
     }
@@ -575,6 +610,7 @@ public class UsuarioService {
         session.removeAttribute(RegwebConstantes.SESSION_OFICINAS_ADMINISTRADAS);
         session.removeAttribute(RegwebConstantes.SESSION_LIBROSADMINISTRADOS);
         session.removeAttribute(RegwebConstantes.SESSION_ORGANISMOS_OFICINA);
+        session.removeAttribute(RegwebConstantes.SESSION_ORGANISMOS_SIR);
 
     }
 

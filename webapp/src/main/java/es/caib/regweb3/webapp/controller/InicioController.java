@@ -13,6 +13,7 @@ import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Fundació BIT.
@@ -83,18 +84,19 @@ public class InicioController extends BaseController{
 
                     // Obtenemos los Oficios pendientes de Llegada
                     mav.addObject("oficiosPendientesLlegada", oficioRemisionEjb.oficiosPendientesLlegada(organismosOficinaActiva, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
-
-                    /* Obtenemos los Asientos Registrales Sir pendientes de procesar */
-                    if(entidadActiva.getSir()) {
-                        List<AsientoRegistralSir> asientosRegistralesSir = asientosRegistralSirEjb.getUltimosARSPendientesProcesar(oficinaActiva.getCodigo(), RegwebConstantes.REGISTROS_PANTALLA_INICIO);
-                        mav.addObject("asientosRegistralesSir", asientosRegistralesSir);
-                    }
                 }
 
                 if(librosRegistroSalida.size() > 0) {
 
                     // Obtenemos los Organismos que tienen Registros de salida pendientes de tramitar por medio de un Oficio de Revisión,
                     //mav.addObject("organismosOficioRemisionSalida", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemision(oficinaActiva.getId(), librosRegistroSalida, getOrganismosOficioRemisionSalida(request, organismosOficinaActiva)));
+                }
+
+                /* Obtenemos los Asientos Registrales Sir pendientes de procesar */
+                if(entidadActiva.getSir() && oficinaActiva.getSir()) {
+                    Set<String> organismosSIR = getOrganismosSIRCodigo(request);
+                    List<AsientoRegistralSir> asientosRegistralesSir = asientosRegistralSirEjb.getUltimosPendientesProcesar(organismosSIR, RegwebConstantes.REGISTROS_PANTALLA_INICIO);
+                    mav.addObject("asientosRegistralesSir", asientosRegistralesSir);
                 }
 
             }

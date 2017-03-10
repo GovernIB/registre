@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Oficina;
+import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.RelacionSirOfi;
 import es.caib.regweb3.model.RelacionSirOfiPK;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -121,23 +122,14 @@ public class RelacionSirOfiBean extends BaseEjbJPA<RelacionSirOfi, RelacionSirOf
     }
 
     @Override
-    public List<Oficina> oficinasSIR(Long idOrganismo, Boolean oficinaVirtual) throws Exception {
+    public List<Oficina> oficinasSIR(Long idOrganismo) throws Exception {
 
-        String oficinaVirtualWhere = "";
-
-        if (!oficinaVirtual) {
-            oficinaVirtualWhere = " and :oficinaVirtual not in elements(rso.oficina.servicios)";
-        }
-
-        Query q = em.createQuery("Select distinct rso.oficina.id, rso.oficina.codigo, rso.oficina.denominacion, oficina.organismoResponsable.id  from RelacionSirOfi as rso " +
-                "where rso.organismo.id = :idOrganismo and rso.estado.codigoEstadoEntidad = :vigente " +
-                oficinaVirtualWhere);
+        Query q = em.createQuery("Select distinct rso.oficina.id, rso.oficina.codigo, rso.oficina.denominacion, oficina.organismoResponsable.id from RelacionSirOfi as rso " +
+                "where rso.organismo.id = :idOrganismo and rso.estado.codigoEstadoEntidad = :vigente and :oficinaSir in elements(rso.oficina.servicios)");
 
         q.setParameter("idOrganismo", idOrganismo);
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-        if (!oficinaVirtual) {
-            q.setParameter("oficinaVirtual", catServicioEjb.findByCodigo(RegwebConstantes.REGISTRO_VIRTUAL_NO_PRESENCIAL));
-        }
+        q.setParameter("oficinaSir", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR));
 
         List<Oficina> oficinas =  new ArrayList<Oficina>();
 
@@ -150,6 +142,28 @@ public class RelacionSirOfiBean extends BaseEjbJPA<RelacionSirOfi, RelacionSirOf
         }
 
         return oficinas;
+    }
+
+    @Override
+    public List<Organismo> organimosServicioSIR(Long idOficina) throws Exception{
+
+        Query q = em.createQuery("Select distinct rso.organismo.id, rso.organismo.codigo, rso.organismo.denominacion from RelacionSirOfi as rso " +
+                "where rso.oficina.id = :idOficina and rso.estado.codigoEstadoEntidad = :vigente");
+
+        q.setParameter("idOficina", idOficina);
+        q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+
+        List<Organismo> organismos =  new ArrayList<Organismo>();
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result){
+            Organismo organismo = new Organismo((Long)object[0],(String)object[1],(String)object[2]);
+
+            organismos.add(organismo);
+        }
+
+        return organismos;
     }
 
     @Override

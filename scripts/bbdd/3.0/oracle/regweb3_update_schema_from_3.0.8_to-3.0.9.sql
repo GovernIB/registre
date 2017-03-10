@@ -18,3 +18,6 @@ ALTER TABLE RWE_PROPIEDADGLOBAL MODIFY VALOR varchar2(1024 char);
 alter table RWE_ANEXO add  (FIRMAVALIDA NUMBER(1,0) DEFAULT 0);
 alter table RWE_ANEXO add  (JUSTIFICANTE NUMBER(1,0) DEFAULT 0);
 
+
+--Nuevo permiso (SIR) en la tabla RWE_PERMLIBUSU
+INSERT INTO RWE_PERMLIBUSU (id,libro,usuario,activo,permiso) SELECT RWE_ALL_SEQ.nextVal,libro,usuario,0,9 FROM RWE_PERMLIBUSU where permiso=1;

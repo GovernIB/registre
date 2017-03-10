@@ -43,7 +43,7 @@ public class RecepcionBean implements RecepcionLocal{
      * Recibe un fichero de intercambio en formato SICRES3 desde un nodo distribuido
      *
      * @param xmlFicheroIntercambio
-     * @return PreRegistro creado
+     *
      */
     public void recibirFicheroIntercambio(String xmlFicheroIntercambio, WebServicesMethodsLocal webServicesMethodsEjb) {
 

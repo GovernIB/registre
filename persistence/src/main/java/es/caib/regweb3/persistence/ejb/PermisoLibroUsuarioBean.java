@@ -258,12 +258,39 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     public List<Libro> getLibrosPermiso(Long idUsuarioEntidad, Long idPermiso) throws Exception{
 
         Query q = em.createQuery("Select distinct plu.libro from PermisoLibroUsuario as plu where " +
-                "plu.usuario.id = :idUsuarioEntidad and plu.libro.activo = true and (plu.permiso = :idPermiso and plu.activo = true)");
+                "plu.usuario.id = :idUsuarioEntidad and plu.libro.organismo.estado.id = :vigente and " +
+                "plu.libro.activo = true and (plu.permiso = :idPermiso and plu.activo = true)");
 
         q.setParameter("idPermiso",idPermiso);
         q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
+        q.setParameter("vigente",catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE).getId());
 
         return q.getResultList();
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<Organismo> getOrganismoLibroPermiso(Long idUsuarioEntidad, Long idPermiso) throws Exception{
+
+        Query q = em.createQuery("Select distinct plu.libro.organismo.id,plu.libro.organismo.codigo, plu.libro.organismo.denominacion from PermisoLibroUsuario as plu where " +
+                "plu.usuario.id = :idUsuarioEntidad and plu.libro.organismo.estado.id = :vigente and " +
+                "plu.libro.activo = true and (plu.permiso = :idPermiso and plu.activo = true)");
+
+        q.setParameter("idPermiso",idPermiso);
+        q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
+        q.setParameter("vigente",catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE).getId());
+
+        List<Organismo> organismos = new ArrayList<Organismo>();
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+            Organismo organismo = new Organismo((Long) object[0], (String) object[1], (String) object[2]);
+
+            organismos.add(organismo);
+        }
+
+        return organismos;
     }
 
     @Override

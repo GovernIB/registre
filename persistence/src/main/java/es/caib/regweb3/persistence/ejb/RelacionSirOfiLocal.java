@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Oficina;
+import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.RelacionSirOfi;
 import es.caib.regweb3.model.RelacionSirOfiPK;
 
@@ -48,7 +49,15 @@ public interface RelacionSirOfiLocal extends BaseEjb<RelacionSirOfi, RelacionSir
      * @return
      * @throws Exception
      */
-    public List<Oficina> oficinasSIR(Long idOrganismo, Boolean oficinaVirtual) throws Exception;
+    public List<Oficina> oficinasSIR(Long idOrganismo) throws Exception;
+
+    /**
+     * Obtiene los Organismos a los que da Servicio Sir una Oficina  integrada en SIR
+     * @param idOficina
+     * @return
+     * @throws Exception
+     */
+    public List<Organismo> organimosServicioSIR(Long idOficina) throws Exception;
 
     /**
      * Elimina las RelacionSirOfi de una Entidad

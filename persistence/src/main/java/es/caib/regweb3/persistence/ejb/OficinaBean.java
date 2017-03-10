@@ -223,8 +223,8 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
-    public List<Oficina> oficinasSIR(Long idOrganismo, Boolean oficinaVirtual) throws Exception{
-        return  relacionSirOfiEjb.oficinasSIR(idOrganismo, oficinaVirtual);
+    public List<Oficina> oficinasSIR(Long idOrganismo) throws Exception{
+        return  relacionSirOfiEjb.oficinasSIR(idOrganismo);
     }
 
     @Override
@@ -320,6 +320,34 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         }
 
         return oficinas;
+    }
+
+    @Override
+    public LinkedHashSet<Oficina> oficinasSIR(List<Libro> libros) throws Exception {
+
+        LinkedHashSet<Oficina> oficinas = new LinkedHashSet<Oficina>();  // Utilizamos un Set porque no permite duplicados
+
+        // Recorremos los Libros y a partir del Organismo al que pertenecen, obtenemos las Oficinas con relación SIR
+        for (Libro libro : libros) {
+            Long idOrganismo = libro.getOrganismo().getId();
+            oficinas.addAll(oficinasSIR(idOrganismo));
+        }
+
+        return oficinas;
+    }
+
+    @Override
+    public Boolean isOficinaSIR(Long idOficina) throws Exception {
+
+        Query q = em.createQuery("Select oficina.id from Oficina as oficina where " +
+                "oficina.id =:idOficina and oficina.estado.codigoEstadoEntidad=:vigente and " +
+                ":oficinaSIR in elements(oficina.servicios)");
+
+        q.setParameter("idOficina",idOficina);
+        q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        q.setParameter("oficinaSIR", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR));
+
+        return q.getResultList().size() > 0;
     }
 
     @Override

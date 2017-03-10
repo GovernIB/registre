@@ -89,11 +89,10 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
     /**
      * Obtiene las Oficinas SIR de un Organismo
      * @param idOrganismo
-     * @param oficinaVirtual
      * @return
      * @throws Exception
      */
-    public List<Oficina> oficinasSIR(Long idOrganismo, Boolean oficinaVirtual) throws Exception;
+    public List<Oficina> oficinasSIR(Long idOrganismo) throws Exception;
 
     /**
      * Obtiene las Oficinas cuya Entidad responsable es la indicada
@@ -158,6 +157,22 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @throws Exception
      */
     public LinkedHashSet<Oficina> oficinasRegistro(List<Libro> libros) throws Exception;
+
+    /**
+     * Obtiene las Oficinas que dan servicio SIR a los Libros seleccionados
+     * @param libros
+     * @return
+     * @throws Exception
+     */
+    public LinkedHashSet<Oficina> oficinasSIR(List<Libro> libros) throws Exception;
+
+    /**
+     * Consulta si una Oficina es considerada como SIR o no
+     * @param idOficina
+     * @return
+     * @throws Exception
+     */
+    public Boolean isOficinaSIR(Long idOficina) throws Exception;
 
     /**
      * Elimina las Oficinas de una Entidad

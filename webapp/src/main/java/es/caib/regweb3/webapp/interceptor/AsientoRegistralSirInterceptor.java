@@ -5,7 +5,6 @@ import es.caib.regweb3.model.Rol;
 import es.caib.regweb3.persistence.ejb.AsientoRegistralSirLocal;
 import es.caib.regweb3.persistence.ejb.PermisoLibroUsuarioLocal;
 import es.caib.regweb3.persistence.ejb.UsuarioEntidadLocal;
-import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.apache.log4j.Logger;
@@ -47,6 +46,14 @@ public class AsientoRegistralSirInterceptor extends HandlerInterceptorAdapter {
             Rol rolActivo = (Rol) session.getAttribute(RegwebConstantes.SESSION_ROL);
             Oficina oficinaActiva = (Oficina) session.getAttribute(RegwebConstantes.SESSION_OFICINA);
 
+            // Comprobamos que la oficinaActiva esté integrada en SIR
+            if(!oficinaActiva.getSir()){
+                log.info("La oficinaActiva no está integrada en SIR");
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficinaActiva.sir"));
+                response.sendRedirect("/regweb3/aviso");
+                return false;
+            }
+
             // Comprobamos que el usuario dispone del Rol RWE_USUARI
             if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_USUARI)){
                 log.info("Error de rol");
@@ -60,11 +67,11 @@ public class AsientoRegistralSirInterceptor extends HandlerInterceptorAdapter {
 
                 String idPreRegistro =  url.replace("/asientoRegistralSir/","").replace("/detalle", ""); //Obtenemos el id a partir de la url
 
-                AsientoRegistralSir asientoRegistralSir = asientoRegistralSirEjb.findById(Long.valueOf(idPreRegistro));
+                /*AsientoRegistralSir asientoRegistralSir = asientoRegistralSirEjb.findById(Long.valueOf(idPreRegistro));
 
                 // Comprobamos que el PreRegistro existe
                 if(asientoRegistralSir == null){
-                    log.info("Aviso: No existeix aquest PreRegistre");
+                    log.info("Aviso: No existeix aquest asientoRegistralSir");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.asientoRegistralSir.detalle"));
                     response.sendRedirect("/regweb3/aviso");
                     return false;
@@ -76,7 +83,7 @@ public class AsientoRegistralSirInterceptor extends HandlerInterceptorAdapter {
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.asientoRegistralSir.detalle"));
                     response.sendRedirect("/regweb3/aviso");
                     return false;
-                }
+                }*/
 
             }
 

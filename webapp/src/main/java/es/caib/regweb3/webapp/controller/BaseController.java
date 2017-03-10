@@ -339,11 +339,10 @@ public class BaseController {
      * Se eliminando los Organismos que están marcados como Entidad de Derecho Público o
      * a los que la OficiaActiva da servicio.
      *
-     * @param request
      * @return
      * @throws Exception
      */
-    public Set<String> getOrganismosOficioRemisionSalida(HttpServletRequest request, Set<Organismo> organismos) throws Exception {
+    public Set<String> getOrganismosOficioRemisionSalida(Set<Organismo> organismos) throws Exception {
 
         // Creamos un Set solo con los codigos
         Set<String> organismosCodigo = new HashSet<String>();
@@ -354,6 +353,42 @@ public class BaseController {
         }
         return organismosCodigo;
     }
+
+    /**
+     * Obtiene los OrganismosSIR
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    public List<Organismo> getOrganismosSIR(HttpServletRequest request) throws Exception {
+
+        HttpSession session = request.getSession();
+
+        return (List<Organismo>) session.getAttribute(RegwebConstantes.SESSION_ORGANISMOS_SIR);
+    }
+
+    /**
+     * Obtiene los unicamente los códigos OrganismosSIR
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    public Set<String> getOrganismosSIRCodigo(HttpServletRequest request) throws Exception {
+
+        List<Organismo> organismos = getOrganismosSIR(request);
+
+        // Creamos un Set solo con los codigos
+        Set<String> organismosCodigo = new HashSet<String>();
+
+        for (Organismo organismo : organismos) {
+            log.info("OrganismoSIR: " + organismo.getDenominacion());
+            organismosCodigo.add(organismo.getCodigo());
+
+        }
+
+        return organismosCodigo;
+    }
+
 
 
     /**

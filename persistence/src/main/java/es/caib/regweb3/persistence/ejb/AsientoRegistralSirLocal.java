@@ -7,6 +7,7 @@ import es.caib.regweb3.sir.core.model.EstadoAsientoRegistralSir;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Fundació BIT.
@@ -62,6 +63,15 @@ public interface AsientoRegistralSirLocal extends BaseEjb<AsientoRegistralSir, L
      * @throws Exception
      */
     public List<AsientoRegistralSir> getUltimosARSPendientesProcesar(String codigoOficinaActiva, Integer total) throws Exception;
+
+    /**
+     * Obtiene los últimos ASR pendientes de procesas de un conjunto de Organismos
+     * @param organismos
+     * @param total
+     * @return
+     * @throws Exception
+     */
+    public List<AsientoRegistralSir> getUltimosPendientesProcesar(Set<String> organismos, Integer total) throws Exception;
 
     /**
      * Modifica el Estado de un {@link es.caib.regweb3.sir.core.model.AsientoRegistralSir}
