@@ -142,7 +142,7 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
         return (Long) q.getSingleResult() > 0;
     }
 
-    public Paginacion busqueda(Integer pageNumber, Integer any, AsientoRegistralSir asientoRegistralSir, String codigoOficinaActiva, String estado) throws Exception{
+    public Paginacion busqueda(Integer pageNumber, Integer any, AsientoRegistralSir asientoRegistralSir, Set<String> organismos, String estado) throws Exception{
 
         Query q;
         Query q2;
@@ -151,10 +151,8 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
 
         StringBuffer query = new StringBuffer("Select asr from AsientoRegistralSir as asr ");
 
-//        if(codigoOficinaActiva!= null){where.add(" preRegistro.codigoUnidadTramitacionDestino = :codigoOficinaActiva "); parametros.put("codigoOficinaActiva",codigoOficinaActiva);}
-
-        if (codigoOficinaActiva != null && codigoOficinaActiva.length() > 0) {
-            where.add(DataBaseUtils.like("asr.codigoEntidadRegistralDestino", "codigoOficinaActiva", parametros, codigoOficinaActiva));
+        if (organismos != null && organismos.size() > 0) {
+            where.add(" asr.codigoUnidadTramitacionDestino in (:organismos) "); parametros.put("organismos",organismos);
         }
 
         if (asientoRegistralSir.getResumen() != null && asientoRegistralSir.getResumen().length() > 0) {
@@ -213,19 +211,6 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
         paginacion.setListado(q.getResultList());
 
         return paginacion;
-    }
-
-    public List<AsientoRegistralSir> getUltimosARSPendientesProcesar(String codigoOficinaActiva, Integer total) throws Exception{
-
-        Query q = em.createQuery("Select ars from AsientoRegistralSir as ars " +
-                "where ars.codigoEntidadRegistralDestino = :codigoOficinaActiva and ars.estado = :idEstadoPreRegistro " +
-                "order by ars.id desc");
-
-        q.setMaxResults(total);
-        q.setParameter("codigoOficinaActiva", codigoOficinaActiva);
-        q.setParameter("idEstadoPreRegistro", EstadoAsientoRegistralSir.RECIBIDO);
-
-        return  q.getResultList();
     }
 
     public List<AsientoRegistralSir> getUltimosPendientesProcesar(Set<String> organismos, Integer total) throws Exception{

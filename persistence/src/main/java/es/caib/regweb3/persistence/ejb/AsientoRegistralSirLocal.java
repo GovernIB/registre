@@ -48,21 +48,12 @@ public interface AsientoRegistralSirLocal extends BaseEjb<AsientoRegistralSir, L
      * @param pageNumber
      * @param any
      * @param asientoRegistralSir
-     * @param codigoOficinaActiva
+     * @param organismos
      * @param estado
      * @return
      * @throws Exception
      */
-    public Paginacion busqueda(Integer pageNumber, Integer any, AsientoRegistralSir asientoRegistralSir, String codigoOficinaActiva, String estado) throws Exception;
-
-    /**
-     *
-     * @param codigoOficinaActiva
-     * @param total
-     * @return
-     * @throws Exception
-     */
-    public List<AsientoRegistralSir> getUltimosARSPendientesProcesar(String codigoOficinaActiva, Integer total) throws Exception;
+    public Paginacion busqueda(Integer pageNumber, Integer any, AsientoRegistralSir asientoRegistralSir, Set<String> organismos, String estado) throws Exception;
 
     /**
      * Obtiene los últimos ASR pendientes de procesas de un conjunto de Organismos

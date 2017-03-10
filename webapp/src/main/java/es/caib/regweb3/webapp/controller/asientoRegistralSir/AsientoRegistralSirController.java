@@ -107,9 +107,7 @@ public class AsientoRegistralSirController extends BaseController {
 
         AsientoRegistralSir asientoRegistralSir = busqueda.getAsientoRegistralSir();
 
-        Oficina oficinaActiva = getOficinaActiva(request);
-
-        Paginacion paginacion = asientoRegistralSirEjb.busqueda(busqueda.getPageNumber(), busqueda.getAnyo(), asientoRegistralSir, oficinaActiva.getCodigo(), busqueda.getEstado());
+        Paginacion paginacion = asientoRegistralSirEjb.busqueda(busqueda.getPageNumber(), busqueda.getAnyo(), asientoRegistralSir, getOrganismosSIRCodigo(request), busqueda.getEstado());
 
         busqueda.setPageNumber(1);
 
@@ -133,10 +131,8 @@ public class AsientoRegistralSirController extends BaseController {
 
         AsientoRegistralSir asientoRegistralSir = busqueda.getAsientoRegistralSir();
 
-        Oficina oficinaActiva = getOficinaActiva(request);
-
         // Obtenemos los AsientoRegistralSirs, pendientes de procesar
-        Paginacion paginacion = asientoRegistralSirEjb.busqueda(busqueda.getPageNumber(), busqueda.getAnyo(), asientoRegistralSir, oficinaActiva.getCodigo(), busqueda.getEstado());
+        Paginacion paginacion = asientoRegistralSirEjb.busqueda(busqueda.getPageNumber(), busqueda.getAnyo(), asientoRegistralSir, getOrganismosSIRCodigo(request), busqueda.getEstado());
 
         busqueda.setPageNumber(1);
         mav.addObject("paginacion", paginacion);
