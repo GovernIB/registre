@@ -333,6 +333,32 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         return q.getResultList().size() > 0;
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Boolean isOficioRemisionSir(Long idRegistro) throws Exception {
+
+        Query q;
+        q = em.createQuery("Select re.destinoExternoCodigo from RegistroEntrada as re where " +
+                "re.id = :idRegistro and re.estado = :valido and re.destino is null");
+
+        // Parámetros
+        q.setParameter("idRegistro", idRegistro);
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+
+        List<String> result = q.getResultList();
+
+        if(result.size() > 0){
+
+            String codigoDir3 = result.get(0);
+            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
+            List<OficinaTF> oficinasSIR = oficinasService.obtenerOficinasSIRUnidad(codigoDir3);
+
+            return oficinasSIR.size() > 0;
+        }
+
+        return false;
+    }
+
 
     @SuppressWarnings(value = "unchecked")
     public Paginacion oficiosRemisionByOrganismoExterno(Integer pageNumber, final Integer resultsPerPage, String codigoOrganismo, Integer any, Long idOficina, Long idLibro) throws Exception {

@@ -78,6 +78,14 @@ public interface OficioRemisionEntradaUtilsLocal {
     public Boolean isOficioRemisionExterno(Long idRegistro) throws Exception;
 
     /**
+     * Comprueba si un RegistroEntrada se considera un OficioRemision SIR o no
+     * @param idRegistro
+     * @return
+     * @throws Exception
+     */
+    public Boolean isOficioRemisionSir(Long idRegistro) throws Exception;
+
+    /**
      * @param registrosEntrada
      * @param oficinaActiva
      * @param usuarioEntidad
