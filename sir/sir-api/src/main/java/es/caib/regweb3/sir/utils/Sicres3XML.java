@@ -5,7 +5,6 @@ import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
 import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
-import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.sir.api.schema.De_Anexo;
 import es.caib.regweb3.sir.api.schema.De_Interesado;
 import es.caib.regweb3.sir.api.schema.De_Mensaje;
@@ -1396,8 +1395,9 @@ public class Sicres3XML {
                 Assert.isTrue(StringUtils.equalsIgnoreCase(
                         anexo.getTipo_MIME(), MimeTypeUtils.getMimeTypeExtension(tokens[2])),
                         "El campo 'TipoMIME' no coincide con el indicado en 'IdentificadorFichero'");
-                String mimePermitidos = PropiedadGlobalUtil.getMIMEPermitidos();
-                Assert.isTrue(mimePermitidos.contains(anexo.getTipo_MIME()),"El tipo MIME recibido no está permitido");
+
+               // String mimePermitidos = PropiedadGlobalUtil.getMIMEPermitidos();
+               // Assert.isTrue(mimePermitidos.contains(anexo.getTipo_MIME()),"El tipo MIME recibido no está permitido");
             }
         }
     }
