@@ -64,7 +64,7 @@ public class AvisoController extends BaseController {
             Long pendientesVisarEntrada = (long) 0;
             Long pendientesVisarSalida = (long) 0;
             Long oficiosEntradaPendientesRemision = (long) 0;
-            //Long oficiosSalidaPendientesRemision = (long) 0;
+            Long oficiosSalidaPendientesRemision = (long) 0;
 
             /*Registros Pendientes de Visar*/
             if(librosAdministrados!= null && librosAdministrados.size() > 0){
@@ -90,11 +90,11 @@ public class AvisoController extends BaseController {
                 // OFICIOS PENDIENTES DE REMISIÓN SALIDA
                 if(librosRegistroEntrada!= null && librosRegistroEntrada.size() > 0){
 
-                    //oficiosSalidaPendientesRemision = oficioRemisionSalidaUtilsEjb.oficiosSalidaPendientesRemisionCount(oficinaActiva.getId(),librosRegistroSalida, getOrganismosOficioRemisionSalida(request, organismosOficinaActiva));
+                    oficiosSalidaPendientesRemision = oficioRemisionSalidaUtilsEjb.oficiosSalidaPendientesRemisionCount(oficinaActiva.getId(),librosRegistroSalida, getOrganismosOficioRemisionSalida(organismosOficinaActiva));
                 }
 
                 mav.addObject("oficiosEntradaPendientesRemision", oficiosEntradaPendientesRemision);
-                //mav.addObject("oficiosSalidaPendientesRemision", oficiosSalidaPendientesRemision);
+                mav.addObject("oficiosSalidaPendientesRemision", oficiosSalidaPendientesRemision);
 
                 // OFICIOS PENDIENTES DE LLEGADA
                 mav.addObject("oficiosPendientesLlegada", oficioRemisionEjb.oficiosPendientesLlegadaCount(organismosOficinaActiva));

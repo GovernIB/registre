@@ -89,7 +89,7 @@ public class InicioController extends BaseController{
                 if(librosRegistroSalida.size() > 0) {
 
                     // Obtenemos los Organismos que tienen Registros de salida pendientes de tramitar por medio de un Oficio de Revisión,
-                    //mav.addObject("organismosOficioRemisionSalida", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemision(oficinaActiva.getId(), librosRegistroSalida, getOrganismosOficioRemisionSalida(request, organismosOficinaActiva)));
+                    mav.addObject("organismosOficioRemisionSalida", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemision(oficinaActiva.getId(), librosRegistroSalida, getOrganismosOficioRemisionSalida(organismosOficinaActiva)));
                 }
 
                 /* Obtenemos los Asientos Registrales Sir pendientes de procesar */

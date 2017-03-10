@@ -262,7 +262,7 @@
                         <c:set var="avisos" value="0"/>
                     </c:if>
 
-                    <%--OFICIOS DE SALIDA PENDIENTES DE REMISIÓN
+                    OFICIOS DE SALIDA PENDIENTES DE REMISIÓN
                     <c:if test="${not empty organismosOficioRemisionSalida}">
                     <c:set var="avisos" value="${avisos+1}"/>
                         <div class="col-xs-6">
@@ -311,7 +311,7 @@
                     <c:if test="${avisos==2}">
                         <div class="clearfix visible-xs-block"></div>
                         <c:set var="avisos" value="0"/>
-                    </c:if>--%>
+                    </c:if>
 
                     <%--ASIENTOS REGISTRALES SIR PENDIENTES DE PROCESAR--%>
                     <c:if test="${not empty asientosRegistralesSir}">
