@@ -262,9 +262,9 @@
                         <c:set var="avisos" value="0"/>
                     </c:if>
 
-                    OFICIOS DE SALIDA PENDIENTES DE REMISIÓN
+                    <%--OFICIOS DE SALIDA PENDIENTES DE REMISIÓN--%>
                     <c:if test="${not empty organismosOficioRemisionSalida}">
-                    <c:set var="avisos" value="${avisos+1}"/>
+                        <c:set var="avisos" value="${avisos+1}"/>
                         <div class="col-xs-6">
 
                             <div class="panel panel-success">
