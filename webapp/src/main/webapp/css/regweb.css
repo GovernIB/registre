@@ -686,6 +686,19 @@ input[readonlyGris] {
     background-color: #73e136;
     border-color: #7af736;
 }
+.btn-ofsir {
+    color: #fff;
+    background-color: #FF99FF;
+    border-color: #FD61FD;
+}
+.btn-ofsir:hover,
+.btn-ofsir:focus,
+.btn-ofsir:active,
+.btn-ofsir.active{
+    color: #fff;
+    background-color: #FD61FD;
+    border-color: #E541E5;
+}
 .text-gris{
     color: #333;
 }

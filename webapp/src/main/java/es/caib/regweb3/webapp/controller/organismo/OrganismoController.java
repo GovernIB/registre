@@ -1,10 +1,7 @@
 package es.caib.regweb3.webapp.controller.organismo;
 
 import es.caib.regweb3.model.*;
-import es.caib.regweb3.persistence.ejb.CatEstadoEntidadLocal;
-import es.caib.regweb3.persistence.ejb.DescargaLocal;
-import es.caib.regweb3.persistence.ejb.LibroLocal;
-import es.caib.regweb3.persistence.ejb.RelacionOrganizativaOfiLocal;
+import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.TimeUtils;
@@ -49,6 +46,9 @@ public class OrganismoController extends BaseController {
 
     @EJB(mappedName = "regweb3/RelacionOrganizativaOfiEJB/local")
     public RelacionOrganizativaOfiLocal relacionOrganizativaOfiEjb;
+
+    @EJB(mappedName = "regweb3/RelacionSirOfiEJB/local")
+    public RelacionSirOfiLocal relacionSirOfiEjb;
 
 
    /**
@@ -227,6 +227,7 @@ public class OrganismoController extends BaseController {
         // Lista las Oficinas según si son Responsables, Dependientes o Funcionales
         List<Oficina> oficinasResponsables = oficinaEjb.responsableByEntidadEstado(entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         List<Oficina> oficinasDependientes = oficinaEjb.dependienteByEntidadEstado(entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        // Lista las Oficinas Organizativas
         List<RelacionOrganizativaOfi> relacionOrganizativaOfi = relacionOrganizativaOfiEjb.organizativaByEntidadEstado(entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         List<CodigoValor> oficinasOrganizativas = new ArrayList<CodigoValor>();
         if(!relacionOrganizativaOfi.isEmpty()) {
@@ -235,6 +236,17 @@ public class OrganismoController extends BaseController {
                 codigoValor.setId(relacionOrganizativaOfi.get(i).getOrganismo().getId().toString());
                 codigoValor.setNombre(relacionOrganizativaOfi.get(i).getOficina().getCodigo() + " - " + relacionOrganizativaOfi.get(i).getOficina().getDenominacion());
                 oficinasOrganizativas.add(codigoValor);
+            }
+        }
+        // Lista las Oficinas SIR
+        List<RelacionSirOfi> relacionSirOfi = relacionSirOfiEjb.oficinasSirByEntidadEstado(entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        List<CodigoValor> oficinasSir = new ArrayList<CodigoValor>();
+        if(!relacionSirOfi.isEmpty()) {
+            for (int i = 0; i < relacionSirOfi.size(); i++) {
+                CodigoValor codigoValor = new CodigoValor();
+                codigoValor.setId(relacionSirOfi.get(i).getOrganismo().getId().toString());
+                codigoValor.setNombre(relacionSirOfi.get(i).getOficina().getCodigo() + " - " + relacionSirOfi.get(i).getOficina().getDenominacion());
+                oficinasSir.add(codigoValor);
             }
         }
 
@@ -325,6 +337,7 @@ public class OrganismoController extends BaseController {
         mav.addObject("oficinasResponsables", oficinasResponsables);
         mav.addObject("oficinasDependientes", oficinasDependientes);
         mav.addObject("oficinasOrganizativas", oficinasOrganizativas);
+        mav.addObject("oficinasSir", oficinasSir);
         mav.addObject("librosOrganismoPrimerNivel", librosOrganismoPrimerNivel);
         mav.addObject("librosOrganismoSegundoNivel", librosOrganismoSegundoNivel);
         mav.addObject("librosOrganismoTercerNivel", librosOrganismoTercerNivel);
