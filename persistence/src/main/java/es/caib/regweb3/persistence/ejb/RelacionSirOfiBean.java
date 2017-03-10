@@ -110,6 +110,17 @@ public class RelacionSirOfiBean extends BaseEjbJPA<RelacionSirOfi, RelacionSirOf
     }
 
     @Override
+    public List<RelacionSirOfi> oficinasSirByEntidadEstado(Long idEntidad, String estado) throws Exception{
+        Query q = em.createQuery("Select relacionSirOfi from RelacionSirOfi as relacionSirOfi where " +
+                "relacionSirOfi.organismo.entidad.id =:idEntidad and relacionSirOfi.estado.codigoEstadoEntidad =:estado order by relacionSirOfi.oficina.codigo");
+
+        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("estado",estado);
+
+        return q.getResultList();
+    }
+
+    @Override
     public List<Oficina> oficinasSIR(Long idOrganismo, Boolean oficinaVirtual) throws Exception {
 
         String oficinaVirtualWhere = "";

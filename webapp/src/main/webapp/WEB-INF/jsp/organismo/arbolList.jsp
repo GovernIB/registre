@@ -83,6 +83,13 @@
                                         </button>
                                     </div>
                                 </c:if>
+                                <c:if test="${not empty oficinasSir}">
+                                    <div class="col-xs-12 pad-bottom5">
+                                        <button type="button" class="btn-ofsir btn-xs col-xs-12"><i
+                                                class="fa fa-exchange"></i> <spring:message code="regweb.oficina.sir"/>
+                                        </button>
+                                    </div>
+                                </c:if>
                                 <c:if test="${not empty oficinasOrganizativas}">
                                     <div class="col-xs-12 pad-bottom5">
                                         <button type="button" class="btn-success btn-xs"><i class="fa fa-institution"></i> <spring:message code="regweb.oficina.organizativa"/></button>
@@ -179,6 +186,17 @@
                                                         </li>
                                                     </c:if>
                                                 </c:forEach>
+                                                <!-- **** Oficinas Sir ***-->
+                                                <c:forEach var="oficinaSir" items="${oficinasSir}">
+                                                    <c:if test="${oficinaSir.id == organismo1.id}">
+                                                        <li>
+                                                            <a href="javascript:void(0);"><span
+                                                                    class="panel-heading btn-ofsir vuitanta-percent"
+                                                                    style="display:closed;"><i
+                                                                    class="fa fa-exchange"></i> ${oficinaSir.nombre}</span></a>
+                                                        </li>
+                                                    </c:if>
+                                                </c:forEach>
 
                                                 <c:forEach var="organismo2" items="${organismosSegundoNivel}">
                                                     <c:if test="${organismo2.organismoSuperior.id == organismo1.id}">
@@ -255,6 +273,17 @@
                                                                                     class="panel-heading btn-success vuitanta-percent"
                                                                                     style="display:closed;"><i
                                                                                     class="fa fa-institution"></i> ${oficinaOrganizativa.nombre}</span></a>
+                                                                        </li>
+                                                                    </c:if>
+                                                                </c:forEach>
+                                                                <!-- **** Oficinas Sir ***-->
+                                                                <c:forEach var="oficinaSir" items="${oficinasSir}">
+                                                                    <c:if test="${oficinaSir.id == organismo2.id}">
+                                                                        <li>
+                                                                            <a href="javascript:void(0);"><span
+                                                                                    class="panel-heading btn-ofsir vuitanta-percent"
+                                                                                    style="display:closed;"><i
+                                                                                    class="fa fa-exchange"></i> ${oficinaSir.nombre}</span></a>
                                                                         </li>
                                                                     </c:if>
                                                                 </c:forEach>
@@ -337,6 +366,17 @@
                                                                                         </li>
                                                                                     </c:if>
                                                                                 </c:forEach>
+                                                                                <!-- **** Oficinas Sir ***-->
+                                                                                <c:forEach var="oficinaSir" items="${oficinasSir}">
+                                                                                    <c:if test="${oficinaSir.id == organismo3.id}">
+                                                                                        <li>
+                                                                                            <a href="javascript:void(0);"><span
+                                                                                                    class="panel-heading btn-ofsir vuitanta-percent"
+                                                                                                    style="display:closed;"><i
+                                                                                                    class="fa fa-exchange"></i> ${oficinaSir.nombre}</span></a>
+                                                                                        </li>
+                                                                                    </c:if>
+                                                                                </c:forEach>
 
                                                                                 <c:forEach var="organismo4" items="${organismosCuartoNivel}">
                                                                                     <c:if test="${organismo4.organismoSuperior.id == organismo3.id}">
@@ -413,6 +453,17 @@
                                                                                                                     class="panel-heading btn-success vuitanta-percent"
                                                                                                                     style="display:closed;"><i
                                                                                                                     class="fa fa-institution"></i> ${oficinaOrganizativa.nombre}</span></a>
+                                                                                                        </li>
+                                                                                                    </c:if>
+                                                                                                </c:forEach>
+                                                                                                <!-- **** Oficinas Sir ***-->
+                                                                                                <c:forEach var="oficinaSir" items="${oficinasSir}">
+                                                                                                    <c:if test="${oficinaSir.id == organismo4.id}">
+                                                                                                        <li>
+                                                                                                            <a href="javascript:void(0);"><span
+                                                                                                                    class="panel-heading btn-ofsir vuitanta-percent"
+                                                                                                                    style="display:closed;"><i
+                                                                                                                    class="fa fa-exchange"></i> ${oficinaSir.nombre}</span></a>
                                                                                                         </li>
                                                                                                     </c:if>
                                                                                                 </c:forEach>
@@ -495,6 +546,17 @@
                                                                                                                         </li>
                                                                                                                     </c:if>
                                                                                                                 </c:forEach>
+                                                                                                                <!-- **** Oficinas Sir ***-->
+                                                                                                                <c:forEach var="oficinaSir" items="${oficinasSir}">
+                                                                                                                    <c:if test="${oficinaSir.id == organismo5.id}">
+                                                                                                                        <li>
+                                                                                                                            <a href="javascript:void(0);"><span
+                                                                                                                                    class="panel-heading btn-ofsir vuitanta-percent"
+                                                                                                                                    style="display:closed;"><i
+                                                                                                                                    class="fa fa-exchange"></i> ${oficinaSir.nombre}</span></a>
+                                                                                                                        </li>
+                                                                                                                    </c:if>
+                                                                                                                </c:forEach>
 
                                                                                                                 <c:forEach var="organismo6" items="${organismosSextoNivel}">
                                                                                                                     <c:if test="${organismo6.organismoSuperior.id == organismo5.id}">
@@ -574,6 +636,17 @@
                                                                                                                                         </li>
                                                                                                                                     </c:if>
                                                                                                                                 </c:forEach>
+                                                                                                                                <!-- **** Oficinas Sir ***-->
+                                                                                                                                <c:forEach var="oficinaSir" items="${oficinasSir}">
+                                                                                                                                    <c:if test="${oficinaSir.id == organismo6.id}">
+                                                                                                                                        <li>
+                                                                                                                                            <a href="javascript:void(0);"><span
+                                                                                                                                                    class="panel-heading btn-ofsir vuitanta-percent"
+                                                                                                                                                    style="display:closed;"><i
+                                                                                                                                                    class="fa fa-exchange"></i> ${oficinaSir.nombre}</span></a>
+                                                                                                                                        </li>
+                                                                                                                                    </c:if>
+                                                                                                                                </c:forEach>
 
                                                                                                                                 <c:forEach var="organismo7" items="${organismosSeptimoNivel}">
                                                                                                                                     <c:if test="${organismo7.organismoSuperior.id == organismo6.id}">
@@ -650,6 +723,17 @@
                                                                                                                                                                     class="panel-heading btn-success vuitanta-percent"
                                                                                                                                                                     style="display:closed;"><i
                                                                                                                                                                     class="fa fa-institution"></i> ${oficinaOrganizativa.nombre}</span></a>
+                                                                                                                                                        </li>
+                                                                                                                                                    </c:if>
+                                                                                                                                                </c:forEach>
+                                                                                                                                                <!-- **** Oficinas Sir ***-->
+                                                                                                                                                <c:forEach var="oficinaSir" items="${oficinasSir}">
+                                                                                                                                                    <c:if test="${oficinaSir.id == organismo7.id}">
+                                                                                                                                                        <li>
+                                                                                                                                                            <a href="javascript:void(0);"><span
+                                                                                                                                                                    class="panel-heading btn-ofsir vuitanta-percent"
+                                                                                                                                                                    style="display:closed;"><i
+                                                                                                                                                                    class="fa fa-exchange"></i> ${oficinaSir.nombre}</span></a>
                                                                                                                                                         </li>
                                                                                                                                                     </c:if>
                                                                                                                                                 </c:forEach>
