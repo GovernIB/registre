@@ -35,15 +35,14 @@ import java.util.Set;
 @RunAs("RWE_USUARI")*/
 
 @Stateless(name = WS_SIR8_BImpl.NAME + "Ejb")
-@SOAPBinding(style = SOAPBinding.Style.RPC)
+@SOAPBinding(style = SOAPBinding.Style.DOCUMENT)
 @org.apache.cxf.interceptor.InInterceptors(interceptors = {"org.apache.cxf.interceptor.LoggingInInterceptor"})
 @org.apache.cxf.interceptor.InFaultInterceptors(interceptors = {"org.apache.cxf.interceptor.LoggingInInterceptor"})
 @WebService(
         name = WS_SIR8_BImpl.NAME_WS,
         portName = WS_SIR8_BImpl.NAME_WS,
         serviceName = WS_SIR8_BImpl.NAME_WS + "Service",
-        targetNamespace = "http://impl.manager.cct.map.es",
-        wsdlLocation = "/wsdl/axis/WS_SIR8_B.wsdl"
+        targetNamespace = "http://impl.manager.cct.map.es"
 )
 @WebContext(
         contextRoot = "/regweb3/ws/sir",
