@@ -56,7 +56,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group col-xs-6">
+                               <%-- <div class="form-group col-xs-6">
                                     <div class="col-xs-4 pull-left align-right"><span class="text-danger">*</span> <spring:message code="oficioRemision.libro"/></div>
                                     <div class="col-xs-8">
                                         <form:select path="oficioRemision.libro.id" cssClass="chosen-select">
@@ -64,7 +64,7 @@
                                             <form:options items="${librosConsulta}" itemValue="id" itemLabel="nombreCompleto"/>
                                         </form:select>
                                     </div>
-                                </div>
+                                </div>--%>
 
                                 <div class="form-group col-xs-6">
                                     <div class="col-xs-4 pull-left align-right"><spring:message code="oficioRemision.numeroOficio"/></div>

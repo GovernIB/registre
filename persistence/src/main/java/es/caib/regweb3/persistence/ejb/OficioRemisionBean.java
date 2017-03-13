@@ -320,7 +320,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     }
 
     @Override
-    public Paginacion oficiosPendientesLlegadaBusqueda(Set<Organismo> organismos, Integer pageNumber,OficioRemision oficioRemision, List<Libro> libros, Long tipoOficioRemision) throws Exception {
+    public Paginacion oficiosPendientesLlegadaBusqueda(Set<Organismo> organismos, Integer pageNumber,OficioRemision oficioRemision, Long tipoOficioRemision) throws Exception {
 
         Query q;
         Query q2;
@@ -337,12 +337,12 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
         if(oficioRemision.getNumeroOficio()!= null && oficioRemision.getNumeroOficio() > 0){where.add(" oficioRemision.numeroOficio = :numeroOficio"); parametros.put("numeroOficio",oficioRemision.getNumeroOficio());}
 
-        // Comprobamos si la búsqueda es sobre un libro en concreto o sobre todos a los que tiene acceso el usuario.
+        /*// Comprobamos si la búsqueda es sobre un libro en concreto o sobre todos a los que tiene acceso el usuario.
         if(oficioRemision.getLibro().getId() != null && oficioRemision.getLibro().getId() > 0){
             where.add(" oficioRemision.libro.id = :idLibro"); parametros.put("idLibro",oficioRemision.getLibro().getId());
         }else{
             where.add(" oficioRemision.libro in (:libros)"); parametros.put("libros",libros);
-        }
+        }*/
 
 
         if (parametros.size() != 0) {

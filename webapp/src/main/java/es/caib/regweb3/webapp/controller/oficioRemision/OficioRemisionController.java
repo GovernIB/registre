@@ -325,12 +325,8 @@ public class OficioRemisionController extends BaseController {
 
         ModelAndView mav = new ModelAndView("oficioRemision/oficiosPendientesLlegadaList");
 
-        // Obtenemos los Libros donde el usuario tiene permisos de Consulta
-        List<Libro> librosConsulta = getLibrosConsultaEntradas(request);
-
         OficioRemisionBusquedaForm oficioRemisionBusquedaForm = new OficioRemisionBusquedaForm(new OficioRemision(), 1);
 
-        model.addAttribute("librosConsulta", librosConsulta);
         model.addAttribute("tiposOficioRemision", RegwebConstantes.TIPOS_OFICIO_REMISION);
         model.addAttribute("oficioRemisionBusqueda", oficioRemisionBusquedaForm);
         model.addAttribute("anys", getAnys());
@@ -351,16 +347,12 @@ public class OficioRemisionController extends BaseController {
 
         OficioRemision oficioRemision = busqueda.getOficioRemision();
 
-        // Obtenemos los Libros donde el usuario tiene permisos de Consulta
-        List<Libro> librosConsulta = getLibrosConsultaEntradas(request);
-
         LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
-        Paginacion paginacion = oficioRemisionEjb.oficiosPendientesLlegadaBusqueda(organismosOficinaActiva, busqueda.getPageNumber(), oficioRemision, librosConsulta, busqueda.getTipoOficioRemision());
+        Paginacion paginacion = oficioRemisionEjb.oficiosPendientesLlegadaBusqueda(organismosOficinaActiva, busqueda.getPageNumber(), oficioRemision, busqueda.getTipoOficioRemision());
 
         busqueda.setPageNumber(1);
         mav.addObject("paginacion", paginacion);
-        mav.addObject("librosConsulta", librosConsulta);
         mav.addObject("tiposOficioRemision", RegwebConstantes.TIPOS_OFICIO_REMISION);
         mav.addObject("oficioRemisionBusqueda", busqueda);
 

@@ -90,7 +90,7 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
         }
 
         // Comprobaciones previas al listado de OficioRemision
-        if (url.equals("/oficioRemision/list") || url.contains("pendientesLlegada")) {
+        if (url.equals("/oficioRemision/list")) {
 
             Set<Long> organismos = oficinaActiva.getOrganismosFuncionalesId();
 

@@ -116,7 +116,9 @@ public interface PermisoLibroUsuarioLocal extends BaseEjb<PermisoLibroUsuario, L
     /**
      * Retorna los {@link es.caib.regweb3.model.Libro} de un conjunto de Organismos donde un UsuarioEntidad puede hacer alguna acción
      * según el permiso que se le pasa por parámetro.
-     * @param usuario
+     * @param idPermiso
+     * @param idUsuarioEntidad
+     * @param organismos
      * @return
      * @throws Exception
      */
