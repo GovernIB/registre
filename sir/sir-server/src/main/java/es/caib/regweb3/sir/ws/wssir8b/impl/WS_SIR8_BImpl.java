@@ -35,7 +35,7 @@ import java.util.Set;
 @RunAs("RWE_USUARI")*/
 
 @Stateless(name = WS_SIR8_BImpl.NAME + "Ejb")
-@SOAPBinding(style = SOAPBinding.Style.DOCUMENT)
+@SOAPBinding(style = SOAPBinding.Style.RPC)
 @org.apache.cxf.interceptor.InInterceptors(interceptors = {"org.apache.cxf.interceptor.LoggingInInterceptor"})
 @org.apache.cxf.interceptor.InFaultInterceptors(interceptors = {"org.apache.cxf.interceptor.LoggingInInterceptor"})
 @WebService(
