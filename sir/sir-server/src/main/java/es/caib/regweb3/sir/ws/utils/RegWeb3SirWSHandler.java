@@ -4,15 +4,17 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.xml.namespace.QName;
-import javax.xml.soap.SOAPBody;
+import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.soap.SOAPHandler;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Set;
 
 /**
@@ -47,15 +49,19 @@ public class RegWeb3SirWSHandler implements SOAPHandler<SOAPMessageContext> {
                 log.info("");
                 log.info("");
 
-                /*String result = soapMessageToString(smc.getMessage()).replace("envioFicherosAAplicacion>", "ns1:envioFicherosAAplicacion>");
+                String result = soapMessageToString(smc.getMessage()).replace("<envioFicherosAAplicacion", "<ns1:envioFicherosAAplicacion xmlns:ns1=\"http://impl.manager.cct.map.es\"");
+
+                result = result.replace("</envioFicherosAAplicacion>","</ns1:envioFicherosAAplicacion>");
 
                 InputStream bStream = new ByteArrayInputStream(result.getBytes());
                 SOAPMessage request = MessageFactory.newInstance().createMessage(null, bStream);
-                smc.setMessage(request);*/
+                smc.setMessage(request);
 
-                SOAPBody body = msg.getBody();
+                /*SOAPBody body = msg.getBody();
                 //body.removeNamespaceDeclaration(UNWANTED_NS_PREFIX);
                 body.addNamespaceDeclaration("ns1", "http://impl.manager.cct.map.es");
+
+                msg.addBody();*/
 
 
 
@@ -66,6 +72,8 @@ public class RegWeb3SirWSHandler implements SOAPHandler<SOAPMessageContext> {
 
         } catch (SOAPException ex) {
             ex.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         return true;
