@@ -48,7 +48,6 @@
         ID number(19,0) not null,
         APLICACION varchar2(4 char),
         COD_ASUNTO varchar2(16 char),
-        COD_ENT_REG varchar2(21 char),
         COD_ENT_REG_DEST varchar2(21 char) not null,
         COD_ENT_REG_INI varchar2(21 char) not null,
         COD_ENT_REG_ORI varchar2(21 char) not null,
