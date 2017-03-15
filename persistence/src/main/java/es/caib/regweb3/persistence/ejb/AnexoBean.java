@@ -184,9 +184,15 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         
         anexo.setFechaCaptura(new Date());
 
-        //Por defecto no es justificante, ni se ha validado la firma.
-        anexo.setFirmaValida(false);
-        anexo.setJustificante(false);
+        //Si firmaValida es null, por defecto marcamos como false
+        if(anexo.isFirmaValida()== null){
+              anexo.setFirmaValida(false);
+        }
+        //Si justificante es null, por defecto marcamos como false
+        if(anexo.isJustificante() == null){
+            anexo.setJustificante(false);
+        }
+
 
         // Revisar si tipusdocumental està carregat
         Long id = anexo.getTipoDocumental().getId();
