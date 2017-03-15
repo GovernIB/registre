@@ -15,6 +15,7 @@ import org.jboss.wsf.spi.annotation.WebContext;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.jws.HandlerChain;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
@@ -35,9 +36,9 @@ import java.util.Set;
 @RunAs("RWE_USUARI")*/
 
 @Stateless(name = WS_SIR8_BImpl.NAME + "Ejb")
-@SOAPBinding(style = SOAPBinding.Style.RPC)
-@org.apache.cxf.interceptor.InInterceptors(interceptors = {"org.apache.cxf.interceptor.LoggingInInterceptor"})
-@org.apache.cxf.interceptor.InFaultInterceptors(interceptors = {"org.apache.cxf.interceptor.LoggingInInterceptor"})
+@SOAPBinding(style = SOAPBinding.Style.DOCUMENT)
+/*@org.apache.cxf.interceptor.InInterceptors(interceptors = {"org.apache.cxf.interceptor.LoggingInInterceptor"})
+@org.apache.cxf.interceptor.InFaultInterceptors(interceptors = {"org.apache.cxf.interceptor.LoggingInInterceptor"})*/
 @WebService(
         name = WS_SIR8_BImpl.NAME_WS,
         portName = WS_SIR8_BImpl.NAME_WS,
@@ -50,6 +51,7 @@ import java.util.Set;
         transportGuarantee = TransportGuarantee.NONE,
         secureWSDLAccess = false
 )
+@HandlerChain(file = "/handler-chain.xml")
 public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
 
     protected final Logger log = Logger.getLogger(getClass());
