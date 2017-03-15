@@ -70,6 +70,9 @@ public class AsientoRegistralSirController extends BaseController {
     @EJB(mappedName = "regweb3/MensajeEJB/local")
     public MensajeLocal mensajeEjb;
 
+    @EJB(mappedName = "regweb3/LibroEJB/local")
+    public LibroLocal libroEjb;
+
 
     /**
      * Listado de todos los AsientoRegistralSirs
@@ -156,14 +159,8 @@ public class AsientoRegistralSirController extends BaseController {
 
             model.addAttribute("asientoRegistralSir",asientoRegistralSir);
 
-            //Obtenemos los libros de Registro según si el AsientoRegistralSir es de Entrada o de Salida
-            List<Libro> libros = null;
-            if(asientoRegistralSir.getTipoRegistro().equals(TipoRegistro.ENTRADA)){
-                 libros = getLibrosRegistroEntrada(request);
-            }
-            if(asientoRegistralSir.getTipoRegistro().equals(TipoRegistro.SALIDA)){
-                libros = getLibrosRegistroSalida(request);
-            }
+            //Obtenemos los libros de
+            List<Libro> libros = libroEjb.getLibrosActivosOrganismo(asientoRegistralSir.getCodigoUnidadTramitacionDestino());
 
             model.addAttribute("libros",libros);
             model.addAttribute("registrarForm", new RegistrarForm());

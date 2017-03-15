@@ -165,6 +165,26 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
     }
 
     @Override
+    public List<Libro> getLibrosActivosOrganismo(String codigoOrganismo) throws Exception{
+
+        Query q = em.createQuery("Select libro.id,libro.codigo, libro.nombre from Libro as libro where " +
+                "libro.organismo.codigo = :codigoOrganismo and libro.activo = true");
+
+        q.setParameter("codigoOrganismo",codigoOrganismo);
+
+        List<Object[]> result = q.getResultList();
+        List<Libro> libros = new ArrayList<Libro>();
+
+        for (Object[] object : result) {
+            Libro libro = new Libro((Long) object[0], (String) object[1], (String) object[2]);
+
+            libros.add(libro);
+        }
+
+        return libros;
+    }
+
+    @Override
     public List<Libro> getLibrosOrganismo(Long idOrganismo) throws Exception{
 
         Query q = em.createQuery("Select libro from Libro as libro where " +
