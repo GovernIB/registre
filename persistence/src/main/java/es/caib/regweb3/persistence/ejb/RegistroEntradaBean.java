@@ -141,6 +141,9 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
             }
         }
+        //Llamamos al plugin de postproceso
+        //TODO Si devuelve false que hacemos?
+        //postProcesoNuevoRegistro(registroEntrada,usuarioEntidad.getEntidad().getId());
 
         return registroEntrada;
 
@@ -450,6 +453,26 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         }
     }
 
+    public String findNumeroRegistroFormateadoByRegistroDetalle(Long idRegistroDetalle) throws Exception {
+
+        Query q = em.createQuery("Select registroEntrada.numeroRegistroFormateado "
+                + " from RegistroEntrada as registroEntrada"
+                + " where registroEntrada.registroDetalle.id = :idRegistroDetalle "
+              );
+
+        q.setParameter("idRegistroDetalle", idRegistroDetalle);
+
+
+        List<String> registro = q.getResultList();
+
+        if (registro.size() == 1) {
+            return registro.get(0);
+        } else {
+            return null;
+        }
+    }
+
+
 
     @Override
     public void anularRegistroEntrada(RegistroEntrada registroEntrada,
@@ -675,7 +698,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         //Obtenemos plugin
 
-        IDistribucionPlugin distribucionPlugin = RegwebDistribucionPluginManager.getInstance();
+        IDistribucionPlugin distribucionPlugin = RegwebDistribucionPluginManager.getInstance(usuarioEntidad.getEntidad().getId());
         //Si han especificado plug-in
         if (distribucionPlugin != null) {
             respuestaDistribucion.setHayPlugin(true);
@@ -706,10 +729,10 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
 
-    public Boolean enviar(RegistroEntrada re, DestinatarioWrapper wrapper) throws Exception, I18NException {
+    public Boolean enviar(RegistroEntrada re, DestinatarioWrapper wrapper,Long entidadId) throws Exception, I18NException {
 
         //Obtenemos plugin
-        IDistribucionPlugin distribucionPlugin = RegwebDistribucionPluginManager.getInstance();
+        IDistribucionPlugin distribucionPlugin = RegwebDistribucionPluginManager.getInstance(entidadId);
         if (distribucionPlugin != null) {
             ConfiguracionDistribucion configuracionDistribucion = distribucionPlugin.configurarDistribucion();
             re = obtenerAnexosDistribucion(re, configuracionDistribucion.configuracionAnexos);
@@ -765,6 +788,17 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         }
         return original;
     }
+
+   /* public boolean postProcesoActualizarRegistro(RegistroEntrada re,Long entidadId) throws Exception {
+        IPostProcesoPlugin postProcesoPlugin = RegwebPostProcesoPluginManager.getInstance(entidadId);
+        return postProcesoPlugin != null && postProcesoPlugin.actualizarRegistroEntrada(re);
+    }
+
+    public boolean postProcesoNuevoRegistro(RegistroEntrada re,Long entidadId) throws Exception {
+        IPostProcesoPlugin postProcesoPlugin = RegwebPostProcesoPluginManager.getInstance(entidadId);
+        return postProcesoPlugin != null && postProcesoPlugin.nuevoRegistroEntrada(re);
+    }*/
+
 
 
 }

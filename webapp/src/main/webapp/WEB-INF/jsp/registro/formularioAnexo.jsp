@@ -40,6 +40,7 @@
 
                         <form:hidden path="registroID" />
                         <form:hidden path="tipoRegistro" />
+                        <form:hidden path="oficioRemisionSir" />
                         <%--
                         <form:hidden path="returnURL" />
                          
@@ -48,6 +49,7 @@
                         </script>
                         --%>
 
+                    <div class="col-xs-12">
                         <div class="form-group col-xs-6">
                            <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                                 <label for="titulo"><span class="text-danger">*</span>
@@ -62,19 +64,21 @@
 
                         <div class="form-group col-xs-6">
                             <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                <label for="validezDocumento"><span class="text-danger">*</span>
-                                <spring:message code="anexo.validezDocumento"/></label>
+                                <label for="origenCiudadanoAdmin"><span class="text-danger">*</span> <spring:message code="anexo.origen"/></label>
                             </div>
                             <div class="col-xs-8">
-                                <form:select path="anexo.validezDocumento" class="chosen-select" onchange="bloquearFirma('${registro.id}','${registro.registroDetalle.id}','${param.registro}')">
-                                    <%--<form:option value="-1">...</form:option>--%>
-                                    <c:forEach items="${tiposValidezDocumento}" var="validezDocumento">
-                                        <form:option value="${validezDocumento}"><spring:message code="tipoValidezDocumento.${validezDocumento}"/></form:option>
-                                    </c:forEach>
+                                <form:select path="anexo.origenCiudadanoAdmin" class="chosen-select">
+                                    <form:option value="0"><spring:message code="anexo.origen.ciudadano"/></form:option>
+                                    <form:option value="1"><spring:message code="anexo.origen.administracion"/></form:option>
                                 </form:select>
-                                <form:errors path="anexo.validezDocumento" cssClass="label label-danger"/>
+                                <form:errors path="anexo.origenCiudadanoAdmin" cssClass="label label-danger"/>
                             </div>
                         </div>
+                    </div>
+
+
+
+                    <div class="col-xs-12">
 
                         <div class="form-group col-xs-6">
                            <div class="col-xs-4 pull-left etiqueta_regweb control-label">
@@ -91,29 +95,6 @@
                         </div>
 
 
-                        <div class="form-group col-xs-6">
-                           <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                <label for="observacionesAnexo"><spring:message code="anexo.observaciones"/></label>
-                           </div>
-                           <div class="col-xs-8">
-                               <form:textarea path="anexo.observaciones" class="form-control" rows="2"  maxlength="50"/>
-                               <form:errors path="anexo.observaciones" cssClass="label label-danger"/>
-                           </div>
-                        </div>
-
-
-                       <div class="form-group col-xs-6">
-                         <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                             <label for="origenCiudadanoAdmin"><span class="text-danger">*</span> <spring:message code="anexo.origen"/></label>
-                         </div>
-                         <div class="col-xs-8">
-                             <form:select path="anexo.origenCiudadanoAdmin" class="chosen-select">
-                                 <form:option value="0"><spring:message code="anexo.origen.ciudadano"/></form:option>
-                                 <form:option value="1"><spring:message code="anexo.origen.administracion"/></form:option>
-                             </form:select>
-                             <form:errors path="anexo.origenCiudadanoAdmin" cssClass="label label-danger"/>
-                         </div>
-                       </div>
 
                        <div class="form-group col-xs-6">
                           <div class="col-xs-4 pull-left etiqueta_regweb control-label">
@@ -128,28 +109,60 @@
                               <form:errors path="anexo.tipoDocumental" cssClass="label label-danger"/>
                           </div>
                        </div>
+                    </div>
 
 
-                       <div class="form-group col-xs-10" id="divmodofirma">
+                    <div class="col-xs-12">
+
+                        <div class="form-group col-xs-6">
                             <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                  <label><spring:message code="anexo.tipofirma"/></label>
-                            </div>
-                            <div class="col-xs-10" >
-                                <label class="radio-inline">
-                                    <form:radiobutton path="anexo.modoFirma" onclick="cambioTipoFirma();" value="1"/><spring:message code="anexo.tipofirma.attached"/>
-                                </label>
-                                 <label class="radio-inline">
-                                    <form:radiobutton path="anexo.modoFirma" onclick="cambioTipoFirma();" value="2"/><spring:message code="anexo.tipofirma.detached"/>
-                                </label>
-                                <label class="radio-inline">
-                                    <form:radiobutton id="sinfirma" path="anexo.modoFirma" onclick="cambioTipoFirma();" value="0"/><spring:message code="anexo.tipofirma.sinfirma"/>
-                                </label>
-                            </div>
-                            <form:errors path="anexo.modoFirma" cssClass="label label-danger"/>
-
+                                <label for="validezDocumento"><span class="text-danger">*</span>
+                                    <spring:message code="anexo.validezDocumento"/></label>
+                                </div>
+                                <div class="col-xs-8">
+                                    <form:select path="anexo.validezDocumento" class="chosen-select" onchange="bloquearFirma('${registro.id}','${registro.registroDetalle.id}','${param.registro}')">
+                                        <%--<form:option value="-1">...</form:option>--%>
+                                        <c:forEach items="${tiposValidezDocumento}" var="validezDocumento">
+                                            <form:option value="${validezDocumento}"><spring:message code="tipoValidezDocumento.${validezDocumento}"/></form:option>
+                                        </c:forEach>
+                                    </form:select>
+                                    <form:errors path="anexo.validezDocumento" cssClass="label label-danger"/>
+                                </div>
                         </div>
 
-                        <div class="clearfix"></div>
+                        <div class="form-group col-xs-6">
+                            <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                <label for="observacionesAnexo"><spring:message code="anexo.observaciones"/></label>
+                            </div>
+                            <div class="col-xs-8">
+                                <form:textarea path="anexo.observaciones" class="form-control" rows="2"  maxlength="50"/>
+                                <form:errors path="anexo.observaciones" cssClass="label label-danger"/>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group col-xs-10" id="divmodofirma">
+                        <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                              <label><spring:message code="anexo.tipofirma"/></label>
+                        </div>
+                        <div class="col-xs-10" >
+                            <label class="radio-inline">
+                                <form:radiobutton path="anexo.modoFirma" onclick="cambioTipoFirma();" value="1"/><spring:message code="anexo.tipofirma.attached"/>
+                            </label>
+                             <label class="radio-inline">
+                                <form:radiobutton path="anexo.modoFirma" onclick="cambioTipoFirma();" value="2"/><spring:message code="anexo.tipofirma.detached"/>
+                            </label>
+                            <label class="radio-inline">
+                                <form:radiobutton id="sinfirma" path="anexo.modoFirma" onclick="cambioTipoFirma();" value="0"/><spring:message code="anexo.tipofirma.sinfirma"/>
+                            </label>
+                        </div>
+                        <form:errors path="anexo.modoFirma" cssClass="label label-danger"/>
+
+                    </div>
+
+                    <div class="clearfix"></div>
                
 			 <c:if test="${teScan}">
                 <div class="pull-right" style="margin-top: 0px; ">

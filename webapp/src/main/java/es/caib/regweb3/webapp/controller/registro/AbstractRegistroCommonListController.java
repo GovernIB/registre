@@ -5,8 +5,10 @@ import es.caib.regweb3.model.CatNivelAdministracion;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
+import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -109,6 +111,21 @@ public abstract class AbstractRegistroCommonListController extends BaseControlle
         model.addAttribute("iframe_anexos_height",
             AnexoController.BASE_IFRAME_HEIGHT + AnexoController.FILE_TAB_HEIGHT);
       }
+    }
+
+    //Montamos la nota informativa de las limitaciones de los anexos cogiendo los valores de las propiedades configuradas
+    public void initMensajeNotaInformativaAnexos(Entidad entidad, Model model) throws Exception{
+        Integer maxAnexosPermitidos = PropiedadGlobalUtil.getMaxAnexosPermitidos(entidad.getId());
+        String extensionesPermitidas = PropiedadGlobalUtil.getFormatosPermitidos(entidad.getId());
+        Long maxUploadSizeInBytes= new Long(0);
+        Long maxUploadSizeTotal= new Long(0);
+        if(PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidad.getId())!= null){
+            maxUploadSizeInBytes = PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidad.getId())/(1024*1024);
+        }
+        if(PropiedadGlobalUtil.getMaxUploadSizeTotal(entidad.getId())!=null) {
+            maxUploadSizeTotal = PropiedadGlobalUtil.getMaxUploadSizeTotal(entidad.getId()) / (1024 * 1024);
+        }
+        model.addAttribute("notainformativa", I18NUtils.tradueix("anexo.notainformativa",maxAnexosPermitidos.toString(),maxUploadSizeInBytes.toString(),maxUploadSizeTotal.toString(),extensionesPermitidas ));
     }
 
     /**

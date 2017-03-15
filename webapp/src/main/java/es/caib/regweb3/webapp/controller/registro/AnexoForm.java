@@ -21,6 +21,8 @@ public class AnexoForm extends AnexoFull {
   String tipoRegistro;
   
   Long registroID;
+
+  Boolean oficioRemisionSir;
   
   public AnexoForm() {
     super();
@@ -75,4 +77,11 @@ public class AnexoForm extends AnexoFull {
     this.registroID = registroID;
   }
 
+  public Boolean getOficioRemisionSir() {
+    return oficioRemisionSir;
+  }
+
+  public void setOficioRemisionSir(Boolean oficioRemisionSir) {
+    this.oficioRemisionSir = oficioRemisionSir;
+  }
 }

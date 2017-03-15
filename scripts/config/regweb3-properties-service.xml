@@ -8,8 +8,11 @@
             es.caib.regweb3.iscaib=false
             es.caib.regweb3.showtimestamp=false
             es.caib.regweb3.preregistre=http://www.caib.es
-            <!-- Tamany màxim de pujada de fitxer. Si no es defineix no hi ha límit. -->
+            <!-- Tamany màxim de pujada de fitxer(10Mb). Si no es defineix no hi ha límit. -->
             #es.caib.regweb3.maxuploadsizeinbytes=10485760
+            <!-- 15 Mb en total -->
+            #es.caib.regweb3.maxuploadsizetotal=15728640
+            #es.caib.regweb3.maxanexospermitidos=5
 
             <!-- Directorio de oficinas, unidades y catálogos -->
             es.caib.regweb3.dir3caib.server=http://195.57.128.134:8080/dir3caib

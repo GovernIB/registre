@@ -1,5 +1,7 @@
 package es.caib.regweb3.webapp.controller;
 
+import es.caib.regweb3.webapp.utils.Mensaje;
+import es.caib.regweb3.webapp.utils.RegWebMaxUploadSizeExceededException;
 import org.apache.commons.fileupload.FileUploadBase.SizeLimitExceededException;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
@@ -9,11 +11,7 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import es.caib.regweb3.webapp.utils.Mensaje;
-import es.caib.regweb3.webapp.utils.RegWebMaxUploadSizeExceededException;
-
 import javax.servlet.http.HttpServletRequest;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 
@@ -147,16 +145,22 @@ public class ErrorController {
           // log.error(" YYYYYYYYYYYY  CAUSE: " + musee.getCause());
           if (musee.getCause() instanceof SizeLimitExceededException) {
             SizeLimitExceededException slee = (SizeLimitExceededException) musee.getCause();
-            maxUploadSize = String.valueOf(slee.getPermittedSize());
-            currentSize = String.valueOf(slee.getActualSize());
+              /* Marilen recalculamos en Mb*/
+              Long ps = slee.getPermittedSize()/(1024*1024);
+              Long cs = slee.getActualSize()/(1024*1024);
+              maxUploadSize = String.valueOf(ps)+" Mb";
+              currentSize = String.valueOf(cs)+" Mb";
           } else {
             maxUploadSize = String.valueOf(musee.getMaxUploadSize());
           }
 
         } else {
           SizeLimitExceededException slee = (SizeLimitExceededException) ex;
-          maxUploadSize = String.valueOf(slee.getPermittedSize());
-          currentSize = String.valueOf(slee.getActualSize());
+            /* marilen recalculamos en Mb*/
+            Long ps = slee.getPermittedSize()/(1024*1024);
+            Long cs = slee.getActualSize()/(1024*1024);
+            maxUploadSize = String.valueOf(ps)+" Mb";
+            currentSize = String.valueOf(cs)+" Mb";
           msgCode = "tamanyfitxerpujatsuperat";
         }
 

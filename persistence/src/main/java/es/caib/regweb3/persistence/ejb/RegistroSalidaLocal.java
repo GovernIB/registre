@@ -99,6 +99,16 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      */
     public RegistroSalida findByNumeroRegistroFormateado(String numeroRegistroFormateado) throws Exception;
 
+
+    /**
+     * Devuelve el numero de registro formateado a partir de un registro detalle.
+     * Se necesita para el plug-in postproceso para pasarselo cuando creamos interesados.
+     * @param idRegistroDetalle
+     * @return
+     * @throws Exception
+     */
+    public String findNumeroRegistroFormateadoByRegistroDetalle(Long idRegistroDetalle) throws Exception;
+
     /**
      * Anula un RegistroSalida, cambiandole el estado a anulado.
      * @param registroSalida
@@ -193,5 +203,22 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @throws I18NException
      */
     public RegistroSalida getConAnexosFull(Long id) throws Exception, I18NException;
+
+
+    /**
+     * Metodo que llama al plugin de postproceso cuando creamos un registro de salida.
+     * @param rs
+     * @return
+     * @throws Exception
+     */
+  //  public boolean postProcesoNuevoRegistro(RegistroSalida rs, Long entidadId) throws Exception;
+
+    /**
+     * Metodo que llama al plugin de postproceso cuando actualizamos un registro de salida
+     * @param rs
+     * @return
+     * @throws Exception
+     */
+  //  public boolean postProcesoActualizarRegistro(RegistroSalida rs, Long entidadId) throws Exception;
 
 }

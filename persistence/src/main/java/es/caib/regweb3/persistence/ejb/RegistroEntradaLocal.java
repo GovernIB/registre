@@ -159,6 +159,16 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @throws Exception
      */
     public RegistroEntrada findByNumeroAnyoLibro(int numero, int anyo, String libro) throws Exception;
+
+    /**
+     * Devuelve el numero de registro formateado a partir de un registro detalle.
+     * Se necesita para el plug-in postproceso para pasarselo cuando creamos interesados.
+     * @param idRegistroDetalle
+     * @return
+     * @throws Exception
+     */
+    public String findNumeroRegistroFormateadoByRegistroDetalle(Long idRegistroDetalle) throws Exception;
+
     
     
     /**
@@ -275,6 +285,22 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @throws Exception
      * @throws I18NException
      */
-    public Boolean enviar(RegistroEntrada re, DestinatarioWrapper wrapper) throws Exception, I18NException;
+    public Boolean enviar(RegistroEntrada re, DestinatarioWrapper wrapper, Long entidadId) throws Exception, I18NException;
+
+    /**
+     * Método que invoca al plugin post proceso al actualizar un registro entrada.
+     * @param re
+     * @return
+     * @throws Exception
+     */
+   // public boolean postProcesoActualizarRegistro(RegistroEntrada re,Long entidadId) throws Exception ;
+
+    /**
+     *
+     * @param re
+     * @return
+     * @throws Exception
+     */
+   // public boolean postProcesoNuevoRegistro(RegistroEntrada re, Long entidadId) throws Exception ;
 
 }
