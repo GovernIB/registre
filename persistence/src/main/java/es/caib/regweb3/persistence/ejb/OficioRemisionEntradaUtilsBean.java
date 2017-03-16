@@ -339,11 +339,10 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
         Query q;
         q = em.createQuery("Select re.destinoExternoCodigo from RegistroEntrada as re where " +
-                "re.id = :idRegistro and re.estado = :valido and re.destino is null");
+                "re.id = :idRegistro and re.destino is null");
 
         // Parámetros
         q.setParameter("idRegistro", idRegistro);
-        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
 
         List<String> result = q.getResultList();
 

@@ -19,10 +19,10 @@
       <div class="panel-heading">
 
           <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_RESERVA || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && oficinaRegistral && puedeEditar}">
-
+              <c:if test="${empty maxanexospermitidos || fn:length(registro.registroDetalle.anexos) < maxanexospermitidos }">
                 <a onClick="nouAnnexFull()" data-toggle="modal" data-target="#myModal" class="btn btn-${color} btn-xs pull-right" role="button"><i class="fa fa-plus"></i> <spring:message code="anexo.nuevo"/></a>
-                
-                
+              </c:if>
+
           </c:if>
           <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong><spring:message code="anexo.anexos"/></strong></h3>
       </div>
@@ -35,6 +35,13 @@
                      <div class="alert alert-warning alert-dismissable">
                         <strong><spring:message code="regweb.listado.vacio"/> <spring:message code="anexo.anexo"/></strong>
                      </div>
+                 </c:if>
+
+
+                 <c:if test="${not empty registro.registroDetalle.anexos && fn:length(registro.registroDetalle.anexos) >= maxanexospermitidos}">
+                      <div class="alert alert-warning alert-dismissable">
+                          <strong><spring:message code="anexo.tamanosuperado"/></strong>
+                      </div>
                  </c:if>
 
                  <c:if test="${not empty registro.registroDetalle.anexos}">
@@ -88,6 +95,7 @@
                          </tbody>
                      </table>
                 </c:if>
+                  ${notainformativa}
               </div>
 
       </div>
@@ -148,7 +156,7 @@
 
       $('#anexoTitulo').html('<spring:message code="anexo.nuevo"/>');
 
-      loadiframe("<c:url value="/anexo/nou/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}" />");
+      loadiframe("<c:url value="/anexo/nou/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${isOficioRemisionSir}" />");
     }
 
 
@@ -156,7 +164,7 @@
         
         $('#anexoTitulo').html('<spring:message code="anexo.editar"/>');
         
-        loadiframe("<c:url value="/anexo/editar/"/>" + idRegistroDetalle + "/" + tipoRegistro + "/" + idRegistro + "/" + idAnexo);
+        loadiframe("<c:url value="/anexo/editar/"/>" + idRegistroDetalle + "/" + tipoRegistro + "/" + idRegistro + "/" + idAnexo+ "/"+${isOficioRemisionSir});
     }
 
 

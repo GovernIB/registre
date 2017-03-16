@@ -6,6 +6,7 @@ import es.caib.regweb3.persistence.ejb.HistoricoRegistroSalidaLocal;
 import es.caib.regweb3.persistence.ejb.OficioRemisionSalidaUtilsLocal;
 import es.caib.regweb3.persistence.ejb.RegistroSalidaLocal;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.form.ModeloForm;
@@ -212,9 +213,24 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             model.addAttribute("organismosOficinaActiva",organismosOficinaActiva);
 
         }
-        // Anexos
-        model.addAttribute("anexos", anexoEjb.getByRegistroSalida(registro));
-        initAnexos(entidadActiva, model, request, registro.getId());
+
+
+        // Inicializamos si se deben mostrar los anexos o no
+        Boolean showannexes = PropiedadGlobalUtil.getShowAnnexes();
+        model.addAttribute("showannexes", showannexes);
+
+        if(showannexes == null || showannexes ) {
+            //TODO Mirar que carga este método para mirar de ver que mostrar en caso de solo lectura y que no cargue todo el anexo.
+            model.addAttribute("anexos", anexoEjb.getByRegistroSalida(registro));
+            initAnexos(entidadActiva, model, request, registro.getId());
+            //Inicializamos el mensaje de las limitaciones de anexos si es oficio de remisión sir
+            //TODO falta hacer el método isOficioRemisionSir (salidas)
+            boolean isOficioRemisionSir = false;
+            if(isOficioRemisionSir) {
+                initMensajeNotaInformativaAnexos(entidadActiva, model);
+                model.addAttribute("maxanexospermitidos", PropiedadGlobalUtil.getMaxAnexosPermitidos(entidadActiva.getId()));
+             }
+        }
 
         // Historicos
         model.addAttribute("historicos", historicoRegistroSalidaEjb.getByRegistroSalida(idRegistro));

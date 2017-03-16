@@ -20,4 +20,6 @@ public interface WebServicesMethodsLocal {
     public Archivo persistArchivo(Archivo archivo) throws Exception;
 
     public void removeArchivo(Archivo archivo) throws Exception;
+
+    public String getPropiedadMimePermitidos() throws Exception;
 }

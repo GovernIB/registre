@@ -120,9 +120,10 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
 
         //Demanar a n'en Victor
         String entidadCodigo = "A04003003";
-        String unidadAdministrativaCodigo = "A04003003";
+       // String unidadAdministrativaCodigo = "A04003003";
         // String entidadCodigo = registro.getOficina().getOrganismoResponsable().getEntidad().getCodigoDir3();
-        // String unidadAdministrativaCodigo= registro.getOficina().getOrganismoResponsable().getCodigo();
+        // String unidadAdministrativaCodigo= registro.getOficina().getOrganismoResponsable().getCodigo();????
+         String unidadAdministrativaCodigo= registro.getDestino().getCodigo();
 
 
         client.enviarAnotacioRegistreEntrada(entidadCodigo, unidadAdministrativaCodigo, registreAnotacio);

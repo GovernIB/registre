@@ -2,10 +2,7 @@ package es.caib.regweb3.webapp.controller.registro;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.*;
-import es.caib.regweb3.persistence.utils.DestinatarioWrapper;
-import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.persistence.utils.RegistroUtils;
-import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
+import es.caib.regweb3.persistence.utils.*;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.webapp.form.ModeloForm;
@@ -211,9 +208,11 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         model.addAttribute("isDistribuir", registroEntradaEjb.isDistribuir(idRegistro, getOrganismosOficioRemision(request,organismosOficinaActiva)));
 
         // OficioRemision
+        Boolean isOficioRemisionSir = oficioRemisionEntradaUtilsEjb.isOficioRemisionSir(idRegistro);
         if(entidadActiva.getOficioRemision()){
             model.addAttribute("isOficioRemisionInterno", oficioRemisionEntradaUtilsEjb.isOficioRemisionInterno(idRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva)));
             model.addAttribute("isOficioRemisionExterno", oficioRemisionEntradaUtilsEjb.isOficioRemisionExterno(idRegistro));
+            model.addAttribute("isOficioRemisionSir", isOficioRemisionSir);
         }
 
         // Interesados, solo si el Registro en Válido o Estamos en la Oficina donde se registró, o en su Oficina Responsable
@@ -228,9 +227,23 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             model.addAttribute("organismosOficinaActiva",organismosOficinaActiva);
         }
 
-        // Anexos
-        model.addAttribute("anexos", anexoEjb.getByRegistroEntrada(registro));
-        initAnexos(entidadActiva, model, request, registro.getId());
+
+        // Inicializamos si se deben mostrar los anexos o no
+        Boolean showannexes = PropiedadGlobalUtil.getShowAnnexes();
+        model.addAttribute("showannexes", showannexes);
+
+
+        if(showannexes == null || showannexes ) {
+            //TODO Mirar que carga este método para mirar de ver que mostrar en caso de solo lectura y que no cargue todo el anexo.
+            model.addAttribute("anexos", anexoEjb.getByRegistroEntrada(registro));
+            initAnexos(entidadActiva, model, request, registro.getId());
+            //Inicializamos el mensaje de las limitaciones de anexos si es oficio de remisión sir
+            if(isOficioRemisionSir) {
+                initMensajeNotaInformativaAnexos(entidadActiva, model);
+                model.addAttribute("maxanexospermitidos", PropiedadGlobalUtil.getMaxAnexosPermitidos(entidadActiva.getId()));
+            }
+        }
+
 
         // Historicos
         model.addAttribute("historicos", historicoRegistroEntradaEjb.getByRegistroEntrada(idRegistro));
@@ -473,7 +486,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         log.info(" Observaciones obtenidas:" + wrapper.getObservaciones());
 
         // Enviamos el registro de entrada a los destinatarios indicados en la variable wrapper
-        Boolean enviado = registroEntradaEjb.enviar(registroEntrada, wrapper);
+        Boolean enviado = registroEntradaEjb.enviar(registroEntrada, wrapper,usuarioEntidad.getEntidad().getId());
 
         if (enviado) { //Mostramos mensaje en funcion de si se ha enviado o ha habido un error.
             // Marcamos el registro como tramitado, solo si se ha enviado bien

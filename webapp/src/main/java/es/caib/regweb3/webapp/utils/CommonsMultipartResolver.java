@@ -1,14 +1,16 @@
 package es.caib.regweb3.webapp.utils;
 
-import javax.servlet.http.HttpServletRequest;
-
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import es.caib.regweb3.utils.Configuracio;
+import javax.annotation.security.RunAs;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 
@@ -16,6 +18,7 @@ import es.caib.regweb3.utils.Configuracio;
  * 
  */
 @Component
+@RunAs("RWE_USUARI")
 public class CommonsMultipartResolver extends
     org.springframework.web.multipart.commons.CommonsMultipartResolver {
 
@@ -44,7 +47,8 @@ public class CommonsMultipartResolver extends
 
     // Pujada d'un fitxer
     // Es fa una mescla entre el màxim global i màxim per entitat
-    maxUploadSize = getMaxUploadSize();
+    maxUploadSize = getMaxUploadSize(request);
+
     msgCode = "tamanyfitxerpujatsuperat";
 
     if (maxUploadSize == null) {
@@ -65,8 +69,14 @@ public class CommonsMultipartResolver extends
 
   }
 
-  private Long getMaxUploadSize() {
-    Long maxUploadSizeGlobal = Configuracio.getMaxUploadSizeInBytes();
+  private Long getMaxUploadSize(HttpServletRequest request) {
+    Entidad entidad = (Entidad)request.getSession().getAttribute(RegwebConstantes.SESSION_ENTIDAD);
+    Long maxUploadSizeGlobal;
+    if(entidad != null) {
+       maxUploadSizeGlobal = PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidad.getId());
+    }else {
+       maxUploadSizeGlobal = PropiedadGlobalUtil.getMaxUploadSizeInBytes();
+    }
     if (log.isDebugEnabled()) {
       if (maxUploadSizeGlobal == null) {
         log.debug("No s'ha definit limit de tamany global en la pujada de Fitxers");

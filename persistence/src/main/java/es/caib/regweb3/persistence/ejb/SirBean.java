@@ -1082,9 +1082,9 @@ public class SirBean implements SirLocal{
                 anexosProcesados.remove(identificadorDocumentoFirmado);
 
             }
-            // Al ser un anexo con firma, si sicres no habia especificado la validez, regweb la fija a copia y aqui
-            // la modifica a copia compulsada porque ya sabe que hay firma.
-            if (anexoFull.getAnexo().getValidezDocumento() == RegwebConstantes.TIPOVALIDEZDOCUMENTO_COPIA) {
+            // Al ser un anexo con firma, si sicres no la informa, la informará el usuario. Si el usuario indica "COPIA"
+            // regweb la cambia a COPIA_COMPULSADA porque aqui ya sabe que hay firma y si hay firma la validezDocumento no puede ser "COPIA".
+            if (anexoFull.getAnexo().getValidezDocumento().equals( RegwebConstantes.TIPOVALIDEZDOCUMENTO_COPIA)) {
                 anexoFull.getAnexo().setValidezDocumento(RegwebConstantes.TIPOVALIDEZDOCUMENTO_COPIA_COMPULSADA);
             }
         } else { // El anexo no es firma de nadie
@@ -1311,7 +1311,7 @@ public class SirBean implements SirLocal{
     }
 
     /**
-     * Genera el Hash mediante MD5 del contenido del documento y lo codifica en base64
+     * Genera el Hash mediante SHA-256 del contenido del documento y lo codifica en base64
      *
      * @param documentoData
      * @return
@@ -1319,7 +1319,7 @@ public class SirBean implements SirLocal{
      */
     protected byte[] obtenerHash(byte[] documentoData) throws Exception {
 
-        MessageDigest md = MessageDigest.getInstance("MD5");
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
         byte[] digest = md.digest(documentoData);
 
         return Base64.encodeBase64(digest);

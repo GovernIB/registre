@@ -62,6 +62,107 @@ public class PropiedadGlobalUtil {
     }
 
     /**
+     * Retorna el valor de la propiedad del tamaño máximo en bytes por anexo de la entidad indicada.
+     * @return
+     */
+    public static Long getMaxUploadSizeTotal(Long idEntidad) {
+        final String partialPropertyName = "maxuploadsizetotal";
+        Long valor = getLongByEntidad(idEntidad, partialPropertyName);
+
+        // Valor global si no existeix el de per entitat
+        if (valor == null) {
+            valor = getLong(partialPropertyName);
+        }
+        if(valor == null){//Si no hay ni propiedad global se devuelve por defecto 15 Mb
+            return new Long(15728640);
+        }
+        return valor;
+    }
+
+    /**
+     * Retorna el valor de la propiedad del tamaño máximo en bytes por anexo de la entidad indicada.
+     * @return
+     */
+    public static Long getMaxUploadSizeInBytes(Long idEntidad) {
+        final String partialPropertyName = "maxuploadsizeinbytes";
+        Long valor = getLongByEntidad(idEntidad, partialPropertyName);
+
+        // Valor global si no existeix el de per entitat
+        if (valor == null) {
+            valor = getLong(partialPropertyName);
+        }
+        if(valor== null){// Si no existe la propiedad global se devuelve por defecto 10 Mb
+            valor = new Long(10485760);
+        }
+        return valor;
+    }
+
+    /**
+     * Retorna el valor de la propiedad de formatos permitidos de la entidad indicada.
+     * @return
+     */
+    public static String getFormatosPermitidos(Long idEntidad) {
+        final String partialPropertyName = "formatospermitidos";
+        String valor = getStringByEntidad(idEntidad, partialPropertyName);
+
+        // Valor global si no existeix el de per entitat
+        if (valor == null) {
+            valor = getString(partialPropertyName);
+        }
+        if(valor == null){ //si no esta definida la propiedad a nivel global se devuelven los formatos por defecto.
+            valor = new String(".jpg, .jpeg, .odt, .odp, .ods, .odg, .docx, .xlsx, .pptx, .pdf, .png, .rtf, .svg, .tiff, .txt., .xml, .xsig");
+        }
+        return valor;
+    }
+
+    /**
+     * Retorna el valor de la propiedad maximo anexos permitidos de la entidad indicada.
+     * @return
+     */
+    public static Integer getMaxAnexosPermitidos(Long idEntidad) {
+        final String partialPropertyName = "maxanexospermitidos";
+        Integer valor = getIntegerByEntidad(idEntidad, partialPropertyName);
+
+        // Valor global si no existeix el de per entitat
+        if (valor == null) {
+            valor = getInteger(partialPropertyName);
+        }
+        if(valor== null){// si no esta definida la propiedad a nivel global se devuelve por defecto 5.
+            valor = 5;
+        }
+        return valor;
+    }
+
+
+
+    /**
+     * Retorna el valor de la propiedad DefaultLanguage de la entidad indicada.
+     * @return
+     */
+    public static String getDefaultLanguage() {
+        final String partialPropertyName = "defaultlanguage";
+        String valor = getString( partialPropertyName);
+
+        return valor != null ? valor : null;
+    }
+
+
+    /**
+     * Retorna el valor de la propiedad de MIME permitidos de la entidad indicada.
+     * Basado en el catalogo de estandares de ENI
+     * @return
+     */
+    public static String getMIMEPermitidos() {
+        final String partialPropertyName = "mimepermitidos";
+        String valor = getString(partialPropertyName);
+
+        if(valor == null){ //si no esta definida la propiedad a nivel global se devuelven los formatos por defecto.
+            valor = new String("image/jpeg,image/pjpeg,application/vnd.oasis.opendocument.text,application/vnd.oasis.opendocument.spreadsheet,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/mspowerpoint,application/powerpoint,application/x-mspowerpoint,application/pdf,image/png,text/rtf,application/rtf,application/x-rtf,image/svg+xml,image/tiff,image/x-tiff,text/plain,application/xml");
+        }
+        return valor;
+    }
+
+    /**
      * Retorna el valor de la propiedad IsCaib de la entidad indicada.
      * @return
      */
@@ -91,6 +192,76 @@ public class PropiedadGlobalUtil {
         final String partialPropertyName = "showtimestamp";
 
         return getBoolean(partialPropertyName);
+
+    }
+
+    /**
+     * Retorna el valor de la propiedad ShowAnnexes de la entidad indicada.
+     * @return
+     */
+    public static Boolean getShowAnnexes() {
+        final String partialPropertyName = "showannexes";
+
+        return getBoolean(partialPropertyName);
+
+    }
+
+
+    /**
+     * Retorna la clase del plugin de distribución de la entidad
+     * @return
+     */
+    public static String getPluginDistribucion(Long idEntidad) {
+        final String partialPropertyName = "distribucion.plugin";
+        String valor = getStringByEntidad(idEntidad, partialPropertyName);
+
+        // Valor global si no existeix el de per entitat
+        if (valor == null) {
+            valor = getString(partialPropertyName);
+        }
+        if(valor == null){ //si no esta definida la propiedad a nivel global se devuelven la clase del plugin por defecto
+            valor ="org.fundaciobit.plugins.distribucion.distribucionlocal.DistribucionLocalDistribucionPlugin";
+        }
+        return valor;
+    }
+
+
+    /**
+     * Retorna la base del plugin de distribución
+     * @return
+     */
+    public static String getBasePluginDistribucion() {
+        final String partialPropertyName = "distribucion.plugin";
+        return RegwebConstantes.REGWEB3_PROPERTY_BASE + partialPropertyName;
+
+    }
+
+    /**
+     * Retorna la clase del plugin de distribución de la entidad
+     * @return
+     */
+    public static String getPluginPostProceso(Long idEntidad) {
+        final String partialPropertyName = "postproceso.plugin";
+        String valor = getStringByEntidad(idEntidad, partialPropertyName);
+
+        // Valor global si no existeix el de per entitat
+        if (valor == null) {
+            valor = getString(partialPropertyName);
+        }
+        if(valor == null){ //si no esta definida la propiedad a nivel global se devuelven la clase del plugin por defecto
+            valor ="org.fundaciobit.plugins.postproceso.postprocesolocal.PostProcesoLocalPostProcesoPlugin";
+        }
+        return valor;
+    }
+
+
+    /**
+     * Retorna la base del plugin de distribución
+     * @return
+     */
+    public static String getBasePluginPostProceso() {
+        final String partialPropertyName = "postproceso.plugin";
+        return RegwebConstantes.REGWEB3_PROPERTY_BASE + partialPropertyName;
 
     }
 

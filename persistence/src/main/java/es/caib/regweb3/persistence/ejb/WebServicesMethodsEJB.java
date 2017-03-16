@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Archivo;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -51,5 +52,10 @@ public class WebServicesMethodsEJB implements WebServicesMethodsLocal {
     @Override
     public void removeArchivo(Archivo archivo) throws Exception{
          archivoEjb.remove(archivo);
+    }
+
+    @Override
+    public String getPropiedadMimePermitidos() throws Exception{
+        return PropiedadGlobalUtil.getMIMEPermitidos();
     }
 }

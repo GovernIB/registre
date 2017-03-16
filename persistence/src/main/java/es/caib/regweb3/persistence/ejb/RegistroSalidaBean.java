@@ -125,7 +125,6 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
             interesadoEjb.guardarInteresados(interesados, registroSalida.getRegistroDetalle());
         }
 
-        // TODO Controlar custodyID y si hay fallo borrar todos los Custody
         if (anexos != null && anexos.size() != 0) {
             final Long registroID = registroSalida.getId();
             for (AnexoFull anexoFull : anexos) {
@@ -134,7 +133,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
             }
         }
 
-
+       // postProcesoNuevoRegistro(registroSalida,usuarioEntidad.getEntidad().getId());
         return registroSalida;
 
     }
@@ -336,6 +335,25 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         }
     }
 
+    public String findNumeroRegistroFormateadoByRegistroDetalle(Long idRegistroDetalle) throws Exception {
+
+        Query q = em.createQuery("Select registroSalida.numeroRegistroFormateado "
+                + " from RegistroSalida as registroSalida"
+                + " where registroSalida.registroDetalle.id = :idRegistroDetalle "
+        );
+
+        q.setParameter("idRegistroDetalle", idRegistroDetalle);
+
+
+        List<String> registro = q.getResultList();
+
+        if (registro.size() == 1) {
+            return registro.get(0);
+        } else {
+            return null;
+        }
+    }
+
     @Override
     public void anularRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception {
 
@@ -495,4 +513,13 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         return re;
     }
 
+   /* public boolean postProcesoActualizarRegistro(RegistroSalida rs, Long entidadId) throws Exception {
+        IPostProcesoPlugin postProcesoPlugin = RegwebPostProcesoPluginManager.getInstance(entidadId);
+        return postProcesoPlugin != null && postProcesoPlugin.actualizarRegistroSalida(rs);
+    }
+
+    public boolean postProcesoNuevoRegistro(RegistroSalida rs, Long entidadId) throws Exception {
+        IPostProcesoPlugin postProcesoPlugin = RegwebPostProcesoPluginManager.getInstance(entidadId);
+        return postProcesoPlugin != null && postProcesoPlugin.nuevoRegistroSalida(rs);
+    }*/
 }
