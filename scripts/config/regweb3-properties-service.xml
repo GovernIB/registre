@@ -129,11 +129,39 @@
             <!-- ============== 2 - Dynamic Web Twain  ================ -->
             es.caib.regweb3.scan.plugin.2=es.limit.plugins.scanweb.dynamicwebtwain.DynamicWebTwainScanWebPlugin
 
+            es.caib.regweb3.scan.plugin.2.plugins.scanweb.dynamicwebtwain.debug=true
+            es.caib.regweb3.scan.plugin.2.plugins.scanweb.dynamicwebtwain.trial=true
+            # trial productkey està dins C:\Program Files (x86)\Dynamsoft\Dynamic Web TWAIN SDK 12.2 Trial\Samples\Getting Started\Resources\dynamsoft.webtwain.config.js
+            es.caib.regweb3.scan.plugin.2.plugins.scanweb.dynamicwebtwain.productkey=
+
+            # Optional
+            # Versió: Per defecte 12.2. Possibles valors 12.2 o 10.2
+            es.caib.regweb3.scan.plugin.2.plugins.scanweb.dynamicwebtwain.version=12.2
+
+            es.caib.regweb3.scan.plugin.2.plugins.scanweb.dynamicwebtwain.forcesign=true
+            # Optional
+            es.caib.regweb3.scan.plugin.2.plugins.scanweb.dynamicwebtwain.sign.keystore=D:/dades/dades/CarpetesPersonals/Programacio/digitalitzacio/servidor/jboss-5.2.0-caib-cxf/server/default/deploydigital/digital/recursos/keystore.jks
+            es.caib.regweb3.scan.plugin.2.plugins.scanweb.dynamicwebtwain.sign.password=copia_autentica
+            es.caib.regweb3.scan.plugin.2.plugins.scanweb.dynamicwebtwain.sign.certpassword=copia_autentica
+            es.caib.regweb3.scan.plugin.2.plugins.scanweb.dynamicwebtwain.sign.alias=preproddgidt
+            es.caib.regweb3.scan.plugin.2.plugins.scanweb.dynamicwebtwain.sign.asunto=XXX ASUNTO DWT XXX
+
 
             <!-- ============== 3 - Applet IECISA ================ -->
             es.caib.regweb3.scan.plugin.3=org.fundaciobit.plugins.scanweb.iecisa.IECISAScanWebPlugin
-            es.caib.regweb3.scan.plugin.3.plugins.scanweb.iecisa.showInModal=true
             es.caib.regweb3.scan.plugin.3.plugins.scanweb.iecisa.debug=false
+            
+            es.caib.regweb3.scan.plugin.3.plugins.scanweb.iecisa.debug=false
+            es.caib.regweb3.scan.plugin.3.plugins.scanweb.iecisa.forcejnlp=false
+            es.caib.regweb3.scan.plugin.3.plugins.scanweb.iecisa.forcesign=true
+            # Optional
+            es.caib.regweb3.scan.plugin.3.plugins.scanweb.iecisa.sign.keystore=D:/dades/dades/CarpetesPersonals/Programacio/digitalitzacio/servidor/jboss-5.2.0-caib-cxf/server/default/deploydigital/digital/recursos/keystore.jks
+            es.caib.regweb3.scan.plugin.3.plugins.scanweb.iecisa.sign.password=copia_autentica
+            es.caib.regweb3.scan.plugin.3.plugins.scanweb.iecisa.sign.certpassword=copia_autentica
+            es.caib.regweb3.scan.plugin.3.plugins.scanweb.iecisa.sign.alias=preproddgidt
+            es.caib.regweb3.scan.plugin.3.plugins.scanweb.iecisa.sign.asunto=XXX ASUNTO SIMPLE XXX
+            
+            
 
             <!-- ======== PLUGIN DISTRIBUCION ======= -->
             <!--Plugin Distribución -->
