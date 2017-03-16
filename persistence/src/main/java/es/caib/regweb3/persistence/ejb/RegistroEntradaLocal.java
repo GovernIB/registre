@@ -293,7 +293,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-   // public boolean postProcesoActualizarRegistro(RegistroEntrada re,Long entidadId) throws Exception ;
+    public void postProcesoActualizarRegistro(RegistroEntrada re,Long entidadId) throws Exception ;
 
     /**
      *
@@ -301,6 +301,6 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-   // public boolean postProcesoNuevoRegistro(RegistroEntrada re, Long entidadId) throws Exception ;
+    public void postProcesoNuevoRegistro(RegistroEntrada re, Long entidadId) throws Exception ;
 
 }

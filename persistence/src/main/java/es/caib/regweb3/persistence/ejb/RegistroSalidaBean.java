@@ -10,6 +10,7 @@ import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+import org.fundaciobit.plugins.postproceso.IPostProcesoPlugin;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
@@ -133,7 +134,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
             }
         }
 
-       // postProcesoNuevoRegistro(registroSalida,usuarioEntidad.getEntidad().getId());
+        postProcesoNuevoRegistro(registroSalida,usuarioEntidad.getEntidad().getId());
         return registroSalida;
 
     }
@@ -513,13 +514,18 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         return re;
     }
 
-   /* public boolean postProcesoActualizarRegistro(RegistroSalida rs, Long entidadId) throws Exception {
+    public void postProcesoActualizarRegistro(RegistroSalida rs, Long entidadId) throws Exception {
         IPostProcesoPlugin postProcesoPlugin = RegwebPostProcesoPluginManager.getInstance(entidadId);
-        return postProcesoPlugin != null && postProcesoPlugin.actualizarRegistroSalida(rs);
+        if(postProcesoPlugin != null){
+            postProcesoPlugin.actualizarRegistroSalida(rs);
+        }
+
     }
 
-    public boolean postProcesoNuevoRegistro(RegistroSalida rs, Long entidadId) throws Exception {
+    public void postProcesoNuevoRegistro(RegistroSalida rs, Long entidadId) throws Exception {
         IPostProcesoPlugin postProcesoPlugin = RegwebPostProcesoPluginManager.getInstance(entidadId);
-        return postProcesoPlugin != null && postProcesoPlugin.nuevoRegistroSalida(rs);
-    }*/
+        if(postProcesoPlugin != null){
+            postProcesoPlugin.nuevoRegistroSalida(rs);
+        }
+    }
 }

@@ -30,6 +30,7 @@
     <module>webapp</module>
     <!--   <module>plugins</module>-->
     <module>plugindistribucion</module>
+    <module>pluginpostproceso</module>
     <module>ear</module>
   </modules>
 

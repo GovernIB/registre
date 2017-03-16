@@ -12,6 +12,7 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.plugins.distribucion.ConfiguracionDistribucion;
 import org.fundaciobit.plugins.distribucion.IDistribucionPlugin;
+import org.fundaciobit.plugins.postproceso.IPostProcesoPlugin;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
@@ -142,8 +143,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             }
         }
         //Llamamos al plugin de postproceso
-        //TODO Si devuelve false que hacemos?
-        //postProcesoNuevoRegistro(registroEntrada,usuarioEntidad.getEntidad().getId());
+        postProcesoNuevoRegistro(registroEntrada,usuarioEntidad.getEntidad().getId());
 
         return registroEntrada;
 
@@ -789,15 +789,20 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         return original;
     }
 
-   /* public boolean postProcesoActualizarRegistro(RegistroEntrada re,Long entidadId) throws Exception {
+    public void postProcesoActualizarRegistro(RegistroEntrada re,Long entidadId) throws Exception {
         IPostProcesoPlugin postProcesoPlugin = RegwebPostProcesoPluginManager.getInstance(entidadId);
-        return postProcesoPlugin != null && postProcesoPlugin.actualizarRegistroEntrada(re);
+        if(postProcesoPlugin != null){
+            postProcesoPlugin.actualizarRegistroEntrada(re);
+        }
+
     }
 
-    public boolean postProcesoNuevoRegistro(RegistroEntrada re,Long entidadId) throws Exception {
+    public void postProcesoNuevoRegistro(RegistroEntrada re,Long entidadId) throws Exception {
         IPostProcesoPlugin postProcesoPlugin = RegwebPostProcesoPluginManager.getInstance(entidadId);
-        return postProcesoPlugin != null && postProcesoPlugin.nuevoRegistroEntrada(re);
-    }*/
+        if(postProcesoPlugin != null){
+            postProcesoPlugin.nuevoRegistroEntrada(re);
+        }
+    }
 
 
 

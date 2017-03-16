@@ -256,6 +256,29 @@
       <version>${project.version}</version>
     </dependency>
 
+   <!--Comentado de momento, descomentar cuando acabado de implementar -->
+   <!-- <dependency>
+            <groupId>es.caib.regweb3</groupId>
+            <artifactId>plugins-distribucionregweb-distribucionripea</artifactId>
+            <version>${project.version}</version>
+    </dependency>-->
+
+    <!-- ============================================ -->
+    <!-- ======== PLUGINS DE POSTPROCES =========== -->
+    <!-- ============================================ -->
+
+    <dependency>
+        <groupId>es.caib.regweb3</groupId>
+        <artifactId>plugins-postproceso-api</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>es.caib.regweb3</groupId>
+        <artifactId>plugins-postproceso-postprocesolocal</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+
     <!-- ============================================ -->
     <!-- =============    FINAL PLUGINS   =========== -->
     <!-- ============================================ -->

@@ -4,9 +4,7 @@ import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.Persona;
 import es.caib.regweb3.model.RegistroDetalle;
-import es.caib.regweb3.persistence.ejb.CatPaisLocal;
-import es.caib.regweb3.persistence.ejb.PersonaLocal;
-import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
+import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.webapp.controller.BaseController;
@@ -50,6 +48,12 @@ public class InteresadoController extends BaseController{
     @EJB(mappedName = "regweb3/RegistroDetalleEJB/local")
     public RegistroDetalleLocal registroDetalleEjb;
 
+    @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
+    public RegistroEntradaLocal registroEntradaEjb;
+
+    @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
+    public RegistroSalidaLocal registroSalidaEjb;
+
 
     /**
      * Añade un Organismo existente a la variable de sesion que almacena los interesados.
@@ -91,6 +95,11 @@ public class InteresadoController extends BaseController{
 
                 organismo.setRegistroDetalle(registroDetalleEjb.findById(Long.valueOf(idRegistroDetalle)));
                 interesadoEjb.persist(organismo);
+
+                Entidad entidadActiva = getEntidadActiva(request);
+                //Obtenemos el numero de registro Formateado para pasarlo al plug-in postproceso
+                String numRegistroFormateado = getNumeroFormateadoByRegistroDetalle(Long.valueOf(idRegistroDetalle),tipoRegistro);
+                interesadoEjb.postProcesoNuevoInteresado(organismo,numRegistroFormateado,tipoRegistro, entidadActiva.getId());
             }
 
 
@@ -132,6 +141,11 @@ public class InteresadoController extends BaseController{
                     interesado.setId(null);
                     interesado.setRegistroDetalle(registroDetalleEjb.getReference(Long.valueOf(idRegistroDetalle)));
                     interesado = interesadoEjb.persist(interesado);
+                    Entidad entidadActiva = getEntidadActiva(request);
+
+                    //Obtenemos el numero de registro Formateado para pasarlo al plug-in postproceso
+                    String numRegistroFormateado = getNumeroFormateadoByRegistroDetalle(Long.valueOf(idRegistroDetalle),tipoRegistro);
+                    interesadoEjb.postProcesoNuevoInteresado(interesado,numRegistroFormateado, tipoRegistro,entidadActiva.getId());
                     return interesado.getId().intValue();
                 }
             }
@@ -256,6 +270,11 @@ public class InteresadoController extends BaseController{
 
                 }else{ // Edición de un registro, lo añadimos a la bbdd
                     log.info("idRegistroDetalle: " + idRegistroDetalle);
+                    Entidad entidadActiva = getEntidadActiva(request);
+
+                    //Averiguamos el numeroRegistroFormateado para pasarselo al plug-in de postproceso
+                    String numRegistroFormateado = getNumeroFormateadoByRegistroDetalle(Long.valueOf(idRegistroDetalle),tipoRegistro);
+
 
                     if(isRepresentante) { // Si se trata de un representante lo indicamos
                         interesado.setId(null);
@@ -265,15 +284,18 @@ public class InteresadoController extends BaseController{
 
                         // Guardamos el Nuevo representante
                         interesado = interesadoEjb.persist(interesado);
+                        interesadoEjb.postProcesoNuevoInteresado(interesado,numRegistroFormateado, tipoRegistro,entidadActiva.getId());
 
                         // Lo asociamos al represenatado
                         Interesado representado = interesadoEjb.findById(Long.valueOf(idRepresentado));
                         representado.setRepresentante(interesado);
                         interesadoEjb.merge(representado);
+                        interesadoEjb.postProcesoActualizarInteresado(representado,numRegistroFormateado, tipoRegistro,entidadActiva.getId());
                     }else{
                         interesado.setId(null);
                         interesado.setRegistroDetalle(registroDetalleEjb.getReference(Long.valueOf(idRegistroDetalle)));
                         interesado = interesadoEjb.persist(interesado);
+                        interesadoEjb.postProcesoNuevoInteresado(interesado,numRegistroFormateado, tipoRegistro,entidadActiva.getId());
                     }
 
                 }
@@ -360,6 +382,10 @@ public class InteresadoController extends BaseController{
                     log.info("idRegistroDetalle: " + idRegistroDetalle);
                     interesado.setRegistroDetalle(registroDetalleEjb.getReference(Long.valueOf(idRegistroDetalle)));
                     interesado = interesadoEjb.merge(interesado);
+                    Entidad entidadActiva = getEntidadActiva(request);
+                    //Averiguamos el numeroRegistroFormateado para pasarselo al plug-in de postproceso
+                    String numRegistroFormateado = getNumeroFormateadoByRegistroDetalle(Long.valueOf(idRegistroDetalle),tipoRegistro);
+                    interesadoEjb.postProcesoActualizarInteresado(interesado,numRegistroFormateado,tipoRegistro,entidadActiva.getId());
                 }
 
                 // Almacenamos el Id de la nueva persona/representante creado
@@ -462,10 +488,15 @@ public class InteresadoController extends BaseController{
                 representante.setRegistroDetalle(registroDetalleEjb.getReference(idRegistroDetalle));
                 representante.setRepresentado(representado);
                 representante = interesadoEjb.persist(representante);
+                Entidad entidadActiva= getEntidadActiva(request);
+                //Averiguamos el numeroRegistroFormateado para pasarselo al plug-in de postproceso
+                String numRegistroFormateado = getNumeroFormateadoByRegistroDetalle(Long.valueOf(idRegistroDetalle),tipoRegistro);
+                interesadoEjb.postProcesoNuevoInteresado(representante,numRegistroFormateado, tipoRegistro, entidadActiva.getId());
 
                 // Actualizamos el representado
                 representado.setRepresentante(representante);
                 interesadoEjb.merge(representado);
+                interesadoEjb.postProcesoActualizarInteresado(representado,numRegistroFormateado, tipoRegistro,entidadActiva.getId());
 
             }
 
@@ -513,7 +544,12 @@ public class InteresadoController extends BaseController{
                 Interesado representado = interesadoEjb.findById(idRepresentado);
                 representado.setRepresentante(null);
                 interesadoEjb.merge(representado);
+                Entidad entidadActiva= getEntidadActiva(request);
+                //Averiguamos el numeroRegistroFormateado para pasarselo al plug-in de postproceso
+                String numRegistroFormateado = getNumeroFormateadoByRegistroDetalle(Long.valueOf(idRegistroDetalle),tipoRegistro);
+                interesadoEjb.postProcesoActualizarInteresado(representado,numRegistroFormateado, tipoRegistro,entidadActiva.getId());
                 interesadoEjb.eliminarInteresadoRegistroDetalle(idRepresentante, Long.valueOf(idRegistroDetalle));
+                interesadoEjb.postProcesoEliminarInteresado(idRepresentante,numRegistroFormateado,tipoRegistro,getEntidadActiva(request).getId());
                 return true;
             }
 
@@ -560,7 +596,11 @@ public class InteresadoController extends BaseController{
                 log.info("RegistroDetalle: " + idRegistroDetalle);
                 RegistroDetalle registroDetalle = registroDetalleEjb.findById(Long.valueOf(idRegistroDetalle));
                 if(registroDetalle != null && registroDetalle.getInteresados().size()>1 ) { // Si solo hay un Interesado, no permitimos eliminarlo.
+
                     interesadoEjb.eliminarInteresadoRegistroDetalle(id,Long.valueOf(idRegistroDetalle));
+                    //Averiguamos el numeroRegistroFormateado para pasarselo al plug-in de postproceso
+                    String numRegistroFormateado = getNumeroFormateadoByRegistroDetalle(Long.valueOf(idRegistroDetalle),tipoRegistro);
+                    interesadoEjb.postProcesoEliminarInteresado(id,numRegistroFormateado,tipoRegistro,getEntidadActiva(request).getId());
                     return true;
                 }
 
@@ -604,6 +644,9 @@ public class InteresadoController extends BaseController{
                     Interesado interesado = interesadoEjb.findByCodigoDir3RegistroDetalle(codigoDir3, Long.valueOf(idRegistroDetalle));
                     if(interesado != null){
                         interesadoEjb.eliminarInteresadoRegistroDetalle(interesado.getId(),Long.valueOf(idRegistroDetalle));
+                        //Averiguamos el numeroRegistroFormateado para pasarselo al plug-in de postproceso
+                        String numRegistroFormateado = getNumeroFormateadoByRegistroDetalle(Long.valueOf(idRegistroDetalle),tipoRegistro);
+                        interesadoEjb.postProcesoEliminarInteresado(interesado.getId(),numRegistroFormateado, tipoRegistro,getEntidadActiva(request).getId());
                         return true;
                     }
                 }
@@ -830,6 +873,18 @@ public class InteresadoController extends BaseController{
         }
 
         return false;
+    }
+
+
+
+    private String getNumeroFormateadoByRegistroDetalle(Long idRegistroDetalle, String tipoRegistro) throws Exception{
+
+
+        if(tipoRegistro.equals("entrada")){
+            return  registroEntradaEjb.findNumeroRegistroFormateadoByRegistroDetalle(Long.valueOf(idRegistroDetalle));
+        }else{
+            return registroSalidaEjb.findNumeroRegistroFormateadoByRegistroDetalle(Long.valueOf(idRegistroDetalle));
+        }
     }
 
 
