@@ -5,7 +5,6 @@ import org.apache.commons.logging.LogFactory;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.MessageFactory;
-import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.ws.handler.MessageContext;
@@ -34,39 +33,25 @@ public class RegWeb3SirWSHandler implements SOAPHandler<SOAPMessageContext> {
 
         log.info(" ------------------ RegWeb3SirWSHandler  handleMessage --------------");
 
-
+        // Obtenemos el tipo a procesar
         Boolean outboundProperty = (Boolean) smc.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
 
         try {
 
-            SOAPEnvelope msg = smc.getMessage().getSOAPPart().getEnvelope(); //get the SOAP Message envelope
+            if (!outboundProperty) { // Mensaje de entrada
 
-            if (outboundProperty.booleanValue()) {
+                String mensaje = soapMessageToString(smc.getMessage());
 
-                log.info("Mesaje de salida: " + soapMessageToString(smc.getMessage()));
-            } else {
-                log.info("Mesaje de entrada: " + soapMessageToString(smc.getMessage()));
-                log.info("");
-                log.info("");
+                // Añadimos el namespace al inicio
+                mensaje = mensaje.replace("<envioFicherosAAplicacion", "<ns1:envioFicherosAAplicacion xmlns:ns1=\"http://impl.manager.cct.map.es\"");
 
-                String result = soapMessageToString(smc.getMessage()).replace("<envioFicherosAAplicacion", "<ns1:envioFicherosAAplicacion xmlns:ns1=\"http://impl.manager.cct.map.es\"");
+                // Añadimos el namespace al final
+                mensaje = mensaje.replace("</envioFicherosAAplicacion>","</ns1:envioFicherosAAplicacion>");
 
-                result = result.replace("</envioFicherosAAplicacion>","</ns1:envioFicherosAAplicacion>");
-
-                InputStream bStream = new ByteArrayInputStream(result.getBytes());
+                // Rehacemos la petición con el nuevo mensaje
+                InputStream bStream = new ByteArrayInputStream(mensaje.getBytes());
                 SOAPMessage request = MessageFactory.newInstance().createMessage(null, bStream);
                 smc.setMessage(request);
-
-                /*SOAPBody body = msg.getBody();
-                //body.removeNamespaceDeclaration(UNWANTED_NS_PREFIX);
-                body.addNamespaceDeclaration("ns1", "http://impl.manager.cct.map.es");
-
-                msg.addBody();*/
-
-
-
-                log.info("Mesaje de entrada modificado: " + soapMessageToString(smc.getMessage()));
-
 
             }
 
@@ -89,6 +74,11 @@ public class RegWeb3SirWSHandler implements SOAPHandler<SOAPMessageContext> {
 
     }
 
+    /**
+     * Convierte un SOAPMessage en un String
+     * @param message
+     * @return
+     */
     public String soapMessageToString(SOAPMessage message)
     {
         String result = null;
