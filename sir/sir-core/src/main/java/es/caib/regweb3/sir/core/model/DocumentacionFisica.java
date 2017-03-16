@@ -42,12 +42,11 @@ public enum DocumentacionFisica {
 
     public static String getDocumentacionFisicaValue(String value) {
 
-        if (value != null) {
+        DocumentacionFisica documentacionFisica = getDocumentacionFisica(value);
 
-            for (DocumentacionFisica documentacionFisica : DocumentacionFisica.values()) {
-                if (value.equals(documentacionFisica.getValue())) return documentacionFisica.getValue();
-            }
+        if (documentacionFisica != null) {
 
+            return documentacionFisica.getValue();
         }
 
         return null;

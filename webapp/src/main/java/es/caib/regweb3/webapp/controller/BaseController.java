@@ -355,7 +355,7 @@ public class BaseController {
     }
 
     /**
-     * Obtiene los OrganismosSIR
+     * Obtiene los OrganismosSIR que puede gestionar el usuario
      * @param request
      * @return
      * @throws Exception
@@ -368,7 +368,7 @@ public class BaseController {
     }
 
     /**
-     * Obtiene los unicamente los códigos OrganismosSIR
+     * Obtiene los unicamente los códigos de los OrganismosSIR que puede gestionar el usuario
      * @param request
      * @return
      * @throws Exception
@@ -381,9 +381,7 @@ public class BaseController {
         Set<String> organismosCodigo = new HashSet<String>();
 
         for (Organismo organismo : organismos) {
-            log.info("OrganismoSIR: " + organismo.getDenominacion());
             organismosCodigo.add(organismo.getCodigo());
-
         }
 
         return organismosCodigo;

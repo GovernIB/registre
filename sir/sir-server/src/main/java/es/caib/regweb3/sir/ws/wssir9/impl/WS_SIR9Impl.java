@@ -57,7 +57,7 @@ public class WS_SIR9Impl implements WS_SIR9_PortType {
         RespuestaWS respuestaWS = null;
 
         try{
-            // Envia el fichero de intercambio a REGWEB3
+            // Envia el mensaje datos control a REGWEB3
             recepcionEjb.recibirMensajeDatosControl(mensaje);
 
             // Creamos la respuesta exitosa

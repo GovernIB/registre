@@ -328,7 +328,7 @@ public class UsuarioService {
             // Comprobamos si la Oficina está integrada en SIR
             oficinaNueva.setSir(oficinaEjb.isOficinaSIR(oficinaNueva.getId()));
 
-            // Si la Entidad está en SIR y la OficiaActiva es SIR, obtenemos los organismos que gestiona
+            // Si la Entidad está en SIR y la OficiaActiva es SIR, obtenemos los organismosSIR que gestiona el usuario
             if(oficinaNueva.getSir() && entidadActiva.getSir()){
                 List<Organismo> organismosSir = permisoLibroUsuarioEjb.getOrganismoLibroPermiso(usuarioEntidad.getId(), RegwebConstantes.PERMISO_SIR);
                 session.setAttribute(RegwebConstantes.SESSION_ORGANISMOS_SIR, organismosSir);

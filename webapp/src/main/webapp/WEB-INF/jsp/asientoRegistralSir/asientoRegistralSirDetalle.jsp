@@ -217,33 +217,34 @@
 
                         <%--Formulari per completar dades del registre--%>
                         <div class="panel-footer">
-                            <c:if test="${(fn:length(libros) > 1)}">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">
-                                        <strong><spring:message code="registro.completar"/></strong>
-                                    </h3>
+
+                            <div class="panel-heading">
+                                <h3 class="panel-title">
+                                    <strong><spring:message code="registro.completar"/></strong>
+                                </h3>
+                            </div>
+
+                            <%--Si s'ha de triar llibre--%>
+                            <c:if test="${fn:length(libros) > 1}">
+                                <div class="form-group col-xs-12">
+                                    <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                                        <label for="idLibro"><span class="text-danger">*</span> <spring:message
+                                                code="libro.libro"/></label>
+                                    </div>
+                                    <div class="col-xs-7 no-pad-right" id="libro">
+                                        <form:select path="idLibro" cssClass="chosen-select">
+                                            <form:options items="${libros}" itemValue="id" itemLabel="nombre"/>
+                                        </form:select>
+                                        <span class="errors"></span>
+                                    </div>
                                 </div>
                             </c:if>
-                                <%--<c:url value="/asientoRegistralSir/aceptar/${asientoRegistralSir.id}" var="urlAceptar" scope="request"/>--%>
-                                <%--<form:form modelAttribute="registrarForm" action="${urlAceptar}" method="post" cssClass="form-horizontal">--%>
-                                <%--Si s'ha de triar llibre--%>
-                                <c:if test="${fn:length(libros) > 1}">
-                                    <div class="form-group col-xs-12">
-                                        <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                                            <label for="idLibro"><span class="text-danger">*</span> <spring:message
-                                                    code="libro.libro"/></label>
-                                        </div>
-                                        <div class="col-xs-7 no-pad-right" id="libro">
-                                            <form:select path="idLibro" cssClass="chosen-select">
-                                                <form:options items="${libros}" itemValue="id" itemLabel="nombre"/>
-                                            </form:select>
-                                            <span class="errors"></span>
-                                        </div>
-                                    </div>
-                                </c:if>
-                                <c:if test="${fn:length(libros) == 1}">
-                                    <form:hidden path="idLibro" value="${libros[0].id}"/>
-                                </c:if>
+                            <c:if test="${fn:length(libros) == 1}">
+                                <form:hidden path="idLibro" value="${libros[0].id}"/>
+                            </c:if>
+
+                            <%--Si hay al menos un Libro, podemos aceptar el AsientoRegistalSir--%>
+                            <c:if test="${fn:length(libros) >= 1}">
 
                                 <%--Idioma--%>
                                 <div class="form-group col-xs-12">
@@ -268,8 +269,7 @@
                                     </div>
                                 </div>
 
-
-                                <%--Si s'ha de posar valor per tipoAsunto--%>
+                                <%--TipoAsunto--%>
 
                                 <div class="form-group col-xs-12">
                                     <div class="col-xs-5 pull-left etiqueta_regweb control-label">
@@ -279,13 +279,11 @@
                                     <div class="col-xs-7 no-pad-right" id="tipoAsunto">
                                         <form:select path="idTipoAsunto" cssClass="chosen-select">
                                             <form:option value="-1">...</form:option>
-                                            <form:options items="${tiposAsunto}" itemValue="id"
-                                                          itemLabel="traduccion.nombre"/>
+                                            <form:options items="${tiposAsunto}" itemValue="id" itemLabel="traduccion.nombre"/>
                                         </form:select>
                                         <span class="errors"></span>
                                     </div>
                                 </div>
-
 
                                 <div class="row">
                                     <div class="col-xs-12 list-group-item-heading">
@@ -296,22 +294,32 @@
                                 </div>
                                 <c:set var="errorObligatori"><spring:message code="error.valor.requerido"/></c:set>
                                 <input id="error" type="hidden" value="${errorObligatori}"/>
-                                <%--  </form:form>--%>
+
+                            </c:if>
+
+                            <%--Si no hay Libros no podremos aceptar el AsientoRegistralSir--%>
+                            <c:if test="${empty libros}">
+                                No existe ningún Libro de <c:if test="${not empty asientoRegistralSir.decodificacionUnidadTramitacionDestino}"> ${asientoRegistralSir.decodificacionUnidadTramitacionDestino}</c:if>.
+                                No se podrá aceptar el AsientoRegistralSir.
+                            </c:if>
+
                         </div>
 
-                        <div class="panel-footer">  <%--Botonera--%>
+                        <div class="panel-footer">
 
                             <div class="btn-group btn-group-justified" role="group" aria-label="...">
+
+                                <%--Reenviar--%>
                                 <div class="btn-group" role="group">
                                     <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <spring:message code="asientoRegistralSir.estado.reenviar"/> <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
                                         <li><a data-toggle="modal" href="#modalBuscadorOficinaSir" onclick="inicializarBuscador('#codNivelAdministracionOficinaSir','#codComunidadAutonomaOficinaSir','#provinciaOficinaSir','#localidadOficinaSir','${oficinaActiva.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficinaActiva.organismoResponsable.codAmbComunidad.codigoComunidad}','OficinaSir' );">Buscar oficina destino</a></li>
-
                                     </ul>
                                 </div>
 
+                                <%--Rechazar--%>
                                 <div class="btn-group" role="group">
                                     <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <spring:message code="asientoRegistralSir.estado.rechazar"/> <span class="caret"></span>
@@ -321,8 +329,8 @@
                                         <li><a data-toggle="modal" href="#rechazoModal" onclick="limpiarModalRechazo()">Inicio</a></li>
                                     </ul>
                                 </div>
-
                             </div>
+
                             <c:url value="/asientoRegistralSir/reenviar/${asientoRegistralSir.id}" var="urlReenviar" scope="request"/>
                             <form:form modelAttribute="reenviarForm" method="post" action="${urlReenviar}" cssClass="form-horizontal">
                                 <form:hidden path="oficinaReenvio" value=""/>

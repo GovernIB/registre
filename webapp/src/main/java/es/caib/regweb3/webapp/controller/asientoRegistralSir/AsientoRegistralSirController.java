@@ -153,13 +153,12 @@ public class AsientoRegistralSirController extends BaseController {
 
         AsientoRegistralSir asientoRegistralSir = asientoRegistralSirEjb.findById(idAsientoRegistralSir);
 
-        // Comprobamos la Oficina Activa puede gestionar el AsientoRegistralSir
-
+        // Comprobamos si el usuario puede gestionar este AsientoRegistralSir según su organismo destino
         if(getOrganismosSIRCodigo(request).contains(asientoRegistralSir.getCodigoUnidadTramitacionDestino())){
 
             model.addAttribute("asientoRegistralSir",asientoRegistralSir);
 
-            //Obtenemos los libros de
+            // Obtenemos los libros del Organismo destinatário del AsientoRegistralSir
             List<Libro> libros = libroEjb.getLibrosActivosOrganismo(asientoRegistralSir.getCodigoUnidadTramitacionDestino());
 
             model.addAttribute("libros",libros);
@@ -171,6 +170,7 @@ public class AsientoRegistralSirController extends BaseController {
             model.addAttribute("nivelesAdministracion", catNivelAdministracionEjb.getAll());
             model.addAttribute("comunidad", catNivelAdministracionEjb.getAll());
 
+            // Obtenemos la comunidad de la Entidad para personalizar el buscador de oficinas Sir
             Entidad entidad = getEntidadActiva(request);
             Organismo organismoRaiz = organismoEjb.findByCodigoEntidad(entidad.getCodigoDir3(), entidad.getId());
             if ((organismoRaiz != null) && organismoRaiz.getCodAmbComunidad() != null) {
