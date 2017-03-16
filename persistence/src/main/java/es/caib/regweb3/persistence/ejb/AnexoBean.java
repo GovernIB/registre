@@ -185,11 +185,11 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         anexo.setFechaCaptura(new Date());
 
         //Si firmaValida es null, por defecto marcamos como false
-        if(anexo.isFirmaValida()== null){
+        if(anexo.getFirmaValida()== null){
               anexo.setFirmaValida(false);
         }
         //Si justificante es null, por defecto marcamos como false
-        if(anexo.isJustificante() == null){
+        if(anexo.getJustificante() == null){
             anexo.setJustificante(false);
         }
 
@@ -887,6 +887,22 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         Query query = em.createQuery("Select anexo from Anexo as anexo where anexo.registroDetalle.id=:idRegistroDetalle order by anexo.id");
         query.setParameter("idRegistroDetalle", idRegistroDetalle);
         return query.getResultList();
+
+    }
+
+    @Override
+    public Long getIdJustificante(Long idRegistroDetalle) throws Exception{
+        Query query = em.createQuery("Select anexo.id from Anexo as anexo where anexo.registroDetalle.id=:idRegistroDetalle and " +
+                "anexo.justificante = true");
+        query.setParameter("idRegistroDetalle", idRegistroDetalle);
+
+        List<Long> justificante = query.getResultList();
+
+        if (justificante.size() == 1) {
+            return justificante.get(0);
+        } else {
+            return Long.valueOf(-1);
+        }
 
     }
 

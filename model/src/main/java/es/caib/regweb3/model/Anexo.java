@@ -293,7 +293,7 @@ public class Anexo implements Serializable {
     }
 
     @Column(name ="FIRMAVALIDA")
-    public Boolean isFirmaValida() {
+    public Boolean getFirmaValida() {
         return firmaValida;
     }
 
@@ -302,7 +302,7 @@ public class Anexo implements Serializable {
     }
 
     @Column(name = "JUSTIFICANTE")
-    public Boolean isJustificante() {
+    public Boolean getJustificante() {
         return justificante;
     }
 
