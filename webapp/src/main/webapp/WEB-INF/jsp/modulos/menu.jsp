@@ -189,7 +189,7 @@
                                         <a href="<c:url value="/oficioRemision/pendientesLlegada/list"/>"><spring:message code="oficioRemision.pendientesLlegada"/></a></li>
                                     <li class="divider"></li>
                                     <li><a href="<c:url value="/oficioRemision/entradasPendientesRemision"/>"><spring:message code="registroEntrada.oficiosRemision"/></a></li>
-                                    <%--<li><a href="<c:url value="/oficioRemision/salidasPendientesRemision"/>"><spring:message code="registroSalida.oficiosRemision"/></a></li>--%>
+                                    <li><a href="<c:url value="/oficioRemision/salidasPendientesRemision"/>"><spring:message code="registroSalida.oficiosRemision"/></a></li>
                                     <c:if test="${entidadActiva.sir}">
                                         <li class="divider"></li>
                                         <li class="dropdown-submenu-left toggle-left">
