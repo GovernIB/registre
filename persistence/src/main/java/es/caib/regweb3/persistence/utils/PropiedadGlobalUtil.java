@@ -219,9 +219,6 @@ public class PropiedadGlobalUtil {
         if (valor == null) {
             valor = getString(partialPropertyName);
         }
-        if(valor == null){ //si no esta definida la propiedad a nivel global se devuelven la clase del plugin por defecto
-            valor ="org.fundaciobit.plugins.distribucion.distribucionlocal.DistribucionLocalDistribucionPlugin";
-        }
         return valor;
     }
 

@@ -23,7 +23,7 @@ public class RegwebDistribucionPluginManager {
             String basePlugin= PropiedadGlobalUtil.getBasePluginDistribucion();
 
             if (className == null || className.trim().length() <= 0) {
-                log.info("No hi ha cap propietat " + basePlugin + " definint la classe que gestiona el plugin de distribució");
+                log.debug("No hi ha cap propietat " + basePlugin + " definint la classe que gestiona el plugin de distribució");
                 return null;
             }
 
