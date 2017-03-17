@@ -52,12 +52,6 @@ public class PostProcesoLocalPostProcesoPlugin extends AbstractPluginProperties 
     public void nuevoRegistroEntrada(RegistroEntrada registroEntrada) throws Exception{
         log.info("Nuevo registro entrada");
         log.info("NUMERO: " +registroEntrada.getNumeroRegistroFormateado());
-        if(registroEntrada.getRegistroDetalle()!=null){
-            log.info("INTERESADOS: " +registroEntrada.getRegistroDetalle().getInteresados().size());
-            log.info("ANEXOS: " +registroEntrada.getRegistroDetalle().getAnexos().size());
-        }
-
-
 
     }
 
@@ -72,7 +66,6 @@ public class PostProcesoLocalPostProcesoPlugin extends AbstractPluginProperties 
         log.info("Nuevo registro salida");
         log.info("NUMERO: " +registroSalida.getNumeroRegistroFormateado());
 
-    //    log.info("INTERESADOS "+ registroSalida.getRegistroDetalle().getInteresados().size());
 
     }
 
@@ -87,9 +80,7 @@ public class PostProcesoLocalPostProcesoPlugin extends AbstractPluginProperties 
     public void actualizarRegistroEntrada(RegistroEntrada registroEntrada) throws Exception{
         log.info("actualizar registro entrada");
         log.info("NUMERO: " +registroEntrada.getNumeroRegistroFormateado());
-        log.info("INTERESADOS: " +registroEntrada.getRegistroDetalle().getInteresados().size());
-        log.info("ANEXOS: " +registroEntrada.getNumeroRegistroFormateado());
-        //Ojo no vienen los interesados
+
 
     }
 

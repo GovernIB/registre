@@ -20,7 +20,7 @@ public class RegwebPostProcesoPluginManager {
             String basePlugin= PropiedadGlobalUtil.getBasePluginPostProceso();
 
             if (className == null || className.trim().length() <= 0) {
-                log.info("No hi ha cap propietat " + basePlugin + " definint la classe que gestiona el plugin de Post-Procés");
+                log.debug("No hi ha cap propietat " + basePlugin + " definint la classe que gestiona el plugin de Post-Procés");
                 return null;
             }
 
