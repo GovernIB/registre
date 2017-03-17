@@ -1,4 +1,4 @@
-package es.caib.regweb3.sir.core.model;
+package es.caib.regweb3.model.utils;
 
 
 /**

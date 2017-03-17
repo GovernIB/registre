@@ -2,6 +2,12 @@ package es.caib.regweb3.sir.utils;
 
 import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
+import es.caib.regweb3.model.AnexoSir;
+import es.caib.regweb3.model.AsientoRegistralSir;
+import es.caib.regweb3.model.InteresadoSir;
+import es.caib.regweb3.model.utils.DocumentacionFisica;
+import es.caib.regweb3.model.utils.IndicadorPrueba;
+import es.caib.regweb3.model.utils.TipoRegistro;
 import es.caib.regweb3.persistence.ejb.WebServicesMethodsLocal;
 import es.caib.regweb3.persistence.utils.ArchivoManager;
 import es.caib.regweb3.persistence.utils.Dir3CaibUtils;

@@ -1,6 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.sir.core.model.InteresadoSir;
+import es.caib.regweb3.model.InteresadoSir;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;

@@ -6,7 +6,9 @@
         CUSTODIAID varchar(256),
         FECHACAPTURA timestamp not null,
         FIRMA bytea,
+        FIRMAVALIDA bool,
         HASH bytea,
+        JUSTIFICANTE bool,
         MODOFIRMA int4,
         OBSERVACIONES varchar(50),
         ORIGEN int4,
@@ -390,14 +392,20 @@
 
     create table RWE_OFICIO_REMISION (
         ID int8 not null,
+        COD_ERROR varchar(255),
+        DESC_ERROR varchar(2000),
         DESTINOEXTERNOCODIGO varchar(9),
         DESTINOEXTERNODENOMINA varchar(300),
         ESTADO int4 not null,
         FECHA timestamp not null,
+        FECHA_ENVIO timestamp,
         FECHA_ESTADO timestamp,
-        IDINTERCAMBIOSIR varchar(300),
+        FECHA_RECEPCION timestamp,
         NUMREGISTRO int4 not null,
+        REINTENTOS int4,
+        SIR bool not null,
         TIPO_OFICIO int8 not null,
+        ASIENTO_REGISTRAL_SIR int8,
         LIBRO int8 not null,
         OFICINA int8 not null,
         ORGANISMODEST int8,
@@ -645,10 +653,11 @@
     create table RWE_TRAZABILIDAD (
         ID int8 not null,
         FECHA timestamp not null,
+        ASIENTO_REGISTRAL_SIR int8,
         OFICIO_REMISION int8 not null,
         REGENT_DESTINO int8,
         REGENT_ORIGEN int8,
-        REGISTRO_SALIDA int8 not null,
+        REGISTRO_SALIDA int8,
         primary key (ID)
     );
 
@@ -1031,6 +1040,11 @@
     create index RWE_OFIREM_USUARI_FK_I on RWE_OFICIO_REMISION (USUARIO);
 
     alter table RWE_OFICIO_REMISION
+        add constraint RWE_OFIREM_ASR_FK
+        foreign key (ASIENTO_REGISTRAL_SIR)
+        references RWE_ASIENTO_REGISTRAL_SIR;
+
+    alter table RWE_OFICIO_REMISION
         add constraint RWE_OFIREM_USUORM_FK
         foreign key (USUARIO)
         references RWE_USUARIO_ENTIDAD;
@@ -1316,6 +1330,11 @@
         add constraint RWE_TIPODOCUMENTAL_ENTIDAD_FK
         foreign key (ENTIDAD)
         references RWE_ENTIDAD;
+
+    alter table RWE_TRAZABILIDAD
+        add constraint RWE_TRAZAB_ASR_FK
+        foreign key (ASIENTO_REGISTRAL_SIR)
+        references RWE_ASIENTO_REGISTRAL_SIR;
 
     alter table RWE_TRAZABILIDAD
         add constraint RWE_TRAZAB_REGSAL_FK

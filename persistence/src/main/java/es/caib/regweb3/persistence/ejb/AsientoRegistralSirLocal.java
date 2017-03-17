@@ -1,8 +1,8 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.regweb3.model.AsientoRegistralSir;
+import es.caib.regweb3.model.utils.EstadoAsientoRegistralSir;
 import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
-import es.caib.regweb3.sir.core.model.EstadoAsientoRegistralSir;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
@@ -65,7 +65,7 @@ public interface AsientoRegistralSirLocal extends BaseEjb<AsientoRegistralSir, L
     public List<AsientoRegistralSir> getUltimosPendientesProcesar(Set<String> organismos, Integer total) throws Exception;
 
     /**
-     * Modifica el Estado de un {@link es.caib.regweb3.sir.core.model.AsientoRegistralSir}
+     * Modifica el Estado de un {@link AsientoRegistralSir}
      * @param idAsientoRegistralSir
      * @param estado
      * @throws Exception

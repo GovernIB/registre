@@ -39,7 +39,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @return
      * @throws Exception
      */
-    public OficioRemision registrarOficioRemision(OficioRemision oficioRemision, Long estado, Long tipoOficioRemision)
+    public OficioRemision registrarOficioRemision(OficioRemision oficioRemision, Long estado)
         throws Exception, I18NException, I18NValidationException;
 
     /**
@@ -49,6 +49,18 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @throws Exception
      */
     public void anularOficioRemision(Long idOficioRemision, UsuarioEntidad usuarioEntidad) throws Exception;
+
+    /**
+     *
+     * @param oficioRemision
+     * @param idRegistroEntrada
+     * @param accion
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     * @throws I18NValidationException
+     */
+    public OficioRemision registrarOficioRemisionSIR(OficioRemision oficioRemision, Long idRegistroEntrada, String accion) throws Exception, I18NException, I18NValidationException;
 
     /**
      * Devuelve los Oficios de Remisión pendientes de procesar de los organismos seleccionados

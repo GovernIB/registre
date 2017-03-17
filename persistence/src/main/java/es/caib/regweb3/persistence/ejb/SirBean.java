@@ -1,11 +1,9 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
-import es.caib.regweb3.model.utils.AnexoFull;
-import es.caib.regweb3.model.utils.CamposNTI;
+import es.caib.regweb3.model.utils.*;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
-import es.caib.regweb3.sir.core.model.*;
+import es.caib.regweb3.sir.core.model.TipoAnotacion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.apache.commons.codec.binary.Base64;
@@ -54,11 +52,11 @@ public class SirBean implements SirLocal{
     @EJB public TipoDocumentalLocal tipoDocumentalEjb;
     @EJB public AsientoRegistralSirLocal asientoRegistralSirEjb;
     @EJB public OficioRemisionEntradaUtilsLocal oficioRemisionEntradaUtilsEjb;
-    @EJB public TrazabilidadSirLocal trazabilidadSirEjb;
+    @EJB public OficioRemisionLocal oficioRemisionEjb;
 
     /**
      *
-     * @param idRegistroEntrada
+     * @param idRegistro
      * @param codigoEntidadRegistralDestino
      * @param denominacionEntidadRegistralDestino
      * @param oficinaActiva
@@ -69,30 +67,75 @@ public class SirBean implements SirLocal{
      * @throws I18NException
      */
     @Override
-    public AsientoRegistralSir enviarFicheroIntercambio(Long idRegistroEntrada, String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino, Oficina oficinaActiva, UsuarioEntidad usuario, Long idLibro) throws Exception, I18NException {
+    public OficioRemision enviarFicheroIntercambio(String tipoRegistro, Long idRegistro, String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino, Oficina oficinaActiva, UsuarioEntidad usuario, Long idLibro) throws Exception, I18NException {
 
-        // Creamos y guardamos el AsientoRegistralSir
-        AsientoRegistralSir asientoRegistralSir = transformarRegistroEntrada(idRegistroEntrada, codigoEntidadRegistralDestino, denominacionEntidadRegistralDestino);
+        log.info("Enviando Registro al nodo distribuido ");
+
+        AsientoRegistralSir asientoRegistralSir = null;
+
+        // Creamos el OficioRemision
+        OficioRemision oficioRemision = new OficioRemision();
+        oficioRemision.setSir(true);
+        oficioRemision.setAsientoRegistralSir(asientoRegistralSir);
+        oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_EXTERNO_ENVIADO);
+        oficioRemision.setFechaEstado(new Date());
+        oficioRemision.setOficina(oficinaActiva);
+        oficioRemision.setUsuarioResponsable(usuario);
+        oficioRemision.setLibro(new Libro(idLibro));
+
+        if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO)){
+
+            // Creamos y guardamos el AsientoRegistralSir
+            RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
+            asientoRegistralSir = transformarRegistroEntrada(registroEntrada, codigoEntidadRegistralDestino, denominacionEntidadRegistralDestino);
+
+            oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
+            oficioRemision.setDestinoExternoCodigo(registroEntrada.getDestinoExternoCodigo());
+            oficioRemision.setDestinoExternoDenominacion(registroEntrada.getDestinoExternoDenominacion());
+            oficioRemision.setOrganismoDestinatario(null);
+
+            List<RegistroEntrada> registrosEntrada = new ArrayList<RegistroEntrada>();
+            registrosEntrada.add(registroEntrada);
+            oficioRemision.setRegistrosEntrada(registrosEntrada);
+            oficioRemision.setRegistrosSalida(null);
+
+        }else if(tipoRegistro.equals(RegwebConstantes.REGISTRO_SALIDA_ESCRITO)){
+
+            // Creamos y guardamos el AsientoRegistralSir
+            RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(idRegistro);
+            asientoRegistralSir = transformarRegistroSalida(registroSalida, codigoEntidadRegistralDestino, denominacionEntidadRegistralDestino);
+
+            oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA);
+            oficioRemision.setDestinoExternoCodigo(asientoRegistralSir.getCodigoUnidadTramitacionDestino());
+            oficioRemision.setDestinoExternoDenominacion(asientoRegistralSir.getDecodificacionUnidadTramitacionDestino());
+            oficioRemision.setOrganismoDestinatario(null);
+
+            List<RegistroSalida> registrosSalida = new ArrayList<RegistroSalida>();
+            registrosSalida.add(registroSalida);
+            oficioRemision.setRegistrosSalida(registrosSalida);
+            oficioRemision.setRegistrosEntrada(null);
+
+        }
 
         // Establecer el tipo de anotación
         asientoRegistralSir.setTipoAnotacion(TipoAnotacion.ENVIO.getValue());
         asientoRegistralSir.setDecodificacionTipoAnotacion(TipoAnotacion.ENVIO.getName());
 
-        asientoRegistralSirEjb.persist(asientoRegistralSir);
+        // Creamos el AsientoRegistralSir
+        asientoRegistralSir = asientoRegistralSirEjb.persist(asientoRegistralSir);
 
-        // Creamos el OficioRemision
-        OficioRemision oficioRemision = oficioRemisionEntradaUtilsEjb.crearOficioRemisionSir(idRegistroEntrada, oficinaActiva, usuario, codigoEntidadRegistralDestino, denominacionEntidadRegistralDestino, idLibro,asientoRegistralSir.getIdentificadorIntercambio());
+        // Lo relacionamos al OficioRemision
+        oficioRemision.setAsientoRegistralSir(asientoRegistralSir);
 
-        // Creamos la TrazabilidadSir
-        TrazabilidadSir trazabilidadSir = new TrazabilidadSir();
-        trazabilidadSir.setAsientoRegistralSir(asientoRegistralSir);
-        trazabilidadSir.setFechaEnvio(new Date());
-        trazabilidadSir.setTipoIntercambio(RegwebConstantes.INTERCAMBIO_ENVIO);
-        trazabilidadSir.setOficioRemision(oficioRemision);
+        try {
+            oficioRemision = oficioRemisionEjb.registrarOficioRemisionSIR(oficioRemision, idRegistro,"ENVIO");
 
-        trazabilidadSirEjb.persist(trazabilidadSir);
+        } catch (I18NValidationException e) {
+            e.printStackTrace();
+        }
 
-        return asientoRegistralSir;
+
+        return oficioRemision;
 
     }
 
@@ -102,20 +145,41 @@ public class SirBean implements SirLocal{
      * @throws Exception
      */
     @Override
-    public Long aceptarAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs)
+    public RegistroEntrada aceptarAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs)
             throws Exception {
+
+        OficioRemision oficioRemision = new OficioRemision();
+
+        oficioRemision.setSir(true);
+        oficioRemision.setAsientoRegistralSir(asientoRegistralSir);
+        oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_ACEPTADO);
+        oficioRemision.setFechaEstado(new Date());
+        oficioRemision.setOficina(oficinaActiva);
+        oficioRemision.setUsuarioResponsable(usuario);
+        oficioRemision.setLibro(new Libro(idLibro));
+        oficioRemision.setOrganismoDestinatario(organismoEjb.findByCodigoEntidad(asientoRegistralSir.getCodigoUnidadTramitacionDestino(), asientoRegistralSir.getEntidad().getId()));
+        oficioRemision.setDestinoExternoCodigo(null);
+        oficioRemision.setDestinoExternoDenominacion(null);
 
         if(asientoRegistralSir.getTipoRegistro().equals(TipoRegistro.ENTRADA)) {
 
-            // Creamos el RegistroEntrada a partir del AsientoRegistral aceptado
+            oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
+
+            // Creamos y registramos el RegistroEntrada a partir del AsientoRegistral aceptado
             RegistroEntrada registroEntrada = null;
             try {
                 registroEntrada = transformarAsientoRegistralEntrada(asientoRegistralSir, usuario, oficinaActiva, idLibro, idIdioma, idTipoAsunto, camposNTIs);
 
+                // Creamos el Oficio de remision
+                List<RegistroEntrada> registros = new ArrayList<RegistroEntrada>();
+                registros.add(registroEntrada);
+                oficioRemision.setRegistrosEntrada(registros);
+                oficioRemisionEjb.registrarOficioRemisionSIR(oficioRemision, registroEntrada.getId(), "RECEPCION");
+
                 // Modificamos el estado del AsientoRegistralSir
                 asientoRegistralSirEjb.modificarEstado(asientoRegistralSir.getId(), EstadoAsientoRegistralSir.ACEPTADO);
 
-                return registroEntrada.getId();
+                return registroEntrada;
 
             } catch (I18NException e) {
                 e.printStackTrace();
@@ -123,7 +187,9 @@ public class SirBean implements SirLocal{
                 e.printStackTrace();
             }
 
-        }else if(asientoRegistralSir.getTipoRegistro().equals(TipoRegistro.SALIDA)){
+        }/*else if(asientoRegistralSir.getTipoRegistro().equals(TipoRegistro.SALIDA)){
+
+            oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA);
 
             // Creamos el RegistroEntrada a partir del AsientoRegistral aceptado
             RegistroSalida registroSalida = null;
@@ -133,7 +199,7 @@ public class SirBean implements SirLocal{
                 // Modificamos el estado del AsientoRegistralSir
                 asientoRegistralSirEjb.modificarEstado(asientoRegistralSir.getId(), EstadoAsientoRegistralSir.ACEPTADO);
 
-                return registroSalida.getId();
+                return registroSalida;
 
             } catch (I18NException e) {
                 e.printStackTrace();
@@ -141,15 +207,15 @@ public class SirBean implements SirLocal{
                 e.printStackTrace();
             }
 
-        }
+        }*/
 
         return null;
 
     }
 
     /**
-     * Transforma un {@link es.caib.regweb3.model.RegistroEntrada} en un {@link es.caib.regweb3.sir.core.model.AsientoRegistralSir}
-     * @param idRegistroEntrada
+     * Transforma un {@link es.caib.regweb3.model.RegistroEntrada} en un {@link AsientoRegistralSir}
+     * @param registroEntrada
      * @param codigoEntidadRegistralDestino
      * @param denominacionEntidadRegistralDestino
      * @return
@@ -158,10 +224,8 @@ public class SirBean implements SirLocal{
      * @throws I18NValidationException
      */
     @Override
-    public AsientoRegistralSir transformarRegistroEntrada(Long idRegistroEntrada, String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino)
+    public AsientoRegistralSir transformarRegistroEntrada(RegistroEntrada registroEntrada, String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino)
             throws Exception, I18NException {
-
-        RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistroEntrada);
 
         RegistroDetalle registroDetalle = registroEntrada.getRegistroDetalle();
 
@@ -221,7 +285,7 @@ public class SirBean implements SirLocal{
     }
 
     /**
-     * Transforma un {@link es.caib.regweb3.sir.core.model.AsientoRegistralSir} en un {@link es.caib.regweb3.model.RegistroEntrada}
+     * Transforma un {@link AsientoRegistralSir} en un {@link es.caib.regweb3.model.RegistroEntrada}
      * @param asientoRegistralSir
      * @param usuario
      * @param oficinaActiva
@@ -277,17 +341,18 @@ public class SirBean implements SirLocal{
     }
 
     /**
-     * Transforma un {@link es.caib.regweb3.model.RegistroSalida} en un {@link es.caib.regweb3.sir.core.model.AsientoRegistralSir}
+     * Transforma un {@link es.caib.regweb3.model.RegistroSalida} en un {@link AsientoRegistralSir}
      * @param registroSalida
-     * @param oficinaSir
+     * @param codigoEntidadRegistralDestino
+     * @param denominacionEntidadRegistralDestino
      * @return
      * @throws Exception
      * @throws I18NException
      * @throws I18NValidationException
      */
     @Override
-    public AsientoRegistralSir transformarRegistroSalida(RegistroSalida registroSalida, OficinaTF oficinaSir, String codigoUnidadTramitacionDestino, String decodificacionUnidadTramitacionDestino)
-            throws Exception, I18NException, I18NValidationException{
+    public AsientoRegistralSir transformarRegistroSalida(RegistroSalida registroSalida,String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino)
+            throws Exception, I18NException{
 
         RegistroDetalle registroDetalle = registroSalida.getRegistroDetalle();
 
@@ -306,10 +371,10 @@ public class SirBean implements SirLocal{
         asientoRegistralSir.setDecodificacionUnidadTramitacionOrigen(registroSalida.getOficina().getOrganismoResponsable().getDenominacion());
 
         // Segmento De_Destino
-        asientoRegistralSir.setCodigoEntidadRegistralDestino(oficinaSir.getCodigo());
-        asientoRegistralSir.setDecodificacionEntidadRegistralDestino(oficinaSir.getDenominacion());
-        asientoRegistralSir.setCodigoUnidadTramitacionDestino(codigoUnidadTramitacionDestino);
-        asientoRegistralSir.setDecodificacionUnidadTramitacionDestino(decodificacionUnidadTramitacionDestino);
+        asientoRegistralSir.setCodigoEntidadRegistralDestino(codigoEntidadRegistralDestino);
+        asientoRegistralSir.setDecodificacionEntidadRegistralDestino(denominacionEntidadRegistralDestino);
+        asientoRegistralSir.setCodigoUnidadTramitacionDestino(obtenerCodigoUnidadTramitacionDestino(registroSalida));
+        asientoRegistralSir.setDecodificacionUnidadTramitacionDestino(obtenerDenominacionUnidadTramitacionDestino(registroSalida));
 
         // Segmento De_Asunto
         asientoRegistralSir.setResumen(registroDetalle.getExtracto());
@@ -338,7 +403,7 @@ public class SirBean implements SirLocal{
         asientoRegistralSir.setSolicita(registroDetalle.getSolicita());
 
         // Segmento De_Interesados
-        asientoRegistralSir.setInteresados(null);
+        asientoRegistralSir.setInteresados(procesarInteresadosSir(registroDetalle.getInteresados()));
 
         // Segmento De_Anexos
         asientoRegistralSir.setAnexos(procesarAnexosSir(registroDetalle.getAnexosFull(), asientoRegistralSir.getIdentificadorIntercambio()));
@@ -347,7 +412,7 @@ public class SirBean implements SirLocal{
     }
 
     /**
-     * Transforma un {@link es.caib.regweb3.sir.core.model.AsientoRegistralSir} en un {@link es.caib.regweb3.model.RegistroSalida}
+     * Transforma un {@link AsientoRegistralSir} en un {@link es.caib.regweb3.model.RegistroSalida}
      * @param asientoRegistralSir
      * @param usuario
      * @param oficinaActiva
@@ -442,6 +507,7 @@ public class SirBean implements SirLocal{
         registroDetalle.setOficinaOrigenExternoCodigo(asientoRegistralSir.getCodigoEntidadRegistralOrigen());
         registroDetalle.setOficinaOrigenExternoDenominacion(asientoRegistralSir.getDecodificacionEntidadRegistralOrigen());
 
+        registroDetalle.setNumeroRegistroOrigen(asientoRegistralSir.getNumeroRegistro());
         registroDetalle.setFechaOrigen(asientoRegistralSir.getFechaRegistro());
 
         // Interesados
@@ -519,11 +585,9 @@ public class SirBean implements SirLocal{
 
         // Averiguamos que tipo es el Interesado
         if (StringUtils.isEmpty(interesadoSir.getRazonSocialInteresado())) {
-            log.info("Persona Fisica: " + interesadoSir.getNombreInteresado());
             interesado.setTipo(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA);
 
         } else {
-            log.info("Persona Juridica: " + interesadoSir.getRazonSocialInteresado());
             interesado.setTipo(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA);
         }
 
@@ -1224,6 +1288,30 @@ public class SirBean implements SirLocal{
         }
 
         return denominacionOficinaOrigen;
+    }
+
+    /**
+     *
+     * @param registroSalida
+     * @return
+     */
+    protected String obtenerCodigoUnidadTramitacionDestino(RegistroSalida registroSalida){
+
+        List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
+
+        return interesados.get(0).getCodigoDir3();
+    }
+
+    /**
+     *
+     * @param registroSalida
+     * @return
+     */
+    protected String obtenerDenominacionUnidadTramitacionDestino(RegistroSalida registroSalida){
+
+        List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
+
+        return interesados.get(0).getRazonSocial();
     }
 
     /**

@@ -1,6 +1,6 @@
 package es.caib.regweb3.sir.ejb;
 
-import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
+import es.caib.regweb3.model.AsientoRegistralSir;
 import es.caib.regweb3.sir.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.utils.Mensaje;
 

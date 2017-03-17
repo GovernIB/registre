@@ -69,7 +69,7 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
 
     @Override
     @WebMethod(operationName = "envioFicherosAAplicacion")
-    public RespuestaWS envioFicherosAAplicacion(@WebParam(name = "value0") String value0, @WebParam(name = "value1") String value1) {
+    public RespuestaWS envioFicherosAAplicacion(@WebParam(name = "registro") String registro, @WebParam(name = "firmaRegistro") String firmaRegistro) {
 
         // Realizamos el login con un usuario existente en Seycon, porque este WS está sin autenticar
         LoginContext lc = null;
@@ -94,7 +94,7 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
         }
 
         log.info("WS_SIR8_BImpl: recibiendo fichero intercambio");
-        log.info("Registro: " + value0);
+        log.info("Registro: " + registro);
         //log.info("Firma: " + firmaRegistro);
 
         RespuestaWS respuestaWS = null;
@@ -102,7 +102,7 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
         try {
 
             // Envia el fichero de intercambio a REGWEB3
-            recepcionEjb.recibirFicheroIntercambio(value0, webServicesMethodsEjb);
+            recepcionEjb.recibirFicheroIntercambio(registro, webServicesMethodsEjb);
 
             // Creamos la respuesta exitosa
             respuestaWS = crearRespuestaWS(Errores.OK);

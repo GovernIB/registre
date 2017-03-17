@@ -117,22 +117,6 @@ public interface OficioRemisionEntradaUtilsLocal {
                                                      Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, String organismoExternoCodigo,
                                                      String organismoExternoDenominacion, Long idLibro) throws Exception, I18NException, I18NValidationException;
 
-    /**
-     * @param idRegistroEntrada
-     * @param oficinaActiva
-     * @param usuarioEntidad
-     * @param organismoExterno
-     * @param organismoExternoDenominacion
-     * @param idLibro
-     * @return
-     * @throws Exception
-     * @throws I18NException
-     * @throws I18NValidationException
-     */
-    public OficioRemision crearOficioRemisionSir(Long idRegistroEntrada,
-                                                 Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, String organismoExterno,
-                                                 String organismoExternoDenominacion, Long idLibro, String identificadorIntercambio) throws Exception;
-
 
     /**
      * @param oficioRemision

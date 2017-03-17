@@ -1,9 +1,18 @@
 package es.caib.regweb3.sir.ejb;
 
+import es.caib.regweb3.model.AsientoRegistralSir;
+import es.caib.regweb3.model.Oficina;
+import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.utils.CamposNTI;
+import es.caib.regweb3.model.utils.EstadoAsientoRegistralSir;
+import es.caib.regweb3.persistence.ejb.SirLocal;
 import es.caib.regweb3.persistence.ejb.WebServicesMethodsLocal;
 import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
-import es.caib.regweb3.sir.core.model.*;
+import es.caib.regweb3.sir.core.model.Errores;
+import es.caib.regweb3.sir.core.model.TipoAnotacion;
+import es.caib.regweb3.sir.core.model.TipoMensaje;
 import es.caib.regweb3.sir.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.utils.Mensaje;
 import es.caib.regweb3.sir.utils.Sicres3XML;
@@ -17,6 +26,7 @@ import javax.ejb.Stateless;
 import javax.xml.xpath.XPathConstants;
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 /**
  * Ejb para la gestión de la Recepción de Ficheros de Intercambios y Mensajes de Dtos de Control
@@ -29,6 +39,9 @@ public class RecepcionBean implements RecepcionLocal{
 
     @EJB(name = "MensajeEJB")
     public MensajeLocal mensajeEjb;
+
+    @EJB(name = "SirEJB")
+    public SirLocal sirEjb;
 
     public Sicres3XML sicres3XML = new Sicres3XML();
 
@@ -120,9 +133,10 @@ public class RecepcionBean implements RecepcionLocal{
             throw new ValidacionException(Errores.ERROR_0037, e);
         }
 
-        // tipo anotacion envio
+        // ENVIO
         if (TipoAnotacion.ENVIO.getValue().equals(ficheroIntercambio.getTipoAnotacion())) {
 
+            // Buscamos si el Asiento recibido ya existe en el sistema
             try {
                 asientoRegistralSir = webServicesMethodsEjb.getAsientoRegistral(ficheroIntercambio.getIdentificadorIntercambio(),ficheroIntercambio.getCodigoEntidadRegistralDestino());
             } catch (Exception e) {
@@ -164,17 +178,46 @@ public class RecepcionBean implements RecepcionLocal{
         }
 
 
-        // tipo anotacion reenvio
+        // REENVIO
         if (TipoAnotacion.REENVIO.getValue().equals(ficheroIntercambio.getTipoAnotacion())) {
 
         }
 
-        // tipo anotacion rechazo
+        // RECHAZO
         if (TipoAnotacion.RECHAZO.getValue().equals(ficheroIntercambio.getTipoAnotacion())) {
 
         }
 
         return asientoRegistralSir;
+    }
+
+    /**
+     *
+     * @param asientoRegistralSir
+     * @param usuario
+     * @param oficinaActiva
+     * @param idLibro
+     * @param idIdioma
+     * @param idTipoAsunto
+     * @param camposNTIs
+     * @return
+     * @throws Exception
+     */
+    public RegistroEntrada aceptarAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs) throws Exception{
+
+        log.info("Aceptando AsientoRegistralSir: " + asientoRegistralSir.getIdentificadorIntercambio());
+
+        RegistroEntrada registroEntrada =  sirEjb.aceptarAsientoRegistralSir(asientoRegistralSir, usuario, oficinaActiva, idLibro, idIdioma, idTipoAsunto, camposNTIs);
+
+        if(registroEntrada != null){
+
+            mensajeEjb.enviarMensajeConfirmacion(asientoRegistralSir, registroEntrada.getNumeroRegistroFormateado());
+
+            return registroEntrada;
+
+        }
+
+        return null;
     }
 
     /**

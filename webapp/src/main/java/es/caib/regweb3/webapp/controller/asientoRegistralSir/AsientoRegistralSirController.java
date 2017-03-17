@@ -1,12 +1,10 @@
 package es.caib.regweb3.webapp.controller.asientoRegistralSir;
 
 import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.utils.EstadoAsientoRegistralSir;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
-import es.caib.regweb3.sir.core.model.EstadoAsientoRegistralSir;
-import es.caib.regweb3.sir.core.model.TipoRegistro;
-import es.caib.regweb3.sir.ejb.MensajeLocal;
+import es.caib.regweb3.sir.ejb.RecepcionLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.AsientoRegistralSirBusquedaForm;
@@ -67,8 +65,8 @@ public class AsientoRegistralSirController extends BaseController {
     @EJB(mappedName = "regweb3/SirEJB/local")
     public SirLocal sirEjb;
 
-    @EJB(mappedName = "regweb3/MensajeEJB/local")
-    public MensajeLocal mensajeEjb;
+    @EJB(mappedName = "regweb3/RecepcionEJB/local")
+    public RecepcionLocal recepcionEjb;
 
     @EJB(mappedName = "regweb3/LibroEJB/local")
     public LibroLocal libroEjb;
@@ -200,7 +198,6 @@ public class AsientoRegistralSirController extends BaseController {
         AsientoRegistralSir asientoRegistralSir = asientoRegistralSirEjb.findById(idAsientoRegistralSir);
         Oficina oficinaActiva = getOficinaActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-        Long idRegistro;
         String variableReturn = "redirect:/asientoRegistralSir/"+idAsientoRegistralSir+"/detalle";
 
         // Comprobamos si ya ha sido confirmado
@@ -210,29 +207,18 @@ public class AsientoRegistralSirController extends BaseController {
         }
 
         // Procesa el AsientoRegistralSir
-        String numeroRegistro = null;
         try{
-            idRegistro = sirEjb.aceptarAsientoRegistralSir(asientoRegistralSir, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getIdTipoAsunto(), registrarForm.getCamposNTIs());
+            //idRegistro = sirEjb.aceptarAsientoRegistralSir(asientoRegistralSir, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getIdTipoAsunto(), registrarForm.getCamposNTIs());
+            RegistroEntrada registroEntrada = recepcionEjb.aceptarAsientoRegistralSir(asientoRegistralSir, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getIdTipoAsunto(), registrarForm.getCamposNTIs());
 
-            if(asientoRegistralSir.getTipoRegistro().equals(TipoRegistro.ENTRADA)) {
-                variableReturn = "redirect:/registroEntrada/" + idRegistro + "/detalle";
-                numeroRegistro = registroEntradaEjb.getNumeroRegistroEntrada(idRegistro);
-            }
-            if(asientoRegistralSir.getTipoRegistro().equals(TipoRegistro.SALIDA)) {
-                variableReturn = "redirect:/registroSalida/" + idRegistro + "/detalle";
-                numeroRegistro = registroSalidaEjb.getNumeroRegistroSalida(idRegistro);
-            }
+            variableReturn = "redirect:/registroEntrada/" + registroEntrada.getId() + "/detalle";
 
-            if(numeroRegistro != null){
-                // Enviamos el mensaje de confirmación
-                mensajeEjb.enviarMensajeConfirmacion(asientoRegistralSir, numeroRegistro);
-                Mensaje.saveMessageInfo(request, getMessage("asientoRegistralSir.aceptar.ok"));
-            }
-
+            Mensaje.saveMessageInfo(request, getMessage("asientoRegistralSir.aceptar.ok"));
 
         }catch (Exception e){
             Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.error.aceptar"));
             e.printStackTrace();
+            return variableReturn;
         }
 
         return variableReturn;

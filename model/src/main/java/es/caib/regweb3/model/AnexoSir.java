@@ -1,6 +1,5 @@
-package es.caib.regweb3.sir.core.model;
+package es.caib.regweb3.model;
 
-import es.caib.regweb3.model.Archivo;
 import org.hibernate.annotations.ForeignKey;
 
 import javax.persistence.*;

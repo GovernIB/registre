@@ -1,10 +1,13 @@
 package es.caib.regweb3.sir.ejb;
 
+import es.caib.regweb3.model.AsientoRegistralSir;
 import es.caib.regweb3.model.Oficina;
+import es.caib.regweb3.model.OficioRemision;
 import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.utils.EstadoAsientoRegistralSir;
+import es.caib.regweb3.persistence.ejb.AsientoRegistralSirLocal;
 import es.caib.regweb3.persistence.ejb.SirLocal;
 import es.caib.regweb3.sir.core.excepcion.SIRException;
-import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
 import es.caib.regweb3.sir.core.model.Errores;
 import es.caib.regweb3.sir.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.utils.Sicres3XML;
@@ -32,12 +35,15 @@ public class EmisionBean implements EmisionLocal{
     @EJB(mappedName = "regweb3/SirEJB/local")
     public SirLocal sirEjb;
 
+    @EJB public AsientoRegistralSirLocal asientoRegistralSirEjb;
+
     Sicres3XML sicres3XML = new Sicres3XML();
 
 
     /**
      * Envío de un AsientoRegistral en formato SICRES3 a un nodo distribuido
-     * @param idRegistroEntrada
+     * @param tipoRegistro
+     * @param idRegistro
      * @param codigoEntidadRegistralDestino
      * @param denominacionEntidadRegistralDestino
      * @param oficinaActiva
@@ -45,14 +51,15 @@ public class EmisionBean implements EmisionLocal{
      * @param idLibro
      * @return
      */
-    public AsientoRegistralSir enviarFicheroIntercambio(Long idRegistroEntrada, String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino, Oficina oficinaActiva, UsuarioEntidad usuario, Long idLibro){
+    public OficioRemision enviarFicheroIntercambio(String tipoRegistro, Long idRegistro, String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino, Oficina oficinaActiva, UsuarioEntidad usuario, Long idLibro){
 
-        AsientoRegistralSir asientoRegistralSir = null;
+        OficioRemision oficioRemision = null;
 
         try {
 
-            asientoRegistralSir = sirEjb.enviarFicheroIntercambio(idRegistroEntrada, codigoEntidadRegistralDestino, denominacionEntidadRegistralDestino, oficinaActiva, usuario,idLibro);
+            oficioRemision = sirEjb.enviarFicheroIntercambio(tipoRegistro, idRegistro, codigoEntidadRegistralDestino, denominacionEntidadRegistralDestino, oficinaActiva, usuario,idLibro);
 
+            AsientoRegistralSir asientoRegistralSir = oficioRemision.getAsientoRegistralSir();
 
             // Creamos el xml de intercambio
             String xml = sicres3XML.crearXMLFicheroIntercambioSICRES3(asientoRegistralSir);
@@ -63,7 +70,11 @@ public class EmisionBean implements EmisionLocal{
             if (respuesta != null) {
                 log.info("Respuesta: " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
 
-                if (!Errores.OK.getValue().equals(respuesta.getCodigo())) {
+                if (Errores.OK.getValue().equals(respuesta.getCodigo())) {
+
+                    asientoRegistralSirEjb.modificarEstado(asientoRegistralSir.getId(), EstadoAsientoRegistralSir.ENVIADO_Y_ACK);
+
+                }else{
                     log.error("Respuesta: " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
                     throw new SIRException("Error " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
                 }
@@ -79,7 +90,7 @@ public class EmisionBean implements EmisionLocal{
             throw new SIRException("Error en la llamada al servicio de recepción de ficheros de datos de intercambio (WS_SIR6_B)");
         }
 
-        return asientoRegistralSir;
+        return oficioRemision;
     }
 
     /**
@@ -99,17 +110,6 @@ public class EmisionBean implements EmisionLocal{
     }
 
     /**
-     * @return
-     * @throws Exception
-     */
-    public WS_SIR6_B_PortType getWS_SIR6_B() throws Exception {
-        WS_SIR6_BServiceLocator locator = new WS_SIR6_BServiceLocator();
-        URL url = new URL(Configuracio.getSirServerBase() + "/WS_SIR6_B");
-        return  locator.getWS_SIR6_B(url);
-    }
-
-
-    /**
      *
      * @param xml
      * @return
@@ -122,6 +122,18 @@ public class EmisionBean implements EmisionLocal{
         return ws_sir6_b.recepcionFicheroDeAplicacion(xml);
 
     }
+
+    /**
+     * @return
+     * @throws Exception
+     */
+    public WS_SIR6_B_PortType getWS_SIR6_B() throws Exception {
+        WS_SIR6_BServiceLocator locator = new WS_SIR6_BServiceLocator();
+        URL url = new URL(Configuracio.getSirServerBase() + "/WS_SIR6_B");
+
+        return  locator.getWS_SIR6_B(url);
+    }
+
 
     /**
      * Calcula una cadena de ocho dígitos a partir del instante de tiempo actual.

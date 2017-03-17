@@ -12,6 +12,6 @@
         <p><small class="text-muted"><i class="fa fa-clock-o"></i> <fmt:formatDate value="${registroEntradaOrigen.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></small></p>
     </div>
     <div class="timeline-body">
-        <p><small><i class="fa fa-exchange"></i> <strong><spring:message code="registroEntrada.oficina"/>:</strong> ${registroEntradaOrigen.oficina.denominacion}</small></p>
+        <p><small><i class="fa fa-home"></i> <strong><spring:message code="registroEntrada.oficina"/>:</strong> ${registroEntradaOrigen.oficina.denominacion}</small></p>
     </div>
 </div>

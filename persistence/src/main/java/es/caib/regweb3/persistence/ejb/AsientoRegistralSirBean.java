@@ -1,12 +1,12 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.regweb3.model.AnexoSir;
+import es.caib.regweb3.model.AsientoRegistralSir;
 import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.InteresadoSir;
+import es.caib.regweb3.model.utils.EstadoAsientoRegistralSir;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.sir.core.model.AnexoSir;
-import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
-import es.caib.regweb3.sir.core.model.EstadoAsientoRegistralSir;
-import es.caib.regweb3.sir.core.model.InteresadoSir;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;

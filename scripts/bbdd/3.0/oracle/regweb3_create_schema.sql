@@ -6,7 +6,9 @@
         CUSTODIAID varchar2(256 char),
         FECHACAPTURA timestamp not null,
         FIRMA raw(255),
+        FIRMAVALIDA number(1,0),
         HASH raw(255),
+        JUSTIFICANTE number(1,0),
         MODOFIRMA number(10,0),
         OBSERVACIONES varchar2(50 char),
         ORIGEN number(10,0),
@@ -358,14 +360,20 @@
 
     create table RWE_OFICIO_REMISION (
         ID number(19,0) not null,
+        COD_ERROR varchar2(255 char),
+        DESC_ERROR varchar2(2000 char),
         DESTINOEXTERNOCODIGO varchar2(9 char),
         DESTINOEXTERNODENOMINA varchar2(300 char),
         ESTADO number(10,0) not null,
         FECHA timestamp not null,
+        FECHA_ENVIO timestamp,
         FECHA_ESTADO timestamp,
-        IDINTERCAMBIOSIR varchar2(300 char),
+        FECHA_RECEPCION timestamp,
         NUMREGISTRO number(10,0) not null,
+        REINTENTOS number(10,0),
+        SIR number(1,0) not null,
         TIPO_OFICIO number(19,0) not null,
+        ASIENTO_REGISTRAL_SIR number(19,0),
         LIBRO number(19,0) not null,
         OFICINA number(19,0) not null,
         ORGANISMODEST number(19,0),
@@ -594,10 +602,11 @@
     create table RWE_TRAZABILIDAD (
         ID number(19,0) not null,
         FECHA timestamp not null,
+        ASIENTO_REGISTRAL_SIR number(19,0),
         OFICIO_REMISION number(19,0) not null,
         REGENT_DESTINO number(19,0),
         REGENT_ORIGEN number(19,0),
-        REGISTRO_SALIDA number(19,0) not null
+        REGISTRO_SALIDA number(19,0)
     );
 
     create table RWE_TRA_CODIGOASUNTO (
@@ -1078,6 +1087,11 @@
         references RWE_CATSERVICIO;
 
     alter table RWE_OFICIO_REMISION
+        add constraint RWE_OFIREM_ASR_FK
+        foreign key (ASIENTO_REGISTRAL_SIR)
+        references RWE_ASIENTO_REGISTRAL_SIR;
+
+    alter table RWE_OFICIO_REMISION
         add constraint RWE_OFIREM_USUORM_FK
         foreign key (USUARIO)
         references RWE_USUARIO_ENTIDAD;
@@ -1321,6 +1335,11 @@
         add constraint RWE_TIPODOCUMENTAL_ENTIDAD_FK
         foreign key (ENTIDAD)
         references RWE_ENTIDAD;
+
+    alter table RWE_TRAZABILIDAD
+        add constraint RWE_TRAZAB_ASR_FK
+        foreign key (ASIENTO_REGISTRAL_SIR)
+        references RWE_ASIENTO_REGISTRAL_SIR;
 
     alter table RWE_TRAZABILIDAD
         add constraint RWE_TRAZAB_REGSAL_FK

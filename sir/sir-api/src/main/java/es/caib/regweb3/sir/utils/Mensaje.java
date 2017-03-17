@@ -1,6 +1,6 @@
 package es.caib.regweb3.sir.utils;
 
-import es.caib.regweb3.sir.core.model.IndicadorPrueba;
+import es.caib.regweb3.model.utils.IndicadorPrueba;
 import es.caib.regweb3.sir.core.model.TipoMensaje;
 
 import java.util.Date;

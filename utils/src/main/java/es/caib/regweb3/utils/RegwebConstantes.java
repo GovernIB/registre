@@ -255,11 +255,6 @@ public interface RegwebConstantes {
             REGISTRO_OFICIO_INTERNO,
             REGISTRO_TRAMITADO,
             REGISTRO_ANULADO};
-    
-    
-    /* ------------- TIPO INTERCAMBIO SIR ---------------*/
-    public static final Long INTERCAMBIO_ENVIO = 1L;
-    public static final Long INTERCAMBIO_RECEPCION = 2L;
 
     /* ------------- TRANSPORTE ---------------*/
 

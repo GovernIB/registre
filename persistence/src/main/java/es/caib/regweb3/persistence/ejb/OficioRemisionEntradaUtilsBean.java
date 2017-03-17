@@ -10,7 +10,6 @@ import es.caib.regweb3.model.utils.OficioPendienteLlegada;
 import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
 import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
 import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.sir.core.excepcion.SIRException;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -77,22 +76,21 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         // Si el array de organismos está vacío, no incluimos la condición.
         String organismosWhere = "";
         if (organismos.size() > 0) {
-            organismosWhere = "re.destino.id not in (:organismos) and ";
+            organismosWhere = " and re.destino.id not in (:organismos) ";
         }
 
         // Obtenemos los Organismos destinatarios PROPIOS que tiene Oficios de Remision pendientes de tramitar
         Query q;
         q = em.createQuery("Select distinct re.destino.codigo, re.destino.denominacion from RegistroEntrada as re where " +
                 "re.estado = :valido and re.oficina.id = :idOficina and re.libro in (:libros) and " +
-                "re.destino != null and " + organismosWhere +
-                " re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra where tra.oficioRemision.tipoOficioRemision = :tipoOficioRemision and tra.oficioRemision.estado != :anulado)");
+                "re.destino != null " + organismosWhere);
 
         // Parámetros
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q.setParameter("idOficina", idOficina);
         q.setParameter("libros", libros);
-        q.setParameter("tipoOficioRemision", RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
-        q.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
+        //q.setParameter("tipoOficioRemision", RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
+        //q.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
 
         if (organismos.size() > 0) {
             q.setParameter("organismos", organismos);
@@ -111,15 +109,14 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         Query q1;
         q1 = em.createQuery("Select distinct re.destinoExternoCodigo, re.destinoExternoDenominacion from RegistroEntrada as re where " +
                 "re.estado = :valido and re.oficina.id = :idOficina and re.libro in (:libros) and " +
-                "re.destino is null and " +
-                "re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra where tra.oficioRemision.tipoOficioRemision = :tipoOficioRemision and tra.oficioRemision.estado != :anulado)");
+                "re.destino is null ");
 
         // Parámetros
         q1.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q1.setParameter("idOficina", idOficina);
         q1.setParameter("libros", libros);
-        q1.setParameter("tipoOficioRemision", RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
-        q1.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
+        //q1.setParameter("tipoOficioRemision", RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
+        //q1.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
 
         List<Object[]> externos = q1.getResultList();
 
@@ -141,21 +138,20 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         // Si el array de organismos está vacío, no incluimos la condición.
         String organismosWhere = "";
         if (organismos.size() > 0) {
-            organismosWhere = "re.destino.id not in (:organismos) and ";
+            organismosWhere = "and re.destino.id not in (:organismos)";
         }
 
         Query q;
         q = em.createQuery("Select count(re.id) from RegistroEntrada as re where " +
                 "re.estado = :valido and re.oficina.id = :idOficina and re.libro in (:libros) and " +
-                "re.destino != null and " + organismosWhere +
-                " re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra where tra.oficioRemision.tipoOficioRemision = :tipoOficioRemision and tra.oficioRemision.estado != :anulado)");
+                "re.destino != null " + organismosWhere);
 
         // Parámetros
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q.setParameter("idOficina", idOficina);
-        q.setParameter("tipoOficioRemision", RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
+        //q.setParameter("tipoOficioRemision", RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
         q.setParameter("libros", libros);
-        q.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
+        //q.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
 
         if (organismos.size() > 0) {
             q.setParameter("organismos", organismos);
@@ -166,14 +162,13 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         Query q1;
         q1 = em.createQuery("Select count(re.id) from RegistroEntrada as re where " +
                 "re.estado = :valido and re.oficina.id = :idOficina and re.libro in (:libros) and " +
-                "re.destino is null and " +
-                "re.id not in (select tra.registroEntradaOrigen.id from Trazabilidad as tra where tra.oficioRemision.tipoOficioRemision = :tipoOficioRemision and tra.oficioRemision.estado != :anulado)");
+                "re.destino is null ");
 
         q1.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q1.setParameter("idOficina", idOficina);
-        q1.setParameter("tipoOficioRemision", RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
+        //q1.setParameter("tipoOficioRemision", RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
         q1.setParameter("libros", libros);
-        q1.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
+        //q1.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
 
         total = total +  (Long) q1.getSingleResult();
 
@@ -439,8 +434,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         oficioRemision.setOrganismoDestinatario(new Organismo(idOrganismo));
 
         synchronized (this) {
-            oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision,
-                    RegwebConstantes.REGISTRO_OFICIO_INTERNO, RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
+            oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision, RegwebConstantes.REGISTRO_OFICIO_INTERNO);
         }
 
         return oficioRemision;
@@ -466,7 +460,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
         OficioRemision oficioRemision = new OficioRemision();
         oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
-        oficioRemision.setIdentificadorIntercambioSir(null);
+        oficioRemision.setAsientoRegistralSir(null);
         oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_EXTERNO_ENVIADO);
         oficioRemision.setFechaEstado(new Date());
         oficioRemision.setOficina(oficinaActiva);
@@ -479,46 +473,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         oficioRemision.setOrganismoDestinatario(null);
 
         synchronized (this) {
-            oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision,
-                    RegwebConstantes.REGISTRO_OFICIO_EXTERNO, RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
-        }
-
-        return oficioRemision;
-
-    }
-
-    @Override
-    public OficioRemision crearOficioRemisionSir(Long idRegistroEntrada, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, String organismoExterno, String organismoExternoDenominacion, Long idLibro, String identificadorIntercambio) throws Exception{
-
-
-        List<RegistroEntrada> registros = new ArrayList<RegistroEntrada>();
-        registros.add(registroEntradaEjb.getReference(idRegistroEntrada));
-
-        OficioRemision oficioRemision = new OficioRemision();
-        oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
-        oficioRemision.setIdentificadorIntercambioSir(identificadorIntercambio);
-        oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_EXTERNO_ENVIADO);
-        oficioRemision.setFechaEstado(new Date());
-        oficioRemision.setOficina(oficinaActiva);
-        oficioRemision.setFecha(new Date());
-        oficioRemision.setRegistrosEntrada(registros);
-        oficioRemision.setUsuarioResponsable(usuarioEntidad);
-        oficioRemision.setLibro(new Libro(idLibro));
-        oficioRemision.setDestinoExternoCodigo(organismoExterno);
-        oficioRemision.setDestinoExternoDenominacion(organismoExternoDenominacion);
-        oficioRemision.setOrganismoDestinatario(null);
-
-        synchronized (this) {
-            try {
-                oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision,
-                        RegwebConstantes.REGISTRO_OFICIO_EXTERNO, RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
-            } catch (I18NException e) {
-                e.printStackTrace();
-                throw new SIRException("Error al crear el OficioRemision");
-            } catch (I18NValidationException e) {
-                e.printStackTrace();
-                throw new SIRException("Error al crear el OficioRemision");
-            }
+            oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision, RegwebConstantes.REGISTRO_OFICIO_EXTERNO);
         }
 
         return oficioRemision;

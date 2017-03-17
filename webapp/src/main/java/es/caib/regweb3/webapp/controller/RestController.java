@@ -3,7 +3,6 @@ package es.caib.regweb3.webapp.controller;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.ObjetoBasico;
 import es.caib.regweb3.persistence.ejb.*;
-import es.caib.regweb3.sir.core.model.InteresadoSir;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.LocalidadJson;
 import org.apache.log4j.Logger;
@@ -207,7 +206,7 @@ public class RestController {
     }
 
     /**
-     * Obtiene un {@link es.caib.regweb3.sir.core.model.InteresadoSir}
+     * Obtiene un {@link InteresadoSir}
      */
     @RequestMapping(value = "/obtenerInteresadoSir", method = RequestMethod.GET)
     public @ResponseBody

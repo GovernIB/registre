@@ -20,7 +20,7 @@
         <div class="row">
             <div class="col-xs-12">
                 <ol class="breadcrumb">
-                    <li><a <c:if test="${oficinaActiva.sir}">class="azul"</c:if> href="<c:url value="/inici"/>"><i class="fa fa-institution"></i> ${oficinaActiva.denominacion}</a></li>
+                    <li><a <c:if test="${oficinaActiva.sir}">class="azul"</c:if> href="<c:url value="/inici"/>"><i class="fa fa-home"></i> ${oficinaActiva.denominacion}</a></li>
                     <li><a href="<c:url value="/asientoRegistralSir/list"/>"><i class="fa fa-list"></i> <spring:message
                             code="asientoRegistralSir.listado"/></a></li>
                     <li class="active"><i class="fa fa-pencil-square-o"></i> <spring:message
@@ -47,7 +47,7 @@
                         <dl class="detalle_registro">
 
                             <c:if test="${not empty asientoRegistralSir.codigoUnidadTramitacionOrigen}">
-                                <dt><i class="fa fa-exchange"></i> <spring:message code="asientoRegistralSir.unidadOrigen"/>:
+                                <dt><i class="fa fa-institution"></i> <spring:message code="asientoRegistralSir.unidadOrigen"/>:
                                 </dt>
                                 <dd> ${asientoRegistralSir.codigoUnidadTramitacionOrigen}
                                     <c:if test="${not empty asientoRegistralSir.decodificacionUnidadTramitacionOrigen}">
@@ -56,7 +56,7 @@
                                 </dd>
                             </c:if>
 
-                            <dt><i class="fa fa-briefcase"></i> <spring:message code="asientoRegistralSir.oficinaOrigen"/>:
+                            <dt><i class="fa fa-home"></i> <spring:message code="asientoRegistralSir.oficinaOrigen"/>:
                             </dt>
                             <dd> ${asientoRegistralSir.codigoEntidadRegistralOrigen}
                                 <c:if test="${not empty asientoRegistralSir.decodificacionEntidadRegistralOrigen}">
@@ -65,7 +65,7 @@
                             </dd>
 
                             <c:if test="${not empty asientoRegistralSir.codigoUnidadTramitacionDestino}">
-                                <dt><i class="fa fa-exchange"></i> <spring:message code="asientoRegistralSir.unidadDestino"/>:
+                                <dt><i class="fa fa-institution"></i> <spring:message code="asientoRegistralSir.unidadDestino"/>:
                                 </dt>
                                 <dd> ${asientoRegistralSir.codigoUnidadTramitacionDestino}
                                     <c:if test="${not empty asientoRegistralSir.decodificacionUnidadTramitacionDestino}">
@@ -75,7 +75,7 @@
                             </c:if>
 
                             <c:if test="${not empty asientoRegistralSir.codigoUnidadTramitacionDestino}">
-                                <dt><i class="fa fa-briefcase"></i> <spring:message code="asientoRegistralSir.oficinaDestino"/>:
+                                <dt><i class="fa fa-home"></i> <spring:message code="asientoRegistralSir.oficinaDestino"/>:
                                 </dt>
                                 <dd> ${asientoRegistralSir.codigoEntidadRegistralDestino}
                                     <c:if test="${not empty asientoRegistralSir.decodificacionEntidadRegistralDestino}">

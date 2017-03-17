@@ -1,6 +1,6 @@
 package es.caib.regweb3.webapp.form;
 
-import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
+import es.caib.regweb3.model.AsientoRegistralSir;
 
 /**
  * Created by Fundació BIT.

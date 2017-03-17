@@ -1,6 +1,9 @@
-package es.caib.regweb3.sir.core.model;
+package es.caib.regweb3.model;
 
-import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.utils.DocumentacionFisica;
+import es.caib.regweb3.model.utils.EstadoAsientoRegistralSir;
+import es.caib.regweb3.model.utils.IndicadorPrueba;
+import es.caib.regweb3.model.utils.TipoRegistro;
 import org.hibernate.annotations.ForeignKey;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;

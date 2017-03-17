@@ -13,76 +13,145 @@
 
                 <c:forEach var="trazabilidad" items="${trazabilidades}" varStatus="status">
 
-                    <c:if test="${registro.id == trazabilidad.registroEntradaOrigen.id}">
+                    <%-- Registro que ha entrado via SIR --%>
+                    <c:if test="${trazabilidad.oficioRemision.sir}">
 
-                        <%--REGISTRO ENTRADA ORIGEN--%>
-                        <c:if test="${status.first}">
+                        <c:if test="${registro.id == trazabilidad.registroEntradaOrigen.id}">
+
+                            <%--REGISTRO ENTRADA ORIGEN--%>
+                            <c:if test="${status.first}">
+                                <li>
+                                    <c:set var="registroEntradaOrigen" value="${trazabilidad.registroEntradaOrigen}" scope="request"/>
+                                    <c:import url="../trazabilidad/registroEntradaOrigen.jsp">
+                                        <c:param name="activo" value="true"/>
+                                    </c:import>
+                                </li>
+                            </c:if>
+
+                            <%--OFICIO REMISION--%>
                             <li>
-                                <c:set var="registroEntradaOrigen" value="${trazabilidad.registroEntradaOrigen}" scope="request"/>
-                                <c:import url="../trazabilidad/registroEntradaOrigen.jsp">
-                                    <c:param name="activo" value="true"/>
-                                </c:import>
+                                <c:set var="oficioRemision" value="${trazabilidad.oficioRemision}" scope="request"/>
+                                <c:import url="../trazabilidad/oficioRemision.jsp"/>
                             </li>
-                        </c:if>
 
-                        <%--OFICIO REMISION--%>
-                        <li>
-                            <c:set var="oficioRemision" value="${trazabilidad.oficioRemision}" scope="request"/>
-                            <c:import url="../trazabilidad/oficioRemision.jsp"/>
-                        </li>
+                            <%--REGISTRO SALIDA--%>
+                            <li>
+                                <c:set var="registroSalida" value="${trazabilidad.registroSalida}" scope="request"/>
+                                <c:import url="../trazabilidad/registroSalida.jsp"/>
+                            </li>
 
-                        <%--REGISTRO SALIDA--%>
-                        <li>
-                            <c:set var="registroSalida" value="${trazabilidad.registroSalida}" scope="request"/>
-                            <c:import url="../trazabilidad/registroSalida.jsp"/>
-                        </li>
-
-                        <%--REGISTRO ENTRADA DESTINO--%>
-                        <c:if test="${trazabilidad.registroEntradaDestino != null}">
+                            <%--ASIENTO REGISTRAL SIR--%>
                             <li class="timeline-inverted">
-                                <c:set var="registroEntradaDestino" value="${trazabilidad.registroEntradaDestino}" scope="request"/>
-                                <c:import url="../trazabilidad/registroEntradaDestino.jsp"/>
+                                <c:set var="asientoRegistralSir" value="${trazabilidad.asientoRegistralSir}" scope="request"/>
+                                <c:import url="../trazabilidad/asientoRegistralSir.jsp"/>
                             </li>
+
                         </c:if>
+
+                        <c:if test="${registro.id == trazabilidad.registroEntradaDestino.id}">
+
+                            <%--ASIENTO REGISTRAL SIR--%>
+                            <li>
+                                <c:set var="asientoRegistralSir" value="${trazabilidad.asientoRegistralSir}" scope="request"/>
+                                <c:import url="../trazabilidad/asientoRegistralSir.jsp"/>
+                            </li>
+
+                            <%--OFICIO REMISION--%>
+                            <li>
+                                <c:set var="oficioRemision" value="${trazabilidad.oficioRemision}" scope="request"/>
+                                <c:import url="../trazabilidad/oficioRemision.jsp"/>
+                            </li>
+
+
+                            <%--REGISTRO ENTRADA DESTINO--%>
+                            <c:if test="${trazabilidad.registroEntradaDestino != null}">
+                                <li class="timeline-inverted">
+                                    <c:set var="registroEntradaDestino" value="${trazabilidad.registroEntradaDestino}" scope="request"/>
+                                    <c:import url="../trazabilidad/registroEntradaDestino.jsp">
+                                        <c:param name="activo" value="true"/>
+                                    </c:import>
+                                </li>
+                            </c:if>
+
+                        </c:if>
+
                     </c:if>
 
-                    <c:if test="${registro.id == trazabilidad.registroEntradaDestino.id}">
+                    <%-- Registro Interno --%>
+                    <c:if test="${!trazabilidad.oficioRemision.sir}">
 
-                        <%--REGISTRO ENTRADA ORIGEN--%>
-                        <c:if test="${trazabilidad.oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA}">
-                            <li class="timeline-inverted">
-                                <c:set var="registroEntradaOrigen" value="${trazabilidad.registroEntradaOrigen}" scope="request"/>
-                                <c:import url="../trazabilidad/registroEntradaOrigen.jsp">
-                                    <c:param name="activo" value="false"/>
-                                </c:import>
+                        <c:if test="${registro.id == trazabilidad.registroEntradaOrigen.id}">
+
+                            <%--REGISTRO ENTRADA ORIGEN--%>
+                            <c:if test="${status.first}">
+                                <li>
+                                    <c:set var="registroEntradaOrigen" value="${trazabilidad.registroEntradaOrigen}" scope="request"/>
+                                    <c:import url="../trazabilidad/registroEntradaOrigen.jsp">
+                                        <c:param name="activo" value="true"/>
+                                    </c:import>
+                                </li>
+                            </c:if>
+
+                            <%--OFICIO REMISION--%>
+                            <li>
+                                <c:set var="oficioRemision" value="${trazabilidad.oficioRemision}" scope="request"/>
+                                <c:import url="../trazabilidad/oficioRemision.jsp"/>
                             </li>
+
+                            <%--REGISTRO SALIDA--%>
+                            <li>
+                                <c:set var="registroSalida" value="${trazabilidad.registroSalida}" scope="request"/>
+                                <c:import url="../trazabilidad/registroSalida.jsp"/>
+                            </li>
+
+                            <%--REGISTRO ENTRADA DESTINO--%>
+                            <c:if test="${trazabilidad.registroEntradaDestino != null}">
+                                <li class="timeline-inverted">
+                                    <c:set var="registroEntradaDestino" value="${trazabilidad.registroEntradaDestino}" scope="request"/>
+                                    <c:import url="../trazabilidad/registroEntradaDestino.jsp"/>
+                                </li>
+                            </c:if>
                         </c:if>
 
-                        <%--OFICIO REMISION--%>
-                        <li class="timeline-inverted">
-                            <c:set var="oficioRemision" value="${trazabilidad.oficioRemision}" scope="request"/>
-                            <c:import url="../trazabilidad/oficioRemision.jsp"/>
-                        </li>
+                        <c:if test="${registro.id == trazabilidad.registroEntradaDestino.id}">
 
-                        <%--REGISTRO SALIDA--%>
-                        <li class="timeline-inverted">
-                            <c:set var="registroSalida" value="${trazabilidad.registroSalida}" scope="request"/>
-                            <c:import url="../trazabilidad/registroSalida.jsp"/>
-                        </li>
+                            <%--REGISTRO ENTRADA ORIGEN--%>
+                            <c:if test="${trazabilidad.oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA}">
+                                <li class="timeline-inverted">
+                                    <c:set var="registroEntradaOrigen" value="${trazabilidad.registroEntradaOrigen}" scope="request"/>
+                                    <c:import url="../trazabilidad/registroEntradaOrigen.jsp">
+                                        <c:param name="activo" value="false"/>
+                                    </c:import>
+                                </li>
+                            </c:if>
 
-                        <%--REGISTRO ENTRADA--%>
-                        <li>
-                            <div class="timeline-badge info"><i class="fa fa-file-o"></i></div>
-                            <div class="timeline-panel timeline-panel-activo-re">
-                                <div class="timeline-heading">
-                                    <h4 class="timeline-title"><spring:message code="registroEntrada.registroEntrada"/> ${registro.numeroRegistroFormateado}</h4>
-                                    <p><small class="text-muted"><i class="fa fa-clock-o"></i> <fmt:formatDate value="${registro.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></small></p>
+                            <%--OFICIO REMISION--%>
+                            <li class="timeline-inverted">
+                                <c:set var="oficioRemision" value="${trazabilidad.oficioRemision}" scope="request"/>
+                                <c:import url="../trazabilidad/oficioRemision.jsp"/>
+                            </li>
+
+                            <%--REGISTRO SALIDA--%>
+                            <li class="timeline-inverted">
+                                <c:set var="registroSalida" value="${trazabilidad.registroSalida}" scope="request"/>
+                                <c:import url="../trazabilidad/registroSalida.jsp"/>
+                            </li>
+
+                            <%--REGISTRO ENTRADA--%>
+                            <li>
+                                <div class="timeline-badge info"><i class="fa fa-file-o"></i></div>
+                                <div class="timeline-panel timeline-panel-activo-re">
+                                    <div class="timeline-heading">
+                                        <h4 class="timeline-title"><spring:message code="registroEntrada.registroEntrada"/> ${registro.numeroRegistroFormateado}</h4>
+                                        <p><small class="text-muted"><i class="fa fa-clock-o"></i> <fmt:formatDate value="${registro.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></small></p>
+                                    </div>
+                                    <div class="timeline-body">
+                                        <p><small><i class="fa fa-exchange"></i> <strong><spring:message code="registroEntrada.oficina"/>:</strong> ${registro.oficina.denominacion}</small></p>
+                                    </div>
                                 </div>
-                                <div class="timeline-body">
-                                    <p><small><i class="fa fa-exchange"></i> <strong><spring:message code="registroEntrada.oficina"/>:</strong> ${registro.oficina.denominacion}</small></p>
-                                </div>
-                            </div>
-                        </li>
+                            </li>
+
+                        </c:if>
 
                     </c:if>
 

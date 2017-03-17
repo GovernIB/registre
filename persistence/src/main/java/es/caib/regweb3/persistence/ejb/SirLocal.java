@@ -1,12 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.dir3caib.ws.api.oficina.OficinaTF;
-import es.caib.regweb3.model.Oficina;
-import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.model.RegistroSalida;
-import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.CamposNTI;
-import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
@@ -26,7 +21,8 @@ public interface SirLocal {
 
   /**
    *
-   * @param idRegistroEntrada
+   * @param tipoRegistro
+   * @param idRegistro
    * @param codigoEntidadRegistralDestino
    * @param denominacionEntidadRegistralDestino
    * @param oficinaActiva
@@ -35,7 +31,7 @@ public interface SirLocal {
    * @throws Exception
      * @throws I18NException
      */
-  public AsientoRegistralSir enviarFicheroIntercambio(Long idRegistroEntrada, String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino, Oficina oficinaActiva, UsuarioEntidad usuario, Long idLibro) throws Exception, I18NException;
+  public OficioRemision enviarFicheroIntercambio(String tipoRegistro, Long idRegistro, String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino, Oficina oficinaActiva, UsuarioEntidad usuario, Long idLibro) throws Exception, I18NException;
 
   /**
    *
@@ -48,11 +44,11 @@ public interface SirLocal {
    * @param camposNTIs
      * @return
      */
-  public Long aceptarAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs) throws Exception;
+  public RegistroEntrada aceptarAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs) throws Exception;
 
   /**
-   * Transforma un {@link es.caib.regweb3.model.RegistroEntrada} en un {@link es.caib.regweb3.sir.core.model.AsientoRegistralSir}
-   * @param idRegistroEntrada
+   * Transforma un {@link es.caib.regweb3.model.RegistroEntrada} en un {@link AsientoRegistralSir}
+   * @param registroEntrada
    * @param codigoEntidadRegistralDestino
    * @param denominacionEntidadRegistralDestino
    * @return
@@ -60,7 +56,7 @@ public interface SirLocal {
    * @throws I18NException
    * @throws I18NValidationException
      */
-  public AsientoRegistralSir transformarRegistroEntrada(Long idRegistroEntrada, String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino)
+  public AsientoRegistralSir transformarRegistroEntrada(RegistroEntrada registroEntrada, String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino)
           throws Exception, I18NException;
 
   /**
@@ -80,16 +76,17 @@ public interface SirLocal {
   public RegistroEntrada transformarAsientoRegistralEntrada(AsientoRegistralSir asientoRegistralSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs) throws Exception, I18NException, I18NValidationException;
 
   /**
-   * Transforma un {@link es.caib.regweb3.model.RegistroEntrada} en un {@link es.caib.regweb3.sir.core.model.AsientoRegistralSir}
+   * Transforma un {@link es.caib.regweb3.model.RegistroEntrada} en un {@link AsientoRegistralSir}
    * @param registroSalida
-   * @param oficinaSir
+   * @param codigoEntidadRegistralDestino
+   * @param denominacionEntidadRegistralDestino
    * @return
    * @throws Exception
    * @throws I18NException
    * @throws I18NValidationException
    */
-  public AsientoRegistralSir transformarRegistroSalida(RegistroSalida registroSalida, OficinaTF oficinaSir, String codigoUnidadTramitacionDestino, String decodificacionUnidadTramitacionDestino)
-          throws Exception, I18NException, I18NValidationException;
+  public AsientoRegistralSir transformarRegistroSalida(RegistroSalida registroSalida, String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino)
+          throws Exception, I18NException;
 
   /**
    *

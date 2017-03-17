@@ -2,7 +2,6 @@ package es.caib.regweb3.webapp.controller;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.*;
-import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
