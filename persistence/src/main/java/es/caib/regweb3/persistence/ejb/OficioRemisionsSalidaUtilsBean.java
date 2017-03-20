@@ -394,7 +394,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
     @Override
     public Boolean isOficioRemisionInterno(RegistroSalida registroSalida, Set<String> organismos) throws Exception {
 
-        String codigoDir3 = isOficioRemision(registroSalida, organismos);
+        String codigoDir3 = organismoOficioRemision(registroSalida, organismos);
 
         if(!StringUtils.isEmpty(codigoDir3)){
             Long idEntidad = registroSalida.getOficina().getOrganismoResponsable().getEntidad().getId();
@@ -407,11 +407,30 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
     @Override
     public Boolean isOficioRemisionExterno(RegistroSalida registroSalida, Set<String> organismos) throws Exception {
 
-        String codigoDir3 = isOficioRemision(registroSalida, organismos);
+        String codigoDir3 = organismoOficioRemision(registroSalida, organismos);
 
         if(!StringUtils.isEmpty(codigoDir3)){
             Long idEntidad = registroSalida.getOficina().getOrganismoResponsable().getEntidad().getId();
             return organismoEjb.findByCodigoEntidad(codigoDir3, idEntidad) == null;
+        }
+
+        return false;
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Boolean isOficioRemisionSir(RegistroSalida registroSalida, Set<String> organismos) throws Exception {
+
+        // Obtenemos el organismo destinatario del Registro en el caso de que sea un OficioRemision externo
+        String codigoDir3 = organismoOficioRemision(registroSalida, organismos);
+
+        // Si se trata de un OficioRemisionExterno, comprobamos si el destino tiene Oficinas Sir
+        if(!StringUtils.isEmpty(codigoDir3) && isOficioRemisionExterno(registroSalida, organismos)){
+
+            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
+            List<OficinaTF> oficinasSIR = oficinasService.obtenerOficinasSIRUnidad(codigoDir3);
+
+            return oficinasSIR.size() > 0;
         }
 
         return false;
@@ -425,7 +444,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
      * @return
      * @throws Exception
      */
-    private String isOficioRemision(RegistroSalida registroSalida, Set<String> organismos) throws Exception{
+    private String organismoOficioRemision(RegistroSalida registroSalida, Set<String> organismos) throws Exception{
 
         if(registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)){
 

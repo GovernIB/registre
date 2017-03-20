@@ -119,4 +119,13 @@ public interface OficioRemisionSalidaUtilsLocal {
      * @throws Exception
      */
     public Boolean isOficioRemisionExterno(RegistroSalida registroSalida, Set<String> organismos) throws Exception;
+
+    /**
+     * Comprueba si un RegistroSalida se considera un OficioRemision SIR o no
+     * @param registroSalida
+     * @param organismos
+     * @return
+     * @throws Exception
+     */
+    public Boolean isOficioRemisionSir(RegistroSalida registroSalida, Set<String> organismos) throws Exception;
 }
