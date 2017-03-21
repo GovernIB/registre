@@ -16,15 +16,15 @@
 		</schema>
 	</wsdl:types>
 	<wsdl:message name="envioFicherosAAplicacionRequest">
-		<wsdl:part name="registro" type="xsd:string"/>
-		<wsdl:part name="firmaRegistro" type="xsd:string"/>
+		<wsdl:part name="value0" type="xsd:string"/>
+		<wsdl:part name="value1" type="xsd:string"/>
 	</wsdl:message>
 	<wsdl:message name="envioFicherosAAplicacionResponse">
 		<wsdl:part name="envioFicherosAAplicacionReturn" type="tns1:RespuestaWS"/>
 	</wsdl:message>
 	<wsdl:portType name="WS_SIR8_B">
 		<wsdl:operation name="envioFicherosAAplicacion"
-						parameterOrder="registro firmaRegistro">
+						parameterOrder="value0 value1">
 			<wsdl:input message="impl:envioFicherosAAplicacionRequest"
 						name="envioFicherosAAplicacionRequest"/>
 			<wsdl:output message="impl:envioFicherosAAplicacionResponse"
