@@ -156,7 +156,7 @@
 
       $('#anexoTitulo').html('<spring:message code="anexo.nuevo"/>');
 
-      loadiframe("<c:url value="/anexo/nou/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${isOficioRemisionSir}" />");
+      loadiframe("<c:url value="/anexo/nou/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${oficio.sir}" />");
     }
 
 
@@ -164,7 +164,7 @@
         
         $('#anexoTitulo').html('<spring:message code="anexo.editar"/>');
         
-        loadiframe("<c:url value="/anexo/editar/"/>" + idRegistroDetalle + "/" + tipoRegistro + "/" + idRegistro + "/" + idAnexo+ "/"+${isOficioRemisionSir});
+        loadiframe("<c:url value="/anexo/editar/"/>" + idRegistroDetalle + "/" + tipoRegistro + "/" + idRegistro + "/" + idAnexo+ "/"+${oficio.sir});
     }
 
 

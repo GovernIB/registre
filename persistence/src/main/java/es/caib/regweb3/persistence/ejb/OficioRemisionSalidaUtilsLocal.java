@@ -3,6 +3,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.OficioPendienteLlegada;
+import es.caib.regweb3.persistence.utils.Oficio;
 import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -93,14 +94,13 @@ public interface OficioRemisionSalidaUtilsLocal {
                                                         List<OficioPendienteLlegada> oficios) throws Exception, I18NException, I18NValidationException;
 
     /**
-     * Comprueba si un RegistroSalida se considera un OficioRemision o no
-     *
-     * @param idRegistro
-     * @param organismos Lista con los Destinatarios que no se consideran Oficio de Remisión
+     * Comprueba si el Registro es considerado como un OficioRemision y de que tipo
+     * @param registroSalida
+     * @param organismos
      * @return
      * @throws Exception
      */
-    public Boolean isOficioRemision(Long idRegistro, Set<String> organismos) throws Exception;
+    public Oficio isOficio(RegistroSalida registroSalida, Set<String> organismos) throws Exception;
 
     /**
      * Comprueba si un RegistroSalida se considera un OficioRemision interno o no

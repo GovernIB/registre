@@ -8,6 +8,7 @@ import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.OficioPendienteLlegada;
 import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
+import es.caib.regweb3.persistence.utils.Oficio;
 import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -284,6 +285,38 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         paginacion.setListado(q.getResultList());
 
         return paginacion;
+    }
+
+    @Override
+    public Oficio isOficio(Long idRegistro, Set<Long> organismos) throws Exception{
+
+        Oficio oficio = new Oficio();
+
+        if(isOficioRemisionExterno(idRegistro)){ // Externo
+            oficio.setOficioRemision(true);
+            oficio.setInterno(false);
+
+            Boolean sir = isOficioRemisionSir(idRegistro);
+
+            if(sir){
+                oficio.setSir(true);
+                oficio.setExterno(false);
+            }else{
+                oficio.setSir(false);
+                oficio.setExterno(true);
+            }
+
+        }else{
+            oficio.setExterno(false);
+            oficio.setSir(false);
+
+            Boolean interno = isOficioRemisionInterno(idRegistro, organismos);
+
+            oficio.setOficioRemision(interno);
+            oficio.setInterno(interno);
+        }
+
+        return oficio;
     }
 
 

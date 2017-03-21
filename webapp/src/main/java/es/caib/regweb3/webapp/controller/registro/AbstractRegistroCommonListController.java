@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 /**
@@ -134,6 +135,23 @@ public abstract class AbstractRegistroCommonListController extends BaseControlle
             maxUploadSizeTotal = PropiedadGlobalUtil.getMaxUploadSizeTotal(entidad.getId()) / (1024 * 1024);
         }
         model.addAttribute("notainformativa", I18NUtils.tradueix("anexo.notainformativa",maxAnexosPermitidos.toString(),maxUploadSizeInBytes.toString(),maxUploadSizeTotal.toString(),extensionesPermitidas ));
+    }
+
+    /**
+     * Carga en el Model todos los datos necesarios para gestioanr Interesados
+     * @param model
+     * @param organismosOficinaActiva
+     * @throws Exception
+     */
+    public void initDatosInteresados(Model model, LinkedHashSet<Organismo> organismosOficinaActiva) throws Exception{
+
+        model.addAttribute("tiposInteresado", RegwebConstantes.TIPOS_INTERESADO);
+        model.addAttribute("tiposPersona",RegwebConstantes.TIPOS_PERSONA);
+        model.addAttribute("paises",catPaisEjb.getAll());
+        model.addAttribute("provincias",catProvinciaEjb.getAll());
+        model.addAttribute("canalesNotificacion",RegwebConstantes.CANALES_NOTIFICACION);
+        model.addAttribute("tiposDocumento", RegwebConstantes.TIPOS_DOCUMENTOID);
+        model.addAttribute("organismosOficinaActiva",organismosOficinaActiva);
     }
 
     /**

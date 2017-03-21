@@ -295,8 +295,13 @@
                                                     <c:if test="${oficiosRemisionOrganismo.vigente == false}">
                                                         <button type="button" class="btn btn-sm btn-success disabled">
                                                     </c:if>
+                                                        <c:if test="${oficiosRemisionOrganismo.sir}">
+                                                            <spring:message code="oficioRemision.boton.crear.sir"/>
+                                                        </c:if>
+                                                        <c:if test="${!oficiosRemisionOrganismo.sir}">
+                                                            <spring:message code="oficioRemision.boton.crear.externo"/>
+                                                        </c:if>
 
-                                                        <spring:message code="oficioRemision.boton.crear.externo"/>
                                                     </button>
                                                 </div>
                                             </c:if>

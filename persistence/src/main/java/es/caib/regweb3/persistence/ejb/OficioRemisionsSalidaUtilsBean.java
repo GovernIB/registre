@@ -8,6 +8,7 @@ import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.OficioPendienteLlegada;
 import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
+import es.caib.regweb3.persistence.utils.Oficio;
 import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -372,24 +373,40 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
     }
 
+
+
     @Override
-    @SuppressWarnings(value = "unchecked")
-    public Boolean isOficioRemision(Long idRegistro, Set<String> organismos) throws Exception {
+    public Oficio isOficio(RegistroSalida registroSalida, Set<String> organismos) throws Exception{
 
-        Query q;
+        Oficio oficio = new Oficio();
 
-        q = em.createQuery("Select rs.id from RegistroSalida as rs where " +
-                "rs.estado = :valido and rs.id = :idRegistro and " +
-                "rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo = :administracion and i.codigoDir3 not in (:organismos)) ");
+        if(isOficioRemisionExterno(registroSalida, organismos)){ // Externo
+            oficio.setOficioRemision(true);
+            oficio.setInterno(false);
 
-        // Parámetros
-        q.setParameter("idRegistro", idRegistro);
-        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
-        q.setParameter("organismos", organismos);
-        q.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
+            Boolean sir = isOficioRemisionSir(registroSalida, organismos);
 
-        return q.getResultList().size() > 0;
+            if(sir){
+                oficio.setSir(true);
+                oficio.setExterno(false);
+            }else{
+                oficio.setSir(false);
+                oficio.setExterno(true);
+            }
+
+        }else{
+            oficio.setExterno(false);
+            oficio.setSir(false);
+
+            Boolean interno = isOficioRemisionInterno(registroSalida, organismos);
+
+            oficio.setOficioRemision(interno);
+            oficio.setInterno(interno);
+        }
+
+        return oficio;
     }
+
 
     @Override
     public Boolean isOficioRemisionInterno(RegistroSalida registroSalida, Set<String> organismos) throws Exception {

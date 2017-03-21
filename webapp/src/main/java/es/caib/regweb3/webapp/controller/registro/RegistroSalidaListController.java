@@ -5,6 +5,7 @@ import es.caib.regweb3.persistence.ejb.BaseEjbJPA;
 import es.caib.regweb3.persistence.ejb.HistoricoRegistroSalidaLocal;
 import es.caib.regweb3.persistence.ejb.OficioRemisionSalidaUtilsLocal;
 import es.caib.regweb3.persistence.ejb.RegistroSalidaLocal;
+import es.caib.regweb3.persistence.utils.Oficio;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
@@ -181,10 +182,12 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         Oficina oficinaActiva = getOficinaActiva(request);
         LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
-        Boolean isOficioRemisionSir = false;
+        Oficio oficio = null;
+        Boolean showannexes = PropiedadGlobalUtil.getShowAnnexes();
 
         model.addAttribute("registro",registro);
         model.addAttribute("oficina", oficinaActiva);
+        model.addAttribute("showannexes", showannexes);
 
         // Modelo Recibo
         model.addAttribute("modeloRecibo", new ModeloForm());
@@ -196,46 +199,42 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         model.addAttribute("isAdministradorLibro", permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(),registro.getLibro().getId()));
         model.addAttribute("puedeEditar", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),registro.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA));
 
-        // OficioRemision
-        if(entidadActiva.getOficioRemision() && registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) && oficinaRegistral){
-            isOficioRemisionSir = oficioRemisionSalidaUtilsEjb.isOficioRemisionSir(registro, getOrganismosOficioRemisionSalida(organismosOficinaActiva));
-            model.addAttribute("isOficioRemisionInterno", oficioRemisionSalidaUtilsEjb.isOficioRemisionInterno(registro, getOrganismosOficioRemisionSalida(organismosOficinaActiva)));
-            model.addAttribute("isOficioRemisionExterno", oficioRemisionSalidaUtilsEjb.isOficioRemisionExterno(registro, getOrganismosOficioRemisionSalida(organismosOficinaActiva)));
-            model.addAttribute("isOficioRemisionSir", isOficioRemisionSir);
+        // Si es VÁLIDO o PENDIENTE DE VISAR y estamos en la OficinaRegistral
+        if(registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && oficinaRegistral){
+
+            // Oficio Remision
+            if(entidadActiva.getOficioRemision()){
+                oficio = oficioRemisionSalidaUtilsEjb.isOficio(registro, getOrganismosOficioRemisionSalida(organismosOficinaActiva));
+                model.addAttribute("oficio", oficio);
+            }
+
+                // Anexos completo
+            if(showannexes){ // Si se muestran los anexos
+                model.addAttribute("anexos", anexoEjb.getByRegistroSalida(registro));
+
+                if(oficio != null && oficio.getSir()) { // Mensajes de limitaciones anexos si es oficio de remisión sir
+                    initMensajeNotaInformativaAnexos(entidadActiva, model);
+                    model.addAttribute("maxanexospermitidos", PropiedadGlobalUtil.getMaxAnexosPermitidos(entidadActiva.getId()));
+                }
+
+                // Inicializa los atributos para escanear anexos
+                initScanAnexos(entidadActiva, model, request, registro.getId());
+            }
+
+        }else{
+
+            // Anexos lectura
+            if(showannexes){ // Si se muestran los anexos
+                model.addAttribute("anexos", anexoEjb.getByRegistroDetalleLectura(registro.getRegistroDetalle().getId()));
+            }
         }
 
         // Interesados, solo si el Registro en Válio
         if(registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) && oficinaRegistral){
 
-            model.addAttribute("tiposInteresado",RegwebConstantes.TIPOS_INTERESADO);
-            model.addAttribute("tiposPersona", RegwebConstantes.TIPOS_PERSONA);
-            model.addAttribute("paises",catPaisEjb.getAll());
-            model.addAttribute("provincias",catProvinciaEjb.getAll());
-            model.addAttribute("canalesNotificacion", RegwebConstantes.CANALES_NOTIFICACION);
-            model.addAttribute("tiposDocumento",RegwebConstantes.TIPOS_DOCUMENTOID);
-            model.addAttribute("organismosOficinaActiva",organismosOficinaActiva);
-
+            initDatosInteresados(model, organismosOficinaActiva);
         }
 
-
-        // Inicializamos si se deben mostrar los anexos o no
-        Boolean showannexes = PropiedadGlobalUtil.getShowAnnexes();
-        model.addAttribute("showannexes", showannexes);
-
-        if(showannexes) {
-            if((registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR)) && oficinaRegistral){
-                model.addAttribute("anexos", anexoEjb.getByRegistroSalida(registro));
-                //Inicializamos el mensaje de las limitaciones de anexos si es oficio de remisión sir
-                if(isOficioRemisionSir) {
-                    initMensajeNotaInformativaAnexos(entidadActiva, model);
-                    model.addAttribute("maxanexospermitidos", PropiedadGlobalUtil.getMaxAnexosPermitidos(entidadActiva.getId()));
-                }
-                // Inicializa los atributos para escanear anexos
-                initScanAnexos(entidadActiva, model, request, registro.getId());
-            }else{
-                model.addAttribute("anexos", anexoEjb.getByRegistroDetalleLectura(registro.getRegistroDetalle().getId()));
-            }
-        }
 
         // Historicos
         model.addAttribute("historicos", historicoRegistroSalidaEjb.getByRegistroSalida(idRegistro));
