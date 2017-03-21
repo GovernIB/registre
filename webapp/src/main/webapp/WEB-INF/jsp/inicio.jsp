@@ -353,7 +353,7 @@
                                                     <td>${asientoRegistralSir.decodificacionEntidadRegistralDestino}</td>
                                                     <td>${asientoRegistralSir.resumen}</td>
                                                     <td class="center">
-                                                        <a class="btn btn-info btn-sm" href="<c:url value="/asientoRegistralSir/${asientoRegistralSir.id}/detalle"/>" title="<spring:message code="asientoRegistralSir.detalle"/>"><span class="fa fa-eye"></span></a>
+                                                        <a class="btn btn-success btn-sm" href="<c:url value="/asientoRegistralSir/${asientoRegistralSir.id}/detalle"/>" title="<spring:message code="asientoRegistralSir.detalle"/>"><span class="fa fa-eye"></span></a>
                                                     </td>
                                                 </tr>
                                             </c:forEach>
