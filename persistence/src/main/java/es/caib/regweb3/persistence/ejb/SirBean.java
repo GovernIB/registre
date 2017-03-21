@@ -3,7 +3,11 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.*;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
+import es.caib.regweb3.sir.core.excepcion.ValidacionException;
+import es.caib.regweb3.sir.core.model.Errores;
 import es.caib.regweb3.sir.core.model.TipoAnotacion;
+import es.caib.regweb3.sir.core.model.TipoMensaje;
+import es.caib.regweb3.sir.core.utils.Mensaje;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.apache.commons.codec.binary.Base64;
@@ -53,6 +57,202 @@ public class SirBean implements SirLocal{
     @EJB public AsientoRegistralSirLocal asientoRegistralSirEjb;
     @EJB public OficioRemisionEntradaUtilsLocal oficioRemisionEntradaUtilsEjb;
     @EJB public OficioRemisionLocal oficioRemisionEjb;
+
+
+    /**
+     * Realiza las acciones pertinentes cuando se recibie un mensaje de control
+     * @param mensaje
+     * @throws Exception
+     */
+    public void recibirMensajeDatosControl(Mensaje mensaje) throws Exception{
+
+        OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(mensaje.getIdentificadorIntercambio());
+
+        if (oficioRemision != null) {
+
+            // Mensaje ACK
+            if(mensaje.getTipoMensaje().equals(TipoMensaje.ACK)){
+
+                procesarMensajeACK(oficioRemision);
+
+            // Mensaje CONFIRMACIÓN
+            }else if(mensaje.getTipoMensaje().equals(TipoMensaje.CONFIRMACION)){
+
+                procesarMensajeCONFIRMACION(oficioRemision, mensaje);
+
+            // Mensaje ERROR
+            }else if(mensaje.getTipoMensaje().equals(TipoMensaje.ERROR)){
+
+                procesarMensajeERROR(oficioRemision, mensaje);
+
+            }else{
+                log.info("El tipo mensaje de control no es válido: " + mensaje.getTipoMensaje());
+                throw new ValidacionException(Errores.ERROR_0044);
+            }
+
+        }else{
+            log.info("El mensaje de control corresponde a un Asiento registral que no existe en el sistema");
+            throw new ValidacionException(Errores.ERROR_0044);
+        }
+
+    }
+
+    /**
+     * Procesa un mensaje de control de tipo ACK
+     * @param oficioRemision
+     * @throws Exception
+     */
+    private void procesarMensajeACK(OficioRemision oficioRemision) throws Exception{
+
+        AsientoRegistralSir asiento = oficioRemision.getAsientoRegistralSir();
+
+        if (asiento.getEstado().equals(EstadoAsientoRegistralSir.ENVIADO)){
+
+            // Actualizamos el asiento
+            asiento.setEstado(EstadoAsientoRegistralSir.ENVIADO_Y_ACK);
+            asientoRegistralSirEjb.merge(asiento);
+
+            // Actualizamos el OficioRemision
+            oficioRemision.setNumeroReintentos(0);
+            oficioRemision.setFechaEstado(new Date());
+            oficioRemisionEjb.merge(oficioRemision);
+
+        } else if (asiento.getEstado().equals(EstadoAsientoRegistralSir.REENVIADO)){
+
+            // Actualizamos el asiento
+            asiento.setEstado(EstadoAsientoRegistralSir.REENVIADO_Y_ACK);
+            asientoRegistralSirEjb.merge(asiento);
+
+            // Actualizamos el OficioRemision
+            oficioRemision.setNumeroReintentos(0);
+            oficioRemision.setFechaEstado(new Date());
+            oficioRemisionEjb.merge(oficioRemision);
+
+        } else if (asiento.getEstado().equals(EstadoAsientoRegistralSir.RECHAZADO)){
+
+            // Actualizamos el asiento
+            asiento.setEstado(EstadoAsientoRegistralSir.RECHAZADO_Y_ACK);
+            asientoRegistralSirEjb.merge(asiento);
+
+            // Actualizamos el OficioRemision
+            oficioRemision.setNumeroReintentos(0);
+            oficioRemision.setFechaEstado(new Date());
+            oficioRemisionEjb.merge(oficioRemision);
+
+        } else if (asiento.getEstado().equals(EstadoAsientoRegistralSir.ENVIADO_Y_ACK) ||
+                asiento.getEstado().equals(EstadoAsientoRegistralSir.REENVIADO_Y_ACK) ||
+                asiento.getEstado().equals(EstadoAsientoRegistralSir.RECHAZADO_Y_ACK)){
+
+            log.info("Se ha recibido un mensaje duplicado con identificador: " + asiento.getIdentificadorIntercambio());
+            throw new ValidacionException(Errores.ERROR_0206);
+
+        }else{
+            log.info("Se ha recibido un mensaje que no tiene el estado adecuado para recibir un ACK");
+            throw new ValidacionException(Errores.ERROR_0044);
+        }
+    }
+
+    /**
+     * Procesa un mensaje de control de tipo CONFIRMACION
+     * @param oficioRemision
+     * @throws Exception
+     */
+    private void procesarMensajeCONFIRMACION(OficioRemision oficioRemision, Mensaje mensaje) throws Exception{
+
+        AsientoRegistralSir asiento = oficioRemision.getAsientoRegistralSir();
+
+        if (asiento.getEstado().equals(EstadoAsientoRegistralSir.ENVIADO) ||
+                asiento.getEstado().equals(EstadoAsientoRegistralSir.ENVIADO_Y_ACK) ||
+                asiento.getEstado().equals(EstadoAsientoRegistralSir.ENVIADO_Y_ERROR) ||
+                asiento.getEstado().equals(EstadoAsientoRegistralSir.REENVIADO) ||
+                asiento.getEstado().equals(EstadoAsientoRegistralSir.REENVIADO_Y_ACK) ||
+                asiento.getEstado().equals(EstadoAsientoRegistralSir.REENVIADO_Y_ERROR)){
+
+            // Actualizamos el asiento
+            asiento.setEstado(EstadoAsientoRegistralSir.ACEPTADO);
+            asiento.setNumeroRegistro(mensaje.getNumeroRegistroEntradaDestino());
+            asiento.setFechaRegistro(mensaje.getFechaEntradaDestino());
+            asientoRegistralSirEjb.merge(asiento);
+
+            // Actualizamos el OficioRemision
+            oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_ACEPTADO);
+            oficioRemision.setFechaEstado(new Date());
+            oficioRemisionEjb.merge(oficioRemision);
+
+        }else  if(asiento.getEstado().equals(EstadoAsientoRegistralSir.ACEPTADO)){
+
+            log.info("Se ha recibido un mensaje de confirmación duplicado: " + mensaje.toString());
+            throw new ValidacionException(Errores.ERROR_0206);
+
+        }else{
+            log.info("El asiento registrar no tiene el estado necesario para ser Confirmado: " + asiento.getIdentificadorIntercambio() + " - " + asiento.getEstado().getName());
+            throw new ValidacionException(Errores.ERROR_0044);
+        }
+    }
+
+    /**
+     * Procesa un mensaje de control de tipo ERROR
+     * @param oficioRemision
+     * @param mensaje
+     * @throws Exception
+     */
+    private void procesarMensajeERROR(OficioRemision oficioRemision, Mensaje mensaje) throws Exception{
+
+        AsientoRegistralSir asiento = oficioRemision.getAsientoRegistralSir();
+
+        if (asiento.getEstado().equals(EstadoAsientoRegistralSir.ENVIADO)){
+
+            // Actualizamos el asiento
+            asiento.setEstado(EstadoAsientoRegistralSir.ENVIADO_Y_ERROR);
+            asientoRegistralSirEjb.merge(asiento);
+
+            // Actualizamos el OficioRemision
+            //oficioRemision.setEstado(RegwebConstantes.); todo especificar nuevo estado
+            oficioRemision.setCodigoError(mensaje.getCodigoError());
+            oficioRemision.setDescripcionError(mensaje.getDescripcionMensaje());
+            oficioRemision.setNumeroReintentos(0);
+            oficioRemision.setFechaEstado(new Date());
+            oficioRemisionEjb.merge(oficioRemision);
+
+        } else if (asiento.getEstado().equals(EstadoAsientoRegistralSir.REENVIADO)){
+
+            // Actualizamos el asiento
+            asiento.setEstado(EstadoAsientoRegistralSir.REENVIADO_Y_ERROR);
+            asientoRegistralSirEjb.merge(asiento);
+
+            // Actualizamos el OficioRemision
+            //oficioRemision.setEstado(RegwebConstantes.); todo especificar nuevo estado
+            oficioRemision.setCodigoError(mensaje.getCodigoError());
+            oficioRemision.setDescripcionError(mensaje.getDescripcionMensaje());
+            oficioRemision.setNumeroReintentos(0);
+            oficioRemision.setFechaEstado(new Date());
+            oficioRemisionEjb.merge(oficioRemision);
+
+
+        } else if (asiento.getEstado().equals(EstadoAsientoRegistralSir.RECHAZADO)){
+
+            // Actualizamos el asiento
+            asiento.setEstado(EstadoAsientoRegistralSir.RECHAZADO_Y_ERROR);
+            asientoRegistralSirEjb.merge(asiento);
+
+            // Actualizamos el OficioRemision
+            //oficioRemision.setEstado(RegwebConstantes.); todo especificar nuevo estado
+            oficioRemision.setCodigoError(mensaje.getCodigoError());
+            oficioRemision.setDescripcionError(mensaje.getDescripcionMensaje());
+            oficioRemision.setNumeroReintentos(0);
+            oficioRemision.setFechaEstado(new Date());
+            oficioRemisionEjb.merge(oficioRemision);
+
+
+        } else if (asiento.getEstado().equals(EstadoAsientoRegistralSir.ENVIADO_Y_ERROR) ||
+                asiento.getEstado().equals(EstadoAsientoRegistralSir.REENVIADO_Y_ERROR) ||
+                asiento.getEstado().equals(EstadoAsientoRegistralSir.RECHAZADO_Y_ERROR)){
+
+            log.info("Se ha recibido un mensaje duplicado con identificador: " + asiento.getIdentificadorIntercambio());
+            throw new ValidacionException(Errores.ERROR_0206);
+
+        }
+    }
 
     /**
      *

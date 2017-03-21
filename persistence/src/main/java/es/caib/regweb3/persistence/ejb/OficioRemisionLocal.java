@@ -105,6 +105,14 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
     public List<RegistroSalida> getSalidasByOficioRemision(Long idOficioRemision) throws Exception;
 
     /**
+     * Obtiene un OficioRemisionSir a partir del identificadorIntercambio del envío
+     * @param identificadorIntercambio
+     * @return
+     * @throws Exception
+     */
+    public OficioRemision getByIdentificadorIntercambio(String identificadorIntercambio) throws Exception;
+
+    /**
      * Busca los Números de Registro Formateados de los Registros de Entrada que pertenecen a un OficioRemision
      * @param idOficioRemision
      * @return

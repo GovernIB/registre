@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Archivo;
 import es.caib.regweb3.model.AsientoRegistralSir;
+import es.caib.regweb3.sir.core.utils.Mensaje;
 
 import javax.ejb.Local;
 
@@ -21,5 +22,5 @@ public interface WebServicesMethodsLocal {
 
     public void removeArchivo(Archivo archivo) throws Exception;
 
-    public String getPropiedadMimePermitidos() throws Exception;
+    public void recibirMensajeDatosControl(Mensaje mensaje) throws Exception;
 }

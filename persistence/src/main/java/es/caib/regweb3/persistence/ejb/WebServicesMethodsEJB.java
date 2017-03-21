@@ -2,7 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Archivo;
 import es.caib.regweb3.model.AsientoRegistralSir;
-import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.sir.core.utils.Mensaje;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.annotation.security.RunAs;
@@ -34,6 +34,9 @@ public class WebServicesMethodsEJB implements WebServicesMethodsLocal {
     @EJB(mappedName = "regweb3/ArchivoEJB/local")
     public ArchivoLocal archivoEjb;
 
+    @EJB(mappedName = "regweb3/SirEJB/local")
+    public SirLocal sirEjb;
+
     @Override
     public AsientoRegistralSir getAsientoRegistral(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws Exception{
         return  asientoRegistralSirEjb.getAsientoRegistral(identificadorIntercambio, codigoEntidadRegistralDestino);
@@ -55,7 +58,7 @@ public class WebServicesMethodsEJB implements WebServicesMethodsLocal {
     }
 
     @Override
-    public String getPropiedadMimePermitidos() throws Exception{
-        return PropiedadGlobalUtil.getMIMEPermitidos();
+    public void recibirMensajeDatosControl(Mensaje mensaje) throws Exception{
+        sirEjb.recibirMensajeDatosControl(mensaje);
     }
 }

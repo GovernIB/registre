@@ -12,9 +12,8 @@ import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.sir.core.model.Errores;
 import es.caib.regweb3.sir.core.model.TipoAnotacion;
-import es.caib.regweb3.sir.core.model.TipoMensaje;
+import es.caib.regweb3.sir.core.utils.Mensaje;
 import es.caib.regweb3.sir.utils.FicheroIntercambio;
-import es.caib.regweb3.sir.utils.Mensaje;
 import es.caib.regweb3.sir.utils.Sicres3XML;
 import es.caib.regweb3.sir.utils.XPathReaderUtil;
 import org.apache.log4j.Logger;
@@ -260,7 +259,7 @@ public class RecepcionBean implements RecepcionLocal{
      *
      * @param xmlMensaje XML con la información del mensaje en formato SICRES 3.0.
      */
-    public void recibirMensajeDatosControl(String xmlMensaje){
+    public void recibirMensajeDatosControl(String xmlMensaje, WebServicesMethodsLocal webServicesMethodsEjb){
 
         // Parseamos el mensaje xml
         Mensaje mensaje = sicres3XML.parseXMLMensaje(xmlMensaje);
@@ -268,13 +267,15 @@ public class RecepcionBean implements RecepcionLocal{
         // Validamos el mensaje recibido
         sicres3XML.validarMensaje(mensaje);
 
-        // Acciones en función del tipo de mensaje
-        if(mensaje.getTipoMensaje().equals(TipoMensaje.ACK)){
+        log.info("Recibiendo mensade de control: " + mensaje.getTipoMensaje() + " - " + mensaje.getIdentificadorIntercambio());
 
-        }else if(mensaje.getTipoMensaje().equals(TipoMensaje.CONFIRMACION)){
+        try {
 
-        }else if(mensaje.getTipoMensaje().equals(TipoMensaje.ERROR)){
+            webServicesMethodsEjb.recibirMensajeDatosControl(mensaje);
 
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServiceException(Errores.ERROR_INESPERADO,e);
         }
 
         log.info("Mensaje recibido y procesado correctamente: " + mensaje.getIdentificadorIntercambio());

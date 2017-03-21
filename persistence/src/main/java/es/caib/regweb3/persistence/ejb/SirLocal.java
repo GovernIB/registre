@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.CamposNTI;
+import es.caib.regweb3.sir.core.utils.Mensaje;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
@@ -18,6 +19,13 @@ import java.util.List;
 @Local
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public interface SirLocal {
+
+  /**
+   * Realiza las acciones pertinentes cuando se recibie un mensaje de control
+   * @param mensaje
+   * @throws Exception
+     */
+  public void recibirMensajeDatosControl(Mensaje mensaje) throws Exception;
 
   /**
    *

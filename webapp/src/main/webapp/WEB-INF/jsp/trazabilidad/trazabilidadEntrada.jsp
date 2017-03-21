@@ -13,9 +13,10 @@
 
                 <c:forEach var="trazabilidad" items="${trazabilidades}" varStatus="status">
 
-                    <%-- Registro que ha entrado via SIR --%>
+                    <%-- Registro que ha entrado o salido via SIR --%>
                     <c:if test="${trazabilidad.oficioRemision.sir}">
 
+                        <%--Enviado via SIR--%>
                         <c:if test="${registro.id == trazabilidad.registroEntradaOrigen.id}">
 
                             <%--REGISTRO ENTRADA ORIGEN--%>
@@ -41,13 +42,19 @@
                             </li>
 
                             <%--ASIENTO REGISTRAL SIR--%>
-                            <li class="timeline-inverted">
-                                <c:set var="asientoRegistralSir" value="${trazabilidad.asientoRegistralSir}" scope="request"/>
-                                <c:import url="../trazabilidad/asientoRegistralSir.jsp"/>
-                            </li>
+                            <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ACEPTADO}">
+
+                                <li class="timeline-inverted">
+                                    <c:set var="asientoRegistralSir" value="${trazabilidad.asientoRegistralSir}" scope="request"/>
+                                    <c:import url="../trazabilidad/asientoRegistralSir.jsp"/>
+                                </li>
+
+                            </c:if>
+
 
                         </c:if>
 
+                        <%--Recibido via SIR--%>
                         <c:if test="${registro.id == trazabilidad.registroEntradaDestino.id}">
 
                             <%--ASIENTO REGISTRAL SIR--%>

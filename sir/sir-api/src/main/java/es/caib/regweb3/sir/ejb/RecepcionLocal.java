@@ -17,9 +17,19 @@ import java.util.List;
 /*@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})*/
 public interface RecepcionLocal {
 
+    /**
+     *
+     * @param xmlFicheroIntercambio
+     * @param webServicesMethodsEjb
+     */
     public void recibirFicheroIntercambio(String xmlFicheroIntercambio, WebServicesMethodsLocal webServicesMethodsEjb);
 
-    public void recibirMensajeDatosControl(String xmlMensaje);
+    /**
+     *
+     * @param xmlMensaje
+     * @param webServicesMethodsEjb
+     */
+    public void recibirMensajeDatosControl(String xmlMensaje, WebServicesMethodsLocal webServicesMethodsEjb);
 
     /**
      *
