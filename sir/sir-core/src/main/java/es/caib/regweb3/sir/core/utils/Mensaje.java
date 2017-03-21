@@ -1,4 +1,4 @@
-package es.caib.regweb3.sir.utils;
+package es.caib.regweb3.sir.core.utils;
 
 import es.caib.regweb3.model.utils.IndicadorPrueba;
 import es.caib.regweb3.sir.core.model.TipoMensaje;
@@ -156,4 +156,19 @@ public class Mensaje {
         this.indicadorPrueba = indicadorPrueba;
     }
 
+    @Override
+    public String toString() {
+        return "Mensaje{" +
+                "codigoEntidadRegistralOrigen='" + codigoEntidadRegistralOrigen + '\'' +
+                ", codigoEntidadRegistralDestino='" + codigoEntidadRegistralDestino + '\'' +
+                ", identificadorIntercambio='" + identificadorIntercambio + '\'' +
+                ", tipoMensaje=" + tipoMensaje +
+                ", descripcionMensaje='" + descripcionMensaje + '\'' +
+                ", numeroRegistroEntradaDestino='" + numeroRegistroEntradaDestino + '\'' +
+                ", fechaEntradaDestino=" + fechaEntradaDestino +
+                ", indicadorPrueba=" + indicadorPrueba +
+                ", identificadoresFicheros=" + identificadoresFicheros +
+                ", codigoError='" + codigoError + '\'' +
+                '}';
+    }
 }

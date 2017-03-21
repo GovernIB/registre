@@ -1,5 +1,6 @@
 package es.caib.regweb3.sir.ws.wssir9.impl;
 
+import es.caib.regweb3.persistence.ejb.WebServicesMethodsLocal;
 import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.core.model.Errores;
 import es.caib.regweb3.sir.ejb.RecepcionLocal;
@@ -43,6 +44,9 @@ public class WS_SIR9Impl implements WS_SIR9_PortType {
 
     public static final String NAME_WS = NAME + "Ws";
 
+    @EJB(mappedName = "regweb3/WebServicesMethodsEJB/local")
+    public WebServicesMethodsLocal webServicesMethodsEjb;
+
     @EJB(name = "RecepcionEJB")
     public RecepcionLocal recepcionEjb;
 
@@ -58,7 +62,7 @@ public class WS_SIR9Impl implements WS_SIR9_PortType {
 
         try{
             // Envia el mensaje datos control a REGWEB3
-            recepcionEjb.recibirMensajeDatosControl(mensaje);
+            recepcionEjb.recibirMensajeDatosControl(mensaje, webServicesMethodsEjb);
 
             // Creamos la respuesta exitosa
             respuestaWS = crearRespuestaWS(Errores.OK);

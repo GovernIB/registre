@@ -19,6 +19,7 @@ import es.caib.regweb3.sir.api.schema.types.Indicador_PruebaType;
 import es.caib.regweb3.sir.core.excepcion.SIRException;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.sir.core.model.*;
+import es.caib.regweb3.sir.core.utils.Mensaje;
 import es.caib.regweb3.utils.MimeTypeUtils;
 import es.caib.regweb3.utils.Versio;
 import org.apache.commons.codec.binary.Base64;
@@ -264,8 +265,6 @@ public class Sicres3XML {
         Assert.hasText(mensaje.getCodigoEntidadRegistralDestino(), "El campo 'codigoEntidadRegistralDestino' no puede estar vacio");
         Assert.hasText(mensaje.getIdentificadorIntercambio(), "El campo 'identificadorIntercambio' no puede estar vacio");
         Assert.notNull(mensaje.getTipoMensaje(), "El campo 'tipoMensaje' no puede ser null");
-
-        log.info("Mensaje (" + mensaje.getTipoMensaje().getName()+") validado");
     }
 
     /**
@@ -944,8 +943,6 @@ public class Sicres3XML {
     public Mensaje parseXMLMensaje(String xml) {
 
         Mensaje mensaje = null;
-
-        log.info("Parseando el XML del mensaje...");
 
         try {
 
