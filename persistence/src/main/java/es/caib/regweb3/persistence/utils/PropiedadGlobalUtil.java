@@ -374,6 +374,20 @@ public class PropiedadGlobalUtil {
 
 
     /**
+     * Retorna el valor de la propiedad CronExpression para inicializar contadores libro.
+     * Si no está definida devuelve la expresión por defecto
+     * @return
+     */
+    public static String getCronExpressionInicializarContadores() {
+        final String partialPropertyName = "cronExpression.inicializarContadores";
+        String valor = getString( partialPropertyName);
+
+        return valor != null ? valor : RegwebConstantes.CRON_INICIALIZAR_CONTADORES;
+    }
+
+
+
+    /**
      *
      * @param idEntidad
      * @param partialPropertyName

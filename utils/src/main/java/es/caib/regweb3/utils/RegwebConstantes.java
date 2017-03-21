@@ -587,4 +587,6 @@ public interface RegwebConstantes {
     public int ANEXO_NOMBREFICHERO_MAXLENGTH_SIR = 80;
     public int ANEXO_OBSERVACIONES_MAXLENGTH_SIR = 50;
     public int ANEXO_IDENTIFICADOR_MAXLENGTH_SIR = 50;
+
+    String CRON_INICIALIZAR_CONTADORES = "0 0 0 1 1 ? *";
 }

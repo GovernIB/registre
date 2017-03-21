@@ -7,7 +7,9 @@ import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.jboss.ejb3.annotation.TransactionTimeout;
 
+import javax.annotation.security.RunAs;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -25,6 +27,7 @@ import java.util.List;
 
 @Stateless(name = "LibroEJB")
 @SecurityDomain("seycon")
+@RunAs("RWE_SUPERADMIN")
 public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
 
     protected final Logger log = Logger.getLogger(getClass());
@@ -336,5 +339,24 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
 
         return libro.getId();
     }
+
+
+    /*
+    * Tarea que reinicia los contadores de los libros de una Entidad
+    */
+    @Override
+    @TransactionTimeout(value = 18000)
+    public void reiniciarContadoresEntidadTask(Long idEntidad) {
+
+        try {
+
+            reiniciarContadoresEntidad(idEntidad);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }
