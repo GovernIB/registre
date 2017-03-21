@@ -191,6 +191,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         Oficina oficinaActiva = getOficinaActiva(request);
         LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
+        Boolean isOficioRemisionSir = false;
 
         model.addAttribute("registro",registro);
         model.addAttribute("oficina", oficinaActiva);
@@ -208,8 +209,8 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         model.addAttribute("isDistribuir", registroEntradaEjb.isDistribuir(idRegistro, getOrganismosOficioRemision(request,organismosOficinaActiva)));
 
         // OficioRemision
-        Boolean isOficioRemisionSir = oficioRemisionEntradaUtilsEjb.isOficioRemisionSir(idRegistro);
-        if(entidadActiva.getOficioRemision()){
+        if(entidadActiva.getOficioRemision() && registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) && oficinaRegistral){
+            isOficioRemisionSir = oficioRemisionEntradaUtilsEjb.isOficioRemisionSir(idRegistro);
             model.addAttribute("isOficioRemisionInterno", oficioRemisionEntradaUtilsEjb.isOficioRemisionInterno(idRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva)));
             model.addAttribute("isOficioRemisionExterno", oficioRemisionEntradaUtilsEjb.isOficioRemisionExterno(idRegistro));
             model.addAttribute("isOficioRemisionSir", isOficioRemisionSir);
@@ -232,15 +233,18 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         Boolean showannexes = PropiedadGlobalUtil.getShowAnnexes();
         model.addAttribute("showannexes", showannexes);
 
-
-        if(showannexes == null || showannexes ) {
-            //TODO Mirar que carga este método para mirar de ver que mostrar en caso de solo lectura y que no cargue todo el anexo.
-            model.addAttribute("anexos", anexoEjb.getByRegistroEntrada(registro));
-            initAnexos(entidadActiva, model, request, registro.getId());
-            //Inicializamos el mensaje de las limitaciones de anexos si es oficio de remisión sir
-            if(isOficioRemisionSir) {
-                initMensajeNotaInformativaAnexos(entidadActiva, model);
-                model.addAttribute("maxanexospermitidos", PropiedadGlobalUtil.getMaxAnexosPermitidos(entidadActiva.getId()));
+        if(showannexes) {
+            if((registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR)) && oficinaRegistral){
+                model.addAttribute("anexos", anexoEjb.getByRegistroEntrada(registro));
+                //Inicializamos el mensaje de las limitaciones de anexos si es oficio de remisión sir
+                if(isOficioRemisionSir) {
+                    initMensajeNotaInformativaAnexos(entidadActiva, model);
+                    model.addAttribute("maxanexospermitidos", PropiedadGlobalUtil.getMaxAnexosPermitidos(entidadActiva.getId()));
+                }
+                // Inicializa los atributos para escanear anexos
+                initScanAnexos(entidadActiva, model, request, registro.getId());
+            }else{
+                model.addAttribute("anexos", anexoEjb.getByRegistroDetalleLectura(registro.getRegistroDetalle().getId()));
             }
         }
 

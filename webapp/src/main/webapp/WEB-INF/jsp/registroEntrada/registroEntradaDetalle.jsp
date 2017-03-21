@@ -136,32 +136,33 @@
                         </c:if>
 
                         <%--Botón Distribuir y Oficio Remision--%>
-                        <c:if test="${(isDistribuir && puedeDistribuir) || isOficioRemisionInterno || isOficioRemisionExterno}">
-                            <div class="panel-footer center">
-                                <c:if test="${isDistribuir && puedeDistribuir}">
+                        <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO}">
+                            <c:if test="${(isDistribuir && puedeDistribuir) || isOficioRemisionInterno || isOficioRemisionExterno}">
+                                <div class="panel-footer center">
+                                    <c:if test="${isDistribuir && puedeDistribuir}">
 
-                                    <button type="button" onclick='confirmDistribuir("<spring:message code="regweb.confirmar.distribuir" htmlEscape="true"/>")'
-                                            class="btn btn-success btn-sm btn-block"><spring:message
-                                            code="regweb.distribuir"/></button>
+                                        <button type="button" onclick='confirmDistribuir("<spring:message code="regweb.confirmar.distribuir" htmlEscape="true"/>")'
+                                                class="btn btn-success btn-sm btn-block"><spring:message
+                                                code="regweb.distribuir"/></button>
 
-                                </c:if>
+                                    </c:if>
 
-                                <c:if test="${isOficioRemisionInterno || isOficioRemisionExterno}">
-                                    <button type="button" onclick="goTo('/regweb3/oficioRemision/entradasPendientesRemision')"
-                                            class="btn btn-success btn-sm btn-block">
-                                        <c:if test="${isOficioRemisionInterno}">
-                                            <spring:message code="oficioRemision.boton.crear.interno"/>
-                                        </c:if>
-                                        <c:if test="${isOficioRemisionExterno}">
-                                            <spring:message code="oficioRemision.boton.crear.externo"/>
-                                        </c:if>
+                                    <c:if test="${isOficioRemisionInterno || isOficioRemisionExterno}">
+                                        <button type="button" onclick="goTo('/regweb3/oficioRemision/entradasPendientesRemision')"
+                                                class="btn btn-success btn-sm btn-block">
+                                            <c:if test="${isOficioRemisionInterno}">
+                                                <spring:message code="oficioRemision.boton.crear.interno"/>
+                                            </c:if>
+                                            <c:if test="${isOficioRemisionExterno}">
+                                                <spring:message code="oficioRemision.boton.crear.externo"/>
+                                            </c:if>
 
-                                    </button>
-                                </c:if>
+                                        </button>
+                                    </c:if>
 
-                            </div>
+                                </div>
+                            </c:if>
                         </c:if>
-
                     </c:if>
 
                     <div class="panel-footer center">
@@ -208,7 +209,7 @@
 
             <!-- ANEXOS -->
             <!-- Si no existe la variable showannexes se muestran por defecto los anexos-->
-            <c:if test="${empty showannexes || showannexes}">
+            <c:if test="${showannexes}">
                 <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && oficinaRegistral && puedeEditar}">
                         <c:import url="../registro/anexos.jsp">
                             <c:param name="tipoRegistro" value="entrada"/>

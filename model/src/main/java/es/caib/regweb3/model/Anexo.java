@@ -123,7 +123,10 @@ public class Anexo implements Serializable {
       return clone;
     }
 
-
+    public Anexo(String titulo, Long tipoDocumento) {
+        this.titulo = titulo;
+        this.tipoDocumento = tipoDocumento;
+    }
 
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")

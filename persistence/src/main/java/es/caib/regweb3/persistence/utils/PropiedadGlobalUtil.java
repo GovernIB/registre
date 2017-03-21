@@ -462,7 +462,7 @@ public class PropiedadGlobalUtil {
             return propiedadGlobalEjb.getBooleanPropertyByEntidad(idEntidad,RegwebConstantes.REGWEB3_PROPERTY_BASE + partialPropertyName);
         } catch (Exception e) {
             log.error("Error obteniendo la propiedad ]" + RegwebConstantes.REGWEB3_PROPERTY_BASE + partialPropertyName, e);
-            return null;
+            return false;
         }
     }
 
@@ -477,7 +477,7 @@ public class PropiedadGlobalUtil {
             return propiedadGlobalEjb.getBooleanProperty(RegwebConstantes.REGWEB3_PROPERTY_BASE + partialPropertyName);
         } catch (Exception e) {
             log.error("Error obteniendo la propiedad ]" + RegwebConstantes.REGWEB3_PROPERTY_BASE + partialPropertyName, e);
-            return null;
+            return false;
         }
     }
 

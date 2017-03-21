@@ -1,4 +1,3 @@
-<%@ page import="es.caib.regweb3.utils.Configuracio" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 
@@ -184,7 +183,7 @@
             </div>
 
             <!-- ANEXOS -->
-            <%if(!Configuracio.isCAIB()){%>
+            <c:if test="${showannexes}">
                 <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR)&& oficinaRegistral && puedeEditar}">
                     <c:import url="../registro/anexos.jsp">
                         <c:param name="tipoRegistro" value="salida"/>
@@ -197,7 +196,7 @@
                         <c:param name="tipoRegistro" value="salida"/>
                     </c:import>
                 </c:if>
-            <%}%>
+            </c:if>
             <%--INTERESADOS--%>
             <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO && oficinaRegistral && puedeEditar}">
                 <c:import url="../registro/interesados.jsp">

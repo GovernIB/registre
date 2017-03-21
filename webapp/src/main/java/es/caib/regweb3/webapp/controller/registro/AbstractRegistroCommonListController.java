@@ -94,7 +94,15 @@ public abstract class AbstractRegistroCommonListController extends BaseControlle
         return new CatComunidadAutonoma();
     }
 
-    public void initAnexos(Entidad entidad, Model model, HttpServletRequest request, Long registroID) throws Exception {
+    /**
+     *  Inicializa los atributos para escanear anexos
+     * @param entidad
+     * @param model
+     * @param request
+     * @param registroID
+     * @throws Exception
+     */
+    public void initScanAnexos(Entidad entidad, Model model, HttpServletRequest request, Long registroID) throws Exception {
       long tipusScan = 0;
       if (entidad.getTipoScan() != null && !"".equals(entidad.getTipoScan())) {
         tipusScan = Long.parseLong(entidad.getTipoScan());

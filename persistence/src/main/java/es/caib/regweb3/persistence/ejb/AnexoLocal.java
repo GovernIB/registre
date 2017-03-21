@@ -81,6 +81,14 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
     public List<Anexo> getByRegistroDetalle(Long idRegistroDetalle) throws Exception;
 
     /**
+    *
+    * @param idRegistroDetalle
+    * @return
+    * @throws Exception
+    */
+    public List<Anexo> getByRegistroDetalleLectura(Long idRegistroDetalle) throws Exception;
+
+    /**
      *  Obtiene el id del Justificante que tiene un registroDetalle
      * @param idRegistroDetalle
      * @return

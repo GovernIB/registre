@@ -181,6 +181,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         Oficina oficinaActiva = getOficinaActiva(request);
         LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
+        Boolean isOficioRemisionSir = false;
 
         model.addAttribute("registro",registro);
         model.addAttribute("oficina", oficinaActiva);
@@ -196,10 +197,12 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         model.addAttribute("puedeEditar", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),registro.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA));
 
         // OficioRemision
-       /* if(entidadActiva.getOficioRemision()){
-            model.addAttribute("isOficioRemisionInterno", oficioRemisionSalidaUtilsEjb.isOficioRemisionInterno(registro, getOrganismosOficioRemisionSalida(request, organismosOficinaActiva)));
-            model.addAttribute("isOficioRemisionExterno", oficioRemisionSalidaUtilsEjb.isOficioRemisionExterno(registro, getOrganismosOficioRemisionSalida(request, organismosOficinaActiva)));
-        }*/
+        if(entidadActiva.getOficioRemision() && registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) && oficinaRegistral){
+            isOficioRemisionSir = oficioRemisionSalidaUtilsEjb.isOficioRemisionSir(registro, getOrganismosOficioRemisionSalida(organismosOficinaActiva));
+            model.addAttribute("isOficioRemisionInterno", oficioRemisionSalidaUtilsEjb.isOficioRemisionInterno(registro, getOrganismosOficioRemisionSalida(organismosOficinaActiva)));
+            model.addAttribute("isOficioRemisionExterno", oficioRemisionSalidaUtilsEjb.isOficioRemisionExterno(registro, getOrganismosOficioRemisionSalida(organismosOficinaActiva)));
+            model.addAttribute("isOficioRemisionSir", isOficioRemisionSir);
+        }
 
         // Interesados, solo si el Registro en Válio
         if(registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) && oficinaRegistral){
@@ -219,17 +222,19 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         Boolean showannexes = PropiedadGlobalUtil.getShowAnnexes();
         model.addAttribute("showannexes", showannexes);
 
-        if(showannexes == null || showannexes ) {
-            //TODO Mirar que carga este método para mirar de ver que mostrar en caso de solo lectura y que no cargue todo el anexo.
-            model.addAttribute("anexos", anexoEjb.getByRegistroSalida(registro));
-            initAnexos(entidadActiva, model, request, registro.getId());
-            //Inicializamos el mensaje de las limitaciones de anexos si es oficio de remisión sir
-            //TODO falta hacer el método isOficioRemisionSir (salidas)
-            boolean isOficioRemisionSir = false;
-            if(isOficioRemisionSir) {
-                initMensajeNotaInformativaAnexos(entidadActiva, model);
-                model.addAttribute("maxanexospermitidos", PropiedadGlobalUtil.getMaxAnexosPermitidos(entidadActiva.getId()));
-             }
+        if(showannexes) {
+            if((registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR)) && oficinaRegistral){
+                model.addAttribute("anexos", anexoEjb.getByRegistroSalida(registro));
+                //Inicializamos el mensaje de las limitaciones de anexos si es oficio de remisión sir
+                if(isOficioRemisionSir) {
+                    initMensajeNotaInformativaAnexos(entidadActiva, model);
+                    model.addAttribute("maxanexospermitidos", PropiedadGlobalUtil.getMaxAnexosPermitidos(entidadActiva.getId()));
+                }
+                // Inicializa los atributos para escanear anexos
+                initScanAnexos(entidadActiva, model, request, registro.getId());
+            }else{
+                model.addAttribute("anexos", anexoEjb.getByRegistroDetalleLectura(registro.getRegistroDetalle().getId()));
+            }
         }
 
         // Historicos
