@@ -94,22 +94,22 @@
                                 </c:if>
 
                                 <c:if test="${oficioRemision.sir == true}">
-                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == PENDIENTE_ENVIO}"><span class="label label-success"></c:if>
-                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == ENVIADO}"><span class="label label-success"></c:if>
-                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == ENVIADO_Y_ACK}"><span class="label label-success"></c:if>
-                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == ENVIADO_Y_ERROR}"><span class="label label-danger"></c:if>
-                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == DEVUELTO}"><span class="label label-warning"></c:if>
-                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == ACEPTADO}"><span class="label label-success"></c:if>
-                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == REENVIADO}"><span class="label label-warning"></c:if>
-                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == REENVIADO_Y_ACK}"><span class="label label-warning"></c:if>
-                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == REENVIADO_Y_ERROR}"><span class="label label-danger"></c:if>
-                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == ANULADO}"><span class="label label-danger"></c:if>
-                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == RECIBIDO}"><span class="label label-success"></c:if>
-                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == RECHAZADO}"><span class="label label-danger"></c:if>
-                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == RECHAZADO_Y_ACK}"><span class="label label-danger"></c:if>
-                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == RECHAZADO_Y_ERROR}"><span class="label label-danger"></c:if>
-                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == VALIDADO}"><span class="label label-success"></c:if>
-                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == REINTENTAR_VALIDACION}"><span class="label label-warning"></c:if>
+                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == 'PENDIENTE_ENVIO'}"><span class="label label-success"></c:if>
+                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == 'ENVIADO'}"><span class="label label-success"></c:if>
+                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == 'ENVIADO_Y_ACK'}"><span class="label label-success"></c:if>
+                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == 'ENVIADO_Y_ERROR'}"><span class="label label-danger"></c:if>
+                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == 'DEVUELTO'}"><span class="label label-warning"></c:if>
+                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == 'ACEPTADO'}"><span class="label label-success"></c:if>
+                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == 'REENVIADO'}"><span class="label label-warning"></c:if>
+                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == 'REENVIADO_Y_ACK'}"><span class="label label-warning"></c:if>
+                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == 'REENVIADO_Y_ERROR'}"><span class="label label-danger"></c:if>
+                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == 'ANULADO'}"><span class="label label-danger"></c:if>
+                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == 'RECIBIDO'}"><span class="label label-success"></c:if>
+                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == 'RECHAZADO'}"><span class="label label-danger"></c:if>
+                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == 'RECHAZADO_Y_ACK'}"><span class="label label-danger"></c:if>
+                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == 'RECHAZADO_Y_ERROR'}"><span class="label label-danger"></c:if>
+                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == 'VALIDADO'}"><span class="label label-success"></c:if>
+                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == 'REINTENTAR_VALIDACION'}"><span class="label label-warning"></c:if>
 
                                         <spring:message code="asientoRegistralSir.estado.${oficioRemision.asientoRegistralSir.estado}"/>
                                         <c:if test="${not empty oficioRemision.fechaEstado && oficioRemision.estado != 0}">
