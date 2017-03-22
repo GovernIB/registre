@@ -32,6 +32,23 @@ public class RegWeb3SirWSHandler implements SOAPHandler<SOAPMessageContext> {
     public boolean handleMessage(SOAPMessageContext smc) {
 
         log.info(" ------------------ RegWeb3SirWSHandler  handleMessage --------------");
+        log.info(" ");
+        log.info("HTTP_REQUEST_HEADERS :" + smc.get(MessageContext.HTTP_REQUEST_HEADERS));
+        log.info("HTTP_REQUEST_METHOD :" + smc.get(MessageContext.HTTP_REQUEST_METHOD));
+        log.info("HTTP_RESPONSE_CODE :" + smc.get(MessageContext.HTTP_RESPONSE_CODE));
+        log.info("INBOUND_MESSAGE_ATTACHMENTS :" + smc.get(MessageContext.INBOUND_MESSAGE_ATTACHMENTS));
+        log.info("MESSAGE_OUTBOUND_PROPERTY :" + smc.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY));
+        log.info("OUTBOUND_MESSAGE_ATTACHMENTS :" + smc.get(MessageContext.OUTBOUND_MESSAGE_ATTACHMENTS));
+        log.info("PATH_INFO :" + smc.get(MessageContext.PATH_INFO));
+        log.info("QUERY_STRING :" + smc.get(MessageContext.QUERY_STRING));
+        log.info("REFERENCE_PARAMETERS :" + smc.get(MessageContext.REFERENCE_PARAMETERS));
+        log.info("SERVLET_CONTEXT :" + smc.get(MessageContext.SERVLET_CONTEXT));
+        log.info("SERVLET_REQUEST :" + smc.get(MessageContext.SERVLET_REQUEST));
+        log.info("SERVLET_RESPONSE :" + smc.get(MessageContext.SERVLET_RESPONSE));
+        log.info("WSDL_DESCRIPTION :" + smc.get(MessageContext.WSDL_DESCRIPTION));
+        log.info("WSDL_INTERFACE :" + smc.get(MessageContext.WSDL_INTERFACE));
+        log.info("WSDL_OPERATION :" + smc.get(MessageContext.WSDL_OPERATION));
+        log.info("WSDL_SERVICE :" + smc.get(MessageContext.WSDL_SERVICE));
 
         // Obtenemos el tipo a procesar
         Boolean outboundProperty = (Boolean) smc.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);

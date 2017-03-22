@@ -25,6 +25,8 @@ import javax.jws.soap.SOAPBinding;
  */
 @Stateless(name = WS_SIR9Impl.NAME + "Ejb")
 @SOAPBinding(style = SOAPBinding.Style.RPC)
+@org.apache.cxf.interceptor.InInterceptors(interceptors = {"org.apache.cxf.interceptor.LoggingInInterceptor"})
+@org.apache.cxf.interceptor.InFaultInterceptors(interceptors = {"org.apache.cxf.interceptor.LoggingInInterceptor"})
 @WebService(
         name = WS_SIR9Impl.NAME_WS,
         portName = WS_SIR9Impl.NAME_WS,
