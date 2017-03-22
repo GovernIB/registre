@@ -73,7 +73,7 @@ public class RegWeb3SirWSHandler implements SOAPHandler<SOAPMessageContext> {
 
                     log.info("Se trata de una petición al WS_SIR9, modificamos las cabeceras");
 
-                    /*// Obtenemos el mensaje de la petición
+                    // Obtenemos el mensaje de la petición
                     String mensaje = soapMessageToString(smc.getMessage());
 
                     // Añadimos el namespace al inicio del mensaje
@@ -85,7 +85,7 @@ public class RegWeb3SirWSHandler implements SOAPHandler<SOAPMessageContext> {
                     // Rehacemos la petición con el nuevo mensaje
                     InputStream bStream = new ByteArrayInputStream(mensaje.getBytes());
                     SOAPMessage request = MessageFactory.newInstance().createMessage(null, bStream);
-                    smc.setMessage(request);*/
+                    smc.setMessage(request);
 
                 }
             }

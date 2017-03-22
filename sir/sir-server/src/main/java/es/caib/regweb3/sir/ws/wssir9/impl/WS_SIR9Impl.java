@@ -25,13 +25,14 @@ import javax.jws.soap.SOAPBinding;
  * @author earrivi
  */
 @Stateless(name = WS_SIR9Impl.NAME + "Ejb")
-@SOAPBinding(style = SOAPBinding.Style.RPC)
+@SOAPBinding(style = SOAPBinding.Style.DOCUMENT)
 @org.apache.cxf.interceptor.InInterceptors(interceptors = {"org.apache.cxf.interceptor.LoggingInInterceptor"})
 @org.apache.cxf.interceptor.InFaultInterceptors(interceptors = {"org.apache.cxf.interceptor.LoggingInInterceptor"})
 @WebService(
         name = WS_SIR9Impl.NAME_WS,
         portName = WS_SIR9Impl.NAME_WS,
-        serviceName = WS_SIR9Impl.NAME_WS + "Service"
+        serviceName = WS_SIR9Impl.NAME_WS + "Service",
+        targetNamespace = "http://impl.manager.cct.map.es"
 )
 @WebContext(
         contextRoot = "/regweb3/ws/sir",
@@ -46,7 +47,7 @@ public class WS_SIR9Impl implements WS_SIR9_PortType {
 
     public static final String NAME = "WS_SIR9";
 
-    public static final String NAME_WS = NAME + "Ws";
+    public static final String NAME_WS = NAME;
 
     @EJB(mappedName = "regweb3/WebServicesMethodsEJB/local")
     public WebServicesMethodsLocal webServicesMethodsEjb;
