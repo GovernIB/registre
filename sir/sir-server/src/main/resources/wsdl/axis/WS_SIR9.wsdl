@@ -11,8 +11,8 @@
             <element name="envioMensajeDatosControlAAplicacion">
                 <complexType>
                     <sequence>
-                        <element name="mensaje" type="xsd:string"/>
-                        <element name="firma" type="xsd:string"/>
+                        <element name="value0" type="xsd:string"/>
+                        <element name="value1" type="xsd:string"/>
                     </sequence>
                 </complexType>
             </element>

@@ -4,7 +4,6 @@ import es.caib.regweb3.model.AsientoRegistralSir;
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.OficioRemision;
 import es.caib.regweb3.model.UsuarioEntidad;
-import es.caib.regweb3.model.utils.EstadoAsientoRegistralSir;
 import es.caib.regweb3.persistence.ejb.AsientoRegistralSirLocal;
 import es.caib.regweb3.persistence.ejb.SirLocal;
 import es.caib.regweb3.sir.core.excepcion.SIRException;
@@ -72,7 +71,7 @@ public class EmisionBean implements EmisionLocal{
 
                 if (Errores.OK.getValue().equals(respuesta.getCodigo())) {
 
-                    asientoRegistralSirEjb.modificarEstado(asientoRegistralSir.getId(), EstadoAsientoRegistralSir.ENVIADO_Y_ACK);
+                    log.info("Respuesta: " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
 
                 }else{
                     log.error("Respuesta: " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
