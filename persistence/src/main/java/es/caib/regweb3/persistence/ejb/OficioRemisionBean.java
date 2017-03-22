@@ -544,7 +544,12 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
         q.setParameter("identificadorIntercambio", identificadorIntercambio);
 
-        return (OficioRemision) q.getSingleResult();
+        List<OficioRemision> oficioRemision = q.getResultList();
+        if(oficioRemision.size() == 1){
+            return oficioRemision.get(0);
+        }else{
+            return  null;
+        }
     }
 
     @Override

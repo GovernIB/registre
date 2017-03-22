@@ -977,10 +977,9 @@ public class Sicres3XML {
                 }
 
                 // Indicador de prueba
-                IndicadorPrueba indicadorPrueba = IndicadorPrueba.valueOf(de_mensaje.getIndicador_Prueba().value());
-                if ((indicadorPrueba != null)
-                        && StringUtils.isNotBlank(indicadorPrueba.getValue())) {
-                    mensaje.setIndicadorPrueba(IndicadorPrueba.getIndicadorPrueba(indicadorPrueba.getValue()));
+                IndicadorPrueba indicadorPrueba = IndicadorPrueba.getIndicadorPrueba(de_mensaje.getIndicador_Prueba().value());
+                if ((indicadorPrueba != null) && StringUtils.isNotBlank(indicadorPrueba.getValue())) {
+                    mensaje.setIndicadorPrueba(indicadorPrueba);
                 }
             }
 
