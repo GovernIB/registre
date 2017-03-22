@@ -14,6 +14,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.jws.HandlerChain;
 import javax.jws.WebMethod;
+import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 
@@ -58,7 +59,7 @@ public class WS_SIR9Impl implements WS_SIR9_PortType {
 
     @Override
     @WebMethod(operationName = "envioMensajeDatosControlAAplicacion")
-    public RespuestaWS envioMensajeDatosControlAAplicacion(String mensaje, String firma) {
+    public RespuestaWS envioMensajeDatosControlAAplicacion(@WebParam(name = "value0")String mensaje, @WebParam(name = "value1")String firma) {
 
         log.info("Dentro de WS_SIR9Impl: envioMensajeDatosControlAAplicacion");
         log.info("Mensaje: " + mensaje);
