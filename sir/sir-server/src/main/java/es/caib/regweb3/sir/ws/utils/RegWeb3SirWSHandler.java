@@ -77,12 +77,10 @@ public class RegWeb3SirWSHandler implements SOAPHandler<SOAPMessageContext> {
                     String mensaje = soapMessageToString(smc.getMessage());
 
                     // Añadimos el namespace al inicio del mensaje
-                    mensaje = mensaje.replace("<ns1:envioMensajeDatosControlAAplicacion xmlns:ns1=\"http://impl.manager.cct.map.es\"", "<envioMensajeDatosControlAAplicacion");
-                    //mensaje = mensaje.replace("<envioMensajeDatosControlAAplicacion", "<ns1:envioMensajeDatosControlAAplicacion xmlns:ns1=\"http://impl.manager.cct.map.es\"");
+                    mensaje = mensaje.replace("<envioMensajeDatosControlAAplicacion", "<ns1:envioMensajeDatosControlAAplicacion xmlns:ns1=\"http://impl.manager.cct.map.es\"");
 
                     // Añadimos el namespace al final del mensaje
-                    mensaje = mensaje.replace("</ns1:envioMensajeDatosControlAAplicacion>","</envioMensajeDatosControlAAplicacion>");
-                    //mensaje = mensaje.replace("</envioMensajeDatosControlAAplicacion>","</ns1:envioMensajeDatosControlAAplicacion>");
+                    mensaje = mensaje.replace("</envioMensajeDatosControlAAplicacion>","</ns1:envioMensajeDatosControlAAplicacion>");
 
                     // Rehacemos la petición con el nuevo mensaje
                     InputStream bStream = new ByteArrayInputStream(mensaje.getBytes());
