@@ -6,7 +6,15 @@
 <div class="timeline-panel">
     <div class="timeline-heading">
         <h4 class="timeline-title">
-            <a href="<c:url value="/oficioRemision/${oficioRemision.id}/detalle"/>"><spring:message code="oficioRemision.oficioRemision"/> <fmt:formatDate value="${oficioRemision.fecha}" pattern="yyyy"/> / ${oficioRemision.numeroOficio}</a>
+            <a href="<c:url value="/oficioRemision/${oficioRemision.id}/detalle"/>">
+                <c:if test="${oficioRemision.sir == false}">
+                    <spring:message code="oficioRemision.oficioRemision"/>
+                </c:if>
+                <c:if test="${oficioRemision.sir == true}">
+                    <spring:message code="oficioRemision.oficioRemision.sir"/>
+                </c:if>
+                <fmt:formatDate value="${oficioRemision.fecha}" pattern="yyyy"/> / ${oficioRemision.numeroOficio}
+            </a>
         </h4>
         <p><small class="text-muted"><i class="fa fa-clock-o"></i> <fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></small></p>
     </div>
@@ -40,8 +48,11 @@
                     <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ANULADO}"><span class="label label-danger"></c:if>
 
                         <spring:message code="oficioRemision.estado.${oficioRemision.estado}"/>
-                        <c:if test="${not empty oficioRemision.fechaEstado && oficioRemision.estado != 0}">
+                        <c:if test="${not empty oficioRemision.fechaEstado && oficioRemision.estado != RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO}">
                             - <fmt:formatDate value="${oficioRemision.fechaEstado}" pattern="dd/MM/yyyy HH:mm:ss"/>
+                        </c:if>
+                        <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO}">
+                            - <fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/>
                         </c:if>
                     </span>
                 </c:if>

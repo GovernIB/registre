@@ -12,6 +12,7 @@ import org.jboss.wsf.spi.annotation.WebContext;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.jws.HandlerChain;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
@@ -38,6 +39,7 @@ import javax.jws.soap.SOAPBinding;
         transportGuarantee = TransportGuarantee.NONE,
         secureWSDLAccess = false
 )
+@HandlerChain(file = "/handler-chain.xml")
 public class WS_SIR9Impl implements WS_SIR9_PortType {
 
     protected final Logger log = Logger.getLogger(getClass());
