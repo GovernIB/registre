@@ -17,11 +17,11 @@ public class WS_SIR_8B_Test {
     @Test
     public void envioFicherosAAplicacion() throws Exception {
 
-        String url1 = "http://registre3.fundaciobit.org/regweb3/ws/sir/v3/WS_SIR8_B?method=envioFicherosAAplicacion";
-        String url = "http://localhost:8080/regweb3/ws/sir/v3/WS_SIR8_B?method=envioFicherosAAplicacion";
+        String registre3 = "http://registre3.fundaciobit.org/regweb3/ws/sir/v3/WS_SIR8_B?method=envioFicherosAAplicacion";
+        String local = "http://localhost:8080/regweb3/ws/sir/v3/WS_SIR8_B?method=envioFicherosAAplicacion";
 
         WS_SIR8_BServiceLocator locator = new WS_SIR8_BServiceLocator();
-        locator.setWS_SIR8_BEndpointAddress(url);
+        locator.setWS_SIR8_BEndpointAddress(local);
         WS_SIR8_B_PortType service = locator.getWS_SIR8_B();
 
 
