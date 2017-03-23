@@ -1,10 +1,7 @@
 package es.caib.regweb3.webapp.interceptor;
 
 import es.caib.regweb3.model.*;
-import es.caib.regweb3.persistence.ejb.PermisoLibroUsuarioLocal;
-import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
-import es.caib.regweb3.persistence.ejb.TipoDocumentalLocal;
-import es.caib.regweb3.persistence.ejb.UsuarioEntidadLocal;
+import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.apache.log4j.Logger;
@@ -42,6 +39,9 @@ public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
 
     @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
     public TipoDocumentalLocal tipoDocumentalEjb;
+
+    @EJB(mappedName = "regweb3/AnexoEJB/local")
+    public AnexoLocal anexoEjb;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -175,6 +175,23 @@ public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
                 return false;
             }
 
+        }
+
+        // Comprobaciones previas a la consulta de RegistroEntrada
+        if(url.contains("justificante")){
+
+            String idRegistroEntrada =  url.replace("/registroEntrada/","").replace("/justificante", ""); //Obtenemos el id a partir de la url
+
+            RegistroEntrada registroEntrada = registroEntradaEjb.findById(Long.valueOf(idRegistroEntrada));
+            Long idJustificante = anexoEjb.getIdJustificante(registroEntrada.getRegistroDetalle().getId());
+
+            //Si ya existe un justificante, da error
+            if(idJustificante != -1){
+                log.info("Aviso: El registro ya tiene un justificante asociado");
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.justificante.existe"));
+                response.sendRedirect("/regweb3/aviso");
+                return false;
+            }
         }
 
         return true;

@@ -53,8 +53,8 @@
                          </colgroup>
                          <thead>
                              <tr>
-                                 <th><spring:message code="anexo.titulo"/></th>
-                                 <th><spring:message code="anexo.tipoDocumento"/></th>
+                                 <th><dt><spring:message code="anexo.titulo"/></dt></th>
+                                 <th><spring:message code="anexo.tipoDoc"/></th>
                                  <th class="center"><spring:message code="regweb.acciones"/></th>
                              </tr>
                          </thead>
@@ -63,7 +63,12 @@
                              <c:forEach var="anexo" items="${registro.registroDetalle.anexos}">
                                  <tr id="anexo${anexo.id}">
 
-                                     <td>${anexo.titulo}</td>
+                                     <c:if test="${anexo.justificante}">
+                                         <td><dt>${anexo.titulo}</dt></td>
+                                     </c:if>
+                                     <c:if test="${!anexo.justificante}">
+                                         <td>${anexo.titulo}</td>
+                                     </c:if>
                                      <td><spring:message code="tipoDocumento.0${anexo.tipoDocumento}"/></td>
                                      <td class="center">
 
@@ -79,13 +84,15 @@
                                                 target="_blank" title="<spring:message code="anexo.descargar"/>"><span
                                                      class="fa fa-download"></span></a>
                                          </c:if>
-                                         <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_RESERVA || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && oficinaRegistral && puedeEditar}">
-                                             <a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#myModal"  onclick="editarAnexoFull('${anexo.id}','${registro.id}','${registro.registroDetalle.id}','${param.tipoRegistro}')" title="Editar"><span class="fa fa-pencil"></span></a>
-                                             <a class="btn btn-danger btn-default btn-sm"  onclick="eliminarAnexo('${anexo.id}','${registro.id}','${registro.registroDetalle.id}','${param.tipoRegistro}', '<spring:message code="anexo.confirmar.eliminar" javaScriptEscape='true'/>')" href="#" title="Eliminar"><span class="fa fa-eraser"></span></a>
-                                         </c:if>
-                                         <c:if test="${(registro.estado != RegwebConstantes.REGISTRO_VALIDO && registro.estado != RegwebConstantes.REGISTRO_RESERVA && registro.estado != RegwebConstantes.REGISTRO_PENDIENTE_VISAR) || !oficinaRegistral || !puedeEditar}">
-                                             <a class="btn btn-warning disabled btn-sm" href="javascript:void(0);" title="Editar"><span class="fa fa-pencil"></span></a>
-                                             <a class="btn btn-danger disabled btn-sm" href="javascript:void(0);" title="<spring:message code="regweb.eliminar"/>"><span class="fa fa-eraser"></span></a>
+                                         <c:if test="${!anexo.justificante}">
+                                             <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_RESERVA || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && oficinaRegistral && puedeEditar}">
+                                                 <a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#myModal"  onclick="editarAnexoFull('${anexo.id}','${registro.id}','${registro.registroDetalle.id}','${param.tipoRegistro}')" title="Editar"><span class="fa fa-pencil"></span></a>
+                                                 <a class="btn btn-danger btn-default btn-sm"  onclick="eliminarAnexo('${anexo.id}','${registro.id}','${registro.registroDetalle.id}','${param.tipoRegistro}', '<spring:message code="anexo.confirmar.eliminar" javaScriptEscape='true'/>')" href="#" title="Eliminar"><span class="fa fa-eraser"></span></a>
+                                             </c:if>
+                                             <c:if test="${(registro.estado != RegwebConstantes.REGISTRO_VALIDO && registro.estado != RegwebConstantes.REGISTRO_RESERVA && registro.estado != RegwebConstantes.REGISTRO_PENDIENTE_VISAR) || !oficinaRegistral || !puedeEditar}">
+                                                 <a class="btn btn-warning disabled btn-sm" href="javascript:void(0);" title="Editar"><span class="fa fa-pencil"></span></a>
+                                                 <a class="btn btn-danger disabled btn-sm" href="javascript:void(0);" title="<spring:message code="regweb.eliminar"/>"><span class="fa fa-eraser"></span></a>
+                                             </c:if>
                                          </c:if>
 
                                      </td>

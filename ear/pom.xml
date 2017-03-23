@@ -280,6 +280,22 @@
     </dependency>
 
     <!-- ============================================ -->
+    <!-- ======== PLUGINS DE JUSTIFICANTE =========== -->
+    <!-- ============================================ -->
+
+    <dependency>
+        <groupId>es.caib.regweb3</groupId>
+        <artifactId>plugins-justificanteregweb-api</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>es.caib.regweb3</groupId>
+        <artifactId>plugins-justificanteregweb-caib</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+
+    <!-- ============================================ -->
     <!-- =============    FINAL PLUGINS   =========== -->
     <!-- ============================================ -->
 
