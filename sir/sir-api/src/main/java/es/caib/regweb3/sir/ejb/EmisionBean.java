@@ -9,7 +9,7 @@ import es.caib.regweb3.persistence.ejb.AsientoRegistralSirLocal;
 import es.caib.regweb3.persistence.ejb.SirLocal;
 import es.caib.regweb3.sir.core.excepcion.SIRException;
 import es.caib.regweb3.sir.core.model.Errores;
-import es.caib.regweb3.sir.utils.FicheroIntercambio;
+import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.utils.Sicres3XML;
 import es.caib.regweb3.sir.ws.api.wssir6b.RespuestaWS;
 import es.caib.regweb3.sir.ws.api.wssir6b.WS_SIR6_BServiceLocator;

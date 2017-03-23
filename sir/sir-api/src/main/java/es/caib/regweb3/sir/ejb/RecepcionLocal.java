@@ -22,7 +22,7 @@ public interface RecepcionLocal {
      * @param xmlFicheroIntercambio
      * @param webServicesMethodsEjb
      */
-    public void recibirFicheroIntercambio(String xmlFicheroIntercambio, WebServicesMethodsLocal webServicesMethodsEjb);
+    public void recibirFicheroIntercambio(String xmlFicheroIntercambio, WebServicesMethodsLocal webServicesMethodsEjb) throws Exception;
 
     /**
      *

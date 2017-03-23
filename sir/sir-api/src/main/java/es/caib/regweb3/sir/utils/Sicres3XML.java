@@ -11,14 +11,15 @@ import es.caib.regweb3.model.utils.IndicadorPrueba;
 import es.caib.regweb3.model.utils.TipoRegistro;
 import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
-import es.caib.regweb3.sir.api.schema.De_Anexo;
-import es.caib.regweb3.sir.api.schema.De_Interesado;
-import es.caib.regweb3.sir.api.schema.De_Mensaje;
-import es.caib.regweb3.sir.api.schema.Fichero_Intercambio_SICRES_3;
-import es.caib.regweb3.sir.api.schema.types.Indicador_PruebaType;
 import es.caib.regweb3.sir.core.excepcion.SIRException;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.sir.core.model.*;
+import es.caib.regweb3.sir.core.schema.De_Anexo;
+import es.caib.regweb3.sir.core.schema.De_Interesado;
+import es.caib.regweb3.sir.core.schema.De_Mensaje;
+import es.caib.regweb3.sir.core.schema.Fichero_Intercambio_SICRES_3;
+import es.caib.regweb3.sir.core.schema.types.Indicador_PruebaType;
+import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.core.utils.Mensaje;
 import es.caib.regweb3.utils.MimeTypeUtils;
 import es.caib.regweb3.utils.Versio;
@@ -939,7 +940,11 @@ public class Sicres3XML {
         return ficheroIntercambio;
     }
 
-
+    /**
+     *
+     * @param xml
+     * @return
+     */
     public Mensaje parseXMLMensaje(String xml) {
 
         Mensaje mensaje = null;

@@ -3,10 +3,12 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.*;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
+import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.sir.core.model.Errores;
 import es.caib.regweb3.sir.core.model.TipoAnotacion;
 import es.caib.regweb3.sir.core.model.TipoMensaje;
+import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.core.utils.Mensaje;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
@@ -60,10 +62,79 @@ public class SirBean implements SirLocal{
 
 
     /**
+     *
+     * @param ficheroIntercambio
+     * @throws Exception
+     */
+    @Override
+    public void recibirFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception{
+
+
+        AsientoRegistralSir asientoRegistralSir = null;
+
+
+        // ENVIO
+        if (TipoAnotacion.ENVIO.getValue().equals(ficheroIntercambio.getTipoAnotacion())) {
+
+            // Buscamos si el Asiento recibido ya existe en el sistema
+            try {
+                asientoRegistralSir = asientoRegistralSirEjb.getAsientoRegistral(ficheroIntercambio.getIdentificadorIntercambio(),ficheroIntercambio.getCodigoEntidadRegistralDestino());
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new ServiceException(Errores.ERROR_INESPERADO,e);
+            }
+
+            if(asientoRegistralSir != null) { // Ya existe en el sistema
+
+                if(EstadoAsientoRegistralSir.RECIBIDO.equals(asientoRegistralSir.getEstado())){
+
+                    log.info("El AsientoRegistral" + asientoRegistralSir.getIdentificadorIntercambio() +" ya se ha recibido.");
+                    throw new ValidacionException(Errores.ERROR_0205);
+
+                }else if(EstadoAsientoRegistralSir.RECHAZADO.equals(asientoRegistralSir.getEstado()) ||
+                        EstadoAsientoRegistralSir.RECHAZADO_Y_ACK.equals(asientoRegistralSir.getEstado()) ||
+                        EstadoAsientoRegistralSir.RECHAZADO_Y_ERROR.equals(asientoRegistralSir.getEstado()) ||
+                        EstadoAsientoRegistralSir.REENVIADO.equals(asientoRegistralSir.getEstado())){
+
+
+                }
+
+
+            }else{ // No existe en el sistema, lo creamos.
+
+                try {
+                    // Convertimos el Fichero de Intercambio SICRES3 en {@link es.caib.regweb3.model.AsientoRegistralSir}
+                    asientoRegistralSir = asientoRegistralSirEjb.transformarFicheroIntercambio(ficheroIntercambio);
+
+                    asientoRegistralSir = asientoRegistralSirEjb.crearAsientoRegistralSir(asientoRegistralSir);
+
+                } catch (Exception e) {
+                    log.info("Error al crear el AsientoRegistralSir", e);
+                    throw new ServiceException(Errores.ERROR_INESPERADO,e);
+                }
+            }
+
+
+        }
+
+
+        // REENVIO
+        if (TipoAnotacion.REENVIO.getValue().equals(ficheroIntercambio.getTipoAnotacion())) {
+
+        }
+
+        // RECHAZO
+        if (TipoAnotacion.RECHAZO.getValue().equals(ficheroIntercambio.getTipoAnotacion())) {
+
+        }
+    }
+
+    /**
      * Realiza las acciones pertinentes cuando se recibie un mensaje de control
      * @param mensaje
      * @throws Exception
      */
+    @Override
     public void recibirMensajeDatosControl(Mensaje mensaje) throws Exception{
 
         OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(mensaje.getIdentificadorIntercambio());
@@ -276,7 +347,6 @@ public class SirBean implements SirLocal{
         // Creamos el OficioRemision
         OficioRemision oficioRemision = new OficioRemision();
         oficioRemision.setSir(true);
-        oficioRemision.setAsientoRegistralSir(asientoRegistralSir);
         oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_EXTERNO_ENVIADO);
         oficioRemision.setFechaEstado(new Date());
         oficioRemision.setOficina(oficinaActiva);
@@ -387,7 +457,9 @@ public class SirBean implements SirLocal{
                 e.printStackTrace();
             }
 
-        }/*else if(asientoRegistralSir.getTipoRegistro().equals(TipoRegistro.SALIDA)){
+        }
+        //todo RegistroSalida
+        /*else if(asientoRegistralSir.getTipoRegistro().equals(TipoRegistro.SALIDA)){
 
             oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA);
 

@@ -1,7 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.model.Archivo;
-import es.caib.regweb3.model.AsientoRegistralSir;
+import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.core.utils.Mensaje;
 
 import javax.ejb.Local;
@@ -14,13 +13,7 @@ import javax.ejb.Local;
 @Local
 public interface WebServicesMethodsLocal {
 
-    public AsientoRegistralSir getAsientoRegistral(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws Exception;
-
-    public AsientoRegistralSir crearAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir) throws Exception;
-
-    public Archivo persistArchivo(Archivo archivo) throws Exception;
-
-    public void removeArchivo(Archivo archivo) throws Exception;
-
     public void recibirMensajeDatosControl(Mensaje mensaje) throws Exception;
+
+    public void recibirFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception;
 }

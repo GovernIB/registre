@@ -3,6 +3,7 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.AsientoRegistralSir;
 import es.caib.regweb3.model.utils.EstadoAsientoRegistralSir;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
@@ -71,6 +72,14 @@ public interface AsientoRegistralSirLocal extends BaseEjb<AsientoRegistralSir, L
      * @throws Exception
      */
     public void modificarEstado(Long idAsientoRegistralSir, EstadoAsientoRegistralSir estado) throws Exception;
+
+    /**
+     *
+     * @param ficheroIntercambio
+     * @return
+     * @throws Exception
+     */
+    public AsientoRegistralSir transformarFicheroIntercambio(FicheroIntercambio ficheroIntercambio)throws Exception;
 
     /**
      * Elimina los AsientoRegistralSir de una Entidad

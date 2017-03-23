@@ -44,7 +44,7 @@ public class RegWeb3SirWSHandler implements SOAPHandler<SOAPMessageContext> {
         try {
 
             // Petición al WS_SIR8_B
-            if (query_string.contains(WS_SIR8_B_QUERY_STRING)) {
+            if (query_string != null && query_string.contains(WS_SIR8_B_QUERY_STRING)) {
 
                 if (!outboundProperty) { // Mensaje de entrada
 
@@ -67,7 +67,7 @@ public class RegWeb3SirWSHandler implements SOAPHandler<SOAPMessageContext> {
                 }
 
             // Petición al WS_SIR9
-            }else if(query_string.contains(WS_SIR9_QUERY_STRING)){
+            }else if(query_string != null && query_string.contains(WS_SIR9_QUERY_STRING)){
 
                 if (!outboundProperty) { // Mensaje de entrada
 

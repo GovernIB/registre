@@ -1,14 +1,31 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
+import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.AnexoSir;
 import es.caib.regweb3.model.AsientoRegistralSir;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.InteresadoSir;
+import es.caib.regweb3.model.utils.DocumentacionFisica;
 import es.caib.regweb3.model.utils.EstadoAsientoRegistralSir;
+import es.caib.regweb3.model.utils.IndicadorPrueba;
+import es.caib.regweb3.model.utils.TipoRegistro;
+import es.caib.regweb3.persistence.utils.ArchivoManager;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
+import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.sir.core.excepcion.ServiceException;
+import es.caib.regweb3.sir.core.excepcion.ValidacionException;
+import es.caib.regweb3.sir.core.model.*;
+import es.caib.regweb3.sir.core.schema.*;
+import es.caib.regweb3.sir.core.schema.types.Documentacion_FisicaType;
+import es.caib.regweb3.sir.core.schema.types.Indicador_PruebaType;
+import es.caib.regweb3.sir.core.schema.types.Tipo_RegistroType;
+import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
+import es.caib.regweb3.utils.MimeTypeUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -17,6 +34,8 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -40,6 +59,7 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
     @EJB public RegistroEntradaLocal registroEntradaEjb;
     @EJB public RegistroSalidaLocal registroSalidaEjb;
     @EJB public OficinaLocal oficinaEjb;
+    @EJB public ArchivoLocal archivoEjb;
 
 
     @Override
@@ -257,6 +277,311 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
 
         return total;
 
+    }
+
+    /**
+     * Crea un AsientoRegistralSir, a partir del FicheroIntercambio.
+     *
+     * @return Información del asientoRegistralSir registral.
+     */
+    @Override
+    public AsientoRegistralSir transformarFicheroIntercambio(FicheroIntercambio ficheroIntercambio)throws Exception{
+
+        final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMddHHmmss");
+
+        AsientoRegistralSir asientoRegistralSir = null;
+
+        if (ficheroIntercambio.getFicheroIntercambio() != null) {
+
+            asientoRegistralSir = new AsientoRegistralSir();
+
+            // Segmento De_Origen_o_Remitente
+            De_Origen_o_Remitente de_Origen_o_Remitente = ficheroIntercambio.getFicheroIntercambio().getDe_Origen_o_Remitente();
+            if (de_Origen_o_Remitente != null) {
+
+                asientoRegistralSir.setCodigoEntidadRegistralOrigen(de_Origen_o_Remitente.getCodigo_Entidad_Registral_Origen());
+
+                if (!org.apache.commons.lang.StringUtils.isEmpty(de_Origen_o_Remitente.getDecodificacion_Entidad_Registral_Origen())) {
+                    asientoRegistralSir.setDecodificacionEntidadRegistralOrigen(de_Origen_o_Remitente.getDecodificacion_Entidad_Registral_Origen());
+                } else {
+                    asientoRegistralSir.setDecodificacionEntidadRegistralOrigen(Dir3CaibUtils.denominacion(de_Origen_o_Remitente.getCodigo_Entidad_Registral_Origen(), RegwebConstantes.OFICINA));
+                }
+
+                asientoRegistralSir.setCodigoUnidadTramitacionOrigen(de_Origen_o_Remitente.getCodigo_Unidad_Tramitacion_Origen());
+
+                if (!org.apache.commons.lang.StringUtils.isEmpty(de_Origen_o_Remitente.getDecodificacion_Unidad_Tramitacion_Origen())) {
+                    asientoRegistralSir.setDecodificacionUnidadTramitacionOrigen(de_Origen_o_Remitente.getDecodificacion_Unidad_Tramitacion_Origen());
+                } else {
+                    asientoRegistralSir.setDecodificacionUnidadTramitacionOrigen(Dir3CaibUtils.denominacion(de_Origen_o_Remitente.getCodigo_Unidad_Tramitacion_Origen(), RegwebConstantes.UNIDAD));
+                }
+
+
+                asientoRegistralSir.setNumeroRegistro(de_Origen_o_Remitente.getNumero_Registro_Entrada());
+                asientoRegistralSir.setTimestampRegistro(de_Origen_o_Remitente.getTimestamp_Entrada());
+
+                String fechaRegistro = de_Origen_o_Remitente.getFecha_Hora_Entrada();
+                if (org.apache.commons.lang.StringUtils.isNotBlank(fechaRegistro)) {
+                    try {
+                        asientoRegistralSir.setFechaRegistro(SDF.parse(fechaRegistro));
+                    } catch (ParseException e) {
+                        log.error("Error al parsear la fecha de registro: [" + fechaRegistro + "]", e);
+                        throw new ValidacionException(Errores.ERROR_0037, e);
+                    }
+                }
+            }
+
+            // Segmento De_Destino
+            De_Destino de_Destino = ficheroIntercambio.getFicheroIntercambio().getDe_Destino();
+            if (de_Destino != null) {
+
+                asientoRegistralSir.setCodigoEntidadRegistralDestino(de_Destino.getCodigo_Entidad_Registral_Destino());
+                if (!org.apache.commons.lang.StringUtils.isEmpty(de_Destino.getDecodificacion_Entidad_Registral_Destino())) {
+                    asientoRegistralSir.setDecodificacionEntidadRegistralDestino(de_Destino.getDecodificacion_Entidad_Registral_Destino());
+                } else {
+                    asientoRegistralSir.setDecodificacionEntidadRegistralDestino(Dir3CaibUtils.denominacion(de_Destino.getCodigo_Entidad_Registral_Destino(), RegwebConstantes.OFICINA));
+                }
+
+                if (!org.apache.commons.lang.StringUtils.isEmpty(de_Destino.getCodigo_Unidad_Tramitacion_Destino())) {
+                    asientoRegistralSir.setCodigoUnidadTramitacionDestino(de_Destino.getCodigo_Unidad_Tramitacion_Destino());
+                    if (!org.apache.commons.lang.StringUtils.isEmpty(de_Destino.getDecodificacion_Unidad_Tramitacion_Destino())) {
+                        asientoRegistralSir.setDecodificacionUnidadTramitacionDestino(de_Destino.getDecodificacion_Unidad_Tramitacion_Destino());
+                    } else {
+                        asientoRegistralSir.setDecodificacionUnidadTramitacionDestino(Dir3CaibUtils.denominacion(de_Destino.getCodigo_Unidad_Tramitacion_Destino(), RegwebConstantes.UNIDAD));
+                    }
+                }
+
+            }
+
+            // Segmento De_Asunto de_Asunto
+            De_Asunto de_Asunto = ficheroIntercambio.getFicheroIntercambio().getDe_Asunto();
+            if (de_Asunto != null) {
+                asientoRegistralSir.setResumen(de_Asunto.getResumen());
+                asientoRegistralSir.setCodigoAsunto(de_Asunto.getCodigo_Asunto_Segun_Destino());
+                asientoRegistralSir.setReferenciaExterna(de_Asunto.getReferencia_Externa());
+                asientoRegistralSir.setNumeroExpediente(de_Asunto.getNumero_Expediente());
+            }
+
+            // Segmento De_Internos_Control
+            De_Internos_Control de_Internos_Control = ficheroIntercambio.getFicheroIntercambio().getDe_Internos_Control();
+            if (de_Internos_Control != null) {
+
+                asientoRegistralSir.setIdentificadorIntercambio(de_Internos_Control.getIdentificador_Intercambio());
+                asientoRegistralSir.setAplicacion(de_Internos_Control.getAplicacion_Version_Emisora());
+                asientoRegistralSir.setTipoAnotacion(ficheroIntercambio.getTipoAnotacion());
+                asientoRegistralSir.setDecodificacionTipoAnotacion(de_Internos_Control.getDescripcion_Tipo_Anotacion());
+                asientoRegistralSir.setNumeroTransporte(de_Internos_Control.getNumero_Transporte_Entrada());
+                asientoRegistralSir.setNombreUsuario(de_Internos_Control.getNombre_Usuario());
+                asientoRegistralSir.setContactoUsuario(de_Internos_Control.getContacto_Usuario());
+                asientoRegistralSir.setObservacionesApunte(de_Internos_Control.getObservaciones_Apunte());
+
+                asientoRegistralSir.setCodigoEntidadRegistralInicio(de_Internos_Control.getCodigo_Entidad_Registral_Inicio());
+                if (!org.apache.commons.lang.StringUtils.isEmpty(de_Internos_Control.getDecodificacion_Entidad_Registral_Inicio())) {
+                    asientoRegistralSir.setDecodificacionEntidadRegistralInicio(de_Internos_Control.getDecodificacion_Entidad_Registral_Inicio());
+                } else {
+                    asientoRegistralSir.setDecodificacionEntidadRegistralInicio(Dir3CaibUtils.denominacion(de_Internos_Control.getCodigo_Entidad_Registral_Inicio(), RegwebConstantes.OFICINA));
+                }
+
+
+                // Tipo de transporte
+                String tipoTransporte = de_Internos_Control.getTipo_Transporte_Entrada();
+                if (org.apache.commons.lang.StringUtils.isNotBlank(tipoTransporte)) {
+                    asientoRegistralSir.setTipoTransporte(TipoTransporte.getTipoTransporteValue(tipoTransporte));
+                }
+
+                // Tipo de registro
+                Tipo_RegistroType tipo_Registro = de_Internos_Control.getTipo_Registro();
+                if ((tipo_Registro != null) && org.apache.commons.lang.StringUtils.isNotBlank(tipo_Registro.value())) {
+                    asientoRegistralSir.setTipoRegistro(TipoRegistro.getTipoRegistro(tipo_Registro.value()));
+                }
+
+                // Documentación física
+                Documentacion_FisicaType documentacion_Fisica = de_Internos_Control.getDocumentacion_Fisica();
+                if ((documentacion_Fisica != null) && org.apache.commons.lang.StringUtils.isNotBlank(documentacion_Fisica.value())) {
+                    asientoRegistralSir.setDocumentacionFisica(DocumentacionFisica.getDocumentacionFisicaValue(documentacion_Fisica.value()));
+                }
+
+                // Indicador de prueba
+                Indicador_PruebaType indicadorPrueba = de_Internos_Control.getIndicador_Prueba();
+                if ((indicadorPrueba != null) && org.apache.commons.lang.StringUtils.isNotBlank(indicadorPrueba.value())){
+                    asientoRegistralSir.setIndicadorPrueba(IndicadorPrueba.getIndicadorPrueba(indicadorPrueba.value()));
+                }
+
+            }
+
+            // Segmento De_Formulario_Generico
+            De_Formulario_Generico de_Formulario_Generico = ficheroIntercambio.getFicheroIntercambio().getDe_Formulario_Generico();
+            if (de_Formulario_Generico != null) {
+                asientoRegistralSir.setExpone(de_Formulario_Generico.getExpone());
+                asientoRegistralSir.setSolicita(de_Formulario_Generico.getSolicita());
+            }
+
+            // Segmento De_Interesado
+            De_Interesado[] de_Interesados = ficheroIntercambio.getFicheroIntercambio().getDe_Interesado();
+            if (ArrayUtils.isNotEmpty(de_Interesados)) {
+                for (De_Interesado de_Interesado : de_Interesados) {
+                    if (de_Interesado != null) {
+
+                        // Si se trata de una Salida y no tiene Interesados
+                        if(ficheroIntercambio.getTipoRegistro().equals(TipoRegistro.SALIDA) &&
+                                org.apache.commons.lang.StringUtils.isBlank(de_Interesado.getRazon_Social_Interesado())
+                                || (org.apache.commons.lang.StringUtils.isBlank(de_Interesado.getNombre_Interesado()) && org.apache.commons.lang.StringUtils.isBlank(de_Interesado.getPrimer_Apellido_Interesado()))){
+
+                            // Creamos uno a partir de la Entidad destino
+                            asientoRegistralSir.getInteresados().add(crearInteresadoJuridico(ficheroIntercambio));
+
+                        }else{
+
+                            InteresadoSir interesado = new InteresadoSir();
+
+                            // Información del interesado
+                            interesado.setDocumentoIdentificacionInteresado(de_Interesado.getDocumento_Identificacion_Interesado());
+                            interesado.setRazonSocialInteresado(de_Interesado.getRazon_Social_Interesado());
+                            interesado.setNombreInteresado(de_Interesado.getNombre_Interesado());
+                            interesado.setPrimerApellidoInteresado(de_Interesado.getPrimer_Apellido_Interesado());
+                            interesado.setSegundoApellidoInteresado(de_Interesado.getSegundo_Apellido_Interesado());
+                            interesado.setCodigoPaisInteresado(de_Interesado.getPais_Interesado());
+                            interesado.setCodigoProvinciaInteresado(de_Interesado.getProvincia_Interesado());
+                            interesado.setCodigoMunicipioInteresado(de_Interesado.getMunicipio_Interesado());
+                            interesado.setDireccionInteresado(de_Interesado.getDireccion_Interesado());
+                            interesado.setCodigoPostalInteresado(de_Interesado.getCodigo_Postal_Interesado());
+                            interesado.setCorreoElectronicoInteresado(de_Interesado.getCorreo_Electronico_Interesado());
+                            interesado.setTelefonoInteresado(de_Interesado.getTelefono_Contacto_Interesado());
+                            interesado.setDireccionElectronicaHabilitadaInteresado(de_Interesado.getDireccion_Electronica_Habilitada_Interesado());
+
+                            String tipoDocumento = de_Interesado.getTipo_Documento_Identificacion_Interesado();
+                            if (org.apache.commons.lang.StringUtils.isNotBlank(tipoDocumento)) {
+                                interesado.setTipoDocumentoIdentificacionInteresado(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacionValue(tipoDocumento));
+                            }
+
+                            String canalPreferente = de_Interesado.getCanal_Preferente_Comunicacion_Interesado();
+                            if (org.apache.commons.lang.StringUtils.isNotBlank(canalPreferente)) {
+                                interesado.setCanalPreferenteComunicacionInteresado(CanalNotificacion.getCanalNotificacionValue(canalPreferente));
+                            }
+
+                            // Información del representante
+                            interesado.setDocumentoIdentificacionRepresentante(de_Interesado.getDocumento_Identificacion_Representante());
+                            interesado.setRazonSocialRepresentante(de_Interesado.getRazon_Social_Representante());
+                            interesado.setNombreRepresentante(de_Interesado.getNombre_Representante());
+                            interesado.setPrimerApellidoRepresentante(de_Interesado.getPrimer_Apellido_Representante());
+                            interesado.setSegundoApellidoRepresentante(de_Interesado.getSegundo_Apellido_Representante());
+                            interesado.setCodigoPaisRepresentante(de_Interesado.getPais_Representante());
+                            interesado.setCodigoProvinciaRepresentante(de_Interesado.getProvincia_Representante());
+                            interesado.setCodigoMunicipioRepresentante(de_Interesado.getMunicipio_Representante());
+                            interesado.setDireccionRepresentante(de_Interesado.getDireccion_Representante());
+                            interesado.setCodigoPostalRepresentante(de_Interesado.getCodigo_Postal_Representante());
+                            interesado.setCorreoElectronicoRepresentante(de_Interesado.getCorreo_Electronico_Representante());
+                            interesado.setTelefonoRepresentante(de_Interesado.getTelefono_Contacto_Representante());
+                            interesado.setDireccionElectronicaHabilitadaRepresentante(de_Interesado.getDireccion_Electronica_Habilitada_Representante());
+
+                            tipoDocumento = de_Interesado.getTipo_Documento_Identificacion_Representante();
+                            if (org.apache.commons.lang.StringUtils.isNotBlank(tipoDocumento)) {
+                                interesado.setTipoDocumentoIdentificacionRepresentante(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacionValue(tipoDocumento));
+                            }
+
+                            canalPreferente = de_Interesado.getCanal_Preferente_Comunicacion_Representante();
+                            if (org.apache.commons.lang.StringUtils.isNotBlank(canalPreferente)) {
+                                interesado.setCanalPreferenteComunicacionRepresentante(CanalNotificacion.getCanalNotificacionValue(canalPreferente));
+                            }
+
+                            interesado.setObservaciones(de_Interesado.getObservaciones());
+
+                            asientoRegistralSir.getInteresados().add(interesado);
+                        }
+
+                    }
+                }
+            }
+
+            // Segmento De_Anexos
+            De_Anexo[] de_Anexos = ficheroIntercambio.getFicheroIntercambio().getDe_Anexo();
+            if (ArrayUtils.isNotEmpty(de_Anexos)) {
+                for (De_Anexo de_Anexo : de_Anexos) {
+                    if (de_Anexo != null) {
+                        AnexoSir anexo = new AnexoSir();
+
+                        anexo.setNombreFichero(de_Anexo.getNombre_Fichero_Anexado());
+                        anexo.setIdentificadorFichero(de_Anexo.getIdentificador_Fichero());
+                        anexo.setIdentificadorDocumentoFirmado(de_Anexo.getIdentificador_Documento_Firmado());
+                        anexo.setCertificado(de_Anexo.getCertificado());
+                        anexo.setFirma(de_Anexo.getFirma_Documento());
+                        anexo.setTimestamp(de_Anexo.getTimeStamp());
+                        anexo.setValidacionOCSPCertificado(de_Anexo.getValidacion_OCSP_Certificado());
+                        anexo.setHash(de_Anexo.getHash());
+                        //Si el tipo mime es null, se obtiene del nombre del fichero
+                        if (de_Anexo.getTipo_MIME() == null || de_Anexo.getTipo_MIME().isEmpty()) {
+                            anexo.setTipoMIME(MimeTypeUtils.getMimeTypeFileName(de_Anexo.getNombre_Fichero_Anexado()));
+                        } else {
+                            anexo.setTipoMIME(de_Anexo.getTipo_MIME());
+                        }
+
+                        try {
+                            ArchivoManager am = new ArchivoManager(archivoEjb, de_Anexo.getNombre_Fichero_Anexado(), anexo.getTipoMIME(), de_Anexo.getAnexo());
+                            anexo.setAnexo(am.prePersist());
+                        } catch (Exception e) {
+                            log.info("Error al crear el Anexo en el sistema de archivos", e);
+                            throw new ServiceException(Errores.ERROR_0045,e);
+                        }
+
+                        anexo.setObservaciones(de_Anexo.getObservaciones());
+
+                        String validezDocumento = de_Anexo.getValidez_Documento();
+                        if (org.apache.commons.lang.StringUtils.isNotBlank(validezDocumento)) {
+                            anexo.setValidezDocumento(ValidezDocumento.getValidezDocumentoValue(validezDocumento));
+                        }
+
+                        String tipoDocumento = de_Anexo.getTipo_Documento();
+                        if (org.apache.commons.lang.StringUtils.isNotBlank(tipoDocumento)) {
+                            anexo.setTipoDocumento(TipoDocumento.getTipoDocumentoValue(tipoDocumento));
+                        }
+
+                        asientoRegistralSir.getAnexos().add(anexo);
+                    }
+                }
+            }
+        }
+
+        return asientoRegistralSir;
+
+    }
+
+    /**
+     * Crea un Interesado tipo Persona Juridica a partir del Código Unidad De Gestión de destino o si no está informado,
+     * a partir del Código Entidad Registral de destino
+     * @return
+     */
+    private InteresadoSir crearInteresadoJuridico(FicheroIntercambio ficheroIntercambio){
+
+        InteresadoSir interesadoSalida = new InteresadoSir();
+
+        if(org.apache.commons.lang.StringUtils.isNotBlank(ficheroIntercambio.getCodigoUnidadTramitacionDestino())){
+
+            interesadoSalida.setTipoDocumentoIdentificacionInteresado(TipoDocumentoIdentificacion.CODIGO_ORIGEN_VALUE.getValue());
+            interesadoSalida.setDocumentoIdentificacionInteresado(ficheroIntercambio.getCodigoUnidadTramitacionDestino());
+
+            if(org.apache.commons.lang.StringUtils.isNotBlank(ficheroIntercambio.getDescripcionUnidadTramitacionDestino())){
+                interesadoSalida.setRazonSocialInteresado(ficheroIntercambio.getDescripcionUnidadTramitacionDestino());
+            }else{
+                interesadoSalida.setRazonSocialInteresado(Dir3CaibUtils.denominacion(ficheroIntercambio.getCodigoUnidadTramitacionDestino(),RegwebConstantes.UNIDAD));
+
+            }
+
+
+        }else{
+            try {
+                Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
+
+                OficinaTF oficinaTF = oficinasService.obtenerOficina(ficheroIntercambio.getCodigoEntidadRegistralDestino(),null,null);
+
+                interesadoSalida.setTipoDocumentoIdentificacionInteresado(TipoDocumentoIdentificacion.CODIGO_ORIGEN_VALUE.getValue());
+                interesadoSalida.setDocumentoIdentificacionInteresado(oficinaTF.getCodUoResponsable());
+                interesadoSalida.setRazonSocialInteresado(Dir3CaibUtils.denominacion(oficinaTF.getCodUoResponsable(),RegwebConstantes.UNIDAD));
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return interesadoSalida;
     }
 
 }
