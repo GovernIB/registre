@@ -31,6 +31,7 @@
     <!--   <module>plugins</module>-->
     <module>plugindistribucion</module>
     <module>pluginpostproceso</module>
+    <module>pluginjustificante</module>
     <module>ear</module>
   </modules>
 

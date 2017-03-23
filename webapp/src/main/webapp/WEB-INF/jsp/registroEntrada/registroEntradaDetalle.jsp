@@ -106,31 +106,45 @@
                     <%--Si no nos encontramos en la misma Oficia en la que se creó el Registro o en su Oficina Responsable, no podemos hacer nada con el--%>
                     <c:if test="${oficinaRegistral}">
 
-                        <%--Botones imprimir Recibo y Sello--%>
+                        <%--Botones imprimir Recibo, Justificante y Sello--%>
                         <c:if test="${registro.estado != RegwebConstantes.REGISTRO_PENDIENTE_VISAR && registro.estado != RegwebConstantes.REGISTRO_ANULADO}">
                             <div class="panel-footer center">
 
-                                <c:if test="${fn:length(modelosRecibo) > 1}">
-                                    <form:form modelAttribute="modeloRecibo" method="post" cssClass="form-horizontal">
-                                        <div class="col-xs-12 btn-block">
-                                            <div class="col-xs-6 no-pad-lateral list-group-item-heading">
-                                                <form:select path="idModelo" cssClass="chosen-select">
-                                                    <form:options items="${modelosRecibo}" itemValue="id" itemLabel="nombre"/>
-                                                </form:select>
+                                <%--Si la entidad no es SIR, muestra el boton Modelo Recibo--%>
+                                <c:if test="${!entidadActiva.sir}">
+                                    <%--Si hay varios Modelso Recibo, muestra select--%>
+                                    <c:if test="${fn:length(modelosRecibo) > 1}">
+                                        <form:form modelAttribute="modeloRecibo" method="post" cssClass="form-horizontal">
+                                            <div class="col-xs-12 btn-block">
+                                                <div class="col-xs-6 no-pad-lateral list-group-item-heading">
+                                                    <form:select path="idModelo" cssClass="chosen-select">
+                                                        <form:options items="${modelosRecibo}" itemValue="id" itemLabel="nombre"/>
+                                                    </form:select>
+                                                </div>
+                                                <div class="col-xs-6 no-pad-right list-group-item-heading">
+                                                    <button type="button" class="btn btn-warning btn-sm btn-block" onclick="imprimirRecibo('<c:url value="/modeloRecibo/${registro.id}/RE/imprimir/"/>')"><spring:message code="modeloRecibo.imprimir"/></button>
+                                                </div>
                                             </div>
-                                            <div class="col-xs-6 no-pad-right list-group-item-heading">
-                                                <button type="button" class="btn btn-warning btn-sm btn-block" onclick="imprimirRecibo('<c:url value="/modeloRecibo/${registro.id}/RE/imprimir/"/>')"><spring:message code="modeloRecibo.imprimir"/></button>
-                                            </div>
-                                        </div>
-                                    </form:form>
-
-                                    <button type="button" data-toggle="modal" data-target="#selloModal" class="btn btn-warning btn-sm btn-block"><spring:message code="sello.imprimir"/></button>
+                                        </form:form>
+                                    </c:if>
+                                    <%--Si hay 1 Modelo Recibo, muestra sólo el botón --%>
+                                    <c:if test="${fn:length(modelosRecibo) == 1}">
+                                        <div class="btn-group"><button type="button" class="btn btn-warning btn-sm" onclick="goTo('<c:url value="/modeloRecibo/${registro.id}/RE/imprimir/${modelosRecibo[0].id}"/>')"><spring:message code="modeloRecibo.imprimir"/></button></div>
+                                    </c:if>
                                 </c:if>
 
-                                <c:if test="${fn:length(modelosRecibo) == 1}">
-                                    <div class="btn-group"><button type="button" class="btn btn-warning btn-sm" onclick="goTo('<c:url value="/modeloRecibo/${registro.id}/RE/imprimir/${modelosRecibo[0].id}"/>')"><spring:message code="modeloRecibo.imprimir"/></button></div>
-                                    <div class="btn-group"><button type="button" data-toggle="modal" data-target="#selloModal" class="btn btn-warning btn-sm"><spring:message code="sello.imprimir"/></button></div>
+                                <%--Si la entidad es SIR y no tiene ya justificante, muestra el boton Justificante --%>
+                                <c:if test="${entidadActiva.sir && numJustificante == 0}">
+                                    <div class="btn-group"><button type="button" class="btn btn-warning btn-sm" onclick="goTo('<c:url value="/registroEntrada/${registro.id}/justificante"/>')"><spring:message code="justificante.boton"/></button></div>
                                 </c:if>
+
+                                <%--Si la entidad es SIR y tiene justificante, muestra el boton Descargar Justificante --%>
+                                <c:if test="${entidadActiva.sir && numJustificante == 1}">
+                                    <div class="btn-group"><button type="button" class="btn btn-warning btn-sm" onclick="goTo('<c:url value="/anexo/descargarDocumento/${idJustificante}"/>')"><span class="fa fa-download"></span> <spring:message code="justificante.boton"/></button></div>
+                                </c:if>
+
+                                <%-- Botón de sello --%>
+                                <div class="btn-group"><button type="button" data-toggle="modal" data-target="#selloModal" class="btn btn-warning btn-sm"><spring:message code="sello.imprimir"/></button></div>
 
                             </div>
                         </c:if>
