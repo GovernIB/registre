@@ -184,7 +184,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
      * Carga el formulario para ver el detalle de un {@link es.caib.regweb3.model.RegistroEntrada}
      */
     @RequestMapping(value = "/{idRegistro}/detalle", method = RequestMethod.GET)
-    public String detalleRegistroEntrada(@PathVariable Long idRegistro, Model model, HttpServletRequest request) throws Exception {
+    public String detalleRegistroEntrada(@PathVariable Long idRegistro, Model model, HttpServletRequest request) throws Exception, I18NException {
 
         RegistroEntrada registro = registroEntradaEjb.findById(idRegistro);
         Entidad entidadActiva = getEntidadActiva(request);
@@ -221,7 +221,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
             // Anexos completo
             if(showannexes){ // Si se muestran los anexos
-                model.addAttribute("anexos", anexoEjb.getByRegistroEntrada(registro));
+                anexoEjb.getByRegistroEntrada(registro); //Inicializamos los anexos del registro de entrada.
 
                 if(oficio != null && oficio.getSir()) { // Mensajes de limitaciones anexos si es oficio de remisión sir
                     initMensajeNotaInformativaAnexos(entidadActiva, model);

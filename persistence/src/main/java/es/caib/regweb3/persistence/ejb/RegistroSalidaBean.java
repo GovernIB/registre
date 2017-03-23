@@ -509,7 +509,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
             AnexoFull anexoFull = anexoEjb.getAnexoFullCompleto(anexo.getId());
             anexosFull.add(anexoFull);
         }
-        //Asignamos los documentos recuperados de custodia al registro de entrada.
+        //Asignamos los documentos recuperados de custodia al registro de salida.
         re.getRegistroDetalle().setAnexosFull(anexosFull);
         return re;
     }

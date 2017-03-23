@@ -269,6 +269,7 @@ public class AnexoController extends BaseController {
       Entidad entidadActiva = getEntidadActiva(request);
 
       // Si es oficio de remision sir debemos comprobar la limitación de los anexos impuesta por SIR
+        //TODO REVISAR ESTE CODIGO CUANDO API CUSTODIA DEVUELVA EL TAMAÑO DE LOS ARCHIVOS
         if(anexoForm.getOficioRemisionSir()){
           log.info("ENTRO EN OFICIO REMISION SIR");
             // Obtenemos los anexos para validar que no exceda los 15 MB
@@ -406,8 +407,8 @@ public class AnexoController extends BaseController {
       AnexoForm anexoForm = new AnexoForm(anexoFull2);
       anexoForm.setRegistroID(registroID);
       anexoForm.setTipoRegistro(tipoRegistro);
-      //anexoForm.setReturnURL(getRedirectURL(request, tipoRegistro, registroID));
-      
+      anexoForm.setOficioRemisionSir(isOficioRemisionSir);
+
       if (debug ) {
       
         log.info(" Carregant ANEXO: ");
@@ -438,7 +439,82 @@ public class AnexoController extends BaseController {
     @RequestMapping(value = "/editar", method = RequestMethod.POST)
     public String editarAnexoPost(@ModelAttribute AnexoForm anexoForm,
         BindingResult result, HttpServletRequest request,
-        HttpServletResponse response, Model model) throws Exception, I18NValidationException {
+        HttpServletResponse response, Model model) throws Exception, I18NValidationException, I18NException {
+
+        log.info(" Passa per crearAnexoPost");
+        Entidad entidadActiva = getEntidadActiva(request);
+
+        //Si es oficio de remisión sir se debe comprobar que no se sobrepasen los limites de tamaño ni de archivos.
+        //TODO REVISAR ESTE CODIGO CUANDO API CUSTODIA DEVUELVA EL TAMAÑO DE LOS ARCHIVOS
+        if(anexoForm.getOficioRemisionSir()){
+            log.info("ENTRO EN OFICIO REMISION SIR");
+            // Obtenemos los anexos para validar que no exceda los 15 MB
+            List<AnexoFull> anexoFulls = new ArrayList<AnexoFull>();
+            if (anexoForm.getTipoRegistro().equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO.toLowerCase())) {
+                RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(anexoForm.getRegistroID());
+                anexoFulls = registroEntrada.getRegistroDetalle().getAnexosFull();
+
+            } else {
+                RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(anexoForm.getRegistroID());
+                anexoFulls = registroSalida.getRegistroDetalle().getAnexosFull();
+
+            }
+
+            //Se suman las distintas medidas de los anexos obtenidos
+            long tamanyoTotalAnexos = 0;
+            long tamanyoanexo = 0;
+            for (AnexoFull anexoFull : anexoFulls) {
+                //Obtenemos los bytes del documento que representa el anexo, en el caso 4 Firma Attached,
+                // el documento está en SignatureCustody
+                DocumentCustody dc = anexoFull.getDocumentoCustody();
+                if (dc != null) {//Si documentCustody es null tenemos que coger SignatureCustody.
+                    tamanyoanexo = anexoFull.getDocumentoCustody().getData().length;
+                } else {
+                    SignatureCustody sc = anexoFull.getSignatureCustody();
+                    if (sc != null) {
+                        tamanyoanexo = anexoFull.getSignatureCustody().getData().length;
+                    }
+                }
+                tamanyoTotalAnexos += tamanyoanexo;
+            }
+            //Añadimos el tamaño del nuevo anexo, puede estar en DocumentoFile o en FirmaFile
+            if (anexoForm.getDocumentoFile().getSize() != 0) {
+                tamanyoTotalAnexos += anexoForm.getDocumentoFile().getSize();
+            } else {
+                tamanyoTotalAnexos += anexoForm.getFirmaFile().getSize();
+            }
+
+            //Si el tamaño total es mayor de 15 Mb
+            Long tamanyoMaximoTotalAnexos = PropiedadGlobalUtil.getMaxUploadSizeTotal(entidadActiva.getId());
+            if (tamanyoTotalAnexos > tamanyoMaximoTotalAnexos) {
+                String totalAnexos = tamanyoTotalAnexos / (1024 * 1024) + " Mb";
+                String maxTotalAnexos = tamanyoMaximoTotalAnexos / (1024 * 1024) + " Mb";
+                Mensaje.saveMessageError(request, I18NUtils.tradueix("tamanymaxtotalsuperat", totalAnexos, maxTotalAnexos));
+
+                loadCommonAttributes(request, model, anexoForm.getRegistroID());
+                return "registro/formularioAnexo";
+            }
+
+            // Validamos que la extensión del fichero indicado esté dentro de los formatos permitidos.
+            String extensionObtenida;
+            log.info("DocumentFile " + anexoForm.getDocumentoFile());
+            log.info("FirmaFile " + anexoForm.getFirmaFile());
+            if (!anexoForm.getDocumentoFile().getOriginalFilename().isEmpty()) {
+                extensionObtenida = FilenameUtils.getExtension(anexoForm.getDocumentoFile().getOriginalFilename());
+            } else {
+                extensionObtenida = FilenameUtils.getExtension(anexoForm.getFirmaFile().getOriginalFilename());
+            }
+
+            String extensionesPermitidas = PropiedadGlobalUtil.getFormatosPermitidos(entidadActiva.getId());
+            log.info("OBTENIDA " + extensionObtenida);
+            log.info("contains " + extensionesPermitidas.contains(extensionObtenida));
+            if (!extensionesPermitidas.contains(extensionObtenida)) {
+                Mensaje.saveMessageError(request, I18NUtils.tradueix("formatonopermitido", extensionObtenida, extensionesPermitidas));
+
+                loadCommonAttributes(request, model, anexoForm.getRegistroID());
+                return "registro/formularioAnexo";
+            }
+        }
 
       anexoValidator.validate(anexoForm.getAnexo(),result);
       

@@ -14,6 +14,7 @@ import es.caib.regweb3.webapp.form.ModeloForm;
 import es.caib.regweb3.webapp.form.RegistroSalidaBusqueda;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.RegistroSalidaBusquedaValidator;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -175,7 +176,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
      * Carga el formulario para ver el detalle de un {@link es.caib.regweb3.model.RegistroSalida}
      */
     @RequestMapping(value = "/{idRegistro}/detalle", method = RequestMethod.GET)
-    public String detalleRegistroSalida(@PathVariable Long idRegistro, Model model, HttpServletRequest request) throws Exception {
+    public String detalleRegistroSalida(@PathVariable Long idRegistro, Model model, HttpServletRequest request) throws Exception, I18NException {
 
         RegistroSalida registro = registroSalidaEjb.findById(idRegistro);
         Entidad entidadActiva = getEntidadActiva(request);
@@ -210,7 +211,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
                 // Anexos completo
             if(showannexes){ // Si se muestran los anexos
-                model.addAttribute("anexos", anexoEjb.getByRegistroSalida(registro));
+                anexoEjb.getByRegistroSalida(registro); //Inicializamos los anexos del registro de salida.
 
                 if(oficio != null && oficio.getSir()) { // Mensajes de limitaciones anexos si es oficio de remisión sir
                     initMensajeNotaInformativaAnexos(entidadActiva, model);

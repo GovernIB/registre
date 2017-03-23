@@ -55,6 +55,7 @@
                              <tr>
                                  <th><spring:message code="anexo.titulo"/></th>
                                  <th><spring:message code="anexo.tipoDocumento"/></th>
+                                 <th><spring:message code="anexo.tamano"/></th>
                                  <th class="center"><spring:message code="regweb.acciones"/></th>
                              </tr>
                          </thead>
@@ -65,6 +66,8 @@
 
                                      <td>${anexo.titulo}</td>
                                      <td><spring:message code="tipoDocumento.0${anexo.tipoDocumento}"/></td>
+                                     <!-- TODO mostrar el tamanyo desde custodia -->
+                                     <td>0 KB</td>
                                      <td class="center">
 
                                          <c:if test="${anexo.modoFirma != RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
