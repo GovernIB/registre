@@ -273,8 +273,8 @@ public class AnexoController extends BaseController {
       if(anexoForm.getOficioRemisionSir()){
         log.info("ENTRO EN OFICIO REMISION SIR");
 
-        // Obtenemos los anexos para validar que no exceda los 15 MB
-        List<AnexoFull> anexosFull = obtenerAnexosFull(anexoForm.getRegistroID(), anexoForm.getTipoRegistro());
+        // Obtenemos los anexos del registro para validar que no exceda los 15 MB
+        List<AnexoFull> anexosFull = obtenerAnexosFullByRegistro(anexoForm.getRegistroID(), anexoForm.getTipoRegistro());
 
         //Se suman las distintas medidas de los anexos obtenidos
         long  tamanyoTotalAnexos= obtenerTamanoTotalAnexos(anexosFull, anexoForm);
@@ -414,8 +414,8 @@ public class AnexoController extends BaseController {
       if(anexoForm.getOficioRemisionSir()){
         log.info("ENTRO EN OFICIO REMISION SIR");
 
-        // Obtenemos los anexos para validar que no exceda los 15 MB
-        List<AnexoFull> anexosFull = obtenerAnexosFull(anexoForm.getRegistroID(), anexoForm.getTipoRegistro());
+        // Obtenemos los anexos del registro para validar que no exceda los 15 MB
+        List<AnexoFull> anexosFull = obtenerAnexosFullByRegistro(anexoForm.getRegistroID(), anexoForm.getTipoRegistro());
 
         //Se suman las distintas medidas de los anexos obtenidos
         long  tamanyoTotalAnexos= obtenerTamanoTotalAnexos(anexosFull, anexoForm);
@@ -913,7 +913,7 @@ public class AnexoController extends BaseController {
      * @throws Exception
      * @throws I18NException
      */
-    public List<AnexoFull> obtenerAnexosFull(Long idRegistro, String tipoRegistro)  throws Exception, I18NException {
+    public List<AnexoFull> obtenerAnexosFullByRegistro(Long idRegistro, String tipoRegistro)  throws Exception, I18NException {
         if (tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO.toLowerCase())) {
             RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
             return registroEntrada.getRegistroDetalle().getAnexosFull();
