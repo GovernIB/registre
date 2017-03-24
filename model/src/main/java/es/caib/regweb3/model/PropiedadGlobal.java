@@ -61,7 +61,7 @@ public class PropiedadGlobal implements Serializable {
         this.clave = clave;
     }
 
-    @Column(name = "VALOR", length = 255)
+    @Column(name = "VALOR", length = 2048)
     public String getValor() {
         return valor;
     }

@@ -53,11 +53,9 @@
                          </colgroup>
                          <thead>
                              <tr>
-                                 <th><spring:message code="anexo.titulo"/></th>
+                                 <th><dt><spring:message code="anexo.titulo"/></dt></th>
                                  <th><spring:message code="anexo.tipoDocumento"/></th>
                                  <th><spring:message code="anexo.tamano"/></th>
-                                 <th><dt><spring:message code="anexo.titulo"/></dt></th>
-                                 <th><spring:message code="anexo.tipoDoc"/></th>
                                  <th class="center"><spring:message code="regweb.acciones"/></th>
                              </tr>
                          </thead>

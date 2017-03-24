@@ -5,7 +5,7 @@ ALTER TABLE RWE_ASIENTO_REGISTRAL_SIR DROP COLUMN COD_ENT_REG;
 update RWE_REGISTRO_DETALLE set APLICACION='RWE3';
 
 --Aumento de tamaño del campo VALOR
-alter table RWE_PROPIEDADGLOBAL alter VALOR type varchar(1024);
+alter table RWE_PROPIEDADGLOBAL alter VALOR type varchar(2048);
 
 --Nuevas propiedades en RWE_PROPIEDADGLOBAL
 INSERT INTO rwe_propiedadglobal(id,clave,valor,tipo,descripcion,entidad) SELECT nextval('RWE_ALL_SEQ'), 'es.caib.regweb3.maxanexospermitidos','5',7,'Máximo número de anexos que se pueden adjuntar a un registro de entrada o salida',id FROM rwe_entidad;

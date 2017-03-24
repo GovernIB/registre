@@ -463,17 +463,14 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
      */
     private String organismoOficioRemision(RegistroSalida registroSalida, Set<String> organismos) throws Exception{
 
-        if(registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)){
+        List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
 
-            List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
+        for (Interesado interesado : interesados) {
+            if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
 
-            for (Interesado interesado : interesados) {
-                if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
+                if(!organismos.contains(interesado.getCodigoDir3())){
 
-                    if(!organismos.contains(interesado.getCodigoDir3())){
-
-                        return interesado.getCodigoDir3();
-                    }
+                    return interesado.getCodigoDir3();
                 }
             }
         }

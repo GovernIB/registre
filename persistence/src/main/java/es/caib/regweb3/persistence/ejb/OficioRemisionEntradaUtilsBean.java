@@ -293,6 +293,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         Oficio oficio = new Oficio();
 
         if(isOficioRemisionExterno(idRegistro)){ // Externo
+
             oficio.setOficioRemision(true);
             oficio.setInterno(false);
 
@@ -332,12 +333,11 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
         Query q;
         q = em.createQuery("Select re.id from RegistroEntrada as re where " +
-                "re.id = :idRegistro and re.estado = :valido and " +
+                "re.id = :idRegistro  and " +
                 "re.destino != null and " + organismosWhere);
 
         // Parámetros
         q.setParameter("idRegistro", idRegistro);
-        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
 
         if (organismos.size() > 0) {
             q.setParameter("organismos", organismos);
@@ -352,11 +352,11 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
         Query q;
         q = em.createQuery("Select re.id from RegistroEntrada as re where " +
-                "re.id = :idRegistro and re.estado = :valido and re.destino is null");
+                "re.id = :idRegistro and re.destino is null");
 
         // Parámetros
         q.setParameter("idRegistro", idRegistro);
-        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+
 
         return q.getResultList().size() > 0;
     }

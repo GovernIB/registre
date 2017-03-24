@@ -157,7 +157,7 @@ public class PropiedadGlobalUtil {
         String valor = getString(partialPropertyName);
 
         if(valor == null){ //si no esta definida la propiedad a nivel global se devuelven los formatos por defecto.
-            valor = new String("image/jpeg,image/pjpeg,application/vnd.oasis.opendocument.text,application/vnd.oasis.opendocument.spreadsheet,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/mspowerpoint,application/powerpoint,application/x-mspowerpoint,application/pdf,image/png,text/rtf,application/rtf,application/x-rtf,image/svg+xml,image/tiff,image/x-tiff,text/plain,application/xml");
+            valor = new String("image/jpeg, image/pjpeg, application/vnd.oasis.opendocument.text, application/vnd.oasis.opendocument.spreadsheet, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/mspowerpoint, application/powerpoint, application/x-mspowerpoint, application/pdf, image/png, text/rtf, application/rtf, application/x-rtf, image/svg+xml, image/tiff, image/x-tiff, text/plain, application/xml");
         }
         return valor;
     }
