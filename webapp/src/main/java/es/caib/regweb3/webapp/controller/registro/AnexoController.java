@@ -106,7 +106,6 @@ public class AnexoController extends BaseController {
       Long registroDetalleID = (Long)session.getAttribute("LAST_registroDetalleID");
       String tipoRegistro = (String)session.getAttribute("LAST_tipoRegistro");
       Long registroID = (Long)session.getAttribute("LAST_registroID");
-
       Long anexoID = (Long)session.getAttribute("LAST_anexoID");
       
       boolean isOficioRemisionSir = false;
@@ -135,7 +134,6 @@ public class AnexoController extends BaseController {
       
       
       saveLastAnnexoAction(request, registroDetalleID, registroID, tipoRegistro, null, isOficioRemisionSir);
-     
 
       RegistroDetalle registroDetalle = registroDetalleEjb.findById(registroDetalleID);
      
@@ -147,7 +145,6 @@ public class AnexoController extends BaseController {
       model.addAttribute("anexoForm" ,anexoForm);
       
       loadCommonAttributes(request, model, registroID);
-
       return "registro/formularioAnexo";
     }
 
@@ -155,51 +152,51 @@ public class AnexoController extends BaseController {
 
     protected void saveLastAnnexoAction(HttpServletRequest request, Long registroDetalleID,
         Long registroID, String tipoRegistro, Long anexoID, boolean isOficioRemisionSir) {
-      HttpSession session = request.getSession();
-      session.setAttribute("LAST_registroDetalleID", registroDetalleID);
-      session.setAttribute("LAST_tipoRegistro", tipoRegistro);
-      session.setAttribute("LAST_registroID", registroID);
-      session.setAttribute("LAST_anexoID", anexoID); // nou = null o editar != null
-      session.setAttribute("LAST_isOficioRemisionSir", isOficioRemisionSir);
+          HttpSession session = request.getSession();
+          session.setAttribute("LAST_registroDetalleID", registroDetalleID);
+          session.setAttribute("LAST_tipoRegistro", tipoRegistro);
+          session.setAttribute("LAST_registroID", registroID);
+          session.setAttribute("LAST_anexoID", anexoID); // nou = null o editar != null
+          session.setAttribute("LAST_isOficioRemisionSir", isOficioRemisionSir);
     }
 
 
 
     protected void loadCommonAttributes(HttpServletRequest request, Model model,
         Long registroID) throws Exception {
-      model.addAttribute("tiposDocumental", tipoDocumentalEjb.getByEntidad(getEntidadActiva(request).getId()));
-      model.addAttribute("tiposDocumentoAnexo", RegwebConstantes.TIPOS_DOCUMENTO);
-      model.addAttribute("tiposFirma", RegwebConstantes.TIPOS_FIRMA);
-      model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
-      
-      
-      // Scan
-      Entidad entidad = getEntidadActiva(request);
-      Long pluginID = null;
-      if (entidad.getTipoScan() != null && !"".equals(entidad.getTipoScan())) {
-        pluginID = Long.parseLong(entidad.getTipoScan());
-      }
-      //      Integer tipusScan = 2;
-      boolean teScan = scanWebModuleEjb.teScan(pluginID);
-      model.addAttribute("teScan", teScan);
-      
-      if (teScan) {
-        
-        String languageUI = request.getParameter("lang");
-        
-        if (languageUI == null) {
-          languageUI = I18NUtils.getLocale().getLanguage();
-          
-        }
-        request.setAttribute("lang", languageUI);
+          model.addAttribute("tiposDocumental", tipoDocumentalEjb.getByEntidad(getEntidadActiva(request).getId()));
+          model.addAttribute("tiposDocumentoAnexo", RegwebConstantes.TIPOS_DOCUMENTO);
+          model.addAttribute("tiposFirma", RegwebConstantes.TIPOS_FIRMA);
+          model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
 
-        // Utilitzam l'ID del registre per escanejar  
-        final long scanWebID = registroID;
 
-        String urlToPluginWebPage = initializeScan(request, pluginID, scanWebID, languageUI);
+          // Scan
+          Entidad entidad = getEntidadActiva(request);
+          Long pluginID = null;
+          if (entidad.getTipoScan() != null && !"".equals(entidad.getTipoScan())) {
+            pluginID = Long.parseLong(entidad.getTipoScan());
+          }
+          // Integer tipusScan = 2;
+          boolean teScan = scanWebModuleEjb.teScan(pluginID);
+          model.addAttribute("teScan", teScan);
 
-        model.addAttribute("urlToPluginWebPage", urlToPluginWebPage);
-      }
+          if (teScan) {
+
+            String languageUI = request.getParameter("lang");
+
+            if (languageUI == null) {
+              languageUI = I18NUtils.getLocale().getLanguage();
+
+            }
+            request.setAttribute("lang", languageUI);
+
+            // Utilitzam l'ID del registre per escanejar
+            final long scanWebID = registroID;
+
+            String urlToPluginWebPage = initializeScan(request, pluginID, scanWebID, languageUI);
+
+            model.addAttribute("urlToPluginWebPage", urlToPluginWebPage);
+          }
       
     }
 
@@ -266,42 +263,15 @@ public class AnexoController extends BaseController {
        HttpServletResponse response, Model model) throws Exception,I18NException {
 
       log.info(" Passa per crearAnexoPost");
-      Entidad entidadActiva = getEntidadActiva(request);
+      String variableReturn = "";
 
       // Si es oficio de remision sir debemos comprobar la limitación de los anexos impuesta por SIR
-      //TODO REVISAR ESTE CODIGO CUANDO API CUSTODIA DEVUELVA EL TAMAÑO DE LOS ARCHIVOS
+      //TODO REVISAR validarParametrosSIRAnexos CUANDO API CUSTODIA DEVUELVA EL TAMAÑO DE LOS ARCHIVOS
       if(anexoForm.getOficioRemisionSir()){
-        log.info("ENTRO EN OFICIO REMISION SIR");
-
-        // Obtenemos los anexos del registro para validar que no exceda los 15 MB
-        List<AnexoFull> anexosFull = obtenerAnexosFullByRegistro(anexoForm.getRegistroID(), anexoForm.getTipoRegistro());
-
-        //Se suman las distintas medidas de los anexos obtenidos
-        long  tamanyoTotalAnexos= obtenerTamanoTotalAnexos(anexosFull, anexoForm);
-
-        //Si el tamaño total es mayor de 15 Mb
-        Long tamanyoMaximoTotalAnexos = PropiedadGlobalUtil.getMaxUploadSizeTotal(entidadActiva.getId());
-        if (tamanyoTotalAnexos > tamanyoMaximoTotalAnexos) {
-            String totalAnexos = tamanyoTotalAnexos / (1024 * 1024) + " Mb";
-            String maxTotalAnexos = tamanyoMaximoTotalAnexos / (1024 * 1024) + " Mb";
-            Mensaje.saveMessageError(request, I18NUtils.tradueix("tamanymaxtotalsuperat", totalAnexos, maxTotalAnexos));
-
-            loadCommonAttributes(request, model, anexoForm.getRegistroID());
-            return "registro/formularioAnexo";
-        }
-
-        // Validamos que la extensión del fichero indicado esté dentro de los formatos permitidos.
-        String extensionObtenida = obtenerExtensionAnexo(anexoForm);
-
-        String extensionesPermitidas = PropiedadGlobalUtil.getFormatosPermitidos(entidadActiva.getId());
-        log.info("OBTENIDA " + extensionObtenida);
-        log.info("contains " + extensionesPermitidas.contains(extensionObtenida));
-        if (!extensionesPermitidas.contains(extensionObtenida)) {
-            Mensaje.saveMessageError(request, I18NUtils.tradueix("formatonopermitido", extensionObtenida, extensionesPermitidas));
-
-            loadCommonAttributes(request, model, anexoForm.getRegistroID());
-            return "registro/formularioAnexo";
-        }
+            variableReturn = validarLimitacionesSIRAnexos(anexoForm, request, model);
+      }
+      if(!variableReturn.isEmpty()){
+            return variableReturn;
       }
 
       anexoValidator.validate(anexoForm.getAnexo(),result);
@@ -334,8 +304,7 @@ public class AnexoController extends BaseController {
       
       }
 
-      // Errors 
-      
+      // Errors
       loadCommonAttributes(request, model, anexoForm.getRegistroID());
 
       return "registro/formularioAnexo";
@@ -406,75 +375,44 @@ public class AnexoController extends BaseController {
         HttpServletResponse response, Model model) throws Exception, I18NValidationException, I18NException {
 
         log.info(" Passa per editarAnexoPost");
-        Entidad entidadActiva = getEntidadActiva(request);
+        String variableReturn = "";
 
-
-      // Si es oficio de remision sir debemos comprobar la limitación de los anexos impuesta por SIR
-      //TODO REVISAR ESTE CODIGO CUANDO API CUSTODIA DEVUELVA EL TAMAÑO DE LOS ARCHIVOS
-      if(anexoForm.getOficioRemisionSir()){
-        log.info("ENTRO EN OFICIO REMISION SIR");
-
-        // Obtenemos los anexos del registro para validar que no exceda los 15 MB
-        List<AnexoFull> anexosFull = obtenerAnexosFullByRegistro(anexoForm.getRegistroID(), anexoForm.getTipoRegistro());
-
-        //Se suman las distintas medidas de los anexos obtenidos
-        long  tamanyoTotalAnexos= obtenerTamanoTotalAnexos(anexosFull, anexoForm);
-
-        //Si el tamaño total es mayor de 15 Mb
-        Long tamanyoMaximoTotalAnexos = PropiedadGlobalUtil.getMaxUploadSizeTotal(entidadActiva.getId());
-        if (tamanyoTotalAnexos > tamanyoMaximoTotalAnexos) {
-            String totalAnexos = tamanyoTotalAnexos / (1024 * 1024) + " Mb";
-            String maxTotalAnexos = tamanyoMaximoTotalAnexos / (1024 * 1024) + " Mb";
-            Mensaje.saveMessageError(request, I18NUtils.tradueix("tamanymaxtotalsuperat", totalAnexos, maxTotalAnexos));
-
-            loadCommonAttributes(request, model, anexoForm.getRegistroID());
-            return "registro/formularioAnexo";
+        // Si es oficio de remision sir debemos comprobar la limitación de los anexos impuesta por SIR
+        //TODO REVISAR validarParametrosSIRAnexos CUANDO API CUSTODIA DEVUELVA EL TAMAÑO DE LOS ARCHIVOS
+        if(anexoForm.getOficioRemisionSir()){
+            variableReturn = validarLimitacionesSIRAnexos(anexoForm, request, model);
+        }
+        if(!variableReturn.isEmpty()){
+            return variableReturn;
         }
 
-        // Validamos que la extensión del fichero indicado esté dentro de los formatos permitidos.
-        String extensionObtenida = obtenerExtensionAnexo(anexoForm);
-
-        String extensionesPermitidas = PropiedadGlobalUtil.getFormatosPermitidos(entidadActiva.getId());
-        log.info("OBTENIDA " + extensionObtenida);
-        log.info("contains " + extensionesPermitidas.contains(extensionObtenida));
-        if (!extensionesPermitidas.contains(extensionObtenida)) {
-            Mensaje.saveMessageError(request, I18NUtils.tradueix("formatonopermitido", extensionObtenida, extensionesPermitidas));
-
-            loadCommonAttributes(request, model, anexoForm.getRegistroID());
-            return "registro/formularioAnexo";
-        }
-      }
-
-      anexoValidator.validate(anexoForm.getAnexo(),result);
+        anexoValidator.validate(anexoForm.getAnexo(),result);
       
-      if (!result.hasErrors()) { // Si no hay errores
+        if (!result.hasErrors()) { // Si no hay errores
 
-        try {
+          try {
         
-           manageDocumentCustodySignatureCustody(request, anexoForm);
+               manageDocumentCustodySignatureCustody(request, anexoForm);
 
-           anexoEjb.actualizarAnexo(anexoForm, getUsuarioEntidadActivo(request),
-               anexoForm.getRegistroID(), anexoForm.getTipoRegistro());
+               anexoEjb.actualizarAnexo(anexoForm, getUsuarioEntidadActivo(request),
+                   anexoForm.getRegistroID(), anexoForm.getTipoRegistro());
+
+               model.addAttribute("closeAndReload", "true");
+
+               return "registro/formularioAnexo";
            
-           model.addAttribute("closeAndReload", "true");
-           
-           
-           return "registro/formularioAnexo";
-           
-           
-        } catch(I18NException i18n) {
-          log.error(i18n.getMessage(), i18n);
-          Mensaje.saveMessageError(request, I18NUtils.tradueix(i18n.getTraduccio())); 
-        } catch(Exception e) {
-          log.error(e.getMessage(), e);
-          Mensaje.saveMessageError(request, e.getMessage());
-        }
+          } catch(I18NException i18n) {
+            log.error(i18n.getMessage(), i18n);
+            Mensaje.saveMessageError(request, I18NUtils.tradueix(i18n.getTraduccio()));
+          } catch(Exception e) {
+            log.error(e.getMessage(), e);
+            Mensaje.saveMessageError(request, e.getMessage());
+          }
       
-      }
+        }
 
       
       loadCommonAttributes(request, model, anexoForm.getRegistroID());
-      
       return "registro/formularioAnexo";
 
       
@@ -613,7 +551,6 @@ public class AnexoController extends BaseController {
             anexoForm.getAnexo().setValidezDocumento(defVal);
           }
 
-          
         }
 
         anexoForm.setMetadatas(sd.getMetadatas());
@@ -644,8 +581,6 @@ public class AnexoController extends BaseController {
           log.info(" XYZ SIGNATUREFILE " + sc);
           log.info(" XYZ modoFirma " + modoFirma);
 
-
-        
       }
       
       if (config != null) {
@@ -975,6 +910,46 @@ public class AnexoController extends BaseController {
     }
 
 
+    /**
+     * Valida las limitaciones del cuestionario de verificación de SIR (Numero de archivos, tamaño máximo y total de los archivos
+     * @param anexoForm
+     * @param request
+     * @param model
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
+    public String validarLimitacionesSIRAnexos(AnexoForm anexoForm, HttpServletRequest request, Model model) throws Exception, I18NException{
+        Entidad entidadActiva = getEntidadActiva(request);
+
+        // Obtenemos los anexos del registro para validar que no exceda el máximo de MB establecido
+        List<AnexoFull> anexosFull = obtenerAnexosFullByRegistro(anexoForm.getRegistroID(), anexoForm.getTipoRegistro());
+
+        //Se suman las distintas medidas de los anexos obtenidos
+        long  tamanyoTotalAnexos= obtenerTamanoTotalAnexos(anexosFull, anexoForm);
+
+        //Si el tamaño total es mayor del maximo establecido
+        Long tamanyoMaximoTotalAnexos = PropiedadGlobalUtil.getMaxUploadSizeTotal(entidadActiva.getId());
+        if (tamanyoTotalAnexos > tamanyoMaximoTotalAnexos) {
+            String totalAnexos = tamanyoTotalAnexos / (1024 * 1024) + " Mb";
+            String maxTotalAnexos = tamanyoMaximoTotalAnexos / (1024 * 1024) + " Mb";
+            Mensaje.saveMessageError(request, I18NUtils.tradueix("tamanymaxtotalsuperat", totalAnexos, maxTotalAnexos));
+
+            loadCommonAttributes(request, model, anexoForm.getRegistroID());
+            return "registro/formularioAnexo";
+        }
+
+        // Validamos que la extensión del fichero indicado esté dentro de los formatos permitidos.
+        String extensionObtenida = obtenerExtensionAnexo(anexoForm);
+        String extensionesPermitidas = PropiedadGlobalUtil.getFormatosPermitidos(entidadActiva.getId());
+        if (!extensionesPermitidas.contains(extensionObtenida)) {
+            Mensaje.saveMessageError(request, I18NUtils.tradueix("formatonopermitido", extensionObtenida, extensionesPermitidas));
+
+            loadCommonAttributes(request, model, anexoForm.getRegistroID());
+            return "registro/formularioAnexo";
+        }
+        return "";
+    }
 
     
     
