@@ -4,15 +4,15 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.RegistroBasico;
 import es.caib.regweb3.persistence.utils.*;
+import es.caib.regweb3.plugins.distribucion.ConfiguracionDistribucion;
+import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
+import es.caib.regweb3.plugins.postproceso.IPostProcesoPlugin;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
-import org.fundaciobit.plugins.distribucion.ConfiguracionDistribucion;
-import org.fundaciobit.plugins.distribucion.IDistribucionPlugin;
-import org.fundaciobit.plugins.postproceso.IPostProcesoPlugin;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;

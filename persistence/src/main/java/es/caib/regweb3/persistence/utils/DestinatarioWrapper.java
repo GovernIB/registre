@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.utils;
 
-import org.fundaciobit.plugins.distribucion.Destinatario;
+
+import es.caib.regweb3.plugins.distribucion.Destinatario;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

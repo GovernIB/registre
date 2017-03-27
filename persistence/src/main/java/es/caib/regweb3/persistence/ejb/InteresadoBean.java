@@ -3,9 +3,9 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.RegistroDetalle;
 import es.caib.regweb3.persistence.utils.RegwebPostProcesoPluginManager;
+import es.caib.regweb3.plugins.postproceso.IPostProcesoPlugin;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
-import org.fundaciobit.plugins.postproceso.IPostProcesoPlugin;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;

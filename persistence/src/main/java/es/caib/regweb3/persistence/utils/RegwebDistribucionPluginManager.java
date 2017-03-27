@@ -1,7 +1,7 @@
 package es.caib.regweb3.persistence.utils;
 
+import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
 import org.apache.log4j.Logger;
-import org.fundaciobit.plugins.distribucion.IDistribucionPlugin;
 import org.fundaciobit.plugins.utils.PluginsManager;
 
 

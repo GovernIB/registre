@@ -50,9 +50,17 @@
                             <c:forEach var="anexo" items="${registro.registroDetalle.anexos}">
 
                                     <tr>
-                                        <td>
-                                            <a data-toggle="modal" href="#detalleAnexo" onclick="obtenerAnexo(${anexo.id})">${anexo.titulo}</a>
-                                        </td>
+                                        <c:if test="${anexo.justificante}">
+                                            <td>
+                                                <a data-toggle="modal" href="#detalleAnexo" onclick="obtenerAnexo(${anexo.id})"><dt>${anexo.titulo}</dt></a>
+                                            </td>
+                                        </c:if>
+                                        <c:if test="${!anexo.justificante}">
+                                            <td>
+                                                <a data-toggle="modal" href="#detalleAnexo" onclick="obtenerAnexo(${anexo.id})">${anexo.titulo}</a>
+                                            </td>
+                                        </c:if>
+
                                         <td>
                                             <spring:message code="tipoDocumento.0${anexo.tipoDocumento}"/>
                                         </td>

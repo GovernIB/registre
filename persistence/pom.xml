@@ -43,14 +43,21 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>plugins-distribucionregweb-api</artifactId>
+            <artifactId>plugin-distribucion-api</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>plugins-postproceso-api</artifactId>
+            <artifactId>plugin-postproceso-api</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>plugin-justificante-api</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
@@ -86,7 +93,7 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>plugins-distribucionregweb-api</artifactId>
+            <artifactId>plugin-distribucion-api</artifactId>
             <type>jar</type>
             <version>${project.version}</version>
             <scope>provided</scope>
@@ -99,14 +106,6 @@
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>-->
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>plugins-justificanteregweb-api</artifactId>
-            <type>jar</type>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
 
         <dependency>
             <groupId>org.hibernate</groupId>

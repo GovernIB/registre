@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.utils;
 
-import org.fundaciobit.plugins.distribucion.Destinatarios;
+
+import es.caib.regweb3.plugins.distribucion.Destinatarios;
 
 /**
  * Clase que representa la respuesta al distribuir un registro de entrada mediante el plugin de distribución
