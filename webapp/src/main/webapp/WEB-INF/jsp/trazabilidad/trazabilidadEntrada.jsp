@@ -13,8 +13,8 @@
 
                 <c:forEach var="trazabilidad" items="${trazabilidades}" varStatus="status">
 
-                    <%-- Registro que ha entrado o salido via SIR --%>
-                    <c:if test="${trazabilidad.oficioRemision.sir}">
+                    <%-- Registro que ha salido via SIR --%>
+                    <c:if test="${trazabilidad.oficioRemision != null && trazabilidad.oficioRemision.sir}">
 
                         <%--Enviado via SIR--%>
                         <c:if test="${registro.id == trazabilidad.registroEntradaOrigen.id}">
@@ -54,38 +54,31 @@
 
                         </c:if>
 
-                        <%--Recibido via SIR--%>
-                        <c:if test="${registro.id == trazabilidad.registroEntradaDestino.id}">
+                    </c:if>
 
-                            <%--ASIENTO REGISTRAL SIR--%>
+                    <%--Recibido via SIR--%>
+                    <c:if test="${trazabilidad.oficioRemision == null}">
+
+                        <%--ASIENTO REGISTRAL SIR--%>
+                        <li class="timeline-inverted">
+                            <c:set var="asientoRegistralSir" value="${trazabilidad.asientoRegistralSir}" scope="request"/>
+                            <c:import url="../trazabilidad/asientoRegistralSir.jsp"/>
+                        </li>
+
+                        <%--REGISTRO ENTRADA DESTINO--%>
+                        <c:if test="${trazabilidad.registroEntradaDestino != null}">
                             <li>
-                                <c:set var="asientoRegistralSir" value="${trazabilidad.asientoRegistralSir}" scope="request"/>
-                                <c:import url="../trazabilidad/asientoRegistralSir.jsp"/>
+                                <c:set var="registroEntradaDestino" value="${trazabilidad.registroEntradaDestino}" scope="request"/>
+                                <c:import url="../trazabilidad/registroEntradaDestino.jsp">
+                                    <c:param name="activo" value="true"/>
+                                </c:import>
                             </li>
-
-                            <%--OFICIO REMISION--%>
-                            <li>
-                                <c:set var="oficioRemision" value="${trazabilidad.oficioRemision}" scope="request"/>
-                                <c:import url="../trazabilidad/oficioRemision.jsp"/>
-                            </li>
-
-
-                            <%--REGISTRO ENTRADA DESTINO--%>
-                            <c:if test="${trazabilidad.registroEntradaDestino != null}">
-                                <li class="timeline-inverted">
-                                    <c:set var="registroEntradaDestino" value="${trazabilidad.registroEntradaDestino}" scope="request"/>
-                                    <c:import url="../trazabilidad/registroEntradaDestino.jsp">
-                                        <c:param name="activo" value="true"/>
-                                    </c:import>
-                                </li>
-                            </c:if>
-
                         </c:if>
 
                     </c:if>
 
                     <%-- Registro Interno --%>
-                    <c:if test="${!trazabilidad.oficioRemision.sir}">
+                    <c:if test="${trazabilidad.oficioRemision != null && !trazabilidad.oficioRemision.sir}">
 
                         <c:if test="${registro.id == trazabilidad.registroEntradaOrigen.id}">
 

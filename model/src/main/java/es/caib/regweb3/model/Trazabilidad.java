@@ -71,7 +71,7 @@ public class Trazabilidad implements Serializable {
         this.registroEntradaDestino = registroEntradaDestino;
     }
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = true)
     @JoinColumn(name="OFICIO_REMISION")
     @ForeignKey(name="RWE_TRAZAB_OFIREM_FK")
     public OficioRemision getOficioRemision() {

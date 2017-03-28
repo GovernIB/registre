@@ -3,7 +3,6 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.*;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
-import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.sir.core.model.Errores;
 import es.caib.regweb3.sir.core.model.TipoAnotacion;
@@ -59,10 +58,11 @@ public class SirBean implements SirLocal{
     @EJB public AsientoRegistralSirLocal asientoRegistralSirEjb;
     @EJB public OficioRemisionEntradaUtilsLocal oficioRemisionEntradaUtilsEjb;
     @EJB public OficioRemisionLocal oficioRemisionEjb;
+    @EJB public TrazabilidadLocal trazabilidadEjb;
 
 
     /**
-     *
+     * Recibe un fichero de intercambio en formato SICRES3 desde un nodo distribuido
      * @param ficheroIntercambio
      * @throws Exception
      */
@@ -77,12 +77,8 @@ public class SirBean implements SirLocal{
         if (TipoAnotacion.ENVIO.getValue().equals(ficheroIntercambio.getTipoAnotacion())) {
 
             // Buscamos si el Asiento recibido ya existe en el sistema
-            try {
-                asientoRegistralSir = asientoRegistralSirEjb.getAsientoRegistral(ficheroIntercambio.getIdentificadorIntercambio(),ficheroIntercambio.getCodigoEntidadRegistralDestino());
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new ServiceException(Errores.ERROR_INESPERADO,e);
-            }
+
+            asientoRegistralSir = asientoRegistralSirEjb.getAsientoRegistral(ficheroIntercambio.getIdentificadorIntercambio(),ficheroIntercambio.getCodigoEntidadRegistralDestino());
 
             if(asientoRegistralSir != null) { // Ya existe en el sistema
 
@@ -96,22 +92,17 @@ public class SirBean implements SirLocal{
                         EstadoAsientoRegistralSir.RECHAZADO_Y_ERROR.equals(asientoRegistralSir.getEstado()) ||
                         EstadoAsientoRegistralSir.REENVIADO.equals(asientoRegistralSir.getEstado())){
 
-
                 }
 
 
             }else{ // No existe en el sistema, lo creamos.
 
-                try {
-                    // Convertimos el Fichero de Intercambio SICRES3 en {@link es.caib.regweb3.model.AsientoRegistralSir}
-                    asientoRegistralSir = asientoRegistralSirEjb.transformarFicheroIntercambio(ficheroIntercambio);
+                // Convertimos el Fichero de Intercambio SICRES3 en {@link es.caib.regweb3.model.AsientoRegistralSir}
+                asientoRegistralSir = asientoRegistralSirEjb.transformarFicheroIntercambio(ficheroIntercambio);
 
-                    asientoRegistralSir = asientoRegistralSirEjb.crearAsientoRegistralSir(asientoRegistralSir);
+                asientoRegistralSir = asientoRegistralSirEjb.crearAsientoRegistralSir(asientoRegistralSir);
 
-                } catch (Exception e) {
-                    log.info("Error al crear el AsientoRegistralSir", e);
-                    throw new ServiceException(Errores.ERROR_INESPERADO,e);
-                }
+
             }
 
 
@@ -392,7 +383,7 @@ public class SirBean implements SirLocal{
         asientoRegistralSir.setDecodificacionTipoAnotacion(TipoAnotacion.ENVIO.getName());
 
         // Creamos el AsientoRegistralSir
-        asientoRegistralSir = asientoRegistralSirEjb.persist(asientoRegistralSir);
+        asientoRegistralSir = asientoRegistralSirEjb.crearAsientoRegistralSir(asientoRegistralSir);
 
         // Lo relacionamos al OficioRemision
         oficioRemision.setAsientoRegistralSir(asientoRegistralSir);
@@ -418,33 +409,23 @@ public class SirBean implements SirLocal{
     public RegistroEntrada aceptarAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs)
             throws Exception {
 
-        OficioRemision oficioRemision = new OficioRemision();
-
-        oficioRemision.setSir(true);
-        oficioRemision.setAsientoRegistralSir(asientoRegistralSir);
-        oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_ACEPTADO);
-        oficioRemision.setFechaEstado(new Date());
-        oficioRemision.setOficina(oficinaActiva);
-        oficioRemision.setUsuarioResponsable(usuario);
-        oficioRemision.setLibro(new Libro(idLibro));
-        oficioRemision.setOrganismoDestinatario(organismoEjb.findByCodigoEntidad(asientoRegistralSir.getCodigoUnidadTramitacionDestino(), asientoRegistralSir.getEntidad().getId()));
-        oficioRemision.setDestinoExternoCodigo(null);
-        oficioRemision.setDestinoExternoDenominacion(null);
-
         if(asientoRegistralSir.getTipoRegistro().equals(TipoRegistro.ENTRADA)) {
-
-            oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
 
             // Creamos y registramos el RegistroEntrada a partir del AsientoRegistral aceptado
             RegistroEntrada registroEntrada = null;
             try {
                 registroEntrada = transformarAsientoRegistralEntrada(asientoRegistralSir, usuario, oficinaActiva, idLibro, idIdioma, idTipoAsunto, camposNTIs);
 
-                // Creamos el Oficio de remision
-                List<RegistroEntrada> registros = new ArrayList<RegistroEntrada>();
-                registros.add(registroEntrada);
-                oficioRemision.setRegistrosEntrada(registros);
-                oficioRemisionEjb.registrarOficioRemisionSIR(oficioRemision, registroEntrada.getId(), "RECEPCION");
+                // CREAMOS LA TRAZABILIDAD
+                Trazabilidad trazabilidad = new Trazabilidad();
+                trazabilidad.setAsientoRegistralSir(asientoRegistralSir);
+                trazabilidad.setRegistroEntradaOrigen(null);
+                trazabilidad.setOficioRemision(null);
+                trazabilidad.setRegistroSalida(null);
+                trazabilidad.setRegistroEntradaDestino(registroEntrada);
+                trazabilidad.setFecha(new Date());
+
+                trazabilidadEjb.persist(trazabilidad);
 
                 // Modificamos el estado del AsientoRegistralSir
                 asientoRegistralSirEjb.modificarEstado(asientoRegistralSir.getId(), EstadoAsientoRegistralSir.ACEPTADO);

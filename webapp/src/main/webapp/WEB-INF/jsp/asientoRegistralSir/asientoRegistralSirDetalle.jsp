@@ -337,6 +337,56 @@
                             </form:form>
 
                         </div>
+
+                        <%--Modal Rechazo--%>
+                        <div id="rechazoModal" class="modal fade bs-example-modal-lg">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                                        <h3>Rechazar Asiento Registral Sir ${asientoRegistralSir.numeroRegistro}</h3>
+                                    </div>
+
+                                    <div class="modal-body">
+                                        <c:url value="/asientoRegistralSir/rechazar/${asientoRegistralSir.id}" var="urlRechazar" scope="request"/>
+                                        <form:form modelAttribute="rechazarForm" method="post" action="${urlRechazar}" cssClass="form-horizontal">
+                                            <div class="panel panel-success">
+
+                                                <div class="panel-heading">
+                                                    <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i>
+                                                        <strong>Introduzca el motivo del rechazo</strong></h3>
+                                                </div>
+
+                                                <div class="panel-body">
+
+                                                    <div class="form-group col-xs-12">
+                                                        <div class="col-xs-4 pull-left etiqueta_regweb_left control-label">
+                                                            <form:label for="observacionesRechazo" path="observacionesRechazo"> Observaciones</form:label>
+                                                        </div>
+                                                        <div class="col-xs-8" id="observacionesRechazoSir">
+                                                            <form:textarea path="observacionesRechazo" rows="5" cssClass="form-control"/> <span class="errors"></span>
+                                                        </div>
+                                                    </div>
+
+                                                </div> <!-- /.panel body -->
+                                            </div>
+                                            <!-- /.panel panel-info -->
+                                            <div class="form-actions">
+                                                <input type="submit" value="<spring:message code="asientoRegistralSir.estado.rechazar"/>"
+                                                       class="btn btn-danger btn-sm"
+                                                       onclick="return rechazarAsientoRegistralSir()">
+                                            </div>
+                                        </form:form>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn" data-dismiss="modal" aria-hidden="true"><spring:message
+                                                code="regweb.cerrar"/></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </c:if>
 
                 </div>
@@ -353,60 +403,17 @@
             <!-- ANEXOS -->
             <c:import url="anexosSir.jsp"/>
 
+                <%--TRAZABILIDAD--%>
+            <c:if test="${not empty trazabilidades}">
+                <c:import url="../trazabilidad/trazabilidadSir.jsp"/>
+            </c:if>
+
 
         </div><!-- /div.row-->
         </form:form>
 
     </div>
 </div> <!-- /container -->
-
-<div id="rechazoModal" class="modal fade bs-example-modal-lg">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-                <h3>Rechazar Asiento Registral Sir ${asientoRegistralSir.numeroRegistro}</h3>
-            </div>
-
-            <div class="modal-body">
-                <c:url value="/asientoRegistralSir/rechazar/${asientoRegistralSir.id}" var="urlRechazar" scope="request"/>
-                <form:form modelAttribute="rechazarForm" method="post" action="${urlRechazar}" cssClass="form-horizontal">
-                    <div class="panel panel-success">
-
-                        <div class="panel-heading">
-                            <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i>
-                                <strong>Introduzca el motivo del rechazo</strong></h3>
-                        </div>
-
-                        <div class="panel-body">
-
-                            <div class="form-group col-xs-12">
-                                <div class="col-xs-4 pull-left etiqueta_regweb_left control-label">
-                                    <form:label for="observacionesRechazo" path="observacionesRechazo"> Observaciones</form:label>
-                                </div>
-                                <div class="col-xs-8" id="observacionesRechazoSir">
-                                    <form:textarea path="observacionesRechazo" rows="5" cssClass="form-control"/> <span class="errors"></span>
-                                </div>
-                            </div>
-
-                        </div> <!-- /.panel body -->
-                    </div>
-                    <!-- /.panel panel-info -->
-                    <div class="form-actions">
-                        <input type="submit" value="<spring:message code="asientoRegistralSir.estado.rechazar"/>"
-                               class="btn btn-danger btn-sm"
-                               onclick="return rechazarAsientoRegistralSir()">
-                    </div>
-                </form:form>
-
-            </div>
-            <div class="modal-footer">
-                <button class="btn" data-dismiss="modal" aria-hidden="true"><spring:message
-                        code="regweb.cerrar"/></button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <c:import url="../modulos/pie.jsp"/>
 

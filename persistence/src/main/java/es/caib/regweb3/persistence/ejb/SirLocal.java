@@ -22,6 +22,7 @@ import java.util.List;
 public interface SirLocal {
 
     /**
+     * Recibe un fichero de intercambio en formato SICRES3 desde un nodo distribuido
      * @param ficheroIntercambio
      * @throws Exception
      */
