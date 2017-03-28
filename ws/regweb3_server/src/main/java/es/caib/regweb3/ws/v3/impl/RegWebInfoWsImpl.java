@@ -313,7 +313,7 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
 
     // 5.- Comprobaciones usuarioEntidad existente
     if(usuarioEntidad == null){//No existe
-      throw new I18NException("registro.usuario.noExiste", UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadCodigoDir3);
+      throw new I18NException("registro.usuario.noExiste", usuario, entidadCodigoDir3);
 
     }
 
