@@ -516,10 +516,9 @@ public class OficioRemisionController extends BaseController {
                 }
 
             } catch (SIRException s) {
-                // TODO que fer en aquest cas
                 log.error(" Error enviant a SIR: " + s.getMessage(), s);
                 Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.error.envio"));
-                // TODO Borrar Oficio Remision
+                return new ModelAndView("redirect:/oficioRemision/entradasPendientesRemision");
 
             }
 
@@ -568,10 +567,10 @@ public class OficioRemisionController extends BaseController {
 
 
             } catch (Throwable e) {
-                // TODO que fer en aquest cas
+
                 log.error(" Error enviant a SIR: " + e.getMessage(), e);
                 Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.error.envio"));
-                // TODO Borrar Oficio Remision
+                return new ModelAndView("redirect:/oficioRemision/salidasPendientesRemision");
 
             }
         }
