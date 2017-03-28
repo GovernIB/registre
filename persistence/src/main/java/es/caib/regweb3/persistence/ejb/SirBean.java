@@ -422,9 +422,10 @@ public class SirBean implements SirLocal{
 
         asientoRegistralSir.setTipoAnotacion(TipoAnotacion.REENVIO.getValue());
         asientoRegistralSir.setDecodificacionTipoAnotacion(TipoAnotacion.REENVIO.getName());
-        asientoRegistralSir.setEstado(EstadoAsientoRegistralSir.REENVIADO);
 
-        return asientoRegistralSir = asientoRegistralSirEjb.merge(asientoRegistralSir);
+        asientoRegistralSir = asientoRegistralSirEjb.merge(asientoRegistralSir);
+
+        return asientoRegistralSir;
 
     }
 
