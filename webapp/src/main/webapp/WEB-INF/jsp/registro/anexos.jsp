@@ -66,11 +66,13 @@
 
                                      <c:if test="${anexo.justificante}">
                                          <td><dt>${anexo.titulo}</dt></td>
+                                         <td><spring:message code="justificante.boton"/></td>
                                      </c:if>
                                      <c:if test="${!anexo.justificante}">
                                          <td>${anexo.titulo}</td>
+                                         <td><spring:message code="tipoDocumento.0${anexo.tipoDocumento}"/></td>
                                      </c:if>
-                                     <td><spring:message code="tipoDocumento.0${anexo.tipoDocumento}"/></td>
+
                                      <!-- TODO mostrar el tamanyo desde custodia -->
                                      <td>0 KB</td>
                                      <td class="center">

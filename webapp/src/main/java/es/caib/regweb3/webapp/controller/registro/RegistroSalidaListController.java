@@ -1,7 +1,6 @@
 package es.caib.regweb3.webapp.controller.registro;
 
 import es.caib.regweb3.model.*;
-import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.Oficio;
 import es.caib.regweb3.persistence.utils.Paginacion;
@@ -14,11 +13,7 @@ import es.caib.regweb3.webapp.form.RegistroSalidaBusqueda;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.utils.RegwebJustificantePluginManager;
 import es.caib.regweb3.webapp.validator.RegistroSalidaBusquedaValidator;
-import org.apache.commons.io.FileUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.genapp.common.i18n.I18NValidationException;
-import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
-import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -33,13 +28,11 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
-
-import static es.caib.regweb3.persistence.utils.FileSystemManager.getArchivosPath;
+import java.util.Locale;
 
 /**
  * Created by Fundació BIT.
@@ -207,13 +200,8 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         model.addAttribute("showannexes", showannexes);
         model.addAttribute("entidadActiva", entidadActiva);
 
+        // Justificante
         Long idJustificante = anexoEjb.getIdJustificante(registro.getRegistroDetalle().getId());
-        log.info("idJustificante: " + idJustificante);
-        if(idJustificante!=-1) {
-            model.addAttribute("numJustificante", 1);
-        }else{
-            model.addAttribute("numJustificante", 0);
-        }
         model.addAttribute("idJustificante", idJustificante);
 
         // Modelo Recibo
@@ -458,10 +446,22 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
             // Comprova que existeix el plugin de justificant
             if(justificantePlugin!=null) {
-                // Obtenim el ByteArray per generar el pdf
-                ByteArrayOutputStream baos = justificantePlugin.generarJustificante(registroSalida);
+
+                String tipoRegistro = "salida";
+
                 // Nom del fitxer generat
                 String nombreFichero = getMessage("justificante.fichero") + "_" + registroSalida.getNumeroRegistro() + ".pdf";
+                UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+                String tituloAnexo = getMessage("justificante.anexo.titulo");
+                String observacionesAnexo = getMessage("justificante.anexo.observaciones");
+                Locale locale = new Locale(RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(registroSalida.getRegistroDetalle().getIdioma()));
+
+                // Obtenim el ByteArray per generar el pdf
+                ByteArrayOutputStream baos = justificantePlugin.generarJustificante(registroSalida);
+                // Cream l'annex justificant
+                anexoEjb.crearJustificante(baos, idEntidad, nombreFichero, usuarioEntidad, idRegistro, locale, tituloAnexo,
+                        observacionesAnexo,tipoRegistro);
+
                 // Cabeceras Response
                 response.setHeader("Content-Disposition", "attachment; filename=" + nombreFichero);
                 response.setHeader("Content-Type", "application/pdf;charset=UTF-8");
@@ -474,56 +474,13 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
                 baos.writeTo(out);
                 out.flush();
                 out.close();
-
-                // Adjuntar justificante como ANEXO del registro
-                AnexoFull anexoFull = new AnexoFull();
-                anexoFull.getAnexo().setTitulo(getMessage("justificante.anexo.titulo"));
-                anexoFull.getAnexo().setValidezDocumento(RegwebConstantes.TIPOVALIDEZDOCUMENTO_ORIGINAL);
-                TipoDocumental tipoDocumental = tipoDocumentalEjb.findByCodigoEntidad("TD99",idEntidad);
-                anexoFull.getAnexo().setTipoDocumental(tipoDocumental);
-
-                anexoFull.getAnexo().setTipoDocumento(RegwebConstantes.TIPO_DOCUMENTO_DOC_ADJUNTO);
-                anexoFull.getAnexo().setOrigenCiudadanoAdmin(RegwebConstantes.ANEXO_ORIGEN_ADMINISTRACION.intValue());
-                anexoFull.getAnexo().setObservaciones(getMessage("justificante.anexo.observaciones"));
-                anexoFull.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED);
-
-                // Fichero Anexado
-                try {
-
-                    File file = new File(getArchivosPath().toString()+"\\"+nombreFichero);
-                    FileUtils.writeByteArrayToFile(file, baos.toByteArray());
-
-                    anexoFull.getAnexo().setJustificante(true);
-
-                    DocumentCustody doc = new DocumentCustody();
-                    doc.setData(baos.toByteArray());
-                    doc.setMime("application/pdf");
-                    doc.setName(nombreFichero);
-                    anexoFull.setDocumentoCustody(doc);
-                    anexoFull.setDocumentoFileDelete(false);
-
-                    SignatureCustody sign = new SignatureCustody();
-                    sign.setData(baos.toByteArray());
-                    sign.setMime("application/pdf");
-                    sign.setName("firma");
-
-                    anexoFull.setSignatureCustody(sign);
-                    anexoFull.setSignatureFileDelete(false);
-
-                    anexoEjb.crearAnexo(anexoFull,getUsuarioEntidadActivo(request),idRegistro,"salida");
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } catch (I18NValidationException e) {
-                    e.printStackTrace();
-                }
             }
 
         } catch (I18NException e) {
             e.printStackTrace();
         }
 
-        return "redirect:" + "/registroEntrada/"+idRegistro+"/detalle";
+        return "redirect:/registroSalida/"+idRegistro+"/detalle";
 
     }
 

@@ -58,8 +58,6 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
     @Override
     public ByteArrayOutputStream generarJustificante(RegistroEntrada registroEntrada) throws Exception{
 
-
-
         Long idEntidadActiva = registroEntrada.getUsuario().getEntidad().getId();
 
         Locale locale;
@@ -655,7 +653,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
     }
 
-    // Añade la información del pie, CSV, etc
+
     protected String tradueixMissatge(Locale locale, String missatge) throws Exception {
 
         try {

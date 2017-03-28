@@ -186,7 +186,7 @@ public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
             Long idJustificante = anexoEjb.getIdJustificante(registroEntrada.getRegistroDetalle().getId());
 
             //Si ya existe un justificante, da error
-            if(idJustificante != -1){
+            if(idJustificante != null){
                 log.info("Aviso: El registro ya tiene un justificante asociado");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.justificante.existe"));
                 response.sendRedirect("/regweb3/aviso");

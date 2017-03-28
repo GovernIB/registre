@@ -13,7 +13,9 @@ import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
+import java.io.ByteArrayOutputStream;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Fundacio Bit
@@ -146,6 +148,26 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      */
     public String crearArchivo(String name, byte[] file, String signatureName,
                                byte[] signature, int signatureMode, String custodyID, String custodyParameters) throws Exception;
+
+
+    /**
+     * Crea un Jusitificante como anexo al registro
+     * @param baos
+     * @param idEntidad
+     * @param nombreFichero
+     * @param usuarioEntidad
+     * @param idRegistro
+     * @param locale
+     * @param tituloAnexo
+     * @param observacionesAnexo
+     * @param tipoRegistro
+     * @return Boolean
+     * @throws Exception
+     */
+    public Boolean crearJustificante(ByteArrayOutputStream baos, Long idEntidad, String nombreFichero,
+                                     UsuarioEntidad usuarioEntidad, Long idRegistro, Locale locale, String tituloAnexo,
+                                     String observacionesAnexo, String tipoRegistro) throws Exception;
+
 
 
 }
