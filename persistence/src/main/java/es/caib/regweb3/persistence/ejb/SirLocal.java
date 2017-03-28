@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.CamposNTI;
+import es.caib.regweb3.model.utils.EstadoAsientoRegistralSir;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.core.utils.Mensaje;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -60,6 +61,21 @@ public interface SirLocal {
      * @return
      */
     public RegistroEntrada aceptarAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs) throws Exception;
+
+
+    /**
+     * Reenvio de un Asiento Registral SIR
+     * @param asientoRegistralSir
+     * @throws Exception
+     */
+    public AsientoRegistralSir reenviarAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir, Oficina oficinaReenvio, Oficina oficinaActiva, Usuario usuario) throws Exception;
+
+    /**
+     * Método que indica si el asiento registral puede ser reenviado en función de su estado.
+     * @param estado del asiento registral
+     * @return
+     */
+    public boolean puedeReenviarAsientoRegistralSir(EstadoAsientoRegistralSir estado);
 
     /**
      * Transforma un {@link es.caib.regweb3.model.RegistroEntrada} en un {@link AsientoRegistralSir}

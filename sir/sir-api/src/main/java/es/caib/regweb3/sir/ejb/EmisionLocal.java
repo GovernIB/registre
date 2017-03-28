@@ -1,8 +1,6 @@
 package es.caib.regweb3.sir.ejb;
 
-import es.caib.regweb3.model.Oficina;
-import es.caib.regweb3.model.OficioRemision;
-import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.*;
 
 import javax.ejb.Local;
 
@@ -14,4 +12,6 @@ import javax.ejb.Local;
 public interface EmisionLocal {
 
     public OficioRemision enviarFicheroIntercambio(String tipoRegistro, Long idRegistro, String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino, Oficina oficinaActiva, UsuarioEntidad usuario, Long idLibro);
+
+    public void reenviarFicheroIntercambio(AsientoRegistralSir asientoRegistralSir, Oficina oficinaReenvio, Oficina oficinaActiva, Usuario usuario)  throws Exception;
 }

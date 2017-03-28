@@ -400,6 +400,49 @@ public class SirBean implements SirLocal{
 
     }
 
+    public AsientoRegistralSir reenviarAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir, Oficina oficinaReenvio, Oficina oficinaActiva, Usuario usuario) throws Exception {
+
+
+        //Actualizamos la oficina destino con la escogida por el usuario
+        asientoRegistralSir.setCodigoEntidadRegistralDestino(oficinaReenvio.getCodigo());
+        asientoRegistralSir.setDecodificacionEntidadRegistralDestino(oficinaReenvio.getDenominacion());
+
+        //Actualizamos la oficina de origen con la oficina activa
+        asientoRegistralSir.setCodigoEntidadRegistralOrigen(oficinaActiva.getCodigo());
+        asientoRegistralSir.setDecodificacionEntidadRegistralOrigen(oficinaActiva.getDenominacion());
+
+        //Actualizamos la unidad de tramitación destino con el organismo responsable de la oficina de reenvio
+        asientoRegistralSir.setCodigoUnidadTramitacionDestino(oficinaReenvio.getOrganismoResponsable().getCodigo());
+        asientoRegistralSir.setDecodificacionUnidadTramitacionDestino(oficinaReenvio.getOrganismoResponsable().getDenominacion());
+
+        //Modificamos usuario, contacto, aplicacion
+        asientoRegistralSir.setAplicacion(RegwebConstantes.CODIGO_APLICACION);
+        asientoRegistralSir.setNombreUsuario(usuario.getNombreCompleto());
+        asientoRegistralSir.setContactoUsuario(usuario.getEmail());
+
+        asientoRegistralSir.setTipoAnotacion(TipoAnotacion.REENVIO.getValue());
+        asientoRegistralSir.setDecodificacionTipoAnotacion(TipoAnotacion.REENVIO.getName());
+        asientoRegistralSir.setEstado(EstadoAsientoRegistralSir.REENVIADO);
+
+        return asientoRegistralSir = asientoRegistralSirEjb.merge(asientoRegistralSir);
+
+    }
+
+    /**
+     * Indica si el asiento registral se puede reenviar, en función de su estado
+     * @param estado del asiento registral
+     * @return
+     */
+    public boolean puedeReenviarAsientoRegistralSir(EstadoAsientoRegistralSir estado){
+       return  estado.equals(EstadoAsientoRegistralSir.RECIBIDO) ||
+               estado.equals(EstadoAsientoRegistralSir.DEVUELTO) ||
+               estado.equals(EstadoAsientoRegistralSir.REENVIADO) ||
+               estado.equals(EstadoAsientoRegistralSir.REENVIADO_Y_ERROR);
+
+
+
+    }
+
     /**
      * Acepta un AsientoRegistralSir, creando un Registro de Entrada o un Registro de Salida
      * @param asientoRegistralSir

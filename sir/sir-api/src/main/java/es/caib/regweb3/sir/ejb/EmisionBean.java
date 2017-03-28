@@ -1,9 +1,6 @@
 package es.caib.regweb3.sir.ejb;
 
-import es.caib.regweb3.model.AsientoRegistralSir;
-import es.caib.regweb3.model.Oficina;
-import es.caib.regweb3.model.OficioRemision;
-import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.EstadoAsientoRegistralSir;
 import es.caib.regweb3.persistence.ejb.AsientoRegistralSirLocal;
 import es.caib.regweb3.persistence.ejb.SirLocal;
@@ -61,26 +58,7 @@ public class EmisionBean implements EmisionLocal{
 
             AsientoRegistralSir asientoRegistralSir = oficioRemision.getAsientoRegistralSir();
 
-            // Creamos el xml de intercambio
-            String xml = sicres3XML.crearXMLFicheroIntercambioSICRES3(asientoRegistralSir);
-            log.info("Xml Fichero Intercambio generado: " + xml);
-
-            RespuestaWS respuesta = ws_sir6_b_recepcionFicheroDeAplicacion(xml);
-
-            if (respuesta != null) {
-                log.info("Respuesta: " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
-
-                if (Errores.OK.getValue().equals(respuesta.getCodigo())) {
-
-                    log.info("AsientoRegistral enviado correctamente");
-                    asientoRegistralSirEjb.modificarEstado(asientoRegistralSir.getId(), EstadoAsientoRegistralSir.ENVIADO);
-
-                }else{
-                    log.error("Respuesta: " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
-                    throw new SIRException("Error " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
-                }
-            }
-
+            enviar(asientoRegistralSir, EstadoAsientoRegistralSir.ENVIADO);
 
 
         } catch (Exception e) {
@@ -96,10 +74,15 @@ public class EmisionBean implements EmisionLocal{
 
     /**
      * Reenvío de un AsientoRegistral en formato SICRES3 a un nodo distribuido
-     * @param ficheroIntercambio
+     * @param asientoRegistralSir
      */
-    public void reenviarFicheroIntercambio(FicheroIntercambio ficheroIntercambio) {
+    public void reenviarFicheroIntercambio(AsientoRegistralSir asientoRegistralSir, Oficina oficinaReenvio, Oficina oficinaActiva, Usuario usuario)  throws Exception {
 
+        //Preparamos el asiento registral para su reenvio
+        asientoRegistralSir =  sirEjb.reenviarAsientoRegistralSir(asientoRegistralSir, oficinaReenvio, oficinaActiva, usuario);
+
+        //Enviamos el asiento registral al nodo distribuido.
+        enviar(asientoRegistralSir, EstadoAsientoRegistralSir.REENVIADO);
     }
 
     /**
@@ -108,6 +91,41 @@ public class EmisionBean implements EmisionLocal{
      */
     public void rechazarFicheroIntercambio(FicheroIntercambio ficheroIntercambio) {
 
+    }
+
+    /**
+     * Envia un asiento registral a un nodo distribuido creando previamente el fichero de intercambio
+     * @param asientoRegistralSir
+     * @param estado
+     */
+    public void enviar(AsientoRegistralSir asientoRegistralSir, EstadoAsientoRegistralSir estado){
+
+        try{
+        // Creamos el xml de intercambio
+        String xml = sicres3XML.crearXMLFicheroIntercambioSICRES3(asientoRegistralSir);
+        log.info("Xml Fichero Intercambio generado: " + xml);
+
+        RespuestaWS respuesta = ws_sir6_b_recepcionFicheroDeAplicacion(xml);
+
+        if (respuesta != null) {
+            log.info("Respuesta: " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
+
+            if (Errores.OK.getValue().equals(respuesta.getCodigo())) {
+
+                log.info("AsientoRegistral enviado correctamente");
+                asientoRegistralSirEjb.modificarEstado(asientoRegistralSir.getId(), estado);
+
+            }else{
+                log.error("Respuesta: " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
+                throw new SIRException("Error " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
+            }
+        }
+
+
+        } catch (Exception e) {
+            log.error("Error al enviar el fichero de intercambio: " + e);
+            throw new SIRException("Error en la llamada al servicio de recepción de ficheros de datos de intercambio (WS_SIR6_B)");
+        }
     }
 
     /**

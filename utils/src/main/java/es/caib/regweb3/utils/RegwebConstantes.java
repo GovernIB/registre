@@ -19,6 +19,10 @@ public interface RegwebConstantes {
     public static final String REGWEB3_PROPERTY_BASE = "es.caib.regweb3.";
     public static final String SECURITY_DOMAIN = "seycon";
 
+    /*
+     *-------------------GENERAL-------------------
+     */
+    public static final String CODIGO_APLICACION = "RWE3";
 
     /**
      * -------------- VARIABLES DE SESION --------------

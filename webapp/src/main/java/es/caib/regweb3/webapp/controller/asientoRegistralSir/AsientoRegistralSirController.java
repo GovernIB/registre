@@ -4,6 +4,7 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.EstadoAsientoRegistralSir;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.sir.ejb.EmisionLocal;
 import es.caib.regweb3.sir.ejb.RecepcionLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
@@ -70,6 +71,9 @@ public class AsientoRegistralSirController extends BaseController {
 
     @EJB(mappedName = "regweb3/LibroEJB/local")
     public LibroLocal libroEjb;
+
+    @EJB(mappedName = "regweb3/EmisionEJB/local")
+    public EmisionLocal emisionEjb;
 
     @EJB(mappedName = "regweb3/TrazabilidadEJB/local")
     public TrazabilidadLocal trazabilidadEjb;
@@ -153,6 +157,9 @@ public class AsientoRegistralSirController extends BaseController {
     public String detalleAsientoRegistralSir(@PathVariable Long idAsientoRegistralSir, Model model, HttpServletRequest request) throws Exception {
 
         AsientoRegistralSir asientoRegistralSir = asientoRegistralSirEjb.findById(idAsientoRegistralSir);
+
+        //si el estado del asiento  es RECIBIDO,DEVUELTO, REENVIADO o REENVIADO_Y_ERROR se puede reenviar
+        model.addAttribute("puedeReenviar",  sirEjb.puedeReenviarAsientoRegistralSir(asientoRegistralSir.getEstado()));
 
         // Comprobamos si el usuario puede gestionar este AsientoRegistralSir según su organismo destino
         if(getOrganismosSIRCodigo(request).contains(asientoRegistralSir.getCodigoUnidadTramitacionDestino())){
@@ -276,23 +283,29 @@ public class AsientoRegistralSirController extends BaseController {
     public String reenviarAsientoRegistralSir(@PathVariable Long idAsientoRegistralSir, @ModelAttribute ReenviarForm reenviarForm , HttpServletRequest request)
             throws Exception, I18NException, I18NValidationException {
 
-        log.info("Oficina Destino reenvio: " + reenviarForm.getOficinaReenvio());
+        log.info("Oficina Destino reenvio: " + reenviarForm.getCodigoOficina());
 
+        //Montamos la oficina de reenvio seleccionada por el usuario
+        Oficina oficinaReenvio = reenviarForm.oficinaReenvio();
         AsientoRegistralSir asientoRegistralSir = asientoRegistralSirEjb.findById(idAsientoRegistralSir);
         Oficina oficinaActiva = getOficinaActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         Long idRegistro;
         String variableReturn = "redirect:/asientoRegistralSir/"+idAsientoRegistralSir+"/detalle";
 
-        // Comprobamos si ya ha sido confirmado
+        // Comprobamos si ya ha sido reenviado
         if(asientoRegistralSir.getEstado().equals(EstadoAsientoRegistralSir.REENVIADO)){
             Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.error.reenvio"));
             return variableReturn;
         }
 
-        // Rechaza el AsientoRegistralSir
+        // Reenvia el AsientoRegistralSir
         try{
-            asientoRegistralSirEjb.modificarEstado(idAsientoRegistralSir,EstadoAsientoRegistralSir.REENVIADO);
+            if(oficinaReenvio != null){//Si han seleccionado oficina de reenvio
+                //Reenviamos
+                emisionEjb.reenviarFicheroIntercambio(asientoRegistralSir, oficinaReenvio, oficinaActiva,usuarioEntidad.getUsuario());
+            }
+
             Mensaje.saveMessageInfo(request, getMessage("asientoRegistralSir.reenvio.ok"));
 
         }catch (Exception e){

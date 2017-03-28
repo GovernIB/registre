@@ -310,14 +310,20 @@
                             <div class="btn-group btn-group-justified" role="group" aria-label="...">
 
                                 <%--Reenviar--%>
-                                <div class="btn-group" role="group">
-                                    <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <spring:message code="asientoRegistralSir.estado.reenviar"/> <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a data-toggle="modal" href="#modalBuscadorOficinaSir" onclick="inicializarBuscador('#codNivelAdministracionOficinaSir','#codComunidadAutonomaOficinaSir','#provinciaOficinaSir','#localidadOficinaSir','${oficinaActiva.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficinaActiva.organismoResponsable.codAmbComunidad.codigoComunidad}','OficinaSir' );">Buscar oficina destino</a></li>
-                                    </ul>
-                                </div>
+                                <c:if test="${puedeReenviar}">
+                                    <div class="btn-group" role="group">
+
+                                        <a data-toggle="modal" role="button" href="#modalBuscadorOficinaSir"
+                                           onclick="inicializarBuscador('#codNivelAdministracionOficinaSir','#codComunidadAutonomaOficinaSir','#provinciaOficinaSir','#localidadOficinaSir','${oficinaActiva.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficinaActiva.organismoResponsable.codAmbComunidad.codigoComunidad}','OficinaSir' );"
+                                           class="btn btn-warning btn-sm"><spring:message code="asientoRegistralSir.estado.reenviar"/></a>
+                                       <%-- <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <spring:message code="asientoRegistralSir.estado.reenviar"/> <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a data-toggle="modal" href="#modalBuscadorOficinaSir" onclick="inicializarBuscador('#codNivelAdministracionOficinaSir','#codComunidadAutonomaOficinaSir','#provinciaOficinaSir','#localidadOficinaSir','${oficinaActiva.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficinaActiva.organismoResponsable.codAmbComunidad.codigoComunidad}','OficinaSir' );">Buscar oficina destino</a></li>
+                                        </ul>--%>
+                                    </div>
+                                </c:if>
 
                                 <%--Rechazar--%>
                                 <div class="btn-group" role="group">
@@ -333,7 +339,8 @@
 
                             <c:url value="/asientoRegistralSir/reenviar/${asientoRegistralSir.id}" var="urlReenviar" scope="request"/>
                             <form:form modelAttribute="reenviarForm" method="post" action="${urlReenviar}" cssClass="form-horizontal">
-                                <form:hidden path="oficinaReenvio" value=""/>
+                                <form:hidden path="codigoOficina" value=""/>
+                                <form:hidden path="denominacionOficina" value=""/>
                             </form:form>
 
                         </div>
