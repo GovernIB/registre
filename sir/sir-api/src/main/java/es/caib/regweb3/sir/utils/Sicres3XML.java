@@ -1100,7 +1100,7 @@ public class Sicres3XML {
                 }else if(fichero.getTipoRegistro().equals(TipoRegistro.SALIDA)){
 
                     // Si no hay ningún Interesado
-                    if(StringUtils.isBlank(interesado.getRazon_Social_Interesado()) || (StringUtils.isBlank(interesado
+                    if(StringUtils.isBlank(interesado.getRazon_Social_Interesado()) && (StringUtils.isBlank(interesado
                             .getNombre_Interesado()) && StringUtils.isBlank(interesado.getPrimer_Apellido_Interesado()))){
 
                         // Comprobar que el campo CodigoUnidadTramitacionOrigen está informado y es válido

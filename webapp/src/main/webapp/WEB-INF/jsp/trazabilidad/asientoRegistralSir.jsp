@@ -13,6 +13,14 @@
     </div>
     <div class="timeline-body">
         <p><small><i class="fa fa-barcode"></i> <strong><spring:message code="asientoRegistralSir.identificadorIntercambio"/>:</strong> ${asientoRegistralSir.identificadorIntercambio}</small></p>
+        <p><small><i class="fa fa-file-o"></i> <strong><spring:message code="asientoRegistralSir.tipoRegistro"/>:</strong>
+        <c:if test="${asientoRegistralSir.tipoRegistro == 'ENTRADA'}">
+             <span class="label label-info"><spring:message code="asientoRegistralSir.entrada"/></span></small></p>
+        </c:if>
+        <c:if test="${asientoRegistralSir.tipoRegistro == 'SALIDA'}">
+            <span class="label label-danger"><spring:message code="asientoRegistralSir.salida"/></span></small></p>
+        </c:if>
+
         <c:if test="${not empty asientoRegistralSir.decodificacionUnidadTramitacionOrigen}">
             <p><small><i class="fa fa-institution"></i> <strong><spring:message code="organismo.origen"/>:</strong> ${asientoRegistralSir.decodificacionUnidadTramitacionOrigen}</small></p>
         </c:if>

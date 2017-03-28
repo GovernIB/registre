@@ -24,8 +24,8 @@ import es.caib.regweb3.sir.core.schema.types.Tipo_RegistroType;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.utils.MimeTypeUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.utils.StringUtils;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -301,7 +301,7 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
 
                 asientoRegistralSir.setCodigoEntidadRegistralOrigen(de_Origen_o_Remitente.getCodigo_Entidad_Registral_Origen());
 
-                if (!org.apache.commons.lang.StringUtils.isEmpty(de_Origen_o_Remitente.getDecodificacion_Entidad_Registral_Origen())) {
+                if (!StringUtils.isEmpty(de_Origen_o_Remitente.getDecodificacion_Entidad_Registral_Origen())) {
                     asientoRegistralSir.setDecodificacionEntidadRegistralOrigen(de_Origen_o_Remitente.getDecodificacion_Entidad_Registral_Origen());
                 } else {
                     asientoRegistralSir.setDecodificacionEntidadRegistralOrigen(Dir3CaibUtils.denominacion(de_Origen_o_Remitente.getCodigo_Entidad_Registral_Origen(), RegwebConstantes.OFICINA));
@@ -309,7 +309,7 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
 
                 asientoRegistralSir.setCodigoUnidadTramitacionOrigen(de_Origen_o_Remitente.getCodigo_Unidad_Tramitacion_Origen());
 
-                if (!org.apache.commons.lang.StringUtils.isEmpty(de_Origen_o_Remitente.getDecodificacion_Unidad_Tramitacion_Origen())) {
+                if (!StringUtils.isEmpty(de_Origen_o_Remitente.getDecodificacion_Unidad_Tramitacion_Origen())) {
                     asientoRegistralSir.setDecodificacionUnidadTramitacionOrigen(de_Origen_o_Remitente.getDecodificacion_Unidad_Tramitacion_Origen());
                 } else {
                     asientoRegistralSir.setDecodificacionUnidadTramitacionOrigen(Dir3CaibUtils.denominacion(de_Origen_o_Remitente.getCodigo_Unidad_Tramitacion_Origen(), RegwebConstantes.UNIDAD));
@@ -320,7 +320,7 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
                 asientoRegistralSir.setTimestampRegistro(de_Origen_o_Remitente.getTimestamp_Entrada());
 
                 String fechaRegistro = de_Origen_o_Remitente.getFecha_Hora_Entrada();
-                if (org.apache.commons.lang.StringUtils.isNotBlank(fechaRegistro)) {
+                if (StringUtils.isNotBlank(fechaRegistro)) {
                     try {
                         asientoRegistralSir.setFechaRegistro(SDF.parse(fechaRegistro));
                     } catch (ParseException e) {
@@ -335,15 +335,15 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
             if (de_Destino != null) {
 
                 asientoRegistralSir.setCodigoEntidadRegistralDestino(de_Destino.getCodigo_Entidad_Registral_Destino());
-                if (!org.apache.commons.lang.StringUtils.isEmpty(de_Destino.getDecodificacion_Entidad_Registral_Destino())) {
+                if (!StringUtils.isEmpty(de_Destino.getDecodificacion_Entidad_Registral_Destino())) {
                     asientoRegistralSir.setDecodificacionEntidadRegistralDestino(de_Destino.getDecodificacion_Entidad_Registral_Destino());
                 } else {
                     asientoRegistralSir.setDecodificacionEntidadRegistralDestino(Dir3CaibUtils.denominacion(de_Destino.getCodigo_Entidad_Registral_Destino(), RegwebConstantes.OFICINA));
                 }
 
-                if (!org.apache.commons.lang.StringUtils.isEmpty(de_Destino.getCodigo_Unidad_Tramitacion_Destino())) {
+                if (!StringUtils.isEmpty(de_Destino.getCodigo_Unidad_Tramitacion_Destino())) {
                     asientoRegistralSir.setCodigoUnidadTramitacionDestino(de_Destino.getCodigo_Unidad_Tramitacion_Destino());
-                    if (!org.apache.commons.lang.StringUtils.isEmpty(de_Destino.getDecodificacion_Unidad_Tramitacion_Destino())) {
+                    if (!StringUtils.isEmpty(de_Destino.getDecodificacion_Unidad_Tramitacion_Destino())) {
                         asientoRegistralSir.setDecodificacionUnidadTramitacionDestino(de_Destino.getDecodificacion_Unidad_Tramitacion_Destino());
                     } else {
                         asientoRegistralSir.setDecodificacionUnidadTramitacionDestino(Dir3CaibUtils.denominacion(de_Destino.getCodigo_Unidad_Tramitacion_Destino(), RegwebConstantes.UNIDAD));
@@ -375,7 +375,7 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
                 asientoRegistralSir.setObservacionesApunte(de_Internos_Control.getObservaciones_Apunte());
 
                 asientoRegistralSir.setCodigoEntidadRegistralInicio(de_Internos_Control.getCodigo_Entidad_Registral_Inicio());
-                if (!org.apache.commons.lang.StringUtils.isEmpty(de_Internos_Control.getDecodificacion_Entidad_Registral_Inicio())) {
+                if (!StringUtils.isEmpty(de_Internos_Control.getDecodificacion_Entidad_Registral_Inicio())) {
                     asientoRegistralSir.setDecodificacionEntidadRegistralInicio(de_Internos_Control.getDecodificacion_Entidad_Registral_Inicio());
                 } else {
                     asientoRegistralSir.setDecodificacionEntidadRegistralInicio(Dir3CaibUtils.denominacion(de_Internos_Control.getCodigo_Entidad_Registral_Inicio(), RegwebConstantes.OFICINA));
@@ -384,25 +384,25 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
 
                 // Tipo de transporte
                 String tipoTransporte = de_Internos_Control.getTipo_Transporte_Entrada();
-                if (org.apache.commons.lang.StringUtils.isNotBlank(tipoTransporte)) {
+                if (StringUtils.isNotBlank(tipoTransporte)) {
                     asientoRegistralSir.setTipoTransporte(TipoTransporte.getTipoTransporteValue(tipoTransporte));
                 }
 
                 // Tipo de registro
                 Tipo_RegistroType tipo_Registro = de_Internos_Control.getTipo_Registro();
-                if ((tipo_Registro != null) && org.apache.commons.lang.StringUtils.isNotBlank(tipo_Registro.value())) {
+                if ((tipo_Registro != null) && StringUtils.isNotBlank(tipo_Registro.value())) {
                     asientoRegistralSir.setTipoRegistro(TipoRegistro.getTipoRegistro(tipo_Registro.value()));
                 }
 
                 // Documentación física
                 Documentacion_FisicaType documentacion_Fisica = de_Internos_Control.getDocumentacion_Fisica();
-                if ((documentacion_Fisica != null) && org.apache.commons.lang.StringUtils.isNotBlank(documentacion_Fisica.value())) {
+                if ((documentacion_Fisica != null) && StringUtils.isNotBlank(documentacion_Fisica.value())) {
                     asientoRegistralSir.setDocumentacionFisica(DocumentacionFisica.getDocumentacionFisicaValue(documentacion_Fisica.value()));
                 }
 
                 // Indicador de prueba
                 Indicador_PruebaType indicadorPrueba = de_Internos_Control.getIndicador_Prueba();
-                if ((indicadorPrueba != null) && org.apache.commons.lang.StringUtils.isNotBlank(indicadorPrueba.value())){
+                if ((indicadorPrueba != null) && StringUtils.isNotBlank(indicadorPrueba.value())){
                     asientoRegistralSir.setIndicadorPrueba(IndicadorPrueba.getIndicadorPrueba(indicadorPrueba.value()));
                 }
 
@@ -423,8 +423,8 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
 
                         // Si se trata de una Salida y no tiene Interesados
                         if(ficheroIntercambio.getTipoRegistro().equals(TipoRegistro.SALIDA) &&
-                                org.apache.commons.lang.StringUtils.isBlank(de_Interesado.getRazon_Social_Interesado())
-                                || (org.apache.commons.lang.StringUtils.isBlank(de_Interesado.getNombre_Interesado()) && org.apache.commons.lang.StringUtils.isBlank(de_Interesado.getPrimer_Apellido_Interesado()))){
+                                StringUtils.isBlank(de_Interesado.getRazon_Social_Interesado())
+                                && (StringUtils.isBlank(de_Interesado.getNombre_Interesado()) && StringUtils.isBlank(de_Interesado.getPrimer_Apellido_Interesado()))){
 
                             // Creamos uno a partir de la Entidad destino
                             asientoRegistralSir.getInteresados().add(crearInteresadoJuridico(ficheroIntercambio));
@@ -449,12 +449,12 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
                             interesado.setDireccionElectronicaHabilitadaInteresado(de_Interesado.getDireccion_Electronica_Habilitada_Interesado());
 
                             String tipoDocumento = de_Interesado.getTipo_Documento_Identificacion_Interesado();
-                            if (org.apache.commons.lang.StringUtils.isNotBlank(tipoDocumento)) {
+                            if (StringUtils.isNotBlank(tipoDocumento)) {
                                 interesado.setTipoDocumentoIdentificacionInteresado(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacionValue(tipoDocumento));
                             }
 
                             String canalPreferente = de_Interesado.getCanal_Preferente_Comunicacion_Interesado();
-                            if (org.apache.commons.lang.StringUtils.isNotBlank(canalPreferente)) {
+                            if (StringUtils.isNotBlank(canalPreferente)) {
                                 interesado.setCanalPreferenteComunicacionInteresado(CanalNotificacion.getCanalNotificacionValue(canalPreferente));
                             }
 
@@ -474,12 +474,12 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
                             interesado.setDireccionElectronicaHabilitadaRepresentante(de_Interesado.getDireccion_Electronica_Habilitada_Representante());
 
                             tipoDocumento = de_Interesado.getTipo_Documento_Identificacion_Representante();
-                            if (org.apache.commons.lang.StringUtils.isNotBlank(tipoDocumento)) {
+                            if (StringUtils.isNotBlank(tipoDocumento)) {
                                 interesado.setTipoDocumentoIdentificacionRepresentante(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacionValue(tipoDocumento));
                             }
 
                             canalPreferente = de_Interesado.getCanal_Preferente_Comunicacion_Representante();
-                            if (org.apache.commons.lang.StringUtils.isNotBlank(canalPreferente)) {
+                            if (StringUtils.isNotBlank(canalPreferente)) {
                                 interesado.setCanalPreferenteComunicacionRepresentante(CanalNotificacion.getCanalNotificacionValue(canalPreferente));
                             }
 
@@ -525,12 +525,12 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
                         anexo.setObservaciones(de_Anexo.getObservaciones());
 
                         String validezDocumento = de_Anexo.getValidez_Documento();
-                        if (org.apache.commons.lang.StringUtils.isNotBlank(validezDocumento)) {
+                        if (StringUtils.isNotBlank(validezDocumento)) {
                             anexo.setValidezDocumento(ValidezDocumento.getValidezDocumentoValue(validezDocumento));
                         }
 
                         String tipoDocumento = de_Anexo.getTipo_Documento();
-                        if (org.apache.commons.lang.StringUtils.isNotBlank(tipoDocumento)) {
+                        if (StringUtils.isNotBlank(tipoDocumento)) {
                             anexo.setTipoDocumento(TipoDocumento.getTipoDocumentoValue(tipoDocumento));
                         }
 
@@ -553,12 +553,12 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
 
         InteresadoSir interesadoSalida = new InteresadoSir();
 
-        if(org.apache.commons.lang.StringUtils.isNotBlank(ficheroIntercambio.getCodigoUnidadTramitacionDestino())){
+        if(StringUtils.isNotBlank(ficheroIntercambio.getCodigoUnidadTramitacionDestino())){
 
             interesadoSalida.setTipoDocumentoIdentificacionInteresado(TipoDocumentoIdentificacion.CODIGO_ORIGEN_VALUE.getValue());
             interesadoSalida.setDocumentoIdentificacionInteresado(ficheroIntercambio.getCodigoUnidadTramitacionDestino());
 
-            if(org.apache.commons.lang.StringUtils.isNotBlank(ficheroIntercambio.getDescripcionUnidadTramitacionDestino())){
+            if(StringUtils.isNotBlank(ficheroIntercambio.getDescripcionUnidadTramitacionDestino())){
                 interesadoSalida.setRazonSocialInteresado(ficheroIntercambio.getDescripcionUnidadTramitacionDestino());
             }else{
                 interesadoSalida.setRazonSocialInteresado(Dir3CaibUtils.denominacion(ficheroIntercambio.getCodigoUnidadTramitacionDestino(),RegwebConstantes.UNIDAD));

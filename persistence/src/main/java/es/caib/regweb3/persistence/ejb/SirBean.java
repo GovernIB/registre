@@ -409,8 +409,6 @@ public class SirBean implements SirLocal{
     public RegistroEntrada aceptarAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs)
             throws Exception {
 
-        if(asientoRegistralSir.getTipoRegistro().equals(TipoRegistro.ENTRADA)) {
-
             // Creamos y registramos el RegistroEntrada a partir del AsientoRegistral aceptado
             RegistroEntrada registroEntrada = null;
             try {
@@ -437,30 +435,6 @@ public class SirBean implements SirLocal{
             } catch (I18NValidationException e) {
                 e.printStackTrace();
             }
-
-        }
-        //todo RegistroSalida
-        /*else if(asientoRegistralSir.getTipoRegistro().equals(TipoRegistro.SALIDA)){
-
-            oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA);
-
-            // Creamos el RegistroEntrada a partir del AsientoRegistral aceptado
-            RegistroSalida registroSalida = null;
-            try {
-                registroSalida = transformarAsientoRegistralSalida(asientoRegistralSir, usuario, oficinaActiva, idLibro, idIdioma, idTipoAsunto, camposNTIs);
-
-                // Modificamos el estado del AsientoRegistralSir
-                asientoRegistralSirEjb.modificarEstado(asientoRegistralSir.getId(), EstadoAsientoRegistralSir.ACEPTADO);
-
-                return registroSalida;
-
-            } catch (I18NException e) {
-                e.printStackTrace();
-            } catch (I18NValidationException e) {
-                e.printStackTrace();
-            }
-
-        }*/
 
         return null;
 
