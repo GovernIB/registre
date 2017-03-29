@@ -728,7 +728,7 @@ public class EntidadController extends BaseController {
      */
     @RequestMapping(value = "/{idEntidad}/eliminarRegistros")
     public String eliminarRegistrosEntidad(@PathVariable Long idEntidad, HttpServletRequest request) {
-        log.info("idEntidad: " + idEntidad);
+
         try {
 
             entidadEjb.eliminarRegistros(idEntidad);

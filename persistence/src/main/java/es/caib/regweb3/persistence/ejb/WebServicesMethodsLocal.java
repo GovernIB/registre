@@ -1,7 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.model.Archivo;
-import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
+import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
+import es.caib.regweb3.sir.core.utils.Mensaje;
 
 import javax.ejb.Local;
 
@@ -13,13 +13,17 @@ import javax.ejb.Local;
 @Local
 public interface WebServicesMethodsLocal {
 
-    public AsientoRegistralSir getAsientoRegistral(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws Exception;
+    /**
+     * Recibe un mensaje de control en formato SICRES3 desde un nodo distribuido
+     * @param mensaje
+     * @throws Exception
+     */
+    public void recibirMensajeDatosControl(Mensaje mensaje) throws Exception;
 
-    public AsientoRegistralSir crearAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir) throws Exception;
-
-    public Archivo persistArchivo(Archivo archivo) throws Exception;
-
-    public void removeArchivo(Archivo archivo) throws Exception;
-
-    public String getPropiedadMimePermitidos() throws Exception;
+    /**
+     * Recibe un fichero de intercambio en formato SICRES3 desde un nodo distribuido
+     * @param ficheroIntercambio
+     * @throws Exception
+     */
+    public void recibirFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception;
 }

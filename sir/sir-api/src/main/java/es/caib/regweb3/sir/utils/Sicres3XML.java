@@ -4,16 +4,23 @@ import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
 import es.caib.dir3caib.ws.api.unidad.UnidadTF;
+import es.caib.regweb3.model.AnexoSir;
+import es.caib.regweb3.model.AsientoRegistralSir;
+import es.caib.regweb3.model.InteresadoSir;
+import es.caib.regweb3.model.utils.IndicadorPrueba;
+import es.caib.regweb3.model.utils.TipoRegistro;
 import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
-import es.caib.regweb3.sir.api.schema.De_Anexo;
-import es.caib.regweb3.sir.api.schema.De_Interesado;
-import es.caib.regweb3.sir.api.schema.De_Mensaje;
-import es.caib.regweb3.sir.api.schema.Fichero_Intercambio_SICRES_3;
-import es.caib.regweb3.sir.api.schema.types.Indicador_PruebaType;
 import es.caib.regweb3.sir.core.excepcion.SIRException;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.sir.core.model.*;
+import es.caib.regweb3.sir.core.schema.De_Anexo;
+import es.caib.regweb3.sir.core.schema.De_Interesado;
+import es.caib.regweb3.sir.core.schema.De_Mensaje;
+import es.caib.regweb3.sir.core.schema.Fichero_Intercambio_SICRES_3;
+import es.caib.regweb3.sir.core.schema.types.Indicador_PruebaType;
+import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
+import es.caib.regweb3.sir.core.utils.Mensaje;
 import es.caib.regweb3.utils.MimeTypeUtils;
 import es.caib.regweb3.utils.Versio;
 import org.apache.commons.codec.binary.Base64;
@@ -259,8 +266,6 @@ public class Sicres3XML {
         Assert.hasText(mensaje.getCodigoEntidadRegistralDestino(), "El campo 'codigoEntidadRegistralDestino' no puede estar vacio");
         Assert.hasText(mensaje.getIdentificadorIntercambio(), "El campo 'identificadorIntercambio' no puede estar vacio");
         Assert.notNull(mensaje.getTipoMensaje(), "El campo 'tipoMensaje' no puede ser null");
-
-        log.info("Mensaje (" + mensaje.getTipoMensaje().getName()+") validado");
     }
 
     /**
@@ -935,12 +940,14 @@ public class Sicres3XML {
         return ficheroIntercambio;
     }
 
-
+    /**
+     *
+     * @param xml
+     * @return
+     */
     public Mensaje parseXMLMensaje(String xml) {
 
         Mensaje mensaje = null;
-
-        log.info("Parseando el XML del mensaje...");
 
         try {
 
@@ -975,10 +982,9 @@ public class Sicres3XML {
                 }
 
                 // Indicador de prueba
-                IndicadorPrueba indicadorPrueba = IndicadorPrueba.valueOf(de_mensaje.getIndicador_Prueba().value());
-                if ((indicadorPrueba != null)
-                        && StringUtils.isNotBlank(indicadorPrueba.getValue())) {
-                    mensaje.setIndicadorPrueba(IndicadorPrueba.getIndicadorPrueba(indicadorPrueba.getValue()));
+                IndicadorPrueba indicadorPrueba = IndicadorPrueba.getIndicadorPrueba(de_mensaje.getIndicador_Prueba().value());
+                if ((indicadorPrueba != null) && StringUtils.isNotBlank(indicadorPrueba.getValue())) {
+                    mensaje.setIndicadorPrueba(indicadorPrueba);
                 }
             }
 
@@ -1094,7 +1100,7 @@ public class Sicres3XML {
                 }else if(fichero.getTipoRegistro().equals(TipoRegistro.SALIDA)){
 
                     // Si no hay ningún Interesado
-                    if(StringUtils.isBlank(interesado.getRazon_Social_Interesado()) || (StringUtils.isBlank(interesado
+                    if(StringUtils.isBlank(interesado.getRazon_Social_Interesado()) && (StringUtils.isBlank(interesado
                             .getNombre_Interesado()) && StringUtils.isBlank(interesado.getPrimer_Apellido_Interesado()))){
 
                         // Comprobar que el campo CodigoUnidadTramitacionOrigen está informado y es válido

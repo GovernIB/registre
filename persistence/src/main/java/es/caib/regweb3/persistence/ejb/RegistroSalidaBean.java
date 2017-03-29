@@ -4,6 +4,7 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.RegistroBasico;
 import es.caib.regweb3.persistence.utils.*;
+import es.caib.regweb3.plugins.postproceso.IPostProcesoPlugin;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
@@ -133,7 +134,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
             }
         }
 
-       // postProcesoNuevoRegistro(registroSalida,usuarioEntidad.getEntidad().getId());
+        postProcesoNuevoRegistro(registroSalida,usuarioEntidad.getEntidad().getId());
         return registroSalida;
 
     }
@@ -508,18 +509,23 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
             AnexoFull anexoFull = anexoEjb.getAnexoFullCompleto(anexo.getId());
             anexosFull.add(anexoFull);
         }
-        //Asignamos los documentos recuperados de custodia al registro de entrada.
+        //Asignamos los documentos recuperados de custodia al registro de salida.
         re.getRegistroDetalle().setAnexosFull(anexosFull);
         return re;
     }
 
-   /* public boolean postProcesoActualizarRegistro(RegistroSalida rs, Long entidadId) throws Exception {
+    public void postProcesoActualizarRegistro(RegistroSalida rs, Long entidadId) throws Exception {
         IPostProcesoPlugin postProcesoPlugin = RegwebPostProcesoPluginManager.getInstance(entidadId);
-        return postProcesoPlugin != null && postProcesoPlugin.actualizarRegistroSalida(rs);
+        if(postProcesoPlugin != null){
+            postProcesoPlugin.actualizarRegistroSalida(rs);
+        }
+
     }
 
-    public boolean postProcesoNuevoRegistro(RegistroSalida rs, Long entidadId) throws Exception {
+    public void postProcesoNuevoRegistro(RegistroSalida rs, Long entidadId) throws Exception {
         IPostProcesoPlugin postProcesoPlugin = RegwebPostProcesoPluginManager.getInstance(entidadId);
-        return postProcesoPlugin != null && postProcesoPlugin.nuevoRegistroSalida(rs);
-    }*/
+        if(postProcesoPlugin != null){
+            postProcesoPlugin.nuevoRegistroSalida(rs);
+        }
+    }
 }

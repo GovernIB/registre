@@ -68,4 +68,34 @@ public interface InteresadoLocal extends BaseEjb<Interesado, Long> {
      * @throws Exception
      */
     public List<Interesado> guardarInteresados(List<Interesado> interesadosSesion, RegistroDetalle registroDetalle) throws Exception;
+
+    /**
+     * Método que invoca al plugin de post proceso cuando se crea un interesado. Se indica el tipo de registro y el numero de registro
+     * @param interesado
+     * @param numRegistro
+     * @param tipo
+     * @return
+     * @throws Exception
+     */
+    public void postProcesoNuevoInteresado(Interesado interesado, String numRegistro, String tipo, Long entidadId) throws Exception;
+
+    /**
+     * Método que invoca al plugin de post proceso cuando se actualiza un interesado. Se indica el tipo de registro y el numero de registro
+     * @param interesado
+     * @param numRegistro
+     * @param tipo
+     * @return
+     * @throws Exception
+     */
+    public void postProcesoActualizarInteresado(Interesado interesado, String numRegistro, String tipo, Long entidadId) throws Exception;
+
+    /**
+     * Método que invoca al plugin de post proceso cuando se elimina un interesado. Se indica el tipo de registro y el numero de registro
+     * @param idInteresado
+     * @param numRegistro
+     * @param tipo
+     * @return
+     * @throws Exception
+     */
+    public void postProcesoEliminarInteresado(Long idInteresado, String numRegistro, String tipo, Long entidadId) throws Exception;
 }

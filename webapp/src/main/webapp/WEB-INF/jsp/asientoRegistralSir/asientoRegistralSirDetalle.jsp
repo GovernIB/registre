@@ -20,7 +20,7 @@
         <div class="row">
             <div class="col-xs-12">
                 <ol class="breadcrumb">
-                    <li><a <c:if test="${oficinaActiva.sir}">class="azul"</c:if> href="<c:url value="/inici"/>"><i class="fa fa-institution"></i> ${oficinaActiva.denominacion}</a></li>
+                    <li><a <c:if test="${oficinaActiva.sir}">class="azul"</c:if> href="<c:url value="/inici"/>"><i class="fa fa-home"></i> ${oficinaActiva.denominacion}</a></li>
                     <li><a href="<c:url value="/asientoRegistralSir/list"/>"><i class="fa fa-list"></i> <spring:message
                             code="asientoRegistralSir.listado"/></a></li>
                     <li class="active"><i class="fa fa-pencil-square-o"></i> <spring:message
@@ -47,7 +47,7 @@
                         <dl class="detalle_registro">
 
                             <c:if test="${not empty asientoRegistralSir.codigoUnidadTramitacionOrigen}">
-                                <dt><i class="fa fa-exchange"></i> <spring:message code="asientoRegistralSir.unidadOrigen"/>:
+                                <dt><i class="fa fa-institution"></i> <spring:message code="asientoRegistralSir.unidadOrigen"/>:
                                 </dt>
                                 <dd> ${asientoRegistralSir.codigoUnidadTramitacionOrigen}
                                     <c:if test="${not empty asientoRegistralSir.decodificacionUnidadTramitacionOrigen}">
@@ -56,7 +56,7 @@
                                 </dd>
                             </c:if>
 
-                            <dt><i class="fa fa-briefcase"></i> <spring:message code="asientoRegistralSir.oficinaOrigen"/>:
+                            <dt><i class="fa fa-home"></i> <spring:message code="asientoRegistralSir.oficinaOrigen"/>:
                             </dt>
                             <dd> ${asientoRegistralSir.codigoEntidadRegistralOrigen}
                                 <c:if test="${not empty asientoRegistralSir.decodificacionEntidadRegistralOrigen}">
@@ -65,7 +65,7 @@
                             </dd>
 
                             <c:if test="${not empty asientoRegistralSir.codigoUnidadTramitacionDestino}">
-                                <dt><i class="fa fa-exchange"></i> <spring:message code="asientoRegistralSir.unidadDestino"/>:
+                                <dt><i class="fa fa-institution"></i> <spring:message code="asientoRegistralSir.unidadDestino"/>:
                                 </dt>
                                 <dd> ${asientoRegistralSir.codigoUnidadTramitacionDestino}
                                     <c:if test="${not empty asientoRegistralSir.decodificacionUnidadTramitacionDestino}">
@@ -75,7 +75,7 @@
                             </c:if>
 
                             <c:if test="${not empty asientoRegistralSir.codigoUnidadTramitacionDestino}">
-                                <dt><i class="fa fa-briefcase"></i> <spring:message code="asientoRegistralSir.oficinaDestino"/>:
+                                <dt><i class="fa fa-home"></i> <spring:message code="asientoRegistralSir.oficinaDestino"/>:
                                 </dt>
                                 <dd> ${asientoRegistralSir.codigoEntidadRegistralDestino}
                                     <c:if test="${not empty asientoRegistralSir.decodificacionEntidadRegistralDestino}">
@@ -310,14 +310,20 @@
                             <div class="btn-group btn-group-justified" role="group" aria-label="...">
 
                                 <%--Reenviar--%>
-                                <div class="btn-group" role="group">
-                                    <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <spring:message code="asientoRegistralSir.estado.reenviar"/> <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a data-toggle="modal" href="#modalBuscadorOficinaSir" onclick="inicializarBuscador('#codNivelAdministracionOficinaSir','#codComunidadAutonomaOficinaSir','#provinciaOficinaSir','#localidadOficinaSir','${oficinaActiva.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficinaActiva.organismoResponsable.codAmbComunidad.codigoComunidad}','OficinaSir' );">Buscar oficina destino</a></li>
-                                    </ul>
-                                </div>
+                                <c:if test="${puedeReenviar}">
+                                    <div class="btn-group" role="group">
+
+                                        <a data-toggle="modal" role="button" href="#modalBuscadorOficinaSir"
+                                           onclick="inicializarBuscador('#codNivelAdministracionOficinaSir','#codComunidadAutonomaOficinaSir','#provinciaOficinaSir','#localidadOficinaSir','${oficinaActiva.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficinaActiva.organismoResponsable.codAmbComunidad.codigoComunidad}','OficinaSir' );"
+                                           class="btn btn-warning btn-sm"><spring:message code="asientoRegistralSir.estado.reenviar"/></a>
+                                       <%-- <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <spring:message code="asientoRegistralSir.estado.reenviar"/> <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a data-toggle="modal" href="#modalBuscadorOficinaSir" onclick="inicializarBuscador('#codNivelAdministracionOficinaSir','#codComunidadAutonomaOficinaSir','#provinciaOficinaSir','#localidadOficinaSir','${oficinaActiva.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficinaActiva.organismoResponsable.codAmbComunidad.codigoComunidad}','OficinaSir' );">Buscar oficina destino</a></li>
+                                        </ul>--%>
+                                    </div>
+                                </c:if>
 
                                 <%--Rechazar--%>
                                 <div class="btn-group" role="group">
@@ -333,10 +339,61 @@
 
                             <c:url value="/asientoRegistralSir/reenviar/${asientoRegistralSir.id}" var="urlReenviar" scope="request"/>
                             <form:form modelAttribute="reenviarForm" method="post" action="${urlReenviar}" cssClass="form-horizontal">
-                                <form:hidden path="oficinaReenvio" value=""/>
+                                <form:hidden path="codigoOficina" value=""/>
+                                <form:hidden path="denominacionOficina" value=""/>
                             </form:form>
 
                         </div>
+
+                        <%--Modal Rechazo--%>
+                        <div id="rechazoModal" class="modal fade bs-example-modal-lg">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                                        <h3>Rechazar Asiento Registral Sir ${asientoRegistralSir.numeroRegistro}</h3>
+                                    </div>
+
+                                    <div class="modal-body">
+                                        <c:url value="/asientoRegistralSir/rechazar/${asientoRegistralSir.id}" var="urlRechazar" scope="request"/>
+                                        <form:form modelAttribute="rechazarForm" method="post" action="${urlRechazar}" cssClass="form-horizontal">
+                                            <div class="panel panel-success">
+
+                                                <div class="panel-heading">
+                                                    <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i>
+                                                        <strong>Introduzca el motivo del rechazo</strong></h3>
+                                                </div>
+
+                                                <div class="panel-body">
+
+                                                    <div class="form-group col-xs-12">
+                                                        <div class="col-xs-4 pull-left etiqueta_regweb_left control-label">
+                                                            <form:label for="observacionesRechazo" path="observacionesRechazo"> Observaciones</form:label>
+                                                        </div>
+                                                        <div class="col-xs-8" id="observacionesRechazoSir">
+                                                            <form:textarea path="observacionesRechazo" rows="5" cssClass="form-control"/> <span class="errors"></span>
+                                                        </div>
+                                                    </div>
+
+                                                </div> <!-- /.panel body -->
+                                            </div>
+                                            <!-- /.panel panel-info -->
+                                            <div class="form-actions">
+                                                <input type="submit" value="<spring:message code="asientoRegistralSir.estado.rechazar"/>"
+                                                       class="btn btn-danger btn-sm"
+                                                       onclick="return rechazarAsientoRegistralSir()">
+                                            </div>
+                                        </form:form>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn" data-dismiss="modal" aria-hidden="true"><spring:message
+                                                code="regweb.cerrar"/></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </c:if>
 
                 </div>
@@ -353,60 +410,17 @@
             <!-- ANEXOS -->
             <c:import url="anexosSir.jsp"/>
 
+                <%--TRAZABILIDAD--%>
+            <c:if test="${not empty trazabilidades}">
+                <c:import url="../trazabilidad/trazabilidadSir.jsp"/>
+            </c:if>
+
 
         </div><!-- /div.row-->
         </form:form>
 
     </div>
 </div> <!-- /container -->
-
-<div id="rechazoModal" class="modal fade bs-example-modal-lg">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-                <h3>Rechazar Asiento Registral Sir ${asientoRegistralSir.numeroRegistro}</h3>
-            </div>
-
-            <div class="modal-body">
-                <c:url value="/asientoRegistralSir/rechazar/${asientoRegistralSir.id}" var="urlRechazar" scope="request"/>
-                <form:form modelAttribute="rechazarForm" method="post" action="${urlRechazar}" cssClass="form-horizontal">
-                    <div class="panel panel-success">
-
-                        <div class="panel-heading">
-                            <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i>
-                                <strong>Introduzca el motivo del rechazo</strong></h3>
-                        </div>
-
-                        <div class="panel-body">
-
-                            <div class="form-group col-xs-12">
-                                <div class="col-xs-4 pull-left etiqueta_regweb_left control-label">
-                                    <form:label for="observacionesRechazo" path="observacionesRechazo"> Observaciones</form:label>
-                                </div>
-                                <div class="col-xs-8" id="observacionesRechazoSir">
-                                    <form:textarea path="observacionesRechazo" rows="5" cssClass="form-control"/> <span class="errors"></span>
-                                </div>
-                            </div>
-
-                        </div> <!-- /.panel body -->
-                    </div>
-                    <!-- /.panel panel-info -->
-                    <div class="form-actions">
-                        <input type="submit" value="<spring:message code="asientoRegistralSir.estado.rechazar"/>"
-                               class="btn btn-danger btn-sm"
-                               onclick="return rechazarAsientoRegistralSir()">
-                    </div>
-                </form:form>
-
-            </div>
-            <div class="modal-footer">
-                <button class="btn" data-dismiss="modal" aria-hidden="true"><spring:message
-                        code="regweb.cerrar"/></button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <c:import url="../modulos/pie.jsp"/>
 

@@ -1,12 +1,11 @@
 package es.caib.regweb3.webapp.controller.asientoRegistralSir;
 
 import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.utils.EstadoAsientoRegistralSir;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
-import es.caib.regweb3.sir.core.model.EstadoAsientoRegistralSir;
-import es.caib.regweb3.sir.core.model.TipoRegistro;
-import es.caib.regweb3.sir.ejb.MensajeLocal;
+import es.caib.regweb3.sir.ejb.EmisionLocal;
+import es.caib.regweb3.sir.ejb.RecepcionLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.AsientoRegistralSirBusquedaForm;
@@ -67,11 +66,17 @@ public class AsientoRegistralSirController extends BaseController {
     @EJB(mappedName = "regweb3/SirEJB/local")
     public SirLocal sirEjb;
 
-    @EJB(mappedName = "regweb3/MensajeEJB/local")
-    public MensajeLocal mensajeEjb;
+    @EJB(mappedName = "regweb3/RecepcionEJB/local")
+    public RecepcionLocal recepcionEjb;
 
     @EJB(mappedName = "regweb3/LibroEJB/local")
     public LibroLocal libroEjb;
+
+    @EJB(mappedName = "regweb3/EmisionEJB/local")
+    public EmisionLocal emisionEjb;
+
+    @EJB(mappedName = "regweb3/TrazabilidadEJB/local")
+    public TrazabilidadLocal trazabilidadEjb;
 
 
     /**
@@ -153,31 +158,42 @@ public class AsientoRegistralSirController extends BaseController {
 
         AsientoRegistralSir asientoRegistralSir = asientoRegistralSirEjb.findById(idAsientoRegistralSir);
 
+        //si el estado del asiento  es RECIBIDO,DEVUELTO, REENVIADO o REENVIADO_Y_ERROR se puede reenviar
+        model.addAttribute("puedeReenviar",  sirEjb.puedeReenviarAsientoRegistralSir(asientoRegistralSir.getEstado()));
+
         // Comprobamos si el usuario puede gestionar este AsientoRegistralSir según su organismo destino
         if(getOrganismosSIRCodigo(request).contains(asientoRegistralSir.getCodigoUnidadTramitacionDestino())){
 
             model.addAttribute("asientoRegistralSir",asientoRegistralSir);
 
-            // Obtenemos los libros del Organismo destinatário del AsientoRegistralSir
-            List<Libro> libros = libroEjb.getLibrosActivosOrganismo(asientoRegistralSir.getCodigoUnidadTramitacionDestino());
+            if(asientoRegistralSir.getEstado().equals(EstadoAsientoRegistralSir.RECIBIDO)){
+                // Obtenemos los libros del Organismo destinatário del AsientoRegistralSir
+                //List<Libro> libros = libroEjb.getLibrosActivosOrganismo(asientoRegistralSir.getCodigoUnidadTramitacionDestino());
+                List<Libro> libros = getLibrosRegistroEntrada(request);
 
-            model.addAttribute("libros",libros);
-            model.addAttribute("registrarForm", new RegistrarForm());
-            model.addAttribute("rechazarForm", new RechazarForm());
-            model.addAttribute("reenviarForm", new ReenviarForm());
+                model.addAttribute("libros",libros);
+                model.addAttribute("registrarForm", new RegistrarForm());
+                model.addAttribute("rechazarForm", new RechazarForm());
+                model.addAttribute("reenviarForm", new ReenviarForm());
 
-            model.addAttribute("comunidadesAutonomas", catComunidadAutonomaEjb.getAll());
-            model.addAttribute("nivelesAdministracion", catNivelAdministracionEjb.getAll());
-            model.addAttribute("comunidad", catNivelAdministracionEjb.getAll());
+                model.addAttribute("comunidadesAutonomas", catComunidadAutonomaEjb.getAll());
+                model.addAttribute("nivelesAdministracion", catNivelAdministracionEjb.getAll());
+                model.addAttribute("comunidad", catNivelAdministracionEjb.getAll());
 
-            // Obtenemos la comunidad de la Entidad para personalizar el buscador de oficinas Sir
-            Entidad entidad = getEntidadActiva(request);
-            Organismo organismoRaiz = organismoEjb.findByCodigoEntidad(entidad.getCodigoDir3(), entidad.getId());
-            if ((organismoRaiz != null) && organismoRaiz.getCodAmbComunidad() != null) {
-                model.addAttribute("comunidad", organismoRaiz.getCodAmbComunidad());
+                // Obtenemos la comunidad de la Entidad para personalizar el buscador de oficinas Sir
+                Entidad entidad = getEntidadActiva(request);
+                Organismo organismoRaiz = organismoEjb.findByCodigoEntidad(entidad.getCodigoDir3(), entidad.getId());
+                if ((organismoRaiz != null) && organismoRaiz.getCodAmbComunidad() != null) {
+                    model.addAttribute("comunidad", organismoRaiz.getCodAmbComunidad());
+                }else{
+                    model.addAttribute("comunidad", new CatComunidadAutonoma());
+                }
             }else{
-                model.addAttribute("comunidad", new CatComunidadAutonoma());
+                // Trazabilidad
+                model.addAttribute("trazabilidades", trazabilidadEjb.getByAsientoRegistralSir(asientoRegistralSir.getId()));
             }
+
+
 
         }else{
             Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.error.destino"));
@@ -200,7 +216,6 @@ public class AsientoRegistralSirController extends BaseController {
         AsientoRegistralSir asientoRegistralSir = asientoRegistralSirEjb.findById(idAsientoRegistralSir);
         Oficina oficinaActiva = getOficinaActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-        Long idRegistro;
         String variableReturn = "redirect:/asientoRegistralSir/"+idAsientoRegistralSir+"/detalle";
 
         // Comprobamos si ya ha sido confirmado
@@ -210,29 +225,18 @@ public class AsientoRegistralSirController extends BaseController {
         }
 
         // Procesa el AsientoRegistralSir
-        String numeroRegistro = null;
         try{
-            idRegistro = sirEjb.aceptarAsientoRegistralSir(asientoRegistralSir, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getIdTipoAsunto(), registrarForm.getCamposNTIs());
+            //idRegistro = sirEjb.aceptarAsientoRegistralSir(asientoRegistralSir, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getIdTipoAsunto(), registrarForm.getCamposNTIs());
+            RegistroEntrada registroEntrada = recepcionEjb.aceptarAsientoRegistralSir(asientoRegistralSir, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getIdTipoAsunto(), registrarForm.getCamposNTIs());
 
-            if(asientoRegistralSir.getTipoRegistro().equals(TipoRegistro.ENTRADA)) {
-                variableReturn = "redirect:/registroEntrada/" + idRegistro + "/detalle";
-                numeroRegistro = registroEntradaEjb.getNumeroRegistroEntrada(idRegistro);
-            }
-            if(asientoRegistralSir.getTipoRegistro().equals(TipoRegistro.SALIDA)) {
-                variableReturn = "redirect:/registroSalida/" + idRegistro + "/detalle";
-                numeroRegistro = registroSalidaEjb.getNumeroRegistroSalida(idRegistro);
-            }
+            variableReturn = "redirect:/registroEntrada/" + registroEntrada.getId() + "/detalle";
 
-            if(numeroRegistro != null){
-                // Enviamos el mensaje de confirmación
-                mensajeEjb.enviarMensajeConfirmacion(asientoRegistralSir, numeroRegistro);
-                Mensaje.saveMessageInfo(request, getMessage("asientoRegistralSir.aceptar.ok"));
-            }
-
+            Mensaje.saveMessageInfo(request, getMessage("asientoRegistralSir.aceptar.ok"));
 
         }catch (Exception e){
             Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.error.aceptar"));
             e.printStackTrace();
+            return variableReturn;
         }
 
         return variableReturn;
@@ -279,23 +283,29 @@ public class AsientoRegistralSirController extends BaseController {
     public String reenviarAsientoRegistralSir(@PathVariable Long idAsientoRegistralSir, @ModelAttribute ReenviarForm reenviarForm , HttpServletRequest request)
             throws Exception, I18NException, I18NValidationException {
 
-        log.info("Oficina Destino reenvio: " + reenviarForm.getOficinaReenvio());
+        log.info("Oficina Destino reenvio: " + reenviarForm.getCodigoOficina());
 
+        //Montamos la oficina de reenvio seleccionada por el usuario
+        Oficina oficinaReenvio = reenviarForm.oficinaReenvio();
         AsientoRegistralSir asientoRegistralSir = asientoRegistralSirEjb.findById(idAsientoRegistralSir);
         Oficina oficinaActiva = getOficinaActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         Long idRegistro;
         String variableReturn = "redirect:/asientoRegistralSir/"+idAsientoRegistralSir+"/detalle";
 
-        // Comprobamos si ya ha sido confirmado
+        // Comprobamos si ya ha sido reenviado
         if(asientoRegistralSir.getEstado().equals(EstadoAsientoRegistralSir.REENVIADO)){
             Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.error.reenvio"));
             return variableReturn;
         }
 
-        // Rechaza el AsientoRegistralSir
+        // Reenvia el AsientoRegistralSir
         try{
-            asientoRegistralSirEjb.modificarEstado(idAsientoRegistralSir,EstadoAsientoRegistralSir.REENVIADO);
+            if(oficinaReenvio != null){//Si han seleccionado oficina de reenvio
+                //Reenviamos
+                emisionEjb.reenviarFicheroIntercambio(asientoRegistralSir, oficinaReenvio, oficinaActiva,usuarioEntidad.getUsuario());
+            }
+
             Mensaje.saveMessageInfo(request, getMessage("asientoRegistralSir.reenvio.ok"));
 
         }catch (Exception e){

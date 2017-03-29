@@ -1,11 +1,17 @@
 package es.caib.regweb3.sir.ejb;
 
+import es.caib.regweb3.model.AsientoRegistralSir;
+import es.caib.regweb3.model.Oficina;
+import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.utils.CamposNTI;
+import es.caib.regweb3.persistence.ejb.SirLocal;
 import es.caib.regweb3.persistence.ejb.WebServicesMethodsLocal;
 import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
-import es.caib.regweb3.sir.core.model.*;
-import es.caib.regweb3.sir.utils.FicheroIntercambio;
-import es.caib.regweb3.sir.utils.Mensaje;
+import es.caib.regweb3.sir.core.model.Errores;
+import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
+import es.caib.regweb3.sir.core.utils.Mensaje;
 import es.caib.regweb3.sir.utils.Sicres3XML;
 import es.caib.regweb3.sir.utils.XPathReaderUtil;
 import org.apache.log4j.Logger;
@@ -17,6 +23,7 @@ import javax.ejb.Stateless;
 import javax.xml.xpath.XPathConstants;
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 /**
  * Ejb para la gestión de la Recepción de Ficheros de Intercambios y Mensajes de Dtos de Control
@@ -29,6 +36,9 @@ public class RecepcionBean implements RecepcionLocal{
 
     @EJB(name = "MensajeEJB")
     public MensajeLocal mensajeEjb;
+
+    @EJB(name = "SirEJB")
+    public SirLocal sirEjb;
 
     public Sicres3XML sicres3XML = new Sicres3XML();
 
@@ -45,7 +55,7 @@ public class RecepcionBean implements RecepcionLocal{
      * @param xmlFicheroIntercambio
      *
      */
-    public void recibirFicheroIntercambio(String xmlFicheroIntercambio, WebServicesMethodsLocal webServicesMethodsEjb) {
+    public void recibirFicheroIntercambio(String xmlFicheroIntercambio, WebServicesMethodsLocal webServicesMethodsEjb) throws Exception {
 
         FicheroIntercambio ficheroIntercambio = null;
         String descripcionError = null;
@@ -57,8 +67,16 @@ public class RecepcionBean implements RecepcionLocal{
             // Convertimos y validamos el xml recibido en un FicheroIntercambio mediate xsd FicheroIntercambio.xsd
             ficheroIntercambio = sicres3XML.parseXMLFicheroIntercambio(xmlFicheroIntercambio);
 
+            // Validamos el Fichero de Intercambio creado a partir del xml recibido
+            try {
+                sicres3XML.validarFicheroIntercambio(ficheroIntercambio);
+            } catch (IllegalArgumentException e) {
+                log.error("Se produjo un error de validacion del xml recibido: " + e.getMessage());
+                throw new ValidacionException(Errores.ERROR_0037, e);
+            }
+
             // Creamos el AsientoRegistralSir a partir del xml recibido y validado
-            recibirFicheroIntercambio(ficheroIntercambio, xmlFicheroIntercambio, webServicesMethodsEjb);
+            webServicesMethodsEjb.recibirFicheroIntercambio(ficheroIntercambio);
 
             // Si ha ido bien, enviamos el ACK
             mensajeEjb.enviarACK(ficheroIntercambio);
@@ -96,85 +114,39 @@ public class RecepcionBean implements RecepcionLocal{
                 // Comprobamos una posible excepción al no disponer de los datos necesarios para enviar los mensajes
                 log.info("No se ha podido enviar el mensaje de error debido a una excepción producida, podría ser debido a la falta de campos requeridos para el envío del mismo:", ex);
             }
+
             throw e;
+
         }
-
-        //return asientoRegistralSir;
-
     }
 
     /**
-     * @param ficheroIntercambio
-     * @param xmlFicheroIntercambio
+     *
+     * @param asientoRegistralSir
+     * @param usuario
+     * @param oficinaActiva
+     * @param idLibro
+     * @param idIdioma
+     * @param idTipoAsunto
+     * @param camposNTIs
      * @return
+     * @throws Exception
      */
-    protected AsientoRegistralSir recibirFicheroIntercambio(FicheroIntercambio ficheroIntercambio, String xmlFicheroIntercambio, WebServicesMethodsLocal webServicesMethodsEjb) {
+    public RegistroEntrada aceptarAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs) throws Exception{
 
-        AsientoRegistralSir asientoRegistralSir = null;
+        log.info("Aceptando AsientoRegistralSir: " + asientoRegistralSir.getIdentificadorIntercambio());
 
-        // Validamos el Fichero de Intercambio creado a partir del xml recibido
-        try {
-            sicres3XML.validarFicheroIntercambio(ficheroIntercambio);
-        } catch (IllegalArgumentException e) {
-            log.error("Se produjo un error de validacion del xml recibido: " + e.getMessage());
-            throw new ValidacionException(Errores.ERROR_0037, e);
-        }
+        RegistroEntrada registroEntrada =  sirEjb.aceptarAsientoRegistralSir(asientoRegistralSir, usuario, oficinaActiva, idLibro, idIdioma, idTipoAsunto, camposNTIs);
 
-        // tipo anotacion envio
-        if (TipoAnotacion.ENVIO.getValue().equals(ficheroIntercambio.getTipoAnotacion())) {
+        if(registroEntrada != null){
 
-            try {
-                asientoRegistralSir = webServicesMethodsEjb.getAsientoRegistral(ficheroIntercambio.getIdentificadorIntercambio(),ficheroIntercambio.getCodigoEntidadRegistralDestino());
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new ServiceException(Errores.ERROR_INESPERADO,e);
-            }
+            mensajeEjb.enviarMensajeConfirmacion(asientoRegistralSir, registroEntrada.getNumeroRegistroFormateado());
 
-            if(asientoRegistralSir != null) { // Ya existe en el sistema
-
-                if(EstadoAsientoRegistralSir.RECIBIDO.equals(asientoRegistralSir.getEstado())){
-
-                    log.info("El AsientoRegistral" + asientoRegistralSir.getIdentificadorIntercambio() +" ya se ha recibido.");
-                    throw new ValidacionException(Errores.ERROR_0205);
-
-                }else if(EstadoAsientoRegistralSir.RECHAZADO.equals(asientoRegistralSir.getEstado()) ||
-                        EstadoAsientoRegistralSir.RECHAZADO_Y_ACK.equals(asientoRegistralSir.getEstado()) ||
-                        EstadoAsientoRegistralSir.RECHAZADO_Y_ERROR.equals(asientoRegistralSir.getEstado()) ||
-                        EstadoAsientoRegistralSir.REENVIADO.equals(asientoRegistralSir.getEstado())){
-
-
-                }
-
-
-            }else{ // No existe en el sistema, lo creamos.
-
-                try {
-                    // Convertimos el Fichero de Intercambio SICRES3 en {@link es.caib.regweb3.model.AsientoRegistralSir}
-                    asientoRegistralSir = ficheroIntercambio.getAsientoRegistralSir(webServicesMethodsEjb);
-
-                    // Guardamos el nuevo AsientoRegistrarSir
-                    asientoRegistralSir = webServicesMethodsEjb.crearAsientoRegistralSir(asientoRegistralSir);
-                } catch (Exception e) {
-                    log.info("Error al crear el AsientoRegistralSir", e);
-                    throw new ServiceException(Errores.ERROR_INESPERADO,e);
-                }
-            }
-
+            return registroEntrada;
 
         }
 
-
-        // tipo anotacion reenvio
-        if (TipoAnotacion.REENVIO.getValue().equals(ficheroIntercambio.getTipoAnotacion())) {
-
-        }
-
-        // tipo anotacion rechazo
-        if (TipoAnotacion.RECHAZO.getValue().equals(ficheroIntercambio.getTipoAnotacion())) {
-
-        }
-
-        return asientoRegistralSir;
+        return null;
     }
 
     /**
@@ -217,7 +189,7 @@ public class RecepcionBean implements RecepcionLocal{
      *
      * @param xmlMensaje XML con la información del mensaje en formato SICRES 3.0.
      */
-    public void recibirMensajeDatosControl(String xmlMensaje){
+    public void recibirMensajeDatosControl(String xmlMensaje, WebServicesMethodsLocal webServicesMethodsEjb){
 
         // Parseamos el mensaje xml
         Mensaje mensaje = sicres3XML.parseXMLMensaje(xmlMensaje);
@@ -225,13 +197,15 @@ public class RecepcionBean implements RecepcionLocal{
         // Validamos el mensaje recibido
         sicres3XML.validarMensaje(mensaje);
 
-        // Acciones en función del tipo de mensaje
-        if(mensaje.getTipoMensaje().equals(TipoMensaje.ACK)){
+        log.info("Recibiendo mensade de control: " + mensaje.getTipoMensaje() + " - " + mensaje.getIdentificadorIntercambio());
 
-        }else if(mensaje.getTipoMensaje().equals(TipoMensaje.CONFIRMACION)){
+        try {
 
-        }else if(mensaje.getTipoMensaje().equals(TipoMensaje.ERROR)){
+            webServicesMethodsEjb.recibirMensajeDatosControl(mensaje);
 
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServiceException(Errores.ERROR_INESPERADO,e);
         }
 
         log.info("Mensaje recibido y procesado correctamente: " + mensaje.getIdentificadorIntercambio());

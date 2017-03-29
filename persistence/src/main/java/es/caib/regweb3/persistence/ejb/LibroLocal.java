@@ -146,4 +146,10 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
      */
     public Long eliminarLibro(Long idLibro) throws Exception;
 
+    /**
+     * Tarea que reinicia los contadores de los libros de una entidad
+     * @param idEntidad
+     */
+    public void reiniciarContadoresEntidadTask(Long idEntidad);
+
 }

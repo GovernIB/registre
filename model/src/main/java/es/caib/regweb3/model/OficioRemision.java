@@ -4,7 +4,6 @@ import org.hibernate.annotations.ForeignKey;
 import org.hibernate.annotations.Index;
 
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlElement;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -27,11 +26,9 @@ public class OficioRemision implements Serializable {
 
   private Long id;
   private Organismo organismoDestinatario;
-  @XmlElement
   private String destinoExternoCodigo;
-  @XmlElement
   private String destinoExternoDenominacion;
-  private Long tipoOficioRemision;
+  private Long tipoOficioRemision; // entrada o salida
   private UsuarioEntidad usuarioResponsable;
   private Integer numeroOficio;
   private Oficina oficina;
@@ -39,11 +36,16 @@ public class OficioRemision implements Serializable {
   private Date fecha;
   private List<RegistroEntrada> registrosEntrada;
   private List<RegistroSalida> registrosSalida;
-
   private int estado;
   private Date fechaEstado;
 
-  private String identificadorIntercambioSir;
+  private Boolean sir = false;
+  private AsientoRegistralSir asientoRegistralSir;
+  private Date fechaRecepcion;
+  private Date fechaEnvio;
+  private String codigoError;
+  private String descripcionError;
+  private Integer numeroReintentos;
 
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
@@ -197,13 +199,69 @@ public class OficioRemision implements Serializable {
     this.destinoExternoDenominacion = destinoExternoDenominacion;
   }
 
-  @Column(name = "IDINTERCAMBIOSIR", length = 300)
-  public String getIdentificadorIntercambioSir() {
-    return identificadorIntercambioSir;
+  @Column(name = "SIR", nullable = false)
+  public Boolean getSir() {
+    return sir;
   }
 
-  public void setIdentificadorIntercambioSir(String identificadorIntercambioSir) {
-    this.identificadorIntercambioSir = identificadorIntercambioSir;
+  public void setSir(Boolean sir) {
+    this.sir = sir;
+  }
+
+  @ManyToOne(optional = true)
+  @JoinColumn(name = "ASIENTO_REGISTRAL_SIR")
+  @ForeignKey(name = "RWE_OFIREM_ASR_FK")
+  public AsientoRegistralSir getAsientoRegistralSir() {
+    return asientoRegistralSir;
+  }
+
+  public void setAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir) {
+    this.asientoRegistralSir = asientoRegistralSir;
+  }
+
+  @Column(name = "FECHA_RECEPCION", nullable = true)
+  public Date getFechaRecepcion() {
+    return fechaRecepcion;
+  }
+
+  public void setFechaRecepcion(Date fechaRecepcion) {
+    this.fechaRecepcion = fechaRecepcion;
+  }
+
+  @Column(name = "FECHA_ENVIO", nullable = true)
+  public Date getFechaEnvio() {
+    return fechaEnvio;
+  }
+
+  public void setFechaEnvio(Date fechaEnvio) {
+    this.fechaEnvio = fechaEnvio;
+  }
+
+  @Column(name = "COD_ERROR", nullable = true)
+  public String getCodigoError() {
+    return codigoError;
+  }
+
+  public void setCodigoError(String codigoError) {
+    this.codigoError = codigoError;
+  }
+
+  @Column(name = "DESC_ERROR", length = 2000 ,nullable = true)
+  public String getDescripcionError() {
+    return descripcionError;
+  }
+
+  public void setDescripcionError(String descripcionError) {
+    this.descripcionError = descripcionError;
+  }
+
+  @Column(name = "REINTENTOS", nullable = true)
+  public Integer getNumeroReintentos() {
+    return numeroReintentos;
+  }
+
+  public void setNumeroReintentos(Integer numeroReintentos) {
+    this.numeroReintentos = numeroReintentos;
   }
 
   @Override

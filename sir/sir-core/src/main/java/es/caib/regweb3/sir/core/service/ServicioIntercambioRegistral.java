@@ -1,8 +1,8 @@
 package es.caib.regweb3.sir.core.service;
 
+import es.caib.regweb3.model.AsientoRegistralSir;
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.UsuarioEntidad;
-import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
 
 /**
  * Created by earrivi on 14/01/2016.

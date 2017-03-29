@@ -3,6 +3,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.OficioPendienteLlegada;
+import es.caib.regweb3.persistence.utils.Oficio;
 import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -79,22 +80,6 @@ public interface OficioRemisionSalidaUtilsLocal {
     public OficioRemision crearOficioRemisionExterno(List<RegistroSalida> registrosSalida, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, String organismoExterno, String organismoExternoDenominacion, Long idLibro) throws Exception, I18NException, I18NValidationException;
 
     /**
-     *
-     * @param registroSalida
-     * @param oficinaActiva
-     * @param usuarioEntidad
-     * @param organismoExterno
-     * @param organismoExternoDenominacion
-     * @param idLibro
-     * @param identificadorIntercambio
-     * @return
-     * @throws Exception
-     * @throws I18NException
-     * @throws I18NValidationException
-     */
-    public OficioRemision crearOficioRemisionSir(RegistroSalida registroSalida, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, String organismoExterno, String organismoExternoDenominacion, Long idLibro, String identificadorIntercambio) throws Exception, I18NException, I18NValidationException;
-
-    /**
      * @param oficioRemision
      * @param usuario
      * @param oficinaActiva
@@ -109,14 +94,13 @@ public interface OficioRemisionSalidaUtilsLocal {
                                                         List<OficioPendienteLlegada> oficios) throws Exception, I18NException, I18NValidationException;
 
     /**
-     * Comprueba si un RegistroSalida se considera un OficioRemision o no
-     *
-     * @param idRegistro
-     * @param organismos Lista con los Destinatarios que no se consideran Oficio de Remisión
+     * Comprueba si el Registro es considerado como un OficioRemision y de que tipo
+     * @param registroSalida
+     * @param organismos
      * @return
      * @throws Exception
      */
-    public Boolean isOficioRemision(Long idRegistro, Set<String> organismos) throws Exception;
+    public Oficio isOficio(RegistroSalida registroSalida, Set<String> organismos) throws Exception;
 
     /**
      * Comprueba si un RegistroSalida se considera un OficioRemision interno o no
@@ -135,4 +119,13 @@ public interface OficioRemisionSalidaUtilsLocal {
      * @throws Exception
      */
     public Boolean isOficioRemisionExterno(RegistroSalida registroSalida, Set<String> organismos) throws Exception;
+
+    /**
+     * Comprueba si un RegistroSalida se considera un OficioRemision SIR o no
+     * @param registroSalida
+     * @param organismos
+     * @return
+     * @throws Exception
+     */
+    public Boolean isOficioRemisionSir(RegistroSalida registroSalida, Set<String> organismos) throws Exception;
 }

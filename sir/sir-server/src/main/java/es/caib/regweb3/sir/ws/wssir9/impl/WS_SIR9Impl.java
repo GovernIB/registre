@@ -1,5 +1,6 @@
 package es.caib.regweb3.sir.ws.wssir9.impl;
 
+import es.caib.regweb3.persistence.ejb.WebServicesMethodsLocal;
 import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.core.model.Errores;
 import es.caib.regweb3.sir.ejb.RecepcionLocal;
@@ -11,7 +12,9 @@ import org.jboss.wsf.spi.annotation.WebContext;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.jws.HandlerChain;
 import javax.jws.WebMethod;
+import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 
@@ -23,11 +26,14 @@ import javax.jws.soap.SOAPBinding;
  * @author earrivi
  */
 @Stateless(name = WS_SIR9Impl.NAME + "Ejb")
-@SOAPBinding(style = SOAPBinding.Style.RPC)
+@SOAPBinding(style = SOAPBinding.Style.DOCUMENT)
+@org.apache.cxf.interceptor.InInterceptors(interceptors = {"org.apache.cxf.interceptor.LoggingInInterceptor"})
+@org.apache.cxf.interceptor.InFaultInterceptors(interceptors = {"org.apache.cxf.interceptor.LoggingInInterceptor"})
 @WebService(
         name = WS_SIR9Impl.NAME_WS,
         portName = WS_SIR9Impl.NAME_WS,
-        serviceName = WS_SIR9Impl.NAME_WS + "Service"
+        serviceName = WS_SIR9Impl.NAME_WS + "Service",
+        targetNamespace = "http://impl.manager.cct.map.es"
 )
 @WebContext(
         contextRoot = "/regweb3/ws/sir",
@@ -35,13 +41,17 @@ import javax.jws.soap.SOAPBinding;
         transportGuarantee = TransportGuarantee.NONE,
         secureWSDLAccess = false
 )
+@HandlerChain(file = "/handler-chain.xml")
 public class WS_SIR9Impl implements WS_SIR9_PortType {
 
     protected final Logger log = Logger.getLogger(getClass());
 
     public static final String NAME = "WS_SIR9";
 
-    public static final String NAME_WS = NAME + "Ws";
+    public static final String NAME_WS = NAME;
+
+    @EJB(mappedName = "regweb3/WebServicesMethodsEJB/local")
+    public WebServicesMethodsLocal webServicesMethodsEjb;
 
     @EJB(name = "RecepcionEJB")
     public RecepcionLocal recepcionEjb;
@@ -49,7 +59,7 @@ public class WS_SIR9Impl implements WS_SIR9_PortType {
 
     @Override
     @WebMethod(operationName = "envioMensajeDatosControlAAplicacion")
-    public RespuestaWS envioMensajeDatosControlAAplicacion(String mensaje, String firma) {
+    public RespuestaWS envioMensajeDatosControlAAplicacion(@WebParam(name = "value0")String mensaje, @WebParam(name = "value1")String firma) {
 
         log.info("Dentro de WS_SIR9Impl: envioMensajeDatosControlAAplicacion");
         log.info("Mensaje: " + mensaje);
@@ -58,7 +68,7 @@ public class WS_SIR9Impl implements WS_SIR9_PortType {
 
         try{
             // Envia el mensaje datos control a REGWEB3
-            recepcionEjb.recibirMensajeDatosControl(mensaje);
+            recepcionEjb.recibirMensajeDatosControl(mensaje, webServicesMethodsEjb);
 
             // Creamos la respuesta exitosa
             respuestaWS = crearRespuestaWS(Errores.OK);

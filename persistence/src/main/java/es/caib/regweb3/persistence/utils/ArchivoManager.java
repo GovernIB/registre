@@ -1,7 +1,7 @@
 package es.caib.regweb3.persistence.utils;
 
 import es.caib.regweb3.model.Archivo;
-import es.caib.regweb3.persistence.ejb.WebServicesMethodsLocal;
+import es.caib.regweb3.persistence.ejb.ArchivoLocal;
 import org.apache.log4j.Logger;
 
 /**
@@ -13,14 +13,14 @@ public class ArchivoManager {
 
     protected final Logger log = Logger.getLogger(getClass());
 
-    private final WebServicesMethodsLocal webServicesMethodsLocal;
+    private final ArchivoLocal archivoEjb;
     private Archivo archivoActual;
     private String nombreFichero;
     private String mime;
     private byte[] fichero;
 
-    public ArchivoManager(WebServicesMethodsLocal webServicesMethodsLocal, String nombreFichero, String mime, byte[] fichero) {
-        this.webServicesMethodsLocal = webServicesMethodsLocal;
+    public ArchivoManager(ArchivoLocal archivoEjb, String nombreFichero, String mime, byte[] fichero) {
+        this.archivoEjb = archivoEjb;
         this.nombreFichero = nombreFichero;
         this.mime = mime;
         this.fichero = fichero;
@@ -33,7 +33,7 @@ public class ArchivoManager {
         archivoActual.setNombre(nombreFichero);
         archivoActual.setTamano((long) fichero.length);
 
-        archivoActual = webServicesMethodsLocal.persistArchivo(archivoActual);
+        archivoActual = archivoEjb.persist(archivoActual);
 
         FileSystemManager.crearArchivo(fichero, archivoActual.getId());
 
@@ -46,7 +46,7 @@ public class ArchivoManager {
      */
     public void processError() throws Exception {
 
-        webServicesMethodsLocal.removeArchivo(this.archivoActual);
+        archivoEjb.remove(this.archivoActual);
         FileSystemManager.eliminarArchivo(this.archivoActual.getId());
     }
 

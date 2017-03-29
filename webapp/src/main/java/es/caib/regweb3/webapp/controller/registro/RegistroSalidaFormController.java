@@ -302,6 +302,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
                 // Creamos el Historico RegistroSalida
                 historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(registroSalidaAntiguo, usuarioEntidad, I18NLogicUtils.tradueix(LocaleContextHolder.getLocale(),"registro.modificacion.datos" ), true);
 
+                registroSalidaEjb.postProcesoActualizarRegistro(registroSalida,entidad.getId());
                 Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
 
             }catch (Exception e) {

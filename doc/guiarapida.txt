@@ -21,17 +21,6 @@
 					 * Nom: Model ofici remis
 					 * Arxiu: trobareu un arxiu d'exemple dins regweb-3.0\scripts\modelos\ModelOficiRemissio.rtf
 					 * Pitjar Desar
-	(3.5) Tipus Documental: AdEn -> CAIB -> cataleg de dades -> Gestio Tipus Documental:
-	           * Mitjançant script sql [regweb-3.0]\scripts\bbdd\3.0\alta_tipus_documentals.sql
-	           * Introduir Tipus Documental a mà (Tipus de Document definit en les NTI)
-					  /*Documentos de decisión*/ - TD01 - Resolución. - TD02 - Acuerdo. - TD03 - Contrato. - TD04 - Convenio. - TD05 - Declaración.
-					  /*Documentos de transmisión*/ - TD06 - Comunicación. - TD07 - Notificación. - TD08 - Publicación. - TD09 - Acuse de recibo.
-					  /*Documentos de constancia*/ - TD10 - Acta. - TD11 - Certificado. - TD12 - Diligencia. 
-					  /*Documentos de juicio*/ - TD13 - Informe. 
-					  /*Documentos de ciudadano*/ - TD14 - Solicitud. - TD15 - Denuncia. - TD16 - Alegación
-					  TD17 - Recursos. - TD18 - Comunicación ciudadano. - TD19 - Factura. - TD20 - Otros incautados.
-					  /*Otros*/ - TD99 - Otros.
-				* Desar
 	(3.5) Tipus Assumpte: AdEn -> CAIB -> cataleg de dades -> Gestio Tipus Assumpte:
 	           * Introduir codi tipus assumpte:  AJSU
 			   * Afegir traduccions: Ajudes i Subvencions / Ayudas y Subvenciones

@@ -19,7 +19,7 @@
         <div class="row">
             <div class="col-xs-12">
                 <ol class="breadcrumb">
-                    <li><a <c:if test="${oficinaActiva.sir}">class="azul"</c:if> href="<c:url value="/inici"/>"><i class="fa fa-institution"></i> ${oficinaActiva.denominacion}</a></li>
+                    <li><a <c:if test="${oficinaActiva.sir}">class="azul"</c:if> href="<c:url value="/inici"/>"><i class="fa fa-home"></i> ${oficinaActiva.denominacion}</a></li>
                     <li class="active"><i class="fa fa-list-ul"></i> <strong><spring:message code="registroSalida.oficiosRemision"/></strong></li>
                     <%--Importamos el menú de avisos--%>
                     <c:import url="/avisos"/>
@@ -277,7 +277,12 @@
                                                         <button type="button" class="btn btn-sm btn-success disabled">
                                                             </c:if>
 
-                                                            <spring:message code="oficioRemision.boton.crear.externo"/>
+                                                            <c:if test="${oficiosRemisionOrganismo.sir}">
+                                                                <spring:message code="oficioRemision.boton.crear.sir"/>
+                                                            </c:if>
+                                                            <c:if test="${!oficiosRemisionOrganismo.sir}">
+                                                                <spring:message code="oficioRemision.boton.crear.externo"/>
+                                                            </c:if>
                                                         </button>
                                                 </div>
                                             </c:if>

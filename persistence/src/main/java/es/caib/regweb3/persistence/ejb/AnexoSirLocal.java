@@ -1,7 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 
-import es.caib.regweb3.sir.core.model.AnexoSir;
+import es.caib.regweb3.model.AnexoSir;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;

@@ -28,8 +28,10 @@
     <module>ws</module>
     <module>sir</module>
     <module>webapp</module>
-    <!--   <module>plugins</module>-->
-    <module>plugindistribucion</module>
+    <module>plugins</module>
+    <!--<module>plugindistribucion</module>-->
+    <!--<module>pluginpostproceso</module>-->
+    <!--<module>pluginjustificante</module>-->
     <module>ear</module>
   </modules>
 

@@ -2,6 +2,8 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.RegistroDetalle;
+import es.caib.regweb3.persistence.utils.RegwebPostProcesoPluginManager;
+import es.caib.regweb3.plugins.postproceso.IPostProcesoPlugin;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -201,4 +203,42 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
 
         return interesados;
     }
+
+    public void postProcesoNuevoInteresado(Interesado interesado, String numRegistro, String tipo, Long entidadId) throws Exception {
+        IPostProcesoPlugin postProcesoPlugin = RegwebPostProcesoPluginManager.getInstance(entidadId);
+        if(postProcesoPlugin !=null) {
+            if ("entrada".equals(tipo)) {
+                postProcesoPlugin.nuevoInteresadoEntrada(interesado, numRegistro);
+            } else {
+                postProcesoPlugin.nuevoInteresadoSalida(interesado, numRegistro);
+            }
+        }
+
+    }
+
+    public void postProcesoActualizarInteresado(Interesado interesado, String numRegistro, String tipo, Long entidadId) throws Exception {
+        IPostProcesoPlugin postProcesoPlugin = RegwebPostProcesoPluginManager.getInstance(entidadId);
+        if(postProcesoPlugin !=null) {
+            if ("entrada".equals(tipo)) {
+                postProcesoPlugin.actualizarInteresadoEntrada(interesado, numRegistro);
+            } else {
+                postProcesoPlugin.actualizarInteresadoSalida(interesado, numRegistro);
+            }
+        }
+
+    }
+
+    public void postProcesoEliminarInteresado(Long idInteresado, String numRegistro, String tipo, Long entidadId) throws Exception {
+        IPostProcesoPlugin postProcesoPlugin = RegwebPostProcesoPluginManager.getInstance(entidadId);
+        if(postProcesoPlugin !=null) {
+            if ("entrada".equals(tipo)) {
+                postProcesoPlugin.eliminarInteresadoEntrada(idInteresado, numRegistro);
+            } else {
+                postProcesoPlugin.eliminarInteresadoSalida(idInteresado, numRegistro);
+            }
+        }
+
+    }
+
+
 }

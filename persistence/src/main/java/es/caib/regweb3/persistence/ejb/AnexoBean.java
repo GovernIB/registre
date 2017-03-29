@@ -39,6 +39,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+
 /**
  * Created by Fundacio Bit
  *
@@ -185,11 +186,11 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         anexo.setFechaCaptura(new Date());
 
         //Si firmaValida es null, por defecto marcamos como false
-        if(anexo.isFirmaValida()== null){
+        if(anexo.getFirmaValida()== null){
               anexo.setFirmaValida(false);
         }
         //Si justificante es null, por defecto marcamos como false
-        if(anexo.isJustificante() == null){
+        if(anexo.getJustificante() == null){
             anexo.setJustificante(false);
         }
 
@@ -890,6 +891,36 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     }
 
+    @Override
+    public List<Anexo> getByRegistroDetalleLectura(Long idRegistroDetalle) throws Exception {
+        Query query = em.createQuery("Select anexo.titulo, anexo.tipoDocumento from Anexo as anexo where anexo.registroDetalle.id=:idRegistroDetalle");
+        query.setParameter("idRegistroDetalle", idRegistroDetalle);
+
+        List<Anexo> anexos = new ArrayList<Anexo>();
+        List<Object[]> result = query.getResultList();
+
+        for (Object[] object : result) {
+            anexos.add(new Anexo((String) object[0], (Long) object[1]));
+        }
+        return anexos;
+    }
+
+    @Override
+    public Long getIdJustificante(Long idRegistroDetalle) throws Exception{
+        Query query = em.createQuery("Select anexo.id from Anexo as anexo where anexo.registroDetalle.id=:idRegistroDetalle and " +
+                "anexo.justificante = true");
+        query.setParameter("idRegistroDetalle", idRegistroDetalle);
+
+        List<Long> justificante = query.getResultList();
+
+        if (justificante.size() == 1) {
+            return justificante.get(0);
+        } else {
+            return null;
+        }
+
+    }
+
 
     /* METODOS DEL AnnexDocumentCustodyManager.java hecho por marilen del TODO DE TONI*/
 
@@ -1097,6 +1128,63 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
         return custodyID;
       }
+
+
+    /**
+     * Crea un Jusitificante como anexo al registro
+     * @param baos
+     * @param idEntidad
+     * @param nombreFichero
+     * @param usuarioEntidad
+     * @param idRegistro
+     * @param locale
+     * @param tituloAnexo
+     * @param observacionesAnexo
+     * @return Boolean
+     * @throws Exception
+     */
+    public Boolean crearJustificante(ByteArrayOutputStream baos, Long idEntidad, String nombreFichero,
+                                     UsuarioEntidad usuarioEntidad, Long idRegistro, Locale locale, String tituloAnexo,
+                                     String observacionesAnexo, String tipoRegistro) throws Exception {
+
+        // Adjuntar justificante como ANEXO del registro
+        try {
+
+            AnexoFull anexoFull = new AnexoFull();
+            anexoFull.getAnexo().setTitulo(tituloAnexo);
+            anexoFull.getAnexo().setValidezDocumento(RegwebConstantes.TIPOVALIDEZDOCUMENTO_ORIGINAL);
+            TipoDocumental tipoDocumental = tipoDocumentalEjb.findByCodigoEntidad("TD99",idEntidad);
+            anexoFull.getAnexo().setTipoDocumental(tipoDocumental);
+
+            anexoFull.getAnexo().setTipoDocumento(RegwebConstantes.TIPO_DOCUMENTO_DOC_ADJUNTO);
+            anexoFull.getAnexo().setOrigenCiudadanoAdmin(RegwebConstantes.ANEXO_ORIGEN_ADMINISTRACION.intValue());
+            anexoFull.getAnexo().setObservaciones(observacionesAnexo);
+            anexoFull.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED);
+
+            // Fichero Anexado
+            anexoFull.getAnexo().setJustificante(true);
+
+            SignatureCustody sign = new SignatureCustody();
+            sign.setData(baos.toByteArray());
+            sign.setMime("application/pdf");
+            sign.setName(nombreFichero);
+
+            anexoFull.setSignatureCustody(sign);
+            anexoFull.setSignatureFileDelete(false);
+
+            crearAnexo(anexoFull,usuarioEntidad,idRegistro,tipoRegistro);
+
+            return true;
+
+        } catch (I18NValidationException e) {
+            e.printStackTrace();
+            return false;
+        } catch (I18NException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
 
 
     /* FIN METODOS DEL AnnexDocumentCustodyManager.java hecho por marilen del TODO DE TONI*/

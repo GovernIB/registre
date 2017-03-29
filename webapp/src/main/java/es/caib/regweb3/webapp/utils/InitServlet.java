@@ -1,5 +1,6 @@
 package es.caib.regweb3.webapp.utils;
 
+import es.caib.regweb3.persistence.ejb.InicializadorContadoresLocal;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.Versio;
@@ -8,6 +9,7 @@ import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.stereotype.Component;
 
+import javax.naming.InitialContext;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -40,6 +42,20 @@ public class InitServlet extends HttpServlet {
       I18NUtils.setMessageSource(ms);
     } catch (Throwable th) {
       log.error("Error inicialitzant el sistema de traduccions web: " + th.getMessage(), th);
+    }
+
+    // Inicializar Contadores Libros de la entidad especificada
+    try {
+
+      InicializadorContadoresLocal inicializadorContadores;
+      inicializadorContadores = (InicializadorContadoresLocal) new InitialContext()
+              .lookup("regweb3/InicializadoresContadoresEJB/local");
+
+      inicializadorContadores.clearTimers();
+
+      inicializadorContadores.createTimer();
+    } catch (Throwable th) {
+      log.error("Error desconegut inicialitzant Inicializador Contadores: " + th.getMessage(), th);
     }
 
     // Sistema de Traduccions LOGIC

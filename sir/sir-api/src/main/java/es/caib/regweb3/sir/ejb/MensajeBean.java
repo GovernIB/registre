@@ -1,10 +1,11 @@
 package es.caib.regweb3.sir.ejb;
 
+import es.caib.regweb3.model.AsientoRegistralSir;
 import es.caib.regweb3.sir.core.excepcion.SIRException;
-import es.caib.regweb3.sir.core.model.AsientoRegistralSir;
+import es.caib.regweb3.sir.core.model.Errores;
 import es.caib.regweb3.sir.core.model.TipoMensaje;
-import es.caib.regweb3.sir.utils.FicheroIntercambio;
-import es.caib.regweb3.sir.utils.Mensaje;
+import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
+import es.caib.regweb3.sir.core.utils.Mensaje;
 import es.caib.regweb3.sir.utils.Sicres3XML;
 import es.caib.regweb3.sir.ws.api.wssir7.RespuestaWS;
 import es.caib.regweb3.sir.ws.api.wssir7.WS_SIR7ServiceLocator;
@@ -33,6 +34,8 @@ public class MensajeBean implements MensajeLocal {
      * @param asientoRegistralSir Información del asiento registral.
      */
     public void enviarMensajeConfirmacion(AsientoRegistralSir asientoRegistralSir, String numeroRegistro) {
+
+        log.info("Enviando Mensaje de confirmación del asiento: " + asientoRegistralSir.getIdentificadorIntercambio());
 
         Mensaje confirmacion = new Mensaje();
         confirmacion.setCodigoEntidadRegistralOrigen(asientoRegistralSir.getCodigoEntidadRegistralDestino());
@@ -116,6 +119,7 @@ public class MensajeBean implements MensajeLocal {
             WS_SIR7_PortType ws_sir7 = getWS_SIR7();
 
             respuesta = ws_sir7.recepcionMensajeDatosControlDeAplicacion(xml);
+
         } catch (Exception e) {
             log.info("Error al enviar el mensaje");
             e.printStackTrace();
@@ -125,6 +129,11 @@ public class MensajeBean implements MensajeLocal {
         if (respuesta != null) {
 
             log.info("Respuesta ws_sir7: " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
+
+            if (!Errores.OK.getValue().equals(respuesta.getCodigo())) {
+                log.info("La respuesta de WS_SIR7 no es correcta");
+                throw new SIRException("Error en la respuesta del servicio de recepción de mensaje de datos de control (WS_SIR7)");
+            }
 
         }
     }

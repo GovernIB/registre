@@ -23,6 +23,9 @@ public class RegWeb3SirWSHandler implements SOAPHandler<SOAPMessageContext> {
 
     protected final Log log = LogFactory.getLog(getClass());
 
+    private static final String WS_SIR8_B_QUERY_STRING = "envioFicherosAAplicacion";
+    private static final String WS_SIR9_QUERY_STRING = "envioMensajeDatosControlAAplicacion";
+
     @Override
     public Set<QName> getHeaders() {
         return null;
@@ -32,28 +35,61 @@ public class RegWeb3SirWSHandler implements SOAPHandler<SOAPMessageContext> {
     public boolean handleMessage(SOAPMessageContext smc) {
 
         log.info(" ------------------ RegWeb3SirWSHandler  handleMessage --------------");
+        log.info(" ");
 
-        // Obtenemos el tipo a procesar
-        Boolean outboundProperty = (Boolean) smc.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
+
+        String query_string =  (String) smc.get(MessageContext.QUERY_STRING);
+        Boolean outboundProperty = (Boolean) smc.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY); //Mensaje de entrada o salida
 
         try {
 
-            if (!outboundProperty) { // Mensaje de entrada
+            // Petición al WS_SIR8_B
+            if (query_string != null && query_string.contains(WS_SIR8_B_QUERY_STRING)) {
 
-                String mensaje = soapMessageToString(smc.getMessage());
+                if (!outboundProperty) { // Mensaje de entrada
 
-                // Añadimos el namespace al inicio
-                mensaje = mensaje.replace("<envioFicherosAAplicacion", "<ns1:envioFicherosAAplicacion xmlns:ns1=\"http://impl.manager.cct.map.es\"");
+                    log.info("Se trata de una petición al WS_SIR8_B, modificamos las cabeceras");
 
-                // Añadimos el namespace al final
-                mensaje = mensaje.replace("</envioFicherosAAplicacion>","</ns1:envioFicherosAAplicacion>");
+                    // Obtenemos el mensaje de la petición
+                    String mensaje = soapMessageToString(smc.getMessage());
 
-                // Rehacemos la petición con el nuevo mensaje
-                InputStream bStream = new ByteArrayInputStream(mensaje.getBytes());
-                SOAPMessage request = MessageFactory.newInstance().createMessage(null, bStream);
-                smc.setMessage(request);
+                    // Añadimos el namespace al inicio del mensaje
+                    mensaje = mensaje.replace("<envioFicherosAAplicacion", "<ns1:envioFicherosAAplicacion xmlns:ns1=\"http://impl.manager.cct.map.es\"");
 
+                    // Añadimos el namespace al final del mensaje
+                    mensaje = mensaje.replace("</envioFicherosAAplicacion>","</ns1:envioFicherosAAplicacion>");
+
+                    // Rehacemos la petición con el nuevo mensaje
+                    InputStream bStream = new ByteArrayInputStream(mensaje.getBytes());
+                    SOAPMessage request = MessageFactory.newInstance().createMessage(null, bStream);
+                    smc.setMessage(request);
+
+                }
+
+            // Petición al WS_SIR9
+            }else if(query_string != null && query_string.contains(WS_SIR9_QUERY_STRING)){
+
+                if (!outboundProperty) { // Mensaje de entrada
+
+                    log.info("Se trata de una petición al WS_SIR9, modificamos las cabeceras");
+
+                    // Obtenemos el mensaje de la petición
+                    String mensaje = soapMessageToString(smc.getMessage());
+
+                    // Añadimos el namespace al inicio del mensaje
+                    mensaje = mensaje.replace("<envioMensajeDatosControlAAplicacion", "<ns1:envioMensajeDatosControlAAplicacion xmlns:ns1=\"http://impl.manager.cct.map.es\"");
+
+                    // Añadimos el namespace al final del mensaje
+                    mensaje = mensaje.replace("</envioMensajeDatosControlAAplicacion>","</ns1:envioMensajeDatosControlAAplicacion>");
+
+                    // Rehacemos la petición con el nuevo mensaje
+                    InputStream bStream = new ByteArrayInputStream(mensaje.getBytes());
+                    SOAPMessage request = MessageFactory.newInstance().createMessage(null, bStream);
+                    smc.setMessage(request);
+
+                }
             }
+
 
         } catch (SOAPException ex) {
             ex.printStackTrace();

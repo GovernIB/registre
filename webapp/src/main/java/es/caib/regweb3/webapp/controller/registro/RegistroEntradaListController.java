@@ -3,11 +3,14 @@ package es.caib.regweb3.webapp.controller.registro;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.*;
+import es.caib.regweb3.plugins.justificante.IJustificantePlugin;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.webapp.form.ModeloForm;
 import es.caib.regweb3.webapp.form.RegistroEntradaBusqueda;
 import es.caib.regweb3.webapp.utils.Mensaje;
+import es.caib.regweb3.webapp.utils.RegwebJustificantePluginManager;
+import es.caib.regweb3.webapp.validator.AnexoWebValidator;
 import es.caib.regweb3.webapp.validator.RegistroEntradaBusquedaValidator;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +23,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Fundació BIT.
@@ -42,6 +44,9 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     @Autowired
     private RegistroEntradaBusquedaValidator registroEntradaBusquedaValidator;
 
+    @Autowired
+    private AnexoWebValidator anexoValidator;
+
     @EJB(mappedName = "regweb3/HistoricoRegistroEntradaEJB/local")
     public HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
     
@@ -53,7 +58,10 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
     @EJB(mappedName = "regweb3/OficioRemisionEntradaUtilsEJB/local")
     public OficioRemisionEntradaUtilsLocal oficioRemisionEntradaUtilsEjb;
-    
+
+    @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
+    public TipoDocumentalLocal tipoDocumentalEjb;
+
 
     /**
     * Listado de todos los Registros de Entrada
@@ -184,16 +192,24 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
      * Carga el formulario para ver el detalle de un {@link es.caib.regweb3.model.RegistroEntrada}
      */
     @RequestMapping(value = "/{idRegistro}/detalle", method = RequestMethod.GET)
-    public String detalleRegistroEntrada(@PathVariable Long idRegistro, Model model, HttpServletRequest request) throws Exception {
+    public String detalleRegistroEntrada(@PathVariable Long idRegistro, Model model, HttpServletRequest request) throws Exception, I18NException {
 
         RegistroEntrada registro = registroEntradaEjb.findById(idRegistro);
         Entidad entidadActiva = getEntidadActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         Oficina oficinaActiva = getOficinaActiva(request);
         LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
+        Oficio oficio = null;
+        Boolean showannexes = PropiedadGlobalUtil.getShowAnnexes();
 
         model.addAttribute("registro",registro);
         model.addAttribute("oficina", oficinaActiva);
+        model.addAttribute("showannexes", showannexes);
+        model.addAttribute("entidadActiva", entidadActiva);
+
+        // Justificante
+        Long idJustificante = anexoEjb.getIdJustificante(registro.getRegistroDetalle().getId());
+        model.addAttribute("idJustificante", idJustificante);
 
         // Modelo Recibo
         model.addAttribute("modeloRecibo", new ModeloForm());
@@ -207,41 +223,40 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         model.addAttribute("puedeDistribuir", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registro.getLibro().getId(), RegwebConstantes.PERMISO_DISTRIBUCION_REGISTRO));
         model.addAttribute("isDistribuir", registroEntradaEjb.isDistribuir(idRegistro, getOrganismosOficioRemision(request,organismosOficinaActiva)));
 
-        // OficioRemision
-        Boolean isOficioRemisionSir = oficioRemisionEntradaUtilsEjb.isOficioRemisionSir(idRegistro);
-        if(entidadActiva.getOficioRemision()){
-            model.addAttribute("isOficioRemisionInterno", oficioRemisionEntradaUtilsEjb.isOficioRemisionInterno(idRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva)));
-            model.addAttribute("isOficioRemisionExterno", oficioRemisionEntradaUtilsEjb.isOficioRemisionExterno(idRegistro));
-            model.addAttribute("isOficioRemisionSir", isOficioRemisionSir);
+        // Si es VÁLIDO o PENDIENTE DE VISAR y estamos en la OficinaRegistral
+        if(registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && oficinaRegistral){
+
+            // Oficio Remision
+            if(entidadActiva.getOficioRemision()){
+                oficio = oficioRemisionEntradaUtilsEjb.isOficio(idRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva));
+                model.addAttribute("oficio", oficio);
+            }
+
+            // Anexos completo
+            if(showannexes){ // Si se muestran los anexos
+                anexoEjb.getByRegistroEntrada(registro); //Inicializamos los anexos del registro de entrada.
+
+                if(oficio != null && oficio.getSir()) { // Mensajes de limitaciones anexos si es oficio de remisión sir
+                    initMensajeNotaInformativaAnexos(entidadActiva, model);
+                    model.addAttribute("maxanexospermitidos", PropiedadGlobalUtil.getMaxAnexosPermitidos(entidadActiva.getId()));
+                }
+
+                // Inicializa los atributos para escanear anexos
+                initScanAnexos(entidadActiva, model, request, registro.getId());
+            }
+
+        }else{
+
+            // Anexos lectura
+            if(showannexes){ // Si se muestran los anexos
+                model.addAttribute("anexos", anexoEjb.getByRegistroDetalleLectura(registro.getRegistroDetalle().getId()));
+            }
         }
 
         // Interesados, solo si el Registro en Válido o Estamos en la Oficina donde se registró, o en su Oficina Responsable
         if(registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) && oficinaRegistral){
 
-            model.addAttribute("tiposInteresado", RegwebConstantes.TIPOS_INTERESADO);
-            model.addAttribute("tiposPersona",RegwebConstantes.TIPOS_PERSONA);
-            model.addAttribute("paises",catPaisEjb.getAll());
-            model.addAttribute("provincias",catProvinciaEjb.getAll());
-            model.addAttribute("canalesNotificacion",RegwebConstantes.CANALES_NOTIFICACION);
-            model.addAttribute("tiposDocumento", RegwebConstantes.TIPOS_DOCUMENTOID);
-            model.addAttribute("organismosOficinaActiva",organismosOficinaActiva);
-        }
-
-
-        // Inicializamos si se deben mostrar los anexos o no
-        Boolean showannexes = PropiedadGlobalUtil.getShowAnnexes();
-        model.addAttribute("showannexes", showannexes);
-
-
-        if(showannexes == null || showannexes ) {
-            //TODO Mirar que carga este método para mirar de ver que mostrar en caso de solo lectura y que no cargue todo el anexo.
-            model.addAttribute("anexos", anexoEjb.getByRegistroEntrada(registro));
-            initAnexos(entidadActiva, model, request, registro.getId());
-            //Inicializamos el mensaje de las limitaciones de anexos si es oficio de remisión sir
-            if(isOficioRemisionSir) {
-                initMensajeNotaInformativaAnexos(entidadActiva, model);
-                model.addAttribute("maxanexospermitidos", PropiedadGlobalUtil.getMaxAnexosPermitidos(entidadActiva.getId()));
-            }
+            initDatosInteresados(model, organismosOficinaActiva);
         }
 
 
@@ -425,8 +440,6 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     @ResponseBody
     RespuestaDistribucion distribuirRegistroEntrada(@PathVariable Long idRegistro, HttpServletRequest request) throws Exception, I18NException {
 
-        log.info("Entramos en distribuirRegistroEntrada");
-
         RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         RespuestaDistribucion respuestaDistribucion = new RespuestaDistribucion();
@@ -518,6 +531,64 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         mav.addObject("tipoRegistro", getMessage("informe.entrada"));
 
         return mav;
+    }
+
+
+    /**
+     * Método que genera el Justificante en pdf
+     * @param idRegistro identificador del registro de entrada
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping(value = "/{idRegistro}/justificante", method=RequestMethod.GET)
+    public String justificante(@PathVariable Long idRegistro, HttpServletResponse response, HttpServletRequest request) throws Exception {
+
+        try {
+            RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
+            Long idEntidad = registroEntrada.getUsuario().getEntidad().getId();
+
+            // Carregam el plugin
+            IJustificantePlugin justificantePlugin = RegwebJustificantePluginManager.getInstance(idEntidad);
+
+            // Comprova que existeix el plugin de justificant
+            if(justificantePlugin!=null) {
+
+                String tipoRegistro = "entrada";
+
+                // Nom del fitxer generat
+                String nombreFichero = getMessage("justificante.fichero") + "_" + registroEntrada.getNumeroRegistro() + ".pdf";
+                UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+                String tituloAnexo = getMessage("justificante.anexo.titulo");
+                String observacionesAnexo = getMessage("justificante.anexo.observaciones");
+                Locale locale = new Locale(RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(registroEntrada.getRegistroDetalle().getIdioma()));
+
+                // Obtenim el ByteArray per generar el pdf
+                ByteArrayOutputStream baos = justificantePlugin.generarJustificante(registroEntrada);
+                // Cream l'annex justificant
+                anexoEjb.crearJustificante(baos, idEntidad, nombreFichero, usuarioEntidad, idRegistro, locale, tituloAnexo,
+                        observacionesAnexo,tipoRegistro);
+
+                // Cabeceras Response
+                response.setHeader("Content-Disposition", "attachment; filename=" + nombreFichero);
+                response.setHeader("Content-Type", "application/pdf;charset=UTF-8");
+                response.setHeader("Expires", "0");
+                response.setHeader("Cache-Control","must-revalidate, post-check=0, pre-check=0");
+                response.setHeader("Pragma", "public");
+                response.setContentLength(baos.size());
+                // Genera el pdf
+                ServletOutputStream out = response.getOutputStream();
+                baos.writeTo(out);
+                out.flush();
+                out.close();
+            }
+
+        } catch (I18NException e) {
+            e.printStackTrace();
+        }
+
+        return "redirect:/registroEntrada/"+idRegistro+"/detalle";
+
     }
 
 

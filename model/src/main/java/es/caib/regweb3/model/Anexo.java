@@ -123,7 +123,10 @@ public class Anexo implements Serializable {
       return clone;
     }
 
-
+    public Anexo(String titulo, Long tipoDocumento) {
+        this.titulo = titulo;
+        this.tipoDocumento = tipoDocumento;
+    }
 
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
@@ -293,7 +296,7 @@ public class Anexo implements Serializable {
     }
 
     @Column(name ="FIRMAVALIDA")
-    public Boolean isFirmaValida() {
+    public Boolean getFirmaValida() {
         return firmaValida;
     }
 
@@ -302,7 +305,7 @@ public class Anexo implements Serializable {
     }
 
     @Column(name = "JUSTIFICANTE")
-    public Boolean isJustificante() {
+    public Boolean getJustificante() {
         return justificante;
     }
 

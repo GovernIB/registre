@@ -246,14 +246,53 @@
 
     <dependency>
       <groupId>es.caib.regweb3</groupId>
-      <artifactId>plugins-distribucionregweb-api</artifactId>
+      <artifactId>plugin-distribucion-api</artifactId>
       <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>es.caib.regweb3</groupId>
-      <artifactId>plugins-distribucionregweb-distribucionlocal</artifactId>
+      <artifactId>plugin-distribucion-mock</artifactId>
       <version>${project.version}</version>
+    </dependency>
+
+   <!--Comentado de momento, descomentar cuando acabado de implementar -->
+   <!-- <dependency>
+            <groupId>es.caib.regweb3</groupId>
+            <artifactId>plugins-distribucionregweb-distribucionripea</artifactId>
+            <version>${project.version}</version>
+    </dependency>-->
+
+    <!-- ============================================ -->
+    <!-- ======== PLUGINS DE POSTPROCES =========== -->
+    <!-- ============================================ -->
+
+    <dependency>
+        <groupId>es.caib.regweb3</groupId>
+        <artifactId>plugin-postproceso-api</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>es.caib.regweb3</groupId>
+        <artifactId>plugin-postproceso-mock</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+
+    <!-- ============================================ -->
+    <!-- ======== PLUGINS DE JUSTIFICANTE =========== -->
+    <!-- ============================================ -->
+
+    <dependency>
+        <groupId>es.caib.regweb3</groupId>
+        <artifactId>plugin-justificante-api</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>es.caib.regweb3</groupId>
+        <artifactId>plugin-justificante-caib</artifactId>
+        <version>${project.version}</version>
     </dependency>
 
     <!-- ============================================ -->

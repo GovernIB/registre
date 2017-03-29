@@ -8,6 +8,7 @@ import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.OficioPendienteLlegada;
 import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
+import es.caib.regweb3.persistence.utils.Oficio;
 import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -74,15 +75,13 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         Query q;
         q = em.createQuery("Select count(rs.id) from RegistroSalida as rs where " +
                 "rs.estado = :valido and rs.oficina.id = :idOficina and rs.libro in (:libros) and " +
-                "rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo = :administracion and codigoDir3 not in (:organismos)) and " +
-                " rs.id not in (select tra.registroSalida.id from Trazabilidad as tra where tra.oficioRemision.estado != :anulado)");
+                "rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo = :administracion and codigoDir3 not in (:organismos)) ");
 
         // Parámetros
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q.setParameter("idOficina", idOficina);
         q.setParameter("libros", libros);
         q.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
-        q.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
         q.setParameter("organismos", organismos);
 
 
@@ -98,16 +97,13 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         Query q1;
         q1 = em.createQuery("Select rs.registroDetalle.id from RegistroSalida as rs where " +
                 "rs.estado = :valido and rs.oficina.id = :idOficina and rs.libro in (:libros) and " +
-                "rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo = :administracion and codigoDir3 not in (:organismos)) and " +
-                " rs.id not in (select tra.registroSalida.id from Trazabilidad as tra where tra.oficioRemision.tipoOficioRemision = :tipoOficioRemision and tra.oficioRemision.estado != :anulado)");
+                "rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo = :administracion and codigoDir3 not in (:organismos)) ");
 
         // Parámetros
         q1.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q1.setParameter("idOficina", idOficina);
         q1.setParameter("libros", libros);
-        q1.setParameter("tipoOficioRemision", RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA);
         q1.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
-        q1.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
         q1.setParameter("organismos", organismos);
 
         List<Object> registros = q1.getResultList();
@@ -207,8 +203,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
         StringBuilder query = new StringBuilder("Select rs from RegistroSalida as rs where " + anyWhere +
                 "rs.libro.id = :idLibro and rs.oficina.id = :idOficina and rs.estado = :valido and " +
-                "rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo = :administracion and i.codigoDir3 = :codigoOrganismo) and " +
-                "rs.id not in (select tra.registroSalida.id from Trazabilidad as tra where tra.oficioRemision.tipoOficioRemision = :tipoOficioRemision and tra.oficioRemision.estado != :anulado)");
+                "rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo = :administracion and i.codigoDir3 = :codigoOrganismo) ");
 
         q2 = em.createQuery(query.toString().replaceAll("Select rs", "Select count(rs.id)"));
         query.append(" order by rs.fecha desc ");
@@ -223,18 +218,14 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         q.setParameter("idLibro", idLibro);
         q.setParameter("idOficina", idOficina);
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
-        q.setParameter("tipoOficioRemision", RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA);
         q.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
         q.setParameter("codigoOrganismo", codigoOrganismo);
-        q.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
 
         q2.setParameter("idLibro", idLibro);
         q2.setParameter("idOficina", idOficina);
         q2.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
-        q2.setParameter("tipoOficioRemision", RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA);
         q2.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
         q2.setParameter("codigoOrganismo", codigoOrganismo);
-        q2.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
 
         Paginacion paginacion = null;
 
@@ -281,8 +272,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         oficioRemision.setOrganismoDestinatario(new Organismo(idOrganismo));
 
         synchronized (this) {
-            oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision,
-                    RegwebConstantes.REGISTRO_OFICIO_INTERNO, RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA);
+            oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision, RegwebConstantes.REGISTRO_OFICIO_INTERNO);
         }
 
         return oficioRemision;
@@ -309,7 +299,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
         OficioRemision oficioRemision = new OficioRemision();
         oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA);
-        oficioRemision.setIdentificadorIntercambioSir(null);
+        oficioRemision.setAsientoRegistralSir(null);
         oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_EXTERNO_ENVIADO);
         oficioRemision.setFechaEstado(new Date());
         oficioRemision.setOficina(oficinaActiva);
@@ -322,38 +312,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         oficioRemision.setOrganismoDestinatario(null);
 
         synchronized (this) {
-            oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision,
-                    RegwebConstantes.REGISTRO_OFICIO_EXTERNO, RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA);
-        }
-
-        return oficioRemision;
-
-    }
-
-    @Override
-    public OficioRemision crearOficioRemisionSir(RegistroSalida registroSalida, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, String organismoExterno, String organismoExternoDenominacion, Long idLibro, String identificadorIntercambio) throws Exception, I18NException, I18NValidationException {
-
-
-        List<RegistroSalida> registros = new ArrayList<RegistroSalida>();
-        registros.add(registroSalida);
-
-        OficioRemision oficioRemision = new OficioRemision();
-        oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA);
-        oficioRemision.setIdentificadorIntercambioSir(identificadorIntercambio);
-        oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_EXTERNO_ENVIADO);
-        oficioRemision.setFechaEstado(new Date());
-        oficioRemision.setOficina(oficinaActiva);
-        oficioRemision.setFecha(new Date());
-        oficioRemision.setRegistrosSalida(registros);
-        oficioRemision.setUsuarioResponsable(usuarioEntidad);
-        oficioRemision.setLibro(new Libro(idLibro));
-        oficioRemision.setDestinoExternoCodigo(organismoExterno);
-        oficioRemision.setDestinoExternoDenominacion(organismoExternoDenominacion);
-        oficioRemision.setOrganismoDestinatario(null);
-
-        synchronized (this) {
-            oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision,
-                    RegwebConstantes.REGISTRO_OFICIO_EXTERNO, RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA);
+            oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision, RegwebConstantes.REGISTRO_OFICIO_EXTERNO);
         }
 
         return oficioRemision;
@@ -414,29 +373,45 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
     }
 
+
+
     @Override
-    @SuppressWarnings(value = "unchecked")
-    public Boolean isOficioRemision(Long idRegistro, Set<String> organismos) throws Exception {
+    public Oficio isOficio(RegistroSalida registroSalida, Set<String> organismos) throws Exception{
 
-        Query q;
+        Oficio oficio = new Oficio();
 
-        q = em.createQuery("Select rs.id from RegistroSalida as rs where " +
-                "rs.estado = :valido and rs.id = :idRegistro and " +
-                "rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo = :administracion and i.codigoDir3 not in (:organismos)) ");
+        if(isOficioRemisionExterno(registroSalida, organismos)){ // Externo
+            oficio.setOficioRemision(true);
+            oficio.setInterno(false);
 
-        // Parámetros
-        q.setParameter("idRegistro", idRegistro);
-        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
-        q.setParameter("organismos", organismos);
-        q.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
+            Boolean sir = isOficioRemisionSir(registroSalida, organismos);
 
-        return q.getResultList().size() > 0;
+            if(sir){
+                oficio.setSir(true);
+                oficio.setExterno(false);
+            }else{
+                oficio.setSir(false);
+                oficio.setExterno(true);
+            }
+
+        }else{
+            oficio.setExterno(false);
+            oficio.setSir(false);
+
+            Boolean interno = isOficioRemisionInterno(registroSalida, organismos);
+
+            oficio.setOficioRemision(interno);
+            oficio.setInterno(interno);
+        }
+
+        return oficio;
     }
+
 
     @Override
     public Boolean isOficioRemisionInterno(RegistroSalida registroSalida, Set<String> organismos) throws Exception {
 
-        String codigoDir3 = isOficioRemision(registroSalida, organismos);
+        String codigoDir3 = organismoOficioRemision(registroSalida, organismos);
 
         if(!StringUtils.isEmpty(codigoDir3)){
             Long idEntidad = registroSalida.getOficina().getOrganismoResponsable().getEntidad().getId();
@@ -449,11 +424,30 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
     @Override
     public Boolean isOficioRemisionExterno(RegistroSalida registroSalida, Set<String> organismos) throws Exception {
 
-        String codigoDir3 = isOficioRemision(registroSalida, organismos);
+        String codigoDir3 = organismoOficioRemision(registroSalida, organismos);
 
         if(!StringUtils.isEmpty(codigoDir3)){
             Long idEntidad = registroSalida.getOficina().getOrganismoResponsable().getEntidad().getId();
             return organismoEjb.findByCodigoEntidad(codigoDir3, idEntidad) == null;
+        }
+
+        return false;
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Boolean isOficioRemisionSir(RegistroSalida registroSalida, Set<String> organismos) throws Exception {
+
+        // Obtenemos el organismo destinatario del Registro en el caso de que sea un OficioRemision externo
+        String codigoDir3 = organismoOficioRemision(registroSalida, organismos);
+
+        // Si se trata de un OficioRemisionExterno, comprobamos si el destino tiene Oficinas Sir
+        if(!StringUtils.isEmpty(codigoDir3) && isOficioRemisionExterno(registroSalida, organismos)){
+
+            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
+            List<OficinaTF> oficinasSIR = oficinasService.obtenerOficinasSIRUnidad(codigoDir3);
+
+            return oficinasSIR.size() > 0;
         }
 
         return false;
@@ -467,19 +461,16 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
      * @return
      * @throws Exception
      */
-    private String isOficioRemision(RegistroSalida registroSalida, Set<String> organismos) throws Exception{
+    private String organismoOficioRemision(RegistroSalida registroSalida, Set<String> organismos) throws Exception{
 
-        if(registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)){
+        List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
 
-            List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
+        for (Interesado interesado : interesados) {
+            if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
 
-            for (Interesado interesado : interesados) {
-                if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
+                if(!organismos.contains(interesado.getCodigoDir3())){
 
-                    if(!organismos.contains(interesado.getCodigoDir3())){
-
-                        return interesado.getCodigoDir3();
-                    }
+                    return interesado.getCodigoDir3();
                 }
             }
         }

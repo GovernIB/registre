@@ -133,26 +133,15 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+    @SuppressWarnings(value = "unchecked")
+    public List<Trazabilidad> getByAsientoRegistralSir(Long idAsientoRegistralSir) throws Exception {
 
-        List<?> trazabilidades =  em.createQuery("Select id from Trazabilidad where oficioRemision.usuarioResponsable.entidad.id=:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
-        Integer total = trazabilidades.size();
+        Query q = em.createQuery("Select trazabilidad from Trazabilidad as trazabilidad " +
+                "where trazabilidad.asientoRegistralSir.id = :idAsientoRegistralSir order by trazabilidad.fecha");
 
-        if (trazabilidades.size() > 0) {
+        q.setParameter("idAsientoRegistralSir", idAsientoRegistralSir);
 
-            // Si hay más de 1000 registros, dividimos las queries (ORA-01795).
-            while (trazabilidades.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
-
-                List<?> subList = trazabilidades.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN);
-                em.createQuery("delete from Trazabilidad where id in (:id)").setParameter("id", subList).executeUpdate();
-                trazabilidades.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN).clear();
-            }
-
-            em.createQuery("delete from Trazabilidad where id in (:id)").setParameter("id", trazabilidades).executeUpdate();
-        }
-
-        return total;
-
+        return q.getResultList();
     }
 
     @Override
@@ -176,5 +165,36 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
         }
 
         return registros;
+    }
+
+    @Override
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+
+        List<?> trazabilidades =  em.createQuery("Select id from Trazabilidad where oficioRemision.usuarioResponsable.entidad.id=:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        List<?> trazabilidadesSir =  em.createQuery("Select id from Trazabilidad where asientoRegistralSir.entidad.id=:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        Integer total = trazabilidades.size() + trazabilidadesSir.size();
+
+        eliminarTrazabilidades(trazabilidades);
+        eliminarTrazabilidades(trazabilidadesSir);
+
+        return total;
+
+    }
+
+    private void eliminarTrazabilidades(List<?> trazabilidades){
+
+        if (trazabilidades.size() > 0) {
+
+            // Si hay más de 1000 registros, dividimos las queries (ORA-01795).
+            while (trazabilidades.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
+
+                List<?> subList = trazabilidades.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN);
+                em.createQuery("delete from Trazabilidad where id in (:id)").setParameter("id", subList).executeUpdate();
+                trazabilidades.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN).clear();
+            }
+
+            em.createQuery("delete from Trazabilidad where id in (:id)").setParameter("id", trazabilidades).executeUpdate();
+        }
+
     }
 }

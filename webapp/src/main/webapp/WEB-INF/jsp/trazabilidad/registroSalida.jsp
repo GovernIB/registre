@@ -10,7 +10,7 @@
         <p><small class="text-muted"><i class="fa fa-clock-o"></i> <fmt:formatDate value="${registroSalida.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></small></p>
     </div>
     <div class="timeline-body">
-        <p><small><i class="fa fa-exchange"></i> <strong><spring:message code="registroSalida.oficina"/>:</strong> ${registroSalida.oficina.denominacion}</small></p>
+        <p><small><i class="fa fa-home"></i> <strong><spring:message code="registroSalida.oficina"/>:</strong> ${registroSalida.oficina.denominacion}</small></p>
         <c:if test="${registroSalida.estado == RegwebConstantes.REGISTRO_ANULADO}">
             <p><small><i class="fa fa-bookmark"></i> <strong><spring:message code="oficioRemision.estado"/>:</strong><span class="label label-danger"><spring:message code="registro.estado.${registroSalida.estado}"/></span></small></p>
         </c:if>

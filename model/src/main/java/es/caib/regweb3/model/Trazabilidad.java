@@ -21,6 +21,7 @@ public class Trazabilidad implements Serializable {
     private RegistroEntrada registroEntradaOrigen;
     private RegistroSalida registroSalida;
     private RegistroEntrada registroEntradaDestino;
+    private AsientoRegistralSir asientoRegistralSir;
     private Date fecha;
 
 
@@ -48,7 +49,7 @@ public class Trazabilidad implements Serializable {
         this.registroEntradaOrigen = registroEntradaOrigen;
     }
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = true)
     @JoinColumn(name="REGISTRO_SALIDA")
     @ForeignKey(name="RWE_TRAZAB_REGSAL_FK")
     public RegistroSalida getRegistroSalida() {
@@ -70,7 +71,7 @@ public class Trazabilidad implements Serializable {
         this.registroEntradaDestino = registroEntradaDestino;
     }
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = true)
     @JoinColumn(name="OFICIO_REMISION")
     @ForeignKey(name="RWE_TRAZAB_OFIREM_FK")
     public OficioRemision getOficioRemision() {
@@ -79,6 +80,17 @@ public class Trazabilidad implements Serializable {
 
     public void setOficioRemision(OficioRemision oficioRemision) {
         this.oficioRemision = oficioRemision;
+    }
+
+    @ManyToOne(optional = true)
+    @JoinColumn(name="ASIENTO_REGISTRAL_SIR")
+    @ForeignKey(name="RWE_TRAZAB_ASR_FK")
+    public AsientoRegistralSir getAsientoRegistralSir() {
+        return asientoRegistralSir;
+    }
+
+    public void setAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir) {
+        this.asientoRegistralSir = asientoRegistralSir;
     }
 
     @Column(name = "FECHA", nullable = false)

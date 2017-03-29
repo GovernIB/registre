@@ -95,11 +95,11 @@
                         <c:if test="${fn:length(oficinas) > 1}">
 
                             <li class="dropdown">
-                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-institution"></i> <spring:message code="regweb.oficinas"/> <i class="fa fa-caret-down"></i></a>
+                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-home"></i> <spring:message code="regweb.oficinas"/> <i class="fa fa-caret-down"></i></a>
                                 <ul class="dropdown-menu scrollable-menu">
                                     <c:forEach var="oficina" items="${oficinas}">
                                         <c:if test="${oficina.id != oficinaActiva.id}">
-                                            <li><a href="<c:url value="/cambioOficina/${oficina.id}"/>"><i class="fa fa-institution"></i> ${oficina.denominacion}</a></li>
+                                            <li><a href="<c:url value="/cambioOficina/${oficina.id}"/>"><i class="fa fa-home"></i> ${oficina.denominacion}</a></li>
                                         </c:if>
                                     </c:forEach>
                                 </ul>
@@ -189,7 +189,7 @@
                                         <a href="<c:url value="/oficioRemision/pendientesLlegada/list"/>"><spring:message code="oficioRemision.pendientesLlegada"/></a></li>
                                     <li class="divider"></li>
                                     <li><a href="<c:url value="/oficioRemision/entradasPendientesRemision"/>"><spring:message code="registroEntrada.oficiosRemision"/></a></li>
-                                    <%--<li><a href="<c:url value="/oficioRemision/salidasPendientesRemision"/>"><spring:message code="registroSalida.oficiosRemision"/></a></li>--%>
+                                    <li><a href="<c:url value="/oficioRemision/salidasPendientesRemision"/>"><spring:message code="registroSalida.oficiosRemision"/></a></li>
                                     <c:if test="${entidadActiva.sir}">
                                         <li class="divider"></li>
                                         <li class="dropdown-submenu-left toggle-left">

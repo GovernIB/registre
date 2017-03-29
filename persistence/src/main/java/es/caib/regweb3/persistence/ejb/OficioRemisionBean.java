@@ -201,7 +201,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override    
     public synchronized OficioRemision registrarOficioRemision(OficioRemision oficioRemision,
-        Long estado, Long tipoOficioRemision) throws Exception, I18NException, I18NValidationException {
+        Long estado) throws Exception, I18NException, I18NValidationException {
 
         // Obtenemos el Número de registro del OficioRemision
         Libro libro = libroEjb.findById(oficioRemision.getLibro().getId());
@@ -213,7 +213,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         oficioRemision = persist(oficioRemision);
 
         // Oficio de Remisión Entrada
-        if(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA.equals(tipoOficioRemision)){
+        if(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA.equals(oficioRemision.getTipoOficioRemision())){
 
             // Creamos un Registro de Salida y Trazabilidad por cada Registro de Entrada que contenga el OficioRemision
             for (RegistroEntrada registroEntrada : oficioRemision.getRegistrosEntrada()) {
@@ -245,7 +245,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         }
 
         // Oficio de Remisión Salida
-        if(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA.equals(tipoOficioRemision)){
+        if(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA.equals(oficioRemision.getTipoOficioRemision())){
 
             // CREAMOS LA TRAZABILIDAD
             for (RegistroSalida registroSalida : oficioRemision.getRegistrosSalida()) {
@@ -301,6 +301,105 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         merge(oficioRemision);
 
     }
+
+    @Override
+    public synchronized OficioRemision registrarOficioRemisionSIR(OficioRemision oficioRemision, Long idRegistroEntrada, String accion) throws Exception, I18NException, I18NValidationException {
+
+        // Obtenemos el Número de registro del OficioRemision
+        Libro libro = libroEjb.findById(oficioRemision.getLibro().getId());
+        NumeroRegistro numeroRegistro = contadorEjb.incrementarContador(libro.getContadorOficioRemision().getId());
+        oficioRemision.setNumeroOficio(numeroRegistro.getNumero());
+        oficioRemision.setFecha(numeroRegistro.getFecha());
+
+        // Guardamos el Oficio de Remisión
+        oficioRemision = persist(oficioRemision);
+
+        if(accion.equals("ENVIO")){
+
+            // Oficio de Remisión Entrada
+            if(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA.equals(oficioRemision.getTipoOficioRemision())){
+
+                // Creamos un Registro de Salida y Trazabilidad a partir del Registro de Entrada del OficioRemision
+                RegistroEntrada registroEntrada = oficioRemision.getRegistrosEntrada().get(0);
+                RegistroSalida registroSalida = new RegistroSalida();
+
+                registroSalida.setRegistroDetalle(registroDetalleEjb.findByRegistroEntrada(registroEntrada.getId()));
+                registroSalida.setUsuario(oficioRemision.getUsuarioResponsable());
+                registroSalida.setOficina(oficioRemision.getOficina());
+                registroSalida.setOrigen(libro.getOrganismo());//todo: Esta asignación es correcta?
+                registroSalida.setLibro(oficioRemision.getLibro());
+
+                registroSalida.setEstado(RegwebConstantes.REGISTRO_TRAMITADO);
+
+                // Registramos la Salida
+                registroSalida = registroSalidaEjb.registrarSalida(registroSalida, oficioRemision.getUsuarioResponsable(), null);
+
+                // CREAMOS LA TRAZABILIDAD
+                Trazabilidad trazabilidad = new Trazabilidad();
+                trazabilidad.setAsientoRegistralSir(oficioRemision.getAsientoRegistralSir());
+                trazabilidad.setRegistroEntradaOrigen(registroEntrada);
+                trazabilidad.setOficioRemision(oficioRemision);
+                trazabilidad.setRegistroSalida(registroSalida);
+                trazabilidad.setRegistroEntradaDestino(null);
+                trazabilidad.setFecha(new Date());
+
+                trazabilidadEjb.persist(trazabilidad);
+
+                // Modificamos el estado del Registro de Entrada
+                registroEntradaEjb.cambiarEstado(registroEntrada, RegwebConstantes.REGISTRO_OFICIO_EXTERNO, oficioRemision.getUsuarioResponsable());
+
+            }
+
+            // Oficio de Remisión Salida
+            if(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA.equals(oficioRemision.getTipoOficioRemision())){
+                // TODO
+                // CREAMOS LA TRAZABILIDAD
+                RegistroSalida registroSalida = oficioRemision.getRegistrosSalida().get(0);
+
+                    Trazabilidad trazabilidad = new Trazabilidad();
+                    trazabilidad.setAsientoRegistralSir(oficioRemision.getAsientoRegistralSir());
+                    trazabilidad.setRegistroEntradaOrigen(null);
+                    trazabilidad.setOficioRemision(oficioRemision);
+                    trazabilidad.setRegistroSalida(registroSalida);
+                    trazabilidad.setFecha(new Date());
+
+                    trazabilidadEjb.persist(trazabilidad);
+
+                    // Modificamos el estado del Registro de Salida
+                    registroSalidaEjb.cambiarEstado(registroSalida, RegwebConstantes.REGISTRO_OFICIO_EXTERNO, oficioRemision.getUsuarioResponsable());
+
+
+            }
+
+
+        }else if(accion.equals("RECEPCION")){
+
+            // Oficio de Remisión Entrada
+            if(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA.equals(oficioRemision.getTipoOficioRemision())){
+
+                // Creamos la trazabilidad
+                Trazabilidad trazabilidad = new Trazabilidad();
+                trazabilidad.setAsientoRegistralSir(oficioRemision.getAsientoRegistralSir());
+                trazabilidad.setRegistroEntradaDestino(registroEntradaEjb.getReference(idRegistroEntrada));
+                trazabilidad.setRegistroEntradaOrigen(null);
+                trazabilidad.setOficioRemision(oficioRemision);
+                trazabilidad.setRegistroSalida(null);
+                trazabilidad.setFecha(new Date());
+
+                trazabilidadEjb.persist(trazabilidad);
+
+            }else if(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA.equals(oficioRemision.getTipoOficioRemision())){
+
+                // TODO
+            }
+
+
+        }
+
+
+        return oficioRemision;
+    }
+
 
     @Override
     @SuppressWarnings(value = "unchecked")
@@ -435,6 +534,22 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         q.setParameter("idOficioRemision", idOficioRemision);
 
         return q.getResultList();
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public OficioRemision getByIdentificadorIntercambio(String identificadorIntercambio) throws Exception{
+
+        Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision where oficioRemision.asientoRegistralSir.identificadorIntercambio = :identificadorIntercambio ");
+
+        q.setParameter("identificadorIntercambio", identificadorIntercambio);
+
+        List<OficioRemision> oficioRemision = q.getResultList();
+        if(oficioRemision.size() == 1){
+            return oficioRemision.get(0);
+        }else{
+            return  null;
+        }
     }
 
     @Override

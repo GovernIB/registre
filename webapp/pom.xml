@@ -133,6 +133,22 @@
       <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>plugin-distribucion-api</artifactId>
+      <type>jar</type>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>plugin-justificante-api</artifactId>
+      <type>jar</type>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
     <!-- Externas -->
 
     <dependency>
@@ -148,14 +164,6 @@
       <artifactId>plugin-scanweb-api</artifactId>
       <type>jar</type>
       <version>2.0.0</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>plugins-distribucionregweb-api</artifactId>
-      <type>jar</type>
-      <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
 

@@ -13,7 +13,9 @@ import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
+import java.io.ByteArrayOutputStream;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Fundacio Bit
@@ -80,6 +82,22 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      */
     public List<Anexo> getByRegistroDetalle(Long idRegistroDetalle) throws Exception;
 
+    /**
+    *
+    * @param idRegistroDetalle
+    * @return
+    * @throws Exception
+    */
+    public List<Anexo> getByRegistroDetalleLectura(Long idRegistroDetalle) throws Exception;
+
+    /**
+     *  Obtiene el id del Justificante que tiene un registroDetalle
+     * @param idRegistroDetalle
+     * @return
+     * @throws Exception
+     */
+    public Long getIdJustificante(Long idRegistroDetalle) throws Exception;
+
     
     public byte[] getArchivoContent(String custodiaID) throws Exception;
     
@@ -130,6 +148,26 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      */
     public String crearArchivo(String name, byte[] file, String signatureName,
                                byte[] signature, int signatureMode, String custodyID, String custodyParameters) throws Exception;
+
+
+    /**
+     * Crea un Jusitificante como anexo al registro
+     * @param baos
+     * @param idEntidad
+     * @param nombreFichero
+     * @param usuarioEntidad
+     * @param idRegistro
+     * @param locale
+     * @param tituloAnexo
+     * @param observacionesAnexo
+     * @param tipoRegistro
+     * @return Boolean
+     * @throws Exception
+     */
+    public Boolean crearJustificante(ByteArrayOutputStream baos, Long idEntidad, String nombreFichero,
+                                     UsuarioEntidad usuarioEntidad, Long idRegistro, Locale locale, String tituloAnexo,
+                                     String observacionesAnexo, String tipoRegistro) throws Exception;
+
 
 
 }

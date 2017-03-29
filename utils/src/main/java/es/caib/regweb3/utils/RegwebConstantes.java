@@ -19,6 +19,10 @@ public interface RegwebConstantes {
     public static final String REGWEB3_PROPERTY_BASE = "es.caib.regweb3.";
     public static final String SECURITY_DOMAIN = "seycon";
 
+    /*
+     *-------------------GENERAL-------------------
+     */
+    public static final String CODIGO_APLICACION = "RWE3";
 
     /**
      * -------------- VARIABLES DE SESION --------------
@@ -255,11 +259,6 @@ public interface RegwebConstantes {
             REGISTRO_OFICIO_INTERNO,
             REGISTRO_TRAMITADO,
             REGISTRO_ANULADO};
-    
-    
-    /* ------------- TIPO INTERCAMBIO SIR ---------------*/
-    public static final Long INTERCAMBIO_ENVIO = 1L;
-    public static final Long INTERCAMBIO_RECEPCION = 2L;
 
     /* ------------- TRANSPORTE ---------------*/
 
@@ -592,4 +591,6 @@ public interface RegwebConstantes {
     public int ANEXO_NOMBREFICHERO_MAXLENGTH_SIR = 80;
     public int ANEXO_OBSERVACIONES_MAXLENGTH_SIR = 50;
     public int ANEXO_IDENTIFICADOR_MAXLENGTH_SIR = 50;
+
+    String CRON_INICIALIZAR_CONTADORES = "0 0 0 1 1 ? *";
 }

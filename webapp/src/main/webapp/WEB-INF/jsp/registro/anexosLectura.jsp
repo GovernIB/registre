@@ -21,8 +21,6 @@
 
         <div class="panel-body">
 
-            <div class="col-xs-12">
-
                 <div class="table-responsive">
 
                     <c:if test="${empty registro.registroDetalle.anexos}">
@@ -41,6 +39,7 @@
                             <tr>
                                 <th><spring:message code="anexo.titulo"/></th>
                                 <th><spring:message code="anexo.tipoDocumento"/></th>
+                                <th><spring:message code="anexo.tamano"/></th>
                                 <th class="center"><spring:message code="regweb.acciones"/></th>
                             </tr>
                             </thead>
@@ -49,12 +48,22 @@
                             <c:forEach var="anexo" items="${registro.registroDetalle.anexos}">
 
                                     <tr>
-                                        <td>
-                                            <a data-toggle="modal" href="#detalleAnexo" onclick="obtenerAnexo(${anexo.id})">${anexo.titulo}</a>
-                                        </td>
+                                        <c:if test="${anexo.justificante}">
+                                            <td>
+                                                <a data-toggle="modal" href="#detalleAnexo" onclick="obtenerAnexo(${anexo.id})"><dt>${anexo.titulo}</dt></a>
+                                            </td>
+                                        </c:if>
+                                        <c:if test="${!anexo.justificante}">
+                                            <td>
+                                                <a data-toggle="modal" href="#detalleAnexo" onclick="obtenerAnexo(${anexo.id})">${anexo.titulo}</a>
+                                            </td>
+                                        </c:if>
+
                                         <td>
                                             <spring:message code="tipoDocumento.0${anexo.tipoDocumento}"/>
                                         </td>
+                                        <!-- TODO mostrar el tamanyo desde custodia -->
+                                        <td>0 KB</td>
                                         <td class="center">
                                             <c:if test="${anexo.modoFirma != RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
                                             <a class="btn btn-success btn-default btn-sm"
@@ -76,7 +85,6 @@
                         </table>
                     </c:if>
                 </div>
-            </div>
 
         </div>
     </div>

@@ -135,6 +135,7 @@ function organismoBusqueda(tipoOrganismo, urlServidor, idRegistroDetalle) {
     // indica que queremos obtener de la búsqueda de organismos aquellos que tienen oficinas
     //de registro
     var conOficinas = false;
+    var oficinasSir = false;
 
     // Variables configurables en función del tipo de organismo indicado.
     var url = getUrlBusqueda(tipoOrganismo, urlServidor);
@@ -150,6 +151,9 @@ function organismoBusqueda(tipoOrganismo, urlServidor, idRegistroDetalle) {
     $('#arbol' + tipoOrganismo).html("");
     if (tipoOrganismo != 'OficinaOrigen') {
         $('#tab' + tipoOrganismo + ' a:last').hide();
+    }
+    if(tipoOrganismo == 'OficinaSir'){
+        oficinasSir = true;
     }
 
 
@@ -179,7 +183,8 @@ function organismoBusqueda(tipoOrganismo, urlServidor, idRegistroDetalle) {
             conOficinas: conOficinas,
             unidadRaiz: unidadRaiz,
             provincia: provincia,
-            localidad: localidad
+            localidad: localidad,
+            oficinasSir: oficinasSir
         },
         success: function (result) {
 
@@ -397,7 +402,8 @@ function asignarOrganismo(codigo, denominacion, tipoOrganismo) {
     var idModal = "#modalBuscador" + tipoOrganismo;
 
     if(tipoOrganismo == 'OficinaSir'){
-        $('#oficinaReenvio').val(codigo);
+        $('#codigoOficina').val(codigo);
+        $('#denominacionOficina').val(denominacion);
         doForm('#reenviarForm');
     }
     /* Miramos si el organismo ya existe en el select, si existe lo seleccionamos,

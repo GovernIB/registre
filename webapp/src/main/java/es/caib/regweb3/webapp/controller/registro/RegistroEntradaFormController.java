@@ -377,7 +377,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                 // Si es PENDIENTE, Procesamos lo Interesados de la session
                 if(registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_RESERVA)){
 
-                    registroEntrada.getRegistroDetalle().setInteresados(interesadoEjb.guardarInteresados(interesadosSesion, registroEntrada.getRegistroDetalle()));
+                    registroEntrada.getRegistroDetalle().setInteresados(interesadoEjb.guardarInteresados(interesadosSesion, registroEntrada.getRegistroDetalle()) );
                 }
 
                 // Calculamos los días transcurridos desde que se Registró para asignarle un Estado
@@ -402,6 +402,8 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
                 // Creamos el Historico RegistroEntrada
                 historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntradaAntiguo, usuarioEntidad, I18NLogicUtils.tradueix(LocaleContextHolder.getLocale(),"registro.modificacion.datos" ),true);
+                registroEntradaEjb.postProcesoActualizarRegistro(registroEntrada,entidadActiva.getId());
+
 
                 Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
 

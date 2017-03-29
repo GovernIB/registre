@@ -11,3 +11,6 @@ target
 /ws/regweb3_api_axis/src/main/resources/logicmissatges_es.properties
 /webapp/src/main/resources/logicmissatges_ca.properties
 /webapp/src/main/resources/logicmissatges_es.properties
+/pluginjustificante/api/dependency-reduced-pom.xml
+/pluginjustificante/caib/src/main/resources/logicmissatges_es.properties
+/pluginjustificante/caib/src/main/resources/logicmissatges_ca.properties

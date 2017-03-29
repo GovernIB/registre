@@ -157,7 +157,7 @@ public class PropiedadGlobalUtil {
         String valor = getString(partialPropertyName);
 
         if(valor == null){ //si no esta definida la propiedad a nivel global se devuelven los formatos por defecto.
-            valor = new String("image/jpeg,image/pjpeg,application/vnd.oasis.opendocument.text,application/vnd.oasis.opendocument.spreadsheet,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/mspowerpoint,application/powerpoint,application/x-mspowerpoint,application/pdf,image/png,text/rtf,application/rtf,application/x-rtf,image/svg+xml,image/tiff,image/x-tiff,text/plain,application/xml");
+            valor = new String("image/jpeg, image/pjpeg, application/vnd.oasis.opendocument.text, application/vnd.oasis.opendocument.spreadsheet, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/mspowerpoint, application/powerpoint, application/x-mspowerpoint, application/pdf, image/png, text/rtf, application/rtf, application/x-rtf, image/svg+xml, image/tiff, image/x-tiff, text/plain, application/xml");
         }
         return valor;
     }
@@ -219,9 +219,6 @@ public class PropiedadGlobalUtil {
         if (valor == null) {
             valor = getString(partialPropertyName);
         }
-        if(valor == null){ //si no esta definida la propiedad a nivel global se devuelven la clase del plugin por defecto
-            valor ="org.fundaciobit.plugins.distribucion.distribucionlocal.DistribucionLocalDistribucionPlugin";
-        }
         return valor;
     }
 
@@ -247,9 +244,6 @@ public class PropiedadGlobalUtil {
         // Valor global si no existeix el de per entitat
         if (valor == null) {
             valor = getString(partialPropertyName);
-        }
-        if(valor == null){ //si no esta definida la propiedad a nivel global se devuelven la clase del plugin por defecto
-            valor ="org.fundaciobit.plugins.postproceso.postprocesolocal.PostProcesoLocalPostProcesoPlugin";
         }
         return valor;
     }
@@ -378,6 +372,123 @@ public class PropiedadGlobalUtil {
         return getBooleanByEntidad(idEntidad, partialPropertyName);
     }
 
+//    /**
+//     * Retorna el valor de la propiedad TitolJustificant de la entidad indicada.
+//     * @return
+//     */
+//    public static String getTitolJustificant(Long idEntidad, Long idiomaRegistre) {
+//        final String partialPropertyName = "justificant.titol";
+//        String codiIdiomaRegistre = RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(idiomaRegistre);
+//        String valor = getStringByEntidad(idEntidad, partialPropertyName+"_ca");
+//
+//        // Valor buit si no existeix el de per entitat
+//        if (!(getStringByEntidad(idEntidad, partialPropertyName+"_"+codiIdiomaRegistre) == null)) {
+//            valor = getStringByEntidad(idEntidad, partialPropertyName+"_"+codiIdiomaRegistre);
+//        }
+//        return valor;
+//    }
+//
+//    /**
+//     * Retorna el valor de la propiedad DeclaracioJustificant de la entidad indicada.
+//     * @return
+//     */
+//    public static String getDeclaracioJustificant(Long idEntidad, Long idiomaRegistre) {
+//        final String partialPropertyName = "justificant.declaracio";
+//        String codiIdiomaRegistre = RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(idiomaRegistre);
+//        String valor = getStringByEntidad(idEntidad, partialPropertyName+"_ca");
+//
+//        // Valor buit si no existeix el de per entitat
+//        if (!(getStringByEntidad(idEntidad, partialPropertyName+"_"+codiIdiomaRegistre) == null)) {
+//            valor = getStringByEntidad(idEntidad, partialPropertyName+"_"+codiIdiomaRegistre);
+//        }
+//        return valor;
+//    }
+//
+//    /**
+//     * Retorna el valor de la propiedad DeclaracioJustificant de la entidad indicada.
+//     * @return
+//     */
+//    public static String getLleiJustificant(Long idEntidad, Long idiomaRegistre) {
+//        final String partialPropertyName = "justificant.llei";
+//        String codiIdiomaRegistre = RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(idiomaRegistre);
+//        String valor = getStringByEntidad(idEntidad, partialPropertyName+"_ca");
+//
+//        // Valor buit si no existeix el de per entitat
+//        if (!(getStringByEntidad(idEntidad, partialPropertyName+"_"+codiIdiomaRegistre) == null)) {
+//            valor = getStringByEntidad(idEntidad, partialPropertyName+"_"+codiIdiomaRegistre);
+//        }
+//        return valor;
+//    }
+//
+//    /**
+//     * Retorna el valor de la propiedad DeclaracioJustificant de la entidad indicada.
+//     * @return
+//     */
+//    public static String getSedeJustificant(Long idEntidad, Long idiomaRegistre) {
+//        final String partialPropertyName = "justificant.sede";
+//        String codiIdiomaRegistre = RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(idiomaRegistre);
+//        String valor = getStringByEntidad(idEntidad, partialPropertyName+"_ca");
+//
+//        // Valor buit si no existeix el de per entitat
+//        if (!(getStringByEntidad(idEntidad, partialPropertyName+"_"+codiIdiomaRegistre) == null)) {
+//            valor = getStringByEntidad(idEntidad, partialPropertyName+"_"+codiIdiomaRegistre);
+//        }
+//        return valor;
+//    }
+//
+//    /**
+//     * Retorna el valor de la propiedad DeclaracioJustificant de la entidad indicada.
+//     * @return
+//     */
+//    public static String getTextVerticalJustificant(Long idEntidad, Long idiomaRegistre) {
+//        final String partialPropertyName = "justificant.textvertical";
+//        String codiIdiomaRegistre = RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(idiomaRegistre);
+//        String valor = getStringByEntidad(idEntidad, partialPropertyName+"_ca");
+//
+//        // Valor buit si no existeix el de per entitat
+//        if (!(getStringByEntidad(idEntidad, partialPropertyName+"_"+codiIdiomaRegistre) == null)) {
+//            valor = getStringByEntidad(idEntidad, partialPropertyName+"_"+codiIdiomaRegistre);
+//        }
+//        return valor;
+//    }
+//
+//    /**
+//     * Retorna el valor de la propiedad de la Entidad para el JustificantePlugin.
+//     * @return
+//     */
+//    public static String getJustificantePlugin(Long idEntidad) {
+//        final String partialPropertyName = "justificante.plugin";
+//        String valor = getStringByEntidad(idEntidad, partialPropertyName);
+//
+//        return valor != null ? valor : null;
+//    }
+//
+
+    /**
+     * Retorna el valor de la propiedad JustificantePlugin de la entidad indicada.
+     * @return
+     */
+    public static String getJustificanteActivoPlugin(Long idEntidad, String basePlugin) {
+
+        String valor = getStringByEntidad(idEntidad, basePlugin);
+
+        return valor != null ? valor : null;
+    }
+
+
+    /**
+     * Retorna el valor de la propiedad CronExpression para inicializar contadores libro.
+     * Si no está definida devuelve la expresión por defecto
+     * @return
+     */
+    public static String getCronExpressionInicializarContadores() {
+        final String partialPropertyName = "cronExpression.inicializarContadores";
+        String valor = getString( partialPropertyName);
+
+        return valor != null ? valor : RegwebConstantes.CRON_INICIALIZAR_CONTADORES;
+    }
+
+
 
     /**
      *
@@ -454,7 +565,7 @@ public class PropiedadGlobalUtil {
             return propiedadGlobalEjb.getBooleanPropertyByEntidad(idEntidad,RegwebConstantes.REGWEB3_PROPERTY_BASE + partialPropertyName);
         } catch (Exception e) {
             log.error("Error obteniendo la propiedad ]" + RegwebConstantes.REGWEB3_PROPERTY_BASE + partialPropertyName, e);
-            return null;
+            return false;
         }
     }
 
@@ -469,7 +580,7 @@ public class PropiedadGlobalUtil {
             return propiedadGlobalEjb.getBooleanProperty(RegwebConstantes.REGWEB3_PROPERTY_BASE + partialPropertyName);
         } catch (Exception e) {
             log.error("Error obteniendo la propiedad ]" + RegwebConstantes.REGWEB3_PROPERTY_BASE + partialPropertyName, e);
-            return null;
+            return false;
         }
     }
 
