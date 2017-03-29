@@ -445,6 +445,39 @@ public class SirBean implements SirLocal{
     }
 
     /**
+     *
+     * @param asiento
+     * @param oficinaReenvio
+     * @param oficinaActiva
+     * @param usuario
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public AsientoRegistralSir rechazarAsientoRegistralSir(AsientoRegistralSir asiento, Oficina oficinaReenvio, Oficina oficinaActiva, Usuario usuario) throws Exception {
+
+        // Modificamos la oficina destino con la de inicio
+        asiento.setCodigoEntidadRegistralDestino(asiento.getCodigoEntidadRegistralInicio());
+        asiento.setDecodificacionEntidadRegistralDestino(asiento.getDecodificacionEntidadRegistralInicio());
+
+        // Modificamos la oficina de origen con la oficina activa
+        asiento.setCodigoEntidadRegistralOrigen(oficinaActiva.getCodigo());
+        asiento.setDecodificacionEntidadRegistralOrigen(oficinaActiva.getDenominacion());
+
+        // Modificamos usuario, contacto, aplicacion
+        asiento.setAplicacion(RegwebConstantes.CODIGO_APLICACION);
+        asiento.setNombreUsuario(usuario.getNombreCompleto());
+        asiento.setContactoUsuario(usuario.getEmail());
+
+        asiento.setTipoAnotacion(TipoAnotacion.RECHAZO.getValue());
+        asiento.setDecodificacionTipoAnotacion(TipoAnotacion.RECHAZO.getName());
+
+        asiento = asientoRegistralSirEjb.merge(asiento);
+
+        return asiento;
+    }
+
+    /**
      * Acepta un AsientoRegistralSir, creando un Registro de Entrada o un Registro de Salida
      * @param asientoRegistralSir
      * @throws Exception

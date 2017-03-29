@@ -6,7 +6,6 @@ import es.caib.regweb3.persistence.ejb.AsientoRegistralSirLocal;
 import es.caib.regweb3.persistence.ejb.SirLocal;
 import es.caib.regweb3.sir.core.excepcion.SIRException;
 import es.caib.regweb3.sir.core.model.Errores;
-import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.utils.Sicres3XML;
 import es.caib.regweb3.sir.ws.api.wssir6b.RespuestaWS;
 import es.caib.regweb3.sir.ws.api.wssir6b.WS_SIR6_BServiceLocator;
@@ -87,10 +86,18 @@ public class EmisionBean implements EmisionLocal{
 
     /**
      * Rechazo de un AsientoRegistral en formato SICRES3 a un nodo distribuido
-     * @param ficheroIntercambio
+     * @param asientoRegistralSir
+     * @param oficinaActiva
+     * @param oficinaReenvio
+     * @param usuario
      */
-    public void rechazarFicheroIntercambio(FicheroIntercambio ficheroIntercambio) {
+    public void rechazarFicheroIntercambio(AsientoRegistralSir asientoRegistralSir, Oficina oficinaReenvio, Oficina oficinaActiva, Usuario usuario) throws Exception{
 
+        //Preparamos el asiento registral para su rechazo
+        asientoRegistralSir =  sirEjb.rechazarAsientoRegistralSir(asientoRegistralSir, oficinaReenvio, oficinaActiva, usuario);
+
+        //Enviamos el asiento registral al nodo distribuido.
+        enviar(asientoRegistralSir, EstadoAsientoRegistralSir.RECHAZADO);
     }
 
     /**
