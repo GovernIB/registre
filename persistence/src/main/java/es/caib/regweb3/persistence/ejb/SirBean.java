@@ -447,14 +447,13 @@ public class SirBean implements SirLocal{
     /**
      *
      * @param asiento
-     * @param oficinaReenvio
      * @param oficinaActiva
      * @param usuario
      * @return
      * @throws Exception
      */
     @Override
-    public AsientoRegistralSir rechazarAsientoRegistralSir(AsientoRegistralSir asiento, Oficina oficinaReenvio, Oficina oficinaActiva, Usuario usuario) throws Exception {
+    public AsientoRegistralSir rechazarAsientoRegistralSir(AsientoRegistralSir asiento, Oficina oficinaActiva, Usuario usuario, String observaciones) throws Exception {
 
         // Modificamos la oficina destino con la de inicio
         asiento.setCodigoEntidadRegistralDestino(asiento.getCodigoEntidadRegistralInicio());
@@ -470,7 +469,7 @@ public class SirBean implements SirLocal{
         asiento.setContactoUsuario(usuario.getEmail());
 
         asiento.setTipoAnotacion(TipoAnotacion.RECHAZO.getValue());
-        asiento.setDecodificacionTipoAnotacion(TipoAnotacion.RECHAZO.getName());
+        asiento.setDecodificacionTipoAnotacion(observaciones);
 
         asiento = asientoRegistralSirEjb.merge(asiento);
 

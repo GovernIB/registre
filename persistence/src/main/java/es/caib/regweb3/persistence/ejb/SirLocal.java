@@ -80,13 +80,12 @@ public interface SirLocal {
     /**
      *
      * @param asientoRegistralSir
-     * @param oficinaReenvio
      * @param oficinaActiva
      * @param usuario
      * @return
      * @throws Exception
      */
-    public AsientoRegistralSir rechazarAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir, Oficina oficinaReenvio, Oficina oficinaActiva, Usuario usuario) throws Exception;
+    public AsientoRegistralSir rechazarAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir, Oficina oficinaActiva, Usuario usuario, String observaciones) throws Exception;
 
     /**
      * Transforma un {@link es.caib.regweb3.model.RegistroEntrada} en un {@link AsientoRegistralSir}

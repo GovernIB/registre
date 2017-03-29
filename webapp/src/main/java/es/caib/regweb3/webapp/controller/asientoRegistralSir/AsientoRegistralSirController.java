@@ -254,7 +254,7 @@ public class AsientoRegistralSirController extends BaseController {
         AsientoRegistralSir asientoRegistralSir = asientoRegistralSirEjb.findById(idAsientoRegistralSir);
         Oficina oficinaActiva = getOficinaActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-        Long idRegistro;
+
         String variableReturn = "redirect:/asientoRegistralSir/"+idAsientoRegistralSir+"/detalle";
 
         // Comprobamos si ya ha sido confirmado
@@ -265,7 +265,8 @@ public class AsientoRegistralSirController extends BaseController {
 
         // Rechaza el AsientoRegistralSir
         try{
-            asientoRegistralSirEjb.modificarEstado(idAsientoRegistralSir,EstadoAsientoRegistralSir.RECHAZADO);
+            emisionEjb.rechazarFicheroIntercambio(asientoRegistralSir, oficinaActiva, usuarioEntidad.getUsuario(), rechazarForm.getObservacionesRechazo());
+
             Mensaje.saveMessageInfo(request, getMessage("asientoRegistralSir.rechazo.ok"));
 
         }catch (Exception e){

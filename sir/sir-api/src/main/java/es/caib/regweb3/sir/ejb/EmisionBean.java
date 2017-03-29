@@ -47,7 +47,7 @@ public class EmisionBean implements EmisionLocal{
      * @param idLibro
      * @return
      */
-    public OficioRemision enviarFicheroIntercambio(String tipoRegistro, Long idRegistro, String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino, Oficina oficinaActiva, UsuarioEntidad usuario, Long idLibro){
+    public OficioRemision enviarFicheroIntercambio(String tipoRegistro, Long idRegistro, String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino, Oficina oficinaActiva, UsuarioEntidad usuario, Long idLibro)throws Exception{
 
         OficioRemision oficioRemision = null;
 
@@ -88,13 +88,12 @@ public class EmisionBean implements EmisionLocal{
      * Rechazo de un AsientoRegistral en formato SICRES3 a un nodo distribuido
      * @param asientoRegistralSir
      * @param oficinaActiva
-     * @param oficinaReenvio
      * @param usuario
      */
-    public void rechazarFicheroIntercambio(AsientoRegistralSir asientoRegistralSir, Oficina oficinaReenvio, Oficina oficinaActiva, Usuario usuario) throws Exception{
+    public void rechazarFicheroIntercambio(AsientoRegistralSir asientoRegistralSir, Oficina oficinaActiva, Usuario usuario, String observaciones) throws Exception{
 
         //Preparamos el asiento registral para su rechazo
-        asientoRegistralSir =  sirEjb.rechazarAsientoRegistralSir(asientoRegistralSir, oficinaReenvio, oficinaActiva, usuario);
+        asientoRegistralSir =  sirEjb.rechazarAsientoRegistralSir(asientoRegistralSir, oficinaActiva, usuario, observaciones);
 
         //Enviamos el asiento registral al nodo distribuido.
         enviar(asientoRegistralSir, EstadoAsientoRegistralSir.RECHAZADO);
