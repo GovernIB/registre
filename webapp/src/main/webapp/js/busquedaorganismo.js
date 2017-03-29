@@ -219,7 +219,10 @@ function organismoBusqueda(tipoOrganismo, urlServidor, idRegistroDetalle) {
                 } else if (tipoOrganismo == 'OficinaOrigen') {
                     var linea = "<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\"" + superior + "\">" + result[i].codigo + " - " + result[i].denominacion + "</label></td><td style=\"text-align:left;\"> " + title + "</td><td style=\"text-align:left;\"> " + result[i].localidad + "</td><td class=\"center\"><a class=\"btn btn-warning btn-sm\" title=\"Seleccionar\" onclick=\"asignarOrganismo('" + codigo + "','" + denominacion + "','" + tipoOrganismo + "')\"><span class=\"fa fa-hand-o-right\"></span></a></td></tr>";
                 }else if (tipoOrganismo == 'OficinaSir') {
-                    var linea = "<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\"" + superior + "\">" + result[i].codigo + " - " + result[i].denominacion + "</label></td><td style=\"text-align:left;\"> " + title + "</td><td style=\"text-align:left;\"> " + result[i].localidad + "</td><td class=\"center\"><a class=\"btn btn-warning btn-sm\" title=\"Seleccionar\" onclick=\"asignarOrganismo('" + codigo + "','" + denominacion + "','" + tipoOrganismo + "')\"><span class=\"fa fa-hand-o-right\"></span></a></td></tr>";
+                    // Obtenemos el organismo responsable de la oficina viene como string combinado en el elemento raiz de la siguiente forma " Denominacion - Codigo".
+                    var codigoOrganismoResponsable = result[i].raiz.split(" - ")[1];
+                    var denominacionOrganismoResponsable = normalizarTexto(result[i].raiz.split(" - ")[0]);
+                    var linea = "<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\"" + superior + "\">" + result[i].codigo + " - " + result[i].denominacion + "</label></td><td style=\"text-align:left;\"> " + title + "</td><td style=\"text-align:left;\"> " + result[i].localidad + "</td><td class=\"center\"><a class=\"btn btn-warning btn-sm\" title=\"Seleccionar\" onclick=\"asignarOficinaSir('" + codigo + "','" + denominacion + "','"+codigoOrganismoResponsable+"','"+denominacionOrganismoResponsable+"','" + tipoOrganismo + "')\"><span class=\"fa fa-hand-o-right\"></span></a></td></tr>";
                 }
 
                 table.append(linea);
@@ -391,6 +394,16 @@ function inicializarBuscador(selectNivelAdministracion, selectComunidadAutonoma,
     $('#resultadosbusqueda' + tipoOrganismo).empty();
 }
 
+function asignarOficinaSir(codigo,denominacion,codigoOrganismoResponsable, denominacionOrganismoResponsable, tipoOrganismo){
+    if(tipoOrganismo == 'OficinaSir'){
+        $('#codigoOficina').val(codigo);
+        $('#denominacionOficina').val(denominacion);
+        $('#codigoOrganismoResponsable').val(codigoOrganismoResponsable);
+        $('#denominacionOrganismoResponsable').val(denominacionOrganismoResponsable);
+        doForm('#reenviarForm');
+    }
+}
+
 /* Función que asigna el valor seleccionado de la búsqueda al select correspondiente
  * y cierra el modal de la búsqueda */
 function asignarOrganismo(codigo, denominacion, tipoOrganismo) {
@@ -401,11 +414,7 @@ function asignarOrganismo(codigo, denominacion, tipoOrganismo) {
     var anadir = true;
     var idModal = "#modalBuscador" + tipoOrganismo;
 
-    if(tipoOrganismo == 'OficinaSir'){
-        $('#codigoOficina').val(codigo);
-        $('#denominacionOficina').val(denominacion);
-        doForm('#reenviarForm');
-    }
+
     /* Miramos si el organismo ya existe en el select, si existe lo seleccionamos,
      si no lo indicamos con la variable anadir para añadirlo posteriormente */
     $(idSelect + " option").each(function () {

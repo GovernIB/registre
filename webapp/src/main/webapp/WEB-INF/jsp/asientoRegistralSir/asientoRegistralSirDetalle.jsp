@@ -29,7 +29,7 @@
             </div>
         </div><!-- Fin miga de pan -->
         <c:url value="/asientoRegistralSir/aceptar/${asientoRegistralSir.id}" var="urlAceptar" scope="request"/>
-        <form:form modelAttribute="registrarForm" action="${urlAceptar}" method="post" cssClass="form-horizontal">
+
 
         <div class="row">
 
@@ -211,6 +211,7 @@
 
                     </div>
 
+                    <form:form modelAttribute="registrarForm" action="${urlAceptar}" method="post" cssClass="form-horizontal">
 
                     <%-- Se muestra la Botonera si el AsientoRegistralSir está pendiente de procesar--%>
                     <c:if test="${asientoRegistralSir.estado == 'RECIBIDO'}">
@@ -307,91 +308,22 @@
 
                         <div class="panel-footer">
 
-                            <div class="btn-group btn-group-justified" role="group" aria-label="...">
-
-                                <%--Reenviar--%>
-                                <c:if test="${puedeReenviar}">
-                                    <div class="btn-group" role="group">
-
-                                        <a data-toggle="modal" role="button" href="#modalBuscadorOficinaSir"
-                                           onclick="inicializarBuscador('#codNivelAdministracionOficinaSir','#codComunidadAutonomaOficinaSir','#provinciaOficinaSir','#localidadOficinaSir','${oficinaActiva.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficinaActiva.organismoResponsable.codAmbComunidad.codigoComunidad}','OficinaSir' );"
-                                           class="btn btn-warning btn-sm"><spring:message code="asientoRegistralSir.estado.reenviar"/></a>
-                                       <%-- <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <spring:message code="asientoRegistralSir.estado.reenviar"/> <span class="caret"></span>
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li><a data-toggle="modal" href="#modalBuscadorOficinaSir" onclick="inicializarBuscador('#codNivelAdministracionOficinaSir','#codComunidadAutonomaOficinaSir','#provinciaOficinaSir','#localidadOficinaSir','${oficinaActiva.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficinaActiva.organismoResponsable.codAmbComunidad.codigoComunidad}','OficinaSir' );">Buscar oficina destino</a></li>
-                                        </ul>--%>
-                                    </div>
-                                </c:if>
-
-                                <%--Rechazar--%>
-                                <div class="btn-group" role="group">
-                                    <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <spring:message code="asientoRegistralSir.estado.rechazar"/> <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a data-toggle="modal" href="#rechazoModal" onclick="limpiarModalRechazo()">Origen</a></li>
-                                        <li><a data-toggle="modal" href="#rechazoModal" onclick="limpiarModalRechazo()">Inicio</a></li>
-                                    </ul>
+                            <%--Botón Reenviar--%>
+                            <c:if test="${puedeReenviar}">
+                                <div class="btn-group">
+                                    <a data-toggle="modal" role="button" href="#modalBuscadorOficinaSir"
+                                      onclick="inicializarBuscador('#codNivelAdministracionOficinaSir','#codComunidadAutonomaOficinaSir','#provinciaOficinaSir','#localidadOficinaSir','${oficinaActiva.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficinaActiva.organismoResponsable.codAmbComunidad.codigoComunidad}','OficinaSir' );"
+                                      class="btn btn-warning btn-sm"><spring:message code="asientoRegistralSir.estado.reenviar"/></a>
                                 </div>
+                            </c:if>
+
+                            <%--Rechazar--%>
+                            <div class="btn-group">
+                                <a data-toggle="modal" role="button" href="#rechazoModal"
+                                   onclick="limpiarModalRechazo();"
+                                   class="btn btn-danger btn-sm"><spring:message code="asientoRegistralSir.estado.rechazar"/></a>
                             </div>
 
-                            <c:url value="/asientoRegistralSir/reenviar/${asientoRegistralSir.id}" var="urlReenviar" scope="request"/>
-                            <form:form modelAttribute="reenviarForm" method="post" action="${urlReenviar}" cssClass="form-horizontal">
-                                <form:hidden path="codigoOficina" value=""/>
-                                <form:hidden path="denominacionOficina" value=""/>
-                            </form:form>
-
-                        </div>
-
-                        <%--Modal Rechazo--%>
-                        <div id="rechazoModal" class="modal fade bs-example-modal-lg">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-                                        <h3>Rechazar Asiento Registral Sir ${asientoRegistralSir.numeroRegistro}</h3>
-                                    </div>
-
-                                    <div class="modal-body">
-                                        <c:url value="/asientoRegistralSir/rechazar/${asientoRegistralSir.id}" var="urlRechazar" scope="request"/>
-                                        <form:form modelAttribute="rechazarForm" method="post" action="${urlRechazar}" cssClass="form-horizontal">
-                                            <div class="panel panel-success">
-
-                                                <div class="panel-heading">
-                                                    <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i>
-                                                        <strong>Introduzca el motivo del rechazo</strong></h3>
-                                                </div>
-
-                                                <div class="panel-body">
-
-                                                    <div class="form-group col-xs-12">
-                                                        <div class="col-xs-4 pull-left etiqueta_regweb_left control-label">
-                                                            <form:label for="observacionesRechazo" path="observacionesRechazo"> Observaciones</form:label>
-                                                        </div>
-                                                        <div class="col-xs-8" id="observacionesRechazoSir">
-                                                            <form:textarea path="observacionesRechazo" rows="5" cssClass="form-control"/> <span class="errors"></span>
-                                                        </div>
-                                                    </div>
-
-                                                </div> <!-- /.panel body -->
-                                            </div>
-                                            <!-- /.panel panel-info -->
-                                            <div class="form-actions">
-                                                <input type="submit" value="<spring:message code="asientoRegistralSir.estado.rechazar"/>"
-                                                       class="btn btn-danger btn-sm"
-                                                       onclick="return rechazarAsientoRegistralSir()">
-                                            </div>
-                                        </form:form>
-
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button class="btn" data-dismiss="modal" aria-hidden="true"><spring:message
-                                                code="regweb.cerrar"/></button>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
 
                     </c:if>
@@ -409,7 +341,7 @@
 
             <!-- ANEXOS -->
             <c:import url="anexosSir.jsp"/>
-
+            </form:form>
                 <%--TRAZABILIDAD--%>
             <c:if test="${not empty trazabilidades}">
                 <c:import url="../trazabilidad/trazabilidadSir.jsp"/>
@@ -417,6 +349,63 @@
 
 
         </div><!-- /div.row-->
+
+
+        <%--Modal Rechazo--%>
+        <div id="rechazoModal" class="modal fade bs-example-modal-lg">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h3>Rechazar Asiento Registral Sir ${asientoRegistralSir.numeroRegistro}</h3>
+                    </div>
+
+                    <div class="modal-body">
+                        <c:url value="/asientoRegistralSir/rechazar/${asientoRegistralSir.id}" var="urlRechazar" scope="request"/>
+                        <form:form modelAttribute="rechazarForm" method="post" action="${urlRechazar}" cssClass="form-horizontal">
+                            <div class="panel panel-success">
+
+                                <div class="panel-heading">
+                                    <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i>
+                                        <strong>Introduzca el motivo del rechazo</strong></h3>
+                                </div>
+
+                                <div class="panel-body">
+
+                                    <div class="form-group col-xs-12">
+                                        <div class="col-xs-4 pull-left etiqueta_regweb_left control-label">
+                                            <form:label for="observacionesRechazo" path="observacionesRechazo"> Observaciones</form:label>
+                                        </div>
+                                        <div class="col-xs-8" id="observacionesRechazoSir">
+                                            <form:textarea path="observacionesRechazo" rows="5" cssClass="form-control"/> <span class="errors"></span>
+                                        </div>
+                                    </div>
+
+                                </div> <!-- /.panel body -->
+                            </div>
+                            <!-- /.panel panel-info -->
+                            <div class="form-actions">
+                                <input type="submit" value="<spring:message code="asientoRegistralSir.estado.rechazar"/>"
+                                       class="btn btn-danger btn-sm"
+                                       onclick="return rechazarAsientoRegistralSir()">
+                            </div>
+                        </form:form>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn" data-dismiss="modal" aria-hidden="true"><spring:message
+                                code="regweb.cerrar"/></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <c:url value="/asientoRegistralSir/reenviar/${asientoRegistralSir.id}" var="urlReenviar" scope="request"/>
+        <form:form modelAttribute="reenviarForm" method="post" action="${urlReenviar}" cssClass="form-horizontal">
+            <form:hidden path="codigoOficina" value=""/>
+            <form:hidden path="denominacionOficina" value=""/>
+            <form:hidden path="codigoOrganismoResponsable" value=""/>
+            <form:hidden path="denominacionOrganismoResponsable" value=""/>
         </form:form>
 
     </div>
