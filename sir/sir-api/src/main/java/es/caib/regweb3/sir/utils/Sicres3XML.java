@@ -688,6 +688,8 @@ public class Sicres3XML {
             if (anexoSir.getAnexoData() != null) {
                 elem = rootElement.addElement("Hash");
                 elem.addCDATA(getBase64String(anexoSir.getAnexoData()));
+            }else{
+                log.info("getAnexoData es null");
             }
 
             // Tipo_MIME
@@ -700,6 +702,8 @@ public class Sicres3XML {
             if (anexoSir.getAnexoData() != null) {
                 elem = rootElement.addElement("Anexo");
                 elem.addCDATA(getBase64String(anexoSir.getAnexoData()));
+            }else{
+                log.info("getAnexoData es null");
             }
 
             //Identificador Fichero Firmado

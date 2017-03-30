@@ -290,19 +290,9 @@ public class AsientoRegistralSirController extends BaseController {
         Oficina oficinaReenvio = reenviarForm.oficinaReenvio();
         Oficina oficinaActiva = getOficinaActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-        Long idRegistro;
         String variableReturn = "redirect:/asientoRegistralSir/"+idAsientoRegistralSir+"/detalle";
 
-        AsientoRegistralSir asientoRegistralSir = null;
-
-        try{
-            asientoRegistralSir = asientoRegistralSirEjb.getAsientoRegistralConAnexos(idAsientoRegistralSir);
-        }catch (Exception e){
-            log.info("Error al obtener el asientoRegistralSir con aenexos");
-            e.printStackTrace();
-            Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.error.reenvio"));
-            return variableReturn;
-        }
+        AsientoRegistralSir asientoRegistralSir  = asientoRegistralSirEjb.findById(idAsientoRegistralSir);
 
         // Comprobamos si ya ha sido reenviado
         if(asientoRegistralSir.getEstado().equals(EstadoAsientoRegistralSir.REENVIADO)){
