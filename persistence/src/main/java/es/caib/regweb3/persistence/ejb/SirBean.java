@@ -1474,7 +1474,7 @@ public class SirBean implements SirLocal{
 
 
 
-    protected DocumentCustody getDocumentCustody(AnexoSir anexoSir) {
+    protected DocumentCustody getDocumentCustody(AnexoSir anexoSir) throws Exception {
         if (log.isDebugEnabled()) {
             log.debug("  ------------------------------");
             log.debug(" anexoSir.getAnexo = " + anexoSir.getAnexo());
