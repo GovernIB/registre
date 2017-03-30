@@ -123,7 +123,7 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
     public AsientoRegistralSir crearAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir) throws Exception{
 
         // En caso de recepción, le asignamos la entidad a la que va dirigida
-        if(asientoRegistralSir.getEntidad() != null){
+        if(asientoRegistralSir.getEntidad() == null){
             Entidad entidad = new Entidad(oficinaEjb.obtenerEntidad(asientoRegistralSir.getCodigoEntidadRegistralDestino()));
             log.info("Se trata de una recepción, buscamos la entidad a la que va dirigida: " + entidad.getNombre());
             asientoRegistralSir.setEntidad(entidad);
@@ -295,7 +295,6 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
         if (ficheroIntercambio.getFicheroIntercambio() != null) {
 
             asientoRegistralSir = new AsientoRegistralSir();
-            asientoRegistralSir.setEntidad(null);
 
             // Segmento De_Origen_o_Remitente
             De_Origen_o_Remitente de_Origen_o_Remitente = ficheroIntercambio.getFicheroIntercambio().getDe_Origen_o_Remitente();
