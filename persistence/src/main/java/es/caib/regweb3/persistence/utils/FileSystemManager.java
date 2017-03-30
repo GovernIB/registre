@@ -32,7 +32,7 @@ public class FileSystemManager {
      * @param id
      * @return
      */
-    public static byte[] getBytesArchivo(Long id) {
+    public static byte[] getBytesArchivo(Long id) throws Exception{
         File file = new File(getArchivosPath(), String.valueOf(id));
         FileInputStream input = null;
         byte[] content = null;
@@ -43,10 +43,10 @@ public class FileSystemManager {
         } catch (FileNotFoundException e) {
             log.info("El archivo no se encuentro en el path indicado");
             e.printStackTrace();
-            return null;
+            throw e;
         } catch (IOException e) {
             e.printStackTrace();
-            return null;
+            throw e;
         }
 
         return content;

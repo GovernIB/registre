@@ -123,7 +123,7 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
 
         for (AnexoSir anexoSir : asientoRegistralSir.getAnexos()) {
 
-            anexoSir.setAnexoData(FileSystemManager.getBytesArchivo(anexoSir.getId()));
+            anexoSir.setAnexoData(FileSystemManager.getBytesArchivo(anexoSir.getAnexo().getId()));
         }
 
         return asientoRegistralSir;
