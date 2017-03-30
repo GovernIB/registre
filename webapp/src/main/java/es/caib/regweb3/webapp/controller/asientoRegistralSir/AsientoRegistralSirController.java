@@ -161,12 +161,13 @@ public class AsientoRegistralSirController extends BaseController {
         //si el estado del asiento  es RECIBIDO,DEVUELTO, REENVIADO o REENVIADO_Y_ERROR se puede reenviar
         model.addAttribute("puedeReenviar",  sirEjb.puedeReenviarAsientoRegistralSir(asientoRegistralSir.getEstado()));
 
-        // Comprobamos si el usuario puede gestionar este AsientoRegistralSir según su organismo destino
-        if(getOrganismosSIRCodigo(request).contains(asientoRegistralSir.getCodigoUnidadTramitacionDestino())){
 
-            model.addAttribute("asientoRegistralSir",asientoRegistralSir);
+        // Si el asiento cuyo estado es RECIBIDO
+        if(asientoRegistralSir.getEstado().equals(EstadoAsientoRegistralSir.RECIBIDO)){
 
-            if(asientoRegistralSir.getEstado().equals(EstadoAsientoRegistralSir.RECIBIDO)){
+            // Tengo permisos para gestionarlo?
+            if(getOrganismosSIRCodigo(request).contains(asientoRegistralSir.getCodigoUnidadTramitacionDestino())){
+
                 // Obtenemos los libros del Organismo destinatário del AsientoRegistralSir
                 //List<Libro> libros = libroEjb.getLibrosActivosOrganismo(asientoRegistralSir.getCodigoUnidadTramitacionDestino());
                 List<Libro> libros = getLibrosRegistroEntrada(request);
@@ -176,31 +177,22 @@ public class AsientoRegistralSirController extends BaseController {
                 model.addAttribute("rechazarForm", new RechazarForm());
                 model.addAttribute("reenviarForm", new ReenviarForm());
 
-                model.addAttribute("comunidadesAutonomas", catComunidadAutonomaEjb.getAll());
-                model.addAttribute("nivelesAdministracion", catNivelAdministracionEjb.getAll());
-                model.addAttribute("comunidad", catNivelAdministracionEjb.getAll());
-
-                // Obtenemos la comunidad de la Entidad para personalizar el buscador de oficinas Sir
-                Entidad entidad = getEntidadActiva(request);
-                Organismo organismoRaiz = organismoEjb.findByCodigoEntidad(entidad.getCodigoDir3(), entidad.getId());
-                if ((organismoRaiz != null) && organismoRaiz.getCodAmbComunidad() != null) {
-                    model.addAttribute("comunidad", organismoRaiz.getCodAmbComunidad());
-                }else{
-                    model.addAttribute("comunidad", new CatComunidadAutonoma());
-                }
             }else{
-                // Trazabilidad
-                model.addAttribute("trazabilidades", trazabilidadEjb.getByAsientoRegistralSir(asientoRegistralSir.getId()));
+                Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.error.destino"));
+                return  "redirect:/asientoRegistralSir/list";
             }
 
-
-
         }else{
-            Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.error.destino"));
-            return  "redirect:/asientoRegistralSir/list";
+
+            model.addAttribute("trazabilidades", trazabilidadEjb.getByAsientoRegistralSir(asientoRegistralSir.getId()));
+            model.addAttribute("rechazarForm", new RechazarForm());
+            model.addAttribute("reenviarForm", new ReenviarForm());
+
         }
 
-
+        model.addAttribute("comunidadesAutonomas", catComunidadAutonomaEjb.getAll());
+        model.addAttribute("nivelesAdministracion", catNivelAdministracionEjb.getAll());
+        model.addAttribute("asientoRegistralSir",asientoRegistralSir);
 
         return "asientoRegistralSir/asientoRegistralSirDetalle";
     }
