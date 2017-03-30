@@ -117,6 +117,22 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
     }
 
     @Override
+    public AsientoRegistralSir getAsientoRegistral(String identificadorIntercambio) throws Exception{
+
+        Query q = em.createQuery("Select asientoRegistralSir from AsientoRegistralSir as asientoRegistralSir where " +
+                "asientoRegistralSir.identificadorIntercambio = :identificadorIntercambio");
+
+        q.setParameter("identificadorIntercambio",identificadorIntercambio);
+
+        List<AsientoRegistralSir> asientoRegistralSir = q.getResultList();
+        if(asientoRegistralSir.size() == 1){
+            return asientoRegistralSir.get(0);
+        }else{
+            return  null;
+        }
+    }
+
+    @Override
     public AsientoRegistralSir getAsientoRegistralConAnexos(Long idAsientoRegistralsir) throws Exception{
 
         AsientoRegistralSir asientoRegistralSir = findById(idAsientoRegistralsir);

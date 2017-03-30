@@ -129,7 +129,7 @@ public class SirBean implements SirLocal{
     @Override
     public void recibirMensajeDatosControl(Mensaje mensaje) throws Exception{
 
-        AsientoRegistralSir asientoRegistralSir = asientoRegistralSirEjb.getAsientoRegistral(mensaje.getIdentificadorIntercambio(),mensaje.getCodigoEntidadRegistralDestino());
+        AsientoRegistralSir asientoRegistralSir = asientoRegistralSirEjb.getAsientoRegistral(mensaje.getIdentificadorIntercambio());
 
         if (asientoRegistralSir != null) {
 
