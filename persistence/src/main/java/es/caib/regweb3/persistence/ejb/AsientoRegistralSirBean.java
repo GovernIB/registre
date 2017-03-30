@@ -10,10 +10,7 @@ import es.caib.regweb3.model.utils.DocumentacionFisica;
 import es.caib.regweb3.model.utils.EstadoAsientoRegistralSir;
 import es.caib.regweb3.model.utils.IndicadorPrueba;
 import es.caib.regweb3.model.utils.TipoRegistro;
-import es.caib.regweb3.persistence.utils.ArchivoManager;
-import es.caib.regweb3.persistence.utils.DataBaseUtils;
-import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
-import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.persistence.utils.*;
 import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.sir.core.model.*;
@@ -117,6 +114,20 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
         }else{
             return  null;
         }
+    }
+
+    @Override
+    public AsientoRegistralSir getAsientoRegistralConAnexos(Long idAsientoRegistralsir) throws Exception{
+
+        AsientoRegistralSir asientoRegistralSir = findById(idAsientoRegistralsir);
+
+        for (AnexoSir anexoSir : asientoRegistralSir.getAnexos()) {
+
+            anexoSir.setAnexoData(FileSystemManager.getBytesArchivo(anexoSir.getId()));
+        }
+
+        return asientoRegistralSir;
+
     }
 
     @Override

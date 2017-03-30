@@ -288,7 +288,7 @@ public class AsientoRegistralSirController extends BaseController {
 
         //Montamos la oficina de reenvio seleccionada por el usuario
         Oficina oficinaReenvio = reenviarForm.oficinaReenvio();
-        AsientoRegistralSir asientoRegistralSir = asientoRegistralSirEjb.findById(idAsientoRegistralSir);
+        AsientoRegistralSir asientoRegistralSir = asientoRegistralSirEjb.getAsientoRegistralConAnexos(idAsientoRegistralSir);
         Oficina oficinaActiva = getOficinaActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         Long idRegistro;
