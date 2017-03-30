@@ -129,24 +129,24 @@ public class SirBean implements SirLocal{
     @Override
     public void recibirMensajeDatosControl(Mensaje mensaje) throws Exception{
 
-        OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(mensaje.getIdentificadorIntercambio());
+        AsientoRegistralSir asientoRegistralSir = asientoRegistralSirEjb.getAsientoRegistral(mensaje.getIdentificadorIntercambio(),mensaje.getCodigoEntidadRegistralDestino());
 
-        if (oficioRemision != null) {
+        if (asientoRegistralSir != null) {
 
             // Mensaje ACK
             if(mensaje.getTipoMensaje().equals(TipoMensaje.ACK)){
 
-                procesarMensajeACK(oficioRemision);
+                procesarMensajeACK(asientoRegistralSir);
 
             // Mensaje CONFIRMACIÓN
             }else if(mensaje.getTipoMensaje().equals(TipoMensaje.CONFIRMACION)){
 
-                procesarMensajeCONFIRMACION(oficioRemision, mensaje);
+                procesarMensajeCONFIRMACION(asientoRegistralSir, mensaje);
 
             // Mensaje ERROR
             }else if(mensaje.getTipoMensaje().equals(TipoMensaje.ERROR)){
 
-                procesarMensajeERROR(oficioRemision, mensaje);
+                procesarMensajeERROR(asientoRegistralSir, mensaje);
 
             }else{
                 log.info("El tipo mensaje de control no es válido: " + mensaje.getTipoMensaje());
@@ -162,12 +162,12 @@ public class SirBean implements SirLocal{
 
     /**
      * Procesa un mensaje de control de tipo ACK
-     * @param oficioRemision
+     * @param asiento
      * @throws Exception
      */
-    private void procesarMensajeACK(OficioRemision oficioRemision) throws Exception{
+    private void procesarMensajeACK(AsientoRegistralSir asiento) throws Exception{
 
-        AsientoRegistralSir asiento = oficioRemision.getAsientoRegistralSir();
+        OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(asiento.getIdentificadorIntercambio());
 
         if (asiento.getEstado().equals(EstadoAsientoRegistralSir.ENVIADO)){
 
@@ -176,9 +176,11 @@ public class SirBean implements SirLocal{
             asientoRegistralSirEjb.merge(asiento);
 
             // Actualizamos el OficioRemision
-            oficioRemision.setNumeroReintentos(0);
-            oficioRemision.setFechaEstado(new Date());
-            oficioRemisionEjb.merge(oficioRemision);
+            if(oficioRemision != null){
+                oficioRemision.setNumeroReintentos(0);
+                oficioRemision.setFechaEstado(new Date());
+                oficioRemisionEjb.merge(oficioRemision);
+            }
 
         } else if (asiento.getEstado().equals(EstadoAsientoRegistralSir.REENVIADO)){
 
@@ -187,9 +189,11 @@ public class SirBean implements SirLocal{
             asientoRegistralSirEjb.merge(asiento);
 
             // Actualizamos el OficioRemision
-            oficioRemision.setNumeroReintentos(0);
-            oficioRemision.setFechaEstado(new Date());
-            oficioRemisionEjb.merge(oficioRemision);
+            if(oficioRemision != null){
+                oficioRemision.setNumeroReintentos(0);
+                oficioRemision.setFechaEstado(new Date());
+                oficioRemisionEjb.merge(oficioRemision);
+            }
 
         } else if (asiento.getEstado().equals(EstadoAsientoRegistralSir.RECHAZADO)){
 
@@ -198,9 +202,11 @@ public class SirBean implements SirLocal{
             asientoRegistralSirEjb.merge(asiento);
 
             // Actualizamos el OficioRemision
-            oficioRemision.setNumeroReintentos(0);
-            oficioRemision.setFechaEstado(new Date());
-            oficioRemisionEjb.merge(oficioRemision);
+            if(oficioRemision != null){
+                oficioRemision.setNumeroReintentos(0);
+                oficioRemision.setFechaEstado(new Date());
+                oficioRemisionEjb.merge(oficioRemision);
+            }
 
         } else if (asiento.getEstado().equals(EstadoAsientoRegistralSir.ENVIADO_Y_ACK) ||
                 asiento.getEstado().equals(EstadoAsientoRegistralSir.REENVIADO_Y_ACK) ||
@@ -217,12 +223,12 @@ public class SirBean implements SirLocal{
 
     /**
      * Procesa un mensaje de control de tipo CONFIRMACION
-     * @param oficioRemision
+     * @param asiento
      * @throws Exception
      */
-    private void procesarMensajeCONFIRMACION(OficioRemision oficioRemision, Mensaje mensaje) throws Exception{
+    private void procesarMensajeCONFIRMACION(AsientoRegistralSir asiento, Mensaje mensaje) throws Exception{
 
-        AsientoRegistralSir asiento = oficioRemision.getAsientoRegistralSir();
+        OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(asiento.getIdentificadorIntercambio());
 
         if (asiento.getEstado().equals(EstadoAsientoRegistralSir.ENVIADO) ||
                 asiento.getEstado().equals(EstadoAsientoRegistralSir.ENVIADO_Y_ACK) ||
@@ -238,9 +244,11 @@ public class SirBean implements SirLocal{
             asientoRegistralSirEjb.merge(asiento);
 
             // Actualizamos el OficioRemision
-            oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_ACEPTADO);
-            oficioRemision.setFechaEstado(new Date());
-            oficioRemisionEjb.merge(oficioRemision);
+            if(oficioRemision != null){
+                oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_ACEPTADO);
+                oficioRemision.setFechaEstado(new Date());
+                oficioRemisionEjb.merge(oficioRemision);
+            }
 
         }else  if(asiento.getEstado().equals(EstadoAsientoRegistralSir.ACEPTADO)){
 
@@ -255,13 +263,13 @@ public class SirBean implements SirLocal{
 
     /**
      * Procesa un mensaje de control de tipo ERROR
-     * @param oficioRemision
+     * @param asiento
      * @param mensaje
      * @throws Exception
      */
-    private void procesarMensajeERROR(OficioRemision oficioRemision, Mensaje mensaje) throws Exception{
+    private void procesarMensajeERROR(AsientoRegistralSir asiento, Mensaje mensaje) throws Exception{
 
-        AsientoRegistralSir asiento = oficioRemision.getAsientoRegistralSir();
+        OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(asiento.getIdentificadorIntercambio());
 
         if (asiento.getEstado().equals(EstadoAsientoRegistralSir.ENVIADO)){
 
@@ -270,12 +278,14 @@ public class SirBean implements SirLocal{
             asientoRegistralSirEjb.merge(asiento);
 
             // Actualizamos el OficioRemision
-            //oficioRemision.setEstado(RegwebConstantes.); todo especificar nuevo estado
-            oficioRemision.setCodigoError(mensaje.getCodigoError());
-            oficioRemision.setDescripcionError(mensaje.getDescripcionMensaje());
-            oficioRemision.setNumeroReintentos(0);
-            oficioRemision.setFechaEstado(new Date());
-            oficioRemisionEjb.merge(oficioRemision);
+            if(oficioRemision != null){
+                //oficioRemision.setEstado(RegwebConstantes.); todo especificar nuevo estado
+                oficioRemision.setCodigoError(mensaje.getCodigoError());
+                oficioRemision.setDescripcionError(mensaje.getDescripcionMensaje());
+                oficioRemision.setNumeroReintentos(0);
+                oficioRemision.setFechaEstado(new Date());
+                oficioRemisionEjb.merge(oficioRemision);
+            }
 
         } else if (asiento.getEstado().equals(EstadoAsientoRegistralSir.REENVIADO)){
 
@@ -284,13 +294,14 @@ public class SirBean implements SirLocal{
             asientoRegistralSirEjb.merge(asiento);
 
             // Actualizamos el OficioRemision
-            //oficioRemision.setEstado(RegwebConstantes.); todo especificar nuevo estado
-            oficioRemision.setCodigoError(mensaje.getCodigoError());
-            oficioRemision.setDescripcionError(mensaje.getDescripcionMensaje());
-            oficioRemision.setNumeroReintentos(0);
-            oficioRemision.setFechaEstado(new Date());
-            oficioRemisionEjb.merge(oficioRemision);
-
+            if(oficioRemision != null){
+                //oficioRemision.setEstado(RegwebConstantes.); todo especificar nuevo estado
+                oficioRemision.setCodigoError(mensaje.getCodigoError());
+                oficioRemision.setDescripcionError(mensaje.getDescripcionMensaje());
+                oficioRemision.setNumeroReintentos(0);
+                oficioRemision.setFechaEstado(new Date());
+                oficioRemisionEjb.merge(oficioRemision);
+            }
 
         } else if (asiento.getEstado().equals(EstadoAsientoRegistralSir.RECHAZADO)){
 
@@ -299,13 +310,15 @@ public class SirBean implements SirLocal{
             asientoRegistralSirEjb.merge(asiento);
 
             // Actualizamos el OficioRemision
-            //oficioRemision.setEstado(RegwebConstantes.); todo especificar nuevo estado
-            oficioRemision.setCodigoError(mensaje.getCodigoError());
-            oficioRemision.setDescripcionError(mensaje.getDescripcionMensaje());
-            oficioRemision.setNumeroReintentos(0);
-            oficioRemision.setFechaEstado(new Date());
-            oficioRemisionEjb.merge(oficioRemision);
+            if(oficioRemision != null){
+                //oficioRemision.setEstado(RegwebConstantes.); todo especificar nuevo estado
+                oficioRemision.setCodigoError(mensaje.getCodigoError());
+                oficioRemision.setDescripcionError(mensaje.getDescripcionMensaje());
+                oficioRemision.setNumeroReintentos(0);
+                oficioRemision.setFechaEstado(new Date());
+                oficioRemisionEjb.merge(oficioRemision);
 
+            }
 
         } else if (asiento.getEstado().equals(EstadoAsientoRegistralSir.ENVIADO_Y_ERROR) ||
                 asiento.getEstado().equals(EstadoAsientoRegistralSir.REENVIADO_Y_ERROR) ||
