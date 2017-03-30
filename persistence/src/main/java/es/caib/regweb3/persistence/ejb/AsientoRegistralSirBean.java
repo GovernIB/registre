@@ -122,11 +122,12 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
     @Override
     public AsientoRegistralSir crearAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir) throws Exception{
 
-        // Obtenemos la Entidad a la que pertenece la Oficina a la que va dirigida este AsientoRegistralSir
-        Entidad entidad = new Entidad(oficinaEjb.obtenerEntidad(asientoRegistralSir.getCodigoEntidadRegistralDestino()));
+        // En caso de recepción, le asignamos la entidad a la que va dirigida
+        if(asientoRegistralSir.getEntidad() != null){
 
-        asientoRegistralSir.setEntidad(entidad);
-        asientoRegistralSir.setEstado(EstadoAsientoRegistralSir.RECIBIDO);
+            Entidad entidad = new Entidad(oficinaEjb.obtenerEntidad(asientoRegistralSir.getCodigoEntidadRegistralDestino()));
+            asientoRegistralSir.setEntidad(entidad);
+        }
 
         asientoRegistralSir = persist(asientoRegistralSir);
 

@@ -106,6 +106,8 @@ public class EmisionBean implements EmisionLocal{
      */
     public void enviar(AsientoRegistralSir asientoRegistralSir, EstadoAsientoRegistralSir estado){
 
+        log.info("Enviando el asiento registral al nodo distribuido: " + asientoRegistralSir.getIdentificadorIntercambio());
+
         try{
         // Creamos el xml de intercambio
         String xml = sicres3XML.crearXMLFicheroIntercambioSICRES3(asientoRegistralSir);

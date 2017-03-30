@@ -99,8 +99,9 @@ public class SirBean implements SirLocal{
 
                 // Convertimos el Fichero de Intercambio SICRES3 en {@link es.caib.regweb3.model.AsientoRegistralSir}
                 asientoRegistralSir = asientoRegistralSirEjb.transformarFicheroIntercambio(ficheroIntercambio);
+                asientoRegistralSir.setEstado(EstadoAsientoRegistralSir.RECIBIDO);
 
-                asientoRegistralSir = asientoRegistralSirEjb.crearAsientoRegistralSir(asientoRegistralSir);
+                asientoRegistralSirEjb.crearAsientoRegistralSir(asientoRegistralSir);
 
 
             }
@@ -330,8 +331,6 @@ public class SirBean implements SirLocal{
      */
     @Override
     public OficioRemision enviarFicheroIntercambio(String tipoRegistro, Long idRegistro, String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino, Oficina oficinaActiva, UsuarioEntidad usuario, Long idLibro) throws Exception, I18NException {
-
-        log.info("Enviando Registro al nodo distribuido ");
 
         AsientoRegistralSir asientoRegistralSir = null;
 
