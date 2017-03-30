@@ -13,11 +13,16 @@ public class ArchivoManager {
 
     protected final Logger log = Logger.getLogger(getClass());
 
-    private final ArchivoLocal archivoEjb;
+    private ArchivoLocal archivoEjb;
     private Archivo archivoActual;
     private String nombreFichero;
     private String mime;
     private byte[] fichero;
+
+    public ArchivoManager(Archivo archivoActual, ArchivoLocal archivoEjb) {
+        this.archivoActual = archivoActual;
+        this.archivoEjb = archivoEjb;
+    }
 
     public ArchivoManager(ArchivoLocal archivoEjb, String nombreFichero, String mime, byte[] fichero) {
         this.archivoEjb = archivoEjb;

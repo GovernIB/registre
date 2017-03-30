@@ -153,33 +153,46 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
     @Override
     public AsientoRegistralSir crearAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir) throws Exception{
 
-        // En caso de recepción, le asignamos la entidad a la que va dirigida
-        if(asientoRegistralSir.getEntidad() == null){
-            Entidad entidad = new Entidad(oficinaEjb.obtenerEntidad(asientoRegistralSir.getCodigoEntidadRegistralDestino()));
-            log.info("Se trata de una recepción, buscamos la entidad a la que va dirigida: " + entidad.getNombre());
-            asientoRegistralSir.setEntidad(entidad);
-        }
+        try{
 
-        asientoRegistralSir = persist(asientoRegistralSir);
-
-        // Guardamos los Interesados
-        if(asientoRegistralSir.getInteresados() != null && asientoRegistralSir.getInteresados().size() > 0){
-            for(InteresadoSir interesadoSir: asientoRegistralSir.getInteresados()){
-                interesadoSir.setIdAsientoRegistralSir(asientoRegistralSir);
-
-                interesadoSirEjb.persist(interesadoSir);
+            // En caso de recepción, le asignamos la entidad a la que va dirigida
+            if(asientoRegistralSir.getEntidad() == null){
+                Entidad entidad = new Entidad(oficinaEjb.obtenerEntidad(asientoRegistralSir.getCodigoEntidadRegistralDestino()));
+                log.info("Se trata de una recepción, buscamos la entidad a la que va dirigida: " + entidad.getNombre());
+                asientoRegistralSir.setEntidad(entidad);
             }
-        }
 
-        // Guardamos los Anexos
-        if(asientoRegistralSir.getAnexos() != null && asientoRegistralSir.getAnexos().size() > 0){
+            asientoRegistralSir = persist(asientoRegistralSir);
+
+            // Guardamos los Interesados
+            if(asientoRegistralSir.getInteresados() != null && asientoRegistralSir.getInteresados().size() > 0){
+                for(InteresadoSir interesadoSir: asientoRegistralSir.getInteresados()){
+                    interesadoSir.setIdAsientoRegistralSir(asientoRegistralSir);
+
+                    interesadoSirEjb.persist(interesadoSir);
+                }
+            }
+
+            // Guardamos los Anexos
+            if(asientoRegistralSir.getAnexos() != null && asientoRegistralSir.getAnexos().size() > 0){
+                for(AnexoSir anexoSir: asientoRegistralSir.getAnexos()){
+                    anexoSir.setIdAsientoRegistralSir(asientoRegistralSir);
+
+                    anexoSirEjb.persist(anexoSir);
+                }
+            }
+            em.flush();
+
+        }catch (Exception e){
+            log.info("Error al crear el AsientoRegistralSir, eliminamos los posibles anexos creados");
             for(AnexoSir anexoSir: asientoRegistralSir.getAnexos()){
-                anexoSir.setIdAsientoRegistralSir(asientoRegistralSir);
-
-                anexoSirEjb.persist(anexoSir);
+                ArchivoManager am = new ArchivoManager(anexoSir.getAnexo(),archivoEjb);
+                am.processError();
             }
+            e.printStackTrace();
+            throw e;
         }
-        em.flush();
+
         return asientoRegistralSir;
     }
 
@@ -546,11 +559,13 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
                             anexo.setTipoMIME(de_Anexo.getTipo_MIME());
                         }
 
+                        ArchivoManager am = null;
                         try {
-                            ArchivoManager am = new ArchivoManager(archivoEjb, de_Anexo.getNombre_Fichero_Anexado(), anexo.getTipoMIME(), de_Anexo.getAnexo());
+                            am = new ArchivoManager(archivoEjb, de_Anexo.getNombre_Fichero_Anexado(), anexo.getTipoMIME(), de_Anexo.getAnexo());
                             anexo.setAnexo(am.prePersist());
                         } catch (Exception e) {
                             log.info("Error al crear el Anexo en el sistema de archivos", e);
+                            am.processError();
                             throw new ServiceException(Errores.ERROR_0045,e);
                         }
 
