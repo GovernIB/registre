@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 
 import es.caib.regweb3.persistence.ejb.ScanWebModuleLocal;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.webapp.scan.TipoScan;
 
@@ -150,9 +151,12 @@ public class ScanRequestServlet extends HttpServlet {
 
   public static String getAbsoluteRequestPluginBasePath(HttpServletRequest request,
       String webContext, long scanWebID) {
-
-    String absoluteURLBase =   request.getScheme() + "://" + request.getServerName() + ":"
+    
+    String absoluteURLBase = PropiedadGlobalUtil.getScanWebAbsoluteURL();
+    if (absoluteURLBase==null || absoluteURLBase.trim().isEmpty()) {
+      absoluteURLBase =   request.getScheme() + "://" + request.getServerName() + ":"
         + request.getServerPort() + request.getContextPath();
+    }
     
     return absoluteURLBase + webContext +  scanWebID;
   }
