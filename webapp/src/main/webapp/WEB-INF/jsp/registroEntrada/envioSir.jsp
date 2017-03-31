@@ -38,7 +38,7 @@
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-file-o"></i>
                             <strong>
-                                Enviar <spring:message code="registroEntrada.registroEntrada"/> a SIR
+                                Enviar <spring:message code="registroEntrada.registroEntrada"/> ${registroEntrada.numeroRegistroFormateado} a SIR
                             </strong>
                         </h3>
                     </div>
@@ -49,7 +49,7 @@
                             <div class="col-lg-6">
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
-                                        <spring:message code="registroEntrada.registroEntrada"/> a enviar: ${registroEntrada.numeroRegistroFormateado}
+                                        <strong><spring:message code="registroEntrada.registroEntrada"/> a enviar: ${registroEntrada.numeroRegistroFormateado}</strong>
                                     </div>
                                     <div class="panel-body">
                                         <p><strong><i class="fa fa-home"></i> <spring:message code="registroEntrada.oficina"/>:</strong> ${registroEntrada.oficina.denominacion}</p>
@@ -65,7 +65,7 @@
                             <div class="col-lg-6">
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
-                                        Oficina destino
+                                        <strong>Oficina destino</strong>
                                     </div>
                                     <div class="panel-body">
                                         <p><strong><i class="fa fa-institution"></i> <spring:message code="registroEntrada.organismoDestino"/>:</strong> ${registroEntrada.destinoExternoDenominacion}</p>
@@ -74,21 +74,27 @@
 
                                             <input type="hidden" id="idRegistro" name="idRegistro" value="${registroEntrada.id}"/>
                                             <input type="hidden" id="idLibro" name="idLibro" value="${registroEntrada.libro.id}"/>
-                                            <div class="form-group">
-                                                <div class="col-xs-3"><strong><i class="fa fa-home"></i> <spring:message code="registroEntrada.oficina"/>:</strong></div>
-                                                <div class="col-xs-9">
-                                                    <!-- Oficina Sir destinataria -->
-                                                    <form:select path="oficinaSIRCodigo" items="${oficinasSIR}"
-                                                                 itemLabel="denominacion"
-                                                                 itemValue="codigo"
-                                                                 class="form-control"/>
+
+                                            <!-- Oficina Sir destinataria -->
+                                            <c:if test="${fn:length(oficinasSIR) == 1}">
+                                                <p><strong><i class="fa fa-home"></i> <spring:message code="oficina.destino"/>:</strong> ${oficinasSIR[0].denominacion}</p>
+                                                <input type="hidden" id="oficinaSIRCodigo" name="oficinaSIRCodigo" value="${oficinasSIR[0].codigo}"/>
+                                            </c:if>
+                                            <c:if test="${fn:length(oficinasSIR) > 1}">
+                                                <div class="form-group">
+                                                    <div class="col-xs-4"><strong><i class="fa fa-home"></i> <spring:message code="oficina.destino"/>:</strong></div>
+                                                    <div class="col-xs-8">
+
+                                                        <form:select path="oficinaSIRCodigo" items="${oficinasSIR}"
+                                                                     itemLabel="denominacion"
+                                                                     itemValue="codigo"
+                                                                     class="form-control"/>
+                                                    </div>
                                                 </div>
-                                            </div>
-
+                                            </c:if>
                                             <div class="form-actions">
-                                                <input type="submit" value="Enviar" class="btn btn-primary btn-sm">
+                                                <input type="submit" value="Enviar" class="btn btn-warning btn-sm">
                                             </div>
-
 
                                         </form:form>
                                     </div>

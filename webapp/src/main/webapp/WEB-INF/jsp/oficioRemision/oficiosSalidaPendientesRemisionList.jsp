@@ -229,7 +229,7 @@
 
                                                 <!-- Oficina Sir destinataria -->
                                                 <c:if test="${oficiosRemisionOrganismo.sir}">
-                                                    <div class="row">
+                                                    <div class="">
                                                         <div class="form-group col-xs-12">
                                                             <div class="col-xs-2 pull-left align-right">
                                                                 <spring:message code="oficioRemision.oficinaSir"/></div>
