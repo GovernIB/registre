@@ -289,7 +289,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     /**
      * Enviar a SIR un Registro de Entrada
      */
-    @RequestMapping(value = "/{idRegistroEntrada}/enviar", method = RequestMethod.GET)
+    @RequestMapping(value = "/{idRegistroEntrada}/enviarSir", method = RequestMethod.GET)
     public ModelAndView enviarSir(@PathVariable Long idRegistroEntrada, Model model, HttpServletRequest request) throws Exception {
 
         ModelAndView mav = new ModelAndView("registroEntrada/envioSir");
@@ -313,7 +313,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     /**
      * Enviar a SIR un Registro de Entrada
      */
-    @RequestMapping(value = "/{idRegistroEntrada}/enviar", method = RequestMethod.POST)
+    @RequestMapping(value = "/{idRegistroEntrada}/enviarSir", method = RequestMethod.POST)
     public ModelAndView enviarSir(@ModelAttribute EnvioSirForm envioSirForm, @PathVariable Long idRegistroEntrada, HttpServletRequest request) throws Exception {
 
         OficioRemision oficioRemision = null;

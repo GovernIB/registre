@@ -175,7 +175,7 @@
                                             </c:if>
                                             <c:if test="${oficio.sir}">
                                                 <button type="button" onclick="goTo('/regweb3/registroEntrada/${registro.id}/enviarSir')" class="btn btn-success btn-sm btn-block">
-                                                    <spring:message code="oficioRemision.boton.crear.sir"/>
+                                                    <spring:message code="registroEntrada.enviar.sir"/>
                                                 </button>
                                             </c:if>
 

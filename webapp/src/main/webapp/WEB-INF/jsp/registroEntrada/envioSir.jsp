@@ -34,7 +34,7 @@
 
             <div class="col-xs-12">
 
-                <div class="panel panel-primary">
+                <div class="panel panel-info">
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-file-o"></i>
                             <strong>
