@@ -14,3 +14,5 @@ target
 /pluginjustificante/api/dependency-reduced-pom.xml
 /pluginjustificante/caib/src/main/resources/logicmissatges_es.properties
 /pluginjustificante/caib/src/main/resources/logicmissatges_ca.properties
+/plugins/plugin-justificante/justificante-caib/src/main/resources/logicmissatges_ca.properties
+/plugins/plugin-justificante/justificante-caib/src/main/resources/logicmissatges_es.properties

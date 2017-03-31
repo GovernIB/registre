@@ -18,6 +18,8 @@
     <cxf.version>2.2.12</cxf.version>
     <timestamp>${maven.build.timestamp}</timestamp>
     <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
+    <documentcustody.api.version>3.0.0</documentcustody.api.version>
+    <scanweb.api.version>2.0.3</scanweb.api.version>
   </properties>
 
   <modules>

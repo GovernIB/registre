@@ -9,6 +9,7 @@ import es.caib.regweb3.persistence.validator.AnexoValidator;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
@@ -28,16 +29,18 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
 import java.beans.Encoder;
 import java.beans.Expression;
 import java.beans.PersistenceDelegate;
-import java.beans.XMLEncoder;
 import java.io.ByteArrayOutputStream;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 
 /**
@@ -45,6 +48,7 @@ import java.util.Locale;
  *
  * @author earrivi
  * @author anadal
+ * @author anadal (Adaptació DocumentCustody 3.0.0)
  * Date: 6/03/13
  */
 @Stateless(name = "AnexoEJB")
@@ -211,7 +215,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
           //Obtenemos el registro con sus anexos, interesados y tipo Asunto
         IRegistro registro = getIRegistro(registroID, tipoRegistro, anexo, isNew);
 
-        final String custodyParameters = getCustodyParameters(registro, anexo);
+        final Map<String, Object> custodyParameters = getCustodyParameters(registro, anexo);
 
           //Reservamos el custodyID
         custodyID = custody.reserveCustodyID(custodyParameters);
@@ -296,7 +300,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         IRegistro registro = getIRegistro(registroID, tipoRegistro, anexo, isNew);
         
         
-        final String custodyParameters = getCustodyParameters(registro, anexo);
+        final Map<String, Object> custodyParameters = getCustodyParameters(registro, anexo);
         
         
         final String custodyID = anexo.getCustodiaID();
@@ -430,7 +434,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @throws I18NException
      */
     protected void updateCustodyInfoOfAnexo(AnexoFull anexoFull, IDocumentCustodyPlugin custody,
-        final String custodyParameters, final String custodyID, 
+        final Map<String, Object> custodyParameters, final String custodyID, 
         IRegistro registro, boolean isNou) throws Exception, I18NException {
       
       // Validador: Sempre amb algun arxiu
@@ -535,7 +539,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         if (isNou || modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
 
             //Guardamos el documentCustody
-            DocumentCustody doc = guardarDocumentCustody(anexoFull.getDocumentoCustody(), custody, custodyID, custodyParameters, anexo, updateDate, mimeFinal);
+            DocumentCustody doc = guardarDocumentCustody(anexoFull.getDocumentoCustody(),
+                custody, custodyID, custodyParameters, anexo, updateDate, mimeFinal);
             //Guardamos la signatureCustody
             guardarSignatureCustody(anexoFull.getSignatureCustody(), doc, custody, custodyID, custodyParameters, anexo, updateDate, mimeFinal);
 
@@ -648,7 +653,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         metadades.add(new Metadata("anexo.observaciones", anexo.getObservaciones()));
       }
 
-      custody.updateMetadata(custodyID, metadades.toArray(new Metadata[metadades.size()]));
+      custody.updateMetadata(custodyID, metadades.toArray(new Metadata[metadades.size()]), custodyParameters);
 
     }
 
@@ -666,7 +671,10 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @return
      * @throws Exception
      */
-    public DocumentCustody guardarDocumentCustody(DocumentCustody dc, IDocumentCustodyPlugin custody, String custodyID, final String custodyParameters, Anexo anexo, boolean updateDate, String mimeFinal) throws Exception {
+    public DocumentCustody guardarDocumentCustody(DocumentCustody dc, 
+        IDocumentCustodyPlugin custody, String custodyID,
+        final Map<String, Object> custodyParameters, Anexo anexo, 
+        boolean updateDate, String mimeFinal) throws Exception {
         DocumentCustody doc = null;
 
         doc = dc;
@@ -709,7 +717,10 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @return
      * @throws Exception
      */
-    public SignatureCustody guardarSignatureCustody(SignatureCustody sc, DocumentCustody doc, IDocumentCustodyPlugin custody, String custodyID, final String custodyParameters, Anexo anexo, boolean updateDate, String mimeFinal) throws Exception {
+    public SignatureCustody guardarSignatureCustody(SignatureCustody sc, 
+        DocumentCustody doc, IDocumentCustodyPlugin custody, 
+        String custodyID, final Map<String, Object> custodyParameters, 
+        Anexo anexo, boolean updateDate, String mimeFinal) throws Exception {
         //Obtenemos la firma que nos envian
         SignatureCustody signature = sc;
         if (signature != null && signature.getData() != null) {//Si nos envian firma
@@ -773,61 +784,15 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
   }
 
 
-    protected String getCustodyParameters(IRegistro registro, Anexo anexo) throws Exception {
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-      XMLEncoder encoder = new XMLEncoder(baos);
-
-      encoder.setPersistenceDelegate(java.sql.Date.class, new java_util_Date_PersistenceDelegate());
-      encoder.setPersistenceDelegate(java.sql.Time.class, new java_util_Date_PersistenceDelegate());
-      encoder.setPersistenceDelegate(java.sql.Timestamp.class, new java_util_Date_PersistenceDelegate());
-      encoder.setPersistenceDelegate(java.util.Date.class, new java_util_Date_PersistenceDelegate()); 
+    protected Map<String, Object> getCustodyParameters(IRegistro registro, Anexo anexo) throws Exception {
       
-      encoder.writeObject(registro);
-      encoder.writeObject(new Anexo(anexo));
-      encoder.flush();
-      encoder.close();
+      Map<String,Object> map = new HashMap<String, Object>();
       
-/*
-
-      try {
-        java.beans.XMLDecoder xmlDec = new java.beans.XMLDecoder(
-            new java.io.ByteArrayInputStream(baos.toByteArray()));
-        IRegistro registroDec = (IRegistro) xmlDec.readObject();
-  
-        System.out.println(" DDDDDDDDDDDDDDD = ]" + registroDec.getNumeroRegistroFormateado()
-            + "[");
-        System.out.println(" zzzzzzzzzzzzzzz = ]"
-            + registroDec.getRegistroDetalle().getFechaOrigen() + "[");
-  
-        Anexo anex = (Anexo) xmlDec.readObject();
-  
-        System.out.println(" KKKKKKKK = ]"
-            + ((TraduccionTipoDocumental) anex.getTipoDocumental().getTraduccion("ca"))
-                .getNombre() + "[");
-  
-
-  
-      } catch (Throwable e) {
-        log.error(" EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE", e);
-      }
-  
-      try {
-  
-        java.io.FileOutputStream fos = new java.io.FileOutputStream("c:\\tmp\\out.xml");
-        fos.write(baos.toByteArray());
-        fos.flush();
-        fos.close();
-  
-      } catch (Throwable e) {
-        log.error(" FFFFFFFFFFFFFFFFF", e);
-      }
-*/
-
-
+      map.put("registro", registro);
+      map.put("anexo", anexo);
       
+      return map;
 
-      return new String(baos.toByteArray());
     }
     
     
@@ -993,6 +958,16 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     }
     
+    
+    @Override
+    public DocumentCustody getDocumentInfoOnly(String custodiaID) throws Exception {
+      return getInstance().getDocumentInfoOnly(custodiaID);
+    }
+    
+    @Override
+    public SignatureCustody getSignatureInfoOnly(String custodiaID) throws Exception {
+      return getInstance().getSignatureInfoOnly(custodiaID);
+    }
 
     /**
      * Obtiene la info de la firma existente en el sistema de archivos
@@ -1061,7 +1036,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      */
     // TODO mime de doc i firma
     public String crearArchivo(String name, byte[] file, String signatureName, 
-        byte[] signature,  int signatureMode, String custodyID, String custodyParameters) throws Exception {
+        byte[] signature,  int signatureMode, String custodyID, 
+        Map<String, Object> custodyParameters) throws Exception {
 
         IDocumentCustodyPlugin instance = getInstance();
 

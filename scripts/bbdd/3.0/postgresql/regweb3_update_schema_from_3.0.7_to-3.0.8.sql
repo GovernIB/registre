@@ -1,4 +1,4 @@
---Nueva campo en la tabla RWE_PROPIEDADGLOBAL
+﻿--Nueva campo en la tabla RWE_PROPIEDADGLOBAL
 alter table RWE_PROPIEDADGLOBAL add TIPO int8;
 
 --Nou camp ACTIU a la taula RWE_CODIGOASUNTO
@@ -26,5 +26,6 @@ alter table RWE_ENTIDAD add OFICIOREMISION bool NOT NULL DEFAULT TRUE;
 INSERT INTO RWE_PERMLIBUSU (id,libro,usuario,activo,permiso) SELECT nextval('RWE_ALL_SEQ'),libro,usuario,true,8 FROM RWE_PERMLIBUSU where permiso=1;
 
 --Contenido para cada Entidad de la tabla RWE_PROPIEDADGLOBAL (Es necesario especificar el id de la Entidad a la que pertenecen)
-INSERT INTO RWE_PROPIEDADGLOBAL (id,clave,valor,tipo,descripcion,entidad) VALUES (nextval('RWE_ALL_SEQ'),'es.caib.regweb3.resultsperpage.oficios','20',1,'Resultados por página en los Oficios pendientes de remisión',?);
-INSERT INTO RWE_PROPIEDADGLOBAL (id,clave,valor,tipo,descripcion,entidad) VALUES (nextval('RWE_ALL_SEQ'),'es.caib.regweb3.resultsperpage.lopd','20',1,'Resultados por página en los informes LOPD',?);
+
+INSERT INTO RWE_PROPIEDADGLOBAL (id,clave,valor,tipo,descripcion,entidad) SELECT nextval('RWE_ALL_SEQ'),'es.caib.regweb3.resultsperpage.oficios','20',1,'Resultados por página en los Oficios pendientes de remisión',rwe_entidad.id FROM rwe_entidad;
+INSERT INTO RWE_PROPIEDADGLOBAL (id,clave,valor,tipo,descripcion,entidad) SELECT nextval('RWE_ALL_SEQ'),'es.caib.regweb3.resultsperpage.lopd','20',1,'Resultados por página en los informes LOPD',rwe_entidad.id FROM rwe_entidad;

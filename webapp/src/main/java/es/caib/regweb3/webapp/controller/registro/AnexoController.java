@@ -12,6 +12,7 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.AnexoWebValidator;
+
 import org.apache.axis.utils.StringUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -36,9 +37,11 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.ejb.EJB;
+import javax.naming.InitialContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -957,8 +960,65 @@ public class AnexoController extends BaseController {
     @InitBinder     
     public void initBinder(WebDataBinder binder){
          binder.registerCustomEditor(       Date.class,     
-                             new CustomDateEditor(new SimpleDateFormat("dd/MM/yyyy"), true, 10));   
+                             new CustomDateEditor(new SimpleDateFormat("dd/MM/yyyy"), true, 10)); 
+         
+         
     }
     
+    
+    
+    /**
+     * Mètodes utilitzat dins regweb3.tld
+     * @param custodyID
+     * @return
+     */
+    public static long getDocSize(String custodiaID) throws Exception {
+      
+      DocumentCustody dc = getAnexoLocalEJBStatic().getDocumentInfoOnly(custodiaID);
+      if (dc == null) {
+        return -1;
+      }
+      long size = dc.getLength();
+      return formatFileSize(size);
+    }
+
+    
+    /**
+     * Mètodes utilitzat dins regweb3.tld
+     * @param custodyID
+     * @return
+     */
+    public static long getSignSize(String custodiaID) throws Exception {
+      
+      SignatureCustody sc = getAnexoLocalEJBStatic().getSignatureInfoOnly(custodiaID);
+      if (sc == null) {
+        return -1;
+      }
+      long size = sc.getLength();
+      return formatFileSize(size);
+    }
+    
+    protected static long formatFileSize(long size) {
+      if (size < 1024) {
+        return  1;
+      } else {
+        return size/1024;
+      }
+    }
+    
+   
+    protected static AnexoLocal anexoEjbStatic = null;
+
+    public static AnexoLocal getAnexoLocalEJBStatic() throws Exception {
+
+      if (anexoEjbStatic == null) {
+        
+          anexoEjbStatic = (AnexoLocal) new InitialContext()
+              .lookup("regweb3/AnexoEJB/local");
+       
+      }
+
+      return anexoEjbStatic;
+    }
 
 }
