@@ -66,7 +66,9 @@ public class Sicres3XML {
 
     private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMddHHmmss");
 
-
+    // Service WS Dir3Caib
+    private Dir3CaibObtenerOficinasWs oficinasService;
+    private Dir3CaibObtenerUnidadesWs unidadesService;
 
     /**
      * Map con los valores de los campos del xml que deben estar en formato base64 junto con su expresión xpath de seleccion
@@ -104,6 +106,13 @@ public class Sicres3XML {
 
 
     public void validarFicheroIntercambio(FicheroIntercambio fichero) {
+
+        try {
+            oficinasService = Dir3CaibUtils.getObtenerOficinasService();
+            unidadesService = Dir3CaibUtils.getObtenerUnidadesService();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         log.info("Validando FicheroIntercambio...");
 
@@ -1533,7 +1542,7 @@ public class Sicres3XML {
         }
 
         try {
-            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
+            //Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
             OficinaTF oficinaTF = oficinasService.obtenerOficina(codigoEntidadRegistral,null,null);
 
             if(oficinaTF == null){
@@ -1561,7 +1570,7 @@ public class Sicres3XML {
         }
 
         try {
-            Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService();
+            //Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService();
             UnidadTF unidadTF = unidadesService.obtenerUnidad(codigoUnidadTramitacion,null,null);
 
             return unidadTF != null;

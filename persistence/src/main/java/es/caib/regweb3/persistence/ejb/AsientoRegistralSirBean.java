@@ -158,7 +158,6 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
             // En caso de recepción, le asignamos la entidad a la que va dirigida
             if(asientoRegistralSir.getEntidad() == null){
                 Entidad entidad = new Entidad(oficinaEjb.obtenerEntidad(asientoRegistralSir.getCodigoEntidadRegistralDestino()));
-                log.info("Se trata de una recepción, buscamos la entidad a la que va dirigida: " + entidad.getNombre());
                 asientoRegistralSir.setEntidad(entidad);
             }
 
