@@ -251,6 +251,18 @@ public class AnexoSir implements Serializable {
         this.anexoData = anexoData;
     }
 
+    @Transient
+    public String getNombreFicheroCorto(){
+
+        String nombreFicheroCorto = getNombreFichero();
+
+        if (nombreFicheroCorto.length() > 20) {
+            nombreFicheroCorto = getNombreFichero().substring(0, 20) + "...";
+        }
+
+        return nombreFicheroCorto;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

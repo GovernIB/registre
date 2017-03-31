@@ -115,8 +115,8 @@
                                         <tr>
                                             <td><spring:message code="propiedadGlobal.tipo.${propiedadGlobal.tipo}"/></td>
                                             <td>${propiedadGlobal.descripcion}</td>
-                                            <td>${propiedadGlobal.clave}</td>
-                                            <td>${propiedadGlobal.valor}</td>
+                                            <td><p rel="valorPropiedad" data-content="${propiedadGlobal.clave}" data-toggle="popover">${propiedadGlobal.claveCorto}</p></td>
+                                            <td><p rel="valorPropiedad" data-content="${propiedadGlobal.valor}" data-toggle="popover">${propiedadGlobal.valorCorto}</p></td>
                                             <td class="center">
                                                 <a class="btn btn-warning btn-sm"
                                                    href="<c:url value="/propiedadGlobal/${propiedadGlobal.id}/edit"/>"

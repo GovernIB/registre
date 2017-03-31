@@ -59,6 +59,8 @@
 
     $("[rel='ayuda']").popover({ trigger: "hover",placement: "bottom",container:"body", html:true});
 
+    $("[rel='valorPropiedad']").popover({ trigger: 'hover',placement: 'top',container:"body", html:true});
+
     /*$.sessionTimeout({
      title: 'Sesion timeout',
      ignoreUserActivity:true,

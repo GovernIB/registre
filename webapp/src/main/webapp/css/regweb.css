@@ -740,6 +740,12 @@ a.text-gris:focus {
     font-size: 11px;
     font-weight:normal;
 }
+.popover.top {
+    margin-top: -10px;
+    max-width : 700px;
+    width: 100%;
+    z-index: 1060;
+}
 
 /*BUSQUEDA AVANZADA*/
 .pad-right-75 {
@@ -790,4 +796,8 @@ a.text-gris:focus {
 .azul:hover,
 .azul:focus {
     color: #4173B1;
+}
+
+.textPeu {
+    font-size: 80%;
 }

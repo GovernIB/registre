@@ -111,6 +111,30 @@ public class PropiedadGlobal implements Serializable {
         this.pageNumber = pageNumber;
     }
 
+    @Transient
+    public String getValorCorto(){
+
+        String valorCorto = getValor();
+
+        if (valorCorto.length() > 40) {
+            valorCorto = getValor().substring(0, 40) + "...";
+        }
+
+        return valorCorto;
+    }
+
+    @Transient
+    public String getClaveCorto(){
+
+        String claveCorto = getClave();
+
+        if (claveCorto.length() > 40) {
+            claveCorto = getClave().substring(0, 40) + "...";
+        }
+
+        return claveCorto;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

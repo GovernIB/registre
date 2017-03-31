@@ -119,7 +119,7 @@
                      </table>
                      <div class="pull-right"><i><spring:message code="anexo.sumatotaltamany"/>: ${totalA} KB</i></div>
                 </c:if>
-                  ${notainformativa}
+                  <p class="textPeu">${notainformativa}</p>
               </div>
 
       </div>
