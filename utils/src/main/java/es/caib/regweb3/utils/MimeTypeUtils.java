@@ -21,11 +21,11 @@ public class MimeTypeUtils {
     }
 
     public static String getMimeTypeFileName(String fileName) {
-        Collection mimeTypes = MimeUtil.getMimeTypes(fileName.toLowerCase());
+        Collection<?> mimeTypes = MimeUtil.getMimeTypes(fileName.toLowerCase());
         return getMostSpecificMimeType(mimeTypes);
     }
 
-    protected static String getMostSpecificMimeType(Collection mimeTypes) {
+    protected static String getMostSpecificMimeType(Collection<?> mimeTypes) {
 
         String mostSpecificMimeType = null;
 

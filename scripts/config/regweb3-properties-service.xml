@@ -37,10 +37,46 @@
             <!-- Directorio base para los annexos -->
             <!-- ======== PLUGIN DE CUSTODIA - FILESYSTEM ============== -->
             es.caib.regweb3.annex.documentcustodyplugin=org.fundaciobit.plugins.documentcustody.filesystem.FileSystemDocumentCustodyPlugin
-            es.caib.regweb3.annex.plugins.documentcustody.filesystem.prefix=ANNEX_
+
             es.caib.regweb3.annex.plugins.documentcustody.filesystem.basedir=D:/dades/dades/Proyectos/REGWEB/Archivos/
-            # {0} = custodyID i {1} = URL.Encoded(custodyID)
-            es.caib.regweb3.annex.plugins.documentcustody.filesystem.baseurl=http://localhost:8080/annexos/index.jsp?custodyID={1}
+      
+            # ============ Generiques  AbstractDocumentCustodyPlugin (veure projecte /plugin-documentcustody-api per a altres propietats)
+
+            # Informació de ExpressionLanguage: http://freemarker.org/docs/ref_directives.html
+
+            # Opcional. Servei per generar la URL de Custodia. Si no es defineix retornarà null. 
+            # {0} => custodyID // {1} => URLEncode(custodyID) // {2} => Hash(custodyID)
+            es.caib.portafib.plugins.documentcustody.filesystem.baseurl=http://localhost:8080/annexos/index.jsp?custodyID={1}
+
+            # Opcional. Configuració per generar Hash de la baseurl quan {2}
+            es.caib.portafib.plugins.documentcustody.filesystem.hash.password=mypass
+            #  MD2, MD5, SHA,SHA-256,SHA-384,SHA-512
+            es.caib.portafib.plugins.documentcustody.filesystem.hash.algorithm=MD5
+            
+            # Opcional. Serveix per generar els CustodyID a partir d'una EL 
+            #es.caib.regweb3.annex.plugins.documentcustody.filesystem.generate_custodyid_expressionlanguage=${registre.numeroRegistro}_${anexo.id}
+
+            # Opcional.Prefix a afegir al nom dels fitxers creats
+            es.caib.regweb3.annex.plugins.documentcustody.filesystem.prefix=ANNEX_
+
+            # Opcional crea estructures del tipus /1971/08/12/Entrada/123455
+            es.caib.regweb3.annex.plugins.documentcustody.filesystem.folder_expressionlanguage=${registro.fecha?string["yyyy/MM/dd"]}/&lt;#if  registro.origen??>Salida&lt;#else>Entrada&lt;/#if>/${registro.numeroRegistro}/
+
+            # Opcional. Metadades Automàtiques
+            #es.caib.regweb3.annex.plugins.documentcustody.filesystem.automaticmetadata_items=1,2,22,4
+
+            #es.caib.regweb3.annex.plugins.documentcustody.filesystem.automatic_metadata.1.name=eni:v_nti
+            #es.caib.regweb3.annex.plugins.documentcustody.filesystem.automatic_metadata.1.valueEL=http://administracionelectronica.gob.es/ENI/XSD/v1.0/documento-e
+
+            #es.caib.regweb3.annex.plugins.documentcustody.filesystem.automatic_metadata.2.name=eni:origen
+            #es.caib.regweb3.annex.plugins.documentcustody.filesystem.automatic_metadata.2.valueEL=${anexo.origenCiudadanoAdmin}
+
+            # 1=Administracion || 0=Ciudadano
+            #specificProperties.setProperty(metaProp + ".22.name", "eni:origenStr");
+            #specificProperties.setProperty(metaProp + ".22.valueEL", "&lt;#if anexo.origenCiudadanoAdmin == 1>Administracion&lt;#elseif anexo.origenCiudadanoAdmin == 0>Ciudadano&lt;#else>DESCONEGUT ${anexo.origenCiudadanoAdmin}&lt;/#if>");
+
+            #es.caib.regweb3.annex.plugins.documentcustody.filesystem.automatic_metadata.4.name=eni:tipo_doc_ENI
+            #es.caib.regweb3.annex.plugins.documentcustody.filesystem.automatic_metadata.4.valueEL=${anexo.tipoDocumental.codigoNTI}
 
             <!-- ======== PLUGIN DE CUSTODIA - ALFRESCO ============== -->
             #es.caib.regweb3.annex.documentcustodyplugin=org.fundaciobit.plugins.documentcustody.alfresco.base.AlfrescoBaseDocumentCustodyPlugin
@@ -55,6 +91,46 @@
             "b886bad2-998d-4674-a120-1fcc2f1f533c"); //"USER_HOMES/anadal/test/");
             # Only for ATOM
             es.caib.regweb3.annex.plugins.documentcustody.alfresco.site=ODES
+            # es.caib.regweb3.annex.plugins.documentcustody.alfresco.fullsitepath=/Sites/ODES/documentLibrary
+            
+            # ============ Generiques  AbstractDocumentCustodyPlugin (veure projecte /plugin-documentcustody-api per a altres propietats)
+
+            # Informació de ExpressionLanguage: http://freemarker.org/docs/ref_directives.html
+
+            # Opcional. Servei per generar la URL de Custodia. Si no es defineix retornarà null. 
+            # {0} => custodyID // {1} => URLEncode(custodyID) // {2} => Hash(custodyID)
+            es.caib.portafib.plugins.documentcustody.alfresco.baseurl=http://localhost:8080/annexos/index.jsp?custodyID={1}
+
+            # Opcional. Configuració per generar Hash de la baseurl quan {2}
+            es.caib.portafib.plugins.documentcustody.alfresco.hash.password=mypass
+            #  MD2, MD5, SHA,SHA-256,SHA-384,SHA-512
+            es.caib.portafib.plugins.documentcustody.alfresco.hash.algorithm=MD5
+            
+            # Opcional. Serveix per generar els CustodyID a partir d'una EL 
+            #es.caib.regweb3.annex.plugins.documentcustody.alfresco.generate_custodyid_expressionlanguage=${registre.numeroRegistro}_${anexo.id}
+
+            # NO SUPORTAT EN ALFRESCO  !!!!!!  Prefix a afegir al nom dels fitxers creats
+            # es.caib.regweb3.annex.plugins.documentcustody.alfresco.prefix=
+
+            # Opcional crea estructures del tipus /1971/08/12/Entrada/123455
+            es.caib.regweb3.annex.plugins.documentcustody.alfresco.folder_expressionlanguage=${registro.fecha?string["yyyy/MM/dd"]}/&lt;#if  registro.origen??>Salida&lt;#else>Entrada&lt;/#if>/${registro.numeroRegistro}/
+
+            # Opcional. Metadades Automàtiques
+            #es.caib.regweb3.annex.plugins.documentcustody.alfresco.automaticmetadata_items=1,2,22,4
+
+            #es.caib.regweb3.annex.plugins.documentcustody.alfresco.automatic_metadata.1.name=eni:v_nti
+            #es.caib.regweb3.annex.plugins.documentcustody.alfresco.automatic_metadata.1.valueEL=http://administracionelectronica.gob.es/ENI/XSD/v1.0/documento-e
+
+            #es.caib.regweb3.annex.plugins.documentcustody.alfresco.automatic_metadata.2.name=eni:origen
+            #es.caib.regweb3.annex.plugins.documentcustody.alfresco.automatic_metadata.2.valueEL=${anexo.origenCiudadanoAdmin}
+
+            # 1=Administracion || 0=Ciudadano
+            #es.caib.regweb3.annex.plugins.documentcustody.alfresco.automatic_metadata.22.name=origenStr
+            #es.caib.regweb3.annex.plugins.documentcustody.alfresco.automatic_metadata.22.valueEL=&lt;#if anexo.origenCiudadanoAdmin == 1>Administracion&lt;#elseif anexo.origenCiudadanoAdmin == 0>Ciudadano&lt;#else>DESCONEGUT ${anexo.origenCiudadanoAdmin}&lt;/#if>
+
+            #es.caib.regweb3.annex.plugins.documentcustody.alfresco.automatic_metadata.4.name=eni:tipo_doc_ENI
+            #es.caib.regweb3.annex.plugins.documentcustody.alfresco.automatic_metadata.4.valueEL=${anexo.tipoDocumental.codigoNTI}
+
 
             <!-- Configuració del plugin de Información de usuarios -->
 
@@ -129,11 +205,39 @@
             <!-- ============== 2 - Dynamic Web Twain  ================ -->
             es.caib.regweb3.scan.plugin.2=es.limit.plugins.scanweb.dynamicwebtwain.DynamicWebTwainScanWebPlugin
 
+            es.caib.regweb3.scan.plugin.2.plugins.scanweb.dynamicwebtwain.debug=true
+            es.caib.regweb3.scan.plugin.2.plugins.scanweb.dynamicwebtwain.trial=true
+            # trial productkey està dins C:\Program Files (x86)\Dynamsoft\Dynamic Web TWAIN SDK 12.2 Trial\Samples\Getting Started\Resources\dynamsoft.webtwain.config.js
+            es.caib.regweb3.scan.plugin.2.plugins.scanweb.dynamicwebtwain.productkey=
+
+            # Optional
+            # Versió: Per defecte 12.2. Possibles valors 12.2 o 10.2
+            es.caib.regweb3.scan.plugin.2.plugins.scanweb.dynamicwebtwain.version=12.2
+
+            es.caib.regweb3.scan.plugin.2.plugins.scanweb.dynamicwebtwain.forcesign=true
+            # Optional
+            es.caib.regweb3.scan.plugin.2.plugins.scanweb.dynamicwebtwain.sign.keystore=D:/dades/dades/CarpetesPersonals/Programacio/digitalitzacio/servidor/jboss-5.2.0-caib-cxf/server/default/deploydigital/digital/recursos/keystore.jks
+            es.caib.regweb3.scan.plugin.2.plugins.scanweb.dynamicwebtwain.sign.password=copia_autentica
+            es.caib.regweb3.scan.plugin.2.plugins.scanweb.dynamicwebtwain.sign.certpassword=copia_autentica
+            es.caib.regweb3.scan.plugin.2.plugins.scanweb.dynamicwebtwain.sign.alias=preproddgidt
+            es.caib.regweb3.scan.plugin.2.plugins.scanweb.dynamicwebtwain.sign.asunto=XXX ASUNTO DWT XXX
+
 
             <!-- ============== 3 - Applet IECISA ================ -->
             es.caib.regweb3.scan.plugin.3=org.fundaciobit.plugins.scanweb.iecisa.IECISAScanWebPlugin
-            es.caib.regweb3.scan.plugin.3.plugins.scanweb.iecisa.showInModal=true
             es.caib.regweb3.scan.plugin.3.plugins.scanweb.iecisa.debug=false
+            
+            es.caib.regweb3.scan.plugin.3.plugins.scanweb.iecisa.debug=false
+            es.caib.regweb3.scan.plugin.3.plugins.scanweb.iecisa.forcejnlp=false
+            es.caib.regweb3.scan.plugin.3.plugins.scanweb.iecisa.forcesign=true
+            # Optional
+            es.caib.regweb3.scan.plugin.3.plugins.scanweb.iecisa.sign.keystore=D:/dades/dades/CarpetesPersonals/Programacio/digitalitzacio/servidor/jboss-5.2.0-caib-cxf/server/default/deploydigital/digital/recursos/keystore.jks
+            es.caib.regweb3.scan.plugin.3.plugins.scanweb.iecisa.sign.password=copia_autentica
+            es.caib.regweb3.scan.plugin.3.plugins.scanweb.iecisa.sign.certpassword=copia_autentica
+            es.caib.regweb3.scan.plugin.3.plugins.scanweb.iecisa.sign.alias=preproddgidt
+            es.caib.regweb3.scan.plugin.3.plugins.scanweb.iecisa.sign.asunto=XXX ASUNTO SIMPLE XXX
+            
+            
 
 
         </attribute>

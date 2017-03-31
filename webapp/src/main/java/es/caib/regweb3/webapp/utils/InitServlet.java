@@ -1,9 +1,13 @@
 package es.caib.regweb3.webapp.utils;
 
+import java.util.Properties;
+import java.util.Set;
+
 import es.caib.regweb3.persistence.ejb.InicializadorContadoresLocal;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.Versio;
+
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
@@ -93,6 +97,22 @@ public class InitServlet extends HttpServlet {
       log.info("RegWeb3 Version: " + ver);
     } catch (Throwable e) {
       System.out.println("RegWeb3 Version: " + ver);
+    }
+    
+    
+    if (log.isDebugEnabled()) {
+      Properties prop = System.getProperties();
+      
+      Set<Object> keys = prop.keySet();
+      StringBuffer str = new StringBuffer("\r\n");
+      for (Object keyO : keys) {
+         String key = (String)keyO;
+         if (key.startsWith("es.caib.regweb3.")) {
+            str.append(key + " => " + prop.getProperty(key) + "\r\n");
+         }
+      }
+      
+      log.debug("RegWeb3 Properties: " + str.toString());
     }
 
   }

@@ -4,41 +4,41 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 
-    <parent>
-        <artifactId>regweb3</artifactId>
-        <groupId>es.caib.regweb3</groupId>
-        <version>3.0.9</version>
-    </parent>
-    <modelVersion>4.0.0</modelVersion>
-
-    <artifactId>regweb3-webapp</artifactId>
+  <parent>
+    <artifactId>regweb3</artifactId>
+    <groupId>es.caib.regweb3</groupId>
     <version>3.0.9</version>
-    <packaging>war</packaging>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
 
-    <name>RegWeb3 - WebApp</name>
-	
-	<build>
-      <plugins>
+  <artifactId>regweb3-webapp</artifactId>
+  <version>3.0.9</version>
+  <packaging>war</packaging>
 
-		 <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.3</version>
-                <configuration>
-				    <webResources>
-                        <!-- Documents pdf que es troben dins /doc/pdf i han d'anar a WEBAPP/Documentacio -->
-                        <resource>
-                             <directory>../doc/pdf</directory>
-                             <targetPath>doc</targetPath>
-                             <includes>
-								<include>Manual_de_Usuari_Administrador_de_RegWeb3.pdf</include>
-								<include>Manual_de_Usuari_Administrador_Entitat_de_RegWeb3.pdf</include>
-								<include>Manual_de_Usuari_Operador_de_RegWeb3.pdf</include>
-                             </includes>
-                             <filtering>false</filtering>
-                        </resource>
-                    </webResources>
-					<packagingExcludes>
+  <name>RegWeb3 - WebApp</name>
+
+  <build>
+    <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.3</version>
+        <configuration>
+          <webResources>
+            <!-- Documents pdf que es troben dins /doc/pdf i han d'anar a WEBAPP/Documentacio -->
+            <resource>
+              <directory>../doc/pdf</directory>
+              <targetPath>doc</targetPath>
+              <includes>
+                <include>Manual_de_Usuari_Administrador_de_RegWeb3.pdf</include>
+                <include>Manual_de_Usuari_Administrador_Entitat_de_RegWeb3.pdf</include>
+                <include>Manual_de_Usuari_Operador_de_RegWeb3.pdf</include>
+              </includes>
+              <filtering>false</filtering>
+            </resource>
+          </webResources>
+          <packagingExcludes>
 					  WEB-INF/lib/commons-logging-*.jar
           </packagingExcludes>
         </configuration>
@@ -163,7 +163,7 @@
       <groupId>org.fundaciobit.plugins</groupId>
       <artifactId>plugin-scanweb-api</artifactId>
       <type>jar</type>
-      <version>2.0.0</version>
+      <version>${scanweb.api.version}</version>
       <scope>provided</scope>
     </dependency>
 

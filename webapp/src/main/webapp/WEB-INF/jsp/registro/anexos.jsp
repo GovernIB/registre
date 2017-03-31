@@ -45,7 +45,7 @@
                  </c:if>
 
                  <c:if test="${not empty registro.registroDetalle.anexos}">
-                     <table id="anexos" class="table table-bordered table-hover table-striped">
+                     <table id="anexos" class="table table-bordered table-hover table-striped" style="margin-bottom: 5px;">
                          <colgroup>
                              <col>
                              <col>
@@ -61,6 +61,7 @@
                          </thead>
 
                          <tbody>
+                             <c:set var="totalA" value="0" />
                              <c:forEach var="anexo" items="${registro.registroDetalle.anexos}">
                                  <tr id="anexo${anexo.id}">
 
@@ -74,7 +75,17 @@
                                      </c:if>
 
                                      <!-- TODO mostrar el tamanyo desde custodia -->
-                                     <td>0 KB</td>
+                                     <td>                                     
+                                     <c:if test="${anexo.modoFirma != RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
+                                        <c:set var="tamanyAnexo" value="${reg:getSizeOfDocumentCustody(anexo.custodiaID)}" />                                        
+                                     </c:if>
+                                     <c:if test="${anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
+                                        <c:set var="tamanyAnexo" value="${reg:getSizeOfSignatureCustody(anexo.custodiaID)}" />
+                                     </c:if> 
+                                     ${tamanyAnexo } KB
+                                     <c:set var="totalA" value="${totalA + tamanyAnexo }" />
+                                                                         
+                                     </td>
                                      <td class="center">
 
                                          <c:if test="${anexo.modoFirma != RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
@@ -106,6 +117,7 @@
                              </c:forEach>
                          </tbody>
                      </table>
+                     <div class="pull-right"><i><spring:message code="anexo.sumatotaltamany"/>: ${totalA} KB</i></div>
                 </c:if>
                   ${notainformativa}
               </div>
