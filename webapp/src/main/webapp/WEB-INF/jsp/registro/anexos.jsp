@@ -29,7 +29,7 @@
 
       <div class="panel-body">
 
-              <div id="anexosdiv" class="table-responsive">
+              <div id="anexosdiv" class="">
 
                  <c:if test="${empty registro.registroDetalle.anexos}">
                      <div class="alert alert-warning alert-dismissable">
@@ -49,7 +49,7 @@
                          <colgroup>
                              <col>
                              <col>
-                             <col width="125">
+                             <col width="100">
                          </colgroup>
                          <thead>
                              <tr>

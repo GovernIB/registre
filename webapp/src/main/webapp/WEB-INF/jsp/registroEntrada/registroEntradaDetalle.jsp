@@ -162,19 +162,23 @@
                                     </c:if>
 
                                     <c:if test="${oficio.oficioRemision}">
-                                        <button type="button" onclick="goTo('/regweb3/oficioRemision/entradasPendientesRemision')"
-                                                class="btn btn-success btn-sm btn-block">
+
                                             <c:if test="${oficio.interno}">
-                                                <spring:message code="oficioRemision.boton.crear.interno"/>
+                                                <button type="button" onclick="goTo('/regweb3/oficioRemision/entradasPendientesRemision')" class="btn btn-success btn-sm btn-block">
+                                                    <spring:message code="oficioRemision.boton.crear.interno"/>
+                                                </button>
                                             </c:if>
                                             <c:if test="${oficio.externo}">
-                                                <spring:message code="oficioRemision.boton.crear.externo"/>
+                                                <button type="button" onclick="goTo('/regweb3/oficioRemision/entradasPendientesRemision')" class="btn btn-success btn-sm btn-block">
+                                                    <spring:message code="oficioRemision.boton.crear.externo"/>
+                                                </button>
                                             </c:if>
                                             <c:if test="${oficio.sir}">
-                                                <spring:message code="oficioRemision.boton.crear.sir"/>
+                                                <button type="button" onclick="goTo('/regweb3/registroEntrada/${registro.id}/enviarSir')" class="btn btn-success btn-sm btn-block">
+                                                    <spring:message code="oficioRemision.boton.crear.sir"/>
+                                                </button>
                                             </c:if>
 
-                                        </button>
                                     </c:if>
 
                                 </div>

@@ -17,7 +17,7 @@
         </div>
 
         <div class="panel-body">
-            <div class="table-responsive">
+            <div class="">
 
                 <table id="historicos" class="table table-bordered table-hover table-striped">
                     <colgroup>

@@ -1,11 +1,16 @@
 package es.caib.regweb3.webapp.controller.registro;
 
+import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
+import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.*;
 import es.caib.regweb3.plugins.justificante.IJustificantePlugin;
+import es.caib.regweb3.sir.core.excepcion.SIRException;
+import es.caib.regweb3.sir.ejb.EmisionLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+import es.caib.regweb3.webapp.form.EnvioSirForm;
 import es.caib.regweb3.webapp.form.ModeloForm;
 import es.caib.regweb3.webapp.form.RegistroEntradaBusqueda;
 import es.caib.regweb3.webapp.utils.Mensaje;
@@ -61,6 +66,9 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
     @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
     public TipoDocumentalLocal tipoDocumentalEjb;
+
+    @EJB(mappedName = "regweb3/EmisionEJB/local")
+    public EmisionLocal emisionEjb;
 
 
     /**
@@ -276,6 +284,55 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         lopdEjb.insertarRegistroEntrada(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuarioEntidad.getId());
 
         return "registroEntrada/registroEntradaDetalle";
+    }
+
+    /**
+     * Enviar a SIR un Registro de Entrada
+     */
+    @RequestMapping(value = "/{idRegistroEntrada}/enviar", method = RequestMethod.GET)
+    public ModelAndView enviarSir(@PathVariable Long idRegistroEntrada, Model model, HttpServletRequest request) throws Exception {
+
+        ModelAndView mav = new ModelAndView("registroEntrada/envioSir");
+        RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistroEntrada);
+
+        List<OficinaTF> oficinasSIR = oficioRemisionEntradaUtilsEjb.isOficioRemisionSir(idRegistroEntrada);
+
+        if(oficinasSIR == null){
+            log.info("Este registro no se puede enviar via SIR");
+            Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.error.envio"));
+            return new ModelAndView("redirect:/registroEntrada/" + idRegistroEntrada + "/detalle");
+        }
+
+        mav.addObject("envioSirForm", new EnvioSirForm());
+        mav.addObject("registroEntrada", registroEntrada);
+        mav.addObject("oficinasSIR", oficinasSIR);
+
+        return mav;
+    }
+
+    /**
+     * Enviar a SIR un Registro de Entrada
+     */
+    @RequestMapping(value = "/{idRegistroEntrada}/enviar", method = RequestMethod.POST)
+    public ModelAndView enviarSir(@ModelAttribute EnvioSirForm envioSirForm, @PathVariable Long idRegistroEntrada, HttpServletRequest request) throws Exception {
+
+        OficioRemision oficioRemision = null;
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+
+        // OficinaSir destino
+        Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
+        OficinaTF oficinaSir = oficinasService.obtenerOficina(envioSirForm.getOficinaSIRCodigo(), null, null);
+
+        try{
+
+            oficioRemision = emisionEjb.enviarFicheroIntercambio(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO,idRegistroEntrada, oficinaSir.getCodigo(),oficinaSir.getDenominacion(), getOficinaActiva(request), usuarioEntidad, envioSirForm.getIdLibro());
+
+        }catch (SIRException e){
+
+            return new ModelAndView("redirect:/registroEntrada/" + idRegistroEntrada + "/detalle");
+        }
+
+        return new ModelAndView("redirect:/oficioRemision/" + oficioRemision.getId() + "/detalle");
     }
 
     @RequestMapping(value = "/pendientesVisar/list/{pageNumber}", method = RequestMethod.GET)

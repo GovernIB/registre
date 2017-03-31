@@ -281,9 +281,9 @@
 
                                     <p class="pull-right"><spring:message code="regweb.pagina"/> <strong>${paginacion.currentIndex}</strong> de ${paginacion.totalPages}</p>
                                 </div>
-                        </div>
 
-                            <div class="row table-responsive">
+
+                            <div class="table-responsive">
 
                                 <table class="table table-bordered table-hover table-striped tablesorter">
                                     <colgroup>
@@ -407,6 +407,7 @@
                                 </c:import>
 
                             </div>
+                        </div>
 
                         </c:if>
 

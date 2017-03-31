@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 
+import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.OficioPendienteLlegada;
 import es.caib.regweb3.persistence.utils.Oficio;
@@ -93,7 +94,7 @@ public interface OficioRemisionEntradaUtilsLocal {
      * @return
      * @throws Exception
      */
-    public Boolean isOficioRemisionSir(Long idRegistro) throws Exception;
+    public List<OficinaTF> isOficioRemisionSir(Long idRegistro) throws Exception;
 
     /**
      * @param registrosEntrada
