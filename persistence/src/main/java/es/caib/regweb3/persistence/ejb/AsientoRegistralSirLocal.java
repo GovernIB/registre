@@ -31,6 +31,22 @@ public interface AsientoRegistralSirLocal extends BaseEjb<AsientoRegistralSir, L
     public AsientoRegistralSir getAsientoRegistral(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws Exception;
 
     /**
+     * Obtiene un AsientoRegistral a partir de los parámetros
+     * @param identificadorIntercambio
+     * @return
+     * @throws Exception
+     */
+    public AsientoRegistralSir getAsientoRegistral(String identificadorIntercambio) throws Exception;
+
+    /**
+     * Obtiene un AsientoRegistral incluyendo los anexos almancenados en disco
+     * @param idAsientoRegistralsir
+     * @return
+     * @throws Exception
+     */
+    public AsientoRegistralSir getAsientoRegistralConAnexos(Long idAsientoRegistralsir) throws Exception;
+
+    /**
      * Crea un AsientoRegistralSir
      * @throws Exception
      */

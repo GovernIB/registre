@@ -68,7 +68,7 @@
                             <dt><i class="fa fa-file-text-o"></i> <spring:message code="oficioRemision.tipo"/>:</dt>
                             <dd>
                                 <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA}">
-                                    <span class="label label-success"><spring:message code="oficioRemision.tipo.1"/></span>
+                                    <span class="label label-info"><spring:message code="oficioRemision.tipo.1"/></span>
                                 </c:if>
 
                                 <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA}">

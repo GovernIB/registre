@@ -297,9 +297,9 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             oficio.setOficioRemision(true);
             oficio.setInterno(false);
 
-            Boolean sir = isOficioRemisionSir(idRegistro);
+            List<OficinaTF> oficinasSIR = isOficioRemisionSir(idRegistro);
 
-            if(sir){
+            if(oficinasSIR != null){
                 oficio.setSir(true);
                 oficio.setExterno(false);
             }else{
@@ -363,7 +363,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Boolean isOficioRemisionSir(Long idRegistro) throws Exception {
+    public List<OficinaTF> isOficioRemisionSir(Long idRegistro) throws Exception {
 
         Query q;
         q = em.createQuery("Select re.destinoExternoCodigo from RegistroEntrada as re where " +
@@ -380,10 +380,10 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
             List<OficinaTF> oficinasSIR = oficinasService.obtenerOficinasSIRUnidad(codigoDir3);
 
-            return oficinasSIR.size() > 0;
+            return oficinasSIR;
         }
 
-        return false;
+        return null;
     }
 
 

@@ -10,7 +10,6 @@ import es.caib.regweb3.model.InteresadoSir;
 import es.caib.regweb3.model.utils.IndicadorPrueba;
 import es.caib.regweb3.model.utils.TipoRegistro;
 import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
-import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.sir.core.excepcion.SIRException;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.sir.core.model.*;
@@ -689,6 +688,8 @@ public class Sicres3XML {
             if (anexoSir.getAnexoData() != null) {
                 elem = rootElement.addElement("Hash");
                 elem.addCDATA(getBase64String(anexoSir.getAnexoData()));
+            }else{
+                log.info("getAnexoData es null");
             }
 
             // Tipo_MIME
@@ -701,6 +702,8 @@ public class Sicres3XML {
             if (anexoSir.getAnexoData() != null) {
                 elem = rootElement.addElement("Anexo");
                 elem.addCDATA(getBase64String(anexoSir.getAnexoData()));
+            }else{
+                log.info("getAnexoData es null");
             }
 
             //Identificador Fichero Firmado
@@ -1403,8 +1406,9 @@ public class Sicres3XML {
                         anexo.getTipo_MIME(), MimeTypeUtils.getMimeTypeExtension(tokens[2])),
                         "El campo 'TipoMIME' no coincide con el indicado en 'IdentificadorFichero'");
 
-                String mimePermitidos = PropiedadGlobalUtil.getMIMEPermitidos();
-                Assert.isTrue(mimePermitidos.contains(anexo.getTipo_MIME()),"El tipo MIME recibido no está permitido");
+                //TODO revisar si lo activamos en producción o no
+                //String mimePermitidos = PropiedadGlobalUtil.getMIMEPermitidos();
+                //Assert.isTrue(mimePermitidos.contains(anexo.getTipo_MIME()),"El tipo MIME recibido no está permitido");
             }
         }
     }

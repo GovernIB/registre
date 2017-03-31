@@ -10,10 +10,7 @@ import es.caib.regweb3.model.utils.DocumentacionFisica;
 import es.caib.regweb3.model.utils.EstadoAsientoRegistralSir;
 import es.caib.regweb3.model.utils.IndicadorPrueba;
 import es.caib.regweb3.model.utils.TipoRegistro;
-import es.caib.regweb3.persistence.utils.ArchivoManager;
-import es.caib.regweb3.persistence.utils.DataBaseUtils;
-import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
-import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.persistence.utils.*;
 import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.sir.core.model.*;
@@ -120,34 +117,82 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
     }
 
     @Override
+    public AsientoRegistralSir getAsientoRegistral(String identificadorIntercambio) throws Exception{
+
+        Query q = em.createQuery("Select asientoRegistralSir from AsientoRegistralSir as asientoRegistralSir where " +
+                "asientoRegistralSir.identificadorIntercambio = :identificadorIntercambio");
+
+        q.setParameter("identificadorIntercambio",identificadorIntercambio);
+
+        List<AsientoRegistralSir> asientoRegistralSir = q.getResultList();
+        if(asientoRegistralSir.size() == 1){
+            return asientoRegistralSir.get(0);
+        }else{
+            return  null;
+        }
+    }
+
+    @Override
+    public AsientoRegistralSir getAsientoRegistralConAnexos(Long idAsientoRegistralsir) throws Exception{
+
+        AsientoRegistralSir asientoRegistralSir = findById(idAsientoRegistralsir);
+
+        List<AnexoSir> anexosFull = new ArrayList<AnexoSir>();
+        for (AnexoSir anexoSir : asientoRegistralSir.getAnexos()) {
+
+            anexoSir.setAnexoData(FileSystemManager.getBytesArchivo(anexoSir.getAnexo().getId()));
+            anexosFull.add(anexoSir);
+        }
+
+        asientoRegistralSir.setAnexos(anexosFull);
+
+        return asientoRegistralSir;
+
+    }
+
+    @Override
     public AsientoRegistralSir crearAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir) throws Exception{
 
-        // Obtenemos la Entidad a la que pertenece la Oficina a la que va dirigida este AsientoRegistralSir
-        Entidad entidad = new Entidad(oficinaEjb.obtenerEntidad(asientoRegistralSir.getCodigoEntidadRegistralDestino()));
+        try{
 
-        asientoRegistralSir.setEntidad(entidad);
-        asientoRegistralSir.setEstado(EstadoAsientoRegistralSir.RECIBIDO);
-
-        asientoRegistralSir = persist(asientoRegistralSir);
-
-        // Guardamos los Interesados
-        if(asientoRegistralSir.getInteresados() != null && asientoRegistralSir.getInteresados().size() > 0){
-            for(InteresadoSir interesadoSir: asientoRegistralSir.getInteresados()){
-                interesadoSir.setIdAsientoRegistralSir(asientoRegistralSir);
-
-                interesadoSirEjb.persist(interesadoSir);
+            // En caso de recepción, le asignamos la entidad a la que va dirigida
+            if(asientoRegistralSir.getEntidad() == null){
+                Entidad entidad = new Entidad(oficinaEjb.obtenerEntidad(asientoRegistralSir.getCodigoEntidadRegistralDestino()));
+                log.info("Se trata de una recepción, buscamos la entidad a la que va dirigida: " + entidad.getNombre());
+                asientoRegistralSir.setEntidad(entidad);
             }
-        }
 
-        // Guardamos los Anexos
-        if(asientoRegistralSir.getAnexos() != null && asientoRegistralSir.getAnexos().size() > 0){
+            asientoRegistralSir = persist(asientoRegistralSir);
+
+            // Guardamos los Interesados
+            if(asientoRegistralSir.getInteresados() != null && asientoRegistralSir.getInteresados().size() > 0){
+                for(InteresadoSir interesadoSir: asientoRegistralSir.getInteresados()){
+                    interesadoSir.setIdAsientoRegistralSir(asientoRegistralSir);
+
+                    interesadoSirEjb.persist(interesadoSir);
+                }
+            }
+
+            // Guardamos los Anexos
+            if(asientoRegistralSir.getAnexos() != null && asientoRegistralSir.getAnexos().size() > 0){
+                for(AnexoSir anexoSir: asientoRegistralSir.getAnexos()){
+                    anexoSir.setIdAsientoRegistralSir(asientoRegistralSir);
+
+                    anexoSirEjb.persist(anexoSir);
+                }
+            }
+            em.flush();
+
+        }catch (Exception e){
+            log.info("Error al crear el AsientoRegistralSir, eliminamos los posibles anexos creados");
             for(AnexoSir anexoSir: asientoRegistralSir.getAnexos()){
-                anexoSir.setIdAsientoRegistralSir(asientoRegistralSir);
-
-                anexoSirEjb.persist(anexoSir);
+                ArchivoManager am = new ArchivoManager(anexoSir.getAnexo(),archivoEjb);
+                am.processError();
             }
+            e.printStackTrace();
+            throw e;
         }
-        em.flush();
+
         return asientoRegistralSir;
     }
 
@@ -514,11 +559,13 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
                             anexo.setTipoMIME(de_Anexo.getTipo_MIME());
                         }
 
+                        ArchivoManager am = null;
                         try {
-                            ArchivoManager am = new ArchivoManager(archivoEjb, de_Anexo.getNombre_Fichero_Anexado(), anexo.getTipoMIME(), de_Anexo.getAnexo());
+                            am = new ArchivoManager(archivoEjb, de_Anexo.getNombre_Fichero_Anexado(), anexo.getTipoMIME(), de_Anexo.getAnexo());
                             anexo.setAnexo(am.prePersist());
                         } catch (Exception e) {
                             log.info("Error al crear el Anexo en el sistema de archivos", e);
+                            am.processError();
                             throw new ServiceException(Errores.ERROR_0045,e);
                         }
 

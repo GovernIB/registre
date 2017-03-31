@@ -99,35 +99,32 @@
                 </div>
             </div>
 
-            <div class="row table-responsive">
-                <table id="interesados" class="table table-bordered table-hover table-striped" style="display: none;">
-                    <colgroup>
-                        <col>
-                        <col>
-                        <col>
-                        <col width="100">
-                    </colgroup>
-                    <thead>
-                    <tr>
-                        <c:if test="${param.tipoRegistro == 'entrada'}">
-                            <th><spring:message code="registroEntrada.interesado"/></th>
-                        </c:if>
-                        <c:if test="${param.tipoRegistro == 'salida'}">
-                            <th><spring:message code="registroSalida.destinatario"/></th>
-                        </c:if>
+            <table id="interesados" class="table table-bordered table-hover table-striped" style="display: none;">
+                <colgroup>
+                    <col>
+                    <col>
+                    <col>
+                    <col width="100">
+                </colgroup>
+                <thead>
+                <tr>
+                    <c:if test="${param.tipoRegistro == 'entrada'}">
+                        <th><spring:message code="registroEntrada.interesado"/></th>
+                    </c:if>
+                    <c:if test="${param.tipoRegistro == 'salida'}">
+                        <th><spring:message code="registroSalida.destinatario"/></th>
+                    </c:if>
 
-                        <th><spring:message code="interesado.tipoInteresado"/></th>
-                        <th><spring:message code="representante.representante"/></th>
-                        <th class="center"><spring:message code="regweb.acciones"/></th>
-                    </tr>
-                    </thead>
+                    <th><spring:message code="interesado.tipoInteresado"/></th>
+                    <th><spring:message code="representante.representante"/></th>
+                    <th class="center"><spring:message code="regweb.acciones"/></th>
+                </tr>
+                </thead>
 
-                    <tbody>
+                <tbody>
 
-                    </tbody>
-                </table>
-
-            </div>
+                </tbody>
+            </table>
 
         </div>
     </div>
