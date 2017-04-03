@@ -115,8 +115,22 @@
                                         <tr>
                                             <td><spring:message code="propiedadGlobal.tipo.${propiedadGlobal.tipo}"/></td>
                                             <td>${propiedadGlobal.descripcion}</td>
-                                            <td><p rel="valorPropiedad" data-content="${propiedadGlobal.clave}" data-toggle="popover">${propiedadGlobal.claveCorto}</p></td>
-                                            <td><p rel="valorPropiedad" data-content="${propiedadGlobal.valor}" data-toggle="popover">${propiedadGlobal.valorCorto}</p></td>
+                                            <td>
+                                                <c:if test="${propiedadGlobal.clave != propiedadGlobal.claveCorto}">
+                                                    <p rel="valorPropiedad" data-content="${propiedadGlobal.clave}" data-toggle="popover">${propiedadGlobal.claveCorto}</p>
+                                                </c:if>
+                                                <c:if test="${propiedadGlobal.clave == propiedadGlobal.claveCorto}">
+                                                    ${propiedadGlobal.clave}
+                                                </c:if>
+                                            </td>
+                                            <td>
+                                                <c:if test="${propiedadGlobal.valor != propiedadGlobal.valorCorto}">
+                                                    <p rel="valorPropiedad" data-content="${propiedadGlobal.valor}" data-toggle="popover">${propiedadGlobal.valorCorto}</p>
+                                                </c:if>
+                                                <c:if test="${propiedadGlobal.valor == propiedadGlobal.valorCorto}">
+                                                    ${propiedadGlobal.valor}
+                                                </c:if>
+                                            </td>
                                             <td class="center">
                                                 <a class="btn btn-warning btn-sm"
                                                    href="<c:url value="/propiedadGlobal/${propiedadGlobal.id}/edit"/>"

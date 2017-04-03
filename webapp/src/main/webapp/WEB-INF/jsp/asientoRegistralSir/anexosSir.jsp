@@ -51,7 +51,14 @@
 
                             <c:forEach var="anexo" items="${asientoRegistralSir.anexos}" varStatus="status">
                                 <tr id="anexo${anexo.id}">
-                                    <td><p rel="valorPropiedad" data-content="${anexo.nombreFichero}" data-toggle="popover">${anexo.nombreFicheroCorto}</p></td>
+                                    <td>
+                                        <c:if test="${anexo.nombreFichero != anexo.nombreFicheroCorto}">
+                                            <p rel="valorPropiedad" data-content="${anexo.nombreFichero}" data-toggle="popover">${anexo.nombreFicheroCorto}</p>
+                                        </c:if>
+                                        <c:if test="${anexo.nombreFichero == anexo.nombreFicheroCorto}">
+                                            ${anexo.nombreFichero}
+                                        </c:if>
+                                    </td>
                                     <td><spring:message code="tipoDocumento.${anexo.tipoDocumento}"/></td>
 
                                         <%-- Gestionamos los campos NTI que no vienen informados por SICRES.

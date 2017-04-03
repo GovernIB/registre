@@ -49,7 +49,8 @@
                          <colgroup>
                              <col>
                              <col>
-                             <col width="100">
+                             <col>
+                             <col>
                          </colgroup>
                          <thead>
                              <tr>
@@ -115,32 +116,38 @@
 
                                  </tr>
                              </c:forEach>
-                         </tbody>
-                     </table>
-                     <div class="pull-right"><i><spring:message code="anexo.sumatotaltamany"/>: ${totalA} KB</i></div>
-                </c:if>
-                  <p class="textPeu">${notainformativa}</p>
-              </div>
-
+                     <%-- Fila pel tamany Total dels annexes --%>
+                     <tr>
+                         <th></th>
+                         <th></th>
+                         <th><spring:message code="anexo.sumatotaltamany"/>: ${totalA} KB</th>
+                         <th></th>
+                     </tr>
+                 </tbody>
+             </table>
+        </c:if>
+          <p class="textPeu">${notainformativa}</p>
       </div>
-    </div>
+
+</div>
+</div>
 
 </div>
 
 <div class="modal fade" id="myModal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 <div class="modal-dialog" style="width:910px;">
-  <div class="modal-content">
-    
-    <div class="modal-header" style="border:hidden; min-width: 5px;">
-      
-      <button type="button" class="close" onClick="unloadiframe()" data-dismiss="modal" aria-hidden="true" >×</button>
-      <h3 id="anexoTitulo" style="margin-top: 0px; margin-bottom: 0px;"></h3>
-      <hr style="margin-top: 5px;margin-bottom: 5px;"  />
-    </div>
-    
-    <div class="modal-body" style="padding-top:10px; padding-left:5px; padding-right:0px; padding-bottom:15px;">
-      
-      <%-- HEIGHT 480px --%>
+<div class="modal-content">
+
+<div class="modal-header" style="border:hidden; min-width: 5px;">
+
+<button type="button" class="close" onClick="unloadiframe()" data-dismiss="modal" aria-hidden="true" >×</button>
+<h3 id="anexoTitulo" style="margin-top: 0px; margin-bottom: 0px;"></h3>
+<hr style="margin-top: 5px;margin-bottom: 5px;"  />
+</div>
+
+<div class="modal-body" style="padding-top:10px; padding-left:5px; padding-right:0px; padding-bottom:15px;">
+
+<%-- HEIGHT 480px --%>
     <iframe src="" frameborder="0" id="targetiframe" style="width:885px; height:${iframe_anexos_height}px; " name="targetframe" allowtransparency="true">
          
     </iframe> <!-- target iframe -->
