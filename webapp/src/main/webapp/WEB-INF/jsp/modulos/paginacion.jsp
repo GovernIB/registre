@@ -5,7 +5,7 @@
 
 
 <c:if test="${paginacion.totalPages > 1}">
-    <div class="row">
+    <div class="">
         <div class="col-xs-12">
             <c:url var="firstUrl" value="/${param.entidad}/list/1" />
             <c:url var="lastUrl" value="/${param.entidad}/list/${paginacion.totalPages}" />

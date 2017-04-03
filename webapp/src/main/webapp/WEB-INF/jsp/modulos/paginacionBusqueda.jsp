@@ -13,7 +13,7 @@
         }
     </script>
 
-    <div class="row">
+    <div class="">
         <div class="col-xs-12">
 
             <c:url var="firstUrl" value="/${param.entidad}/list/1" />
