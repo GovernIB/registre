@@ -11,8 +11,8 @@
     </div>
     <div class="timeline-body">
         <p><small><i class="fa fa-barcode"></i> <strong><spring:message code="asientoRegistralSir.identificadorIntercambio"/>:</strong> ${oficioRemision.identificadorIntercambio}</small></p>
-        <p><small><i class="fa fa-institution"></i> <strong><spring:message code="organismo.origen"/>:</strong> ${registroEntradaOrigen.destinoExternoDenominacion}</small></p>
         <p><small><i class="fa fa-home"></i> <strong><spring:message code="oficina.origen"/>:</strong> ${registroEntradaOrigen.oficina.denominacion}</small></p>
+        <p><small><i class="fa fa-institution"></i> <strong><spring:message code="organismo.destino"/>:</strong> ${registroEntradaOrigen.destinoExternoDenominacion}</small></p>
         <p><small><i class="fa fa-home"></i> <strong><spring:message code="oficina.destino"/>:</strong> ${registroEntradaOrigen.registroDetalle.decodificacionEntidadRegistralDestino}</small></p>
     </div>
 </div>

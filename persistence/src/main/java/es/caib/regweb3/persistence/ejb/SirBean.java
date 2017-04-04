@@ -357,7 +357,7 @@ public class SirBean implements SirLocal{
             registroEntrada.getRegistroDetalle().setIndicadorPrueba(IndicadorPrueba.NORMAL);
             registroEntrada.getRegistroDetalle().setIdentificadorIntercambio(generarIdentificadorIntercambio(registroEntrada.getOficina().getCodigo()));
             registroEntrada.getRegistroDetalle().setCodigoEntidadRegistralDestino(codigoEntidadRegistralDestino);
-            registroEntrada.getRegistroDetalle().setDecodificacionTipoAnotacion(denominacionEntidadRegistralDestino);
+            registroEntrada.getRegistroDetalle().setDecodificacionEntidadRegistralDestino(denominacionEntidadRegistralDestino);
             registroEntrada.getRegistroDetalle().setTipoAnotacion(TipoAnotacion.ENVIO.getValue());
             registroEntrada.getRegistroDetalle().setDecodificacionTipoAnotacion(TipoAnotacion.ENVIO.getName());
 

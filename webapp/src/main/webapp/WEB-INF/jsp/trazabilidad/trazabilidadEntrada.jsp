@@ -41,7 +41,7 @@
                                 <c:import url="../trazabilidad/registroSalida.jsp"/>
                             </li>
 
-                            <%--INFO DESTINO--%>
+                            <%--ASIENTO DESTINO--%>
                             <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_ACEPTADO}">
 
                                 <li class="timeline-inverted">
