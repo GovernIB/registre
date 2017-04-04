@@ -56,8 +56,8 @@
                                     <div class="col-xs-3 pull-left etiqueta_regweb control-label text-right">
                                         <label><span class="text-danger">*</span> <spring:message code="asientoRegistralSir.oficinaReenvio"/></label>
                                     </div>
-                                    <div class="col-xs-6" id="datosOficinaReenvio">
-                                        <form:textarea path="datosOficinaReenvio" id="datosOficinaReenvioText" class="form-control"/> <span class="errors"></span>
+                                    <div class="col-xs-6" id="idDatosOficinaReenvio">
+                                        <form:textarea path="datosOficinaReenvio" class="form-control"/> <span class="errors"></span>
 
                                     </div>
 
@@ -77,7 +77,7 @@
                                     <div class="col-xs-3 pull-left etiqueta_regweb control-label text-right">
                                         <label><span class="text-danger"> * </span><spring:message code="registroEntrada.observaciones"/></label>
                                     </div>
-                                    <div class="col-xs-9" id="observaciones">
+                                    <div class="col-xs-9" id="idObservaciones">
                                         <form:textarea path="observaciones" rows="3" class="form-control"/>
                                         <span class="errors"></span>
                                     </div>
@@ -88,7 +88,7 @@
                             <div class="row">
                                 <div class="form-group col-xs-12">
                                     <div class="col-xs-1 boto-panel">
-                                        <button type="submit" class="btn btn-warning btn-sm" style="margin-left: 15px;" onclick="return validarFormReenvio();">
+                                        <button type="button" class="btn btn-warning btn-sm" style="margin-left: 15px;" onclick="validarFormReenvio();">
                                             <spring:message code="regweb.reenviar"/>
                                         </button>
                                     </div>

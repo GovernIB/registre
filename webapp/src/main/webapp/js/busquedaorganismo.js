@@ -402,7 +402,7 @@ function asignarOficinaSir(codigo,denominacion,codigoOrganismoResponsable, denom
         $('#denominacionOficina').val(denominacion);
         $('#codigoOrganismoResponsable').val(codigoOrganismoResponsable);
         $('#denominacionOrganismoResponsable').val(denominacionOrganismoResponsable);
-        $('#datosOficinaReenvioText').val(codigoOrganismoResponsable+": "+denominacionOrganismoResponsable+ ", "+codigo+": " + denominacion);
+        $('#datosOficinaReenvio').val(codigoOrganismoResponsable+": "+denominacionOrganismoResponsable+ ", "+codigo+": " + denominacion);
 
 
 
@@ -414,8 +414,18 @@ function asignarOficinaSir(codigo,denominacion,codigoOrganismoResponsable, denom
 function validarFormReenvio() {
     var observaciones = $('#observaciones').val();
     var datosOficinaReenvio = $('#datosOficinaReenvio').val();
+    var observ = true;
+    var datos = true;
 
-    if(validaCampo(observaciones,'observaciones') && validaCampo(datosOficinaReenvio,'datosOficinaReenvio')){
+    //if(validaCampo(observaciones,'observaciones') && validaCampo(datosOficinaReenvio,'datosOficinaReenvio')){
+    if(!validaCampo(observaciones,'idObservaciones')){
+        observ = false;
+    }
+    if(!validaCampo(datosOficinaReenvio,'idDatosOficinaReenvio')){
+        datos = false;
+    }
+
+    if(observ && datos){
         doForm('#reenviarForm');
     }else{
         return false;
