@@ -106,12 +106,9 @@ public class SirBean implements SirLocal{
 
                 asientoRegistralSirEjb.crearAsientoRegistralSir(asientoRegistralSir);
 
-
             }
 
-
         }
-
 
         // REENVIO
         if (TipoAnotacion.REENVIO.getValue().equals(ficheroIntercambio.getTipoAnotacion())) {
@@ -129,15 +126,15 @@ public class SirBean implements SirLocal{
 
             if(oficioRemision != null) { // Existe en el sistema
 
-                if(EstadoAsientoRegistralSir.ENVIADO.equals(asientoRegistralSir.getEstado()) ||
-                        EstadoAsientoRegistralSir.ENVIADO_Y_ACK.equals(asientoRegistralSir.getEstado()) ||
-                        EstadoAsientoRegistralSir.REENVIADO.equals(asientoRegistralSir.getEstado()) ||
-                        EstadoAsientoRegistralSir.REENVIADO_Y_ACK.equals(asientoRegistralSir.getEstado())){
+                if(oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO ||
+                        oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO_ACK ||
+                        oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_REENVIADO ||
+                        oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_RECHAZADO_ACK){
 
                     registroEntrada = oficioRemision.getRegistrosEntrada().get(0);
 
                     // Actualizamos el asiento
-                    registroEntrada.setEstado(RegwebConstantes.REGISTRO_VALIDO); // Válido o Devuelto?
+                    registroEntrada.setEstado(RegwebConstantes.REGISTRO_VALIDO); // TODO Válido o Devuelto o Rectificado?
                     registroEntrada.getRegistroDetalle().setAplicacion(ficheroIntercambio.getAplicacionEmisora());
                     registroEntrada.getRegistroDetalle().setObservaciones(ficheroIntercambio.getObservacionesApunte());
                     registroEntrada.getRegistroDetalle().setTipoAnotacion(ficheroIntercambio.getTipoAnotacion());
@@ -149,7 +146,7 @@ public class SirBean implements SirLocal{
                     oficioRemision.setFechaEstado(new Date());
                     oficioRemisionEjb.merge(oficioRemision);
 
-                }else if(EstadoAsientoRegistralSir.DEVUELTO.equals(asientoRegistralSir.getEstado())){
+                }else if(oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_DEVUELTO){
 
                     log.info("Se ha intentado rechazar un asiento que ya esta devuelto" + ficheroIntercambio.getIdentificadorIntercambio());
                     throw new ValidacionException(Errores.ERROR_0205);
@@ -161,7 +158,7 @@ public class SirBean implements SirLocal{
 
 
             }else{
-                log.info("El fichero intercambio recibido no existe en el sistema: " + ficheroIntercambio.getIdentificadorIntercambio());
+                log.info("El registro recibido no existe en el sistema: " + ficheroIntercambio.getIdentificadorIntercambio());
                 throw new ValidacionException(Errores.ERROR_0063);
             }
         }
