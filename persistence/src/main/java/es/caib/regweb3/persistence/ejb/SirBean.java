@@ -475,7 +475,7 @@ public class SirBean implements SirLocal{
 
         asiento = asientoRegistralSirEjb.merge(asiento);
 
-        return asiento;
+        return asientoRegistralSirEjb.getAsientoRegistralConAnexos(asiento.getId());
     }
 
     /**

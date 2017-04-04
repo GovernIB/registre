@@ -102,7 +102,7 @@ public class EmisionBean implements EmisionLocal{
     public void rechazarFicheroIntercambio(AsientoRegistralSir asientoRegistralSir, Oficina oficinaActiva, Usuario usuario, String observaciones) throws Exception{
 
         //Preparamos el asiento registral para su rechazo
-        asientoRegistralSir =  sirEjb.rechazarAsientoRegistralSir(asientoRegistralSir, oficinaActiva, usuario, observaciones);
+        asientoRegistralSir = sirEjb.rechazarAsientoRegistralSir(asientoRegistralSir, oficinaActiva, usuario, observaciones);
 
         log.info("Rezhazando el asiento registral al nodo distribuido: " + asientoRegistralSir.getIdentificadorIntercambio());
 
