@@ -316,7 +316,6 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     @RequestMapping(value = "/{idRegistroEntrada}/enviarSir", method = RequestMethod.POST)
     public ModelAndView enviarSir(@ModelAttribute EnvioSirForm envioSirForm, @PathVariable Long idRegistroEntrada, HttpServletRequest request) throws Exception {
 
-        OficioRemision oficioRemision = null;
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
         // OficinaSir destino
