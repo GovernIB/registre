@@ -354,7 +354,7 @@ public class SirBean implements SirLocal{
         if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO)){
 
             // Creamos y guardamos el AsientoRegistralSir
-            RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
+            RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
 
             // Establecer campos SIR
             registroEntrada.getRegistroDetalle().setIndicadorPrueba(IndicadorPrueba.NORMAL);

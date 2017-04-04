@@ -60,7 +60,7 @@ public class EmisionBean implements EmisionLocal{
 
             oficioRemision = sirEjb.enviarFicheroIntercambio(tipoRegistro, idRegistro, codigoEntidadRegistralDestino, denominacionEntidadRegistralDestino, oficinaActiva, usuario,idLibro);
 
-            RegistroEntrada registroEntrada = oficioRemision.getRegistrosEntrada().get(0);
+            RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(oficioRemision.getRegistrosEntrada().get(0).getId());
 
             log.info("Enviando el registro al nodo distribuido: " + registroEntrada.getRegistroDetalle().getIdentificadorIntercambio());
 
