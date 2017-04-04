@@ -264,7 +264,7 @@ public class SirBean implements SirLocal{
             oficioRemision.setNumeroRegistroEntradaDestino(mensaje.getNumeroRegistroEntradaDestino());
             oficioRemision.setFechaEntradaDestino(mensaje.getFechaEntradaDestino());
             oficioRemision.setEstado(RegwebConstantes.OFICIO_ACEPTADO);
-            oficioRemision.setFechaEstado(new Date());
+            oficioRemision.setFechaEstado(mensaje.getFechaEntradaDestino());
             oficioRemisionEjb.merge(oficioRemision);
 
         }else  if(oficioRemision.getEstado() == (RegwebConstantes.OFICIO_ACEPTADO)){
