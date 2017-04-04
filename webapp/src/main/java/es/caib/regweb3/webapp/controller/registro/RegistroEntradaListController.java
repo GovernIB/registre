@@ -325,14 +325,14 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         try{
 
-            oficioRemision = emisionEjb.enviarFicheroIntercambio(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO,idRegistroEntrada, oficinaSir.getCodigo(),oficinaSir.getDenominacion(), getOficinaActiva(request), usuarioEntidad, envioSirForm.getIdLibro());
+            emisionEjb.enviarFicheroIntercambio(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO,idRegistroEntrada, oficinaSir.getCodigo(),oficinaSir.getDenominacion(), getOficinaActiva(request), usuarioEntidad, envioSirForm.getIdLibro());
+            Mensaje.saveMessageInfo(request, getMessage("asientoRegistralSir.envio.ok"));
 
         }catch (SIRException e){
-
-            return new ModelAndView("redirect:/registroEntrada/" + idRegistroEntrada + "/detalle");
+            Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.error.envio"));
         }
 
-        return new ModelAndView("redirect:/oficioRemision/" + oficioRemision.getId() + "/detalle");
+        return new ModelAndView("redirect:/registroEntrada/" + idRegistroEntrada + "/detalle");
     }
 
     @RequestMapping(value = "/pendientesVisar/list/{pageNumber}", method = RequestMethod.GET)

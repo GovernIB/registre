@@ -1117,8 +1117,6 @@ public class InformeController extends AbstractRegistroCommonFormController {
                     valorRegistro.add("TRAMITAT");
                 } else if(registro.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)) {
                         valorRegistro.add("ANUL·LAT");
-                    } else if(registro.getEstado().equals(RegwebConstantes.REGISTRO_ENVIADO)) {
-                            valorRegistro.add("ENVIAT");
                         } else if(registro.getEstado().equals(RegwebConstantes.REGISTRO_OFICIO_EXTERNO)) {
                                 valorRegistro.add("OFICI EXTERN");
                             } else if(registro.getEstado().equals(RegwebConstantes.REGISTRO_OFICIO_INTERNO)) {
@@ -1153,8 +1151,6 @@ public class InformeController extends AbstractRegistroCommonFormController {
                         registros.get(i).add("TRAMITAT");
                     } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)) {
                             registros.get(i).add("ANUL·LAT");
-                        } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_ENVIADO)) {
-                                registros.get(i).add("ENVIAT");
                             } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_OFICIO_EXTERNO)) {
                                     registros.get(i).add("OFICI EXTERN");
                                 } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_OFICIO_INTERNO)) {

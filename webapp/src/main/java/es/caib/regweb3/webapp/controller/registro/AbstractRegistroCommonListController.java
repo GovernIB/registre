@@ -72,11 +72,9 @@ public abstract class AbstractRegistroCommonListController extends BaseControlle
 
     @ModelAttribute("estados")
     public Long[] estados(HttpServletRequest request) throws Exception {
-      if(getEntidadActiva(request).getSir()){
-          return RegwebConstantes.ESTADOS_REGISTRO_SIR;
-      }else {
-          return RegwebConstantes.ESTADOS_REGISTRO;
-      }
+
+        return RegwebConstantes.ESTADOS_REGISTRO;
+
     }
 
     /**

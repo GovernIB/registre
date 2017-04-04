@@ -148,6 +148,7 @@
                                                         <col>
                                                         <col>
                                                         <col>
+                                                        <col>
                                                         <col width="51">
                                                     </colgroup>
                                                     <thead>
@@ -159,6 +160,7 @@
                                                             <th><spring:message code="oficioRemision.numero.re"/></th>
                                                             <th><spring:message code="oficioRemision.estado"/></th>
                                                             <th><spring:message code="oficioRemision.destino"/></th>
+                                                            <th><spring:message code="oficioRemision.sir"/></th>
                                                             <th class="center"><spring:message code="regweb.acciones"/></th>
                                                         </tr>
                                                     </thead>
@@ -179,15 +181,25 @@
                                                                     </c:if>
                                                                 </td>
                                                                 <td>
-                                                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO}"><span class="label label-warning"></c:if>
-                                                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_EXTERNO_ENVIADO}"><span class="label label-warning"></c:if>
-                                                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ACEPTADO}"><span class="label label-success"></c:if>
-                                                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ANULADO}"><span class="label label-danger"></c:if>
+                                                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_INTERNO}"><span class="label label-success"></c:if>
+                                                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_EXTERNO}"><span class="label label-success"></c:if>
+                                                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_ACEPTADO}"><span class="label label-success"></c:if>
+                                                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO}"><span class="label label-warning"></c:if>
+                                                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_ACK}"><span class="label label-success"></c:if>
+                                                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR}"><span class="label label-danger"></c:if>
+                                                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO}"><span class="label label-warning"></c:if>
+                                                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO_ACK}"><span class="label label-warning"></c:if>
+                                                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR}"><span class="label label-danger"></c:if>
+                                                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO}"><span class="label label-warning"></c:if>
+                                                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO_ACK}"><span class="label label-success"></c:if>
+                                                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO_ERROR}"><span class="label label-danger"></c:if>
+                                                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_DEVUELTO}"><span class="label label-danger"></c:if>
+                                                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_ANULADO}"><span class="label label-danger"></c:if>
                                                                       <spring:message code="oficioRemision.estado.${oficioRemision.estado}"/>
-                                                                      <c:if test="${not empty oficioRemision.fechaEstado && oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ACEPTADO || oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ANULADO}">
+                                                                      <c:if test="${not empty oficioRemision.fechaEstado && oficioRemision.estado == RegwebConstantes.OFICIO_ACEPTADO || oficioRemision.estado == RegwebConstantes.OFICIO_ANULADO}">
                                                                           - <fmt:formatDate value="${oficioRemision.fechaEstado}" pattern="dd/MM/yyyy HH:mm:ss"/>
                                                                       </c:if>
-                                                                        <c:if test="${oficioRemision.estado != RegwebConstantes.OFICIO_REMISION_ACEPTADO && oficioRemision.estado != RegwebConstantes.OFICIO_REMISION_ANULADO}">
+                                                                        <c:if test="${oficioRemision.estado != RegwebConstantes.OFICIO_ACEPTADO && oficioRemision.estado != RegwebConstantes.OFICIO_ANULADO}">
                                                                             - <fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/>
                                                                         </c:if>
                                                                     </span>
@@ -201,6 +213,10 @@
                                                                             <spring:message code="oficioRemision.externo"/>
                                                                         </c:if>
                                                                     </span>
+                                                                </td>
+                                                                <td>
+                                                                    <c:if test="${oficioRemision.sir}"><span class="label label-success"><spring:message code="regweb.si"/></span></c:if>
+                                                                    <c:if test="${not oficioRemision.sir}"><span class="label label-danger"><spring:message code="regweb.no"/></span></c:if>
                                                                 </td>
 
                                                                 <td class="center">

@@ -689,6 +689,17 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         return re;
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public RegistroEntrada getByIdentificadorIntercambio(String identificadorIntercambio) throws Exception {
+
+        Query q = em.createQuery("Select registroEntrada from RegistroEntrada as registroEntrada where registroEntrada.registroDetalle.identificadorIntercambio = :identificadorIntercambio ");
+
+        q.setParameter("identificadorIntercambio", identificadorIntercambio);
+
+        return (RegistroEntrada) q.getResultList().get(0);
+    }
+
 
     public RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception, I18NException {
         RespuestaDistribucion respuestaDistribucion = new RespuestaDistribucion();

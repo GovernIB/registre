@@ -40,9 +40,9 @@ public class OficioRemision implements Serializable {
   private Date fechaEstado;
 
   private Boolean sir = false;
-  private AsientoRegistralSir asientoRegistralSir;
-  private Date fechaRecepcion;
-  private Date fechaEnvio;
+  private String identificadorIntercambio;
+  private String numeroRegistroEntradaDestino;
+  private Date fechaEntradaDestino;
   private String codigoError;
   private String descripcionError;
   private Integer numeroReintentos;
@@ -154,15 +154,6 @@ public class OficioRemision implements Serializable {
     this.usuarioResponsable = usuarioResponsable;
   }
 
-  /**
-   * @return Indica el estado del oficio de remision:
-   *         -RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO(0): (Interno)
-   *         -RegwebConstantes.OFICIO_REMISION_EXTERNO_ENVIADO(1): (Externo)
-   *         -RegwebConstantes.OFICIO_REMISION_ACEPTADO(2): (Interno y Externo)
-   *         -RegwebConstantes.OFICIO_REMISION_RECHAZADO(3): (Solo Externo)
-   *         -RegwebConstantes.OFICIO_REMISION_REENVIADO(4): (Solo Externo)
-   *         -RegwebConstantes.OFICIO_REMISION_ANULADO(4): (Interno y Externo)
-   */
   @Column(name = "ESTADO", nullable = false)
   public int getEstado() {
     return estado;
@@ -208,33 +199,31 @@ public class OficioRemision implements Serializable {
     this.sir = sir;
   }
 
-  @ManyToOne(optional = true)
-  @JoinColumn(name = "ASIENTO_REGISTRAL_SIR")
-  @ForeignKey(name = "RWE_OFIREM_ASR_FK")
-  public AsientoRegistralSir getAsientoRegistralSir() {
-    return asientoRegistralSir;
+  @Column(name = "ID_INTERCAMBIO", length = 33, nullable = true)
+  public String getIdentificadorIntercambio() {
+    return identificadorIntercambio;
   }
 
-  public void setAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir) {
-    this.asientoRegistralSir = asientoRegistralSir;
+  public void setIdentificadorIntercambio(String identificadorIntercambio) {
+    this.identificadorIntercambio = identificadorIntercambio;
   }
 
-  @Column(name = "FECHA_RECEPCION", nullable = true)
-  public Date getFechaRecepcion() {
-    return fechaRecepcion;
+  @Column(name = "NUM_REG_DESTINO", nullable = true)
+  public String getNumeroRegistroEntradaDestino() {
+    return numeroRegistroEntradaDestino;
   }
 
-  public void setFechaRecepcion(Date fechaRecepcion) {
-    this.fechaRecepcion = fechaRecepcion;
+  public void setNumeroRegistroEntradaDestino(String numeroRegistroEntradaDestino) {
+    this.numeroRegistroEntradaDestino = numeroRegistroEntradaDestino;
   }
 
-  @Column(name = "FECHA_ENVIO", nullable = true)
-  public Date getFechaEnvio() {
-    return fechaEnvio;
+  @Column(name = "FECHA_DESTINO", nullable = true)
+  public Date getFechaEntradaDestino() {
+    return fechaEntradaDestino;
   }
 
-  public void setFechaEnvio(Date fechaEnvio) {
-    this.fechaEnvio = fechaEnvio;
+  public void setFechaEntradaDestino(Date fechaEntradaDestino) {
+    this.fechaEntradaDestino = fechaEntradaDestino;
   }
 
   @Column(name = "COD_ERROR", nullable = true)

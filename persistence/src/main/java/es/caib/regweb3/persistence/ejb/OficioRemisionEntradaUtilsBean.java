@@ -90,8 +90,6 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q.setParameter("idOficina", idOficina);
         q.setParameter("libros", libros);
-        //q.setParameter("tipoOficioRemision", RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
-        //q.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
 
         if (organismos.size() > 0) {
             q.setParameter("organismos", organismos);
@@ -116,8 +114,6 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         q1.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q1.setParameter("idOficina", idOficina);
         q1.setParameter("libros", libros);
-        //q1.setParameter("tipoOficioRemision", RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
-        //q1.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
 
         List<Object[]> externos = q1.getResultList();
 
@@ -150,9 +146,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         // Parámetros
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q.setParameter("idOficina", idOficina);
-        //q.setParameter("tipoOficioRemision", RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
         q.setParameter("libros", libros);
-        //q.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
 
         if (organismos.size() > 0) {
             q.setParameter("organismos", organismos);
@@ -167,9 +161,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
         q1.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q1.setParameter("idOficina", idOficina);
-        //q1.setParameter("tipoOficioRemision", RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
         q1.setParameter("libros", libros);
-        //q1.setParameter("anulado", RegwebConstantes.OFICIO_REMISION_ANULADO);
 
         total = total +  (Long) q1.getSingleResult();
 
@@ -458,7 +450,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
         OficioRemision oficioRemision = new OficioRemision();
         oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
-        oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO);
+        oficioRemision.setEstado(RegwebConstantes.OFICIO_INTERNO);
         oficioRemision.setOficina(oficinaActiva);
         oficioRemision.setFecha(new Date());
         oficioRemision.setRegistrosEntrada(registrosEntrada);
@@ -493,8 +485,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
         OficioRemision oficioRemision = new OficioRemision();
         oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
-        oficioRemision.setAsientoRegistralSir(null);
-        oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_EXTERNO_ENVIADO);
+        oficioRemision.setEstado(RegwebConstantes.OFICIO_EXTERNO);
         oficioRemision.setFechaEstado(new Date());
         oficioRemision.setOficina(oficinaActiva);
         oficioRemision.setFecha(new Date());
@@ -558,7 +549,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
         }
 
-        oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_ACEPTADO);
+        oficioRemision.setEstado(RegwebConstantes.OFICIO_ACEPTADO);
         oficioRemision.setFechaEstado(new Date());
 
         // Actualizamos el oficio de remisión

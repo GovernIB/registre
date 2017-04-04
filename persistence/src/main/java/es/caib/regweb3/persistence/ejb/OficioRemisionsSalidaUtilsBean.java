@@ -263,7 +263,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
         OficioRemision oficioRemision = new OficioRemision();
         oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA);
-        oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO);
+        oficioRemision.setEstado(RegwebConstantes.OFICIO_INTERNO);
         oficioRemision.setOficina(oficinaActiva);
         oficioRemision.setFecha(new Date());
         oficioRemision.setRegistrosSalida(registrosSalida);
@@ -299,8 +299,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
         OficioRemision oficioRemision = new OficioRemision();
         oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA);
-        oficioRemision.setAsientoRegistralSir(null);
-        oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_EXTERNO_ENVIADO);
+        oficioRemision.setEstado(RegwebConstantes.OFICIO_EXTERNO);
         oficioRemision.setFechaEstado(new Date());
         oficioRemision.setOficina(oficinaActiva);
         oficioRemision.setFecha(new Date());
@@ -363,7 +362,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
         }
 
-        oficioRemision.setEstado(RegwebConstantes.OFICIO_REMISION_ACEPTADO);
+        oficioRemision.setEstado(RegwebConstantes.OFICIO_ACEPTADO);
         oficioRemision.setFechaEstado(new Date());
 
         // Actualizamos el oficio de remisión

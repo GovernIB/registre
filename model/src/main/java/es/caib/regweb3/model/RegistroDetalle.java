@@ -1,6 +1,7 @@
 package es.caib.regweb3.model;
 
 import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.model.utils.IndicadorPrueba;
 import es.caib.regweb3.utils.Versio;
 import org.hibernate.annotations.ForeignKey;
 import org.hibernate.annotations.LazyCollection;
@@ -57,6 +58,22 @@ public class RegistroDetalle implements Serializable {
     private String numeroRegistroOrigen;
     @XmlElement
     private Date fechaOrigen;
+
+    // Campos añadidos SIR
+    @XmlTransient
+    private IndicadorPrueba indicadorPrueba = IndicadorPrueba.NORMAL;
+    @XmlTransient
+    private String tipoAnotacion;
+    @XmlTransient
+    private String decodificacionTipoAnotacion;
+    @XmlTransient
+    private String codigoEntidadRegistralDestino;
+    @XmlTransient
+    private String decodificacionEntidadRegistralDestino;
+    @XmlTransient
+    private String identificadorIntercambio;
+    // Fin Campos añadidos SIR
+
     @XmlElement
     private String expone;
     @XmlElement
@@ -293,6 +310,62 @@ public class RegistroDetalle implements Serializable {
 
     public void setFechaOrigen(Date fechaOrigen) {
         this.fechaOrigen = fechaOrigen;
+    }
+
+
+    @Column(name = "INDICADOR_PRUEBA", length = 1, nullable = true)
+    @Enumerated(EnumType.ORDINAL)
+    public IndicadorPrueba getIndicadorPrueba() {
+        return indicadorPrueba;
+    }
+
+    public void setIndicadorPrueba(IndicadorPrueba indicadorPrueba) {
+        this.indicadorPrueba = indicadorPrueba;
+    }
+
+    @Column(name = "TIPO_ANOTACION", length = 2, nullable = true)
+    public String getTipoAnotacion() {
+        return tipoAnotacion;
+    }
+
+    public void setTipoAnotacion(String tipoAnotacion) {
+        this.tipoAnotacion = tipoAnotacion;
+    }
+
+    @Column(name = "DEC_T_ANOTACION", length = 80, nullable = true)
+    public String getDecodificacionTipoAnotacion() {
+        return decodificacionTipoAnotacion;
+    }
+
+    public void setDecodificacionTipoAnotacion(String decodificacionTipoAnotacion) {
+        this.decodificacionTipoAnotacion = decodificacionTipoAnotacion;
+    }
+
+    @Column(name = "COD_ENT_REG_DEST", length = 21, nullable = true)
+    public String getCodigoEntidadRegistralDestino() {
+        return codigoEntidadRegistralDestino;
+    }
+
+    public void setCodigoEntidadRegistralDestino(String codigoEntidadRegistralDestino) {
+        this.codigoEntidadRegistralDestino = codigoEntidadRegistralDestino;
+    }
+
+    @Column(name = "DEC_ENT_REG_DEST", length = 80, nullable = true)
+    public String getDecodificacionEntidadRegistralDestino() {
+        return decodificacionEntidadRegistralDestino;
+    }
+
+    public void setDecodificacionEntidadRegistralDestino(String decodificacionEntidadRegistralDestino) {
+        this.decodificacionEntidadRegistralDestino = decodificacionEntidadRegistralDestino;
+    }
+
+    @Column(name = "ID_INTERCAMBIO", length = 33, nullable = true)
+    public String getIdentificadorIntercambio() {
+        return identificadorIntercambio;
+    }
+
+    public void setIdentificadorIntercambio(String identificadorIntercambio) {
+        this.identificadorIntercambio = identificadorIntercambio;
     }
 
     @Column(name = "EXPONE", length = 4000, nullable = true)

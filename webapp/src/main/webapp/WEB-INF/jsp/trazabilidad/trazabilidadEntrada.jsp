@@ -41,12 +41,12 @@
                                 <c:import url="../trazabilidad/registroSalida.jsp"/>
                             </li>
 
-                            <%--ASIENTO REGISTRAL SIR--%>
-                            <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ACEPTADO}">
+                            <%--INFO DESTINO--%>
+                            <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_ACEPTADO}">
 
                                 <li class="timeline-inverted">
-                                    <c:set var="asientoRegistralSir" value="${trazabilidad.asientoRegistralSir}" scope="request"/>
-                                    <c:import url="../trazabilidad/asientoRegistralSir.jsp"/>
+                                    <c:set var="oficioRemision" value="${trazabilidad.oficioRemision}" scope="request"/>
+                                    <c:import url="../trazabilidad/asientoDestino.jsp"/>
                                 </li>
 
                             </c:if>

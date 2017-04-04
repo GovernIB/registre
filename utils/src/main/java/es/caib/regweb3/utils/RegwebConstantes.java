@@ -236,20 +236,9 @@ public interface RegwebConstantes {
     public static final Long REGISTRO_PENDIENTE_VISAR = 3L;
     public static final Long REGISTRO_OFICIO_EXTERNO = 4L;
     public static final Long REGISTRO_OFICIO_INTERNO = 5L;
-    public static final Long REGISTRO_ENVIADO = 6L;
+    /*public static final Long REGISTRO_ENVIADO = 6L;*/
     public static final Long REGISTRO_TRAMITADO = 7L;
     public static final Long REGISTRO_ANULADO = 8L;
-
-
-    public static final Long[] ESTADOS_REGISTRO_SIR = {
-            REGISTRO_VALIDO,
-            REGISTRO_RESERVA,
-            REGISTRO_PENDIENTE_VISAR,
-            REGISTRO_OFICIO_EXTERNO,
-            REGISTRO_OFICIO_INTERNO,
-            REGISTRO_ENVIADO,
-            REGISTRO_TRAMITADO,
-            REGISTRO_ANULADO};
 
     public static final Long[] ESTADOS_REGISTRO = {
             REGISTRO_VALIDO,
@@ -541,11 +530,37 @@ public interface RegwebConstantes {
     public static final int OFICIO_REMISION_REENVIADO = 4; // Externo
     public static final int OFICIO_REMISION_ANULADO = 5; // Interno y Externo
 
+
+    public static final int OFICIO_INTERNO = 0;
+    public static final int OFICIO_EXTERNO = 1;
+    public static final int OFICIO_ACEPTADO = 2;
+    public static final int OFICIO_SIR_ENVIADO = 3;
+    public static final int OFICIO_SIR_ENVIADO_ACK = 4;
+    public static final int OFICIO_SIR_ENVIADO_ERROR = 5;
+    public static final int OFICIO_SIR_REENVIADO = 6;
+    public static final int OFICIO_SIR_REENVIADO_ACK = 7;
+    public static final int OFICIO_SIR_REENVIADO_ERROR = 8;
+    public static final int OFICIO_SIR_RECHAZADO = 9;
+    public static final int OFICIO_SIR_RECHAZADO_ACK = 10;
+    public static final int OFICIO_SIR_RECHAZADO_ERROR = 11;
+    public static final int OFICIO_SIR_DEVUELTO = 12;
+    public static final int OFICIO_ANULADO = 13;
+
     public static final Integer[] ESTADOS_OFICIO_REMISION = {
-            OFICIO_REMISION_INTERNO_ENVIADO,
-            OFICIO_REMISION_EXTERNO_ENVIADO,
-            OFICIO_REMISION_ACEPTADO,
-            OFICIO_REMISION_ANULADO
+            OFICIO_INTERNO,
+            OFICIO_EXTERNO,
+            OFICIO_ACEPTADO,
+            OFICIO_SIR_ENVIADO,
+            OFICIO_SIR_ENVIADO_ACK,
+            OFICIO_SIR_ENVIADO_ERROR,
+            OFICIO_SIR_REENVIADO,
+            OFICIO_SIR_REENVIADO_ACK,
+            OFICIO_SIR_REENVIADO_ERROR,
+            OFICIO_SIR_RECHAZADO,
+            OFICIO_SIR_RECHAZADO_ACK,
+            OFICIO_SIR_RECHAZADO_ERROR,
+            OFICIO_SIR_DEVUELTO,
+            OFICIO_ANULADO
     };
 
     public static final int REGISTROS_PANTALLA_INICIO = 5;

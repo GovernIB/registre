@@ -135,8 +135,6 @@ public class LibroRegistroExcel extends AbstractExcelView {
             estadoRegistro = getMessage("registro.estado.4");
         }else if(estado.equals(RegwebConstantes.REGISTRO_OFICIO_INTERNO)){
             estadoRegistro = getMessage("registro.estado.5");
-        }else if(estado.equals(RegwebConstantes.REGISTRO_ENVIADO)){
-            estadoRegistro = getMessage("registro.estado.6");
         }else if(estado.equals(RegwebConstantes.REGISTRO_TRAMITADO)){
             estadoRegistro = getMessage("registro.estado.7");
         }else if(estado.equals(RegwebConstantes.REGISTRO_ANULADO)){

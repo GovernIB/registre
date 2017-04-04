@@ -4,9 +4,8 @@ import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
 import es.caib.dir3caib.ws.api.unidad.UnidadTF;
-import es.caib.regweb3.model.AnexoSir;
-import es.caib.regweb3.model.AsientoRegistralSir;
-import es.caib.regweb3.model.InteresadoSir;
+import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.IndicadorPrueba;
 import es.caib.regweb3.model.utils.TipoRegistro;
 import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
@@ -21,6 +20,7 @@ import es.caib.regweb3.sir.core.schema.types.Indicador_PruebaType;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.core.utils.Mensaje;
 import es.caib.regweb3.utils.MimeTypeUtils;
+import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.Versio;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.ArrayUtils;
@@ -30,6 +30,8 @@ import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.exolab.castor.xml.MarshalException;
+import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
+import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.w3c.dom.Node;
@@ -37,6 +39,7 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathConstants;
 import java.io.*;
+import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -846,6 +849,640 @@ public class Sicres3XML {
 
     }
 
+    /**
+     * @param registroEntrada
+     * @return
+     */
+    public String crearXMLFicheroIntercambioSICRES3(RegistroEntrada registroEntrada) throws Exception   {
+
+        Assert.notNull(registroEntrada, "La variable 'registroEntrada' no puede ser null");
+
+        Document doc = DocumentHelper.createDocument();
+        doc.setXMLEncoding("UTF-8");
+
+        // Fichero_Intercambio_SICRES_3
+        Element rootNode = doc.addElement("Fichero_Intercambio_SICRES_3");
+
+        /* Segmento DeOrigenORemitente */
+        addDatosOrigenORemitente(rootNode, registroEntrada);
+
+        /* Segmento DeDestino */
+        addDatosDestino(rootNode, registroEntrada);
+
+        /* Segmento DeInteresados */
+        addDatosInteresados(rootNode, registroEntrada.getRegistroDetalle());
+
+        /* Segmento DeAsunto */
+        addDatosAsunto(rootNode, registroEntrada);
+
+        /* Segmento DeAnexo */
+        addDatosAnexos(rootNode, registroEntrada);
+
+        /* Segmento DeInternosControl */
+        addDatosInternosControl(rootNode, registroEntrada);
+
+        /* Segmento DeFormularioGenerico */
+        addDatosformularioGenerico(rootNode, registroEntrada);
+
+        return doc.asXML();
+    }
+
+    /**
+     * Añade el Segmento deOrigenORemitente al Fichero de Intercambio
+     *
+     * @param rootNode
+     * @param registro
+     */
+    private void addDatosOrigenORemitente(Element rootNode, RegistroEntrada registro) {
+
+        // De_Origen_o_Remitente
+        Element rootElement = rootNode.addElement("De_Origen_o_Remitente");
+        Element elem = null;
+
+        // Codigo_Entidad_Registral_Origen
+        if (StringUtils.isNotBlank(registro.getOficina().getCodigo())) {
+            elem = rootElement.addElement("Codigo_Entidad_Registral_Origen");
+            elem.addCDATA(registro.getOficina().getCodigo());
+        }
+
+        // Decodificacion_Entidad_Registral_Origen
+        if (StringUtils.isNotBlank(registro.getOficina().getDenominacion())) {
+            elem = rootElement.addElement("Decodificacion_Entidad_Registral_Origen");
+            elem.addCDATA(registro.getOficina().getDenominacion());
+        }
+
+        // Numero_Registro_Entrada
+        if (StringUtils.isNotBlank(registro.getNumeroRegistroFormateado())) {
+            elem = rootElement.addElement("Numero_Registro_Entrada");
+            elem.addCDATA(registro.getNumeroRegistroFormateado());
+        }
+
+        // Fecha_Hora_Entrada
+        if (registro.getFecha() != null) {
+            elem = rootElement.addElement("Fecha_Hora_Entrada");
+            elem.addCDATA(SDF.format(registro.getFecha()));
+        }
+
+        // Timestamp_Entrada
+        //deOrigenORemitente.setTimestampEntrada(); // No es necesario
+
+        Entidad entidad = registro.getOficina().getOrganismoResponsable().getEntidad();
+
+        // Codigo_Unidad_Tramitacion_Origen
+        if (StringUtils.isNotBlank(entidad.getCodigoDir3())) {
+            elem = rootElement.addElement("Codigo_Unidad_Tramitacion_Origen");
+            elem.addCDATA(entidad.getCodigoDir3());
+        }
+
+        // Decodificacion_Unidad_Tramitacion_Origen
+        if (StringUtils.isNotBlank(entidad.getNombre())) {
+            elem = rootElement.addElement("Decodificacion_Unidad_Tramitacion_Origen");
+            elem.addCDATA(entidad.getNombre());
+        }
+
+        log.info("Segmento De_Origen_o_Remitente creado");
+
+    }
+
+    /**
+     * Añade el Segmento deDestino al Fichero de Intercambio
+     *
+     * @param rootNode
+     * @param registro
+     */
+    private void addDatosDestino(Element rootNode, RegistroEntrada registro) {
+
+        // De_Destino
+        Element rootElement = rootNode.addElement("De_Destino");
+        Element elem = null;
+
+        // Codigo_Entidad_Registral_Destino
+        if (StringUtils.isNotBlank(registro.getRegistroDetalle().getCodigoEntidadRegistralDestino())) {
+            elem = rootElement.addElement("Codigo_Entidad_Registral_Destino");
+            elem.addCDATA(registro.getRegistroDetalle().getCodigoEntidadRegistralDestino());
+        }
+
+        // Decodificacion_Entidad_Registral_Destino
+        if (StringUtils.isNotBlank(registro.getRegistroDetalle().getDecodificacionEntidadRegistralDestino())) {
+            elem = rootElement.addElement("Decodificacion_Entidad_Registral_Destino");
+            elem.addCDATA(registro.getRegistroDetalle().getDecodificacionEntidadRegistralDestino());
+        }
+
+        // Codigo_Unidad_Tramitacion_Destino
+        if (StringUtils.isNotBlank(registro.getDestinoExternoCodigo())) {
+            elem = rootElement.addElement("Codigo_Unidad_Tramitacion_Destino");
+            elem.addCDATA(registro.getDestinoExternoCodigo());
+        }
+
+        // Decodificacion_Unidad_Tramitacion_Destino
+        if (StringUtils.isNotBlank(registro.getDestinoExternoDenominacion())) {
+            elem = rootElement.addElement("Decodificacion_Unidad_Tramitacion_Destino");
+            elem.addCDATA(registro.getDestinoExternoDenominacion());
+        }
+
+        log.info("Segmento De_Destino creado");
+
+    }
+
+    /**
+     * Añade el Segmento deInteresado al Fichero de Intercambio
+     *
+     * @param rootNode
+     * @param registroDetalle
+     */
+    private void addDatosInteresados(Element rootNode, RegistroDetalle registroDetalle) {
+
+        List<Interesado> interesados = registroDetalle.getInteresados();
+
+        if (!CollectionUtils.isEmpty(interesados)) {
+
+            for (Interesado interesado : interesados) {
+
+                Element rootElement = rootNode.addElement("De_Interesado");
+                Element elem = null;
+
+                if (!interesado.getIsRepresentante()) { // Interesado
+
+                    // Tipo_Documento_Identificacion_Interesado
+                    if (interesado.getTipoDocumentoIdentificacion() != null) {
+                        elem = rootElement.addElement("Tipo_Documento_Identificacion_Interesado");
+                        elem.addCDATA(String.valueOf(RegwebConstantes.CODIGO_NTI_BY_TIPODOCUMENTOID.get(interesado.getTipoDocumentoIdentificacion())));
+                    }
+                    // Documento_Identificacion_Interesado
+                    if (!StringUtils.isEmpty(interesado.getDocumento())) {
+                        elem = rootElement.addElement("Documento_Identificacion_Interesado");
+                        elem.addCDATA(interesado.getDocumento());
+                    }
+                    // Razon_Social_Interesado
+                    if (!StringUtils.isEmpty(interesado.getRazonSocial())) {
+                        elem = rootElement.addElement("Razon_Social_Interesado");
+                        elem.addCDATA(interesado.getRazonSocial());
+                    }
+                    // Nombre_Interesado
+                    if (!StringUtils.isEmpty(interesado.getNombre())) {
+                        elem = rootElement.addElement("Nombre_Interesado");
+                        elem.addCDATA(interesado.getNombre());
+                    }
+                    // Primer_Apellido_Interesado
+                    if (!StringUtils.isEmpty(interesado.getApellido1())) {
+                        elem = rootElement.addElement("Primer_Apellido_Interesado");
+                        elem.addCDATA(interesado.getApellido1());
+                    }
+                    // Segundo_Apellido_Interesado
+                    if (!StringUtils.isEmpty(interesado.getApellido2())) {
+                        elem = rootElement.addElement("Segundo_Apellido_Interesado");
+                        elem.addCDATA(interesado.getApellido2());
+                    }
+
+                    // Pais_Interesado
+                    if (interesado.getPais() != null) {
+                        elem = rootElement.addElement("Pais_Interesado");
+                        elem.addCDATA(interesado.getPais().getCodigoPais().toString());
+                    }
+                    // Provincia_Interesado
+                    if (interesado.getProvincia() != null) {
+                        elem = rootElement.addElement("Provincia_Interesado");
+                        elem.addCDATA(interesado.getProvincia().getCodigoProvincia().toString());
+                    }
+                    // Municipio_Interesado
+                    if (interesado.getLocalidad() != null) {
+                        elem = rootElement.addElement("Municipio_Interesado");
+                        elem.addCDATA(interesado.getLocalidad().getCodigoLocalidad().toString());
+                    }
+                    // Direccion_Interesado
+                    if (!StringUtils.isEmpty(interesado.getDireccion())) {
+                        elem = rootElement.addElement("Direccion_Interesado");
+                        elem.addCDATA(interesado.getDireccion());
+                    }
+                    // Codigo_Postal_Interesado
+                    if (!StringUtils.isEmpty(interesado.getCp())) {
+                        elem = rootElement.addElement("Codigo_Postal_Interesado");
+                        elem.addCDATA(interesado.getCp());
+                    }
+                    // Correo_Electronico_Interesado
+                    if (!StringUtils.isEmpty(interesado.getEmail())) {
+                        elem = rootElement.addElement("Correo_Electronico_Interesado");
+                        elem.addCDATA(interesado.getEmail());
+                    }
+                    // Telefono_Contacto_Interesado
+                    if (!StringUtils.isEmpty(interesado.getTelefono())) {
+                        elem = rootElement.addElement("Telefono_Contacto_Interesado");
+                        elem.addCDATA(interesado.getTelefono());
+                    }
+                    // Direccion_Electronica_Habilitada_Interesado
+                    if (!StringUtils.isEmpty(interesado.getDireccionElectronica())) {
+                        elem = rootElement.addElement("Direccion_Electronica_Habilitada_Interesado");
+                        elem.addCDATA(interesado.getDireccionElectronica());
+                    }
+                    // Canal_Preferente_Comunicacion_Interesado
+                    if (interesado.getCanal() != null) {
+                        elem = rootElement.addElement("Canal_Preferente_Comunicacion_Interesado");
+                        elem.addCDATA(RegwebConstantes.CODIGO_BY_CANALNOTIFICACION.get(interesado.getCanal()));
+                    }
+
+                }
+
+                if (interesado.getRepresentante() != null) { // Representante
+
+                    Interesado representante = interesado.getRepresentante();
+
+                    // Tipo_Documento_Identificacion_Representante
+                    if (representante.getTipoDocumentoIdentificacion() != null) {
+                        elem = rootElement.addElement("Tipo_Documento_Identificacion_Representante");
+                        elem.addCDATA(String.valueOf(RegwebConstantes.CODIGO_NTI_BY_TIPODOCUMENTOID.get(representante.getTipoDocumentoIdentificacion())));
+                    }
+                    // Documento_Identificacion_Representante
+                    if (representante.getDocumento() != null) {
+                        elem = rootElement.addElement("Documento_Identificacion_Representante");
+                        elem.addCDATA(representante.getDocumento());
+                    }
+                    // Razon_Social_Representante
+                    if (representante.getRazonSocial() != null) {
+                        elem = rootElement.addElement("Razon_Social_Representante");
+                        elem.addCDATA(representante.getRazonSocial());
+                    }
+                    // Nombre_Representante
+                    if (representante.getNombre() != null) {
+                        elem = rootElement.addElement("Nombre_Representante");
+                        elem.addCDATA(representante.getNombre());
+                    }
+                    // Primer_Apellido_Representante
+                    if (representante.getApellido1() != null) {
+                        elem = rootElement.addElement("Primer_Apellido_Representante");
+                        elem.addCDATA(representante.getApellido1());
+                    }
+                    // Segundo_Apellido_Representante
+                    if (representante.getApellido2() != null) {
+                        elem = rootElement.addElement("Segundo_Apellido_Representante");
+                        elem.addCDATA(representante.getApellido2());
+                    }
+
+                    // Pais_Representante
+                    if (representante.getPais() != null) {
+                        elem = rootElement.addElement("Pais_Representante");
+                        elem.addCDATA(representante.getPais().getCodigoPais().toString());
+                    }
+                    // Provincia_Representante
+                    if (representante.getProvincia() != null) {
+                        elem = rootElement.addElement("Provincia_Representante");
+                        elem.addCDATA(representante.getProvincia().getCodigoProvincia().toString());
+                    }
+                    // Municipio_Representante
+                    if (representante.getLocalidad() != null) {
+                        elem = rootElement.addElement("Municipio_Representante");
+                        elem.addCDATA(representante.getLocalidad().getCodigoLocalidad().toString());
+                    }
+                    // Direccion_Representante
+                    if (!StringUtils.isEmpty(representante.getDireccion())) {
+                        elem = rootElement.addElement("Direccion_Representante");
+                        elem.addCDATA(representante.getDireccion());
+                    }
+                    // Codigo_Postal_Representante
+                    if (!StringUtils.isEmpty(representante.getCp())) {
+                        elem = rootElement.addElement("Codigo_Postal_Representante");
+                        elem.addCDATA(representante.getCp());
+                    }
+                    // Correo_Electronico_Representante
+                    if (!StringUtils.isEmpty(representante.getEmail())) {
+                        elem = rootElement.addElement("Correo_Electronico_Representante");
+                        elem.addCDATA(representante.getEmail());
+                    }
+                    // Telefono_Contacto_Representante
+                    if (!StringUtils.isEmpty(representante.getTelefono())) {
+                        elem = rootElement.addElement("Telefono_Contacto_Representante");
+                        elem.addCDATA(representante.getTelefono());
+                    }
+                    // Direccion_Electronica_Habilitada_Representante
+                    if (!StringUtils.isEmpty(representante.getDireccionElectronica())) {
+                        elem = rootElement.addElement("Direccion_Electronica_Habilitada_Representante");
+                        elem.addCDATA(representante.getDireccionElectronica());
+                    }
+                    // Canal_Preferente_Comunicacion_Representante
+                    if (representante.getCanal() != null) {
+                        elem = rootElement.addElement("Canal_Preferente_Comunicacion_Representante");
+                        elem.addCDATA(RegwebConstantes.CODIGO_BY_CANALNOTIFICACION.get(representante.getCanal()));
+                    }
+                }
+
+
+
+                // Observaciones
+                if (!StringUtils.isEmpty(interesado.getObservaciones())) {
+                    elem = rootElement.addElement("Observaciones");
+                    elem.addCDATA(interesado.getObservaciones());
+                }
+
+            }
+        } else {
+            // De_Interesado es elemento obligatoria su presencia aunque sea vacio y no vengan interesados
+            Element rootElement = rootNode.addElement("De_Interesado");
+        }
+
+        log.info("Segmento De_Interesado creado");
+    }
+
+    /**
+     * Añade el Segmento deAsunto al Fichero de Intercambio
+     *
+     * @param rootNode
+     * @param registro
+     */
+    private void addDatosAsunto(Element rootNode, RegistroEntrada registro) {
+
+        // De_Asunto
+        Element rootElement = rootNode.addElement("De_Asunto");
+        Element elem = null;
+
+        RegistroDetalle registroDetalle = registro.getRegistroDetalle();
+
+        // Resumen
+        elem = rootElement.addElement("Resumen");
+        if (StringUtils.isNotBlank(registroDetalle.getExtracto())) {
+            elem.addCDATA(registroDetalle.getExtracto());
+        }
+        // Codigo_Asunto_Segun_Destino
+        if (registroDetalle.getCodigoAsunto() != null) {
+            elem = rootElement.addElement("Codigo_Asunto_Segun_Destino");
+            elem.addCDATA(registroDetalle.getCodigoAsunto().getCodigo());
+        }
+
+        // Referencia_Externa
+        if (StringUtils.isNotBlank(registroDetalle.getReferenciaExterna())) {
+            elem = rootElement.addElement("Referencia_Externa");
+            elem.addCDATA(registroDetalle.getReferenciaExterna());
+        }
+
+        // Numero_Expediente
+        if (StringUtils.isNotBlank(registroDetalle.getExpediente())) {
+            elem = rootElement.addElement("Numero_Expediente");
+            elem.addCDATA(registroDetalle.getExpediente());
+        }
+
+        log.info("Segmento De_Asunto creado");
+
+    }
+
+    /**
+     *
+     * @param rootNode
+     * @param registro
+     * @throws Exception
+     */
+    private void addDatosAnexos(Element rootNode, RegistroEntrada registro) throws Exception  {
+
+        int secuencia = 0;
+
+        for (AnexoFull anexoFull : registro.getRegistroDetalle().getAnexosFull()) {
+
+            final int modoFirma = anexoFull.getAnexo().getModoFirma();
+            Anexo anexo = anexoFull.getAnexo();
+
+            switch (modoFirma){
+
+                case MODO_FIRMA_ANEXO_ATTACHED:
+                    SignatureCustody sc = anexoFull.getSignatureCustody();
+
+                    String identificadorFichero = generateIdentificadorFichero(registro.getRegistroDetalle().getIdentificadorIntercambio(), secuencia, sc.getName());
+                    secuencia++;
+
+                    crearAnexo(rootNode, sc.getName(),identificadorFichero, CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento()),
+                            CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(anexo.getTipoDocumento()),anexo.getCertificado(),anexo.getFirma(),anexo.getTimestamp(), anexo.getValidacionOCSPCertificado(),
+                            obtenerHash(sc.getData()),sc.getMime(),sc.getData(), identificadorFichero, anexo.getObservaciones());
+
+                    break;
+
+                case MODO_FIRMA_ANEXO_DETACHED:
+
+                    DocumentCustody dc = anexoFull.getDocumentoCustody();
+
+                    identificadorFichero = generateIdentificadorFichero(registro.getRegistroDetalle().getIdentificadorIntercambio(), secuencia, dc.getName());
+                    secuencia++;
+
+                    crearAnexo(rootNode, dc.getName(),identificadorFichero, CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento()),
+                            CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(anexo.getTipoDocumento()),anexo.getCertificado(),anexo.getFirma(),anexo.getTimestamp(), anexo.getValidacionOCSPCertificado(),
+                            obtenerHash(dc.getData()),dc.getMime(),dc.getData(), null,anexo.getObservaciones());
+
+                    SignatureCustody scFirma = anexoFull.getSignatureCustody();
+                    String identificadorFicheroFirmado = generateIdentificadorFichero(registro.getRegistroDetalle().getIdentificadorIntercambio(), secuencia, dc.getName());
+                    secuencia++;
+
+                    crearAnexo(rootNode, scFirma.getName(),identificadorFicheroFirmado, CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento()),
+                            CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(anexo.getTipoDocumento()),anexo.getCertificado(),anexo.getFirma(),anexo.getTimestamp(), anexo.getValidacionOCSPCertificado(),
+                            obtenerHash(scFirma.getData()),scFirma.getMime(),scFirma.getData(), identificadorFichero, anexo.getObservaciones());
+                    break;
+
+            }
+
+
+        }
+
+        log.info("Segmento De_Anexo creado");
+
+    }
+
+    private void crearAnexo(Element rootNode, String nombreFichero, String identificadorFichero, String validezDocumento, String tipoDocumento, byte[] certificado,
+                            byte[] firma, byte[] timeStamp, byte[] validacionOCSPCertificado, byte[] hash, String tipoMime, byte[] anexo, String identificadorFicheroFirmado, String observaciones){
+
+        Element elem;
+        Element rootElement = rootNode.addElement("De_Anexo");
+
+        // Nombre_Fichero_Anexado
+        if (StringUtils.isNotBlank(nombreFichero)) {
+            elem = rootElement.addElement("Nombre_Fichero_Anexado");
+            elem.addCDATA(nombreFichero);
+        }
+
+        // Identificador_Fichero
+        elem = rootElement.addElement("Identificador_Fichero");
+        elem.addCDATA(identificadorFichero);
+
+
+        // Validez_Documento
+        elem = rootElement.addElement("Validez_Documento");
+        if (validezDocumento == null) {
+            elem.addCDATA(null);
+        } else {
+            elem.addCDATA(validezDocumento);
+        }
+
+        // Tipo_Documento
+        elem = rootElement.addElement("Tipo_Documento");
+        if (tipoDocumento == null) {
+            elem.addCDATA(null);
+        } else {
+            elem.addCDATA(tipoDocumento);
+        }
+
+        // Certificado
+        if (certificado != null) {
+            elem = rootElement.addElement("Certificado");
+            elem.addCDATA(getBase64String(certificado));
+        }
+
+        //Firma documento (propiedad Firma Documento del segmento)
+        if (firma != null) {
+            elem = rootElement.addElement("Firma_Documento");
+            elem.addCDATA(getBase64String(firma));
+        }
+
+        // TimeStamp
+        if (timeStamp != null) {
+            elem = rootElement.addElement("TimeStamp");
+            elem.addCDATA(getBase64String(timeStamp));
+        }
+
+        // Validacion_OCSP_Certificado
+        if (validacionOCSPCertificado != null) {
+            elem = rootElement.addElement("Validacion_OCSP_Certificado");
+            elem.addCDATA(getBase64String(validacionOCSPCertificado));
+        }
+
+        // Hash
+        if (hash != null) {
+            elem = rootElement.addElement("Hash");
+            elem.addCDATA(getBase64String(hash));
+        }else{
+            log.info("hash es null");
+        }
+
+        // Tipo_MIME
+        if (tipoMime != null || tipoMime.length() <= ANEXO_TIPOMIME_MAXLENGTH_SIR) {
+            elem = rootElement.addElement("Tipo_MIME");
+            elem.addCDATA(tipoMime);
+        }
+
+        //Anexo (propiedad Anexo del segmento)
+        if (anexo != null) {
+            elem = rootElement.addElement("Anexo");
+            elem.addCDATA(getBase64String(anexo));
+        }else{
+            log.info("anexo es null");
+        }
+
+        //Identificador Fichero Firmado
+        elem = rootElement.addElement("Identificador_Documento_Firmado");
+        elem.addCDATA(identificadorFicheroFirmado);
+
+        // Observaciones
+        if (StringUtils.isNotBlank(observaciones)) {
+            elem = rootElement.addElement("Observaciones");
+            elem.addCDATA(observaciones);
+        }
+    }
+
+    /**
+     * Añade el Segmento deInternosControl al Fichero de Intercambio
+     *
+     * @param rootNode
+     * @param registro
+     */
+    private void addDatosInternosControl(Element rootNode, RegistroEntrada registro) {
+
+        // De_Internos_Control
+        Element rootElement = rootNode.addElement("De_Internos_Control");
+        Element elem = null;
+
+        RegistroDetalle registroDetalle = registro.getRegistroDetalle();
+
+        // Tipo_Transporte_Entrada
+        if (registroDetalle.getTransporte() != null) {
+            elem = rootElement.addElement("Tipo_Transporte_Entrada");
+            elem.addCDATA(RegwebConstantes.CODIGO_SICRES_BY_TRANSPORTE.get(registroDetalle.getTransporte()));
+        }
+
+        // Numero_Transporte_Entrada
+        if (StringUtils.isNotBlank(registroDetalle.getNumeroTransporte())) {
+            elem = rootElement.addElement("Numero_Transporte_Entrada");
+            elem.addCDATA(registroDetalle.getNumeroTransporte());
+        }
+
+        // Nombre_Usuario
+        if (StringUtils.isNotBlank(registro.getUsuario().getNombreCompleto())) {
+            elem = rootElement.addElement("Nombre_Usuario");
+            elem.addCDATA(registro.getUsuario().getNombreCompleto());
+        }
+
+        // Contacto_Usuario
+        if (StringUtils.isNotBlank(registro.getUsuario().getUsuario().getEmail())) {
+            elem = rootElement.addElement("Contacto_Usuario");
+            elem.addCDATA(registro.getUsuario().getUsuario().getEmail());
+        }
+
+        // Identificador_Intercambio
+        if (StringUtils.isNotBlank(registroDetalle.getIdentificadorIntercambio())) {
+            elem = rootElement.addElement("Identificador_Intercambio");
+            elem.addCDATA(registroDetalle.getIdentificadorIntercambio());
+        }
+
+        // Aplicacion_Version_Emisora
+        elem = rootElement.addElement("Aplicacion_Version_Emisora");
+        elem.addCDATA(Versio.VERSIO_SIR);
+
+        // Tipo_Anotacion
+        elem = rootElement.addElement("Tipo_Anotacion");
+        elem.addCDATA(registroDetalle.getTipoAnotacion());
+
+        elem = rootElement.addElement("Descripcion_Tipo_Anotacion");
+        elem.addCDATA(registroDetalle.getDecodificacionTipoAnotacion());
+
+        // Tipo_Registro
+        elem = rootElement.addElement("Tipo_Registro");
+        elem.addCDATA(TipoRegistro.ENTRADA.getValue());
+
+        // Documentacion_Fisica
+        elem = rootElement.addElement("Documentacion_Fisica");
+        elem.addCDATA(String.valueOf(registroDetalle.getTipoDocumentacionFisica()));
+
+
+        // Observaciones_Apunte
+        if (StringUtils.isNotBlank(registroDetalle.getObservaciones())) {
+            elem = rootElement.addElement("Observaciones_Apunte");
+            elem.addCDATA(registroDetalle.getObservaciones());
+        }
+
+        // Indicador_Prueba
+        elem = rootElement.addElement("Indicador_Prueba");
+        elem.addCDATA(registroDetalle.getIndicadorPrueba().getValue());
+
+        // Codigo_Entidad_Registral_Inicio
+        elem = rootElement.addElement("Codigo_Entidad_Registral_Inicio");
+        elem.addCDATA(obtenerCodigoOficinaOrigen(registro));
+
+
+        // Decodificacion_Entidad_Registral_Inicio
+        elem = rootElement.addElement("Decodificacion_Entidad_Registral_Inicio");
+        elem.addCDATA(obtenerDenominacionOficinaOrigen(registro));
+
+    }
+
+    /**
+     * Añade el Segmento deInternosControl al Fichero de Intercambio
+     *
+     * @param rootNode
+     * @param registro
+     */
+    private void addDatosformularioGenerico(Element rootNode, RegistroEntrada registro) {
+
+        // De_Formulario_Generico
+        Element rootElement = rootNode.addElement("De_Formulario_Generico");
+        Element elem = null;
+
+        RegistroDetalle registroDetalle = registro.getRegistroDetalle();
+
+        // Expone
+        elem = rootElement.addElement("Expone");
+        if (StringUtils.isNotBlank(registroDetalle.getExpone())) {
+            elem.addCDATA(registroDetalle.getExpone());
+        }
+
+        // Solicita
+        elem = rootElement.addElement("Solicita");
+        if (StringUtils.isNotBlank(registroDetalle.getSolicita())) {
+            elem.addCDATA(registroDetalle.getSolicita());
+        }
+
+    }
+
 
     /**
      * Devuelve un XML con el mensaje de propósito general con el objetivo de
@@ -1643,5 +2280,63 @@ public class Sicres3XML {
                 }
             }
         }
+    }
+
+    /**
+     * Obtiene el código Oficina de Origen dependiendo de si es interna o externa
+     *
+     * @param re
+     * @return
+     * @throws Exception
+     */
+    protected String obtenerCodigoOficinaOrigen(RegistroEntrada re) {
+        String codOficinaOrigen = null;
+
+        if ((re.getRegistroDetalle().getOficinaOrigenExternoCodigo() == null) && (re.getRegistroDetalle().getOficinaOrigen() == null)) {
+            codOficinaOrigen = re.getOficina().getCodigo();
+        } else if (re.getRegistroDetalle().getOficinaOrigenExternoCodigo() != null) {
+            codOficinaOrigen = re.getRegistroDetalle().getOficinaOrigenExternoCodigo();
+        } else {
+            codOficinaOrigen = re.getRegistroDetalle().getOficinaOrigen().getCodigo();
+        }
+
+        return codOficinaOrigen;
+    }
+
+    /**
+     * Obtiene el denominación Oficina de Origen dependiendo de si es interna o externa
+     *
+     * @param re
+     * @return
+     * @throws Exception
+     */
+    protected String obtenerDenominacionOficinaOrigen(RegistroEntrada re) {
+        String denominacionOficinaOrigen = null;
+
+        if ((re.getRegistroDetalle().getOficinaOrigenExternoCodigo() == null) && (re.getRegistroDetalle().getOficinaOrigen() == null)) {
+            denominacionOficinaOrigen = re.getOficina().getCodigo();
+        } else if (re.getRegistroDetalle().getOficinaOrigenExternoCodigo() != null) {
+            denominacionOficinaOrigen = re.getRegistroDetalle().getOficinaOrigenExternoDenominacion();
+        } else {
+            denominacionOficinaOrigen = re.getRegistroDetalle().getOficinaOrigen().getDenominacion();
+        }
+
+        return denominacionOficinaOrigen;
+    }
+
+    /**
+     * Genera el Hash mediante SHA-256 del contenido del documento y lo codifica en base64
+     *
+     * @param documentoData
+     * @return
+     * @throws Exception
+     */
+    protected byte[] obtenerHash(byte[] documentoData) throws Exception {
+
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        byte[] digest = md.digest(documentoData);
+
+        return Base64.encodeBase64(digest);
+
     }
 }

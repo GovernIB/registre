@@ -343,9 +343,6 @@
                                                     <c:when test="${registroSalida.estado == RegwebConstantes.REGISTRO_OFICIO_EXTERNO || registroSalida.estado == RegwebConstantes.REGISTRO_OFICIO_INTERNO}">
                                                         <span class="label label-default"><spring:message code="registro.estado.${registroSalida.estado}" /></span>
                                                     </c:when>
-                                                    <c:when test="${registroSalida.estado == RegwebConstantes.REGISTRO_ENVIADO}">
-                                                        <span class="label label-primary"><spring:message code="registro.estado.${registroSalida.estado}" /></span>
-                                                    </c:when>
                                                     <c:when test="${registroSalida.estado == RegwebConstantes.REGISTRO_TRAMITADO}">
                                                         <span class="label label-primary"><spring:message code="registro.estado.${registroSalida.estado}" /></span>
                                                     </c:when>

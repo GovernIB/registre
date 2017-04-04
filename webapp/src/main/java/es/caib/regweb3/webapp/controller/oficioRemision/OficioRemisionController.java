@@ -303,7 +303,7 @@ public class OficioRemisionController extends BaseController {
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
         if (permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(), oficioRemision.getLibro().getId()) &&
-                oficioRemision.getEstado() == RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO || oficioRemision.getEstado() == RegwebConstantes.OFICIO_REMISION_EXTERNO_ENVIADO) {
+                oficioRemision.getEstado() == RegwebConstantes.OFICIO_INTERNO || oficioRemision.getEstado() == RegwebConstantes.OFICIO_EXTERNO) {
 
             oficioRemisionEjb.anularOficioRemision(idOficioRemision, usuarioEntidad);
             Mensaje.saveMessageInfo(request, getMessage("aviso.oficioRemision.anulado"));
@@ -643,7 +643,7 @@ public class OficioRemisionController extends BaseController {
 
         OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
 
-        if (RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA.equals(oficioRemision.getTipoOficioRemision())) {
+        /*if (RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA.equals(oficioRemision.getTipoOficioRemision())) {
             List<RegistroEntrada> registrosEntrada = oficioRemisionEjb.getEntradasByOficioRemision(oficioRemision.getId());
             model.addAttribute("registrosEntrada", registrosEntrada);
         }
@@ -651,7 +651,7 @@ public class OficioRemisionController extends BaseController {
         if (RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA.equals(oficioRemision.getTipoOficioRemision())) {
             List<RegistroSalida> registrosSalida = oficioRemisionEjb.getSalidasByOficioRemision(oficioRemision.getId());
             model.addAttribute("registrosSalida", registrosSalida);
-        }
+        }*/
 
         model.addAttribute("oficioRemision", oficioRemision);
 
@@ -688,7 +688,7 @@ public class OficioRemisionController extends BaseController {
 
         // Comprobamos si ya ha sido procesado
         if (!organismosOficinaActiva.contains(oficioRemision.getOrganismoDestinatario()) ||
-                oficioRemision.getEstado() != RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO) {
+                oficioRemision.getEstado() != RegwebConstantes.OFICIO_INTERNO) {
             Mensaje.saveMessageError(request, getMessage("oficioRemision.error.yaprocesado"));
             return "redirect:/oficioRemision/pendientesLlegada/list";
         }

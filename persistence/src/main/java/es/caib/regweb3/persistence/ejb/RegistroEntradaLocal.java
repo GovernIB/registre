@@ -266,6 +266,14 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
     public RegistroEntrada getConAnexosFull(Long id) throws Exception, I18NException;
 
     /**
+     * Obtiene un Registro de Entrada a partir de su IdentificadorIntercambio
+     * @param identificadorIntercambio
+     * @return
+     * @throws Exception
+     */
+    public RegistroEntrada getByIdentificadorIntercambio(String identificadorIntercambio) throws Exception;
+
+    /**
      * Método que obtiene los destinatarios a los que distribuir el registro
      *
      * @param re registro de entrada a distribuir

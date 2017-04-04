@@ -98,7 +98,7 @@ public interface SirLocal {
      * @throws I18NException
      * @throws I18NValidationException
      */
-    public AsientoRegistralSir transformarRegistroEntrada(RegistroEntrada registroEntrada, String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino)
+    public AsientoRegistralSir transformarRegistroEntrada(RegistroEntrada registroEntrada)
             throws Exception, I18NException;
 
     /**

@@ -52,12 +52,12 @@
                     <div class="panel-body">
 
                         <dl class="detalle_registro">
-                            <dt><i class="fa fa-home"></i> <spring:message code="registroEntrada.oficina"/>: </dt> <dd> ${oficioRemision.oficina.denominacion}</dd>
+                            <dt><i class="fa fa-user"></i> <spring:message code="usuario.usuario"/>: </dt> <dd> ${oficioRemision.usuarioResponsable.usuario.nombreCompleto}</dd>
+                            <%--<dt><i class="fa fa-home"></i> <spring:message code="registroEntrada.oficina"/>: </dt> <dd> ${oficioRemision.oficina.denominacion}</dd>--%>
                             <dt><i class="fa fa-clock-o"></i> <spring:message code="registroEntrada.fecha"/>: </dt> <dd> <fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></dd>
                             <dt><i class="fa fa-book"></i> <spring:message code="registroEntrada.libro.corto"/>: </dt> <dd> ${oficioRemision.libro.nombre}</dd>
-                            <dt><i class="fa fa-user"></i> <spring:message code="usuario.usuario"/>: </dt> <dd> ${oficioRemision.usuarioResponsable.usuario.nombreCompleto}</dd>
-                            <dt><i class="fa fa-institution"></i> <spring:message code="oficioRemision.organismoDestino"/>: </dt>
-                            <dd> ${(empty oficioRemision.organismoDestinatario)? oficioRemision.destinoExternoDenominacion : oficioRemision.organismoDestinatario.denominacion}</dd>
+                            <%--<dt><i class="fa fa-institution"></i> <spring:message code="oficioRemision.organismoDestino"/>: </dt>
+                            <dd> ${(empty oficioRemision.organismoDestinatario)? oficioRemision.destinoExternoDenominacion : oficioRemision.organismoDestinatario.denominacion}</dd>--%>
                             <dt><i class="fa fa-exchange"></i> <spring:message code="oficioRemision.destino"/>:</dt>
                             <dd>
                                 <span class="label label-default">
@@ -78,40 +78,38 @@
                             <dt><i class="fa fa-bookmark"></i> <spring:message code="oficioRemision.estado"/>: </dt>
                             <dd>
                                 <c:if test="${oficioRemision.sir == false}">
-                                        <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO}"><span class="label label-warning"></c:if>
-                                        <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_EXTERNO_ENVIADO}"><span class="label label-warning"></c:if>
-                                        <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ACEPTADO}"><span class="label label-success"></c:if>
-                                        <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_ANULADO}"><span class="label label-danger"></c:if>
+                                        <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_INTERNO}"><span class="label label-warning"></c:if>
+                                        <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_EXTERNO}"><span class="label label-warning"></c:if>
+                                        <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_ACEPTADO}"><span class="label label-success"></c:if>
+                                        <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_ANULADO}"><span class="label label-danger"></c:if>
 
                                         <spring:message code="oficioRemision.estado.${oficioRemision.estado}"/>
-                                        <c:if test="${not empty oficioRemision.fechaEstado && oficioRemision.estado != RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO}">
+                                        <c:if test="${not empty oficioRemision.fechaEstado && oficioRemision.estado != RegwebConstantes.OFICIO_INTERNO}">
                                             - <fmt:formatDate value="${oficioRemision.fechaEstado}" pattern="dd/MM/yyyy HH:mm:ss"/>
                                         </c:if>
-                                        <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO}">
+                                        <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_INTERNO}">
                                             - <fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/>
                                         </c:if>
                                     </span>
                                 </c:if>
 
                                 <c:if test="${oficioRemision.sir == true}">
-                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == 'PENDIENTE_ENVIO'}"><span class="label label-success"></c:if>
-                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == 'ENVIADO'}"><span class="label label-success"></c:if>
-                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == 'ENVIADO_Y_ACK'}"><span class="label label-success"></c:if>
-                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == 'ENVIADO_Y_ERROR'}"><span class="label label-danger"></c:if>
-                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == 'DEVUELTO'}"><span class="label label-warning"></c:if>
-                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == 'ACEPTADO'}"><span class="label label-success"></c:if>
-                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == 'REENVIADO'}"><span class="label label-warning"></c:if>
-                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == 'REENVIADO_Y_ACK'}"><span class="label label-warning"></c:if>
-                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == 'REENVIADO_Y_ERROR'}"><span class="label label-danger"></c:if>
-                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == 'ANULADO'}"><span class="label label-danger"></c:if>
-                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == 'RECIBIDO'}"><span class="label label-success"></c:if>
-                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == 'RECHAZADO'}"><span class="label label-danger"></c:if>
-                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == 'RECHAZADO_Y_ACK'}"><span class="label label-danger"></c:if>
-                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == 'RECHAZADO_Y_ERROR'}"><span class="label label-danger"></c:if>
-                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == 'VALIDADO'}"><span class="label label-success"></c:if>
-                                    <c:if test="${oficioRemision.asientoRegistralSir.estado == 'REINTENTAR_VALIDACION'}"><span class="label label-warning"></c:if>
+                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_INTERNO}"><span class="label label-success"></c:if>
+                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_EXTERNO}"><span class="label label-success"></c:if>
+                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_ACEPTADO}"><span class="label label-success"></c:if>
+                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO}"><span class="label label-warning"></c:if>
+                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_ACK}"><span class="label label-success"></c:if>
+                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR}"><span class="label label-danger"></c:if>
+                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO}"><span class="label label-warning"></c:if>
+                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO_ACK}"><span class="label label-warning"></c:if>
+                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR}"><span class="label label-danger"></c:if>
+                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO}"><span class="label label-warning"></c:if>
+                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO_ACK}"><span class="label label-success"></c:if>
+                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO_ERROR}"><span class="label label-danger"></c:if>
+                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_DEVUELTO}"><span class="label label-danger"></c:if>
+                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_ANULADO}"><span class="label label-danger"></c:if>
 
-                                        <spring:message code="asientoRegistralSir.estado.${oficioRemision.asientoRegistralSir.estado}"/>
+                                        <spring:message code="oficioRemision.estado.${oficioRemision.estado}"/>
                                         <c:if test="${not empty oficioRemision.fechaEstado && oficioRemision.estado != 0}">
                                             - <fmt:formatDate value="${oficioRemision.fechaEstado}" pattern="dd/MM/yyyy HH:mm:ss"/>
                                         </c:if>
@@ -120,7 +118,7 @@
                             </dd>
                             <c:if test="${oficioRemision.sir == true}">
                                 <dt><i class="fa fa-qrcode"></i> <spring:message code="asientoRegistralSir.identificadorIntercambio"/>:</dt>
-                                <dd> ${oficioRemision.asientoRegistralSir.identificadorIntercambio}</dd>
+                                <dd> ${oficioRemision.identificadorIntercambio}</dd>
                             </c:if>
 
                         </dl>
@@ -144,7 +142,7 @@
                         </div>
                     </c:if>
 
-                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_INTERNO_ENVIADO || oficioRemision.estado == RegwebConstantes.OFICIO_REMISION_EXTERNO_ENVIADO && isAdministradorLibro}">
+                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_INTERNO || oficioRemision.estado == RegwebConstantes.OFICIO_EXTERNO && isAdministradorLibro}">
                         <div class="panel-footer">
                             <button type="button" onclick='confirm("<c:url value="/oficioRemision/${oficioRemision.id}/anular"/>","<spring:message code="oficioRemision.anular.confirmar" htmlEscape="true"/>")' class="btn btn-danger btn-sm btn-block"><spring:message code="oficioRemision.anular"/></button>
                         </div>
@@ -158,11 +156,56 @@
                 <c:import url="../modulos/mensajes.jsp"/>
             </div>
 
-            <%--Registros de Entrada--%>
+            <div class="col-xs-8 col-xs-offset">
 
-            <c:if test="${not empty trazabilidades}">
-                <div class="col-xs-8 col-xs-offset">
+                <%--Información de Origen y destino--%>
+                <div class="row">
 
+                    <div class="col-lg-6">
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-home"></i>
+                                    <strong><spring:message code="oficina.origen"/></strong>
+                                </h3>
+                            </div>
+                            <div class="panel-body">
+                                <p><strong><i class="fa fa-home"></i> <spring:message code="registroEntrada.oficina"/>:</strong> ${oficioRemision.oficina.denominacion}</p>
+                                <p><strong><i class="fa fa-clock-o"></i> <spring:message code="oficioRemision.fecha"/>:</strong> <fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-institution"></i>
+                                    <strong><spring:message code="organismo.organismo"/></strong>
+                                </h3>
+                            </div>
+                            <div class="panel-body">
+                                <p>
+                                    <strong><i class="fa fa-institution"></i> <spring:message code="registroEntrada.organismoDestino"/>:</strong>
+                                    <c:if test="${not oficioRemision.sir}">
+                                        ${(empty oficioRemision.organismoDestinatario)? oficioRemision.destinoExternoDenominacion : oficioRemision.organismoDestinatario.denominacion}
+                                    </c:if>
+                                    <c:if test="${oficioRemision.sir}">
+                                         ${oficioRemision.destinoExternoDenominacion}
+                                    </c:if>
+                                </p>
+                                <c:if test="${not empty oficioRemision.fechaEstado && oficioRemision.estado == RegwebConstantes.OFICIO_ACEPTADO}">
+                                    <p><strong><i class="fa fa-clock-o"></i> <spring:message code="oficioRemision.fecha.aceptado"/>:</strong> <fmt:formatDate value="${oficioRemision.fechaEstado}" pattern="dd/MM/yyyy HH:mm:ss"/></p>
+                                </c:if>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <%--Registros del oficio--%>
+                <c:if test="${not empty trazabilidades}">
                     <div class="panel panel-success">
 
                         <div class="panel-heading">
@@ -273,12 +316,9 @@
 
                         </div>
                     </div>
+                </c:if>
 
-                </div>
-
-            </c:if>
-
-
+            </div>
 
         </div><!-- /div.row-->
 

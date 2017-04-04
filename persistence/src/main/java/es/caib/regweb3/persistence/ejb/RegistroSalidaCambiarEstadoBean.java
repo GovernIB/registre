@@ -71,9 +71,11 @@ public class RegistroSalidaCambiarEstadoBean extends BaseEjbJPA<RegistroSalida, 
 
     @Override
     public void cambiarEstado(Long idRegistro, Long idEstado) throws Exception{
-        RegistroSalida registroSalida = findById(idRegistro);
-        registroSalida.setEstado(idEstado);
-        merge(registroSalida);
+
+        Query q = em.createQuery("update RegistroSalida set estado=:idEstado where id = :idRegistro");
+        q.setParameter("idEstado", idEstado);
+        q.setParameter("idRegistro", idRegistro);
+        q.executeUpdate();
     }
 
    
