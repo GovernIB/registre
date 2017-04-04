@@ -190,8 +190,8 @@ public class AsientoRegistralSirController extends BaseController {
 
         }
 
-        model.addAttribute("comunidadesAutonomas", catComunidadAutonomaEjb.getAll());
-        model.addAttribute("nivelesAdministracion", catNivelAdministracionEjb.getAll());
+        //model.addAttribute("comunidadesAutonomas", catComunidadAutonomaEjb.getAll());
+        //model.addAttribute("nivelesAdministracion", catNivelAdministracionEjb.getAll());
         model.addAttribute("asientoRegistralSir",asientoRegistralSir);
 
         return "asientoRegistralSir/asientoRegistralSirDetalle";
@@ -269,6 +269,17 @@ public class AsientoRegistralSirController extends BaseController {
         return "redirect:/asientoRegistralSir/"+idAsientoRegistralSir+"/detalle";
     }
 
+    @RequestMapping(value = "/{idAsientoRegistralSir}/reenviar", method = RequestMethod.GET)
+    public String reenviarAsientoRegistralSir(@PathVariable Long idAsientoRegistralSir, Model model, HttpServletRequest request) throws Exception {
+
+        model.addAttribute("comunidadesAutonomas", catComunidadAutonomaEjb.getAll());
+        model.addAttribute("nivelesAdministracion", catNivelAdministracionEjb.getAll());
+        model.addAttribute("asientoRegistralSir", asientoRegistralSirEjb.findById(idAsientoRegistralSir));
+        model.addAttribute("reenviarForm", new ReenviarForm());
+
+        return "asientoRegistralSir/asientoRegistralSirReenvio";
+    }
+
     /**
      * Reenvia un {@link AsientoRegistralSir}
      */
@@ -296,7 +307,7 @@ public class AsientoRegistralSirController extends BaseController {
         try{
             if(oficinaReenvio != null){//Si han seleccionado oficina de reenvio
                 //Reenviamos
-                emisionEjb.reenviarFicheroIntercambio(asientoRegistralSir, oficinaReenvio, oficinaActiva,usuarioEntidad.getUsuario());
+                emisionEjb.reenviarFicheroIntercambio(asientoRegistralSir, oficinaReenvio, oficinaActiva,usuarioEntidad.getUsuario(),reenviarForm.getObservaciones());
             }
 
             Mensaje.saveMessageInfo(request, getMessage("asientoRegistralSir.reenvio.ok"));

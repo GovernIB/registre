@@ -311,9 +311,7 @@
                             <%--Botón Reenviar--%>
                             <c:if test="${puedeReenviar}">
                                 <div class="btn-group">
-                                    <a data-toggle="modal" role="button" href="#modalBuscadorOficinaSir"
-                                      onclick="inicializarBuscador('#codNivelAdministracionOficinaSir','#codComunidadAutonomaOficinaSir','#provinciaOficinaSir','#localidadOficinaSir','${oficinaActiva.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficinaActiva.organismoResponsable.codAmbComunidad.codigoComunidad}','OficinaSir' );"
-                                      class="btn btn-warning btn-sm"><spring:message code="asientoRegistralSir.estado.reenviar"/></a>
+                                    <a class="btn btn-warning btn-sm" href="<c:url value="/asientoRegistralSir/${asientoRegistralSir.id}/reenviar"/>" role="button"><spring:message code="asientoRegistralSir.estado.reenviar"/></a>
                                 </div>
                             </c:if>
 
@@ -323,11 +321,8 @@
                                    onclick="limpiarModalRechazo();"
                                    class="btn btn-danger btn-sm"><spring:message code="asientoRegistralSir.estado.rechazar"/></a>
                             </div>
-
                         </div>
-
                     </c:if>
-
                 </div>
 
             </div>
@@ -400,13 +395,13 @@
             </div>
         </div>
 
-        <c:url value="/asientoRegistralSir/reenviar/${asientoRegistralSir.id}" var="urlReenviar" scope="request"/>
-        <form:form modelAttribute="reenviarForm" method="post" action="${urlReenviar}" cssClass="form-horizontal">
-            <form:hidden path="codigoOficina" value=""/>
-            <form:hidden path="denominacionOficina" value=""/>
-            <form:hidden path="codigoOrganismoResponsable" value=""/>
-            <form:hidden path="denominacionOrganismoResponsable" value=""/>
-        </form:form>
+        <%--<c:url value="/asientoRegistralSir/reenviar/${asientoRegistralSir.id}" var="urlReenviar" scope="request"/>
+      <form:form modelAttribute="reenviarForm" method="post" action="${urlReenviar}" cssClass="form-horizontal">
+           <form:hidden path="codigoOficina" value=""/>
+           <form:hidden path="denominacionOficina" value=""/>
+           <form:hidden path="codigoOrganismoResponsable" value=""/>
+           <form:hidden path="denominacionOrganismoResponsable" value=""/>
+       </form:form>--%>
 
     </div>
 </div> <!-- /container -->

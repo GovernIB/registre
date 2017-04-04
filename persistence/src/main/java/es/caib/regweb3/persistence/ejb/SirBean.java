@@ -406,7 +406,7 @@ public class SirBean implements SirLocal{
 
     }
 
-    public AsientoRegistralSir reenviarAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir, Oficina oficinaReenvio, Oficina oficinaActiva, Usuario usuario) throws Exception {
+    public AsientoRegistralSir reenviarAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir, Oficina oficinaReenvio, Oficina oficinaActiva, Usuario usuario, String observaciones) throws Exception {
 
 
         //Actualizamos la oficina destino con la escogida por el usuario
@@ -427,7 +427,8 @@ public class SirBean implements SirLocal{
         asientoRegistralSir.setContactoUsuario(usuario.getEmail());
 
         asientoRegistralSir.setTipoAnotacion(TipoAnotacion.REENVIO.getValue());
-        asientoRegistralSir.setDecodificacionTipoAnotacion(TipoAnotacion.REENVIO.getName());
+        asientoRegistralSir.setDecodificacionTipoAnotacion(observaciones);
+
 
         asientoRegistralSirEjb.merge(asientoRegistralSir);
 

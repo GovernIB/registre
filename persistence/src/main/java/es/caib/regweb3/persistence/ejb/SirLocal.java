@@ -68,7 +68,7 @@ public interface SirLocal {
      * @param asientoRegistralSir
      * @throws Exception
      */
-    public AsientoRegistralSir reenviarAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir, Oficina oficinaReenvio, Oficina oficinaActiva, Usuario usuario) throws Exception;
+    public AsientoRegistralSir reenviarAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir, Oficina oficinaReenvio, Oficina oficinaActiva, Usuario usuario,String observaciones) throws Exception;
 
     /**
      * Método que indica si el asiento registral puede ser reenviado en función de su estado.

@@ -395,12 +395,30 @@ function inicializarBuscador(selectNivelAdministracion, selectComunidadAutonoma,
 }
 
 function asignarOficinaSir(codigo,denominacion,codigoOrganismoResponsable, denominacionOrganismoResponsable, tipoOrganismo){
+    var idModal = "#modalBuscador" + tipoOrganismo;
     if(tipoOrganismo == 'OficinaSir'){
+
         $('#codigoOficina').val(codigo);
         $('#denominacionOficina').val(denominacion);
         $('#codigoOrganismoResponsable').val(codigoOrganismoResponsable);
         $('#denominacionOrganismoResponsable').val(denominacionOrganismoResponsable);
+        $('#datosOficinaReenvioText').val(codigoOrganismoResponsable+": "+denominacionOrganismoResponsable+ ", "+codigo+": " + denominacion);
+
+
+
+        $(idModal).modal('hide');
+    }
+}
+
+
+function validarFormReenvio() {
+    var observaciones = $('#observaciones').val();
+    var datosOficinaReenvio = $('#datosOficinaReenvio').val();
+
+    if(validaCampo(observaciones,'observaciones') && validaCampo(datosOficinaReenvio,'datosOficinaReenvio')){
         doForm('#reenviarForm');
+    }else{
+        return false;
     }
 }
 

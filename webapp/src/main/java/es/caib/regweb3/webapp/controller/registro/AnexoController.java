@@ -12,7 +12,6 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.AnexoWebValidator;
-
 import org.apache.axis.utils.StringUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -41,7 +40,6 @@ import javax.naming.InitialContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -906,7 +904,7 @@ public class AnexoController extends BaseController {
         log.info("DocumentFile " + anexoForm.getDocumentoFile());
         log.info("FirmaFile " + anexoForm.getFirmaFile());
         if (!anexoForm.getDocumentoFile().getOriginalFilename().isEmpty()) {
-            return FilenameUtils.getExtension(anexoForm.getDocumentoFile().getOriginalFilename());
+           return FilenameUtils.getExtension(anexoForm.getDocumentoFile().getOriginalFilename());
         } else {
            return FilenameUtils.getExtension(anexoForm.getFirmaFile().getOriginalFilename());
         }

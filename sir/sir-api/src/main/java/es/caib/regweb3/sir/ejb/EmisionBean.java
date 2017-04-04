@@ -82,10 +82,10 @@ public class EmisionBean implements EmisionLocal{
      * Reenvío de un AsientoRegistral en formato SICRES3 a un nodo distribuido
      * @param asientoRegistralSir
      */
-    public void reenviarFicheroIntercambio(AsientoRegistralSir asientoRegistralSir, Oficina oficinaReenvio, Oficina oficinaActiva, Usuario usuario)  throws Exception {
+    public void reenviarFicheroIntercambio(AsientoRegistralSir asientoRegistralSir, Oficina oficinaReenvio, Oficina oficinaActiva, Usuario usuario, String observaciones)  throws Exception {
 
         //Preparamos el asiento registral para su reenvio
-        asientoRegistralSir =  sirEjb.reenviarAsientoRegistralSir(asientoRegistralSir, oficinaReenvio, oficinaActiva, usuario);
+        asientoRegistralSir =  sirEjb.reenviarAsientoRegistralSir(asientoRegistralSir, oficinaReenvio, oficinaActiva, usuario, observaciones);
 
         log.info("Reenviando el asiento registral al nodo distribuido: " + asientoRegistralSir.getIdentificadorIntercambio());
 

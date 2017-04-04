@@ -14,6 +14,8 @@ public class ReenviarForm {
     private String denominacionOficina;
     private String codigoOrganismoResponsable;
     private String denominacionOrganismoResponsable;
+    private String observaciones;
+    private String datosOficinaReenvio;
 
 
 
@@ -50,6 +52,22 @@ public class ReenviarForm {
 
     public void setDenominacionOrganismoResponsable(String denominacionOrganismoResponsable) {
         this.denominacionOrganismoResponsable = denominacionOrganismoResponsable;
+    }
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
+    }
+
+    public String getDatosOficinaReenvio() {
+        return datosOficinaReenvio;
+    }
+
+    public void setDatosOficinaReenvio(String datosOficinaReenvio) {
+        this.datosOficinaReenvio = datosOficinaReenvio;
     }
 
     public Oficina oficinaReenvio(){
