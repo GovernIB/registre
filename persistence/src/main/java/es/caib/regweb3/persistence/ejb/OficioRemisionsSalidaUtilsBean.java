@@ -383,9 +383,9 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
             oficio.setOficioRemision(true);
             oficio.setInterno(false);
 
-            Boolean sir = isOficioRemisionSir(registroSalida, organismos);
+            List<OficinaTF> oficinasSIR = isOficioRemisionSir(registroSalida, organismos);
 
-            if(sir){
+            if(!oficinasSIR.isEmpty()){
                 oficio.setSir(true);
                 oficio.setExterno(false);
             }else{
@@ -435,7 +435,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Boolean isOficioRemisionSir(RegistroSalida registroSalida, Set<String> organismos) throws Exception {
+    public List<OficinaTF> isOficioRemisionSir(RegistroSalida registroSalida, Set<String> organismos) throws Exception {
 
         // Obtenemos el organismo destinatario del Registro en el caso de que sea un OficioRemision externo
         String codigoDir3 = organismoOficioRemision(registroSalida, organismos);
@@ -446,10 +446,10 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
             Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
             List<OficinaTF> oficinasSIR = oficinasService.obtenerOficinasSIRUnidad(codigoDir3);
 
-            return oficinasSIR.size() > 0;
+            return oficinasSIR;
         }
 
-        return false;
+        return null;
     }
 
     /**

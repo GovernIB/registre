@@ -291,7 +291,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
             List<OficinaTF> oficinasSIR = isOficioRemisionSir(idRegistro);
 
-            if(oficinasSIR != null){
+            if(!oficinasSIR.isEmpty()){
                 oficio.setSir(true);
                 oficio.setExterno(false);
             }else{
