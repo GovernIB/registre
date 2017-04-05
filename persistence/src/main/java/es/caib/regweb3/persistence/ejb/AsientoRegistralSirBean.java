@@ -215,9 +215,9 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
 
         StringBuffer query = new StringBuffer("Select asr from AsientoRegistralSir as asr ");
 
-        if (organismos != null && organismos.size() > 0) {
+        /*if (organismos != null && organismos.size() > 0) {
             where.add(" asr.codigoUnidadTramitacionDestino in (:organismos) "); parametros.put("organismos",organismos);
-        }
+        }*/
 
         if (asientoRegistralSir.getResumen() != null && asientoRegistralSir.getResumen().length() > 0) {
             where.add(DataBaseUtils.like("asr.resumen", "resumen", parametros, asientoRegistralSir.getResumen()));
