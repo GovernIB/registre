@@ -459,8 +459,8 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
                 // Obtenim el ByteArray per generar el pdf
                 ByteArrayOutputStream baos = justificantePlugin.generarJustificante(registroSalida);
                 // Cream l'annex justificant
-                anexoEjb.crearJustificante(baos, idEntidad, nombreFichero, usuarioEntidad, idRegistro, locale, tituloAnexo,
-                        observacionesAnexo,tipoRegistro);
+//                anexoEjb.crearJustificante(baos, idEntidad, nombreFichero, usuarioEntidad, idRegistro, locale, tituloAnexo,
+//                        observacionesAnexo,tipoRegistro);
 
                 // Cabeceras Response
                 response.setHeader("Content-Disposition", "attachment; filename=" + nombreFichero);

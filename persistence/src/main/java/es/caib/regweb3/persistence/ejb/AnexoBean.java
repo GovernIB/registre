@@ -9,8 +9,8 @@ import es.caib.regweb3.persistence.validator.AnexoValidator;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
-
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -29,18 +29,14 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-
 import java.beans.Encoder;
 import java.beans.Expression;
 import java.beans.PersistenceDelegate;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -79,6 +75,9 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     @EJB(mappedName = "regweb3/HistoricoRegistroSalidaEJB/local")
     public HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
+
+    @EJB(mappedName = "regweb3/SignatureServerEJB/local")
+    public SignatureServerLocal signatureServerEjb;
 
 
 
@@ -1107,24 +1106,33 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
 
     /**
-     * Crea un Jusitificante como anexo al registro
-     * @param baos
+     * Crea un Jusitificante, lo firma y lo crea como anexo al registro
      * @param idEntidad
      * @param nombreFichero
      * @param usuarioEntidad
      * @param idRegistro
-     * @param locale
      * @param tituloAnexo
      * @param observacionesAnexo
-     * @return Boolean
+     * @param tipoRegistro
+     * @param baos
+     * @param idiomaUsuari
+     * @return AnexoFull
      * @throws Exception
      */
-    public Boolean crearJustificante(ByteArrayOutputStream baos, Long idEntidad, String nombreFichero,
-                                     UsuarioEntidad usuarioEntidad, Long idRegistro, Locale locale, String tituloAnexo,
-                                     String observacionesAnexo, String tipoRegistro) throws Exception {
+    public AnexoFull crearJustificante(Long idEntidad, String nombreFichero, UsuarioEntidad usuarioEntidad, Long idRegistro,
+                                       String tituloAnexo, String observacionesAnexo, String tipoRegistro, ByteArrayOutputStream baos,
+                                       String idiomaUsuari) throws Exception {
 
-        // Adjuntar justificante como ANEXO del registro
         try {
+
+            File justificanteFile = File.createTempFile("regweb3_",".justificant");
+            FileOutputStream fos = new FileOutputStream(justificanteFile);
+            fos.write(baos.toByteArray());
+            fos.flush();
+            fos.close();
+
+            // Firma el justificant
+            File signedFile = signatureServerEjb.signFile(justificanteFile, idiomaUsuari, idEntidad);
 
             AnexoFull anexoFull = new AnexoFull();
             anexoFull.getAnexo().setTitulo(tituloAnexo);
@@ -1141,23 +1149,23 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             anexoFull.getAnexo().setJustificante(true);
 
             SignatureCustody sign = new SignatureCustody();
-            sign.setData(baos.toByteArray());
+            sign.setData(FileUtils.readFileToByteArray(signedFile));
             sign.setMime("application/pdf");
             sign.setName(nombreFichero);
 
             anexoFull.setSignatureCustody(sign);
             anexoFull.setSignatureFileDelete(false);
 
-            crearAnexo(anexoFull,usuarioEntidad,idRegistro,tipoRegistro);
+            anexoFull = crearAnexo(anexoFull,usuarioEntidad,idRegistro,tipoRegistro);
 
-            return true;
+            return anexoFull;
 
         } catch (I18NValidationException e) {
             e.printStackTrace();
-            return false;
+            throw new Exception(e);
         } catch (I18NException e) {
             e.printStackTrace();
-            return false;
+            throw new Exception(e);
         }
 
     }

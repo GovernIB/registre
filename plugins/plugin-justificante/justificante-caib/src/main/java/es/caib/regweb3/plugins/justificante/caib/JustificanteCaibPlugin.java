@@ -13,9 +13,9 @@ import org.apache.log4j.Logger;
 import org.fundaciobit.plugins.utils.AbstractPluginProperties;
 
 import javax.imageio.ImageIO;
-import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
+import java.io.*;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
@@ -112,14 +112,10 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
         // Agafam idioma pels missatges del justificant. Si no és "ca" o "es", agafa "es" per defecte
         Long idiomaRegistre = registroEntrada.getRegistroDetalle().getIdioma();
-        log.info("idioma: " + idiomaRegistre);
         if(idiomaRegistre.equals(RegwebConstantes.IDIOMA_CATALAN_ID) || idiomaRegistre.equals(RegwebConstantes.IDIOMA_CASTELLANO_ID)) {
             locale = new Locale(RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(idiomaRegistre));
-            log.info("locale: " + locale);
-            log.info("entra_1");
         } else{
             locale = new Locale("es");
-            log.info("entra_2");
         }
 
         String denominacionOficina = registroEntrada.getOficina().getDenominacion();
@@ -127,7 +123,12 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         String numeroRegistroFormateado = registroEntrada.getNumeroRegistroFormateado();
         Long tipoDocumentacionFisica = registroEntrada.getRegistroDetalle().getTipoDocumentacionFisica();
         String extracte = registroEntrada.getRegistroDetalle().getExtracto();
-        String nomDesti = registroEntrada.getDestino().getNombreCompleto();
+        String nomDesti;
+        if(registroEntrada.getDestino()!=null) {
+            nomDesti = registroEntrada.getDestino().getNombreCompleto();
+        }else{
+            nomDesti = registroEntrada.getDestinoExternoDenominacion();
+        }
         String expedient = registroEntrada.getRegistroDetalle().getExpediente();
         Date fechaRegistro = registroEntrada.getFecha();
         SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -288,7 +289,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
             cellInfoAnnexe.setBorderWidth(1f);
             cellInfoAnnexe.setHorizontalAlignment(Element.ALIGN_MIDDLE);
             taulaAnnexe.addCell(cellInfoAnnexe);
-            taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.tamaño"), font8)));
+            taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.tamanyo"), font8)));
             taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.validez"), font8)));
             taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.tipoAdjunto"), font8)));
             taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.hash"), font8)));
@@ -302,11 +303,28 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
             for(AnexoFull anexo : anexos) {
                 cellInfoAnnexe2 = new PdfPCell(new Paragraph(anexo.getAnexo().getTitulo(), font8));
                 taulaAnnexe.addCell(cellInfoAnnexe2);
-                if(anexo.getAnexo().getCustodiaID()!=null) {
-                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(String.valueOf(anexo.getAnexo().getCustodiaID().getBytes().length), font8)));
-                } else{
-                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(String.valueOf(anexo.getAnexo().getFirma().length), font8)));
+
+                // Calcula i afegeix el tamany del document
+                String tamanyFitxer = "";
+                if(anexo.getDocumentoCustody()!=null){
+                    if(anexo.getDocumentoCustody().getData().length < 1024){
+                        tamanyFitxer = tamanyFitxer + "D: 1 KB\n";
+                    }else{
+                        tamanyFitxer = tamanyFitxer + "D: " + String.valueOf(anexo.getDocumentoCustody().getData().length/1024) + " KB\n";
+                    }
+                }else{
+                    tamanyFitxer = tamanyFitxer + "D: 0 KB"+ "\n";
                 }
+                if(anexo.getSignatureCustody()!=null){
+                    if(anexo.getSignatureCustody().getData().length < 1024){
+                        tamanyFitxer = tamanyFitxer + "F: 1 KB";
+                    }else{
+                        tamanyFitxer = tamanyFitxer + "F: " + String.valueOf(anexo.getSignatureCustody().getData().length/1024) + " KB";
+                    }
+                }else{
+                    tamanyFitxer = tamanyFitxer + "F: 0 KB";
+                }
+                taulaAnnexe.addCell(new PdfPCell(new Paragraph(tamanyFitxer, font8)));
                 taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale,"tipoValidezDocumento." + anexo.getAnexo().getValidezDocumento()), font8)));
                 taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale,"tipoDocumento.0" + anexo.getAnexo().getTipoDocumento()), font8)));
                 taulaAnnexe.addCell(new PdfPCell(new Paragraph(new String(Base64.encodeBase64(anexo.getAnexo().getHash()),"UTF-8"), font8)));
@@ -317,7 +335,6 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
             // Pie de anexo
             PdfPTable peuAnnexe = new PdfPTable(1);
             peuAnnexe.setWidthPercentage(100);
-//            PdfPCell cellPeuAnnexe = new PdfPCell(new Paragraph(denominacio + " " + PropiedadGlobalUtil.getDeclaracioJustificant(idEntidadActiva, idiomaRegistre), font8));
             PdfPCell cellPeuAnnexe = new PdfPCell(new Paragraph(denominacio + " " + tradueixMissatge(locale,"justificante.mensaje.declaracion"), font8));
             cellPeuAnnexe.setBackgroundColor(BaseColor.WHITE);
             cellPeuAnnexe.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -331,7 +348,6 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
             PdfPTable titolLlei = new PdfPTable(1);
             titolLlei.setWidthPercentage(100);
-//            PdfPCell cellLlei = new PdfPCell(new Paragraph(PropiedadGlobalUtil.getLleiJustificant(idEntidadActiva, idiomaRegistre), font8));
             PdfPCell cellLlei = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.mensaje.ley"), font8));
             cellLlei.setBackgroundColor(BaseColor.WHITE);
             cellLlei.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -661,13 +677,49 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
             return new String(justificantemissatges.getString(missatge).getBytes("ISO-8859-1"), "UTF-8");
         }catch (Exception e) {
             try{
-                ResourceBundle logicmissatges = ResourceBundle.getBundle("logicmissatges", locale);
-                return new String(logicmissatges.getString(missatge).getBytes("ISO-8859-1"), "UTF-8");
+                ResourceBundle logicmissatges = ResourceBundle.getBundle("logicmissatges", locale, UTF8CONTROL);
+                return logicmissatges.getString(missatge);
             }catch (Exception e2){
                 return "{"+locale+"_"+missatge+"}";
             }
         }
 
+    }
+
+    public static final UTF8Control UTF8CONTROL=new UTF8Control();
+
+    public static class UTF8Control extends ResourceBundle.Control {
+        public ResourceBundle newBundle(String baseName, Locale locale, String format,
+                                        ClassLoader loader, boolean reload) throws IllegalAccessException,
+                InstantiationException, IOException {
+            // The below is a copy of the default implementation.
+            String bundleName = toBundleName(baseName, locale);
+            String resourceName = toResourceName(bundleName, "properties");
+            ResourceBundle bundle = null;
+            InputStream stream = null;
+            if (reload) {
+                URL url = loader.getResource(resourceName);
+                if (url != null) {
+                    URLConnection connection = url.openConnection();
+                    if (connection != null) {
+                        connection.setUseCaches(false);
+                        stream = connection.getInputStream();
+                    }
+                }
+            } else {
+                stream = loader.getResourceAsStream(resourceName);
+            }
+            if (stream != null) {
+                try {
+                    // Only this line is changed to make it to read properties files as
+                    // UTF-8.
+                    bundle = new PropertyResourceBundle(new InputStreamReader(stream, "UTF-8"));
+                } finally {
+                    stream.close();
+                }
+            }
+            return bundle;
+        }
     }
 
 

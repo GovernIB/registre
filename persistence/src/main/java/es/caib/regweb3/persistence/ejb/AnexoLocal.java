@@ -6,7 +6,6 @@ import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
-
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
@@ -14,10 +13,8 @@ import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
-
 import java.io.ByteArrayOutputStream;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by Fundacio Bit
@@ -143,21 +140,21 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
 
     /**
      * Crea un Jusitificante como anexo al registro
-     * @param baos
      * @param idEntidad
      * @param nombreFichero
      * @param usuarioEntidad
      * @param idRegistro
-     * @param locale
      * @param tituloAnexo
      * @param observacionesAnexo
      * @param tipoRegistro
-     * @return Boolean
+     * @param baos
+     * @param idiomaUsuari
+     * @return AnexoFull
      * @throws Exception
      */
-    public Boolean crearJustificante(ByteArrayOutputStream baos, Long idEntidad, String nombreFichero,
-                                     UsuarioEntidad usuarioEntidad, Long idRegistro, Locale locale, String tituloAnexo,
-                                     String observacionesAnexo, String tipoRegistro) throws Exception;
+    public AnexoFull crearJustificante(Long idEntidad, String nombreFichero, UsuarioEntidad usuarioEntidad, Long idRegistro,
+                                       String tituloAnexo, String observacionesAnexo, String tipoRegistro,
+                                       ByteArrayOutputStream baos, String idiomaUsuari) throws Exception;
 
 
 

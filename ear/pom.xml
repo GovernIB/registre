@@ -295,6 +295,16 @@
         <version>${project.version}</version>
     </dependency>
 
+    <!-- ================================================= -->
+    <!-- ======== PLUGINS DE FIRMA EN SERVIDOR =========== -->
+    <!-- ================================================= -->
+
+        <dependency>
+            <groupId>org.fundaciobit.plugins</groupId>
+            <artifactId>plugin-signatureserver-miniappletinserver</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+
     <!-- ============================================ -->
     <!-- =============    FINAL PLUGINS   =========== -->
     <!-- ============================================ -->

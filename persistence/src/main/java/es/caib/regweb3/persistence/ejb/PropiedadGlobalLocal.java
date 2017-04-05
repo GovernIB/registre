@@ -139,4 +139,12 @@ public interface PropiedadGlobalLocal extends BaseEjb<PropiedadGlobal, Long> {
      * @throws Exception
      */
     public Integer getIntegerProperty(String clave) throws Exception;
+
+    /**
+     * Obtiene las {@link es.caib.regweb3.model.PropiedadGlobal} de una {@link es.caib.regweb3.model.Entidad}
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public List<PropiedadGlobal> getAllPropertiesByEntidad(Long idEntidad) throws Exception;
 }

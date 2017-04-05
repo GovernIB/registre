@@ -3,6 +3,7 @@ package es.caib.regweb3.webapp.controller.registro;
 import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.*;
 import es.caib.regweb3.plugins.justificante.IJustificantePlugin;
@@ -69,6 +70,9 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
     @EJB(mappedName = "regweb3/EmisionEJB/local")
     public EmisionLocal emisionEjb;
+
+    @EJB(mappedName = "regweb3/SignatureServerEJB/local")
+    public SignatureServerLocal signatureServerEjb;
 
 
     /**
@@ -603,10 +607,10 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         try {
             RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
             Long idEntidad = registroEntrada.getUsuario().getEntidad().getId();
-
+log.info("Abans carregar plugin justificante");
             // Carregam el plugin
             IJustificantePlugin justificantePlugin = RegwebJustificantePluginManager.getInstance(idEntidad);
-
+            log.info("Despres carregar plugin justificante");
             // Comprova que existeix el plugin de justificant
             if(justificantePlugin!=null) {
 
@@ -618,25 +622,29 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
                 String tituloAnexo = getMessage("justificante.anexo.titulo");
                 String observacionesAnexo = getMessage("justificante.anexo.observaciones");
                 Locale locale = new Locale(RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(registroEntrada.getRegistroDetalle().getIdioma()));
+                String idiomaUsuari = getUsuarioEntidadActivo(request).getUsuario().getIdioma().toString();
 
                 // Obtenim el ByteArray per generar el pdf
                 ByteArrayOutputStream baos = justificantePlugin.generarJustificante(registroEntrada);
-                // Cream l'annex justificant
-                anexoEjb.crearJustificante(baos, idEntidad, nombreFichero, usuarioEntidad, idRegistro, locale, tituloAnexo,
-                        observacionesAnexo,tipoRegistro);
 
+                // Cream l'annex justificant
+                AnexoFull anexoFull = anexoEjb.crearJustificante(idEntidad, nombreFichero, usuarioEntidad, idRegistro, tituloAnexo,
+                        observacionesAnexo,tipoRegistro, baos, idiomaUsuari);
+
+                // Descarrega el Justificant firmat
                 // Cabeceras Response
                 response.setHeader("Content-Disposition", "attachment; filename=" + nombreFichero);
                 response.setHeader("Content-Type", "application/pdf;charset=UTF-8");
                 response.setHeader("Expires", "0");
                 response.setHeader("Cache-Control","must-revalidate, post-check=0, pre-check=0");
                 response.setHeader("Pragma", "public");
-                response.setContentLength(baos.size());
-                // Genera el pdf
+                response.setContentLength((int) anexoFull.getSignatureCustody().getLength());
+                // Descarga el pdf
                 ServletOutputStream out = response.getOutputStream();
-                baos.writeTo(out);
+                out.write(anexoFull.getSignatureCustody().getData());
                 out.flush();
                 out.close();
+
             }
 
         } catch (I18NException e) {
@@ -646,7 +654,6 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         return "redirect:/registroEntrada/"+idRegistro+"/detalle";
 
     }
-
 
     @InitBinder("registroEntradaBusqueda")
     public void registroEntradaBusqueda(WebDataBinder binder) {

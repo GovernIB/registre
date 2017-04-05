@@ -56,7 +56,7 @@
                              <tr>
                                  <th><dt><spring:message code="anexo.titulo"/></dt></th>
                                  <th><spring:message code="anexo.tipoDocumento"/></th>
-                                 <th><spring:message code="anexo.tamano"/></th>
+                                 <th class="center"><spring:message code="anexo.tamano"/></th>
                                  <th class="center"><spring:message code="regweb.acciones"/></th>
                              </tr>
                          </thead>
@@ -76,7 +76,7 @@
                                      </c:if>
 
                                      <!-- TODO mostrar el tamanyo desde custodia -->
-                                     <td>                                     
+                                     <td class="text-right">
                                      <c:if test="${anexo.modoFirma != RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
                                         <c:set var="tamanyAnexo" value="${reg:getSizeOfDocumentCustody(anexo.custodiaID)}" />                                        
                                      </c:if>
@@ -85,8 +85,8 @@
                                      </c:if> 
                                      ${tamanyAnexo } KB
                                      <c:set var="totalA" value="${totalA + tamanyAnexo }" />
-                                                                         
                                      </td>
+
                                      <td class="center">
 
                                          <c:if test="${anexo.modoFirma != RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
@@ -118,10 +118,10 @@
                              </c:forEach>
                      <%-- Fila pel tamany Total dels annexes --%>
                      <tr>
-                         <th></th>
-                         <th></th>
-                         <th><spring:message code="anexo.sumatotaltamany"/>: ${totalA} KB</th>
-                         <th></th>
+                         <td></td>
+                         <td></td>
+                         <td class="text-right"><spring:message code="anexo.sumatotaltamany"/>: <b>${totalA} KB</b></td>
+                         <td></td>
                      </tr>
                  </tbody>
              </table>

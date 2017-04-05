@@ -1,10 +1,13 @@
 package es.caib.regweb3.persistence.utils;
 
+import es.caib.regweb3.model.PropiedadGlobal;
 import es.caib.regweb3.persistence.ejb.PropiedadGlobalLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 
 import javax.naming.InitialContext;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * Created by earrivi on 03/10/2016.
@@ -224,16 +227,6 @@ public class PropiedadGlobalUtil {
 
 
     /**
-     * Retorna la base del plugin de distribución
-     * @return
-     */
-    public static String getBasePluginDistribucion() {
-        final String partialPropertyName = "distribucion.plugin";
-        return RegwebConstantes.REGWEB3_PROPERTY_BASE + partialPropertyName;
-
-    }
-
-    /**
      * Retorna la clase del plugin de distribución de la entidad
      * @return
      */
@@ -248,16 +241,6 @@ public class PropiedadGlobalUtil {
         return valor;
     }
 
-
-    /**
-     * Retorna la base del plugin de distribución
-     * @return
-     */
-    public static String getBasePluginPostProceso() {
-        final String partialPropertyName = "postproceso.plugin";
-        return RegwebConstantes.REGWEB3_PROPERTY_BASE + partialPropertyName;
-
-    }
 
     /**
      * Retorna el valor de la propiedad MaxUploadSizeInBytes.
@@ -644,6 +627,42 @@ public class PropiedadGlobalUtil {
             }
         }
         return propiedadGlobalEjb;
+    }
+
+
+    /**
+     * Retorna la base del plugin de SignatureServer de la entidad
+     * @return
+     */
+    public static String getBasePluginSignatureServer(Long idEntidad) {
+        final String partialPropertyName = "signatureserver.plugin.base";
+        String valor = getStringByEntidad(idEntidad, partialPropertyName);
+
+        // Valor global si no existeix el de per entitat
+        if (valor == null) {
+            valor = getString(partialPropertyName);
+        }
+        return valor;
+
+    }
+
+    /**
+     * Retorna totes les Properties d'una Entitat
+     * @return
+     */
+    public static Properties getAllPropertiesByEntity(Long idEntidad) {
+        try {
+            PropiedadGlobalLocal propiedadGlobalEjb = getPropiedadGlobalEJB();
+            List<PropiedadGlobal> list = propiedadGlobalEjb.getAllPropertiesByEntidad(idEntidad);
+            Properties p = new Properties();
+            for(PropiedadGlobal pg : list){
+                p.setProperty(pg.getClave(), pg.getValor());
+            }
+            return p;
+        } catch (Exception e) {
+            log.error("Error obteniendo las propiedades de la Entidad " + idEntidad + ": " + e.getMessage(), e);
+            return null;
+        }
     }
 
 }
