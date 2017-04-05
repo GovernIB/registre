@@ -118,10 +118,10 @@
                              </c:forEach>
                      <%-- Fila pel tamany Total dels annexes --%>
                      <tr>
-                         <td></td>
-                         <td></td>
-                         <td class="text-right"><spring:message code="anexo.sumatotaltamany"/>: <b>${totalA} KB</b></td>
-                         <td></td>
+                         <td class="senseBorder"></td>
+                         <td class="senseBorder"></td>
+                         <td class="senseBorder text-right"><spring:message code="anexo.sumatotaltamany"/>: <b>${totalA} KB</b></td>
+                         <td class="senseBorder"></td>
                      </tr>
                  </tbody>
              </table>

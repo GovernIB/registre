@@ -1107,24 +1107,26 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     /**
      * Crea un Jusitificante, lo firma y lo crea como anexo al registro
-     * @param idEntidad
-     * @param nombreFichero
      * @param usuarioEntidad
      * @param idRegistro
-     * @param tituloAnexo
-     * @param observacionesAnexo
      * @param tipoRegistro
      * @param baos
-     * @param idiomaUsuari
-     * @return AnexoFull
+     * @return
      * @throws Exception
      */
-    public AnexoFull crearJustificante(Long idEntidad, String nombreFichero, UsuarioEntidad usuarioEntidad, Long idRegistro,
-                                       String tituloAnexo, String observacionesAnexo, String tipoRegistro, ByteArrayOutputStream baos,
-                                       String idiomaUsuari) throws Exception {
+    public AnexoFull crearJustificante(UsuarioEntidad usuarioEntidad, Long idRegistro,
+                                       String tipoRegistro, ByteArrayOutputStream baos) throws Exception {
 
         try {
 
+            Long idEntidad = usuarioEntidad.getEntidad().getId();
+
+            Locale locale = new Locale("es");
+            String nombreFichero = I18NLogicUtils.tradueix(locale,"justificante.fichero") + ".pdf";
+            String tituloAnexo = I18NLogicUtils.tradueix(locale,"justificante.anexo.titulo");
+            String observacionesAnexo = I18NLogicUtils.tradueix(locale,"justificante.anexo.observaciones");
+
+            // Crea el justificante como fichero temporal
             File justificanteFile = File.createTempFile("regweb3_",".justificant");
             FileOutputStream fos = new FileOutputStream(justificanteFile);
             fos.write(baos.toByteArray());
@@ -1132,14 +1134,14 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             fos.close();
 
             // Firma el justificant
-            File signedFile = signatureServerEjb.signFile(justificanteFile, idiomaUsuari, idEntidad);
+            File signedFile = signatureServerEjb.signFile(justificanteFile, "es", idEntidad);
 
+            // Crea el anexo del justificante firmado
             AnexoFull anexoFull = new AnexoFull();
             anexoFull.getAnexo().setTitulo(tituloAnexo);
             anexoFull.getAnexo().setValidezDocumento(RegwebConstantes.TIPOVALIDEZDOCUMENTO_ORIGINAL);
             TipoDocumental tipoDocumental = tipoDocumentalEjb.findByCodigoEntidad("TD99",idEntidad);
             anexoFull.getAnexo().setTipoDocumental(tipoDocumental);
-
             anexoFull.getAnexo().setTipoDocumento(RegwebConstantes.TIPO_DOCUMENTO_DOC_ADJUNTO);
             anexoFull.getAnexo().setOrigenCiudadanoAdmin(RegwebConstantes.ANEXO_ORIGEN_ADMINISTRACION.intValue());
             anexoFull.getAnexo().setObservaciones(observacionesAnexo);
@@ -1155,7 +1157,6 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             anexoFull.setSignatureCustody(sign);
             anexoFull.setSignatureFileDelete(false);
-
             anexoFull = crearAnexo(anexoFull,usuarioEntidad,idRegistro,tipoRegistro);
 
             return anexoFull;

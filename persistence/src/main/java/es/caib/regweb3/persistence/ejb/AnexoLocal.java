@@ -140,21 +140,15 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
 
     /**
      * Crea un Jusitificante como anexo al registro
-     * @param idEntidad
-     * @param nombreFichero
      * @param usuarioEntidad
      * @param idRegistro
-     * @param tituloAnexo
-     * @param observacionesAnexo
      * @param tipoRegistro
      * @param baos
-     * @param idiomaUsuari
-     * @return AnexoFull
+     * @return
      * @throws Exception
      */
-    public AnexoFull crearJustificante(Long idEntidad, String nombreFichero, UsuarioEntidad usuarioEntidad, Long idRegistro,
-                                       String tituloAnexo, String observacionesAnexo, String tipoRegistro,
-                                       ByteArrayOutputStream baos, String idiomaUsuari) throws Exception;
+    public AnexoFull crearJustificante(UsuarioEntidad usuarioEntidad, Long idRegistro,
+                                       String tipoRegistro, ByteArrayOutputStream baos) throws Exception;
 
 
 

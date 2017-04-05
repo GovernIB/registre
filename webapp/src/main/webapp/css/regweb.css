@@ -801,3 +801,15 @@ a.text-gris:focus {
 .textPeu {
     font-size: 80%;
 }
+
+.table>tbody>tr>td.senseBorder {
+    padding: 2px 2px 2px 10px;
+    height: 20px;
+    vertical-align: middle;
+    font-size: 13px;
+    border: 0px;
+}
+.table>thead>tr>th.senseBorder{
+    height: 30px;
+    padding: 4px;
+}

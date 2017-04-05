@@ -34,7 +34,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.List;
 
 /**
  * Created by Fundació BIT.
@@ -607,33 +610,27 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         try {
             RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
             Long idEntidad = registroEntrada.getUsuario().getEntidad().getId();
-log.info("Abans carregar plugin justificante");
+
             // Carregam el plugin
             IJustificantePlugin justificantePlugin = RegwebJustificantePluginManager.getInstance(idEntidad);
-            log.info("Despres carregar plugin justificante");
+
             // Comprova que existeix el plugin de justificant
             if(justificantePlugin!=null) {
 
                 String tipoRegistro = "entrada";
 
                 // Nom del fitxer generat
-                String nombreFichero = getMessage("justificante.fichero") + "_" + registroEntrada.getNumeroRegistro() + ".pdf";
                 UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-                String tituloAnexo = getMessage("justificante.anexo.titulo");
-                String observacionesAnexo = getMessage("justificante.anexo.observaciones");
-                Locale locale = new Locale(RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(registroEntrada.getRegistroDetalle().getIdioma()));
-                String idiomaUsuari = getUsuarioEntidadActivo(request).getUsuario().getIdioma().toString();
 
                 // Obtenim el ByteArray per generar el pdf
                 ByteArrayOutputStream baos = justificantePlugin.generarJustificante(registroEntrada);
 
-                // Cream l'annex justificant
-                AnexoFull anexoFull = anexoEjb.crearJustificante(idEntidad, nombreFichero, usuarioEntidad, idRegistro, tituloAnexo,
-                        observacionesAnexo,tipoRegistro, baos, idiomaUsuari);
+                // Cream l'annex justificant i el firmam
+                AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, idRegistro, tipoRegistro, baos);
 
                 // Descarrega el Justificant firmat
                 // Cabeceras Response
-                response.setHeader("Content-Disposition", "attachment; filename=" + nombreFichero);
+                response.setHeader("Content-Disposition", "attachment; filename=" + anexoFull.getSignatureCustody().getName());
                 response.setHeader("Content-Type", "application/pdf;charset=UTF-8");
                 response.setHeader("Expires", "0");
                 response.setHeader("Cache-Control","must-revalidate, post-check=0, pre-check=0");

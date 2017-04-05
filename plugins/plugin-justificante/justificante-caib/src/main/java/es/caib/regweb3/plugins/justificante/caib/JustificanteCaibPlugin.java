@@ -60,7 +60,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
         Long idEntidadActiva = registroEntrada.getUsuario().getEntidad().getId();
 
-        Locale locale;
+        Locale locale = new Locale("es");
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
 
@@ -111,12 +111,12 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         document.add(new Paragraph(" "));
 
         // Agafam idioma pels missatges del justificant. Si no és "ca" o "es", agafa "es" per defecte
-        Long idiomaRegistre = registroEntrada.getRegistroDetalle().getIdioma();
-        if(idiomaRegistre.equals(RegwebConstantes.IDIOMA_CATALAN_ID) || idiomaRegistre.equals(RegwebConstantes.IDIOMA_CASTELLANO_ID)) {
-            locale = new Locale(RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(idiomaRegistre));
-        } else{
-            locale = new Locale("es");
-        }
+//        Long idiomaRegistre = registroEntrada.getRegistroDetalle().getIdioma();
+//        if(idiomaRegistre.equals(RegwebConstantes.IDIOMA_CATALAN_ID) || idiomaRegistre.equals(RegwebConstantes.IDIOMA_CASTELLANO_ID)) {
+//            locale = new Locale(RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(idiomaRegistre));
+//        } else{
+//            locale = new Locale("es");
+//        }
 
         String denominacionOficina = registroEntrada.getOficina().getDenominacion();
         String codigoOficina = registroEntrada.getOficina().getCodigo();
@@ -135,7 +135,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         String dataRegistre = formatDate.format(fechaRegistro);
 
         // TITULO Y REGISTRO
-        informacioRegistre(locale, document, idEntidadActiva, denominacionOficina, idiomaRegistre, codigoOficina, dataRegistre,
+        informacioRegistre(locale, document, denominacionOficina, codigoOficina, dataRegistre,
                 numeroRegistroFormateado, tipoDocumentacionFisica);
 
         // INTERESADOS
@@ -147,7 +147,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
         // ADJUNTOS
         List<AnexoFull> anexos = registroEntrada.getRegistroDetalle().getAnexosFull();
-        llistarAnnexes(anexos, idiomaRegistre, locale, document, idEntidadActiva, denominacionOficina);
+        llistarAnnexes(anexos, locale, document, denominacionOficina);
 
         // CSV Y TEXTO VERTICAL
 //            csvRegistre(locale, document, dataRegistre, idEntidadActiva, numeroRegistroFormateado, idiomaRegistre, writer, missatges);
@@ -234,7 +234,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
 
         // TITULO Y REGISTRO
-        informacioRegistre(locale, document, idEntidadActiva, denominacionOficina, idiomaRegistre, codigoOficina, dataRegistre,
+        informacioRegistre(locale, document, denominacionOficina, codigoOficina, dataRegistre,
                 numeroRegistroFormateado, tipoDocumentacionFisica);
 
         // INTERESADOS
@@ -247,7 +247,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         // ADJUNTOS
 //            List<Anexo> anexos = anexoEjb.getByRegistroSalida(registroSalida);
         List<AnexoFull> anexos = registroSalida.getRegistroDetalle().getAnexosFull();
-        llistarAnnexes(anexos, idiomaRegistre, locale, document, idEntidadActiva, denominacionOficina);
+        llistarAnnexes(anexos, locale, document, denominacionOficina);
 
         // CSV Y TEXTO VERTICAL
 //            csvRegistre(locale, document, dataRegistre, idEntidadActiva, numeroRegistroFormateado, idiomaRegistre, writer, missatges);
@@ -260,8 +260,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
 
     // Lista los anexos tanto para el registro de entrada como el de salida
-    protected void llistarAnnexes(List<AnexoFull> anexos, Long idiomaRegistre, Locale locale, Document document,
-                                  Long idEntidadActiva, String denominacio) throws Exception {
+    protected void llistarAnnexes(List<AnexoFull> anexos, Locale locale, Document document, String denominacio) throws Exception {
 
         Font font8Bold = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.BOLD);
         Font font8 = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.NORMAL);
@@ -502,8 +501,8 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
     }
 
     // Añade el título y la información de registro
-    protected void informacioRegistre(Locale locale, Document document, Long idEntidadActiva, String denominacionOficina,
-                                      Long idiomaRegistre, String codigoOficina, String dataRegistre, String numeroRegistroFormateado,
+    protected void informacioRegistre(Locale locale, Document document, String denominacionOficina,
+                                      String codigoOficina, String dataRegistre, String numeroRegistroFormateado,
                                       Long tipoDocumentacionFisica) throws Exception {
 
         Font font16Bold = FontFactory.getFont(FontFactory.HELVETICA, 16, Font.BOLD);
@@ -588,8 +587,8 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
     }
 
     // Añade la información del pie, CSV, etc
-    protected void csvRegistre(Locale locale, Document document, String dataRegistre, Long idEntidadActiva,
-                               String numeroRegistroFormateado, Long idiomaRegistre, PdfWriter writer) throws Exception {
+    protected void csvRegistre(Locale locale, Document document, String dataRegistre,
+                               String numeroRegistroFormateado, PdfWriter writer) throws Exception {
 
         Font font9Underline = FontFactory.getFont(FontFactory.HELVETICA, 9, Font.UNDERLINE);
         Font font9 = FontFactory.getFont(FontFactory.HELVETICA, 9);
