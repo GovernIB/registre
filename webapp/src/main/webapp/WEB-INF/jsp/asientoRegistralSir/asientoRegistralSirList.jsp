@@ -124,7 +124,7 @@
                                             <tr>
                                                 <th><spring:message code="asientoRegistralSir.numero"/></th>
                                                 <th><spring:message code="asientoRegistralSir.fecha"/></th>
-                                                <th><spring:message code="asientoRegistralSir.unidadOrigen"/></th>
+                                                <th><spring:message code="asientoRegistralSir.oficinaOrigen"/></th>
                                                 <th><spring:message code="asientoRegistralSir.oficinaDestino"/></th>
                                                 <th><spring:message code="asientoRegistralSir.estado"/></th>
                                                 <th><spring:message code="asientoRegistralSir.extracto"/></th>
@@ -137,7 +137,7 @@
                                                 <tr>
                                                     <td> ${asientoRegistralSir.numeroRegistro}</td>
                                                     <td><fmt:formatDate value="${asientoRegistralSir.fechaRegistro}" pattern="dd/MM/yyyy"/></td>
-                                                    <td>${asientoRegistralSir.decodificacionUnidadTramitacionOrigen}</td>
+                                                    <td>${asientoRegistralSir.decodificacionEntidadRegistralOrigen}</td>
                                                     <td>${asientoRegistralSir.decodificacionEntidadRegistralDestino}</td>
                                                     <td>
                                                         <c:if test="${asientoRegistralSir.estado == 'PENDIENTE_ENVIO' || asientoRegistralSir.estado == 'DEVUELTO' || asientoRegistralSir.estado == 'RECIBIDO' || asientoRegistralSir.estado == 'REINTENTAR_VALIDACION'}">
