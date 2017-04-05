@@ -404,8 +404,6 @@ function asignarOficinaSir(codigo,denominacion,codigoOrganismoResponsable, denom
         $('#denominacionOrganismoResponsable').val(denominacionOrganismoResponsable);
         $('#datosOficinaReenvio').val(codigoOrganismoResponsable+": "+denominacionOrganismoResponsable+ ", "+codigo+": " + denominacion);
 
-
-
         $(idModal).modal('hide');
     }
 }
@@ -414,18 +412,8 @@ function asignarOficinaSir(codigo,denominacion,codigoOrganismoResponsable, denom
 function validarFormReenvio() {
     var observaciones = $('#observaciones').val();
     var datosOficinaReenvio = $('#datosOficinaReenvio').val();
-    var observ = true;
-    var datos = true;
 
-    //if(validaCampo(observaciones,'observaciones') && validaCampo(datosOficinaReenvio,'datosOficinaReenvio')){
-    if(!validaCampo(observaciones,'idObservaciones')){
-        observ = false;
-    }
-    if(!validaCampo(datosOficinaReenvio,'idDatosOficinaReenvio')){
-        datos = false;
-    }
-
-    if(observ && datos){
+    if(validaCampo(datosOficinaReenvio,'idDatosOficinaReenvio')&& validaCampo(observaciones,'idObservaciones')) {
         doForm('#reenviarForm');
     }else{
         return false;

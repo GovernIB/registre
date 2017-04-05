@@ -57,7 +57,7 @@
                                         <label><span class="text-danger">*</span> <spring:message code="asientoRegistralSir.oficinaReenvio"/></label>
                                     </div>
                                     <div class="col-xs-6" id="idDatosOficinaReenvio">
-                                        <form:textarea path="datosOficinaReenvio" class="form-control"/> <span class="errors"></span>
+                                        <form:textarea path="datosOficinaReenvio" class="form-control" rows="3" disabled="true"/> <span class="errors"></span>
 
                                     </div>
 

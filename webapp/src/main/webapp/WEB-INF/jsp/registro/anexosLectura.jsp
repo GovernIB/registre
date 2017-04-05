@@ -63,7 +63,15 @@
                                             <spring:message code="tipoDocumento.0${anexo.tipoDocumento}"/>
                                         </td>
                                         <!-- TODO mostrar el tamanyo desde custodia -->
-                                        <td>0 KB</td>
+                                        <td>
+                                            <c:if test="${anexo.modoFirma != RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
+                                                <c:set var="tamanyAnexo" value="${reg:getSizeOfDocumentCustody(anexo.custodiaID)}" />
+                                            </c:if>
+                                            <c:if test="${anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
+                                                <c:set var="tamanyAnexo" value="${reg:getSizeOfSignatureCustody(anexo.custodiaID)}" />
+                                            </c:if>
+                                            ${tamanyAnexo } KB
+                                        </td>
                                         <td class="center">
                                             <c:if test="${anexo.modoFirma != RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
                                             <a class="btn btn-success btn-default btn-sm"

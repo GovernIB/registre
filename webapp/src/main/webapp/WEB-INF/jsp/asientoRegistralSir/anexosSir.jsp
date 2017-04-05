@@ -38,6 +38,7 @@
                             <tr>
                                 <th><spring:message code="anexo.titulo"/></th>
                                 <th><spring:message code="anexo.sir.tipoDocumento"/></th>
+                                <th><spring:message code="anexo.tamano"/></th>
                                 <c:if test="${asientoRegistralSir.estado != 'ACEPTADO'}">
                                     <th><spring:message code="anexo.sir.validezDocumento"/></th>
                                     <th><spring:message code="anexo.origen"/></th>
@@ -60,6 +61,8 @@
                                         </c:if>
                                     </td>
                                     <td><spring:message code="tipoDocumento.${anexo.tipoDocumento}"/></td>
+                                    <td>${anexo.tamano} KB</td>
+
 
                                         <%-- Gestionamos los campos NTI que no vienen informados por SICRES.
                                              Si el anexo es "FICHERO INTERNO" se deshabilitan los selects de los campos NTI

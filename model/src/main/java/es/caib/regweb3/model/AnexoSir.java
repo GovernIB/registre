@@ -263,6 +263,13 @@ public class AnexoSir implements Serializable {
         return nombreFicheroCorto;
     }
 
+    @Transient
+    public Long getTamano(){
+
+        return getAnexo().getTamano()/1000;
+
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
