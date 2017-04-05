@@ -480,6 +480,20 @@ public class RegistroDetalle implements Serializable {
         return  total;
     }
 
+    /**
+     * Comprueba si el Registro tiene el Justificante generado
+     * @return
+     */
+    @Transient
+    public boolean tieneJustificante(){
+        for (Anexo anexo : anexos) {
+            if(anexo.getJustificante()){
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

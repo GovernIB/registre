@@ -15,7 +15,6 @@ import es.caib.regweb3.webapp.form.EnvioSirForm;
 import es.caib.regweb3.webapp.form.ModeloForm;
 import es.caib.regweb3.webapp.form.RegistroEntradaBusqueda;
 import es.caib.regweb3.webapp.utils.Mensaje;
-import es.caib.regweb3.webapp.utils.RegwebJustificantePluginManager;
 import es.caib.regweb3.webapp.validator.AnexoWebValidator;
 import es.caib.regweb3.webapp.validator.RegistroEntradaBusquedaValidator;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -609,6 +608,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         try {
             RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
+            UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
             Long idEntidad = registroEntrada.getUsuario().getEntidad().getId();
 
             // Carregam el plugin
@@ -617,16 +617,11 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             // Comprova que existeix el plugin de justificant
             if(justificantePlugin!=null) {
 
-                String tipoRegistro = "entrada";
-
-                // Nom del fitxer generat
-                UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-
                 // Obtenim el ByteArray per generar el pdf
                 ByteArrayOutputStream baos = justificantePlugin.generarJustificante(registroEntrada);
 
                 // Cream l'annex justificant i el firmam
-                AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, idRegistro, tipoRegistro, baos);
+                AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, idRegistro, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), baos);
 
                 // Descarrega el Justificant firmat
                 // Cabeceras Response
