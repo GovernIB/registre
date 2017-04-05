@@ -3,6 +3,8 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.*;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
+import es.caib.regweb3.persistence.utils.RegwebJustificantePluginManager;
+import es.caib.regweb3.plugins.justificante.IJustificantePlugin;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.sir.core.model.Errores;
 import es.caib.regweb3.sir.core.model.TipoAnotacion;
@@ -23,6 +25,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.io.ByteArrayOutputStream;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -59,6 +62,7 @@ public class SirBean implements SirLocal{
     @EJB public OficioRemisionEntradaUtilsLocal oficioRemisionEntradaUtilsEjb;
     @EJB public OficioRemisionLocal oficioRemisionEjb;
     @EJB public TrazabilidadLocal trazabilidadEjb;
+    @EJB public AnexoLocal anexoEjb;
 
 
     /**
@@ -449,10 +453,26 @@ public class SirBean implements SirLocal{
 
         if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO)){
 
-            // Creamos y guardamos el AsientoRegistralSir
             RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
 
-            // Establecer campos SIR
+            // Si no tiene generado el Justificante, lo hacemos
+            if (!registroEntrada.getRegistroDetalle().tieneJustificante()) {
+
+                IJustificantePlugin justificantePlugin = RegwebJustificantePluginManager.getInstance(usuario.getEntidad().getId());
+
+                if(justificantePlugin != null) {
+
+                    // Generamos el pdf del Justificante
+                    ByteArrayOutputStream baos = justificantePlugin.generarJustificante(registroEntrada);
+
+                    // Creamos el anexo del justificante y se lo añadimos al registro
+                    AnexoFull anexoFull = anexoEjb.crearJustificante(usuario, idRegistro, tipoRegistro.toLowerCase(), baos);
+                    registroEntrada.getRegistroDetalle().getAnexos().add(anexoFull.getAnexo());
+                }
+
+            }
+
+            // Actualizamos el Registro con campos SIR
             registroEntrada.getRegistroDetalle().setIndicadorPrueba(IndicadorPrueba.NORMAL);
             registroEntrada.getRegistroDetalle().setIdentificadorIntercambio(generarIdentificadorIntercambio(registroEntrada.getOficina().getCodigo()));
             registroEntrada.getRegistroDetalle().setCodigoEntidadRegistralDestino(codigoEntidadRegistralDestino);
