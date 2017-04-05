@@ -297,9 +297,9 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         List<OficinaTF> oficinasSIR = oficioRemisionEntradaUtilsEjb.isOficioRemisionSir(idRegistroEntrada);
 
-        if(oficinasSIR == null){
-            log.info("Este registro no se puede enviar via SIR");
-            Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.error.envio"));
+        if(oficinasSIR.isEmpty()){
+            log.info("Este registro no se puede enviar via SIR, no tiene oficinas");
+            Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.error.envio.oficinas"));
             return new ModelAndView("redirect:/registroEntrada/" + idRegistroEntrada + "/detalle");
         }
 
