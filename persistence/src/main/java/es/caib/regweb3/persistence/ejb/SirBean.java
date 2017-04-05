@@ -172,32 +172,51 @@ public class SirBean implements SirLocal{
     @Override
     public void recibirMensajeDatosControl(Mensaje mensaje) throws Exception{
 
-        OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(mensaje.getIdentificadorIntercambio());
+        // Mensaje ACK
+        if(mensaje.getTipoMensaje().equals(TipoMensaje.ACK)){
 
-        if (oficioRemision != null) {
+            OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(mensaje.getIdentificadorIntercambio());
+            AsientoRegistralSir asientoRegistralSir = asientoRegistralSirEjb.getAsientoRegistral(mensaje.getIdentificadorIntercambio(),mensaje.getCodigoEntidadRegistralDestino());
 
-            // Mensaje ACK
-            if(mensaje.getTipoMensaje().equals(TipoMensaje.ACK)){
-
+            if(oficioRemision != null){
                 procesarMensajeACK(oficioRemision);
-
-            // Mensaje CONFIRMACIÓN
-            }else if(mensaje.getTipoMensaje().equals(TipoMensaje.CONFIRMACION)){
-
-                procesarMensajeCONFIRMACION(oficioRemision, mensaje);
-
-            // Mensaje ERROR
-            }else if(mensaje.getTipoMensaje().equals(TipoMensaje.ERROR)){
-
-                procesarMensajeERROR(oficioRemision, mensaje);
-
+            }else if(asientoRegistralSir != null){
+                procesarMensajeACK(asientoRegistralSir);
             }else{
-                log.info("El tipo mensaje de control no es válido: " + mensaje.getTipoMensaje());
+                log.info("El mensaje de control corresponde a un Asiento registral que no existe en el sistema");
+                throw new ValidacionException(Errores.ERROR_0044);
+            }
+
+        // Mensaje CONFIRMACIÓN
+        }else if(mensaje.getTipoMensaje().equals(TipoMensaje.CONFIRMACION)){
+
+            OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(mensaje.getIdentificadorIntercambio());
+
+            if(oficioRemision != null){
+                procesarMensajeCONFIRMACION(oficioRemision, mensaje);
+            }else{
+                log.info("El mensaje de control corresponde a un Asiento registral que no existe en el sistema");
+                throw new ValidacionException(Errores.ERROR_0044);
+            }
+
+
+        // Mensaje ERROR
+        }else if(mensaje.getTipoMensaje().equals(TipoMensaje.ERROR)){
+
+            OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(mensaje.getIdentificadorIntercambio());
+            AsientoRegistralSir asientoRegistralSir = asientoRegistralSirEjb.getAsientoRegistral(mensaje.getIdentificadorIntercambio(),mensaje.getCodigoEntidadRegistralDestino());
+
+            if(oficioRemision != null){
+                procesarMensajeERROR(oficioRemision, mensaje);
+            }else if(asientoRegistralSir != null){
+                procesarMensajeERROR(asientoRegistralSir, mensaje);
+            }else{
+                log.info("El mensaje de control corresponde a un Asiento registral que no existe en el sistema");
                 throw new ValidacionException(Errores.ERROR_0044);
             }
 
         }else{
-            log.info("El mensaje de control corresponde a un Asiento registral que no existe en el sistema");
+            log.info("El tipo mensaje de control no es válido: " + mensaje.getTipoMensaje());
             throw new ValidacionException(Errores.ERROR_0044);
         }
 
@@ -248,6 +267,44 @@ public class SirBean implements SirLocal{
     }
 
     /**
+     * Procesa un mensaje de control de tipo ACK
+     * @param asientoRegistralSir
+     * @throws Exception
+     */
+    private void procesarMensajeACK(AsientoRegistralSir asientoRegistralSir) throws Exception{
+
+        if (EstadoAsientoRegistralSir.ENVIADO.equals(asientoRegistralSir.getEstado())){
+
+            // Actualizamos el asiento
+            asientoRegistralSir.setEstado(EstadoAsientoRegistralSir.ENVIADO_Y_ACK);
+            asientoRegistralSirEjb.merge(asientoRegistralSir);
+
+        } else if (EstadoAsientoRegistralSir.REENVIADO.equals(asientoRegistralSir.getEstado())){
+
+            // Actualizamos el asiento
+            asientoRegistralSir.setEstado(EstadoAsientoRegistralSir.REENVIADO_Y_ACK);
+            asientoRegistralSirEjb.merge(asientoRegistralSir);
+
+        } else if (EstadoAsientoRegistralSir.RECHAZADO.equals(asientoRegistralSir.getEstado())){
+
+            // Actualizamos el asiento
+            asientoRegistralSir.setEstado(EstadoAsientoRegistralSir.RECHAZADO_Y_ACK);
+            asientoRegistralSirEjb.merge(asientoRegistralSir);
+
+        } else if (EstadoAsientoRegistralSir.ENVIADO_Y_ACK.equals(asientoRegistralSir.getEstado()) ||
+                EstadoAsientoRegistralSir.REENVIADO_Y_ACK.equals(asientoRegistralSir.getEstado()) ||
+                EstadoAsientoRegistralSir.RECHAZADO_Y_ACK.equals(asientoRegistralSir.getEstado())){
+
+            log.info("Se ha recibido un asiento duplicado con identificador: " + asientoRegistralSir.getIdentificadorIntercambio());
+            throw new ValidacionException(Errores.ERROR_0206);
+
+        }else{
+            log.info("Se ha recibido un mensaje que no tiene el estado adecuado para recibir un ACK");
+            throw new ValidacionException(Errores.ERROR_0044);
+        }
+    }
+
+    /**
      * Procesa un mensaje de control de tipo CONFIRMACION
      * @param oficioRemision
      * @throws Exception
@@ -256,10 +313,7 @@ public class SirBean implements SirLocal{
 
         if (oficioRemision.getEstado() == (RegwebConstantes.OFICIO_SIR_ENVIADO) ||
                 oficioRemision.getEstado() == (RegwebConstantes.OFICIO_SIR_ENVIADO_ACK) ||
-                oficioRemision.getEstado() == (RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR) ||
-                oficioRemision.getEstado() == (RegwebConstantes.OFICIO_SIR_REENVIADO) ||
-                oficioRemision.getEstado() == (RegwebConstantes.OFICIO_SIR_REENVIADO_ACK) ||
-                oficioRemision.getEstado() == (RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR)){
+                oficioRemision.getEstado() == (RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR)){
 
             oficioRemision.setNumeroRegistroEntradaDestino(mensaje.getNumeroRegistroEntradaDestino());
             oficioRemision.setFechaEntradaDestino(mensaje.getFechaEntradaDestino());
@@ -305,7 +359,7 @@ public class SirBean implements SirLocal{
             oficioRemision.setFechaEstado(new Date());
             oficioRemisionEjb.merge(oficioRemision);
 
-        } else if (oficioRemision.getEstado() == (RegwebConstantes.OFICIO_SIR_REENVIADO)){
+        } else if (oficioRemision.getEstado() == (RegwebConstantes.OFICIO_SIR_RECHAZADO)){
 
             oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_RECHAZADO_ERROR);
             oficioRemision.setCodigoError(mensaje.getCodigoError());
@@ -319,6 +373,51 @@ public class SirBean implements SirLocal{
                 oficioRemision.getEstado() == (RegwebConstantes.OFICIO_SIR_RECHAZADO_ERROR)){
 
             log.info("Se ha recibido un mensaje duplicado con identificador: " + oficioRemision.getIdentificadorIntercambio());
+            throw new ValidacionException(Errores.ERROR_0206);
+
+        }
+    }
+
+    /**
+     * Procesa un mensaje de control de tipo ERROR
+     * @param asientoRegistralSir
+     * @param mensaje
+     * @throws Exception
+     */
+    private void procesarMensajeERROR(AsientoRegistralSir asientoRegistralSir, Mensaje mensaje) throws Exception{
+
+        if (EstadoAsientoRegistralSir.ENVIADO.equals(asientoRegistralSir.getEstado())){
+
+            asientoRegistralSir.setEstado(EstadoAsientoRegistralSir.ENVIADO_Y_ERROR);
+            /*asientoRegistralSir.setCodigoError(mensaje.getCodigoError());
+            asientoRegistralSir.setDescripcionError(mensaje.getDescripcionMensaje());
+            asientoRegistralSir.setNumeroReintentos(0);
+            asientoRegistralSir.setFechaEstado(new Date());*/
+            asientoRegistralSirEjb.merge(asientoRegistralSir);
+
+        } else if (EstadoAsientoRegistralSir.REENVIADO.equals(asientoRegistralSir.getEstado())){
+
+            asientoRegistralSir.setEstado(EstadoAsientoRegistralSir.REENVIADO_Y_ERROR);
+            /*asientoRegistralSir.setCodigoError(mensaje.getCodigoError());
+            asientoRegistralSir.setDescripcionError(mensaje.getDescripcionMensaje());
+            asientoRegistralSir.setNumeroReintentos(0);
+            asientoRegistralSir.setFechaEstado(new Date());*/
+            asientoRegistralSirEjb.merge(asientoRegistralSir);
+
+        } else if (EstadoAsientoRegistralSir.RECHAZADO.equals(asientoRegistralSir.getEstado())){
+
+            asientoRegistralSir.setEstado(EstadoAsientoRegistralSir.RECHAZADO_Y_ERROR);
+            /*asientoRegistralSir.setCodigoError(mensaje.getCodigoError());
+            asientoRegistralSir.setDescripcionError(mensaje.getDescripcionMensaje());
+            asientoRegistralSir.setNumeroReintentos(0);
+            asientoRegistralSir.setFechaEstado(new Date());*/
+            asientoRegistralSirEjb.merge(asientoRegistralSir);
+
+        } else if (EstadoAsientoRegistralSir.ENVIADO_Y_ERROR.equals(asientoRegistralSir.getEstado()) ||
+                EstadoAsientoRegistralSir.REENVIADO_Y_ERROR.equals(asientoRegistralSir.getEstado()) ||
+                EstadoAsientoRegistralSir.RECHAZADO_Y_ERROR.equals(asientoRegistralSir.getEstado())){
+
+            log.info("Se ha recibido un asiento duplicado con identificador: " + asientoRegistralSir.getIdentificadorIntercambio());
             throw new ValidacionException(Errores.ERROR_0206);
 
         }
