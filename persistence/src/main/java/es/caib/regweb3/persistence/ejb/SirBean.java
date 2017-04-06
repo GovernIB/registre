@@ -73,60 +73,53 @@ public class SirBean implements SirLocal{
     @Override
     public void recibirFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception{
 
-        AsientoRegistralSir asientoRegistralSir = null;
-        OficioRemision oficioRemision = null;
-        RegistroEntrada registroEntrada = null;
+        // ENVIO Y REENVIO
+        if (TipoAnotacion.ENVIO.getValue().equals(ficheroIntercambio.getTipoAnotacion()) ||
+                TipoAnotacion.REENVIO.getValue().equals(ficheroIntercambio.getTipoAnotacion())) {
 
-        // ENVIO
-        if (TipoAnotacion.ENVIO.getValue().equals(ficheroIntercambio.getTipoAnotacion())) {
-
-            log.info("El ficheroIntercambio recibido es un ENVIO");
+            log.info("El ficheroIntercambio recibido es un: " + ficheroIntercambio.getDescripcionTipoAnotacion());
 
             // Buscamos si el Registro recibido ya existe en el sistema
-            asientoRegistralSir = asientoRegistralSirEjb.getAsientoRegistral(ficheroIntercambio.getIdentificadorIntercambio(),ficheroIntercambio.getCodigoEntidadRegistralDestino());
+            AsientoRegistralSir asiento = asientoRegistralSirEjb.getAsientoRegistral(ficheroIntercambio.getIdentificadorIntercambio(),ficheroIntercambio.getCodigoEntidadRegistralDestino());
 
-            if(registroEntrada != null) { // Ya existe en el sistema
+            if(asiento != null) { // Ya existe en el sistema
 
-                if(EstadoAsientoRegistralSir.RECIBIDO.equals(asientoRegistralSir.getEstado())){
+                if(EstadoAsientoRegistralSir.RECIBIDO.equals(asiento.getEstado())){
 
-                    log.info("El AsientoRegistral" + asientoRegistralSir.getIdentificadorIntercambio() +" ya se ha recibido.");
+                    log.info("El AsientoRegistral" + asiento.getIdentificadorIntercambio() +" ya se ha recibido.");
                     throw new ValidacionException(Errores.ERROR_0205);
 
-                }else if(EstadoAsientoRegistralSir.RECHAZADO.equals(asientoRegistralSir.getEstado()) ||
-                        EstadoAsientoRegistralSir.RECHAZADO_Y_ACK.equals(asientoRegistralSir.getEstado()) ||
-                        EstadoAsientoRegistralSir.RECHAZADO_Y_ERROR.equals(asientoRegistralSir.getEstado()) ||
-                        EstadoAsientoRegistralSir.REENVIADO.equals(asientoRegistralSir.getEstado())){
+                }else if(EstadoAsientoRegistralSir.RECHAZADO.equals(asiento.getEstado()) ||
+                        EstadoAsientoRegistralSir.RECHAZADO_Y_ACK.equals(asiento.getEstado()) ||
+                        EstadoAsientoRegistralSir.RECHAZADO_Y_ERROR.equals(asiento.getEstado()) ||
+                        EstadoAsientoRegistralSir.REENVIADO.equals(asiento.getEstado())){
 
-                    registroEntrada = registroEntradaEjb.getByIdentificadorIntercambio(ficheroIntercambio.getIdentificadorIntercambio());
+                   // todo El asiento ya existe pero está Rechazado/Reenviado, que hacemos??
 
+                }else{
+                    log.info("Se ha intentado enviar un ficheroIntercambio con estado incompatible: " + ficheroIntercambio.getIdentificadorIntercambio());
+                    throw new ValidacionException(Errores.ERROR_0063);
                 }
 
 
             }else{ // No existe en el sistema, creamos un nuevo AsientoRegistralSir
 
                 // Convertimos el Fichero de Intercambio SICRES3 en {@link es.caib.regweb3.model.AsientoRegistralSir}
-                asientoRegistralSir = asientoRegistralSirEjb.transformarFicheroIntercambio(ficheroIntercambio);
-                asientoRegistralSir.setEstado(EstadoAsientoRegistralSir.RECIBIDO);
+                asiento = asientoRegistralSirEjb.transformarFicheroIntercambio(ficheroIntercambio);
+                asiento.setEstado(EstadoAsientoRegistralSir.RECIBIDO);
 
-                asientoRegistralSirEjb.crearAsientoRegistralSir(asientoRegistralSir);
+                asientoRegistralSirEjb.crearAsientoRegistralSir(asiento);
+                log.info("El asiento no existía en el sistema y se ha creado: " + asiento.getIdentificadorIntercambio());
 
             }
 
-        }
-
-        // REENVIO
-        if (TipoAnotacion.REENVIO.getValue().equals(ficheroIntercambio.getTipoAnotacion())) {
-
-            log.info("El ficheroIntercambio recibido es un REENVIO");
-        }
-
         // RECHAZO
-        if (TipoAnotacion.RECHAZO.getValue().equals(ficheroIntercambio.getTipoAnotacion())) {
+        }else if (TipoAnotacion.RECHAZO.getValue().equals(ficheroIntercambio.getTipoAnotacion())) {
 
             log.info("El ficheroIntercambio recibido es un RECHAZO");
 
             // Buscamos si el Asiento recibido ya existe en el sistema
-            oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(ficheroIntercambio.getIdentificadorIntercambio());
+            OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(ficheroIntercambio.getIdentificadorIntercambio());
 
             if(oficioRemision != null) { // Existe en el sistema
 
@@ -135,7 +128,7 @@ public class SirBean implements SirLocal{
                         oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_REENVIADO ||
                         oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_RECHAZADO_ACK){
 
-                    registroEntrada = oficioRemision.getRegistrosEntrada().get(0);
+                    RegistroEntrada registroEntrada = oficioRemision.getRegistrosEntrada().get(0);
 
                     // Actualizamos el asiento
                     registroEntrada.setEstado(RegwebConstantes.REGISTRO_VALIDO); // TODO Válido o Devuelto o Rectificado?
