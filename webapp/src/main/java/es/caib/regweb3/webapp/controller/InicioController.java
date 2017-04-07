@@ -94,8 +94,11 @@ public class InicioController extends BaseController{
                 /* Obtenemos los Asientos Registrales Sir pendientes de procesar */
                 if(entidadActiva.getSir() && oficinaActiva.getSir()) {
                     Set<String> organismosSIR = getOrganismosSIRCodigo(request);
-                    List<AsientoRegistralSir> asientosRegistralesSir = asientosRegistralSirEjb.getUltimosPendientesProcesar(organismosSIR, RegwebConstantes.REGISTROS_PANTALLA_INICIO);
-                    mav.addObject("asientosRegistralesSir", asientosRegistralesSir);
+
+                    if (organismosSIR.size() > 0) {
+                        List<AsientoRegistralSir> asientosRegistralesSir = asientosRegistralSirEjb.getUltimosPendientesProcesar(organismosSIR, RegwebConstantes.REGISTROS_PANTALLA_INICIO);
+                        mav.addObject("asientosRegistralesSir", asientosRegistralesSir);
+                    }
                 }
 
             }
