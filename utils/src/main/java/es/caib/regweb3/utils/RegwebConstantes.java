@@ -16,73 +16,74 @@ public interface RegwebConstantes {
     /**
      * --------------- SISTEMA --------------
      */
-    public static final String REGWEB3_PROPERTY_BASE = "es.caib.regweb3.";
-    public static final String SECURITY_DOMAIN = "seycon";
+    String REGWEB3_PROPERTY_BASE = "es.caib.regweb3.";
+    String SECURITY_DOMAIN = "seycon";
 
     /*
      *-------------------GENERAL-------------------
      */
-    public static final String CODIGO_APLICACION = "RWE3";
+    String CODIGO_APLICACION = "RWE3";
+    int REGISTROS_PANTALLA_INICIO = 5;
 
     /**
      * -------------- VARIABLES DE SESION --------------
      */
-    public static final String SESSION_USUARIO = "usuarioAutenticado";
-    public static final String SESSION_USUARIO_ENTIDAD = "usuarioEntidadActivo";
-    public static final String SESSION_ROLES = "rolesAutenticado";
-    public static final String SESSION_ROL = "rolAutenticado";
-    public static final String SESSION_ENTIDADES = "entidades";
-    public static final String SESSION_ENTIDAD = "entidadActiva";
-    public static final String SESSION_OFICINAS = "oficinas";
-    public static final String SESSION_OFICINA = "oficinaActiva";
-    public static final String SESSION_ORGANISMOS_OFICINA = "organismosOficinaActiva";
-    public static final String SESSION_ORGANISMOS_SIR = "organismosSIR";
-    public static final String SESSION_OFICINAS_ADMINISTRADAS = "oficinasAdministradas";
-    public static final String SESSION_LIBROSADMINISTRADOS = "librosAdministrados";
-    public static final String SESSION_MIGRADOS = "registrosMigrados";
-    public static final String SESSION_TIENE_ASR = "tieneASR";
-    public static final String SESSION_CONFIGURACION = "configuracion";
-    public static final String SESSION_INTERESADOS_ENTRADA = "interesadosEntrada";
-    public static final String SESSION_INTERESADOS_SALIDA = "interesadosSalida";
+    String SESSION_USUARIO = "usuarioAutenticado";
+    String SESSION_USUARIO_ENTIDAD = "usuarioEntidadActivo";
+    String SESSION_ROLES = "rolesAutenticado";
+    String SESSION_ROL = "rolAutenticado";
+    String SESSION_ENTIDADES = "entidades";
+    String SESSION_ENTIDAD = "entidadActiva";
+    String SESSION_OFICINAS = "oficinas";
+    String SESSION_OFICINA = "oficinaActiva";
+    String SESSION_ORGANISMOS_OFICINA = "organismosOficinaActiva";
+    String SESSION_ORGANISMOS_SIR = "organismosSIR";
+    String SESSION_OFICINAS_ADMINISTRADAS = "oficinasAdministradas";
+    String SESSION_LIBROSADMINISTRADOS = "librosAdministrados";
+    String SESSION_MIGRADOS = "registrosMigrados";
+    String SESSION_TIENE_ASR = "tieneASR";
+    String SESSION_CONFIGURACION = "configuracion";
+    String SESSION_INTERESADOS_ENTRADA = "interesadosEntrada";
+    String SESSION_INTERESADOS_SALIDA = "interesadosSalida";
 
     /**
      * -------------- IDIOMA --------------
      */
-    public static final Long IDIOMA_CATALAN_ID = 1L;
-    public static final String IDIOMA_CATALAN_CODIGO = "ca";
+    Long IDIOMA_CATALAN_ID = 1L;
+    String IDIOMA_CATALAN_CODIGO = "ca";
 
-    public static final Long IDIOMA_CASTELLANO_ID = 2L;
-    public static final String IDIOMA_CASTELLANO_CODIGO = "es";
+    Long IDIOMA_CASTELLANO_ID = 2L;
+    String IDIOMA_CASTELLANO_CODIGO = "es";
 
-    public static final Long IDIOMA_GALLEGO_ID = 3L;
-    public static final String IDIOMA_GALLEGO_CODIGO = "gl";
+    Long IDIOMA_GALLEGO_ID = 3L;
+    String IDIOMA_GALLEGO_CODIGO = "gl";
 
-    public static final Long IDIOMA_EUSKERA_ID = 4L;
-    public static final String IDIOMA_EUSKERA_CODIGO = "eu";
+    Long IDIOMA_EUSKERA_ID = 4L;
+    String IDIOMA_EUSKERA_CODIGO = "eu";
 
-    public static final Long IDIOMA_INGLES_ID = 5L;
-    public static final String IDIOMA_INGLES_CODIGO = "en";
+    Long IDIOMA_INGLES_ID = 5L;
+    String IDIOMA_INGLES_CODIGO = "en";
 
-    public static final Long IDIOMA_OTROS_ID = 6L;
-    public static final String IDIOMA_OTROS_CODIGO = "ot";
+    Long IDIOMA_OTROS_ID = 6L;
+    String IDIOMA_OTROS_CODIGO = "ot";
 
-    public static final Long[] IDIOMAS_UI = {
+    Long[] IDIOMAS_UI = {
             IDIOMA_CATALAN_ID, IDIOMA_CASTELLANO_ID
     };
 
-    public static final Long[] IDIOMAS_REGISTRO = {
+    Long[] IDIOMAS_REGISTRO = {
             IDIOMA_CATALAN_ID, IDIOMA_CASTELLANO_ID,
             IDIOMA_GALLEGO_ID, IDIOMA_EUSKERA_ID,
             IDIOMA_INGLES_ID, IDIOMA_OTROS_ID
     };
 
-    public static final Long[] IDIOMAS_REGISTRO_ES = {
+    Long[] IDIOMAS_REGISTRO_ES = {
             IDIOMA_CASTELLANO_ID, IDIOMA_CATALAN_ID,
             IDIOMA_GALLEGO_ID, IDIOMA_EUSKERA_ID,
             IDIOMA_INGLES_ID, IDIOMA_OTROS_ID
     };
 
-    public static final Map<Long, String> CODIGO_BY_IDIOMA_ID = new HashMap<Long, String>() {{
+    Map<Long, String> CODIGO_BY_IDIOMA_ID = new HashMap<Long, String>() {{
         put(IDIOMA_CATALAN_ID, IDIOMA_CATALAN_CODIGO);
         put(IDIOMA_CASTELLANO_ID, IDIOMA_CASTELLANO_CODIGO);
         put(IDIOMA_GALLEGO_ID, IDIOMA_GALLEGO_CODIGO);
@@ -92,44 +93,44 @@ public interface RegwebConstantes {
     }};
 
 
-    public static final Map<String, Long> IDIOMA_ID_BY_CODIGO = RegwebUtils.invert(CODIGO_BY_IDIOMA_ID);
+    Map<String, Long> IDIOMA_ID_BY_CODIGO = RegwebUtils.invert(CODIGO_BY_IDIOMA_ID);
 
     /* -------------- PROPERTIES DE APLICACIÓN --------------*/
-    public static final String ARCHIVOS_LOCATION_PROPERTY = "es.caib.regweb3.archivos.path";
+    String ARCHIVOS_LOCATION_PROPERTY = "es.caib.regweb3.archivos.path";
 
     /* -------------- ROLES --------------*/
-    public static final String ROL_SUPERADMIN = "RWE_SUPERADMIN";
-    public static final String ROL_ADMIN = "RWE_ADMIN";  // Administradores entidad
-    public static final String ROL_USUARI = "RWE_USUARI";
+    String ROL_SUPERADMIN = "RWE_SUPERADMIN";// SuperAdministradores entidad
+    Long ROL_SUPERADMIN_ID = 1L;
 
-    public static final Long ROL_SUPERADMIN_ID = 1L;
-    public static final Long ROL_ADMIN_ID = 2L;  // Administradores entidad
-    public static final Long ROL_USUARI_ID = 3L;
+    String ROL_ADMIN = "RWE_ADMIN";  // Administradores entidad
+    Long ROL_ADMIN_ID = 2L;
+
+    String ROL_USUARI = "RWE_USUARI"; // Usuarios entidad
+    Long ROL_USUARI_ID = 3L;
 
     /* -------------- ESTADO ENTIDAD --------------*/
-    public static final String ESTADO_ENTIDAD_ANULADO = "A";
-    public static final String ESTADO_ENTIDAD_EXTINGUIDO = "E";
-    public static final String ESTADO_ENTIDAD_TRANSITORIO = "T";
-    public static final String ESTADO_ENTIDAD_VIGENTE = "V";
+    String ESTADO_ENTIDAD_ANULADO = "A";
+    String ESTADO_ENTIDAD_EXTINGUIDO = "E";
+    String ESTADO_ENTIDAD_TRANSITORIO = "T";
+    String ESTADO_ENTIDAD_VIGENTE = "V";
 
     /* -------------- FORMATOS --------------*/
-    public static final String FORMATO_FECHA = "dd/MM/yyyy";
-    public static final String FORMATO_FECHA_HORA = "dd/MM/yyyy HH:mm";
-    public static final Integer ANY = 2015;
+    String FORMATO_FECHA = "dd/MM/yyyy";
+    String FORMATO_FECHA_HORA = "dd/MM/yyyy HH:mm";
+    Integer ANY = 2015;
 
     /* -------------- PERMISOS LIBRO REGISTROS --------------*/
-    public static final Long PERMISO_REGISTRO_ENTRADA = 1L;
-    public static final Long PERMISO_REGISTRO_SALIDA = 2L;
-    public static final Long PERMISO_CONSULTA_REGISTRO_ENTRADA = 3L;
-    public static final Long PERMISO_CONSULTA_REGISTRO_SALIDA = 4L;
-    public static final Long PERMISO_MODIFICACION_REGISTRO_ENTRADA = 5L;
-    public static final Long PERMISO_MODIFICACION_REGISTRO_SALIDA = 6L;
-    public static final Long PERMISO_ADMINISTRACION_LIBRO = 7L;
-    public static final Long PERMISO_DISTRIBUCION_REGISTRO = 8L;
-    public static final Long PERMISO_SIR = 9L;
+    Long PERMISO_REGISTRO_ENTRADA = 1L;
+    Long PERMISO_REGISTRO_SALIDA = 2L;
+    Long PERMISO_CONSULTA_REGISTRO_ENTRADA = 3L;
+    Long PERMISO_CONSULTA_REGISTRO_SALIDA = 4L;
+    Long PERMISO_MODIFICACION_REGISTRO_ENTRADA = 5L;
+    Long PERMISO_MODIFICACION_REGISTRO_SALIDA = 6L;
+    Long PERMISO_ADMINISTRACION_LIBRO = 7L;
+    Long PERMISO_DISTRIBUCION_REGISTRO = 8L;
+    Long PERMISO_SIR = 9L;
 
-
-    public static final Long[] PERMISOS = {
+    Long[] PERMISOS = {
             PERMISO_REGISTRO_ENTRADA,
             PERMISO_REGISTRO_SALIDA,
             PERMISO_CONSULTA_REGISTRO_ENTRADA,
@@ -143,65 +144,57 @@ public interface RegwebConstantes {
 
 
     /* -------------- TIPO PERSONA --------------*/
-    public static final Long TIPO_PERSONA_FISICA = 2L;
-    public static final Long TIPO_PERSONA_JURIDICA = 3L;
+    Long TIPO_PERSONA_FISICA = 2L;
+    Long TIPO_PERSONA_JURIDICA = 3L;
 
-    public static final Long[] TIPOS_PERSONA = {
+    Long[] TIPOS_PERSONA = {
             TIPO_PERSONA_FISICA,
             TIPO_PERSONA_JURIDICA
     };
 
 
     /* -------------- TIPO INTERESADO --------------*/
-    public static final Long TIPO_INTERESADO_ADMINISTRACION = 1L;
-    public static final Long TIPO_INTERESADO_PERSONA_FISICA = 2L;
-    public static final Long TIPO_INTERESADO_PERSONA_JURIDICA = 3L;
+    Long TIPO_INTERESADO_ADMINISTRACION = 1L;
+    Long TIPO_INTERESADO_PERSONA_FISICA = 2L;
+    Long TIPO_INTERESADO_PERSONA_JURIDICA = 3L;
 
-    public static final Long[] TIPOS_INTERESADO = {
+    Long[] TIPOS_INTERESADO = {
             TIPO_INTERESADO_ADMINISTRACION,
             TIPO_INTERESADO_PERSONA_FISICA,
             TIPO_INTERESADO_PERSONA_JURIDICA
     };
     
-    
-    
+
     /* -------------- TIPO ANOTACION --------------*/
+    Long TIPO_ANOTACION_PENDIENTE = 1L;
+    Long TIPO_ANOTACION_ENVIO = 2L;
+    Long TIPO_ANOTACION_REENVIO = 3L;
+    Long TIPO_ANOTACION_RECHAZO = 4L;
 
-    public static final Long TIPO_ANOTACION_PENDIENTE = 1L;
-    public static final Long TIPO_ANOTACION_ENVIO = 2L;
-    public static final Long TIPO_ANOTACION_REENVIO = 3L;
-    public static final Long TIPO_ANOTACION_RECHAZO = 4L;
-
-
-    public static final Long[] TIPOS_ANOTACION = {
+    Long[] TIPOS_ANOTACION = {
             TIPO_ANOTACION_PENDIENTE, TIPO_ANOTACION_ENVIO,
             TIPO_ANOTACION_REENVIO, TIPO_ANOTACION_RECHAZO
     };
 
-
-    public static final Map<Long, String> CODIGO_BY_TIPO_ANOTACION = new HashMap<Long, String>() {{
+    Map<Long, String> CODIGO_BY_TIPO_ANOTACION = new HashMap<Long, String>() {{
         put(TIPO_ANOTACION_PENDIENTE, "0" + TIPO_ANOTACION_PENDIENTE);
         put(TIPO_ANOTACION_ENVIO, "0" + TIPO_ANOTACION_ENVIO);
         put(TIPO_ANOTACION_REENVIO, "0" + TIPO_ANOTACION_REENVIO);
         put(TIPO_ANOTACION_RECHAZO, "0" + TIPO_ANOTACION_RECHAZO);
     }};
 
+    Map<String, Long> TIPO_ANOTACION_BY_CODIGO = RegwebUtils.invert(CODIGO_BY_TIPO_ANOTACION);
 
-    public static final Map<String, Long> TIPO_ANOTACION_BY_CODIGO = RegwebUtils.invert(CODIGO_BY_TIPO_ANOTACION);
 
-
-    /**
-     * ------------ TIPO VALIDEZ DOCUMENTAL ------------
-     */
+    /*------------ TIPO VALIDEZ DOCUMENTAL ------------*/
 
     // NTI    SICRES
+    Long TIPOVALIDEZDOCUMENTO_COPIA = 1L;
+    Long TIPOVALIDEZDOCUMENTO_COPIA_COMPULSADA = 2L;
+    Long TIPOVALIDEZDOCUMENTO_COPIA_ORIGINAL = 3L;
+    Long TIPOVALIDEZDOCUMENTO_ORIGINAL = 4L;
 
-    public static final Long TIPOVALIDEZDOCUMENTO_COPIA = 1L;
-    public static final Long TIPOVALIDEZDOCUMENTO_COPIA_COMPULSADA = 2L;
-    public static final Long TIPOVALIDEZDOCUMENTO_COPIA_ORIGINAL = 3L;
-    public static final Long TIPOVALIDEZDOCUMENTO_ORIGINAL = 4L;
-
-    public static final Long[] TIPOS_VALIDEZDOCUMENTO = {
+    Long[] TIPOS_VALIDEZDOCUMENTO = {
             TIPOVALIDEZDOCUMENTO_COPIA,
             TIPOVALIDEZDOCUMENTO_COPIA_COMPULSADA,
             TIPOVALIDEZDOCUMENTO_COPIA_ORIGINAL,
@@ -209,65 +202,65 @@ public interface RegwebConstantes {
     };
 
 
-    public static final Map<Long, String> CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO = new HashMap<Long, String>() {{
+    Map<Long, String> CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO = new HashMap<Long, String>() {{
         put(TIPOVALIDEZDOCUMENTO_COPIA, "0" + TIPOVALIDEZDOCUMENTO_COPIA);
         put(TIPOVALIDEZDOCUMENTO_COPIA_COMPULSADA, "0" + TIPOVALIDEZDOCUMENTO_COPIA_COMPULSADA);
         put(TIPOVALIDEZDOCUMENTO_COPIA_ORIGINAL, "0" + TIPOVALIDEZDOCUMENTO_COPIA_ORIGINAL);
         put(TIPOVALIDEZDOCUMENTO_ORIGINAL, "0" + TIPOVALIDEZDOCUMENTO_ORIGINAL);
     }};
 
-    public static final Map<String, Long> TIPOVALIDEZDOCUMENTO_BY_CODIGO_SICRES
+    Map<String, Long> TIPOVALIDEZDOCUMENTO_BY_CODIGO_SICRES
             = RegwebUtils.invert(CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO);
 
 
-    public static final Map<Long, String> CODIGO_NTI_BY_TIPOVALIDEZDOCUMENTO = new HashMap<Long, String>() {{
+    Map<Long, String> CODIGO_NTI_BY_TIPOVALIDEZDOCUMENTO = new HashMap<Long, String>() {{
         put(TIPOVALIDEZDOCUMENTO_COPIA, "EE0" + TIPOVALIDEZDOCUMENTO_COPIA);
         put(TIPOVALIDEZDOCUMENTO_COPIA_COMPULSADA, "EE0" + TIPOVALIDEZDOCUMENTO_COPIA_COMPULSADA);
         put(TIPOVALIDEZDOCUMENTO_COPIA_ORIGINAL, "EE0" + TIPOVALIDEZDOCUMENTO_COPIA_ORIGINAL);
         put(TIPOVALIDEZDOCUMENTO_ORIGINAL, "EE0" + TIPOVALIDEZDOCUMENTO_ORIGINAL);
     }};
 
-    public static final Map<String, Long> TIPOVALIDEZDOCUMENTO_BY_CODIGO_NTI
+    Map<String, Long> TIPOVALIDEZDOCUMENTO_BY_CODIGO_NTI
             = RegwebUtils.invert(CODIGO_NTI_BY_TIPOVALIDEZDOCUMENTO);
 
-    /* -------------- ESTADO REGISTRO --------------*/
-    public static final Long REGISTRO_VALIDO = 1L;
-    public static final Long REGISTRO_RESERVA = 2L;
-    public static final Long REGISTRO_PENDIENTE_VISAR = 3L;
-    public static final Long REGISTRO_OFICIO_EXTERNO = 4L;
-    public static final Long REGISTRO_OFICIO_INTERNO = 5L;
-    /*public static final Long REGISTRO_ENVIADO = 6L;*/
-    public static final Long REGISTRO_TRAMITADO = 7L;
-    public static final Long REGISTRO_ANULADO = 8L;
 
-    public static final Long[] ESTADOS_REGISTRO = {
+    /* -------------- ESTADO REGISTRO --------------*/
+    Long REGISTRO_VALIDO = 1L;
+    Long REGISTRO_RESERVA = 2L;
+    Long REGISTRO_PENDIENTE_VISAR = 3L;
+    Long REGISTRO_OFICIO_EXTERNO = 4L;
+    Long REGISTRO_OFICIO_INTERNO = 5L;
+    /*Long REGISTRO_ENVIADO = 6L;*/
+    Long REGISTRO_TRAMITADO = 7L;
+    Long REGISTRO_ANULADO = 8L;
+    Long REGISTRO_RECTIFICADO = 9L;
+
+    Long[] ESTADOS_REGISTRO = {
             REGISTRO_VALIDO,
             REGISTRO_RESERVA,
             REGISTRO_PENDIENTE_VISAR,
             REGISTRO_OFICIO_EXTERNO,
             REGISTRO_OFICIO_INTERNO,
             REGISTRO_TRAMITADO,
-            REGISTRO_ANULADO};
+            REGISTRO_ANULADO,
+            REGISTRO_RECTIFICADO};
 
     /* ------------- TRANSPORTE ---------------*/
+    Long TRANSPORTE_SERVICIO_MENSAJEROS = 1L;
+    Long TRANSPORTE_CORREO_POSTAL = 2L;
+    Long TRANSPORTE_CORREO_POSTAL_CERTIFICADO = 3L;
+    Long TRANSPORTE_BUROFAX = 4L;
+    Long TRANSPORTE_EN_MANO = 5L;
+    Long TRANSPORTE_FAX = 6L;
+    Long TRANSPORTE_OTROS = 7L;
 
-    public static final Long TRANSPORTE_SERVICIO_MENSAJEROS = 1L;
-    public static final Long TRANSPORTE_CORREO_POSTAL = 2L;
-    public static final Long TRANSPORTE_CORREO_POSTAL_CERTIFICADO = 3L;
-    public static final Long TRANSPORTE_BUROFAX = 4L;
-    public static final Long TRANSPORTE_EN_MANO = 5L;
-    public static final Long TRANSPORTE_FAX = 6L;
-    public static final Long TRANSPORTE_OTROS = 7L;
-
-
-    public static final Long[] TRANSPORTES = {
+    Long[] TRANSPORTES = {
             TRANSPORTE_SERVICIO_MENSAJEROS, TRANSPORTE_CORREO_POSTAL,
             TRANSPORTE_CORREO_POSTAL_CERTIFICADO, TRANSPORTE_BUROFAX,
             TRANSPORTE_EN_MANO, TRANSPORTE_FAX, TRANSPORTE_OTROS
     };
 
-
-    public static final Map<Long, String> CODIGO_SICRES_BY_TRANSPORTE = new HashMap<Long, String>() {{
+    Map<Long, String> CODIGO_SICRES_BY_TRANSPORTE = new HashMap<Long, String>() {{
         put(TRANSPORTE_SERVICIO_MENSAJEROS, "0".concat(TRANSPORTE_SERVICIO_MENSAJEROS.toString()));
         put(TRANSPORTE_CORREO_POSTAL, "0".concat(TRANSPORTE_CORREO_POSTAL.toString()));
         put(TRANSPORTE_CORREO_POSTAL_CERTIFICADO, "0".concat(TRANSPORTE_CORREO_POSTAL_CERTIFICADO.toString()));
@@ -277,17 +270,16 @@ public interface RegwebConstantes {
         put(TRANSPORTE_OTROS, "0".concat(TRANSPORTE_OTROS.toString()));
     }};
 
-
-    public static final Map<String, Long> TRANSPORTE_BY_CODIGO_SICRES = RegwebUtils.invert(CODIGO_SICRES_BY_TRANSPORTE);
+    Map<String, Long> TRANSPORTE_BY_CODIGO_SICRES = RegwebUtils.invert(CODIGO_SICRES_BY_TRANSPORTE);
 
 
     /* --------------------CONFIGURACIONPERSONA ------------------------*/
-    public static final long CONFIGURACION_PERSONA_SIN_GUARDAR = 1L;
-    public static final long CONFIGURACION_PERSONA_GUARDAR_TODOS = 2L;
-    public static final long CONFIGURACION_PERSONA_CONFIRMAR_NUEVA_PERSONA = 3L;
-    public static final long CONFIGURACION_PERSONA_SISTEMA_EXTERNO = 4L;
+    long CONFIGURACION_PERSONA_SIN_GUARDAR = 1L;
+    long CONFIGURACION_PERSONA_GUARDAR_TODOS = 2L;
+    long CONFIGURACION_PERSONA_CONFIRMAR_NUEVA_PERSONA = 3L;
+    long CONFIGURACION_PERSONA_SISTEMA_EXTERNO = 4L;
 
-    public static final long[] CONFIGURACIONES_PERSONA = {
+    long[] CONFIGURACIONES_PERSONA = {
             CONFIGURACION_PERSONA_SIN_GUARDAR,
             CONFIGURACION_PERSONA_GUARDAR_TODOS,
             CONFIGURACION_PERSONA_CONFIRMAR_NUEVA_PERSONA,
@@ -296,28 +288,28 @@ public interface RegwebConstantes {
 
 
     /* -------------- DESCARGA TIPOS --------------*/
-    public static final String UNIDAD = "unidad";
-    public static final String OFICINA = "oficina";
-    public static final String CATALOGO = "catalogo";
+    String UNIDAD = "unidad";
+    String OFICINA = "oficina";
+    String CATALOGO = "catalogo";
 
     /* -------------- PAIS --------------*/
-    public static final Long PAIS_ESPAÑA = 724L;
+    Long PAIS_ESPAÑA = 724L;
 
     /* -------------- CANAL NOTIFICACIÓN --------------*/
-    public static final Long CANAL_DIRECCION_POSTAL = 1L;
-    public static final Long CANAL_DIRECCION_ELECTRONICA = 2L;
-    public static final Long CANAL_COMPARECENCIA_ELECTRONICA = 3L;
+    Long CANAL_DIRECCION_POSTAL = 1L;
+    Long CANAL_DIRECCION_ELECTRONICA = 2L;
+    Long CANAL_COMPARECENCIA_ELECTRONICA = 3L;
 
     /* --------------------TIPO PROPIEDAD GLOBAL ------------------------*/
-    public static final long TIPO_PROPIEDAD_GENERAL = 1L;
-    public static final long TIPO_PROPIEDAD_DIR3CAIB = 2L;
-    public static final long TIPO_PROPIEDAD_CUSTODIA = 3L;
-    public static final long TIPO_PROPIEDAD_USERINFORMATION = 4L;
-    public static final long TIPO_PROPIEDAD_SCANNER = 5L;
-    public static final long TIPO_PROPIEDAD_DISTRIBUCION = 6L;
-    public static final long TIPO_PROPIEDAD_SIR = 7L;
+    long TIPO_PROPIEDAD_GENERAL = 1L;
+    long TIPO_PROPIEDAD_DIR3CAIB = 2L;
+    long TIPO_PROPIEDAD_CUSTODIA = 3L;
+    long TIPO_PROPIEDAD_USERINFORMATION = 4L;
+    long TIPO_PROPIEDAD_SCANNER = 5L;
+    long TIPO_PROPIEDAD_DISTRIBUCION = 6L;
+    long TIPO_PROPIEDAD_SIR = 7L;
 
-    public static final long[] TIPOS_PROPIEDAD_GLOBAL = {
+    long[] TIPOS_PROPIEDAD_GLOBAL = {
             TIPO_PROPIEDAD_GENERAL,
             TIPO_PROPIEDAD_DIR3CAIB,
             TIPO_PROPIEDAD_CUSTODIA,
@@ -328,25 +320,22 @@ public interface RegwebConstantes {
     };
 
 
-    /**
-     * --------------- TIPO FIRMA --------------
-     */
-    public static final Long TIPO_FIRMA_CSV = 1L;
-    public static final Long TIPO_FIRMA_XADES_DETACHED_SIGNATURE = 2L;
-    public static final Long TIPO_FIRMA_XADES_ENVELOPE_SIGNATURE = 3L;
-    public static final Long TIPO_FIRMA_CADES_DETACHED_EXPLICIT_SIGNATURE = 4L;
-    public static final Long TIPO_FIRMA_CADES_ATTACHED_IMPLICIT_SIGNAUTRE = 5L;
-    public static final Long TIPO_FIRMA_PADES = 6L;
+    /*--------------- TIPO FIRMA --------------*/
+    Long TIPO_FIRMA_CSV = 1L;
+    Long TIPO_FIRMA_XADES_DETACHED_SIGNATURE = 2L;
+    Long TIPO_FIRMA_XADES_ENVELOPE_SIGNATURE = 3L;
+    Long TIPO_FIRMA_CADES_DETACHED_EXPLICIT_SIGNATURE = 4L;
+    Long TIPO_FIRMA_CADES_ATTACHED_IMPLICIT_SIGNAUTRE = 5L;
+    Long TIPO_FIRMA_PADES = 6L;
 
-    public static final Long[] TIPOS_FIRMA = {TIPO_FIRMA_CSV,
+    Long[] TIPOS_FIRMA = {TIPO_FIRMA_CSV,
             TIPO_FIRMA_XADES_DETACHED_SIGNATURE,
             TIPO_FIRMA_XADES_ENVELOPE_SIGNATURE,
             TIPO_FIRMA_CADES_DETACHED_EXPLICIT_SIGNATURE,
             TIPO_FIRMA_CADES_ATTACHED_IMPLICIT_SIGNAUTRE,
             TIPO_FIRMA_PADES};
 
-
-    public static final Map<Long, String> CODIGO_NTI_BY_TIPOFIRMA = new HashMap<Long, String>() {{
+    Map<Long, String> CODIGO_NTI_BY_TIPOFIRMA = new HashMap<Long, String>() {{
         put(TIPO_FIRMA_CSV, "TF0" + TIPO_FIRMA_CSV);
         put(TIPO_FIRMA_XADES_DETACHED_SIGNATURE, "TF0" + TIPO_FIRMA_XADES_DETACHED_SIGNATURE);
         put(TIPO_FIRMA_XADES_ENVELOPE_SIGNATURE, "TF0" + TIPO_FIRMA_XADES_ENVELOPE_SIGNATURE);
@@ -355,76 +344,64 @@ public interface RegwebConstantes {
         put(TIPO_FIRMA_PADES, "TF0" + TIPO_FIRMA_PADES);
     }};
 
+    Map<String, Long> TIPOFIRMA_BY_CODIGO_NTI = RegwebUtils.invert(CODIGO_NTI_BY_TIPOFIRMA);
 
-    public static final Map<String, Long> TIPOFIRMA_BY_CODIGO_NTI = RegwebUtils.invert(CODIGO_NTI_BY_TIPOFIRMA);
-
-    
-    
-    /*
-     * 1;"TF01";"CSV"
-2;"TF02";"XAdES internally detached signature"
-3;"TF03";"XAdES envelope signature"
-4;"TF04";"CAdES detached/explicit signature"
-5;"TF05";"CAdES attached/implicit signautre"
-6;"TF06";"PAdES"
-
-     */
 
     /* -------------- TIPO USUARIO --------------*/
-    public static final Long TIPO_USUARIO_PERSONA = 1L;
-    public static final Long TIPO_USUARIO_APLICACION = 2L;
+    Long TIPO_USUARIO_PERSONA = 1L;
+    Long TIPO_USUARIO_APLICACION = 2L;
 
-    public static final Long[] TIPOS_USUARIO = {
+    Long[] TIPOS_USUARIO = {
             TIPO_USUARIO_PERSONA, TIPO_USUARIO_APLICACION
     };
 
+
     /* -------------- ACCION LOPD --------------*/
-    public static final Long LOPD_LISTADO = 1L;
-    public static final Long LOPD_CONSULTA = 2L;
-    public static final Long LOPD_CREACION = 3L;
-    public static final Long LOPD_MODIFICACION = 4L;
-    public static final String LOPDMIGRADO_LISTADO = "LIST";
-    public static final String LOPDMIGRADO_CONSULTA = "SELECT";
-    public static final String LOPDMIGRADO_CREACION = "INSERT";
-    public static final String LOPDMIGRADO_MODIFICACION = "UPDATE";
-    public static final Long LOPD_TIPO_MIGRADO = 3L;
+    Long LOPD_LISTADO = 1L;
+    Long LOPD_CONSULTA = 2L;
+    Long LOPD_CREACION = 3L;
+    Long LOPD_MODIFICACION = 4L;
+    String LOPDMIGRADO_LISTADO = "LIST";
+    String LOPDMIGRADO_CONSULTA = "SELECT";
+    String LOPDMIGRADO_CREACION = "INSERT";
+    String LOPDMIGRADO_MODIFICACION = "UPDATE";
+    Long LOPD_TIPO_MIGRADO = 3L;
+
 
     /* -------------- TIPO REGISTRO -------------*/
-    public static final Long REGISTRO_ENTRADA = 1L;
-    public static final Long REGISTRO_SALIDA = 2L;
-    public static final String REGISTRO_ENTRADA_ESCRITO = "Entrada";
-    public static final String REGISTRO_SALIDA_ESCRITO = "Sortida";
-    public static final String REGISTRO_ENTRADA_ESCRITO_CASTELLANO = "Entrada";
-    public static final String REGISTRO_SALIDA_ESCRITO_CASTELLANO = "Salida";
+    Long REGISTRO_ENTRADA = 1L;
+    Long REGISTRO_SALIDA = 2L;
+    String REGISTRO_ENTRADA_ESCRITO = "Entrada";
+    String REGISTRO_SALIDA_ESCRITO = "Sortida";
+    String REGISTRO_ENTRADA_ESCRITO_CASTELLANO = "Entrada";
+    String REGISTRO_SALIDA_ESCRITO_CASTELLANO = "Salida";
 
     /* -------------- TIPO DOCUMENTO IDENTIFICACION --------------*/
-    public static final char TIPODOCUMENTOID_NIF = 'N';
-    public static final long TIPODOCUMENTOID_NIF_ID = 1;
+    char TIPODOCUMENTOID_NIF = 'N';
+    long TIPODOCUMENTOID_NIF_ID = 1;
 
-    public static final char TIPODOCUMENTOID_CIF = 'C';
-    public static final long TIPODOCUMENTOID_CIF_ID = 2;
+    char TIPODOCUMENTOID_CIF = 'C';
+    long TIPODOCUMENTOID_CIF_ID = 2;
 
-    public static final char TIPODOCUMENTOID_PASSAPORT = 'P';
-    public static final long TIPODOCUMENTOID_PASSAPORT_ID = 3;
+    char TIPODOCUMENTOID_PASSAPORT = 'P';
+    long TIPODOCUMENTOID_PASSAPORT_ID = 3;
 
-    public static final char TIPODOCUMENTOID_NIE = 'E';
-    public static final long TIPODOCUMENTOID_NIE_ID = 4;
+    char TIPODOCUMENTOID_NIE = 'E';
+    long TIPODOCUMENTOID_NIE_ID = 4;
 
-    public static final char TIPODOCUMENTOID_PERSONA_FISICA = 'X';
-    public static final long TIPODOCUMENTOID_PERSONA_FISICA_ID = 5;
+    char TIPODOCUMENTOID_PERSONA_FISICA = 'X';
+    long TIPODOCUMENTOID_PERSONA_FISICA_ID = 5;
 
-    public static final char TIPODOCUMENTOID_CODIGO_ORIGEN = 'O';
-    public static final long TIPODOCUMENTOID_CODIGO_ORIGEN_ID = 6;
+    char TIPODOCUMENTOID_CODIGO_ORIGEN = 'O';
+    long TIPODOCUMENTOID_CODIGO_ORIGEN_ID = 6;
 
-
-    public static final long[] TIPOS_DOCUMENTOID = {
+    long[] TIPOS_DOCUMENTOID = {
             TIPODOCUMENTOID_NIF_ID, TIPODOCUMENTOID_CIF_ID,
             TIPODOCUMENTOID_PASSAPORT_ID, TIPODOCUMENTOID_NIE_ID,
             TIPODOCUMENTOID_PERSONA_FISICA_ID, TIPODOCUMENTOID_CODIGO_ORIGEN_ID
     };
 
-
-    public static final Map<Long, Character> CODIGO_NTI_BY_TIPODOCUMENTOID = new HashMap<Long, Character>() {{
+    Map<Long, Character> CODIGO_NTI_BY_TIPODOCUMENTOID = new HashMap<Long, Character>() {{
         put(TIPODOCUMENTOID_NIF_ID, TIPODOCUMENTOID_NIF);
         put(TIPODOCUMENTOID_CIF_ID, TIPODOCUMENTOID_CIF);
         put(TIPODOCUMENTOID_PASSAPORT_ID, TIPODOCUMENTOID_PASSAPORT);
@@ -433,120 +410,110 @@ public interface RegwebConstantes {
         put(TIPODOCUMENTOID_CODIGO_ORIGEN_ID, TIPODOCUMENTOID_CODIGO_ORIGEN);
     }};
 
+    Map<Character, Long> TIPODOCUMENTOID_BY_CODIGO_NTI = RegwebUtils.invert(CODIGO_NTI_BY_TIPODOCUMENTOID);
 
-    public static final Map<Character, Long> TIPODOCUMENTOID_BY_CODIGO_NTI = RegwebUtils.invert(CODIGO_NTI_BY_TIPODOCUMENTOID);
 
     /* -------------- CANAL NOTIFICACION --------------*/
-    public static final long CANALNOTIFICACION_DIRECCION_POSTAL = 1;
-    public static final long CANALNOTIFICACION_DIRECCION_ELECTRONICA_HABILITADA = 2;
-    public static final long CANALNOTIFICACION_COMPARECENCIA_ELECTRONICA = 3;
+    long CANALNOTIFICACION_DIRECCION_POSTAL = 1;
+    long CANALNOTIFICACION_DIRECCION_ELECTRONICA_HABILITADA = 2;
+    long CANALNOTIFICACION_COMPARECENCIA_ELECTRONICA = 3;
 
-    public static final long[] CANALES_NOTIFICACION = {
+    long[] CANALES_NOTIFICACION = {
             CANALNOTIFICACION_DIRECCION_POSTAL,
             CANALNOTIFICACION_DIRECCION_ELECTRONICA_HABILITADA,
             CANALNOTIFICACION_COMPARECENCIA_ELECTRONICA
     };
 
-
-    public static final Map<Long, String> CODIGO_BY_CANALNOTIFICACION = new HashMap<Long, String>() {{
+    Map<Long, String> CODIGO_BY_CANALNOTIFICACION = new HashMap<Long, String>() {{
         put(CANALNOTIFICACION_DIRECCION_POSTAL, "0" + CANALNOTIFICACION_DIRECCION_POSTAL);
         put(CANALNOTIFICACION_DIRECCION_ELECTRONICA_HABILITADA, "0" + CANALNOTIFICACION_DIRECCION_ELECTRONICA_HABILITADA);
         put(CANALNOTIFICACION_COMPARECENCIA_ELECTRONICA, "0" + CANALNOTIFICACION_COMPARECENCIA_ELECTRONICA);
     }};
 
+    Map<String, Long> CANALNOTIFICACION_BY_CODIGO = RegwebUtils.invert(CODIGO_BY_CANALNOTIFICACION);
 
-    public static final Map<String, Long> CANALNOTIFICACION_BY_CODIGO
-            = RegwebUtils.invert(CODIGO_BY_CANALNOTIFICACION);
 
     /* ----------------ANEXOS --------------------------*/
     /* SICRES 3 establece 80 max. Se quitan los 4 que emplea la extensión .ext*/
-    public static final int ANEXO_NOMBREARCHIVO_MAXLENGTH = 76;
-    public static final String ANEXO_TIPOVALIDEZDOCUMENTO_COPIA = "01";
+    int ANEXO_NOMBREARCHIVO_MAXLENGTH = 76;
+    String ANEXO_TIPOVALIDEZDOCUMENTO_COPIA = "01";
 
 
     /* ----------------MODO FIRMA ANEXOS --------------------------*/
-    public static final int MODO_FIRMA_ANEXO_SINFIRMA = 0;
-    public static final int MODO_FIRMA_ANEXO_ATTACHED = 1; // Document amb firma adjunta
-    public static final int MODO_FIRMA_ANEXO_DETACHED = 2; // Firma en document separat
+    int MODO_FIRMA_ANEXO_SINFIRMA = 0;
+    int MODO_FIRMA_ANEXO_ATTACHED = 1; // Document amb firma adjunta
+    int MODO_FIRMA_ANEXO_DETACHED = 2; // Firma en document separat
 
 
     /* -------- TIPO DOCUMENTO ---------- */
-    public static final Long TIPO_DOCUMENTO_FORMULARIO = 1L;
-    public static final Long TIPO_DOCUMENTO_DOC_ADJUNTO = 2L;
-    public static final Long TIPO_DOCUMENTO_FICHERO_TECNICO = 3L;
+    Long TIPO_DOCUMENTO_FORMULARIO = 1L;
+    Long TIPO_DOCUMENTO_DOC_ADJUNTO = 2L;
+    Long TIPO_DOCUMENTO_FICHERO_TECNICO = 3L;
 
-    public static final Long[] TIPOS_DOCUMENTO = {
+    Long[] TIPOS_DOCUMENTO = {
             TIPO_DOCUMENTO_FORMULARIO,
             TIPO_DOCUMENTO_DOC_ADJUNTO,
             TIPO_DOCUMENTO_FICHERO_TECNICO
     };
 
-    public static final Map<Long, String> CODIGO_SICRES_BY_TIPO_DOCUMENTO = new HashMap<Long, String>() {{
+    Map<Long, String> CODIGO_SICRES_BY_TIPO_DOCUMENTO = new HashMap<Long, String>() {{
         put(TIPO_DOCUMENTO_FORMULARIO, "0" + TIPO_DOCUMENTO_FORMULARIO);
         put(TIPO_DOCUMENTO_DOC_ADJUNTO, "0" + TIPO_DOCUMENTO_DOC_ADJUNTO);
         put(TIPO_DOCUMENTO_FICHERO_TECNICO, "0" + TIPO_DOCUMENTO_FICHERO_TECNICO);
     }};
 
-
-    public static final Map<String, Long> TIPO_DOCUMENTO_BY_CODIGO_NTI
+    Map<String, Long> TIPO_DOCUMENTO_BY_CODIGO_NTI
             = RegwebUtils.invert(CODIGO_SICRES_BY_TIPO_DOCUMENTO);
 
+
     /* -------- TIPO DOCUMENTACION FISICA ---------- */
+    Long TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA = 1L;
+    Long TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA = 2L;
+    Long TIPO_DOCFISICA_NO_ACOMPANYA_DOC = 3L;
 
-    public static final Long TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA = 1L;
-    public static final Long TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA = 2L;
-    public static final Long TIPO_DOCFISICA_NO_ACOMPANYA_DOC = 3L;
-
-
-    public static final Long[] TIPOS_DOCFISICA = {
+    Long[] TIPOS_DOCFISICA = {
             TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA,
             TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA,
             TIPO_DOCFISICA_NO_ACOMPANYA_DOC
     };
 
-    /* -------- DESTINOS DE OFICIO DE REMISION ---------- */
-    public static final Long DESTINO_OFICIO_REMISION_INTERNO = 1L;
-    public static final Long DESTINO_OFICIO_REMISION_EXTERNO = 2L;
 
-    public static final Long[] DESTINOS_OFICIO_REMISION = {
+    /* -------- DESTINOS DE OFICIO DE REMISION ---------- */
+    Long DESTINO_OFICIO_REMISION_INTERNO = 1L;
+    Long DESTINO_OFICIO_REMISION_EXTERNO = 2L;
+
+    Long[] DESTINOS_OFICIO_REMISION = {
             DESTINO_OFICIO_REMISION_INTERNO,
             DESTINO_OFICIO_REMISION_EXTERNO
     };
 
-    /* -------- TIPOS DE OFICIO DE REMISION ---------- */
-    public static final Long TIPO_OFICIO_REMISION_ENTRADA = 1L;
-    public static final Long TIPO_OFICIO_REMISION_SALIDA = 2L;
 
-    public static final Long[] TIPOS_OFICIO_REMISION = {
+    /* -------- TIPOS DE OFICIO DE REMISION ---------- */
+    Long TIPO_OFICIO_REMISION_ENTRADA = 1L;
+    Long TIPO_OFICIO_REMISION_SALIDA = 2L;
+
+    Long[] TIPOS_OFICIO_REMISION = {
             TIPO_OFICIO_REMISION_ENTRADA,
             TIPO_OFICIO_REMISION_SALIDA
     };
 
     /* -------- ESTADO DE UN OFICIO DE REMISION ---------- */
-    public static final int OFICIO_REMISION_INTERNO_ENVIADO = 0; // Interno
-    public static final int OFICIO_REMISION_EXTERNO_ENVIADO = 1; // Externo
-    public static final int OFICIO_REMISION_ACEPTADO = 2; // Interno y Externo
-    public static final int OFICIO_REMISION_RECHAZADO = 3; // Externo
-    public static final int OFICIO_REMISION_REENVIADO = 4; // Externo
-    public static final int OFICIO_REMISION_ANULADO = 5; // Interno y Externo
+    int OFICIO_INTERNO = 0;
+    int OFICIO_EXTERNO = 1;
+    int OFICIO_ACEPTADO = 2;
+    int OFICIO_SIR_ENVIADO = 3;
+    int OFICIO_SIR_ENVIADO_ACK = 4;
+    int OFICIO_SIR_ENVIADO_ERROR = 5;
+    int OFICIO_SIR_REENVIADO = 6;
+    int OFICIO_SIR_REENVIADO_ACK = 7;
+    int OFICIO_SIR_REENVIADO_ERROR = 8;
+    int OFICIO_SIR_RECHAZADO = 9;
+    int OFICIO_SIR_RECHAZADO_ACK = 10;
+    int OFICIO_SIR_RECHAZADO_ERROR = 11;
+    int OFICIO_SIR_DEVUELTO = 12;
+    int OFICIO_ANULADO = 13;
 
-
-    public static final int OFICIO_INTERNO = 0;
-    public static final int OFICIO_EXTERNO = 1;
-    public static final int OFICIO_ACEPTADO = 2;
-    public static final int OFICIO_SIR_ENVIADO = 3;
-    public static final int OFICIO_SIR_ENVIADO_ACK = 4;
-    public static final int OFICIO_SIR_ENVIADO_ERROR = 5;
-    public static final int OFICIO_SIR_REENVIADO = 6;
-    public static final int OFICIO_SIR_REENVIADO_ACK = 7;
-    public static final int OFICIO_SIR_REENVIADO_ERROR = 8;
-    public static final int OFICIO_SIR_RECHAZADO = 9;
-    public static final int OFICIO_SIR_RECHAZADO_ACK = 10;
-    public static final int OFICIO_SIR_RECHAZADO_ERROR = 11;
-    public static final int OFICIO_SIR_DEVUELTO = 12;
-    public static final int OFICIO_ANULADO = 13;
-
-    public static final Integer[] ESTADOS_OFICIO_REMISION = {
+    Integer[] ESTADOS_OFICIO_REMISION = {
             OFICIO_INTERNO,
             OFICIO_EXTERNO,
             OFICIO_ACEPTADO,
@@ -563,49 +530,53 @@ public interface RegwebConstantes {
             OFICIO_ANULADO
     };
 
-    public static final int REGISTROS_PANTALLA_INICIO = 5;
-
 
     /* -------------- INFORMES - TIPOS REGISTRO --------------*/
-    public static final Long INFORME_TIPO_REGISTRO_ENTRADASALIDA = 0L;
-    public static final Long INFORME_TIPO_REGISTRO_ENTRADA = 1L;
-    public static final Long INFORME_TIPO_REGISTRO_SALIDA = 2L;
+    Long INFORME_TIPO_REGISTRO_ENTRADASALIDA = 0L;
+    Long INFORME_TIPO_REGISTRO_ENTRADA = 1L;
+    Long INFORME_TIPO_REGISTRO_SALIDA = 2L;
 
 
     /* -------------- ANEXO ORIGEN -------------------------- */
-    public static final Long ANEXO_ORIGEN_CIUDADANO = 0L;
-    public static final Long ANEXO_ORIGEN_ADMINISTRACION = 1L;
+    Long ANEXO_ORIGEN_CIUDADANO = 0L;
+    Long ANEXO_ORIGEN_ADMINISTRACION = 1L;
+
 
     /* -------------- CAT SERVICIOS -------------------------- */
-    public static final Long OFICINA_REGISTRO = 1L;
-    public static final Long OFICINA_INFORMACION = 2L;
-    public static final Long OFICINA_TRAMITACION = 3L;
-    public static final Long REGISTRO_VIRTUAL_NO_PRESENCIAL = 4L;
-    public static final Long OFICINA_INTEGRADA_SIR = 5L;
-    public static final Long OFICINA_INTEGRADA_SIR_ENVIO = 6L;
-    public static final Long OFICINA_INTEGRADA_SIR_RECEPCION = 7L;
-    public static final Long OFICINA_INTEGRADA_060 = 8L;
-    public static final Long OFICINA_CORREOS = 9L;
-    public static final Long OFICINA_EXTRANJERIA = 10L;
-    public static final Long OFICINA_VIOLENCIA_GENERO = 11L;
-    public static final Long OFICINA_ACCESIBLE = 12L;
+    Long OFICINA_REGISTRO = 1L;
+    Long OFICINA_INFORMACION = 2L;
+    Long OFICINA_TRAMITACION = 3L;
+    Long REGISTRO_VIRTUAL_NO_PRESENCIAL = 4L;
+    Long OFICINA_INTEGRADA_SIR = 5L;
+    Long OFICINA_INTEGRADA_SIR_ENVIO = 6L;
+    Long OFICINA_INTEGRADA_SIR_RECEPCION = 7L;
+    Long OFICINA_INTEGRADA_060 = 8L;
+    Long OFICINA_CORREOS = 9L;
+    Long OFICINA_EXTRANJERIA = 10L;
+    Long OFICINA_VIOLENCIA_GENERO = 11L;
+    Long OFICINA_ACCESIBLE = 12L;
 
     /* -------- Límite expresiones en ORACLE in (:elements) (ORA-01795) ---------- */
-    public static final int NUMBER_EXPRESSIONS_IN = 1000;
+    int NUMBER_EXPRESSIONS_IN = 1000;
+
 
     /* -------------- LOGOMENU --------------*/
-    public int LOGOMENU_AMPLADA_MAX = 600;
-    public int LOGOMENU_ALSADA_MAX = 90;
+    int LOGOMENU_AMPLADA_MAX = 600;
+    int LOGOMENU_ALSADA_MAX = 90;
+
 
     /* -------------- OFICINA VIRTUAL --------------*/
-    public Boolean OFICINA_VIRTUAL_SI = true; // Las incluimos en los resultados obtenidos
-    public Boolean OFICINA_VIRTUAL_NO = false; // No las incluimos en los resultados obtenidos
+    Boolean OFICINA_VIRTUAL_SI = true; // Las incluimos en los resultados obtenidos
+    Boolean OFICINA_VIRTUAL_NO = false; // No las incluimos en los resultados obtenidos
+
 
     /* -------------- ANEXO MIME --------------*/
-    public int ANEXO_TIPOMIME_MAXLENGTH_SIR = 20;
-    public int ANEXO_NOMBREFICHERO_MAXLENGTH_SIR = 80;
-    public int ANEXO_OBSERVACIONES_MAXLENGTH_SIR = 50;
-    public int ANEXO_IDENTIFICADOR_MAXLENGTH_SIR = 50;
+    int ANEXO_TIPOMIME_MAXLENGTH_SIR = 20;
+    int ANEXO_NOMBREFICHERO_MAXLENGTH_SIR = 80;
+    int ANEXO_OBSERVACIONES_MAXLENGTH_SIR = 50;
+    int ANEXO_IDENTIFICADOR_MAXLENGTH_SIR = 50;
 
+
+    /* -------------- EXPRESIÓN CRON --------------*/
     String CRON_INICIALIZAR_CONTADORES = "0 0 0 1 1 ? *";
 }
