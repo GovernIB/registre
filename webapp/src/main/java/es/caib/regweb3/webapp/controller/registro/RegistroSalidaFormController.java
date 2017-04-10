@@ -180,11 +180,6 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
     @RequestMapping(value = "/{idRegistro}/edit", method = RequestMethod.GET)
     public String editarRegistroSalida(@PathVariable("idRegistro") Long idRegistro,  Model model, HttpServletRequest request) throws Exception{
 
-        if(!isOperador(request)){
-            Mensaje.saveMessageError(request, getMessage("error.rol.operador"));
-            return "redirect:/inici";
-        }
-
         //Eliminamos los posibles interesados de la Sesion
         eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 

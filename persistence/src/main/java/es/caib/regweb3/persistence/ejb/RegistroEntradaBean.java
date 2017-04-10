@@ -13,6 +13,7 @@ import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+import org.hibernate.Session;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
@@ -40,25 +41,28 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     private EntityManager em;
 
     @EJB(name = "LibroEJB")
-    public LibroLocal libroEjb;
+    private LibroLocal libroEjb;
 
     @EJB(name = "ContadorEJB")
-    public ContadorLocal contadorEjb;
+    private ContadorLocal contadorEjb;
 
     @EJB(name = "OficinaEJB")
-    public OficinaLocal oficinaEjb;
+    private OficinaLocal oficinaEjb;
 
     @EJB(name = "HistoricoRegistroEntradaEJB")
-    public HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
+    private HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
 
     @EJB(mappedName = "regweb3/AnexoEJB/local")
-    public AnexoLocal anexoEjb;
+    private AnexoLocal anexoEjb;
 
     @EJB(mappedName = "regweb3/OrganismoEJB/local")
-    public OrganismoLocal organismoEjb;
+    private OrganismoLocal organismoEjb;
 
     @EJB(mappedName = "regweb3/InteresadoEJB/local")
-    public InteresadoLocal interesadoEjb;
+    private InteresadoLocal interesadoEjb;
+
+    @EJB(mappedName = "regweb3/TrazabilidadEJB/local")
+    private TrazabilidadLocal trazabilidadEjb;
 
 
     @Override
@@ -698,6 +702,69 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         q.setParameter("identificadorIntercambio", identificadorIntercambio);
 
         return (RegistroEntrada) q.getResultList().get(0);
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public RegistroEntrada rectificar(Long idRegistro, UsuarioEntidad usuarioEntidad) throws Exception {
+
+        RegistroEntrada rectificado = null;
+
+        try {
+            RegistroEntrada registroEntrada = getConAnexosFull(idRegistro);
+            List<Interesado> interesados = registroEntrada.getRegistroDetalle().getInteresados();
+            List<AnexoFull> anexos = registroEntrada.getRegistroDetalle().getAnexosFull();
+
+            // Detach de la sesion para poder duplicar el registro
+            Session session = (Session) em.getDelegate();
+            session.evict(registroEntrada);
+            session.evict(registroEntrada.getRegistroDetalle());
+
+            // Nuevas propiedades
+            registroEntrada.setEstado(RegwebConstantes.REGISTRO_VALIDO);
+            registroEntrada.setFecha(new Date());
+
+            // Set Id's a null
+            registroEntrada.setId(null);
+            registroEntrada.getRegistroDetalle().setId(null);
+
+            for (Interesado interesado : interesados) {
+                interesado.setId(null);
+            }
+            registroEntrada.getRegistroDetalle().setInteresados(null);
+
+            for (AnexoFull anexo : anexos) {
+                anexo.getAnexo().setId(null);
+                anexo.getAnexo().setJustificante(false);
+            }
+            registroEntrada.getRegistroDetalle().setAnexos(null);
+
+            registroEntrada.getRegistroDetalle().setObservaciones("Rectificación del registro " + registroEntrada.getNumeroRegistroFormateado());
+
+            // Registramos el nuevo registro
+            rectificado = registrarEntrada(registroEntrada, usuarioEntidad,interesados, anexos);
+
+            // Moficiamos el estado al registro original
+            cambiarEstado(idRegistro,RegwebConstantes.REGISTRO_RECTIFICADO);
+
+            // Creamos la Trazabilidad de la rectificación
+            Trazabilidad trazabilidad = new Trazabilidad(RegwebConstantes.TRAZABILIDAD_RECTIFICACION);
+            trazabilidad.setRegistroEntradaOrigen(getReference(idRegistro));
+            trazabilidad.setRegistroEntradaDestino(registroEntrada);
+            trazabilidad.setAsientoRegistralSir(null);
+            trazabilidad.setOficioRemision(null);
+            trazabilidad.setRegistroSalida(null);
+            trazabilidad.setFecha(new Date());
+
+            trazabilidadEjb.persist(trazabilidad);
+
+        } catch (I18NException e) {
+            e.printStackTrace();
+        } catch (I18NValidationException e) {
+            e.printStackTrace();
+        }
+
+        return rectificado;
     }
 
 

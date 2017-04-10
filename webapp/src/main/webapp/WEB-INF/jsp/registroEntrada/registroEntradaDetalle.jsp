@@ -72,33 +72,16 @@
                             <dt><i class="fa fa-gears"></i> <spring:message code="registroEntrada.aplicacion"/>: </dt> <dd> ${registro.registroDetalle.aplicacion} ${registro.registroDetalle.version}</dd>
                             <dt><i class="fa fa-bookmark"></i> <spring:message code="registroEntrada.estado"/>: </dt>
                             <dd>
-                                <c:choose>
-                                    <c:when test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO}">
-                                        <span class="label label-success"><spring:message code="registro.estado.${registro.estado}" /></span>
-                                    </c:when>
-                                    <c:when test="${registro.estado == RegwebConstantes.REGISTRO_RESERVA}">
-                                        <span class="label label-warning"><spring:message code="registro.estado.${registro.estado}" /></span>
-                                    </c:when>
-                                    <c:when test="${registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR}">
-                                        <span class="label label-info"><spring:message code="registro.estado.${registro.estado}" /></span>
-                                    </c:when>
-                                    <c:when test="${registro.estado == RegwebConstantes.REGISTRO_OFICIO_EXTERNO || registro.estado == RegwebConstantes.REGISTRO_OFICIO_INTERNO}">
-                                        <span class="label label-default"><spring:message code="registro.estado.${registro.estado}" /></span>
-                                    </c:when>
-                                    <c:when test="${registro.estado == RegwebConstantes.REGISTRO_TRAMITADO}">
-                                        <span class="label label-primary"><spring:message code="registro.estado.${registro.estado}" /></span>
-                                    </c:when>
-                                    <c:when test="${registro.estado == RegwebConstantes.REGISTRO_ANULADO}">
-                                        <span class="label label-danger"><spring:message code="registro.estado.${registro.estado}" /></span>
-                                    </c:when>
-
-                                </c:choose>
+                                <c:import url="../registro/estadosRegistro.jsp">
+                                    <c:param name="estado" value="${registro.estado}"/>
+                                </c:import>
                             </dd>
 
                         </dl>
 
                     </div>
 
+                    <%--BOTONERA--%>
 
                     <%--Si no nos encontramos en la misma Oficia en la que se creó el Registro o en su Oficina Responsable, no podemos hacer nada con el--%>
                     <c:if test="${oficinaRegistral}">
@@ -187,12 +170,12 @@
 
                         <%--Botón nuevo registro--%>
                         <c:if test="${registro.estado != RegwebConstantes.REGISTRO_RESERVA}">
-                            <div class="btn-group"><button type="button" onclick="goTo('/regweb3/registroEntrada/new')" class="btn btn-info btn-sm"><spring:message code="registro.boton.nuevo"/></button></div>
+                            <div class="btn-group"><button type="button" onclick="goTo('<c:url value="/registroEntrada/new"/>')" class="btn btn-info btn-sm"><spring:message code="registro.boton.nuevo"/></button></div>
                         </c:if>
 
                         <%--Botón nueva reserva--%>
                         <c:if test="${registro.estado == RegwebConstantes.REGISTRO_RESERVA}">
-                            <div class="btn-group"><button type="button" onclick="goTo('/regweb3/registroEntrada/reserva')" class="btn btn-info btn-sm"><spring:message code="registro.boton.nuevo.reserva"/></button></div>
+                            <div class="btn-group"><button type="button" onclick="goTo('<c:url value="/registroEntrada/reserva"/>')" class="btn btn-info btn-sm"><spring:message code="registro.boton.nuevo.reserva"/></button></div>
                         </c:if>
 
                         <%--Botón Editar Registro--%>
@@ -213,6 +196,11 @@
                         <%--Botón Anular--%>
                         <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_RESERVA || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && puedeEditar}">
                             <div class="btn-group"><button type="button" onclick='javascript:confirm("<c:url value="/registroEntrada/${registro.id}/anular"/>","<spring:message code="regweb.confirmar.anular" htmlEscape="true"/>")' class="btn btn-danger btn-sm"><spring:message code="regweb.anular"/></button></div>
+                        </c:if>
+
+                        <%--Botón rectificar--%>
+                        <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_ANULADO || registro.estado == RegwebConstantes.REGISTRO_RECHAZADO || registro.estado == RegwebConstantes.REGISTRO_TRAMITADO) && oficinaRegistral}">
+                            <div class="btn-group"><button type="button" onclick='javascript:confirm("<c:url value="/registroEntrada/${registro.id}/rectificar"/>","<spring:message code="regweb.confirmar.rectificar" htmlEscape="true"/>")' class="btn btn-danger btn-sm"><spring:message code="registro.boton.rectificar"/></button></div>
                         </c:if>
 
                     </div>

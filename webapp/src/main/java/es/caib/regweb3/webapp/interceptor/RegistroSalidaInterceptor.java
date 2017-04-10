@@ -127,7 +127,7 @@ public class RegistroSalidaInterceptor extends HandlerInterceptorAdapter {
             Set<Long> organismos = oficinaActiva.getOrganismosFuncionalesId();
             if (permisoLibroUsuarioEjb.getLibrosOrganismoPermiso(organismos, usuarioEntidad.getId(), RegwebConstantes.PERMISO_REGISTRO_SALIDA).size() == 0) {
                 log.info("Aviso: No hay ningún libro con permisos para registrar");
-                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registro"));
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registro.permisos"));
                 response.sendRedirect("/regweb3/aviso");
                 return false;
             }

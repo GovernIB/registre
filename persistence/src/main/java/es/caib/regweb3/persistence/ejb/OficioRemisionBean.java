@@ -231,7 +231,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
                 registroSalida = registroSalidaEjb.registrarSalida(registroSalida, oficioRemision.getUsuarioResponsable(), null);
 
                 // CREAMOS LA TRAZABILIDAD
-                Trazabilidad trazabilidad = new Trazabilidad();
+                Trazabilidad trazabilidad = new Trazabilidad(RegwebConstantes.TRAZABILIDAD_OFICIO);
                 trazabilidad.setRegistroEntradaOrigen(registroEntrada);
                 trazabilidad.setOficioRemision(oficioRemision);
                 trazabilidad.setRegistroSalida(registroSalida);
@@ -250,7 +250,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
             // CREAMOS LA TRAZABILIDAD
             for (RegistroSalida registroSalida : oficioRemision.getRegistrosSalida()) {
 
-                Trazabilidad trazabilidad = new Trazabilidad();
+                Trazabilidad trazabilidad = new Trazabilidad(RegwebConstantes.TRAZABILIDAD_OFICIO);
                 trazabilidad.setRegistroEntradaOrigen(null);
                 trazabilidad.setOficioRemision(oficioRemision);
                 trazabilidad.setRegistroSalida(registroSalida);
@@ -333,7 +333,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
             registroSalida = registroSalidaEjb.registrarSalida(registroSalida, oficioRemision.getUsuarioResponsable(), null);
 
             // CREAMOS LA TRAZABILIDAD
-            Trazabilidad trazabilidad = new Trazabilidad();
+            Trazabilidad trazabilidad = new Trazabilidad(RegwebConstantes.TRAZABILIDAD_OFICIO_SIR);
             //trazabilidad.setAsientoRegistralSir(oficioRemision.getAsientoRegistralSir());
             trazabilidad.setRegistroEntradaOrigen(registroEntrada);
             trazabilidad.setOficioRemision(oficioRemision);
@@ -354,7 +354,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
             // CREAMOS LA TRAZABILIDAD
             RegistroSalida registroSalida = oficioRemision.getRegistrosSalida().get(0);
 
-                Trazabilidad trazabilidad = new Trazabilidad();
+                Trazabilidad trazabilidad = new Trazabilidad(RegwebConstantes.TRAZABILIDAD_OFICIO_SIR);
                 trazabilidad.setRegistroEntradaOrigen(null);
                 trazabilidad.setOficioRemision(oficioRemision);
                 trazabilidad.setRegistroSalida(registroSalida);

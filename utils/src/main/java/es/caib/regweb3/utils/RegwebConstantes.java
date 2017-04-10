@@ -13,21 +13,16 @@ import java.util.Map;
  */
 public interface RegwebConstantes {
 
-    /**
-     * --------------- SISTEMA --------------
-     */
+    /*--------------- SISTEMA --------------*/
     String REGWEB3_PROPERTY_BASE = "es.caib.regweb3.";
     String SECURITY_DOMAIN = "seycon";
+    String ARCHIVOS_LOCATION_PROPERTY = "es.caib.regweb3.archivos.path";
 
-    /*
-     *-------------------GENERAL-------------------
-     */
+    /*-------------------GENERAL-------------------*/
     String CODIGO_APLICACION = "RWE3";
     int REGISTROS_PANTALLA_INICIO = 5;
 
-    /**
-     * -------------- VARIABLES DE SESION --------------
-     */
+    /*-------------- VARIABLES DE SESION --------------*/
     String SESSION_USUARIO = "usuarioAutenticado";
     String SESSION_USUARIO_ENTIDAD = "usuarioEntidadActivo";
     String SESSION_ROLES = "rolesAutenticado";
@@ -41,14 +36,11 @@ public interface RegwebConstantes {
     String SESSION_OFICINAS_ADMINISTRADAS = "oficinasAdministradas";
     String SESSION_LIBROSADMINISTRADOS = "librosAdministrados";
     String SESSION_MIGRADOS = "registrosMigrados";
-    String SESSION_TIENE_ASR = "tieneASR";
     String SESSION_CONFIGURACION = "configuracion";
     String SESSION_INTERESADOS_ENTRADA = "interesadosEntrada";
     String SESSION_INTERESADOS_SALIDA = "interesadosSalida";
 
-    /**
-     * -------------- IDIOMA --------------
-     */
+    /*-------------- IDIOMA --------------*/
     Long IDIOMA_CATALAN_ID = 1L;
     String IDIOMA_CATALAN_CODIGO = "ca";
 
@@ -95,8 +87,6 @@ public interface RegwebConstantes {
 
     Map<String, Long> IDIOMA_ID_BY_CODIGO = RegwebUtils.invert(CODIGO_BY_IDIOMA_ID);
 
-    /* -------------- PROPERTIES DE APLICACIÓN --------------*/
-    String ARCHIVOS_LOCATION_PROPERTY = "es.caib.regweb3.archivos.path";
 
     /* -------------- ROLES --------------*/
     String ROL_SUPERADMIN = "RWE_SUPERADMIN";// SuperAdministradores entidad
@@ -234,6 +224,7 @@ public interface RegwebConstantes {
     Long REGISTRO_TRAMITADO = 7L;
     Long REGISTRO_ANULADO = 8L;
     Long REGISTRO_RECTIFICADO = 9L;
+    Long REGISTRO_RECHAZADO = 10L;
 
     Long[] ESTADOS_REGISTRO = {
             REGISTRO_VALIDO,
@@ -243,7 +234,62 @@ public interface RegwebConstantes {
             REGISTRO_OFICIO_INTERNO,
             REGISTRO_TRAMITADO,
             REGISTRO_ANULADO,
-            REGISTRO_RECTIFICADO};
+            REGISTRO_RECTIFICADO,
+            REGISTRO_RECHAZADO};
+
+    /* -------- TIPOS DE OFICIO DE REMISION ---------- */
+    Long TIPO_OFICIO_REMISION_ENTRADA = 1L;
+    Long TIPO_OFICIO_REMISION_SALIDA = 2L;
+
+    Long[] TIPOS_OFICIO_REMISION = {
+            TIPO_OFICIO_REMISION_ENTRADA,
+            TIPO_OFICIO_REMISION_SALIDA
+    };
+
+    /* -------- ESTADO DE UN OFICIO DE REMISION ---------- */
+    int OFICIO_INTERNO = 0;
+    int OFICIO_EXTERNO = 1;
+    int OFICIO_ACEPTADO = 2;
+    int OFICIO_SIR_ENVIADO = 3;
+    int OFICIO_SIR_ENVIADO_ACK = 4;
+    int OFICIO_SIR_ENVIADO_ERROR = 5;
+    int OFICIO_SIR_REENVIADO = 6;
+    int OFICIO_SIR_REENVIADO_ACK = 7;
+    int OFICIO_SIR_REENVIADO_ERROR = 8;
+    int OFICIO_SIR_RECHAZADO = 9;
+    int OFICIO_SIR_RECHAZADO_ACK = 10;
+    int OFICIO_SIR_RECHAZADO_ERROR = 11;
+    int OFICIO_SIR_DEVUELTO = 12;
+    int OFICIO_ANULADO = 13;
+
+    Integer[] ESTADOS_OFICIO_REMISION = {
+            OFICIO_INTERNO,
+            OFICIO_EXTERNO,
+            OFICIO_ACEPTADO,
+            OFICIO_SIR_ENVIADO,
+            OFICIO_SIR_ENVIADO_ACK,
+            OFICIO_SIR_ENVIADO_ERROR,
+            OFICIO_SIR_REENVIADO,
+            OFICIO_SIR_REENVIADO_ACK,
+            OFICIO_SIR_REENVIADO_ERROR,
+            OFICIO_SIR_RECHAZADO,
+            OFICIO_SIR_RECHAZADO_ACK,
+            OFICIO_SIR_RECHAZADO_ERROR,
+            OFICIO_SIR_DEVUELTO,
+            OFICIO_ANULADO
+    };
+
+
+    /* -------- TIPO TRAZABILIDAD ---------- */
+    Long TRAZABILIDAD_OFICIO = 1L;
+    Long TRAZABILIDAD_OFICIO_SIR = 2L;
+    Long TRAZABILIDAD_RECIBIDO_SIR = 3L;
+    Long TRAZABILIDAD_RECTIFICACION = 4L;
+
+    Long[] TIPOS_TRAZABILIDAD = {
+            TRAZABILIDAD_OFICIO, TRAZABILIDAD_OFICIO_SIR, TRAZABILIDAD_RECIBIDO_SIR, TRAZABILIDAD_RECTIFICACION
+    };
+
 
     /* ------------- TRANSPORTE ---------------*/
     Long TRANSPORTE_SERVICIO_MENSAJEROS = 1L;
@@ -273,7 +319,7 @@ public interface RegwebConstantes {
     Map<String, Long> TRANSPORTE_BY_CODIGO_SICRES = RegwebUtils.invert(CODIGO_SICRES_BY_TRANSPORTE);
 
 
-    /* --------------------CONFIGURACIONPERSONA ------------------------*/
+    /* --------------------CONFIGURACION PERSONA ------------------------*/
     long CONFIGURACION_PERSONA_SIN_GUARDAR = 1L;
     long CONFIGURACION_PERSONA_GUARDAR_TODOS = 2L;
     long CONFIGURACION_PERSONA_CONFIRMAR_NUEVA_PERSONA = 3L;
@@ -485,49 +531,6 @@ public interface RegwebConstantes {
     Long[] DESTINOS_OFICIO_REMISION = {
             DESTINO_OFICIO_REMISION_INTERNO,
             DESTINO_OFICIO_REMISION_EXTERNO
-    };
-
-
-    /* -------- TIPOS DE OFICIO DE REMISION ---------- */
-    Long TIPO_OFICIO_REMISION_ENTRADA = 1L;
-    Long TIPO_OFICIO_REMISION_SALIDA = 2L;
-
-    Long[] TIPOS_OFICIO_REMISION = {
-            TIPO_OFICIO_REMISION_ENTRADA,
-            TIPO_OFICIO_REMISION_SALIDA
-    };
-
-    /* -------- ESTADO DE UN OFICIO DE REMISION ---------- */
-    int OFICIO_INTERNO = 0;
-    int OFICIO_EXTERNO = 1;
-    int OFICIO_ACEPTADO = 2;
-    int OFICIO_SIR_ENVIADO = 3;
-    int OFICIO_SIR_ENVIADO_ACK = 4;
-    int OFICIO_SIR_ENVIADO_ERROR = 5;
-    int OFICIO_SIR_REENVIADO = 6;
-    int OFICIO_SIR_REENVIADO_ACK = 7;
-    int OFICIO_SIR_REENVIADO_ERROR = 8;
-    int OFICIO_SIR_RECHAZADO = 9;
-    int OFICIO_SIR_RECHAZADO_ACK = 10;
-    int OFICIO_SIR_RECHAZADO_ERROR = 11;
-    int OFICIO_SIR_DEVUELTO = 12;
-    int OFICIO_ANULADO = 13;
-
-    Integer[] ESTADOS_OFICIO_REMISION = {
-            OFICIO_INTERNO,
-            OFICIO_EXTERNO,
-            OFICIO_ACEPTADO,
-            OFICIO_SIR_ENVIADO,
-            OFICIO_SIR_ENVIADO_ACK,
-            OFICIO_SIR_ENVIADO_ERROR,
-            OFICIO_SIR_REENVIADO,
-            OFICIO_SIR_REENVIADO_ACK,
-            OFICIO_SIR_REENVIADO_ERROR,
-            OFICIO_SIR_RECHAZADO,
-            OFICIO_SIR_RECHAZADO_ACK,
-            OFICIO_SIR_RECHAZADO_ERROR,
-            OFICIO_SIR_DEVUELTO,
-            OFICIO_ANULADO
     };
 
 

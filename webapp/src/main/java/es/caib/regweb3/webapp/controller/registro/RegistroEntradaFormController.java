@@ -11,6 +11,7 @@ import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.RegistroEntradaWebValidator;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -25,10 +26,7 @@ import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Fundació BIT.
@@ -235,11 +233,6 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
     @RequestMapping(value = "/{idRegistro}/edit", method = RequestMethod.GET)
     public String editarRegistroEntrada(@PathVariable("idRegistro") Long idRegistro,  Model model, HttpServletRequest request) throws Exception{
 
-        if(!isOperador(request)){
-            Mensaje.saveMessageError(request, getMessage("error.rol.operador"));
-            return "redirect:/inici";
-        }
-
         //Eliminamos los posibles interesados de la Sesion
         eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_ENTRADA);
 
@@ -425,6 +418,53 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         }
     }
 
+
+    /**
+     * Método que rectifica un Registro de Entrada
+     * @param idRegistro identificador del registro de entrada
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/{idRegistro}/rectificar", method=RequestMethod.GET)
+    public String rectificar(@PathVariable Long idRegistro, HttpServletRequest request) throws Exception {
+
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+        RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
+        RegistroEntrada registroEntradaRectificado = null;
+
+        // Comprobamos si el usuario tiene permisos para registrar el registro rectificado
+        if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroEntrada.getLibro().getId(), RegwebConstantes.PERMISO_REGISTRO_ENTRADA)) {
+            Mensaje.saveMessageError(request, I18NUtils.tradueix("aviso.registro.permisos"));
+            return "redirect:/registroEntrada/"+idRegistro+"/detalle";
+        }
+
+        List<Long> isRectificar = new ArrayList<Long>();
+        Collections.addAll(isRectificar, RegwebConstantes.REGISTRO_TRAMITADO, RegwebConstantes.REGISTRO_RECHAZADO, RegwebConstantes.REGISTRO_ANULADO);
+
+        try{
+
+            // Si el Registro se puede rectificar y el usuario tiene permisos sobre el libro
+            if(isRectificar.contains(registroEntrada.getEstado())){
+
+                registroEntradaRectificado = registroEntradaEjb.rectificar(idRegistro, usuarioEntidad);
+
+                Mensaje.saveMessageInfo(request, getMessage("registro.rectificar.ok"));
+                return "redirect:/registroEntrada/"+registroEntradaRectificado.getId()+"/detalle";
+            }else{
+
+                log.info("Este registro no se puede rectificar");
+                Mensaje.saveMessageError(request, getMessage("registro.rectificar.no"));
+            }
+
+        }catch (Exception e){
+            log.info("Error al rectificar el asiento");
+            e.printStackTrace();
+            Mensaje.saveMessageError(request, getMessage("registro.rectificar.error"));
+        }
+
+        return "redirect:/registroEntrada/"+idRegistro+"/detalle";
+
+    }
 
 
     /**

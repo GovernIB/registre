@@ -49,20 +49,19 @@ public class SirBean implements SirLocal{
     @PersistenceContext(unitName="regweb3")
     private EntityManager em;
 
-    @EJB public RegistroEntradaLocal registroEntradaEjb;
-    @EJB public RegistroSalidaLocal registroSalidaEjb;
-    @EJB public LibroLocal libroEjb;
-    @EJB public OrganismoLocal organismoEjb;
-    @EJB public OficinaLocal oficinaEjb;
-    @EJB public CatPaisLocal catPaisEjb;
-    @EJB public CatProvinciaLocal catProvinciaEjb;
-    @EJB public CatLocalidadLocal catLocalidadEjb;
-    @EJB public TipoDocumentalLocal tipoDocumentalEjb;
-    @EJB public AsientoRegistralSirLocal asientoRegistralSirEjb;
-    @EJB public OficioRemisionEntradaUtilsLocal oficioRemisionEntradaUtilsEjb;
-    @EJB public OficioRemisionLocal oficioRemisionEjb;
-    @EJB public TrazabilidadLocal trazabilidadEjb;
-    @EJB public AnexoLocal anexoEjb;
+    @EJB private RegistroEntradaLocal registroEntradaEjb;
+    @EJB private RegistroSalidaLocal registroSalidaEjb;
+    @EJB private LibroLocal libroEjb;
+    @EJB private OrganismoLocal organismoEjb;
+    @EJB private OficinaLocal oficinaEjb;
+    @EJB private CatPaisLocal catPaisEjb;
+    @EJB private CatProvinciaLocal catProvinciaEjb;
+    @EJB private CatLocalidadLocal catLocalidadEjb;
+    @EJB private TipoDocumentalLocal tipoDocumentalEjb;
+    @EJB private AsientoRegistralSirLocal asientoRegistralSirEjb;
+    @EJB private OficioRemisionLocal oficioRemisionEjb;
+    @EJB private TrazabilidadLocal trazabilidadEjb;
+    @EJB private AnexoLocal anexoEjb;
 
 
     /**
@@ -131,7 +130,7 @@ public class SirBean implements SirLocal{
                     RegistroEntrada registroEntrada = oficioRemision.getRegistrosEntrada().get(0);
 
                     // Actualizamos el asiento
-                    registroEntrada.setEstado(RegwebConstantes.REGISTRO_VALIDO); // TODO Válido o Devuelto o Rectificado?
+                    registroEntrada.setEstado(RegwebConstantes.REGISTRO_RECHAZADO);
                     registroEntrada.getRegistroDetalle().setAplicacion(ficheroIntercambio.getAplicacionEmisora());
                     registroEntrada.getRegistroDetalle().setObservaciones(ficheroIntercambio.getObservacionesApunte());
                     registroEntrada.getRegistroDetalle().setTipoAnotacion(ficheroIntercambio.getTipoAnotacion());
@@ -605,7 +604,7 @@ public class SirBean implements SirLocal{
                 registroEntrada = transformarAsientoRegistralEntrada(asientoRegistralSir, usuario, oficinaActiva, idLibro, idIdioma, idTipoAsunto, camposNTIs);
 
                 // CREAMOS LA TRAZABILIDAD
-                Trazabilidad trazabilidad = new Trazabilidad();
+                Trazabilidad trazabilidad = new Trazabilidad(RegwebConstantes.TRAZABILIDAD_RECIBIDO_SIR);
                 trazabilidad.setAsientoRegistralSir(asientoRegistralSir);
                 trazabilidad.setRegistroEntradaOrigen(null);
                 trazabilidad.setOficioRemision(null);

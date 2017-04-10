@@ -74,7 +74,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
     @SuppressWarnings(value = "unchecked")
     public List<Trazabilidad> getByRegistroSalida(Long idRegistroSalida) throws Exception {
 
-        Query q = em.createQuery("Select trazabilidad from Trazabilidad as trazabilidad " +
+        Query q = em.createQuery("Select DISTINCT trazabilidad from Trazabilidad as trazabilidad " +
                 "where trazabilidad.registroSalida.id = :idRegistroSalida order by trazabilidad.fecha desc");
 
         q.setParameter("idRegistroSalida", idRegistroSalida);
@@ -86,7 +86,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
     @SuppressWarnings(value = "unchecked")
     public List<Trazabilidad> getByRegistroEntrada(Long idRegistroEntrada) throws Exception {
 
-        Query q = em.createQuery("Select trazabilidad from Trazabilidad as trazabilidad " +
+        Query q = em.createQuery("Select DISTINCT trazabilidad from Trazabilidad as trazabilidad " +
                 "where trazabilidad.registroEntradaOrigen.id = :idRegistroEntrada or trazabilidad.registroEntradaDestino.id = :idRegistroEntrada " +
                 "order by trazabilidad.fecha");
 
@@ -99,7 +99,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
     @SuppressWarnings(value = "unchecked")
     public List<Trazabilidad> getByOficioRemision(Long idOficioRemision) throws Exception {
 
-        Query q = em.createQuery("Select trazabilidad from Trazabilidad as trazabilidad " +
+        Query q = em.createQuery("Select DISTINCT trazabilidad from Trazabilidad as trazabilidad " +
                 "where trazabilidad.oficioRemision.id = :idOficioRemision " +
                 "order by trazabilidad.fecha desc");
 
@@ -136,7 +136,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
     @SuppressWarnings(value = "unchecked")
     public List<Trazabilidad> getByAsientoRegistralSir(Long idAsientoRegistralSir) throws Exception {
 
-        Query q = em.createQuery("Select trazabilidad from Trazabilidad as trazabilidad " +
+        Query q = em.createQuery("Select DISTINCT trazabilidad from Trazabilidad as trazabilidad " +
                 "where trazabilidad.asientoRegistralSir.id = :idAsientoRegistralSir order by trazabilidad.fecha");
 
         q.setParameter("idAsientoRegistralSir", idAsientoRegistralSir);

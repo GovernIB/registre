@@ -123,11 +123,11 @@ public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
                 return false;
             }
 
-            // Obtenemos los Organismos a los que da servicio una Oficina
+            // Comprobamos si el usuario dispone de algún libro donde registrar
             Set<Long> organismos = oficinaActiva.getOrganismosFuncionalesId();
             if (permisoLibroUsuarioEjb.getLibrosOrganismoPermiso(organismos, usuarioEntidad.getId(), RegwebConstantes.PERMISO_REGISTRO_ENTRADA).size() == 0) {
                 log.info("Aviso: No hay ningún libro con permisos para registrar");
-                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registro"));
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registro.permisos"));
                 response.sendRedirect("/regweb3/aviso");
                 return false;
             }

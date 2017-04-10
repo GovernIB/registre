@@ -274,6 +274,14 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
     public RegistroEntrada getByIdentificadorIntercambio(String identificadorIntercambio) throws Exception;
 
     /**
+     * Rectificar un Registro de entrada, creando una nuevo informando de ello
+     * @param idRegistro
+     * @return
+     * @throws Exception
+     */
+    public RegistroEntrada rectificar(Long idRegistro, UsuarioEntidad usuarioEntidad) throws Exception;
+
+    /**
      * Método que obtiene los destinatarios a los que distribuir el registro
      *
      * @param re registro de entrada a distribuir

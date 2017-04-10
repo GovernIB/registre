@@ -333,24 +333,9 @@
                                             </c:if>
                                             <td>${registroSalida.registroDetalle.extracto}</td>
                                             <td class="center">
-                                                <c:choose>
-                                                    <c:when test="${registroSalida.estado == RegwebConstantes.REGISTRO_VALIDO}">
-                                                        <span class="label label-success"><spring:message code="registro.estado.${registroSalida.estado}" /></span>
-                                                    </c:when>
-                                                    <c:when test="${registroSalida.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR}">
-                                                        <span class="label label-info"><spring:message code="registro.estado.${registroSalida.estado}" /></span>
-                                                    </c:when>
-                                                    <c:when test="${registroSalida.estado == RegwebConstantes.REGISTRO_OFICIO_EXTERNO || registroSalida.estado == RegwebConstantes.REGISTRO_OFICIO_INTERNO}">
-                                                        <span class="label label-default"><spring:message code="registro.estado.${registroSalida.estado}" /></span>
-                                                    </c:when>
-                                                    <c:when test="${registroSalida.estado == RegwebConstantes.REGISTRO_TRAMITADO}">
-                                                        <span class="label label-primary"><spring:message code="registro.estado.${registroSalida.estado}" /></span>
-                                                    </c:when>
-                                                    <c:when test="${registroSalida.estado == RegwebConstantes.REGISTRO_ANULADO}">
-                                                        <span class="label label-danger"><spring:message code="registro.estado.${registroSalida.estado}" /></span>
-                                                    </c:when>
-
-                                                </c:choose>
+                                                <c:import url="../registro/estadosRegistro.jsp">
+                                                    <c:param name="estado" value="${registroSalida.estado}"/>
+                                                </c:import>
                                             </td>
                                             <c:if test="${registroSalida.registroDetalle.interesados != null}">
                                                 <td class="center"><label class="no-bold representante" rel="ayuda"

@@ -17,6 +17,7 @@ import java.util.Date;
 public class Trazabilidad implements Serializable {
 
     private Long id;
+    private Long tipo;
     private OficioRemision oficioRemision;
     private RegistroEntrada registroEntradaOrigen;
     private RegistroSalida registroSalida;
@@ -24,7 +25,12 @@ public class Trazabilidad implements Serializable {
     private AsientoRegistralSir asientoRegistralSir;
     private Date fecha;
 
+    public Trazabilidad() {
+    }
 
+    public Trazabilidad(Long tipo) {
+        this.tipo = tipo;
+    }
 
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
@@ -37,6 +43,14 @@ public class Trazabilidad implements Serializable {
         this.id = id;
     }
 
+    @Column(name="tipo", nullable = false)
+    public Long getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(Long tipo) {
+        this.tipo = tipo;
+    }
 
     @ManyToOne(optional = true)
     @JoinColumn(name="REGENT_ORIGEN")

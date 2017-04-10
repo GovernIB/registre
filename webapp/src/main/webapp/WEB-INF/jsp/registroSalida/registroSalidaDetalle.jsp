@@ -71,28 +71,15 @@
                             <dt><i class="fa fa-gears"></i> <spring:message code="registroEntrada.aplicacion"/>: </dt> <dd> ${registro.registroDetalle.aplicacion} ${registro.registroDetalle.version}</dd>
                             <dt><i class="fa fa-bookmark"></i> <spring:message code="registroSalida.estado"/>: </dt>
                             <dd>
-                                <c:choose>
-                                    <c:when test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO}">
-                                        <span class="label label-success"><spring:message code="registro.estado.${registro.estado}" /></span>
-                                    </c:when>
-                                    <c:when test="${registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR}">
-                                        <span class="label label-info"><spring:message code="registro.estado.${registro.estado}" /></span>
-                                    </c:when>
-                                    <c:when test="${registro.estado == RegwebConstantes.REGISTRO_OFICIO_EXTERNO || registro.estado == RegwebConstantes.REGISTRO_OFICIO_INTERNO}">
-                                        <span class="label label-default"><spring:message code="registro.estado.${registro.estado}" /></span>
-                                    </c:when>
-                                    <c:when test="${registro.estado == RegwebConstantes.REGISTRO_TRAMITADO}">
-                                        <span class="label label-primary"><spring:message code="registro.estado.${registro.estado}" /></span>
-                                    </c:when>
-                                    <c:when test="${registro.estado == RegwebConstantes.REGISTRO_ANULADO}">
-                                        <span class="label label-danger"><spring:message code="registro.estado.${registro.estado}" /></span>
-                                    </c:when>
-
-                                </c:choose>
+                                <c:import url="../registro/estadosRegistro.jsp">
+                                    <c:param name="estado" value="${registro.estado}"/>
+                                </c:import>
                             </dd>
                         </dl>
             
                     </div>
+
+                    <%--BOTONERA--%>
 
                     <%--Si no nos encontramos en la misma Oficia en la que se creó el Registro o en su Oficina Responsable, no podemos hacer nada con el--%>
                     <c:if test="${oficinaRegistral}">
