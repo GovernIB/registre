@@ -666,7 +666,7 @@ public class OficioRemisionController extends BaseController {
         model.addAttribute("modeloOficioRemision", new ModeloForm());
         model.addAttribute("modelosOficioRemision", modeloOficioRemisionEjb.getByEntidad(getEntidadActiva(request).getId()));
 
-        return "oficioRemision/oficioRemisionProcesar";
+        return "oficioRemision/oficioRemisionAceptar";
     }
 
     /**
@@ -689,7 +689,7 @@ public class OficioRemisionController extends BaseController {
         // Comprobamos si ya ha sido procesado
         if (!organismosOficinaActiva.contains(oficioRemision.getOrganismoDestinatario()) ||
                 oficioRemision.getEstado() != RegwebConstantes.OFICIO_INTERNO) {
-            Mensaje.saveMessageError(request, getMessage("oficioRemision.error.yaprocesado"));
+            Mensaje.saveMessageError(request, getMessage("oficioRemision.error.aceptado"));
             return "redirect:/oficioRemision/pendientesLlegada/list";
         }
 
@@ -710,11 +710,11 @@ public class OficioRemisionController extends BaseController {
 
         } catch (Exception e) {
             e.printStackTrace();
-            Mensaje.saveMessageError(request, getMessage("oficioRemision.error.procesando"));
+            Mensaje.saveMessageError(request, getMessage("oficioRemision.error.aceptando"));
             return "redirect:/oficioRemision/pendientesLlegada/list";
         }
 
-        return "oficioRemision/oficioRemisionProcesado";
+        return "oficioRemision/oficioRemisionAceptado";
     }
 
 }
