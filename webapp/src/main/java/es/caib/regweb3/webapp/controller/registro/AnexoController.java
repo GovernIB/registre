@@ -875,11 +875,11 @@ public class AnexoController extends BaseController {
             // el documento está en SignatureCustody
             DocumentCustody dc = anexoFull.getDocumentoCustody();
             if (dc != null) {//Si documentCustody es null tenemos que coger SignatureCustody.
-                tamanyoanexo = anexoFull.getDocumentoCustody().getData().length;
+                tamanyoanexo = anexoFull.getDocumentoCustody().getLength();
             } else {
                 SignatureCustody sc = anexoFull.getSignatureCustody();
                 if (sc != null) {
-                    tamanyoanexo = anexoFull.getSignatureCustody().getData().length;
+                    tamanyoanexo = anexoFull.getSignatureCustody().getLength();
                 }
             }
             tamanyoTotalAnexos += tamanyoanexo;
