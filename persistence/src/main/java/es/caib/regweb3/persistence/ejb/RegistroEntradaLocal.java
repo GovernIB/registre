@@ -256,6 +256,15 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
     public Boolean tieneEstado(Long idRegistroEntrada, Long idEstado) throws Exception;
 
     /**
+     * Método que devuelve un registro de entrada completo, con anexoFull pero sin los documentos fisicos.
+     * @param id
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
+    public RegistroEntrada getConAnexosFull(Long id) throws Exception, I18NException;
+
+    /**
      * Método que devuelve un registro de entrada completo, con los anexos completos
      *
      * @param id
@@ -263,7 +272,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @throws Exception
      * @throws I18NException
      */
-    public RegistroEntrada getConAnexosFull(Long id) throws Exception, I18NException;
+    public RegistroEntrada getConAnexosFullCompleto(Long id) throws Exception, I18NException;
 
     /**
      * Obtiene un Registro de Entrada a partir de su IdentificadorIntercambio

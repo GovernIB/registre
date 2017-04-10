@@ -434,7 +434,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
     public String justificante(@PathVariable Long idRegistro, HttpServletResponse response, HttpServletRequest request) throws Exception {
 
         try {
-            RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(idRegistro);
+            RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFullCompleto(idRegistro);
             Long idEntidad = registroSalida.getUsuario().getEntidad().getId();
 
             // Carregam el plugin

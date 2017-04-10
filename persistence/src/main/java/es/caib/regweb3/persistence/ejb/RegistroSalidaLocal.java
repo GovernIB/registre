@@ -195,6 +195,14 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
     public void cambiarEstado(RegistroSalida registroSalida, Long idEstado, UsuarioEntidad usuarioEntidad) throws Exception;
 
     /**
+     * Método que devuelve un registro de salida completo, con los anexosFull pero sin los documentos fisicos.
+     * @param id
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
+    public RegistroSalida getConAnexosFull(Long id) throws Exception, I18NException;
+    /**
      * Método que devuelve un registro de salida completo, con los anexos completos
      *
      * @param id
@@ -202,7 +210,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @throws Exception
      * @throws I18NException
      */
-    public RegistroSalida getConAnexosFull(Long id) throws Exception, I18NException;
+    public RegistroSalida getConAnexosFullCompleto(Long id) throws Exception, I18NException;
 
 
     /**

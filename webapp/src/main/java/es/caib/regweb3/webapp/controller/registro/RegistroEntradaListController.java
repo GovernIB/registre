@@ -607,7 +607,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     public String justificante(@PathVariable Long idRegistro, HttpServletResponse response, HttpServletRequest request) throws Exception {
 
         try {
-            RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
+            RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFullCompleto(idRegistro);
             UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
             Long idEntidad = registroEntrada.getUsuario().getEntidad().getId();
 
