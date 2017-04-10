@@ -105,7 +105,7 @@
                     </c:if>
 
                         <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_INTERNO}">
-                        <button type="button" onclick="doForm('#oficioPendienteLlegadaForm')" class="btn btn-success btn-sm btn-block"><spring:message code="oficioRemision.procesar"/></button>
+                        <button type="button" onclick="doForm('#oficioPendienteLlegadaForm')" class="btn btn-success btn-sm btn-block"><spring:message code="oficioRemision.aceptar"/></button>
                     </c:if>
 
                     </div>

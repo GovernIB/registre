@@ -115,7 +115,7 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
             // Mira que el usuario tiene permisos consulta de entrada en los Libros
             if (libros.size() == 0) {
                 log.info("Aviso: No tiene permisos para procesar Oficios de Remision");
-                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficioRemision.procesar"));
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficioRemision.aceptar"));
                 response.sendRedirect("/regweb3/aviso");
                 return false;
             }

@@ -638,7 +638,7 @@ public class OficioRemisionController extends BaseController {
     /**
      * Carga el formulario para procesar un {@link es.caib.regweb3.model.OficioRemision}
      */
-    @RequestMapping(value = "/{idOficioRemision}/procesar", method = RequestMethod.GET)
+    @RequestMapping(value = "/{idOficioRemision}/aceptar", method = RequestMethod.GET)
     public String procesarOficioRemision(@PathVariable Long idOficioRemision, Model model, HttpServletRequest request) throws Exception {
 
         OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
@@ -673,7 +673,7 @@ public class OficioRemisionController extends BaseController {
      * Procesa {@link es.caib.regweb3.model.OficioRemision} pendiente de llegada,
      * creando tantos RegistroEntrada como contenga dicho OficioRemision.
      */
-    @RequestMapping(value = "/{idOficioRemision}/procesar", method = RequestMethod.POST)
+    @RequestMapping(value = "/{idOficioRemision}/aceptar", method = RequestMethod.POST)
     public String procesarOficioRemision(
             @ModelAttribute OficioPendienteLlegadaForm oficioPendienteLlegadaForm,
             @PathVariable Long idOficioRemision, Model model, HttpServletRequest request)
