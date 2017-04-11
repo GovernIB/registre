@@ -313,7 +313,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         try{
 
             emisionEjb.enviarFicheroIntercambio(RegwebConstantes.REGISTRO_SALIDA_ESCRITO,idRegistro, oficinaSir.getCodigo(),oficinaSir.getDenominacion(), getOficinaActiva(request), usuarioEntidad, envioSirForm.getIdLibro());
-            Mensaje.saveMessageInfo(request, getMessage("asientoRegistralSir.envio.ok"));
+            Mensaje.saveMessageInfo(request, getMessage("registroSalida.envioSir.ok"));
 
         }catch (SIRException e){
             Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.error.envio"));
