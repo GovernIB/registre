@@ -58,8 +58,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
     @Override
     public ByteArrayOutputStream generarJustificante(RegistroEntrada registroEntrada) throws Exception{
 
-        Long idEntidadActiva = registroEntrada.getUsuario().getEntidad().getId();
-
+        // Define idioma Español para el justificante
         Locale locale = new Locale("es");
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
@@ -71,53 +70,10 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         writer.setViewerPreferences(PdfWriter.ALLOW_PRINTING | PdfWriter.PageLayoutSinglePage);
         PdfWriter.getInstance(document,ficheroPdf).setInitialLeading(20);
 
-        // Build PDF document.
-        document.open();
+        // INICIALIZA DOCUMENTO
+        document = inicialitzaDocument(document, writer);
 
-        //CONFIGURACIONES GENERALES FORMATO PDF
-        document.setPageSize(PageSize.A4);
-        document.addAuthor("REGWEB3");
-        document.addCreationDate();
-        document.addCreator("iText library");
-        document.newPage();
-
-        // LOGOS
-        PdfPTable logos = new PdfPTable(2);
-        logos.setWidthPercentage(100);
-        // Regweb3
-        ClassLoader classLoader = getClass().getClassLoader();
-        InputStream fileRW = classLoader.getResourceAsStream("img/logo-regweb3.jpg");
-        PdfContentByte cb = writer.getDirectContent();
-        Image logoRW = Image.getInstance(cb, ImageIO.read(fileRW), 1);
-        logoRW.setAlignment(Element.ALIGN_LEFT);
-        logoRW.scaleToFit(100, 110);
-        logoRW.setAbsolutePosition(35f, 790f);
-        Paragraph parrafo;
-        parrafo = new Paragraph("");
-        parrafo.setAlignment(Element.ALIGN_LEFT);
-        document.add(parrafo);
-        document.add(logoRW);
-        // Sir
-        InputStream fileSIR = classLoader.getResourceAsStream("img/SIR_petit.jpg");
-        Image logoSIR = Image.getInstance(cb, ImageIO.read(fileSIR), 1);
-        logoSIR.setAlignment(Element.ALIGN_RIGHT);
-        logoSIR.scaleToFit(100, 100);
-        logoSIR.setAbsolutePosition(460f, 790f);
-        parrafo = new Paragraph("");
-        parrafo.setAlignment(Element.ALIGN_RIGHT);
-        document.add(parrafo);
-        document.add(logoSIR);
-        document.add(new Paragraph(" "));
-        document.add(new Paragraph(" "));
-
-        // Agafam idioma pels missatges del justificant. Si no és "ca" o "es", agafa "es" per defecte
-//        Long idiomaRegistre = registroEntrada.getRegistroDetalle().getIdioma();
-//        if(idiomaRegistre.equals(RegwebConstantes.IDIOMA_CATALAN_ID) || idiomaRegistre.equals(RegwebConstantes.IDIOMA_CASTELLANO_ID)) {
-//            locale = new Locale(RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(idiomaRegistre));
-//        } else{
-//            locale = new Locale("es");
-//        }
-
+        // COMIENZA A CREAR JUSTIFICANTE
         String denominacionOficina = registroEntrada.getOficina().getDenominacion();
         String codigoOficina = registroEntrada.getOficina().getCodigo();
         String numeroRegistroFormateado = registroEntrada.getNumeroRegistroFormateado();
@@ -150,7 +106,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         llistarAnnexes(anexos, locale, document, denominacionOficina);
 
         // CSV Y TEXTO VERTICAL
-//            csvRegistre(locale, document, dataRegistre, idEntidadActiva, numeroRegistroFormateado, idiomaRegistre, writer, missatges);
+        csvRegistre(locale, document, dataRegistre, numeroRegistroFormateado, writer);
 
         document.close();
 
@@ -161,9 +117,8 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
     @Override
     public ByteArrayOutputStream generarJustificante(RegistroSalida registroSalida) throws Exception{
 
-        Long idEntidadActiva = registroSalida.getUsuario().getEntidad().getId();
-
-        Locale locale;
+        // Define idioma Español para el justificante
+        Locale locale = new Locale("es");
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
 
@@ -173,6 +128,51 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         PdfWriter writer = PdfWriter.getInstance(document, baos);
         writer.setViewerPreferences(PdfWriter.ALLOW_PRINTING | PdfWriter.PageLayoutSinglePage);
         PdfWriter.getInstance(document,ficheroPdf).setInitialLeading(20);
+
+        // INICIALIZA DOCUMENTO
+        document = inicialitzaDocument(document, writer);
+
+        // COMIENZA A CREAR JUSTIFICANTE
+        String denominacionOficina = registroSalida.getOficina().getDenominacion();
+        String codigoOficina = registroSalida.getOficina().getCodigo();
+        String numeroRegistroFormateado = registroSalida.getNumeroRegistroFormateado();
+        Long tipoDocumentacionFisica = registroSalida.getRegistroDetalle().getTipoDocumentacionFisica();
+        String extracte = registroSalida.getRegistroDetalle().getExtracto();
+        String nomOrigen = registroSalida.getOrigen().getNombreCompleto();
+        String expedient = registroSalida.getRegistroDetalle().getExpediente();
+        Date fechaRegistro = registroSalida.getFecha();
+        SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        String dataRegistre = formatDate.format(fechaRegistro);
+
+
+        // TITULO Y REGISTRO
+        informacioRegistre(locale, document, denominacionOficina, codigoOficina, dataRegistre,
+                numeroRegistroFormateado, tipoDocumentacionFisica);
+
+        // INTERESADOS
+        List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
+        llistarInteressats(interesados, locale, document);
+
+        // INFORMACION REGISTRO
+        adicionalRegistre(locale, document, extracte, nomOrigen, expedient, registroSalida.getClass().getSimpleName());
+
+        // ADJUNTOS
+//            List<Anexo> anexos = anexoEjb.getByRegistroSalida(registroSalida);
+        List<AnexoFull> anexos = registroSalida.getRegistroDetalle().getAnexosFull();
+        llistarAnnexes(anexos, locale, document, denominacionOficina);
+
+        // CSV Y TEXTO VERTICAL
+        csvRegistre(locale, document, dataRegistre, numeroRegistroFormateado, writer);
+
+
+        document.close();
+
+        return baos;
+    }
+
+
+    // Inicializa el Documento tanto para el registro de entrada como el de salida
+    protected Document inicialitzaDocument(Document document, PdfWriter writer) throws Exception {
 
         // Build PDF document.
         document.open();
@@ -213,57 +213,15 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         document.add(new Paragraph(" "));
         document.add(new Paragraph(" "));
 
-        // Agafam idioma pels missatges del justificant. Si no és "ca" o "es", agafa "es" per defecte
-        Long idiomaRegistre = registroSalida.getRegistroDetalle().getIdioma();
-        if(idiomaRegistre.equals(RegwebConstantes.IDIOMA_CATALAN_ID) || idiomaRegistre.equals(RegwebConstantes.IDIOMA_CASTELLANO_ID)) {
-            locale = new Locale(RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(idiomaRegistre));
-        } else{
-            locale = new Locale("es");
-        }
+        return document;
 
-        String denominacionOficina = registroSalida.getOficina().getDenominacion();
-        String codigoOficina = registroSalida.getOficina().getCodigo();
-        String numeroRegistroFormateado = registroSalida.getNumeroRegistroFormateado();
-        Long tipoDocumentacionFisica = registroSalida.getRegistroDetalle().getTipoDocumentacionFisica();
-        String extracte = registroSalida.getRegistroDetalle().getExtracto();
-        String nomOrigen = registroSalida.getOrigen().getNombreCompleto();
-        String expedient = registroSalida.getRegistroDetalle().getExpediente();
-        Date fechaRegistro = registroSalida.getFecha();
-        SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        String dataRegistre = formatDate.format(fechaRegistro);
-
-
-        // TITULO Y REGISTRO
-        informacioRegistre(locale, document, denominacionOficina, codigoOficina, dataRegistre,
-                numeroRegistroFormateado, tipoDocumentacionFisica);
-
-        // INTERESADOS
-        List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
-        llistarInteressats(interesados, locale, document);
-
-        // INFORMACION REGISTRO
-        adicionalRegistre(locale, document, extracte, nomOrigen, expedient, registroSalida.getClass().getSimpleName());
-
-        // ADJUNTOS
-//            List<Anexo> anexos = anexoEjb.getByRegistroSalida(registroSalida);
-        List<AnexoFull> anexos = registroSalida.getRegistroDetalle().getAnexosFull();
-        llistarAnnexes(anexos, locale, document, denominacionOficina);
-
-        // CSV Y TEXTO VERTICAL
-//            csvRegistre(locale, document, dataRegistre, idEntidadActiva, numeroRegistroFormateado, idiomaRegistre, writer, missatges);
-
-
-        document.close();
-
-        return baos;
     }
-
 
     // Lista los anexos tanto para el registro de entrada como el de salida
     protected void llistarAnnexes(List<AnexoFull> anexos, Locale locale, Document document, String denominacio) throws Exception {
 
-        Font font8Bold = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.BOLD);
         Font font8 = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.NORMAL);
+        Font font8Bold = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.BOLD);
 
         if(anexos.size()>0) {
             // Creamos estilo para el título Adjuntos
@@ -334,7 +292,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
             // Pie de anexo
             PdfPTable peuAnnexe = new PdfPTable(1);
             peuAnnexe.setWidthPercentage(100);
-            PdfPCell cellPeuAnnexe = new PdfPCell(new Paragraph(denominacio + " " + tradueixMissatge(locale,"justificante.mensaje.declaracion"), font8));
+            PdfPCell cellPeuAnnexe = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.la") + " " + denominacio + " " + tradueixMissatge(locale,"justificante.mensaje.declaracion"), font8));
             cellPeuAnnexe.setBackgroundColor(BaseColor.WHITE);
             cellPeuAnnexe.setHorizontalAlignment(Element.ALIGN_LEFT);
             cellPeuAnnexe.setBorder(Rectangle.TOP);
@@ -345,6 +303,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
             document.add(new Paragraph(" "));
             document.add(new Paragraph(" "));
 
+            // Paràgraf Llei
             PdfPTable titolLlei = new PdfPTable(1);
             titolLlei.setWidthPercentage(100);
             PdfPCell cellLlei = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.mensaje.ley"), font8));
@@ -354,6 +313,17 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
             cellLlei.setBorderWidth(0f);
             titolLlei.addCell(cellLlei);
             document.add(titolLlei);
+
+            // Paràgraf Plaços
+            PdfPTable titolPlazos = new PdfPTable(1);
+            titolPlazos.setWidthPercentage(100);
+            PdfPCell cellPlazos = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.plazos"), font8));
+            cellPlazos.setBackgroundColor(BaseColor.WHITE);
+            cellPlazos.setHorizontalAlignment(Element.ALIGN_LEFT);
+            cellPlazos.setBorderColor(BaseColor.WHITE);
+            cellPlazos.setBorderWidth(0f);
+            titolPlazos.addCell(cellPlazos);
+            document.add(titolPlazos);
             document.add(new Paragraph(" "));
             document.add(new Paragraph(" "));
         }
@@ -362,13 +332,15 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
     // Lista los interesados y representantes tanto para el registro de entrada como el de salida
     protected void llistarInteressats(List<Interesado> interesados, Locale locale, Document document) throws Exception {
 
-        Font font8Bold = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.BOLD);
-        Font font8 = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.NORMAL);
+        Font font8gris = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.NORMAL);
+        font8gris.setColor(BaseColor.GRAY);
+        Font font8negre = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.NORMAL);
+        Font font8bold = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.BOLD);
 
         // Creamos estilo para el título Interesado
         PdfPTable titolInteressat = new PdfPTable(1);
         titolInteressat.setWidthPercentage(100);
-        PdfPCell cellInteressat = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.interesado"), font8Bold));
+        PdfPCell cellInteressat = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.interesado"), font8bold));
         cellInteressat.setBackgroundColor(BaseColor.LIGHT_GRAY);
         cellInteressat.setHorizontalAlignment(Element.ALIGN_LEFT);
         cellInteressat.setBorder(Rectangle.BOTTOM);
@@ -391,54 +363,71 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                 taulaInteresado.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                 taulaInteresado.getDefaultCell().setBorder(0);
                 taulaInteresado.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-                taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.identificacion"), font8));
-                taulaInteresado.addCell(new Paragraph(interesado.getDocumento(), font8));
-                if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)) {
-                    taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.nombre"), font8));
-                    taulaInteresado.addCell(new Paragraph(interesado.getNombreCompleto(), font8));
-                } else if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)) {
-                    taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.razonSocial"), font8));
-                    taulaInteresado.addCell(new Paragraph(interesado.getRazonSocial(), font8));
-                } else if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)) {
-                    taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.organismo"), font8));
-                    taulaInteresado.addCell(new Paragraph(interesado.getRazonSocial(), font8));
-                }
-                taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.pais"), font8));
+                // Document
+                taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.identificacion"), font8gris));
+                taulaInteresado.addCell(new Paragraph(interesado.getDocumento(), font8negre));
+                // Pais
+                taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.pais"), font8gris));
                 if(interesado.getPais() != null) {
-                    taulaInteresado.addCell(new Paragraph(interesado.getPais().getDescripcionPais(), font8));
+                    taulaInteresado.addCell(new Paragraph(interesado.getPais().getDescripcionPais(), font8negre));
                 } else{ taulaInteresado.addCell(""); }
-                taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.municipio"), font8));
+                // Nom - Organ
+                if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)) {
+                    taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.nombre"), font8gris));
+                    taulaInteresado.addCell(new Paragraph(interesado.getNombreCompleto(), font8negre));
+                } else if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)) {
+                    taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.razonSocial"), font8gris));
+                    taulaInteresado.addCell(new Paragraph(interesado.getRazonSocial(), font8negre));
+                } else if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)) {
+                    taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.organismo"), font8gris));
+                    taulaInteresado.addCell(new Paragraph(interesado.getRazonSocial(), font8negre));
+                }
+                // Telefon
+                taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.telefono"), font8gris));
+                taulaInteresado.addCell(new Paragraph(interesado.getTelefono(), font8negre));
+                // Adreça
+                taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.direccion"), font8gris));
+                taulaInteresado.addCell(new Paragraph(interesado.getDireccion(), font8negre));
+                // Mail
+                taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.correo"), font8gris));
+                taulaInteresado.addCell(new Paragraph(interesado.getEmail(), font8negre));
+                // Municipi
+                taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.municipio"), font8gris));
                 if(interesado.getLocalidad() != null && interesado.getCp() != null) {
-                    taulaInteresado.addCell(new Paragraph(interesado.getCp() + " - " + interesado.getLocalidad().getNombre(), font8));
+                    taulaInteresado.addCell(new Paragraph(interesado.getCp() + " - " + interesado.getLocalidad().getNombre(), font8negre));
                 } else{ taulaInteresado.addCell(""); }
-                taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.provincia"), font8));
-                if(interesado.getProvincia() != null) {
-                    taulaInteresado.addCell(new Paragraph(interesado.getProvincia().getDescripcionProvincia(), font8));
-                } else{ taulaInteresado.addCell(""); }
-                taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.direccion"), font8));
-                taulaInteresado.addCell(new Paragraph(interesado.getDireccion(), font8));
-                taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.telefono"), font8));
-                taulaInteresado.addCell(new Paragraph(interesado.getTelefono(), font8));
-                taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.canalNot"), font8));
+                // Canal Notificacio
+                taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.canalNot"), font8gris));
                 if(interesado.getCanal() != null) {
-                    taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"canalNotificacion." + interesado.getCanal()), font8));
+                    taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"canalNotificacion." + interesado.getCanal()), font8negre));
                 } else{ taulaInteresado.addCell(""); }
-                taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.correo"), font8));
-                taulaInteresado.addCell(new Paragraph(interesado.getEmail(), font8));
-                taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.observaciones"), font8));
-                taulaInteresado.addCell(new Paragraph(interesado.getObservaciones(), font8));
+                // Provincia
+                taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.provincia"), font8gris));
+                if(interesado.getProvincia() != null) {
+                    taulaInteresado.addCell(new Paragraph(interesado.getProvincia().getDescripcionProvincia(), font8negre));
+                } else{ taulaInteresado.addCell(""); }
+                // Observacions
+                taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.observaciones"), font8gris));
+                taulaInteresado.addCell(new Paragraph(interesado.getObservaciones(), font8negre));
+                // Direccio Electronica Habilitada
+                taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.deh"), font8gris));
+                taulaInteresado.addCell(new Paragraph(interesado.getDireccionElectronica(), font8negre));
+                // Completa la cel·la buida
+                taulaInteresado.addCell("");
+                taulaInteresado.addCell("");
 
                 document.add(taulaInteresado);
                 // Vaciamos el contenido del interesado para rellenarlo con uno nuevo
                 taulaInteresado.deleteBodyRows();
                 document.add(new Paragraph(" "));
+
                 // Si el interesado tiene representante
                 if(interesado.getRepresentante() != null) {
                     // Recorremos todos los interesados para buscar el reresentante
                     for(Interesado representante : interesados) {
                         // Encuentra su representante y lo muestra
                         if (interesado.getRepresentante().getId().equals(representante.getId())) {
-                            PdfPCell cellRepresentant = new PdfPCell(new Paragraph(tradueixMissatge(locale, "justificante.representante") + " de " + interesado.getNombreCompleto(), font8Bold));
+                            PdfPCell cellRepresentant = new PdfPCell(new Paragraph(tradueixMissatge(locale, "justificante.representante") + " de " + interesado.getNombreCompleto(), font8gris));
                             cellRepresentant.setBackgroundColor(BaseColor.WHITE);
                             cellRepresentant.setHorizontalAlignment(Element.ALIGN_LEFT);
                             cellRepresentant.setBorder(Rectangle.BOTTOM);
@@ -452,42 +441,59 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                             taulaRepresentant.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                             taulaRepresentant.getDefaultCell().setBorder(0);
                             taulaRepresentant.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-                            taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.identificacion"), font8));
-                            taulaRepresentant.addCell(new Paragraph(representante.getDocumento(), font8));
-                            if(representante.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)) {
-                                taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.nombre"), font8));
-                                taulaRepresentant.addCell(new Paragraph(representante.getNombreCompleto(), font8));
-                            } else if(representante.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)) {
-                                taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.razonSocial"), font8));
-                                taulaRepresentant.addCell(new Paragraph(representante.getRazonSocial(), font8));
-                            } else if(representante.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)) {
-                                taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.organismo"), font8));
-                                taulaRepresentant.addCell(new Paragraph(representante.getRazonSocial(), font8));
-                            }
-                            taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.pais"), font8));
+                            // Document
+                            taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.identificacion"), font8gris));
+                            taulaRepresentant.addCell(new Paragraph(representante.getDocumento(), font8negre));
+                            // Pais
+                            taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.pais"), font8gris));
                             if(representante.getPais() != null) {
-                                taulaRepresentant.addCell(new Paragraph(representante.getPais().getDescripcionPais(), font8));
+                                taulaRepresentant.addCell(new Paragraph(representante.getPais().getDescripcionPais(), font8negre));
                             } else{ taulaRepresentant.addCell(""); }
-                            taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.municipio"), font8));
+                            // Nom - Organ
+                            if(representante.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)) {
+                                taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.nombre"), font8gris));
+                                taulaRepresentant.addCell(new Paragraph(representante.getNombreCompleto(), font8negre));
+                            } else if(representante.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)) {
+                                taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.razonSocial"), font8gris));
+                                taulaRepresentant.addCell(new Paragraph(representante.getRazonSocial(), font8negre));
+                            } else if(representante.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)) {
+                                taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.organismo"), font8gris));
+                                taulaRepresentant.addCell(new Paragraph(representante.getRazonSocial(), font8negre));
+                            }
+                            // Telefon
+                            taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.telefono"), font8gris));
+                            taulaRepresentant.addCell(new Paragraph(representante.getTelefono(), font8negre));
+                            // Adreça
+                            taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.direccion"), font8gris));
+                            taulaRepresentant.addCell(new Paragraph(representante.getDireccion(), font8negre));
+                            // Mail
+                            taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.correo"), font8gris));
+                            taulaRepresentant.addCell(new Paragraph(representante.getEmail(), font8negre));
+                            // Municipi
+                            taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.municipio"), font8gris));
                             if(representante.getLocalidad() != null && representante.getCp() != null) {
-                                taulaRepresentant.addCell(new Paragraph(representante.getCp() + " - " + representante.getLocalidad().getNombre(), font8));
+                                taulaRepresentant.addCell(new Paragraph(representante.getCp() + " - " + representante.getLocalidad().getNombre(), font8negre));
                             } else{ taulaRepresentant.addCell(""); }
-                            taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.provincia"), font8));
-                            if(representante.getProvincia() != null) {
-                                taulaRepresentant.addCell(new Paragraph(representante.getProvincia().getDescripcionProvincia(), font8));
-                            } else{ taulaRepresentant.addCell(""); }
-                            taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.direccion"), font8));
-                            taulaRepresentant.addCell(new Paragraph(representante.getDireccion(), font8));
-                            taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.telefono"), font8));
-                            taulaRepresentant.addCell(new Paragraph(representante.getTelefono(), font8));
-                            taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.canalNot"), font8));
+                            // Canal Notificacio
+                            taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.canalNot"), font8gris));
                             if(representante.getCanal() != null) {
-                                taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"canalNotificacion." + interesado.getCanal()), font8));
+                                taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"canalNotificacion." + interesado.getCanal()), font8negre));
                             } else{ taulaRepresentant.addCell(""); }
-                            taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.correo"), font8));
-                            taulaRepresentant.addCell(new Paragraph(representante.getEmail(), font8));
-                            taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.observaciones"), font8));
-                            taulaRepresentant.addCell(new Paragraph(representante.getObservaciones(), font8));
+                            // Provincia
+                            taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.provincia"), font8gris));
+                            if(representante.getProvincia() != null) {
+                                taulaRepresentant.addCell(new Paragraph(representante.getProvincia().getDescripcionProvincia(), font8negre));
+                            } else{ taulaRepresentant.addCell(""); }
+                            // Observacions
+                            taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.observaciones"), font8gris));
+                            taulaRepresentant.addCell(new Paragraph(representante.getObservaciones(), font8negre));
+                            // Direccio Electronica Habilitada
+                            taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.deh"), font8gris));
+                            taulaRepresentant.addCell(new Paragraph(representante.getDireccionElectronica(), font8negre));
+                            // Completa la cel·la buida
+                            taulaRepresentant.addCell("");
+                            taulaRepresentant.addCell("");
+
                             document.add(taulaRepresentant);
                             // Vaciamos el contenido del representante para rellenarlo con uno nuevo
                             taulaRepresentant.deleteBodyRows();
@@ -505,19 +511,22 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                                       String codigoOficina, String dataRegistre, String numeroRegistroFormateado,
                                       Long tipoDocumentacionFisica) throws Exception {
 
-        Font font16Bold = FontFactory.getFont(FontFactory.HELVETICA, 16, Font.BOLD);
-        Font font8 = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.NORMAL);
+        Font font8gris = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.NORMAL);
+        font8gris.setColor(BaseColor.GRAY);
+        Font font8negre = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.NORMAL);
+        Font font14bold = FontFactory.getFont(FontFactory.HELVETICA, 14, Font.BOLD);
+        Font font8bold = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.BOLD);
 
         document.addTitle(tradueixMissatge(locale,"justificante.anexo.titulo"));
         PdfPTable titulo = new PdfPTable(1);
         titulo.setWidthPercentage(100);
-//        PdfPCell cellTitulo= new PdfPCell(new Paragraph(PropiedadGlobalUtil.getTitolJustificant(idEntidadActiva, idiomaRegistre), font16Bold));
-        PdfPCell cellTitulo= new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.mensaje.titulo"), font16Bold));
+        PdfPCell cellTitulo= new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.mensaje.titulo"), font14bold));
         cellTitulo.setBackgroundColor(BaseColor.WHITE);
         cellTitulo.setHorizontalAlignment(Element.ALIGN_CENTER);
         cellTitulo.setBorder(Rectangle.BOTTOM);
         cellTitulo.setBorderColor(BaseColor.BLACK);
         cellTitulo.setBorderWidth(2f);
+        cellTitulo.setPaddingBottom(10);
         titulo.addCell(cellTitulo);
         document.add(titulo);
 
@@ -527,16 +536,16 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         taulaRegistre.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
         taulaRegistre.getDefaultCell().setBorder(0);
         taulaRegistre.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-        taulaRegistre.addCell(new Paragraph(tradueixMissatge(locale,"justificante.oficina"), font8));
+        taulaRegistre.addCell(new Paragraph(tradueixMissatge(locale,"justificante.oficina"), font8gris));
         String oficina = denominacionOficina + " - " + codigoOficina;
-        taulaRegistre.addCell(new Paragraph(oficina, font8));
-        taulaRegistre.addCell(new Paragraph(tradueixMissatge(locale,"justificante.fechaPresentacion"), font8));
-        taulaRegistre.addCell(new Paragraph(dataRegistre, font8));
-        taulaRegistre.addCell(new Paragraph(tradueixMissatge(locale,"justificante.numRegistro"), font8));
-        taulaRegistre.addCell(new Paragraph(numeroRegistroFormateado, font8));
-        taulaRegistre.addCell(new Paragraph(tradueixMissatge(locale,"justificante.docFisica"), font8));
+        taulaRegistre.addCell(new Paragraph(oficina, font8negre));
+        taulaRegistre.addCell(new Paragraph(tradueixMissatge(locale,"justificante.fechaPresentacion"), font8gris));
+        taulaRegistre.addCell(new Paragraph(dataRegistre, font8negre));
+        taulaRegistre.addCell(new Paragraph(tradueixMissatge(locale,"justificante.numRegistro"), font8gris));
+        taulaRegistre.addCell(new Paragraph(numeroRegistroFormateado, font8bold));
+        taulaRegistre.addCell(new Paragraph(tradueixMissatge(locale,"justificante.docFisica"), font8gris));
         String docFisica = tradueixMissatge(locale,"tipoDocumentacionFisica." + tipoDocumentacionFisica);
-        taulaRegistre.addCell(new Paragraph(docFisica, font8));
+        taulaRegistre.addCell(new Paragraph(docFisica, font8negre));
         document.add(taulaRegistre);
         document.add(new Paragraph(" "));
         document.add(new Paragraph(" "));
@@ -547,13 +556,15 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
     protected void adicionalRegistre(Locale locale, Document document, String extracte, String nomDesti, String expedient,
                                      String tipoRegistro) throws Exception {
 
-        Font font8Bold = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.BOLD);
-        Font font8 = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.NORMAL);
+        Font font8gris = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.NORMAL);
+        font8gris.setColor(BaseColor.GRAY);
+        Font font8negre = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.NORMAL);
+        Font font8bold = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.BOLD);
 
         // Creamos estilo para el título Información
         PdfPTable titolInformacio = new PdfPTable(1);
         titolInformacio.setWidthPercentage(100);
-        PdfPCell cellInformacio = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.informacion"), font8Bold));
+        PdfPCell cellInformacio = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.informacion"), font8bold));
         cellInformacio.setBackgroundColor(BaseColor.LIGHT_GRAY);
         cellInformacio.setHorizontalAlignment(Element.ALIGN_LEFT);
         cellInformacio.setBorder(Rectangle.BOTTOM);
@@ -568,18 +579,18 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         taulaInformacio.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
         taulaInformacio.getDefaultCell().setBorder(0);
         taulaInformacio.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-        taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale,"justificante.tipoAsiento"), font8));
+        taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale,"justificante.tipoAsiento"), font8gris));
         if(tipoRegistro.equals("RegistroEntrada")) {
-            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale,"justificante.entrada"), font8));
+            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale,"justificante.entrada"), font8negre));
         }else{
-            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale,"justificante.salida"), font8));
+            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale,"justificante.salida"), font8negre));
         }
-        taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale,"justificante.resumen"), font8));
-        taulaInformacio.addCell(new Paragraph(extracte, font8));
-        taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale,"justificante.unidad"), font8));
-        taulaInformacio.addCell(new Paragraph(nomDesti, font8));
-        taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale,"justificante.expediente"), font8));
-        taulaInformacio.addCell(new Paragraph(expedient, font8));
+        taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale,"justificante.resumen"), font8gris));
+        taulaInformacio.addCell(new Paragraph(extracte, font8negre));
+        taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale,"justificante.unidad"), font8gris));
+        taulaInformacio.addCell(new Paragraph(nomDesti, font8negre));
+        taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale,"justificante.expediente"), font8gris));
+        taulaInformacio.addCell(new Paragraph(expedient, font8negre));
         document.add(taulaInformacio);
         document.add(new Paragraph(" "));
         document.add(new Paragraph(" "));
@@ -636,17 +647,16 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         cellInfoCsv = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.validacion"), font9Underline));
         cellInfoCsv.setBorderWidth(0f);
         taulaCsv.addCell(cellInfoCsv);
-        cellInfoCsv = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.cif"), font9Underline));
+        cellInfoCsv = new PdfPCell(new Paragraph(""));
         cellInfoCsv.setBorderWidth(0f);
         taulaCsv.addCell(cellInfoCsv);
         cellInfoCsv = new PdfPCell(new Paragraph(numeroRegistroFormateado, font9));
         cellInfoCsv.setBorderWidth(0f);
         taulaCsv.addCell(cellInfoCsv);
-//        cellInfoCsv = new PdfPCell(new Paragraph(PropiedadGlobalUtil.getSedeJustificant(idEntidadActiva, idiomaRegistre), font9));
         cellInfoCsv = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.mensaje.sede"), font9));
         cellInfoCsv.setBorderWidth(0f);
         taulaCsv.addCell(cellInfoCsv);
-        cellInfoCsv = new PdfPCell(new Paragraph("CIF interessat?", font9));
+        cellInfoCsv = new PdfPCell(new Paragraph(""));
         cellInfoCsv.setBorderWidth(0f);
         taulaCsv.addCell(cellInfoCsv);
         document.add(taulaCsv);
@@ -662,7 +672,6 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         document.add(code128Image);
 
         // Texto Vertical
-//        Phrase p = new Phrase(PropiedadGlobalUtil.getTextVerticalJustificant(idEntidadActiva, idiomaRegistre) + PropiedadGlobalUtil.getSedeJustificant(idEntidadActiva, idiomaRegistre), font7);
         Phrase p = new Phrase(tradueixMissatge(locale,"justificante.mensaje.textovertical") + tradueixMissatge(locale,"justificante.mensaje.sede"), font7);
         ColumnText.showTextAligned(cb, Element.ALIGN_MIDDLE, p, 20, 30, 90);
 

@@ -92,7 +92,7 @@
 
                                 <%--Si la entidad no es SIR o es una Reserva de Número, muestra el boton Modelo Recibo--%>
                                 <c:if test="${!entidadActiva.sir || registro.estado == RegwebConstantes.REGISTRO_RESERVA}">
-                                    <%--Si hay varios Modelso Recibo, muestra select--%>
+                                    <%--Si hay varios Modelos Recibo, muestra select--%>
                                     <c:if test="${fn:length(modelosRecibo) > 1}">
                                         <form:form modelAttribute="modeloRecibo" method="post" cssClass="form-horizontal">
                                             <div class="col-xs-12 btn-block">
@@ -115,12 +115,12 @@
 
                                 <%--Si la entidad es SIR, no és una Reserva de Número y no tiene ya justificante, muestra el boton Justificante --%>
                                 <c:if test="${entidadActiva.sir && registro.estado != RegwebConstantes.REGISTRO_RESERVA && idJustificante == null}">
-                                    <div class="btn-group"><button type="button" class="btn btn-warning btn-sm" onclick="goTo('<c:url value="/registroEntrada/${registro.id}/justificante"/>')"><spring:message code="justificante.boton"/></button></div>
+                                    <div class="btn-group"><button type="button" class="btn btn-warning btn-sm" onclick='javascript:confirm("<c:url value="/registroEntrada/${registro.id}/justificante"/>","<spring:message code="regweb.confirmar.justificante" htmlEscape="true"/>")'><spring:message code="justificante.boton"/></button></div>
                                 </c:if>
 
                                 <%--Si la entidad es SIR, no es una Reserva de Número y tiene justificante, muestra el boton Descargar Justificante --%>
                                 <c:if test="${entidadActiva.sir && registro.estado != RegwebConstantes.REGISTRO_RESERVA && idJustificante != null}">
-                                    <div class="btn-group"><button type="button" class="btn btn-warning btn-sm" onclick="goTo('<c:url value="/anexo/descargarFirma/${idJustificante}"/>')"><span class="fa fa-download"></span> <spring:message code="justificante.boton"/></button></div>
+                                    <div class="btn-group"><button type="button" class="btn btn-success btn-sm" onclick="goTo('<c:url value="/anexo/descargarFirma/${idJustificante}"/>')"><span class="fa fa-download"></span> <spring:message code="justificante.boton"/></button></div>
                                 </c:if>
 
                                 <%-- Botón de sello --%>

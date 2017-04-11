@@ -116,12 +116,12 @@
 
                                 <%--Si la entidad es SIR, no és una Reserva de Número y no tiene ya justificante, muestra el boton Justificante --%>
                                 <c:if test="${entidadActiva.sir && registro.estado != RegwebConstantes.REGISTRO_RESERVA && idJustificante == null}">
-                                    <div class="btn-group"><button type="button" class="btn btn-warning btn-sm" onclick="goTo('<c:url value="/registroSalida/${registro.id}/justificante"/>')"><spring:message code="justificante.boton"/></button></div>
+                                    <div class="btn-group"><button type="button" class="btn btn-warning btn-sm" onclick='javascript:confirm("<c:url value="/registroSalida/${registro.id}/justificante"/>","<spring:message code="regweb.confirmar.justificante" htmlEscape="true"/>")'><spring:message code="justificante.boton"/></button></div>
                                 </c:if>
 
                                 <%--Si la entidad es SIR, no es una Reserva de Número y tiene justificante, muestra el boton Descargar Justificante --%>
                                 <c:if test="${entidadActiva.sir && registro.estado != RegwebConstantes.REGISTRO_RESERVA && idJustificante != null}">
-                                    <div class="btn-group"><button type="button" class="btn btn-warning btn-sm" onclick="goTo('<c:url value="/anexo/descargarDocumento/${idJustificante}"/>')"><span class="fa fa-download"></span> <spring:message code="justificante.boton"/></button></div>
+                                    <div class="btn-group"><button type="button" class="btn btn-success btn-sm" onclick="goTo('<c:url value="/anexo/descargarDocumento/${idJustificante}"/>')"><span class="fa fa-download"></span> <spring:message code="justificante.boton"/></button></div>
                                 </c:if>
 
                                 <%-- Botón de sello --%>

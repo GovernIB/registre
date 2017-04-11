@@ -64,57 +64,55 @@
                          <tbody>
                              <c:set var="totalA" value="0" />
                              <c:forEach var="anexo" items="${registro.registroDetalle.anexos}">
-                                 <tr id="anexo${anexo.id}">
 
-                                     <c:if test="${anexo.justificante}">
-                                         <td><dt>${anexo.titulo}</dt></td>
-                                         <td><spring:message code="justificante.boton"/></td>
-                                     </c:if>
-                                     <c:if test="${!anexo.justificante}">
+                                 <!-- No mostra el justificant ni ho conta pel tamany màxim -->
+                                 <c:if test="${!anexo.justificante}">
+                                     <tr id="anexo${anexo.id}">
+
                                          <td>${anexo.titulo}</td>
                                          <td><spring:message code="tipoDocumento.0${anexo.tipoDocumento}"/></td>
-                                     </c:if>
 
-                                     <!-- TODO mostrar el tamanyo desde custodia -->
-                                     <td class="text-right">
-                                     <c:if test="${anexo.modoFirma != RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
-                                        <c:set var="tamanyAnexo" value="${reg:getSizeOfDocumentCustody(anexo.custodiaID)}" />                                        
-                                     </c:if>
-                                     <c:if test="${anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
-                                        <c:set var="tamanyAnexo" value="${reg:getSizeOfSignatureCustody(anexo.custodiaID)}" />
-                                     </c:if> 
-                                     ${tamanyAnexo } KB
-                                     <c:set var="totalA" value="${totalA + tamanyAnexo }" />
-                                     </td>
-
-                                     <td class="center">
-
+                                         <!-- TODO mostrar el tamanyo desde custodia -->
+                                         <td class="text-right">
                                          <c:if test="${anexo.modoFirma != RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
-                                             <a class="btn btn-success btn-default btn-sm"
-                                                href="<c:url value="/anexo/descargarDocumento/${anexo.id}"/>"
-                                                target="_blank" title="<spring:message code="anexo.descargar"/>"><span
-                                                     class="fa fa-download"></span></a>
+                                            <c:set var="tamanyAnexo" value="${reg:getSizeOfDocumentCustody(anexo.custodiaID)}" />
                                          </c:if>
                                          <c:if test="${anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
-                                             <a class="btn btn-success btn-default btn-sm"
-                                                href="<c:url value="/anexo/descargarFirma/${anexo.id}"/>"
-                                                target="_blank" title="<spring:message code="anexo.descargar"/>"><span
-                                                     class="fa fa-download"></span></a>
+                                            <c:set var="tamanyAnexo" value="${reg:getSizeOfSignatureCustody(anexo.custodiaID)}" />
                                          </c:if>
-                                         <c:if test="${!anexo.justificante}">
-                                             <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_RESERVA || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && oficinaRegistral && puedeEditar}">
-                                                 <a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#myModal"  onclick="editarAnexoFull('${anexo.id}','${registro.id}','${registro.registroDetalle.id}','${param.tipoRegistro}')" title="Editar"><span class="fa fa-pencil"></span></a>
-                                                 <a class="btn btn-danger btn-default btn-sm"  onclick="eliminarAnexo('${anexo.id}','${registro.id}','${registro.registroDetalle.id}','${param.tipoRegistro}', '<spring:message code="anexo.confirmar.eliminar" javaScriptEscape='true'/>')" href="#" title="Eliminar"><span class="fa fa-eraser"></span></a>
-                                             </c:if>
-                                             <c:if test="${(registro.estado != RegwebConstantes.REGISTRO_VALIDO && registro.estado != RegwebConstantes.REGISTRO_RESERVA && registro.estado != RegwebConstantes.REGISTRO_PENDIENTE_VISAR) || !oficinaRegistral || !puedeEditar}">
-                                                 <a class="btn btn-warning disabled btn-sm" href="javascript:void(0);" title="Editar"><span class="fa fa-pencil"></span></a>
-                                                 <a class="btn btn-danger disabled btn-sm" href="javascript:void(0);" title="<spring:message code="regweb.eliminar"/>"><span class="fa fa-eraser"></span></a>
-                                             </c:if>
-                                         </c:if>
+                                         ${tamanyAnexo } KB
+                                         <c:set var="totalA" value="${totalA + tamanyAnexo }" />
+                                         </td>
 
-                                     </td>
+                                         <td class="center">
 
-                                 </tr>
+                                             <c:if test="${anexo.modoFirma != RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
+                                                 <a class="btn btn-success btn-default btn-sm"
+                                                    href="<c:url value="/anexo/descargarDocumento/${anexo.id}"/>"
+                                                    target="_blank" title="<spring:message code="anexo.descargar"/>"><span
+                                                         class="fa fa-download"></span></a>
+                                             </c:if>
+                                             <c:if test="${anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
+                                                 <a class="btn btn-success btn-default btn-sm"
+                                                    href="<c:url value="/anexo/descargarFirma/${anexo.id}"/>"
+                                                    target="_blank" title="<spring:message code="anexo.descargar"/>"><span
+                                                         class="fa fa-download"></span></a>
+                                             </c:if>
+                                             <c:if test="${!anexo.justificante}">
+                                                 <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_RESERVA || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && oficinaRegistral && puedeEditar}">
+                                                     <a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#myModal"  onclick="editarAnexoFull('${anexo.id}','${registro.id}','${registro.registroDetalle.id}','${param.tipoRegistro}')" title="Editar"><span class="fa fa-pencil"></span></a>
+                                                     <a class="btn btn-danger btn-default btn-sm"  onclick="eliminarAnexo('${anexo.id}','${registro.id}','${registro.registroDetalle.id}','${param.tipoRegistro}', '<spring:message code="anexo.confirmar.eliminar" javaScriptEscape='true'/>')" href="#" title="Eliminar"><span class="fa fa-eraser"></span></a>
+                                                 </c:if>
+                                                 <c:if test="${(registro.estado != RegwebConstantes.REGISTRO_VALIDO && registro.estado != RegwebConstantes.REGISTRO_RESERVA && registro.estado != RegwebConstantes.REGISTRO_PENDIENTE_VISAR) || !oficinaRegistral || !puedeEditar}">
+                                                     <a class="btn btn-warning disabled btn-sm" href="javascript:void(0);" title="Editar"><span class="fa fa-pencil"></span></a>
+                                                     <a class="btn btn-danger disabled btn-sm" href="javascript:void(0);" title="<spring:message code="regweb.eliminar"/>"><span class="fa fa-eraser"></span></a>
+                                                 </c:if>
+                                             </c:if>
+
+                                         </td>
+
+                                     </tr>
+                                 </c:if>
                              </c:forEach>
                      <%-- Fila pel tamany Total dels annexes --%>
                      <tr>
