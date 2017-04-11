@@ -32,6 +32,7 @@
 
         <div class="row">
 
+            <!-- Panel Lateral -->
             <div class="col-xs-4">
 
                 <div class="panel panel-info">
@@ -178,6 +179,7 @@
                 </div>
 
             </div>
+            <!-- Fin Panel Lateral -->
 
             <div class="col-xs-8 pull-right" id="mensajesdetalle">
                 <c:import url="../modulos/mensajes.jsp"/>
@@ -202,7 +204,7 @@
 
             </c:if>
 
-             <%--INTERESADOS--%>
+            <%--INTERESADOS--%>
             <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO && oficinaRegistral && puedeEditar}">
                 <c:import url="../registro/interesados.jsp">
                     <c:param name="tipo" value="detalle"/>

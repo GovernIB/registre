@@ -31,7 +31,8 @@
         <div id="mensajes"></div>
     
         <div class="row">
-        
+
+            <!-- Panel Lateral -->
             <div class="col-xs-4">
             
                 <div class="panel panel-danger">
@@ -158,6 +159,7 @@
                 </div>
             
             </div>
+            <!-- Fin Panel Lateral -->
             
             <div class="col-xs-8 col-xs-offset">
                 <c:import url="../modulos/mensajes.jsp"/>
@@ -172,7 +174,7 @@
                 </c:if>
 
                 <%--ANEXOS SOLO LECTURA--%>
-            <c:if test="${(registro.estado != RegwebConstantes.REGISTRO_VALIDO && registro.estado != RegwebConstantes.REGISTRO_RESERVA && registro.estado != RegwebConstantes.REGISTRO_PENDIENTE_VISAR) || !oficinaRegistral || !puedeEditar}">
+                <c:if test="${(registro.estado != RegwebConstantes.REGISTRO_VALIDO && registro.estado != RegwebConstantes.REGISTRO_RESERVA && registro.estado != RegwebConstantes.REGISTRO_PENDIENTE_VISAR) || !oficinaRegistral || !puedeEditar}">
                     <c:import url="../registro/anexosLectura.jsp">
                         <c:param name="tipoRegistro" value="salida"/>
                     </c:import>
