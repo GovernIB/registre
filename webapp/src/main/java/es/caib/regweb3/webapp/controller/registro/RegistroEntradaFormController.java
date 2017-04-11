@@ -41,16 +41,15 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
     @Autowired
     private RegistroEntradaWebValidator registroEntradaValidator;
-    
 
     @EJB(mappedName = "regweb3/HistoricoRegistroEntradaEJB/local")
-    public HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
+    private HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
     
     @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
-    public RegistroEntradaLocal registroEntradaEjb;
+    private RegistroEntradaLocal registroEntradaEjb;
 
     @EJB(mappedName = "regweb3/ReproEJB/local")
-    public ReproLocal reproEjb;
+    private ReproLocal reproEjb;
 
 
     /**
