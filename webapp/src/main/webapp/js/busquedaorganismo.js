@@ -160,11 +160,28 @@ function organismoBusqueda(tipoOrganismo, urlServidor, idRegistroDetalle) {
     // Definimos la tabla que contendrá los resultados.
     var idTablaResultados = "tresultadosbusqueda" + tipoOrganismo;
     var table = $('<table id="' + idTablaResultados + '"></table>').addClass('paginated table table-bordered table-hover table-striped tablesorter ');
-    table.append('<colgroup><col width="310"><col width="310"><col width="125"><col width="100"></colgroup>');
 
 
-    // table.append('<thead><tr><th>'+tradorganismo['organismo.denominacion']+'</th><th>'+tradorganismo['organismo.superior']+'</th><th>'+tradorganismo['regweb.acciones']+'</th></tr></thead><tbody></tbody>');
-    table.append('<thead><tr><th>' + tradorganismo['organismo.denominacion'] + '</th><th>' + tradorganismo['organismo.raiz'] + '</th><th>' + tradorganismo['organismo.localidad'] + '</th><th>' + tradorganismo['regweb.acciones'] + '</th></tr></thead><tbody></tbody>');
+    //Gestión de mostrar la localidad y si tiene oficinas sir en función de niveles de administración y si son organismos o oficinas
+    var mostrarThLocalidad="";
+    var mostrarColLocalidad="";
+    //Mostramos la localidad en Administraciones Locales y de Justicia si son organismos y siempre que sean oficinas.
+    if(codNivelAdministracion == 3 || codNivelAdministracion == 6 || tipoOrganismo == 'OficinaOrigen' || tipoOrganismo == 'OficinaSir' ){
+        mostrarThLocalidad = '<th>' + tradorganismo['organismo.localidad'] + '</th>';
+        mostrarColLocalidad = '<col width="125">';
+    }
+
+    var mostrarThSir="";
+    var mostrarColSir="";
+    //Mostramos si tiene Oficinas sir cuando sean organismos
+    if(tipoOrganismo != 'OficinaOrigen' && tipoOrganismo != 'OficinaSir' ){
+        mostrarThSir='<th>' + tradorganismo['organismo.oficinaSir'] + '</th>';
+        mostrarColSir='<col width="50">';
+    }
+
+    table.append('<colgroup><col width="310"><col width="310">'+ mostrarColLocalidad + mostrarColSir +'<col width="100"></colgroup>');
+    table.append('<thead><tr><th>' + tradorganismo['organismo.denominacion'] + '</th><th>' + tradorganismo['organismo.raiz'] + '</th>'+ mostrarThLocalidad + mostrarThSir +'<th>' + tradorganismo['regweb.acciones'] + '</th></tr></thead><tbody></tbody>');
+
 
     //Mostram la imatge de reload
     $('#reloadorg' + tipoOrganismo).show();
@@ -201,7 +218,6 @@ function organismoBusqueda(tipoOrganismo, urlServidor, idRegistroDetalle) {
                 codigo = result[i].codigo;
 
 
-                //var title = $('#organismo_raiz').val()+": "+result[i].raiz;
                 var title = result[i].raiz;
                 // el elemento superior puede ser null, en ese caso le ponemos un texto por defecto
                 var superior = $('#organismo_superior').val() + ": " + result[i].superior;
@@ -212,17 +228,36 @@ function organismoBusqueda(tipoOrganismo, urlServidor, idRegistroDetalle) {
 
                 // definimos el contenido de la tabla en función de los resultados de la busqueda.
                 var organigramaTab = '#organigrama' + tipoOrganismo;
+
+                //Definimos si tiene oficinas sir o no
+                var tieneOficinaSir = '<span class="label label-danger">'+tradorganismo['organismo.oficinaSir.no']+'</span>';
+                if(result[i].tieneOficinaSir) {
+                    tieneOficinaSir = '<span class="label label-success">'+tradorganismo['organismo.oficinaSir.si']+'</span>'
+                }
+
+                //Definimos si se muestra la información de que tieneOficinaSir
+                var mostrarOficinaSir = "";
+                if(tipoOrganismo != 'OficinaOrigen' && tipoOrganismo != 'OficinaSir' ){
+                    mostrarOficinaSir = '<td style=\"text-align:center;\">'+tieneOficinaSir+'</td>';
+                }
+
+                //Mostramos la localidad en Administraciones Locales y de Justicia si son organismos y siempre que sean oficinas.
+                var mostrarLocalidad = "";
+                if(codNivelAdministracion == 3 || codNivelAdministracion == 6 || tipoOrganismo == 'OficinaOrigen' || tipoOrganismo == 'OficinaSir' ){
+                    mostrarLocalidad = '<td style=\"text-align:left;\"> ' + result[i].localidad + '</td>';
+                }
+
                 if (tipoOrganismo == 'OrganismoInteresado') {
-                    var linea = "<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\"" + superior + "\">" + result[i].denominacion + " - " + result[i].codigo + "</label></td><td style=\"text-align:left;\"> " + title + "</td><td style=\"text-align:left;\"> " + result[i].localidad + "</td><td class=\"center\"><a class=\"btn btn-warning btn-sm\" title=\"Seleccionar\" onclick=\"addAdministracionInteresadosModal('" + codigo + "','" + denominacion + "','Administración','" + tipoOrganismo + "','" + idRegistroDetalle + "')\"><span class=\"fa fa-hand-o-right\"></span></a><a class=\"btn btn-success btn-sm\" title=\"Arbol\" onclick=\"mostrarArbol('" + codigo + "','" + urlServidor + "','" + tipoOrganismo + "','" + idRegistroDetalle + "')\"><span class=\"fa fa-sitemap\"></span></a></td></tr>";
+                    var linea = "<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\"" + superior + "\">" + result[i].denominacion + " - " + result[i].codigo + "</label></td><td style=\"text-align:left;\"> " + title + "</td>"+ mostrarLocalidad + mostrarOficinaSir +"<td class=\"center\"><a class=\"btn btn-warning btn-sm\" title=\"Seleccionar\" onclick=\"addAdministracionInteresadosModal('" + codigo + "','" + denominacion + "','Administración','" + tipoOrganismo + "','" + idRegistroDetalle + "')\"><span class=\"fa fa-hand-o-right\"></span></a><a class=\"btn btn-success btn-sm\" title=\"Arbol\" onclick=\"mostrarArbol('" + codigo + "','" + urlServidor + "','" + tipoOrganismo + "','" + idRegistroDetalle + "')\"><span class=\"fa fa-sitemap\"></span></a></td></tr>";
                 } else if (tipoOrganismo == 'OrganismoDestino' || tipoOrganismo == 'listaRegEntrada' || tipoOrganismo == 'listaRegSalida') {
-                    var linea = "<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\"" + superior + "\">" + result[i].denominacion + " - " + result[i].codigo + "</label></td><td style=\"text-align:left;\"> " + title + "</td><td style=\"text-align:left;\"> " + result[i].localidad + "</td><td class=\"center\"><a class=\"btn btn-warning btn-sm\" title=\"Seleccionar\" onclick=\"asignarOrganismo('" + codigo + "','" + denominacion + "','" + tipoOrganismo + "')\"><span class=\"fa fa-hand-o-right\"></span></a><a class=\"btn btn-success btn-sm\" title=\"Arbol\" onclick=\"mostrarArbol('" + codigo + "','" + urlServidor + "','" + tipoOrganismo + "','" + idRegistroDetalle + "')\"><span class=\"fa fa-sitemap\"></span></a></td></tr>";
+                    var linea = "<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\"" + superior + "\">" + result[i].denominacion + " - " + result[i].codigo + "</label></td><td style=\"text-align:left;\"> " + title + "</td>"+ mostrarLocalidad + mostrarOficinaSir +"<td class=\"center\"><a class=\"btn btn-warning btn-sm\" title=\"Seleccionar\" onclick=\"asignarOrganismo('" + codigo + "','" + denominacion + "','" + tipoOrganismo + "')\"><span class=\"fa fa-hand-o-right\"></span></a><a class=\"btn btn-success btn-sm\" title=\"Arbol\" onclick=\"mostrarArbol('" + codigo + "','" + urlServidor + "','" + tipoOrganismo + "','" + idRegistroDetalle + "')\"><span class=\"fa fa-sitemap\"></span></a></td></tr>";
                 } else if (tipoOrganismo == 'OficinaOrigen') {
-                    var linea = "<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\"" + superior + "\">" + result[i].codigo + " - " + result[i].denominacion + "</label></td><td style=\"text-align:left;\"> " + title + "</td><td style=\"text-align:left;\"> " + result[i].localidad + "</td><td class=\"center\"><a class=\"btn btn-warning btn-sm\" title=\"Seleccionar\" onclick=\"asignarOrganismo('" + codigo + "','" + denominacion + "','" + tipoOrganismo + "')\"><span class=\"fa fa-hand-o-right\"></span></a></td></tr>";
+                    var linea = "<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\"" + superior + "\">" + result[i].codigo + " - " + result[i].denominacion + "</label></td><td style=\"text-align:left;\"> " + title + "</td>"+ mostrarLocalidad + mostrarOficinaSir +"<td class=\"center\"><a class=\"btn btn-warning btn-sm\" title=\"Seleccionar\" onclick=\"asignarOrganismo('" + codigo + "','" + denominacion + "','" + tipoOrganismo + "')\"><span class=\"fa fa-hand-o-right\"></span></a></td></tr>";
                 }else if (tipoOrganismo == 'OficinaSir') {
                     // Obtenemos el organismo responsable de la oficina viene como string combinado en el elemento raiz de la siguiente forma " Denominacion - Codigo".
                     var codigoOrganismoResponsable = result[i].raiz.split(" - ")[1];
                     var denominacionOrganismoResponsable = normalizarTexto(result[i].raiz.split(" - ")[0]);
-                    var linea = "<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\"" + superior + "\">" + result[i].codigo + " - " + result[i].denominacion + "</label></td><td style=\"text-align:left;\"> " + title + "</td><td style=\"text-align:left;\"> " + result[i].localidad + "</td><td class=\"center\"><a class=\"btn btn-warning btn-sm\" title=\"Seleccionar\" onclick=\"asignarOficinaSir('" + codigo + "','" + denominacion + "','"+codigoOrganismoResponsable+"','"+denominacionOrganismoResponsable+"','" + tipoOrganismo + "')\"><span class=\"fa fa-hand-o-right\"></span></a></td></tr>";
+                    var linea = "<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\"" + superior + "\">" + result[i].codigo + " - " + result[i].denominacion + "</label></td><td style=\"text-align:left;\"> " + title + "</td>"+ mostrarLocalidad + mostrarOficinaSir +"<td class=\"center\"><a class=\"btn btn-warning btn-sm\" title=\"Seleccionar\" onclick=\"asignarOficinaSir('" + codigo + "','" + denominacion + "','"+codigoOrganismoResponsable+"','"+denominacionOrganismoResponsable+"','" + tipoOrganismo + "')\"><span class=\"fa fa-hand-o-right\"></span></a></td></tr>";
                 }
 
                 table.append(linea);
@@ -514,28 +549,8 @@ function mostrarArbol(organismo, urlServidor, tipoOrganismo, idRegistroDetalle) 
         data: {codigo: organismo},
         success: function (result) {
             var denominacion = normalizarTexto(result.denominacion);
-            var nodoactual = result.codigo + ' - ' + result.denominacion;
-            var raizCodigo = result.raiz.split(" - ")[0];
-            var raizDenominacion = normalizarTexto(result.raiz.split(" - ")[1]);
-            var superiorCodigo = result.superior.split(" - ")[0];
-            var superiorDenominacion = normalizarTexto(result.superior.split(" - ")[1]);
-            /*  if (raizCodigo != result.codigo) {
-                html += '<ul>';
-                if (tipoOrganismo == 'OrganismoInteresado') {
-                    html += "<li> <span class=\"badge-arbre btn-primary\" onclick=\"addAdministracionInteresadosModal('" + raizCodigo + "','" + raizDenominacion + "','Administración','" + tipoOrganismo + "','" + idRegistroDetalle + "')\">" + raizDenominacion + " - " + raizCodigo + "</span>";
-                } else {
-                    html += "<li> <span class=\"badge-arbre btn-primary\" onclick=\"asignarOrganismo('" + raizCodigo + "','" + raizDenominacion + "','" + tipoOrganismo + "')\">" + raizDenominacion + " - " + raizCodigo + "</span>";
-                }
-            }
-            if (raizCodigo != superiorCodigo) {
-                html += '<ul>';
-                if (tipoOrganismo == 'OrganismoInteresado') {
-                    html += "<li> <span class=\"badge-arbre btn-primary\" onclick=\"addAdministracionInteresadosModal('" + superiorCodigo + "','" + superiorDenominacion + "','Administración','" + tipoOrganismo + "','" + idRegistroDetalle + "')\">" + superiorDenominacion + " - " + superiorCodigo + "</span>";
-                } else {
-                    html += "<li> <span class=\"badge-arbre btn-primary\" onclick=\"asignarOrganismo('" + superiorCodigo + "','" + superiorDenominacion + "','" + tipoOrganismo + "')\">" + superiorDenominacion + " - " + superiorCodigo + "</span>";
-                }
 
-             }*/
+
             html += '<ul>';
             html += '<li>';
             if (tipoOrganismo == 'OrganismoInteresado') {
