@@ -199,6 +199,9 @@ que se le indica -->
     tradorganismo['organismo.superior.vacio'] = "<spring:message code='organismo.superior.vacio' javaScriptEscape='true' />";
     tradorganismo['organismo.raiz'] = "<spring:message code='organismo.raiz' javaScriptEscape='true' />";
     tradorganismo['organismo.localidad'] = "<spring:message code='organismo.localidad' javaScriptEscape='true' />";
+    tradorganismo['organismo.oficinaSir'] = "<spring:message code='organismo.oficinaSir' javaScriptEscape='true' />";
+    tradorganismo['organismo.oficinaSir.si'] = "<spring:message code='regweb.si' javaScriptEscape='true' />";
+    tradorganismo['organismo.oficinaSir.no'] = "<spring:message code='regweb.no' javaScriptEscape='true' />";
     tradorganismo['interesado.resultado'] = "<spring:message code="interesado.resultado" javaScriptEscape='true' />";
     tradorganismo['interesado.resultados'] = "<spring:message code='interesado.resultados' javaScriptEscape='true' />";
     tradorganismo['regweb.noresultados'] = "<spring:message code='regweb.noresultados' javaScriptEscape='true' />";
