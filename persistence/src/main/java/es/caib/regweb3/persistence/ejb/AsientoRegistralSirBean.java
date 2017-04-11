@@ -2,14 +2,8 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
-import es.caib.regweb3.model.AnexoSir;
-import es.caib.regweb3.model.AsientoRegistralSir;
-import es.caib.regweb3.model.Entidad;
-import es.caib.regweb3.model.InteresadoSir;
-import es.caib.regweb3.model.utils.DocumentacionFisica;
-import es.caib.regweb3.model.utils.EstadoAsientoRegistralSir;
-import es.caib.regweb3.model.utils.IndicadorPrueba;
-import es.caib.regweb3.model.utils.TipoRegistro;
+import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.utils.*;
 import es.caib.regweb3.persistence.utils.*;
 import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
@@ -21,9 +15,14 @@ import es.caib.regweb3.sir.core.schema.types.Tipo_RegistroType;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.utils.MimeTypeUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
+import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
@@ -31,9 +30,12 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.security.MessageDigest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static es.caib.regweb3.utils.RegwebConstantes.*;
 
 /**
  * Created by Fundació BIT.
@@ -51,12 +53,12 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
     @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
-    @EJB public InteresadoSirLocal interesadoSirEjb;
-    @EJB public AnexoSirLocal anexoSirEjb;
-    @EJB public RegistroEntradaLocal registroEntradaEjb;
-    @EJB public RegistroSalidaLocal registroSalidaEjb;
-    @EJB public OficinaLocal oficinaEjb;
-    @EJB public ArchivoLocal archivoEjb;
+    @EJB private InteresadoSirLocal interesadoSirEjb;
+    @EJB private AnexoSirLocal anexoSirEjb;
+    @EJB private RegistroEntradaLocal registroEntradaEjb;
+    @EJB private RegistroSalidaLocal registroSalidaEjb;
+    @EJB private OficinaLocal oficinaEjb;
+    @EJB private ArchivoLocal archivoEjb;
 
 
     @Override
@@ -588,6 +590,589 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
 
         return asientoRegistralSir;
 
+    }
+
+    /**
+     * Transforma un {@link es.caib.regweb3.model.RegistroEntrada} en un {@link AsientoRegistralSir}
+     * @param registroEntrada
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     * @throws I18NValidationException
+     */
+    @Override
+    public AsientoRegistralSir transformarRegistroEntrada(RegistroEntrada registroEntrada)
+            throws Exception, I18NException {
+
+        RegistroDetalle registroDetalle = registroEntrada.getRegistroDetalle();
+
+        AsientoRegistralSir asientoRegistralSir = new AsientoRegistralSir();
+
+        asientoRegistralSir.setIndicadorPrueba(IndicadorPrueba.NORMAL);
+        asientoRegistralSir.setEstado(EstadoAsientoRegistralSir.PENDIENTE_ENVIO);
+        asientoRegistralSir.setEntidad(registroEntrada.getOficina().getOrganismoResponsable().getEntidad());
+
+        // Segmento De_Origen_O_Remitente
+        asientoRegistralSir.setCodigoEntidadRegistralOrigen(registroEntrada.getOficina().getCodigo());
+        asientoRegistralSir.setDecodificacionEntidadRegistralOrigen(registroEntrada.getOficina().getDenominacion());
+        asientoRegistralSir.setNumeroRegistro(registroEntrada.getNumeroRegistroFormateado());
+        asientoRegistralSir.setFechaRegistro(registroEntrada.getFecha());
+        asientoRegistralSir.setCodigoUnidadTramitacionOrigen(registroEntrada.getOficina().getOrganismoResponsable().getCodigo());
+        asientoRegistralSir.setDecodificacionUnidadTramitacionOrigen(registroEntrada.getOficina().getOrganismoResponsable().getDenominacion());
+
+        // Segmento De_Destino
+        asientoRegistralSir.setCodigoEntidadRegistralDestino(registroDetalle.getCodigoEntidadRegistralDestino());
+        asientoRegistralSir.setDecodificacionEntidadRegistralDestino(registroDetalle.getDecodificacionEntidadRegistralDestino());
+        asientoRegistralSir.setCodigoUnidadTramitacionDestino(registroEntrada.getDestinoExternoCodigo());
+        asientoRegistralSir.setDecodificacionUnidadTramitacionDestino(registroEntrada.getDestinoExternoDenominacion());
+
+        // Segmento De_Asunto
+        asientoRegistralSir.setResumen(registroDetalle.getExtracto());
+        if(registroEntrada.getDestino() != null){
+            TraduccionCodigoAsunto tra = (TraduccionCodigoAsunto) registroDetalle.getCodigoAsunto().getTraduccion(RegwebConstantes.IDIOMA_CASTELLANO_CODIGO);
+            asientoRegistralSir.setCodigoAsunto(tra.getNombre());
+        }
+        asientoRegistralSir.setReferenciaExterna(registroDetalle.getReferenciaExterna());
+        asientoRegistralSir.setNumeroExpediente(registroDetalle.getExpediente());
+
+        // Segmento De_Internos_Control
+        asientoRegistralSir.setTipoTransporte(CODIGO_SICRES_BY_TRANSPORTE.get(registroDetalle.getTransporte()));
+        asientoRegistralSir.setNumeroTransporte(registroDetalle.getNumeroTransporte());
+        asientoRegistralSir.setNombreUsuario(registroEntrada.getUsuario().getNombreCompleto());
+        asientoRegistralSir.setContactoUsuario(registroEntrada.getUsuario().getUsuario().getEmail());
+        asientoRegistralSir.setIdentificadorIntercambio(registroDetalle.getIdentificadorIntercambio());
+        asientoRegistralSir.setAplicacion(registroDetalle.getAplicacion());
+        asientoRegistralSir.setTipoAnotacion(registroDetalle.getTipoAnotacion());
+        asientoRegistralSir.setDecodificacionTipoAnotacion(registroDetalle.getDecodificacionTipoAnotacion());
+        asientoRegistralSir.setTipoRegistro(TipoRegistro.ENTRADA);
+        asientoRegistralSir.setDocumentacionFisica(String.valueOf(registroDetalle.getTipoDocumentacionFisica()));
+        asientoRegistralSir.setObservacionesApunte(registroDetalle.getObservaciones());
+        asientoRegistralSir.setCodigoEntidadRegistralInicio(obtenerCodigoOficinaOrigen(registroDetalle,registroEntrada.getOficina().getCodigo()));
+        asientoRegistralSir.setDecodificacionEntidadRegistralInicio(obtenerDenominacionOficinaOrigen(registroDetalle, registroEntrada.getOficina().getDenominacion()));
+
+        // Segmento De_Formulario_Genérico
+        asientoRegistralSir.setExpone(registroDetalle.getExpone());
+        asientoRegistralSir.setSolicita(registroDetalle.getSolicita());
+
+        // Segmento De_Interesados
+        asientoRegistralSir.setInteresados(procesarInteresadosSir(registroDetalle.getInteresados()));
+
+        // Segmento De_Anexos
+        asientoRegistralSir.setAnexos(procesarAnexosSir(registroDetalle.getAnexosFull(), asientoRegistralSir.getIdentificadorIntercambio()));
+
+        return asientoRegistralSir;
+    }
+
+    /**
+     * Transforma un {@link es.caib.regweb3.model.RegistroSalida} en un {@link AsientoRegistralSir}
+     * @param registroSalida
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     * @throws I18NValidationException
+     */
+    @Override
+    public AsientoRegistralSir transformarRegistroSalida(RegistroSalida registroSalida)
+            throws Exception, I18NException{
+
+        RegistroDetalle registroDetalle = registroSalida.getRegistroDetalle();
+
+        AsientoRegistralSir asientoRegistralSir = new AsientoRegistralSir();
+
+        asientoRegistralSir.setIndicadorPrueba(IndicadorPrueba.NORMAL); // todo Modificar cuando entremos en Producción
+        asientoRegistralSir.setEstado(EstadoAsientoRegistralSir.PENDIENTE_ENVIO);
+        asientoRegistralSir.setEntidad(registroSalida.getOficina().getOrganismoResponsable().getEntidad());
+
+        // Segmento De_Origen_O_Remitente
+        asientoRegistralSir.setCodigoEntidadRegistralOrigen(registroSalida.getOficina().getCodigo());
+        asientoRegistralSir.setDecodificacionEntidadRegistralOrigen(registroSalida.getOficina().getDenominacion());
+        asientoRegistralSir.setNumeroRegistro(registroSalida.getNumeroRegistroFormateado());
+        asientoRegistralSir.setFechaRegistro(registroSalida.getFecha());
+        asientoRegistralSir.setCodigoUnidadTramitacionOrigen(registroSalida.getOficina().getOrganismoResponsable().getCodigo());
+        asientoRegistralSir.setDecodificacionUnidadTramitacionOrigen(registroSalida.getOficina().getOrganismoResponsable().getDenominacion());
+
+        // Segmento De_Destino
+        asientoRegistralSir.setCodigoEntidadRegistralDestino(registroDetalle.getCodigoEntidadRegistralDestino());
+        asientoRegistralSir.setDecodificacionEntidadRegistralDestino(registroDetalle.getDecodificacionEntidadRegistralDestino());
+        asientoRegistralSir.setCodigoUnidadTramitacionDestino(obtenerCodigoUnidadTramitacionDestino(registroDetalle));
+        asientoRegistralSir.setDecodificacionUnidadTramitacionDestino(obtenerDenominacionUnidadTramitacionDestino(registroDetalle));
+
+        // Segmento De_Asunto
+        asientoRegistralSir.setResumen(registroDetalle.getExtracto());
+        /*if(registroSalida.getDestino() != null){ //todo Revisar
+            TraduccionCodigoAsunto tra = (TraduccionCodigoAsunto) registroDetalle.getCodigoAsunto().getTraduccion(RegwebConstantes.IDIOMA_CASTELLANO_CODIGO);
+            asientoRegistralSir.setCodigoAsunto(tra.getNombre());
+        }*/
+        asientoRegistralSir.setReferenciaExterna(registroDetalle.getReferenciaExterna());
+        asientoRegistralSir.setNumeroExpediente(registroDetalle.getExpediente());
+
+        // Segmento De_Internos_Control
+        asientoRegistralSir.setTipoTransporte(CODIGO_SICRES_BY_TRANSPORTE.get(registroDetalle.getTransporte()));
+        asientoRegistralSir.setNumeroTransporte(registroDetalle.getNumeroTransporte());
+        asientoRegistralSir.setNombreUsuario(registroSalida.getUsuario().getNombreCompleto());
+        asientoRegistralSir.setContactoUsuario(registroSalida.getUsuario().getUsuario().getEmail());
+        asientoRegistralSir.setIdentificadorIntercambio(registroDetalle.getIdentificadorIntercambio());
+        asientoRegistralSir.setAplicacion(registroDetalle.getAplicacion());
+        asientoRegistralSir.setTipoRegistro(TipoRegistro.SALIDA);
+        asientoRegistralSir.setDocumentacionFisica(String.valueOf(registroDetalle.getTipoDocumentacionFisica()));
+        asientoRegistralSir.setObservacionesApunte(registroDetalle.getObservaciones());
+        asientoRegistralSir.setCodigoEntidadRegistralInicio(obtenerCodigoOficinaOrigen(registroDetalle, registroSalida.getOficina().getCodigo()));
+        asientoRegistralSir.setDecodificacionEntidadRegistralInicio(obtenerDenominacionOficinaOrigen(registroDetalle, registroSalida.getOficina().getDenominacion()));
+
+        // Segmento De_Formulario_Genérico
+        asientoRegistralSir.setExpone(registroDetalle.getExpone());
+        asientoRegistralSir.setSolicita(registroDetalle.getSolicita());
+
+        // Segmento De_Interesados
+        asientoRegistralSir.setInteresados(procesarInteresadosSir(registroDetalle.getInteresados()));
+
+        // Segmento De_Anexos
+        asientoRegistralSir.setAnexos(procesarAnexosSir(registroDetalle.getAnexosFull(), asientoRegistralSir.getIdentificadorIntercambio()));
+
+        return asientoRegistralSir;
+    }
+
+    /**
+     * Transforma una Lista de {@link InteresadoSir} en una Lista de {@link Interesado}
+     * @param interesados
+     * @return
+     * @throws Exception
+     */
+    private List<InteresadoSir> procesarInteresadosSir(List<Interesado> interesados) throws Exception{
+        List<InteresadoSir> interesadosSir = new ArrayList<InteresadoSir>();
+
+        for (Interesado interesado : interesados) {
+            InteresadoSir interesadoSir = null;
+
+            if (!interesado.getIsRepresentante()){
+                interesadoSir = transformarInteresadoSir(interesado, interesado.getRepresentante());
+                interesadosSir.add(interesadoSir);
+            }
+
+
+        }
+        return interesadosSir;
+    }
+
+    /**
+     * Transforma un {@link InteresadoSir} en un {@link Interesado}
+     * @param interesado
+     * @param representante
+     * @return Interesado de tipo {@link Interesado}
+     * @throws Exception
+     */
+    private InteresadoSir transformarInteresadoSir(Interesado interesado, Interesado representante) throws Exception{
+
+        InteresadoSir interesadoSir = new InteresadoSir();
+
+        if (interesado.getTipoDocumentoIdentificacion() != null) {
+            interesadoSir.setTipoDocumentoIdentificacionInteresado(String.valueOf(CODIGO_NTI_BY_TIPODOCUMENTOID.get(interesado.getTipoDocumentoIdentificacion())));
+        }
+
+        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesado.getDocumento())) {
+            interesadoSir.setDocumentoIdentificacionInteresado(interesado.getDocumento());
+        }
+
+        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesado.getRazonSocial())) {
+            interesadoSir.setRazonSocialInteresado(interesado.getRazonSocial());
+        }
+
+        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesado.getNombre())) {
+            interesadoSir.setNombreInteresado(interesado.getNombre());
+        }
+
+        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesado.getApellido1())) {
+            interesadoSir.setPrimerApellidoInteresado(interesado.getApellido1());
+        }
+
+        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesado.getApellido2())) {
+            interesadoSir.setSegundoApellidoInteresado(interesado.getApellido2());
+        }
+
+        if(interesado.getPais() != null){
+            interesadoSir.setCodigoPaisInteresado(interesado.getPais().getCodigoPais().toString());
+        }
+
+        if(interesado.getProvincia() != null){
+            interesadoSir.setCodigoProvinciaInteresado(interesado.getProvincia().getCodigoProvincia().toString());
+        }
+
+        if(interesado.getLocalidad() != null){
+            interesadoSir.setCodigoMunicipioInteresado(interesado.getLocalidad().getCodigoLocalidad().toString());
+        }
+
+        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesado.getDireccion())) {
+            interesadoSir.setDireccionInteresado(interesado.getDireccion());
+        }
+
+        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesado.getCp())) {
+            interesadoSir.setCodigoPostalInteresado(interesado.getCp());
+        }
+
+        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesado.getEmail())) {
+            interesadoSir.setCorreoElectronicoInteresado(interesado.getEmail());
+        }
+
+        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesado.getTelefono())) {
+            interesadoSir.setTelefonoInteresado(interesado.getTelefono());
+        }
+
+        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesado.getDireccionElectronica())) {
+            interesadoSir.setDireccionElectronicaHabilitadaInteresado(interesado.getDireccionElectronica());
+        }
+
+        if (interesado.getCanal() != null) {
+            interesadoSir.setCanalPreferenteComunicacionInteresado(CODIGO_BY_CANALNOTIFICACION.get(interesado.getCanal()));
+        }
+
+        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesado.getObservaciones())) {
+            interesadoSir.setObservaciones(interesado.getObservaciones());
+        }
+
+        // Si tiene representante, también lo transformamos
+        if(representante != null){
+
+            if (representante.getTipoDocumentoIdentificacion() != null) {
+                interesadoSir.setTipoDocumentoIdentificacionRepresentante(String.valueOf(CODIGO_NTI_BY_TIPODOCUMENTOID.get(representante.getTipoDocumentoIdentificacion())));
+            }
+
+            if (!es.caib.regweb3.utils.StringUtils.isEmpty(representante.getDocumento())) {
+                interesadoSir.setDocumentoIdentificacionRepresentante(representante.getDocumento());
+            }
+
+            if (!es.caib.regweb3.utils.StringUtils.isEmpty(representante.getRazonSocial())) {
+                interesadoSir.setRazonSocialRepresentante(representante.getRazonSocial());
+            }
+
+            if (!es.caib.regweb3.utils.StringUtils.isEmpty(representante.getNombre())) {
+                interesadoSir.setNombreRepresentante(representante.getNombre());
+            }
+
+            if (!es.caib.regweb3.utils.StringUtils.isEmpty(representante.getApellido1())) {
+                interesadoSir.setPrimerApellidoRepresentante(representante.getApellido1());
+            }
+
+            if (!es.caib.regweb3.utils.StringUtils.isEmpty(representante.getApellido2())) {
+                interesadoSir.setSegundoApellidoRepresentante(representante.getApellido2());
+            }
+
+            if(representante.getPais() != null){
+                interesadoSir.setCodigoPaisRepresentante(representante.getPais().getCodigoPais().toString());
+            }
+
+            if(representante.getProvincia() != null){
+                interesadoSir.setCodigoProvinciaRepresentante(representante.getProvincia().getCodigoProvincia().toString());
+            }
+
+            if(representante.getLocalidad() != null){
+                interesadoSir.setCodigoMunicipioRepresentante(representante.getLocalidad().getCodigoLocalidad().toString());
+            }
+
+            if (!es.caib.regweb3.utils.StringUtils.isEmpty(representante.getDireccion())) {
+                interesadoSir.setDireccionRepresentante(representante.getDireccion());
+            }
+
+            if (!es.caib.regweb3.utils.StringUtils.isEmpty(representante.getCp())) {
+                interesadoSir.setCodigoPostalRepresentante(representante.getCp());
+            }
+
+            if (!es.caib.regweb3.utils.StringUtils.isEmpty(representante.getEmail())) {
+                interesadoSir.setCorreoElectronicoRepresentante(representante.getEmail());
+            }
+
+            if (!es.caib.regweb3.utils.StringUtils.isEmpty(representante.getTelefono())) {
+                interesadoSir.setTelefonoRepresentante(representante.getTelefono());
+            }
+
+            if (!es.caib.regweb3.utils.StringUtils.isEmpty(representante.getDireccionElectronica())) {
+                interesadoSir.setDireccionElectronicaHabilitadaRepresentante(representante.getDireccionElectronica());
+            }
+
+            if (representante.getCanal() != null) {
+                interesadoSir.setCanalPreferenteComunicacionRepresentante(CODIGO_BY_CANALNOTIFICACION.get(representante.getCanal()));
+            }
+
+        }
+
+        return interesadoSir;
+
+    }
+
+    /**
+     *
+     * @param anexosFull
+     * @param identificadorIntercambio
+     * @return
+     */
+    private List<AnexoSir> procesarAnexosSir(List<AnexoFull> anexosFull, String identificadorIntercambio) throws Exception{
+
+        List<AnexoSir> anexosSir = new ArrayList<AnexoSir>();
+        int secuencia = 0;
+
+        for(AnexoFull anexoFull:anexosFull){
+
+
+            final int modoFirma = anexoFull.getAnexo().getModoFirma();
+            Anexo anexo = anexoFull.getAnexo();
+
+            switch (modoFirma){
+
+                case MODO_FIRMA_ANEXO_ATTACHED:
+
+                    SignatureCustody sc = anexoFull.getSignatureCustody();
+
+                    String identificador_fichero = generateIdentificadorFichero(identificadorIntercambio, secuencia, sc.getName());
+                    secuencia++;
+
+                    AnexoSir anexoSir = crearAnexoSir(sc.getName(),identificador_fichero,
+                            CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento()),
+                            CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(anexo.getTipoDocumento()),anexo.getCertificado(),
+                            anexo.getFirma(),anexo.getTimestamp(), anexo.getValidacionOCSPCertificado(),
+                            obtenerHash(sc.getData()),sc.getMime(),sc.getData(),identificador_fichero,
+                            anexo.getObservaciones());
+
+                    anexosSir.add(anexoSir);
+
+                    break;
+
+                case MODO_FIRMA_ANEXO_DETACHED:
+
+                    // ================= SEGMENTO 1: DOCUMENT ==================
+                    anexoSir = new AnexoSir();
+
+                    DocumentCustody dc = anexoFull.getDocumentoCustody();
+
+                    identificador_fichero = generateIdentificadorFichero(identificadorIntercambio, secuencia, dc.getName());
+                    secuencia++;
+
+                    anexoSir = crearAnexoSir(dc.getName(),identificador_fichero,
+                            CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento()),
+                            CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(anexo.getTipoDocumento()),anexo.getCertificado(),
+                            anexo.getFirma(),anexo.getTimestamp(), anexo.getValidacionOCSPCertificado(),
+                            obtenerHash(dc.getData()),dc.getMime(),dc.getData(),null,
+                            anexo.getObservaciones());
+
+                    anexosSir.add(anexoSir);
+
+                    // ================= SEGMENTO 2: FIRMA ==================
+                    anexoSir = new AnexoSir();
+
+                    sc = anexoFull.getSignatureCustody();
+
+                    String identificador_fichero_FIRMA = generateIdentificadorFichero(identificadorIntercambio, secuencia, sc.getName());
+                    secuencia++;
+
+                    anexoSir = crearAnexoSir(sc.getName(),identificador_fichero_FIRMA,
+                            CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento()),
+                            CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FICHERO_TECNICO), null,
+                            null,anexo.getTimestamp(), null,
+                            obtenerHash(sc.getData()),sc.getMime(),sc.getData(),identificador_fichero,
+                            anexo.getObservaciones());
+
+                    anexosSir.add(anexoSir);
+
+                    break;
+            }
+
+
+        }
+
+        return anexosSir;
+    }
+
+    /**
+     *
+     * @param nombreFichero
+     * @param identificadorFichero
+     * @param validezDocumento
+     * @param tipoDocumento
+     * @param certificado
+     * @param firma
+     * @param timeStamp
+     * @param validacionOCSPCertificado
+     * @param hash
+     * @param tipoMime
+     * @param anexoData
+     * @param identificadorDocumentoFirmado
+     * @param observaciones
+     * @return
+     */
+    private AnexoSir crearAnexoSir(String nombreFichero, String identificadorFichero, String validezDocumento, String tipoDocumento, byte[] certificado,
+                                   byte[] firma, byte[] timeStamp, byte[] validacionOCSPCertificado, byte[] hash, String tipoMime,
+                                   byte[] anexoData, String identificadorDocumentoFirmado, String observaciones){
+        AnexoSir anexoSir = new AnexoSir();
+
+        anexoSir.setNombreFichero(nombreFichero);
+        anexoSir.setIdentificadorFichero(identificadorFichero);
+        if(validezDocumento != null){
+            anexoSir.setValidezDocumento(validezDocumento);
+        }
+        anexoSir.setTipoDocumento(tipoDocumento);
+        if(certificado != null){
+            anexoSir.setCertificado(certificado);
+        }
+        if(firma != null){
+            anexoSir.setFirma(firma);
+        }
+        if(timeStamp != null){
+            anexoSir.setTimestamp(timeStamp);
+        }
+        if(validacionOCSPCertificado != null){
+            anexoSir.setValidacionOCSPCertificado(validacionOCSPCertificado);
+        }
+
+        anexoSir.setHash(hash);
+        if(tipoMime != null){
+            anexoSir.setTipoMIME(tipoMime);
+        }
+        if(anexoData != null){
+            anexoSir.setAnexoData(anexoData);
+        }
+        if(identificadorDocumentoFirmado != null){
+            anexoSir.setIdentificadorDocumentoFirmado(identificadorDocumentoFirmado);
+        }
+
+        anexoSir.setObservaciones(observaciones);
+
+        return anexoSir;
+    }
+
+    /**
+     * Metodo que genera identificador de anxso según el patron
+     * identificadorIntercambio_01_secuencia.extension
+     * donde secuencia es cadena que repesenta secuencia en formato 0001 (leftpading con 0 y máximo de 4 caracteres)
+     * donde extesion es la extension del anexo
+     *
+     * @param identificadorIntercambio
+     * @param secuencia
+     * @param fileName
+     * @return
+     */
+    protected String generateIdentificadorFichero(String identificadorIntercambio, int secuencia, String fileName) {
+
+        String result = new StringBuffer()
+                .append(identificadorIntercambio)
+                .append("_01_")
+                .append(org.apache.commons.lang.StringUtils.leftPad(
+                        String.valueOf(secuencia), 4, "0"))
+                .append(".").append(getExtension(fileName)).toString();
+
+        return result;
+    }
+
+    /**
+     * Obtiene la Extensión de un Fichero a partir de su nombre
+     *
+     * @param nombreFichero
+     * @return extensión del fichero
+     */
+    private String getExtension(String nombreFichero) {
+        String extension = "";
+
+        int i = nombreFichero.lastIndexOf('.');
+        if (i > 0) {
+            extension = nombreFichero.substring(i + 1);
+        }
+
+        return extension;
+    }
+
+    /**
+     * Genera el Hash mediante SHA-256 del contenido del documento y lo codifica en base64
+     *
+     * @param documentoData
+     * @return
+     * @throws Exception
+     */
+    private byte[] obtenerHash(byte[] documentoData) throws Exception {
+
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        byte[] digest = md.digest(documentoData);
+
+        return Base64.encodeBase64(digest);
+
+    }
+
+    /**
+     * Obtiene el código Oficina de Origen dependiendo de si es interna o externa
+     *
+     * @param registroDetalle
+     * @param codigoOficia
+     * @return
+     * @throws Exception
+     */
+    private String obtenerCodigoOficinaOrigen(RegistroDetalle registroDetalle, String codigoOficia) {
+        String codOficinaOrigen = null;
+
+        if ((registroDetalle.getOficinaOrigenExternoCodigo() == null) && (registroDetalle.getOficinaOrigen() == null)) {
+            codOficinaOrigen = codigoOficia;
+        } else if (registroDetalle.getOficinaOrigenExternoCodigo() != null) {
+            codOficinaOrigen = registroDetalle.getOficinaOrigenExternoCodigo();
+        } else {
+            codOficinaOrigen = registroDetalle.getOficinaOrigen().getCodigo();
+        }
+
+        return codOficinaOrigen;
+    }
+
+    /**
+     * Obtiene el denominación Oficina de Origen dependiendo de si es interna o externa
+     *
+     * @param registroDetalle
+     * @param denominacionOficia
+     * @return
+     * @throws Exception
+     */
+    private String obtenerDenominacionOficinaOrigen(RegistroDetalle registroDetalle, String denominacionOficia) {
+        String denominacionOficinaOrigen = null;
+
+        if ((registroDetalle.getOficinaOrigenExternoCodigo() == null) && (registroDetalle.getOficinaOrigen() == null)) {
+            denominacionOficinaOrigen = denominacionOficia;
+        } else if (registroDetalle.getOficinaOrigenExternoCodigo() != null) {
+            denominacionOficinaOrigen = registroDetalle.getOficinaOrigenExternoDenominacion();
+        } else {
+            denominacionOficinaOrigen = registroDetalle.getOficinaOrigen().getDenominacion();
+        }
+
+        return denominacionOficinaOrigen;
+    }
+
+    /**
+     *
+     * @param registroDetalle
+     * @return
+     */
+    private String obtenerCodigoUnidadTramitacionDestino(RegistroDetalle registroDetalle){
+
+        List<Interesado> interesados = registroDetalle.getInteresados();
+
+        for (Interesado interesado : interesados) {
+            if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
+
+                return interesado.getCodigoDir3();
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     *
+     * @param registroDetalle
+     * @return
+     */
+    private String obtenerDenominacionUnidadTramitacionDestino(RegistroDetalle registroDetalle){
+
+        List<Interesado> interesados = registroDetalle.getInteresados();
+
+        for (Interesado interesado : interesados) {
+            if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
+
+                return interesado.getRazonSocial();
+            }
+        }
+
+        return null;
     }
 
     /**

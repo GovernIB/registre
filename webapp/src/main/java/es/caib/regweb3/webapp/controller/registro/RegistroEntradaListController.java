@@ -56,25 +56,19 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     private AnexoWebValidator anexoValidator;
 
     @EJB(mappedName = "regweb3/HistoricoRegistroEntradaEJB/local")
-    public HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
+    private HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
     
     @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
     public RegistroEntradaLocal registroEntradaEjb;
 
     @EJB(mappedName = "regweb3/AnexoEJB/local")
-    public AnexoLocal anexoEjb;
+    private AnexoLocal anexoEjb;
 
     @EJB(mappedName = "regweb3/OficioRemisionEntradaUtilsEJB/local")
-    public OficioRemisionEntradaUtilsLocal oficioRemisionEntradaUtilsEjb;
-
-    @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
-    public TipoDocumentalLocal tipoDocumentalEjb;
+    private OficioRemisionEntradaUtilsLocal oficioRemisionEntradaUtilsEjb;
 
     @EJB(mappedName = "regweb3/EmisionEJB/local")
-    public EmisionLocal emisionEjb;
-
-    @EJB(mappedName = "regweb3/SignatureServerEJB/local")
-    public SignatureServerLocal signatureServerEjb;
+    private EmisionLocal emisionEjb;
 
 
     /**
@@ -295,23 +289,25 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     /**
      * Enviar a SIR un Registro de Entrada
      */
-    @RequestMapping(value = "/{idRegistroEntrada}/enviarSir", method = RequestMethod.GET)
-    public ModelAndView enviarSir(@PathVariable Long idRegistroEntrada, Model model, HttpServletRequest request) throws Exception {
+    @RequestMapping(value = "/{idRegistro}/enviarSir", method = RequestMethod.GET)
+    public ModelAndView enviarSir(@PathVariable Long idRegistro, Model model, HttpServletRequest request) throws Exception {
 
-        ModelAndView mav = new ModelAndView("registroEntrada/envioSir");
-        RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistroEntrada);
+        ModelAndView mav = new ModelAndView("registro/envioSir");
+        RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
 
-        List<OficinaTF> oficinasSIR = oficioRemisionEntradaUtilsEjb.isOficioRemisionSir(idRegistroEntrada);
+        List<OficinaTF> oficinasSIR = oficioRemisionEntradaUtilsEjb.isOficioRemisionSir(idRegistro);
 
         if(oficinasSIR.isEmpty()){
             log.info("Este registro no se puede enviar via SIR, no tiene oficinas");
             Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.error.envio.oficinas"));
-            return new ModelAndView("redirect:/registroEntrada/" + idRegistroEntrada + "/detalle");
+            return new ModelAndView("redirect:/registroEntrada/" + idRegistro + "/detalle");
         }
 
+        mav.addObject("tipoRegistro", RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO);
         mav.addObject("envioSirForm", new EnvioSirForm());
-        mav.addObject("registroEntrada", registroEntrada);
+        mav.addObject("registro", registroEntrada);
         mav.addObject("oficinasSIR", oficinasSIR);
+        mav.addObject("destino", registroEntrada.getDestinoExternoDenominacion());
 
         return mav;
     }
@@ -319,8 +315,8 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     /**
      * Enviar a SIR un Registro de Entrada
      */
-    @RequestMapping(value = "/{idRegistroEntrada}/enviarSir", method = RequestMethod.POST)
-    public ModelAndView enviarSir(@ModelAttribute EnvioSirForm envioSirForm, @PathVariable Long idRegistroEntrada, HttpServletRequest request) throws Exception {
+    @RequestMapping(value = "/{idRegistro}/enviarSir", method = RequestMethod.POST)
+    public ModelAndView enviarSir(@ModelAttribute EnvioSirForm envioSirForm, @PathVariable Long idRegistro, HttpServletRequest request) throws Exception {
 
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
@@ -330,14 +326,14 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         try{
 
-            emisionEjb.enviarFicheroIntercambio(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO,idRegistroEntrada, oficinaSir.getCodigo(),oficinaSir.getDenominacion(), getOficinaActiva(request), usuarioEntidad, envioSirForm.getIdLibro());
+            emisionEjb.enviarFicheroIntercambio(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO,idRegistro, oficinaSir.getCodigo(),oficinaSir.getDenominacion(), getOficinaActiva(request), usuarioEntidad, envioSirForm.getIdLibro());
             Mensaje.saveMessageInfo(request, getMessage("asientoRegistralSir.envio.ok"));
 
         }catch (SIRException e){
             Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.error.envio"));
         }
 
-        return new ModelAndView("redirect:/registroEntrada/" + idRegistroEntrada + "/detalle");
+        return new ModelAndView("redirect:/registroEntrada/" + idRegistro + "/detalle");
     }
 
     @RequestMapping(value = "/pendientesVisar/list/{pageNumber}", method = RequestMethod.GET)
@@ -615,7 +611,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             IJustificantePlugin justificantePlugin = RegwebJustificantePluginManager.getInstance(idEntidad);
 
             // Comprova que existeix el plugin de justificant
-            if(justificantePlugin!=null) {
+            if(justificantePlugin != null) {
 
                 // Obtenim el ByteArray per generar el pdf
                 ByteArrayOutputStream baos = justificantePlugin.generarJustificante(registroEntrada);

@@ -398,14 +398,14 @@
         DESTINOEXTERNODENOMINA varchar(300),
         ESTADO int4 not null,
         FECHA timestamp not null,
-        FECHA_ENVIO timestamp,
+        FECHA_DESTINO timestamp,
         FECHA_ESTADO timestamp,
-        FECHA_RECEPCION timestamp,
+        ID_INTERCAMBIO varchar(33),
         NUMREGISTRO int4 not null,
+        NUM_REG_DESTINO varchar(255),
         REINTENTOS int4,
         SIR bool not null,
         TIPO_OFICIO int8 not null,
-        ASIENTO_REGISTRAL_SIR int8,
         LIBRO int8 not null,
         OFICINA int8 not null,
         ORGANISMODEST int8,
@@ -493,7 +493,7 @@
         DESCRIPCION varchar(255),
         ENTIDAD int8,
         TIPO int8,
-        VALOR varchar(255),
+        VALOR varchar(2048),
         primary key (ID),
         unique (CLAVE, ENTIDAD)
     );
@@ -510,11 +510,16 @@
     create table RWE_REGISTRO_DETALLE (
         ID int8 not null,
         APLICACION varchar(255),
+        COD_ENT_REG_DEST varchar(21),
+        DEC_ENT_REG_DEST varchar(80),
+        DEC_T_ANOTACION varchar(80),
         EXPEDIENTE varchar(80),
         EXPONE varchar(4000),
         EXTRACTO varchar(240),
         FECHAORIGEN timestamp,
+        ID_INTERCAMBIO varchar(33),
         IDIOMA int8,
+        INDICADOR_PRUEBA int4,
         NUMREG_ORIGEN varchar(20),
         NUMTRANSPORTE varchar(20),
         OBSERVACIONES varchar(50),
@@ -523,6 +528,7 @@
         REFEXT varchar(16),
         RESERVA varchar(4000),
         SOLICITA varchar(4000),
+        TIPO_ANOTACION varchar(2),
         TIPODOCFISICA int8,
         TRANSPORTE int8,
         VERSION varchar(255),
@@ -653,8 +659,9 @@
     create table RWE_TRAZABILIDAD (
         ID int8 not null,
         FECHA timestamp not null,
+        tipo int8 not null,
         ASIENTO_REGISTRAL_SIR int8,
-        OFICIO_REMISION int8 not null,
+        OFICIO_REMISION int8,
         REGENT_DESTINO int8,
         REGENT_ORIGEN int8,
         REGISTRO_SALIDA int8,
@@ -1038,11 +1045,6 @@
     create index RWE_OFIREM_LIBRO_FK_I on RWE_OFICIO_REMISION (LIBRO);
 
     create index RWE_OFIREM_USUARI_FK_I on RWE_OFICIO_REMISION (USUARIO);
-
-    alter table RWE_OFICIO_REMISION
-        add constraint RWE_OFIREM_ASR_FK
-        foreign key (ASIENTO_REGISTRAL_SIR)
-        references RWE_ASIENTO_REGISTRAL_SIR;
 
     alter table RWE_OFICIO_REMISION
         add constraint RWE_OFIREM_USUORM_FK

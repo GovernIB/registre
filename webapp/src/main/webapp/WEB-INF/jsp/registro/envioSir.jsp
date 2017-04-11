@@ -12,6 +12,13 @@
 
 <c:import url="../modulos/menu.jsp"/>
 
+<c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO}">
+    <c:set var="color" value="info"/>
+</c:if>
+<c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO}">
+    <c:set var="color" value="danger"/>
+</c:if>
+
 <div class="row-fluid container main">
 
     <div class="well well-white">
@@ -21,7 +28,7 @@
             <div class="col-xs-12">
                 <ol class="breadcrumb">
                     <li><a <c:if test="${oficinaActiva.sir}">class="azul"</c:if> href="<c:url value="/inici"/>"><i class="fa fa-home"></i> ${oficinaActiva.denominacion}</a></li>
-                    <li class="active"><i class="fa fa-pencil-square-o"></i> <spring:message code="registroEntrada.registroEntrada"/> ${registroEntrada.numeroRegistroFormateado}cir</li>
+                    <li class="active"><i class="fa fa-pencil-square-o"></i> <spring:message code="registroEntrada.registroEntrada"/> ${registro.numeroRegistroFormateado}cir</li>
                     <%--Importamos el menú de avisos--%>
                     <c:import url="/avisos"/>
                 </ol>
@@ -34,12 +41,16 @@
 
             <div class="col-xs-12">
 
-                <div class="panel panel-info">
+                <div class="panel panel-${color}">
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-file-o"></i>
-                            <strong>
-                                Enviar <spring:message code="registroEntrada.registroEntrada"/> ${registroEntrada.numeroRegistroFormateado} a SIR
-                            </strong>
+                            <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO}">
+                                <strong>Enviar <spring:message code="registroEntrada.registroEntrada"/> ${registro.numeroRegistroFormateado} a ${destino}, mediante SIR</strong>
+                            </c:if>
+                            <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO}">
+                                <strong>Enviar <spring:message code="registroSalida.registroSalida"/> ${registro.numeroRegistroFormateado} a ${destino}, mediante SIR</strong>
+                            </c:if>
+
                         </h3>
                     </div>
                     <div class="panel-body">
@@ -49,12 +60,12 @@
                             <div class="col-lg-6">
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
-                                        <strong><spring:message code="registroEntrada.registroEntrada"/> a enviar: ${registroEntrada.numeroRegistroFormateado}</strong>
+                                        <strong><spring:message code="oficina.origen"/>: ${registro.oficina.denominacion}</strong>
                                     </div>
                                     <div class="panel-body">
-                                        <p><strong><i class="fa fa-home"></i> <spring:message code="registroEntrada.oficina"/>:</strong> ${registroEntrada.oficina.denominacion}</p>
-                                        <p><strong><i class="fa fa-clock-o"></i> <spring:message code="regweb.fecha"/>:</strong> <fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></p>
-                                        <p><strong><i class="fa fa-book"></i> <spring:message code="libro.libro"/>:</strong> ${registroEntrada.libro.nombre}</p>
+                                        <p><strong><i class="fa fa-home"></i> <spring:message code="registroEntrada.numeroRegistro"/>:</strong> ${registro.numeroRegistroFormateado}</p>
+                                        <p><strong><i class="fa fa-clock-o"></i> <spring:message code="regweb.fecha"/>:</strong> <fmt:formatDate value="${registro.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></p>
+                                        <p><strong><i class="fa fa-book"></i> <spring:message code="libro.libro"/>:</strong> ${registro.libro.nombre}</p>
                                     </div>
                                     <div class="panel-footer">
                                         Panel Footer
@@ -68,12 +79,12 @@
                                         <strong>Oficina destino</strong>
                                     </div>
                                     <div class="panel-body">
-                                        <p><strong><i class="fa fa-institution"></i> <spring:message code="registroEntrada.organismoDestino"/>:</strong> ${registroEntrada.destinoExternoDenominacion}</p>
+                                        <p><strong><i class="fa fa-institution"></i> <spring:message code="registroEntrada.organismoDestino"/>:</strong> ${destino}</p>
 
                                         <form:form modelAttribute="envioSirForm" method="post" cssClass="form-horizontal">
 
-                                            <input type="hidden" id="idRegistro" name="idRegistro" value="${registroEntrada.id}"/>
-                                            <input type="hidden" id="idLibro" name="idLibro" value="${registroEntrada.libro.id}"/>
+                                            <input type="hidden" id="idRegistro" name="idRegistro" value="${registro.id}"/>
+                                            <input type="hidden" id="idLibro" name="idLibro" value="${registro.libro.id}"/>
 
                                             <!-- Oficina Sir destinataria -->
                                             <c:if test="${fn:length(oficinasSIR) == 1}">
@@ -93,7 +104,7 @@
                                                 </div>
                                             </c:if>
                                             <div class="form-actions">
-                                                <input type="submit" value="Enviar" class="btn btn-warning btn-sm">
+                                                <input type="submit" value="Enviar" class="btn btn-${color} btn-sm">
                                             </div>
 
                                         </form:form>

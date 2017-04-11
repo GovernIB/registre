@@ -290,7 +290,7 @@ public class AsientoRegistralSir implements Serializable {
         this.fechaRegistro = fechaRegistro;
     }
 
-    @Column(name = "TIMESTAMP_REGISTRO", nullable = true)
+    @Column(name = "TIMESTAMP_REGISTRO", nullable = true, length = 2000)
     public byte[] getTimestampRegistro() {
         return timestampRegistro;
     }

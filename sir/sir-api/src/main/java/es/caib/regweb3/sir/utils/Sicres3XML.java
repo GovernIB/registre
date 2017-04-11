@@ -873,16 +873,16 @@ public class Sicres3XML {
         addDatosInteresados(rootNode, registroEntrada.getRegistroDetalle());
 
         /* Segmento DeAsunto */
-        addDatosAsunto(rootNode, registroEntrada);
+        addDatosAsunto(rootNode, registroEntrada.getRegistroDetalle());
 
         /* Segmento DeAnexo */
-        addDatosAnexos(rootNode, registroEntrada);
+        addDatosAnexos(rootNode, registroEntrada.getRegistroDetalle());
 
         /* Segmento DeInternosControl */
         addDatosInternosControl(rootNode, registroEntrada);
 
         /* Segmento DeFormularioGenerico */
-        addDatosformularioGenerico(rootNode, registroEntrada);
+        addDatosformularioGenerico(rootNode, registroEntrada.getRegistroDetalle());
 
         return doc.asXML();
     }
@@ -1185,15 +1185,13 @@ public class Sicres3XML {
      * Añade el Segmento deAsunto al Fichero de Intercambio
      *
      * @param rootNode
-     * @param registro
+     * @param registroDetalle
      */
-    private void addDatosAsunto(Element rootNode, RegistroEntrada registro) {
+    private void addDatosAsunto(Element rootNode, RegistroDetalle registroDetalle) {
 
         // De_Asunto
         Element rootElement = rootNode.addElement("De_Asunto");
         Element elem = null;
-
-        RegistroDetalle registroDetalle = registro.getRegistroDetalle();
 
         // Resumen
         elem = rootElement.addElement("Resumen");
@@ -1225,14 +1223,14 @@ public class Sicres3XML {
     /**
      *
      * @param rootNode
-     * @param registro
+     * @param registroDetalle
      * @throws Exception
      */
-    private void addDatosAnexos(Element rootNode, RegistroEntrada registro) throws Exception  {
+    private void addDatosAnexos(Element rootNode, RegistroDetalle registroDetalle) throws Exception  {
 
         int secuencia = 0;
 
-        for (AnexoFull anexoFull : registro.getRegistroDetalle().getAnexosFull()) {
+        for (AnexoFull anexoFull : registroDetalle.getAnexosFull()) {
 
             final int modoFirma = anexoFull.getAnexo().getModoFirma();
             Anexo anexo = anexoFull.getAnexo();
@@ -1242,7 +1240,7 @@ public class Sicres3XML {
                 case MODO_FIRMA_ANEXO_ATTACHED:
                     SignatureCustody sc = anexoFull.getSignatureCustody();
 
-                    String identificadorFichero = generateIdentificadorFichero(registro.getRegistroDetalle().getIdentificadorIntercambio(), secuencia, sc.getName());
+                    String identificadorFichero = generateIdentificadorFichero(registroDetalle.getIdentificadorIntercambio(), secuencia, sc.getName());
                     secuencia++;
 
                     crearAnexo(rootNode, sc.getName(),identificadorFichero, CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento()),
@@ -1255,7 +1253,7 @@ public class Sicres3XML {
 
                     DocumentCustody dc = anexoFull.getDocumentoCustody();
 
-                    identificadorFichero = generateIdentificadorFichero(registro.getRegistroDetalle().getIdentificadorIntercambio(), secuencia, dc.getName());
+                    identificadorFichero = generateIdentificadorFichero(registroDetalle.getIdentificadorIntercambio(), secuencia, dc.getName());
                     secuencia++;
 
                     crearAnexo(rootNode, dc.getName(),identificadorFichero, CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento()),
@@ -1263,7 +1261,7 @@ public class Sicres3XML {
                             obtenerHash(dc.getData()),dc.getMime(),dc.getData(), null,anexo.getObservaciones());
 
                     SignatureCustody scFirma = anexoFull.getSignatureCustody();
-                    String identificadorFicheroFirmado = generateIdentificadorFichero(registro.getRegistroDetalle().getIdentificadorIntercambio(), secuencia, dc.getName());
+                    String identificadorFicheroFirmado = generateIdentificadorFichero(registroDetalle.getIdentificadorIntercambio(), secuencia, dc.getName());
                     secuencia++;
 
                     crearAnexo(rootNode, scFirma.getName(),identificadorFicheroFirmado, CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento()),
@@ -1459,15 +1457,13 @@ public class Sicres3XML {
      * Añade el Segmento deInternosControl al Fichero de Intercambio
      *
      * @param rootNode
-     * @param registro
+     * @param registroDetalle
      */
-    private void addDatosformularioGenerico(Element rootNode, RegistroEntrada registro) {
+    private void addDatosformularioGenerico(Element rootNode, RegistroDetalle registroDetalle) {
 
         // De_Formulario_Generico
         Element rootElement = rootNode.addElement("De_Formulario_Generico");
         Element elem = null;
-
-        RegistroDetalle registroDetalle = registro.getRegistroDetalle();
 
         // Expone
         elem = rootElement.addElement("Expone");

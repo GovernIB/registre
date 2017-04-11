@@ -1,9 +1,12 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.AsientoRegistralSir;
+import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.utils.EstadoAsientoRegistralSir;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
@@ -96,6 +99,26 @@ public interface AsientoRegistralSirLocal extends BaseEjb<AsientoRegistralSir, L
      * @throws Exception
      */
     public AsientoRegistralSir transformarFicheroIntercambio(FicheroIntercambio ficheroIntercambio)throws Exception;
+
+
+    /**
+     *
+     * @param registroEntrada
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
+    public AsientoRegistralSir transformarRegistroEntrada(RegistroEntrada registroEntrada) throws Exception, I18NException;
+
+    /**
+     *
+     * @param registroSalida
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
+    public AsientoRegistralSir transformarRegistroSalida(RegistroSalida registroSalida)
+            throws Exception, I18NException;
 
     /**
      * Elimina los AsientoRegistralSir de una Entidad

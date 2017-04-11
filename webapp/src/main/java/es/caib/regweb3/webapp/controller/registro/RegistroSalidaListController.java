@@ -1,11 +1,16 @@
 package es.caib.regweb3.webapp.controller.registro;
 
+import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
+import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.*;
 import es.caib.regweb3.plugins.justificante.IJustificantePlugin;
+import es.caib.regweb3.sir.core.excepcion.SIRException;
+import es.caib.regweb3.sir.ejb.EmisionLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.webapp.form.EnvioSirForm;
 import es.caib.regweb3.webapp.form.ModeloForm;
 import es.caib.regweb3.webapp.form.RegistroSalidaBusqueda;
 import es.caib.regweb3.webapp.utils.Mensaje;
@@ -29,6 +34,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Fundació BIT.
@@ -49,16 +55,16 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
     public RegistroSalidaLocal registroSalidaEjb;
 
     @EJB(mappedName = "regweb3/HistoricoRegistroSalidaEJB/local")
-    public HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
+    private HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
 
     @EJB(mappedName = "regweb3/OficioRemisionSalidaUtilsEJB/local")
     private OficioRemisionSalidaUtilsLocal oficioRemisionSalidaUtilsEjb;
 
-    @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
-    public TipoDocumentalLocal tipoDocumentalEjb;
-
     @EJB(mappedName = "regweb3/AnexoEJB/local")
-    public AnexoLocal anexoEjb;
+    private AnexoLocal anexoEjb;
+
+    @EJB(mappedName = "regweb3/EmisionEJB/local")
+    private EmisionLocal emisionEjb;
 
 
 
@@ -265,6 +271,57 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         return "registroSalida/registroSalidaDetalle";
     }
 
+    /**
+     * Enviar a SIR un Registro de Salida
+     */
+    @RequestMapping(value = "/{idRegistro}/enviarSir", method = RequestMethod.GET)
+    public ModelAndView enviarSir(@PathVariable Long idRegistro, Model model, HttpServletRequest request) throws Exception {
+
+        ModelAndView mav = new ModelAndView("registro/envioSir");
+        RegistroSalida registroSalida = registroSalidaEjb.findById(idRegistro);
+        LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
+
+        List<OficinaTF> oficinasSIR = oficioRemisionSalidaUtilsEjb.isOficioRemisionSir(registroSalida, getOrganismosOficioRemisionSalida(organismosOficinaActiva));
+
+        if(oficinasSIR.isEmpty()){
+            log.info("Este registro no se puede enviar via SIR, no tiene oficinas");
+            Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.error.envio.oficinas"));
+            return new ModelAndView("redirect:/registroSalida/" + idRegistro + "/detalle");
+        }
+
+        mav.addObject("tipoRegistro", RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO);
+        mav.addObject("envioSirForm", new EnvioSirForm());
+        mav.addObject("registro", registroSalida);
+        mav.addObject("oficinasSIR", oficinasSIR);
+        mav.addObject("destino", organismoOficioRemision(registroSalida, getOrganismosOficioRemisionSalida(organismosOficinaActiva)));
+
+        return mav;
+    }
+
+    /**
+     * Enviar a SIR un Registro de Salida
+     */
+    @RequestMapping(value = "/{idRegistro}/enviarSir", method = RequestMethod.POST)
+    public ModelAndView enviarSir(@ModelAttribute EnvioSirForm envioSirForm, @PathVariable Long idRegistro, HttpServletRequest request) throws Exception {
+
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+
+        // OficinaSir destino
+        Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
+        OficinaTF oficinaSir = oficinasService.obtenerOficina(envioSirForm.getOficinaSIRCodigo(), null, null);
+
+        try{
+
+            emisionEjb.enviarFicheroIntercambio(RegwebConstantes.REGISTRO_SALIDA_ESCRITO,idRegistro, oficinaSir.getCodigo(),oficinaSir.getDenominacion(), getOficinaActiva(request), usuarioEntidad, envioSirForm.getIdLibro());
+            Mensaje.saveMessageInfo(request, getMessage("asientoRegistralSir.envio.ok"));
+
+        }catch (SIRException e){
+            Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.error.envio"));
+        }
+
+        return new ModelAndView("redirect:/registroSalida/" + idRegistro + "/detalle");
+    }
+
     @RequestMapping(value = "/pendientesVisar/list/{pageNumber}", method = RequestMethod.GET)
     public ModelAndView pendientesVisar(@PathVariable Integer pageNumber, HttpServletRequest request) throws Exception{
 
@@ -435,24 +492,20 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
         try {
             RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFullCompleto(idRegistro);
+            UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
             Long idEntidad = registroSalida.getUsuario().getEntidad().getId();
 
             // Carregam el plugin
             IJustificantePlugin justificantePlugin = RegwebJustificantePluginManager.getInstance(idEntidad);
 
             // Comprova que existeix el plugin de justificant
-            if(justificantePlugin!=null) {
-
-                String tipoRegistro = "salida";
-
-                // Nom del fitxer generat
-                UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+            if(justificantePlugin != null) {
 
                 // Obtenim el ByteArray per generar el pdf
                 ByteArrayOutputStream baos = justificantePlugin.generarJustificante(registroSalida);
 
                 // Cream l'annex justificant i el firmam
-                AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, idRegistro, tipoRegistro, baos);
+                AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, idRegistro, RegwebConstantes.REGISTRO_SALIDA_ESCRITO.toLowerCase(), baos);
 
                 // Descarrega el Justificant firmat
                 // Cabeceras Response
@@ -475,6 +528,31 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
         return "redirect:/registroSalida/"+idRegistro+"/detalle";
 
+    }
+
+    /**
+     * Comprueba si el RegistroSalida es un Oficio de Remisión y obtiene el códigoDir3 del
+     * Interesado tipo administración asociado al registro.
+     * @param registroSalida
+     * @param organismos
+     * @return
+     * @throws Exception
+     */
+    private String organismoOficioRemision(RegistroSalida registroSalida, Set<String> organismos) throws Exception{
+
+        List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
+
+        for (Interesado interesado : interesados) {
+            if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
+
+                if(!organismos.contains(interesado.getCodigoDir3())){
+
+                    return interesado.getRazonSocial();
+                }
+            }
+        }
+
+        return null;
     }
 
     @InitBinder("registroSalidaBusqueda")

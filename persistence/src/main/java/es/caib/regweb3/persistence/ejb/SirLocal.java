@@ -88,20 +88,6 @@ public interface SirLocal {
     public AsientoRegistralSir rechazarAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir, Oficina oficinaActiva, Usuario usuario, String observaciones) throws Exception;
 
     /**
-     * Transforma un {@link es.caib.regweb3.model.RegistroEntrada} en un {@link AsientoRegistralSir}
-     *
-     * @param registroEntrada
-     * @param codigoEntidadRegistralDestino
-     * @param denominacionEntidadRegistralDestino
-     * @return
-     * @throws Exception
-     * @throws I18NException
-     * @throws I18NValidationException
-     */
-    public AsientoRegistralSir transformarRegistroEntrada(RegistroEntrada registroEntrada)
-            throws Exception, I18NException;
-
-    /**
      * @param asientoRegistralSir
      * @param usuario
      * @param oficinaActiva
@@ -115,20 +101,6 @@ public interface SirLocal {
      * @throws I18NValidationException
      */
     public RegistroEntrada transformarAsientoRegistralEntrada(AsientoRegistralSir asientoRegistralSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs) throws Exception, I18NException, I18NValidationException;
-
-    /**
-     * Transforma un {@link es.caib.regweb3.model.RegistroEntrada} en un {@link AsientoRegistralSir}
-     *
-     * @param registroSalida
-     * @param codigoEntidadRegistralDestino
-     * @param denominacionEntidadRegistralDestino
-     * @return
-     * @throws Exception
-     * @throws I18NException
-     * @throws I18NValidationException
-     */
-    public AsientoRegistralSir transformarRegistroSalida(RegistroSalida registroSalida, String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino)
-            throws Exception, I18NException;
 
     /**
      * @param asientoRegistralSir

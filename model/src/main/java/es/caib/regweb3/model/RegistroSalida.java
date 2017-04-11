@@ -1,5 +1,6 @@
 package es.caib.regweb3.model;
 
+import es.caib.regweb3.utils.RegwebConstantes;
 import org.hibernate.annotations.ForeignKey;
 
 import javax.persistence.*;
@@ -230,6 +231,36 @@ public class RegistroSalida implements IRegistro {
         this.registroDetalle = registroDetalle;
     }
 
+
+    @Transient
+    public String interesadoDestinoCodigo() throws Exception{
+
+        List<Interesado> interesados = this.getRegistroDetalle().getInteresados();
+
+        for (Interesado interesado : interesados) {
+            if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
+
+                return interesado.getCodigoDir3();
+            }
+        }
+
+        return null;
+    }
+
+    @Transient
+    public String interesadoDestinoDenominacion() throws Exception{
+
+        List<Interesado> interesados = this.getRegistroDetalle().getInteresados();
+
+        for (Interesado interesado : interesados) {
+            if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
+
+                return interesado.getRazonSocial();
+            }
+        }
+
+        return null;
+    }
 
     @Override
     public boolean equals(Object o) {

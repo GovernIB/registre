@@ -137,7 +137,7 @@ public class RegistroUtils {
        java.util.Date hoy = new Date(); //Fecha de hoy
 
        long diferencia = ( hoy.getTime() - fechaCreacionRegistro.getTime() )/MILLSECS_PER_DAY;
-       log.info("Dias trascurridos: " + diferencia);
+
        return diferencia;
 
     }

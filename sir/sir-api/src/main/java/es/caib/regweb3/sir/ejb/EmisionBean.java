@@ -2,10 +2,7 @@ package es.caib.regweb3.sir.ejb;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.EstadoAsientoRegistralSir;
-import es.caib.regweb3.persistence.ejb.AsientoRegistralSirLocal;
-import es.caib.regweb3.persistence.ejb.OficioRemisionLocal;
-import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
-import es.caib.regweb3.persistence.ejb.SirLocal;
+import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.sir.core.excepcion.SIRException;
 import es.caib.regweb3.sir.core.model.Errores;
 import es.caib.regweb3.sir.utils.Sicres3XML;
@@ -31,14 +28,13 @@ public class EmisionBean implements EmisionLocal{
 
     public final Logger log = Logger.getLogger(getClass());
 
-    @EJB(mappedName = "regweb3/SirEJB/local")
-    public SirLocal sirEjb;
+    @EJB private SirLocal sirEjb;
+    @EJB private AsientoRegistralSirLocal asientoRegistralSirEjb;
+    @EJB private RegistroEntradaLocal registroEntradaEjb;
+    @EJB private RegistroSalidaLocal registroSalidaEjb;
+    @EJB private OficioRemisionLocal oficioRemisionEjb;
 
-    @EJB public AsientoRegistralSirLocal asientoRegistralSirEjb;
-    @EJB public RegistroEntradaLocal registroEntradaEjb;
-    @EJB public OficioRemisionLocal oficioRemisionEjb;
-
-    Sicres3XML sicres3XML = new Sicres3XML();
+    private Sicres3XML sicres3XML = new Sicres3XML();
 
 
     /**
@@ -54,24 +50,37 @@ public class EmisionBean implements EmisionLocal{
      */
     public OficioRemision enviarFicheroIntercambio(String tipoRegistro, Long idRegistro, String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino, Oficina oficinaActiva, UsuarioEntidad usuario, Long idLibro)throws Exception{
 
-        OficioRemision oficioRemision = null;
+        OficioRemision oficioRemision;
+        AsientoRegistralSir asientoRegistralSir = null;
 
         try {
 
             oficioRemision = sirEjb.enviarFicheroIntercambio(tipoRegistro, idRegistro, codigoEntidadRegistralDestino, denominacionEntidadRegistralDestino, oficinaActiva, usuario,idLibro);
 
-            RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(oficioRemision.getRegistrosEntrada().get(0).getId());
+            if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO)){
 
-            log.info("Enviando el registro al nodo distribuido: " + registroEntrada.getRegistroDetalle().getIdentificadorIntercambio());
+                RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFullCompleto(oficioRemision.getRegistrosEntrada().get(0).getId());
+                asientoRegistralSir = asientoRegistralSirEjb.transformarRegistroEntrada(registroEntrada);
+                log.info("asientoRegistralSir transformado:" + asientoRegistralSir.getIdentificadorIntercambio());
+            }else if(tipoRegistro.equals(RegwebConstantes.REGISTRO_SALIDA_ESCRITO)){
+
+                RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFullCompleto(oficioRemision.getRegistrosSalida().get(0).getId());
+                asientoRegistralSir = asientoRegistralSirEjb.transformarRegistroSalida(registroSalida);
+                log.info("asientoRegistralSir transformado:" + asientoRegistralSir.getIdentificadorIntercambio());
+            }
+
+            log.info("Enviando el registro al nodo distribuido: " + asientoRegistralSir.getIdentificadorIntercambio());
 
             // Enviamos el asiento registral al nodo distribuido.
-            enviar(registroEntrada, oficioRemision.getId(), RegwebConstantes.OFICIO_SIR_ENVIADO);
+            enviar(asientoRegistralSir, oficioRemision.getId(), RegwebConstantes.OFICIO_SIR_ENVIADO);
 
         } catch (Exception e) {
             log.error("Error al enviar el fichero de intercambio: " + e);
+            e.printStackTrace();
             throw new SIRException("Error en la llamada al servicio de recepción de ficheros de datos de intercambio (WS_SIR6_B)");
         } catch (I18NException e) {
             log.error("Error al enviar el fichero de intercambio: " + e);
+            e.printStackTrace();
             throw new SIRException("Error en la llamada al servicio de recepción de ficheros de datos de intercambio (WS_SIR6_B)");
         }
 
@@ -112,15 +121,15 @@ public class EmisionBean implements EmisionLocal{
 
     /**
      * Envia un registro de entrada a un nodo distribuido creando previamente el fichero de intercambio
-     * @param registroEntrada
+     * @param asientoRegistralSir
      * @param idOficioRemision
      * @param idEstadoOficio
      */
-    public void enviar(RegistroEntrada registroEntrada, Long idOficioRemision, int idEstadoOficio){
+    public void enviar(AsientoRegistralSir asientoRegistralSir, Long idOficioRemision, int idEstadoOficio){
 
         try{
             // Creamos el xml de intercambio
-            String xml = sicres3XML.crearXMLFicheroIntercambioSICRES3(registroEntrada);
+            String xml = sicres3XML.crearXMLFicheroIntercambioSICRES3(asientoRegistralSir);
             log.info("Xml Fichero Intercambio generado: " + xml);
 
             RespuestaWS respuesta = ws_sir6_b_recepcionFicheroDeAplicacion(xml);

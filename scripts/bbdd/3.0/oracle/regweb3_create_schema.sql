@@ -78,7 +78,7 @@
         REF_EXTERNA varchar2(16 char),
         RESUMEN varchar2(240 char) not null,
         SOLICITA varchar2(4000 char),
-        TIMESTAMP_REGISTRO raw(255),
+        TIMESTAMP_REGISTRO raw(2000),
         timestampRegistroInicial raw(255),
         TIPO_ANOTACION varchar2(2 char) not null,
         TIPO_REGISTRO number(10,0) not null,
@@ -366,14 +366,14 @@
         DESTINOEXTERNODENOMINA varchar2(300 char),
         ESTADO number(10,0) not null,
         FECHA timestamp not null,
-        FECHA_ENVIO timestamp,
+        FECHA_DESTINO timestamp,
         FECHA_ESTADO timestamp,
-        FECHA_RECEPCION timestamp,
+        ID_INTERCAMBIO varchar2(33 char),
         NUMREGISTRO number(10,0) not null,
+        NUM_REG_DESTINO varchar2(255 char),
         REINTENTOS number(10,0),
         SIR number(1,0) not null,
         TIPO_OFICIO number(19,0) not null,
-        ASIENTO_REGISTRAL_SIR number(19,0),
         LIBRO number(19,0) not null,
         OFICINA number(19,0) not null,
         ORGANISMODEST number(19,0),
@@ -456,7 +456,7 @@
         DESCRIPCION varchar2(255 char),
         ENTIDAD number(19,0),
         TIPO number(19,0),
-        VALOR varchar2(255 char)
+        VALOR varchar2(2048 char)
     );
 
     create table RWE_REGISTROLOPD_MIGRADO (
@@ -470,11 +470,16 @@
     create table RWE_REGISTRO_DETALLE (
         ID number(19,0) not null,
         APLICACION varchar2(255 char),
+        COD_ENT_REG_DEST varchar2(21 char),
+        DEC_ENT_REG_DEST varchar2(80 char),
+        DEC_T_ANOTACION varchar2(80 char),
         EXPEDIENTE varchar2(80 char),
         EXPONE varchar2(4000 char),
         EXTRACTO varchar2(240 char),
         FECHAORIGEN timestamp,
+        ID_INTERCAMBIO varchar2(33 char),
         IDIOMA number(19,0),
+        INDICADOR_PRUEBA number(10,0),
         NUMREG_ORIGEN varchar2(20 char),
         NUMTRANSPORTE varchar2(20 char),
         OBSERVACIONES varchar2(50 char),
@@ -483,6 +488,7 @@
         REFEXT varchar2(16 char),
         RESERVA varchar2(4000 char),
         SOLICITA varchar2(4000 char),
+        TIPO_ANOTACION varchar2(2 char),
         TIPODOCFISICA number(19,0),
         TRANSPORTE number(19,0),
         VERSION varchar2(255 char),
@@ -602,8 +608,9 @@
     create table RWE_TRAZABILIDAD (
         ID number(19,0) not null,
         FECHA timestamp not null,
+        tipo number(19,0) not null,
         ASIENTO_REGISTRAL_SIR number(19,0),
-        OFICIO_REMISION number(19,0) not null,
+        OFICIO_REMISION number(19,0),
         REGENT_DESTINO number(19,0),
         REGENT_ORIGEN number(19,0),
         REGISTRO_SALIDA number(19,0)
@@ -1085,11 +1092,6 @@
         add constraint RWE_OFICINA_SERVICIO_FK
         foreign key (IDSERVICIO)
         references RWE_CATSERVICIO;
-
-    alter table RWE_OFICIO_REMISION
-        add constraint RWE_OFIREM_ASR_FK
-        foreign key (ASIENTO_REGISTRAL_SIR)
-        references RWE_ASIENTO_REGISTRAL_SIR;
 
     alter table RWE_OFICIO_REMISION
         add constraint RWE_OFIREM_USUORM_FK

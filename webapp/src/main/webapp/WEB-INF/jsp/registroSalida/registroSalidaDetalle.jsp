@@ -134,19 +134,23 @@
                         <%--Botón Oficio Remision--%>
                         <c:if test="${oficio.oficioRemision}">
                             <div class="panel-footer center">
-                                <button type="button" onclick="goTo('/regweb3/oficioRemision/salidasPendientesRemision')"
-                                        class="btn btn-success btn-sm btn-block">
-                                    <c:if test="${oficio.interno}">
-                                        <spring:message code="oficioRemision.boton.crear.interno"/>
-                                    </c:if>
-                                    <c:if test="${oficio.externo}">
-                                        <spring:message code="oficioRemision.boton.crear.externo"/>
-                                    </c:if>
-                                    <c:if test="${oficio.sir}">
-                                        <spring:message code="oficioRemision.boton.crear.sir"/>
-                                    </c:if>
 
-                                </button>
+                                <c:if test="${oficio.interno}">
+                                    <button type="button" onclick="goTo('<c:url value="/oficioRemision/salidasPendientesRemision"/>')" class="btn btn-success btn-sm btn-block">
+                                        <spring:message code="oficioRemision.boton.crear.interno"/>
+                                    </button>
+                                </c:if>
+                                <c:if test="${oficio.externo}">
+                                    <button type="button" onclick="goTo('<c:url value="/oficioRemision/salidasPendientesRemision"/>')" class="btn btn-success btn-sm btn-block">
+                                        <spring:message code="oficioRemision.boton.crear.externo"/>
+                                    </button>
+                                </c:if>
+                                <c:if test="${oficio.sir}">
+                                    <button type="button" onclick="goTo('<c:url value="/registroSalida/${registro.id}/enviarSir"/>')" class="btn btn-success btn-sm btn-block">
+                                        <spring:message code="registroEntrada.enviar.sir"/>
+                                    </button>
+                                </c:if>
+
                             </div>
                         </c:if>
 
@@ -155,7 +159,7 @@
                     <div class="panel-footer center">
 
                         <%--Botón Nueva Salida--%>
-                        <div class="btn-group"><button type="button" onclick="goTo('/regweb3/registroSalida/new')" class="btn btn-danger btn-sm"><spring:message code="registro.boton.nuevo"/></button></div>
+                        <div class="btn-group"><button type="button" onclick="goTo('<c:url value="/registroSalida/new"/>')" class="btn btn-danger btn-sm"><spring:message code="registro.boton.nuevo"/></button></div>
 
                         <%--Botón Editar Registro--%>
                         <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO && puedeEditar}">
