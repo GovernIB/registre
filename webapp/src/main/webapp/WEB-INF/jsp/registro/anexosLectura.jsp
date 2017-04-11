@@ -15,7 +15,7 @@
 
         <div class="panel-heading">
             <h3 class="panel-title">
-                <i class="fa fa-pencil-square-o"></i><strong><spring:message code="anexo.anexos"/></strong>
+                <i class="fa fa-file"></i><strong><spring:message code="anexo.anexos"/></strong>
             </h3>
         </div>
 

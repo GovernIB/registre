@@ -15,7 +15,7 @@
 
         <div class="panel-heading">
             <h3 class="panel-title">
-                <i class="fa fa-pencil-square-o"></i>
+                <i class="fa fa-user"></i>
                 <strong>
                     <c:if test="${param.tipoRegistro == 'entrada'}">
                         <spring:message code="interesado.interesados"/>
