@@ -306,7 +306,7 @@
                                                             <th class="center"><spring:message code="registroEntrada.fecha"/></th>
                                                             <th class="center"><spring:message code="registroEntrada.usuario"/></th>
                                                             <th class="center"><spring:message code="registroEntrada.oficina"/></th>
-                                                            <th class="center"><spring:message code="registroEntrada.organismoDestino"/></th>
+                                                            <th class="center"><spring:message code="organismo.destino"/></th>
                                                             <c:if test="${registroEntradaBusqueda.registroEntrada.estado == 2}">
                                                                 <th class="center"><spring:message code="registroEntrada.reserva"/></th>
                                                             </c:if>

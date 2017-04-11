@@ -668,6 +668,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         return (Long) q.getSingleResult() > 0;
     }
 
+    @Override
     public Boolean tieneEstado(Long idRegistroEntrada, Long idEstado) throws Exception {
         Query q;
 
@@ -679,7 +680,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         return (Long) q.getSingleResult() > 0;
     }
 
-
+    @Override
     public RegistroEntrada getConAnexosFull(Long id) throws Exception, I18NException {
 
         RegistroEntrada re = findById(id);
@@ -694,6 +695,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         return re;
     }
 
+    @Override
     public RegistroEntrada getConAnexosFullCompleto(Long id) throws Exception, I18NException {
 
         RegistroEntrada re = findById(id);
@@ -726,7 +728,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         RegistroEntrada rectificado = null;
 
         try {
-            RegistroEntrada registroEntrada = getConAnexosFull(idRegistro);
+            RegistroEntrada registroEntrada = getConAnexosFullCompleto(idRegistro);
             List<Interesado> interesados = registroEntrada.getRegistroDetalle().getInteresados();
             List<AnexoFull> anexos = registroEntrada.getRegistroDetalle().getAnexosFull();
 
@@ -782,7 +784,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         return rectificado;
     }
 
-
+    @Override
     public RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception, I18NException {
         RespuestaDistribucion respuestaDistribucion = new RespuestaDistribucion();
         respuestaDistribucion.setHayPlugin(false);
@@ -821,7 +823,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         return respuestaDistribucion;
     }
 
-
+    @Override
     public Boolean enviar(RegistroEntrada re, DestinatarioWrapper wrapper,Long entidadId) throws Exception, I18NException {
 
         //Obtenemos plugin
