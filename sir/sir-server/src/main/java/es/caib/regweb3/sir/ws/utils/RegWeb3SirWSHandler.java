@@ -34,10 +34,6 @@ public class RegWeb3SirWSHandler implements SOAPHandler<SOAPMessageContext> {
     @Override
     public boolean handleMessage(SOAPMessageContext smc) {
 
-        log.info(" ------------------ RegWeb3SirWSHandler  handleMessage --------------");
-        log.info(" ");
-
-
         String query_string =  (String) smc.get(MessageContext.QUERY_STRING);
         Boolean outboundProperty = (Boolean) smc.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY); //Mensaje de entrada o salida
 
