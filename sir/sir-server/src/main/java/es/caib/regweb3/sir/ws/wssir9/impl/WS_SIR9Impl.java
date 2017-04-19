@@ -3,7 +3,7 @@ package es.caib.regweb3.sir.ws.wssir9.impl;
 import es.caib.regweb3.persistence.ejb.WebServicesMethodsLocal;
 import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.core.model.Errores;
-import es.caib.regweb3.sir.ejb.RecepcionLocal;
+import es.caib.regweb3.sir.ws.ejb.RecepcionLocal;
 import es.caib.regweb3.sir.ws.wssir9.RespuestaWS;
 import es.caib.regweb3.sir.ws.wssir9.WS_SIR9_PortType;
 import org.apache.log4j.Logger;
