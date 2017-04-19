@@ -9,6 +9,7 @@ import es.caib.regweb3.persistence.validator.AnexoValidator;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -19,6 +20,7 @@ import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.IDocumentCustodyPlugin;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.fundaciobit.plugins.utils.Metadata;
+import org.fundaciobit.plugins.utils.MetadataConstants;
 import org.fundaciobit.plugins.utils.PluginsManager;
 import org.hibernate.Hibernate;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -29,6 +31,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
 import java.beans.Encoder;
 import java.beans.Expression;
 import java.beans.PersistenceDelegate;
@@ -103,12 +106,11 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             anexoFull.setSignatureCustody(custody.getSignatureInfoOnly(custodyID));
             anexoFull.setSignatureFileDelete(false);
 
-            log.info("XYZ SIGNATURE " + custody.getSignatureInfoOnly(custodyID));
-            log.info("XYZ DOCUMENT " + custody.getDocumentInfoOnly(custodyID));
-
-            int modoFirma = anexo.getModoFirma();
-
-            log.info(" XYZ modoFirma " + modoFirma);
+            if (log.isDebugEnabled()) {
+              log.debug("SIGNATURE " + custody.getSignatureInfoOnly(custodyID));
+              log.debug("DOCUMENT " + custody.getDocumentInfoOnly(custodyID));
+              log.debug("modoFirma " + anexo.getModoFirma());
+            }
 
 
             return anexoFull;
@@ -437,7 +439,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @throws Exception
      * @throws I18NException
      */
-    protected void updateCustodyInfoOfAnexo(AnexoFull anexoFull, IDocumentCustodyPlugin custody,
+    protected void updateCustodyInfoOfAnexo(AnexoFull anexoFull, IDocumentCustodyPlugin custody2,
                                             final Map<String, Object> custodyParameters, final String custodyID,
                                             IRegistro registro, boolean isNou) throws Exception, I18NException {
 
@@ -459,7 +461,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             int total = 0;
             //Si no tenia documento, pero ahora envian uno nuevo, sumamos 1
             if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) {
-                if (custody.getDocumentInfoOnly(custodyID) == null) {
+                if (custody2.getDocumentInfoOnly(custodyID) == null) {
                     // Afegim un
                     if (anexoFull.getDocumentoCustody() != null) {
                         total += 1;
@@ -475,7 +477,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             }
             if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED) {
                 //Si no tenia firma, pero envian 1 nueva, sumamos 1
-                if (custody.getSignatureInfoOnly(custodyID) == null) {
+                if (custody2.getSignatureInfoOnly(custodyID) == null) {
                     // Afegim un
                     if (anexoFull.getSignatureCustody() != null) {
                         total += 1;
@@ -489,7 +491,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                   throw new I18NException("anexo.error.quedarsesinfichero");
               }*/
                 //PARCHE API ANTIGUA
-                if (custody.getDocumentInfoOnly(custodyID) == null) {
+                if (custody2.getDocumentInfoOnly(custodyID) == null) {
                     // Afegim un
                     if (anexoFull.getDocumentoCustody() != null) {
                         total += 1;
@@ -504,7 +506,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 }
             }
             if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
-                if (custody.getDocumentInfoOnly(custodyID) == null) {
+                if (custody2.getDocumentInfoOnly(custodyID) == null) {
                     // Afegim un
                     if (anexoFull.getDocumentoCustody() != null) {
                         total += 1;
@@ -514,7 +516,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 }
 
                 //Si no tenia firma, pero envian 1 nueva, sumamos 1
-                if (custody.getSignatureInfoOnly(custodyID) == null) {
+                if (custody2.getSignatureInfoOnly(custodyID) == null) {
                     // Afegim un
                     if (anexoFull.getSignatureCustody() != null) {
                         total += 1;
@@ -536,6 +538,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         Anexo anexo = anexoFull.getAnexo();
 
         boolean updateDate = false;
+        final DocumentCustody documentCustody;
+        final SignatureCustody signatureCustody;
 
         String mimeFinal = null;
         //Actualización o creación de los documentos de los anexos en función del modo de firma
@@ -543,120 +547,201 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         if (isNou || modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
 
             //Guardamos el documentCustody
-            DocumentCustody doc = guardarDocumentCustody(anexoFull.getDocumentoCustody(),
-                    custody, custodyID, custodyParameters, anexo, updateDate, mimeFinal);
+            // XMAS SAVEALL DocumentCustody doc = guardarDocumentCustody(anexoFull.getDocumentoCustody(),
+            //      custody, custodyID, custodyParameters, anexo,  mimeFinal);
+            documentCustody = anexoFull.getDocumentoCustody();
+            mimeFinal = arreglarDocumentCustody(documentCustody, custodyID, custodyParameters,
+                anexo, mimeFinal);
+
             //Guardamos la signatureCustody
-            guardarSignatureCustody(anexoFull.getSignatureCustody(), doc, custody, custodyID, custodyParameters, anexo, updateDate, mimeFinal);
+            // XMAS SAVEALL guardarSignatureCustody(anexoFull.getSignatureCustody(), doc, custody, custodyID, custodyParameters, anexo, updateDate, mimeFinal);
+            signatureCustody = anexoFull.getSignatureCustody();
+            mimeFinal = arreglarSignatureCustody(signatureCustody, documentCustody, custodyID,
+                custodyParameters, anexo, mimeFinal);
+            
+            updateDate = true;
 
         } else { //es modificación Tratamos todos los modos firma como corresponda
+            DocumentCustody doc = anexoFull.getDocumentoCustody();
             if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) {
 
                 //Guardamos el documentCustody
-                guardarDocumentCustody(anexoFull.getDocumentoCustody(), custody, custodyID, custodyParameters, anexo, updateDate, mimeFinal);
+                // XMAS SAVEALL guardarDocumentCustody(anexoFull.getDocumentoCustody(), custody, custodyID, custodyParameters, anexo, updateDate, mimeFinal);
+                documentCustody = anexoFull.getDocumentoCustody();
+                mimeFinal = arreglarDocumentCustody(documentCustody, custodyID, custodyParameters,
+                  anexo, mimeFinal);
 
                 //Borrar lo que haya en signature custody
-                custody.deleteSignature(custodyID);
+                // XMAS SAVEALL custody.deleteSignature(custodyID);
+                signatureCustody = null;
+                
                 updateDate = true;
-            }
-            if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED) {
+            } else if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED) {
                 //obtenemos el document custody para crear bien el documento
-                DocumentCustody doc = anexoFull.getDocumentoCustody();
+                
                 if (doc == null) {//CASO API NUEVA
-                    //Guardamos la signatureCustody. Los documentos con firma attached se guardan en SignatureCustody.
-                    guardarSignatureCustody(anexoFull.getSignatureCustody(), doc, custody, custodyID, custodyParameters, anexo, updateDate, mimeFinal);
-
+                  
+                  documentCustody = null;
+                  //Guardamos la signatureCustody. Los documentos con firma attached se guardan en SignatureCustody.
+                    
+                  signatureCustody = anexoFull.getSignatureCustody();
+                  mimeFinal = arreglarSignatureCustody(signatureCustody, documentCustody, custodyID,
+                      custodyParameters, anexo, mimeFinal);
+                  
+                    // XMAS SAVEALL guardarSignatureCustody(anexoFull.getSignatureCustody(), doc, custody, custodyID, custodyParameters, anexo, updateDate, mimeFinal);
                     //Borramos el documentcustody que habia por si venimos de otro modo de firma
-                    custody.deleteDocument(custodyID);
+                    // custody.deleteDocument(custodyID);
+
                     updateDate = true;
                 } else { //PARCHE PARA API ANTIGUA
                     log.info("PARCHE DC " + anexoFull.getDocumentoCustody());
-                    guardarDocumentCustody(anexoFull.getDocumentoCustody(), custody, custodyID, custodyParameters, anexo, updateDate, mimeFinal);
+                    documentCustody = doc;
+                    mimeFinal = arreglarDocumentCustody(documentCustody, custodyID, custodyParameters,
+                      anexo, mimeFinal);
+                    
+                    signatureCustody = null;
+                    
+                 // XMAS SAVEALL guardarDocumentCustody(anexoFull.getDocumentoCustody(), custody, custodyID, custodyParameters, anexo, updateDate, mimeFinal);
                     updateDate = true;
                 }
+                
+            } else {
+              //el caso de modoFirma detached es igual que si fuese nuevo.
+              
+              
+              // CASO:  no tocam res
+              documentCustody = null;
+              signatureCustody = null;
             }
-            //el caso de modoFirma detached es igual que si fuese nuevo.
+            
         }
 
+        
+        if (documentCustody == null && signatureCustody == null) {
+          // OK No feim res.
+        } else {
 
-        // Actualitzar Metadades
-        final String lang = Configuracio.getDefaultLanguage();
-        final Locale loc = new Locale(lang);
-        List<Metadata> metadades = new ArrayList<Metadata>();
+          // Actualitzar Metadades
+          final String lang = Configuracio.getDefaultLanguage();
+          final Locale loc = new Locale(lang);
+          List<Metadata> metadades = new ArrayList<Metadata>();
+  
+          // Metadades que venen de Scan
+          List<Metadata> metasScan = anexoFull.getMetadatas();
+          
+          final boolean debug = log.isDebugEnabled();
+  
+          if (debug) {
+            log.info("MESTAS SCAN = " + metasScan);
+          }
+  
+          if (metasScan != null && metasScan.size() != 0) {
+  
+              if (debug) {
+                log.info("MESTAS SCAN SIZE = " + metasScan.size());
+                log.info("MESTAS ORIG SIZE PRE = " + metadades.size());
+              }
+  
+              metadades.addAll(metasScan);
+  
+              if (debug) {
+                log.info("MESTAS ORIG SIZE POST = " + metadades.size());
+              }
+  
+          }
+  
+          // fechaDeEntradaEnElSistema
+          if (updateDate) {
 
-        // Metadades que venen de Scan
-        List<Metadata> metasScan = anexoFull.getMetadatas();
-
-        log.info("XYZ MESTAS SCAN = " + metasScan);
-
-        if (metasScan != null && metasScan.size() != 0) {
-
-            log.info("XYZ MESTAS SCAN SIZE = " + metasScan.size());
-
-            log.info("XYZ MESTAS ORIG SIZE PRE = " + metadades.size());
-
-            metadades.addAll(metasScan);
-
-            log.info("XYZ MESTAS ORIG SIZE POST = " + metadades.size());
-
-        }
-
-        // fechaDeEntradaEnElSistema
-        if (updateDate) {
-            metadades.add(new Metadata("anexo.fechaCaptura", anexo.getFechaCaptura()));
-        }
-
-        // String tipoDeDocumento; //  varchar(100)
-        if (anexo.getTitulo() != null) {
+              metadades.add(new Metadata("anexo.fechaCaptura", anexo.getFechaCaptura()));
+            
+              // Afegida Nova Metadada
+              metadades.add(new Metadata(MetadataConstants.ENI_FECHA_INICIO, 
+                  org.fundaciobit.plugins.utils.ISO8601.dateToISO8601(anexo.getFechaCaptura())));
+          }
+  
+          // String tipoDeDocumento; //  varchar(100)
+          if (anexo.getTitulo() != null) {
             metadades.add(new Metadata("anexo.titulo", anexo.getTitulo()));
-        }
-
-        //  String tipoDeDocumento; //  varchar(100)
-        if (anexo.getTipoDocumento() != null) {
+            
+            // Afegida Nova Metadada
+            // MetadataConstants.ENI_DESCRIPCION = "eni:descripcion"
+            metadades.add(new Metadata(MetadataConstants.ENI_DESCRIPCION, anexo.getTitulo()));
+          }
+  
+          //  String tipoDeDocumento; //  varchar(100)
+          if (anexo.getTipoDocumento() != null) {
+            // TODO A quin tipus ENI es correspon AIXÒ !!!!
             metadades.add(new Metadata("anexo.tipoDocumento",
-                    I18NLogicUtils.tradueix(loc, "tipoDocumento.0" + anexo.getTipoDocumento())));
-        }
+                      I18NLogicUtils.tradueix(loc, "tipoDocumento.0" + anexo.getTipoDocumento())));
+          }
+  
+          if (registro.getOficina() != null && registro.getOficina().getNombreCompleto() != null) {
+            
+            metadades.add(new Metadata("oficina", registro.getOficina().getNombreCompleto()));
+            
+            // Afegida Nova Metadada
+            // MetadataConstants.ENI_CODIGO_OFICINA_REGISTRO = "eni:codigo_oficina_registro"
+            metadades.add(new Metadata(MetadataConstants.ENI_CODIGO_OFICINA_REGISTRO,
+                      registro.getOficina().getCodigo()));
+          }
+  
+  
+          if (anexo.getOrigenCiudadanoAdmin() != null) {
+              metadades.add(new Metadata("anexo.origen",
+                      I18NLogicUtils.tradueix(loc, "anexo.origen." + anexo.getOrigenCiudadanoAdmin())));
+              
+              // Afegida Nova Metadada
+              // MetadataConstants.ENI_ORIGEN = "eni:origen"
+              metadades.add(new Metadata(MetadataConstants.ENI_ORIGEN,
+                  anexo.getOrigenCiudadanoAdmin()));
+          }
+  
+          /**
+           * tipoValidezDocumento.1=Còpia
+           * tipoValidezDocumento.2=Còpia Compulsada
+           * tipoValidezDocumento.3=Còpia Original
+           * tipoValidezDocumento.4=Original
+           */
+          if (anexo.getValidezDocumento() != null && anexo.getValidezDocumento() != -1) {
+              metadades.add(new Metadata("anexo.validezDocumento",
+                      I18NLogicUtils.tradueix(loc, "tipoValidezDocumento." + anexo.getValidezDocumento())));
 
-        if (registro.getOficina() != null && registro.getOficina().getNombreCompleto() != null) {
-            metadades.add(new Metadata("oficina",
-                    registro.getOficina().getNombreCompleto()));
-        }
+              // Afegida Nova Metadada
+              // MetadataConstants.ENI_ESTADO_ELABORACION = "eni:estado_elaboracion"
+              metadades.add(new Metadata(MetadataConstants.ENI_ESTADO_ELABORACION,
+                  RegwebConstantes.CODIGO_NTI_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento())));
+          }
+  
+          if (mimeFinal != null) {
+              metadades.add(new Metadata("anexo.formato", mimeFinal));
+          }
 
+          if (anexo.getTipoDocumental() != null &&
+                  anexo.getTipoDocumental().getCodigoNTI() != null) {
 
-        if (anexo.getOrigenCiudadanoAdmin() != null) {
-            metadades.add(new Metadata("anexo.origen",
-                    I18NLogicUtils.tradueix(loc, "anexo.origen." + anexo.getOrigenCiudadanoAdmin())));
-        }
+            // Afegida Nova Metadada
+            // MetadataConstants.ENI_TIPO_DOCUMENTAL = "eni:tipo_doc_ENI"
+            metadades.add(new Metadata(MetadataConstants.ENI_TIPO_DOCUMENTAL,
+                anexo.getTipoDocumental().getCodigoNTI()));
 
-        /**
-         * tipoValidezDocumento.1=Còpia
-         * tipoValidezDocumento.2=Còpia Compulsada
-         * tipoValidezDocumento.3=Còpia Original
-         * tipoValidezDocumento.4=Original
-         */
-        if (anexo.getValidezDocumento() != null && anexo.getValidezDocumento() != -1) {
-            metadades.add(new Metadata("anexo.validezDocumento",
-                    I18NLogicUtils.tradueix(loc, "tipoValidezDocumento." + anexo.getValidezDocumento())));
-        }
-
-        if (mimeFinal != null) {
-            metadades.add(new Metadata("anexo.formato", mimeFinal));
-        }
-
-        if (anexo.getTipoDocumental() != null &&
-                anexo.getTipoDocumental().getCodigoNTI() != null) {
             metadades.add(new Metadata("anexo.tipoDocumental.codigo", anexo.getTipoDocumental().getCodigoNTI()));
-            try {
-                metadades.add(new Metadata("anexo.tipoDocumental.descripcion",
-                        ((TraduccionTipoDocumental) anexo.getTipoDocumental().getTraduccion(loc.getLanguage())).getNombre()));
-            } catch (Throwable th) {
-                log.error("Error en la traduccion de tipo documental: " + th.getMessage(), th);
-            }
-        }
-        if (anexo.getObservaciones() != null) {
-            metadades.add(new Metadata("anexo.observaciones", anexo.getObservaciones()));
-        }
 
-        custody.updateMetadata(custodyID, metadades.toArray(new Metadata[metadades.size()]), custodyParameters);
+            try {
+              metadades.add(new Metadata("anexo.tipoDocumental.descripcion",
+                  ((TraduccionTipoDocumental) anexo.getTipoDocumental().getTraduccion(loc.getLanguage())).getNombre()));
+            } catch (Throwable th) {
+              log.error("Error en la traduccion de tipo documental: " + th.getMessage(), th);
+            }
+          }
+          if (anexo.getObservaciones() != null) {
+              metadades.add(new Metadata("anexo.observaciones", anexo.getObservaciones()));
+          }
+  
+          // XMAS SAVEALL custody.updateMetadata(custodyID, metadades.toArray(new Metadata[metadades.size()]), custodyParameters);
+          custody2.saveAll(custodyID, custodyParameters, documentCustody,
+              signatureCustody, metadades.toArray(new Metadata[metadades.size()]));
+        }
 
     }
 
@@ -674,18 +759,16 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @return
      * @throws Exception
      */
-    public DocumentCustody guardarDocumentCustody(DocumentCustody dc,
+    /*
+    public DocumentCustody guardarDocumentCustody(DocumentCustody doc,
                                                   IDocumentCustodyPlugin custody, String custodyID,
                                                   final Map<String, Object> custodyParameters, Anexo anexo,
-                                                  boolean updateDate, String mimeFinal) throws Exception {
-        DocumentCustody doc = null;
+                                                  String mimeFinal) throws Exception {
 
-        doc = dc;
         if (doc != null && doc.getData() != null) {// si nos envian documento
 
             //Borramos el anterior (pruebas marilen, quitado checkbox de esborrar)
             custody.deleteDocument(custodyID);
-            updateDate = true;
 
             //Asignamos los datos nuevos recibidos
             if (doc.getMime() == null) {
@@ -701,10 +784,32 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             //guardamos documento en custodia
             custody.saveDocument(custodyID, custodyParameters, doc);
 
-            updateDate = true;
         }
         return doc;
     }
+    */
+    public String arreglarDocumentCustody(DocumentCustody doc,
+         String custodyID,
+        final Map<String, Object> custodyParameters, Anexo anexo,
+        String mimeFinal) throws Exception {
+
+        if (doc != null && doc.getData() != null) {// si nos envian documento
+        
+        
+        //Asignamos los datos nuevos recibidos
+        if (doc.getMime() == null) {
+          doc.setMime("application/octet-stream");
+        }
+        mimeFinal = doc.getMime();
+        
+        doc.setName(checkFileName(doc.getName(), "file.bin"));
+        
+        anexo.setFechaCaptura(new Date());
+        anexo.setHash(obtenerHash(doc.getData()));
+        
+        }
+        return mimeFinal;
+     }
 
     /**
      * Método que guarda la SignatureCustody de un anexo en custodia
@@ -720,6 +825,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @return
      * @throws Exception
      */
+    /*
     public SignatureCustody guardarSignatureCustody(SignatureCustody sc,
                                                     DocumentCustody doc, IDocumentCustodyPlugin custody,
                                                     String custodyID, final Map<String, Object> custodyParameters,
@@ -765,6 +871,46 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         }
         return sc;
 
+    }
+    */
+    public String arreglarSignatureCustody(SignatureCustody signature,
+        DocumentCustody doc, 
+        String custodyID, final Map<String, Object> custodyParameters,
+        Anexo anexo, String mimeFinal) throws Exception {
+      //Obtenemos la firma que nos envian
+
+      if (signature != null && signature.getData() != null) {//Si nos envian firma
+      
+       
+        //Preparamos todos los datos para guardar la firma en custodia.
+        String signType = (doc == null) ? SignatureCustody.OTHER_SIGNATURE_WITH_ATTACHED_DOCUMENT : SignatureCustody.OTHER_SIGNATURE_WITH_DETACHED_DOCUMENT;
+        
+        signature.setName(checkFileName(signature.getName(), "signature.bin"));
+        
+        final String mime = signature.getMime();
+        if (mime == null) {
+          signature.setMime("application/octet-stream");
+        } else {
+          if ("application/pdf".equals(mime)) {
+            signType = SignatureCustody.PADES_SIGNATURE;
+          } else if ("application/xml".equals(mime) || "text/xml".equals(mime)) {
+            signType = SignatureCustody.XADES_SIGNATURE;
+          }
+        }
+        
+        mimeFinal = signature.getMime(); // Sobreescriu Mime de doc
+        
+        signature.setSignatureType(signType);
+        // TODO Fallarà en update
+        signature.setAttachedDocument(doc == null ? true : false);
+        
+        if (doc == null) {
+          anexo.setHash(obtenerHash(signature.getData()));
+        }
+
+      }
+      
+      return mimeFinal;
     }
 
 
@@ -1031,6 +1177,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @throws Exception
      */
     // TODO mime de doc i firma
+    /*
     public String crearArchivo(String name, byte[] file, String signatureName,
                                byte[] signature, int signatureMode, String custodyID,
                                Map<String, Object> custodyParameters) throws Exception {
@@ -1099,7 +1246,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
         return custodyID;
     }
-
+*/
 
     /**
      * Crea un Jusitificante, lo firma y lo crea como anexo al registro

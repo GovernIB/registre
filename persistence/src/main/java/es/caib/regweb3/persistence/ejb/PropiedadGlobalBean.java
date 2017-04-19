@@ -214,7 +214,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("clave", clave);
 
-        List list = q.getResultList();
+        List<?> list = q.getResultList();
 
         return list != null && list.size() != 0? (String) list.get(0):null;
 
@@ -226,7 +226,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
         Query q = em.createQuery("Select pg.valor from PropiedadGlobal as pg where pg.entidad is null and pg.clave = :clave");
         q.setParameter("clave", clave);
 
-        List list = q.getResultList();
+        List<?> list = q.getResultList();
 
         return list != null && list.size() != 0? (String) list.get(0):null;
 
@@ -316,7 +316,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
         Query q = em.createQuery("Select pg from PropiedadGlobal as pg where pg.entidad = :idEntidad ");
         q.setParameter("idEntidad", idEntidad);
 
-        List list = q.getResultList();
+        List<?> list = q.getResultList();
 
         return (List<PropiedadGlobal>) list;
 

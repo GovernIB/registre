@@ -1,7 +1,9 @@
 package es.caib.regweb3.webapp.controller;
 
+import es.caib.regweb3.webapp.controller.registro.ScanRequestServlet;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.utils.RegWebMaxUploadSizeExceededException;
+
 import org.apache.commons.fileupload.FileUploadBase.SizeLimitExceededException;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
@@ -12,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 
@@ -120,16 +123,10 @@ public class ErrorController {
           || ex instanceof RegWebMaxUploadSizeExceededException
           || ex instanceof SizeLimitExceededException) {
 
-        /*
-          log.info(" ++++ Scheme: " + request.getScheme());
-         log.info(" ++++ PathInfo: " + request.getPathInfo());
-         log.info(" ++++ PathTrans: " + request.getPathTranslated());
-          log.info(" ++++ ContextPath: " + request.getContextPath());
-          log.info(" ++++ ServletPath: " + request.getServletPath());
-          log.info(" ++++ getRequestURI: " + request.getRequestURI());
-          log.info(" ++++ getRequestURL: " + request.getRequestURL().toString());
-          log.info(" ++++ getQueryString: " + request.getQueryString());
-          */
+        if (log.isDebugEnabled()) {
+          log.debug("resolveFileSizeException(" + ex.getClass() +")\n" 
+              + ScanRequestServlet.servletRequestInfoToStr(request));
+        }
          
         String maxUploadSize = "???";
         String currentSize = "???";

@@ -27,7 +27,7 @@ public class SignatureServerBean implements SignatureServerLocal{
         // Cerca el Plugin de Justificant definit a les Propietats Globals
         ISignatureServerPlugin pluginInstance = RegwebPluginsManager.getPluginSignatureServer(idEntidadActiva);
 
-        final IRubricGenerator rubricGenerator = null;
+
         final String signType = FileInfoSignature.SIGN_TYPE_PADES;
         final int signMode = FileInfoSignature.SIGN_MODE_IMPLICIT;
         boolean userRequiresTimeStamp = false;
@@ -52,11 +52,12 @@ public class SignatureServerBean implements SignatureServerLocal{
 
         int signaturesTableLocation = FileInfoSignature.SIGNATURESTABLELOCATION_WITHOUT;
         PdfVisibleSignature pdfInfoSignature = null;
-        if (FileInfoSignature.SIGN_TYPE_PADES.equals(signType) && rubricGenerator != null) {
-            signaturesTableLocation = FileInfoSignature.SIGNATURESTABLELOCATION_LASTPAGE;
-            PdfRubricRectangle pdfRubricRectangle = new PdfRubricRectangle(106, 650, 555, 710);
-            pdfInfoSignature = new PdfVisibleSignature(pdfRubricRectangle, rubricGenerator);
-        }
+//      final IRubricGenerator rubricGenerator = null;
+//        if (FileInfoSignature.SIGN_TYPE_PADES.equals(signType) && rubricGenerator != null) {
+//            signaturesTableLocation = FileInfoSignature.SIGNATURESTABLELOCATION_LASTPAGE;
+//            PdfRubricRectangle pdfRubricRectangle = new PdfRubricRectangle(106, 650, 555, 710);
+//            pdfInfoSignature = new PdfVisibleSignature(pdfRubricRectangle, rubricGenerator);
+//        }
         final ITimeStampGenerator timeStampGenerator = null;
 
         // Valors per defcte

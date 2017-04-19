@@ -34,7 +34,7 @@ public class SIR6BTest extends SIRTestUtils {
             String str = new String(FileUtils.readFileToByteArray(file));
 
             // Get target URL
-            String strURL = getEndPoint(SIR_6_B); // "http://localhost:9999/services/WS_SIR6_B";
+            //String strURL = getEndPoint(SIR_6_B); // "http://localhost:9999/services/WS_SIR6_B";
             // Get SOAP action
 
             //RespuestaWS resp = WS_SIR6_B_DirectApi.recepcionFicheroDeAplicacion(str, strURL);

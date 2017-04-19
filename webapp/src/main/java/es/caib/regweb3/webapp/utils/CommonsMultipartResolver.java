@@ -3,6 +3,8 @@ package es.caib.regweb3.webapp.utils;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.webapp.controller.registro.ScanRequestServlet;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
@@ -32,15 +34,12 @@ public class CommonsMultipartResolver extends
   public MultipartHttpServletRequest resolveMultipart(HttpServletRequest request)
       throws MultipartException {
     
-      log.info(" ++++ Scheme: " + request.getScheme());
-      log.info(" ++++ PathInfo: " + request.getPathInfo());
-      log.info(" ++++ PathTrans: " + request.getPathTranslated());
-      log.info(" ++++ ContextPath: " + request.getContextPath());
-      log.info(" ++++ ServletPath: " + request.getServletPath());
-      log.info(" ++++ getRequestURI: " + request.getRequestURI());
-      log.info(" ++++ getRequestURL: " + request.getRequestURL().toString());
-      log.info(" ++++ getQueryString: " + request.getQueryString());
-     
+    
+    if (log.isDebugEnabled()) {
+      log.debug("------------ resolveMultipart() -------\n" 
+          + ScanRequestServlet.servletRequestInfoToStr(request));
+    }
+    
 
     Long maxUploadSize;
     String msgCode;

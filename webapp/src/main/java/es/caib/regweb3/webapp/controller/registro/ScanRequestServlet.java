@@ -104,8 +104,8 @@ public class ScanRequestServlet extends HttpServlet {
   
   
   
-  /* XYZ TODO MOURE A CLASSE D'UTILITAT DE PLUGIN */
-  protected String servletRequestInfoToStr(HttpServletRequest request) {
+
+  public static String servletRequestInfoToStr(HttpServletRequest request) {
     StringBuffer str = new StringBuffer(
         " +++++++++++++++++ SERVLET REQUEST INFO ++++++++++++++++++++++\n");
     str.append(" ++++ Scheme: " + request.getScheme() + "\n");
@@ -124,10 +124,6 @@ public class ScanRequestServlet extends HttpServlet {
     return str.toString();
   }
 
-  
-  
-  
-  
   
 
   protected void requestPlugin(HttpServletRequest request, HttpServletResponse response,

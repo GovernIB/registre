@@ -49,6 +49,7 @@
                         <configuration>
                             <schemaDirectory>src/main/resources/xsd</schemaDirectory>
                             <packaging>es.caib.regweb3.sir.core.schema</packaging>
+                            <dest>src/main/java</dest>
                         </configuration>
                         <goals>
                             <goal>generate</goal>
