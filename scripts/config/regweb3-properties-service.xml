@@ -230,6 +230,7 @@
             es.caib.regweb3.scan.plugin.3.plugins.scanweb.iecisa.debug=false
             es.caib.regweb3.scan.plugin.3.plugins.scanweb.iecisa.forcejnlp=false
             es.caib.regweb3.scan.plugin.3.plugins.scanweb.iecisa.forcesign=true
+            es.caib.regweb3.scan.plugin.3.plugins.scanweb.iecisa.closewindowwhenfinish=true
             # Optional
             es.caib.regweb3.scan.plugin.3.plugins.scanweb.iecisa.sign.keystore=D:/dades/dades/CarpetesPersonals/Programacio/digitalitzacio/servidor/jboss-5.2.0-caib-cxf/server/default/deploydigital/digital/recursos/keystore.jks
             es.caib.regweb3.scan.plugin.3.plugins.scanweb.iecisa.sign.password=copia_autentica
