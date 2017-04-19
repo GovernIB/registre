@@ -4,8 +4,6 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.EstadoAsientoRegistralSir;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.sir.ejb.EmisionLocal;
-import es.caib.regweb3.sir.ejb.RecepcionLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.AsientoRegistralSirBusquedaForm;
@@ -37,13 +35,10 @@ public class AsientoRegistralSirController extends BaseController {
 
 
     @EJB(mappedName = "regweb3/AsientoRegistralSirEJB/local")
-    public AsientoRegistralSirLocal asientoRegistralSirEjb;
-
-    @EJB(mappedName = "regweb3/ArchivoEJB/local")
-    public ArchivoLocal archivoEjb;
+    private AsientoRegistralSirLocal asientoRegistralSirEjb;
 
     @EJB(mappedName = "regweb3/TipoAsuntoEJB/local")
-    public TipoAsuntoLocal tipoAsuntoEjb;
+    private TipoAsuntoLocal tipoAsuntoEjb;
 
     @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
     public RegistroEntradaLocal registroEntradaEjb;
@@ -52,31 +47,19 @@ public class AsientoRegistralSirController extends BaseController {
     public RegistroSalidaLocal registroSalidaEjb;
 
     @EJB(mappedName = "regweb3/CatComunidadAutonomaEJB/local")
-    public CatComunidadAutonomaLocal catComunidadAutonomaEjb;
+    private CatComunidadAutonomaLocal catComunidadAutonomaEjb;
 
     @EJB(mappedName = "regweb3/CatNivelAdministracionEJB/local")
-    public CatNivelAdministracionLocal catNivelAdministracionEjb;
-
-    @EJB(mappedName = "regweb3/CatProvinciaEJB/local")
-    public CatProvinciaLocal catProvinciaEjb;
+    private CatNivelAdministracionLocal catNivelAdministracionEjb;
 
     @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
-    public TipoDocumentalLocal tipoDocumentalEjb;
+    private TipoDocumentalLocal tipoDocumentalEjb;
 
     @EJB(mappedName = "regweb3/SirEJB/local")
-    public SirLocal sirEjb;
-
-    @EJB(mappedName = "regweb3/RecepcionEJB/local")
-    public RecepcionLocal recepcionEjb;
-
-    @EJB(mappedName = "regweb3/LibroEJB/local")
-    public LibroLocal libroEjb;
-
-    @EJB(mappedName = "regweb3/EmisionEJB/local")
-    public EmisionLocal emisionEjb;
+    private SirLocal sirEjb;
 
     @EJB(mappedName = "regweb3/TrazabilidadEJB/local")
-    public TrazabilidadLocal trazabilidadEjb;
+    private TrazabilidadLocal trazabilidadEjb;
 
 
     /**
@@ -218,8 +201,8 @@ public class AsientoRegistralSirController extends BaseController {
 
         // Procesa el AsientoRegistralSir
         try{
-            //idRegistro = sirEjb.aceptarAsientoRegistralSir(asientoRegistralSir, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getIdTipoAsunto(), registrarForm.getCamposNTIs());
-            RegistroEntrada registroEntrada = recepcionEjb.aceptarAsientoRegistralSir(asientoRegistralSir, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getIdTipoAsunto(), registrarForm.getCamposNTIs());
+
+            RegistroEntrada registroEntrada = sirEjb.aceptarAsientoRegistralSir(asientoRegistralSir, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getIdTipoAsunto(), registrarForm.getCamposNTIs());
 
             variableReturn = "redirect:/registroEntrada/" + registroEntrada.getId() + "/detalle";
 
@@ -257,7 +240,7 @@ public class AsientoRegistralSirController extends BaseController {
 
         // Rechaza el AsientoRegistralSir
         try{
-            emisionEjb.rechazarFicheroIntercambio(asientoRegistralSir, oficinaActiva, usuarioEntidad.getUsuario(), rechazarForm.getObservacionesRechazo());
+            sirEjb.rechazarAsientoRegistralSir(asientoRegistralSir, oficinaActiva, usuarioEntidad.getUsuario(), rechazarForm.getObservacionesRechazo());
 
             Mensaje.saveMessageInfo(request, getMessage("asientoRegistralSir.rechazo.ok"));
 
@@ -307,7 +290,7 @@ public class AsientoRegistralSirController extends BaseController {
         try{
             if(oficinaReenvio != null){//Si han seleccionado oficina de reenvio
                 //Reenviamos
-                emisionEjb.reenviarFicheroIntercambio(asientoRegistralSir, oficinaReenvio, oficinaActiva,usuarioEntidad.getUsuario(),reenviarForm.getObservaciones());
+                sirEjb.reenviarAsientoRegistralSir(asientoRegistralSir, oficinaReenvio, oficinaActiva,usuarioEntidad.getUsuario(),reenviarForm.getObservaciones());
             }
 
             Mensaje.saveMessageInfo(request, getMessage("asientoRegistralSir.reenvio.ok"));

@@ -8,14 +8,13 @@ import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.*;
 import es.caib.regweb3.plugins.justificante.IJustificantePlugin;
 import es.caib.regweb3.sir.core.excepcion.SIRException;
-import es.caib.regweb3.sir.ejb.EmisionLocal;
+import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.webapp.form.EnvioSirForm;
 import es.caib.regweb3.webapp.form.ModeloForm;
 import es.caib.regweb3.webapp.form.RegistroEntradaBusqueda;
 import es.caib.regweb3.webapp.utils.Mensaje;
-import es.caib.regweb3.webapp.validator.AnexoWebValidator;
 import es.caib.regweb3.webapp.validator.RegistroEntradaBusquedaValidator;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,9 +51,6 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     @Autowired
     private RegistroEntradaBusquedaValidator registroEntradaBusquedaValidator;
 
-    @Autowired
-    private AnexoWebValidator anexoValidator;
-
     @EJB(mappedName = "regweb3/HistoricoRegistroEntradaEJB/local")
     private HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
     
@@ -67,8 +63,8 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     @EJB(mappedName = "regweb3/OficioRemisionEntradaUtilsEJB/local")
     private OficioRemisionEntradaUtilsLocal oficioRemisionEntradaUtilsEjb;
 
-    @EJB(mappedName = "regweb3/EmisionEJB/local")
-    private EmisionLocal emisionEjb;
+    @EJB(mappedName = "regweb3/SirEJB/local")
+    private SirLocal sirEjb;
 
 
     /**
@@ -326,11 +322,15 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         try{
 
-            emisionEjb.enviarFicheroIntercambio(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO,idRegistro, oficinaSir.getCodigo(),oficinaSir.getDenominacion(), getOficinaActiva(request), usuarioEntidad, envioSirForm.getIdLibro());
+            sirEjb.enviarFicheroIntercambio(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO,idRegistro, oficinaSir.getCodigo(),oficinaSir.getDenominacion(), getOficinaActiva(request), usuarioEntidad, envioSirForm.getIdLibro());
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.envioSir.ok"));
 
         }catch (SIRException e){
             Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.error.envio"));
+            e.printStackTrace();
+        } catch (I18NException e) {
+            Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.error.envio"));
+            e.printStackTrace();
         }
 
         return new ModelAndView("redirect:/registroEntrada/" + idRegistro + "/detalle");
