@@ -45,7 +45,7 @@ public class OficioRemision implements Serializable {
   private Date fechaEntradaDestino;
   private String codigoError;
   private String descripcionError;
-  private Integer numeroReintentos;
+  private Integer numeroReintentos = 0;
 
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
