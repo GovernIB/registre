@@ -35,12 +35,12 @@ public class RecepcionBean implements RecepcionLocal{
     public final Logger log = Logger.getLogger(getClass());
 
     @EJB(name = "MensajeEJB")
-    public MensajeLocal mensajeEjb;
+    private MensajeLocal mensajeEjb;
 
     @EJB(name = "SirEJB")
-    public SirLocal sirEjb;
+    private SirLocal sirEjb;
 
-    public Sicres3XML sicres3XML = new Sicres3XML();
+    private Sicres3XML sicres3XML = new Sicres3XML();
 
 
     private String errorGenerico = Errores.ERROR_0065.getValue(); // ERROR GENÉRICO: ERROR_EN_EL_ASIENTO

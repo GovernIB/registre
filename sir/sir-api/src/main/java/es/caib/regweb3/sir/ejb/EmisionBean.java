@@ -72,7 +72,10 @@ public class EmisionBean implements EmisionLocal{
             log.info("Enviando el registro al nodo distribuido: " + asientoRegistralSir.getIdentificadorIntercambio());
 
             // Enviamos el asiento registral al nodo distribuido.
-            enviar(asientoRegistralSir, oficioRemision.getId(), RegwebConstantes.OFICIO_SIR_ENVIADO);
+            enviar(asientoRegistralSir);
+
+            // Modificamos el estado del OficioRemision
+            oficioRemisionEjb.modificarEstado(oficioRemision.getId(), RegwebConstantes.OFICIO_SIR_ENVIADO);
 
         } catch (Exception e) {
             log.error("Error al enviar el fichero de intercambio: " + e);
@@ -99,7 +102,10 @@ public class EmisionBean implements EmisionLocal{
         log.info("Reenviando el asiento registral al nodo distribuido: " + asientoRegistralSir.getIdentificadorIntercambio());
 
         // Reenviamos el asiento registral al nodo distribuido.
-        enviar(asientoRegistralSir, EstadoAsientoRegistralSir.REENVIADO);
+        enviar(asientoRegistralSir);
+
+        // Modificamos el estado del AsientoRegistralSir
+        asientoRegistralSirEjb.modificarEstado(asientoRegistralSir.getId(), EstadoAsientoRegistralSir.REENVIADO);
     }
 
     /**
@@ -116,51 +122,17 @@ public class EmisionBean implements EmisionLocal{
         log.info("Rezhazando el asiento registral al nodo distribuido: " + asientoRegistralSir.getIdentificadorIntercambio());
 
         // Rechazamos el asiento registral al nodo distribuido.
-        enviar(asientoRegistralSir, EstadoAsientoRegistralSir.RECHAZADO);
-    }
+        enviar(asientoRegistralSir);
 
-    /**
-     * Envia un registro de entrada a un nodo distribuido creando previamente el fichero de intercambio
-     * @param asientoRegistralSir
-     * @param idOficioRemision
-     * @param idEstadoOficio
-     */
-    public void enviar(AsientoRegistralSir asientoRegistralSir, Long idOficioRemision, int idEstadoOficio){
-
-        try{
-            // Creamos el xml de intercambio
-            String xml = sicres3XML.crearXMLFicheroIntercambioSICRES3(asientoRegistralSir);
-            log.info("Xml Fichero Intercambio generado: " + xml);
-
-            RespuestaWS respuesta = ws_sir6_b_recepcionFicheroDeAplicacion(xml);
-
-            if (respuesta != null) {
-                log.info("Respuesta: " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
-
-                if (Errores.OK.getValue().equals(respuesta.getCodigo())) {
-
-                    log.info("Registro enviado correctamente");
-                    oficioRemisionEjb.modificarEstado(idOficioRemision, idEstadoOficio);
-
-                }else{
-                    log.error("Respuesta: " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
-                    throw new SIRException("Error " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
-                }
-            }
-
-
-        } catch (Exception e) {
-            log.error("Error al enviar el fichero de intercambio: " + e);
-            throw new SIRException("Error en la llamada al servicio de recepción de ficheros de datos de intercambio (WS_SIR6_B)");
-        }
+        // Modificamos el estado del AsientoRegistralSir
+        asientoRegistralSirEjb.modificarEstado(asientoRegistralSir.getId(), EstadoAsientoRegistralSir.RECHAZADO);
     }
 
     /**
      * Envia un asiento registral a un nodo distribuido creando previamente el fichero de intercambio
      * @param asientoRegistralSir
-     * @param estado
      */
-    public void enviar(AsientoRegistralSir asientoRegistralSir, EstadoAsientoRegistralSir estado){
+    private void enviar(AsientoRegistralSir asientoRegistralSir){
 
         try{
         // Creamos el xml de intercambio
@@ -175,8 +147,6 @@ public class EmisionBean implements EmisionLocal{
             if (Errores.OK.getValue().equals(respuesta.getCodigo())) {
 
                 log.info("AsientoRegistral enviado correctamente");
-                asientoRegistralSirEjb.modificarEstado(asientoRegistralSir.getId(), estado);
-
             }else{
                 log.error("Respuesta: " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
                 throw new SIRException("Error " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
@@ -196,7 +166,7 @@ public class EmisionBean implements EmisionLocal{
      * @return
      * @throws Exception
      */
-    public RespuestaWS ws_sir6_b_recepcionFicheroDeAplicacion(String xml) throws Exception {
+    private RespuestaWS ws_sir6_b_recepcionFicheroDeAplicacion(String xml) throws Exception {
 
         WS_SIR6_B_PortType ws_sir6_b = getWS_SIR6_B();
 
@@ -208,7 +178,7 @@ public class EmisionBean implements EmisionLocal{
      * @return
      * @throws Exception
      */
-    public WS_SIR6_B_PortType getWS_SIR6_B() throws Exception {
+    private WS_SIR6_B_PortType getWS_SIR6_B() throws Exception {
         WS_SIR6_BServiceLocator locator = new WS_SIR6_BServiceLocator();
         URL url = new URL(Configuracio.getSirServerBase() + "/WS_SIR6_B");
 
