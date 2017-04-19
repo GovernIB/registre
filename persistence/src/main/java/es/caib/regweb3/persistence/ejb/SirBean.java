@@ -14,6 +14,8 @@ import es.caib.regweb3.sir.core.model.TipoAnotacion;
 import es.caib.regweb3.sir.core.model.TipoMensaje;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.core.utils.Mensaje;
+import es.caib.regweb3.sir.ejb.EmisionLocal;
+import es.caib.regweb3.sir.ejb.MensajeLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
@@ -61,6 +63,8 @@ public class SirBean implements SirLocal{
     @EJB private OficioRemisionLocal oficioRemisionEjb;
     @EJB private TrazabilidadLocal trazabilidadEjb;
     @EJB private AnexoLocal anexoEjb;
+    @EJB private EmisionLocal emisionEjb;
+    @EJB private MensajeLocal mensajeEjb;
 
 
     /**
@@ -433,6 +437,8 @@ public class SirBean implements SirLocal{
     @Override
     public OficioRemision enviarFicheroIntercambio(String tipoRegistro, Long idRegistro, String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino, Oficina oficinaActiva, UsuarioEntidad usuario, Long idLibro) throws Exception, I18NException {
 
+        AsientoRegistralSir asientoRegistralSir = null;
+
         // Creamos el OficioRemision
         OficioRemision oficioRemision = new OficioRemision();
         oficioRemision.setSir(true);
@@ -484,6 +490,10 @@ public class SirBean implements SirLocal{
             oficioRemision.setOrganismoDestinatario(null);
             oficioRemision.setRegistrosSalida(null);
 
+            // Transformamos el RegistroEntrada en un AsientoRegistralSir
+            registroEntrada = registroEntradaEjb.getConAnexosFullCompleto(oficioRemision.getRegistrosEntrada().get(0).getId());
+            asientoRegistralSir = asientoRegistralSirEjb.transformarRegistroEntrada(registroEntrada);
+
         }else if(tipoRegistro.equals(RegwebConstantes.REGISTRO_SALIDA_ESCRITO)){
 
             RegistroSalida registroSalida = registroSalidaEjb.findById(idRegistro);
@@ -526,6 +536,10 @@ public class SirBean implements SirLocal{
             oficioRemision.setOrganismoDestinatario(null);
             oficioRemision.setRegistrosEntrada(null);
 
+            // Transformamos el RegistroSalida en un AsientoRegistralSir
+            registroSalida = registroSalidaEjb.getConAnexosFullCompleto(oficioRemision.getRegistrosSalida().get(0).getId());
+            asientoRegistralSir = asientoRegistralSirEjb.transformarRegistroSalida(registroSalida);
+
         }
 
         // Registramos el Oficio de Remisión SIR
@@ -536,12 +550,17 @@ public class SirBean implements SirLocal{
             e.printStackTrace();
         }
 
+        // Enviamos el Registro al Componente CIR
+        emisionEjb.enviarFicheroIntercambio(asientoRegistralSir);
+
+        // Modificamos el estado del OficioRemision
+        oficioRemisionEjb.modificarEstado(oficioRemision.getId(), RegwebConstantes.OFICIO_SIR_ENVIADO);
 
         return oficioRemision;
 
     }
 
-    public AsientoRegistralSir reenviarAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir, Oficina oficinaReenvio, Oficina oficinaActiva, Usuario usuario, String observaciones) throws Exception {
+    public void reenviarAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir, Oficina oficinaReenvio, Oficina oficinaActiva, Usuario usuario, String observaciones) throws Exception {
 
 
         //Actualizamos la oficina destino con la escogida por el usuario
@@ -560,14 +579,17 @@ public class SirBean implements SirLocal{
         asientoRegistralSir.setAplicacion(RegwebConstantes.CODIGO_APLICACION);
         asientoRegistralSir.setNombreUsuario(usuario.getNombreCompleto());
         asientoRegistralSir.setContactoUsuario(usuario.getEmail());
-
         asientoRegistralSir.setTipoAnotacion(TipoAnotacion.REENVIO.getValue());
         asientoRegistralSir.setDecodificacionTipoAnotacion(observaciones);
 
-
+        // Actualizamos el AsientoRegistralSir
         asientoRegistralSirEjb.merge(asientoRegistralSir);
 
-        return asientoRegistralSirEjb.getAsientoRegistralConAnexos(asientoRegistralSir.getId());
+        // Enviamos el Registro al Componente CIR
+        emisionEjb.reenviarFicheroIntercambio(asientoRegistralSirEjb.getAsientoRegistralConAnexos(asientoRegistralSir.getId()));
+
+        // Modificamos el estado del AsientoRegistralSir
+        asientoRegistralSirEjb.modificarEstado(asientoRegistralSir.getId(), EstadoAsientoRegistralSir.REENVIADO);
 
     }
 
@@ -593,7 +615,7 @@ public class SirBean implements SirLocal{
      * @throws Exception
      */
     @Override
-    public AsientoRegistralSir rechazarAsientoRegistralSir(AsientoRegistralSir asiento, Oficina oficinaActiva, Usuario usuario, String observaciones) throws Exception {
+    public void rechazarAsientoRegistralSir(AsientoRegistralSir asiento, Oficina oficinaActiva, Usuario usuario, String observaciones) throws Exception {
 
         // Modificamos la oficina destino con la de inicio
         asiento.setCodigoEntidadRegistralDestino(asiento.getCodigoEntidadRegistralInicio());
@@ -613,7 +635,11 @@ public class SirBean implements SirLocal{
 
         asiento = asientoRegistralSirEjb.merge(asiento);
 
-        return asientoRegistralSirEjb.getAsientoRegistralConAnexos(asiento.getId());
+        // Rechazamos el AsientoRegistralSir
+        emisionEjb.rechazarFicheroIntercambio(asientoRegistralSirEjb.getAsientoRegistralConAnexos(asiento.getId()));
+
+        // Modificamos el estado del AsientoRegistralSir
+        asientoRegistralSirEjb.modificarEstado(asiento.getId(), EstadoAsientoRegistralSir.RECHAZADO);
     }
 
     /**
@@ -643,6 +669,9 @@ public class SirBean implements SirLocal{
 
                 // Modificamos el estado del AsientoRegistralSir
                 asientoRegistralSirEjb.modificarEstado(asientoRegistralSir.getId(), EstadoAsientoRegistralSir.ACEPTADO);
+
+                // Enviamos el Mensaje de Confirmación
+                mensajeEjb.enviarMensajeConfirmacion(asientoRegistralSir, registroEntrada.getNumeroRegistroFormateado());
 
                 return registroEntrada;
 

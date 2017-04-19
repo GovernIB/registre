@@ -61,31 +61,28 @@ public class EntidadController extends BaseController {
     private UsuarioService usuarioService;
 
     @EJB(mappedName = "regweb3/DescargaEJB/local")
-    public DescargaLocal descargaEjb;
+    private DescargaLocal descargaEjb;
 
     @EJB(mappedName = "regweb3/SincronizadorDir3EJB/local")
     private SincronizadorDir3Local sincronizadorDIR3Ejb;
 
     @EJB(mappedName = "regweb3/PendienteEJB/local")
-    public PendienteLocal pendienteEjb;
+    private PendienteLocal pendienteEjb;
 
     @EJB(mappedName = "regweb3/EntidadEJB/local")
-    public EntidadLocal entidadEjb;
+    private EntidadLocal entidadEjb;
 
     @EJB(mappedName = "regweb3/LibroEJB/local")
-    public LibroLocal libroEjb;
+    private LibroLocal libroEjb;
 
     @EJB(mappedName = "regweb3/ArchivoEJB/local")
-    public ArchivoLocal archivoEjb;
+    private ArchivoLocal archivoEjb;
 
     @EJB(mappedName = "regweb3/UsuarioEJB/local")
-    public UsuarioLocal usuarioEjb;
-
-    @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
-    public TipoDocumentalLocal tipoDocumentalEjb;
+    private UsuarioLocal usuarioEjb;
     
     @EJB(mappedName = "regweb3/ScanWebModuleEJB/local")
-    public ScanWebModuleLocal scanWebModuleEjb;
+    private ScanWebModuleLocal scanWebModuleEjb;
 
     /**
      * Listado de todas las Entidades

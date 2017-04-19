@@ -8,7 +8,7 @@ import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.*;
 import es.caib.regweb3.plugins.justificante.IJustificantePlugin;
 import es.caib.regweb3.sir.core.excepcion.SIRException;
-import es.caib.regweb3.sir.ejb.EmisionLocal;
+import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.form.EnvioSirForm;
 import es.caib.regweb3.webapp.form.ModeloForm;
@@ -63,8 +63,8 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
     @EJB(mappedName = "regweb3/AnexoEJB/local")
     private AnexoLocal anexoEjb;
 
-    @EJB(mappedName = "regweb3/EmisionEJB/local")
-    private EmisionLocal emisionEjb;
+    @EJB(mappedName = "regweb3/SirEJB/local")
+    private SirLocal sirEjb;
 
 
 
@@ -312,10 +312,14 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
         try{
 
-            emisionEjb.enviarFicheroIntercambio(RegwebConstantes.REGISTRO_SALIDA_ESCRITO,idRegistro, oficinaSir.getCodigo(),oficinaSir.getDenominacion(), getOficinaActiva(request), usuarioEntidad, envioSirForm.getIdLibro());
+            sirEjb.enviarFicheroIntercambio(RegwebConstantes.REGISTRO_SALIDA_ESCRITO,idRegistro, oficinaSir.getCodigo(),oficinaSir.getDenominacion(), getOficinaActiva(request), usuarioEntidad, envioSirForm.getIdLibro());
             Mensaje.saveMessageInfo(request, getMessage("registroSalida.envioSir.ok"));
 
         }catch (SIRException e){
+            e.printStackTrace();
+            Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.error.envio"));
+        } catch (I18NException e) {
+            e.printStackTrace();
             Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.error.envio"));
         }
 

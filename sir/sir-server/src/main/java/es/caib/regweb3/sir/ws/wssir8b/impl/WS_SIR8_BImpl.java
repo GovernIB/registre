@@ -4,7 +4,7 @@ package es.caib.regweb3.sir.ws.wssir8b.impl;
 import es.caib.regweb3.persistence.ejb.WebServicesMethodsLocal;
 import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.core.model.Errores;
-import es.caib.regweb3.sir.ejb.RecepcionLocal;
+import es.caib.regweb3.sir.ws.ejb.RecepcionLocal;
 import es.caib.regweb3.sir.ws.utils.PassiveCallbackHandler;
 import es.caib.regweb3.sir.ws.wssir8b.RespuestaWS;
 import es.caib.regweb3.sir.ws.wssir8b.WS_SIR8_B_PortType;
@@ -57,10 +57,10 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
     protected final Logger log = Logger.getLogger(getClass());
 
     @EJB(name = "RecepcionEJB")
-    public RecepcionLocal recepcionEjb;
+    private RecepcionLocal recepcionEjb;
 
     @EJB(mappedName = "regweb3/WebServicesMethodsEJB/local")
-    public WebServicesMethodsLocal webServicesMethodsEjb;
+    private WebServicesMethodsLocal webServicesMethodsEjb;
 
     public static final String NAME = "WS_SIR8_B";
 
@@ -90,12 +90,11 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
 
         } catch (LoginException le) {
             // Authentication failed.
-            log.error("CAIB3 Login ERROR" + le.getMessage());
+            log.error("CAIB Login ERROR" + le.getMessage());
         }
 
         log.info("WS_SIR8_BImpl: recibiendo fichero intercambio");
         log.info("Registro: " + registro);
-        //log.info("Firma: " + firmaRegistro);
 
         RespuestaWS respuestaWS = null;
 

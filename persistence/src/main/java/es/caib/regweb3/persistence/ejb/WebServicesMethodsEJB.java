@@ -18,23 +18,8 @@ import javax.ejb.Stateless;
 @RunAs("RWE_USUARI") //todo Revisar si se puede eliminar
 public class WebServicesMethodsEJB implements WebServicesMethodsLocal {
 
-    @EJB(mappedName = "regweb3/AsientoRegistralSirEJB/local")
-    public AsientoRegistralSirLocal asientoRegistralSirEjb;
-
-    @EJB(mappedName = "regweb3/CatLocalidadEJB/local")
-    public CatLocalidadLocal catLocalidadEjb;
-
-    @EJB(mappedName = "regweb3/CatProvinciaEJB/local")
-    public CatProvinciaLocal catProvinciaEjb;
-
-    @EJB(mappedName = "regweb3/CatPaisEJB/local")
-    public CatPaisLocal catPaisEjb;
-
-    @EJB(mappedName = "regweb3/ArchivoEJB/local")
-    public ArchivoLocal archivoEjb;
-
     @EJB(mappedName = "regweb3/SirEJB/local")
-    public SirLocal sirEjb;
+    private SirLocal sirEjb;
 
     @Override
     public void recibirMensajeDatosControl(Mensaje mensaje) throws Exception{

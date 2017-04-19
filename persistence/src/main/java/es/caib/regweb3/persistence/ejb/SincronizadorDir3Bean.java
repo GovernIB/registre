@@ -7,7 +7,7 @@ import es.caib.dir3caib.ws.api.oficina.RelacionSirOfiTF;
 import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
 import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
-import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
+import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.utils.TimeUtils;

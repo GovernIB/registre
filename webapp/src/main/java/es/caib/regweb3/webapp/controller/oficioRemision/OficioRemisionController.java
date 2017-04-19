@@ -5,12 +5,11 @@ import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.RegistroBasico;
 import es.caib.regweb3.persistence.ejb.*;
-import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
 import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.sir.core.excepcion.SIRException;
-import es.caib.regweb3.sir.ejb.EmisionLocal;
+import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.*;
@@ -50,32 +49,18 @@ public class OficioRemisionController extends BaseController {
     @EJB(mappedName = "regweb3/OficioRemisionSalidaUtilsEJB/local")
     private OficioRemisionSalidaUtilsLocal oficioRemisionSalidaUtilsEjb;
 
-    @EJB(mappedName = "regweb3/RelacionOrganizativaOfiEJB/local")
-    public RelacionOrganizativaOfiLocal relacionOrganizativaOfiLocalEjb;
-
     @EJB(mappedName = "regweb3/OficioRemisionEJB/local")
-    public OficioRemisionLocal oficioRemisionEjb;
+    private OficioRemisionLocal oficioRemisionEjb;
 
     @EJB(mappedName = "regweb3/ModeloOficioRemisionEJB/local")
-    public ModeloOficioRemisionLocal modeloOficioRemisionEjb;
-
-    @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
-    public RegistroEntradaLocal registroEntradaEjb;
-
-    @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
-    public RegistroSalidaLocal registroSalidaEjb;
-
-    @EJB(mappedName = "regweb3/EntidadEJB/local")
-    public EntidadLocal entidadEjb;
+    private ModeloOficioRemisionLocal modeloOficioRemisionEjb;
 
     @EJB(mappedName = "regweb3/TrazabilidadEJB/local")
-    public TrazabilidadLocal trazabilidadEjb;
+    private TrazabilidadLocal trazabilidadEjb;
 
     @EJB(mappedName = "regweb3/SirEJB/local")
-    public SirLocal sirEjb;
+    private SirLocal sirEjb;
 
-    @EJB(mappedName = "regweb3/EmisionEJB/local")
-    public EmisionLocal emisionEjb;
 
 
     /**
@@ -509,7 +494,7 @@ public class OficioRemisionController extends BaseController {
                     for (RegistroEntrada registroEntradaAEnviar : registrosEntrada) {
 
                         // Enviamos el Fichero de datos de intercambio al nodo SIR
-                        OficioRemision oficioRemision = emisionEjb.enviarFicheroIntercambio(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO,registroEntradaAEnviar.getId(), oficinaSir.getCodigo(),oficinaSir.getDenominacion(), getOficinaActiva(request), usuarioEntidad, oficioRemisionForm.getIdLibro());
+                        OficioRemision oficioRemision = sirEjb.enviarFicheroIntercambio(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO,registroEntradaAEnviar.getId(), oficinaSir.getCodigo(),oficinaSir.getDenominacion(), getOficinaActiva(request), usuarioEntidad, oficioRemisionForm.getIdLibro());
 
                         oficioRemisionList.add(oficioRemision);
                     }
@@ -520,6 +505,10 @@ public class OficioRemisionController extends BaseController {
                 Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.error.envio"));
                 return new ModelAndView("redirect:/oficioRemision/entradasPendientesRemision");
 
+            } catch (I18NException e) {
+                e.printStackTrace();
+                Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.error.envio"));
+                return new ModelAndView("redirect:/oficioRemision/entradasPendientesRemision");
             }
 
             // OFICIO DE REMISION SALIDA
@@ -559,19 +548,22 @@ public class OficioRemisionController extends BaseController {
                     for (RegistroSalida registroSalidaAEnviar : registrosSalida) {
 
                         // Enviamos el Fichero de datos de intercambio al nodo SIR
-                        OficioRemision oficioRemision = emisionEjb.enviarFicheroIntercambio(RegwebConstantes.REGISTRO_SALIDA_ESCRITO,registroSalidaAEnviar.getId(), oficinaSir.getCodigo(),oficinaSir.getDenominacion(), getOficinaActiva(request), usuarioEntidad, oficioRemisionForm.getIdLibro());
+                        OficioRemision oficioRemision = sirEjb.enviarFicheroIntercambio(RegwebConstantes.REGISTRO_SALIDA_ESCRITO,registroSalidaAEnviar.getId(), oficinaSir.getCodigo(),oficinaSir.getDenominacion(), getOficinaActiva(request), usuarioEntidad, oficioRemisionForm.getIdLibro());
 
                         oficioRemisionList.add(oficioRemision);
                     }
                 }
 
 
-            } catch (Throwable e) {
-
-                log.error(" Error enviant a SIR: " + e.getMessage(), e);
+            } catch (SIRException s) {
+                log.error(" Error enviant a SIR: " + s.getMessage(), s);
                 Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.error.envio"));
                 return new ModelAndView("redirect:/oficioRemision/salidasPendientesRemision");
 
+            } catch (I18NException e) {
+                e.printStackTrace();
+                Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.error.envio"));
+                return new ModelAndView("redirect:/oficioRemision/salidasPendientesRemision");
             }
         }
 

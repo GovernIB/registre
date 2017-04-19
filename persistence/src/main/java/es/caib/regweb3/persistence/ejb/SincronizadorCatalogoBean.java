@@ -5,7 +5,7 @@ import es.caib.dir3caib.ws.api.catalogo.CatEstadoEntidad;
 import es.caib.dir3caib.ws.api.catalogo.CatTipoVia;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.CatPais;
-import es.caib.regweb3.persistence.utils.Dir3CaibUtils;
+import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;

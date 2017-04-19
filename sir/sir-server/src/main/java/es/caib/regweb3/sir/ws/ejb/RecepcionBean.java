@@ -1,17 +1,12 @@
-package es.caib.regweb3.sir.ejb;
+package es.caib.regweb3.sir.ws.ejb;
 
-import es.caib.regweb3.model.AsientoRegistralSir;
-import es.caib.regweb3.model.Oficina;
-import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.model.UsuarioEntidad;
-import es.caib.regweb3.model.utils.CamposNTI;
-import es.caib.regweb3.persistence.ejb.SirLocal;
 import es.caib.regweb3.persistence.ejb.WebServicesMethodsLocal;
 import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.sir.core.model.Errores;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.core.utils.Mensaje;
+import es.caib.regweb3.sir.ejb.MensajeLocal;
 import es.caib.regweb3.sir.utils.Sicres3XML;
 import es.caib.regweb3.sir.utils.XPathReaderUtil;
 import org.apache.log4j.Logger;
@@ -23,7 +18,6 @@ import javax.ejb.Stateless;
 import javax.xml.xpath.XPathConstants;
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 
 /**
  * Ejb para la gestión de la Recepción de Ficheros de Intercambios y Mensajes de Dtos de Control
@@ -32,15 +26,12 @@ import java.util.List;
 @Stateless(name = "RecepcionEJB")
 public class RecepcionBean implements RecepcionLocal{
 
-    public final Logger log = Logger.getLogger(getClass());
+    private final Logger log = Logger.getLogger(getClass());
 
     @EJB(name = "MensajeEJB")
-    public MensajeLocal mensajeEjb;
+    private MensajeLocal mensajeEjb;
 
-    @EJB(name = "SirEJB")
-    public SirLocal sirEjb;
-
-    public Sicres3XML sicres3XML = new Sicres3XML();
+    private Sicres3XML sicres3XML = new Sicres3XML();
 
 
     private String errorGenerico = Errores.ERROR_0065.getValue(); // ERROR GENÉRICO: ERROR_EN_EL_ASIENTO
@@ -118,35 +109,6 @@ public class RecepcionBean implements RecepcionLocal{
             throw e;
 
         }
-    }
-
-    /**
-     *
-     * @param asientoRegistralSir
-     * @param usuario
-     * @param oficinaActiva
-     * @param idLibro
-     * @param idIdioma
-     * @param idTipoAsunto
-     * @param camposNTIs
-     * @return
-     * @throws Exception
-     */
-    public RegistroEntrada aceptarAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs) throws Exception{
-
-        log.info("Aceptando AsientoRegistralSir: " + asientoRegistralSir.getIdentificadorIntercambio());
-
-        RegistroEntrada registroEntrada =  sirEjb.aceptarAsientoRegistralSir(asientoRegistralSir, usuario, oficinaActiva, idLibro, idIdioma, idTipoAsunto, camposNTIs);
-
-        if(registroEntrada != null){
-
-            mensajeEjb.enviarMensajeConfirmacion(asientoRegistralSir, registroEntrada.getNumeroRegistroFormateado());
-
-            return registroEntrada;
-
-        }
-
-        return null;
     }
 
     /**
