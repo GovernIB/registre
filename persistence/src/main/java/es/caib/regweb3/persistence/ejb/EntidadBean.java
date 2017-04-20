@@ -33,37 +33,34 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @PersistenceContext(unitName="regweb3")
     private EntityManager em;
 
-    @EJB public RegistroDetalleLocal registroDetalleEjb;
-    @EJB public LibroLocal libroEjb;
-    @EJB public CodigoAsuntoLocal codigoAsuntoEjb;
-    @EJB public OficioRemisionLocal oficioRemisionEjb;
-    @EJB public TipoDocumentalLocal tipoDocumentalEjb;
-    @EJB public TipoAsuntoLocal tipoAsuntoEjb;
-    @EJB public RegistroEntradaLocal registroEntradaEjb;
-    @EJB public RegistroSalidaLocal registroSalidaEjb;
-    @EJB public OrganismoLocal organismoEjb;
-    @EJB public TrazabilidadLocal trazabilidadEjb;
-    @EJB public PersonaLocal personaEjb;
-    @EJB public HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
-    @EJB public HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
-    @EJB public ReproLocal reproEjb;
-    @EJB public LopdLocal lopdEjb;
-    @EJB public AnexoLocal anexoEjb;
-    @EJB public PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
-    @EJB public RelacionOrganizativaOfiLocal relacionOrganizativaOfiEjb;
-    @EJB public RelacionSirOfiLocal relacionSirOfiEjb;
-    @EJB public OficinaLocal oficinaEjb;
-    @EJB public UsuarioEntidadLocal usuarioEntidadEjb;
-    @EJB public UsuarioLocal usuarioEjb;
-    @EJB public DescargaLocal descargaEjb;
-    @EJB public ModeloOficioRemisionLocal modeloOficioRemisionEjb;
-    @EJB public ModeloReciboLocal modeloReciboEjb;
-    @EJB public RegistroLopdMigradoLocal registroMigradoLopdEjb;
-    @EJB public RegistroMigradoLocal registroMigradoEjb;
-    @EJB public PropiedadGlobalLocal propiedadGlobalEjb;
-    @EJB public AsientoRegistralSirLocal asientoRegistralSirEjb;
-    @EJB public InteresadoSirLocal interesadoSirEjb;
-    @EJB public AnexoSirLocal anexoSirEjb;
+    @EJB private RegistroDetalleLocal registroDetalleEjb;
+    @EJB private LibroLocal libroEjb;
+    @EJB private OficioRemisionLocal oficioRemisionEjb;
+    @EJB private TipoDocumentalLocal tipoDocumentalEjb;
+    @EJB private TipoAsuntoLocal tipoAsuntoEjb;
+    @EJB private RegistroEntradaLocal registroEntradaEjb;
+    @EJB private RegistroSalidaLocal registroSalidaEjb;
+    @EJB private OrganismoLocal organismoEjb;
+    @EJB private TrazabilidadLocal trazabilidadEjb;
+    @EJB private PersonaLocal personaEjb;
+    @EJB private HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
+    @EJB private HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
+    @EJB private ReproLocal reproEjb;
+    @EJB private LopdLocal lopdEjb;
+    @EJB private PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
+    @EJB private RelacionOrganizativaOfiLocal relacionOrganizativaOfiEjb;
+    @EJB private RelacionSirOfiLocal relacionSirOfiEjb;
+    @EJB private OficinaLocal oficinaEjb;
+    @EJB private UsuarioEntidadLocal usuarioEntidadEjb;
+    @EJB private DescargaLocal descargaEjb;
+    @EJB private ModeloOficioRemisionLocal modeloOficioRemisionEjb;
+    @EJB private ModeloReciboLocal modeloReciboEjb;
+    @EJB private RegistroLopdMigradoLocal registroMigradoLopdEjb;
+    @EJB private RegistroMigradoLocal registroMigradoEjb;
+    @EJB private PropiedadGlobalLocal propiedadGlobalEjb;
+    @EJB private AsientoRegistralSirLocal asientoRegistralSirEjb;
+    @EJB private InteresadoSirLocal interesadoSirEjb;
+    @EJB private AnexoSirLocal anexoSirEjb;
 
 
     @Override
@@ -268,6 +265,13 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         q.setParameter("idEntidad",idEntidad);
 
         return (Boolean) q.getSingleResult();
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<Entidad> getEntidadesSir() throws Exception {
+
+        return  em.createQuery("Select entidad from Entidad as entidad where entidad.sir = true order by entidad.id").getResultList();
     }
 
 

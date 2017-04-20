@@ -51,6 +51,13 @@ public interface SirLocal {
     public OficioRemision enviarFicheroIntercambio(String tipoRegistro, Long idRegistro, String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino, Oficina oficinaActiva, UsuarioEntidad usuario, Long idLibro) throws Exception, I18NException;
 
     /**
+     *
+     * @param idEntidad
+     * @throws Exception
+     */
+    public void reintentarEnvios(Long idEntidad) ;
+
+    /**
      * @param asientoRegistralSir
      * @param usuario
      * @param oficinaActiva

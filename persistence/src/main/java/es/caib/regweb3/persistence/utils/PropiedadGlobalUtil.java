@@ -464,11 +464,23 @@ public class PropiedadGlobalUtil {
      * Si no está definida devuelve la expresión por defecto
      * @return
      */
-    public static String getCronExpressionInicializarContadores() {
+    public static String getInicializarContadoresCronExpression() {
         final String partialPropertyName = "cronExpression.inicializarContadores";
         String valor = getString( partialPropertyName);
 
         return valor != null ? valor : RegwebConstantes.CRON_INICIALIZAR_CONTADORES;
+    }
+
+    /**
+     * Retorna el valor de la propiedad CronExpression para los envios Sir pendientes.
+     * Si no está definida devuelve la expresión por defecto
+     * @return
+     */
+    public static String getEnviosSirPendientesCronExpression() {
+        final String partialPropertyName = "cronExpression.enviosSirPendientes";
+        String valor = getString( partialPropertyName);
+
+        return valor != null ? valor : RegwebConstantes.CRON_ENVIOS_SIR_PENDIENTES;
     }
     
     /**

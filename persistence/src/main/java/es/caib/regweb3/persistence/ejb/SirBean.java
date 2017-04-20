@@ -27,8 +27,6 @@ import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -46,9 +44,6 @@ import java.util.concurrent.atomic.AtomicLong;
 public class SirBean implements SirLocal{
 
     protected final Logger log = Logger.getLogger(getClass());
-
-    @PersistenceContext(unitName="regweb3")
-    private EntityManager em;
 
     @EJB private RegistroEntradaLocal registroEntradaEjb;
     @EJB private RegistroSalidaLocal registroSalidaEjb;
@@ -557,6 +552,48 @@ public class SirBean implements SirLocal{
         oficioRemisionEjb.modificarEstado(oficioRemision.getId(), RegwebConstantes.OFICIO_SIR_ENVIADO);
 
         return oficioRemision;
+
+    }
+
+    @Override
+    public void reintentarEnvios(Long idEntidad) {
+
+        try {
+
+            List<OficioRemision> oficios = oficioRemisionEjb.getByEstado(RegwebConstantes.OFICIO_SIR_ENVIADO, idEntidad);
+
+            log.info("Hay " + oficios.size() + " pendientes de volver a enviar al nodo CIR");
+
+            for (OficioRemision oficio : oficios) {
+
+                if(oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)){
+
+                    // Transformamos el RegistroEntrada en un AsientoRegistralSir
+                    RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFullCompleto(oficio.getRegistrosEntrada().get(0).getId());
+                    AsientoRegistralSir asientoRegistralSir = asientoRegistralSirEjb.transformarRegistroEntrada(registroEntrada);
+
+                    // Enviamos el Registro al Componente CIR
+                    log.info("Reintentando envio a: " + asientoRegistralSir.getDecodificacionEntidadRegistralDestino());
+                    emisionEjb.enviarFicheroIntercambio(asientoRegistralSir);
+
+                    // Contabilizamos los reintentos
+                    oficio.setNumeroReintentos(oficio.getNumeroReintentos() + 1);
+                    oficio.setFechaEstado(new Date());
+
+                    oficioRemisionEjb.merge(oficio);
+
+
+                }else if(oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)){
+
+                }
+            }
+
+        } catch (I18NException e) {
+            e.printStackTrace();
+        }catch (Exception e){
+            log.info("Error al reintenar el envio");
+            e.printStackTrace();
+        }
 
     }
 
@@ -1196,7 +1233,7 @@ public class SirBean implements SirLocal{
 
 
 
-    protected DocumentCustody getDocumentCustody(AnexoSir anexoSir) throws Exception {
+    private DocumentCustody getDocumentCustody(AnexoSir anexoSir) throws Exception {
         if (log.isDebugEnabled()) {
             log.debug("  ------------------------------");
             log.debug(" anexoSir.getAnexo = " + anexoSir.getAnexo());
@@ -1212,7 +1249,7 @@ public class SirBean implements SirLocal{
     }
 
 
-    protected SignatureCustody getSignatureCustody(AnexoSir anexoSir, DocumentCustody dc,
+    private SignatureCustody getSignatureCustody(AnexoSir anexoSir, DocumentCustody dc,
                                                    int modoFirma) throws Exception {
         if (log.isDebugEnabled()) {
             log.debug("  ------------------------------");
@@ -1277,7 +1314,7 @@ public class SirBean implements SirLocal{
      * @return
      * @throws Exception
      */
-    protected String generarIdentificadorIntercambio(String codOficinaOrigen) {
+    private String generarIdentificadorIntercambio(String codOficinaOrigen) {
 
         String identificador = "";
         SimpleDateFormat anyo = new SimpleDateFormat("yy"); // Just the year, with 2 digits

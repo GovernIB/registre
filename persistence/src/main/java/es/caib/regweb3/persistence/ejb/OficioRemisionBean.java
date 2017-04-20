@@ -37,25 +37,19 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     public LibroLocal libroEjb;
 
     @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
-    public RegistroSalidaLocal registroSalidaEjb;
+    private RegistroSalidaLocal registroSalidaEjb;
 
     @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
-    public RegistroEntradaLocal registroEntradaEjb;
+    private RegistroEntradaLocal registroEntradaEjb;
 
     @EJB(mappedName = "regweb3/RegistroDetalleEJB/local")
-    public RegistroDetalleLocal registroDetalleEjb;
-
-    @EJB(mappedName = "regweb3/HistoricoRegistroEntradaEJB/local")
-    public HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
-
-    @EJB(mappedName = "regweb3/HistoricoRegistroSalidaEJB/local")
-    public HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
+    private RegistroDetalleLocal registroDetalleEjb;
 
     @EJB(mappedName = "regweb3/TrazabilidadEJB/local")
-    public TrazabilidadLocal trazabilidadEjb;
+    private TrazabilidadLocal trazabilidadEjb;
 
     @EJB(mappedName = "regweb3/ContadorEJB/local")
-    public ContadorLocal contadorEjb;
+    private ContadorLocal contadorEjb;
 
 
     @Override
@@ -491,6 +485,19 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         Query q = em.createQuery("Select oficioRemision.registrosEntrada from OficioRemision as oficioRemision where oficioRemision.id = :idOficioRemision ");
 
         q.setParameter("idOficioRemision", idOficioRemision);
+
+        return q.getResultList();
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<OficioRemision> getByEstado(int idEstado, Long idEntidad) throws Exception{
+
+        Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision where oficioRemision.estado = :idEstado " +
+                "and oficioRemision.usuarioResponsable.entidad.id = :idEntidad");
+
+        q.setParameter("idEstado", idEstado);
+        q.setParameter("idEntidad", idEntidad);
 
         return q.getResultList();
     }

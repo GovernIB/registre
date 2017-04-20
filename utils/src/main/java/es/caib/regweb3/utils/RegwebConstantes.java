@@ -582,4 +582,10 @@ public interface RegwebConstantes {
 
     /* -------------- EXPRESIÓN CRON --------------*/
     String CRON_INICIALIZAR_CONTADORES = "0 0 0 1 1 ? *";
+    String CRON_ENVIOS_SIR_PENDIENTES = "0 0/2 * 1/1 * ? *"; //0 0 0/2 1/1 * ? *
+
+    /* -------------- TIPO PLUGIN --------------*/
+    Long PLUGIN_DISTRIBUCION = 1L;
+    Long PLUGIN_JUSTIFICANTE = 2L;
+    Long PLUGIN_POSTPROCESO = 3L;
 }

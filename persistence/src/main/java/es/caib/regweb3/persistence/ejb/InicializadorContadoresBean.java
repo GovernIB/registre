@@ -31,7 +31,6 @@ public class InicializadorContadoresBean implements InicializadorContadoresLocal
 
     protected final Logger log = Logger.getLogger(getClass());
 
-
     private static final String NAME_TIMER = "InitContadoresTimer";
 
     @Resource
@@ -71,7 +70,7 @@ public class InicializadorContadoresBean implements InicializadorContadoresLocal
             // Si han passat més de 30segons de l'hora pravista d'execució
             // llavors no l'executam.
             if (timeRemaining > -30000) {
-                inicializar();
+                reiniciarContadoresEntidad();
             } else {
                 log.warn("Timer programado para "
                         + new Date(System.currentTimeMillis() + timeRemaining)
@@ -86,7 +85,7 @@ public class InicializadorContadoresBean implements InicializadorContadoresLocal
 
     protected Date nextExecution() throws ParseException {
 
-        String cronExpression = PropiedadGlobalUtil.getCronExpressionInicializarContadores();
+        String cronExpression = PropiedadGlobalUtil.getInicializarContadoresCronExpression();
         Date currTime = new Date();
         CronTriggerImpl tr = new CronTriggerImpl();
         tr.setCronExpression(cronExpression);
@@ -111,7 +110,7 @@ public class InicializadorContadoresBean implements InicializadorContadoresLocal
         for (Object obj : timerService.getTimers()) {
             javax.ejb.Timer timer = (javax.ejb.Timer) obj;
             String scheduled = (String) timer.getInfo();
-            //System.out.println("-> Timer Found : " + scheduled);
+
             if (scheduled.equals(name)) {
                 log.info("Removing old timer : " + scheduled + "(" + timer.getNextTimeout() + ")");
                 timer.cancel();
@@ -124,21 +123,23 @@ public class InicializadorContadoresBean implements InicializadorContadoresLocal
         removeTimer(NAME_TIMER);
     }
 
-    @Override
-    public void inicializar() {
+    /**
+     *
+     */
+    private void reiniciarContadoresEntidad() {
         try{
 
             List<Entidad> entidades = entidadEjb.getAll();
+
             for(Entidad entidad: entidades) {
+
                 libroEjb.reiniciarContadoresEntidadTask(entidad.getId());
+                log.info("Ejecutado reiniciarContadores de:" + entidad.getNombre());
             }
 
-            log.info("Ejecutado reiniciarContadoresEntidad");
         } catch (Throwable e) {
           log.error("Error Inicializando contadores entidad ...", e);
         }
-
-
 
     }
 }

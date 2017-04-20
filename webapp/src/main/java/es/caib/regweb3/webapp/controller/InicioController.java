@@ -22,35 +22,27 @@ import java.util.Set;
  */
 @Controller
 public class InicioController extends BaseController{
-
-    //protected final Logger log = Logger.getLogger(getClass());
-    
-    @EJB(mappedName = "regweb3/RelacionOrganizativaOfiEJB/local")
-    public RelacionOrganizativaOfiLocal relacionOrganizativaOfiLocalEjb;
     
     @EJB(mappedName = "regweb3/OficioRemisionEJB/local")
-    public OficioRemisionLocal oficioRemisionEjb;
+    private OficioRemisionLocal oficioRemisionEjb;
     
     @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
-    public RegistroSalidaLocal registroSalidaEjb;
-    
+    private RegistroSalidaLocal registroSalidaEjb;
+
     @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
-    public RegistroEntradaLocal registroEntradaEjb;
+    private RegistroEntradaLocal registroEntradaEjb;
 
     @EJB(mappedName = "regweb3/AsientoRegistralSirEJB/local")
-    public AsientoRegistralSirLocal asientosRegistralSirEjb;
-
-    @EJB(mappedName = "regweb3/LopdEJB/local")
-    public LopdLocal lopdEjb;
+    private AsientoRegistralSirLocal asientosRegistralSirEjb;
 
     @EJB(mappedName = "regweb3/DescargaEJB/local")
-    public DescargaLocal descargaEjb;
+    private DescargaLocal descargaEjb;
 
     @EJB(mappedName = "regweb3/OficioRemisionEntradaUtilsEJB/local")
-    public OficioRemisionEntradaUtilsLocal oficioRemisionEntradaUtilsEjb;
+    private OficioRemisionEntradaUtilsLocal oficioRemisionEntradaUtilsEjb;
 
     @EJB(mappedName = "regweb3/OficioRemisionSalidaUtilsEJB/local")
-    public OficioRemisionSalidaUtilsLocal oficioRemisionSalidaUtilsEjb;
+    private OficioRemisionSalidaUtilsLocal oficioRemisionSalidaUtilsEjb;
 
 
     @RequestMapping(value = "/inici")

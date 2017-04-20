@@ -103,6 +103,13 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
     public Boolean isSir(Long idEntidad) throws Exception;
 
     /**
+     * Obtiene todas las entidades que están marcadas como SIR
+     * @return
+     * @throws Exception
+     */
+    public List<Entidad> getEntidadesSir() throws Exception;
+
+    /**
      * Elimina todos los Registros y relaciones de una Entidad.
      *
      * @param idEntidad

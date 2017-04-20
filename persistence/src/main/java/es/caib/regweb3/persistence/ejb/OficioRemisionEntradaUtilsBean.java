@@ -520,9 +520,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         List<RegistroEntrada> registros = new ArrayList<RegistroEntrada>();
 
         // Recorremos los RegistroEntrada del Oficio y Libro de registro seleccionado
-        for (int i = 0; i < oficios.size(); i++) {
-
-            OficioPendienteLlegada oficio = oficios.get(i);
+        for (OficioPendienteLlegada oficio : oficios) {
 
             RegistroEntrada registroEntrada = registroEntradaEjb.findById(oficio.getIdRegistro());
             Libro libro = libroEjb.findById(oficio.getIdLibro());

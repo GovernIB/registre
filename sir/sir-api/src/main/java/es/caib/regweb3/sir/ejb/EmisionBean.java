@@ -85,16 +85,16 @@ public class EmisionBean implements EmisionLocal{
         try{
         // Creamos el xml de intercambio
         String xml = sicres3XML.crearXMLFicheroIntercambioSICRES3(asientoRegistralSir);
-        log.info("Xml Fichero Intercambio generado: " + xml);
+        //log.info("Xml Fichero Intercambio generado: " + xml);
 
+        // Enviamos el Fichero de intercambio
         RespuestaWS respuesta = ws_sir6_b_recepcionFicheroDeAplicacion(xml);
 
         if (respuesta != null) {
-            log.info("Respuesta: " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
 
             if (Errores.OK.getValue().equals(respuesta.getCodigo())) {
 
-                log.info("AsientoRegistral enviado correctamente");
+                log.info("AsientoRegistral enviado correctamente: " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
             }else{
                 log.error("Respuesta: " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
                 throw new SIRException("Error " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());

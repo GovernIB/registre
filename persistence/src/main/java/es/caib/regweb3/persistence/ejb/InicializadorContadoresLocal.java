@@ -8,8 +8,6 @@ import javax.ejb.Local;
 @Local
 public interface InicializadorContadoresLocal {
 
-    public void inicializar();
-
     public void createTimer();
 
     public void clearTimers();
