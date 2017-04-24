@@ -61,8 +61,9 @@ public class WS_SIR9Impl implements WS_SIR9_PortType {
     @WebMethod(operationName = "envioMensajeDatosControlAAplicacion")
     public RespuestaWS envioMensajeDatosControlAAplicacion(@WebParam(name = "value0")String mensaje, @WebParam(name = "value1")String firma) {
 
-        log.info("Dentro de WS_SIR9Impl: envioMensajeDatosControlAAplicacion");
-        log.info("Mensaje: " + mensaje);
+        log.info("-------------------- Recibiendo mensaje de control en WS_SIR9Impl --------------------");
+        log.info("Mensaje de control: " + mensaje);
+        log.info("--------------------------------------------------------------------------------------");
 
         RespuestaWS respuestaWS = null;
 
