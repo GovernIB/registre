@@ -704,7 +704,7 @@ public class Sicres3XML {
             }
 
             // Tipo_MIME
-            if (anexoSir.getTipoMIME() != null || anexoSir.getTipoMIME().length() <= ANEXO_TIPOMIME_MAXLENGTH_SIR) {
+            if (anexoSir.getTipoMIME() != null && anexoSir.getTipoMIME().length() <= ANEXO_TIPOMIME_MAXLENGTH_SIR) {
                 elem = rootElement.addElement("Tipo_MIME");
                 elem.addCDATA(anexoSir.getTipoMIME());
             }
@@ -1343,7 +1343,7 @@ public class Sicres3XML {
         }
 
         // Tipo_MIME
-        if (tipoMime != null || tipoMime.length() <= ANEXO_TIPOMIME_MAXLENGTH_SIR) {
+        if (tipoMime != null && tipoMime.length() <= ANEXO_TIPOMIME_MAXLENGTH_SIR) {
             elem = rootElement.addElement("Tipo_MIME");
             elem.addCDATA(tipoMime);
         }
