@@ -451,11 +451,15 @@ public class PropiedadGlobalUtil {
      * Retorna el valor de la propiedad JustificantePlugin de la entidad indicada.
      * @return
      */
-    public static String getJustificanteActivoPlugin(Long idEntidad, String basePlugin) {
+    public static String getJustificantePlugin(Long idEntidad, String basePlugin) {
 
         String valor = getStringByEntidad(idEntidad, basePlugin);
 
-        return valor != null ? valor : null;
+        if(valor == null){
+            return RegwebConstantes.PLUGIN_JUSTIFICANTE_CLASS_MOCK;
+        }
+
+        return valor;
     }
 
 

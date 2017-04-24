@@ -22,7 +22,7 @@ public class RegwebJustificantePluginManager {
             final String propertyName = "justificante.plugin";
 
             // Cerca el Plugin de Justificant definit a les Propietats Globals
-            String className = PropiedadGlobalUtil.getJustificanteActivoPlugin(idEntidadActiva, propertyName);
+            String className = PropiedadGlobalUtil.getJustificantePlugin(idEntidadActiva, propertyName);
 
             // Si no existeix la propietat global, dóna error
             if (className == null || className.trim().length() <= 0) {
