@@ -99,10 +99,22 @@
                             </dd>
                             <%--OficioRemision SIR--%>
                             <c:if test="${oficioRemision.sir == true}">
+                                <%--Código y descripción error--%>
+                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR ||
+                                          oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR ||
+                                          oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO_ERROR}">
+                                    <dt><i class="fa fa-bug"></i> <spring:message code="asientoRegistralSir.codigoError"/>:</dt>
+                                    <dd> ${oficioRemision.codigoError}</dd>
+                                    <dt><i class="fa fa-comment"></i> <spring:message code="asientoRegistralSir.descripcionError"/>:</dt>
+                                    <dd> ${oficioRemision.descripcionError}</dd>
+
+                                </c:if>
+                                <%--Reintentos--%>
                                 <c:if test="${oficioRemision.numeroReintentos > 0}">
                                     <dt><i class="fa fa-retweet"></i> <spring:message code="oficioRemision.reintentos"/>:</dt>
                                     <dd> ${oficioRemision.numeroReintentos}</dd>
                                 </c:if>
+                                <%--Identificador intercambio--%>
                                 <dt><i class="fa fa-qrcode"></i> <spring:message code="asientoRegistralSir.identificadorIntercambio"/>:</dt>
                                 <dd> ${oficioRemision.identificadorIntercambio}</dd>
                             </c:if>
@@ -155,7 +167,7 @@
                                 </h3>
                             </div>
                             <div class="panel-body">
-                                <p><strong><i class="fa fa-home"></i> <spring:message code="registroEntrada.oficina"/>:</strong> ${oficioRemision.oficina.denominacion}</p>
+                                <p><strong><i class="fa fa-home"></i> <spring:message code="oficina.oficina"/>:</strong> ${oficioRemision.oficina.denominacion}</p>
                                 <p><strong><i class="fa fa-clock-o"></i> <spring:message code="oficioRemision.fecha"/>:</strong> <fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></p>
                             </div>
 
@@ -166,12 +178,12 @@
                         <div class="panel panel-success">
                             <div class="panel-heading">
                                 <h3 class="panel-title"><i class="fa fa-institution"></i>
-                                    <strong><spring:message code="organismo.organismo"/></strong>
+                                    <strong><spring:message code="organismo.destino"/></strong>
                                 </h3>
                             </div>
                             <div class="panel-body">
                                 <p>
-                                    <strong><i class="fa fa-institution"></i> <spring:message code="registroEntrada.organismoDestino"/>:</strong>
+                                    <strong><i class="fa fa-institution"></i> <spring:message code="organismo.organismo"/>:</strong>
                                     <c:if test="${not oficioRemision.sir}">
                                         ${(empty oficioRemision.organismoDestinatario)? oficioRemision.destinoExternoDenominacion : oficioRemision.organismoDestinatario.denominacion}
                                     </c:if>

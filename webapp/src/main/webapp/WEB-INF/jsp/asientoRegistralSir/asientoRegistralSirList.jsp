@@ -55,7 +55,7 @@
                                 </div>
                             </div>
                             <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left align-right"><spring:message code="asientoRegistralSir.numero"/></div>
+                                <div class="col-xs-4 pull-left align-right"><spring:message code="asientoRegistralSir.numeroRegistro"/></div>
                                 <div class="col-xs-8">
                                     <form:input path="asientoRegistralSir.numeroRegistro" cssClass="form-control" maxlength="10"/>
                                 </div>
@@ -122,8 +122,8 @@
                                             </colgroup>
                                             <thead>
                                             <tr>
-                                                <th><spring:message code="asientoRegistralSir.numero"/></th>
-                                                <th><spring:message code="asientoRegistralSir.fecha"/></th>
+                                                <th><spring:message code="asientoRegistralSir.numeroRegistro"/></th>
+                                                <th><spring:message code="asientoRegistralSir.fechaRegistro"/></th>
                                                 <th><spring:message code="asientoRegistralSir.oficinaOrigen"/></th>
                                                 <th><spring:message code="asientoRegistralSir.oficinaDestino"/></th>
                                                 <th><spring:message code="asientoRegistralSir.estado"/></th>

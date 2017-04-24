@@ -383,28 +383,28 @@ public class SirBean implements SirLocal{
         if (EstadoAsientoRegistralSir.ENVIADO.equals(asientoRegistralSir.getEstado())){
 
             asientoRegistralSir.setEstado(EstadoAsientoRegistralSir.ENVIADO_Y_ERROR);
-            /*asientoRegistralSir.setCodigoError(mensaje.getCodigoError());
+            asientoRegistralSir.setCodigoError(mensaje.getCodigoError());
             asientoRegistralSir.setDescripcionError(mensaje.getDescripcionMensaje());
             asientoRegistralSir.setNumeroReintentos(0);
-            asientoRegistralSir.setFechaEstado(new Date());*/
+            asientoRegistralSir.setFechaEstado(new Date());
             asientoRegistralSirEjb.merge(asientoRegistralSir);
 
         } else if (EstadoAsientoRegistralSir.REENVIADO.equals(asientoRegistralSir.getEstado())){
 
             asientoRegistralSir.setEstado(EstadoAsientoRegistralSir.REENVIADO_Y_ERROR);
-            /*asientoRegistralSir.setCodigoError(mensaje.getCodigoError());
+            asientoRegistralSir.setCodigoError(mensaje.getCodigoError());
             asientoRegistralSir.setDescripcionError(mensaje.getDescripcionMensaje());
             asientoRegistralSir.setNumeroReintentos(0);
-            asientoRegistralSir.setFechaEstado(new Date());*/
+            asientoRegistralSir.setFechaEstado(new Date());
             asientoRegistralSirEjb.merge(asientoRegistralSir);
 
         } else if (EstadoAsientoRegistralSir.RECHAZADO.equals(asientoRegistralSir.getEstado())){
 
             asientoRegistralSir.setEstado(EstadoAsientoRegistralSir.RECHAZADO_Y_ERROR);
-            /*asientoRegistralSir.setCodigoError(mensaje.getCodigoError());
+            asientoRegistralSir.setCodigoError(mensaje.getCodigoError());
             asientoRegistralSir.setDescripcionError(mensaje.getDescripcionMensaje());
             asientoRegistralSir.setNumeroReintentos(0);
-            asientoRegistralSir.setFechaEstado(new Date());*/
+            asientoRegistralSir.setFechaEstado(new Date());
             asientoRegistralSirEjb.merge(asientoRegistralSir);
 
         } else if (EstadoAsientoRegistralSir.ENVIADO_Y_ERROR.equals(asientoRegistralSir.getEstado()) ||

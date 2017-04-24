@@ -39,7 +39,6 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathConstants;
 import java.io.*;
-import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -697,9 +696,9 @@ public class Sicres3XML {
             }
 
             // Hash
-            if (anexoSir.getAnexoData() != null) {
+            if (anexoSir.getHash() != null) {
                 elem = rootElement.addElement("Hash");
-                elem.addCDATA(getBase64String(anexoSir.getAnexoData()));
+                elem.addCDATA(org.apache.commons.codec.binary.StringUtils.newStringUtf8(anexoSir.getHash()));
             }else{
                 log.info("getAnexoData es null");
             }
@@ -1245,7 +1244,7 @@ public class Sicres3XML {
 
                     crearAnexo(rootNode, sc.getName(),identificadorFichero, CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento()),
                             CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(anexo.getTipoDocumento()),anexo.getCertificado(),anexo.getFirma(),anexo.getTimestamp(), anexo.getValidacionOCSPCertificado(),
-                            obtenerHash(sc.getData()),sc.getMime(),sc.getData(), identificadorFichero, anexo.getObservaciones());
+                            anexo.getHash(),sc.getMime(),sc.getData(), identificadorFichero, anexo.getObservaciones());
 
                     break;
 
@@ -1258,7 +1257,7 @@ public class Sicres3XML {
 
                     crearAnexo(rootNode, dc.getName(),identificadorFichero, CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento()),
                             CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(anexo.getTipoDocumento()),anexo.getCertificado(),anexo.getFirma(),anexo.getTimestamp(), anexo.getValidacionOCSPCertificado(),
-                            obtenerHash(dc.getData()),dc.getMime(),dc.getData(), null,anexo.getObservaciones());
+                            anexo.getHash(),dc.getMime(),dc.getData(), null,anexo.getObservaciones());
 
                     SignatureCustody scFirma = anexoFull.getSignatureCustody();
                     String identificadorFicheroFirmado = generateIdentificadorFichero(registroDetalle.getIdentificadorIntercambio(), secuencia, dc.getName());
@@ -1266,7 +1265,7 @@ public class Sicres3XML {
 
                     crearAnexo(rootNode, scFirma.getName(),identificadorFicheroFirmado, CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento()),
                             CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(anexo.getTipoDocumento()),anexo.getCertificado(),anexo.getFirma(),anexo.getTimestamp(), anexo.getValidacionOCSPCertificado(),
-                            obtenerHash(scFirma.getData()),scFirma.getMime(),scFirma.getData(), identificadorFichero, anexo.getObservaciones());
+                            anexo.getHash(),scFirma.getMime(),scFirma.getData(), identificadorFichero, anexo.getObservaciones());
                     break;
 
             }
@@ -1338,7 +1337,7 @@ public class Sicres3XML {
         // Hash
         if (hash != null) {
             elem = rootElement.addElement("Hash");
-            elem.addCDATA(getBase64String(hash));
+            elem.addCDATA(org.apache.commons.codec.binary.StringUtils.newStringUtf8(hash));
         }else{
             log.info("hash es null");
         }
@@ -2318,21 +2317,5 @@ public class Sicres3XML {
         }
 
         return denominacionOficinaOrigen;
-    }
-
-    /**
-     * Genera el Hash mediante SHA-256 del contenido del documento y lo codifica en base64
-     *
-     * @param documentoData
-     * @return
-     * @throws Exception
-     */
-    protected byte[] obtenerHash(byte[] documentoData) throws Exception {
-
-        MessageDigest md = MessageDigest.getInstance("SHA-256");
-        byte[] digest = md.digest(documentoData);
-
-        return Base64.encodeBase64(digest);
-
     }
 }

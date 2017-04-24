@@ -337,8 +337,8 @@
                                             </colgroup>
                                             <thead>
                                             <tr>
-                                                <th><spring:message code="asientoRegistralSir.numero"/></th>
-                                                <th><spring:message code="asientoRegistralSir.fecha"/></th>
+                                                <th><spring:message code="asientoRegistralSir.numeroRegistro"/></th>
+                                                <th><spring:message code="asientoRegistralSir.fechaRegistro"/></th>
                                                 <th><spring:message code="asientoRegistralSir.oficinaDestino"/></th>
                                                 <th><spring:message code="asientoRegistralSir.extracto"/></th>
                                                 <th class="center"><spring:message code="regweb.acciones"/></th>

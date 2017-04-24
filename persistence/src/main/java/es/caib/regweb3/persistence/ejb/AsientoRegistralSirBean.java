@@ -344,6 +344,7 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
         if (ficheroIntercambio.getFicheroIntercambio() != null) {
 
             asientoRegistralSir = new AsientoRegistralSir();
+            asientoRegistralSir.setFechaRecepcion(new Date());
 
             // Segmento De_Origen_o_Remitente
             De_Origen_o_Remitente de_Origen_o_Remitente = ficheroIntercambio.getFicheroIntercambio().getDe_Origen_o_Remitente();
@@ -932,7 +933,7 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
                             CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento()),
                             CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(anexo.getTipoDocumento()),anexo.getCertificado(),
                             anexo.getFirma(),anexo.getTimestamp(), anexo.getValidacionOCSPCertificado(),
-                            obtenerHash(sc.getData()),sc.getMime(),sc.getData(),identificador_fichero,
+                            anexo.getHash(),sc.getMime(),sc.getData(),identificador_fichero,
                             anexo.getObservaciones());
 
                     anexosSir.add(anexoSir);
@@ -953,7 +954,7 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
                             CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento()),
                             CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(anexo.getTipoDocumento()),anexo.getCertificado(),
                             anexo.getFirma(),anexo.getTimestamp(), anexo.getValidacionOCSPCertificado(),
-                            obtenerHash(dc.getData()),dc.getMime(),dc.getData(),null,
+                            anexo.getHash(),dc.getMime(),dc.getData(),null,
                             anexo.getObservaciones());
 
                     anexosSir.add(anexoSir);
@@ -970,7 +971,7 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
                             CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento()),
                             CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FICHERO_TECNICO), null,
                             null,anexo.getTimestamp(), null,
-                            obtenerHash(sc.getData()),sc.getMime(),sc.getData(),identificador_fichero,
+                            anexo.getHash(),sc.getMime(),sc.getData(),identificador_fichero,
                             anexo.getObservaciones());
 
                     anexosSir.add(anexoSir);

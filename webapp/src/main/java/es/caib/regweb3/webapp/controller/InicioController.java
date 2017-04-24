@@ -25,9 +25,6 @@ public class InicioController extends BaseController{
     
     @EJB(mappedName = "regweb3/OficioRemisionEJB/local")
     private OficioRemisionLocal oficioRemisionEjb;
-    
-    @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
-    private RegistroSalidaLocal registroSalidaEjb;
 
     @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
     private RegistroEntradaLocal registroEntradaEjb;

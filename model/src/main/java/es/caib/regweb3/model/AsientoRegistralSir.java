@@ -224,6 +224,11 @@ public class AsientoRegistralSir implements Serializable {
      */
     private List<InteresadoSir> interesados = null;
 
+    private Date fechaRecepcion;
+    private Date fechaEstado;
+    private Integer numeroReintentos;
+    private String codigoError;
+    private String descripcionError;
 
     public AsientoRegistralSir() {
     }
@@ -597,7 +602,8 @@ public class AsientoRegistralSir implements Serializable {
         this.estado = estado;
     }
 
-    /*public Date getFechaEstado() {
+    @Column(name = "FECHA_ESTADO", length = 14)
+    public Date getFechaEstado() {
         return fechaEstado;
     }
 
@@ -605,14 +611,7 @@ public class AsientoRegistralSir implements Serializable {
         this.fechaEstado = fechaEstado;
     }
 
-    public Date getFechaEnvio() {
-        return fechaEnvio;
-    }
-
-    public void setFechaEnvio(Date fechaEnvio) {
-        this.fechaEnvio = fechaEnvio;
-    }
-
+    @Column(name = "FECHA_RECEPCION", length = 14)
     public Date getFechaRecepcion() {
         return fechaRecepcion;
     }
@@ -621,14 +620,16 @@ public class AsientoRegistralSir implements Serializable {
         this.fechaRecepcion = fechaRecepcion;
     }
 
-    public int getNumeroReintentos() {
+    @Column(name = "REINTENTOS")
+    public Integer getNumeroReintentos() {
         return numeroReintentos;
     }
 
-    public void setNumeroReintentos(int numeroReintentos) {
+    public void setNumeroReintentos(Integer numeroReintentos) {
         this.numeroReintentos = numeroReintentos;
     }
 
+    @Column(name = "COD_ERROR")
     public String getCodigoError() {
         return codigoError;
     }
@@ -637,13 +638,14 @@ public class AsientoRegistralSir implements Serializable {
         this.codigoError = codigoError;
     }
 
-    public String getDecodificacionError() {
-        return decodificacionError;
+    @Column(name = "DESC_ERROR", length = 2000)
+    public String getDescripcionError() {
+        return descripcionError;
     }
 
-    public void setDecodificacionError(String decodificacionError) {
-        this.decodificacionError = decodificacionError;
-    }*/
+    public void setDescripcionError(String descripcionError) {
+        this.descripcionError = descripcionError;
+    }
 
     @Override
     public boolean equals(Object o) {

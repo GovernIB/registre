@@ -85,7 +85,11 @@ public class EmisionBean implements EmisionLocal{
         try{
         // Creamos el xml de intercambio
         String xml = sicres3XML.crearXMLFicheroIntercambioSICRES3(asientoRegistralSir);
-        //log.info("Xml Fichero Intercambio generado: " + xml);
+        log.info("-----------------------------------------------------------------------------------------");
+        log.info("");
+        log.info("Xml Fichero Intercambio generado: " + xml);
+        log.info("");
+        log.info("-----------------------------------------------------------------------------------------");
 
         // Enviamos el Fichero de intercambio
         RespuestaWS respuesta = ws_sir6_b_recepcionFicheroDeAplicacion(xml);

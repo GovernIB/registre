@@ -44,7 +44,7 @@ public class RegWeb3SirWSHandler implements SOAPHandler<SOAPMessageContext> {
 
                 if (!outboundProperty) { // Mensaje de entrada
 
-                    log.info("Se trata de una petición al WS_SIR8_B, modificamos las cabeceras");
+                    log.debug("Se trata de una petición al WS_SIR8_B, modificamos las cabeceras");
 
                     // Obtenemos el mensaje de la petición
                     String mensaje = soapMessageToString(smc.getMessage());
@@ -67,7 +67,7 @@ public class RegWeb3SirWSHandler implements SOAPHandler<SOAPMessageContext> {
 
                 if (!outboundProperty) { // Mensaje de entrada
 
-                    log.info("Se trata de una petición al WS_SIR9, modificamos las cabeceras");
+                    log.debug("Se trata de una petición al WS_SIR9, modificamos las cabeceras");
 
                     // Obtenemos el mensaje de la petición
                     String mensaje = soapMessageToString(smc.getMessage());
