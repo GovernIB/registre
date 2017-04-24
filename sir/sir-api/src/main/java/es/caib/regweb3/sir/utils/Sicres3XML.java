@@ -698,7 +698,7 @@ public class Sicres3XML {
             // Hash
             if (anexoSir.getHash() != null) {
                 elem = rootElement.addElement("Hash");
-                elem.addCDATA(org.apache.commons.codec.binary.StringUtils.newStringUtf8(anexoSir.getHash()));
+                elem.addCDATA(getBase64String(anexoSir.getHash()));
             }else{
                 log.info("getAnexoData es null");
             }
