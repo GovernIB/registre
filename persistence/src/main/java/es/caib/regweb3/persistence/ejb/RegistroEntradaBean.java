@@ -96,13 +96,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
 
     @Override
-    public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad, List<Interesado> interesados)
-            throws Exception, I18NException, I18NValidationException {
-        return registrarEntrada(registroEntrada, usuarioEntidad,interesados, null);
-    }
-
-
-    @Override
     public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
                                             UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexosFull)
             throws Exception, I18NException, I18NValidationException {
