@@ -718,6 +718,8 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
         asientoRegistralSir.setContactoUsuario(registroSalida.getUsuario().getUsuario().getEmail());
         asientoRegistralSir.setIdentificadorIntercambio(registroDetalle.getIdentificadorIntercambio());
         asientoRegistralSir.setAplicacion(registroDetalle.getAplicacion());
+        asientoRegistralSir.setTipoAnotacion(registroDetalle.getTipoAnotacion());
+        asientoRegistralSir.setDecodificacionTipoAnotacion(registroDetalle.getDecodificacionTipoAnotacion());
         asientoRegistralSir.setTipoRegistro(TipoRegistro.SALIDA);
         asientoRegistralSir.setDocumentacionFisica(String.valueOf(registroDetalle.getTipoDocumentacionFisica()));
         asientoRegistralSir.setObservacionesApunte(registroDetalle.getObservaciones());
