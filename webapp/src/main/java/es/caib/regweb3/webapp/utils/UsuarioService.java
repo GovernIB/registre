@@ -28,37 +28,31 @@ public class UsuarioService {
     public final Logger log = Logger.getLogger(getClass());
 
     @EJB(mappedName = "regweb3/UsuarioEJB/local")
-    public UsuarioLocal usuarioEjb;
+    private UsuarioLocal usuarioEjb;
 
     @EJB(mappedName = "regweb3/RolEJB/local")
-    public RolLocal rolEjb;
+    private RolLocal rolEjb;
 
     @EJB(mappedName = "regweb3/EntidadEJB/local")
-    public EntidadLocal entidadEjb;
+    private EntidadLocal entidadEjb;
 
     @EJB(mappedName = "regweb3/UsuarioEntidadEJB/local")
-    public UsuarioEntidadLocal usuarioEntidadEjb;
+    private UsuarioEntidadLocal usuarioEntidadEjb;
 
     @EJB(mappedName = "regweb3/PermisoLibroUsuarioEJB/local")
-    public PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
+    private PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
 
     @EJB(mappedName = "regweb3/OficinaEJB/local")
-    public OficinaLocal oficinaEjb;
-
-    @EJB(mappedName = "regweb3/RelacionOrganizativaOfiEJB/local")
-    public RelacionOrganizativaOfiLocal relacionOrganizativaOfiLocalEjb;
+    private OficinaLocal oficinaEjb;
 
     @EJB(mappedName = "regweb3/RegistroMigradoEJB/local")
-    public RegistroMigradoLocal registroMigradoEjb;
-
-    @EJB(mappedName = "regweb3/AsientoRegistralSirEJB/local")
-    public AsientoRegistralSirLocal asientoRegistralSirEjb;
+    private RegistroMigradoLocal registroMigradoEjb;
 
     @EJB(mappedName = "regweb3/ConfiguracionEJB/local")
-    public ConfiguracionLocal configuracionEjb;
+    private ConfiguracionLocal configuracionEjb;
 
     @EJB(mappedName = "regweb3/OrganismoEJB/local")
-    public OrganismoLocal organismoEjb;
+    private OrganismoLocal organismoEjb;
 
 
     /**
@@ -88,7 +82,7 @@ public class UsuarioService {
      * @param request
      * @throws Exception
      */
-    public Rol obtenerCredenciales(Usuario usuario, HttpServletRequest request) throws Exception{
+    private Rol obtenerCredenciales(Usuario usuario, HttpServletRequest request) throws Exception{
 
         HttpSession session = request.getSession();
 
@@ -129,7 +123,7 @@ public class UsuarioService {
      * @param request
      * @throws Exception
      */
-    public void autorizarRol(Rol rolActivo,Entidad entidadActiva, HttpServletRequest request) throws Exception{
+    private void autorizarRol(Rol rolActivo,Entidad entidadActiva, HttpServletRequest request) throws Exception{
 
 
         HttpSession session = request.getSession();
@@ -172,7 +166,7 @@ public class UsuarioService {
      * @param session
      * @throws Exception
      */
-    public void asignarEntidadesAdministradas(Usuario usuario,Entidad entidadActiva, HttpSession session) throws Exception{
+    private void asignarEntidadesAdministradas(Usuario usuario,Entidad entidadActiva, HttpSession session) throws Exception{
 
         ArrayList<Entidad> entidadesAdministradas = new ArrayList<Entidad>();
         ArrayList<Entidad> entidadesPropietario = new ArrayList<Entidad>();
@@ -218,7 +212,7 @@ public class UsuarioService {
      * @param session
      * @throws Exception
      */
-    public UsuarioEntidad asignarEntidadesOperador(Usuario usuarioAutenticado,Entidad entidadActiva, HttpSession session) throws Exception{
+    private UsuarioEntidad asignarEntidadesOperador(Usuario usuarioAutenticado,Entidad entidadActiva, HttpSession session) throws Exception{
 
         // Obtenemos las entidades a las que el Usuario está asociado
         List<Entidad> entidades = usuarioEntidadEjb.getEntidadesByUsuario(usuarioAutenticado.getId());
@@ -253,7 +247,7 @@ public class UsuarioService {
      * @param session
      * @throws Exception
      */
-    public void asignarOficinasRegistro(UsuarioEntidad usuarioEntidad, HttpSession session) throws Exception{
+    private void asignarOficinasRegistro(UsuarioEntidad usuarioEntidad, HttpSession session) throws Exception{
 
         // Antes de nada, eliminamos las variables de sesión que continen información de las oficinas
         eliminarVariablesSesionOficina(session);
@@ -312,6 +306,12 @@ public class UsuarioService {
 
     }
 
+    /**
+     *
+     * @param oficinaNueva
+     * @param session
+     * @throws Exception
+     */
     public void asignarOficinaActiva(Oficina oficinaNueva, HttpSession session) throws Exception{
 
         if(oficinaNueva != null){
@@ -349,7 +349,7 @@ public class UsuarioService {
      * @param session
      * @throws Exception
      */
-    public void tieneMigrados(Entidad entidadActiva, HttpSession session) throws Exception{
+    private void tieneMigrados(Entidad entidadActiva, HttpSession session) throws Exception{
         session.setAttribute(RegwebConstantes.SESSION_MIGRADOS, registroMigradoEjb.tieneRegistrosMigrados(entidadActiva.getId()));
     }
 
@@ -410,7 +410,7 @@ public class UsuarioService {
      * @return
      * @throws Exception
      */
-    public List<Rol> obtenerRolesUsuarioAutenticado(HttpServletRequest request) throws Exception{
+    private List<Rol> obtenerRolesUsuarioAutenticado(HttpServletRequest request) throws Exception{
 
         List<Rol> rolesUsuario = null;
 
@@ -433,7 +433,7 @@ public class UsuarioService {
      * @return
      * @throws Exception
      */
-    public List<Rol> obtenerRolesUserPlugin(String identificador) throws Exception{
+    private List<Rol> obtenerRolesUserPlugin(String identificador) throws Exception{
 
         IUserInformationPlugin loginPlugin = RegwebLoginPluginManager.getInstance();
         RolesInfo rolesInfo = loginPlugin.getRolesByUsername(identificador);
@@ -559,7 +559,7 @@ public class UsuarioService {
      * @param usuario
      * @param session
      */
-    public UsuarioEntidad setUsuarioEntidadActivo(Usuario usuario, Entidad entidad, HttpSession session) throws Exception{
+    private UsuarioEntidad setUsuarioEntidadActivo(Usuario usuario, Entidad entidad, HttpSession session) throws Exception{
 
         UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByUsuarioEntidadActivo(usuario.getId(), entidad.getId());
 
@@ -588,7 +588,7 @@ public class UsuarioService {
      * @param session
      * @throws Exception
      */
-    public void eliminarVariablesSesion(HttpSession session) throws Exception{
+    private void eliminarVariablesSesion(HttpSession session) throws Exception{
 
         session.removeAttribute(RegwebConstantes.SESSION_ENTIDADES);
         session.removeAttribute(RegwebConstantes.SESSION_ENTIDAD);
@@ -603,7 +603,7 @@ public class UsuarioService {
      * @param session
      * @throws Exception
      */
-    public void eliminarVariablesSesionOficina(HttpSession session) throws Exception{
+    private void eliminarVariablesSesionOficina(HttpSession session) throws Exception{
 
         session.removeAttribute(RegwebConstantes.SESSION_OFICINAS);
         session.removeAttribute(RegwebConstantes.SESSION_OFICINA);
@@ -619,7 +619,7 @@ public class UsuarioService {
      * @param session
      * @throws Exception
      */
-    public void eliminarVariablesSesionCredenciales(HttpSession session) throws Exception{
+    private void eliminarVariablesSesionCredenciales(HttpSession session) throws Exception{
 
         session.removeAttribute(RegwebConstantes.SESSION_USUARIO);
         session.removeAttribute(RegwebConstantes.SESSION_USUARIO_ENTIDAD);
@@ -633,7 +633,7 @@ public class UsuarioService {
      * @param configuracion
      * @param request
      */
-    public void asignarConfiguracionAdministrador(Configuracion configuracion, HttpServletRequest request) throws Exception{
+    private void asignarConfiguracionAdministrador(Configuracion configuracion, HttpServletRequest request) throws Exception{
         HttpSession session = request.getSession();
         session.setAttribute(RegwebConstantes.SESSION_CONFIGURACION, configuracion);
     }
