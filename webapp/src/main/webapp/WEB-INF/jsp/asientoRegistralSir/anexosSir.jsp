@@ -77,10 +77,10 @@
                                                         name="camposNTIs[${status.index}].idValidezDocumento"
                                                         class="chosen-select"
                                                         <c:if test="${anexo.tipoDocumento == RegwebConstantes.CODIGO_SICRES_BY_TIPO_DOCUMENTO[RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO] || asientoRegistralSir.estado == 'ACEPTADO'}">disabled</c:if> >
-                                                    <c:forEach items="${tiposValidezDocumento}" var="validezDocumento">
-                                                        <option value="${validezDocumento}"><spring:message
-                                                                code="tipoValidezDocumento.${validezDocumento}"/></option>
-                                                    </c:forEach>
+                                                        <c:forEach items="${tiposValidezDocumento}" var="validezDocumento">
+                                                            <option value="${validezDocumento}"><spring:message
+                                                                    code="tipoValidezDocumento.${validezDocumento}"/></option>
+                                                        </c:forEach>
                                                 </select>
                                             </td>
                                         </c:if>
@@ -94,10 +94,10 @@
                                             <select id="camposNTIs[${status.index}].idOrigen"
                                                     name="camposNTIs[${status.index}].idOrigen" class="chosen-select"
                                                     <c:if test="${anexo.tipoDocumento == RegwebConstantes.CODIGO_SICRES_BY_TIPO_DOCUMENTO[RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO] }">disabled</c:if>>
-                                                <option value="0"><spring:message
-                                                        code="anexo.origen.ciudadano"/></option>
-                                                <option value="1" selected="selected"><spring:message
-                                                        code="anexo.origen.administracion"/></option>
+                                                    <option value="0"><spring:message
+                                                            code="anexo.origen.ciudadano"/></option>
+                                                    <option value="1" selected="selected"><spring:message
+                                                            code="anexo.origen.administracion"/></option>
                                             </select>
                                         </td>
                                         <td>
@@ -105,10 +105,11 @@
                                                     name="camposNTIs[${status.index}].idTipoDocumental"
                                                     class="chosen-select"
                                                     <c:if test="${anexo.tipoDocumento == RegwebConstantes.CODIGO_SICRES_BY_TIPO_DOCUMENTO[RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO] }">disabled</c:if>>
-                                                <c:forEach items="${tiposDocumentales}" var="tipoDocumental">
-                                                    <option value="${tipoDocumental.codigoNTI}"><i:trad
-                                                            value="${tipoDocumental}" property="nombre"/></option>
-                                                </c:forEach>
+                                                    <option value="">...</option>
+                                                    <c:forEach items="${tiposDocumentales}" var="tipoDocumental">
+                                                        <option value="${tipoDocumental.codigoNTI}"><i:trad
+                                                                value="${tipoDocumental}" property="nombre"/></option>
+                                                    </c:forEach>
                                             </select>
 
                                         </td>

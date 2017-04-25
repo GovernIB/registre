@@ -1662,7 +1662,11 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
         if (camposNTI.getIdOrigen() != null) {
             anexo.setOrigenCiudadanoAdmin(camposNTI.getIdOrigen().intValue());
         }
-        if (camposNTI.getIdTipoDocumental() != null) {
+
+        // Si el usuario no especifica el tipo Documental, por defecto se pone TD99 - Otros
+        if (camposNTI.getIdTipoDocumental() == null || camposNTI.getIdTipoDocumental().equals("")) {
+            anexo.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad("TD99", idEntidad));
+        }else{
             anexo.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad(camposNTI.getIdTipoDocumental(), idEntidad));
         }
 
@@ -1688,8 +1692,8 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
 
 
 
-        DocumentCustody dc= new DocumentCustody();
-        SignatureCustody sc= new SignatureCustody();
+        DocumentCustody dc;
+        SignatureCustody sc;
         // Si el anexo tiene identificador_documento_firmado, es que es la firma de un anexo anterior.
         if (!es.caib.regweb3.utils.StringUtils.isEmpty(anexoSir.getIdentificadorDocumentoFirmado()) && anexoSir.getIdentificadorDocumentoFirmado() != null) {
             String identificadorDocumentoFirmado = anexoSir.getIdentificadorDocumentoFirmado();
