@@ -321,61 +321,62 @@
                                                     </thead>
 
                                                     <tbody>
-                                                        <c:forEach var="registroEntrada" items="${paginacion.listado}" varStatus="status">
+                                                        <c:forEach var="registro" items="${paginacion.listado}" varStatus="status">
                                                             <tr>
-                                                                <td>${registroEntrada.numeroRegistroFormateado}</td>
-                                                                <td class="center"><fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy"/></td>
-                                                                <td class="center">${registroEntrada.usuario.usuario.identificador}</td>
-                                                                <td class="center"><label class="no-bold" rel="ayuda" data-content="${registroEntrada.oficina.denominacion}" data-toggle="popover">${registroEntrada.oficina.codigo}</label></td>
-                                                                <td>${(empty registroEntrada.destino)? registroEntrada.destinoExternoDenominacion : registroEntrada.destino.denominacion}</td>
-                                                                <c:if test="${registroEntrada.estado == RegwebConstantes.REGISTRO_RESERVA}">
-                                                                    <td>${registroEntrada.registroDetalle.reserva}</td>
+                                                                <td>${registro.numeroRegistroFormateado}</td>
+                                                                <td class="center"><fmt:formatDate value="${registro.fecha}" pattern="dd/MM/yyyy"/></td>
+                                                                <td class="center">${registro.usuario.usuario.identificador}</td>
+                                                                <td class="center"><label class="no-bold" rel="ayuda" data-content="${registro.oficina.denominacion}" data-toggle="popover">${registro.oficina.codigo}</label></td>
+                                                                <td>${(empty registro.destino)? registro.destinoExternoDenominacion : registro.destino.denominacion}</td>
+                                                                <c:if test="${registro.estado == RegwebConstantes.REGISTRO_RESERVA}">
+                                                                    <td>${registro.registroDetalle.reserva}</td>
                                                                 </c:if>
-                                                                <c:if test="${registroEntrada.estado != RegwebConstantes.REGISTRO_RESERVA}">
-                                                                    <td>${registroEntrada.registroDetalle.extracto}</td>
+                                                                <c:if test="${registro.estado != RegwebConstantes.REGISTRO_RESERVA}">
+                                                                    <td>${registro.registroDetalle.extracto}</td>
                                                                 </c:if>
                                                                 <td class="center">
                                                                     <c:import url="../registro/estadosRegistro.jsp">
-                                                                        <c:param name="estado" value="${registroEntrada.estado}"/>
+                                                                        <c:param name="estado" value="${registro.estado}"/>
+                                                                        <c:param name="decodificacionTipoAnotacion" value="${registro.registroDetalle.decodificacionTipoAnotacion}"/>
                                                                     </c:import>
                                                                 </td>
-                                                                <c:if test="${registroEntrada.registroDetalle.interesados != null}">
+                                                                <c:if test="${registro.registroDetalle.interesados != null}">
                                                                     <td class="center"><label
                                                                             class="no-bold representante" rel="ayuda"
-                                                                            data-content="${registroEntrada.registroDetalle.nombreInteresadosHtml}"
-                                                                            data-toggle="popover">${registroEntrada.registroDetalle.totalInteresados}</label>
+                                                                            data-content="${registro.registroDetalle.nombreInteresadosHtml}"
+                                                                            data-toggle="popover">${registro.registroDetalle.totalInteresados}</label>
                                                                     </td>
                                                                 </c:if>
-                                                                <c:if test="${registroEntrada.registroDetalle.interesados == null}">
+                                                                <c:if test="${registro.registroDetalle.interesados == null}">
                                                                     <td class="center">0</td>
                                                                 </c:if>
-                                                                <c:if test="${registroEntrada.registroDetalle.anexos != null}">
-                                                                    <td class="center">${fn:length(registroEntrada.registroDetalle.anexos)}</td>
+                                                                <c:if test="${registro.registroDetalle.anexos != null}">
+                                                                    <td class="center">${fn:length(registro.registroDetalle.anexos)}</td>
                                                                 </c:if>
-                                                                <c:if test="${registroEntrada.registroDetalle.anexos == null}">
+                                                                <c:if test="${registro.registroDetalle.anexos == null}">
                                                                     <td class="center">0</td>
                                                                 </c:if>
 
                                                                 <td class="center">
-                                                                    <a class="btn btn-info btn-sm" href="<c:url value="/registroEntrada/${registroEntrada.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
+                                                                    <a class="btn btn-info btn-sm" href="<c:url value="/registroEntrada/${registro.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
                                                                     <%--Acciones según el estado--%>
                                                                         <%--Si no nos encontramos en la misma Oficia en la que se creó el Registro o en su Oficina Responsable, no podemos hacer nada con el--%>
-                                                                    <c:if test="${registroEntrada.oficina.id == oficinaActiva.id || registroEntrada.oficina.oficinaResponsable.id == oficinaActiva.id}">
+                                                                    <c:if test="${registro.oficina.id == oficinaActiva.id || registro.oficina.oficinaResponsable.id == oficinaActiva.id}">
                                                                         <c:choose>
-                                                                            <c:when test="${(registroEntrada.estado == RegwebConstantes.REGISTRO_VALIDO || registroEntrada.estado == RegwebConstantes.REGISTRO_RESERVA) && puedeEditar}">  <%--Válido--%>
-                                                                                <a class="btn btn-warning btn-sm" href="<c:url value="/registroEntrada/${registroEntrada.id}/edit"/>" title="<spring:message code="regweb.editar"/>"><span class="fa fa-pencil"></span></a>
-                                                                                <a class="btn btn-danger btn-sm" href="javascript:void(0);" onclick='javascript:confirm("<c:url value="/registroEntrada/${registroEntrada.id}/anular"/>","<spring:message code="regweb.confirmar.anular" htmlEscape="true"/>")' title="<spring:message code="regweb.anular"/>"><span class="fa fa-thumbs-o-down"></span></a>
+                                                                            <c:when test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_RESERVA) && puedeEditar}">  <%--Válido--%>
+                                                                                <a class="btn btn-warning btn-sm" href="<c:url value="/registroEntrada/${registro.id}/edit"/>" title="<spring:message code="regweb.editar"/>"><span class="fa fa-pencil"></span></a>
+                                                                                <a class="btn btn-danger btn-sm" href="javascript:void(0);" onclick='javascript:confirm("<c:url value="/registroEntrada/${registro.id}/anular"/>","<spring:message code="regweb.confirmar.anular" htmlEscape="true"/>")' title="<spring:message code="regweb.anular"/>"><span class="fa fa-thumbs-o-down"></span></a>
                                                                             </c:when>
 
-                                                                            <c:when test="${registroEntrada.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR && isAdministradorLibro}">  <%--Pendiente de Visar--%>
-                                                                                <a class="btn btn-danger btn-sm" href="javascript:void(0);" onclick='javascript:confirm("<c:url value="/registroEntrada/${registroEntrada.id}/anular"/>","<spring:message code="regweb.confirmar.anular" htmlEscape="true"/>")' title="<spring:message code="regweb.anular"/>"><span class="fa fa-thumbs-o-down"></span></a>
+                                                                            <c:when test="${registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR && isAdministradorLibro}">  <%--Pendiente de Visar--%>
+                                                                                <a class="btn btn-danger btn-sm" href="javascript:void(0);" onclick='javascript:confirm("<c:url value="/registroEntrada/${registro.id}/anular"/>","<spring:message code="regweb.confirmar.anular" htmlEscape="true"/>")' title="<spring:message code="regweb.anular"/>"><span class="fa fa-thumbs-o-down"></span></a>
                                                                             </c:when>
-                                                                            <c:when test="${registroEntrada.estado == RegwebConstantes.REGISTRO_OFICIO_EXTERNO || registroEntrada.estado == RegwebConstantes.REGISTRO_OFICIO_INTERNO}">  <%--Oficio externo e interno--%>
+                                                                            <c:when test="${registro.estado == RegwebConstantes.REGISTRO_OFICIO_EXTERNO || registro.estado == RegwebConstantes.REGISTRO_OFICIO_INTERNO}">  <%--Oficio externo e interno--%>
 
                                                                             </c:when>
 
-                                                                            <c:when test="${registroEntrada.estado == RegwebConstantes.REGISTRO_ANULADO && puedeEditar}">  <%--Anulado--%>
-                                                                                <a class="btn btn-primary btn-sm" onclick='javascript:confirm("<c:url value="/registroEntrada/${registroEntrada.id}/activar"/>","<spring:message code="regweb.confirmar.activar" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.activar"/>"><span class="fa fa-thumbs-o-up"></span></a>
+                                                                            <c:when test="${registro.estado == RegwebConstantes.REGISTRO_ANULADO && puedeEditar}">  <%--Anulado--%>
+                                                                                <a class="btn btn-primary btn-sm" onclick='javascript:confirm("<c:url value="/registroEntrada/${registro.id}/activar"/>","<spring:message code="regweb.confirmar.activar" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.activar"/>"><span class="fa fa-thumbs-o-up"></span></a>
                                                                             </c:when>
 
                                                                         </c:choose>

@@ -30,6 +30,7 @@
 <dd>
     <c:import url="../registro/estadosRegistro.jsp">
         <c:param name="estado" value="${registro.estado}"/>
+        <c:param name="decodificacionTipoAnotacion" value="${registro.registroDetalle.decodificacionTipoAnotacion}"/>
     </c:import>
 </dd>
 
