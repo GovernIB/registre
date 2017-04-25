@@ -125,15 +125,28 @@ public class SirBean implements SirLocal{
                         oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_REENVIADO ||
                         oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_RECHAZADO_ACK){
 
-                    RegistroEntrada registroEntrada = oficioRemision.getRegistrosEntrada().get(0);
+                    if(oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)){
+                        
+                        RegistroEntrada registroEntrada = oficioRemision.getRegistrosEntrada().get(0);
+                        // Actualizamos el asiento
+                        registroEntrada.setEstado(RegwebConstantes.REGISTRO_RECHAZADO);
+                        registroEntrada.getRegistroDetalle().setAplicacion(ficheroIntercambio.getAplicacionEmisora());
+                        registroEntrada.getRegistroDetalle().setObservaciones(ficheroIntercambio.getObservacionesApunte());
+                        registroEntrada.getRegistroDetalle().setTipoAnotacion(ficheroIntercambio.getTipoAnotacion());
+                        registroEntrada.getRegistroDetalle().setDecodificacionTipoAnotacion(ficheroIntercambio.getDescripcionTipoAnotacion());
+                        registroEntradaEjb.merge(registroEntrada);
 
-                    // Actualizamos el asiento
-                    registroEntrada.setEstado(RegwebConstantes.REGISTRO_RECHAZADO);
-                    registroEntrada.getRegistroDetalle().setAplicacion(ficheroIntercambio.getAplicacionEmisora());
-                    registroEntrada.getRegistroDetalle().setObservaciones(ficheroIntercambio.getObservacionesApunte());
-                    registroEntrada.getRegistroDetalle().setTipoAnotacion(ficheroIntercambio.getTipoAnotacion());
-                    registroEntrada.getRegistroDetalle().setDecodificacionTipoAnotacion(ficheroIntercambio.getDescripcionTipoAnotacion());
-                    registroEntradaEjb.merge(registroEntrada);
+                    }else if(oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)){
+
+                        RegistroSalida registroSalida = oficioRemision.getRegistrosSalida().get(0);
+                        // Actualizamos el asiento
+                        registroSalida.setEstado(RegwebConstantes.REGISTRO_RECHAZADO);
+                        registroSalida.getRegistroDetalle().setAplicacion(ficheroIntercambio.getAplicacionEmisora());
+                        registroSalida.getRegistroDetalle().setObservaciones(ficheroIntercambio.getObservacionesApunte());
+                        registroSalida.getRegistroDetalle().setTipoAnotacion(ficheroIntercambio.getTipoAnotacion());
+                        registroSalida.getRegistroDetalle().setDecodificacionTipoAnotacion(ficheroIntercambio.getDescripcionTipoAnotacion());
+                        registroSalidaEjb.merge(registroSalida);
+                    }
 
                     // Actualizamos el oficio
                     oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_DEVUELTO);
