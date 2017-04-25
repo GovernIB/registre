@@ -152,7 +152,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
 
                 // Guardamos el RegistroSalida
                 synchronized (this){
-                    registroSalida = registroSalidaEjb.registrarSalida(registroSalida, usuarioEntidad, interesadosSesion);
+                    registroSalida = registroSalidaEjb.registrarSalida(registroSalida, usuarioEntidad, interesadosSesion, null);
                 }
 
 
