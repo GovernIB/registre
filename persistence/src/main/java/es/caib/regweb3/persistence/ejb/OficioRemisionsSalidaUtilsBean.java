@@ -349,7 +349,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
             nuevoRE.setRegistroDetalle(registroSalida.getRegistroDetalle());
 
             synchronized (this) {
-                nuevoRE = registroEntradaEjb.registrarEntrada(nuevoRE, usuario, null);
+                nuevoRE = registroEntradaEjb.registrarEntrada(nuevoRE, usuario, null, null);
             }
 
             registros.add(nuevoRE);

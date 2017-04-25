@@ -534,7 +534,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             nuevoRE.setRegistroDetalle(registroEntrada.getRegistroDetalle());
 
             synchronized (this) {
-                nuevoRE = registroEntradaEjb.registrarEntrada(nuevoRE, usuario, null);
+                nuevoRE = registroEntradaEjb.registrarEntrada(nuevoRE, usuario, null, null);
             }
 
             registros.add(nuevoRE);

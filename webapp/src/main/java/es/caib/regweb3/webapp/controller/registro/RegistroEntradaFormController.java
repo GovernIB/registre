@@ -203,7 +203,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
                 //Guardamos el RegistroEntrada
                 synchronized (this){
-                    registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuarioEntidad, interesadosSesion);
+                    registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuarioEntidad, interesadosSesion, null);
                 }
 
             }catch (Exception e) {
