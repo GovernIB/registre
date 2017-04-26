@@ -25,10 +25,14 @@ INSERT INTO rwe_propiedadglobal(id,clave,valor,tipo,descripcion,entidad) SELECT 
 INSERT INTO rwe_propiedadglobal(id,clave,valor,tipo,descripcion,entidad) SELECT nextval('RWE_ALL_SEQ'), 'es.caib.regweb3.scanweb.absoluteurl',null,5,'URL Base absoluta para atacar los plugins de ScanWeb',id FROM rwe_entidad;
 INSERT INTO rwe_propiedadglobal(id,clave,valor,tipo,descripcion,entidad) SELECT nextval('RWE_ALL_SEQ'), 'es.caib.regweb3.firmajustificante.plugin','org.fundaciobit.plugins.signatureserver.miniappletinserver.MiniAppletInServerSignatureServerPlugin',1,'Clase del Plugin de signature server',id FROM rwe_entidad;
 INSERT INTO rwe_propiedadglobal(id,clave,valor,tipo,descripcion,entidad) SELECT nextval('RWE_ALL_SEQ'), 'es.caib.regweb3.firmajustificante.plugins.signatureserver.miniappletinserver.base_dir','[PATH_XXX]',1,'Base del Plugin de signature server',id FROM rwe_entidad;
+INSERT INTO rwe_propiedadglobal(id,clave,valor,tipo,descripcion,entidad) SELECT nextval('RWE_ALL_SEQ'), 'es.caib.regweb3.justificante.mensaje.estampacion','Este es un mensaje de estampación {0} {1} {2}',1,'Mensaje de estampación del justificante',id FROM rwe_entidad;
+
 
 --SIR Anexos
 alter table RWE_ANEXO add FIRMAVALIDA bool DEFAULT FALSE;
-alter table RWE_ANEXO add JUSTIFICANTE bool DEFAULT FALSE;
+alter table RWE_ANEXO add JUSTIFICANTE bool NOT NULL DEFAULT FALSE;
+
+ALTER TABLE RWE_ANEXO ALTER COLUMN JUSTIFICANTE SET NOT NULL;
 
 --Nuevo permiso (SIR) en la tabla RWE_PERMLIBUSU
 INSERT INTO RWE_PERMLIBUSU (id,libro,usuario,activo,permiso) SELECT nextval('RWE_ALL_SEQ'),libro,usuario,false,9 FROM RWE_PERMLIBUSU where permiso=1;
@@ -73,4 +77,6 @@ ALTER TABLE RWE_OFICIO_REMISION DROP COLUMN FECHA_RECEPCION;
 ALTER TABLE RWE_OFICIO_REMISION DROP COLUMN FECHA_ENVIO;
 -- Solo desarrollo actualizar tipo trazabilidad
 UPDATE RWE_TRAZABILIDAD set TIPO=3 where OFICIO_REMISION=null;
+-- Solo desarrollo actualizar justificante de Anexo
+ALTER TABLE RWE_ANEXO MODIFY (JUSTIFICANTE NOT NULL);
 --Fin solo desarrollo
