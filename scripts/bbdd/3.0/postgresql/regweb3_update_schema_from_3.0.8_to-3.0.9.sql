@@ -24,8 +24,6 @@ INSERT INTO rwe_propiedadglobal(id,clave,valor,tipo,descripcion,entidad) SELECT 
 alter table RWE_ANEXO add FIRMAVALIDA bool DEFAULT FALSE;
 alter table RWE_ANEXO add JUSTIFICANTE bool NOT NULL DEFAULT FALSE;
 
-ALTER TABLE RWE_ANEXO ALTER COLUMN JUSTIFICANTE SET NOT NULL;
-
 --Nuevo permiso (SIR) en la tabla RWE_PERMLIBUSU
 INSERT INTO RWE_PERMLIBUSU (id,libro,usuario,activo,permiso) SELECT nextval('RWE_ALL_SEQ'),libro,usuario,false,9 FROM RWE_PERMLIBUSU where permiso=1;
 
@@ -201,5 +199,5 @@ ALTER TABLE RWE_OFICIO_REMISION DROP COLUMN FECHA_ENVIO;
 -- Solo desarrollo actualizar tipo trazabilidad
 UPDATE RWE_TRAZABILIDAD set TIPO=3 where OFICIO_REMISION=null;
 -- Solo desarrollo actualizar justificante de Anexo
-ALTER TABLE RWE_ANEXO MODIFY (JUSTIFICANTE NOT NULL);
+ALTER TABLE RWE_ANEXO ALTER COLUMN JUSTIFICANTE SET NOT NULL;
 --Fin solo desarrollo
