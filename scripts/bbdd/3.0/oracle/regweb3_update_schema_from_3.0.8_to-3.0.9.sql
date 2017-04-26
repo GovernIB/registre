@@ -17,10 +17,11 @@ INSERT INTO rwe_propiedadglobal(id,clave,valor,tipo,descripcion,entidad) SELECT 
 INSERT INTO rwe_propiedadglobal(id,clave,valor,tipo,descripcion,entidad) SELECT nextval('RWE_ALL_SEQ'), 'es.caib.regweb3.scanweb.absoluteurl',null,5,'URL Base absoluta para atacar los plugins de ScanWeb',id FROM rwe_entidad;
 INSERT INTO rwe_propiedadglobal(id,clave,valor,tipo,descripcion,entidad) SELECT RWE_ALL_SEQ.nextVal, 'es.caib.regweb3.firmajustificante.plugin','org.fundaciobit.plugins.signatureserver.miniappletinserver.MiniAppletInServerSignatureServerPlugin',1,'Clase del Plugin de signature server',id FROM rwe_entidad;
 INSERT INTO rwe_propiedadglobal(id,clave,valor,tipo,descripcion,entidad) SELECT RWE_ALL_SEQ.nextVal, 'es.caib.regweb3.firmajustificante.plugins.signatureserver.miniappletinserver.base_dir','[PATH_XXX]',1,'Base del Plugin de signature server',id FROM rwe_entidad;
+INSERT INTO rwe_propiedadglobal(id,clave,valor,tipo,descripcion,entidad) SELECT RWE_ALL_SEQ.nextVal, 'es.caib.regweb3.justificante.mensaje.estampacion','Este es un mensaje de estampación {0} {1} {2}',1,'Mensaje de estampación del justificante',id FROM rwe_entidad;
 
 --SIR Anexos
-ALTER TABLE RWE_ANEXO add (FIRMAVALIDA NUMBER(1,0) DEFAULT 0);
-ALTER TABLE RWE_ANEXO add (JUSTIFICANTE NUMBER(1,0) DEFAULT 0);
+alter table RWE_ANEXO add (FIRMAVALIDA NUMBER(1,0) DEFAULT 0);
+alter table RWE_ANEXO add (JUSTIFICANTE NUMBER(1,0) NOT NULL DEFAULT 0);
 
 --Nuevo permiso (SIR) en la tabla RWE_PERMLIBUSU
 INSERT INTO RWE_PERMLIBUSU (id,libro,usuario,activo,permiso) SELECT RWE_ALL_SEQ.nextVal,libro,usuario,0,9 FROM RWE_PERMLIBUSU where permiso=1;
@@ -200,6 +201,9 @@ ALTER TABLE RWE_OFICIO_REMISION DROP CONSTRAINT RWE_OFIREM_ASR_FK;
 ALTER TABLE RWE_OFICIO_REMISION DROP COLUMN ASIENTO_REGISTRAL_SIR;
 ALTER TABLE RWE_OFICIO_REMISION DROP COLUMN FECHA_RECEPCION;
 ALTER TABLE RWE_OFICIO_REMISION DROP COLUMN FECHA_ENVIO;
+
 -- Solo desarrollo actualizar tipo trazabilidad
 UPDATE RWE_TRAZABILIDAD set TIPO=3 where OFICIO_REMISION=null;
+-- Solo desarrollo actualizar justificante de Anexo
+ALTER TABLE RWE_ANEXO MODIFY (JUSTIFICANTE NOT NULL);
 --Fin solo desarrollo
