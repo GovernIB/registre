@@ -214,14 +214,15 @@ public class PropiedadGlobalUtil {
      * Retorna la clase del plugin de distribución de la entidad
      * @return
      */
-    public static String getPluginDistribucion(Long idEntidad) {
-        final String partialPropertyName = "distribucion.plugin";
-        String valor = getStringByEntidad(idEntidad, partialPropertyName);
 
-        // Valor global si no existeix el de per entitat
-        if (valor == null) {
-            valor = getString(partialPropertyName);
+    public static String getPluginDistribucion(Long idEntidad, String basePlugin) {
+
+        String valor = getStringByEntidad(idEntidad, basePlugin);
+
+        if(valor == null){
+            return RegwebConstantes.PLUGIN_DISTRIBUCION_CLASS_MOCK;
         }
+
         return valor;
     }
 

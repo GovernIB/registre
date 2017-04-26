@@ -11,7 +11,7 @@ public class ConfiguracionDistribucion {
      */
     public boolean listadoDestinatariosModificable;
 
-    //especifica que información se enviará en el segemento de anexo del registro de entrada.
+    //especifica que información se enviará en el segmento de anexo del registro de entrada.
     /* 1 = custodiaId + metadades + fitxer + firma. És a dir a dins el segment annexes de l'assentament s'enviaria tot el contingut de l'annexe.
     *  2 =  custodiaId. A dins el segment annexes de l'assentament només s'enviaria l'Id del sistema que custodia l'arxiu.
     *  3 = custodiaId + metadades. A dins el segment annexes de l'assentament s'enviaria l'Id del sistema que custodia l'arxiu i les metadades del document.
