@@ -103,9 +103,9 @@
                                 <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR ||
                                           oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR ||
                                           oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO_ERROR}">
-                                    <dt><i class="fa fa-bug"></i> <spring:message code="asientoRegistralSir.codigoError"/>:</dt>
+                                    <dt><i class="fa fa-bug"></i> <spring:message code="registroSir.codigoError"/>:</dt>
                                     <dd> ${oficioRemision.codigoError}</dd>
-                                    <dt><i class="fa fa-comment"></i> <spring:message code="asientoRegistralSir.descripcionError"/>:</dt>
+                                    <dt><i class="fa fa-comment"></i> <spring:message code="registroSir.descripcionError"/>:</dt>
                                     <dd> ${oficioRemision.descripcionError}</dd>
 
                                 </c:if>
@@ -115,7 +115,7 @@
                                     <dd> ${oficioRemision.numeroReintentos}</dd>
                                 </c:if>
                                 <%--Identificador intercambio--%>
-                                <dt><i class="fa fa-qrcode"></i> <spring:message code="asientoRegistralSir.identificadorIntercambio"/>:</dt>
+                                <dt><i class="fa fa-qrcode"></i> <spring:message code="registroSir.identificadorIntercambio"/>:</dt>
                                 <dd> ${oficioRemision.identificadorIntercambio}</dd>
                             </c:if>
 

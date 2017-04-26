@@ -48,9 +48,9 @@ import static es.caib.regweb3.utils.RegwebConstantes.*;
  * Date: 16/06/16
  */
 
-@Stateless(name = "AsientoRegistralSirEJB")
+@Stateless(name = "RegistroSirEJB")
 @SecurityDomain("seycon")
-public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Long> implements AsientoRegistralSirLocal {
+public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements RegistroSirLocal {
 
     protected final Logger log = Logger.getLogger(getClass());
 
@@ -72,29 +72,29 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
 
 
     @Override
-    public AsientoRegistralSir getReference(Long id) throws Exception {
+    public RegistroSir getReference(Long id) throws Exception {
 
-        return em.getReference(AsientoRegistralSir.class, id);
+        return em.getReference(RegistroSir.class, id);
     }
 
     @Override
-    public AsientoRegistralSir findById(Long id) throws Exception {
+    public RegistroSir findById(Long id) throws Exception {
 
-        return em.find(AsientoRegistralSir.class, id);
+        return em.find(RegistroSir.class, id);
     }
 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<AsientoRegistralSir> getAll() throws Exception {
+    public List<RegistroSir> getAll() throws Exception {
 
-        return em.createQuery("Select asientoRegistralSir from AsientoRegistralSir as asientoRegistralSir order by asientoRegistralSir.id").getResultList();
+        return em.createQuery("Select registroSir from RegistroSir as registroSir order by registroSir.id").getResultList();
     }
 
     @Override
     public Long getTotal() throws Exception {
 
-        Query q = em.createQuery("Select count(asientoRegistralSir.id) from AsientoRegistralSir as asientoRegistralSir");
+        Query q = em.createQuery("Select count(registroSir.id) from RegistroSir as registroSir");
 
         return (Long) q.getSingleResult();
     }
@@ -102,9 +102,9 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<AsientoRegistralSir> getPagination(int inicio) throws Exception {
+    public List<RegistroSir> getPagination(int inicio) throws Exception {
 
-        Query q = em.createQuery("Select asientoRegistralSir from AsientoRegistralSir as asientoRegistralSir order by asientoRegistralSir.id");
+        Query q = em.createQuery("Select registroSir from RegistroSir as registroSir order by registroSir.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
 
@@ -112,82 +112,82 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
     }
 
     @Override
-    public AsientoRegistralSir getAsientoRegistral(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws Exception {
+    public RegistroSir getRegistroSir(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws Exception {
 
-        Query q = em.createQuery("Select asientoRegistralSir from AsientoRegistralSir as asientoRegistralSir where " +
-                "asientoRegistralSir.identificadorIntercambio = :identificadorIntercambio and asientoRegistralSir.codigoEntidadRegistralOrigen = :codigoEntidadRegistralDestino");
+        Query q = em.createQuery("Select registroSir from RegistroSir as registroSir where " +
+                "registroSir.identificadorIntercambio = :identificadorIntercambio and registroSir.codigoEntidadRegistralOrigen = :codigoEntidadRegistralDestino");
 
         q.setParameter("identificadorIntercambio",identificadorIntercambio);
         q.setParameter("codigoEntidadRegistralDestino",codigoEntidadRegistralDestino);
 
-        List<AsientoRegistralSir> asientoRegistralSir = q.getResultList();
-        if(asientoRegistralSir.size() == 1){
-            return asientoRegistralSir.get(0);
+        List<RegistroSir> registroSir = q.getResultList();
+        if(registroSir.size() == 1){
+            return registroSir.get(0);
         }else{
             return  null;
         }
     }
 
     @Override
-    public AsientoRegistralSir getAsientoRegistral(String identificadorIntercambio) throws Exception{
+    public RegistroSir getRegistroSir(String identificadorIntercambio) throws Exception{
 
-        Query q = em.createQuery("Select asientoRegistralSir from AsientoRegistralSir as asientoRegistralSir where " +
-                "asientoRegistralSir.identificadorIntercambio = :identificadorIntercambio");
+        Query q = em.createQuery("Select registroSir from RegistroSir as registroSir where " +
+                "registroSir.identificadorIntercambio = :identificadorIntercambio");
 
         q.setParameter("identificadorIntercambio",identificadorIntercambio);
 
-        List<AsientoRegistralSir> asientoRegistralSir = q.getResultList();
-        if(asientoRegistralSir.size() == 1){
-            return asientoRegistralSir.get(0);
+        List<RegistroSir> registroSir = q.getResultList();
+        if(registroSir.size() == 1){
+            return registroSir.get(0);
         }else{
             return  null;
         }
     }
 
     @Override
-    public AsientoRegistralSir getAsientoRegistralConAnexos(Long idAsientoRegistralsir) throws Exception{
+    public RegistroSir getRegistroSirConAnexos(Long idRegistroSirsir) throws Exception{
 
-        AsientoRegistralSir asientoRegistralSir = findById(idAsientoRegistralsir);
+        RegistroSir registroSir = findById(idRegistroSirsir);
 
         List<AnexoSir> anexosFull = new ArrayList<AnexoSir>();
-        for (AnexoSir anexoSir : asientoRegistralSir.getAnexos()) {
+        for (AnexoSir anexoSir : registroSir.getAnexos()) {
 
             anexoSir.setAnexoData(FileSystemManager.getBytesArchivo(anexoSir.getAnexo().getId()));
             anexosFull.add(anexoSir);
         }
 
-        asientoRegistralSir.setAnexos(anexosFull);
+        registroSir.setAnexos(anexosFull);
 
-        return asientoRegistralSir;
+        return registroSir;
 
     }
 
     @Override
-    public AsientoRegistralSir crearAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir) throws Exception{
+    public RegistroSir crearRegistroSir(RegistroSir registroSir) throws Exception{
 
         try{
 
             // En caso de recepción, le asignamos la entidad a la que va dirigida
-            if(asientoRegistralSir.getEntidad() == null){
-                Entidad entidad = new Entidad(oficinaEjb.obtenerEntidad(asientoRegistralSir.getCodigoEntidadRegistralDestino()));
-                asientoRegistralSir.setEntidad(entidad);
+            if(registroSir.getEntidad() == null){
+                Entidad entidad = new Entidad(oficinaEjb.obtenerEntidad(registroSir.getCodigoEntidadRegistralDestino()));
+                registroSir.setEntidad(entidad);
             }
 
-            asientoRegistralSir = persist(asientoRegistralSir);
+            registroSir = persist(registroSir);
 
             // Guardamos los Interesados
-            if(asientoRegistralSir.getInteresados() != null && asientoRegistralSir.getInteresados().size() > 0){
-                for(InteresadoSir interesadoSir: asientoRegistralSir.getInteresados()){
-                    interesadoSir.setIdAsientoRegistralSir(asientoRegistralSir);
+            if(registroSir.getInteresados() != null && registroSir.getInteresados().size() > 0){
+                for(InteresadoSir interesadoSir: registroSir.getInteresados()){
+                    interesadoSir.setRegistroSir(registroSir);
 
                     interesadoSirEjb.persist(interesadoSir);
                 }
             }
 
             // Guardamos los Anexos
-            if(asientoRegistralSir.getAnexos() != null && asientoRegistralSir.getAnexos().size() > 0){
-                for(AnexoSir anexoSir: asientoRegistralSir.getAnexos()){
-                    anexoSir.setIdAsientoRegistralSir(asientoRegistralSir);
+            if(registroSir.getAnexos() != null && registroSir.getAnexos().size() > 0){
+                for(AnexoSir anexoSir: registroSir.getAnexos()){
+                    anexoSir.setRegistroSir(registroSir);
 
                     anexoSirEjb.persist(anexoSir);
                 }
@@ -195,8 +195,8 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
             em.flush();
 
         }catch (Exception e){
-            log.info("Error al crear el AsientoRegistralSir, eliminamos los posibles anexos creados");
-            for(AnexoSir anexoSir: asientoRegistralSir.getAnexos()){
+            log.info("Error al crear el RegistroSir, eliminamos los posibles anexos creados");
+            for(AnexoSir anexoSir: registroSir.getAnexos()){
                 ArchivoManager am = new ArchivoManager(anexoSir.getAnexo(),archivoEjb);
                 am.processError();
             }
@@ -204,43 +204,43 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
             throw e;
         }
 
-        return asientoRegistralSir;
+        return registroSir;
     }
 
     @Override
-    public Boolean tieneAsientoRegistralSir(String codigoOficinaActiva) throws Exception {
+    public Boolean tieneRegistroSir(String codigoOficinaActiva) throws Exception {
 
-        Query q = em.createQuery("Select count(asientoRegistralSir.id) from AsientoRegistralSir as asientoRegistralSir where " +
-                "asientoRegistralSir.codigoEntidadRegistralDestino = :codigoOficinaActiva");
+        Query q = em.createQuery("Select count(registroSir.id) from RegistroSir as registroSir where " +
+                "registroSir.codigoEntidadRegistralDestino = :codigoOficinaActiva");
 
         q.setParameter("codigoOficinaActiva",codigoOficinaActiva);
 
         return (Long) q.getSingleResult() > 0;
     }
 
-    public Paginacion busqueda(Integer pageNumber, Integer any, AsientoRegistralSir asientoRegistralSir, Set<String> organismos, String estado) throws Exception{
+    public Paginacion busqueda(Integer pageNumber, Integer any, RegistroSir registroSir, Set<String> organismos, String estado) throws Exception{
 
         Query q;
         Query q2;
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        StringBuffer query = new StringBuffer("Select asr from AsientoRegistralSir as asr ");
+        StringBuffer query = new StringBuffer("Select asr from RegistroSir as asr ");
 
         /*if (organismos != null && organismos.size() > 0) {
             where.add(" asr.codigoUnidadTramitacionDestino in (:organismos) "); parametros.put("organismos",organismos);
         }*/
 
-        if (asientoRegistralSir.getResumen() != null && asientoRegistralSir.getResumen().length() > 0) {
-            where.add(DataBaseUtils.like("asr.resumen", "resumen", parametros, asientoRegistralSir.getResumen()));
+        if (registroSir.getResumen() != null && registroSir.getResumen().length() > 0) {
+            where.add(DataBaseUtils.like("asr.resumen", "resumen", parametros, registroSir.getResumen()));
         }
 
-        if (asientoRegistralSir.getNumeroRegistro() != null && asientoRegistralSir.getNumeroRegistro().length() > 0) {
-            where.add(DataBaseUtils.like("asr.numeroRegistro", "numeroRegistro", parametros, asientoRegistralSir.getNumeroRegistro()));
+        if (registroSir.getNumeroRegistro() != null && registroSir.getNumeroRegistro().length() > 0) {
+            where.add(DataBaseUtils.like("asr.numeroRegistro", "numeroRegistro", parametros, registroSir.getNumeroRegistro()));
         }
 
         if (!StringUtils.isEmpty(estado)) {
-            where.add(" asr.estado = :estado "); parametros.put("estado",EstadoAsientoRegistralSir.valueOf(estado));
+            where.add(" asr.estado = :estado "); parametros.put("estado",EstadoRegistroSir.valueOf(estado));
         }
 
         if(any!= null){where.add(" year(asr.fechaRegistro) = :any "); parametros.put("any",any);}
@@ -255,7 +255,7 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
                 query.append(w);
                 count++;
             }
-            q2 = em.createQuery(query.toString().replaceAll("Select asr from AsientoRegistralSir as asr ", "Select count(asr.id) from AsientoRegistralSir as asr "));
+            q2 = em.createQuery(query.toString().replaceAll("Select asr from RegistroSir as asr ", "Select count(asr.id) from RegistroSir as asr "));
             query.append(" order by asr.id desc");
             q = em.createQuery(query.toString());
 
@@ -266,7 +266,7 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
             }
 
         } else {
-            q2 = em.createQuery(query.toString().replaceAll("Select asr from AsientoRegistralSir as asr ", "Select count(asr.id) from AsientoRegistralSir as asr "));
+            q2 = em.createQuery(query.toString().replaceAll("Select asr from RegistroSir as asr ", "Select count(asr.id) from RegistroSir as asr "));
             query.append("order by asr.id desc");
             q = em.createQuery(query.toString());
         }
@@ -289,25 +289,25 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
         return paginacion;
     }
 
-    public List<AsientoRegistralSir> getUltimosPendientesProcesar(Set<String> organismos, Integer total) throws Exception{
+    public List<RegistroSir> getUltimosPendientesProcesar(Set<String> organismos, Integer total) throws Exception{
 
-        Query q = em.createQuery("Select ars from AsientoRegistralSir as ars " +
+        Query q = em.createQuery("Select ars from RegistroSir as ars " +
                 "where ars.codigoUnidadTramitacionDestino in (:organismos) and ars.estado = :idEstadoPreRegistro " +
                 "order by ars.id desc");
 
         q.setMaxResults(total);
         q.setParameter("organismos", organismos);
-        q.setParameter("idEstadoPreRegistro", EstadoAsientoRegistralSir.RECIBIDO);
+        q.setParameter("idEstadoPreRegistro", EstadoRegistroSir.RECIBIDO);
 
         return  q.getResultList();
     }
 
     @Override
-    public void modificarEstado(Long idAsientoRegistralSir, EstadoAsientoRegistralSir estado) throws Exception {
+    public void modificarEstado(Long idRegistroSir, EstadoRegistroSir estado) throws Exception {
 
-        Query q = em.createQuery("update AsientoRegistralSir set estado=:estado where id = :idAsientoRegistralSir");
+        Query q = em.createQuery("update RegistroSir set estado=:estado where id = :idRegistroSir");
         q.setParameter("estado", estado);
-        q.setParameter("idAsientoRegistralSir", idAsientoRegistralSir);
+        q.setParameter("idRegistroSir", idRegistroSir);
         q.executeUpdate();
 
     }
@@ -315,7 +315,7 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
     @Override
     public Integer eliminarByEntidad(Long idEntidad) throws Exception{
 
-        List<?> result = em.createQuery("Select distinct(a.id) from AsientoRegistralSir as a where a.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        List<?> result = em.createQuery("Select distinct(a.id) from RegistroSir as a where a.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
         Integer total = result.size();
 
         if(result.size() > 0){
@@ -324,11 +324,11 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
             while (result.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
 
                 List<?> subList = result.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN);
-                em.createQuery("delete from AsientoRegistralSir where id in (:result) ").setParameter("result", subList).executeUpdate();
+                em.createQuery("delete from RegistroSir where id in (:result) ").setParameter("result", subList).executeUpdate();
                 result.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN).clear();
             }
 
-            em.createQuery("delete from AsientoRegistralSir where id in (:result) ").setParameter("result", result).executeUpdate();
+            em.createQuery("delete from RegistroSir where id in (:result) ").setParameter("result", result).executeUpdate();
         }
 
         return total;
@@ -336,50 +336,50 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
     }
 
     /**
-     * Crea un AsientoRegistralSir, a partir del FicheroIntercambio.
+     * Crea un RegistroSir, a partir del FicheroIntercambio.
      *
-     * @return Información del asientoRegistralSir registral.
+     * @return Información del registroSir registral.
      */
     @Override
-    public AsientoRegistralSir transformarFicheroIntercambio(FicheroIntercambio ficheroIntercambio)throws Exception{
+    public RegistroSir transformarFicheroIntercambio(FicheroIntercambio ficheroIntercambio)throws Exception{
 
         final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMddHHmmss");
 
-        AsientoRegistralSir asientoRegistralSir = null;
+        RegistroSir registroSir = null;
 
         if (ficheroIntercambio.getFicheroIntercambio() != null) {
 
-            asientoRegistralSir = new AsientoRegistralSir();
-            asientoRegistralSir.setFechaRecepcion(new Date());
+            registroSir = new RegistroSir();
+            registroSir.setFechaRecepcion(new Date());
 
             // Segmento De_Origen_o_Remitente
             De_Origen_o_Remitente de_Origen_o_Remitente = ficheroIntercambio.getFicheroIntercambio().getDe_Origen_o_Remitente();
             if (de_Origen_o_Remitente != null) {
 
-                asientoRegistralSir.setCodigoEntidadRegistralOrigen(de_Origen_o_Remitente.getCodigo_Entidad_Registral_Origen());
+                registroSir.setCodigoEntidadRegistralOrigen(de_Origen_o_Remitente.getCodigo_Entidad_Registral_Origen());
 
                 if (!StringUtils.isEmpty(de_Origen_o_Remitente.getDecodificacion_Entidad_Registral_Origen())) {
-                    asientoRegistralSir.setDecodificacionEntidadRegistralOrigen(de_Origen_o_Remitente.getDecodificacion_Entidad_Registral_Origen());
+                    registroSir.setDecodificacionEntidadRegistralOrigen(de_Origen_o_Remitente.getDecodificacion_Entidad_Registral_Origen());
                 } else {
-                    asientoRegistralSir.setDecodificacionEntidadRegistralOrigen(Dir3CaibUtils.denominacion(de_Origen_o_Remitente.getCodigo_Entidad_Registral_Origen(), RegwebConstantes.OFICINA));
+                    registroSir.setDecodificacionEntidadRegistralOrigen(Dir3CaibUtils.denominacion(de_Origen_o_Remitente.getCodigo_Entidad_Registral_Origen(), RegwebConstantes.OFICINA));
                 }
 
-                asientoRegistralSir.setCodigoUnidadTramitacionOrigen(de_Origen_o_Remitente.getCodigo_Unidad_Tramitacion_Origen());
+                registroSir.setCodigoUnidadTramitacionOrigen(de_Origen_o_Remitente.getCodigo_Unidad_Tramitacion_Origen());
 
                 if (!StringUtils.isEmpty(de_Origen_o_Remitente.getDecodificacion_Unidad_Tramitacion_Origen())) {
-                    asientoRegistralSir.setDecodificacionUnidadTramitacionOrigen(de_Origen_o_Remitente.getDecodificacion_Unidad_Tramitacion_Origen());
+                    registroSir.setDecodificacionUnidadTramitacionOrigen(de_Origen_o_Remitente.getDecodificacion_Unidad_Tramitacion_Origen());
                 } else {
-                    asientoRegistralSir.setDecodificacionUnidadTramitacionOrigen(Dir3CaibUtils.denominacion(de_Origen_o_Remitente.getCodigo_Unidad_Tramitacion_Origen(), RegwebConstantes.UNIDAD));
+                    registroSir.setDecodificacionUnidadTramitacionOrigen(Dir3CaibUtils.denominacion(de_Origen_o_Remitente.getCodigo_Unidad_Tramitacion_Origen(), RegwebConstantes.UNIDAD));
                 }
 
 
-                asientoRegistralSir.setNumeroRegistro(de_Origen_o_Remitente.getNumero_Registro_Entrada());
-                asientoRegistralSir.setTimestampRegistro(de_Origen_o_Remitente.getTimestamp_Entrada());
+                registroSir.setNumeroRegistro(de_Origen_o_Remitente.getNumero_Registro_Entrada());
+                registroSir.setTimestampRegistro(de_Origen_o_Remitente.getTimestamp_Entrada());
 
                 String fechaRegistro = de_Origen_o_Remitente.getFecha_Hora_Entrada();
                 if (StringUtils.isNotBlank(fechaRegistro)) {
                     try {
-                        asientoRegistralSir.setFechaRegistro(SDF.parse(fechaRegistro));
+                        registroSir.setFechaRegistro(SDF.parse(fechaRegistro));
                     } catch (ParseException e) {
                         log.error("Error al parsear la fecha de registro: [" + fechaRegistro + "]", e);
                         throw new ValidacionException(Errores.ERROR_0037, e);
@@ -391,19 +391,19 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
             De_Destino de_Destino = ficheroIntercambio.getFicheroIntercambio().getDe_Destino();
             if (de_Destino != null) {
 
-                asientoRegistralSir.setCodigoEntidadRegistralDestino(de_Destino.getCodigo_Entidad_Registral_Destino());
+                registroSir.setCodigoEntidadRegistralDestino(de_Destino.getCodigo_Entidad_Registral_Destino());
                 if (!StringUtils.isEmpty(de_Destino.getDecodificacion_Entidad_Registral_Destino())) {
-                    asientoRegistralSir.setDecodificacionEntidadRegistralDestino(de_Destino.getDecodificacion_Entidad_Registral_Destino());
+                    registroSir.setDecodificacionEntidadRegistralDestino(de_Destino.getDecodificacion_Entidad_Registral_Destino());
                 } else {
-                    asientoRegistralSir.setDecodificacionEntidadRegistralDestino(Dir3CaibUtils.denominacion(de_Destino.getCodigo_Entidad_Registral_Destino(), RegwebConstantes.OFICINA));
+                    registroSir.setDecodificacionEntidadRegistralDestino(Dir3CaibUtils.denominacion(de_Destino.getCodigo_Entidad_Registral_Destino(), RegwebConstantes.OFICINA));
                 }
 
                 if (!StringUtils.isEmpty(de_Destino.getCodigo_Unidad_Tramitacion_Destino())) {
-                    asientoRegistralSir.setCodigoUnidadTramitacionDestino(de_Destino.getCodigo_Unidad_Tramitacion_Destino());
+                    registroSir.setCodigoUnidadTramitacionDestino(de_Destino.getCodigo_Unidad_Tramitacion_Destino());
                     if (!StringUtils.isEmpty(de_Destino.getDecodificacion_Unidad_Tramitacion_Destino())) {
-                        asientoRegistralSir.setDecodificacionUnidadTramitacionDestino(de_Destino.getDecodificacion_Unidad_Tramitacion_Destino());
+                        registroSir.setDecodificacionUnidadTramitacionDestino(de_Destino.getDecodificacion_Unidad_Tramitacion_Destino());
                     } else {
-                        asientoRegistralSir.setDecodificacionUnidadTramitacionDestino(Dir3CaibUtils.denominacion(de_Destino.getCodigo_Unidad_Tramitacion_Destino(), RegwebConstantes.UNIDAD));
+                        registroSir.setDecodificacionUnidadTramitacionDestino(Dir3CaibUtils.denominacion(de_Destino.getCodigo_Unidad_Tramitacion_Destino(), RegwebConstantes.UNIDAD));
                     }
                 }
 
@@ -412,55 +412,55 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
             // Segmento De_Asunto de_Asunto
             De_Asunto de_Asunto = ficheroIntercambio.getFicheroIntercambio().getDe_Asunto();
             if (de_Asunto != null) {
-                asientoRegistralSir.setResumen(de_Asunto.getResumen());
-                asientoRegistralSir.setCodigoAsunto(de_Asunto.getCodigo_Asunto_Segun_Destino());
-                asientoRegistralSir.setReferenciaExterna(de_Asunto.getReferencia_Externa());
-                asientoRegistralSir.setNumeroExpediente(de_Asunto.getNumero_Expediente());
+                registroSir.setResumen(de_Asunto.getResumen());
+                registroSir.setCodigoAsunto(de_Asunto.getCodigo_Asunto_Segun_Destino());
+                registroSir.setReferenciaExterna(de_Asunto.getReferencia_Externa());
+                registroSir.setNumeroExpediente(de_Asunto.getNumero_Expediente());
             }
 
             // Segmento De_Internos_Control
             De_Internos_Control de_Internos_Control = ficheroIntercambio.getFicheroIntercambio().getDe_Internos_Control();
             if (de_Internos_Control != null) {
 
-                asientoRegistralSir.setIdentificadorIntercambio(de_Internos_Control.getIdentificador_Intercambio());
-                asientoRegistralSir.setAplicacion(de_Internos_Control.getAplicacion_Version_Emisora());
-                asientoRegistralSir.setTipoAnotacion(ficheroIntercambio.getTipoAnotacion());
-                asientoRegistralSir.setDecodificacionTipoAnotacion(de_Internos_Control.getDescripcion_Tipo_Anotacion());
-                asientoRegistralSir.setNumeroTransporte(de_Internos_Control.getNumero_Transporte_Entrada());
-                asientoRegistralSir.setNombreUsuario(de_Internos_Control.getNombre_Usuario());
-                asientoRegistralSir.setContactoUsuario(de_Internos_Control.getContacto_Usuario());
-                asientoRegistralSir.setObservacionesApunte(de_Internos_Control.getObservaciones_Apunte());
+                registroSir.setIdentificadorIntercambio(de_Internos_Control.getIdentificador_Intercambio());
+                registroSir.setAplicacion(de_Internos_Control.getAplicacion_Version_Emisora());
+                registroSir.setTipoAnotacion(ficheroIntercambio.getTipoAnotacion());
+                registroSir.setDecodificacionTipoAnotacion(de_Internos_Control.getDescripcion_Tipo_Anotacion());
+                registroSir.setNumeroTransporte(de_Internos_Control.getNumero_Transporte_Entrada());
+                registroSir.setNombreUsuario(de_Internos_Control.getNombre_Usuario());
+                registroSir.setContactoUsuario(de_Internos_Control.getContacto_Usuario());
+                registroSir.setObservacionesApunte(de_Internos_Control.getObservaciones_Apunte());
 
-                asientoRegistralSir.setCodigoEntidadRegistralInicio(de_Internos_Control.getCodigo_Entidad_Registral_Inicio());
+                registroSir.setCodigoEntidadRegistralInicio(de_Internos_Control.getCodigo_Entidad_Registral_Inicio());
                 if (!StringUtils.isEmpty(de_Internos_Control.getDecodificacion_Entidad_Registral_Inicio())) {
-                    asientoRegistralSir.setDecodificacionEntidadRegistralInicio(de_Internos_Control.getDecodificacion_Entidad_Registral_Inicio());
+                    registroSir.setDecodificacionEntidadRegistralInicio(de_Internos_Control.getDecodificacion_Entidad_Registral_Inicio());
                 } else {
-                    asientoRegistralSir.setDecodificacionEntidadRegistralInicio(Dir3CaibUtils.denominacion(de_Internos_Control.getCodigo_Entidad_Registral_Inicio(), RegwebConstantes.OFICINA));
+                    registroSir.setDecodificacionEntidadRegistralInicio(Dir3CaibUtils.denominacion(de_Internos_Control.getCodigo_Entidad_Registral_Inicio(), RegwebConstantes.OFICINA));
                 }
 
 
                 // Tipo de transporte
                 String tipoTransporte = de_Internos_Control.getTipo_Transporte_Entrada();
                 if (StringUtils.isNotBlank(tipoTransporte)) {
-                    asientoRegistralSir.setTipoTransporte(TipoTransporte.getTipoTransporteValue(tipoTransporte));
+                    registroSir.setTipoTransporte(TipoTransporte.getTipoTransporteValue(tipoTransporte));
                 }
 
                 // Tipo de registro
                 Tipo_RegistroType tipo_Registro = de_Internos_Control.getTipo_Registro();
                 if ((tipo_Registro != null) && StringUtils.isNotBlank(tipo_Registro.value())) {
-                    asientoRegistralSir.setTipoRegistro(TipoRegistro.getTipoRegistro(tipo_Registro.value()));
+                    registroSir.setTipoRegistro(TipoRegistro.getTipoRegistro(tipo_Registro.value()));
                 }
 
                 // Documentación física
                 Documentacion_FisicaType documentacion_Fisica = de_Internos_Control.getDocumentacion_Fisica();
                 if ((documentacion_Fisica != null) && StringUtils.isNotBlank(documentacion_Fisica.value())) {
-                    asientoRegistralSir.setDocumentacionFisica(DocumentacionFisica.getDocumentacionFisicaValue(documentacion_Fisica.value()));
+                    registroSir.setDocumentacionFisica(DocumentacionFisica.getDocumentacionFisicaValue(documentacion_Fisica.value()));
                 }
 
                 // Indicador de prueba
                 Indicador_PruebaType indicadorPrueba = de_Internos_Control.getIndicador_Prueba();
                 if ((indicadorPrueba != null) && StringUtils.isNotBlank(indicadorPrueba.value())){
-                    asientoRegistralSir.setIndicadorPrueba(IndicadorPrueba.getIndicadorPrueba(indicadorPrueba.value()));
+                    registroSir.setIndicadorPrueba(IndicadorPrueba.getIndicadorPrueba(indicadorPrueba.value()));
                 }
 
             }
@@ -468,8 +468,8 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
             // Segmento De_Formulario_Generico
             De_Formulario_Generico de_Formulario_Generico = ficheroIntercambio.getFicheroIntercambio().getDe_Formulario_Generico();
             if (de_Formulario_Generico != null) {
-                asientoRegistralSir.setExpone(de_Formulario_Generico.getExpone());
-                asientoRegistralSir.setSolicita(de_Formulario_Generico.getSolicita());
+                registroSir.setExpone(de_Formulario_Generico.getExpone());
+                registroSir.setSolicita(de_Formulario_Generico.getSolicita());
             }
 
             // Segmento De_Interesado
@@ -484,7 +484,7 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
                                 && (StringUtils.isBlank(de_Interesado.getNombre_Interesado()) && StringUtils.isBlank(de_Interesado.getPrimer_Apellido_Interesado()))){
 
                             // Creamos uno a partir de la Entidad destino
-                            asientoRegistralSir.getInteresados().add(crearInteresadoJuridico(ficheroIntercambio));
+                            registroSir.getInteresados().add(crearInteresadoJuridico(ficheroIntercambio));
 
                         }else{
 
@@ -542,7 +542,7 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
 
                             interesado.setObservaciones(de_Interesado.getObservaciones());
 
-                            asientoRegistralSir.getInteresados().add(interesado);
+                            registroSir.getInteresados().add(interesado);
                         }
 
                     }
@@ -593,18 +593,18 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
                             anexo.setTipoDocumento(TipoDocumento.getTipoDocumentoValue(tipoDocumento));
                         }
 
-                        asientoRegistralSir.getAnexos().add(anexo);
+                        registroSir.getAnexos().add(anexo);
                     }
                 }
             }
         }
 
-        return asientoRegistralSir;
+        return registroSir;
 
     }
 
     /**
-     * Transforma un {@link es.caib.regweb3.model.RegistroEntrada} en un {@link AsientoRegistralSir}
+     * Transforma un {@link RegistroEntrada} en un {@link RegistroSir}
      * @param registroEntrada
      * @return
      * @throws Exception
@@ -612,70 +612,70 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
      * @throws I18NValidationException
      */
     @Override
-    public AsientoRegistralSir transformarRegistroEntrada(RegistroEntrada registroEntrada)
+    public RegistroSir transformarRegistroEntrada(RegistroEntrada registroEntrada)
             throws Exception, I18NException {
 
         RegistroDetalle registroDetalle = registroEntrada.getRegistroDetalle();
 
-        AsientoRegistralSir asientoRegistralSir = new AsientoRegistralSir();
+        RegistroSir registroSir = new RegistroSir();
 
-        asientoRegistralSir.setIndicadorPrueba(IndicadorPrueba.NORMAL);
-        asientoRegistralSir.setEstado(EstadoAsientoRegistralSir.PENDIENTE_ENVIO);
-        asientoRegistralSir.setEntidad(registroEntrada.getOficina().getOrganismoResponsable().getEntidad());
+        registroSir.setIndicadorPrueba(IndicadorPrueba.NORMAL);
+        registroSir.setEstado(EstadoRegistroSir.PENDIENTE_ENVIO);
+        registroSir.setEntidad(registroEntrada.getOficina().getOrganismoResponsable().getEntidad());
 
         // Segmento De_Origen_O_Remitente
-        asientoRegistralSir.setCodigoEntidadRegistralOrigen(registroEntrada.getOficina().getCodigo());
-        asientoRegistralSir.setDecodificacionEntidadRegistralOrigen(registroEntrada.getOficina().getDenominacion());
-        asientoRegistralSir.setNumeroRegistro(registroEntrada.getNumeroRegistroFormateado());
-        asientoRegistralSir.setFechaRegistro(registroEntrada.getFecha());
-        asientoRegistralSir.setCodigoUnidadTramitacionOrigen(registroEntrada.getOficina().getOrganismoResponsable().getCodigo());
-        asientoRegistralSir.setDecodificacionUnidadTramitacionOrigen(registroEntrada.getOficina().getOrganismoResponsable().getDenominacion());
+        registroSir.setCodigoEntidadRegistralOrigen(registroEntrada.getOficina().getCodigo());
+        registroSir.setDecodificacionEntidadRegistralOrigen(registroEntrada.getOficina().getDenominacion());
+        registroSir.setNumeroRegistro(registroEntrada.getNumeroRegistroFormateado());
+        registroSir.setFechaRegistro(registroEntrada.getFecha());
+        registroSir.setCodigoUnidadTramitacionOrigen(registroEntrada.getOficina().getOrganismoResponsable().getCodigo());
+        registroSir.setDecodificacionUnidadTramitacionOrigen(registroEntrada.getOficina().getOrganismoResponsable().getDenominacion());
 
         // Segmento De_Destino
-        asientoRegistralSir.setCodigoEntidadRegistralDestino(registroDetalle.getCodigoEntidadRegistralDestino());
-        asientoRegistralSir.setDecodificacionEntidadRegistralDestino(registroDetalle.getDecodificacionEntidadRegistralDestino());
-        asientoRegistralSir.setCodigoUnidadTramitacionDestino(registroEntrada.getDestinoExternoCodigo());
-        asientoRegistralSir.setDecodificacionUnidadTramitacionDestino(registroEntrada.getDestinoExternoDenominacion());
+        registroSir.setCodigoEntidadRegistralDestino(registroDetalle.getCodigoEntidadRegistralDestino());
+        registroSir.setDecodificacionEntidadRegistralDestino(registroDetalle.getDecodificacionEntidadRegistralDestino());
+        registroSir.setCodigoUnidadTramitacionDestino(registroEntrada.getDestinoExternoCodigo());
+        registroSir.setDecodificacionUnidadTramitacionDestino(registroEntrada.getDestinoExternoDenominacion());
 
         // Segmento De_Asunto
-        asientoRegistralSir.setResumen(registroDetalle.getExtracto());
+        registroSir.setResumen(registroDetalle.getExtracto());
         if(registroEntrada.getDestino() != null){
             TraduccionCodigoAsunto tra = (TraduccionCodigoAsunto) registroDetalle.getCodigoAsunto().getTraduccion(RegwebConstantes.IDIOMA_CASTELLANO_CODIGO);
-            asientoRegistralSir.setCodigoAsunto(tra.getNombre());
+            registroSir.setCodigoAsunto(tra.getNombre());
         }
-        asientoRegistralSir.setReferenciaExterna(registroDetalle.getReferenciaExterna());
-        asientoRegistralSir.setNumeroExpediente(registroDetalle.getExpediente());
+        registroSir.setReferenciaExterna(registroDetalle.getReferenciaExterna());
+        registroSir.setNumeroExpediente(registroDetalle.getExpediente());
 
         // Segmento De_Internos_Control
-        asientoRegistralSir.setTipoTransporte(CODIGO_SICRES_BY_TRANSPORTE.get(registroDetalle.getTransporte()));
-        asientoRegistralSir.setNumeroTransporte(registroDetalle.getNumeroTransporte());
-        asientoRegistralSir.setNombreUsuario(registroEntrada.getUsuario().getNombreCompleto());
-        asientoRegistralSir.setContactoUsuario(registroEntrada.getUsuario().getUsuario().getEmail());
-        asientoRegistralSir.setIdentificadorIntercambio(registroDetalle.getIdentificadorIntercambio());
-        asientoRegistralSir.setAplicacion(registroDetalle.getAplicacion());
-        asientoRegistralSir.setTipoAnotacion(registroDetalle.getTipoAnotacion());
-        asientoRegistralSir.setDecodificacionTipoAnotacion(registroDetalle.getDecodificacionTipoAnotacion());
-        asientoRegistralSir.setTipoRegistro(TipoRegistro.ENTRADA);
-        asientoRegistralSir.setDocumentacionFisica(String.valueOf(registroDetalle.getTipoDocumentacionFisica()));
-        asientoRegistralSir.setObservacionesApunte(registroDetalle.getObservaciones());
-        asientoRegistralSir.setCodigoEntidadRegistralInicio(obtenerCodigoOficinaOrigen(registroDetalle,registroEntrada.getOficina().getCodigo()));
-        asientoRegistralSir.setDecodificacionEntidadRegistralInicio(obtenerDenominacionOficinaOrigen(registroDetalle, registroEntrada.getOficina().getDenominacion()));
+        registroSir.setTipoTransporte(CODIGO_SICRES_BY_TRANSPORTE.get(registroDetalle.getTransporte()));
+        registroSir.setNumeroTransporte(registroDetalle.getNumeroTransporte());
+        registroSir.setNombreUsuario(registroEntrada.getUsuario().getNombreCompleto());
+        registroSir.setContactoUsuario(registroEntrada.getUsuario().getUsuario().getEmail());
+        registroSir.setIdentificadorIntercambio(registroDetalle.getIdentificadorIntercambio());
+        registroSir.setAplicacion(registroDetalle.getAplicacion());
+        registroSir.setTipoAnotacion(registroDetalle.getTipoAnotacion());
+        registroSir.setDecodificacionTipoAnotacion(registroDetalle.getDecodificacionTipoAnotacion());
+        registroSir.setTipoRegistro(TipoRegistro.ENTRADA);
+        registroSir.setDocumentacionFisica(String.valueOf(registroDetalle.getTipoDocumentacionFisica()));
+        registroSir.setObservacionesApunte(registroDetalle.getObservaciones());
+        registroSir.setCodigoEntidadRegistralInicio(obtenerCodigoOficinaOrigen(registroDetalle,registroEntrada.getOficina().getCodigo()));
+        registroSir.setDecodificacionEntidadRegistralInicio(obtenerDenominacionOficinaOrigen(registroDetalle, registroEntrada.getOficina().getDenominacion()));
 
         // Segmento De_Formulario_Genérico
-        asientoRegistralSir.setExpone(registroDetalle.getExpone());
-        asientoRegistralSir.setSolicita(registroDetalle.getSolicita());
+        registroSir.setExpone(registroDetalle.getExpone());
+        registroSir.setSolicita(registroDetalle.getSolicita());
 
         // Segmento De_Interesados
-        asientoRegistralSir.setInteresados(procesarInteresadosSir(registroDetalle.getInteresados()));
+        registroSir.setInteresados(procesarInteresadosSir(registroDetalle.getInteresados()));
 
         // Segmento De_Anexos
-        asientoRegistralSir.setAnexos(procesarAnexosSir(registroDetalle.getAnexosFull(), asientoRegistralSir.getIdentificadorIntercambio()));
+        registroSir.setAnexos(procesarAnexosSir(registroDetalle.getAnexosFull(), registroSir.getIdentificadorIntercambio()));
 
-        return asientoRegistralSir;
+        return registroSir;
     }
 
     /**
-     * Transforma un {@link es.caib.regweb3.model.RegistroSalida} en un {@link AsientoRegistralSir}
+     * Transforma un {@link RegistroSalida} en un {@link RegistroSir}
      * @param registroSalida
      * @return
      * @throws Exception
@@ -683,66 +683,66 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
      * @throws I18NValidationException
      */
     @Override
-    public AsientoRegistralSir transformarRegistroSalida(RegistroSalida registroSalida)
+    public RegistroSir transformarRegistroSalida(RegistroSalida registroSalida)
             throws Exception, I18NException{
 
         RegistroDetalle registroDetalle = registroSalida.getRegistroDetalle();
 
-        AsientoRegistralSir asientoRegistralSir = new AsientoRegistralSir();
+        RegistroSir registroSir = new RegistroSir();
 
-        asientoRegistralSir.setIndicadorPrueba(IndicadorPrueba.NORMAL); // todo Modificar cuando entremos en Producción
-        asientoRegistralSir.setEstado(EstadoAsientoRegistralSir.PENDIENTE_ENVIO);
-        asientoRegistralSir.setEntidad(registroSalida.getOficina().getOrganismoResponsable().getEntidad());
+        registroSir.setIndicadorPrueba(IndicadorPrueba.NORMAL); // todo Modificar cuando entremos en Producción
+        registroSir.setEstado(EstadoRegistroSir.PENDIENTE_ENVIO);
+        registroSir.setEntidad(registroSalida.getOficina().getOrganismoResponsable().getEntidad());
 
         // Segmento De_Origen_O_Remitente
-        asientoRegistralSir.setCodigoEntidadRegistralOrigen(registroSalida.getOficina().getCodigo());
-        asientoRegistralSir.setDecodificacionEntidadRegistralOrigen(registroSalida.getOficina().getDenominacion());
-        asientoRegistralSir.setNumeroRegistro(registroSalida.getNumeroRegistroFormateado());
-        asientoRegistralSir.setFechaRegistro(registroSalida.getFecha());
-        asientoRegistralSir.setCodigoUnidadTramitacionOrigen(registroSalida.getOficina().getOrganismoResponsable().getCodigo());
-        asientoRegistralSir.setDecodificacionUnidadTramitacionOrigen(registroSalida.getOficina().getOrganismoResponsable().getDenominacion());
+        registroSir.setCodigoEntidadRegistralOrigen(registroSalida.getOficina().getCodigo());
+        registroSir.setDecodificacionEntidadRegistralOrigen(registroSalida.getOficina().getDenominacion());
+        registroSir.setNumeroRegistro(registroSalida.getNumeroRegistroFormateado());
+        registroSir.setFechaRegistro(registroSalida.getFecha());
+        registroSir.setCodigoUnidadTramitacionOrigen(registroSalida.getOficina().getOrganismoResponsable().getCodigo());
+        registroSir.setDecodificacionUnidadTramitacionOrigen(registroSalida.getOficina().getOrganismoResponsable().getDenominacion());
 
         // Segmento De_Destino
-        asientoRegistralSir.setCodigoEntidadRegistralDestino(registroDetalle.getCodigoEntidadRegistralDestino());
-        asientoRegistralSir.setDecodificacionEntidadRegistralDestino(registroDetalle.getDecodificacionEntidadRegistralDestino());
-        asientoRegistralSir.setCodigoUnidadTramitacionDestino(obtenerCodigoUnidadTramitacionDestino(registroDetalle));
-        asientoRegistralSir.setDecodificacionUnidadTramitacionDestino(obtenerDenominacionUnidadTramitacionDestino(registroDetalle));
+        registroSir.setCodigoEntidadRegistralDestino(registroDetalle.getCodigoEntidadRegistralDestino());
+        registroSir.setDecodificacionEntidadRegistralDestino(registroDetalle.getDecodificacionEntidadRegistralDestino());
+        registroSir.setCodigoUnidadTramitacionDestino(obtenerCodigoUnidadTramitacionDestino(registroDetalle));
+        registroSir.setDecodificacionUnidadTramitacionDestino(obtenerDenominacionUnidadTramitacionDestino(registroDetalle));
 
         // Segmento De_Asunto
-        asientoRegistralSir.setResumen(registroDetalle.getExtracto());
+        registroSir.setResumen(registroDetalle.getExtracto());
         /*if(registroSalida.getDestino() != null){ //todo Revisar
             TraduccionCodigoAsunto tra = (TraduccionCodigoAsunto) registroDetalle.getCodigoAsunto().getTraduccion(RegwebConstantes.IDIOMA_CASTELLANO_CODIGO);
-            asientoRegistralSir.setCodigoAsunto(tra.getNombre());
+            registroSir.setCodigoAsunto(tra.getNombre());
         }*/
-        asientoRegistralSir.setReferenciaExterna(registroDetalle.getReferenciaExterna());
-        asientoRegistralSir.setNumeroExpediente(registroDetalle.getExpediente());
+        registroSir.setReferenciaExterna(registroDetalle.getReferenciaExterna());
+        registroSir.setNumeroExpediente(registroDetalle.getExpediente());
 
         // Segmento De_Internos_Control
-        asientoRegistralSir.setTipoTransporte(CODIGO_SICRES_BY_TRANSPORTE.get(registroDetalle.getTransporte()));
-        asientoRegistralSir.setNumeroTransporte(registroDetalle.getNumeroTransporte());
-        asientoRegistralSir.setNombreUsuario(registroSalida.getUsuario().getNombreCompleto());
-        asientoRegistralSir.setContactoUsuario(registroSalida.getUsuario().getUsuario().getEmail());
-        asientoRegistralSir.setIdentificadorIntercambio(registroDetalle.getIdentificadorIntercambio());
-        asientoRegistralSir.setAplicacion(registroDetalle.getAplicacion());
-        asientoRegistralSir.setTipoAnotacion(registroDetalle.getTipoAnotacion());
-        asientoRegistralSir.setDecodificacionTipoAnotacion(registroDetalle.getDecodificacionTipoAnotacion());
-        asientoRegistralSir.setTipoRegistro(TipoRegistro.SALIDA);
-        asientoRegistralSir.setDocumentacionFisica(String.valueOf(registroDetalle.getTipoDocumentacionFisica()));
-        asientoRegistralSir.setObservacionesApunte(registroDetalle.getObservaciones());
-        asientoRegistralSir.setCodigoEntidadRegistralInicio(obtenerCodigoOficinaOrigen(registroDetalle, registroSalida.getOficina().getCodigo()));
-        asientoRegistralSir.setDecodificacionEntidadRegistralInicio(obtenerDenominacionOficinaOrigen(registroDetalle, registroSalida.getOficina().getDenominacion()));
+        registroSir.setTipoTransporte(CODIGO_SICRES_BY_TRANSPORTE.get(registroDetalle.getTransporte()));
+        registroSir.setNumeroTransporte(registroDetalle.getNumeroTransporte());
+        registroSir.setNombreUsuario(registroSalida.getUsuario().getNombreCompleto());
+        registroSir.setContactoUsuario(registroSalida.getUsuario().getUsuario().getEmail());
+        registroSir.setIdentificadorIntercambio(registroDetalle.getIdentificadorIntercambio());
+        registroSir.setAplicacion(registroDetalle.getAplicacion());
+        registroSir.setTipoAnotacion(registroDetalle.getTipoAnotacion());
+        registroSir.setDecodificacionTipoAnotacion(registroDetalle.getDecodificacionTipoAnotacion());
+        registroSir.setTipoRegistro(TipoRegistro.SALIDA);
+        registroSir.setDocumentacionFisica(String.valueOf(registroDetalle.getTipoDocumentacionFisica()));
+        registroSir.setObservacionesApunte(registroDetalle.getObservaciones());
+        registroSir.setCodigoEntidadRegistralInicio(obtenerCodigoOficinaOrigen(registroDetalle, registroSalida.getOficina().getCodigo()));
+        registroSir.setDecodificacionEntidadRegistralInicio(obtenerDenominacionOficinaOrigen(registroDetalle, registroSalida.getOficina().getDenominacion()));
 
         // Segmento De_Formulario_Genérico
-        asientoRegistralSir.setExpone(registroDetalle.getExpone());
-        asientoRegistralSir.setSolicita(registroDetalle.getSolicita());
+        registroSir.setExpone(registroDetalle.getExpone());
+        registroSir.setSolicita(registroDetalle.getSolicita());
 
         // Segmento De_Interesados
-        asientoRegistralSir.setInteresados(procesarInteresadosSir(registroDetalle.getInteresados()));
+        registroSir.setInteresados(procesarInteresadosSir(registroDetalle.getInteresados()));
 
         // Segmento De_Anexos
-        asientoRegistralSir.setAnexos(procesarAnexosSir(registroDetalle.getAnexosFull(), asientoRegistralSir.getIdentificadorIntercambio()));
+        registroSir.setAnexos(procesarAnexosSir(registroDetalle.getAnexosFull(), registroSir.getIdentificadorIntercambio()));
 
-        return asientoRegistralSir;
+        return registroSir;
     }
 
     /**
@@ -1066,7 +1066,7 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
         String result = new StringBuffer()
                 .append(identificadorIntercambio)
                 .append("_01_")
-                .append(org.apache.commons.lang.StringUtils.leftPad(
+                .append(StringUtils.leftPad(
                         String.valueOf(secuencia), 4, "0"))
                 .append(".").append(getExtension(fileName)).toString();
 
@@ -1229,8 +1229,8 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
     }
 
     /**
-     * Transforma un {@link AsientoRegistralSir} en un {@link es.caib.regweb3.model.RegistroEntrada}
-     * @param asientoRegistralSir
+     * Transforma un {@link RegistroSir} en un {@link RegistroEntrada}
+     * @param registroSir
      * @param usuario
      * @param oficinaActiva
      * @param idLibro
@@ -1242,7 +1242,7 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
      * @throws I18NValidationException
      */
     @Override
-    public RegistroEntrada transformarAsientoRegistralEntrada(AsientoRegistralSir asientoRegistralSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs)
+    public RegistroEntrada transformarRegistroSirEntrada(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs)
             throws Exception, I18NException, I18NValidationException {
 
         Libro libro = libroEjb.findById(idLibro);
@@ -1255,11 +1255,11 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
 
         // Organismo destino
         Organismo organismoDestino;
-        if(asientoRegistralSir.getCodigoUnidadTramitacionDestino() != null){
-            organismoDestino = organismoEjb.findByCodigoEntidad(asientoRegistralSir.getCodigoUnidadTramitacionDestino(),usuario.getEntidad().getId());
+        if(registroSir.getCodigoUnidadTramitacionDestino() != null){
+            organismoDestino = organismoEjb.findByCodigoEntidad(registroSir.getCodigoUnidadTramitacionDestino(),usuario.getEntidad().getId());
             registroEntrada.setDestino(organismoDestino);
         }else{
-            Oficina oficina = oficinaEjb.findByCodigoEntidad(asientoRegistralSir.getCodigoEntidadRegistralDestino(),usuario.getEntidad().getId());
+            Oficina oficina = oficinaEjb.findByCodigoEntidad(registroSir.getCodigoEntidadRegistralDestino(),usuario.getEntidad().getId());
             organismoDestino = organismoEjb.findByCodigoEntidad(oficina.getOrganismoResponsable().getCodigo(),usuario.getEntidad().getId());
         }
 
@@ -1268,13 +1268,13 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
         registroEntrada.setDestinoExternoDenominacion(null);
 
         // RegistroDetalle
-        registroEntrada.setRegistroDetalle(getRegistroDetalle(asientoRegistralSir, idIdioma, idTipoAsunto));
+        registroEntrada.setRegistroDetalle(getRegistroDetalle(registroSir, idIdioma, idTipoAsunto));
 
         // Interesados
-        List<Interesado> interesados = procesarInteresados(asientoRegistralSir.getInteresados());
+        List<Interesado> interesados = procesarInteresados(registroSir.getInteresados());
 
         // Anexos
-        List<AnexoFull> anexosFull = procesarAnexos(asientoRegistralSir, camposNTIs);
+        List<AnexoFull> anexosFull = procesarAnexos(registroSir, camposNTIs);
 
         // Registramos el Registro Entrada
         synchronized (this){
@@ -1285,8 +1285,8 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
     }
 
     /**
-     * Transforma un {@link AsientoRegistralSir} en un {@link es.caib.regweb3.model.RegistroSalida}
-     * @param asientoRegistralSir
+     * Transforma un {@link RegistroSir} en un {@link RegistroSalida}
+     * @param registroSir
      * @param usuario
      * @param oficinaActiva
      * @param idLibro
@@ -1298,7 +1298,7 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
      * @throws I18NValidationException
      */
     @Override
-    public RegistroSalida transformarAsientoRegistralSalida(AsientoRegistralSir asientoRegistralSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs) throws Exception, I18NException, I18NValidationException {
+    public RegistroSalida transformarRegistroSirSalida(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs) throws Exception, I18NException, I18NValidationException {
 
         Libro libro = libroEjb.findById(idLibro);
 
@@ -1311,8 +1311,8 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
         // Organismo origen
         // TODO Esta asignación es incorrecta
         Organismo organismoOrigen;
-        if(asientoRegistralSir.getCodigoUnidadTramitacionDestino() != null){
-            organismoOrigen = organismoEjb.findByCodigoLigero(asientoRegistralSir.getCodigoUnidadTramitacionDestino());
+        if(registroSir.getCodigoUnidadTramitacionDestino() != null){
+            organismoOrigen = organismoEjb.findByCodigoLigero(registroSir.getCodigoUnidadTramitacionDestino());
             registroSalida.setOrigen(organismoOrigen);
         }
 
@@ -1320,13 +1320,13 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
         registroSalida.setOrigenExternoDenominacion(null);
 
         // RegistroDetalle
-        registroSalida.setRegistroDetalle(getRegistroDetalle(asientoRegistralSir, idIdioma, idTipoAsunto));
+        registroSalida.setRegistroDetalle(getRegistroDetalle(registroSir, idIdioma, idTipoAsunto));
 
         // Interesados
-        List<Interesado> interesados = procesarInteresados(asientoRegistralSir.getInteresados());
+        List<Interesado> interesados = procesarInteresados(registroSir.getInteresados());
 
         // Anexos
-        List<AnexoFull> anexosFull = procesarAnexos(asientoRegistralSir, camposNTIs);
+        List<AnexoFull> anexosFull = procesarAnexos(registroSir, camposNTIs);
 
         // Registramos el Registro Entrada
         synchronized (this){
@@ -1337,51 +1337,51 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
     }
 
     /**
-     * Obtiene un {@link RegistroDetalle} a partir de los datos de un AsientoRegistralSir
-     * @param asientoRegistralSir
+     * Obtiene un {@link RegistroDetalle} a partir de los datos de un RegistroSir
+     * @param registroSir
      * @param idIdioma
      * @param idTipoAsunto
      * @return
      * @throws Exception
      */
-    private RegistroDetalle getRegistroDetalle(AsientoRegistralSir asientoRegistralSir, Long idIdioma, Long idTipoAsunto) throws Exception{
+    private RegistroDetalle getRegistroDetalle(RegistroSir registroSir, Long idIdioma, Long idTipoAsunto) throws Exception{
 
         RegistroDetalle registroDetalle = new RegistroDetalle();
 
-        registroDetalle.setExtracto(asientoRegistralSir.getResumen());
-        registroDetalle.setTipoDocumentacionFisica(Long.valueOf(asientoRegistralSir.getDocumentacionFisica()));
+        registroDetalle.setExtracto(registroSir.getResumen());
+        registroDetalle.setTipoDocumentacionFisica(Long.valueOf(registroSir.getDocumentacionFisica()));
         registroDetalle.setIdioma(idIdioma);
         registroDetalle.setTipoAsunto(new TipoAsunto(idTipoAsunto));
         registroDetalle.setCodigoAsunto(null);
 
-        if(asientoRegistralSir.getTipoTransporte() != null){
-            registroDetalle.setTransporte(Long.valueOf(asientoRegistralSir.getTipoTransporte()));
+        if(registroSir.getTipoTransporte() != null){
+            registroDetalle.setTransporte(Long.valueOf(registroSir.getTipoTransporte()));
         }
-        if(!es.caib.regweb3.utils.StringUtils.isEmpty(asientoRegistralSir.getNumeroTransporte())){
-            registroDetalle.setNumeroTransporte(asientoRegistralSir.getNumeroTransporte());
+        if(!es.caib.regweb3.utils.StringUtils.isEmpty(registroSir.getNumeroTransporte())){
+            registroDetalle.setNumeroTransporte(registroSir.getNumeroTransporte());
         }
-        if(!es.caib.regweb3.utils.StringUtils.isEmpty(asientoRegistralSir.getObservacionesApunte())){
-            registroDetalle.setObservaciones(asientoRegistralSir.getObservacionesApunte());
+        if(!es.caib.regweb3.utils.StringUtils.isEmpty(registroSir.getObservacionesApunte())){
+            registroDetalle.setObservaciones(registroSir.getObservacionesApunte());
         }
-        if(!es.caib.regweb3.utils.StringUtils.isEmpty(asientoRegistralSir.getReferenciaExterna())){
-            registroDetalle.setReferenciaExterna(asientoRegistralSir.getReferenciaExterna());
+        if(!es.caib.regweb3.utils.StringUtils.isEmpty(registroSir.getReferenciaExterna())){
+            registroDetalle.setReferenciaExterna(registroSir.getReferenciaExterna());
         }
-        if(!es.caib.regweb3.utils.StringUtils.isEmpty(asientoRegistralSir.getNumeroExpediente())){
-            registroDetalle.setExpediente(asientoRegistralSir.getNumeroExpediente());
+        if(!es.caib.regweb3.utils.StringUtils.isEmpty(registroSir.getNumeroExpediente())){
+            registroDetalle.setExpediente(registroSir.getNumeroExpediente());
         }
-        if(!es.caib.regweb3.utils.StringUtils.isEmpty(asientoRegistralSir.getExpone())){
-            registroDetalle.setExpone(asientoRegistralSir.getExpone());
+        if(!es.caib.regweb3.utils.StringUtils.isEmpty(registroSir.getExpone())){
+            registroDetalle.setExpone(registroSir.getExpone());
         }
-        if(!es.caib.regweb3.utils.StringUtils.isEmpty(asientoRegistralSir.getSolicita())){
-            registroDetalle.setSolicita(asientoRegistralSir.getSolicita());
+        if(!es.caib.regweb3.utils.StringUtils.isEmpty(registroSir.getSolicita())){
+            registroDetalle.setSolicita(registroSir.getSolicita());
         }
 
         registroDetalle.setOficinaOrigen(null);
-        registroDetalle.setOficinaOrigenExternoCodigo(asientoRegistralSir.getCodigoEntidadRegistralOrigen());
-        registroDetalle.setOficinaOrigenExternoDenominacion(asientoRegistralSir.getDecodificacionEntidadRegistralOrigen());
+        registroDetalle.setOficinaOrigenExternoCodigo(registroSir.getCodigoEntidadRegistralOrigen());
+        registroDetalle.setOficinaOrigenExternoDenominacion(registroSir.getDecodificacionEntidadRegistralOrigen());
 
-        registroDetalle.setNumeroRegistroOrigen(asientoRegistralSir.getNumeroRegistro());
-        registroDetalle.setFechaOrigen(asientoRegistralSir.getFechaRegistro());
+        registroDetalle.setNumeroRegistroOrigen(registroSir.getNumeroRegistro());
+        registroDetalle.setFechaOrigen(registroSir.getFechaRegistro());
 
         // Interesados
         registroDetalle.setInteresados(null);
@@ -1599,23 +1599,23 @@ public class AsientoRegistralSirBean extends BaseEjbJPA<AsientoRegistralSir, Lon
 
     /**
      *
-     * @param asientoRegistralSir
-     * @param camposNTIs representa la lista de anexos del asiento registral en los que el usuario ha especificado
+     * @param registroSir
+     * @param camposNTIs representa la lista de anexos del RegistroSir en los que el usuario ha especificado
      *                          los valores de los campos NTI no informados por SICRES (validez Documento, origen, Tipo Documental)
      * @return
      * @throws Exception
      */
-    private List<AnexoFull> procesarAnexos(AsientoRegistralSir asientoRegistralSir, List<CamposNTI> camposNTIs) throws Exception {
+    private List<AnexoFull> procesarAnexos(RegistroSir registroSir, List<CamposNTI> camposNTIs) throws Exception {
 
 
         List<AnexoFull> anexos = new ArrayList<AnexoFull>();
         HashMap<String,AnexoFull> mapAnexosFull = new HashMap<String, AnexoFull>();
 
         //Aqui buscamos los camposNTI del anexoSir con el que se corresponde para pasarlo al método transformarAnexo
-        for (AnexoSir anexoSir : asientoRegistralSir.getAnexos()) {
+        for (AnexoSir anexoSir : registroSir.getAnexos()) {
             for (CamposNTI cnti : camposNTIs) {
                 if (anexoSir.getId().equals(cnti.getId())) {
-                    AnexoFull anexoFull = transformarAnexo(anexoSir, asientoRegistralSir.getEntidad().getId(), mapAnexosFull, cnti);
+                    AnexoFull anexoFull = transformarAnexo(anexoSir, registroSir.getEntidad().getId(), mapAnexosFull, cnti);
                     mapAnexosFull.put(anexoSir.getIdentificadorFichero(), anexoFull);
                 }
             }

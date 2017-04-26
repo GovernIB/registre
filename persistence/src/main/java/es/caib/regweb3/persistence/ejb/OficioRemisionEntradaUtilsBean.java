@@ -453,6 +453,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         oficioRemision.setEstado(RegwebConstantes.OFICIO_INTERNO);
         oficioRemision.setOficina(oficinaActiva);
         oficioRemision.setFecha(new Date());
+        oficioRemision.setFechaEstado(new Date());
         oficioRemision.setRegistrosEntrada(registrosEntrada);
         oficioRemision.setUsuarioResponsable(usuarioEntidad);
         oficioRemision.setLibro(new Libro(idLibro));

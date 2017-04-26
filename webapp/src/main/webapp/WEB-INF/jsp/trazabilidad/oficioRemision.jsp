@@ -68,7 +68,7 @@
                           oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR ||
                           oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO_ERROR}">
                 <p>
-                    <small><i class="fa fa-comment"></i> <strong><spring:message code="asientoRegistralSir.descripcionError"/>:</strong> ${oficioRemision.descripcionError}</small>
+                    <small><i class="fa fa-comment"></i> <strong><spring:message code="registroSir.descripcionError"/>:</strong> ${oficioRemision.descripcionError}</small>
                 </p>
 
             </c:if>
@@ -80,7 +80,7 @@
             </p>
             <%--Identificador intercambio--%>
             <p>
-                <small><i class="fa fa-qrcode"></i> <strong><spring:message code="asientoRegistralSir.identificadorIntercambio"/>:</strong> ${oficioRemision.identificadorIntercambio}</small>
+                <small><i class="fa fa-qrcode"></i> <strong><spring:message code="registroSir.identificadorIntercambio"/>:</strong> ${oficioRemision.identificadorIntercambio}</small>
             </p>
         </c:if>
 

@@ -1,6 +1,6 @@
 package es.caib.regweb3.sir.ejb;
 
-import es.caib.regweb3.model.AsientoRegistralSir;
+import es.caib.regweb3.model.RegistroSir;
 import es.caib.regweb3.sir.core.excepcion.SIRException;
 import es.caib.regweb3.sir.core.model.Errores;
 import es.caib.regweb3.sir.core.model.TipoMensaje;
@@ -25,22 +25,22 @@ public class MensajeBean implements MensajeLocal {
 
     public final Logger log = Logger.getLogger(getClass());
 
-    public Sicres3XML sicres3XML = new Sicres3XML();
+    private Sicres3XML sicres3XML = new Sicres3XML();
 
 
     /**
      * Envía un mensaje de control de confirmación.
      *
-     * @param asientoRegistralSir Información del asiento registral.
+     * @param numeroRegistro Información del RegistroSir
      */
-    public void enviarMensajeConfirmacion(AsientoRegistralSir asientoRegistralSir, String numeroRegistro) {
+    public void enviarMensajeConfirmacion(RegistroSir registroSir, String numeroRegistro) {
 
-        log.info("Enviando Mensaje de confirmación del asiento: " + asientoRegistralSir.getIdentificadorIntercambio());
+        log.info("Enviando Mensaje de confirmación del RegistroSir: " + registroSir.getIdentificadorIntercambio());
 
         Mensaje confirmacion = new Mensaje();
-        confirmacion.setCodigoEntidadRegistralOrigen(asientoRegistralSir.getCodigoEntidadRegistralDestino());
-        confirmacion.setCodigoEntidadRegistralDestino(asientoRegistralSir.getCodigoEntidadRegistralInicio());
-        confirmacion.setIdentificadorIntercambio(asientoRegistralSir.getIdentificadorIntercambio());
+        confirmacion.setCodigoEntidadRegistralOrigen(registroSir.getCodigoEntidadRegistralDestino());
+        confirmacion.setCodigoEntidadRegistralDestino(registroSir.getCodigoEntidadRegistralInicio());
+        confirmacion.setIdentificadorIntercambio(registroSir.getIdentificadorIntercambio());
         confirmacion.setTipoMensaje(TipoMensaje.CONFIRMACION);
         confirmacion.setDescripcionMensaje(TipoMensaje.CONFIRMACION.getName());
         confirmacion.setNumeroRegistroEntradaDestino(numeroRegistro);
@@ -54,7 +54,7 @@ public class MensajeBean implements MensajeLocal {
     /**
      * Envía un mensaje de control ACK.
      *
-     * @param ficheroIntercambio Información del asiento registral.
+     * @param ficheroIntercambio Información del RegistroSir.
      */
     public void enviarACK(FicheroIntercambio ficheroIntercambio) {
 
@@ -104,7 +104,7 @@ public class MensajeBean implements MensajeLocal {
 
     }
 
-    protected void enviarMensaje(Mensaje mensaje) {
+    private void enviarMensaje(Mensaje mensaje) {
 
         sicres3XML.validarMensaje(mensaje);
 
@@ -142,7 +142,7 @@ public class MensajeBean implements MensajeLocal {
      * @return
      * @throws Exception
      */
-    public WS_SIR7_PortType getWS_SIR7() throws Exception {
+    private WS_SIR7_PortType getWS_SIR7() throws Exception {
         WS_SIR7ServiceLocator locator = new WS_SIR7ServiceLocator();
         URL url = new URL(Configuracio.getSirServerBase() + "/WS_SIR7");
 

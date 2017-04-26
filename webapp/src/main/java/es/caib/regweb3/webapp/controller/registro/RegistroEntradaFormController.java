@@ -456,7 +456,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             }
 
         }catch (Exception e){
-            log.info("Error al rectificar el asiento");
+            log.info("Error al rectificar el registro");
             e.printStackTrace();
             Mensaje.saveMessageError(request, getMessage("registro.rectificar.error"));
         }

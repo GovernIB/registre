@@ -69,7 +69,7 @@ public class AnexoSirBean extends BaseEjbJPA<AnexoSir, Long> implements AnexoSir
     @Override
     public Integer eliminarByEntidad(Long idEntidad) throws Exception{
 
-        List<?> result = em.createQuery("Select distinct(a.id) from AnexoSir as a where a.idAsientoRegistralSir.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        List<?> result = em.createQuery("Select distinct(a.id) from AnexoSir as a where a.registroSir.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
         Integer total = result.size();
 
         if(result.size() > 0){

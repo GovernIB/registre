@@ -69,7 +69,7 @@ public class InteresadoSirBean extends BaseEjbJPA<InteresadoSir, Long> implement
     @Override
     public Integer eliminarByEntidad(Long idEntidad) throws Exception{
 
-        List<?> result = em.createQuery("Select distinct(i.id) from InteresadoSir as i where i.idAsientoRegistralSir.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        List<?> result = em.createQuery("Select distinct(i.id) from InteresadoSir as i where i.registroSir.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
         Integer total = result.size();
 
         if(result.size() > 0){

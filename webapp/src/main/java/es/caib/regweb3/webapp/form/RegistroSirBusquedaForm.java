@@ -1,6 +1,6 @@
 package es.caib.regweb3.webapp.form;
 
-import es.caib.regweb3.model.AsientoRegistralSir;
+import es.caib.regweb3.model.RegistroSir;
 
 /**
  * Created by Fundació BIT.
@@ -8,27 +8,27 @@ import es.caib.regweb3.model.AsientoRegistralSir;
  * @author earrivi
  * Date: 16/06/16
  */
-public class AsientoRegistralSirBusquedaForm {
+public class RegistroSirBusquedaForm {
 
-    private AsientoRegistralSir asientoRegistralSir;
+    private RegistroSir registroSir;
     private Integer pageNumber;
     private Integer anyo;
     private String estado;
 
 
-    public AsientoRegistralSirBusquedaForm() {}
+    public RegistroSirBusquedaForm() {}
 
-    public AsientoRegistralSirBusquedaForm(AsientoRegistralSir asientoRegistralSir, Integer pageNumber) {
-        this.asientoRegistralSir = asientoRegistralSir;
+    public RegistroSirBusquedaForm(RegistroSir registroSir, Integer pageNumber) {
+        this.registroSir = registroSir;
         this.pageNumber = pageNumber;
     }
 
-    public AsientoRegistralSir getAsientoRegistralSir() {
-        return asientoRegistralSir;
+    public RegistroSir getRegistroSir() {
+        return registroSir;
     }
 
-    public void setAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir) {
-        this.asientoRegistralSir = asientoRegistralSir;
+    public void setRegistroSir(RegistroSir registroSir) {
+        this.registroSir = registroSir;
     }
 
     public Integer getPageNumber() {

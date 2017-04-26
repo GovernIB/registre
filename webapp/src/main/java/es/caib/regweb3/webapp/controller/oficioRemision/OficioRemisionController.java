@@ -502,12 +502,12 @@ public class OficioRemisionController extends BaseController {
 
             } catch (SIRException s) {
                 log.error(" Error enviant a SIR: " + s.getMessage(), s);
-                Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.error.envio"));
+                Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
                 return new ModelAndView("redirect:/oficioRemision/entradasPendientesRemision");
 
             } catch (I18NException e) {
                 e.printStackTrace();
-                Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.error.envio"));
+                Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
                 return new ModelAndView("redirect:/oficioRemision/entradasPendientesRemision");
             }
 
@@ -557,12 +557,12 @@ public class OficioRemisionController extends BaseController {
 
             } catch (SIRException s) {
                 log.error(" Error enviant a SIR: " + s.getMessage(), s);
-                Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.error.envio"));
+                Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
                 return new ModelAndView("redirect:/oficioRemision/salidasPendientesRemision");
 
             } catch (I18NException e) {
                 e.printStackTrace();
-                Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.error.envio"));
+                Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
                 return new ModelAndView("redirect:/oficioRemision/salidasPendientesRemision");
             }
         }

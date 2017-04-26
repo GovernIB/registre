@@ -134,12 +134,12 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Trazabilidad> getByAsientoRegistralSir(Long idAsientoRegistralSir) throws Exception {
+    public List<Trazabilidad> getByRegistroSir(Long idRegistroSir) throws Exception {
 
         Query q = em.createQuery("Select DISTINCT trazabilidad from Trazabilidad as trazabilidad " +
-                "where trazabilidad.asientoRegistralSir.id = :idAsientoRegistralSir order by trazabilidad.fecha");
+                "where trazabilidad.registroSir.id = :registroSir order by trazabilidad.fecha");
 
-        q.setParameter("idAsientoRegistralSir", idAsientoRegistralSir);
+        q.setParameter("registroSir", idRegistroSir);
 
         return q.getResultList();
     }
@@ -171,11 +171,13 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
     public Integer eliminarByEntidad(Long idEntidad) throws Exception{
 
         List<?> trazabilidades =  em.createQuery("Select id from Trazabilidad where oficioRemision.usuarioResponsable.entidad.id=:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
-        List<?> trazabilidadesSir =  em.createQuery("Select id from Trazabilidad where asientoRegistralSir.entidad.id=:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        List<?> trazabilidadesSir =  em.createQuery("Select id from Trazabilidad where registroSir.entidad.id=:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        List<?> trazabilidadesRectificacion =  em.createQuery("Select id from Trazabilidad where registroEntradaOrigen.libro.organismo.entidad.id=:idEntidad and tipo = :rectificacion").setParameter("idEntidad",idEntidad).setParameter("rectificacion",RegwebConstantes.TRAZABILIDAD_RECTIFICACION).getResultList();
         Integer total = trazabilidades.size() + trazabilidadesSir.size();
 
         eliminarTrazabilidades(trazabilidades);
         eliminarTrazabilidades(trazabilidadesSir);
+        eliminarTrazabilidades(trazabilidadesRectificacion);
 
         return total;
 

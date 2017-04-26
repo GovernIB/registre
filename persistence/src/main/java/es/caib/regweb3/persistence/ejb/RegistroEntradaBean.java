@@ -785,7 +785,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             Trazabilidad trazabilidad = new Trazabilidad(RegwebConstantes.TRAZABILIDAD_RECTIFICACION);
             trazabilidad.setRegistroEntradaOrigen(getReference(idRegistro));
             trazabilidad.setRegistroEntradaDestino(registroEntrada);
-            trazabilidad.setAsientoRegistralSir(null);
+            trazabilidad.setRegistroSir(null);
             trazabilidad.setOficioRemision(null);
             trazabilidad.setRegistroSalida(null);
             trazabilidad.setFecha(new Date());

@@ -20,7 +20,7 @@
             <div class="col-xs-12">
                 <ol class="breadcrumb">
                     <li><a <c:if test="${oficinaActiva.sir}">class="azul"</c:if> href="<c:url value="/inici"/>"><i class="fa fa-home"></i> ${oficinaActiva.denominacion}</a></li>
-                    <li class="active"><i class="fa fa-list-ul"></i> <strong><spring:message code="asientoRegistralSir.asientosRegistralesSir"/></strong></li>
+                    <li class="active"><i class="fa fa-list-ul"></i> <strong><spring:message code="registroSir.registrosSir"/></strong></li>
                 </ol>
             </div>
         </div><!-- /.row -->
@@ -36,15 +36,15 @@
                 <div class="panel panel-success">
 
                     <div class="panel-heading">
-                        <h3 class="panel-title"><i class="fa fa-search"></i><strong><spring:message code="asientoRegistralSir.buscador"/></strong> </h3>
+                        <h3 class="panel-title"><i class="fa fa-search"></i><strong><spring:message code="registroSir.buscador"/></strong> </h3>
                     </div>
 
-                    <form:form modelAttribute="asientoRegistralSirBusqueda" method="post" cssClass="form-horizontal">
+                    <form:form modelAttribute="registroSirBusqueda" method="post" cssClass="form-horizontal">
                         <form:hidden path="pageNumber"/>
 
                         <div class="panel-body">
                             <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left align-right"><spring:message code="asientoRegistralSir.anyRegistro"/></div>
+                                <div class="col-xs-4 pull-left align-right"><spring:message code="registroSir.anyRegistro"/></div>
                                 <div class="col-xs-8">
                                     <form:select path="anyo" cssClass="chosen-select">
                                         <form:option value="" label="..."/>
@@ -55,24 +55,24 @@
                                 </div>
                             </div>
                             <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left align-right"><spring:message code="asientoRegistralSir.numeroRegistro"/></div>
+                                <div class="col-xs-4 pull-left align-right"><spring:message code="registroSir.numeroRegistro"/></div>
                                 <div class="col-xs-8">
-                                    <form:input path="asientoRegistralSir.numeroRegistro" cssClass="form-control" maxlength="10"/>
+                                    <form:input path="registroSir.numeroRegistro" cssClass="form-control" maxlength="10"/>
                                 </div>
                             </div>
                             <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left align-right"><spring:message code="asientoRegistralSir.extracto"/></div>
+                                <div class="col-xs-4 pull-left align-right"><spring:message code="registroSir.extracto"/></div>
                                 <div class="col-xs-8">
-                                    <form:input path="asientoRegistralSir.resumen" cssClass="form-control" maxlength="10"/>
+                                    <form:input path="registroSir.resumen" cssClass="form-control" maxlength="10"/>
                                 </div>
                             </div>
                             <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left align-right"><spring:message code="asientoRegistralSir.estado"/></div>
+                                <div class="col-xs-4 pull-left align-right"><spring:message code="registroSir.estado"/></div>
                                 <div class="col-xs-8">
                                     <form:select path="estado" cssClass="chosen-select">
                                         <form:option value="" label="..."/>
                                         <c:forEach var="estado" items="${estados}">
-                                            <form:option value="${estado}"><spring:message code="asientoRegistralSir.estado.${estado}"/></form:option>
+                                            <form:option value="${estado}"><spring:message code="registroSir.estado.${estado}"/></form:option>
                                         </c:forEach>
                                     </form:select>
                                 </div>
@@ -91,7 +91,7 @@
                                 <c:if test="${empty paginacion.listado}">
                                     <div class="alert alert-warning alert-dismissable">
                                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                                        <spring:message code="regweb.busqueda.vacio"/> <strong><spring:message code="asientoRegistralSir.asientoRegistralSir"/></strong>
+                                        <spring:message code="regweb.busqueda.vacio"/> <strong><spring:message code="registroSir.registroSir"/></strong>
                                     </div>
                                 </c:if>
 
@@ -99,10 +99,10 @@
 
                                     <div class="alert-grey">
                                         <c:if test="${paginacion.totalResults == 1}">
-                                            <spring:message code="regweb.resultado"/> <strong>${paginacion.totalResults}</strong> <spring:message code="asientoRegistralSir.asientoRegistralSir"/>
+                                            <spring:message code="regweb.resultado"/> <strong>${paginacion.totalResults}</strong> <spring:message code="registroSir.registroSir"/>
                                         </c:if>
                                         <c:if test="${paginacion.totalResults > 1}">
-                                            <spring:message code="regweb.resultados"/> <strong>${paginacion.totalResults}</strong> <spring:message code="asientoRegistralSir.asientoRegistralSir"/>
+                                            <spring:message code="regweb.resultados"/> <strong>${paginacion.totalResults}</strong> <spring:message code="registroSir.registroSir"/>
                                         </c:if>
 
                                         <p class="pull-right"><spring:message code="regweb.pagina"/> <strong>${paginacion.currentIndex}</strong> de ${paginacion.totalPages}</p>
@@ -122,40 +122,40 @@
                                             </colgroup>
                                             <thead>
                                             <tr>
-                                                <th><spring:message code="asientoRegistralSir.numeroRegistro"/></th>
-                                                <th><spring:message code="asientoRegistralSir.fechaRegistro"/></th>
-                                                <th><spring:message code="asientoRegistralSir.oficinaOrigen"/></th>
-                                                <th><spring:message code="asientoRegistralSir.oficinaDestino"/></th>
-                                                <th><spring:message code="asientoRegistralSir.estado"/></th>
-                                                <th><spring:message code="asientoRegistralSir.extracto"/></th>
+                                                <th><spring:message code="registroSir.numeroRegistro"/></th>
+                                                <th><spring:message code="registroSir.fechaRegistro"/></th>
+                                                <th><spring:message code="registroSir.oficinaOrigen"/></th>
+                                                <th><spring:message code="registroSir.oficinaDestino"/></th>
+                                                <th><spring:message code="registroSir.estado"/></th>
+                                                <th><spring:message code="registroSir.extracto"/></th>
                                                 <th class="center"><spring:message code="regweb.acciones"/></th>
                                             </tr>
                                             </thead>
 
                                             <tbody>
-                                            <c:forEach var="asientoRegistralSir" items="${paginacion.listado}" varStatus="status">
+                                            <c:forEach var="registroSir" items="${paginacion.listado}" varStatus="status">
                                                 <tr>
-                                                    <td> ${asientoRegistralSir.numeroRegistro}</td>
-                                                    <td><fmt:formatDate value="${asientoRegistralSir.fechaRegistro}" pattern="dd/MM/yyyy"/></td>
-                                                    <td>${asientoRegistralSir.decodificacionEntidadRegistralOrigen}</td>
-                                                    <td>${asientoRegistralSir.decodificacionEntidadRegistralDestino}</td>
+                                                    <td> ${registroSir.numeroRegistro}</td>
+                                                    <td><fmt:formatDate value="${registroSir.fechaRegistro}" pattern="dd/MM/yyyy"/></td>
+                                                    <td>${registroSir.decodificacionEntidadRegistralOrigen}</td>
+                                                    <td>${registroSir.decodificacionEntidadRegistralDestino}</td>
                                                     <td>
-                                                        <c:if test="${asientoRegistralSir.estado == 'PENDIENTE_ENVIO' || asientoRegistralSir.estado == 'DEVUELTO' || asientoRegistralSir.estado == 'RECIBIDO' || asientoRegistralSir.estado == 'REINTENTAR_VALIDACION'}">
-                                                            <span class="label label-warning"><spring:message code="asientoRegistralSir.estado.${asientoRegistralSir.estado}" /></span>
+                                                        <c:if test="${registroSir.estado == 'PENDIENTE_ENVIO' || registroSir.estado == 'DEVUELTO' || registroSir.estado == 'RECIBIDO' || registroSir.estado == 'REINTENTAR_VALIDACION'}">
+                                                            <span class="label label-warning"><spring:message code="registroSir.estado.${registroSir.estado}" /></span>
                                                         </c:if>
 
-                                                        <c:if test="${asientoRegistralSir.estado == 'ENVIADO' || asientoRegistralSir.estado == 'ENVIADO_Y_ACK' || asientoRegistralSir.estado == 'ACEPTADO' || asientoRegistralSir.estado == 'REENVIADO' || asientoRegistralSir.estado == 'REENVIADO_Y_ACK' || asientoRegistralSir.estado == 'VALIDADO'}">
-                                                            <span class="label label-success"><spring:message code="asientoRegistralSir.estado.${asientoRegistralSir.estado}" /></span>
+                                                        <c:if test="${registroSir.estado == 'ENVIADO' || registroSir.estado == 'ENVIADO_Y_ACK' || registroSir.estado == 'ACEPTADO' || registroSir.estado == 'REENVIADO' || registroSir.estado == 'REENVIADO_Y_ACK' || registroSir.estado == 'VALIDADO'}">
+                                                            <span class="label label-success"><spring:message code="registroSir.estado.${registroSir.estado}" /></span>
                                                         </c:if>
 
-                                                        <c:if test="${asientoRegistralSir.estado == 'ENVIADO_Y_ERROR' || asientoRegistralSir.estado == 'REENVIADO_Y_ERROR' || asientoRegistralSir.estado == 'ANULADO' || asientoRegistralSir.estado == 'RECHAZADO' || asientoRegistralSir.estado == 'RECHAZADO_Y_ACK' ||asientoRegistralSir.estado == 'RECHAZADO_Y_ERROR'}">
-                                                            <span class="label label-danger"><spring:message code="asientoRegistralSir.estado.${asientoRegistralSir.estado}" /></span>
+                                                        <c:if test="${registroSir.estado == 'ENVIADO_Y_ERROR' || registroSir.estado == 'REENVIADO_Y_ERROR' || registroSir.estado == 'ANULADO' || registroSir.estado == 'RECHAZADO' || registroSir.estado == 'RECHAZADO_Y_ACK' ||registroSir.estado == 'RECHAZADO_Y_ERROR'}">
+                                                            <span class="label label-danger"><spring:message code="registroSir.estado.${registroSir.estado}" /></span>
                                                         </c:if>
                                                     </td>
-                                                    <td>${asientoRegistralSir.resumen}</td>
+                                                    <td>${registroSir.resumen}</td>
 
                                                     <td class="center">
-                                                        <a class="btn btn-info btn-sm" href="<c:url value="/asientoRegistralSir/${asientoRegistralSir.id}/detalle"/>" title="<spring:message code="asientoRegistralSir.detalle"/>"><span class="fa fa-eye"></span></a>
+                                                        <a class="btn btn-info btn-sm" href="<c:url value="/registroSir/${registroSir.id}/detalle"/>" title="<spring:message code="registroSir.detalle"/>"><span class="fa fa-eye"></span></a>
                                                     </td>
                                                 </tr>
                                             </c:forEach>
@@ -164,7 +164,7 @@
 
                                         <!-- Paginacion -->
                                         <c:import url="../modulos/paginacionBusqueda.jsp">
-                                            <c:param name="entidad" value="asientoRegistralSir"/>
+                                            <c:param name="entidad" value="registroSir"/>
                                         </c:import>
 
                                     </div>

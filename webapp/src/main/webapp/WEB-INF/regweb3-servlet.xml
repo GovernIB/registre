@@ -146,10 +146,10 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
             <bean class="es.caib.regweb3.webapp.interceptor.AdminInterceptor"/>
         </mvc:interceptor>
 
-        <!--Interceptor para el AsientoRegistralSir-->
+        <!--Interceptor para el RegistroSir-->
         <mvc:interceptor>
-            <mvc:mapping path="/asientoRegistralSir/**"/>
-            <bean class="es.caib.regweb3.webapp.interceptor.AsientoRegistralSirInterceptor"/>
+            <mvc:mapping path="/registroSir/**"/>
+            <bean class="es.caib.regweb3.webapp.interceptor.RegistroSirInterceptor"/>
         </mvc:interceptor>
 
         <!-- Configuración de Idioma -->

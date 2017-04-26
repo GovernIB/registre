@@ -16,10 +16,10 @@
                     <%--Recibido via SIR--%>
                     <c:if test="${trazabilidad.oficioRemision == null}">
 
-                        <%--ASIENTO REGISTRAL SIR--%>
+                        <%--REGISTRO SIR--%>
                         <li class="timeline-inverted">
-                            <c:set var="asientoRegistralSir" value="${trazabilidad.asientoRegistralSir}" scope="request"/>
-                            <c:import url="../trazabilidad/asientoRegistralSir.jsp"/>
+                            <c:set var="registroSir" value="${trazabilidad.registroSir}" scope="request"/>
+                            <c:import url="../trazabilidad/registroSir.jsp"/>
                         </li>
 
                         <%--REGISTRO ENTRADA DESTINO--%>

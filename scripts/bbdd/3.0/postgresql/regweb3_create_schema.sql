@@ -37,7 +37,7 @@
         VAL_OCSP_CERTIFICADO bytea,
         VALIDEZ_DOCUMENTO varchar(2),
         ANEXO int8,
-        ASIENTO_REGISTRAL int8,
+        REGISTRO_SIR int8,
         primary key (ID)
     );
 
@@ -46,47 +46,6 @@
         MIME varchar(255) not null,
         NOMBRE varchar(255) not null,
         TAMANO int8 not null,
-        primary key (ID)
-    );
-
-    create table RWE_ASIENTO_REGISTRAL_SIR (
-        ID int8 not null,
-        APLICACION varchar(4),
-        COD_ASUNTO varchar(16),
-        COD_ENT_REG_DEST varchar(21) not null,
-        COD_ENT_REG_INI varchar(21) not null,
-        COD_ENT_REG_ORI varchar(21) not null,
-        COD_UNI_TRA_DEST varchar(21),
-        COD_UNI_TRA_ORI varchar(21),
-        CONTACTO_USUARIO varchar(160),
-        DEC_ENT_REG_DEST varchar(80),
-        DEC_ENT_REG_INI varchar(80),
-        DEC_ENT_REG_ORI varchar(80),
-        DEC_T_ANOTACION varchar(80),
-        DEC_UNI_TRA_DEST varchar(80),
-        DEC_UNI_TRA_ORI varchar(80),
-        DOC_FISICA varchar(1) not null,
-        ESTADO int4 not null,
-        EXPONE varchar(4000),
-        FECHAR_EGISTRO timestamp not null,
-        fechaRegistroInicial timestamp,
-        ID_INTERCAMBIO varchar(33) not null,
-        INDICADOR_PRUEBA int4 not null,
-        NOMBRE_USUARIO varchar(80),
-        NUM_EXPEDIENTE varchar(80),
-        NUMERO_REGISTRO varchar(20) not null,
-        numeroRegistroInicial varchar(255),
-        NUM_TRANSPORTE varchar(20),
-        OBSERVACIONES varchar(50),
-        REF_EXTERNA varchar(16),
-        RESUMEN varchar(240) not null,
-        SOLICITA varchar(4000),
-        TIMESTAMP_REGISTRO bytea,
-        timestampRegistroInicial bytea,
-        TIPO_ANOTACION varchar(2) not null,
-        TIPO_REGISTRO int4 not null,
-        TIPO_TRANSPORTE varchar(2),
-        ENTIDAD int8 not null,
         primary key (ID)
     );
 
@@ -313,7 +272,7 @@
         TELEFONO_REPRESENTANTE varchar(20),
         T_DOCUMENTO_INTERESADO varchar(1),
         T_DOCUMENTO_REPRESENTANTE varchar(1),
-        ASIENTO_REGISTRAL int8,
+        REGISTRO_SIR int8,
         primary key (ID)
     );
 
@@ -608,6 +567,52 @@
         primary key (ID)
     );
 
+    create table RWE_REGISTRO_SIR (
+        ID int8 not null,
+        APLICACION varchar(4),
+        COD_ASUNTO varchar(16),
+        COD_ENT_REG_DEST varchar(21) not null,
+        COD_ENT_REG_INI varchar(21) not null,
+        COD_ENT_REG_ORI varchar(21) not null,
+        COD_ERROR varchar(255),
+        COD_UNI_TRA_DEST varchar(21),
+        COD_UNI_TRA_ORI varchar(21),
+        CONTACTO_USUARIO varchar(160),
+        DEC_ENT_REG_DEST varchar(80),
+        DEC_ENT_REG_INI varchar(80),
+        DEC_ENT_REG_ORI varchar(80),
+        DEC_T_ANOTACION varchar(80),
+        DEC_UNI_TRA_DEST varchar(80),
+        DEC_UNI_TRA_ORI varchar(80),
+        DESC_ERROR varchar(2000),
+        DOC_FISICA varchar(1) not null,
+        ESTADO int4 not null,
+        EXPONE varchar(4000),
+        FECHA_ESTADO timestamp,
+        FECHA_RECEPCION timestamp,
+        FECHAR_EGISTRO timestamp not null,
+        fechaRegistroInicial timestamp,
+        ID_INTERCAMBIO varchar(33) not null,
+        INDICADOR_PRUEBA int4 not null,
+        NOMBRE_USUARIO varchar(80),
+        NUM_EXPEDIENTE varchar(80),
+        NUMERO_REGISTRO varchar(20) not null,
+        numeroRegistroInicial varchar(255),
+        REINTENTOS int4,
+        NUM_TRANSPORTE varchar(20),
+        OBSERVACIONES varchar(50),
+        REF_EXTERNA varchar(16),
+        RESUMEN varchar(240) not null,
+        SOLICITA varchar(4000),
+        TIMESTAMP_REGISTRO bytea,
+        timestampRegistroInicial bytea,
+        TIPO_ANOTACION varchar(2) not null,
+        TIPO_REGISTRO int4 not null,
+        TIPO_TRANSPORTE varchar(2),
+        ENTIDAD int8 not null,
+        primary key (ID)
+    );
+
     create table RWE_RELORGOFI (
         IDORGANISMO int8,
         IDOFICINA int8,
@@ -660,11 +665,11 @@
         ID int8 not null,
         FECHA timestamp not null,
         tipo int8 not null,
-        ASIENTO_REGISTRAL_SIR int8,
         OFICIO_REMISION int8,
         REGENT_DESTINO int8,
         REGENT_ORIGEN int8,
         REGISTRO_SALIDA int8,
+        REGISTRO_SIR int8,
         primary key (ID)
     );
 
@@ -729,19 +734,14 @@
         references RWE_TIPODOCUMENTAL;
 
     alter table RWE_ANEXO_SIR
-        add constraint RWE_ANEXOSIR_ASIREG_FK
-        foreign key (ASIENTO_REGISTRAL)
-        references RWE_ASIENTO_REGISTRAL_SIR;
-
-    alter table RWE_ANEXO_SIR
         add constraint RWE_ANEXOSIR_ANEXO_FK
         foreign key (ANEXO)
         references RWE_ARCHIVO;
 
-    alter table RWE_ASIENTO_REGISTRAL_SIR
-        add constraint RWE_ARS_ENTIDAD_FK
-        foreign key (ENTIDAD)
-        references RWE_ENTIDAD;
+    alter table RWE_ANEXO_SIR
+        add constraint RWE_ANEXOSIR_REGSIR_FK
+        foreign key (REGISTRO_SIR)
+        references RWE_REGISTRO_SIR;
 
     create index RWE_CATCOM_CATPAI_FK_I on RWE_CATCOMUNIDADAUTONOMA (PAIS);
 
@@ -900,9 +900,9 @@
         references RWE_CATLOCALIDAD;
 
     alter table RWE_INTERESADO_SIR
-        add constraint RWE_INTERESADOSIR_ASIREG_FK
-        foreign key (ASIENTO_REGISTRAL)
-        references RWE_ASIENTO_REGISTRAL_SIR;
+        add constraint RWE_INTERESADOSIR_REGSIR_FK
+        foreign key (REGISTRO_SIR)
+        references RWE_REGISTRO_SIR;
 
     create index RWE_LIBRO_CONSAL_FK_I on RWE_LIBRO (CONTADOR_SALIDA);
 
@@ -1288,6 +1288,11 @@
         foreign key (LIBRO)
         references RWE_LIBRO;
 
+    alter table RWE_REGISTRO_SIR
+        add constraint RWE_RES_ENTIDAD_FK
+        foreign key (ENTIDAD)
+        references RWE_ENTIDAD;
+
     alter table RWE_RELORGOFI
         add constraint RWE_RELORGOFI_ORGANISMO_FK
         foreign key (IDORGANISMO)
@@ -1334,11 +1339,6 @@
         references RWE_ENTIDAD;
 
     alter table RWE_TRAZABILIDAD
-        add constraint RWE_TRAZAB_ASR_FK
-        foreign key (ASIENTO_REGISTRAL_SIR)
-        references RWE_ASIENTO_REGISTRAL_SIR;
-
-    alter table RWE_TRAZABILIDAD
         add constraint RWE_TRAZAB_REGSAL_FK
         foreign key (REGISTRO_SALIDA)
         references RWE_REGISTRO_SALIDA;
@@ -1357,6 +1357,11 @@
         add constraint RWE_TRAZAB_REGENTD_FK
         foreign key (REGENT_DESTINO)
         references RWE_REGISTRO_ENTRADA;
+
+    alter table RWE_TRAZABILIDAD
+        add constraint RWE_TRAZAB_REGSIR_FK
+        foreign key (REGISTRO_SIR)
+        references RWE_REGISTRO_SIR;
 
     alter table RWE_TRA_CODIGOASUNTO
         add constraint RWE_CODASUNTO_TRACODASUNTO_FK

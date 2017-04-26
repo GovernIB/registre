@@ -1,6 +1,6 @@
 package es.caib.regweb3.sir.ejb;
 
-import es.caib.regweb3.model.AsientoRegistralSir;
+import es.caib.regweb3.model.RegistroSir;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.core.utils.Mensaje;
 
@@ -15,10 +15,10 @@ public interface MensajeLocal {
 
     /**
      *
-     * @param asientoRegistralSir
+     * @param registroSir
      * @param numeroRegistro
      */
-    public void enviarMensajeConfirmacion(AsientoRegistralSir asientoRegistralSir, String numeroRegistro);
+    public void enviarMensajeConfirmacion(RegistroSir registroSir, String numeroRegistro);
 
     /**
      *

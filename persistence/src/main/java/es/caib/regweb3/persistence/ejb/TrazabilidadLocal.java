@@ -60,12 +60,12 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
     public Trazabilidad getByOficioRegistroSalida(Long idOficioRemision, Long idRegistroSalida) throws Exception;
 
     /**
-     * Obtiene las Trazabilidades de un AsientoRegistralSir
-     * @param idAsientoRegistralSir
+     * Obtiene las Trazabilidades de un RegistroSir
+     * @param idRegistroSir
      * @return
      * @throws Exception
      */
-    public List<Trazabilidad> getByAsientoRegistralSir(Long idAsientoRegistralSir) throws Exception;
+    public List<Trazabilidad> getByRegistroSir(Long idRegistroSir) throws Exception;
 
     /**
      * Elimina las Trazabilidades de una Entidad

@@ -29,8 +29,8 @@ public class InicioController extends BaseController{
     @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
     private RegistroEntradaLocal registroEntradaEjb;
 
-    @EJB(mappedName = "regweb3/AsientoRegistralSirEJB/local")
-    private AsientoRegistralSirLocal asientosRegistralSirEjb;
+    @EJB(mappedName = "regweb3/RegistroSirEJB/local")
+    private RegistroSirLocal registroSirEjb;
 
     @EJB(mappedName = "regweb3/DescargaEJB/local")
     private DescargaLocal descargaEjb;
@@ -80,13 +80,13 @@ public class InicioController extends BaseController{
                     mav.addObject("organismosOficioRemisionSalida", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemision(oficinaActiva.getId(), librosRegistroSalida, getOrganismosOficioRemisionSalida(organismosOficinaActiva)));
                 }
 
-                /* Obtenemos los Asientos Registrales Sir pendientes de procesar */
+                /* Obtenemos los Registros Sir pendientes de procesar */
                 if(entidadActiva.getSir() && oficinaActiva.getSir()) {
                     Set<String> organismosSIR = getOrganismosSIRCodigo(request);
 
                     if (organismosSIR.size() > 0) {
-                        List<AsientoRegistralSir> asientosRegistralesSir = asientosRegistralSirEjb.getUltimosPendientesProcesar(organismosSIR, RegwebConstantes.REGISTROS_PANTALLA_INICIO);
-                        mav.addObject("asientosRegistralesSir", asientosRegistralesSir);
+                        List<RegistroSir> registrosSir = registroSirEjb.getUltimosPendientesProcesar(organismosSIR, RegwebConstantes.REGISTROS_PANTALLA_INICIO);
+                        mav.addObject("registrosSir", registrosSir);
                     }
                 }
 

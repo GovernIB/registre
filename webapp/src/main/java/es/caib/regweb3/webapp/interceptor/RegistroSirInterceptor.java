@@ -2,8 +2,8 @@ package es.caib.regweb3.webapp.interceptor;
 
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.Rol;
-import es.caib.regweb3.persistence.ejb.AsientoRegistralSirLocal;
 import es.caib.regweb3.persistence.ejb.PermisoLibroUsuarioLocal;
+import es.caib.regweb3.persistence.ejb.RegistroSirLocal;
 import es.caib.regweb3.persistence.ejb.UsuarioEntidadLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.Mensaje;
@@ -19,17 +19,17 @@ import javax.servlet.http.HttpSession;
 /**
  * Created by Fundació BIT.
  *
- * Interceptor para el AsientoRegistralSir
+ * Interceptor para el RegistroSir
  *
  * @author jpernia
  * Date: 5/12/14
  */
-public class AsientoRegistralSirInterceptor extends HandlerInterceptorAdapter {
+public class RegistroSirInterceptor extends HandlerInterceptorAdapter {
 
     protected final Logger log = Logger.getLogger(getClass());
 
-    @EJB(mappedName = "regweb3/AsientoRegistralSirEJB/local")
-    public AsientoRegistralSirLocal asientoRegistralSirEjb;
+    @EJB(mappedName = "regweb3/RegistroSirEJB/local")
+    public RegistroSirLocal registroSirEjb;
 
     @EJB(mappedName = "regweb3/PermisoLibroUsuarioEJB/local")
     public PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
@@ -62,25 +62,25 @@ public class AsientoRegistralSirInterceptor extends HandlerInterceptorAdapter {
                 return false;
             }
 
-            // Comprobaciones previas al detalle de un AsientoRegistralSir
+            // Comprobaciones previas al detalle de un RegistroSir
             if(url.contains("detalle")){
 
-                String idPreRegistro =  url.replace("/asientoRegistralSir/","").replace("/detalle", ""); //Obtenemos el id a partir de la url
+                String idPreRegistro =  url.replace("/registroSir/","").replace("/detalle", ""); //Obtenemos el id a partir de la url
 
-                /*AsientoRegistralSir asientoRegistralSir = asientoRegistralSirEjb.findById(Long.valueOf(idPreRegistro));
+                /*RegistroSir registroSir = registroSirEjb.findById(Long.valueOf(idPreRegistro));
 
                 // Comprobamos que el PreRegistro existe
-                if(asientoRegistralSir == null){
-                    log.info("Aviso: No existeix aquest asientoRegistralSir");
-                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.asientoRegistralSir.detalle"));
+                if(registroSir == null){
+                    log.info("Aviso: No existeix aquest registroSir");
+                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registroSir.detalle"));
                     response.sendRedirect("/regweb3/aviso");
                     return false;
                 }
 
                 // Comprobamos que el PreRegistro tiene como destino nuestra Oficina Activa
-                if(!asientoRegistralSir.getCodigoEntidadRegistralDestino().equals(oficinaActiva.getCodigo())){
+                if(!registroSir.getCodigoEntidadRegistralDestino().equals(oficinaActiva.getCodigo())){
                     log.info("Aviso: No és d'aquesta oficina");
-                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.asientoRegistralSir.detalle"));
+                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registroSir.detalle"));
                     response.sendRedirect("/regweb3/aviso");
                     return false;
                 }*/

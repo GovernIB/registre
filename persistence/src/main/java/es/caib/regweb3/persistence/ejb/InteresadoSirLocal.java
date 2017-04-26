@@ -17,7 +17,7 @@ import javax.ejb.Local;
 public interface InteresadoSirLocal extends BaseEjb<InteresadoSir, Long> {
 
     /**
-     * Elimina los AsientoRegistralSir de una Entidad
+     * Elimina los InteresadoSir de una Entidad
      * @param idEntidad
      * @return
      * @throws Exception

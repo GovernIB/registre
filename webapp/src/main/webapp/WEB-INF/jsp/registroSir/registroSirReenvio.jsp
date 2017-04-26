@@ -21,10 +21,10 @@
             <div class="col-xs-12">
                 <ol class="breadcrumb">
                     <li><a <c:if test="${oficinaActiva.sir}">class="azul"</c:if> href="<c:url value="/inici"/>"><i class="fa fa-home"></i> ${oficinaActiva.denominacion}</a></li>
-                    <li><a href="<c:url value="/asientoRegistralSir/list"/>"><i class="fa fa-list"></i> <spring:message
-                            code="asientoRegistralSir.listado"/></a></li>
+                    <li><a href="<c:url value="/registroSir/list"/>"><i class="fa fa-list"></i> <spring:message
+                            code="registroSir.listado"/></a></li>
                     <li class="active"><i class="fa fa-pencil-square-o"></i> <spring:message
-                            code="asientoRegistralSir.asientoRegistralSir"/> ${asientoRegistralSir.numeroRegistro}</li>
+                            code="registroSir.registroSir"/> ${registroSir.numeroRegistro}</li>
                 </ol>
             </div>
         </div><!-- Fin miga de pan -->
@@ -36,11 +36,11 @@
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-file-o"></i>
                             <strong><spring:message code="regweb.reenviar"/> <spring:message
-                                    code="asientoRegistralSir.asientoRegistralSir"/> ${asientoRegistralSir.numeroRegistro}</strong>
+                                    code="registroSir.registroSir"/> ${registroSir.numeroRegistro}</strong>
                         </h3>
                     </div>
                     <div class="panel-body">
-                        <c:url value="/asientoRegistralSir/reenviar/${asientoRegistralSir.id}" var="urlReenviar" scope="request"/>
+                        <c:url value="/registroSir/reenviar/${registroSir.id}" var="urlReenviar" scope="request"/>
                         <form:form modelAttribute="reenviarForm" method="post" action="${urlReenviar}" cssClass="form-horizontal" >
 
                             <form:hidden path="codigoOficina" value=""/>
@@ -48,13 +48,12 @@
                             <form:hidden path="codigoOrganismoResponsable" value=""/>
                             <form:hidden path="denominacionOrganismoResponsable" value=""/>
 
-
                             <!-- Buscador Oficina Destino -->
                             <div class="row">
                                 <div class="form-group col-xs-8">
 
                                     <div class="col-xs-3 pull-left etiqueta_regweb control-label text-right">
-                                        <label><span class="text-danger">*</span> <spring:message code="asientoRegistralSir.oficinaReenvio"/></label>
+                                        <label><span class="text-danger">*</span> <spring:message code="registroSir.oficinaReenvio"/></label>
                                     </div>
                                     <div class="col-xs-6" id="idDatosOficinaReenvio">
                                         <form:textarea path="datosOficinaReenvio" class="form-control" rows="3" disabled="true"/> <span class="errors"></span>

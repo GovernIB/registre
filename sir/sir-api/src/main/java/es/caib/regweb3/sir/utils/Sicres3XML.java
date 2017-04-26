@@ -136,25 +136,25 @@ public class Sicres3XML {
     }
 
 
-    public void validarAsientoRegistral(AsientoRegistralSir asiento) {
+    public void validarRegistroSir(RegistroSir registroSir) {
 
-        log.info("Llamada a validarAsientoRegistral");
+        log.info("Llamada a validarRegistroSir");
 
 
-        Assert.notNull(asiento, "La variable 'asiento' no puede ser null");
+        Assert.notNull(registroSir, "La variable 'registroSir' no puede ser null");
 
         // Comprobar los datos de origen
-        Assert.hasText(asiento.getCodigoEntidadRegistralOrigen(), "El campo 'codigoEntidadRegistralOrigen' no puede estar vacio");
-        Assert.hasText(asiento.getNumeroRegistro(), "El campo 'numeroRegistroEntrada' no puede estar vacio");
-        Assert.notNull(asiento.getFechaRegistro(), "El campo 'fechaEntrada' no puede ser null");
+        Assert.hasText(registroSir.getCodigoEntidadRegistralOrigen(), "El campo 'codigoEntidadRegistralOrigen' no puede estar vacio");
+        Assert.hasText(registroSir.getNumeroRegistro(), "El campo 'numeroRegistroEntrada' no puede estar vacio");
+        Assert.notNull(registroSir.getFechaRegistro(), "El campo 'fechaEntrada' no puede ser null");
 
         // Comprobar los datos de destino
-        Assert.hasText(asiento.getCodigoEntidadRegistralDestino(), "El campo 'codigoEntidadRegistralDestino' no puede estar vacio");
+        Assert.hasText(registroSir.getCodigoEntidadRegistralDestino(), "El campo 'codigoEntidadRegistralDestino' no puede estar vacio");
 
         // Comprobar los datos de los interesados
-        if (!CollectionUtils.isEmpty(asiento.getInteresados()) && StringUtils.isBlank(asiento
+        if (!CollectionUtils.isEmpty(registroSir.getInteresados()) && StringUtils.isBlank(registroSir
                 .getCodigoUnidadTramitacionOrigen())) {
-            for (InteresadoSir interesado : asiento.getInteresados()) {
+            for (InteresadoSir interesado : registroSir.getInteresados()) {
 
                 Assert.isTrue(
                         StringUtils.isNotBlank(interesado.getRazonSocialInteresado())
@@ -215,16 +215,16 @@ public class Sicres3XML {
         }
 
         // Comprobar los datos de asunto
-        Assert.hasText(asiento.getResumen(), "El campo 'resumen' no puede estar vacio");
+        Assert.hasText(registroSir.getResumen(), "El campo 'resumen' no puede estar vacio");
 
         // Comprobar los datos de los anexos
-        if (!CollectionUtils.isEmpty(asiento.getAnexos())) {
+        if (!CollectionUtils.isEmpty(registroSir.getAnexos())) {
 
             int numAdjuntos = 0; // Número de adjuntos: documentos de tipo
             // "02 - Documento Adjunto" que no son
             // firmas
 
-            for (AnexoSir anexo : asiento.getAnexos()) {
+            for (AnexoSir anexo : registroSir.getAnexos()) {
 
                 Assert.hasText(anexo.getNombreFichero(), "El campo 'nombreFichero' no puede estar vacio");
                 Assert.notNull(anexo.getTipoDocumento(), "El campo 'tipoDocumento' no puede ser null");
@@ -256,13 +256,13 @@ public class Sicres3XML {
         }
 
         // Comprobar los datos de internos o de control
-        Assert.hasText(asiento.getIdentificadorIntercambio(), "El campo 'identificadorIntercambio' no puede estar vacio");
-        Assert.notNull(asiento.getTipoRegistro(), "El campo 'tipoRegistro' no puede ser null");
-        Assert.notNull(asiento.getDocumentacionFisica(), "El campo 'documentacionFisica' no puede ser null");
-        Assert.notNull(asiento.getIndicadorPrueba(), "El campo 'indicadorPrueba' no puede ser null");
-        Assert.hasText(asiento.getCodigoEntidadRegistralInicio(), "El campo 'codigoEntidadRegistralInicio' no puede estar vacio");
+        Assert.hasText(registroSir.getIdentificadorIntercambio(), "El campo 'identificadorIntercambio' no puede estar vacio");
+        Assert.notNull(registroSir.getTipoRegistro(), "El campo 'tipoRegistro' no puede ser null");
+        Assert.notNull(registroSir.getDocumentacionFisica(), "El campo 'documentacionFisica' no puede ser null");
+        Assert.notNull(registroSir.getIndicadorPrueba(), "El campo 'indicadorPrueba' no puede ser null");
+        Assert.hasText(registroSir.getCodigoEntidadRegistralInicio(), "El campo 'codigoEntidadRegistralInicio' no puede estar vacio");
 
-        log.info("Asiento registral validado");
+        log.info("RegistroSir validado");
     }
 
     /**
@@ -279,12 +279,12 @@ public class Sicres3XML {
     }
 
     /**
-     * @param asientoRegistralSir
+     * @param registroSir
      * @return
      */
-    public String crearXMLFicheroIntercambioSICRES3(AsientoRegistralSir asientoRegistralSir) throws Exception   {
+    public String crearXMLFicheroIntercambioSICRES3(RegistroSir registroSir) throws Exception   {
 
-        Assert.notNull(asientoRegistralSir, "La variable 'asientoRegistralSir' no puede ser null");
+        Assert.notNull(registroSir, "La variable 'registroSir' no puede ser null");
 
         Document doc = DocumentHelper.createDocument();
         doc.setXMLEncoding("UTF-8");
@@ -293,25 +293,25 @@ public class Sicres3XML {
         Element rootNode = doc.addElement("Fichero_Intercambio_SICRES_3");
 
         /* Segmento DeOrigenORemitente */
-        addDatosOrigenORemitente(rootNode, asientoRegistralSir);
+        addDatosOrigenORemitente(rootNode, registroSir);
 
         /* Segmento DeDestino */
-        addDatosDestino(rootNode, asientoRegistralSir);
+        addDatosDestino(rootNode, registroSir);
 
         /* Segmento DeInteresados */
-        addDatosInteresados(rootNode, asientoRegistralSir.getInteresados());
+        addDatosInteresados(rootNode, registroSir.getInteresados());
 
         /* Segmento DeAsunto */
-        addDatosAsunto(rootNode, asientoRegistralSir);
+        addDatosAsunto(rootNode, registroSir);
 
         /* Segmento DeAnexo */
-        addDatosAnexos(rootNode, asientoRegistralSir);
+        addDatosAnexos(rootNode, registroSir);
 
         /* Segmento DeInternosControl */
-        addDatosInternosControl(rootNode, asientoRegistralSir);
+        addDatosInternosControl(rootNode, registroSir);
 
         /* Segmento DeFormularioGenerico */
-        addDatosformularioGenerico(rootNode, asientoRegistralSir);
+        addDatosformularioGenerico(rootNode, registroSir);
 
         return doc.asXML();
     }
@@ -321,37 +321,37 @@ public class Sicres3XML {
      * Añade el Segmento deOrigenORemitente al Fichero de Intercambio
      *
      * @param rootNode
-     * @param asiento
+     * @param registroSir
      */
-    private void addDatosOrigenORemitente(Element rootNode, AsientoRegistralSir asiento) {
+    private void addDatosOrigenORemitente(Element rootNode, RegistroSir registroSir) {
 
         // De_Origen_o_Remitente
         Element rootElement = rootNode.addElement("De_Origen_o_Remitente");
         Element elem = null;
 
         // Codigo_Entidad_Registral_Origen
-        if (StringUtils.isNotBlank(asiento.getCodigoEntidadRegistralOrigen())) {
+        if (StringUtils.isNotBlank(registroSir.getCodigoEntidadRegistralOrigen())) {
             elem = rootElement.addElement("Codigo_Entidad_Registral_Origen");
-            elem.addCDATA(asiento.getCodigoEntidadRegistralOrigen());
+            elem.addCDATA(registroSir.getCodigoEntidadRegistralOrigen());
         }
 
         // Decodificacion_Entidad_Registral_Origen
-        if (StringUtils.isNotBlank(asiento.getDecodificacionEntidadRegistralOrigen())) {
+        if (StringUtils.isNotBlank(registroSir.getDecodificacionEntidadRegistralOrigen())) {
             elem = rootElement.addElement("Decodificacion_Entidad_Registral_Origen");
-            elem.addCDATA(asiento.getDecodificacionEntidadRegistralOrigen());
+            elem.addCDATA(registroSir.getDecodificacionEntidadRegistralOrigen());
         }
 
         // Numero_Registro_Entrada
-        if (StringUtils.isNotBlank(asiento.getNumeroRegistro())) {
+        if (StringUtils.isNotBlank(registroSir.getNumeroRegistro())) {
             elem = rootElement.addElement("Numero_Registro_Entrada");
-            elem.addCDATA(asiento.getNumeroRegistro());
+            elem.addCDATA(registroSir.getNumeroRegistro());
         }
 
 
         // Fecha_Hora_Entrada
-        if (asiento.getFechaRegistro() != null) {
+        if (registroSir.getFechaRegistro() != null) {
             elem = rootElement.addElement("Fecha_Hora_Entrada");
-            elem.addCDATA(SDF.format(asiento.getFechaRegistro()));
+            elem.addCDATA(SDF.format(registroSir.getFechaRegistro()));
         }
 
 
@@ -359,15 +359,15 @@ public class Sicres3XML {
         //deOrigenORemitente.setTimestampEntrada(); // No es necesario
 
         // Codigo_Unidad_Tramitacion_Origen
-        if (StringUtils.isNotBlank(asiento.getCodigoUnidadTramitacionOrigen())) {
+        if (StringUtils.isNotBlank(registroSir.getCodigoUnidadTramitacionOrigen())) {
             elem = rootElement.addElement("Codigo_Unidad_Tramitacion_Origen");
-            elem.addCDATA(asiento.getCodigoUnidadTramitacionOrigen());
+            elem.addCDATA(registroSir.getCodigoUnidadTramitacionOrigen());
         }
 
         // Decodificacion_Unidad_Tramitacion_Origen
-        if (StringUtils.isNotBlank(asiento.getDecodificacionUnidadTramitacionOrigen())) {
+        if (StringUtils.isNotBlank(registroSir.getDecodificacionUnidadTramitacionOrigen())) {
             elem = rootElement.addElement("Decodificacion_Unidad_Tramitacion_Origen");
-            elem.addCDATA(asiento.getDecodificacionUnidadTramitacionOrigen());
+            elem.addCDATA(registroSir.getDecodificacionUnidadTramitacionOrigen());
         }
 
     }
@@ -376,36 +376,36 @@ public class Sicres3XML {
      * Añade el Segmento deDestino al Fichero de Intercambio
      *
      * @param rootNode
-     * @param asiento
+     * @param registroSir
      */
-    private void addDatosDestino(Element rootNode, AsientoRegistralSir asiento) {
+    private void addDatosDestino(Element rootNode, RegistroSir registroSir) {
 
         // De_Destino
         Element rootElement = rootNode.addElement("De_Destino");
         Element elem = null;
 
         // Codigo_Entidad_Registral_Destino
-        if (StringUtils.isNotBlank(asiento.getCodigoEntidadRegistralDestino())) {
+        if (StringUtils.isNotBlank(registroSir.getCodigoEntidadRegistralDestino())) {
             elem = rootElement.addElement("Codigo_Entidad_Registral_Destino");
-            elem.addCDATA(asiento.getCodigoEntidadRegistralDestino());
+            elem.addCDATA(registroSir.getCodigoEntidadRegistralDestino());
         }
 
         // Decodificacion_Entidad_Registral_Destino
-        if (StringUtils.isNotBlank(asiento.getDecodificacionEntidadRegistralDestino())) {
+        if (StringUtils.isNotBlank(registroSir.getDecodificacionEntidadRegistralDestino())) {
             elem = rootElement.addElement("Decodificacion_Entidad_Registral_Destino");
-            elem.addCDATA(asiento.getDecodificacionEntidadRegistralDestino());
+            elem.addCDATA(registroSir.getDecodificacionEntidadRegistralDestino());
         }
 
         // Codigo_Unidad_Tramitacion_Destino
-        if (StringUtils.isNotBlank(asiento.getCodigoUnidadTramitacionDestino())) {
+        if (StringUtils.isNotBlank(registroSir.getCodigoUnidadTramitacionDestino())) {
             elem = rootElement.addElement("Codigo_Unidad_Tramitacion_Destino");
-            elem.addCDATA(asiento.getCodigoUnidadTramitacionDestino());
+            elem.addCDATA(registroSir.getCodigoUnidadTramitacionDestino());
         }
 
         // Decodificacion_Unidad_Tramitacion_Destino
-        if (StringUtils.isNotBlank(asiento.getDecodificacionUnidadTramitacionDestino())) {
+        if (StringUtils.isNotBlank(registroSir.getDecodificacionUnidadTramitacionDestino())) {
             elem = rootElement.addElement("Decodificacion_Unidad_Tramitacion_Destino");
-            elem.addCDATA(asiento.getDecodificacionUnidadTramitacionDestino());
+            elem.addCDATA(registroSir.getDecodificacionUnidadTramitacionDestino());
         }
 
     }
@@ -604,9 +604,9 @@ public class Sicres3XML {
      * Añade el Segmento deAsunto al Fichero de Intercambio
      *
      * @param rootNode
-     * @param asiento
+     * @param registroSir
      */
-    private void addDatosAsunto(Element rootNode, AsientoRegistralSir asiento) {
+    private void addDatosAsunto(Element rootNode, RegistroSir registroSir) {
 
         // De_Asunto
         Element rootElement = rootNode.addElement("De_Asunto");
@@ -614,32 +614,32 @@ public class Sicres3XML {
 
         // Resumen
         elem = rootElement.addElement("Resumen");
-        if (StringUtils.isNotBlank(asiento.getResumen())) {
-            elem.addCDATA(asiento.getResumen());
+        if (StringUtils.isNotBlank(registroSir.getResumen())) {
+            elem.addCDATA(registroSir.getResumen());
         }
         // Codigo_Asunto_Segun_Destino
-        if (asiento.getCodigoAsunto() != null) {
+        if (registroSir.getCodigoAsunto() != null) {
             elem = rootElement.addElement("Codigo_Asunto_Segun_Destino");
-            elem.addCDATA(asiento.getCodigoAsunto());
+            elem.addCDATA(registroSir.getCodigoAsunto());
         }
 
         // Referencia_Externa
-        if (StringUtils.isNotBlank(asiento.getReferenciaExterna())) {
+        if (StringUtils.isNotBlank(registroSir.getReferenciaExterna())) {
             elem = rootElement.addElement("Referencia_Externa");
-            elem.addCDATA(asiento.getReferenciaExterna());
+            elem.addCDATA(registroSir.getReferenciaExterna());
         }
 
         // Numero_Expediente
-        if (StringUtils.isNotBlank(asiento.getNumeroExpediente())) {
+        if (StringUtils.isNotBlank(registroSir.getNumeroExpediente())) {
             elem = rootElement.addElement("Numero_Expediente");
-            elem.addCDATA(asiento.getNumeroExpediente());
+            elem.addCDATA(registroSir.getNumeroExpediente());
         }
 
     }
 
-    private void addDatosAnexos(Element rootNode, AsientoRegistralSir asiento) throws Exception  {
+    private void addDatosAnexos(Element rootNode, RegistroSir registroSir) throws Exception  {
 
-        for (AnexoSir anexoSir : asiento.getAnexos()) {
+        for (AnexoSir anexoSir : registroSir.getAnexos()) {
 
             Element elem;
             Element rootElement = rootNode.addElement("De_Anexo");
@@ -738,42 +738,42 @@ public class Sicres3XML {
      * Añade el Segmento deInternosControl al Fichero de Intercambio
      *
      * @param rootNode
-     * @param asiento
+     * @param registroSir
      */
-    private void addDatosInternosControl(Element rootNode, AsientoRegistralSir asiento) {
+    private void addDatosInternosControl(Element rootNode, RegistroSir registroSir) {
 
         // De_Internos_Control
         Element rootElement = rootNode.addElement("De_Internos_Control");
         Element elem = null;
 
         // Tipo_Transporte_Entrada
-        if (asiento.getTipoTransporte() != null) {
+        if (registroSir.getTipoTransporte() != null) {
             elem = rootElement.addElement("Tipo_Transporte_Entrada");
-            elem.addCDATA(asiento.getTipoTransporte());
+            elem.addCDATA(registroSir.getTipoTransporte());
         }
 
         // Numero_Transporte_Entrada
-        if (StringUtils.isNotBlank(asiento.getNumeroTransporte())) {
+        if (StringUtils.isNotBlank(registroSir.getNumeroTransporte())) {
             elem = rootElement.addElement("Numero_Transporte_Entrada");
-            elem.addCDATA(asiento.getNumeroTransporte());
+            elem.addCDATA(registroSir.getNumeroTransporte());
         }
 
         // Nombre_Usuario
-        if (StringUtils.isNotBlank(asiento.getNombreUsuario())) {
+        if (StringUtils.isNotBlank(registroSir.getNombreUsuario())) {
             elem = rootElement.addElement("Nombre_Usuario");
-            elem.addCDATA(asiento.getNombreUsuario());
+            elem.addCDATA(registroSir.getNombreUsuario());
         }
 
         // Contacto_Usuario
-        if (StringUtils.isNotBlank(asiento.getContactoUsuario())) {
+        if (StringUtils.isNotBlank(registroSir.getContactoUsuario())) {
             elem = rootElement.addElement("Contacto_Usuario");
-            elem.addCDATA(asiento.getContactoUsuario());
+            elem.addCDATA(registroSir.getContactoUsuario());
         }
 
         // Identificador_Intercambio
-        if (StringUtils.isNotBlank(asiento.getIdentificadorIntercambio())) {
+        if (StringUtils.isNotBlank(registroSir.getIdentificadorIntercambio())) {
             elem = rootElement.addElement("Identificador_Intercambio");
-            elem.addCDATA(asiento.getIdentificadorIntercambio());
+            elem.addCDATA(registroSir.getIdentificadorIntercambio());
         }
 
         // Aplicacion_Version_Emisora
@@ -782,41 +782,41 @@ public class Sicres3XML {
 
         // Tipo_Anotacion
         elem = rootElement.addElement("Tipo_Anotacion");
-        elem.addCDATA(asiento.getTipoAnotacion());
+        elem.addCDATA(registroSir.getTipoAnotacion());
 
         elem = rootElement.addElement("Descripcion_Tipo_Anotacion");
-        elem.addCDATA(asiento.getDecodificacionTipoAnotacion());
+        elem.addCDATA(registroSir.getDecodificacionTipoAnotacion());
 
         // Tipo_Registro
         elem = rootElement.addElement("Tipo_Registro");
-        elem.addCDATA(asiento.getTipoRegistro().getValue());
+        elem.addCDATA(registroSir.getTipoRegistro().getValue());
 
         // Documentacion_Fisica
-        if (StringUtils.isNotBlank(asiento.getDocumentacionFisica())) {
+        if (StringUtils.isNotBlank(registroSir.getDocumentacionFisica())) {
             elem = rootElement.addElement("Documentacion_Fisica");
-            elem.addCDATA(asiento.getDocumentacionFisica());
+            elem.addCDATA(registroSir.getDocumentacionFisica());
         }
 
         // Observaciones_Apunte
-        if (StringUtils.isNotBlank(asiento.getObservacionesApunte())) {
+        if (StringUtils.isNotBlank(registroSir.getObservacionesApunte())) {
             elem = rootElement.addElement("Observaciones_Apunte");
-            elem.addCDATA(asiento.getObservacionesApunte());
+            elem.addCDATA(registroSir.getObservacionesApunte());
         }
 
         // Indicador_Prueba
         elem = rootElement.addElement("Indicador_Prueba");
-        elem.addCDATA(asiento.getIndicadorPrueba().getValue());
+        elem.addCDATA(registroSir.getIndicadorPrueba().getValue());
 
         // Codigo_Entidad_Registral_Inicio
-        if (StringUtils.isNotBlank(asiento.getCodigoEntidadRegistralInicio())) {
+        if (StringUtils.isNotBlank(registroSir.getCodigoEntidadRegistralInicio())) {
             elem = rootElement.addElement("Codigo_Entidad_Registral_Inicio");
-            elem.addCDATA(asiento.getCodigoEntidadRegistralInicio());
+            elem.addCDATA(registroSir.getCodigoEntidadRegistralInicio());
         }
 
         // Decodificacion_Entidad_Registral_Inicio
-        if (StringUtils.isNotBlank(asiento.getDecodificacionEntidadRegistralInicio())) {
+        if (StringUtils.isNotBlank(registroSir.getDecodificacionEntidadRegistralInicio())) {
             elem = rootElement.addElement("Decodificacion_Entidad_Registral_Inicio");
-            elem.addCDATA(asiento.getDecodificacionEntidadRegistralInicio());
+            elem.addCDATA(registroSir.getDecodificacionEntidadRegistralInicio());
         }
 
 
@@ -826,9 +826,9 @@ public class Sicres3XML {
      * Añade el Segmento deInternosControl al Fichero de Intercambio
      *
      * @param rootNode
-     * @param asiento
+     * @param registroSir
      */
-    private void addDatosformularioGenerico(Element rootNode, AsientoRegistralSir asiento) {
+    private void addDatosformularioGenerico(Element rootNode, RegistroSir registroSir) {
 
         // De_Formulario_Generico
         Element rootElement = rootNode.addElement("De_Formulario_Generico");
@@ -836,14 +836,14 @@ public class Sicres3XML {
 
         // Expone
         elem = rootElement.addElement("Expone");
-        if (StringUtils.isNotBlank(asiento.getExpone())) {
-            elem.addCDATA(asiento.getExpone());
+        if (StringUtils.isNotBlank(registroSir.getExpone())) {
+            elem.addCDATA(registroSir.getExpone());
         }
 
         // Solicita
         elem = rootElement.addElement("Solicita");
-        if (StringUtils.isNotBlank(asiento.getSolicita())) {
-            elem.addCDATA(asiento.getSolicita());
+        if (StringUtils.isNotBlank(registroSir.getSolicita())) {
+            elem.addCDATA(registroSir.getSolicita());
         }
 
     }
@@ -1986,7 +1986,7 @@ public class Sicres3XML {
 			 * TODO SIR-RC-PR-096
 			 *
 			 * Recepción de fichero de intercambio correspondiente
-			 * a un asiento registral con los campos mínimos requeridos por la
+			 * a un registroSir registral con los campos mínimos requeridos por la
 			 * norma SICRES3 y con un fichero anexado y con los campos del
 			 * "Hash", "Certificado del firmante", "Firma del documento",
 			 * "Sello de tiempo de la firma" y "Validación OCSP del certificado"
@@ -1997,7 +1997,7 @@ public class Sicres3XML {
 			 * TODO SIR-RC-PR-100
 			 *
 			 * Recepción de fichero de intercambio
-			 * correspondiente a un asiento registral con los campos mínimos
+			 * correspondiente a un registroSir registral con los campos mínimos
 			 * requeridos por la norma SICRES3 y con el campo "Anexo" (no
 			 * válido).
 			 */
