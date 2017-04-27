@@ -317,7 +317,6 @@ public class UsuarioService {
         if(oficinaNueva != null){
 
             UsuarioEntidad usuarioEntidad = (UsuarioEntidad)session.getAttribute(RegwebConstantes.SESSION_USUARIO_ENTIDAD);
-            Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
 
             // Guardamos en la sesión la nueva OficinaActiva
             session.setAttribute(RegwebConstantes.SESSION_OFICINA, oficinaNueva);
