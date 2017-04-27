@@ -591,8 +591,9 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
             }
 
             oficina.setServicios(servicios);
+        }else{
+            oficina.setServicios(null);
         }
-
     }
 
 
