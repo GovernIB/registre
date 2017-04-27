@@ -323,16 +323,10 @@ public class UsuarioService {
             session.setAttribute(RegwebConstantes.SESSION_OFICINA, oficinaNueva);
 
             // Guardamos en la sesión los Organismos OficiaActiva
-            session.setAttribute(RegwebConstantes.SESSION_ORGANISMOS_OFICINA,organismoEjb.getByOficinaActiva(oficinaNueva));
+            session.setAttribute(RegwebConstantes.SESSION_ORGANISMOS_OFICINA, organismoEjb.getByOficinaActiva(oficinaNueva));
 
             // Comprobamos si la Oficina está integrada en SIR
             oficinaNueva.setSir(oficinaEjb.isOficinaSIR(oficinaNueva.getId()));
-
-            // Si la Entidad está en SIR y la OficiaActiva es SIR, obtenemos los organismosSIR que gestiona el usuario
-            if(oficinaNueva.getSir() && entidadActiva.getSir()){
-                List<Organismo> organismosSir = permisoLibroUsuarioEjb.getOrganismoLibroPermiso(usuarioEntidad.getId(), RegwebConstantes.PERMISO_SIR);
-                session.setAttribute(RegwebConstantes.SESSION_ORGANISMOS_SIR, organismosSir);
-            }
 
             // Actualizamos la última Oficina del Usuario
             usuarioEntidadEjb.actualizarOficinaUsuario(usuarioEntidad.getId(), oficinaNueva.getId());
@@ -595,7 +589,6 @@ public class UsuarioService {
         session.removeAttribute(RegwebConstantes.SESSION_MIGRADOS);
 
         eliminarVariablesSesionOficina(session);
-
     }
 
     /**
@@ -610,8 +603,6 @@ public class UsuarioService {
         session.removeAttribute(RegwebConstantes.SESSION_OFICINAS_ADMINISTRADAS);
         session.removeAttribute(RegwebConstantes.SESSION_LIBROSADMINISTRADOS);
         session.removeAttribute(RegwebConstantes.SESSION_ORGANISMOS_OFICINA);
-        session.removeAttribute(RegwebConstantes.SESSION_ORGANISMOS_SIR);
-
     }
 
     /**
@@ -625,7 +616,6 @@ public class UsuarioService {
         session.removeAttribute(RegwebConstantes.SESSION_USUARIO_ENTIDAD);
         session.removeAttribute(RegwebConstantes.SESSION_ROLES);
         session.removeAttribute(RegwebConstantes.SESSION_ROL);
-
     }
 
     /**

@@ -98,7 +98,7 @@ public class RegistroSirController extends BaseController {
 
         RegistroSir registroSir = busqueda.getRegistroSir();
 
-        Paginacion paginacion = registrosirSirEjb.busqueda(busqueda.getPageNumber(), busqueda.getAnyo(), registroSir, getOrganismosSIRCodigo(request), busqueda.getEstado());
+        Paginacion paginacion = registrosirSirEjb.busqueda(busqueda.getPageNumber(), busqueda.getAnyo(), registroSir, getOficinaActiva(request).getCodigo(), busqueda.getEstado());
 
         busqueda.setPageNumber(1);
 
@@ -111,27 +111,6 @@ public class RegistroSirController extends BaseController {
 
     }
 
-
-    /**
-     * Realiza la busqueda de Listado de RegistroSir pendientes de procesar
-     */
-    @RequestMapping(value = "/registrosSirPendientesProcesar", method = RequestMethod.POST)
-    public ModelAndView registrosSirPendientesProcesar(@ModelAttribute RegistroSirBusquedaForm busqueda, HttpServletRequest request)throws Exception {
-
-        ModelAndView mav = new ModelAndView("registroSir/registroSirList");
-
-        RegistroSir registroSir = busqueda.getRegistroSir();
-
-        // Obtenemos los RegistroSirs, pendientes de procesar
-        Paginacion paginacion = registrosirSirEjb.busqueda(busqueda.getPageNumber(), busqueda.getAnyo(), registroSir, getOrganismosSIRCodigo(request), busqueda.getEstado());
-
-        busqueda.setPageNumber(1);
-        mav.addObject("paginacion", paginacion);
-        mav.addObject("registroSirBusqueda", busqueda);
-
-        return mav;
-
-    }
 
     /**
      * Carga el formulario para ver el detalle de un {@link RegistroSir}
@@ -149,7 +128,7 @@ public class RegistroSirController extends BaseController {
         if(registroSir.getEstado().equals(EstadoRegistroSir.RECIBIDO)){
 
             // Tengo permisos para gestionarlo?
-            if(getOrganismosSIRCodigo(request).contains(registroSir.getCodigoUnidadTramitacionDestino())){
+            if(getOficinaActiva(request).getCodigo().equals(registroSir.getCodigoEntidadRegistralDestino())){
 
                 // Obtenemos los libros del Organismo destinatário del RegistroSir
                 //List<Libro> libros = libroEjb.getLibrosActivosOrganismo(registroSir.getCodigoUnidadTramitacionDestino());

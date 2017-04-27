@@ -12,7 +12,6 @@ import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Fundació BIT.
@@ -82,12 +81,7 @@ public class InicioController extends BaseController{
 
                 /* Obtenemos los Registros Sir pendientes de procesar */
                 if(entidadActiva.getSir() && oficinaActiva.getSir()) {
-                    Set<String> organismosSIR = getOrganismosSIRCodigo(request);
-
-                    if (organismosSIR.size() > 0) {
-                        List<RegistroSir> registrosSir = registroSirEjb.getUltimosPendientesProcesar(organismosSIR, RegwebConstantes.REGISTROS_PANTALLA_INICIO);
-                        mav.addObject("registrosSir", registrosSir);
-                    }
+                    mav.addObject("registrosSir", registroSirEjb.getUltimosPendientesProcesar(oficinaActiva.getCodigo(), RegwebConstantes.REGISTROS_PANTALLA_INICIO));
                 }
 
             }

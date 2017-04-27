@@ -218,7 +218,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         return (Long) q.getSingleResult() > 0;
     }
 
-    public Paginacion busqueda(Integer pageNumber, Integer any, RegistroSir registroSir, Set<String> organismos, String estado) throws Exception{
+    public Paginacion busqueda(Integer pageNumber, Integer any, RegistroSir registroSir, String oficinaSir, String estado) throws Exception{
 
         Query q;
         Query q2;
@@ -227,9 +227,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         StringBuffer query = new StringBuffer("Select asr from RegistroSir as asr ");
 
-        /*if (organismos != null && organismos.size() > 0) {
-            where.add(" asr.codigoUnidadTramitacionDestino in (:organismos) "); parametros.put("organismos",organismos);
-        }*/
+        where.add(" asr.codigoEntidadRegistralDestino = :oficinaSir "); parametros.put("oficinaSir",oficinaSir);
 
         if (registroSir.getResumen() != null && registroSir.getResumen().length() > 0) {
             where.add(DataBaseUtils.like("asr.resumen", "resumen", parametros, registroSir.getResumen()));
@@ -289,14 +287,14 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         return paginacion;
     }
 
-    public List<RegistroSir> getUltimosPendientesProcesar(Set<String> organismos, Integer total) throws Exception{
+    public List<RegistroSir> getUltimosPendientesProcesar(String oficinaSir, Integer total) throws Exception{
 
         Query q = em.createQuery("Select ars from RegistroSir as ars " +
-                "where ars.codigoUnidadTramitacionDestino in (:organismos) and ars.estado = :idEstadoPreRegistro " +
+                "where ars.codigoEntidadRegistralDestino = :oficinaSir and ars.estado = :idEstadoPreRegistro " +
                 "order by ars.id desc");
 
         q.setMaxResults(total);
-        q.setParameter("organismos", organismos);
+        q.setParameter("oficinaSir", oficinaSir);
         q.setParameter("idEstadoPreRegistro", EstadoRegistroSir.RECIBIDO);
 
         return  q.getResultList();

@@ -32,7 +32,6 @@ public interface RegwebConstantes {
     String SESSION_OFICINAS = "oficinas";
     String SESSION_OFICINA = "oficinaActiva";
     String SESSION_ORGANISMOS_OFICINA = "organismosOficinaActiva";
-    String SESSION_ORGANISMOS_SIR = "organismosSIR";
     String SESSION_OFICINAS_ADMINISTRADAS = "oficinasAdministradas";
     String SESSION_LIBROSADMINISTRADOS = "librosAdministrados";
     String SESSION_MIGRADOS = "registrosMigrados";

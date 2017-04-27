@@ -11,7 +11,6 @@ import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Fundació BIT.
@@ -68,21 +67,21 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
      * @param pageNumber
      * @param any
      * @param registroSir
-     * @param organismos
+     * @param oficinaSir
      * @param estado
      * @return
      * @throws Exception
      */
-    public Paginacion busqueda(Integer pageNumber, Integer any, RegistroSir registroSir, Set<String> organismos, String estado) throws Exception;
+    public Paginacion busqueda(Integer pageNumber, Integer any, RegistroSir registroSir, String oficinaSir, String estado) throws Exception;
 
     /**
-     * Obtiene los últimos ASR pendientes de procesas de un conjunto de Organismos
-     * @param organismos
+     * Obtiene los últimos ASR pendientes de procesar destinados a una OficinaSir
+     * @param oficinaSir
      * @param total
      * @return
      * @throws Exception
      */
-    public List<RegistroSir> getUltimosPendientesProcesar(Set<String> organismos, Integer total) throws Exception;
+    public List<RegistroSir> getUltimosPendientesProcesar(String oficinaSir, Integer total) throws Exception;
 
     /**
      * Modifica el Estado de un {@link RegistroSir}
