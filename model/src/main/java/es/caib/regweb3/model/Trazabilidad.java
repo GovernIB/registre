@@ -22,7 +22,7 @@ public class Trazabilidad implements Serializable {
     private RegistroEntrada registroEntradaOrigen;
     private RegistroSalida registroSalida;
     private RegistroEntrada registroEntradaDestino;
-    private AsientoRegistralSir asientoRegistralSir;
+    private RegistroSir registroSir;
     private Date fecha;
 
     public Trazabilidad() {
@@ -97,14 +97,15 @@ public class Trazabilidad implements Serializable {
     }
 
     @ManyToOne(optional = true)
-    @JoinColumn(name="ASIENTO_REGISTRAL_SIR")
-    @ForeignKey(name="RWE_TRAZAB_ASR_FK")
-    public AsientoRegistralSir getAsientoRegistralSir() {
-        return asientoRegistralSir;
+    @JoinColumn(name="REGISTRO_SIR")
+    @ForeignKey(name="RWE_TRAZAB_REGSIR_FK")
+
+    public RegistroSir getRegistroSir() {
+        return registroSir;
     }
 
-    public void setAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir) {
-        this.asientoRegistralSir = asientoRegistralSir;
+    public void setRegistroSir(RegistroSir registroSir) {
+        this.registroSir = registroSir;
     }
 
     @Column(name = "FECHA", nullable = false)

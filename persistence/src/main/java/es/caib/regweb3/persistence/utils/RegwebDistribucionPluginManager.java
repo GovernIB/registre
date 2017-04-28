@@ -1,11 +1,8 @@
 package es.caib.regweb3.persistence.utils;
 
 import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
-import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.fundaciobit.plugins.utils.PluginsManager;
-
-import java.util.Properties;
 
 
 /**
@@ -21,24 +18,23 @@ public class RegwebDistribucionPluginManager {
     public static IDistribucionPlugin getInstance(Long idEntidad) throws Exception {
 
 
-        if (plugin == null) {
-            String className = PropiedadGlobalUtil.getPluginDistribucion(idEntidad);
+        // Valor de la Clau
 
-            final String partialPropertyName = "distribucion.plugin";
-            String basePlugin= RegwebConstantes.REGWEB3_PROPERTY_BASE + partialPropertyName;
+        final String propertyName = "distribucion.plugin";
 
-            if (className == null || className.trim().length() <= 0) {
-                log.debug("No hi ha cap propietat " + basePlugin + " definint la classe que gestiona el plugin de distribució");
-                return null;
-            }
+        // Cerca el Plugin de Distribució definit a les Propietats Globals
+        String className = PropiedadGlobalUtil.getPluginDistribucion(idEntidad, propertyName);
 
-            Properties prop = PropiedadGlobalUtil.getAllPropertiesByEntity(idEntidad);
-
-            Object obj;
-            obj = PluginsManager.instancePluginByClassName(className, basePlugin, prop);
-            plugin= (IDistribucionPlugin) obj;
-
+        // Si no existeix la propietat global, dóna error
+        if (className == null || className.trim().length() <= 0) {
+            log.info("No hi ha cap propietat " + propertyName + " definint la classe que gestiona el plugin de distribució");
+            return null;
         }
+
+        // Carregant la classe
+        Object obj;
+        obj = PluginsManager.instancePluginByClassName(className, propertyName);
+        plugin = (IDistribucionPlugin) obj;
 
         return plugin;
     }

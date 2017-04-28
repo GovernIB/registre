@@ -66,7 +66,7 @@ public class RecepcionBean implements RecepcionLocal{
                 throw new ValidacionException(Errores.ERROR_0037, e);
             }
 
-            // Creamos el AsientoRegistralSir a partir del xml recibido y validado
+            // Creamos el RegistroSir a partir del xml recibido y validado
             webServicesMethodsEjb.recibirFicheroIntercambio(ficheroIntercambio);
 
             // Si ha ido bien, enviamos el ACK

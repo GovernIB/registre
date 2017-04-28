@@ -34,64 +34,61 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
     protected final Logger log = Logger.getLogger(getClass());
 
     @EJB(mappedName = "regweb3/OrganismoEJB/local")
-    public OrganismoLocal organismoEjb;
+    private OrganismoLocal organismoEjb;
 
     @EJB(mappedName = "regweb3/OficinaEJB/local")
-    public OficinaLocal oficinaEjb;
+    private OficinaLocal oficinaEjb;
 
     @EJB(mappedName = "regweb3/CatEstadoEntidadEJB/local")
-    public CatEstadoEntidadLocal catEstadoEntidadEjb;
+    private CatEstadoEntidadLocal catEstadoEntidadEjb;
 
     @EJB(mappedName = "regweb3/CatNivelAdministracionEJB/local")
-    public CatNivelAdministracionLocal catNivelAdministracionEjb;
+    private CatNivelAdministracionLocal catNivelAdministracionEjb;
 
     @EJB(mappedName = "regweb3/CatProvinciaEJB/local")
-    public CatProvinciaLocal catProvinciaEjb;
+    private CatProvinciaLocal catProvinciaEjb;
 
     @EJB(mappedName = "regweb3/CatComunidadAutonomaEJB/local")
-    public CatComunidadAutonomaLocal catComunidadAutonomaEjb;
+    private CatComunidadAutonomaLocal catComunidadAutonomaEjb;
 
     @EJB(mappedName = "regweb3/RelacionSirOfiEJB/local")
-    public RelacionSirOfiLocal relacionSirOfiEjb;
+    private RelacionSirOfiLocal relacionSirOfiEjb;
 
     @EJB(mappedName = "regweb3/RelacionOrganizativaOfiEJB/local")
-    public RelacionOrganizativaOfiLocal relacionOrganizativaOfiEjb;
+    private RelacionOrganizativaOfiLocal relacionOrganizativaOfiEjb;
 
     @EJB(mappedName = "regweb3/EntidadEJB/local")
-    public EntidadLocal entidadEjb;
+    private EntidadLocal entidadEjb;
 
     @EJB(mappedName = "regweb3/PendienteEJB/local")
-    public PendienteLocal pendienteEjb;
+    private PendienteLocal pendienteEjb;
 
     @EJB(mappedName = "regweb3/DescargaEJB/local")
-    public DescargaLocal descargaEjb;
+    private DescargaLocal descargaEjb;
 
     @EJB(mappedName = "regweb3/CatLocalidadEJB/local")
-    public CatLocalidadLocal catLocalidadEjb;
+    private CatLocalidadLocal catLocalidadEjb;
 
     @EJB(mappedName = "regweb3/CatPaisEJB/local")
-    public CatPaisLocal catPaisEjb;
+    private CatPaisLocal catPaisEjb;
 
     @EJB(mappedName = "regweb3/CatTipoViaEJB/local")
-    public CatTipoViaLocal catTipoViaEjb;
+    private CatTipoViaLocal catTipoViaEjb;
 
     @EJB(mappedName = "regweb3/CatServicioEJB/local")
-    public CatServicioLocal catServicioEjb;
-
-    @EJB(mappedName = "regweb3/RelacionOrganizativaOfiEJB/local")
-    public RelacionOrganizativaOfiLocal relacionOrganizativaOfiLocalEjb;
+    private CatServicioLocal catServicioEjb;
 
     @EJB(mappedName = "regweb3/LibroEJB/local")
-    public LibroLocal libroEjb;
+    private LibroLocal libroEjb;
 
     //Caches
-    Map<Long, CatProvincia> cacheProvincia = new TreeMap<Long, CatProvincia>();
-    Map<Long, CatComunidadAutonoma> cacheComunidadAutonoma = new TreeMap<Long, CatComunidadAutonoma>();
-    Map<Long, CatNivelAdministracion> cacheNivelAdministracion = new TreeMap<Long, CatNivelAdministracion>();
-    Map<Long, CatPais> cachePais = new TreeMap<Long, CatPais>();
-    Map<String, CatEstadoEntidad> cacheEstadoEntidad = new TreeMap<String, CatEstadoEntidad>();
-    Map<Long, CatTipoVia> cacheTipoVia = new TreeMap<Long, CatTipoVia>();
-    Map<Long, CatServicio> cacheServicio = new TreeMap<Long, CatServicio>();
+    private Map<Long, CatProvincia> cacheProvincia = new TreeMap<Long, CatProvincia>();
+    private Map<Long, CatComunidadAutonoma> cacheComunidadAutonoma = new TreeMap<Long, CatComunidadAutonoma>();
+    private Map<Long, CatNivelAdministracion> cacheNivelAdministracion = new TreeMap<Long, CatNivelAdministracion>();
+    private Map<Long, CatPais> cachePais = new TreeMap<Long, CatPais>();
+    private Map<String, CatEstadoEntidad> cacheEstadoEntidad = new TreeMap<String, CatEstadoEntidad>();
+    private Map<Long, CatTipoVia> cacheTipoVia = new TreeMap<Long, CatTipoVia>();
+    private Map<Long, CatServicio> cacheServicio = new TreeMap<Long, CatServicio>();
 
     /**
      * Método que sincroniza o actualiza una entidad de regweb3 desde dir3caib. Lo hace en función de si se indica la
@@ -591,8 +588,9 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
             }
 
             oficina.setServicios(servicios);
+        }else{
+            oficina.setServicios(null);
         }
-
     }
 
 

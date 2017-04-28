@@ -1,8 +1,6 @@
 package es.caib.regweb3.plugins.distribucion.mock;
 
-import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.plugins.distribucion.ConfiguracionDistribucion;
 import es.caib.regweb3.plugins.distribucion.Destinatario;
 import es.caib.regweb3.plugins.distribucion.Destinatarios;
@@ -10,7 +8,6 @@ import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
 import org.apache.log4j.Logger;
 import org.fundaciobit.plugins.utils.AbstractPluginProperties;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -21,17 +18,7 @@ public class DistribucionMockPlugin extends AbstractPluginProperties implements 
 
     protected final Logger log = Logger.getLogger(getClass());
 
-/*
-    private static final String PROPERTY_BASE = DISTRIBUCION_BASE_PROPERTY + "distribucionlocal.";
 
-
-	private static final String PROPERTY_EXEMPLE = PROPERTY_BASE +"exemple";
-
-	public String getExample() throws Exception {
-		//return getProperty(PROPERTY_EXEMPLE);
-
-		return getPropertyRequired(PROPERTY_EXEMPLE);
-	}*/
 
     /**
      *
@@ -59,13 +46,16 @@ public class DistribucionMockPlugin extends AbstractPluginProperties implements 
     @Override
     public Destinatarios distribuir(RegistroEntrada registro) throws Exception {
 
-        // Este código es una prueba, aquí se deben determinar los destinatarios reales en función de la
-        // implementación particular de cada entidad
+
         log.info("Distribuir plugin");
 
+
+
+        //La implementación Mock no devuelve destinatarios.
         Destinatarios destinatarios = new Destinatarios();
 
-        List<Destinatario> destinatariosPosibles = new ArrayList<Destinatario>();
+        //Código de ejemplo para posibles implementaciones
+       /* List<Destinatario> destinatariosPosibles = new ArrayList<Destinatario>();
         List<Destinatario> destinatariosPropuestos = new ArrayList<Destinatario>();
         Destinatario destinatario = new Destinatario();
         destinatario.setId("1");
@@ -89,10 +79,8 @@ public class DistribucionMockPlugin extends AbstractPluginProperties implements 
         destinatario.setName("BANDEJA 3");
         destinatariosPropuestos.add(destinatario);
 
-
-
         destinatarios.setPropuestos(destinatariosPropuestos);
-        destinatarios.setPosibles(destinatariosPosibles);
+        destinatarios.setPosibles(destinatariosPosibles);*/
 
 
         return destinatarios;
@@ -100,7 +88,9 @@ public class DistribucionMockPlugin extends AbstractPluginProperties implements 
 
     @Override
     public Boolean enviarDestinatarios(RegistroEntrada registro, List<Destinatario> destinatariosDefinitivos, String observaciones) throws Exception {
-        // Este código es una prueba, aquí se debe distribuir el registro al listado de destinatarios indicado.
+
+
+       /* código de ejemplo
         log.info("OBSERVACIONES EN PLUGIN " + observaciones);
         log.info("NUMERO DE ANEXOS FULL" + registro.getRegistroDetalle().getAnexosFull().size());
         log.info("NUMERO DE ANEXOS " + registro.getRegistroDetalle().getAnexos().size());
@@ -122,13 +112,17 @@ public class DistribucionMockPlugin extends AbstractPluginProperties implements 
                 log.info("DESTINATARIO NOMBRE EN PLUGIN " + destinatario.getName());
             }
         }
+        return true;*/
+
+        //La implementación Mock devuelve que ha ido bien el envio del registro
         return true;
 
     }
 
     @Override
     public ConfiguracionDistribucion configurarDistribucion() throws Exception {
-        ConfiguracionDistribucion cd = new ConfiguracionDistribucion(true, 3);
+        //Configuración por defecto de la implementación Mock
+        ConfiguracionDistribucion cd = new ConfiguracionDistribucion(false, 2);
         return cd;
 
     }

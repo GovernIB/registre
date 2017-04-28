@@ -45,25 +45,25 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
     private EntityManager em;
 
     @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
-    public RegistroEntradaLocal registroEntradaEjb;
+    private RegistroEntradaLocal registroEntradaEjb;
 
     @EJB(mappedName = "regweb3/OficioRemisionEJB/local")
-    public OficioRemisionLocal oficioRemisionEjb;
+    private OficioRemisionLocal oficioRemisionEjb;
 
     @EJB(mappedName = "regweb3/OrganismoEJB/local")
-    public OrganismoLocal organismoEjb;
+    private OrganismoLocal organismoEjb;
 
     @EJB(mappedName = "regweb3/LibroEJB/local")
-    public LibroLocal libroEjb;
+    private LibroLocal libroEjb;
 
     @EJB(mappedName = "regweb3/TrazabilidadEJB/local")
-    public TrazabilidadLocal trazabilidadEjb;
+    private TrazabilidadLocal trazabilidadEjb;
 
     @EJB(name = "OficinaEJB")
-    public OficinaLocal oficinaEjb;
+    private OficinaLocal oficinaEjb;
 
     @EJB(name = "CatEstadoEntidadEJB")
-    public CatEstadoEntidadLocal catEstadoEntidadEjb;
+    private CatEstadoEntidadLocal catEstadoEntidadEjb;
 
 
 
@@ -453,6 +453,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         oficioRemision.setEstado(RegwebConstantes.OFICIO_INTERNO);
         oficioRemision.setOficina(oficinaActiva);
         oficioRemision.setFecha(new Date());
+        oficioRemision.setFechaEstado(new Date());
         oficioRemision.setRegistrosEntrada(registrosEntrada);
         oficioRemision.setUsuarioResponsable(usuarioEntidad);
         oficioRemision.setLibro(new Libro(idLibro));
@@ -520,9 +521,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         List<RegistroEntrada> registros = new ArrayList<RegistroEntrada>();
 
         // Recorremos los RegistroEntrada del Oficio y Libro de registro seleccionado
-        for (int i = 0; i < oficios.size(); i++) {
-
-            OficioPendienteLlegada oficio = oficios.get(i);
+        for (OficioPendienteLlegada oficio : oficios) {
 
             RegistroEntrada registroEntrada = registroEntradaEjb.findById(oficio.getIdRegistro());
             Libro libro = libroEjb.findById(oficio.getIdLibro());
@@ -536,7 +535,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             nuevoRE.setRegistroDetalle(registroEntrada.getRegistroDetalle());
 
             synchronized (this) {
-                nuevoRE = registroEntradaEjb.registrarEntrada(nuevoRE, usuario, null);
+                nuevoRE = registroEntradaEjb.registrarEntrada(nuevoRE, usuario, null, null);
             }
 
             registros.add(nuevoRE);

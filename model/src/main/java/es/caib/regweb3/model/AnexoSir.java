@@ -19,9 +19,9 @@ public class AnexoSir implements Serializable {
     private Long id;
 
     /**
-     * Id del Asiento Registral al que pertenece
+     * Id del RegistroSir al que pertenece
      */
-    private AsientoRegistralSir idAsientoRegistralSir;
+    private RegistroSir registroSir;
 
     /**
      * Nombre del fichero original.
@@ -112,14 +112,14 @@ public class AnexoSir implements Serializable {
     }
 
     @ManyToOne()
-    @JoinColumn(name = "ASIENTO_REGISTRAL")
-    @ForeignKey(name = "RWE_ANEXOSIR_ASIREG_FK")
-    public AsientoRegistralSir getIdAsientoRegistralSir() {
-        return idAsientoRegistralSir;
+    @JoinColumn(name = "REGISTRO_SIR")
+    @ForeignKey(name = "RWE_ANEXOSIR_REGSIR_FK")
+    public RegistroSir getRegistroSir() {
+        return registroSir;
     }
 
-    public void setIdAsientoRegistralSir(AsientoRegistralSir idAsientoRegistralSir) {
-        this.idAsientoRegistralSir = idAsientoRegistralSir;
+    public void setRegistroSir(RegistroSir registroSir) {
+        this.registroSir = registroSir;
     }
 
     @Column(name = "NOMBRE_FICHERO", length = 80, nullable = false)

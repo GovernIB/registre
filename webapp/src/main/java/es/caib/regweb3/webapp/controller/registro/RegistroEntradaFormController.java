@@ -203,7 +203,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
                 //Guardamos el RegistroEntrada
                 synchronized (this){
-                    registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuarioEntidad, interesadosSesion);
+                    registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuarioEntidad, interesadosSesion, null);
                 }
 
             }catch (Exception e) {
@@ -456,7 +456,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             }
 
         }catch (Exception e){
-            log.info("Error al rectificar el asiento");
+            log.info("Error al rectificar el registro");
             e.printStackTrace();
             Mensaje.saveMessageError(request, getMessage("registro.rectificar.error"));
         }

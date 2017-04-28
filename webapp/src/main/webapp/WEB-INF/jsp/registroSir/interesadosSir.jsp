@@ -10,13 +10,13 @@
         <div class="panel-body">
             <div class="col-xs-12">
                 <div class="table-responsive">
-                    <c:if test="${empty asientoRegistralSir.interesados}">
+                    <c:if test="${empty registroSir.interesados}">
                         <div class="alert alert-warning ">
                             <spring:message code="regweb.listado.vacio"/> <strong><spring:message
                                 code="registroEntrada.interesado"/></strong>
                         </div>
                     </c:if>
-                    <c:if test="${not empty asientoRegistralSir.interesados}">
+                    <c:if test="${not empty registroSir.interesados}">
                         <table id="interesados" class="table table-bordered table-hover table-striped">
                             <colgroup>
                                 <col>
@@ -31,7 +31,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <c:forEach var="interesado" items="${asientoRegistralSir.interesados}">
+                            <c:forEach var="interesado" items="${registroSir.interesados}">
                                 <tr>
                                     <td>
                                         <a data-toggle="modal" href="#detalleInteresadoSir"

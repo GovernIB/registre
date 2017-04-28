@@ -18,7 +18,7 @@ public class InteresadoSir implements Serializable {
 
     private Long id;
     @JsonIgnore
-    private AsientoRegistralSir idAsientoRegistralSir;
+    private RegistroSir registroSir;
     private String tipoDocumentoIdentificacionInteresado;
     private String documentoIdentificacionInteresado;
     private String razonSocialInteresado;
@@ -68,14 +68,14 @@ public class InteresadoSir implements Serializable {
     }
 
     @ManyToOne()
-    @JoinColumn(name = "ASIENTO_REGISTRAL")
-    @ForeignKey(name = "RWE_INTERESADOSIR_ASIREG_FK")
-    public AsientoRegistralSir getIdAsientoRegistralSir() {
-        return idAsientoRegistralSir;
+    @JoinColumn(name = "REGISTRO_SIR")
+    @ForeignKey(name = "RWE_INTERESADOSIR_REGSIR_FK")
+    public RegistroSir getRegistroSir() {
+        return registroSir;
     }
 
-    public void setIdAsientoRegistralSir(AsientoRegistralSir idAsientoRegistralSir) {
-        this.idAsientoRegistralSir = idAsientoRegistralSir;
+    public void setRegistroSir(RegistroSir registroSir) {
+        this.registroSir = registroSir;
     }
 
     @Column(name = "T_DOCUMENTO_INTERESADO", length = 1, nullable = true)

@@ -16,6 +16,7 @@ import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.hibernate.Session;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
+import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -39,6 +40,9 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
+
+    @Resource
+    private javax.ejb.SessionContext ejbContext;
 
     @EJB(name = "LibroEJB")
     private LibroLocal libroEjb;
@@ -92,64 +96,77 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
 
     @Override
-    public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad, List<Interesado> interesados)
-            throws Exception, I18NException, I18NValidationException {
-        return registrarEntrada(registroEntrada, usuarioEntidad,interesados, null);
-    }
-
-
-    @Override
     public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
                                             UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexosFull)
             throws Exception, I18NException, I18NValidationException {
 
+        try{
 
-        // Obtenemos el Número de registro
-        Libro libro = libroEjb.findById(registroEntrada.getLibro().getId());
-        Oficina oficina = oficinaEjb.findById(registroEntrada.getOficina().getId());
-        NumeroRegistro numeroRegistro = contadorEjb.incrementarContador(libro.getContadorEntrada().getId());
-        registroEntrada.setNumeroRegistro(numeroRegistro.getNumero());
-        registroEntrada.setFecha(numeroRegistro.getFecha());
+            // Obtenemos el Número de registro
+            Libro libro = libroEjb.findById(registroEntrada.getLibro().getId());
+            Oficina oficina = oficinaEjb.findById(registroEntrada.getOficina().getId());
+            NumeroRegistro numeroRegistro = contadorEjb.incrementarContador(libro.getContadorEntrada().getId());
+            registroEntrada.setNumeroRegistro(numeroRegistro.getNumero());
+            registroEntrada.setFecha(numeroRegistro.getFecha());
 
-        // Generamos el Número de registro formateado
-        registroEntrada.setNumeroRegistroFormateado(RegistroUtils.numeroRegistroFormateado(registroEntrada, libro, oficina));
+            // Generamos el Número de registro formateado
+            registroEntrada.setNumeroRegistroFormateado(RegistroUtils.numeroRegistroFormateado(registroEntrada, libro, oficina));
 
-        // Si no ha introducido ninguna fecha de Origen
-        if (registroEntrada.getRegistroDetalle().getFechaOrigen() == null) {
-            registroEntrada.getRegistroDetalle().setFechaOrigen(registroEntrada.getFecha());
-        }
-
-        //Si no se ha espeficicado un NumeroRegistroOrigen, le asignamos el propio
-        if (StringUtils.isEmpty(registroEntrada.getRegistroDetalle().getNumeroRegistroOrigen())) {
-
-            registroEntrada.getRegistroDetalle().setNumeroRegistroOrigen(registroEntrada.getNumeroRegistroFormateado());
-        }
-
-        // Guardar RegistroEntrada
-        registroEntrada = persist(registroEntrada);
-
-        // Guardar el HistorioRegistroEntrada
-        historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()),"registro.modificacion.creacion" ),false);
-
-        // Procesamos los Interesados
-        if(interesados != null && interesados.size() > 0){
-            interesadoEjb.guardarInteresados(interesados, registroEntrada.getRegistroDetalle());
-        }
-
-        // TODO Controlar custodyID y si hay fallo borrar todos los Custody
-        if (anexosFull != null && anexosFull.size() != 0) {
-            final Long registroID = registroEntrada.getId();
-            for (AnexoFull anexoFull : anexosFull) {
-
-                anexoFull.getAnexo().setRegistroDetalle(registroEntrada.getRegistroDetalle());
-                anexoEjb.crearAnexo(anexoFull, usuarioEntidad, registroID, "entrada");
-
+            // Si no ha introducido ninguna fecha de Origen
+            if (registroEntrada.getRegistroDetalle().getFechaOrigen() == null) {
+                registroEntrada.getRegistroDetalle().setFechaOrigen(registroEntrada.getFecha());
             }
-        }
-        //Llamamos al plugin de postproceso
-        postProcesoNuevoRegistro(registroEntrada,usuarioEntidad.getEntidad().getId());
 
-        return registroEntrada;
+            //Si no se ha espeficicado un NumeroRegistroOrigen, le asignamos el propio
+            if (StringUtils.isEmpty(registroEntrada.getRegistroDetalle().getNumeroRegistroOrigen())) {
+
+                registroEntrada.getRegistroDetalle().setNumeroRegistroOrigen(registroEntrada.getNumeroRegistroFormateado());
+            }
+
+            // Guardar RegistroEntrada
+            registroEntrada = persist(registroEntrada);
+
+            // Guardar el HistorioRegistroEntrada
+            historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()),"registro.modificacion.creacion" ),false);
+
+            // Procesamos los Interesados
+            if(interesados != null && interesados.size() > 0){
+                interesadoEjb.guardarInteresados(interesados, registroEntrada.getRegistroDetalle());
+            }
+
+            // TODO Controlar custodyID y si hay fallo borrar todos los Custody
+            if (anexosFull != null && anexosFull.size() != 0) {
+                final Long registroID = registroEntrada.getId();
+                for (AnexoFull anexoFull : anexosFull) {
+
+                    anexoFull.getAnexo().setRegistroDetalle(registroEntrada.getRegistroDetalle());
+                    anexoEjb.crearAnexo(anexoFull, usuarioEntidad, registroID, "entrada");
+
+                }
+            }
+            //Llamamos al plugin de postproceso
+            postProcesoNuevoRegistro(registroEntrada,usuarioEntidad.getEntidad().getId());
+
+            return registroEntrada;
+
+        }catch (I18NException i18n){
+            log.info("Error registrando la entrada");
+            i18n.printStackTrace();
+            ejbContext.setRollbackOnly();
+            throw i18n;
+
+        }catch (I18NValidationException i18nv){
+            log.info("Error de validación registrando la entrada");
+            i18nv.printStackTrace();
+            ejbContext.setRollbackOnly();
+            throw i18nv;
+
+        } catch (Exception e){
+            log.info("Error registrando la entrada");
+            e.printStackTrace();
+            ejbContext.setRollbackOnly();
+            throw e;
+        }
 
     }
 
@@ -768,7 +785,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             Trazabilidad trazabilidad = new Trazabilidad(RegwebConstantes.TRAZABILIDAD_RECTIFICACION);
             trazabilidad.setRegistroEntradaOrigen(getReference(idRegistro));
             trazabilidad.setRegistroEntradaDestino(registroEntrada);
-            trazabilidad.setAsientoRegistralSir(null);
+            trazabilidad.setRegistroSir(null);
             trazabilidad.setOficioRemision(null);
             trazabilidad.setRegistroSalida(null);
             trazabilidad.setFecha(new Date());

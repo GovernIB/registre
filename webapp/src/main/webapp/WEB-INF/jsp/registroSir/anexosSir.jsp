@@ -8,7 +8,7 @@
         <div class="panel-heading">
             <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong><spring:message
                     code="anexo.anexos"/></strong>: <spring:message
-                    code="tipoDocumentacionFisica.${asientoRegistralSir.documentacionFisica}"/>
+                    code="tipoDocumentacionFisica.${registroSir.documentacionFisica}"/>
             </h3>
         </div>
 
@@ -16,18 +16,18 @@
             <div class="col-xs-12">
                 <div id="anexosdiv" class="table-responsive">
 
-                    <c:if test="${empty asientoRegistralSir.anexos}">
+                    <c:if test="${empty registroSir.anexos}">
                         <div class="alert alert-warning alert-dismissable">
                             <strong><spring:message code="regweb.listado.vacio"/> <spring:message code="anexo.anexo"/></strong>
                         </div>
                     </c:if>
 
-                    <c:if test="${not empty asientoRegistralSir.anexos}">
+                    <c:if test="${not empty registroSir.anexos}">
                         <table id="anexos" class="table table-bordered table-hover table-striped">
                             <colgroup>
                                 <col>
                                 <col>
-                                <c:if test="${asientoRegistralSir.estado != 'ACEPTADO'}">
+                                <c:if test="${registroSir.estado != 'ACEPTADO'}">
                                     <col>
                                     <col>
                                     <col>
@@ -39,7 +39,7 @@
                                 <th><spring:message code="anexo.titulo"/></th>
                                 <th><spring:message code="anexo.sir.tipoDocumento"/></th>
                                 <th><spring:message code="anexo.tamano"/></th>
-                                <c:if test="${asientoRegistralSir.estado != 'ACEPTADO'}">
+                                <c:if test="${registroSir.estado != 'ACEPTADO'}">
                                     <th><spring:message code="anexo.sir.validezDocumento"/></th>
                                     <th><spring:message code="anexo.origen"/></th>
                                     <th><spring:message code="anexo.tipoDocumental"/></th>
@@ -50,7 +50,7 @@
 
                             <tbody>
 
-                            <c:forEach var="anexo" items="${asientoRegistralSir.anexos}" varStatus="status">
+                            <c:forEach var="anexo" items="${registroSir.anexos}" varStatus="status">
                                 <tr id="anexo${anexo.id}">
                                     <td>
                                         <c:if test="${anexo.nombreFichero != anexo.nombreFicheroCorto}">
@@ -69,18 +69,18 @@
                                              Es el caso 4: DOCUMENTO CON FIRMA DETACHED y los documentos que son firmas
                                              se marcan como FICHERO INTERNO y los campos NTI solo se aplican al documento que no es la firma
                                         --%>
-                                    <c:if test="${asientoRegistralSir.estado != 'ACEPTADO'}">
+                                    <c:if test="${registroSir.estado != 'ACEPTADO'}">
                                         <c:if test="${empty anexo.validezDocumento}">
                                             <td>
                                                     <%--Si s'ha de posar valor per validez Documento--%>
                                                 <select id="camposNTIs[${status.index}].idValidezDocumento"
                                                         name="camposNTIs[${status.index}].idValidezDocumento"
                                                         class="chosen-select"
-                                                        <c:if test="${anexo.tipoDocumento == RegwebConstantes.CODIGO_SICRES_BY_TIPO_DOCUMENTO[RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO] || asientoRegistralSir.estado == 'ACEPTADO'}">disabled</c:if> >
-                                                    <c:forEach items="${tiposValidezDocumento}" var="validezDocumento">
-                                                        <option value="${validezDocumento}"><spring:message
-                                                                code="tipoValidezDocumento.${validezDocumento}"/></option>
-                                                    </c:forEach>
+                                                        <c:if test="${anexo.tipoDocumento == RegwebConstantes.CODIGO_SICRES_BY_TIPO_DOCUMENTO[RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO] || registroSir.estado == 'ACEPTADO'}">disabled</c:if> >
+                                                        <c:forEach items="${tiposValidezDocumento}" var="validezDocumento">
+                                                            <option value="${validezDocumento}"><spring:message
+                                                                    code="tipoValidezDocumento.${validezDocumento}"/></option>
+                                                        </c:forEach>
                                                 </select>
                                             </td>
                                         </c:if>
@@ -94,10 +94,10 @@
                                             <select id="camposNTIs[${status.index}].idOrigen"
                                                     name="camposNTIs[${status.index}].idOrigen" class="chosen-select"
                                                     <c:if test="${anexo.tipoDocumento == RegwebConstantes.CODIGO_SICRES_BY_TIPO_DOCUMENTO[RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO] }">disabled</c:if>>
-                                                <option value="0"><spring:message
-                                                        code="anexo.origen.ciudadano"/></option>
-                                                <option value="1" selected="selected"><spring:message
-                                                        code="anexo.origen.administracion"/></option>
+                                                    <option value="0"><spring:message
+                                                            code="anexo.origen.ciudadano"/></option>
+                                                    <option value="1" selected="selected"><spring:message
+                                                            code="anexo.origen.administracion"/></option>
                                             </select>
                                         </td>
                                         <td>
@@ -105,10 +105,11 @@
                                                     name="camposNTIs[${status.index}].idTipoDocumental"
                                                     class="chosen-select"
                                                     <c:if test="${anexo.tipoDocumento == RegwebConstantes.CODIGO_SICRES_BY_TIPO_DOCUMENTO[RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO] }">disabled</c:if>>
-                                                <c:forEach items="${tiposDocumentales}" var="tipoDocumental">
-                                                    <option value="${tipoDocumental.codigoNTI}"><i:trad
-                                                            value="${tipoDocumental}" property="nombre"/></option>
-                                                </c:forEach>
+                                                    <option value="">...</option>
+                                                    <c:forEach items="${tiposDocumentales}" var="tipoDocumental">
+                                                        <option value="${tipoDocumental.codigoNTI}"><i:trad
+                                                                value="${tipoDocumental}" property="nombre"/></option>
+                                                    </c:forEach>
                                             </select>
 
                                         </td>

@@ -25,7 +25,7 @@
 
                     <c:if test="${empty registro.registroDetalle.anexos}">
                         <div class="alert alert-warning ">
-                            <spring:message code="regweb.listado.vacio"/> <strong><spring:message code="anexo.anexo"/></strong>
+                            <spring:message code="regweb.listado.vacio"/><strong> <spring:message code="anexo.anexo"/></strong>
                         </div>
                     </c:if>
 

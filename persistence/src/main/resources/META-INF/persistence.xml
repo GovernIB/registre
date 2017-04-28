@@ -59,7 +59,7 @@ http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
         <class>es.caib.regweb3.model.UsuarioEntidad</class>
 
         <!--SIR-->
-        <class>es.caib.regweb3.model.AsientoRegistralSir</class>
+        <class>es.caib.regweb3.model.RegistroSir</class>
         <class>es.caib.regweb3.model.InteresadoSir</class>
         <class>es.caib.regweb3.model.AnexoSir</class>
 

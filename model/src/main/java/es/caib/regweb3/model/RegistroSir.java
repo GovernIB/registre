@@ -1,7 +1,7 @@
 package es.caib.regweb3.model;
 
 import es.caib.regweb3.model.utils.DocumentacionFisica;
-import es.caib.regweb3.model.utils.EstadoAsientoRegistralSir;
+import es.caib.regweb3.model.utils.EstadoRegistroSir;
 import es.caib.regweb3.model.utils.IndicadorPrueba;
 import es.caib.regweb3.model.utils.TipoRegistro;
 import org.hibernate.annotations.ForeignKey;
@@ -15,20 +15,20 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Implementación de un Asiento Registral de intercambio
+ * Implementación de un RegistroSir de intercambio
  */
 @Entity
-@Table(name = "RWE_ASIENTO_REGISTRAL_SIR")
+@Table(name = "RWE_REGISTRO_SIR")
 @SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
-public class AsientoRegistralSir implements Serializable {
+public class RegistroSir implements Serializable {
 
     /**
-     * Id del AsientoRegistralSir
+     * Id del RegistroSir
      */
     private Long id;
 
     /**
-     * Entidad a la que pertenece el AsientoRegistralSir
+     * Entidad a la que pertenece el RegistroSir
      */
     private Entidad entidad;
 
@@ -153,9 +153,9 @@ public class AsientoRegistralSir implements Serializable {
     private String identificadorIntercambio;
 
     /**
-     * Estado del asiento registral.
+     * Estado del RegistroSir
      */
-    private EstadoAsientoRegistralSir estado;
+    private EstadoRegistroSir estado;
 
     /**
      * Aplicación y versión emisora.
@@ -215,20 +215,25 @@ public class AsientoRegistralSir implements Serializable {
     private String solicita;
 
     /**
-     * Lista de anexos del asiento registral.
+     * Lista de anexos del RegistroSir.
      */
     private List<AnexoSir> anexos = null;
 
     /**
-     * Lista de interesados del asiento registral.
+     * Lista de interesados del RegistroSir.
      */
     private List<InteresadoSir> interesados = null;
 
+    private Date fechaRecepcion;
+    private Date fechaEstado;
+    private Integer numeroReintentos;
+    private String codigoError;
+    private String descripcionError;
 
-    public AsientoRegistralSir() {
+    public RegistroSir() {
     }
 
-    public AsientoRegistralSir(Long id) {
+    public RegistroSir(Long id) {
         this.id=id;
     }
 
@@ -245,7 +250,7 @@ public class AsientoRegistralSir implements Serializable {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "ENTIDAD")
-    @ForeignKey(name = "RWE_ARS_ENTIDAD_FK")
+    @ForeignKey(name = "RWE_RES_ENTIDAD_FK")
     public Entidad getEntidad() {
         return entidad;
     }
@@ -559,7 +564,7 @@ public class AsientoRegistralSir implements Serializable {
     }
 
 
-    @OneToMany(cascade= CascadeType.ALL,targetEntity=AnexoSir.class, mappedBy="idAsientoRegistralSir")
+    @OneToMany(cascade= CascadeType.ALL,targetEntity=AnexoSir.class, mappedBy="registroSir")
     @LazyCollection(value= LazyCollectionOption.FALSE)
     public List<AnexoSir> getAnexos() {
         if (anexos == null) {
@@ -573,7 +578,7 @@ public class AsientoRegistralSir implements Serializable {
         this.anexos = anexos;
     }
 
-    @OneToMany(cascade= CascadeType.ALL,targetEntity=InteresadoSir.class, mappedBy="idAsientoRegistralSir")
+    @OneToMany(cascade= CascadeType.ALL,targetEntity=InteresadoSir.class, mappedBy="registroSir")
     @LazyCollection(value= LazyCollectionOption.FALSE)
     public List<InteresadoSir> getInteresados() {
         if (interesados == null) {
@@ -589,15 +594,16 @@ public class AsientoRegistralSir implements Serializable {
 
     @Column(name = "ESTADO", length = 2, nullable = false)
     @Enumerated(EnumType.ORDINAL)
-    public EstadoAsientoRegistralSir getEstado() {
+    public EstadoRegistroSir getEstado() {
         return estado;
     }
 
-    public void setEstado(EstadoAsientoRegistralSir estado) {
+    public void setEstado(EstadoRegistroSir estado) {
         this.estado = estado;
     }
 
-    /*public Date getFechaEstado() {
+    @Column(name = "FECHA_ESTADO", length = 14)
+    public Date getFechaEstado() {
         return fechaEstado;
     }
 
@@ -605,14 +611,7 @@ public class AsientoRegistralSir implements Serializable {
         this.fechaEstado = fechaEstado;
     }
 
-    public Date getFechaEnvio() {
-        return fechaEnvio;
-    }
-
-    public void setFechaEnvio(Date fechaEnvio) {
-        this.fechaEnvio = fechaEnvio;
-    }
-
+    @Column(name = "FECHA_RECEPCION", length = 14)
     public Date getFechaRecepcion() {
         return fechaRecepcion;
     }
@@ -621,14 +620,16 @@ public class AsientoRegistralSir implements Serializable {
         this.fechaRecepcion = fechaRecepcion;
     }
 
-    public int getNumeroReintentos() {
+    @Column(name = "REINTENTOS")
+    public Integer getNumeroReintentos() {
         return numeroReintentos;
     }
 
-    public void setNumeroReintentos(int numeroReintentos) {
+    public void setNumeroReintentos(Integer numeroReintentos) {
         this.numeroReintentos = numeroReintentos;
     }
 
+    @Column(name = "COD_ERROR")
     public String getCodigoError() {
         return codigoError;
     }
@@ -637,22 +638,23 @@ public class AsientoRegistralSir implements Serializable {
         this.codigoError = codigoError;
     }
 
-    public String getDecodificacionError() {
-        return decodificacionError;
+    @Column(name = "DESC_ERROR", length = 2000)
+    public String getDescripcionError() {
+        return descripcionError;
     }
 
-    public void setDecodificacionError(String decodificacionError) {
-        this.decodificacionError = decodificacionError;
-    }*/
+    public void setDescripcionError(String descripcionError) {
+        this.descripcionError = descripcionError;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        AsientoRegistralSir asientoRegistral = (AsientoRegistralSir) o;
+        RegistroSir registroSir = (RegistroSir) o;
 
-        if (!id.equals(asientoRegistral.id)) return false;
+        if (!id.equals(registroSir.id)) return false;
 
         return true;
     }

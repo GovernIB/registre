@@ -32,7 +32,6 @@ public interface RegwebConstantes {
     String SESSION_OFICINAS = "oficinas";
     String SESSION_OFICINA = "oficinaActiva";
     String SESSION_ORGANISMOS_OFICINA = "organismosOficinaActiva";
-    String SESSION_ORGANISMOS_SIR = "organismosSIR";
     String SESSION_OFICINAS_ADMINISTRADAS = "oficinasAdministradas";
     String SESSION_LIBROSADMINISTRADOS = "librosAdministrados";
     String SESSION_MIGRADOS = "registrosMigrados";
@@ -178,7 +177,7 @@ public interface RegwebConstantes {
 
     /*------------ TIPO VALIDEZ DOCUMENTAL ------------*/
 
-    // NTI    SICRES
+    //SICRES
     Long TIPOVALIDEZDOCUMENTO_COPIA = 1L;
     Long TIPOVALIDEZDOCUMENTO_COPIA_COMPULSADA = 2L;
     Long TIPOVALIDEZDOCUMENTO_COPIA_ORIGINAL = 3L;
@@ -204,10 +203,10 @@ public interface RegwebConstantes {
 
 
     Map<Long, String> CODIGO_NTI_BY_TIPOVALIDEZDOCUMENTO = new HashMap<Long, String>() {{
-        put(TIPOVALIDEZDOCUMENTO_COPIA, "EE0" + TIPOVALIDEZDOCUMENTO_COPIA);
-        put(TIPOVALIDEZDOCUMENTO_COPIA_COMPULSADA, "EE0" + TIPOVALIDEZDOCUMENTO_COPIA_COMPULSADA);
-        put(TIPOVALIDEZDOCUMENTO_COPIA_ORIGINAL, "EE0" + TIPOVALIDEZDOCUMENTO_COPIA_ORIGINAL);
-        put(TIPOVALIDEZDOCUMENTO_ORIGINAL, "EE0" + TIPOVALIDEZDOCUMENTO_ORIGINAL);
+        put(TIPOVALIDEZDOCUMENTO_COPIA, "EE99");
+        put(TIPOVALIDEZDOCUMENTO_COPIA_COMPULSADA, "EE99");
+        put(TIPOVALIDEZDOCUMENTO_COPIA_ORIGINAL, "EE03");
+        put(TIPOVALIDEZDOCUMENTO_ORIGINAL, "EE01");
     }};
 
     Map<String, Long> TIPOVALIDEZDOCUMENTO_BY_CODIGO_NTI
@@ -582,4 +581,14 @@ public interface RegwebConstantes {
 
     /* -------------- EXPRESIÓN CRON --------------*/
     String CRON_INICIALIZAR_CONTADORES = "0 0 0 1 1 ? *";
+    String CRON_ENVIOS_SIR_PENDIENTES = "0 0/2 * 1/1 * ? *"; //0 0 0/2 1/1 * ? *
+
+    /* -------------- PLUGINS POR DEFECTO --------------*/
+    String PLUGIN_DISTRIBUCION_CLASS_MOCK="es.caib.regweb3.plugins.distribucion.mock.DistribucionMockPlugin";
+    String PLUGIN_JUSTIFICANTE_CLASS_MOCK="es.caib.regweb3.plugins.justificante.mock.JustificanteMockPlugin";
+
+    /* -------------- TIPO PLUGIN --------------*/
+    Long PLUGIN_DISTRIBUCION = 1L;
+    Long PLUGIN_JUSTIFICANTE = 2L;
+    Long PLUGIN_POSTPROCESO = 3L;
 }

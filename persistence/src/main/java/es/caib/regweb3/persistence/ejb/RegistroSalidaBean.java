@@ -13,6 +13,7 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
+import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -37,26 +38,29 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
+    @Resource
+    private javax.ejb.SessionContext ejbContext;
+
     @EJB(mappedName = "regweb3/LibroEJB/local")
-    public LibroLocal libroEjb;
+    private LibroLocal libroEjb;
 
     @EJB(mappedName = "regweb3/OficinaEJB/local")
-    public OficinaLocal oficinaEjb;
+    private OficinaLocal oficinaEjb;
 
     @EJB(mappedName = "regweb3/HistoricoRegistroSalidaEJB/local")
-    public HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
+    private HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
 
     @EJB(mappedName = "regweb3/ContadorEJB/local")
-    public ContadorLocal contadorEjb;
+    private ContadorLocal contadorEjb;
 
     @EJB(mappedName = "regweb3/AnexoEJB/local")
-    public AnexoLocal anexoEjb;
+    private AnexoLocal anexoEjb;
 
     @EJB(mappedName = "regweb3/OrganismoEJB/local")
-    public OrganismoLocal organismoEjb;
+    private OrganismoLocal organismoEjb;
 
     @EJB(mappedName = "regweb3/InteresadoEJB/local")
-    public InteresadoLocal interesadoEjb;
+    private InteresadoLocal interesadoEjb;
 
 
     @Override
@@ -82,60 +86,76 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         return q.getResultList();
     }
 
-    @Override
-    public RegistroSalida registrarSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad, List<Interesado> interesados)
-            throws Exception, I18NException, I18NValidationException {
-        return registrarSalida(registroSalida, usuarioEntidad,interesados, null);
-    }
-
 
     @Override
     public synchronized RegistroSalida registrarSalida(RegistroSalida registroSalida,
                                                        UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos)
             throws Exception, I18NException, I18NValidationException {
 
-        // Obtenemos el Número de registro
-        Libro libro = libroEjb.findById(registroSalida.getLibro().getId());
-        Oficina oficina = oficinaEjb.findById(registroSalida.getOficina().getId());
-        NumeroRegistro numeroRegistro = contadorEjb.incrementarContador(libro.getContadorSalida().getId());
-        registroSalida.setNumeroRegistro(numeroRegistro.getNumero());
-        registroSalida.setFecha(numeroRegistro.getFecha());
+        try{
 
-        // Generamos el Número de registro formateado
-        registroSalida.setNumeroRegistroFormateado(RegistroUtils.numeroRegistroFormateado(registroSalida, libro, oficina));
+            // Obtenemos el Número de registro
+            Libro libro = libroEjb.findById(registroSalida.getLibro().getId());
+            Oficina oficina = oficinaEjb.findById(registroSalida.getOficina().getId());
+            NumeroRegistro numeroRegistro = contadorEjb.incrementarContador(libro.getContadorSalida().getId());
+            registroSalida.setNumeroRegistro(numeroRegistro.getNumero());
+            registroSalida.setFecha(numeroRegistro.getFecha());
 
-        // Si no ha introducido ninguna fecha de Origen
-        if (registroSalida.getRegistroDetalle().getFechaOrigen() == null) {
-            registroSalida.getRegistroDetalle().setFechaOrigen(registroSalida.getFecha());
-        }
+            // Generamos el Número de registro formateado
+            registroSalida.setNumeroRegistroFormateado(RegistroUtils.numeroRegistroFormateado(registroSalida, libro, oficina));
 
-        //Si no se ha espeficicado un NumeroRegistroOrigen, le asignamos el propio
-        if (StringUtils.isEmpty(registroSalida.getRegistroDetalle().getNumeroRegistroOrigen())) {
-
-            registroSalida.getRegistroDetalle().setNumeroRegistroOrigen(registroSalida.getNumeroRegistroFormateado());
-        }
-
-        // Guardamos el RegistroSalida
-        registroSalida = persist(registroSalida);
-
-        //Guardamos el HistorioRegistroSalida
-        historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(registroSalida, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()),"registro.modificacion.creacion" ),false);
-
-        // Procesamos los Interesados
-        if(interesados != null && interesados.size() > 0){
-            interesadoEjb.guardarInteresados(interesados, registroSalida.getRegistroDetalle());
-        }
-
-        if (anexos != null && anexos.size() != 0) {
-            final Long registroID = registroSalida.getId();
-            for (AnexoFull anexoFull : anexos) {
-                anexoFull.getAnexo().setRegistroDetalle(registroSalida.getRegistroDetalle());
-                anexoEjb.crearAnexo(anexoFull, usuarioEntidad, registroID, "salida");
+            // Si no ha introducido ninguna fecha de Origen
+            if (registroSalida.getRegistroDetalle().getFechaOrigen() == null) {
+                registroSalida.getRegistroDetalle().setFechaOrigen(registroSalida.getFecha());
             }
-        }
 
-        postProcesoNuevoRegistro(registroSalida,usuarioEntidad.getEntidad().getId());
-        return registroSalida;
+            //Si no se ha espeficicado un NumeroRegistroOrigen, le asignamos el propio
+            if (StringUtils.isEmpty(registroSalida.getRegistroDetalle().getNumeroRegistroOrigen())) {
+
+                registroSalida.getRegistroDetalle().setNumeroRegistroOrigen(registroSalida.getNumeroRegistroFormateado());
+            }
+
+            // Guardamos el RegistroSalida
+            registroSalida = persist(registroSalida);
+
+            //Guardamos el HistorioRegistroSalida
+            historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(registroSalida, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()),"registro.modificacion.creacion" ),false);
+
+            // Procesamos los Interesados
+            if(interesados != null && interesados.size() > 0){
+                interesadoEjb.guardarInteresados(interesados, registroSalida.getRegistroDetalle());
+            }
+
+            if (anexos != null && anexos.size() != 0) {
+                final Long registroID = registroSalida.getId();
+                for (AnexoFull anexoFull : anexos) {
+                    anexoFull.getAnexo().setRegistroDetalle(registroSalida.getRegistroDetalle());
+                    anexoEjb.crearAnexo(anexoFull, usuarioEntidad, registroID, "salida");
+                }
+            }
+
+            postProcesoNuevoRegistro(registroSalida,usuarioEntidad.getEntidad().getId());
+
+            return registroSalida;
+
+        }catch (I18NException i18n){
+            log.info("Error registrando la salida");
+            i18n.printStackTrace();
+            ejbContext.setRollbackOnly();
+            throw i18n;
+
+        }catch (I18NValidationException i18nv){
+            log.info("Error de validación registrando la salida");
+            i18nv.printStackTrace();
+            ejbContext.setRollbackOnly();
+            throw i18nv;
+
+        } catch (Exception e){
+            log.info("Error registrando la salida");
+            e.printStackTrace();
+            ejbContext.setRollbackOnly();
+            throw e;
+        }
 
     }
 

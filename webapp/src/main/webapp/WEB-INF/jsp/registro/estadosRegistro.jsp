@@ -24,6 +24,6 @@
         <span class="label label-danger"><spring:message code="registro.estado.${param.estado}" /></span>
     </c:when>
     <c:when test="${param.estado == RegwebConstantes.REGISTRO_RECHAZADO}">
-        <span class="label label-danger"><spring:message code="registro.estado.${param.estado}" /></span>
+        <span class="label label-danger"><spring:message code="registro.estado.${param.estado}" />: ${param.decodificacionTipoAnotacion}</span>
     </c:when>
 </c:choose>

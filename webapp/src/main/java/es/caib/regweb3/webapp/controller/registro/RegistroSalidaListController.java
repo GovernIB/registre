@@ -285,7 +285,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
         if(oficinasSIR.isEmpty()){
             log.info("Este registro no se puede enviar via SIR, no tiene oficinas");
-            Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.error.envio.oficinas"));
+            Mensaje.saveMessageError(request, getMessage("registroSir.error.envio.oficinas"));
             return new ModelAndView("redirect:/registroSalida/" + idRegistro + "/detalle");
         }
 
@@ -317,10 +317,10 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
         }catch (SIRException e){
             e.printStackTrace();
-            Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.error.envio"));
+            Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
         } catch (I18NException e) {
             e.printStackTrace();
-            Mensaje.saveMessageError(request, getMessage("asientoRegistralSir.error.envio"));
+            Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
         }
 
         return new ModelAndView("redirect:/registroSalida/" + idRegistro + "/detalle");

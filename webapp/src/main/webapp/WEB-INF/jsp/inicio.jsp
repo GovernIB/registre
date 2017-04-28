@@ -313,14 +313,14 @@
                         <c:set var="avisos" value="0"/>
                     </c:if>
 
-                    <%--ASIENTOS REGISTRALES SIR PENDIENTES DE PROCESAR--%>
-                    <c:if test="${not empty asientosRegistralesSir}">
+                    <%--REGISTROS SIR PENDIENTES DE PROCESAR--%>
+                    <c:if test="${not empty registrosSir}">
                         <c:set var="avisos" value="${avisos+1}"/>
                         <div class="col-xs-6">
 
                             <div class="panel panel-success">
                                 <div class="panel-heading">
-                                    <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="asientoRegistralSir.pendientesProcesar"/></strong> </h3>
+                                    <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="registroSir.pendientesProcesar"/></strong> </h3>
                                 </div>
 
                                 <div class="panel-body">
@@ -337,23 +337,23 @@
                                             </colgroup>
                                             <thead>
                                             <tr>
-                                                <th><spring:message code="asientoRegistralSir.numero"/></th>
-                                                <th><spring:message code="asientoRegistralSir.fecha"/></th>
-                                                <th><spring:message code="asientoRegistralSir.oficinaDestino"/></th>
-                                                <th><spring:message code="asientoRegistralSir.extracto"/></th>
+                                                <th><spring:message code="registroSir.numeroRegistro"/></th>
+                                                <th><spring:message code="registroSir.fechaRegistro"/></th>
+                                                <th><spring:message code="registroSir.oficinaDestino"/></th>
+                                                <th><spring:message code="registroSir.extracto"/></th>
                                                 <th class="center"><spring:message code="regweb.acciones"/></th>
                                             </tr>
                                             </thead>
 
                                             <tbody>
-                                            <c:forEach var="asientoRegistralSir" items="${asientosRegistralesSir}">
+                                            <c:forEach var="registroSir" items="${registrosSir}">
                                                 <tr>
-                                                    <td>${asientoRegistralSir.numeroRegistro}</td>
-                                                    <td><fmt:formatDate value="${asientoRegistralSir.fechaRegistro}" pattern="dd/MM/yyyy"/></td>
-                                                    <td>${asientoRegistralSir.decodificacionEntidadRegistralDestino}</td>
-                                                    <td>${asientoRegistralSir.resumen}</td>
+                                                    <td>${registroSir.numeroRegistro}</td>
+                                                    <td><fmt:formatDate value="${registroSir.fechaRegistro}" pattern="dd/MM/yyyy"/></td>
+                                                    <td>${registroSir.decodificacionEntidadRegistralDestino}</td>
+                                                    <td>${registroSir.resumen}</td>
                                                     <td class="center">
-                                                        <a class="btn btn-success btn-sm" href="<c:url value="/asientoRegistralSir/${asientoRegistralSir.id}/detalle"/>" title="<spring:message code="asientoRegistralSir.detalle"/>"><span class="fa fa-eye"></span></a>
+                                                        <a class="btn btn-success btn-sm" href="<c:url value="/registroSir/${registroSir.id}/detalle"/>" title="<spring:message code="registroSir.detalle"/>"><span class="fa fa-eye"></span></a>
                                                     </td>
                                                 </tr>
                                             </c:forEach>

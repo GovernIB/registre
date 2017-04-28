@@ -4,7 +4,7 @@ package es.caib.regweb3.model.utils;
 /**
  *
  */
-public enum EstadoAsientoRegistralSir {
+public enum EstadoRegistroSir {
 
     PENDIENTE_ENVIO("0", "Pendiente de envío"),
     ENVIADO("1", "Enviado"),
@@ -27,7 +27,7 @@ public enum EstadoAsientoRegistralSir {
     private final String name;
 
 
-    EstadoAsientoRegistralSir(String value, String name) {
+    EstadoRegistroSir(String value, String name) {
         this.value = value;
         this.name = name;
     }
@@ -40,11 +40,11 @@ public enum EstadoAsientoRegistralSir {
         return name;
     }
 
-    public static EstadoAsientoRegistralSir getEstadoAsientoRegistral(String value) {
+    public static EstadoRegistroSir getEstadoRegistroSir(String value) {
 
         if (value != null) {
 
-            for (EstadoAsientoRegistralSir e : EstadoAsientoRegistralSir.values()) {
+            for (EstadoRegistroSir e : EstadoRegistroSir.values()) {
                 if (value.equals(e.getValue())) return e;
             }
 

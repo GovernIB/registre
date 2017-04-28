@@ -1,6 +1,6 @@
 package es.caib.regweb3.sir.ejb;
 
-import es.caib.regweb3.model.AsientoRegistralSir;
+import es.caib.regweb3.model.RegistroSir;
 import es.caib.regweb3.sir.core.excepcion.SIRException;
 import es.caib.regweb3.sir.core.model.Errores;
 import es.caib.regweb3.sir.utils.Sicres3XML;
@@ -27,19 +27,19 @@ public class EmisionBean implements EmisionLocal{
 
 
     /**
-     * Envío de un AsientoRegistral en formato SICRES3 a un nodo distribuido
-     * @param asientoRegistralSir
+     * Envío de un RegistroSir en formato SICRES3 a un nodo distribuido
+     * @param registroSir
 
      * @return
      */
-    public void enviarFicheroIntercambio(AsientoRegistralSir asientoRegistralSir)throws Exception{
+    public void enviarFicheroIntercambio(RegistroSir registroSir)throws Exception{
 
         try {
 
-            log.info("Enviando el registro al nodo distribuido: " + asientoRegistralSir.getIdentificadorIntercambio());
+            log.info("Enviando el registro al nodo distribuido: " + registroSir.getIdentificadorIntercambio());
 
-            // Enviamos el asiento registral al nodo distribuido.
-            enviar(asientoRegistralSir);
+            // Enviamos el RegistroSir al nodo distribuido.
+            enviar(registroSir);
 
 
         } catch (Exception e) {
@@ -51,56 +51,59 @@ public class EmisionBean implements EmisionLocal{
     }
 
     /**
-     * Reenvío de un AsientoRegistral en formato SICRES3 a un nodo distribuido
-     * @param asientoRegistralSir
+     * Reenvío de un RegistroSir en formato SICRES3 a un nodo distribuido
+     * @param registroSir
      */
-    public void reenviarFicheroIntercambio(AsientoRegistralSir asientoRegistralSir)  throws Exception {
+    public void reenviarFicheroIntercambio(RegistroSir registroSir)  throws Exception {
 
-        log.info("Reenviando el asiento registral al nodo distribuido: " + asientoRegistralSir.getIdentificadorIntercambio());
+        log.info("Reenviando el RegistroSir al nodo distribuido: " + registroSir.getIdentificadorIntercambio());
 
-        // Reenviamos el asiento registral al nodo distribuido.
-        enviar(asientoRegistralSir);
+        // Reenviamos el RegistroSir al nodo distribuido.
+        enviar(registroSir);
 
     }
 
     /**
-     * Rechazo de un AsientoRegistral en formato SICRES3 a un nodo distribuido
-     * @param asientoRegistralSir
+     * Rechazo de un RegistroSir en formato SICRES3 a un nodo distribuido
+     * @param registroSir
      */
-    public void rechazarFicheroIntercambio(AsientoRegistralSir asientoRegistralSir) throws Exception{
+    public void rechazarFicheroIntercambio(RegistroSir registroSir) throws Exception{
 
-        log.info("Rezhazando el asiento registral al nodo distribuido: " + asientoRegistralSir.getIdentificadorIntercambio());
+        log.info("Rezhazando el RegistroSir al nodo distribuido: " + registroSir.getIdentificadorIntercambio());
 
-        // Rechazamos el asiento registral al nodo distribuido.
-        enviar(asientoRegistralSir);
+        // Rechazamos el RegistroSir al nodo distribuido.
+        enviar(registroSir);
 
     }
 
     /**
-     * Envia un asiento registral a un nodo distribuido creando previamente el fichero de intercambio
-     * @param asientoRegistralSir
+     * Envia un RegistroSir a un nodo distribuido creando previamente el fichero de intercambio
+     * @param registroSir
      */
-    private void enviar(AsientoRegistralSir asientoRegistralSir){
+    private void enviar(RegistroSir registroSir){
 
         try{
         // Creamos el xml de intercambio
-        String xml = sicres3XML.crearXMLFicheroIntercambioSICRES3(asientoRegistralSir);
+        String xml = sicres3XML.crearXMLFicheroIntercambioSICRES3(registroSir);
+        log.info("-----------------------------------------------------------------------------------------");
+        log.info("");
         log.info("Xml Fichero Intercambio generado: " + xml);
+        log.info("");
+        log.info("-----------------------------------------------------------------------------------------");
 
+        // Enviamos el Fichero de intercambio
         RespuestaWS respuesta = ws_sir6_b_recepcionFicheroDeAplicacion(xml);
 
         if (respuesta != null) {
-            log.info("Respuesta: " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
 
             if (Errores.OK.getValue().equals(respuesta.getCodigo())) {
 
-                log.info("AsientoRegistral enviado correctamente");
+                log.info("RegistroSir enviado correctamente: " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
             }else{
                 log.error("Respuesta: " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
                 throw new SIRException("Error " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
             }
         }
-
 
         } catch (Exception e) {
             log.error("Error al enviar el fichero de intercambio: " + e);

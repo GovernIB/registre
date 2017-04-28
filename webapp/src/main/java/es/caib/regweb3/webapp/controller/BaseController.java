@@ -301,10 +301,29 @@ public class BaseController {
      * @throws Exception
      */
     public LinkedHashSet<Organismo> getOrganismosOficinaActiva(HttpServletRequest request) throws Exception {
-        //return organismoEjb.getByOficinaActiva(getOficinaActiva(request));
         HttpSession session = request.getSession();
 
         return (LinkedHashSet<Organismo>) session.getAttribute(RegwebConstantes.SESSION_ORGANISMOS_OFICINA);
+    }
+
+    /**
+     * Obtiene los unicamente los códigos de los Organismos de la OficinaActiva que puede gestionar el usuario
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    public Set<String> getOrganismosOficinaActivaCodigo(HttpServletRequest request) throws Exception {
+
+        LinkedHashSet<Organismo> organismos = getOrganismosOficinaActiva(request);
+
+        // Creamos un Set solo con los codigos
+        Set<String> organismosCodigo = new HashSet<String>();
+
+        for (Organismo organismo : organismos) {
+            organismosCodigo.add(organismo.getCodigo());
+        }
+
+        return organismosCodigo;
     }
 
     /**
@@ -351,39 +370,6 @@ public class BaseController {
             organismosCodigo.add(organismo.getCodigo());
 
         }
-        return organismosCodigo;
-    }
-
-    /**
-     * Obtiene los OrganismosSIR que puede gestionar el usuario
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    public List<Organismo> getOrganismosSIR(HttpServletRequest request) throws Exception {
-
-        HttpSession session = request.getSession();
-
-        return (List<Organismo>) session.getAttribute(RegwebConstantes.SESSION_ORGANISMOS_SIR);
-    }
-
-    /**
-     * Obtiene los unicamente los códigos de los OrganismosSIR que puede gestionar el usuario
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    public Set<String> getOrganismosSIRCodigo(HttpServletRequest request) throws Exception {
-
-        List<Organismo> organismos = getOrganismosSIR(request);
-
-        // Creamos un Set solo con los codigos
-        Set<String> organismosCodigo = new HashSet<String>();
-
-        for (Organismo organismo : organismos) {
-            organismosCodigo.add(organismo.getCodigo());
-        }
-
         return organismosCodigo;
     }
 

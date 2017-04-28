@@ -2,11 +2,10 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.CamposNTI;
-import es.caib.regweb3.model.utils.EstadoAsientoRegistralSir;
+import es.caib.regweb3.model.utils.EstadoRegistroSir;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.core.utils.Mensaje;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
@@ -51,7 +50,14 @@ public interface SirLocal {
     public OficioRemision enviarFicheroIntercambio(String tipoRegistro, Long idRegistro, String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino, Oficina oficinaActiva, UsuarioEntidad usuario, Long idLibro) throws Exception, I18NException;
 
     /**
-     * @param asientoRegistralSir
+     *
+     * @param idEntidad
+     * @throws Exception
+     */
+    public void reintentarEnvios(Long idEntidad) ;
+
+    /**
+     * @param registroSir
      * @param usuario
      * @param oficinaActiva
      * @param idLibro
@@ -60,62 +66,32 @@ public interface SirLocal {
      * @param camposNTIs
      * @return
      */
-    public RegistroEntrada aceptarAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs) throws Exception;
+    public RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs) throws Exception;
 
 
     /**
-     * Reenvio de un Asiento Registral SIR
-     * @param asientoRegistralSir
+     * Reenvio de un Registro SIR
+     * @param registroSir
      * @throws Exception
      */
-    public void reenviarAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir, Oficina oficinaReenvio, Oficina oficinaActiva, Usuario usuario,String observaciones) throws Exception;
+    public void reenviarRegistroSir(RegistroSir registroSir, Oficina oficinaReenvio, Oficina oficinaActiva, Usuario usuario,String observaciones) throws Exception;
 
     /**
-     * Método que indica si el asiento registral puede ser reenviado en función de su estado.
-     * @param estado del asiento registral
+     * Método que indica si el RegistroSir puede ser reenviado en función de su estado.
+     * @param estado del RegistroSir
      * @return
      */
-    public boolean puedeReenviarAsientoRegistralSir(EstadoAsientoRegistralSir estado);
+    public boolean puedeReenviarRegistroSir(EstadoRegistroSir estado);
 
     /**
      *
-     * @param asientoRegistralSir
+     * @param registroSir
      * @param oficinaActiva
      * @param usuario
      * @return
      * @throws Exception
      */
-    public void rechazarAsientoRegistralSir(AsientoRegistralSir asientoRegistralSir, Oficina oficinaActiva, Usuario usuario, String observaciones) throws Exception;
-
-    /**
-     * @param asientoRegistralSir
-     * @param usuario
-     * @param oficinaActiva
-     * @param idLibro
-     * @param idIdioma
-     * @param idTipoAsunto
-     * @param camposNTIs
-     * @return
-     * @throws Exception
-     * @throws I18NException
-     * @throws I18NValidationException
-     */
-    public RegistroEntrada transformarAsientoRegistralEntrada(AsientoRegistralSir asientoRegistralSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs) throws Exception, I18NException, I18NValidationException;
-
-    /**
-     * @param asientoRegistralSir
-     * @param usuario
-     * @param oficinaActiva
-     * @param idLibro
-     * @param idIdioma
-     * @param idTipoAsunto
-     * @param camposNTIs
-     * @return
-     * @throws Exception
-     * @throws I18NException
-     * @throws I18NValidationException
-     */
-    public RegistroSalida transformarAsientoRegistralSalida(AsientoRegistralSir asientoRegistralSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs) throws Exception, I18NException, I18NValidationException;
+    public void rechazarRegistroSir(RegistroSir registroSir, Oficina oficinaActiva, Usuario usuario, String observaciones) throws Exception;
 
 }
 

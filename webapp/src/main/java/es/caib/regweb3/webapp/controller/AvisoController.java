@@ -25,19 +25,19 @@ public class AvisoController extends BaseController {
 
     
     @EJB(mappedName = "regweb3/OficioRemisionEJB/local")
-    public OficioRemisionLocal oficioRemisionEjb;
+    private OficioRemisionLocal oficioRemisionEjb;
     
     @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
-    public RegistroEntradaLocal registroEntradaEjb;
+    private RegistroEntradaLocal registroEntradaEjb;
 
     @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
-    public RegistroSalidaLocal registroSalidaEjb;
+    private RegistroSalidaLocal registroSalidaEjb;
 
     @EJB(mappedName = "regweb3/OficioRemisionEntradaUtilsEJB/local")
-    public OficioRemisionEntradaUtilsLocal oficioRemisionEntradaUtilsEjb;
+    private OficioRemisionEntradaUtilsLocal oficioRemisionEntradaUtilsEjb;
 
     @EJB(mappedName = "regweb3/OficioRemisionSalidaUtilsEJB/local")
-    public OficioRemisionSalidaUtilsLocal oficioRemisionSalidaUtilsEjb;
+    private OficioRemisionSalidaUtilsLocal oficioRemisionSalidaUtilsEjb;
 
 
     /**
@@ -98,6 +98,11 @@ public class AvisoController extends BaseController {
 
                 // OFICIOS PENDIENTES DE LLEGADA
                 mav.addObject("oficiosPendientesLlegada", oficioRemisionEjb.oficiosPendientesLlegadaCount(organismosOficinaActiva));
+            }
+
+            // Registros de Entrada Rechazados por SIR
+            if(entidadActiva.getSir() && oficinaActiva.getSir()) {
+                mav.addObject("oficiosDevueltos", oficioRemisionEjb.getByEstado(RegwebConstantes.OFICIO_SIR_DEVUELTO, entidadActiva.getId()).size());
             }
 
 

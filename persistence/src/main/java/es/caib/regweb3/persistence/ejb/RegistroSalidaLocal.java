@@ -40,16 +40,6 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @throws Exception
      */
     public List<RegistroSalida> getByUsuario(Long idUsuarioEntidad) throws Exception;
-
-    /**
-     * Guarda un Registro de Salida (sin anexos)
-     * @param registroSalida
-     * @return
-     * @throws Exception
-     */
-    public RegistroSalida registrarSalida(RegistroSalida registroSalida,
-                                          UsuarioEntidad usuarioEntidad, List<Interesado> interesados)
-        throws Exception, I18NException, I18NValidationException;
     
     /**
      * Guarda un Registro de Salida (con anexos)

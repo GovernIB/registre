@@ -45,17 +45,6 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      */
     public List<RegistroEntrada> getByUsuario(Long idUsuarioEntidad) throws Exception;
     
-    
-    /**
-     * Guarda un Registro de Entrada y le asocia un número de registro (sin anexos)
-     * @param registroEntrada
-     * @return
-     * @throws Exception
-     */
-    public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
-                                            UsuarioEntidad usuarioEntidad, List<Interesado> interesados)
-        throws Exception, I18NException, I18NValidationException;
-    
 
     /**
      * Guarda un Registro de Entrada y le asocia un número de registro (con anexos)

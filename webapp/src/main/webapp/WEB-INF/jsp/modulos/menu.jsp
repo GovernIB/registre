@@ -196,8 +196,8 @@
                                             <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i>
                                                 <spring:message code="regweb.sir"/></a>
                                             <ul class="dropdown-menu">
-                                                <li class="submenu-complet"><a href="<c:url value="/asientoRegistralSir/list"/>"><spring:message
-                                                        code="asientoRegistralSir.listado"/></a></li>
+                                                <li class="submenu-complet"><a href="<c:url value="/registroSir/list"/>"><spring:message
+                                                        code="registroSir.listado"/></a></li>
                                             </ul>
                                         </li>
                                     </c:if>

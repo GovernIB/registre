@@ -15,6 +15,7 @@
         <p><small><i class="fa fa-bookmark"></i> <strong><spring:message code="registroEntrada.estado"/>:</strong>
             <c:import url="../registro/estadosRegistro.jsp">
                 <c:param name="estado" value="${registroEntradaOrigen.estado}"/>
+                <c:param name="decodificacionTipoAnotacion" value="${registroEntradaOrigen.registroDetalle.decodificacionTipoAnotacion}"/>
             </c:import>
         </small></p>
         <p><small><i class="fa fa-home"></i> <strong><spring:message code="registroEntrada.oficina"/>:</strong> ${registroEntradaOrigen.oficina.denominacion}</small></p>

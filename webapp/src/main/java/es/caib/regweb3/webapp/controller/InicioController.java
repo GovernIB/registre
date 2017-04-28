@@ -12,7 +12,6 @@ import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Fundació BIT.
@@ -22,35 +21,24 @@ import java.util.Set;
  */
 @Controller
 public class InicioController extends BaseController{
-
-    //protected final Logger log = Logger.getLogger(getClass());
-    
-    @EJB(mappedName = "regweb3/RelacionOrganizativaOfiEJB/local")
-    public RelacionOrganizativaOfiLocal relacionOrganizativaOfiLocalEjb;
     
     @EJB(mappedName = "regweb3/OficioRemisionEJB/local")
-    public OficioRemisionLocal oficioRemisionEjb;
-    
-    @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
-    public RegistroSalidaLocal registroSalidaEjb;
-    
+    private OficioRemisionLocal oficioRemisionEjb;
+
     @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
-    public RegistroEntradaLocal registroEntradaEjb;
+    private RegistroEntradaLocal registroEntradaEjb;
 
-    @EJB(mappedName = "regweb3/AsientoRegistralSirEJB/local")
-    public AsientoRegistralSirLocal asientosRegistralSirEjb;
-
-    @EJB(mappedName = "regweb3/LopdEJB/local")
-    public LopdLocal lopdEjb;
+    @EJB(mappedName = "regweb3/RegistroSirEJB/local")
+    private RegistroSirLocal registroSirEjb;
 
     @EJB(mappedName = "regweb3/DescargaEJB/local")
-    public DescargaLocal descargaEjb;
+    private DescargaLocal descargaEjb;
 
     @EJB(mappedName = "regweb3/OficioRemisionEntradaUtilsEJB/local")
-    public OficioRemisionEntradaUtilsLocal oficioRemisionEntradaUtilsEjb;
+    private OficioRemisionEntradaUtilsLocal oficioRemisionEntradaUtilsEjb;
 
     @EJB(mappedName = "regweb3/OficioRemisionSalidaUtilsEJB/local")
-    public OficioRemisionSalidaUtilsLocal oficioRemisionSalidaUtilsEjb;
+    private OficioRemisionSalidaUtilsLocal oficioRemisionSalidaUtilsEjb;
 
 
     @RequestMapping(value = "/inici")
@@ -90,17 +78,11 @@ public class InicioController extends BaseController{
                     // Obtenemos los Organismos que tienen Registros de salida pendientes de tramitar por medio de un Oficio de Revisión,
                     mav.addObject("organismosOficioRemisionSalida", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemision(oficinaActiva.getId(), librosRegistroSalida, getOrganismosOficioRemisionSalida(organismosOficinaActiva)));
                 }
+            }
 
-                /* Obtenemos los Asientos Registrales Sir pendientes de procesar */
-                if(entidadActiva.getSir() && oficinaActiva.getSir()) {
-                    Set<String> organismosSIR = getOrganismosSIRCodigo(request);
-
-                    if (organismosSIR.size() > 0) {
-                        List<AsientoRegistralSir> asientosRegistralesSir = asientosRegistralSirEjb.getUltimosPendientesProcesar(organismosSIR, RegwebConstantes.REGISTROS_PANTALLA_INICIO);
-                        mav.addObject("asientosRegistralesSir", asientosRegistralesSir);
-                    }
-                }
-
+            /* Obtenemos los Registros Sir pendientes de procesar */
+            if(entidadActiva.getSir() && oficinaActiva.getSir()) {
+                mav.addObject("registrosSir", registroSirEjb.getUltimosPendientesProcesar(oficinaActiva.getCodigo(), RegwebConstantes.REGISTROS_PANTALLA_INICIO));
             }
 
         }

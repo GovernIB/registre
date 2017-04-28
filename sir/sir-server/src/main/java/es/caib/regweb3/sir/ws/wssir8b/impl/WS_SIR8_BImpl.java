@@ -93,8 +93,9 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
             log.error("CAIB Login ERROR" + le.getMessage());
         }
 
-        log.info("WS_SIR8_BImpl: recibiendo fichero intercambio");
-        log.info("Registro: " + registro);
+        log.info("-------------------- Recibiendo fichero de intercambio en WS_SIR9Impl --------------------");
+        log.info("Fichero de intercambio: " + registro);
+        log.info("------------------------------------------------------------------------------------------");
 
         RespuestaWS respuestaWS = null;
 
