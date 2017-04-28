@@ -100,7 +100,6 @@
                                 <%-- Botón de sello --%>
                                 <div class="btn-group"><button type="button" data-toggle="modal" data-target="#selloModal" class="btn btn-warning btn-sm"><spring:message code="sello.imprimir"/></button></div>
 
-
                             </div>
                         </c:if>
 
@@ -118,11 +117,18 @@
                                         <spring:message code="oficioRemision.boton.crear.externo"/>
                                     </button>
                                 </c:if>
-                                <c:if test="${oficio.sir}">
+                                <c:if test="${oficio.sir && oficinaActiva.sir}">
                                     <button type="button" onclick="goTo('<c:url value="/registroSalida/${registro.id}/enviarSir"/>')" class="btn btn-success btn-sm btn-block">
                                         <spring:message code="registroEntrada.enviar.sir"/>
                                     </button>
                                 </c:if>
+                                <c:if test="${oficio.sir && !oficinaActiva.sir}">
+                                    <p class="text-danger">El <strong>destinatario</strong> dispone de una Oficina integrada en SIR, pero la ${oficinaActiva.denominacion} no está integrada en SIR y no se podrá realizar el intercambio.</p>
+                                    <button type="button" onclick="goTo('<c:url value="/oficioRemision/salidasPendientesRemision"/>')" class="btn btn-success btn-sm btn-block">
+                                        <spring:message code="oficioRemision.boton.crear.externo"/>
+                                    </button>
+                                </c:if>
+
 
                             </div>
                         </c:if>

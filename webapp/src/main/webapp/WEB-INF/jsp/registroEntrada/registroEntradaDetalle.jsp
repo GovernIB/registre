@@ -114,21 +114,27 @@
 
                                     <c:if test="${oficio.oficioRemision}">
 
-                                            <c:if test="${oficio.interno}">
-                                                <button type="button" onclick="goTo('<c:url value="/oficioRemision/entradasPendientesRemision"/>')" class="btn btn-success btn-sm btn-block">
-                                                    <spring:message code="oficioRemision.boton.crear.interno"/>
-                                                </button>
-                                            </c:if>
-                                            <c:if test="${oficio.externo}">
-                                                <button type="button" onclick="goTo('<c:url value="/oficioRemision/entradasPendientesRemision"/>')" class="btn btn-success btn-sm btn-block">
-                                                    <spring:message code="oficioRemision.boton.crear.externo"/>
-                                                </button>
-                                            </c:if>
-                                            <c:if test="${oficio.sir}">
-                                                <button type="button" onclick="goTo('<c:url value="/registroEntrada/${registro.id}/enviarSir"/>')" class="btn btn-success btn-sm btn-block">
-                                                    <spring:message code="registroEntrada.enviar.sir"/>
-                                                </button>
-                                            </c:if>
+                                        <c:if test="${oficio.interno}">
+                                            <button type="button" onclick="goTo('<c:url value="/oficioRemision/entradasPendientesRemision"/>')" class="btn btn-success btn-sm btn-block">
+                                                <spring:message code="oficioRemision.boton.crear.interno"/>
+                                            </button>
+                                        </c:if>
+                                        <c:if test="${oficio.externo}">
+                                            <button type="button" onclick="goTo('<c:url value="/oficioRemision/entradasPendientesRemision"/>')" class="btn btn-success btn-sm btn-block">
+                                                <spring:message code="oficioRemision.boton.crear.externo"/>
+                                            </button>
+                                        </c:if>
+                                        <c:if test="${oficio.sir && oficinaActiva.sir}">
+                                            <button type="button" onclick="goTo('<c:url value="/registroEntrada/${registro.id}/enviarSir"/>')" class="btn btn-success btn-sm btn-block">
+                                                <spring:message code="registroEntrada.enviar.sir"/>
+                                            </button>
+                                        </c:if>
+                                        <c:if test="${oficio.sir && !oficinaActiva.sir}">
+                                            <p class="text-danger">El <strong>${(empty registro.destino)? registro.destinoExternoDenominacion : registro.destino.denominacion}</strong> dispone de una Oficina integrada en SIR, pero la ${oficinaActiva.denominacion} no está integrada en SIR y no se podrá realizar el intercambio.</p>
+                                            <button type="button" onclick="goTo('<c:url value="/oficioRemision/entradasPendientesRemision"/>')" class="btn btn-success btn-sm btn-block">
+                                                <spring:message code="oficioRemision.boton.crear.externo"/>
+                                            </button>
+                                        </c:if>
 
                                     </c:if>
 

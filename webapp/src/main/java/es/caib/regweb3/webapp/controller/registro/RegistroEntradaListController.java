@@ -286,10 +286,17 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
      * Enviar a SIR un Registro de Entrada
      */
     @RequestMapping(value = "/{idRegistro}/enviarSir", method = RequestMethod.GET)
-    public ModelAndView enviarSir(@PathVariable Long idRegistro, Model model, HttpServletRequest request) throws Exception {
+    public ModelAndView enviarSir(@PathVariable Long idRegistro, HttpServletRequest request) throws Exception {
 
         ModelAndView mav = new ModelAndView("registro/envioSir");
         RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
+        Oficina oficinaActiva = getOficinaActiva(request);
+
+        if(!oficinaActiva.getSir()){
+            log.info("La oficinaActiva no está integrada en SIR");
+            Mensaje.saveMessageError(request, getMessage("aviso.oficinaActiva.sir"));
+            return new ModelAndView("redirect:/registroEntrada/" + idRegistro + "/detalle");
+        }
 
         List<OficinaTF> oficinasSIR = oficioRemisionEntradaUtilsEjb.isOficioRemisionSir(idRegistro);
 

@@ -5,10 +5,10 @@ package es.caib.regweb3.persistence.utils;
  */
 public class Oficio {
 
-    Boolean isOficioRemision;
-    Boolean isInterno;
-    Boolean isExterno;
-    Boolean isSir;
+    private Boolean isOficioRemision;
+    private Boolean isInterno;
+    private Boolean isExterno;
+    private Boolean isSir;
 
     public Oficio() {
     }
