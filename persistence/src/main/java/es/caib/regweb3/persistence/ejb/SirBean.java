@@ -688,13 +688,16 @@ public class SirBean implements SirLocal{
     }
 
     /**
-     * Acepta un RegistroSir, creando un Registro de Entrada o un Registro de Salida
+     * Acepta un RegistroSir, creando un Registro de Entrada
      * @param registroSir
      * @throws Exception
      */
     @Override
     public RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs)
             throws Exception {
+
+        log.info("");
+        log.info("Aceptando RegistroSir " + registroSir.getIdentificadorIntercambio());
 
         // Creamos y registramos el RegistroEntrada a partir del RegistroSir aceptado
         RegistroEntrada registroEntrada = null;
