@@ -28,39 +28,32 @@ public class FicheroIntercambio {
 
     private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMddHHmmss");
 
-    /**
-     * Información del fichero de intercambio
-     */
     private Fichero_Intercambio_SICRES_3 ficheroIntercambio = null;
 
-    /**
-     * Constructor.
-     */
+
     public FicheroIntercambio() {
-        super();
     }
 
     public Fichero_Intercambio_SICRES_3 getFicheroIntercambio() {
         return ficheroIntercambio;
     }
 
-    public void setFicheroIntercambio(
-            Fichero_Intercambio_SICRES_3 ficheroIntercambio) {
+    public void setFicheroIntercambio(Fichero_Intercambio_SICRES_3 ficheroIntercambio) {
         this.ficheroIntercambio = ficheroIntercambio;
     }
 
     public String getCodigoEntidadRegistralOrigen() {
-        if ((getFicheroIntercambio() != null)
-                && (getFicheroIntercambio().getDe_Origen_o_Remitente() != null)) {
+
+        if ((getFicheroIntercambio() != null) && (getFicheroIntercambio().getDe_Origen_o_Remitente() != null)) {
             return getFicheroIntercambio().getDe_Origen_o_Remitente().getCodigo_Entidad_Registral_Origen();
         }
 
         return null;
     }
 
-    public String getDescripcionEntidadRegistralOrigen() {
-        if ((getFicheroIntercambio() != null)
-                && (getFicheroIntercambio().getDe_Origen_o_Remitente() != null)) {
+    public String getDecodificacionEntidadRegistralOrigen() {
+
+        if ((getFicheroIntercambio() != null) && (getFicheroIntercambio().getDe_Origen_o_Remitente() != null)) {
             return getFicheroIntercambio().getDe_Origen_o_Remitente().getDecodificacion_Entidad_Registral_Origen();
         }
 
@@ -68,17 +61,17 @@ public class FicheroIntercambio {
     }
 
     public String getCodigoUnidadTramitacionOrigen() {
-        if ((getFicheroIntercambio() != null)
-                && (getFicheroIntercambio().getDe_Origen_o_Remitente() != null)) {
+
+        if ((getFicheroIntercambio() != null) && (getFicheroIntercambio().getDe_Origen_o_Remitente() != null)) {
             return getFicheroIntercambio().getDe_Origen_o_Remitente().getCodigo_Unidad_Tramitacion_Origen();
         }
 
         return null;
     }
 
-    public String getDescripcionUnidadTramitacionOrigen() {
-        if ((getFicheroIntercambio() != null)
-                && (getFicheroIntercambio().getDe_Origen_o_Remitente() != null)) {
+    public String getDecodificacionUnidadTramitacionOrigen() {
+
+        if ((getFicheroIntercambio() != null) && (getFicheroIntercambio().getDe_Origen_o_Remitente() != null)) {
             return getFicheroIntercambio().getDe_Origen_o_Remitente().getDecodificacion_Unidad_Tramitacion_Origen();
         }
 
@@ -86,8 +79,8 @@ public class FicheroIntercambio {
     }
 
     public String getCodigoEntidadRegistralDestino() {
-        if ((getFicheroIntercambio() != null)
-                && (getFicheroIntercambio().getDe_Destino() != null)) {
+
+        if ((getFicheroIntercambio() != null) && (getFicheroIntercambio().getDe_Destino() != null)) {
             return getFicheroIntercambio().getDe_Destino().getCodigo_Entidad_Registral_Destino();
         }
 
@@ -95,8 +88,8 @@ public class FicheroIntercambio {
     }
 
     public String getDescripcionEntidadRegistralDestino() {
-        if ((getFicheroIntercambio() != null)
-                && (getFicheroIntercambio().getDe_Destino() != null)) {
+
+        if ((getFicheroIntercambio() != null) && (getFicheroIntercambio().getDe_Destino() != null)) {
             return getFicheroIntercambio().getDe_Destino().getDecodificacion_Entidad_Registral_Destino();
         }
 
@@ -104,8 +97,8 @@ public class FicheroIntercambio {
     }
 
     public String getCodigoUnidadTramitacionDestino() {
-        if ((getFicheroIntercambio() != null)
-                && (getFicheroIntercambio().getDe_Destino() != null)) {
+
+        if ((getFicheroIntercambio() != null) && (getFicheroIntercambio().getDe_Destino() != null)) {
             return getFicheroIntercambio().getDe_Destino().getCodigo_Unidad_Tramitacion_Destino();
         }
 
@@ -113,8 +106,8 @@ public class FicheroIntercambio {
     }
 
     public String getDescripcionUnidadTramitacionDestino() {
-        if ((getFicheroIntercambio() != null)
-                && (getFicheroIntercambio().getDe_Destino() != null)) {
+
+        if ((getFicheroIntercambio() != null) && (getFicheroIntercambio().getDe_Destino() != null)) {
             return getFicheroIntercambio().getDe_Destino().getDecodificacion_Unidad_Tramitacion_Destino();
         }
 
@@ -122,8 +115,8 @@ public class FicheroIntercambio {
     }
 
     public String getNumeroRegistro() {
-        if ((getFicheroIntercambio() != null)
-                && (getFicheroIntercambio().getDe_Origen_o_Remitente() != null)) {
+
+        if ((getFicheroIntercambio() != null) && (getFicheroIntercambio().getDe_Origen_o_Remitente() != null)) {
             return getFicheroIntercambio().getDe_Origen_o_Remitente().getNumero_Registro_Entrada();
         }
 
@@ -131,8 +124,8 @@ public class FicheroIntercambio {
     }
 
     public String getFechaRegistroXML() {
-        if ((getFicheroIntercambio() != null)
-                && (getFicheroIntercambio().getDe_Origen_o_Remitente() != null)) {
+
+        if ((getFicheroIntercambio() != null) && (getFicheroIntercambio().getDe_Origen_o_Remitente() != null)) {
             return getFicheroIntercambio().getDe_Origen_o_Remitente().getFecha_Hora_Entrada();
         }
 
@@ -140,6 +133,7 @@ public class FicheroIntercambio {
     }
 
     public Date getFechaRegistro() {
+
         String fechaRegistro = getFechaRegistroXML();
         if (StringUtils.isNotBlank(fechaRegistro)) {
             try {
@@ -153,8 +147,8 @@ public class FicheroIntercambio {
     }
 
     public byte[] getTimestampRegistro() {
-        if ((getFicheroIntercambio() != null)
-                && (getFicheroIntercambio().getDe_Origen_o_Remitente() != null)) {
+
+        if ((getFicheroIntercambio() != null) && (getFicheroIntercambio().getDe_Origen_o_Remitente() != null)) {
             return getFicheroIntercambio().getDe_Origen_o_Remitente().getTimestamp_Entrada();
         }
 
@@ -162,8 +156,8 @@ public class FicheroIntercambio {
     }
 
     public String getCodigoAsunto() {
-        if ((getFicheroIntercambio() != null)
-                && (getFicheroIntercambio().getDe_Asunto() != null)) {
+
+        if ((getFicheroIntercambio() != null) && (getFicheroIntercambio().getDe_Asunto() != null)) {
             return getFicheroIntercambio().getDe_Asunto().getCodigo_Asunto_Segun_Destino();
         }
 
@@ -171,8 +165,8 @@ public class FicheroIntercambio {
     }
 
     public String getNumeroExpediente() {
-        if ((getFicheroIntercambio() != null)
-                && (getFicheroIntercambio().getDe_Asunto() != null)) {
+
+        if ((getFicheroIntercambio() != null) && (getFicheroIntercambio().getDe_Asunto() != null)) {
             return getFicheroIntercambio().getDe_Asunto().getNumero_Expediente();
         }
 
@@ -180,8 +174,8 @@ public class FicheroIntercambio {
     }
 
     public String getReferenciaExterna() {
-        if ((getFicheroIntercambio() != null)
-                && (getFicheroIntercambio().getDe_Asunto() != null)) {
+
+        if ((getFicheroIntercambio() != null) && (getFicheroIntercambio().getDe_Asunto() != null)) {
             return getFicheroIntercambio().getDe_Asunto().getReferencia_Externa();
         }
 
@@ -189,8 +183,8 @@ public class FicheroIntercambio {
     }
 
     public String getResumen() {
-        if ((getFicheroIntercambio() != null)
-                && (getFicheroIntercambio().getDe_Asunto() != null)) {
+
+        if ((getFicheroIntercambio() != null) && (getFicheroIntercambio().getDe_Asunto() != null)) {
             return getFicheroIntercambio().getDe_Asunto().getResumen();
         }
 
@@ -198,17 +192,17 @@ public class FicheroIntercambio {
     }
 
     public String getCodigoEntidadRegistralInicio() {
-        if ((getFicheroIntercambio() != null)
-                && (getFicheroIntercambio().getDe_Internos_Control() != null)) {
+
+        if ((getFicheroIntercambio() != null) && (getFicheroIntercambio().getDe_Internos_Control() != null)) {
             return getFicheroIntercambio().getDe_Internos_Control().getCodigo_Entidad_Registral_Inicio();
         }
 
         return null;
     }
 
-    public String getDescripcionEntidadRegistralInicio() {
-        if ((getFicheroIntercambio() != null)
-                && (getFicheroIntercambio().getDe_Internos_Control() != null)) {
+    public String getDecodificacionEntidadRegistralInicio() {
+
+        if ((getFicheroIntercambio() != null) && (getFicheroIntercambio().getDe_Internos_Control() != null)) {
             return getFicheroIntercambio().getDe_Internos_Control().getDecodificacion_Entidad_Registral_Inicio();
         }
 
@@ -216,8 +210,8 @@ public class FicheroIntercambio {
     }
 
     public String getNombreUsuario() {
-        if ((getFicheroIntercambio() != null)
-                && (getFicheroIntercambio().getDe_Internos_Control() != null)) {
+
+        if ((getFicheroIntercambio() != null) && (getFicheroIntercambio().getDe_Internos_Control() != null)) {
             return getFicheroIntercambio().getDe_Internos_Control().getNombre_Usuario();
         }
 
@@ -225,8 +219,8 @@ public class FicheroIntercambio {
     }
 
     public String getContactoUsuario() {
-        if ((getFicheroIntercambio() != null)
-                && (getFicheroIntercambio().getDe_Internos_Control() != null)) {
+
+        if ((getFicheroIntercambio() != null) && (getFicheroIntercambio().getDe_Internos_Control() != null)) {
             return getFicheroIntercambio().getDe_Internos_Control().getContacto_Usuario();
         }
 
@@ -234,8 +228,8 @@ public class FicheroIntercambio {
     }
 
     public String getTipoTransporteXML() {
-        if ((getFicheroIntercambio() != null)
-                && (getFicheroIntercambio().getDe_Internos_Control() != null)) {
+
+        if ((getFicheroIntercambio() != null) && (getFicheroIntercambio().getDe_Internos_Control() != null)) {
             return getFicheroIntercambio().getDe_Internos_Control().getTipo_Transporte_Entrada();
         }
 
@@ -243,6 +237,7 @@ public class FicheroIntercambio {
     }
 
     public TipoTransporte getTipoTransporte() {
+
         String tipoTransporte = getTipoTransporteXML();
         if (StringUtils.isNotBlank(tipoTransporte)) {
             return TipoTransporte.getTipoTransporte(tipoTransporte);
@@ -252,6 +247,7 @@ public class FicheroIntercambio {
     }
 
     public Long getTipoTransporteEntrada() {
+
         String tipoTransporte = getFicheroIntercambio().getDe_Internos_Control().getTipo_Transporte_Entrada();
         if (StringUtils.isNotBlank(tipoTransporte)) {
             return RegwebConstantes.TRANSPORTE_BY_CODIGO_SICRES.get(tipoTransporte);
@@ -262,8 +258,8 @@ public class FicheroIntercambio {
 
 
     public String getNumeroTransporte() {
-        if ((getFicheroIntercambio() != null)
-                && (getFicheroIntercambio().getDe_Internos_Control() != null)) {
+
+        if ((getFicheroIntercambio() != null) && (getFicheroIntercambio().getDe_Internos_Control() != null)) {
             return getFicheroIntercambio().getDe_Internos_Control().getNumero_Transporte_Entrada();
         }
 
@@ -271,28 +267,18 @@ public class FicheroIntercambio {
     }
 
 
-    /**
-     * Obtiene el identificador de intercambio.
-     *
-     * @return Identificador de intercambio.
-     */
     public String getIdentificadorIntercambio() {
-        if ((getFicheroIntercambio() != null)
-                && (getFicheroIntercambio().getDe_Internos_Control() != null)) {
+
+        if ((getFicheroIntercambio() != null) && (getFicheroIntercambio().getDe_Internos_Control() != null)) {
             return getFicheroIntercambio().getDe_Internos_Control().getIdentificador_Intercambio();
         }
 
         return null;
     }
 
-    /**
-     * Obtiene la información de la aplicación emisora.
-     *
-     * @return Aplicación emisora.
-     */
     public String getAplicacionEmisora() {
-        if ((getFicheroIntercambio() != null)
-                && (getFicheroIntercambio().getDe_Internos_Control() != null)) {
+
+        if ((getFicheroIntercambio() != null) && (getFicheroIntercambio().getDe_Internos_Control() != null)) {
             return getFicheroIntercambio().getDe_Internos_Control().getAplicacion_Version_Emisora();
         }
 
@@ -311,11 +297,6 @@ public class FicheroIntercambio {
         return null;
     }
 
-    /**
-     * Obtiene el tipo de anotación.
-     *
-     * @return Tipo de anotación.
-     */
     public String getTipoAnotacion() {
 
         String tipoAnotacion = getTipoAnotacionXML();
@@ -339,6 +320,7 @@ public class FicheroIntercambio {
     }
 
     public TipoRegistro getTipoRegistro() {
+
         if ((getFicheroIntercambio() != null)
                 && (getFicheroIntercambio().getDe_Internos_Control() != null)){
 
@@ -352,8 +334,8 @@ public class FicheroIntercambio {
     }
 
     public String getObservacionesApunte() {
-        if ((getFicheroIntercambio() != null)
-                && (getFicheroIntercambio().getDe_Internos_Control() != null)) {
+
+        if ((getFicheroIntercambio() != null) && (getFicheroIntercambio().getDe_Internos_Control() != null)) {
             return getFicheroIntercambio().getDe_Internos_Control().getObservaciones_Apunte();
         }
 
@@ -362,8 +344,8 @@ public class FicheroIntercambio {
 
 
     public String getExpone() {
-        if ((getFicheroIntercambio() != null)
-                && (getFicheroIntercambio().getDe_Formulario_Generico() != null)) {
+
+        if ((getFicheroIntercambio() != null) && (getFicheroIntercambio().getDe_Formulario_Generico() != null)) {
             return getFicheroIntercambio().getDe_Formulario_Generico().getExpone();
         }
 
@@ -371,8 +353,8 @@ public class FicheroIntercambio {
     }
 
     public String getSolicita() {
-        if ((getFicheroIntercambio() != null)
-                && (getFicheroIntercambio().getDe_Formulario_Generico() != null)) {
+
+        if ((getFicheroIntercambio() != null) && (getFicheroIntercambio().getDe_Formulario_Generico() != null)) {
             return getFicheroIntercambio().getDe_Formulario_Generico().getSolicita();
         }
 
