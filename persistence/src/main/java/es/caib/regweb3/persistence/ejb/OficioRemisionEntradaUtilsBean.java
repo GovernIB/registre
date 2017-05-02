@@ -170,7 +170,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public OficiosRemisionOrganismo oficiosEntradaPendientesRemision(Integer pageNumber, final Integer resultsPerPage, Integer any, Long idOficina, Long idLibro, String codigoOrganismo, Set<Long> organismos, Entidad entidadActiva) throws Exception {
+    public OficiosRemisionOrganismo oficiosEntradaPendientesRemision(Integer pageNumber, final Integer resultsPerPage, Integer any, Oficina oficinaActiva, Long idLibro, String codigoOrganismo, Set<Long> organismos, Entidad entidadActiva) throws Exception {
 
         OficiosRemisionOrganismo oficios = new OficiosRemisionOrganismo();
 
@@ -182,7 +182,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             oficios.setOficinas(oficinaEjb.tieneOficinasServicio(organismo.getId(), RegwebConstantes.OFICINA_VIRTUAL_NO));
 
             //Buscamos los Registros de Entrada, pendientes de tramitar mediante un Oficio de Remision
-            oficios.setPaginacion(oficiosRemisionByOrganismoInterno(pageNumber,resultsPerPage,organismo.getId(), any, idOficina, idLibro));
+            oficios.setPaginacion(oficiosRemisionByOrganismoInterno(pageNumber,resultsPerPage,organismo.getId(), any, oficinaActiva.getId(), idLibro));
 
         }else { // Destinatario organismo externo
 
@@ -200,7 +200,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
                 // Comprueba si la Entidad Actual está en SIR
                 //Boolean isSir = (Boolean) em.createQuery("select e.sir from Entidad as e where e.id = :id").setParameter("id", idEntidadActiva).getSingleResult();
-                if (entidadActiva.getSir()) {
+                if (entidadActiva.getSir() && oficinaActiva.getSirEnvio()) {
                     // Averiguamos si el Organismo Externo está en Sir o no
                     Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
                     List<OficinaTF> oficinasSIR = oficinasService.obtenerOficinasSIRUnidad(organismoExterno.getCodigo());
@@ -220,7 +220,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
                 }
 
                 //Buscamos los Registros de Entrada, pendientes de tramitar mediante un Oficio de Remision
-                oficios.setPaginacion(oficiosRemisionByOrganismoExterno(pageNumber, resultsPerPage, organismoExterno.getCodigo(), any, idOficina, idLibro));
+                oficios.setPaginacion(oficiosRemisionByOrganismoExterno(pageNumber, resultsPerPage, organismoExterno.getCodigo(), any, oficinaActiva.getId(), idLibro));
             }
         }
 

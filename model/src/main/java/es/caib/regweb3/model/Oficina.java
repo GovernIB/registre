@@ -67,7 +67,9 @@ public class Oficina implements Serializable{
     private Set<CatServicio> servicios;
 
     @Transient
-    private Boolean sir;
+    private Boolean isSirRecepcion;
+    @Transient
+    private Boolean isSirEnvio;
 
     public Oficina() {
       super();
@@ -321,13 +323,21 @@ public class Oficina implements Serializable{
     }
 
     @Transient
-    public Boolean getSir() {
-        return sir;
+    public Boolean getSirRecepcion() {
+        return isSirRecepcion;
+    }
+
+    public void setSirRecepcion(Boolean sirRecepcion) {
+        isSirRecepcion = sirRecepcion;
     }
 
     @Transient
-    public void setSir(Boolean sir) {
-        this.sir = sir;
+    public Boolean getSirEnvio() {
+        return isSirEnvio;
+    }
+
+    public void setSirEnvio(Boolean sirEnvio) {
+        isSirEnvio = sirEnvio;
     }
 
     @Override

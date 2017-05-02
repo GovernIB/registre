@@ -115,6 +115,7 @@ public class SirBean implements SirLocal{
                 if(oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO ||
                         oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO_ACK ||
                         oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_REENVIADO ||
+                        oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_REENVIADO_ACK ||
                         oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_RECHAZADO_ACK){
 
                     if(oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)){

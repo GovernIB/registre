@@ -47,7 +47,7 @@ public class RegistroSirInterceptor extends HandlerInterceptorAdapter {
             Oficina oficinaActiva = (Oficina) session.getAttribute(RegwebConstantes.SESSION_OFICINA);
 
             // Comprobamos que la oficinaActiva esté integrada en SIR
-            if(!oficinaActiva.getSir()){
+            if(!oficinaActiva.getSirEnvio() || !oficinaActiva.getSirRecepcion()){
                 log.info("La oficinaActiva no está integrada en SIR");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficinaActiva.sir"));
                 response.sendRedirect("/regweb3/aviso");

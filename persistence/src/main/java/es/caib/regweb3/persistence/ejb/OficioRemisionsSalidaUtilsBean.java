@@ -133,7 +133,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public OficiosRemisionOrganismo oficiosSalidaPendientesRemision(Integer pageNumber, Integer any, Long idOficina, Long idLibro, String codigoOrganismo, Entidad entidadActiva) throws Exception {
+    public OficiosRemisionOrganismo oficiosSalidaPendientesRemision(Integer pageNumber, Integer any, Oficina oficinaActiva, Long idLibro, String codigoOrganismo, Entidad entidadActiva) throws Exception {
 
         OficiosRemisionOrganismo oficios = new OficiosRemisionOrganismo();
         Organismo organismo = organismoEjb.findByCodigoEntidad(codigoOrganismo, entidadActiva.getId());
@@ -158,8 +158,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
                 oficios.setOrganismo(organismoExterno);
 
                 // Comprueba si la Entidad Actual está en SIR
-                //Boolean isSir = (Boolean) em.createQuery("select e.sir from Entidad as e where e.id = :id").setParameter("id", entidadActiva.getId()).getSingleResult();
-                if (entidadActiva.getSir()) {
+                if (entidadActiva.getSir() && oficinaActiva.getSirEnvio()) {
                     // Averiguamos si el Organismo Externo está en Sir o no
                     Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
                     List<OficinaTF> oficinasSIR = oficinasService.obtenerOficinasSIRUnidad(organismoExterno.getCodigo());
@@ -184,7 +183,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         }
 
         //Buscamos los Registros de Salida, pendientes de tramitar mediante un Oficio de Remision
-        oficios.setPaginacion(oficiosSalidaByOrganismo(pageNumber, codigoOrganismo, any, idOficina, idLibro));
+        oficios.setPaginacion(oficiosSalidaByOrganismo(pageNumber, codigoOrganismo, any, oficinaActiva.getId(), idLibro));
 
         return oficios;
 

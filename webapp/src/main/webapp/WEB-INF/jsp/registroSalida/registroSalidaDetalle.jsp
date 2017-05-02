@@ -20,7 +20,7 @@
         <div class="row">
             <div class="col-xs-12">
                 <ol class="breadcrumb">
-                    <li><a <c:if test="${oficinaActiva.sir}">class="azul"</c:if> href="<c:url value="/inici"/>"><i class="fa fa-home"></i> ${oficinaActiva.denominacion}</a></li>
+                    <li><a <c:if test="${oficinaActiva.sirEnvio || oficinaActiva.sirRecepcion}">class="azul"</c:if> href="<c:url value="/inici"/>"><i class="fa fa-home"></i> ${oficinaActiva.denominacion}</a></li>
                     <li class="active"><i class="fa fa-pencil-square-o"></i> <spring:message code="registroSalida.registroSalida"/> ${registro.numeroRegistroFormateado}</li>
                     <%--Importamos el menú de avisos--%>
                     <c:import url="/avisos"/>
@@ -100,7 +100,6 @@
                                 <%-- Botón de sello --%>
                                 <div class="btn-group"><button type="button" data-toggle="modal" data-target="#selloModal" class="btn btn-warning btn-sm"><spring:message code="sello.imprimir"/></button></div>
 
-
                             </div>
                         </c:if>
 
@@ -118,11 +117,18 @@
                                         <spring:message code="oficioRemision.boton.crear.externo"/>
                                     </button>
                                 </c:if>
-                                <c:if test="${oficio.sir}">
+                                <c:if test="${oficio.sir && oficinaActiva.sirEnvio}">
                                     <button type="button" onclick="goTo('<c:url value="/registroSalida/${registro.id}/enviarSir"/>')" class="btn btn-success btn-sm btn-block">
                                         <spring:message code="registroEntrada.enviar.sir"/>
                                     </button>
                                 </c:if>
+                                <c:if test="${oficio.sir && !oficinaActiva.sirEnvio}">
+                                    <p class="text-danger">El <strong>destinatario</strong> dispone de una Oficina integrada en SIR, pero la ${oficinaActiva.denominacion} no está integrada en SIR y no se podrá realizar el intercambio.</p>
+                                    <button type="button" onclick="goTo('<c:url value="/oficioRemision/salidasPendientesRemision"/>')" class="btn btn-success btn-sm btn-block">
+                                        <spring:message code="oficioRemision.boton.crear.externo"/>
+                                    </button>
+                                </c:if>
+
 
                             </div>
                         </c:if>
