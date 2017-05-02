@@ -282,7 +282,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
         Oficina oficinaActiva = getOficinaActiva(request);
 
-        if(!oficinaActiva.getSir()){
+        if(!oficinaActiva.getSirEnvio()){
             log.info("La oficinaActiva no está integrada en SIR");
             Mensaje.saveMessageError(request, getMessage("aviso.oficinaActiva.sir"));
             return new ModelAndView("redirect:/registroSalida/" + idRegistro + "/detalle");

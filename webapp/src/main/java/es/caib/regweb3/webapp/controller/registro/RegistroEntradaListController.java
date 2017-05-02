@@ -292,7 +292,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
         Oficina oficinaActiva = getOficinaActiva(request);
 
-        if(!oficinaActiva.getSir()){
+        if(!oficinaActiva.getSirEnvio()){
             log.info("La oficinaActiva no está integrada en SIR");
             Mensaje.saveMessageError(request, getMessage("aviso.oficinaActiva.sir"));
             return new ModelAndView("redirect:/registroEntrada/" + idRegistro + "/detalle");

@@ -325,7 +325,8 @@ public class UsuarioService {
             session.setAttribute(RegwebConstantes.SESSION_ORGANISMOS_OFICINA, organismoEjb.getByOficinaActiva(oficinaNueva));
 
             // Comprobamos si la Oficina está integrada en SIR
-            oficinaNueva.setSir(oficinaEjb.isOficinaSIR(oficinaNueva.getId()));
+            oficinaNueva.setSirRecepcion(oficinaEjb.isSIRRecepcion(oficinaNueva.getId()));
+            oficinaNueva.setSirEnvio(oficinaEjb.isSIRRecepcion(oficinaNueva.getId()));
 
             // Actualizamos la última Oficina del Usuario
             usuarioEntidadEjb.actualizarOficinaUsuario(usuarioEntidad.getId(), oficinaNueva.getId());

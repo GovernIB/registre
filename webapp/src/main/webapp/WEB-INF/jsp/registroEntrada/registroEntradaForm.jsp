@@ -24,7 +24,7 @@
            <div class="row">
                 <div class="col-xs-12">
                     <ol class="breadcrumb">
-                        <li><a <c:if test="${oficinaActiva.sir}">class="azul"</c:if> href="<c:url value="/inici"/>"><i class="fa fa-home"></i> ${oficinaActiva.denominacion}</a></li>
+                        <li><a <c:if test="${oficinaActiva.sirEnvio || oficinaActiva.sirRecepcion}">class="azul"</c:if> href="<c:url value="/inici"/>"><i class="fa fa-home"></i> ${oficinaActiva.denominacion}</a></li>
                         <li class="active"><i class="fa fa-pencil-square-o"></i>
                             <c:if test="${not empty registroEntrada.id}"><spring:message code="registroEntrada.editar"/> ${registroEntrada.numeroRegistroFormateado}</c:if>
                             <c:if test="${empty registroEntrada.id}"><spring:message code="registroEntrada.nuevo"/></c:if>

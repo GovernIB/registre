@@ -337,15 +337,29 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
-    public Boolean isOficinaSIR(Long idOficina) throws Exception {
+    public Boolean isSIRRecepcion(Long idOficina) throws Exception {
 
         Query q = em.createQuery("Select oficina.id from Oficina as oficina where " +
                 "oficina.id =:idOficina and oficina.estado.codigoEstadoEntidad=:vigente and " +
-                ":oficinaSIR in elements(oficina.servicios)");
+                ":recepcionSir in elements(oficina.servicios)");
 
         q.setParameter("idOficina",idOficina);
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-        q.setParameter("oficinaSIR", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR));
+        q.setParameter("recepcionSir", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR_RECEPCION));
+
+        return q.getResultList().size() > 0;
+    }
+
+    @Override
+    public Boolean isSIREnvio(Long idOficina) throws Exception {
+
+        Query q = em.createQuery("Select oficina.id from Oficina as oficina where " +
+                "oficina.id =:idOficina and oficina.estado.codigoEstadoEntidad=:vigente and " +
+                ":envioSir in elements(oficina.servicios)");
+
+        q.setParameter("idOficina",idOficina);
+        q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        q.setParameter("envioSir", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR_ENVIO));
 
         return q.getResultList().size() > 0;
     }

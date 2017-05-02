@@ -50,14 +50,14 @@ public interface OficioRemisionSalidaUtilsLocal {
      * Obtiene todos los Registros de Salida que están considerados Oficios de Remisión de un Organismo destinatario en concreto
      * @param pageNumber
      * @param any
-     * @param idOficina Oficina activa
+     * @param oficinaActiva Oficina activa
      * @param idLibro Libro seleccionado
      * @param codigoOrganismo Organismo destinatario seleccionado
      * @param entidadActiva
      * @return
      * @throws Exception
      */
-    public OficiosRemisionOrganismo oficiosSalidaPendientesRemision(Integer pageNumber, Integer any, Long idOficina, Long idLibro, String codigoOrganismo, Entidad entidadActiva) throws Exception;
+    public OficiosRemisionOrganismo oficiosSalidaPendientesRemision(Integer pageNumber, Integer any, Oficina oficinaActiva, Long idLibro, String codigoOrganismo, Entidad entidadActiva) throws Exception;
 
     /**
      * @param registrosSalida

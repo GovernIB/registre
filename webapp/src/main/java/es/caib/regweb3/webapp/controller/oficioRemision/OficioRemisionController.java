@@ -173,7 +173,7 @@ public class OficioRemisionController extends BaseController {
         LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
         // Obtenemos los Registros de Entrada, pendientes de tramitar por medio de un Oficio de Revisión, agrupados según su Organismos destinatario.
-        OficiosRemisionOrganismo oficiosRemisionOrganismo = oficioRemisionEntradaUtilsEjb.oficiosEntradaPendientesRemision(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageOficios(entidadActiva.getId()), busqueda.getAnyo(), oficinaActiva.getId(), registroEntrada.getLibro().getId(), registroEntrada.getDestino().getCodigo(), getOrganismosOficioRemision(request, organismosOficinaActiva), entidadActiva);
+        OficiosRemisionOrganismo oficiosRemisionOrganismo = oficioRemisionEntradaUtilsEjb.oficiosEntradaPendientesRemision(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageOficios(entidadActiva.getId()), busqueda.getAnyo(), oficinaActiva, registroEntrada.getLibro().getId(), registroEntrada.getDestino().getCodigo(), getOrganismosOficioRemision(request, organismosOficinaActiva), entidadActiva);
 
         busqueda.setPageNumber(1);
         mav.addObject("oficiosRemisionOrganismo", oficiosRemisionOrganismo);
@@ -231,7 +231,7 @@ public class OficioRemisionController extends BaseController {
         LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
         // Obtenemos los Registros de Salida, pendientes de tramitar por medio de un Oficio de Revisión, agrupados según su Organismos destinatario.
-        OficiosRemisionOrganismo oficiosRemisionOrganismo = oficioRemisionSalidaUtilsEjb.oficiosSalidaPendientesRemision(busqueda.getPageNumber(), busqueda.getAnyo(), oficinaActiva.getId(), busqueda.getRegistroSalida().getLibro().getId(), busqueda.getDestinatario().getCodigo(), entidadActiva);
+        OficiosRemisionOrganismo oficiosRemisionOrganismo = oficioRemisionSalidaUtilsEjb.oficiosSalidaPendientesRemision(busqueda.getPageNumber(), busqueda.getAnyo(), oficinaActiva, busqueda.getRegistroSalida().getLibro().getId(), busqueda.getDestinatario().getCodigo(), entidadActiva);
 
         busqueda.setPageNumber(1);
         mav.addObject("oficiosRemisionOrganismo", oficiosRemisionOrganismo);
