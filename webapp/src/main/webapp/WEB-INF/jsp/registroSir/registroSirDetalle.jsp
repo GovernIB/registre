@@ -331,7 +331,7 @@
 
                         </div>
 
-                        <div class="panel-footer">
+                        <div class="panel-footer center">
 
                             <%--Botón Reenviar--%>
                             <c:if test="${puedeReenviar}">
