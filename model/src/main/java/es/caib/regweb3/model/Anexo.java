@@ -73,6 +73,14 @@ public class Anexo implements Serializable {
     private Boolean firmaValida; // Indicará si la firma es vàlida o no
     private Boolean justificante; // Indica si el anexo es justificante.
 
+
+    //SCAN
+    private String signType;
+
+    private String signFormat;
+
+    private String signProfile;
+
     
     public Anexo() {
     }
@@ -311,6 +319,33 @@ public class Anexo implements Serializable {
 
     public void setJustificante(Boolean justificante) {
         this.justificante = justificante;
+    }
+
+    @Column(name = "SIGNTYPE")
+    public String getSignType() {
+        return signType;
+    }
+
+    public void setSignType(String signType) {
+        this.signType = signType;
+    }
+
+    @Column(name = "SIGNFORMAT")
+    public String getSignFormat() {
+        return signFormat;
+    }
+
+    public void setSignFormat(String signFormat) {
+        this.signFormat = signFormat;
+    }
+
+    @Column(name = "SIGNPROFILE")
+    public String getSignProfile() {
+        return signProfile;
+    }
+
+    public void setSignProfile(String signProfile) {
+        this.signProfile = signProfile;
     }
 
     @Override

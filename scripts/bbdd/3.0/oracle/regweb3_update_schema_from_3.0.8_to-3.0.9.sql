@@ -194,6 +194,11 @@ ALTER TABLE RWE_INTERESADO_SIR
         foreign key (REGISTRO_SIR)
         references RWE_REGISTRO_SIR;
 
+-- Nuevos campos anexo
+ALTER TABLE RWE_ANEXO add SIGNTYPE varchar2(128 char);
+ALTER TABLE RWE_ANEXO add SIGNFORMAT varchar2(128 char);
+ALTER TABLE RWE_ANEXO add SIGNPROFILE varchar2(128 char);
+
 
 
 --SOLO DESARROLLO Eliminar campos de RWE_OFICIO_REMISION
