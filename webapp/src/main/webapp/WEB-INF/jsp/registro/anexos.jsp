@@ -20,7 +20,11 @@
 
           <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_RESERVA || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && oficinaRegistral && puedeEditar}">
               <c:if test="${empty maxanexospermitidos || fn:length(registro.registroDetalle.anexos) < maxanexospermitidos }">
-                <a onClick="nouAnnexFull()" data-toggle="modal" data-target="#myModal" class="btn btn-${color} btn-xs pull-right" role="button"><i class="fa fa-plus"></i> <spring:message code="anexo.nuevo"/></a>
+                  <c:if test="${teScan}">
+                  <a onClick="nuevoAnexoScan()" data-toggle="modal" data-target="#myModalScan" class="btn btn-${color} btn-xs pull-right" role="button"><i class="fa fa-plus"></i>Scan</a>
+                  </c:if>
+                  <a onClick="nuevoAnexoFichero()" data-toggle="modal" data-target="#myModal" class="btn btn-${color} btn-xs pull-right" role="button"><i class="fa fa-plus"></i> <spring:message code="anexo.archivo.nuevo"/></a>
+
               </c:if>
 
           </c:if>
@@ -183,9 +187,25 @@
 
     function nouAnnexFull() {
 
-      $('#anexoTitulo').html('<spring:message code="anexo.nuevo"/>');
+        $('#anexoTitulo').html('<spring:message code="anexo.nuevo"/>');
 
-      loadiframe("<c:url value="/anexo/nou/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${oficio.sir}" />");
+        loadiframe("<c:url value="/anexo/nou/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${oficio.sir}" />");
+    }
+
+
+    function nuevoAnexoFichero() {
+
+        $('#anexoTitulo').html('<spring:message code="anexo.nuevo"/>');
+        $('#sinfirma').prop("checked", "checked");
+
+        loadiframe("<c:url value="/anexoFichero/ficheros/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${oficio.sir}" />");
+    }
+
+    function nuevoAnexoScan() {
+
+        $('#anexoTitulo').html('<spring:message code="anexo.nuevo"/>');
+
+        loadiframe("<c:url value="/anexoScan/new/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${oficio.sir}" />");
     }
 
 

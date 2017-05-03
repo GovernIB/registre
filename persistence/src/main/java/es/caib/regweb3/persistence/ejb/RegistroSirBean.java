@@ -19,7 +19,6 @@ import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.MimeTypeUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -34,7 +33,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.security.MessageDigest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -112,6 +110,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public RegistroSir getRegistroSir(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws Exception {
 
         Query q = em.createQuery("Select registroSir from RegistroSir as registroSir where " +
@@ -129,6 +128,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public RegistroSir getRegistroSir(String identificadorIntercambio) throws Exception{
 
         Query q = em.createQuery("Select registroSir from RegistroSir as registroSir where " +
@@ -287,6 +287,8 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         return paginacion;
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public List<RegistroSir> getUltimosPendientesProcesar(String oficinaSir, Integer total) throws Exception{
 
         Query q = em.createQuery("Select ars from RegistroSir as ars " +
@@ -301,6 +303,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public void modificarEstado(Long idRegistroSir, EstadoRegistroSir estado) throws Exception {
 
         Query q = em.createQuery("update RegistroSir set estado=:estado where id = :idRegistroSir");
@@ -311,6 +314,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Integer eliminarByEntidad(Long idEntidad) throws Exception{
 
         List<?> result = em.createQuery("Select distinct(a.id) from RegistroSir as a where a.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
@@ -347,11 +351,13 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         if (ficheroIntercambio.getFicheroIntercambio() != null) {
 
+            Fichero_Intercambio_SICRES_3 fichero_intercambio_sicres_3 = ficheroIntercambio.getFicheroIntercambio();
+
             registroSir = new RegistroSir();
             registroSir.setFechaRecepcion(new Date());
 
             // Segmento De_Origen_o_Remitente
-            De_Origen_o_Remitente de_Origen_o_Remitente = ficheroIntercambio.getFicheroIntercambio().getDe_Origen_o_Remitente();
+            De_Origen_o_Remitente de_Origen_o_Remitente = fichero_intercambio_sicres_3.getDe_Origen_o_Remitente();
             if (de_Origen_o_Remitente != null) {
 
                 registroSir.setCodigoEntidadRegistralOrigen(de_Origen_o_Remitente.getCodigo_Entidad_Registral_Origen());
@@ -386,7 +392,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             }
 
             // Segmento De_Destino
-            De_Destino de_Destino = ficheroIntercambio.getFicheroIntercambio().getDe_Destino();
+            De_Destino de_Destino = fichero_intercambio_sicres_3.getDe_Destino();
             if (de_Destino != null) {
 
                 registroSir.setCodigoEntidadRegistralDestino(de_Destino.getCodigo_Entidad_Registral_Destino());
@@ -408,7 +414,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             }
 
             // Segmento De_Asunto de_Asunto
-            De_Asunto de_Asunto = ficheroIntercambio.getFicheroIntercambio().getDe_Asunto();
+            De_Asunto de_Asunto = fichero_intercambio_sicres_3.getDe_Asunto();
             if (de_Asunto != null) {
                 registroSir.setResumen(de_Asunto.getResumen());
                 registroSir.setCodigoAsunto(de_Asunto.getCodigo_Asunto_Segun_Destino());
@@ -417,7 +423,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             }
 
             // Segmento De_Internos_Control
-            De_Internos_Control de_Internos_Control = ficheroIntercambio.getFicheroIntercambio().getDe_Internos_Control();
+            De_Internos_Control de_Internos_Control = fichero_intercambio_sicres_3.getDe_Internos_Control();
             if (de_Internos_Control != null) {
 
                 registroSir.setIdentificadorIntercambio(de_Internos_Control.getIdentificador_Intercambio());
@@ -464,14 +470,14 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             }
 
             // Segmento De_Formulario_Generico
-            De_Formulario_Generico de_Formulario_Generico = ficheroIntercambio.getFicheroIntercambio().getDe_Formulario_Generico();
+            De_Formulario_Generico de_Formulario_Generico = fichero_intercambio_sicres_3.getDe_Formulario_Generico();
             if (de_Formulario_Generico != null) {
                 registroSir.setExpone(de_Formulario_Generico.getExpone());
                 registroSir.setSolicita(de_Formulario_Generico.getSolicita());
             }
 
             // Segmento De_Interesado
-            De_Interesado[] de_Interesados = ficheroIntercambio.getFicheroIntercambio().getDe_Interesado();
+            De_Interesado[] de_Interesados = fichero_intercambio_sicres_3.getDe_Interesado();
             if (ArrayUtils.isNotEmpty(de_Interesados)) {
                 for (De_Interesado de_Interesado : de_Interesados) {
                     if (de_Interesado != null) {
@@ -548,7 +554,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             }
 
             // Segmento De_Anexos
-            De_Anexo[] de_Anexos = ficheroIntercambio.getFicheroIntercambio().getDe_Anexo();
+            De_Anexo[] de_Anexos = fichero_intercambio_sicres_3.getDe_Anexo();
             if (ArrayUtils.isNotEmpty(de_Anexos)) {
                 for (De_Anexo de_Anexo : de_Anexos) {
                     if (de_Anexo != null) {
@@ -1089,22 +1095,6 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     }
 
     /**
-     * Genera el Hash mediante SHA-256 del contenido del documento y lo codifica en base64
-     *
-     * @param documentoData
-     * @return
-     * @throws Exception
-     */
-    private byte[] obtenerHash(byte[] documentoData) throws Exception {
-
-        MessageDigest md = MessageDigest.getInstance("SHA-256");
-        byte[] digest = md.digest(documentoData);
-
-        return Base64.encodeBase64(digest);
-
-    }
-
-    /**
      * Obtiene el código Oficina de Origen dependiendo de si es interna o externa
      *
      * @param registroDetalle
@@ -1605,8 +1595,6 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      */
     private List<AnexoFull> procesarAnexos(RegistroSir registroSir, List<CamposNTI> camposNTIs) throws Exception {
 
-
-        List<AnexoFull> anexos = new ArrayList<AnexoFull>();
         HashMap<String,AnexoFull> mapAnexosFull = new HashMap<String, AnexoFull>();
 
         //Aqui buscamos los camposNTI del anexoSir con el que se corresponde para pasarlo al método transformarAnexo
@@ -1618,8 +1606,8 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                 }
             }
         }
-        anexos = new ArrayList<AnexoFull>(mapAnexosFull.values());
-        return anexos;
+
+        return new ArrayList<AnexoFull>(mapAnexosFull.values());
     }
 
     /**
@@ -1670,12 +1658,12 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         if(anexoSir.getCertificado()!= null) {
             anexo.setCertificado(anexoSir.getCertificado());
-        };
+        }
 
         if (anexoSir.getFirma() != null) {
             anexo.setFirma(anexoSir.getFirma());
 
-        };
+        }
         if (anexoSir.getTimestamp() != null) {
             anexo.setTimestamp(anexoSir.getTimestamp());
         }

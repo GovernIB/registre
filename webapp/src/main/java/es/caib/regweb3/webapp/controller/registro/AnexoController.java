@@ -65,12 +65,7 @@ public class AnexoController extends BaseController {
 
     @Autowired
     private AnexoWebValidator anexoValidator;
-    
-    @EJB(mappedName = "regweb3/HistoricoRegistroEntradaEJB/local")
-    public HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
 
-    @EJB(mappedName = "regweb3/HistoricoRegistroSalidaEJB/local")
-    public HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
     
     @EJB(mappedName = "regweb3/AnexoEJB/local")
     public AnexoLocal anexoEjb;
@@ -90,11 +85,6 @@ public class AnexoController extends BaseController {
     @EJB(mappedName = "regweb3/ScanWebModuleEJB/local")
     public ScanWebModuleLocal scanWebModuleEjb;
 
-    @EJB(mappedName = "regweb3/OficioRemisionEntradaUtilsEJB/local")
-    public OficioRemisionEntradaUtilsLocal oficioRemisionEntradaUtilsEjb;
-
-    @EJB(mappedName = "regweb3/OficioRemisionSalidaUtilsEJB/local")
-    public OficioRemisionSalidaUtilsLocal oficioRemisionSalidaUtilsEjb;
     
     /**
      *  Si arriba aqui és que hi ha un error de  Tamany de Fitxer Superat   
@@ -110,9 +100,9 @@ public class AnexoController extends BaseController {
       Long anexoID = (Long)session.getAttribute("LAST_anexoID");
       
       boolean isOficioRemisionSir = false;
-      return new ModelAndView(new RedirectView("/anexo/" + (anexoID == null? "nou/" : "editar/") 
+      return new ModelAndView(new RedirectView("/anexo/" + (anexoID == null? "nou/" : "editar/")
           + registroDetalleID + "/" + tipoRegistro + "/" + registroID + (anexoID == null? "" : ("/" + anexoID))+"/"+isOficioRemisionSir, true));
-    }
+}
     
     /**
      *  Si arriba aqui és que hi ha un error de  Tamany de Fitxer Superat   
@@ -267,28 +257,31 @@ public class AnexoController extends BaseController {
       String variableReturn = "";
 
       // Si es oficio de remision sir debemos comprobar la limitación de los anexos impuesta por SIR
-      //TODO REVISAR validarParametrosSIRAnexos CUANDO API CUSTODIA DEVUELVA EL TAMAÑO DE LOS ARCHIVOS
-      if(anexoForm.getOficioRemisionSir()){
+     /*
+     Ya se hace previamente
+
+     if(anexoForm.getOficioRemisionSir()){
             variableReturn = validarLimitacionesSIRAnexos(anexoForm, request, model);
       }
       if(!variableReturn.isEmpty()){
             return variableReturn;
-      }
+      }*/
 
       anexoValidator.validate(anexoForm.getAnexo(),result);
 
       if (!result.hasErrors()) { // Si no hay errores
 
         try {
-           manageDocumentCustodySignatureCustody(request, anexoForm);
+           //manageDocumentCustodySignatureCustody(request, anexoForm);
 
            anexoEjb.crearAnexo(anexoForm, getUsuarioEntidadActivo(request),
                anexoForm.getRegistroID(), anexoForm.getTipoRegistro());
 
            model.addAttribute("closeAndReload", "true");
 
-           return "registro/formularioAnexo";
-           
+           //return "registro/formularioAnexo";
+           return "registro/formularioAnexo2";
+
         } catch(I18NValidationException i18n) {
           log.error(i18n.getMessage(), i18n);
           // TODO
@@ -308,7 +301,7 @@ public class AnexoController extends BaseController {
       // Errors
       loadCommonAttributes(request, model, anexoForm.getRegistroID());
 
-      return "registro/formularioAnexo";
+      return "registro/formularioAnexo2";
      
       
     }
@@ -379,7 +372,6 @@ public class AnexoController extends BaseController {
         String variableReturn = "";
 
         // Si es oficio de remision sir debemos comprobar la limitación de los anexos impuesta por SIR
-        //TODO REVISAR validarParametrosSIRAnexos CUANDO API CUSTODIA DEVUELVA EL TAMAÑO DE LOS ARCHIVOS
         if(anexoForm.getOficioRemisionSir()){
             variableReturn = validarLimitacionesSIRAnexos(anexoForm, request, model);
         }
