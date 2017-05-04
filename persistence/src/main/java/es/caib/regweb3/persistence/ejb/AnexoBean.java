@@ -9,7 +9,6 @@ import es.caib.regweb3.persistence.validator.AnexoValidator;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -31,7 +30,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-
 import java.beans.Encoder;
 import java.beans.Expression;
 import java.beans.PersistenceDelegate;
@@ -80,6 +78,9 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     @EJB(mappedName = "regweb3/SignatureServerEJB/local")
     private SignatureServerLocal signatureServerEjb;
 
+    @EJB(mappedName = "regweb3/PluginEJB/local")
+    private PluginLocal pluginEjb;
+
 
     @Override
     public Anexo getReference(Long id) throws Exception {
@@ -98,7 +99,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             AnexoFull anexoFull = new AnexoFull(anexo);
 
             //IDocumentCustodyPlugin custody = AnnexDocumentCustodyManager.getInstance();
-            IDocumentCustodyPlugin custody = getInstance();
+            IDocumentCustodyPlugin custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
 
             anexoFull.setDocumentoCustody(custody.getDocumentInfoOnly(custodyID));
             anexoFull.setDocumentoFileDelete(false);
@@ -136,7 +137,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             AnexoFull anexoFull = new AnexoFull(anexo);
 
             //IDocumentCustodyPlugin custody = AnnexDocumentCustodyManager.getInstance();
-            IDocumentCustodyPlugin custody = getInstance();
+            IDocumentCustodyPlugin custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
 
             anexoFull.setDocumentoCustody(custody.getDocumentInfo(custodyID));
 
@@ -207,7 +208,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 anexo.setTipoDocumental(td);
             }
 
-            custody = getInstance();
+            custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
 
             //Obtenemos el registro con sus anexos, interesados y tipo Asunto
             IRegistro registro = getIRegistro(registroID, tipoRegistro, anexo, isNew);
@@ -294,7 +295,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             anexo.setFechaCaptura(new Date());
 
 
-            IDocumentCustodyPlugin custody = getInstance();
+            IDocumentCustodyPlugin custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
 
             //Obtenemos el registro con sus anexos, interesados y tipo Asunto
             IRegistro registro = getIRegistro(registroID, tipoRegistro, anexo, isNew);
@@ -1075,8 +1076,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             log.warn("getArchivo :: CustodiaID vale null !!!!!", new Exception());
             return null;
         }
-
-        return getInstance().getDocumentInfo(custodiaID);
+        IDocumentCustodyPlugin custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
+        return custody.getDocumentInfo(custodiaID);
 
     }
 
@@ -1095,20 +1096,22 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             log.warn("getArchivo :: CustodiaID vale null !!!!!", new Exception());
             return null;
         }
-
-        return getInstance().getDocument(custodiaID);
+        IDocumentCustodyPlugin custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
+        return custody.getDocument(custodiaID);
 
     }
 
 
     @Override
     public DocumentCustody getDocumentInfoOnly(String custodiaID) throws Exception {
-        return getInstance().getDocumentInfoOnly(custodiaID);
+        IDocumentCustodyPlugin custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
+        return custody.getDocumentInfoOnly(custodiaID);
     }
 
     @Override
     public SignatureCustody getSignatureInfoOnly(String custodiaID) throws Exception {
-        return getInstance().getSignatureInfoOnly(custodiaID);
+        IDocumentCustodyPlugin custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
+        return custody.getSignatureInfoOnly(custodiaID);
     }
 
     /**
@@ -1124,8 +1127,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             log.warn("getFirma :: CustodiaID vale null !!!!!", new Exception());
             return null;
         }
-
-        return getInstance().getSignatureInfo(custodiaID);
+        IDocumentCustodyPlugin custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
+        return custody.getSignatureInfo(custodiaID);
     }
 
 
@@ -1136,8 +1139,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             log.warn("getFirma :: CustodiaID vale null !!!!!", new Exception());
             return null;
         }
-
-        return getInstance().getSignature(custodiaID);
+        IDocumentCustodyPlugin custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
+        return custody.getSignature(custodiaID);
     }
 
 

@@ -96,11 +96,20 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
     /**
      * Obtiene los Oficios de Remisión de un determinado Estado y Entidad
      * @param idEstado
+     * @param idOficina
+     * @return
+     * @throws Exception
+     */
+    public List<OficioRemision> getByEstadoOficina(int idEstado, Long idOficina) throws Exception;
+
+    /**
+     * Obtiene los Oficios de Remisión de un determinado Estado y Entidad
+     * @param idEstado
      * @param idEntidad
      * @return
      * @throws Exception
      */
-    public List<OficioRemision> getByEstado(int idEstado, Long idEntidad) throws Exception;
+    public List<OficioRemision> getByEstadoEntidad(int idEstado, Long idEntidad) throws Exception;
 
     /**
      * Busca Registros de Salida que pertenecen a un OficioRemision

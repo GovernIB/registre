@@ -66,6 +66,9 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     @EJB(mappedName = "regweb3/SirEJB/local")
     private SirLocal sirEjb;
 
+    @EJB(mappedName = "regweb3/PluginEJB/local")
+    private PluginLocal pluginEjb;
+
 
     /**
     * Listado de todos los Registros de Entrada
@@ -329,7 +332,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         try{
 
-            sirEjb.enviarFicheroIntercambio(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO,idRegistro, oficinaSir.getCodigo(),oficinaSir.getDenominacion(), getOficinaActiva(request), usuarioEntidad, envioSirForm.getIdLibro());
+            sirEjb.enviarFicheroIntercambio(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO,idRegistro, oficinaSir.getCodigo(),oficinaSir.getDenominacion(), getOficinaActiva(request), usuarioEntidad);
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.envioSir.ok"));
 
         }catch (SIRException e){
@@ -615,7 +618,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             Long idEntidad = registroEntrada.getUsuario().getEntidad().getId();
 
             // Carregam el plugin
-            IJustificantePlugin justificantePlugin = RegwebJustificantePluginManager.getInstance(idEntidad);
+            IJustificantePlugin justificantePlugin = (IJustificantePlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_JUSTIFICANTE);
 
             // Comprova que existeix el plugin de justificant
             if(justificantePlugin != null) {

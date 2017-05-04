@@ -43,11 +43,10 @@ public interface SirLocal {
      * @param denominacionEntidadRegistralDestino
      * @param oficinaActiva
      * @param usuario
-     * @param idLibro
      * @throws Exception
      * @throws I18NException
      */
-    public OficioRemision enviarFicheroIntercambio(String tipoRegistro, Long idRegistro, String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino, Oficina oficinaActiva, UsuarioEntidad usuario, Long idLibro) throws Exception, I18NException;
+    public OficioRemision enviarFicheroIntercambio(String tipoRegistro, Long idRegistro, String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino, Oficina oficinaActiva, UsuarioEntidad usuario) throws Exception, I18NException;
 
     /**
      *
@@ -68,6 +67,18 @@ public interface SirLocal {
      */
     public RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs) throws Exception;
 
+
+    /**
+     *
+     * @param tipoRegistro
+     * @param idRegistro
+     * @param oficinaReenvio
+     * @param oficinaActiva
+     * @param usuario
+     * @param observaciones
+     * @throws Exception
+     */
+    public void reenviarRegistro(String tipoRegistro, Long idRegistro, Oficina oficinaReenvio, Oficina oficinaActiva, UsuarioEntidad usuario, String observaciones) throws Exception, I18NException;
 
     /**
      * Reenvio de un Registro SIR

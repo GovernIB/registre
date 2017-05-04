@@ -29,19 +29,19 @@ public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
     protected final Logger log = Logger.getLogger(getClass());
 
     @EJB(mappedName = "regweb3/UsuarioEntidadEJB/local")
-    public UsuarioEntidadLocal usuarioEntidadEjb;
+    private UsuarioEntidadLocal usuarioEntidadEjb;
 
     @EJB(mappedName = "regweb3/PermisoLibroUsuarioEJB/local")
-    public PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
+    private PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
 
     @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
-    public RegistroEntradaLocal registroEntradaEjb;
+    private RegistroEntradaLocal registroEntradaEjb;
 
     @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
-    public TipoDocumentalLocal tipoDocumentalEjb;
+    private TipoDocumentalLocal tipoDocumentalEjb;
 
     @EJB(mappedName = "regweb3/AnexoEJB/local")
-    public AnexoLocal anexoEjb;
+    private AnexoLocal anexoEjb;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -193,6 +193,20 @@ public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
                 return false;
             }
         }
+
+        // Comprobaciones previas al reenvio
+        if(url.contains("reenvio")){
+            String idRegistroEntrada =  url.replace("/registroEntrada/","").replace("/reenvio", ""); //Obtenemos el id a partir de la url
+            RegistroEntrada registroEntrada = registroEntradaEjb.findById(Long.valueOf(idRegistroEntrada));
+
+            // Comprobamos que está Rechazado
+            if(!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_RECHAZADO)){
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registro.reenvioSir"));
+                response.sendRedirect("/regweb3/aviso");
+                return false;
+            }
+        }
+
 
         return true;
     }

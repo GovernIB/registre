@@ -410,6 +410,18 @@
         PROVINCIA number(19,0)
     );
 
+    create table RWE_PLUGIN (
+        ID number(19,0) not null,
+        ACTIVO number(1,0) not null,
+        CLASE varchar2(1000 char) not null,
+        DESCRIPCION varchar2(2000 char) not null,
+        ENTIDAD number(19,0),
+        NOMBRE varchar2(255 char) not null,
+        PROPIEDADES_ADMIN varchar2(2000 char),
+        PROPIEDADES_ENTIDAD varchar2(2000 char),
+        TIPO number(19,0)
+    );
+
     create table RWE_PROPIEDADGLOBAL (
         ID number(19,0) not null,
         CLAVE varchar2(255 char) not null,
@@ -618,6 +630,7 @@
         REGENT_DESTINO number(19,0),
         REGENT_ORIGEN number(19,0),
         REGISTRO_SALIDA number(19,0),
+        REGISTRO_SALIDA_RECT number(19,0),
         REGISTRO_SIR number(19,0)
     );
 
@@ -715,6 +728,7 @@
     create index RWE_PELIUS_USUARI_FK_I on RWE_PERMLIBUSU (USUARIO);
     create index RWE_PELIUS_LIBRO_FK_I on RWE_PERMLIBUSU (LIBRO);
     create index RWE_PERSONA_ENTIDAD_FK_I on RWE_PERSONA (ENTIDAD);
+    create index RWE_PLUGI_ENTIDA_FK_I on RWE_PLUGIN (ENTIDAD);
     create index RWE_PROPIE_ENTIDA_FK_I on RWE_PROPIEDADGLOBAL (ENTIDAD);
     create index RWE_REGMIG_FECREG_I on RWE_REGISTRO_MIGRADO (FECHAREG);
     create index RWE_REGMIG_CODOF_I on RWE_REGISTRO_MIGRADO (CODOFICINA);
@@ -795,6 +809,8 @@
     alter table RWE_PERMLIBUSU add constraint RWE_PERMLIBUSU_pk primary key (ID);
 
     alter table RWE_PERSONA add constraint RWE_PERSONA_pk primary key (ID);
+
+    alter table RWE_PLUGIN add constraint RWE_PLUGIN_pk primary key (ID);
 
     alter table RWE_PROPIEDADGLOBAL add constraint RWE_PROPIEDADGLOBAL_pk primary key (ID);
 
@@ -1357,6 +1373,11 @@
         add constraint RWE_TRAZAB_OFIREM_FK
         foreign key (OFICIO_REMISION)
         references RWE_OFICIO_REMISION;
+
+    alter table RWE_TRAZABILIDAD
+        add constraint RWE_TRAZAB_RGSRCT_FK
+        foreign key (REGISTRO_SALIDA_RECT)
+        references RWE_REGISTRO_SALIDA;
 
     alter table RWE_TRAZABILIDAD
         add constraint RWE_TRAZAB_REGENTD_FK

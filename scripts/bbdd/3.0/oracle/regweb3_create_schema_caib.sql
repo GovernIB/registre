@@ -418,6 +418,18 @@ create table RWE_PERSONA (
     PROVINCIA number(19,0)
 );
 
+create table RWE_PLUGIN (
+    ID number(19,0) not null,
+    ACTIVO number(1,0) not null,
+    CLASE varchar2(1000 char) not null,
+    DESCRIPCION varchar2(2000 char) not null,
+    ENTIDAD number(19,0),
+    NOMBRE varchar2(255 char) not null,
+    PROPIEDADES_ADMIN varchar2(2000 char),
+    PROPIEDADES_ENTIDAD varchar2(2000 char),
+    TIPO number(19,0)
+);
+
 create table RWE_PROPIEDADGLOBAL (
     ID number(19,0) not null,
     CLAVE varchar2(255 char) not null,
@@ -642,6 +654,7 @@ create table RWE_TRAZABILIDAD (
     REGENT_DESTINO number(19,0),
     REGENT_ORIGEN number(19,0),
     REGISTRO_SALIDA number(19,0),
+    REGISTRO_SALIDA_RECT number(19,0),
     REGISTRO_SIR number(19,0)
 );
 
@@ -739,6 +752,7 @@ create index RWE_ORGANI_PAIS_FK_I on RWE_ORGANISMO (PAIS) TABLESPACE REGWEB_INDE
 create index RWE_PELIUS_USUARI_FK_I on RWE_PERMLIBUSU (USUARIO) TABLESPACE REGWEB_INDEX;
 create index RWE_PELIUS_LIBRO_FK_I on RWE_PERMLIBUSU (LIBRO) TABLESPACE REGWEB_INDEX;
 create index RWE_PERSONA_ENTIDAD_FK_I on RWE_PERSONA (ENTIDAD) TABLESPACE REGWEB_INDEX;
+create index RWE_PLUGI_ENTIDA_FK_I on RWE_PLUGIN (ENTIDAD) TABLESPACE REGWEB_INDEX;
 create index RWE_PROPIE_ENTIDA_FK_I on RWE_PROPIEDADGLOBAL (ENTIDAD) TABLESPACE REGWEB_INDEX;
 create index RWE_REGMIG_FECREG_I on RWE_REGISTRO_MIGRADO (FECHAREG) TABLESPACE REGWEB_INDEX;
 create index RWE_REGMIG_CODOF_I on RWE_REGISTRO_MIGRADO (CODOFICINA) TABLESPACE REGWEB_INDEX;
@@ -819,6 +833,8 @@ alter table RWE_PENDIENTE add constraint RWE_PENDIENTE_pk primary key (ID);
 alter table RWE_PERMLIBUSU add constraint RWE_PERMLIBUSU_pk primary key (ID);
 
 alter table RWE_PERSONA add constraint RWE_PERSONA_pk primary key (ID);
+
+alter table RWE_PLUGIN add constraint RWE_PLUGIN_pk primary key (ID);
 
 alter table RWE_PROPIEDADGLOBAL add constraint RWE_PROPIEDADGLOBAL_pk primary key (ID);
 
@@ -1383,6 +1399,11 @@ foreign key (OFICIO_REMISION)
 references RWE_OFICIO_REMISION;
 
 alter table RWE_TRAZABILIDAD
+    add constraint RWE_TRAZAB_RGSRCT_FK
+foreign key (REGISTRO_SALIDA_RECT)
+references RWE_REGISTRO_SALIDA;
+
+alter table RWE_TRAZABILIDAD
     add constraint RWE_TRAZAB_REGENTD_FK
 foreign key (REGENT_DESTINO)
 references RWE_REGISTRO_ENTRADA;
@@ -1471,6 +1492,7 @@ grant select,insert,delete,update on RWE_ORGANISMO to www_regweb3;
 grant select,insert,delete,update on RWE_PENDIENTE to www_regweb3;
 grant select,insert,delete,update on RWE_PERMLIBUSU to www_regweb3;
 grant select,insert,delete,update on RWE_PERSONA to www_regweb3;
+grant select,insert,delete,update on RWE_PLUGIN to www_regweb3;
 grant select,insert,delete,update on RWE_PROPIEDADGLOBAL to www_regweb3;
 grant select,insert,delete,update on RWE_REGISTROLOPD_MIGRADO to www_regweb3;
 grant select,insert,delete,update on RWE_REGISTRO_DETALLE to www_regweb3;

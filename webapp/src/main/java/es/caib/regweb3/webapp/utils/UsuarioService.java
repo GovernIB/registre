@@ -4,7 +4,6 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.webapp.login.RegwebLoginPluginManager;
 import org.apache.log4j.Logger;
 import org.fundaciobit.plugins.userinformation.IUserInformationPlugin;
 import org.fundaciobit.plugins.userinformation.RolesInfo;
@@ -53,6 +52,9 @@ public class UsuarioService {
 
     @EJB(mappedName = "regweb3/OrganismoEJB/local")
     private OrganismoLocal organismoEjb;
+
+    @EJB(mappedName = "regweb3/PluginEJB/local")
+    private PluginLocal pluginEjb;
 
 
     /**
@@ -429,7 +431,7 @@ public class UsuarioService {
      */
     private List<Rol> obtenerRolesUserPlugin(String identificador) throws Exception{
 
-        IUserInformationPlugin loginPlugin = RegwebLoginPluginManager.getInstance();
+        IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null,RegwebConstantes.PLUGIN_USER_INFORMATION);
         RolesInfo rolesInfo = loginPlugin.getRolesByUsername(identificador);
 
         List<String> roles = new ArrayList<String>();
@@ -477,7 +479,7 @@ public class UsuarioService {
      */
     public Usuario crearUsuario(String identificador) throws Exception{
 
-        IUserInformationPlugin loginPlugin = RegwebLoginPluginManager.getInstance();
+        IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null,RegwebConstantes.PLUGIN_USER_INFORMATION);
         UserInfo regwebUserInfo = loginPlugin.getUserInfoByUserName(identificador);
 
         if(regwebUserInfo != null){ // Si el documento no existe en REGWEB3
@@ -571,7 +573,7 @@ public class UsuarioService {
      * @throws Exception
      */
     public Boolean existeIdentificador(String identificador) throws  Exception{
-        IUserInformationPlugin loginPlugin = RegwebLoginPluginManager.getInstance();
+        IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null,RegwebConstantes.PLUGIN_USER_INFORMATION);
         UserInfo regwebUserInfo = loginPlugin.getUserInfoByUserName(identificador);
 
         return regwebUserInfo != null;

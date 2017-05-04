@@ -1,6 +1,3 @@
---Actualizar el nombre de la aplicación para adaptarlo a SICRES3
-update RWE_REGISTRO_DETALLE set APLICACION='RWE3';
-
 --Aumento de tamaño del campo VALOR
 ALTER TABLE RWE_PROPIEDADGLOBAL MODIFY VALOR varchar2(2048 char);
 
@@ -19,9 +16,12 @@ INSERT INTO rwe_propiedadglobal(id,clave,valor,tipo,descripcion,entidad) SELECT 
 INSERT INTO rwe_propiedadglobal(id,clave,valor,tipo,descripcion,entidad) SELECT RWE_ALL_SEQ.nextVal, 'es.caib.regweb3.firmajustificante.plugins.signatureserver.miniappletinserver.base_dir','[PATH_XXX]',1,'Base del Plugin de signature server',id FROM rwe_entidad;
 INSERT INTO rwe_propiedadglobal(id,clave,valor,tipo,descripcion,entidad) SELECT RWE_ALL_SEQ.nextVal, 'es.caib.regweb3.justificante.mensaje.estampacion','Este es un mensaje de estampación {0} {1} {2}',1,'Mensaje de estampación del justificante',id FROM rwe_entidad;
 
---SIR Anexos
+--Nuevos campos RWE_ANEXO
 alter table RWE_ANEXO add (FIRMAVALIDA NUMBER(1,0) DEFAULT 0);
 alter table RWE_ANEXO add (JUSTIFICANTE NUMBER(1,0) NOT NULL DEFAULT 0);
+ALTER TABLE RWE_ANEXO add SIGNTYPE varchar2(128 char);
+ALTER TABLE RWE_ANEXO add SIGNFORMAT varchar2(128 char);
+ALTER TABLE RWE_ANEXO add SIGNPROFILE varchar2(128 char);
 
 --Nuevo permiso (SIR) en la tabla RWE_PERMLIBUSU
 INSERT INTO RWE_PERMLIBUSU (id,libro,usuario,activo,permiso) SELECT RWE_ALL_SEQ.nextVal,libro,usuario,0,9 FROM RWE_PERMLIBUSU where permiso=1;
@@ -35,9 +35,16 @@ ALTER TABLE RWE_OFICIO_REMISION add FECHA_DESTINO timestamp;
 ALTER TABLE RWE_OFICIO_REMISION add COD_ERROR varchar2(255 char);
 ALTER TABLE RWE_OFICIO_REMISION add DESC_ERROR varchar2(2000 char);
 ALTER TABLE RWE_OFICIO_REMISION add REINTENTOS number(10,0) DEFAULT 0;
+update RWE_OFICIO_REMISION set ESTADO=13 where ESTADO=5; -- Actualización código de estadod e oficio remision
 
---Nuevo campo en la tabla RWE_TRAZABILIDAD
+--Nuevos campos en la tabla RWE_TRAZABILIDAD
 ALTER TABLE RWE_TRAZABILIDAD add (TIPO number(10,0) DEFAULT 1 not null);
+
+ALTER TABLE RWE_TRAZABILIDAD add REGISTRO_SALIDA_RECT number(19,0);--04/05/2017
+ALTER TABLE RWE_TRAZABILIDAD
+        add constraint RWE_TRAZAB_RGSRCT_FK
+        foreign key (REGISTRO_SALIDA_RECT)
+        references RWE_REGISTRO_SALIDA;--04/05/2017
 
 -- Campo REGISTRO_SALIDA nulleable en la tabla RWE_TRAZABILIDAD
 ALTER TABLE RWE_TRAZABILIDAD MODIFY REGISTRO_SALIDA NULL;
@@ -50,9 +57,7 @@ ALTER TABLE RWE_REGISTRO_DETALLE add DEC_T_ANOTACION varchar2(80 char);
 ALTER TABLE RWE_REGISTRO_DETALLE add COD_ENT_REG_DEST varchar2(21 char);
 ALTER TABLE RWE_REGISTRO_DETALLE add DEC_ENT_REG_DEST varchar2(80 char);
 ALTER TABLE RWE_REGISTRO_DETALLE add ID_INTERCAMBIO varchar2(33 char);
-
--- Actualización código de estadod e oficio remision
-update RWE_OFICIO_REMISION set ESTADO=13 where ESTADO=5;
+update RWE_REGISTRO_DETALLE set APLICACION='RWE3'; --Actualizar el nombre de la aplicación para adaptarlo a SICRES3
 
 --Eliminamos las tabla RWE_ASIENTO_REGISTRAL_SIR, RWE_INTERESADO_SIR y RWE_ANEXO_SIR
 DROP TABLE RWE_ASIENTO_REGISTRAL_SIR CASCADE CONSTRAINTS;
@@ -194,21 +199,37 @@ ALTER TABLE RWE_INTERESADO_SIR
         foreign key (REGISTRO_SIR)
         references RWE_REGISTRO_SIR;
 
--- Nuevos campos anexo
-ALTER TABLE RWE_ANEXO add SIGNTYPE varchar2(128 char);
-ALTER TABLE RWE_ANEXO add SIGNFORMAT varchar2(128 char);
-ALTER TABLE RWE_ANEXO add SIGNPROFILE varchar2(128 char);
 
+--Creamos la Tabla RWE_PLUGIN 04/05/2017
+create table RWE_PLUGIN (
+        ID number(19,0) not null,
+        ACTIVO number(1,0) not null,
+        CLASE varchar2(1000 char) not null,
+        DESCRIPCION varchar2(2000 char) not null,
+        ENTIDAD number(19,0),
+        NOMBRE varchar2(255 char) not null,
+        PROPIEDADES_ADMIN varchar2(2000 char),
+        PROPIEDADES_ENTIDAD varchar2(2000 char),
+        TIPO number(19,0)
+    );
+create index RWE_PLUGI_ENTIDA_FK_I on RWE_PLUGIN (ENTIDAD);
+alter table RWE_PLUGIN add constraint RWE_PLUGIN_pk primary key (ID);
 
-
---SOLO DESARROLLO Eliminar campos de RWE_OFICIO_REMISION
-ALTER TABLE RWE_OFICIO_REMISION DROP CONSTRAINT RWE_OFIREM_ASR_FK;
-ALTER TABLE RWE_OFICIO_REMISION DROP COLUMN ASIENTO_REGISTRAL_SIR;
-ALTER TABLE RWE_OFICIO_REMISION DROP COLUMN FECHA_RECEPCION;
-ALTER TABLE RWE_OFICIO_REMISION DROP COLUMN FECHA_ENVIO;
-
--- Solo desarrollo actualizar tipo trazabilidad
-UPDATE RWE_TRAZABILIDAD set TIPO=3 where OFICIO_REMISION=null;
--- Solo desarrollo actualizar justificante de Anexo
-ALTER TABLE RWE_ANEXO MODIFY (JUSTIFICANTE NOT NULL);
---Fin solo desarrollo
+INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad,PROPIEDADES_ADMIN) values (RWE_ALL_SEQ.nextVal,1, 'User Information','Información de usuarios','org.fundaciobit.plugins.userinformation.database.DataBaseUserInformationPlugin',5,null,'es.caib.regweb3.userinformationplugin.plugins.userinformation.database.jndi=java:/es.caib.seycon.db.wl
+es.caib.regweb3.userinformationplugin.plugins.userinformation.database.users_table=SC_WL_USUARI
+es.caib.regweb3.userinformationplugin.plugins.userinformation.database.username_column=USU_CODI
+es.caib.regweb3.userinformationplugin.plugins.userinformation.database.administrationid_column=USU_NIF
+es.caib.regweb3.userinformationplugin.plugins.userinformation.database.name_column=USU_NOM
+es.caib.regweb3.userinformationplugin.plugins.userinformation.database.userroles_table=SC_WL_USUGRU
+es.caib.regweb3.userinformationplugin.plugins.userinformation.database.userroles_rolename_column=UGR_CODGRU
+es.caib.regweb3.userinformationplugin.plugins.userinformation.database.userroles_username_column=UGR_CODUSU');
+INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad, PROPIEDADES_ADMIN) values (RWE_ALL_SEQ.nextVal,1, 'Custodia','Custodia de documentos','org.fundaciobit.plugins.documentcustody.filesystem.FileSystemDocumentCustodyPlugin',0,null,'es.caib.regweb3.annex.plugins.documentcustody.filesystem.prefix=ANNEX_
+es.caib.regweb3.annex.plugins.documentcustody.filesystem.basedir=C:/Users/earrivi/Documents/Proyectos/SICRES3/REGWEB/archivos/
+es.caib.regweb3.annex.plugins.documentcustody.filesystem.baseurl=http://localhost:8080/annexos/index.jsp?custodyID={1}');
+INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad) SELECT RWE_ALL_SEQ.nextVal,1, 'Justificante','Genera el justificante SIR-CAIB de los registros','es.caib.regweb3.plugins.justificante.caib.JustificanteCaibPlugin',1,id FROM rwe_entidad;
+INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad) SELECT RWE_ALL_SEQ.nextVal,1, 'PostProceso','Implementación base del plugin','es.caib.regweb3.plugins.postproceso.mock.PostProcesoMockPlugin',3,id FROM rwe_entidad;
+INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad) SELECT RWE_ALL_SEQ.nextVal,1, 'Distribución','Implementación base del plugin, marca como distribuido el registro de entrada','es.caib.regweb3.plugins.distribucion.mock.DistribucionMockPlugin',2,id FROM rwe_entidad;
+INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,PROPIEDADES_ENTIDAD,entidad) SELECT RWE_ALL_SEQ.nextVal,1, 'Firma en servidor','Firma en servidor mediante el MiniApplet','org.fundaciobit.plugins.signatureserver.miniappletinserver.MiniAppletInServerSignatureServerPlugin',4,'# Base del Plugin de signature server
+es.caib.regweb3.signatureserver.plugins.signatureserver.miniappletinserver.base_dir=C:/Users/earrivi/Documents/Proyectos/OTAE/REGWEB3/',id FROM rwe_entidad;
+INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,PROPIEDADES_ENTIDAD,entidad) SELECT RWE_ALL_SEQ.nextVal,1, 'CAIB Scan','Scan mediante el sistema CAIB','org.fundaciobit.plugins.scanweb.caib.CAIBScanWebPlugin',6,'',id FROM rwe_entidad;
+INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,PROPIEDADES_ENTIDAD,entidad) SELECT RWE_ALL_SEQ.nextVal,1, 'DynamicWebTwain','Scan mediante el sistema DynamicWebTwain','es.limit.plugins.scanweb.dynamicwebtwain.DynamicWebTwainScanWebPlugin',6,'',id FROM rwe_entidad;

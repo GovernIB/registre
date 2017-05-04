@@ -20,8 +20,9 @@ public class Trazabilidad implements Serializable {
     private Long tipo;
     private OficioRemision oficioRemision;
     private RegistroEntrada registroEntradaOrigen;
-    private RegistroSalida registroSalida;
     private RegistroEntrada registroEntradaDestino;
+    private RegistroSalida registroSalida;
+    private RegistroSalida registroSalidaRectificado;
     private RegistroSir registroSir;
     private Date fecha;
 
@@ -64,6 +65,17 @@ public class Trazabilidad implements Serializable {
     }
 
     @ManyToOne(optional = true)
+    @JoinColumn(name="REGENT_DESTINO")
+    @ForeignKey(name="RWE_TRAZAB_REGENTD_FK")
+    public RegistroEntrada getRegistroEntradaDestino() {
+        return registroEntradaDestino;
+    }
+
+    public void setRegistroEntradaDestino(RegistroEntrada registroEntradaDestino) {
+        this.registroEntradaDestino = registroEntradaDestino;
+    }
+
+    @ManyToOne(optional = true)
     @JoinColumn(name="REGISTRO_SALIDA")
     @ForeignKey(name="RWE_TRAZAB_REGSAL_FK")
     public RegistroSalida getRegistroSalida() {
@@ -75,14 +87,14 @@ public class Trazabilidad implements Serializable {
     }
 
     @ManyToOne(optional = true)
-    @JoinColumn(name="REGENT_DESTINO")
-    @ForeignKey(name="RWE_TRAZAB_REGENTD_FK")
-    public RegistroEntrada getRegistroEntradaDestino() {
-        return registroEntradaDestino;
+    @JoinColumn(name="REGISTRO_SALIDA_RECT")
+    @ForeignKey(name="RWE_TRAZAB_RGSRCT_FK")
+    public RegistroSalida getRegistroSalidaRectificado() {
+        return registroSalidaRectificado;
     }
 
-    public void setRegistroEntradaDestino(RegistroEntrada registroEntradaDestino) {
-        this.registroEntradaDestino = registroEntradaDestino;
+    public void setRegistroSalidaRectificado(RegistroSalida registroSalidaRectificado) {
+        this.registroSalidaRectificado = registroSalidaRectificado;
     }
 
     @ManyToOne(optional = true)

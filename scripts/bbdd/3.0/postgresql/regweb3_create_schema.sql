@@ -12,6 +12,9 @@
         MODOFIRMA int4,
         OBSERVACIONES varchar(50),
         ORIGEN int4,
+        SIGNFORMAT varchar(255),
+        SIGNPROFILE varchar(255),
+        SIGNTYPE varchar(255),
         TIMESTAMP bytea,
         TIPODOC int8,
         TITULO varchar(200) not null,
@@ -446,6 +449,19 @@
         primary key (ID)
     );
 
+    create table RWE_PLUGIN (
+        ID int8 not null,
+        ACTIVO bool not null,
+        CLASE varchar(1000) not null,
+        DESCRIPCION varchar(2000) not null,
+        ENTIDAD int8,
+        NOMBRE varchar(255) not null,
+        PROPIEDADES_ADMIN varchar(2000),
+        PROPIEDADES_ENTIDAD varchar(2000),
+        TIPO int8,
+        primary key (ID)
+    );
+
     create table RWE_PROPIEDADGLOBAL (
         ID int8 not null,
         CLAVE varchar(255) not null,
@@ -669,6 +685,7 @@
         REGENT_DESTINO int8,
         REGENT_ORIGEN int8,
         REGISTRO_SALIDA int8,
+        REGISTRO_SALIDA_RECT int8,
         REGISTRO_SIR int8,
         primary key (ID)
     );
@@ -1197,6 +1214,8 @@
         foreign key (LOCALIDAD)
         references RWE_CATLOCALIDAD;
 
+    create index RWE_PLUGI_ENTIDA_FK_I on RWE_PLUGIN (ENTIDAD);
+
     create index RWE_PROPIE_ENTIDA_FK_I on RWE_PROPIEDADGLOBAL (ENTIDAD);
 
     alter table RWE_REGISTROLOPD_MIGRADO
@@ -1352,6 +1371,11 @@
         add constraint RWE_TRAZAB_OFIREM_FK
         foreign key (OFICIO_REMISION)
         references RWE_OFICIO_REMISION;
+
+    alter table RWE_TRAZABILIDAD
+        add constraint RWE_TRAZAB_RGSRCT_FK
+        foreign key (REGISTRO_SALIDA_RECT)
+        references RWE_REGISTRO_SALIDA;
 
     alter table RWE_TRAZABILIDAD
         add constraint RWE_TRAZAB_REGENTD_FK

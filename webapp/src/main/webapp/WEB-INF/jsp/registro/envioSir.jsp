@@ -28,7 +28,14 @@
             <div class="col-xs-12">
                 <ol class="breadcrumb">
                     <li><a <c:if test="${oficinaActiva.sirEnvio || oficinaActiva.sirRecepcion}">class="azul"</c:if> href="<c:url value="/inici"/>"><i class="fa fa-home"></i> ${oficinaActiva.denominacion}</a></li>
-                    <li class="active"><i class="fa fa-pencil-square-o"></i> <spring:message code="registroEntrada.registroEntrada"/> ${registro.numeroRegistroFormateado}cir</li>
+                    <li class="active"><i class="fa fa-pencil-square-o"></i>
+                        <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO}">
+                            <spring:message code="registroEntrada.registroEntrada"/> ${registro.numeroRegistroFormateado}
+                        </c:if>
+                        <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO}">
+                            <spring:message code="registroSalida.registroSalida"/> ${registro.numeroRegistroFormateado}
+                        </c:if>
+                    </li>
                     <%--Importamos el menú de avisos--%>
                     <c:import url="/avisos"/>
                 </ol>
@@ -84,7 +91,7 @@
                                         <form:form modelAttribute="envioSirForm" method="post" cssClass="form-horizontal">
 
                                             <input type="hidden" id="idRegistro" name="idRegistro" value="${registro.id}"/>
-                                            <input type="hidden" id="idLibro" name="idLibro" value="${registro.libro.id}"/>
+                                            <%--<input type="hidden" id="idLibro" name="idLibro" value="${registro.libro.id}"/>--%>
 
                                             <!-- Oficina Sir destinataria -->
                                             <c:if test="${fn:length(oficinasSIR) == 1}">

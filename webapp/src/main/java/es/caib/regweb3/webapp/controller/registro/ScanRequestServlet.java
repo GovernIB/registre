@@ -1,23 +1,24 @@
 package es.caib.regweb3.webapp.controller.registro;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import es.caib.regweb3.persistence.ejb.PluginLocal;
+import es.caib.regweb3.persistence.ejb.ScanWebModuleLocal;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.utils.Configuracio;
+import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.webapp.scan.TipoScan;
+import org.apache.log4j.Logger;
+import org.fundaciobit.plugins.scanweb.api.IScanWebPlugin;
+import org.springframework.stereotype.Controller;
 
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.log4j.Logger;
-import org.springframework.stereotype.Controller;
-
-import es.caib.regweb3.persistence.ejb.ScanWebModuleLocal;
-import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
-import es.caib.regweb3.utils.Configuracio;
-import es.caib.regweb3.webapp.scan.TipoScan;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 
 
@@ -166,7 +167,20 @@ public class ScanRequestServlet extends HttpServlet {
  
 
   
-  public static List<TipoScan> getTipusScanejat(ScanWebModuleLocal scanWebModuleEjb, Locale locale, String noScanName){
+  public static List<TipoScan> getTipusScanejat(ScanWebModuleLocal scanWebModuleEjb, PluginLocal pluginEjb, Long idEntidad, Locale locale, String noScanName){
+
+    // Test plugins
+    try {
+      List<Object> pluginsScan =  pluginEjb.getPlugins(idEntidad, RegwebConstantes.PLUGIN_SCAN);
+      for (Object plugin : pluginsScan) {
+        IScanWebPlugin plu = (IScanWebPlugin) plugin;
+        log.info("Plugin: " + plu.getName(locale));
+      }
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
     String[] values = new String[] {"0"};
     try {
       String plugins = Configuracio.getScanPlugins();

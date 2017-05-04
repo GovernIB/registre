@@ -270,6 +270,7 @@
                                 <ul class="dropdown-menu">
                                     <li class="submenu-complet"><a href="<c:url value="/entidad/${entidadActiva.id}/edit"/>"><spring:message
                                             code="menu.entidad.editar"/></a></li>
+                                    <li class="submenu-complet"><a href="<c:url value="/plugin/list"/>"><spring:message code="plugin.plugins"/></a></li>
                                     <li class="submenu-complet"><a href="<c:url value="/propiedadGlobal/list"/>"><spring:message
                                             code="propiedadGlobal.propiedadesGlobales"/></a></li>
                                     <li class="divider"></li>
@@ -353,6 +354,7 @@
                             </li>
 
                             <li class="submenu-complet"><a href="<c:url value="/usuario/list"/>"><spring:message code="menu.usuarios"/></a></li>
+                            <li class="submenu-complet"><a href="<c:url value="/plugin/list"/>"><spring:message code="plugin.plugins"/></a></li>
                             <li class="submenu-complet"><a href="<c:url value="/propiedadGlobal/list"/>"><spring:message code="propiedadGlobal.propiedadesGlobales"/></a></li>
                             <li class="submenu-complet"><a href="<c:url value="/dir3/datosCatalogo"/>" tabindex="-1"><spring:message code="menu.dir3"/></a></li>
                             <li class="submenu-complet"><a href="<c:url value="/configuracion/editar"/>"><spring:message code="menu.configuracion"/></a></li>

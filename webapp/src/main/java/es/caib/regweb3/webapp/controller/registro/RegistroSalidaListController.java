@@ -5,7 +5,10 @@ import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.*;
-import es.caib.regweb3.persistence.utils.*;
+import es.caib.regweb3.persistence.utils.Oficio;
+import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.plugins.justificante.IJustificantePlugin;
 import es.caib.regweb3.sir.core.excepcion.SIRException;
 import es.caib.regweb3.utils.Dir3CaibUtils;
@@ -65,6 +68,8 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
     @EJB(mappedName = "regweb3/SirEJB/local")
     private SirLocal sirEjb;
 
+    @EJB(mappedName = "regweb3/PluginEJB/local")
+    private PluginLocal pluginEjb;
 
 
     /**
@@ -318,7 +323,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
         try{
 
-            sirEjb.enviarFicheroIntercambio(RegwebConstantes.REGISTRO_SALIDA_ESCRITO,idRegistro, oficinaSir.getCodigo(),oficinaSir.getDenominacion(), getOficinaActiva(request), usuarioEntidad, envioSirForm.getIdLibro());
+            sirEjb.enviarFicheroIntercambio(RegwebConstantes.REGISTRO_SALIDA_ESCRITO,idRegistro, oficinaSir.getCodigo(),oficinaSir.getDenominacion(), getOficinaActiva(request), usuarioEntidad);
             Mensaje.saveMessageInfo(request, getMessage("registroSalida.envioSir.ok"));
 
         }catch (SIRException e){
@@ -506,7 +511,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             Long idEntidad = registroSalida.getUsuario().getEntidad().getId();
 
             // Carregam el plugin
-            IJustificantePlugin justificantePlugin = RegwebJustificantePluginManager.getInstance(idEntidad);
+            IJustificantePlugin justificantePlugin = (IJustificantePlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_JUSTIFICANTE);
 
             // Comprova que existeix el plugin de justificant
             if(justificantePlugin != null) {

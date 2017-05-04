@@ -67,6 +67,45 @@
                         </c:if>
                     </c:if>
 
+                    <%-- RECTIFICACIÓN --%>
+                    <c:if test="${trazabilidad.tipo == RegwebConstantes.TRAZABILIDAD_RECTIFICACION_SALIDA}">
+
+                        <c:if test="${registro.id == trazabilidad.registroSalida.id}">
+
+                            <%--RECTIFICADO--%>
+                            <li class="timeline-inverted">
+                                <c:set var="registroSalida" value="${trazabilidad.registroSalidaRectificado}" scope="request"/>
+                                <c:import url="../trazabilidad/registroSalida.jsp">
+                                    <c:param name="activo" value="false"/>
+                                </c:import>
+                            </li>
+
+                            <%--REGISTRO SALIDA--%>
+                            <li>
+                                <div class="timeline-badge danger"><i class="fa fa-external-link"></i></div>
+                                <div class="timeline-panel timeline-panel-activo-rs">
+                                    <div class="timeline-heading">
+                                        <h4 class="timeline-title"><spring:message code="registroSalida.registroSalida"/> ${registro.numeroRegistroFormateado}</h4>
+                                        <p><small class="text-muted"><i class="fa fa-clock-o"></i> <fmt:formatDate value="${registro.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></small></p>
+                                    </div>
+                                    <div class="timeline-body">
+                                        <p><small><i class="fa fa-exchange"></i> <strong><spring:message code="registroSalida.oficina"/>:</strong> ${registro.oficina.denominacion}</small></p>
+                                    </div>
+                                </div>
+                            </li>
+
+                        </c:if>
+
+                        <%--RECTIFICADO--%>
+                        <c:if test="${registro.id == trazabilidad.registroSalidaRectificado.id}">
+                            <li class="timeline-inverted">
+                                <c:set var="registroSalida" value="${trazabilidad.registroSalida}" scope="request"/>
+                                <c:import url="../trazabilidad/registroSalida.jsp"/>
+                            </li>
+                        </c:if>
+
+                    </c:if>
+
                 </c:forEach>
 
             </ul>

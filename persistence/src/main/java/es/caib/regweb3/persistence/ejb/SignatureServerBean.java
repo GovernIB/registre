@@ -1,10 +1,12 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.persistence.utils.RegwebPluginsManager;
+import es.caib.regweb3.utils.RegwebConstantes;
+import org.apache.log4j.Logger;
 import org.fundaciobit.plugins.signature.api.*;
 import org.fundaciobit.plugins.signatureserver.api.ISignatureServerPlugin;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import java.io.File;
 
@@ -14,6 +16,11 @@ import java.io.File;
 @Stateless(name = "SignatureServerEJB")
 @SecurityDomain("seycon")
 public class SignatureServerBean implements SignatureServerLocal{
+
+    protected final Logger log = Logger.getLogger(getClass());
+
+    @EJB(mappedName = "regweb3/PluginEJB/local")
+    private PluginLocal pluginEjb;
 
     /**Método que genera la Firma de un File para una Entidad en concreto
      * @param pdfsource
@@ -25,7 +32,7 @@ public class SignatureServerBean implements SignatureServerLocal{
     public File signFile(File pdfsource, String languageUI, Long idEntidadActiva) throws Exception {
 
         // Cerca el Plugin de Justificant definit a les Propietats Globals
-        ISignatureServerPlugin pluginInstance = RegwebPluginsManager.getPluginSignatureServer(idEntidadActiva);
+        ISignatureServerPlugin pluginInstance = (ISignatureServerPlugin) pluginEjb.getPlugin(idEntidadActiva, RegwebConstantes.PLUGIN_FIRMA_SERVIDOR);
 
 
         final String signType = FileInfoSignature.SIGN_TYPE_PADES;

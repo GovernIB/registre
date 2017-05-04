@@ -494,7 +494,7 @@ public class OficioRemisionController extends BaseController {
                     for (RegistroEntrada registroEntradaAEnviar : registrosEntrada) {
 
                         // Enviamos el Fichero de datos de intercambio al nodo SIR
-                        OficioRemision oficioRemision = sirEjb.enviarFicheroIntercambio(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO,registroEntradaAEnviar.getId(), oficinaSir.getCodigo(),oficinaSir.getDenominacion(), getOficinaActiva(request), usuarioEntidad, oficioRemisionForm.getIdLibro());
+                        OficioRemision oficioRemision = sirEjb.enviarFicheroIntercambio(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO,registroEntradaAEnviar.getId(), oficinaSir.getCodigo(),oficinaSir.getDenominacion(), getOficinaActiva(request), usuarioEntidad);
 
                         oficioRemisionList.add(oficioRemision);
                     }
@@ -548,7 +548,7 @@ public class OficioRemisionController extends BaseController {
                     for (RegistroSalida registroSalidaAEnviar : registrosSalida) {
 
                         // Enviamos el Fichero de datos de intercambio al nodo SIR
-                        OficioRemision oficioRemision = sirEjb.enviarFicheroIntercambio(RegwebConstantes.REGISTRO_SALIDA_ESCRITO,registroSalidaAEnviar.getId(), oficinaSir.getCodigo(),oficinaSir.getDenominacion(), getOficinaActiva(request), usuarioEntidad, oficioRemisionForm.getIdLibro());
+                        OficioRemision oficioRemision = sirEjb.enviarFicheroIntercambio(RegwebConstantes.REGISTRO_SALIDA_ESCRITO,registroSalidaAEnviar.getId(), oficinaSir.getCodigo(),oficinaSir.getDenominacion(), getOficinaActiva(request), usuarioEntidad);
 
                         oficioRemisionList.add(oficioRemision);
                     }

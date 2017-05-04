@@ -202,6 +202,15 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      */
     public RegistroSalida getConAnexosFullCompleto(Long id) throws Exception, I18NException;
 
+    /**
+     * Rectificar Registro de Salida
+     * @param idRegistro
+     * @param usuarioEntidad
+     * @return
+     * @throws Exception
+     */
+    public RegistroSalida rectificar(Long idRegistro, UsuarioEntidad usuarioEntidad) throws Exception;
+
 
     /**
      * Metodo que llama al plugin de postproceso cuando creamos un registro de salida.
