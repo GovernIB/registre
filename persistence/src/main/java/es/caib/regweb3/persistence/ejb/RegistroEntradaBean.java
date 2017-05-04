@@ -68,6 +68,9 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     @EJB(mappedName = "regweb3/TrazabilidadEJB/local")
     private TrazabilidadLocal trazabilidadEjb;
 
+    @EJB(mappedName = "regweb3/PluginEJB/local")
+    private PluginLocal pluginEjb;
+
 
     @Override
     public String getNumeroRegistroEntrada(Long idRegistroEntrada) throws Exception {
@@ -782,7 +785,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             cambiarEstado(idRegistro,RegwebConstantes.REGISTRO_RECTIFICADO);
 
             // Creamos la Trazabilidad de la rectificación
-            Trazabilidad trazabilidad = new Trazabilidad(RegwebConstantes.TRAZABILIDAD_RECTIFICACION);
+            Trazabilidad trazabilidad = new Trazabilidad(RegwebConstantes.TRAZABILIDAD_RECTIFICACION_ENTRADA);
             trazabilidad.setRegistroEntradaOrigen(getReference(idRegistro));
             trazabilidad.setRegistroEntradaDestino(registroEntrada);
             trazabilidad.setRegistroSir(null);
@@ -810,7 +813,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         //Obtenemos plugin
 
-        IDistribucionPlugin distribucionPlugin = RegwebDistribucionPluginManager.getInstance(usuarioEntidad.getEntidad().getId());
+        IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(usuarioEntidad.getEntidad().getId(), RegwebConstantes.PLUGIN_DISTRIBUCION);
         //Si han especificado plug-in
         if (distribucionPlugin != null) {
             respuestaDistribucion.setHayPlugin(true);
@@ -844,7 +847,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     public Boolean enviar(RegistroEntrada re, DestinatarioWrapper wrapper,Long entidadId) throws Exception, I18NException {
 
         //Obtenemos plugin
-        IDistribucionPlugin distribucionPlugin = RegwebDistribucionPluginManager.getInstance(entidadId);
+        IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_DISTRIBUCION);
         if (distribucionPlugin != null) {
             ConfiguracionDistribucion configuracionDistribucion = distribucionPlugin.configurarDistribucion();
             re = obtenerAnexosDistribucion(re, configuracionDistribucion.configuracionAnexos);
@@ -902,7 +905,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     public void postProcesoActualizarRegistro(RegistroEntrada re,Long entidadId) throws Exception {
-        IPostProcesoPlugin postProcesoPlugin = RegwebPostProcesoPluginManager.getInstance(entidadId);
+        IPostProcesoPlugin postProcesoPlugin = (IPostProcesoPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_POSTPROCESO);
         if(postProcesoPlugin != null){
             postProcesoPlugin.actualizarRegistroEntrada(re);
         }
@@ -910,7 +913,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     public void postProcesoNuevoRegistro(RegistroEntrada re,Long entidadId) throws Exception {
-        IPostProcesoPlugin postProcesoPlugin = RegwebPostProcesoPluginManager.getInstance(entidadId);
+        IPostProcesoPlugin postProcesoPlugin = (IPostProcesoPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_POSTPROCESO);
         if(postProcesoPlugin != null){
             postProcesoPlugin.nuevoRegistroEntrada(re);
         }

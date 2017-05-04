@@ -12,7 +12,6 @@ import es.caib.regweb3.webapp.form.EntidadForm;
 import es.caib.regweb3.webapp.form.LibroOrganismo;
 import es.caib.regweb3.webapp.form.PermisoLibroUsuarioForm;
 import es.caib.regweb3.webapp.form.UsuarioEntidadBusquedaForm;
-import es.caib.regweb3.webapp.login.RegwebLoginPluginManager;
 import es.caib.regweb3.webapp.utils.*;
 import es.caib.regweb3.webapp.validator.EntidadValidator;
 import org.fundaciobit.plugins.userinformation.IUserInformationPlugin;
@@ -83,6 +82,9 @@ public class EntidadController extends BaseController {
     
     @EJB(mappedName = "regweb3/ScanWebModuleEJB/local")
     private ScanWebModuleLocal scanWebModuleEjb;
+
+    @EJB(mappedName = "regweb3/PluginEJB/local")
+    private PluginLocal pluginEjb;
 
     /**
      * Listado de todas las Entidades
@@ -247,7 +249,7 @@ public class EntidadController extends BaseController {
                 }
             }
 
-            model.addAttribute("tipoScan",  ScanRequestServlet.getTipusScanejat(scanWebModuleEjb, request.getLocale(), getMessage("scan.noScan")));
+            model.addAttribute("tipoScan",  ScanRequestServlet.getTipusScanejat(scanWebModuleEjb, pluginEjb, entidadId, request.getLocale(), getMessage("scan.noScan")));
             model.addAttribute("administradoresEntidad", administradoresEntidadModificar(entidad.getPropietario(), entidad));
             model.addAttribute("tieneOrganismos", entidadEjb.tieneOrganismos(entidadId));
 
@@ -274,7 +276,7 @@ public class EntidadController extends BaseController {
 
            try {
                 model.addAttribute("administradoresEntidad", administradoresEntidadModificar(entidadForm.getEntidad().getPropietario(), entidadForm.getEntidad()));
-                model.addAttribute("tipoScan", ScanRequestServlet.getTipusScanejat(scanWebModuleEjb, request.getLocale(), getMessage("scan.noScan")));
+                model.addAttribute("tipoScan", ScanRequestServlet.getTipusScanejat(scanWebModuleEjb, pluginEjb, entidadId, request.getLocale(), getMessage("scan.noScan")));
                model.addAttribute("tieneOrganismos", entidadEjb.tieneOrganismos(entidadId));
             } catch (Exception e) {
                 e.printStackTrace();
@@ -576,7 +578,7 @@ public class EntidadController extends BaseController {
         UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findById(idUsuarioEntidad);
         List<Libro> libros = libroEjb.getLibrosEntidad(entidad.getId());
 
-        IUserInformationPlugin loginPlugin = RegwebLoginPluginManager.getInstance();
+        IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null,RegwebConstantes.PLUGIN_USER_INFORMATION);
         RolesInfo rolesInfo = loginPlugin.getRolesByUsername(usuarioEntidad.getUsuario().getIdentificador());
         
         List<String> roles = new ArrayList<String>();
@@ -966,7 +968,7 @@ public class EntidadController extends BaseController {
     @ModelAttribute("propietarios")
     public List<Usuario> propietarios() throws Exception {
 
-        IUserInformationPlugin loginPlugin = RegwebLoginPluginManager.getInstance();
+        IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null,RegwebConstantes.PLUGIN_USER_INFORMATION);
         String[] usuarios = loginPlugin.getUsernamesByRol(RegwebConstantes.ROL_ADMIN);
 
         List<Usuario> administradoresEntidad = new ArrayList<Usuario>();

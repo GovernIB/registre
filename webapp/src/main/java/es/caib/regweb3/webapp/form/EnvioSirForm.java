@@ -8,7 +8,6 @@ public class EnvioSirForm {
 
 
     private Long idRegistro;
-    private Long idLibro;
     private String oficinaSIRCodigo;
 
 
@@ -24,13 +23,6 @@ public class EnvioSirForm {
         this.idRegistro = idRegistro;
     }
 
-    public Long getIdLibro() {
-        return idLibro;
-    }
-
-    public void setIdLibro(Long idLibro) {
-        this.idLibro = idLibro;
-    }
 
     public String getOficinaSIRCodigo() {
         return oficinaSIRCodigo;

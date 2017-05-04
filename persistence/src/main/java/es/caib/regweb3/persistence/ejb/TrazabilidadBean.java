@@ -75,7 +75,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
     public List<Trazabilidad> getByRegistroSalida(Long idRegistroSalida) throws Exception {
 
         Query q = em.createQuery("Select DISTINCT trazabilidad from Trazabilidad as trazabilidad " +
-                "where trazabilidad.registroSalida.id = :idRegistroSalida order by trazabilidad.fecha desc");
+                "where trazabilidad.registroSalida.id = :idRegistroSalida or trazabilidad.registroSalidaRectificado.id = :idRegistroSalida order by trazabilidad.fecha desc");
 
         q.setParameter("idRegistroSalida", idRegistroSalida);
 
@@ -172,12 +172,14 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
         List<?> trazabilidades =  em.createQuery("Select id from Trazabilidad where oficioRemision.usuarioResponsable.entidad.id=:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
         List<?> trazabilidadesSir =  em.createQuery("Select id from Trazabilidad where registroSir.entidad.id=:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
-        List<?> trazabilidadesRectificacion =  em.createQuery("Select id from Trazabilidad where registroEntradaOrigen.libro.organismo.entidad.id=:idEntidad and tipo = :rectificacion").setParameter("idEntidad",idEntidad).setParameter("rectificacion",RegwebConstantes.TRAZABILIDAD_RECTIFICACION).getResultList();
+        List<?> trazabilidadesRectificacionEntrada =  em.createQuery("Select id from Trazabilidad where registroEntradaOrigen.libro.organismo.entidad.id=:idEntidad and tipo = :rectificacion").setParameter("idEntidad",idEntidad).setParameter("rectificacion",RegwebConstantes.TRAZABILIDAD_RECTIFICACION_ENTRADA).getResultList();
+        List<?> trazabilidadesRectificacionSalida =  em.createQuery("Select id from Trazabilidad where registroEntradaOrigen.libro.organismo.entidad.id=:idEntidad and tipo = :rectificacion").setParameter("idEntidad",idEntidad).setParameter("rectificacion",RegwebConstantes.TRAZABILIDAD_RECTIFICACION_SALIDA).getResultList();
         Integer total = trazabilidades.size() + trazabilidadesSir.size();
 
         eliminarTrazabilidades(trazabilidades);
         eliminarTrazabilidades(trazabilidadesSir);
-        eliminarTrazabilidades(trazabilidadesRectificacion);
+        eliminarTrazabilidades(trazabilidadesRectificacionEntrada);
+        eliminarTrazabilidades(trazabilidadesRectificacionSalida);
 
         return total;
 

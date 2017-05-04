@@ -11,6 +11,7 @@ import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+import org.hibernate.Session;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.annotation.Resource;
@@ -61,6 +62,12 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
     @EJB(mappedName = "regweb3/InteresadoEJB/local")
     private InteresadoLocal interesadoEjb;
+
+    @EJB(mappedName = "regweb3/TrazabilidadEJB/local")
+    private TrazabilidadLocal trazabilidadEjb;
+
+    @EJB(mappedName = "regweb3/PluginEJB/local")
+    private PluginLocal pluginEjb;
 
 
     @Override
@@ -550,8 +557,72 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         return re;
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public RegistroSalida rectificar(Long idRegistro, UsuarioEntidad usuarioEntidad) throws Exception {
+
+        RegistroSalida rectificado = null;
+
+        try {
+            RegistroSalida registroSalida = getConAnexosFullCompleto(idRegistro);
+            List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
+            List<AnexoFull> anexos = registroSalida.getRegistroDetalle().getAnexosFull();
+
+            // Detach de la sesion para poder duplicar el registro
+            Session session = (Session) em.getDelegate();
+            session.evict(registroSalida);
+            session.evict(registroSalida.getRegistroDetalle());
+
+            // Nuevas propiedades
+            registroSalida.setEstado(RegwebConstantes.REGISTRO_VALIDO);
+            registroSalida.setFecha(new Date());
+
+            // Set Id's a null
+            registroSalida.setId(null);
+            registroSalida.getRegistroDetalle().setId(null);
+
+            for (Interesado interesado : interesados) {
+                interesado.setId(null);
+            }
+            registroSalida.getRegistroDetalle().setInteresados(null);
+
+            for (AnexoFull anexo : anexos) {
+                anexo.getAnexo().setId(null);
+                anexo.getAnexo().setJustificante(false);
+            }
+            registroSalida.getRegistroDetalle().setAnexos(null);
+
+            registroSalida.getRegistroDetalle().setObservaciones("Rectificación del registro " + registroSalida.getNumeroRegistroFormateado());
+
+            // Registramos el nuevo registro
+            rectificado = registrarSalida(registroSalida, usuarioEntidad,interesados, anexos);
+
+            // Moficiamos el estado al registro original
+            cambiarEstado(idRegistro,RegwebConstantes.REGISTRO_RECTIFICADO);
+
+            // Creamos la Trazabilidad de la rectificación
+            Trazabilidad trazabilidad = new Trazabilidad(RegwebConstantes.TRAZABILIDAD_RECTIFICACION_SALIDA);
+            /*trazabilidad.setRegistroEntradaOrigen(null);
+            trazabilidad.setRegistroEntradaDestino(null);
+            trazabilidad.setRegistroSir(null);
+            trazabilidad.setOficioRemision(null);*/
+            trazabilidad.setRegistroSalida(registroSalida);
+            trazabilidad.setRegistroSalidaRectificado(getReference(idRegistro));
+            trazabilidad.setFecha(new Date());
+
+            trazabilidadEjb.persist(trazabilidad);
+
+        } catch (I18NException e) {
+            e.printStackTrace();
+        } catch (I18NValidationException e) {
+            e.printStackTrace();
+        }
+
+        return rectificado;
+    }
+
     public void postProcesoActualizarRegistro(RegistroSalida rs, Long entidadId) throws Exception {
-        IPostProcesoPlugin postProcesoPlugin = RegwebPostProcesoPluginManager.getInstance(entidadId);
+        IPostProcesoPlugin postProcesoPlugin = (IPostProcesoPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_POSTPROCESO);
         if(postProcesoPlugin != null){
             postProcesoPlugin.actualizarRegistroSalida(rs);
         }
@@ -559,7 +630,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     }
 
     public void postProcesoNuevoRegistro(RegistroSalida rs, Long entidadId) throws Exception {
-        IPostProcesoPlugin postProcesoPlugin = RegwebPostProcesoPluginManager.getInstance(entidadId);
+        IPostProcesoPlugin postProcesoPlugin = (IPostProcesoPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_POSTPROCESO);
         if(postProcesoPlugin != null){
             postProcesoPlugin.nuevoRegistroSalida(rs);
         }

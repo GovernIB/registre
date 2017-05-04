@@ -150,7 +150,7 @@
                     </c:if>
 
                     <%-- RECTIFICACIÓN --%>
-                    <c:if test="${trazabilidad.tipo == RegwebConstantes.TRAZABILIDAD_RECTIFICACION}">
+                    <c:if test="${trazabilidad.tipo == RegwebConstantes.TRAZABILIDAD_RECTIFICACION_ENTRADA}">
 
                         <c:if test="${registro.id == trazabilidad.registroEntradaDestino.id}">
 

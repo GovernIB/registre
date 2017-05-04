@@ -2,7 +2,6 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.RegistroDetalle;
-import es.caib.regweb3.persistence.utils.RegwebPostProcesoPluginManager;
 import es.caib.regweb3.plugins.postproceso.IPostProcesoPlugin;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
@@ -33,7 +32,10 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
     private EntityManager em;
 
     @EJB(mappedName = "regweb3/RegistroDetalleEJB/local")
-    public RegistroDetalleLocal registroDetalleEjb;
+    private RegistroDetalleLocal registroDetalleEjb;
+
+    @EJB(mappedName = "regweb3/PluginEJB/local")
+    private PluginLocal pluginEjb;
 
 
     @Override
@@ -205,7 +207,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
     }
 
     public void postProcesoNuevoInteresado(Interesado interesado, String numRegistro, String tipo, Long entidadId) throws Exception {
-        IPostProcesoPlugin postProcesoPlugin = RegwebPostProcesoPluginManager.getInstance(entidadId);
+        IPostProcesoPlugin postProcesoPlugin = (IPostProcesoPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_POSTPROCESO);
         if(postProcesoPlugin !=null) {
             if ("entrada".equals(tipo)) {
                 postProcesoPlugin.nuevoInteresadoEntrada(interesado, numRegistro);
@@ -217,7 +219,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
     }
 
     public void postProcesoActualizarInteresado(Interesado interesado, String numRegistro, String tipo, Long entidadId) throws Exception {
-        IPostProcesoPlugin postProcesoPlugin = RegwebPostProcesoPluginManager.getInstance(entidadId);
+        IPostProcesoPlugin postProcesoPlugin = (IPostProcesoPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_POSTPROCESO);
         if(postProcesoPlugin !=null) {
             if ("entrada".equals(tipo)) {
                 postProcesoPlugin.actualizarInteresadoEntrada(interesado, numRegistro);
@@ -229,7 +231,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
     }
 
     public void postProcesoEliminarInteresado(Long idInteresado, String numRegistro, String tipo, Long entidadId) throws Exception {
-        IPostProcesoPlugin postProcesoPlugin = RegwebPostProcesoPluginManager.getInstance(entidadId);
+        IPostProcesoPlugin postProcesoPlugin = (IPostProcesoPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_POSTPROCESO);
         if(postProcesoPlugin !=null) {
             if ("entrada".equals(tipo)) {
                 postProcesoPlugin.eliminarInteresadoEntrada(idInteresado, numRegistro);
