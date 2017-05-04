@@ -29,7 +29,6 @@ import javax.ejb.EJB;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashSet;
@@ -513,7 +512,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             if(justificantePlugin != null) {
 
                 // Obtenim el ByteArray per generar el pdf
-                ByteArrayOutputStream baos = justificantePlugin.generarJustificante(registroSalida);
+                byte[] baos = justificantePlugin.generarJustificante(registroSalida);
 
                 // Cream l'annex justificant i el firmam
                 AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, idRegistro, RegwebConstantes.REGISTRO_SALIDA_ESCRITO.toLowerCase(), baos);

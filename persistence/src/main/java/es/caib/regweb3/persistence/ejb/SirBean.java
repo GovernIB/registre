@@ -465,10 +465,10 @@ public class SirBean implements SirLocal{
                 if(justificantePlugin != null) {
 
                     // Generamos el pdf del Justificante
-                    ByteArrayOutputStream baos = justificantePlugin.generarJustificante(registroEntrada);
+                    byte[] data = justificantePlugin.generarJustificante(registroEntrada);
 
                     // Creamos el anexo del justificante y se lo añadimos al registro
-                    AnexoFull anexoFull = anexoEjb.crearJustificante(usuario, idRegistro, tipoRegistro.toLowerCase(), baos);
+                    AnexoFull anexoFull = anexoEjb.crearJustificante(usuario, idRegistro, tipoRegistro.toLowerCase(), data);
                     registroDetalle.getAnexos().add(anexoFull.getAnexo());
                 }
 
@@ -511,10 +511,10 @@ public class SirBean implements SirLocal{
                 if(justificantePlugin != null) {
 
                     // Generamos el pdf del Justificante
-                    ByteArrayOutputStream baos = justificantePlugin.generarJustificante(registroSalida);
+                    byte[] data = justificantePlugin.generarJustificante(registroSalida);
 
                     // Creamos el anexo del justificante y se lo añadimos al registro
-                    AnexoFull anexoFull = anexoEjb.crearJustificante(usuario, idRegistro, tipoRegistro.toLowerCase(), baos);
+                    AnexoFull anexoFull = anexoEjb.crearJustificante(usuario, idRegistro, tipoRegistro.toLowerCase(), data);
                     registroDetalle.getAnexos().add(anexoFull.getAnexo());
                 }
 

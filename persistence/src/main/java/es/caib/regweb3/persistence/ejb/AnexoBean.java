@@ -35,7 +35,6 @@ import javax.persistence.Query;
 import java.beans.Encoder;
 import java.beans.Expression;
 import java.beans.PersistenceDelegate;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.security.MessageDigest;
@@ -1258,9 +1257,12 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @return
      * @throws Exception
      */
+    @Override
     public AnexoFull crearJustificante(UsuarioEntidad usuarioEntidad, Long idRegistro,
-                                       String tipoRegistro, ByteArrayOutputStream baos) throws Exception {
+                                       String tipoRegistro, byte[] data) throws Exception {
 
+        File justificanteFile = null;
+        File signedFile = null;
         try {
 
             Long idEntidad = usuarioEntidad.getEntidad().getId();
@@ -1271,14 +1273,14 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             String observacionesAnexo = I18NLogicUtils.tradueix(locale, "justificante.anexo.observaciones");
 
             // Crea el justificante como fichero temporal
-            File justificanteFile = File.createTempFile("regweb3_", ".justificant");
+            justificanteFile = File.createTempFile("regweb3_", ".justificant");
             FileOutputStream fos = new FileOutputStream(justificanteFile);
-            fos.write(baos.toByteArray());
+            fos.write(data);
             fos.flush();
             fos.close();
 
             // Firma el justificant
-            File signedFile = signatureServerEjb.signFile(justificanteFile, "es", idEntidad);
+            signedFile = signatureServerEjb.signFile(justificanteFile, "es", idEntidad);
 
             // Crea el anexo del justificante firmado
             AnexoFull anexoFull = new AnexoFull();
@@ -1311,6 +1313,21 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         } catch (I18NException e) {
             e.printStackTrace();
             throw new Exception(e);
+        } finally {
+          
+          if (justificanteFile != null) {
+            if (!justificanteFile.delete()) {
+              justificanteFile.deleteOnExit(); 
+            }
+          }
+          
+          
+          if (signedFile != null) {
+            if (!signedFile.delete()) {
+              signedFile.deleteOnExit(); 
+            }
+          }
+          
         }
 
     }

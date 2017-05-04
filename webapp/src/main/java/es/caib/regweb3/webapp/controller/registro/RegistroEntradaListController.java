@@ -621,7 +621,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             if(justificantePlugin != null) {
 
                 // Obtenim el ByteArray per generar el pdf
-                ByteArrayOutputStream baos = justificantePlugin.generarJustificante(registroEntrada);
+                byte[] baos = justificantePlugin.generarJustificante(registroEntrada);
 
                 // Cream l'annex justificant i el firmam
                 AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, idRegistro, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), baos);

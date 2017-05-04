@@ -5,10 +5,12 @@ import es.caib.regweb3.plugins.distribucion.ConfiguracionDistribucion;
 import es.caib.regweb3.plugins.distribucion.Destinatario;
 import es.caib.regweb3.plugins.distribucion.Destinatarios;
 import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
+
 import org.apache.log4j.Logger;
 import org.fundaciobit.plugins.utils.AbstractPluginProperties;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 /**
@@ -87,7 +89,9 @@ public class DistribucionMockPlugin extends AbstractPluginProperties implements 
     }
 
     @Override
-    public Boolean enviarDestinatarios(RegistroEntrada registro, List<Destinatario> destinatariosDefinitivos, String observaciones) throws Exception {
+    public Boolean enviarDestinatarios(RegistroEntrada registro,
+        List<Destinatario> destinatariosDefinitivos, String observaciones,
+        Locale lang) throws Exception {
 
 
        /* código de ejemplo

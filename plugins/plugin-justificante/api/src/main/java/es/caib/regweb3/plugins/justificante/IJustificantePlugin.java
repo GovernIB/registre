@@ -22,7 +22,7 @@ public interface IJustificantePlugin extends IPlugin {
      * @return
      * @throws Exception
      */
-    ByteArrayOutputStream generarJustificante(RegistroEntrada registroEntrada) throws Exception;
+    byte[] generarJustificante(RegistroEntrada registroEntrada) throws Exception;
 
     /**
      * Metodo que genera el justificante de un registro de entrada.
@@ -30,6 +30,6 @@ public interface IJustificantePlugin extends IPlugin {
      * @return
      * @throws Exception
      */
-    ByteArrayOutputStream generarJustificante(RegistroSalida registroSalida) throws Exception;
+    byte[] generarJustificante(RegistroSalida registroSalida) throws Exception;
 
 }

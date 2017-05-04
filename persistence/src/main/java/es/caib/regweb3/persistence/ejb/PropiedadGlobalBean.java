@@ -311,11 +311,23 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
     }
 
     @Override
-    public List<PropiedadGlobal> getAllPropertiesByEntidad(Long idEntidad) throws Exception{
+    public List<PropiedadGlobal> getAllPropertiesByEntidad(Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select pg from PropiedadGlobal as pg where pg.entidad = :idEntidad ");
         q.setParameter("idEntidad", idEntidad);
 
+        List<?> list = q.getResultList();
+
+        return (List<PropiedadGlobal>) list;
+
+    }
+    
+    
+    @Override
+    public List<PropiedadGlobal> getAllProperties() throws Exception {
+
+        Query q = em.createQuery("Select pg from PropiedadGlobal as pg where pg.entidad is null");
+        
         List<?> list = q.getResultList();
 
         return (List<PropiedadGlobal>) list;

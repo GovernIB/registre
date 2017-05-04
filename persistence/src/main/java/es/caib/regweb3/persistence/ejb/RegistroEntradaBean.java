@@ -825,7 +825,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                 respuestaDistribucion.setDestinatarios(distribucionPlugin.distribuir(re)); // isListado = true , puede escoger a quien lo distribuye de la listas propuestas.
 
             } else { // Si no es modificable, obtendra los destinatarios del propio registro y nos saltamos una llamada al plugin
-                respuestaDistribucion.setEnviado(distribucionPlugin.enviarDestinatarios(re, null, ""));
+                Locale locale = new Locale("ca");
+                respuestaDistribucion.setEnviado(distribucionPlugin.enviarDestinatarios(re, null, "", locale));
 
                 // Si ya ha sido enviado, lo marcamos como tramitado.
                 if(respuestaDistribucion.getEnviado()){
@@ -848,7 +849,9 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         if (distribucionPlugin != null) {
             ConfiguracionDistribucion configuracionDistribucion = distribucionPlugin.configurarDistribucion();
             re = obtenerAnexosDistribucion(re, configuracionDistribucion.configuracionAnexos);
-            return distribucionPlugin.enviarDestinatarios(re, wrapper.getDestinatarios(), wrapper.getObservaciones());
+            // XYZ ZZZ
+            Locale locale = new Locale("ca");
+            return distribucionPlugin.enviarDestinatarios(re, wrapper.getDestinatarios(), wrapper.getObservaciones(), locale);
         }
         return false;
 

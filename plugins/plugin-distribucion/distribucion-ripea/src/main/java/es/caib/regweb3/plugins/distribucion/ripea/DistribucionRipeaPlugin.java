@@ -11,11 +11,13 @@ import es.caib.ripea.ws.v1.bustia.BustiaV1;
 import es.caib.ripea.ws.v1.bustia.RegistreAnnex;
 import es.caib.ripea.ws.v1.bustia.RegistreAnotacio;
 import es.caib.ripea.ws.v1.bustia.RegistreInteressat;
+
 import org.apache.log4j.Logger;
-import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
+import org.fundaciobit.genapp.common.i18n.I18NCommonUtils;
 import org.fundaciobit.plugins.utils.AbstractPluginProperties;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 /**
@@ -26,10 +28,10 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
     protected final Logger log = Logger.getLogger(getClass());
 
 
-    String basePluginRipea = ".plugins.distribucion.distribucionripea";
-    String PROPERTY_USUARIO = basePluginRipea + ".usuario";
-    String PROPERTY_PASSWORD = basePluginRipea + ".password";
-    String PROPERTY_ENDPOINT = basePluginRipea + ".endpoint";
+    public static final String basePluginRipea = DISTRIBUCION_BASE_PROPERTY + "distribucionripea.";
+    public static final String PROPERTY_USUARIO = basePluginRipea + "usuario";
+    public static final String PROPERTY_PASSWORD = basePluginRipea + "password";
+    public static final String PROPERTY_ENDPOINT = basePluginRipea + "endpoint";
 
 
     public String getPropertyUsuario() throws Exception {
@@ -82,7 +84,9 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
     }
 
     @Override
-    public Boolean enviarDestinatarios(RegistroEntrada registro, List<Destinatario> destinatariosDefinitivos, String observaciones) throws Exception {
+    public Boolean enviarDestinatarios(RegistroEntrada registro,
+        List<Destinatario> destinatariosDefinitivos, String observaciones,
+        Locale locale) throws Exception {
         //Invocar ws de ripea
 
         String endpoint = getPropertyEndPoint();
@@ -95,16 +99,15 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
                 usuario,
                 password);
 
-
         //Transformamos a registreAnotació. TODO VER QUE CAMPOS DE REGISTRO ENVIAMOS A RIPEA
-        RegistreAnotacio registreAnotacio = transformarARegistreAnotacio(registro);
+        RegistreAnotacio registreAnotacio = transformarARegistreAnotacio(registro, locale);
 
 
         //Parte de interesados
         List<RegistreInteressat> registresInteressats = registreAnotacio.getInteressats();
         for (Interesado interesado : registro.getRegistroDetalle().getInteresados()) {
-            RegistreInteressat registreInteressat = transformarARegistreInteressat(interesado);
-            RegistreInteressat representant = transformarARegistreInteressat(interesado.getRepresentante());
+            RegistreInteressat registreInteressat = transformarARegistreInteressat(interesado, locale);
+            RegistreInteressat representant = transformarARegistreInteressat(interesado.getRepresentante(), locale);
             registreInteressat.setRepresentant(representant);
             registresInteressats.add(registreInteressat);
         }
@@ -153,7 +156,7 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
      * @return
      * @throws Exception
      */
-    private RegistreAnotacio transformarARegistreAnotacio(RegistroEntrada re) throws Exception {
+    private RegistreAnotacio transformarARegistreAnotacio(RegistroEntrada re, Locale language) throws Exception {
         RegistreAnotacio registreAnotacio = new RegistreAnotacio();
 
         registreAnotacio.setIdentificador(re.getId().toString());
@@ -173,7 +176,7 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
         String codiDF = re.getRegistroDetalle().getTipoDocumentacionFisica().toString();
         registreAnotacio.setDocumentacioFisicaCodi(codiDF);
         //TODO Es crea dependencia al genapp.
-        String descripcionTipoDocFisica = I18NUtils.tradueix("tipoDocumentacionFisica." + codiDF);
+        String descripcionTipoDocFisica = I18NCommonUtils.tradueix(language,"tipoDocumentacionFisica." + codiDF);
         log.info(descripcionTipoDocFisica);
         registreAnotacio.setDocumentacioFisicaDescripcio(descripcionTipoDocFisica);
         registreAnotacio.setEntitatCodi(re.getOficina().getOrganismoResponsable().getEntidad().getCodigoDir3());
@@ -191,7 +194,7 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
         registreAnotacio.setTransportNumero(re.getRegistroDetalle().getNumeroTransporte());
         String codigoTransporte = re.getRegistroDetalle().getTransporte().toString();
         registreAnotacio.setTransportTipusCodi(codigoTransporte);
-        String transporte = I18NUtils.tradueix("transporte." + codigoTransporte);
+        String transporte = I18NCommonUtils.tradueix(language, "transporte." + codigoTransporte);
         registreAnotacio.setTransportTipusDescripcio(transporte);
         registreAnotacio.setUsuariCodi(re.getUsuario().getId().toString());
         registreAnotacio.setUsuariContacte(re.getUsuario().getUsuario().getEmail());
@@ -201,16 +204,16 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
 
     }
 
-    private RegistreInteressat transformarARegistreInteressat(Interesado interesado) throws Exception {
+    private RegistreInteressat transformarARegistreInteressat(Interesado interesado, Locale language) throws Exception {
         RegistreInteressat registreInteressat = new RegistreInteressat();
 
         registreInteressat.setAdresa(interesado.getDireccion());
-        String canalNotificacion = I18NUtils.tradueix("canalNotificacion." + interesado.getCanal());
+        String canalNotificacion = I18NCommonUtils.tradueix(language,"canalNotificacion." + interesado.getCanal());
         registreInteressat.setCanalPreferent(canalNotificacion);
         registreInteressat.setCodiPostal(interesado.getCp());
         registreInteressat.setDocumentNum(interesado.getDocumento());
 
-        String tipoDocumentoIdentificacion = I18NUtils.tradueix("tipoDocumentoIdentificacion." + interesado.getTipoDocumentoIdentificacion());
+        String tipoDocumentoIdentificacion = I18NCommonUtils.tradueix(language, "tipoDocumentoIdentificacion." + interesado.getTipoDocumentoIdentificacion());
         registreInteressat.setDocumentTipus(tipoDocumentoIdentificacion);
         registreInteressat.setEmail(interesado.getEmail());
         registreInteressat.setEmailHabilitat(interesado.getDireccionElectronica());
@@ -232,7 +235,7 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
         }
         registreInteressat.setRaoSocial(interesado.getRazonSocial());
         registreInteressat.setTelefon(interesado.getTelefono());
-        String tipo = I18NUtils.tradueix("interesado.tipo." + interesado.getTipo());
+        String tipo = I18NCommonUtils.tradueix(language, "interesado.tipo." + interesado.getTipo());
         registreInteressat.setTipus(tipo);
 
         return registreInteressat;

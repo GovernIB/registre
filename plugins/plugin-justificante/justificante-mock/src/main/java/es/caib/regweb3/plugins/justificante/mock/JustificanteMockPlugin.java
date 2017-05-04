@@ -56,7 +56,7 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
 
 
     @Override
-    public ByteArrayOutputStream generarJustificante(RegistroEntrada registroEntrada) throws Exception{
+    public byte[] generarJustificante(RegistroEntrada registroEntrada) throws Exception{
 
 
 
@@ -155,12 +155,12 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
 
         document.close();
 
-        return baos;
+        return baos.toByteArray();
     }
 
 
     @Override
-    public ByteArrayOutputStream generarJustificante(RegistroSalida registroSalida) throws Exception{
+    public byte[] generarJustificante(RegistroSalida registroSalida) throws Exception{
 
         Long idEntidadActiva = registroSalida.getUsuario().getEntidad().getId();
 
@@ -256,7 +256,7 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
 
         document.close();
 
-        return baos;
+        return baos.toByteArray();
     }
 
 

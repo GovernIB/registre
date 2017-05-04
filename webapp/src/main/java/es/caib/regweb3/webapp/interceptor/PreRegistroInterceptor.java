@@ -1,6 +1,5 @@
 package es.caib.regweb3.webapp.interceptor;
 
-import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.Rol;
 import es.caib.regweb3.persistence.ejb.PermisoLibroUsuarioLocal;
 import es.caib.regweb3.persistence.ejb.PreRegistroLocal;
@@ -41,10 +40,10 @@ public class PreRegistroInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
         try {
-            String url = request.getServletPath();
+            //String url = request.getServletPath();
             HttpSession session = request.getSession();
             Rol rolActivo = (Rol) session.getAttribute(RegwebConstantes.SESSION_ROL);
-            Oficina oficinaActiva = (Oficina) session.getAttribute(RegwebConstantes.SESSION_OFICINA);
+            //Oficina oficinaActiva = (Oficina) session.getAttribute(RegwebConstantes.SESSION_OFICINA);
 
             // Comprobamos que el usuario dispone del Rol RWE_USUARI
             if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_USUARI)){

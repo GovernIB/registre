@@ -2,17 +2,20 @@ package es.caib.regweb3.plugins.justificante.caib;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
+
 import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.plugins.justificante.IJustificantePlugin;
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.apache.commons.codec.binary.Base64;
+
 import org.apache.log4j.Logger;
 import org.fundaciobit.plugins.utils.AbstractPluginProperties;
+import org.fundaciobit.plugins.utils.Base64;
 
 import javax.imageio.ImageIO;
+
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
@@ -56,7 +59,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
 
     @Override
-    public ByteArrayOutputStream generarJustificante(RegistroEntrada registroEntrada) throws Exception{
+    public byte[] generarJustificante(RegistroEntrada registroEntrada) throws Exception{
 
         // Define idioma Español para el justificante
         Locale locale = new Locale("es");
@@ -110,12 +113,12 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
         document.close();
 
-        return baos;
+        return baos.toByteArray();
     }
 
 
     @Override
-    public ByteArrayOutputStream generarJustificante(RegistroSalida registroSalida) throws Exception{
+    public byte[] generarJustificante(RegistroSalida registroSalida) throws Exception{
 
         // Define idioma Español para el justificante
         Locale locale = new Locale("es");
@@ -167,7 +170,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
         document.close();
 
-        return baos;
+        return baos.toByteArray();
     }
 
 
@@ -284,7 +287,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                 taulaAnnexe.addCell(new PdfPCell(new Paragraph(tamanyFitxer, font8)));
                 taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale,"tipoValidezDocumento." + anexo.getAnexo().getValidezDocumento()), font8)));
                 taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale,"tipoDocumento.0" + anexo.getAnexo().getTipoDocumento()), font8)));
-                taulaAnnexe.addCell(new PdfPCell(new Paragraph(new String(Base64.encodeBase64(anexo.getAnexo().getHash()),"UTF-8"), font8)));
+                taulaAnnexe.addCell(new PdfPCell(new Paragraph(Base64.encode(anexo.getAnexo().getHash()), font8)));
                 taulaAnnexe.addCell(new PdfPCell(new Paragraph(anexo.getAnexo().getObservaciones(), font8)));
             }
             document.add(taulaAnnexe);

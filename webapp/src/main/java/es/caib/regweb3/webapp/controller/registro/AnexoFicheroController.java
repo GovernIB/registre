@@ -147,8 +147,9 @@ public class AnexoFicheroController extends BaseController {
 
 
         model.addAttribute("anexoForm" ,ficheroForm);
-
+        
         loadCommonAttributes(request, model);
+
         return "registro/formularioAnexo2";
 
 

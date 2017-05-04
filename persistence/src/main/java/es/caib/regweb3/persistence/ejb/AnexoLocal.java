@@ -148,7 +148,7 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @throws Exception
      */
     public AnexoFull crearJustificante(UsuarioEntidad usuarioEntidad, Long idRegistro,
-                                       String tipoRegistro, ByteArrayOutputStream baos) throws Exception;
+                                       String tipoRegistro, byte[] baos) throws Exception;
 
 
 

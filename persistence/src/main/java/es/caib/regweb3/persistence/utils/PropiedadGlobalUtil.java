@@ -681,5 +681,25 @@ public class PropiedadGlobalUtil {
             return null;
         }
     }
+    
+    
+    /**
+     * Retorna totes les Properties d'una Entitat
+     * @return
+     */
+    public static Properties getAllProperties() {
+        try {
+            PropiedadGlobalLocal propiedadGlobalEjb = getPropiedadGlobalEJB();
+            List<PropiedadGlobal> list = propiedadGlobalEjb.getAllProperties();
+            Properties p = new Properties();
+            for(PropiedadGlobal pg : list){
+                p.setProperty(pg.getClave(), pg.getValor());
+            }
+            return p;
+        } catch (Exception e) {
+            log.error("Error obteniendo las propiedades no asociadas a alguna Entidad: " + e.getMessage(), e);
+            return null;
+        }
+    }
 
 }

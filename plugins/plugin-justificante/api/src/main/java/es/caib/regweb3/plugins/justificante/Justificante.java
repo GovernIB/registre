@@ -5,7 +5,11 @@ import org.fundaciobit.plugins.utils.Metadata;
 
 import java.util.List;
 
-
+/**
+ * 
+ * @author jpernia
+ *
+ */
 public class Justificante {
 
     protected DocumentCustody justificant;
