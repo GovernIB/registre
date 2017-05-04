@@ -388,7 +388,7 @@ public class AnexoController extends BaseController {
                manageDocumentCustodySignatureCustody(request, anexoForm);
 
                anexoEjb.actualizarAnexo(anexoForm, getUsuarioEntidadActivo(request),
-                   anexoForm.getRegistroID(), anexoForm.getTipoRegistro());
+                   anexoForm.getRegistroID(), anexoForm.getTipoRegistro(),anexoForm.getAnexo().isJustificante());
 
                model.addAttribute("closeAndReload", "true");
 
@@ -742,8 +742,8 @@ public class AnexoController extends BaseController {
     public void  anexo(@PathVariable("anexoId") Long anexoId, HttpServletRequest request,
         HttpServletResponse response)  throws Exception, I18NException {
          AnexoFull anexoFull = anexoEjb.getAnexoFull(anexoId);
-         fullDownload(anexoFull.getAnexo().getCustodiaID(), anexoFull.getDocumentoCustody().getName(),
-             anexoFull.getDocumentoCustody().getMime(), false,response);
+        fullDownload(anexoFull.getAnexo().getCustodiaID(), anexoFull.getDocumentoCustody().getName(),
+             anexoFull.getDocumentoCustody().getMime(), anexoFull.getAnexo().isJustificante(), false, response);
     }
 
      /**
@@ -757,10 +757,10 @@ public class AnexoController extends BaseController {
         //Parche para la api de custodia antigua que se guardan los documentos firmados (modofirma == 1 Attached) en DocumentCustody.
         if (anexo.getSignatureCustody() == null) {//Api antigua, hay que descargar el document custody
             fullDownload(anexo.getAnexo().getCustodiaID(), anexo.getDocumentoCustody().getName(),
-                    anexo.getDocumentoCustody().getMime(), false, response);
+                    anexo.getDocumentoCustody().getMime(), anexo.getAnexo().isJustificante(), false, response);
         } else {
             fullDownload(anexo.getAnexo().getCustodiaID(), anexo.getSignatureCustody().getName(),
-                    anexo.getSignatureCustody().getMime(), true, response);
+                    anexo.getSignatureCustody().getMime(), anexo.getAnexo().isJustificante(), true, response);
         }
 
     }
@@ -771,13 +771,14 @@ public class AnexoController extends BaseController {
     * @param custodiaID  identificador del archivo
     * @param filename   nombre del archivo
     * @param contentType
+    * @param isJustificante
     * @param response
      * @return Descarga el archivo y además devuelve true o false en funcion de si ha encontrado el archivo indicado.
      * En la api de custodia antigua, los documentos firmados se guardaban en DocumentCustody y en la nueva en SignatureCustody.
      * Por tanto cuando vaya a recuperar un documento con firma antiguo, mirarà en SignatureCustody y no lo encontrará, por tanto controlamos ese caso y devolvemos false.
      * para poder ir a buscarlo a DocumentCustody, que es donde estará. (todo esto se hace en el método firma)
     */
-    public void fullDownload(String custodiaID, String filename, String contentType, boolean firma,
+    public void fullDownload(String custodiaID, String filename, String contentType, boolean isJustificante, boolean firma,
         HttpServletResponse response)  {
 
          //FileInputStream input = null;
@@ -789,11 +790,11 @@ public class AnexoController extends BaseController {
          try {
              if (custodiaID != null) {
                  if(!firma){
-                   DocumentCustody dc = anexoEjb.getArchivo(custodiaID);
+                   DocumentCustody dc = anexoEjb.getArchivo(custodiaID, isJustificante);
                    filename = dc.getName();
                    data = dc.getData();
                  }else{
-                   SignatureCustody sc = anexoEjb.getFirma(custodiaID);
+                   SignatureCustody sc = anexoEjb.getFirma(custodiaID, isJustificante);
                    filename = sc.getName();
                    data = sc.getData();
                  }
@@ -959,7 +960,7 @@ public class AnexoController extends BaseController {
     
     /**
      * Mètodes utilitzat dins regweb3.tld
-     * @param custodyID
+     * @param custodiaID
      * @return
      */
     public static long getDocSize(String custodiaID) throws Exception {
@@ -975,7 +976,7 @@ public class AnexoController extends BaseController {
     
     /**
      * Mètodes utilitzat dins regweb3.tld
-     * @param custodyID
+     * @param custodiaID
      * @return
      */
     public static long getSignSize(String custodiaID) throws Exception {

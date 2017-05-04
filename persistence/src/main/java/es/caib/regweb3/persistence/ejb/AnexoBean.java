@@ -99,8 +99,12 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             AnexoFull anexoFull = new AnexoFull(anexo);
 
-            //IDocumentCustodyPlugin custody = AnnexDocumentCustodyManager.getInstance();
-            IDocumentCustodyPlugin custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
+            IDocumentCustodyPlugin custody = null;
+            if(anexo.isJustificante()){
+                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+            }else{
+                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
+            }
 
             anexoFull.setDocumentoCustody(custody.getDocumentInfoOnly(custodyID));
             anexoFull.setDocumentoFileDelete(false);
@@ -137,8 +141,12 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             AnexoFull anexoFull = new AnexoFull(anexo);
 
-            //IDocumentCustodyPlugin custody = AnnexDocumentCustodyManager.getInstance();
-            IDocumentCustodyPlugin custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
+            IDocumentCustodyPlugin custody = null;
+            if(anexo.isJustificante()){
+                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+            }else{
+                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
+            }
 
             anexoFull.setDocumentoCustody(custody.getDocumentInfo(custodyID));
 
@@ -175,9 +183,15 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     public AnexoFull crearAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
                                 Long registroID, String tipoRegistro) throws I18NException, I18NValidationException {
 
+        return crearJustificanteAnexo(anexoFull, usuarioEntidad, registroID, tipoRegistro, null);
+
+    }
+
+        public AnexoFull crearJustificanteAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
+                Long registroID, String tipoRegistro, String custodyID) throws I18NException, I18NValidationException{
+
         IDocumentCustodyPlugin custody = null;
         boolean error = false;
-        String custodyID = null;
         final boolean isNew = true;
         try {
 
@@ -192,8 +206,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             if (anexo.getFirmaValida() == null) {
                 anexo.setFirmaValida(false);
             }
-            //Si justificante es null, por defecto marcamos como false
-            if (anexo.getJustificante() == null) {
+            //Si no és justificante, por defecto marcamos como false
+            if (!anexo.isJustificante()) {
                 anexo.setJustificante(false);
             }
 
@@ -209,7 +223,12 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 anexo.setTipoDocumental(td);
             }
 
-            custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
+            if (anexo.isJustificante()) {
+                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+            }else{
+                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
+            }
+
 
             //Obtenemos el registro con sus anexos, interesados y tipo Asunto
             IRegistro registro = getIRegistro(registroID, tipoRegistro, anexo, isNew);
@@ -219,7 +238,9 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             final Map<String, Object> custodyParameters = getCustodyParameters(registro, anexo);
 
             //Reservamos el custodyID
-            custodyID = custody.reserveCustodyID(custodyParameters);
+            if(custodyID==null) {
+                custodyID = custody.reserveCustodyID(custodyParameters);
+            }
             anexo.setCustodiaID(custodyID);
 
             //Guardamos los documentos asociados al anexo en custodia
@@ -230,7 +251,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             anexo = this.persist(anexo);
 
             //Creamos el histórico de las modificaciones del registro debido a los anexos
-            if (!anexo.getJustificante()) {
+            if (!anexo.isJustificante()) {
                 crearHistorico(anexoFull, usuarioEntidad, registroID, tipoRegistro, isNew);
             }
 
@@ -283,7 +304,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      */
     @Override
     public AnexoFull actualizarAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
-                                     Long registroID, String tipoRegistro) throws I18NException, I18NValidationException {
+                                     Long registroID, String tipoRegistro, boolean isJustificante) throws I18NException, I18NValidationException {
 
         try {
 
@@ -1032,7 +1053,6 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     /* METODOS DEL AnnexDocumentCustodyManager.java hecho por marilen del TODO DE TONI*/
 
-
     private static IDocumentCustodyPlugin cacheDocumentCustodyPlugin = null;
 
 
@@ -1071,13 +1091,20 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @param custodiaID
      * @return
      */
-    public DocumentCustody getArchivo(String custodiaID) throws Exception {
+    public DocumentCustody getArchivo(String custodiaID, boolean isJustificante) throws Exception {
+
+        IDocumentCustodyPlugin custody;
 
         if (custodiaID == null) {
             log.warn("getArchivo :: CustodiaID vale null !!!!!", new Exception());
             return null;
         }
-        IDocumentCustodyPlugin custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
+        if(isJustificante){
+            custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+        }else{
+            custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
+        }
+
         return custody.getDocumentInfo(custodiaID);
 
     }
@@ -1091,13 +1118,21 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @return
      */
     @Override
-    public byte[] getArchivoContent(String custodiaID) throws Exception {
+    public byte[] getArchivoContent(String custodiaID, boolean isJustificante) throws Exception {
+
+        IDocumentCustodyPlugin custody = null;
 
         if (custodiaID == null) {
             log.warn("getArchivo :: CustodiaID vale null !!!!!", new Exception());
             return null;
         }
-        IDocumentCustodyPlugin custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
+        if(isJustificante) {
+            custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+
+        }else {
+            custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
+        }
+
         return custody.getDocument(custodiaID);
 
     }
@@ -1122,25 +1157,41 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @param custodiaID
      * @return
      */
-    public SignatureCustody getFirma(String custodiaID) throws Exception {
+    public SignatureCustody getFirma(String custodiaID, boolean isJustificante) throws Exception {
+
+        IDocumentCustodyPlugin custody = null;
 
         if (custodiaID == null) {
             log.warn("getFirma :: CustodiaID vale null !!!!!", new Exception());
             return null;
         }
-        IDocumentCustodyPlugin custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
+        if(isJustificante) {
+            custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+
+        }else {
+            custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
+        }
+
         return custody.getSignatureInfo(custodiaID);
     }
 
 
     @Override
-    public byte[] getFirmaContent(String custodiaID) throws Exception {
+    public byte[] getFirmaContent(String custodiaID, boolean isJustificante) throws Exception {
+
+        IDocumentCustodyPlugin custody = null;
 
         if (custodiaID == null) {
             log.warn("getFirma :: CustodiaID vale null !!!!!", new Exception());
             return null;
         }
-        IDocumentCustodyPlugin custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
+        if(isJustificante) {
+            custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+
+        }else {
+            custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
+        }
+
         return custody.getSignature(custodiaID);
     }
 
@@ -1152,14 +1203,24 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @return true si l'arxiu no existeix o s'ha borrat. false en els altres
      * casos.
      */
-    public boolean eliminarCustodia(String custodiaID) throws Exception {
+    public boolean eliminarCustodia(String custodiaID, boolean isJustificante) throws Exception {
 
         if (custodiaID == null) {
             log.warn("eliminarCustodia :: CustodiaID vale null !!!!!", new Exception());
             return false;
         } else {
-            getInstance().deleteCustody(custodiaID);
+            IDocumentCustodyPlugin custody;
+            if(isJustificante) {
+                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+
+            }else {
+                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
+            }
+
+            custody.deleteCustody(custodiaID);
+
             return true;
+
         }
 
     }
@@ -1183,9 +1244,9 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     /*
     public String crearArchivo(String name, byte[] file, String signatureName,
                                byte[] signature, int signatureMode, String custodyID,
-                               Map<String, Object> custodyParameters) throws Exception {
+                               Map<String, Object> custodyParameters, boolean isJustificante) throws Exception {
 
-        IDocumentCustodyPlugin instance = getInstance();
+        IDocumentCustodyPlugin instance = getInstance(isJustificante);
 
         if (custodyID == null) {
             custodyID = instance.reserveCustodyID(custodyParameters);
@@ -1257,12 +1318,14 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @param usuarioEntidad
      * @param idRegistro
      * @param tipoRegistro
+     * @param custodyID
      * @param baos
+     * @param csv
      * @return
      * @throws Exception
      */
-    public AnexoFull crearJustificante(UsuarioEntidad usuarioEntidad, Long idRegistro,
-                                       String tipoRegistro, ByteArrayOutputStream baos) throws Exception {
+    public AnexoFull crearJustificante(UsuarioEntidad usuarioEntidad, Long idRegistro, String tipoRegistro,
+                                       ByteArrayOutputStream baos, String custodyID, String csv) throws Exception {
 
         try {
 
@@ -1293,6 +1356,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             anexoFull.getAnexo().setOrigenCiudadanoAdmin(RegwebConstantes.ANEXO_ORIGEN_ADMINISTRACION.intValue());
             anexoFull.getAnexo().setObservaciones(observacionesAnexo);
             anexoFull.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED);
+            anexoFull.getAnexo().setCsv(csv);
 
             // Fichero Anexado
             anexoFull.getAnexo().setJustificante(true);
@@ -1304,7 +1368,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             anexoFull.setSignatureCustody(sign);
             anexoFull.setSignatureFileDelete(false);
-            anexoFull = crearAnexo(anexoFull, usuarioEntidad, idRegistro, tipoRegistro);
+            anexoFull = crearJustificanteAnexo(anexoFull, usuarioEntidad, idRegistro, tipoRegistro,custodyID);
 
             return anexoFull;
 

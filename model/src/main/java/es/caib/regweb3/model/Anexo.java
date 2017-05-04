@@ -71,7 +71,7 @@ public class Anexo implements Serializable {
 
     //SIR
     private Boolean firmaValida; // Indicará si la firma es vàlida o no
-    private Boolean justificante; // Indica si el anexo es justificante.
+    private boolean justificante; // Indica si el anexo es justificante.
 
 
     //SCAN
@@ -312,12 +312,12 @@ public class Anexo implements Serializable {
         this.firmaValida = firmaValida;
     }
 
-    @Column(name = "JUSTIFICANTE")
-    public Boolean getJustificante() {
+    @Column(name = "JUSTIFICANTE", nullable = false)
+    public boolean isJustificante() {
         return justificante;
     }
 
-    public void setJustificante(Boolean justificante) {
+    public void setJustificante(boolean justificante) {
         this.justificante = justificante;
     }
 

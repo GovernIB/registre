@@ -236,7 +236,7 @@ public class AnexoConverter extends CommonConverter {
            SignatureCustody sign = anexoFull.getSignatureCustody();
            anexoWs.setNombreFirmaAnexada(sign.getName());
            anexoWs.setTipoMIMEFirmaAnexada(sign.getMime());
-           anexoWs.setFirmaAnexada(anexoEjb.getFirmaContent(custodyID));
+           anexoWs.setFirmaAnexada(anexoEjb.getFirmaContent(custodyID, anexoFull.getAnexo().isJustificante()));
          }
          
          
@@ -246,7 +246,7 @@ public class AnexoConverter extends CommonConverter {
             DocumentCustody doc = anexoFull.getDocumentoCustody();
             anexoWs.setNombreFicheroAnexado(doc.getName());
             anexoWs.setTipoMIMEFicheroAnexado(doc.getMime());
-            anexoWs.setFicheroAnexado(anexoEjb.getArchivoContent(custodyID));
+            anexoWs.setFicheroAnexado(anexoEjb.getArchivoContent(custodyID, anexoFull.getAnexo().isJustificante()));
          }
        }
        

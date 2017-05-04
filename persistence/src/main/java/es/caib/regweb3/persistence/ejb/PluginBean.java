@@ -237,6 +237,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
             case 4: BASE_PACKAGE = RegwebConstantes.REGWEB3_PROPERTY_BASE + "signatureserver."; break;
             case 5: BASE_PACKAGE = RegwebConstantes.REGWEB3_PROPERTY_BASE + "userinformationplugin."; break;
             case 6: BASE_PACKAGE = RegwebConstantes.REGWEB3_PROPERTY_BASE + "scan."; break;
+            case 7: BASE_PACKAGE = RegwebConstantes.REGWEB3_PROPERTY_BASE + "custodiajustificante."; break;
         }
 
         // Obtenemos la clase del Plugin

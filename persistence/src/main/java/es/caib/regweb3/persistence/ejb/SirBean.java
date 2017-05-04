@@ -18,16 +18,17 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+import org.fundaciobit.plugins.documentcustody.api.IDocumentCustodyPlugin;
+import org.fundaciobit.plugins.utils.Metadata;
+import org.fundaciobit.plugins.utils.MetadataConstants;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import java.io.ByteArrayOutputStream;
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -462,11 +463,29 @@ public class SirBean implements SirLocal{
 
                 if(justificantePlugin != null) {
 
+                    // Generam la Custòdia per tenir el CSV
+                    Map<String,Object> custodyParameters = new HashMap<String, Object>();
+                    custodyParameters.put("registre", registroEntrada);
+                    IDocumentCustodyPlugin plugin = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+                    String custodyID = plugin.reserveCustodyID(custodyParameters);
+                    Metadata mcsv = plugin.getOnlyOneMetadata(custodyID, MetadataConstants.ENI_CSV);
+                    String csv = null;
+                    if(mcsv != null){
+                        csv = mcsv.getValue();
+                    }
+                    String url = plugin.getValidationUrl(custodyID, custodyParameters);
+                    String specialValue = plugin.getSpecialValue(custodyID,custodyParameters);
+
+                    // TODO aixpo s'ha d'obtenir d'una property
+                    String urlVerificacio = url + specialValue;
+                    String estampat = MessageFormat.format("Este es un mensaje de estampación {0} {1}", url, specialValue, csv);
+
                     // Generamos el pdf del Justificante
-                    ByteArrayOutputStream baos = justificantePlugin.generarJustificante(registroEntrada);
+                    ByteArrayOutputStream baos = justificantePlugin.generarJustificante(registroEntrada, estampat, urlVerificacio);
 
                     // Creamos el anexo del justificante y se lo añadimos al registro
-                    AnexoFull anexoFull = anexoEjb.crearJustificante(usuario, idRegistro, tipoRegistro.toLowerCase(), baos);
+                    AnexoFull anexoFull = anexoEjb.crearJustificante(usuario, idRegistro, tipoRegistro.toLowerCase(),
+                            baos, custodyID, csv);
                     registroDetalle.getAnexos().add(anexoFull.getAnexo());
                 }
 
@@ -509,11 +528,29 @@ public class SirBean implements SirLocal{
 
                 if(justificantePlugin != null) {
 
+                    // Generam la Custòdia per tenir el CSV
+                    Map<String,Object> custodyParameters = new HashMap<String, Object>();
+                    custodyParameters.put("registre", registroSalida);
+                    IDocumentCustodyPlugin plugin = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+                    String custodyID = plugin.reserveCustodyID(custodyParameters);
+                    Metadata mcsv = plugin.getOnlyOneMetadata(custodyID, MetadataConstants.ENI_CSV);
+                    String csv = null;
+                    if(mcsv != null){
+                        csv = mcsv.getValue();
+                    }
+                    String url = plugin.getValidationUrl(custodyID, custodyParameters);
+                    String specialValue = plugin.getSpecialValue(custodyID,custodyParameters);
+
+                    // TODO aixpo s'ha d'obtenir d'una property
+                    String urlVerificacio = url + specialValue;
+                    String estampat = MessageFormat.format("Este es un mensaje de estampación {0} {1}", url, specialValue, csv);
+
                     // Generamos el pdf del Justificante
-                    ByteArrayOutputStream baos = justificantePlugin.generarJustificante(registroSalida);
+                    ByteArrayOutputStream baos = justificantePlugin.generarJustificante(registroSalida,estampat, urlVerificacio);
 
                     // Creamos el anexo del justificante y se lo añadimos al registro
-                    AnexoFull anexoFull = anexoEjb.crearJustificante(usuario, idRegistro, tipoRegistro.toLowerCase(), baos);
+                    AnexoFull anexoFull = anexoEjb.crearJustificante(usuario, idRegistro, tipoRegistro.toLowerCase(),
+                            baos, custodyID, csv);
                     registroDetalle.getAnexos().add(anexoFull.getAnexo());
                 }
 
