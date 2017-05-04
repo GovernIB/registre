@@ -569,7 +569,7 @@ public class SirBean implements SirLocal{
 
         try {
 
-            List<OficioRemision> oficios = oficioRemisionEjb.getByEstado(RegwebConstantes.OFICIO_SIR_ENVIADO, idEntidad);
+            List<OficioRemision> oficios = oficioRemisionEjb.getByEstadoEntidad(RegwebConstantes.OFICIO_SIR_ENVIADO, idEntidad);
 
             log.info("Hay " + oficios.size() + " pendientes de volver a enviar al nodo CIR");
 
