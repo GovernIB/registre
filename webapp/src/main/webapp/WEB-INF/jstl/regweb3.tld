@@ -23,9 +23,25 @@
 
 <function>
         <name>getSizeOfSignatureCustody</name>
-        <description>Retorna el tamany d'un DocumentCustody </description>
+        <description>Retorna el tamany d'un SignatureCustody </description>
         <function-class>es.caib.regweb3.webapp.controller.registro.AnexoController</function-class>
         <function-signature>long getSignSize(java.lang.String) throws Exception
+        </function-signature>
+</function>
+
+<function>
+        <name>getNameOfDocumentCustody</name>
+        <description>Retorna el nom d'un DocumentCustody </description>
+        <function-class>es.caib.regweb3.webapp.controller.registro.AnexoController</function-class>
+        <function-signature>String getDocName(java.lang.String) throws Exception
+        </function-signature>
+</function>
+
+<function>
+        <name>getNameOfSignatureCustody</name>
+        <description>Retorna el nom d'un SignatureCustody </description>
+        <function-class>es.caib.regweb3.webapp.controller.registro.AnexoController</function-class>
+        <function-signature>String getSignName(java.lang.String) throws Exception
         </function-signature>
 </function>
 

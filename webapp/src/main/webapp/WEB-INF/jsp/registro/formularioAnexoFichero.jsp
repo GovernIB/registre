@@ -28,7 +28,7 @@
 <c:import url="../modulos/mensajes.jsp"/>
 
 <%-- Formulario que contiene el resto de campos del anexo. --%>
-<form:form id="ficheroForm" action="${pageContext.request.contextPath}/anexoFichero/ficheros" modelAttribute="ficheroForm" method="POST"  enctype="multipart/form-data">
+<form:form id="anexoForm" action="${pageContext.request.contextPath}/anexoFichero/ficheros" modelAttribute="anexoForm" method="POST"  enctype="multipart/form-data">
                 
                         
                     <form:hidden path="anexo.id" />

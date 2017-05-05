@@ -37,7 +37,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping(value = "/anexoFichero")
-@SessionAttributes(types = {FicheroForm.class })
+@SessionAttributes(types = {AnexoForm.class })
 public class AnexoFicheroController extends BaseController {
 
     @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
@@ -57,7 +57,7 @@ public class AnexoFicheroController extends BaseController {
      *  Si arriba aqui és que hi ha un error de  Tamany de Fitxer Superat
      */
     @RequestMapping(value = "/ficheros", method = RequestMethod.GET)
-    public ModelAndView crearAnexoGet(HttpServletRequest request,
+    public ModelAndView ficherosGet(HttpServletRequest request,
                                       HttpServletResponse response, Model model) throws I18NException, Exception {
 
         HttpSession session = request.getSession();
@@ -76,20 +76,21 @@ public class AnexoFicheroController extends BaseController {
                                 @PathVariable String tipoRegistro, @PathVariable Long registroID, @PathVariable Boolean isOficioRemisionSir,
                                 Model model) throws I18NException, Exception {
 
-
+        log.info(" Passa per AnexoFicheroController::ficherosGet(" + registroDetalleID
+                + "," + tipoRegistro + ", " + registroID + ")");
 
         saveLastAnnexoAction(request, registroDetalleID, registroID, tipoRegistro, null, isOficioRemisionSir);
 
         RegistroDetalle registroDetalle = registroDetalleEjb.findById(registroDetalleID);
 
-        FicheroForm ficheroForm = new FicheroForm();
-        ficheroForm.setRegistroID(registroID);
-        ficheroForm.setTipoRegistro(tipoRegistro);
-        ficheroForm.getAnexo().setRegistroDetalle(registroDetalle);
-        ficheroForm.setOficioRemisionSir(isOficioRemisionSir);
-        model.addAttribute("ficheroForm" ,ficheroForm);
+        AnexoForm anexoForm = new AnexoForm();
+        anexoForm.setRegistroID(registroID);
+        anexoForm.setTipoRegistro(tipoRegistro);
+        anexoForm.getAnexo().setRegistroDetalle(registroDetalle);
+        anexoForm.setOficioRemisionSir(isOficioRemisionSir);
+        model.addAttribute("anexoForm" ,anexoForm);
 
-
+        loadCommonAttributes(request, model);
         return "registro/formularioAnexoFichero";
     }
 
@@ -97,60 +98,40 @@ public class AnexoFicheroController extends BaseController {
 
 
     @RequestMapping(value = "/ficheros", method = RequestMethod.POST)
-    public String ficherosPost(@ModelAttribute FicheroForm ficheroForm,
-                                 BindingResult result, HttpServletRequest request,
-                                 HttpServletResponse response, Model model) throws Exception,I18NException {
+    public String ficherosPost(@ModelAttribute AnexoForm anexoForm,
+                               BindingResult result, HttpServletRequest request,
+                               HttpServletResponse response, Model model) throws Exception,I18NException {
 
         log.info(" Passa per ficherosPost");
         String variableReturn = "";
 
         // Si es oficio de remision sir debemos comprobar la limitación de los anexos impuesta por SIR
-        if(ficheroForm.getOficioRemisionSir()){
-            variableReturn = validarLimitacionesSIRAnexos(ficheroForm, request, model);
-        }
+        //COMENTADO POR PROBLEMAS CON DIR3CAIB
+        //if(anexoForm.getOficioRemisionSir()){
+        log.info("Entramos en OficioSir");
+        variableReturn = validarLimitacionesSIRAnexos(anexoForm, request);
+        //}
         if(!variableReturn.isEmpty()){
+            log.info("Entramos en OficioSir variable return");
             return variableReturn;
         }
 
-        //Montamos el documentCustody y el signature custody
-        DocumentCustody dc;
-        SignatureCustody sc;
+        try {
+            manageDocumentCustodySignatureCustody(request, anexoForm);
 
-        // Formulari Fitxer de Sistema
-        int modoFirma= ficheroForm.getAnexo().getModoFirma();
+            loadCommonAttributes(request, model);
+            log.info("llego a aqui todo ha ido bien");
+            return "registro/formularioAnexo2";
+        } catch(I18NException i18n) {
+            log.debug(i18n.getMessage(), i18n);
+            Mensaje.saveMessageError(request, I18NUtils.tradueix(i18n.getTraduccio()));
 
-        // Comprobamos en función del modo de firma que los documentos vengan bien
-        dc = getDocumentCustody(ficheroForm);
-        sc = getSignatureCustody(ficheroForm, dc, modoFirma);
-        if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA && dc == null) {
-            throw new I18NException("anexo.error.sinfichero");
-        }
-        if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED && sc == null) {
-            if (dc == null) { //Controlamos que no sea api antigua
-                throw new I18NException("anexo.error.sinfichero");
-            }
-
-        }
-        if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED && (dc == null || sc == null)) {
-            throw new I18NException("anexo.error.faltadocumento");
+        } catch(Exception e) {
+            log.error(e.getMessage(), e);
+            Mensaje.saveMessageError(request, e.getMessage());
         }
 
-
-
-        log.info(" XYZ DOCUMENTFILE " + dc);
-        log.info(" XYZ SIGNATUREFILE " + sc);
-        log.info(" XYZ modoFirma " + modoFirma);
-
-        //Asignamos los valores de documentCustody y SignatureCustody en función de lo obtenido anteriormente.
-        ficheroForm.setDocumentoCustody(dc);
-        ficheroForm.setSignatureCustody(sc);
-
-
-        model.addAttribute("anexoForm" ,ficheroForm);
-
-        loadCommonAttributes(request, model);
-        return "registro/formularioAnexo2";
-
+        return "registro/formularioAnexoFichero";
 
     }
 
@@ -249,12 +230,11 @@ public class AnexoFicheroController extends BaseController {
      * Valida las limitaciones del cuestionario de verificación de SIR (Numero de archivos, tamaño máximo y total de los archivos
      * @param anexoForm
      * @param request
-     * @param model
      * @return
      * @throws Exception
      * @throws I18NException
      */
-    public String validarLimitacionesSIRAnexos(AnexoForm anexoForm, HttpServletRequest request, Model model) throws Exception, I18NException{
+    public String validarLimitacionesSIRAnexos(AnexoForm anexoForm, HttpServletRequest request) throws Exception, I18NException{
         Entidad entidadActiva = getEntidadActiva(request);
 
         // Obtenemos los anexos del registro para validar que no exceda el máximo de MB establecido
@@ -383,6 +363,45 @@ public class AnexoFicheroController extends BaseController {
             dc.setName(multipart.getOriginalFilename());
         }
         return dc;
+    }
+
+
+    /**
+     * Método que prepara el DocumentCustody y el Signature Custody de un anexo introducido via web
+     * @param request
+     * @param anexoForm
+     * @throws Exception
+     * @throws I18NException
+     */
+    protected void manageDocumentCustodySignatureCustody(
+            HttpServletRequest request,  AnexoForm anexoForm) throws Exception, I18NException {
+
+        //Montamos el documentCustody y el signature custody
+        DocumentCustody dc;
+        SignatureCustody sc;
+
+        // Formulari Fitxer de Sistema
+        int modoFirma = anexoForm.getAnexo().getModoFirma();
+
+        // Comprobamos en función del modo de firma que los documentos vengan bien
+        dc = getDocumentCustody(anexoForm);
+        sc = getSignatureCustody(anexoForm, dc, modoFirma);
+        if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA && dc == null) {
+            throw new I18NException("anexo.error.sinfichero");
+        }
+        if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED && sc == null) {
+            if (dc == null) { //Controlamos que no sea api antigua
+                throw new I18NException("anexo.error.sinfichero");
+            }
+
+        }
+        if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED && (dc == null || sc == null)) {
+            throw new I18NException("anexo.error.faltadocumento");
+        }
+
+        anexoForm.setDocumentoCustody(dc);
+        anexoForm.setSignatureCustody(sc);
+
     }
 
 }
