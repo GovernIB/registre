@@ -44,6 +44,12 @@
 
                         <div class="panel-body">
                             <div class="form-group col-xs-6">
+                                <div class="col-xs-4 pull-left align-right"><spring:message code="registroSir.numeroRegistro"/></div>
+                                <div class="col-xs-8">
+                                    <form:input path="registroSir.numeroRegistro" cssClass="form-control" maxlength="10"/>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-6">
                                 <div class="col-xs-4 pull-left align-right"><spring:message code="registroSir.anyRegistro"/></div>
                                 <div class="col-xs-8">
                                     <form:select path="anyo" cssClass="chosen-select">
@@ -52,12 +58,6 @@
                                             <form:option value="${anyo}">${anyo}</form:option>
                                         </c:forEach>
                                     </form:select>
-                                </div>
-                            </div>
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left align-right"><spring:message code="registroSir.numeroRegistro"/></div>
-                                <div class="col-xs-8">
-                                    <form:input path="registroSir.numeroRegistro" cssClass="form-control" maxlength="10"/>
                                 </div>
                             </div>
                             <div class="form-group col-xs-6">

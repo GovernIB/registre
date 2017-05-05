@@ -105,8 +105,10 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
         StringBuffer query = new StringBuffer("Select oficioRemision from OficioRemision as oficioRemision ");
 
-        // Tipo Oficio
-        where.add(" oficioRemision.tipoOficioRemision = :tipoOficioRemision "); parametros.put("tipoOficioRemision",tipoOficioRemision);
+        // Tipo Oficio: Entrada o Salida
+        if(tipoOficioRemision != 0){
+            where.add(" oficioRemision.tipoOficioRemision = :tipoOficioRemision "); parametros.put("tipoOficioRemision",tipoOficioRemision);
+        }
 
         if(oficioRemision.getNumeroOficio()!= null && oficioRemision.getNumeroOficio() > 0){where.add(" oficioRemision.numeroOficio = :numeroOficio"); parametros.put("numeroOficio",oficioRemision.getNumeroOficio());}
 
@@ -119,7 +121,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
             where.add(" oficioRemision.libro in (:libros)"); parametros.put("libros",libros);
         }
 
-        // Tipo Oficio Remisión Interno o Externo
+        // Oficio Remisión Interno o Externo
         if (destinoOficioRemision != null) {
             if (destinoOficioRemision.equals(RegwebConstantes.DESTINO_OFICIO_REMISION_INTERNO)) {
                 where.add(" oficioRemision.organismoDestinatario != null");
@@ -177,7 +179,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         List<OficioRemision> oficios = q.getResultList();
 
         // Inicializamos los Registros según su tipo de registro
-        if(tipoOficioRemision.equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)){
+        /*if(tipoOficioRemision.equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)){
             for(OficioRemision oficio:oficios){
                 Hibernate.initialize(oficio.getRegistrosEntrada());
             }
@@ -185,7 +187,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
             for(OficioRemision oficio:oficios){
                 Hibernate.initialize(oficio.getRegistrosSalida());
             }
-        }
+        }*/
 
         paginacion.setListado(oficios);
 
