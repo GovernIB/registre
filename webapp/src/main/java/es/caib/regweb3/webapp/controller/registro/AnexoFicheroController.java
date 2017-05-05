@@ -106,11 +106,11 @@ public class AnexoFicheroController extends BaseController {
         String variableReturn = "";
 
         // Si es oficio de remision sir debemos comprobar la limitación de los anexos impuesta por SIR
-        //COMENTADO POR PROBLEMAS CON DIR3CAIB
-        //if(anexoForm.getOficioRemisionSir()){
-        log.info("Entramos en OficioSir");
-        variableReturn = validarLimitacionesSIRAnexos(anexoForm, request);
-        //}
+
+        if(anexoForm.getOficioRemisionSir()){
+            log.info("Entramos en OficioSir");
+            variableReturn = validarLimitacionesSIRAnexos(anexoForm, request);
+        }
         if(!variableReturn.isEmpty()){
             log.info("Entramos en OficioSir variable return");
             return variableReturn;
