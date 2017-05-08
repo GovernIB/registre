@@ -650,7 +650,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
                 String estampat = MessageFormat.format(estampacion, url, specialValue, csv);
 
                 // Obtenim el ByteArray per generar el pdf
-                ByteArrayOutputStream baos = justificantePlugin.generarJustificante(registroEntrada, estampat, urlVerificacio);
+                byte[] baos = justificantePlugin.generarJustificante(registroEntrada, estampat, urlVerificacio);
 
                 // Cream l'annex justificant i el firmam
                 AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, idRegistro,

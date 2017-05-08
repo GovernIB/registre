@@ -5,14 +5,17 @@ import es.caib.regweb3.model.RegistroDetalle;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.persistence.ejb.AnexoLocal;
 import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
 import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
 import es.caib.regweb3.persistence.ejb.RegistroSalidaLocal;
 import es.caib.regweb3.persistence.ejb.TipoDocumentalLocal;
+import es.caib.regweb3.persistence.utils.AnexoFirmaUtils;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.utils.Mensaje;
+
 import org.apache.commons.io.FilenameUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
@@ -30,6 +33,7 @@ import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import java.util.List;
 
 /**
@@ -52,6 +56,9 @@ public class AnexoFicheroController extends BaseController {
     @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
     public TipoDocumentalLocal tipoDocumentalEjb;
 
+    @EJB(mappedName = "regweb3/AnexoEJB/local")
+    public AnexoLocal anexoEjb;
+    
 
     /**
      *  Si arriba aqui és que hi ha un error de  Tamany de Fitxer Superat
@@ -106,8 +113,9 @@ public class AnexoFicheroController extends BaseController {
         String variableReturn = "";
 
         // Si es oficio de remision sir debemos comprobar la limitación de los anexos impuesta por SIR
+        boolean isSIR = anexoForm.getOficioRemisionSir();
 
-        if(anexoForm.getOficioRemisionSir()){
+        if(isSIR){
             log.info("Entramos en OficioSir");
             variableReturn = validarLimitacionesSIRAnexos(anexoForm, request);
         }
@@ -115,16 +123,24 @@ public class AnexoFicheroController extends BaseController {
             log.info("Entramos en OficioSir variable return");
             return variableReturn;
         }
+        
 
         try {
+
             manageDocumentCustodySignatureCustody(request, anexoForm);
+            
+            
+            Entidad entidad = getEntidadActiva(request);
+            anexoEjb.checkDocumentAndSignature(anexoForm, entidad.getId(), isSIR, I18NUtils.getLocale());
+            
 
             loadCommonAttributes(request, model);
             log.info("llego a aqui todo ha ido bien");
             return "registro/formularioAnexo2";
         } catch(I18NException i18n) {
-            log.debug(i18n.getMessage(), i18n);
-            Mensaje.saveMessageError(request, I18NUtils.tradueix(i18n.getTraduccio()));
+          String msg = I18NUtils.tradueix(i18n.getTraduccio());
+          log.error(msg, i18n);
+          Mensaje.saveMessageError(request, msg);
 
         } catch(Exception e) {
             log.error(e.getMessage(), e);

@@ -78,11 +78,13 @@
       <url>http://GovernIB.github.io/maven/maven/</url>
     </repository>
 
+    <!-- XYZ ZZZ
     <repository>
       <name>Local Maven Repository 1</name>
       <id>es.caib.regweb3.localrepo1</id>
       <url>file://${basedir}/../local-repo</url>
     </repository>
+    -->
 
   </repositories>
 

@@ -68,7 +68,7 @@
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
-
+<!-- XYZ ZZZ
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>regweb3-persistence</artifactId>
@@ -95,6 +95,7 @@
             <version>1.2</version>
             <scope>provided</scope>
         </dependency>
+        -->
 
         <!-- iText -->
         <dependency>

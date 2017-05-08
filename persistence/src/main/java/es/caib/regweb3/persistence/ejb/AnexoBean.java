@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.persistence.utils.AnexoFirmaUtils;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.persistence.validator.AnexoBeanValidator;
@@ -9,6 +10,7 @@ import es.caib.regweb3.persistence.validator.AnexoValidator;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -30,10 +32,10 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
 import java.beans.Encoder;
 import java.beans.Expression;
 import java.beans.PersistenceDelegate;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.security.MessageDigest;
@@ -1324,9 +1326,13 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @return
      * @throws Exception
      */
-    public AnexoFull crearJustificante(UsuarioEntidad usuarioEntidad, Long idRegistro, String tipoRegistro,
-                                       ByteArrayOutputStream baos, String custodyID, String csv) throws Exception {
+    @Override
+    public AnexoFull crearJustificante(UsuarioEntidad usuarioEntidad, Long idRegistro,
+                                       String tipoRegistro, byte[] data, String custodyID, String csv) throws Exception {
 
+
+        File justificanteFile = null;
+        File signedFile = null;
         try {
 
             Long idEntidad = usuarioEntidad.getEntidad().getId();
@@ -1337,14 +1343,14 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             String observacionesAnexo = I18NLogicUtils.tradueix(locale, "justificante.anexo.observaciones");
 
             // Crea el justificante como fichero temporal
-            File justificanteFile = File.createTempFile("regweb3_", ".justificant");
+            justificanteFile = File.createTempFile("regweb3_", ".justificant");
             FileOutputStream fos = new FileOutputStream(justificanteFile);
-            fos.write(baos.toByteArray());
+            fos.write(data);
             fos.flush();
             fos.close();
 
             // Firma el justificant
-            File signedFile = signatureServerEjb.signFile(justificanteFile, "es", idEntidad);
+            signedFile = signatureServerEjb.signFile(justificanteFile, "es", idEntidad);
 
             // Crea el anexo del justificante firmado
             AnexoFull anexoFull = new AnexoFull();
@@ -1378,10 +1384,35 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         } catch (I18NException e) {
             e.printStackTrace();
             throw new Exception(e);
+        } finally {
+          
+          if (justificanteFile != null) {
+            if (!justificanteFile.delete()) {
+              justificanteFile.deleteOnExit(); 
+            }
+          }
+          
+          
+          if (signedFile != null) {
+            if (!signedFile.delete()) {
+              signedFile.deleteOnExit(); 
+            }
+          }
+          
         }
 
     }
 
+    
+    @Override
+    public AnexoFull checkDocumentAndSignature(AnexoFull input, long idEntidad,
+        boolean sir, Locale locale) throws I18NException {
+      
+      return AnexoFirmaUtils.checkDocumentAndSignature(pluginEjb, input, idEntidad, sir, locale);
+      
+      
+    }
+    
 
     /* FIN METODOS DEL AnnexDocumentCustodyManager.java hecho por marilen del TODO DE TONI*/
 

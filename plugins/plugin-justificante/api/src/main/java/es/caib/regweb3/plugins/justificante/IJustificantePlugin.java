@@ -4,8 +4,6 @@ import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import org.fundaciobit.plugins.IPlugin;
 
-import java.io.ByteArrayOutputStream;
-
 /**
  * Created by Fundació BIT.
  * @author jpernia
@@ -24,7 +22,8 @@ public interface IJustificantePlugin extends IPlugin {
      * @return
      * @throws Exception
      */
-    ByteArrayOutputStream generarJustificante(RegistroEntrada registroEntrada, String estampat, String urlVerificacio) throws Exception;
+
+    byte[] generarJustificante(RegistroEntrada registroEntrada, String estampat, String urlVerificacio) throws Exception;
 
     /**
      * Metodo que genera el justificante de un registro de entrada.
@@ -34,6 +33,6 @@ public interface IJustificantePlugin extends IPlugin {
      * @return
      * @throws Exception
      */
-    ByteArrayOutputStream generarJustificante(RegistroSalida registroSalida, String estampat, String urlVerificacio) throws Exception;
+    byte[] generarJustificante(RegistroSalida registroSalida, String estampat, String urlVerificacio) throws Exception;
 
 }

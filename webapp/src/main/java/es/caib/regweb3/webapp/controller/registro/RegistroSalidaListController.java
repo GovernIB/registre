@@ -35,7 +35,6 @@ import javax.ejb.EJB;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -543,7 +542,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
                 String estampat = MessageFormat.format(estampacion, url, specialValue, csv);
 
                 // Obtenim el ByteArray per generar el pdf
-                ByteArrayOutputStream baos = justificantePlugin.generarJustificante(registroSalida, estampat, urlVerificacio);
+                byte[] baos = justificantePlugin.generarJustificante(registroSalida, estampat, urlVerificacio);
 
                 // Cream l'annex justificant i el firmam
                 AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, idRegistro,

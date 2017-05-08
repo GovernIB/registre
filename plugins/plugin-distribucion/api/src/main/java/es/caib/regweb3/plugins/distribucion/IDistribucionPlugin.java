@@ -1,9 +1,11 @@
 package es.caib.regweb3.plugins.distribucion;
 
 import es.caib.regweb3.model.RegistroEntrada;
+
 import org.fundaciobit.plugins.IPlugin;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Fundació BIT.
@@ -32,7 +34,9 @@ public interface IDistribucionPlugin extends IPlugin {
      * @return
      * @throws Exception
      */
-    Boolean enviarDestinatarios(RegistroEntrada registro, List<Destinatario> destinatariosDefinitivos, String observaciones) throws Exception;
+    Boolean enviarDestinatarios(RegistroEntrada registro, 
+        List<Destinatario> destinatariosDefinitivos, 
+        String observaciones, Locale locale) throws Exception;
 
     /*
       Método que devuelve la configuración de la distribución.

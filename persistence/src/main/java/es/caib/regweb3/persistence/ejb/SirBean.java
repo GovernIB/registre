@@ -25,7 +25,6 @@ import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import java.io.ByteArrayOutputStream;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -481,11 +480,12 @@ public class SirBean implements SirLocal{
                     String estampat = MessageFormat.format("Este es un mensaje de estampación {0} {1}", url, specialValue, csv);
 
                     // Generamos el pdf del Justificante
-                    ByteArrayOutputStream baos = justificantePlugin.generarJustificante(registroEntrada, estampat, urlVerificacio);
+
+                    byte[] data = justificantePlugin.generarJustificante(registroEntrada, estampat, urlVerificacio);
 
                     // Creamos el anexo del justificante y se lo añadimos al registro
-                    AnexoFull anexoFull = anexoEjb.crearJustificante(usuario, idRegistro, tipoRegistro.toLowerCase(),
-                            baos, custodyID, csv);
+                    AnexoFull anexoFull = anexoEjb.crearJustificante(usuario, idRegistro, tipoRegistro.toLowerCase(), data, custodyID, csv);
+
                     registroDetalle.getAnexos().add(anexoFull.getAnexo());
                 }
 
@@ -546,11 +546,12 @@ public class SirBean implements SirLocal{
                     String estampat = MessageFormat.format("Este es un mensaje de estampación {0} {1}", url, specialValue, csv);
 
                     // Generamos el pdf del Justificante
-                    ByteArrayOutputStream baos = justificantePlugin.generarJustificante(registroSalida,estampat, urlVerificacio);
+
+                    byte[] data = justificantePlugin.generarJustificante(registroSalida, estampat, urlVerificacio);
 
                     // Creamos el anexo del justificante y se lo añadimos al registro
-                    AnexoFull anexoFull = anexoEjb.crearJustificante(usuario, idRegistro, tipoRegistro.toLowerCase(),
-                            baos, custodyID, csv);
+                    AnexoFull anexoFull = anexoEjb.crearJustificante(usuario, idRegistro, tipoRegistro.toLowerCase(), data, custodyID, csv);
+
                     registroDetalle.getAnexos().add(anexoFull.getAnexo());
                 }
 

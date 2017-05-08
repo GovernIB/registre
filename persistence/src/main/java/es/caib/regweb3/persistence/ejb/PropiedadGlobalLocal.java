@@ -4,6 +4,7 @@ import es.caib.regweb3.model.PropiedadGlobal;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
+
 import java.util.List;
 
 /**
@@ -147,4 +148,12 @@ public interface PropiedadGlobalLocal extends BaseEjb<PropiedadGlobal, Long> {
      * @throws Exception
      */
     public List<PropiedadGlobal> getAllPropertiesByEntidad(Long idEntidad) throws Exception;
+    
+    /**
+     * Obtiene todas las {@link es.caib.regweb3.model.PropiedadGlobal} que no estan asociadas 
+     * a alguna {@link es.caib.regweb3.model.Entidad}
+     * @return
+     * @throws Exception
+     */
+    public List<PropiedadGlobal> getAllProperties() throws Exception;
 }

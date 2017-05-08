@@ -6,6 +6,7 @@ import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
+
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
@@ -13,8 +14,9 @@ import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
-import java.io.ByteArrayOutputStream;
+
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Fundacio Bit
@@ -156,8 +158,19 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @throws Exception
      */
     public AnexoFull crearJustificante(UsuarioEntidad usuarioEntidad, Long idRegistro, String tipoRegistro,
-                                       ByteArrayOutputStream baos, String custodyID, String csv) throws Exception;
+        byte[] baos, String custodyID, String csv) throws Exception;
 
 
+   /**
+    * Ho hem de fer passar per un EJB a causa del BUG CXF des de capa WEB
+    * @param input
+    * @param idEntidad
+    * @param sir
+    * @param locale
+    * @return
+    * @throws I18NException
+    */
+    public AnexoFull checkDocumentAndSignature(AnexoFull input, long idEntidad,
+        boolean sir, Locale locale) throws I18NException;
 
 }
