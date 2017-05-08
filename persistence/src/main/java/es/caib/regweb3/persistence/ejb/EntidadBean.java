@@ -1,9 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.model.Entidad;
-import es.caib.regweb3.model.Libro;
-import es.caib.regweb3.model.PropiedadGlobal;
-import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -61,6 +58,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @EJB private RegistroSirLocal registroSirEjb;
     @EJB private InteresadoSirLocal interesadoSirEjb;
     @EJB private AnexoSirLocal anexoSirEjb;
+    @EJB private PluginLocal pluginEjb;
 
 
     @Override
@@ -142,11 +140,15 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"maxuploadsizetotal","15728640","Tamaño máximo permitido para el total de anexos en bytes", entidad.getId(), 7L));
         propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"formatospermitidos",".jpg, .jpeg, .odt, .odp, .ods, .odg, .docx, .xlsx, .pptx, .pdf, .png, .rtf, .svg, .tiff, .txt, .xml, .xsig","Formatos permitidos para los anexos", entidad.getId(), 7L));
         propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"mimespermitidos","image/jpeg,image/pjpeg,application/vnd.oasis.opendocument.text,application/vnd.oasis.opendocument.spreadsheet,application/vnd.oasis.opendocument.graphics,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/mspowerpoint,application/powerpoint,application/vndms-powerpoint,application/x-mspowerpoint,application/pdf,image/png,text/rtf,application/rtf,application/x-rtf,text/richtext,image/svg+xml,image/tiff,image/x-tiff,text/plain,application/xml","Tipos Mime permitidos para los anexos", entidad.getId(), 7L));
+        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"cronExpression.inicializarContadores","0 0 0 1 1 ? *","Expresión del cron para la inicializacion de contadores", entidad.getId(), 1L));
+
+        // Creamos los Plugins
+        pluginEjb.persist(new Plugin("Justificante","Implementación base del plugin, genera el justificante SIR de los registros","es.caib.regweb3.plugins.justificante.caib.JustificanteMockPlugin",true,entidad.getId(),RegwebConstantes.PLUGIN_JUSTIFICANTE,null,null));
+        pluginEjb.persist(new Plugin("Distribución","Implementación base del plugin, marca como distribuido un Registro","es.caib.regweb3.plugins.distribucion.mock.DistribucionMockPlugin",true,entidad.getId(),RegwebConstantes.PLUGIN_DISTRIBUCION,null,null));
+
         propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"postproceso.plugin","es.caib.regweb3.plugins.postproceso.mock.PostProcesoMockPlugin","Clase del Plugin de post-proceso", entidad.getId(), 1L));
         propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"justificante.plugin","es.caib.regweb3.plugins.justificante.caib.JustificanteCaibPlugin","Clase del Plugin de justificante", entidad.getId(), 1L));
         propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"distribucion.plugin","es.caib.regweb3.plugins.distribucion.mock.DistribucionMockPlugin","Clase del Plugin de distribución", entidad.getId(), 1L));
-        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"cronExpression.inicializarContadores","0 0 0 1 1 ? *","Expresión del cron para la inicializacion de contadores", entidad.getId(), 1L));
-
 
         return entidad;
     }
@@ -386,6 +388,9 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         /********* REGISTROS MIGRADOS *********/
         log.info("RegistrosMigradosLopd: " + registroMigradoLopdEjb.eliminarByEntidad(idEntidad));
         log.info("RegistrosMigrados: " + registroMigradoEjb.eliminarByEntidad(idEntidad));
+
+        /********* PLUGINS *********/
+        log.info("PLugins: " + pluginEjb.eliminarByEntidad(idEntidad));
 
         /********* ENTIDAD *********/
         em.flush();

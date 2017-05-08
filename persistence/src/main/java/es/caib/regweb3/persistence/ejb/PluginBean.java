@@ -148,18 +148,6 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
-
-        List<?> propiedades = em.createQuery("Select distinct(id) from Plugin where entidad =:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
-
-        for (Object id : propiedades) {
-            remove(findById((Long) id));
-        }
-
-        return propiedades.size();
-    }
-
-    @Override
     @SuppressWarnings(value = "unchecked")
     public List<Plugin> findByEntidadTipo(Long idEntidad, Long tipo) throws Exception {
 
@@ -264,5 +252,17 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
 
         // Carregant la classe
         return PluginsManager.instancePluginByClassName(className, BASE_PACKAGE, prop);
+    }
+
+    @Override
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
+
+        List<?> plugins = em.createQuery("Select distinct(id) from Plugin where entidad = :idEntidad").setParameter("idEntidad", idEntidad).getResultList();
+
+        for (Object id : plugins) {
+            remove(findById((Long) id));
+        }
+
+        return plugins.size();
     }
 }
