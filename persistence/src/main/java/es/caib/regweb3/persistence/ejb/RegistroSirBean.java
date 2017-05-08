@@ -225,23 +225,23 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        StringBuffer query = new StringBuffer("Select asr from RegistroSir as asr ");
+        StringBuffer query = new StringBuffer("Select registroSir from RegistroSir as registroSir ");
 
-        where.add(" asr.codigoEntidadRegistralDestino = :oficinaSir or asr.codigoEntidadRegistralOrigen = :oficinaSir"); parametros.put("oficinaSir",oficinaSir);
+        where.add(" (registroSir.codigoEntidadRegistralDestino = :oficinaSir or registroSir.codigoEntidadRegistralOrigen = :oficinaSir) "); parametros.put("oficinaSir",oficinaSir);
 
         if (registroSir.getResumen() != null && registroSir.getResumen().length() > 0) {
-            where.add(DataBaseUtils.like("asr.resumen", "resumen", parametros, registroSir.getResumen()));
+            where.add(DataBaseUtils.like("registroSir.resumen", "resumen", parametros, registroSir.getResumen()));
         }
 
         if (registroSir.getNumeroRegistro() != null && registroSir.getNumeroRegistro().length() > 0) {
-            where.add(DataBaseUtils.like("asr.numeroRegistro", "numeroRegistro", parametros, registroSir.getNumeroRegistro()));
+            where.add(DataBaseUtils.like("registroSir.numeroRegistro", "numeroRegistro", parametros, registroSir.getNumeroRegistro()));
         }
 
         if (!StringUtils.isEmpty(estado)) {
-            where.add(" asr.estado = :estado "); parametros.put("estado",EstadoRegistroSir.valueOf(estado));
+            where.add(" registroSir.estado = :estado "); parametros.put("estado", EstadoRegistroSir.getEstadoRegistroSir(estado));
         }
 
-        if(any!= null){where.add(" year(asr.fechaRegistro) = :any "); parametros.put("any",any);}
+        if(any!= null){where.add(" year(registroSir.fechaRegistro) = :any "); parametros.put("any",any);}
 
         if (parametros.size() != 0) {
             query.append("where ");
@@ -253,8 +253,8 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                 query.append(w);
                 count++;
             }
-            q2 = em.createQuery(query.toString().replaceAll("Select asr from RegistroSir as asr ", "Select count(asr.id) from RegistroSir as asr "));
-            query.append(" order by asr.id desc");
+            q2 = em.createQuery(query.toString().replaceAll("Select registroSir from RegistroSir as registroSir ", "Select count(registroSir.id) from RegistroSir as registroSir "));
+            query.append(" order by registroSir.id desc");
             q = em.createQuery(query.toString());
 
             for (Map.Entry<String, Object> param : parametros.entrySet()) {
@@ -264,8 +264,8 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             }
 
         } else {
-            q2 = em.createQuery(query.toString().replaceAll("Select asr from RegistroSir as asr ", "Select count(asr.id) from RegistroSir as asr "));
-            query.append("order by asr.id desc");
+            q2 = em.createQuery(query.toString().replaceAll("Select registroSir from RegistroSir as registroSir ", "Select count(registroSir.id) from RegistroSir as registroSir "));
+            query.append("order by registroSir.id desc");
             q = em.createQuery(query.toString());
         }
 
@@ -291,13 +291,13 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     @SuppressWarnings(value = "unchecked")
     public List<RegistroSir> getUltimosPendientesProcesar(String oficinaSir, Integer total) throws Exception{
 
-        Query q = em.createQuery("Select ars from RegistroSir as ars " +
-                "where ars.codigoEntidadRegistralDestino = :oficinaSir and ars.estado = :idEstadoPreRegistro " +
-                "order by ars.id desc");
+        Query q = em.createQuery("Select registroSir from RegistroSir as registroSir " +
+                "where registroSir.codigoEntidadRegistralDestino = :oficinaSir and registroSir.estado = :idEstado " +
+                "order by registroSir.id desc");
 
         q.setMaxResults(total);
         q.setParameter("oficinaSir", oficinaSir);
-        q.setParameter("idEstadoPreRegistro", EstadoRegistroSir.RECIBIDO);
+        q.setParameter("idEstado", EstadoRegistroSir.RECIBIDO);
 
         return  q.getResultList();
     }
