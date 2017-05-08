@@ -114,7 +114,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     public RegistroSir getRegistroSir(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws Exception {
 
         Query q = em.createQuery("Select registroSir from RegistroSir as registroSir where " +
-                "registroSir.identificadorIntercambio = :identificadorIntercambio and registroSir.codigoEntidadRegistralOrigen = :codigoEntidadRegistralDestino");
+                "registroSir.identificadorIntercambio = :identificadorIntercambio and registroSir.codigoEntidadRegistralDestino = :codigoEntidadRegistralDestino");
 
         q.setParameter("identificadorIntercambio",identificadorIntercambio);
         q.setParameter("codigoEntidadRegistralDestino",codigoEntidadRegistralDestino);
