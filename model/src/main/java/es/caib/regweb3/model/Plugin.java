@@ -31,6 +31,17 @@ public class Plugin implements Serializable {
 
     }
 
+    public Plugin(String nombre, String descripcion, String clase, Boolean activo, Long entidad, Long tipo,String propiedadesAdmin, String propiedadesEntidad) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.clase = clase;
+        this.propiedadesAdmin = propiedadesAdmin;
+        this.propiedadesEntidad = propiedadesEntidad;
+        this.activo = activo;
+        this.entidad = entidad;
+        this.tipo = tipo;
+    }
+
     public Plugin(Long idEntidad) {
         this.entidad = idEntidad;
     }

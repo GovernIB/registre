@@ -114,7 +114,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     public RegistroSir getRegistroSir(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws Exception {
 
         Query q = em.createQuery("Select registroSir from RegistroSir as registroSir where " +
-                "registroSir.identificadorIntercambio = :identificadorIntercambio and registroSir.codigoEntidadRegistralOrigen = :codigoEntidadRegistralDestino");
+                "registroSir.identificadorIntercambio = :identificadorIntercambio and registroSir.codigoEntidadRegistralDestino = :codigoEntidadRegistralDestino");
 
         q.setParameter("identificadorIntercambio",identificadorIntercambio);
         q.setParameter("codigoEntidadRegistralDestino",codigoEntidadRegistralDestino);
@@ -227,7 +227,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         StringBuffer query = new StringBuffer("Select asr from RegistroSir as asr ");
 
-        where.add(" asr.codigoEntidadRegistralDestino = :oficinaSir "); parametros.put("oficinaSir",oficinaSir);
+        where.add(" asr.codigoEntidadRegistralDestino = :oficinaSir or asr.codigoEntidadRegistralOrigen = :oficinaSir"); parametros.put("oficinaSir",oficinaSir);
 
         if (registroSir.getResumen() != null && registroSir.getResumen().length() > 0) {
             where.add(DataBaseUtils.like("asr.resumen", "resumen", parametros, registroSir.getResumen()));
