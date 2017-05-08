@@ -9,13 +9,15 @@ import es.caib.regweb3.sir.core.utils.Mensaje;
 import es.caib.regweb3.sir.ejb.MensajeLocal;
 import es.caib.regweb3.sir.utils.Sicres3XML;
 import es.caib.regweb3.sir.utils.XPathReaderUtil;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.util.Assert;
 import org.w3c.dom.Node;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.xml.xpath.XPathConstants;
+
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 
@@ -53,7 +55,7 @@ public class RecepcionBean implements RecepcionLocal{
 
         try {
 
-            Assert.hasText(xmlFicheroIntercambio, "'xmlFicheroIntercambio' no puede estar vacio");
+            assert_hasText(xmlFicheroIntercambio, "'xmlFicheroIntercambio' no puede estar vacio");
 
             // Convertimos y validamos el xml recibido en un FicheroIntercambio mediate xsd FicheroIntercambio.xsd
             ficheroIntercambio = sicres3XML.parseXMLFicheroIntercambio(xmlFicheroIntercambio);
@@ -173,4 +175,36 @@ public class RecepcionBean implements RecepcionLocal{
         log.info("Mensaje recibido y procesado correctamente: " + mensaje.getIdentificadorIntercambio());
 
     }
+    
+    
+    
+    /**
+     * Assert that the given String has valid text content; that is, it must not
+     * be {@code null} and must contain at least one non-whitespace character.
+     * <pre class="code">assert_hasText(name, "'name' must not be empty");</pre>
+     * @param text the String to check
+     * @param message the exception message to use if the assertion fails
+     * @see StringUtils#hasText
+     */
+    public static void assert_hasText(String text, String message) {
+      if (!hasText(text)) {
+        throw new IllegalArgumentException(message);
+      }
+    }
+    
+    
+    public static boolean hasText(String str) {
+      if (!(str != null && str.length() > 0)) {
+        return false;
+      }
+      int strLen = str.length();
+      for (int i = 0; i < strLen; i++) {
+        if (!Character.isWhitespace(str.charAt(i))) {
+          return true;
+        }
+      }
+      return false;
+    }
+    
+    
 }

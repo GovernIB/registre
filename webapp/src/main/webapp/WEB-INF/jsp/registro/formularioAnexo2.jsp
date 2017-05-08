@@ -30,7 +30,7 @@
 <c:import url="../modulos/mensajes.jsp"/>
 
 <%-- Formulario que contiene el resto de campos del anexo. --%>
-<form:form id="anexoForm" action="${pageContext.request.contextPath}/anexo/${(empty anexoForm.anexo.id)?'nou' : 'editar'}" modelAttribute="anexoForm" method="POST"  enctype="multipart/form-data">
+<form:form id="anexoForm" action="${pageContext.request.contextPath}/anexo/${(empty anexoForm.anexo.id)?'nou' : 'editar'}" modelAttribute="anexoForm" method="POST" >
                 
                         
                         <form:hidden path="anexo.id" />
@@ -143,44 +143,40 @@
 
 
 
-                    <div class="form-group col-xs-10" id="divmodofirma">
-                        <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                              <label><spring:message code="anexo.tipofirma"/></label>
+                    <div class="form-group col-xs-12" id="divmodofirma" style="margin-bottom: 0px;">
+                        <div class="col-xs-8 pull-left etiqueta_regweb control-label">
+                              <label><spring:message code="anexo.tipofirma"/></label> :
+                              <c:choose>
+                                  <c:when test="${anexoForm.anexo.modoFirma == 1}">
+                                      <spring:message code="anexo.tipofirma.attached"/>
+                                  </c:when>
+                                  <c:when test="${anexoForm.anexo.modoFirma == 2}">
+                                      <spring:message code="anexo.tipofirma.detached"/>
+                                  </c:when>
+                                  <c:when test="${anexoForm.anexo.modoFirma == 3}">
+                                      <spring:message code="anexo.tipofirma.sinfirma"/>
+                                  </c:when>
+                              </c:choose>
                         </div>
-                        <div class="col-xs-10" >
-                                <label class="radio-inline">
-                                    <form:radiobutton path="anexo.modoFirma"  value="1" disabled="true" selected="${anexoForm.anexo.modoFirma == 1}"/><spring:message code="anexo.tipofirma.attached"/>
-                                </label>
-                                 <label class="radio-inline">
-                                    <form:radiobutton path="anexo.modoFirma"  value="2" disabled="true" selected="${anexoForm.anexo.modoFirma == 2}"/><spring:message code="anexo.tipofirma.detached"/>
-                                </label>
-                                <label class="radio-inline">
-                                    <form:radiobutton id="sinfirma" path="anexo.modoFirma"  value="0" disabled="true" selected="${anexoForm.anexo.modoFirma == 3}"/><spring:message code="anexo.tipofirma.sinfirma"/>
-                                </label>
-
-                        </div>
-                        <form:errors path="anexo.modoFirma" cssClass="label label-danger"/>
 
                     </div>
 
-                    <div class="clearfix"></div>
+
 
 
                     <!--ANEXO-->
                     <c:if test="${not empty anexoForm.documentoCustody}">
                         <div class="form-group col-xs-12" style="margin-bottom: 0px;">
-                            <div class="form-group col-xs-6" id="divInputArchivo">
+                            <div class="form-group col-xs-4" id="divInputArchivo">
                                 <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                                    <form:label path="documentoFile" id="labelDocumento"><spring:message
                                            code="anexo.archivo"/></form:label>&nbsp;
                                 </div>
-
-                                    <div class="col-xs-8">
-                                        <a href="<c:url value="/anexo/descargarDocumento/${anexoForm.anexo.id}" />" target="_blank">
-                                                ${anexoForm.documentoCustody.name}
-                                        </a>
-                                    </div>
-
+                                <div class="col-xs-8">
+                                    <a href="<c:url value="/anexo/descargarDocumento/${anexoForm.anexo.id}" />" target="_blank">
+                                            ${anexoForm.documentoCustody.name}
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </c:if>
@@ -189,21 +185,16 @@
                     <!--FIRMA -->
                     <c:if test="${not empty anexoForm.signatureCustody}">
                         <div class="form-group col-xs-12" style="margin-bottom: 0px;">
-                            <div class="form-group col-xs-6" id="divInputFirma">
+                            <div class="form-group col-xs-4" id="divInputFirma">
                                 <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                                    <form:label path="firmaFile" id="labelFirma"><spring:message
                                            code="anexo.firma"/></form:label>
                                 </div>
-
-                                    <div id="divFirmaActual" class="form-group col-xs-6">
-
-                                        <div class="col-xs-8">
-                                            <a href="<c:url value="/anexo/descargarFirma/${anexoForm.anexo.id}" />" target="_blank">
-                                                    ${anexoForm.signatureCustody.name}
-                                            </a>
-                                        </div>
-                                    </div>
-
+                                <div class="col-xs-8">
+                                    <a href="<c:url value="/anexo/descargarFirma/${anexoForm.anexo.id}" />" target="_blank">
+                                            ${anexoForm.signatureCustody.name}
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </c:if>

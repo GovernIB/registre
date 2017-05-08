@@ -357,7 +357,16 @@
           <groupId>org.slf4j</groupId>
           <artifactId>jcl-over-slf4j</artifactId>
         </exclusion>
-
+        
+        <exclusion>  
+          <groupId>org.apache.ws.security</groupId>
+          <artifactId>wss4j</artifactId>
+        </exclusion>
+        
+        <exclusion>  
+          <groupId>org.apache.santuario</groupId>
+          <artifactId>xmlsec</artifactId>
+        </exclusion>
       </exclusions> 
     </dependency>
     
@@ -471,7 +480,30 @@
           <artifactId>plugin-validatesignature-integra</artifactId>
           <version>1.0.0</version>
           
-          <exclusions> 
+          <exclusions>
+            <!-- Eliminam tota la comunicació AXIS -->
+            <exclusion>  
+              <groupId>org.apache.axis</groupId>
+              <artifactId>axis</artifactId>
+            </exclusion>
+            <exclusion>  
+              <groupId>org.apache.axis</groupId>
+              <artifactId>axis-jaxrpc</artifactId>
+            </exclusion>
+            <exclusion>  
+              <groupId>org.apache.axis</groupId>
+              <artifactId>axis-saaj</artifactId>
+            </exclusion>
+            <exclusion>  
+              <groupId>org.apache.santuario</groupId>
+              <artifactId>xmlsec</artifactId>
+            </exclusion>
+            <exclusion>  
+              <groupId>com.sun.xml.wss</groupId>
+              <artifactId>xws-security</artifactId>
+            </exclusion>
+            
+            <!-- Altres llibreries no necessaries -->
             <exclusion>  
               <groupId>xerces</groupId>
               <artifactId>xercesImpl</artifactId>
@@ -496,7 +528,19 @@
               <groupId>org.slf4j</groupId>
               <artifactId>jcl-over-slf4j</artifactId>
             </exclusion>
+
+            <exclusion>  
+              <groupId>org.apache.ws.security</groupId>
+              <artifactId>wss4j</artifactId>
+            </exclusion>
+
+            <exclusion>  
+              <groupId>org.apache.santuario</groupId>
+              <artifactId>xmlsec</artifactId>
+            </exclusion>
+
           </exclusions> 
+
         </dependency>
       </dependencies>
     </profile>

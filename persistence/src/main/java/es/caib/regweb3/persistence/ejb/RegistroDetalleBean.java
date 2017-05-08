@@ -90,7 +90,7 @@ public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> imple
 
             //Elimina los anexos
             for(Anexo anexo: registroDetalle.getAnexos()){
-                anexoEjb.eliminarCustodia(anexo.getCustodiaID());
+                anexoEjb.eliminarCustodia(anexo.getCustodiaID(), anexo.isJustificante());
             }
             remove(registroDetalle);
 
@@ -122,6 +122,6 @@ public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> imple
             merge(registroDetalle);
             anexoEjb.remove(anexo);
         }
-        return anexoEjb.eliminarCustodia(anexo.getCustodiaID());
+        return anexoEjb.eliminarCustodia(anexo.getCustodiaID(), anexo.isJustificante());
     }
 }

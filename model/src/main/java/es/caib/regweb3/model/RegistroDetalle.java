@@ -487,7 +487,7 @@ public class RegistroDetalle implements Serializable {
     @Transient
     public boolean tieneJustificante(){
         for (Anexo anexo : anexos) {
-            if(anexo.getJustificante()){
+            if(anexo.isJustificante()){
                 return true;
             }
         }

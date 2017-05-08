@@ -194,17 +194,6 @@
             <groupId>org.quartz-scheduler</groupId>
             <artifactId>quartz</artifactId>
             <version>2.2.1</version>
-
-            <!-- XYZ ZZZ   Es pega amb la llibreria Spring -->
-            <!--
-            <exclusions>
-              <exclusion>  
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-              </exclusion>
-            </exclusions>
-            -->
-
         </dependency>
 
     </dependencies>

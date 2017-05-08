@@ -59,7 +59,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
 
     @Override
-    public byte[] generarJustificante(RegistroEntrada registroEntrada) throws Exception{
+    public byte[] generarJustificante(RegistroEntrada registroEntrada, String estampat, String urlVerificacio) throws Exception{
 
         // Define idioma Español para el justificante
         Locale locale = new Locale("es");
@@ -92,10 +92,14 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         Date fechaRegistro = registroEntrada.getFecha();
         SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         String dataRegistre = formatDate.format(fechaRegistro);
+        String dataActual = formatDate.format(Calendar.getInstance().getTime());
 
         // TITULO Y REGISTRO
         informacioRegistre(locale, document, denominacionOficina, codigoOficina, dataRegistre,
                 numeroRegistroFormateado, tipoDocumentacionFisica);
+
+        // CSV Y TEXTO VERTICAL
+        csvRegistre(locale, document, dataActual, numeroRegistroFormateado, writer, estampat, urlVerificacio);
 
         // INTERESADOS
         List<Interesado> interesados = registroEntrada.getRegistroDetalle().getInteresados();
@@ -108,9 +112,6 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         List<AnexoFull> anexos = registroEntrada.getRegistroDetalle().getAnexosFull();
         llistarAnnexes(anexos, locale, document, denominacionOficina);
 
-        // CSV Y TEXTO VERTICAL
-        csvRegistre(locale, document, dataRegistre, numeroRegistroFormateado, writer);
-
         document.close();
 
         return baos.toByteArray();
@@ -118,7 +119,8 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
 
     @Override
-    public byte[] generarJustificante(RegistroSalida registroSalida) throws Exception{
+    public byte[] generarJustificante(RegistroSalida registroSalida,
+        String estampat, String urlVerificacio) throws Exception{
 
         // Define idioma Español para el justificante
         Locale locale = new Locale("es");
@@ -146,11 +148,15 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         Date fechaRegistro = registroSalida.getFecha();
         SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         String dataRegistre = formatDate.format(fechaRegistro);
+        String dataActual = formatDate.format(Calendar.getInstance().getTime());
 
 
         // TITULO Y REGISTRO
         informacioRegistre(locale, document, denominacionOficina, codigoOficina, dataRegistre,
                 numeroRegistroFormateado, tipoDocumentacionFisica);
+
+        // CSV Y TEXTO VERTICAL
+        csvRegistre(locale, document, dataActual, numeroRegistroFormateado, writer, estampat, urlVerificacio);
 
         // INTERESADOS
         List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
@@ -160,13 +166,8 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         adicionalRegistre(locale, document, extracte, nomOrigen, expedient, registroSalida.getClass().getSimpleName());
 
         // ADJUNTOS
-//            List<Anexo> anexos = anexoEjb.getByRegistroSalida(registroSalida);
         List<AnexoFull> anexos = registroSalida.getRegistroDetalle().getAnexosFull();
         llistarAnnexes(anexos, locale, document, denominacionOficina);
-
-        // CSV Y TEXTO VERTICAL
-        csvRegistre(locale, document, dataRegistre, numeroRegistroFormateado, writer);
-
 
         document.close();
 
@@ -264,25 +265,22 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                 cellInfoAnnexe2 = new PdfPCell(new Paragraph(anexo.getAnexo().getTitulo(), font8));
                 taulaAnnexe.addCell(cellInfoAnnexe2);
 
-                // Calcula i afegeix el tamany del document
-                String tamanyFitxer = "";
+                // Calcula i afegeix el tamany del document (Del DocumentCustody i si és null del SignatureCustody)
+                String tamanyFitxer = null;
                 if(anexo.getDocumentoCustody()!=null){
                     if(anexo.getDocumentoCustody().getData().length < 1024){
-                        tamanyFitxer = tamanyFitxer + "D: 1 KB\n";
+                        tamanyFitxer = "1 KB";
                     }else{
-                        tamanyFitxer = tamanyFitxer + "D: " + String.valueOf(anexo.getDocumentoCustody().getData().length/1024) + " KB\n";
+                        tamanyFitxer = String.valueOf(anexo.getDocumentoCustody().getData().length/1024) + " KB";
                     }
-                }else{
-                    tamanyFitxer = tamanyFitxer + "D: 0 KB"+ "\n";
-                }
-                if(anexo.getSignatureCustody()!=null){
-                    if(anexo.getSignatureCustody().getData().length < 1024){
-                        tamanyFitxer = tamanyFitxer + "F: 1 KB";
-                    }else{
-                        tamanyFitxer = tamanyFitxer + "F: " + String.valueOf(anexo.getSignatureCustody().getData().length/1024) + " KB";
+                }else {
+                    if (anexo.getSignatureCustody() != null) {
+                        if (anexo.getSignatureCustody().getData().length < 1024) {
+                            tamanyFitxer = "1 KB";
+                        } else {
+                            tamanyFitxer = String.valueOf(anexo.getSignatureCustody().getData().length / 1024) + " KB";
+                        }
                     }
-                }else{
-                    tamanyFitxer = tamanyFitxer + "F: 0 KB";
                 }
                 taulaAnnexe.addCell(new PdfPCell(new Paragraph(tamanyFitxer, font8)));
                 taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale,"tipoValidezDocumento." + anexo.getAnexo().getValidezDocumento()), font8)));
@@ -501,6 +499,8 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                             // Vaciamos el contenido del representante para rellenarlo con uno nuevo
                             taulaRepresentant.deleteBodyRows();
                             document.add(new Paragraph(" "));
+
+                            titolRepresentant.deleteBodyRows();
                         }
                     }
                 }
@@ -601,14 +601,14 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
     }
 
     // Añade la información del pie, CSV, etc
-    protected void csvRegistre(Locale locale, Document document, String dataRegistre,
-                               String numeroRegistroFormateado, PdfWriter writer) throws Exception {
+    protected void csvRegistre(Locale locale, Document document, String dataActual, String numeroRegistroFormateado,
+                               PdfWriter writer, String estampat, String urlVerificacio) throws Exception {
 
-        Font font9Underline = FontFactory.getFont(FontFactory.HELVETICA, 9, Font.UNDERLINE);
-        Font font9 = FontFactory.getFont(FontFactory.HELVETICA, 9);
-        Font font8 = FontFactory.getFont(FontFactory.HELVETICA, 8);
+//        Font font9Underline = FontFactory.getFont(FontFactory.HELVETICA, 9, Font.UNDERLINE);
+//        Font font9 = FontFactory.getFont(FontFactory.HELVETICA, 9);
+//        Font font8 = FontFactory.getFont(FontFactory.HELVETICA, 8);
         Font font7 = FontFactory.getFont(FontFactory.HELVETICA, 7);
-
+/*
         // Añadimos la separación
         PdfPTable csv = new PdfPTable(1);
         csv.setWidthPercentage(100);
@@ -621,6 +621,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         document.add(csv);
         document.add(new Paragraph(" "));
         // Añadimos los campos
+        // Primera fila
         PdfPTable taulaCsv = new PdfPTable(new float[]{25, 45, 30 });
         taulaCsv.setWidthPercentage(100);
         PdfPCell cellInfoCsv = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.ambito"), font9Underline));
@@ -629,7 +630,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         cellInfoCsv.setBorderColor(BaseColor.WHITE);
         cellInfoCsv.setHorizontalAlignment(Element.ALIGN_LEFT);
         taulaCsv.addCell(cellInfoCsv);
-        cellInfoCsv = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.csv"), font9Underline));
+        cellInfoCsv = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.numRegistro"), font9Underline));
         cellInfoCsv.setBorderWidth(0f);
         taulaCsv.addCell(cellInfoCsv);
         cellInfoCsv = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.fechaDocumento"), font9Underline));
@@ -638,44 +639,38 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         cellInfoCsv = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.aplicacion"), font9));
         cellInfoCsv.setBorderWidth(0f);
         taulaCsv.addCell(cellInfoCsv);
-        cellInfoCsv = new PdfPCell(new Paragraph("REGWEB·XXXXXXXXXX", font9));
-        cellInfoCsv.setBorderWidth(0f);
-        taulaCsv.addCell(cellInfoCsv);
-        cellInfoCsv = new PdfPCell(new Paragraph(dataRegistre, font9));
-        cellInfoCsv.setBorderWidth(0f);
-        taulaCsv.addCell(cellInfoCsv);
-        cellInfoCsv = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.numRegistro"), font9Underline));
-        cellInfoCsv.setBorderWidth(0f);
-        taulaCsv.addCell(cellInfoCsv);
-        cellInfoCsv = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.validacion"), font9Underline));
-        cellInfoCsv.setBorderWidth(0f);
-        taulaCsv.addCell(cellInfoCsv);
-        cellInfoCsv = new PdfPCell(new Paragraph(""));
-        cellInfoCsv.setBorderWidth(0f);
-        taulaCsv.addCell(cellInfoCsv);
         cellInfoCsv = new PdfPCell(new Paragraph(numeroRegistroFormateado, font9));
         cellInfoCsv.setBorderWidth(0f);
         taulaCsv.addCell(cellInfoCsv);
-        cellInfoCsv = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.mensaje.sede"), font9));
-        cellInfoCsv.setBorderWidth(0f);
-        taulaCsv.addCell(cellInfoCsv);
-        cellInfoCsv = new PdfPCell(new Paragraph(""));
+        cellInfoCsv = new PdfPCell(new Paragraph(dataActual, font9));
         cellInfoCsv.setBorderWidth(0f);
         taulaCsv.addCell(cellInfoCsv);
         document.add(taulaCsv);
+        // Segona fila
+        PdfPTable taulaCsv1 = new PdfPTable(new float[]{100 });
+        taulaCsv1.setWidthPercentage(100);
+        PdfPCell cellInfoCsv1 = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.validacion"), font9Underline));
+        cellInfoCsv1.setBorderWidth(0f);
+        taulaCsv1.addCell(cellInfoCsv1);
+        cellInfoCsv1 = new PdfPCell(new Paragraph(urlVerificacio, font9));
+        cellInfoCsv1.setBorderWidth(0f);
+        taulaCsv1.addCell(cellInfoCsv1);
+        document.add(taulaCsv1);
 
         // Código de barras
         PdfContentByte cb = writer.getDirectContent();
         Barcode128 code128 = new Barcode128();
-        code128.setCode("REGWEBXXXXXXXXXX");
+        code128.setCode(urlVerificacio);
         code128.setCodeType(Barcode128.CODE128);
         Image code128Image = code128.createImageWithBarcode(cb, null, null);
-        code128Image.scalePercent(125);
+        code128Image.scalePercent(75);
         code128Image.setAlignment(Element.ALIGN_MIDDLE);
         document.add(code128Image);
+        */
 
         // Texto Vertical
-        Phrase p = new Phrase(tradueixMissatge(locale,"justificante.mensaje.textovertical") + tradueixMissatge(locale,"justificante.mensaje.sede"), font7);
+        PdfContentByte cb = writer.getDirectContent();
+        Phrase p = new Phrase(estampat, font7);
         ColumnText.showTextAligned(cb, Element.ALIGN_MIDDLE, p, 20, 30, 90);
 
     }

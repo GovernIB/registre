@@ -17,6 +17,9 @@ import es.caib.regweb3.webapp.form.RegistroEntradaBusqueda;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.RegistroEntradaBusquedaValidator;
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.plugins.documentcustody.api.IDocumentCustodyPlugin;
+import org.fundaciobit.plugins.utils.Metadata;
+import org.fundaciobit.plugins.utils.MetadataConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -31,11 +34,9 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Fundació BIT.
@@ -623,11 +624,37 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             // Comprova que existeix el plugin de justificant
             if(justificantePlugin != null) {
 
+                // Generam la Custòdia per tenir el CSV
+                Map<String,Object> custodyParameters = new HashMap<String, Object>();
+                custodyParameters.put("registre", registroEntrada);
+                IDocumentCustodyPlugin plugin = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+                String custodyID = plugin.reserveCustodyID(custodyParameters);
+
+                Metadata mcsv = plugin.getOnlyOneMetadata(custodyID, MetadataConstants.ENI_CSV);
+                String csv = "";
+                if(mcsv != null){
+                    csv = mcsv.getValue();
+                }
+                String url = plugin.getValidationUrl(custodyID, custodyParameters);
+                String specialValue = plugin.getSpecialValue(custodyID,custodyParameters);
+
+                // Obtenim el missatge d'Estampació de l'Entitat a les Propietats Globals
+                //String estampacion = PropiedadGlobalUtil.getMensajeEstampacionJustificante(idEntidad);
+                String estampacion = "Este es un mensaje de estampación {0} {1} {2}"; //TODO obtnerlo del plugin Justificante
+                // Si no existeix la propietat global, dóna error
+                if (estampacion == null || estampacion.trim().length() <= 0) {
+                    log.info("No hi ha cap propietat definint el misstge d'estampació del justificant");
+                    return null;
+                }
+                String urlVerificacio = url + specialValue;
+                String estampat = MessageFormat.format(estampacion, url, specialValue, csv);
+
                 // Obtenim el ByteArray per generar el pdf
-                byte[] baos = justificantePlugin.generarJustificante(registroEntrada);
+                byte[] baos = justificantePlugin.generarJustificante(registroEntrada, estampat, urlVerificacio);
 
                 // Cream l'annex justificant i el firmam
-                AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, idRegistro, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), baos);
+                AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, idRegistro,
+                        RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), baos, custodyID, csv);
 
                 // Descarrega el Justificant firmat
                 // Cabeceras Response

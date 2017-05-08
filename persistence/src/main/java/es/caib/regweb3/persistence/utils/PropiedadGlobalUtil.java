@@ -356,97 +356,6 @@ public class PropiedadGlobalUtil {
         return getBooleanByEntidad(idEntidad, partialPropertyName);
     }
 
-//    /**
-//     * Retorna el valor de la propiedad TitolJustificant de la entidad indicada.
-//     * @return
-//     */
-//    public static String getTitolJustificant(Long idEntidad, Long idiomaRegistre) {
-//        final String partialPropertyName = "justificant.titol";
-//        String codiIdiomaRegistre = RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(idiomaRegistre);
-//        String valor = getStringByEntidad(idEntidad, partialPropertyName+"_ca");
-//
-//        // Valor buit si no existeix el de per entitat
-//        if (!(getStringByEntidad(idEntidad, partialPropertyName+"_"+codiIdiomaRegistre) == null)) {
-//            valor = getStringByEntidad(idEntidad, partialPropertyName+"_"+codiIdiomaRegistre);
-//        }
-//        return valor;
-//    }
-//
-//    /**
-//     * Retorna el valor de la propiedad DeclaracioJustificant de la entidad indicada.
-//     * @return
-//     */
-//    public static String getDeclaracioJustificant(Long idEntidad, Long idiomaRegistre) {
-//        final String partialPropertyName = "justificant.declaracio";
-//        String codiIdiomaRegistre = RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(idiomaRegistre);
-//        String valor = getStringByEntidad(idEntidad, partialPropertyName+"_ca");
-//
-//        // Valor buit si no existeix el de per entitat
-//        if (!(getStringByEntidad(idEntidad, partialPropertyName+"_"+codiIdiomaRegistre) == null)) {
-//            valor = getStringByEntidad(idEntidad, partialPropertyName+"_"+codiIdiomaRegistre);
-//        }
-//        return valor;
-//    }
-//
-//    /**
-//     * Retorna el valor de la propiedad DeclaracioJustificant de la entidad indicada.
-//     * @return
-//     */
-//    public static String getLleiJustificant(Long idEntidad, Long idiomaRegistre) {
-//        final String partialPropertyName = "justificant.llei";
-//        String codiIdiomaRegistre = RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(idiomaRegistre);
-//        String valor = getStringByEntidad(idEntidad, partialPropertyName+"_ca");
-//
-//        // Valor buit si no existeix el de per entitat
-//        if (!(getStringByEntidad(idEntidad, partialPropertyName+"_"+codiIdiomaRegistre) == null)) {
-//            valor = getStringByEntidad(idEntidad, partialPropertyName+"_"+codiIdiomaRegistre);
-//        }
-//        return valor;
-//    }
-//
-//    /**
-//     * Retorna el valor de la propiedad DeclaracioJustificant de la entidad indicada.
-//     * @return
-//     */
-//    public static String getSedeJustificant(Long idEntidad, Long idiomaRegistre) {
-//        final String partialPropertyName = "justificant.sede";
-//        String codiIdiomaRegistre = RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(idiomaRegistre);
-//        String valor = getStringByEntidad(idEntidad, partialPropertyName+"_ca");
-//
-//        // Valor buit si no existeix el de per entitat
-//        if (!(getStringByEntidad(idEntidad, partialPropertyName+"_"+codiIdiomaRegistre) == null)) {
-//            valor = getStringByEntidad(idEntidad, partialPropertyName+"_"+codiIdiomaRegistre);
-//        }
-//        return valor;
-//    }
-//
-//    /**
-//     * Retorna el valor de la propiedad DeclaracioJustificant de la entidad indicada.
-//     * @return
-//     */
-//    public static String getTextVerticalJustificant(Long idEntidad, Long idiomaRegistre) {
-//        final String partialPropertyName = "justificant.textvertical";
-//        String codiIdiomaRegistre = RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(idiomaRegistre);
-//        String valor = getStringByEntidad(idEntidad, partialPropertyName+"_ca");
-//
-//        // Valor buit si no existeix el de per entitat
-//        if (!(getStringByEntidad(idEntidad, partialPropertyName+"_"+codiIdiomaRegistre) == null)) {
-//            valor = getStringByEntidad(idEntidad, partialPropertyName+"_"+codiIdiomaRegistre);
-//        }
-//        return valor;
-//    }
-//
-//    /**
-//     * Retorna el valor de la propiedad de la Entidad para el JustificantePlugin.
-//     * @return
-//     */
-//    public static String getJustificantePlugin(Long idEntidad) {
-//        final String partialPropertyName = "justificante.plugin";
-//        String valor = getStringByEntidad(idEntidad, partialPropertyName);
-//
-//        return valor != null ? valor : null;
-//    }
-//
 
     /**
      * Retorna el valor de la propiedad JustificantePlugin de la entidad indicada.
@@ -461,6 +370,17 @@ public class PropiedadGlobalUtil {
         }
 
         return valor;
+    }
+
+    /**
+     //     * Retorna el valor de la propiedad Mensaje Estampacion Justificante de la entidad indicada.
+     //     * @return
+     //     */
+    public static String getMensajeEstampacionJustificante(Long idEntidad) {
+        final String partialPropertyName = "justificante.mensaje.estampacion";
+        String valor = getStringByEntidad(idEntidad, partialPropertyName);
+
+        return valor != null ? valor : null;
     }
 
 
@@ -512,7 +432,7 @@ public class PropiedadGlobalUtil {
             PropiedadGlobalLocal propiedadGlobalEjb = getPropiedadGlobalEJB();
             return propiedadGlobalEjb.getPropertyByEntidad(idEntidad,RegwebConstantes.REGWEB3_PROPERTY_BASE + partialPropertyName);
         } catch (Exception e) {
-            log.error("Error obteniendo la propiedad ]" + RegwebConstantes.REGWEB3_PROPERTY_BASE + partialPropertyName, e);
+            log.error("Error obteniendo la propiedad " + RegwebConstantes.REGWEB3_PROPERTY_BASE + partialPropertyName, e);
             return null;
         }
     }

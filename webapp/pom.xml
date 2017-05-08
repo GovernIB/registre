@@ -39,9 +39,7 @@
             </resource>
           </webResources>
           <packagingExcludes>
-					  WEB-INF/lib/commons-logging-*.jar,
-            WEB-INF/lib/spring-expression-*.jar,
-            WEB-INF/lib/aopalliance-*.jar,
+            WEB-INF/lib/commons-logging-*.jar,
             WEB-INF/lib/xmlworker-*.jar,
             WEB-INF/lib/itextpdf-*.jar
           </packagingExcludes>
@@ -213,7 +211,6 @@
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>
       <version>3.2.6.RELEASE</version>
-      <scope>provided</scope>
       <exclusions>
         <exclusion>
           <groupId>commons-logging</groupId>
@@ -226,7 +223,6 @@
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
       <version>3.2.6.RELEASE</version>
-      <scope>provided</scope>
       <exclusions>
         <exclusion>
           <groupId>commons-logging</groupId>
@@ -240,7 +236,6 @@
       <groupId>org.springframework</groupId>
       <artifactId>spring-beans</artifactId>
       <version>3.2.6.RELEASE</version>
-      <scope>provided</scope>
       <exclusions>
         <exclusion>
           <groupId>commons-logging</groupId>
@@ -253,7 +248,6 @@
       <groupId>org.springframework</groupId>
       <artifactId>spring-aop</artifactId>
       <version>3.2.6.RELEASE</version>
-      <scope>provided</scope>
       <exclusions>
         <exclusion>
           <groupId>commons-logging</groupId>
@@ -305,7 +299,7 @@
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-web</artifactId>
-      <version>3.2.6.RELEASE</version> <!-- 3.1.3.RELEASE -->
+      <version>3.2.6.RELEASE</version> 
       <exclusions>
         <exclusion>
           <groupId>commons-logging</groupId>
@@ -317,7 +311,7 @@
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-config</artifactId>
-      <version>3.2.6.RELEASE</version> <!-- 3.1.3.RELEASE -->
+      <version>3.2.6.RELEASE</version>
       <exclusions>
         <exclusion>
           <groupId>commons-logging</groupId>
@@ -329,7 +323,7 @@
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-taglibs</artifactId>
-      <version>3.2.6.RELEASE</version> <!-- 3.1.3.RELEASE -->
+      <version>3.2.6.RELEASE</version>
       <exclusions>
         <exclusion>
           <groupId>commons-logging</groupId>
@@ -341,7 +335,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-orm</artifactId>
-      <version>3.2.6.RELEASE</version> <!-- 3.1.3.RELEASE -->
+      <version>3.2.6.RELEASE</version>
       <exclusions>
         <exclusion>
           <groupId>org.apache.xerces</groupId>
@@ -353,7 +347,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-tx</artifactId>
-      <version>3.2.6.RELEASE</version> <!-- 3.1.3.RELEASE -->
+      <version>3.2.6.RELEASE</version>
       <exclusions>
         <exclusion>
           <groupId>commons-logging</groupId>

@@ -597,6 +597,8 @@ public interface RegwebConstantes {
     Long PLUGIN_FIRMA_SERVIDOR = 4L;
     Long PLUGIN_USER_INFORMATION = 5L;
     Long PLUGIN_SCAN = 6L;
+    Long PLUGIN_CUSTODIA_JUSTIFICANTE = 7L;
+    Long PLUGIN_VALIDACION_FIRMAS = 8L;
 
     Long[] TIPOS_PLUGIN = {
             PLUGIN_CUSTODIA,
@@ -605,6 +607,8 @@ public interface RegwebConstantes {
             PLUGIN_POSTPROCESO,
             PLUGIN_FIRMA_SERVIDOR,
             PLUGIN_USER_INFORMATION,
-            PLUGIN_SCAN
+            PLUGIN_SCAN,
+            PLUGIN_CUSTODIA_JUSTIFICANTE,
+            PLUGIN_VALIDACION_FIRMAS
     };
 }
