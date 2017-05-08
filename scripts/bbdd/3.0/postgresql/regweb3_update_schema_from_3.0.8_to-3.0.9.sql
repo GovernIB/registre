@@ -204,8 +204,8 @@ create table RWE_PLUGIN (
         DESCRIPCION varchar(2000) not null,
         ENTIDAD int8,
         NOMBRE varchar(255) not null,
-        PROPIEDADES_ADMIN varchar(2000),
-        PROPIEDADES_ENTIDAD varchar(2000),
+        PROPIEDADES_ADMIN text,
+        PROPIEDADES_ENTIDAD text,
         TIPO int8,
         primary key (ID)
     );
