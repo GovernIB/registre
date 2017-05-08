@@ -324,6 +324,13 @@ public class SirBean implements SirLocal{
             oficioRemision.setFechaEstado(mensaje.getFechaEntradaDestino());
             oficioRemisionEjb.merge(oficioRemision);
 
+            // Marcamos el Registro original como ACEPTADO
+            if(oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)){
+                registroEntradaEjb.cambiarEstado(oficioRemision.getRegistrosEntrada().get(0).getId(),RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
+            }else if(oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)){
+                registroSalidaEjb.cambiarEstado(oficioRemision.getRegistrosSalida().get(0).getId(),RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
+            }
+
         }else  if(oficioRemision.getEstado() == (RegwebConstantes.OFICIO_ACEPTADO)){
 
             log.info("Se ha recibido un mensaje de confirmación duplicado: " + mensaje.toString());

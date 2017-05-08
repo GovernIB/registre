@@ -139,7 +139,7 @@ public interface OficioRemisionEntradaUtilsLocal {
      * @throws I18NException
      * @throws I18NValidationException
      */
-    public List<RegistroEntrada> procesarOficioRemision(OficioRemision oficioRemision,
+    public List<RegistroEntrada> aceptarOficioRemision(OficioRemision oficioRemision,
                                                         UsuarioEntidad usuario, Oficina oficinaActiva,
                                                         List<OficioPendienteLlegada> oficios) throws Exception, I18NException, I18NValidationException;
 

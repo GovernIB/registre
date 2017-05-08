@@ -11,7 +11,7 @@
     <c:when test="${param.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR}">
         <span class="label label-info"><spring:message code="registro.estado.${param.estado}" /></span>
     </c:when>
-    <c:when test="${param.estado == RegwebConstantes.REGISTRO_OFICIO_EXTERNO || param.estado == RegwebConstantes.REGISTRO_OFICIO_INTERNO}">
+    <c:when test="${param.estado == RegwebConstantes.REGISTRO_OFICIO_EXTERNO || param.estado == RegwebConstantes.REGISTRO_OFICIO_INTERNO || param.estado == RegwebConstantes.REGISTRO_OFICIO_ACEPTADO}">
         <span class="label label-default"><spring:message code="registro.estado.${param.estado}" /></span>
     </c:when>
     <c:when test="${param.estado == RegwebConstantes.REGISTRO_TRAMITADO}">

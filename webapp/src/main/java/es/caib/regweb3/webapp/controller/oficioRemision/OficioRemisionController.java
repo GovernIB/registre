@@ -689,12 +689,12 @@ public class OficioRemisionController extends BaseController {
         try {
             if (RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA.equals(oficioRemision.getTipoOficioRemision())) {
 
-                registrosEntrada = oficioRemisionEntradaUtilsEjb.procesarOficioRemision(oficioRemision,
+                registrosEntrada = oficioRemisionEntradaUtilsEjb.aceptarOficioRemision(oficioRemision,
                         usuarioEntidad, oficinaActiva, oficioPendienteLlegadaForm.getOficios());
 
             } else if (RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA.equals(oficioRemision.getTipoOficioRemision())) {
 
-                registrosEntrada = oficioRemisionSalidaUtilsEjb.procesarOficioRemision(oficioRemision,
+                registrosEntrada = oficioRemisionSalidaUtilsEjb.aceptarOficioRemision(oficioRemision,
                         usuarioEntidad, oficinaActiva, oficioPendienteLlegadaForm.getOficios());
             }
 

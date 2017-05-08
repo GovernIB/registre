@@ -325,7 +325,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
      * @throws Exception
      */
     @Override
-    public List<RegistroEntrada> procesarOficioRemision(OficioRemision oficioRemision,
+    public List<RegistroEntrada> aceptarOficioRemision(OficioRemision oficioRemision,
                                                         UsuarioEntidad usuario, Oficina oficinaActiva,
                                                         List<OficioPendienteLlegada> oficios) throws Exception, I18NException, I18NValidationException {
 
@@ -358,6 +358,9 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
             trazabilidad.setRegistroEntradaDestino(nuevoRE);
 
             trazabilidadEjb.merge(trazabilidad);
+
+            // Marcamos el RegistroEntrada original como ACEPTADO
+            registroSalidaEjb.cambiarEstadoTrazabilidad(registroSalida,RegwebConstantes.REGISTRO_OFICIO_ACEPTADO, usuario);
 
         }
 

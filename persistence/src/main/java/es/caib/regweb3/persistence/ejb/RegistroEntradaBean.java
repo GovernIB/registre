@@ -406,7 +406,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
-    public void cambiarEstado(RegistroEntrada registroEntrada, Long idEstado, UsuarioEntidad usuarioEntidad) throws Exception {
+    public void cambiarEstadoTrazabilidad(RegistroEntrada registroEntrada, Long idEstado, UsuarioEntidad usuarioEntidad) throws Exception {
 
         Query q = em.createQuery("update RegistroEntrada set estado=:idEstado where id = :idRegistro");
         q.setParameter("idEstado", idEstado);
@@ -503,7 +503,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                                       UsuarioEntidad usuarioEntidad) throws Exception {
 
         // Estado anulado
-        cambiarEstado(registroEntrada, RegwebConstantes.REGISTRO_ANULADO, usuarioEntidad);
+        cambiarEstadoTrazabilidad(registroEntrada, RegwebConstantes.REGISTRO_ANULADO, usuarioEntidad);
 
     }
 
@@ -512,7 +512,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                                        UsuarioEntidad usuarioEntidad) throws Exception {
 
         // Actualizamos el estado del RegistroEntrada
-        cambiarEstado(registroEntrada, RegwebConstantes.REGISTRO_PENDIENTE_VISAR, usuarioEntidad);
+        cambiarEstadoTrazabilidad(registroEntrada, RegwebConstantes.REGISTRO_PENDIENTE_VISAR, usuarioEntidad);
 
     }
 
@@ -521,7 +521,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                                      UsuarioEntidad usuarioEntidad) throws Exception {
 
         // Modificamos el estado del RegistroEntrada
-        cambiarEstado(registroEntrada, RegwebConstantes.REGISTRO_VALIDO, usuarioEntidad);
+        cambiarEstadoTrazabilidad(registroEntrada, RegwebConstantes.REGISTRO_VALIDO, usuarioEntidad);
 
     }
 
@@ -529,7 +529,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     public void tramitarRegistroEntrada(RegistroEntrada registroEntrada,
                                         UsuarioEntidad usuarioEntidad) throws Exception {
 
-        cambiarEstado(registroEntrada, RegwebConstantes.REGISTRO_TRAMITADO, usuarioEntidad);
+        cambiarEstadoTrazabilidad(registroEntrada, RegwebConstantes.REGISTRO_TRAMITADO, usuarioEntidad);
 
     }
 

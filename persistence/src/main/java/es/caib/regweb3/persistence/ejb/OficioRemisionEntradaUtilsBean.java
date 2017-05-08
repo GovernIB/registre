@@ -507,14 +507,14 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
 
     /**
-     * Procesa un OficioRemision pendiente de llegada, creando tantos Registros de Entrada,
+     * Aceptar un OficioRemision pendiente de llegada, creando tantos Registros de Entrada,
      * como contenga el Oficio.
      *
      * @param oficioRemision
      * @throws Exception
      */
     @Override
-    public List<RegistroEntrada> procesarOficioRemision(OficioRemision oficioRemision,
+    public List<RegistroEntrada> aceptarOficioRemision(OficioRemision oficioRemision,
                                                         UsuarioEntidad usuario, Oficina oficinaActiva,
                                                         List<OficioPendienteLlegada> oficios) throws Exception, I18NException, I18NValidationException {
 
@@ -545,6 +545,9 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             trazabilidad.setRegistroEntradaDestino(nuevoRE);
 
             trazabilidadEjb.merge(trazabilidad);
+
+            // Marcamos el RegistroEntrada original como ACEPTADO
+            registroEntradaEjb.cambiarEstadoTrazabilidad(registroEntrada,RegwebConstantes.REGISTRO_OFICIO_ACEPTADO, usuario);
 
         }
 
