@@ -624,7 +624,6 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         RegistroSir registroSir = new RegistroSir();
 
         registroSir.setIndicadorPrueba(IndicadorPrueba.NORMAL);
-        registroSir.setEstado(EstadoRegistroSir.PENDIENTE_ENVIO);
         registroSir.setEntidad(registroEntrada.getOficina().getOrganismoResponsable().getEntidad());
 
         // Segmento De_Origen_O_Remitente
@@ -695,7 +694,6 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         RegistroSir registroSir = new RegistroSir();
 
         registroSir.setIndicadorPrueba(IndicadorPrueba.NORMAL); // todo Modificar cuando entremos en Producción
-        registroSir.setEstado(EstadoRegistroSir.PENDIENTE_ENVIO);
         registroSir.setEntidad(registroSalida.getOficina().getOrganismoResponsable().getEntidad());
 
         // Segmento De_Origen_O_Remitente
