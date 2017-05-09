@@ -317,23 +317,20 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     @SuppressWarnings(value = "unchecked")
     public Integer eliminarByEntidad(Long idEntidad) throws Exception{
 
-        List<?> result = em.createQuery("Select distinct(a.id) from RegistroSir as a where a.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
-        Integer total = result.size();
+        List<RegistroSir> registros = em.createQuery("Select distinct(a) from RegistroSir as a where a.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
 
-        if(result.size() > 0){
+        for (RegistroSir registroSir : registros) {
+            List<AnexoSir> anexos = registroSir.getAnexos();
+            remove(registroSir);
 
-            // Si hay más de 1000 registros, dividimos las queries (ORA-01795).
-            while (result.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
-
-                List<?> subList = result.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN);
-                em.createQuery("delete from RegistroSir where id in (:result) ").setParameter("result", subList).executeUpdate();
-                result.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN).clear();
+            for (AnexoSir anexoSir : anexos) {
+                FileSystemManager.eliminarArchivo(anexoSir.getAnexo().getId());
             }
 
-            em.createQuery("delete from RegistroSir where id in (:result) ").setParameter("result", result).executeUpdate();
         }
+        em.flush();
 
-        return total;
+        return registros.size();
 
     }
 
