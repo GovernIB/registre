@@ -5,12 +5,11 @@ import es.caib.regweb3.model.RegistroDetalle;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.utils.AnexoFull;
-import es.caib.regweb3.persistence.ejb.AnexoLocal;
 import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
 import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
 import es.caib.regweb3.persistence.ejb.RegistroSalidaLocal;
+import es.caib.regweb3.persistence.ejb.SignatureServerLocal;
 import es.caib.regweb3.persistence.ejb.TipoDocumentalLocal;
-import es.caib.regweb3.persistence.utils.AnexoFirmaUtils;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
@@ -55,13 +54,12 @@ public class AnexoFicheroController extends BaseController {
 
     @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
     public TipoDocumentalLocal tipoDocumentalEjb;
-
-    @EJB(mappedName = "regweb3/AnexoEJB/local")
-    public AnexoLocal anexoEjb;
-    
+  
+    @EJB(mappedName = "regweb3/SignatureServerEJB/local")
+    private SignatureServerLocal signatureServerEjb;
 
     /**
-     *  Si arriba aqui és que hi ha un error de  Tamany de Fitxer Superat
+     * Si arriba aqui és que hi ha un error de  Tamany de Fitxer Superat.
      */
     @RequestMapping(value = "/ficheros", method = RequestMethod.GET)
     public ModelAndView ficherosGet(HttpServletRequest request,
@@ -128,10 +126,15 @@ public class AnexoFicheroController extends BaseController {
         try {
 
             manageDocumentCustodySignatureCustody(request, anexoForm);
-            
-            
+
             Entidad entidad = getEntidadActiva(request);
-            anexoEjb.checkDocumentAndSignature(anexoForm, entidad.getId(), isSIR, I18NUtils.getLocale());
+            signatureServerEjb.checkDocumentAndSignature(anexoForm, entidad.getId(),
+                isSIR, I18NUtils.getLocale());
+            
+            
+            log.info(" XYZ ZZZ anexoForm.getDocumentoCustody() ======> "  + anexoForm.getDocumentoCustody());
+            log.info(" XYZ ZZZ anexoForm.getSignatureCustody() ======> "  + anexoForm.getSignatureCustody());
+            
             
 
             loadCommonAttributes(request, model);

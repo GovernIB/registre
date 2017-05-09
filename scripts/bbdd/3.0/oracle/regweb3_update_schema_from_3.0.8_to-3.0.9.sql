@@ -237,3 +237,20 @@ es.caib.regweb3.custodiajustificante.plugins.documentcustody.filesystem.baseurl=
 
 INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,PROPIEDADES_ENTIDAD,entidad) SELECT RWE_ALL_SEQ.nextVal,1, 'CAIB Scan','Scan mediante el sistema CAIB','org.fundaciobit.plugins.scanweb.caib.CAIBScanWebPlugin',6,'',id FROM rwe_entidad;
 INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,PROPIEDADES_ENTIDAD,entidad) SELECT RWE_ALL_SEQ.nextVal,1, 'DynamicWebTwain','Scan mediante el sistema DynamicWebTwain','es.limit.plugins.scanweb.dynamicwebtwain.DynamicWebTwainScanWebPlugin',6,'',id FROM rwe_entidad;
+
+-- Validate Signature Plugins (08/05/2017)
+INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,propiedades_admin,entidad) VALUES(RWE_ALL_SEQ.nextval,1, 'Validar Firma - @Firma','Información y Validación de Firmas Mediante @firma','org.fundaciobit.plugins.validatesignature.afirmacxf.AfirmaCxfValidateSignaturePlugin',8,'# Obligatiori. Aplicació definida dins "Gestión de Aplicaciones" de @firma federat
+es.caib.regweb3.validatesignature.plugins.validatesignature.afirmacxf.applicationID=appPrueba
+# Podeu descarregar-ho des de https://github.com/GovernIB/pluginsib/tree/pluginsib-1.0/plugins-validatesignature/afirmacxf/config/transformersTemplates
+es.caib.regweb3.validatesignature.plugins.validatesignature.afirmacxf.TransformersTemplatesPath=D:/dades/dades/transformersTemplates
+#http://afirma.redsara.es/afirmaws/services/DSSAfirmaVerify
+#http://des-afirma.redsara.es/afirmaws/services/DSSAfirmaVerify
+#http://localhost:9090/afirmaws/services/DSSAfirmaVerify
+es.caib.regweb3.validatesignature.plugins.validatesignature.afirmacxf.endpoint=http://des-afirma.redsara.es/afirmaws/services/DSSAfirmaVerify
+es.caib.regweb3.validatesignature.plugins.validatesignature.afirmacxf.printxml=false
+# CERTIFICATE Token
+es.caib.regweb3.validatesignature.plugins.validatesignature.afirmacxf.authorization.ks.path=D:/dades/dades/proves-dgidt.jks
+es.caib.regweb3.validatesignature.plugins.validatesignature.afirmacxf.authorization.ks.type=JKS
+es.caib.regweb3.validatesignature.plugins.validatesignature.afirmacxf.authorization.ks.password=<<KEYSTORE_PASSWORD>>
+es.caib.regweb3.validatesignature.plugins.validatesignature.afirmacxf.authorization.ks.cert.alias=<<ALIAS>>
+es.caib.regweb3.validatesignature.plugins.validatesignature.afirmacxf.authorization.ks.cert.password=<<CERTIFICATE_PASSWORD>>',null);

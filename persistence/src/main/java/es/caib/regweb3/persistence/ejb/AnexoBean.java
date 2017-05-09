@@ -1,8 +1,15 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.model.*;
+
+import es.caib.regweb3.model.Anexo;
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.IRegistro;
+import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.RegistroSalida;
+import es.caib.regweb3.model.TipoDocumental;
+import es.caib.regweb3.model.TraduccionTipoDocumental;
+import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
-import es.caib.regweb3.persistence.utils.AnexoFirmaUtils;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.persistence.validator.AnexoBeanValidator;
@@ -12,7 +19,6 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -36,10 +42,14 @@ import javax.persistence.Query;
 import java.beans.Encoder;
 import java.beans.Expression;
 import java.beans.PersistenceDelegate;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.security.MessageDigest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
 
 
 /**
@@ -1328,29 +1338,23 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      */
     @Override
     public AnexoFull crearJustificante(UsuarioEntidad usuarioEntidad, Long idRegistro,
-                                       String tipoRegistro, byte[] data, String custodyID, String csv) throws Exception {
+            String tipoRegistro, byte[] data, String custodyID, String csv) throws Exception {
 
 
-        File justificanteFile = null;
-        File signedFile = null;
+        
         try {
 
             Long idEntidad = usuarioEntidad.getEntidad().getId();
 
+            // XYZ ZZZ TODO Això està bé ????
             Locale locale = new Locale("es");
             String nombreFichero = I18NLogicUtils.tradueix(locale, "justificante.fichero") + ".pdf";
             String tituloAnexo = I18NLogicUtils.tradueix(locale, "justificante.anexo.titulo");
             String observacionesAnexo = I18NLogicUtils.tradueix(locale, "justificante.anexo.observaciones");
 
-            // Crea el justificante como fichero temporal
-            justificanteFile = File.createTempFile("regweb3_", ".justificant");
-            FileOutputStream fos = new FileOutputStream(justificanteFile);
-            fos.write(data);
-            fos.flush();
-            fos.close();
-
             // Firma el justificant
-            signedFile = signatureServerEjb.signFile(justificanteFile, "es", idEntidad);
+            SignatureCustody sign = signatureServerEjb.signJustificante(data, "es", idEntidad);
+            sign.setName(nombreFichero);
 
             // Crea el anexo del justificante firmado
             AnexoFull anexoFull = new AnexoFull();
@@ -1367,11 +1371,6 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             // Fichero Anexado
             anexoFull.getAnexo().setJustificante(true);
 
-            SignatureCustody sign = new SignatureCustody();
-            sign.setData(FileUtils.readFileToByteArray(signedFile));
-            sign.setMime("application/pdf");
-            sign.setName(nombreFichero);
-
             anexoFull.setSignatureCustody(sign);
             anexoFull.setSignatureFileDelete(false);
             anexoFull = crearJustificanteAnexo(anexoFull, usuarioEntidad, idRegistro, tipoRegistro,custodyID);
@@ -1384,34 +1383,12 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         } catch (I18NException e) {
             e.printStackTrace();
             throw new Exception(e);
-        } finally {
-          
-          if (justificanteFile != null) {
-            if (!justificanteFile.delete()) {
-              justificanteFile.deleteOnExit(); 
-            }
-          }
-          
-          
-          if (signedFile != null) {
-            if (!signedFile.delete()) {
-              signedFile.deleteOnExit(); 
-            }
-          }
-          
         }
 
     }
 
     
-    @Override
-    public AnexoFull checkDocumentAndSignature(AnexoFull input, long idEntidad,
-        boolean sir, Locale locale) throws I18NException {
-      
-      return AnexoFirmaUtils.checkDocumentAndSignature(pluginEjb, input, idEntidad, sir, locale);
-      
-      
-    }
+
     
 
     /* FIN METODOS DEL AnnexDocumentCustodyManager.java hecho por marilen del TODO DE TONI*/
