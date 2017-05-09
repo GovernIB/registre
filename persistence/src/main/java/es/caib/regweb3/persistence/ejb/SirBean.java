@@ -75,8 +75,8 @@ public class SirBean implements SirLocal{
 
                 if(EstadoRegistroSir.RECIBIDO.equals(registroSir.getEstado())){
 
-                    log.info("El RegistroSir" + registroSir.getIdentificadorIntercambio() +" ya se ha recibido.");
-                    throw new ValidacionException(Errores.ERROR_0205);
+                    log.info("El RegistroSir " + registroSir.getIdentificadorIntercambio() +" ya se ha recibido, enviamos otro ACK");
+                    //throw new ValidacionException(Errores.ERROR_0205);
 
                 }else if(EstadoRegistroSir.RECHAZADO.equals(registroSir.getEstado()) ||
                         EstadoRegistroSir.RECHAZADO_Y_ACK.equals(registroSir.getEstado()) ||
@@ -86,20 +86,31 @@ public class SirBean implements SirLocal{
                     // Eliminamos el RegistroSir para volverlo a crear
                     registroSirEjb.remove(registroSir);
 
-                }else{
+                    // Creamos un nuevo RegistroSir
+                    registroSir = registroSirEjb.transformarFicheroIntercambio(ficheroIntercambio);
+                    registroSir.setEstado(EstadoRegistroSir.RECIBIDO);
+
+                    registroSirEjb.crearRegistroSir(registroSir);
+                    log.info("El registroSir no existía en el sistema y se ha creado: " + registroSir.getIdentificadorIntercambio());
+
+                }else if(EstadoRegistroSir.ACEPTADO.equals(registroSir.getEstado())){
+                    log.info("Se ha intentado enviar un ficheroIntercambio que ya ha sido aceptado previamente: " + ficheroIntercambio.getIdentificadorIntercambio()+", volvemos a enviar un ACK");
+                    //throw new ValidacionException(Errores.ERROR_0205);
+
+                } else{
                     log.info("Se ha intentado enviar un ficheroIntercambio con estado incompatible: " + ficheroIntercambio.getIdentificadorIntercambio());
                     throw new ValidacionException(Errores.ERROR_0063);
                 }
 
+            }else{
 
+                // Creamos un nuevo RegistroSir
+                registroSir = registroSirEjb.transformarFicheroIntercambio(ficheroIntercambio);
+                registroSir.setEstado(EstadoRegistroSir.RECIBIDO);
+
+                registroSirEjb.crearRegistroSir(registroSir);
+                log.info("El registroSir no existía en el sistema y se ha creado: " + registroSir.getIdentificadorIntercambio());
             }
-
-            // Creamos un nuevo RegistroSir
-            registroSir = registroSirEjb.transformarFicheroIntercambio(ficheroIntercambio);
-            registroSir.setEstado(EstadoRegistroSir.RECIBIDO);
-
-            registroSirEjb.crearRegistroSir(registroSir);
-            log.info("El registroSir no existía en el sistema y se ha creado: " + registroSir.getIdentificadorIntercambio());
 
 
         // RECHAZO
@@ -229,7 +240,7 @@ public class SirBean implements SirLocal{
      */
     private void procesarMensajeACK(OficioRemision oficioRemision) throws Exception{
 
-        if (oficioRemision.getEstado() == (RegwebConstantes.OFICIO_SIR_ENVIADO)){
+        if (RegwebConstantes.OFICIO_SIR_ENVIADO == oficioRemision.getEstado()){
 
             // Actualizamos el OficioRemision
             oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_ENVIADO_ACK);
@@ -237,7 +248,7 @@ public class SirBean implements SirLocal{
             oficioRemision.setNumeroReintentos(0);
             oficioRemisionEjb.merge(oficioRemision);
 
-        } else if (oficioRemision.getEstado() == (RegwebConstantes.OFICIO_SIR_REENVIADO)){
+        } else if (RegwebConstantes.OFICIO_SIR_REENVIADO == oficioRemision.getEstado()){
 
             // Actualizamos el OficioRemision
             oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_REENVIADO_ACK);
@@ -245,7 +256,7 @@ public class SirBean implements SirLocal{
             oficioRemision.setNumeroReintentos(0);
             oficioRemisionEjb.merge(oficioRemision);
 
-        } else if (oficioRemision.getEstado() == (RegwebConstantes.OFICIO_SIR_RECHAZADO)){
+        } else if (RegwebConstantes.OFICIO_SIR_RECHAZADO == oficioRemision.getEstado()){
 
             // Actualizamos el OficioRemision
             oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_RECHAZADO_ACK);
@@ -253,12 +264,12 @@ public class SirBean implements SirLocal{
             oficioRemision.setNumeroReintentos(0);
             oficioRemisionEjb.merge(oficioRemision);
 
-        } else if (oficioRemision.getEstado() == (RegwebConstantes.OFICIO_SIR_ENVIADO_ACK) ||
-                oficioRemision.getEstado() == (RegwebConstantes.OFICIO_SIR_REENVIADO_ACK) ||
-                oficioRemision.getEstado() == (RegwebConstantes.OFICIO_SIR_RECHAZADO_ACK)){
+        } else if (RegwebConstantes.OFICIO_SIR_ENVIADO_ACK == oficioRemision.getEstado() ||
+                RegwebConstantes.OFICIO_SIR_REENVIADO_ACK == oficioRemision.getEstado()  ||
+                RegwebConstantes.OFICIO_SIR_RECHAZADO_ACK == oficioRemision.getEstado()){
 
-            log.info("Se ha recibido un mensaje duplicado con identificador: " + oficioRemision.getIdentificadorIntercambio());
-            throw new ValidacionException(Errores.ERROR_0206);
+            log.info("Se ha recibido un mensaje ACK duplicado con identificador: " + oficioRemision.getIdentificadorIntercambio());
+            //throw new ValidacionException(Errores.ERROR_0206);
 
         }else{
             log.info("Se ha recibido un mensaje que no tiene el estado adecuado para recibir un ACK");
@@ -298,8 +309,8 @@ public class SirBean implements SirLocal{
                 EstadoRegistroSir.REENVIADO_Y_ACK.equals(registroSir.getEstado()) ||
                 EstadoRegistroSir.RECHAZADO_Y_ACK.equals(registroSir.getEstado())){
 
-            log.info("Se ha recibido un registroSir duplicado con identificador: " + registroSir.getIdentificadorIntercambio());
-            throw new ValidacionException(Errores.ERROR_0206);
+            log.info("Se ha recibido un mensaje ACK duplicado con identificador: " + registroSir.getIdentificadorIntercambio());
+            //throw new ValidacionException(Errores.ERROR_0206);
 
         }else{
             log.info("Se ha recibido un mensaje que no tiene el estado adecuado para recibir un ACK");
@@ -314,9 +325,9 @@ public class SirBean implements SirLocal{
      */
     private void procesarMensajeCONFIRMACION(OficioRemision oficioRemision, Mensaje mensaje) throws Exception{
 
-        if (oficioRemision.getEstado() == (RegwebConstantes.OFICIO_SIR_ENVIADO) ||
-                oficioRemision.getEstado() == (RegwebConstantes.OFICIO_SIR_ENVIADO_ACK) ||
-                oficioRemision.getEstado() == (RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR)){
+        if (RegwebConstantes.OFICIO_SIR_ENVIADO == oficioRemision.getEstado()  ||
+                RegwebConstantes.OFICIO_SIR_ENVIADO_ACK == oficioRemision.getEstado() ||
+                RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR == oficioRemision.getEstado()){
 
             oficioRemision.setNumeroRegistroEntradaDestino(mensaje.getNumeroRegistroEntradaDestino());
             oficioRemision.setFechaEntradaDestino(mensaje.getFechaEntradaDestino());
@@ -334,7 +345,7 @@ public class SirBean implements SirLocal{
         }else  if(oficioRemision.getEstado() == (RegwebConstantes.OFICIO_ACEPTADO)){
 
             log.info("Se ha recibido un mensaje de confirmación duplicado: " + mensaje.toString());
-            throw new ValidacionException(Errores.ERROR_0206);
+            //throw new ValidacionException(Errores.ERROR_0206);
 
         }else{
             log.info("El RegistroSir no tiene el estado necesario para ser Confirmado: " + oficioRemision.getIdentificadorIntercambio());
