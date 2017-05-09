@@ -9,7 +9,6 @@ import es.caib.regweb3.sir.core.utils.Mensaje;
 import es.caib.regweb3.sir.ejb.MensajeLocal;
 import es.caib.regweb3.sir.utils.Sicres3XML;
 import es.caib.regweb3.sir.utils.XPathReaderUtil;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Node;
@@ -17,7 +16,6 @@ import org.w3c.dom.Node;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.xml.xpath.XPathConstants;
-
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 
@@ -94,12 +92,7 @@ public class RecepcionBean implements RecepcionLocal{
                 // Intentamos parsear el xml los 3 campos necesarios para mensaje de error
                 Mensaje mensaje = parserForError(xmlFicheroIntercambio);
 
-                // Si el código de error es el de duplicado, se vuelve a enviar un ACK
-                if (Errores.ERROR_0205.getValue().equals(errorGenerico)) {
-                    mensajeEjb.enviarACK(mensaje);
-
-                    // Enviar mensaje de error, sino tiene nada que ver con los campos CodigoEntidad
-                } else if (!Errores.ERROR_COD_ENTIDAD_INVALIDO.getValue().equals(errorGenerico)) {
+                if (!Errores.ERROR_COD_ENTIDAD_INVALIDO.getValue().equals(errorGenerico)) {
                     mensajeEjb.enviarMensajeError(mensaje, errorGenerico, descripcionError);
                 }
 

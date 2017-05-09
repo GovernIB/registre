@@ -99,7 +99,7 @@ public class SirBean implements SirLocal{
 
                 } else{
                     log.info("Se ha intentado enviar un ficheroIntercambio con estado incompatible: " + ficheroIntercambio.getIdentificadorIntercambio());
-                    throw new ValidacionException(Errores.ERROR_0063);
+                    throw new ValidacionException(Errores.ERROR_0037);
                 }
 
             }else{
@@ -160,17 +160,17 @@ public class SirBean implements SirLocal{
                 }else if(oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_DEVUELTO){
 
                     log.info("Se ha intentado rechazar un registroSir que ya esta devuelto" + ficheroIntercambio.getIdentificadorIntercambio());
-                    throw new ValidacionException(Errores.ERROR_0205);
+                    throw new ValidacionException(Errores.ERROR_0037);
 
                 }else{
                     log.info("Se ha intentado rechazar cuyo estado no lo permite: " + ficheroIntercambio.getIdentificadorIntercambio());
-                    throw new ValidacionException(Errores.ERROR_0063);
+                    throw new ValidacionException(Errores.ERROR_0037);
                 }
 
 
             }else{
                 log.info("El registro recibido no existe en el sistema: " + ficheroIntercambio.getIdentificadorIntercambio());
-                throw new ValidacionException(Errores.ERROR_0063);
+                throw new ValidacionException(Errores.ERROR_0037);
             }
         }
     }
@@ -195,7 +195,7 @@ public class SirBean implements SirLocal{
                 procesarMensajeACK(registroSir);
             }else{
                 log.info("El mensaje de control corresponde a un IdentificadorIntercambio que no existe en el sistema");
-                throw new ValidacionException(Errores.ERROR_0044);
+                throw new ValidacionException(Errores.ERROR_0037);
             }
 
             // Mensaje CONFIRMACIÓN
@@ -207,7 +207,7 @@ public class SirBean implements SirLocal{
                 procesarMensajeCONFIRMACION(oficioRemision, mensaje);
             }else{
                 log.info("El mensaje de control corresponde a un IdentificadorIntercambio que no existe en el sistema");
-                throw new ValidacionException(Errores.ERROR_0044);
+                throw new ValidacionException(Errores.ERROR_0037);
             }
 
 
@@ -223,12 +223,12 @@ public class SirBean implements SirLocal{
                 procesarMensajeERROR(registroSir, mensaje);
             }else{
                 log.info("El mensaje de control corresponde a un IdentificadorIntercambio que no existe en el sistema");
-                throw new ValidacionException(Errores.ERROR_0044);
+                throw new ValidacionException(Errores.ERROR_0037);
             }
 
         }else{
             log.info("El tipo mensaje de control no es válido: " + mensaje.getTipoMensaje());
-            throw new ValidacionException(Errores.ERROR_0044);
+            throw new ValidacionException(Errores.ERROR_0037);
         }
 
     }
@@ -273,7 +273,7 @@ public class SirBean implements SirLocal{
 
         }else{
             log.info("Se ha recibido un mensaje que no tiene el estado adecuado para recibir un ACK");
-            throw new ValidacionException(Errores.ERROR_0044);
+            throw new ValidacionException(Errores.ERROR_0037);
         }
     }
 
@@ -314,7 +314,7 @@ public class SirBean implements SirLocal{
 
         }else{
             log.info("Se ha recibido un mensaje que no tiene el estado adecuado para recibir un ACK");
-            throw new ValidacionException(Errores.ERROR_0044);
+            throw new ValidacionException(Errores.ERROR_0037);
         }
     }
 
@@ -349,7 +349,7 @@ public class SirBean implements SirLocal{
 
         }else{
             log.info("El RegistroSir no tiene el estado necesario para ser Confirmado: " + oficioRemision.getIdentificadorIntercambio());
-            throw new ValidacionException(Errores.ERROR_0044);
+            throw new ValidacionException(Errores.ERROR_0037);
         }
     }
 
@@ -394,7 +394,7 @@ public class SirBean implements SirLocal{
                 oficioRemision.getEstado() == (RegwebConstantes.OFICIO_SIR_RECHAZADO_ERROR)){
 
             log.info("Se ha recibido un mensaje duplicado con identificador: " + oficioRemision.getIdentificadorIntercambio());
-            throw new ValidacionException(Errores.ERROR_0206);
+            throw new ValidacionException(Errores.ERROR_0037);
 
         }
     }
@@ -439,7 +439,7 @@ public class SirBean implements SirLocal{
                 EstadoRegistroSir.RECHAZADO_Y_ERROR.equals(registroSir.getEstado())){
 
             log.info("Se ha recibido un registroSir duplicado con identificador: " + registroSir.getIdentificadorIntercambio());
-            throw new ValidacionException(Errores.ERROR_0206);
+            throw new ValidacionException(Errores.ERROR_0037);
 
         }
     }
