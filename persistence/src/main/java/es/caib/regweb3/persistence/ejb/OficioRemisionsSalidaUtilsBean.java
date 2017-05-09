@@ -6,6 +6,7 @@ import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
 import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.OficioPendienteLlegada;
 import es.caib.regweb3.persistence.utils.Oficio;
 import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
@@ -16,6 +17,7 @@ import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+import org.hibernate.Session;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
@@ -331,12 +333,13 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
         List<RegistroEntrada> registros = new ArrayList<RegistroEntrada>();
 
-        // Recorremos los RegistroSalida del Oficio y Libro de registro seleccionado
-        for (int i = 0; i < oficios.size(); i++) {
+        // Recorremos los RegistroSalida del Oficio
+        for (OficioPendienteLlegada oficio : oficios) {
 
-            OficioPendienteLlegada oficio = oficios.get(i);
-
+            // Creamos un Nuevo RegistroEntrada
             RegistroSalida registroSalida = registroSalidaEjb.findById(oficio.getIdRegistro());
+            List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
+            List<AnexoFull> anexos = registroSalida.getRegistroDetalle().getAnexosFull();
             Libro libro = libroEjb.findById(oficio.getIdLibro());
 
             RegistroEntrada nuevoRE = new RegistroEntrada();
@@ -345,10 +348,32 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
             nuevoRE.setOficina(oficinaActiva);
             nuevoRE.setEstado(RegwebConstantes.REGISTRO_VALIDO);
             nuevoRE.setLibro(libro);
-            nuevoRE.setRegistroDetalle(registroSalida.getRegistroDetalle());
 
+            // Creamos un nuevo RegistroDetalle, modificando las propiedades Origen
+            RegistroDetalle registroDetalle = registroSalida.getRegistroDetalle();
+
+            // Detach de la sesion para poder duplicar el registroDetalle
+            Session session = (Session) em.getDelegate();
+            session.evict(registroDetalle);
+
+            // Set Id's a null
+            registroDetalle.setId(null);
+            registroDetalle.setAnexos(null);
+            registroDetalle.setInteresados(null);
+
+            for (Interesado interesado : interesados) {
+                interesado.setId(null);
+            }
+            for (AnexoFull anexo : anexos) {
+                anexo.getAnexo().setId(null);
+                anexo.getAnexo().setJustificante(false);
+            }
+
+            nuevoRE.setRegistroDetalle(registroDetalle);
+
+            // Registramos el nuevo RegistroEntrada
             synchronized (this) {
-                nuevoRE = registroEntradaEjb.registrarEntrada(nuevoRE, usuario, null, null);
+                nuevoRE = registroEntradaEjb.registrarEntrada(nuevoRE, usuario, interesados, anexos);
             }
 
             registros.add(nuevoRE);
@@ -356,10 +381,9 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
             // ACTUALIZAMOS LA TRAZABILIDAD
             Trazabilidad trazabilidad = trazabilidadEjb.getByOficioRegistroSalida(oficioRemision.getId(), registroSalida.getId());
             trazabilidad.setRegistroEntradaDestino(nuevoRE);
-
             trazabilidadEjb.merge(trazabilidad);
 
-            // Marcamos el RegistroEntrada original como ACEPTADO
+            // Marcamos el RegistroSalida original como ACEPTADO
             registroSalidaEjb.cambiarEstadoTrazabilidad(registroSalida,RegwebConstantes.REGISTRO_OFICIO_ACEPTADO, usuario);
 
         }

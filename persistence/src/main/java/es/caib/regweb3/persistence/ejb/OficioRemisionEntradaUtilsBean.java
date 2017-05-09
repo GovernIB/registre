@@ -6,6 +6,7 @@ import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
 import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.OficioPendienteLlegada;
 import es.caib.regweb3.persistence.utils.Oficio;
 import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
@@ -15,6 +16,7 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+import org.hibernate.Session;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
@@ -520,22 +522,47 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
         List<RegistroEntrada> registros = new ArrayList<RegistroEntrada>();
 
-        // Recorremos los RegistroEntrada del Oficio y Libro de registro seleccionado
+        // Recorremos los RegistroEntrada del Oficio
         for (OficioPendienteLlegada oficio : oficios) {
 
             RegistroEntrada registroEntrada = registroEntradaEjb.findById(oficio.getIdRegistro());
+            List<Interesado> interesados = registroEntrada.getRegistroDetalle().getInteresados();
+            List<AnexoFull> anexos = registroEntrada.getRegistroDetalle().getAnexosFull();
             Libro libro = libroEjb.findById(oficio.getIdLibro());
 
+            // Creamos un Nuevo RegistroEntrada
             RegistroEntrada nuevoRE = new RegistroEntrada();
             nuevoRE.setUsuario(usuario);
             nuevoRE.setDestino(organismoEjb.findByIdLigero(oficio.getIdOrganismoDestinatario()));
             nuevoRE.setOficina(oficinaActiva);
             nuevoRE.setEstado(RegwebConstantes.REGISTRO_VALIDO);
             nuevoRE.setLibro(libro);
-            nuevoRE.setRegistroDetalle(registroEntrada.getRegistroDetalle());
 
+            // Creamos un nuevo RegistroDetalle, modificando las propiedades Origen
+            RegistroDetalle registroDetalle = registroEntrada.getRegistroDetalle();
+
+            // Detach de la sesion para poder duplicar el registroDetalle
+            Session session = (Session) em.getDelegate();
+            session.evict(registroDetalle);
+
+            // Set Id's a null
+            registroDetalle.setId(null);
+            registroDetalle.setAnexos(null);
+            registroDetalle.setInteresados(null);
+
+            for (Interesado interesado : interesados) {
+                interesado.setId(null);
+            }
+            for (AnexoFull anexo : anexos) {
+                anexo.getAnexo().setId(null);
+                anexo.getAnexo().setJustificante(false);
+            }
+
+            nuevoRE.setRegistroDetalle(registroDetalle);
+
+            // Registramos el nuevo RegistroEntrada
             synchronized (this) {
-                nuevoRE = registroEntradaEjb.registrarEntrada(nuevoRE, usuario, null, null);
+                nuevoRE = registroEntradaEjb.registrarEntrada(nuevoRE, usuario, interesados, anexos);
             }
 
             registros.add(nuevoRE);
@@ -543,7 +570,6 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             // ACTUALIZAMOS LA TRAZABILIDAD
             Trazabilidad trazabilidad = trazabilidadEjb.getByOficioRegistroEntrada(oficioRemision.getId(), registroEntrada.getId());
             trazabilidad.setRegistroEntradaDestino(nuevoRE);
-
             trazabilidadEjb.merge(trazabilidad);
 
             // Marcamos el RegistroEntrada original como ACEPTADO

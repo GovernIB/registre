@@ -506,6 +506,11 @@ public class SirBean implements SirLocal{
             registroDetalle.setTipoAnotacion(TipoAnotacion.ENVIO.getValue());
             registroDetalle.setDecodificacionTipoAnotacion(TipoAnotacion.ENVIO.getName());
 
+            // Nos aseguramos que los campos origen sean los del registro, sobreescribiendo los posibles valores de un oficio interno
+            registroDetalle.setOficinaOrigen(registroEntrada.getOficina());
+            registroDetalle.setNumeroRegistroOrigen(registroEntrada.getNumeroRegistroFormateado());
+            registroDetalle.setFechaOrigen(registroEntrada.getFecha());
+
             // Actualizamos el registro
             registroEntrada = registroEntradaEjb.merge(registroEntrada);
 
@@ -571,6 +576,11 @@ public class SirBean implements SirLocal{
             registroDetalle.setDecodificacionEntidadRegistralDestino(denominacionEntidadRegistralDestino);
             registroDetalle.setTipoAnotacion(TipoAnotacion.ENVIO.getValue());
             registroDetalle.setDecodificacionTipoAnotacion(TipoAnotacion.ENVIO.getName());
+
+            // Nos aseguramos que los campos origen sean los del registro, sobreescribiendo los posibles valores de un oficio interno
+            registroDetalle.setOficinaOrigen(registroSalida.getOficina());
+            registroDetalle.setNumeroRegistroOrigen(registroSalida.getNumeroRegistroFormateado());
+            registroDetalle.setFechaOrigen(registroSalida.getFecha());
 
             // Actualizamos el registro
             registroSalida = registroSalidaEjb.merge(registroSalida);
