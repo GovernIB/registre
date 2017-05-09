@@ -176,10 +176,7 @@
 
 <div class="pull-right" style="margin-top: 15px; "> <%--  class="modal-footer" --%>
 
-
     <button id="desaAnnex" type="submit" class="btn btn-warning btn-sm" onclick="$('#reload').show();"><spring:message code="regweb.guardar"/></button>
-
-
 
 </div>
 
@@ -190,13 +187,7 @@
 <script type="text/javascript" >
 
     
-
-    
-    
-    
-    
     function cambioTipoFirma() {
-    
         console.log("-----  Entra dins cambioTipoFirma   -----");
         var autofirma = $('input[name=anexo\\.modoFirma]:radio:checked').val();
 
@@ -205,8 +196,13 @@
             autofirma = 0;
         }
 
+        //Quitamos errores
+        quitarErrorAnexo('#firmaFile.errors');
+
+
         switch (autofirma) {
             case '0': <%--doc sense firma --%>
+
                 $('#divInputArchivo').show();
                 $('#divInputFirma').hide();
 
@@ -239,14 +235,11 @@
     };
 
 
-
-
-  
     // Muestra u Oculta el input firma en función de si es autofirma
     $('input[name=anexo\\.modoFirma]:radio').click(function () {
         cambioTipoFirma();
     });
-   
+    $('#sinfirma').prop("checked", "checked");
     cambioTipoFirma();
 
    
@@ -303,6 +296,8 @@
         });
     });
 </script>
+
+
 
 <!-- FI JAVASCRIPT INCLOS DEL PEU -->
 

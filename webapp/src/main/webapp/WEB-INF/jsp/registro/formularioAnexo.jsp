@@ -1,3 +1,4 @@
+<%--
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 
@@ -29,7 +30,7 @@
 
 <c:import url="../modulos/mensajes.jsp"/>
 
-<%-- Formulario que contiene el resto de campos del anexo. --%>
+&lt;%&ndash; Formulario que contiene el resto de campos del anexo. &ndash;%&gt;
 <form:form id="anexoForm" action="${pageContext.request.contextPath}/anexo/${(empty anexoForm.anexo.id)?'nou' : 'editar'}" modelAttribute="anexoForm" method="POST"  enctype="multipart/form-data">
                 
                         
@@ -41,13 +42,13 @@
                         <form:hidden path="registroID" />
                         <form:hidden path="tipoRegistro" />
                         <form:hidden path="oficioRemisionSir" />
-                        <%--
+                        &lt;%&ndash;
                         <form:hidden path="returnURL" />
                          
                         <script>
                           document.getElementById("returnURL").value = document.URL;
                         </script>
-                        --%>
+                        &ndash;%&gt;
 
                     <div class="col-xs-12">
                         <div class="form-group col-xs-6">
@@ -121,7 +122,7 @@
                                 </div>
                                 <div class="col-xs-8">
                                     <form:select path="anexo.validezDocumento" class="chosen-select" onchange="bloquearFirma('${registro.id}','${registro.registroDetalle.id}','${param.registro}')">
-                                        <%--<form:option value="-1">...</form:option>--%>
+                                        &lt;%&ndash;<form:option value="-1">...</form:option>&ndash;%&gt;
                                         <c:forEach items="${tiposValidezDocumento}" var="validezDocumento">
                                             <form:option value="${validezDocumento}"><spring:message code="tipoValidezDocumento.${validezDocumento}"/></form:option>
                                         </c:forEach>
@@ -211,8 +212,8 @@
     	                            <a href="<c:url value="/anexo/descargarDocumento/${anexoForm.anexo.id}" />" target="_blank">
                                     ${anexoForm.documentoCustody.name}
                                     </a>
-                                        <%-- <form:checkbox id="documentoFileDelete" path="documentoFileDelete" />
-                                         <spring:message code="anexo.archivo.borrar"/>--%>
+                                        &lt;%&ndash; <form:checkbox id="documentoFileDelete" path="documentoFileDelete" />
+                                         <spring:message code="anexo.archivo.borrar"/>&ndash;%&gt;
     	                        </div>
                                 
     	                    </div>
@@ -252,8 +253,8 @@
     	                            <a href="<c:url value="/anexo/descargarFirma/${anexoForm.anexo.id}" />" target="_blank">
                                     ${anexoForm.signatureCustody.name}
                                     </a>
-                                        <%-- <form:checkbox id="signatureFileDelete" path="signatureFileDelete" />
-                                         <spring:message code="anexo.archivo.borrar"/>--%>
+                                        &lt;%&ndash; <form:checkbox id="signatureFileDelete" path="signatureFileDelete" />
+                                         <spring:message code="anexo.archivo.borrar"/>&ndash;%&gt;
     	                        </div>
     	                    </div>
                             </c:if>
@@ -302,7 +303,7 @@
               console.log(" checkIframeSize():: SET " + h);
             }
             document.getElementById('myiframe').style.height=h + "px";
-            lastSize =  Math.max($(iframeDocument.body).height(),iframeDocument.body.scrollHeight); <%--  $("#tablefull").height() --%>
+            lastSize =  Math.max($(iframeDocument.body).height(),iframeDocument.body.scrollHeight); &lt;%&ndash;  $("#tablefull").height() &ndash;%&gt;
             if (log) {
               console.log(" checkIframeSize():: GET " + lastSize);
             }
@@ -326,7 +327,7 @@
                         <img src="<c:url value="/img/712.GIF"/>" width="20" height="20"/>
                </div>
     			
-    		    <div class="pull-right" style="margin-top: 15px; "> <%--  class="modal-footer" --%>
+    		    <div class="pull-right" style="margin-top: 15px; "> &lt;%&ndash;  class="modal-footer" &ndash;%&gt;
  
                     
                     <button id="desaAnnex" type="submit" class="btn btn-warning btn-sm" onclick="$('#reload').show();"><spring:message code="regweb.guardar"/></button>
@@ -378,13 +379,13 @@
         }
 
         switch (autofirma) {
-            case '0': <%--doc sense firma --%>
+            case '0': &lt;%&ndash;doc sense firma &ndash;%&gt;
                 $('#divInputArchivo').show();
                 $('#divArchivoActual').show();
                 $('#divInputFirma').hide();
                 $('#divFirmaActual').hide();
                 break;
-            case '1':<%--doc amb firma adjunta (PADES)--%>
+            case '1':&lt;%&ndash;doc amb firma adjunta (PADES)&ndash;%&gt;
 
                 if (${anexoForm.documentoCustody != null}) {
                     $("#labelDocumento").html("<spring:message code="anexo.tipofirma.attached"/>");
@@ -403,7 +404,7 @@
                 }
 
                 break;
-            case '2':<%--firma amb doc separat --%>
+            case '2':&lt;%&ndash;firma amb doc separat &ndash;%&gt;
                 $("#labelFirma").html("<spring:message code="anexo.firma"/>");
                 $('#divInputArchivo').show();
                 $('#divArchivoActual').show();
@@ -489,3 +490,4 @@
 </body>
 
 </html>
+--%>

@@ -966,3 +966,14 @@ function normalizarTexto(texto) {
 
     return normalizado;
 }
+
+
+function quitarErrorAnexo(campo){
+    //Quitamos errores
+
+    //$(campo).parents(".form-group").removeClass("has-error");
+    $(campo).remove();
+
+}
+
+
