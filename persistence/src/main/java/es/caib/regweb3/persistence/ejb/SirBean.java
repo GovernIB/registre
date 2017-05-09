@@ -91,7 +91,7 @@ public class SirBean implements SirLocal{
                     registroSir.setEstado(EstadoRegistroSir.RECIBIDO);
 
                     registroSirEjb.crearRegistroSir(registroSir);
-                    log.info("El registroSir no existía en el sistema y se ha creado: " + registroSir.getIdentificadorIntercambio());
+                    log.info("El registroSir existía en el sistema, pero se ha eliminado y vuelto a crear: " + registroSir.getIdentificadorIntercambio());
 
                 }else if(EstadoRegistroSir.ACEPTADO.equals(registroSir.getEstado())){
                     log.info("Se ha intentado enviar un ficheroIntercambio que ya ha sido aceptado previamente: " + ficheroIntercambio.getIdentificadorIntercambio()+", volvemos a enviar un ACK");
