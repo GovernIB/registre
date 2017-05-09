@@ -329,8 +329,6 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         log.info("Libros reiniciados: " +libros.size());
 
         /********* REGISTRO SIR *********/
-        log.info("InteresadoSir eliminados: " + interesadoSirEjb.eliminarByEntidad(idEntidad));
-        log.info("AnexoSir eliminados: " + anexoSirEjb.eliminarByEntidad(idEntidad));
         log.info("RegistroSir eliminados: " + registroSirEjb.eliminarByEntidad(idEntidad));
 
         em.flush();
@@ -390,7 +388,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         log.info("RegistrosMigrados: " + registroMigradoEjb.eliminarByEntidad(idEntidad));
 
         /********* PLUGINS *********/
-        log.info("PLugins: " + pluginEjb.eliminarByEntidad(idEntidad));
+        log.info("Plugins: " + pluginEjb.eliminarByEntidad(idEntidad));
 
         /********* ENTIDAD *********/
         em.flush();

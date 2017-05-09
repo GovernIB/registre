@@ -25,11 +25,12 @@ import java.util.Set;
  *         Date: 16/01/14
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal {
 
     /**
      * Obtiene el Numero RegistroEntrada Formateado
+     *
      * @param idRegistroEntrada
      * @return
      * @throws Exception
@@ -39,15 +40,17 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 
     /**
      * Obtiene los Registros de Entrada de un Usuario.
+     *
      * @param idUsuarioEntidad
      * @return
      * @throws Exception
      */
     public List<RegistroEntrada> getByUsuario(Long idUsuarioEntidad) throws Exception;
-    
+
 
     /**
      * Guarda un Registro de Entrada y le asocia un número de registro (con anexos)
+     *
      * @param registroEntrada
      * @return
      * @throws Exception
@@ -56,8 +59,9 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
                                             UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexosFull)
             throws Exception, I18NException, I18NValidationException;
 
-   /**
+    /**
      * Busca los Registros de Entrada en función de los parámetros
+     *
      * @param pageNumber
      * @param fechaInicio
      * @param fechaFin
@@ -65,10 +69,11 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-   public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroEntrada registroEntrada, String interesadoNom, String interesadoDoc, String interesadoLli1, String interesadoLli2, String organoDest, Boolean anexos, String observaciones, String usuario, Long idEntidad) throws Exception;
+    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroEntrada registroEntrada, String interesadoNom, String interesadoDoc, String interesadoLli1, String interesadoLli2, String organoDest, Boolean anexos, String observaciones, String usuario, Long idEntidad) throws Exception;
 
     /**
      * Busca los Registros de Entrada de una OficinaActiva en función de su estado.
+     *
      * @param idOficinaActiva
      * @param idEstado
      * @return
@@ -78,6 +83,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 
     /**
      * Busca los Registros de Entrada de una OficinaActiva en función de su estado.
+     *
      * @param idOficinaActiva
      * @param idEstado
      * @return
@@ -85,17 +91,19 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      */
     public List<RegistroEntrada> getByOficinaEstado(Long idOficinaActiva, Long idEstado) throws Exception;
 
- /**
-  * Busca los Registros de Entrada de una OficinaActiva en función de su estado.
-  * @param idOficinaActiva
-  * @param idEstado
-  * @return
-  * @throws Exception
-  */
- public Long getByOficinaEstadoCount(Long idOficinaActiva, Long idEstado) throws Exception;
+    /**
+     * Busca los Registros de Entrada de una OficinaActiva en función de su estado.
+     *
+     * @param idOficinaActiva
+     * @param idEstado
+     * @return
+     * @throws Exception
+     */
+    public Long getByOficinaEstadoCount(Long idOficinaActiva, Long idEstado) throws Exception;
 
     /**
      * Busca los Registros de Entrada de un listado de Libros en función de su estado.
+     *
      * @param inicio
      * @param libros
      * @param idEstado
@@ -104,25 +112,28 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      */
     public List<RegistroEntrada> getByLibrosEstado(int inicio, List<Libro> libros, Long idEstado) throws Exception;
 
- /**
-  * Busca los Registros de Entrada de un listado de Libros en función de su estado.
-  * @param libros
-  * @param idEstado
-  * @return
-  * @throws Exception
-  */
- public Long getByLibrosEstadoCount(List<Libro> libros, Long idEstado) throws Exception;
+    /**
+     * Busca los Registros de Entrada de un listado de Libros en función de su estado.
+     *
+     * @param libros
+     * @param idEstado
+     * @return
+     * @throws Exception
+     */
+    public Long getByLibrosEstadoCount(List<Libro> libros, Long idEstado) throws Exception;
 
     /**
      * Cambia el estado de un RegistroEntrada y el HistoricoModificación correspondiente
+     *
      * @param registroEntrada
      * @param idEstado
      * @throws Exception
      */
-    public void cambiarEstado(RegistroEntrada registroEntrada, Long idEstado, UsuarioEntidad usuarioEntidad) throws Exception;
+    public void cambiarEstadoTrazabilidad(RegistroEntrada registroEntrada, Long idEstado, UsuarioEntidad usuarioEntidad) throws Exception;
 
     /**
      * Busca los últimos RegistroEntrada de una Oficina
+     *
      * @param idOficina
      * @param total
      * @return
@@ -132,6 +143,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 
     /**
      * Obtiene el RegistroEntrada a partir de su numero de registro formateado
+     *
      * @param numeroRegistroFormateado
      * @return
      * @throws Exception
@@ -141,6 +153,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
     /**
      * Obtiene el numero de registro formateado de un RegistroEntrada
      * a partir de su numero de registro, año y libro.
+     *
      * @param numero
      * @param anyo
      * @param libro
@@ -152,16 +165,17 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
     /**
      * Devuelve el numero de registro formateado a partir de un registro detalle.
      * Se necesita para el plug-in postproceso para pasarselo cuando creamos interesados.
+     *
      * @param idRegistroDetalle
      * @return
      * @throws Exception
      */
     public String findNumeroRegistroFormateadoByRegistroDetalle(Long idRegistroDetalle) throws Exception;
 
-    
-    
+
     /**
      * Anula un RegistroEntrada, cambiandole el estado a anulado.
+     *
      * @param registroEntrada
      * @param usuarioEntidad
      * @throws Exception
@@ -170,6 +184,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 
     /**
      * Activa un RegistroEntrada, cambiandole el estado a anulado.
+     *
      * @param registroEntrada
      * @param usuarioEntidad
      * @throws Exception
@@ -178,6 +193,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 
     /**
      * Visa un RegistroEntrada, cambiandole el estado a anulado.
+     *
      * @param registroEntrada
      * @param usuarioEntidad
      * @throws Exception
@@ -186,6 +202,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 
     /**
      * Tramita un RegistroEntrada, cambiandole el estado a tramitado.
+     *
      * @param registroEntrada
      * @param usuarioEntidad
      * @throws Exception
@@ -194,6 +211,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 
     /**
      * Retorna el identificador del Libro al que pertenece el RegistroEntrada
+     *
      * @param idRegistroEntrada
      * @return
      * @throws Exception
@@ -202,6 +220,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 
     /**
      * Comprueba si un Registro de Entrada se puede tramitar o no
+     *
      * @param idRegistro
      * @param organismos
      * @return
@@ -211,6 +230,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 
     /**
      * Elimina los RegistroEntrada de una Entidad
+     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -219,6 +239,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 
     /**
      * Busca los Registros de Entrada de un Libro.
+     *
      * @param idLibro
      * @return
      * @throws Exception
@@ -246,6 +267,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 
     /**
      * Método que devuelve un registro de entrada completo, con anexoFull pero sin los documentos fisicos.
+     *
      * @param id
      * @return
      * @throws Exception
@@ -265,6 +287,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 
     /**
      * Obtiene un Registro de Entrada a partir de su IdentificadorIntercambio
+     *
      * @param identificadorIntercambio
      * @return
      * @throws Exception
@@ -273,6 +296,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 
     /**
      * Rectificar un Registro de entrada, creando una nuevo informando de ello
+     *
      * @param idRegistro
      * @return
      * @throws Exception
@@ -282,7 +306,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
     /**
      * Método que obtiene los destinatarios a los que distribuir el registro
      *
-     * @param re registro de entrada a distribuir
+     * @param re             registro de entrada a distribuir
      * @param usuarioEntidad
      * @return lista de destinatarios a los que se debe distribuir el registro
      * @throws Exception
@@ -303,18 +327,18 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 
     /**
      * Método que invoca al plugin post proceso al actualizar un registro entrada.
-     * @param re
-     * @return
-     * @throws Exception
-     */
-    public void postProcesoActualizarRegistro(RegistroEntrada re,Long entidadId) throws Exception ;
-
-    /**
      *
      * @param re
      * @return
      * @throws Exception
      */
-    public void postProcesoNuevoRegistro(RegistroEntrada re, Long entidadId) throws Exception ;
+    public void postProcesoActualizarRegistro(RegistroEntrada re, Long entidadId) throws Exception;
+
+    /**
+     * @param re
+     * @return
+     * @throws Exception
+     */
+    public void postProcesoNuevoRegistro(RegistroEntrada re, Long entidadId) throws Exception;
 
 }

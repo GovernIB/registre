@@ -182,7 +182,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @param usuarioEntidad
      * @throws Exception
      */
-    public void cambiarEstado(RegistroSalida registroSalida, Long idEstado, UsuarioEntidad usuarioEntidad) throws Exception;
+    public void cambiarEstadoTrazabilidad(RegistroSalida registroSalida, Long idEstado, UsuarioEntidad usuarioEntidad) throws Exception;
 
     /**
      * Método que devuelve un registro de salida completo, con los anexosFull pero sin los documentos fisicos.

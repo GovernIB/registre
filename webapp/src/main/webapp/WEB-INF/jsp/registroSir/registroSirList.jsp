@@ -46,7 +46,7 @@
                             <div class="form-group col-xs-6">
                                 <div class="col-xs-4 pull-left align-right"><spring:message code="registroSir.numeroRegistro"/></div>
                                 <div class="col-xs-8">
-                                    <form:input path="registroSir.numeroRegistro" cssClass="form-control" maxlength="10"/>
+                                    <form:input path="registroSir.numeroRegistro" cssClass="form-control"/>
                                 </div>
                             </div>
                             <div class="form-group col-xs-6">
@@ -63,7 +63,7 @@
                             <div class="form-group col-xs-6">
                                 <div class="col-xs-4 pull-left align-right"><spring:message code="registroSir.extracto"/></div>
                                 <div class="col-xs-8">
-                                    <form:input path="registroSir.resumen" cssClass="form-control" maxlength="10"/>
+                                    <form:input path="registroSir.resumen" cssClass="form-control"/>
                                 </div>
                             </div>
                             <div class="form-group col-xs-6">
@@ -72,7 +72,7 @@
                                     <form:select path="estado" cssClass="chosen-select">
                                         <form:option value="" label="..."/>
                                         <c:forEach var="estado" items="${estados}">
-                                            <form:option value="${estado}"><spring:message code="registroSir.estado.${estado}"/></form:option>
+                                            <form:option value="${estado.value}"><spring:message code="registroSir.estado.${estado.value}"/></form:option>
                                         </c:forEach>
                                     </form:select>
                                 </div>

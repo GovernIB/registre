@@ -130,6 +130,12 @@ public class RegistroDetalle implements Serializable {
       //this.anexos = rd.anexos;
       this.aplicacion = rd.aplicacion;
       this.version = rd.version;
+      this.indicadorPrueba = rd.getIndicadorPrueba();
+      this.tipoAnotacion = rd.getTipoAnotacion();
+      this.decodificacionTipoAnotacion = rd.getDecodificacionTipoAnotacion();
+      this.codigoEntidadRegistralDestino = rd.getCodigoEntidadRegistralDestino();
+      this.decodificacionEntidadRegistralDestino = rd.getDecodificacionEntidadRegistralDestino();
+      this.identificadorIntercambio = rd.getIdentificadorIntercambio();
     }
 
     /**
