@@ -43,7 +43,7 @@
                         <form:hidden path="oficioRemisionSir" />
                         <%--
                         <form:hidden path="returnURL" />
-                         
+
                         <script>
                           document.getElementById("returnURL").value = document.URL;
                         </script>
@@ -232,7 +232,7 @@
 <script type="text/javascript" src="<c:url value="/js/jquery.form.js"/>"></script>
 
 <!-- Input File -->
-<script>
+<%--<script>
     $(document)
             .on('change', '.btn-file :file', function() {
                 var input = $(this),
@@ -251,10 +251,10 @@
             }
         });
     });
-</script>
+</script>--%>
 
 <!-- COLOR MENU -->
-<script>
+<%--<script>
     $(document).ready(function() {
         $(function () {
             if(${entidadActiva != null}){
@@ -263,7 +263,7 @@
             }
         });
     });
-</script>
+</script>--%>
 
 <!-- FI JAVASCRIPT INCLOS DEL PEU -->
 
